@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { mapCurrenciesToRadioItems } from '@ukef/dtfs2-common';
 import api from '../../../../api';
 import { asLoggedInUserSession } from '../../../../helpers/express-session';
 import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
@@ -29,9 +30,12 @@ export const getProvideUtilisationReportCorrection = async (req: GetProvideUtili
 
     const feeRecordCorrection = await api.getFeeRecordCorrection(userToken, bankId, correctionId);
 
+    const paymentCurrencyOptions = mapCurrenciesToRadioItems();
+
     return renderProvideUtilisationReportCorrectionPage(res, {
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       correctionRequestDetails: mapToCorrectionRequestDetailsViewModel(feeRecordCorrection),
+      paymentCurrencyOptions,
     });
   } catch (error) {
     console.error('Failed to get provide utilisation report correction %o', error);

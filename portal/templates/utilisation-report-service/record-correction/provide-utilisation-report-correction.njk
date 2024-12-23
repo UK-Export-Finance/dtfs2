@@ -3,6 +3,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 
 {% import "./_macros/correction-request-details-table.njk" as correctionRequestDetailsTable %}
@@ -38,6 +39,26 @@
         classes: "govuk-input--width-20",
         attributes: {
           "data-cy": "facility-id-input"
+        }
+      }) }}
+    {% endif %}
+
+    {% if correctionRequestDetails.reasons and "REPORTED_CURRENCY_INCORRECT" in correctionRequestDetails.reasons %}
+      {{ govukRadios({
+        fieldset: {
+          legend: {
+            text: "Select the reported currency",
+            classes: "govuk-fieldset__legend--s"
+          }
+        },
+        hint: {
+          text: "This is the currency that you report the fees in"
+        },
+        name: "reportedCurrency",
+        items: paymentCurrencyOptions,
+        attributes: {
+          id: 'reported-currency',
+          'data-cy': 'reported-currency-radios'
         }
       }) }}
     {% endif %}

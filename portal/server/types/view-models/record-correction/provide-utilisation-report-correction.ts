@@ -1,4 +1,4 @@
-import { CurrencyAndAmountString, RecordCorrectionReason } from '@ukef/dtfs2-common';
+import { CurrencyAndAmountString, RadioItem, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { PrimaryNavKey } from '../../primary-nav-key';
 
 export type CorrectionRequestDetailsViewModel = {
@@ -14,4 +14,5 @@ export type CorrectionRequestDetailsViewModel = {
 export type ProvideUtilisationReportCorrectionViewModel = {
   primaryNav: PrimaryNavKey;
   correctionRequestDetails: CorrectionRequestDetailsViewModel;
+  paymentCurrencyOptions: RadioItem[];
 };
