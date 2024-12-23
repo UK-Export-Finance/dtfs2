@@ -10,5 +10,5 @@
  *         type: number
  *       formData:
  *         type: object
- *         $ref: '#/definitions/FeeRecordCorrectionTransientFormData'
+ *         $ref: '#/definitions/FeeRecordCorrectionRequestTransientFormData'
  */

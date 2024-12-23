@@ -1,5 +1,5 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
-import { RECORD_CORRECTION_REASON, RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
+import { RECORD_CORRECTION_REASON, RecordCorrectionRequestTransientFormData } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { aGetFeeRecordResponseBody, aTfmSessionUser } from '../../../../../test-helpers';
 import {
@@ -46,7 +46,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         session: requestSession,
       });
 
-    const transientFormDataResponse: RecordCorrectionTransientFormData = {
+    const transientFormDataResponse: RecordCorrectionRequestTransientFormData = {
       reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT],
       additionalInfo: 'Some additional info',
     };

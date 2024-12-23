@@ -2,7 +2,7 @@ import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import {
-  FeeRecordCorrectionTransientFormDataEntityMockBuilder,
+  FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder,
   FeeRecordEntityMockBuilder,
   RECORD_CORRECTION_REASON,
   REQUEST_PLATFORM_TYPE,
@@ -14,7 +14,7 @@ import { postFeeRecordCorrection, PostFeeRecordCorrectionRequest } from './index
 import { aTfmSessionUser } from '../../../../../../test-helpers';
 import { executeWithSqlTransaction } from '../../../../../helpers';
 import { FeeRecordStateMachine } from '../../../../../services/state-machines/fee-record/fee-record.state-machine';
-import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
+import { FeeRecordCorrectionRequestTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-request-transient-form-data-repo';
 import { FEE_RECORD_EVENT_TYPE } from '../../../../../services/state-machines/fee-record/event/fee-record.event-type';
 import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
 import { sendFeeRecordCorrectionRequestEmails } from './helpers';
@@ -22,7 +22,7 @@ import { FeeRecordCorrectionRequestEmailAddresses } from '../../../../../types/u
 
 jest.mock('../../../../../helpers');
 jest.mock('../../../../../services/state-machines/fee-record/fee-record.state-machine');
-jest.mock('../../../../../repositories/fee-record-correction-transient-form-data-repo');
+jest.mock('../../../../../repositories/fee-record-correction-request-transient-form-data-repo');
 jest.mock('../../../../../repositories/fee-record-repo');
 jest.mock('./helpers');
 
@@ -49,7 +49,7 @@ describe('post-fee-record-correction.controller', () => {
       });
       FeeRecordStateMachine.forFeeRecord = mockForFeeRecordStateMachineConstructor;
 
-      jest.spyOn(FeeRecordCorrectionTransientFormDataRepo, 'withTransaction').mockReturnValue({
+      jest.spyOn(FeeRecordCorrectionRequestTransientFormDataRepo, 'withTransaction').mockReturnValue({
         findByUserIdAndFeeRecordId: mockFindTransientFormData,
         deleteByUserIdAndFeeRecordId: mockDeleteTransientFormData,
       });
@@ -91,7 +91,7 @@ describe('post-fee-record-correction.controller', () => {
 
       beforeEach(() => {
         mockFindTransientFormData.mockResolvedValue(
-          new FeeRecordCorrectionTransientFormDataEntityMockBuilder()
+          new FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder()
             .withUserId(userId)
             .withFeeRecordId(feeRecordId)
             .withFormData({ reasons, additionalInfo })
@@ -234,7 +234,7 @@ describe('post-fee-record-correction.controller', () => {
       });
       const res = httpMocks.createResponse();
 
-      mockFindTransientFormData.mockResolvedValue(new FeeRecordCorrectionTransientFormDataEntityMockBuilder().build());
+      mockFindTransientFormData.mockResolvedValue(new FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder().build());
       mockFindFeeRecordWithReport.mockResolvedValue(null);
 
       // Act
@@ -255,7 +255,7 @@ describe('post-fee-record-correction.controller', () => {
       });
       const res = httpMocks.createResponse();
 
-      mockFindTransientFormData.mockResolvedValue(new FeeRecordCorrectionTransientFormDataEntityMockBuilder().build());
+      mockFindTransientFormData.mockResolvedValue(new FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder().build());
       mockFindFeeRecordWithReport.mockResolvedValue(new FeeRecordEntityMockBuilder().build());
 
       const errorStatus = HttpStatusCode.NotFound;
@@ -276,7 +276,7 @@ describe('post-fee-record-correction.controller', () => {
       });
       const res = httpMocks.createResponse();
 
-      mockFindTransientFormData.mockResolvedValue(new FeeRecordCorrectionTransientFormDataEntityMockBuilder().build());
+      mockFindTransientFormData.mockResolvedValue(new FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder().build());
       mockFindFeeRecordWithReport.mockResolvedValue(new FeeRecordEntityMockBuilder().build());
 
       const errorMessage = 'Some error message';
@@ -297,7 +297,7 @@ describe('post-fee-record-correction.controller', () => {
       });
       const res = httpMocks.createResponse();
 
-      mockFindTransientFormData.mockResolvedValue(new FeeRecordCorrectionTransientFormDataEntityMockBuilder().build());
+      mockFindTransientFormData.mockResolvedValue(new FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder().build());
       mockFindFeeRecordWithReport.mockResolvedValue(new FeeRecordEntityMockBuilder().build());
 
       mockHandleEvent.mockRejectedValue(new Error('Some error'));
@@ -317,7 +317,7 @@ describe('post-fee-record-correction.controller', () => {
       });
       const res = httpMocks.createResponse();
 
-      mockFindTransientFormData.mockResolvedValue(new FeeRecordCorrectionTransientFormDataEntityMockBuilder().build());
+      mockFindTransientFormData.mockResolvedValue(new FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder().build());
       mockFindFeeRecordWithReport.mockResolvedValue(new FeeRecordEntityMockBuilder().build());
 
       mockHandleEvent.mockRejectedValue(new Error('Some error'));
