@@ -99,8 +99,8 @@ describe('provide-utilisation-report-correction helpers', () => {
   });
 
   describe('getAdditionalCommentsFieldLabels', () => {
-    describe(`when the fee record correction has one reason and it is '${RECORD_CORRECTION_REASON.OTHER}`, () => {
-      it('should return the "required" field labels', () => {
+    describe(`when the only fee record correction reason is '${RECORD_CORRECTION_REASON.OTHER}'`, () => {
+      it('should return the "required" additional info field labels', () => {
         // Arrange
         const reasons = [RECORD_CORRECTION_REASON.OTHER];
 
@@ -112,8 +112,8 @@ describe('provide-utilisation-report-correction helpers', () => {
       });
     });
 
-    describe(`when the fee record correction has one reason and it is not '${RECORD_CORRECTION_REASON.OTHER}`, () => {
-      it('should return the "optional" field labels', () => {
+    describe(`when the only fee record correction reason is not '${RECORD_CORRECTION_REASON.OTHER}'`, () => {
+      it('should return the "optional" additional info field labels', () => {
         // Arrange
         const reasons = [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT];
 
@@ -125,23 +125,23 @@ describe('provide-utilisation-report-correction helpers', () => {
       });
     });
 
-    describe(`when the fee record correction has multiple reasons and not including '${RECORD_CORRECTION_REASON.OTHER}`, () => {
-      it('should return the "optional" field labels', () => {
+    describe(`when the fee record correction has multiple reasons including '${RECORD_CORRECTION_REASON.OTHER}'`, () => {
+      it('should return the "required" additional info field labels', () => {
         // Arrange
-        const reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT];
+        const reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER];
 
         // Act
         const result = getAdditionalCommentsFieldLabels(reasons);
 
         // Assert
-        expect(result).toEqual(optionalAdditionalCommentsFieldLabels);
+        expect(result).toEqual(requiredAdditionalCommentsFieldLabels);
       });
     });
 
-    describe(`when the fee record correction has multiple reasons including '${RECORD_CORRECTION_REASON.OTHER}'`, () => {
-      it('should return the "optional" field labels', () => {
+    describe(`when the fee record correction has multiple reasons not including '${RECORD_CORRECTION_REASON.OTHER}`, () => {
+      it('should return the "optional" additional info field labels', () => {
         // Arrange
-        const reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER];
+        const reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT];
 
         // Act
         const result = getAdditionalCommentsFieldLabels(reasons);

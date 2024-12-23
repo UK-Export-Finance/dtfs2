@@ -91,10 +91,10 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
     });
 
     describe.each`
-      description                                                   | reasons
-      ${`one reason and it is '${RECORD_CORRECTION_REASON.OTHER}'`} | ${[RECORD_CORRECTION_REASON.OTHER]}
-      ${'has multiple reasons'}                                     | ${[RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER]}
-    `('when the fee record correction has $description', ({ reasons }: { reasons: RecordCorrectionReason[] }) => {
+      description   | reasons
+      ${'includes'} | ${[RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER]}
+      ${'excludes'} | ${[RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.UTILISATION_INCORRECT]}
+    `(`when the fee record correction reasons $description '${RECORD_CORRECTION_REASON.OTHER}'`, ({ reasons }: { reasons: RecordCorrectionReason[] }) => {
       it('should render the expected additional comments labels', async () => {
         // Arrange
         const feeRecordCorrectionResponse = {

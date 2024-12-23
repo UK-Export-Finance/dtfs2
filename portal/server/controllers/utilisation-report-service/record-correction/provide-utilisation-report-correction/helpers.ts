@@ -48,18 +48,17 @@ export const optionalAdditionalCommentsFieldLabels: AdditionalCommentsFieldLabel
 
 /**
  * Gets the labels for the additional comments field based on the correction reasons.
- * If there is only one reason and it is {@link{RECORD_CORRECTION_REASON.OTHER}},
- * returns labels for recording information.
- * Otherwise returns labels for optional additional comments.
  * @param correctionReasons The array of correction reasons
- * @returns The labels object containing label and hint text
+ * @returns The required additional comments labels if the reasons include
+ * {@link{RECORD_CORRECTION_REASON.OTHER}}, otherwise the optional additional
+ * comments labels.
  */
 export const getAdditionalCommentsFieldLabels = (correctionReasons: RecordCorrectionReason[]): AdditionalCommentsFieldLabels => {
   if (correctionReasons.length === 0) {
     throw new Error('Correction must have at least one reason');
   }
 
-  if (correctionReasons.length === 1 && correctionReasons[0] === RECORD_CORRECTION_REASON.OTHER) {
+  if (correctionReasons.includes(RECORD_CORRECTION_REASON.OTHER)) {
     return requiredAdditionalCommentsFieldLabels;
   }
 
