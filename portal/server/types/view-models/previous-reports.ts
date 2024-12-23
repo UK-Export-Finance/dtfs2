@@ -1,4 +1,5 @@
-import { PortalSessionUser, UtilisationReportStatus } from '@ukef/dtfs2-common';
+import { UtilisationReportStatus } from '@ukef/dtfs2-common';
+import { BaseViewModel } from './base-view-model';
 
 export type PreviousReportNavItemViewModel = {
   text: string | number;
@@ -15,10 +16,8 @@ export type PreviousReportViewModel = {
   downloadPath: string;
 };
 
-export type PreviousReportsViewModel = {
+export type PreviousReportsViewModel = BaseViewModel & {
   year: string | number | undefined;
-  user: PortalSessionUser;
-  primaryNav: string;
   navItems: PreviousReportNavItemViewModel[];
   reports: PreviousReportViewModel[];
 };
