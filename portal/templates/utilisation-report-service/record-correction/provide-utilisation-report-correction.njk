@@ -12,139 +12,152 @@
 
 {% block content %}
 
-    <h1 class="govuk-heading-xl">
-      Report GEF utilisation and fees
-    </h1>
+  <h1 class="govuk-heading-xl">
+    Report GEF utilisation and fees
+  </h1>
 
-    <h2 class="govuk-heading-l">
-      Record correction
-    </h2>
+  <div class="govuk-grid-row">
 
-    {{ correctionRequestDetailsTable.render({
-      details: correctionRequestDetails,
-      errorTypeHeader: errorTypeHeader
-    }) }}
+    <div class="govuk-grid-column-full">
 
-    {% if correctionRequestDetails.reasons and "FACILITY_ID_INCORRECT" in correctionRequestDetails.reasons %}
-      {{ govukInput({
-        label: {
-          text: "Enter the facility ID",
-          classes: "govuk-label--s"
-        },
-        hint: {
-          text: "The facility ID can be found on the deal summary page"
-        },
-        id: "facilityId",
-        name: "facilityId",
-        classes: "govuk-input--width-20",
-        attributes: {
-          "data-cy": "facility-id-input"
-        }
+      <h2 class="govuk-heading-l">
+        Record correction
+      </h2>
+
+      {{ correctionRequestDetailsTable.render({
+        details: correctionRequestDetails,
+        errorTypeHeader: errorTypeHeader
       }) }}
-    {% endif %}
 
-    {% if correctionRequestDetails.reasons and "REPORTED_CURRENCY_INCORRECT" in correctionRequestDetails.reasons %}
-      {{ govukRadios({
-        fieldset: {
-          legend: {
-            text: "Select the reported currency",
-            classes: "govuk-fieldset__legend--s"
-          }
-        },
-        hint: {
-          text: "This is the currency that you report the fees in"
-        },
-        name: "reportedCurrency",
-        items: paymentCurrencyOptions,
-        attributes: {
-          id: 'reported-currency',
-          'data-cy': 'reported-currency-radios'
-        }
-      }) }}
-    {% endif %}
+    </div>
 
-    {% if correctionRequestDetails.reasons and "REPORTED_FEE_INCORRECT" in correctionRequestDetails.reasons %}
-      {{ govukInput({
-        label: {
-          text: "Enter the reported fee",
-          classes: "govuk-label--s"
-        },
-        hint: {
-          text: "This the fee amount that has been sent to UKEF for the period"
-        },
-        id: "reportedFee",
-        name: "reportedFee",
-        classes: "govuk-input--width-20",
-        attributes: {
-          "data-cy": "reported-fee-input"
-        }
-      }) }}
-    {% endif %}
+  </div>
 
-    {% if correctionRequestDetails.reasons and "UTILISATION_INCORRECT" in correctionRequestDetails.reasons %}
-      {{ govukInput({
-        label: {
-          text: "Enter the utilisation",
-          classes: "govuk-label--s"
-        },
-        hint: {
-          text: "Enter the utilisation in base currency for the period end date"
-        },
-        id: "utilisation",
-        name: "utilisation",
-        classes: "govuk-input--width-20",
-        attributes: {
-          "data-cy": "utilisation-input"
-        }
-      }) }}
-    {% endif %}
+  <div class="govuk-grid-row">
 
-    {{ govukCharacterCount({
-      name: "additionalComments",
-      id: "additionalComments",
-      label: {
-        text: additionalCommentsLabel,
-        classes: "govuk-label--s",
-        attributes: {
-          "data-cy": "additional-comments-label"
-        }
-      },
-      hint: {
-        text: additionalCommentsHint,
-        attributes: {
-          "data-cy": "additional-comments-hint"
-        }
-      },
-      maxlength: 500,
-      rows: 4,
-      attributes: {
-        "data-cy": "additional-comments"
-      }
-    }) }}
+    <div class="govuk-grid-column-two-thirds-from-desktop">
 
-    {# TODO: Can we restrict the width of this input? Similar to TFM UI. #}
-    {# TODO: Make 'Other' field text (title and hint) dynamic - provide through the controller. #}
-
-    <div class="govuk-button-group">
-      <form method="post">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-        {{ govukButton({
-          text: "Save and review changes",
+      {% if correctionRequestDetails.reasons and "FACILITY_ID_INCORRECT" in correctionRequestDetails.reasons %}
+        {{ govukInput({
+          label: {
+            text: "Enter the facility ID",
+            classes: "govuk-label--s"
+          },
+          hint: {
+            text: "The facility ID can be found on the deal summary page"
+          },
+          id: "facilityId",
+          name: "facilityId",
+          classes: "govuk-input--width-20",
           attributes: {
-            'data-cy': 'continue-button'
+            "data-cy": "facility-id-input"
           }
         }) }}
-      </form>
-      <form method="post">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-        <input
-          class="govuk-button govuk-button--secondary"
-          formaction=""
-          value="Cancel record correction"
-          data-module="govuk-button"
-          type="submit"
-          data-cy="cancel-button"/>
-      </form>
+      {% endif %}
+
+      {% if correctionRequestDetails.reasons and "REPORTED_CURRENCY_INCORRECT" in correctionRequestDetails.reasons %}
+        {{ govukRadios({
+          fieldset: {
+            legend: {
+              text: "Select the reported currency",
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          hint: {
+            text: "This is the currency that you report the fees in"
+          },
+          name: "reportedCurrency",
+          items: paymentCurrencyOptions,
+          attributes: {
+            id: 'reported-currency',
+            'data-cy': 'reported-currency-radios'
+          }
+        }) }}
+      {% endif %}
+
+      {% if correctionRequestDetails.reasons and "REPORTED_FEE_INCORRECT" in correctionRequestDetails.reasons %}
+        {{ govukInput({
+          label: {
+            text: "Enter the reported fee",
+            classes: "govuk-label--s"
+          },
+          hint: {
+            text: "This the fee amount that has been sent to UKEF for the period"
+          },
+          id: "reportedFee",
+          name: "reportedFee",
+          classes: "govuk-input--width-20",
+          attributes: {
+            "data-cy": "reported-fee-input"
+          }
+        }) }}
+      {% endif %}
+
+      {% if correctionRequestDetails.reasons and "UTILISATION_INCORRECT" in correctionRequestDetails.reasons %}
+        {{ govukInput({
+          label: {
+            text: "Enter the utilisation",
+            classes: "govuk-label--s"
+          },
+          hint: {
+            text: "Enter the utilisation in base currency for the period end date"
+          },
+          id: "utilisation",
+          name: "utilisation",
+          classes: "govuk-input--width-20",
+          attributes: {
+            "data-cy": "utilisation-input"
+          }
+        }) }}
+      {% endif %}
+
+      {{ govukCharacterCount({
+        name: "additionalComments",
+        id: "additionalComments",
+        label: {
+          text: additionalCommentsLabel,
+          classes: "govuk-label--s",
+          attributes: {
+            "data-cy": "additional-comments-label"
+          }
+        },
+        hint: {
+          text: additionalCommentsHint,
+          attributes: {
+            "data-cy": "additional-comments-hint"
+          }
+        },
+        maxlength: 500,
+        rows: 4,
+        attributes: {
+          "data-cy": "additional-comments"
+        }
+      }) }}
+
+      <div class="govuk-button-group">
+        <form method="post">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+          {{ govukButton({
+            text: "Save and review changes",
+            attributes: {
+              'data-cy': 'continue-button'
+            }
+          }) }}
+        </form>
+        <form method="post">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+          <input
+            class="govuk-button govuk-button--secondary"
+            formaction=""
+            value="Cancel record correction"
+            data-module="govuk-button"
+            type="submit"
+            data-cy="cancel-button"/>
+        </form>
+      </div>
+
     </div>
+
+  </div>
 
 {% endblock %}
