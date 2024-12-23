@@ -103,14 +103,14 @@
       name: "additionalComments",
       id: "additionalComments",
       label: {
-        text: "TODO MAKE DYNAMIC",
+        text: additionalCommentsLabel,
         classes: "govuk-label--s",
         attributes: {
           "data-cy": "additional-comments-label"
         }
       },
       hint: {
-        text: "TODO MAKE DYNAMIC",
+        text: additionalCommentsHint,
         attributes: {
           "data-cy": "additional-comments-hint"
         }
@@ -122,6 +122,7 @@
       }
     }) }}
 
+    {# TODO: Can we restrict the width of this input? Similar to TFM UI. #}
     {# TODO: Make 'Other' field text (title and hint) dynamic - provide through the controller. #}
 
     <div class="govuk-button-group">

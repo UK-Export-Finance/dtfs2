@@ -1,4 +1,4 @@
-import { getFormattedCurrencyAndAmount, mapReasonsToDisplayValues } from '@ukef/dtfs2-common';
+import { getFormattedCurrencyAndAmount, mapReasonsToDisplayValues, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { GetFeeRecordCorrectionResponseBody } from '../../../../api-response-types';
 import { CorrectionRequestDetailsViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
 
@@ -18,5 +18,33 @@ export const mapToCorrectionRequestDetailsViewModel = (correctionResponse: GetFe
     formattedReasons: mapReasonsToDisplayValues(correctionResponse.reasons).join(', '),
     additionalInfo: correctionResponse.additionalInfo,
     errorTypeHeader,
+  };
+};
+
+type AdditionalCommentsFieldLabels = {
+  label: string;
+  hint: string;
+};
+
+// TODO: Add unit tests.
+/**
+ * Gets the labels for the additional comments field based on the correction reasons.
+ * If there is only one reason and it is {@link{RECORD_CORRECTION_REASON.OTHER}},
+ * returns labels for recording information.
+ * Otherwise returns labels for optional additional comments.
+ * @param correctionReasons The array of correction reasons
+ * @returns The labels object containing label and hint text
+ */
+export const getAdditionalCommentsFieldLabels = (correctionReasons: RecordCorrectionReason[]): AdditionalCommentsFieldLabels => {
+  if (correctionReasons.length === 1 && correctionReasons[0] === RECORD_CORRECTION_REASON.OTHER) {
+    return {
+      label: 'Record information',
+      hint: 'Provide the correct information as indicated by UKEF',
+    };
+  }
+
+  return {
+    label: 'Additional comments (optional)',
+    hint: 'For example, if you are disputing the change, explain why below',
   };
 };

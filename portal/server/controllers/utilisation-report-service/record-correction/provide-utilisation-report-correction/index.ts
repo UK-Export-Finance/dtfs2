@@ -4,7 +4,7 @@ import api from '../../../../api';
 import { asLoggedInUserSession } from '../../../../helpers/express-session';
 import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
-import { mapToCorrectionRequestDetailsViewModel } from './helpers';
+import { getAdditionalCommentsFieldLabels, mapToCorrectionRequestDetailsViewModel } from './helpers';
 
 export type GetProvideUtilisationReportCorrection = Request & {
   params: {
@@ -20,6 +20,7 @@ const renderProvideUtilisationReportCorrectionPage = (res: Response, viewModel: 
  * @param req - The request object
  * @param res - The response object
  */
+// TODO: Update unit tests.
 export const getProvideUtilisationReportCorrection = async (req: GetProvideUtilisationReportCorrection, res: Response) => {
   const { user, userToken } = asLoggedInUserSession(req.session);
 
@@ -32,10 +33,14 @@ export const getProvideUtilisationReportCorrection = async (req: GetProvideUtili
 
     const paymentCurrencyOptions = mapCurrenciesToRadioItems();
 
+    const { label: additionalCommentsLabel, hint: additionalCommentsHint } = getAdditionalCommentsFieldLabels(feeRecordCorrection.reasons);
+
     return renderProvideUtilisationReportCorrectionPage(res, {
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       correctionRequestDetails: mapToCorrectionRequestDetailsViewModel(feeRecordCorrection),
       paymentCurrencyOptions,
+      additionalCommentsLabel,
+      additionalCommentsHint,
     });
   } catch (error) {
     console.error('Failed to get provide utilisation report correction %o', error);
