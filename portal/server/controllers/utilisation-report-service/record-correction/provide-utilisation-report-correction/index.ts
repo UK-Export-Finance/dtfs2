@@ -20,7 +20,6 @@ const renderProvideUtilisationReportCorrectionPage = (res: Response, viewModel: 
  * @param req - The request object
  * @param res - The response object
  */
-// TODO: Update unit tests.
 export const getProvideUtilisationReportCorrection = async (req: GetProvideUtilisationReportCorrection, res: Response) => {
   const { user, userToken } = asLoggedInUserSession(req.session);
 

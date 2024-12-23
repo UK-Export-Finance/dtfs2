@@ -21,12 +21,31 @@ export const mapToCorrectionRequestDetailsViewModel = (correctionResponse: GetFe
   };
 };
 
+/**
+ * Type definition for labels used in the additional comments field.
+ * Contains a label string and hint text string.
+ */
 type AdditionalCommentsFieldLabels = {
   label: string;
   hint: string;
 };
 
-// TODO: Add unit tests.
+/**
+ * Labels for when the additional comments field is required.
+ */
+export const requiredAdditionalCommentsFieldLabels: AdditionalCommentsFieldLabels = {
+  label: 'Record information',
+  hint: 'Provide the correct information as indicated by UKEF',
+};
+
+/**
+ * Labels for when the additional comments field is optional.
+ */
+export const optionalAdditionalCommentsFieldLabels: AdditionalCommentsFieldLabels = {
+  label: 'Additional comments (optional)',
+  hint: 'For example, if you are disputing the change, explain why below',
+};
+
 /**
  * Gets the labels for the additional comments field based on the correction reasons.
  * If there is only one reason and it is {@link{RECORD_CORRECTION_REASON.OTHER}},
@@ -36,15 +55,13 @@ type AdditionalCommentsFieldLabels = {
  * @returns The labels object containing label and hint text
  */
 export const getAdditionalCommentsFieldLabels = (correctionReasons: RecordCorrectionReason[]): AdditionalCommentsFieldLabels => {
-  if (correctionReasons.length === 1 && correctionReasons[0] === RECORD_CORRECTION_REASON.OTHER) {
-    return {
-      label: 'Record information',
-      hint: 'Provide the correct information as indicated by UKEF',
-    };
+  if (correctionReasons.length === 0) {
+    throw new Error('Correction must have at least one reason');
   }
 
-  return {
-    label: 'Additional comments (optional)',
-    hint: 'For example, if you are disputing the change, explain why below',
-  };
+  if (correctionReasons.length === 1 && correctionReasons[0] === RECORD_CORRECTION_REASON.OTHER) {
+    return requiredAdditionalCommentsFieldLabels;
+  }
+
+  return optionalAdditionalCommentsFieldLabels;
 };

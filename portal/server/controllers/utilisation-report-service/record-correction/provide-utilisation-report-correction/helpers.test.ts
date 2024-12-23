@@ -1,5 +1,17 @@
-import { CURRENCY, CurrencyAndAmount, getFormattedCurrencyAndAmount, mapReasonToDisplayValue, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
-import { mapToCorrectionRequestDetailsViewModel } from './helpers';
+import {
+  CURRENCY,
+  CurrencyAndAmount,
+  getFormattedCurrencyAndAmount,
+  mapReasonToDisplayValue,
+  RECORD_CORRECTION_REASON,
+  RecordCorrectionReason,
+} from '@ukef/dtfs2-common';
+import {
+  getAdditionalCommentsFieldLabels,
+  mapToCorrectionRequestDetailsViewModel,
+  optionalAdditionalCommentsFieldLabels,
+  requiredAdditionalCommentsFieldLabels,
+} from './helpers';
 import { aGetFeeRecordCorrectionResponseBody } from '../../../../../test-helpers/test-data/get-fee-record-correction-response';
 import { GetFeeRecordCorrectionResponseBody } from '../../../../api-response-types';
 import { CorrectionRequestDetailsViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
@@ -82,6 +94,70 @@ describe('provide-utilisation-report-correction helpers', () => {
 
         // Assert
         expect(response.errorTypeHeader).toEqual(expectedErrorTypeHeader);
+      });
+    });
+  });
+
+  describe('getAdditionalCommentsFieldLabels', () => {
+    describe(`when the fee record correction has one reason and it is '${RECORD_CORRECTION_REASON.OTHER}`, () => {
+      it('should return the "required" field labels', () => {
+        // Arrange
+        const reasons = [RECORD_CORRECTION_REASON.OTHER];
+
+        // Act
+        const result = getAdditionalCommentsFieldLabels(reasons);
+
+        // Assert
+        expect(result).toEqual(requiredAdditionalCommentsFieldLabels);
+      });
+    });
+
+    describe(`when the fee record correction has one reason and it is not '${RECORD_CORRECTION_REASON.OTHER}`, () => {
+      it('should return the "optional" field labels', () => {
+        // Arrange
+        const reasons = [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT];
+
+        // Act
+        const result = getAdditionalCommentsFieldLabels(reasons);
+
+        // Assert
+        expect(result).toEqual(optionalAdditionalCommentsFieldLabels);
+      });
+    });
+
+    describe(`when the fee record correction has multiple reasons and not including '${RECORD_CORRECTION_REASON.OTHER}`, () => {
+      it('should return the "optional" field labels', () => {
+        // Arrange
+        const reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT];
+
+        // Act
+        const result = getAdditionalCommentsFieldLabels(reasons);
+
+        // Assert
+        expect(result).toEqual(optionalAdditionalCommentsFieldLabels);
+      });
+    });
+
+    describe(`when the fee record correction has multiple reasons including '${RECORD_CORRECTION_REASON.OTHER}'`, () => {
+      it('should return the "optional" field labels', () => {
+        // Arrange
+        const reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER];
+
+        // Act
+        const result = getAdditionalCommentsFieldLabels(reasons);
+
+        // Assert
+        expect(result).toEqual(optionalAdditionalCommentsFieldLabels);
+      });
+    });
+
+    describe('when the fee record correction has no reasons', () => {
+      it('should throw an error', () => {
+        // Arrange
+        const reasons: RecordCorrectionReason[] = [];
+
+        // Assert
+        expect(() => getAdditionalCommentsFieldLabels(reasons)).toThrow('Correction must have at least one reason');
       });
     });
   });
