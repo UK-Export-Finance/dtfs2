@@ -128,6 +128,9 @@ context('Clone GEF (AIN) deal', () => {
     it('should clone submitted to UKEF AIN deal and reset issueDate on facilities table to -', () => {
       cy.login(BANK1_CHECKER1);
       cy.visit(relative(`/gef/application-details/${AINdealId}`));
+      cy.document().then((doc) => {
+        cy.task('htmlLog', doc.documentElement.outerHTML);
+      });
       cy.clickSubmitButton();
       submitToUkef.confirmSubmissionCheckbox().click();
       cy.clickSubmitButton();

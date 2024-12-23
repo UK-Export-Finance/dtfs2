@@ -38,6 +38,12 @@ module.exports = {
       return null;
     };
 
+    const htmlLog = (message) => {
+      // eslint-disable-next-line no-console
+      console.log(message);
+      return null;
+    };
+
     const getUserFromDbByEmail = async (email) => {
       const users = await getUsersCollection();
       return users.findOne({ email: { $eq: email } });
@@ -286,6 +292,7 @@ module.exports = {
 
     return {
       log,
+      htmlLog,
       getUserFromDbByEmail,
       getUserFromDbByUsername,
       overridePortalUserSignInTokenWithValidTokenByUsername,
