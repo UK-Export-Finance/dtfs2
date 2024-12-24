@@ -39,6 +39,9 @@ describe('mapTeamMembers', () => {
     expect(api.findTeamMembers).toHaveBeenCalledWith(req.params.teamId);
     expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
     expect(res._getData()).toEqual(expectedMembers);
+
+    expect(res._getData()).not.toHaveProperty('status');
+    expect(res._getData()).not.toHaveProperty('data');
   });
 
   it(`should return ${HttpStatusCode.BadRequest} for an invalid team identifier`, async () => {
@@ -56,6 +59,7 @@ describe('mapTeamMembers', () => {
     // Assert
     expect(api.findTeamMembers).toHaveBeenCalledWith(mockInvalidReq.params.teamId);
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+
     expect(res._getData().status).toBe(HttpStatusCode.BadRequest);
     expect(res._getData().data).toEqual('Invalid team id provided');
   });
@@ -69,6 +73,7 @@ describe('mapTeamMembers', () => {
 
     // Assert
     expect(api.findTeamMembers).toHaveBeenCalledWith(req.params.teamId);
+
     expect(console.error).toHaveBeenCalledWith('An error occurred while mapping TFM team members %o', new Error('Mock error'));
     expect(res.statusCode).toBe(HttpStatusCode.InternalServerError);
   });

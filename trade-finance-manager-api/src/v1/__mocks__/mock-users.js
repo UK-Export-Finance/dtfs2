@@ -57,7 +57,6 @@ const MOCK_USERS = [
     status: USER_STATUS.ACTIVE,
   },
   {
-    _id: '6051d94564494924d38ce128',
     username: 'PIM_USER_1',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -68,7 +67,6 @@ const MOCK_USERS = [
     status: USER_STATUS.ACTIVE,
   },
   {
-    _id: '6051d94564494924d38ce129',
     username: 'PDC_READ_USER',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -79,7 +77,6 @@ const MOCK_USERS = [
     status: USER_STATUS.ACTIVE,
   },
   {
-    _id: '6051d94564494924d38ce130',
     username: 'PDC_RECONCILE_USER',
     password: 'AbC!2345',
     email: 'test@testing.com',
