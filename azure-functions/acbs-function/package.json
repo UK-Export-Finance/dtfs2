@@ -44,7 +44,7 @@
     "lodash": "^4.17.21"
   },
   "engines": {
-    "node": ">=22.8.0",
+    "node": ">=23.4.0",
     "npm": ">=10.8.2"
   },
   "engineStrict": true
