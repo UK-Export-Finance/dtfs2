@@ -1,9 +1,3 @@
-import relative from '../relativeURL';
-import { form } from '../partials';
-import cloneGEFDeal from '../pages/clone-deal';
-import nameApplication from '../pages/name-application';
-import mandatoryCriteria from '../pages/mandatory-criteria';
-import statusBanner from '../pages/application-status-banner';
 import CONSTANTS from '../../fixtures/constants';
 import { anUnissuedCashFacility } from '../../../../e2e-fixtures/mock-gef-facilities';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
@@ -13,6 +7,9 @@ context('Clone GEF (MIN) deal', () => {
   let MINdealId;
   let token;
   let facilityOneId;
+
+  const clonedDealName = 'Cloned MIN deal';
+
   before(() => {
     cy.apiLogin(BANK1_MAKER1)
       .then((t) => {
@@ -31,24 +28,19 @@ context('Clone GEF (MIN) deal', () => {
       });
   });
   describe('Clone MIN deal', () => {
+    before(() => {
+      cy.cloneDeal(MINdealId, clonedDealName);
+    });
+
     beforeEach(() => {
       cy.saveSession();
       cy.login(BANK1_MAKER1);
-      cy.visit(relative(`/gef/application-details/${MINdealId}`));
+      cy.get('table.govuk-table tr').eq(1).find('td').eq(1).find('.govuk-link').click();
     });
 
-    it('should clone a GEF (MIN) deal', () => {
-      cloneGEFDeal.cloneGefDealLink().click();
-      cy.url().should('eq', relative(`/gef/application-details/${MINdealId}/clone`));
-      mandatoryCriteria.trueRadio().click();
-      form().submit();
-      cy.url().should('eq', relative(`/gef/application-details/${MINdealId}/clone/name-application`));
-      cy.keyboardInput(nameApplication.internalRef(), 'Cloned MIN deal');
-      form().submit();
-
-      cy.get('[data-cy="success-message-link"]').click();
-      statusBanner.bannerStatus().contains('Draft');
-      statusBanner.bannerCheckedBy().contains('-');
+    it('should validate the information in the banner and deal', () => {
+      cy.checkClonedDealBannerAndDeal(clonedDealName, 'Completed');
+      cy.get('[data-cy="facility-summary-list"]').eq(0).find('.govuk-summary-list__row').eq(1).find('.govuk-summary-list__key').contains('Stage');
     });
   });
 });
