@@ -3,32 +3,30 @@ const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../../fixtures/constants');
 const { dashboardDeals } = require('../../../../pages');
 const { dashboardFilters } = require('../../../../partials');
-const { BSS_DEAL_DRAFT, GEF_DEAL_DRAFT } = require('../../fixtures');
+const { GEF_DEAL_DRAFT } = require('../../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
-context('Dashboard Deals filters - filter by dealType/product', () => {
-  const ALL_DEALS = [];
+const EXPECTED_DEALS_LENGTH = {
+  BSS: 1,
+  GEF: 1,
+};
 
+context('Dashboard Deals filters - filter by dealType/product', () => {
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.createBssEwcsDeal();
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1);
   });
 
   describe('BSS', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
@@ -70,19 +68,15 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
     });
 
     it('renders only BSS deals', () => {
-      const ALL_BSS_DEALS = ALL_DEALS.filter(({ dealType }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
-      dashboardDeals.rows().should('have.length', ALL_BSS_DEALS.length);
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.BSS);
 
-      const firstBssDeal = ALL_BSS_DEALS[0];
-
-      dashboardDeals.row.product(firstBssDeal._id).should('have.text', CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
+      cy.assertText(dashboardDeals.rowIndex.product(), CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
     });
   });
 
   describe('GEF', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
@@ -131,12 +125,9 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
     });
 
     it('renders only GEF deals', () => {
-      const ALL_GEF_DEALS = ALL_DEALS.filter(({ dealType }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF);
-      dashboardDeals.rows().should('have.length', ALL_GEF_DEALS.length);
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.GEF);
 
-      const firstGefDeal = ALL_GEF_DEALS[0];
-
-      dashboardDeals.row.product(firstGefDeal._id).should('have.text', CONSTANTS.DEALS.DEAL_TYPE.GEF);
+      cy.assertText(dashboardDeals.rowIndex.product(), CONSTANTS.DEALS.DEAL_TYPE.GEF);
     });
   });
 });

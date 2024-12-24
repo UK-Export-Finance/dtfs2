@@ -65,9 +65,8 @@ context('View dashboard deals as a maker', () => {
 
   it('BSS and GEF deals render on the dashboard with correct values', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
 
-    const { exporter, bankRef, product, status, type, updated } = dashboardDeals.row;
+    const { updated } = dashboardDeals.rowIndex;
 
     // should see all deals in the maker's bank
     cy.assertText(dashboardDeals.totalItems(), `(${ALL_BANK1_DEALS.length} items)`);
@@ -76,19 +75,19 @@ context('View dashboard deals as a maker', () => {
     // first deal should be the most recently updated (with our test data - GEF)
     //---------------------------------------------------------------
 
-    cy.get('table tr').eq(1).as('firstRow').find(`[data-cy="deal__status--${gefDeal._id}"]`).should('exist');
+    cy.assertText(dashboardDeals.rowIndex.exporter(), GEF_DEAL_BANK_2_MAKER_2.exporter.companyName);
 
-    cy.assertText(exporter(gefDealId), gefDeal.exporter.companyName);
+    // cy.assertText(bankRef(), gefDeal.bankInternalRefName);
+    cy.assertText(dashboardDeals.rowIndex.bankRef(2), GEF_DEAL_BANK_2_MAKER_2.bankInternalRefName);
 
-    cy.assertText(bankRef(gefDealId), gefDeal.bankInternalRefName);
+    cy.assertText(dashboardDeals.rowIndex.product(), CONSTANTS.DEALS.DEAL_TYPE.GEF);
 
-    cy.assertText(product(gefDealId), gefDeal.dealType);
+    cy.assertText(dashboardDeals.rowIndex.type(), 'Automatic Inclusion Notice');
 
-    cy.assertText(type(gefDealId), '-');
-
-    cy.assertText(status(gefDealId), gefDeal.status);
+    cy.assertText(dashboardDeals.rowIndex.status(), gefDeal.status);
 
     updated(gefDealId)
+      .should('exist')
       .invoke('text')
       .then((text) => {
         expect(text.trim()).to.match(regexDateTime);
@@ -97,17 +96,15 @@ context('View dashboard deals as a maker', () => {
     //---------------------------------------------------------------
     // second deal (BSS)
     //---------------------------------------------------------------
-    cy.get('table tr').eq(2).find(`[data-cy="deal__status--${bssDealId}"]`).should('exist');
+    cy.assertText(dashboardDeals.rowIndex.exporter(), bssDeal.exporter.companyName);
 
-    cy.assertText(exporter(bssDealId), bssDeal.exporter.companyName);
+    cy.assertText(dashboardDeals.rowIndex.bankRef(1), bssDeal.bankInternalRefName);
 
-    cy.assertText(bankRef(bssDealId), bssDeal.bankInternalRefName);
+    cy.assertText(dashboardDeals.rowIndex.product(2), bssDeal.dealType);
 
-    cy.assertText(product(bssDealId), bssDeal.dealType);
+    cy.assertText(dashboardDeals.rowIndex.type(), bssDeal.submissionType);
 
-    cy.assertText(type(bssDealId), bssDeal.submissionType);
-
-    cy.assertText(status(bssDealId), bssDeal.status);
+    cy.assertText(dashboardDeals.rowIndex.status(), bssDeal.status);
 
     updated(bssDealId)
       .invoke('text')
@@ -118,7 +115,6 @@ context('View dashboard deals as a maker', () => {
 
   it('deal links go to correct deal page/URL depending on dealType', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
 
     // GEF link
     dashboardDeals.row.link(gefDealId).click();
@@ -135,7 +131,6 @@ context('View dashboard deals as a maker', () => {
   // TODO: DTFS2-5372 - fix.
   it('should not show deals created by other banks', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
 
     cy.assertText(dashboardDeals.totalItems(), `(${ALL_BANK1_DEALS.length} items)`);
 

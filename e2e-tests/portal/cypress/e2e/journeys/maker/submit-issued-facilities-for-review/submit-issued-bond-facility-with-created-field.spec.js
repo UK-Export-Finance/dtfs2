@@ -1,3 +1,5 @@
+import { add } from 'date-fns';
+
 const pages = require('../../../pages');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { FACILITY } = require('../../../../fixtures/constants');
@@ -6,24 +8,37 @@ const { oneMonth } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
+const tomorrow = add(new Date(), { days: 1 });
+const startDate = {
+  day: tomorrow.getDate(),
+  month: tomorrow.getMonth(),
+  year: tomorrow.getFullYear(),
+};
+
 context('Issue Bond Form - Submit issued bond with inserted element on page', () => {
-  let deal;
   let dealId;
+
   const dealFacilities = {
     bonds: [],
   };
 
   before(() => {
-    cy.insertOneDeal(dealWithNotStartedFacilityStatuses, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
-      dealId = deal._id;
+    cy.createBssEwcsDeal();
 
-      const { mockFacilities } = dealWithNotStartedFacilityStatuses;
+    cy.getDealIdFromUrl(dealId).then((id) => {
+      dealId = id;
 
-      const bonds = mockFacilities.filter((f) => f.type === FACILITY.FACILITY_TYPE.BOND);
+      cy.url().then((url) => {
+        const urlParts = url.split('/');
+        dealId = urlParts[urlParts.length - 1];
 
-      cy.createFacilities(dealId, bonds, BANK1_MAKER1).then((createdFacilities) => {
-        dealFacilities.bonds = createdFacilities;
+        const { mockFacilities } = dealWithNotStartedFacilityStatuses;
+
+        const bonds = mockFacilities.filter((f) => f.type === FACILITY.FACILITY_TYPE.BOND);
+
+        cy.createFacilities(dealId, bonds, BANK1_MAKER1).then((createdFacilities) => {
+          dealFacilities.bonds = createdFacilities;
+        });
       });
     });
   });
@@ -35,16 +50,22 @@ context('Issue Bond Form - Submit issued bond with inserted element on page', ()
   });
 
   it("should not insert created element's data into the bond", () => {
-    cy.login(BANK1_MAKER1);
-    pages.contract.visit(deal);
+    cy.loginGoToDealPage(BANK1_MAKER1);
+    pages.dashboardDeals.visit();
+    cy.clickDashboardDealLink();
+
     pages.contract.proceedToReview().should('not.exist');
 
     const bondId = dealFacilities.bonds[0]._id;
     const bondRow = pages.contract.bondTransactionsTable.row(bondId);
 
-    bondRow.issueFacilityLink().click();
+    bondRow.uniqueNumberLink().click();
 
-    cy.completeDateFormFields({ idPrefix: 'issuedDate' });
+    pages.bondDetails.facilityStageIssuedInput().click();
+
+    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateDayInput(), startDate.day);
+    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateMonthInput(), startDate.month);
+    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateYearInput(), startDate.year);
 
     cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneMonth.date });
 
@@ -55,7 +76,7 @@ context('Issue Bond Form - Submit issued bond with inserted element on page', ()
 
     cy.clickSubmitButton();
 
-    cy.getFacility(deal._id, bondId, BANK1_MAKER1).then((bond) => {
+    cy.getFacility(dealId, bondId, BANK1_MAKER1).then((bond) => {
       // check bond does not contain inserted field
       expect(bond.intruder).to.be.an('undefined');
     });
