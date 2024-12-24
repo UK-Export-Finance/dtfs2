@@ -71,7 +71,6 @@ function buildBody(app, previewMode, user) {
     user,
     hasChangedFacilities,
   };
-
   const appBody = {
     application: app,
     status: app.status,
@@ -116,6 +115,9 @@ function buildBody(app, previewMode, user) {
     dealId: app.id,
     makerCanSubmit: app.canSubmit,
     checkerCanSubmit: app.checkerCanSubmit,
+    checkerCanSubmit1: app.checkerCanSubmit1,
+    checkerCanSubmit2: app.checkerCanSubmit2,
+    checkerCanSubmit3: app.checkerCanSubmit3,
     makerCanReSubmit: makerCanReSubmit(userSession, app),
     ukefDecision: app.ukefDecision,
     unissuedFacilitiesPresent,

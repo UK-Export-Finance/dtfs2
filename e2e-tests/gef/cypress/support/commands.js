@@ -28,6 +28,13 @@ Cypress.Commands.add('loadData', require('./commands/loadData'));
 Cypress.Commands.add('automaticEligibilityCriteria', require('./commands/automaticEligibilityCriteria'));
 Cypress.Commands.add('manualEligibilityCriteria', require('./commands/manualEligibilityCriteria'));
 Cypress.Commands.add('completeDateFormFields', require('./commands/completeDateFormFields'));
+Cypress.Commands.add('submitMockDataLoaderDealToChecker', require('./commands/submit-mock-data-loader-deal-to-checker'));
+Cypress.Commands.add('submitMockDataLoaderDealToUkef', require('./commands/submit-mock-data-loader-deal-to-ukef'));
+Cypress.Commands.add('completeManualInclusionSupportingInfoSections', require('./commands/complete-manual-inclusion-supporting-info-sections'));
+
+Cypress.Commands.add('checkCloneDealLink', require('./commands/clone/check-clone-deal-link'));
+Cypress.Commands.add('cloneDeal', require('./commands/clone/clone-deal'));
+Cypress.Commands.add('checkClonedDealBannerAndDeal', require('./commands/clone/check-cloned-deal-banner-and-deal'));
 
 Cypress.Commands.add('apiLogin', api.login);
 Cypress.Commands.add('apiFetchAllApplications', api.fetchAllApplications);

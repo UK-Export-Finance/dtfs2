@@ -32,6 +32,21 @@
     {% include "includes/application-details/supporting-information.njk" %}
   {% endif %}
 
+  <h1>CAN SUBMIT</h1>
+  <h2> {{ checkerCanSubmit }}</h2>
+
+  <h1>CAN SUBMIT1</h1>
+  <h2> {{ checkerCanSubmit1 }}</h2>
+
+  <h1>CAN SUBMIT2</h1>
+  <h2> {{ checkerCanSubmit2 }}</h2>
+
+  <h1>CAN SUBMIT3</h1>
+  <h2> {{ checkerCanSubmit3 }}</h2>
+
+    <h1>NOO</h1>
+  <h2> {{ makerCanReSubmit }}</h2>
+
   {% if makerCanReSubmit %}
     <form method="post" data-cy="form">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
