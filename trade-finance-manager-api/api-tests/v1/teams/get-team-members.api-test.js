@@ -43,16 +43,19 @@ describe('GET /teams/:teamId/members', () => {
   describe.each(tfmTeams)('for teamId %s', (teamId) => {
     it(`should returns a ${HttpStatusCode.Ok} response with only the _id, first name, and last name of active team members only returned by DTFS Central`, async () => {
       // Arrange
-      const usersReturnedByDtfsCentral = MOCK_USERS.map(({ _id, firstName, lastName, status }, index) => ({
-        _id,
-        username: `${firstName}.${lastName}.${index}@example.com`,
-        email: `${firstName}.${lastName}.${index}@example.com`,
-        teams: [teamId],
-        timezone: 'Europe/London',
-        firstName,
-        lastName,
-        status,
-      }));
+      const usersReturnedByDtfsCentral = MOCK_USERS.map(({ _id, firstName, lastName, status }, index) => {
+        const email = `${firstName}.${lastName}.${index}@example.com`;
+        return {
+          _id,
+          username: email,
+          email,
+          teams: [teamId],
+          timezone: 'Europe/London',
+          firstName,
+          lastName,
+          status,
+        };
+      });
 
       const teamMembers = MOCK_USERS.filter(({ status }) => status === USER_STATUS.ACTIVE).map(({ _id, firstName, lastName }) => ({
         _id,
