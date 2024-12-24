@@ -39,6 +39,9 @@ context('Clone GEF (MIN) deal', () => {
     });
 
     it('should validate the information in the banner and deal', () => {
+      cy.document().then((doc) => {
+        cy.task('htmlLog', doc.documentElement.outerHTML);
+      });
       cy.checkClonedDealBannerAndDeal(clonedDealName, 'Completed');
       cy.get('[data-cy="facility-summary-list"]').eq(0).find('.govuk-summary-list__row').eq(1).find('.govuk-summary-list__key').contains('Stage');
     });
