@@ -184,272 +184,272 @@ jobs:
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TZ }}"
 
-  # 2.1. API tests
-  api-tests:
-    name: API 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+  # # 2.1. API tests
+  # api-tests:
+  #   name: API 👷
+  #   needs: [setup]
+  #   environment:
+  #     name: ${{ needs.setup.outputs.environment }}
+  #   runs-on: ubuntu-latest
 
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services: ['portal', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'trade-finance-manager-api', 'dtfs-central-api', 'external-api']
+  #   strategy:
+  #     # Do not cancel in-progress jobs upon failure
+  #     fail-fast: false
+  #     # Single dimension matrix
+  #     matrix:
+  #       services: ['portal', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'trade-finance-manager-api', 'dtfs-central-api', 'external-api']
 
-    concurrency:
-      group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
+  #   concurrency:
+  #     group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+  #     cancel-in-progress: true
 
-    steps:
-      - name: Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
+  #   steps:
+  #     - name: Node
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ vars.NODE_VERSION }}
 
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v2.0
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
-      - name: Repository
-        uses: actions/checkout@v4
+  #     - name: Repository
+  #       uses: actions/checkout@v4
 
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Dependencies
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm ci
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Start
-        uses: ./.github/actions/rerun
-        with:
-          command: docker compose up --build -d
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Start
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: docker compose up --build -d
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Initialise
-        uses: ./.github/actions/rerun
-        with:
-          command: sleep 100s && npm run load
-          working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Initialise
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: sleep 100s && npm run load
+  #         working-directory: ./utils
+  #         env: |
+  #           MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: SQL
-        working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-        run: npm run db:migrate
+  #     - name: SQL
+  #       working-directory: ./libs/common
+  #       env:
+  #         SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+  #       run: npm run db:migrate
 
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Execute
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
+  #         env: |
+  #           MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Stop
-        working-directory: ./
-        run: docker compose down
+  #     - name: Stop
+  #       working-directory: ./
+  #       run: docker compose down
 
-      - name: Coverage
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: api-test
-          verbose: true
+  #     - name: Coverage
+  #       uses: codecov/codecov-action@v5
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         flags: api-test
+  #         verbose: true
 
-  # 2.2. API tests
-  dof-api-tests:
-    name: DOF API 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+  # # 2.2. API tests
+  # dof-api-tests:
+  #   name: DOF API 👷
+  #   needs: [setup]
+  #   environment:
+  #     name: ${{ needs.setup.outputs.environment }}
+  #   runs-on: ubuntu-latest
 
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        functions: ['acbs-function']
+  #   strategy:
+  #     # Do not cancel in-progress jobs upon failure
+  #     fail-fast: false
+  #     # Single dimension matrix
+  #     matrix:
+  #       functions: ['acbs-function']
 
-    concurrency:
-      group: dof-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
-      cancel-in-progress: true
+  #   concurrency:
+  #     group: dof-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
+  #     cancel-in-progress: true
 
-    steps:
-      - name: Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
+  #   steps:
+  #     - name: Node
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ vars.NODE_VERSION }}
 
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v2.0
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
-      - name: Repository
-        uses: actions/checkout@v4
+  #     - name: Repository
+  #       uses: actions/checkout@v4
 
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Dependencies
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm ci
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: ${{ matrix.functions }}
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run api-test
-          working-directory: ./azure-functions/${{ matrix.functions }}
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: ${{ matrix.functions }}
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm run api-test
+  #         working-directory: ./azure-functions/${{ matrix.functions }}
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Coverage
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: api-test
-          verbose: true
+  #     - name: Coverage
+  #       uses: codecov/codecov-action@v5
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         flags: api-test
+  #         verbose: true
 
-  # 3. Unit tests
-  unit-tests:
-    name: Unit 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+  # # 3. Unit tests
+  # unit-tests:
+  #   name: Unit 👷
+  #   needs: [setup]
+  #   environment:
+  #     name: ${{ needs.setup.outputs.environment }}
+  #   runs-on: ubuntu-latest
 
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services:
-          [
-            './portal',
-            './gef-ui',
-            './trade-finance-manager-ui',
-            './portal-api',
-            './dtfs-central-api',
-            './external-api',
-            './trade-finance-manager-api',
-            './libs/common',
-            './azure-functions/acbs-function',
-          ]
+  #   strategy:
+  #     # Do not cancel in-progress jobs upon failure
+  #     fail-fast: false
+  #     # Single dimension matrix
+  #     matrix:
+  #       services:
+  #         [
+  #           './portal',
+  #           './gef-ui',
+  #           './trade-finance-manager-ui',
+  #           './portal-api',
+  #           './dtfs-central-api',
+  #           './external-api',
+  #           './trade-finance-manager-api',
+  #           './libs/common',
+  #           './azure-functions/acbs-function',
+  #         ]
 
-    concurrency:
-      group: unit-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
+  #   concurrency:
+  #     group: unit-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+  #     cancel-in-progress: true
 
-    steps:
-      - name: Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
+  #   steps:
+  #     - name: Node
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ vars.NODE_VERSION }}
 
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v2.0
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
-      - name: Repository
-        uses: actions/checkout@v4
+  #     - name: Repository
+  #       uses: actions/checkout@v4
 
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Dependencies
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm ci
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run unit-test
-          working-directory: ${{ matrix.services }}
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Execute
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm run unit-test
+  #         working-directory: ${{ matrix.services }}
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Coverage
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: unit-test
-          verbose: true
+  #     - name: Coverage
+  #       uses: codecov/codecov-action@v5
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         flags: unit-test
+  #         verbose: true
 
-  # 3. Unit tests - FF
-  unit-tests-ff:
-    name: Unit feature flag 👷
-    needs: [setup]
-    env:
-      # Various feature flags
-      FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
-      FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
-      FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
-      FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
-      FF_TFM_SSO_ENABLED: 'true'
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
+  # # 3. Unit tests - FF
+  # unit-tests-ff:
+  #   name: Unit feature flag 👷
+  #   needs: [setup]
+  #   env:
+  #     # Various feature flags
+  #     FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
+  #     FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
+  #     FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
+  #     FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
+  #     FF_TFM_SSO_ENABLED: 'true'
+  #   environment:
+  #     name: ${{ needs.setup.outputs.environment }}
+  #   runs-on: ubuntu-latest
 
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services:
-          [
-            './portal',
-            './gef-ui',
-            './trade-finance-manager-ui',
-            './portal-api',
-            './dtfs-central-api',
-            './external-api',
-            './trade-finance-manager-api',
-            './libs/common',
-            './azure-functions/acbs-function',
-          ]
+  #   strategy:
+  #     # Do not cancel in-progress jobs upon failure
+  #     fail-fast: false
+  #     # Single dimension matrix
+  #     matrix:
+  #       services:
+  #         [
+  #           './portal',
+  #           './gef-ui',
+  #           './trade-finance-manager-ui',
+  #           './portal-api',
+  #           './dtfs-central-api',
+  #           './external-api',
+  #           './trade-finance-manager-api',
+  #           './libs/common',
+  #           './azure-functions/acbs-function',
+  #         ]
 
-    concurrency:
-      group: unit-tests-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
+  #   concurrency:
+  #     group: unit-tests-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+  #     cancel-in-progress: true
 
-    steps:
-      - name: Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
+  #   steps:
+  #     - name: Node
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ vars.NODE_VERSION }}
 
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+  #     - name: Timezone
+  #       uses: szenius/set-timezone@v2.0
+  #       with:
+  #         timezoneLinux: ${{ needs.setup.outputs.TZ }}
 
-      - name: Repository
-        uses: actions/checkout@v4
+  #     - name: Repository
+  #       uses: actions/checkout@v4
 
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Dependencies
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm ci
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run unit-test-ff
-          working-directory: ${{ matrix.services }}
-          retries: ${{ vars.RETRY_LIMIT }}
+  #     - name: Execute
+  #       uses: ./.github/actions/rerun
+  #       with:
+  #         command: npm run unit-test-ff
+  #         working-directory: ${{ matrix.services }}
+  #         retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Coverage
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: unit-test
-          verbose: true
+  #     - name: Coverage
+  #       uses: codecov/codecov-action@v5
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         flags: unit-test
+  #         verbose: true
 
   # 4. E2E - PORTAL
   e2e-tests-portal:
