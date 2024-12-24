@@ -10,7 +10,7 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('Ensure proceed to review button is only visible once facilities are in eligible for submission', () => {
   beforeEach(() => {
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
   });
 
   afterEach(() => {
@@ -59,7 +59,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   it('Ensure proceed to review button is visible', () => {
-    cy.createBssEwcsDeal({ readyForCheck: true, dealType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
+    cy.createBssEwcsDeal({ fillOutAllFields: true, dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
   });
 
   it('Add an issued bond', () => {
@@ -101,7 +101,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   it('Ensure proceed to review button is visible', () => {
-    cy.createBssEwcsDeal({ readyForCheck: true, dealType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
+    cy.createBssEwcsDeal({ fillOutAllFields: true, dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
   });
 
   it('Add a partial issued (unconditional) loan', () => {

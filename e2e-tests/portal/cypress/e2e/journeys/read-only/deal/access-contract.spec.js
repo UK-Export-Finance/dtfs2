@@ -5,7 +5,7 @@ const { READ_ONLY_ALL_BANKS, ADMIN } = MOCK_USERS;
 context('A read-only role viewing a draft deal', () => {
   before(() => {
     cy.deleteDeals(ADMIN);
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
   });
 
   it('allows read only user with all bank access to view deal', () => {

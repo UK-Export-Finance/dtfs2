@@ -40,109 +40,105 @@ const endDate = {
  * @param {Boolean} readyForCheck: Conditionally complete all "maker" required forms
  * * @param {import('@ukef/dtfs2-common').DealType} createBssEwcsDealParams.dealType - ....
  */
-const createBssEwcsDeal = ({ readyForCheck = false, dealType, facilityStage, exporterCompanyName }) => {
+
+const fillBankDetails = () => {
+  cy.keyboardInput(bankDetails.bankDealId(), '123');
+  cy.keyboardInput(bankDetails.bankDealName(), 'BssDeal');
+  cy.clickSubmitButton();
+};
+
+const fillSupplierDetails = (exporterCompanyName) => {
+  contract.aboutSupplierDetailsLink().click();
+
+  if (exporterCompanyName) {
+    contractAboutSupplier.supplierType().select('Exporter');
+    cy.keyboardInput(contractAboutSupplier.supplierName(), exporterCompanyName);
+    contractAboutSupplier.supplierAddress().country().select('United Kingdom');
+    cy.keyboardInput(contractAboutSupplier.supplierAddress().line1(), 'Test');
+    cy.keyboardInput(contractAboutSupplier.supplierPostCode(), 'AB1 2CD');
+    contractAboutSupplier.supplierCorrespondenceAddressSame().click();
+    contractAboutSupplier.industrySector().select('Accommodation and food service activities');
+    contractAboutSupplier.industryClass().select('Event catering activities');
+    contractAboutSupplier.smeTypeSmall().click();
+    cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'Supply Contract Description');
+    contractAboutSupplier.notLegallyDistinct().click();
+    contractAboutSupplier.nextPage().click();
+  } else {
+    contractAboutSupplier.supplierType().select(submissionDetails['supplier-type']);
+    cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), '12345678');
+    contractAboutSupplier.supplierSearchCompaniesHouse().click();
+    contractAboutSupplier.supplierAddress().country().select('United Kingdom');
+    contractAboutSupplier.supplierCorrespondenceAddressSame().click();
+    contractAboutSupplier.smeTypeSmall().click();
+    cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'Supply Contract Description');
+    contractAboutSupplier.notLegallyDistinct().click();
+    contractAboutSupplier.nextPage().click();
+  }
+};
+
+const fillBuyerDetails = () => {
+  cy.keyboardInput(contractAboutBuyer.buyerName(), 'Buyer Name');
+  contractAboutBuyer.buyerAddress().country().select('United Kingdom');
+  cy.keyboardInput(contractAboutBuyer.buyerAddress().line1(), 'Line 1');
+  cy.keyboardInput(contractAboutBuyer.buyerAddress().line2(), 'Line 2');
+  cy.keyboardInput(contractAboutBuyer.buyerAddress().line3(), 'Line 3');
+  cy.keyboardInput(contractAboutBuyer.buyerAddress().town(), 'Town');
+  cy.keyboardInput(contractAboutBuyer.buyerAddress().postcode(), 'AB1 2CD');
+  contractAboutBuyer.destinationOfGoodsAndServices().select('United Kingdom');
+  contractAboutBuyer.nextPage().click();
+};
+
+const fillFinancialDetails = () => {
+  cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '12000');
+  contractAboutFinancial.supplyContractCurrency().select('GBP');
+  contractAboutFinancial.saveAndGoBack().click();
+};
+
+const fillEligibilityCriteria = (dealSubmissionType) => {
+  contract.eligibilityCriteriaLink().click();
+
+  const criteria = dealSubmissionType === 'BSS/EWCS' ? [true, false, true, true, true, true, true, true] : [true, true, true, true, true, true, true, true];
+
+  criteria.forEach((value, index) => {
+    if (value) {
+      eligibilityCriteria.eligibilityCriteriaTrue(index + 11).click();
+    } else {
+      eligibilityCriteria.eligibilityCriteriaFalse(index + 11).click();
+    }
+  });
+
+  eligibilityCriteria.nextPageButton().click();
+  if (dealSubmissionType === 'BSS/EWCS') {
+    eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-upload.txt');
+  }
+};
+
+const createBssEwcsDeal = ({ fillOutAllFields = false, dealSubmissionType, facilityStage, exporterCompanyName } = {}) => {
   cy.login(BANK1_MAKER1);
 
   dashboard.createNewSubmission().click();
-
-  // select BSS scheme
   selectScheme.bss().click();
   cy.clickContinueButton();
-
-  // select True before starting the application
   beforeYouStart.true().click();
   cy.clickSubmitButton();
 
-  // complete "bank details"
-  cy.keyboardInput(bankDetails.bankDealId(), '123');
-  cy.keyboardInput(bankDetails.bankDealName(), 'BssDeal');
+  fillBankDetails();
 
-  cy.clickSubmitButton();
-
-  if (readyForCheck) {
-    contract.aboutSupplierDetailsLink().click();
-
-    if (exporterCompanyName) {
-      contractAboutSupplier.supplierType().select('Exporter');
-      cy.keyboardInput(contractAboutSupplier.supplierName(), exporterCompanyName);
-      contractAboutSupplier.supplierAddress().country().select('United Kingdom');
-      cy.keyboardInput(contractAboutSupplier.supplierAddress().line1(), 'Test');
-      cy.keyboardInput(contractAboutSupplier.supplierPostCode(), 'AB1 2CD');
-      contractAboutSupplier.supplierCorrespondenceAddressSame().click();
-      contractAboutSupplier.industrySector().select('Accommodation and food service activities');
-      contractAboutSupplier.industryClass().select('Event catering activities');
-      contractAboutSupplier.smeTypeSmall().click();
-      cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'Supply Contract Description');
-      contractAboutSupplier.notLegallyDistinct().click();
-      contractAboutSupplier.nextPage().click();
-    } else {
-      // complete "about supplier"
-      contractAboutSupplier.supplierType().select(submissionDetails['supplier-type']);
-      cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), '12345678');
-      contractAboutSupplier.supplierSearchCompaniesHouse().click();
-      contractAboutSupplier.supplierAddress().country().select('United Kingdom');
-      contractAboutSupplier.supplierCorrespondenceAddressSame().click();
-      contractAboutSupplier.smeTypeSmall().click();
-      cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'Supply Contract Description');
-      contractAboutSupplier.notLegallyDistinct().click();
-      contractAboutSupplier.nextPage().click();
-    }
-
-    // complete "about buyer"
-    cy.keyboardInput(contractAboutBuyer.buyerName(), 'Buyer Name');
-    contractAboutBuyer.buyerAddress().country().select('United Kingdom');
-    cy.keyboardInput(contractAboutBuyer.buyerAddress().line1(), 'Line 1');
-    cy.keyboardInput(contractAboutBuyer.buyerAddress().line2(), 'Line 2');
-    cy.keyboardInput(contractAboutBuyer.buyerAddress().line3(), 'Line 3');
-    cy.keyboardInput(contractAboutBuyer.buyerAddress().town(), 'Town');
-    cy.keyboardInput(contractAboutBuyer.buyerAddress().postcode(), 'AB1 2CD');
-    contractAboutBuyer.destinationOfGoodsAndServices().select('United Kingdom');
-    contractAboutBuyer.nextPage().click();
-
-    // complete "financial details"
-    cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '12000');
-    contractAboutFinancial.supplyContractCurrency().select('GBP');
-    contractAboutFinancial.saveAndGoBack().click();
-
-    contract.eligibilityCriteriaLink().click();
-
-    if (dealType === 'BSS/EWCS') {
-      // complete "eligibility criteria"
-      eligibilityCriteria.eligibilityCriteriaTrue(11).click();
-      eligibilityCriteria.eligibilityCriteriaFalse(12).click();
-      eligibilityCriteria.eligibilityCriteriaTrue(13).click();
-      eligibilityCriteria.eligibilityCriteriaTrue(14).click();
-      eligibilityCriteria.eligibilityCriteriaTrue(15).click();
-      eligibilityCriteria.eligibilityCriteriaTrue(16).click();
-      eligibilityCriteria.eligibilityCriteriaTrue(17).click();
-      eligibilityCriteria.eligibilityCriteriaTrue(18).click();
-      eligibilityCriteria.nextPageButton().click();
-      eligibilityDocumentation.questionnaireFileInputUpload().attachFile('test-upload.txt');
-    } else if (dealType === 'Automatic Inclusion Notice') {
-      // complete "eligibility criteria"
-      eligibilityCriteria.eligibilityCriteriaTrue(11).click();
-      eligibilityCriteria.eligibilityCriteriaTrue(12).click();
-      eligibilityCriteria.eligibilityCriteriaTrue(13).click();
-      eligibilityCriteria.eligibilityCriteriaTrue(14).click();
-      eligibilityCriteria.eligibilityCriteriaTrue(15).click();
-      eligibilityCriteria.eligibilityCriteriaTrue(16).click();
-      eligibilityCriteria.eligibilityCriteriaTrue(17).click();
-      eligibilityCriteria.eligibilityCriteriaTrue(18).click();
-      eligibilityCriteria.nextPageButton().click();
-    }
-
+  if (fillOutAllFields) {
+    fillSupplierDetails(exporterCompanyName);
+    fillBuyerDetails();
+    fillFinancialDetails();
+    fillEligibilityCriteria(dealSubmissionType);
     cy.clickSaveGoBackButton();
 
     cy.clickAddBondButton();
 
     if (facilityStage === 'Unissued') {
-      // complete "bond details"
       bondDetails.bondTypeInput().select('Advance payment guarantee');
       bondDetails.facilityStageUnissuedInput().click();
       cy.keyboardInput(bondDetails.ukefGuaranteeInMonthsInput(), '12');
       cy.clickSubmitButton();
     } else if (facilityStage === 'Issued') {
-      // complete "bond details"
       bondDetails.bondTypeInput().select('Advance payment guarantee');
       bondDetails.facilityStageIssuedInput().click();
       cy.keyboardInput(bondDetails.requestedCoverStartDateDayInput(), startDate.day);
@@ -155,23 +151,19 @@ const createBssEwcsDeal = ({ readyForCheck = false, dealType, facilityStage, exp
       cy.clickSubmitButton();
     }
 
-    // complete "bond financial details"
     cy.keyboardInput(bondFinancialDetails.facilityValueInput(), '100000');
     bondFinancialDetails.currencySameAsSupplyContractCurrencyYesInput().click();
     cy.keyboardInput(bondFinancialDetails.riskMarginFeeInput(), '10');
     cy.keyboardInput(bondFinancialDetails.coveredPercentageInput(), '80');
     cy.clickSubmitButton();
 
-    // complete "bond fee details"
     bondFeeDetails.feeTypeAtMaturityInput().click();
     bondFeeDetails.dayCountBasis365Input().click();
     cy.clickSaveGoBackButton();
 
-    // Proceed to review button
     contract.proceedToReview().should('exist');
     contract.proceedToReview().click();
 
-    // submit to checker
     cy.keyboardInput(contractReadyForReview.comments(), 'Ready for checkers approval');
     contractReadyForReview.readyForCheckersApproval().click();
   }

@@ -7,7 +7,7 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
   before(() => {
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
   });
 
   afterEach(() => {

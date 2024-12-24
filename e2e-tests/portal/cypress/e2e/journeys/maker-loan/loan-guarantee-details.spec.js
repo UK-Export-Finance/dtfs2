@@ -29,7 +29,7 @@ context('Loan Guarantee Details', () => {
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
   });
 
   describe('Loan Guarantee title', () => {

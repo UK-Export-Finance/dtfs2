@@ -17,7 +17,7 @@ context('Admin dashboard', () => {
     // resets all facilities array
     ALL_FACILITIES.length = 0;
 
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((dealGef) => {
       const { _id: dealId } = dealGef;

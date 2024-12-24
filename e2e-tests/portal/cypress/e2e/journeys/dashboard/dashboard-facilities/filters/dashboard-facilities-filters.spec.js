@@ -15,7 +15,7 @@ context('Dashboard Deals filters', () => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       const { _id: dealId } = deal;

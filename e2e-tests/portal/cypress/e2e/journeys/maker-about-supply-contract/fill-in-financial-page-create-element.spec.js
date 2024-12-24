@@ -8,7 +8,7 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Financial page form - create element and check if inserted into deal', () => {
   before(() => {
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
 
     cy.getDealIdFromUrl();
   });

@@ -13,7 +13,7 @@ context('Issue Loan Form - Submit issued loan with inserted element on page', ()
   };
 
   before(() => {
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
 
     cy.getDealIdFromUrl().then((id) => {
       dealId = id;

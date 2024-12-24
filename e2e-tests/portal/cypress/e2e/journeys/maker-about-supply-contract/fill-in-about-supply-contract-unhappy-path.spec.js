@@ -8,7 +8,7 @@ context('about-supply-contract', () => {
   before(() => {
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
   });
 
   it('A maker picks up a deal in status=Draft, and fills in the about-supply-contract section, selecting every option that requires more data.', () => {

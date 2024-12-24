@@ -23,7 +23,7 @@ context('Issue Bond Form - Submit issued bond with inserted element on page', ()
   };
 
   before(() => {
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
 
     cy.getDealIdFromUrl(dealId).then((id) => {
       dealId = id;

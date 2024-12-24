@@ -15,7 +15,7 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1);
 

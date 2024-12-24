@@ -18,14 +18,13 @@ const endDate = {
   year: tomorrow.getFullYear() + 1,
 };
 
-// DTFS2-2839
 context(
   'Maker cannot submit a deal to checker when facility has cover start dates before the MIN submission date" (should see validation errors, submit button should not exist)',
   () => {
     before(() => {
       cy.deleteDeals(ADMIN);
 
-      cy.createBssEwcsDeal({});
+      cy.createBssEwcsDeal();
     });
 
     it('should display a validation error', () => {

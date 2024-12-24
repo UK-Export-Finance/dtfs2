@@ -7,7 +7,7 @@ context('Abandon a deal', () => {
   before(() => {
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
   });
 
   describe('when a read-only user views a draft deal', () => {

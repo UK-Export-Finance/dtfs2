@@ -18,7 +18,7 @@ context('Bond Fee Details', () => {
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
   });
 
   describe('when submitting an empty form and navigating back to `Bond Fee Details` page', () => {

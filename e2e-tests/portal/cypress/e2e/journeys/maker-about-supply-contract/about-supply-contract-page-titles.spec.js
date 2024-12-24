@@ -2,7 +2,7 @@ const { contractAboutBuyer, contractAboutFinancial, contractAboutSupplier, contr
 
 context('About supply contract page titles', () => {
   beforeEach(() => {
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
   });
 
   it('displays correct page title for buyer', () => {

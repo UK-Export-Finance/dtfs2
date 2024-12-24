@@ -11,7 +11,7 @@ context('Bond Details', () => {
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
 
     cy.loginGoToDealPage(BANK1_MAKER1);
 

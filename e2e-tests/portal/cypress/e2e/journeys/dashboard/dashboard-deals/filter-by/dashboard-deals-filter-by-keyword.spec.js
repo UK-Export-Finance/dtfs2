@@ -18,8 +18,8 @@ context('Dashboard Deals filters - filter by keyword', () => {
     cy.deleteDeals(ADMIN);
 
     cy.createBssEwcsDeal({
-      readyForCheck: true,
-      dealType: DEAL_SUBMISSION_TYPE.AIN,
+      fillOutAllFields: true,
+      dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN,
       facilityStage: FACILITY_STAGE.UNISSUED,
       exporterCompanyName: MOCK_KEYWORD,
     });

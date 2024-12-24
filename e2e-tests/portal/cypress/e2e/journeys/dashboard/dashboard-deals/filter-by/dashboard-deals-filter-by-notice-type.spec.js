@@ -18,7 +18,7 @@ context('Dashboard Deals filters - filter by submissionType/noticeType', () => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal({ readyForCheck: true, dealType: DEAL_TYPE.BSS_EWCS, facilityStage: FACILITY_STAGE.ISSUED });
+    cy.createBssEwcsDeal({ fillOutAllFields: true, dealSubmissionType: DEAL_TYPE.BSS_EWCS, facilityStage: FACILITY_STAGE.ISSUED });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       ALL_DEALS.push(deal);

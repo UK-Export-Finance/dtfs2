@@ -14,7 +14,7 @@ context('Clone a deal', () => {
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
     cy.getDealIdFromUrl(dealId).then((id) => {
       dealId = id;
 

@@ -10,7 +10,7 @@ context('Supply contract form - create element and check if inserted into deal',
   before(() => {
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
 
     cy.getDealIdFromUrl();
   });

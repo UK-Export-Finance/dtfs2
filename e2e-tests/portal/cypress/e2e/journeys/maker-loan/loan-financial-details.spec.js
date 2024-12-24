@@ -31,7 +31,7 @@ context('Loan Financial Details', () => {
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
   });
 
   describe('Loan financial details title', () => {

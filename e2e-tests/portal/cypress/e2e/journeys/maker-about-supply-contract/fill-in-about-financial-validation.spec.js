@@ -6,7 +6,7 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('about-buyer', () => {
   before(() => {
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
   });
 
   after(() => {

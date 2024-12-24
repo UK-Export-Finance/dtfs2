@@ -23,7 +23,7 @@ context('Bond Financial Details', () => {
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal({});
+    cy.createBssEwcsDeal();
   });
 
   describe('after submitting one form field and navigating back to `Bond Financial Details` page', () => {
