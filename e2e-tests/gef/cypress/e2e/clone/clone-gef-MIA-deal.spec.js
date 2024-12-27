@@ -36,8 +36,36 @@ context('Clone GEF (MIA) deal', () => {
     });
 
     describe('when cloning the deal', () => {
+      let token;
+      let facilityId;
+
       before(() => {
         cy.cloneDeal(MIAdealId, clonedDealName);
+
+        /**
+         * Fetches all deals
+         * Finds the deal which is cloned by bankInternalRefName matching clonedDealName
+         * Finds the id of the facility which is in progress
+         */
+        cy.apiLogin(BANK1_MAKER1)
+          .then((tok) => {
+            token = tok;
+          })
+          .then(() => cy.apiFetchAllGefApplications(token))
+          .then(({ body }) => {
+            body.items.forEach((item) => {
+              /**
+               * if the deal has the clonedDealName, then find the facility in progress in this deal
+               * one facility will be in progress as was issued and had a past cover start date
+               */
+              if (item.bankInternalRefName === clonedDealName) {
+                cy.apiFetchAllFacilities(item._id, token).then((res) => {
+                  const facility = res.body.items.find((eachFacility) => eachFacility.status === 'In progress');
+                  facilityId = facility.details._id;
+                });
+              }
+            });
+          });
       });
 
       beforeEach(() => {
@@ -46,8 +74,7 @@ context('Clone GEF (MIA) deal', () => {
       });
 
       it('should validate the information in the banner and deal', () => {
-        cy.checkClonedDealBannerAndDeal(clonedDealName, 'In progress');
-        cy.get('[data-cy="facility-summary-list"]').eq(1).find('.govuk-summary-list__row').eq(1).find('.govuk-summary-list__key').contains('Stage');
+        cy.checkClonedDealBannerAndDeal(clonedDealName, facilityId);
       });
     });
   });

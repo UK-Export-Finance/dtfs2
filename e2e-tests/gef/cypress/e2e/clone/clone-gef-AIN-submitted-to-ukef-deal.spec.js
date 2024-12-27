@@ -1,6 +1,5 @@
 import relative from '../relativeURL';
 import { dashboard, dashboardSubNavigation } from '../partials';
-import applicationDetails from '../pages/application-details';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
 context('Clone GEF (AIN) deal - Submitted to UKEF', () => {
@@ -39,8 +38,36 @@ context('Clone GEF (AIN) deal - Submitted to UKEF', () => {
     });
 
     describe('when cloning the deal', () => {
+      let token;
+      let facilityId;
+
       before(() => {
         cy.cloneDeal(AINdealId, clonedDealName);
+
+        /**
+         * Fetches all deals
+         * Finds the deal which is cloned by bankInternalRefName matching clonedDealName
+         * Finds the id of the facility which is in progress
+         */
+        cy.apiLogin(BANK1_MAKER1)
+          .then((tok) => {
+            token = tok;
+          })
+          .then(() => cy.apiFetchAllGefApplications(token))
+          .then(({ body }) => {
+            body.items.forEach((item) => {
+              /**
+               * if the deal has the clonedDealName, then find the facility in progress in this deal
+               * one facility will be in progress as was issued and had a past cover start date
+               */
+              if (item.bankInternalRefName === clonedDealName) {
+                cy.apiFetchAllFacilities(item._id, token).then((res) => {
+                  const facility = res.body.items.find((eachFacility) => eachFacility.status === 'In progress');
+                  facilityId = facility.details._id;
+                });
+              }
+            });
+          });
       });
 
       beforeEach(() => {
@@ -49,26 +76,16 @@ context('Clone GEF (AIN) deal - Submitted to UKEF', () => {
       });
 
       it('should validate the information in the banner and deal', () => {
-        cy.checkClonedDealBannerAndDeal(clonedDealName, 'In progress');
+        cy.checkClonedDealBannerAndDeal(clonedDealName, facilityId);
         cy.get('[data-cy="facility-summary-list"]').eq(1).find('.govuk-summary-list__row').eq(1).find('.govuk-summary-list__key').contains('Stage');
       });
 
       it('should reset the issueDate on facilities table to -', () => {
-        applicationDetails
-          .facilitySummaryListTable(0)
-          .nameAction()
-          .invoke('attr', 'href')
-          .then((href) => {
-            // get id from href for facility
-            const hrefSplit = href.split('/');
-            const facilityId = hrefSplit[5];
-
-            dashboard().click();
-            // goes to facilities table and makes sure it's issued and no issue date so properly cloned
-            dashboardSubNavigation.facilities().click();
-            cy.get(`[data-cy="facility__bankStage--${facilityId}"]`).contains('Issued');
-            cy.get(`[data-cy="facility__issuedDate--${facilityId}"]`).contains('-');
-          });
+        dashboard().click();
+        // goes to facilities table and makes sure the cloned issued facility is Issued and has a cover start date of -
+        dashboardSubNavigation.facilities().click();
+        cy.get(`[data-cy="facility__bankStage--${facilityId}"]`).contains('Issued');
+        cy.get(`[data-cy="facility__issuedDate--${facilityId}"]`).contains('-');
       });
     });
   });
