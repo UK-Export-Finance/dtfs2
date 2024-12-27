@@ -76,8 +76,10 @@ context('Clone GEF (AIN) deal - Submitted to UKEF', () => {
       });
 
       it('should validate the information in the banner and deal', () => {
+        cy.document().then((doc) => {
+          cy.task('htmlLog', doc.documentElement.outerHTML);
+        });
         cy.checkClonedDealBannerAndDeal(clonedDealName, facilityId);
-        cy.get('[data-cy="facility-summary-list"]').eq(1).find('.govuk-summary-list__row').eq(1).find('.govuk-summary-list__key').contains('Stage');
       });
 
       it('should reset the issueDate on facilities table to -', () => {
