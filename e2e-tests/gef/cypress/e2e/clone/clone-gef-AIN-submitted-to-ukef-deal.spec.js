@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 import relative from '../relativeURL';
 import { dashboard, dashboardSubNavigation } from '../partials';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
@@ -71,14 +72,13 @@ context('Clone GEF (AIN) deal - Submitted to UKEF', () => {
       });
 
       beforeEach(() => {
+        cy.wait(60000);
         cy.login(BANK1_MAKER1);
         cy.get('table.govuk-table tr').eq(1).find('td').eq(1).find('.govuk-link').click();
       });
 
       it('should validate the information in the banner and deal', () => {
-        cy.document().then((doc) => {
-          cy.task('htmlLog', doc.documentElement.outerHTML);
-        });
+        cy.wait(60000);
         cy.checkClonedDealBannerAndDeal(clonedDealName, facilityId);
       });
 
