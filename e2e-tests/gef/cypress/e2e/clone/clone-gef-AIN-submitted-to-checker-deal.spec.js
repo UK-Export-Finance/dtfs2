@@ -36,6 +36,7 @@ context('Clone GEF (AIN) deal - Submitted to checker', () => {
   describe('when cloning the deal', () => {
     let token;
     let facilityId;
+    let allFacilities;
     let facilityLog;
 
     before(() => {
@@ -60,6 +61,7 @@ context('Clone GEF (AIN) deal - Submitted to checker', () => {
             if (item.bankInternalRefName === clonedDealName) {
               cy.apiFetchAllFacilities(item._id, token).then((res) => {
                 const facility = res.body.items.find((eachFacility) => eachFacility.status === 'In progress');
+                allFacilities = res.body.items;
                 facilityLog = facility;
                 facilityId = facility.details._id;
               });
@@ -74,6 +76,7 @@ context('Clone GEF (AIN) deal - Submitted to checker', () => {
     });
 
     it('should validate the information in the banner and deal', () => {
+      cy.task('log', `all facilities: ${JSON.stringify(allFacilities)}`);
       cy.task('log', `facility: ${JSON.stringify(facilityLog)}`);
       cy.checkClonedDealBannerAndDeal(clonedDealName, facilityId);
     });
