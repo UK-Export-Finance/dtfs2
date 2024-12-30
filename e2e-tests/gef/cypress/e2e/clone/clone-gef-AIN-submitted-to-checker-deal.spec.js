@@ -36,6 +36,7 @@ context('Clone GEF (AIN) deal - Submitted to checker', () => {
   describe('when cloning the deal', () => {
     let token;
     let facilityId;
+    let facilityLog;
 
     before(() => {
       cy.cloneDeal(AINdealId, clonedDealName);
@@ -59,8 +60,7 @@ context('Clone GEF (AIN) deal - Submitted to checker', () => {
             if (item.bankInternalRefName === clonedDealName) {
               cy.apiFetchAllFacilities(item._id, token).then((res) => {
                 const facility = res.body.items.find((eachFacility) => eachFacility.status === 'In progress');
-                // eslint-disable-next-line no-console
-                console.log('facility', facility);
+                facilityLog = facility;
                 facilityId = facility.details._id;
               });
             }
@@ -74,6 +74,8 @@ context('Clone GEF (AIN) deal - Submitted to checker', () => {
     });
 
     it('should validate the information in the banner and deal', () => {
+      // eslint-disable-next-line no-console
+      console.log(facilityLog);
       cy.checkClonedDealBannerAndDeal(clonedDealName, facilityId);
     });
   });
