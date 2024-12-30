@@ -144,9 +144,6 @@ class Application {
         application.checker = await getUserDetails({ userId: application.checkerId, userToken });
       }
 
-      application.checkerCanSubmit1 = [DEAL_STATUS.READY_FOR_APPROVAL].includes(application.status);
-      application.checkerCanSubmit2 = !application.editedBy.includes(user._id);
-      application.checkerCanSubmit3 = user.roles.includes(CHECKER);
       return application;
     } catch (error) {
       console.error('Error with GEF application model %o', error);
