@@ -64,6 +64,8 @@ context('Clone GEF (AIN) deal - Submitted to UKEF', () => {
               if (item.bankInternalRefName === clonedDealName) {
                 cy.apiFetchAllFacilities(item._id, token).then((res) => {
                   const facility = res.body.items.find((eachFacility) => eachFacility.status === 'In progress');
+                  // eslint-disable-next-line no-console
+                  console.log('facility', facility);
                   facilityId = facility.details._id;
                 });
               }
