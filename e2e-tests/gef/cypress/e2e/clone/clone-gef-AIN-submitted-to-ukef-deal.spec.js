@@ -72,13 +72,11 @@ context('Clone GEF (AIN) deal - Submitted to UKEF', () => {
       });
 
       beforeEach(() => {
-        cy.wait(60000);
         cy.login(BANK1_MAKER1);
         cy.get('table.govuk-table tr').eq(1).find('td').eq(1).find('.govuk-link').click();
       });
 
       it('should validate the information in the banner and deal', () => {
-        cy.wait(60000);
         cy.checkClonedDealBannerAndDeal(clonedDealName, facilityId);
       });
 
