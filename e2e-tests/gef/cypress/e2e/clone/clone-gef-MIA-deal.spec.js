@@ -60,7 +60,7 @@ context('Clone GEF (MIA) deal', () => {
                */
               if (item.bankInternalRefName === clonedDealName) {
                 cy.apiFetchAllFacilities(item._id, token).then((res) => {
-                  const facility = res.body.items.find((eachFacility) => eachFacility.name === 'This Contingent facility 1');
+                  const facility = res.body.items.find((eachFacility) => eachFacility.details.name === 'This Contingent facility 1');
                   facilityId = facility.details._id;
                 });
               }

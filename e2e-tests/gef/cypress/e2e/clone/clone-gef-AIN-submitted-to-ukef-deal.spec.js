@@ -41,8 +41,6 @@ context('Clone GEF (AIN) deal - Submitted to UKEF', () => {
     describe('when cloning the deal', () => {
       let token;
       let facilityId;
-      let facilityLog;
-      let allFacilities;
 
       before(() => {
         cy.cloneDeal(AINdealId, clonedDealName);
@@ -65,9 +63,7 @@ context('Clone GEF (AIN) deal - Submitted to UKEF', () => {
                */
               if (item.bankInternalRefName === clonedDealName) {
                 cy.apiFetchAllFacilities(item._id, token).then((res) => {
-                  const facility = res.body.items.find((eachFacility) => eachFacility.name === 'This Contingent facility 1');
-                  allFacilities = res.body.items;
-                  facilityLog = facility;
+                  const facility = res.body.items.find((eachFacility) => eachFacility.details.name === 'This Contingent facility 1');
                   facilityId = facility.details._id;
                 });
               }
@@ -83,8 +79,6 @@ context('Clone GEF (AIN) deal - Submitted to UKEF', () => {
 
       it('should validate the information in the banner and deal', () => {
         cy.wait(60000);
-        cy.task('log', `all facilities: ${JSON.stringify(allFacilities)}`);
-        cy.task('log', `facility: ${JSON.stringify(facilityLog)}`);
         cy.checkClonedDealBannerAndDeal(clonedDealName, facilityId);
       });
 
