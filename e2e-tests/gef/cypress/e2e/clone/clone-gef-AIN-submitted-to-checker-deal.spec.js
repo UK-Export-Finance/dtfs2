@@ -74,8 +74,7 @@ context('Clone GEF (AIN) deal - Submitted to checker', () => {
     });
 
     it('should validate the information in the banner and deal', () => {
-      // eslint-disable-next-line no-console
-      console.log(facilityLog);
+      cy.task('log', `facility: ${JSON.stringify(facilityLog)}`);
       cy.checkClonedDealBannerAndDeal(clonedDealName, facilityId);
     });
   });

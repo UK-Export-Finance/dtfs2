@@ -81,8 +81,7 @@ context('Clone GEF (AIN) deal - Submitted to UKEF', () => {
 
       it('should validate the information in the banner and deal', () => {
         cy.wait(60000);
-        // eslint-disable-next-line no-console
-        console.log('facility', facilityLog);
+        cy.task('log', `facility: ${JSON.stringify(facilityLog)}`);
         cy.checkClonedDealBannerAndDeal(clonedDealName, facilityId);
       });
 
