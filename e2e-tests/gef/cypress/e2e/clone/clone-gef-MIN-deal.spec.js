@@ -9,11 +9,12 @@ context('Clone GEF (MIN) deal', () => {
   let facilityOneId;
 
   const clonedDealName = 'Cloned MIN deal';
+  const facilityName = 'This Contingent facility 1';
 
   const facilityToInsert = {
     ...anIssuedContingentFacility(),
     shouldCoverStartOnSubmission: false,
-    name: 'This Contingent facility 1',
+    name: facilityName,
   };
 
   before(() => {
@@ -58,7 +59,7 @@ context('Clone GEF (MIN) deal', () => {
              */
             if (item.bankInternalRefName === clonedDealName) {
               cy.apiFetchAllFacilities(item._id, token).then((res) => {
-                const facility = res.body.items.find((eachFacility) => eachFacility.details.name === 'This Contingent facility 1');
+                const facility = res.body.items.find((eachFacility) => eachFacility.details.name === facilityName);
                 facilityId = facility.details._id;
               });
             }
