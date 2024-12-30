@@ -648,7 +648,7 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             TZ=${{ vars.TIMEZONE }}
-          retries: ${{ vars.RETRY_LIMIT }}
+          retries: 1
 
   # #6. E2E - TFM
   # e2e-tests-tfm:
