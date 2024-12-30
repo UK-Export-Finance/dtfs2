@@ -60,7 +60,7 @@ context('Clone GEF (AIN) deal - Submitted to checker', () => {
              */
             if (item.bankInternalRefName === clonedDealName) {
               cy.apiFetchAllFacilities(item._id, token).then((res) => {
-                const facility = res.body.items.find((eachFacility) => eachFacility.status === 'In progress');
+                const facility = res.body.items.find((eachFacility) => eachFacility.name === 'This Contingent facility 1');
                 allFacilities = res.body.items;
                 facilityLog = facility;
                 facilityId = facility.details._id;
