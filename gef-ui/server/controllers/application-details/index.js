@@ -71,6 +71,7 @@ function buildBody(app, previewMode, user) {
     user,
     hasChangedFacilities,
   };
+
   const appBody = {
     application: app,
     status: app.status,
