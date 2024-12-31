@@ -66,8 +66,6 @@ context('View dashboard deals as a maker', () => {
   it('BSS and GEF deals render on the dashboard with correct values', () => {
     cy.login(BANK1_MAKER1);
 
-    const { updated } = dashboardDeals.rowIndex;
-
     // should see all deals in the maker's bank
     cy.assertText(dashboardDeals.totalItems(), `(${ALL_BANK1_DEALS.length} items)`);
 
@@ -86,7 +84,8 @@ context('View dashboard deals as a maker', () => {
 
     cy.assertText(dashboardDeals.rowIndex.status(), gefDeal.status);
 
-    updated(gefDealId)
+    dashboardDeals.rowIndex
+      .updated(gefDealId)
       .should('exist')
       .invoke('text')
       .then((text) => {
@@ -106,7 +105,8 @@ context('View dashboard deals as a maker', () => {
 
     cy.assertText(dashboardDeals.rowIndex.status(), bssDeal.status);
 
-    updated(bssDealId)
+    dashboardDeals.rowIndex
+      .updated(bssDealId)
       .invoke('text')
       .then((text) => {
         expect(text.trim()).to.match(regexDateTime);

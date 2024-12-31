@@ -1,5 +1,3 @@
-import { add } from 'date-fns';
-
 const pages = require('../../../pages');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { FACILITY } = require('../../../../fixtures/constants');
@@ -7,13 +5,6 @@ const dealWithNotStartedFacilityStatuses = require('./dealWithNotStartedFacility
 const { oneMonth } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
-
-const tomorrow = add(new Date(), { days: 1 });
-const startDate = {
-  day: tomorrow.getDate(),
-  month: tomorrow.getMonth(),
-  year: tomorrow.getFullYear(),
-};
 
 context('Issue Bond Form - Submit issued bond with inserted element on page', () => {
   let dealId;
@@ -63,9 +54,7 @@ context('Issue Bond Form - Submit issued bond with inserted element on page', ()
 
     pages.bondDetails.facilityStageIssuedInput().click();
 
-    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateDayInput(), startDate.day);
-    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateMonthInput(), startDate.month);
-    cy.keyboardInput(pages.bondDetails.requestedCoverStartDateYearInput(), startDate.year);
+    cy.completeDateFormFields({ idPrefix: 'requestedCoverStartDate' });
 
     cy.completeDateFormFields({ idPrefix: 'coverEndDate', date: oneMonth.date });
 
