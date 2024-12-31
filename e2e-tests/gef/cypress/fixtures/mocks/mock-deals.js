@@ -213,7 +213,6 @@ export const MOCK_APPLICATION_AIN = {
 };
 
 export const MOCK_APPLICATION_MIN = {
-  version: 0,
   status: DEAL_STATUS.UKEF_ACKNOWLEDGED,
   submissionType: DEAL_SUBMISSION_TYPE.MIN,
   ukefDecisionAccepted: true,

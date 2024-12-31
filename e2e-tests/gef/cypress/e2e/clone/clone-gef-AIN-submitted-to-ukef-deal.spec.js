@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 import relative from '../relativeURL';
 import { dashboard, dashboardSubNavigation } from '../partials';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
@@ -51,8 +50,8 @@ context('Clone GEF (AIN) deal - Submitted to UKEF', () => {
          * Finds the id of the facility which is in progress
          */
         cy.apiLogin(BANK1_MAKER1)
-          .then((tok) => {
-            token = tok;
+          .then((apiToken) => {
+            token = apiToken;
           })
           .then(() => cy.apiFetchAllGefApplications(token))
           .then(({ body }) => {

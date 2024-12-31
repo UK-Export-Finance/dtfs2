@@ -47,8 +47,8 @@ context('Clone GEF (MIN) deal', () => {
        * Finds the id of the facility which is in progress
        */
       cy.apiLogin(BANK1_MAKER1)
-        .then((tok) => {
-          token = tok;
+        .then((apiToken) => {
+          token = apiToken;
         })
         .then(() => cy.apiFetchAllGefApplications(token))
         .then(({ body }) => {

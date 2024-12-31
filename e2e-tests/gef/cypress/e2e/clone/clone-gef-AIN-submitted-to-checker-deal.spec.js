@@ -46,8 +46,8 @@ context('Clone GEF (AIN) deal - Submitted to checker', () => {
        * Finds the id of the facility which is in progress
        */
       cy.apiLogin(BANK1_MAKER1)
-        .then((tok) => {
-          token = tok;
+        .then((apiToken) => {
+          token = apiToken;
         })
         .then(() => cy.apiFetchAllGefApplications(token))
         .then(({ body }) => {

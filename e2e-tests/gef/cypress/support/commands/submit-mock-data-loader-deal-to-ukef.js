@@ -1,3 +1,4 @@
+import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
 import { BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 import submitToUkef from '../../e2e/pages/submit-to-ukef';
 import relative from '../relativeURL';
@@ -10,7 +11,7 @@ import relative from '../relativeURL';
  * @param {String} dealId - the deal id
  * @param {String} dealType - if the deal if AIN or MIA
  */
-const submitMockDataLoaderDealToUkef = (dealId, dealType = 'AIN') => {
+const submitMockDataLoaderDealToUkef = (dealId, dealType = DEAL_SUBMISSION_TYPE.AIN) => {
   cy.submitMockDataLoaderDealToChecker(dealId, dealType);
 
   cy.login(BANK1_CHECKER1);

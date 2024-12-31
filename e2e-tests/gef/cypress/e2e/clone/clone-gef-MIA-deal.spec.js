@@ -1,3 +1,4 @@
+import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
 import relative from '../relativeURL';
 import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
 
@@ -22,7 +23,7 @@ context('Clone GEF (MIA) deal', () => {
   });
   describe('Clone MIA deal', () => {
     before(() => {
-      cy.submitMockDataLoaderDealToChecker(MIAdealId, 'MIA');
+      cy.submitMockDataLoaderDealToChecker(MIAdealId, DEAL_SUBMISSION_TYPE.MIA);
     });
 
     beforeEach(() => {
@@ -48,8 +49,8 @@ context('Clone GEF (MIA) deal', () => {
          * Finds the id of the facility which is in progress
          */
         cy.apiLogin(BANK1_MAKER1)
-          .then((tok) => {
-            token = tok;
+          .then((apiToken) => {
+            token = apiToken;
           })
           .then(() => cy.apiFetchAllGefApplications(token))
           .then(({ body }) => {

@@ -26,7 +26,7 @@ context('Clone GEF (AIN) deal - Validation', () => {
       cy.visit(relative(`/gef/application-details/${testDealId}`));
     });
 
-    it('should show an error when the mandatory criteria is false', () => {
+    it('should show show a not eligible error when the mandatory criteria is false', () => {
       cloneGEFDeal.cloneGefDealLink().click();
       cy.url().should('eq', relative(`/gef/application-details/${testDealId}/clone`));
       mandatoryCriteria.falseRadio().click();
