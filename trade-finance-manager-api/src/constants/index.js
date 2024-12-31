@@ -7,7 +7,6 @@ const NDB_TASKS_AMENDMENT = require('./tasks-ndb-amendment.constant');
 const EMAIL_TEMPLATE_IDS = require('./email-template-ids');
 const ACTIVITY = require('./activity');
 const AMENDMENTS = require('./amendments');
-const USER = require('./user');
 const REGEX = require('./regex');
 const { FILESHARES } = require('./fileshares');
 
@@ -22,7 +21,6 @@ module.exports = {
   TASKS_AMENDMENT,
   NDB_TASKS_AMENDMENT,
   AMENDMENTS,
-  USER,
   REGEX,
   FILESHARES,
 };

@@ -1,4 +1,4 @@
-const { TEAM_IDS } = require('@ukef/dtfs2-common');
+const { USER_STATUS, TEAM_IDS } = require('@ukef/dtfs2-common');
 
 const MOCK_USERS = [
   {
@@ -10,6 +10,7 @@ const MOCK_USERS = [
     timezone: 'Europe/London',
     firstName: 'John',
     lastName: 'Davies',
+    status: USER_STATUS.ACTIVE,
   },
   {
     _id: '6051d94564494924d38ce124',
@@ -20,6 +21,7 @@ const MOCK_USERS = [
     timezone: 'Europe/London',
     firstName: 'Ben',
     lastName: 'Wilson',
+    status: USER_STATUS.ACTIVE,
   },
   {
     _id: '6051d94564494924d38ce125',
@@ -30,6 +32,7 @@ const MOCK_USERS = [
     timezone: 'Europe/London',
     firstName: 'Benjamin',
     lastName: 'Jones',
+    status: USER_STATUS.ACTIVE,
   },
   {
     _id: '6051d94564494924d38ce126',
@@ -40,6 +43,7 @@ const MOCK_USERS = [
     timezone: 'Europe/London',
     firstName: 'Olivia',
     lastName: 'Williams',
+    status: USER_STATUS.ACTIVE,
   },
   {
     _id: '6051d94564494924d38ce127',
@@ -50,8 +54,10 @@ const MOCK_USERS = [
     timezone: 'Europe/London',
     firstName: 'Steven',
     lastName: 'Robinson',
+    status: USER_STATUS.ACTIVE,
   },
   {
+    _id: '6051d94564494924d38ce128',
     username: 'PIM_USER_1',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -59,8 +65,10 @@ const MOCK_USERS = [
     timezone: 'Europe/London',
     firstName: 'Piper',
     lastName: 'Matthews',
+    status: USER_STATUS.ACTIVE,
   },
   {
+    _id: '6051d94564494924d38ce129',
     username: 'PDC_READ_USER',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -68,8 +76,10 @@ const MOCK_USERS = [
     timezone: 'Europe/London',
     firstName: 'Peter',
     lastName: 'Reading',
+    status: USER_STATUS.ACTIVE,
   },
   {
+    _id: '6051d94564494924d38ce130',
     username: 'PDC_RECONCILE_USER',
     password: 'AbC!2345',
     email: 'test@testing.com',
@@ -77,6 +87,18 @@ const MOCK_USERS = [
     timezone: 'Europe/London',
     firstName: 'Colin',
     lastName: 'Bellamy',
+    status: USER_STATUS.ACTIVE,
+  },
+  {
+    _id: '6051d94564494924d38ce131',
+    username: 'BLOCKED_UNDERWRITER',
+    password: 'AbC!2345',
+    email: 'test@testing.com',
+    teams: [TEAM_IDS.UNDERWRITERS],
+    timezone: 'Europe/London',
+    firstName: 'John',
+    lastName: 'Smith',
+    status: USER_STATUS.BLOCKED,
   },
 ];
 

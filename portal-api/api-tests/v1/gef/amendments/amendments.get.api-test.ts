@@ -5,7 +5,7 @@ import app from '../../../../src/createApp';
 import testUserCache from '../../../api-test-users';
 
 import { MAKER } from '../../../../src/v1/roles/roles';
-import { getAmendmentUrl } from './get-amendment-url';
+import { getAmendmentUrl } from './amendment-urls';
 import createApi from '../../../api';
 import { TestUser } from '../../../types/test-user';
 import { withRoleAuthorisationTests } from '../../../common-tests/role-authorisation-tests';
