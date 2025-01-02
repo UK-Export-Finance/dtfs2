@@ -42,7 +42,7 @@
     "express": "^4.21.2",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^6.11.2",
-    "express-validator": "^7.2.0",
+    "express-validator": "^7.2.1",
     "lodash": "^4.17.21",
     "lodash.orderby": "^4.6.0",
     "mongo-dot-notation": "3.1.0",
@@ -78,7 +78,7 @@
     "typescript": "^5.7.2"
   },
   "engines": {
-    "node": ">=22.8.0",
+    "node": ">=23.4.0",
     "npm": ">=10.8.2"
   },
   "engineStrict": true
