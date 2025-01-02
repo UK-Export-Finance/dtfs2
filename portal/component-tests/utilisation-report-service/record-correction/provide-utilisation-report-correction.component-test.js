@@ -25,12 +25,12 @@ describe(page, () => {
   describe.each(correctionReasonsExcludingOther)('when "%s" is the sole correction reason', (correctionReason) => {
     it(`should only render the "${correctionReason}" error type input`, () => {
       // Arrange
-      const correctionReasons = [correctionReason];
+      const requestReasons = [correctionReason];
 
       const viewModel = aProvideUtilisationReportCorrectionViewModel();
-      viewModel.correctionRequestDetails.reasons = correctionReasons;
+      viewModel.correctionRequestDetails.reasons = requestReasons;
 
-      const remainingCorrectionReasonsExcludingOther = difference(correctionReasonsExcludingOther, [...correctionReasons]);
+      const unusedCorrectionReasons = difference(correctionReasonsExcludingOther, [...requestReasons]);
 
       // Act
       const wrapper = render(viewModel);
@@ -38,8 +38,8 @@ describe(page, () => {
       // Assert
       wrapper.expectElement(`[data-cy="${correctionReason}-input"]`).toExist();
 
-      remainingCorrectionReasonsExcludingOther.forEach((remainingCorrectionReason) => {
-        wrapper.expectElement(`[data-cy="${remainingCorrectionReason}-input"]`).notToExist();
+      unusedCorrectionReasons.forEach((remainingRequestReason) => {
+        wrapper.expectElement(`[data-cy="${remainingRequestReason}-input"]`).notToExist();
       });
     });
 
@@ -52,23 +52,23 @@ describe(page, () => {
       const wrapper = render(viewModel);
 
       // Assert
-      wrapper.expectElement(`textarea[data-cy="${RECORD_CORRECTION_REASON.OTHER}-input"]`).toExist();
+      wrapper.expectElement(`textarea[data-cy="additional-comments-input"]`).toExist();
     });
   });
 
   describe(`when "${RECORD_CORRECTION_REASON.OTHER}" is the sole correction reason`, () => {
-    const correctionReasons = [RECORD_CORRECTION_REASON.OTHER];
+    const requestReasons = [RECORD_CORRECTION_REASON.OTHER];
 
     it('should only render the "additional comments" input', () => {
       // Arrange
       const viewModel = aProvideUtilisationReportCorrectionViewModel();
-      viewModel.correctionRequestDetails.reasons = correctionReasons;
+      viewModel.correctionRequestDetails.reasons = requestReasons;
 
       // Act
       const wrapper = render(viewModel);
 
       // Assert
-      wrapper.expectElement(`textarea[data-cy="${RECORD_CORRECTION_REASON.OTHER}-input"]`).toExist();
+      wrapper.expectElement(`textarea[data-cy="additional-comments-input"]`).toExist();
 
       correctionReasonsExcludingOther.forEach((correctionReason) => {
         wrapper.expectElement(`[data-cy="${correctionReason}-input"]`).notToExist();
@@ -77,24 +77,24 @@ describe(page, () => {
   });
 
   describe(`when there are multiple correction reasons excluding "${RECORD_CORRECTION_REASON.OTHER}"`, () => {
-    const correctionReasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.UTILISATION_INCORRECT];
+    const requestReasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.UTILISATION_INCORRECT];
 
     it('should only render the error type inputs for the provided correction reasons', () => {
       // Arrange
       const viewModel = aProvideUtilisationReportCorrectionViewModel();
-      viewModel.correctionRequestDetails.reasons = correctionReasons;
+      viewModel.correctionRequestDetails.reasons = requestReasons;
 
-      const remainingCorrectionReasonsExcludingOther = difference(correctionReasonsExcludingOther, correctionReasons);
+      const unusedCorrectionReasons = difference(correctionReasonsExcludingOther, requestReasons);
 
       // Act
       const wrapper = render(viewModel);
 
       // Assert
-      correctionReasons.forEach((correctionReason) => {
+      requestReasons.forEach((correctionReason) => {
         wrapper.expectElement(`[data-cy="${correctionReason}-input"]`).toExist();
       });
 
-      remainingCorrectionReasonsExcludingOther.forEach((correctionReason) => {
+      unusedCorrectionReasons.forEach((correctionReason) => {
         wrapper.expectElement(`[data-cy="${correctionReason}-input"]`).notToExist();
       });
     });
@@ -102,35 +102,38 @@ describe(page, () => {
     it('should render the "additional comments" input', () => {
       // Arrange
       const viewModel = aProvideUtilisationReportCorrectionViewModel();
-      viewModel.correctionRequestDetails.reasons = correctionReasons;
+      viewModel.correctionRequestDetails.reasons = requestReasons;
 
       // Act
       const wrapper = render(viewModel);
 
       // Assert
-      wrapper.expectElement(`textarea[data-cy="${RECORD_CORRECTION_REASON.OTHER}-input"]`).toExist();
+      wrapper.expectElement(`textarea[data-cy="additional-comments-input"]`).toExist();
     });
   });
 
   describe(`when there are multiple correction reasons including "${RECORD_CORRECTION_REASON.OTHER}"`, () => {
-    const correctionReasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER];
+    const requestReasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER];
 
     it('should only render the error type inputs for the provided correction reasons', () => {
       // Arrange
       const viewModel = aProvideUtilisationReportCorrectionViewModel();
-      viewModel.correctionRequestDetails.reasons = correctionReasons;
+      viewModel.correctionRequestDetails.reasons = requestReasons;
 
-      const remainingCorrectionReasons = difference(correctionReasonsExcludingOther, correctionReasons);
+      const unusedCorrectionReasons = difference(correctionReasonsExcludingOther, requestReasons);
+      const requestReasonsExcludingOther = difference(requestReasons, [RECORD_CORRECTION_REASON.OTHER]);
 
       // Act
       const wrapper = render(viewModel);
 
       // Assert
-      correctionReasons.forEach((correctionReason) => {
+      requestReasonsExcludingOther.forEach((correctionReason) => {
         wrapper.expectElement(`[data-cy="${correctionReason}-input"]`).toExist();
       });
 
-      remainingCorrectionReasons.forEach((correctionReason) => {
+      wrapper.expectElement(`textarea[data-cy="additional-comments-input"]`).toExist();
+
+      unusedCorrectionReasons.forEach((correctionReason) => {
         wrapper.expectElement(`[data-cy="${correctionReason}-input"]`).notToExist();
       });
     });
@@ -151,8 +154,8 @@ describe(page, () => {
     const wrapper = render(viewModel);
 
     // Assert
-    wrapper.expectText(`[data-cy="${RECORD_CORRECTION_REASON.OTHER}-label"]`).toRead(additionalCommentsLabel);
-    wrapper.expectText(`[data-cy="${RECORD_CORRECTION_REASON.OTHER}-hint"]`).toRead(additionalCommentsHint);
+    wrapper.expectText(`[data-cy="additional-comments-label"]`).toRead(additionalCommentsLabel);
+    wrapper.expectText(`[data-cy="additional-comments-hint"]`).toRead(additionalCommentsHint);
   });
 
   it('should render the provided "error type" header text', () => {
