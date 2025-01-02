@@ -8,7 +8,6 @@ export * from './date-validation';
 export {
   isTfmPaymentReconciliationFeatureFlagEnabled,
   isFeeRecordCorrectionFeatureFlagEnabled,
-  isTfmFacilityEndDateFeatureFlagEnabled,
   isTfmDealCancellationFeatureFlagEnabled,
   isTfmSsoFeatureFlagEnabled,
   isPortalFacilityAmendmentsFeatureFlagEnabled,
