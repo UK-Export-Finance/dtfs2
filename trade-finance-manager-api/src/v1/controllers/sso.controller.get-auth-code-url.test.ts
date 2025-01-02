@@ -31,8 +31,8 @@ describe('SsoController', () => {
 
     beforeEach(() => {
       jest.resetAllMocks();
-      entraIdService = new EntraIdServiceMockBuilder().withDefaults().with({ getAuthCodeUrl: getAuthCodeUrlMock }).build();
-      userService = new UserServiceMockBuilder().withDefaults().build();
+      entraIdService = new EntraIdServiceMockBuilder().with({ getAuthCodeUrl: getAuthCodeUrlMock }).build();
+      userService = new UserServiceMockBuilder().build();
       ssoController = new SsoController({ entraIdService, userService });
 
       ({ req, res } = getHttpMocks());
