@@ -28,8 +28,8 @@ module.exports = defineConfig({
   chromeWebSecurity: false,
   pageLoadTimeout: 120000,
   numTestsKeptInMemory: 1,
-  viewportWidth: 3840,
-  viewportHeight: 2400,
+  viewportWidth: 1920,
+  viewportHeight: 1080,
   retries: {
     runMode: 2,
     openMode: 0,
