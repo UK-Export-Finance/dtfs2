@@ -1,4 +1,4 @@
-import { isTfmFacilityEndDateFeatureFlagEnabled, MAPPED_FACILITY_TYPE, TEAM_IDS } from '@ukef/dtfs2-common';
+import { MAPPED_FACILITY_TYPE, TEAM_IDS } from '@ukef/dtfs2-common';
 import { add } from 'date-fns';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
@@ -31,11 +31,6 @@ const gefFacilityType = MAPPED_FACILITY_TYPE.CASH;
 
 const { dealId, facilityId, amendmentId } = MOCK_AMENDMENT_COVERENDDATE_CHANGE;
 
-jest.mock('@ukef/dtfs2-common', () => ({
-  ...jest.requireActual('@ukef/dtfs2-common'),
-  isTfmFacilityEndDateFeatureFlagEnabled: jest.fn(),
-}));
-
 describe('amendmentFacilityEndDate routes', () => {
   beforeEach(() => {
     jest.resetAllMocks();
@@ -44,7 +39,6 @@ describe('amendmentFacilityEndDate routes', () => {
   describe('POST postAmendmentFacilityEndDate', () => {
     beforeEach(() => {
       jest.resetAllMocks();
-      jest.mocked(isTfmFacilityEndDateFeatureFlagEnabled).mockReturnValue(true);
     });
 
     describe('incorrect facility end date entered', () => {
