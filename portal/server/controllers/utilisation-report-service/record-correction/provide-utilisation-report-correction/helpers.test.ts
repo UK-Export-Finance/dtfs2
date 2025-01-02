@@ -18,7 +18,7 @@ import { CorrectionRequestDetailsViewModel } from '../../../../types/view-models
 
 describe('provide-utilisation-report-correction helpers', () => {
   describe('mapToCorrectionRequestDetailsViewModel', () => {
-    it('should return an object containing the fee record correction facility id', () => {
+    it('should return an object containing the correction request details', () => {
       // Arrange
       const facilityId = '7';
       const exporter = 'A sample exporter.';

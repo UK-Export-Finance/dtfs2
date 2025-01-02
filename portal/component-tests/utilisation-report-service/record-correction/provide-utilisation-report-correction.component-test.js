@@ -155,6 +155,20 @@ describe(page, () => {
     wrapper.expectText(`[data-cy="${RECORD_CORRECTION_REASON.OTHER}-hint"]`).toRead(additionalCommentsHint);
   });
 
+  it('should render the provided "error type" header text', () => {
+    // Arrange
+    const errorTypeHeader = 'An error type header';
+
+    const viewModel = aProvideUtilisationReportCorrectionViewModel();
+    viewModel.correctionRequestDetails.errorTypeHeader = errorTypeHeader;
+
+    // Act
+    const wrapper = render(viewModel);
+
+    // Assert
+    wrapper.expectText(`[data-cy="correction-request-details-table-header--error-type"]`).toRead(errorTypeHeader);
+  });
+
   it('should render the save button', () => {
     // Arrange
     const viewModel = aProvideUtilisationReportCorrectionViewModel();
