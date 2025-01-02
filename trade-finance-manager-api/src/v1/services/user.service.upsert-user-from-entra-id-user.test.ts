@@ -22,6 +22,7 @@ describe('user service', () => {
     let userId: ObjectId;
     let createUserSpy: jest.SpyInstance;
     let updateUserByIdSpy: jest.SpyInstance;
+    let userService: UserService;
 
     beforeAll(() => {
       jest.useFakeTimers();
@@ -31,7 +32,8 @@ describe('user service', () => {
       jest.resetAllMocks();
       entraIdUser = anEntraIdUser();
       auditDetails = generateSystemAuditDetails();
-      transformedUser = UserService.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
+      userService = new UserService();
+      transformedUser = userService.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
       userId = new ObjectId();
       existingUser = { ...transformedUser, _id: userId, status: USER.STATUS.ACTIVE };
     });
@@ -47,7 +49,7 @@ describe('user service', () => {
       });
 
       it('creates a new user in the database', async () => {
-        await UserService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
+        await userService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
 
         expect(createUserSpy).toHaveBeenCalledWith({
           user: transformedUser,
@@ -64,7 +66,7 @@ describe('user service', () => {
       });
 
       it('updates the user in the database', async () => {
-        await UserService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
+        await userService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
 
         expect(updateUserByIdSpy).toHaveBeenCalledWith({
           userId,
@@ -81,7 +83,7 @@ describe('user service', () => {
       });
 
       it('throws an error', async () => {
-        await expect(UserService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails })).rejects.toThrowError();
+        await expect(userService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails })).rejects.toThrowError();
       });
     });
   });

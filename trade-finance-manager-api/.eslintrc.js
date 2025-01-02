@@ -9,7 +9,19 @@ const baseRules = {
   'no-underscore-dangle': [
     'error',
     {
-      allow: ['_id', '_csrf', '_getBuffer', '_getData', '_getHeaders', '_getStatusCode', '_getRedirectUrl', '_getRenderData', '_getRenderView', '_isEndCalled'],
+      allow: [
+        '_id',
+        '_csrf',
+        '_getBuffer',
+        '_getData',
+        '_getHeaders',
+        '_getJSONData',
+        '_getStatusCode',
+        '_getRedirectUrl',
+        '_getRenderData',
+        '_getRenderView',
+        '_isEndCalled',
+      ],
     },
   ],
   'import/extensions': 'off',
