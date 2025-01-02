@@ -156,6 +156,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
         paymentDetails: [],
         keyingSheet: [],
         utilisationDetails: [],
+        recordCorrectionDetails: [],
       };
     }
   });

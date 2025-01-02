@@ -11,6 +11,7 @@ describe('record-correction-helpers', () => {
       const result = mapToRecordCorrectionTableRowViewModel(feeRecordCorrection, displayStatus);
 
       const expected = {
+        correctionId: feeRecordCorrection.correctionId,
         feeRecordId: feeRecordCorrection.feeRecordId,
         facilityId: feeRecordCorrection.facilityId,
         exporter: feeRecordCorrection.exporter,

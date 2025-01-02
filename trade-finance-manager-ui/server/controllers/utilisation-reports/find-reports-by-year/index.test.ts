@@ -341,7 +341,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         dateUploaded: '2024-02-15 10:38:01.4033333',
         totalFeesReported: 3,
         reportedFeesLeftToReconcile: 3,
-        formattedReportPeriod: 'January 2024',
+        formattedReportPeriod: 'January 2025',
         displayStatus: 'Pending reconciliation',
         formattedDateUploaded: '15 Feb 2024',
       };

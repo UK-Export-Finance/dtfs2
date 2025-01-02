@@ -16,7 +16,6 @@ const { table } = recordCorrectionHistoryTab;
  */
 const checkRecordCorrectionHistoryTableRowValues = ({ feeRecord, reasons, dateSent, requestedBy, status }) => {
   const feeRecordId = feeRecord.id;
-
   const row = table.row(feeRecordId);
 
   cy.assertText(row.facilityId(), feeRecord.facilityId);
