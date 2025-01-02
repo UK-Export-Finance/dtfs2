@@ -1,0 +1,83 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% block pageTitle -%}
+  New facility value
+{%- endblock %}
+
+{% set headingHtml %}
+<header>
+  <span class="govuk-caption-l" data-cy="heading-caption">
+    {{ exporterName }}
+  </span>
+  <h1 class="govuk-label-wrapper" data-cy="page-heading">
+    <label class="govuk-label govuk-label--xl govuk-!-padding-bottom-3" for="facility-value">
+        New facility value
+      </label>
+  </h1>
+</header>
+{% endset %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      },
+      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: previousPage,
+    attributes: {
+      'data-cy': 'back-link'
+    }
+  }) }}
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-three-quarters">
+      <form method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukInput({
+          id: "facility-value",
+          classes: "govuk-input--width-10",
+          label: {
+            html: headingHtml,
+            isPageHeading: true
+          },
+          value: facilityValue,
+          prefix: {
+            text: currencySymbol,
+            attributes: {
+            'data-cy': 'facility-value-prefix'
+          }
+          },
+          spellcheck: false,
+          attributes: {
+            'data-cy': 'facility-value'
+          }
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              'data-cy': 'continue-button'
+            }
+          }) }}
+
+          <a href={{cancelUrl}}  data-cy="cancel-link" class="govuk-link">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

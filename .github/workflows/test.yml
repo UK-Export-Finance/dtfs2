@@ -257,7 +257,7 @@ jobs:
         run: docker compose down
 
       - name: Coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api-test
@@ -310,7 +310,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api-test
@@ -374,7 +374,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: unit-test
@@ -391,7 +391,6 @@ jobs:
       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
       FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
       FF_TFM_SSO_ENABLED: 'true'
-      GEF_DEAL_VERSION: 1
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -446,7 +445,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: unit-test
@@ -579,19 +578,16 @@ jobs:
             'amendments/portal-amendments-disabled/**/*.spec.js',
             'application/**/*.spec.js',
             'checker/**/*.spec.js',
-            'clone/*.spec.js',
+            'clone/**/*.spec.js',
             'eligibility/**/*.spec.js',
             'exporter/**/*.spec.js',
             'external/**/*.spec.js',
-            'facility/pre-submission/*.spec.js',
-            'facility/pre-submission/facility-end-date-disabled/*.spec.js',
-            'facility/review-ukef-approval/facility-end-date-disabled/*.spec.js',
+            'facility/pre-submission/**/*.spec.js',
+            'facility/review-ukef-approval/**/*.spec.js',
             'facility/version-0/*.spec.js',
-            'facility/unissued-facilities/AIN/facility-end-date-disabled/*.spec.js',
-            'facility/unissued-facilities/MIN/facility-end-date-disabled/*.spec.js',
-            'facility/unissued-facilities/MIN/*.spec.js',
-            'maker/*.spec.js',
-            'maker/facility-end-date-disabled/*.spec.js',
+            'facility/unissued-facilities/AIN/**/*.spec.js',
+            'facility/unissued-facilities/MIN/**/*.spec.js',
+            'maker/**/*.spec.js',
             'scenarios/**/*.spec.js',
             'security/**/*.spec.js',
             'ukef/**/*.spec.js',
@@ -781,26 +777,11 @@ jobs:
       matrix:
         spec:
           [
-            'portal/MIA-underwriter-managers-approved-decision-updates-portal-deal-and-submission-type-to-MIN/**/*.spec.js',
-            'portal/MIA-underwriter-managers-decision-updates-portal-deal/**/*.spec.js',
-            'portal/submit-AIN-deal-creates-default-credit-rating-in-tfm/**/*.spec.js',
-            'portal/submit-AIN-deal-creates-tasks-in-tfm/**/*.spec.js',
-            'portal/submit-AIN-deal-creates-tfm-deal-stage-and-product/**/*.spec.js',
-            'portal/submit-AIN-deal-updates-portal-deal-status/**/*.spec.js',
-            'portal/submit-MIA-deal-TFM-approves-resubmit-MIA-deal-becomes-MIN/**/*.spec.js',
-            'portal/submit-MIA-deal-creates-tasks-in-tfm/**/*.spec.js',
-            'portal/submit-MIA-deal-creates-tfm-deal-stage-and-product/**/*.spec.js',
-            'portal/submit-MIA-deal-updates-portal-deal-status/**/*.spec.js',
-            'portal/submit-MIN-changes-tfm-stage-to-confirmed/**/*.spec.js',
-            'portal/submit-MIN-deal-does-not-create-credit-rating-in-tfm/**/*.spec.js',
-            'portal/submit-MIN-deal-updates-portal-deal-status/**/*.spec.js',
-            'portal/submit-MIN-with-unissued-facilities-and-resubmit-issued-facilities-updates-facilities-in-tfm/**/*.spec.js',
-            'portal/submit-deal-adds-risk-profile-to-facilities/**/*.spec.js',
-            'portal/submit-deal-converts-contract-value-to-gbp/**/*.spec.js',
-            'portal/submit-deal-creates-loss-given-and-probability-defaults-in-tfm/**/*.spec.js',
-            'portal/submit-deal-with-issued-facilities/**/*.spec.js',
-            'portal/submit-deal-with-non-gbp-facilities/**/*.spec.js',
-            'portal/submit-deal-with-unissued-facilities-and-resubmit-as-issued/**/*.spec.js',
+            'portal/MIA-underwriter/**/*.spec.js',
+            'portal/submit-AIN/**/*.spec.js',
+            'portal/submit-MIA/**/*.spec.js',
+            'portal/submit-MIN/**/*.spec.js',
+            'portal/submit-deal/**/*.spec.js',
             'utilisation-reports/**/*.spec.js',
           ]
 
@@ -848,7 +829,7 @@ jobs:
         env:
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
         run: npm run db:migrate
-
+  
       - name: Execute
         uses: ./.github/actions/rerun
         with:
@@ -870,7 +851,6 @@ jobs:
       FF_TFM_FACILITY_END_DATE_ENABLED: 'true'
       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
       FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
-      GEF_DEAL_VERSION: 1
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -921,19 +901,16 @@ jobs:
             './gef/cypress/e2e/application/**/*.spec.js',
             './gef/cypress/e2e/checker/**/*.spec.js',
             './gef/cypress/e2e/clone/*.spec.js',
-            './gef/cypress/e2e/clone/facility-end-date-enabled/*.spec.js',
+            './gef/cypress/e2e/clone/**/*.spec.js',
             './gef/cypress/e2e/eligibility/**/*.spec.js',
             './gef/cypress/e2e/exporter/**/*.spec.js',
             './gef/cypress/e2e/external/**/*.spec.js',
-            './gef/cypress/e2e/facility/pre-submission/*.spec.js',
-            './gef/cypress/e2e/facility/pre-submission/facility-end-date-enabled/*.spec.js',
-            './gef/cypress/e2e/facility/review-ukef-approval/facility-end-date-enabled/*.spec.js',
+            './gef/cypress/e2e/facility/pre-submission/**/*.spec.js',
+            './gef/cypress/e2e/facility/review-ukef-approval/**/*.spec.js',
             './gef/cypress/e2e/facility/version-0/*.spec.js',
-            './gef/cypress/e2e/facility/unissued-facilities/AIN/facility-end-date-enabled/*.spec.js',
-            './gef/cypress/e2e/facility/unissued-facilities/MIN/facility-end-date-enabled/*.spec.js',
-            './gef/cypress/e2e/facility/unissued-facilities/MIN/*.spec.js',
-            './gef/cypress/e2e/maker/*.spec.js',
-            './gef/cypress/e2e/maker/facility-end-date-enabled/*.spec.js',
+            './gef/cypress/e2e/facility/unissued-facilities/AIN/**/*.spec.js',
+            './gef/cypress/e2e/facility/unissued-facilities/MIN/**/*.spec.js',
+            './gef/cypress/e2e/maker/**/*.spec.js',
             './gef/cypress/e2e/scenarios/**/*.spec.js',
             './gef/cypress/e2e/security/**/*.spec.js',
             './gef/cypress/e2e/ukef/**/*.spec.js',

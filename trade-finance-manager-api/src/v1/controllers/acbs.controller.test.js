@@ -1,11 +1,13 @@
 const { DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
-const { issueAcbsFacilities, addToACBSLog } = require('./acbs.controller');
 const api = require('../api');
-const { mongoDbClient: db } = require('../../drivers/db-client');
 const CONSTANTS = require('../../constants');
-const { createACBS } = require('./acbs.controller');
 const MOCK_DEAL_ACBS = require('../__mocks__/mock-deal-acbs');
+const { MOCK_ACBS_TASK_LINK, MOCK_ACBS_FACILITY_LINK } = require('../__mocks__/mock-durable-tasks');
+
+const { createACBS, issueAcbsFacilities, addToACBSLog, updateIssuedFacilityAcbs, updateAmendedFacilityAcbs } = require('./acbs.controller');
+const { mongoDbClient: db } = require('../../drivers/db-client');
 const { findOneTfmDeal } = require('./deal.controller');
+const { updateFacilityAcbs } = require('./tfm.controller');
 
 const consoleErrorMock = jest.spyOn(console, 'error');
 consoleErrorMock.mockImplementation();
@@ -17,9 +19,9 @@ const insertOneMock = jest.fn().mockResolvedValue(true);
 const getCollectionMock = jest.spyOn(db, 'getCollection');
 getCollectionMock.mockResolvedValue({ insertOne: insertOneMock });
 
-const createACBSAPIMock = jest.fn().mockResolvedValue(123);
+const createAcbsApiMock = jest.fn().mockResolvedValue(123);
 const createACBSMock = jest.spyOn(api, 'createACBS');
-createACBSMock.mockResolvedValue(createACBSAPIMock);
+createACBSMock.mockResolvedValue(createAcbsApiMock);
 
 /**
  * Mock `deal.controller` imperative functions to
@@ -30,17 +32,17 @@ jest.mock('./deal.controller', () => ({
   findOneTfmDeal: jest.fn(),
 }));
 
-const mockACBSTaskLink = {
-  id: '5ce819935e539c343f141ece',
-  statusQueryGetUri: 'acbs',
-  sendEventPostUri: 'acbs',
-  terminatePostUri: 'acbs',
-  rewindPostUri: 'acbs',
-  purgeHistoryDeleteUri: 'acbs',
-};
+/**
+ * Mock `tfm.controller` imperative functions to
+ * expedite unit test execution and keep it in function
+ * scope.
+ */
+jest.mock('./tfm.controller', () => ({
+  updateFacilityAcbs: jest.fn().mockResolvedValue(true),
+}));
 
 const updateACBSFacilityMock = jest.spyOn(api, 'issueACBSfacility');
-updateACBSFacilityMock.mockResolvedValue(mockACBSTaskLink);
+updateACBSFacilityMock.mockResolvedValue(MOCK_ACBS_TASK_LINK);
 
 const invalidDealIds = ['invalid', '', '0000000000', '123', 'ABC', '!"£', [], {}];
 
@@ -96,7 +98,7 @@ describe('addToACBSLog', () => {
       deal: {
         _id: '5ce819935e539c343f141ece',
       },
-      acbsTaskLinks: mockACBSTaskLink,
+      acbsTaskLinks: MOCK_ACBS_TASK_LINK,
     };
 
     const result = await addToACBSLog(payload);
@@ -110,8 +112,8 @@ describe('addToACBSLog', () => {
       facility: {},
       bank: {},
       status: DURABLE_FUNCTIONS_LOG.STATUS.RUNNING,
-      instanceId: mockACBSTaskLink.id,
-      acbsTaskLinks: mockACBSTaskLink,
+      instanceId: MOCK_ACBS_TASK_LINK.id,
+      acbsTaskLinks: MOCK_ACBS_TASK_LINK,
       submittedDate: expect.any(String),
       auditRecord: expect.any(Object),
     });
@@ -193,8 +195,8 @@ describe('issueAcbsFacilities', () => {
       facility: {},
       bank: {},
       status: DURABLE_FUNCTIONS_LOG.STATUS.RUNNING,
-      instanceId: mockACBSTaskLink.id,
-      acbsTaskLinks: mockACBSTaskLink,
+      instanceId: MOCK_ACBS_TASK_LINK.id,
+      acbsTaskLinks: MOCK_ACBS_TASK_LINK,
       submittedDate: expect.any(String),
       auditRecord: expect.any(Object),
     });
@@ -450,5 +452,55 @@ describe('createACBS', () => {
 
     expect(createACBSMock).toHaveBeenCalledTimes(1);
     expect(createACBSMock).toHaveBeenCalledWith(MOCK_DEAL_ACBS, bank);
+  });
+});
+
+describe('updateIssuedFacilityAcbs', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should update the facility acbs object when successfully issued in ACBS', async () => {
+    // Arrange
+    const { facilityIdentifier, issuedFacilityMaster, facilityLoan, facilityFee } = MOCK_ACBS_FACILITY_LINK.acbsTaskResult.output;
+
+    // Act
+    await updateIssuedFacilityAcbs(MOCK_ACBS_FACILITY_LINK.acbsTaskResult.output);
+
+    // Assert
+    expect(updateFacilityAcbs).toHaveBeenCalledTimes(1);
+    expect(updateFacilityAcbs).toHaveBeenCalledWith(facilityIdentifier, {
+      facilityStage: CONSTANTS.FACILITIES.ACBS_FACILITY_STAGE.ISSUED,
+      issuedFacilityMaster,
+      facilityLoan,
+      facilityFee,
+    });
+  });
+});
+
+describe('updateAmendedFacilityAcbs', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should update the facility acbs object when successfully amended in ACBS', async () => {
+    // Arrange
+    const { instanceId } = MOCK_ACBS_FACILITY_LINK.acbsTaskResult;
+    const { _id } = MOCK_ACBS_FACILITY_LINK.acbsTaskResult.input.amendment.facility;
+    const { facilityMasterRecord, facilityLoanRecord } = MOCK_ACBS_FACILITY_LINK.acbsTaskResult.output;
+
+    const mockAcbsUpdate = {
+      [instanceId]: {
+        facilityMasterRecord,
+        facilityLoanRecord,
+      },
+    };
+
+    // Act
+    await updateAmendedFacilityAcbs(MOCK_ACBS_FACILITY_LINK.acbsTaskResult);
+
+    // Assert
+    expect(updateFacilityAcbs).toHaveBeenCalledTimes(1);
+    expect(updateFacilityAcbs).toHaveBeenCalledWith(_id, mockAcbsUpdate);
   });
 });

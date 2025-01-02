@@ -94,13 +94,15 @@ jobs:
           port: ${{ secrets.SQL_DB_PORT }}
           username: ${{ secrets.SQL_DB_USERNAME }}
           password: ${{ secrets.SQL_DB_PASSWORD }}
-          databae: ${{ secrets.SQL_DB_NAME }}
+          database: ${{ secrets.SQL_DB_NAME }}
           node: ${{ vars.NODE_VERSION }}
+          log: ${{ vars.SQL_DB_LOGGING_ENABLED }}
+
   # 3. micro-serices WebApp deployments
   webapp:
     name: WebApp 🌐
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    needs: [setup]
+    needs: [setup, database]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
     env:
@@ -136,7 +138,7 @@ jobs:
   functions:
     name: Functions ⚡
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    needs: [setup, webapp]
+    needs: [setup, database, webapp]
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
     env:
@@ -167,3 +169,67 @@ jobs:
           credentials: ${{ secrets.AZURE_CREDENTIALS }}
           acr: ${{ secrets.ACR_PASSWORD }}
           functions: ${{ matrix.functions }}
+
+  # 5. Notification
+  notify:
+    name: Notification 🔔
+    needs: [setup]
+    environment: ${{ needs.setup.outputs.environment }}
+    runs-on: [self-hosted, DTFS, deployment]
+
+    env:
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+      WEBHOOK: ${{ secrets.MSTEAMS_WEBHOOK }}
+
+    steps:
+      - name: Facts
+        run: |
+
+      - name: MS Teams
+        run: |
+          curl --location '${{ env.WEBHOOK }}' \
+          --header 'Content-Type: application/json' \
+          --data-raw '{
+          "@type": "MessageCard",
+          "@context": "http://schema.org/extensions",
+          "themeColor": "00703c",
+          "title": "🚀 ${{ github.event.workflow_run.head_branch }} : ${{ env.ENVIRONMENT }}",
+          "summary": "Deploying '\''${{ github.event.workflow_run.head_branch }}'\'' branch to '\''${{ env.ENVIRONMENT }}'\'' DTFS environment",
+          "sections": [
+          {
+            "activityTitle": "Release deployment",
+            "activitySubtitle": "Deploying **${{ github.event.workflow_run.head_branch }}** release branch to **${{ env.ENVIRONMENT }}** DTFS environment.",
+            "facts": [
+                {
+                    "name": "Release",
+                    "value": "${{ github.event.workflow_run.head_branch }}"
+                },
+                {
+                    "name": "Environment",
+                    "value": "${{ env.ENVIRONMENT }}"
+                },
+                {
+                    "name": "Commit",
+                    "value": "${{ github.sha }}"
+                },
+                {
+                    "name": "Status",
+                    "value": "Pending approval"
+                }
+            ],
+            "markdown": true
+                  }
+              ],
+            "potentialAction": [
+              {
+              "@type": "OpenUri",
+              "name": "Deployment",
+                "targets": [
+                  {
+                      "os": "default",
+                      "uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                  }
+                ]
+              }
+            ]
+          }'

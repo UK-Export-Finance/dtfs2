@@ -6,12 +6,12 @@ import {
   MONGO_DB_COLLECTIONS,
   TfmUser,
   UpdateTfmUserRequest,
+  USER_STATUS,
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { FindOneAndUpdateOptions, ModifyResult, ObjectId, WithId } from 'mongodb';
 import { mongoDbClient } from '../../drivers/db-client';
 import { UserRepo } from './user.repo';
-import { USER } from '../../constants';
 
 let findOneAndUpdateMock = jest.fn();
 let getCollectionMock = jest.fn();
@@ -42,7 +42,7 @@ describe('user repo', () => {
 
       updateTfmUserRequest = aUpsertTfmUserRequest();
       updateUserDatabaseRequest = { ...updateTfmUserRequest, auditRecord };
-      updateUserDatabaseResponse = { ...updateUserDatabaseRequest, _id: userId, status: USER.STATUS.ACTIVE } as WithId<TfmUser>;
+      updateUserDatabaseResponse = { ...updateUserDatabaseRequest, _id: userId, status: USER_STATUS.ACTIVE } as WithId<TfmUser>;
 
       userId = new ObjectId();
     });
