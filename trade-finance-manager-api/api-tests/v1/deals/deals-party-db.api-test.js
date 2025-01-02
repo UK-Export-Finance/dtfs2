@@ -25,6 +25,7 @@ describe('add partyUrn to deal', () => {
       ...MOCK_DEAL,
       exporter: {
         companiesHouseRegistrationNumber: '',
+        companyName: 'some name',
       },
     };
 
@@ -39,6 +40,7 @@ describe('add partyUrn to deal', () => {
       ...MOCK_DEAL,
       exporter: {
         companiesHouseRegistrationNumber: 'NO_MATCH',
+        companyName: 'some name',
       },
     };
 
@@ -53,6 +55,7 @@ describe('add partyUrn to deal', () => {
       ...MOCK_DEAL,
       exporter: {
         companiesHouseRegistrationNumber: 'MATCH',
+        companyName: 'some name',
       },
     };
 
@@ -67,6 +70,7 @@ describe('add partyUrn to deal', () => {
       ...MOCK_DEAL,
       exporter: {
         companiesHouseRegistrationNumber: 'MATCH',
+        companyName: 'some name',
       },
       tfm: {
         mockField: 'mock data',
