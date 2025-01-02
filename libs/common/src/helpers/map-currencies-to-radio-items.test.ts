@@ -1,8 +1,8 @@
-import { CURRENCY } from '@ukef/dtfs2-common';
-import { aCurrencyRadioItem } from '../../test-helpers/currency-radio-item';
+import { CURRENCY } from '../constants';
+import { aCurrencyRadioItem } from '../test-helpers/currency-radio-item';
 import { mapCurrenciesToRadioItems } from './map-currencies-to-radio-items';
 
-describe('map currencies to radio items helper', () => {
+describe('map-currencies-to-radio-items helper', () => {
   describe('mapCurrenciesToRadioItems', () => {
     describe('when called without a checked currency', () => {
       it('should return an array of RadioItem objects for all currencies', () => {
