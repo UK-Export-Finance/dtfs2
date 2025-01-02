@@ -25,7 +25,7 @@ export const getUtilisationReportReconciliationDetailsById = async (req: GetUtil
   const { paymentDetailsFilters, premiumPaymentsFilters } = req.query;
 
   try {
-    const utilisationReport = await UtilisationReportRepo.findOneByIdWithFeeRecordsWithPayments(Number(reportId));
+    const utilisationReport = await UtilisationReportRepo.findOneByIdWithFeeRecordsWithPaymentsAndCorrections(Number(reportId));
 
     if (!utilisationReport) {
       throw new NotFoundError(`Failed to find a report with id '${reportId}'`);

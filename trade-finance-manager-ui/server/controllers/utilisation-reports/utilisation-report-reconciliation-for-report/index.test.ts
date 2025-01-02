@@ -156,7 +156,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         premiumPayments: premiumPaymentsGroups,
         paymentDetails: paymentDetailsGroups,
         utilisationDetails,
-        recordCorrectionDetails: mockRecordCorrectionDetails,
+        recordCorrectionDetails: [mockRecordCorrectionDetails[0]],
       };
       const formattedReportPeriod = 'January 2024';
 
@@ -219,7 +219,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         downloadUrl: `/utilisation-reports/${reportId}/download`,
       };
 
-      const expectedRecordCorrectionDetails = mapToRecordCorrectionViewModel(mockRecordCorrectionDetails);
+      const expectedRecordCorrectionDetails = mapToRecordCorrectionViewModel([mockRecordCorrectionDetails[0]]);
 
       const paymentDetailsFilters = {
         facilityId: paymentDetailsFacilityId,

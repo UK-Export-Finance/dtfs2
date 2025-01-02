@@ -66,7 +66,14 @@ context('When fee record correction feature flag is enabled', () => {
     beforeEach(() => {
       pages.landingPage.visit();
 
-      cy.createFeeRecordCorrection({ shouldSubmitFeeRecordCorrectionRequest: false, feeRecord: feeRecordAtToDoStatus, reportId, additionalInfoUserInput });
+      cy.login(USERS.PDC_RECONCILE);
+
+      cy.completeFeeRecordCorrectionRequestForm({
+        feeRecord: feeRecordAtToDoStatus,
+        reportId,
+        additionalInfoUserInput,
+        reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER],
+      });
     });
 
     it('should be able to view the form values and other details of correction request', () => {

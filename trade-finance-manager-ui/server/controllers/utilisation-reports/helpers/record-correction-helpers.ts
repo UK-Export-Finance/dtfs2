@@ -1,4 +1,4 @@
-import { FeeRecordCorrection } from '@ukef/dtfs2-common';
+import { FeeRecordCorrectionSummary } from '@ukef/dtfs2-common';
 import { RecordCorrectionRowViewModel, RecordCorrectionsViewModel, FeeRecordDisplayStatus } from '../../../types/view-models';
 import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
 
@@ -9,14 +9,15 @@ import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
  * @returns the view model for the row in the record correction table
  */
 export const mapToRecordCorrectionTableRowViewModel = (
-  feeRecordCorrection: FeeRecordCorrection,
+  feeRecordCorrection: FeeRecordCorrectionSummary,
   displayStatus: FeeRecordDisplayStatus,
 ): RecordCorrectionRowViewModel => ({
+  correctionId: feeRecordCorrection.correctionId,
   feeRecordId: feeRecordCorrection.feeRecordId,
   facilityId: feeRecordCorrection.facilityId,
   exporter: feeRecordCorrection.exporter,
-  reasons: feeRecordCorrection.reasons,
-  dateSent: feeRecordCorrection.dateSent,
+  reasons: feeRecordCorrection.formattedReasons,
+  dateSent: feeRecordCorrection.formattedDateSent,
   requestedBy: feeRecordCorrection.requestedBy,
   status: feeRecordCorrection.status,
   displayStatus,
@@ -27,7 +28,7 @@ export const mapToRecordCorrectionTableRowViewModel = (
  * @param recordCorrectionDetails - the record correction details
  * @returns the record correction details view model
  */
-export const mapToRecordCorrectionViewModel = (recordCorrectionDetails: FeeRecordCorrection[]): RecordCorrectionsViewModel => {
+export const mapToRecordCorrectionViewModel = (recordCorrectionDetails: FeeRecordCorrectionSummary[]): RecordCorrectionsViewModel => {
   const mappedRows = recordCorrectionDetails.map((recordCorrection) => {
     const displayStatus = getFeeRecordDisplayStatus(recordCorrection.status);
     return mapToRecordCorrectionTableRowViewModel(recordCorrection, displayStatus);

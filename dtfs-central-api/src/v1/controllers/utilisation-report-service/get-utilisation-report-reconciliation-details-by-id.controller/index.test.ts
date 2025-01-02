@@ -31,7 +31,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller', () =>
         },
       });
 
-    const utilisationReportRepoFindSpy = jest.spyOn(UtilisationReportRepo, 'findOneByIdWithFeeRecordsWithPayments');
+    const utilisationReportRepoFindSpy = jest.spyOn(UtilisationReportRepo, 'findOneByIdWithFeeRecordsWithPaymentsAndCorrections');
 
     beforeEach(() => {
       utilisationReportRepoFindSpy.mockRejectedValue(new Error('Some error'));

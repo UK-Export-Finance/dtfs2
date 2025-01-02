@@ -87,7 +87,6 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
     recordCorrection.additionalInfo = additionalInfo;
     recordCorrection.isCompleted = false;
     recordCorrection.updateLastUpdatedBy(requestSource);
-    recordCorrection.dateRequested = new Date();
     return recordCorrection;
   }
 }

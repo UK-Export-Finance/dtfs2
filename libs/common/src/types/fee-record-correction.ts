@@ -6,12 +6,13 @@ export type RequestedByUser = {
   lastName: string;
 };
 
-export type FeeRecordCorrection = {
+export type FeeRecordCorrectionSummary = {
+  correctionId: number;
   feeRecordId: number;
   facilityId: string;
   exporter: string;
-  reasons: string;
-  dateSent: string;
+  formattedReasons: string;
+  formattedDateSent: string;
   requestedBy: string;
   status: FeeRecordStatus;
 };

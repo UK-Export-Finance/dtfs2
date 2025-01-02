@@ -17,13 +17,13 @@
     <tbody class="govuk-table__body">
       {% for recordCorrectionRow in recordCorrectionRows %}
 
-        <tr class="govuk-table__row" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.feeRecordId }}">
-          <td class="govuk-table__cell" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.feeRecordId }}-facility-id">{{ recordCorrectionRow.facilityId }}</td>
-          <td class="govuk-table__cell" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.feeRecordId }}-exporter">{{ recordCorrectionRow.exporter }}</td>
-          <td class="govuk-table__cell" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.feeRecordId }}-reasons">{{ recordCorrectionRow.reasons }}</td>
-          <td class="govuk-table__cell" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.feeRecordId }}-date-sent">{{ recordCorrectionRow.dateSent }}</td>
-          <td class="govuk-table__cell" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.feeRecordId }}-requested-by">{{ recordCorrectionRow.requestedBy }}</td>
-          <td class="govuk-table__cell" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.feeRecordId }}-status">
+        <tr class="govuk-table__row" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.correctionId }}">
+          <td class="govuk-table__cell" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.correctionId }}-facility-id">{{ recordCorrectionRow.facilityId }}</td>
+          <td class="govuk-table__cell" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.correctionId }}-exporter">{{ recordCorrectionRow.exporter }}</td>
+          <td class="govuk-table__cell" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.correctionId }}-reasons">{{ recordCorrectionRow.reasons }}</td>
+          <td class="govuk-table__cell" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.correctionId }}-date-sent">{{ recordCorrectionRow.dateSent }}</td>
+          <td class="govuk-table__cell" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.correctionId }}-requested-by">{{ recordCorrectionRow.requestedBy }}</td>
+          <td class="govuk-table__cell" data-cy="record-correction-history-table-row-{{ recordCorrectionRow.correctionId }}-status">
            {{ feeRecordStatus.render({
               status: recordCorrectionRow.status,
               displayStatus: recordCorrectionRow.displayStatus

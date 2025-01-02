@@ -1,4 +1,4 @@
-import { mockRecordCorrectionDetails, FeeRecordCorrection } from '@ukef/dtfs2-common';
+import { mockRecordCorrectionDetails, FeeRecordCorrectionSummary } from '@ukef/dtfs2-common';
 import { mapToRecordCorrectionTableRowViewModel, mapToRecordCorrectionViewModel } from './record-correction-helpers';
 import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
 
@@ -14,8 +14,8 @@ describe('record-correction-helpers', () => {
         feeRecordId: feeRecordCorrection.feeRecordId,
         facilityId: feeRecordCorrection.facilityId,
         exporter: feeRecordCorrection.exporter,
-        reasons: feeRecordCorrection.reasons,
-        dateSent: feeRecordCorrection.dateSent,
+        reasons: feeRecordCorrection.formattedReasons,
+        dateSent: feeRecordCorrection.formattedDateSent,
         requestedBy: feeRecordCorrection.requestedBy,
         status: feeRecordCorrection.status,
         displayStatus,
@@ -28,7 +28,7 @@ describe('record-correction-helpers', () => {
   describe('mapToRecordCorrectionViewModel', () => {
     describe('when no record corrections are provided', () => {
       it('should return an empty array', () => {
-        const recordCorrectionDetails = [] as FeeRecordCorrection[];
+        const recordCorrectionDetails = [] as FeeRecordCorrectionSummary[];
 
         const result = mapToRecordCorrectionViewModel(recordCorrectionDetails);
 
@@ -36,16 +36,35 @@ describe('record-correction-helpers', () => {
       });
     });
 
-    it('should correctly map record correction details to the record correction details view model', () => {
-      const recordCorrectionDetails = [feeRecordCorrection];
+    describe('when 1 record correction is present', () => {
+      it('should correctly map record correction details to the record correction details view model', () => {
+        const recordCorrectionDetails = mockRecordCorrectionDetails[0];
 
-      const result = mapToRecordCorrectionViewModel(recordCorrectionDetails);
+        const result = mapToRecordCorrectionViewModel([recordCorrectionDetails]);
 
-      const expected = {
-        recordCorrectionRows: [mapToRecordCorrectionTableRowViewModel(feeRecordCorrection, displayStatus)],
-      };
+        const expected = {
+          recordCorrectionRows: [mapToRecordCorrectionTableRowViewModel(feeRecordCorrection, displayStatus)],
+        };
 
-      expect(result).toEqual(expected);
+        expect(result).toEqual(expected);
+      });
+    });
+
+    describe('when multiple record corrections are present', () => {
+      it('should correctly map record correction details to the record correction details view model', () => {
+        const multipleRecordCorrectionDetails = mockRecordCorrectionDetails;
+
+        const result = mapToRecordCorrectionViewModel(multipleRecordCorrectionDetails);
+
+        const expected = {
+          recordCorrectionRows: [
+            mapToRecordCorrectionTableRowViewModel(multipleRecordCorrectionDetails[0], displayStatus),
+            mapToRecordCorrectionTableRowViewModel(multipleRecordCorrectionDetails[1], displayStatus),
+          ],
+        };
+
+        expect(result).toEqual(expected);
+      });
     });
   });
 });

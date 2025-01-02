@@ -147,6 +147,7 @@ export type UtilisationTableRowViewModel = {
 
 export type RecordCorrectionRowViewModel = {
   feeRecordId: number;
+  correctionId: number;
   facilityId: string;
   exporter: string;
   reasons: string;
