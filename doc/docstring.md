@@ -188,7 +188,7 @@ interface User {
 1. **Audit**: Review the existing codebase to identify functions, classes,
    types, and interfaces lacking proper documentation.
 
-2. **standardise**: Rewrite the docstrings using the appropriate JSDoc or
+2. **Standardise**: Rewrite the docstrings using the appropriate JSDoc or
    TSDoc format as outlined above.
 
 3. **Review**: Ensure that all docstrings are consistent and adhere to the
