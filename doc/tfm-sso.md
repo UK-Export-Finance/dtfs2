@@ -8,18 +8,17 @@ TFM uses
 
 This means that instead of handling our own authentication, the user is
 redirected to a Microsoft login page. They do not require a separate set of TFM
-login credentials, instead using their UKEF Microsoft credentials. Microsoft
-will handle both login failures and successes, and then on success redirect the
-user back to the TFM application.
+login credentials, instead using their UKEF Microsoft credentials. MS Entra ID
+will handle both login failures and successes. There are two possible outcomes
+from a MS Entra ID (SSO) login:
+
+- ✅ Authorised: User will be redirected to the TFM page.
+- ❌ Denied: User will be presented with an appropriate message.
 
 ## Process flow diagrams
 
-Note: all source `.drawio` files for the following diagrams are contained within
+**Note**: all source `.drawio` files for the following diagrams are contained within
 the [assets](./assets) directory, so they can be updated if required.
-
-### Key
-
-![key](./assets/tfn-entra-id-auth_key.drawio.png)
 
 ### Authenticate Page Request
 
@@ -31,11 +30,23 @@ Notes:
    `userToken` value in the UI server session.
 
 2. You'll notice that Entra ID initially returns an "Auth Code", which we then
-   need to check the validity of in TFM API. Usually, this check is used to gain an Access Token from Entra, however in our case, we are using our own local token issuing policy. As a result, we perform this check but immediately discard the Access Token and issue our own local token.
+   need to check the validity of in TFM API.
+   Usually, this check is used to gain an Access Token from Entra, however in
+   our case we are using our own local token issuing policy.
 
-   Note: As the request for the Auth Code involves the browser, it is less secure as browsers are more susceptible to malicious attacks. The Auth Code is therefore a short-lived, one-time-use code. The Access Token (which we discard) in contrast is long-lived and can be used multiple times. As a result, we should only get an Access Token via a secure server-to-server request (TFM API to Entra ID).
+   As a result, we perform this check but immediately discard
+   the Access Token and issue our own local token.
 
-   If we need to communicate with Entra multiple times, we should look to use the Access Token issued by Entra and not the auth code. This is as per the [OAuth 2.0 spec](https://oauth.net/2/).
+   **Note**: As the request for the Auth Code involves the browser, it is less
+   secure as browsers are more susceptible to malicious attacks.
+   The Auth Code is therefore a short-lived, one-time-use code.
+   The Access Token (which we discard) in contrast is long-lived and can be
+   used multiple times. As a result, we should only get an Access Token
+   via a secure server-to-server request (TFM API to Entra ID).
+
+   If we need to communicate with Entra multiple times, we should look to
+   use the Access Token issued by Entra and not the auth code.
+   This is as per the [OAuth 2.0 spec](https://oauth.net/2/).
 
 3. Why do we briefly see an "accept-sso-redirect" form before submitting another
    duplicate request to the TFM UI? This is because we need to be able to
@@ -50,7 +61,7 @@ Notes:
    will not be available. We get around this by auto-submitting a hidden form
    from our own site, which includes the values provided in the Entra ID
    response, therefore allowing us to now access the user's session cookie. Why
-   we need access to the user's session is discussed in point 4 below.
+   we need access to the user's session is discussed in the point 4.
 
 4. When we validate the Auth Code in TFM API, we need to ensure that the Auth
    Code response we received from Entra ID is from the actual request that the
@@ -65,6 +76,6 @@ Notes:
    [EntraIdStrategy](../../../packages/gift-ui/src/modules/auth/entra-id/entra-id.strategy.ts)).
    When making the follow-up request to validate the Auth Code, we obtain the
    original Auth Code request details from the session and include them in the
-   request.
-   This allows us to validate that the state in our original request matches the
-   state in the Auth Code response received back from Entra ID via the redirect.
+   request. This allows us to validate that the state in our original
+   request matches the state in the Auth Code response received back from
+   Entra ID via the redirect.
