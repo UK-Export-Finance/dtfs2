@@ -4,6 +4,8 @@ import * as api from '../../../services/api';
 import { CoverEndDateViewModel } from '../../../types/view-models/amendments/cover-end-date-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper';
+import { getPreviousPage } from '../helpers/navigation.helper';
+import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 
 export type GetCoverEndDateRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -34,10 +36,22 @@ export const getCoverEndDate = async (req: GetCoverEndDateRequest, res: Response
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      return res.redirect('/not-found');
+    }
+
+    if (!amendment.changeCoverEndDate) {
+      return res.redirect(
+        `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
+      );
+    }
+
     const viewModel: CoverEndDateViewModel = {
       exporterName: deal.exporter.companyName,
       cancelUrl: `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/cancel`,
-      previousPage: `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/what-needs-to-change`,
+      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.COVER_END_DATE, amendment),
     };
 
     return res.render('partials/amendments/cover-end-date.njk', viewModel);
