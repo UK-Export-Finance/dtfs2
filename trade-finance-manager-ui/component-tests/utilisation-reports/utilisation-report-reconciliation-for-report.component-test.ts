@@ -136,7 +136,7 @@ describe(page, () => {
 
       wrapper
         .expectText(`[data-cy="how-to-create-record-correction-request-text"]`)
-        .toMatch(/Errors with a fee record can be addressed and queried with the bank when the 'Create a record correction request' button is selected./);
+        .toMatch(/Errors with a fee record can be addressed and queried with the bank through a record correction request./);
 
       wrapper.expectText(`[data-cy="how-to-add-payments-text"]`).notToExist();
       wrapper.expectText(`[data-cy="how-to-generate-keying-data-text"]`).notToExist();

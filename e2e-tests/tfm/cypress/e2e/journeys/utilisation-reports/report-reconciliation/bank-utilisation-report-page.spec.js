@@ -69,11 +69,6 @@ context('Bank utilisation report page', () => {
         utilisationReportPage.premiumPaymentsTab.howToGenerateKeyingDataText(),
         `When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected.`,
       );
-
-      cy.assertText(
-        utilisationReportPage.premiumPaymentsTab.createRecordCorrectionRequestText(),
-        `If there is an error with the fee record, select the record to create a record correction request to send a query to the bank.`,
-      );
     });
 
     it('should NOT display read-only text', () => {
@@ -106,11 +101,6 @@ context('Bank utilisation report page', () => {
       cy.assertText(
         utilisationReportPage.premiumPaymentsTab.receivedPaymentsText(),
         `Received payments are entered against reported fees. When payments show as matched, the adjustment data for keying into ACBS will be automatically generated.`,
-      );
-
-      cy.assertText(
-        utilisationReportPage.premiumPaymentsTab.createRecordCorrectionRequestText(),
-        `Errors with a fee record can be addressed and queried with the bank when the 'Create a record correction request' button is selected.`,
       );
     });
 
