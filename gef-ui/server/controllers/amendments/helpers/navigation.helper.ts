@@ -61,7 +61,7 @@ export const getPreviousPage = (currentPage: PortalAmendmentPage, amendment: Por
     throw new Error(`Cannot get previous page for ${currentPage}`);
   }
 
-  return `/gef/application-details/${amendment.dealId}/facility/${amendment.facilityId}/amendments/${amendment.amendmentId}/${journey[currentPageIndex - 1]}`;
+  return `/gef/application-details/${amendment.dealId}/facilities/${amendment.facilityId}/amendments/${amendment.amendmentId}/${journey[currentPageIndex - 1]}`;
 };
 
 /**
@@ -78,5 +78,5 @@ export const getNextPage = (currentPage: PortalAmendmentPage, amendment: PortalF
     throw new Error(`Cannot get next page for ${currentPage}`);
   }
 
-  return `/gef/application-details/${amendment.dealId}/facility/${amendment.facilityId}/amendments/${amendment.amendmentId}/${journey[currentPageIndex + 1]}`;
+  return `/gef/application-details/${amendment.dealId}/facilities/${amendment.facilityId}/amendments/${amendment.amendmentId}/${journey[currentPageIndex + 1]}`;
 };

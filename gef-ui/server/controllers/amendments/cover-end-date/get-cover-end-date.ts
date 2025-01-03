@@ -44,13 +44,13 @@ export const getCoverEndDate = async (req: GetCoverEndDateRequest, res: Response
 
     if (!amendment.changeCoverEndDate) {
       return res.redirect(
-        `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
+        `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
       );
     }
 
     const viewModel: CoverEndDateViewModel = {
       exporterName: deal.exporter.companyName,
-      cancelUrl: `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/cancel`,
+      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.COVER_END_DATE, amendment),
     };
 
