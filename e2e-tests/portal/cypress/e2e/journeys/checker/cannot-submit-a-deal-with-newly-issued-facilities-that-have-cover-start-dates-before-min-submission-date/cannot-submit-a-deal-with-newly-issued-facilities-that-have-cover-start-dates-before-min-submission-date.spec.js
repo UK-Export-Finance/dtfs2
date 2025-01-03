@@ -30,7 +30,7 @@ context(
     it('should display a validation error', () => {
       cy.login(BANK1_MAKER1);
 
-      dashboardDeals.rowIndex.link().click();
+      dashboardDeals.rowByIndex(0).link().click();
 
       // complete "bond details"
       contract.addBondButton().click();

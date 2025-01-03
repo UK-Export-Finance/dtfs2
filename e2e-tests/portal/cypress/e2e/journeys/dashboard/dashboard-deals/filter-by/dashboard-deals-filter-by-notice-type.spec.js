@@ -1,4 +1,4 @@
-const { DEAL_TYPE, FACILITY_STAGE } = require('@ukef/dtfs2-common');
+const { DEAL_SUBMISSION_TYPE, FACILITY_STAGE } = require('@ukef/dtfs2-common');
 
 const relative = require('../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
@@ -18,7 +18,7 @@ context('Dashboard Deals filters - filter by submissionType/noticeType', () => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal({ fillOutAllFields: true, dealSubmissionType: DEAL_TYPE.BSS_EWCS, facilityStage: FACILITY_STAGE.ISSUED });
+    cy.createBssEwcsDeal({ fillOutAllFields: true, dealSubmissionType: DEAL_SUBMISSION_TYPE.MIA, facilityStage: FACILITY_STAGE.ISSUED });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       ALL_DEALS.push(deal);

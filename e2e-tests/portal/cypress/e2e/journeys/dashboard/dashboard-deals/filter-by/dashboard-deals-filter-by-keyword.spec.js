@@ -80,10 +80,12 @@ context('Dashboard Deals filters - filter by keyword', () => {
 
     it(`renders only deals that have ${MOCK_KEYWORD} in a field`, () => {
       const expectedLength = 1; // only 1x BSS/EWCS deal has MOCK_KEYWORD.
+      cy.keyboardInput(filters.panel.form.keyword.input(), MOCK_KEYWORD);
+      filters.panel.form.applyFiltersButton().click();
 
       dashboardDeals.rows().should('have.length', expectedLength);
 
-      cy.assertText(dashboardDeals.rowIndex.exporter(), MOCK_KEYWORD);
+      cy.assertText(dashboardDeals.rowByIndex(0).exporter(), MOCK_KEYWORD);
     });
   });
 });

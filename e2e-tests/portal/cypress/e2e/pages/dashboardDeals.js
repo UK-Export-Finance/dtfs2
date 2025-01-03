@@ -4,11 +4,6 @@ const page = {
   rows: () => cy.get('.govuk-table__body .govuk-table__row'),
   exporterButton: () => cy.get('[data-cy="deal__header--exporter-button"]'),
 
-  // NOTE (TODO: Add documentation)
-
-  // * selector is "containing"
-  // ^ selector is "starts with"
-  // if these are working as expected, update rowIndex to use *, to be consistent
   row: {
     exporter: (id) => cy.get(`[data-cy*="deal__exporter--${id}"]`),
     bankRef: (id) => cy.get(`[data-cy*="deal__bankRef--${id}"]`),
@@ -18,21 +13,19 @@ const page = {
     type: (id) => cy.get(`[data-cy*="deal__submissionType--${id}"]`),
     updated: (id) => cy.get(`[data-cy*="deal__updated--${id}"]`),
   },
-  rowIndex: {
-    exporter: (index = 1) => cy.get(`[data-cy*="deal__exporter--index--${index}"]`),
-
-    link: (index = 1) => cy.get(`[data-cy*="deal__link--index--${index}"]`),
-
-    bankRef: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(1),
-
-    product: (index = 1) => cy.get(`[data-cy*="deal__product--index--${index}"]`),
-
-    type: (index = 1) => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(3),
-
-    status: (index = 1) => cy.get(`[data-cy*="deal__status--index--${index}"]`),
-
+  /**
+   * Get row elements by row index
+   * @param {number} index - the row index to select, starting from 0
+   */
+  rowByIndex: (index) => ({
+    exporter: () => cy.get(`[data-cy*="deal__exporter--index--${index + 1}"]`),
+    link: () => cy.get(`[data-cy*="deal__link--index--${index + 1}"]`),
+    bankRef: () => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(1),
+    product: () => cy.get(`[data-cy*="deal__product--index--${index + 1}"]`),
+    type: () => cy.get(`[data-cy*="deal__submissionType--index--${index + 1}"]`),
+    status: () => cy.get(`[data-cy*="deal__status--index--${index + 1}"]`),
     updated: (dealId) => cy.get(`[data-cy*="deal__updated--${dealId}"]`),
-  },
+  }),
   paginationNav: () => cy.get('[data-cy="pagination"] nav'),
   first: () => cy.get('[data-cy="First"]'),
   previous: () => cy.get('[data-cy="Previous"]'),

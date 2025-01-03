@@ -22,7 +22,7 @@ context('Only allow authorised users to access admin pages', () => {
         cy.url().then((url) => {
           dealId = url.split('/').pop();
           expect(dealId).to.be.a('string');
-          cy.url().should('include', `/contract/${dealId}`);
+          cy.url().should('eq', relative(`/contract/${dealId}`));
         });
       });
     });

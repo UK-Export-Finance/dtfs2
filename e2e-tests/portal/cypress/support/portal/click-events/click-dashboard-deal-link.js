@@ -5,8 +5,8 @@ import { dashboardDeals } from '../../../e2e/pages';
  * Click a deal link in the dashboard.
  * @param {Integer} index: Dashboard row index
  */
-const clickDashboardDealLink = (index) => {
-  dashboardDeals.rowIndex.link(index).click();
+const clickDashboardDealLink = () => {
+  dashboardDeals.rowByIndex(0).link().click();
 };
 
 export default clickDashboardDealLink;

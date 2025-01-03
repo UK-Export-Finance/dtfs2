@@ -81,7 +81,7 @@ context('Dashboard Deals filters - filter by status', () => {
     it('renders only draft deals', () => {
       dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH_BY_STATUS.DRAFT);
 
-      dashboardDeals.rowIndex.status(2).should('have.text', CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
+      dashboardDeals.rowByIndex(1).status().should('have.text', CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
     });
   });
 
@@ -137,9 +137,9 @@ context('Dashboard Deals filters - filter by status', () => {
     });
 
     it('renders only Ready for Check deals', () => {
-      dashboardDeals.rowIndex.status().should('have.length', EXPECTED_DEALS_LENGTH_BY_STATUS.READY_FOR_CHECK);
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH_BY_STATUS.READY_FOR_CHECK);
 
-      cy.assertText(dashboardDeals.rowIndex.status(), CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
+      cy.assertText(dashboardDeals.rowByIndex(0).status(), CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
     });
   });
 

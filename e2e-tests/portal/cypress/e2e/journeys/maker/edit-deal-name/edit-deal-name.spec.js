@@ -32,7 +32,7 @@ context('Edit deal name', () => {
     contract.editDealName().contains('Edit deal name');
     contract.editDealName().click();
 
-    cy.keyboardInput(editDealName.additionalRefName(), '{selectall}{backspace}mock');
+    cy.keyboardInput(editDealName.additionalRefName(), 'mock');
     cy.clickSubmitButton();
 
     cy.assertText(contract.additionalRefName(), 'mock');

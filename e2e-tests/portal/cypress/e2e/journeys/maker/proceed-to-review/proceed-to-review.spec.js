@@ -135,7 +135,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
     });
   });
 
-  it('Ensure proceed to review button is not visible', () => {
+  it('Ensure proceed to review button is not visible when the deal status is in Draft', () => {
     cy.loginGoToDealPage(BANK1_MAKER1);
 
     // Proceed to review button

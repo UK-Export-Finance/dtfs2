@@ -43,7 +43,7 @@ context('Admin dashboard', () => {
 
     // check the fields we understand
     expect(dashboardDeals.tableHeader('bankRef').should('exist'));
-    expect(dashboardDeals.rowIndex.bankRef().should('exist'));
+    expect(dashboardDeals.rowByIndex(1).bankRef().should('exist'));
   });
 
   it('clicking on a gef deal takes you to application details page (Admin)', () => {
@@ -54,7 +54,7 @@ context('Admin dashboard', () => {
 
   it('clicking on a bss deal takes you to application details page (Admin)', () => {
     cy.login(ADMIN);
-    dashboardDeals.rowIndex.link(2).click();
+    dashboardDeals.rowByIndex(1).link().click();
     cy.url().should('include', '/contract');
   });
 
@@ -77,7 +77,7 @@ context('Admin dashboard', () => {
 
   it('clicking on a bss facility takes you to application details focussing on the facility (Admin)', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.rowIndex.link(2).click();
+    dashboardDeals.rowByIndex(1).link().click();
     // adds bond
     cy.addBondToDeal();
     // gets bond id

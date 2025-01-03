@@ -123,7 +123,7 @@ context('View dashboard deals as a checker', () => {
     cy.get('table tr').eq(2).as('secondRow');
     const bssDealId = bssDeal._id;
 
-    dashboardDeals.rowIndex.status(2).should('exist');
+    dashboardDeals.rowByIndex(1).status().should('exist');
 
     cy.assertText(exporter(bssDealId), bssDeal.exporter.companyName);
 

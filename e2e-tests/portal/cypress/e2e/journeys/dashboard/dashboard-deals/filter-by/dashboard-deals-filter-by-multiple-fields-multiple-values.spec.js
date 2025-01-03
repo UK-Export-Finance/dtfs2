@@ -176,11 +176,16 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
   });
 
   it('renders the correct aria-labels based on filter selected', () => {
+    applyFilters();
+
     dashboardSubNavigation
       .deals()
       .invoke('attr', 'aria-label')
       .then((label) => {
-        expect(label).to.equal('deals: ,Filters selected: none');
+        cy.log('label', label);
+        expect(label).to.equal(
+          "deals: ,Filters selected: , Notice Type: , Automatic Inclusion Notice, Manual Inclusion Application, Status: , Draft, Ready for Checker's approval",
+        );
       });
 
     dashboardSubNavigation
