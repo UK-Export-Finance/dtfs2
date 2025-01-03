@@ -15,6 +15,8 @@ export type ProvideUtilisationReportCorrectionViewModel = {
   primaryNav: PrimaryNavKey;
   correctionRequestDetails: CorrectionRequestDetailsViewModel;
   paymentCurrencyOptions: RadioItem[];
-  additionalCommentsLabel: string;
-  additionalCommentsHint: string;
+  additionalComments: {
+    label: string;
+    hint: string;
+  };
 };

@@ -32,14 +32,13 @@ export const getProvideUtilisationReportCorrection = async (req: GetProvideUtili
 
     const paymentCurrencyOptions = mapCurrenciesToRadioItems();
 
-    const { label: additionalCommentsLabel, hint: additionalCommentsHint } = getAdditionalCommentsFieldLabels(feeRecordCorrection.reasons);
+    const additionalCommentsLabels = getAdditionalCommentsFieldLabels(feeRecordCorrection.reasons);
 
     return renderProvideUtilisationReportCorrectionPage(res, {
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       correctionRequestDetails: mapToCorrectionRequestDetailsViewModel(feeRecordCorrection),
       paymentCurrencyOptions,
-      additionalCommentsLabel,
-      additionalCommentsHint,
+      additionalComments: additionalCommentsLabels,
     });
   } catch (error) {
     console.error('Failed to get provide utilisation report correction %o', error);

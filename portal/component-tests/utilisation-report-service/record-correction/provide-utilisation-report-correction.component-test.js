@@ -141,21 +141,23 @@ describe(page, () => {
 
   it('should render the provided "additional comments" input labels', () => {
     // Arrange
-    const additionalCommentsLabel = 'Additional comments label';
-    const additionalCommentsHint = 'Additional comments hint';
+    const label = 'Additional comments label';
+    const hint = 'Additional comments hint';
 
     const viewModel = {
       ...aProvideUtilisationReportCorrectionViewModel(),
-      additionalCommentsLabel,
-      additionalCommentsHint,
+      additionalComments: {
+        label,
+        hint,
+      },
     };
 
     // Act
     const wrapper = render(viewModel);
 
     // Assert
-    wrapper.expectText(`[data-cy="additional-comments-label"]`).toRead(additionalCommentsLabel);
-    wrapper.expectText(`[data-cy="additional-comments-hint"]`).toRead(additionalCommentsHint);
+    wrapper.expectText(`[data-cy="additional-comments-label"]`).toRead(label);
+    wrapper.expectText(`[data-cy="additional-comments-hint"]`).toRead(hint);
   });
 
   it('should render the provided "error type" header text', () => {

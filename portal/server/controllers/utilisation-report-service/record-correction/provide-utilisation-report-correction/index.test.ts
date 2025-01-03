@@ -71,8 +71,10 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
         correctionRequestDetails: expectedCorrectionRequestDetails,
         paymentCurrencyOptions: expectedPaymentCurrencyOptions,
-        additionalCommentsHint: expectedAdditionalCommentsHint,
-        additionalCommentsLabel: expectedAdditionalCommentsLabel,
+        additionalComments: {
+          label: expectedAdditionalCommentsLabel,
+          hint: expectedAdditionalCommentsHint,
+        },
       });
     });
 
@@ -112,8 +114,8 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         // Assert
         const viewModel = res._getRenderData() as ProvideUtilisationReportCorrectionViewModel;
 
-        expect(viewModel.additionalCommentsLabel).toEqual(expectedLabel);
-        expect(viewModel.additionalCommentsHint).toEqual(expectedHint);
+        expect(viewModel.additionalComments.label).toEqual(expectedLabel);
+        expect(viewModel.additionalComments.hint).toEqual(expectedHint);
       });
     });
 

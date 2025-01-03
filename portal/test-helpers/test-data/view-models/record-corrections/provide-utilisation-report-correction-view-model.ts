@@ -14,6 +14,8 @@ export const aProvideUtilisationReportCorrectionViewModel = (): ProvideUtilisati
     errorTypeHeader: 'Error type',
   },
   paymentCurrencyOptions: mapCurrenciesToRadioItems(),
-  additionalCommentsLabel: 'Additional comments label',
-  additionalCommentsHint: 'Additional comments hint',
+  additionalComments: {
+    label: 'Additional comments label',
+    hint: 'Additional comments hint',
+  },
 });
