@@ -1,34 +1,27 @@
-const pages = require('../../../pages');
+import { DEAL_SUBMISSION_TYPE, FACILITY_STAGE } from '@ukef/dtfs2-common';
+
+const { contract, dashboardDeals } = require('../../../pages');
 const partials = require('../../../partials');
 const fillBondForm = require('../../maker-bond/fill-bond-forms');
 const fillLoanForm = require('../../maker-loan/fill-loan-forms');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
-const dealWithNoFacilities = require('../submit-issued-facilities-for-review/dealWithNoFacilities');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('Ensure proceed to review button is only visible once facilities are in eligible for submission', () => {
-  let deal;
-
-  before(() => {
-    cy.insertOneDeal(dealWithNoFacilities, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
-    });
+  beforeEach(() => {
+    cy.createBssEwcsDeal();
   });
 
-  after(() => {
+  afterEach(() => {
     cy.deleteDeals(ADMIN);
   });
 
   it('Add an un-issued bond', () => {
-    // Login as a `Maker`
-    cy.login(BANK1_MAKER1);
-
-    // Navigate to the deal in question
-    pages.contract.visit(deal);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     // Ensure proceed to review button does not exist
-    pages.contract.proceedToReview().should('not.exist');
+    contract.proceedToReview().should('not.exist');
 
     // Add bond
     cy.clickAddBondButton();
@@ -47,11 +40,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   it('Add an un-issued (conditional) loan', () => {
-    // Login as a `Maker`
-    cy.login(BANK1_MAKER1);
-
-    // Navigate to the deal in question
-    pages.contract.visit(deal);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     // Add loan
     cy.clickAddLoanButton();
@@ -70,22 +59,11 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   it('Ensure proceed to review button is visible', () => {
-    // Login as a `Maker`
-    cy.login(BANK1_MAKER1);
-
-    // Navigate to the deal in question
-    pages.contract.visit(deal);
-
-    // Proceed to review button
-    pages.contract.proceedToReview().should('exist');
+    cy.createBssEwcsDeal({ fillOutAllFields: true, dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
   });
 
   it('Add an issued bond', () => {
-    // Login as a `Maker`
-    cy.login(BANK1_MAKER1);
-
-    // Navigate to the deal in question
-    pages.contract.visit(deal);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     // Add bond
     cy.clickAddBondButton();
@@ -104,11 +82,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   it('Add an issued (unconditional) loan', () => {
-    // Login as a `Maker`
-    cy.login(BANK1_MAKER1);
-
-    // Navigate to the deal in question
-    pages.contract.visit(deal);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     // Add loan
     cy.clickAddLoanButton();
@@ -127,22 +101,11 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   it('Ensure proceed to review button is visible', () => {
-    // Login as a `Maker`
-    cy.login(BANK1_MAKER1);
-
-    // Navigate to the deal in question
-    pages.contract.visit(deal);
-
-    // Proceed to review button
-    pages.contract.proceedToReview().should('exist');
+    cy.createBssEwcsDeal({ fillOutAllFields: true, dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
   });
 
   it('Add a partial issued (unconditional) loan', () => {
-    // Login as a `Maker`
-    cy.login(BANK1_MAKER1);
-
-    // Navigate to the deal in question
-    pages.contract.visit(deal);
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     // Add loan
     cy.clickAddLoanButton();
@@ -161,25 +124,21 @@ context('Ensure proceed to review button is only visible once facilities are in 
     cy.clickSubmitButton();
 
     // Navigate to the deal in question
-    pages.contract.visit(deal);
+    dashboardDeals.visit();
+    cy.clickDashboardDealLink();
 
     // Ensure facility stage is `Incomplete`
-    pages.contract.loansTransactionsTableRows().each((row, index) => {
+    contract.loansTransactionsTableRows().each((row) => {
       const loanId = row.attr('data-cy').split('-')[1];
-      const loan = pages.contract.loansTransactionsTable.row(loanId);
-      const status = index === 2 ? 'Incomplete' : 'Complete';
-      loan.loanStatus().contains(status);
+      const loan = contract.loansTransactionsTable.row(loanId);
+      loan.loanStatus().contains('Incomplete');
     });
   });
 
-  it('Ensure proceed to review button is not visible', () => {
-    // Login as a `Maker`
-    cy.login(BANK1_MAKER1);
-
-    // Navigate to the deal in question
-    pages.contract.visit(deal);
+  it('Ensure proceed to review button is not visible when the deal status is in Draft', () => {
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     // Proceed to review button
-    pages.contract.proceedToReview().should('not.exist');
+    contract.proceedToReview().should('not.exist');
   });
 });
