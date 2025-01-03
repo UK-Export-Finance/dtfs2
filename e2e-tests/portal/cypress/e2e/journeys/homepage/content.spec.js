@@ -29,6 +29,7 @@ context('Portal homepage', () => {
     login.banks().contains('Virgin Money');
     login.banks().contains('Shawbrook Bank');
     login.banks().contains('ICICI');
+    login.banks().contains('ABC Bank');
   });
 
   it('Ensure product text is visible on the portal login page', () => {

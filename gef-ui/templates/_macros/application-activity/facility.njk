@@ -1,0 +1,25 @@
+{% import './status-change.njk' as statusChange %}
+
+{% macro render(params) %}
+
+  {% set dealId = params.dealId %}
+  {% set facilityId = params.facilityId %}
+  {% set ukefFacilityId = params.ukefFacilityId %}
+  {% set facilityType = params.facilityType %}
+  {% set maker = params.maker %}
+  {% set checker = params.checker %}
+
+  <p class="colour-light-grey" data-cy="facility-changed-by-{{ ukefFacilityId }}">Changed by {{ maker.firstname }} {{ maker.surname }}</p>
+  <p class="colour-light-grey" data-cy="facility-checked-by-{{ ukefFacilityId }}">Checked by {{ checker.firstname }} {{ checker.surname }} </p>
+
+  <p class="govuk-!-margin-bottom-0">
+    <a href="/gef/application-details/{{dealId}}#{{ facilityId }}" class="govuk-link" data-cy="facility-link-{{ ukefFacilityId }}">{{ facilityType }}  {{ ukefFacilityId }}</a>
+
+    {{ statusChange.render({
+      previousStatus: "Unissued",
+      newStatus: "Issued",
+      id: ukefFacilityId,
+      tagColour: "purple"
+    }) }}
+  </p>
+{% endmacro %}

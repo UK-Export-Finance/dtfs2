@@ -8,6 +8,7 @@ const pageBanner = {
   userName: () => cy.get('[data-cy="username-header"]'),
   profile: () => cy.get('[data-cy="profile-header"]'),
   betaBanner: () => cy.get('[data-cy="beta-banner"]'),
+  betaBannerTag: () => cy.get('[data-cy="beta-banner"] strong'),
   betaBannerHref: () => cy.get('[data-cy="beta-feedback-link"]'),
   logout: () => cy.get('[data-cy="logout-header"]'),
 };

@@ -4,3 +4,6 @@ export * from './deal-stage';
 export * from './deal-cancellation-status';
 export * from './facility-stage';
 export * from './activity-types';
+export * from './comment-type';
+export * from './underwriter-manager-decisions';
+export * from './user-status';

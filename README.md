@@ -1,7 +1,7 @@
 # Digital Trade Finance Service :briefcase:
 
 This repository contains the code for the UK Export Finance Trade Finance Service.
-This documentation provides a comprehensive overview of the UKEF Digital TradeFinance Service (DTFS), including prerequisites, technology stack, setup instructions, testing procedures, deployment guidelines, and other essential information for the developers.
+This documentation provides a comprehensive overview of the UKEF Digital TradeFinance Service (DTFS), including prerequisites, technology stack, setup instructions, testing procedures, deployment guidelines and other essential information for the developers.
 
 **Status** 🚦
 
@@ -113,7 +113,7 @@ These variables are stored as secrets in the GitHub repository. When deploying t
 
 ## Testing :test_tube:
 
-### Run All Tests (E2E, API, and UI) :rocket:
+### Run All Tests (E2E, API and UI) :rocket:
 
 With Docker running, execute all tests using the following command:
 
