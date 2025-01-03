@@ -10,7 +10,8 @@ import {
   getAdditionalCommentsFieldLabels,
   mapToCorrectionRequestDetailsViewModel,
   optionalAdditionalCommentsFieldLabels,
-  requiredAdditionalCommentsFieldLabels,
+  requiredAdditionalCommentsFieldLabelsForManyReasons,
+  requiredAdditionalCommentsFieldLabelsForSingleReason,
 } from './helpers';
 import { aGetFeeRecordCorrectionResponseBody } from '../../../../../test-helpers/test-data/get-fee-record-correction-response';
 import { GetFeeRecordCorrectionResponseBody } from '../../../../api-response-types';
@@ -100,7 +101,7 @@ describe('provide-utilisation-report-correction helpers', () => {
 
   describe('getAdditionalCommentsFieldLabels', () => {
     describe(`when the only fee record correction reason is '${RECORD_CORRECTION_REASON.OTHER}'`, () => {
-      it('should return the "required" additional info field labels', () => {
+      it('should return the "required" additional info field labels for a single reason', () => {
         // Arrange
         const reasons = [RECORD_CORRECTION_REASON.OTHER];
 
@@ -108,7 +109,7 @@ describe('provide-utilisation-report-correction helpers', () => {
         const result = getAdditionalCommentsFieldLabels(reasons);
 
         // Assert
-        expect(result).toEqual(requiredAdditionalCommentsFieldLabels);
+        expect(result).toEqual(requiredAdditionalCommentsFieldLabelsForSingleReason);
       });
     });
 
@@ -126,7 +127,7 @@ describe('provide-utilisation-report-correction helpers', () => {
     });
 
     describe(`when the fee record correction has multiple reasons including '${RECORD_CORRECTION_REASON.OTHER}'`, () => {
-      it('should return the "required" additional info field labels', () => {
+      it('should return the "required" additional info field labels for multiple reasons', () => {
         // Arrange
         const reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER];
 
@@ -134,7 +135,7 @@ describe('provide-utilisation-report-correction helpers', () => {
         const result = getAdditionalCommentsFieldLabels(reasons);
 
         // Assert
-        expect(result).toEqual(requiredAdditionalCommentsFieldLabels);
+        expect(result).toEqual(requiredAdditionalCommentsFieldLabelsForManyReasons);
       });
     });
 
@@ -157,7 +158,7 @@ describe('provide-utilisation-report-correction helpers', () => {
         const reasons: RecordCorrectionReason[] = [];
 
         // Assert
-        expect(() => getAdditionalCommentsFieldLabels(reasons)).toThrow('Correction must have at least one reason');
+        expect(() => getAdditionalCommentsFieldLabels(reasons)).toThrow('Corrections must have at least one reason');
       });
     });
   });

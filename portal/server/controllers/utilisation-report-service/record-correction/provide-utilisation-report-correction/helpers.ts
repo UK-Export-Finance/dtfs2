@@ -31,15 +31,26 @@ export type AdditionalCommentsFieldLabels = {
 };
 
 /**
- * Labels for when the additional comments field is required.
+ * Labels for the additional comments field when {@link RECORD_CORRECTION_REASON.OTHER}
+ * is the only correction reason.
  */
-export const requiredAdditionalCommentsFieldLabels: AdditionalCommentsFieldLabels = {
+export const requiredAdditionalCommentsFieldLabelsForSingleReason: AdditionalCommentsFieldLabels = {
   label: 'Record information',
   hint: 'Provide the correct information as indicated by UKEF',
 };
 
 /**
- * Labels for when the additional comments field is optional.
+ * Labels for the additional comments field when there are many correction
+ * reasons including {@link RECORD_CORRECTION_REASON.OTHER}.
+ */
+export const requiredAdditionalCommentsFieldLabelsForManyReasons: AdditionalCommentsFieldLabels = {
+  label: 'Additional comments',
+  hint: 'For example, if you are disputing the change, explain why below',
+};
+
+/**
+ * Labels for the additional comments field when the correction reasons do not
+ * include {@link RECORD_CORRECTION_REASON.OTHER}.
  */
 export const optionalAdditionalCommentsFieldLabels: AdditionalCommentsFieldLabels = {
   label: 'Additional comments (optional)',
@@ -49,18 +60,22 @@ export const optionalAdditionalCommentsFieldLabels: AdditionalCommentsFieldLabel
 /**
  * Gets the labels for the additional comments field based on the correction reasons.
  * @param correctionReasons The array of correction reasons
- * @returns The required additional comments labels if the reasons include
- * {@link{RECORD_CORRECTION_REASON.OTHER}}, otherwise the optional additional
- * comments labels.
+ * @returns The additional comments labels, dependent on the correction reasons.
  */
 export const getAdditionalCommentsFieldLabels = (correctionReasons: RecordCorrectionReason[]): AdditionalCommentsFieldLabels => {
   if (correctionReasons.length === 0) {
-    throw new Error('Correction must have at least one reason');
+    throw new Error('Corrections must have at least one reason');
   }
 
-  if (correctionReasons.includes(RECORD_CORRECTION_REASON.OTHER)) {
-    return requiredAdditionalCommentsFieldLabels;
+  const hasOtherReason = correctionReasons.includes(RECORD_CORRECTION_REASON.OTHER);
+
+  if (!hasOtherReason) {
+    return optionalAdditionalCommentsFieldLabels;
   }
 
-  return optionalAdditionalCommentsFieldLabels;
+  if (correctionReasons.length === 1) {
+    return requiredAdditionalCommentsFieldLabelsForSingleReason;
+  }
+
+  return requiredAdditionalCommentsFieldLabelsForManyReasons;
 };
