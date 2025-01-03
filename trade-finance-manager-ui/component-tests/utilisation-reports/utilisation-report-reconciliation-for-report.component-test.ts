@@ -97,6 +97,10 @@ describe(page, () => {
           /When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected./,
         );
 
+      wrapper
+        .expectText(`[data-cy="how-to-create-record-correction-request-text"]`)
+        .toMatch(/If there is an error with the fee record, select the record to create a record correction request to send a query to the bank./);
+
       wrapper.expectText(`[data-cy="received-payments-text"]`).notToExist();
 
       wrapper.expectElement(`${premiumPaymentsTabSelector} form[data-cy="premium-payments-form"]`).toExist();
@@ -129,6 +133,10 @@ describe(page, () => {
         .toMatch(
           /Received payments are entered against reported fees. When payments show as matched, the adjustment data for keying into ACBS will be automatically generated./,
         );
+
+      wrapper
+        .expectText(`[data-cy="how-to-create-record-correction-request-text"]`)
+        .toMatch(/Errors with a fee record can be addressed and queried with the bank when the 'Create a record correction request' button is selected./);
 
       wrapper.expectText(`[data-cy="how-to-add-payments-text"]`).notToExist();
       wrapper.expectText(`[data-cy="how-to-generate-keying-data-text"]`).notToExist();
