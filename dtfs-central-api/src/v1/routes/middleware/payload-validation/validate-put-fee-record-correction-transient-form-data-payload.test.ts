@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { ObjectId } from 'typeorm';
+import { ObjectId } from 'mongodb';
 import {
   PutFeeRecordCorrectionTransientFormDataPayload,
   validatePutFeeRecordCorrectionTransientFormDataPayload,

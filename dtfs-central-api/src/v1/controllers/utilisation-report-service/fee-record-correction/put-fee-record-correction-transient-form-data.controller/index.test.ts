@@ -139,7 +139,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
       await putFeeRecordCorrectionTransientFormData(req, res);
 
       // Assert
-      expect(res._getData()).toEqual(`Failed to put fee record correction request transient form data: ${errorMessage}`);
+      expect(res._getData()).toEqual(`Failed to put fee record correction transient form data: ${errorMessage}`);
       expect(mockSaveTransientFormData).not.toHaveBeenCalled();
     });
 
@@ -164,7 +164,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
       await putFeeRecordCorrectionTransientFormData(req, res);
 
       // Assert
-      expect(res._getData()).toEqual(`Failed to put fee record correction request transient form data`);
+      expect(res._getData()).toEqual(`Failed to put fee record correction transient form data`);
 
       expect(mockSaveTransientFormData).not.toHaveBeenCalled();
     });
