@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
+import { getFormattedReportPeriodWithLongMonth, PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { getFindReportsByYear } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
@@ -341,7 +341,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         dateUploaded: '2024-02-15 10:38:01.4033333',
         totalFeesReported: 3,
         reportedFeesLeftToReconcile: 3,
-        formattedReportPeriod: 'January 2024',
+        formattedReportPeriod: getFormattedReportPeriodWithLongMonth(reportPeriod),
         displayStatus: 'Pending reconciliation',
         formattedDateUploaded: '15 Feb 2024',
       };
