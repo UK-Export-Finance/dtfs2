@@ -169,6 +169,7 @@ describe(`GET ${BASE_URL}`, () => {
         // Act
         const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { bankId }));
 
+        // Assert
         expect((response.body as PendingCorrectionsResponseBody).nextDueReportPeriod).toEqual(
           getNextReportPeriodForBankSchedule(bank.utilisationReportPeriodSchedule),
         );

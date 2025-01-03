@@ -190,7 +190,7 @@ describe('get-utilisation-report-pending-corrections.controller helpers', () => 
       await getNextDueReportPeriod(bank);
 
       // Assert
-      expect(findDueReportsByBankIdSpy).toHaveBeenCalledWith(bank.id);
+      expect(findDueReportsByBankIdSpy).toHaveBeenCalledTimes(1);
       expect(findDueReportsByBankIdSpy).toHaveBeenCalledWith(bank.id);
     });
 
@@ -287,7 +287,7 @@ describe('get-utilisation-report-pending-corrections.controller helpers', () => 
       });
 
       describe('and when finding the user errors', () => {
-        const mockError = new Error('Could not fine user');
+        const mockError = new Error('Could not find user');
 
         beforeEach(() => {
           jest.mocked(getUserById).mockRejectedValue(mockError);

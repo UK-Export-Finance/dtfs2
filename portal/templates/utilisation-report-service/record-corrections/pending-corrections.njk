@@ -6,11 +6,11 @@
   <h1 class="govuk-heading-l" data-cy="main-heading">
     Report GEF utilisation and fees
   </h1>
-  <p class="govuk-body">
+  <p class="govuk-body" data-cy="corrections-info-text">
     The following errors in the {{ formattedReportPeriod }} report uploaded by {{ uploadedByFullName }} on {{ formattedDateUploaded }} have been identified by UKEF:
   </p>
   <h2 class="govuk-heading-m" data-cy="pending-corrections-heading">Record correction</h2>
-  <p class="govuk-body">
+  <p class="govuk-body" data-cy="selection-text">
     Select the record you would like to amend from the list below
   </p>
 
@@ -40,7 +40,7 @@
         attributes: { "data-cy": "pending-corrections-row--error-summary" }
       }
     ] %}
-    {% set rows = (rows.push(row), rows) %}
+    {% set rows = rows.concat([row]) %}
   {% endfor %}
 
   {{ govukTable({

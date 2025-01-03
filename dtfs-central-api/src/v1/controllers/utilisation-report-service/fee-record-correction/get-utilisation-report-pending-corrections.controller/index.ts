@@ -59,7 +59,8 @@ export const getUtilisationReportPendingCorrectionsByBankId = async (
     const oldestReportWithPendingCorrections = await UtilisationReportRepo.findOldestReportWithPendingCorrectionsByBankId(bankId);
 
     if (!oldestReportWithPendingCorrections) {
-      // If there aren't any reports with pending corrections then we return null.
+      // If there is not an oldest report with pending corrections, that means
+      // that none of reports have pending corrections, so we return an empty object.
       return res.status(HttpStatusCode.Ok).send({});
     }
 

@@ -12,8 +12,7 @@ export type GetUtilisationReportPendingCorrectionsRequest = CustomExpressRequest
 /**
  * Controller for the GET utilisation report pending corrections route.
  *
- * If there are pending corrections returns the corrections,
- * if there are no pending corrections returns an empty object.
+ * Returns pending corrections if any exist, otherwise returns an empty object.
  * @param req - The request object
  * @param res - The response object
  */
