@@ -1,6 +1,8 @@
 const express = require('express');
 const { validatePortalFacilityAmendmentsEnabled } = require('@ukef/dtfs2-common');
 const validation = require('../validation/route-validators/route-validators');
+const { validatePutPortalFacilityAmendmentPayload } = require('./middleware/payload-validation/validate-put-portal-facility-amendment-payload');
+const { validatePatchPortalFacilityAmendmentPayload } = require('./middleware/payload-validation/validate-patch-portal-facility-amendment-payload');
 
 const portalRouter = express.Router();
 const createDealController = require('../controllers/portal/deal/create-deal.controller');
@@ -30,6 +32,8 @@ const createGefFacilityController = require('../controllers/portal/gef-facility/
 const updateGefFacilityController = require('../controllers/portal/gef-facility/update-facility.controller');
 
 const getFacilityAmendmentController = require('../controllers/portal/facility/get-amendment.controller');
+const putFacilityAmendmentController = require('../controllers/portal/facility/put-amendment.controller');
+const patchFacilityAmendmentController = require('../controllers/portal/facility/patch-amendment.controller');
 
 const durableFunctionsController = require('../controllers/durable-functions/durable-functions.controller');
 const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controller');
@@ -514,9 +518,9 @@ portalRouter.route('/facilities/:id/status').put(updateFacilityStatusController.
  * @openapi
  * /facilities/:facilityId/amendments/:amendmentId:
  *   get:
- *     summary: Get a Portal GEF facility amendment
- *     tags: [Portal - GEF]
- *     description: Get a Portal GEF facility amendment
+ *     summary: Get a Portal facility amendment
+ *     tags: [Portal - Amendments]
+ *     description: Get a Portal facility amendment
  *     parameters:
  *       - in: path
  *         name: facilityId
@@ -539,11 +543,98 @@ portalRouter.route('/facilities/:id/status').put(updateFacilityStatusController.
  *                $ref: '#/definitions/PortalAmendment'
  *       404:
  *         description: Not found
+ *   patch:
+ *     summary: Update a Portal GEF facility amendment
+ *     tags: [Portal - Amendments]
+ *     description: Update a Portal GEF facility amendment
+ *     parameters:
+ *       - in: path
+ *         name: facilityId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Facility ID amendment should exist on
+ *       - in: path
+ *         name: amendmentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Amendment ID to get
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               update:
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAmendmentUserInput'
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/PortalAmendment'
+ *       404:
+ *         description: Not found
  */
 portalRouter
   .route('/facilities/:facilityId/amendments/:amendmentId')
   .all(validatePortalFacilityAmendmentsEnabled, validation.mongoIdValidation('facilityId'), validation.mongoIdValidation('amendmentId'))
-  .get(getFacilityAmendmentController.getAmendment);
+  .get(getFacilityAmendmentController.getAmendment)
+  .patch(validatePatchPortalFacilityAmendmentPayload, patchFacilityAmendmentController.patchAmendment);
+
+/**
+ * @openapi
+ * /facilities/:facilityId/amendments:
+ *   put:
+ *     summary: upsert a Portal facility amendment
+ *     tags: [Portal - Amendments]
+ *     description: Upsert a Portal facility amendment
+ *     parameters:
+ *       - in: path
+ *         name: facilityId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Facility ID amendment should exist on
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               dealId:
+ *                type: string
+ *                example: '123456abcdef123456abcdef'
+ *               amendment:
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAmendmentUserInput'
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/PortalAmendment'
+ *       404:
+ *         description: Not found
+ */
+portalRouter
+  .route('/facilities/:facilityId/amendments')
+  .all(validatePortalFacilityAmendmentsEnabled, validation.mongoIdValidation('facilityId'))
+  .put(validatePutPortalFacilityAmendmentPayload, putFacilityAmendmentController.putAmendmentDraft);
 
 /**
  * @openapi

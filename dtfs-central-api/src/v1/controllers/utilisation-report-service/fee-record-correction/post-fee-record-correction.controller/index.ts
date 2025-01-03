@@ -10,6 +10,7 @@ import { NotFoundError } from '../../../../../errors';
 import { PostFeeRecordCorrectionPayload } from '../../../../routes/middleware/payload-validation';
 import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
 import { sendFeeRecordCorrectionRequestEmails } from './helpers';
+import { FeeRecordCorrectionRequestEmailAddresses } from '../../../../../types/utilisation-reports';
 
 export type PostFeeRecordCorrectionRequest = CustomExpressRequest<{
   params: {
@@ -19,6 +20,8 @@ export type PostFeeRecordCorrectionRequest = CustomExpressRequest<{
   reqBody: PostFeeRecordCorrectionPayload;
 }>;
 
+type PostFeeRecordCorrectionResponse = Response<FeeRecordCorrectionRequestEmailAddresses | string>;
+
 /**
  * Controller for the POST fee record correction endpoint
  *
@@ -27,10 +30,14 @@ export type PostFeeRecordCorrectionRequest = CustomExpressRequest<{
  *
  * Updates the fee record status to PENDING_CORRECTION.
  *
+ * Deletes transient form data for the requesting user and fee record.
+ *
+ * Sends fee record correction request emails
+ *
  * @param req - The request object
  * @param res - The response object
  */
-export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionRequest, res: Response) => {
+export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionRequest, res: PostFeeRecordCorrectionResponse) => {
   const { reportId: reportIdString, feeRecordId: feeRecordIdString } = req.params;
   const { user } = req.body;
 
@@ -39,7 +46,7 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
     const feeRecordId = Number(feeRecordIdString);
     const userId = user._id.toString();
 
-    await executeWithSqlTransaction(async (transactionEntityManager) => {
+    const recipientEmailAddresses = await executeWithSqlTransaction<FeeRecordCorrectionRequestEmailAddresses>(async (transactionEntityManager) => {
       const formDataEntity = await FeeRecordCorrectionTransientFormDataRepo.withTransaction(transactionEntityManager).findByUserIdAndFeeRecordId(
         userId,
         feeRecordId,
@@ -77,10 +84,20 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
         },
       });
 
-      await sendFeeRecordCorrectionRequestEmails(reasons, feeRecord.report.reportPeriod, feeRecord.exporter, feeRecord.report.bankId, user.email);
+      await FeeRecordCorrectionTransientFormDataRepo.withTransaction(transactionEntityManager).deleteByUserIdAndFeeRecordId(userId, feeRecordId);
+
+      const notifiedEmails = await sendFeeRecordCorrectionRequestEmails(
+        reasons,
+        feeRecord.report.reportPeriod,
+        feeRecord.exporter,
+        feeRecord.report.bankId,
+        user.email,
+      );
+
+      return notifiedEmails;
     });
 
-    return res.sendStatus(HttpStatusCode.Ok);
+    return res.status(HttpStatusCode.Ok).send(recipientEmailAddresses);
   } catch (error) {
     const errorMessage = 'Failed to create record correction';
     console.error(errorMessage, error);

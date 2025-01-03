@@ -15,19 +15,13 @@ import { SqlDbHelper } from '../../../sql-db-helper';
 import { aBank } from '../../../../test-helpers';
 import { mongoDbClient } from '../../../../src/drivers/db-client';
 import { wipe } from '../../../wipeDB';
+import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
 
 console.error = jest.fn();
 
 const BASE_URL = '/v1/utilisation-reports/:reportId/fee-records/:feeRecordId/correction-request-review/:userId';
 
 describe(`GET ${BASE_URL}`, () => {
-  const getUrl = (reportId: number | string, feeRecordId: number | string, userId: string) => {
-    const reportIdReplaced = BASE_URL.replace(':reportId', reportId.toString());
-    const feeRecordIdReplaced = reportIdReplaced.replace(':feeRecordId', feeRecordId.toString());
-    const userIdReplaced = feeRecordIdReplaced.replace(':userId', userId);
-    return userIdReplaced;
-  };
-
   const reportId = 1;
   const feeRecordId = 2;
   const userId = '5c0a7922c9d89830f4911426';
@@ -94,7 +88,7 @@ describe(`GET ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', transientFormDataEntity);
 
     // Act
-    const response = await testApi.get(getUrl(reportId, feeRecordId + 1, userId));
+    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId: feeRecordId + 1, userId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -102,7 +96,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it(`should return '${HttpStatusCode.NotFound}' when no correction form data can be found`, async () => {
     // Act
-    const response = await testApi.get(getUrl(reportId, feeRecordId, userId));
+    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId, userId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -117,7 +111,9 @@ describe(`GET ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', transientFormDataEntity);
 
     // Act
-    const response = await testApi.get(getUrl(reportIdWithNoMatchingBank, feeRecordIdWithNoMatchingBank, userId));
+    const response = await testApi.get(
+      replaceUrlParameterPlaceholders(BASE_URL, { reportId: reportIdWithNoMatchingBank, feeRecordId: feeRecordIdWithNoMatchingBank, userId }),
+    );
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -137,7 +133,7 @@ describe(`GET ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', transientFormDataEntity);
 
     // Act
-    const response = await testApi.get(getUrl(reportId, feeRecordId, userId));
+    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId, userId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.Ok);

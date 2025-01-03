@@ -1,4 +1,4 @@
-import { UtilisationReportEntity, getPreviousReportPeriodForBankScheduleByMonth, ReportPeriod } from '@ukef/dtfs2-common';
+import { getPreviousReportPeriodForBankScheduleByMonth, ReportPeriod } from '@ukef/dtfs2-common';
 import { getBankById } from '../repositories/banks-repo';
 import { NotFoundError } from '../errors';
 
@@ -8,10 +8,10 @@ import { NotFoundError } from '../errors';
  * constructs the month formatted to ISO 8601 month string in format 'yyyy-MM'
  * returns the previous report period from getPreviousReportPeriodForBankScheduleByMonth
  * @param bankId
- * @param report
+ * @param reportPeriod
  * @returns previous report period from getPreviousReportPeriodForBankScheduleByMonth
  */
-export const getPreviousReportPeriod = async (bankId: string, report: UtilisationReportEntity): Promise<ReportPeriod> => {
+export const getPreviousReportPeriod = async (bankId: string, reportPeriod: ReportPeriod): Promise<ReportPeriod> => {
   try {
     const bank = await getBankById(bankId);
 
@@ -20,7 +20,7 @@ export const getPreviousReportPeriod = async (bankId: string, report: Utilisatio
       throw new NotFoundError(`Bank not found: ${bankId}`);
     }
 
-    const { start } = report.reportPeriod;
+    const { start } = reportPeriod;
     const paddedMonth = String(start.month).padStart(2, '0');
     const monthFormatted = `${start.year}-${paddedMonth}`;
 

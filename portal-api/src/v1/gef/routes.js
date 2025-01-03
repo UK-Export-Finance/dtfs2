@@ -1,7 +1,9 @@
 const { HttpStatusCode } = require('axios');
 const express = require('express');
+const { validatePortalFacilityAmendmentsEnabled } = require('@ukef/dtfs2-common');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../roles/roles');
 const { validateUserHasAtLeastOneAllowedRole } = require('../roles/validate-user-has-at-least-one-allowed-role');
+const { mongoIdValidation } = require('../validation/route-validators/route-validators');
 
 const { fileUpload } = require('../middleware/file-upload');
 
@@ -13,6 +15,10 @@ const eligibilityCriteria = require('./controllers/eligibilityCriteria.controlle
 const externalApi = require('./controllers/externalApi.controller');
 const files = require('./controllers/files.controller');
 const companies = require('../controllers/companies.controller');
+const { getAmendment } = require('../controllers/amendments/get-amendment.controller');
+const { putAmendment } = require('../controllers/amendments/put-amendment.controller');
+const { handleExpressValidatorResult } = require('../validation/route-validators/express-validator-result-handler');
+const { validatePutPortalFacilityAmendmentPayload } = require('../validation/route-validators/validate-put-portal-facility-amendment-payload');
 
 const router = express.Router();
 
@@ -110,5 +116,27 @@ router.route('/companies/:registrationNumber').get(validateUserHasAtLeastOneAllo
 router
   .route('/address/:postcode') // Geospatial Addresses
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, ADMIN] }), externalApi.getAddressesByPostcode);
+
+router
+  .route('/facilities/:facilityId/amendments/:amendmentId')
+  .all(
+    validatePortalFacilityAmendmentsEnabled,
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }),
+    mongoIdValidation('facilityId'),
+    mongoIdValidation('amendmentId'),
+    handleExpressValidatorResult,
+  )
+  .get(getAmendment);
+
+router
+  .route('/facilities/:facilityId/amendments')
+  .put(
+    validatePortalFacilityAmendmentsEnabled,
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }),
+    mongoIdValidation('facilityId'),
+    handleExpressValidatorResult,
+    validatePutPortalFacilityAmendmentPayload,
+    putAmendment,
+  );
 
 module.exports = router;

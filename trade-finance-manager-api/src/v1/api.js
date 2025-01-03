@@ -1744,13 +1744,29 @@ const getFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, us
 };
 
 /**
+ * Deletes fee record correction transient form data by report id, fee record id, and user id
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {string} userId - The user id
+ * @returns {Promise<void>}
+ */
+const deleteFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, userId) => {
+  await axios({
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data/${userId}`,
+    method: 'delete',
+    headers: headers.central,
+  });
+};
+
+/**
  * Creates a fee record correction
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
  * @param {import('../types/tfm-session-user').TfmSessionUser} user - The requesting user
+ * @returns {Promise<import('./api-response-types').FeeRecordCorrectionResponseBody>}
  */
 const createFeeRecordCorrection = async (reportId, feeRecordId, user) => {
-  await axios({
+  const response = await axios({
     url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/corrections`,
     method: 'post',
     headers: headers.central,
@@ -1758,6 +1774,8 @@ const createFeeRecordCorrection = async (reportId, feeRecordId, user) => {
       user,
     },
   });
+
+  return response.data;
 };
 
 module.exports = {
@@ -1840,6 +1858,7 @@ module.exports = {
   getFeeRecord,
   getFeeRecordCorrectionRequestReview,
   updateFeeRecordCorrectionTransientFormData,
-  createFeeRecordCorrection,
   getFeeRecordCorrectionTransientFormData,
+  deleteFeeRecordCorrectionTransientFormData,
+  createFeeRecordCorrection,
 };

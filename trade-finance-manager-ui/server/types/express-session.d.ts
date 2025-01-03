@@ -22,5 +22,6 @@ declare module 'express-session' {
     generateKeyingDataErrorKey: GenerateKeyingDataErrorKey;
     removeFeesFromPaymentErrorKey: RemoveFeesFromPaymentErrorKey;
     editPaymentFormValues: EditPaymentFormValues;
+    recordCorrectionRequestEmails: string[];
   }
 }

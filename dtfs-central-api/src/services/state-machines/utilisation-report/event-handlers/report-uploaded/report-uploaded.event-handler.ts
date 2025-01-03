@@ -1,17 +1,10 @@
 import { EntityManager } from 'typeorm';
-import {
-  DbRequestSource,
-  UtilisationReportEntity,
-  AzureFileInfo,
-  AzureFileInfoEntity,
-  FeeRecordEntity,
-  FacilityUtilisationDataEntity,
-  UtilisationReportRawCsvData,
-} from '@ukef/dtfs2-common';
+import { DbRequestSource, UtilisationReportEntity, AzureFileInfo, AzureFileInfoEntity, FeeRecordEntity, UtilisationReportRawCsvData } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
-import { feeRecordCsvRowToSqlEntity, getPreviousReportPeriod } from '../../../../../helpers';
-import { calculateInitialUtilisationAndFixedFee } from '../helpers';
+import { feeRecordCsvRowToSqlEntity } from '../../../../../helpers';
 import { UTILISATION_REPORT_EVENT_TYPE } from '../../event/utilisation-report.event-type';
+import { CHUNK_SIZE_FOR_SQL_BATCH_SAVING } from '../../../../../constants';
+import { FacilityUtilisationDataService } from '../../../../facility-utilisation-data/facility-utilisation-data.service';
 
 type ReportUploadedEventPayload = {
   azureFileInfo: AzureFileInfo;
@@ -20,46 +13,6 @@ type ReportUploadedEventPayload = {
   requestSource: DbRequestSource;
   transactionEntityManager: EntityManager;
 };
-
-/**
- * Creates a new facility utilisation data entity by id if an entity does not exist
- * if it does not exist:
- * gets the previous report period as it should not be the same as the current report period
- * calculates the initial utilisation and fixed fee
- * creates a new facility utilisation data entity with the calculated values
- * @param facilityId - The facility id
- * @param report - The report
- * @param requestSource - The request source
- * @param entityManager - The entity manager
- * @returns The new facility utilisation data entity
- */
-const createFacilityUtilisationDataEntityIfNotExists = async (
-  facilityId: string,
-  report: UtilisationReportEntity,
-  requestSource: DbRequestSource,
-  entityManager: EntityManager,
-): Promise<FacilityUtilisationDataEntity | null> => {
-  const entityExists = await entityManager.existsBy(FacilityUtilisationDataEntity, { id: facilityId });
-  if (entityExists) {
-    return null;
-  }
-
-  const { bankId } = report;
-
-  const previousReportPeriod = await getPreviousReportPeriod(bankId, report);
-
-  const { utilisation, fixedFee } = await calculateInitialUtilisationAndFixedFee(facilityId);
-
-  return FacilityUtilisationDataEntity.create({
-    id: facilityId,
-    reportPeriod: previousReportPeriod,
-    requestSource,
-    utilisation,
-    fixedFee,
-  });
-};
-
-const CHUNK_SIZE_FOR_BATCH_SAVING = 100;
 
 export type UtilisationReportReportUploadedEvent = BaseUtilisationReportEvent<typeof UTILISATION_REPORT_EVENT_TYPE.REPORT_UPLOADED, ReportUploadedEventPayload>;
 
@@ -89,19 +42,17 @@ export const handleUtilisationReportReportUploadedEvent = async (
   });
   await transactionEntityManager.save(UtilisationReportEntity, report);
 
-  const uniqueReportCsvDataFacilityIds: string[] = Array.from(
-    reportCsvData.reduce((uniqueFacilityIds, { 'ukef facility id': facilityId }) => uniqueFacilityIds.add(facilityId), new Set<string>()),
-  );
-  const facilityUtilisationDataEntities = await Promise.all(
-    uniqueReportCsvDataFacilityIds.map((facilityId) =>
-      createFacilityUtilisationDataEntityIfNotExists(facilityId, report, requestSource, transactionEntityManager),
-    ),
+  const uniqueReportCsvDataFacilityIds = reportCsvData.reduce(
+    (uniqueFacilityIds, { 'ukef facility id': facilityId }) => uniqueFacilityIds.add(facilityId),
+    new Set<string>(),
   );
 
-  await transactionEntityManager.save(
-    FacilityUtilisationDataEntity,
-    facilityUtilisationDataEntities.filter((entity): entity is FacilityUtilisationDataEntity => entity !== null),
-    { chunk: CHUNK_SIZE_FOR_BATCH_SAVING },
+  await FacilityUtilisationDataService.initialiseFacilityUtilisationData(
+    uniqueReportCsvDataFacilityIds,
+    report.bankId,
+    report.reportPeriod,
+    requestSource,
+    transactionEntityManager,
   );
 
   const feeRecordEntities: FeeRecordEntity[] = reportCsvData.map((dataEntry) =>
@@ -111,7 +62,8 @@ export const handleUtilisationReportReportUploadedEvent = async (
       report,
     }),
   );
-  await transactionEntityManager.save(FeeRecordEntity, feeRecordEntities, { chunk: CHUNK_SIZE_FOR_BATCH_SAVING });
+
+  await transactionEntityManager.save(FeeRecordEntity, feeRecordEntities, { chunk: CHUNK_SIZE_FOR_SQL_BATCH_SAVING });
   report.updateWithFeeRecords({
     feeRecords: feeRecordEntities,
   });

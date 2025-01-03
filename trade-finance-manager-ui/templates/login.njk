@@ -1,6 +1,7 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/password-input/macro.njk" import govukPasswordInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% extends "index.njk" %}
@@ -19,9 +20,9 @@
           {{ govukErrorSummary({
             titleText: "There is a problem",
             errorList: errors.errorSummary,
-            classes: 'govuk-!-margin-bottom-0',
+            classes: "govuk-!-margin-bottom-0",
             attributes: {
-              'data-cy': 'error-summary'
+              "data-cy": "error-summary"
             }
           }) }}
         {% endif %}
@@ -58,7 +59,7 @@
             }
           }) }}
 
-          {{ govukInput({
+          {{ govukPasswordInput({
             label: {
               text: "Password",
               attributes: {
@@ -67,17 +68,16 @@
             },
             id: "password",
             name: "password",
-            type: "password",
-            spellcheck: false,
+            attributes: {
+              'data-cy': "password",
+              autocomplete: true,
+              spellcheck: false
+            },
             errorMessage: errors.fieldErrors.password and {
               text: errors.fieldErrors.password.text,
               attributes: {
                 "data-cy": "password-error"
               }
-            },
-            attributes: {
-              "data-cy": "password",
-              "autocomplete": "off"
             }
           }) }}
 

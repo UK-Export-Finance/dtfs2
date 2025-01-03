@@ -4,6 +4,7 @@ import { Response } from 'express';
 import api from '../../../api';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { postFeeRecordCorrection, PostFeeRecordCorrectionRequest } from './post-fee-record-correction.controller';
+import { FeeRecordCorrectionResponseBody } from '../../../api-response-types';
 
 console.error = jest.fn();
 
@@ -38,7 +39,20 @@ describe('post-fee-record-correction.controller', () => {
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-      expect(res._isEndCalled()).toEqual(true);
+    });
+
+    it(`should return the notified emails in the response body if the api request is successful`, async () => {
+      const responseBody: FeeRecordCorrectionResponseBody = {
+        emails: ['test1@ukexportfinance.gov.uk', 'test2@ukexportfinance.gov.uk'],
+      };
+
+      jest.mocked(api.createFeeRecordCorrection).mockResolvedValue(responseBody);
+
+      // Act
+      await postFeeRecordCorrection(req, res);
+
+      // Assert
+      expect(res._getData()).toEqual(responseBody);
     });
 
     it('should call the create fee record correction api endpoint once', async () => {
