@@ -1,9 +1,11 @@
 import httpMocks from 'node-mocks-http';
 import { resetAllWhenMocks, when } from 'jest-when';
+import { AuthorizationUrlRequest } from '@azure/msal-node';
 import { aTfmSessionUser } from '../../../../test-helpers';
 import { LoginController } from './login.controller';
 import { LoginService } from '../../../services/login.service';
-import { LoginServiceMockBuilder } from '../../../../test-helpers/mocks';
+import { UserSessionService } from '../../../services/user-session.service';
+import { LoginServiceMockBuilder, UserSessionServiceMockBuilder } from '../../../../test-helpers/mocks';
 
 describe('controllers - login (sso)', () => {
   describe('getLogin', () => {
@@ -12,6 +14,8 @@ describe('controllers - login (sso)', () => {
 
     let loginController: LoginController;
     let loginService: LoginService;
+    let userSessionService: UserSessionService;
+
     const getAuthCodeUrlMock = jest.fn();
     const next = jest.fn();
 
@@ -20,8 +24,8 @@ describe('controllers - login (sso)', () => {
       jest.resetAllMocks();
 
       loginService = new LoginServiceMockBuilder().with({ getAuthCodeUrl: getAuthCodeUrlMock }).build();
-
-      loginController = new LoginController({ loginService });
+      userSessionService = new UserSessionServiceMockBuilder().build();
+      loginController = new LoginController({ loginService, userSessionService });
     });
 
     describe('when there is a user session', () => {
@@ -35,7 +39,7 @@ describe('controllers - login (sso)', () => {
           session: requestSession,
         });
 
-      it('redirects to /home', async () => {
+      it('redirects to /deals', async () => {
         // Arrange
         const { req, res } = getHttpMocks();
 
@@ -43,7 +47,7 @@ describe('controllers - login (sso)', () => {
         await loginController.getLogin(req, res, next);
 
         // Assert
-        expect(res._getRedirectUrl()).toEqual('/home');
+        expect(res._getRedirectUrl()).toEqual('/deals');
       });
     });
 
@@ -70,7 +74,7 @@ describe('controllers - login (sso)', () => {
             session: { loginData: { authCodeUrlRequest: 'an old auth code url request', aField: 'another field' } },
           });
 
-          req.session.loginData = { authCodeUrlRequest: 'old-auth-code-url-request' };
+          req.session.loginData = { authCodeUrlRequest: 'old-auth-code-url-request' as unknown as AuthorizationUrlRequest };
 
           // Act
           await loginController.getLogin(req, res, next);

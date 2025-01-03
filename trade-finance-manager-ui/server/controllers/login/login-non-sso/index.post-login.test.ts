@@ -55,7 +55,7 @@ describe('controllers - login (sso)', () => {
       });
     });
 
-    it('should redirect to /home if login successful', async () => {
+    it('should redirect to /deals if login successful', async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks({
         session: {},
@@ -66,7 +66,7 @@ describe('controllers - login (sso)', () => {
       await postLogin(req, res);
 
       // Assert
-      expect(res._getRedirectUrl()).toEqual('/home');
+      expect(res._getRedirectUrl()).toEqual('/deals');
     });
   });
 });

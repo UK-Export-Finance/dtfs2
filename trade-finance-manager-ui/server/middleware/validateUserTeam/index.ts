@@ -7,11 +7,11 @@ import { userIsInTeam } from '../../helpers/user';
  * Middleware to check if the user is in at least
  * one of the teams specified in the requiredTeamIds
  * array. If they are not, they are redirected to
- * the redirectUrl, which defaults to '/home' if
+ * the redirectUrl, which defaults to '/deals' if
  * it is not explicitly provided.
  */
 export const validateUserTeam =
-  (requiredTeamIds: TeamId[], redirectUrl: string = '/home'): RequestHandler =>
+  (requiredTeamIds: TeamId[], redirectUrl: string = '/deals'): RequestHandler =>
   (req, res, next) => {
     const { user } = asUserSession(req.session);
     if (userIsInTeam(user, requiredTeamIds)) {

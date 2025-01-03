@@ -1,16 +1,19 @@
 import httpMocks from 'node-mocks-http';
 import { LoginController } from './login.controller';
 import { LoginService } from '../../../services/login.service';
-import { LoginServiceMockBuilder } from '../../../../test-helpers/mocks';
+import { LoginServiceMockBuilder, UserSessionServiceMockBuilder } from '../../../../test-helpers/mocks';
+import { UserSessionService } from '../../../services/user-session.service';
 
 describe('controllers - login (sso)', () => {
   describe('getLogout', () => {
     let loginService: LoginService;
+    let userSessionService: UserSessionService;
     let loginController: LoginController;
 
     beforeEach(() => {
       loginService = new LoginServiceMockBuilder().build();
-      loginController = new LoginController({ loginService });
+      userSessionService = new UserSessionServiceMockBuilder().build();
+      loginController = new LoginController({ loginService, userSessionService });
     });
 
     it('redirects to /', () => {
