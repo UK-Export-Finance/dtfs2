@@ -309,7 +309,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
     it("renders the 'utilisation-reports-by-bank-and-year-results.njk' view with required data when there are valid query params", async () => {
       // Arrange
       const bankQuery = BANK_ID_ONE;
-      const yearQuery = new Date().getFullYear().toString();
+      const yearQuery = '2024';
       const reportPeriod = {
         start: {
           month: 1,
