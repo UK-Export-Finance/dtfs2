@@ -15,7 +15,7 @@ import { provideCorrection } from '../../../../pages';
 import { correctionRequestDetails } from '../../../../partials';
 
 context('Provide correction - Fee record correction feature flag enabled', () => {
-  context('Report GEF Utilisation and fees page', () => {
+  context('Report GEF utilisation and fees page', () => {
     beforeEach(() => {
       cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
     });
