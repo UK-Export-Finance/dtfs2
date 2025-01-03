@@ -280,6 +280,16 @@ authRouter
   );
 
 authRouter
+  .route('/banks/:bankId/utilisation-reports/pending-corrections')
+  .get(
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
+    bankIdValidation,
+    handleExpressValidatorResult,
+    validateUserAndBankIdMatch,
+    utilisationReportControllers.getUtilisationReportPendingCorrectionsByBankId,
+  );
+
+authRouter
   .route('/banks/:bankId/utilisation-reports/last-uploaded')
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),

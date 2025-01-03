@@ -1,12 +1,13 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { Response } from 'express';
-import { mapCurrenciesToRadioItems, PORTAL_LOGIN_STATUS, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
+import { aPortalSessionUser, mapCurrenciesToRadioItems, PORTAL_LOGIN_STATUS, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import api from '../../../../api';
 import { getProvideUtilisationReportCorrection, GetProvideUtilisationReportCorrection } from '.';
 import { getAdditionalCommentsFieldLabels, mapToCorrectionRequestDetailsViewModel } from './helpers';
 import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
 import { aGetFeeRecordCorrectionResponseBody } from '../../../../../test-helpers/test-data/get-fee-record-correction-response';
+import { aBank } from '../../../../../test-helpers/test-data';
 
 jest.mock('../../../../api');
 
@@ -15,7 +16,9 @@ console.error = jest.fn();
 describe('controllers/utilisation-reports/record-corrections/create-record-correction-request', () => {
   const bankId = '123';
   const mockUser = {
+    ...aPortalSessionUser(),
     bank: {
+      ...aBank(),
       id: bankId,
     },
   };
@@ -68,6 +71,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       expect(res._getRenderView()).toEqual('utilisation-report-service/record-correction/provide-utilisation-report-correction.njk');
 
       expect(res._getRenderData() as ProvideUtilisationReportCorrectionViewModel).toEqual<ProvideUtilisationReportCorrectionViewModel>({
+        user: mockUser,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
         correctionRequestDetails: expectedCorrectionRequestDetails,
         paymentCurrencyOptions: expectedPaymentCurrencyOptions,

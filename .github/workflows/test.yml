@@ -498,7 +498,9 @@ jobs:
             'maker-loan/**/*.spec.js',
             'read-only/**/*.spec.js',
             'reports/**/*.spec.js',
-            'payment-report-officer/**/*.spec.js',
+            'payment-report-officer/utilisation-report-upload/**/*.spec.js',
+            'payment-report-officer/previous-reports/**/*.spec.js',
+            'payment-report-officer/record-corrections/feature-flag-disabled/**/*.spec.js',
           ]
 
     concurrency:
@@ -892,7 +894,9 @@ jobs:
             './portal/cypress/e2e/journeys/maker-loan/**/*.spec.js',
             './portal/cypress/e2e/journeys/read-only/**/*.spec.js',
             './portal/cypress/e2e/journeys/reports/**/*.spec.js',
-            './portal/cypress/e2e/journeys/payment-report-officer/**/*.spec.js',
+            './portal/cypress/e2e/journeys/payment-report-officer/utilisation-report-upload/**/*.spec.js',
+            './portal/cypress/e2e/journeys/payment-report-officer/previous-reports/**/*.spec.js',
+            './portal/cypress/e2e/journeys/payment-report-officer/record-corrections/feature-flag-enabled/**/*.spec.js',
             './gef/cypress/e2e/*.spec.js',
             './gef/cypress/e2e/application/**/*.spec.js',
             './gef/cypress/e2e/checker/**/*.spec.js',
