@@ -11,7 +11,6 @@ export type PostCreateFacilityAmendmentRequest = CustomExpressRequest<{
 export const postCreateDraftFacilityAmendment = async (req: PostCreateFacilityAmendmentRequest, res: Response) => {
   try {
     const { dealId, facilityId } = req.params;
-
     const { userToken } = asLoggedInUserSession(req.session);
 
     const { amendmentId } = await api.upsertAmendment({ facilityId, dealId, amendment: {}, userToken });

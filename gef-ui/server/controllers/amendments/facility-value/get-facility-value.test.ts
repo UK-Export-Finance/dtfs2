@@ -4,7 +4,16 @@ const getFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
 
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { aPortalSessionUser, CURRENCY, DEAL_STATUS, DEAL_SUBMISSION_TYPE, Facility, PORTAL_LOGIN_STATUS, ROLES } from '@ukef/dtfs2-common';
+import {
+  aPortalSessionUser,
+  CURRENCY,
+  DEAL_STATUS,
+  DEAL_SUBMISSION_TYPE,
+  Facility,
+  PORTAL_LOGIN_STATUS,
+  ROLES,
+  PortalFacilityAmendmentWithUkefId,
+} from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
 import { getFacilityValue, GetFacilityValueRequest } from './get-facility-value';
@@ -13,6 +22,7 @@ import { FacilityValueViewModel } from '../../../types/view-models/amendments/fa
 import { getCurrencySymbol } from './getCurrencySymbol';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
+import { getPreviousPage } from '../helpers/navigation.helper';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
@@ -46,20 +56,22 @@ const mockFacility = {
 } as Facility;
 
 describe('getFacilityValue', () => {
+  let amendment: PortalFacilityAmendmentWithUkefId;
+
   beforeEach(() => {
     jest.resetAllMocks();
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
 
+    amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withDealId(dealId)
+      .withFacilityId(facilityId)
+      .withAmendmentId(amendmentId)
+      .withChangeFacilityValue(true)
+      .build();
+
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue({ details: mockFacility });
-    getAmendmentMock.mockResolvedValue(
-      new PortalFacilityAmendmentWithUkefIdMockBuilder()
-        .withDealId(dealId)
-        .withFacilityId(facilityId)
-        .withAmendmentId(amendmentId)
-        .withChangeFacilityValue(true)
-        .build(),
-    );
+    getAmendmentMock.mockResolvedValue(amendment);
   });
 
   afterAll(() => {
@@ -113,7 +125,7 @@ describe('getFacilityValue', () => {
     const expectedRenderData: FacilityValueViewModel = {
       exporterName: companyName,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
-      previousPage: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
+      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment),
       currencySymbol: getCurrencySymbol(mockFacility.currency.id),
     };
 
