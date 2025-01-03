@@ -16,12 +16,26 @@ export class LoginController {
     this.userSessionService = userSessionService;
   }
 
+  /**
+   * Handles the login process for the user.
+   *
+   * This method checks if the user is already logged in by inspecting the session.
+   * If the user is logged in, they are redirected to the '/deals' page.
+   * If the user is not logged in, it retrieves the authentication code URL and
+   * creates a partially logged-in session before redirecting the user to the authentication URL.
+   *
+   * @param {Request} req - The HTTP request object.
+   * @param {Response} res - The HTTP response object.
+   * @returns {Promise<void>} - A promise that resolves when the login process is complete.
+   *
+   * @throws Will render a problem with service page if an error occurs during the login process.
+   */
   public async getLogin(req: Request, res: Response) {
     try {
-      // TODO: This validation is legacy code, and can be improved
-      if (req.session.user) {
+      // TODO DTFS2-7734: This validation is legacy code, and can be improved
+      if (req?.session?.user) {
         // User is already logged in.
-        return res.redirect('/home');
+        return res.redirect('/deals');
       }
 
       const { authCodeUrl, authCodeUrlRequest } = await this.loginService.getAuthCodeUrl({ successRedirect: '/' });
@@ -30,11 +44,24 @@ export class LoginController {
 
       return res.redirect(authCodeUrl);
     } catch (error) {
-      console.error('Unable to log in user: %O', error);
+      console.error('Unable to log in user %o', error);
       return res.render('_partials/problem-with-service.njk');
     }
   }
 
+  /**
+   * Handles the SSO redirect form submission.
+   *
+   * This method processes the SSO redirect form, verifies the payload, and logs in the user.
+   * If the payload is invalid, it throws an `InvalidPayloadError`.
+   * On successful login, it redirects the user to the specified URL or the home page.
+   * In case of an error, it logs the error and renders a problem with service page.
+   *
+   * @param {HandleSsoRedirectFormUiRequest} req - The request object containing the form data and session.
+   * @param {Response} res - The response object used to redirect or render a page.
+   * @returns {Promise<void>} - A promise that resolves when the operation is complete.
+   * @throws {InvalidPayloadError} - If the payload from the SSO redirect is invalid.
+   */
   async handleSsoRedirectForm(req: HandleSsoRedirectFormUiRequest, res: Response) {
     try {
       const { body, session } = req;
@@ -51,17 +78,29 @@ export class LoginController {
         auditDetails,
       });
 
+      const url = successRedirect ?? '/';
+
       this.userSessionService.createLoggedInSession({ session, user, userToken: token });
 
-      return res.redirect(successRedirect ?? '/');
+      return res.redirect(url);
     } catch (error) {
-      console.error('Unable to redirect user after login: %O', error);
+      console.error('Unable to redirect the user after login %o', error);
       return res.render('_partials/problem-with-service.njk');
     }
   }
 
   // TODO DTFS2-6892: Update this logout handling
+  /**
+   * Handles the logout process for the user.
+   *
+   * This method logs out the user from the Trade Finance Manager (TFM) application.
+   * It destroys the user's session and redirects them to the home page.
+   *
+   * @param req - The HTTP request object.
+   * @param res - The HTTP response object.
+   */
   public getLogout = (req: Request, res: Response) => {
+    console.info('User has been logged out from TFM');
     req.session.destroy(() => {
       res.redirect('/');
     });

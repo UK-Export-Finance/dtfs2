@@ -39,7 +39,7 @@ describe('controllers - login (sso)', () => {
           session: requestSession,
         });
 
-      it('redirects to /home', async () => {
+      it('redirects to /deals', async () => {
         // Arrange
         const { req, res } = getHttpMocks();
 
@@ -47,7 +47,7 @@ describe('controllers - login (sso)', () => {
         await loginController.getLogin(req, res, next);
 
         // Assert
-        expect(res._getRedirectUrl()).toEqual('/home');
+        expect(res._getRedirectUrl()).toEqual('/deals');
       });
     });
 

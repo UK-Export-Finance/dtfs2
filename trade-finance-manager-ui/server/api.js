@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { HttpStatusCode } = require('axios');
 const { HEADERS } = require('@ukef/dtfs2-common');
 const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId, isValidBankId } = require('./helpers/validateIds');
 const { assertValidIsoMonth, assertValidIsoYear } = require('./helpers/date');
@@ -422,9 +423,10 @@ const login = async (username, password) => {
 };
 
 /**
+ * Handles the SSO redirect form request by sending a POST request to the TFM API.
  *
- * @param {import('@ukef/dtfs2-common').HandleSsoRedirectFormRequest} handleSsoRedirectFormRequest
- * @returns {Promise<import('@ukef/dtfs2-common').HandleSsoRedirectFormResponse>}
+ * @param {object} handleSsoRedirectFormRequest - The request payload. Shape from import('@ukef/dtfs2-common').HandleSsoRedirectFormRequest
+ * @returns {Promise<object>} A promise resolving to the response object. Shape from import('@ukef/dtfs2-common').HandleSsoRedirectFormResponse
  */
 const handleSsoRedirectForm = async (handleSsoRedirectFormRequest) => {
   try {
@@ -437,10 +439,15 @@ const handleSsoRedirectForm = async (handleSsoRedirectFormRequest) => {
       data: handleSsoRedirectFormRequest,
     });
 
+    if (!response) {
+      console.error('Invalid response received %o', response);
+      return { status: HttpStatusCode.BadGateway, data: 'Invalid response received' };
+    }
+
     return response.data;
   } catch (error) {
-    console.error('Unable to log in %o', error?.response?.data);
-    return { status: error?.response?.status || 500, data: 'Failed to login' };
+    console.error('An exception has occurred while handling TFM SSO %o', error?.response?.data);
+    return { status: error?.response?.status || HttpStatusCode.InternalServerError, data: 'Failed to login' };
   }
 };
 

@@ -9,8 +9,9 @@ export const getLoginSsoRouter: GetRouter = () => {
   const userSessionService = new UserSessionService();
   const loginController = new LoginController({ loginService, userSessionService });
   const loginSsoRouter = express.Router();
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  loginSsoRouter.get('/', (req, res) => loginController.getLogin(req, res));
+  loginSsoRouter.get('/', (req, res, next) => {
+    loginController.getLogin(req, res).catch(next);
+  });
 
   return loginSsoRouter;
 };
