@@ -16,7 +16,7 @@ import { correctionRequestDetails } from '../../../../partials';
 
 context('Provide correction - Fee record correction feature flag enabled', () => {
   context('Report GEF Utilisation and fees page', () => {
-    before(() => {
+    beforeEach(() => {
       cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
     });
 
@@ -71,35 +71,30 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
         });
       });
 
-      afterEach(() => {
-        cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
-      });
+      context('and when a user has initiated the "provide correction" journey', () => {
+        beforeEach(() => {
+          cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
 
-      context('and when there are no reports due for upload', () => {
-        context('and when a user has initiated the "provide correction" journey', () => {
-          beforeEach(() => {
-            cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
+          // TODO FN-3688: Update this to navigate through from the pending corrections list - dependent on #4086 being merged.
+          cy.visit(relative(`/utilisation-reports/provide-correction/${pendingCorrectionDetails.id}`));
+        });
 
-            cy.visit(relative(`/utilisation-reports/provide-correction/${pendingCorrectionDetails.id}`));
-          });
+        it('should be able to view the record correction request summary on the "provide correction" screen', () => {
+          correctionRequestDetails.container().should('exist');
 
-          it('should be able to view the record correction summary on the "provide correction" screen', () => {
-            correctionRequestDetails.container().should('exist');
+          cy.assertText(correctionRequestDetails.row.facilityId(), pendingCorrectionDetails.facilityId);
+          cy.assertText(correctionRequestDetails.row.exporter(), pendingCorrectionDetails.exporter);
+          cy.assertText(correctionRequestDetails.row.reportedFees(), getFormattedCurrencyAndAmount(pendingCorrectionDetails.reportedFee));
+          cy.assertText(correctionRequestDetails.row.formattedReasons(), mapReasonsToDisplayValues(pendingCorrectionDetails.reasons).join(', '));
+          cy.assertText(correctionRequestDetails.row.additionalInfo(), pendingCorrectionDetails.additionalInfo);
+        });
 
-            cy.assertText(correctionRequestDetails.row.facilityId(), pendingCorrectionDetails.facilityId);
-            cy.assertText(correctionRequestDetails.row.exporter(), pendingCorrectionDetails.exporter);
-            cy.assertText(correctionRequestDetails.row.reportedFees(), getFormattedCurrencyAndAmount(pendingCorrectionDetails.reportedFee));
-            cy.assertText(correctionRequestDetails.row.formattedReasons(), mapReasonsToDisplayValues(pendingCorrectionDetails.reasons).join(', '));
-            cy.assertText(correctionRequestDetails.row.additionalInfo(), pendingCorrectionDetails.additionalInfo);
-          });
-
-          it('should be able to see only the form fields relevant to the correction request reasons', () => {
-            provideCorrection.facilityIdInput().should('exist');
-            provideCorrection.reportedFeeInput().should('not.exist');
-            provideCorrection.reportedCurrency.container().should('exist');
-            provideCorrection.utilisationInput().should('not.exist');
-            provideCorrection.additionalComments.input().should('exist');
-          });
+        it('should be able to see only the form fields relevant to the correction request reasons', () => {
+          provideCorrection.facilityIdInput().should('exist');
+          provideCorrection.reportedFeeInput().should('not.exist');
+          provideCorrection.reportedCurrency.container().should('exist');
+          provideCorrection.utilisationInput().should('not.exist');
+          provideCorrection.additionalComments.input().should('exist');
         });
       });
     });
