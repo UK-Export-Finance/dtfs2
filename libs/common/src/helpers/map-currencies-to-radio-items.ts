@@ -1,4 +1,5 @@
-import { CURRENCY, RadioItem } from '@ukef/dtfs2-common';
+import { CURRENCY } from '../constants';
+import { RadioItem } from '../types';
 
 /**
  * Maps currencies to radio items for form input.
