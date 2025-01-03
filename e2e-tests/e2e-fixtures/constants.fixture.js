@@ -117,6 +117,7 @@ export const NODE_TASKS = {
   INSERT_PAYMENT_MATCHING_TOLERANCES_INTO_DB: 'insertPaymentMatchingTolerancesIntoDb',
   REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES: 'reinsertZeroThresholdPaymentMatchingTolerances',
   INSERT_FEE_RECORDS_INTO_DB: 'insertFeeRecordsIntoDb',
+  GET_FEE_RECORD_FROM_DB_BY_ID: 'getFeeRecordById',
   INSERT_PAYMENTS_INTO_DB: 'insertPaymentsIntoDb',
   REMOVE_ALL_PAYMENTS_FROM_DB: 'removeAllPaymentsFromDb',
   REMOVE_ALL_FEE_RECORDS_FROM_DB: 'removeAllFeeRecordsFromDb',

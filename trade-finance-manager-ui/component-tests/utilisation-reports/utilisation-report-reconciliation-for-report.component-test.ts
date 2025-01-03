@@ -46,6 +46,7 @@ describe(page, () => {
     },
     utilisationDetails: { utilisationTableRows: [], downloadUrl },
     isFeeRecordCorrectionFeatureFlagEnabled: true,
+    recordCorrectionDetails: { recordCorrectionRows: [] },
   };
 
   const getWrapper = (viewModel: UtilisationReportReconciliationForReportViewModel = params) => render(viewModel);
