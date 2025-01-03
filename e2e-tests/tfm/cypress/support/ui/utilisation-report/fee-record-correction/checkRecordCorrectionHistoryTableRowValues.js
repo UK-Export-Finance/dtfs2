@@ -15,8 +15,8 @@ const { table } = recordCorrectionHistoryTab;
  * @param {String} status - provided string with the status of the fee record correction
  */
 const checkRecordCorrectionHistoryTableRowValues = ({ feeRecord, reasons, dateSent, requestedBy, status }) => {
-  const feeRecordId = feeRecord.id;
-  const row = table.row(feeRecordId);
+  const correctionId = feeRecord.corrections[0].id;
+  const row = table.row(correctionId);
 
   cy.assertText(row.facilityId(), feeRecord.facilityId);
   cy.assertText(row.exporter(), feeRecord.exporter);

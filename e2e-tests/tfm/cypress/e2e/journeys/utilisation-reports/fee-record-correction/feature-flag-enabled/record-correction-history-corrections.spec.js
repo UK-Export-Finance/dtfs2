@@ -93,22 +93,26 @@ context('When fee record correction feature flag is enabled', () => {
   });
 
   it('should display the correct values for the first row', () => {
-    cy.checkRecordCorrectionHistoryTableRowValues({
-      feeRecord: firstFeeRecord,
-      reasons: 'Facility ID is incorrect, Other',
-      dateSent: today.dd_MMM_yyyy,
-      requestedBy: `${USERS.PDC_RECONCILE.firstName} ${USERS.PDC_RECONCILE.lastName}`,
-      status: 'Record correction sent',
+    cy.task(NODE_TASKS.GET_FEE_RECORD_FROM_DB_BY_ID, firstFeeRecord.id).then((feeRecord) => {
+      cy.checkRecordCorrectionHistoryTableRowValues({
+        feeRecord,
+        reasons: 'Facility ID is incorrect, Other',
+        dateSent: today.dd_MMM_yyyy,
+        requestedBy: `${USERS.PDC_RECONCILE.firstName} ${USERS.PDC_RECONCILE.lastName}`,
+        status: 'Record correction sent',
+      });
     });
   });
 
   it('should display the correct values for the second row', () => {
-    cy.checkRecordCorrectionHistoryTableRowValues({
-      feeRecord: secondFeeRecord,
-      reasons: 'Reported fee is incorrect',
-      dateSent: today.dd_MMM_yyyy,
-      requestedBy: `${USERS.PDC_RECONCILE.firstName} ${USERS.PDC_RECONCILE.lastName}`,
-      status: 'Record correction sent',
+    cy.task(NODE_TASKS.GET_FEE_RECORD_FROM_DB_BY_ID, secondFeeRecord.id).then((feeRecord) => {
+      cy.checkRecordCorrectionHistoryTableRowValues({
+        feeRecord,
+        reasons: 'Reported fee is incorrect',
+        dateSent: today.dd_MMM_yyyy,
+        requestedBy: `${USERS.PDC_RECONCILE.firstName} ${USERS.PDC_RECONCILE.lastName}`,
+        status: 'Record correction sent',
+      });
     });
   });
 });
