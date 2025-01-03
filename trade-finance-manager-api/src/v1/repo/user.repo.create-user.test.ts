@@ -6,12 +6,12 @@ import {
   TfmUser,
   CreateTfmUserRequest,
   aCreateTfmUserRequest,
+  USER_STATUS,
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { InsertOneResult, ObjectId, WithoutId } from 'mongodb';
 import { mongoDbClient } from '../../drivers/db-client';
 import { UserRepo } from './user.repo';
-import { USER } from '../../constants';
 
 let insertOneMock = jest.fn();
 let getCollectionMock = jest.fn();
@@ -40,7 +40,7 @@ describe('user repo', () => {
       auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
 
       createTfmUserRequest = aCreateTfmUserRequest();
-      createUserDatabaseRequest = { ...createTfmUserRequest, status: USER.STATUS.ACTIVE, auditRecord };
+      createUserDatabaseRequest = { ...createTfmUserRequest, status: USER_STATUS.ACTIVE, auditRecord };
 
       insertedId = new ObjectId();
     });
