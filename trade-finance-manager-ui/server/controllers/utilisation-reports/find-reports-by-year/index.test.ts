@@ -309,7 +309,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
     it("renders the 'utilisation-reports-by-bank-and-year-results.njk' view with required data when there are valid query params", async () => {
       // Arrange
       const bankQuery = BANK_ID_ONE;
-      const yearQuery = '2024';
+      const yearQuery = new Date().getFullYear().toString();
       const reportPeriod = {
         start: {
           month: 1,
@@ -341,7 +341,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         dateUploaded: '2024-02-15 10:38:01.4033333',
         totalFeesReported: 3,
         reportedFeesLeftToReconcile: 3,
-        formattedReportPeriod: 'January 2025',
+        formattedReportPeriod: 'January 2024',
         displayStatus: 'Pending reconciliation',
         formattedDateUploaded: '15 Feb 2024',
       };
