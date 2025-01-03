@@ -326,4 +326,15 @@ authRouter
   .route('/companies/:registrationNumber')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), companies.getCompanyByRegistrationNumber);
 
+authRouter
+  .route('/banks/:bankId/fee-record-correction/:correctionId')
+  .get(
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
+    bankIdValidation,
+    sqlIdValidation('correctionId'),
+    handleExpressValidatorResult,
+    validateUserAndBankIdMatch,
+    utilisationReportControllers.getFeeRecordCorrection,
+  );
+
 module.exports = { openRouter, authRouter };
