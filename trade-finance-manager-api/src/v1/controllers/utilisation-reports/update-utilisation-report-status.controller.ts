@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { HttpStatusCode, isAxiosError } from 'axios';
-import { ReportWithStatus } from '@ukef/dtfs2-common';
-import { TfmSessionUser } from '../../../types/tfm-session-user';
+import { ReportWithStatus, TfmSessionUser } from '@ukef/dtfs2-common';
 import api from '../../api';
 
 export type UpdateUtilisationReportStatusRequestBody = {

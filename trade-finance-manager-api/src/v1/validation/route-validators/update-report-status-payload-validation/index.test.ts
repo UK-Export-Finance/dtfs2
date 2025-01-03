@@ -1,9 +1,8 @@
 import { Request } from 'express';
 import { validationResult } from 'express-validator';
 import { createRequest } from 'node-mocks-http';
-import { ReportWithStatus, UtilisationReportStatus, PENDING_RECONCILIATION, UTILISATION_REPORT_STATUS } from '@ukef/dtfs2-common';
+import { ReportWithStatus, UtilisationReportStatus, PENDING_RECONCILIATION, UTILISATION_REPORT_STATUS, TfmSessionUser } from '@ukef/dtfs2-common';
 import { updateReportStatusPayloadValidation } from '.';
-import { TfmSessionUser } from '../../../../types/tfm-session-user';
 import { UpdateUtilisationReportStatusRequestBody } from '../../../controllers/utilisation-reports/update-utilisation-report-status.controller';
 import { MOCK_TFM_SESSION_USER } from '../../../__mocks__/mock-tfm-session-user';
 

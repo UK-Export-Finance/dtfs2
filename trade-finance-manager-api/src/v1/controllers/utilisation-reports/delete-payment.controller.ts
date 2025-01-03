@@ -1,8 +1,7 @@
 import { Response } from 'express';
 import { HttpStatusCode, isAxiosError } from 'axios';
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, TfmSessionUser } from '@ukef/dtfs2-common';
 import api from '../../api';
-import { TfmSessionUser } from '../../../types/tfm-session-user';
 
 type DeletePaymentRequest = CustomExpressRequest<{
   reqBody: {

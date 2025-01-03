@@ -8,12 +8,12 @@ import {
   PaymentEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
   REQUEST_PLATFORM_TYPE,
+  TfmSessionUser,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { addPaymentToUtilisationReport } from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { InvalidPayloadError, NotFoundError } from '../../../../errors';
-import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';
