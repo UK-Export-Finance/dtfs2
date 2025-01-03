@@ -1,6 +1,7 @@
 /* eslint-disable import/first */
 const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
+const getAmendmentMock = jest.fn();
 
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { aPortalSessionUser, CURRENCY, DEAL_STATUS, DEAL_SUBMISSION_TYPE, Facility, PORTAL_LOGIN_STATUS, ROLES } from '@ukef/dtfs2-common';
@@ -10,10 +11,13 @@ import { getFacilityValue, GetFacilityValueRequest } from './get-facility-value'
 import { Deal } from '../../../types/deal';
 import { FacilityValueViewModel } from '../../../types/view-models/amendments/facility-value-view-model';
 import { getCurrencySymbol } from './getCurrencySymbol';
+import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
+import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
   getFacility: getFacilityMock,
+  getAmendment: getAmendmentMock,
 }));
 
 const dealId = 'dealId';
@@ -48,6 +52,14 @@ describe('getFacilityValue', () => {
 
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue({ details: mockFacility });
+    getAmendmentMock.mockResolvedValue(
+      new PortalFacilityAmendmentWithUkefIdMockBuilder()
+        .withDealId(dealId)
+        .withFacilityId(facilityId)
+        .withAmendmentId(amendmentId)
+        .withChangeFacilityValue(true)
+        .build(),
+    );
   });
 
   afterAll(() => {
@@ -66,7 +78,7 @@ describe('getFacilityValue', () => {
     expect(getApplicationMock).toHaveBeenCalledWith({ dealId, userToken: req.session.userToken });
   });
 
-  it('should call getFacility with the correct dealId and userToken', async () => {
+  it('should call getFacility with the correct facilityId and userToken', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
@@ -76,6 +88,18 @@ describe('getFacilityValue', () => {
     // Assert
     expect(getFacilityMock).toHaveBeenCalledTimes(1);
     expect(getFacilityMock).toHaveBeenCalledWith({ facilityId, userToken: req.session.userToken });
+  });
+
+  it('should call getAmendment with the correct facilityId, amendmentId and userToken', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await getFacilityValue(req, res);
+
+    // Assert
+    expect(getAmendmentMock).toHaveBeenCalledTimes(1);
+    expect(getAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, userToken: req.session.userToken });
   });
 
   it('should render the facility value template if the facility is valid', async () => {
@@ -88,8 +112,8 @@ describe('getFacilityValue', () => {
     // Assert
     const expectedRenderData: FacilityValueViewModel = {
       exporterName: companyName,
-      cancelUrl: `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/cancel`,
-      previousPage: `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/bank-review-date`,
+      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      previousPage: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
       currencySymbol: getCurrencySymbol(mockFacility.currency.id),
     };
 
@@ -109,6 +133,7 @@ describe('getFacilityValue', () => {
     // Assert
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
   it('should redirect if the deal is not found', async () => {
@@ -122,6 +147,21 @@ describe('getFacilityValue', () => {
     // Assert
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    expect(res._getRedirectUrl()).toEqual(`/not-found`);
+  });
+
+  it('should redirect if the amendment is not found', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    getAmendmentMock.mockResolvedValue(undefined);
+
+    // Act
+    await getFacilityValue(req, res);
+
+    // Assert
+
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
   it('should redirect if the facility cannot be amended', async () => {
@@ -135,6 +175,30 @@ describe('getFacilityValue', () => {
     // Assert
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    expect(res._getRedirectUrl()).toEqual(`/gef/application-details/${dealId}`);
+  });
+
+  it('should redirect if the amendment is not changing the facility value', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    getAmendmentMock.mockResolvedValue(
+      new PortalFacilityAmendmentWithUkefIdMockBuilder()
+        .withDealId(dealId)
+        .withFacilityId(facilityId)
+        .withAmendmentId(amendmentId)
+        .withChangeFacilityValue(false)
+        .build(),
+    );
+
+    // Act
+    await getFacilityValue(req, res);
+
+    // Assert
+
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    expect(res._getRedirectUrl()).toEqual(
+      `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
+    );
   });
 
   it('should render `problem with service` if getApplication throws an error', async () => {
@@ -152,6 +216,18 @@ describe('getFacilityValue', () => {
   it('should render `problem with service` if getFacility throws an error', async () => {
     // Arrange
     getFacilityMock.mockRejectedValue(new Error('test error'));
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await getFacilityValue(req, res);
+
+    // Assert
+    expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
+  });
+
+  it('should render `problem with service` if getAmendment throws an error', async () => {
+    // Arrange
+    getAmendmentMock.mockRejectedValue(new Error('test error'));
     const { req, res } = getHttpMocks();
 
     // Act

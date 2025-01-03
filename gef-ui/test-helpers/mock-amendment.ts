@@ -1,0 +1,53 @@
+import { AMENDMENT_STATUS, AMENDMENT_TYPES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { getUnixTime } from 'date-fns';
+
+export class PortalFacilityAmendmentWithUkefIdMockBuilder {
+  private readonly amendment: PortalFacilityAmendmentWithUkefId;
+
+  public constructor(amendment?: PortalFacilityAmendmentWithUkefId) {
+    this.amendment = amendment ?? {
+      dealId: '6776cb6f3e2efb60a50fbc3d',
+      facilityId: '6776cb6f3e2efb60a50fbc41',
+      amendmentId: '6777c4ca826649ec990c1adf',
+      type: AMENDMENT_TYPES.PORTAL,
+      status: AMENDMENT_STATUS.IN_PROGRESS,
+      createdAt: getUnixTime(new Date()),
+      updatedAt: getUnixTime(new Date()),
+      createdBy: {
+        username: 'maker1@ukexportfinance.gov.uk',
+        name: 'First Last',
+        email: 'maker1@ukexportfinance.gov.uk',
+      },
+      ukefFacilityId: '0041282190',
+    };
+  }
+
+  public withChangeCoverEndDate(changeCoverEndDate: boolean) {
+    this.amendment.changeCoverEndDate = changeCoverEndDate;
+    return this;
+  }
+
+  public withChangeFacilityValue(changeFacilityValue: boolean) {
+    this.amendment.changeFacilityValue = changeFacilityValue;
+    return this;
+  }
+
+  public withFacilityId(facilityId: string) {
+    this.amendment.facilityId = facilityId;
+    return this;
+  }
+
+  public withDealId(dealId: string) {
+    this.amendment.dealId = dealId;
+    return this;
+  }
+
+  public withAmendmentId(amendmentId: string) {
+    this.amendment.amendmentId = amendmentId;
+    return this;
+  }
+
+  public build() {
+    return this.amendment;
+  }
+}
