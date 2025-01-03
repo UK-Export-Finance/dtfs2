@@ -89,7 +89,7 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
             cy.assertText(correctionRequestDetails.row.facilityId(), pendingCorrectionDetails.facilityId);
             cy.assertText(correctionRequestDetails.row.exporter(), pendingCorrectionDetails.exporter);
             cy.assertText(correctionRequestDetails.row.reportedFees(), getFormattedCurrencyAndAmount(pendingCorrectionDetails.reportedFee));
-            cy.assertText(correctionRequestDetails.row.formattedReasons(), mapReasonsToDisplayValues(pendingCorrectionDetails.reasons));
+            cy.assertText(correctionRequestDetails.row.formattedReasons(), mapReasonsToDisplayValues(pendingCorrectionDetails.reasons).join(', '));
             cy.assertText(correctionRequestDetails.row.additionalInfo(), pendingCorrectionDetails.additionalInfo);
           });
 
@@ -98,7 +98,7 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
             provideCorrection.reportedFeeInput().should('not.exist');
             provideCorrection.reportedCurrency.container().should('exist');
             provideCorrection.utilisationInput().should('not.exist');
-            provideCorrection.additionalComments().should('exist');
+            provideCorrection.additionalComments.input().should('exist');
           });
         });
       });
