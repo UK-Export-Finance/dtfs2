@@ -34,7 +34,7 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
       formattedReportPeriod: getFormattedReportPeriodWithLongMonth(reportPeriod),
       reasonForRecordCorrection: mapReasonsToDisplayValues(reasons).join(', '),
       additionalInfo,
-      contactEmailAddresses: contactEmailAddresses.join(', '),
+      contactEmailAddresses,
     });
   } catch (error) {
     console.error('Failed to render create record correction request - "check the information" page %o', error);

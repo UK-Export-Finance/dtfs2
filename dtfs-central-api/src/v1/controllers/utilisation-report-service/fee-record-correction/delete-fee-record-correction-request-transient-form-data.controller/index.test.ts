@@ -3,17 +3,17 @@ import { ObjectId } from 'mongodb';
 import { TestApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
+import { FeeRecordCorrectionRequestTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-request-transient-form-data-repo';
 import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
-import { DeleteFeeRecordCorrectionTransientFormDataRequest, deleteFeeRecordCorrectionTransientFormData } from '.';
+import { DeleteFeeRecordCorrectionRequestTransientFormDataRequest, deleteFeeRecordCorrectionRequestTransientFormData } from '.';
 
 jest.mock('../../../../../repositories/fee-record-repo');
-jest.mock('../../../../../repositories/fee-record-correction-transient-form-data-repo');
+jest.mock('../../../../../repositories/fee-record-correction-request-transient-form-data-repo');
 
 console.error = jest.fn();
 
-describe('delete-fee-record-correction-transient-form-data.controller', () => {
-  describe('deleteFeeRecordCorrectionTransientFormData', () => {
+describe('delete-fee-record-correction-request-transient-form-data.controller', () => {
+  describe('deleteFeeRecordCorrectionRequestTransientFormData', () => {
     const reportId = 1;
     const feeRecordId = 2;
 
@@ -24,14 +24,14 @@ describe('delete-fee-record-correction-transient-form-data.controller', () => {
     const mockFeeRecordExists = jest.fn();
     const mockTransientFormDataDelete = jest.fn();
 
-    let req: DeleteFeeRecordCorrectionTransientFormDataRequest;
+    let req: DeleteFeeRecordCorrectionRequestTransientFormDataRequest;
     let res: MockResponse<Response>;
 
     beforeEach(() => {
       FeeRecordRepo.existsByIdAndReportId = mockFeeRecordExists;
-      FeeRecordCorrectionTransientFormDataRepo.deleteByUserIdAndFeeRecordId = mockTransientFormDataDelete;
+      FeeRecordCorrectionRequestTransientFormDataRepo.deleteByUserIdAndFeeRecordId = mockTransientFormDataDelete;
 
-      req = httpMocks.createRequest<DeleteFeeRecordCorrectionTransientFormDataRequest>({
+      req = httpMocks.createRequest<DeleteFeeRecordCorrectionRequestTransientFormDataRequest>({
         params: aValidRequestQuery(),
       });
       res = httpMocks.createResponse();
@@ -47,7 +47,7 @@ describe('delete-fee-record-correction-transient-form-data.controller', () => {
       mockTransientFormDataDelete.mockResolvedValue(null);
 
       // Act
-      await deleteFeeRecordCorrectionTransientFormData(req, res);
+      await deleteFeeRecordCorrectionRequestTransientFormData(req, res);
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.NoContent);
@@ -55,7 +55,7 @@ describe('delete-fee-record-correction-transient-form-data.controller', () => {
 
     it('should call fee record exists once', async () => {
       // Act
-      await deleteFeeRecordCorrectionTransientFormData(req, res);
+      await deleteFeeRecordCorrectionRequestTransientFormData(req, res);
 
       // Assert
       expect(mockFeeRecordExists).toHaveBeenCalledTimes(1);
@@ -63,29 +63,29 @@ describe('delete-fee-record-correction-transient-form-data.controller', () => {
 
     it('should call fee record exists with the correct parameters', async () => {
       // Act
-      await deleteFeeRecordCorrectionTransientFormData(req, res);
+      await deleteFeeRecordCorrectionRequestTransientFormData(req, res);
 
       // Assert
       expect(mockFeeRecordExists).toHaveBeenCalledWith(feeRecordId, reportId);
     });
 
-    it('should call fee record correction transient form data delete once if a fee record exists', async () => {
+    it('should call fee record correction request transient form data delete once if a fee record exists', async () => {
       // Arrange
       mockFeeRecordExists.mockReturnValue(true);
 
       // Act
-      await deleteFeeRecordCorrectionTransientFormData(req, res);
+      await deleteFeeRecordCorrectionRequestTransientFormData(req, res);
 
       // Assert
       expect(mockTransientFormDataDelete).toHaveBeenCalledTimes(1);
     });
 
-    it('should call fee record correction transient form data delete with the correct parameters if a fee record exists', async () => {
+    it('should call fee record correction request transient form data delete with the correct parameters if a fee record exists', async () => {
       // Arrange
       mockFeeRecordExists.mockReturnValue(true);
 
       // Act
-      await deleteFeeRecordCorrectionTransientFormData(req, res);
+      await deleteFeeRecordCorrectionRequestTransientFormData(req, res);
 
       // Assert
       expect(mockTransientFormDataDelete).toHaveBeenCalledWith(tfmUserId, feeRecordId);
@@ -96,7 +96,7 @@ describe('delete-fee-record-correction-transient-form-data.controller', () => {
       mockFeeRecordExists.mockReturnValue(false);
 
       // Act
-      await deleteFeeRecordCorrectionTransientFormData(req, res);
+      await deleteFeeRecordCorrectionRequestTransientFormData(req, res);
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
@@ -113,7 +113,7 @@ describe('delete-fee-record-correction-transient-form-data.controller', () => {
 
       it('should respond with the specific error status', async () => {
         // Act
-        await deleteFeeRecordCorrectionTransientFormData(req, res);
+        await deleteFeeRecordCorrectionRequestTransientFormData(req, res);
 
         // Assert
         expect(res._getStatusCode()).toEqual(errorStatus);
@@ -121,10 +121,10 @@ describe('delete-fee-record-correction-transient-form-data.controller', () => {
 
       it('should respond with the specific error message', async () => {
         // Act
-        await deleteFeeRecordCorrectionTransientFormData(req, res);
+        await deleteFeeRecordCorrectionRequestTransientFormData(req, res);
 
         // Assert
-        expect(res._getData()).toEqual(`Failed to delete fee record correction transient form data: ${errorMessage}`);
+        expect(res._getData()).toEqual(`Failed to delete fee record correction request transient form data: ${errorMessage}`);
       });
     });
 
@@ -135,7 +135,7 @@ describe('delete-fee-record-correction-transient-form-data.controller', () => {
 
       it(`should respond with a '${HttpStatusCode.InternalServerError}'`, async () => {
         // Act
-        await deleteFeeRecordCorrectionTransientFormData(req, res);
+        await deleteFeeRecordCorrectionRequestTransientFormData(req, res);
 
         // Assert
         expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
@@ -143,10 +143,10 @@ describe('delete-fee-record-correction-transient-form-data.controller', () => {
 
       it('should respond with a generic error message', async () => {
         // Act
-        await deleteFeeRecordCorrectionTransientFormData(req, res);
+        await deleteFeeRecordCorrectionRequestTransientFormData(req, res);
 
         // Assert
-        expect(res._getData()).toEqual(`Failed to delete fee record correction transient form data`);
+        expect(res._getData()).toEqual(`Failed to delete fee record correction request transient form data`);
       });
     });
   });

@@ -20,8 +20,8 @@ describe(component, () => {
         formattedReportedFees,
         formattedReasons,
         additionalInfo,
+        errorTypeHeader,
       },
-      errorTypeHeader,
     };
 
     // Act

@@ -1,4 +1,4 @@
-import { Currency, RadioItem } from '@ukef/dtfs2-common';
+import { Currency, RadioItem } from '../types';
 
 type CurrencyRadioItemParams = {
   currency: Currency;
