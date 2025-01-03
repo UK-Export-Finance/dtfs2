@@ -71,6 +71,9 @@ const assertions = (wrapper, html) => ({
     notToExist: () => {
       expect(wrapper(selector).html()).toBeNull();
     },
+    toHaveHtmlContent: (value) => {
+      expect(wrapper(selector).html()?.trim()).toBe(value);
+    },
     hasClass: (value) => {
       expect(wrapper(selector).hasClass(value)).toEqual(true);
     },

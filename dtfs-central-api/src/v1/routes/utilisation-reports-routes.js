@@ -49,6 +49,7 @@ const { postFeeRecordCorrection } = require('../controllers/utilisation-report-s
 const {
   deleteFeeRecordCorrectionRequestTransientFormData,
 } = require('../controllers/utilisation-report-service/fee-record-correction/delete-fee-record-correction-request-transient-form-data.controller');
+const { getFeeRecordCorrection } = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -972,6 +973,40 @@ utilisationReportsRouter
   .route('/:reportId/fee-records/:feeRecordId/corrections')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
   .post(validatePostFeeRecordCorrectionPayload, postFeeRecordCorrection);
+
+/**
+ * @openapi
+ * /utilisation-reports/fee-record-corrections/:correctionId:
+ *   get:
+ *     summary: Get a fee record correction
+ *     tags: [Utilisation Report]
+ *     description: Get a fee record correction
+ *     parameters:
+ *       - in: path
+ *         name: correctionId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the correction
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/FeeRecordCorrectionResponse'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/fee-record-corrections/:correctionId')
+  .all(validation.sqlIdValidation('correctionId'), handleExpressValidatorResult)
+  .get(getFeeRecordCorrection);
 
 /**
  * @openapi

@@ -1,7 +1,7 @@
 /**
  * @openapi
  * definitions:
- *   FeeRecordCorrectionResponse:
+ *   FeeRecordCorrectionTransientFormDataResponse:
  *     type: object
  *     properties:
  *       userId:
