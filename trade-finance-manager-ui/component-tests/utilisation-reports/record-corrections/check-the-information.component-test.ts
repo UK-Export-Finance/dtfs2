@@ -154,19 +154,23 @@ describe('page', () => {
     wrapper.expectLink('[data-cy="change-record-correction-additional-info-link"]').toLinkTo(expectedHref, 'Change more information for record correction');
   });
 
-  it('should render the contact email addresses', () => {
+  it('should render the contact email addresses with line breaks', () => {
     // Arrange
-    const email = 'one@email.com, two@email.com';
+    const emails = ['one@ukexportfinance.gov.uk', 'two@ukexportfinance.gov.uk'];
     const viewModel: RecordCorrectionRequestInformationViewModel = {
       ...aRecordCorrectionRequestInformationViewModel(),
-      contactEmailAddresses: email,
+      contactEmailAddresses: emails,
     };
+
+    const emailsSelector = definitionDescriptionSelector('Contact email address(es)');
+    const expectedContent = 'one@ukexportfinance.gov.uk,<br>two@ukexportfinance.gov.uk';
 
     // Act
     const wrapper = render(viewModel);
 
     // Assert
-    wrapper.expectText(definitionDescriptionSelector('Contact email address')).toRead(email);
+    wrapper.expectElement(emailsSelector).toHaveHtmlContent(expectedContent);
+    wrapper.expectElement(emailsSelector).hasClass('ukef-word-break-break-all');
   });
 
   it('should render send request button', () => {
