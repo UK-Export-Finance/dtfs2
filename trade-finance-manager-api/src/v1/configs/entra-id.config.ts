@@ -3,6 +3,7 @@ import { z } from 'zod';
 import dotenv from 'dotenv';
 
 dotenv.config();
+
 export class EntraIdConfig {
   private static readonly entraIdEnvVarConfigSchema = z.object({
     ENTRA_ID_CLIENT_ID: z.string(),

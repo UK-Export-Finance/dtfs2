@@ -1,5 +1,5 @@
-import { EntraIdConfig } from '../../server/configs/entra-id.config';
-import { BaseMockBuilder } from './mock-builder.mock.builder';
+import { BaseMockBuilder } from '@ukef/dtfs2-common';
+import { EntraIdConfig } from '../../configs/entra-id.config';
 
 export class EntraIdConfigMockBuilder extends BaseMockBuilder<EntraIdConfig> {
   constructor() {

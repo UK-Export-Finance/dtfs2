@@ -1,8 +1,8 @@
 import axios from 'axios';
 import MockAdapter = require('axios-mock-adapter');
-import { EntraIdConfig } from '../configs/entra-id.config';
 import { EntraIdApi } from './entra-id.api';
-import { EntraIdConfigMockBuilder } from '../../test-helpers/mocks';
+import { EntraIdConfig } from '../configs/entra-id.config';
+import { EntraIdConfigMockBuilder } from '../__mocks__/builders';
 
 const mockAxios = new MockAdapter(axios);
 
