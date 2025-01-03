@@ -1,7 +1,7 @@
 /**
  * @openapi
  * definitions:
- *   FeeRecordCorrectionTransientFormData:
+ *   FeeRecordCorrectionRequestTransientFormData:
  *     type: object
  *     properties:
  *       reasons:

@@ -1,11 +1,11 @@
 import { HttpStatusCode } from 'axios';
 import {
   FEE_RECORD_STATUS,
-  FeeRecordCorrectionTransientFormDataEntityMockBuilder,
+  FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder,
   FeeRecordEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
   RECORD_CORRECTION_REASON,
-  RecordCorrectionTransientFormData,
+  RecordCorrectionRequestTransientFormData,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { withSqlAndMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
@@ -15,7 +15,7 @@ import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replac
 
 console.error = jest.fn();
 
-const BASE_URL = '/v1/utilisation-reports/:reportId/fee-records/:feeRecordId/correction-transient-form-data/:userId';
+const BASE_URL = '/v1/utilisation-reports/:reportId/fee-records/:feeRecordId/correction-request-transient-form-data/:userId';
 
 describe(`DELETE ${BASE_URL}`, () => {
   const reportId = 1;
@@ -37,7 +37,7 @@ describe(`DELETE ${BASE_URL}`, () => {
   });
 
   afterEach(async () => {
-    await SqlDbHelper.deleteAllEntries('FeeRecordCorrectionTransientFormData');
+    await SqlDbHelper.deleteAllEntries('FeeRecordCorrectionRequestTransientFormData');
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
   });
 
@@ -50,16 +50,16 @@ describe(`DELETE ${BASE_URL}`, () => {
 
   it(`should return '${HttpStatusCode.NoContent}' if the request is valid and transient form data exists`, async () => {
     // Arrange
-    const formData: RecordCorrectionTransientFormData = {
+    const formData: RecordCorrectionRequestTransientFormData = {
       reasons: [RECORD_CORRECTION_REASON.OTHER],
       additionalInfo: 'Some additional information',
     };
-    const transientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()
+    const transientFormDataEntity = new FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder()
       .withFeeRecordId(feeRecordId)
       .withUserId(userId)
       .withFormData(formData)
       .build();
-    await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', transientFormDataEntity);
+    await SqlDbHelper.saveNewEntry('FeeRecordCorrectionRequestTransientFormData', transientFormDataEntity);
 
     // Act
     const response = await testApi.remove({}).to(replaceUrlParameterPlaceholders(BASE_URL, { reportId, feeRecordId, userId }));
