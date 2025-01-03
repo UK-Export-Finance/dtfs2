@@ -25,7 +25,7 @@ export const mapToCorrectionRequestDetailsViewModel = (correctionResponse: GetFe
  * Type definition for labels used in the additional comments field.
  * Contains a label string and hint text string.
  */
-type AdditionalCommentsFieldLabels = {
+export type AdditionalCommentsFieldLabels = {
   label: string;
   hint: string;
 };
