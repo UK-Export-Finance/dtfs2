@@ -20,7 +20,6 @@ describe(page, () => {
 
   describe("'Make a change' button", () => {
     const makeAChangeButtonSelector = (facilityId) => `[data-cy="facility-${facilityId}-make-change-button"]`;
-    const getButtonLinkUrl = (dealId, facilityId) => `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/what-needs-to-change`;
 
     it('should not be rendered when showFacilityAmendmentButton is false', () => {
       wrapper = render({
@@ -55,13 +54,8 @@ describe(page, () => {
 
         const expectedButtonText = 'Make a change';
 
-        wrapper
-          .expectLink(makeAChangeButtonSelector(issuedCashFacility.facilityId))
-          .toLinkTo(getButtonLinkUrl(dealId, issuedCashFacility.facilityId), expectedButtonText);
-
-        wrapper
-          .expectLink(makeAChangeButtonSelector(issuedContingentFacility.facilityId))
-          .toLinkTo(getButtonLinkUrl(dealId, issuedContingentFacility.facilityId), expectedButtonText);
+        wrapper.expectPrimaryButton(makeAChangeButtonSelector(issuedCashFacility.facilityId)).toLinkTo(undefined, expectedButtonText);
+        wrapper.expectPrimaryButton(makeAChangeButtonSelector(issuedContingentFacility.facilityId)).toLinkTo(undefined, expectedButtonText);
       });
 
       it('should not render on the unissued facilities', () => {

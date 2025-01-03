@@ -7,6 +7,7 @@ import { createApi } from '../create-api';
 import api from '../../server/services/api';
 import * as storage from '../test-helpers/storage/storage';
 import { Deal } from '../../server/types/deal';
+import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
 
 const originalEnv = { ...process.env };
 
@@ -19,8 +20,9 @@ jest.mock('../../server/middleware/csrf', () => ({
 
 const dealId = '123';
 const facilityId = '111';
+const amendmentId = 'amendmentId';
 
-const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/what-needs-to-change`;
+const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`;
 
 describe(`GET ${url}`, () => {
   let sessionCookie: string;

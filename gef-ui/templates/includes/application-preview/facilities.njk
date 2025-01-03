@@ -40,13 +40,17 @@
         {{item.heading}} facility
       </h3>
       {% if canIssuedFacilitiesBeAmended and item.stage === "Issued" %}
-        {{ govukButton({
+
+        <form method="post" action={{"/gef/application-details/"+dealId+"/facilities/"+item.facilityId+"/amendments/create-draft"}} >
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+          {{ govukButton({
           text: "Make a change",
           attributes: {
             'data-cy': "facility-" + item.facilityId + "-make-change-button"
-          },
-          href: "/gef/application-details/"+dealId+"/facilities/"+item.facilityId+"/amendments/what-needs-to-change"
+          }
         }) }}
+        </form>
       {% endif %}
     </header>
     {{ govukSummaryList({
