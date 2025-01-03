@@ -1,6 +1,6 @@
 import { getFormattedReportPeriodWithLongMonth, PortalSessionUser, ReportPeriod } from '@ukef/dtfs2-common';
 import { addMonths, format, isBefore, startOfMonth } from 'date-fns';
-import { NextActionViewModel, PendingCorrectionsViewModel } from '../../../types/view-models/pending-corrections';
+import { NextActionViewModel, PendingCorrectionsViewModel } from '../../../types/view-models/record-correction/pending-corrections';
 import { NonEmptyPendingCorrectionsResponseBody, UtilisationReportPendingCorrectionsResponseBody } from '../../../api-response-types';
 import { PRIMARY_NAV_KEY } from '../../../constants';
 

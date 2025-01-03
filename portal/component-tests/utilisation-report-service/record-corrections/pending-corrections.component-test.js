@@ -174,8 +174,8 @@ describe(page, () => {
       // Assert
       wrapper.expectElement('th').toHaveCount(3);
       wrapper.expectElement('th:contains("Facility ID")').toExist();
-      wrapper.expectElement('th:contains("Facility ID")').toExist();
-      wrapper.expectElement('th:contains("Facility ID")').toExist();
+      wrapper.expectElement('th:contains("Exporter")').toExist();
+      wrapper.expectElement('th:contains("Error summary")').toExist();
     });
 
     it('should render the corrections as rows within the table', () => {

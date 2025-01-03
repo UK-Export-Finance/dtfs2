@@ -1,7 +1,7 @@
 /**
  * @openapi
  * definitions:
- *   FeeRecordCorrectionResponse:
+ *   FeeRecordCorrectionTransientFormDataResponse:
  *     type: object
  *     properties:
  *       userId:
@@ -10,5 +10,5 @@
  *         type: number
  *       formData:
  *         type: object
- *         $ref: '#/definitions/FeeRecordCorrectionTransientFormData'
+ *         $ref: '#/definitions/FeeRecordCorrectionRequestTransientFormData'
  */

@@ -1,5 +1,5 @@
 import { aPortalSessionUser } from '@ukef/dtfs2-common';
-import { PendingCorrectionsViewModel } from '../../server/types/view-models/pending-corrections';
+import { PendingCorrectionsViewModel } from '../../server/types/view-models/record-correction/pending-corrections';
 import { PRIMARY_NAV_KEY } from '../../server/constants';
 
 export const aPendingCorrectionsViewModel = (): PendingCorrectionsViewModel => ({

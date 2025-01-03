@@ -1,0 +1,69 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% macro render(params) %}
+  {% set details = params.details %}
+ 
+  {{ govukTable({
+    caption: "Current record",
+    captionClasses: "govuk-table__caption--m",
+    firstCellIsHeader: false,
+    head: [
+      {
+        text: "Facility ID"
+      },
+      {
+        text: "Exporter"
+      },
+      {
+        text: "Reported fees"
+      },
+      {
+        text: details.errorTypeHeader,
+        attributes: {
+          "data-cy": "correction-request-details-table-header--error-type"
+        }
+      },
+      {
+        text: "Error summary"
+      }
+    ],
+    rows: [
+      [
+        {
+          text: details.facilityId,
+          attributes: {
+            "data-cy": "correction-request-details-table--facility-id"
+          }
+        },
+        {
+          text: details.exporter,
+          attributes: {
+            "data-cy": "correction-request-details-table--exporter"
+          }
+        },
+        {
+          text: details.formattedReportedFees,
+          attributes: {
+            "data-cy": "correction-request-details-table--reported-fees"
+          }
+        },
+        {
+          text: details.formattedReasons,
+          attributes: {
+            "data-cy": "correction-request-details-table--formatted-reasons"
+          }
+        },
+        {
+          html: (details.additionalInfo | replaceNewLinesWithBrTags),
+          attributes: {
+            "data-cy": "correction-request-details-table--additional-info"
+          }
+        }
+      ]
+    ],
+    attributes: {
+      "data-cy": "correction-request-details-table"
+    }
+  }) }}
+
+{% endmacro %}

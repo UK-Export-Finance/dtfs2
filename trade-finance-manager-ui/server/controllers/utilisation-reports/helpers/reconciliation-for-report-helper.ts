@@ -6,6 +6,7 @@ import {
   getFormattedMonetaryValue,
   IsoDateTimeStamp,
   KeyingSheetAdjustment,
+  mapCurrenciesToRadioItems,
   PaymentDetailsFilters,
 } from '@ukef/dtfs2-common';
 import { format, parseISO } from 'date-fns';
@@ -27,7 +28,6 @@ import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
 import { getKeyingSheetDisplayStatus } from './get-keying-sheet-display-status';
 import { KeyingSheetCheckboxId } from '../../../types/keying-sheet-checkbox-id';
 import { getKeyToDateSortValueMap } from './get-key-to-date-sort-value-map-helper';
-import { mapCurrenciesToRadioItems } from '../../../helpers/map-currencies-to-radio-items';
 
 /**
  * Sort fee records by reported payments

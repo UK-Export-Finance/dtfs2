@@ -5,7 +5,7 @@ import { CustomExpressRequest } from '../../../../../types/custom-express-reques
 import { executeWithSqlTransaction } from '../../../../../helpers';
 import { FeeRecordStateMachine } from '../../../../../services/state-machines/fee-record/fee-record.state-machine';
 import { FEE_RECORD_EVENT_TYPE } from '../../../../../services/state-machines/fee-record/event/fee-record.event-type';
-import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
+import { FeeRecordCorrectionRequestTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-request-transient-form-data-repo';
 import { NotFoundError } from '../../../../../errors';
 import { PostFeeRecordCorrectionPayload } from '../../../../routes/middleware/payload-validation';
 import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
@@ -47,7 +47,7 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
     const userId = user._id.toString();
 
     const recipientEmailAddresses = await executeWithSqlTransaction<FeeRecordCorrectionRequestEmailAddresses>(async (transactionEntityManager) => {
-      const formDataEntity = await FeeRecordCorrectionTransientFormDataRepo.withTransaction(transactionEntityManager).findByUserIdAndFeeRecordId(
+      const formDataEntity = await FeeRecordCorrectionRequestTransientFormDataRepo.withTransaction(transactionEntityManager).findByUserIdAndFeeRecordId(
         userId,
         feeRecordId,
       );
@@ -84,7 +84,7 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
         },
       });
 
-      await FeeRecordCorrectionTransientFormDataRepo.withTransaction(transactionEntityManager).deleteByUserIdAndFeeRecordId(userId, feeRecordId);
+      await FeeRecordCorrectionRequestTransientFormDataRepo.withTransaction(transactionEntityManager).deleteByUserIdAndFeeRecordId(userId, feeRecordId);
 
       const notifiedEmails = await sendFeeRecordCorrectionRequestEmails(
         reasons,
