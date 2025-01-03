@@ -43,7 +43,7 @@ context('When fee record correction feature flag is disabled', () => {
   context('The record correction tab and text is not visible for PDC_READ users', () => {
     beforeEach(() => {
       pages.landingPage.visit();
-      cy.login(USERS.PDC_RECONCILE);
+      cy.login(USERS.PDC_READ);
 
       cy.visit(`utilisation-reports/${reportId}`);
     });
