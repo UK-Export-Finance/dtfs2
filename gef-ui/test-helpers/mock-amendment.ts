@@ -22,16 +22,6 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
     };
   }
 
-  public withChangeCoverEndDate(changeCoverEndDate: boolean) {
-    this.amendment.changeCoverEndDate = changeCoverEndDate;
-    return this;
-  }
-
-  public withChangeFacilityValue(changeFacilityValue: boolean) {
-    this.amendment.changeFacilityValue = changeFacilityValue;
-    return this;
-  }
-
   public withFacilityId(facilityId: string) {
     this.amendment.facilityId = facilityId;
     return this;
@@ -44,6 +34,21 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
 
   public withAmendmentId(amendmentId: string) {
     this.amendment.amendmentId = amendmentId;
+    return this;
+  }
+
+  public withChangeCoverEndDate(changeCoverEndDate: boolean) {
+    this.amendment.changeCoverEndDate = changeCoverEndDate;
+    return this;
+  }
+
+  public withChangeFacilityValue(changeFacilityValue: boolean) {
+    this.amendment.changeFacilityValue = changeFacilityValue;
+    return this;
+  }
+
+  public withIsUsingFacilityEndDate(isUsingFacilityEndDate: boolean) {
+    this.amendment.isUsingFacilityEndDate = isUsingFacilityEndDate;
     return this;
   }
 
