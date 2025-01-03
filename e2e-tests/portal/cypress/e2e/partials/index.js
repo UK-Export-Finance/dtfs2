@@ -3,6 +3,7 @@ const dashboardSubNavigation = require('./dashboardSubNavigation');
 const successMessage = require('./successMessage');
 const ukefComments = require('./ukef-comments');
 const taskListHeader = require('./taskListHeader');
+const correctionRequestDetails = require('./correctionRequestDetails');
 
 module.exports = {
   backLink: () => cy.get('[data-cy="back-link"]'),
@@ -19,4 +20,5 @@ module.exports = {
   successMessage,
   ukefComments,
   taskListHeader,
+  correctionRequestDetails,
 };
