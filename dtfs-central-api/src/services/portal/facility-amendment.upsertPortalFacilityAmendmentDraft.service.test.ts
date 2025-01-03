@@ -36,6 +36,10 @@ describe('PortalFacilityAmendmentService', () => {
     mockUpsertPortalFacilityAmendmentDraft.mockResolvedValue({});
   });
 
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   describe('upsertPortalFacilityAmendmentDraft', () => {
     it('should call findOneUser with auditDetails.id', async () => {
       // Act
