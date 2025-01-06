@@ -50,6 +50,7 @@ const findOneUserByIdMock = jest.fn() as jest.Mock<Promise<TfmUser | null>>;
 const updatePortalDealStatusMock = jest.fn() as jest.Mock<Promise<void>>;
 const updatePortalFacilitiesMock = jest.fn() as jest.Mock<Promise<void>>;
 const addGefDealCancelledActivityMock = jest.fn() as jest.Mock<Promise<void>>;
+const addGefDealCancellationPendingActivityMock = jest.fn() as jest.Mock<Promise<void>>;
 
 jest.mock('../../repositories/tfm-deals-repo/tfm-deal-cancellation.repo', () => ({
   TfmDealCancellationRepo: {
@@ -68,7 +69,7 @@ jest.mock('../../repositories/tfm-users-repo', () => ({
 
 const mockUser = aTfmUser();
 
-const dealId = 'dealId';
+const dealId = new ObjectId();
 
 const effectiveFromPresentAndPastTestCases = [
   {
@@ -133,6 +134,7 @@ describe('DealCancellationService', () => {
       jest.spyOn(PortalDealService, 'updateStatus').mockImplementation(updatePortalDealStatusMock);
       jest.spyOn(PortalFacilityRepo, 'updateManyByDealId').mockImplementation(updatePortalFacilitiesMock);
       jest.spyOn(PortalDealService, 'addGefDealCancelledActivity').mockImplementation(addGefDealCancelledActivityMock);
+      jest.spyOn(PortalDealService, 'addGefDealCancellationPendingActivity').mockImplementation(addGefDealCancellationPendingActivityMock);
     });
 
     const aDealCancellation = (): TfmDealCancellation => ({
@@ -140,6 +142,7 @@ describe('DealCancellationService', () => {
       bankRequestDate: new Date().valueOf(),
       effectiveFrom: new Date().valueOf(),
     });
+
     const auditDetails = generateTfmAuditDetails(aTfmUser()._id);
 
     describe('when effectiveFrom is the present or in the past', () => {
@@ -155,6 +158,8 @@ describe('DealCancellationService', () => {
           await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
           // Assert
+          expect(submitDealCancellationMock).toHaveBeenCalledTimes(1);
+
           const expectedActivity: TfmActivity = {
             type: ACTIVITY_TYPES.CANCELLATION,
             timestamp: getUnixTime(new Date()),
@@ -166,7 +171,6 @@ describe('DealCancellationService', () => {
             ...cancellation,
           };
 
-          expect(submitDealCancellationMock).toHaveBeenCalledTimes(1);
           expect(submitDealCancellationMock).toHaveBeenCalledWith({ dealId, cancellation, activity: expectedActivity, auditDetails });
         });
 
@@ -183,7 +187,9 @@ describe('DealCancellationService', () => {
           const dealCancellationResponse = await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
 
           // Assert
-          expect(dealCancellationResponse).toEqual(DealCancellationService.getTfmDealCancellationResponse(mockRepositoryResponse));
+          const expected = DealCancellationService.getTfmDealCancellationResponse(mockRepositoryResponse);
+
+          expect(dealCancellationResponse).toEqual(expected);
         });
 
         it(`should call PortalDealService.updateStatus with ${DEAL_STATUS.CANCELLED} status`, async () => {
@@ -204,6 +210,14 @@ describe('DealCancellationService', () => {
           expect(updatePortalFacilitiesMock).toHaveBeenCalledWith(dealId, { facilityStage: FACILITY_STAGE.RISK_EXPIRED }, auditDetails);
         });
 
+        it('should not call PortalDealService.addGefDealCancellationPendingActivity', async () => {
+          // Act
+          await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
+
+          // Assert
+          expect(addGefDealCancellationPendingActivityMock).toHaveBeenCalledTimes(0);
+        });
+
         it('should call PortalDealService.addGefDealCancelledActivity with relevant params', async () => {
           // Act
           await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
@@ -216,7 +230,12 @@ describe('DealCancellationService', () => {
           };
 
           expect(addGefDealCancelledActivityMock).toHaveBeenCalledTimes(1);
-          expect(addGefDealCancelledActivityMock).toHaveBeenCalledWith({ deal: mockRepositoryResponse.cancelledDeal, author: expectedAuthor, auditDetails });
+          expect(addGefDealCancelledActivityMock).toHaveBeenCalledWith({
+            dealId,
+            dealType,
+            author: expectedAuthor,
+            auditDetails,
+          });
         });
 
         it('should throw InvalidAuditDetailsError when no user is found', async () => {
@@ -297,6 +316,26 @@ describe('DealCancellationService', () => {
 
           // Assert
           expect(addGefDealCancelledActivityMock).toHaveBeenCalledTimes(0);
+        });
+
+        it('should call PortalDealService.addGefDealCancellationPendingActivity with the correct params', async () => {
+          // Act
+          await DealCancellationService.submitDealCancellation(dealId, cancellation, auditDetails);
+
+          // Assert
+          const expectedAuthor = {
+            firstName: mockUser.firstName,
+            lastName: mockUser.lastName,
+            _id: mockUser._id.toString(),
+          };
+
+          expect(addGefDealCancellationPendingActivityMock).toHaveBeenCalledTimes(1);
+          expect(addGefDealCancellationPendingActivityMock).toHaveBeenCalledWith({
+            dealId,
+            dealType,
+            author: expectedAuthor,
+            auditDetails,
+          });
         });
 
         it('should throw InvalidAuditDetailsError when no user is found', async () => {

@@ -1,7 +1,7 @@
 import { EntityManager } from 'typeorm';
 import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordStatus, ReportPeriod } from '@ukef/dtfs2-common';
 import { BaseFeeRecordEvent } from '../../event/base-fee-record.event';
-import { calculatePrincipalBalanceAdjustment, calculateFixedFeeAdjustment, updateFacilityUtilisationData, calculateFixedFee } from '../helpers';
+import { calculatePrincipalBalanceAdjustment, updateFacilityUtilisationData } from '../helpers';
 import { calculateUkefShareOfUtilisation, getKeyingSheetCalculationFacilityValues } from '../../../../../helpers';
 
 type GenerateKeyingDataEventPayload = {
@@ -33,22 +33,13 @@ export const handleFeeRecordGenerateKeyingDataEvent = async (
     return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
   }
 
-  const { coverPercentage, coverEndDate, interestPercentage, dayCountBasis } = await getKeyingSheetCalculationFacilityValues(
-    feeRecord.facilityId,
-    reportPeriod,
-  );
+  const { coverPercentage } = await getKeyingSheetCalculationFacilityValues(feeRecord.facilityId);
 
   const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(feeRecord.facilityUtilisation, coverPercentage);
 
-  const fixedFee = calculateFixedFee({
-    ukefShareOfUtilisation,
-    reportPeriod,
-    coverEndDate,
-    interestPercentage,
-    dayCountBasis,
-  });
+  const fixedFee = 0;
 
-  const fixedFeeAdjustment = calculateFixedFeeAdjustment(feeRecord, feeRecord.facilityUtilisationData, reportPeriod, fixedFee);
+  const fixedFeeAdjustment = 0;
 
   const principalBalanceAdjustment = calculatePrincipalBalanceAdjustment(ukefShareOfUtilisation, feeRecord.facilityUtilisationData);
 

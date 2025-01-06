@@ -1,8 +1,8 @@
-import httpMocks from 'node-mocks-http';
+import httpMocks, { MockResponse } from 'node-mocks-http';
 import { mapReasonsToDisplayValues, getFormattedReportPeriodWithLongMonth, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
+import { Request, Response } from 'express';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
-import { getLinkToPremiumPaymentsTab } from '../../helpers/get-link-to-premium-payments-tab';
 import { getRecordCorrectionRequestInformation, postRecordCorrectionRequestInformation } from '.';
 import api from '../../../../api';
 
@@ -55,7 +55,6 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
 
       // Assert
       const expectedReasons = mapReasonsToDisplayValues(correctionRequestDetails.reasons).join(', ');
-      const expectedContactEmailAddresses = correctionRequestDetails.contactEmailAddresses.join(', ');
 
       expect(res._getRenderView()).toEqual('utilisation-reports/record-corrections/check-the-information.njk');
       expect(res._getRenderData()).toEqual({
@@ -69,19 +68,27 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
         formattedReportPeriod: getFormattedReportPeriodWithLongMonth(reportPeriod),
         reasonForRecordCorrection: expectedReasons,
         additionalInfo: correctionRequestDetails.additionalInfo,
-        contactEmailAddresses: expectedContactEmailAddresses,
-        cancelLink: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
+        contactEmailAddresses: correctionRequestDetails.contactEmailAddresses,
       });
     });
   });
 
   describe('postRecordCorrectionRequestInformation', () => {
-    it('should redirect to request sent page on success', async () => {
-      // Arrange
-      const { req, res } = httpMocks.createMocks({
+    const emails = ['test1@ukexportfinance.gov.uk', 'test2@ukexportfinance.gov.uk'];
+
+    let req: Request;
+    let res: MockResponse<Response>;
+
+    beforeEach(() => {
+      ({ req, res } = httpMocks.createMocks({
         session: requestSession,
         params: { reportId, feeRecordId },
-      });
+      }));
+    });
+
+    it('should redirect to request sent page on success', async () => {
+      // Arrange
+      jest.mocked(api.createFeeRecordCorrection).mockResolvedValue({ emails });
 
       // Act
       await postRecordCorrectionRequestInformation(req, res);
@@ -92,13 +99,19 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
       expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/request-sent`);
     });
 
+    it(`should populate the session with the record correction request emails`, async () => {
+      // Arrange
+      jest.mocked(api.createFeeRecordCorrection).mockResolvedValue({ emails });
+
+      // Act
+      await postRecordCorrectionRequestInformation(req, res);
+
+      // Assert
+      expect(req.session.recordCorrectionRequestEmails).toEqual(emails);
+    });
+
     it('should render problem with service page on error', async () => {
       // Arrange
-      const { req, res } = httpMocks.createMocks({
-        session: requestSession,
-        params: { reportId, feeRecordId },
-      });
-
       jest.mocked(api.createFeeRecordCorrection).mockRejectedValue(new Error('API Error'));
 
       // Act

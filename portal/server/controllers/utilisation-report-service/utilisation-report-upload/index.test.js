@@ -1,10 +1,12 @@
 const httpMocks = require('node-mocks-http');
+const { UTILISATION_REPORT_HEADERS } = require('@ukef/dtfs2-common');
 const { MOCK_PORTAL_SESSION_USER } = require('../../../test-mocks/mock-portal-session-user');
 const { postUtilisationReportUpload } = require('.');
 const { getUploadErrors } = require('./utilisation-report-upload-errors');
 const { getDueReportPeriodsByBankId } = require('./utilisation-report-status');
 const { extractCsvData } = require('../../../utils/csv-utils');
 const { PRIMARY_NAV_KEY } = require('../../../constants');
+const { filterReportJsonToRelevantKeys } = require('../../../helpers/filterReportJsonToRelevantKeys');
 const api = require('../../../api');
 
 jest.mock('./utilisation-report-upload-errors');
@@ -66,7 +68,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       jest.mocked(getUploadErrors).mockReturnValueOnce(null);
 
       jest.mocked(extractCsvData).mockReturnValueOnce({
-        csvJson: null,
+        csvJson: [{}],
         fileBuffer: null,
         error: true,
       });
@@ -105,7 +107,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       jest.mocked(getUploadErrors).mockReturnValueOnce(null);
 
       jest.mocked(extractCsvData).mockReturnValueOnce({
-        csvJson: null,
+        csvJson: [{}],
         fileBuffer: null,
         error: false,
       });
@@ -148,7 +150,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
       jest.mocked(getUploadErrors).mockReturnValueOnce(null);
 
       jest.mocked(extractCsvData).mockReturnValueOnce({
-        csvJson: null,
+        csvJson: [{}],
         fileBuffer: null,
         error: false,
       });
@@ -160,6 +162,45 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
 
       // Assert
       expect(res._getRedirectUrl()).toEqual('/utilisation-report-upload/confirm-and-send');
+    });
+
+    it('filters down the object sent to the API for validation', async () => {
+      // Arrange
+      const { res, req } = httpMocks.createMocks({
+        session: { userToken: 'user-token', user: MOCK_PORTAL_SESSION_USER, logInStatus: 'Valid 2FA' },
+        file: { originalname: 'filename' },
+      });
+
+      const reportJsonWithExtraKeys = [
+        {
+          [UTILISATION_REPORT_HEADERS.BASE_CURRENCY]: 'GBP',
+          keyToRemove: 'test value',
+        },
+        {
+          [UTILISATION_REPORT_HEADERS.BASE_CURRENCY]: 'USD',
+          keyToRemove: 'test value',
+        },
+      ];
+
+      jest.mocked(getUploadErrors).mockReturnValueOnce(null);
+
+      jest.mocked(extractCsvData).mockReturnValueOnce({
+        csvJson: reportJsonWithExtraKeys,
+        fileBuffer: null,
+        error: false,
+      });
+
+      jest.spyOn(api, 'generateValidationErrorsForUtilisationReportData').mockReturnValueOnce({ csvValidationErrors: [] });
+
+      // Act
+      await postUtilisationReportUpload(req, res);
+
+      // Assert
+      expect(api.generateValidationErrorsForUtilisationReportData).toHaveBeenCalledTimes(1);
+
+      const expected = filterReportJsonToRelevantKeys(reportJsonWithExtraKeys);
+
+      expect(api.generateValidationErrorsForUtilisationReportData).toHaveBeenCalledWith(expected, expect.any(String), expect.any(String));
     });
   });
 });

@@ -69,8 +69,9 @@ context('Check GEF GOVUK header displays correctly', () => {
     it('displays the beta banner correctly', () => {
       pageBanner.userName().contains(`${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
       pageBanner.betaBanner().contains('This is a new service – your feedback will help us to improve it.');
-      pageBanner.betaBanner().contains('beta');
+      cy.assertText(pageBanner.betaBannerTag(), 'Beta');
       pageBanner.betaBannerHref().contains('feedback');
+
       pageBanner
         .betaBannerHref()
         .invoke('attr', 'href')
