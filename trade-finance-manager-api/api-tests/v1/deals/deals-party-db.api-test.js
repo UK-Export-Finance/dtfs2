@@ -4,6 +4,7 @@ const { addPartyUrns } = require('../../../src/v1/controllers/deal.party-db');
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const api = require('../../../src/v1/api');
 const { MOCK_PORTAL_USERS } = require('../../../src/v1/__mocks__/mock-portal-users');
+const { COMPANY_REGISTRATION_NUMBER } = require('../../../src/constants/deals');
 
 describe('add partyUrn to deal', () => {
   beforeEach(() => {
@@ -39,7 +40,7 @@ describe('add partyUrn to deal', () => {
     const deal = {
       ...MOCK_DEAL,
       exporter: {
-        companiesHouseRegistrationNumber: 'NO_MATCH',
+        companiesHouseRegistrationNumber: COMPANY_REGISTRATION_NUMBER.NO_MATCH,
         companyName: 'some name',
       },
     };
@@ -54,7 +55,7 @@ describe('add partyUrn to deal', () => {
     const deal = {
       ...MOCK_DEAL,
       exporter: {
-        companiesHouseRegistrationNumber: 'MATCH',
+        companiesHouseRegistrationNumber: COMPANY_REGISTRATION_NUMBER.MATCH,
         companyName: 'some name',
       },
     };
@@ -69,7 +70,7 @@ describe('add partyUrn to deal', () => {
     const deal = {
       ...MOCK_DEAL,
       exporter: {
-        companiesHouseRegistrationNumber: 'MATCH',
+        companiesHouseRegistrationNumber: COMPANY_REGISTRATION_NUMBER.MATCH,
         companyName: 'some name',
       },
       tfm: {
