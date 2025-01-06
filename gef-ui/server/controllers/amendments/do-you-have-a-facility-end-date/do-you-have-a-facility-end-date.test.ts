@@ -1,19 +1,24 @@
 /* eslint-disable import/first */
 const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
+const getAmendmentMock = jest.fn();
 
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES } from '@ukef/dtfs2-common';
+import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
 import { getDoYouHaveAFacilityEndDate, GetDoYouHaveAFacilityEndDateRequest } from './do-you-have-a-facility-end-date';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { DoYouHaveAFacilityEndDateViewModel } from '../../../types/view-models/amendments/do-you-have-a-facility-end-date-view-model';
 import { MOCK_UNISSUED_FACILITY, MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
+import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
+import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
+import { getPreviousPage } from '../helpers/navigation.helper';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
   getFacility: getFacilityMock,
+  getAmendment: getAmendmentMock,
 }));
 
 const dealId = 'dealId';
@@ -33,12 +38,22 @@ const getHttpMocks = () =>
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 
 describe('getDoYouHaveAFacilityEndDate', () => {
+  let amendment: PortalFacilityAmendmentWithUkefId;
+
   beforeEach(() => {
     jest.resetAllMocks();
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
 
+    amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withDealId(dealId)
+      .withFacilityId(facilityId)
+      .withAmendmentId(amendmentId)
+      .withChangeCoverEndDate(true)
+      .build();
+
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
+    getAmendmentMock.mockResolvedValue(amendment);
   });
 
   afterAll(() => {
@@ -69,6 +84,18 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     expect(getFacilityMock).toHaveBeenCalledWith({ facilityId, userToken: req.session.userToken });
   });
 
+  it('should call getAmendment with the correct facilityId, amendmentId and userToken', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await getDoYouHaveAFacilityEndDate(req, res);
+
+    // Assert
+    expect(getAmendmentMock).toHaveBeenCalledTimes(1);
+    expect(getAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, userToken: req.session.userToken });
+  });
+
   it('should render the correct template if the facility is valid', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
@@ -79,8 +106,8 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     // Assert
     const expectedRenderData: DoYouHaveAFacilityEndDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
-      cancelUrl: `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/cancel`,
-      previousPage: `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/new-cover-end-date`,
+      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE, amendment),
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
@@ -114,6 +141,19 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     expect(res._getRedirectUrl()).toEqual('/not-found');
   });
 
+  it('should redirect if the amendment is not found', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    getAmendmentMock.mockResolvedValue(undefined);
+
+    // Act
+    await getDoYouHaveAFacilityEndDate(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    expect(res._getRedirectUrl()).toEqual(`/not-found`);
+  });
+
   it('should redirect if the facility cannot be amended', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
@@ -125,6 +165,28 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/gef/application-details/${dealId}`);
+  });
+
+  it('should redirect if the amendment is not changing the cover end date', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    getAmendmentMock.mockResolvedValue(
+      new PortalFacilityAmendmentWithUkefIdMockBuilder()
+        .withDealId(dealId)
+        .withFacilityId(facilityId)
+        .withAmendmentId(amendmentId)
+        .withChangeCoverEndDate(false)
+        .build(),
+    );
+
+    // Act
+    await getDoYouHaveAFacilityEndDate(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    expect(res._getRedirectUrl()).toEqual(
+      `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
+    );
   });
 
   it('should render `problem with service` if getApplication throws an error', async () => {
@@ -142,6 +204,18 @@ describe('getDoYouHaveAFacilityEndDate', () => {
   it('should render `problem with service` if getFacility throws an error', async () => {
     // Arrange
     getFacilityMock.mockRejectedValue(new Error('test error'));
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await getDoYouHaveAFacilityEndDate(req, res);
+
+    // Assert
+    expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
+  });
+
+  it('should render `problem with service` if getAmendment throws an error', async () => {
+    // Arrange
+    getAmendmentMock.mockRejectedValue(new Error('test error'));
     const { req, res } = getHttpMocks();
 
     // Act
