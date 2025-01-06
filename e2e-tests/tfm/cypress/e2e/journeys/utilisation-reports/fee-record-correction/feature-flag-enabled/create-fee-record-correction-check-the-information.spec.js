@@ -86,7 +86,9 @@ context('When fee record correction feature flag is enabled', () => {
       summaryList().should('contain', additionalInfoUserInput);
 
       // The contact email addresses are taken from the bank payment officer team
-      summaryList().should('contain', expectedBankEmails.join(', '));
+      expectedBankEmails.forEach((email) => {
+        summaryList().should('contain', email);
+      });
     });
 
     context('when the user clicks the "continue" button', () => {

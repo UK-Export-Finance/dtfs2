@@ -12,7 +12,7 @@ const {
   validatePostAddFeesToAnExistingPaymentGroupPayload,
   validatePostUploadUtilisationReportPayload,
   validatePostFeeRecordCorrectionPayload,
-  validatePutFeeRecordCorrectionTransientFormDataPayload,
+  validatePutFeeRecordCorrectionRequestTransientFormDataPayload,
 } = require('./middleware/payload-validation');
 const { getUtilisationReportById } = require('../controllers/utilisation-report-service/get-utilisation-report.controller');
 const { postUploadUtilisationReport } = require('../controllers/utilisation-report-service/post-upload-utilisation-report.controller');
@@ -40,15 +40,16 @@ const {
   getFeeRecordCorrectionRequestReview,
 } = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction-request-review.controller');
 const {
-  putFeeRecordCorrectionTransientFormData,
-} = require('../controllers/utilisation-report-service/fee-record-correction/put-fee-record-correction-transient-form-data.controller');
+  putFeeRecordCorrectionRequestTransientFormData,
+} = require('../controllers/utilisation-report-service/fee-record-correction/put-fee-record-correction-request-transient-form-data.controller');
 const {
-  getFeeRecordCorrectionTransientFormData,
-} = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction-transient-form-data.controller');
+  getFeeRecordCorrectionRequestTransientFormData,
+} = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction-request-transient-form-data.controller');
 const { postFeeRecordCorrection } = require('../controllers/utilisation-report-service/fee-record-correction/post-fee-record-correction.controller');
 const {
-  deleteFeeRecordCorrectionTransientFormData,
-} = require('../controllers/utilisation-report-service/fee-record-correction/delete-fee-record-correction-transient-form-data.controller');
+  deleteFeeRecordCorrectionRequestTransientFormData,
+} = require('../controllers/utilisation-report-service/fee-record-correction/delete-fee-record-correction-request-transient-form-data.controller');
+const { getFeeRecordCorrection } = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -792,11 +793,11 @@ utilisationReportsRouter
 
 /**
  * @openapi
- * /utilisation-reports/:reportId/fee-records/:feeRecordId/correction-transient-form-data:
+ * /utilisation-reports/:reportId/fee-records/:feeRecordId/correction-request-transient-form-data:
  *   put:
- *     summary: Save fee record correction transient form data against a user and fee record
+ *     summary: Save fee record correction request transient form data against a user and fee record
  *     tags: [Utilisation Report]
- *     description: Save fee record correction transient form data against a user and fee record
+ *     description: Save fee record correction request transient form data against a user and fee record
  *     parameters:
  *       - in: path
  *         name: reportId
@@ -819,7 +820,7 @@ utilisationReportsRouter
  *             properties:
  *               formData:
  *                 type: object
- *                 $ref: '#/definitions/FeeRecordCorrectionTransientFormData'
+ *                 $ref: '#/definitions/FeeRecordCorrectionRequestTransientFormData'
  *               user:
  *                 type: object
  *                 $ref: '#/definitions/TFMUser'
@@ -832,17 +833,17 @@ utilisationReportsRouter
  *         description: Internal Server Error
  */
 utilisationReportsRouter
-  .route('/:reportId/fee-records/:feeRecordId/correction-transient-form-data')
+  .route('/:reportId/fee-records/:feeRecordId/correction-request-transient-form-data')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
-  .put(validatePutFeeRecordCorrectionTransientFormDataPayload, putFeeRecordCorrectionTransientFormData);
+  .put(validatePutFeeRecordCorrectionRequestTransientFormDataPayload, putFeeRecordCorrectionRequestTransientFormData);
 
 /**
  * @openapi
- * /utilisation-reports/:reportId/fee-records/:feeRecordId/correction-transient-form-data/:userId:
+ * /utilisation-reports/:reportId/fee-records/:feeRecordId/correction-request-transient-form-data/:userId:
  *   get:
- *     summary: Gets the fee record correction transient form data against a user and fee record
+ *     summary: Gets the fee record correction request transient form data against a user and fee record
  *     tags: [Utilisation Report]
- *     description: Gets the fee record correction transient form data against a user and fee record
+ *     description: Gets the fee record correction request transient form data against a user and fee record
  *     parameters:
  *       - in: path
  *         name: reportId
@@ -870,7 +871,7 @@ utilisationReportsRouter
  *             schema:
  *               oneOf:
  *                 - type: object
- *                   $ref: '#/definitions/FeeRecordCorrectionTransientFormDataResponse'
+ *                   $ref: '#/definitions/FeeRecordCorrectionRequestTransientFormDataResponse'
  *                 - type: object
  *                   properties: {}
  *       400:
@@ -880,9 +881,9 @@ utilisationReportsRouter
  *       500:
  *         description: Internal Server Error
  *   delete:
- *     summary: Deletes the fee record correction transient form data stored against a user and fee record
+ *     summary: Deletes the fee record correction request transient form data stored against a user and fee record
  *     tags: [Utilisation Report]
- *     description: Deletes the fee record correction transient form data stored against a user and fee record
+ *     description: Deletes the fee record correction request transient form data stored against a user and fee record
  *     parameters:
  *       - in: path
  *         name: reportId
@@ -913,10 +914,10 @@ utilisationReportsRouter
  *         description: Internal Server Error
  */
 utilisationReportsRouter
-  .route('/:reportId/fee-records/:feeRecordId/correction-transient-form-data/:userId')
+  .route('/:reportId/fee-records/:feeRecordId/correction-request-transient-form-data/:userId')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), validation.mongoIdValidation('userId'), handleExpressValidatorResult)
-  .get(getFeeRecordCorrectionTransientFormData)
-  .delete(deleteFeeRecordCorrectionTransientFormData);
+  .get(getFeeRecordCorrectionRequestTransientFormData)
+  .delete(deleteFeeRecordCorrectionRequestTransientFormData);
 
 /**
  * @openapi
@@ -972,6 +973,40 @@ utilisationReportsRouter
   .route('/:reportId/fee-records/:feeRecordId/corrections')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), handleExpressValidatorResult)
   .post(validatePostFeeRecordCorrectionPayload, postFeeRecordCorrection);
+
+/**
+ * @openapi
+ * /utilisation-reports/fee-record-corrections/:correctionId:
+ *   get:
+ *     summary: Get a fee record correction
+ *     tags: [Utilisation Report]
+ *     description: Get a fee record correction
+ *     parameters:
+ *       - in: path
+ *         name: correctionId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the correction
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/FeeRecordCorrectionResponse'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/fee-record-corrections/:correctionId')
+  .all(validation.sqlIdValidation('correctionId'), handleExpressValidatorResult)
+  .get(getFeeRecordCorrection);
 
 /**
  * @openapi
