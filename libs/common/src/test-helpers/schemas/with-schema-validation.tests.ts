@@ -25,6 +25,7 @@ export type TestCaseWithPathParameter = {
  * @param params.schemaTestOptions Options that are specific to the schema as a whole, for instance, if the schema is a partial, or strict
  * @param params.aValidPayload A function that returns a valid payload for the schema
  * @param params.testCases Test cases to test
+ * @see doc\schemas.md for more information
  * @example Schema test options
  * ```ts
  * const schemaTestOptions = { isPartial: true, isStrict: true }
