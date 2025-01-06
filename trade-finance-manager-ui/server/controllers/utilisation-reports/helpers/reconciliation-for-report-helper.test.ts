@@ -1,7 +1,6 @@
 import { when } from 'jest-when';
-import { CURRENCY, Currency, CurrencyAndAmount, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { CURRENCY, Currency, CurrencyAndAmount, FEE_RECORD_STATUS, FeeRecordStatus, mapCurrenciesToRadioItems } from '@ukef/dtfs2-common';
 import difference from 'lodash.difference';
-import { mapCurrenciesToRadioItems } from '../../../helpers/map-currencies-to-radio-items';
 import {
   getFormattedDateReconciled,
   getFormattedReconciledByUser,

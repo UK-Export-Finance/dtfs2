@@ -127,6 +127,7 @@ describe('get-utilisation-report-reconciliation-details-by-id.controller helpers
           paymentDetails: [],
           keyingSheet: [],
           utilisationDetails: [],
+          recordCorrectionDetails: [],
         });
       });
     });
