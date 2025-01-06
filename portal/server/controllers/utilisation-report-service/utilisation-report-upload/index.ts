@@ -178,7 +178,7 @@ export const postUtilisationReportUpload = async (req: Request, res: Response) =
       return renderPageWithError(req, res, extractDataErrorSummary, extractDataError, dueReportPeriods);
     }
 
-    if (!csvJson || !csvJson.length) {
+    if (!csvJson?.length) {
       throw new Error('Report data is empty');
     }
 
