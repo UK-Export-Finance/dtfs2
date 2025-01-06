@@ -80,10 +80,11 @@
       },
       {
         key: {
-          text: "Contact email address"
+          text: "Contact email address(es)"
         },
         value: {
-          text: contactEmailAddresses
+          html: (contactEmailAddresses | join(",<br>") | safe),
+          classes: "ukef-word-break-break-all"
         }
       }
     ],
