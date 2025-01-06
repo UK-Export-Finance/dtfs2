@@ -90,12 +90,16 @@ describe(page, () => {
       wrapper.expectText(`${premiumPaymentsTabSelector} h2[data-cy="premium-payments-heading"]`).toRead('Premium payments');
       wrapper
         .expectText(`[data-cy="how-to-add-payments-text"]`)
-        .toMatch(/Received payments are entered against reported fees through selection and then selection of the 'Add a payment' button./);
+        .toRead("Received payments are entered against reported fees through selection and then selection of the 'Add a payment' button.");
       wrapper
         .expectText(`[data-cy="how-to-generate-keying-data-text"]`)
-        .toMatch(
-          /When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected./,
+        .toRead(
+          "When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected.",
         );
+
+      wrapper
+        .expectText(`[data-cy="how-to-create-record-correction-request-text"]`)
+        .toRead('If there is an error with the fee record, select the record to create a record correction request to send a query to the bank.');
 
       wrapper.expectText(`[data-cy="received-payments-text"]`).notToExist();
 
@@ -119,6 +123,12 @@ describe(page, () => {
       wrapper.expectElement(`${premiumPaymentsTabSelector} table[data-cy="premium-payments-table"]`).toExist();
     });
 
+    it('should NOT render the text for creating a record correction request on the premium payments tab', () => {
+      const wrapper = getWrapper({ ...params, isFeeRecordCorrectionFeatureFlagEnabled: false });
+
+      wrapper.expectText(`[data-cy="how-to-create-record-correction-request-text"]`).notToExist();
+    });
+
     it('should render the premium payments with the relevant text for non-PDC_RECONCILE users', () => {
       const wrapper = getWrapper({ ...params, user: aPdcReadUser() });
       const premiumPaymentsTabSelector = 'div#premium-payments';
@@ -126,12 +136,22 @@ describe(page, () => {
       wrapper.expectElement(premiumPaymentsTabSelector).toExist();
       wrapper
         .expectText(`[data-cy="received-payments-text"]`)
-        .toMatch(
-          /Received payments are entered against reported fees. When payments show as matched, the adjustment data for keying into ACBS will be automatically generated./,
+        .toRead(
+          'Received payments are entered against reported fees. When payments show as matched, the adjustment data for keying into ACBS will be automatically generated.',
         );
+
+      wrapper
+        .expectText(`[data-cy="how-to-create-record-correction-request-text"]`)
+        .toRead('Errors with a fee record can be addressed and queried with the bank through a record correction request.');
 
       wrapper.expectText(`[data-cy="how-to-add-payments-text"]`).notToExist();
       wrapper.expectText(`[data-cy="how-to-generate-keying-data-text"]`).notToExist();
+    });
+
+    it('should NOT render the text for creating a record correction request on the premium payments tab for non-PDC_RECONCILE users', () => {
+      const wrapper = getWrapper({ ...params, isFeeRecordCorrectionFeatureFlagEnabled: false, user: aPdcReadUser() });
+
+      wrapper.expectText(`[data-cy="how-to-create-record-correction-request-text"]`).notToExist();
     });
 
     it('should render the facility ID filter input', () => {
@@ -304,10 +324,10 @@ describe(page, () => {
       wrapper.expectElement(keyingSheetTabSelector).toExist();
 
       wrapper.expectText(`${keyingSheetTabSelector} h2[data-cy="keying-sheet-heading"]`).toRead('Keying sheet');
-      wrapper.expectText(`[data-cy="select-payments-text"]`).toMatch(/Select payments and mark as done when the adjustments have been keyed into ACBS./);
+      wrapper.expectText(`[data-cy="select-payments-text"]`).toRead('Select payments and mark as done when the adjustments have been keyed into ACBS.');
       wrapper
         .expectText(`[data-cy="payments-on-premium-payments-tab-text"]`)
-        .toMatch(/Payments on the premium payments tab will show as reconciled when they have been marked as done here./);
+        .toRead('Payments on the premium payments tab will show as reconciled when they have been marked as done here.');
 
       wrapper.expectElement(`${keyingSheetTabSelector} form[data-cy="keying-sheet-form"]`).toExist();
 
@@ -336,7 +356,7 @@ describe(page, () => {
       wrapper.expectText('[data-cy="select-payments-text"]').notToExist();
       wrapper
         .expectText('[data-cy="payments-on-premium-payments-tab-text"]')
-        .toMatch(/Payments on the premium payments tab will show as reconciled when they have been marked as done here./);
+        .toRead('Payments on the premium payments tab will show as reconciled when they have been marked as done here.');
 
       wrapper.expectElement(`${keyingSheetTabSelector} form[data-cy="keying-sheet-form"]`).toExist();
 
@@ -356,7 +376,7 @@ describe(page, () => {
       wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
       wrapper
         .expectText(`${paymentDetailsTabSelector} p[data-cy="payment-details-no-payments-text"]`)
-        .toMatch(/Payment details will be displayed when payments have been entered on the premium payments tab./);
+        .toRead('Payment details will be displayed when payments have been entered on the premium payments tab.');
       wrapper.expectElement(`${paymentDetailsTabSelector} p[data-cy="payment-details-no-records-matching-filters-text"]`).notToExist();
     });
 
@@ -367,7 +387,7 @@ describe(page, () => {
       wrapper.expectText(`${paymentDetailsTabSelector} h2[data-cy="payment-details-heading"]`).toRead('Payment details');
       wrapper
         .expectText(`${paymentDetailsTabSelector} p[data-cy="payment-details-no-records-matching-filters-text"]`)
-        .toMatch(/There are no records matching the search criteria/);
+        .toRead('There are no records matching the search criteria');
       wrapper.expectElement(`${paymentDetailsTabSelector} p[data-cy="payment-details-no-payments-text"]`).notToExist();
     });
 
