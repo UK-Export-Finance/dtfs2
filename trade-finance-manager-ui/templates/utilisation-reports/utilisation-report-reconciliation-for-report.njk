@@ -37,7 +37,7 @@
 {% endset %}
 
 {% set recordCorrectionHistoryHtml %}
-  {% include "./partials/record-correction-history-html.njk" %}
+  {% include "./partials/record-correction-log-html.njk" %}
 {% endset %}
 
 {% set itemsArray = 
@@ -85,18 +85,18 @@
   ]
 %}
 
-  {% if isFeeRecordCorrectionFeatureFlagEnabled %}
-    {% set itemsArray = (itemsArray.push({
-      label: "Record correction history",
-      id: "record-correction-history",
-      panel: {
-        html: recordCorrectionHistoryHtml | safe
-      },
-      attributes: {
-        'data-cy': 'bank-report-tab-record-correction-history'
-      }
-    }), itemsArray) %}
-  {% endif %}
+{% if isFeeRecordCorrectionFeatureFlagEnabled %}
+  {% set itemsArray = (itemsArray.push({
+    label: "Record correction log",
+    id: "record-correction-log",
+    panel: {
+      html: recordCorrectionHistoryHtml | safe
+    },
+    attributes: {
+      'data-cy': 'bank-report-tab-record-correction-log'
+    }
+  }), itemsArray) %}
+{% endif %}
 
 {% block content %}
   <div class="govuk-grid-row govuk-!-padding-top-7">
