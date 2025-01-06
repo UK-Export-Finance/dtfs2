@@ -10,15 +10,15 @@
 {%- endblock %}
 
 {% set legendHtml %}
-  <span class="govuk-caption-l" data-cy="heading-caption">
-    {{ exporterName }}
-  </span>
+<span class="govuk-caption-l" data-cy="heading-caption">
+  {{ exporterName }}
+</span>
 
-  <h1 class="govuk-label-wrapper" data-cy="page-heading">
-    <label class="govuk-label govuk-label--xl govuk-!-padding-bottom-3" for="facility-value">
+<h1 class="govuk-label-wrapper" data-cy="page-heading">
+  <label class="govuk-label govuk-label--xl govuk-!-padding-bottom-3" for="facility-value">
         Do you have a facility end date?
     </label>
-  </h1>
+</h1>
 {% endset %}
 
 {% block content %}
@@ -54,6 +54,9 @@
             legend: {
               html: legendHtml
             }
+          },
+          attributes: {
+            "data-cy": "has-facility-end-date"
           },
           hint: {
             text: "You have to provide UKEF either a facility end date or a bank review date for this GEF cash facility as per an updated version of the GEF user guide."
@@ -96,12 +99,18 @@
 
       {{ govukDetails({
         summaryText: "What is a facility end date",
-        text: "The facility end date is the deadline for a committed loan to be repaid at which point the contract will be terminated."
+        text: "The facility end date is the deadline for a committed loan to be repaid at which point the contract will be terminated.",
+        attributes: {
+          "data-cy": "what-is-a-facility-end-date"
+        }
       }) }}
 
       {{ govukDetails({
         summaryText: "What is a bank review date",
-        text: "The bank review date is when you decide in accordance with your usual policies and procedures for such facilities whether to continue or terminate the facility based on the borrower's needs and circumstances."
+        text: "The bank review date is when you decide in accordance with your usual policies and procedures for such facilities whether to continue or terminate the facility based on the borrower's needs and circumstances.",
+        attributes: {
+          "data-cy": "what-is-a-bank-review-date"
+        }
       }) }}
     </div>
   </div>
