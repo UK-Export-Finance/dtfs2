@@ -11,6 +11,8 @@ import {
 import { withStringTests, withNumberTests, withBooleanTests, withArrayTests } from './primitive-object-tests';
 import { withTfmTeamSchemaTests, withAuditDatabaseRecordSchemaTests, withEntraIdUserSchemaTests } from './schema-tests';
 import { TestCase } from './with-test-for-test-case.type';
+import { withCurrencySchemaTests } from './custom-objects-tests/with-currency-schema.tests';
+import { withIsoDateTimeStampToDateSchemaTests } from './transformation-tests';
 
 /**
  * Gets tests for a test case, using the test case type to determine which tests to run
@@ -135,6 +137,22 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
 
     case 'ENTRA_ID_USER_SCHEMA':
       withEntraIdUserSchemaTests({
+        schema,
+        options,
+        getTestObjectWithUpdatedParameter,
+      });
+      break;
+
+    case 'CURRENCY_SCHEMA':
+      withCurrencySchemaTests({
+        schema,
+        options,
+        getTestObjectWithUpdatedParameter,
+      });
+      break;
+
+    case 'ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA':
+      withIsoDateTimeStampToDateSchemaTests({
         schema,
         options,
         getTestObjectWithUpdatedParameter,

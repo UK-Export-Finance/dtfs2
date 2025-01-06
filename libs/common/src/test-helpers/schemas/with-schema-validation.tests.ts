@@ -8,6 +8,7 @@ import { TestCase } from './with-test-for-test-case.type';
  */
 type SchemaTestOptions = {
   isPartial?: boolean;
+  isStrict?: boolean;
 };
 
 /**
@@ -32,12 +33,21 @@ export const withSchemaValidationTests = <Schema extends ZodSchema>({
   testCases: TestCaseWithPathParameter[];
   aValidPayload: () => z.infer<Schema>;
 }) => {
-  const schemaTestOptionsDefaults: Partial<SchemaTestOptions> = { isPartial: false };
+  const schemaTestOptionsDefaults: Partial<SchemaTestOptions> = { isPartial: false, isStrict: false };
 
   const mergedSchemaTestOptions = {
     ...schemaTestOptionsDefaults,
     ...schemaTestOptions,
   };
+
+  if (mergedSchemaTestOptions.isStrict) {
+    describe('strict schema validation tests', () => {
+      it('should fail parsing if a parameter not in the schema exists', () => {
+        const { success } = schema.safeParse({ ...aValidPayload(), aFieldThatDoesNotBelong: 'a-value' });
+        expect(success).toBe(false);
+      });
+    });
+  }
 
   testCases.forEach((testCase) => {
     const { parameterPath } = testCase;

@@ -4,3 +4,5 @@ export * from './object-id';
 export * from './deal-cancellation';
 export * from './tfm';
 export * from './unix-timestamp.schema';
+export * from './portal-amendment';
+export * from './currency.schema';

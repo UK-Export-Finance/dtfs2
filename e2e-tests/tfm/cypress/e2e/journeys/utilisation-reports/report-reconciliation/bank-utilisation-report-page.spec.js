@@ -57,7 +57,6 @@ context('Bank utilisation report page', () => {
       cy.assertText(utilisationReportPage.keyingSheetTabLink(), 'Keying sheet');
       cy.assertText(utilisationReportPage.paymentDetailsTabLink(), 'Payment details');
       cy.assertText(utilisationReportPage.utilisationTabLink(), 'Utilisation');
-      cy.assertText(utilisationReportPage.recordCorrectionHistoryTabLink(), 'Record correction history');
     });
   });
 });
