@@ -257,7 +257,7 @@ bankRouter
  */
 bankRouter
   .route('/:bankId/fee-record-corrections/:correctionId/transient-form-data')
-  .get(
+  .put(
     validation.bankIdValidation,
     validation.sqlIdValidation('correctionId'),
     handleExpressValidatorResult,
