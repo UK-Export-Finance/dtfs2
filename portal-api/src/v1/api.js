@@ -528,6 +528,50 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
   }
 };
 
+/**
+ * Updates a portal facility amendment with the provided details.
+ * @param {Object} params
+ * @param {string} params.facilityId - id of the facility to amend.
+ * @param {string} params.amendmentId - id of the amendment.
+ * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} params.update - the updates to amend the amendment with.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - The audit details for the update.
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>} - the amendment
+ */
+const patchPortalFacilityAmendment = async ({ facilityId, amendmentId, update, auditDetails }) => {
+  try {
+    const response = await axios({
+      method: 'patch',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments`,
+      headers: headers.central,
+      data: {
+        facilityId,
+        amendmentId,
+        update,
+        auditDetails,
+      },
+    });
+
+    const { success, error, data } = PORTAL_FACILITY_AMENDMENT.safeParse(response.data);
+
+    if (success) {
+      return data;
+    }
+
+    console.error('Type validation error occurred when receiving portal amendment from dtfs-central %o', error);
+
+    throw new Error('Type validation error occurred');
+  } catch (error) {
+    console.error(
+      'Error updating portal facility amendment with id: %s for facility with id %s: with the following update: %o, %o',
+      amendmentId,
+      facilityId,
+      update,
+      error,
+    );
+    throw error;
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -551,4 +595,5 @@ module.exports = {
   getFeeRecordCorrectionById,
   getPortalFacilityAmendment,
   putPortalFacilityAmendment,
+  patchPortalFacilityAmendment,
 };
