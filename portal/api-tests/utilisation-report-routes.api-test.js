@@ -44,11 +44,16 @@ describe('utilisation-report routes', () => {
   });
 
   describe('GET /utilisation-reports/provide-correction/:correctionId', () => {
+    const originalProcessEnv = { ...process.env };
     const getUrl = ({ correctionId }) => `/utilisation-reports/provide-correction/${correctionId}`;
 
     describe('when FF_FEE_RECORD_CORRECTION_ENABLED is set to `true`', () => {
       beforeAll(() => {
         process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'true';
+      });
+
+      afterAll(() => {
+        process.env = { ...originalProcessEnv };
       });
 
       withRoleValidationApiTests({
@@ -62,6 +67,10 @@ describe('utilisation-report routes', () => {
     describe('when FF_FEE_RECORD_CORRECTION_ENABLED is set to `false`', () => {
       beforeAll(() => {
         process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'false';
+      });
+
+      afterAll(() => {
+        process.env = { ...originalProcessEnv };
       });
 
       it(`should redirect to "/not-found"`, async () => {
