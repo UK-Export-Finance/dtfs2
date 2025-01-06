@@ -31,8 +31,8 @@ context('When fee record correction feature flag is enabled', () => {
       cy.visit(`utilisation-reports/${reportId}`);
     });
 
-    it('should display the record correction history tab', () => {
-      cy.assertText(utilisationReportPage.recordCorrectionHistoryTabLink(), 'Record correction history');
+    it('should display the record correction log tab', () => {
+      cy.assertText(utilisationReportPage.recordCorrectionLogTabLink(), 'Record correction log');
     });
 
     it('should display the record correction text', () => {
@@ -51,8 +51,8 @@ context('When fee record correction feature flag is enabled', () => {
       cy.visit(`utilisation-reports/${reportId}`);
     });
 
-    it('should display the record correction history tab', () => {
-      cy.assertText(utilisationReportPage.recordCorrectionHistoryTabLink(), 'Record correction history');
+    it('should display the record correction log tab', () => {
+      cy.assertText(utilisationReportPage.recordCorrectionLogTabLink(), 'Record correction log');
     });
 
     it('should display the record correction text', () => {
