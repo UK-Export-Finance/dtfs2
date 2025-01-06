@@ -35,7 +35,7 @@ router
   .get(getCoverEndDate);
 
 router
-  .route(`/application-details/:dealId/facilities/:facilityId/amendments/${DO_YOU_HAVE_A_FACILITY_END_DATE}`)
+  .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${DO_YOU_HAVE_A_FACILITY_END_DATE}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getDoYouHaveAFacilityEndDate);
 
