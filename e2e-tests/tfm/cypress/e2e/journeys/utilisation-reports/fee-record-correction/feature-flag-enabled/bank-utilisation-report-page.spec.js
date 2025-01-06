@@ -51,11 +51,6 @@ context('When fee record correction feature flag is enabled', () => {
       cy.visit(`utilisation-reports/${reportId}`);
     });
 
-    afterEach(() => {
-      cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
-      cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
-    });
-
     it('should display the record correction history tab', () => {
       cy.assertText(utilisationReportPage.recordCorrectionHistoryTabLink(), 'Record correction history');
     });
@@ -63,7 +58,7 @@ context('When fee record correction feature flag is enabled', () => {
     it('should display the record correction text', () => {
       cy.assertText(
         utilisationReportPage.premiumPaymentsTab.createRecordCorrectionRequestText(),
-        `Errors with a fee record can be addressed and queried with the bank through a record correction request.`,
+        'Errors with a fee record can be addressed and queried with the bank through a record correction request.',
       );
     });
   });

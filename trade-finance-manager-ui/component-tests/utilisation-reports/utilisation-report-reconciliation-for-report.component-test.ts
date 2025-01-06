@@ -123,6 +123,12 @@ describe(page, () => {
       wrapper.expectElement(`${premiumPaymentsTabSelector} table[data-cy="premium-payments-table"]`).toExist();
     });
 
+    it('should NOT render the text for creating a record correction request on the premium payments tab', () => {
+      const wrapper = getWrapper({ ...params, isFeeRecordCorrectionFeatureFlagEnabled: false });
+
+      wrapper.expectText(`[data-cy="how-to-create-record-correction-request-text"]`).notToExist();
+    });
+
     it('should render the premium payments with the relevant text for non-PDC_RECONCILE users', () => {
       const wrapper = getWrapper({ ...params, user: aPdcReadUser() });
       const premiumPaymentsTabSelector = 'div#premium-payments';
@@ -140,6 +146,12 @@ describe(page, () => {
 
       wrapper.expectText(`[data-cy="how-to-add-payments-text"]`).notToExist();
       wrapper.expectText(`[data-cy="how-to-generate-keying-data-text"]`).notToExist();
+    });
+
+    it('should NOT render the text for creating a record correction request on the premium payments tab for non-PDC_RECONCILE users', () => {
+      const wrapper = getWrapper({ ...params, isFeeRecordCorrectionFeatureFlagEnabled: false, user: aPdcReadUser() });
+
+      wrapper.expectText(`[data-cy="how-to-create-record-correction-request-text"]`).notToExist();
     });
 
     it('should render the facility ID filter input', () => {

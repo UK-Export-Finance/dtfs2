@@ -48,11 +48,6 @@ context('When fee record correction feature flag is disabled', () => {
       cy.visit(`utilisation-reports/${reportId}`);
     });
 
-    afterEach(() => {
-      cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
-      cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
-    });
-
     it('should NOT display the record correction history tab', () => {
       utilisationReportPage.recordCorrectionHistoryTabLink().should('not.exist');
     });
