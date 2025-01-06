@@ -400,6 +400,37 @@ const upsertAmendment = async ({ facilityId, dealId, amendment, userToken }) => 
   }
 };
 
+/**
+ * @param {Object} param
+ * @param {string} param.facilityId
+ * @param {string} param.amendmentId
+ * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} param.update
+ * @param {string} param.userToken
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}>}
+ */
+const updateAmendment = async ({ facilityId, amendmentId, update, userToken }) => {
+  if (!isValidMongoId(facilityId)) {
+    console.error('Invalid facility ID %s', facilityId);
+    throw new InvalidFacilityIdError(facilityId);
+  }
+
+  if (!isValidMongoId(amendmentId)) {
+    throw new Error('Invalid amendment ID');
+  }
+
+  const payload = {
+    update,
+  };
+
+  try {
+    const { data } = await Axios.patch(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, payload, { ...config(userToken) });
+    return data;
+  } catch (error) {
+    console.error('Failed to update the amendment with id: %s on facility with id: %s with update: %o: %o', amendmentId, facilityId, payload, error);
+    throw error;
+  }
+};
+
 module.exports = {
   validateToken,
   validateBank,
@@ -423,4 +454,5 @@ module.exports = {
   updateSupportingInformation,
   getAmendment,
   upsertAmendment,
+  updateAmendment,
 };
