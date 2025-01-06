@@ -7,3 +7,7 @@
 {% endif %}
 
 <p class="govuk-body" data-cy="record-correction-automatic-notification-text">You will be automatically notified via email when the record correction comes through from the bank.</p>
+
+{{ recordCorrectionTable.render({
+  recordCorrectionRows: recordCorrectionDetails.recordCorrectionRows
+}) }}

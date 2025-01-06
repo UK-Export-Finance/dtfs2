@@ -133,6 +133,20 @@ module.exports = {
     };
 
     /**
+     * Fetches fee records with corrections and payments from the SQL database by ID
+     * @param {string} feeRecordId
+     * @returns The feeRecord with the specified ID
+     */
+    const getFeeRecordById = async (feeRecordId) =>
+      await SqlDbDataSource.manager.findOne(FeeRecordEntity, {
+        where: { id: feeRecordId },
+        relations: {
+          payments: true,
+          corrections: true,
+        },
+      });
+
+    /**
      * Deletes all the rows from the payment matching tolerance table
      */
     const removeAllPaymentMatchingTolerancesFromDb = async () => await SqlDbDataSource.manager.getRepository(PaymentMatchingToleranceEntity).delete({});
@@ -313,6 +327,7 @@ module.exports = {
       insertVersion0Facility,
       insertFeeRecordsIntoDb,
       insertFeeRecordCorrectionsIntoDb,
+      getFeeRecordById,
       removeAllPaymentMatchingTolerancesFromDb,
       reinsertZeroThresholdPaymentMatchingTolerances,
       insertPaymentMatchingTolerancesIntoDb,

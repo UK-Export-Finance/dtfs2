@@ -146,6 +146,23 @@ const utilisationReportPage = {
     viewHistoricRecordCorrectionText: () => cy.get('[data-cy="view-historic-record-corrections-text"]'),
     recordCorrectionAutomaticallyNotifiedText: () => cy.get('[data-cy="record-correction-automatic-notification-text"]'),
     noRecordCorrectionsText: () => cy.get('[data-cy="no-record-corrections-text"]'),
+    table: {
+      recordCorrectionHistoryTable: () => cy.get('[data-cy="record-correction-history-table"]'),
+      facilityIdHeader: () => cy.get('[data-cy="record-correction-history-table-facility-id-header"]'),
+      exporterHeader: () => cy.get('[data-cy="record-correction-history-table-exporter-header"]'),
+      reasonsHeader: () => cy.get('[data-cy="record-correction-history-table-reasons-header"]'),
+      dateSentHeader: () => cy.get('[data-cy="record-correction-history-table-date-sent-header"]'),
+      requestedByHeader: () => cy.get('[data-cy="record-correction-history-table-requested-by-header"]'),
+      statusHeader: () => cy.get('[data-cy="record-correction-history-table-status-header"]'),
+      row: (feeRecordId) => ({
+        facilityId: () => cy.get(`[data-cy="record-correction-history-table-row-${feeRecordId}-facility-id"]`),
+        exporter: () => cy.get(`[data-cy="record-correction-history-table-row-${feeRecordId}-exporter"]`),
+        reasons: () => cy.get(`[data-cy="record-correction-history-table-row-${feeRecordId}-reasons"]`),
+        dateSent: () => cy.get(`[data-cy="record-correction-history-table-row-${feeRecordId}-date-sent"]`),
+        requestedBy: () => cy.get(`[data-cy="record-correction-history-table-row-${feeRecordId}-requested-by"]`),
+        status: () => cy.get(`[data-cy="record-correction-history-table-row-${feeRecordId}-status"]`),
+      }),
+    },
   },
 };
 
