@@ -6,11 +6,11 @@ import {
   MONGO_DB_COLLECTIONS,
   TfmUser,
   UpdateTfmUserRequest,
+  USER_STATUS,
 } from '@ukef/dtfs2-common';
 import { Collection, FindOneAndUpdateOptions, ObjectId, WithoutId } from 'mongodb';
 import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
-import { USER } from '../../constants';
 import { getEscapedRegexFromString } from '../helpers/get-escaped-regex-from-string';
 
 type CreateUserParams = {
@@ -59,7 +59,7 @@ export class UserRepo {
     const userToCreate: WithoutId<TfmUser> = {
       ...user,
       auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-      status: USER.STATUS.ACTIVE, // New users start in an active state
+      status: USER_STATUS.ACTIVE, // New users start in an active state
     };
 
     const result = await collection.insertOne(userToCreate);

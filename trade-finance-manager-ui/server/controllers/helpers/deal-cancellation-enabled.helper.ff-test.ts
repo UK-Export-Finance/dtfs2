@@ -7,7 +7,7 @@ const nonPimUser = { teams: [TEAM_IDS.UNDERWRITERS] } as TfmSessionUser;
 const { AIN, MIN, MIA } = DEAL_SUBMISSION_TYPE;
 
 describe('isDealCancellationEnabledForUser', () => {
-  describe('when `FF_TFM_FACILITY_END_DATE_ENABLED` is set to true', () => {
+  describe('when `FF_TFM_DEAL_CANCELLATION_ENABLED` is set to true', () => {
     describe('when user is a PIM user', () => {
       it('should return false if the deal type is MIA', () => {
         const result = isDealCancellationEnabledForUser(MIA, pimUser);
@@ -39,7 +39,7 @@ describe('isDealCancellationEnabledForUser', () => {
 });
 
 describe('isDealCancellationEnabled', () => {
-  describe('when `FF_TFM_FACILITY_END_DATE_ENABLED` is set to true', () => {
+  describe('when `FF_TFM_DEAL_CANCELLATION_ENABLED` is set to true', () => {
     describe('when user is a PIM user', () => {
       it('should return false if the deal type is MIA', () => {
         const result = isDealCancellationEnabled(MIA);

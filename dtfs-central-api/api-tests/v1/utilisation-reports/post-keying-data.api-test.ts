@@ -326,7 +326,58 @@ describe(`POST ${BASE_URL}`, () => {
     expect(joinTableEntities[0].paymentAmountUsedForFeeRecord).not.toBeNull();
   });
 
-  it('calculates the new fixed fee using the effective amendment at the report period end', async () => {
+  it('should set the fixed fee to zero', async () => {
+    // Arrange
+    const facilityId = '11111111';
+
+    const tfmFacility: TfmFacility = {
+      ...aTfmFacility(),
+      facilitySnapshot: {
+        ...aFacility(),
+        ukefFacilityId: facilityId,
+        coverPercentage: 80,
+      },
+    };
+
+    const tfmFacilitiesCollection = await mongoDbClient.getCollection('tfm-facilities');
+    await tfmFacilitiesCollection.insertOne(tfmFacility);
+
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(reportId).build();
+
+    const utilisationData = FacilityUtilisationDataEntityMockBuilder.forId(facilityId).withFixedFee(1).build();
+    const feeRecords = [
+      FeeRecordEntityMockBuilder.forReport(report)
+        .withId(1)
+        .withFacilityId(facilityId)
+        .withFacilityUtilisationData(utilisationData)
+        .withStatus(FEE_RECORD_STATUS.MATCH)
+        .build(),
+    ];
+    report.feeRecords = feeRecords;
+    await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+    await insertMatchingPaymentsForFeeRecords(feeRecords);
+
+    const requestBody = aValidRequestBody();
+
+    // Act
+    const response = await testApi.post(requestBody).to(getUrl(reportId));
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.Ok);
+
+    const entities = await SqlDbHelper.manager.find(FacilityUtilisationDataEntity, {});
+    expect(entities).toHaveLength(1);
+    expect(entities[0].id).toEqual(facilityId);
+    expect(entities[0].fixedFee).toEqual(0);
+  });
+
+  /**
+   * This test is skipped because fixed fee adjustments are temporarily turned off.
+   *
+   * TODO FN-3639: Remove this skip and update with new calculation requirements.
+   */
+  it.skip('calculates the new fixed fee using the effective amendment at the report period end', async () => {
     // Arrange
     const reportPeriod = { start: { month: 12, year: 2023 }, end: { month: 2, year: 2024 } };
     const dateWithinReportPeriod = new Date('2024-01-01');

@@ -1,12 +1,13 @@
 import { Headers } from 'node-mocks-http';
 import { NextFunction, Request, Response } from 'express';
-import { MAKER } from '../../server/constants/roles';
+import { ROLES } from '@ukef/dtfs2-common';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
 import { createApi } from '../create-api';
 import api from '../../server/services/api';
 import * as storage from '../test-helpers/storage/storage';
 import { Deal } from '../../server/types/deal';
+import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
 
 const originalEnv = { ...process.env };
 
@@ -19,8 +20,9 @@ jest.mock('../../server/middleware/csrf', () => ({
 
 const dealId = '123';
 const facilityId = '111';
+const amendmentId = 'amendmentId';
 
-const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/what-needs-to-change`;
+const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`;
 
 describe(`GET ${url}`, () => {
   let sessionCookie: string;
@@ -29,7 +31,7 @@ describe(`GET ${url}`, () => {
     await storage.flush();
     jest.resetAllMocks();
 
-    ({ sessionCookie } = await storage.saveUserSession([MAKER]));
+    ({ sessionCookie } = await storage.saveUserSession([ROLES.MAKER]));
     jest.spyOn(api, 'getApplication').mockResolvedValue({ exporter: { companyName: 'test exporter' } } as Deal);
   });
 
@@ -61,10 +63,8 @@ describe(`GET ${url}`, () => {
 
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers: Headers) => get(url, {}, headers),
-      whitelistedRoles: [MAKER],
+      whitelistedRoles: [ROLES.MAKER],
       successCode: 200,
-      successHeaders: null,
-      redirectUrlForInvalidRoles: null,
     });
 
     it('should return status 200 when user logged in as maker', async () => {

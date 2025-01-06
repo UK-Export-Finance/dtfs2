@@ -1077,6 +1077,7 @@ const addPaymentToFeeRecords = async (reportId, parsedAddPaymentFormValues, feeR
  * @param {string} feeRecordId - The fee record id
  * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user
  * @param {string} userToken - The user token
+ * @returns {Promise<import('./api-response-types').PostFeeRecordCorrectionResponseBody>}
  */
 const createFeeRecordCorrection = async (reportId, feeRecordId, user, userToken) => {
   const response = await axios({
@@ -1397,7 +1398,7 @@ const getFeeRecordCorrectionRequestReview = async (reportId, feeRecordId, userId
  * Updates the fee record correction transient form data associated with the user
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
- * @param {import('@ukef/dtfs2-common').RecordCorrectionTransientFormData} formData - The transient form data
+ * @param {import('@ukef/dtfs2-common').RecordCorrectionRequestTransientFormData} formData - The transient form data
  * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
  * @param {string} userToken - The user token
  * @returns {Promise<void>}
@@ -1426,7 +1427,7 @@ const updateFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
  * @param {string} feeRecordId - The fee record id
  * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
  * @param {string} userToken - The user token
- * @returns {Promise<import('@ukef/dtfs2-common').RecordCorrectionTransientFormData | {}>}
+ * @returns {Promise<import('@ukef/dtfs2-common').RecordCorrectionRequestTransientFormData | {}>}
  */
 const getFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, user, userToken) => {
   try {
@@ -1439,6 +1440,29 @@ const getFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, us
     return data;
   } catch (error) {
     console.error('Failed to get fee record correction transient form data', error);
+    throw error;
+  }
+};
+
+/**
+ * Deletes the fee record by report id, fee record id and user
+ * @param {string} reportId - The report id
+ * @param {string} feeRecordId - The fee record id
+ * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {string} userToken - The user token
+ * @returns {Promise<void>}
+ */
+const deleteFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, user, userToken) => {
+  try {
+    const userId = user._id;
+
+    await axios({
+      method: 'delete',
+      url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data/${userId}`,
+      headers: generateHeaders(userToken),
+    });
+  } catch (error) {
+    console.error('Failed to delete fee record correction transient form data %o', error);
     throw error;
   }
 };
@@ -1509,4 +1533,5 @@ module.exports = {
   getFeeRecordCorrectionRequestReview,
   updateFeeRecordCorrectionTransientFormData,
   getFeeRecordCorrectionTransientFormData,
+  deleteFeeRecordCorrectionTransientFormData,
 };

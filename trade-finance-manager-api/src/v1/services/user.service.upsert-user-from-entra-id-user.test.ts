@@ -1,7 +1,6 @@
-import { AuditDetails, anEntraIdUser, EntraIdUser, TfmUser, UpsertTfmUserRequest } from '@ukef/dtfs2-common';
+import { USER_STATUS, AuditDetails, anEntraIdUser, EntraIdUser, TfmUser, UpsertTfmUserRequest } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
-import { USER } from '../../constants';
 import { UserService } from './user.service';
 import { UserRepo } from '../repo/user.repo';
 
@@ -35,7 +34,7 @@ describe('user service', () => {
       userService = new UserService();
       transformedUser = userService.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
       userId = new ObjectId();
-      existingUser = { ...transformedUser, _id: userId, status: USER.STATUS.ACTIVE };
+      existingUser = { ...transformedUser, _id: userId, status: USER_STATUS.ACTIVE };
     });
 
     afterAll(() => {

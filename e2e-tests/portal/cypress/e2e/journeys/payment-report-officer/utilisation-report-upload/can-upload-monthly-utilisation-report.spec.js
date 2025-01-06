@@ -2,13 +2,18 @@ const { errorSummary, mainHeading } = require('../../../partials');
 const { utilisationReportUpload } = require('../../../pages');
 const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../e2e-fixtures');
 const relativeURL = require('../../../relativeURL');
-const { february2023ReportDetails, march2023ReportDetails, tfmFacilityForReport } = require('../../../../fixtures/mockUtilisationReportDetails');
+const {
+  february2023ReportDetails,
+  march2023ReportDetails,
+  tfmFacilityForReport,
+  ewcsTfmFacilityForReport,
+} = require('../../../../fixtures/mockUtilisationReportDetails');
 
 context('Monthly utilisation report upload', () => {
   beforeEach(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
     cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [march2023ReportDetails, february2023ReportDetails]);
-    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, [tfmFacilityForReport]);
+    cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, [tfmFacilityForReport, ewcsTfmFacilityForReport]);
 
     cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
     cy.visit(relativeURL('/utilisation-report-upload'));
@@ -148,7 +153,7 @@ context('Monthly utilisation report upload', () => {
       });
       cy.assertValidationErrorTableRowContains({
         tableRowIndex: 7,
-        message: 'The Facility ID has not been recognised. Enter a valid Facility ID between 8 and 10 characters.',
+        message: 'The facility ID has not been recognised. Enter a facility ID for a general export facility.',
         exporter: 'Fish Exporter',
         row: '4',
         column: 'B',
@@ -164,7 +169,7 @@ context('Monthly utilisation report upload', () => {
       });
       cy.assertValidationErrorTableRowContains({
         tableRowIndex: 9,
-        message: 'The Facility ID has not been recognised. Enter a valid Facility ID between 8 and 10 characters.',
+        message: 'The facility ID has not been recognised. Enter a facility ID for a general export facility.',
         exporter: 'Potato Exporter',
         row: '5',
         column: 'B',
@@ -283,7 +288,7 @@ context('Monthly utilisation report upload', () => {
       });
       cy.assertValidationErrorTableRowContains({
         tableRowIndex: 7,
-        message: 'The Facility ID has not been recognised. Enter a valid Facility ID between 8 and 10 characters.',
+        message: 'The facility ID has not been recognised. Enter a facility ID for a general export facility.',
         exporter: 'Fish Exporter',
         row: '4',
         column: 'B',
@@ -291,7 +296,7 @@ context('Monthly utilisation report upload', () => {
       });
       cy.assertValidationErrorTableRowContains({
         tableRowIndex: 8,
-        message: 'The Facility ID has not been recognised. Enter a valid Facility ID between 8 and 10 characters.',
+        message: 'The facility ID has not been recognised. Enter a facility ID for a general export facility.',
         exporter: 'Potato Exporter',
         row: '5',
         column: 'B',

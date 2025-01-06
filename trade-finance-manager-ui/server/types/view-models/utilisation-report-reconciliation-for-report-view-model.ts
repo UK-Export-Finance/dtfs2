@@ -146,14 +146,15 @@ export type UtilisationTableRowViewModel = {
 };
 
 export type RecordCorrectionRowViewModel = {
+  feeRecordId: number;
+  correctionId: number;
   facilityId: string;
   exporter: string;
-  baseCurrency: Currency;
-  reason: string;
-  formattedDateSent: string | undefined;
-  formattedUtilisation: string;
+  reasons: string;
+  dateSent: string;
   requestedBy: string;
-  status: string;
+  status: FeeRecordStatus;
+  displayStatus: FeeRecordDisplayStatus;
 };
 
 export type UtilisationDetailsViewModel = {
@@ -183,5 +184,6 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   keyingSheet: KeyingSheetViewModel;
   paymentDetails: PaymentDetailsViewModel;
   utilisationDetails: UtilisationDetailsViewModel;
+  recordCorrectionDetails: RecordCorrectionsViewModel;
   isFeeRecordCorrectionFeatureFlagEnabled: boolean;
 };

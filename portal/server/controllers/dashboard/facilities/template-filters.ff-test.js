@@ -5,7 +5,7 @@ import { DASHBOARD_FILTERS } from '../../../content-strings';
 import { generateFiltersArray } from '../filters/generate-template-filters';
 
 describe('controllers/dashboard/facilities - template-filters', () => {
-  describe('facility stage filters - FF_TFM_FACILITY_END_DATE_ENABLED enabled', () => {
+  describe('facility stage filters - FF_TFM_DEAL_CANCELLATION_ENABLED enabled', () => {
     it('should return generateFiltersArray with all possible `facility stage` field inputs', () => {
       const mockSubmittedFilters = {};
 

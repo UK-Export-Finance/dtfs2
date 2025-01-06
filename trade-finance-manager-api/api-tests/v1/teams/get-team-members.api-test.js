@@ -1,10 +1,13 @@
 const { when } = require('jest-when');
+const { USER_STATUS } = require('@ukef/dtfs2-common');
+const { HttpStatusCode } = require('axios');
 const app = require('../../../src/createApp');
 const { createApi } = require('../../api');
 const { initialiseTestUsers } = require('../../api-test-users');
 const api = require('../../../src/v1/api');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { TEAMS } = require('../../../src/constants');
+const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
 
 const { as, get } = createApi(app);
 
@@ -16,6 +19,7 @@ describe('GET /teams/:teamId/members', () => {
   beforeAll(async () => {
     const testUsers = await initialiseTestUsers(app);
     tokenUser = testUsers().one();
+    console.error = jest.fn();
   });
 
   afterAll(() => {
@@ -27,96 +31,111 @@ describe('GET /teams/:teamId/members', () => {
     makeRequestWithAuthHeader: (authHeader) => get(validUrlToGetTeamMembers, { headers: { Authorization: authHeader } }),
   });
 
-  it('returns a 400 response if the teamId is not one of the allowed values', async () => {
-    const unexpectedTeamId = 'unexpected team id';
-
-    const { status, body } = await as(tokenUser).get(`/v1/teams/${unexpectedTeamId}/members`);
-
-    const allTeamsSeparatedByComma = Object.values(TEAMS)
-      .map((team) => team.id)
-      .join(', ');
-    expect(status).toEqual(400);
-    expect(body).toStrictEqual({
-      status: 400,
-      errors: [
-        {
-          location: 'params',
-          msg: `teamId must be one of ${allTeamsSeparatedByComma}`,
-          path: 'teamId',
-          type: 'field',
-          value: 'unexpected team id',
-        },
-      ],
-    });
-  });
-
-  it('returns the status and data from the api call if DTFS Central does not respond', async () => {
-    const statusFromDtfsCentralApiCall = 400;
-    const dataFromDtfsCentralApiCall = 'Error message';
-    when(api.findTeamMembers).calledWith(validTeamId).mockResolvedValueOnce({
-      status: statusFromDtfsCentralApiCall,
-      data: dataFromDtfsCentralApiCall,
-    });
-
-    const { status, body } = await as(tokenUser).get(validUrlToGetTeamMembers);
-
-    expect(status).toEqual(statusFromDtfsCentralApiCall);
-    expect(body).toStrictEqual({
-      status: statusFromDtfsCentralApiCall,
-      data: dataFromDtfsCentralApiCall,
-    });
-  });
-
-  describe.each([
+  const tfmTeams = [
     TEAMS.BUSINESS_SUPPORT.id,
     TEAMS.PIM.id,
     TEAMS.RISK_MANAGERS.id,
     TEAMS.UNDERWRITERS.id,
     TEAMS.UNDERWRITER_MANAGERS.id,
     TEAMS.UNDERWRITING_SUPPORT.id,
-  ])('for teamId %s', (teamId) => {
-    it('returns a 200 response with only the _id, first name, and last name of the team members returned by DTFS Central', async () => {
-      const expectedTeamMemberDataToReturn = [
-        {
-          _id: 'mongo-id-1',
-          firstName: 'First1',
-          lastName: 'Last1',
-        },
-        {
-          _id: 'mongo-id-2',
-          firstName: 'First2',
-          lastName: 'Last2',
-        },
-        {
-          _id: 'mongo-id-3',
-          firstName: 'First3',
-          lastName: 'Last3',
-        },
-      ];
-      const usersReturnedByDtfsCentral = expectedTeamMemberDataToReturn.map(({ _id, firstName, lastName }, index) => ({
+  ];
+
+  describe.each(tfmTeams)('for teamId %s', (teamId) => {
+    it(`should returns a ${HttpStatusCode.Ok} response with only the _id, first name, and last name of active team members only returned by DTFS Central`, async () => {
+      // Arrange
+      const usersReturnedByDtfsCentral = MOCK_USERS.map(({ _id, firstName, lastName, status }, index) => {
+        const email = `${firstName}.${lastName}.${index}@example.com`;
+        return {
+          _id,
+          username: email,
+          email,
+          teams: [teamId],
+          timezone: 'Europe/London',
+          firstName,
+          lastName,
+          status,
+        };
+      });
+
+      const teamMembers = MOCK_USERS.filter(({ status }) => status === USER_STATUS.ACTIVE).map(({ _id, firstName, lastName }) => ({
         _id,
-        username: `${firstName}.${lastName}.${index}@example.com`,
-        email: `${firstName}.${lastName}.${index}@example.com`,
-        teams: [teamId],
-        timezone: 'Europe/London',
         firstName,
         lastName,
       }));
+
       when(api.findTeamMembers).calledWith(teamId).mockResolvedValueOnce(usersReturnedByDtfsCentral);
 
+      // Act
       const { status, body } = await as(tokenUser).get(`/v1/teams/${teamId}/members`);
 
-      expect(status).toEqual(200);
-      expect(body).toStrictEqual({ teamMembers: expectedTeamMemberDataToReturn });
+      // Assert
+      expect(status).toEqual(HttpStatusCode.Ok);
+      expect(body).toStrictEqual({ teamMembers });
     });
 
-    it('returns a 200 response with an empty array if DTFS Central responds with an empty array of users', async () => {
+    it(`returns a ${HttpStatusCode.Ok} response with an empty array if DTFS Central responds with an empty array of users`, async () => {
       when(api.findTeamMembers).calledWith(teamId).mockResolvedValueOnce([]);
 
       const { status, body } = await as(tokenUser).get(`/v1/teams/${teamId}/members`);
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
       expect(body).toStrictEqual({ teamMembers: [] });
     });
+  });
+
+  it(`should returns a ${HttpStatusCode.BadRequest} response if the teamId is invalid`, async () => {
+    // Arrange
+    const invalidTeamId = 'INVALID';
+    const allTeamsSeparatedByComma = Object.values(TEAMS)
+      .map((team) => team.id)
+      .join(', ');
+
+    // Act
+    const { status, body } = await as(tokenUser).get(`/v1/teams/${invalidTeamId}/members`);
+
+    // Assert
+    expect(status).toEqual(HttpStatusCode.BadRequest);
+    expect(body).toStrictEqual({
+      status: HttpStatusCode.BadRequest,
+      errors: [
+        {
+          location: 'params',
+          msg: `teamId must be one of ${allTeamsSeparatedByComma}`,
+          path: 'teamId',
+          type: 'field',
+          value: invalidTeamId,
+        },
+      ],
+    });
+  });
+
+  it(`should returns ${HttpStatusCode.BadRequest} from the api call if DTFS Central does not respond`, async () => {
+    // Arrange
+    when(api.findTeamMembers).calledWith(validTeamId).mockResolvedValueOnce({
+      status: HttpStatusCode.BadRequest,
+      data: 'Error message',
+    });
+
+    // Act
+    const { status, body } = await as(tokenUser).get(validUrlToGetTeamMembers);
+
+    // Assert
+    expect(status).toEqual(HttpStatusCode.BadRequest);
+    expect(body).toStrictEqual({
+      status: HttpStatusCode.BadRequest,
+      data: 'Error message',
+    });
+  });
+
+  it(`should return ${HttpStatusCode.InternalServerError} if an exception is thrown`, async () => {
+    // Arrange
+    when(api.findTeamMembers).calledWith(validTeamId).mockRejectedValue(new Error('Mock error'));
+
+    // Act
+    const { status } = await as(tokenUser).get(validUrlToGetTeamMembers);
+
+    // Assert
+    expect(console.error).toHaveBeenCalledWith('An error occurred while mapping TFM team members %o', new Error('Mock error'));
+    expect(status).toEqual(HttpStatusCode.InternalServerError);
   });
 });

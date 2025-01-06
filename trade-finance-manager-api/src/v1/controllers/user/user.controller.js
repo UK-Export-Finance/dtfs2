@@ -2,9 +2,9 @@ const { ObjectId } = require('mongodb');
 const { generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
 const { PAYLOAD_VERIFICATION, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
+const { USER_STATUS } = require('@ukef/dtfs2-common');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
 const { mapUserData } = require('./helpers/mapUserData.helper');
-const { USER } = require('../../../constants');
 const utils = require('../../../utils/crypto.util');
 
 const businessRules = { loginFailureCount: 5 };
@@ -38,7 +38,7 @@ exports.create = async (user, auditDetails, callback) => {
   const collection = await db.getCollection('tfm-users');
   const tfmUser = {
     ...user,
-    status: USER.STATUS.ACTIVE,
+    status: USER_STATUS.ACTIVE,
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
@@ -135,7 +135,7 @@ exports.incrementFailedLoginCount = async (user, auditDetails) => {
   const update = {
     loginFailureCount: failureCount,
     lastLoginFailure: Date.now(),
-    status: thresholdReached ? USER.STATUS.BLOCKED : user.status,
+    status: thresholdReached ? USER_STATUS.BLOCKED : user.status,
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 

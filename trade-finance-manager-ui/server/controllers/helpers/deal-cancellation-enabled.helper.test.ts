@@ -14,7 +14,7 @@ const { AIN, MIN, MIA } = DEAL_SUBMISSION_TYPE;
 const { COMPLETED, PENDING, DRAFT } = TFM_DEAL_CANCELLATION_STATUS;
 
 describe('isDealCancellationEnabledForUser', () => {
-  describe('when `FF_TFM_FACILITY_END_DATE_ENABLED` is set to false', () => {
+  describe('when `FF_TFM_DEAL_CANCELLATION_ENABLED` is set to false', () => {
     describe('when user is a PIM user', () => {
       it.each([MIA, MIN, AIN])('should return false if the deal type is %s', (type) => {
         const result = isDealCancellationEnabledForUser(type, pimUser);
@@ -34,7 +34,7 @@ describe('isDealCancellationEnabledForUser', () => {
 });
 
 describe('isDealCancellationEnabled', () => {
-  describe('when `FF_TFM_FACILITY_END_DATE_ENABLED` is set to false', () => {
+  describe('when `FF_TFM_DEAL_CANCELLATION_ENABLED` is set to false', () => {
     describe('when user is a PIM user', () => {
       it.each([MIA, MIN, AIN])('should return false if the deal type is %s', (type) => {
         const result = isDealCancellationEnabled(type);

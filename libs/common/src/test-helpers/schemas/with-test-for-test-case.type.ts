@@ -17,7 +17,9 @@ export type TestCaseTypes =
   | 'OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA'
   | 'ISO_DATE_TIME_STAMP_SCHEMA'
   | 'AUDIT_DATABASE_RECORD_SCHEMA'
-  | 'ENTRA_ID_USER_SCHEMA';
+  | 'ENTRA_ID_USER_SCHEMA'
+  | 'CURRENCY_SCHEMA'
+  | 'ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA';
 
 /**
  * The test case to be tested, including the type and any options that are required
@@ -42,4 +44,6 @@ export type TestCase =
   | TestCaseWithType<'OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA'>
   | TestCaseWithType<'ISO_DATE_TIME_STAMP_SCHEMA'>
   | TestCaseWithType<'AUDIT_DATABASE_RECORD_SCHEMA'>
-  | TestCaseWithType<'ENTRA_ID_USER_SCHEMA'>;
+  | TestCaseWithType<'ENTRA_ID_USER_SCHEMA'>
+  | TestCaseWithType<'CURRENCY_SCHEMA'>
+  | TestCaseWithType<'ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA'>;

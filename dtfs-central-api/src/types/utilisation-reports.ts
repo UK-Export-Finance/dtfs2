@@ -8,6 +8,7 @@ import {
   CurrencyAndAmount,
   FeeRecordUtilisation,
   UtilisationReportStatus,
+  FeeRecordCorrectionSummary,
 } from '@ukef/dtfs2-common';
 import { FeeRecord, KeyingSheet } from './fee-records';
 import { Payment } from './payments';
@@ -83,6 +84,7 @@ export type UtilisationReportReconciliationDetails = {
   paymentDetails: PaymentDetails[];
   keyingSheet: KeyingSheet;
   utilisationDetails: FeeRecordUtilisation[];
+  recordCorrectionDetails: FeeRecordCorrectionSummary[];
 };
 
 export type NewPaymentDetails = {
@@ -116,7 +118,10 @@ type FeeRecordCorrectionRequestEmailVariables = {
   reasonsList: string;
 };
 
-export type FeeRecordCorrectionRequestEmails = {
+export type FeeRecordCorrectionRequestEmailAddresses = {
   emails: Array<string>;
+};
+
+export type FeeRecordCorrectionRequestEmails = FeeRecordCorrectionRequestEmailAddresses & {
   variables: FeeRecordCorrectionRequestEmailVariables;
 };

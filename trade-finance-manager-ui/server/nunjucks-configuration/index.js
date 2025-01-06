@@ -2,6 +2,7 @@ const dotenv = require('dotenv');
 const path = require('path');
 const nunjucks = require('nunjucks');
 let mojFilters = require('@ministryofjustice/frontend/moj/filters/all')();
+const { replaceNewLinesWithBrTags } = require('@ukef/dtfs2-common');
 const { localiseTimestamp } = require('./filter-localiseTimestamp');
 const { formatDateString } = require('./filter-formatDateString');
 const { formatIsoDateString } = require('./filter-formatIsoDateString');
@@ -50,6 +51,7 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('formatAsCurrency', formatAsCurrency);
   nunjucksEnvironment.addFilter('countriesWithEmptyInitialOption', countriesWithEmptyInitialOption);
   nunjucksEnvironment.addFilter('replaceWhiteSpaceWithDash', replaceWhiteSpaceWithDash);
+  nunjucksEnvironment.addFilter('replaceNewLinesWithBrTags', replaceNewLinesWithBrTags);
   nunjucksEnvironment.addFilter('bondBeneficiaryFacilities', bondBeneficiaryFacilities);
   nunjucksEnvironment.addFilter('bondIssuerFacilities', bondIssuerFacilities);
   nunjucksEnvironment.addFilter('formatAsDecimal', formatAsDecimal);

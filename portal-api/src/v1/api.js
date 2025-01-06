@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { HEADERS } = require('@ukef/dtfs2-common');
+const { PORTAL_FACILITY_AMENDMENT } = require('@ukef/dtfs2-common/schemas');
 const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 
 require('dotenv').config();
@@ -450,6 +451,83 @@ const getNextReportPeriodByBankId = async (bankId) => {
   }
 };
 
+/**
+ * Gets fee record correction by id.
+ * @param {number} correctionId - The ID of the correction
+ * @returns {Promise<import('./api-response-types').GetFeeRecordCorrectionResponseBody>} response of API call or wrapped error response
+ */
+const getFeeRecordCorrectionById = async (correctionId) => {
+  try {
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/fee-record-corrections/${correctionId}`, {
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get fee record correction with id %s: %o', correctionId, error);
+    throw error;
+  }
+};
+
+/**
+ * Gets the portal facility amendment
+ * @param {string} facilityId - id of the facility to amend
+ * @param {string} amendmentId - id of the facility amendment
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>} - the amendment
+ */
+const getPortalFacilityAmendment = async (facilityId, amendmentId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments/${amendmentId}`,
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error getting portal facility amendment with facility id %s and amendment id %s: %o', facilityId, amendmentId, error);
+    throw error;
+  }
+};
+
+/**
+ * Upserts a draft amendment for a portal facility in the database.
+ * @param {Object} params
+ * @param {string} params.dealId - id of the deal with the relevant facility.
+ * @param {string} params.facilityId - id of the facility to amend.
+ * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} params.amendment - the draft amendment to be upserted.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - The audit details for the update.
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>} - the amendment
+ */
+const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, auditDetails }) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments`,
+      headers: headers.central,
+      data: {
+        dealId,
+        facilityId,
+        amendment,
+        auditDetails,
+      },
+    });
+
+    const { success, error, data } = PORTAL_FACILITY_AMENDMENT.safeParse(response.data);
+
+    if (success) {
+      return data;
+    }
+
+    console.error('Type validation error occurred when receiving portal amendment from dtfs-central %o', error);
+
+    throw new Error('Type validation error occurred');
+  } catch (error) {
+    console.error('Error upserting portal facility amendment for facility with id %s: with amendment details: %o, %o', facilityId, amendment, error);
+    throw error;
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -470,4 +548,7 @@ module.exports = {
   getBankById,
   getAllBanks,
   getNextReportPeriodByBankId,
+  getFeeRecordCorrectionById,
+  getPortalFacilityAmendment,
+  putPortalFacilityAmendment,
 };

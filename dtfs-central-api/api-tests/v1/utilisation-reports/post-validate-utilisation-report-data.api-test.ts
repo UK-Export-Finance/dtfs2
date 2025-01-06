@@ -1,6 +1,15 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'supertest';
-import { MONGO_DB_COLLECTIONS, TfmFacility, UTILISATION_REPORT_HEADERS, UtilisationReportDataValidationError } from '@ukef/dtfs2-common';
+import {
+  FACILITY_TYPE,
+  FacilityType,
+  GEF_FACILITY_TYPE,
+  MONGO_DB_COLLECTIONS,
+  TfmFacility,
+  UTILISATION_REPORT_HEADERS,
+  UtilisationReportDataValidationError,
+} from '@ukef/dtfs2-common';
+import { difference } from 'lodash';
 import { testApi } from '../../test-api';
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { aFacility, aTfmFacility } from '../../../test-helpers';
@@ -54,8 +63,28 @@ describe(`POST ${URL}`, () => {
       expect(response.status).toEqual(HttpStatusCode.Ok);
     });
 
+    describe('and when the UKEF facility ID is not an 8 to 10 digit string', () => {
+      const expectedError = 'UKEF facility ID must be an 8 to 10 digit number';
+
+      const ukefFacilityId = '1234567';
+
+      it('should return the "facility ID format" error', async () => {
+        // Arrange
+        const requestBody = {
+          reportData: [{ [UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID]: { value: ukefFacilityId, row: '2', column: 'C' } }],
+        };
+
+        // Act
+        const response: SuccessResponse = await testApi.post(requestBody).to(URL);
+
+        // Assert
+        const errorMessages = response.body.csvValidationErrors.map(({ errorMessage }) => errorMessage);
+        expect(errorMessages).toContain(expectedError);
+      });
+    });
+
     describe('and when the UKEF facility ID is an 8 to 10 digit string', () => {
-      const expectedError = 'The Facility ID has not been recognised. Enter a valid Facility ID between 8 and 10 characters.';
+      const expectedError = 'The facility ID has not been recognised. Enter a facility ID for a general export facility.';
 
       const ukefFacilityId = '123456789';
 
@@ -73,39 +102,74 @@ describe(`POST ${URL}`, () => {
         await tfmFacilitiesCollection.deleteMany({});
       });
 
-      it('returns the "facility ID not recognised" error when the supplied facility id does not exist in the TFM facilities collection', async () => {
-        // Arrange
-        const requestBody = getRequestBody();
+      describe('and when the supplied facility id does not exist in the TFM facilities collection', () => {
+        it('should return the "facility ID not recognised" error', async () => {
+          // Arrange
+          const requestBody = getRequestBody();
 
-        // Act
-        const response: SuccessResponse = await testApi.post(requestBody).to(URL);
+          // Act
+          const response: SuccessResponse = await testApi.post(requestBody).to(URL);
 
-        // Assert
-        const errorMessages = response.body.csvValidationErrors.map(({ errorMessage }) => errorMessage);
-        expect(errorMessages).toContain(expectedError);
+          // Assert
+          const errorMessages = response.body.csvValidationErrors.map(({ errorMessage }) => errorMessage);
+          expect(errorMessages).toContain(expectedError);
+        });
       });
 
-      it('does not return the "facility ID not recognised" error when the facility id does exist in the TFM facilities collection', async () => {
-        // Arrange
-        const requestBody = getRequestBody();
+      describe('and when the supplied facility id exists in the TFM facilities collection', () => {
+        it.each(difference(Object.values(FACILITY_TYPE), Object.values(GEF_FACILITY_TYPE)))(
+          'should return the "facility ID not recognised" error for unsupported facility type "%s"',
+          async (facilityType: FacilityType) => {
+            // Arrange
+            const requestBody = getRequestBody();
 
-        const tfmFacility: TfmFacility = {
-          ...aTfmFacility(),
-          facilitySnapshot: {
-            ...aFacility(),
-            ukefFacilityId,
+            const tfmFacility: TfmFacility = {
+              ...aTfmFacility(),
+              facilitySnapshot: {
+                ...aFacility(),
+                type: facilityType,
+                ukefFacilityId,
+              },
+            };
+
+            const tfmFacilitiesCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+            await tfmFacilitiesCollection.insertOne(tfmFacility);
+
+            // Act
+            const response: SuccessResponse = await testApi.post(requestBody).to(URL);
+
+            // Assert
+            const errorMessages = response.body.csvValidationErrors.map(({ errorMessage }) => errorMessage);
+            expect(errorMessages).toContain(expectedError);
           },
-        };
+        );
 
-        const tfmFacilitiesCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
-        await tfmFacilitiesCollection.insertOne(tfmFacility);
+        it.each(Object.values(GEF_FACILITY_TYPE))(
+          'should not return the "facility ID not recognised" error for supported facility type "%s"',
+          async (facilityType: FacilityType) => {
+            // Arrange
+            const requestBody = getRequestBody();
 
-        // Act
-        const response: SuccessResponse = await testApi.post(requestBody).to(URL);
+            const tfmFacility: TfmFacility = {
+              ...aTfmFacility(),
+              facilitySnapshot: {
+                ...aFacility(),
+                type: facilityType,
+                ukefFacilityId,
+              },
+            };
 
-        // Assert
-        const errorMessages = response.body.csvValidationErrors.map(({ errorMessage }) => errorMessage);
-        expect(errorMessages).not.toContain(expectedError);
+            const tfmFacilitiesCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
+            await tfmFacilitiesCollection.insertOne(tfmFacility);
+
+            // Act
+            const response: SuccessResponse = await testApi.post(requestBody).to(URL);
+
+            // Assert
+            const errorMessages = response.body.csvValidationErrors.map(({ errorMessage }) => errorMessage);
+            expect(errorMessages).not.toContain(expectedError);
+          },
+        );
       });
     });
   });
