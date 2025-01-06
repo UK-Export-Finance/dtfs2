@@ -4,7 +4,7 @@ import { HttpStatusCode } from 'axios';
 import { getBankById } from '../../../../../repositories/banks-repo';
 import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
 import { NotFoundError } from '../../../../../errors';
-import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
+import { FeeRecordCorrectionRequestTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-request-transient-form-data-repo';
 
 export type GetFeeRecordCorrectionRequestReviewRequest = CustomExpressRequest<{
   params: {
@@ -51,10 +51,10 @@ export const getFeeRecordCorrectionRequestReview = async (
     const reportId = Number(reportIdString);
     const feeRecordId = Number(feeRecordIdString);
 
-    const formDataEntity = await FeeRecordCorrectionTransientFormDataRepo.findByUserIdAndFeeRecordId(userId, feeRecordId);
+    const formDataEntity = await FeeRecordCorrectionRequestTransientFormDataRepo.findByUserIdAndFeeRecordId(userId, feeRecordId);
 
     if (!formDataEntity) {
-      throw new NotFoundError(`Failed to find fee record correction transient form data with userId: ${userId} and feeRecordId: ${feeRecordId}`);
+      throw new NotFoundError(`Failed to find fee record correction request transient form data with userId: ${userId} and feeRecordId: ${feeRecordId}`);
     }
 
     const feeRecord = await FeeRecordRepo.findOneByIdAndReportIdWithReport(feeRecordId, reportId);

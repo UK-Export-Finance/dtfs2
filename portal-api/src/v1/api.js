@@ -452,6 +452,24 @@ const getNextReportPeriodByBankId = async (bankId) => {
 };
 
 /**
+ * Gets fee record correction by id.
+ * @param {number} correctionId - The ID of the correction
+ * @returns {Promise<import('./api-response-types').GetFeeRecordCorrectionResponseBody>} response of API call or wrapped error response
+ */
+const getFeeRecordCorrectionById = async (correctionId) => {
+  try {
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/fee-record-corrections/${correctionId}`, {
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get fee record correction with id %s: %o', correctionId, error);
+    throw error;
+  }
+};
+
+/**
  * Gets the portal facility amendment
  * @param {string} facilityId - id of the facility to amend
  * @param {string} amendmentId - id of the facility amendment
@@ -530,6 +548,7 @@ module.exports = {
   getBankById,
   getAllBanks,
   getNextReportPeriodByBankId,
+  getFeeRecordCorrectionById,
   getPortalFacilityAmendment,
   putPortalFacilityAmendment,
 };

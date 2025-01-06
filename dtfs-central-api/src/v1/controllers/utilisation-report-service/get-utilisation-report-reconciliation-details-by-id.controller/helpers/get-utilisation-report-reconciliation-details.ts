@@ -9,6 +9,7 @@ import { getKeyingSheetForReportId } from './get-keying-sheet-for-report-id';
 import { FeeRecordPaymentEntityGroup } from '../../../../../types/fee-record-payment-entity-group';
 import { mapToPaymentDetails } from './map-to-payment-details';
 import { getUtilisationDetails } from './get-utilisation-details';
+import { getRecordCorrectionDetails } from './get-record-correction-details';
 
 /**
  * Gets premium payment fee record payment groups based on provided filters.
@@ -97,6 +98,8 @@ export const getUtilisationReportReconciliationDetails = async (
 
   const utilisationDetails = await getUtilisationDetails(feeRecords, reportPeriod);
 
+  const recordCorrectionDetails = getRecordCorrectionDetails(feeRecords);
+
   return {
     reportId: id,
     bank: {
@@ -110,5 +113,6 @@ export const getUtilisationReportReconciliationDetails = async (
     paymentDetails,
     keyingSheet,
     utilisationDetails,
+    recordCorrectionDetails,
   };
 };

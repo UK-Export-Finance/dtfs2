@@ -1,7 +1,7 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import {
-  FeeRecordCorrectionTransientFormDataEntityMockBuilder,
+  FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder,
   FeeRecordEntityMockBuilder,
   RECORD_CORRECTION_REASON,
   TestApiError,
@@ -10,11 +10,11 @@ import {
 import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
 import { aBank } from '../../../../../../test-helpers';
 import { getFeeRecordCorrectionRequestReview, GetFeeRecordCorrectionRequestReviewRequest } from '.';
-import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
+import { FeeRecordCorrectionRequestTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-request-transient-form-data-repo';
 import * as BanksRepo from '../../../../../repositories/banks-repo';
 
 jest.mock('../../../../../repositories/fee-record-repo');
-jest.mock('../../../../../repositories/fee-record-correction-transient-form-data-repo');
+jest.mock('../../../../../repositories/fee-record-correction-request-transient-form-data-repo');
 jest.mock('../../../../../repositories/banks-repo');
 
 describe('get-fee-record-correction-request-review.controller', () => {
@@ -29,7 +29,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       });
 
     const findFeeRecordSpy = jest.spyOn(FeeRecordRepo, 'findOneByIdAndReportIdWithReport');
-    const findFormDataSpy = jest.spyOn(FeeRecordCorrectionTransientFormDataRepo, 'findByUserIdAndFeeRecordId');
+    const findFormDataSpy = jest.spyOn(FeeRecordCorrectionRequestTransientFormDataRepo, 'findByUserIdAndFeeRecordId');
     const findBankSpy = jest.spyOn(BanksRepo, 'getBankById');
 
     afterEach(() => {
@@ -49,7 +49,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
-      const expectedErrorMessage = `Failed to find fee record correction transient form data with userId: ${userId} and feeRecordId: ${feeRecordId}`;
+      const expectedErrorMessage = `Failed to find fee record correction request transient form data with userId: ${userId} and feeRecordId: ${feeRecordId}`;
       expect(res._getData()).toEqual(`Failed to get fee record correction request review: ${expectedErrorMessage}`);
       expect(findFormDataSpy).toHaveBeenCalledTimes(1);
       expect(findFormDataSpy).toHaveBeenCalledWith(userId, feeRecordId);
@@ -59,7 +59,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      findFormDataSpy.mockResolvedValue(new FeeRecordCorrectionTransientFormDataEntityMockBuilder().build());
+      findFormDataSpy.mockResolvedValue(new FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder().build());
       findFeeRecordSpy.mockResolvedValue(null);
       findBankSpy.mockResolvedValue(aBank());
 
@@ -79,7 +79,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       const bankId = '1234567';
       const { req, res } = getHttpMocks();
 
-      findFormDataSpy.mockResolvedValue(new FeeRecordCorrectionTransientFormDataEntityMockBuilder().build());
+      findFormDataSpy.mockResolvedValue(new FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder().build());
       findFeeRecordSpy.mockResolvedValue(FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().withBankId(bankId).build()).build());
       findBankSpy.mockResolvedValue(null);
 
@@ -151,7 +151,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
     describe('when the request is successful', () => {
       const bankId = '12356';
 
-      const formData = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()
+      const formData = new FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder()
         .withFormData({
           reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT],
           additionalInfo: 'this is more info',
