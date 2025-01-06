@@ -9,38 +9,39 @@ import createApi from '../../../api';
 import { TestUser } from '../../../types/test-user';
 import { withRoleAuthorisationTests } from '../../../common-tests/role-authorisation-tests';
 import { withClientAuthenticationTests } from '../../../common-tests/client-authentication-tests';
-import { putAmendmentUrl } from './amendment-urls';
+import { patchAmendmentUrl } from './amendment-urls';
 
-const { as, put } = createApi(app);
+const { as, patch } = createApi(app);
 
-const putPortalFacilityAmendmentMock = jest.fn() as jest.Mock<Promise<PortalFacilityAmendmentWithUkefId>>;
+const patchPortalFacilityAmendmentMock = jest.fn() as jest.Mock<Promise<PortalFacilityAmendmentWithUkefId>>;
 
 jest.mock('../../../../src/v1/api', () => ({
   ...jest.requireActual<AnyObject>('../../../../src/v1/api'),
-  putPortalFacilityAmendment: () => putPortalFacilityAmendmentMock(),
+  patchPortalFacilityAmendment: () => patchPortalFacilityAmendmentMock(),
 }));
 
 const originalProcessEnv = { ...process.env };
 
 const validFacilityId = new ObjectId().toString();
 
+const validAmendmentId = new ObjectId().toString();
+
 const invalidId = 'invalid-id';
 
 const dealId = new ObjectId().toString();
 
-const validPayload: { dealId: string; amendment: PortalFacilityAmendmentUserValues } = {
-  dealId,
-  amendment: {
+const validPayload: { update: PortalFacilityAmendmentUserValues } = {
+  update: {
     changeCoverEndDate: true,
     changeFacilityValue: false,
   },
 };
 
-describe('/v1/gef/facilities/:facilityId/amendments', () => {
+describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
   let testUsers: Awaited<ReturnType<typeof testUserCache.initialise>>;
   let aMaker: TestUser;
 
-  describe('PUT /v1/gef/facilities/:facilityId/amendments', () => {
+  describe('PATCH /v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
     beforeEach(() => {
       jest.resetAllMocks();
     });
@@ -62,10 +63,10 @@ describe('/v1/gef/facilities/:facilityId/amendments', () => {
 
       it(`should return a ${HttpStatusCode.NotFound} response`, async () => {
         // Arrange
-        const url = putAmendmentUrl({ facilityId: validFacilityId });
+        const url = patchAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(aMaker).put(validPayload).to(url);
+        const response = await as(aMaker).patch(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -82,8 +83,9 @@ describe('/v1/gef/facilities/:facilityId/amendments', () => {
       });
 
       withClientAuthenticationTests({
-        makeRequestWithoutAuthHeader: () => put(putAmendmentUrl({ facilityId: validFacilityId })),
-        makeRequestWithAuthHeader: (authHeader: string) => put(putAmendmentUrl({ facilityId: validFacilityId }), { headers: { Authorization: authHeader } }),
+        makeRequestWithoutAuthHeader: () => patch(patchAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId })),
+        makeRequestWithAuthHeader: (authHeader: string) =>
+          patch(patchAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId }), { headers: { Authorization: authHeader } }),
       });
 
       withRoleAuthorisationTests({
@@ -91,17 +93,17 @@ describe('/v1/gef/facilities/:facilityId/amendments', () => {
         getUserWithRole: (role: Role) => testUsers().withRole(role).one() as TestUser,
         makeRequestAsUser: (user: TestUser) =>
           as(user)
-            .put(validPayload)
-            .to(putAmendmentUrl({ facilityId: validFacilityId })),
+            .patch(validPayload)
+            .to(patchAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId })),
         successStatusCode: HttpStatusCode.Ok,
       });
 
       it(`should return a ${HttpStatusCode.BadRequest} response when the facility id path param is invalid`, async () => {
         // Arrange
-        const url = putAmendmentUrl({ facilityId: invalidId });
+        const url = patchAmendmentUrl({ facilityId: invalidId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(aMaker).put(validPayload).to(url);
+        const response = await as(aMaker).patch(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -109,12 +111,12 @@ describe('/v1/gef/facilities/:facilityId/amendments', () => {
 
       it(`should return a ${HttpStatusCode.BadRequest} response when the payload is invalid`, async () => {
         // Arrange
-        const url = putAmendmentUrl({ facilityId: validFacilityId });
+        const url = patchAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
 
-        const invalidPayload = { dealId, amendment: { changeCoverEndDate: 'yes' } };
+        const invalidPayload = { update: { changeCoverEndDate: 'yes' } };
 
         // Act
-        const response = await as(aMaker).put(invalidPayload).to(url);
+        const response = await as(aMaker).patch(invalidPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -136,11 +138,11 @@ describe('/v1/gef/facilities/:facilityId/amendments', () => {
           status: AMENDMENT_STATUS.IN_PROGRESS,
         };
 
-        jest.mocked(putPortalFacilityAmendmentMock).mockResolvedValue(amendment);
-        const url = putAmendmentUrl({ facilityId });
+        jest.mocked(patchPortalFacilityAmendmentMock).mockResolvedValue(amendment);
+        const url = patchAmendmentUrl({ facilityId, amendmentId });
 
         // Act
-        const response = await as(aMaker).put(validPayload).to(url);
+        const response = await as(aMaker).patch(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.Ok);
