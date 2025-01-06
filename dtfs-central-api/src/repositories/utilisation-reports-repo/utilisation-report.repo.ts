@@ -286,12 +286,13 @@ export const UtilisationReportRepo = SqlDbDataSource.getRepository(UtilisationRe
    * @param reportId - The report id
    * @returns The utilisation report with attached fee records and payments
    */
-  async findOneByIdWithFeeRecordsWithPayments(reportId: number): Promise<UtilisationReportEntity | null> {
+  async findOneByIdWithFeeRecordsWithPaymentsAndCorrections(reportId: number): Promise<UtilisationReportEntity | null> {
     return await UtilisationReportRepo.findOne({
       where: { id: Number(reportId) },
       relations: {
         feeRecords: {
           payments: true,
+          corrections: true,
         },
       },
     });
