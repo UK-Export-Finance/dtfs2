@@ -19,8 +19,64 @@ export type TestCaseWithPathParameter = {
 } & TestCase;
 
 /**
- * With schema validation tests allows for the passing in of a schema, a valid payload, and test cases to test the schema.
- * It calls pre made test cases through withTestsForTestcase, after applying schema specific options and overrides
+ * This function orchestrates a schema's test cases.
+ * It applies schema test options to all test cases, as well as adding and schema-specific tests as required.
+ * @param params.schema The schema to test
+ * @param params.schemaTestOptions Options that are specific to the schema as a whole, for instance, if the schema is a partial, or strict
+ * @param params.aValidPayload A function that returns a valid payload for the schema
+ * @param params.testCases Test cases to test
+ * @example Schema test options
+ * ```ts
+ * const schemaTestOptions = { isPartial: true, isStrict: true }
+ * ```
+ * @example A valid payload
+ * ```ts
+ * const aValidPayload = () => ({ age: 20,
+ *   _id: new ObjectId(),
+ *   sessionIdentifier: 'session-identifier',
+ *   teams: [{ name: 'a-valid-team-name' }]
+ * })
+ * ```
+ *
+ * @example Test case: using a primitive type
+ * ```ts
+ * const testCases = [{
+ *   parameterPath: 'age',
+ *   type: 'number', // with-number.tests will be used for age
+ * }]
+ * ```
+ *
+ * @example Test case: using a custom type
+ * ```ts
+ * const testCases = [{
+ *   parameterPath: '_id',
+ *   type: 'OBJECT_ID_SCHEMA', //  with-object-id-schema.tests will be used for _id
+ * }]
+ * ```
+ *
+ * @example Test case: using options that are available on all types
+ * ```ts
+ * const testCases = [{
+ *   parameterPath: 'sessionIdentifier',
+ *   type: 'string',
+ *   options: { isOptional: true },
+ * }]
+ * ```
+ *
+ * @example Test case: using options that are available on a certain type
+ * ```ts
+ * const testCases = [{
+ *   parameterPath: 'teams',
+ *   type: 'Array',
+ *   options: {
+ *   // In this case, the type specific options allow us to
+ *   //specify the type of each object on the array
+ *     arrayTypeTestCase: {
+ *       type: 'TfmTeamSchema',
+ *     },
+ *   },
+ * }]
+ * ```
  */
 export const withSchemaValidationTests = <Schema extends ZodSchema>({
   schema,

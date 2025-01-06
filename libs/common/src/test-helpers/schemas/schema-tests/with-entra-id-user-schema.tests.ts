@@ -1,6 +1,6 @@
 import { ZodSchema } from 'zod';
 import { anEntraIdUser } from '../../mock-data';
-import { withDefaultOptionsTests } from '../primitive-object-tests';
+import { withDefaultOptionsTests } from '../primitive-types-tests';
 import { withSchemaValidationTests } from '../with-schema-validation.tests';
 import { WithSchemaTestParams } from '../with-schema-test.type';
 

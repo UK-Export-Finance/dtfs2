@@ -1,4 +1,4 @@
-import { DefaultOptions, WithArrayTestsOptions } from './primitive-object-tests';
+import { DefaultOptions, WithArrayTestsOptions } from './primitive-types-tests';
 
 /**
  * All test case types that have been tests implemented
