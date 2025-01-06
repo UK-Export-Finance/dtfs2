@@ -55,7 +55,6 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
 
       // Assert
       const expectedReasons = mapReasonsToDisplayValues(correctionRequestDetails.reasons).join(', ');
-      const expectedContactEmailAddresses = correctionRequestDetails.contactEmailAddresses.join(', ');
 
       expect(res._getRenderView()).toEqual('utilisation-reports/record-corrections/check-the-information.njk');
       expect(res._getRenderData()).toEqual({
@@ -69,7 +68,7 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
         formattedReportPeriod: getFormattedReportPeriodWithLongMonth(reportPeriod),
         reasonForRecordCorrection: expectedReasons,
         additionalInfo: correctionRequestDetails.additionalInfo,
-        contactEmailAddresses: expectedContactEmailAddresses,
+        contactEmailAddresses: correctionRequestDetails.contactEmailAddresses,
       });
     });
   });
