@@ -9,6 +9,11 @@ export type GetDoYouHaveAFacilityEndDateRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
 }>;
 
+/**
+ * Controller to get the `Do you have a facility end date` page
+ * @param req - the request object
+ * @param res - the response object
+ */
 export const getDoYouHaveAFacilityEndDate = async (req: GetDoYouHaveAFacilityEndDateRequest, res: Response) => {
   try {
     const { dealId, facilityId, amendmentId } = req.params;

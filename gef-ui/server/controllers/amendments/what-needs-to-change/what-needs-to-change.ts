@@ -9,6 +9,11 @@ export type GetWhatNeedsToChangeRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
 }>;
 
+/**
+ * Controller to get the `What needs to change` page
+ * @param req - the request object
+ * @param res - the response object
+ */
 export const getWhatNeedsToChange = async (req: GetWhatNeedsToChangeRequest, res: Response) => {
   try {
     const { dealId } = req.params;

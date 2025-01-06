@@ -10,6 +10,11 @@ export type GetFacilityValueRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
 }>;
 
+/**
+ * Controller to get the Facility Value page
+ * @param req - the request object
+ * @param res - the response object
+ */
 export const getFacilityValue = async (req: GetFacilityValueRequest, res: Response) => {
   try {
     const { dealId, facilityId, amendmentId } = req.params;

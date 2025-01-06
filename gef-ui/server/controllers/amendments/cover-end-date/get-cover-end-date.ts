@@ -10,11 +10,9 @@ export type GetCoverEndDateRequest = CustomExpressRequest<{
 }>;
 
 /**
- * Renders the new cover end date view based on the provided request parameters
- * @param {GetCoverEndDateRequest} Request object
- * @param {Response} Response used to render the cover end date view
- * @returns {void} Renders the 'partials/amendments/cover-end-date.njk' template
- * or an error if rendering fails
+ * Controller to get the Cover End Date page
+ * @param req - the request object
+ * @param res - the response object
  */
 export const getCoverEndDate = async (req: GetCoverEndDateRequest, res: Response) => {
   try {
