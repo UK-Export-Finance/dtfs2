@@ -36,7 +36,7 @@
   {% include "./partials/utilisation-html.njk" %}
 {% endset %}
 
-{% set recordCorrectionHistoryHtml %}
+{% set recordCorrectionLogHtml %}
   {% include "./partials/record-correction-log-html.njk" %}
 {% endset %}
 
@@ -90,7 +90,7 @@
     label: "Record correction log",
     id: "record-correction-log",
     panel: {
-      html: recordCorrectionHistoryHtml | safe
+      html: recordCorrectionLogHtml | safe
     },
     attributes: {
       'data-cy': 'bank-report-tab-record-correction-log'
