@@ -1,6 +1,5 @@
-import { FEE_RECORD_STATUS, FeeRecordCorrectionEntityMockBuilder, FeeRecordEntity, FeeRecordEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, FeeRecordCorrectionEntityMockBuilder, FeeRecordEntity, FeeRecordEntityMockBuilder, PendingCorrection } from '@ukef/dtfs2-common';
 import { mapFeeRecordsToPendingCorrections, mapFeeRecordToPendingCorrectionsArray } from './map-fee-records-to-pending-corrections';
-import { PendingCorrection } from '..';
 
 describe('map-fee-records-to-pending-corrections', () => {
   describe('mapFeeRecordToPendingCorrectionsArray', () => {
