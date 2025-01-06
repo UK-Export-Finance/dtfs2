@@ -3,12 +3,13 @@ const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
 
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { aPortalSessionUser, CURRENCY, DEAL_STATUS, DEAL_SUBMISSION_TYPE, Facility, PORTAL_LOGIN_STATUS, ROLES } from '@ukef/dtfs2-common';
+import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
 import { getDoYouHaveAFacilityEndDate, GetDoYouHaveAFacilityEndDateRequest } from './do-you-have-a-facility-end-date';
-import { Deal } from '../../../types/deal';
+import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { DoYouHaveAFacilityEndDateViewModel } from '../../../types/view-models/amendments/do-you-have-a-facility-end-date-view-model';
+import { MOCK_UNISSUED_FACILITY, MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
@@ -18,8 +19,6 @@ jest.mock('../../../services/api', () => ({
 const dealId = 'dealId';
 const facilityId = 'facilityId';
 const amendmentId = 'amendmentId';
-
-const companyName = 'company name ltd';
 
 const getHttpMocks = () =>
   createMocks<GetDoYouHaveAFacilityEndDateRequest>({
@@ -31,14 +30,7 @@ const getHttpMocks = () =>
     },
   });
 
-const mockDeal = { exporter: { companyName }, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as Deal;
-
-const mockFacility = {
-  currency: {
-    id: CURRENCY.GBP,
-  },
-  hasBeenIssued: true,
-} as Facility;
+const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 
 describe('getDoYouHaveAFacilityEndDate', () => {
   beforeEach(() => {
@@ -46,7 +38,7 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
 
     getApplicationMock.mockResolvedValue(mockDeal);
-    getFacilityMock.mockResolvedValue({ details: mockFacility });
+    getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
   });
 
   afterAll(() => {
@@ -65,7 +57,7 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     expect(getApplicationMock).toHaveBeenCalledWith({ dealId, userToken: req.session.userToken });
   });
 
-  it('should call getFacility with the correct dealId and userToken', async () => {
+  it('should call getFacility with the correct facilityId and userToken', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
@@ -77,7 +69,7 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     expect(getFacilityMock).toHaveBeenCalledWith({ facilityId, userToken: req.session.userToken });
   });
 
-  it('should render the facility value template if the facility is valid', async () => {
+  it('should render the correct template if the facility is valid', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
@@ -86,7 +78,7 @@ describe('getDoYouHaveAFacilityEndDate', () => {
 
     // Assert
     const expectedRenderData: DoYouHaveAFacilityEndDateViewModel = {
-      exporterName: companyName,
+      exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       cancelUrl: `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage: `/gef/application-details/${dealId}/facility/${facilityId}/amendments/${amendmentId}/new-cover-end-date`,
     };
@@ -106,6 +98,7 @@ describe('getDoYouHaveAFacilityEndDate', () => {
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    expect(res._getRedirectUrl()).toEqual('/not-found');
   });
 
   it('should redirect if the deal is not found', async () => {
@@ -118,18 +111,20 @@ describe('getDoYouHaveAFacilityEndDate', () => {
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    expect(res._getRedirectUrl()).toEqual('/not-found');
   });
 
   it('should redirect if the facility cannot be amended', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
-    getFacilityMock.mockResolvedValue({ details: { ...mockFacility, hasBeenIssued: false } });
+    getFacilityMock.mockResolvedValue(MOCK_UNISSUED_FACILITY);
 
     // Act
     await getDoYouHaveAFacilityEndDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    expect(res._getRedirectUrl()).toEqual(`/gef/application-details/${dealId}`);
   });
 
   it('should render `problem with service` if getApplication throws an error', async () => {
