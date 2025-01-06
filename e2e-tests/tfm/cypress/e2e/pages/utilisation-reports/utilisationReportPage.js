@@ -19,6 +19,10 @@ const utilisationReportPage = {
     generateKeyingDataButton: () => cy.get('[data-cy="generate-keying-data-button"]'),
     addAPaymentButton: () => cy.get('[data-cy="add-a-payment-button"]'),
     createRecordCorrectionRequestButton: () => cy.get('[data-cy="create-record-correction-request-button"]'),
+    createRecordCorrectionRequestText: () => cy.get('[data-cy="how-to-create-record-correction-request-text"]'),
+    receivedPaymentsText: () => cy.get('[data-cy="received-payments-text"]'),
+    howToAddPaymentsText: () => cy.get('[data-cy="how-to-add-payments-text"]'),
+    howToGenerateKeyingDataText: () => cy.get('[data-cy="how-to-generate-keying-data-text"]'),
     premiumPaymentsTable: {
       error: () => cy.get('[data-cy="premium-payments-table--error"]'),
       header: {
