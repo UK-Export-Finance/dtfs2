@@ -102,7 +102,7 @@ describe('pending-corrections-helper', () => {
 
       const result = isNonEmptyPendingCorrectionsResponseBody(responseBody);
 
-      expect(result).toBe(true);
+      expect(result).toEqual(true);
     });
 
     it('should return false if the response body is an empty object', () => {
@@ -110,7 +110,7 @@ describe('pending-corrections-helper', () => {
 
       const result = isNonEmptyPendingCorrectionsResponseBody(responseBody);
 
-      expect(result).toBe(false);
+      expect(result).toEqual(false);
     });
   });
 });

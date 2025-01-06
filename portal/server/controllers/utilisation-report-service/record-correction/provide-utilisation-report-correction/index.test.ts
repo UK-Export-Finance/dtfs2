@@ -1,13 +1,19 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { Response } from 'express';
-import { aPortalSessionUser, mapCurrenciesToRadioItems, PORTAL_LOGIN_STATUS, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
+import {
+  aPortalSessionBank,
+  aPortalSessionUser,
+  mapCurrenciesToRadioItems,
+  PORTAL_LOGIN_STATUS,
+  RECORD_CORRECTION_REASON,
+  RecordCorrectionReason,
+} from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import api from '../../../../api';
 import { getProvideUtilisationReportCorrection, GetProvideUtilisationReportCorrection } from '.';
 import { getAdditionalCommentsFieldLabels, mapToCorrectionRequestDetailsViewModel } from './helpers';
 import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
 import { aGetFeeRecordCorrectionResponseBody } from '../../../../../test-helpers/test-data/get-fee-record-correction-response';
-import { aBank } from '../../../../../test-helpers/test-data';
 
 jest.mock('../../../../api');
 
@@ -18,7 +24,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
   const mockUser = {
     ...aPortalSessionUser(),
     bank: {
-      ...aBank(),
+      ...aPortalSessionBank(),
       id: bankId,
     },
   };

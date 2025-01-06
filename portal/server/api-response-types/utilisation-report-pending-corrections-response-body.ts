@@ -1,11 +1,4 @@
-import { IsoDateTimeStamp, ReportPeriod } from '@ukef/dtfs2-common';
-
-type PendingCorrection = {
-  correctionId: number;
-  facilityId: string;
-  exporter: string;
-  additionalInfo: string;
-};
+import { IsoDateTimeStamp, PendingCorrection, ReportPeriod } from '@ukef/dtfs2-common';
 
 export type NonEmptyPendingCorrectionsResponseBody = {
   reportPeriod: ReportPeriod;

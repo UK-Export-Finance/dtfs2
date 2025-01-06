@@ -112,16 +112,19 @@ describe(`GET ${BASE_URL}`, () => {
       .withUploadedByUserId(portalUserId)
       .withDateUploaded(new Date('2021-01-01'))
       .build();
+
     const feeRecord = FeeRecordEntityMockBuilder.forReport(report)
       .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
       .withFacilityId('1122334455')
       .withExporter('Test Exporter')
       .build();
+
     const completedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
       .withId(1)
       .withIsCompleted(true)
       .withAdditionalInfo('This correction has been completed')
       .build();
+
     const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
       .withId(2)
       .withIsCompleted(false)
@@ -265,20 +268,24 @@ describe(`GET ${BASE_URL}`, () => {
       const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { bankId }));
 
       // Assert
-      expect(response.body).toEqual({
+      const expectedCorrections = [
+        {
+          correctionId: pendingCorrection.id,
+          facilityId: feeRecord.facilityId,
+          exporter: feeRecord.exporter,
+          additionalInfo: pendingCorrection.additionalInfo,
+        },
+      ];
+
+      const expected = {
         reportPeriod: oldestReportWithPendingCorrections.reportPeriod,
         uploadedByFullName: `${portalUser.firstname} ${portalUser.surname}`,
         dateUploaded: oldestReportWithPendingCorrections.dateUploaded?.toISOString(),
-        corrections: [
-          {
-            correctionId: pendingCorrection.id,
-            facilityId: feeRecord.facilityId,
-            exporter: feeRecord.exporter,
-            additionalInfo: pendingCorrection.additionalInfo,
-          },
-        ],
+        corrections: expectedCorrections,
         nextDueReportPeriod: expectAnyReportPeriod,
-      });
+      };
+
+      expect(response.body).toEqual(expected);
     });
   });
 });

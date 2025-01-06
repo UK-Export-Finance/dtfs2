@@ -26,11 +26,8 @@ describe(page, () => {
     const wrapper = render(viewModel);
 
     // Assert
-    wrapper
-      .expectText('[data-cy="corrections-info-text"]')
-      .toRead(
-        `The following errors in the ${viewModel.formattedReportPeriod} report uploaded by ${viewModel.uploadedByFullName} on ${viewModel.formattedDateUploaded} have been identified by UKEF:`,
-      );
+    const expected = `The following errors in the ${viewModel.formattedReportPeriod} report uploaded by ${viewModel.uploadedByFullName} on ${viewModel.formattedDateUploaded} have been identified by UKEF:`;
+    wrapper.expectText('[data-cy="corrections-info-text"]').toRead(expected);
   });
 
   it('should render the corrections heading and selection text', () => {
@@ -68,11 +65,8 @@ describe(page, () => {
       const wrapper = render(viewModel);
 
       // Assert
-      wrapper
-        .expectText('[data-cy="next-report-due-text"]')
-        .toRead(
-          `The ${nextDueReport} report is due, but cannot be uploaded until the record corrections for the ${correctionsReportPeriod} have been completed.`,
-        );
+      const expected = `The ${nextDueReport} report is due, but cannot be uploaded until the record corrections for the ${correctionsReportPeriod} have been completed.`;
+      wrapper.expectText('[data-cy="next-report-due-text"]').toRead(expected);
     });
 
     it('should not render the no report due for upload heading', () => {
@@ -118,7 +112,8 @@ describe(page, () => {
       const wrapper = render(viewModel);
 
       // Assert
-      wrapper.expectText('[data-cy="no-report-due-text"]').toRead(`The ${nextDueReport} report can be uploaded from ${nextDueReportUploadFromDate}`);
+      const expected = `The ${nextDueReport} report can be uploaded from ${nextDueReportUploadFromDate}`;
+      wrapper.expectText('[data-cy="no-report-due-text"]').toRead(expected);
     });
 
     it('should not render the next report due for upload heading', () => {

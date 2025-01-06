@@ -46,17 +46,20 @@ context('Pending corrections - Fee record correction feature flag enabled', () =
             .withBankId(bankId)
             .withReportPeriod(pendingCorrectionReportPeriod)
             .build();
+
           const feeRecord = FeeRecordEntityMockBuilder.forReport(report)
             .withId(1)
             .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
             .withFacilityId(pendingCorrectionDetails.facilityId)
             .withExporter(pendingCorrectionDetails.exporter)
             .build();
+
           const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
             .withId(1)
             .withIsCompleted(false)
             .withAdditionalInfo(pendingCorrectionDetails.additionalInfo)
             .build();
+
           const completedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
             .withId(2)
             .withIsCompleted(true)

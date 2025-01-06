@@ -1,8 +1,8 @@
 import httpMocks from 'node-mocks-http';
-import { aPortalSessionUser, isFeeRecordCorrectionFeatureFlagEnabled, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
+import { aPortalSessionBank, aPortalSessionUser, isFeeRecordCorrectionFeatureFlagEnabled, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { getUtilisationReportUpload } from '..';
 import api from '../../../../api';
-import { aBank, aNonEmptyPendingCorrectionsResponseBody, aReportPeriod } from '../../../../../test-helpers/test-data';
+import { aNonEmptyPendingCorrectionsResponseBody, aReportPeriod } from '../../../../../test-helpers/test-data';
 import { mapToPendingCorrectionsViewModel } from '../pending-corrections-helper';
 import { UtilisationReportPendingCorrectionsResponseBody } from '../../../../api-response-types';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
@@ -27,7 +27,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
 
   describe('getUtilisationReportUpload', () => {
     const bankId = '1234';
-    const user = { ...aPortalSessionUser(), bank: { ...aBank(), id: bankId } };
+    const user = { ...aPortalSessionUser(), bank: { ...aPortalSessionBank(), id: bankId } };
     const userToken = 'user-token';
 
     const getHttpMocks = () =>

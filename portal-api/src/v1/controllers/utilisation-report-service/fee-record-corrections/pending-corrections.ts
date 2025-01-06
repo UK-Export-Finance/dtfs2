@@ -22,7 +22,7 @@ export const getUtilisationReportPendingCorrectionsByBankId = async (req: GetUti
 
     const pendingCorrections = await api.getUtilisationReportPendingCorrectionsByBankId(bankId);
 
-    return res.status(200).send(pendingCorrections);
+    return res.status(HttpStatusCode.Ok).send(pendingCorrections);
   } catch (error) {
     const errorMessage = 'Failed to get pending corrections';
     const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;

@@ -3,3 +3,10 @@ export type RequestedByUser = {
   firstName: string;
   lastName: string;
 };
+
+export type PendingCorrection = {
+  correctionId: number;
+  facilityId: string;
+  exporter: string;
+  additionalInfo: string;
+};

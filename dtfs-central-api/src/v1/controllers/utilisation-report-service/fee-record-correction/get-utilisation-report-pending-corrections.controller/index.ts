@@ -1,4 +1,4 @@
-import { ApiError, ReportPeriod } from '@ukef/dtfs2-common';
+import { ApiError, PendingCorrection, ReportPeriod } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../../../types/custom-express-request';
@@ -12,13 +12,6 @@ export type GetUtilisationReportPendingCorrectionsRequest = CustomExpressRequest
     bankId: string;
   };
 }>;
-
-export type PendingCorrection = {
-  correctionId: number;
-  facilityId: string;
-  exporter: string;
-  additionalInfo: string;
-};
 
 export type PendingCorrectionsResponseBody = {
   reportPeriod: ReportPeriod;

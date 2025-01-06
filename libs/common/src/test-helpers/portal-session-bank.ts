@@ -1,7 +1,7 @@
-import { PortalSessionBank } from '@ukef/dtfs2-common';
-import { aMonthlyBankReportPeriodSchedule } from './utilisation-reporting-schedule';
+import { PortalSessionBank } from '../types/portal-session-data/portal-session-bank';
+import { aMonthlyBankReportPeriodSchedule } from './bank-report-period-schedule';
 
-export const aBank = (): PortalSessionBank => ({
+export const aPortalSessionBank = (): PortalSessionBank => ({
   _id: '6597dffeb5ef5ff4267e5044',
   id: '956',
   name: 'Barclays Bank',
