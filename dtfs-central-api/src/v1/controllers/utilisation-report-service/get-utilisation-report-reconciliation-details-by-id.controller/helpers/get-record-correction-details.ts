@@ -14,8 +14,10 @@ export const getRecordCorrectionDetails = (feeRecords: FeeRecordEntity[]): FeeRe
       return [];
     }
 
+    const { facilityId, id: feeRecordId, exporter } = feeRecord;
+
     return feeRecord.corrections.map((correction) => {
-      const { facilityId } = feeRecord;
+      const { id: correctionId, dateRequested, requestedByUser } = correction;
 
       /**
        * maps the reasons as an array of strings to display values
@@ -26,14 +28,14 @@ export const getRecordCorrectionDetails = (feeRecords: FeeRecordEntity[]): FeeRe
       const formattedReasons = reasonsArray.join(', ');
 
       return {
-        correctionId: correction.id,
-        feeRecordId: feeRecord.id,
+        correctionId,
+        feeRecordId,
         facilityId,
-        exporter: feeRecord.exporter,
+        exporter,
         status: FEE_RECORD_STATUS.PENDING_CORRECTION,
         formattedReasons,
-        formattedDateSent: format(correction.dateRequested, 'dd MMM yyyy'),
-        requestedBy: `${correction.requestedByUser.firstName} ${correction.requestedByUser.lastName}`,
+        formattedDateSent: format(dateRequested, 'dd MMM yyyy'),
+        requestedBy: `${requestedByUser.firstName} ${requestedByUser.lastName}`,
       };
     });
   });

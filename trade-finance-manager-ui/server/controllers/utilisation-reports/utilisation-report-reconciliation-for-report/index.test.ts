@@ -23,7 +23,7 @@ import { mapToRecordCorrectionViewModel } from '../helpers/record-correction-hel
 jest.mock('../../../api');
 jest.mock('../../../helpers/date');
 
-// eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   isFeeRecordCorrectionFeatureFlagEnabled: jest.fn().mockReturnValue(true),
