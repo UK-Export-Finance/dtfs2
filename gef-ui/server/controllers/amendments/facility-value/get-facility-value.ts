@@ -31,6 +31,7 @@ export const getFacilityValue = async (req: GetFacilityValueRequest, res: Respon
     const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
 
     if (!amendment) {
+      console.error('Amendment %s not found on facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 

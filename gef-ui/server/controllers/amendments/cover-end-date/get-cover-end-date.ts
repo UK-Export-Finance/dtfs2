@@ -39,7 +39,7 @@ export const getCoverEndDate = async (req: GetCoverEndDateRequest, res: Response
     const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
 
     if (!amendment) {
-      console.error(`Amendment ${amendmentId} not found on facility ${facilityId}`);
+      console.error('Amendment %s not found on facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 
