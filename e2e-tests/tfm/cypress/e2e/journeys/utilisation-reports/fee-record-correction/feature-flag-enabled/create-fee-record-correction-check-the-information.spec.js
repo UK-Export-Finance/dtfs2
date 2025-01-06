@@ -10,7 +10,7 @@ import USERS from '../../../../../fixtures/users';
 import BANKS from '../../../../../fixtures/banks';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
 import relative from '../../../../relativeURL';
-import { summaryList } from '../../../../partials';
+import { summaryList, mainHeading } from '../../../../partials';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context('When fee record correction feature flag is enabled', () => {
@@ -59,8 +59,9 @@ context('When fee record correction feature flag is enabled', () => {
   });
 
   context('PDC_RECONCILE users can send record correction requests', () => {
-    const { createFeeRecordCorrectionRequestPage, checkFeeRecordCorrectionRequestPage } = pages;
+    const { createFeeRecordCorrectionRequestPage, checkFeeRecordCorrectionRequestPage, feeRecordCorrectionRequestSentPage } = pages;
     const additionalInfoUserInput = 'Some additional info.\nSome special characters &$%!<>?@*()_+={}[];:~`\'"';
+    const expectedBankEmails = BANKS.find((bank) => bank.id === bankId).paymentOfficerTeam.emails;
 
     beforeEach(() => {
       pages.landingPage.visit();
@@ -89,15 +90,38 @@ context('When fee record correction feature flag is enabled', () => {
       summaryList().should('contain', additionalInfoUserInput);
 
       // The contact email addresses are taken from the bank payment officer team
-      const expectedEmails = BANKS.find((bank) => bank.id === bankId).paymentOfficerTeam.emails;
-      summaryList().should('contain', expectedEmails.join(', '));
+      expectedBankEmails.forEach((email) => {
+        summaryList().should('contain', email);
+      });
     });
 
-    it('should be able to send the record correction request', () => {
-      cy.clickContinueButton();
+    context('when the user clicks the "continue" button', () => {
+      beforeEach(() => {
+        cy.clickContinueButton();
+      });
 
-      cy.visit(`utilisation-reports/${reportId}`);
-      cy.assertText(premiumPaymentsTab.premiumPaymentsTable.status(feeRecordAtToDoStatus.id), 'Record correction sent');
+      it('should be able to send the record correction request and display the request sent screen with the expected emails', () => {
+        cy.assertText(mainHeading(), 'Record correction request');
+        feeRecordCorrectionRequestSentPage.requestSentPanel().should('exist');
+        feeRecordCorrectionRequestSentPage.requestSentPanel().should('contain', 'Request sent');
+        feeRecordCorrectionRequestSentPage.requestSentPanel().should('contain', 'Your record correction request has been sent');
+        cy.assertText(feeRecordCorrectionRequestSentPage.otherEmailAddress(1), expectedBankEmails[0]);
+        cy.assertText(feeRecordCorrectionRequestSentPage.otherEmailAddress(2), expectedBankEmails[1]);
+        cy.assertText(feeRecordCorrectionRequestSentPage.userEmailAddressCopy(), `A copy of the email has also been sent to ${USERS.PDC_RECONCILE.email}.`);
+
+        cy.visit(`utilisation-reports/${reportId}`);
+        cy.assertText(premiumPaymentsTab.premiumPaymentsTable.status(feeRecordAtToDoStatus.id), 'Record correction sent');
+      });
+
+      context('and then user clicks the "back to premium payments" button', () => {
+        beforeEach(() => {
+          feeRecordCorrectionRequestSentPage.backToPremiumPaymentsButton().click();
+        });
+
+        it('should return to the premium payments tab', () => {
+          cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
+        });
+      });
     });
 
     context('when user abandons their journey, without cancelling', () => {

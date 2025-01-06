@@ -234,6 +234,7 @@ const anIssuedContingentFacility = ({ facilityEndDateEnabled = false } = {}) => 
 exports.anUnissuedCashFacility = anUnissuedCashFacility;
 exports.anIssuedCashFacility = anIssuedCashFacility;
 exports.anIssuedCashFacilityWithCoverDateConfirmed = anIssuedCashFacilityWithCoverDateConfirmed;
+exports.anIssuedContingentFacility = anIssuedContingentFacility;
 exports.multipleMockGefFacilities = ({ facilityEndDateEnabled = false } = {}) => ({
   unissuedCashFacility: anUnissuedCashFacility({ facilityEndDateEnabled }),
   issuedCashFacility: anIssuedCashFacility({ facilityEndDateEnabled }),

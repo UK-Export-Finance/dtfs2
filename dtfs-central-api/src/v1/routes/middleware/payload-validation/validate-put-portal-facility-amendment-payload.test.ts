@@ -189,7 +189,8 @@ describe('validatePutPortalFacilityAmendmentPayload', () => {
     {
       description: 'auditDetails is an empty object',
       payload: {
-        auditDetails: validAmendment,
+        amendment: validAmendment,
+        auditDetails: {},
         dealId: validDealId,
       },
     },

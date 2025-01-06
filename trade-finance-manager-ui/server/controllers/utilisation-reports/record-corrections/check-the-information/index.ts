@@ -34,7 +34,7 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
       formattedReportPeriod: getFormattedReportPeriodWithLongMonth(reportPeriod),
       reasonForRecordCorrection: mapReasonsToDisplayValues(reasons).join(', '),
       additionalInfo,
-      contactEmailAddresses: contactEmailAddresses.join(', '),
+      contactEmailAddresses,
     });
   } catch (error) {
     console.error('Failed to render create record correction request - "check the information" page %o', error);
@@ -54,7 +54,13 @@ export const postRecordCorrectionRequestInformation = async (req: Request, res: 
     const { reportId, feeRecordId } = req.params;
     const { user, userToken } = asUserSession(req.session);
 
-    await api.createFeeRecordCorrection(reportId, feeRecordId, user, userToken);
+    const { emails } = await api.createFeeRecordCorrection(reportId, feeRecordId, user, userToken);
+
+    if (!emails) {
+      throw new Error('No record correction request emails returned from the API.');
+    }
+
+    req.session.recordCorrectionRequestEmails = emails;
 
     return res.redirect(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/request-sent`);
   } catch (error) {

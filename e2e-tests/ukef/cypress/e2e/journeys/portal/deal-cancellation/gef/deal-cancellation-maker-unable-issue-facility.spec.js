@@ -5,8 +5,7 @@ import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT, MOCK_APPLICATION_MIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility, anUnissuedCashFacility, multipleMockGefFacilities } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { yesterday, tomorrow } from '../../../../../../../e2e-fixtures/dateConstants';
-
-import { PIM_USER_1 } from '../../../../../../../e2e-fixtures';
+import { PIM_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -41,6 +40,7 @@ context('GEF deals - When TFM submits a deal cancellation - Portal maker should 
           cy.checkerLoginSubmitGefDealToUkef(gefDeal);
           cy.clearSessionCookies();
 
+          cy.visit(TFM_URL);
           cy.tfmLogin(PIM_USER_1);
           const effectiveDate = index % 2 === 0 ? tomorrow.date : yesterday.date;
           cy.submitDealCancellation({ dealId: gefDeal._id, effectiveDate });

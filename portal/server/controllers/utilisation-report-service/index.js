@@ -7,6 +7,7 @@ const {
   getReportConfirmation,
 } = require('./utilisation-report-upload');
 const { getPreviousReports } = require('./previous-reports');
+const { getProvideUtilisationReportCorrection } = require('./record-correction');
 
 module.exports = {
   getReportDownload,
@@ -16,4 +17,5 @@ module.exports = {
   postReportConfirmAndSend,
   getReportConfirmation,
   getPreviousReports,
+  getProvideUtilisationReportCorrection,
 };

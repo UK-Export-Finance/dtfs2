@@ -6,7 +6,7 @@ import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_MIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { yesterday, today } from '../../../../../../../e2e-fixtures/dateConstants';
-import { PIM_USER_1 } from '../../../../../../../e2e-fixtures';
+import { PIM_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -29,6 +29,7 @@ context('GEF MIN deal - When TFM submits a deal cancellation - Portal status and
         cy.checkerLoginSubmitGefDealToUkef(gefDeal);
         cy.clearSessionCookies();
 
+        cy.visit(TFM_URL);
         cy.tfmLogin(PIM_USER_1);
 
         const effectiveDate = yesterday.date;
@@ -57,7 +58,7 @@ context('GEF MIN deal - When TFM submits a deal cancellation - Portal status and
   });
 
   it('should update the deal status', () => {
-    cy.assertText(statusBanner.bannerStatus(), DEAL_STATUS.DEAL_CANCELLED);
+    cy.assertText(statusBanner.bannerStatus(), DEAL_STATUS.CANCELLED);
   });
 
   describe('activity feed', () => {

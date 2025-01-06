@@ -5,6 +5,7 @@ import { validateRole, validateToken, validateBank } from '../../../middleware';
 import { MAKER } from '../../../constants/roles';
 import { getWhatNeedsToChange } from '../../../controllers/amendments/what-needs-to-change/what-needs-to-change';
 import { getFacilityValue } from '../../../controllers/amendments/facility-value/get-facility-value';
+import { getCoverEndDate } from '../../../controllers/amendments/cover-end-date/get-cover-end-date';
 import { getDoYouHaveAFacilityEndDate } from '../../../controllers/amendments/do-you-have-a-facility-end-date/do-you-have-a-facility-end-date';
 
 const router = express.Router();
@@ -20,6 +21,11 @@ router
   .route('/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/facility-value')
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getFacilityValue);
+
+router
+  .route('/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/cover-end-date')
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(getCoverEndDate);
 
 router
   .route('/application-details/:dealId/facilities/:facilityId/amendments/do-you-have-a-facility-end-date')
