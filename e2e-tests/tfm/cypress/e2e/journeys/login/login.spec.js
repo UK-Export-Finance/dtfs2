@@ -82,7 +82,7 @@ context('User can login', () => {
 
   it('displays the beta banner correctly', () => {
     header.betaBanner().contains('This is a new service – your feedback will help us to improve it.');
-    header.betaBanner().contains('beta');
+    cy.assertText(header.betaBannerTag(), 'Beta');
     header.betaBannerHref().contains('feedback');
     header
       .betaBannerHref()

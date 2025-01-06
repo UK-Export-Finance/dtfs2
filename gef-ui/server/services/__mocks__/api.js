@@ -13,4 +13,6 @@ module.exports = {
   getAddressesByPostcode: jest.fn(),
   getUserDetails: jest.fn(),
   setApplicationStatus: jest.fn(),
+  getAmendment: jest.fn(),
+  upsertAmendment: jest.fn(),
 };

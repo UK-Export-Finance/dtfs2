@@ -28,9 +28,8 @@ export const validateRows = (csvData: UtilisationReportCsvRowData[]): Utilisatio
     const ukefFacilityId = row['ukef facility id']?.value;
     const baseCurrencyValue = row['base currency']?.value;
     const facilityUtilisationValue = row['facility utilisation']?.value;
-    const exporterName = row['bank facility reference']?.value;
 
-    if (!baseCurrencyValue || !facilityUtilisationValue || !ukefFacilityId || !exporterName) {
+    if (!baseCurrencyValue || !facilityUtilisationValue || !ukefFacilityId) {
       return;
     }
 

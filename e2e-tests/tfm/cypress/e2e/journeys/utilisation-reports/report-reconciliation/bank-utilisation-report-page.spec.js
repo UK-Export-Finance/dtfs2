@@ -38,14 +38,14 @@ context('Bank utilisation report page', () => {
     cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, matchingTfmFacilities);
   });
 
-  beforeEach(() => {
-    pages.landingPage.visit();
-    cy.login(USERS.PDC_RECONCILE);
+  describe(`when navigating to the page as ${USERS.PDC_RECONCILE}`, () => {
+    beforeEach(() => {
+      pages.landingPage.visit();
+      cy.login(USERS.PDC_RECONCILE);
 
-    cy.visit(`utilisation-reports/${reportId}`);
-  });
+      cy.visit(`utilisation-reports/${reportId}`);
+    });
 
-  describe('when navigating to the page', () => {
     it('should display the page heading and date', () => {
       cy.assertText(utilisationReportPage.heading(), bankName);
 
@@ -57,7 +57,56 @@ context('Bank utilisation report page', () => {
       cy.assertText(utilisationReportPage.keyingSheetTabLink(), 'Keying sheet');
       cy.assertText(utilisationReportPage.paymentDetailsTabLink(), 'Payment details');
       cy.assertText(utilisationReportPage.utilisationTabLink(), 'Utilisation');
-      cy.assertText(utilisationReportPage.recordCorrectionHistoryTabLink(), 'Record correction history');
+    });
+
+    it('should display the correct text', () => {
+      cy.assertText(
+        utilisationReportPage.premiumPaymentsTab.howToAddPaymentsText(),
+        `Received payments are entered against reported fees through selection and then selection of the 'Add a payment' button.`,
+      );
+
+      cy.assertText(
+        utilisationReportPage.premiumPaymentsTab.howToGenerateKeyingDataText(),
+        `When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected.`,
+      );
+    });
+
+    it('should NOT display read-only text', () => {
+      utilisationReportPage.premiumPaymentsTab.receivedPaymentsText().should('not.exist');
+    });
+  });
+
+  describe(`when navigating to the page as ${USERS.PDC_READ}`, () => {
+    beforeEach(() => {
+      pages.landingPage.visit();
+      cy.login(USERS.PDC_READ);
+
+      cy.visit(`utilisation-reports/${reportId}`);
+    });
+
+    it('should display the page heading and date', () => {
+      cy.assertText(utilisationReportPage.heading(), bankName);
+
+      cy.assertText(utilisationReportPage.reportPeriodHeading(), reportPeriodString);
+    });
+
+    it('should display the correct tabs', () => {
+      cy.assertText(utilisationReportPage.premiumPaymentsTabLink(), 'Premium payments');
+      cy.assertText(utilisationReportPage.keyingSheetTabLink(), 'Keying sheet');
+      cy.assertText(utilisationReportPage.paymentDetailsTabLink(), 'Payment details');
+      cy.assertText(utilisationReportPage.utilisationTabLink(), 'Utilisation');
+    });
+
+    it('should display the correct text', () => {
+      cy.assertText(
+        utilisationReportPage.premiumPaymentsTab.receivedPaymentsText(),
+        `Received payments are entered against reported fees. When payments show as matched, the adjustment data for keying into ACBS will be automatically generated.`,
+      );
+    });
+
+    it('should NOT display non-read-only text', () => {
+      utilisationReportPage.premiumPaymentsTab.howToAddPaymentsText().should('not.exist');
+      utilisationReportPage.premiumPaymentsTab.howToGenerateKeyingDataText().should('not.exist');
     });
   });
 });

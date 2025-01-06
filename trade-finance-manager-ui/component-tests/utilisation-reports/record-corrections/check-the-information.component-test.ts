@@ -107,7 +107,7 @@ describe('page', () => {
     wrapper.expectLink('[data-cy="change-record-correction-reason-link"]').toLinkTo(expectedHref, 'Change reason for record correction');
   });
 
-  it('should render the "provide more information" text', () => {
+  it('should render the "provide more information" text without line breaks', () => {
     // Arrange
     const additionalInfo = 'The record needs changing because of the provided reason. Please correct as per the reason.';
     const viewModel: RecordCorrectionRequestInformationViewModel = {
@@ -120,6 +120,22 @@ describe('page', () => {
 
     // Assert
     wrapper.expectText(definitionDescriptionSelector('Provide more information')).toRead(additionalInfo);
+  });
+
+  it('should render the "provide more information" text with line breaks', () => {
+    // Arrange
+    const additionalInfo = 'First line\n\nAnother line after some spacing';
+    const viewModel: RecordCorrectionRequestInformationViewModel = {
+      ...aRecordCorrectionRequestInformationViewModel(),
+      additionalInfo,
+    };
+
+    // Act
+    const wrapper = render(viewModel);
+
+    // Assert
+    const expectedContent = 'First line<br><br>Another line after some spacing';
+    wrapper.expectElement(definitionDescriptionSelector('Provide more information')).toHaveHtmlContent(expectedContent);
   });
 
   it('should render the "provide more information" change link', () => {
@@ -138,19 +154,23 @@ describe('page', () => {
     wrapper.expectLink('[data-cy="change-record-correction-additional-info-link"]').toLinkTo(expectedHref, 'Change more information for record correction');
   });
 
-  it('should render the contact email addresses', () => {
+  it('should render the contact email addresses with line breaks', () => {
     // Arrange
-    const email = 'one@email.com, two@email.com';
+    const emails = ['one@ukexportfinance.gov.uk', 'two@ukexportfinance.gov.uk'];
     const viewModel: RecordCorrectionRequestInformationViewModel = {
       ...aRecordCorrectionRequestInformationViewModel(),
-      contactEmailAddresses: email,
+      contactEmailAddresses: emails,
     };
+
+    const emailsSelector = definitionDescriptionSelector('Contact email address(es)');
+    const expectedContent = 'one@ukexportfinance.gov.uk,<br>two@ukexportfinance.gov.uk';
 
     // Act
     const wrapper = render(viewModel);
 
     // Assert
-    wrapper.expectText(definitionDescriptionSelector('Contact email address')).toRead(email);
+    wrapper.expectElement(emailsSelector).toHaveHtmlContent(expectedContent);
+    wrapper.expectElement(emailsSelector).hasClass('ukef-word-break-break-all');
   });
 
   it('should render send request button', () => {
@@ -164,17 +184,23 @@ describe('page', () => {
 
   it('should render cancel button', () => {
     // Arrange
-    const cancelLink = '/utilisation-reports/cancel-record-correction-request';
     const viewModel: RecordCorrectionRequestInformationViewModel = {
       ...aRecordCorrectionRequestInformationViewModel(),
-      cancelLink,
+      reportId,
+      feeRecordId,
     };
+
+    const cancelLink = `/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/cancel`;
 
     // Act
     const wrapper = render(viewModel);
 
     // Assert
-    wrapper.expectSecondaryButton('[data-cy="cancel-button"]').toLinkTo(cancelLink, 'Cancel record correction request');
+    const cancelButtonSelector = '[data-cy="cancel-button"]';
+    wrapper.expectElement(cancelButtonSelector).toExist();
+    wrapper.expectElement(cancelButtonSelector).toHaveAttribute('value', 'Cancel record correction request');
+    wrapper.expectElement(cancelButtonSelector).hasClass('govuk-button--secondary');
+    wrapper.expectElement(cancelButtonSelector).toHaveAttribute('formaction', cancelLink);
   });
 
   it('should render the back link', () => {

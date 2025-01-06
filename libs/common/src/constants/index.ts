@@ -28,5 +28,9 @@ export * from './floating-point-rounding-decimal-places';
 export * from './flash';
 export * from './ukef';
 export * from './record-correction-reason';
+export * from './facility-fee-type';
+export * from './facility-fee-frequency';
+export * from './facility-day-count-basis';
+export * from './e2e-fixtures';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';

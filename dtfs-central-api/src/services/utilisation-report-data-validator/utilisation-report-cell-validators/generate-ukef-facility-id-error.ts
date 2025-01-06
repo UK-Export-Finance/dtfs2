@@ -29,11 +29,11 @@ export const generateUkefFacilityIdError: UtilisationReportCellValidationErrorGe
     };
   }
 
-  const ukefFacilityIdExists = await TfmFacilitiesRepo.ukefFacilityIdExists(facilityIdCellData.value);
+  const ukefGefFacilityExists = await TfmFacilitiesRepo.ukefGefFacilityExists(facilityIdCellData.value);
 
-  if (!ukefFacilityIdExists) {
+  if (!ukefGefFacilityExists) {
     return {
-      errorMessage: 'The Facility ID has not been recognised. Enter a valid Facility ID between 8 and 10 characters.',
+      errorMessage: 'The facility ID has not been recognised. Enter a facility ID for a general export facility.',
       column: facilityIdCellData?.column,
       row: facilityIdCellData?.row,
       value: facilityIdCellData?.value,

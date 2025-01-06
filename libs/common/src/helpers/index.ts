@@ -8,7 +8,6 @@ export * from './date-validation';
 export {
   isTfmPaymentReconciliationFeatureFlagEnabled,
   isFeeRecordCorrectionFeatureFlagEnabled,
-  isTfmFacilityEndDateFeatureFlagEnabled,
   isTfmDealCancellationFeatureFlagEnabled,
   isTfmSsoFeatureFlagEnabled,
   isPortalFacilityAmendmentsFeatureFlagEnabled,
@@ -21,3 +20,4 @@ export * from './get-ukef-deal-id';
 export * from './is-ukef-email';
 export * from './fee-record-corrections';
 export * from './decode-html-entities';
+export * from './map-currencies-to-radio-items';

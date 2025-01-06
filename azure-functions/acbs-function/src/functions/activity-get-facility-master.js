@@ -16,7 +16,7 @@ const { isHttpErrorStatus } = require('../../helpers/http');
  */
 const handler = async (payload) => {
   try {
-    const { facilityId: facilityIdentifier } = payload;
+    const { facilityIdentifier } = payload;
 
     if (!facilityIdentifier) {
       throw new Error('Invalid facility ID');

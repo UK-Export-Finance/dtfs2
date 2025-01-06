@@ -1,6 +1,6 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
-import { RecordCorrectionTransientFormData, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
+import { RecordCorrectionRequestTransientFormData, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import api from '../../../api';
 import { aTfmSessionUser } from '../../../../../test-helpers';
@@ -43,9 +43,9 @@ describe('get-fee-record-correction-transient-form-data.controller', () => {
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     });
 
-    it(`should return the form data in the request body if the api request is successful`, async () => {
+    it(`should return the form data in the response body if the api request is successful`, async () => {
       // Arrange
-      const formData: RecordCorrectionTransientFormData = {
+      const formData: RecordCorrectionRequestTransientFormData = {
         reasons: [RECORD_CORRECTION_REASON.OTHER],
         additionalInfo: 'Some additional information',
       };

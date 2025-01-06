@@ -86,6 +86,9 @@ export const assertions = <TParams extends object>(wrapper: CheerioAPI, html: st
     notToExist: () => {
       expect(wrapper(selector).html()).toBeNull();
     },
+    toHaveHtmlContent: (value: string) => {
+      expect(wrapper(selector).html()?.trim()).toBe(value);
+    },
     hasClass: (value: string) => {
       expect(wrapper(selector).hasClass(value)).toEqual(true);
     },
