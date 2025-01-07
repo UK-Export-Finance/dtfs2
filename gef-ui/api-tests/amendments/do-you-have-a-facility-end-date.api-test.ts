@@ -25,6 +25,8 @@ const mockGetFacility = jest.fn();
 const mockGetApplication = jest.fn();
 const mockGetAmendment = jest.fn();
 
+const aMockError = () => new Error();
+
 const dealId = '123';
 const facilityId = '111';
 const amendmentId = '111';
@@ -63,9 +65,24 @@ describe(`GET ${url}`, () => {
     process.env = originalEnv;
   });
 
-  describe('when portal facility amendments feature flag is disabled', () => {
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED feature flag is disabled', () => {
     beforeEach(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'false';
+    });
+
+    it('should redirect to /not-found', async () => {
+      // Act
+      const response = await getWithSessionCookie(sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Found);
+      expect(response.headers.location).toEqual('/not-found');
+    });
+  });
+
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED feature flag is not set', () => {
+    beforeEach(() => {
+      delete process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED;
     });
 
     it('should redirect to /not-found', async () => {
@@ -169,7 +186,7 @@ describe(`GET ${url}`, () => {
 
     it('should render `problem with service` if getApplication throws an error', async () => {
       // Arrange
-      mockGetApplication.mockRejectedValue(new Error('test error'));
+      mockGetApplication.mockRejectedValue(aMockError());
 
       // Act
       const response = await getWithSessionCookie(sessionCookie);
@@ -181,7 +198,7 @@ describe(`GET ${url}`, () => {
 
     it('should render `problem with service` if getFacility throws an error', async () => {
       // Arrange
-      mockGetFacility.mockRejectedValue(new Error('test error'));
+      mockGetFacility.mockRejectedValue(aMockError());
 
       // Act
       const response = await getWithSessionCookie(sessionCookie);
@@ -193,7 +210,7 @@ describe(`GET ${url}`, () => {
 
     it('should render `problem with service` if getAmendment throws an error', async () => {
       // Arrange
-      mockGetAmendment.mockRejectedValue(new Error('test error'));
+      mockGetAmendment.mockRejectedValue(aMockError());
 
       // Act
       const response = await getWithSessionCookie(sessionCookie);

@@ -42,7 +42,10 @@ describe('getDoYouHaveAFacilityEndDate', () => {
 
   beforeEach(() => {
     jest.resetAllMocks();
+    jest.restoreAllMocks();
+
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
+    jest.spyOn(console, 'error');
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
       .withDealId(dealId)
@@ -96,7 +99,7 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     expect(getAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, userToken: req.session.userToken });
   });
 
-  it('should render the correct template if the facility is valid', async () => {
+  it('should render the correct template if the facility and amendment are valid', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
@@ -113,6 +116,17 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     expect(res._getRenderView()).toEqual('partials/amendments/do-you-have-a-facility-end-date.njk');
     expect(res._getRenderData()).toEqual(expectedRenderData);
+  });
+
+  it('should not call console.error if the facility and amendment are valid', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await getDoYouHaveAFacilityEndDate(req, res);
+
+    // Assert
+    expect(console.error).toHaveBeenCalledTimes(0);
   });
 
   it('should redirect if the facility is not found', async () => {

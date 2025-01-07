@@ -25,7 +25,7 @@ export const getDoYouHaveAFacilityEndDate = async (req: GetDoYouHaveAFacilityEnd
     const { details: facility } = await api.getFacility({ facilityId, userToken });
 
     if (!deal || !facility) {
-      console.error('Deal %s or Facility %s not found', dealId, facilityId);
+      console.error('Deal %s or Facility %s was not found', dealId, facilityId);
       return res.redirect('/not-found');
     }
 
