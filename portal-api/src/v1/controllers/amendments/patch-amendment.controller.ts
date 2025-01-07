@@ -25,14 +25,14 @@ export const patchAmendment = async (req: PatchAmendmentRequest, res: Response) 
   const { update } = req.body;
 
   try {
-    const amendmentResponse = await api.patchPortalFacilityAmendment({
+    const updatedAmendment = await api.patchPortalFacilityAmendment({
       facilityId,
       amendmentId,
       update,
       auditDetails: generatePortalAuditDetails(req.user._id),
     });
 
-    return res.status(HttpStatusCode.Ok).send(amendmentResponse);
+    return res.status(HttpStatusCode.Ok).send(updatedAmendment);
   } catch (error) {
     const errorMessage = 'Failed to update the amendment';
     console.error(errorMessage, error);
