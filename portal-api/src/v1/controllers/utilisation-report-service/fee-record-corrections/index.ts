@@ -1,1 +1,1 @@
-export * from './pending-corrections';
+export * from './pending-corrections.controller';
