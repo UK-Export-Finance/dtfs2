@@ -1,6 +1,8 @@
 import {
   AMENDMENT_STATUS,
   AMENDMENT_TYPES,
+  AmendmentNotFoundError,
+  FacilityAmendmentWithUkefId,
   getUnixTimestampSeconds,
   InvalidAuditDetailsError,
   PortalAuditDetails,
@@ -79,7 +81,7 @@ export class PortalFacilityAmendmentService {
     facilityId: string;
     update: PortalFacilityAmendmentUserValues;
     auditDetails: PortalAuditDetails;
-  }): Promise<void> {
+  }): Promise<FacilityAmendmentWithUkefId> {
     const amendmentUpdate: Partial<PortalFacilityAmendment> = {
       ...update,
       updatedAt: getUnixTimestampSeconds(new Date()),
@@ -91,5 +93,12 @@ export class PortalFacilityAmendmentService {
       update: amendmentUpdate,
       auditDetails,
     });
+
+    const updatedAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(new ObjectId(facilityId), new ObjectId(amendmentId));
+    if (!updatedAmendment) {
+      throw new AmendmentNotFoundError(amendmentId, facilityId);
+    }
+
+    return updatedAmendment;
   }
 }

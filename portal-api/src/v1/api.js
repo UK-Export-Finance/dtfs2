@@ -541,7 +541,7 @@ const patchPortalFacilityAmendment = async ({ facilityId, amendmentId, update, a
   try {
     const response = await axios({
       method: 'patch',
-      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments/${amendmentId}`,
       headers: headers.central,
       data: {
         facilityId,

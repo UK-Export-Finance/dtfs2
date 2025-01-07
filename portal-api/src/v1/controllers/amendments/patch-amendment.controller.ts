@@ -16,7 +16,7 @@ export type PatchAmendmentRequest = CustomExpressRequest<{
 }>;
 
 /**
- * Updates a draft portal facility amendment into the database
+ * Updates a portal facility amendment
  * @param req - The request object
  * @param res - The response object
  */
