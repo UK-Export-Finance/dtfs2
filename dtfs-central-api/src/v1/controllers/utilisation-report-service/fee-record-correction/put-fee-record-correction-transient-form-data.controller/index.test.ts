@@ -83,7 +83,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
       expect(mockSaveTransientFormData).toHaveBeenCalledWith(expectedTransientFormDataEntity);
     });
 
-    it('should call the correction repo to fetch the correction once', async () => {
+    it('should call the correction repo to fetch the correction', async () => {
       // Arrange
       mockFindCorrection.mockResolvedValue(new FeeRecordCorrectionEntityMockBuilder().build());
 
@@ -92,16 +92,6 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
 
       // Assert
       expect(mockFindCorrection).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call the correction repo to fetch the correction with the correct parameters', async () => {
-      // Arrange
-      mockFindCorrection.mockResolvedValue(new FeeRecordCorrectionEntityMockBuilder().build());
-
-      // Act
-      await putFeeRecordCorrectionTransientFormData(req, res);
-
-      // Assert
       expect(mockFindCorrection).toHaveBeenCalledWith(correctionId, bankId);
     });
 

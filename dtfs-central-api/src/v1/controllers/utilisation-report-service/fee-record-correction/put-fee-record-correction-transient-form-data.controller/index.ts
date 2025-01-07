@@ -56,8 +56,8 @@ export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordC
 
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {
-    const errorMessage = `Failed to put fee record correction transient form data`;
-    console.error(errorMessage, error);
+    const errorMessage = 'Failed to put fee record correction transient form data';
+    console.error('%s %o', errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }
