@@ -42,6 +42,7 @@ export const getDoYouHaveAFacilityEndDate = async (req: GetDoYouHaveAFacilityEnd
     }
 
     if (!amendment.changeCoverEndDate) {
+      console.error('Amendment %s is not changing the cover end date', amendmentId);
       return res.redirect(
         `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
       );
