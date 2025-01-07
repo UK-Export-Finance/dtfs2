@@ -26,12 +26,12 @@ export const getFacilityValue = async (req: GetFacilityValueRequest, res: Respon
     const { details: facility } = await api.getFacility({ facilityId, userToken });
 
     if (!deal || !facility) {
-      console.error(`Deal ${dealId} or Facility ${facilityId} not found`);
+      console.error('Deal %s or Facility %s not found', dealId, facilityId);
       return res.redirect('/not-found');
     }
 
     if (!userCanAmendFacility(facility, deal, user.roles)) {
-      console.error(`User cannot amend facility ${facilityId} on deal ${dealId}`);
+      console.error('User cannot amend facility %s on deal %s', facilityId, dealId);
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
