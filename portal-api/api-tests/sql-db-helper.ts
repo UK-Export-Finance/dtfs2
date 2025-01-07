@@ -1,4 +1,10 @@
-import { AzureFileInfoEntity, FeeRecordCorrectionEntity, FeeRecordCorrectionTransientFormDataEntity, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import {
+  AzureFileInfoEntity,
+  FeeRecordCorrectionEntity,
+  FeeRecordCorrectionTransientFormDataEntity,
+  FeeRecordEntity,
+  UtilisationReportEntity,
+} from '@ukef/dtfs2-common';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 
 const initialize = async () => {
