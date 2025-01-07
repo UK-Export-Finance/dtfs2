@@ -8,6 +8,10 @@ import { getWhatNeedsToChange } from '../../../controllers/amendments/what-needs
 import { getFacilityValue } from '../../../controllers/amendments/facility-value/get-facility-value';
 import { getCoverEndDate } from '../../../controllers/amendments/cover-end-date/get-cover-end-date';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
+import {
+  getCancelPortalFacilityAmendment,
+  postCancelPortalFacilityAmendment,
+} from '../../../controllers/amendments/cancel-amendment/cancel-portal-facility-amendment';
 
 const { WHAT_DO_YOU_NEED_TO_CHANGE, COVER_END_DATE, FACILITY_VALUE } = PORTAL_AMENDMENT_PAGES;
 
@@ -32,5 +36,11 @@ router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${COVER_END_DATE}/`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getCoverEndDate);
+
+router
+  .route('/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/cancel')
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(getCancelPortalFacilityAmendment)
+  .post(postCancelPortalFacilityAmendment);
 
 export default router;
