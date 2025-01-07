@@ -2,12 +2,18 @@ import { ZodSchema } from 'zod';
 import { WithSchemaTestParams } from '../with-schema-test.type';
 import { withDefaultOptionsTests } from './with-default-options.tests';
 
-export const withNumberTests = <Schema extends ZodSchema>({ schema, options = {}, getTestObjectWithUpdatedParameter }: WithSchemaTestParams<Schema>) => {
+export const withNumberTests = <Schema extends ZodSchema>({
+  schema,
+  options = {},
+  getTestObjectWithUpdatedParameter,
+  getUpdatedParameterFromParsedTestObject,
+}: WithSchemaTestParams<Schema>) => {
   describe('with number tests', () => {
     withDefaultOptionsTests({
       schema,
       options,
       getTestObjectWithUpdatedParameter,
+      getUpdatedParameterFromParsedTestObject,
     });
 
     it('should fail parsing if the parameter is not a number', () => {

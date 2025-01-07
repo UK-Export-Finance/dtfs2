@@ -5,6 +5,7 @@ describe('tfm-team.schema', () => {
   withTfmTeamSchemaTests({
     schema: TfmTeamSchema,
     getTestObjectWithUpdatedParameter: (newValue: unknown) => newValue,
+    getUpdatedParameterFromParsedTestObject: (data) => data,
     options: { isOptional: false },
   });
 });

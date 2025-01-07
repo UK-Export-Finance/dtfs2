@@ -9,11 +9,13 @@ export const withAuditDatabaseRecordSchemaTests = <Schema extends ZodSchema>({
   schema,
   options = {},
   getTestObjectWithUpdatedParameter,
+  getUpdatedParameterFromParsedTestObject,
 }: WithSchemaTestParams<Schema>) => {
   describe('with AUDIT_DATABASE_RECORD_SCHEMA tests', () => {
     withDefaultOptionsTests({
       schema,
       getTestObjectWithUpdatedParameter,
+      getUpdatedParameterFromParsedTestObject,
       options,
     });
 

@@ -13,6 +13,7 @@ export const withArrayTests = <Schema extends ZodSchema>({
   schema,
   options,
   getTestObjectWithUpdatedParameter,
+  getUpdatedParameterFromParsedTestObject,
 }: WithSchemaTestParams<Schema, WithArrayTestsOptions>) => {
   const arrayTestOptionsDefaults = { isAllowEmpty: true };
   const arrayTestOptions = {
@@ -25,6 +26,7 @@ export const withArrayTests = <Schema extends ZodSchema>({
       schema,
       options,
       getTestObjectWithUpdatedParameter,
+      getUpdatedParameterFromParsedTestObject,
     });
 
     it('should fail parsing if the parameter is not a array', () => {
@@ -49,6 +51,7 @@ export const withArrayTests = <Schema extends ZodSchema>({
         schema,
         testCase: arrayTestOptions.arrayTypeTestCase,
         getTestObjectWithUpdatedParameter: (value) => getTestObjectWithUpdatedParameter([value]),
+        getUpdatedParameterFromParsedTestObject: (parsedPayload) => getUpdatedParameterFromParsedTestObject(parsedPayload),
       });
     });
   });

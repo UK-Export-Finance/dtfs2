@@ -122,11 +122,17 @@ export const withSchemaValidationTests = <Schema extends ZodSchema>({
         ? testCase.options.overrideGetTestObjectWithUpdatedField
         : (newValue: unknown): unknown => ({ ...aValidPayload(), [parameterPath]: newValue });
 
+    const getUpdatedParameterFromParsedTestObject = (parsedPayload: unknown) => {
+      const parsedPayloadAsRecord = parsedPayload as Record<string, unknown>;
+      return parsedPayloadAsRecord[parameterPath];
+    };
+
     describe(`${parameterPath} parameter tests`, () => {
       withTestsForTestcase({
         schema,
         testCase,
         getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
       });
     });
   });

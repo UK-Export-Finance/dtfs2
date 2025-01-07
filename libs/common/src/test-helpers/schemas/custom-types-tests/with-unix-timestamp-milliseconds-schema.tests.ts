@@ -7,18 +7,21 @@ export const withUnixTimestampMillisecondsSchemaTests = <Schema extends ZodSchem
   schema,
   options = {},
   getTestObjectWithUpdatedParameter,
+  getUpdatedParameterFromParsedTestObject,
 }: WithSchemaTestParams<Schema>) => {
   describe('with UNIX_TIMESTAMP_MILLISECONDS_SCHEMA tests', () => {
     withDefaultOptionsTests({
       schema,
       options,
       getTestObjectWithUpdatedParameter,
+      getUpdatedParameterFromParsedTestObject,
     });
 
     withNumberTests({
       schema,
       options,
       getTestObjectWithUpdatedParameter,
+      getUpdatedParameterFromParsedTestObject,
     });
 
     it('should fail parsing if the parameter is not positive number', () => {

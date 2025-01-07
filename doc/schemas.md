@@ -70,7 +70,9 @@ However, sometimes you'll have created a new nested schema or type that doesn't 
   }
   ```
 
-### To create your own reusable schema / tranformation test:
+### To create your own reusable schema / transformation test:
+
+n.b. transformation tests use a different test case type to allow access to a function to get the value of the transformed payload -- pay attention to types if working on a transformation test.
 
 - Create a new file in the correct folder (ie `with-audit-database-record-schema.tests.ts`)
 - Follow the existing pattern (see `with-audit-database-record-schema.tests.ts` for an example)

@@ -3,12 +3,18 @@ import { WithSchemaTestParams } from '../with-schema-test.type';
 import { TEAM_IDS } from '../../../constants';
 import { withDefaultOptionsTests } from '../primitive-types-tests/with-default-options.tests';
 
-export const withTfmTeamSchemaTests = <Schema extends ZodSchema>({ schema, options = {}, getTestObjectWithUpdatedParameter }: WithSchemaTestParams<Schema>) => {
+export const withTfmTeamSchemaTests = <Schema extends ZodSchema>({
+  schema,
+  options = {},
+  getTestObjectWithUpdatedParameter,
+  getUpdatedParameterFromParsedTestObject,
+}: WithSchemaTestParams<Schema>) => {
   describe('with TfmTeamSchema tests', () => {
     withDefaultOptionsTests({
       schema,
       options,
       getTestObjectWithUpdatedParameter,
+      getUpdatedParameterFromParsedTestObject,
     });
 
     it('should fail parsing if the parameter is not a valid tfm-team', () => {

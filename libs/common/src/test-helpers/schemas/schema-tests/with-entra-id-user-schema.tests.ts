@@ -8,11 +8,13 @@ export const withEntraIdUserSchemaTests = <Schema extends ZodSchema>({
   schema,
   options = {},
   getTestObjectWithUpdatedParameter,
+  getUpdatedParameterFromParsedTestObject,
 }: WithSchemaTestParams<Schema>) => {
   describe('with ENTRA_ID_USER_SCHEMA tests', () => {
     withDefaultOptionsTests({
       schema,
       getTestObjectWithUpdatedParameter,
+      getUpdatedParameterFromParsedTestObject,
       options,
     });
 

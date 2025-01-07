@@ -24,10 +24,12 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
   schema,
   testCase,
   getTestObjectWithUpdatedParameter,
+  getUpdatedParameterFromParsedTestObject,
 }: {
   schema: Schema;
   testCase: TestCase;
   getTestObjectWithUpdatedParameter: (newValue: unknown) => unknown;
+  getUpdatedParameterFromParsedTestObject: (parsedTestObject: unknown) => unknown;
 }) => {
   const { type, options } = testCase;
 
@@ -37,6 +39,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
         schema,
         options,
         getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
       });
       break;
 
@@ -45,6 +48,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
         schema,
         options,
         getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
       });
       break;
 
@@ -53,6 +57,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
         schema,
         options,
         getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
       });
       break;
 
@@ -61,6 +66,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
         schema,
         options,
         getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
       });
       break;
 
@@ -69,6 +75,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
         schema,
         options,
         getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
       });
       break;
 
@@ -77,6 +84,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
         schema,
         options,
         getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
       });
       break;
 
@@ -85,6 +93,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
         schema,
         options,
         getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
       });
       break;
 
@@ -93,6 +102,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
         schema,
         options,
         getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
       });
       break;
 
@@ -101,6 +111,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
         schema,
         options,
         getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
       });
       break;
 
@@ -109,6 +120,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
         schema,
         options,
         getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
       });
       break;
 
@@ -117,6 +129,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
         schema,
         options,
         getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
       });
       break;
 
@@ -125,6 +138,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
         schema,
         options,
         getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
       });
       break;
 
@@ -133,6 +147,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
         schema,
         options,
         getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
       });
       break;
 
@@ -141,6 +156,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
         schema,
         options,
         getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
       });
       break;
 
@@ -149,6 +165,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
         schema,
         options,
         getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
       });
       break;
 
@@ -157,6 +174,7 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
         schema,
         options,
         getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
       });
       break;
 

@@ -6,11 +6,13 @@ export const withIsoDateTimeStampSchemaTests = <Schema extends ZodSchema>({
   schema,
   options = {},
   getTestObjectWithUpdatedParameter,
+  getUpdatedParameterFromParsedTestObject,
 }: WithSchemaTestParams<Schema>) => {
   describe('with ISO_DATE_TIME_STAMP_SCHEMA tests', () => {
     withDefaultOptionsTests({
       schema,
       getTestObjectWithUpdatedParameter,
+      getUpdatedParameterFromParsedTestObject,
       options,
     });
 

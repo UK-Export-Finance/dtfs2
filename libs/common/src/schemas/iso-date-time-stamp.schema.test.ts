@@ -5,5 +5,6 @@ describe('ISO_DATE_TIME_STAMP_SCHEMA', () => {
   withIsoDateTimeStampSchemaTests({
     schema: ISO_DATE_TIME_STAMP_SCHEMA,
     getTestObjectWithUpdatedParameter: (newValue) => newValue,
+    getUpdatedParameterFromParsedTestObject: (data) => data,
   });
 });
