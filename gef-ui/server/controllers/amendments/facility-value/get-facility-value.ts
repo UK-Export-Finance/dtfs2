@@ -43,7 +43,7 @@ export const getFacilityValue = async (req: GetFacilityValueRequest, res: Respon
     }
 
     if (!amendment.changeFacilityValue) {
-      console.error(`Amendment ${amendmentId} not changing facility value`);
+      console.error('Amendment %s not changing facility value', amendmentId);
       return res.redirect(
         `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
       );
