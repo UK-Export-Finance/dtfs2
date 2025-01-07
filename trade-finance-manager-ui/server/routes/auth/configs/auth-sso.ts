@@ -17,7 +17,8 @@ export const getAuthSsoRouter: GetRouter = () => {
   const authSsoRouter = express.Router();
 
   // Todo: update this to check the right token
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  authSsoRouter.post('/auth/sso-redirect/form', loginController.handleSsoRedirectForm.bind(loginController));
+  authSsoRouter.post('/auth/sso-redirect/form', (req, res, next) => {
+    loginController.handleSsoRedirectForm(req, res).catch(next);
+  });
   return authSsoRouter;
 };
