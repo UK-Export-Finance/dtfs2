@@ -41,6 +41,7 @@ export class SsoController {
         });
         return;
       }
+
       res.status(HttpStatusCode.InternalServerError).send({
         status: HttpStatusCode.InternalServerError,
         message: errorMessage,

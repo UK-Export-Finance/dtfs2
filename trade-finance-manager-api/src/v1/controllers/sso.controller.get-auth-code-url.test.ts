@@ -55,15 +55,8 @@ describe('SsoController', () => {
         await ssoController.getAuthCodeUrl(req, res);
 
         // Assert
-        expect(getAuthCodeUrlMock).toHaveBeenCalledWith(expectedGetAuthCodeUrlParams);
-      });
-
-      it('should call entraIdService.getAuthCodeUrl once', async () => {
-        // Act
-        await ssoController.getAuthCodeUrl(req, res);
-
-        // Assert
         expect(getAuthCodeUrlMock).toHaveBeenCalledTimes(1);
+        expect(getAuthCodeUrlMock).toHaveBeenCalledWith(expectedGetAuthCodeUrlParams);
       });
 
       it('should return the result of entraIdService.getAuthCodeUrl', async () => {
