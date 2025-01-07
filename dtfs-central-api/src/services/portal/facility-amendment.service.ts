@@ -1,7 +1,6 @@
 import {
   AMENDMENT_STATUS,
   AMENDMENT_TYPES,
-  AmendmentNotFoundError,
   FacilityAmendmentWithUkefId,
   getUnixTimestampSeconds,
   InvalidAuditDetailsError,
@@ -95,8 +94,9 @@ export class PortalFacilityAmendmentService {
     });
 
     const updatedAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(new ObjectId(facilityId), new ObjectId(amendmentId));
+
     if (!updatedAmendment || updatedAmendment.type !== AMENDMENT_TYPES.PORTAL) {
-      throw new AmendmentNotFoundError(amendmentId, facilityId);
+      throw new Error(`Could not find amendment to return`);
     }
 
     return updatedAmendment;
