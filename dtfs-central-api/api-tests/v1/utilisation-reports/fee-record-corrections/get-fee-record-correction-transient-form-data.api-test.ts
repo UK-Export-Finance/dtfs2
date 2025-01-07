@@ -1,0 +1,82 @@
+import { HttpStatusCode } from 'axios';
+import { FeeRecordCorrectionTransientFormDataEntityMockBuilder, RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
+import { withSqlAndMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
+import { ObjectId } from 'mongodb';
+import { testApi } from '../../../test-api';
+import { SqlDbHelper } from '../../../sql-db-helper';
+import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
+
+console.error = jest.fn();
+
+const BASE_URL = '/v1/utilisation-reports/fee-record-corrections/:correctionId/transient-form-data/:userId';
+
+describe(`GET ${BASE_URL}`, () => {
+  const correctionId = 123;
+  const userId = new ObjectId().toString();
+  const otherUserId = new ObjectId().toString();
+
+  const transientFormData: RecordCorrectionTransientFormData = {
+    utilisation: 10000,
+  };
+
+  const transientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()
+    .withUserId(userId)
+    .withCorrectionId(correctionId)
+    .withFormData(transientFormData)
+    .build();
+
+  beforeAll(async () => {
+    await SqlDbHelper.initialize();
+  });
+
+  beforeEach(async () => {
+    await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', transientFormDataEntity);
+  });
+
+  afterEach(async () => {
+    await SqlDbHelper.deleteAllEntries('FeeRecordCorrectionTransientFormData');
+  });
+
+  withSqlAndMongoIdPathParameterValidationTests({
+    baseUrl: BASE_URL,
+    makeRequest: (url) => testApi.get(url),
+    sqlPathParameters: ['correctionId'],
+    mongoPathParameters: ['userId'],
+  });
+
+  it(`should return '${HttpStatusCode.Ok}' with an empty body when no transient form data exists for the user or correction`, async () => {
+    // Act
+    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { correctionId: correctionId + 1, userId: otherUserId }));
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.Ok);
+    expect(response.body).toEqual({});
+  });
+
+  it(`should return '${HttpStatusCode.Ok}' with an empty body when no transient form data exists for the user for the given correction id`, async () => {
+    // Act
+    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { correctionId: correctionId + 1, userId }));
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.Ok);
+    expect(response.body).toEqual({});
+  });
+
+  it(`should return '${HttpStatusCode.Ok}' with an empty body when no transient form data exists for the correction for the given user id`, async () => {
+    // Act
+    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { correctionId, userId: otherUserId }));
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.Ok);
+    expect(response.body).toEqual({});
+  });
+
+  it(`should return '${HttpStatusCode.Ok}' with the form data if the request is valid and transient form data exists`, async () => {
+    // Act
+    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { correctionId, userId }));
+
+    // Assert
+    expect(response.status).toEqual(HttpStatusCode.Ok);
+    expect(response.body).toEqual(transientFormData);
+  });
+});

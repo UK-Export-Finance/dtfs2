@@ -1013,7 +1013,7 @@ utilisationReportsRouter
 
 /**
  * @openapi
- * /fee-records-corrections/:correctionId/transient-form-data/:userId:
+ * /utilisation-reports/fee-records-corrections/:correctionId/transient-form-data/:userId:
  *   get:
  *     summary: Gets the fee record correction transient form data against a user and correction
  *     tags: [Utilisation Report]
