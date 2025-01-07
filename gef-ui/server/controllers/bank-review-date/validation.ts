@@ -1,30 +1,20 @@
 import { add, isAfter, isBefore, startOfDay } from 'date-fns';
-import { uniq } from 'lodash';
-import { DayMonthYearInput, FACILITY_END_DATE_MAXIMUM_YEARS_IN_FUTURE } from '@ukef/dtfs2-common';
-import { validateAndParseDayMonthYear } from '../../utils/day-month-year-validation';
+import { applyStandardValidationAndParseDateInput, DayMonthYearInput, FACILITY_END_DATE_MAXIMUM_YEARS_IN_FUTURE } from '@ukef/dtfs2-common';
 import { ErrorsOrDate } from '../../types/errors-or-date';
 
 export const validateAndParseBankReviewDate = (bankReviewDayMonthYear: DayMonthYearInput, coverStartDate: Date): ErrorsOrDate => {
   const errRef = 'bankReviewDate';
+  const variableDisplayName = 'bank review date';
 
-  const formattingErrorsOrDate = validateAndParseDayMonthYear(bankReviewDayMonthYear, {
-    errRef,
-    variableDisplayName: 'bank review date',
-  });
+  const formattingErrorsOrDate = applyStandardValidationAndParseDateInput(bankReviewDayMonthYear, variableDisplayName, errRef);
 
-  if ('errors' in formattingErrorsOrDate) {
+  if (formattingErrorsOrDate.error) {
     return {
-      errors: [
-        {
-          errRef,
-          errMsg: 'Bank review date must be in the correct format DD/MM/YYYY',
-          subFieldErrorRefs: uniq(formattingErrorsOrDate.errors.flatMap((error) => error.subFieldErrorRefs ?? [])),
-        },
-      ],
+      errors: [{ errRef, errMsg: formattingErrorsOrDate.error.message, subFieldErrorRefs: formattingErrorsOrDate.error.fieldRefs }],
     };
   }
 
-  const bankReviewDate = formattingErrorsOrDate.date;
+  const bankReviewDate = formattingErrorsOrDate.parsedDate;
 
   const now = startOfDay(new Date());
   const maximumBankReviewDate = add(now, { years: FACILITY_END_DATE_MAXIMUM_YEARS_IN_FUTURE });
