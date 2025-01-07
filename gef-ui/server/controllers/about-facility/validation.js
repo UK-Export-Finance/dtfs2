@@ -156,7 +156,7 @@ const validateAboutFacility = ({
     });
   }
 
-  if (coverStartDateIsFullyComplete && coverEndDateValid) {
+  if (coverStartDateIsFullyComplete && coverEndDateIsFullyComplete && coverEndDateValid) {
     if (coverEndDate < coverStartDate) {
       aboutFacilityErrors.push({
         errRef: 'coverEndDate',

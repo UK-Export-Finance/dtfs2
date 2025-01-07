@@ -642,7 +642,7 @@ describe('validateAndUpdateAboutFacility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The day for the cover end date must include 1 or 2 numbers' }]),
+            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'Cover end date must be a real date' }]),
           }),
         }),
       );
@@ -660,7 +660,7 @@ describe('validateAndUpdateAboutFacility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The day for the cover end date must include 1 or 2 numbers' }]),
+            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'Cover end date must be a real date' }]),
           }),
         }),
       );
