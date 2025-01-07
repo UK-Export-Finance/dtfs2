@@ -1,12 +1,12 @@
 import pages from '../../../../e2e/pages';
 
-const { recordCorrectionHistoryTab } = pages.utilisationReportPage;
+const { recordCorrectionLogTab } = pages.utilisationReportPage;
 
-const { table } = recordCorrectionHistoryTab;
+const { table } = recordCorrectionLogTab;
 
 /**
- * checkRecordCorrectionHistoryTableRowValues
- * checks the values of a row in the fee record correction history table
+ * checkRecordCorrectionLogTableRowValues
+ * checks the values of a row in the fee record correction log table
  * from the fee record and provided values
  * @param {FeeRecordEntity} feeRecord - provided fee record
  * @param {String} reasons - provided string with fee record correction reasons
@@ -14,7 +14,7 @@ const { table } = recordCorrectionHistoryTab;
  * @param {String} requestedBy - provided string with the name of the user requesting the fee record correction
  * @param {String} status - provided string with the status of the fee record correction
  */
-const checkRecordCorrectionHistoryTableRowValues = ({ feeRecord, reasons, dateSent, requestedBy, status }) => {
+const checkRecordCorrectionLogTableRowValues = ({ feeRecord, reasons, dateSent, requestedBy, status }) => {
   const correctionId = feeRecord.corrections[0].id;
   const row = table.row(correctionId);
 
@@ -26,4 +26,4 @@ const checkRecordCorrectionHistoryTableRowValues = ({ feeRecord, reasons, dateSe
   cy.assertText(row.status(), status);
 };
 
-export default checkRecordCorrectionHistoryTableRowValues;
+export default checkRecordCorrectionLogTableRowValues;

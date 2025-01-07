@@ -21,9 +21,9 @@ const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(firstReport).withId
 
 const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([firstFeeRecord, secondFeeRecord]);
 
-const { recordCorrectionHistoryTab } = pages.utilisationReportPage;
+const { recordCorrectionLogTab } = pages.utilisationReportPage;
 const { utilisationReportPage } = pages;
-const { table } = recordCorrectionHistoryTab;
+const { table } = recordCorrectionLogTab;
 
 const additionalInfoUserInput = 'Some additional info';
 
@@ -66,7 +66,7 @@ context('When fee record correction feature flag is enabled', () => {
     cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${reportId}`);
-    utilisationReportPage.recordCorrectionHistoryTabLink().click();
+    utilisationReportPage.recordCorrectionLogTabLink().click();
   });
 
   after(() => {
@@ -74,9 +74,9 @@ context('When fee record correction feature flag is enabled', () => {
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
   });
 
-  it('should display the record correction history table', () => {
-    table.recordCorrectionHistoryTable().should('exist');
-    table.recordCorrectionHistoryTable().should('be.visible');
+  it('should display the record correction log table', () => {
+    recordCorrectionLogTab.recordCorrectionLogTable().should('exist');
+    recordCorrectionLogTab.recordCorrectionLogTable().should('be.visible');
   });
 
   it('should display the correct table headers', () => {
@@ -89,12 +89,12 @@ context('When fee record correction feature flag is enabled', () => {
   });
 
   it('should only have 2 rows in the table', () => {
-    table.recordCorrectionHistoryTable().find('tr[data-cy^="record-correction-history-table-row-"]').should('have.length', 2);
+    recordCorrectionLogTab.recordCorrectionLogTable().find('tr[data-cy^="record-correction-log-table-row-"]').should('have.length', 2);
   });
 
   it('should display the correct values for the first row', () => {
     cy.task(NODE_TASKS.GET_FEE_RECORD_FROM_DB_BY_ID, firstFeeRecord.id).then((feeRecord) => {
-      cy.checkRecordCorrectionHistoryTableRowValues({
+      cy.checkRecordCorrectionLogTableRowValues({
         feeRecord,
         reasons: 'Facility ID is incorrect, Other',
         dateSent: today.dd_MMM_yyyy,
@@ -106,7 +106,7 @@ context('When fee record correction feature flag is enabled', () => {
 
   it('should display the correct values for the second row', () => {
     cy.task(NODE_TASKS.GET_FEE_RECORD_FROM_DB_BY_ID, secondFeeRecord.id).then((feeRecord) => {
-      cy.checkRecordCorrectionHistoryTableRowValues({
+      cy.checkRecordCorrectionLogTableRowValues({
         feeRecord,
         reasons: 'Reported fee is incorrect',
         dateSent: today.dd_MMM_yyyy,

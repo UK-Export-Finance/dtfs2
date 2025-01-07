@@ -31,8 +31,8 @@ context('When fee record correction feature flag is disabled', () => {
       cy.visit(`utilisation-reports/${reportId}`);
     });
 
-    it('should NOT display the record correction history tab', () => {
-      utilisationReportPage.recordCorrectionHistoryTabLink().should('not.exist');
+    it('should NOT display the record correction log tab', () => {
+      utilisationReportPage.recordCorrectionLogTabLink().should('not.exist');
     });
 
     it('should NOT display the record correction text', () => {
@@ -48,8 +48,8 @@ context('When fee record correction feature flag is disabled', () => {
       cy.visit(`utilisation-reports/${reportId}`);
     });
 
-    it('should NOT display the record correction history tab', () => {
-      utilisationReportPage.recordCorrectionHistoryTabLink().should('not.exist');
+    it('should NOT display the record correction log tab', () => {
+      utilisationReportPage.recordCorrectionLogTabLink().should('not.exist');
     });
 
     it('should NOT display the record correction text', () => {
