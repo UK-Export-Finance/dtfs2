@@ -35,7 +35,7 @@ describe('controllers - login (sso)', () => {
           session: requestSession,
         });
 
-      it('redirects to /home', async () => {
+      it('should redirect to /home', async () => {
         // Arrange
         const { req, res } = getHttpMocks();
 
@@ -53,7 +53,7 @@ describe('controllers - login (sso)', () => {
           mockSuccessfulGetAuthCodeUrl();
         });
 
-        it('redirects to login URL', async () => {
+        it('should redirect to login URL', async () => {
           // Arrange
           const { req, res } = httpMocks.createMocks({ session: {} });
 
@@ -64,7 +64,7 @@ describe('controllers - login (sso)', () => {
           expect(res._getRedirectUrl()).toEqual(mockAuthCodeUrl);
         });
 
-        it('overrides session login data if present', async () => {
+        it('should override session login data if present', async () => {
           // Arrange
           const { req, res } = httpMocks.createMocks({
             session: { loginData: { authCodeUrlRequest: 'an old auth code url request', aField: 'another field' } },
@@ -85,7 +85,7 @@ describe('controllers - login (sso)', () => {
           mockFailedGetAuthCodeUrl();
         });
 
-        it('calls next with error', async () => {
+        it('should call next with error', async () => {
           // Arrange
           const { req, res } = httpMocks.createMocks({ session: {} });
           const error = new Error('getAuthCodeUrl error');

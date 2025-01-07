@@ -4,7 +4,7 @@ import { UserSessionError } from './user-session.error';
 import { UserPartialLoginDataNotDefinedError } from './user-partial-login-data-not-defined.error';
 
 describe('UserPartialLoginDataNotDefinedError', () => {
-  it('exposes the message the error was created with', () => {
+  it('should expose the message the error was created with', () => {
     // Act
     const exception = new UserPartialLoginDataNotDefinedError();
 
@@ -12,7 +12,7 @@ describe('UserPartialLoginDataNotDefinedError', () => {
     expect(exception.message).toEqual('Expected session.loginData to be defined');
   });
 
-  it('exposes the 401 (Unauthorised) status code', () => {
+  it('should expose the 401 (Unauthorised) status code', () => {
     // Act
     const exception = new UserPartialLoginDataNotDefinedError();
 
@@ -20,7 +20,7 @@ describe('UserPartialLoginDataNotDefinedError', () => {
     expect(exception.status).toEqual(HttpStatusCode.Unauthorized);
   });
 
-  it('exposes the INVALID_USER_SESSION code', () => {
+  it('should expose the INVALID_USER_SESSION code', () => {
     // Act
     const exception = new UserPartialLoginDataNotDefinedError();
 
@@ -52,7 +52,7 @@ describe('UserPartialLoginDataNotDefinedError', () => {
     expect(exception).toBeInstanceOf(ApiError);
   });
 
-  it('exposes the name of the exception', () => {
+  it('should expose the name of the exception', () => {
     // Act
     const exception = new UserPartialLoginDataNotDefinedError();
 

@@ -15,11 +15,12 @@ describe('login service', () => {
       getAuthCodeUrlSpy.mockReset();
     });
 
-    it('calls api.getAuthCodeUrl with the request', async () => {
+    it('should call api.getAuthCodeUrl with the request', async () => {
       // Act
       await loginService.getAuthCodeUrl({ successRedirect });
 
       // Assert
+      expect(getAuthCodeUrlSpy).toHaveBeenCalledTimes(1);
       expect(getAuthCodeUrlSpy).toHaveBeenCalledWith({ successRedirect });
     });
 
@@ -33,7 +34,7 @@ describe('login service', () => {
         getAuthCodeUrlSpy.mockResolvedValueOnce(mockGetAuthCodeResponse);
       });
 
-      it('returns the auth code url', async () => {
+      it('should return the auth code url', async () => {
         // Act
         const result = await loginService.getAuthCodeUrl({ successRedirect });
 
@@ -49,7 +50,7 @@ describe('login service', () => {
         getAuthCodeUrlSpy.mockRejectedValueOnce(error);
       });
 
-      it('throws the error', async () => {
+      it('should throw the error', async () => {
         // Act & Assert
         await expect(loginService.getAuthCodeUrl({ successRedirect })).rejects.toThrow(error);
       });
