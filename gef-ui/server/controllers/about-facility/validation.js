@@ -1,5 +1,4 @@
 const { add, isAfter, isBefore, isEqual, set, startOfDay } = require('date-fns');
-const Joi = require('joi');
 const { applyStandardValidationAndParseDateInput } = require('@ukef/dtfs2-common');
 const { isTrueSet } = require('../../utils/helpers');
 
@@ -110,7 +109,7 @@ const validateAboutFacility = ({
       }
     }
 
-    if (!coverEndDateIsBlank || !saveAndReturn) {
+    if (!(coverEndDateIsBlank && saveAndReturn)) {
       const coverEndDateErrRef = 'coverEndDate';
       const coverEndDateDisplayName = 'cover end date';
 
@@ -125,6 +124,8 @@ const validateAboutFacility = ({
       );
 
       if (coverEndDateFormattingError) {
+        coverEndDateValid = false;
+
         aboutFacilityErrors.push({
           errRef: coverEndDateErrRef,
           errMsg: coverEndDateFormattingError.message,
@@ -155,44 +156,8 @@ const validateAboutFacility = ({
     });
   }
 
-  if (coverEndDateIsFullyComplete) {
-    // schema which ensures that coverEndDate year only contains 4 numbers
-    const yearSchema = Joi.string().length(4).pattern(/^\d+$/).required();
-    const yearValidation = yearSchema.validate(coverEndDateYear);
-
-    // schema which ensures that coverEnd month and day is only numbers and of length 1 or 2
-    const coverDayMonthSchema = Joi.string().min(1).max(2).pattern(/^\d+$/);
-    const coverEndMonthValidation = coverDayMonthSchema.validate(coverEndDateMonth);
-    const coverEndDayValidation = coverDayMonthSchema.validate(coverEndDateDay);
-
-    // if coverEndDate day has validation error
-    if (coverEndDayValidation.error) {
-      coverEndDateValid = false;
-      aboutFacilityErrors.push({
-        errRef: 'coverEndDate',
-        errMsg: 'The day for the cover end date must include 1 or 2 numbers',
-      });
-    }
-    // if coverEndDate month has validation error
-    if (coverEndMonthValidation.error) {
-      coverEndDateValid = false;
-      aboutFacilityErrors.push({
-        errRef: 'coverEndDate',
-        errMsg: 'The month for the cover end date must include 1 or 2 numbers',
-      });
-    }
-    // if coverEndDate year has validation error
-    if (yearValidation.error) {
-      coverEndDateValid = false;
-      aboutFacilityErrors.push({
-        errRef: 'coverEndDate',
-        errMsg: 'The year for the cover end date must include 4 numbers',
-      });
-    }
-  }
-
-  if (coverStartDateIsFullyComplete && coverEndDateIsFullyComplete) {
-    if (coverEndDate < coverStartDate && coverEndDateValid) {
+  if (coverStartDateIsFullyComplete && coverEndDateValid) {
+    if (coverEndDate < coverStartDate) {
       aboutFacilityErrors.push({
         errRef: 'coverEndDate',
         errMsg: 'Cover end date cannot be before cover start date',
@@ -200,7 +165,7 @@ const validateAboutFacility = ({
     }
 
     // if coverEndDate is the same as the coverStartDate
-    if (isEqual(coverStartDate, coverEndDate) && coverEndDateValid) {
+    if (isEqual(coverStartDate, coverEndDate)) {
       aboutFacilityErrors.push({
         errRef: 'coverEndDate',
         errMsg: 'The cover end date must be after the cover start date',
