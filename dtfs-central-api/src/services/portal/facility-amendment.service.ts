@@ -69,7 +69,7 @@ export class PortalFacilityAmendmentService {
    * @param params.facilityId - The facility id
    * @param params.update - The update payload for the amendment.
    * @param params.auditDetails - The audit details for the update operation.
-   * @returns A promise that resolves when the update operation is complete.
+   * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithUkefId)>} A promise that resolves when the update operation is complete.
    */
   public static async updatePortalFacilityAmendment({
     amendmentId,
@@ -95,7 +95,7 @@ export class PortalFacilityAmendmentService {
     });
 
     const updatedAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(new ObjectId(facilityId), new ObjectId(amendmentId));
-    if (!updatedAmendment) {
+    if (!updatedAmendment || updatedAmendment.type !== AMENDMENT_TYPES.PORTAL) {
       throw new AmendmentNotFoundError(amendmentId, facilityId);
     }
 

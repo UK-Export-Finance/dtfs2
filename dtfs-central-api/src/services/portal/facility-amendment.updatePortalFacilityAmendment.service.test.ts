@@ -8,11 +8,13 @@ jest.mock('../../v1/controllers/user/get-user.controller', () => ({
 import { ObjectId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { PortalFacilityAmendmentService } from './facility-amendment.service';
 import { aPortalUser } from '../../../test-helpers';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 
 const mockUpdatePortalFacilityAmendmentByAmendmentId = jest.fn();
+const mockFindOneAmendmentByFacilityIdAndAmendmentId = jest.fn();
 
 const amendmentId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
@@ -21,6 +23,7 @@ const update = {
   isUsingFacilityEndDate: true,
   facilityEndDate: new Date(),
 };
+const updatedAmendment = { ...aPortalFacilityAmendment(), ...update };
 const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
 
 describe('PortalFacilityAmendmentService', () => {
@@ -32,9 +35,11 @@ describe('PortalFacilityAmendmentService', () => {
     jest.resetAllMocks();
 
     jest.spyOn(TfmFacilitiesRepo, 'updatePortalFacilityAmendmentByAmendmentId').mockImplementation(mockUpdatePortalFacilityAmendmentByAmendmentId);
+    jest.spyOn(TfmFacilitiesRepo, 'findOneAmendmentByFacilityIdAndAmendmentId').mockImplementation(mockFindOneAmendmentByFacilityIdAndAmendmentId);
 
     mockFindOneUser.mockResolvedValue(aPortalUser());
     mockUpdatePortalFacilityAmendmentByAmendmentId.mockResolvedValue({});
+    mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValue(updatedAmendment);
   });
 
   afterAll(() => {
@@ -42,7 +47,7 @@ describe('PortalFacilityAmendmentService', () => {
   });
 
   describe('updatePortalFacilityAmendment', () => {
-    it('should call TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId with correct params', async () => {
+    it('should call TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId with the correct params', async () => {
       // Act
       await PortalFacilityAmendmentService.updatePortalFacilityAmendment({
         amendmentId,
@@ -65,5 +70,32 @@ describe('PortalFacilityAmendmentService', () => {
         auditDetails,
       });
     });
+  });
+
+  it('should call TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId with the correct params', async () => {
+    // Act
+    await PortalFacilityAmendmentService.updatePortalFacilityAmendment({
+      amendmentId,
+      facilityId,
+      update,
+      auditDetails,
+    });
+
+    // Assert
+    expect(mockFindOneAmendmentByFacilityIdAndAmendmentId).toHaveBeenCalledTimes(1);
+    expect(mockFindOneAmendmentByFacilityIdAndAmendmentId).toHaveBeenCalledWith(new ObjectId(facilityId), new ObjectId(amendmentId));
+  });
+
+  it('should return the result of TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId', async () => {
+    // Act
+    const expected = await PortalFacilityAmendmentService.updatePortalFacilityAmendment({
+      amendmentId,
+      facilityId,
+      update,
+      auditDetails,
+    });
+
+    // Assert
+    expect(expected).toEqual(updatedAmendment);
   });
 });
