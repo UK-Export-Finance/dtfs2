@@ -490,6 +490,25 @@ const getFeeRecordCorrectionById = async (correctionId) => {
 };
 
 /**
+ * Gets fee record correction transient form data by correction id and user id.
+ * @param {number} correctionId - The ID of the correction
+ * @param {string} userId - The ID of the user
+ * @returns {Promise<import('./api-response-types').GetFeeRecordCorrectionTransientFormDataResponseBody>} response of API call
+ */
+const getFeeRecordCorrectionTransientFormData = async (correctionId, userId) => {
+  try {
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/fee-record-corrections/${correctionId}/transient-form-data/${userId}`, {
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get fee record correction transient form data with correction id %s and user id %s: %o', correctionId, userId, error);
+    throw error;
+  }
+};
+
+/**
  * Gets the portal facility amendment
  * @param {string} facilityId - id of the facility to amend
  * @param {string} amendmentId - id of the facility amendment
@@ -570,6 +589,7 @@ module.exports = {
   getNextReportPeriodByBankId,
   getUtilisationReportPendingCorrectionsByBankId,
   getFeeRecordCorrectionById,
+  getFeeRecordCorrectionTransientFormData,
   getPortalFacilityAmendment,
   putPortalFacilityAmendment,
 };
