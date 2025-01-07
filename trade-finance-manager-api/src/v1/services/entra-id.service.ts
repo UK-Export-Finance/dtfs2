@@ -68,7 +68,6 @@ export class EntraIdService {
       throw new Error('No auth code URL request found in session');
     }
 
-    // TODO -- This validates the user as well, lets consider renaming this
     const { entraIdUser } = await this.getEntraIdUserByAuthCode({
       authCodeResponse,
       originalAuthCodeUrlRequest,
