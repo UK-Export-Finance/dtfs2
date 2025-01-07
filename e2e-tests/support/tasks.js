@@ -8,6 +8,7 @@ const {
   AzureFileInfoEntity,
   FacilityUtilisationDataEntity,
   PaymentMatchingToleranceEntity,
+  FeeRecordCorrectionTransientFormDataEntity,
   FeeRecordCorrectionRequestTransientFormDataEntity,
   FeeRecordCorrectionEntity,
 } = require('@ukef/dtfs2-common');
@@ -190,6 +191,12 @@ module.exports = {
       await SqlDbDataSource.manager.delete(FeeRecordCorrectionRequestTransientFormDataEntity, {});
 
     /**
+     * Deletes all rows from the fee record request transient form data table
+     */
+    const removeAllFeeRecordCorrectionTransientFormDataFromDb = async () =>
+      await SqlDbDataSource.manager.delete(FeeRecordCorrectionTransientFormDataEntity, {});
+
+    /**
      * Deletes all data from the SQL database
      */
     const deleteAllFromSqlDb = async () =>
@@ -201,6 +208,7 @@ module.exports = {
         await SqlDbDataSource.manager.delete(FacilityUtilisationDataEntity, {}),
         await SqlDbDataSource.manager.delete(PaymentMatchingToleranceEntity, {}),
         await SqlDbDataSource.manager.delete(FeeRecordCorrectionRequestTransientFormDataEntity, {}),
+        await SqlDbDataSource.manager.delete(FeeRecordCorrectionTransientFormDataEntity, {}),
         await SqlDbDataSource.manager.delete(FeeRecordCorrectionEntity, {}),
       ]);
 
@@ -336,6 +344,7 @@ module.exports = {
       removeAllFeeRecordsFromDb,
       deleteAllFromSqlDb,
       removeAllFeeRecordCorrectionRequestTransientFormDataFromDb,
+      removeAllFeeRecordCorrectionTransientFormDataFromDb,
     };
   },
 };

@@ -1,15 +1,22 @@
 /**
  * @openapi
  * definitions:
- *   FeeRecordCorrectionRequestTransientFormData:
+ *   FeeRecordCorrectionTransientFormData:
  *     type: object
  *     properties:
- *       reasons:
- *         description: The fee record correction reasons
- *         type: array
- *         items:
- *           $ref: '#/definitions/FeeRecordCorrectionReason'
- *       additionalInfo:
- *         description: Additional record correction information
+ *       utilisation:
  *         type: string
+ *         nullable: true
+ *       reportedCurrency:
+ *         type: string
+ *         nullable: true
+ *       reportedFee:
+ *         type: string
+ *         nullable: true
+ *       facilityId:
+ *         type: string
+ *         nullable: true
+ *       additionalComments:
+ *         type: string
+ *         nullable: true
  */
