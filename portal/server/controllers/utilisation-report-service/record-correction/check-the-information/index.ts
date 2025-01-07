@@ -24,7 +24,7 @@ export const getRecordCorrectionInformation = (req: Request, res: Response) => {
     // const userId = user._id;
 
     // TODO: Remove stub after debug.
-    const { feeRecord, reasons, errorSummary, oldValues, newValues, bankCommentary }: GetFeeRecordCorrectionReviewResponseBody = {
+    const { correctionId, feeRecord, reasons, errorSummary, oldValues, newValues, bankCommentary }: GetFeeRecordCorrectionReviewResponseBody = {
       correctionId: 1,
       feeRecord: {
         exporter: 'Some exporter',
@@ -51,9 +51,12 @@ export const getRecordCorrectionInformation = (req: Request, res: Response) => {
     const formattedOldValues = formatCorrectedValues(oldValues, reasons);
     const formattedNewValues = formatCorrectedValues(newValues, reasons);
 
+    const backLinkHref = `/utilisation-reports/provide-correction/${correctionId}`;
+
     return renderCheckTheInformationPage(res, {
       user,
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
+      backLinkHref,
       feeRecord,
       formattedReasons: mapReasonsToDisplayValues(reasons).join(', '),
       errorSummary,

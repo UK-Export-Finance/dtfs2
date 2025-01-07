@@ -2,19 +2,15 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% extends "index.njk" %}
 
-{% set backLink = { "href": "/utilisation-reports/" + reportId + "/create-record-correction-request/" + feeRecordId } %}
-
 {% block pageTitle %}Check the information before submitting the record correction{% endblock %}
 
 {% block content %}
-  <div class="govuk-!-padding-top-7">
-      <h1 class="govuk-heading-l" data-cy="main-heading">Record correction</h1>
-      <h2 class="govuk-heading-m" data-cy="check-the-information-heading">
-        Check the information before submitting the record correction
-      </h2>
-  </div>
+  <h1 class="govuk-heading-l" data-cy="main-heading">Record correction</h1>
+  <h2 class="govuk-heading-m" data-cy="check-the-information-heading">
+    Check the information before submitting the record correction
+  </h2>
 
-  <div class="govuk-!-padding-top-7">
+  <div class="govuk-!-padding-top-2">
     <h3 class="govuk-heading-s" data-cy="original-values-heading">Original values</h3>
 
     {{ govukSummaryList({
@@ -50,8 +46,8 @@
     }) }}
   </div>
 
-  <div class="govuk-!-padding-top-7">
-    <h3 class="govuk-heading-s" data-cy="original-values-heading">Original values</h3>
+  <div class="govuk-!-padding-top-2">
+    <h3 class="govuk-heading-s" data-cy="record-correction-details-heading">Record correction details</h3>
 
     {{ govukSummaryList({
       rows: [
@@ -89,7 +85,7 @@
           actions: {
             items: [
               {
-                href: backLink.href,
+                href: backLinkHref,
                 text: "Change",
                 visuallyHiddenText: "new values for record correction",
                 attributes: {
@@ -109,7 +105,7 @@
           actions: {
             items: [
               {
-                href: backLink.href,
+                href: backLinkHref,
                 text: "Change",
                 visuallyHiddenText: "bank commentary for record correction",
                 attributes: {
@@ -126,7 +122,7 @@
     }) }}
   </div>
 
-  <div class="govuk-button-group">
+  <div class="govuk-button-group govuk-!-padding-top-6">
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
       {{ govukButton({
@@ -138,14 +134,17 @@
     </form>
 
     {# TODO: Add clear behaviour under a different ticket. Note that this will need changing to be an input with a formaction attribute. #}
-    {{ govukButton({
-      text: "Cancel record correction",
-      href: "/utilisation-report-upload",
-      class: "govuk-button govuk-button--secondary",
-      attributes: {
-        "data-cy":"cancel-button"
-      }
-    }) }}
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+      {{ govukButton({
+        text: "Cancel record correction",
+        classes: "govuk-button govuk-button--secondary",
+        href: "/utilisation-report-upload",
+        attributes: {
+          'data-cy': 'cancel-button'
+        }
+      }) }}
+    </form>
   </div>
 
 {% endblock %}
