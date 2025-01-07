@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
-import { PDC_TEAM_IDS } from '@ukef/dtfs2-common';
+import { PDC_TEAM_IDS, validateFeeRecordCorrectionFeatureFlagIsEnabled } from '@ukef/dtfs2-common';
 import { getUtilisationReports } from '../../controllers/utilisation-reports';
 import { updateUtilisationReportStatus } from '../../controllers/utilisation-reports/update-utilisation-report-status';
 import {
@@ -10,7 +10,6 @@ import {
   validatePostAddPaymentRequestBody,
   validateTfmPaymentReconciliationFeatureFlagIsNotEnabled,
   validatePostRemoveFeesFromPaymentRequestBody,
-  validateFeeRecordCorrectionFeatureFlagIsEnabled,
 } from '../../middleware';
 import { getReportDownload } from '../../controllers/utilisation-reports/report-download';
 import { getUtilisationReportReconciliationByReportId } from '../../controllers/utilisation-reports/utilisation-report-reconciliation-for-report';
