@@ -116,9 +116,9 @@ const validateAboutFacility = ({
 
       const { error: coverEndDateFormattingError } = applyStandardValidationAndParseDateInput(
         {
-          day: coverStartDateDay,
-          month: coverStartDateMonth,
-          year: coverStartDateYear,
+          day: coverEndDateDay,
+          month: coverEndDateMonth,
+          year: coverEndDateYear,
         },
         coverEndDateDisplayName,
         coverEndDateErrRef,
