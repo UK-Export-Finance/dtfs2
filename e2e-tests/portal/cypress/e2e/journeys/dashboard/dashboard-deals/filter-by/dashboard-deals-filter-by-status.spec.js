@@ -14,7 +14,7 @@ const filters = dashboardFilters;
 
 const EXPECTED_DEALS_LENGTH_BY_STATUS = {
   DRAFT: 2,
-  READY_FOR_CHECK: 1,
+  READY_FOR_APPROVAL: 1,
   ALL_STATUSES: 3,
 };
 
@@ -137,7 +137,7 @@ context('Dashboard Deals filters - filter by status', () => {
     });
 
     it('renders only Ready for Check deals', () => {
-      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH_BY_STATUS.READY_FOR_CHECK);
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH_BY_STATUS.READY_FOR_APPROVAL);
 
       cy.assertText(dashboardDeals.rowByIndex(0).status(), CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
     });

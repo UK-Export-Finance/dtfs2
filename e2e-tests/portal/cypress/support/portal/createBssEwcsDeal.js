@@ -1,5 +1,5 @@
 import { add } from 'date-fns';
-import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+import { DEAL_SUBMISSION_TYPE, FACILITY_STAGE } from '@ukef/dtfs2-common';
 
 const {
   dashboard,
@@ -17,7 +17,7 @@ const {
   contractAboutFinancial,
   eligibilityDocumentation,
 } = require('../../e2e/pages');
-const { submissionDetails } = require('../../fixtures/deal');
+const { bank, submissionDetails } = require('../../fixtures/deal');
 const MOCK_USERS = require('../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
@@ -44,8 +44,8 @@ const endDate = {
  * - Clicks the submit button to submit the form.
  */
 const fillBankDetails = () => {
-  cy.keyboardInput(bankDetails.bankDealId(), '123');
-  cy.keyboardInput(bankDetails.bankDealName(), 'BssDeal');
+  cy.keyboardInput(bankDetails.bankDealId(), bank.id);
+  cy.keyboardInput(bankDetails.bankDealName(), bank.name);
   cy.clickSubmitButton();
 };
 
@@ -66,21 +66,17 @@ const fillSupplierDetails = (exporterCompanyName) => {
     contractAboutSupplier.supplierCorrespondenceAddressSame().click();
     contractAboutSupplier.industrySector().select('Accommodation and food service activities');
     contractAboutSupplier.industryClass().select('Event catering activities');
-    contractAboutSupplier.smeTypeSmall().click();
-    cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'Supply Contract Description');
-    contractAboutSupplier.notLegallyDistinct().click();
-    contractAboutSupplier.nextPage().click();
   } else {
     contractAboutSupplier.supplierType().select(submissionDetails['supplier-type']);
     cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), '12345678');
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
     contractAboutSupplier.supplierAddress().country().select('United Kingdom');
     contractAboutSupplier.supplierCorrespondenceAddressSame().click();
-    contractAboutSupplier.smeTypeSmall().click();
-    cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'Supply Contract Description');
-    contractAboutSupplier.notLegallyDistinct().click();
-    contractAboutSupplier.nextPage().click();
   }
+  contractAboutSupplier.smeTypeSmall().click();
+  cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'Supply Contract Description');
+  contractAboutSupplier.notLegallyDistinct().click();
+  contractAboutSupplier.nextPage().click();
 };
 
 /**
@@ -111,7 +107,7 @@ const fillBuyerDetails = () => {
 /**
  * Fills in the financial details for a contract.
  *
- * This function inputs the supply contract value, selects the currency as GBP,
+ * This function sets the supply contract value to 12000, selects the currency as GBP,
  * and then saves the details and navigates back.
  */
 const fillFinancialDetails = () => {
@@ -123,7 +119,7 @@ const fillFinancialDetails = () => {
 /**
  * Fills out the eligibility criteria for a deal submission.
  *
- * @param {string} dealSubmissionType - The type of deal submission.
+ * @param {import('@ukef/dtfs2-common').DealSubmissionType} dealSubmissionType - The type of deal submission.
  * It can be one of the values from DEAL_SUBMISSION_TYPE.
  *
  * @example
@@ -234,14 +230,15 @@ const fillBondFeeDetails = () => {
  * depending on whether the bond is 'Unissued' or 'Issued'. It also fills in
  * the bond's financial and fee details.
  *
- * @param {string} facilityStage - The stage of the facility, either 'Unissued' or 'Issued'.
+ *  @param {typeof FACILITY_STAGE.ISSUED | typeof FACILITY_STAGE.UNISSUED} facilityStage - The stage of the facility, either 'Unissued' or 'Issued'.
+
  */
 const addBondDetails = (facilityStage) => {
   cy.clickAddBondButton();
 
-  if (facilityStage === 'Unissued') {
+  if (facilityStage === FACILITY_STAGE.UNISSUED) {
     fillUnissuedBondDetails();
-  } else if (facilityStage === 'Issued') {
+  } else if (facilityStage === FACILITY_STAGE.ISSUED) {
     fillIssuedBondDetails();
   }
 
@@ -269,8 +266,8 @@ const proceedToReviewAndApproval = () => {
  * Fills out the deal details form with the provided information.
  *
  * @param {Object} params - The parameters for filling out the deal details.
- * @param {string} params.dealSubmissionType - The type of deal submission.
- * @param {string} params.facilityStage - The stage of the facility.
+ * @param {string} params.dealSubmissionType - The type of DealSubmissionType from ukef common.
+ * @param {typeof FACILITY_STAGE.ISSUED | typeof FACILITY_STAGE.UNISSUED} - The stage of the facility.
  * @param {string} params.exporterCompanyName - The name of the exporter company.
  */
 const fillOutDealDetails = ({ dealSubmissionType, facilityStage, exporterCompanyName }) => {
@@ -286,10 +283,14 @@ const fillOutDealDetails = ({ dealSubmissionType, facilityStage, exporterCompany
 };
 
 /**
- * Create a BSS/EWCS deal via the UI.
- * * @param {Object} createBssEwcsDealParams
- * @param {Boolean} createBssEwcsDealParams.readyForCheck - Conditionally complete all "maker" required forms
- * * @param {import('@ukef/dtfs2-common').DealType} createBssEwcsDealParams.dealType -
+ * Creates a BSS/EWCS deal via the UI.
+ * @param {Object} createBssEwcsDealParams
+ * @param {Object} [options] - The options for creating the deal.
+ * @param {boolean} [options.fillOutAllFields=false] - Whether to fill out all fields in the deal form.
+ * @param {string} [options.dealSubmissionType] - The type of deal submission.
+ * @param {string} [options.facilityStage] - The stage of the facility.
+ * @param {string} [options.exporterCompanyName] - The name of the exporter company.
+ * @param {import('@ukef/dtfs2-common').DealType} createBssEwcsDealParams.dealType -
  */
 const createBssEwcsDeal = ({ fillOutAllFields = false, dealSubmissionType, facilityStage, exporterCompanyName } = {}) => {
   cy.login(BANK1_MAKER1);

@@ -6,8 +6,8 @@ const CONSTANTS = require('./constants');
 const deal = {
   submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
   updatedAt: Date.now(),
-  bankInternalRefName: '123',
-  additionalRefName: 'BssDeal',
+  bankInternalRefName: '9',
+  additionalRefName: 'UKEF test bank (Delegated)',
   status: CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
   previousStatus: CONSTANTS.DEALS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   bank: {

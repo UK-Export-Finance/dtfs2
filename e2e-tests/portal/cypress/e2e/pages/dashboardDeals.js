@@ -24,7 +24,6 @@ const page = {
     product: () => cy.get(`[data-cy*="deal__product--index--${index + 1}"]`),
     type: () => cy.get(`[data-cy*="deal__submissionType--index--${index + 1}"]`),
     status: () => cy.get(`[data-cy*="deal__status--index--${index + 1}"]`),
-    updated: (dealId) => cy.get(`[data-cy*="deal__updated--${dealId}"]`),
   }),
   paginationNav: () => cy.get('[data-cy="pagination"] nav'),
   first: () => cy.get('[data-cy="First"]'),

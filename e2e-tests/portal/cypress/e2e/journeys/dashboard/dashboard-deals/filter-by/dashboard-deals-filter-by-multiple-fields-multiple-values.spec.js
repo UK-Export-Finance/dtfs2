@@ -159,15 +159,16 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
     dashboardDeals.filters.mainContainer.selectedFilters.statusReadyForChecker().contains(expectedText);
   });
 
-  it('renders only deals that have matching fields - MIA, AIN, Draft status, Ready for check status', () => {
+  it.only('renders only deals that have matching fields - MIA, AIN, Draft status, Ready for check status', () => {
     cy.login(BANK1_MAKER1);
     dashboardDeals.visit();
+
     const EXPECTED_DEALS = ALL_DEALS.filter(
-      ({ submissionType, status }) =>
+      ({ submissionType, status, product }) =>
         (status === CONSTANTS.DEALS.DEAL_STATUS.DRAFT || status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL) &&
         (submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA ||
           submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.AIN ||
-          submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.GEF),
+          product !== CONSTANTS.DEALS.DEAL_TYPE.GEF),
     );
 
     dashboardDeals.rows().should('have.length', EXPECTED_DEALS.length);

@@ -1,4 +1,5 @@
-import { DEAL_SUBMISSION_TYPE, FACILITY_STAGE } from '@ukef/dtfs2-common';
+const { DEAL_SUBMISSION_TYPE, FACILITY_STAGE } = require('@ukef/dtfs2-common');
+const relative = require('../../../relativeURL');
 
 const { contract, contractReturnToMaker, contractComments } = require('../../../pages');
 const { successMessage } = require('../../../partials');
@@ -7,6 +8,7 @@ const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { ADMIN, BANK1_CHECKER1, BANK1_MAKER1 } = MOCK_USERS;
 
 context('A checker selects to return a deal to maker from the view-contract page', () => {
+  let dealId;
   before(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal({ fillOutAllFields: true, dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
@@ -21,7 +23,15 @@ context('A checker selects to return a deal to maker from the view-contract page
     contractReturnToMaker.cancel().click();
 
     // check we've gone to the right page
-    cy.url().should('include', '/contract');
+    cy.getDealIdFromUrl(dealId).then((id) => {
+      dealId = id;
+      cy.url().then((url) => {
+        dealId = url.split('/').pop();
+        cy.log('dealId', dealId);
+        expect(dealId).to.be.a('string');
+        cy.url().should('eq', relative(`/contract/${dealId}`));
+      });
+    });
   });
 
   it('The Return to Maker button generates an error if no comment has been entered.', () => {
@@ -34,7 +44,12 @@ context('A checker selects to return a deal to maker from the view-contract page
     cy.clickReturnToMakerButton();
 
     // expect to stay on the abandon page, and see an error
-    cy.url().should('match', /\/contract\/[a-f\d]{24}\/return-to-maker/);
+    cy.url().then((url) => {
+      dealId = url.split('/')[4];
+      expect(dealId).to.be.a('string');
+      cy.log('dealId', dealId);
+      cy.url().should('eq', relative(`/contract/${dealId}/return-to-maker`));
+    });
 
     contractReturnToMaker.expectError('Comment is required when returning a deal to maker.');
   });

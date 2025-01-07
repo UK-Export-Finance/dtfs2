@@ -73,19 +73,18 @@ context('View dashboard deals as a maker', () => {
     // first deal should be the most recently updated (with our test data - GEF)
     //---------------------------------------------------------------
 
-    cy.assertText(dashboardDeals.rowByIndex(0).exporter(), GEF_DEAL_BANK_2_MAKER_2.exporter.companyName);
+    cy.assertText(dashboardDeals.rowByIndex(2).exporter(), GEF_DEAL_BANK_2_MAKER_2.exporter.companyName);
 
     // cy.assertText(bankRef(), gefDeal.bankInternalRefName);
     cy.assertText(dashboardDeals.rowByIndex(2).bankRef(), GEF_DEAL_BANK_2_MAKER_2.bankInternalRefName);
 
-    cy.assertText(dashboardDeals.rowByIndex(0).product(), CONSTANTS.DEALS.DEAL_TYPE.GEF);
+    cy.assertText(dashboardDeals.rowByIndex(2).product(), CONSTANTS.DEALS.DEAL_TYPE.GEF);
 
-    cy.assertText(dashboardDeals.rowByIndex(1).type(), 'Automatic Inclusion Notice');
+    cy.assertText(dashboardDeals.rowByIndex(2).type(), '-');
 
-    cy.assertText(dashboardDeals.rowByIndex(0).status(), gefDeal.status);
+    cy.assertText(dashboardDeals.rowByIndex(2).status(), gefDeal.status);
 
-    dashboardDeals
-      .rowByIndex()
+    dashboardDeals.row
       .updated(gefDealId)
       .should('exist')
       .invoke('text')
@@ -96,7 +95,7 @@ context('View dashboard deals as a maker', () => {
     //---------------------------------------------------------------
     // second deal (BSS)
     //---------------------------------------------------------------
-    cy.assertText(dashboardDeals.rowByIndex(0).exporter(), bssDeal.exporter.companyName);
+    cy.assertText(dashboardDeals.rowByIndex(1).exporter(), bssDeal.exporter.companyName);
 
     cy.assertText(dashboardDeals.rowByIndex(1).bankRef(), bssDeal.bankInternalRefName);
 
@@ -104,10 +103,9 @@ context('View dashboard deals as a maker', () => {
 
     cy.assertText(dashboardDeals.rowByIndex(1).type(), bssDeal.submissionType);
 
-    cy.assertText(dashboardDeals.rowByIndex(0).status(), bssDeal.status);
+    cy.assertText(dashboardDeals.rowByIndex(1).status(), bssDeal.status);
 
-    dashboardDeals
-      .rowByIndex()
+    dashboardDeals.row
       .updated(bssDealId)
       .invoke('text')
       .then((text) => {
