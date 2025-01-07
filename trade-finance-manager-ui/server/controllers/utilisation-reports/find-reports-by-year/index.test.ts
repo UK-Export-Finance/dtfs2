@@ -97,6 +97,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
       user: MOCK_TFM_SESSION_USER,
     };
     const originalUrl = '/utilisation-reports/find-reports-by-year?';
+    const formattedReportPeriod = `January ${new Date().getFullYear()}`;
 
     it("renders the 'problem-with-service' page when the bank query is provided but is not a string", async () => {
       // Arrange
@@ -341,7 +342,7 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
         dateUploaded: '2024-02-15 10:38:01.4033333',
         totalFeesReported: 3,
         reportedFeesLeftToReconcile: 3,
-        formattedReportPeriod: 'January 2024',
+        formattedReportPeriod,
         displayStatus: 'Pending reconciliation',
         formattedDateUploaded: '15 Feb 2024',
       };
