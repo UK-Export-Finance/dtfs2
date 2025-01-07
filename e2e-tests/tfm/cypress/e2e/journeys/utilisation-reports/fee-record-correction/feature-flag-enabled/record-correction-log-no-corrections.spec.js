@@ -5,9 +5,9 @@ import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 const { utilisationReportPage } = pages;
-const { recordCorrectionHistoryTab } = utilisationReportPage;
+const { recordCorrectionLogTab } = utilisationReportPage;
 
-context('Record correction history page - no corrections', () => {
+context('record correction log page - no corrections', () => {
   const bankId = '961';
   const reportId = 1;
 
@@ -35,31 +35,30 @@ context('Record correction history page - no corrections', () => {
     cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${reportId}`);
-    utilisationReportPage.recordCorrectionHistoryTabLink().click();
+    utilisationReportPage.recordCorrectionLogTabLink().click();
   });
 
   describe('when navigating to the page', () => {
     it('should display the tab heading and text', () => {
-      cy.assertText(recordCorrectionHistoryTab.heading(), 'Record correction history');
+      cy.assertText(recordCorrectionLogTab.heading(), 'Record correction log');
 
-      cy.assertText(utilisationReportPage.recordCorrectionHistoryTabLink(), 'Record correction history');
+      cy.assertText(utilisationReportPage.recordCorrectionLogTabLink(), 'Record correction log');
+
+      cy.assertText(utilisationReportPage.recordCorrectionLogTab.viewHistoricRecordCorrectionText(), 'View record correction requests that have been made.');
 
       cy.assertText(
-        recordCorrectionHistoryTab.recordCorrectionAutomaticallyNotifiedText(),
+        recordCorrectionLogTab.recordCorrectionAutomaticallyNotifiedText(),
         'You will be automatically notified via email when the record correction comes through from the bank.',
       );
     });
 
     describe('when no record corrections are present', () => {
-      it('should display the "no record corrections" text', () => {
-        recordCorrectionHistoryTab.viewHistoricRecordCorrectionText().should('not.to.exist');
+      it('should NOT display the record correction log table', () => {
+        recordCorrectionLogTab.viewHistoricRecordCorrectionText().should('be.visible');
 
-        recordCorrectionHistoryTab.noRecordCorrectionsText().should('be.visible');
+        recordCorrectionLogTab.recordCorrectionAutomaticallyNotifiedText().should('be.visible');
 
-        cy.assertText(
-          recordCorrectionHistoryTab.noRecordCorrectionsText(),
-          'When a request for a record correction is made and submitted, it will appear here.',
-        );
+        utilisationReportPage.recordCorrectionLogTab.recordCorrectionLogTable().should('not.exist');
       });
     });
   });
