@@ -1,0 +1,11 @@
+export const PORTAL_AMENDMENT_PAGES = {
+  WHAT_DO_YOU_NEED_TO_CHANGE: 'what-do-you-need-to-change',
+  COVER_END_DATE: 'cover-end-date',
+  DO_YOU_HAVE_A_FACILITY_END_DATE: 'do-you-have-a-facility-end-date',
+  FACILITY_END_DATE: 'facility-end-date',
+  BANK_REVIEW_DATE: 'bank-review-date',
+  FACILITY_VALUE: 'facility-value',
+  ELIGIBILITY: 'eligibility',
+  EFFECTIVE_DATE: 'effective-date',
+  CHECK_YOUR_ANSWERS: 'check-your-answers',
+} as const;

@@ -85,6 +85,7 @@
     "@types/express-session": "^1.18.1",
     "@types/jest": "^29.5.14",
     "@types/morgan": "^1.9.9",
+    "@types/multer": "^1.4.12",
     "axios-mock-adapter": "^2.1.0",
     "babel-jest": "29.5.0",
     "babel-loader": "9.1.2",
