@@ -13,6 +13,9 @@ import { getUserById } from '../../../../../../repositories/users-repo';
 import { mapFeeRecordsToPendingCorrections } from './map-fee-records-to-pending-corrections';
 import { getNextDueReportPeriod } from './get-next-due-report-period';
 
+jest.mock('../../../../../../repositories/users-repo');
+jest.mock('../../../../../../repositories/utilisation-reports-repo');
+
 describe('get-utilisation-report-pending-corrections.controller helpers', () => {
   describe('mapReportToPendingCorrectionsResponseBody', () => {
     let report: UtilisationReportEntity;

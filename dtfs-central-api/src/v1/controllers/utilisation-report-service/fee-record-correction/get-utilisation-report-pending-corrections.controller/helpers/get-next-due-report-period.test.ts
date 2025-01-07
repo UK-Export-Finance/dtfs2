@@ -3,6 +3,8 @@ import { UtilisationReportRepo } from '../../../../../../repositories/utilisatio
 import { aBank } from '../../../../../../../test-helpers';
 import { getNextDueReportPeriod } from './get-next-due-report-period';
 
+jest.mock('../../../../../../repositories/utilisation-reports-repo');
+
 describe('get-next-due-report-period', () => {
   describe('getNextDueReportPeriod', () => {
     const bank = aBank();
