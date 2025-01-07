@@ -1039,7 +1039,7 @@ utilisationReportsRouter
  *             schema:
  *               oneOf:
  *                 - type: object
- *                   $ref: '#/definitions/FeeRecordCorrectionTransientFormDataResponse'
+ *                   $ref: '#/definitions/FeeRecordCorrectionTransientFormData'
  *                 - type: object
  *                   properties: {}
  *       400:
