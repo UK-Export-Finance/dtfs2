@@ -11,7 +11,7 @@ import {
 } from '@ukef/dtfs2-common';
 import { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } from '../../../../../../../e2e-fixtures';
 import relative from '../../../../relativeURL';
-import { provideCorrection } from '../../../../pages';
+import { provideCorrection, pendingCorrections } from '../../../../pages';
 import { correctionRequestDetails } from '../../../../partials';
 
 context('Provide correction - Fee record correction feature flag enabled', () => {
@@ -74,9 +74,9 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
       context('and when a user has initiated the "provide correction" journey', () => {
         beforeEach(() => {
           cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
+          cy.visit(relative(`/utilisation-report-upload`));
 
-          // TODO FN-3688: Update this to navigate through from the pending corrections list - dependent on #4086 being merged.
-          cy.visit(relative(`/utilisation-reports/provide-correction/${pendingCorrectionDetails.id}`));
+          pendingCorrections.row(1).correctionLink().click();
         });
 
         it('should be able to view the record correction request summary on the "provide correction" screen', () => {
