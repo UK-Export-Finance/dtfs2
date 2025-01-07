@@ -849,6 +849,16 @@ const getUkefDecisionReport = async (token, payload) => {
   }
 };
 
+/**
+ * Uploads the utilisation report data
+ * @param {import('@ukef/dtfs2-common').PortalSessionUser} uploadingUser - The user uploading the report
+ * @param {import('@ukef/dtfs2-common').ReportPeriod} reportPeriod - The report period
+ * @param {Record<string, string | null>[]} csvData
+ * @param {Buffer} csvFileBuffer
+ * @param {string} formattedReportPeriod - The formatted report period
+ * @param {string} token - The user token
+ * @returns {Promise<import('axios').AxiosResponse>} The response from the API
+ */
 const uploadUtilisationReportData = async (uploadingUser, reportPeriod, csvData, csvFileBuffer, formattedReportPeriod, token) => {
   try {
     const formData = new FormData();
@@ -962,12 +972,38 @@ const getDueReportPeriodsByBankId = async (token, bankId) => {
   return response.data;
 };
 
+/**
+ * Gets the next report period for the bank with the specified id
+ * @param {string} token - The user token
+ * @param {strong} bankId - The bank id
+ * @returns {Promise<import('@ukef/dtfs2-common').ReportPeriod} The next report period
+ */
 const getNextReportPeriodByBankId = async (token, bankId) => {
   if (!isValidBankId(bankId)) {
     throw new Error(`Getting next report period failed for id ${bankId}`);
   }
 
   const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/next-report-period`, {
+    headers: {
+      Authorization: token,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+    },
+  });
+  return response.data;
+};
+
+/**
+ * Gets all pending corrections for earliest report with corrections for the supplied bank
+ * @param {string} token - The user token
+ * @param {string} bankId - The bank id
+ * @returns {Promise<import('./api-response-types').UtilisationReportPendingCorrectionsResponseBody>} The pending corrections
+ */
+const getUtilisationReportPendingCorrectionsByBankId = async (token, bankId) => {
+  if (!isValidBankId(bankId)) {
+    throw new Error(`Getting next report period failed for id ${bankId}`);
+  }
+
+  const response = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-reports/pending-corrections`, {
     headers: {
       Authorization: token,
       [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
@@ -1068,5 +1104,6 @@ module.exports = {
   getDueReportPeriodsByBankId,
   getNextReportPeriodByBankId,
   getUkBankHolidays,
+  getUtilisationReportPendingCorrectionsByBankId,
   getFeeRecordCorrection,
 };

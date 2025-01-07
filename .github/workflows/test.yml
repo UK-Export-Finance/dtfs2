@@ -500,6 +500,7 @@ jobs:
             'reports/**/*.spec.js',
             'payment-report-officer/utilisation-report-upload/**/*.spec.js',
             'payment-report-officer/previous-reports/**/*.spec.js',
+            'payment-report-officer/record-corrections/feature-flag-disabled/**/*.spec.js',
           ]
 
     concurrency:

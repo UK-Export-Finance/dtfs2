@@ -8,6 +8,9 @@ const createBankController = require('../controllers/bank/create-bank.controller
 const getNextReportPeriodController = require('../controllers/bank/get-next-report-period-by-bank.controller');
 const { getUtilisationReportsByBankIdAndOptions } = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
 const {
+  getUtilisationReportPendingCorrectionsByBankId,
+} = require('../controllers/utilisation-report-service/fee-record-correction/get-utilisation-report-pending-corrections.controller');
+const {
   getUtilisationReportSummariesByBankIdAndYear,
 } = require('../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller');
 
@@ -200,5 +203,31 @@ bankRouter
 bankRouter
   .route('/:bankId/utilisation-reports/reconciliation-summary-by-year/:year')
   .get(validation.bankIdValidation, validation.yearValidation('year'), handleExpressValidatorResult, getUtilisationReportSummariesByBankIdAndYear);
+
+/**
+ * @openapi
+ * /bank/:bankId/utilisation-reports/pending-corrections:
+ *   get:
+ *     summary: Pending corrections for the oldest utilisation report with pending corrections
+ *     tags: [Utilisation Report]
+ *     description: Pending corrections for the oldest utilisation report with pending corrections
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/UtilisationReportPendingCorrections'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal Server Error
+ */
+bankRouter
+  .route('/:bankId/utilisation-reports/pending-corrections')
+  .get(validation.bankIdValidation, handleExpressValidatorResult, getUtilisationReportPendingCorrectionsByBankId);
 
 module.exports = bankRouter;

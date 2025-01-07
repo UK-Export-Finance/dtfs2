@@ -452,6 +452,26 @@ const getNextReportPeriodByBankId = async (bankId) => {
 };
 
 /**
+ * Call the central API to get the pending corrections for a bank's utilisation reports if there are any
+ * @param {string} bankId
+ * @returns {Promise<import('./api-response-types').UtilisationReportPendingCorrectionsResponseBody | string>} response of API call or wrapped error response
+ */
+const getUtilisationReportPendingCorrectionsByBankId = async (bankId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports/pending-corrections`,
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get pending corrections: %o', error);
+    throw error;
+  }
+};
+
+/**
  * Gets fee record correction by id.
  * @param {number} correctionId - The ID of the correction
  * @returns {Promise<import('./api-response-types').GetFeeRecordCorrectionResponseBody>} response of API call or wrapped error response
@@ -548,6 +568,7 @@ module.exports = {
   getBankById,
   getAllBanks,
   getNextReportPeriodByBankId,
+  getUtilisationReportPendingCorrectionsByBankId,
   getFeeRecordCorrectionById,
   getPortalFacilityAmendment,
   putPortalFacilityAmendment,
