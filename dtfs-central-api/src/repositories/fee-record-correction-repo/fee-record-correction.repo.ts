@@ -19,4 +19,14 @@ export const FeeRecordCorrectionRepo = SqlDbDataSource.getRepository(FeeRecordCo
       relations: { feeRecord: { report: true } },
     });
   },
+
+  /**
+   * Finds one fee record correction with the given id and bank id.
+   * @param correctionId - The id of the correction.
+   * @param bankId - The id of the bank.
+   * @returns The found fee record correction, else null.
+   */
+  async findByIdAndBankId(correctionId: number, bankId: string): Promise<FeeRecordCorrectionEntity | null> {
+    return await this.findOneBy({ id: correctionId, feeRecord: { report: { bankId } } });
+  },
 });

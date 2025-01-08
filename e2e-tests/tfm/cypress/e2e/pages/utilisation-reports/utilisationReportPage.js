@@ -6,7 +6,7 @@ const utilisationReportPage = {
   paymentDetailsTabLink: () => cy.get('a[data-cy="bank-report-tab-payment-details"]'),
   premiumPaymentsTabLink: () => cy.get('a[data-cy="bank-report-tab-premium-payments"]'),
   utilisationTabLink: () => cy.get('a[data-cy="bank-report-tab-utilisation"]'),
-  recordCorrectionHistoryTabLink: () => cy.get('a[data-cy="bank-report-tab-record-correction-history"]'),
+  recordCorrectionLogTabLink: () => cy.get('a[data-cy="bank-report-tab-record-correction-log"]'),
   premiumPaymentsTab: {
     matchSuccessNotificationHeading: () => cy.get('[data-cy="match-success-notification-heading"]'),
     matchSuccessNotificationMessage: () => cy.get('[data-cy="match-success-notification-message"]'),
@@ -19,6 +19,10 @@ const utilisationReportPage = {
     generateKeyingDataButton: () => cy.get('[data-cy="generate-keying-data-button"]'),
     addAPaymentButton: () => cy.get('[data-cy="add-a-payment-button"]'),
     createRecordCorrectionRequestButton: () => cy.get('[data-cy="create-record-correction-request-button"]'),
+    createRecordCorrectionRequestText: () => cy.get('[data-cy="how-to-create-record-correction-request-text"]'),
+    receivedPaymentsText: () => cy.get('[data-cy="received-payments-text"]'),
+    howToAddPaymentsText: () => cy.get('[data-cy="how-to-add-payments-text"]'),
+    howToGenerateKeyingDataText: () => cy.get('[data-cy="how-to-generate-keying-data-text"]'),
     premiumPaymentsTable: {
       error: () => cy.get('[data-cy="premium-payments-table--error"]'),
       header: {
@@ -137,11 +141,28 @@ const utilisationReportPage = {
       exposureHeader: () => cy.get('[data-cy="exposure-header"]'),
     },
   },
-  recordCorrectionHistoryTab: {
-    heading: () => cy.get('[data-cy="record-correction-history-heading"]'),
+  recordCorrectionLogTab: {
+    heading: () => cy.get('[data-cy="record-correction-log-heading"]'),
     viewHistoricRecordCorrectionText: () => cy.get('[data-cy="view-historic-record-corrections-text"]'),
     recordCorrectionAutomaticallyNotifiedText: () => cy.get('[data-cy="record-correction-automatic-notification-text"]'),
     noRecordCorrectionsText: () => cy.get('[data-cy="no-record-corrections-text"]'),
+    recordCorrectionLogTable: () => cy.get('[data-cy="record-correction-log-table"]'),
+    table: {
+      facilityIdHeader: () => cy.get('[data-cy="record-correction-log-table-facility-id-header"]'),
+      exporterHeader: () => cy.get('[data-cy="record-correction-log-table-exporter-header"]'),
+      reasonsHeader: () => cy.get('[data-cy="record-correction-log-table-reasons-header"]'),
+      dateSentHeader: () => cy.get('[data-cy="record-correction-log-table-date-sent-header"]'),
+      requestedByHeader: () => cy.get('[data-cy="record-correction-log-table-requested-by-header"]'),
+      statusHeader: () => cy.get('[data-cy="record-correction-log-table-status-header"]'),
+      row: (feeRecordId) => ({
+        facilityId: () => cy.get(`[data-cy="record-correction-log-table-row-${feeRecordId}-facility-id"]`),
+        exporter: () => cy.get(`[data-cy="record-correction-log-table-row-${feeRecordId}-exporter"]`),
+        reasons: () => cy.get(`[data-cy="record-correction-log-table-row-${feeRecordId}-reasons"]`),
+        dateSent: () => cy.get(`[data-cy="record-correction-log-table-row-${feeRecordId}-date-sent"]`),
+        requestedBy: () => cy.get(`[data-cy="record-correction-log-table-row-${feeRecordId}-requested-by"]`),
+        status: () => cy.get(`[data-cy="record-correction-log-table-row-${feeRecordId}-status"]`),
+      }),
+    },
   },
 };
 
