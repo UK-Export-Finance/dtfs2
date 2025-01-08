@@ -39,6 +39,7 @@ const { getFeeRecord } = require('../controllers/utilisation-report-service/get-
 const {
   getFeeRecordCorrectionRequestReview,
 } = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction-request-review.controller');
+const { getFeeRecordCorrectionReview } = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction-review.controller');
 const {
   putFeeRecordCorrectionRequestTransientFormData,
 } = require('../controllers/utilisation-report-service/fee-record-correction/put-fee-record-correction-request-transient-form-data.controller');
@@ -1053,5 +1054,11 @@ utilisationReportsRouter
   .route('/:reportId/fee-records/:feeRecordId/correction-request-review/:userId')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), validation.mongoIdValidation('userId'), handleExpressValidatorResult)
   .get(getFeeRecordCorrectionRequestReview);
+
+// TODO: Add swagger docs.
+utilisationReportsRouter
+  .route('/fee-record-correction-review/:correctionId/user/:userId')
+  .all(validation.sqlIdValidation('correctionId'), validation.mongoIdValidation('userId'), handleExpressValidatorResult)
+  .get(getFeeRecordCorrectionReview);
 
 module.exports = utilisationReportsRouter;

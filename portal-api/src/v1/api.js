@@ -536,7 +536,7 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
  */
 const getFeeRecordCorrectionReview = async (correctionId, userId) => {
   try {
-    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/fee-record-correction-review/${correctionId}/user/${userId}`, {
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/fee-record-correction-review/${correctionId}/user/${userId}`, {
       headers: headers.central,
     });
 
