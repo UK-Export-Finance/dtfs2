@@ -1,4 +1,6 @@
 /* eslint-disable import/first */
+import { AMENDMENT_TYPES } from '@ukef/dtfs2-common';
+
 const mockFindOneUser = jest.fn();
 
 jest.mock('../../v1/controllers/user/get-user.controller', () => ({
@@ -97,5 +99,37 @@ describe('PortalFacilityAmendmentService', () => {
 
     // Assert
     expect(expected).toEqual(updatedAmendment);
+  });
+
+  it('should throw an error if no amendment is found when calling TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId', async () => {
+    // Arrange
+    mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce(null);
+
+    // Act
+    const returned = PortalFacilityAmendmentService.updatePortalFacilityAmendment({
+      amendmentId,
+      facilityId,
+      update,
+      auditDetails,
+    });
+
+    // Assert
+    await expect(returned).rejects.toThrow(new Error('Could not find amendment to return'));
+  });
+
+  it(`should throw an error if an amendment without a ${AMENDMENT_TYPES.PORTAL} amendment type is returned from TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId`, async () => {
+    // Arrange
+    mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce({ ...updatedAmendment, type: AMENDMENT_TYPES.TFM });
+
+    // Act
+    const returned = PortalFacilityAmendmentService.updatePortalFacilityAmendment({
+      amendmentId,
+      facilityId,
+      update,
+      auditDetails,
+    });
+
+    // Assert
+    await expect(returned).rejects.toThrow(new Error('Could not find amendment to return'));
   });
 });
