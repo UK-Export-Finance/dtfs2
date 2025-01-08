@@ -984,7 +984,7 @@ jobs:
       - name: Docker
         uses: ./.github/actions/rerun
         with:
-          command: docker compose down && docker compose up --build -d
+          command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Initialise
