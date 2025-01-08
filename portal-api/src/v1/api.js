@@ -528,6 +528,25 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
   }
 };
 
+/**
+ * Gets fee record correction review information by correction id and user id.
+ * @param {number} correctionId - The ID of the correction
+ * @param {string} userId - The ID of the user
+ * @returns {Promise<import('@ukef/dtfs2-common').FeeRecordCorrectionReviewInformation>} response of API call or wrapped error response
+ */
+const getFeeRecordCorrectionReview = async (correctionId, userId) => {
+  try {
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/fee-record-correction-review/${correctionId}/user/${userId}`, {
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get fee record correction review (correction id: %s, user id: %s): %o', correctionId, userId, error);
+    throw error;
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -551,4 +570,5 @@ module.exports = {
   getFeeRecordCorrectionById,
   getPortalFacilityAmendment,
   putPortalFacilityAmendment,
+  getFeeRecordCorrectionReview,
 };
