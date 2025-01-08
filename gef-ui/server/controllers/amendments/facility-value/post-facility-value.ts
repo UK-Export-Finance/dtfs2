@@ -7,6 +7,7 @@ import { getCurrencySymbol } from './getCurrencySymbol';
 import { getNextPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { validateFacilityValue } from './validation';
+import { validationErrorHandler } from '../../../utils/helpers';
 
 export type PostFacilityValueRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -35,16 +36,18 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
       return res.redirect('/not-found');
     }
 
-    const validationErrors = validateFacilityValue(facilityValue);
+    const validationError = validateFacilityValue(facilityValue);
 
-    if (validationErrors) {
+    if (validationError) {
       const currencySymbol = getCurrencySymbol(facility.currency?.id ?? CURRENCY.GBP);
 
       const viewModel: FacilityValueViewModel = {
+        facilityValue,
         exporterName: deal.exporter.companyName,
         cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
         previousPage,
         currencySymbol,
+        errors: validationErrorHandler(validationError),
       };
 
       return res.render('partials/amendments/facility-value.njk', viewModel);
