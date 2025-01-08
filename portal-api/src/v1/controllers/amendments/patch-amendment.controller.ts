@@ -24,12 +24,14 @@ export const patchAmendment = async (req: PatchAmendmentRequest, res: Response) 
   const { facilityId, amendmentId } = req.params;
   const { update } = req.body;
 
+  const auditDetails = generatePortalAuditDetails(req.user._id);
+
   try {
     const updatedAmendment = await api.patchPortalFacilityAmendment({
       facilityId,
       amendmentId,
       update,
-      auditDetails: generatePortalAuditDetails(req.user._id),
+      auditDetails,
     });
 
     return res.status(HttpStatusCode.Ok).send(updatedAmendment);
