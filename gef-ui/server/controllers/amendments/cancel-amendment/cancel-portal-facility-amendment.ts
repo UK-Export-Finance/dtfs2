@@ -83,6 +83,13 @@ export const postCancelPortalFacilityAmendment = async (req: PostCancelPortalFac
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      console.error('Amendment %s not found on facility %s', amendmentId, facilityId);
+      return res.redirect('/not-found');
+    }
+
     if (req.query.return) {
       return res.redirect(getPreviousPageUrl(req.body.previousPage, dealId, facilityId, amendmentId));
     }
