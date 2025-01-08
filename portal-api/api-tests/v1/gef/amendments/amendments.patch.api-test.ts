@@ -73,6 +73,23 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
       });
     });
 
+    describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is not set', () => {
+      beforeEach(() => {
+        delete process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED;
+      });
+
+      it(`should return a ${HttpStatusCode.NotFound} response`, async () => {
+        // Arrange
+        const url = patchAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
+
+        // Act
+        const response = await as(aMaker).patch(validPayload).to(url);
+
+        // Assert
+        expect(response.status).toEqual(HttpStatusCode.NotFound);
+      });
+    });
+
     describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is enabled', () => {
       beforeEach(() => {
         process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
