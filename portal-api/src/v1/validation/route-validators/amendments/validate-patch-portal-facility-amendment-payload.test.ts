@@ -13,6 +13,10 @@ describe('validatePatchPortalFacilityAmendmentPayload', () => {
       payload: {},
     },
     {
+      description: 'undefined payload',
+      payload: undefined,
+    },
+    {
       description: 'update is not an object',
       payload: {
         update: 'not an object',
@@ -23,6 +27,14 @@ describe('validatePatchPortalFacilityAmendmentPayload', () => {
       payload: {
         update: {
           extra: 'property',
+        },
+      },
+    },
+    {
+      description: 'update.changeCoverEndDate is null',
+      payload: {
+        update: {
+          changeCoverEndDate: null,
         },
       },
     },
@@ -75,6 +87,14 @@ describe('validatePatchPortalFacilityAmendmentPayload', () => {
       },
     },
     {
+      description: 'update.facilityEndDate is null',
+      payload: {
+        update: {
+          facilityEndDate: null,
+        },
+      },
+    },
+    {
       description: 'update.bankReviewDate is not a number',
       payload: {
         update: {
@@ -115,6 +135,14 @@ describe('validatePatchPortalFacilityAmendmentPayload', () => {
       },
     },
     {
+      description: 'update.currentValue is null',
+      payload: {
+        update: {
+          currentValue: null,
+        },
+      },
+    },
+    {
       description: 'update.currency is not a valid enum value',
       payload: {
         update: {
@@ -135,6 +163,14 @@ describe('validatePatchPortalFacilityAmendmentPayload', () => {
       payload: {
         update: {
           coveredPercentage: 'not a number',
+        },
+      },
+    },
+    {
+      description: 'update.coveredPercentage is null',
+      payload: {
+        update: {
+          coveredPercentage: null,
         },
       },
     },
