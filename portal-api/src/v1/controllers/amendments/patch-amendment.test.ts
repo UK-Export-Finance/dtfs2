@@ -8,6 +8,8 @@ import { patchAmendment, PatchAmendmentRequest } from './patch-amendment.control
 
 jest.mock('../../api');
 
+console.error = jest.fn();
+
 const facilityId = new ObjectId().toString();
 const amendmentId = new ObjectId().toString();
 const dealId = new ObjectId().toString();
@@ -68,6 +70,7 @@ describe('controllers - facility amendment', () => {
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
       expect(res._getData()).toEqual(mockPortalAmendmentResponse);
+      expect(console.error).toHaveBeenCalledTimes(0);
     });
 
     it('should return an error when there is an API error', async () => {
@@ -88,6 +91,7 @@ describe('controllers - facility amendment', () => {
       // Assert
       expect(res._getStatusCode()).toEqual(testErrorStatus);
       expect(res._getData()).toEqual({ message: `Failed to update the amendment: ${testApiErrorMessage}`, status: testErrorStatus });
+      expect(console.error).toHaveBeenCalledTimes(1);
     });
 
     it('should return an error when there is a general error', async () => {
@@ -106,6 +110,7 @@ describe('controllers - facility amendment', () => {
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
       expect(res._getData()).toEqual({ message: 'Failed to update the amendment', status: HttpStatusCode.InternalServerError });
+      expect(console.error).toHaveBeenCalledTimes(1);
     });
   });
 });
