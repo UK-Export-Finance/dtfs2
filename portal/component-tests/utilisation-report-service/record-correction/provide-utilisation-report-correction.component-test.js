@@ -1,4 +1,4 @@
-import { RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
+import { RECORD_CORRECTION_REASON, CURRENCY, mapCurrenciesToRadioItems } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
 import pageRenderer from '../../pageRenderer';
 import { aProvideUtilisationReportCorrectionViewModel } from '../../../test-helpers/test-data/view-models/record-corrections/provide-utilisation-report-correction-view-model';
@@ -134,6 +134,86 @@ describe(page, () => {
       unusedCorrectionReasons.forEach((correctionReason) => {
         wrapper.expectElement(`[data-cy="${correctionReason}-input"]`).notToExist();
       });
+    });
+  });
+
+  describe('when there are NOT any form values provided', () => {
+    const viewModel = {
+      ...aProvideUtilisationReportCorrectionViewModel(),
+      correctionRequestDetails: {
+        ...aProvideUtilisationReportCorrectionViewModel().correctionRequestDetails,
+        reasons: [
+          RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT,
+          RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT,
+          RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT,
+          RECORD_CORRECTION_REASON.UTILISATION_INCORRECT,
+          RECORD_CORRECTION_REASON.OTHER,
+        ],
+      },
+      paymentCurrencyOptions: mapCurrenciesToRadioItems(),
+      formValues: {
+        additionalComments: null,
+        facilityId: null,
+        utilisation: null,
+        reportedFee: null,
+      },
+    };
+
+    it('should not set any of the form values', () => {
+      // Act
+      const wrapper = render(viewModel);
+
+      // Assert
+      wrapper.expectInput(`[data-cy="${RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT}-input"]`).toHaveValue(undefined);
+      wrapper.expectInput(`[data-cy="${RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT}-input"]`).toHaveValue(undefined);
+      wrapper.expectInput(`[data-cy="${RECORD_CORRECTION_REASON.UTILISATION_INCORRECT}-input"]`).toHaveValue(undefined);
+      wrapper.expectTextArea('[data-cy="additional-comments-input"]').toHaveValue('');
+
+      wrapper.expectInput(`[data-cy="currency-${CURRENCY.GBP}"]`).toNotBeChecked();
+      wrapper.expectInput(`[data-cy="currency-${CURRENCY.USD}"]`).toNotBeChecked();
+      wrapper.expectInput(`[data-cy="currency-${CURRENCY.EUR}"]`).toNotBeChecked();
+      wrapper.expectInput(`[data-cy="currency-${CURRENCY.JPY}"]`).toNotBeChecked();
+    });
+  });
+
+  describe('when there are form values provided', () => {
+    const formValues = {
+      additionalComments: 'this is an additional comment',
+      facilityId: '7777777',
+      utilisation: '99,999.00',
+      reportedFee: '88,888.88',
+    };
+
+    const viewModel = {
+      ...aProvideUtilisationReportCorrectionViewModel(),
+      correctionRequestDetails: {
+        ...aProvideUtilisationReportCorrectionViewModel().correctionRequestDetails,
+        reasons: [
+          RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT,
+          RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT,
+          RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT,
+          RECORD_CORRECTION_REASON.UTILISATION_INCORRECT,
+          RECORD_CORRECTION_REASON.OTHER,
+        ],
+      },
+      paymentCurrencyOptions: mapCurrenciesToRadioItems(CURRENCY.JPY),
+      formValues,
+    };
+
+    it('should set the input to have the given form values', () => {
+      // Act
+      const wrapper = render(viewModel);
+
+      // Assert
+      wrapper.expectInput(`[data-cy="${RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT}-input"]`).toHaveValue(formValues.facilityId);
+      wrapper.expectInput(`[data-cy="${RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT}-input"]`).toHaveValue(formValues.reportedFee);
+      wrapper.expectInput(`[data-cy="${RECORD_CORRECTION_REASON.UTILISATION_INCORRECT}-input"]`).toHaveValue(formValues.utilisation);
+      wrapper.expectTextArea('[data-cy="additional-comments-input"]').toHaveValue(formValues.additionalComments);
+
+      wrapper.expectInput(`[data-cy="currency-${CURRENCY.GBP}"]`).toNotBeChecked();
+      wrapper.expectInput(`[data-cy="currency-${CURRENCY.USD}"]`).toNotBeChecked();
+      wrapper.expectInput(`[data-cy="currency-${CURRENCY.EUR}"]`).toNotBeChecked();
+      wrapper.expectInput(`[data-cy="currency-${CURRENCY.JPY}"]`).toBeChecked();
     });
   });
 
