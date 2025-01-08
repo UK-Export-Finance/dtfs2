@@ -49,9 +49,9 @@
           {{ govukButton({
             text: "No, go back",
             classes: "govuk-button--secondary",
+            href: previousPage,
             attributes: {
-              "data-cy": "no-go-back-button",
-              formaction: "?return=true"
+              "data-cy": "no-go-back-button"
             }
             })
           }}

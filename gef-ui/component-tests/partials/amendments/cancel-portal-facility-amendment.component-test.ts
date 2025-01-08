@@ -28,8 +28,7 @@ describe(page, () => {
   it('should render the `No, go back` button', () => {
     const wrapper = render(params);
 
-    wrapper.expectElement('[data-cy="no-go-back-button"]').toExist();
-    wrapper.expectText('[data-cy="no-go-back-button"]').toRead('No, go back');
+    wrapper.expectSecondaryButton('[data-cy="no-go-back-button"]').toLinkTo(previousPage, 'No, go back');
   });
 
   it('should render the exporter name in the heading caption', () => {
