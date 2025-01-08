@@ -12,8 +12,9 @@ import {
   getCancelPortalFacilityAmendment,
   postCancelPortalFacilityAmendment,
 } from '../../../controllers/amendments/cancel-amendment/cancel-portal-facility-amendment';
+import { getDoYouHaveAFacilityEndDate } from '../../../controllers/amendments/do-you-have-a-facility-end-date/do-you-have-a-facility-end-date';
 
-const { WHAT_DO_YOU_NEED_TO_CHANGE, COVER_END_DATE, FACILITY_VALUE } = PORTAL_AMENDMENT_PAGES;
+const { WHAT_DO_YOU_NEED_TO_CHANGE, COVER_END_DATE, FACILITY_VALUE, DO_YOU_HAVE_A_FACILITY_END_DATE } = PORTAL_AMENDMENT_PAGES;
 
 const router = express.Router();
 
@@ -42,5 +43,10 @@ router
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getCancelPortalFacilityAmendment)
   .post(postCancelPortalFacilityAmendment);
+
+router
+  .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${DO_YOU_HAVE_A_FACILITY_END_DATE}`)
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(getDoYouHaveAFacilityEndDate);
 
 export default router;

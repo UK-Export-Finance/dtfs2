@@ -12,6 +12,11 @@ export type GetFacilityValueRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
 }>;
 
+/**
+ * Controller to get the Facility Value page
+ * @param req - the request object
+ * @param res - the response object
+ */
 export const getFacilityValue = async (req: GetFacilityValueRequest, res: Response) => {
   try {
     const { dealId, facilityId, amendmentId } = req.params;
@@ -21,10 +26,12 @@ export const getFacilityValue = async (req: GetFacilityValueRequest, res: Respon
     const { details: facility } = await api.getFacility({ facilityId, userToken });
 
     if (!deal || !facility) {
+      console.error('Deal %s or Facility %s was not found', dealId, facilityId);
       return res.redirect('/not-found');
     }
 
     if (!userCanAmendFacility(facility, deal, user.roles)) {
+      console.error('User cannot amend facility %s on deal %s', facilityId, dealId);
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
@@ -36,6 +43,7 @@ export const getFacilityValue = async (req: GetFacilityValueRequest, res: Respon
     }
 
     if (!amendment.changeFacilityValue) {
+      console.error('Amendment %s not changing facility value', amendmentId);
       return res.redirect(
         `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
       );

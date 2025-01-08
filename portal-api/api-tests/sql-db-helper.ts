@@ -1,4 +1,10 @@
-import { AzureFileInfoEntity, FeeRecordCorrectionEntity, FeeRecordEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import {
+  AzureFileInfoEntity,
+  FeeRecordCorrectionEntity,
+  FeeRecordCorrectionTransientFormDataEntity,
+  FeeRecordEntity,
+  UtilisationReportEntity,
+} from '@ukef/dtfs2-common';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 
 const initialize = async () => {
@@ -8,7 +14,7 @@ const initialize = async () => {
   return await SqlDbDataSource.initialize();
 };
 
-type SqlTableName = 'UtilisationReport' | 'FeeRecord' | 'FeeRecordCorrection' | 'AzureFileInfo';
+type SqlTableName = 'UtilisationReport' | 'FeeRecord' | 'FeeRecordCorrection' | 'AzureFileInfo' | 'FeeRecordCorrectionTransientFormData';
 
 const deleteAllEntries = async (tableName: SqlTableName): Promise<void> => {
   switch (tableName) {
@@ -24,6 +30,9 @@ const deleteAllEntries = async (tableName: SqlTableName): Promise<void> => {
     case 'AzureFileInfo':
       await SqlDbDataSource.manager.delete(AzureFileInfoEntity, {});
       return;
+    case 'FeeRecordCorrectionTransientFormData':
+      await SqlDbDataSource.manager.delete(FeeRecordCorrectionTransientFormDataEntity, {});
+      return;
     default:
       throw new Error(`Cannot delete all entries from table: no entity found for table name '${tableName}'`);
   }
@@ -37,6 +46,8 @@ type Entity<TableName extends SqlTableName> = TableName extends 'UtilisationRepo
   ? FeeRecordCorrectionEntity
   : TableName extends 'AzureFileInfo'
   ? AzureFileInfoEntity
+  : TableName extends 'FeeRecordCorrectionTransientFormData'
+  ? FeeRecordCorrectionTransientFormDataEntity
   : never;
 
 const saveNewEntry = async <TableName extends SqlTableName>(tableName: TableName, entityToInsert: Entity<TableName>): Promise<Entity<TableName>> => {
@@ -49,6 +60,11 @@ const saveNewEntry = async <TableName extends SqlTableName>(tableName: TableName
       return (await SqlDbDataSource.manager.save(FeeRecordCorrectionEntity, entityToInsert as FeeRecordCorrectionEntity)) as Entity<TableName>;
     case 'AzureFileInfo':
       return (await SqlDbDataSource.manager.save(AzureFileInfoEntity, entityToInsert as AzureFileInfoEntity)) as Entity<TableName>;
+    case 'FeeRecordCorrectionTransientFormData':
+      return (await SqlDbDataSource.manager.save(
+        FeeRecordCorrectionTransientFormDataEntity,
+        entityToInsert as FeeRecordCorrectionTransientFormDataEntity,
+      )) as Entity<TableName>;
     default:
       throw new Error(`Cannot save new entry to table: no entity found for table name '${tableName}'`);
   }
@@ -64,6 +80,11 @@ const saveNewEntries = async <TableName extends SqlTableName>(tableName: TableNa
       return (await SqlDbDataSource.manager.save(FeeRecordCorrectionEntity, entityToInsert as FeeRecordCorrectionEntity[])) as Entity<TableName>[];
     case 'AzureFileInfo':
       return (await SqlDbDataSource.manager.save(AzureFileInfoEntity, entityToInsert as AzureFileInfoEntity[])) as Entity<TableName>[];
+    case 'FeeRecordCorrectionTransientFormData':
+      return (await SqlDbDataSource.manager.save(
+        FeeRecordCorrectionTransientFormDataEntity,
+        entityToInsert as FeeRecordCorrectionTransientFormDataEntity[],
+      )) as Entity<TableName>[];
     default:
       throw new Error(`Cannot save entries to table: no entity found for table name '${tableName}'`);
   }

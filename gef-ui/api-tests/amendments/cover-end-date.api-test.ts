@@ -47,7 +47,14 @@ describe(`GET ${url}`, () => {
 
     mockGetFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
     mockGetApplication.mockResolvedValue(mockDeal);
-    mockGetAmendment.mockResolvedValue(new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(true).build());
+    mockGetAmendment.mockResolvedValue(
+      new PortalFacilityAmendmentWithUkefIdMockBuilder()
+        .withDealId(dealId)
+        .withFacilityId(facilityId)
+        .withAmendmentId(amendmentId)
+        .withChangeCoverEndDate(true)
+        .build(),
+    );
   });
 
   afterAll(async () => {
@@ -141,7 +148,14 @@ describe(`GET ${url}`, () => {
 
     it('should redirect to "what do you need to change" page if amendment is not changing cover end date', async () => {
       // Arrange
-      mockGetAmendment.mockResolvedValue(new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(false).build());
+      mockGetAmendment.mockResolvedValue(
+        new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withDealId(dealId)
+          .withFacilityId(facilityId)
+          .withAmendmentId(amendmentId)
+          .withChangeCoverEndDate(false)
+          .build(),
+      );
 
       // Act
       const response = await getWithSessionCookie(sessionCookie);
