@@ -5,7 +5,7 @@ import { getFeeRecordCorrection, GetFeeRecordCorrectionRequest } from './get-fee
 import api from '../../../api';
 import { aGetFeeRecordCorrectionResponseBody } from '../../../../../test-helpers/test-data/get-fee-record-correction-response-body';
 
-jest.mock('../../../../api');
+jest.mock('../../../api');
 
 console.error = jest.fn();
 
