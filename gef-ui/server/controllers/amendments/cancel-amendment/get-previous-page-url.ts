@@ -24,5 +24,8 @@ export const getPreviousPageUrl = (url: string, dealId: string, facilityId: stri
     return existingValue;
   }, undefined);
 
-  return previousPageUrl ?? `/gef/application-details/${dealId}`;
+  return (
+    previousPageUrl ??
+    `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`
+  );
 };

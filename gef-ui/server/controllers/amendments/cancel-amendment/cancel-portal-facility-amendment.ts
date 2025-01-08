@@ -5,6 +5,7 @@ import { CancelAmendmentViewModel } from '../../../types/view-models/amendments/
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper';
 import { getPreviousPageUrl } from './get-previous-page-url';
+import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 
 export type GetCancelPortalFacilityAmendmentRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -30,7 +31,7 @@ export const getCancelPortalFacilityAmendment = async (req: GetCancelPortalFacil
     const { details: facility } = await api.getFacility({ facilityId, userToken });
 
     if (!deal || !facility) {
-      console.error('Get cancel portal facility amendment failed, due to missing data');
+      console.error('Deal %s or Facility %s was not found', dealId, facilityId);
       return res.redirect('/not-found');
     }
 
@@ -48,8 +49,9 @@ export const getCancelPortalFacilityAmendment = async (req: GetCancelPortalFacil
 
     const viewModel: CancelAmendmentViewModel = {
       exporterName: deal.exporter.companyName,
-      cancelAmendmentUrl: `/gef/application-details/${dealId}`,
-      previousPage: req.headers.referer ?? `/gef/application-details/${dealId}`,
+      previousPage:
+        req.headers.referer ??
+        `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
     };
 
     return res.render('partials/amendments/cancel.njk', viewModel);

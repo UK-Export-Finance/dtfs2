@@ -7,11 +7,9 @@ const render = pageRenderer(page);
 describe(page, () => {
   const exporterName = 'exporterName';
   const previousPage = 'previousPage';
-  const cancelAmendmentUrl = 'cancelAmendmentUrl';
 
   const params: CancelAmendmentViewModel = {
     exporterName,
-    cancelAmendmentUrl,
     previousPage,
   };
 
@@ -24,8 +22,6 @@ describe(page, () => {
   it('should render the `Yes, cancel` button', () => {
     const wrapper = render(params);
 
-    wrapper.expectElement('[data-cy="yes-cancel-button"]').toExist();
-    wrapper.expectText('[data-cy="yes-cancel-button"]').toRead('Yes, cancel');
     wrapper.expectPrimaryButton('[data-cy="yes-cancel-button"]').toLinkTo(undefined, 'Yes, cancel');
   });
 

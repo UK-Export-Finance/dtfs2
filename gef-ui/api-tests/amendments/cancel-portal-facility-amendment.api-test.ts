@@ -46,7 +46,9 @@ describe(`GET ${url}`, () => {
 
     mockGetApplication.mockResolvedValue(mockDeal);
     mockGetFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
-    mockGetAmendment.mockResolvedValue(new PortalFacilityAmendmentWithUkefIdMockBuilder().build());
+    mockGetAmendment.mockResolvedValue(
+      new PortalFacilityAmendmentWithUkefIdMockBuilder().withDealId(dealId).withFacilityId(facilityId).withAmendmentId(amendmentId).build(),
+    );
   });
 
   afterAll(async () => {
