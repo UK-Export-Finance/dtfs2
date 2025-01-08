@@ -1,6 +1,7 @@
 import { add, startOfDay } from 'date-fns';
 import { applyStandardValidationAndParseDateInput } from '@ukef/dtfs2-common';
 import { validateAndParseBankReviewDate } from './validation';
+import { mapValidationError } from '../../utils/map-validation-error';
 
 const valueName = 'bank review date';
 const valueRef = 'bankReviewDate';
@@ -23,13 +24,7 @@ describe('validateAndParseBankReviewDate', () => {
 
     // Assert
     expect(response).toEqual({
-      errors: [
-        {
-          errMsg: applyStandardValidationAndParseDateInput(dayMonthYear, valueName, valueRef).error!.message,
-          errRef: valueRef,
-          subFieldErrorRefs: applyStandardValidationAndParseDateInput(dayMonthYear, valueName, valueRef).error!.fieldRefs,
-        },
-      ],
+      errors: [mapValidationError(applyStandardValidationAndParseDateInput(dayMonthYear, valueName, valueRef).error!)],
     });
   });
 

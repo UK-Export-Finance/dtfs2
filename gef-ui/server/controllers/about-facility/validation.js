@@ -1,6 +1,7 @@
 const { add, isAfter, isBefore, isEqual, set, startOfDay } = require('date-fns');
 const { applyStandardValidationAndParseDateInput } = require('@ukef/dtfs2-common');
 const { isTrueSet } = require('../../utils/helpers');
+const { mapValidationError } = require('../../utils/map-validation-error');
 
 /**
  * @param {Object} params
@@ -83,11 +84,7 @@ const validateAboutFacility = ({
         );
 
         if (coverStartDateFormattingError) {
-          aboutFacilityErrors.push({
-            errRef: coverStartDateErrRef,
-            errMsg: coverStartDateFormattingError.message,
-            subFieldErrorRefs: coverStartDateFormattingError.fieldRefs,
-          });
+          aboutFacilityErrors.push(mapValidationError(coverStartDateFormattingError));
         } else {
           const now = startOfDay(new Date());
           const threeMonthsFromNow = add(now, { months: 3 });
@@ -126,11 +123,7 @@ const validateAboutFacility = ({
       if (coverEndDateFormattingError) {
         coverEndDateValid = false;
 
-        aboutFacilityErrors.push({
-          errRef: coverEndDateErrRef,
-          errMsg: coverEndDateFormattingError.message,
-          subFieldErrorRefs: coverEndDateFormattingError.fieldRefs,
-        });
+        aboutFacilityErrors.push(mapValidationError(coverEndDateFormattingError));
       }
     }
   }

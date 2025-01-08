@@ -1,6 +1,6 @@
 import { isValid, parseISO } from 'date-fns';
 import z from 'zod';
-import { DayMonthYearInput } from '../types';
+import { DayMonthYearInput, TfmValidationError } from '../types';
 
 type ValueAndFieldRefs = {
   value: string;
@@ -9,19 +9,13 @@ type ValueAndFieldRefs = {
   year: string;
 };
 
-type ValidationError = {
-  message: string;
-  ref: string;
-  fieldRefs: string[];
-};
-
 type ErrorOrDate =
   | {
       error: null;
       parsedDate: Date;
     }
   | {
-      error: ValidationError;
+      error: TfmValidationError;
       parsedDate: undefined;
     };
 
@@ -36,7 +30,7 @@ const parseDate = ({ day, month, year }: DayMonthYearInput): Date => {
   return parseISO(isoDateString);
 };
 
-const validateAllFieldsArePresent = ({ day, month, year }: DayMonthYearInput, valueName: string, refs: ValueAndFieldRefs): ValidationError | null => {
+const validateAllFieldsArePresent = ({ day, month, year }: DayMonthYearInput, valueName: string, refs: ValueAndFieldRefs): TfmValidationError | null => {
   const capitalisedValueName = capitalizeFirstLetter(valueName);
   const dateIsBlank = !day && !month && !year;
   if (dateIsBlank) {
@@ -95,7 +89,7 @@ const validateAllFieldsArePresent = ({ day, month, year }: DayMonthYearInput, va
   return null;
 };
 
-const validateEachFieldIsValid = ({ day, month, year }: DayMonthYearInput, valueName: string, refs: ValueAndFieldRefs): ValidationError | null => {
+const validateEachFieldIsValid = ({ day, month, year }: DayMonthYearInput, valueName: string, refs: ValueAndFieldRefs): TfmValidationError | null => {
   const capitalisedValueName = capitalizeFirstLetter(valueName);
 
   let yearFormatError;

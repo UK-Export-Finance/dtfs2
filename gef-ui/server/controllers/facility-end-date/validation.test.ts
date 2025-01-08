@@ -1,6 +1,7 @@
 import { applyStandardValidationAndParseDateInput } from '@ukef/dtfs2-common';
 import { add, startOfDay } from 'date-fns';
 import { validateAndParseFacilityEndDate } from './validation';
+import { mapValidationError } from '../../utils/map-validation-error';
 
 const valueName = 'facility end date';
 const valueRef = 'facilityEndDate';
@@ -23,13 +24,7 @@ describe('validateAndParseFacilityEndDate', () => {
 
     // Assert
     expect(response).toEqual({
-      errors: [
-        {
-          errMsg: applyStandardValidationAndParseDateInput(dayMonthYear, valueName, valueRef).error!.message,
-          errRef: valueRef,
-          subFieldErrorRefs: applyStandardValidationAndParseDateInput(dayMonthYear, valueName, valueRef).error!.fieldRefs,
-        },
-      ],
+      errors: [mapValidationError(applyStandardValidationAndParseDateInput(dayMonthYear, valueName, valueRef).error!)],
     });
   });
 

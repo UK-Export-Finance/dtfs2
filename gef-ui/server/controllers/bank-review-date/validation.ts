@@ -1,6 +1,7 @@
 import { add, isAfter, isBefore, startOfDay } from 'date-fns';
 import { applyStandardValidationAndParseDateInput, DayMonthYearInput, FACILITY_END_DATE_MAXIMUM_YEARS_IN_FUTURE } from '@ukef/dtfs2-common';
 import { ErrorsOrDate } from '../../types/errors-or-date';
+import { mapValidationError } from '../../utils/map-validation-error';
 
 export const validateAndParseBankReviewDate = (bankReviewDayMonthYear: DayMonthYearInput, coverStartDate: Date): ErrorsOrDate => {
   const errRef = 'bankReviewDate';
@@ -10,7 +11,7 @@ export const validateAndParseBankReviewDate = (bankReviewDayMonthYear: DayMonthY
 
   if (formattingErrorsOrDate.error) {
     return {
-      errors: [{ errRef, errMsg: formattingErrorsOrDate.error.message, subFieldErrorRefs: formattingErrorsOrDate.error.fieldRefs }],
+      errors: [mapValidationError(formattingErrorsOrDate.error)],
     };
   }
 
