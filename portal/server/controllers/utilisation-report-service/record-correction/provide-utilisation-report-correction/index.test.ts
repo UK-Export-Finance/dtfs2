@@ -11,9 +11,10 @@ import {
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import api from '../../../../api';
 import { getProvideUtilisationReportCorrection, GetProvideUtilisationReportCorrection } from '.';
-import { getAdditionalCommentsFieldLabels, mapToCorrectionRequestDetailsViewModel } from './helpers';
+import { getAdditionalCommentsFieldLabels, mapSavedFormValuesToViewModel, mapToCorrectionRequestDetailsViewModel } from './helpers';
 import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
 import { aGetFeeRecordCorrectionResponseBody } from '../../../../../test-helpers/test-data/get-fee-record-correction-response';
+import { GetFeeRecordCorrectionTransientFormDataResponseBody } from '../../../../api-response-types';
 
 jest.mock('../../../../api');
 
@@ -63,8 +64,10 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         ...aGetFeeRecordCorrectionResponseBody(),
         reasons,
       };
+      const savedFormValues: GetFeeRecordCorrectionTransientFormDataResponseBody = { facilityId: '123', additionalComments: 'Some comments' };
 
       jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(feeRecordCorrectionResponse);
+      jest.mocked(api.getFeeRecordCorrectionTransientFormData).mockResolvedValue(savedFormValues);
 
       const expectedCorrectionRequestDetails = mapToCorrectionRequestDetailsViewModel(feeRecordCorrectionResponse);
       const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems();
@@ -85,6 +88,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
           label: expectedAdditionalCommentsLabel,
           hint: expectedAdditionalCommentsHint,
         },
+        formValues: mapSavedFormValuesToViewModel(savedFormValues),
       });
     });
 
@@ -93,6 +97,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       const feeRecordCorrectionResponse = aGetFeeRecordCorrectionResponseBody();
 
       jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(feeRecordCorrectionResponse);
+      jest.mocked(api.getFeeRecordCorrectionTransientFormData).mockResolvedValue({});
 
       // Act
       await getProvideUtilisationReportCorrection(req, res);
@@ -100,6 +105,19 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       // Assert
       expect(api.getFeeRecordCorrection).toHaveBeenCalledTimes(1);
       expect(api.getFeeRecordCorrection).toHaveBeenCalledWith(userToken, bankId, correctionId);
+    });
+
+    it('should fetch the fee record correction transient form data using the correction id and users bank id', async () => {
+      // Arrange
+      jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(aGetFeeRecordCorrectionResponseBody());
+      jest.mocked(api.getFeeRecordCorrectionTransientFormData).mockResolvedValue({});
+
+      // Act
+      await getProvideUtilisationReportCorrection(req, res);
+
+      // Assert
+      expect(api.getFeeRecordCorrectionTransientFormData).toHaveBeenCalledTimes(1);
+      expect(api.getFeeRecordCorrectionTransientFormData).toHaveBeenCalledWith(userToken, bankId, correctionId);
     });
 
     describe.each`
@@ -115,6 +133,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         };
 
         jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(feeRecordCorrectionResponse);
+        jest.mocked(api.getFeeRecordCorrectionTransientFormData).mockResolvedValue({});
 
         const { label: expectedLabel, hint: expectedHint } = getAdditionalCommentsFieldLabels(reasons);
 
@@ -129,9 +148,10 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       });
     });
 
-    it('should render the "problem with service" page when fetching the fee record correction fails', async () => {
+    it('should render the "problem with service" page when an error occurs', async () => {
       // Arrange
       jest.mocked(api.getFeeRecordCorrection).mockRejectedValue(new Error());
+      jest.mocked(api.getFeeRecordCorrectionTransientFormData).mockResolvedValue({});
 
       // Act
       await getProvideUtilisationReportCorrection(req, res);
