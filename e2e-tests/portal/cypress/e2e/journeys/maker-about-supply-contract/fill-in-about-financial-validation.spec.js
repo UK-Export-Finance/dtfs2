@@ -1,6 +1,8 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { contractAboutBuyer, contractAboutFinancial, contractAboutPreview, dashboardDeals, contract, contractAboutSupplier } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { thirtyFiveDaysAgo } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -39,7 +41,7 @@ context('about-buyer', () => {
 
     // fill in value + pick currency=GBP to clear validation warnings
     cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '123.45');
-    contractAboutFinancial.supplyContractCurrency().select('GBP');
+    contractAboutFinancial.supplyContractCurrency().select(CURRENCY.GBP);
     contractAboutFinancial.preview().click();
 
     // check the errors have been cleared..
@@ -57,7 +59,7 @@ context('about-buyer', () => {
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
-    contractAboutFinancial.supplyContractCurrency().select('USD');
+    contractAboutFinancial.supplyContractCurrency().select(CURRENCY.USD);
     contractAboutFinancial.preview().click();
 
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion rate is required for non-GBP currencies');
@@ -69,7 +71,7 @@ context('about-buyer', () => {
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionRateToGBP(), '{selectall}{backspace}0.1234567');
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionRateToGBP(), '0.1234567');
     contractAboutFinancial.preview().click();
 
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion rate must be a number with up to 6 decimal places');
@@ -80,7 +82,7 @@ context('about-buyer', () => {
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionRateToGBP(), '{selectall}{backspace}0.123456');
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionRateToGBP(), '0.123456');
     contractAboutFinancial.preview().click();
 
     contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion rate is required for non-GBP currencies');
@@ -125,13 +127,12 @@ context('about-buyer', () => {
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), '{selectall}{backspace}3019');
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), '3019');
     contractAboutFinancial.preview().click();
 
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be in the future');
 
-    const dateTooFarInThePast = new Date();
-    dateTooFarInThePast.setDate(dateTooFarInThePast.getDate() - 35);
+    const dateTooFarInThePast = thirtyFiveDaysAgo;
 
     dashboardDeals.visit();
     cy.clickDashboardDealLink();
@@ -140,9 +141,9 @@ context('about-buyer', () => {
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), `{selectall}{backspace}${dateTooFarInThePast.getDate()}`);
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), `{selectall}{backspace}${dateTooFarInThePast.getMonth() + 1}`);
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), `{selectall}{backspace}${dateTooFarInThePast.getFullYear()}`);
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), `{selectall}{backspace}${dateTooFarInThePast.day}`);
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), `{selectall}{backspace}${dateTooFarInThePast.month}`);
+    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), `{selectall}{backspace}${dateTooFarInThePast.year}`);
 
     contractAboutFinancial.preview().click();
 

@@ -79,9 +79,9 @@ context('Dashboard Deals filters - filter by status', () => {
     });
 
     it('renders only draft deals', () => {
-      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH_BY_STATUS.DRAFT);
-
-      dashboardDeals.rowByIndex(1).status().should('have.text', CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
+      dashboardDeals.rows().each((row) => {
+        cy.wrap(row).contains(CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
+      });
     });
   });
 

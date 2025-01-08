@@ -183,7 +183,6 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
       .deals()
       .invoke('attr', 'aria-label')
       .then((label) => {
-        cy.log('label', label);
         expect(label).to.equal(
           "deals: ,Filters selected: , Notice Type: , Automatic Inclusion Notice, Manual Inclusion Application, Status: , Draft, Ready for Checker's approval",
         );

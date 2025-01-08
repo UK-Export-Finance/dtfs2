@@ -1,6 +1,7 @@
-const { contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial } = require('../../pages');
+const { contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, defaults } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
+const { additionalRefName } = require('../../../fixtures/deal');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -14,6 +15,8 @@ context('about-supply-contract', () => {
 
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
+
+    cy.title().should('eq', `Buyer information - ${additionalRefName}${defaults.pageTitleAppend}`);
 
     // fill in the fields
     cy.keyboardInput(contractAboutBuyer.buyerName(), 'Harry Bear');

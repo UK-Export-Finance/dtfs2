@@ -2,10 +2,12 @@ const { contract, contractDelete, defaults, dashboardDeals } = require('../../..
 const { successMessage } = require('../../../partials');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { additionalRefName, bankInternalRefName } = require('../../../../fixtures/deal');
+const relative = require('../../../relativeURL');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('A maker selects to abandon a contract from the view-contract page', () => {
+  let dealId;
   before(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal();
@@ -33,7 +35,14 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     contractDelete.cancel().click();
 
     // check we've gone to the right page
-    cy.url().should('include', '/contract');
+    cy.getDealIdFromUrl(dealId).then((id) => {
+      dealId = id;
+      cy.url().then((url) => {
+        dealId = url.split('/').pop();
+        expect(dealId).to.be.a('string');
+        cy.url().should('eq', relative(`/contract/${dealId}`));
+      });
+    });
   });
 
   it('The abandon button generates an error if no comment has been entered.', () => {
@@ -54,7 +63,11 @@ context('A maker selects to abandon a contract from the view-contract page', () 
     contractDelete.abandon().click();
 
     // expect to stay on the abandon page, and see an error
-    cy.url().should('include', '/contract');
+    cy.url().then((url) => {
+      dealId = url.split('/').slice(-2, -1)[0];
+      expect(dealId).to.be.a('string');
+      cy.url().should('eq', relative(`/contract/${dealId}/delete`));
+    });
     contractDelete.expectError('Comment is required when abandoning a deal.');
   });
 

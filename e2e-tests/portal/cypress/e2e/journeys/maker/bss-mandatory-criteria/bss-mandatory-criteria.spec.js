@@ -1,4 +1,4 @@
-import { DEAL_SUBMISSION_TYPE, FACILITY_STAGE } from '@ukef/dtfs2-common';
+const { DEAL_SUBMISSION_TYPE, FACILITY_STAGE } = require('@ukef/dtfs2-common');
 
 const pages = require('../../../pages');
 const partials = require('../../../partials');

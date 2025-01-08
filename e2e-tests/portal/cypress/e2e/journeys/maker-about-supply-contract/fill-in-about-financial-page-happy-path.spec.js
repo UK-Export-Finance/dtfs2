@@ -1,3 +1,4 @@
+const { CURRENCY } = require('@ukef/dtfs2-common');
 const { contract, contractAboutFinancial, defaults, dashboardDeals, contractAboutSupplier, contractAboutBuyer, contractAboutPreview } = require('../../pages');
 const { taskListHeader } = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
@@ -28,7 +29,7 @@ context('about-supply-contract', () => {
     cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '10000');
     contractAboutFinancial.supplyContractValue().should('have.value', '10,000');
 
-    contractAboutFinancial.supplyContractCurrency().select('GBP');
+    contractAboutFinancial.supplyContractCurrency().select(CURRENCY.GBP);
 
     // prove the exchange-rate fields stay hidden..
     contractAboutFinancial.supplyContractConversionRateToGBP().should('not.be.visible');
