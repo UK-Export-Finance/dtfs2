@@ -562,7 +562,7 @@ const patchPortalFacilityAmendment = async ({ facilityId, amendmentId, update, a
     throw new Error('Type validation error occurred');
   } catch (error) {
     console.error(
-      'Error updating portal facility amendment with id: %s for facility with id %s: with the following update: %o, %o',
+      'Error updating portal facility amendment with id %s for facility with id %s with the following update %o, %o',
       amendmentId,
       facilityId,
       update,

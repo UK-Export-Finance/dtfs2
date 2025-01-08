@@ -415,6 +415,7 @@ const updateAmendment = async ({ facilityId, amendmentId, update, userToken }) =
   }
 
   if (!isValidMongoId(amendmentId)) {
+    console.error('Invalid amendment ID %s', amendmentId);
     throw new Error('Invalid amendment ID');
   }
 
@@ -426,7 +427,7 @@ const updateAmendment = async ({ facilityId, amendmentId, update, userToken }) =
     const { data } = await Axios.patch(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, payload, { ...config(userToken) });
     return data;
   } catch (error) {
-    console.error('Failed to update the amendment with id: %s on facility with id: %s with update: %o: %o', amendmentId, facilityId, payload, error);
+    console.error('Failed to update the amendment with id %s on facility with id %s with update: %o %o', amendmentId, facilityId, payload, error);
     throw error;
   }
 };
