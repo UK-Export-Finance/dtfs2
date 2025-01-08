@@ -11,8 +11,10 @@ const facilityId = 'facilityId';
 const dealId = 'dealId';
 const amendmentId = 'amendmentId';
 const amendment = aPortalFacilityAmendmentUserValues();
+const type = AMENDMENT_TYPES.PORTAL;
+const amendmentStatus = AMENDMENT_STATUS.IN_PROGRESS;
 
-const mockUpdatedAmendment = { facilityId, dealId, amendment, type: AMENDMENT_TYPES.PORTAL, status: AMENDMENT_STATUS.IN_PROGRESS };
+const mockUpdatedAmendment = { facilityId, dealId, amendment, type, status: amendmentStatus };
 
 const mockUpdatePortalFacilityAmendment = jest.fn();
 

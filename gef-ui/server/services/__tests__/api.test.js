@@ -392,44 +392,82 @@ describe('getAmendment()', () => {
 
 describe('upsertAmendment()', () => {
   it(`should return the response body when the amendment can be upserted`, async () => {
+    // Arrange
     const mockAmendment = { facilityId: validMongoId, amendmentId: validMongoId, dealId: validMongoId, changeCoverEndDate: true };
     Axios.put.mockReturnValue(Promise.resolve({ data: mockAmendment }));
+
+    // Act
     const response = await api.upsertAmendment({ facilityId: validMongoId, dealId: validMongoId, amendment: {}, userToken });
+
+    // Assert
     expect(response).toEqual(mockAmendment);
   });
 
   it('should throw an error if there is an api error', async () => {
+    // Arrange
     Axios.put.mockReturnValue(Promise.reject(new AxiosError()));
-    await expect(api.upsertAmendment({ facilityId: validMongoId, dealId: validMongoId, amendment: {}, userToken })).rejects.toThrow(AxiosError);
+
+    // Act
+    const returned = api.upsertAmendment({ facilityId: validMongoId, dealId: validMongoId, amendment: {}, userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow(AxiosError);
   });
 
   it.each(invalidMongoIdTestCases)('should throw an error when given an invalid deal Id', async (invalidMongoId) => {
-    await expect(api.upsertAmendment({ facilityId: validMongoId, dealId: invalidMongoId, amendment: {}, userToken })).rejects.toThrow(InvalidDealIdError);
+    // Act
+    const returned = api.upsertAmendment({ facilityId: validMongoId, dealId: invalidMongoId, amendment: {}, userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow(InvalidDealIdError);
   });
 
   it.each(invalidMongoIdTestCases)('should throw an error when given an invalid facility Id', async (invalidMongoId) => {
-    await expect(api.upsertAmendment({ facilityId: invalidMongoId, dealId: validMongoId, amendment: {}, userToken })).rejects.toThrow(InvalidFacilityIdError);
+    // Act
+    const returned = api.upsertAmendment({ facilityId: invalidMongoId, dealId: validMongoId, amendment: {}, userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow(InvalidFacilityIdError);
   });
 });
 
-describe.only('updateAmendment()', () => {
+describe('updateAmendment()', () => {
   it(`should return the response body when the amendment can be updated`, async () => {
+    // Arrange
     const mockAmendment = { facilityId: validMongoId, amendmentId: validMongoId, dealId: validMongoId, changeCoverEndDate: true };
     Axios.patch.mockReturnValue(Promise.resolve({ data: mockAmendment }));
+
+    // Act
     const response = await api.updateAmendment({ facilityId: validMongoId, amendmentId: validMongoId, update: {}, userToken });
+
+    // Assert
     expect(response).toEqual(mockAmendment);
   });
 
   it('should throw an error if there is an api error', async () => {
+    // Arrange
     Axios.patch.mockReturnValue(Promise.reject(new AxiosError()));
-    await expect(api.updateAmendment({ facilityId: validMongoId, amendmentId: validMongoId, update: {}, userToken })).rejects.toThrow(AxiosError);
+
+    // Act
+    const returned = api.updateAmendment({ facilityId: validMongoId, amendmentId: validMongoId, update: {}, userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow(AxiosError);
   });
 
   it.each(invalidMongoIdTestCases)('should throw an error when given an invalid amendment Id', async (invalidMongoId) => {
-    await expect(api.updateAmendment({ facilityId: validMongoId, amendmentId: invalidMongoId, update: {}, userToken })).rejects.toThrow('Invalid amendment ID');
+    // Act
+    const returned = api.updateAmendment({ facilityId: validMongoId, amendmentId: invalidMongoId, update: {}, userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow('Invalid amendment ID');
   });
 
   it.each(invalidMongoIdTestCases)('should throw an error when given an invalid facility Id', async (invalidMongoId) => {
-    await expect(api.updateAmendment({ facilityId: invalidMongoId, amendmentId: validMongoId, update: {}, userToken })).rejects.toThrow(InvalidFacilityIdError);
+    // Act
+    const returned = api.updateAmendment({ facilityId: invalidMongoId, amendmentId: validMongoId, update: {}, userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow(InvalidFacilityIdError);
   });
 });
