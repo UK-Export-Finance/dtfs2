@@ -94,7 +94,9 @@ export const getAdditionalCommentsFieldLabels = (correctionReasons: RecordCorrec
  * @param savedFormValues - The saved transient form values
  * @returns The view model for the saved form values
  */
-export const mapSavedFormValuesToViewModel = (savedFormValues: GetFeeRecordCorrectionTransientFormDataResponseBody): ProvideCorrectionFormValuesViewModel => {
+export const mapToProvideCorrectionFormValuesViewModel = (
+  savedFormValues: GetFeeRecordCorrectionTransientFormDataResponseBody,
+): ProvideCorrectionFormValuesViewModel => {
   return {
     facilityId: savedFormValues.facilityId ?? null,
     utilisation: savedFormValues.utilisation ? getFormattedMonetaryValue(savedFormValues.utilisation) : null,

@@ -9,7 +9,7 @@ import {
 } from '@ukef/dtfs2-common';
 import {
   getAdditionalCommentsFieldLabels,
-  mapSavedFormValuesToViewModel,
+  mapToProvideCorrectionFormValuesViewModel,
   mapToCorrectionRequestDetailsViewModel,
   optionalAdditionalCommentsFieldLabels,
   requiredAdditionalCommentsFieldLabelsForManyReasons,
@@ -165,7 +165,7 @@ describe('provide-utilisation-report-correction helpers', () => {
     });
   });
 
-  describe('mapSavedFormValuesToViewModel', () => {
+  describe('mapToProvideCorrectionFormValuesViewModel', () => {
     it('should map facilityId without changing the value when provided', () => {
       // Arrange
       const savedFormValues = {
@@ -173,7 +173,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       };
 
       // Act
-      const result = mapSavedFormValuesToViewModel(savedFormValues);
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
       expect(result.facilityId).toEqual(savedFormValues.facilityId);
@@ -184,7 +184,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       const savedFormValues = {};
 
       // Act
-      const result = mapSavedFormValuesToViewModel(savedFormValues);
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
       expect(result.facilityId).toEqual(null);
@@ -197,7 +197,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       };
 
       // Act
-      const result = mapSavedFormValuesToViewModel(savedFormValues);
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
       expect(result.utilisation).toEqual(getFormattedMonetaryValue(savedFormValues.utilisation));
@@ -208,7 +208,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       const savedFormValues = {};
 
       // Act
-      const result = mapSavedFormValuesToViewModel(savedFormValues);
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
       expect(result.utilisation).toEqual(null);
@@ -221,7 +221,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       };
 
       // Act
-      const result = mapSavedFormValuesToViewModel(savedFormValues);
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
       expect(result.reportedFee).toEqual(getFormattedMonetaryValue(savedFormValues.reportedFee));
@@ -232,7 +232,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       const savedFormValues = {};
 
       // Act
-      const result = mapSavedFormValuesToViewModel(savedFormValues);
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
       expect(result.reportedFee).toEqual(null);
@@ -243,7 +243,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       const savedFormValues = {};
 
       // Act
-      const result = mapSavedFormValuesToViewModel(savedFormValues);
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
       expect(result.additionalComments).toEqual(null);
@@ -256,7 +256,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       };
 
       // Act
-      const result = mapSavedFormValuesToViewModel(savedFormValues);
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
       expect(result.additionalComments).toEqual(savedFormValues.additionalComments);
@@ -279,7 +279,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       };
 
       // Act
-      const result = mapSavedFormValuesToViewModel(savedFormValues);
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
       expect(result).toEqual(expected);
@@ -299,7 +299,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       };
 
       // Act
-      const result = mapSavedFormValuesToViewModel(savedFormValues);
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
       expect(result).toEqual(expected);

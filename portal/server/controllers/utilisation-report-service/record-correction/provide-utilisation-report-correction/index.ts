@@ -4,7 +4,7 @@ import api from '../../../../api';
 import { asLoggedInUserSession } from '../../../../helpers/express-session';
 import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
-import { getAdditionalCommentsFieldLabels, mapSavedFormValuesToViewModel, mapToCorrectionRequestDetailsViewModel } from './helpers';
+import { getAdditionalCommentsFieldLabels, mapToProvideCorrectionFormValuesViewModel, mapToCorrectionRequestDetailsViewModel } from './helpers';
 
 export type GetProvideUtilisationReportCorrection = Request & {
   params: {
@@ -42,7 +42,7 @@ export const getProvideUtilisationReportCorrection = async (req: GetProvideUtili
       correctionRequestDetails: mapToCorrectionRequestDetailsViewModel(feeRecordCorrection),
       paymentCurrencyOptions,
       additionalComments: additionalCommentsLabels,
-      formValues: mapSavedFormValuesToViewModel(savedFormValues),
+      formValues: mapToProvideCorrectionFormValuesViewModel(savedFormValues),
     });
   } catch (error) {
     console.error('Failed to get provide utilisation report correction %o', error);

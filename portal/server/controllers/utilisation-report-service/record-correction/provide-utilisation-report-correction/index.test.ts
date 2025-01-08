@@ -11,7 +11,7 @@ import {
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import api from '../../../../api';
 import { getProvideUtilisationReportCorrection, GetProvideUtilisationReportCorrection } from '.';
-import { getAdditionalCommentsFieldLabels, mapSavedFormValuesToViewModel, mapToCorrectionRequestDetailsViewModel } from './helpers';
+import { getAdditionalCommentsFieldLabels, mapToProvideCorrectionFormValuesViewModel, mapToCorrectionRequestDetailsViewModel } from './helpers';
 import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
 import { aGetFeeRecordCorrectionResponseBody } from '../../../../../test-helpers/test-data/get-fee-record-correction-response';
 import { GetFeeRecordCorrectionTransientFormDataResponseBody } from '../../../../api-response-types';
@@ -88,7 +88,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
           label: expectedAdditionalCommentsLabel,
           hint: expectedAdditionalCommentsHint,
         },
-        formValues: mapSavedFormValuesToViewModel(savedFormValues),
+        formValues: mapToProvideCorrectionFormValuesViewModel(savedFormValues),
       });
     });
 
