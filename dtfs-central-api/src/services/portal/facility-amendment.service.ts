@@ -98,7 +98,7 @@ export class PortalFacilityAmendmentService {
 
     const updatedAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityMongoId, amendmentMongoId);
 
-    if (!updatedAmendment || updatedAmendment.type !== AMENDMENT_TYPES.PORTAL) {
+    if (updatedAmendment?.type !== AMENDMENT_TYPES.PORTAL) {
       throw new Error(`Could not find amendment to return`);
     }
 
