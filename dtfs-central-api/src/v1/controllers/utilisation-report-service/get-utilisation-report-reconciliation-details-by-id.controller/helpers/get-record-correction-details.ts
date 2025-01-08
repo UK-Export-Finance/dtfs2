@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
-import { FeeRecordEntity, FeeRecordCorrectionSummary, mapReasonsToDisplayValues, mapCorrectionReasonsToValues, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, FeeRecordCorrectionSummary, mapReasonsToDisplayValues, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
+import { mapCorrectionReasonsToFormattedOldValues } from '../../../../../helpers/map-correction-reasons-to-incorrect-values';
 
 /**
  * Retrieves and constructs record correction data for the given fee records.
@@ -24,7 +25,7 @@ export const getRecordCorrectionDetails = (feeRecords: FeeRecordEntity[]): FeeRe
        * constructs a comma seperated string if there are more than one reason
        * the "old records" are the values before being corrected
        */
-      const oldRecords = mapCorrectionReasonsToValues(feeRecord, correction.reasons);
+      const oldRecords = mapCorrectionReasonsToFormattedOldValues(feeRecord, correction.reasons);
       const formattedOldRecords = oldRecords.join(', ');
 
       /**

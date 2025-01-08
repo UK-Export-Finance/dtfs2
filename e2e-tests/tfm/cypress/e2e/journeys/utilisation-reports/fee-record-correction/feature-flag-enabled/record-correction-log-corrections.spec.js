@@ -4,6 +4,7 @@ import {
   PENDING_RECONCILIATION,
   UtilisationReportEntityMockBuilder,
   RECORD_CORRECTION_REASON,
+  getFormattedMonetaryValue,
 } from '@ukef/dtfs2-common';
 import pages from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
@@ -13,11 +14,17 @@ import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/ut
 
 const bankId = '961';
 const reportId = 1;
+const fee = 50000;
 
 const firstReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(reportId).withBankId(bankId).build();
 
 const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(firstReport).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build();
-const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(firstReport).withId(2).withFacilityId('987654321').withStatus(FEE_RECORD_STATUS.TO_DO).build();
+const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(firstReport)
+  .withId(2)
+  .withFacilityId('987654321')
+  .withStatus(FEE_RECORD_STATUS.TO_DO)
+  .withFeesPaidToUkefForThePeriod(fee)
+  .build();
 
 const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([firstFeeRecord, secondFeeRecord]);
 
@@ -112,7 +119,7 @@ context('When fee record correction feature flag is enabled', () => {
         reasons: 'Reported fee is incorrect',
         dateSent: today.dd_MMM_yyyy,
         correctRecord: '-',
-        oldRecord: secondFeeRecord.totalFeesAccruedForThePeriod.toString(),
+        oldRecord: getFormattedMonetaryValue(fee),
         status: 'Record correction sent',
       });
     });

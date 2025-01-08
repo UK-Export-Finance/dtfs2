@@ -4,10 +4,10 @@ import {
   mapReasonsToDisplayValues,
   FEE_RECORD_STATUS,
   RECORD_CORRECTION_REASON,
-  mapCorrectionReasonsToValues,
 } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 import { getRecordCorrectionDetails } from './get-record-correction-details';
+import { mapCorrectionReasonsToFormattedOldValues } from '../../../../../helpers/map-correction-reasons-to-incorrect-values';
 
 describe('get-record-correction-details', () => {
   const feeRecordId = 11;
@@ -39,7 +39,7 @@ describe('get-record-correction-details', () => {
     it('should return a mapped array with a single reason', () => {
       const result = getRecordCorrectionDetails([feeRecord]);
 
-      const oldRecords = mapCorrectionReasonsToValues(feeRecord, correction.reasons);
+      const oldRecords = mapCorrectionReasonsToFormattedOldValues(feeRecord, correction.reasons);
       const formattedOldRecords = oldRecords.join(', ');
 
       const reasonsArray = mapReasonsToDisplayValues(feeRecord.corrections[0].reasons);
@@ -73,7 +73,7 @@ describe('get-record-correction-details', () => {
 
       const reasonsArray = mapReasonsToDisplayValues(feeRecord.corrections[0].reasons);
 
-      const oldRecords = mapCorrectionReasonsToValues(feeRecord, correction.reasons);
+      const oldRecords = mapCorrectionReasonsToFormattedOldValues(feeRecord, correction.reasons);
       const formattedOldRecords = oldRecords.join(', ');
 
       const expected = [
@@ -112,10 +112,10 @@ describe('get-record-correction-details', () => {
       const reasonsArray1 = mapReasonsToDisplayValues(feeRecord.corrections[0].reasons);
       const reasonsArray2 = mapReasonsToDisplayValues(feeRecord.corrections[1].reasons);
 
-      const oldRecords1 = mapCorrectionReasonsToValues(feeRecord, feeRecord.corrections[0].reasons);
+      const oldRecords1 = mapCorrectionReasonsToFormattedOldValues(feeRecord, feeRecord.corrections[0].reasons);
       const formattedOldRecords1 = oldRecords1.join(', ');
 
-      const oldRecords2 = mapCorrectionReasonsToValues(feeRecord, feeRecord.corrections[1].reasons);
+      const oldRecords2 = mapCorrectionReasonsToFormattedOldValues(feeRecord, feeRecord.corrections[1].reasons);
       const formattedOldRecords2 = oldRecords2.join(', ');
 
       const expected = [
@@ -174,13 +174,13 @@ describe('get-record-correction-details', () => {
       const reasonsArray2 = mapReasonsToDisplayValues(feeRecord1.corrections[1].reasons);
       const reasonsArray3 = mapReasonsToDisplayValues(feeRecord2.corrections[0].reasons);
 
-      const oldRecords1 = mapCorrectionReasonsToValues(feeRecord1, feeRecord1.corrections[0].reasons);
+      const oldRecords1 = mapCorrectionReasonsToFormattedOldValues(feeRecord1, feeRecord1.corrections[0].reasons);
       const formattedOldRecords1 = oldRecords1.join(', ');
 
-      const oldRecords2 = mapCorrectionReasonsToValues(feeRecord1, feeRecord1.corrections[1].reasons);
+      const oldRecords2 = mapCorrectionReasonsToFormattedOldValues(feeRecord1, feeRecord1.corrections[1].reasons);
       const formattedOldRecords2 = oldRecords2.join(', ');
 
-      const oldRecords3 = mapCorrectionReasonsToValues(feeRecord2, feeRecord2.corrections[0].reasons);
+      const oldRecords3 = mapCorrectionReasonsToFormattedOldValues(feeRecord2, feeRecord2.corrections[0].reasons);
       const formattedOldRecords3 = oldRecords3.join(', ');
 
       const expected = [
@@ -250,13 +250,13 @@ describe('get-record-correction-details', () => {
       const reasonsArray2 = mapReasonsToDisplayValues(feeRecord1.corrections[1].reasons);
       const reasonsArray3 = mapReasonsToDisplayValues(feeRecord2.corrections[0].reasons);
 
-      const oldRecords1 = mapCorrectionReasonsToValues(feeRecord1, feeRecord1.corrections[0].reasons);
+      const oldRecords1 = mapCorrectionReasonsToFormattedOldValues(feeRecord1, feeRecord1.corrections[0].reasons);
       const formattedOldRecords1 = oldRecords1.join(', ');
 
-      const oldRecords2 = mapCorrectionReasonsToValues(feeRecord1, feeRecord1.corrections[1].reasons);
+      const oldRecords2 = mapCorrectionReasonsToFormattedOldValues(feeRecord1, feeRecord1.corrections[1].reasons);
       const formattedOldRecords2 = oldRecords2.join(', ');
 
-      const oldRecords3 = mapCorrectionReasonsToValues(feeRecord2, feeRecord2.corrections[0].reasons);
+      const oldRecords3 = mapCorrectionReasonsToFormattedOldValues(feeRecord2, feeRecord2.corrections[0].reasons);
       const formattedOldRecords3 = oldRecords3.join(', ');
 
       const expected = [
