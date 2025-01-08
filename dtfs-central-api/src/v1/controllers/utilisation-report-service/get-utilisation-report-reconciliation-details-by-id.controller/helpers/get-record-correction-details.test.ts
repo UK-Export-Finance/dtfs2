@@ -4,6 +4,7 @@ import {
   mapReasonsToDisplayValues,
   FEE_RECORD_STATUS,
   RECORD_CORRECTION_REASON,
+  mapCorrectionReasonsToValues,
 } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 import { getRecordCorrectionDetails } from './get-record-correction-details';
@@ -38,18 +39,21 @@ describe('get-record-correction-details', () => {
     it('should return a mapped array with a single reason', () => {
       const result = getRecordCorrectionDetails([feeRecord]);
 
+      const oldRecords = mapCorrectionReasonsToValues(feeRecord, correction.reasons);
+      const formattedOldRecords = oldRecords.join(', ');
+
       const reasonsArray = mapReasonsToDisplayValues(feeRecord.corrections[0].reasons);
 
       const expected = [
         {
           correctionId: correction.id,
           feeRecordId: feeRecord.id,
-          facilityId: feeRecord.facilityId,
           exporter: feeRecord.exporter,
           status: FEE_RECORD_STATUS.PENDING_CORRECTION,
           formattedReasons: reasonsArray[0],
           formattedDateSent: format(feeRecord.corrections[0].dateRequested, 'dd MMM yyyy'),
-          requestedBy: `${feeRecord.corrections[0].requestedByUser.firstName} ${feeRecord.corrections[0].requestedByUser.lastName}`,
+          formattedOldRecords,
+          formattedCorrectRecords: '-',
         },
       ];
       expect(result).toEqual(expected);
@@ -69,16 +73,19 @@ describe('get-record-correction-details', () => {
 
       const reasonsArray = mapReasonsToDisplayValues(feeRecord.corrections[0].reasons);
 
+      const oldRecords = mapCorrectionReasonsToValues(feeRecord, correction.reasons);
+      const formattedOldRecords = oldRecords.join(', ');
+
       const expected = [
         {
           correctionId: correction.id,
           feeRecordId: feeRecord.id,
-          facilityId: feeRecord.facilityId,
           exporter: feeRecord.exporter,
           status: FEE_RECORD_STATUS.PENDING_CORRECTION,
           formattedReasons: `${reasonsArray[0]}, ${reasonsArray[1]}`,
           formattedDateSent: format(feeRecord.corrections[0].dateRequested, 'dd MMM yyyy'),
-          requestedBy: `${feeRecord.corrections[0].requestedByUser.firstName} ${feeRecord.corrections[0].requestedByUser.lastName}`,
+          formattedOldRecords,
+          formattedCorrectRecords: '-',
         },
       ];
       expect(result).toEqual(expected);
@@ -105,26 +112,32 @@ describe('get-record-correction-details', () => {
       const reasonsArray1 = mapReasonsToDisplayValues(feeRecord.corrections[0].reasons);
       const reasonsArray2 = mapReasonsToDisplayValues(feeRecord.corrections[1].reasons);
 
+      const oldRecords1 = mapCorrectionReasonsToValues(feeRecord, feeRecord.corrections[0].reasons);
+      const formattedOldRecords1 = oldRecords1.join(', ');
+
+      const oldRecords2 = mapCorrectionReasonsToValues(feeRecord, feeRecord.corrections[1].reasons);
+      const formattedOldRecords2 = oldRecords2.join(', ');
+
       const expected = [
         {
           correctionId: correction1.id,
           feeRecordId: feeRecord.id,
-          facilityId: feeRecord.facilityId,
           exporter: feeRecord.exporter,
           status: FEE_RECORD_STATUS.PENDING_CORRECTION,
           formattedReasons: `${reasonsArray1[0]}, ${reasonsArray1[1]}`,
           formattedDateSent: format(feeRecord.corrections[0].dateRequested, 'dd MMM yyyy'),
-          requestedBy: `${feeRecord.corrections[0].requestedByUser.firstName} ${feeRecord.corrections[0].requestedByUser.lastName}`,
+          formattedOldRecords: formattedOldRecords1,
+          formattedCorrectRecords: '-',
         },
         {
           correctionId: correction2.id,
           feeRecordId: feeRecord.id,
-          facilityId: feeRecord.facilityId,
           exporter: feeRecord.exporter,
           status: FEE_RECORD_STATUS.PENDING_CORRECTION,
           formattedReasons: reasonsArray2[0],
           formattedDateSent: format(feeRecord.corrections[1].dateRequested, 'dd MMM yyyy'),
-          requestedBy: `${feeRecord.corrections[1].requestedByUser.firstName} ${feeRecord.corrections[1].requestedByUser.lastName}`,
+          formattedOldRecords: formattedOldRecords2,
+          formattedCorrectRecords: '-',
         },
       ];
 
@@ -161,36 +174,45 @@ describe('get-record-correction-details', () => {
       const reasonsArray2 = mapReasonsToDisplayValues(feeRecord1.corrections[1].reasons);
       const reasonsArray3 = mapReasonsToDisplayValues(feeRecord2.corrections[0].reasons);
 
+      const oldRecords1 = mapCorrectionReasonsToValues(feeRecord1, feeRecord1.corrections[0].reasons);
+      const formattedOldRecords1 = oldRecords1.join(', ');
+
+      const oldRecords2 = mapCorrectionReasonsToValues(feeRecord1, feeRecord1.corrections[1].reasons);
+      const formattedOldRecords2 = oldRecords2.join(', ');
+
+      const oldRecords3 = mapCorrectionReasonsToValues(feeRecord2, feeRecord2.corrections[0].reasons);
+      const formattedOldRecords3 = oldRecords3.join(', ');
+
       const expected = [
         {
           correctionId: correction1.id,
           feeRecordId: feeRecord1.id,
-          facilityId: feeRecord1.facilityId,
           exporter: feeRecord1.exporter,
           status: FEE_RECORD_STATUS.PENDING_CORRECTION,
           formattedReasons: `${reasonsArray1[0]}, ${reasonsArray1[1]}`,
           formattedDateSent: format(feeRecord1.corrections[0].dateRequested, 'dd MMM yyyy'),
-          requestedBy: `${feeRecord1.corrections[0].requestedByUser.firstName} ${feeRecord1.corrections[0].requestedByUser.lastName}`,
+          formattedOldRecords: formattedOldRecords1,
+          formattedCorrectRecords: '-',
         },
         {
           correctionId: correction2.id,
           feeRecordId: feeRecord1.id,
-          facilityId: feeRecord1.facilityId,
           exporter: feeRecord1.exporter,
           status: FEE_RECORD_STATUS.PENDING_CORRECTION,
           formattedReasons: reasonsArray2[0],
           formattedDateSent: format(feeRecord1.corrections[1].dateRequested, 'dd MMM yyyy'),
-          requestedBy: `${feeRecord1.corrections[1].requestedByUser.firstName} ${feeRecord1.corrections[1].requestedByUser.lastName}`,
+          formattedOldRecords: formattedOldRecords2,
+          formattedCorrectRecords: '-',
         },
         {
           correctionId: correction3.id,
           feeRecordId: feeRecord2.id,
-          facilityId: feeRecord2.facilityId,
           exporter: feeRecord2.exporter,
           status: FEE_RECORD_STATUS.PENDING_CORRECTION,
           formattedReasons: reasonsArray3[0],
           formattedDateSent: format(feeRecord2.corrections[0].dateRequested, 'dd MMM yyyy'),
-          requestedBy: `${feeRecord2.corrections[0].requestedByUser.firstName} ${feeRecord2.corrections[0].requestedByUser.lastName}`,
+          formattedOldRecords: formattedOldRecords3,
+          formattedCorrectRecords: '-',
         },
       ];
 
@@ -228,36 +250,45 @@ describe('get-record-correction-details', () => {
       const reasonsArray2 = mapReasonsToDisplayValues(feeRecord1.corrections[1].reasons);
       const reasonsArray3 = mapReasonsToDisplayValues(feeRecord2.corrections[0].reasons);
 
+      const oldRecords1 = mapCorrectionReasonsToValues(feeRecord1, feeRecord1.corrections[0].reasons);
+      const formattedOldRecords1 = oldRecords1.join(', ');
+
+      const oldRecords2 = mapCorrectionReasonsToValues(feeRecord1, feeRecord1.corrections[1].reasons);
+      const formattedOldRecords2 = oldRecords2.join(', ');
+
+      const oldRecords3 = mapCorrectionReasonsToValues(feeRecord2, feeRecord2.corrections[0].reasons);
+      const formattedOldRecords3 = oldRecords3.join(', ');
+
       const expected = [
         {
           correctionId: correction1.id,
           feeRecordId: feeRecord1.id,
-          facilityId: feeRecord1.facilityId,
           exporter: feeRecord1.exporter,
           status: FEE_RECORD_STATUS.PENDING_CORRECTION,
           formattedReasons: `${reasonsArray1[0]}, ${reasonsArray1[1]}`,
           formattedDateSent: format(feeRecord1.corrections[0].dateRequested, 'dd MMM yyyy'),
-          requestedBy: `${feeRecord1.corrections[0].requestedByUser.firstName} ${feeRecord1.corrections[0].requestedByUser.lastName}`,
+          formattedOldRecords: formattedOldRecords1,
+          formattedCorrectRecords: '-',
         },
         {
           correctionId: correction2.id,
           feeRecordId: feeRecord1.id,
-          facilityId: feeRecord1.facilityId,
           exporter: feeRecord1.exporter,
           status: FEE_RECORD_STATUS.PENDING_CORRECTION,
           formattedReasons: reasonsArray2[0],
           formattedDateSent: format(feeRecord1.corrections[1].dateRequested, 'dd MMM yyyy'),
-          requestedBy: `${feeRecord1.corrections[1].requestedByUser.firstName} ${feeRecord1.corrections[1].requestedByUser.lastName}`,
+          formattedOldRecords: formattedOldRecords2,
+          formattedCorrectRecords: '-',
         },
         {
           correctionId: correction3.id,
           feeRecordId: feeRecord2.id,
-          facilityId: feeRecord2.facilityId,
           exporter: feeRecord2.exporter,
           status: FEE_RECORD_STATUS.PENDING_CORRECTION,
           formattedReasons: reasonsArray3[0],
           formattedDateSent: format(feeRecord2.corrections[0].dateRequested, 'dd MMM yyyy'),
-          requestedBy: `${feeRecord2.corrections[0].requestedByUser.firstName} ${feeRecord2.corrections[0].requestedByUser.lastName}`,
+          formattedOldRecords: formattedOldRecords3,
+          formattedCorrectRecords: '-',
         },
       ];
 

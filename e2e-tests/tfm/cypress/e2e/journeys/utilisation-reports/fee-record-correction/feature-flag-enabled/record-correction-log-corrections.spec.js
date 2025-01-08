@@ -80,11 +80,11 @@ context('When fee record correction feature flag is enabled', () => {
   });
 
   it('should display the correct table headers', () => {
-    cy.assertText(table.facilityIdHeader(), 'Facility ID');
+    cy.assertText(table.dateSentHeader(), 'Date sent');
     cy.assertText(table.exporterHeader(), 'Exporter');
     cy.assertText(table.reasonsHeader(), 'Reason for record correction');
-    cy.assertText(table.dateSentHeader(), 'Date sent');
-    cy.assertText(table.requestedByHeader(), 'Requested by');
+    cy.assertText(table.correctRecordHeader(), 'Correct record');
+    cy.assertText(table.oldRecordHeader(), 'Old record');
     cy.assertText(table.statusHeader(), 'Status');
   });
 
@@ -98,7 +98,8 @@ context('When fee record correction feature flag is enabled', () => {
         feeRecord,
         reasons: 'Facility ID is incorrect, Other',
         dateSent: today.dd_MMM_yyyy,
-        requestedBy: `${USERS.PDC_RECONCILE.firstName} ${USERS.PDC_RECONCILE.lastName}`,
+        correctRecord: '-',
+        oldRecord: `${firstFeeRecord.facilityId}, -`,
         status: 'Record correction sent',
       });
     });
@@ -110,7 +111,8 @@ context('When fee record correction feature flag is enabled', () => {
         feeRecord,
         reasons: 'Reported fee is incorrect',
         dateSent: today.dd_MMM_yyyy,
-        requestedBy: `${USERS.PDC_RECONCILE.firstName} ${USERS.PDC_RECONCILE.lastName}`,
+        correctRecord: '-',
+        oldRecord: secondFeeRecord.totalFeesAccruedForThePeriod.toString(),
         status: 'Record correction sent',
       });
     });
