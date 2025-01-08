@@ -136,7 +136,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
       cy.login(USERS.PDC_READ);
 
       cy.visit(`utilisation-reports/${REPORT_ID}`);
-      pages.utilisationReportPage.keyingSheetTabLink().click();
+      pages.utilisationReportPage.tabs.keyingSheet().click();
 
       pages.utilisationReportPage.premiumPaymentsTab.selectPaymentsText().should('not.exist');
       pages.utilisationReportPage.premiumPaymentsTab.paymentsOnPremiumPaymentsText().should('exist');
@@ -169,7 +169,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
     pages.utilisationReportsSummaryPage.tableRowSelector(BANK_ID, SUBMISSION_MONTH).should('contain', 'Report completed');
 
     pages.utilisationReportsSummaryPage.reportLink(BANK_ID, SUBMISSION_MONTH).click();
-    pages.utilisationReportPage.keyingSheetTabLink().click();
+    pages.utilisationReportPage.tabs.keyingSheet().click();
     pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FEE_RECORD_ID_TWO).within(() => cy.get('input[type="checkbox"]').click());
     pages.utilisationReportPage.keyingSheetTab.markAsToDoButton().click();
 
@@ -181,7 +181,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
     pages.utilisationReportPage.keyingSheetTab.selectAllCheckbox().click();
     pages.utilisationReportPage.keyingSheetTab.markAsDoneButton().click();
 
-    pages.utilisationReportPage.premiumPaymentsTabLink().click();
+    pages.utilisationReportPage.tabs.premiumPayments().click();
 
     pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.selectAllCheckboxContainer().should('not.exist');
   });

@@ -128,7 +128,7 @@ context('Portal to TFM utilisation report submission', () => {
     assertPremiumPaymentsTableContainsRowWithExpectedValues(february2023ExpectedValues.secondReportRow);
     assertPremiumPaymentsTableContainsRowWithExpectedValues(february2023ExpectedValues.thirdReportRow);
 
-    tfmPages.utilisationReportPage.utilisationTabLink().click();
+    tfmPages.utilisationReportPage.tabs.utilisation().click();
 
     assertUtilisationTableContainsRowWithExpectedValues(february2023ExpectedValues.firstReportRow);
     assertUtilisationTableContainsRowWithExpectedValues(february2023ExpectedValues.secondReportRow);

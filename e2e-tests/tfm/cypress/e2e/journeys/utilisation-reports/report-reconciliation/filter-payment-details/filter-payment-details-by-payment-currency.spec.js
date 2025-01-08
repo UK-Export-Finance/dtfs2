@@ -21,7 +21,7 @@ context(`users can filter payment details by payment currency`, () => {
     .withDateUploaded(new Date())
     .build();
 
-  const { paymentDetailsTabLink, paymentDetailsTab } = pages.utilisationReportPage;
+  const { tabs, paymentDetailsTab } = pages.utilisationReportPage;
   const { filters, paymentDetailsTable, errorSummaryErrors } = paymentDetailsTab;
 
   before(() => {
@@ -72,7 +72,7 @@ context(`users can filter payment details by payment currency`, () => {
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      paymentDetailsTabLink().click();
+      tabs.paymentDetails().click();
 
       filters.paymentCurrencyRadioInput(paymentCurrencyFilter).click();
       filters.submitButton().click();
@@ -138,7 +138,7 @@ context(`users can filter payment details by payment currency`, () => {
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      paymentDetailsTabLink().click();
+      tabs.paymentDetails().click();
 
       filters.submitButton().click();
 
@@ -170,7 +170,7 @@ context(`users can filter payment details by payment currency`, () => {
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      paymentDetailsTabLink().click();
+      tabs.paymentDetails().click();
 
       filters.paymentCurrencyRadioInput(unknownPaymentCurrencyFilter).click();
       filters.submitButton().click();

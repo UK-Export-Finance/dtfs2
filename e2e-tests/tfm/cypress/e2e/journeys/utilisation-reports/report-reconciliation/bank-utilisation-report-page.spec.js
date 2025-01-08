@@ -53,10 +53,10 @@ context('Bank utilisation report page', () => {
     });
 
     it('should display the correct tabs', () => {
-      cy.assertText(utilisationReportPage.premiumPaymentsTabLink(), 'Premium payments');
-      cy.assertText(utilisationReportPage.keyingSheetTabLink(), 'Keying sheet');
-      cy.assertText(utilisationReportPage.paymentDetailsTabLink(), 'Payment details');
-      cy.assertText(utilisationReportPage.utilisationTabLink(), 'Utilisation');
+      cy.assertText(utilisationReportPage.tabs.premiumPayments(), 'Premium payments');
+      cy.assertText(utilisationReportPage.tabs.keyingSheet(), 'Keying sheet');
+      cy.assertText(utilisationReportPage.tabs.paymentDetails(), 'Payment details');
+      cy.assertText(utilisationReportPage.tabs.utilisation(), 'Utilisation');
     });
 
     it('should display the correct text', () => {
@@ -91,10 +91,10 @@ context('Bank utilisation report page', () => {
     });
 
     it('should display the correct tabs', () => {
-      cy.assertText(utilisationReportPage.premiumPaymentsTabLink(), 'Premium payments');
-      cy.assertText(utilisationReportPage.keyingSheetTabLink(), 'Keying sheet');
-      cy.assertText(utilisationReportPage.paymentDetailsTabLink(), 'Payment details');
-      cy.assertText(utilisationReportPage.utilisationTabLink(), 'Utilisation');
+      cy.assertText(utilisationReportPage.tabs.premiumPayments(), 'Premium payments');
+      cy.assertText(utilisationReportPage.tabs.keyingSheet(), 'Keying sheet');
+      cy.assertText(utilisationReportPage.tabs.paymentDetails(), 'Payment details');
+      cy.assertText(utilisationReportPage.tabs.utilisation(), 'Utilisation');
     });
 
     it('should display the correct text', () => {

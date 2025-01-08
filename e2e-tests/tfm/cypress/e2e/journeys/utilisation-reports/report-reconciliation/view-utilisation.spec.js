@@ -159,7 +159,7 @@ context('Users can view utilisation', () => {
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
 
-    pages.utilisationReportPage.utilisationTabLink().click();
+    pages.utilisationReportPage.tabs.utilisation().click();
   });
 
   it('should render the utilisation for each fee record', () => {

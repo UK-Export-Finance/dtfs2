@@ -2,11 +2,13 @@ const utilisationReportPage = {
   heading: () => cy.get('[data-cy="utilisation-report-reconciliation-for-report-heading"]'),
   reportPeriodHeading: () => cy.get('[data-cy="report-period-heading"]'),
   bankReportsNavLink: () => cy.get('a[data-cy="bank-reports-nav-link"]'),
-  keyingSheetTabLink: () => cy.get('a[data-cy="bank-report-tab-keying-sheet"]'),
-  paymentDetailsTabLink: () => cy.get('a[data-cy="bank-report-tab-payment-details"]'),
-  premiumPaymentsTabLink: () => cy.get('a[data-cy="bank-report-tab-premium-payments"]'),
-  utilisationTabLink: () => cy.get('a[data-cy="bank-report-tab-utilisation"]'),
-  recordCorrectionLogTabLink: () => cy.get('a[data-cy="bank-report-tab-record-correction-log"]'),
+  tabs: {
+    keyingSheet: () => cy.get('a[data-cy="bank-report-tab-keying-sheet"]'),
+    paymentDetails: () => cy.get('a[data-cy="bank-report-tab-payment-details"]'),
+    premiumPayments: () => cy.get('a[data-cy="bank-report-tab-premium-payments"]'),
+    utilisation: () => cy.get('a[data-cy="bank-report-tab-utilisation"]'),
+    recordCorrectionLog: () => cy.get('a[data-cy="bank-report-tab-record-correction-log"]'),
+  },
   premiumPaymentsTab: {
     matchSuccessNotificationHeading: () => cy.get('[data-cy="match-success-notification-heading"]'),
     matchSuccessNotificationMessage: () => cy.get('[data-cy="match-success-notification-message"]'),

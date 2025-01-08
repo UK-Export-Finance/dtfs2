@@ -32,7 +32,7 @@ context('When fee record correction feature flag is enabled', () => {
     });
 
     it('should display the record correction log tab', () => {
-      cy.assertText(utilisationReportPage.recordCorrectionLogTabLink(), 'Record correction log');
+      cy.assertText(utilisationReportPage.tabs.recordCorrectionLog(), 'Record correction log');
     });
 
     it('should display the record correction text', () => {
@@ -52,7 +52,7 @@ context('When fee record correction feature flag is enabled', () => {
     });
 
     it('should display the record correction log tab', () => {
-      cy.assertText(utilisationReportPage.recordCorrectionLogTabLink(), 'Record correction log');
+      cy.assertText(utilisationReportPage.tabs.recordCorrectionLog(), 'Record correction log');
     });
 
     it('should display the record correction text', () => {

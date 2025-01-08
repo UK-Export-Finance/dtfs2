@@ -22,7 +22,7 @@ context(`users can filter payment details by payment reference`, () => {
     .withDateUploaded(new Date())
     .build();
 
-  const { paymentDetailsTabLink, paymentDetailsTab } = pages.utilisationReportPage;
+  const { tabs, paymentDetailsTab } = pages.utilisationReportPage;
   const { filters, paymentDetailsTable, errorSummaryErrors } = paymentDetailsTab;
 
   before(() => {
@@ -66,7 +66,7 @@ context(`users can filter payment details by payment reference`, () => {
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      paymentDetailsTabLink().click();
+      tabs.paymentDetails().click();
 
       cy.keyboardInput(filters.paymentReferenceInput(), completePaymentReferenceFilter);
       filters.submitButton().click();
@@ -106,7 +106,7 @@ context(`users can filter payment details by payment reference`, () => {
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      paymentDetailsTabLink().click();
+      tabs.paymentDetails().click();
 
       cy.keyboardInput(filters.paymentReferenceInput(), partialPaymentReferenceFilter);
       filters.submitButton().click();
@@ -144,7 +144,7 @@ context(`users can filter payment details by payment reference`, () => {
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      paymentDetailsTabLink().click();
+      tabs.paymentDetails().click();
 
       cy.keyboardInput(filters.paymentReferenceInput(), invalidPaymentReferenceFilter);
       filters.submitButton().click();
@@ -183,7 +183,7 @@ context(`users can filter payment details by payment reference`, () => {
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      paymentDetailsTabLink().click();
+      tabs.paymentDetails().click();
 
       filters.paymentReferenceInput().should('have.value', emptyPaymentReferenceFilter);
       filters.submitButton().click();
@@ -217,7 +217,7 @@ context(`users can filter payment details by payment reference`, () => {
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      paymentDetailsTabLink().click();
+      tabs.paymentDetails().click();
 
       cy.keyboardInput(filters.paymentReferenceInput(), unknownPaymentReferenceFilter);
       filters.submitButton().click();

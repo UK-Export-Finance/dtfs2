@@ -35,14 +35,14 @@ context('record correction log page - no corrections', () => {
     cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${reportId}`);
-    utilisationReportPage.recordCorrectionLogTabLink().click();
+    utilisationReportPage.tabs.recordCorrectionLog().click();
   });
 
   describe('when navigating to the page', () => {
     it('should display the tab heading and text', () => {
       cy.assertText(recordCorrectionLogTab.heading(), 'Record correction log');
 
-      cy.assertText(utilisationReportPage.recordCorrectionLogTabLink(), 'Record correction log');
+      cy.assertText(utilisationReportPage.tabs.recordCorrectionLog(), 'Record correction log');
 
       cy.assertText(utilisationReportPage.recordCorrectionLogTab.viewHistoricRecordCorrectionText(), 'View record correction requests that have been made.');
 

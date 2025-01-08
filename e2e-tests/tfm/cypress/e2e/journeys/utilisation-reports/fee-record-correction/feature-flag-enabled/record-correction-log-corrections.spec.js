@@ -66,7 +66,7 @@ context('When fee record correction feature flag is enabled', () => {
     cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${reportId}`);
-    utilisationReportPage.recordCorrectionLogTabLink().click();
+    utilisationReportPage.tabs.recordCorrectionLog().click();
   });
 
   after(() => {

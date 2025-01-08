@@ -21,7 +21,7 @@ context(`users can filter payment details by facility id`, () => {
     .withDateUploaded(new Date())
     .build();
 
-  const { paymentDetailsTabLink, paymentDetailsTab } = pages.utilisationReportPage;
+  const { tabs, paymentDetailsTab } = pages.utilisationReportPage;
   const { filters, paymentDetailsTable, errorSummaryErrors } = paymentDetailsTab;
 
   const aPaymentWithFeeRecords = (feeRecords) => PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords(feeRecords).build();
@@ -66,7 +66,7 @@ context(`users can filter payment details by facility id`, () => {
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      paymentDetailsTabLink().click();
+      tabs.paymentDetails().click();
 
       cy.keyboardInput(filters.facilityIdInput(), completeFacilityIdFilter);
       filters.submitButton().click();
@@ -105,7 +105,7 @@ context(`users can filter payment details by facility id`, () => {
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      paymentDetailsTabLink().click();
+      tabs.paymentDetails().click();
 
       cy.keyboardInput(filters.facilityIdInput(), partialFacilityIdFilter);
       filters.submitButton().click();
@@ -143,7 +143,7 @@ context(`users can filter payment details by facility id`, () => {
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      paymentDetailsTabLink().click();
+      tabs.paymentDetails().click();
 
       cy.keyboardInput(filters.facilityIdInput(), invalidFacilityIdFilter);
       filters.submitButton().click();
@@ -182,7 +182,7 @@ context(`users can filter payment details by facility id`, () => {
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      paymentDetailsTabLink().click();
+      tabs.paymentDetails().click();
 
       filters.facilityIdInput().should('have.value', emptyFacilityIdFilter);
       filters.submitButton().click();
@@ -216,7 +216,7 @@ context(`users can filter payment details by facility id`, () => {
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      paymentDetailsTabLink().click();
+      tabs.paymentDetails().click();
 
       cy.keyboardInput(filters.facilityIdInput(), unknownFacilityIdFilter);
       filters.submitButton().click();
