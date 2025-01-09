@@ -243,7 +243,7 @@ bankRouter
  *             properties:
  *               formData:
  *                 type: object
- *                 $ref: '#/definitions/FeeRecordCorrectionTransientFormData'
+ *                 $ref: '#/definitions/FeeRecordCorrectionTransientFormDataRequestBody'
  *               user:
  *                 type: object
  *                 properties:
