@@ -1,3 +1,2 @@
-import { getProvideUtilisationReportCorrection } from './provide-utilisation-report-correction';
-
-export { getProvideUtilisationReportCorrection };
+export { getProvideUtilisationReportCorrection } from './provide-utilisation-report-correction';
+export { getRecordCorrectionConfirmation } from './record-correction-confirmation';

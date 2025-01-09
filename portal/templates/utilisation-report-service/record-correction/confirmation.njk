@@ -1,0 +1,25 @@
+{% extends "index.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% import "../_macros/header-only-panel.njk" as headerOnlyPanel %}
+{% import "../_macros/email-confirmation-list.njk" as emailConfirmationList %}
+
+{% block pageTitle %}Confirmation{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ headerOnlyPanel.render({
+        titleText: formattedReportPeriod + ' record correction sent to UKEF'
+      }) }}
+
+      {{ emailConfirmationList.render({
+        emails: sentToEmails
+      }) }}
+
+      <p class="govuk-body">UKEF will be notified via email that a record has been updated.</p>
+
+      <a href="/utilisation-report-upload" role="button" class="govuk-button govuk-!-margin-top-6" data-module="govuk-button" data-cy="continue-button">Continue</a>
+    </div>
+  </div>
+{% endblock %}
