@@ -21,7 +21,7 @@ function populateTeamCheckingRouter() {
   teamCheckingRoutes.get('/', (req: Request, res: Response) => renderTeamsChecker(req, res, { teamCombinations }));
 
   teamCombinations.forEach((teamCombination) => {
-    teamCheckingRoutes.get(`/${teamCombination.url}`, validateUserTeam(teamCombination.teams), (req: Request, res: Response) =>
+    teamCheckingRoutes.get(`/${teamCombination.url}`, (req: Request, res: Response) =>
       renderTeamsChecker(req, res, { teamCombinations, currentPageTeamRestrictions: teamCombination }),
     );
   });
