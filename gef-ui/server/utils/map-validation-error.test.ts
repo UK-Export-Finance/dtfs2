@@ -5,20 +5,20 @@ import { mapValidationError } from './map-validation-error';
 describe('mapValidationError', () => {
   it('should map the validation error', () => {
     // Arrange
-    const tfmValidationError: GenericValidationError = {
+    const genericValidationError: GenericValidationError = {
       ref: 'facilityEndDate',
       message: 'Facility end date cannot be before the cover start date',
       fieldRefs: ['facilityEndDate-day', 'facilityEndDate-month', 'facilityEndDate-year'],
     };
 
     // Act
-    const result = mapValidationError(tfmValidationError);
+    const result = mapValidationError(genericValidationError);
 
     // Assert
     const expected: ValidationError = {
-      errRef: tfmValidationError.ref,
-      errMsg: tfmValidationError.message,
-      subFieldErrorRefs: tfmValidationError.fieldRefs,
+      errRef: genericValidationError.ref,
+      errMsg: genericValidationError.message,
+      subFieldErrorRefs: genericValidationError.fieldRefs,
     };
 
     expect(result).toEqual(expected);

@@ -4,7 +4,7 @@ import { ValidationError } from '../types/validation-error';
 /**
  * The commonised validation `applyStandardValidationAndParseDateInput` returns a `GenericValidationError` object but
  * in gef-ui a different type `ValidationError` is used. This function maps the `GenericValidationError` to a `ValidationError`.
- * @param validationError - a tfm validation error
+ * @param validationError - a validation error
  * @returns the mapped validation error
  */
 export const mapValidationError = (validationError: GenericValidationError): ValidationError => {

@@ -510,7 +510,7 @@ describe('validateAndUpdateAboutFacility', () => {
       );
     });
 
-    it('shows error message if coverStartDate day has character or is more than 3 numbers long', async () => {
+    it('shows error message if coverStartDate day contains a non-numeric character or is more than 3 digits long', async () => {
       const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
@@ -549,7 +549,7 @@ describe('validateAndUpdateAboutFacility', () => {
       );
     });
 
-    it('shows error message if coverStartDate month has character or is more than 3 numbers long', async () => {
+    it('shows error message if coverStartDate month contains a non-numeric character or is more than 3 digits long', async () => {
       const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
@@ -627,7 +627,7 @@ describe('validateAndUpdateAboutFacility', () => {
       );
     });
 
-    it('shows error message if coverEndDate day has character or is more than 3 numbers long', async () => {
+    it('shows error message if coverEndDate day contains a non-numeric character or is more than 3 digits long', async () => {
       const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
@@ -666,7 +666,7 @@ describe('validateAndUpdateAboutFacility', () => {
       );
     });
 
-    it('shows error message if coverEndDate month has character or is more than 3 numbers long', async () => {
+    it('shows error message if coverEndDate month contains a non-numeric character or is more than 3 digits long', async () => {
       const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
