@@ -1,9 +1,7 @@
-import { CurrencyAndAmount, PortalSessionUser } from '@ukef/dtfs2-common';
-import { PrimaryNavKey } from '../../primary-nav-key';
+import { CurrencyAndAmount } from '@ukef/dtfs2-common';
+import { BaseViewModel } from '../base-view-model';
 
-export type UtilisationReportCorrectionInformationViewModel = {
-  user: PortalSessionUser;
-  primaryNav: PrimaryNavKey;
+export type UtilisationReportCorrectionInformationViewModel = BaseViewModel & {
   backLinkHref: string;
   feeRecord: {
     exporter: string;
