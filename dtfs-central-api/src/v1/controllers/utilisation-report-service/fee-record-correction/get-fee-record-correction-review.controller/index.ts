@@ -46,8 +46,7 @@ export const getFeeRecordCorrectionReview = async (req: GetFeeRecordCorrectionRe
       throw new NotFoundError(`Failed to find fee record correction transient form data with correction id ${correctionId} and user id ${userId}`);
     }
 
-    // TODO: Do we need the report, can we add a new reduced repo method?
-    const feeRecordCorrection = await FeeRecordCorrectionRepo.findOneByIdWithFeeRecordAndReport(correctionId);
+    const feeRecordCorrection = await FeeRecordCorrectionRepo.findOneByIdWithFeeRecord(correctionId);
 
     if (!feeRecordCorrection) {
       throw new NotFoundError(`Failed to find fee record correction with id: ${correctionId}`);
