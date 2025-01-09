@@ -510,7 +510,7 @@ describe('validateAndUpdateAboutFacility', () => {
       );
     });
 
-    it('shows error message if coverStartDate day has character or is more than 3 numbers long', async () => {
+    it('shows error message if coverStartDate day contains a non-numeric character or is more than 3 digits long', async () => {
       const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
@@ -525,7 +525,7 @@ describe('validateAndUpdateAboutFacility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The day for the cover start date must include 1 or 2 numbers' }]),
+            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'Cover start date must be a real date' }]),
           }),
         }),
       );
@@ -543,13 +543,13 @@ describe('validateAndUpdateAboutFacility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The day for the cover start date must include 1 or 2 numbers' }]),
+            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'Cover start date must be a real date' }]),
           }),
         }),
       );
     });
 
-    it('shows error message if coverStartDate month has character or is more than 3 numbers long', async () => {
+    it('shows error message if coverStartDate month contains a non-numeric character or is more than 3 digits long', async () => {
       const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
@@ -564,7 +564,7 @@ describe('validateAndUpdateAboutFacility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The month for the cover start date must include 1 or 2 numbers' }]),
+            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'Cover start date must be a real date' }]),
           }),
         }),
       );
@@ -582,7 +582,7 @@ describe('validateAndUpdateAboutFacility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The month for the cover start date must include 1 or 2 numbers' }]),
+            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'Cover start date must be a real date' }]),
           }),
         }),
       );
@@ -603,7 +603,7 @@ describe('validateAndUpdateAboutFacility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The year for the cover start date must include 4 numbers' }]),
+            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'Cover start date must be a real date' }]),
           }),
         }),
       );
@@ -621,13 +621,13 @@ describe('validateAndUpdateAboutFacility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'The year for the cover start date must include 4 numbers' }]),
+            errorSummary: expect.arrayContaining([{ href: '#coverStartDate', text: 'Cover start date must be a real date' }]),
           }),
         }),
       );
     });
 
-    it('shows error message if coverEndDate day has character or is more than 3 numbers long', async () => {
+    it('shows error message if coverEndDate day contains a non-numeric character or is more than 3 digits long', async () => {
       const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
@@ -642,7 +642,7 @@ describe('validateAndUpdateAboutFacility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The day for the cover end date must include 1 or 2 numbers' }]),
+            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'Cover end date must be a real date' }]),
           }),
         }),
       );
@@ -660,13 +660,13 @@ describe('validateAndUpdateAboutFacility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The day for the cover end date must include 1 or 2 numbers' }]),
+            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'Cover end date must be a real date' }]),
           }),
         }),
       );
     });
 
-    it('shows error message if coverStartDate month has character or is more than 3 numbers long', async () => {
+    it('shows error message if coverEndDate month contains a non-numeric character or is more than 3 digits long', async () => {
       const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
@@ -681,7 +681,7 @@ describe('validateAndUpdateAboutFacility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The month for the cover end date must include 1 or 2 numbers' }]),
+            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'Cover end date must be a real date' }]),
           }),
         }),
       );
@@ -699,13 +699,13 @@ describe('validateAndUpdateAboutFacility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The month for the cover end date must include 1 or 2 numbers' }]),
+            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'Cover end date must be a real date' }]),
           }),
         }),
       );
     });
 
-    it('shows error message if coverStartDate year is less than 4 numbers long or has symbols', async () => {
+    it('shows error message if coverEndDate year is less than 4 numbers long or has symbols', async () => {
       const mockRequest = MockRequest();
       mockRequest.body.facilityType = CONSTANTS.FACILITY_TYPE.CASH;
       mockRequest.body.hasBeenIssued = 'true';
@@ -720,7 +720,7 @@ describe('validateAndUpdateAboutFacility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The year for the cover end date must include 4 numbers' }]),
+            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'Cover end date must be a real date' }]),
           }),
         }),
       );
@@ -738,7 +738,7 @@ describe('validateAndUpdateAboutFacility', () => {
         'partials/about-facility.njk',
         expect.objectContaining({
           errors: expect.objectContaining({
-            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'The year for the cover end date must include 4 numbers' }]),
+            errorSummary: expect.arrayContaining([{ href: '#coverEndDate', text: 'Cover end date must be a real date' }]),
           }),
         }),
       );

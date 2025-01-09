@@ -1,7 +1,7 @@
 const { add, isAfter, isBefore, isEqual, set, startOfDay } = require('date-fns');
-const Joi = require('joi');
+const { applyStandardValidationAndParseDateInput } = require('@ukef/dtfs2-common');
 const { isTrueSet } = require('../../utils/helpers');
-const { validateAndParseDayMonthYear } = require('../../utils/day-month-year-validation');
+const { mapValidationError } = require('../../utils/map-validation-error');
 
 /**
  * @param {Object} params
@@ -70,34 +70,35 @@ const validateAboutFacility = ({
 
     if (shouldCoverStartOnSubmission === 'false') {
       if (!coverStartDateIsBlank || !saveAndReturn) {
-        const { errors: coverStartDateFormattingErrors, date: startDate } = validateAndParseDayMonthYear(
+        const coverStartDateErrRef = 'coverStartDate';
+        const coverStartDateDisplayName = 'cover start date';
+
+        const { parsedDate: startDate, error: coverStartDateFormattingError } = applyStandardValidationAndParseDateInput(
           {
             day: coverStartDateDay,
             month: coverStartDateMonth,
             year: coverStartDateYear,
           },
-          {
-            errRef: 'coverStartDate',
-            variableDisplayName: 'cover start date',
-          },
+          coverStartDateDisplayName,
+          coverStartDateErrRef,
         );
 
-        if (coverStartDateFormattingErrors) {
-          aboutFacilityErrors.push(...coverStartDateFormattingErrors);
+        if (coverStartDateFormattingError) {
+          aboutFacilityErrors.push(mapValidationError(coverStartDateFormattingError));
         } else {
           const now = startOfDay(new Date());
           const threeMonthsFromNow = add(now, { months: 3 });
 
           if (isBefore(startDate, now)) {
             aboutFacilityErrors.push({
-              errRef: 'coverStartDate',
+              errRef: coverStartDateErrRef,
               errMsg: 'Cover start date cannot be before today',
             });
           }
 
           if (isAfter(startDate, threeMonthsFromNow)) {
             aboutFacilityErrors.push({
-              errRef: 'coverStartDate',
+              errRef: coverStartDateErrRef,
               errMsg: 'Cover start date cannot be more than 3 months from now',
             });
           }
@@ -105,21 +106,24 @@ const validateAboutFacility = ({
       }
     }
 
-    if (!coverEndDateIsBlank || !saveAndReturn) {
-      const { errors: coverEndDateFormattingErrors } = validateAndParseDayMonthYear(
+    if (!(coverEndDateIsBlank && saveAndReturn)) {
+      const coverEndDateErrRef = 'coverEndDate';
+      const coverEndDateDisplayName = 'cover end date';
+
+      const { error: coverEndDateFormattingError } = applyStandardValidationAndParseDateInput(
         {
           day: coverEndDateDay,
           month: coverEndDateMonth,
           year: coverEndDateYear,
         },
-        {
-          errRef: 'coverEndDate',
-          variableDisplayName: 'cover end date',
-        },
+        coverEndDateDisplayName,
+        coverEndDateErrRef,
       );
 
-      if (coverEndDateFormattingErrors) {
-        aboutFacilityErrors.push(...coverEndDateFormattingErrors);
+      if (coverEndDateFormattingError) {
+        coverEndDateValid = false;
+
+        aboutFacilityErrors.push(mapValidationError(coverEndDateFormattingError));
       }
     }
   }
@@ -145,44 +149,8 @@ const validateAboutFacility = ({
     });
   }
 
-  if (coverEndDateIsFullyComplete) {
-    // schema which ensures that coverEndDate year only contains 4 numbers
-    const yearSchema = Joi.string().length(4).pattern(/^\d+$/).required();
-    const yearValidation = yearSchema.validate(coverEndDateYear);
-
-    // schema which ensures that coverEnd month and day is only numbers and of length 1 or 2
-    const coverDayMonthSchema = Joi.string().min(1).max(2).pattern(/^\d+$/);
-    const coverEndMonthValidation = coverDayMonthSchema.validate(coverEndDateMonth);
-    const coverEndDayValidation = coverDayMonthSchema.validate(coverEndDateDay);
-
-    // if coverEndDate day has validation error
-    if (coverEndDayValidation.error) {
-      coverEndDateValid = false;
-      aboutFacilityErrors.push({
-        errRef: 'coverEndDate',
-        errMsg: 'The day for the cover end date must include 1 or 2 numbers',
-      });
-    }
-    // if coverEndDate month has validation error
-    if (coverEndMonthValidation.error) {
-      coverEndDateValid = false;
-      aboutFacilityErrors.push({
-        errRef: 'coverEndDate',
-        errMsg: 'The month for the cover end date must include 1 or 2 numbers',
-      });
-    }
-    // if coverEndDate year has validation error
-    if (yearValidation.error) {
-      coverEndDateValid = false;
-      aboutFacilityErrors.push({
-        errRef: 'coverEndDate',
-        errMsg: 'The year for the cover end date must include 4 numbers',
-      });
-    }
-  }
-
-  if (coverStartDateIsFullyComplete && coverEndDateIsFullyComplete) {
-    if (coverEndDate < coverStartDate && coverEndDateValid) {
+  if (coverStartDateIsFullyComplete && coverEndDateIsFullyComplete && coverEndDateValid) {
+    if (coverEndDate < coverStartDate) {
       aboutFacilityErrors.push({
         errRef: 'coverEndDate',
         errMsg: 'Cover end date cannot be before cover start date',
@@ -190,7 +158,7 @@ const validateAboutFacility = ({
     }
 
     // if coverEndDate is the same as the coverStartDate
-    if (isEqual(coverStartDate, coverEndDate) && coverEndDateValid) {
+    if (isEqual(coverStartDate, coverEndDate)) {
       aboutFacilityErrors.push({
         errRef: 'coverEndDate',
         errMsg: 'The cover end date must be after the cover start date',
