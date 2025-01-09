@@ -7,7 +7,7 @@ import * as dtfsCommon from '@ukef/dtfs2-common';
 import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
-import { getDoYouHaveAFacilityEndDate, GetDoYouHaveAFacilityEndDateRequest } from './do-you-have-a-facility-end-date';
+import { getDoYouHaveAFacilityEndDate, GetDoYouHaveAFacilityEndDateRequest } from './get-do-you-have-a-facility-end-date';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { DoYouHaveAFacilityEndDateViewModel } from '../../../types/view-models/amendments/do-you-have-a-facility-end-date-view-model';
 import { MOCK_UNISSUED_FACILITY, MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
