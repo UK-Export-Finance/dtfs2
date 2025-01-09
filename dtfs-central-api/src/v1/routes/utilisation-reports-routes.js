@@ -45,6 +45,9 @@ const {
 const {
   getFeeRecordCorrectionRequestTransientFormData,
 } = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction-request-transient-form-data.controller');
+const {
+  getFeeRecordCorrectionTransientFormData,
+} = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction-transient-form-data.controller');
 const { postFeeRecordCorrection } = require('../controllers/utilisation-report-service/fee-record-correction/post-fee-record-correction.controller');
 const {
   deleteFeeRecordCorrectionRequestTransientFormData,
@@ -1007,6 +1010,49 @@ utilisationReportsRouter
   .route('/fee-record-corrections/:correctionId')
   .all(validation.sqlIdValidation('correctionId'), handleExpressValidatorResult)
   .get(getFeeRecordCorrection);
+
+/**
+ * @openapi
+ * /utilisation-reports/fee-records-corrections/:correctionId/transient-form-data/:userId:
+ *   get:
+ *     summary: Gets the fee record correction transient form data against a user and correction
+ *     tags: [Utilisation Report]
+ *     description: Gets the fee record correction transient form data against a user and correction
+ *     parameters:
+ *       - in: path
+ *         name: correctionId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the correction
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the user
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               oneOf:
+ *                 - type: object
+ *                   $ref: '#/definitions/FeeRecordCorrectionTransientFormDataResponseBody'
+ *                 - type: object
+ *                   properties: {}
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/fee-record-corrections/:correctionId/transient-form-data/:userId')
+  .all(validation.sqlIdValidation('correctionId'), validation.mongoIdValidation('userId'), handleExpressValidatorResult)
+  .get(getFeeRecordCorrectionTransientFormData);
 
 /**
  * @openapi
