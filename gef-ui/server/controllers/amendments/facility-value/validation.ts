@@ -4,7 +4,7 @@ import { ValidationError } from '../../../types/validation-error';
 const MINIMUM_FACILITY_VALUE = 1;
 const MAXIMUM_FACILITY_VALUE = 1e12;
 
-const errRef = 'facility-value';
+const errRef = 'facilityValue';
 
 export const validateFacilityValue = (value: string): ValidationError | null => {
   if (!value) {
