@@ -178,7 +178,10 @@ export const applyStandardValidationAndParseDateInput = (inputtedDate: DayMonthY
     year: `${valueRef}-year`,
   };
 
-  const trimmedInputtedDate = { day: inputtedDate.day?.trim() || '', month: inputtedDate.month?.trim() || '', year: inputtedDate.year?.trim() || '' };
+  const trimmedInputtedDay = inputtedDate.day?.trim() || '';
+  const trimmedInputtedMonth = inputtedDate.month?.trim() || '';
+  const trimmedInputtedYear = inputtedDate.year?.trim() || '';
+  const trimmedInputtedDate = { day: trimmedInputtedDay, month: trimmedInputtedMonth, year: trimmedInputtedYear };
 
   const allFieldsPresentError = validateAllFieldsArePresent(trimmedInputtedDate, valueName, valueAndFieldRefs);
   if (allFieldsPresentError) {
