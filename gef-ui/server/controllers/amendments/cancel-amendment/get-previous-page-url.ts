@@ -17,11 +17,7 @@ export const getPreviousAmendmentPageUrl = (url: string | undefined, dealId: str
 
   const previousPageUrl = previousPages.reduce((existingValue: string | undefined, currentValue: string) => {
     const urlSuffix = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${currentValue}`;
-    if (url?.includes(urlSuffix)) {
-      return urlSuffix;
-    }
-
-    return existingValue;
+    return url?.includes(urlSuffix) ? urlSuffix : existingValue;
   }, undefined);
 
   return (

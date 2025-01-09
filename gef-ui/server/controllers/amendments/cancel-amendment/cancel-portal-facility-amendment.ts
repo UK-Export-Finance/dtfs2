@@ -9,11 +9,6 @@ import { getPreviousAmendmentPageUrl } from './get-previous-page-url';
 export type GetCancelPortalFacilityAmendmentRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
 }>;
-export type PostCancelPortalFacilityAmendmentRequest = CustomExpressRequest<{
-  params: { dealId: string; facilityId: string; amendmentId: string };
-  query: { return: string };
-  reqBody: { previousPage: string };
-}>;
 
 /**
  * controller to get the cancel amendment page

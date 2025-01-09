@@ -5,11 +5,11 @@ const dealId = 'abcdef123456';
 const facilityId = '123';
 const amendmentId = '456';
 
-describe('getPreviousPageUrlForAmendmentCancellation', () => {
+describe('getPreviousAmendmentPageUrl', () => {
   const previousPages = Object.values(PORTAL_AMENDMENT_PAGES);
 
   describe.each(previousPages)('when the provided url is for the %s page', (page) => {
-    it('returns the correct relative url, when given a relative URL', () => {
+    it('should return the correct relative url, when given a relative URL', () => {
       // Arrange
       const url = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${page}`;
 
@@ -20,7 +20,7 @@ describe('getPreviousPageUrlForAmendmentCancellation', () => {
       expect(response).toEqual(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${page}`);
     });
 
-    it('returns the correct relative url, when given an absolute URL', () => {
+    it('should return the correct relative url, when given an absolute URL', () => {
       // Arrange
       const url = `www.example.com/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${page}`;
 
@@ -31,7 +31,7 @@ describe('getPreviousPageUrlForAmendmentCancellation', () => {
       expect(response).toEqual(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${page}`);
     });
 
-    it('returns the correct relative url, when given a localhost URL', () => {
+    it('should return the correct relative url, when given a localhost URL', () => {
       // Arrange
       const url = `localhost:5003//gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${page}`;
 
@@ -43,7 +43,7 @@ describe('getPreviousPageUrlForAmendmentCancellation', () => {
     });
   });
 
-  it('returns a URL for the deal summary page if the provided URL is not recognised', () => {
+  it(`should return a URL for ${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE} page if the provided URL is not recognised`, () => {
     // Arrange
     const url = `/gef/application-details/${dealId}/facilities/`;
 
@@ -51,6 +51,8 @@ describe('getPreviousPageUrlForAmendmentCancellation', () => {
     const response = getPreviousAmendmentPageUrl(url, dealId, facilityId, amendmentId);
 
     // Assert
-    expect(response).toEqual(`/gef/application-details/${dealId}`);
+    expect(response).toEqual(
+      `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
+    );
   });
 });
