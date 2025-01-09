@@ -1,3 +1,4 @@
+import { validationErrorHandler } from '../../../server/utils/helpers';
 import { FacilityValueViewModel } from '../../../server/types/view-models/amendments/facility-value-view-model';
 import pageRenderer from '../../pageRenderer';
 
@@ -53,5 +54,41 @@ describe(page, () => {
     const wrapper = render(params);
 
     wrapper.expectText('[data-cy="facility-value-prefix"]').toRead(currencySymbol);
+  });
+
+  it('should not render the error summary if there is no error', () => {
+    const wrapper = render(params);
+
+    wrapper.expectElement('[data-cy="error-summary"]').notToExist();
+  });
+
+  it('should not render the error summary if there is no error', () => {
+    const wrapper = render(params);
+
+    wrapper.expectElement('[data-cy="facility-value-inline-error"]').notToExist();
+  });
+
+  it('should render the error summary if there is an error', () => {
+    const errMsg = 'an error';
+    const paramsWithError = {
+      ...params,
+      errors: validationErrorHandler({ errRef: 'facilityValue', errMsg }),
+    };
+
+    const wrapper = render(paramsWithError);
+
+    wrapper.expectText('[data-cy="error-summary"]').toContain(errMsg);
+  });
+
+  it('should render the error summary if there is an error', () => {
+    const errMsg = 'an error';
+    const paramsWithError = {
+      ...params,
+      errors: validationErrorHandler({ errRef: 'facilityValue', errMsg }),
+    };
+
+    const wrapper = render(paramsWithError);
+
+    wrapper.expectText('[data-cy="facility-value-inline-error"]').toContain(errMsg);
   });
 });
