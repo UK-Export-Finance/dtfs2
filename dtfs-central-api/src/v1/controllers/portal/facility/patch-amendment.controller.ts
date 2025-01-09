@@ -20,9 +20,9 @@ export const patchAmendment = async (req: PatchAmendmentRequest, res: Response) 
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.PORTAL);
 
-    await PortalFacilityAmendmentService.updatePortalFacilityAmendment({ amendmentId, facilityId, update, auditDetails });
+    const updatedAmendment = await PortalFacilityAmendmentService.updatePortalFacilityAmendment({ amendmentId, facilityId, update, auditDetails });
 
-    return res.sendStatus(HttpStatusCode.Ok);
+    return res.status(HttpStatusCode.Ok).send(updatedAmendment);
   } catch (error) {
     if (error instanceof ApiError) {
       const { status, message, code } = error;

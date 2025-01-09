@@ -6,6 +6,13 @@ export type RequestedByUser = {
   lastName: string;
 };
 
+export type PendingCorrection = {
+  correctionId: number;
+  facilityId: string;
+  exporter: string;
+  additionalInfo: string;
+};
+
 export type FeeRecordCorrectionSummary = {
   correctionId: number;
   feeRecordId: number;

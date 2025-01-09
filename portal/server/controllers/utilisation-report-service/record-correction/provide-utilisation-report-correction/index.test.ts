@@ -1,6 +1,13 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { Response } from 'express';
-import { mapCurrenciesToRadioItems, PORTAL_LOGIN_STATUS, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
+import {
+  aPortalSessionBank,
+  aPortalSessionUser,
+  mapCurrenciesToRadioItems,
+  PORTAL_LOGIN_STATUS,
+  RECORD_CORRECTION_REASON,
+  RecordCorrectionReason,
+} from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import api from '../../../../api';
 import { getProvideUtilisationReportCorrection, GetProvideUtilisationReportCorrection } from '.';
@@ -15,7 +22,9 @@ console.error = jest.fn();
 describe('controllers/utilisation-reports/record-corrections/create-record-correction-request', () => {
   const bankId = '123';
   const mockUser = {
+    ...aPortalSessionUser(),
     bank: {
+      ...aPortalSessionBank(),
       id: bankId,
     },
   };
@@ -68,6 +77,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       expect(res._getRenderView()).toEqual('utilisation-report-service/record-correction/provide-utilisation-report-correction.njk');
 
       expect(res._getRenderData() as ProvideUtilisationReportCorrectionViewModel).toEqual<ProvideUtilisationReportCorrectionViewModel>({
+        user: mockUser,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
         correctionRequestDetails: expectedCorrectionRequestDetails,
         paymentCurrencyOptions: expectedPaymentCurrencyOptions,
