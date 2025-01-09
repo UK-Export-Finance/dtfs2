@@ -3,7 +3,7 @@
 
   <p class="govuk-body" data-cy="paragraph">
     A confirmation email has been sent to:
-    <ul class="govuk-list govuk-list--bullet">
+    <ul class="govuk-list govuk-list--bullet" data-cy="email-list">
       {% for email in emails %}
         <li>{{ email }}</li>
       {% endfor %}
