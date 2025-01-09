@@ -9,7 +9,6 @@ import {
 import { difference } from 'lodash';
 import { mapCorrectionReasonsToFormattedOldValues } from '../../../../../helpers/map-correction-reasons-to-incorrect-values';
 
-// TODO: Add unit tests
 /**
  * Gets the formatted value from form data for a specific correction reason.
  * @param formData - The transient form data containing corrected values
@@ -17,7 +16,7 @@ import { mapCorrectionReasonsToFormattedOldValues } from '../../../../../helpers
  * @returns The formatted value corresponding to the correction reason
  * @throws Error if the correction reason is not supported
  */
-const getFormattedFormDataValueForCorrectionReason = (formData: RecordCorrectionTransientFormData, reason: RecordCorrectionReason) => {
+export const getFormattedFormDataValueForCorrectionReason = (formData: RecordCorrectionTransientFormData, reason: RecordCorrectionReason) => {
   switch (reason) {
     case RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT:
       return formData.facilityId;
@@ -32,7 +31,6 @@ const getFormattedFormDataValueForCorrectionReason = (formData: RecordCorrection
   }
 };
 
-// TODO: Add unit tests
 /**
  * Maps through an array of correction reasons and returns an array of
  * formatted values from the transient form data.
@@ -48,9 +46,13 @@ export const mapFormDataToFormattedValues = (formData: RecordCorrectionTransient
   return reasonsWithoutOther.map((reason) => getFormattedFormDataValueForCorrectionReason(formData, reason));
 };
 
-// TODO: Add unit tests
-// TODO: Add TSDOC
-export const mapToReviewInformation = (
+/**
+ * Maps transient form data and fee record correction entity into review information.
+ * @param formData - The transient form data containing the corrected values
+ * @param feeRecordCorrection - The fee record correction entity containing original record and correction details
+ * @returns Formatted review information
+ */
+export const mapTransientCorrectionDataToReviewInformation = (
   formData: RecordCorrectionTransientFormData,
   feeRecordCorrection: FeeRecordCorrectionEntity,
 ): FeeRecordCorrectionReviewInformation => {

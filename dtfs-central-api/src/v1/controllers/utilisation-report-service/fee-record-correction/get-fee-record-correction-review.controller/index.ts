@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import { NotFoundError } from '../../../../../errors';
 import { FeeRecordCorrectionRepo } from '../../../../../repositories/fee-record-correction-repo';
-import { mapToReviewInformation } from './helpers';
+import { mapTransientCorrectionDataToReviewInformation } from './helpers';
 
 export type GetFeeRecordCorrectionReviewRequest = CustomExpressRequest<{
   params: {
@@ -12,9 +12,8 @@ export type GetFeeRecordCorrectionReviewRequest = CustomExpressRequest<{
   };
 }>;
 
-type GetFeeRecordCorrectionReviewResponse = Response<FeeRecordCorrectionReviewInformation | string>;
+export type GetFeeRecordCorrectionReviewResponse = Response<FeeRecordCorrectionReviewInformation | string>;
 
-// TODO: Add unit tests
 /**
  * Controller for the GET fee record correction review route.
  *
@@ -54,7 +53,7 @@ export const getFeeRecordCorrectionReview = async (req: GetFeeRecordCorrectionRe
 
     const { formData } = transientFormData;
 
-    const reviewInformation = mapToReviewInformation(formData, feeRecordCorrection);
+    const reviewInformation = mapTransientCorrectionDataToReviewInformation(formData, feeRecordCorrection);
 
     return res.status(HttpStatusCode.Ok).send(reviewInformation);
   } catch (error) {

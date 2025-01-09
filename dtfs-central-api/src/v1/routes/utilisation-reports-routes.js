@@ -1055,7 +1055,41 @@ utilisationReportsRouter
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), validation.mongoIdValidation('userId'), handleExpressValidatorResult)
   .get(getFeeRecordCorrectionRequestReview);
 
-// TODO: Add swagger docs.
+/**
+ * @openapi
+ * /utilisation-reports/fee-record-correction-review/:correctionId/user/:userId
+ *   get:
+ *     summary: Get fee record correction review information to check before sending
+ *     tags: [Utilisation Report]
+ *     description: Get fee record correction review information to check before sending
+ *     parameters:
+ *       - in: path
+ *         name: correctionId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for correction
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the user requesting the correction
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/FeeRecordCorrectionReview'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
 utilisationReportsRouter
   .route('/fee-record-correction-review/:correctionId/user/:userId')
   .all(validation.sqlIdValidation('correctionId'), validation.mongoIdValidation('userId'), handleExpressValidatorResult)
