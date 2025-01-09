@@ -55,4 +55,17 @@ describe('getPreviousAmendmentPageUrl', () => {
       `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
     );
   });
+
+  it(`should return a URL for ${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE} page if the provided URL is undefined`, () => {
+    // Arrange
+    const url = undefined;
+
+    // Act
+    const response = getPreviousAmendmentPageUrl(url, dealId, facilityId, amendmentId);
+
+    // Assert
+    expect(response).toEqual(
+      `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
+    );
+  });
 });
