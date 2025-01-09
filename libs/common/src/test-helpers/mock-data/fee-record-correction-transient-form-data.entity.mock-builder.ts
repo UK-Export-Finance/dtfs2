@@ -21,7 +21,7 @@ export class FeeRecordCorrectionTransientFormDataEntityMockBuilder {
     return this;
   }
 
-  public withCorrectionIs(correctionId: number): FeeRecordCorrectionTransientFormDataEntityMockBuilder {
+  public withCorrectionId(correctionId: number): FeeRecordCorrectionTransientFormDataEntityMockBuilder {
     this.transientFormData.correctionId = correctionId;
     return this;
   }

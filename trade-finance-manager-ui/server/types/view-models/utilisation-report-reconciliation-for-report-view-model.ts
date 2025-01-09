@@ -148,13 +148,13 @@ export type UtilisationTableRowViewModel = {
 export type RecordCorrectionRowViewModel = {
   feeRecordId: number;
   correctionId: number;
-  facilityId: string;
   exporter: string;
   reasons: string;
   dateSent: string;
-  requestedBy: string;
   status: FeeRecordStatus;
   displayStatus: FeeRecordDisplayStatus;
+  formattedOldRecords: string;
+  formattedCorrectRecords: string;
 };
 
 export type UtilisationDetailsViewModel = {

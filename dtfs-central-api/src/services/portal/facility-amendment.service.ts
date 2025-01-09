@@ -1,6 +1,7 @@
 import {
   AMENDMENT_STATUS,
   AMENDMENT_TYPES,
+  FacilityAmendmentWithUkefId,
   getUnixTimestampSeconds,
   InvalidAuditDetailsError,
   PortalAuditDetails,
@@ -67,7 +68,7 @@ export class PortalFacilityAmendmentService {
    * @param params.facilityId - The facility id
    * @param params.update - The update payload for the amendment.
    * @param params.auditDetails - The audit details for the update operation.
-   * @returns A promise that resolves when the update operation is complete.
+   * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithUkefId)>} A promise that resolves when the update operation is complete.
    */
   public static async updatePortalFacilityAmendment({
     amendmentId,
@@ -79,7 +80,7 @@ export class PortalFacilityAmendmentService {
     facilityId: string;
     update: PortalFacilityAmendmentUserValues;
     auditDetails: PortalAuditDetails;
-  }): Promise<void> {
+  }): Promise<FacilityAmendmentWithUkefId> {
     const amendmentUpdate: Partial<PortalFacilityAmendment> = {
       ...update,
       updatedAt: getUnixTimestampSeconds(new Date()),
@@ -91,5 +92,16 @@ export class PortalFacilityAmendmentService {
       update: amendmentUpdate,
       auditDetails,
     });
+
+    const facilityMongoId = new ObjectId(facilityId);
+    const amendmentMongoId = new ObjectId(amendmentId);
+
+    const updatedAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityMongoId, amendmentMongoId);
+
+    if (updatedAmendment?.type !== AMENDMENT_TYPES.PORTAL) {
+      throw new Error(`Could not find amendment to return`);
+    }
+
+    return updatedAmendment;
   }
 }

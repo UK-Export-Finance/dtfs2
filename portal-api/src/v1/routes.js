@@ -347,4 +347,15 @@ authRouter
     utilisationReportControllers.getFeeRecordCorrection,
   );
 
+authRouter
+  .route('/banks/:bankId/fee-record-correction/:correctionId/transient-form-data')
+  .get(
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
+    bankIdValidation,
+    sqlIdValidation('correctionId'),
+    handleExpressValidatorResult,
+    validateUserAndBankIdMatch,
+    utilisationReportControllers.getFeeRecordCorrectionTransientFormData,
+  );
+
 module.exports = { openRouter, authRouter };
