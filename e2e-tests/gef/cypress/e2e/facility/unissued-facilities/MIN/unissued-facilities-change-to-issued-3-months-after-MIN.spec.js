@@ -118,7 +118,7 @@ context('Unissued Facilities MIN - change to issued more than 3 months after MIN
       facilityEndDate.facilityEndDateYear().clear();
       cy.clickContinueButton();
 
-      errorSummary().contains('Facility end date must be in the correct format DD/MM/YYYY');
+      errorSummary().contains('Enter the facility end date');
       facilityEndDate.facilityEndDateError();
     });
 
