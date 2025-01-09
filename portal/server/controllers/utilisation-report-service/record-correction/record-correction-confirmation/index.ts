@@ -4,40 +4,34 @@ import { asLoggedInUserSession, LoggedInUserSession } from '../../../../helpers/
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { RecordCorrectionConfirmationViewModel } from '../../../../types/view-models/record-correction/record-correction-confirmation';
 
-export type GetRecordCorrectionConfirmationRequest = Request & {
-  params: {
-    correctionId: string;
-  };
-};
-
-const renderRecordCorrectionConfirmationPage = (res: Response, viewModel: RecordCorrectionConfirmationViewModel) =>
-  res.render('utilisation-report-service/record-correction/confirmation.njk', viewModel);
+const renderRecordCorrectionSentPage = (res: Response, viewModel: RecordCorrectionConfirmationViewModel) =>
+  res.render('utilisation-report-service/record-correction/correction-sent.njk', viewModel);
 
 /**
- * Controller for the GET record correction confirmation route.
+ * Controller for the GET record correction sent route.
  * @param req - The request object
  * @param res - The response object
  */
-export const getRecordCorrectionConfirmation = (req: GetRecordCorrectionConfirmationRequest, res: Response) => {
-  const { user, recordCorrectionConfirmation } = asLoggedInUserSession(req.session);
+export const getRecordCorrectionSent = (req: Request, res: Response) => {
+  const { user, recordCorrectionSent } = asLoggedInUserSession(req.session);
 
   try {
-    if (!recordCorrectionConfirmation) {
-      throw new Error('No record correction confirmation data found in session');
+    if (!recordCorrectionSent) {
+      throw new Error('No record correction sent data found in session');
     }
 
-    const { sentToEmails, reportPeriod } = recordCorrectionConfirmation;
+    const { sentToEmails, reportPeriod } = recordCorrectionSent;
 
-    delete (req.session as LoggedInUserSession).recordCorrectionConfirmation;
+    delete (req.session as LoggedInUserSession).recordCorrectionSent;
 
-    return renderRecordCorrectionConfirmationPage(res, {
+    return renderRecordCorrectionSentPage(res, {
       user,
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       formattedReportPeriod: getFormattedReportPeriodWithLongMonth(reportPeriod),
       sentToEmails,
     });
   } catch (error) {
-    console.error('Failed to get record correction confirmation page %o', error);
+    console.error('Failed to get record correction sent page %o', error);
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };

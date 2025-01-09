@@ -13,9 +13,8 @@ router.get(
 );
 
 router.get(
-  '/utilisation-reports/provide-correction/:correctionId/confirmation',
+  '/utilisation-reports/correction-sent',
   [validateFeeRecordCorrectionFeatureFlagIsEnabled, validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] })],
-  validateSqlId('correctionId'),
   (req, res) => getRecordCorrectionConfirmation(req, res),
 );
 

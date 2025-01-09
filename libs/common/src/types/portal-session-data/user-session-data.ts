@@ -30,7 +30,7 @@ export type LoggedInPortalSessionData = {
     submittedBy?: string;
     paymentOfficerEmails?: string[];
   };
-  recordCorrectionConfirmation?: {
+  recordCorrectionSent?: {
     sentToEmails: string[];
     reportPeriod: ReportPeriod;
   };
