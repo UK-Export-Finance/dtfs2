@@ -83,7 +83,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         // Assert
         expect(res._getRenderView()).toEqual('utilisation-report-service/record-correction/provide-utilisation-report-correction.njk');
 
-        expect(res._getRenderData() as ProvideUtilisationReportCorrectionViewModel).toEqual<ProvideUtilisationReportCorrectionViewModel>({
+        const expected = {
           user: mockUser,
           primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
           correctionRequestDetails: expectedCorrectionRequestDetails,
@@ -93,7 +93,9 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
             hint: expectedAdditionalCommentsHint,
           },
           formValues: mapToProvideCorrectionFormValuesViewModel({}),
-        });
+        };
+
+        expect(res._getRenderData() as ProvideUtilisationReportCorrectionViewModel).toEqual<ProvideUtilisationReportCorrectionViewModel>(expected);
       });
     });
 
@@ -128,7 +130,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         // Assert
         expect(res._getRenderView()).toEqual('utilisation-report-service/record-correction/provide-utilisation-report-correction.njk');
 
-        expect(res._getRenderData() as ProvideUtilisationReportCorrectionViewModel).toEqual<ProvideUtilisationReportCorrectionViewModel>({
+        const expected = {
           user: mockUser,
           primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
           correctionRequestDetails: expectedCorrectionRequestDetails,
@@ -138,7 +140,9 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
             hint: expectedAdditionalCommentsHint,
           },
           formValues: mapToProvideCorrectionFormValuesViewModel(savedFormValues),
-        });
+        };
+
+        expect(res._getRenderData() as ProvideUtilisationReportCorrectionViewModel).toEqual<ProvideUtilisationReportCorrectionViewModel>(expected);
       });
     });
 

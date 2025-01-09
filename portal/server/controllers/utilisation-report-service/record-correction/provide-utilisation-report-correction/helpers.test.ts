@@ -179,7 +179,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       expect(result.facilityId).toEqual(savedFormValues.facilityId);
     });
 
-    it('should map set facilityId to null if not provided', () => {
+    it('should set facilityId to null if not provided', () => {
       // Arrange
       const savedFormValues = {};
 
@@ -187,7 +187,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
-      expect(result.facilityId).toEqual(null);
+      expect(result.facilityId).toBeNull();
     });
 
     it('should map utilisation to formatted monetary string when provided', () => {
@@ -203,7 +203,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       expect(result.utilisation).toEqual(getFormattedMonetaryValue(savedFormValues.utilisation));
     });
 
-    it('should map set utilisation to null if not provided', () => {
+    it('should set utilisation to null if not provided', () => {
       // Arrange
       const savedFormValues = {};
 
@@ -211,7 +211,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
-      expect(result.utilisation).toEqual(null);
+      expect(result.utilisation).toBeNull();
     });
 
     it('should map reportedFee to formatted monetary string when provided', () => {
@@ -227,7 +227,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       expect(result.reportedFee).toEqual(getFormattedMonetaryValue(savedFormValues.reportedFee));
     });
 
-    it('should map set reportedFee to null if not provided', () => {
+    it('should set reportedFee to null if not provided', () => {
       // Arrange
       const savedFormValues = {};
 
@@ -235,10 +235,10 @@ describe('provide-utilisation-report-correction helpers', () => {
       const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
-      expect(result.reportedFee).toEqual(null);
+      expect(result.reportedFee).toBeNull();
     });
 
-    it('should map set additionalComments to null if not provided', () => {
+    it('should set additionalComments to null if not provided', () => {
       // Arrange
       const savedFormValues = {};
 
@@ -246,7 +246,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
-      expect(result.additionalComments).toEqual(null);
+      expect(result.additionalComments).toBeNull();
     });
 
     it('should map additionalComments without changing the value when provided', () => {

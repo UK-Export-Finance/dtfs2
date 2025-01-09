@@ -11,8 +11,10 @@ console.error = jest.fn();
 const BASE_URL = '/v1/utilisation-reports/fee-record-corrections/:correctionId/transient-form-data/:userId';
 
 describe(`GET ${BASE_URL}`, () => {
-  const correctionId = 123;
-  const userId = new ObjectId().toString();
+  const formDataCorrectionId = 123;
+  const formDataCreatedByUserId = new ObjectId().toString();
+
+  const otherCorrectionId = formDataCorrectionId + 1;
   const otherUserId = new ObjectId().toString();
 
   const transientFormData: RecordCorrectionTransientFormData = {
@@ -20,8 +22,8 @@ describe(`GET ${BASE_URL}`, () => {
   };
 
   const transientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()
-    .withUserId(userId)
-    .withCorrectionId(correctionId)
+    .withUserId(formDataCreatedByUserId)
+    .withCorrectionId(formDataCorrectionId)
     .withFormData(transientFormData)
     .build();
 
@@ -44,9 +46,9 @@ describe(`GET ${BASE_URL}`, () => {
     mongoPathParameters: ['userId'],
   });
 
-  it(`should return '${HttpStatusCode.Ok}' with an empty body when no transient form data exists for the user or correction`, async () => {
+  it(`should return '${HttpStatusCode.Ok}' with an empty body when no transient form data exists for the user and correction combination`, async () => {
     // Act
-    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { correctionId: correctionId + 1, userId: otherUserId }));
+    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { correctionId: otherCorrectionId, userId: otherUserId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.Ok);
@@ -55,7 +57,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it(`should return '${HttpStatusCode.Ok}' with an empty body when no transient form data exists for the user for the given correction id`, async () => {
     // Act
-    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { correctionId: correctionId + 1, userId }));
+    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { correctionId: otherCorrectionId, userId: formDataCreatedByUserId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.Ok);
@@ -64,7 +66,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it(`should return '${HttpStatusCode.Ok}' with an empty body when no transient form data exists for the correction for the given user id`, async () => {
     // Act
-    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { correctionId, userId: otherUserId }));
+    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { correctionId: formDataCorrectionId, userId: otherUserId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.Ok);
@@ -73,7 +75,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it(`should return '${HttpStatusCode.Ok}' with the form data if the request is valid and transient form data exists`, async () => {
     // Act
-    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { correctionId, userId }));
+    const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { correctionId: formDataCorrectionId, userId: formDataCreatedByUserId }));
 
     // Assert
     expect(response.status).toEqual(HttpStatusCode.Ok);

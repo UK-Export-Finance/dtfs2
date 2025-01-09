@@ -137,7 +137,7 @@ describe(page, () => {
     });
   });
 
-  describe('when there are NOT any form values provided', () => {
+  describe('when there are NO form values provided', () => {
     const viewModel = {
       ...aProvideUtilisationReportCorrectionViewModel(),
       correctionRequestDetails: {

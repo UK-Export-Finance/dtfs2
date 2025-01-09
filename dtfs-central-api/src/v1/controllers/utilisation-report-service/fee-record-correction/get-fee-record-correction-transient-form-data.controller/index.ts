@@ -35,7 +35,7 @@ export const getFeeRecordCorrectionTransientFormData = async (
     return res.status(HttpStatusCode.Ok).send(formData);
   } catch (error) {
     const errorMessage = `Failed to get fee record correction transient form data`;
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }

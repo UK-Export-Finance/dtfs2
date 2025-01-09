@@ -37,9 +37,6 @@ describe('get-fee-record-correction-transient-form-data.controller', () => {
     });
 
     it('should call the repo to fetch the transient form data for the user and correction combination', async () => {
-      // Arrange
-      mockTransientFormDataFind.mockResolvedValue(null);
-
       // Act
       await getFeeRecordCorrectionTransientFormData(req, res);
 
