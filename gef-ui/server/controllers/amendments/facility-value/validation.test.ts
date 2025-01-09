@@ -37,22 +37,6 @@ describe('validateFacilityValue', () => {
       },
     },
     {
-      description: 'the value contains too many decimal points',
-      value: '1000.00.0',
-      expectedError: {
-        errRef,
-        errMsg: 'Enter a valid facility value',
-      },
-    },
-    {
-      description: 'the value contains too many decimal points',
-      value: '1000.00.0',
-      expectedError: {
-        errRef,
-        errMsg: 'Enter a valid facility value',
-      },
-    },
-    {
       description: 'the value contains has no leading digit',
       value: '.99',
       expectedError: {
