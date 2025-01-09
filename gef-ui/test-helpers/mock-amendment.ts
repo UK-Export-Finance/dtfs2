@@ -52,6 +52,11 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
     return this;
   }
 
+  public withFacilityValue(facilityValue: number) {
+    this.amendment.value = facilityValue;
+    return this;
+  }
+
   public build() {
     return this.amendment;
   }

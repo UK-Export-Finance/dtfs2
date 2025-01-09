@@ -122,6 +122,7 @@ describe('postBankReviewDate', () => {
       previousPage,
       currencySymbol: getCurrencySymbol(MOCK_ISSUED_FACILITY.details.currency.id as Currency),
       errors: validationErrorHandler(validateFacilityValue(facilityValue)!),
+      facilityValue,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);

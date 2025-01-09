@@ -7,7 +7,7 @@ const render = pageRenderer(page);
 describe(page, () => {
   const previousPage = 'previousPage';
   const cancelUrl = 'cancelUrl';
-  const facilityValue = 7000;
+  const facilityValue = '7000';
   const exporterName = 'exporterName';
   const currencySymbol = '£';
 
