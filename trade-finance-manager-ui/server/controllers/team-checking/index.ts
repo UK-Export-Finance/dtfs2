@@ -10,5 +10,5 @@ type RenderTeamsCheckerProps = {
 export const renderTeamsChecker = (req: Request, res: Response, { teamCombinations, currentPageTeamRestrictions }: RenderTeamsCheckerProps) => {
   const { user } = asUserSession(req.session);
 
-  return res.render('role-checking/index.njk', { currentUserTeams: user.teams, currentPageTeamRestrictions, teamCombinations });
+  return res.render('team-checking/team-checking-page.njk', { currentUserTeams: user.teams, currentPageTeamRestrictions, teamCombinations });
 };
