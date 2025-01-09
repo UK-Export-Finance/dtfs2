@@ -46,6 +46,7 @@
     <div class="govuk-grid-column-three-quarters">
       <form method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="previousPage" value="{{ previousPage }}">
 
         {{ govukInput({
           id: "facility-value",
@@ -54,6 +55,7 @@
             html: headingHtml,
             isPageHeading: true
           },
+          name: "facilityValue",
           value: facilityValue,
           prefix: {
             text: currencySymbol,

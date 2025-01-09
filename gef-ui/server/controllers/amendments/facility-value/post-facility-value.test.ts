@@ -204,4 +204,16 @@ describe('postBankReviewDate', () => {
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
   });
+
+  it('should render `problem with service` if updateAmendment throws an error', async () => {
+    // Arrange
+    updateAmendmentMock.mockRejectedValue(new Error('test error'));
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await postFacilityValue(req, res);
+
+    // Assert
+    expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
+  });
 });
