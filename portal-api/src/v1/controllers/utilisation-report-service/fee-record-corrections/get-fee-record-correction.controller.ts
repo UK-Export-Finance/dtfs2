@@ -1,7 +1,7 @@
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { HttpStatusCode, isAxiosError } from 'axios';
-import api from '../../../../api';
+import api from '../../../api';
 
 /**
  * Request type for the GET fee record correction endpoint.

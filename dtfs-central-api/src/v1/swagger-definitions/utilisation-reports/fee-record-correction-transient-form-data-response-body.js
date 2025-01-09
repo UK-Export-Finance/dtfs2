@@ -1,17 +1,17 @@
 /**
  * @openapi
  * definitions:
- *   FeeRecordCorrectionTransientFormData:
+ *   FeeRecordCorrectionTransientFormDataResponseBody:
  *     type: object
  *     properties:
  *       utilisation:
- *         type: string
+ *         type: number
  *         nullable: true
  *       reportedCurrency:
  *         type: string
  *         nullable: true
  *       reportedFee:
- *         type: string
+ *         type: number
  *         nullable: true
  *       facilityId:
  *         type: string

@@ -4,7 +4,7 @@ import api from '../../../../api';
 import { asLoggedInUserSession } from '../../../../helpers/express-session';
 import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
-import { getAdditionalCommentsFieldLabels, mapToCorrectionRequestDetailsViewModel } from './helpers';
+import { getAdditionalCommentsFieldLabels, mapToProvideCorrectionFormValuesViewModel, mapToCorrectionRequestDetailsViewModel } from './helpers';
 
 export type GetProvideUtilisationReportCorrection = Request & {
   params: {
@@ -30,7 +30,9 @@ export const getProvideUtilisationReportCorrection = async (req: GetProvideUtili
 
     const feeRecordCorrection = await api.getFeeRecordCorrection(userToken, bankId, correctionId);
 
-    const paymentCurrencyOptions = mapCurrenciesToRadioItems();
+    const savedFormValues = await api.getFeeRecordCorrectionTransientFormData(userToken, bankId, correctionId);
+
+    const paymentCurrencyOptions = mapCurrenciesToRadioItems(savedFormValues.reportedCurrency);
 
     const additionalCommentsLabels = getAdditionalCommentsFieldLabels(feeRecordCorrection.reasons);
 
@@ -40,6 +42,7 @@ export const getProvideUtilisationReportCorrection = async (req: GetProvideUtili
       correctionRequestDetails: mapToCorrectionRequestDetailsViewModel(feeRecordCorrection),
       paymentCurrencyOptions,
       additionalComments: additionalCommentsLabels,
+      formValues: mapToProvideCorrectionFormValuesViewModel(savedFormValues),
     });
   } catch (error) {
     console.error('Failed to get provide utilisation report correction %o', error);
