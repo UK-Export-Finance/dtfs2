@@ -1,15 +1,15 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
 import { Response } from 'express';
-import { getFeeRecordCorrection, GetFeeRecordCorrectionRequest } from '.';
-import api from '../../../../api';
-import { aGetFeeRecordCorrectionResponseBody } from '../../../../../../test-helpers/test-data/get-fee-record-correction-response-body';
+import { getFeeRecordCorrection, GetFeeRecordCorrectionRequest } from './get-fee-record-correction.controller';
+import api from '../../../api';
+import { aGetFeeRecordCorrectionResponseBody } from '../../../../../test-helpers/test-data/get-fee-record-correction-response-body';
 
-jest.mock('../../../../api');
+jest.mock('../../../api');
 
 console.error = jest.fn();
 
-describe('get-fee-record-correction.controller', () => {
+describe('fee-record-correction.controller', () => {
   describe('getFeeRecordCorrection', () => {
     const bankId = '123';
     const correctionId = 7;
