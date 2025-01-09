@@ -2,6 +2,7 @@ import * as dtfsCommon from '@ukef/dtfs2-common';
 import { aPortalSessionUser, DEAL_STATUS, PORTAL_LOGIN_STATUS, DEAL_SUBMISSION_TYPE, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
+import { getPreviousAmendmentPageUrl } from './get-previous-page-url';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 
 /* eslint-disable import/first */
@@ -114,7 +115,7 @@ describe('getCancelPortalFacilityAmendment', () => {
     // Assert
     const expectedRenderData: CancelAmendmentViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
-      previousPage: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.COVER_END_DATE}`,
+      previousPage: getPreviousAmendmentPageUrl(req.headers.referer, dealId, facilityId, amendmentId),
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
