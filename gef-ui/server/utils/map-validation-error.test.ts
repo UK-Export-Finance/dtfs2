@@ -1,11 +1,11 @@
-import { TfmValidationError } from '@ukef/dtfs2-common';
+import { GenericValidationError } from '@ukef/dtfs2-common';
 import { ValidationError } from '../types/validation-error';
 import { mapValidationError } from './map-validation-error';
 
 describe('mapValidationError', () => {
   it('should map the validation error', () => {
     // Arrange
-    const tfmValidationError: TfmValidationError = {
+    const tfmValidationError: GenericValidationError = {
       ref: 'facilityEndDate',
       message: 'Facility end date cannot be before the cover start date',
       fieldRefs: ['facilityEndDate-day', 'facilityEndDate-month', 'facilityEndDate-year'],
