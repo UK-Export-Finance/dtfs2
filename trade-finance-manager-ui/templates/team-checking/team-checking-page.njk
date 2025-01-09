@@ -1,17 +1,20 @@
-{% macro renderLinks(teamCombinations) %}
-    <ul>
-        {% for teamCombination in teamCombinations %}
-            <li>
-                <a href="/team-checking/{{ teamCombination.url }}">{{ teamCombination.description }}</a>
-            </li>
-        {% endfor %}
-    </ul>
-{% endmacro %}
-<h1>Logged in user teams: {{ currentUserTeams | join(", ") }}</h1>
-{% if currentPageTeamRestrictions %}
-    <h2>
-        ✅ User has access to a page with the following team restrictions: {{ currentPageTeamRestrictions.description }}
-    </h2>
-{% endif %}
-<h2>Click below to check routes restrictions:</h2>
-{{ renderLinks(teamCombinations) }}
+{% extends "index.njk" %}
+{% block content %}
+    {% macro renderLinks(teamCombinations) %}
+        <ul>
+            {% for teamCombination in teamCombinations %}
+                <li>
+                    <a href="/team-checking/{{ teamCombination.url }}">{{ teamCombination.description }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endmacro %}
+    <h1>Logged in user teams: {{ currentUserTeams | join(", ") }}</h1>
+    {% if currentPageTeamRestrictions %}
+        <h2>
+            ✅ User has access to a page with the following team restrictions: {{ currentPageTeamRestrictions.description }}
+        </h2>
+    {% endif %}
+    <h2>Click below to check routes restrictions:</h2>
+    {{ renderLinks(teamCombinations) }}
+    {{ endblock }}
