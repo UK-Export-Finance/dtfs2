@@ -2,8 +2,8 @@ import httpMocks, { MockResponse } from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
 import { Response } from 'express';
 import { getFeeRecordCorrection, GetFeeRecordCorrectionRequest } from '.';
-import api from '../../../../api';
-import { aGetFeeRecordCorrectionResponseBody } from '../../../../../../test-helpers/test-data/get-fee-record-correction-response-body';
+import api from '../../../api';
+import { aGetFeeRecordCorrectionResponseBody } from '../../../../../test-helpers/test-data/get-fee-record-correction-response-body';
 
 jest.mock('../../../../api');
 
