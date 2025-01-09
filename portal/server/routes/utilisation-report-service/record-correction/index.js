@@ -1,6 +1,6 @@
 const express = require('express');
 const { ROLES, validateFeeRecordCorrectionFeatureFlagIsEnabled } = require('@ukef/dtfs2-common');
-const { getProvideUtilisationReportCorrection, getRecordCorrectionConfirmation } = require('../../../controllers/utilisation-report-service/record-correction');
+const { getProvideUtilisationReportCorrection, getRecordCorrectionSent } = require('../../../controllers/utilisation-report-service/record-correction');
 const { validateRole, validateToken, validateSqlId } = require('../../middleware');
 
 const router = express.Router();
@@ -15,7 +15,7 @@ router.get(
 router.get(
   '/utilisation-reports/correction-sent',
   [validateFeeRecordCorrectionFeatureFlagIsEnabled, validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] })],
-  (req, res) => getRecordCorrectionConfirmation(req, res),
+  (req, res) => getRecordCorrectionSent(req, res),
 );
 
 module.exports = router;

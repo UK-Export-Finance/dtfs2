@@ -2,9 +2,9 @@ import { Request, Response } from 'express';
 import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import { asLoggedInUserSession, LoggedInUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
-import { RecordCorrectionConfirmationViewModel } from '../../../../types/view-models/record-correction/record-correction-confirmation';
+import { RecordCorrectionSentViewModel } from '../../../../types/view-models/record-correction/record-correction-confirmation';
 
-const renderRecordCorrectionSentPage = (res: Response, viewModel: RecordCorrectionConfirmationViewModel) =>
+const renderRecordCorrectionSentPage = (res: Response, viewModel: RecordCorrectionSentViewModel) =>
   res.render('utilisation-report-service/record-correction/correction-sent.njk', viewModel);
 
 /**

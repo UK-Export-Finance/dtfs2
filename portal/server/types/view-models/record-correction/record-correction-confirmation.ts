@@ -1,6 +1,6 @@
 import { BaseViewModel } from '../base-view-model';
 
-export type RecordCorrectionConfirmationViewModel = BaseViewModel & {
+export type RecordCorrectionSentViewModel = BaseViewModel & {
   formattedReportPeriod: string;
   sentToEmails: string[];
 };
