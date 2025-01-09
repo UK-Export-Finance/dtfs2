@@ -6,11 +6,11 @@
   <table class="govuk-table" data-module="moj-sortable-table" data-cy="record-correction-log-table">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header" aria-sort="none" data-cy="record-correction-log-table-facility-id-header">Facility ID</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none" data-cy="record-correction-log-table-date-sent-header">Date sent</th>
         <th scope="col" class="govuk-table__header" aria-sort="none" data-cy="record-correction-log-table-exporter-header">Exporter</th>
         <th scope="col" class="govuk-table__header" data-cy="record-correction-log-table-reasons-header">Reason for record correction</th>
-        <th scope="col" class="govuk-table__header" data-cy="record-correction-log-table-date-sent-header">Date sent</th>
-        <th scope="col" class="govuk-table__header" data-cy="record-correction-log-table-requested-by-header">Requested by</th>
+        <th scope="col" class="govuk-table__header" data-cy="record-correction-log-table-correct-record-header">Correct record</th>
+        <th scope="col" class="govuk-table__header" data-cy="record-correction-log-table-old-record-header">Old record</th>
         <th scope="col" class="govuk-table__header" data-cy="record-correction-log-table-status-header">Status</th>
       </tr>
     </thead>
@@ -18,11 +18,11 @@
       {% for recordCorrectionRow in recordCorrectionRows %}
 
         <tr class="govuk-table__row" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}">
-          <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-facility-id">{{ recordCorrectionRow.facilityId }}</td>
+          <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-date-sent">{{ recordCorrectionRow.dateSent }}</td>
           <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-exporter">{{ recordCorrectionRow.exporter }}</td>
           <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-reasons">{{ recordCorrectionRow.reasons }}</td>
-          <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-date-sent">{{ recordCorrectionRow.dateSent }}</td>
-          <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-requested-by">{{ recordCorrectionRow.requestedBy }}</td>
+          <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-correct-record">{{ recordCorrectionRow.formattedCorrectRecords }}</td>
+          <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-old-record">{{ recordCorrectionRow.formattedOldRecords }}</td>
           <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-status">
            {{ feeRecordStatus.render({
               status: recordCorrectionRow.status,

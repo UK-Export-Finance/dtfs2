@@ -11,18 +11,19 @@ const { table } = recordCorrectionLogTab;
  * @param {FeeRecordEntity} feeRecord - provided fee record
  * @param {String} reasons - provided string with fee record correction reasons
  * @param {String} dateSent - provided string with the date the fee record correction was requested
- * @param {String} requestedBy - provided string with the name of the user requesting the fee record correction
+ * @param {String} correctRecord - provided string for the correct record
+ * @param {String} oldRecord - provided string for the old record with the values from the existing fee record
  * @param {String} status - provided string with the status of the fee record correction
  */
-const checkRecordCorrectionLogTableRowValues = ({ feeRecord, reasons, dateSent, requestedBy, status }) => {
+const checkRecordCorrectionLogTableRowValues = ({ feeRecord, reasons, dateSent, correctRecord, oldRecord, status }) => {
   const correctionId = feeRecord.corrections[0].id;
   const row = table.row(correctionId);
 
-  cy.assertText(row.facilityId(), feeRecord.facilityId);
+  cy.assertText(row.dateSent(), dateSent);
   cy.assertText(row.exporter(), feeRecord.exporter);
   cy.assertText(row.reasons(), reasons);
-  cy.assertText(row.dateSent(), dateSent);
-  cy.assertText(row.requestedBy(), requestedBy);
+  cy.assertText(row.correctRecord(), correctRecord);
+  cy.assertText(row.oldRecord(), oldRecord);
   cy.assertText(row.status(), status);
 };
 
