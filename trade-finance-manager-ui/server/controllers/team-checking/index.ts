@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { TeamToCheck } from '../../helpers/team-checking.helper';
 import { asUserSession } from '../../helpers/express-session';
+import { userIsInTeam } from '../../helpers/user';
 
 type RenderTeamsCheckerProps = {
   teamCombinations: TeamToCheck[];
@@ -10,5 +11,7 @@ type RenderTeamsCheckerProps = {
 export const renderTeamsChecker = (req: Request, res: Response, { teamCombinations, currentPageTeamRestrictions }: RenderTeamsCheckerProps) => {
   const { user } = asUserSession(req.session);
 
-  return res.render('team-checking/team-checking-page.njk', { currentUserTeams: user.teams, currentPageTeamRestrictions, teamCombinations });
+  const isUserInTeam = currentPageTeamRestrictions && userIsInTeam(user, currentPageTeamRestrictions.teams);
+
+  return res.render('team-checking/team-checking-page.njk', { currentUserTeams: user.teams, currentPageTeamRestrictions, isUserInTeam, teamCombinations });
 };
