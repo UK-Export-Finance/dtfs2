@@ -36,7 +36,7 @@ router
   .get(getCoverEndDate);
 
 router
-  .route('/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/cancel/')
+  .route('/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/cancel')
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getCancelPortalFacilityAmendment);
 
