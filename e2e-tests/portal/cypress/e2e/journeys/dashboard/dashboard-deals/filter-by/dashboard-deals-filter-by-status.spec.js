@@ -88,7 +88,8 @@ context('Dashboard Deals filters - filter by status', () => {
   describe('Ready for checker', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      cy.createBssEwcsDeal({ fillOutAllFields: true, dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
+      cy.createBssEwcsDeal();
+      cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 

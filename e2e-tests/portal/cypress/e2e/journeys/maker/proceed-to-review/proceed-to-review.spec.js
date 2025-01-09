@@ -59,7 +59,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   it('Ensure proceed to review button is visible', () => {
-    cy.createBssEwcsDeal({ fillOutAllFields: true, dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
+    cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
   });
 
   it('Add an issued bond', () => {
@@ -101,7 +101,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   it('Ensure proceed to review button is visible', () => {
-    cy.createBssEwcsDeal({ fillOutAllFields: true, dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
+    cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
   });
 
   it('Add a partial issued (unconditional) loan', () => {

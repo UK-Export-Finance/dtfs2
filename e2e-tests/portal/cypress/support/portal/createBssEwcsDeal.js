@@ -283,25 +283,25 @@ const fillOutDealDetails = ({ dealSubmissionType, facilityStage, exporterCompany
 };
 
 /**
- * Creates a BSS/EWCS deal via the UI.
- * @param {Object} createBssEwcsDealParams
- * @param {Object} [options] - The options for creating the deal.
- * @param {boolean} [options.fillOutAllFields=false] - Whether to fill out all fields in the deal form.
- * @param {string} [options.dealSubmissionType] - The type of deal submission.
- * @param {string} [options.facilityStage] - The stage of the facility.
- * @param {string} [options.exporterCompanyName] - The name of the exporter company.
- * @param {import('@ukef/dtfs2-common').DealType} createBssEwcsDealParams.dealType -
+ * Initiates the creation of a BSS/EWCS deal via the UI.
+ * This includes logging in, starting a new submission, and filling bank details.
  */
-const createBssEwcsDeal = ({ fillOutAllFields = false, dealSubmissionType, facilityStage, exporterCompanyName } = {}) => {
+const createBssEwcsDeal = () => {
   cy.login(BANK1_MAKER1);
-
   startNewSubmission();
-
   fillBankDetails();
-
-  if (fillOutAllFields) {
-    fillOutDealDetails({ dealSubmissionType, facilityStage, exporterCompanyName });
-  }
 };
 
-export default createBssEwcsDeal;
+/**
+ * Completes the additional fields for a BSS/EWCS deal.
+ * @param {Object} params - The parameters for filling out the deal details.
+ * @param {string} params.dealSubmissionType - The type of deal submission.
+ * @param {typeof FACILITY_STAGE.ISSUED | typeof FACILITY_STAGE.UNISSUED} params.facilityStage - The stage of the facility.
+ * @param {string} params.exporterCompanyName - The name of the exporter company.
+ * @param {import('@ukef/dtfs2-common').DealType} createBssEwcsDealParams.dealType -
+ */
+const completeBssEwcsDealFields = ({ dealSubmissionType, facilityStage, exporterCompanyName }) => {
+  fillOutDealDetails({ dealSubmissionType, facilityStage, exporterCompanyName });
+};
+
+export { createBssEwcsDeal, completeBssEwcsDealFields };

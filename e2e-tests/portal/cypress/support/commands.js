@@ -1,5 +1,6 @@
 import 'cypress-file-upload';
 import * as api from '../../../gef/cypress/support/commands/api';
+import * as createBssEwcsDealandFillDealFields from './portal/createBssEwcsDeal';
 
 const { downloadFile } = require('./portal-api/fileshare');
 
@@ -77,7 +78,9 @@ Cypress.Commands.add('renameDeal', require('./portal/renameDeal'));
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('userSetPassword', require('./portal/userSetPassword'));
 Cypress.Commands.add('disablePortalUserByUsername', require('./portal/disablePortalUserByUsername'));
-Cypress.Commands.add('createBssEwcsDeal', require('./portal/createBssEwcsDeal'));
+
+Cypress.Commands.add('createBssEwcsDeal', createBssEwcsDealandFillDealFields.createBssEwcsDeal);
+Cypress.Commands.add('completeBssEwcsDealFields', createBssEwcsDealandFillDealFields.completeBssEwcsDealFields);
 
 Cypress.Commands.add('getDealIdFromUrl', require('./portal/getDealIdFromUrl'));
 

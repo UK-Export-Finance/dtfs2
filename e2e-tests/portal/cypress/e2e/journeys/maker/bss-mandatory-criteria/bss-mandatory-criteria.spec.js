@@ -9,7 +9,8 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('BSS Mandatory criteria: Check deal details page', () => {
   before(() => {
-    cy.createBssEwcsDeal({ fillOutAllFields: true, dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
+    cy.createBssEwcsDeal();
+    cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
   });
 
   after(() => {

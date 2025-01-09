@@ -18,7 +18,8 @@ context('Dashboard Deals filters - filter by submissionType/noticeType', () => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal({ fillOutAllFields: true, dealSubmissionType: DEAL_SUBMISSION_TYPE.MIA, facilityStage: FACILITY_STAGE.ISSUED });
+    cy.createBssEwcsDeal();
+    cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.MIA, facilityStage: FACILITY_STAGE.ISSUED });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       ALL_DEALS.push(deal);
@@ -76,12 +77,6 @@ context('Dashboard Deals filters - filter by submissionType/noticeType', () => {
     });
 
     it('renders only MIA deals', () => {
-      cy.login(BANK1_MAKER1);
-      dashboardDeals.visit();
-      filters.showHideButton().click();
-      dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().click();
-      filters.panel.form.applyFiltersButton().click();
-
       dashboardDeals.rows().each((row) => {
         cy.wrap(row).contains(CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
       });

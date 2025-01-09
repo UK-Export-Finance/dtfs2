@@ -11,7 +11,8 @@ context('A checker selects to return a deal to maker from the view-contract page
   let dealId;
   before(() => {
     cy.deleteDeals(ADMIN);
-    cy.createBssEwcsDeal({ fillOutAllFields: true, dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
+    cy.createBssEwcsDeal();
+    cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
   });
 
   it('The cancel button returns the user to the view-contract page.', () => {

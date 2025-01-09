@@ -17,12 +17,8 @@ context('Dashboard Deals filters - filter by keyword', () => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal({
-      fillOutAllFields: true,
-      dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN,
-      facilityStage: FACILITY_STAGE.UNISSUED,
-      exporterCompanyName: MOCK_KEYWORD,
-    });
+    cy.createBssEwcsDeal();
+    cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED, exporterCompanyName: MOCK_KEYWORD });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1);
   });
