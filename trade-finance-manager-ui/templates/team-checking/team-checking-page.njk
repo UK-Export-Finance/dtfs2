@@ -14,7 +14,9 @@
         This tool is designed to aid the checking of team restrictions. It utilises the same method for our tfm-ui middleware.
     </p>
     <p>
-        Your current user has the following team assignments: <b>{{ currentUserTeams | join(", ") }}</b>.
+        <b>
+            Your current user has the following team assignments: {{ currentUserTeams | join(", ") }}
+        </b>.
     </p>
     <p>
         To get started, click the links below to see how this user behaves when visiting a page with restrictions for teams as stated.
@@ -23,15 +25,17 @@
         The below links state all roles that can access them -- ie if a link is 'team1 and team2', the user can belong to either 'team1' or 'team2'. This follows Role Based Access Control (RBAC) principles.
     </p>
     <h2>Current page team restrictions:</h2>
-    {% if currentPageTeamRestrictions %}
-        {% if isUserInTeam %}
-            ✅ User has access to a page with the following team restrictions: {{ currentPageTeamRestrictions.description }}
+    <b>
+        {% if currentPageTeamRestrictions %}
+            {% if isUserInTeam %}
+                ✅ User has access to a page with the following team restrictions: {{ currentPageTeamRestrictions.description }}
+            {% else %}
+                ❌ User does not have access to a page with the following team restrictions: {{ currentPageTeamRestrictions.description }}
+            {% endif %}
         {% else %}
-            ❌ User does not have access to a page with the following team restrictions: {{ currentPageTeamRestrictions.description }}
+            The current page does not have any team restrictions. Click a link below to check team restrictions.
         {% endif %}
-    {% else %}
-        The current page does not have any team restrictions. Click a link below to check team restrictions.
-    {% endif %}
+    </b>
     <h2>Click below to check routes restrictions:</h2>
     {{ renderLinks(teamCombinations) }}
 {% endblock content %}
