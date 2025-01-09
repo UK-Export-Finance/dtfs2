@@ -21,7 +21,8 @@ context(`users can filter payment details by facility id`, () => {
     .withDateUploaded(new Date())
     .build();
 
-  const { tabs, paymentDetailsContent } = pages.utilisationReportPage.tabs;
+  const { tabs } = pages.utilisationReportPage;
+  const { paymentDetailsContent } = tabs;
   const { filters, paymentDetailsTable, errorSummaryErrors } = paymentDetailsContent;
 
   const aPaymentWithFeeRecords = (feeRecords) => PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords(feeRecords).build();

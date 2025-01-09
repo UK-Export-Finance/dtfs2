@@ -114,7 +114,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
     it('should return to the payment details page when accessed from payment details table', () => {
       cy.visit(`/utilisation-reports/${reportId}#payment-details`);
 
-      pages.utilisationReportPage.paymentDetailsContent.clickPaymentLink(paymentId);
+      pages.utilisationReportPage.tabs.paymentDetailsContent.clickPaymentLink(paymentId);
 
       cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=payment-details`));
 
