@@ -70,8 +70,8 @@ describe('map-correction-reasons-to-incorrect-values', () => {
         const expected = [
           feeRecord.facilityId,
           feeRecord.totalFeesAccruedForThePeriodCurrency,
-          feeRecord.totalFeesAccruedForThePeriod,
-          feeRecord.facilityUtilisation,
+          getFormattedMonetaryValue(feeRecord.totalFeesAccruedForThePeriod),
+          getFormattedMonetaryValue(feeRecord.facilityUtilisation),
           '-',
         ];
 
