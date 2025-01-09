@@ -1,11 +1,11 @@
-import { getPreviousPageUrl } from './get-previous-page-url';
+import { getPreviousAmendmentPageUrl } from './get-previous-page-url';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 
 const dealId = 'abcdef123456';
 const facilityId = '123';
 const amendmentId = '456';
 
-describe('getPreviousPageUrlForCancelCancellation', () => {
+describe('getPreviousPageUrlForAmendmentCancellation', () => {
   const previousPages = Object.values(PORTAL_AMENDMENT_PAGES);
 
   describe.each(previousPages)('when the provided url is for the %s page', (page) => {
@@ -14,7 +14,7 @@ describe('getPreviousPageUrlForCancelCancellation', () => {
       const url = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${page}`;
 
       // Act
-      const response = getPreviousPageUrl(url, dealId, facilityId, amendmentId);
+      const response = getPreviousAmendmentPageUrl(url, dealId, facilityId, amendmentId);
 
       // Assert
       expect(response).toEqual(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${page}`);
@@ -25,7 +25,7 @@ describe('getPreviousPageUrlForCancelCancellation', () => {
       const url = `www.example.com/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${page}`;
 
       // Act
-      const response = getPreviousPageUrl(url, dealId, facilityId, amendmentId);
+      const response = getPreviousAmendmentPageUrl(url, dealId, facilityId, amendmentId);
 
       // Assert
       expect(response).toEqual(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${page}`);
@@ -36,7 +36,7 @@ describe('getPreviousPageUrlForCancelCancellation', () => {
       const url = `localhost:5003//gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${page}`;
 
       // Act
-      const response = getPreviousPageUrl(url, dealId, facilityId, amendmentId);
+      const response = getPreviousAmendmentPageUrl(url, dealId, facilityId, amendmentId);
 
       // Assert
       expect(response).toEqual(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${page}`);
@@ -48,7 +48,7 @@ describe('getPreviousPageUrlForCancelCancellation', () => {
     const url = `/gef/application-details/${dealId}/facilities/`;
 
     // Act
-    const response = getPreviousPageUrl(url, dealId, facilityId, amendmentId);
+    const response = getPreviousAmendmentPageUrl(url, dealId, facilityId, amendmentId);
 
     // Assert
     expect(response).toEqual(`/gef/application-details/${dealId}`);

@@ -12,12 +12,12 @@ import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
  * @param amendmentId - The amendment id
  * @returns the previous page URL
  */
-export const getPreviousPageUrl = (url: string, dealId: string, facilityId: string, amendmentId: string): string => {
+export const getPreviousAmendmentPageUrl = (url: string | undefined, dealId: string, facilityId: string, amendmentId: string): string => {
   const previousPages = Object.values(PORTAL_AMENDMENT_PAGES);
 
   const previousPageUrl = previousPages.reduce((existingValue: string | undefined, currentValue: string) => {
     const urlSuffix = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${currentValue}`;
-    if (url.includes(urlSuffix)) {
+    if (url?.includes(urlSuffix)) {
       return urlSuffix;
     }
 

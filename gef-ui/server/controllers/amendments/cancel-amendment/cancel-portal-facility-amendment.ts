@@ -4,7 +4,7 @@ import * as api from '../../../services/api';
 import { CancelAmendmentViewModel } from '../../../types/view-models/amendments/cancel-amendment-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper';
-import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
+import { getPreviousAmendmentPageUrl } from './get-previous-page-url';
 
 export type GetCancelPortalFacilityAmendmentRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -46,11 +46,11 @@ export const getCancelPortalFacilityAmendment = async (req: GetCancelPortalFacil
       return res.redirect('/not-found');
     }
 
+    const previousPage = getPreviousAmendmentPageUrl(req.headers.referer, dealId, facilityId, amendmentId);
+
     const viewModel: CancelAmendmentViewModel = {
       exporterName: deal.exporter.companyName,
-      previousPage:
-        req.headers.referer ??
-        `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
+      previousPage,
     };
 
     return res.render('partials/amendments/cancel.njk', viewModel);
