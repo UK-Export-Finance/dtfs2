@@ -25,6 +25,8 @@ const dealId = 'dealId';
 const facilityId = 'facilityId';
 const amendmentId = 'amendmentId';
 
+const aMockError = () => new Error();
+
 const getHttpMocks = () =>
   createMocks<GetCancelPortalFacilityAmendmentRequest>({
     params: { dealId, facilityId, amendmentId },
@@ -46,6 +48,7 @@ describe('getCancelPortalFacilityAmendment', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
+    jest.spyOn(console, 'error');
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
       .withDealId(dealId)
@@ -83,6 +86,7 @@ describe('getCancelPortalFacilityAmendment', () => {
     await getCancelPortalFacilityAmendment(req, res);
 
     // Assert
+    expect(console.error).not.toHaveBeenCalled();
     expect(getFacilityMock).toHaveBeenCalledTimes(1);
     expect(getFacilityMock).toHaveBeenCalledWith({ facilityId, userToken: req.session.userToken });
   });
@@ -95,6 +99,7 @@ describe('getCancelPortalFacilityAmendment', () => {
     await getCancelPortalFacilityAmendment(req, res);
 
     // Assert
+    expect(console.error).not.toHaveBeenCalled();
     expect(getAmendmentMock).toHaveBeenCalledTimes(1);
     expect(getAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, userToken: req.session.userToken });
   });
@@ -117,6 +122,17 @@ describe('getCancelPortalFacilityAmendment', () => {
     expect(res._getRenderData()).toEqual(expectedRenderData);
   });
 
+  it('should not call console.error if the facility and amendment are valid', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await getCancelPortalFacilityAmendment(req, res);
+
+    // Assert
+    expect(console.error).not.toHaveBeenCalled();
+  });
+
   it('should redirect if the deal is not found', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
@@ -128,6 +144,8 @@ describe('getCancelPortalFacilityAmendment', () => {
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Deal %s or Facility %s was not found', dealId, facilityId);
   });
 
   it('should redirect if the facility is not found', async () => {
@@ -141,6 +159,8 @@ describe('getCancelPortalFacilityAmendment', () => {
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Deal %s or Facility %s was not found', dealId, facilityId);
   });
 
   it('should redirect if the facility cannot be amended', async () => {
@@ -154,6 +174,8 @@ describe('getCancelPortalFacilityAmendment', () => {
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/gef/application-details/${dealId}`);
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('User cannot amend facility %s on deal %s', facilityId, dealId);
   });
 
   it('should redirect if the amendment is not found', async () => {
@@ -167,11 +189,14 @@ describe('getCancelPortalFacilityAmendment', () => {
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Amendment %s not found on facility %s', amendmentId, facilityId);
   });
 
   it('should render `problem with service` if getApplication throws an error', async () => {
     // Arrange
-    getApplicationMock.mockRejectedValue(new Error('test error'));
+    const mockError = aMockError();
+    getApplicationMock.mockRejectedValue(mockError);
     const { req, res } = getHttpMocks();
 
     // Act
@@ -179,11 +204,14 @@ describe('getCancelPortalFacilityAmendment', () => {
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Error getting cancel portal facility amendment page %o', mockError);
   });
 
   it('should render `problem with service` if getFacility throws an error', async () => {
     // Arrange
-    getFacilityMock.mockRejectedValue(new Error('test error'));
+    const mockError = aMockError();
+    getFacilityMock.mockRejectedValue(mockError);
     const { req, res } = getHttpMocks();
 
     // Act
@@ -191,11 +219,14 @@ describe('getCancelPortalFacilityAmendment', () => {
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Error getting cancel portal facility amendment page %o', mockError);
   });
 
   it('should render `problem with service` if getAmendment throws an error', async () => {
     // Arrange
-    getAmendmentMock.mockRejectedValue(new Error('test error'));
+    const mockError = aMockError();
+    getAmendmentMock.mockRejectedValue(mockError);
     const { req, res } = getHttpMocks();
 
     // Act
@@ -203,5 +234,7 @@ describe('getCancelPortalFacilityAmendment', () => {
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Error getting cancel portal facility amendment page %o', mockError);
   });
 });

@@ -30,7 +30,7 @@ export const getCancelPortalFacilityAmendment = async (req: GetCancelPortalFacil
     }
 
     if (!userCanAmendFacility(facility, deal, user.roles)) {
-      console.error('Authorisation failure, getting cancel portal facility amendment failed.');
+      console.error('User cannot amend facility %s on deal %s', facilityId, dealId);
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
