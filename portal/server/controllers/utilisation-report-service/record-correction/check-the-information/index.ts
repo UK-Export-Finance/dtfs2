@@ -4,7 +4,12 @@ import api from '../../../../api';
 import { asLoggedInUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { UtilisationReportCorrectionInformationViewModel } from '../../../../types/view-models/record-correction/utilisation-report-correction-information';
-import { formatCorrectedValues } from './helpers';
+
+export type GetRecordCorrectionInformationRequest = Request & {
+  params: {
+    correctionId: string;
+  };
+};
 
 const renderCheckTheInformationPage = (res: Response, viewModel: UtilisationReportCorrectionInformationViewModel) =>
   res.render('utilisation-report-service/record-correction/check-the-information.njk', viewModel);
@@ -14,7 +19,7 @@ const renderCheckTheInformationPage = (res: Response, viewModel: UtilisationRepo
  * @param req - the request
  * @param res - the response
  */
-export const getRecordCorrectionInformation = async (req: Request, res: Response) => {
+export const getRecordCorrectionInformation = async (req: GetRecordCorrectionInformationRequest, res: Response) => {
   const { user, userToken } = asLoggedInUserSession(req.session);
 
   try {
@@ -23,15 +28,12 @@ export const getRecordCorrectionInformation = async (req: Request, res: Response
     const bankId = user.bank.id;
     const userId = user._id;
 
-    const { feeRecord, reasons, errorSummary, oldValues, newValues, bankCommentary } = await api.getFeeRecordCorrectionReview(
+    const { feeRecord, reasons, errorSummary, formattedOldValues, formattedNewValues, bankCommentary } = await api.getFeeRecordCorrectionReview(
       bankId,
       correctionId,
       userId,
       userToken,
     );
-
-    const formattedOldValues = formatCorrectedValues(oldValues, reasons);
-    const formattedNewValues = formatCorrectedValues(newValues, reasons);
 
     const backLinkHref = `/utilisation-reports/provide-correction/${correctionId}`;
 

@@ -1,5 +1,4 @@
 import { CurrencyAndAmount } from './currency';
-import { RecordCorrectionUpdatableFieldValues } from './record-correction-updatable-values';
 import { RecordCorrectionReason } from './record-correction-reason';
 
 export type FeeRecordCorrectionReviewInformation = {
@@ -10,7 +9,7 @@ export type FeeRecordCorrectionReviewInformation = {
   };
   reasons: RecordCorrectionReason[];
   errorSummary: string;
-  oldValues: RecordCorrectionUpdatableFieldValues;
-  newValues: RecordCorrectionUpdatableFieldValues;
+  formattedOldValues: string;
+  formattedNewValues: string;
   bankCommentary?: string;
 };

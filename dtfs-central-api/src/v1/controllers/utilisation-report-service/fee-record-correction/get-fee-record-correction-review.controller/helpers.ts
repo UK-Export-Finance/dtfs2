@@ -1,48 +1,51 @@
 import {
   FeeRecordCorrectionEntity,
   FeeRecordCorrectionReviewInformation,
-  FeeRecordEntity,
+  getFormattedMonetaryValue,
+  RECORD_CORRECTION_REASON,
+  RecordCorrectionReason,
   RecordCorrectionTransientFormData,
-  RecordCorrectionUpdatableFieldValues,
-  RecordCorrectionUpdatableFieldValuesKey,
 } from '@ukef/dtfs2-common';
-import { pickBy } from 'lodash';
+import { difference } from 'lodash';
+import { mapCorrectionReasonsToFormattedOldValues } from '../../../../../helpers/map-correction-reasons-to-incorrect-values';
 
-// TODO: Add TSDOC
-const getUpdatedFieldKeys = (updatedFieldValues: RecordCorrectionUpdatableFieldValues): RecordCorrectionUpdatableFieldValuesKey[] => {
-  const definedFieldKeys = Object.keys(pickBy(updatedFieldValues));
-
-  return definedFieldKeys as RecordCorrectionUpdatableFieldValuesKey[];
+// TODO: Add unit tests
+/**
+ * Gets the formatted value from form data for a specific correction reason.
+ * @param formData - The transient form data containing corrected values
+ * @param reason - The reason for the correction
+ * @returns The formatted value corresponding to the correction reason
+ * @throws Error if the correction reason is not supported
+ */
+const getFormattedFormDataValueForCorrectionReason = (formData: RecordCorrectionTransientFormData, reason: RecordCorrectionReason) => {
+  switch (reason) {
+    case RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT:
+      return formData.facilityId;
+    case RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT:
+      return formData.reportedCurrency;
+    case RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT:
+      return getFormattedMonetaryValue(formData.reportedFee!);
+    case RECORD_CORRECTION_REASON.UTILISATION_INCORRECT:
+      return getFormattedMonetaryValue(formData.utilisation!);
+    default:
+      throw new Error(`Unsupported record correction reason: ${reason}`);
+  }
 };
 
 // TODO: Add unit tests
-// TODO: Add TSDOC, add detail about won't return undefined values
-export const mapFormDataToNewValues = (formData: RecordCorrectionTransientFormData): RecordCorrectionUpdatableFieldValues => {
-  const { utilisation, reportedCurrency, reportedFee, facilityId } = formData;
+/**
+ * Maps through an array of correction reasons and returns an array of
+ * formatted values from the transient form data.
+ *
+ * {@link RECORD_CORRECTION_REASON.OTHER} is excluded from the returned array.
+ * @param formData - The transient form data containing corrected values
+ * @param reasons - Array of reasons for the correction
+ * @returns Array of formatted values from the form data, corresponding to each correction reason
+ */
+export const mapFormDataToFormattedValues = (formData: RecordCorrectionTransientFormData, reasons: RecordCorrectionReason[]) => {
+  const reasonsWithoutOther = difference(reasons, [RECORD_CORRECTION_REASON.OTHER]);
 
-  return {
-    utilisation,
-    reportedCurrency,
-    reportedFee,
-    facilityId,
-  };
-};
-
-// TODO: Add unit tests
-// TODO: Add TSDOC
-export const mapChangedFeeRecordFieldsToOldValues = (
-  feeRecord: FeeRecordEntity,
-  updatedFields: RecordCorrectionUpdatableFieldValuesKey[],
-): RecordCorrectionUpdatableFieldValues => {
-  const fieldMappings: RecordCorrectionUpdatableFieldValues = {
-    utilisation: feeRecord.facilityUtilisation,
-    // TODO: Check this is the right currency
-    reportedCurrency: feeRecord.feesPaidToUkefForThePeriodCurrency,
-    reportedFee: feeRecord.feesPaidToUkefForThePeriod,
-    facilityId: feeRecord.facilityId,
-  };
-
-  return Object.fromEntries(updatedFields.map((field) => [field, fieldMappings[field]]));
+  return reasonsWithoutOther.map((reason) => getFormattedFormDataValueForCorrectionReason(formData, reason));
 };
 
 // TODO: Add unit tests
@@ -61,19 +64,16 @@ export const mapToReviewInformation = (
     },
   };
 
-  const newValues = mapFormDataToNewValues(formData);
-
-  const updatedFieldKeys = getUpdatedFieldKeys(newValues);
-
-  const oldValues = mapChangedFeeRecordFieldsToOldValues(feeRecord, updatedFieldKeys);
+  const formattedOldValues = mapCorrectionReasonsToFormattedOldValues(feeRecord, reasons);
+  const formattedNewValues = mapFormDataToFormattedValues(formData, reasons);
 
   return {
     correctionId,
     feeRecord: mappedFeeRecord,
     reasons,
     errorSummary,
-    oldValues,
-    newValues,
+    formattedOldValues: formattedOldValues.join(', '),
+    formattedNewValues: formattedNewValues.join(', '),
     bankCommentary: formData.additionalComments,
   };
 };
