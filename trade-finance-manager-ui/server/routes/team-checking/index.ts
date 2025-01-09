@@ -3,7 +3,6 @@
  */
 
 import express, { Request, Response } from 'express';
-import { validateUserTeam } from '../../middleware';
 import { renderTeamsChecker } from '../../controllers/team-checking';
 import { getTeamCombinations } from '../../helpers/team-checking.helper';
 
