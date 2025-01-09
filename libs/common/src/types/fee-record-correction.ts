@@ -16,10 +16,10 @@ export type PendingCorrection = {
 export type FeeRecordCorrectionSummary = {
   correctionId: number;
   feeRecordId: number;
-  facilityId: string;
   exporter: string;
   formattedReasons: string;
   formattedDateSent: string;
-  requestedBy: string;
   status: FeeRecordStatus;
+  formattedOldRecords: string;
+  formattedCorrectRecords: string;
 };

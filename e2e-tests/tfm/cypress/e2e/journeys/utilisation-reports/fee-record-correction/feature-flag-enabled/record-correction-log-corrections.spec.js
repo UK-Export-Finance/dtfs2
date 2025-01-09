@@ -4,6 +4,7 @@ import {
   PENDING_RECONCILIATION,
   UtilisationReportEntityMockBuilder,
   RECORD_CORRECTION_REASON,
+  getFormattedMonetaryValue,
 } from '@ukef/dtfs2-common';
 import pages from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
@@ -13,11 +14,17 @@ import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/ut
 
 const bankId = '961';
 const reportId = 1;
+const fee = 50000;
 
 const firstReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(reportId).withBankId(bankId).build();
 
 const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(firstReport).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build();
-const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(firstReport).withId(2).withFacilityId('987654321').withStatus(FEE_RECORD_STATUS.TO_DO).build();
+const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(firstReport)
+  .withId(2)
+  .withFacilityId('987654321')
+  .withStatus(FEE_RECORD_STATUS.TO_DO)
+  .withFeesPaidToUkefForThePeriod(fee)
+  .build();
 
 const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([firstFeeRecord, secondFeeRecord]);
 
@@ -80,11 +87,11 @@ context('When fee record correction feature flag is enabled', () => {
   });
 
   it('should display the correct table headers', () => {
-    cy.assertText(table.facilityIdHeader(), 'Facility ID');
+    cy.assertText(table.dateSentHeader(), 'Date sent');
     cy.assertText(table.exporterHeader(), 'Exporter');
     cy.assertText(table.reasonsHeader(), 'Reason for record correction');
-    cy.assertText(table.dateSentHeader(), 'Date sent');
-    cy.assertText(table.requestedByHeader(), 'Requested by');
+    cy.assertText(table.correctRecordHeader(), 'Correct record');
+    cy.assertText(table.oldRecordHeader(), 'Old record');
     cy.assertText(table.statusHeader(), 'Status');
   });
 
@@ -98,7 +105,8 @@ context('When fee record correction feature flag is enabled', () => {
         feeRecord,
         reasons: 'Facility ID is incorrect, Other',
         dateSent: today.dd_MMM_yyyy,
-        requestedBy: `${USERS.PDC_RECONCILE.firstName} ${USERS.PDC_RECONCILE.lastName}`,
+        correctRecord: '-',
+        oldRecord: `${firstFeeRecord.facilityId}, -`,
         status: 'Record correction sent',
       });
     });
@@ -110,7 +118,8 @@ context('When fee record correction feature flag is enabled', () => {
         feeRecord,
         reasons: 'Reported fee is incorrect',
         dateSent: today.dd_MMM_yyyy,
-        requestedBy: `${USERS.PDC_RECONCILE.firstName} ${USERS.PDC_RECONCILE.lastName}`,
+        correctRecord: '-',
+        oldRecord: getFormattedMonetaryValue(fee),
         status: 'Record correction sent',
       });
     });
