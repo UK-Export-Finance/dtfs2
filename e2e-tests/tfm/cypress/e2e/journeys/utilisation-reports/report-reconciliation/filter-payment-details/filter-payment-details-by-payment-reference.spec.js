@@ -22,8 +22,9 @@ context(`users can filter payment details by payment reference`, () => {
     .withDateUploaded(new Date())
     .build();
 
-  const { tabs, paymentDetailsTab } = pages.utilisationReportPage;
-  const { filters, paymentDetailsTable, errorSummaryErrors } = paymentDetailsTab;
+  const { tabs } = pages.utilisationReportPage;
+  const { paymentDetailsContent } = tabs;
+  const { filters, paymentDetailsTable, errorSummaryErrors } = paymentDetailsContent;
 
   before(() => {
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);

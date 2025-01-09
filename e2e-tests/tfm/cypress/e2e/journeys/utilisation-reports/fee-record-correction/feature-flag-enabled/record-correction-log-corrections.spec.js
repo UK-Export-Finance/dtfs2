@@ -28,9 +28,9 @@ const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(firstReport)
 
 const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([firstFeeRecord, secondFeeRecord]);
 
-const { recordCorrectionLogTab } = pages.utilisationReportPage;
+const { recordCorrectionLogContent } = pages.utilisationReportPage.tabs;
 const { utilisationReportPage } = pages;
-const { table } = recordCorrectionLogTab;
+const { table } = recordCorrectionLogContent;
 
 const additionalInfoUserInput = 'Some additional info';
 
@@ -82,8 +82,8 @@ context('When fee record correction feature flag is enabled', () => {
   });
 
   it('should display the record correction log table', () => {
-    recordCorrectionLogTab.recordCorrectionLogTable().should('exist');
-    recordCorrectionLogTab.recordCorrectionLogTable().should('be.visible');
+    recordCorrectionLogContent.recordCorrectionLogTable().should('exist');
+    recordCorrectionLogContent.recordCorrectionLogTable().should('be.visible');
   });
 
   it('should display the correct table headers', () => {
@@ -96,7 +96,7 @@ context('When fee record correction feature flag is enabled', () => {
   });
 
   it('should only have 2 rows in the table', () => {
-    recordCorrectionLogTab.recordCorrectionLogTable().find('tr[data-cy^="record-correction-log-table-row-"]').should('have.length', 2);
+    recordCorrectionLogContent.recordCorrectionLogTable().find('tr[data-cy^="record-correction-log-table-row-"]').should('have.length', 2);
   });
 
   it('should display the correct values for the first row', () => {

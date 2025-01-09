@@ -5,7 +5,7 @@ import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 const { utilisationReportPage } = pages;
-const { recordCorrectionLogTab } = utilisationReportPage;
+const { recordCorrectionLogContent } = utilisationReportPage.tabs;
 
 context('record correction log page - no corrections', () => {
   const bankId = '961';
@@ -40,25 +40,25 @@ context('record correction log page - no corrections', () => {
 
   describe('when navigating to the page', () => {
     it('should display the tab heading and text', () => {
-      cy.assertText(recordCorrectionLogTab.heading(), 'Record correction log');
+      cy.assertText(recordCorrectionLogContent.heading(), 'Record correction log');
 
       cy.assertText(utilisationReportPage.tabs.recordCorrectionLog(), 'Record correction log');
 
-      cy.assertText(utilisationReportPage.recordCorrectionLogTab.viewHistoricRecordCorrectionText(), 'View record correction requests that have been made.');
+      cy.assertText(recordCorrectionLogContent.viewHistoricRecordCorrectionText(), 'View record correction requests that have been made.');
 
       cy.assertText(
-        recordCorrectionLogTab.recordCorrectionAutomaticallyNotifiedText(),
+        recordCorrectionLogContent.recordCorrectionAutomaticallyNotifiedText(),
         'You will be automatically notified via email when the record correction comes through from the bank.',
       );
     });
 
     describe('when no record corrections are present', () => {
       it('should NOT display the record correction log table', () => {
-        recordCorrectionLogTab.viewHistoricRecordCorrectionText().should('be.visible');
+        recordCorrectionLogContent.viewHistoricRecordCorrectionText().should('be.visible');
 
-        recordCorrectionLogTab.recordCorrectionAutomaticallyNotifiedText().should('be.visible');
+        recordCorrectionLogContent.recordCorrectionAutomaticallyNotifiedText().should('be.visible');
 
-        utilisationReportPage.recordCorrectionLogTab.recordCorrectionLogTable().should('not.exist');
+        recordCorrectionLogContent.recordCorrectionLogTable().should('not.exist');
       });
     });
   });
