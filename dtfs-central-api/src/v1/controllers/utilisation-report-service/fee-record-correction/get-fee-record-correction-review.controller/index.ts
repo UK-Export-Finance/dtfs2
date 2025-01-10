@@ -4,6 +4,7 @@ import { HttpStatusCode } from 'axios';
 import { NotFoundError } from '../../../../../errors';
 import { FeeRecordCorrectionRepo } from '../../../../../repositories/fee-record-correction-repo';
 import { mapTransientCorrectionDataToReviewInformation } from './helpers';
+import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
 
 export type GetFeeRecordCorrectionReviewRequest = CustomExpressRequest<{
   params: {
@@ -31,15 +32,7 @@ export const getFeeRecordCorrectionReview = async (req: GetFeeRecordCorrectionRe
   try {
     const correctionId = Number(correctionIdString);
 
-    // TODO: Find correction transient form data once persistence work completed (TODO: MERGE IN). Throw NotFoundError if not present for correctionId and userId.
-    const transientFormData = {
-      feeRecordId: 7,
-      formData: {
-        utilisation: 80,
-        facilityId: '12345678',
-        additionalInfo: 'some bank commentary',
-      },
-    };
+    const transientFormData = await FeeRecordCorrectionTransientFormDataRepo.findByUserIdAndCorrectionId(userId, correctionId);
 
     if (!transientFormData) {
       throw new NotFoundError(`Failed to find fee record correction transient form data with correction id ${correctionId} and user id ${userId}`);

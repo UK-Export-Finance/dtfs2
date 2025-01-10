@@ -1,8 +1,17 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
-import { TestApiError } from '@ukef/dtfs2-common';
+import {
+  FeeRecordCorrectionEntityMockBuilder,
+  FeeRecordCorrectionReviewInformation,
+  FeeRecordCorrectionTransientFormDataEntityMockBuilder,
+  RECORD_CORRECTION_REASON,
+  RecordCorrectionTransientFormData,
+  TestApiError,
+} from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { FeeRecordCorrectionRepo } from '../../../../../repositories/fee-record-correction-repo';
 import { GetFeeRecordCorrectionReviewRequest, GetFeeRecordCorrectionReviewResponse, getFeeRecordCorrectionReview } from '.';
+import { mapTransientCorrectionDataToReviewInformation } from './helpers';
+import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
 
 jest.mock('../../../../../repositories/fee-record-correction-repo');
 
@@ -15,13 +24,17 @@ describe('get-fee-record-correction-review.controller', () => {
 
     const aValidRequestQuery = () => ({ correctionId: correctionId.toString(), userId });
 
-    const mockFeeRecordCorrectionFind = jest.fn();
+    const mockCorrectionTransientFormDataFind = jest.fn();
+    const mockCorrectionFind = jest.fn();
 
     let req: GetFeeRecordCorrectionReviewRequest;
     let res: MockResponse<GetFeeRecordCorrectionReviewResponse>;
 
     beforeEach(() => {
-      FeeRecordCorrectionRepo.findOneByIdWithFeeRecord = mockFeeRecordCorrectionFind;
+      FeeRecordCorrectionTransientFormDataRepo.findByUserIdAndCorrectionId = mockCorrectionTransientFormDataFind;
+      FeeRecordCorrectionRepo.findOneByIdWithFeeRecord = mockCorrectionFind;
+
+      mockCorrectionTransientFormDataFind.mockResolvedValue({});
 
       req = httpMocks.createRequest<GetFeeRecordCorrectionReviewRequest>({
         params: aValidRequestQuery(),
@@ -33,34 +46,56 @@ describe('get-fee-record-correction-review.controller', () => {
       jest.resetAllMocks();
     });
 
-    // TODO FN-3669: The following test case requires the persistence work to be merged in to this branch - complete before initial review
+    it(`should respond with a '${HttpStatusCode.Ok}' and the mapped fee record correction review details if a fee record correction entity exists`, async () => {
+      // Arrange
+      const correctionReasons = [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT, RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT];
+      const transientFormData: RecordCorrectionTransientFormData = {
+        utilisation: 10000.23,
+        facilityId: '99999999',
+      };
 
-    // it(`should respond with a '${HttpStatusCode.Ok}' and the mapped fee record correction review details if a fee record correction entity exists`, async () => {
-    //   // Arrange
-    //   const transientFormData = {};
+      const correctionTransientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder().withFormData(transientFormData).build();
 
-    //   const feeRecordCorrectionEntity = new FeeRecordCorrectionEntityMockBuilder().build();
+      mockCorrectionTransientFormDataFind.mockResolvedValue(correctionTransientFormDataEntity);
 
-    //   mockFeeRecordCorrectionFind.mockResolvedValue(feeRecordCorrectionEntity);
+      const feeRecordCorrectionEntity = new FeeRecordCorrectionEntityMockBuilder().withReasons(correctionReasons).build();
 
-    //   const expectedMappedFeeRecordCorrectionInformation = mapTransientCorrectionDataToReviewInformation(transientFormData, feeRecordCorrectionEntity);
+      mockCorrectionFind.mockResolvedValue(feeRecordCorrectionEntity);
 
-    //   // Act
-    //   await getFeeRecordCorrectionReview(req, res);
+      const expectedMappedFeeRecordCorrectionInformation = mapTransientCorrectionDataToReviewInformation(transientFormData, feeRecordCorrectionEntity);
 
-    //   // Assert
-    //   expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+      // Act
+      await getFeeRecordCorrectionReview(req, res);
 
-    //   const responseBody = res._getData() as FeeRecordCorrectionReviewInformation;
-    //   expect(responseBody).toEqual(expectedMappedFeeRecordCorrectionInformation);
-    // });
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+
+      const responseBody = res._getData() as FeeRecordCorrectionReviewInformation;
+      expect(responseBody).toEqual(expectedMappedFeeRecordCorrectionInformation);
+    });
+
+    it('should call fee record correction transient form data find once', async () => {
+      // Act
+      await getFeeRecordCorrectionReview(req, res);
+
+      // Assert
+      expect(mockCorrectionTransientFormDataFind).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call fee record correction transient form data find with the correct parameters', async () => {
+      // Act
+      await getFeeRecordCorrectionReview(req, res);
+
+      // Assert
+      expect(mockCorrectionTransientFormDataFind).toHaveBeenCalledWith(userId, correctionId);
+    });
 
     it('should call fee record correction find once', async () => {
       // Act
       await getFeeRecordCorrectionReview(req, res);
 
       // Assert
-      expect(mockFeeRecordCorrectionFind).toHaveBeenCalledTimes(1);
+      expect(mockCorrectionFind).toHaveBeenCalledTimes(1);
     });
 
     it('should call fee record correction find with the correct parameters', async () => {
@@ -68,12 +103,12 @@ describe('get-fee-record-correction-review.controller', () => {
       await getFeeRecordCorrectionReview(req, res);
 
       // Assert
-      expect(mockFeeRecordCorrectionFind).toHaveBeenCalledWith(correctionId);
+      expect(mockCorrectionFind).toHaveBeenCalledWith(correctionId);
     });
 
     it(`should respond with a '${HttpStatusCode.NotFound}' if fee record correction with the provided fee record correction id is not found`, async () => {
       // Arrange
-      mockFeeRecordCorrectionFind.mockResolvedValue(null);
+      mockCorrectionFind.mockResolvedValue(null);
 
       // Act
       await getFeeRecordCorrectionReview(req, res);
@@ -85,7 +120,7 @@ describe('get-fee-record-correction-review.controller', () => {
     it("should respond with the specific error status if retrieving the fee record correction review information throws an 'ApiError'", async () => {
       // Arrange
       const errorStatus = HttpStatusCode.NotFound;
-      mockFeeRecordCorrectionFind.mockRejectedValue(new TestApiError({ status: errorStatus }));
+      mockCorrectionFind.mockRejectedValue(new TestApiError({ status: errorStatus }));
 
       // Act
       await getFeeRecordCorrectionReview(req, res);
@@ -97,7 +132,7 @@ describe('get-fee-record-correction-review.controller', () => {
     it("should respond with the specific error message if retrieving the fee record correction review information throws an 'ApiError'", async () => {
       // Arrange
       const errorMessage = 'Some error message';
-      mockFeeRecordCorrectionFind.mockRejectedValue(new TestApiError({ message: errorMessage }));
+      mockCorrectionFind.mockRejectedValue(new TestApiError({ message: errorMessage }));
 
       // Act
       await getFeeRecordCorrectionReview(req, res);
@@ -108,7 +143,7 @@ describe('get-fee-record-correction-review.controller', () => {
 
     it(`should respond with a '${HttpStatusCode.InternalServerError}' if an unknown error occurs`, async () => {
       // Arrange
-      mockFeeRecordCorrectionFind.mockRejectedValue(new Error('Some error'));
+      mockCorrectionFind.mockRejectedValue(new Error('Some error'));
 
       // Act
       await getFeeRecordCorrectionReview(req, res);
@@ -119,7 +154,7 @@ describe('get-fee-record-correction-review.controller', () => {
 
     it('should respond with a generic error message if an unknown error occurs', async () => {
       // Arrange
-      mockFeeRecordCorrectionFind.mockRejectedValue(new Error('Some error'));
+      mockCorrectionFind.mockRejectedValue(new Error('Some error'));
 
       // Act
       await getFeeRecordCorrectionReview(req, res);
