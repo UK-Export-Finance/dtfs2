@@ -16,7 +16,7 @@ export const validateIsUsingFacilityEndDate = (isUsingFacilityEndDate: string): 
     errors: [
       {
         errMsg: 'Select if there is an end date for this facility',
-        errRef: 'is-using-facility-end-date',
+        errRef: 'isUsingFacilityEndDate',
       },
     ],
   };

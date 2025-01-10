@@ -39,9 +39,9 @@ describe(page, () => {
     const paramsWithErrors = {
       ...params,
       errors: {
-        errorSummary: [{ text: errorText, href: 'hasFacilityEndDate' }],
+        errorSummary: [{ text: errorText, href: 'isUsingFacilityEndDate' }],
         fieldErrors: {
-          hasFacilityEndDate: {
+          isUsingFacilityEndDate: {
             text: errorText,
           },
         },
@@ -53,15 +53,15 @@ describe(page, () => {
     wrapper.expectText('[data-cy="error-summary"]').toContain(errorText);
   });
 
-  it(`should render the hasFacilityEndDate error if an error exists`, () => {
+  it(`should render the isUsingFacilityEndDate error if an error exists`, () => {
     const errorText = 'an error';
 
     const paramsWithErrors = {
       ...params,
       errors: {
-        errorSummary: [{ text: errorText, href: 'hasFacilityEndDate' }],
+        errorSummary: [{ text: errorText, href: 'isUsingFacilityEndDate' }],
         fieldErrors: {
-          hasFacilityEndDate: {
+          isUsingFacilityEndDate: {
             text: errorText,
           },
         },
