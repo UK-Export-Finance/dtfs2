@@ -1,0 +1,10 @@
+{% macro render(params) %}
+  {% set titleText = params.titleText %}
+
+  <div class="govuk-panel govuk-panel--confirmation">
+    <h1 class="govuk-panel__title" data-cy="main-heading">
+      {{ titleText }}
+    </h1>
+  </div>
+
+{% endmacro %}
