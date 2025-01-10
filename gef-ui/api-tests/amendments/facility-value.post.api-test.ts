@@ -79,6 +79,21 @@ describe(`GET ${url}`, () => {
     });
   });
 
+  describe('when portal facility amendments feature flag is not set', () => {
+    beforeEach(() => {
+      delete process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED;
+    });
+
+    it('should redirect to /not-found', async () => {
+      // Act
+      const response = await postWithSessionCookie({ facilityValue: '100.00' }, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Found);
+      expect(response.headers.location).toEqual('/not-found');
+    });
+  });
+
   describe('when portal facility amendments feature flag is enabled', () => {
     beforeEach(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
