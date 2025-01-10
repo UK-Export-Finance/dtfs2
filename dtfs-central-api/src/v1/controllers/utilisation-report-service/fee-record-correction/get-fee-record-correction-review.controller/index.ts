@@ -51,7 +51,7 @@ export const getFeeRecordCorrectionReview = async (req: GetFeeRecordCorrectionRe
     return res.status(HttpStatusCode.Ok).send(reviewInformation);
   } catch (error) {
     const errorMessage = `Failed to get fee record correction review information`;
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
 
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
