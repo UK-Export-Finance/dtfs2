@@ -1,3 +1,4 @@
+// TODO: DTFS2-7724 - remove this eslint-disable
 /* eslint-disable import/first */
 const getFacilityMock = jest.fn();
 const getApplicationMock = jest.fn();
@@ -27,6 +28,8 @@ jest.mock('../../../services/api', () => ({
 const dealId = 'dealId';
 const facilityId = 'facilityId';
 const amendmentId = 'amendmentId';
+
+const aMockError = () => new Error();
 
 const previousPage = 'previousPage';
 
@@ -58,7 +61,10 @@ describe('postBankReviewDate', () => {
 
   beforeEach(() => {
     jest.resetAllMocks();
+    jest.restoreAllMocks();
+
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
+    jest.spyOn(console, 'error');
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
       .withDealId(dealId)
@@ -143,6 +149,18 @@ describe('postBankReviewDate', () => {
     expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { value: Number(facilityValue) }, userToken });
   });
 
+  it('should not call console.error if the facilityValue is valid', async () => {
+    // Arrange
+    const facilityValue = '1000';
+    const { req, res } = getHttpMocks(facilityValue);
+
+    // Act
+    await postFacilityValue(req, res);
+
+    // Assert
+    expect(console.error).toHaveBeenCalledTimes(0);
+  });
+
   it('should redirect to the next page if facilityValue is valid', async () => {
     // Arrange
     const facilityValue = '10000';
@@ -167,6 +185,8 @@ describe('postBankReviewDate', () => {
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Deal %s or Facility %s was not found', dealId, facilityId);
   });
 
   it('should redirect if the deal is not found', async () => {
@@ -180,11 +200,14 @@ describe('postBankReviewDate', () => {
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Deal %s or Facility %s was not found', dealId, facilityId);
   });
 
   it('should render `problem with service` if getApplication throws an error', async () => {
     // Arrange
-    getApplicationMock.mockRejectedValue(new Error('test error'));
+    const mockError = aMockError();
+    getApplicationMock.mockRejectedValue(mockError);
     const { req, res } = getHttpMocks();
 
     // Act
@@ -192,11 +215,14 @@ describe('postBankReviewDate', () => {
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Error getting amendments facility value page %o', mockError);
   });
 
   it('should render `problem with service` if getFacility throws an error', async () => {
     // Arrange
-    getFacilityMock.mockRejectedValue(new Error('test error'));
+    const mockError = aMockError();
+    getFacilityMock.mockRejectedValue(mockError);
     const { req, res } = getHttpMocks();
 
     // Act
@@ -204,11 +230,14 @@ describe('postBankReviewDate', () => {
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Error getting amendments facility value page %o', mockError);
   });
 
   it('should render `problem with service` if updateAmendment throws an error', async () => {
     // Arrange
-    updateAmendmentMock.mockRejectedValue(new Error('test error'));
+    const mockError = aMockError();
+    updateAmendmentMock.mockRejectedValue(mockError);
     const { req, res } = getHttpMocks();
 
     // Act
@@ -216,5 +245,7 @@ describe('postBankReviewDate', () => {
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Error getting amendments facility value page %o', mockError);
   });
 });
