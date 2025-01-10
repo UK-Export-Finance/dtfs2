@@ -7,7 +7,7 @@ import {
   RecordCorrectionTransientFormData,
 } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
-import { mapCorrectionReasonsToFormattedOldValues } from '../../../../../helpers/map-correction-reasons-to-incorrect-values';
+import { mapCorrectionReasonsToFormattedOldValues } from '../../../../../helpers/map-correction-reasons-to-formatted-values';
 
 /**
  * Gets the formatted value from form data for a specific correction reason.

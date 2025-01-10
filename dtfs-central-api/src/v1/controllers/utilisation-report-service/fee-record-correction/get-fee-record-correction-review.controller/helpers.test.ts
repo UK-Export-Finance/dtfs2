@@ -9,7 +9,7 @@ import {
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { getFormattedFormDataValueForCorrectionReason, mapFormDataToFormattedValues, mapTransientCorrectionDataToReviewInformation } from './helpers';
-import { mapCorrectionReasonsToFormattedOldValues } from '../../../../../helpers/map-correction-reasons-to-incorrect-values';
+import { mapCorrectionReasonsToFormattedOldValues } from '../../../../../helpers/map-correction-reasons-to-formatted-values';
 
 console.error = jest.fn();
 
