@@ -48,7 +48,7 @@ export const putFeeRecordCorrection = async (req: PutFeeRecordCorrectionRequest,
     const transientFormData = await FeeRecordCorrectionTransientFormDataRepo.findByUserIdAndCorrectionId(userId, correctionId);
 
     if (!transientFormData) {
-      throw new NotFoundError(`Failed to find a transient form data with user id '${userId}' for correction id '${correctionId}'`);
+      throw new NotFoundError(`Failed to find transient form data with user id '${userId}' for correction id '${correctionId}'`);
     }
 
     const bank = await getBankById(bankId);
