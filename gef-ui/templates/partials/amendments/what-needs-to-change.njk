@@ -57,7 +57,7 @@
               html: headingHtml
             }
           },
-          id: "amendmentSelection",
+          id: "whatNeedsToChange",
           attributes: {
             "data-cy": "change-checkbox-selection"
           },
@@ -72,7 +72,8 @@
           },
           items: [
             {
-              value: "coverEndDate",
+              value: "changeCoverEndDate",
+              name: "changeCoverEndDate",
               text: "Cover end date",
               checked: changeCoverEndDate,
               attributes: {
@@ -80,7 +81,8 @@
               }
             },
             {
-              value: "facilityValue",
+              value: "changeFacilityValue",
+              name: "changeFacilityValue",
               text: "Facility value",
               checked: changeFacilityValue,
               attributes: {
