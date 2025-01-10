@@ -18,13 +18,13 @@ import { getEditPaymentsCheckboxIdsFromObjectKeys } from '../../../helpers/edit-
 import { EditPaymentsTableCheckboxId } from '../../../types/edit-payments-table-checkbox-id';
 import { ReconciliationForReportTab } from '../../../types/reconciliation-for-report-tab';
 
-const renderEditPaymentPage = (res: Response, viewModel: EditPaymentViewModel) => res.render('utilisation-reports/edit-payment.njk', viewModel);
-
 type GetEditPaymentRequest = CustomExpressRequest<{
   query: {
     redirectTab?: ReconciliationForReportTab;
   };
 }>;
+
+const template = 'utilisation-reports/edit-payment.njk';
 
 export const getEditPayment = async (req: GetEditPaymentRequest, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
@@ -38,7 +38,7 @@ export const getEditPayment = async (req: GetEditPaymentRequest, res: Response) 
     const paymentDetails = await api.getPaymentDetailsWithFeeRecords(reportId, paymentId, userToken);
 
     if (formValues) {
-      const editPaymentViewModel = getEditPaymentViewModelWithFormValues(
+      const editPaymentViewModel: EditPaymentViewModel = getEditPaymentViewModelWithFormValues(
         paymentDetails,
         reportId,
         paymentId,
@@ -47,13 +47,15 @@ export const getEditPayment = async (req: GetEditPaymentRequest, res: Response) 
         redirectTab,
         errors,
       );
-      return renderEditPaymentPage(res, editPaymentViewModel);
+
+      return res.render(template, editPaymentViewModel);
     }
 
-    const editPaymentViewModel = getEditPaymentViewModel(paymentDetails, reportId, paymentId, isCheckboxChecked, redirectTab, errors);
-    return renderEditPaymentPage(res, editPaymentViewModel);
+    const editPaymentViewModel: EditPaymentViewModel = getEditPaymentViewModel(paymentDetails, reportId, paymentId, isCheckboxChecked, redirectTab, errors);
+
+    return res.render(template, editPaymentViewModel);
   } catch (error) {
-    console.error('Error updating utilisation report status:', error);
+    console.error('Error updating utilisation report status: %o', error);
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };
@@ -95,9 +97,10 @@ export const postEditPayment = async (req: PostEditPaymentRequest, res: Response
       redirectTab,
       editPaymentErrors,
     );
-    return renderEditPaymentPage(res, editPaymentViewModel);
+
+    return res.render(template, editPaymentViewModel);
   } catch (error) {
-    console.error('Error updating utilisation report status:', error);
+    console.error('Error updating utilisation report status: %o', error);
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };

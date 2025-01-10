@@ -89,7 +89,7 @@ context.skip('Fixed fee calculation uses effective amendment to cover end date a
   };
 
   const { utilisationReportPage, checkKeyingDataPage } = pages;
-  const { keyingSheetTab, premiumPaymentsTab } = utilisationReportPage;
+  const { keyingSheetContent, premiumPaymentsContent } = utilisationReportPage.tabs;
 
   beforeEach(() => {
     cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
@@ -107,7 +107,7 @@ context.skip('Fixed fee calculation uses effective amendment to cover end date a
   });
 
   it('should calculate the fixed fee adjustment using effective amendment at report period end', () => {
-    premiumPaymentsTab.generateKeyingDataButton().click();
+    premiumPaymentsContent.generateKeyingDataButton().click();
     checkKeyingDataPage.generateKeyingSheetDataButton().click();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}#keying-sheet`));
@@ -129,7 +129,7 @@ context.skip('Fixed fee calculation uses effective amendment to cover end date a
      * The adjustment is therefore the difference between the previous
      * fixed fee which was 700 and 657 which is a decrease of 43
      */
-    cy.assertText(keyingSheetTab.fixedFeeAdjustmentDecrease(feeRecordId), '43.00');
-    cy.assertText(keyingSheetTab.fixedFeeAdjustmentIncrease(feeRecordId), '-');
+    cy.assertText(keyingSheetContent.fixedFeeAdjustmentDecrease(feeRecordId), '43.00');
+    cy.assertText(keyingSheetContent.fixedFeeAdjustmentIncrease(feeRecordId), '-');
   });
 });
