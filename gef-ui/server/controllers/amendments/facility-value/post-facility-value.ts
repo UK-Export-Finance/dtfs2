@@ -53,7 +53,9 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
       return res.render('partials/amendments/facility-value.njk', viewModel);
     }
 
-    const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update: { value: Number(facilityValue) }, userToken });
+    const update = { value: Number(facilityValue) };
+
+    const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
     return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, updatedAmendment));
   } catch (error) {
