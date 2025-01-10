@@ -9,6 +9,8 @@ import api from '../../../../api';
 import { CreateRecordCorrectionRequestFormRequestBody, extractCreateRecordCorrectionRequestFormValues } from './form-helpers';
 import { validateCreateRecordCorrectionRequestFormValues } from './validate-form-values';
 
+const createRecordCorrectionRequestTemplate = 'utilisation-reports/record-corrections/create-record-correction-request.njk';
+
 export type GetCreateRecordCorrectionRequestRequest = CustomExpressRequest<{
   params: {
     reportId: string;
@@ -48,7 +50,7 @@ export const getCreateRecordCorrectionRequest = async (req: GetCreateRecordCorre
       backLinkHref: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
     };
 
-    return res.render('utilisation-reports/record-corrections/create-record-correction-request.njk', viewModel);
+    return res.render(createRecordCorrectionRequestTemplate, viewModel);
   } catch (error) {
     console.error('Failed to get create record correction request', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
@@ -102,7 +104,7 @@ export const postCreateRecordCorrectionRequest = async (req: PostCreateRecordCor
       backLinkHref: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
     };
 
-    return res.render('utilisation-reports/record-corrections/create-record-correction-request.njk', viewModel);
+    return res.render(createRecordCorrectionRequestTemplate, viewModel);
   } catch (error) {
     console.error('Failed to post create record correction request', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });

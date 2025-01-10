@@ -12,6 +12,8 @@ import {
 import { getFindReportSummaryItemViewModel } from '../helpers';
 import { BankWithReportingYearsResponseBody } from '../../../api-response-types';
 
+const findUtilisationReportsByYearTemplate = 'utilisation-reports/find-utilisation-reports-by-year.njk';
+
 /**
  * Gets tha bank id query and year query as string
  * @param req - The request object
@@ -73,7 +75,7 @@ export const getFindReportsByYear = async (req: Request, res: Response) => {
         yearError: undefined,
       };
 
-      return res.render('utilisation-reports/find-utilisation-reports-by-year.njk', viewModel);
+      return res.render(findUtilisationReportsByYearTemplate, viewModel);
     }
 
     const { errorSummary, bankError, yearError, bankIdAsString, yearAsString } = validateSearchInput({
@@ -95,7 +97,7 @@ export const getFindReportsByYear = async (req: Request, res: Response) => {
         selectedYear: isNonEmptyString(yearQuery) ? yearQuery : undefined,
       };
 
-      return res.render('utilisation-reports/find-utilisation-reports-by-year.njk', viewModel);
+      return res.render(findUtilisationReportsByYearTemplate, viewModel);
     }
 
     const { bankName, year, reports } = await api.getReportSummariesByBankAndYear(userToken, bankIdAsString, yearAsString);

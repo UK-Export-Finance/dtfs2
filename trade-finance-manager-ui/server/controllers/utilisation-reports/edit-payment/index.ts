@@ -24,6 +24,8 @@ type GetEditPaymentRequest = CustomExpressRequest<{
   };
 }>;
 
+const template = 'utilisation-reports/edit-payment.njk';
+
 export const getEditPayment = async (req: GetEditPaymentRequest, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
   const { reportId, paymentId } = req.params;
@@ -46,12 +48,12 @@ export const getEditPayment = async (req: GetEditPaymentRequest, res: Response) 
         errors,
       );
 
-      return res.render('utilisation-reports/edit-payment.njk', editPaymentViewModel);
+      return res.render(template, editPaymentViewModel);
     }
 
     const editPaymentViewModel: EditPaymentViewModel = getEditPaymentViewModel(paymentDetails, reportId, paymentId, isCheckboxChecked, redirectTab, errors);
 
-    return res.render('utilisation-reports/edit-payment.njk', editPaymentViewModel);
+    return res.render(template, editPaymentViewModel);
   } catch (error) {
     console.error('Error updating utilisation report status: %o', error);
     return res.render('_partials/problem-with-service.njk', { user });
@@ -96,7 +98,7 @@ export const postEditPayment = async (req: PostEditPaymentRequest, res: Response
       editPaymentErrors,
     );
 
-    return res.render('utilisation-reports/edit-payment.njk', editPaymentViewModel);
+    return res.render(template, editPaymentViewModel);
   } catch (error) {
     console.error('Error updating utilisation report status: %o', error);
     return res.render('_partials/problem-with-service.njk', { user });
