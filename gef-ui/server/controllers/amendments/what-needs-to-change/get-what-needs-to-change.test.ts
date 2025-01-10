@@ -255,5 +255,6 @@ describe('getWhatNeedsToChange', () => {
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Error getting amendments what needs to change page %o', new Error('test error'));
   });
 });

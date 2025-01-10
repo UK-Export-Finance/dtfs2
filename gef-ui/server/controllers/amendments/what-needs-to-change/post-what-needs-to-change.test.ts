@@ -90,6 +90,7 @@ describe('postWhatNeedsToChange', () => {
     // Assert
     expect(getApplicationMock).toHaveBeenCalledTimes(1);
     expect(getApplicationMock).toHaveBeenCalledWith({ dealId, userToken });
+    expect(console.error).toHaveBeenCalledTimes(0);
   });
 
   it('should call getFacility with the correct facilityId and userToken', async () => {
@@ -102,6 +103,7 @@ describe('postWhatNeedsToChange', () => {
     // Assert
     expect(getFacilityMock).toHaveBeenCalledTimes(1);
     expect(getFacilityMock).toHaveBeenCalledWith({ facilityId, userToken: req.session.userToken });
+    expect(console.error).toHaveBeenCalledTimes(0);
   });
 
   it('should not call updateAmendment if neither of changeCoverEndDate or changeFacilityValue are true', async () => {
@@ -113,6 +115,7 @@ describe('postWhatNeedsToChange', () => {
 
     // Assert
     expect(updateAmendmentMock).toHaveBeenCalledTimes(0);
+    expect(console.error).toHaveBeenCalledTimes(0);
   });
 
   it('should render the page with validation errors if an invalid selection has been made', async () => {
