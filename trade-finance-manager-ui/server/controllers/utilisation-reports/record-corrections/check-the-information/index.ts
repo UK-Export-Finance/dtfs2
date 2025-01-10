@@ -5,9 +5,6 @@ import { asUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import api from '../../../../api';
 
-const renderCheckTheInformationPage = (res: Response, viewModel: RecordCorrectionRequestInformationViewModel) =>
-  res.render('utilisation-reports/record-corrections/check-the-information.njk', viewModel);
-
 /**
  * Renders the "check the information" page for a record correction request
  * @param req - the request
@@ -21,7 +18,7 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
     const { bank, reportPeriod, correctionRequestDetails } = await api.getFeeRecordCorrectionRequestReview(reportId, feeRecordId, user._id, userToken);
     const { facilityId, exporter, reasons, additionalInfo, contactEmailAddresses } = correctionRequestDetails;
 
-    return renderCheckTheInformationPage(res, {
+    const viewModel: RecordCorrectionRequestInformationViewModel = {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       bank: {
@@ -35,7 +32,9 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
       reasonForRecordCorrection: mapReasonsToDisplayValues(reasons).join(', '),
       additionalInfo,
       contactEmailAddresses,
-    });
+    };
+
+    return res.render('utilisation-reports/record-corrections/check-the-information.njk', viewModel);
   } catch (error) {
     console.error('Failed to render create record correction request - "check the information" page %o', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
@@ -64,7 +63,7 @@ export const postRecordCorrectionRequestInformation = async (req: Request, res: 
 
     return res.redirect(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/request-sent`);
   } catch (error) {
-    console.error('Failed to create record correction', error);
+    console.error('Failed to create record correction: %o', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };
