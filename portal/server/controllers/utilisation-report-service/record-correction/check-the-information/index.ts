@@ -11,9 +11,6 @@ export type GetUtilisationReportCorrectionReviewRequest = Request & {
   };
 };
 
-const renderCheckTheInformationPage = (res: Response, viewModel: UtilisationReportCorrectionInformationViewModel) =>
-  res.render('utilisation-report-service/record-correction/check-the-information.njk', viewModel);
-
 /**
  * Renders the "check the information" page for a utilisation report correction
  * @param req - the request
@@ -37,7 +34,7 @@ export const getUtilisationReportCorrectionReview = async (req: GetUtilisationRe
 
     const backLinkHref = `/utilisation-reports/provide-correction/${correctionId}`;
 
-    return renderCheckTheInformationPage(res, {
+    const viewModel: UtilisationReportCorrectionInformationViewModel = {
       user,
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       backLinkHref,
@@ -47,9 +44,11 @@ export const getUtilisationReportCorrectionReview = async (req: GetUtilisationRe
       formattedOldValues,
       formattedNewValues,
       bankCommentary: bankCommentary ?? '-',
-    });
+    };
+
+    return res.render('utilisation-report-service/record-correction/check-the-information.njk', viewModel);
   } catch (error) {
-    console.error('Failed to render record correction - "check the information" page: %o', error);
+    console.error('Failed to render utilisation report correction - "check the information" page: %o', error);
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };
