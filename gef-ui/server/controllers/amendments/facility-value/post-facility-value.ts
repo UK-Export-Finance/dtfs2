@@ -59,7 +59,7 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
 
     return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, updatedAmendment));
   } catch (error) {
-    console.error('Error getting amendments facility value page %o', error);
+    console.error('Error posting amendments facility value page %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
