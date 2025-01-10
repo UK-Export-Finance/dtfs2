@@ -49,7 +49,7 @@ export const postDoYouHaveAFacilityEndDate = async (req: PostDoYouHaveAFacilityE
 
     return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE, amendment));
   } catch (error) {
-    console.error('Error getting amendments do you have a facility end date page %o', error);
+    console.error('Error posting amendments do you have a facility end date page %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
