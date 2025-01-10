@@ -1,6 +1,6 @@
 import { validateFacilityValue } from './validation';
 
-const errRef = 'facility-value';
+const errRef = 'facilityValue';
 
 describe('validateFacilityValue', () => {
   const errorTestCases = [
