@@ -31,8 +31,12 @@ export function validateRequiredFormDataField<T>(value: T | undefined | null, re
 export const getFormattedFormDataValueForCorrectionReason = (formData: RecordCorrectionTransientFormData, reason: RecordCorrectionReason) => {
   switch (reason) {
     case RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT:
+      validateRequiredFormDataField(formData.facilityId, reason);
+
       return formData.facilityId;
     case RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT:
+      validateRequiredFormDataField(formData.reportedCurrency, reason);
+
       return formData.reportedCurrency;
     case RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT:
       validateRequiredFormDataField(formData.reportedFee, reason);

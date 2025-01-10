@@ -8,6 +8,7 @@ import {
   RecordCorrectionReason,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
+import { difference } from 'lodash';
 import {
   getFormattedFormDataValueForCorrectionReason,
   mapFormDataToFormattedValues,
@@ -60,6 +61,8 @@ describe('get-fee-record-correction-review.controller helpers', () => {
   });
 
   describe('getFormattedFormDataValueForCorrectionReason', () => {
+    const reasonsExcludingOther = difference(Object.values(RECORD_CORRECTION_REASON), [RECORD_CORRECTION_REASON.OTHER]);
+
     it(`should map form data value for reason "${RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT}" to original value`, () => {
       // Arrange
       const reason = RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT;
@@ -132,6 +135,14 @@ describe('get-fee-record-correction-review.controller helpers', () => {
 
       // Assert
       expect(formattedValue).toEqual('-');
+    });
+
+    it.each(reasonsExcludingOther)('should throw error when value for reason "%s" is missing from the transient form data', (reason) => {
+      // Arrange
+      const formData = {};
+
+      // Act & Assert
+      expect(() => getFormattedFormDataValueForCorrectionReason(formData, reason)).toThrow();
     });
   });
 
