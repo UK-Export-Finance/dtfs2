@@ -13,7 +13,7 @@ import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { getNextPage } from '../helpers/navigation.helper';
-import { postDoYouHaveAFacilityEndDate, PostDoYouHaveAFacilityEndDateRequest } from './post-do-you-have-a-facility-end-date.';
+import { postDoYouHaveAFacilityEndDate, PostDoYouHaveAFacilityEndDateRequest } from './post-do-you-have-a-facility-end-date';
 import { validationErrorHandler } from '../../../utils/helpers';
 import { validateIsUsingFacilityEndDate } from './validation';
 import { ValidationError } from '../../../types/validation-error';
@@ -34,7 +34,7 @@ const userToken = 'testToken';
 
 const aMockError = () => new Error();
 
-const getHttpMocks = (isUsingFacilityEndDate: string = 'true') =>
+const getHttpMocks = (isUsingFacilityEndDate: string | undefined) =>
   createMocks<PostDoYouHaveAFacilityEndDateRequest>({
     params: { dealId, facilityId, amendmentId },
     session: {
@@ -74,7 +74,7 @@ describe('postDoYouHaveAFacilityEndDate', () => {
 
   it('should call getApplication with the correct dealId and userToken', async () => {
     // Arrange
-    const { req, res } = getHttpMocks();
+    const { req, res } = getHttpMocks('true');
 
     // Act
     await postDoYouHaveAFacilityEndDate(req, res);
@@ -86,7 +86,7 @@ describe('postDoYouHaveAFacilityEndDate', () => {
 
   it('should call getFacility with the correct facilityId and userToken', async () => {
     // Arrange
-    const { req, res } = getHttpMocks();
+    const { req, res } = getHttpMocks('true');
 
     // Act
     await postDoYouHaveAFacilityEndDate(req, res);
@@ -98,7 +98,7 @@ describe('postDoYouHaveAFacilityEndDate', () => {
 
   it('should redirect if the facility is not found', async () => {
     // Arrange
-    const { req, res } = getHttpMocks();
+    const { req, res } = getHttpMocks('true');
     getFacilityMock.mockResolvedValue({ details: undefined });
 
     // Act
@@ -113,7 +113,7 @@ describe('postDoYouHaveAFacilityEndDate', () => {
 
   it('should redirect if the deal is not found', async () => {
     // Arrange
-    const { req, res } = getHttpMocks();
+    const { req, res } = getHttpMocks('true');
     getApplicationMock.mockResolvedValue(undefined);
 
     // Act
@@ -251,7 +251,7 @@ describe('postDoYouHaveAFacilityEndDate', () => {
     // Arrange
     const mockError = aMockError();
     getApplicationMock.mockRejectedValue(mockError);
-    const { req, res } = getHttpMocks();
+    const { req, res } = getHttpMocks('true');
 
     // Act
     await postDoYouHaveAFacilityEndDate(req, res);
@@ -266,7 +266,7 @@ describe('postDoYouHaveAFacilityEndDate', () => {
     // Arrange
     const mockError = aMockError();
     getFacilityMock.mockRejectedValue(mockError);
-    const { req, res } = getHttpMocks();
+    const { req, res } = getHttpMocks('true');
 
     // Act
     await postDoYouHaveAFacilityEndDate(req, res);
@@ -281,7 +281,7 @@ describe('postDoYouHaveAFacilityEndDate', () => {
     // Arrange
     const mockError = aMockError();
     updateAmendmentMock.mockRejectedValue(mockError);
-    const { req, res } = getHttpMocks();
+    const { req, res } = getHttpMocks('true');
 
     // Act
     await postDoYouHaveAFacilityEndDate(req, res);
