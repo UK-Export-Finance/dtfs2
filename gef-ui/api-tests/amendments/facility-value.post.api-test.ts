@@ -34,7 +34,7 @@ const mockFacility = { currency: { id: CURRENCY.GBP }, hasBeenIssued: true } as 
 
 const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.FACILITY_VALUE}`;
 
-describe(`GET ${url}`, () => {
+describe(`POST ${url}`, () => {
   let sessionCookie: string;
 
   beforeEach(async () => {
