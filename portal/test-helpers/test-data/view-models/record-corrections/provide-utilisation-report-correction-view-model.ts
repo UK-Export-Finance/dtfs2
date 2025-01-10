@@ -19,4 +19,10 @@ export const aProvideUtilisationReportCorrectionViewModel = (): ProvideUtilisati
     label: 'Additional comments label',
     hint: 'Additional comments hint',
   },
+  formValues: {
+    additionalComments: 'Some additional comments',
+    facilityId: null,
+    utilisation: null,
+    reportedFee: null,
+  },
 });

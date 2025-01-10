@@ -10,7 +10,7 @@ context('When fee record correction feature flag is disabled', () => {
 
     const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(reportId).withBankId(bankId).build();
 
-    const { premiumPaymentsTab } = pages.utilisationReportPage;
+    const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
 
     before(() => {
       cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
@@ -32,7 +32,7 @@ context('When fee record correction feature flag is disabled', () => {
     });
 
     it('should NOT display create record correction request button', () => {
-      premiumPaymentsTab.createRecordCorrectionRequestButton().should('not.exist');
+      premiumPaymentsContent.createRecordCorrectionRequestButton().should('not.exist');
     });
   });
 });

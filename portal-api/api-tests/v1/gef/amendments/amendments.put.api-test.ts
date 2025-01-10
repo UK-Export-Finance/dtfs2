@@ -107,6 +107,19 @@ describe('/v1/gef/facilities/:facilityId/amendments', () => {
         expect(response.status).toEqual(HttpStatusCode.BadRequest);
       });
 
+      it(`should return a ${HttpStatusCode.BadRequest} response when the payload is invalid`, async () => {
+        // Arrange
+        const url = putAmendmentUrl({ facilityId: validFacilityId });
+
+        const invalidPayload = { dealId, amendment: { changeCoverEndDate: 'yes' } };
+
+        // Act
+        const response = await as(aMaker).put(invalidPayload).to(url);
+
+        // Assert
+        expect(response.status).toEqual(HttpStatusCode.BadRequest);
+      });
+
       it(`should return a ${HttpStatusCode.Ok} response and the amendment for an authenticated user`, async () => {
         const amendmentId = new ObjectId().toString();
         const facilityId = new ObjectId().toString();

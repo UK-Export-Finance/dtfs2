@@ -1,7 +1,7 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { HttpStatusCode, AxiosError, AxiosResponse } from 'axios';
 import { Response } from 'express';
-import { getUtilisationReportPendingCorrectionsByBankId, GetUtilisationReportPendingCorrectionsRequest } from './pending-corrections';
+import { getUtilisationReportPendingCorrectionsByBankId, GetUtilisationReportPendingCorrectionsRequest } from './pending-corrections.controller';
 import api from '../../../api';
 import { aReportPeriod } from '../../../../../test-helpers/test-data/report-period';
 import { UtilisationReportPendingCorrectionsResponseBody } from '../../../api-response-types';

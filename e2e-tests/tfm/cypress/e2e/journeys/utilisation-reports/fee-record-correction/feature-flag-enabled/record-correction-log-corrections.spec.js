@@ -4,6 +4,7 @@ import {
   PENDING_RECONCILIATION,
   UtilisationReportEntityMockBuilder,
   RECORD_CORRECTION_REASON,
+  getFormattedMonetaryValue,
 } from '@ukef/dtfs2-common';
 import pages from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
@@ -13,17 +14,23 @@ import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/ut
 
 const bankId = '961';
 const reportId = 1;
+const fee = 50000;
 
 const firstReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(reportId).withBankId(bankId).build();
 
 const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(firstReport).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build();
-const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(firstReport).withId(2).withFacilityId('987654321').withStatus(FEE_RECORD_STATUS.TO_DO).build();
+const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(firstReport)
+  .withId(2)
+  .withFacilityId('987654321')
+  .withStatus(FEE_RECORD_STATUS.TO_DO)
+  .withFeesPaidToUkefForThePeriod(fee)
+  .build();
 
 const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([firstFeeRecord, secondFeeRecord]);
 
-const { recordCorrectionLogTab } = pages.utilisationReportPage;
+const { recordCorrectionLogContent } = pages.utilisationReportPage.tabs;
 const { utilisationReportPage } = pages;
-const { table } = recordCorrectionLogTab;
+const { table } = recordCorrectionLogContent;
 
 const additionalInfoUserInput = 'Some additional info';
 
@@ -66,7 +73,7 @@ context('When fee record correction feature flag is enabled', () => {
     cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${reportId}`);
-    utilisationReportPage.recordCorrectionLogTabLink().click();
+    utilisationReportPage.tabs.recordCorrectionLog().click();
   });
 
   after(() => {
@@ -75,21 +82,21 @@ context('When fee record correction feature flag is enabled', () => {
   });
 
   it('should display the record correction log table', () => {
-    recordCorrectionLogTab.recordCorrectionLogTable().should('exist');
-    recordCorrectionLogTab.recordCorrectionLogTable().should('be.visible');
+    recordCorrectionLogContent.recordCorrectionLogTable().should('exist');
+    recordCorrectionLogContent.recordCorrectionLogTable().should('be.visible');
   });
 
   it('should display the correct table headers', () => {
-    cy.assertText(table.facilityIdHeader(), 'Facility ID');
+    cy.assertText(table.dateSentHeader(), 'Date sent');
     cy.assertText(table.exporterHeader(), 'Exporter');
     cy.assertText(table.reasonsHeader(), 'Reason for record correction');
-    cy.assertText(table.dateSentHeader(), 'Date sent');
-    cy.assertText(table.requestedByHeader(), 'Requested by');
+    cy.assertText(table.correctRecordHeader(), 'Correct record');
+    cy.assertText(table.oldRecordHeader(), 'Old record');
     cy.assertText(table.statusHeader(), 'Status');
   });
 
   it('should only have 2 rows in the table', () => {
-    recordCorrectionLogTab.recordCorrectionLogTable().find('tr[data-cy^="record-correction-log-table-row-"]').should('have.length', 2);
+    recordCorrectionLogContent.recordCorrectionLogTable().find('tr[data-cy^="record-correction-log-table-row-"]').should('have.length', 2);
   });
 
   it('should display the correct values for the first row', () => {
@@ -98,7 +105,8 @@ context('When fee record correction feature flag is enabled', () => {
         feeRecord,
         reasons: 'Facility ID is incorrect, Other',
         dateSent: today.dd_MMM_yyyy,
-        requestedBy: `${USERS.PDC_RECONCILE.firstName} ${USERS.PDC_RECONCILE.lastName}`,
+        correctRecord: '-',
+        oldRecord: `${firstFeeRecord.facilityId}, -`,
         status: 'Record correction sent',
       });
     });
@@ -110,7 +118,8 @@ context('When fee record correction feature flag is enabled', () => {
         feeRecord,
         reasons: 'Reported fee is incorrect',
         dateSent: today.dd_MMM_yyyy,
-        requestedBy: `${USERS.PDC_RECONCILE.firstName} ${USERS.PDC_RECONCILE.lastName}`,
+        correctRecord: '-',
+        oldRecord: getFormattedMonetaryValue(fee),
         status: 'Record correction sent',
       });
     });
