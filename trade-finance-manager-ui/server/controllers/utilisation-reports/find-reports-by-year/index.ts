@@ -13,6 +13,7 @@ import { getFindReportSummaryItemViewModel } from '../helpers';
 import { BankWithReportingYearsResponseBody } from '../../../api-response-types';
 
 const findUtilisationReportsByYearTemplate = 'utilisation-reports/find-utilisation-reports-by-year.njk';
+const utilisationReportsByBankAndYearResultsTemplate = 'utilisation-reports/utilisation-reports-by-bank-and-year-results.njk';
 
 /**
  * Gets tha bank id query and year query as string
@@ -114,7 +115,7 @@ export const getFindReportsByYear = async (req: Request, res: Response) => {
       isTfmPaymentReconciliationFeatureFlagEnabled: isTfmPaymentReconciliationFeatureEnabled,
     };
 
-    return res.render('utilisation-reports/utilisation-reports-by-bank-and-year-results.njk', viewModel);
+    return res.render(utilisationReportsByBankAndYearResultsTemplate, viewModel);
   } catch (error) {
     console.error('Failed to render find reports by year page: %o', error);
     return res.render('_partials/problem-with-service.njk', { user });
