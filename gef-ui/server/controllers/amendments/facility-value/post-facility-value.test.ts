@@ -56,7 +56,7 @@ const getHttpMocks = (facilityValue: string = '10000') =>
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 
-describe('postBankReviewDate', () => {
+describe('postFacilityValue', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
 
   beforeEach(() => {
