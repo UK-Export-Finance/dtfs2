@@ -32,11 +32,11 @@ context('When fee record correction feature flag is disabled', () => {
     });
 
     it('should NOT display the record correction log tab', () => {
-      utilisationReportPage.recordCorrectionLogTabLink().should('not.exist');
+      utilisationReportPage.tabs.recordCorrectionLog().should('not.exist');
     });
 
     it('should NOT display the record correction text', () => {
-      utilisationReportPage.premiumPaymentsTab.createRecordCorrectionRequestText().should('not.exist');
+      utilisationReportPage.tabs.premiumPaymentsContent.createRecordCorrectionRequestText().should('not.exist');
     });
   });
 
@@ -49,11 +49,11 @@ context('When fee record correction feature flag is disabled', () => {
     });
 
     it('should NOT display the record correction log tab', () => {
-      utilisationReportPage.recordCorrectionLogTabLink().should('not.exist');
+      utilisationReportPage.tabs.recordCorrectionLog().should('not.exist');
     });
 
     it('should NOT display the record correction text', () => {
-      utilisationReportPage.premiumPaymentsTab.createRecordCorrectionRequestText().should('not.exist');
+      utilisationReportPage.tabs.premiumPaymentsContent.createRecordCorrectionRequestText().should('not.exist');
     });
   });
 });
