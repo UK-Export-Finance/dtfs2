@@ -4,9 +4,9 @@ import { HttpStatusCode, isAxiosError } from 'axios';
 import api from '../../../api';
 
 /**
- * Request type for the GET fee record correction endpoint.
+ * Request type for the GET and PUT fee record correction endpoint.
  */
-export type GetFeeRecordCorrectionRequest = CustomExpressRequest<{
+export type FeeRecordCorrectionRequest = CustomExpressRequest<{
   params: {
     bankId: string;
     correctionId: string;
@@ -21,7 +21,7 @@ export type GetFeeRecordCorrectionRequest = CustomExpressRequest<{
  * @param req - The request object containing information about the HTTP request.
  * @param res - The response object used to send the HTTP response.
  */
-export const getFeeRecordCorrection = async (req: GetFeeRecordCorrectionRequest, res: Response) => {
+export const getFeeRecordCorrection = async (req: FeeRecordCorrectionRequest, res: Response) => {
   try {
     const { bankId: requestingUserBankId, correctionId } = req.params;
 
@@ -42,6 +42,30 @@ export const getFeeRecordCorrection = async (req: GetFeeRecordCorrectionRequest,
     return res.status(HttpStatusCode.Ok).send(feeRecordCorrection);
   } catch (error) {
     const errorMessage = 'Failed to get fee record correction';
+
+    console.error(errorMessage, error);
+
+    const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
+
+    return res.status(errorStatus).send(errorMessage);
+  }
+};
+
+/**
+ * Calls the DTFS Central API to submit a fee record correction.
+ * @param req - The request object containing information about the HTTP request.
+ * @param res - The response object used to send the HTTP response.
+ */
+export const saveFeeRecordCorrection = async (req: FeeRecordCorrectionRequest, res: Response) => {
+  try {
+    const { bankId, correctionId } = req.params;
+    const userId = req.user._id;
+
+    const data = await api.saveFeeRecordCorrection(bankId, Number(correctionId), userId);
+
+    return res.status(HttpStatusCode.Ok).send(data);
+  } catch (error) {
+    const errorMessage = 'Failed to save fee record correction';
 
     console.error(errorMessage, error);
 
