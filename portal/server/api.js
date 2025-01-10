@@ -1034,6 +1034,26 @@ const getUkBankHolidays = async (token) => {
 };
 
 /**
+ * Gets a fee record correction transient form data for the user by correction id.
+ * @param {string} token - The user token
+ * @param {string} bankId - The bank id
+ * @param {string} id - The correction id
+ * @returns {Promise<import('./api-response-types').GetFeeRecordCorrectionTransientFormDataResponseBody>} Returns
+ * a promise that resolves to the form data if any exists for the user and correction combination, else resolves
+ * to an empty object.
+ */
+const getFeeRecordCorrectionTransientFormData = async (token, bankId, id) => {
+  const { data } = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/fee-record-correction/${id}/transient-form-data`, {
+    headers: {
+      Authorization: token,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+    },
+  });
+
+  return data;
+};
+
+/**
  * Gets a fee record correction by id.
  * @param {string} token - The user token
  * @param {string} bankId - The bank id
@@ -1124,6 +1144,7 @@ module.exports = {
   getNextReportPeriodByBankId,
   getUkBankHolidays,
   getUtilisationReportPendingCorrectionsByBankId,
+  getFeeRecordCorrectionTransientFormData,
   getFeeRecordCorrection,
   getFeeRecordCorrectionReview,
 };

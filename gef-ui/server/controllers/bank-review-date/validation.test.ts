@@ -1,17 +1,17 @@
-import { add } from 'date-fns';
-import { validateAndParseDayMonthYear } from '../../utils/day-month-year-validation';
+import { add, startOfDay } from 'date-fns';
+import { applyStandardValidationAndParseDateInput } from '@ukef/dtfs2-common';
 import { validateAndParseBankReviewDate } from './validation';
+import { mapValidationError } from '../../utils/map-validation-error';
 
-jest.mock('../../utils/day-month-year-validation');
-
-const mockValidateAndParseDayMonthYear = validateAndParseDayMonthYear as unknown as jest.Mock;
+const valueName = 'bank review date';
+const valueRef = 'bankReviewDate';
 
 describe('validateAndParseBankReviewDate', () => {
   afterAll(() => {
     jest.resetAllMocks();
   });
 
-  it('calls validateAndParseDayMonthYear', () => {
+  it('should map the response from applyStandardValidationAndParseDateInput', () => {
     // Arrange
     const dayMonthYear = {
       day: 'x',
@@ -19,62 +19,12 @@ describe('validateAndParseBankReviewDate', () => {
       month: '1',
     };
 
-    const errors = [
-      {
-        errRef: 'date',
-        errMsg: 'An Error',
-      },
-    ];
-    mockValidateAndParseDayMonthYear.mockReturnValueOnce({
-      errors,
-    });
-
     // Act
-    validateAndParseBankReviewDate(dayMonthYear, new Date());
+    const response = validateAndParseBankReviewDate(dayMonthYear, new Date());
 
     // Assert
-    expect(validateAndParseDayMonthYear).toHaveBeenCalledWith(dayMonthYear, {
-      errRef: 'bankReviewDate',
-      variableDisplayName: 'bank review date',
-    });
-  });
-
-  it('combines the error messages', () => {
-    // Arrange
-    const dayMonthYear = {
-      day: 'x',
-      year: '2024',
-      month: '1',
-    };
-    const errors = [
-      {
-        errRef: 'date',
-        errMsg: 'An Error',
-        subFieldErrorRefs: ['day', 'year'],
-      },
-      {
-        errRef: 'date',
-        errMsg: 'Another Error',
-        subFieldErrorRefs: ['month', 'year'],
-      },
-    ];
-
-    mockValidateAndParseDayMonthYear.mockReturnValueOnce({
-      errors,
-    });
-
-    // Act
-    const result = validateAndParseBankReviewDate(dayMonthYear, new Date());
-
-    // Assert
-    expect(result).toEqual({
-      errors: [
-        {
-          errRef: 'bankReviewDate',
-          errMsg: 'Bank review date must be in the correct format DD/MM/YYYY',
-          subFieldErrorRefs: ['day', 'year', 'month'],
-        },
-      ],
+    expect(response).toEqual({
+      errors: [mapValidationError(applyStandardValidationAndParseDateInput(dayMonthYear, valueName, valueRef).error!)],
     });
   });
 
@@ -82,10 +32,6 @@ describe('validateAndParseBankReviewDate', () => {
     // Arrange
     const bankReviewDate = new Date();
     const coverStartDate = add(new Date(), { days: 1 });
-
-    mockValidateAndParseDayMonthYear.mockReturnValueOnce({
-      date: bankReviewDate,
-    });
 
     // Act
     const result = validateAndParseBankReviewDate(
@@ -110,10 +56,6 @@ describe('validateAndParseBankReviewDate', () => {
     const bankReviewDate = add(new Date(), { years: 6, days: 1 });
     const coverStartDate = add(new Date(), { days: 1 });
 
-    mockValidateAndParseDayMonthYear.mockReturnValueOnce({
-      date: bankReviewDate,
-    });
-
     // Act
     const result = validateAndParseBankReviewDate(
       { day: bankReviewDate.getDate().toString(), month: (bankReviewDate.getMonth() + 1).toString(), year: bankReviewDate.getFullYear().toString() },
@@ -134,12 +76,8 @@ describe('validateAndParseBankReviewDate', () => {
 
   it('returns date if valid', () => {
     // Arrange
-    const bankReviewDate = add(new Date(), { years: 1 });
+    const bankReviewDate = startOfDay(add(new Date(), { years: 1 }));
     const coverStartDate = add(new Date(), { days: 1 });
-
-    mockValidateAndParseDayMonthYear.mockReturnValueOnce({
-      date: bankReviewDate,
-    });
 
     // Act
     const result = validateAndParseBankReviewDate(

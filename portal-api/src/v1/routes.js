@@ -348,6 +348,17 @@ authRouter
   );
 
 authRouter
+  .route('/banks/:bankId/fee-record-correction/:correctionId/transient-form-data')
+  .get(
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
+    bankIdValidation,
+    sqlIdValidation('correctionId'),
+    handleExpressValidatorResult,
+    validateUserAndBankIdMatch,
+    utilisationReportControllers.getFeeRecordCorrectionTransientFormData,
+  );
+
+authRouter
   .route('/banks/:bankId/fee-record-correction-review/:correctionId/user/:userId')
   .get(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),

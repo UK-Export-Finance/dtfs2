@@ -53,26 +53,26 @@ context('Bank utilisation report page', () => {
     });
 
     it('should display the correct tabs', () => {
-      cy.assertText(utilisationReportPage.premiumPaymentsTabLink(), 'Premium payments');
-      cy.assertText(utilisationReportPage.keyingSheetTabLink(), 'Keying sheet');
-      cy.assertText(utilisationReportPage.paymentDetailsTabLink(), 'Payment details');
-      cy.assertText(utilisationReportPage.utilisationTabLink(), 'Utilisation');
+      cy.assertUrl(utilisationReportPage.tabs.premiumPayments(), '#premium-payments', 'Premium payments');
+      cy.assertUrl(utilisationReportPage.tabs.keyingSheet(), '#keying-sheet', 'Keying sheet');
+      cy.assertUrl(utilisationReportPage.tabs.paymentDetails(), '#payment-details', 'Payment details');
+      cy.assertUrl(utilisationReportPage.tabs.utilisation(), '#utilisation', 'Utilisation');
     });
 
     it('should display the correct text', () => {
       cy.assertText(
-        utilisationReportPage.premiumPaymentsTab.howToAddPaymentsText(),
+        utilisationReportPage.tabs.premiumPaymentsContent.howToAddPaymentsText(),
         `Received payments are entered against reported fees through selection and then selection of the 'Add a payment' button.`,
       );
 
       cy.assertText(
-        utilisationReportPage.premiumPaymentsTab.howToGenerateKeyingDataText(),
+        utilisationReportPage.tabs.premiumPaymentsContent.howToGenerateKeyingDataText(),
         `When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected.`,
       );
     });
 
     it('should NOT display read-only text', () => {
-      utilisationReportPage.premiumPaymentsTab.receivedPaymentsText().should('not.exist');
+      utilisationReportPage.tabs.premiumPaymentsContent.receivedPaymentsText().should('not.exist');
     });
   });
 
@@ -91,22 +91,22 @@ context('Bank utilisation report page', () => {
     });
 
     it('should display the correct tabs', () => {
-      cy.assertText(utilisationReportPage.premiumPaymentsTabLink(), 'Premium payments');
-      cy.assertText(utilisationReportPage.keyingSheetTabLink(), 'Keying sheet');
-      cy.assertText(utilisationReportPage.paymentDetailsTabLink(), 'Payment details');
-      cy.assertText(utilisationReportPage.utilisationTabLink(), 'Utilisation');
+      cy.assertText(utilisationReportPage.tabs.premiumPayments(), 'Premium payments');
+      cy.assertText(utilisationReportPage.tabs.keyingSheet(), 'Keying sheet');
+      cy.assertText(utilisationReportPage.tabs.paymentDetails(), 'Payment details');
+      cy.assertText(utilisationReportPage.tabs.utilisation(), 'Utilisation');
     });
 
     it('should display the correct text', () => {
       cy.assertText(
-        utilisationReportPage.premiumPaymentsTab.receivedPaymentsText(),
+        utilisationReportPage.tabs.premiumPaymentsContent.receivedPaymentsText(),
         `Received payments are entered against reported fees. When payments show as matched, the adjustment data for keying into ACBS will be automatically generated.`,
       );
     });
 
     it('should NOT display non-read-only text', () => {
-      utilisationReportPage.premiumPaymentsTab.howToAddPaymentsText().should('not.exist');
-      utilisationReportPage.premiumPaymentsTab.howToGenerateKeyingDataText().should('not.exist');
+      utilisationReportPage.tabs.premiumPaymentsContent.howToAddPaymentsText().should('not.exist');
+      utilisationReportPage.tabs.premiumPaymentsContent.howToGenerateKeyingDataText().should('not.exist');
     });
   });
 });

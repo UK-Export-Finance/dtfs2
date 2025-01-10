@@ -36,3 +36,4 @@ export * from './fee-record-correction';
 export * from './record-correction-transient-form-data';
 export * from './record-correction-updatable-values';
 export * from './fee-record-correction-review-information';
+export * from './validation-error';

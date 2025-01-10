@@ -20,7 +20,7 @@ context('When fee record correction feature flag is enabled', () => {
   const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(reportId).withBankId(bankId).build();
   const feeRecordAtToDoStatus = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build();
 
-  const { premiumPaymentsTab } = pages.utilisationReportPage;
+  const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
 
   before(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
@@ -52,7 +52,7 @@ context('When fee record correction feature flag is enabled', () => {
     });
 
     it('should not be able to initiate record correction request', () => {
-      premiumPaymentsTab.createRecordCorrectionRequestButton().should('not.exist');
+      premiumPaymentsContent.createRecordCorrectionRequestButton().should('not.exist');
 
       cy.visit(`/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}`);
 
@@ -72,20 +72,22 @@ context('When fee record correction feature flag is enabled', () => {
     });
 
     it('should be able to initiate a record correction request', () => {
-      premiumPaymentsTab.premiumPaymentsTable.checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status).click();
+      premiumPaymentsContent.premiumPaymentsTable
+        .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
+        .click();
 
-      premiumPaymentsTab.createRecordCorrectionRequestButton().should('exist');
-      premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+      premiumPaymentsContent.createRecordCorrectionRequestButton().should('exist');
+      premiumPaymentsContent.createRecordCorrectionRequestButton().click();
 
       cy.assertText(mainHeading(), 'Record correction request');
     });
 
     context('when a user has initiated the correction request journey', () => {
       beforeEach(() => {
-        premiumPaymentsTab.premiumPaymentsTable
+        premiumPaymentsContent.premiumPaymentsTable
           .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
           .click();
-        premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+        premiumPaymentsContent.createRecordCorrectionRequestButton().click();
       });
 
       it('should be able to view the fee record summary on the create record correction request screen', () => {
@@ -110,26 +112,28 @@ context('When fee record correction feature flag is enabled', () => {
 
     context('when user clicks back on the create record correction request screen', () => {
       it('should return to premium payments tab with the checkbox selected', () => {
-        premiumPaymentsTab.premiumPaymentsTable
+        premiumPaymentsContent.premiumPaymentsTable
           .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
           .click();
 
-        premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+        premiumPaymentsContent.createRecordCorrectionRequestButton().click();
 
         cy.clickBackLink();
 
         cy.url().should('eq', relative(`/utilisation-reports/${reportId}?selectedFeeRecordIds=${feeRecordAtToDoStatus.id}`));
 
-        premiumPaymentsTab.premiumPaymentsTable
+        premiumPaymentsContent.premiumPaymentsTable
           .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
           .should('be.checked');
       });
     });
 
     it('should let the user enter additional info equal to the character limit containing special characters', () => {
-      premiumPaymentsTab.premiumPaymentsTable.checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status).click();
+      premiumPaymentsContent.premiumPaymentsTable
+        .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
+        .click();
 
-      premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+      premiumPaymentsContent.createRecordCorrectionRequestButton().click();
 
       createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
 
