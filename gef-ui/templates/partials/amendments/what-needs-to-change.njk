@@ -52,20 +52,21 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukCheckboxes({
+          name: "amendmentOptions",
           fieldset: {
             legend: {
               html: headingHtml
             }
           },
-          id: "whatNeedsToChange",
+          id: "amendmentOptions",
           attributes: {
             "data-cy": "change-checkbox-selection"
           },
           hint: {
             text: "This change will only affect this facility"
           },
-          errorMessage: errors and errors.fieldErrors.amendmentSelection and {
-            text: errors.fieldErrors.amendmentSelection.text,
+          errorMessage: errors and errors.fieldErrors.amendmentOptions and {
+            text: errors.fieldErrors.amendmentOptions.text,
             attributes: {
               "data-cy": "selection-error-message"
             }
@@ -73,7 +74,6 @@
           items: [
             {
               value: "changeCoverEndDate",
-              name: "changeCoverEndDate",
               text: "Cover end date",
               checked: changeCoverEndDate,
               attributes: {
@@ -82,7 +82,6 @@
             },
             {
               value: "changeFacilityValue",
-              name: "changeFacilityValue",
               text: "Facility value",
               checked: changeFacilityValue,
               attributes: {

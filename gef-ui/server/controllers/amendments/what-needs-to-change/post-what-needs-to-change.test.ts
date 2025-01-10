@@ -43,12 +43,7 @@ const aMockError = () => new Error();
 const companyName = 'company name ltd';
 const userToken = 'userToken';
 
-const getHttpMocks = (
-  { changeCoverEndDate, changeFacilityValue }: { changeCoverEndDate: boolean; changeFacilityValue: boolean } = {
-    changeCoverEndDate: true,
-    changeFacilityValue: true,
-  },
-) =>
+const getHttpMocks = (amendmentOptions: string[] = ['changeCoverEndDate', 'changeFacilityValue']) =>
   createMocks<PostWhatNeedsToChangeRequest>({
     params: { dealId, facilityId, amendmentId },
     session: {
@@ -57,8 +52,7 @@ const getHttpMocks = (
       loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA,
     },
     body: {
-      changeCoverEndDate,
-      changeFacilityValue,
+      amendmentOptions,
     },
   });
 
@@ -112,7 +106,7 @@ describe('postWhatNeedsToChange', () => {
 
   it('should not call updateAmendment if neither of changeCoverEndDate or changeFacilityValue are true', async () => {
     // Arrange
-    const { req, res } = getHttpMocks({ changeCoverEndDate: false, changeFacilityValue: false });
+    const { req, res } = getHttpMocks([]);
 
     // Act
     await postWhatNeedsToChange(req, res);
@@ -125,7 +119,7 @@ describe('postWhatNeedsToChange', () => {
     // Arrange
     const changeCoverEndDate = false;
     const changeFacilityValue = false;
-    const { req, res } = getHttpMocks({ changeCoverEndDate, changeFacilityValue });
+    const { req, res } = getHttpMocks([]);
 
     // Act
     await postWhatNeedsToChange(req, res);
@@ -150,23 +144,19 @@ describe('postWhatNeedsToChange', () => {
 
   it('should call updateAmendment when the selected values are valid', async () => {
     // Arrange
-    const changeCoverEndDate = true;
-    const changeFacilityValue = false;
-    const { req, res } = getHttpMocks({ changeCoverEndDate, changeFacilityValue });
+    const { req, res } = getHttpMocks(['changeCoverEndDate']);
 
     // Act
     await postWhatNeedsToChange(req, res);
 
     // Assert
     expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
-    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { changeCoverEndDate, changeFacilityValue }, userToken });
+    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { changeCoverEndDate: true, changeFacilityValue: false }, userToken });
   });
 
   it('should not call console.error if the selected values are valid', async () => {
     // Arrange
-    const changeCoverEndDate = true;
-    const changeFacilityValue = false;
-    const { req, res } = getHttpMocks({ changeCoverEndDate, changeFacilityValue });
+    const { req, res } = getHttpMocks(['changeCoverEndDate']);
 
     // Act
     await postWhatNeedsToChange(req, res);
@@ -177,9 +167,7 @@ describe('postWhatNeedsToChange', () => {
 
   it('should redirect to the next page if selected values are valid', async () => {
     // Arrange
-    const changeCoverEndDate = false;
-    const changeFacilityValue = true;
-    const { req, res } = getHttpMocks({ changeCoverEndDate, changeFacilityValue });
+    const { req, res } = getHttpMocks(['changeCoverEndDate', 'changeFacilityValue']);
 
     // Act
     await postWhatNeedsToChange(req, res);

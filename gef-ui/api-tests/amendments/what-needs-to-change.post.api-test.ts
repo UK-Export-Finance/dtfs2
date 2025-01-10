@@ -25,8 +25,8 @@ const mockGetFacility = jest.fn();
 const mockGetApplication = jest.fn();
 const mockUpdateAmendment = jest.fn();
 
-const validBody = { changeCoverEndDate: false, changeFacilityValue: true };
-const invalidBody = { changeCoverEndDate: false, changeFacilityValue: false };
+const validBody = { amendmentOptions: ['changeFacilityValue'] };
+const invalidBody = { amendmentOptions: [] };
 
 const dealId = '123';
 const facilityId = '111';

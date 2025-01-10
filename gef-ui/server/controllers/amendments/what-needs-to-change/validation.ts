@@ -1,6 +1,6 @@
 import { ValidationError } from '../../../types/validation-error.ts';
 
-const errRef = 'whatNeedsToChange';
+const errRef = 'amendmentOptions';
 
 /**
  * @param changeCoverEndDate The reason for cancelling

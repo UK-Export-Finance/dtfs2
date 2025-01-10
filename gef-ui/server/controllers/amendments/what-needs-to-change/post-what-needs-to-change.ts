@@ -11,7 +11,7 @@ import { validationErrorHandler } from '../../../utils/helpers';
 
 export type PostWhatNeedsToChangeRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
-  reqBody: { changeCoverEndDate?: boolean; changeFacilityValue?: boolean };
+  reqBody: { amendmentOptions: string[] };
 }>;
 
 /**
@@ -22,7 +22,7 @@ export type PostWhatNeedsToChangeRequest = CustomExpressRequest<{
 export const postWhatNeedsToChange = async (req: PostWhatNeedsToChangeRequest, res: Response) => {
   try {
     const { dealId, facilityId, amendmentId } = req.params;
-    const { changeCoverEndDate, changeFacilityValue } = req.body;
+    const { amendmentOptions } = req.body;
     const { userToken } = asLoggedInUserSession(req.session);
 
     const deal = await api.getApplication({ dealId, userToken });
@@ -32,6 +32,9 @@ export const postWhatNeedsToChange = async (req: PostWhatNeedsToChangeRequest, r
       console.error('Deal %s or Facility %s was not found', dealId, facilityId);
       return res.redirect('/not-found');
     }
+
+    const changeCoverEndDate = amendmentOptions?.includes('changeCoverEndDate');
+    const changeFacilityValue = amendmentOptions?.includes('changeFacilityValue');
 
     const validationError = validateWhatNeedsToChange({ changeCoverEndDate, changeFacilityValue });
 
@@ -48,7 +51,7 @@ export const postWhatNeedsToChange = async (req: PostWhatNeedsToChangeRequest, r
       return res.render('partials/amendments/what-needs-to-change.njk', viewModel);
     }
 
-    const update = { changeFacilityValue: changeFacilityValue ?? false, changeCoverEndDate: changeCoverEndDate ?? false };
+    const update = { changeFacilityValue, changeCoverEndDate };
 
     const updatedAmendment = await api.updateAmendment({
       facilityId,
