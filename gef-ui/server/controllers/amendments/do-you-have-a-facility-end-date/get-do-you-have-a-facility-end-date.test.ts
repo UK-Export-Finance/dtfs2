@@ -120,6 +120,68 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     expect(res._getRenderData()).toEqual(expectedRenderData);
   });
 
+  it('should render the correct template with isUsingFacilityEndDate if it is true', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    const isUsingFacilityEndDate = true;
+
+    amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withDealId(dealId)
+      .withFacilityId(facilityId)
+      .withAmendmentId(amendmentId)
+      .withChangeCoverEndDate(true)
+      .withIsUsingFacilityEndDate(isUsingFacilityEndDate)
+      .build();
+
+    getAmendmentMock.mockResolvedValue(amendment);
+
+    // Act
+    await getDoYouHaveAFacilityEndDate(req, res);
+
+    // Assert
+    const expectedRenderData: DoYouHaveAFacilityEndDateViewModel = {
+      exporterName: MOCK_BASIC_DEAL.exporter.companyName,
+      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE, amendment),
+      isUsingFacilityEndDate: String(isUsingFacilityEndDate),
+    };
+
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+    expect(res._getRenderView()).toEqual('partials/amendments/do-you-have-a-facility-end-date.njk');
+    expect(res._getRenderData()).toEqual(expectedRenderData);
+  });
+
+  it('should render the correct template with isUsingFacilityEndDate if it is false', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    const isUsingFacilityEndDate = false;
+
+    amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withDealId(dealId)
+      .withFacilityId(facilityId)
+      .withAmendmentId(amendmentId)
+      .withChangeCoverEndDate(true)
+      .withIsUsingFacilityEndDate(isUsingFacilityEndDate)
+      .build();
+
+    getAmendmentMock.mockResolvedValue(amendment);
+
+    // Act
+    await getDoYouHaveAFacilityEndDate(req, res);
+
+    // Assert
+    const expectedRenderData: DoYouHaveAFacilityEndDateViewModel = {
+      exporterName: MOCK_BASIC_DEAL.exporter.companyName,
+      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE, amendment),
+      isUsingFacilityEndDate: String(isUsingFacilityEndDate),
+    };
+
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+    expect(res._getRenderView()).toEqual('partials/amendments/do-you-have-a-facility-end-date.njk');
+    expect(res._getRenderData()).toEqual(expectedRenderData);
+  });
+
   it('should not call console.error if the facility and amendment are valid', async () => {
     // Arrange
     const { req, res } = getHttpMocks();

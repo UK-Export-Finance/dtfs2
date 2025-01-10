@@ -128,8 +128,8 @@ describe('postDoYouHaveAFacilityEndDate', () => {
 
   it('should not call updateAmendment if isUsingFacilityEndDate is not set', async () => {
     // Arrange
-    const { req, res } = getHttpMocks('not a number');
-
+    const isUsingFacilityEndDate = undefined;
+    const { req, res } = getHttpMocks(isUsingFacilityEndDate);
     // Act
     await postDoYouHaveAFacilityEndDate(req, res);
 
@@ -139,7 +139,7 @@ describe('postDoYouHaveAFacilityEndDate', () => {
 
   it('should render the page with validation errors if isUsingFacilityEndDate is not set', async () => {
     // Arrange
-    const isUsingFacilityEndDate = '';
+    const isUsingFacilityEndDate = undefined;
     const { req, res } = getHttpMocks(isUsingFacilityEndDate);
 
     // Act
@@ -151,6 +151,7 @@ describe('postDoYouHaveAFacilityEndDate', () => {
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage,
       errors: validationErrorHandler((validateIsUsingFacilityEndDate(isUsingFacilityEndDate) as { errors: ValidationError[] }).errors),
+      isUsingFacilityEndDate,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);

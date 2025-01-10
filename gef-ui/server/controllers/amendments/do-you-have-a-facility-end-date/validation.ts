@@ -1,6 +1,6 @@
 import { ErrorsOrValue } from '../../../types/errors-or-value';
 
-export const validateIsUsingFacilityEndDate = (isUsingFacilityEndDate: string): ErrorsOrValue<boolean> => {
+export const validateIsUsingFacilityEndDate = (isUsingFacilityEndDate: string | undefined): ErrorsOrValue<boolean> => {
   if (isUsingFacilityEndDate === 'true') {
     return {
       value: true,

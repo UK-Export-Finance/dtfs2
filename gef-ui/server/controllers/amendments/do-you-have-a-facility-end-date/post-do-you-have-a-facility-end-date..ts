@@ -10,7 +10,7 @@ import { validationErrorHandler } from '../../../utils/helpers';
 
 export type PostDoYouHaveAFacilityEndDateRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
-  reqBody: { isUsingFacilityEndDate: string; previousPage: string };
+  reqBody: { isUsingFacilityEndDate: string | undefined; previousPage: string };
 }>;
 
 /**
@@ -40,6 +40,7 @@ export const postDoYouHaveAFacilityEndDate = async (req: PostDoYouHaveAFacilityE
         cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
         previousPage,
         errors: validationErrorHandler(errorsOrValue.errors),
+        isUsingFacilityEndDate,
       };
 
       return res.render('partials/amendments/do-you-have-a-facility-end-date.njk', viewModel);
