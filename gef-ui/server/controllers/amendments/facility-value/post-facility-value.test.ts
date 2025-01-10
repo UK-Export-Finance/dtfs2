@@ -216,7 +216,7 @@ describe('postBankReviewDate', () => {
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error getting amendments facility value page %o', mockError);
+    expect(console.error).toHaveBeenCalledWith('Error posting amendments facility value page %o', mockError);
   });
 
   it('should render `problem with service` if getFacility throws an error', async () => {
@@ -231,7 +231,7 @@ describe('postBankReviewDate', () => {
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error getting amendments facility value page %o', mockError);
+    expect(console.error).toHaveBeenCalledWith('Error posting amendments facility value page %o', mockError);
   });
 
   it('should render `problem with service` if updateAmendment throws an error', async () => {
@@ -246,6 +246,6 @@ describe('postBankReviewDate', () => {
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error getting amendments facility value page %o', mockError);
+    expect(console.error).toHaveBeenCalledWith('Error posting amendments facility value page %o', mockError);
   });
 });
