@@ -52,8 +52,6 @@ export const getFormattedFormDataValueForCorrectionReason = (formData: RecordCor
 /**
  * Maps through an array of correction reasons and returns an array of
  * formatted values from the transient form data.
- *
- * {@link RECORD_CORRECTION_REASON.OTHER} is excluded from the returned array.
  * @param formData - The transient form data containing corrected values
  * @param reasons - Array of reasons for the correction
  * @returns Array of formatted values from the form data, corresponding to each correction reason

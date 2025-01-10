@@ -24,15 +24,15 @@ describe('get-fee-record-correction-review.controller', () => {
 
     const aValidRequestQuery = () => ({ correctionId: correctionId.toString(), userId });
 
-    const mockCorrectionTransientFormDataFind = jest.fn();
     const mockCorrectionFind = jest.fn();
+    const mockCorrectionTransientFormDataFind = jest.fn();
 
     let req: GetFeeRecordCorrectionReviewRequest;
     let res: MockResponse<GetFeeRecordCorrectionReviewResponse>;
 
     beforeEach(() => {
-      FeeRecordCorrectionTransientFormDataRepo.findByUserIdAndCorrectionId = mockCorrectionTransientFormDataFind;
       FeeRecordCorrectionRepo.findOneByIdWithFeeRecord = mockCorrectionFind;
+      FeeRecordCorrectionTransientFormDataRepo.findByUserIdAndCorrectionId = mockCorrectionTransientFormDataFind;
 
       mockCorrectionTransientFormDataFind.mockResolvedValue({});
 
