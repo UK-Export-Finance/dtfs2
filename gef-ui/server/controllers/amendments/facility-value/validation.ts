@@ -6,6 +6,11 @@ const MAXIMUM_FACILITY_VALUE = 1e12;
 
 const errRef = 'facilityValue';
 
+/**
+ * Validates the facility value
+ * @param value - the facility value to be validated
+ * @returns a ValidationError if the value is invalid, null if the value is valid
+ */
 export const validateFacilityValue = (value: string): ValidationError | null => {
   if (!value) {
     return {
