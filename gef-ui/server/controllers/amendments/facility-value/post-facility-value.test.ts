@@ -18,6 +18,7 @@ import { validateFacilityValue } from './validation';
 import { getNextPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
+import { ValidationError } from '../../../types/validation-error';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
@@ -127,7 +128,7 @@ describe('postFacilityValue', () => {
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage,
       currencySymbol: getCurrencySymbol(MOCK_ISSUED_FACILITY.details.currency.id as Currency),
-      errors: validationErrorHandler(validateFacilityValue(facilityValue)!),
+      errors: validationErrorHandler((validateFacilityValue(facilityValue) as { errors: ValidationError[] }).errors),
       facilityValue,
     };
 

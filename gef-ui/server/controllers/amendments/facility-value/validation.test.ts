@@ -75,7 +75,7 @@ describe('validateFacilityValue', () => {
     const result = validateFacilityValue(value);
 
     // Assert
-    expect(result).toEqual(expectedError);
+    expect(result).toEqual({ errors: [expectedError] });
   });
 
   const successTestCases = [
@@ -97,11 +97,11 @@ describe('validateFacilityValue', () => {
     },
   ];
 
-  it.each(successTestCases)('should return null when $description', ({ value }) => {
+  it.each(successTestCases)('should return the value as a number when $description', ({ value }) => {
     // Act
     const result = validateFacilityValue(value);
 
     // Assert
-    expect(result).toEqual(null);
+    expect(result).toEqual({ value: Number(value) });
   });
 });

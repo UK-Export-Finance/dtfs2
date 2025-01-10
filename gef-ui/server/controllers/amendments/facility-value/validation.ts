@@ -8,21 +8,24 @@ const errRef = 'facilityValue';
 
 /**
  * Validates the facility value
- * @param value - the facility value to be validated
- * @returns a ValidationError if the value is invalid, null if the value is valid
+ * @param value - the facility value
+ * @returns the value or errors depending on the validation result
  */
-export const validateFacilityValue = (value: string): ValidationError | null => {
+export const validateFacilityValue = (value: string): { errors: ValidationError[] } | { value: number } => {
   if (!value) {
     return {
-      errRef,
-      errMsg: 'Enter the new facility value in number format',
+      errors: [
+        {
+          errRef,
+          errMsg: 'Enter the new facility value in number format',
+        },
+      ],
     };
   }
 
   if (!CURRENCY_NUMBER_REGEX.test(value)) {
     return {
-      errRef,
-      errMsg: 'Enter a valid facility value',
+      errors: [{ errRef, errMsg: 'Enter a valid facility value' }],
     };
   }
 
@@ -30,17 +33,15 @@ export const validateFacilityValue = (value: string): ValidationError | null => 
 
   if (valueAsNumber < MINIMUM_FACILITY_VALUE) {
     return {
-      errRef,
-      errMsg: 'Enter a valid facility value',
+      errors: [{ errRef, errMsg: 'Enter a valid facility value' }],
     };
   }
 
   if (valueAsNumber > MAXIMUM_FACILITY_VALUE) {
     return {
-      errRef,
-      errMsg: 'The new facility value is too high',
+      errors: [{ errRef, errMsg: 'The new facility value is too high' }],
     };
   }
 
-  return null;
+  return { value: valueAsNumber };
 };

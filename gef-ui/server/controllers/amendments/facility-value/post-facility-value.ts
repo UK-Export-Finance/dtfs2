@@ -36,9 +36,9 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
       return res.redirect('/not-found');
     }
 
-    const validationError = validateFacilityValue(facilityValue);
+    const validationErrorOrValue = validateFacilityValue(facilityValue);
 
-    if (validationError) {
+    if ('errors' in validationErrorOrValue) {
       const currencySymbol = getCurrencySymbol(facility.currency?.id ?? CURRENCY.GBP);
 
       const viewModel: FacilityValueViewModel = {
@@ -47,13 +47,13 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
         cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
         previousPage,
         currencySymbol,
-        errors: validationErrorHandler(validationError),
+        errors: validationErrorHandler(validationErrorOrValue.errors),
       };
 
       return res.render('partials/amendments/facility-value.njk', viewModel);
     }
 
-    const update = { value: Number(facilityValue) };
+    const update = { value: validationErrorOrValue.value };
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
