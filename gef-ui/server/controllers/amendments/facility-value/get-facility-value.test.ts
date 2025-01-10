@@ -127,6 +127,38 @@ describe('getFacilityValue', () => {
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment),
       currencySymbol: getCurrencySymbol(mockFacility.currency.id),
+      facilityValue: '',
+    };
+
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+    expect(res._getRenderView()).toEqual('partials/amendments/facility-value.njk');
+    expect(res._getRenderData()).toEqual(expectedRenderData);
+  });
+
+  it('should render the facility value template with the existing facility value', async () => {
+    // Arrange
+    const existingFacilityValue = 1000;
+    const { req, res } = getHttpMocks();
+
+    amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withDealId(dealId)
+      .withFacilityId(facilityId)
+      .withAmendmentId(amendmentId)
+      .withChangeFacilityValue(true)
+      .withFacilityValue(existingFacilityValue)
+      .build();
+    getAmendmentMock.mockResolvedValue(amendment);
+
+    // Act
+    await getFacilityValue(req, res);
+
+    // Assert
+    const expectedRenderData: FacilityValueViewModel = {
+      exporterName: companyName,
+      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment),
+      currencySymbol: getCurrencySymbol(mockFacility.currency.id),
+      facilityValue: String(existingFacilityValue),
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
