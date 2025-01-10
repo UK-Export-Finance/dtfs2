@@ -28,7 +28,7 @@ context('When fee record correction feature flag is enabled', () => {
       .withPayments([PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).build()])
       .build();
 
-    const { premiumPaymentsTab } = pages.utilisationReportPage;
+    const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
 
     before(() => {
       cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
@@ -55,36 +55,40 @@ context('When fee record correction feature flag is enabled', () => {
     });
 
     it('should not allow user to create fee record correction request with no fees selected', () => {
-      premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+      premiumPaymentsContent.createRecordCorrectionRequestButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
 
       errorSummary().contains('Select a record to create a record correction request');
-      premiumPaymentsTab.premiumPaymentsTable.error().should('exist');
-      cy.assertText(premiumPaymentsTab.premiumPaymentsTable.error(), 'Error: Select a record to create a record correction request');
+      premiumPaymentsContent.premiumPaymentsTable.error().should('exist');
+      cy.assertText(premiumPaymentsContent.premiumPaymentsTable.error(), 'Error: Select a record to create a record correction request');
     });
 
     it('should not allow user to create fee record correction request with multiple fees selected', () => {
-      premiumPaymentsTab.premiumPaymentsTable.checkbox([toDoFeeRecord.id], toDoFeeRecord.paymentCurrency, toDoFeeRecord.status).click();
-      premiumPaymentsTab.premiumPaymentsTable.checkbox([anotherToDoFeeRecord.id], anotherToDoFeeRecord.paymentCurrency, anotherToDoFeeRecord.status).click();
-      premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+      premiumPaymentsContent.premiumPaymentsTable.checkbox([toDoFeeRecord.id], toDoFeeRecord.paymentCurrency, toDoFeeRecord.status).click();
+      premiumPaymentsContent.premiumPaymentsTable
+        .checkbox([anotherToDoFeeRecord.id], anotherToDoFeeRecord.paymentCurrency, anotherToDoFeeRecord.status)
+        .click();
+      premiumPaymentsContent.createRecordCorrectionRequestButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
 
       errorSummary().contains('Select one fee for a fee record correction request');
-      premiumPaymentsTab.premiumPaymentsTable.error().should('exist');
-      cy.assertText(premiumPaymentsTab.premiumPaymentsTable.error(), 'Error: Select one fee for a fee record correction request');
+      premiumPaymentsContent.premiumPaymentsTable.error().should('exist');
+      cy.assertText(premiumPaymentsContent.premiumPaymentsTable.error(), 'Error: Select one fee for a fee record correction request');
     });
 
     it('should not allow user to create fee record correction request for fee not in TO_DO status', () => {
-      premiumPaymentsTab.premiumPaymentsTable.checkbox([doesNotMatchFeeRecord.id], doesNotMatchFeeRecord.paymentCurrency, doesNotMatchFeeRecord.status).click();
-      premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+      premiumPaymentsContent.premiumPaymentsTable
+        .checkbox([doesNotMatchFeeRecord.id], doesNotMatchFeeRecord.paymentCurrency, doesNotMatchFeeRecord.status)
+        .click();
+      premiumPaymentsContent.createRecordCorrectionRequestButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
 
       errorSummary().contains("Select a fee in 'To do' status to create a record correction request");
-      premiumPaymentsTab.premiumPaymentsTable.error().should('exist');
-      cy.assertText(premiumPaymentsTab.premiumPaymentsTable.error(), "Error: Select a fee in 'To do' status to create a record correction request");
+      premiumPaymentsContent.premiumPaymentsTable.error().should('exist');
+      cy.assertText(premiumPaymentsContent.premiumPaymentsTable.error(), "Error: Select a fee in 'To do' status to create a record correction request");
     });
   });
 });

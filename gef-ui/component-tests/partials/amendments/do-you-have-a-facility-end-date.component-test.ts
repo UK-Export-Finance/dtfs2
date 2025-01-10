@@ -1,4 +1,4 @@
-import { FacilityValueViewModel } from '../../../server/types/view-models/amendments/facility-value-view-model';
+import { DoYouHaveAFacilityEndDateViewModel } from '../../../server/types/view-models/amendments/do-you-have-a-facility-end-date-view-model';
 import pageRenderer from '../../pageRenderer';
 
 const page = 'partials/amendments/do-you-have-a-facility-end-date.njk';
@@ -7,16 +7,12 @@ const render = pageRenderer(page);
 describe(page, () => {
   const previousPage = 'previousPage';
   const cancelUrl = 'cancelUrl';
-  const facilityValue = 7000;
   const exporterName = 'exporterName';
-  const currencySymbol = '£';
 
-  const params: FacilityValueViewModel = {
+  const params: DoYouHaveAFacilityEndDateViewModel = {
     previousPage,
     cancelUrl,
-    facilityValue,
     exporterName,
-    currencySymbol,
   };
 
   it(`should render the 'Back' link`, () => {

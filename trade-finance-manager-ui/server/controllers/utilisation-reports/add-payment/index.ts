@@ -26,8 +26,6 @@ export type AddPaymentRequest = CustomExpressRequest<{
   reqBody: AddPaymentFormRequestBody;
 }>;
 
-const renderAddPaymentPage = (res: Response, context: AddPaymentViewModel) => res.render('utilisation-reports/add-payment.njk', context);
-
 const mapToRecordedPaymentDetailsViewModel = (payment: SelectedFeeRecordsPaymentDetailsResponse): RecordedPaymentDetailsViewModel => {
   return {
     reference: payment.reference,
@@ -69,7 +67,7 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
     const selectedFeeRecordDetails = await api.getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups(reportId, feeRecordIds, userToken);
     const paymentNumber = selectedFeeRecordDetails.payments.length + 1;
 
-    return renderAddPaymentPage(res, {
+    const viewModel: AddPaymentViewModel = {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       reportId,
@@ -85,9 +83,11 @@ export const addPayment = async (req: AddPaymentRequest, res: Response) => {
       canAddToExistingPayment: selectedFeeRecordDetails.canAddToExistingPayment,
       backLinkHref: getLinkToPremiumPaymentsTab(reportId, feeRecordIds),
       gbpTolerance: selectedFeeRecordDetails.gbpTolerance,
-    });
+    };
+
+    return res.render('utilisation-reports/add-payment.njk', viewModel);
   } catch (error) {
-    console.error('Failed to add payment', error);
+    console.error('Failed to add payment: %o', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };

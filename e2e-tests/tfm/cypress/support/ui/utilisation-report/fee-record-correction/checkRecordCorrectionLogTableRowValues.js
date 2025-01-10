@@ -1,8 +1,8 @@
 import pages from '../../../../e2e/pages';
 
-const { recordCorrectionLogTab } = pages.utilisationReportPage;
+const { recordCorrectionLogContent } = pages.utilisationReportPage.tabs;
 
-const { table } = recordCorrectionLogTab;
+const { table } = recordCorrectionLogContent;
 
 /**
  * checkRecordCorrectionLogTableRowValues

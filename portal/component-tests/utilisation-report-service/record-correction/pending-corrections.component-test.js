@@ -1,5 +1,5 @@
 const pageRenderer = require('../../pageRenderer');
-const { aPendingCorrectionsViewModel } = require('../../../test-helpers/test-data');
+const { aPendingCorrectionsViewModel } = require('../../../test-helpers/test-data/view-models');
 
 const page = 'utilisation-report-service/record-correction/pending-corrections.njk';
 const render = pageRenderer(page);
