@@ -62,7 +62,7 @@ describe(page, () => {
     wrapper.expectElement('[data-cy="error-summary"]').notToExist();
   });
 
-  it('should not render the error summary if there is no error', () => {
+  it('should not render the in-line error if there is no error', () => {
     const wrapper = render(params);
 
     wrapper.expectElement('[data-cy="facility-value-inline-error"]').notToExist();
@@ -80,7 +80,7 @@ describe(page, () => {
     wrapper.expectText('[data-cy="error-summary"]').toContain(errMsg);
   });
 
-  it('should render the error summary if there is an error', () => {
+  it('should render the inline error if there is an error', () => {
     const errMsg = 'an error';
     const paramsWithError = {
       ...params,
