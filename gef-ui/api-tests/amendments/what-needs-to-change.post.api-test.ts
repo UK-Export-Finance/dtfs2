@@ -1,0 +1,197 @@
+import { Headers } from 'node-mocks-http';
+import { NextFunction, Request, Response } from 'express';
+import { AnyObject, CURRENCY, DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
+import { HttpStatusCode } from 'axios';
+import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
+import app from '../../server/createApp';
+import { createApi } from '../create-api';
+import api from '../../server/services/api';
+import * as storage from '../test-helpers/storage/storage';
+import { Deal } from '../../server/types/deal';
+import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
+import { Facility } from '../../server/types/facility.ts';
+import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers/mock-amendment.ts';
+
+const originalEnv = { ...process.env };
+
+const { post } = createApi(app);
+
+jest.mock('csurf', () => () => (_req: Request, _res: Response, next: NextFunction) => next());
+jest.mock('../../server/middleware/csrf', () => ({
+  csrfToken: () => (_req: Request, _res: Response, next: NextFunction) => next(),
+}));
+
+const mockGetFacility = jest.fn();
+const mockGetApplication = jest.fn();
+const mockUpdateAmendment = jest.fn();
+
+const validBody = { changeCoverEndDate: false, changeFacilityValue: true };
+const invalidBody = { changeCoverEndDate: false, changeFacilityValue: false };
+
+const dealId = '123';
+const facilityId = '111';
+const amendmentId = 'amendmentId';
+
+const mockDeal = { exporter: { companyName: 'test exporter' }, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as Deal;
+const mockFacility = { currency: { id: CURRENCY.GBP }, hasBeenIssued: true } as Facility;
+
+const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`;
+
+describe(`POST ${url}`, () => {
+  let sessionCookie: string;
+
+  beforeEach(async () => {
+    await storage.flush();
+    jest.resetAllMocks();
+
+    ({ sessionCookie } = await storage.saveUserSession([ROLES.MAKER]));
+    jest.spyOn(api, 'getFacility').mockImplementation(mockGetFacility);
+    jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
+    jest.spyOn(api, 'updateAmendment').mockImplementation(mockUpdateAmendment);
+
+    mockGetFacility.mockResolvedValue({ details: mockFacility });
+    mockGetApplication.mockResolvedValue(mockDeal);
+    mockUpdateAmendment.mockResolvedValue(
+      new PortalFacilityAmendmentWithUkefIdMockBuilder()
+        .withDealId(dealId)
+        .withFacilityId(facilityId)
+        .withAmendmentId(amendmentId)
+        .withChangeCoverEndDate(false)
+        .withChangeFacilityValue(true)
+        .build(),
+    );
+  });
+
+  afterAll(async () => {
+    jest.resetAllMocks();
+    await storage.flush();
+    process.env = originalEnv;
+  });
+
+  describe('when portal facility amendments feature flag is disabled', () => {
+    beforeEach(() => {
+      process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'false';
+    });
+
+    it('should redirect to /not-found', async () => {
+      // Act
+      const response = await postWithSessionCookie(validBody, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(302);
+      expect(response.headers.location).toEqual('/not-found');
+    });
+  });
+
+  describe('when portal facility amendments feature flag is not set', () => {
+    beforeEach(() => {
+      delete process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED;
+    });
+
+    it('should redirect to /not-found', async () => {
+      // Act
+      const response = await postWithSessionCookie(validBody, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(302);
+      expect(response.headers.location).toEqual('/not-found');
+    });
+  });
+
+  describe('when portal facility amendments feature flag is enabled', () => {
+    beforeEach(() => {
+      process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
+    });
+
+    withRoleValidationApiTests({
+      makeRequestWithHeaders: (headers: Headers) => post(validBody, headers).to(url),
+      whitelistedRoles: [ROLES.MAKER],
+      successCode: HttpStatusCode.Found,
+    });
+
+    it('should redirect to /not-found when facility not found', async () => {
+      // Arrange
+      mockGetFacility.mockResolvedValue({ details: undefined });
+
+      // Act
+      const response = await postWithSessionCookie(validBody, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Found);
+      expect(response.headers.location).toEqual('/not-found');
+    });
+
+    it('should redirect to /not-found when deal not found', async () => {
+      // Arrange
+      mockGetApplication.mockResolvedValue(undefined);
+
+      // Act
+      const response = await postWithSessionCookie(validBody, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Found);
+      expect(response.headers.location).toEqual('/not-found');
+    });
+
+    it('should render the page with errors if the selected options are invalid', async () => {
+      // Act
+      const response = await postWithSessionCookie(invalidBody, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain('What do you need to change?');
+      expect(response.text).toContain('Select if you need to change the facility cover end date, value or both');
+    });
+
+    it('should redirect to the next page if the selected options are valid', async () => {
+      // Act
+      const response = await postWithSessionCookie(validBody, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Found);
+      expect(response.headers.location).toEqual(
+        `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.FACILITY_VALUE}`,
+      );
+    });
+
+    it('should render `problem with service` if getApplication throws an error', async () => {
+      // Arrange
+      mockGetApplication.mockRejectedValue(new Error('test error'));
+
+      // Act
+      const response = await postWithSessionCookie(validBody, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain('Problem with the service');
+    });
+
+    it('should render `problem with service` if getFacility throws an error', async () => {
+      // Arrange
+      mockGetFacility.mockRejectedValue(new Error('test error'));
+
+      // Act
+      const response = await postWithSessionCookie(validBody, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain('Problem with the service');
+    });
+
+    it('should render `problem with service` if updateAmendment throws an error', async () => {
+      // Arrange
+      mockUpdateAmendment.mockRejectedValue(new Error('test error'));
+
+      // Act
+      const response = await postWithSessionCookie(validBody, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain('Problem with the service');
+    });
+  });
+});
+
+function postWithSessionCookie(body: AnyObject, sessionCookie: string) {
+  return post(body, { Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`] }).to(url);
+}

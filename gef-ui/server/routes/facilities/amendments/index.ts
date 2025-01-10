@@ -4,7 +4,8 @@ import { validatePortalFacilityAmendmentsEnabled } from '../../../middleware/fea
 import { validateRole, validateToken, validateBank } from '../../../middleware';
 import { MAKER } from '../../../constants/roles';
 import { postCreateDraftFacilityAmendment } from '../../../controllers/amendments/create-draft/post-create-draft';
-import { getWhatNeedsToChange } from '../../../controllers/amendments/what-needs-to-change/what-needs-to-change';
+import { getWhatNeedsToChange } from '../../../controllers/amendments/what-needs-to-change/get-what-needs-to-change';
+import { postWhatNeedsToChange } from '../../../controllers/amendments/what-needs-to-change/post-what-needs-to-change';
 import { getFacilityValue } from '../../../controllers/amendments/facility-value/get-facility-value';
 import { getCoverEndDate } from '../../../controllers/amendments/cover-end-date/get-cover-end-date';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
@@ -22,7 +23,8 @@ router
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${WHAT_DO_YOU_NEED_TO_CHANGE}/`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
-  .get(getWhatNeedsToChange);
+  .get(getWhatNeedsToChange)
+  .post(postWhatNeedsToChange);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${FACILITY_VALUE}/`)
