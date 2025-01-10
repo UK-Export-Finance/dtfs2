@@ -65,6 +65,7 @@ describe(`PUT ${BASE_URL}`, () => {
   });
 
   beforeEach(async () => {
+    await SqlDbHelper.deleteAllEntries('FeeRecordCorrectionTransientFormData');
     await SqlDbHelper.deleteAllEntries('FeeRecordCorrection');
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
