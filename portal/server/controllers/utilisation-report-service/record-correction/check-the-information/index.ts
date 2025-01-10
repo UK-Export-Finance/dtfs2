@@ -5,7 +5,7 @@ import { asLoggedInUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { UtilisationReportCorrectionInformationViewModel } from '../../../../types/view-models/record-correction/utilisation-report-correction-information';
 
-export type GetRecordCorrectionInformationRequest = Request & {
+export type GetUtilisationReportCorrectionReviewRequest = Request & {
   params: {
     correctionId: string;
   };
@@ -15,11 +15,11 @@ const renderCheckTheInformationPage = (res: Response, viewModel: UtilisationRepo
   res.render('utilisation-report-service/record-correction/check-the-information.njk', viewModel);
 
 /**
- * Renders the "check the information" page for a record correction
+ * Renders the "check the information" page for a utilisation report correction
  * @param req - the request
  * @param res - the response
  */
-export const getRecordCorrectionInformation = async (req: GetRecordCorrectionInformationRequest, res: Response) => {
+export const getUtilisationReportCorrectionReview = async (req: GetUtilisationReportCorrectionReviewRequest, res: Response) => {
   const { user, userToken } = asLoggedInUserSession(req.session);
 
   try {

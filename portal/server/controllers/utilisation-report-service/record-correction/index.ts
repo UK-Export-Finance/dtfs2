@@ -1,4 +1,4 @@
 import { getProvideUtilisationReportCorrection } from './provide-utilisation-report-correction';
-import { getRecordCorrectionInformation } from './check-the-information';
+import { getUtilisationReportCorrectionReview } from './check-the-information';
 
-export { getProvideUtilisationReportCorrection, getRecordCorrectionInformation };
+export { getProvideUtilisationReportCorrection, getUtilisationReportCorrectionReview };

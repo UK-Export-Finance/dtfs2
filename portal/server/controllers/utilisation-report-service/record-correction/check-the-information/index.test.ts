@@ -10,7 +10,7 @@ import {
 } from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import api from '../../../../api';
-import { getRecordCorrectionInformation, GetRecordCorrectionInformationRequest } from '.';
+import { getUtilisationReportCorrectionReview, GetUtilisationReportCorrectionReviewRequest } from '.';
 import { UtilisationReportCorrectionInformationViewModel } from '../../../../types/view-models/record-correction/utilisation-report-correction-information';
 
 jest.mock('../../../../api');
@@ -38,14 +38,14 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
 
   const correctionId = '7';
 
-  describe('getRecordCorrectionInformation', () => {
+  describe('getUtilisationReportCorrectionReview', () => {
     const getHttpMocks = () =>
-      httpMocks.createMocks<GetRecordCorrectionInformationRequest>({
+      httpMocks.createMocks<GetUtilisationReportCorrectionReviewRequest>({
         params: { correctionId },
         session: requestSession,
       });
 
-    let req: GetRecordCorrectionInformationRequest;
+    let req: GetUtilisationReportCorrectionReviewRequest;
     let res: MockResponse<Response>;
 
     beforeEach(() => {
@@ -71,7 +71,7 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
       const expectedFormattedReasons = mapReasonsToDisplayValues(reasons).join(', ');
 
       // Act
-      await getRecordCorrectionInformation(req, res);
+      await getUtilisationReportCorrectionReview(req, res);
 
       // Assert
       const expectedResponse: UtilisationReportCorrectionInformationViewModel = {
@@ -98,7 +98,7 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
       jest.mocked(api.getFeeRecordCorrectionReview).mockResolvedValue(feeRecordCorrectionReviewResponse);
 
       // Act
-      await getRecordCorrectionInformation(req, res);
+      await getUtilisationReportCorrectionReview(req, res);
 
       // Assert
       expect(api.getFeeRecordCorrectionReview).toHaveBeenCalledTimes(1);
@@ -115,7 +115,7 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
       jest.mocked(api.getFeeRecordCorrectionReview).mockResolvedValue(feeRecordCorrectionReviewResponse);
 
       // Act
-      await getRecordCorrectionInformation(req, res);
+      await getUtilisationReportCorrectionReview(req, res);
 
       // Assert
       expect(res._getRenderView()).toEqual('utilisation-report-service/record-correction/check-the-information.njk');
@@ -128,7 +128,7 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
       jest.mocked(api.getFeeRecordCorrectionReview).mockRejectedValue(new Error());
 
       // Act
-      await getRecordCorrectionInformation(req, res);
+      await getUtilisationReportCorrectionReview(req, res);
 
       // Assert
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
