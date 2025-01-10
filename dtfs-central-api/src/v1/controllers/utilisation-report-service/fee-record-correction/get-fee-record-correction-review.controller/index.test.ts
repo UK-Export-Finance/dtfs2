@@ -75,6 +75,11 @@ describe('get-fee-record-correction-review.controller', () => {
     });
 
     it('should call fee record correction transient form data find once', async () => {
+      // Arrange
+      const feeRecordCorrectionEntity = new FeeRecordCorrectionEntityMockBuilder().build();
+
+      mockCorrectionFind.mockResolvedValue(feeRecordCorrectionEntity);
+
       // Act
       await getFeeRecordCorrectionReview(req, res);
 
@@ -83,6 +88,11 @@ describe('get-fee-record-correction-review.controller', () => {
     });
 
     it('should call fee record correction transient form data find with the correct parameters', async () => {
+      // Arrange
+      const feeRecordCorrectionEntity = new FeeRecordCorrectionEntityMockBuilder().build();
+
+      mockCorrectionFind.mockResolvedValue(feeRecordCorrectionEntity);
+
       // Act
       await getFeeRecordCorrectionReview(req, res);
 

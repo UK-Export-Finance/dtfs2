@@ -77,7 +77,7 @@
         },
         {
           key: {
-            text: "New values(s)"
+            text: "New value(s)"
           },
           value: {
             text: formattedNewValues
@@ -133,7 +133,7 @@
       }) }}
     </form>
 
-    {# TODO: Add clear behaviour under a different ticket. Note that this will need changing to be an input with a formaction attribute. #}
+    {# TODO FN-3736: Add clear behaviour when this button is clicked. Note that this will need changing to be an input with a formaction attribute (see check-the-information template in TFM). #}
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
       {{ govukButton({

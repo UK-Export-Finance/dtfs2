@@ -6,8 +6,20 @@ import {
   RecordCorrectionReason,
   RecordCorrectionTransientFormData,
 } from '@ukef/dtfs2-common';
-import { difference } from 'lodash';
 import { mapCorrectionReasonsToFormattedOldValues } from '../../../../../helpers/map-correction-reasons-to-formatted-values';
+
+/**
+ * Validates that a required form data field has a value.
+ * Zero (0) is considered a valid value and will not throw an error.
+ * @param value - The value to validate
+ * @param reason - The correction reason associated with the field
+ * @throws Error if the value is undefined or null
+ */
+export function validateRequiredFormDataField<T>(value: T | undefined | null, reason: RecordCorrectionReason): asserts value is NonNullable<T> {
+  if (value === undefined || value === null) {
+    throw new Error(`Required field is missing from transient form data for correction reason: ${reason}`);
+  }
+}
 
 /**
  * Gets the formatted value from form data for a specific correction reason.
@@ -23,9 +35,15 @@ export const getFormattedFormDataValueForCorrectionReason = (formData: RecordCor
     case RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT:
       return formData.reportedCurrency;
     case RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT:
-      return getFormattedMonetaryValue(formData.reportedFee!);
+      validateRequiredFormDataField(formData.reportedFee, reason);
+
+      return getFormattedMonetaryValue(formData.reportedFee);
     case RECORD_CORRECTION_REASON.UTILISATION_INCORRECT:
-      return getFormattedMonetaryValue(formData.utilisation!);
+      validateRequiredFormDataField(formData.utilisation, reason);
+
+      return getFormattedMonetaryValue(formData.utilisation);
+    case RECORD_CORRECTION_REASON.OTHER:
+      return '-';
     default:
       throw new Error(`Unsupported record correction reason: ${reason}`);
   }
@@ -41,9 +59,7 @@ export const getFormattedFormDataValueForCorrectionReason = (formData: RecordCor
  * @returns Array of formatted values from the form data, corresponding to each correction reason
  */
 export const mapFormDataToFormattedValues = (formData: RecordCorrectionTransientFormData, reasons: RecordCorrectionReason[]) => {
-  const reasonsWithoutOther = difference(reasons, [RECORD_CORRECTION_REASON.OTHER]);
-
-  return reasonsWithoutOther.map((reason) => getFormattedFormDataValueForCorrectionReason(formData, reason));
+  return reasons.map((reason) => getFormattedFormDataValueForCorrectionReason(formData, reason));
 };
 
 /**

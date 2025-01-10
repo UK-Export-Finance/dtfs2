@@ -8,12 +8,57 @@ import {
   RecordCorrectionReason,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import { getFormattedFormDataValueForCorrectionReason, mapFormDataToFormattedValues, mapTransientCorrectionDataToReviewInformation } from './helpers';
+import {
+  getFormattedFormDataValueForCorrectionReason,
+  mapFormDataToFormattedValues,
+  mapTransientCorrectionDataToReviewInformation,
+  validateRequiredFormDataField,
+} from './helpers';
 import { mapCorrectionReasonsToFormattedOldValues } from '../../../../../helpers/map-correction-reasons-to-formatted-values';
 
 console.error = jest.fn();
 
 describe('get-fee-record-correction-review.controller helpers', () => {
+  describe('validateRequiredFormDataField', () => {
+    it('should not throw error when value is defined and not null', () => {
+      // Arrange
+      const value = 'test';
+      const reason = RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT;
+
+      // Act & Assert
+      expect(() => validateRequiredFormDataField(value, reason)).not.toThrow();
+    });
+
+    it('should not throw error when value is zero', () => {
+      // Arrange
+      const value = 0;
+      const reason = RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT;
+
+      // Act & Assert
+      expect(() => validateRequiredFormDataField(value, reason)).not.toThrow();
+    });
+
+    it('should throw error when value is undefined', () => {
+      // Arrange
+      const value = undefined;
+      const reason = RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT;
+      const expectedError = `Required field is missing from transient form data for correction reason: ${reason}`;
+
+      // Act & Assert
+      expect(() => validateRequiredFormDataField(value, reason)).toThrow(expectedError);
+    });
+
+    it('should throw error when value is null', () => {
+      // Arrange
+      const value = null;
+      const reason = RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT;
+      const expectedError = `Required field is missing from transient form data for correction reason: ${reason}`;
+
+      // Act & Assert
+      expect(() => validateRequiredFormDataField(value, reason)).toThrow(expectedError);
+    });
+  });
+
   describe('getFormattedFormDataValueForCorrectionReason', () => {
     it(`should map form data value for reason "${RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT}" to original value`, () => {
       // Arrange
@@ -75,13 +120,18 @@ describe('get-fee-record-correction-review.controller helpers', () => {
       expect(formattedValue).toEqual(getFormattedMonetaryValue(utilisation));
     });
 
-    it(`should throw an error for unsupported reason "${RECORD_CORRECTION_REASON.OTHER}"`, () => {
+    it(`should map form data value for reason "${RECORD_CORRECTION_REASON.OTHER}" to a hyphen character`, () => {
       // Arrange
       const reason = RECORD_CORRECTION_REASON.OTHER;
-      const formData = {};
+      const formData = {
+        additionalComments: 'Some additional bank comments',
+      };
 
-      // Act & Assert
-      expect(() => getFormattedFormDataValueForCorrectionReason(formData, reason)).toThrow();
+      // Act
+      const formattedValue = getFormattedFormDataValueForCorrectionReason(formData, reason);
+
+      // Assert
+      expect(formattedValue).toEqual('-');
     });
   });
 
@@ -98,20 +148,6 @@ describe('get-fee-record-correction-review.controller helpers', () => {
       expect(formattedValues).toEqual([]);
     });
 
-    it(`should return an empty array if "${RECORD_CORRECTION_REASON.OTHER}" is the only reason provided`, () => {
-      // Arrange
-      const reasons = [RECORD_CORRECTION_REASON.OTHER];
-      const formData = {
-        additionalComments: 'Some additional comments',
-      };
-
-      // Act
-      const formattedValues = mapFormDataToFormattedValues(formData, reasons);
-
-      // Assert
-      expect(formattedValues).toEqual([]);
-    });
-
     it(`should return the expected array of formatted form data values when all reasons are provided`, () => {
       // Arrange
       const reasons = Object.values(RECORD_CORRECTION_REASON);
@@ -120,7 +156,7 @@ describe('get-fee-record-correction-review.controller helpers', () => {
         reportedCurrency: CURRENCY.GBP,
         reportedFee: 123.45,
         facilityId: '11111111',
-        additionalComments: 'Some additional comments',
+        additionalComments: 'Some additional bank comments',
       };
 
       const expectedFormattedValues = [
@@ -128,13 +164,14 @@ describe('get-fee-record-correction-review.controller helpers', () => {
         formData.reportedCurrency,
         getFormattedMonetaryValue(formData.reportedFee),
         getFormattedMonetaryValue(formData.utilisation),
+        '-',
       ];
 
       // Act
       const formattedValues = mapFormDataToFormattedValues(formData, reasons);
 
       // Assert
-      expect(formattedValues).toHaveLength(4);
+      expect(formattedValues).toHaveLength(5);
       expect(formattedValues).toEqual(expectedFormattedValues);
     });
   });

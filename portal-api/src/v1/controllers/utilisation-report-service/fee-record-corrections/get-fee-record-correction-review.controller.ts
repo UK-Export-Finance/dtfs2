@@ -14,7 +14,6 @@ export type GetFeeRecordCorrectionReviewRequest = CustomExpressRequest<{
   };
 }>;
 
-// TODO: Add unit tests
 /**
  * Calls the DTFS Central API to get fee record correction review information.
  *

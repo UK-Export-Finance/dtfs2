@@ -1103,7 +1103,7 @@ utilisationReportsRouter
 
 /**
  * @openapi
- * /utilisation-reports/fee-record-correction-review/:correctionId/user/:userId
+ * /utilisation-reports/fee-record-correction-review/:correctionId/user/:userId:
  *   get:
  *     summary: Get fee record correction review information to check before sending
  *     tags: [Utilisation Report]

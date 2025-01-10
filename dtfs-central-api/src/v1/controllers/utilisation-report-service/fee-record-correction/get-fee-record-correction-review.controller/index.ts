@@ -32,16 +32,16 @@ export const getFeeRecordCorrectionReview = async (req: GetFeeRecordCorrectionRe
   try {
     const correctionId = Number(correctionIdString);
 
-    const transientFormData = await FeeRecordCorrectionTransientFormDataRepo.findByUserIdAndCorrectionId(userId, correctionId);
-
-    if (!transientFormData) {
-      throw new NotFoundError(`Failed to find fee record correction transient form data with correction id ${correctionId} and user id ${userId}`);
-    }
-
     const feeRecordCorrection = await FeeRecordCorrectionRepo.findOneByIdWithFeeRecord(correctionId);
 
     if (!feeRecordCorrection) {
       throw new NotFoundError(`Failed to find fee record correction with id: ${correctionId}`);
+    }
+
+    const transientFormData = await FeeRecordCorrectionTransientFormDataRepo.findByUserIdAndCorrectionId(userId, correctionId);
+
+    if (!transientFormData) {
+      throw new NotFoundError(`Failed to find fee record correction transient form data with correction id ${correctionId} and user id ${userId}`);
     }
 
     const { formData } = transientFormData;
