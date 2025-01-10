@@ -15,3 +15,4 @@ export * from './validate-post-submit-deal-cancellation-payload';
 export * from './validate-put-fee-record-correction-request-transient-form-data-payload';
 export * from './validate-put-fee-record-correction-transient-form-data-payload';
 export * from './validate-post-fee-record-correction-payload';
+export * from './validate-put-fee-record-correction-payload';
