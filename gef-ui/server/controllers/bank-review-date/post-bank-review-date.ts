@@ -86,7 +86,7 @@ export const postBankReviewDate = async ({ req, res, uris }: PostBankReviewDateP
 
     const { details: facility } = await api.getFacility({ facilityId, userToken });
 
-    const bankReviewDateErrorsAndDate = validateAndParseBankReviewDate(
+    const bankReviewDateErrorsAndValue = validateAndParseBankReviewDate(
       {
         day: bankReviewDateDay,
         month: bankReviewDateMonth,
@@ -95,9 +95,9 @@ export const postBankReviewDate = async ({ req, res, uris }: PostBankReviewDateP
       getCoverStartDateOrStartOfToday(facility),
     );
 
-    if ('errors' in bankReviewDateErrorsAndDate) {
+    if ('errors' in bankReviewDateErrorsAndValue) {
       const bankReviewDateViewModel: BankReviewDateViewModel = {
-        errors: validationErrorHandler(bankReviewDateErrorsAndDate.errors),
+        errors: validationErrorHandler(bankReviewDateErrorsAndValue.errors),
         dealId,
         facilityId,
         bankReviewDate: {
@@ -111,7 +111,7 @@ export const postBankReviewDate = async ({ req, res, uris }: PostBankReviewDateP
       return res.render('partials/bank-review-date.njk', bankReviewDateViewModel);
     }
 
-    await updateBankReviewDateIfChanged(facility, bankReviewDateErrorsAndDate.date, asLoggedInUserSession(req.session));
+    await updateBankReviewDateIfChanged(facility, bankReviewDateErrorsAndValue.value, asLoggedInUserSession(req.session));
 
     if (isTrueSet(saveAndReturn)) {
       return res.redirect(uris.saveAndReturn);

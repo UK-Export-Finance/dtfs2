@@ -104,7 +104,7 @@ const postFacilityEndDate = async ({ req, res, uris }: HandlePostFacilityEndDate
       return res.render('partials/facility-end-date.njk', facilityEndDateViewModel);
     }
 
-    await updateFacilityEndDateIfChanged(facility, facilityEndDateErrorsAndDate.date, asLoggedInUserSession(req.session));
+    await updateFacilityEndDateIfChanged(facility, facilityEndDateErrorsAndDate.value, asLoggedInUserSession(req.session));
 
     if (isTrueSet(saveAndReturn)) {
       return res.redirect(uris.saveAndReturn);
