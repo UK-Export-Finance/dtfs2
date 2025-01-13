@@ -48,10 +48,13 @@ export const getDoYouHaveAFacilityEndDate = async (req: GetDoYouHaveAFacilityEnd
       );
     }
 
+    const isUsingFacilityEndDate = amendment.isUsingFacilityEndDate === undefined ? undefined : amendment.isUsingFacilityEndDate.toString();
+
     const viewModel: DoYouHaveAFacilityEndDateViewModel = {
       exporterName: deal.exporter.companyName,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE, amendment),
+      isUsingFacilityEndDate,
     };
 
     return res.render('partials/amendments/do-you-have-a-facility-end-date.njk', viewModel);

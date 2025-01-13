@@ -5,4 +5,5 @@ export type DoYouHaveAFacilityEndDateViewModel = {
   previousPage: string;
   cancelUrl: string;
   errors?: ViewModelErrors | null;
+  isUsingFacilityEndDate?: string;
 };
