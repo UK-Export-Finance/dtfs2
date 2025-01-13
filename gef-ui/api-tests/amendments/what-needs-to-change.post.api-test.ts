@@ -148,6 +148,16 @@ describe(`POST ${url}`, () => {
       const changeFacilityValueSelection = { amendmentOptions: ['changeFacilityValue'] };
       const response = await postWithSessionCookie(changeFacilityValueSelection, sessionCookie);
 
+      mockUpdateAmendment.mockResolvedValueOnce(
+        new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withDealId(dealId)
+          .withFacilityId(facilityId)
+          .withAmendmentId(amendmentId)
+          .withChangeCoverEndDate(false)
+          .withChangeFacilityValue(true)
+          .build(),
+      );
+
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual(
@@ -157,8 +167,17 @@ describe(`POST ${url}`, () => {
 
     it('should redirect to the cover end date page if just cover end date is selected', async () => {
       // Act
-      const changeFacilityValueSelection = { amendmentOptions: ['changeCoverEndDate'] };
-      const response = await postWithSessionCookie(changeFacilityValueSelection, sessionCookie);
+      const changeCoverEndDateSelection = { amendmentOptions: ['changeCoverEndDate'] };
+      mockUpdateAmendment.mockResolvedValueOnce(
+        new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withDealId(dealId)
+          .withFacilityId(facilityId)
+          .withAmendmentId(amendmentId)
+          .withChangeCoverEndDate(true)
+          .withChangeFacilityValue(false)
+          .build(),
+      );
+      const response = await postWithSessionCookie(changeCoverEndDateSelection, sessionCookie);
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Found);
@@ -169,8 +188,18 @@ describe(`POST ${url}`, () => {
 
     it('should redirect to the cover end date page if both options are selected', async () => {
       // Act
-      const changeFacilityValueSelection = { amendmentOptions: ['changeFacilityValue', 'changeCoverEndDate'] };
-      const response = await postWithSessionCookie(changeFacilityValueSelection, sessionCookie);
+      const changeBothSelection = { amendmentOptions: ['changeFacilityValue', 'changeCoverEndDate'] };
+      mockUpdateAmendment.mockResolvedValueOnce(
+        new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withDealId(dealId)
+          .withFacilityId(facilityId)
+          .withAmendmentId(amendmentId)
+          .withChangeCoverEndDate(true)
+          .withChangeFacilityValue(true)
+          .build(),
+      );
+
+      const response = await postWithSessionCookie(changeBothSelection, sessionCookie);
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Found);
