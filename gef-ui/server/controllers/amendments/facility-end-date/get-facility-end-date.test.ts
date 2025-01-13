@@ -119,6 +119,7 @@ describe('getFacilityEndDate', () => {
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     expect(res._getRenderView()).toEqual('partials/amendments/facility-end-date.njk');
     expect(res._getRenderData()).toEqual(expectedRenderData);
+    expect(console.error).toHaveBeenCalledTimes(0);
   });
 
   it('should render the correct template when the amendment has an existing facilityEndDate', async () => {
@@ -154,16 +155,6 @@ describe('getFacilityEndDate', () => {
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     expect(res._getRenderView()).toEqual('partials/amendments/facility-end-date.njk');
     expect(res._getRenderData()).toEqual(expectedRenderData);
-  });
-
-  it('should not call console.error if the facility and amendment are valid', async () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-
-    // Act
-    await getFacilityEndDate(req, res);
-
-    // Assert
     expect(console.error).toHaveBeenCalledTimes(0);
   });
 
