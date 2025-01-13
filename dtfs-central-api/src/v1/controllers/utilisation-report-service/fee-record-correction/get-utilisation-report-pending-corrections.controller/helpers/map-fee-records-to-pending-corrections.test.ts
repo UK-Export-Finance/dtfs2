@@ -1,4 +1,12 @@
-import { FEE_RECORD_STATUS, FeeRecordCorrectionEntityMockBuilder, FeeRecordEntity, FeeRecordEntityMockBuilder, PendingCorrection } from '@ukef/dtfs2-common';
+import {
+  CURRENCY,
+  FEE_RECORD_STATUS,
+  FeeRecordCorrectionEntityMockBuilder,
+  FeeRecordEntity,
+  FeeRecordEntityMockBuilder,
+  PendingCorrection,
+  RECORD_CORRECTION_REASON,
+} from '@ukef/dtfs2-common';
 import { mapFeeRecordsToPendingCorrections, mapFeeRecordToPendingCorrectionsArray } from './map-fee-records-to-pending-corrections';
 
 describe('map-fee-records-to-pending-corrections', () => {
@@ -36,10 +44,27 @@ describe('map-fee-records-to-pending-corrections', () => {
         .withId(1)
         .withFacilityId('FAC123')
         .withExporter('Test Exporter')
+        .withFeesPaidToUkefForThePeriod(1000)
+        .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.JPY)
         .withCorrections([
-          new FeeRecordCorrectionEntityMockBuilder().withId(1).withIsCompleted(false).withAdditionalInfo('Pending correction 1').build(),
-          new FeeRecordCorrectionEntityMockBuilder().withId(2).withIsCompleted(true).withAdditionalInfo('Completed correction').build(),
-          new FeeRecordCorrectionEntityMockBuilder().withId(3).withIsCompleted(false).withAdditionalInfo('Pending correction 2').build(),
+          new FeeRecordCorrectionEntityMockBuilder()
+            .withId(1)
+            .withIsCompleted(false)
+            .withAdditionalInfo('Pending correction 1')
+            .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT])
+            .build(),
+          new FeeRecordCorrectionEntityMockBuilder()
+            .withId(2)
+            .withIsCompleted(true)
+            .withAdditionalInfo('Completed correction')
+            .withReasons([RECORD_CORRECTION_REASON.OTHER])
+            .build(),
+          new FeeRecordCorrectionEntityMockBuilder()
+            .withId(3)
+            .withIsCompleted(false)
+            .withAdditionalInfo('Pending correction 2')
+            .withReasons([RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT])
+            .build(),
         ])
         .build();
 
@@ -53,12 +78,22 @@ describe('map-fee-records-to-pending-corrections', () => {
           facilityId: 'FAC123',
           exporter: 'Test Exporter',
           additionalInfo: 'Pending correction 1',
+          reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT],
+          reportedFees: {
+            currency: CURRENCY.JPY,
+            amount: 1000,
+          },
         },
         {
           correctionId: 3,
           facilityId: 'FAC123',
           exporter: 'Test Exporter',
           additionalInfo: 'Pending correction 2',
+          reasons: [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT],
+          reportedFees: {
+            currency: CURRENCY.JPY,
+            amount: 1000,
+          },
         },
       ]);
     });
