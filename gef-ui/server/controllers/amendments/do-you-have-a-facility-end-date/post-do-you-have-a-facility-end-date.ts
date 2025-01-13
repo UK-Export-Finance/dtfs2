@@ -46,7 +46,9 @@ export const postDoYouHaveAFacilityEndDate = async (req: PostDoYouHaveAFacilityE
       return res.render('partials/amendments/do-you-have-a-facility-end-date.njk', viewModel);
     }
 
-    const amendment = await api.updateAmendment({ facilityId, amendmentId, update: { isUsingFacilityEndDate: errorsOrValue.value }, userToken });
+    const update = { isUsingFacilityEndDate: errorsOrValue.value };
+
+    const amendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
     return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE, amendment));
   } catch (error) {
