@@ -64,7 +64,7 @@ export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: 
 
     return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment));
   } catch (error) {
-    console.error('Error getting amendments facility end date page %o', error);
+    console.error('Error posting amendments facility end date page %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
