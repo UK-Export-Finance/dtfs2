@@ -62,7 +62,7 @@ describe('page', () => {
     wrapper.expectText(definitionDescriptionSelector(originalValuesSelector, 'Currency')).toRead(reportedCurrency);
   });
 
-  it('should render the original reported fees', () => {
+  it('should render the original reported fees paid', () => {
     // Arrange
     const reportedFees = 12345.67;
     const viewModel = aUtilisationReportCorrectionInformationViewModel();
@@ -74,7 +74,7 @@ describe('page', () => {
     const wrapper = render(viewModel);
 
     // Assert
-    wrapper.expectText(definitionDescriptionSelector(originalValuesSelector, 'Reported fees')).toRead(expectedReportedFees);
+    wrapper.expectText(definitionDescriptionSelector(originalValuesSelector, 'Reported fees paid')).toRead(expectedReportedFees);
   });
 
   it('should render the record correction details table heading', () => {

@@ -63,7 +63,7 @@ describe('get-fee-record-correction-review.controller helpers', () => {
   describe('getFormattedFormDataValueForCorrectionReason', () => {
     const reasonsExcludingOther = difference(Object.values(RECORD_CORRECTION_REASON), [RECORD_CORRECTION_REASON.OTHER]);
 
-    it(`should map form data value for reason "${RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT}" to original value`, () => {
+    it(`should return the form data facilityId value for reason "${RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT}"`, () => {
       // Arrange
       const reason = RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT;
       const facilityId = 'some-value';
@@ -78,7 +78,7 @@ describe('get-fee-record-correction-review.controller helpers', () => {
       expect(formattedValue).toEqual(facilityId);
     });
 
-    it(`should map form data value for reason "${RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT}" to original value`, () => {
+    it(`should return the form data reportedCurrency value for reason "${RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT}"`, () => {
       // Arrange
       const reason = RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT;
       const reportedCurrency = CURRENCY.GBP;
@@ -93,7 +93,7 @@ describe('get-fee-record-correction-review.controller helpers', () => {
       expect(formattedValue).toEqual(reportedCurrency);
     });
 
-    it(`should map form data value for reason "${RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT}" to formatted monetary value`, () => {
+    it(`should map form data reportedFee value to formatted monetary value for reason "${RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT}"`, () => {
       // Arrange
       const reason = RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT;
       const reportedFee = 123.45;
@@ -108,7 +108,22 @@ describe('get-fee-record-correction-review.controller helpers', () => {
       expect(formattedValue).toEqual(getFormattedMonetaryValue(reportedFee));
     });
 
-    it(`should map form data value for reason "${RECORD_CORRECTION_REASON.UTILISATION_INCORRECT}" to formatted monetary value`, () => {
+    it(`should map form data reportedFee value of 0 to formatted monetary value for reason "${RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT}"`, () => {
+      // Arrange
+      const reason = RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT;
+      const reportedFee = 0;
+      const formData = {
+        reportedFee,
+      };
+
+      // Act
+      const formattedValue = getFormattedFormDataValueForCorrectionReason(formData, reason);
+
+      // Assert
+      expect(formattedValue).toEqual(getFormattedMonetaryValue(reportedFee));
+    });
+
+    it(`should map form data utilisation value to formatted monetary value for reason "${RECORD_CORRECTION_REASON.UTILISATION_INCORRECT}"`, () => {
       // Arrange
       const reason = RECORD_CORRECTION_REASON.UTILISATION_INCORRECT;
       const utilisation = 10000.23;
@@ -123,7 +138,22 @@ describe('get-fee-record-correction-review.controller helpers', () => {
       expect(formattedValue).toEqual(getFormattedMonetaryValue(utilisation));
     });
 
-    it(`should map form data value for reason "${RECORD_CORRECTION_REASON.OTHER}" to a hyphen character`, () => {
+    it(`should map form data utilisation value of 0 to formatted monetary value for reason "${RECORD_CORRECTION_REASON.UTILISATION_INCORRECT}"`, () => {
+      // Arrange
+      const reason = RECORD_CORRECTION_REASON.UTILISATION_INCORRECT;
+      const utilisation = 0;
+      const formData = {
+        utilisation,
+      };
+
+      // Act
+      const formattedValue = getFormattedFormDataValueForCorrectionReason(formData, reason);
+
+      // Assert
+      expect(formattedValue).toEqual(getFormattedMonetaryValue(utilisation));
+    });
+
+    it(`should map form data additionalComments value to a hyphen character for reason "${RECORD_CORRECTION_REASON.OTHER}"`, () => {
       // Arrange
       const reason = RECORD_CORRECTION_REASON.OTHER;
       const formData = {
@@ -137,7 +167,7 @@ describe('get-fee-record-correction-review.controller helpers', () => {
       expect(formattedValue).toEqual('-');
     });
 
-    it.each(reasonsExcludingOther)('should throw error when value for reason "%s" is missing from the transient form data', (reason) => {
+    it.each(reasonsExcludingOther)('should throw error when required value for reason "%s" is missing from the transient form data', (reason) => {
       // Arrange
       const formData = {};
 
@@ -157,6 +187,42 @@ describe('get-fee-record-correction-review.controller helpers', () => {
 
       // Assert
       expect(formattedValues).toEqual([]);
+    });
+
+    it(`should return the expected array of formatted form data values when only one reason is provided`, () => {
+      // Arrange
+      const reasons = [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT];
+      const formData = {
+        utilisation: 10000.23,
+      };
+
+      const expectedFormattedValues = [getFormattedMonetaryValue(formData.utilisation)];
+
+      // Act
+      const formattedValues = mapFormDataToFormattedValues(formData, reasons);
+
+      // Assert
+      expect(formattedValues).toHaveLength(1);
+      expect(formattedValues).toEqual(expectedFormattedValues);
+    });
+
+    it(`should return the expected array of formatted form data values when some reasons are provided`, () => {
+      // Arrange
+      const reasons = [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT, RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER];
+      const formData = {
+        reportedFee: 123.45,
+        facilityId: '22222222',
+        additionalComments: 'Some additional bank comments',
+      };
+
+      const expectedFormattedValues = [getFormattedMonetaryValue(formData.reportedFee), formData.facilityId, '-'];
+
+      // Act
+      const formattedValues = mapFormDataToFormattedValues(formData, reasons);
+
+      // Assert
+      expect(formattedValues).toHaveLength(3);
+      expect(formattedValues).toEqual(expectedFormattedValues);
     });
 
     it(`should return the expected array of formatted form data values when all reasons are provided`, () => {

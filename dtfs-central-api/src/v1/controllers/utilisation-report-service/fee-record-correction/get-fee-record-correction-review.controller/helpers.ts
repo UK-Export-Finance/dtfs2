@@ -28,7 +28,7 @@ export function validateRequiredFormDataField<T>(value: T | undefined | null, re
  * @returns The formatted value corresponding to the correction reason
  * @throws Error if the correction reason is not supported
  */
-export const getFormattedFormDataValueForCorrectionReason = (formData: RecordCorrectionTransientFormData, reason: RecordCorrectionReason) => {
+export const getFormattedFormDataValueForCorrectionReason = (formData: RecordCorrectionTransientFormData, reason: RecordCorrectionReason): string => {
   switch (reason) {
     case RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT:
       validateRequiredFormDataField(formData.facilityId, reason);
@@ -47,6 +47,8 @@ export const getFormattedFormDataValueForCorrectionReason = (formData: RecordCor
 
       return getFormattedMonetaryValue(formData.utilisation);
     case RECORD_CORRECTION_REASON.OTHER:
+      validateRequiredFormDataField(formData.additionalComments, reason);
+
       return '-';
     default:
       throw new Error(`Unsupported record correction reason: ${reason}`);
@@ -84,16 +86,16 @@ export const mapTransientCorrectionDataToReviewInformation = (
     },
   };
 
-  const formattedOldValues = mapCorrectionReasonsToFormattedOldValues(feeRecord, reasons);
-  const formattedNewValues = mapFormDataToFormattedValues(formData, reasons);
+  const formattedOldValues = mapCorrectionReasonsToFormattedOldValues(feeRecord, reasons).join(', ');
+  const formattedNewValues = mapFormDataToFormattedValues(formData, reasons).join(', ');
 
   return {
     correctionId,
     feeRecord: mappedFeeRecord,
     reasons,
     errorSummary,
-    formattedOldValues: formattedOldValues.join(', '),
-    formattedNewValues: formattedNewValues.join(', '),
+    formattedOldValues,
+    formattedNewValues,
     bankCommentary: formData.additionalComments,
   };
 };
