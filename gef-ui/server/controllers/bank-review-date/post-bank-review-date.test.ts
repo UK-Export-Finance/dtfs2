@@ -81,7 +81,7 @@ describe('postBankReviewDate', () => {
   describe('when the bank review date is valid and has changed', () => {
     beforeEach(() => {
       validateAndParseBankReviewDateMock.mockReturnValueOnce({
-        date: bankReviewDate,
+        value: bankReviewDate,
       });
     });
 
@@ -128,7 +128,7 @@ describe('postBankReviewDate', () => {
         },
       });
       validateAndParseBankReviewDateMock.mockReturnValueOnce({
-        date: bankReviewDate,
+        value: bankReviewDate,
       });
     });
 

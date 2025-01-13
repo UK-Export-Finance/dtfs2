@@ -4,6 +4,7 @@ import * as api from '../../../services/api';
 import { WhatNeedsToChangeViewModel } from '../../../types/view-models/amendments/what-needs-to-change-view-model.ts';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { STB_PIM_EMAIL } from '../../../constants/emails.ts';
+import { userCanAmendFacility } from '../../../utils/facility-amendments.helper.ts';
 
 export type GetWhatNeedsToChangeRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -16,21 +17,42 @@ export type GetWhatNeedsToChangeRequest = CustomExpressRequest<{
  */
 export const getWhatNeedsToChange = async (req: GetWhatNeedsToChangeRequest, res: Response) => {
   try {
-    const { dealId } = req.params;
-    const { userToken } = asLoggedInUserSession(req.session);
+    const { dealId, facilityId, amendmentId } = req.params;
+    const { userToken, user } = asLoggedInUserSession(req.session);
 
     const deal = await api.getApplication({ dealId, userToken });
+    const { details: facility } = await api.getFacility({ facilityId, userToken });
+
+    if (!deal || !facility) {
+      console.error('Deal %s or Facility %s was not found', dealId, facilityId);
+      return res.redirect('/not-found');
+    }
+
+    if (!userCanAmendFacility(facility, deal, user.roles)) {
+      console.error('User cannot amend facility %s on deal %s', facilityId, dealId);
+      return res.redirect(`/gef/application-details/${dealId}`);
+    }
+
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      console.error('Amendment %s not found on facility %s', amendmentId, facilityId);
+      return res.redirect('/not-found');
+    }
+
+    const { changeCoverEndDate, changeFacilityValue } = amendment;
 
     const viewModel: WhatNeedsToChangeViewModel = {
       exporterName: deal.exporter.companyName,
       previousPage: `/gef/application-details/${dealId}`,
       amendmentFormEmail: STB_PIM_EMAIL,
-      // TODO: DTFS2-7685 - Pass in existing checkbox values from GET endpoint
+      changeCoverEndDate,
+      changeFacilityValue,
     };
 
     return res.render('partials/amendments/what-needs-to-change.njk', viewModel);
   } catch (error) {
-    console.error(error);
+    console.error('Error getting amendments what needs to change page %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
