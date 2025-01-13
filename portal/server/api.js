@@ -1080,14 +1080,12 @@ const getFeeRecordCorrection = async (token, bankId, id) => {
  * @returns {Promise<void>}
  */
 const putFeeRecordCorrection = async (token, bankId, correctionId, formData) => {
-  const { data } = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/fee-record-correction/${correctionId}/transient-form-data`, formData, {
+  await axios.put(`${PORTAL_API_URL}/v1/banks/${bankId}/fee-record-correction/${correctionId}/transient-form-data`, formData, {
     headers: {
       Authorization: token,
       [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
-
-  return data;
 };
 
 module.exports = {
