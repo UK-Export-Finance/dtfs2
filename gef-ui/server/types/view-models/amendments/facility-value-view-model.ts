@@ -1,7 +1,7 @@
 import { ViewModelErrors } from '../view-model-errors';
 
 export type FacilityValueViewModel = {
-  facilityValue?: number;
+  facilityValue?: string;
   currencySymbol: string;
   exporterName: string;
   previousPage: string;

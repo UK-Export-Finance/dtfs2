@@ -1,4 +1,4 @@
-import { FacilityValueViewModel } from '../../../server/types/view-models/amendments/facility-value-view-model';
+import { DoYouHaveAFacilityEndDateViewModel } from '../../../server/types/view-models/amendments/do-you-have-a-facility-end-date-view-model';
 import pageRenderer from '../../pageRenderer';
 
 const page = 'partials/amendments/do-you-have-a-facility-end-date.njk';
@@ -7,16 +7,12 @@ const render = pageRenderer(page);
 describe(page, () => {
   const previousPage = 'previousPage';
   const cancelUrl = 'cancelUrl';
-  const facilityValue = 7000;
   const exporterName = 'exporterName';
-  const currencySymbol = '£';
 
-  const params: FacilityValueViewModel = {
+  const params: DoYouHaveAFacilityEndDateViewModel = {
     previousPage,
     cancelUrl,
-    facilityValue,
     exporterName,
-    currencySymbol,
   };
 
   it(`should render the 'Back' link`, () => {
@@ -28,9 +24,9 @@ describe(page, () => {
   it(`should render the has facility end date input`, () => {
     const wrapper = render(params);
 
-    wrapper.expectElement('[data-cy="has-facility-end-date"]').toExist();
-    wrapper.expectInput('[data-cy="has-facility-end-date-yes"]').toNotBeChecked();
-    wrapper.expectInput('[data-cy="has-facility-end-date-no"]').toNotBeChecked();
+    wrapper.expectElement('[data-cy="is-using-facility-end-date"]').toExist();
+    wrapper.expectInput('[data-cy="is-using-facility-end-date-yes"]').toNotBeChecked();
+    wrapper.expectInput('[data-cy="is-using-facility-end-date-no"]').toNotBeChecked();
   });
 
   it(`should render the error summary if an error exists`, () => {
@@ -39,9 +35,9 @@ describe(page, () => {
     const paramsWithErrors = {
       ...params,
       errors: {
-        errorSummary: [{ text: errorText, href: 'hasFacilityEndDate' }],
+        errorSummary: [{ text: errorText, href: 'isUsingFacilityEndDate' }],
         fieldErrors: {
-          hasFacilityEndDate: {
+          isUsingFacilityEndDate: {
             text: errorText,
           },
         },
@@ -53,15 +49,15 @@ describe(page, () => {
     wrapper.expectText('[data-cy="error-summary"]').toContain(errorText);
   });
 
-  it(`should render the hasFacilityEndDate error if an error exists`, () => {
+  it(`should render the isUsingFacilityEndDate error if an error exists`, () => {
     const errorText = 'an error';
 
     const paramsWithErrors = {
       ...params,
       errors: {
-        errorSummary: [{ text: errorText, href: 'hasFacilityEndDate' }],
+        errorSummary: [{ text: errorText, href: 'isUsingFacilityEndDate' }],
         fieldErrors: {
-          hasFacilityEndDate: {
+          isUsingFacilityEndDate: {
             text: errorText,
           },
         },
@@ -70,7 +66,7 @@ describe(page, () => {
 
     const wrapper = render(paramsWithErrors);
 
-    wrapper.expectText('[data-cy="has-facility-end-date-error"]').toContain(errorText);
+    wrapper.expectText('[data-cy="is-using-facility-end-date-error"]').toContain(errorText);
   });
 
   it(`should render the continue button`, () => {

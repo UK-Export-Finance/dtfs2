@@ -12,9 +12,6 @@ export type GetProvideUtilisationReportCorrection = Request & {
   };
 };
 
-const renderProvideUtilisationReportCorrectionPage = (res: Response, viewModel: ProvideUtilisationReportCorrectionViewModel) =>
-  res.render('utilisation-report-service/record-correction/provide-utilisation-report-correction.njk', viewModel);
-
 /**
  * Controller for the GET provide utilisation report correction route.
  * @param req - The request object
@@ -36,14 +33,16 @@ export const getProvideUtilisationReportCorrection = async (req: GetProvideUtili
 
     const additionalCommentsLabels = getAdditionalCommentsFieldLabels(feeRecordCorrection.reasons);
 
-    return renderProvideUtilisationReportCorrectionPage(res, {
+    const viewModel: ProvideUtilisationReportCorrectionViewModel = {
       user,
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       correctionRequestDetails: mapToCorrectionRequestDetailsViewModel(feeRecordCorrection),
       paymentCurrencyOptions,
       additionalComments: additionalCommentsLabels,
       formValues: mapToProvideCorrectionFormValuesViewModel(savedFormValues),
-    });
+    };
+
+    return res.render('utilisation-report-service/record-correction/provide-utilisation-report-correction.njk', viewModel);
   } catch (error) {
     console.error('Failed to get provide utilisation report correction %o', error);
     return res.render('_partials/problem-with-service.njk', { user });
