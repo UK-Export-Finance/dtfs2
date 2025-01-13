@@ -58,7 +58,7 @@ describe(page, () => {
       ...params,
       errors: {
         errorSummary: [{ text: errorText, href: '#amendmentOptions' }],
-        fieldErrors: { amendmentSelection: { text: errorText } },
+        fieldErrors: { amendmentOptions: { text: errorText } },
       },
     };
 
