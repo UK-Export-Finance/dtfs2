@@ -1098,7 +1098,9 @@ const getFeeRecordCorrectionReview = async (bankId, correctionId, userId, token)
  * @returns {Promise<import('./api-response-types').SaveFeeRecordCorrectionResponseBody>} Returns a promise that resolves to the fee record correction sent data
  */
 const saveFeeRecordCorrection = async (token, bankId, id) => {
-  const { data } = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/fee-record-correction/${id}`, {
+  const { data } = await axios({
+    method: 'put',
+    url: `${PORTAL_API_URL}/v1/banks/${bankId}/fee-record-correction/${id}`,
     headers: {
       Authorization: token,
       [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,

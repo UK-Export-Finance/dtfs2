@@ -5,7 +5,7 @@ import { asLoggedInUserSession, LoggedInUserSession } from '../../../../helpers/
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { UtilisationReportCorrectionInformationViewModel } from '../../../../types/view-models/record-correction/utilisation-report-correction-information';
 
-export type GetUtilisationReportCorrectionReviewRequest = Request & {
+export type UtilisationReportCorrectionReviewRequest = Request & {
   params: {
     correctionId: string;
   };
@@ -16,7 +16,7 @@ export type GetUtilisationReportCorrectionReviewRequest = Request & {
  * @param req - the request
  * @param res - the response
  */
-export const getUtilisationReportCorrectionReview = async (req: GetUtilisationReportCorrectionReviewRequest, res: Response) => {
+export const getUtilisationReportCorrectionReview = async (req: UtilisationReportCorrectionReviewRequest, res: Response) => {
   const { user, userToken } = asLoggedInUserSession(req.session);
 
   try {
@@ -63,14 +63,15 @@ export const getUtilisationReportCorrectionReview = async (req: GetUtilisationRe
  * @param req - the request
  * @param res - the response
  */
-export const postUtilisationReportCorrectionReview = async (req: Request, res: Response) => {
+export const postUtilisationReportCorrectionReview = async (req: UtilisationReportCorrectionReviewRequest, res: Response) => {
   const { user, userToken } = asLoggedInUserSession(req.session);
 
   try {
-    const bankId = user.bank.id;
-    const userId = user._id;
+    const { correctionId } = req.params;
 
-    const correctionSentData = await api.saveFeeRecordCorrection(userToken, bankId, userId);
+    const bankId = user.bank.id;
+
+    const correctionSentData = await api.saveFeeRecordCorrection(userToken, bankId, correctionId);
 
     (req.session as LoggedInUserSession).recordCorrectionSent = correctionSentData;
 
