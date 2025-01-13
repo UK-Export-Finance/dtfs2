@@ -114,19 +114,19 @@ context('About Facility Page  - feature flag enabled', () => {
       cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: `${today.dayLong}-`, month: today.monthLong, year: today.year });
 
       cy.clickContinueButton();
-      errorSummary().contains('The day for the cover start date must include 1 or 2 numbers');
-      errorSummary().contains('The day for the cover end date must include 1 or 2 numbers');
-      aboutFacility.coverStartDateError().contains('The day for the cover start date must include 1 or 2 numbers');
-      aboutFacility.coverEndDateError().contains('The day for the cover end date must include 1 or 2 numbers');
+      errorSummary().contains('Cover start date must be a real date');
+      errorSummary().contains('Cover end date must be a real date');
+      aboutFacility.coverStartDateError().contains('Cover start date must be a real date');
+      aboutFacility.coverEndDateError().contains('Cover end date must be a real date');
 
       cy.completeDateFormFields({ idPrefix: 'cover-start-date', month: null, year: '-' });
       cy.completeDateFormFields({ idPrefix: 'cover-end-date', month: null, year: '2' });
 
       cy.clickContinueButton();
-      errorSummary().contains('The year for the cover start date must include 4 numbers');
-      errorSummary().contains('The year for the cover end date must include 4 numbers');
-      aboutFacility.coverStartDateError().contains('The year for the cover start date must include 4 numbers');
-      aboutFacility.coverEndDateError().contains('The year for the cover end date must include 4 numbers');
+      errorSummary().contains('Cover start date must be a real date');
+      errorSummary().contains('Cover end date must be a real date');
+      aboutFacility.coverStartDateError().contains('Cover start date must be a real date');
+      aboutFacility.coverEndDateError().contains('Cover end date must be a real date');
     });
 
     it('should show an error message if coverStartDate and coverEndDate are the same', () => {

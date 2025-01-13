@@ -9,6 +9,8 @@ import api from '../../../../api';
 import { CreateRecordCorrectionRequestFormRequestBody, extractCreateRecordCorrectionRequestFormValues } from './form-helpers';
 import { validateCreateRecordCorrectionRequestFormValues } from './validate-form-values';
 
+const createRecordCorrectionRequestTemplate = 'utilisation-reports/record-corrections/create-record-correction-request.njk';
+
 export type GetCreateRecordCorrectionRequestRequest = CustomExpressRequest<{
   params: {
     reportId: string;
@@ -17,9 +19,6 @@ export type GetCreateRecordCorrectionRequestRequest = CustomExpressRequest<{
 }>;
 
 export const EMPTY_CREATE_RECORD_CORRECTION_REQUEST_ERRORS_VIEW_MODEL: CreateRecordCorrectionRequestErrorsViewModel = Object.freeze({ errorSummary: [] });
-
-const renderCreateRecordCorrectionRequestPage = (res: Response, viewModel: CreateRecordCorrectionRequestViewModel) =>
-  res.render('utilisation-reports/record-corrections/create-record-correction-request.njk', viewModel);
 
 /**
  * Controller for the GET create record correction request route
@@ -34,7 +33,7 @@ export const getCreateRecordCorrectionRequest = async (req: GetCreateRecordCorre
     const feeRecord = await api.getFeeRecord(reportId, feeRecordId, userToken);
     const formValues = await api.getFeeRecordCorrectionTransientFormData(reportId, feeRecordId, user, userToken);
 
-    return renderCreateRecordCorrectionRequestPage(res, {
+    const viewModel: CreateRecordCorrectionRequestViewModel = {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       reportId,
@@ -49,7 +48,9 @@ export const getCreateRecordCorrectionRequest = async (req: GetCreateRecordCorre
       formValues,
       errors: EMPTY_CREATE_RECORD_CORRECTION_REQUEST_ERRORS_VIEW_MODEL,
       backLinkHref: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
-    });
+    };
+
+    return res.render(createRecordCorrectionRequestTemplate, viewModel);
   } catch (error) {
     console.error('Failed to get create record correction request', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
@@ -86,7 +87,7 @@ export const postCreateRecordCorrectionRequest = async (req: PostCreateRecordCor
 
     const feeRecord = await api.getFeeRecord(reportId, feeRecordId, userToken);
 
-    return renderCreateRecordCorrectionRequestPage(res, {
+    const viewModel: CreateRecordCorrectionRequestViewModel = {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       reportId,
@@ -101,7 +102,9 @@ export const postCreateRecordCorrectionRequest = async (req: PostCreateRecordCor
       formValues,
       errors,
       backLinkHref: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
-    });
+    };
+
+    return res.render(createRecordCorrectionRequestTemplate, viewModel);
   } catch (error) {
     console.error('Failed to post create record correction request', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });

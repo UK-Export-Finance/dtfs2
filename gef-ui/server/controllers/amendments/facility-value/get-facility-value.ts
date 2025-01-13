@@ -51,7 +51,10 @@ export const getFacilityValue = async (req: GetFacilityValueRequest, res: Respon
 
     const currencySymbol = getCurrencySymbol(facility.currency?.id ?? CURRENCY.GBP);
 
+    const facilityValue = amendment.value ? String(amendment.value) : '';
+
     const viewModel: FacilityValueViewModel = {
+      facilityValue,
       exporterName: deal.exporter.companyName,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment),
