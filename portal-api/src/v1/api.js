@@ -537,6 +537,7 @@ const putFeeRecordCorrectionTransientFormData = async (bankId, correctionId, use
       userId,
       error,
     );
+
     throw error;
   }
 };

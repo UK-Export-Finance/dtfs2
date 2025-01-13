@@ -1072,7 +1072,7 @@ const getFeeRecordCorrection = async (token, bankId, id) => {
 };
 
 /**
- * Puts a fee record correction by id.
+ * Puts a fee record correction by bank id and correction id.
  * @param {string} token - The user token
  * @param {string} bankId - The bank id
  * @param {string} correctionId - The correction id

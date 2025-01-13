@@ -84,6 +84,7 @@ export const postProvideUtilisationReportCorrection = async (req: PostProvideUti
     return res.redirect(`/utilisation-reports/provide-correction/${correctionId}/check-the-information`);
   } catch (error) {
     console.error('Failed to post provide utilisation report correction %o', error);
+
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };

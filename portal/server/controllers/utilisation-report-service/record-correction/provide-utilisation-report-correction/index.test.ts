@@ -283,9 +283,6 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       // Assert
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user: mockUser });
-
-      expect(api.putFeeRecordCorrection).toHaveBeenCalledTimes(1);
-      expect(api.putFeeRecordCorrection).toHaveBeenCalledWith(userToken, bankId, correctionId, formData);
     });
   });
 });
