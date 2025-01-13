@@ -87,7 +87,7 @@ describe('validateAndParseBankReviewDate', () => {
 
     // Assert
     expect(result).toEqual({
-      date: bankReviewDate,
+      value: bankReviewDate,
     });
   });
 });
