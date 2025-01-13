@@ -20,7 +20,7 @@ context('When fee record correction feature flag is enabled', () => {
   const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(reportId).withBankId(bankId).build();
   const feeRecordAtToDoStatus = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build();
 
-  const { premiumPaymentsTab } = pages.utilisationReportPage;
+  const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
 
   before(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
@@ -106,7 +106,7 @@ context('When fee record correction feature flag is enabled', () => {
         cy.assertText(feeRecordCorrectionRequestSentPage.userEmailAddressCopy(), `A copy of the email has also been sent to ${USERS.PDC_RECONCILE.email}.`);
 
         cy.visit(`utilisation-reports/${reportId}`);
-        cy.assertText(premiumPaymentsTab.premiumPaymentsTable.status(feeRecordAtToDoStatus.id), 'Record correction sent');
+        cy.assertText(premiumPaymentsContent.premiumPaymentsTable.status(feeRecordAtToDoStatus.id), 'Record correction sent');
       });
 
       context('and then user clicks the "back to premium payments" button', () => {
@@ -129,11 +129,11 @@ context('When fee record correction feature flag is enabled', () => {
       context('and clicks the "create record correction request" button again', () => {
         beforeEach(() => {
           // Restart the journey using the same fee record.
-          premiumPaymentsTab.premiumPaymentsTable
+          premiumPaymentsContent.premiumPaymentsTable
             .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
             .click();
 
-          premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+          premiumPaymentsContent.createRecordCorrectionRequestButton().click();
         });
 
         it('should not populate the "create record correction request" form with any form data', () => {
@@ -175,7 +175,7 @@ context('When fee record correction feature flag is enabled', () => {
       it('should redirect to the utilisation report page with the fee record still checked', () => {
         cy.url().should('eq', relative(`/utilisation-reports/${reportId}?selectedFeeRecordIds=${feeRecordAtToDoStatus.id}`));
 
-        premiumPaymentsTab.premiumPaymentsTable
+        premiumPaymentsContent.premiumPaymentsTable
           .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
           .should('be.checked');
       });
@@ -183,7 +183,7 @@ context('When fee record correction feature flag is enabled', () => {
       context('and clicks the "create record correction request" button again', () => {
         beforeEach(() => {
           // Note that the same fee record is already checked due to the 'selectedFeeRecordIds' query parameter.
-          premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+          premiumPaymentsContent.createRecordCorrectionRequestButton().click();
         });
 
         it('should not populate the "create record correction request" form with any form data', () => {

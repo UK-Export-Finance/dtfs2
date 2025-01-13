@@ -13,6 +13,8 @@ import pages from '../../../pages';
 import USERS from '../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../e2e-fixtures';
 
+const { keyingSheetContent, premiumPaymentsContent } = pages.utilisationReportPage.tabs;
+
 context('PDC_RECONCILE users can reconcile fee records', () => {
   const SUBMISSION_MONTH = toIsoMonthStamp(new Date());
   const BANK_ID = '961';
@@ -110,21 +112,21 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
     cy.login(USERS.PDC_RECONCILE);
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
-    pages.utilisationReportPage.premiumPaymentsTab.generateKeyingDataButton().click();
+    premiumPaymentsContent.generateKeyingDataButton().click();
     pages.checkKeyingDataPage.generateKeyingSheetDataButton().click();
   });
 
   describe('when logging in as "PDC_RECONCILE" user', () => {
     it('should display the relevant text', () => {
-      pages.utilisationReportPage.premiumPaymentsTab.selectPaymentsText().should('exist');
-      pages.utilisationReportPage.premiumPaymentsTab.paymentsOnPremiumPaymentsText().should('exist');
+      pages.utilisationReportPage.tabs.premiumPaymentsContent.selectPaymentsText().should('exist');
+      pages.utilisationReportPage.tabs.premiumPaymentsContent.paymentsOnPremiumPaymentsText().should('exist');
 
       cy.assertText(
-        pages.utilisationReportPage.premiumPaymentsTab.selectPaymentsText(),
+        pages.utilisationReportPage.tabs.premiumPaymentsContent.selectPaymentsText(),
         'Select payments and mark as done when the adjustments have been keyed into ACBS.',
       );
       cy.assertText(
-        pages.utilisationReportPage.premiumPaymentsTab.paymentsOnPremiumPaymentsText(),
+        pages.utilisationReportPage.tabs.premiumPaymentsContent.paymentsOnPremiumPaymentsText(),
         'Payments on the premium payments tab will show as reconciled when they have been marked as done here.',
       );
     });
@@ -136,53 +138,53 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
       cy.login(USERS.PDC_READ);
 
       cy.visit(`utilisation-reports/${REPORT_ID}`);
-      pages.utilisationReportPage.keyingSheetTabLink().click();
+      pages.utilisationReportPage.tabs.keyingSheet().click();
 
-      pages.utilisationReportPage.premiumPaymentsTab.selectPaymentsText().should('not.exist');
-      pages.utilisationReportPage.premiumPaymentsTab.paymentsOnPremiumPaymentsText().should('exist');
+      pages.utilisationReportPage.tabs.premiumPaymentsContent.selectPaymentsText().should('not.exist');
+      pages.utilisationReportPage.tabs.premiumPaymentsContent.paymentsOnPremiumPaymentsText().should('exist');
 
       cy.assertText(
-        pages.utilisationReportPage.premiumPaymentsTab.paymentsOnPremiumPaymentsText(),
+        pages.utilisationReportPage.tabs.premiumPaymentsContent.paymentsOnPremiumPaymentsText(),
         'Payments on the premium payments tab will show as reconciled when they have been marked as done here.',
       );
     });
   });
 
   it('can mark keying sheet rows as done and to do', () => {
-    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FEE_RECORD_ID_ONE).should('contain', 'To do');
+    keyingSheetContent.keyingSheetTableRow(FEE_RECORD_ID_ONE).should('contain', 'To do');
 
-    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FEE_RECORD_ID_ONE).within(() => cy.get('input[type="checkbox"]').click());
-    pages.utilisationReportPage.keyingSheetTab.markAsDoneButton().click();
-    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FEE_RECORD_ID_ONE).should('contain', 'Done');
+    keyingSheetContent.keyingSheetTableRow(FEE_RECORD_ID_ONE).within(() => cy.get('input[type="checkbox"]').click());
+    keyingSheetContent.markAsDoneButton().click();
+    keyingSheetContent.keyingSheetTableRow(FEE_RECORD_ID_ONE).should('contain', 'Done');
 
-    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FEE_RECORD_ID_ONE).within(() => cy.get('input[type="checkbox"]').click());
-    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FEE_RECORD_ID_TWO).within(() => cy.get('input[type="checkbox"]').click());
-    pages.utilisationReportPage.keyingSheetTab.markAsToDoButton().click();
-    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FEE_RECORD_ID_ONE).should('contain', 'To do');
+    keyingSheetContent.keyingSheetTableRow(FEE_RECORD_ID_ONE).within(() => cy.get('input[type="checkbox"]').click());
+    keyingSheetContent.keyingSheetTableRow(FEE_RECORD_ID_TWO).within(() => cy.get('input[type="checkbox"]').click());
+    keyingSheetContent.markAsToDoButton().click();
+    keyingSheetContent.keyingSheetTableRow(FEE_RECORD_ID_ONE).should('contain', 'To do');
   });
 
   it('updates report status when all fee records are reconciled and when some are unreconciled', () => {
-    pages.utilisationReportPage.keyingSheetTab.selectAllCheckbox().click();
-    pages.utilisationReportPage.keyingSheetTab.markAsDoneButton().click();
+    keyingSheetContent.selectAllCheckbox().click();
+    keyingSheetContent.markAsDoneButton().click();
 
     pages.utilisationReportPage.bankReportsNavLink().click();
     pages.utilisationReportsSummaryPage.tableRowSelector(BANK_ID, SUBMISSION_MONTH).should('contain', 'Report completed');
 
     pages.utilisationReportsSummaryPage.reportLink(BANK_ID, SUBMISSION_MONTH).click();
-    pages.utilisationReportPage.keyingSheetTabLink().click();
-    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FEE_RECORD_ID_TWO).within(() => cy.get('input[type="checkbox"]').click());
-    pages.utilisationReportPage.keyingSheetTab.markAsToDoButton().click();
+    pages.utilisationReportPage.tabs.keyingSheet().click();
+    keyingSheetContent.keyingSheetTableRow(FEE_RECORD_ID_TWO).within(() => cy.get('input[type="checkbox"]').click());
+    keyingSheetContent.markAsToDoButton().click();
 
     pages.utilisationReportPage.bankReportsNavLink().click();
     pages.utilisationReportsSummaryPage.tableRowSelector(BANK_ID, SUBMISSION_MONTH).should('contain', 'Reconciliation in progress');
   });
 
   it('should not display select all checkbox when there are no further actions to take', () => {
-    pages.utilisationReportPage.keyingSheetTab.selectAllCheckbox().click();
-    pages.utilisationReportPage.keyingSheetTab.markAsDoneButton().click();
+    keyingSheetContent.selectAllCheckbox().click();
+    keyingSheetContent.markAsDoneButton().click();
 
-    pages.utilisationReportPage.premiumPaymentsTabLink().click();
+    pages.utilisationReportPage.tabs.premiumPayments().click();
 
-    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.selectAllCheckboxContainer().should('not.exist');
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable.selectAllCheckboxContainer().should('not.exist');
   });
 });

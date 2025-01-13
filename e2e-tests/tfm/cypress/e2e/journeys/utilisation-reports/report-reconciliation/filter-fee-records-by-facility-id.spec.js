@@ -54,8 +54,8 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
     cy.reload();
 
     feeRecords.forEach(({ id, facilityId }) => {
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(id).should('exist');
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(id).should('contain', facilityId);
+      pages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable.row(id).should('exist');
+      pages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable.row(id).should('contain', facilityId);
     });
   });
 
@@ -73,18 +73,18 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
 
     cy.reload();
 
-    cy.keyboardInput(pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput(), '11111111');
-    pages.utilisationReportPage.premiumPaymentsTab.submitFacilityIdFilter();
+    cy.keyboardInput(pages.utilisationReportPage.tabs.premiumPaymentsContent.getFacilityIdFilterInput(), '11111111');
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.submitFacilityIdFilter();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}?premiumPaymentsFacilityId=11111111`));
 
     const [visibleFeeRecord, ...removedFeeRecords] = feeRecords;
 
-    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(visibleFeeRecord.id).should('exist');
-    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(visibleFeeRecord.id).should('contain', visibleFeeRecord.facilityId);
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable.row(visibleFeeRecord.id).should('exist');
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable.row(visibleFeeRecord.id).should('contain', visibleFeeRecord.facilityId);
 
     removedFeeRecords.forEach(({ id }) => {
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(id).should('not.exist');
+      pages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable.row(id).should('not.exist');
     });
   });
 
@@ -102,41 +102,45 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
 
     cy.reload();
 
-    cy.keyboardInput(pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput(), '1111');
-    pages.utilisationReportPage.premiumPaymentsTab.submitFacilityIdFilter();
+    cy.keyboardInput(pages.utilisationReportPage.tabs.premiumPaymentsContent.getFacilityIdFilterInput(), '1111');
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.submitFacilityIdFilter();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}?premiumPaymentsFacilityId=1111`));
 
     const [firstVisibleFeeRecord, secondVisibleFeeRecord, ...removedFeeRecords] = feeRecords;
 
-    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(firstVisibleFeeRecord.id).should('exist');
-    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(firstVisibleFeeRecord.id).should('contain', firstVisibleFeeRecord.facilityId);
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable.row(firstVisibleFeeRecord.id).should('exist');
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable
+      .row(firstVisibleFeeRecord.id)
+      .should('contain', firstVisibleFeeRecord.facilityId);
 
-    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(secondVisibleFeeRecord.id).should('exist');
-    pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(secondVisibleFeeRecord.id).should('contain', secondVisibleFeeRecord.facilityId);
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable.row(secondVisibleFeeRecord.id).should('exist');
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable
+      .row(secondVisibleFeeRecord.id)
+      .should('contain', secondVisibleFeeRecord.facilityId);
 
     removedFeeRecords.forEach(({ id }) => {
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(id).should('not.exist');
+      pages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable.row(id).should('not.exist');
     });
   });
 
   it('should display an error if the supplied facility id query is an invalid value and persist the inputted value', () => {
-    cy.keyboardInput(pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput(), 'nonsense');
-    pages.utilisationReportPage.premiumPaymentsTab.submitFacilityIdFilter();
+    cy.keyboardInput(pages.utilisationReportPage.tabs.premiumPaymentsContent.getFacilityIdFilterInput(), 'nonsense');
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.submitFacilityIdFilter();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}?premiumPaymentsFacilityId=nonsense`));
 
-    pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput().should('have.value', 'nonsense');
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.getFacilityIdFilterInput().should('have.value', 'nonsense');
 
     cy.get('a').should('contain', 'Facility ID must be a number');
   });
 
   it('should display an error if the facility id is submitted with no value', () => {
-    pages.utilisationReportPage.premiumPaymentsTab.submitFacilityIdFilter();
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.submitFacilityIdFilter();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}?premiumPaymentsFacilityId=`));
 
-    pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput().should('be.empty');
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.getFacilityIdFilterInput().should('be.empty');
 
     cy.get('a').should('contain', 'Enter a facility ID');
   });
@@ -167,25 +171,25 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
     cy.reload();
 
     allFeeRecords.forEach(({ id, facilityId }) => {
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(id).should('exist');
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(id).should('contain', facilityId);
+      pages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable.row(id).should('exist');
+      pages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable.row(id).should('contain', facilityId);
     });
 
-    pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(paymentId).should('exist');
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.getPaymentLink(paymentId).should('exist');
 
-    cy.keyboardInput(pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput(), '1111');
-    pages.utilisationReportPage.premiumPaymentsTab.submitFacilityIdFilter();
+    cy.keyboardInput(pages.utilisationReportPage.tabs.premiumPaymentsContent.getFacilityIdFilterInput(), '1111');
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.submitFacilityIdFilter();
 
     toDoFeeRecords.forEach(({ id }) => {
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(id).should('not.exist');
+      pages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable.row(id).should('not.exist');
     });
 
     groupedFeeRecords.forEach(({ id, facilityId }) => {
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(id).should('exist');
-      pages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.row(id).should('contain', facilityId);
+      pages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable.row(id).should('exist');
+      pages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable.row(id).should('contain', facilityId);
     });
 
-    pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(paymentId).should('exist');
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.getPaymentLink(paymentId).should('exist');
   });
 
   it('displays a message when the supplied facility id matches no fee records', () => {
@@ -200,8 +204,8 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can filter fee records by facility id`
 
     cy.reload();
 
-    cy.keyboardInput(pages.utilisationReportPage.premiumPaymentsTab.getFacilityIdFilterInput(), '33333333');
-    pages.utilisationReportPage.premiumPaymentsTab.submitFacilityIdFilter();
+    cy.keyboardInput(pages.utilisationReportPage.tabs.premiumPaymentsContent.getFacilityIdFilterInput(), '33333333');
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.submitFacilityIdFilter();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}?premiumPaymentsFacilityId=33333333`));
 
