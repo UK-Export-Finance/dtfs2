@@ -518,7 +518,7 @@ const getFeeRecordCorrectionTransientFormData = async (correctionId, userId) => 
 const putFeeRecordCorrectionTransientFormData = async (bankId, correctionId, userId, formData) => {
   try {
     const response = await axios.put(
-      `${DTFS_CENTRAL_API_URL}/v1/${bankId}/fee-record-corrections/${correctionId}/transient-form-data`,
+      `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/fee-record-corrections/${correctionId}/transient-form-data`,
       {
         formData,
         user: { _id: userId },
