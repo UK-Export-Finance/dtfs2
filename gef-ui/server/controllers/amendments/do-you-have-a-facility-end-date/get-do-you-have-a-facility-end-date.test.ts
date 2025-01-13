@@ -1,3 +1,4 @@
+// TODO: DTFS2-7724 - remove this eslint-disable
 /* eslint-disable import/first */
 const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
