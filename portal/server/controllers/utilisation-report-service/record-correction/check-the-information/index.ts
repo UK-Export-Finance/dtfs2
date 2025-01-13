@@ -1,7 +1,7 @@
 import { Response, Request } from 'express';
 import { mapReasonsToDisplayValues } from '@ukef/dtfs2-common';
 import api from '../../../../api';
-import { asLoggedInUserSession } from '../../../../helpers/express-session';
+import { asLoggedInUserSession, LoggedInUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { UtilisationReportCorrectionInformationViewModel } from '../../../../types/view-models/record-correction/utilisation-report-correction-information';
 
@@ -49,6 +49,34 @@ export const getUtilisationReportCorrectionReview = async (req: GetUtilisationRe
     return res.render('utilisation-report-service/record-correction/check-the-information.njk', viewModel);
   } catch (error) {
     console.error('Failed to render utilisation report correction - "check the information" page: %o', error);
+    return res.render('_partials/problem-with-service.njk', { user });
+  }
+};
+
+/**
+ * POST controller for the utilisation report correction review page.
+ *
+ * Calls the DTFS Central API to save the fee record correction.
+ *
+ * Sets the recordCorrectionSent session data and redirects to
+ * the correction sent page on success.
+ * @param req - the request
+ * @param res - the response
+ */
+export const postUtilisationReportCorrectionReview = async (req: Request, res: Response) => {
+  const { user, userToken } = asLoggedInUserSession(req.session);
+
+  try {
+    const bankId = user.bank.id;
+    const userId = user._id;
+
+    const correctionSentData = await api.saveFeeRecordCorrection(userToken, bankId, userId);
+
+    (req.session as LoggedInUserSession).recordCorrectionSent = correctionSentData;
+
+    return res.redirect('/utilisation-reports/correction-sent');
+  } catch (error) {
+    console.error('Failed to save fee record correction: %o', error);
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };
