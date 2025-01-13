@@ -275,6 +275,30 @@ describe('getFacilityEndDate', () => {
     expect(console.error).toHaveBeenCalledWith('Amendment %s is not using facility end date', amendmentId);
   });
 
+  it('should redirect if ifUsingFacilityEndDate is not set', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    getAmendmentMock.mockResolvedValue(
+      new PortalFacilityAmendmentWithUkefIdMockBuilder()
+        .withDealId(dealId)
+        .withFacilityId(facilityId)
+        .withAmendmentId(amendmentId)
+        .withChangeCoverEndDate(true)
+        .build(),
+    );
+
+    // Act
+    await getFacilityEndDate(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    expect(res._getRedirectUrl()).toEqual(
+      `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE}`,
+    );
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Amendment %s is not using facility end date', amendmentId);
+  });
+
   it('should render `problem with service` if getApplication throws an error', async () => {
     // Arrange
     const mockError = aMockError();
