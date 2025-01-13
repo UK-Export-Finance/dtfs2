@@ -34,7 +34,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
     const aValidRequestQuery = () => ({ bankId, correctionId: correctionId.toString() });
 
     const aValidRequestBody = (): PutFeeRecordCorrectionTransientFormDataPayload => ({
-      user: { id: userId },
+      user: { _id: userId },
       formData,
     });
 

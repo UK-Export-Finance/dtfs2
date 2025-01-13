@@ -521,7 +521,7 @@ const putFeeRecordCorrectionTransientFormData = async (bankId, correctionId, use
       `${DTFS_CENTRAL_API_URL}/v1/${bankId}/fee-record-corrections/${correctionId}/transient-form-data`,
       {
         formData,
-        user: userId,
+        user: { _id: userId },
       },
       {
         headers: headers.central,
