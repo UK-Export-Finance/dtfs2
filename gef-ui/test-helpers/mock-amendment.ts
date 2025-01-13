@@ -50,6 +50,13 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
   public withIsUsingFacilityEndDate(isUsingFacilityEndDate: boolean) {
     this.withChangeCoverEndDate(true);
     this.amendment.isUsingFacilityEndDate = isUsingFacilityEndDate;
+
+    if (isUsingFacilityEndDate) {
+      delete this.amendment.bankReviewDate;
+    } else {
+      delete this.amendment.facilityEndDate;
+    }
+
     return this;
   }
 
