@@ -1071,6 +1071,25 @@ const getFeeRecordCorrection = async (token, bankId, id) => {
   return data;
 };
 
+/**
+ * Puts a fee record correction by id.
+ * @param {string} token - The user token
+ * @param {string} bankId - The bank id
+ * @param {string} correctionId - The correction id
+ * @param {import('@ukef/dtfs2-common').RecordCorrectionFormValues} formData - The form data
+ * @returns {Promise<void>}
+ */
+const putFeeRecordCorrection = async (token, bankId, correctionId, formData) => {
+  const { data } = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/fee-record-correction/${correctionId}/transient-form-data`, formData, {
+    headers: {
+      Authorization: token,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+    },
+  });
+
+  return data;
+};
+
 module.exports = {
   allDeals,
   allFacilities,
@@ -1127,4 +1146,5 @@ module.exports = {
   getUtilisationReportPendingCorrectionsByBankId,
   getFeeRecordCorrectionTransientFormData,
   getFeeRecordCorrection,
+  putFeeRecordCorrection,
 };
