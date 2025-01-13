@@ -156,7 +156,7 @@ describe('fee-record-correction-transient-form-data.controller', () => {
       jest.resetAllMocks();
     });
 
-    it('should call the put fee record correction transient form data api endpoint once with the correct parameters', async () => {
+    it('should call the "putFeeRecordCorrectionTransientFormData" api endpoint once with the correct parameters', async () => {
       // Arrange
       const formData = aRecordCorrectionFormValues();
       req.body = formData;

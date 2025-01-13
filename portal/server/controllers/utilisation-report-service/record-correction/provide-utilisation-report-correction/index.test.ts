@@ -257,7 +257,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       expect(res._getRedirectUrl()).toEqual(expectedRedirectUrl);
     });
 
-    it('should call the put fee record correction transient form data api endpoint once with the correct parameters', async () => {
+    it('should call the "putFeeRecordCorrection" api endpoint once with the correct parameters', async () => {
       // Arrange
       const formData = aRecordCorrectionFormValues();
       req.body = formData;

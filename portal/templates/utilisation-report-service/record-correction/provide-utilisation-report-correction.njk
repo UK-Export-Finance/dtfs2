@@ -44,10 +44,16 @@
           {{ govukInput({
             label: {
               text: "Enter the facility ID",
-              classes: "govuk-label--s"
+              classes: "govuk-label--s",
+              attributes: {
+                "data-cy": "FACILITY_ID_INCORRECT-label"
+              }
             },
             hint: {
-              text: "The facility ID can be found on the deal summary page"
+              text: "The facility ID can be found on the deal summary page",
+              attributes: {
+                "data-cy": "FACILITY_ID_INCORRECT-hint"
+              }
             },
             id: "facilityId",
             name: "facilityId",
@@ -68,7 +74,10 @@
               }
             },
             hint: {
-              text: "This is the currency that you report the fees in"
+              text: "This is the currency that you report the fees in",
+              attributes: {
+                "data-cy": "REPORTED_CURRENCY_INCORRECT-hint"
+              }
             },
             name: "reportedCurrency",
             items: paymentCurrencyOptions,
@@ -83,10 +92,16 @@
           {{ govukInput({
             label: {
               text: "Enter the reported fee",
-              classes: "govuk-label--s"
+              classes: "govuk-label--s",
+              attributes: {
+                "data-cy": "REPORTED_FEE_INCORRECT-label"
+              }
             },
             hint: {
-              text: "This the fee amount that has been sent to UKEF for the period"
+              text: "This the fee amount that has been sent to UKEF for the period",
+              attributes: {
+                "data-cy": "REPORTED_FEE_INCORRECT-hint"
+              }
             },
             id: "reportedFee",
             name: "reportedFee",
@@ -102,10 +117,16 @@
           {{ govukInput({
             label: {
               text: "Enter the utilisation",
-              classes: "govuk-label--s"
+              classes: "govuk-label--s",
+              attributes: {
+                "data-cy": "UTILISATION_INCORRECT-label"
+              }
             },
             hint: {
-              text: "Enter the utilisation in base currency for the period end date"
+              text: "Enter the utilisation in base currency for the period end date",
+              attributes: {
+                "data-cy": "UTILISATION_INCORRECT-hint"
+              }
             },
             id: "utilisation",
             name: "utilisation",
