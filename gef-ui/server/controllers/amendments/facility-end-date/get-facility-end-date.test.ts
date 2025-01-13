@@ -200,7 +200,7 @@ describe('getFacilityEndDate', () => {
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Amendment %s not found on facility %s', amendmentId, facilityId);
+    expect(console.error).toHaveBeenCalledWith('Amendment %s was not found on facility %s', amendmentId, facilityId);
   });
 
   it('should redirect if the facility cannot be amended', async () => {
