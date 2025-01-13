@@ -98,7 +98,7 @@ export const mapToProvideCorrectionFormValuesViewModel = (
   savedFormValues: GetFeeRecordCorrectionTransientFormDataResponseBody,
 ): ProvideCorrectionFormValuesViewModel => ({
   facilityId: savedFormValues.facilityId ?? null,
-  utilisation: savedFormValues.utilisation ? getFormattedMonetaryValue(savedFormValues.utilisation) : null,
-  reportedFee: savedFormValues.reportedFee ? getFormattedMonetaryValue(savedFormValues.reportedFee) : null,
+  utilisation: savedFormValues.utilisation !== undefined ? getFormattedMonetaryValue(savedFormValues.utilisation) : null,
+  reportedFee: savedFormValues.reportedFee !== undefined ? getFormattedMonetaryValue(savedFormValues.reportedFee) : null,
   additionalComments: savedFormValues.additionalComments ?? null,
 });
