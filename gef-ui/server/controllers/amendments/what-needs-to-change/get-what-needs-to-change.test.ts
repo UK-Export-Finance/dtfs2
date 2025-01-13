@@ -1,3 +1,4 @@
+// TODO: DTFS2-7724 - remove this eslint-disable
 /* eslint-disable import/first */
 const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
@@ -33,8 +34,16 @@ const dealId = 'dealId';
 const facilityId = 'facilityId';
 const amendmentId = 'amendmentId';
 
+const aMockError = () => new Error();
+const mockError = aMockError();
+
 const companyName = 'company name ltd';
 const userToken = 'userToken';
+
+const generalConsoleErrorText = 'Error getting amendments what needs to change page %o';
+const facilityOrDealNotFoundConsoleErrorText = 'Deal %s or Facility %s was not found';
+const amendmentNotFoundConsoleErrorText = 'Amendment %s not found on facility %s';
+const userCannotAmendFacilityErrorText = 'User cannot amend facility %s on deal %s';
 
 const getHttpMocks = () =>
   createMocks<GetWhatNeedsToChangeRequest>({
@@ -173,6 +182,7 @@ describe('getWhatNeedsToChange', () => {
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
     expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith(facilityOrDealNotFoundConsoleErrorText, dealId, facilityId);
   });
 
   it('should redirect if the facility is not found', async () => {
@@ -187,6 +197,7 @@ describe('getWhatNeedsToChange', () => {
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
     expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith(facilityOrDealNotFoundConsoleErrorText, dealId, facilityId);
   });
 
   it('should redirect if the amendment is not found', async () => {
@@ -202,6 +213,7 @@ describe('getWhatNeedsToChange', () => {
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
     expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith(amendmentNotFoundConsoleErrorText, amendmentId, facilityId);
   });
 
   it('should redirect if the facility cannot be amended', async () => {
@@ -216,11 +228,12 @@ describe('getWhatNeedsToChange', () => {
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/gef/application-details/${dealId}`);
     expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith(userCannotAmendFacilityErrorText, facilityId, dealId);
   });
 
   it('should render `problem with service` if getApplication throws an error', async () => {
     // Arrange
-    getApplicationMock.mockRejectedValueOnce(new Error('An error occurred'));
+    getApplicationMock.mockRejectedValueOnce(mockError);
     const { req, res } = getHttpMocks();
 
     // Act
@@ -229,11 +242,12 @@ describe('getWhatNeedsToChange', () => {
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith(generalConsoleErrorText, mockError);
   });
 
   it('should render `problem with service` if getFacility throws an error', async () => {
     // Arrange
-    getFacilityMock.mockRejectedValueOnce(new Error('An error occurred'));
+    getFacilityMock.mockRejectedValueOnce(mockError);
     const { req, res } = getHttpMocks();
 
     // Act
@@ -242,11 +256,12 @@ describe('getWhatNeedsToChange', () => {
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith(generalConsoleErrorText, mockError);
   });
 
   it('should render `problem with service` if getAmendment throws an error', async () => {
     // Arrange
-    getAmendmentMock.mockRejectedValue(new Error('test error'));
+    getAmendmentMock.mockRejectedValue(mockError);
     const { req, res } = getHttpMocks();
 
     // Act
@@ -255,6 +270,6 @@ describe('getWhatNeedsToChange', () => {
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error getting amendments what needs to change page %o', new Error('test error'));
+    expect(console.error).toHaveBeenCalledWith(generalConsoleErrorText, mockError);
   });
 });

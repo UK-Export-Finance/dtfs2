@@ -143,14 +143,39 @@ describe(`POST ${url}`, () => {
       expect(response.text).toContain('Select if you need to change the facility cover end date, value or both');
     });
 
-    it('should redirect to the next page if the selected options are valid', async () => {
+    it('should redirect to facility value page if just facility value is selected', async () => {
       // Act
-      const response = await postWithSessionCookie(validBody, sessionCookie);
+      const changeFacilityValueSelection = { amendmentOptions: ['changeFacilityValue'] };
+      const response = await postWithSessionCookie(changeFacilityValueSelection, sessionCookie);
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual(
         `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.FACILITY_VALUE}`,
+      );
+    });
+
+    it('should redirect to the cover end date page if just cover end date is selected', async () => {
+      // Act
+      const changeFacilityValueSelection = { amendmentOptions: ['changeCoverEndDate'] };
+      const response = await postWithSessionCookie(changeFacilityValueSelection, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Found);
+      expect(response.headers.location).toEqual(
+        `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.COVER_END_DATE}`,
+      );
+    });
+
+    it('should redirect to the cover end date page if both options are selected', async () => {
+      // Act
+      const changeFacilityValueSelection = { amendmentOptions: ['changeFacilityValue', 'changeCoverEndDate'] };
+      const response = await postWithSessionCookie(changeFacilityValueSelection, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Found);
+      expect(response.headers.location).toEqual(
+        `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.COVER_END_DATE}`,
       );
     });
 
