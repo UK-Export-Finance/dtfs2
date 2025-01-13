@@ -133,9 +133,7 @@ describe('GET /v1/banks/:bankId/fee-record-correction-review/:correctionId/user/
 
     const response = await as(aBarclaysPaymentReportOfficer).get(getUrl({ bankId: barclaysBank.id, correctionId, userId }));
 
-    expect(response.status).toEqual(HttpStatusCode.Ok);
-
-    expect(response.body).toEqual({
+    const expectedResponseBody = {
       correctionId,
       feeRecord: {
         exporter,
@@ -146,6 +144,10 @@ describe('GET /v1/banks/:bankId/fee-record-correction-review/:correctionId/user/
       formattedOldValues: `${facilityId}, ${reportedFees.currency}, -`,
       formattedNewValues: `${transientFormData.facilityId}, ${transientFormData.reportedCurrency}, -`,
       bankCommentary: transientFormData.additionalComments,
-    });
+    };
+
+    expect(response.status).toEqual(HttpStatusCode.Ok);
+
+    expect(response.body).toEqual(expectedResponseBody);
   });
 });

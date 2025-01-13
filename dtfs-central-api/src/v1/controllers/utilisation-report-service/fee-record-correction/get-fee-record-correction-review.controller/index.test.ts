@@ -74,7 +74,7 @@ describe('get-fee-record-correction-review.controller', () => {
       expect(responseBody).toEqual(expectedMappedFeeRecordCorrectionInformation);
     });
 
-    it('should call fee record correction transient form data find once', async () => {
+    it('should call fee record correction transient form data find once with the correct parameters', async () => {
       // Arrange
       const feeRecordCorrectionEntity = new FeeRecordCorrectionEntityMockBuilder().build();
 
@@ -85,34 +85,15 @@ describe('get-fee-record-correction-review.controller', () => {
 
       // Assert
       expect(mockCorrectionTransientFormDataFind).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call fee record correction transient form data find with the correct parameters', async () => {
-      // Arrange
-      const feeRecordCorrectionEntity = new FeeRecordCorrectionEntityMockBuilder().build();
-
-      mockCorrectionFind.mockResolvedValue(feeRecordCorrectionEntity);
-
-      // Act
-      await getFeeRecordCorrectionReview(req, res);
-
-      // Assert
       expect(mockCorrectionTransientFormDataFind).toHaveBeenCalledWith(userId, correctionId);
     });
 
-    it('should call fee record correction find once', async () => {
+    it('should call fee record correction find once with the correct parameters', async () => {
       // Act
       await getFeeRecordCorrectionReview(req, res);
 
       // Assert
       expect(mockCorrectionFind).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call fee record correction find with the correct parameters', async () => {
-      // Act
-      await getFeeRecordCorrectionReview(req, res);
-
-      // Assert
       expect(mockCorrectionFind).toHaveBeenCalledWith(correctionId);
     });
 

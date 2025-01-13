@@ -133,9 +133,6 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
       // Assert
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
       expect(res._getRenderData()).toEqual({ user: mockUser });
-
-      expect(api.getFeeRecordCorrectionReview).toHaveBeenCalledTimes(1);
-      expect(api.getFeeRecordCorrectionReview).toHaveBeenCalledWith(bankId, correctionId, userId, userToken);
     });
   });
 });

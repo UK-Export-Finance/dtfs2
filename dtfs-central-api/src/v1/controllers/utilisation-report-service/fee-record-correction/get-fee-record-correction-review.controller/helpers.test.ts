@@ -49,6 +49,15 @@ describe('get-fee-record-correction-review.controller helpers', () => {
       expect(() => validateRequiredFormDataField(value, reason)).toThrow(expectedError);
     });
 
+    it('should not throw error when value is false', () => {
+      // Arrange
+      const value = false;
+      const reason = RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT;
+
+      // Act & Assert
+      expect(() => validateRequiredFormDataField(value, reason)).not.toThrow();
+    });
+
     it('should throw error when value is null', () => {
       // Arrange
       const value = null;
