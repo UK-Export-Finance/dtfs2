@@ -29,7 +29,7 @@ describe('validateWhatNeedsToChange', () => {
     const result = validateWhatNeedsToChange({ changeCoverEndDate, changeFacilityValue });
 
     // Assert
-    const expectedErrRef = 'what-needs-to-change';
+    const expectedErrRef = 'amendmentOptions';
     const expectedErrMsg = 'Select if you need to change the facility cover end date, value or both';
 
     const expectedError = {
