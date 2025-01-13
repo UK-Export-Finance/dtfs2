@@ -114,6 +114,7 @@ describe('getFacilityEndDate', () => {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment),
+      facilityEndDate: undefined,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
