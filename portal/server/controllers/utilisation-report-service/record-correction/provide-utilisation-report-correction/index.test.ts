@@ -15,7 +15,7 @@ import api from '../../../../api';
 import {
   getProvideUtilisationReportCorrection,
   GetProvideUtilisationReportCorrection,
-  PostProvideUtilisationReportCorrection,
+  PostProvideUtilisationReportCorrectionRequest,
   postProvideUtilisationReportCorrection,
 } from '.';
 import { getAdditionalCommentsFieldLabels, mapToProvideCorrectionFormValuesViewModel, mapToCorrectionRequestDetailsViewModel } from './helpers';
@@ -227,13 +227,13 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
   describe('postProvideUtilisationReportCorrection', () => {
     const getHttpMocks = () =>
-      httpMocks.createMocks<PostProvideUtilisationReportCorrection>({
+      httpMocks.createMocks<PostProvideUtilisationReportCorrectionRequest>({
         params: { correctionId },
         session: requestSession,
         body: aRecordCorrectionFormValues(),
       });
 
-    let req: PostProvideUtilisationReportCorrection;
+    let req: PostProvideUtilisationReportCorrectionRequest;
     let res: MockResponse<Response>;
 
     beforeEach(() => {

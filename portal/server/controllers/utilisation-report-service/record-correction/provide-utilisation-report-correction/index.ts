@@ -49,7 +49,7 @@ export const getProvideUtilisationReportCorrection = async (req: GetProvideUtili
   }
 };
 
-export type PostProvideUtilisationReportCorrection = CustomExpressRequest<{
+export type PostProvideUtilisationReportCorrectionRequest = CustomExpressRequest<{
   params: {
     correctionId: string;
   };
@@ -61,7 +61,7 @@ export type PostProvideUtilisationReportCorrection = CustomExpressRequest<{
  * @param req - The request object
  * @param res - The response object
  */
-export const postProvideUtilisationReportCorrection = async (req: PostProvideUtilisationReportCorrection, res: Response) => {
+export const postProvideUtilisationReportCorrection = async (req: PostProvideUtilisationReportCorrectionRequest, res: Response) => {
   const { user, userToken } = asLoggedInUserSession(req.session);
 
   try {
