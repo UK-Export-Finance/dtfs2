@@ -31,4 +31,19 @@ describe('validateIsUsingFacilityEndDate', () => {
       ],
     });
   });
+
+  it('returns validation errors if the input is undefined', () => {
+    const input = undefined;
+
+    const result = validateIsUsingFacilityEndDate(input);
+
+    expect(result).toEqual({
+      errors: [
+        {
+          errMsg: 'Select if there is an end date for this facility',
+          errRef: 'isUsingFacilityEndDate',
+        },
+      ],
+    });
+  });
 });

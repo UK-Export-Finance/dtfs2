@@ -12,6 +12,7 @@ export const validateIsUsingFacilityEndDate = (isUsingFacilityEndDate: string | 
       value: false,
     };
   }
+
   return {
     errors: [
       {
