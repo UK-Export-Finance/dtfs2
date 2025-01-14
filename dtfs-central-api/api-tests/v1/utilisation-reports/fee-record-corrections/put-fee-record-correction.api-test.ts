@@ -17,12 +17,9 @@ import wipeDB from '../../../wipeDB';
 import { aBank } from '../../../../test-helpers';
 import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
 import { mongoDbClient } from '../../../../src/drivers/db-client';
+import { CustomErrorResponse } from '../../../helpers/custom-error-response';
 
 console.error = jest.fn();
-
-interface CustomErrorResponse extends Response {
-  body: { errors: { msg: string }[] };
-}
 
 interface CustomSuccessResponse extends Response {
   body: {
@@ -45,7 +42,6 @@ describe(`PUT ${BASE_URL}`, () => {
   const mockBank = {
     ...aBank(),
     id: bankId,
-    _id: new ObjectId(),
     paymentOfficerTeam: {
       emails: paymentOfficerTeamEmails,
       teamName: 'Payment Officer Team',
