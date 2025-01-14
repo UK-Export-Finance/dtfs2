@@ -28,13 +28,15 @@ context('Pending corrections - Fee record correction feature flag enabled', () =
     });
 
     context('When there are pending corrections', () => {
+      const reportedFeeIntegerValue = 66;
+
       const pendingCorrectionDetails = {
         facilityId: '1234',
         exporter: 'test exporter',
         additionalInfo: 'Lots of additional info %$£%&^@&^',
-        reportedFee: 66,
+        reportedFee: reportedFeeIntegerValue,
         reportedCurrency: CURRENCY.JPY,
-        formattedReportedFee: `${CURRENCY.JPY} 66.00`,
+        formattedReportedFee: `${CURRENCY.JPY} ${reportedFeeIntegerValue}.00`,
         reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER],
         formattedReasons: 'Facility ID is incorrect, Other',
       };

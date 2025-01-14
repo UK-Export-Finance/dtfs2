@@ -40,12 +40,17 @@ describe('map-fee-records-to-pending-corrections', () => {
 
     it('should return the pending corrections of the fee record mapped to the response field', () => {
       // Arrange
+      const feesPaidToUkefForThePeriod = 1000;
+      const feesPaidToUkefForThePeriodCurrency = CURRENCY.JPY;
+      const exporter = 'Test Exporter';
+      const facilityId = 'FAC123';
+
       const feeRecord = new FeeRecordEntityMockBuilder()
         .withId(1)
-        .withFacilityId('FAC123')
-        .withExporter('Test Exporter')
-        .withFeesPaidToUkefForThePeriod(1000)
-        .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.JPY)
+        .withFacilityId(facilityId)
+        .withExporter(exporter)
+        .withFeesPaidToUkefForThePeriod(feesPaidToUkefForThePeriod)
+        .withFeesPaidToUkefForThePeriodCurrency(feesPaidToUkefForThePeriodCurrency)
         .withCorrections([
           new FeeRecordCorrectionEntityMockBuilder()
             .withId(1)
@@ -75,24 +80,24 @@ describe('map-fee-records-to-pending-corrections', () => {
       expect(result).toEqual<PendingCorrection[]>([
         {
           correctionId: 1,
-          facilityId: 'FAC123',
-          exporter: 'Test Exporter',
+          facilityId,
+          exporter,
           additionalInfo: 'Pending correction 1',
           reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT],
           reportedFees: {
-            currency: CURRENCY.JPY,
-            amount: 1000,
+            currency: feesPaidToUkefForThePeriodCurrency,
+            amount: feesPaidToUkefForThePeriod,
           },
         },
         {
           correctionId: 3,
-          facilityId: 'FAC123',
-          exporter: 'Test Exporter',
+          facilityId,
+          exporter,
           additionalInfo: 'Pending correction 2',
           reasons: [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT],
           reportedFees: {
-            currency: CURRENCY.JPY,
-            amount: 1000,
+            currency: feesPaidToUkefForThePeriodCurrency,
+            amount: feesPaidToUkefForThePeriod,
           },
         },
       ]);
