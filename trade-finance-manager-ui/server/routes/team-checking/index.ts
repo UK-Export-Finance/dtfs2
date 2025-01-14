@@ -1,5 +1,7 @@
 /**
- * These routes are only used for role checking
+ * Populates the team checking router with routes for role checking.
+ *
+ * If the application is running in production mode, the routes are not populated, as these routes are only used to aid in SSO role assignment testing.
  */
 
 import express, { Request, Response } from 'express';
