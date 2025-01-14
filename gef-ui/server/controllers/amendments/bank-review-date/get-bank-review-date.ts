@@ -1,5 +1,4 @@
 import { CustomExpressRequest, DayMonthYearInput } from '@ukef/dtfs2-common';
-import { format } from 'date-fns';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { BankReviewDateViewModel } from '../../../types/view-models/amendments/bank-review-date-view-model';
@@ -7,6 +6,7 @@ import { asLoggedInUserSession } from '../../../utils/express-session';
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper';
 import { getPreviousPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
+import { convertDateToDayMonthYearInput } from '../helpers/dates.helper.ts';
 
 export type GetBankReviewDateRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -56,11 +56,7 @@ export const getBankReviewDate = async (req: GetBankReviewDateRequest, res: Resp
       );
     }
 
-    const bankReviewDate: DayMonthYearInput | undefined = amendment.bankReviewDate && {
-      day: format(amendment.bankReviewDate, 'd'),
-      month: format(amendment.bankReviewDate, 'M'),
-      year: format(amendment.bankReviewDate, 'yyyy'),
-    };
+    const bankReviewDate: DayMonthYearInput | undefined = amendment.bankReviewDate && convertDateToDayMonthYearInput(amendment.bankReviewDate);
 
     const viewModel: BankReviewDateViewModel = {
       exporterName: deal.exporter.companyName,
