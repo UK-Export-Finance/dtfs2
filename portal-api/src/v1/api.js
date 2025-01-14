@@ -543,6 +543,19 @@ const putFeeRecordCorrectionTransientFormData = async (bankId, correctionId, use
 };
 
 /**
+ * Deletes a fee record correction transient form data for the user by correction id.
+ * @param {number} correctionId - The ID of the correction
+ * @param {string} userId - The ID of the user
+ */
+const deleteFeeRecordCorrectionTransientFormData = async (correctionId, userId) => {
+  await axios({
+    method: 'delete',
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/fee-record-corrections/${correctionId}/transient-form-data/${userId}`,
+    headers: headers.central,
+  });
+};
+
+/**
  * Gets the portal facility amendment
  * @param {string} facilityId - id of the facility to amend
  * @param {string} amendmentId - id of the facility amendment
@@ -686,6 +699,7 @@ module.exports = {
   getNextReportPeriodByBankId,
   getUtilisationReportPendingCorrectionsByBankId,
   getFeeRecordCorrectionById,
+  deleteFeeRecordCorrectionTransientFormData,
   getFeeRecordCorrectionTransientFormData,
   getPortalFacilityAmendment,
   putPortalFacilityAmendment,

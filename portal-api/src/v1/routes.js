@@ -357,7 +357,8 @@ authRouter
     validateUserAndBankIdMatch,
   )
   .get(utilisationReportControllers.getFeeRecordCorrectionTransientFormData)
-  .put(utilisationReportControllers.putFeeRecordCorrectionTransientFormData);
+  .put(utilisationReportControllers.putFeeRecordCorrectionTransientFormData)
+  .delete(utilisationReportControllers.deleteFeeRecordCorrectionTransientFormData);
 
 authRouter
   .route('/banks/:bankId/fee-record-correction-review/:correctionId/user/:userId')
