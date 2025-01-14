@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import z from 'zod';
 import { generatePortalUserAuditDatabaseRecord } from '../change-stream';
-import { CREATE } from './portal-user';
+import { CREATE } from './portal-user.schema';
 import { withSchemaValidationTests } from '../test-helpers';
 
 describe('PORTAL_USER', () => {

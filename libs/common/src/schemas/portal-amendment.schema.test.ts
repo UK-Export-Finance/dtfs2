@@ -1,4 +1,4 @@
-import { PORTAL_FACILITY_AMENDMENT_USER_VALUES } from './portal-amendment';
+import { PORTAL_FACILITY_AMENDMENT_USER_VALUES } from './portal-amendment.schema';
 import { withSchemaValidationTests } from '../test-helpers';
 import { aPortalFacilityAmendmentUserValues } from '../test-helpers/mock-data-backend';
 import { PortalFacilityAmendmentUserValues } from '../types';
