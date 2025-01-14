@@ -1,23 +1,23 @@
 import { CustomExpressRequest, DayMonthYearInput } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
-import { FacilityEndDateViewModel } from '../../../types/view-models/amendments/facility-end-date-view-model';
+import { BankReviewDateViewModel } from '../../../types/view-models/amendments/bank-review-date-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper';
 import { getPreviousPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { convertDateToDayMonthYearInput } from '../helpers/dates.helper.ts';
 
-export type GetFacilityEndDateRequest = CustomExpressRequest<{
+export type GetBankReviewDateRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
 }>;
 
 /**
- * Controller to get the `Facility end date` page
+ * Controller to get the `Bank review date` page
  * @param req - the request object
  * @param res - the response object
  */
-export const getFacilityEndDate = async (req: GetFacilityEndDateRequest, res: Response) => {
+export const getBankReviewDate = async (req: GetBankReviewDateRequest, res: Response) => {
   try {
     const { dealId, facilityId, amendmentId } = req.params;
     const { userToken, user } = asLoggedInUserSession(req.session);
@@ -49,25 +49,25 @@ export const getFacilityEndDate = async (req: GetFacilityEndDateRequest, res: Re
       );
     }
 
-    if (!amendment.isUsingFacilityEndDate) {
-      console.error('Amendment %s is not using facility end date', amendmentId);
+    if (amendment.isUsingFacilityEndDate !== false) {
+      console.error('Amendment %s is not using bank review date', amendmentId);
       return res.redirect(
         `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE}`,
       );
     }
 
-    const facilityEndDate: DayMonthYearInput | undefined = amendment.facilityEndDate && convertDateToDayMonthYearInput(amendment.facilityEndDate);
+    const bankReviewDate: DayMonthYearInput | undefined = amendment.bankReviewDate && convertDateToDayMonthYearInput(amendment.bankReviewDate);
 
-    const viewModel: FacilityEndDateViewModel = {
+    const viewModel: BankReviewDateViewModel = {
       exporterName: deal.exporter.companyName,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
-      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment),
-      facilityEndDate,
+      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE, amendment),
+      bankReviewDate,
     };
 
-    return res.render('partials/amendments/facility-end-date.njk', viewModel);
+    return res.render('partials/amendments/bank-review-date.njk', viewModel);
   } catch (error) {
-    console.error('Error getting amendments facility end date page %o', error);
+    console.error('Error getting amendments bank review date page %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
