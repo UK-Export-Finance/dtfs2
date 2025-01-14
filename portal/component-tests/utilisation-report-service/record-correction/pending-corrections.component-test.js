@@ -175,7 +175,7 @@ describe(page, () => {
       wrapper.expectElement('th:contains("Facility ID")').toExist();
       wrapper.expectElement('th:contains("Exporter")').toExist();
       wrapper.expectElement('th:contains("Reported fees paid")').toExist();
-      wrapper.expectElement('th:contains("Error type")').toExist();
+      wrapper.expectElement('th:contains("Error type(s)")').toExist();
       wrapper.expectElement('th:contains("Error summary")').toExist();
     });
 
