@@ -21,7 +21,7 @@ describe('validatePutFeeRecordCorrectionTransientFormDataPayload', () => {
 
   const aValidPayload = (): PutFeeRecordCorrectionTransientFormDataPayload => ({
     formData: {},
-    user: { id: userId },
+    user: { _id: userId },
   });
 
   it.each(requiredPayloadKeys)(`should respond with a '${HttpStatusCode.BadRequest}' if the '%s' field is missing`, (payloadKey) => {
@@ -44,14 +44,14 @@ describe('validatePutFeeRecordCorrectionTransientFormDataPayload', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it(`should respond with a '${HttpStatusCode.BadRequest}' if user.id is not a valid mongo id`, () => {
+  it(`should respond with a '${HttpStatusCode.BadRequest}' if user._id is not a valid mongo id`, () => {
     // Arrange
     const { req, res } = getHttpMocks();
     const next = jest.fn();
 
     const invalidPayload = {
       ...aValidPayload(),
-      user: { id: 'invalidObjectId' },
+      user: { _id: 'invalidObjectId' },
     };
     req.body = invalidPayload;
 

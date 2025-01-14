@@ -40,7 +40,7 @@ describe(`PUT ${BASE_URL}`, () => {
       reportedFee: '2,000',
       additionalComments: 'these are some additional comments',
     },
-    user: { id: new ObjectId().toString() },
+    user: { _id: new ObjectId().toString() },
   });
 
   beforeAll(async () => {
