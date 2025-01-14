@@ -33,7 +33,7 @@ const amendmentId = '111';
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 
-const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE}`;
+const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE}`;
 
 describe(`GET ${url}`, () => {
   let sessionCookie: string;
@@ -54,7 +54,7 @@ describe(`GET ${url}`, () => {
         .withDealId(dealId)
         .withFacilityId(facilityId)
         .withAmendmentId(amendmentId)
-        .withChangeCoverEndDate(true)
+        .withIsUsingFacilityEndDate(true)
         .build(),
     );
   });
@@ -106,13 +106,13 @@ describe(`GET ${url}`, () => {
       successCode: HttpStatusCode.Ok,
     });
 
-    it('should render `Do you have a facility end date` page', async () => {
+    it('should render `Facility end date` page', async () => {
       // Act
       const response = await getWithSessionCookie(sessionCookie);
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Ok);
-      expect(response.text).toContain('Do you have a facility end date?');
+      expect(response.text).toContain('Facility end date');
     });
 
     it('should redirect to /not-found when facility not found', async () => {
@@ -181,6 +181,27 @@ describe(`GET ${url}`, () => {
       expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual(
         `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
+      );
+    });
+
+    it('should redirect to "do you have a facility end date" page if amendment is not using facility end date', async () => {
+      // Arrange
+      mockGetAmendment.mockResolvedValue(
+        new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withDealId(dealId)
+          .withFacilityId(facilityId)
+          .withAmendmentId(amendmentId)
+          .withIsUsingFacilityEndDate(false)
+          .build(),
+      );
+
+      // Act
+      const response = await getWithSessionCookie(sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Found);
+      expect(response.headers.location).toEqual(
+        `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE}`,
       );
     });
 

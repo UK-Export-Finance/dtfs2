@@ -1,22 +1,23 @@
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, DayMonthYearInput } from '@ukef/dtfs2-common';
+import { format } from 'date-fns';
 import { Response } from 'express';
 import * as api from '../../../services/api';
-import { CoverEndDateViewModel } from '../../../types/view-models/amendments/cover-end-date-view-model';
+import { FacilityEndDateViewModel } from '../../../types/view-models/amendments/facility-end-date-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper';
 import { getPreviousPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 
-export type GetCoverEndDateRequest = CustomExpressRequest<{
+export type GetFacilityEndDateRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
 }>;
 
 /**
- * Controller to get the Cover End Date page
+ * Controller to get the `Facility end date` page
  * @param req - the request object
  * @param res - the response object
  */
-export const getCoverEndDate = async (req: GetCoverEndDateRequest, res: Response) => {
+export const getFacilityEndDate = async (req: GetFacilityEndDateRequest, res: Response) => {
   try {
     const { dealId, facilityId, amendmentId } = req.params;
     const { userToken, user } = asLoggedInUserSession(req.session);
@@ -42,21 +43,35 @@ export const getCoverEndDate = async (req: GetCoverEndDateRequest, res: Response
     }
 
     if (!amendment.changeCoverEndDate) {
-      console.error('Amendment %s not changing cover end date', amendmentId);
+      console.error('Amendment %s is not changing the cover end date', amendmentId);
       return res.redirect(
         `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
       );
     }
 
-    const viewModel: CoverEndDateViewModel = {
-      exporterName: deal.exporter.companyName,
-      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
-      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.COVER_END_DATE, amendment),
+    if (!amendment.isUsingFacilityEndDate) {
+      console.error('Amendment %s is not using facility end date', amendmentId);
+      return res.redirect(
+        `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE}`,
+      );
+    }
+
+    const facilityEndDate: DayMonthYearInput | undefined = amendment.facilityEndDate && {
+      day: format(amendment.facilityEndDate, 'd'),
+      month: format(amendment.facilityEndDate, 'M'),
+      year: format(amendment.facilityEndDate, 'yyyy'),
     };
 
-    return res.render('partials/amendments/cover-end-date.njk', viewModel);
+    const viewModel: FacilityEndDateViewModel = {
+      exporterName: deal.exporter.companyName,
+      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment),
+      facilityEndDate,
+    };
+
+    return res.render('partials/amendments/facility-end-date.njk', viewModel);
   } catch (error) {
-    console.error('Error getting amendments cover end date page %o', error);
+    console.error('Error getting amendments facility end date page %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
