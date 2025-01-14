@@ -35,3 +35,4 @@ export * from './record-correction-request-transient-form-data';
 export * from './fee-record-correction';
 export * from './validation-error';
 export * from './record-correction-form-values';
+export * from './record-correction-form-value-validation-errors';
