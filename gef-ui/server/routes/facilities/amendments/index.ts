@@ -10,6 +10,7 @@ import { getFacilityValue } from '../../../controllers/amendments/facility-value
 import { postFacilityValue } from '../../../controllers/amendments/facility-value/post-facility-value';
 import { getCoverEndDate } from '../../../controllers/amendments/cover-end-date/get-cover-end-date';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
+import { getCancelPortalFacilityAmendment } from '../../../controllers/amendments/cancel-amendment/cancel-portal-facility-amendment';
 import { getDoYouHaveAFacilityEndDate } from '../../../controllers/amendments/do-you-have-a-facility-end-date/get-do-you-have-a-facility-end-date';
 import { postDoYouHaveAFacilityEndDate } from '../../../controllers/amendments/do-you-have-a-facility-end-date/post-do-you-have-a-facility-end-date';
 
@@ -38,6 +39,11 @@ router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${COVER_END_DATE}/`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getCoverEndDate);
+
+router
+  .route('/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/cancel')
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(getCancelPortalFacilityAmendment);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${DO_YOU_HAVE_A_FACILITY_END_DATE}`)
