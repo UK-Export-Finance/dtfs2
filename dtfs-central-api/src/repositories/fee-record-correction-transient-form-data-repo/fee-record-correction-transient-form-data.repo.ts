@@ -19,4 +19,16 @@ export const FeeRecordCorrectionTransientFormDataRepo = SqlDbDataSource.getRepos
       },
     });
   },
+
+  /**
+   * Deletes the transient form data for the given user id and correction id.
+   * @param userId - The user id
+   * @param correctionId - The correction id
+   */
+  async deleteByUserIdAndCorrectionId(userId: string, correctionId: number): Promise<void> {
+    await this.delete({
+      userId,
+      correctionId,
+    });
+  },
 });
