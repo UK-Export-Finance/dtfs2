@@ -11,7 +11,11 @@ import { UNIX_TIMESTAMP_SECONDS_SCHEMA } from './unix-timestamp.schema';
 export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
   .object({
     changeCoverEndDate: z.boolean().optional(),
-    coverEndDate: UNIX_TIMESTAMP_SECONDS_SCHEMA.optional(),
+    coverEndDate: z
+      .string()
+      .datetime({ offset: true })
+      .transform((isoTimestamp: IsoDateTimeStamp) => parseISO(isoTimestamp))
+      .optional(),
     currentCoverEndDate: UNIX_TIMESTAMP_SECONDS_SCHEMA.optional(),
     isUsingFacilityEndDate: z.boolean().optional(),
     facilityEndDate: z

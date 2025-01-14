@@ -1,4 +1,5 @@
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, DayMonthYearInput } from '@ukef/dtfs2-common';
+import { format } from 'date-fns';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { CoverEndDateViewModel } from '../../../types/view-models/amendments/cover-end-date-view-model';
@@ -48,10 +49,17 @@ export const getCoverEndDate = async (req: GetCoverEndDateRequest, res: Response
       );
     }
 
+    const coverEndDate: DayMonthYearInput | undefined = amendment.coverEndDate && {
+      day: format(amendment.coverEndDate, 'd'),
+      month: format(amendment.coverEndDate, 'M'),
+      year: format(amendment.coverEndDate, 'yyyy'),
+    };
+
     const viewModel: CoverEndDateViewModel = {
       exporterName: deal.exporter.companyName,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.COVER_END_DATE, amendment),
+      coverEndDate,
     };
 
     return res.render('partials/amendments/cover-end-date.njk', viewModel);

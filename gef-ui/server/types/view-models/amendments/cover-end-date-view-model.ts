@@ -1,7 +1,8 @@
+import { DayMonthYearInput } from '@ukef/dtfs2-common';
 import { ViewModelErrors } from '../view-model-errors';
 
 export type CoverEndDateViewModel = {
-  coverEndDate?: string | Date;
+  coverEndDate?: DayMonthYearInput;
   exporterName: string;
   previousPage: string;
   cancelUrl: string;
