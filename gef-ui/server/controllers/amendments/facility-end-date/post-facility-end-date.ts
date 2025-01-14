@@ -44,21 +44,21 @@ export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: 
       return res.redirect('/not-found');
     }
 
-    const validationErrorOrDate = validateAndParseFacilityEndDate(facilityEndDateDayMonthYear, getCoverStartDateOrStartOfToday(facility));
+    const validationErrorsOrValue = validateAndParseFacilityEndDate(facilityEndDateDayMonthYear, getCoverStartDateOrStartOfToday(facility));
 
-    if ('errors' in validationErrorOrDate) {
+    if ('errors' in validationErrorsOrValue) {
       const viewModel: FacilityEndDateViewModel = {
         exporterName: deal.exporter.companyName,
         cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
         previousPage,
         facilityEndDate: facilityEndDateDayMonthYear,
-        errors: validationErrorHandler(validationErrorOrDate.errors),
+        errors: validationErrorHandler(validationErrorsOrValue.errors),
       };
 
       return res.render('partials/amendments/facility-end-date.njk', viewModel);
     }
 
-    const update = { facilityEndDate: validationErrorOrDate.date };
+    const update = { facilityEndDate: validationErrorsOrValue.value };
 
     const amendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
