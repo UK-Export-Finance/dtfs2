@@ -28,7 +28,7 @@ describe('UserPartialLoginDataNotDefinedError', () => {
     expect(exception.code).toEqual('INVALID_USER_SESSION');
   });
 
-  it('is an instance of UserPartialLoginDataNotDefinedError', () => {
+  it('should be an instance of UserPartialLoginDataNotDefinedError', () => {
     // Act
     const exception = new UserPartialLoginDataNotDefinedError();
 
@@ -36,7 +36,7 @@ describe('UserPartialLoginDataNotDefinedError', () => {
     expect(exception).toBeInstanceOf(UserPartialLoginDataNotDefinedError);
   });
 
-  it('is an instance of UserSessionError', () => {
+  it('should be an instance of UserSessionError', () => {
     // Act
     const exception = new UserPartialLoginDataNotDefinedError();
 
@@ -44,7 +44,7 @@ describe('UserPartialLoginDataNotDefinedError', () => {
     expect(exception).toBeInstanceOf(UserSessionError);
   });
 
-  it('is an instance of ApiError', () => {
+  it('should be an instance of ApiError', () => {
     // Act
     const exception = new UserPartialLoginDataNotDefinedError();
 
