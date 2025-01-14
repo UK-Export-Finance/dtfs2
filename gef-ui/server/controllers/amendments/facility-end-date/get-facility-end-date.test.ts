@@ -1,4 +1,3 @@
-// TODO: DTFS2-7724 - remove this eslint-disable
 /* eslint-disable import/first */
 const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
@@ -6,11 +5,12 @@ const getAmendmentMock = jest.fn();
 
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { format } from 'date-fns';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
-import { getDoYouHaveAFacilityEndDate, GetDoYouHaveAFacilityEndDateRequest } from './get-do-you-have-a-facility-end-date';
+import { getFacilityEndDate, GetFacilityEndDateRequest } from './get-facility-end-date';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
-import { DoYouHaveAFacilityEndDateViewModel } from '../../../types/view-models/amendments/do-you-have-a-facility-end-date-view-model';
+import { FacilityEndDateViewModel } from '../../../types/view-models/amendments/facility-end-date-view-model';
 import { MOCK_UNISSUED_FACILITY, MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
@@ -29,7 +29,7 @@ const amendmentId = 'amendmentId';
 const aMockError = () => new Error();
 
 const getHttpMocks = () =>
-  createMocks<GetDoYouHaveAFacilityEndDateRequest>({
+  createMocks<GetFacilityEndDateRequest>({
     params: { dealId, facilityId, amendmentId },
     session: {
       user: { ...aPortalSessionUser(), roles: [ROLES.MAKER] },
@@ -40,7 +40,7 @@ const getHttpMocks = () =>
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 
-describe('getDoYouHaveAFacilityEndDate', () => {
+describe('getFacilityEndDate', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
 
   beforeEach(() => {
@@ -54,7 +54,7 @@ describe('getDoYouHaveAFacilityEndDate', () => {
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
-      .withChangeCoverEndDate(true)
+      .withIsUsingFacilityEndDate(true)
       .build();
 
     getApplicationMock.mockResolvedValue(mockDeal);
@@ -71,7 +71,7 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getDoYouHaveAFacilityEndDate(req, res);
+    await getFacilityEndDate(req, res);
 
     // Assert
     expect(getApplicationMock).toHaveBeenCalledTimes(1);
@@ -83,7 +83,7 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getDoYouHaveAFacilityEndDate(req, res);
+    await getFacilityEndDate(req, res);
 
     // Assert
     expect(getFacilityMock).toHaveBeenCalledTimes(1);
@@ -95,102 +95,67 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getDoYouHaveAFacilityEndDate(req, res);
+    await getFacilityEndDate(req, res);
 
     // Assert
     expect(getAmendmentMock).toHaveBeenCalledTimes(1);
     expect(getAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, userToken: req.session.userToken });
   });
 
-  it('should render the correct template if the facility and amendment are valid', async () => {
+  it('should render the correct template when the amendment does not have an existing facilityEndDate', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
     // Act
-    await getDoYouHaveAFacilityEndDate(req, res);
+    await getFacilityEndDate(req, res);
 
     // Assert
-    const expectedRenderData: DoYouHaveAFacilityEndDateViewModel = {
+    const expectedRenderData: FacilityEndDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
-      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE, amendment),
+      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment),
+      facilityEndDate: undefined,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-    expect(res._getRenderView()).toEqual('partials/amendments/do-you-have-a-facility-end-date.njk');
+    expect(res._getRenderView()).toEqual('partials/amendments/facility-end-date.njk');
     expect(res._getRenderData()).toEqual(expectedRenderData);
+    expect(console.error).toHaveBeenCalledTimes(0);
   });
 
-  it('should render the correct template with isUsingFacilityEndDate if it is true', async () => {
+  it('should render the correct template when the amendment has an existing facilityEndDate', async () => {
     // Arrange
-    const { req, res } = getHttpMocks();
-    const isUsingFacilityEndDate = true;
+    const facilityEndDate = new Date();
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
-      .withChangeCoverEndDate(true)
-      .withIsUsingFacilityEndDate(isUsingFacilityEndDate)
+      .withFacilityEndDate(facilityEndDate)
       .build();
 
     getAmendmentMock.mockResolvedValue(amendment);
 
-    // Act
-    await getDoYouHaveAFacilityEndDate(req, res);
-
-    // Assert
-    const expectedRenderData: DoYouHaveAFacilityEndDateViewModel = {
-      exporterName: MOCK_BASIC_DEAL.exporter.companyName,
-      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
-      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE, amendment),
-      isUsingFacilityEndDate: String(isUsingFacilityEndDate),
-    };
-
-    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-    expect(res._getRenderView()).toEqual('partials/amendments/do-you-have-a-facility-end-date.njk');
-    expect(res._getRenderData()).toEqual(expectedRenderData);
-  });
-
-  it('should render the correct template with isUsingFacilityEndDate if it is false', async () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    const isUsingFacilityEndDate = false;
-
-    amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
-      .withDealId(dealId)
-      .withFacilityId(facilityId)
-      .withAmendmentId(amendmentId)
-      .withChangeCoverEndDate(true)
-      .withIsUsingFacilityEndDate(isUsingFacilityEndDate)
-      .build();
-
-    getAmendmentMock.mockResolvedValue(amendment);
-
-    // Act
-    await getDoYouHaveAFacilityEndDate(req, res);
-
-    // Assert
-    const expectedRenderData: DoYouHaveAFacilityEndDateViewModel = {
-      exporterName: MOCK_BASIC_DEAL.exporter.companyName,
-      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
-      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE, amendment),
-      isUsingFacilityEndDate: String(isUsingFacilityEndDate),
-    };
-
-    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-    expect(res._getRenderView()).toEqual('partials/amendments/do-you-have-a-facility-end-date.njk');
-    expect(res._getRenderData()).toEqual(expectedRenderData);
-  });
-
-  it('should not call console.error if the facility and amendment are valid', async () => {
-    // Arrange
     const { req, res } = getHttpMocks();
 
     // Act
-    await getDoYouHaveAFacilityEndDate(req, res);
+    await getFacilityEndDate(req, res);
 
     // Assert
+    const expectedRenderData: FacilityEndDateViewModel = {
+      exporterName: MOCK_BASIC_DEAL.exporter.companyName,
+      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment),
+      facilityEndDate: {
+        day: format(facilityEndDate, 'd'),
+        month: format(facilityEndDate, 'M'),
+        year: format(facilityEndDate, 'yyyy'),
+      },
+    };
+
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+    expect(res._getRenderView()).toEqual('partials/amendments/facility-end-date.njk');
+    expect(res._getRenderData()).toEqual(expectedRenderData);
     expect(console.error).toHaveBeenCalledTimes(0);
   });
 
@@ -200,7 +165,7 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     getFacilityMock.mockResolvedValue({ details: undefined });
 
     // Act
-    await getDoYouHaveAFacilityEndDate(req, res);
+    await getFacilityEndDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
@@ -215,7 +180,7 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     getApplicationMock.mockResolvedValue(undefined);
 
     // Act
-    await getDoYouHaveAFacilityEndDate(req, res);
+    await getFacilityEndDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
@@ -230,7 +195,7 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     getAmendmentMock.mockResolvedValue(undefined);
 
     // Act
-    await getDoYouHaveAFacilityEndDate(req, res);
+    await getFacilityEndDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
@@ -245,7 +210,7 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     getFacilityMock.mockResolvedValue(MOCK_UNISSUED_FACILITY);
 
     // Act
-    await getDoYouHaveAFacilityEndDate(req, res);
+    await getFacilityEndDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
@@ -267,7 +232,7 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     );
 
     // Act
-    await getDoYouHaveAFacilityEndDate(req, res);
+    await getFacilityEndDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
@@ -278,6 +243,54 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     expect(console.error).toHaveBeenCalledWith('Amendment %s is not changing the cover end date', amendmentId);
   });
 
+  it('should redirect if the amendment is not using facility end date', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    getAmendmentMock.mockResolvedValue(
+      new PortalFacilityAmendmentWithUkefIdMockBuilder()
+        .withDealId(dealId)
+        .withFacilityId(facilityId)
+        .withAmendmentId(amendmentId)
+        .withIsUsingFacilityEndDate(false)
+        .build(),
+    );
+
+    // Act
+    await getFacilityEndDate(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    expect(res._getRedirectUrl()).toEqual(
+      `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE}`,
+    );
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Amendment %s is not using facility end date', amendmentId);
+  });
+
+  it('should redirect if ifUsingFacilityEndDate is not set', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    getAmendmentMock.mockResolvedValue(
+      new PortalFacilityAmendmentWithUkefIdMockBuilder()
+        .withDealId(dealId)
+        .withFacilityId(facilityId)
+        .withAmendmentId(amendmentId)
+        .withChangeCoverEndDate(true)
+        .build(),
+    );
+
+    // Act
+    await getFacilityEndDate(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    expect(res._getRedirectUrl()).toEqual(
+      `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE}`,
+    );
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Amendment %s is not using facility end date', amendmentId);
+  });
+
   it('should render `problem with service` if getApplication throws an error', async () => {
     // Arrange
     const mockError = aMockError();
@@ -285,12 +298,12 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getDoYouHaveAFacilityEndDate(req, res);
+    await getFacilityEndDate(req, res);
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error getting amendments do you have a facility end date page %o', mockError);
+    expect(console.error).toHaveBeenCalledWith('Error getting amendments facility end date page %o', mockError);
   });
 
   it('should render `problem with service` if getFacility throws an error', async () => {
@@ -300,12 +313,12 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getDoYouHaveAFacilityEndDate(req, res);
+    await getFacilityEndDate(req, res);
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error getting amendments do you have a facility end date page %o', mockError);
+    expect(console.error).toHaveBeenCalledWith('Error getting amendments facility end date page %o', mockError);
   });
 
   it('should render `problem with service` if getAmendment throws an error', async () => {
@@ -315,11 +328,11 @@ describe('getDoYouHaveAFacilityEndDate', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getDoYouHaveAFacilityEndDate(req, res);
+    await getFacilityEndDate(req, res);
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error getting amendments do you have a facility end date page %o', mockError);
+    expect(console.error).toHaveBeenCalledWith('Error getting amendments facility end date page %o', mockError);
   });
 });

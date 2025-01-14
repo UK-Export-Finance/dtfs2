@@ -13,8 +13,9 @@ import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { getCancelPortalFacilityAmendment } from '../../../controllers/amendments/cancel-amendment/cancel-portal-facility-amendment';
 import { getDoYouHaveAFacilityEndDate } from '../../../controllers/amendments/do-you-have-a-facility-end-date/get-do-you-have-a-facility-end-date';
 import { postDoYouHaveAFacilityEndDate } from '../../../controllers/amendments/do-you-have-a-facility-end-date/post-do-you-have-a-facility-end-date';
+import { getFacilityEndDate } from '../../../controllers/amendments/facility-end-date/get-facility-end-date';
 
-const { WHAT_DO_YOU_NEED_TO_CHANGE, COVER_END_DATE, FACILITY_VALUE, DO_YOU_HAVE_A_FACILITY_END_DATE } = PORTAL_AMENDMENT_PAGES;
+const { WHAT_DO_YOU_NEED_TO_CHANGE, COVER_END_DATE, FACILITY_VALUE, DO_YOU_HAVE_A_FACILITY_END_DATE, FACILITY_END_DATE } = PORTAL_AMENDMENT_PAGES;
 
 const router = express.Router();
 
@@ -50,5 +51,10 @@ router
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getDoYouHaveAFacilityEndDate)
   .post(postDoYouHaveAFacilityEndDate);
+
+router
+  .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${FACILITY_END_DATE}`)
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(getFacilityEndDate);
 
 export default router;

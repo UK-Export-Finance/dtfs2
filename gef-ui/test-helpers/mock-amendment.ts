@@ -48,12 +48,32 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
   }
 
   public withIsUsingFacilityEndDate(isUsingFacilityEndDate: boolean) {
+    this.withChangeCoverEndDate(true);
     this.amendment.isUsingFacilityEndDate = isUsingFacilityEndDate;
+
+    if (isUsingFacilityEndDate) {
+      delete this.amendment.bankReviewDate;
+    } else {
+      delete this.amendment.facilityEndDate;
+    }
+
     return this;
   }
 
   public withFacilityValue(facilityValue: number) {
     this.amendment.value = facilityValue;
+    return this;
+  }
+
+  public withFacilityEndDate(facilityEndDate: Date) {
+    this.withIsUsingFacilityEndDate(true);
+    this.amendment.facilityEndDate = facilityEndDate;
+    return this;
+  }
+
+  public withBankReviewDate(bankReviewDate: Date) {
+    this.withIsUsingFacilityEndDate(false);
+    this.amendment.bankReviewDate = bankReviewDate;
     return this;
   }
 
