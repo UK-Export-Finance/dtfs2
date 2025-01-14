@@ -28,7 +28,7 @@ describe('validatePutFeeRecordCorrectionPayload', () => {
     const next = jest.fn();
 
     const invalidPayload = {
-      user: { id: 'invalidObjectId' },
+      user: { _id: 'invalidObjectId' },
     };
     req.body = invalidPayload;
 

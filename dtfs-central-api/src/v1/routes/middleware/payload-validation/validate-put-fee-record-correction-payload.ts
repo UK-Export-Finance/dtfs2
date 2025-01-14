@@ -6,7 +6,7 @@ import { MongoObjectIdSchema } from './schemas';
  * Schema for validating fee record correction payload.
  */
 const PutFeeRecordCorrectionPayloadSchema = z.object({
-  user: z.object({ id: MongoObjectIdSchema }),
+  user: z.object({ _id: MongoObjectIdSchema }),
 });
 
 /**

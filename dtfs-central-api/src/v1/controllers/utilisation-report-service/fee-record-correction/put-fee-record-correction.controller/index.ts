@@ -37,7 +37,7 @@ export const putFeeRecordCorrection = async (req: PutFeeRecordCorrectionRequest,
     const { user } = req.body;
 
     const correctionId = Number(correctionIdString);
-    const userId = user.id;
+    const userId = user._id;
 
     const correction = await FeeRecordCorrectionRepo.findOneByIdAndBankIdWithFeeRecordAndReport(correctionId, bankId);
 

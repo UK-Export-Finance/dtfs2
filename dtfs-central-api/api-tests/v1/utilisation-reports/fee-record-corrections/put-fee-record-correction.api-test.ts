@@ -53,7 +53,7 @@ describe(`PUT ${BASE_URL}`, () => {
   };
 
   const aValidRequestBody = () => ({
-    user: { id: userId },
+    user: { _id: userId },
   });
 
   beforeAll(async () => {

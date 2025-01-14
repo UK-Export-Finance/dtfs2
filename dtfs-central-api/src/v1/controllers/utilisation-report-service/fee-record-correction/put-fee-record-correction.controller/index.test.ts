@@ -4,6 +4,7 @@ import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import {
   FeeRecordCorrectionEntityMockBuilder,
+  FeeRecordCorrectionTransientFormDataEntityMockBuilder,
   FeeRecordEntityMockBuilder,
   PaymentOfficerTeam,
   PENDING_RECONCILIATION,
@@ -29,7 +30,7 @@ describe('putFeeRecordCorrection', () => {
   const portalUserId = new ObjectId().toString();
 
   const aValidRequestParams = () => ({ correctionId: correctionId.toString(), bankId });
-  const aValidRequestBody = () => ({ user: { id: portalUserId } });
+  const aValidRequestBody = () => ({ user: { _id: portalUserId } });
 
   let req: PutFeeRecordCorrectionRequest;
   let res: MockResponse<Response>;
@@ -105,9 +106,14 @@ describe('putFeeRecordCorrection', () => {
 
     describe('and when the transient form data is found', () => {
       const formData = { utilisation: 500000 };
+      const transientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()
+        .withCorrectionId(correctionId)
+        .withUserId(portalUserId)
+        .withFormData(formData)
+        .build();
 
       beforeEach(() => {
-        mockFindCorrectionTransientFormData.mockResolvedValue({ formData });
+        mockFindCorrectionTransientFormData.mockResolvedValue(transientFormDataEntity);
       });
 
       describe('and when the bank is not found', () => {

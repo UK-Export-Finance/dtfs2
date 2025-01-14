@@ -305,7 +305,7 @@ bankRouter
  *               user:
  *                 type: object
  *                 properties:
- *                   id: string
+ *                   _id: string
  *     responses:
  *       200:
  *         description: OK

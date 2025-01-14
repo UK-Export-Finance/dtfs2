@@ -507,7 +507,7 @@ const saveFeeRecordCorrection = async (bankId, correctionId, userId) => {
       url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/fee-record-corrections/${correctionId}`,
       headers: headers.central,
       data: {
-        user: { id: userId },
+        user: { _id: userId },
       },
     });
 
