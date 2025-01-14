@@ -1,4 +1,4 @@
-import { asString, isPaymentReferenceOverMaxCharacterCount, isValidCompanyRegistrationNumber } from './validation';
+import { asString, isMonetaryAmountValid, isPaymentReferenceOverMaxCharacterCount, isValidCompanyRegistrationNumber } from './validation';
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '..';
 
 const {
@@ -146,6 +146,45 @@ describe('validation helpers', () => {
         const result = isPaymentReferenceOverMaxCharacterCount(fiftyOneCharReference);
 
         expect(result).toEqual(true);
+      });
+    });
+  });
+
+  describe('isMonetaryAmountValid', () => {
+    describe('when monetary amount is valid', () => {
+      it('should return true for whole numbers', () => {
+        expect(isMonetaryAmountValid('100')).toEqual(true);
+      });
+
+      it('should return true for decimal numbers', () => {
+        expect(isMonetaryAmountValid('100.00')).toEqual(true);
+      });
+
+      it('should return true for numbers with thousands separators', () => {
+        expect(isMonetaryAmountValid('1,000.00')).toEqual(true);
+        expect(isMonetaryAmountValid('1,000,000.00')).toEqual(true);
+      });
+    });
+
+    describe('when monetary amount is invalid', () => {
+      it('should return false for undefined', () => {
+        expect(isMonetaryAmountValid(undefined)).toEqual(false);
+      });
+
+      it('should return false for empty string', () => {
+        expect(isMonetaryAmountValid('')).toEqual(false);
+      });
+
+      it('should return false for invalid number formats', () => {
+        expect(isMonetaryAmountValid('abc')).toEqual(false);
+        expect(isMonetaryAmountValid('100.000')).toEqual(false);
+        expect(isMonetaryAmountValid('1,00.00')).toEqual(false);
+        expect(isMonetaryAmountValid('1.000,00')).toEqual(false);
+      });
+
+      it('should return false for numbers with invalid thousands separator placement', () => {
+        expect(isMonetaryAmountValid('1,00')).toEqual(false);
+        expect(isMonetaryAmountValid('1,000,00')).toEqual(false);
       });
     });
   });
