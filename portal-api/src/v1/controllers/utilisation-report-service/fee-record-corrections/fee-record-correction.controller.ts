@@ -43,7 +43,7 @@ export const getFeeRecordCorrection = async (req: FeeRecordCorrectionRequest, re
   } catch (error) {
     const errorMessage = 'Failed to get fee record correction';
 
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
 
     const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
 
@@ -67,7 +67,7 @@ export const saveFeeRecordCorrection = async (req: FeeRecordCorrectionRequest, r
   } catch (error) {
     const errorMessage = 'Failed to save fee record correction';
 
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
 
     const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
 
