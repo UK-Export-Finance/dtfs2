@@ -1,6 +1,7 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { HttpStatusCode, AxiosError, AxiosResponse } from 'axios';
 import { Response } from 'express';
+import { RECORD_CORRECTION_REASON, CURRENCY } from '@ukef/dtfs2-common';
 import { getUtilisationReportPendingCorrectionsByBankId, GetUtilisationReportPendingCorrectionsRequest } from './pending-corrections.controller';
 import api from '../../../api';
 import { aReportPeriod } from '../../../../../test-helpers/test-data/report-period';
@@ -26,12 +27,22 @@ describe('getUtilisationReportPendingCorrectionsByBankId', () => {
         facilityId: 'FAC123',
         exporter: 'Exporter A',
         additionalInfo: 'Correction details A',
+        reportedFees: {
+          currency: CURRENCY.JPY,
+          amount: 1000,
+        },
+        reasons: [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT],
       },
       {
         correctionId: 2,
         facilityId: 'FAC456',
         exporter: 'Exporter B',
         additionalInfo: 'Correction details B',
+        reportedFees: {
+          currency: CURRENCY.GBP,
+          amount: 0,
+        },
+        reasons: [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT],
       },
     ],
     nextDueReportPeriod: aReportPeriod(),
