@@ -64,7 +64,7 @@ describe(`POST ${url}`, () => {
     process.env = originalEnv;
   });
 
-  describe('when portal facility amendments feature flag is disabled', () => {
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
     beforeEach(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'false';
     });
@@ -79,7 +79,7 @@ describe(`POST ${url}`, () => {
     });
   });
 
-  describe('when portal facility amendments feature flag is not set', () => {
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is not set', () => {
     beforeEach(() => {
       delete process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED;
     });
@@ -94,7 +94,7 @@ describe(`POST ${url}`, () => {
     });
   });
 
-  describe('when portal facility amendments feature flag is enabled', () => {
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is enabled', () => {
     beforeEach(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
     });
