@@ -87,7 +87,7 @@ describe('validateAndParseFacilityEndDate', () => {
 
     // Assert
     expect(result).toEqual({
-      date: facilityEndDate,
+      value: facilityEndDate,
     });
   });
 });

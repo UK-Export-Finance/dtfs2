@@ -45,10 +45,11 @@
     <div class="govuk-grid-column-three-quarters">
       <form method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="previousPage" value="{{ previousPage }}">
 
         {{ govukRadios({
-          idPrefix: "hasFacilityEndDate",
-          name: "hasFacilityEndDate",
+          idPrefix: "isUsingFacilityEndDate",
+          name: "isUsingFacilityEndDate",
           classes: "govuk-radios--inline",
           fieldset: {
             legend: {
@@ -56,30 +57,32 @@
             }
           },
           attributes: {
-            "data-cy": "has-facility-end-date"
+            "data-cy": "is-using-facility-end-date"
           },
           hint: {
             text: "You have to provide UKEF either a facility end date or a bank review date for this GEF cash facility as per an updated version of the GEF user guide."
           },
-          errorMessage: errors and errors.fieldErrors.hasFacilityEndDate and {
-            text: errors.fieldErrors.hasFacilityEndDate.text,
+          errorMessage: errors and errors.fieldErrors.isUsingFacilityEndDate and {
+            text: errors.fieldErrors.isUsingFacilityEndDate.text,
             attributes: {
-              "data-cy": "has-facility-end-date-error"
+              "data-cy": "is-using-facility-end-date-error"
             }
           },
           items: [
             {
               value: "true",
               text: "Yes",
+              checked: isUsingFacilityEndDate === 'true',
               attributes: {
-                "data-cy": "has-facility-end-date-yes"
+                "data-cy": "is-using-facility-end-date-yes"
               }
             },
             {
               value: "false",
               text: "No",
+              checked: isUsingFacilityEndDate === 'false',
               attributes: {
-                "data-cy": "has-facility-end-date-no"
+                "data-cy": "is-using-facility-end-date-no"
               }
             }
           ]

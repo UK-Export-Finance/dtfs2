@@ -1,8 +1,8 @@
 import { ValidationError } from './validation-error';
 
-export type ErrorsOrDate =
+export type ErrorsOrValue<T> =
   | {
-      date: Date;
+      value: T;
     }
   | {
       errors: ValidationError[];
