@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import { asLoggedInUserSession, LoggedInUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
-import { RecordCorrectionSentViewModel } from '../../../../types/view-models/record-correction/record-correction-confirmation';
+import { RecordCorrectionSentViewModel } from '../../../../types/view-models/record-correction/record-correction-sent';
 
 /**
  * Controller for the GET record correction sent route.

@@ -178,6 +178,7 @@ describe('fee-record-correction-transient-form-data.controller', () => {
 
       // Act
       await putFeeRecordCorrectionTransientFormData(req, res);
+
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
       expect(res._isEndCalled()).toEqual(true);
@@ -187,16 +188,19 @@ describe('fee-record-correction-transient-form-data.controller', () => {
       // Arrange
       const errorStatus = HttpStatusCode.BadRequest;
       const axiosError = new AxiosError(undefined, undefined, undefined, undefined, { status: errorStatus } as AxiosResponse);
+
       jest.mocked(api.putFeeRecordCorrectionTransientFormData).mockRejectedValue(axiosError);
 
       // Act
       await putFeeRecordCorrectionTransientFormData(req, res);
+
       // Assert
       expect(res._getStatusCode()).toEqual(errorStatus);
       expect(res._isEndCalled()).toEqual(true);
     });
 
     it('should return an error message if an error occurs', async () => {
+      // Arrange
       jest.mocked(api.putFeeRecordCorrectionTransientFormData).mockRejectedValue(new Error('Some error'));
 
       // Act

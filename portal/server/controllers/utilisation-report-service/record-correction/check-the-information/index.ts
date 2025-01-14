@@ -34,10 +34,13 @@ export const getUtilisationReportCorrectionReview = async (req: GetUtilisationRe
 
     const backLinkHref = `/utilisation-reports/provide-correction/${correctionId}`;
 
+    const cancelLinkHref = `/utilisation-reports/cancel-correction/${correctionId}`;
+
     const viewModel: UtilisationReportCorrectionInformationViewModel = {
       user,
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       backLinkHref,
+      cancelLinkHref,
       feeRecord,
       formattedReasons: mapReasonsToDisplayValues(reasons).join(', '),
       errorSummary,

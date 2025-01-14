@@ -5,6 +5,7 @@ const {
   postProvideUtilisationReportCorrection,
   getUtilisationReportCorrectionReview,
   getRecordCorrectionSent,
+  cancelUtilisationReportCorrection,
 } = require('../../../controllers/utilisation-report-service/record-correction');
 const { validateRole, validateToken, validateSqlId } = require('../../middleware');
 
@@ -21,6 +22,13 @@ router.get(
   [validateFeeRecordCorrectionFeatureFlagIsEnabled, validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] })],
   validateSqlId('correctionId'),
   (req, res) => getUtilisationReportCorrectionReview(req, res),
+);
+
+router.post(
+  '/utilisation-reports/cancel-correction/:correctionId',
+  [validateFeeRecordCorrectionFeatureFlagIsEnabled, validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] })],
+  validateSqlId('correctionId'),
+  (req, res) => cancelUtilisationReportCorrection(req, res),
 );
 
 router.get(

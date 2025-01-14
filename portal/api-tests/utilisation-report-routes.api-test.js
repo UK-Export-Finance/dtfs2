@@ -128,4 +128,47 @@ describe('utilisation-report routes', () => {
       });
     });
   });
+
+  describe('POST /utilisation-reports/cancel-correction/:correctionId', () => {
+    const originalProcessEnv = { ...process.env };
+    const getUrl = ({ correctionId }) => `/utilisation-reports/cancel-correction/${correctionId}`;
+
+    describe('when FF_FEE_RECORD_CORRECTION_ENABLED is set to `true`', () => {
+      beforeAll(() => {
+        process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'true';
+      });
+
+      afterAll(() => {
+        process.env = { ...originalProcessEnv };
+      });
+
+      withRoleValidationApiTests({
+        makeRequestWithHeaders: (headers) => post().to(getUrl({ correctionId: 1 }), {}, headers),
+        whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
+        successCode: HttpStatusCode.Ok,
+        disableHappyPath: true,
+      });
+    });
+
+    describe('when FF_FEE_RECORD_CORRECTION_ENABLED is set to `false`', () => {
+      beforeAll(() => {
+        process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'false';
+      });
+
+      afterAll(() => {
+        process.env = { ...originalProcessEnv };
+      });
+
+      it(`should redirect to "/not-found"`, async () => {
+        // Arrange
+        const url = getUrl({ correctionId: 1 });
+
+        // Act
+        const response = await post().to(url);
+
+        // Assert
+        expect(response.headers.location).toEqual('/not-found');
+      });
+    });
+  });
 });
