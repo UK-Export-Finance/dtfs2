@@ -190,10 +190,23 @@ describe('provide-utilisation-report-correction helpers', () => {
       expect(result.facilityId).toBeNull();
     });
 
-    it('should map utilisation to formatted monetary string when provided', () => {
+    it('should map utilisation to formatted monetary string when non-zero', () => {
       // Arrange
       const savedFormValues = {
         utilisation: 1234.56,
+      };
+
+      // Act
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
+
+      // Assert
+      expect(result.utilisation).toEqual(getFormattedMonetaryValue(savedFormValues.utilisation));
+    });
+
+    it('should map utilisation to formatted monetary string when zero', () => {
+      // Arrange
+      const savedFormValues = {
+        utilisation: 0,
       };
 
       // Act
@@ -214,10 +227,23 @@ describe('provide-utilisation-report-correction helpers', () => {
       expect(result.utilisation).toBeNull();
     });
 
-    it('should map reportedFee to formatted monetary string when provided', () => {
+    it('should map reportedFee to formatted monetary string when non-zero', () => {
       // Arrange
       const savedFormValues = {
         reportedFee: 1234.56,
+      };
+
+      // Act
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
+
+      // Assert
+      expect(result.reportedFee).toEqual(getFormattedMonetaryValue(savedFormValues.reportedFee));
+    });
+
+    it('should map reportedFee to formatted monetary string when zero', () => {
+      // Arrange
+      const savedFormValues = {
+        reportedFee: 0,
       };
 
       // Act
