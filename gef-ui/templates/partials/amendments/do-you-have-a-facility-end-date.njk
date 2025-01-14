@@ -4,6 +4,8 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
+{% import '../../_macros/what-is-a-facility-end-date.njk' as whatIsAFacilityEndDate %}
+{% import '../../_macros/what-is-a-bank-review-date.njk' as whatIsABankReviewDate %}
 
 {% block pageTitle -%}
   Do you have a facility end date?
@@ -100,21 +102,10 @@
         </div>
       </form>
 
-      {{ govukDetails({
-        summaryText: "What is a facility end date",
-        text: "The facility end date is the deadline for a committed loan to be repaid at which point the contract will be terminated.",
-        attributes: {
-          "data-cy": "what-is-a-facility-end-date"
-        }
-      }) }}
+      {{ whatIsAFacilityEndDate.render() }}
 
-      {{ govukDetails({
-        summaryText: "What is a bank review date",
-        text: "The bank review date is when you decide in accordance with your usual policies and procedures for such facilities whether to continue or terminate the facility based on the borrower's needs and circumstances.",
-        attributes: {
-          "data-cy": "what-is-a-bank-review-date"
-        }
-      }) }}
+      {{ whatIsABankReviewDate.render() }}
+
     </div>
   </div>
 

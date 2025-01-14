@@ -90,18 +90,18 @@ describe(page, () => {
   it('should render `What is a facility end date` details', () => {
     const wrapper = render(params);
 
-    wrapper.expectText('[data-cy="what-is-a-facility-end-date"]').toContain('What is a facility end date');
+    wrapper.expectText('[data-cy="facility-end-date-details"]').toContain('What is a facility end date');
     wrapper
-      .expectText('[data-cy="what-is-a-facility-end-date"]')
+      .expectText('[data-cy="facility-end-date-details"]')
       .toContain('The facility end date is the deadline for a committed loan to be repaid at which point the contract will be terminated.');
   });
 
   it('should render `What is a bank review date` details', () => {
     const wrapper = render(params);
 
-    wrapper.expectText('[data-cy="what-is-a-bank-review-date"]').toContain('What is a bank review date');
+    wrapper.expectText('[data-cy="bank-review-date-details"]').toContain('What is a bank review date');
     wrapper
-      .expectText('[data-cy="what-is-a-bank-review-date"]')
+      .expectText('[data-cy="bank-review-date-details"]')
       .toContain(
         "The bank review date is when you decide in accordance with your usual policies and procedures for such facilities whether to continue or terminate the facility based on the borrower's needs and circumstances.",
       );
