@@ -55,7 +55,6 @@ describe('getBankReviewDate', () => {
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
-      .withChangeCoverEndDate(true)
       .withIsUsingFacilityEndDate(false)
       .build();
 
@@ -133,7 +132,6 @@ describe('getBankReviewDate', () => {
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
-      .withChangeCoverEndDate(true)
       .withIsUsingFacilityEndDate(false)
       .withBankReviewDate(bankReviewDate)
       .build();
@@ -247,7 +245,7 @@ describe('getBankReviewDate', () => {
     expect(console.error).toHaveBeenCalledWith('Amendment %s is not changing the cover end date', amendmentId);
   });
 
-  it('should redirect if the amendment is using bank review date not the bank review date', async () => {
+  it('should redirect if the amendment is using facility end date', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
     getAmendmentMock.mockResolvedValue(
@@ -255,7 +253,6 @@ describe('getBankReviewDate', () => {
         .withDealId(dealId)
         .withFacilityId(facilityId)
         .withAmendmentId(amendmentId)
-        .withChangeCoverEndDate(true)
         .withIsUsingFacilityEndDate(true)
         .build(),
     );
@@ -272,7 +269,7 @@ describe('getBankReviewDate', () => {
     expect(console.error).toHaveBeenCalledWith('Amendment %s is not using bank review date', amendmentId);
   });
 
-  it('should redirect if ifUsingFacilityEndDate is not set', async () => {
+  it('should redirect if isUsingFacilityEndDate is not set', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
     getAmendmentMock.mockResolvedValue(
