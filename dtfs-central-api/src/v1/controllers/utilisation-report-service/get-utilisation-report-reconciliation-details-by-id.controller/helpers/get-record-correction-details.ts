@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { FeeRecordEntity, FeeRecordCorrectionSummary, mapReasonsToDisplayValues, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
-import { mapCorrectionReasonsToFormattedOldValues } from '../../../../../helpers/map-correction-reasons-to-incorrect-values';
+import { mapCorrectionReasonsToFormattedOldValues } from '../../../../../helpers/map-correction-reasons-to-formatted-values';
 
 /**
  * Retrieves and constructs record correction data for the given fee records.

@@ -7,3 +7,4 @@ export * from './test-cases-backend';
 export * from './schemas';
 export * from './convert-milliseconds-to-seconds';
 export * from './record-correction-form-values';
+export * from './fee-record-correction-review-information';
