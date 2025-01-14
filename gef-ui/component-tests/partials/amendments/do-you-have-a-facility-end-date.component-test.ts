@@ -15,6 +15,12 @@ describe(page, () => {
     exporterName,
   };
 
+  it('should render the page heading', () => {
+    const wrapper = render(params);
+
+    wrapper.expectText('[data-cy="page-heading"]').toRead('Do you have a facility end date?');
+  });
+
   it(`should render the 'Back' link`, () => {
     const wrapper = render(params);
 
