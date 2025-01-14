@@ -2,7 +2,7 @@ const { getUnixTime } = require('date-fns');
 const { ACTIVITY_TYPES, FLASH_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { generateValidationErrors } = require('../../../helpers/validation');
-const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
+const { filterAmendmentsByInProgress } = require('../../helpers/amendments.helper');
 const CONSTANTS = require('../../../constants');
 const { mapActivities } = require('./helpers/map-activities');
 const { getDealSuccessBannerMessage } = require('../../helpers/get-success-banner-message.helper');
@@ -29,11 +29,12 @@ const getActivity = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const hasAmendmentInProgress = hasAmendmentInProgressDealStage(amendments);
+  const amendmentsInProgress = filterAmendmentsByInProgress({ amendments, deal });
+  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
-  const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
 
   const activities = mapActivities(deal.tfm.activities);
 
@@ -78,11 +79,12 @@ const filterActivities = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const hasAmendmentInProgress = hasAmendmentInProgressDealStage(amendments);
+  const amendmentsInProgress = filterAmendmentsByInProgress({ amendments, deal });
+  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
-  const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
 
   const activities = mapActivities(deal.tfm.activities);
 
