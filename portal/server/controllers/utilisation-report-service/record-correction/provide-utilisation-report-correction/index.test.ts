@@ -3,6 +3,7 @@ import { Response } from 'express';
 import {
   aPortalSessionBank,
   aPortalSessionUser,
+  aRecordCorrectionFormValues,
   CURRENCY,
   mapCurrenciesToRadioItems,
   PORTAL_LOGIN_STATUS,
@@ -11,7 +12,12 @@ import {
 } from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import api from '../../../../api';
-import { getProvideUtilisationReportCorrection, GetProvideUtilisationReportCorrection } from '.';
+import {
+  getProvideUtilisationReportCorrection,
+  GetProvideUtilisationReportCorrection,
+  PostProvideUtilisationReportCorrectionRequest,
+  postProvideUtilisationReportCorrection,
+} from '.';
 import { getAdditionalCommentsFieldLabels, mapToProvideCorrectionFormValuesViewModel, mapToCorrectionRequestDetailsViewModel } from './helpers';
 import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
 import { aGetFeeRecordCorrectionResponseBody } from '../../../../../test-helpers/test-data/get-fee-record-correction-response';
@@ -216,6 +222,67 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
       expect(api.getFeeRecordCorrection).toHaveBeenCalledTimes(1);
       expect(api.getFeeRecordCorrection).toHaveBeenCalledWith(userToken, bankId, correctionId);
+    });
+  });
+
+  describe('postProvideUtilisationReportCorrection', () => {
+    const getHttpMocks = () =>
+      httpMocks.createMocks<PostProvideUtilisationReportCorrectionRequest>({
+        params: { correctionId },
+        session: requestSession,
+        body: aRecordCorrectionFormValues(),
+      });
+
+    let req: PostProvideUtilisationReportCorrectionRequest;
+    let res: MockResponse<Response>;
+
+    beforeEach(() => {
+      ({ req, res } = getHttpMocks());
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
+    });
+
+    it("should redirect to the 'check the information' screen if no errors", async () => {
+      // Arrange
+      jest.mocked(api.putFeeRecordCorrection);
+
+      const expectedRedirectUrl = `/utilisation-reports/provide-correction/${correctionId}/check-the-information`;
+
+      // Act
+      await postProvideUtilisationReportCorrection(req, res);
+
+      // Assert
+      expect(res._getRedirectUrl()).toEqual(expectedRedirectUrl);
+    });
+
+    it('should call the "putFeeRecordCorrection" api endpoint once with the correct parameters', async () => {
+      // Arrange
+      const formData = aRecordCorrectionFormValues();
+      req.body = formData;
+
+      // Act
+      await postProvideUtilisationReportCorrection(req, res);
+
+      // Assert
+      expect(api.putFeeRecordCorrection).toHaveBeenCalledTimes(1);
+      expect(api.putFeeRecordCorrection).toHaveBeenCalledWith(userToken, bankId, correctionId, formData);
+    });
+
+    it('should render the "problem with service" page when an error occurs', async () => {
+      // Arrange
+      const formData = aRecordCorrectionFormValues();
+      req.body = formData;
+
+      jest.mocked(api.putFeeRecordCorrection).mockRejectedValue(new Error());
+
+      // Act
+      await postProvideUtilisationReportCorrection(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
+      expect(res._getRenderData()).toEqual({ user: mockUser });
     });
   });
 });
