@@ -24,8 +24,9 @@ import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { ValidationError } from '../../../types/validation-error';
 import { postFacilityEndDate, PostFacilityEndDateRequest } from './post-facility-end-date';
-import { validateAndParseFacilityEndDate } from '../../facility-end-date/validation';
+import * as facilityEndDateValidation from '../../facility-end-date/validation';
 import { FacilityEndDateViewModel } from '../../../types/view-models/amendments/facility-end-date-view-model';
+import { getCoverStartDateOrStartOfToday } from '../../../utils/get-cover-start-date-or-start-of-today';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
@@ -77,6 +78,7 @@ describe('postFacilityEndDate', () => {
 
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
     jest.spyOn(console, 'error');
+    jest.spyOn(facilityEndDateValidation, 'validateAndParseFacilityEndDate');
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
       .withDealId(dealId)
@@ -114,6 +116,22 @@ describe('postFacilityEndDate', () => {
     expect(getFacilityMock).toHaveBeenCalledWith({ facilityId, userToken: req.session.userToken });
   });
 
+  it('should call validateAndParseFacilityEndDate', async () => {
+    // Arrange
+    const facilityEndDateDayMonthYear = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
+    const { req, res } = getHttpMocks(facilityEndDateDayMonthYear);
+
+    // Act
+    await postFacilityEndDate(req, res);
+
+    // Assert
+    expect(facilityEndDateValidation.validateAndParseFacilityEndDate).toHaveBeenCalledTimes(1);
+    expect(facilityEndDateValidation.validateAndParseFacilityEndDate).toHaveBeenCalledWith(
+      facilityEndDateDayMonthYear,
+      getCoverStartDateOrStartOfToday(MOCK_ISSUED_FACILITY.details),
+    );
+  });
+
   it('should not call updateAmendment if the facilityEndDate is invalid', async () => {
     // Arrange
     const facilityEndDateDayMonthYear = {
@@ -148,8 +166,14 @@ describe('postFacilityEndDate', () => {
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage,
       errors: validationErrorHandler(
-        (validateAndParseFacilityEndDate(facilityEndDateDayMonthYear, new Date(MOCK_ISSUED_FACILITY.details.coverStartDate)) as { errors: ValidationError[] })
-          .errors,
+        (
+          facilityEndDateValidation.validateAndParseFacilityEndDate(
+            facilityEndDateDayMonthYear,
+            new Date(MOCK_ISSUED_FACILITY.details.coverStartDate as dtfsCommon.IsoDateTimeStamp),
+          ) as {
+            errors: ValidationError[];
+          }
+        ).errors,
       ),
       facilityEndDate: facilityEndDateDayMonthYear,
     };
