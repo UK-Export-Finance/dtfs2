@@ -64,9 +64,21 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       jest.resetAllMocks();
     });
 
-    describe('when there are NOT any saved form values', () => {
+    describe('when the user visits the page from a link on the Report GEF utilisation and fees page', () => {
       beforeEach(() => {
-        jest.mocked(api.getFeeRecordCorrectionTransientFormData).mockResolvedValue({});
+        req.headers.referer = 'utilisation-report-upload';
+      });
+
+      it('should clear any saved form data for the correction', async () => {
+        // Arrange
+        jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(aGetFeeRecordCorrectionResponseBody());
+
+        // Act
+        await getProvideUtilisationReportCorrection(req, res);
+
+        // Assert
+        expect(api.deleteFeeRecordCorrectionTransientFormData).toHaveBeenCalledTimes(1);
+        expect(api.deleteFeeRecordCorrectionTransientFormData).toHaveBeenCalledWith(userToken, bankId, correctionId);
       });
 
       it('should render the "provide utilisation report correction" page', async () => {
@@ -105,50 +117,97 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       });
     });
 
-    describe('when there are saved form values', () => {
-      const savedFormValues: GetFeeRecordCorrectionTransientFormDataResponseBody = {
-        facilityId: '123',
-        additionalComments: 'Some comments',
-        reportedCurrency: CURRENCY.GBP,
-      };
-
+    describe('when the user visits the page from a page other than the Report GEF utilisation and fees page', () => {
       beforeEach(() => {
-        jest.mocked(api.getFeeRecordCorrectionTransientFormData).mockResolvedValue(savedFormValues);
+        req.headers.referer = 'some-other-page';
       });
 
-      it('should render the "provide utilisation report correction" page', async () => {
-        // Arrange
-        const reasons = [RECORD_CORRECTION_REASON.OTHER];
-        const feeRecordCorrectionResponse = {
-          ...aGetFeeRecordCorrectionResponseBody(),
-          reasons,
+      describe('when there are NOT any saved form values', () => {
+        beforeEach(() => {
+          jest.mocked(api.getFeeRecordCorrectionTransientFormData).mockResolvedValue({});
+        });
+
+        it('should render the "provide utilisation report correction" page', async () => {
+          // Arrange
+          const reasons = [RECORD_CORRECTION_REASON.OTHER];
+          const feeRecordCorrectionResponse = {
+            ...aGetFeeRecordCorrectionResponseBody(),
+            reasons,
+          };
+
+          jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(feeRecordCorrectionResponse);
+
+          const expectedCorrectionRequestDetails = mapToCorrectionRequestDetailsViewModel(feeRecordCorrectionResponse);
+          const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems();
+          const { label: expectedAdditionalCommentsLabel, hint: expectedAdditionalCommentsHint } = getAdditionalCommentsFieldLabels(reasons);
+
+          // Act
+          await getProvideUtilisationReportCorrection(req, res);
+
+          // Assert
+          expect(res._getRenderView()).toEqual('utilisation-report-service/record-correction/provide-utilisation-report-correction.njk');
+
+          const expected = {
+            user: mockUser,
+            primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
+            correctionRequestDetails: expectedCorrectionRequestDetails,
+            paymentCurrencyOptions: expectedPaymentCurrencyOptions,
+            additionalComments: {
+              label: expectedAdditionalCommentsLabel,
+              hint: expectedAdditionalCommentsHint,
+            },
+            formValues: mapToProvideCorrectionFormValuesViewModel({}),
+          };
+
+          expect(res._getRenderData() as ProvideUtilisationReportCorrectionViewModel).toEqual<ProvideUtilisationReportCorrectionViewModel>(expected);
+        });
+      });
+
+      describe('when there are saved form values', () => {
+        const savedFormValues: GetFeeRecordCorrectionTransientFormDataResponseBody = {
+          facilityId: '123',
+          additionalComments: 'Some comments',
+          reportedCurrency: CURRENCY.GBP,
         };
 
-        jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(feeRecordCorrectionResponse);
+        beforeEach(() => {
+          jest.mocked(api.getFeeRecordCorrectionTransientFormData).mockResolvedValue(savedFormValues);
+        });
 
-        const expectedCorrectionRequestDetails = mapToCorrectionRequestDetailsViewModel(feeRecordCorrectionResponse);
-        const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems(savedFormValues.reportedCurrency);
-        const { label: expectedAdditionalCommentsLabel, hint: expectedAdditionalCommentsHint } = getAdditionalCommentsFieldLabels(reasons);
+        it('should render the "provide utilisation report correction" page', async () => {
+          // Arrange
+          const reasons = [RECORD_CORRECTION_REASON.OTHER];
+          const feeRecordCorrectionResponse = {
+            ...aGetFeeRecordCorrectionResponseBody(),
+            reasons,
+          };
 
-        // Act
-        await getProvideUtilisationReportCorrection(req, res);
+          jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(feeRecordCorrectionResponse);
 
-        // Assert
-        expect(res._getRenderView()).toEqual('utilisation-report-service/record-correction/provide-utilisation-report-correction.njk');
+          const expectedCorrectionRequestDetails = mapToCorrectionRequestDetailsViewModel(feeRecordCorrectionResponse);
+          const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems(savedFormValues.reportedCurrency);
+          const { label: expectedAdditionalCommentsLabel, hint: expectedAdditionalCommentsHint } = getAdditionalCommentsFieldLabels(reasons);
 
-        const expected = {
-          user: mockUser,
-          primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-          correctionRequestDetails: expectedCorrectionRequestDetails,
-          paymentCurrencyOptions: expectedPaymentCurrencyOptions,
-          additionalComments: {
-            label: expectedAdditionalCommentsLabel,
-            hint: expectedAdditionalCommentsHint,
-          },
-          formValues: mapToProvideCorrectionFormValuesViewModel(savedFormValues),
-        };
+          // Act
+          await getProvideUtilisationReportCorrection(req, res);
 
-        expect(res._getRenderData() as ProvideUtilisationReportCorrectionViewModel).toEqual<ProvideUtilisationReportCorrectionViewModel>(expected);
+          // Assert
+          expect(res._getRenderView()).toEqual('utilisation-report-service/record-correction/provide-utilisation-report-correction.njk');
+
+          const expected = {
+            user: mockUser,
+            primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
+            correctionRequestDetails: expectedCorrectionRequestDetails,
+            paymentCurrencyOptions: expectedPaymentCurrencyOptions,
+            additionalComments: {
+              label: expectedAdditionalCommentsLabel,
+              hint: expectedAdditionalCommentsHint,
+            },
+            formValues: mapToProvideCorrectionFormValuesViewModel(savedFormValues),
+          };
+
+          expect(res._getRenderData() as ProvideUtilisationReportCorrectionViewModel).toEqual<ProvideUtilisationReportCorrectionViewModel>(expected);
+        });
       });
     });
 
