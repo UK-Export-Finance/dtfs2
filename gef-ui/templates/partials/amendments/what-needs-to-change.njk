@@ -17,7 +17,7 @@
     <span class="govuk-caption-l" data-cy="heading-caption">
       {{ exporterName }}
     </span>
-    <h1 class="govuk-label-wrapper" data-cy="page-title">
+    <h1 class="govuk-label-wrapper" data-cy="page-heading">
       <label class="govuk-label govuk-label--xl" for="what-needs-to-change">
         What do you need to change?
       </label>
@@ -67,7 +67,7 @@
           errorMessage: errors and errors.fieldErrors.amendmentOptions and {
             text: errors.fieldErrors.amendmentOptions.text,
             attributes: {
-              "data-cy": "selection-error-message"
+              "data-cy": "amendment-options-inline-error"
             }
           },
           items: [
@@ -106,7 +106,7 @@
             }
           }) }}
 
-          <a href="{{ previousPage }}" data-cy="cancel-link" class="govuk-link">Cancel</a>
+          <a href="{{ cancelUrl }}"  data-cy="cancel-link" class="govuk-link">Cancel</a>
         </div>
 
         {{ changeSomethingElseDetails.render(amendmentFormEmail) }}
