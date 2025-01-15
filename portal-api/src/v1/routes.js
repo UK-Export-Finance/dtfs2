@@ -5,7 +5,7 @@ const { param } = require('express-validator');
 
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
 const { validateUserAndBankIdMatch } = require('./validation/validate-user-and-bank-id-match');
-const { bankIdValidation, sqlIdValidation } = require('./validation/route-validators/route-validators');
+const { bankIdValidation, sqlIdValidation, mongoIdValidation } = require('./validation/route-validators/route-validators');
 const { handleExpressValidatorResult } = require('./validation/route-validators/express-validator-result-handler');
 const { MAKER, CHECKER, READ_ONLY, ADMIN, PAYMENT_REPORT_OFFICER } = require('./roles/roles');
 
@@ -338,24 +338,38 @@ authRouter
 
 authRouter
   .route('/banks/:bankId/fee-record-correction/:correctionId')
-  .get(
+  .all(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,
     sqlIdValidation('correctionId'),
     handleExpressValidatorResult,
     validateUserAndBankIdMatch,
-    utilisationReportControllers.getFeeRecordCorrection,
-  );
+  )
+  .get(utilisationReportControllers.getFeeRecordCorrection)
+  .put(utilisationReportControllers.saveFeeRecordCorrection);
 
 authRouter
   .route('/banks/:bankId/fee-record-correction/:correctionId/transient-form-data')
-  .get(
+  .all(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,
     sqlIdValidation('correctionId'),
     handleExpressValidatorResult,
     validateUserAndBankIdMatch,
-    utilisationReportControllers.getFeeRecordCorrectionTransientFormData,
+  )
+  .get(utilisationReportControllers.getFeeRecordCorrectionTransientFormData)
+  .put(utilisationReportControllers.putFeeRecordCorrectionTransientFormData);
+
+authRouter
+  .route('/banks/:bankId/fee-record-correction-review/:correctionId/user/:userId')
+  .get(
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
+    bankIdValidation,
+    sqlIdValidation('correctionId'),
+    mongoIdValidation('userId'),
+    handleExpressValidatorResult,
+    validateUserAndBankIdMatch,
+    utilisationReportControllers.getFeeRecordCorrectionReview,
   );
 
 module.exports = { openRouter, authRouter };

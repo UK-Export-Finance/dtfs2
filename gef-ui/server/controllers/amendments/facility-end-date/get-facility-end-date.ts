@@ -1,5 +1,4 @@
 import { CustomExpressRequest, DayMonthYearInput } from '@ukef/dtfs2-common';
-import { format } from 'date-fns';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { FacilityEndDateViewModel } from '../../../types/view-models/amendments/facility-end-date-view-model';
@@ -7,6 +6,7 @@ import { asLoggedInUserSession } from '../../../utils/express-session';
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper';
 import { getPreviousPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
+import { convertDateToDayMonthYearInput } from '../helpers/dates.helper.ts';
 
 export type GetFacilityEndDateRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -56,11 +56,7 @@ export const getFacilityEndDate = async (req: GetFacilityEndDateRequest, res: Re
       );
     }
 
-    const facilityEndDate: DayMonthYearInput | undefined = amendment.facilityEndDate && {
-      day: format(amendment.facilityEndDate, 'd'),
-      month: format(amendment.facilityEndDate, 'M'),
-      year: format(amendment.facilityEndDate, 'yyyy'),
-    };
+    const facilityEndDate: DayMonthYearInput | undefined = amendment.facilityEndDate && convertDateToDayMonthYearInput(amendment.facilityEndDate);
 
     const viewModel: FacilityEndDateViewModel = {
       exporterName: deal.exporter.companyName,

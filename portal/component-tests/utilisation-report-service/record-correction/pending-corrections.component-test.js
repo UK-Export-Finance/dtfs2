@@ -139,12 +139,16 @@ describe(page, () => {
       facilityId: '1111',
       exporter: 'Exporter 1',
       additionalInfo: 'Additional info 1',
+      formattedReasons: 'Reason 1, Other',
+      formattedReportedFees: 'USD 1,000.00',
     };
     const secondCorrection = {
       correctionId: 2,
       facilityId: '2222',
       exporter: 'Exporter 2',
       additionalInfo: 'Additional info 2',
+      formattedReasons: 'Reason 2',
+      formattedReportedFees: 'JPY 10,000.00',
     };
     const viewModel = {
       ...aPendingCorrectionsViewModel(),
@@ -167,9 +171,11 @@ describe(page, () => {
       const wrapper = render(viewModel);
 
       // Assert
-      wrapper.expectElement('th').toHaveCount(3);
+      wrapper.expectElement('th').toHaveCount(5);
       wrapper.expectElement('th:contains("Facility ID")').toExist();
       wrapper.expectElement('th:contains("Exporter")').toExist();
+      wrapper.expectElement('th:contains("Reported fees paid")').toExist();
+      wrapper.expectElement('th:contains("Error type(s)")').toExist();
       wrapper.expectElement('th:contains("Error summary")').toExist();
     });
 
@@ -182,10 +188,14 @@ describe(page, () => {
 
       wrapper.expectText(`${firstRowSelector} [data-cy="pending-corrections-row--facility-id"]`).toRead(firstCorrection.facilityId);
       wrapper.expectText(`${firstRowSelector} [data-cy="pending-corrections-row--exporter"]`).toRead(firstCorrection.exporter);
+      wrapper.expectText(`${firstRowSelector} [data-cy="pending-corrections-row--reported-fees-paid"]`).toRead(firstCorrection.formattedReportedFees);
+      wrapper.expectText(`${firstRowSelector} [data-cy="pending-corrections-row--error-type"]`).toRead(firstCorrection.formattedReasons);
       wrapper.expectText(`${firstRowSelector} [data-cy="pending-corrections-row--error-summary"]`).toRead(firstCorrection.additionalInfo);
 
       wrapper.expectText(`${secondRowSelector} [data-cy="pending-corrections-row--facility-id"]`).toRead(secondCorrection.facilityId);
       wrapper.expectText(`${secondRowSelector} [data-cy="pending-corrections-row--exporter"]`).toRead(secondCorrection.exporter);
+      wrapper.expectText(`${secondRowSelector} [data-cy="pending-corrections-row--reported-fees-paid"]`).toRead(secondCorrection.formattedReportedFees);
+      wrapper.expectText(`${secondRowSelector} [data-cy="pending-corrections-row--error-type"]`).toRead(secondCorrection.formattedReasons);
       wrapper.expectText(`${secondRowSelector} [data-cy="pending-corrections-row--error-summary"]`).toRead(secondCorrection.additionalInfo);
     });
 

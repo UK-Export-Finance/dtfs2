@@ -1,10 +1,12 @@
 import { HttpStatusCode } from 'axios';
 import {
+  CURRENCY,
   FEE_RECORD_STATUS,
   FeeRecordCorrectionEntityMockBuilder,
   FeeRecordEntityMockBuilder,
   getNextReportPeriodForBankSchedule,
   RECONCILIATION_IN_PROGRESS,
+  RECORD_CORRECTION_REASON,
   REPORT_NOT_RECEIVED,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -117,6 +119,8 @@ describe(`GET ${BASE_URL}`, () => {
       .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
       .withFacilityId('1122334455')
       .withExporter('Test Exporter')
+      .withFeesPaidToUkefForThePeriod(123456.78)
+      .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.USD)
       .build();
 
     const completedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
@@ -129,6 +133,7 @@ describe(`GET ${BASE_URL}`, () => {
       .withId(2)
       .withIsCompleted(false)
       .withAdditionalInfo('This is some additional information')
+      .withReasons([RECORD_CORRECTION_REASON.UTILISATION_INCORRECT])
       .build();
 
     feeRecord.corrections = [completedCorrection, pendingCorrection];
@@ -161,6 +166,11 @@ describe(`GET ${BASE_URL}`, () => {
             facilityId: feeRecord.facilityId,
             exporter: feeRecord.exporter,
             additionalInfo: pendingCorrection.additionalInfo,
+            reasons: pendingCorrection.reasons,
+            reportedFees: {
+              currency: feeRecord.feesPaidToUkefForThePeriodCurrency,
+              amount: feeRecord.feesPaidToUkefForThePeriod,
+            },
           },
         ],
         nextDueReportPeriod: expectAnyReportPeriod,
@@ -219,11 +229,14 @@ describe(`GET ${BASE_URL}`, () => {
       .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
       .withFacilityId('1122334455')
       .withExporter('Test Exporter')
+      .withFeesPaidToUkefForThePeriod(200)
+      .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.EUR)
       .build();
     const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
       .withId(1)
       .withIsCompleted(false)
       .withAdditionalInfo('This is the first correction to be made')
+      .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER])
       .build();
 
     feeRecord.corrections = [pendingCorrection];
@@ -274,6 +287,11 @@ describe(`GET ${BASE_URL}`, () => {
           facilityId: feeRecord.facilityId,
           exporter: feeRecord.exporter,
           additionalInfo: pendingCorrection.additionalInfo,
+          reasons: pendingCorrection.reasons,
+          reportedFees: {
+            currency: feeRecord.feesPaidToUkefForThePeriodCurrency,
+            amount: feeRecord.feesPaidToUkefForThePeriod,
+          },
         },
       ];
 
