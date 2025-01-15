@@ -42,10 +42,12 @@ describe('controllers - deals', () => {
     {
       status: AMENDMENT_STATUS.IN_PROGRESS,
       dealId: '0',
+      submittedByPim: true,
     },
     {
       status: AMENDMENT_STATUS.NOT_STARTED,
       dealId: '1',
+      submittedByPim: true,
     },
   ];
   const mockApiGetAllAmendmentsInProgressResponse = {
