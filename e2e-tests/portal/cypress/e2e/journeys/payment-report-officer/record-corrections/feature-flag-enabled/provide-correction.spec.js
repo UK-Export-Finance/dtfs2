@@ -8,10 +8,11 @@ import {
   CURRENCY,
   mapReasonsToDisplayValues,
   getFormattedCurrencyAndAmount,
+  getFormattedMonetaryValue,
 } from '@ukef/dtfs2-common';
 import { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } from '../../../../../../../e2e-fixtures';
 import relative from '../../../../relativeURL';
-import { provideCorrection, pendingCorrections } from '../../../../pages';
+import { provideCorrection, pendingCorrections, reviewCorrection } from '../../../../pages';
 import { correctionRequestDetails } from '../../../../partials';
 
 context('Provide correction - Fee record correction feature flag enabled', () => {
@@ -33,7 +34,12 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
           amount: 77,
           currency: CURRENCY.GBP,
         },
-        reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT, RECORD_CORRECTION_REASON.OTHER],
+        reasons: [
+          RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT,
+          RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT,
+          RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT,
+          RECORD_CORRECTION_REASON.OTHER,
+        ],
         additionalInfo: 'Lots of additional info %$£%&^@&^',
       };
 
@@ -91,10 +97,35 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
 
         it('should be able to see only the form fields relevant to the correction request reasons', () => {
           provideCorrection.facilityIdInput().should('exist');
-          provideCorrection.reportedFeeInput().should('not.exist');
+          provideCorrection.reportedFeeInput().should('exist');
           provideCorrection.reportedCurrency.container().should('exist');
           provideCorrection.utilisationInput().should('not.exist');
           provideCorrection.additionalComments.input().should('exist');
+        });
+
+        context('and when the user has entered values, clicked save and review changes and clicked change', () => {
+          const newFacilityId = '77777777';
+          const newReportedFee = '12345.67';
+          const newReportedCurrency = CURRENCY.JPY;
+          const additionalComments = 'Some additional comments & Some more additional comments';
+
+          beforeEach(() => {
+            cy.keyboardInput(provideCorrection.facilityIdInput(), newFacilityId);
+            cy.keyboardInput(provideCorrection.reportedFeeInput(), newReportedFee);
+            provideCorrection.reportedCurrency.radioInput(newReportedCurrency).click();
+            cy.keyboardInput(provideCorrection.additionalComments.input(), additionalComments);
+
+            cy.clickContinueButton();
+
+            reviewCorrection.changeNewValuesLink().click();
+          });
+
+          it('should retain the values entered by the user', () => {
+            provideCorrection.facilityIdInput().should('have.value', newFacilityId);
+            provideCorrection.reportedFeeInput().should('have.value', getFormattedMonetaryValue(newReportedFee));
+            provideCorrection.reportedCurrency.radioInput(newReportedCurrency).should('be.checked');
+            provideCorrection.additionalComments.input().should('have.value', additionalComments);
+          });
         });
       });
     });
