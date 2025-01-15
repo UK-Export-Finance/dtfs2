@@ -177,6 +177,19 @@ describe(`POST ${url}`, () => {
       expect(response.text).toContain('Facility end date must be a real date');
     });
 
+    it('should render facility end date page with errors if facility end date is not provided', async () => {
+      // Arrange
+      const body = { 'facility-end-date-day': '', 'facility-end-date-month': '', 'facility-end-date-year': '' };
+
+      // Act
+      const response = await postWithSessionCookie(body, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain('Facility end date');
+      expect(response.text).toContain('Enter the facility end date');
+    });
+
     it('should redirect to the next page if the facility end date is valid', async () => {
       // Arrange
       const body = {
