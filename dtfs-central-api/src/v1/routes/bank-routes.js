@@ -7,10 +7,11 @@ const { getBanks } = require('../controllers/bank/get-banks.controller');
 const createBankController = require('../controllers/bank/create-bank.controller');
 const getNextReportPeriodController = require('../controllers/bank/get-next-report-period-by-bank.controller');
 const { getUtilisationReportsByBankIdAndOptions } = require('../controllers/utilisation-report-service/get-utilisation-reports.controller');
-const { validatePutFeeRecordCorrectionTransientFormDataPayload } = require('./middleware/payload-validation');
+const { validatePutFeeRecordCorrectionTransientFormDataPayload, validatePutFeeRecordCorrectionPayload } = require('./middleware/payload-validation');
 const {
   putFeeRecordCorrectionTransientFormData,
 } = require('../controllers/utilisation-report-service/fee-record-correction/put-fee-record-correction-transient-form-data.controller');
+const { putFeeRecordCorrection } = require('../controllers/utilisation-report-service/fee-record-correction/put-fee-record-correction.controller');
 const {
   getUtilisationReportPendingCorrectionsByBankId,
 } = require('../controllers/utilisation-report-service/fee-record-correction/get-utilisation-report-pending-corrections.controller');
@@ -266,6 +267,63 @@ bankRouter
     handleExpressValidatorResult,
     validatePutFeeRecordCorrectionTransientFormDataPayload,
     putFeeRecordCorrectionTransientFormData,
+  );
+
+/**
+ * @openapi
+ * /bank/:bankId/fee-record-corrections/:correctionId:
+ *   put:
+ *     summary: |
+ *       Save the transient form data for the requesting user
+ *       and correction id combination to the fee record correction
+ *       and send confirmation email to the bank and UKEF
+ *     tags: [Utilisation Report]
+ *     description: |
+ *       Save the transient form data for the requesting user
+ *       and correction id combination to the fee record correction
+ *       and send confirmation email to the bank and UKEF
+ *     parameters:
+ *       - in: path
+ *         name: bankId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the bank
+ *       - in: path
+ *         name: correctionId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the fee record correction
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user:
+ *                 type: object
+ *                 properties:
+ *                   _id: string
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal Server Error
+ */
+bankRouter
+  .route('/:bankId/fee-record-corrections/:correctionId')
+  .put(
+    validation.bankIdValidation,
+    validation.sqlIdValidation('correctionId'),
+    handleExpressValidatorResult,
+    validatePutFeeRecordCorrectionPayload,
+    putFeeRecordCorrection,
   );
 
 /**

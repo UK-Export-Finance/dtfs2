@@ -11,8 +11,10 @@ import {
 } from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import api from '../../../../api';
-import { getUtilisationReportCorrectionReview, GetUtilisationReportCorrectionReviewRequest } from '.';
+import { getUtilisationReportCorrectionReview, UtilisationReportCorrectionReviewRequest, postUtilisationReportCorrectionReview } from '.';
 import { UtilisationReportCorrectionInformationViewModel } from '../../../../types/view-models/record-correction/utilisation-report-correction-information';
+import { SaveFeeRecordCorrectionResponseBody } from '../../../../api-response-types';
+import { LoggedInUserSession } from '../../../../helpers/express-session';
 
 jest.mock('../../../../api');
 
@@ -31,32 +33,32 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
   };
 
   const userToken = 'token';
-  const requestSession = {
+  const aRequestSession = () => ({
     user: mockUser,
     userToken,
     loginStatus: PORTAL_LOGIN_STATUS.VALID_2FA,
-  };
+  });
 
   const correctionId = '7';
 
+  const getHttpMocks = () =>
+    httpMocks.createMocks<UtilisationReportCorrectionReviewRequest>({
+      params: { correctionId },
+      session: aRequestSession(),
+    });
+
+  let req: UtilisationReportCorrectionReviewRequest;
+  let res: MockResponse<Response>;
+
+  beforeEach(() => {
+    ({ req, res } = getHttpMocks());
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
   describe('getUtilisationReportCorrectionReview', () => {
-    const getHttpMocks = () =>
-      httpMocks.createMocks<GetUtilisationReportCorrectionReviewRequest>({
-        params: { correctionId },
-        session: requestSession,
-      });
-
-    let req: GetUtilisationReportCorrectionReviewRequest;
-    let res: MockResponse<Response>;
-
-    beforeEach(() => {
-      ({ req, res } = getHttpMocks());
-    });
-
-    afterEach(() => {
-      jest.resetAllMocks();
-    });
-
     it('should render the "utilisation report correction - check the information" page', async () => {
       // Arrange
       const exporter = 'An exporter';
@@ -149,6 +151,60 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
 
       // Act
       await getUtilisationReportCorrectionReview(req, res);
+
+      // Assert
+      expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
+      expect(res._getRenderData()).toEqual({ user: mockUser });
+    });
+  });
+
+  describe('postUtilisationReportCorrectionReview', () => {
+    const aSaveFeeRecordCorrectionResponseBody = (): SaveFeeRecordCorrectionResponseBody => ({
+      sentToEmails: ['email1@ukexportfinance.gov.uk', 'email2@ukexportfinance.gov.uk'],
+      reportPeriod: { start: { month: 1, year: 2021 }, end: { month: 3, year: 2021 } },
+    });
+
+    it('should save the fee record correction', async () => {
+      // Arrange
+      jest.mocked(api.saveFeeRecordCorrection).mockResolvedValue(aSaveFeeRecordCorrectionResponseBody());
+
+      // Act
+      await postUtilisationReportCorrectionReview(req, res);
+
+      // Assert
+      expect(api.saveFeeRecordCorrection).toHaveBeenCalledTimes(1);
+      expect(api.saveFeeRecordCorrection).toHaveBeenCalledWith(userToken, bankId, correctionId);
+    });
+
+    it('should redirect to the record correction sent page', async () => {
+      // Arrange
+      jest.mocked(api.saveFeeRecordCorrection).mockResolvedValue(aSaveFeeRecordCorrectionResponseBody());
+
+      // Act
+      await postUtilisationReportCorrectionReview(req, res);
+
+      // Assert
+      expect(res._getRedirectUrl()).toEqual('/utilisation-reports/correction-sent');
+    });
+
+    it('should save the record correction sent data to the session', async () => {
+      // Arrange
+      const recordCorrectionSentData = aSaveFeeRecordCorrectionResponseBody();
+      jest.mocked(api.saveFeeRecordCorrection).mockResolvedValue(recordCorrectionSentData);
+
+      // Act
+      await postUtilisationReportCorrectionReview(req, res);
+
+      // Assert
+      expect((req.session as LoggedInUserSession).recordCorrectionSent).toEqual(recordCorrectionSentData);
+    });
+
+    it('should render the "problem with service" page when fetching the fee record correction review information fails', async () => {
+      // Arrange
+      jest.mocked(api.saveFeeRecordCorrection).mockRejectedValue(new Error());
+
+      // Act
+      await postUtilisationReportCorrectionReview(req, res);
 
       // Assert
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');

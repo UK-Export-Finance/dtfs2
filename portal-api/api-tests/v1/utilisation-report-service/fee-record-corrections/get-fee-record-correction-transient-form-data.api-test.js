@@ -6,7 +6,7 @@ const { withClientAuthenticationTests } = require('../../../common-tests/client-
 const { withRoleAuthorisationTests } = require('../../../common-tests/role-authorisation-tests.js');
 const { PAYMENT_REPORT_OFFICER } = require('../../../../src/v1/roles/roles.js');
 
-describe('GET /v1/banks/:bankId/utilisation-reports/pending-corrections', () => {
+describe('GET /v1/banks/:bankId/fee-record-correction/:correctionId/transient-form-data', () => {
   const correctionFormDataUrl = (bankId, correctionId) => `/v1/banks/${bankId}/fee-record-correction/${correctionId}/transient-form-data`;
   let aPaymentReportOfficer;
   let testUsers;

@@ -15,6 +15,7 @@ import { GetUtilisationReportResponse } from '../../../src/types/utilisation-rep
 import { mongoDbClient } from '../../../src/drivers/db-client';
 import { wipe } from '../../wipeDB';
 import { aPortalUser } from '../../../test-helpers';
+import { CustomErrorResponse } from '../../helpers/custom-error-response';
 
 console.error = jest.fn();
 
@@ -24,10 +25,6 @@ const saveReportsToDatabase = async (...reports: UtilisationReportEntity[]): Pro
 type UtilisationReportResponse = GetUtilisationReportResponse & {
   dateUploaded: IsoDateTimeStamp;
 };
-
-interface CustomErrorResponse extends Response {
-  body: { errors: { msg: string }[] };
-}
 
 interface CustomSuccessResponse extends Response {
   body: UtilisationReportResponse[];

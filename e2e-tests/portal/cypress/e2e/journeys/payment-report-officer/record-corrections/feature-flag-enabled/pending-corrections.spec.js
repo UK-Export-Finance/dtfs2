@@ -7,6 +7,8 @@ const {
   REPORT_NOT_RECEIVED,
   getFormattedReportPeriodWithLongMonth,
   getNextReportPeriodForBankSchedule,
+  RECORD_CORRECTION_REASON,
+  CURRENCY,
 } = require('@ukef/dtfs2-common');
 const { addMonths, format } = require('date-fns');
 const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../../e2e-fixtures');
@@ -26,10 +28,17 @@ context('Pending corrections - Fee record correction feature flag enabled', () =
     });
 
     context('When there are pending corrections', () => {
+      const reportedFeeIntegerValue = 66;
+
       const pendingCorrectionDetails = {
         facilityId: '1234',
         exporter: 'test exporter',
         additionalInfo: 'Lots of additional info %$£%&^@&^',
+        reportedFee: reportedFeeIntegerValue,
+        reportedCurrency: CURRENCY.JPY,
+        formattedReportedFee: `${CURRENCY.JPY} ${reportedFeeIntegerValue}.00`,
+        reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER],
+        formattedReasons: 'Facility ID is incorrect, Other',
       };
 
       const pendingCorrectionReportPeriod = { start: { month: 1, year: 2021 }, end: { month: 1, year: 2021 } };
@@ -52,12 +61,15 @@ context('Pending corrections - Fee record correction feature flag enabled', () =
             .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
             .withFacilityId(pendingCorrectionDetails.facilityId)
             .withExporter(pendingCorrectionDetails.exporter)
+            .withFeesPaidToUkefForThePeriod(pendingCorrectionDetails.reportedFee)
+            .withFeesPaidToUkefForThePeriodCurrency(pendingCorrectionDetails.reportedCurrency)
             .build();
 
           const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
             .withId(1)
             .withIsCompleted(false)
             .withAdditionalInfo(pendingCorrectionDetails.additionalInfo)
+            .withReasons(pendingCorrectionDetails.reasons)
             .build();
 
           const completedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
@@ -109,6 +121,8 @@ context('Pending corrections - Fee record correction feature flag enabled', () =
 
           cy.assertText(pendingCorrections.row(1).facilityId(), pendingCorrectionDetails.facilityId);
           cy.assertText(pendingCorrections.row(1).exporter(), pendingCorrectionDetails.exporter);
+          cy.assertText(pendingCorrections.row(1).reportedFeesPaid(), pendingCorrectionDetails.formattedReportedFee);
+          cy.assertText(pendingCorrections.row(1).errorType(), pendingCorrectionDetails.formattedReasons);
           cy.assertText(pendingCorrections.row(1).errorSummary(), pendingCorrectionDetails.additionalInfo);
         });
 
@@ -172,6 +186,8 @@ context('Pending corrections - Fee record correction feature flag enabled', () =
 
           cy.assertText(pendingCorrections.row(1).facilityId(), pendingCorrectionDetails.facilityId);
           cy.assertText(pendingCorrections.row(1).exporter(), pendingCorrectionDetails.exporter);
+          cy.assertText(pendingCorrections.row(1).reportedFeesPaid(), pendingCorrectionDetails.formattedReportedFee);
+          cy.assertText(pendingCorrections.row(1).errorType(), pendingCorrectionDetails.formattedReasons);
           cy.assertText(pendingCorrections.row(1).errorSummary(), pendingCorrectionDetails.additionalInfo);
         });
 
