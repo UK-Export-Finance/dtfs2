@@ -6,7 +6,12 @@ const aNotStartedAmendment = () => ({
   submittedByPim: false,
 });
 
-const anInProgressAmendment = () => ({
+const anUnsubmittedInProgressAmendment = () => ({
+  status: AMENDMENT_STATUS.IN_PROGRESS,
+  submittedByPim: false,
+});
+
+const aSubmittedInProgressAmendment = () => ({
   status: AMENDMENT_STATUS.IN_PROGRESS,
   submittedByPim: true,
 });
@@ -19,7 +24,7 @@ const aCompletedAmendment = () => ({
 describe('filterAmendmentsByInProgress', () => {
   it(`should return an empty array if the deal stage is ${TFM_DEAL_STAGE.CANCELLED}`, () => {
     // Arrange
-    const amendments = [anInProgressAmendment()];
+    const amendments = [aSubmittedInProgressAmendment()];
     const deal = {
       tfm: {
         stage: TFM_DEAL_STAGE.CANCELLED,
@@ -67,7 +72,7 @@ describe('filterAmendmentsByInProgress', () => {
 
   it(`should only return the in progress amendments`, () => {
     // Arrange
-    const amendments = [aNotStartedAmendment(), aCompletedAmendment(), anInProgressAmendment()];
+    const amendments = [aNotStartedAmendment(), aCompletedAmendment(), aSubmittedInProgressAmendment(), anUnsubmittedInProgressAmendment()];
     const deal = {
       tfm: {
         stage: TFM_DEAL_STAGE.COMPLETED,
@@ -78,6 +83,6 @@ describe('filterAmendmentsByInProgress', () => {
     const result = filterAmendmentsByInProgress({ amendments, deal });
 
     // Assert
-    expect(result).toEqual([anInProgressAmendment()]);
+    expect(result).toEqual([aSubmittedInProgressAmendment()]);
   });
 });
