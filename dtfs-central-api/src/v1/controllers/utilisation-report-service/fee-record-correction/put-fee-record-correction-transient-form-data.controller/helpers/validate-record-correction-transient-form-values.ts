@@ -19,7 +19,7 @@ import { TfmFacilitiesRepo } from '../../../../../../repositories/tfm-facilities
  * @returns The form value for the specified reason, or undefined if no value exists.
  * @throws Error if an invalid record correction reason is provided.
  */
-const getFormValueForReason = (formValues: RecordCorrectionFormValues, reason: RecordCorrectionReason): string | undefined => {
+export const getFormValueForReason = (formValues: RecordCorrectionFormValues, reason: RecordCorrectionReason): string | undefined => {
   switch (reason) {
     case RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT:
       return formValues.facilityId;
@@ -43,7 +43,7 @@ const getFormValueForReason = (formValues: RecordCorrectionFormValues, reason: R
  * @param reasons - The reasons for the record correction that determine which form values are expected.
  * @throws Error if there are any form values provided for reasons not in the correction request.
  */
-const validateNoUnexpectedReasonValues = (formValues: RecordCorrectionFormValues, reasons: RecordCorrectionReason[]) => {
+export const validateNoUnexpectedReasonValues = (formValues: RecordCorrectionFormValues, reasons: RecordCorrectionReason[]) => {
   const unexpectedReasons = difference(Object.values(RECORD_CORRECTION_REASON), reasons);
 
   unexpectedReasons.forEach((reason) => {
@@ -55,7 +55,6 @@ const validateNoUnexpectedReasonValues = (formValues: RecordCorrectionFormValues
   });
 };
 
-// TODO: Add unit tests.
 /**
  * Validates a facility ID value.
  * @param facilityIdValue - The facility ID to validate.
@@ -78,7 +77,6 @@ export const getFacilityIdValidationError = async (facilityIdValue?: string): Pr
   return undefined;
 };
 
-// TODO: Add unit tests
 /**
  * Validates the additional comments field for a record correction request.
  *
@@ -122,7 +120,7 @@ type ValidationMap = Record<
  * @param reasons - The reasons for the record correction that determine which form values are required.
  * @returns An object containing validation error messages for any invalid required form values.
  */
-const getValidationErrorsForRequiredFormValues = async (
+export const getValidationErrorsForRequiredFormValues = async (
   formValues: RecordCorrectionFormValues,
   reasons: RecordCorrectionReason[],
 ): Promise<RecordCorrectionFormValueValidationErrors> => {
