@@ -143,7 +143,7 @@ describe('utilisation-report routes', () => {
       });
 
       withRoleValidationApiTests({
-        makeRequestWithHeaders: (headers) => post().to(getUrl({ correctionId: 1 }), {}, headers),
+        makeRequestWithHeaders: (headers) => post(undefined, headers).to(getUrl({ correctionId: 1 })),
         whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
         successCode: HttpStatusCode.Ok,
         disableHappyPath: true,

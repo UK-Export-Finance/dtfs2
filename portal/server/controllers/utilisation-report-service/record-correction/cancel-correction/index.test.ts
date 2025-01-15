@@ -45,8 +45,6 @@ describe('controllers/utilisation-reports/record-corrections/cancel-correction',
   });
 
   it('should delete the form data', async () => {
-    // Arrange
-
     // Act
     await cancelUtilisationReportCorrection(req, res);
 

@@ -140,7 +140,7 @@ describe('fee-record-correction-transient-form-data.controller', () => {
     let res: MockResponse<Response>;
 
     beforeEach(() => {
-      req = httpMocks.createRequest<GetFeeRecordCorrectionTransientFormDataRequest>({
+      req = httpMocks.createRequest<PutFeeRecordCorrectionTransientFormDataRequest>({
         params: aValidRequestParams(),
         body: aRecordCorrectionFormValues(),
         user: { _id: userId },
@@ -217,7 +217,7 @@ describe('fee-record-correction-transient-form-data.controller', () => {
     let res: MockResponse<Response>;
 
     beforeEach(() => {
-      req = httpMocks.createRequest<GetFeeRecordCorrectionTransientFormDataRequest>({
+      req = httpMocks.createRequest<DeleteFeeRecordCorrectionTransientFormDataRequest>({
         params: aValidRequestParams(),
         user: { _id: userId },
       });
