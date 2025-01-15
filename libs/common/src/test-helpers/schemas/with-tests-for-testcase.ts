@@ -9,7 +9,7 @@ import {
   withIsoDateTimeStampSchemaTests,
 } from './custom-objects-tests';
 import { withStringTests, withNumberTests, withBooleanTests, withArrayTests } from './primitive-object-tests';
-import { withTfmTeamSchemaTests, withAuditDatabaseRecordSchemaTests, withEntraIdUserSchemaTests } from './schema-tests';
+import { withTfmTeamSchemaTests, withAuditDatabaseRecordSchemaTests, withEntraIdUserSchemaTests, withTfmSessionUserSchemaTests } from './schema-tests';
 import { TestCase } from './with-test-for-test-case.type';
 import { withCurrencySchemaTests } from './custom-objects-tests/with-currency-schema.tests';
 import { withIsoDateTimeStampToDateSchemaTests } from './transformation-tests';
@@ -153,6 +153,14 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
 
     case 'ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA':
       withIsoDateTimeStampToDateSchemaTests({
+        schema,
+        options,
+        getTestObjectWithUpdatedParameter,
+      });
+      break;
+
+    case 'TFM_SESSION_USER_SCHEMA':
+      withTfmSessionUserSchemaTests({
         schema,
         options,
         getTestObjectWithUpdatedParameter,
