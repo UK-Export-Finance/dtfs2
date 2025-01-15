@@ -89,7 +89,18 @@ context('Deal cancellation - submit cancellation with an amendment in progress',
         caseDealPage.cancelDealButton().should('not.exist');
       });
 
-      it(`should show the deal status as ${TFM_DEAL_STAGE.CANCELLED}`, () => {
+      it(`should show the deal status as ${TFM_DEAL_STAGE.CANCELLED} on all tabs`, () => {
+        caseSubNavigation.tasksLink().click();
+        cy.assertText(caseDealPage.dealStage(), TFM_DEAL_STAGE.CANCELLED);
+        caseSubNavigation.dealLink().click();
+        cy.assertText(caseDealPage.dealStage(), TFM_DEAL_STAGE.CANCELLED);
+        caseSubNavigation.partiesLink().click();
+        cy.assertText(caseDealPage.dealStage(), TFM_DEAL_STAGE.CANCELLED);
+        caseSubNavigation.documentsLink().click();
+        cy.assertText(caseDealPage.dealStage(), TFM_DEAL_STAGE.CANCELLED);
+        caseSubNavigation.underwritingLink().click();
+        cy.assertText(caseDealPage.dealStage(), TFM_DEAL_STAGE.CANCELLED);
+        caseSubNavigation.activityLink().click();
         cy.assertText(caseDealPage.dealStage(), TFM_DEAL_STAGE.CANCELLED);
       });
 
