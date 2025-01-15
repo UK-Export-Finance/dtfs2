@@ -6,6 +6,7 @@ import {
   aPortalSessionUser,
   CURRENCY,
   FeeRecordCorrectionReviewInformation,
+  getFormattedMonetaryValue,
   mapReasonsToDisplayValues,
   PORTAL_LOGIN_STATUS,
 } from '@ukef/dtfs2-common';
@@ -88,7 +89,7 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
         exporter,
         reportedFees: {
           currency: reportedFeesCurrency,
-          formattedAmount: '1,234.56',
+          formattedAmount: getFormattedMonetaryValue(reportedFeesAmount),
         },
       };
 
