@@ -31,7 +31,7 @@ export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordC
     const { user, formData } = req.body;
 
     const correctionId = Number(correctionIdString);
-    const userId = user.id;
+    const userId = user._id;
 
     const correction = await FeeRecordCorrectionRepo.findByIdAndBankId(correctionId, bankId);
 
@@ -39,7 +39,7 @@ export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordC
       throw new NotFoundError(`Failed to find a correction with id '${correctionId}' for bank id '${bankId}'`);
     }
 
-    // TODO: FN-3688 - validate the form data has the fields expected for the given reasons
+    // TODO FN-3688 PR 2: Validate the form data has the fields expected for the given reasons.
     const validatedFormData = formData as unknown as RecordCorrectionTransientFormData;
 
     const newTransientFormData = FeeRecordCorrectionTransientFormDataEntity.create({

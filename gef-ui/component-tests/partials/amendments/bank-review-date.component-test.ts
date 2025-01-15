@@ -1,27 +1,27 @@
 import { validationErrorHandler } from '../../../server/utils/helpers';
-import { FacilityEndDateViewModel } from '../../../server/types/view-models/amendments/facility-end-date-view-model';
+import { BankReviewDateViewModel } from '../../../server/types/view-models/amendments/bank-review-date-view-model';
 import pageRenderer from '../../pageRenderer';
 
-const page = 'partials/amendments/facility-end-date.njk';
+const page = 'partials/amendments/bank-review-date.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
   const previousPage = 'previousPage';
   const cancelUrl = 'cancelUrl';
-  const facilityEndDate = { day: '14', month: '2', year: '2024' };
+  const bankReviewDate = { day: '14', month: '2', year: '2024' };
   const exporterName = 'exporterName';
 
-  const params: FacilityEndDateViewModel = {
+  const params: BankReviewDateViewModel = {
     previousPage,
     cancelUrl,
-    facilityEndDate,
+    bankReviewDate,
     exporterName,
   };
 
   it('should render the page heading', () => {
     const wrapper = render(params);
 
-    wrapper.expectText('[data-cy="page-heading"]').toRead('Facility end date');
+    wrapper.expectText('[data-cy="page-heading"]').toRead('Bank review date');
   });
 
   it(`should render the 'Back' link`, () => {
@@ -30,12 +30,12 @@ describe(page, () => {
     wrapper.expectLink('[data-cy="back-link"]').toLinkTo(previousPage, 'Back');
   });
 
-  it(`should render the facility end date input`, () => {
+  it(`should render the bank review date input`, () => {
     const wrapper = render(params);
 
-    wrapper.expectInput('[data-cy="facility-end-date-day"]').toHaveValue(facilityEndDate.day);
-    wrapper.expectInput('[data-cy="facility-end-date-month"]').toHaveValue(facilityEndDate.month);
-    wrapper.expectInput('[data-cy="facility-end-date-year"]').toHaveValue(facilityEndDate.year);
+    wrapper.expectInput('[data-cy="bank-review-date-day"]').toHaveValue(bankReviewDate.day);
+    wrapper.expectInput('[data-cy="bank-review-date-month"]').toHaveValue(bankReviewDate.month);
+    wrapper.expectInput('[data-cy="bank-review-date-year"]').toHaveValue(bankReviewDate.year);
   });
 
   it(`should render the error summary if an error exists`, () => {
@@ -43,7 +43,7 @@ describe(page, () => {
 
     const paramsWithErrors = {
       ...params,
-      errors: validationErrorHandler({ errMsg, errRef: 'facilityEndDate' }),
+      errors: validationErrorHandler({ errMsg, errRef: 'bankReviewDate' }),
     };
 
     const wrapper = render(paramsWithErrors);
@@ -62,18 +62,18 @@ describe(page, () => {
 
     const paramsWithErrors = {
       ...params,
-      errors: validationErrorHandler({ errMsg, errRef: 'facilityEndDate' }),
+      errors: validationErrorHandler({ errMsg, errRef: 'bankReviewDate' }),
     };
 
     const wrapper = render(paramsWithErrors);
 
-    wrapper.expectText('[data-cy="facility-end-date-inline-error"]').toContain(errMsg);
+    wrapper.expectText('[data-cy="bank-review-date-inline-error"]').toContain(errMsg);
   });
 
   it(`should not render the inline error if there is no error`, () => {
     const wrapper = render(params);
 
-    wrapper.expectText('[data-cy="facility-end-date-inline-error"]').notToExist();
+    wrapper.expectText('[data-cy="bank-review-date-inline-error"]').notToExist();
   });
 
   it(`should render the continue button`, () => {
@@ -88,13 +88,15 @@ describe(page, () => {
     wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(cancelUrl, 'Cancel');
   });
 
-  it('should render the `what is a facility end date` accordion', () => {
+  it('should render the `what is a bank review date` accordion', () => {
     const wrapper = render(params);
 
-    wrapper.expectText('[data-cy="facility-end-date-details"]').toContain('What is a facility end date');
+    wrapper.expectText('[data-cy="bank-review-date-details"]').toContain('What is a bank review date');
     wrapper
-      .expectText('[data-cy="facility-end-date-details"]')
-      .toContain('The facility end date is the deadline for a committed loan to be repaid at which point the contract will be terminated.');
+      .expectText('[data-cy="bank-review-date-details"]')
+      .toContain(
+        "The bank review date is when you decide in accordance with your usual policies and procedures for such facilities whether to continue or terminate the facility based on the borrower's needs and circumstances.",
+      );
   });
 
   it('should render the exporter name in the heading caption', () => {

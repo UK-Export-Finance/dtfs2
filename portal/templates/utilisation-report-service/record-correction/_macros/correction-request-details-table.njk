@@ -2,7 +2,7 @@
 
 {% macro render(params) %}
   {% set details = params.details %}
- 
+
   {{ govukTable({
     caption: "Current record",
     captionClasses: "govuk-table__caption--m",
@@ -15,7 +15,7 @@
         text: "Exporter"
       },
       {
-        text: "Reported fees"
+        text: "Reported fees paid"
       },
       {
         text: details.errorTypeHeader,

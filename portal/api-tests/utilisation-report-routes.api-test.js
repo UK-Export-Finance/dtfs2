@@ -16,11 +16,11 @@ jest.mock('../server/api', () => ({
   }),
 }));
 
-const { ROLES } = require('@ukef/dtfs2-common');
+const { ROLES, aRecordCorrectionFormValues } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
-const { get } = require('./create-api').createApi(app);
+const { get, post } = require('./create-api').createApi(app);
 const MOCK_BANKS = require('../test-helpers/mock-banks');
 
 describe('utilisation-report routes', () => {
@@ -79,6 +79,49 @@ describe('utilisation-report routes', () => {
 
         // Act
         const response = await get(url);
+
+        // Assert
+        expect(response.headers.location).toEqual('/not-found');
+      });
+    });
+  });
+
+  describe('POST /utilisation-reports/provide-correction/:correctionId', () => {
+    const originalProcessEnv = { ...process.env };
+    const getUrl = ({ correctionId }) => `/utilisation-reports/provide-correction/${correctionId}`;
+
+    describe('when FF_FEE_RECORD_CORRECTION_ENABLED is set to `true`', () => {
+      beforeAll(() => {
+        process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'true';
+      });
+
+      afterAll(() => {
+        process.env = { ...originalProcessEnv };
+      });
+
+      withRoleValidationApiTests({
+        makeRequestWithHeaders: (headers) => post(aRecordCorrectionFormValues(), headers).to(getUrl({ correctionId: 1 })),
+        whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
+        successCode: HttpStatusCode.Ok,
+        disableHappyPath: true,
+      });
+    });
+
+    describe('when FF_FEE_RECORD_CORRECTION_ENABLED is set to `false`', () => {
+      beforeAll(() => {
+        process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'false';
+      });
+
+      afterAll(() => {
+        process.env = { ...originalProcessEnv };
+      });
+
+      it(`should redirect to "/not-found"`, async () => {
+        // Arrange
+        const url = getUrl({ correctionId: 1 });
+
+        // Act
+        const response = await post(aRecordCorrectionFormValues()).to(url);
 
         // Assert
         expect(response.headers.location).toEqual('/not-found');

@@ -538,6 +538,40 @@ const getFeeRecordCorrectionTransientFormData = async (correctionId, userId) => 
 };
 
 /**
+ * Puts fee record correction transient form data by bank id, correction id, and user id.
+ * @param {string} bankId - The ID of the bank
+ * @param {number} correctionId - The ID of the correction
+ * @param {string} userId - The ID of the user
+ * @param {import('@ukef/dtfs2-common').RecordCorrectionFormValues} formData - The form data
+ */
+const putFeeRecordCorrectionTransientFormData = async (bankId, correctionId, userId, formData) => {
+  try {
+    const response = await axios.put(
+      `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/fee-record-corrections/${correctionId}/transient-form-data`,
+      {
+        formData,
+        user: { _id: userId },
+      },
+      {
+        headers: headers.central,
+      },
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Unable to put fee record correction transient form data with bank id %s, correction id %s, and user id %s: %o',
+      bankId,
+      correctionId,
+      userId,
+      error,
+    );
+
+    throw error;
+  }
+};
+
+/**
  * Gets the portal facility amendment
  * @param {string} facilityId - id of the facility to amend
  * @param {string} amendmentId - id of the facility amendment
@@ -687,4 +721,5 @@ module.exports = {
   putPortalFacilityAmendment,
   getFeeRecordCorrectionReview,
   patchPortalFacilityAmendment,
+  putFeeRecordCorrectionTransientFormData,
 };
