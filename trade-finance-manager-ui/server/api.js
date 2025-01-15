@@ -440,11 +440,6 @@ const handleSsoRedirectForm = async (handleSsoRedirectFormRequest) => {
       data: handleSsoRedirectFormRequest,
     });
 
-    if (!response) {
-      console.error('Invalid response received %o', response);
-      return { status: HttpStatusCode.BadGateway, data: 'Invalid response received' };
-    }
-
     return HANDLE_SSO_REDIRECT_FORM_RESPONSE_SCHEMA.parse(response.data);
   } catch (error) {
     console.error('An exception has occurred while handling TFM SSO %o', error?.response?.data);

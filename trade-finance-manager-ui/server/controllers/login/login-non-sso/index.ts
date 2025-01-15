@@ -48,7 +48,7 @@ export const postLogin = async (req: CustomExpressRequest<{ reqBody: { email?: s
     });
   }
 
-  return res.redirect('/deals');
+  return res.redirect('/home');
 };
 
 export const logout = (req: Request, res: Response) => {

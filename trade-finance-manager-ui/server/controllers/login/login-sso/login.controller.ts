@@ -24,18 +24,16 @@ export class LoginController {
    * If the user is not logged in, it retrieves the authentication code URL and
    * creates a partially logged-in session before redirecting the user to the authentication URL.
    *
-   * @param {Request} req - The HTTP request object.
-   * @param {Response} res - The HTTP response object.
-   * @returns {Promise<void>} - A promise that resolves when the login process is complete.
-   *
-   * @throws Will render a problem with service page if an error occurs during the login process.
+   * @param req - The HTTP request object.
+   * @param res - The HTTP response object.
+   * @returns - A promise that resolves when the login process is complete.
    */
   public async getLogin(req: Request, res: Response) {
     try {
-      // TODO DTFS2-7734: This validation is legacy code, and can be improved
-      if (req?.session?.user) {
+      // TODO: This validation is legacy code, and can be improved
+      if (req.session.user) {
         // User is already logged in.
-        return res.redirect('/deals');
+        return res.redirect('/home');
       }
 
       const { authCodeUrl, authCodeUrlRequest } = await this.loginService.getAuthCodeUrl({ successRedirect: '/' });
@@ -44,7 +42,7 @@ export class LoginController {
 
       return res.redirect(authCodeUrl);
     } catch (error) {
-      console.error('Unable to log in user %o', error);
+      console.error('Unable to log in user: %o', error);
       return res.render('_partials/problem-with-service.njk');
     }
   }
@@ -57,10 +55,9 @@ export class LoginController {
    * On successful login, it redirects the user to the specified URL or the home page.
    * In case of an error, it logs the error and renders a problem with service page.
    *
-   * @param {HandleSsoRedirectFormUiRequest} req - The request object containing the form data and session.
-   * @param {Response} res - The response object used to redirect or render a page.
-   * @returns {Promise<void>} - A promise that resolves when the operation is complete.
-   * @throws {InvalidPayloadError} - If the payload from the SSO redirect is invalid.
+   * @param req - The request object containing the form data and session.
+   * @param res - The response object used to redirect or render a page.
+   * @returns - A promise that resolves when the operation is complete.
    */
   async handleSsoRedirectForm(req: HandleSsoRedirectFormUiRequest, res: Response) {
     try {
@@ -78,11 +75,9 @@ export class LoginController {
         auditDetails,
       });
 
-      const url = successRedirect ?? '/';
-
       this.userSessionService.createLoggedInSession({ session, user, userToken: token });
 
-      return res.redirect(url);
+      return res.redirect(successRedirect ?? '/');
     } catch (error) {
       console.error('Unable to redirect the user after login %o', error);
       return res.render('_partials/problem-with-service.njk');

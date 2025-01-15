@@ -1,1 +1,1 @@
-export * from './mock-builder';
+export * from './mock-builder.mock.builder';

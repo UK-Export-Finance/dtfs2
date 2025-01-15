@@ -20,7 +20,7 @@ describe('validateUserTeam', () => {
     expect(() => validateUserTeam([])(req, res, next)).toThrow(Error('Expected session.user to be defined'));
   });
 
-  it('should redirect to the default redirect url (/deals) if the user is not in the correct team', () => {
+  it('should redirect to the default redirect url (/home) if the user is not in the correct team', () => {
     // Arrange
     const requiredTeamIds = [TEAM_IDS.PDC_RECONCILE];
     const { req, res } = getHttpMocks({ user: { teams: [] } });
@@ -31,7 +31,7 @@ describe('validateUserTeam', () => {
 
     // Assert
     expect(next).not.toHaveBeenCalled();
-    expect(res._getRedirectUrl()).toEqual('/deals');
+    expect(res._getRedirectUrl()).toEqual('/home');
   });
 
   it('should redirect to the specified redirect url if the user is not in the correct team', () => {

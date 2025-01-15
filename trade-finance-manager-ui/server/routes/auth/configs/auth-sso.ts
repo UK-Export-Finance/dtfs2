@@ -8,7 +8,7 @@ import { UserSessionService } from '../../../services/user-session.service';
  * Creates and configures the authentication SSO router.
  * This router handles the Single Sign-On (SSO) redirect form submission.
  *
- * @returns {Router} The configured authentication SSO router.
+ * @returns The configured authentication SSO router.
  */
 export const getAuthSsoRouter: GetRouter = () => {
   const loginService = new LoginService();
