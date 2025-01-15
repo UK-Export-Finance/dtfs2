@@ -66,7 +66,7 @@ describe('page', () => {
     // Arrange
     const reportedFeesPaid = '12,345.67';
     const viewModel = aUtilisationReportCorrectionInformationViewModel();
-    viewModel.feeRecord.reportedFees.amount = reportedFeesPaid;
+    viewModel.feeRecord.reportedFees.formattedAmount = reportedFeesPaid;
 
     // Act
     const wrapper = render(viewModel);

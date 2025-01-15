@@ -41,7 +41,7 @@ export const getUtilisationReportCorrectionReview = async (req: GetUtilisationRe
       exporter,
       reportedFees: {
         currency,
-        amount: getFormattedMonetaryValue(amount),
+        formattedAmount: getFormattedMonetaryValue(amount),
       },
     };
 

@@ -58,7 +58,7 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
     });
 
     it('should render the "utilisation report correction - check the information" page', async () => {
-      // Arrange,
+      // Arrange
       const exporter = 'An exporter';
       const reportedFeesCurrency = CURRENCY.GBP;
       const reportedFeesAmount = 1234.56;
@@ -86,7 +86,7 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
         exporter,
         reportedFees: {
           currency: reportedFeesCurrency,
-          amount: '1,234.56',
+          formattedAmount: '1,234.56',
         },
       };
 

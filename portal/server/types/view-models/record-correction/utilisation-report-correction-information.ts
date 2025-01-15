@@ -7,7 +7,7 @@ export type UtilisationReportCorrectionInformationViewModel = BaseViewModel & {
     exporter: string;
     reportedFees: {
       currency: Currency;
-      amount: string;
+      formattedAmount: string;
     };
   };
   formattedReasons: string;
