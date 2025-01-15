@@ -6,7 +6,7 @@ import { today, yesterday } from '../../../../../../e2e-fixtures/dateConstants';
 import dealsPage from '../../../pages/dealsPage';
 import facilitiesPage from '../../../pages/facilitiesPage';
 import facilityPage from '../../../pages/facilityPage';
-import { caseSubNavigation, successBanner } from '../../../partials';
+import { caseSubNavigation, caseSummary, successBanner } from '../../../partials';
 import activitiesPage from '../../../pages/activities/activitiesPage';
 import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mock-gef-deals';
 import { anIssuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';
@@ -70,7 +70,7 @@ context('Deal cancellation - submit cancellation with an amendment in progress',
 
         cy.clickContinueButton();
 
-        cy.assertText(caseDealPage.dealStage(), TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
+        cy.assertText(caseSummary.ukefDealStage(), TFM_DEAL_STAGE.AMENDMENT_IN_PROGRESS);
       });
 
       it('should redirect you to the deal summary page with the success banner visible once', () => {
@@ -91,17 +91,27 @@ context('Deal cancellation - submit cancellation with an amendment in progress',
 
       it(`should show the deal status as ${TFM_DEAL_STAGE.CANCELLED} on all tabs`, () => {
         caseSubNavigation.tasksLink().click();
-        cy.assertText(caseDealPage.dealStage(), TFM_DEAL_STAGE.CANCELLED);
+        cy.assertText(caseSummary.ukefDealStage(), TFM_DEAL_STAGE.CANCELLED);
         caseSubNavigation.dealLink().click();
-        cy.assertText(caseDealPage.dealStage(), TFM_DEAL_STAGE.CANCELLED);
+        cy.assertText(caseSummary.ukefDealStage(), TFM_DEAL_STAGE.CANCELLED);
         caseSubNavigation.partiesLink().click();
-        cy.assertText(caseDealPage.dealStage(), TFM_DEAL_STAGE.CANCELLED);
+        cy.assertText(caseSummary.ukefDealStage(), TFM_DEAL_STAGE.CANCELLED);
         caseSubNavigation.documentsLink().click();
-        cy.assertText(caseDealPage.dealStage(), TFM_DEAL_STAGE.CANCELLED);
+        cy.assertText(caseSummary.ukefDealStage(), TFM_DEAL_STAGE.CANCELLED);
         caseSubNavigation.underwritingLink().click();
-        cy.assertText(caseDealPage.dealStage(), TFM_DEAL_STAGE.CANCELLED);
+        cy.assertText(caseSummary.ukefDealStage(), TFM_DEAL_STAGE.CANCELLED);
         caseSubNavigation.activityLink().click();
-        cy.assertText(caseDealPage.dealStage(), TFM_DEAL_STAGE.CANCELLED);
+        cy.assertText(caseSummary.ukefDealStage(), TFM_DEAL_STAGE.CANCELLED);
+
+        caseSubNavigation.dealLink().click();
+        caseDealPage.dealFacilitiesTable.row(facility._id).facilityId().click();
+
+        facilityPage.facilityTabAmendments().click();
+        cy.assertText(caseSummary.ukefDealStage(), TFM_DEAL_STAGE.CANCELLED);
+        facilityPage.facilityTabDetails().click();
+        cy.assertText(caseSummary.ukefDealStage(), TFM_DEAL_STAGE.CANCELLED);
+        facilityPage.facilityTabPremiumSchedule().click();
+        cy.assertText(caseSummary.ukefDealStage(), TFM_DEAL_STAGE.CANCELLED);
       });
 
       it(`should show the facility statuses as ${TFM_FACILITY_STAGE.RISK_EXPIRED}`, () => {
