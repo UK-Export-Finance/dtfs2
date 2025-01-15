@@ -4,7 +4,7 @@ import * as api from '../../../services/api';
 import { FacilityValueViewModel } from '../../../types/view-models/amendments/facility-value-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { getCurrencySymbol } from './getCurrencySymbol';
-import { getNextPage } from '../helpers/navigation.helper';
+import { getAmendmentsUrl, getNextPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { validateFacilityValue } from './validation';
 import { validationErrorHandler } from '../../../utils/helpers';
@@ -44,7 +44,7 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
       const viewModel: FacilityValueViewModel = {
         facilityValue,
         exporterName: deal.exporter.companyName,
-        cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+        cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
         previousPage,
         currencySymbol,
         errors: validationErrorHandler(validationErrorOrValue.errors),

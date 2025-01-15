@@ -4,7 +4,7 @@ import * as api from '../../../services/api';
 import { DoYouHaveAFacilityEndDateViewModel } from '../../../types/view-models/amendments/do-you-have-a-facility-end-date-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper';
-import { getPreviousPage } from '../helpers/navigation.helper';
+import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 
 export type GetDoYouHaveAFacilityEndDateRequest = CustomExpressRequest<{
@@ -43,16 +43,14 @@ export const getDoYouHaveAFacilityEndDate = async (req: GetDoYouHaveAFacilityEnd
 
     if (!amendment.changeCoverEndDate) {
       console.error('Amendment %s is not changing the cover end date', amendmentId);
-      return res.redirect(
-        `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
-      );
+      return res.redirect(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE }));
     }
 
     const isUsingFacilityEndDate = amendment.isUsingFacilityEndDate === undefined ? undefined : amendment.isUsingFacilityEndDate.toString();
 
     const viewModel: DoYouHaveAFacilityEndDateViewModel = {
       exporterName: deal.exporter.companyName,
-      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE, amendment),
       isUsingFacilityEndDate,
     };
