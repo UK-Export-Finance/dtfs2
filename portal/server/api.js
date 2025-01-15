@@ -1071,6 +1071,62 @@ const getFeeRecordCorrection = async (token, bankId, id) => {
   return data;
 };
 
+/**
+ * Puts a fee record correction by bank id and correction id.
+ * @param {string} token - The user token
+ * @param {string} bankId - The bank id
+ * @param {string} correctionId - The correction id
+ * @param {import('@ukef/dtfs2-common').RecordCorrectionFormValues} formData - The form data
+ * @returns {Promise<void>}
+ */
+const putFeeRecordCorrection = async (token, bankId, correctionId, formData) => {
+  await axios.put(`${PORTAL_API_URL}/v1/banks/${bankId}/fee-record-correction/${correctionId}/transient-form-data`, formData, {
+    headers: {
+      Authorization: token,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+    },
+  });
+};
+
+/**
+ * Gets a fee record corrections review information by bank id, correction id, and user id.
+ * @param {string} bankId - The bank id
+ * @param {string} correctionId - The correction id
+ * @param {string} userId - The user id
+ * @param {string} token - The user token
+ * @returns {Promise<import('@ukef/dtfs2-common').FeeRecordCorrectionReviewInformation>} Returns a promise that resolves to the fee record correction review data
+ */
+const getFeeRecordCorrectionReview = async (bankId, correctionId, userId, token) => {
+  const { data } = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/fee-record-correction-review/${correctionId}/user/${userId}`, {
+    headers: {
+      Authorization: token,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+    },
+  });
+
+  return data;
+};
+
+/**
+ * Saves a fee record correction.
+ * @param {string} token - The user token
+ * @param {string} bankId - The bank id
+ * @param {string} id - The correction id
+ * @returns {Promise<import('./api-response-types').SaveFeeRecordCorrectionResponseBody>} Returns a promise that resolves to the fee record correction sent data
+ */
+const saveFeeRecordCorrection = async (token, bankId, id) => {
+  const { data } = await axios({
+    method: 'put',
+    url: `${PORTAL_API_URL}/v1/banks/${bankId}/fee-record-correction/${id}`,
+    headers: {
+      Authorization: token,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+    },
+  });
+
+  return data;
+};
+
 module.exports = {
   allDeals,
   allFacilities,
@@ -1127,4 +1183,7 @@ module.exports = {
   getUtilisationReportPendingCorrectionsByBankId,
   getFeeRecordCorrectionTransientFormData,
   getFeeRecordCorrection,
+  putFeeRecordCorrection,
+  getFeeRecordCorrectionReview,
+  saveFeeRecordCorrection,
 };

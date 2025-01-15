@@ -1,12 +1,21 @@
-import { aPortalSessionUser, getFormattedReportPeriodWithLongMonth, ReportPeriod } from '@ukef/dtfs2-common';
+import {
+  aPortalSessionUser,
+  CURRENCY,
+  getFormattedReportPeriodWithLongMonth,
+  mapReasonsToDisplayValues,
+  PendingCorrection,
+  RECORD_CORRECTION_REASON,
+  ReportPeriod,
+} from '@ukef/dtfs2-common';
 import {
   mapNextDueReportPeriodToNextActionViewModel,
   mapToPendingCorrectionsViewModel,
   isNonEmptyPendingCorrectionsResponseBody,
+  mapToPendingCorrectionViewModel,
 } from './pending-corrections-helper';
 import { NonEmptyPendingCorrectionsResponseBody, UtilisationReportPendingCorrectionsResponseBody } from '../../../api-response-types';
 import { PRIMARY_NAV_KEY } from '../../../constants';
-import { aNonEmptyPendingCorrectionsResponseBody } from '../../../../test-helpers/test-data';
+import { aNonEmptyPendingCorrectionsResponseBody, aPendingCorrection } from '../../../../test-helpers/test-data';
 
 describe('pending-corrections-helper', () => {
   const mockToday = new Date('2023-04-01');
@@ -67,11 +76,76 @@ describe('pending-corrections-helper', () => {
     );
   });
 
+  describe('mapToPendingCorrectionViewModel', () => {
+    it('should map the correction reasons to formatted reasons string', () => {
+      // Arrange
+      const correction: PendingCorrection = {
+        ...aPendingCorrection(),
+        reasons: [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT],
+      };
+
+      // Act
+      const result = mapToPendingCorrectionViewModel(correction);
+
+      // Assert
+      expect(result.formattedReasons).toEqual(mapReasonsToDisplayValues(correction.reasons).join(', '));
+    });
+
+    it('should map the reported fees to formatted string', () => {
+      // Arrange
+      const correction: PendingCorrection = {
+        ...aPendingCorrection(),
+        reportedFees: {
+          currency: CURRENCY.GBP,
+          amount: 100,
+        },
+      };
+
+      // Act
+      const result = mapToPendingCorrectionViewModel(correction);
+
+      // Assert
+      expect(result.formattedReportedFees).toEqual(`${CURRENCY.GBP} 100.00`);
+    });
+
+    it('should set the facility ID, exporter, correction ID and additional info to the correction values', () => {
+      // Arrange
+      const correction: PendingCorrection = {
+        ...aPendingCorrection(),
+        facilityId: '123',
+        exporter: 'exporter',
+        additionalInfo: 'additional info',
+        correctionId: 1,
+      };
+
+      // Act
+      const result = mapToPendingCorrectionViewModel(correction);
+
+      // Assert
+      expect(result.facilityId).toEqual(correction.facilityId);
+      expect(result.exporter).toEqual(correction.exporter);
+      expect(result.additionalInfo).toEqual(correction.additionalInfo);
+      expect(result.correctionId).toEqual(correction.correctionId);
+    });
+  });
+
   describe('mapToPendingCorrectionsViewModel', () => {
     it('should map pending corrections response and user to PendingCorrectionsViewModel', () => {
       // Arrange
       const pendingCorrectionsResponse: NonEmptyPendingCorrectionsResponseBody = {
-        ...aNonEmptyPendingCorrectionsResponseBody(),
+        corrections: [
+          {
+            correctionId: 1,
+            facilityId: '123',
+            exporter: 'exporter',
+            additionalInfo: 'additional info',
+            reasons: [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT],
+            reportedFees: {
+              currency: CURRENCY.GBP,
+              amount: 100,
+            },
+          },
+        ],
         reportPeriod: { start: { month: 2, year: 2023 }, end: { month: 2, year: 2023 } },
         nextDueReportPeriod: { start: { month: 3, year: 2023 }, end: { month: 3, year: 2023 } },
         uploadedByFullName: 'John Doe',
@@ -84,13 +158,15 @@ describe('pending-corrections-helper', () => {
 
       // Assert
       const expectedDateUploaded = '1 January 2023';
+      const expectedCorrection = mapToPendingCorrectionViewModel(pendingCorrectionsResponse.corrections[0]);
+
       expect(result).toEqual({
         user,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
         formattedReportPeriod: getFormattedReportPeriodWithLongMonth(pendingCorrectionsResponse.reportPeriod),
         uploadedByFullName: pendingCorrectionsResponse.uploadedByFullName,
         formattedDateUploaded: expectedDateUploaded,
-        corrections: pendingCorrectionsResponse.corrections,
+        corrections: [expectedCorrection],
         nextAction: mapNextDueReportPeriodToNextActionViewModel(pendingCorrectionsResponse.nextDueReportPeriod),
       });
     });

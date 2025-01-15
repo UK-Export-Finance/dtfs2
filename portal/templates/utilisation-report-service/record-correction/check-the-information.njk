@@ -1,0 +1,152 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% extends "index.njk" %}
+
+{% block pageTitle %}Check the information before submitting the record correction{% endblock %}
+
+{% block content %}
+  <h1 class="govuk-heading-l" data-cy="main-heading">Record correction</h1>
+  <h2 class="govuk-heading-m" data-cy="check-the-information-heading">
+    Check the information before submitting the record correction
+  </h2>
+
+  <div class="govuk-!-padding-top-2">
+    <h3 class="govuk-heading-s" data-cy="original-values-heading">Original values</h3>
+
+    {{ govukSummaryList({
+      rows: [
+        {
+          key: {
+            text: "Exporter"
+          },
+          value: {
+            text: feeRecord.exporter
+          }
+        },
+        {
+          key: {
+            text: "Currency"
+          },
+          value: {
+            text: feeRecord.reportedFees.currency
+          }
+        },
+        {
+          key: {
+            text: "Reported fees paid"
+          },
+          value: {
+            text: feeRecord.reportedFees.formattedAmount
+          }
+        }
+      ],
+      attributes: {
+        'data-cy': 'original-values-summary-list'
+      }
+    }) }}
+  </div>
+
+  <div class="govuk-!-padding-top-2">
+    <h3 class="govuk-heading-s" data-cy="record-correction-details-heading">Record correction details</h3>
+
+    {{ govukSummaryList({
+      rows: [
+        {
+          key: {
+            text: "Error type(s)"
+          },
+          value: {
+            text: formattedReasons
+          }
+        },
+        {
+          key: {
+            text: "Error summary"
+          },
+          value: {
+            html: (errorSummary | replaceNewLinesWithBrTags)
+          }
+        },
+        {
+          key: {
+            text: "Old value(s)"
+          },
+          value: {
+            text: formattedOldValues
+          }
+        },
+        {
+          key: {
+            text: "New value(s)"
+          },
+          value: {
+            text: formattedNewValues
+          },
+          actions: {
+            items: [
+              {
+                href: backLinkHref,
+                text: "Change",
+                visuallyHiddenText: "new values for record correction",
+                attributes: {
+                  'data-cy': 'change-record-correction-new-values-link'
+                }
+              }
+            ]
+          }
+        },
+        {
+          key: {
+            text: "Bank commentary"
+          },
+          value: {
+            html: (bankCommentary | replaceNewLinesWithBrTags)
+          },
+          actions: {
+            items: [
+              {
+                href: backLinkHref,
+                text: "Change",
+                visuallyHiddenText: "bank commentary for record correction",
+                attributes: {
+                  'data-cy': 'change-record-correction-bank-commentary-link'
+                }
+              }
+            ]
+          }
+        }
+      ],
+      attributes: {
+        'data-cy': 'record-correction-details-summary-list'
+      }
+    }) }}
+  </div>
+
+  <div class="govuk-button-group govuk-!-padding-top-6">
+    {# TODO FN-3675: Add send behaviour when this button is clicked. #}
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+      {{ govukButton({
+        text: "Confirm and send",
+        attributes: {
+          'data-cy': 'continue-button'
+        }
+      }) }}
+    </form>
+
+    {# TODO FN-3736: Add clear behaviour when this button is clicked. Note that this will need changing to be an input with a formaction attribute (see check-the-information template in TFM). #}
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+      {{ govukButton({
+        text: "Cancel record correction",
+        classes: "govuk-button govuk-button--secondary",
+        href: "/utilisation-report-upload",
+        attributes: {
+          'data-cy': 'cancel-button'
+        }
+      }) }}
+    </form>
+  </div>
+
+{% endblock %}
+{% block sub_content %}{% endblock %}

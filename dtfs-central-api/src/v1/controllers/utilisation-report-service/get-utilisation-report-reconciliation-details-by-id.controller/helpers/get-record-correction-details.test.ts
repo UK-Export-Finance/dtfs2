@@ -7,7 +7,7 @@ import {
 } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 import { getRecordCorrectionDetails } from './get-record-correction-details';
-import { mapCorrectionReasonsToFormattedOldValues } from '../../../../../helpers/map-correction-reasons-to-incorrect-values';
+import { mapCorrectionReasonsToFormattedOldValues } from '../../../../../helpers/map-correction-reasons-to-formatted-values';
 
 describe('get-record-correction-details', () => {
   const feeRecordId = 11;

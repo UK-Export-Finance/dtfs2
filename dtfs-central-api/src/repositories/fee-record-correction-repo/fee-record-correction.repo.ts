@@ -7,6 +7,21 @@ import { FeeRecordCorrectionEntity } from '@ukef/dtfs2-common';
 export const FeeRecordCorrectionRepo = SqlDbDataSource.getRepository(FeeRecordCorrectionEntity).extend({
   /**
    * Finds one fee record correction with the supplied id with the fee record
+   * attached
+   * @param id - The fee record correction id
+   * @returns The found fee record correction, else null
+   */
+  async findOneByIdWithFeeRecord(id: number): Promise<FeeRecordCorrectionEntity | null> {
+    return await this.findOne({
+      where: {
+        id,
+      },
+      relations: { feeRecord: true },
+    });
+  },
+
+  /**
+   * Finds one fee record correction with the supplied id with the fee record
    * and report attached
    * @param id - The fee record correction id
    * @returns The found fee record correction, else null
@@ -15,6 +30,22 @@ export const FeeRecordCorrectionRepo = SqlDbDataSource.getRepository(FeeRecordCo
     return await this.findOne({
       where: {
         id,
+      },
+      relations: { feeRecord: { report: true } },
+    });
+  },
+
+  /**
+   * Finds one fee record correction with correction id and bank id with
+   * the fee record and report attached
+   * @param id - The fee record correction id
+   * @returns The found fee record correction, else null
+   */
+  async findOneByIdAndBankIdWithFeeRecordAndReport(correctionId: number, bankId: string): Promise<FeeRecordCorrectionEntity | null> {
+    return await this.findOne({
+      where: {
+        id: correctionId,
+        feeRecord: { report: { bankId } },
       },
       relations: { feeRecord: { report: true } },
     });

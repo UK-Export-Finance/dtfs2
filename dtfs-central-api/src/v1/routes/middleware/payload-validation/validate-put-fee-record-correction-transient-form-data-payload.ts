@@ -8,7 +8,7 @@ import { MongoObjectIdSchema } from './schemas';
  * form validation itself is taking place in the controller.
  */
 const PutFeeRecordCorrectionTransientFormDataPayload = z.object({
-  user: z.object({ id: MongoObjectIdSchema }),
+  user: z.object({ _id: MongoObjectIdSchema }),
   formData: z.object({
     utilisation: z.string().optional(),
     facilityId: z.string().optional(),

@@ -2,7 +2,7 @@ import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, isPortalFacilityAmendmentsFeatureFla
 import { canUserAmendIssuedFacilities } from './facility-amendments.helper';
 
 const { AIN, MIN, MIA } = DEAL_SUBMISSION_TYPE;
-const { UKEF_ACKNOWLEDGED, DRAFT } = DEAL_STATUS;
+const { UKEF_ACKNOWLEDGED, DRAFT, CANCELLED } = DEAL_STATUS;
 const { MAKER, CHECKER, ADMIN } = ROLES;
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -37,6 +37,12 @@ describe('canUserAmendIssuedFacilities', () => {
 
     it(`should return false when the deal status is not ${UKEF_ACKNOWLEDGED}`, () => {
       const result = canUserAmendIssuedFacilities(MIN, DRAFT, [MAKER]);
+
+      expect(result).toEqual(false);
+    });
+
+    it(`should return false when the deal status is ${CANCELLED}`, () => {
+      const result = canUserAmendIssuedFacilities(MIN, CANCELLED, [MAKER]);
 
       expect(result).toEqual(false);
     });

@@ -1,7 +1,7 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { TestApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { CURRENCY, RECORD_CORRECTION_REASON, TestApiError, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
 import { GetUtilisationReportPendingCorrectionsRequest, PendingCorrectionsResponseBody, getUtilisationReportPendingCorrectionsByBankId } from '.';
 import { getBankById } from '../../../../../repositories/banks-repo';
 import { aBank, aReportPeriod } from '../../../../../../test-helpers';
@@ -115,8 +115,22 @@ describe('get-utilisation-report-pending-corrections.controller', () => {
           uploadedByFullName: 'John Doe',
           dateUploaded: new Date(),
           corrections: [
-            { correctionId: 1, facilityId: '123', exporter: 'Company Name', additionalInfo: 'Additional Info' },
-            { correctionId: 4, facilityId: '456', exporter: 'Company Name', additionalInfo: 'Additional Info 2' },
+            {
+              correctionId: 1,
+              facilityId: '123',
+              exporter: 'Company Name',
+              additionalInfo: 'Additional Info',
+              reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT],
+              reportedFees: { currency: CURRENCY.GBP, amount: 100 },
+            },
+            {
+              correctionId: 4,
+              facilityId: '456',
+              exporter: 'Company Name',
+              additionalInfo: 'Additional Info 2',
+              reasons: [RECORD_CORRECTION_REASON.OTHER],
+              reportedFees: { currency: CURRENCY.EUR, amount: 0 },
+            },
           ],
           nextDueReportPeriod: aReportPeriod(),
         };

@@ -1,14 +1,14 @@
 import { Headers } from 'node-mocks-http';
 import { NextFunction, Request, Response } from 'express';
-import { CURRENCY, DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
+import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
 import { createApi } from '../create-api';
 import api from '../../server/services/api';
 import * as storage from '../test-helpers/storage/storage';
-import { Deal } from '../../server/types/deal';
-import { Facility } from '../../server/types/facility';
+import { MOCK_BASIC_DEAL } from '../../server/utils/mocks/mock-applications';
+import { MOCK_ISSUED_FACILITY, MOCK_UNISSUED_FACILITY } from '../../server/utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
 
@@ -29,8 +29,7 @@ const dealId = '123';
 const facilityId = '111';
 const amendmentId = '111';
 
-const mockDeal = { exporter: { companyName: 'test exporter' }, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as Deal;
-const mockFacility = { currency: { id: CURRENCY.GBP }, hasBeenIssued: true } as Facility;
+const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 
 const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.FACILITY_VALUE}`;
 
@@ -46,7 +45,7 @@ describe(`GET ${url}`, () => {
     jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
     jest.spyOn(api, 'getAmendment').mockImplementation(mockGetAmendment);
 
-    mockGetFacility.mockResolvedValue({ details: mockFacility });
+    mockGetFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
     mockGetApplication.mockResolvedValue(mockDeal);
     mockGetAmendment.mockResolvedValue(
       new PortalFacilityAmendmentWithUkefIdMockBuilder()
@@ -64,7 +63,7 @@ describe(`GET ${url}`, () => {
     process.env = originalEnv;
   });
 
-  describe('when portal facility amendments feature flag is disabled', () => {
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
     beforeEach(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'false';
     });
@@ -79,7 +78,7 @@ describe(`GET ${url}`, () => {
     });
   });
 
-  describe('when portal facility amendments feature flag is enabled', () => {
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is enabled', () => {
     beforeEach(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
     });
@@ -137,7 +136,7 @@ describe(`GET ${url}`, () => {
 
     it('should redirect to deal summary page when facility cannot be amended', async () => {
       // Arrange
-      mockGetApplication.mockResolvedValue({ details: { ...mockFacility, hasBeenIssued: false } });
+      mockGetApplication.mockResolvedValue(MOCK_UNISSUED_FACILITY);
 
       // Act
       const response = await getWithSessionCookie(sessionCookie);

@@ -6,5 +6,5 @@ export type WhatNeedsToChangeViewModel = {
   exporterName: string;
   previousPage: string;
   amendmentFormEmail: string;
-  errors?: ViewModelErrors;
+  errors?: ViewModelErrors | null;
 };
