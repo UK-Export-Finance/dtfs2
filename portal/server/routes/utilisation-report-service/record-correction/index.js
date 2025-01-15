@@ -4,6 +4,7 @@ const {
   getProvideUtilisationReportCorrection,
   postProvideUtilisationReportCorrection,
   getUtilisationReportCorrectionReview,
+  postUtilisationReportCorrectionReview,
   getRecordCorrectionSent,
   cancelUtilisationReportCorrection,
 } = require('../../../controllers/utilisation-report-service/record-correction');
@@ -36,5 +37,10 @@ router.get(
   [validateFeeRecordCorrectionFeatureFlagIsEnabled, validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] })],
   (req, res) => getRecordCorrectionSent(req, res),
 );
+
+router
+  .route('/utilisation-reports/provide-correction/:correctionId/check-the-information')
+  .all(validateFeeRecordCorrectionFeatureFlagIsEnabled, validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] }))
+  .post((req, res) => postUtilisationReportCorrectionReview(req, res));
 
 module.exports = router;

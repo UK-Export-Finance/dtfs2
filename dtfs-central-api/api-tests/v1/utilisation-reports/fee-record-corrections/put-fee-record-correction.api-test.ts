@@ -1,10 +1,12 @@
 import { HttpStatusCode } from 'axios';
+import { Response } from 'supertest';
 import {
-  CURRENCY,
   FEE_RECORD_STATUS,
   FeeRecordCorrectionEntityMockBuilder,
+  FeeRecordCorrectionTransientFormDataEntityMockBuilder,
   FeeRecordEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
+  ReportPeriod,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
@@ -13,30 +15,41 @@ import { testApi } from '../../../test-api';
 import { SqlDbHelper } from '../../../sql-db-helper';
 import wipeDB from '../../../wipeDB';
 import { aBank } from '../../../../test-helpers';
-import { PutFeeRecordCorrectionTransientFormDataPayload } from '../../../../src/v1/routes/middleware/payload-validation';
 import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
 import { mongoDbClient } from '../../../../src/drivers/db-client';
 import { CustomErrorResponse } from '../../../helpers/custom-error-response';
 
 console.error = jest.fn();
 
-const BASE_URL = '/v1/bank/:bankId/fee-record-corrections/:correctionId/transient-form-data';
+interface CustomSuccessResponse extends Response {
+  body: {
+    sentToEmails: string[];
+    reportPeriod: ReportPeriod;
+  };
+}
+
+const BASE_URL = '/v1/bank/:bankId/fee-record-corrections/:correctionId';
 
 describe(`PUT ${BASE_URL}`, () => {
   const bankId = '1';
   const correctionId = 2;
+  const userId = new ObjectId().toString();
 
-  const mockBank = { ...aBank(), id: bankId, _id: new ObjectId() };
+  const reportPeriod = { start: { month: 3, year: 2023 }, end: { month: 4, year: 2023 } };
+
+  const paymentOfficerTeamEmails = ['email1@ukexportfinance.gov.uk'];
+
+  const mockBank = {
+    ...aBank(),
+    id: bankId,
+    paymentOfficerTeam: {
+      emails: paymentOfficerTeamEmails,
+      teamName: 'Payment Officer Team',
+    },
+  };
 
   const aValidRequestBody = () => ({
-    formData: {
-      utilisation: '1,000,000',
-      facilityId: '12345678',
-      reportedCurrency: CURRENCY.GBP,
-      reportedFee: '2,000',
-      additionalComments: 'these are some additional comments',
-    },
-    user: { _id: new ObjectId().toString() },
+    user: { _id: userId },
   });
 
   beforeAll(async () => {
@@ -49,9 +62,10 @@ describe(`PUT ${BASE_URL}`, () => {
 
   beforeEach(async () => {
     await SqlDbHelper.deleteAllEntries('FeeRecordCorrectionTransientFormData');
+    await SqlDbHelper.deleteAllEntries('FeeRecordCorrection');
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
-    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withBankId(bankId).build();
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withBankId(bankId).withReportPeriod(reportPeriod).build();
 
     const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION).build();
 
@@ -61,10 +75,14 @@ describe(`PUT ${BASE_URL}`, () => {
     report.feeRecords = [feeRecord];
 
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
+
+    const formData = new FeeRecordCorrectionTransientFormDataEntityMockBuilder().withCorrectionId(correctionId).withUserId(userId).build();
+
+    await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', formData);
   });
 
   afterAll(async () => {
-    await SqlDbHelper.deleteAllEntries('FeeRecordCorrectionTransientFormData');
+    await SqlDbHelper.deleteAllEntries('FeeRecordCorrection');
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
   });
 
@@ -84,13 +102,10 @@ describe(`PUT ${BASE_URL}`, () => {
     expect(response.body.errors[0]?.msg).toEqual('The bank id provided should be a string of numbers');
   });
 
-  const requiredPayloadKeys: (keyof PutFeeRecordCorrectionTransientFormDataPayload)[] = ['formData', 'user'];
-
-  it.each([requiredPayloadKeys])(`should return '${HttpStatusCode.BadRequest}' when the '%s' field is missing`, async (payloadKey) => {
+  it(`should return '${HttpStatusCode.BadRequest}' when the user field is missing`, async () => {
     // Arrange
     const requestBody = {
-      ...aValidRequestBody(),
-      [payloadKey]: undefined,
+      user: undefined,
     };
 
     // Act
@@ -131,5 +146,20 @@ describe(`PUT ${BASE_URL}`, () => {
 
     // Assert
     expect(status).toEqual(HttpStatusCode.Ok);
+  });
+
+  it('should return the sent to email addresses and the report period upon success', async () => {
+    // Arrange
+    const requestBody = aValidRequestBody();
+
+    // Act
+    const response: CustomSuccessResponse = await testApi.put(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { bankId, correctionId }));
+
+    // Assert
+    const expectedBody = {
+      sentToEmails: paymentOfficerTeamEmails,
+      reportPeriod,
+    };
+    expect(response.body).toEqual(expectedBody);
   });
 });
