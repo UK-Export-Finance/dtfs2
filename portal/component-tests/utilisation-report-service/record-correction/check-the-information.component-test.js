@@ -64,17 +64,15 @@ describe('page', () => {
 
   it('should render the original reported fees paid', () => {
     // Arrange
-    const reportedFees = 12345.67;
+    const reportedFeesPaid = '12,345.67';
     const viewModel = aUtilisationReportCorrectionInformationViewModel();
-    viewModel.feeRecord.reportedFees.amount = reportedFees;
-
-    const expectedReportedFees = '12345.67';
+    viewModel.feeRecord.reportedFees.amount = reportedFeesPaid;
 
     // Act
     const wrapper = render(viewModel);
 
     // Assert
-    wrapper.expectText(definitionDescriptionSelector(originalValuesSelector, 'Reported fees paid')).toRead(expectedReportedFees);
+    wrapper.expectText(definitionDescriptionSelector(originalValuesSelector, 'Reported fees paid')).toRead(reportedFeesPaid);
   });
 
   it('should render the record correction details table heading', () => {

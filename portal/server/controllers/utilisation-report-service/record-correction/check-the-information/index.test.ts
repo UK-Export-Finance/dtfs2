@@ -4,7 +4,9 @@ import {
   aFeeRecordCorrectionReviewInformation,
   aPortalSessionBank,
   aPortalSessionUser,
+  CURRENCY,
   FeeRecordCorrectionReviewInformation,
+  getFormattedMonetaryValue,
   mapReasonsToDisplayValues,
   PORTAL_LOGIN_STATUS,
 } from '@ukef/dtfs2-common';
@@ -58,17 +60,36 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
 
     it('should render the "utilisation report correction - check the information" page', async () => {
       // Arrange,
+      const exporter = 'An exporter';
+      const reportedFeesCurrency = CURRENCY.GBP;
+      const reportedFeesAmount = 1234.56;
       const bankCommentary = 'Some bank commentary';
+
       const feeRecordCorrectionReviewResponse = {
         ...aFeeRecordCorrectionReviewInformation(),
         bankCommentary,
+        feeRecord: {
+          exporter,
+          reportedFees: {
+            currency: reportedFeesCurrency,
+            amount: reportedFeesAmount,
+          },
+        },
       };
 
       jest.mocked(api.getFeeRecordCorrectionReview).mockResolvedValue(feeRecordCorrectionReviewResponse);
 
-      const { errorSummary, feeRecord, formattedOldValues, formattedNewValues, reasons } = feeRecordCorrectionReviewResponse;
+      const { errorSummary, formattedOldValues, formattedNewValues, reasons } = feeRecordCorrectionReviewResponse;
 
       const expectedFormattedReasons = mapReasonsToDisplayValues(reasons).join(', ');
+
+      const expectedFeeRecord = {
+        exporter,
+        reportedFees: {
+          currency: reportedFeesCurrency,
+          amount: getFormattedMonetaryValue(reportedFeesAmount),
+        },
+      };
 
       // Act
       await getUtilisationReportCorrectionReview(req, res);
@@ -78,7 +99,7 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
         user: mockUser,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
         backLinkHref: `/utilisation-reports/provide-correction/${correctionId}`,
-        feeRecord,
+        feeRecord: expectedFeeRecord,
         formattedReasons: expectedFormattedReasons,
         errorSummary,
         formattedOldValues,
