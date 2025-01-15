@@ -4,6 +4,8 @@ const page = {
   row: (index) => ({
     facilityId: () => cy.get(`[data-cy="pending-corrections-table"] tr:nth-child(${index}) [data-cy="pending-corrections-row--facility-id"]`),
     exporter: () => cy.get(`[data-cy="pending-corrections-table"] tr:nth-child(${index}) [data-cy="pending-corrections-row--exporter"]`),
+    reportedFeesPaid: () => cy.get(`[data-cy="pending-corrections-table"] tr:nth-child(${index}) [data-cy="pending-corrections-row--reported-fees-paid"]`),
+    errorType: () => cy.get(`[data-cy="pending-corrections-table"] tr:nth-child(${index}) [data-cy="pending-corrections-row--error-type"]`),
     errorSummary: () => cy.get(`[data-cy="pending-corrections-table"] tr:nth-child(${index}) [data-cy="pending-corrections-row--error-summary"]`),
     correctionLink: () => cy.get(`[data-cy="pending-corrections-table"] tr:nth-child(${index}) [data-cy="correction-link"]`),
   }),
