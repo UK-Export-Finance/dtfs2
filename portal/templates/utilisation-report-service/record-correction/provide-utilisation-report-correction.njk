@@ -36,119 +36,141 @@
 
     <div class="govuk-grid-column-two-thirds-from-desktop">
 
-      {% if "FACILITY_ID_INCORRECT" in correctionRequestDetails.reasons %}
-        {{ govukInput({
-          label: {
-            text: "Enter the facility ID",
-            classes: "govuk-label--s"
-          },
-          hint: {
-            text: "The facility ID can be found on the deal summary page"
-          },
-          id: "facilityId",
-          name: "facilityId",
-          value: formValues.facilityId,
-          classes: "govuk-input--width-20",
-          attributes: {
-            "data-cy": "FACILITY_ID_INCORRECT-input"
-          }
-        }) }}
-      {% endif %}
+      <form method="post">
 
-      {% if "REPORTED_CURRENCY_INCORRECT" in correctionRequestDetails.reasons %}
-        {{ govukRadios({
-          fieldset: {
-            legend: {
-              text: "Select the reported currency",
-              classes: "govuk-fieldset__legend--s"
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+        {% if "FACILITY_ID_INCORRECT" in correctionRequestDetails.reasons %}
+          {{ govukInput({
+            label: {
+              text: "Enter the facility ID",
+              classes: "govuk-label--s",
+              attributes: {
+                "data-cy": "FACILITY_ID_INCORRECT-label"
+              }
+            },
+            hint: {
+              text: "The facility ID can be found on the deal summary page",
+              attributes: {
+                "data-cy": "FACILITY_ID_INCORRECT-hint"
+              }
+            },
+            id: "facilityId",
+            name: "facilityId",
+            value: formValues.facilityId,
+            classes: "govuk-input--width-20",
+            attributes: {
+              "data-cy": "FACILITY_ID_INCORRECT-input"
+            }
+          }) }}
+        {% endif %}
+
+        {% if "REPORTED_CURRENCY_INCORRECT" in correctionRequestDetails.reasons %}
+          {{ govukRadios({
+            fieldset: {
+              legend: {
+                text: "Select the reported currency",
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            hint: {
+              text: "This is the currency that you report the fees in",
+              attributes: {
+                "data-cy": "REPORTED_CURRENCY_INCORRECT-hint"
+              }
+            },
+            name: "reportedCurrency",
+            items: paymentCurrencyOptions,
+            attributes: {
+              id: 'reported-currency',
+              'data-cy': 'REPORTED_CURRENCY_INCORRECT-input'
+            }
+          }) }}
+        {% endif %}
+
+        {% if "REPORTED_FEE_INCORRECT" in correctionRequestDetails.reasons %}
+          {{ govukInput({
+            label: {
+              text: "Enter the reported fee",
+              classes: "govuk-label--s",
+              attributes: {
+                "data-cy": "REPORTED_FEE_INCORRECT-label"
+              }
+            },
+            hint: {
+              text: "This the fee amount that has been sent to UKEF for the period",
+              attributes: {
+                "data-cy": "REPORTED_FEE_INCORRECT-hint"
+              }
+            },
+            id: "reportedFee",
+            name: "reportedFee",
+            value: formValues.reportedFee,
+            classes: "govuk-input--width-20",
+            attributes: {
+              "data-cy": "REPORTED_FEE_INCORRECT-input"
+            }
+          }) }}
+        {% endif %}
+
+        {% if "UTILISATION_INCORRECT" in correctionRequestDetails.reasons %}
+          {{ govukInput({
+            label: {
+              text: "Enter the utilisation",
+              classes: "govuk-label--s",
+              attributes: {
+                "data-cy": "UTILISATION_INCORRECT-label"
+              }
+            },
+            hint: {
+              text: "Enter the utilisation in base currency for the period end date",
+              attributes: {
+                "data-cy": "UTILISATION_INCORRECT-hint"
+              }
+            },
+            id: "utilisation",
+            name: "utilisation",
+            value: formValues.utilisation,
+            classes: "govuk-input--width-20",
+            attributes: {
+              "data-cy": "UTILISATION_INCORRECT-input"
+            }
+          }) }}
+        {% endif %}
+
+        {{ govukCharacterCount({
+          name: "additionalComments",
+          id: "additionalComments",
+          label: {
+            text: additionalComments.label,
+            classes: "govuk-label--s",
+            attributes: {
+              "data-cy": "additional-comments-label"
             }
           },
           hint: {
-            text: "This is the currency that you report the fees in"
+            text: additionalComments.hint,
+            attributes: {
+              "data-cy": "additional-comments-hint"
+            }
           },
-          name: "reportedCurrency",
-          items: paymentCurrencyOptions,
+          value: formValues.additionalComments,
+          maxlength: 500,
+          rows: 4,
           attributes: {
-            id: 'reported-currency',
-            'data-cy': 'REPORTED_CURRENCY_INCORRECT-input'
+            "data-cy": "additional-comments-input"
           }
         }) }}
-      {% endif %}
 
-      {% if "REPORTED_FEE_INCORRECT" in correctionRequestDetails.reasons %}
-        {{ govukInput({
-          label: {
-            text: "Enter the reported fee",
-            classes: "govuk-label--s"
-          },
-          hint: {
-            text: "This the fee amount that has been sent to UKEF for the period"
-          },
-          id: "reportedFee",
-          name: "reportedFee",
-          value: formValues.reportedFee,
-          classes: "govuk-input--width-20",
-          attributes: {
-            "data-cy": "REPORTED_FEE_INCORRECT-input"
-          }
-        }) }}
-      {% endif %}
+        <div class="govuk-button-group">
 
-      {% if "UTILISATION_INCORRECT" in correctionRequestDetails.reasons %}
-        {{ govukInput({
-          label: {
-            text: "Enter the utilisation",
-            classes: "govuk-label--s"
-          },
-          hint: {
-            text: "Enter the utilisation in base currency for the period end date"
-          },
-          id: "utilisation",
-          name: "utilisation",
-          value: formValues.utilisation,
-          classes: "govuk-input--width-20",
-          attributes: {
-            "data-cy": "UTILISATION_INCORRECT-input"
-          }
-        }) }}
-      {% endif %}
-
-      {{ govukCharacterCount({
-        name: "additionalComments",
-        id: "additionalComments",
-        label: {
-          text: additionalComments.label,
-          classes: "govuk-label--s",
-          attributes: {
-            "data-cy": "additional-comments-label"
-          }
-        },
-        hint: {
-          text: additionalComments.hint,
-          attributes: {
-            "data-cy": "additional-comments-hint"
-          }
-        },
-        value: formValues.additionalComments,
-        maxlength: 500,
-        rows: 4,
-        attributes: {
-          "data-cy": "additional-comments-input"
-        }
-      }) }}
-
-      <div class="govuk-button-group">
-        <form method="post">
-          <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
           {{ govukButton({
             text: "Save and review changes",
             attributes: {
               'data-cy': 'continue-button'
             }
           }) }}
-        </form>
-        <form method="post">
-          <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
           <input
             class="govuk-button govuk-button--secondary"
             formaction=""
@@ -156,8 +178,10 @@
             data-module="govuk-button"
             type="submit"
             data-cy="cancel-button"/>
-        </form>
-      </div>
+
+        </div>
+
+      </form>
 
     </div>
 
