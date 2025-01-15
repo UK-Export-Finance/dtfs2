@@ -54,11 +54,11 @@ const isCurrencyNumberOptionallyWithThousandsSeparators = (value: string) => {
 };
 
 /**
- * Tests if a monetary amount is valid by checking if it is a non-empty string
+ * Tests if a monetary value is valid by checking if it is a non-empty string
  * and matches the currency number format.
- * @param {string} [monetaryAmount] - The monetary amount string to validate.
- * @returns {boolean} True if the monetary amount is valid, false otherwise.
+ * @param {string} [monetaryValue] - The monetary value string to validate.
+ * @returns {boolean} True if the monetary value is valid, false otherwise.
  */
-export const isMonetaryAmountValid = (monetaryAmount?: string): boolean => {
-  return isNonEmptyString(monetaryAmount) && isCurrencyNumberOptionallyWithThousandsSeparators(monetaryAmount);
+export const isMonetaryAmountValid = (monetaryValue?: string): boolean => {
+  return isNonEmptyString(monetaryValue) && isCurrencyNumberOptionallyWithThousandsSeparators(monetaryValue);
 };
