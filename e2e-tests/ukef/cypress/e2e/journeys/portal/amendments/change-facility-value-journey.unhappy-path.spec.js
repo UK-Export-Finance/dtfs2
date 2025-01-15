@@ -72,11 +72,13 @@ context('Amendments - change facility value journey - unhappy path', () => {
     whatDoYouNeedToChange.selectionErrorMessage().contains('Select if you need to change the facility cover end date, value or both');
   });
 
-  it('should submit change facility value', () => {
+  it('navigate to facility value page', () => {
     cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
 
     whatDoYouNeedToChange.facilityValueCheckbox().click();
     cy.clickContinueButton();
+
+    cy.url.should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`));
   });
 
   it('should render an error if no facility value is provided', () => {
