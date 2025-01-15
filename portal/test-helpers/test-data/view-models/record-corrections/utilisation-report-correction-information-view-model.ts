@@ -11,7 +11,7 @@ export const aUtilisationReportCorrectionInformationViewModel = (): UtilisationR
     exporter: 'An exporter',
     reportedFees: {
       currency: 'GBP',
-      amount: 123,
+      formattedAmount: '1,234.56',
     },
   },
   formattedReasons: 'Facility ID is incorrect, Reported currency is incorrect',
