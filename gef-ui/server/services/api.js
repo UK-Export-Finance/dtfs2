@@ -1,5 +1,6 @@
 const FormData = require('form-data');
 const { isValidCompanyRegistrationNumber, InvalidFacilityIdError, InvalidDealIdError } = require('@ukef/dtfs2-common');
+const { PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID } = require('@ukef/dtfs2-common/schemas');
 const { HttpStatusCode } = require('axios');
 const Axios = require('./axios');
 const { apiErrorHandler } = require('../utils/helpers');
@@ -358,8 +359,14 @@ const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
   }
 
   try {
-    const { data } = await Axios.get(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, config(userToken));
-    return data;
+    const response = await Axios.get(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, config(userToken));
+    const { success, error, data } = PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID.safeParse(response.data);
+
+    if (success) {
+      return data;
+    }
+
+    throw new Error(`Failed to parse response body from portal-api. ${error}`);
   } catch (error) {
     console.error('Failed to get the amendment with facility id %s and amendment id %s: %o', facilityId, amendmentId, error);
     throw error;
