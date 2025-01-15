@@ -27,7 +27,7 @@ describe('overrideDealsIfAmendmentsInProgress', () => {
     {
       status: AMENDMENT_STATUS.NOT_STARTED,
       dealId: '1',
-      submittedByPim: true,
+      submittedByPim: false,
     },
   ];
 
@@ -40,7 +40,7 @@ describe('overrideDealsIfAmendmentsInProgress', () => {
     {
       status: AMENDMENT_STATUS.NOT_STARTED,
       dealId: '1',
-      submittedByPim: true,
+      submittedByPim: false,
     },
   ];
 
