@@ -3,6 +3,8 @@ const { ROLES, validateFeeRecordCorrectionFeatureFlagIsEnabled } = require('@uke
 const {
   getProvideUtilisationReportCorrection,
   postProvideUtilisationReportCorrection,
+  getUtilisationReportCorrectionReview,
+  postUtilisationReportCorrectionReview,
   getRecordCorrectionSent,
 } = require('../../../controllers/utilisation-report-service/record-correction');
 const { validateRole, validateToken, validateSqlId } = require('../../middleware');
@@ -14,6 +16,12 @@ router
   .all([validateFeeRecordCorrectionFeatureFlagIsEnabled, validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] })], validateSqlId('correctionId'))
   .get((req, res) => getProvideUtilisationReportCorrection(req, res))
   .post((req, res) => postProvideUtilisationReportCorrection(req, res));
+
+router
+  .route('/utilisation-reports/provide-correction/:correctionId/check-the-information')
+  .all(validateFeeRecordCorrectionFeatureFlagIsEnabled, validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] }), validateSqlId('correctionId'))
+  .get((req, res) => getUtilisationReportCorrectionReview(req, res))
+  .post((req, res) => postUtilisationReportCorrectionReview(req, res));
 
 router.get(
   '/utilisation-reports/correction-sent',

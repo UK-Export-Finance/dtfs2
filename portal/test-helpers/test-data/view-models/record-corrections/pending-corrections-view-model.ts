@@ -14,12 +14,16 @@ export const aPendingCorrectionsViewModel = (): PendingCorrectionsViewModel => (
       facilityId: 'FAC-1',
       exporter: 'Exporter 1',
       additionalInfo: 'Additional info 1',
+      formattedReasons: 'Facility ID Incorrect',
+      formattedReportedFees: 'GBP 1,000.00',
     },
     {
       correctionId: 2,
       facilityId: 'FAC-2',
       exporter: 'Exporter 2',
       additionalInfo: 'Additional info 2',
+      formattedReasons: 'Utilisation Incorrect',
+      formattedReportedFees: 'GBP 1,000.00',
     },
   ],
   nextAction: {

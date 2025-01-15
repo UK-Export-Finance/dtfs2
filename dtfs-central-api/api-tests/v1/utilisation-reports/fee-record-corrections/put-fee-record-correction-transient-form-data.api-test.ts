@@ -1,5 +1,4 @@
 import { HttpStatusCode } from 'axios';
-import { Response } from 'supertest';
 import {
   CURRENCY,
   FEE_RECORD_STATUS,
@@ -17,12 +16,9 @@ import { aBank } from '../../../../test-helpers';
 import { PutFeeRecordCorrectionTransientFormDataPayload } from '../../../../src/v1/routes/middleware/payload-validation';
 import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
 import { mongoDbClient } from '../../../../src/drivers/db-client';
+import { CustomErrorResponse } from '../../../helpers/custom-error-response';
 
 console.error = jest.fn();
-
-interface CustomErrorResponse extends Response {
-  body: { errors: { msg: string }[] };
-}
 
 const BASE_URL = '/v1/bank/:bankId/fee-record-corrections/:correctionId/transient-form-data';
 

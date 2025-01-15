@@ -6,10 +6,10 @@
   <h1 class="govuk-heading-l" data-cy="main-heading">
     Report GEF utilisation and fees
   </h1>
+  <h2 class="govuk-heading-m" data-cy="pending-corrections-heading">Record correction</h2>
   <p class="govuk-body" data-cy="corrections-info-text">
     The following errors in the {{ formattedReportPeriod }} report uploaded by {{ uploadedByFullName }} on {{ formattedDateUploaded }} have been identified by UKEF:
   </p>
-  <h2 class="govuk-heading-m" data-cy="pending-corrections-heading">Record correction</h2>
   <p class="govuk-body" data-cy="selection-text">
     Select the record you would like to amend from the list below
   </p>
@@ -36,6 +36,15 @@
         attributes: { "data-cy": "pending-corrections-row--exporter" }
       },
       {
+        text: correction.formattedReportedFees,
+        format: 'numeric',
+        attributes: { "data-cy": "pending-corrections-row--reported-fees-paid" }
+      },
+      {
+        text: correction.formattedReasons,
+        attributes: { "data-cy": "pending-corrections-row--error-type" }
+      },
+      {
         html: (correction.additionalInfo | replaceNewLinesWithBrTags),
         attributes: { "data-cy": "pending-corrections-row--error-summary" }
       }
@@ -51,6 +60,13 @@
       },
       {
         text: "Exporter"
+      },
+      {
+        text: "Reported fees paid",
+        format: 'numeric'
+      },
+      {
+        text: "Error type(s)"
       },
       {
         text: "Error summary"

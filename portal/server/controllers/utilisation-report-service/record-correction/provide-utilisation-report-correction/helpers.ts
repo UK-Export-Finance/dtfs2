@@ -96,9 +96,14 @@ export const getAdditionalCommentsFieldLabels = (correctionReasons: RecordCorrec
  */
 export const mapToProvideCorrectionFormValuesViewModel = (
   savedFormValues: GetFeeRecordCorrectionTransientFormDataResponseBody,
-): ProvideCorrectionFormValuesViewModel => ({
-  facilityId: savedFormValues.facilityId ?? null,
-  utilisation: savedFormValues.utilisation ? getFormattedMonetaryValue(savedFormValues.utilisation) : null,
-  reportedFee: savedFormValues.reportedFee ? getFormattedMonetaryValue(savedFormValues.reportedFee) : null,
-  additionalComments: savedFormValues.additionalComments ?? null,
-});
+): ProvideCorrectionFormValuesViewModel => {
+  const utilisation = savedFormValues.utilisation !== undefined ? getFormattedMonetaryValue(savedFormValues.utilisation) : null;
+  const reportedFee = savedFormValues.reportedFee !== undefined ? getFormattedMonetaryValue(savedFormValues.reportedFee) : null;
+
+  return {
+    utilisation,
+    reportedFee,
+    facilityId: savedFormValues.facilityId ?? null,
+    additionalComments: savedFormValues.additionalComments ?? null,
+  };
+};

@@ -1,7 +1,7 @@
 import { FeeRecordEntityMockBuilder, RECORD_CORRECTION_REASON, getFormattedMonetaryValue } from '@ukef/dtfs2-common';
-import { mapCorrectionReasonsToFormattedOldValues, getFormattedOldValueForCorrectionReason } from './map-correction-reasons-to-incorrect-values';
+import { mapCorrectionReasonsToFormattedOldValues, getFormattedOldValueForCorrectionReason } from './map-correction-reasons-to-formatted-values';
 
-describe('map-correction-reasons-to-incorrect-values', () => {
+describe('map-correction-reasons-to-formatted-values', () => {
   const feeRecord = new FeeRecordEntityMockBuilder().build();
 
   describe('getFormattedOldValueForCorrectionReason', () => {
