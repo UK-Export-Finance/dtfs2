@@ -3,6 +3,7 @@ import { Response } from 'supertest';
 import {
   FEE_RECORD_STATUS,
   FeeRecordCorrectionEntityMockBuilder,
+  FeeRecordCorrectionTransientFormDataEntity,
   FeeRecordCorrectionTransientFormDataEntityMockBuilder,
   FeeRecordEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
@@ -146,6 +147,18 @@ describe(`PUT ${BASE_URL}`, () => {
 
     // Assert
     expect(status).toEqual(HttpStatusCode.Ok);
+  });
+
+  it('should delete the transient form data', async () => {
+    // Arrange
+    const requestBody = aValidRequestBody();
+
+    // Act
+    await testApi.put(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { bankId, correctionId }));
+
+    // Assert
+    const allTransientFormData = await SqlDbHelper.manager.find(FeeRecordCorrectionTransientFormDataEntity);
+    expect(allTransientFormData).toHaveLength(1);
   });
 
   it('should return the sent to email addresses and the report period upon success', async () => {
