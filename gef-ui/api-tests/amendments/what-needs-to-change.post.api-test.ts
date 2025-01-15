@@ -1,15 +1,15 @@
 import { Headers } from 'node-mocks-http';
 import { NextFunction, Request, Response } from 'express';
-import { AnyObject, CURRENCY, DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
+import { AnyObject, DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
 import { createApi } from '../create-api';
 import api from '../../server/services/api';
 import * as storage from '../test-helpers/storage/storage';
-import { Deal } from '../../server/types/deal';
+import { MOCK_BASIC_DEAL } from '../../server/utils/mocks/mock-applications';
+import { MOCK_ISSUED_FACILITY } from '../../server/utils/mocks/mock-facilities';
 import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
-import { Facility } from '../../server/types/facility.ts';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers/mock-amendment.ts';
 
 const originalEnv = { ...process.env };
@@ -32,8 +32,7 @@ const dealId = '123';
 const facilityId = '111';
 const amendmentId = 'amendmentId';
 
-const mockDeal = { exporter: { companyName: 'test exporter' }, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as Deal;
-const mockFacility = { currency: { id: CURRENCY.GBP }, hasBeenIssued: true } as Facility;
+const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 
 const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`;
 
@@ -49,7 +48,7 @@ describe(`POST ${url}`, () => {
     jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
     jest.spyOn(api, 'updateAmendment').mockImplementation(mockUpdateAmendment);
 
-    mockGetFacility.mockResolvedValue({ details: mockFacility });
+    mockGetFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
     mockGetApplication.mockResolvedValue(mockDeal);
     mockUpdateAmendment.mockResolvedValue(
       new PortalFacilityAmendmentWithUkefIdMockBuilder()
