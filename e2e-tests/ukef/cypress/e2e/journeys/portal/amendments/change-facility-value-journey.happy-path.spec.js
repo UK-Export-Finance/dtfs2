@@ -8,7 +8,7 @@ import facilityValue from '../../../../../../gef/cypress/e2e/pages/amendments/fa
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('Amendments - change facility value journey', () => {
+context('Amendments - change facility value journey - happy path', () => {
   /**
    * @type {string}
    */
