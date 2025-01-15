@@ -490,6 +490,35 @@ const getFeeRecordCorrectionById = async (correctionId) => {
 };
 
 /**
+ * Saves a fee record correction.
+ *
+ * The user id is sent in the body as saving uses the current
+ * users saved fee record correction transient form data.
+ *
+ * @param {string} bankId - The ID of the bank
+ * @param {number} correctionId - The ID of the correction
+ * @param {string} userId - The ID of the user
+ * @returns {Promise<import('./api-response-types').SaveFeeRecordCorrectionResponseBody>} response of API call
+ */
+const saveFeeRecordCorrection = async (bankId, correctionId, userId) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/fee-record-corrections/${correctionId}`,
+      headers: headers.central,
+      data: {
+        user: { _id: userId },
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to save fee record correction with id %s and bank id %s: %o', correctionId, bankId, error);
+    throw error;
+  }
+};
+
+/**
  * Gets fee record correction transient form data by correction id and user id.
  * @param {number} correctionId - The ID of the correction
  * @param {string} userId - The ID of the user
@@ -504,6 +533,40 @@ const getFeeRecordCorrectionTransientFormData = async (correctionId, userId) => 
     return response.data;
   } catch (error) {
     console.error('Unable to get fee record correction transient form data with correction id %s and user id %s: %o', correctionId, userId, error);
+    throw error;
+  }
+};
+
+/**
+ * Puts fee record correction transient form data by bank id, correction id, and user id.
+ * @param {string} bankId - The ID of the bank
+ * @param {number} correctionId - The ID of the correction
+ * @param {string} userId - The ID of the user
+ * @param {import('@ukef/dtfs2-common').RecordCorrectionFormValues} formData - The form data
+ */
+const putFeeRecordCorrectionTransientFormData = async (bankId, correctionId, userId, formData) => {
+  try {
+    const response = await axios.put(
+      `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/fee-record-corrections/${correctionId}/transient-form-data`,
+      {
+        formData,
+        user: { _id: userId },
+      },
+      {
+        headers: headers.central,
+      },
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Unable to put fee record correction transient form data with bank id %s, correction id %s, and user id %s: %o',
+      bankId,
+      correctionId,
+      userId,
+      error,
+    );
+
     throw error;
   }
 };
@@ -652,9 +715,11 @@ module.exports = {
   getNextReportPeriodByBankId,
   getUtilisationReportPendingCorrectionsByBankId,
   getFeeRecordCorrectionById,
+  saveFeeRecordCorrection,
   getFeeRecordCorrectionTransientFormData,
   getPortalFacilityAmendment,
   putPortalFacilityAmendment,
   getFeeRecordCorrectionReview,
   patchPortalFacilityAmendment,
+  putFeeRecordCorrectionTransientFormData,
 };

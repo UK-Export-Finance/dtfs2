@@ -1,6 +1,13 @@
-import { getFormattedReportPeriodWithLongMonth, PortalSessionUser, ReportPeriod } from '@ukef/dtfs2-common';
+import {
+  getFormattedCurrencyAndAmount,
+  getFormattedReportPeriodWithLongMonth,
+  mapReasonsToDisplayValues,
+  PendingCorrection,
+  PortalSessionUser,
+  ReportPeriod,
+} from '@ukef/dtfs2-common';
 import { addMonths, format, isBefore, startOfMonth } from 'date-fns';
-import { NextActionViewModel, PendingCorrectionsViewModel } from '../../../types/view-models/record-correction/pending-corrections';
+import { NextActionViewModel, PendingCorrectionsViewModel, PendingCorrectionViewModel } from '../../../types/view-models/record-correction/pending-corrections';
 import { NonEmptyPendingCorrectionsResponseBody, UtilisationReportPendingCorrectionsResponseBody } from '../../../api-response-types';
 import { PRIMARY_NAV_KEY } from '../../../constants';
 
@@ -37,6 +44,20 @@ export const mapNextDueReportPeriodToNextActionViewModel = (nextDueReportPeriod:
 };
 
 /**
+ * Maps a pending correction to a PendingCorrectionViewModel
+ * @param correction - The pending correction
+ * @returns the view model for the pending correction
+ */
+export const mapToPendingCorrectionViewModel = (correction: PendingCorrection): PendingCorrectionViewModel => ({
+  correctionId: correction.correctionId,
+  facilityId: correction.facilityId,
+  exporter: correction.exporter,
+  additionalInfo: correction.additionalInfo,
+  formattedReasons: mapReasonsToDisplayValues(correction.reasons).join(', '),
+  formattedReportedFees: getFormattedCurrencyAndAmount(correction.reportedFees),
+});
+
+/**
  * Maps a non empty pending corrections response and user to a PendingCorrectionsViewModel
  * @param pendingCorrectionsResponse - The response containing the pending corrections
  * @param user - The user that is currently logged in
@@ -54,7 +75,7 @@ export const mapToPendingCorrectionsViewModel = (
     formattedReportPeriod: getFormattedReportPeriodWithLongMonth(reportPeriod),
     uploadedByFullName,
     formattedDateUploaded: format(new Date(dateUploaded), 'd MMMM yyyy'),
-    corrections,
+    corrections: corrections.map((correction) => mapToPendingCorrectionViewModel(correction)),
     nextAction: mapNextDueReportPeriodToNextActionViewModel(nextDueReportPeriod),
   };
 };

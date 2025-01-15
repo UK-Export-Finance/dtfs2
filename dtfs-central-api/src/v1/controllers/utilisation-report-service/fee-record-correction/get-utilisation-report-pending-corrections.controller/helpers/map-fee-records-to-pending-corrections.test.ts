@@ -1,4 +1,12 @@
-import { FEE_RECORD_STATUS, FeeRecordCorrectionEntityMockBuilder, FeeRecordEntity, FeeRecordEntityMockBuilder, PendingCorrection } from '@ukef/dtfs2-common';
+import {
+  CURRENCY,
+  FEE_RECORD_STATUS,
+  FeeRecordCorrectionEntityMockBuilder,
+  FeeRecordEntity,
+  FeeRecordEntityMockBuilder,
+  PendingCorrection,
+  RECORD_CORRECTION_REASON,
+} from '@ukef/dtfs2-common';
 import { mapFeeRecordsToPendingCorrections, mapFeeRecordToPendingCorrectionsArray } from './map-fee-records-to-pending-corrections';
 
 describe('map-fee-records-to-pending-corrections', () => {
@@ -32,14 +40,36 @@ describe('map-fee-records-to-pending-corrections', () => {
 
     it('should return the pending corrections of the fee record mapped to the response field', () => {
       // Arrange
+      const feesPaidToUkefForThePeriod = 1000;
+      const feesPaidToUkefForThePeriodCurrency = CURRENCY.JPY;
+      const exporter = 'Test Exporter';
+      const facilityId = 'FAC123';
+
       const feeRecord = new FeeRecordEntityMockBuilder()
         .withId(1)
-        .withFacilityId('FAC123')
-        .withExporter('Test Exporter')
+        .withFacilityId(facilityId)
+        .withExporter(exporter)
+        .withFeesPaidToUkefForThePeriod(feesPaidToUkefForThePeriod)
+        .withFeesPaidToUkefForThePeriodCurrency(feesPaidToUkefForThePeriodCurrency)
         .withCorrections([
-          new FeeRecordCorrectionEntityMockBuilder().withId(1).withIsCompleted(false).withAdditionalInfo('Pending correction 1').build(),
-          new FeeRecordCorrectionEntityMockBuilder().withId(2).withIsCompleted(true).withAdditionalInfo('Completed correction').build(),
-          new FeeRecordCorrectionEntityMockBuilder().withId(3).withIsCompleted(false).withAdditionalInfo('Pending correction 2').build(),
+          new FeeRecordCorrectionEntityMockBuilder()
+            .withId(1)
+            .withIsCompleted(false)
+            .withAdditionalInfo('Pending correction 1')
+            .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT])
+            .build(),
+          new FeeRecordCorrectionEntityMockBuilder()
+            .withId(2)
+            .withIsCompleted(true)
+            .withAdditionalInfo('Completed correction')
+            .withReasons([RECORD_CORRECTION_REASON.OTHER])
+            .build(),
+          new FeeRecordCorrectionEntityMockBuilder()
+            .withId(3)
+            .withIsCompleted(false)
+            .withAdditionalInfo('Pending correction 2')
+            .withReasons([RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT])
+            .build(),
         ])
         .build();
 
@@ -50,15 +80,25 @@ describe('map-fee-records-to-pending-corrections', () => {
       expect(result).toEqual<PendingCorrection[]>([
         {
           correctionId: 1,
-          facilityId: 'FAC123',
-          exporter: 'Test Exporter',
+          facilityId,
+          exporter,
           additionalInfo: 'Pending correction 1',
+          reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT],
+          reportedFees: {
+            currency: feesPaidToUkefForThePeriodCurrency,
+            amount: feesPaidToUkefForThePeriod,
+          },
         },
         {
           correctionId: 3,
-          facilityId: 'FAC123',
-          exporter: 'Test Exporter',
+          facilityId,
+          exporter,
           additionalInfo: 'Pending correction 2',
+          reasons: [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT],
+          reportedFees: {
+            currency: feesPaidToUkefForThePeriodCurrency,
+            amount: feesPaidToUkefForThePeriod,
+          },
         },
       ]);
     });

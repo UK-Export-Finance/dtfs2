@@ -28,13 +28,13 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
 
     const formData = { utilisation: '12345' };
 
-    // TODO FN-3688: remove the as unknown as RecordCorrectionTransientFormData
+    // TODO FN-3688 PR 2: Remove the "as unknown as RecordCorrectionTransientFormData".
     const validatedFormData = formData as unknown as RecordCorrectionTransientFormData;
 
     const aValidRequestQuery = () => ({ bankId, correctionId: correctionId.toString() });
 
     const aValidRequestBody = (): PutFeeRecordCorrectionTransientFormDataPayload => ({
-      user: { id: userId },
+      user: { _id: userId },
       formData,
     });
 
