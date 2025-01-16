@@ -158,7 +158,7 @@ describe(`PUT ${BASE_URL}`, () => {
 
     // Assert
     const allTransientFormData = await SqlDbHelper.manager.find(FeeRecordCorrectionTransientFormDataEntity);
-    expect(allTransientFormData).toHaveLength(1);
+    expect(allTransientFormData).toHaveLength(0);
   });
 
   it('should return the sent to email addresses and the report period upon success', async () => {
