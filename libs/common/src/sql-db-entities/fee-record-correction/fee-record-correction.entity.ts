@@ -58,7 +58,7 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
   /**
    * Comments about the correction provided by the bank
    */
-  @Column({ type: 'nvarchar', length: '500' })
+  @Column({ type: 'nvarchar', length: '500', nullable: true })
   bankCommentary!: string | null;
 
   /**
