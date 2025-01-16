@@ -53,6 +53,9 @@ const { postFeeRecordCorrection } = require('../controllers/utilisation-report-s
 const {
   deleteFeeRecordCorrectionRequestTransientFormData,
 } = require('../controllers/utilisation-report-service/fee-record-correction/delete-fee-record-correction-request-transient-form-data.controller');
+const {
+  deleteFeeRecordCorrectionTransientFormData,
+} = require('../controllers/utilisation-report-service/fee-record-correction/delete-fee-record-correction-transient-form-data.controller');
 const { getFeeRecordCorrection } = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction.controller');
 
 const utilisationReportsRouter = express.Router();
@@ -1053,7 +1056,8 @@ utilisationReportsRouter
 utilisationReportsRouter
   .route('/fee-record-corrections/:correctionId/transient-form-data/:userId')
   .all(validation.sqlIdValidation('correctionId'), validation.mongoIdValidation('userId'), handleExpressValidatorResult)
-  .get(getFeeRecordCorrectionTransientFormData);
+  .get(getFeeRecordCorrectionTransientFormData)
+  .delete(deleteFeeRecordCorrectionTransientFormData);
 
 /**
  * @openapi

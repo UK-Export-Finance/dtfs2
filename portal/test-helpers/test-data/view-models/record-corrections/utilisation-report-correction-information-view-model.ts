@@ -6,6 +6,7 @@ export const aUtilisationReportCorrectionInformationViewModel = (): UtilisationR
   user: aPortalSessionUser(),
   primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
   backLinkHref: '/utilisation-reports/provide-correction/7',
+  cancelLinkHref: '/utilisation-reports/cancel-correction/7',
   feeRecord: {
     exporter: 'An exporter',
     reportedFees: {

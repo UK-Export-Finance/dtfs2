@@ -4,7 +4,7 @@ import * as api from '../../../services/api';
 import { FacilityEndDateViewModel } from '../../../types/view-models/amendments/facility-end-date-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper';
-import { getPreviousPage } from '../helpers/navigation.helper';
+import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { convertDateToDayMonthYearInput } from '../helpers/dates.helper.ts';
 
@@ -44,23 +44,19 @@ export const getFacilityEndDate = async (req: GetFacilityEndDateRequest, res: Re
 
     if (!amendment.changeCoverEndDate) {
       console.error('Amendment %s is not changing the cover end date', amendmentId);
-      return res.redirect(
-        `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
-      );
+      return res.redirect(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE }));
     }
 
     if (!amendment.isUsingFacilityEndDate) {
       console.error('Amendment %s is not using facility end date', amendmentId);
-      return res.redirect(
-        `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE}`,
-      );
+      return res.redirect(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE }));
     }
 
     const facilityEndDate: DayMonthYearInput | undefined = amendment.facilityEndDate && convertDateToDayMonthYearInput(amendment.facilityEndDate);
 
     const viewModel: FacilityEndDateViewModel = {
       exporterName: deal.exporter.companyName,
-      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment),
       facilityEndDate,
     };
