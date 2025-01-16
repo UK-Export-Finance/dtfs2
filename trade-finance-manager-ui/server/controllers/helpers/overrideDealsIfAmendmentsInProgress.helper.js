@@ -2,8 +2,13 @@ const { cloneDeep } = require('lodash');
 const { getAmendmentsInProgress } = require('./amendments.helper');
 const { DEAL } = require('../../constants');
 
+/**
+ * Override the deal stage if there is an amendment in progress
+ * @param {import('@ukef/dtfs2-common').TfmDeal[]} deals - the deals
+ * @param {import('@ukef/dtfs2-common').TfmFacilityAmendment[]} amendments - the amendments
+ * @returns {import('@ukef/dtfs2-common').TfmDeal[]} the deals with deal stage overwritten if there is an amendment in progress
+ */
 const overrideDealsIfAmendmentsInProgress = (deals, amendments) => {
-  // override the deal stage if there is an amendment in progress
   if (Array.isArray(amendments) && amendments?.length > 0) {
     return deals.map((deal) => {
       const modifiedDeal = cloneDeep(deal);
