@@ -72,3 +72,40 @@ export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordC
     return res.status(errorStatus).send(errorMessage);
   }
 };
+
+/**
+ * Request type for the DELETE fee record correction transient form data endpoint.
+ */
+export type DeleteFeeRecordCorrectionTransientFormDataRequest = CustomExpressRequest<{
+  params: {
+    bankId: string;
+    correctionId: string;
+  };
+}>;
+
+/**
+ * Controller for the DELETE fee record correction transient form data route.
+ * @param req - The request object
+ * @param res - The response object
+ * @returns A '{@link HttpStatusCode.NoContent}' if there are no errors, else
+ * an error status code. If an Axios error occurs, the specific status code
+ * from the error response is returned, otherwise returns a
+ * {@link HttpStatusCode.InternalServerError}.
+ */
+export const deleteFeeRecordCorrectionTransientFormData = async (req: GetFeeRecordCorrectionTransientFormDataRequest, res: Response) => {
+  try {
+    const { correctionId } = req.params;
+
+    await api.deleteFeeRecordCorrectionTransientFormData(Number(correctionId), req.user._id);
+
+    return res.sendStatus(HttpStatusCode.NoContent);
+  } catch (error) {
+    const errorMessage = 'Failed to delete fee record correction transient form data';
+
+    console.error('%s %o', errorMessage, error);
+
+    const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
+
+    return res.status(errorStatus).send(errorMessage);
+  }
+};

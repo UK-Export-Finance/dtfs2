@@ -5,6 +5,7 @@ export type WhatNeedsToChangeViewModel = {
   changeCoverEndDate?: boolean;
   exporterName: string;
   previousPage: string;
+  cancelUrl: string;
   amendmentFormEmail: string;
   errors?: ViewModelErrors | null;
 };

@@ -22,7 +22,7 @@ import { FacilityValueViewModel } from '../../../types/view-models/amendments/fa
 import { getCurrencySymbol } from './getCurrencySymbol';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
-import { getPreviousPage } from '../helpers/navigation.helper';
+import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
@@ -124,7 +124,7 @@ describe('getFacilityValue', () => {
     // Assert
     const expectedRenderData: FacilityValueViewModel = {
       exporterName: companyName,
-      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment),
       currencySymbol: getCurrencySymbol(mockFacility.currency.id),
       facilityValue: '',
@@ -155,7 +155,7 @@ describe('getFacilityValue', () => {
     // Assert
     const expectedRenderData: FacilityValueViewModel = {
       exporterName: companyName,
-      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment),
       currencySymbol: getCurrencySymbol(mockFacility.currency.id),
       facilityValue: String(existingFacilityValue),

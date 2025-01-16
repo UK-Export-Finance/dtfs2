@@ -5,6 +5,8 @@ import { WhatNeedsToChangeViewModel } from '../../../types/view-models/amendment
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { STB_PIM_EMAIL } from '../../../constants/emails.ts';
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper.ts';
+import { getAmendmentsUrl } from '../helpers/navigation.helper.ts';
+import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
 
 export type GetWhatNeedsToChangeRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -44,6 +46,7 @@ export const getWhatNeedsToChange = async (req: GetWhatNeedsToChangeRequest, res
 
     const viewModel: WhatNeedsToChangeViewModel = {
       exporterName: deal.exporter.companyName,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: `/gef/application-details/${dealId}`,
       amendmentFormEmail: STB_PIM_EMAIL,
       changeCoverEndDate,
