@@ -34,6 +34,8 @@ export const getUtilisationReportCorrectionReview = async (req: UtilisationRepor
 
     const backLinkHref = `/utilisation-reports/provide-correction/${correctionId}`;
 
+    const cancelLinkHref = `/utilisation-reports/cancel-correction/${correctionId}`;
+
     const { exporter, reportedFees } = feeRecord;
     const { currency, amount } = reportedFees;
 
@@ -49,6 +51,7 @@ export const getUtilisationReportCorrectionReview = async (req: UtilisationRepor
       user,
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       backLinkHref,
+      cancelLinkHref,
       feeRecord: mappedFeeRecord,
       formattedReasons: mapReasonsToDisplayValues(reasons).join(', '),
       errorSummary,

@@ -100,6 +100,7 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
       const expectedResponse: UtilisationReportCorrectionInformationViewModel = {
         user: mockUser,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
+        cancelLinkHref: `/utilisation-reports/cancel-correction/${correctionId}`,
         backLinkHref: `/utilisation-reports/provide-correction/${correctionId}`,
         feeRecord: expectedFeeRecord,
         formattedReasons: expectedFormattedReasons,
