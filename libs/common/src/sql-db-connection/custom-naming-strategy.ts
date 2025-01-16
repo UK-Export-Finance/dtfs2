@@ -2,14 +2,6 @@ import { DefaultNamingStrategy } from 'typeorm';
 import { camelCase } from 'typeorm/util/StringUtils';
 
 /**
- * Capitalises the first letter of a string without changing
- * the casing of the rest of the string.
- * @param name the name to capitalise
- * @returns the name with the first letter capitalised
- */
-export const firstLetterCase = (name: string) => name.charAt(0).toUpperCase() + name.slice(1);
-
-/**
  * We define our own naming strategy because we are using embedded columns.
  *
  * The DefaultNamingStrategy does not handle embedded columns correctly,

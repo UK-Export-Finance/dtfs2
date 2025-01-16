@@ -1,4 +1,4 @@
-import { CustomNamingStrategy, firstLetterCase } from './custom-naming-strategy';
+import { CustomNamingStrategy } from './custom-naming-strategy';
 
 describe('custom-naming-strategy', () => {
   describe('CustomNamingStrategy', () => {
@@ -15,10 +15,13 @@ describe('custom-naming-strategy', () => {
           ${'custom_name'} | ${['prefix_word']}        | ${'prefixWordCustomName'} | ${'the inputs are in snake case'}
           ${'custom name'} | ${['prefix word']}        | ${'prefixWordCustomName'} | ${'the inputs are in space separated'}
         `(
-          'should return the customName prefixed by all the prefixes in camel case $description',
+          'should return the customName prefixed by all the prefixes in camel case when $description',
           ({ customName, embeddedPrefixes, expected }: { customName: string; embeddedPrefixes: string[]; expected: string }) => {
+            // Act
             const result = strategy.columnName('propertyName', customName, embeddedPrefixes);
-            expect(result).toBe(expected);
+
+            // Assert
+            expect(result).toEqual(expected);
           },
         );
       });
@@ -33,28 +36,16 @@ describe('custom-naming-strategy', () => {
           ${'property_name'} | ${['prefix_word']}        | ${'prefixWordPropertyName'} | ${'the inputs are in snake case'}
           ${'property name'} | ${['prefix word']}        | ${'prefixWordPropertyName'} | ${'the inputs are in space separated'}
         `(
-          'should return the propertyName prefixed by all the prefixes in camel case $description',
+          'should return the propertyName prefixed by all the prefixes in camel case when $description',
           ({ propertyName, embeddedPrefixes, expected }: { propertyName: string; embeddedPrefixes: string[]; expected: string }) => {
+            // Act
             const result = strategy.columnName(propertyName, '', embeddedPrefixes);
-            expect(result).toBe(expected);
+
+            // Assert
+            expect(result).toEqual(expected);
           },
         );
       });
-    });
-  });
-
-  describe('firstLetterCase', () => {
-    it.each`
-      input              | expected           | description
-      ${'example'}       | ${'Example'}       | ${'lowercase string'}
-      ${'EXAMPLE'}       | ${'EXAMPLE'}       | ${'uppercase string'}
-      ${'eXample'}       | ${'EXample'}       | ${'mixed case string'}
-      ${''}              | ${''}              | ${'empty string'}
-      ${'a'}             | ${'A'}             | ${'single character string'}
-      ${'exampleString'} | ${'ExampleString'} | ${'camel case string'}
-    `('should capitalize the first letter of a $description', ({ input, expected }: { input: string; expected: string }) => {
-      const result = firstLetterCase(input);
-      expect(result).toBe(expected);
     });
   });
 });
