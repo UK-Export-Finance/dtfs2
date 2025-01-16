@@ -4,6 +4,10 @@ export const TFM_AMENDMENT_STATUS = {
   COMPLETED: 'Completed',
 } as const;
 
+export const PORTAL_AMENDMENT_STATUS = {
+  DRAFT: 'Draft',
+} as const;
+
 export const AMENDMENT_QUERIES = {
   LATEST_VALUE: 'latest-value',
   LATEST_COVER_END_DATE: 'latest-cover-end-date',

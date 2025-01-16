@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { UnixTimestamp } from '../date';
-import { TfmAmendmentStatus } from '../amendment-status';
+import { PortalAmendmentStatus, TfmAmendmentStatus } from '../amendment-status';
 import { Currency } from '../currency';
 import { Facility } from './facility';
 import { AnyObject } from '../any-object';
@@ -125,7 +125,7 @@ export interface TfmFacilityAmendment extends BaseAmendment {
  */
 export interface PortalFacilityAmendment extends BaseAmendment {
   type: typeof AMENDMENT_TYPES.PORTAL;
-  status: TfmAmendmentStatus;
+  status: PortalAmendmentStatus;
 }
 
 /**

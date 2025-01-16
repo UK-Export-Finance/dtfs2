@@ -8,11 +8,11 @@ import {
   FacilityNotFoundError,
   AmendmentNotFoundError,
   AMENDMENT_TYPES,
-  AMENDMENT_STATUS,
   PortalFacilityAmendment,
   GEF_FACILITY_TYPE,
   TfmFacilityAmendment,
   FacilityAmendmentWithUkefId,
+  PORTAL_AMENDMENT_STATUS,
 } from '@ukef/dtfs2-common';
 import { deleteMany, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
@@ -332,7 +332,7 @@ export class TfmFacilitiesRepo {
 
     const removeDraftAmendmentsFilter: UpdateFilter<TfmFacility> = {
       $pull: {
-        amendments: { type: AMENDMENT_TYPES.PORTAL, status: { $ne: AMENDMENT_STATUS.COMPLETED } },
+        amendments: { type: AMENDMENT_TYPES.PORTAL, status: { $eq: PORTAL_AMENDMENT_STATUS.DRAFT } },
       },
       $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
     };
