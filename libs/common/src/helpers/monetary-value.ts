@@ -11,7 +11,6 @@ export const getFormattedMonetaryValue = (monetaryValue: number): string => {
   return formatter.format(monetaryValue);
 };
 
-// TODO: Unit tests
 /**
  * Converts a monetary value string with commas to a number
  * @param monetaryValue the string value to convert (e.g. "1,234.56")

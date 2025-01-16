@@ -103,6 +103,18 @@ export const getValidationErrorsForRequiredFormValues = async (
 };
 
 /**
+ * Checks if there are any validation errors present in the validation errors object.
+ *
+ * Iterates through all values in the errors object and checks if any are defined.
+ * Since some error properties may be explicitly set to undefined, we need to check
+ * for defined values rather than just truthy values or object key presence.
+ * @param validationErrors - Object containing validation error messages for form values
+ * @returns True if any validation error messages exist, false otherwise
+ */
+export const hasValidationErrors = (validationErrors: RecordCorrectionFormValueValidationErrors): boolean =>
+  Object.values(validationErrors).some((error) => error !== undefined);
+
+/**
  * Validates the form values for a record correction request
  * @param formValues - The form values to validate
  * @param reasons - The reasons for the record correction
@@ -111,8 +123,15 @@ export const getValidationErrorsForRequiredFormValues = async (
 export const validateRecordCorrectionTransientFormValues = async (
   formValues: RecordCorrectionFormValues,
   reasons: RecordCorrectionReason[],
-): Promise<RecordCorrectionFormValueValidationErrors> => {
+): Promise<{ formHasErrors: boolean; errors: RecordCorrectionFormValueValidationErrors }> => {
   validateNoUnexpectedReasonValues(formValues, reasons);
 
-  return await getValidationErrorsForRequiredFormValues(formValues, reasons);
+  const errors = await getValidationErrorsForRequiredFormValues(formValues, reasons);
+
+  const formHasErrors = hasValidationErrors(errors);
+
+  return {
+    formHasErrors,
+    errors,
+  };
 };

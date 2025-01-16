@@ -6,7 +6,6 @@ import { NotFoundError } from '../../../../../errors';
 import { FeeRecordCorrectionRepo } from '../../../../../repositories/fee-record-correction-repo';
 import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
 import { PutFeeRecordCorrectionTransientFormDataPayload } from '../../../../routes/middleware/payload-validation';
-import { ValidatedRecordCorrectionTransientFormData } from '../../../../../types/validated-record-correction-form-values';
 import { validateRecordCorrectionTransientFormValues, parseValidatedRecordCorrectionTransientFormValues } from './helpers';
 
 export type PutFeeRecordCorrectionTransientFormDataRequest = CustomExpressRequest<{
@@ -17,14 +16,15 @@ export type PutFeeRecordCorrectionTransientFormDataRequest = CustomExpressReques
   reqBody: PutFeeRecordCorrectionTransientFormDataPayload;
 }>;
 
-// TODO: Update unit tests for this function
 /**
  * Controller for the PUT fee record correction transient form data route.
  *
  * Validates the correction exists and belongs to a report for the correct bank.
  *
- * Then creates a new fee record correction transient form data entity with the
- * correction id, user id and form data, and saves it.
+ * Validates the form data, returning any validation error messages to the frontend.
+ *
+ * If there are no validation errors, creates a new fee record correction transient
+ * form data entity with the correction id, user id and form data, and saves it.
  * @param req - The {@link PutFeeRecordCorrectionTransientFormDataRequest} request object
  * @param res - The response object
  */
@@ -42,17 +42,13 @@ export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordC
       throw new NotFoundError(`Failed to find a correction with id '${correctionId}' for bank id '${bankId}'`);
     }
 
-    const errors = await validateRecordCorrectionTransientFormValues(formData, correction.reasons);
-
-    const formHasErrors = Object.values(errors).some((error) => error !== undefined);
+    const { formHasErrors, errors } = await validateRecordCorrectionTransientFormValues(formData, correction.reasons);
 
     if (formHasErrors) {
-      return res.status(HttpStatusCode.BadRequest).send(errors);
+      return res.status(HttpStatusCode.Ok).send(errors);
     }
 
-    const validatedFormData = formData as ValidatedRecordCorrectionTransientFormData;
-
-    const parsedFormData = parseValidatedRecordCorrectionTransientFormValues(validatedFormData);
+    const parsedFormData = parseValidatedRecordCorrectionTransientFormValues(formData);
 
     const newTransientFormData = FeeRecordCorrectionTransientFormDataEntity.create({
       userId,

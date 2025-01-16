@@ -2,6 +2,7 @@ import { CURRENCY, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@uke
 import {
   getFormValueForReason,
   getValidationErrorsForRequiredFormValues,
+  hasValidationErrors,
   validateNoUnexpectedReasonValues,
   validateRecordCorrectionTransientFormValues,
 } from './validate-record-correction-transient-form-values';
@@ -152,11 +153,11 @@ describe('validate-record-correction-transient-form-values', () => {
 
         // Assert
         const expectedFacilityIdErrorMessage = 'You must enter a facility ID between 8 and 10 digits using the numbers 0-9 only';
-        const expectedValidationErrors = {
+        const expectedErrors = {
           facilityIdErrorMessage: expectedFacilityIdErrorMessage,
         };
 
-        expect(validationErrors).toEqual(expectedValidationErrors);
+        expect(validationErrors).toEqual(expectedErrors);
       });
     });
 
@@ -171,11 +172,11 @@ describe('validate-record-correction-transient-form-values', () => {
 
         // Assert
         const expectedReportedCurrencyErrorMessage = 'You must select a currency';
-        const expectedValidationErrors = {
+        const expectedErrors = {
           reportedCurrencyErrorMessage: expectedReportedCurrencyErrorMessage,
         };
 
-        expect(validationErrors).toEqual(expectedValidationErrors);
+        expect(validationErrors).toEqual(expectedErrors);
       });
     });
 
@@ -190,11 +191,11 @@ describe('validate-record-correction-transient-form-values', () => {
 
         // Assert
         const expectedReportedFeeErrorMessage = 'You must enter the reported fee in a valid format';
-        const expectedValidationErrors = {
+        const expectedErrors = {
           reportedFeeErrorMessage: expectedReportedFeeErrorMessage,
         };
 
-        expect(validationErrors).toEqual(expectedValidationErrors);
+        expect(validationErrors).toEqual(expectedErrors);
       });
     });
 
@@ -209,11 +210,11 @@ describe('validate-record-correction-transient-form-values', () => {
 
         // Assert
         const expectedUtilisationErrorMessage = 'You must enter the utilisation in a valid format';
-        const expectedValidationErrors = {
+        const expectedErrors = {
           utilisationErrorMessage: expectedUtilisationErrorMessage,
         };
 
-        expect(validationErrors).toEqual(expectedValidationErrors);
+        expect(validationErrors).toEqual(expectedErrors);
       });
     });
 
@@ -228,11 +229,11 @@ describe('validate-record-correction-transient-form-values', () => {
 
         // Assert
         const expectedAdditionalCommentsErrorMessage = 'You must enter a comment';
-        const expectedValidationErrors = {
+        const expectedErrors = {
           additionalCommentsErrorMessage: expectedAdditionalCommentsErrorMessage,
         };
 
-        expect(validationErrors).toEqual(expectedValidationErrors);
+        expect(validationErrors).toEqual(expectedErrors);
       });
     });
 
@@ -252,12 +253,12 @@ describe('validate-record-correction-transient-form-values', () => {
         const expectedFacilityIdErrorMessage = 'You must enter a facility ID between 8 and 10 digits using the numbers 0-9 only';
         const expectedReportedCurrencyErrorMessage = 'You must select a currency';
 
-        const expectedValidationErrors = {
+        const expectedErrors = {
           facilityIdErrorMessage: expectedFacilityIdErrorMessage,
           reportedCurrencyErrorMessage: expectedReportedCurrencyErrorMessage,
         };
 
-        expect(validationErrors).toEqual(expectedValidationErrors);
+        expect(validationErrors).toEqual(expectedErrors);
       });
     });
 
@@ -270,6 +271,48 @@ describe('validate-record-correction-transient-form-values', () => {
         // Act & Assert
         await expect(getValidationErrorsForRequiredFormValues(formValues, reasons)).rejects.toThrow('Invalid record correction reason: INVALID_REASON');
       });
+    });
+  });
+
+  describe('hasValidationErrors', () => {
+    it('should return true when validation errors object contains defined error messages', () => {
+      // Arrange
+      const validationErrors = {
+        facilityIdErrorMessage: 'Invalid facility ID',
+        reportedCurrencyErrorMessage: undefined,
+        reportedFeeErrorMessage: 'Invalid fee',
+      };
+
+      // Act
+      const result = hasValidationErrors(validationErrors);
+
+      // Assert
+      expect(result).toEqual(true);
+    });
+
+    it('should return false when validation errors object contains only undefined values', () => {
+      // Arrange
+      const validationErrors = {
+        facilityIdErrorMessage: undefined,
+        reportedCurrencyErrorMessage: undefined,
+      };
+
+      // Act
+      const result = hasValidationErrors(validationErrors);
+
+      // Assert
+      expect(result).toEqual(false);
+    });
+
+    it('should return false when validation errors object is empty', () => {
+      // Arrange
+      const validationErrors = {};
+
+      // Act
+      const result = hasValidationErrors(validationErrors);
+
+      // Assert
+      expect(result).toEqual(false);
     });
   });
 
@@ -296,15 +339,15 @@ describe('validate-record-correction-transient-form-values', () => {
       const reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT];
 
       // Act
-      const validationErrors = await validateRecordCorrectionTransientFormValues(formValues, reasons);
+      const { errors } = await validateRecordCorrectionTransientFormValues(formValues, reasons);
 
       // Assert
       const expectedFacilityIdErrorMessage = 'You must enter a facility ID between 8 and 10 digits using the numbers 0-9 only';
-      const expectedValidationErrors = {
+      const expectedErrors = {
         facilityIdErrorMessage: expectedFacilityIdErrorMessage,
       };
 
-      expect(validationErrors).toEqual(expectedValidationErrors);
+      expect(errors).toEqual(expectedErrors);
     });
 
     it('should return no validation errors when only valid values for expected reasons are provided', async () => {
@@ -317,10 +360,10 @@ describe('validate-record-correction-transient-form-values', () => {
       const reasons = [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT, RECORD_CORRECTION_REASON.OTHER];
 
       // Act
-      const validationErrors = await validateRecordCorrectionTransientFormValues(formValues, reasons);
+      const { errors } = await validateRecordCorrectionTransientFormValues(formValues, reasons);
 
       // Assert
-      expect(validationErrors).toEqual({});
+      expect(errors).toEqual({});
     });
 
     it('should validate multiple form values and return any validation errors', async () => {
@@ -337,17 +380,17 @@ describe('validate-record-correction-transient-form-values', () => {
       ];
 
       // Act
-      const validationErrors = await validateRecordCorrectionTransientFormValues(formValues, reasons);
+      const { errors } = await validateRecordCorrectionTransientFormValues(formValues, reasons);
 
       // Assert
       const expectedReportedFeeErrorMessage = 'You must enter the reported fee in a valid format';
       const expectedUtilisationErrorMessage = 'You must enter the utilisation in a valid format';
-      const expectedValidationErrors = {
+      const expectedErrors = {
         reportedFeeErrorMessage: expectedReportedFeeErrorMessage,
         utilisationErrorMessage: expectedUtilisationErrorMessage,
       };
 
-      expect(validationErrors).toEqual(expectedValidationErrors);
+      expect(errors).toEqual(expectedErrors);
     });
 
     it('should validate missing required values', async () => {
@@ -358,15 +401,15 @@ describe('validate-record-correction-transient-form-values', () => {
       const reasons = [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT, RECORD_CORRECTION_REASON.OTHER];
 
       // Act
-      const validationErrors = await validateRecordCorrectionTransientFormValues(formValues, reasons);
+      const { errors } = await validateRecordCorrectionTransientFormValues(formValues, reasons);
 
       // Assert
       const expectedAdditionalCommentsErrorMessage = 'You must enter a comment';
-      const expectedValidationErrors = {
+      const expectedErrors = {
         additionalCommentsErrorMessage: expectedAdditionalCommentsErrorMessage,
       };
 
-      expect(validationErrors).toEqual(expectedValidationErrors);
+      expect(errors).toEqual(expectedErrors);
     });
 
     it('should handle empty form values object', async () => {
@@ -375,15 +418,15 @@ describe('validate-record-correction-transient-form-values', () => {
       const reasons = [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT];
 
       // Act
-      const validationErrors = await validateRecordCorrectionTransientFormValues(formValues, reasons);
+      const { errors } = await validateRecordCorrectionTransientFormValues(formValues, reasons);
 
       // Assert
       const expectedReportedFeeErrorMessage = 'You must enter the reported fee in a valid format';
-      const expectedValidationErrors = {
+      const expectedErrors = {
         reportedFeeErrorMessage: expectedReportedFeeErrorMessage,
       };
 
-      expect(validationErrors).toEqual(expectedValidationErrors);
+      expect(errors).toEqual(expectedErrors);
     });
 
     it('should throw error for invalid reason', async () => {
