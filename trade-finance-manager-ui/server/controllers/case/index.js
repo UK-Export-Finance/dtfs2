@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const { AMENDMENT_STATUS, FLASH_TYPES } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS, FLASH_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const {
   getTask,
@@ -45,7 +45,7 @@ const getCaseDeal = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    const amendmentsInProgress = amendments.filter(({ status }) => status === AMENDMENT_STATUS.IN_PROGRESS);
+    const amendmentsInProgress = amendments.filter(({ status }) => status === TFM_AMENDMENT_STATUS.IN_PROGRESS);
     const hasAmendmentInProgress = amendmentsInProgress.length > 0;
     if (hasAmendmentInProgress) {
       deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
@@ -345,7 +345,7 @@ const getCaseFacility = async (req, res) => {
     return res.render('_partials/problem-with-service.njk');
   }
 
-  const hasAmendmentInProgressButton = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const hasAmendmentInProgressButton = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
   const showContinueAmendmentButton = hasAmendmentInProgressButton && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
 
   const amendmentsInProgress = amendmentsInProgressByDeal(amendments);

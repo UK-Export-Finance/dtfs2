@@ -1,4 +1,4 @@
-const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { DEAL } = require('../../constants');
 const { overrideDealsIfAmendmentsInProgress } = require('./overrideDealsIfAmendmentsInProgress.helper');
 
@@ -20,22 +20,22 @@ describe('overrideDealsIfAmendmentsInProgress', () => {
 
   const amendmentsOneCorresponding = [
     {
-      status: AMENDMENT_STATUS.IN_PROGRESS,
+      status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
       dealId: '0',
     },
     {
-      status: AMENDMENT_STATUS.NOT_STARTED,
+      status: TFM_AMENDMENT_STATUS.NOT_STARTED,
       dealId: '1',
     },
   ];
 
   const amendmentsNoneCorresponding = [
     {
-      status: AMENDMENT_STATUS.IN_PROGRESS,
+      status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
       dealId: '2',
     },
     {
-      status: AMENDMENT_STATUS.NOT_STARTED,
+      status: TFM_AMENDMENT_STATUS.NOT_STARTED,
       dealId: '1',
     },
   ];

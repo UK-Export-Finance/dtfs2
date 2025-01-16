@@ -1,4 +1,4 @@
-import { AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import api from '../../api';
 import PageOutOfBoundsError from '../../errors/page-out-of-bounds.error';
 import { mockRes as generateMockRes } from '../../test-mocks';
@@ -40,11 +40,11 @@ describe('controllers - deals', () => {
   };
   const mockAmendments = [
     {
-      status: AMENDMENT_STATUS.IN_PROGRESS,
+      status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
       dealId: '0',
     },
     {
-      status: AMENDMENT_STATUS.NOT_STARTED,
+      status: TFM_AMENDMENT_STATUS.NOT_STARTED,
       dealId: '1',
     },
   ];

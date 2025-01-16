@@ -1,4 +1,4 @@
-export const AMENDMENT_STATUS = {
+export const TFM_AMENDMENT_STATUS = {
   NOT_STARTED: 'Not started',
   IN_PROGRESS: 'In progress',
   COMPLETED: 'Completed',

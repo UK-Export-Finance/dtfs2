@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { effectiveDateValidation } = require('./validation/amendmentEffectiveDate.validate');
 
@@ -17,7 +17,7 @@ const getAmendmentEffectiveDate = async (req, res) => {
   let effectiveDateMonth = '';
   let effectiveDateYear = '';
 
-  const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
   if (amendment.effectiveDate) {
     effectiveDateDay = format(fromUnixTime(amendment.effectiveDate), 'dd');
     effectiveDateMonth = format(fromUnixTime(amendment.effectiveDate), 'M');
@@ -43,7 +43,7 @@ const postAmendmentEffectiveDate = async (req, res) => {
   const { dealId } = amendment;
 
   if (effectiveDateErrors.length) {
-    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
     return res.render('case/amendments/amendment-effective-date.njk', {
       dealId: amendment.dealId,
       facilityId,

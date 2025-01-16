@@ -1,4 +1,4 @@
-const { TEAM_IDS, AMENDMENT_STATUS, DEAL_STATUS } = require('@ukef/dtfs2-common');
+const { TEAM_IDS, TFM_AMENDMENT_STATUS, DEAL_STATUS } = require('@ukef/dtfs2-common');
 const { DECISIONS, DEAL } = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
 
@@ -66,7 +66,7 @@ const validateUkefDecision = (ukefDecision, decisionType) => ukefDecision?.cover
 
 const hasAmendmentInProgressDealStage = (amendments) => {
   if (Array.isArray(amendments) && amendments.length) {
-    const amendmentsInProgress = amendments.filter(({ status, submittedByPim }) => status === AMENDMENT_STATUS.IN_PROGRESS && submittedByPim);
+    const amendmentsInProgress = amendments.filter(({ status, submittedByPim }) => status === TFM_AMENDMENT_STATUS.IN_PROGRESS && submittedByPim);
     const hasAmendmentInProgress = amendmentsInProgress.length > 0;
     if (hasAmendmentInProgress) {
       return true;
@@ -77,7 +77,7 @@ const hasAmendmentInProgressDealStage = (amendments) => {
 
 const amendmentsInProgressByDeal = (amendments) => {
   if (Array.isArray(amendments) && amendments.length) {
-    return amendments.filter(({ status, submittedByPim }) => status === AMENDMENT_STATUS.IN_PROGRESS && submittedByPim);
+    return amendments.filter(({ status, submittedByPim }) => status === TFM_AMENDMENT_STATUS.IN_PROGRESS && submittedByPim);
   }
   return [];
 };
