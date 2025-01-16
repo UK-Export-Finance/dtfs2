@@ -12,7 +12,7 @@ const { formattedNumber } = require('../../../helpers/number');
 const { UNDERWRITER_MANAGER_DECISIONS_TAGS } = require('../../../constants/decisions.constant');
 const { BANK_DECISIONS_TAGS } = require('../../../constants/amendments');
 const CONSTANTS = require('../../../constants');
-const { filterAmendmentsByInProgress } = require('../../helpers/amendments.helper');
+const { getAmendmentsInProgress } = require('../../helpers/amendments.helper');
 const { getDealSuccessBannerMessage } = require('../../helpers/get-success-banner-message.helper');
 
 /**
@@ -53,7 +53,7 @@ const getUnderwriterPage = async (req, res) => {
   // filters the amendments submittedByPim and also which are not automatic
   amendments = amendments.filter(({ submittedByPim, requireUkefApproval }) => submittedByPim && requireUkefApproval);
 
-  const amendmentsInProgress = filterAmendmentsByInProgress({ amendments, deal });
+  const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
   const hasAmendmentInProgress = amendmentsInProgress.length > 0;
 
   if (hasAmendmentInProgress) {

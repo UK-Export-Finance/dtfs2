@@ -1,5 +1,5 @@
 const { cloneDeep } = require('lodash');
-const { filterAmendmentsByInProgress } = require('./amendments.helper');
+const { getAmendmentsInProgress } = require('./amendments.helper');
 const { DEAL } = require('../../constants');
 
 const overrideDealsIfAmendmentsInProgress = (deals, amendments) => {
@@ -9,7 +9,7 @@ const overrideDealsIfAmendmentsInProgress = (deals, amendments) => {
       const modifiedDeal = cloneDeep(deal);
 
       const amendmentsForDeal = amendments.filter(({ dealId }) => dealId === deal._id);
-      const amendmentInProgressOnDeal = filterAmendmentsByInProgress({ amendments: amendmentsForDeal, deal });
+      const amendmentInProgressOnDeal = getAmendmentsInProgress({ amendments: amendmentsForDeal, deal });
 
       if (amendmentInProgressOnDeal.length > 0) {
         modifiedDeal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;

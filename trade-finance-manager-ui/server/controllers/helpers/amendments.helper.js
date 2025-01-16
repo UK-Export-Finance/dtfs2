@@ -70,12 +70,12 @@ const validateUkefDecision = (ukefDecision, decisionType) => ukefDecision?.cover
 const immutableDealStages = [TFM_DEAL_STAGE.CANCELLED];
 
 /**
- * @param {Object} filterAmendmentsByInProgressParams
- * @param {import('@ukef/dtfs2-common').TfmDeal} filterAmendmentsByInProgressParams.deal - the deal
- * @param {import('@ukef/dtfs2-common').TfmFacilityAmendment[]} filterAmendmentsByInProgressParams.amendments - the amendments
+ * @param {Object} getAmendmentsInProgress Params
+ * @param {import('@ukef/dtfs2-common').TfmDeal} getAmendmentsInProgress Params.deal - the deal
+ * @param {import('@ukef/dtfs2-common').TfmFacilityAmendment[]} getAmendmentsInProgress Params.amendments - the amendments
  * @returns {import('@ukef/dtfs2-common').TfmFacilityAmendment[]} - the amendments that are in progress
  */
-const filterAmendmentsByInProgress = ({ amendments, deal }) => {
+const getAmendmentsInProgress = ({ amendments, deal }) => {
   if (immutableDealStages.includes(deal.tfm.stage)) {
     return [];
   }
@@ -93,5 +93,5 @@ module.exports = {
   userCanEditBankDecision,
   ukefDecisionRejected,
   validateUkefDecision,
-  filterAmendmentsByInProgress,
+  getAmendmentsInProgress,
 };
