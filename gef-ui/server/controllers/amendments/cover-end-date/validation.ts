@@ -1,9 +1,9 @@
-import { add, isAfter, isBefore, startOfDay } from 'date-fns';
+import { add, isAfter, isBefore, startOfDay, getUnixTime } from 'date-fns';
 import { applyStandardValidationAndParseDateInput, DayMonthYearInput, COVER_END_DATE_MAXIMUM_YEARS_IN_FUTURE } from '@ukef/dtfs2-common';
 import { ErrorsOrValue } from '../../../types/errors-or-value';
 import { mapValidationError } from '../../../utils/map-validation-error';
 
-export const validateAndParseCoverEndDate = (dayMonthYear: DayMonthYearInput, coverStartDate: Date): ErrorsOrValue<Date> => {
+export const validateAndParseCoverEndDate = (dayMonthYear: DayMonthYearInput, coverStartDate: Date): ErrorsOrValue<number> => {
   const errRef = 'coverEndDate';
   const variableDisplayName = 'cover end date';
 
@@ -44,5 +44,5 @@ export const validateAndParseCoverEndDate = (dayMonthYear: DayMonthYearInput, co
     };
   }
 
-  return { value: coverEndDate };
+  return { value: getUnixTime(coverEndDate) };
 };

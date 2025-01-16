@@ -5,7 +5,7 @@ const updateAmendmentMock = jest.fn();
 
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { format, startOfDay } from 'date-fns';
+import { format, startOfDay, getUnixTime } from 'date-fns';
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import {
   aPortalSessionUser,
@@ -147,7 +147,11 @@ describe('postCoverEndDate', () => {
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage,
       errors: validationErrorHandler(
-        (validateAndParseCoverEndDate(coverEndDateDayMonthYear, new Date(MOCK_ISSUED_FACILITY.details.coverStartDate)) as { errors: ValidationError[] }).errors,
+        (
+          validateAndParseCoverEndDate(coverEndDateDayMonthYear, new Date(MOCK_ISSUED_FACILITY.details.coverStartDate as dtfsCommon.IsoDateTimeStamp)) as {
+            errors: ValidationError[];
+          }
+        ).errors,
       ),
       coverEndDate: coverEndDateDayMonthYear,
     };
@@ -167,7 +171,7 @@ describe('postCoverEndDate', () => {
 
     // Assert
     expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
-    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { coverEndDate: today }, userToken });
+    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { coverEndDate: getUnixTime(today) }, userToken });
   });
 
   it('should not call console.error if the coverEndDate is valid', async () => {
@@ -237,7 +241,7 @@ describe('postCoverEndDate', () => {
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error posting amendments facility end date page %o', mockError);
+    expect(console.error).toHaveBeenCalledWith('Error posting amendments cover end date page %o', mockError);
   });
 
   it('should render `problem with service` if getFacility throws an error', async () => {
@@ -252,7 +256,7 @@ describe('postCoverEndDate', () => {
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error posting amendments facility end date page %o', mockError);
+    expect(console.error).toHaveBeenCalledWith('Error posting amendments cover end date page %o', mockError);
   });
 
   it('should render `problem with service` if updateAmendment throws an error', async () => {
@@ -267,6 +271,6 @@ describe('postCoverEndDate', () => {
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error posting amendments facility end date page %o', mockError);
+    expect(console.error).toHaveBeenCalledWith('Error posting amendments cover end date page %o', mockError);
   });
 });

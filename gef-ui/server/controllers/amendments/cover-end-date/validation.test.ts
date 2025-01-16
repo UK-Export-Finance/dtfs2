@@ -1,5 +1,5 @@
 import { applyStandardValidationAndParseDateInput, COVER_END_DATE_MAXIMUM_YEARS_IN_FUTURE } from '@ukef/dtfs2-common';
-import { add, startOfDay } from 'date-fns';
+import { add, startOfDay, getUnixTime } from 'date-fns';
 import { validateAndParseCoverEndDate } from './validation';
 import { mapValidationError } from '../../../utils/map-validation-error';
 
@@ -28,7 +28,7 @@ describe('validateAndParseCoverEndDate', () => {
     });
   });
 
-  it('returns error if date is before cover start date', () => {
+  it('should return error if date is before cover start date', () => {
     // Arrange
     const coverEndDate = new Date();
     const coverStartDate = add(new Date(), { days: 1 });
@@ -51,7 +51,7 @@ describe('validateAndParseCoverEndDate', () => {
     });
   });
 
-  it(`returns error if date is ${COVER_END_DATE_MAXIMUM_YEARS_IN_FUTURE} years in the future`, () => {
+  it(`should return error if date is ${COVER_END_DATE_MAXIMUM_YEARS_IN_FUTURE} years in the future`, () => {
     // Arrange
     const coverEndDate = add(new Date(), { years: 6, days: 1 });
     const coverStartDate = add(new Date(), { days: 1 });
@@ -74,7 +74,7 @@ describe('validateAndParseCoverEndDate', () => {
     });
   });
 
-  it('returns date if valid', () => {
+  it('should return cover end date if valid', () => {
     // Arrange
     const coverEndDate = startOfDay(add(new Date(), { years: 1 }));
     const coverStartDate = add(new Date(), { days: 1 });
@@ -87,7 +87,7 @@ describe('validateAndParseCoverEndDate', () => {
 
     // Assert
     expect(result).toEqual({
-      value: coverEndDate,
+      value: getUnixTime(coverEndDate),
     });
   });
 });
