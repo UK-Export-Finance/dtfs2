@@ -4,7 +4,7 @@ import {
   AuditDetails,
   TfmFacility,
   FacilityAmendment,
-  AmendmentStatus,
+  TfmAmendmentStatus,
   FacilityNotFoundError,
   AmendmentNotFoundError,
   AMENDMENT_TYPES,
@@ -132,7 +132,7 @@ export class TfmFacilitiesRepo {
    * @param status - The amendment status
    * @returns The found amendments
    */
-  public static async findAmendmentsByStatus(status: AmendmentStatus): Promise<Document[]> {
+  public static async findAmendmentsByStatus(status: TfmAmendmentStatus): Promise<Document[]> {
     const collection = await this.getCollection();
     return await collection
       .aggregate(aggregatePipelines.amendmentsByStatus(status))
@@ -159,7 +159,7 @@ export class TfmFacilitiesRepo {
    * @param status - The amendment status
    * @returns The found amendments
    */
-  public static async findAmendmentsByFacilityIdAndStatus(facilityId: string | ObjectId, status: AmendmentStatus): Promise<FacilityAmendment[]> {
+  public static async findAmendmentsByFacilityIdAndStatus(facilityId: string | ObjectId, status: TfmAmendmentStatus): Promise<FacilityAmendment[]> {
     const collection = await this.getCollection();
     return await collection
       .aggregate(aggregatePipelines.amendmentsByFacilityIdAndStatus(facilityId, status))
@@ -219,7 +219,7 @@ export class TfmFacilitiesRepo {
    * @param status - The amendment status
    * @returns The found amendments
    */
-  public static async findAmendmentsByDealIdAndStatus(dealId: string | ObjectId, status: AmendmentStatus): Promise<Document[]> {
+  public static async findAmendmentsByDealIdAndStatus(dealId: string | ObjectId, status: TfmAmendmentStatus): Promise<Document[]> {
     const collection = await this.getCollection();
     return await collection
       .aggregate(aggregatePipelines.amendmentsByDealIdAndStatus(dealId, status))

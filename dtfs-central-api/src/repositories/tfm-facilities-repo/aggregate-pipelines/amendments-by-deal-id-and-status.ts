@@ -1,7 +1,7 @@
 import { ObjectId, Document } from 'mongodb';
-import { AmendmentStatus } from '@ukef/dtfs2-common';
+import { TfmAmendmentStatus } from '@ukef/dtfs2-common';
 
-export const amendmentsByDealIdAndStatus = (dealId: string | ObjectId, status: AmendmentStatus): Document[] => [
+export const amendmentsByDealIdAndStatus = (dealId: string | ObjectId, status: TfmAmendmentStatus): Document[] => [
   { $match: { 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } } },
   {
     $addFields: {
