@@ -1,22 +1,22 @@
 const { TFM_DEAL_STAGE, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { filterAmendmentsByInProgress } = require('./amendments.helper');
 
-const aNotStartedAmendment = () => ({
+const notStartedAmendment = () => ({
   status: AMENDMENT_STATUS.NOT_STARTED,
   submittedByPim: false,
 });
 
-const anUnsubmittedInProgressAmendment = () => ({
+const unsubmittedInProgressAmendment = () => ({
   status: AMENDMENT_STATUS.IN_PROGRESS,
   submittedByPim: false,
 });
 
-const aSubmittedInProgressAmendment = () => ({
+const submittedInProgressAmendment = () => ({
   status: AMENDMENT_STATUS.IN_PROGRESS,
   submittedByPim: true,
 });
 
-const aCompletedAmendment = () => ({
+const completedAmendment = () => ({
   status: AMENDMENT_STATUS.COMPLETED,
   submittedByPim: true,
 });
@@ -24,7 +24,7 @@ const aCompletedAmendment = () => ({
 describe('filterAmendmentsByInProgress', () => {
   it(`should return an empty array if the deal stage is ${TFM_DEAL_STAGE.CANCELLED}`, () => {
     // Arrange
-    const amendments = [aSubmittedInProgressAmendment()];
+    const amendments = [submittedInProgressAmendment()];
     const deal = {
       tfm: {
         stage: TFM_DEAL_STAGE.CANCELLED,
@@ -72,7 +72,7 @@ describe('filterAmendmentsByInProgress', () => {
 
   it(`should only return the in progress amendments`, () => {
     // Arrange
-    const amendments = [aNotStartedAmendment(), aCompletedAmendment(), aSubmittedInProgressAmendment(), anUnsubmittedInProgressAmendment()];
+    const amendments = [notStartedAmendment(), completedAmendment(), submittedInProgressAmendment(), unsubmittedInProgressAmendment()];
     const deal = {
       tfm: {
         stage: TFM_DEAL_STAGE.COMPLETED,
@@ -83,6 +83,6 @@ describe('filterAmendmentsByInProgress', () => {
     const result = filterAmendmentsByInProgress({ amendments, deal });
 
     // Assert
-    expect(result).toEqual([aSubmittedInProgressAmendment()]);
+    expect(result).toEqual([submittedInProgressAmendment()]);
   });
 });
