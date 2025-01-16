@@ -59,10 +59,22 @@ context('Amendments - change facility value journey - happy path', () => {
 
   it('should navigate through the journey correctly', () => {
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
+
+    whatDoYouNeedToChange.coverEndDateCheckbox().should('not.be.checked');
+    whatDoYouNeedToChange.facilityValueCheckbox().should('not.be.checked');
+    whatDoYouNeedToChange.pageTitle().contains('What do you need to change?');
+    whatDoYouNeedToChange.backLink();
+    whatDoYouNeedToChange.warning().contains('Check your records for the most up-to-date values');
+
     whatDoYouNeedToChange.facilityValueCheckbox().click();
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`));
+
+    facilityValue.pageHeading().contains('New facility value');
+    facilityValue.backLink();
+    facilityValue.facilityValuePrefix().contains('£');
+
     cy.keyboardInput(facilityValue.facilityValue(), '10000');
     cy.clickContinueButton();
 

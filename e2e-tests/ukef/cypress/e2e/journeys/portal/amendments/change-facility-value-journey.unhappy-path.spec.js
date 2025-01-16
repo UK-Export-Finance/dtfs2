@@ -78,7 +78,7 @@ context('Amendments - change facility value journey - unhappy path', () => {
     whatDoYouNeedToChange.facilityValueCheckbox().click();
     cy.clickContinueButton();
 
-    cy.url.should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`));
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`));
   });
 
   it('should render an error if no facility value is provided', () => {
@@ -91,5 +91,58 @@ context('Amendments - change facility value journey - unhappy path', () => {
 
     facilityValue.facilityValueInlineError().should('be.visible');
     facilityValue.facilityValueInlineError().contains('Enter the new facility value in number format');
+  });
+
+  const errorTestCases = [
+    {
+      description: 'the value contains non-numeric characters',
+      value: '1000x',
+      expectedErrorMessage: 'Enter a valid facility value',
+    },
+    {
+      description: 'the value contains too many decimal places',
+      value: '1000.000',
+      expectedErrorMessage: 'Enter a valid facility value',
+    },
+    {
+      description: 'the value contains too many decimal points',
+      value: '1000.00.0',
+      expectedErrorMessage: 'Enter a valid facility value',
+    },
+    {
+      description: 'the value contains has no leading digit',
+      value: '.99',
+      expectedErrorMessage: 'Enter a valid facility value',
+    },
+    {
+      description: 'the value ends with a decimal place',
+      value: '123.',
+      expectedErrorMessage: 'Enter a valid facility value',
+    },
+    {
+      description: 'the value is too small',
+      value: '0.99',
+      expectedErrorMessage: 'Enter a valid facility value',
+    },
+    {
+      description: 'the value is too large',
+      value: '1000000000000.01',
+      expectedErrorMessage: 'The new facility value is too high',
+    },
+  ];
+
+  errorTestCases.forEach(({ description, value, expectedErrorMessage }) => {
+    it(`should render an error if ${description}`, () => {
+      cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`));
+
+      cy.keyboardInput(facilityValue.facilityValue(), value);
+      cy.clickContinueButton();
+
+      facilityValue.errorSummary().should('be.visible');
+      facilityValue.errorSummary().contains(expectedErrorMessage);
+
+      facilityValue.facilityValueInlineError().should('be.visible');
+      facilityValue.facilityValueInlineError().contains(expectedErrorMessage);
+    });
   });
 });
