@@ -4,6 +4,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
+{% import '../../_macros/amendments/eligibility-criterion.njk' as eligibilityCriterion %}
 
 {% block pageTitle -%}
   Eligibility
@@ -54,8 +55,10 @@
               idPrefix: criterion.id,
               name: criterion.id,
               fieldset: {
-                legend: {text: criterion.id + ". " + criterion.description },
-                attributes: { 'aria-label': criterion.description,  'data-cy': 'description-criterion-' + criterion.id }
+                legend: {
+                  html: eligibilityCriterion.render(criterion.id, criterion.text, criterion.textList)
+                },
+                attributes: { 'aria-label': criterion.text,  'data-cy': 'description-criterion-' + criterion.id }
               },
               attributes: {
                 'data-cy': 'radios-criterion-' + criterion.id
@@ -73,7 +76,7 @@
                   checked: criterion.answer === true,
                   attributes: {
                     'data-cy': 'true-radio-criterion-' + criterion.id,
-                    'aria-label': 'Eligibility criterion, ' + criterion.id + ', ' + criterion.description + ', true'
+                    'aria-label': 'Eligibility criterion, ' + criterion.id + ', ' + criterion.text + ', true'
                   }
                 },
                 {
@@ -82,7 +85,7 @@
                   checked: criterion.answer === false,
                   attributes: {
                     'data-cy': 'false-radio-criterion-' + criterion.id,
-                    'aria-label': 'Eligibility criterion, ' + criterion.id + ', ' + criterion.description + ', false'
+                    'aria-label': 'Eligibility criterion, ' + criterion.id + ', ' + criterion.text + ', false'
                   }
                 }
               ]
