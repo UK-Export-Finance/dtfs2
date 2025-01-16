@@ -6,19 +6,27 @@ const updateAmendmentMock = jest.fn();
 
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
+import { format, startOfDay } from 'date-fns';
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { aPortalSessionUser, PORTAL_LOGIN_STATUS, DEAL_SUBMISSION_TYPE, DEAL_STATUS, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
-import { postFacilityValue, PostFacilityValueRequest } from './post-facility-value';
+import {
+  aPortalSessionUser,
+  PORTAL_LOGIN_STATUS,
+  DEAL_SUBMISSION_TYPE,
+  DEAL_STATUS,
+  PortalFacilityAmendmentWithUkefId,
+  DayMonthYearInput,
+} from '@ukef/dtfs2-common';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
-import { FacilityValueViewModel } from '../../../types/view-models/amendments/facility-value-view-model';
-import { getCurrencySymbol } from './getCurrencySymbol';
 import { validationErrorHandler } from '../../../utils/helpers';
-import { validateFacilityValue } from './validation';
 import { getNextPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { ValidationError } from '../../../types/validation-error';
+import { postFacilityEndDate, PostFacilityEndDateRequest } from './post-facility-end-date';
+import * as facilityEndDateValidation from '../../facility-end-date/validation';
+import { FacilityEndDateViewModel } from '../../../types/view-models/amendments/facility-end-date-view-model';
+import { getCoverStartDateOrStartOfToday } from '../../../utils/get-cover-start-date-or-start-of-today';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
@@ -37,8 +45,10 @@ const previousPage = 'previousPage';
 const mockUser = aPortalSessionUser();
 const userToken = 'userToken';
 
-const getHttpMocks = (facilityValue: string = '10000') =>
-  httpMocks.createMocks<PostFacilityValueRequest>({
+const today = startOfDay(new Date());
+
+const getHttpMocks = (facilityEndDateDayMonthYear: DayMonthYearInput = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') }) =>
+  httpMocks.createMocks<PostFacilityEndDateRequest>({
     params: {
       dealId,
       facilityId,
@@ -51,13 +61,15 @@ const getHttpMocks = (facilityValue: string = '10000') =>
     },
     body: {
       previousPage,
-      facilityValue,
+      'facility-end-date-day': facilityEndDateDayMonthYear.day,
+      'facility-end-date-month': facilityEndDateDayMonthYear.month,
+      'facility-end-date-year': facilityEndDateDayMonthYear.year,
     },
   });
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 
-describe('postFacilityValue', () => {
+describe('postFacilityEndDate', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
 
   beforeEach(() => {
@@ -66,12 +78,13 @@ describe('postFacilityValue', () => {
 
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
     jest.spyOn(console, 'error');
+    jest.spyOn(facilityEndDateValidation, 'validateAndParseFacilityEndDate');
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
-      .withChangeFacilityValue(true)
+      .withFacilityEndDate(today)
       .build();
 
     getApplicationMock.mockResolvedValue(mockDeal);
@@ -84,7 +97,7 @@ describe('postFacilityValue', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await postFacilityValue(req, res);
+    await postFacilityEndDate(req, res);
 
     // Assert
     expect(getApplicationMock).toHaveBeenCalledTimes(1);
@@ -96,83 +109,116 @@ describe('postFacilityValue', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await postFacilityValue(req, res);
+    await postFacilityEndDate(req, res);
 
     // Assert
     expect(getFacilityMock).toHaveBeenCalledTimes(1);
     expect(getFacilityMock).toHaveBeenCalledWith({ facilityId, userToken: req.session.userToken });
   });
 
-  it('should not call updateAmendment if the facilityValue is invalid', async () => {
+  it('should call validateAndParseFacilityEndDate', async () => {
     // Arrange
-    const { req, res } = getHttpMocks('not a number');
+    const facilityEndDateDayMonthYear = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
+    const { req, res } = getHttpMocks(facilityEndDateDayMonthYear);
 
     // Act
-    await postFacilityValue(req, res);
+    await postFacilityEndDate(req, res);
+
+    // Assert
+    expect(facilityEndDateValidation.validateAndParseFacilityEndDate).toHaveBeenCalledTimes(1);
+    expect(facilityEndDateValidation.validateAndParseFacilityEndDate).toHaveBeenCalledWith(
+      facilityEndDateDayMonthYear,
+      getCoverStartDateOrStartOfToday(MOCK_ISSUED_FACILITY.details),
+    );
+  });
+
+  it('should not call updateAmendment if the facilityEndDate is invalid', async () => {
+    // Arrange
+    const facilityEndDateDayMonthYear = {
+      day: '100',
+      month: '100',
+      year: '100',
+    };
+    const { req, res } = getHttpMocks(facilityEndDateDayMonthYear);
+
+    // Act
+    await postFacilityEndDate(req, res);
 
     // Assert
     expect(updateAmendmentMock).toHaveBeenCalledTimes(0);
   });
 
-  it('should render the page with validation errors if facilityValue is invalid', async () => {
+  it('should render the page with validation errors if facilityEndDate is invalid', async () => {
     // Arrange
-    const facilityValue = 'not a number';
-    const { req, res } = getHttpMocks(facilityValue);
+    const facilityEndDateDayMonthYear = {
+      day: '100',
+      month: '100',
+      year: '100',
+    };
+    const { req, res } = getHttpMocks(facilityEndDateDayMonthYear);
 
     // Act
-    await postFacilityValue(req, res);
+    await postFacilityEndDate(req, res);
 
     // Assert
-    const expectedRenderData: FacilityValueViewModel = {
+    const expectedRenderData: FacilityEndDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage,
-      currencySymbol: getCurrencySymbol(MOCK_ISSUED_FACILITY.details.currency!.id),
-      errors: validationErrorHandler((validateFacilityValue(facilityValue) as { errors: ValidationError[] }).errors),
-      facilityValue,
+      errors: validationErrorHandler(
+        (
+          facilityEndDateValidation.validateAndParseFacilityEndDate(
+            facilityEndDateDayMonthYear,
+            new Date(MOCK_ISSUED_FACILITY.details.coverStartDate as dtfsCommon.IsoDateTimeStamp),
+          ) as {
+            errors: ValidationError[];
+          }
+        ).errors,
+      ),
+      facilityEndDate: facilityEndDateDayMonthYear,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-    expect(res._getRenderView()).toEqual('partials/amendments/facility-value.njk');
+    expect(res._getRenderView()).toEqual('partials/amendments/facility-end-date.njk');
     expect(res._getRenderData()).toEqual(expectedRenderData);
   });
 
-  it('should call updateAmendment if the facilityValue is valid', async () => {
+  it('should call updateAmendment if the facilityEndDate is valid', async () => {
     // Arrange
-    const facilityValue = '1000';
-    const { req, res } = getHttpMocks(facilityValue);
+    const facilityEndDateDayMonthYear = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
+    const { req, res } = getHttpMocks(facilityEndDateDayMonthYear);
 
     // Act
-    await postFacilityValue(req, res);
+    await postFacilityEndDate(req, res);
 
     // Assert
     expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
-    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { value: Number(facilityValue) }, userToken });
+    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { facilityEndDate: today }, userToken });
   });
 
-  it('should not call console.error if the facilityValue is valid', async () => {
+  it('should not call console.error if the facilityEndDate is valid', async () => {
     // Arrange
-    const facilityValue = '1000';
-    const { req, res } = getHttpMocks(facilityValue);
+    const facilityEndDateDayMonthYear = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
+    const { req, res } = getHttpMocks(facilityEndDateDayMonthYear);
 
     // Act
-    await postFacilityValue(req, res);
+    await postFacilityEndDate(req, res);
 
     // Assert
     expect(console.error).toHaveBeenCalledTimes(0);
   });
 
-  it('should redirect to the next page if facilityValue is valid', async () => {
+  it('should redirect to the next page if facilityEndDate is valid', async () => {
     // Arrange
-    const facilityValue = '10000';
-    const { req, res } = getHttpMocks(facilityValue);
+    const facilityEndDateDayMonthYear = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
+    const { req, res } = getHttpMocks(facilityEndDateDayMonthYear);
 
     // Act
-    await postFacilityValue(req, res);
+    await postFacilityEndDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
-    expect(res._getRedirectUrl()).toEqual(getNextPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment));
+    expect(res._getRedirectUrl()).toEqual(getNextPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment));
   });
 
   it('should redirect if the facility is not found', async () => {
@@ -181,7 +227,7 @@ describe('postFacilityValue', () => {
     getFacilityMock.mockResolvedValue({ details: undefined });
 
     // Act
-    await postFacilityValue(req, res);
+    await postFacilityEndDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
@@ -196,7 +242,7 @@ describe('postFacilityValue', () => {
     getApplicationMock.mockResolvedValue(undefined);
 
     // Act
-    await postFacilityValue(req, res);
+    await postFacilityEndDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
@@ -212,12 +258,12 @@ describe('postFacilityValue', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await postFacilityValue(req, res);
+    await postFacilityEndDate(req, res);
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error posting amendments facility value page %o', mockError);
+    expect(console.error).toHaveBeenCalledWith('Error posting amendments facility end date page %o', mockError);
   });
 
   it('should render `problem with service` if getFacility throws an error', async () => {
@@ -227,12 +273,12 @@ describe('postFacilityValue', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await postFacilityValue(req, res);
+    await postFacilityEndDate(req, res);
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error posting amendments facility value page %o', mockError);
+    expect(console.error).toHaveBeenCalledWith('Error posting amendments facility end date page %o', mockError);
   });
 
   it('should render `problem with service` if updateAmendment throws an error', async () => {
@@ -242,11 +288,11 @@ describe('postFacilityValue', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await postFacilityValue(req, res);
+    await postFacilityEndDate(req, res);
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error posting amendments facility value page %o', mockError);
+    expect(console.error).toHaveBeenCalledWith('Error posting amendments facility end date page %o', mockError);
   });
 });
