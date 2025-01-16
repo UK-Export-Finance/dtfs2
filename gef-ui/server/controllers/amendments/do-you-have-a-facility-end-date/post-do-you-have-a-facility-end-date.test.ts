@@ -13,7 +13,7 @@ import { DoYouHaveAFacilityEndDateViewModel } from '../../../types/view-models/a
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
-import { getNextPage } from '../helpers/navigation.helper';
+import { getAmendmentsUrl, getNextPage } from '../helpers/navigation.helper';
 import { postDoYouHaveAFacilityEndDate, PostDoYouHaveAFacilityEndDateRequest } from './post-do-you-have-a-facility-end-date';
 import { validationErrorHandler } from '../../../utils/helpers';
 import { validateIsUsingFacilityEndDate } from './validation';
@@ -149,7 +149,7 @@ describe('postDoYouHaveAFacilityEndDate', () => {
     // Assert
     const expectedRenderData: DoYouHaveAFacilityEndDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
-      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage,
       errors: validationErrorHandler((validateIsUsingFacilityEndDate(isUsingFacilityEndDate) as { errors: ValidationError[] }).errors),
       isUsingFacilityEndDate,
