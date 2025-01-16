@@ -81,6 +81,17 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         expect(api.deleteFeeRecordCorrectionTransientFormData).toHaveBeenCalledWith(userToken, bankId, correctionId);
       });
 
+      it('should NOT attempt to fetch saved form data', async () => {
+        // Arrange
+        jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(aGetFeeRecordCorrectionResponseBody());
+
+        // Act
+        await getProvideUtilisationReportCorrection(req, res);
+
+        // Assert
+        expect(api.getFeeRecordCorrectionTransientFormData).not.toHaveBeenCalled();
+      });
+
       it('should render the "provide utilisation report correction" page', async () => {
         // Arrange
         const reasons = [RECORD_CORRECTION_REASON.OTHER];
@@ -120,6 +131,30 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
     describe('when the user visits the page from a page other than the Report GEF utilisation and fees page', () => {
       beforeEach(() => {
         req.headers.referer = 'some-other-page';
+      });
+
+      it('should fetch the fee record correction transient form data using the correction id and users bank id', async () => {
+        // Arrange
+        jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(aGetFeeRecordCorrectionResponseBody());
+        jest.mocked(api.getFeeRecordCorrectionTransientFormData).mockResolvedValue({});
+
+        // Act
+        await getProvideUtilisationReportCorrection(req, res);
+
+        // Assert
+        expect(api.getFeeRecordCorrectionTransientFormData).toHaveBeenCalledTimes(1);
+        expect(api.getFeeRecordCorrectionTransientFormData).toHaveBeenCalledWith(userToken, bankId, correctionId);
+      });
+
+      it('should NOT attempt to delete saved form data', async () => {
+        // Arrange
+        jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(aGetFeeRecordCorrectionResponseBody());
+
+        // Act
+        await getProvideUtilisationReportCorrection(req, res);
+
+        // Assert
+        expect(api.deleteFeeRecordCorrectionTransientFormData).not.toHaveBeenCalled();
       });
 
       describe('when there are NOT any saved form values', () => {
@@ -224,19 +259,6 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       // Assert
       expect(api.getFeeRecordCorrection).toHaveBeenCalledTimes(1);
       expect(api.getFeeRecordCorrection).toHaveBeenCalledWith(userToken, bankId, correctionId);
-    });
-
-    it('should fetch the fee record correction transient form data using the correction id and users bank id', async () => {
-      // Arrange
-      jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(aGetFeeRecordCorrectionResponseBody());
-      jest.mocked(api.getFeeRecordCorrectionTransientFormData).mockResolvedValue({});
-
-      // Act
-      await getProvideUtilisationReportCorrection(req, res);
-
-      // Assert
-      expect(api.getFeeRecordCorrectionTransientFormData).toHaveBeenCalledTimes(1);
-      expect(api.getFeeRecordCorrectionTransientFormData).toHaveBeenCalledWith(userToken, bankId, correctionId);
     });
 
     describe.each`
