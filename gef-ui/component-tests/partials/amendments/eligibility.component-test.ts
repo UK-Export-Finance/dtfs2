@@ -52,6 +52,15 @@ describe(page, () => {
     wrapper.expectText('[data-cy="heading-caption"]').toRead(exporterName);
   });
 
+  it('should render the `Help with declarations` accordion', () => {
+    const wrapper = render(params);
+
+    wrapper.expectText('[data-cy="help-with-declarations"]').toContain('Help with declarations');
+    wrapper
+      .expectText('[data-cy="help-with-declarations"]')
+      .toContain('Read the Master Guarantee Agreement (MGA) definitions and interpretation document for terminology used in the declarations.');
+  });
+
   it('should render all the criteria descriptions', () => {
     const wrapper = render(params);
 
