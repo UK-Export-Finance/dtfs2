@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import { mapReasonsToDisplayValues } from '@ukef/dtfs2-common';
+import { getFormattedMonetaryValue, mapReasonsToDisplayValues } from '@ukef/dtfs2-common';
 import api from '../../../../api';
 import { asLoggedInUserSession, LoggedInUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
@@ -34,11 +34,22 @@ export const getUtilisationReportCorrectionReview = async (req: UtilisationRepor
 
     const backLinkHref = `/utilisation-reports/provide-correction/${correctionId}`;
 
+    const { exporter, reportedFees } = feeRecord;
+    const { currency, amount } = reportedFees;
+
+    const mappedFeeRecord = {
+      exporter,
+      reportedFees: {
+        currency,
+        formattedAmount: getFormattedMonetaryValue(amount),
+      },
+    };
+
     const viewModel: UtilisationReportCorrectionInformationViewModel = {
       user,
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
       backLinkHref,
-      feeRecord,
+      feeRecord: mappedFeeRecord,
       formattedReasons: mapReasonsToDisplayValues(reasons).join(', '),
       errorSummary,
       formattedOldValues,

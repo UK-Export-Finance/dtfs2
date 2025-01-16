@@ -7,7 +7,7 @@ export const aFeeRecordCorrectionReviewInformation = (): FeeRecordCorrectionRevi
     exporter: 'An exporter',
     reportedFees: {
       currency: 'GBP',
-      amount: 123,
+      amount: 1234.56,
     },
   },
   reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT, RECORD_CORRECTION_REASON.OTHER],

@@ -34,6 +34,9 @@ const MOCK_UNISSUED_FACILITY = {
   validation: { required: [] },
 };
 
+/**
+ * @type { {status: import('@ukef/dtfs2-common').DealStatus, details: import('../../types/facility').Facility}}
+ */
 const MOCK_ISSUED_FACILITY = {
   status: CONSTANTS.DEAL_STATUS.COMPLETED,
   details: {
@@ -43,7 +46,7 @@ const MOCK_ISSUED_FACILITY = {
     hasBeenIssued: true,
     name: 'Facility one',
     shouldCoverStartOnSubmission: true,
-    coverStartDate: 1638403200000,
+    coverStartDate: new Date(2022, 1, 1).toISOString(),
     coverEndDate: '2030-01-01T00:00:00.000Z',
     monthsOfCover: null,
     details: [],

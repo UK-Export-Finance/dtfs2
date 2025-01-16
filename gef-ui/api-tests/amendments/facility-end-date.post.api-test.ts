@@ -1,7 +1,8 @@
 import { Headers } from 'node-mocks-http';
 import { NextFunction, Request, Response } from 'express';
-import { AnyObject, DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
+import { add, format, startOfDay } from 'date-fns';
 import { HttpStatusCode } from 'axios';
+import { AnyObject, DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
 import { createApi } from '../create-api';
@@ -9,8 +10,8 @@ import api from '../../server/services/api';
 import * as storage from '../test-helpers/storage/storage';
 import { MOCK_BASIC_DEAL } from '../../server/utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../server/utils/mocks/mock-facilities';
+import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
-import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers/mock-amendment.ts';
 
 const originalEnv = { ...process.env };
 
@@ -25,16 +26,15 @@ const mockGetFacility = jest.fn();
 const mockGetApplication = jest.fn();
 const mockUpdateAmendment = jest.fn();
 
-const validBody = { amendmentOptions: ['changeFacilityValue'] };
-const invalidBody = { amendmentOptions: [] };
-
 const dealId = '123';
 const facilityId = '111';
-const amendmentId = 'amendmentId';
+const amendmentId = '111';
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 
-const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`;
+const todayPlusTwoYears = startOfDay(add(new Date(), { years: 2 }));
+
+const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE}`;
 
 describe(`POST ${url}`, () => {
   let sessionCookie: string;
@@ -55,8 +55,7 @@ describe(`POST ${url}`, () => {
         .withDealId(dealId)
         .withFacilityId(facilityId)
         .withAmendmentId(amendmentId)
-        .withChangeCoverEndDate(false)
-        .withChangeFacilityValue(true)
+        .withFacilityEndDate(todayPlusTwoYears)
         .build(),
     );
   });
@@ -67,43 +66,65 @@ describe(`POST ${url}`, () => {
     process.env = originalEnv;
   });
 
-  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED feature flag is disabled', () => {
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
     beforeEach(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'false';
     });
 
     it('should redirect to /not-found', async () => {
+      // Arrange
+      const body = {
+        'facility-end-date-day': format(todayPlusTwoYears, 'd'),
+        'facility-end-date-month': format(todayPlusTwoYears, 'M'),
+        'facility-end-date-year': format(todayPlusTwoYears, 'yyyy'),
+      };
+
       // Act
-      const response = await postWithSessionCookie(validBody, sessionCookie);
+      const response = await postWithSessionCookie(body, sessionCookie);
 
       // Assert
-      expect(response.status).toEqual(302);
+      expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual('/not-found');
     });
   });
 
-  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED feature flag is not set', () => {
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is not set', () => {
     beforeEach(() => {
       delete process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED;
     });
 
     it('should redirect to /not-found', async () => {
+      // Arrange
+      const body = {
+        'facility-end-date-day': format(todayPlusTwoYears, 'd'),
+        'facility-end-date-month': format(todayPlusTwoYears, 'M'),
+        'facility-end-date-year': format(todayPlusTwoYears, 'yyyy'),
+      };
+
       // Act
-      const response = await postWithSessionCookie(validBody, sessionCookie);
+      const response = await postWithSessionCookie(body, sessionCookie);
 
       // Assert
-      expect(response.status).toEqual(302);
+      expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual('/not-found');
     });
   });
 
-  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED feature flag is enabled', () => {
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is enabled', () => {
     beforeEach(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
     });
 
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers: Headers) => post(validBody, headers).to(url),
+      makeRequestWithHeaders: (headers: Headers) =>
+        post(
+          {
+            'facility-end-date-day': format(todayPlusTwoYears, 'd'),
+            'facility-end-date-month': format(todayPlusTwoYears, 'M'),
+            'facility-end-date-year': format(todayPlusTwoYears, 'yyyy'),
+          },
+          headers,
+        ).to(url),
       whitelistedRoles: [ROLES.MAKER],
       successCode: HttpStatusCode.Found,
     });
@@ -112,9 +133,14 @@ describe(`POST ${url}`, () => {
       // Arrange
       mockGetFacility.mockResolvedValue({ details: undefined });
 
-      // Act
-      const response = await postWithSessionCookie(validBody, sessionCookie);
+      const body = {
+        'facility-end-date-day': format(todayPlusTwoYears, 'd'),
+        'facility-end-date-month': format(todayPlusTwoYears, 'M'),
+        'facility-end-date-year': format(todayPlusTwoYears, 'yyyy'),
+      };
 
+      // Act
+      const response = await postWithSessionCookie(body, sessionCookie);
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual('/not-found');
@@ -124,86 +150,61 @@ describe(`POST ${url}`, () => {
       // Arrange
       mockGetApplication.mockResolvedValue(undefined);
 
+      const body = {
+        'facility-end-date-day': format(todayPlusTwoYears, 'd'),
+        'facility-end-date-month': format(todayPlusTwoYears, 'M'),
+        'facility-end-date-year': format(todayPlusTwoYears, 'yyyy'),
+      };
+
       // Act
-      const response = await postWithSessionCookie(validBody, sessionCookie);
+      const response = await postWithSessionCookie(body, sessionCookie);
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual('/not-found');
     });
 
-    it('should render the page with errors if the selected options are invalid', async () => {
+    it('should render facility end date page with errors if facility end date is invalid', async () => {
+      // Arrange
+      const body = { 'facility-end-date-day': '1000', 'facility-end-date-month': '100', 'facility-end-date-year': '100' };
+
       // Act
-      const response = await postWithSessionCookie(invalidBody, sessionCookie);
+      const response = await postWithSessionCookie(body, sessionCookie);
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Ok);
-      expect(response.text).toContain('What do you need to change?');
-      expect(response.text).toContain('Select if you need to change the facility cover end date, value or both');
+      expect(response.text).toContain('Facility end date');
+      expect(response.text).toContain('Facility end date must be a real date');
     });
 
-    it('should redirect to facility value page if just facility value is selected', async () => {
-      // Act
-      const changeFacilityValueSelection = { amendmentOptions: ['changeFacilityValue'] };
-      const response = await postWithSessionCookie(changeFacilityValueSelection, sessionCookie);
+    it('should render facility end date page with errors if facility end date is not provided', async () => {
+      // Arrange
+      const body = { 'facility-end-date-day': '', 'facility-end-date-month': '', 'facility-end-date-year': '' };
 
-      mockUpdateAmendment.mockResolvedValueOnce(
-        new PortalFacilityAmendmentWithUkefIdMockBuilder()
-          .withDealId(dealId)
-          .withFacilityId(facilityId)
-          .withAmendmentId(amendmentId)
-          .withChangeCoverEndDate(false)
-          .withChangeFacilityValue(true)
-          .build(),
-      );
+      // Act
+      const response = await postWithSessionCookie(body, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain('Facility end date');
+      expect(response.text).toContain('Enter the facility end date');
+    });
+
+    it('should redirect to the next page if the facility end date is valid', async () => {
+      // Arrange
+      const body = {
+        'facility-end-date-day': format(todayPlusTwoYears, 'd'),
+        'facility-end-date-month': format(todayPlusTwoYears, 'M'),
+        'facility-end-date-year': format(todayPlusTwoYears, 'yyyy'),
+      };
+
+      // Act
+      const response = await postWithSessionCookie(body, sessionCookie);
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual(
-        `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.FACILITY_VALUE}`,
-      );
-    });
-
-    it('should redirect to the cover end date page if just cover end date is selected', async () => {
-      // Act
-      const changeCoverEndDateSelection = { amendmentOptions: ['changeCoverEndDate'] };
-      mockUpdateAmendment.mockResolvedValueOnce(
-        new PortalFacilityAmendmentWithUkefIdMockBuilder()
-          .withDealId(dealId)
-          .withFacilityId(facilityId)
-          .withAmendmentId(amendmentId)
-          .withChangeCoverEndDate(true)
-          .withChangeFacilityValue(false)
-          .build(),
-      );
-      const response = await postWithSessionCookie(changeCoverEndDateSelection, sessionCookie);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.Found);
-      expect(response.headers.location).toEqual(
-        `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.COVER_END_DATE}`,
-      );
-    });
-
-    it('should redirect to the cover end date page if both options are selected', async () => {
-      // Act
-      const changeBothSelection = { amendmentOptions: ['changeFacilityValue', 'changeCoverEndDate'] };
-      mockUpdateAmendment.mockResolvedValueOnce(
-        new PortalFacilityAmendmentWithUkefIdMockBuilder()
-          .withDealId(dealId)
-          .withFacilityId(facilityId)
-          .withAmendmentId(amendmentId)
-          .withChangeCoverEndDate(true)
-          .withChangeFacilityValue(true)
-          .build(),
-      );
-
-      const response = await postWithSessionCookie(changeBothSelection, sessionCookie);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.Found);
-      expect(response.headers.location).toEqual(
-        `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.COVER_END_DATE}`,
+        `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.ELIGIBILITY}`,
       );
     });
 
@@ -211,8 +212,14 @@ describe(`POST ${url}`, () => {
       // Arrange
       mockGetApplication.mockRejectedValue(new Error('test error'));
 
+      const body = {
+        'facility-end-date-day': format(todayPlusTwoYears, 'd'),
+        'facility-end-date-month': format(todayPlusTwoYears, 'M'),
+        'facility-end-date-year': format(todayPlusTwoYears, 'yyyy'),
+      };
+
       // Act
-      const response = await postWithSessionCookie(validBody, sessionCookie);
+      const response = await postWithSessionCookie(body, sessionCookie);
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Ok);
@@ -223,8 +230,14 @@ describe(`POST ${url}`, () => {
       // Arrange
       mockGetFacility.mockRejectedValue(new Error('test error'));
 
+      const body = {
+        'facility-end-date-day': format(todayPlusTwoYears, 'd'),
+        'facility-end-date-month': format(todayPlusTwoYears, 'M'),
+        'facility-end-date-year': format(todayPlusTwoYears, 'yyyy'),
+      };
+
       // Act
-      const response = await postWithSessionCookie(validBody, sessionCookie);
+      const response = await postWithSessionCookie(body, sessionCookie);
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Ok);
@@ -235,8 +248,14 @@ describe(`POST ${url}`, () => {
       // Arrange
       mockUpdateAmendment.mockRejectedValue(new Error('test error'));
 
+      const body = {
+        'facility-end-date-day': format(todayPlusTwoYears, 'd'),
+        'facility-end-date-month': format(todayPlusTwoYears, 'M'),
+        'facility-end-date-year': format(todayPlusTwoYears, 'yyyy'),
+      };
+
       // Act
-      const response = await postWithSessionCookie(validBody, sessionCookie);
+      const response = await postWithSessionCookie(body, sessionCookie);
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Ok);
