@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { FeeRecordEntity } from '../fee-record/fee-record.entity';
-import { RequestedByUserPartialEntity } from '../partial-entities';
+import { CorrectionValuesPartialEntity, RequestedByUserPartialEntity } from '../partial-entities';
 import { AuditableBaseEntity } from '../base-entities';
 import { CreateFeeRecordCorrectionParams } from './fee-record-correction.types';
 import { RecordCorrectionReason } from '../../types';
@@ -44,10 +44,36 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
   dateRequested!: Date;
 
   /**
+   * The date the correction was received
+   */
+  @Column({ type: 'datetime2', nullable: true })
+  dateReceived!: Date | null;
+
+  /**
    * Whether the record correction has been completed
    */
   @Column()
   isCompleted!: boolean;
+
+  /**
+   * Comments about the correction provided by the bank
+   */
+  @Column({ type: 'nvarchar', length: '500' })
+  bankCommentary!: string | null;
+
+  /**
+   * The previous values of the fields of the fee record that the
+   * correction is correcting
+   */
+  @Column(() => CorrectionValuesPartialEntity, { prefix: 'previous' })
+  previousValues!: CorrectionValuesPartialEntity;
+
+  /**
+   * The corrected values of the fields of the fee record that the
+   * correction is correcting
+   */
+  @Column(() => CorrectionValuesPartialEntity, { prefix: 'corrected' })
+  correctedValues!: CorrectionValuesPartialEntity;
 
   /**
    * The reasons for the record correction
