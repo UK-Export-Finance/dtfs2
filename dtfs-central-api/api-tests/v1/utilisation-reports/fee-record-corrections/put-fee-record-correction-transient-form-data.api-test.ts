@@ -20,6 +20,7 @@ import { PutFeeRecordCorrectionTransientFormDataPayload } from '../../../../src/
 import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
 import { mongoDbClient } from '../../../../src/drivers/db-client';
 import { CustomErrorResponse } from '../../../helpers/custom-error-response';
+import { validateRecordCorrectionTransientFormValues } from '../../../../src/v1/controllers/utilisation-report-service/fee-record-correction/put-fee-record-correction-transient-form-data.controller/helpers';
 
 console.error = jest.fn();
 
@@ -34,6 +35,7 @@ describe(`PUT ${BASE_URL}`, () => {
   const correctionId = 2;
 
   const facilityId = '11111111';
+  const correctionReasons = Object.values(RECORD_CORRECTION_REASON);
 
   const mockBank = { ...aBank(), id: bankId, _id: new ObjectId() };
 
@@ -67,7 +69,7 @@ describe(`PUT ${BASE_URL}`, () => {
     const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
       .withId(correctionId)
       .withIsCompleted(false)
-      .withReasons(Object.values(RECORD_CORRECTION_REASON))
+      .withReasons(correctionReasons)
       .build();
 
     feeRecord.corrections = [correction];
@@ -147,15 +149,17 @@ describe(`PUT ${BASE_URL}`, () => {
   describe('when there are validation errors', () => {
     it(`should return '${HttpStatusCode.Ok}' with the errors in the response body`, async () => {
       // Arrange
+      const formData = {
+        utilisation: 'invalid-utilisation',
+        facilityId: '77777777',
+        reportedCurrency: 'invalid-currency',
+        reportedFee: 'invalid-reported-fee',
+        additionalComments: '',
+      };
+
       const requestBody = {
         ...aValidRequestBody(),
-        formData: {
-          utilisation: 'invalid-utilisation',
-          facilityId: '77777777',
-          reportedCurrency: 'invalid-currency',
-          reportedFee: 'invalid-reported-fee',
-          additionalComments: '',
-        },
+        formData,
       };
 
       // Act
@@ -164,14 +168,7 @@ describe(`PUT ${BASE_URL}`, () => {
         .to(replaceUrlParameterPlaceholders(BASE_URL, { bankId, correctionId }))) as PutFeeRecordCorrectionTransientFormDataResponse;
 
       // Assert
-      // TODO FN-3688: Replace with call to validateRecordCorrectionTransientFormValues ?
-      const expectedBody: RecordCorrectionFormValueValidationErrors = {
-        facilityIdErrorMessage: 'The facility ID entered has not been recognised, please enter a facility ID for a General Export Facility',
-        reportedCurrencyErrorMessage: 'You must select a currency',
-        reportedFeeErrorMessage: 'You must enter the reported fee in a valid format',
-        utilisationErrorMessage: 'You must enter the utilisation in a valid format',
-        additionalCommentsErrorMessage: 'You must enter a comment',
-      };
+      const { errors: expectedBody } = await validateRecordCorrectionTransientFormValues(formData, correctionReasons);
 
       expect(status).toEqual(HttpStatusCode.Ok);
 
