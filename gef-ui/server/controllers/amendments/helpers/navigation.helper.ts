@@ -18,7 +18,24 @@ const startPages = [WHAT_DO_YOU_NEED_TO_CHANGE] as const;
 const endPages = [ELIGIBILITY, EFFECTIVE_DATE, CHECK_YOUR_ANSWERS] as const;
 const coverEndDatePages = [COVER_END_DATE, DO_YOU_HAVE_A_FACILITY_END_DATE] as const;
 
-export const getAmendmentsUrl = ({ dealId, facilityId, amendmentId, page }: { dealId: string; facilityId: string; amendmentId: string; page: string }) => {
+/**
+ * @param dealId - the deal ID
+ * @param facilityId - the facility ID
+ * @param amendmentId - the amendment ID
+ * @param page - the amendments page
+ * @returns the url for the given amendments page
+ */
+export const getAmendmentsUrl = ({
+  dealId,
+  facilityId,
+  amendmentId,
+  page,
+}: {
+  dealId: string;
+  facilityId: string;
+  amendmentId: string;
+  page: PortalAmendmentPage;
+}) => {
   return `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${page}`;
 };
 
@@ -66,8 +83,9 @@ export const getPreviousPage = (currentPage: PortalAmendmentPage, amendment: Por
   }
 
   const { dealId, facilityId, amendmentId } = amendment;
+  const page = journey[currentPageIndex - 1];
 
-  return getAmendmentsUrl({ dealId, facilityId, amendmentId, page: journey[currentPageIndex - 1] });
+  return getAmendmentsUrl({ dealId, facilityId, amendmentId, page });
 };
 
 /**
@@ -85,6 +103,7 @@ export const getNextPage = (currentPage: PortalAmendmentPage, amendment: PortalF
   }
 
   const { dealId, facilityId, amendmentId } = amendment;
+  const page = journey[currentPageIndex + 1];
 
-  return getAmendmentsUrl({ dealId, facilityId, amendmentId, page: journey[currentPageIndex + 1] });
+  return getAmendmentsUrl({ dealId, facilityId, amendmentId, page });
 };
