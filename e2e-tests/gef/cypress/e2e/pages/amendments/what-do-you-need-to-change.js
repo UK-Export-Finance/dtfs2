@@ -2,8 +2,8 @@ const whatDoYouNeedToChange = {
   coverEndDateCheckbox: () => cy.get('[data-cy="cover-end-date-checkbox"]'),
   facilityValueCheckbox: () => cy.get('[data-cy="facility-value-checkbox"]'),
   errorSummary: () => cy.get('[data-cy="error-summary"]'),
-  selectionErrorMessage: () => cy.get('[data-cy="selection-error-message"]'),
-  pageTitle: () => cy.get('[data-cy="page-title"]'),
+  amendmentOptionsInlineError: () => cy.get('[data-cy="amendment-options-inline-error"]'),
+  pageHeading: () => cy.get('[data-cy="page-heading"]'),
   backLink: () => cy.get('[data-cy="back-link"]'),
   warning: () => cy.get('[data-cy="warning"]'),
 };
