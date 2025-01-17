@@ -1,4 +1,4 @@
-import { AMENDMENT_STATUS, convertMillisecondsToSeconds, TfmFacilityAmendment } from '@ukef/dtfs2-common';
+import { TFM_AMENDMENT_STATUS, convertMillisecondsToSeconds, TfmFacilityAmendment } from '@ukef/dtfs2-common';
 import { addDays, subDays } from 'date-fns';
 import { aCompletedTfmFacilityAmendment, aTfmFacilityAmendment } from '../../../test-helpers';
 import { filterAndSortCompletedEffectiveAmendments } from './filter-and-sort-completed-effective-amendments';
@@ -24,10 +24,10 @@ describe('filter-and-sort-completed-effective-amendments', () => {
       const now = new Date();
       const beforeNow = subDays(now, 1);
 
-      const aCompletedAmendment = { ...aTfmFacilityAmendment(), status: AMENDMENT_STATUS.COMPLETED, effectiveDate: beforeNow.getTime() };
+      const aCompletedAmendment = { ...aTfmFacilityAmendment(), status: TFM_AMENDMENT_STATUS.COMPLETED, effectiveDate: beforeNow.getTime() };
       const amendments: TfmFacilityAmendment[] = [
-        { ...aTfmFacilityAmendment(), status: AMENDMENT_STATUS.IN_PROGRESS, effectiveDate: beforeNow.getTime() },
-        { ...aTfmFacilityAmendment(), status: AMENDMENT_STATUS.NOT_STARTED, effectiveDate: beforeNow.getTime() },
+        { ...aTfmFacilityAmendment(), status: TFM_AMENDMENT_STATUS.IN_PROGRESS, effectiveDate: beforeNow.getTime() },
+        { ...aTfmFacilityAmendment(), status: TFM_AMENDMENT_STATUS.NOT_STARTED, effectiveDate: beforeNow.getTime() },
         aCompletedAmendment,
       ];
 
@@ -113,13 +113,13 @@ describe('filter-and-sort-completed-effective-amendments', () => {
         // Arrange
         const firstEffectiveAmendment = {
           ...aTfmFacilityAmendment(),
-          status: AMENDMENT_STATUS.COMPLETED,
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
           effectiveDate: twoDaysBeforeLatestEffectiveDate,
         };
 
         const secondEffectiveAmendment = {
           ...aTfmFacilityAmendment(),
-          status: AMENDMENT_STATUS.COMPLETED,
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
           effectiveDate: oneDayBeforeLatestEffectiveDate,
         };
 

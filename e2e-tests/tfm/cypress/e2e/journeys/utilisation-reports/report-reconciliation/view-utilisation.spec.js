@@ -1,5 +1,5 @@
 import {
-  AMENDMENT_STATUS,
+  TFM_AMENDMENT_STATUS,
   CURRENCY,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
@@ -63,7 +63,7 @@ context('Users can view utilisation', () => {
       amendments: [
         {
           value: 350000,
-          status: AMENDMENT_STATUS.COMPLETED,
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
           /**
            * This amendment is not in effect for the report in question
            * so should be ignored.
@@ -74,7 +74,7 @@ context('Users can view utilisation', () => {
         },
         {
           value: 300000,
-          status: AMENDMENT_STATUS.COMPLETED,
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
           /**
            * This amendment is in effect for the report in question
            * so it's value should be used.

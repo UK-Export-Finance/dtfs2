@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { UnixTimestamp } from '../date';
-import { AmendmentStatus } from '../amendment-status';
+import { PortalAmendmentStatus, TfmAmendmentStatus } from '../amendment-status';
 import { Currency } from '../currency';
 import { Facility } from './facility';
 import { AnyObject } from '../any-object';
@@ -46,7 +46,6 @@ interface BaseAmendment {
   dealId: ObjectId;
   createdAt: UnixTimestamp;
   updatedAt: UnixTimestamp;
-  status: AmendmentStatus;
   changeCoverEndDate?: boolean;
   coverEndDate?: UnixTimestamp | null;
   currentCoverEndDate?: UnixTimestamp | null;
@@ -80,6 +79,7 @@ interface BaseAmendment {
  */
 export interface TfmFacilityAmendment extends BaseAmendment {
   type?: typeof AMENDMENT_TYPES.TFM;
+  status: TfmAmendmentStatus;
   version: number;
   submittedByPim?: boolean;
   sendFirstTaskEmail?: boolean;
@@ -125,6 +125,7 @@ export interface TfmFacilityAmendment extends BaseAmendment {
  */
 export interface PortalFacilityAmendment extends BaseAmendment {
   type: typeof AMENDMENT_TYPES.PORTAL;
+  status: PortalAmendmentStatus;
 }
 
 /**

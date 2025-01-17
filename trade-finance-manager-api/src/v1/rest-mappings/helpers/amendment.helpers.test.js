@@ -1,4 +1,4 @@
-const { CURRENCY, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { CURRENCY, TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const amendmentHelpers = require('./amendment.helpers');
 
 describe('amendmentChangeValueExportCurrency()', () => {
@@ -159,7 +159,7 @@ describe('calculateAmendmentTotalExposure()', () => {
       {
         updatedAt: new Date('2023-12-12').getTime(),
         version: 0,
-        status: AMENDMENT_STATUS.COMPLETED,
+        status: TFM_AMENDMENT_STATUS.COMPLETED,
         tfm: {
           value: { ...mockAmendmentValueResponse },
         },
@@ -196,9 +196,9 @@ describe('findLatestCompletedAmendment()', () => {
   it('should return an empty object if there are no completed amendments', () => {
     // Arrange
     const amendments = [
-      { ...anAmendmentWithStatus(AMENDMENT_STATUS.IN_PROGRESS) },
-      { ...anAmendmentWithStatus(AMENDMENT_STATUS.IN_PROGRESS) },
-      { ...anAmendmentWithStatus(AMENDMENT_STATUS.IN_PROGRESS) },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS) },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS) },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS) },
     ];
 
     // Act
@@ -213,10 +213,10 @@ describe('findLatestCompletedAmendment()', () => {
     const latestAmendmentTfmObject = { ...anAmendmentTfmObject(), value: 3000, coverEndDate: new Date('2023-12-12').getTime() };
     const anotherAmendmentTfmObject = { ...anAmendmentTfmObject(), value: 1000, coverEndDate: null };
     const amendments = [
-      { ...anAmendmentWithStatus(AMENDMENT_STATUS.IN_PROGRESS), tfm: anotherAmendmentTfmObject },
-      { ...anAmendmentWithStatus(AMENDMENT_STATUS.COMPLETED), tfm: anotherAmendmentTfmObject },
-      { ...anAmendmentWithStatus(AMENDMENT_STATUS.COMPLETED), tfm: latestAmendmentTfmObject },
-      { ...anAmendmentWithStatus(AMENDMENT_STATUS.COMPLETED), tfm: null },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS), tfm: anotherAmendmentTfmObject },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: anotherAmendmentTfmObject },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: latestAmendmentTfmObject },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: null },
     ];
 
     // Act
@@ -250,9 +250,9 @@ describe('findLatestCompletedAmendment()', () => {
     const thirdAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 3 };
 
     const amendments = [
-      { ...anAmendmentWithStatus(AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject },
-      { ...anAmendmentWithStatus(AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject },
-      { ...anAmendmentWithStatus(AMENDMENT_STATUS.COMPLETED), tfm: thirdAmendmentTfmObject },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: thirdAmendmentTfmObject },
     ];
 
     // Act
@@ -283,9 +283,9 @@ describe('findLatestCompletedAmendment()', () => {
     const thirdAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 3 };
 
     const amendments = [
-      { ...anAmendmentWithStatus(AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject },
-      { ...anAmendmentWithStatus(AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject },
-      { ...anAmendmentWithStatus(AMENDMENT_STATUS.COMPLETED), tfm: thirdAmendmentTfmObject },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: thirdAmendmentTfmObject },
     ];
 
     // Act
