@@ -4,9 +4,9 @@ import { ErrorsOrValue } from '../../../types/errors-or-value';
 import { mapValidationError } from '../../../utils/map-validation-error';
 
 /**
- * @param dayMonthYear coverEndDate in DayMonthYearInput format
- * @param coverStartDate
- * @returns ErrorsOrValue<UnixTimestampSeconds>
+ * @param {DayMonthYearInput} [params.dayMonthYear] - The cover end date as a DayMonthYearInput object
+ * @param {Date} [params.dayMonthYear] - The cover start date as Date
+ * @returns ErrorsOrValue<UnixTimestampSeconds> the value or errors depending on the validation result
  */
 export const validateAndParseCoverEndDate = (dayMonthYear: DayMonthYearInput, coverStartDate: Date): ErrorsOrValue<UnixTimestampSeconds> => {
   const errRef = 'coverEndDate';
