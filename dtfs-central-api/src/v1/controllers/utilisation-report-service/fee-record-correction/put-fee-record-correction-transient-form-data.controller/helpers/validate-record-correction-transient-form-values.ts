@@ -35,12 +35,15 @@ export const getFormValueForReason = (formValues: RecordCorrectionFormValues, re
 
 /**
  * Validates that there are no form values provided for reasons that are not in the correction request.
+ *
+ * Note that {@link RECORD_CORRECTION_REASON.OTHER} is always a field (optional if not in the reasons,
+ * required if in the reasons) so it is not included in this check.
  * @param formValues - The form values to validate.
  * @param reasons - The reasons for the record correction that determine which form values are expected.
  * @throws Error if there are any form values provided for reasons not in the correction request.
  */
 export const validateNoUnexpectedReasonValues = (formValues: RecordCorrectionFormValues, reasons: RecordCorrectionReason[]) => {
-  const unexpectedReasons = difference(Object.values(RECORD_CORRECTION_REASON), reasons);
+  const unexpectedReasons = difference(Object.values(RECORD_CORRECTION_REASON), [...reasons, RECORD_CORRECTION_REASON.OTHER]);
 
   unexpectedReasons.forEach((reason) => {
     const reasonFormValue = getFormValueForReason(formValues, reason);

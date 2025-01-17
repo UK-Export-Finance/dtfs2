@@ -135,6 +135,18 @@ describe('validate-record-correction-transient-form-values', () => {
       // Act & Assert
       expect(() => validateNoUnexpectedReasonValues(formValues, reasons)).not.toThrow();
     });
+
+    it(`should not throw error when an "additionalComments" form value is provided and "${RECORD_CORRECTION_REASON.OTHER}" is not in the correction reasons`, () => {
+      // Arrange
+      const formValues = {
+        reportedCurrency: CURRENCY.GBP,
+        additionalComments: 'Some additional comment',
+      };
+      const reasons = [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT];
+
+      // Act & Assert
+      expect(() => validateNoUnexpectedReasonValues(formValues, reasons)).not.toThrow();
+    });
   });
 
   describe('getValidationErrorsForRequiredFormValues', () => {
@@ -372,6 +384,7 @@ describe('validate-record-correction-transient-form-values', () => {
         reportedCurrency: CURRENCY.GBP,
         reportedFee: 'invalid-reported-fee',
         utilisation: 'invalid-utilisation',
+        additionalComments: 'An additional comment',
       };
       const reasons = [
         RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT,
