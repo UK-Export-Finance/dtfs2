@@ -1,6 +1,6 @@
 const page = {
   emailText: () => cy.get('[data-cy="email-text"]'),
-  emailListItem: (email) => cy.get(`[data-cy="email-list"] li:contains(${email})`),
+  emailList: () => cy.get('[data-cy="email-list"]'),
   ukefNotifiedText: () => cy.get('[data-cy="ukef-notified-text"]'),
 };
 

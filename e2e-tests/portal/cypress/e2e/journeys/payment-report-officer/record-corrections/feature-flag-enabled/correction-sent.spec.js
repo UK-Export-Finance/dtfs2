@@ -74,7 +74,7 @@ context('Correction sent page - Fee record correction feature flag enabled', () 
           const bank = banks.find((b) => b.id === id);
 
           bank.paymentOfficerTeam.emails.forEach((email) => {
-            correctionSent.emailListItem(email).should('exist');
+            correctionSent.emailList().should('contain', email);
           });
         });
       });
