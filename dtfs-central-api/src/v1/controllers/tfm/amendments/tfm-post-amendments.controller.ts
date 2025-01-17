@@ -26,7 +26,7 @@ export const postTfmAmendment = async (req: PostTfmAmendmentRequest, res: PostTf
       throw new NotFoundError('The current facility does not exist');
     }
 
-    const inProgressAmendments = await TfmFacilitiesRepo.findAmendmentsByFacilityIdAndStatus(facilityId, TFM_AMENDMENT_STATUS.IN_PROGRESS);
+    const inProgressAmendments = await TfmFacilitiesRepo.findTfmAmendmentsByFacilityIdAndStatus(facilityId, TFM_AMENDMENT_STATUS.IN_PROGRESS);
     if (inProgressAmendments.length !== 0) {
       throw new ResourceAlreadyExistsError('The current facility already has an amendment in progress');
     }
