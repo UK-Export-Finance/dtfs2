@@ -22,10 +22,12 @@ describe('overrideDealsIfAmendmentsInProgress', () => {
     {
       status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
       dealId: '0',
+      submittedByPim: true,
     },
     {
       status: TFM_AMENDMENT_STATUS.NOT_STARTED,
       dealId: '1',
+      submittedByPim: false,
     },
   ];
 
@@ -33,10 +35,12 @@ describe('overrideDealsIfAmendmentsInProgress', () => {
     {
       status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
       dealId: '2',
+      submittedByPim: true,
     },
     {
       status: TFM_AMENDMENT_STATUS.NOT_STARTED,
       dealId: '1',
+      submittedByPim: false,
     },
   ];
 

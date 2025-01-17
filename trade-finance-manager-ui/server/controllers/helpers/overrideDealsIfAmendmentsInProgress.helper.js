@@ -1,19 +1,25 @@
-const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { cloneDeep } = require('lodash');
+const { getAmendmentsInProgress } = require('./amendments.helper');
 const { DEAL } = require('../../constants');
 
+/**
+ * Override the deal stage if there is an amendment in progress
+ * @param {import('@ukef/dtfs2-common').TfmDeal[]} deals - the deals
+ * @param {import('@ukef/dtfs2-common').TfmFacilityAmendment[]} amendments - the amendments
+ * @returns {import('@ukef/dtfs2-common').TfmDeal[]} the deals with deal stage overwritten if there is an amendment in progress
+ */
 const overrideDealsIfAmendmentsInProgress = (deals, amendments) => {
-  // override the deal stage if there is an amendment in progress
   if (Array.isArray(amendments) && amendments?.length > 0) {
     return deals.map((deal) => {
-      const modifiedDeal = deal;
-      // eslint-disable-next-line no-restricted-syntax
-      for (const amendment of amendments) {
-        const amendmentIsInProgress = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
-        if (amendmentIsInProgress && amendment.dealId === deal._id) {
-          modifiedDeal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
-          break;
-        }
+      const modifiedDeal = cloneDeep(deal);
+
+      const amendmentsForDeal = amendments.filter(({ dealId }) => dealId === deal._id);
+      const amendmentInProgressOnDeal = getAmendmentsInProgress({ amendments: amendmentsForDeal, deal });
+
+      if (amendmentInProgressOnDeal.length > 0) {
+        modifiedDeal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
       }
+
       return modifiedDeal;
     });
   }

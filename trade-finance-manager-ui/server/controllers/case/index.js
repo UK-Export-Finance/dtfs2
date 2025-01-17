@@ -13,7 +13,7 @@ const { formattedNumber } = require('../../helpers/number');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
 const { filterTasks } = require('../helpers/tasks.helper');
-const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../helpers/amendments.helper');
+const { getAmendmentsInProgress } = require('../helpers/amendments.helper');
 const validatePartyURN = require('./parties/partyUrnValidation.validate');
 const { bondType, partyType, userCanEdit } = require('./parties/helpers');
 const { asUserSession } = require('../../helpers/express-session');
@@ -45,8 +45,9 @@ const getCaseDeal = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    const amendmentsInProgress = amendments.filter(({ status }) => status === TFM_AMENDMENT_STATUS.IN_PROGRESS);
+    const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
     const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+
     if (hasAmendmentInProgress) {
       deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
     }
@@ -107,11 +108,12 @@ const getCaseTasks = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const hasAmendmentInProgress = hasAmendmentInProgressDealStage(amendments);
+  const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
+  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
-  const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
 
   if (Array.isArray(amendments) && amendments.length > 0) {
     amendments.map((a) => {
@@ -171,11 +173,12 @@ const filterCaseTasks = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const hasAmendmentInProgress = hasAmendmentInProgressDealStage(amendments);
+  const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
+  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
-  const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
 
   if (Array.isArray(amendments) && amendments.length > 0) {
     amendments.map((a) => {
@@ -348,8 +351,9 @@ const getCaseFacility = async (req, res) => {
   const hasAmendmentInProgressButton = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
   const showContinueAmendmentButton = hasAmendmentInProgressButton && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
 
-  const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
-  const hasAmendmentInProgress = hasAmendmentInProgressDealStage(amendments);
+  const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
+  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+
   if (hasAmendmentInProgress) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
@@ -396,11 +400,12 @@ const getCaseDocuments = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    const hasAmendmentInProgress = hasAmendmentInProgressDealStage(amendments);
+    const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
+    const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+
     if (hasAmendmentInProgress) {
       deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
     }
-    const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
 
     const { dealSnapshot } = deal;
 
