@@ -4,6 +4,8 @@ import { getAdditionalCommentsValidationError, getFacilityIdValidationError } fr
 
 describe('get-record-correction-transient-form-validation-error', () => {
   describe('getAdditionalCommentsValidationError', () => {
+    const requiredCommentErrorMessage = 'You must enter a comment';
+
     describe('when "additionalComments" is undefined', () => {
       const reasons = [RECORD_CORRECTION_REASON.OTHER];
       const additionalComments = undefined;
@@ -13,9 +15,7 @@ describe('get-record-correction-transient-form-validation-error', () => {
         const errorMessage = getAdditionalCommentsValidationError(reasons, additionalComments);
 
         // Assert
-        const expectedErrorMessage = 'You must enter a comment';
-
-        expect(errorMessage).toEqual(expectedErrorMessage);
+        expect(errorMessage).toEqual(requiredCommentErrorMessage);
       });
     });
 
@@ -28,9 +28,7 @@ describe('get-record-correction-transient-form-validation-error', () => {
         const errorMessage = getAdditionalCommentsValidationError(reasons, additionalComments);
 
         // Assert
-        const expectedErrorMessage = 'You must enter a comment';
-
-        expect(errorMessage).toEqual(expectedErrorMessage);
+        expect(errorMessage).toEqual(requiredCommentErrorMessage);
       });
     });
 
@@ -43,9 +41,7 @@ describe('get-record-correction-transient-form-validation-error', () => {
         const errorMessage = getAdditionalCommentsValidationError(reasons, additionalComments);
 
         // Assert
-        const expectedErrorMessage = 'You must enter a comment';
-
-        expect(errorMessage).toEqual(expectedErrorMessage);
+        expect(errorMessage).toEqual(requiredCommentErrorMessage);
       });
     });
 
@@ -94,47 +90,41 @@ describe('get-record-correction-transient-form-validation-error', () => {
   });
 
   describe('getFacilityIdValidationError', () => {
+    const invalidFormatErrorMessage = 'You must enter a facility ID between 8 and 10 digits using the numbers 0-9 only';
+
     describe('when facility id is undefined', () => {
-      it('should return "required format" error message', async () => {
+      it('should return "invalid format" error message', async () => {
         // Act
         const errorMessage = await getFacilityIdValidationError(undefined);
 
         // Assert
-        const expectedErrorMessage = 'You must enter a facility ID between 8 and 10 digits using the numbers 0-9 only';
-
-        expect(errorMessage).toBe(expectedErrorMessage);
+        expect(errorMessage).toBe(invalidFormatErrorMessage);
       });
     });
 
     describe('when facility id does not match required format', () => {
-      it('should return "required format" error message for a non-numeric id', async () => {
+      it('should return "invalid format" error message for a non-numeric id', async () => {
         // Act
         const errorMessage = await getFacilityIdValidationError('ABC12345');
 
         // Assert
-        const expectedErrorMessage = 'You must enter a facility ID between 8 and 10 digits using the numbers 0-9 only';
-
-        expect(errorMessage).toBe(expectedErrorMessage);
+        expect(errorMessage).toBe(invalidFormatErrorMessage);
       });
 
-      it('should return "required format" error message for an id below the minimum length', async () => {
+      it('should return "invalid format" error message for an id below the minimum length', async () => {
         // Act
         const errorMessage = await getFacilityIdValidationError('1234567');
 
         // Assert
-        const expectedErrorMessage = 'You must enter a facility ID between 8 and 10 digits using the numbers 0-9 only';
-
-        expect(errorMessage).toBe(expectedErrorMessage);
+        expect(errorMessage).toBe(invalidFormatErrorMessage);
       });
 
-      it('should return "required format" error message for an id above the maximum length', async () => {
+      it('should return "invalid format" error message for an id above the maximum length', async () => {
         // Act
         const errorMessage = await getFacilityIdValidationError('12345678901');
 
         // Assert
-        const expectedErrorMessage = 'You must enter a facility ID between 8 and 10 digits using the numbers 0-9 only';
-
-        expect(errorMessage).toBe(expectedErrorMessage);
+        expect(errorMessage).toBe(invalidFormatErrorMessage);
       });
     });
 
