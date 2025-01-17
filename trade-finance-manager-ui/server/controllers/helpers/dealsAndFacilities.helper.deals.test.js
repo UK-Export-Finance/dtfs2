@@ -42,10 +42,12 @@ describe('controllers - deals', () => {
     {
       status: AMENDMENT_STATUS.IN_PROGRESS,
       dealId: '0',
+      submittedByPim: true,
     },
     {
       status: AMENDMENT_STATUS.NOT_STARTED,
       dealId: '1',
+      submittedByPim: true,
     },
   ];
   const mockApiGetAllAmendmentsInProgressResponse = {
@@ -265,131 +267,131 @@ describe('controllers - deals', () => {
         });
       });
     });
+  });
 
-    describe('queryDealsOrFacilities', () => {
-      describe('when called with `deals` as its first argument', () => {
-        describe('when the pageNumber, sort field/order and search are not specified in the request', () => {
+  describe('queryDealsOrFacilities', () => {
+    describe('when called with `deals` as its first argument', () => {
+      describe('when the pageNumber, sort field/order and search are not specified in the request', () => {
+        const mockReq = structuredClone(mockReqTemplate);
+
+        it('should redirect to GET deals without query parameters', async () => {
+          await queryDealsOrFacilities('deals', mockReq, mockRes);
+
+          expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0');
+        });
+      });
+
+      describe('when the pageNumber is less than 0', () => {
+        const mockReq = structuredClone(mockReqTemplate);
+
+        mockReq.params.pageNumber = '-1';
+
+        it('should redirect to GET deals (page 0) without query parameters', async () => {
+          await queryDealsOrFacilities('deals', mockReq, mockRes);
+
+          expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0');
+        });
+      });
+
+      describe('when the pageNumber cannot be converted to a number', () => {
+        const mockReq = structuredClone(mockReqTemplate);
+
+        mockReq.params.pageNumber = 'hello world';
+
+        it('should redirect to GET deals (page 0) without query parameters', async () => {
+          await queryDealsOrFacilities('deals', mockReq, mockRes);
+
+          expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0');
+        });
+      });
+
+      describe('when the pageNumber is a non-negative integer', () => {
+        const mockReq = structuredClone(mockReqTemplate);
+
+        mockReq.params.pageNumber = '2';
+
+        it('should redirect to GET deals (page 0) without query parameters', async () => {
+          await queryDealsOrFacilities('deals', mockReq, mockRes);
+
+          expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0');
+        });
+      });
+
+      describe.each(['ascending', 'descending'])('', (order) => {
+        describe(`when a ${order} sort field is specified in the request body`, () => {
           const mockReq = structuredClone(mockReqTemplate);
 
-          it('should redirect to GET deals without query parameters', async () => {
+          mockReq.body[order] = 'dealSnapshot.ukefDealId';
+
+          it('should redirect to GET deals with the correct query parameters', async () => {
             await queryDealsOrFacilities('deals', mockReq, mockRes);
 
-            expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0');
+            expect(mockRes.redirect).toHaveBeenCalledWith(`/deals/0?sortfield=dealSnapshot.ukefDealId&sortorder=${order}`);
           });
         });
 
-        describe('when the pageNumber is less than 0', () => {
+        describe(`when a ${order} sort field is specified in the query parameters`, () => {
           const mockReq = structuredClone(mockReqTemplate);
 
-          mockReq.params.pageNumber = '-1';
-
-          it('should redirect to GET deals (page 0) without query parameters', async () => {
-            await queryDealsOrFacilities('deals', mockReq, mockRes);
-
-            expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0');
-          });
-        });
-
-        describe('when the pageNumber cannot be converted to a number', () => {
-          const mockReq = structuredClone(mockReqTemplate);
-
-          mockReq.params.pageNumber = 'hello world';
-
-          it('should redirect to GET deals (page 0) without query parameters', async () => {
-            await queryDealsOrFacilities('deals', mockReq, mockRes);
-
-            expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0');
-          });
-        });
-
-        describe('when the pageNumber is a non-negative integer', () => {
-          const mockReq = structuredClone(mockReqTemplate);
-
-          mockReq.params.pageNumber = '2';
-
-          it('should redirect to GET deals (page 0) without query parameters', async () => {
-            await queryDealsOrFacilities('deals', mockReq, mockRes);
-
-            expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0');
-          });
-        });
-
-        describe.each(['ascending', 'descending'])('', (order) => {
-          describe(`when a ${order} sort field is specified in the request body`, () => {
-            const mockReq = structuredClone(mockReqTemplate);
-
-            mockReq.body[order] = 'dealSnapshot.ukefDealId';
-
-            it('should redirect to GET deals with the correct query parameters', async () => {
-              await queryDealsOrFacilities('deals', mockReq, mockRes);
-
-              expect(mockRes.redirect).toHaveBeenCalledWith(`/deals/0?sortfield=dealSnapshot.ukefDealId&sortorder=${order}`);
-            });
-          });
-
-          describe(`when a ${order} sort field is specified in the query parameters`, () => {
-            const mockReq = structuredClone(mockReqTemplate);
-
-            mockReq.query.sortfield = 'dealSnapshot.ukefDealId';
-            mockReq.query.sortorder = order;
-
-            it('should redirect to GET deals with the correct query parameters', async () => {
-              await queryDealsOrFacilities('deals', mockReq, mockRes);
-
-              expect(mockRes.redirect).toHaveBeenCalledWith(`/deals/0?sortfield=dealSnapshot.ukefDealId&sortorder=${order}`);
-            });
-          });
-        });
-
-        describe('when a sort is specified in the both the request body and the query parameters', () => {
-          const mockReq = structuredClone(mockReqTemplate);
-
-          mockReq.body.descending = 'dealSnapshot.exporter.companyName';
           mockReq.query.sortfield = 'dealSnapshot.ukefDealId';
-          mockReq.query.sortorder = 'ascending';
-
-          it('should redirect to GET deals with query parameters based on the sort specified in the request body', async () => {
-            await queryDealsOrFacilities('deals', mockReq, mockRes);
-
-            expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0?sortfield=dealSnapshot.exporter.companyName&sortorder=descending');
-          });
-        });
-
-        describe('when a search is specified in the request body', () => {
-          const mockReq = structuredClone(mockReqTemplate);
-
-          mockReq.body.search = 'test';
+          mockReq.query.sortorder = order;
 
           it('should redirect to GET deals with the correct query parameters', async () => {
             await queryDealsOrFacilities('deals', mockReq, mockRes);
 
-            expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0?search=test');
+            expect(mockRes.redirect).toHaveBeenCalledWith(`/deals/0?sortfield=dealSnapshot.ukefDealId&sortorder=${order}`);
           });
         });
+      });
 
-        describe('when a search is specified in the query parameters', () => {
-          const mockReq = structuredClone(mockReqTemplate);
+      describe('when a sort is specified in the both the request body and the query parameters', () => {
+        const mockReq = structuredClone(mockReqTemplate);
 
-          mockReq.query.search = 'test';
+        mockReq.body.descending = 'dealSnapshot.exporter.companyName';
+        mockReq.query.sortfield = 'dealSnapshot.ukefDealId';
+        mockReq.query.sortorder = 'ascending';
 
-          it('should redirect to GET deals with the correct query parameters', async () => {
-            await queryDealsOrFacilities('deals', mockReq, mockRes);
+        it('should redirect to GET deals with query parameters based on the sort specified in the request body', async () => {
+          await queryDealsOrFacilities('deals', mockReq, mockRes);
 
-            expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0?search=test');
-          });
+          expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0?sortfield=dealSnapshot.exporter.companyName&sortorder=descending');
         });
+      });
 
-        describe('when a search is specified in the both the request body and the query parameters', () => {
-          const mockReq = structuredClone(mockReqTemplate);
+      describe('when a search is specified in the request body', () => {
+        const mockReq = structuredClone(mockReqTemplate);
 
-          mockReq.body.search = 'searchFromBody';
-          mockReq.query.search = 'searchFromQuery';
+        mockReq.body.search = 'test';
 
-          it('should redirect to GET deals with query parameters based on the search specified in the request body', async () => {
-            await queryDealsOrFacilities('deals', mockReq, mockRes);
+        it('should redirect to GET deals with the correct query parameters', async () => {
+          await queryDealsOrFacilities('deals', mockReq, mockRes);
 
-            expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0?search=searchFromBody');
-          });
+          expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0?search=test');
+        });
+      });
+
+      describe('when a search is specified in the query parameters', () => {
+        const mockReq = structuredClone(mockReqTemplate);
+
+        mockReq.query.search = 'test';
+
+        it('should redirect to GET deals with the correct query parameters', async () => {
+          await queryDealsOrFacilities('deals', mockReq, mockRes);
+
+          expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0?search=test');
+        });
+      });
+
+      describe('when a search is specified in the both the request body and the query parameters', () => {
+        const mockReq = structuredClone(mockReqTemplate);
+
+        mockReq.body.search = 'searchFromBody';
+        mockReq.query.search = 'searchFromQuery';
+
+        it('should redirect to GET deals with query parameters based on the search specified in the request body', async () => {
+          await queryDealsOrFacilities('deals', mockReq, mockRes);
+
+          expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0?search=searchFromBody');
         });
       });
     });

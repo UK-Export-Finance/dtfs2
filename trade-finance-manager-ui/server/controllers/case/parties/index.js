@@ -2,7 +2,7 @@ const { FLASH_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { userCanEdit, isEmptyString, partyType } = require('./helpers');
 const validatePartyURN = require('./partyUrnValidation.validate');
-const { hasAmendmentInProgressDealStage, amendmentsInProgressByDeal } = require('../../helpers/amendments.helper');
+const { getAmendmentsInProgress } = require('../../helpers/amendments.helper');
 const CONSTANTS = require('../../../constants');
 const { getDealSuccessBannerMessage } = require('../../helpers/get-success-banner-message.helper');
 
@@ -27,11 +27,12 @@ const getAllParties = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    const hasAmendmentInProgress = hasAmendmentInProgressDealStage(amendments);
+    const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
+    const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+
     if (hasAmendmentInProgress) {
       deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
     }
-    const amendmentsInProgress = amendmentsInProgressByDeal(amendments);
 
     const canEdit = userCanEdit(user);
 

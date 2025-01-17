@@ -5,6 +5,7 @@ import { asLoggedInUserSession } from '../../../../helpers/express-session';
 import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { getAdditionalCommentsFieldLabels, mapToProvideCorrectionFormValuesViewModel, mapToCorrectionRequestDetailsViewModel } from './helpers';
+import { GetFeeRecordCorrectionTransientFormDataResponseBody } from '../../../../api-response-types';
 
 export type GetProvideUtilisationReportCorrection = Request & {
   params: {
@@ -27,7 +28,20 @@ export const getProvideUtilisationReportCorrection = async (req: GetProvideUtili
 
     const feeRecordCorrection = await api.getFeeRecordCorrection(userToken, bankId, correctionId);
 
-    const savedFormValues = await api.getFeeRecordCorrectionTransientFormData(userToken, bankId, correctionId);
+    let savedFormValues: GetFeeRecordCorrectionTransientFormDataResponseBody = {};
+
+    /**
+     * If the user is coming from a link on the Report GEF utilisation and fees page
+     * then we want to clear any saved form data for the correction as they are starting
+     * a new journey.
+     */
+    const isNewJourney = req.headers.referer?.includes('utilisation-report-upload');
+
+    if (isNewJourney) {
+      await api.deleteFeeRecordCorrectionTransientFormData(userToken, bankId, correctionId);
+    } else {
+      savedFormValues = await api.getFeeRecordCorrectionTransientFormData(userToken, bankId, correctionId);
+    }
 
     const paymentCurrencyOptions = mapCurrenciesToRadioItems(savedFormValues.reportedCurrency);
 
