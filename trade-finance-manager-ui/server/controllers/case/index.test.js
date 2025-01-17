@@ -21,8 +21,6 @@ jest.mock('../helpers/deal-cancellation-enabled.helper', () => ({
 const { DRAFT, COMPLETED } = TFM_DEAL_CANCELLATION_STATUS;
 
 const mockSuccessBannerMessage = 'mock success message';
-console.error = jest.fn();
-
 const res = mockRes();
 
 const token = 'test-token';
@@ -41,6 +39,8 @@ const session = {
 describe('controllers - case', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.restoreAllMocks();
+    jest.spyOn(console, 'error');
   });
 
   describe('GET case deal', () => {
@@ -67,7 +67,7 @@ describe('controllers - case', () => {
         {
           ukefFacilityId: '1234',
           facilityId: '12345',
-          submittedByPim: false,
+          submittedByPim: true,
           status: AMENDMENT_STATUS.IN_PROGRESS,
         },
       ];
@@ -914,12 +914,14 @@ describe('controllers - case', () => {
           ukefDealId: 'ukefDealId',
         },
         mock: true,
+        tfm: {},
       };
 
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
         api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         api.getDealCancellation = jest.fn(() => Promise.resolve({}));
+        mockGetDealSuccessBannerMessage.mockResolvedValue(mockSuccessBannerMessage);
       });
 
       it('should render documents template with data', async () => {
