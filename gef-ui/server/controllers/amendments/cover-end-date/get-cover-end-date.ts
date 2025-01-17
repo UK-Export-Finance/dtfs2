@@ -50,13 +50,13 @@ export const getCoverEndDate = async (req: GetCoverEndDateRequest, res: Response
 
     const currentCoverEndDate: Date | undefined = (amendment.coverEndDate && fromUnixTime(amendment.coverEndDate * 1000)) || undefined;
 
-    const coverEndDate: DayMonthYearInput | undefined = currentCoverEndDate && convertDateToDayMonthYearInput(currentCoverEndDate);
+    const coverEndDateDayMonthYear: DayMonthYearInput | undefined = currentCoverEndDate && convertDateToDayMonthYearInput(currentCoverEndDate);
 
     const viewModel: CoverEndDateViewModel = {
       exporterName: deal.exporter.companyName,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.COVER_END_DATE, amendment),
-      coverEndDate,
+      coverEndDate: coverEndDateDayMonthYear,
     };
 
     return res.render('partials/amendments/cover-end-date.njk', viewModel);

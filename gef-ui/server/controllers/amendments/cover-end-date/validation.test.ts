@@ -1,10 +1,18 @@
-import { applyStandardValidationAndParseDateInput, COVER_END_DATE_MAXIMUM_YEARS_IN_FUTURE } from '@ukef/dtfs2-common';
+import { applyStandardValidationAndParseDateInput, COVER_END_DATE_MAXIMUM_YEARS_IN_FUTURE, DayMonthYearInput } from '@ukef/dtfs2-common';
 import { add, format, startOfDay, getUnixTime } from 'date-fns';
 import { validateAndParseCoverEndDate } from './validation';
 import { mapValidationError } from '../../../utils/map-validation-error';
 
 const valueName = 'cover end date';
 const valueRef = 'coverEndDate';
+
+const getFormattedDate = (coverEndDate: Date): DayMonthYearInput => {
+  return {
+    day: format(coverEndDate, 'd'),
+    month: format(coverEndDate, 'M'),
+    year: format(coverEndDate, 'yyyy'),
+  };
+};
 
 describe('validateAndParseCoverEndDate', () => {
   afterAll(() => {
@@ -34,10 +42,7 @@ describe('validateAndParseCoverEndDate', () => {
     const coverStartDate = add(new Date(), { days: 1 });
 
     // Act
-    const result = validateAndParseCoverEndDate(
-      { day: format(coverEndDate, 'd'), month: format(coverEndDate, 'M'), year: format(coverEndDate, 'yyyy') },
-      coverStartDate,
-    );
+    const result = validateAndParseCoverEndDate(getFormattedDate(coverEndDate), coverStartDate);
 
     // Assert
     expect(result).toEqual({
@@ -57,10 +62,7 @@ describe('validateAndParseCoverEndDate', () => {
     const coverStartDate = add(new Date(), { days: 1 });
 
     // Act
-    const result = validateAndParseCoverEndDate(
-      { day: format(coverEndDate, 'd'), month: format(coverEndDate, 'M'), year: format(coverEndDate, 'yyyy') },
-      coverStartDate,
-    );
+    const result = validateAndParseCoverEndDate(getFormattedDate(coverEndDate), coverStartDate);
 
     // Assert
     expect(result).toEqual({
@@ -80,10 +82,7 @@ describe('validateAndParseCoverEndDate', () => {
     const coverStartDate = add(new Date(), { days: 1 });
 
     // Act
-    const result = validateAndParseCoverEndDate(
-      { day: format(coverEndDate, 'd'), month: format(coverEndDate, 'M'), year: format(coverEndDate, 'yyyy') },
-      coverStartDate,
-    );
+    const result = validateAndParseCoverEndDate(getFormattedDate(coverEndDate), coverStartDate);
 
     // Assert
     expect(result).toEqual({
