@@ -45,8 +45,8 @@ export const isPaymentReferenceOverMaxCharacterCount = (paymentReference: string
 /**
  * Tests if a string value matches the currency number format with optional
  * thousands separators.
- * @param {string} value - The string value to test.
- * @returns {boolean} True if the value matches the currency number format,
+ * @param value - The string value to test.
+ * @returns True if the value matches the currency number format,
  * false otherwise.
  */
 const isCurrencyNumberOptionallyWithThousandsSeparators = (value: string) => {
@@ -56,8 +56,8 @@ const isCurrencyNumberOptionallyWithThousandsSeparators = (value: string) => {
 /**
  * Tests if a monetary value is valid by checking if it is a non-empty string
  * and matches the currency number format.
- * @param {string} [monetaryValue] - The monetary value string to validate.
- * @returns {boolean} True if the monetary value is valid, false otherwise.
+ * @param monetaryValue - The monetary value string to validate.
+ * @returns True if the monetary value is valid, false otherwise.
  */
 export const isMonetaryAmountValid = (monetaryValue?: string): boolean => {
   return isNonEmptyString(monetaryValue) && isCurrencyNumberOptionallyWithThousandsSeparators(monetaryValue);

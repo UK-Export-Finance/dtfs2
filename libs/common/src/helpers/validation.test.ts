@@ -151,41 +151,30 @@ describe('validation helpers', () => {
   });
 
   describe('isMonetaryAmountValid', () => {
-    describe('when monetary amount is valid', () => {
-      it('should return true for whole numbers', () => {
-        expect(isMonetaryAmountValid('100')).toEqual(true);
-      });
-
-      it('should return true for decimal numbers', () => {
-        expect(isMonetaryAmountValid('100.00')).toEqual(true);
-      });
-
-      it('should return true for numbers with thousands separators', () => {
-        expect(isMonetaryAmountValid('1,000.00')).toEqual(true);
-        expect(isMonetaryAmountValid('1,000,000.00')).toEqual(true);
-      });
+    it.each`
+      scenario                                   | input
+      ${'simple whole number'}                   | ${'100'}
+      ${'number with two decimal places'}        | ${'100.23'}
+      ${'number with single thousands group'}    | ${'10,234.56'}
+      ${'number with multiple thousands groups'} | ${'1,234,567.89'}
+    `('should return true for $scenario: "$input"', ({ input }: { input: string }) => {
+      expect(isMonetaryAmountValid(input)).toEqual(true);
     });
 
-    describe('when monetary amount is invalid', () => {
-      it('should return false for undefined', () => {
-        expect(isMonetaryAmountValid(undefined)).toEqual(false);
-      });
-
-      it('should return false for empty string', () => {
-        expect(isMonetaryAmountValid('')).toEqual(false);
-      });
-
-      it('should return false for invalid number formats', () => {
-        expect(isMonetaryAmountValid('abc')).toEqual(false);
-        expect(isMonetaryAmountValid('100.000')).toEqual(false);
-        expect(isMonetaryAmountValid('1,00.00')).toEqual(false);
-        expect(isMonetaryAmountValid('1.000,00')).toEqual(false);
-      });
-
-      it('should return false for numbers with invalid thousands separator placement', () => {
-        expect(isMonetaryAmountValid('1,00')).toEqual(false);
-        expect(isMonetaryAmountValid('1,000,00')).toEqual(false);
-      });
+    it.each`
+      scenario                                           | input
+      ${'undefined value'}                               | ${undefined}
+      ${'empty string'}                                  | ${''}
+      ${'non-numeric characters'}                        | ${'abc'}
+      ${'more than two decimal places'}                  | ${'100.000'}
+      ${'incorrect thousands separator placement'}       | ${'1,00.00'}
+      ${'comma decimal separator'}                       | ${'1,000,00'}
+      ${'period thousands separator'}                    | ${'1.000.00'}
+      ${'period thousands and comma decimal separators'} | ${'1.000,00'}
+      ${'invalid thousands group size'}                  | ${'1,00'}
+      ${'incorrect thousands group format'}              | ${'1,000,00'}
+    `('should return false for $scenario: "$input"', ({ input }: { input: string | undefined }) => {
+      expect(isMonetaryAmountValid(input)).toEqual(false);
     });
   });
 });

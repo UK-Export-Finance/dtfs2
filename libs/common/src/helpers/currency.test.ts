@@ -54,12 +54,9 @@ describe('currency helpers', () => {
   });
 
   describe('isCurrencyValid', () => {
-    it('should return true when currency is a valid CURRENCY enum value', () => {
-      // Arrange
-      const validCurrency = CURRENCY.GBP;
-
+    it.each(Object.values(CURRENCY))('should return true when currency is "%s"', (currency) => {
       // Act
-      const result = isCurrencyValid(validCurrency);
+      const result = isCurrencyValid(currency);
 
       // Assert
       expect(result).toBe(true);
