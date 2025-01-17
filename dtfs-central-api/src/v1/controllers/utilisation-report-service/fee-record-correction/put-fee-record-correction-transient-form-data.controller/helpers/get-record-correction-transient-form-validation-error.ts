@@ -36,7 +36,7 @@ export const getFacilityIdValidationError = async (facilityIdValue?: string): Pr
  * @returns An error message if validation fails, undefined otherwise.
  */
 export const getAdditionalCommentsValidationError = (correctionReasons: RecordCorrectionReason[], additionalComments?: string): string | undefined => {
-  if (!additionalComments) {
+  if (!additionalComments || !additionalComments.trim()) {
     return 'You must enter a comment';
   }
 

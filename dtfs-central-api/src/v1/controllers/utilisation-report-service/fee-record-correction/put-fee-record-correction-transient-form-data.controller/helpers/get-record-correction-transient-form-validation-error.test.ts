@@ -34,6 +34,21 @@ describe('get-record-correction-transient-form-validation-error', () => {
       });
     });
 
+    describe('when "additionalComments" is only whitespace', () => {
+      const reasons = [RECORD_CORRECTION_REASON.OTHER];
+      const additionalComments = '   ';
+
+      it('should return error message', () => {
+        // Act
+        const errorMessage = getAdditionalCommentsValidationError(reasons, additionalComments);
+
+        // Assert
+        const expectedErrorMessage = 'You must enter a comment';
+
+        expect(errorMessage).toEqual(expectedErrorMessage);
+      });
+    });
+
     describe('when "additionalComments" length is less than maximum', () => {
       const reasons = [RECORD_CORRECTION_REASON.OTHER];
       const additionalComments = 'Some valid additional comments';
