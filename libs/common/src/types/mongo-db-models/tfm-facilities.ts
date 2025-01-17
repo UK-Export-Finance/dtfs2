@@ -132,7 +132,7 @@ export type AmendmentsEligibilityCriterion = {
  */
 export interface PortalFacilityAmendment extends BaseAmendment {
   type: typeof AMENDMENT_TYPES.PORTAL;
-  eligibilityCriteria?: {
+  eligibilityCriteria: {
     version: number;
     criteria: AmendmentsEligibilityCriterion[];
   };

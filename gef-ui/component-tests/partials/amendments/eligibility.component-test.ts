@@ -10,9 +10,9 @@ describe(page, () => {
   const previousPage = 'previousPage';
   const cancelUrl = 'cancelUrl';
   const criteria: AmendmentsEligibilityCriterion[] = [
-    { id: 1, text: 'Test first criteria', textList: ['criterion 1 bullet point 1', 'criterion 1 bullet point 2'] },
-    { id: 2, text: 'Test second criteria' },
-    { id: 3, text: 'Test third criteria', textList: ['criterion 3 bullet point 1', 'criterion 3 bullet point 2', 'criterion 3 bullet point 3'] },
+    { id: 1, text: 'Test first criteria', textList: ['criterion 1 bullet point 1', 'criterion 1 bullet point 2'], answer: null },
+    { id: 2, text: 'Test second criteria', answer: null },
+    { id: 3, text: 'Test third criteria', textList: ['criterion 3 bullet point 1', 'criterion 3 bullet point 2', 'criterion 3 bullet point 3'], answer: null },
   ];
   const exporterName = 'exporterName';
 
@@ -107,7 +107,7 @@ describe(page, () => {
     const criteriaWithAnswers: AmendmentsEligibilityCriterion[] = [
       { id: 1, text: 'Test first criteria', answer: true },
       { id: 2, text: 'Test second criteria', answer: false },
-      { id: 3, text: 'Test third criteria' },
+      { id: 3, text: 'Test third criteria', answer: null },
     ];
 
     const wrapper = render({ ...params, criteria: criteriaWithAnswers });

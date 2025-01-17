@@ -1,4 +1,4 @@
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, AMENDMENT_TYPES, AmendmentsEligibilityCriterion, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { getUnixTime } from 'date-fns';
 
 export class PortalFacilityAmendmentWithUkefIdMockBuilder {
@@ -19,6 +19,16 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
         email: 'maker1@ukexportfinance.gov.uk',
       },
       ukefFacilityId: '0041282190',
+      eligibilityCriteria: {
+        version: 1,
+        criteria: [
+          {
+            id: 1,
+            text: 'Criteria 1',
+            answer: null,
+          },
+        ],
+      },
     };
   }
 
@@ -34,6 +44,14 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
 
   public withAmendmentId(amendmentId: string) {
     this.amendment.amendmentId = amendmentId;
+    return this;
+  }
+
+  public withCriteria(criteria: AmendmentsEligibilityCriterion[]) {
+    this.amendment.eligibilityCriteria = {
+      version: 1,
+      criteria,
+    };
     return this;
   }
 
