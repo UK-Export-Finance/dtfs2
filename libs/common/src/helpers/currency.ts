@@ -16,7 +16,7 @@ export const getFormattedCurrencyAndAmount = (currencyAndAmount: CurrencyAndAmou
 
 /**
  * Checks if a currency string is valid by verifying it is a non-empty string
- * and exists in the CURRENCY enum.
+ * and exists in the {@link CURRENCY} enum.
  * @param currency - The currency string to validate
  * @returns True if the currency is valid, false otherwise
  */

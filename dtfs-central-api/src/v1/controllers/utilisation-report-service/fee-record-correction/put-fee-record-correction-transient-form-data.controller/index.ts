@@ -21,7 +21,7 @@ export type PutFeeRecordCorrectionTransientFormDataRequest = CustomExpressReques
  *
  * Validates the correction exists and belongs to a report for the correct bank.
  *
- * Validates the form data, returning any validation error messages to the frontend.
+ * Validates the form data, returning any validation error messages.
  *
  * If there are no validation errors, creates a new fee record correction transient
  * form data entity with the correction id, user id and form data, and saves it.

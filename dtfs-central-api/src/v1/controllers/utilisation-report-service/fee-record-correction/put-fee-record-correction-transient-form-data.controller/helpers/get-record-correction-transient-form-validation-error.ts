@@ -27,7 +27,8 @@ export const getFacilityIdValidationError = async (facilityIdValue?: string): Pr
 /**
  * Validates the additional comments field for a record correction request.
  *
- * If the character count exceeds the maximum allowed character count, the
+ * If the character count exceeds the maximum allowed character count of
+ * {@link MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT}, the
  * input field referenced in the error message is matched to the fields label.
  *
  * @param correctionReasons - The reasons for the record correction request.
