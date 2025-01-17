@@ -24,6 +24,7 @@ jest.mock('../../../../../repositories/banks-repo');
 describe('putFeeRecordCorrection', () => {
   const mockFindCorrection = jest.fn();
   const mockFindCorrectionTransientFormData = jest.fn();
+  const mockDeleteTransientFormData = jest.fn();
 
   const correctionId = 1;
   const bankId = '123';
@@ -38,6 +39,7 @@ describe('putFeeRecordCorrection', () => {
   beforeEach(() => {
     FeeRecordCorrectionRepo.findOneByIdAndBankIdWithFeeRecordAndReport = mockFindCorrection;
     FeeRecordCorrectionTransientFormDataRepo.findByUserIdAndCorrectionId = mockFindCorrectionTransientFormData;
+    FeeRecordCorrectionTransientFormDataRepo.deleteByUserIdAndCorrectionId = mockDeleteTransientFormData;
 
     req = httpMocks.createRequest<PutFeeRecordCorrectionRequest>({
       params: aValidRequestParams(),
@@ -137,6 +139,15 @@ describe('putFeeRecordCorrection', () => {
 
         beforeEach(() => {
           jest.mocked(getBankById).mockResolvedValue(bank);
+        });
+
+        it('should call the repo to delete the transient form data', async () => {
+          // Act
+          await putFeeRecordCorrection(req, res);
+
+          // Assert
+          expect(mockDeleteTransientFormData).toHaveBeenCalledTimes(1);
+          expect(mockDeleteTransientFormData).toHaveBeenCalledWith(portalUserId, correctionId);
         });
 
         it(`should respond with ${HttpStatusCode.Ok}`, async () => {

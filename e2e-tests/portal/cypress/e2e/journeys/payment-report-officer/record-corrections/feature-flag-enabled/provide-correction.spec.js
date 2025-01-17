@@ -102,7 +102,7 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
           provideCorrection.additionalComments.input().should('exist');
         });
 
-        context('and when the user has entered values, clicked save and review changes and clicked change', () => {
+        context('and when the user has entered values and clicked save and review changes', () => {
           const newFacilityId = '77777777';
           const newReportedFee = '12345.67';
           const newReportedCurrency = CURRENCY.JPY;
@@ -115,15 +115,37 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
             cy.keyboardInput(provideCorrection.additionalComments.input(), additionalComments);
 
             cy.clickContinueButton();
-
-            reviewCorrection.changeNewValuesLink().click();
           });
 
-          it('should retain the values entered by the user', () => {
+          it('should retain the values entered by the user when they return to the page via the review page change link', () => {
+            reviewCorrection.changeNewValuesLink().click();
+
             provideCorrection.facilityIdInput().should('have.value', newFacilityId);
             provideCorrection.reportedFeeInput().should('have.value', getFormattedMonetaryValue(newReportedFee));
             provideCorrection.reportedCurrency.radioInput(newReportedCurrency).should('be.checked');
             provideCorrection.additionalComments.input().should('have.value', additionalComments);
+          });
+
+          it('should NOT retain the values entered by the user when they navigate away and restart the journey', () => {
+            cy.visit(relative(`/utilisation-report-upload`));
+
+            pendingCorrections.row(1).correctionLink().click();
+
+            provideCorrection.facilityIdInput().should('have.value', '');
+            provideCorrection.reportedFeeInput().should('have.value', '');
+            provideCorrection.reportedCurrency.radioInput(newReportedCurrency).should('not.be.checked');
+            provideCorrection.additionalComments.input().should('have.value', '');
+          });
+
+          it('should NOT retain the values entered by the user when they cancel on the review page then navigate back directly via url', () => {
+            cy.clickCancelButton();
+
+            cy.visit(relative(`/utilisation-reports/provide-correction/${pendingCorrectionDetails.id}`));
+
+            provideCorrection.facilityIdInput().should('have.value', '');
+            provideCorrection.reportedFeeInput().should('have.value', '');
+            provideCorrection.reportedCurrency.radioInput(newReportedCurrency).should('not.be.checked');
+            provideCorrection.additionalComments.input().should('have.value', '');
           });
         });
       });

@@ -5,6 +5,7 @@ import { AuditDatabaseRecord } from '../audit-database-record';
 import { AnyObject } from '../any-object';
 import { Prettify } from '../types-helper';
 import { TfmActivity } from './tfm-activity';
+import { TfmDealStage } from '../tfm/deal-stage';
 
 /**
  * Type of the mongo db "tfm-deals" collection
@@ -25,7 +26,7 @@ export type TfmDeal = {
     parties: AnyObject;
     probabilityOfDefault: number;
     product: string;
-    stage: string;
+    stage: TfmDealStage;
     cancellation?: TfmDealCancellationWithStatus;
     tasks?: AnyObject[];
   };

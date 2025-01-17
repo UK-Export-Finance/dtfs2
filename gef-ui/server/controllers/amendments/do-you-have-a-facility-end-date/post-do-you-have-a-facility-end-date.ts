@@ -3,7 +3,7 @@ import { Response } from 'express';
 import * as api from '../../../services/api';
 import { DoYouHaveAFacilityEndDateViewModel } from '../../../types/view-models/amendments/do-you-have-a-facility-end-date-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
-import { getNextPage } from '../helpers/navigation.helper';
+import { getAmendmentsUrl, getNextPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { validateIsUsingFacilityEndDate } from './validation';
 import { validationErrorHandler } from '../../../utils/helpers';
@@ -37,7 +37,7 @@ export const postDoYouHaveAFacilityEndDate = async (req: PostDoYouHaveAFacilityE
     if ('errors' in errorsOrValue) {
       const viewModel: DoYouHaveAFacilityEndDateViewModel = {
         exporterName: deal.exporter.companyName,
-        cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+        cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
         previousPage,
         errors: validationErrorHandler(errorsOrValue.errors),
         isUsingFacilityEndDate,

@@ -25,6 +25,7 @@ export type PutFeeRecordCorrectionRequest = CustomExpressRequest<{
  * status back to TO_DO.
  * - Saves the old and new values against the record correction for
  * record correction history log.
+ * - Deletes the transient form data.
  * - Sends confirmation email to the bank payment report officer team.
  * - Sends notification email to PDC team.
  *
@@ -58,6 +59,8 @@ export const putFeeRecordCorrection = async (req: PutFeeRecordCorrectionRequest,
     }
 
     // TODO: FN-3675 - apply the correction to the fee record and send confirmation emails
+
+    await FeeRecordCorrectionTransientFormDataRepo.deleteByUserIdAndCorrectionId(userId, correctionId);
 
     const { reportPeriod } = correction.feeRecord.report;
 
