@@ -69,5 +69,22 @@ describe('parse-record-correction-transient-form-values', () => {
 
       expect(parsedFormValues).toEqual(expectedParsedFormValues);
     });
+
+    it('should remove leading and trailing whitespace from "additionalComments"', () => {
+      // Arrange
+      const formValues = {
+        additionalComments: '   A comment with whitespace   ',
+      };
+
+      // Act
+      const parsedFormValues = parseValidatedRecordCorrectionTransientFormValues(formValues);
+
+      // Assert
+      const expectedParsedFormValues = {
+        additionalComments: 'A comment with whitespace',
+      };
+
+      expect(parsedFormValues).toEqual(expectedParsedFormValues);
+    });
   });
 });

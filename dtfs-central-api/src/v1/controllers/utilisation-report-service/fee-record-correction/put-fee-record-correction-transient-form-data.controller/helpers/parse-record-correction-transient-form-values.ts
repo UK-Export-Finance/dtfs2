@@ -9,7 +9,8 @@ export const parseValidatedRecordCorrectionTransientFormValues = (formValues: Re
   const utilisation = formValues.utilisation ? getMonetaryValueAsNumber(formValues.utilisation) : undefined;
   const reportedCurrency = isCurrencyValid(formValues.reportedCurrency) ? formValues.reportedCurrency : undefined;
   const reportedFee = formValues.reportedFee ? getMonetaryValueAsNumber(formValues.reportedFee) : undefined;
-  const { facilityId, additionalComments } = formValues;
+  const additionalComments = formValues.additionalComments?.trim();
+  const { facilityId } = formValues;
 
   return {
     utilisation,
