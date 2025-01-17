@@ -36,8 +36,10 @@ export const getFormValueForReason = (formValues: RecordCorrectionFormValues, re
 /**
  * Validates that there are no form values provided for reasons that are not in the correction request.
  *
- * Note that {@link RECORD_CORRECTION_REASON.OTHER} is always a field (optional if not in the reasons,
- * required if in the reasons) so it is not included in this check.
+ * Note that the "additionalComments" field is required when {@link RECORD_CORRECTION_REASON.OTHER} is
+ * one of the reasons, and optional when {@link RECORD_CORRECTION_REASON.OTHER} is not one of the
+ * reasons. It is therefore not included in the "unexpected reasons" check as it can be provided
+ * regardless of the correction reasons.
  * @param formValues - The form values to validate.
  * @param reasons - The reasons for the record correction that determine which form values are expected.
  * @throws Error if there are any form values provided for reasons not in the correction request.
@@ -63,6 +65,29 @@ type ValidatorMap = Record<
 >;
 
 /**
+ * Creates a map of validation functions for each record correction reason.
+ * @param reasons - Array of record correction reasons that determine validation rules
+ * @returns A ValidatorMap object containing validation functions for each record correction reason type
+ */
+const getValidatorMap = (reasons: RecordCorrectionReason[]): ValidatorMap => {
+  const facilityIdValidator = async (value?: string) => ({ facilityIdErrorMessage: await getFacilityIdValidationError(value) });
+  const reportedCurrencyValidator = (value?: string) => (!isCurrencyValid(value) ? { reportedCurrencyErrorMessage: 'You must select a currency' } : {});
+  const reportedFeeValidator = (value?: string) =>
+    !isMonetaryAmountValid(value) ? { reportedFeeErrorMessage: 'You must enter the reported fee in a valid format' } : {};
+  const utilisationValidator = (value?: string) =>
+    !isMonetaryAmountValid(value) ? { utilisationErrorMessage: 'You must enter the utilisation in a valid format' } : {};
+  const otherReasonValidator = (value?: string) => ({ additionalCommentsErrorMessage: getAdditionalCommentsValidationError(reasons, value) });
+
+  return {
+    [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT]: facilityIdValidator,
+    [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT]: reportedCurrencyValidator,
+    [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT]: reportedFeeValidator,
+    [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT]: utilisationValidator,
+    [RECORD_CORRECTION_REASON.OTHER]: otherReasonValidator,
+  };
+};
+
+/**
  * Gets validation errors for form values that are required based on the selected reasons.
  * @param formValues - The form values to validate.
  * @param reasons - The reasons for the record correction that determine which form values are required.
@@ -72,16 +97,7 @@ export const getValidationErrorsForRequiredFormValues = async (
   formValues: RecordCorrectionFormValues,
   reasons: RecordCorrectionReason[],
 ): Promise<RecordCorrectionFormValueValidationErrors> => {
-  const validatorMap: ValidatorMap = {
-    [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT]: async (value?: string) => ({ facilityIdErrorMessage: await getFacilityIdValidationError(value) }),
-    [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT]: (value?: string) =>
-      isCurrencyValid(value) ? {} : { reportedCurrencyErrorMessage: 'You must select a currency' },
-    [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT]: (value?: string) =>
-      isMonetaryAmountValid(value) ? {} : { reportedFeeErrorMessage: 'You must enter the reported fee in a valid format' },
-    [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT]: (value?: string) =>
-      isMonetaryAmountValid(value) ? {} : { utilisationErrorMessage: 'You must enter the utilisation in a valid format' },
-    [RECORD_CORRECTION_REASON.OTHER]: (value?: string) => ({ additionalCommentsErrorMessage: getAdditionalCommentsValidationError(reasons, value) }),
-  };
+  const validatorMap = getValidatorMap(reasons);
 
   let validationErrors: RecordCorrectionFormValueValidationErrors = {};
 
