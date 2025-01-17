@@ -67,7 +67,7 @@ const validateUkefDecision = (ukefDecision, decisionType) => ukefDecision?.cover
 /**
  * A deal with one of these stages cannot be amended
  */
-const immutableDealStages = [TFM_DEAL_STAGE.CANCELLED];
+const nonAmendableDealStages = [TFM_DEAL_STAGE.CANCELLED];
 
 /**
  * @param {Object} getAmendmentsInProgress Params
@@ -76,7 +76,7 @@ const immutableDealStages = [TFM_DEAL_STAGE.CANCELLED];
  * @returns {import('@ukef/dtfs2-common').TfmFacilityAmendment[]} - the amendments that are in progress
  */
 const getAmendmentsInProgress = ({ amendments, deal }) => {
-  if (immutableDealStages.includes(deal.tfm.stage)) {
+  if (nonAmendableDealStages.includes(deal.tfm.stage)) {
     return [];
   }
 
