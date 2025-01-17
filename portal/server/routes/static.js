@@ -1,4 +1,5 @@
-const express = require('express');
+import express from 'express';
+import { getISO8601 } from '@ukef/dtfs2-common';
 
 const router = express.Router();
 
@@ -8,7 +9,7 @@ router.get('/.well-known/security.txt', (req, res) => {
   res.write('Contact: https://www.gov.uk/contact/govuk\n');
   res.write('Contact: https://hackerone.com/7af14fd9-fe4e-4f39-bea1-8f8a364061b8/embedded_submissions/new\n');
   res.write('Contact: https://get-a-guarantee-for-export-finance.service.gov.uk/feedback\n');
-  res.write('Expires: 2026-01-17T00:00:00.000Z\n');
+  res.write(`Expires: ${getISO8601()}\n`);
   res.write('Acknowledgments: https://get-a-guarantee-for-export-finance.service.gov.uk/thanks.txt\n');
   res.write('Preferred-Languages: en\n');
   res.write('Canonical: https://get-a-guarantee-for-export-finance.service.gov.uk/.well-known/security.txt\n');
@@ -28,4 +29,4 @@ router.get('/thanks.txt', (req, res) => {
   res.send();
 });
 
-module.exports = router;
+export default router;
