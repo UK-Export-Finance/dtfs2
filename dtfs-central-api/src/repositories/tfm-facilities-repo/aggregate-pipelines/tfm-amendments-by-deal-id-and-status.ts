@@ -1,7 +1,7 @@
 import { ObjectId, Document } from 'mongodb';
-import { TfmAmendmentStatus } from '@ukef/dtfs2-common';
+import { AMENDMENT_TYPES, TfmAmendmentStatus } from '@ukef/dtfs2-common';
 
-export const amendmentsByDealIdAndStatus = (dealId: string | ObjectId, status: TfmAmendmentStatus): Document[] => [
+export const tfmAmendmentsByDealIdAndStatus = (dealId: string | ObjectId, status: TfmAmendmentStatus): Document[] => [
   { $match: { 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } } },
   {
     $addFields: {
@@ -9,6 +9,6 @@ export const amendmentsByDealIdAndStatus = (dealId: string | ObjectId, status: T
     },
   },
   { $unwind: '$amendments' },
-  { $match: { 'amendments.status': { $eq: status } } },
+  { $match: { 'amendments.status': { $eq: status }, 'amendments.type': { $ne: AMENDMENT_TYPES.PORTAL } } },
   { $project: { _id: false, amendments: true } },
 ];

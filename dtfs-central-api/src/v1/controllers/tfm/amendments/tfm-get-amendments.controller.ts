@@ -20,7 +20,7 @@ type CompletedFacilityEndDate =
 
 export const getAllAmendmentsInProgress = async (_req: Request, res: Response) => {
   try {
-    const inProgressAmendments = await TfmFacilitiesRepo.findAmendmentsByStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS);
+    const inProgressAmendments = await TfmFacilitiesRepo.findTfmAmendmentsByStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS);
     return res.status(HttpStatusCode.Ok).send(inProgressAmendments);
   } catch (error) {
     console.error('Error getting all in progress amendments:', error);
@@ -96,7 +96,7 @@ export const getAmendmentsByFacilityId = async (req: Request, res: Response) => 
     let amendment: Document | Document[] | null;
     switch (amendmentIdOrStatus) {
       case AMENDMENT_QUERY_STATUSES.IN_PROGRESS: {
-        amendment = (await TfmFacilitiesRepo.findAmendmentsByFacilityIdAndStatus(facilityId, TFM_AMENDMENT_STATUS.IN_PROGRESS)).at(0) ?? {};
+        amendment = (await TfmFacilitiesRepo.findTfmAmendmentsByFacilityIdAndStatus(facilityId, TFM_AMENDMENT_STATUS.IN_PROGRESS)).at(0) ?? {};
         break;
       }
       case AMENDMENT_QUERY_STATUSES.COMPLETED:
@@ -110,7 +110,7 @@ export const getAmendmentsByFacilityId = async (req: Request, res: Response) => 
           const latestAmendment = await TfmFacilitiesRepo.findLatestCompletedAmendmentByFacilityId(facilityId);
           amendment = latestAmendment ? mapAmendmentToFacilityEndDateValues(latestAmendment) : {};
         } else {
-          amendment = await TfmFacilitiesRepo.findAmendmentsByFacilityIdAndStatus(facilityId, TFM_AMENDMENT_STATUS.COMPLETED);
+          amendment = await TfmFacilitiesRepo.findTfmAmendmentsByFacilityIdAndStatus(facilityId, TFM_AMENDMENT_STATUS.COMPLETED);
         }
         break;
       default:
@@ -144,14 +144,14 @@ export const getAmendmentsByDealId = async (req: Request, res: Response) => {
     let amendment: Document | Document[] | null;
     switch (status) {
       case AMENDMENT_QUERY_STATUSES.IN_PROGRESS:
-        amendment = await TfmFacilitiesRepo.findAmendmentsByDealIdAndStatus(dealId, TFM_AMENDMENT_STATUS.IN_PROGRESS);
+        amendment = await TfmFacilitiesRepo.findTfmAmendmentsByDealIdAndStatus(dealId, TFM_AMENDMENT_STATUS.IN_PROGRESS);
         break;
       case AMENDMENT_QUERY_STATUSES.COMPLETED:
         if (type === AMENDMENT_QUERIES.LATEST) {
           const latestAmendment = await TfmFacilitiesRepo.findLatestCompletedAmendmentByDealId(dealId);
           amendment = latestAmendment ? mapAmendmentToLatestValue(latestAmendment) : {};
         } else {
-          amendment = await TfmFacilitiesRepo.findAmendmentsByDealIdAndStatus(dealId, TFM_AMENDMENT_STATUS.COMPLETED);
+          amendment = await TfmFacilitiesRepo.findTfmAmendmentsByDealIdAndStatus(dealId, TFM_AMENDMENT_STATUS.COMPLETED);
         }
         break;
       default:

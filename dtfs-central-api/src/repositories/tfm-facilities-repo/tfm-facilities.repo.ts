@@ -128,14 +128,14 @@ export class TfmFacilitiesRepo {
   }
 
   /**
-   * Find amendments by the amendment status
-   * @param status - The amendment status
+   * Find TFM amendments by the amendment status
+   * @param status - The tfm amendment status
    * @returns The found amendments
    */
-  public static async findAmendmentsByStatus(status: TfmAmendmentStatus): Promise<Document[]> {
+  public static async findTfmAmendmentsByStatus(status: TfmAmendmentStatus): Promise<Document[]> {
     const collection = await this.getCollection();
     return await collection
-      .aggregate(aggregatePipelines.amendmentsByStatus(status))
+      .aggregate(aggregatePipelines.tfmAmendmentsByStatus(status))
       .map<Document>((doc) => doc.amendments as Document)
       .toArray();
   }
@@ -154,15 +154,15 @@ export class TfmFacilitiesRepo {
   }
 
   /**
-   * Finds amendments by the facility id and status
+   * Finds tfm amendments by the facility id and status
    * @param facilityId - The facility id
-   * @param status - The amendment status
+   * @param status - The TFM amendment status
    * @returns The found amendments
    */
-  public static async findAmendmentsByFacilityIdAndStatus(facilityId: string | ObjectId, status: TfmAmendmentStatus): Promise<FacilityAmendment[]> {
+  public static async findTfmAmendmentsByFacilityIdAndStatus(facilityId: string | ObjectId, status: TfmAmendmentStatus): Promise<FacilityAmendment[]> {
     const collection = await this.getCollection();
     return await collection
-      .aggregate(aggregatePipelines.amendmentsByFacilityIdAndStatus(facilityId, status))
+      .aggregate(aggregatePipelines.tfmAmendmentsByFacilityIdAndStatus(facilityId, status))
       .map<FacilityAmendment>((doc) => doc.amendments as FacilityAmendment)
       .toArray();
   }
@@ -214,15 +214,15 @@ export class TfmFacilitiesRepo {
   }
 
   /**
-   * Finds amendments by the deal id and status
+   * Finds tfm amendments by the deal id and status
    * @param dealId - The deal id
-   * @param status - The amendment status
+   * @param status - The tfm amendment status
    * @returns The found amendments
    */
-  public static async findAmendmentsByDealIdAndStatus(dealId: string | ObjectId, status: TfmAmendmentStatus): Promise<Document[]> {
+  public static async findTfmAmendmentsByDealIdAndStatus(dealId: string | ObjectId, status: TfmAmendmentStatus): Promise<Document[]> {
     const collection = await this.getCollection();
     return await collection
-      .aggregate(aggregatePipelines.amendmentsByDealIdAndStatus(dealId, status))
+      .aggregate(aggregatePipelines.tfmAmendmentsByDealIdAndStatus(dealId, status))
       .map<Document>((doc) => doc.amendments as Document)
       .toArray();
   }
