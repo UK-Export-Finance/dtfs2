@@ -45,6 +45,8 @@ export class PortalFacilityAmendmentService {
 
     const { version, criteria } = await EligibilityCriteriaAmendmentsRepo.findLatestEligibilityCriteria(facilityType);
 
+    const updatedCriteria = criteria.map((criterion) => ({ ...criterion, answer: null }));
+
     const amendmentToInsert: PortalFacilityAmendment = {
       ...amendment,
       dealId: new ObjectId(dealId),
@@ -54,7 +56,7 @@ export class PortalFacilityAmendmentService {
       status: AMENDMENT_STATUS.IN_PROGRESS,
       createdAt: getUnixTimestampSeconds(new Date()),
       updatedAt: getUnixTimestampSeconds(new Date()),
-      eligibilityCriteria: { version, criteria },
+      eligibilityCriteria: { version, criteria: updatedCriteria },
       createdBy: {
         username: user.username,
         name: `${user.firstname} ${user.surname}`,

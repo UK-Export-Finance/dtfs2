@@ -38,7 +38,8 @@ export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
             id: z.number(),
             text: z.string(),
             textList: z.array(z.string()).optional(),
-            answer: z.boolean().optional(),
+            /* When eligibilityCriteria is updated through a patch request with user values, all answers are required */
+            answer: z.boolean(),
           }),
         ),
       })
@@ -65,6 +66,20 @@ export const PORTAL_FACILITY_AMENDMENT = PORTAL_FACILITY_AMENDMENT_USER_VALUES.m
         username: z.string(),
         name: z.string(),
         email: z.string().email(),
+      })
+      .optional(),
+    eligibilityCriteria: z
+      .object({
+        version: z.number(),
+        criteria: z.array(
+          z.object({
+            id: z.number(),
+            text: z.string(),
+            textList: z.array(z.string()).optional(),
+            /* When eligibilityCriteria is fetched from the database all the `answer` fields may be null: this is the case before the user has submitted their eligibility responses. */
+            answer: z.boolean().nullable(),
+          }),
+        ),
       })
       .optional(),
   }),

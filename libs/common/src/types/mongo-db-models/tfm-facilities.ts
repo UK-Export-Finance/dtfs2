@@ -124,7 +124,7 @@ export type AmendmentsEligibilityCriterion = {
   id: number;
   text: string;
   textList?: string[];
-  answer?: boolean;
+  answer: boolean | null;
 };
 
 /**
