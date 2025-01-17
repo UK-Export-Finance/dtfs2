@@ -1,6 +1,7 @@
+import { AmendmentsEligibilityCriterion } from '@ukef/dtfs2-common';
 import { validationErrorHandler } from '../../../server/utils/helpers';
 import pageRenderer from '../../pageRenderer';
-import { EligibilityCriterion, EligibilityViewModel } from '../../../server/types/view-models/amendments/eligibility-view-model.ts';
+import { EligibilityViewModel } from '../../../server/types/view-models/amendments/eligibility-view-model.ts';
 
 const page = 'partials/amendments/eligibility.njk';
 const render = pageRenderer(page);
@@ -8,7 +9,7 @@ const render = pageRenderer(page);
 describe(page, () => {
   const previousPage = 'previousPage';
   const cancelUrl = 'cancelUrl';
-  const criteria: EligibilityCriterion[] = [
+  const criteria: AmendmentsEligibilityCriterion[] = [
     { id: 1, text: 'Test first criteria', textList: ['criterion 1 bullet point 1', 'criterion 1 bullet point 2'] },
     { id: 2, text: 'Test second criteria' },
     { id: 3, text: 'Test third criteria', textList: ['criterion 3 bullet point 1', 'criterion 3 bullet point 2', 'criterion 3 bullet point 3'] },
@@ -103,7 +104,7 @@ describe(page, () => {
   });
 
   it('should render the radio boxes checked as per the passed in answers', () => {
-    const criteriaWithAnswers: EligibilityCriterion[] = [
+    const criteriaWithAnswers: AmendmentsEligibilityCriterion[] = [
       { id: 1, text: 'Test first criteria', answer: true },
       { id: 2, text: 'Test second criteria', answer: false },
       { id: 3, text: 'Test third criteria' },

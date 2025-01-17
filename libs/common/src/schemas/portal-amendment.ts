@@ -30,6 +30,19 @@ export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
     currency: z.enum(Object.values(CURRENCY) as [Currency] & Currency[]).optional(),
     ukefExposure: z.number().optional(),
     coveredPercentage: z.number().optional(),
+    eligibilityCriteria: z
+      .object({
+        version: z.number(),
+        criteria: z.array(
+          z.object({
+            id: z.number(),
+            text: z.string(),
+            textList: z.array(z.string()).optional(),
+            answer: z.boolean().optional(),
+          }),
+        ),
+      })
+      .optional(),
   })
   .strict();
 

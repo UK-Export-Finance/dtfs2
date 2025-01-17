@@ -120,11 +120,22 @@ export interface TfmFacilityAmendment extends BaseAmendment {
   };
 }
 
+export type AmendmentsEligibilityCriterion = {
+  id: number;
+  text: string;
+  textList?: string[];
+  answer?: boolean;
+};
+
 /**
  * Amendments created in Portal
  */
 export interface PortalFacilityAmendment extends BaseAmendment {
   type: typeof AMENDMENT_TYPES.PORTAL;
+  eligibilityCriteria?: {
+    version: number;
+    criteria: AmendmentsEligibilityCriterion[];
+  };
 }
 
 /**

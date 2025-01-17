@@ -11,6 +11,8 @@ import {
 import { ObjectId } from 'mongodb';
 import { findOneUser } from '../../v1/controllers/user/get-user.controller';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
+import { EligibilityCriteriaAmendmentsRepo } from '../../repositories/portal/eligibility-criteria-amendments.repo';
+import { findOneFacility } from '../../v1/controllers/portal/facility/get-facility.controller';
 
 export class PortalFacilityAmendmentService {
   /**
@@ -39,6 +41,10 @@ export class PortalFacilityAmendmentService {
       throw new InvalidAuditDetailsError(`Supplied auditDetails 'id' ${auditDetails.id.toString()} does not correspond to a valid user`);
     }
 
+    const { type: facilityType } = await findOneFacility(facilityId);
+
+    const { version, criteria } = await EligibilityCriteriaAmendmentsRepo.findLatestEligibilityCriteria(facilityType);
+
     const amendmentToInsert: PortalFacilityAmendment = {
       ...amendment,
       dealId: new ObjectId(dealId),
@@ -48,6 +54,7 @@ export class PortalFacilityAmendmentService {
       status: AMENDMENT_STATUS.IN_PROGRESS,
       createdAt: getUnixTimestampSeconds(new Date()),
       updatedAt: getUnixTimestampSeconds(new Date()),
+      eligibilityCriteria: { version, criteria },
       createdBy: {
         username: user.username,
         name: `${user.firstname} ${user.surname}`,
