@@ -42,7 +42,7 @@ describe('PUT /v1/banks/:bankId/fee-record-correction/:correctionId/transient-fo
     const aFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).build();
     utilisationReport.feeRecords = [aFeeRecord];
 
-    const aFeeRecordCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(aFeeRecord)
+    const aFeeRecordCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(aFeeRecord, false)
       .withId(correctionId)
       .withReasons([RECORD_CORRECTION_REASON.UTILISATION_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT, RECORD_CORRECTION_REASON.OTHER])
       .build();

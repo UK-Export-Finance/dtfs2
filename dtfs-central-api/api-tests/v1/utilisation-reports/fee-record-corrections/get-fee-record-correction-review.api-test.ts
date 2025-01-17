@@ -78,7 +78,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it(`should return '${HttpStatusCode.NotFound}' when no correction transient form data exists`, async () => {
     // Arrange
-    const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord).withId(correctionId).build();
+    const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false).withId(correctionId).build();
 
     await SqlDbHelper.saveNewEntry('FeeRecordCorrection', feeRecordCorrectionEntity);
 
@@ -91,7 +91,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it(`should return '${HttpStatusCode.NotFound}' when correction transient form data exists for the correction id but not for the given user`, async () => {
     // Arrange
-    const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord).withId(correctionId).build();
+    const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false).withId(correctionId).build();
 
     await SqlDbHelper.saveNewEntry('FeeRecordCorrection', feeRecordCorrectionEntity);
 
@@ -115,7 +115,7 @@ describe(`GET ${BASE_URL}`, () => {
     // Arrange
     const reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT];
     const errorSummary = 'Some additional PDC comments';
-    const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
+    const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false)
       .withId(correctionId)
       .withReasons(reasons)
       .withAdditionalInfo(errorSummary)
