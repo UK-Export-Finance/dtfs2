@@ -62,7 +62,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
 
     it(`should respond with a '${HttpStatusCode.Ok}' if the transient form data is saved successfully`, async () => {
       // Arrange
-      mockFindCorrection.mockResolvedValue(new FeeRecordCorrectionEntityMockBuilder().build());
+      mockFindCorrection.mockResolvedValue(FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).build());
       const expectedTransientFormDataEntity = FeeRecordCorrectionTransientFormDataEntity.create({
         userId,
         correctionId,
@@ -85,7 +85,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
 
     it('should call the correction repo to fetch the correction', async () => {
       // Arrange
-      mockFindCorrection.mockResolvedValue(new FeeRecordCorrectionEntityMockBuilder().build());
+      mockFindCorrection.mockResolvedValue(FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).build());
 
       // Act
       await putFeeRecordCorrectionTransientFormData(req, res);

@@ -55,7 +55,7 @@ describe(`PUT ${BASE_URL}`, () => {
 
     const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION).build();
 
-    const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord).withId(correctionId).withIsCompleted(false).build();
+    const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false).withId(correctionId).build();
 
     feeRecord.corrections = [correction];
     report.feeRecords = [feeRecord];

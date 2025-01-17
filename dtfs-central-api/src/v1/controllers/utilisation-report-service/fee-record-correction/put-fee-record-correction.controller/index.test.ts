@@ -81,7 +81,7 @@ describe('putFeeRecordCorrection', () => {
 
     const feeRecord = FeeRecordEntityMockBuilder.forReport(report).build();
 
-    const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord).withId(correctionId).build();
+    const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false).withId(correctionId).build();
 
     beforeEach(() => {
       mockFindCorrection.mockResolvedValue(correction);

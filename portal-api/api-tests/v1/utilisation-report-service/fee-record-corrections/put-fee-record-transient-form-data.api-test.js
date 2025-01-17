@@ -35,7 +35,7 @@ describe('PUT /v1/banks/:bankId/fee-record-correction/:correctionId/transient-fo
     const aFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).build();
     utilisationReport.feeRecords = [aFeeRecord];
 
-    const aFeeRecordCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(aFeeRecord).withId(correctionId).build();
+    const aFeeRecordCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(aFeeRecord, false).withId(correctionId).build();
 
     await SqlDbHelper.saveNewEntries('UtilisationReport', [utilisationReport]);
     await SqlDbHelper.saveNewEntries('FeeRecordCorrection', [aFeeRecordCorrection]);
