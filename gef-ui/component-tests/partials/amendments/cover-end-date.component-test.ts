@@ -5,7 +5,7 @@ const page = 'partials/amendments/cover-end-date.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
-  const coverEndDate = { day: '01', month: '2', year: '2024' };
+  const coverEndDate = { day: '01', month: '02', year: '2024' };
   const exporterName = 'exporterName';
   const previousPage = 'previousPage';
   const cancelUrl = 'cancelUrl';

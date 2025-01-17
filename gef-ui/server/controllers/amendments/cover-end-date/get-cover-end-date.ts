@@ -1,5 +1,5 @@
 import { CustomExpressRequest, DayMonthYearInput } from '@ukef/dtfs2-common';
-import { format } from 'date-fns';
+import { fromUnixTime } from 'date-fns';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { CoverEndDateViewModel } from '../../../types/view-models/amendments/cover-end-date-view-model';
@@ -7,6 +7,7 @@ import { asLoggedInUserSession } from '../../../utils/express-session';
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper';
 import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
+import { convertDateToDayMonthYearInput } from '../helpers/dates.helper.ts';
 
 export type GetCoverEndDateRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -47,11 +48,9 @@ export const getCoverEndDate = async (req: GetCoverEndDateRequest, res: Response
       return res.redirect(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE }));
     }
 
-    const coverEndDate: DayMonthYearInput | undefined = amendment.coverEndDate && {
-      day: format(amendment.coverEndDate, 'd'),
-      month: format(amendment.coverEndDate, 'M'),
-      year: format(amendment.coverEndDate, 'yyyy'),
-    };
+    const currentCoverEndDate: Date | undefined = (amendment.coverEndDate && fromUnixTime(amendment.coverEndDate * 1000)) || undefined;
+
+    const coverEndDate: DayMonthYearInput | undefined = currentCoverEndDate && convertDateToDayMonthYearInput(currentCoverEndDate);
 
     const viewModel: CoverEndDateViewModel = {
       exporterName: deal.exporter.companyName,

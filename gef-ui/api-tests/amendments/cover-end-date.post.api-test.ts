@@ -47,6 +47,7 @@ describe(`POST ${url}`, () => {
     jest.spyOn(api, 'getFacility').mockImplementation(mockGetFacility);
     jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
     jest.spyOn(api, 'updateAmendment').mockImplementation(mockUpdateAmendment);
+    jest.spyOn(console, 'error');
 
     mockGetFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
     mockGetApplication.mockResolvedValue(mockDeal);
@@ -162,6 +163,21 @@ describe(`POST ${url}`, () => {
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual('/not-found');
+    });
+
+    it('should not call console.error if the facility and amendment are valid', async () => {
+      // Arrange
+      const body = {
+        'cover-end-date-day': format(todayPlusTwoYears, 'd'),
+        'cover-end-date-month': format(todayPlusTwoYears, 'M'),
+        'cover-end-date-year': format(todayPlusTwoYears, 'yyyy'),
+      };
+
+      // Act
+      await postWithSessionCookie(body, sessionCookie);
+
+      // Assert
+      expect(console.error).not.toHaveBeenCalled();
     });
 
     it('should render cover end date page with errors if cover end date is invalid', async () => {

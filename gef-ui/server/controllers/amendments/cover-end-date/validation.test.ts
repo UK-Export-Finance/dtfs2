@@ -1,5 +1,5 @@
 import { applyStandardValidationAndParseDateInput, COVER_END_DATE_MAXIMUM_YEARS_IN_FUTURE } from '@ukef/dtfs2-common';
-import { add, startOfDay, getUnixTime } from 'date-fns';
+import { add, format, startOfDay, getUnixTime } from 'date-fns';
 import { validateAndParseCoverEndDate } from './validation';
 import { mapValidationError } from '../../../utils/map-validation-error';
 
@@ -35,7 +35,7 @@ describe('validateAndParseCoverEndDate', () => {
 
     // Act
     const result = validateAndParseCoverEndDate(
-      { day: coverEndDate.getDate().toString(), month: (coverEndDate.getMonth() + 1).toString(), year: coverEndDate.getFullYear().toString() },
+      { day: format(coverEndDate, 'd'), month: format(coverEndDate, 'M'), year: format(coverEndDate, 'yyyy') },
       coverStartDate,
     );
 
@@ -58,7 +58,7 @@ describe('validateAndParseCoverEndDate', () => {
 
     // Act
     const result = validateAndParseCoverEndDate(
-      { day: coverEndDate.getDate().toString(), month: (coverEndDate.getMonth() + 1).toString(), year: coverEndDate.getFullYear().toString() },
+      { day: format(coverEndDate, 'd'), month: format(coverEndDate, 'M'), year: format(coverEndDate, 'yyyy') },
       coverStartDate,
     );
 
@@ -81,7 +81,7 @@ describe('validateAndParseCoverEndDate', () => {
 
     // Act
     const result = validateAndParseCoverEndDate(
-      { day: coverEndDate.getDate().toString(), month: (coverEndDate.getMonth() + 1).toString(), year: coverEndDate.getFullYear().toString() },
+      { day: format(coverEndDate, 'd'), month: format(coverEndDate, 'M'), year: format(coverEndDate, 'yyyy') },
       coverStartDate,
     );
 

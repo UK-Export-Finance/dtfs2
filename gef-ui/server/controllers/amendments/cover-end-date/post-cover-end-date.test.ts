@@ -18,7 +18,7 @@ import {
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { validationErrorHandler } from '../../../utils/helpers';
-import { getNextPage } from '../helpers/navigation.helper';
+import { getNextPage, getAmendmentsUrl } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { ValidationError } from '../../../types/validation-error';
@@ -72,7 +72,6 @@ describe('postCoverEndDate', () => {
 
   beforeEach(() => {
     jest.resetAllMocks();
-    jest.restoreAllMocks();
 
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
     jest.spyOn(console, 'error');
@@ -144,7 +143,7 @@ describe('postCoverEndDate', () => {
     // Assert
     const expectedRenderData: CoverEndDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
-      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage,
       errors: validationErrorHandler(
         (

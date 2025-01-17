@@ -3,7 +3,7 @@ import { Response } from 'express';
 import * as api from '../../../services/api';
 import { CoverEndDateViewModel } from '../../../types/view-models/amendments/cover-end-date-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
-import { getNextPage } from '../helpers/navigation.helper';
+import { getNextPage, getAmendmentsUrl } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { validateAndParseCoverEndDate } from './validation';
 import { getCoverStartDateOrStartOfToday } from '../../../utils/get-cover-start-date-or-start-of-today';
@@ -49,7 +49,7 @@ export const postCoverEndDate = async (req: PostCoverEndDateRequest, res: Respon
     if ('errors' in validationErrorsOrValue) {
       const viewModel: CoverEndDateViewModel = {
         exporterName: deal.exporter.companyName,
-        cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+        cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
         previousPage,
         coverEndDate: coverEndDateDayMonthYear,
         errors: validationErrorHandler(validationErrorsOrValue.errors),
