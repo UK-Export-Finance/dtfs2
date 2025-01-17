@@ -338,9 +338,9 @@ describe('validate-record-correction-transient-form-values', () => {
       const reasons = [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT];
 
       // Act & Assert
-      await expect(validateRecordCorrectionTransientFormValues(formValues, reasons)).rejects.toThrow(
-        `Unexpected form value "${CURRENCY.USD}" for reason "${RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT}" not in the correction request reasons.`,
-      );
+      const expectedExceptionMessage = `Unexpected form value "${CURRENCY.USD}" for reason "${RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT}" not in the correction request reasons.`;
+
+      await expect(validateRecordCorrectionTransientFormValues(formValues, reasons)).rejects.toThrow(expectedExceptionMessage);
     });
 
     it('should throw error if form value is invalid for an expected reason', async () => {
@@ -448,7 +448,9 @@ describe('validate-record-correction-transient-form-values', () => {
       const reasons = ['INVALID_REASON' as RecordCorrectionReason];
 
       // Act & Assert
-      await expect(validateRecordCorrectionTransientFormValues(formValues, reasons)).rejects.toThrow('Invalid record correction reason: INVALID_REASON');
+      const expectedExceptionMessage = 'Invalid record correction reason: INVALID_REASON';
+
+      await expect(validateRecordCorrectionTransientFormValues(formValues, reasons)).rejects.toThrow(expectedExceptionMessage);
     });
   });
 });
