@@ -7,7 +7,7 @@ import { IsoDateTimeStamp, OneIndexedMonth, UnixTimestampSeconds } from '../type
  *
  * @returns {Date} The current date and time.
  */
-const now = (): Date => new Date();
+export const now = (): Date => new Date();
 
 /**
  * Returns the current date and time as a UTC ISO string.
