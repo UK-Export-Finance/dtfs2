@@ -68,8 +68,8 @@ context('Amendments - change facility value journey - unhappy path', () => {
     whatDoYouNeedToChange.errorSummary().should('be.visible');
     whatDoYouNeedToChange.errorSummary().contains('Select if you need to change the facility cover end date, value or both');
 
-    whatDoYouNeedToChange.selectionErrorMessage().should('be.visible');
-    whatDoYouNeedToChange.selectionErrorMessage().contains('Select if you need to change the facility cover end date, value or both');
+    whatDoYouNeedToChange.amendmentOptionsInlineError().should('be.visible');
+    whatDoYouNeedToChange.amendmentOptionsInlineError().contains('Select if you need to change the facility cover end date, value or both');
   });
 
   it('navigate to facility value page', () => {
