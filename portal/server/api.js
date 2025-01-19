@@ -1054,6 +1054,23 @@ const getFeeRecordCorrectionTransientFormData = async (token, bankId, id) => {
 };
 
 /**
+ * Deletes a fee record correction transient form data for the user by correction id.
+ * @param {string} token - The user token
+ * @param {string} bankId - The bank id
+ * @param {string} id - The correction id
+ */
+const deleteFeeRecordCorrectionTransientFormData = async (token, bankId, id) => {
+  await axios({
+    method: 'delete',
+    url: `${PORTAL_API_URL}/v1/banks/${bankId}/fee-record-correction/${id}/transient-form-data`,
+    headers: {
+      Authorization: token,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+    },
+  });
+};
+
+/**
  * Gets a fee record correction by id.
  * @param {string} token - The user token
  * @param {string} bankId - The bank id
@@ -1185,5 +1202,6 @@ module.exports = {
   getFeeRecordCorrection,
   putFeeRecordCorrection,
   getFeeRecordCorrectionReview,
+  deleteFeeRecordCorrectionTransientFormData,
   saveFeeRecordCorrection,
 };

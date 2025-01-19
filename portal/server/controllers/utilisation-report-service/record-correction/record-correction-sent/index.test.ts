@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { aPortalSessionBank, aPortalSessionUser, getFormattedReportPeriodWithLongMonth, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { getRecordCorrectionSent } from '..';
-import { RecordCorrectionSentViewModel } from '../../../../types/view-models/record-correction/record-correction-confirmation';
+import { RecordCorrectionSentViewModel } from '../../../../types/view-models/record-correction/record-correction-sent';
 import { LoggedInUserSession } from '../../../../helpers/express-session';
 
 console.error = jest.fn();

@@ -1,0 +1,16 @@
+{% macro render(id, text, textList) %}
+
+  <p class="govuk-!-margin-bottom-0 govuk-!-margin-top-0">{{ id }}. {{ text }}</p>
+
+  {% if textList %}
+    <div class="lower-roman-with-parens govuk-!-margin-bottom-2">
+      <ol type="i" class="govuk-!-margin-bottom-0 govuk-!-margin-top-1">
+        {% for item in textList %}
+          <li>{{ item }}</li>
+        {% endfor %}
+      </ol>
+    </div>
+
+  {% endif %}
+
+{% endmacro %}

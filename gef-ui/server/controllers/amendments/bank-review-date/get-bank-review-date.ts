@@ -4,7 +4,7 @@ import * as api from '../../../services/api';
 import { BankReviewDateViewModel } from '../../../types/view-models/amendments/bank-review-date-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper';
-import { getPreviousPage } from '../helpers/navigation.helper';
+import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { convertDateToDayMonthYearInput } from '../helpers/dates.helper.ts';
 
@@ -60,7 +60,7 @@ export const getBankReviewDate = async (req: GetBankReviewDateRequest, res: Resp
 
     const viewModel: BankReviewDateViewModel = {
       exporterName: deal.exporter.companyName,
-      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE, amendment),
       bankReviewDate,
     };

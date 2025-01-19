@@ -1,0 +1,118 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% import '../../_macros/amendments/eligibility-criterion.njk' as eligibilityCriterion %}
+
+{% block pageTitle -%}
+  Eligibility
+{%- endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        "data-cy": "error-summary"
+      },
+      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: previousPage,
+    attributes: {
+      "data-cy": "back-link"
+    }
+  }) }}
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-three-quarters">
+      <form method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="previousPage" value="{{ previousPage }}">
+
+        <header>
+          <span class="govuk-caption-l" data-cy="heading-caption">
+            {{ exporterName }}
+          </span>
+
+          <h1 class="govuk-label-wrapper" data-cy="page-heading">
+            <label class="govuk-label govuk-label--xl govuk-!-padding-bottom-3" for="eligibility">
+              Eligibility
+            </label>
+          </h1>
+        </header>
+
+        {% for criterion in criteria %}
+          <span data-cy= "radio-wrapper-{{ criterion.id }}">
+            {{ govukRadios({
+              classes: "govuk-radios--inline govuk-!-margin-top-0",
+              idPrefix: criterion.id,
+              name: criterion.id,
+              fieldset: {
+                legend: {
+                  html: eligibilityCriterion.render(criterion.id, criterion.text, criterion.textList)
+                },
+                attributes: { 'aria-label': criterion.text,  'data-cy': 'description-criterion-' + criterion.id }
+              },
+              attributes: {
+                'data-cy': 'radios-criterion-' + criterion.id
+              },
+              errorMessage: errors and errors.fieldErrors[criterion.id] and  {
+                text: errors.fieldErrors[criterion.id].text,
+                attributes: {
+                  'data-cy': 'inline-error-criterion-' + criterion.id
+                }
+              },
+              items: [
+                {
+                  value: "true",
+                  text: "True",
+                  checked: criterion.answer === true,
+                  attributes: {
+                    'data-cy': 'true-radio-criterion-' + criterion.id,
+                    'aria-label': 'Eligibility criterion, ' + criterion.id + ', ' + criterion.text + ', true'
+                  }
+                },
+                {
+                  value: "false",
+                  text: "False",
+                  checked: criterion.answer === false,
+                  attributes: {
+                    'data-cy': 'false-radio-criterion-' + criterion.id,
+                    'aria-label': 'Eligibility criterion, ' + criterion.id + ', ' + criterion.text + ', false'
+                  }
+                }
+              ]
+            }) }}
+          </span>
+        {% endfor %}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              "data-cy": "continue-button"
+            }
+          }) }}
+
+          <a href="{{ cancelUrl }}"  data-cy="cancel-link" class="govuk-link">Cancel</a>
+        </div>
+
+        {{ govukDetails({
+          summaryText: "Help with declarations",
+          text: 'Read the Master Guarantee Agreement (MGA) definitions and interpretation document for terminology used in the declarations.',
+          attributes: {
+            'data-cy': 'help-with-declarations'
+          }
+        }) }}
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

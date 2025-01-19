@@ -9,7 +9,7 @@ import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { getUnixTime } from 'date-fns';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
 import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
 import { PortalFacilityAmendmentService } from './facility-amendment.service';
 import { aPortalUser } from '../../../test-helpers';
@@ -86,7 +86,7 @@ describe('PortalFacilityAmendmentService', () => {
         facilityId: new ObjectId(facilityId),
         amendmentId: expect.any(ObjectId) as ObjectId,
         type: AMENDMENT_TYPES.PORTAL,
-        status: AMENDMENT_STATUS.IN_PROGRESS,
+        status: PORTAL_AMENDMENT_STATUS.DRAFT,
         createdAt: getUnixTime(new Date()),
         updatedAt: getUnixTime(new Date()),
         createdBy: {
@@ -116,7 +116,7 @@ describe('PortalFacilityAmendmentService', () => {
         facilityId: new ObjectId(facilityId),
         amendmentId: expect.any(ObjectId) as ObjectId,
         type: AMENDMENT_TYPES.PORTAL,
-        status: AMENDMENT_STATUS.IN_PROGRESS,
+        status: PORTAL_AMENDMENT_STATUS.DRAFT,
         createdAt: getUnixTime(new Date()),
         updatedAt: getUnixTime(new Date()),
         createdBy: {
