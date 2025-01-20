@@ -9,6 +9,28 @@ import {
 } from './get-record-correction-transient-form-validation-error';
 
 /**
+ * Gets the form field key associated with a specific record correction reason.
+ * @param reason - The record correction reason to get the form field key for.
+ * @returns The form field key corresponding to the specified reason.
+ * @throws Error if an invalid record correction reason is provided.
+ */
+export const getKeyForReason = (reason: RecordCorrectionReason): keyof RecordCorrectionFormValues => {
+  switch (reason) {
+    case RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT:
+      return 'facilityId';
+    case RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT:
+      return 'reportedCurrency';
+    case RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT:
+      return 'reportedFee';
+    case RECORD_CORRECTION_REASON.UTILISATION_INCORRECT:
+      return 'utilisation';
+    case RECORD_CORRECTION_REASON.OTHER:
+      return 'additionalComments';
+    default:
+      throw new Error(`Invalid record correction reason: ${reason}`);
+  }
+};
+/**
  * Gets the form value associated with a specific record correction reason.
  * @param formValues - The form values containing the correction data.
  * @param reason - The record correction reason to get the form value for.
@@ -16,41 +38,38 @@ import {
  * @throws Error if an invalid record correction reason is provided.
  */
 export const getFormValueForReason = (formValues: RecordCorrectionFormValues, reason: RecordCorrectionReason): string | undefined => {
-  switch (reason) {
-    case RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT:
-      return formValues.facilityId;
-    case RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT:
-      return formValues.reportedCurrency;
-    case RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT:
-      return formValues.reportedFee;
-    case RECORD_CORRECTION_REASON.UTILISATION_INCORRECT:
-      return formValues.utilisation;
-    case RECORD_CORRECTION_REASON.OTHER:
-      return formValues.additionalComments;
-    default:
-      throw new Error(`Invalid record correction reason: ${reason}`);
-  }
+  const reasonKey = getKeyForReason(reason);
+
+  return formValues[reasonKey];
 };
 
 /**
- * Validates that there are no form values provided for reasons that are not in the correction request.
+ * Array of form field keys that can be validated against correction reasons.
  *
- * Note that the "additionalComments" field is required when {@link RECORD_CORRECTION_REASON.OTHER} is
- * one of the reasons, and optional when {@link RECORD_CORRECTION_REASON.OTHER} is not one of the
- * reasons. It is therefore not included in the "unexpected reasons" check as it can be provided
+ * Note that the "additionalComments" field is excluded as it can be provided
+ * regardless of the correction reasons.
+ */
+const formFieldKeysWithoutAdditionalComments: (keyof RecordCorrectionFormValues)[] = ['utilisation', 'facilityId', 'reportedCurrency', 'reportedFee'];
+
+/**
+ * Validates that there are no form values provided for reasons that are not
+ * in the correction request.
+ *
+ * Note that the "additionalComments" field is excluded as it can be provided
  * regardless of the correction reasons.
  * @param formValues - The form values to validate.
  * @param reasons - The reasons for the record correction that determine which form values are expected.
  * @throws Error if there are any form values provided for reasons not in the correction request.
  */
 export const validateNoUnexpectedFormValues = (formValues: RecordCorrectionFormValues, reasons: RecordCorrectionReason[]) => {
-  const unexpectedReasons = difference(Object.values(RECORD_CORRECTION_REASON), [...reasons, RECORD_CORRECTION_REASON.OTHER]);
+  const requiredFormFieldKeys = reasons.map((reason) => getKeyForReason(reason));
+  const unexpectedFormFieldKeys = difference(formFieldKeysWithoutAdditionalComments, requiredFormFieldKeys);
 
-  unexpectedReasons.forEach((reason) => {
-    const reasonFormValue = getFormValueForReason(formValues, reason);
+  unexpectedFormFieldKeys.forEach((formFieldKey) => {
+    const formFieldValue = formValues[formFieldKey];
 
-    if (reasonFormValue) {
-      throw new Error(`Unexpected form value "${reasonFormValue}" for reason "${reason}" not in the correction request reasons.`);
+    if (formFieldValue) {
+      throw new Error(`Expected form field "${formFieldKey}" to be undefined as it does not have an associated reason in the correction request.`);
     }
   });
 };

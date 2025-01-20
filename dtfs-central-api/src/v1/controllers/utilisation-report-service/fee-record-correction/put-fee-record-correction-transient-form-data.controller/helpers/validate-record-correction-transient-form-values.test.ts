@@ -1,6 +1,7 @@
 import { CURRENCY, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import {
   getFormValueForReason,
+  getKeyForReason,
   getValidationErrorsForRequiredFormValues,
   hasValidationErrors,
   validateNoUnexpectedFormValues,
@@ -9,6 +10,71 @@ import {
 import { TfmFacilitiesRepo } from '../../../../../../repositories/tfm-facilities-repo';
 
 describe('validate-record-correction-transient-form-values', () => {
+  describe('getKeyForReason', () => {
+    it(`should return "facilityId" when reason is ${RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT}`, () => {
+      // Arrange
+      const reason = RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT;
+
+      // Act
+      const formFieldKey = getKeyForReason(reason);
+
+      // Assert
+      expect(formFieldKey).toEqual('facilityId');
+    });
+
+    it(`should return "reportedCurrency" when reason is ${RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT}`, () => {
+      // Arrange
+      const reason = RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT;
+
+      // Act
+      const formFieldKey = getKeyForReason(reason);
+
+      // Assert
+      expect(formFieldKey).toEqual('reportedCurrency');
+    });
+
+    it(`should return "reportedFee" when reason is ${RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT}`, () => {
+      // Arrange
+      const reason = RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT;
+
+      // Act
+      const formFieldKey = getKeyForReason(reason);
+
+      // Assert
+      expect(formFieldKey).toEqual('reportedFee');
+    });
+
+    it(`should return "utilisation" when reason is ${RECORD_CORRECTION_REASON.UTILISATION_INCORRECT}`, () => {
+      // Arrange
+      const reason = RECORD_CORRECTION_REASON.UTILISATION_INCORRECT;
+
+      // Act
+      const formFieldKey = getKeyForReason(reason);
+
+      // Assert
+      expect(formFieldKey).toEqual('utilisation');
+    });
+
+    it(`should return "additionalComments" when reason is ${RECORD_CORRECTION_REASON.OTHER}`, () => {
+      // Arrange
+      const reason = RECORD_CORRECTION_REASON.OTHER;
+
+      // Act
+      const formFieldKey = getKeyForReason(reason);
+
+      // Assert
+      expect(formFieldKey).toEqual('additionalComments');
+    });
+
+    it('should throw error for invalid reason', () => {
+      // Arrange
+      const reason = 'INVALID_REASON' as RecordCorrectionReason;
+
+      // Act & Assert
+      expect(() => getKeyForReason(reason)).toThrow('Invalid record correction reason: INVALID_REASON');
+    });
+  });
+
   describe('getFormValueForReason', () => {
     it(`should return facilityId when reason is ${RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT}`, () => {
       // Arrange
@@ -108,7 +174,7 @@ describe('validate-record-correction-transient-form-values', () => {
 
       // Act & Assert
       expect(() => validateNoUnexpectedFormValues(formValues, reasons)).toThrow(
-        `Unexpected form value "500.00" for reason "${RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT}" not in the correction request reasons.`,
+        `Expected form field "reportedFee" to be undefined as it does not have an associated reason in the correction request.`,
       );
     });
 
@@ -338,7 +404,7 @@ describe('validate-record-correction-transient-form-values', () => {
       const reasons = [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT];
 
       // Act & Assert
-      const expectedExceptionMessage = `Unexpected form value "${CURRENCY.USD}" for reason "${RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT}" not in the correction request reasons.`;
+      const expectedExceptionMessage = `Expected form field "reportedCurrency" to be undefined as it does not have an associated reason in the correction request.`;
 
       await expect(validateRecordCorrectionTransientFormValues(formValues, reasons)).rejects.toThrow(expectedExceptionMessage);
     });
