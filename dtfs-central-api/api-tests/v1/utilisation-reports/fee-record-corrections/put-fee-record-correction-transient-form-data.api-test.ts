@@ -20,7 +20,6 @@ import { PutFeeRecordCorrectionTransientFormDataPayload } from '../../../../src/
 import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
 import { mongoDbClient } from '../../../../src/drivers/db-client';
 import { CustomErrorResponse } from '../../../helpers/custom-error-response';
-import { validateRecordCorrectionTransientFormValues } from '../../../../src/v1/controllers/utilisation-report-service/fee-record-correction/put-fee-record-correction-transient-form-data.controller/helpers';
 
 console.error = jest.fn();
 
@@ -151,10 +150,10 @@ describe(`PUT ${BASE_URL}`, () => {
       // Arrange
       const formData = {
         utilisation: 'invalid-utilisation',
-        facilityId: '77777777',
+        facilityId: '123',
         reportedCurrency: 'invalid-currency',
         reportedFee: 'invalid-reported-fee',
-        additionalComments: '',
+        additionalComments: ' ',
       };
 
       const requestBody = {
@@ -168,7 +167,13 @@ describe(`PUT ${BASE_URL}`, () => {
         .to(replaceUrlParameterPlaceholders(BASE_URL, { bankId, correctionId }))) as PutFeeRecordCorrectionTransientFormDataResponse;
 
       // Assert
-      const { errors: expectedBody } = await validateRecordCorrectionTransientFormValues(formData, correctionReasons);
+      const expectedBody: RecordCorrectionFormValueValidationErrors = {
+        facilityIdErrorMessage: 'You must enter a facility ID between 8 and 10 digits using the numbers 0-9 only',
+        reportedCurrencyErrorMessage: 'You must select a currency',
+        reportedFeeErrorMessage: 'You must enter the reported fee in a valid format',
+        utilisationErrorMessage: 'You must enter the utilisation in a valid format',
+        additionalCommentsErrorMessage: 'You must enter a comment',
+      };
 
       expect(status).toEqual(HttpStatusCode.Ok);
 
