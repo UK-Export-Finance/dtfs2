@@ -1,4 +1,4 @@
-import { RecordCorrectionReason, MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT } from '@ukef/dtfs2-common';
+import { RecordCorrectionReason, MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, isMonetaryAmountValid, isCurrencyValid } from '@ukef/dtfs2-common';
 import { UKEF_FACILITY_ID_REGEX } from '../../../../../../constants/regex';
 import { TfmFacilitiesRepo } from '../../../../../../repositories/tfm-facilities-repo';
 
@@ -19,6 +19,51 @@ export const getFacilityIdValidationError = async (facilityIdValue?: string): Pr
 
   if (!ukefGefFacilityExists) {
     return 'The facility ID entered has not been recognised, please enter a facility ID for a General Export Facility';
+  }
+
+  return undefined;
+};
+
+// TODO FN-3688: Add unit tests
+/**
+ * Validates a reported currency value.
+ * @param reportedCurrencyValue - The reported currency value to validate.
+ * @returns An error message if validation fails, undefined otherwise.
+ * The error message will indicate if the reported currency is missing or invalid.
+ */
+export const getReportedCurrencyValidationError = (reportedCurrencyValue?: string): string | undefined => {
+  if (!isCurrencyValid(reportedCurrencyValue)) {
+    return 'You must select a currency';
+  }
+
+  return undefined;
+};
+
+// TODO FN-3688: Add unit tests
+/**
+ * Validates a reported fee value.
+ * @param reportedFeeValue - The reported fee value to validate.
+ * @returns An error message if validation fails, undefined otherwise.
+ * The error message will indicate if the reported fee amount is missing or in an invalid format.
+ */
+export const getReportedFeeValidationError = (reportedFeeValue?: string): string | undefined => {
+  if (!isMonetaryAmountValid(reportedFeeValue)) {
+    return 'You must enter the reported fee in a valid format';
+  }
+
+  return undefined;
+};
+
+// TODO FN-3688: Add unit tests
+/**
+ * Validates a utilisation value.
+ * @param utilisationValue - The utilisation value to validate.
+ * @returns An error message if validation fails, undefined otherwise.
+ * The error message will indicate if the utilisation is missing or in an invalid format.
+ */
+export const getUtilisationValidationError = (utilisationValue?: string): string | undefined => {
+  if (!isMonetaryAmountValid(utilisationValue)) {
+    return 'You must enter the utilisation in a valid format';
   }
 
   return undefined;

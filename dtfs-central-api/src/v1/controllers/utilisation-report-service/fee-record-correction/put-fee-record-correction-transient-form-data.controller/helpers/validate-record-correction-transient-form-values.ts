@@ -1,13 +1,12 @@
-import {
-  isCurrencyValid,
-  isMonetaryAmountValid,
-  RECORD_CORRECTION_REASON,
-  RecordCorrectionFormValues,
-  RecordCorrectionFormValueValidationErrors,
-  RecordCorrectionReason,
-} from '@ukef/dtfs2-common';
+import { RECORD_CORRECTION_REASON, RecordCorrectionFormValues, RecordCorrectionFormValueValidationErrors, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
-import { getAdditionalCommentsValidationError, getFacilityIdValidationError } from './get-record-correction-transient-form-validation-error';
+import {
+  getAdditionalCommentsValidationError,
+  getFacilityIdValidationError,
+  getReportedCurrencyValidationError,
+  getReportedFeeValidationError,
+  getUtilisationValidationError,
+} from './get-record-correction-transient-form-validation-error';
 
 /**
  * Gets the form value associated with a specific record correction reason.
@@ -44,7 +43,7 @@ export const getFormValueForReason = (formValues: RecordCorrectionFormValues, re
  * @param reasons - The reasons for the record correction that determine which form values are expected.
  * @throws Error if there are any form values provided for reasons not in the correction request.
  */
-export const validateNoUnexpectedReasonValues = (formValues: RecordCorrectionFormValues, reasons: RecordCorrectionReason[]) => {
+export const validateNoUnexpectedFormValues = (formValues: RecordCorrectionFormValues, reasons: RecordCorrectionReason[]) => {
   const unexpectedReasons = difference(Object.values(RECORD_CORRECTION_REASON), [...reasons, RECORD_CORRECTION_REASON.OTHER]);
 
   unexpectedReasons.forEach((reason) => {
@@ -71,11 +70,13 @@ type ValidatorMap = Record<
  */
 const getValidatorMap = (reasons: RecordCorrectionReason[]): ValidatorMap => {
   const facilityIdValidator = async (value?: string) => ({ facilityIdErrorMessage: await getFacilityIdValidationError(value) });
-  const reportedCurrencyValidator = (value?: string) => (!isCurrencyValid(value) ? { reportedCurrencyErrorMessage: 'You must select a currency' } : {});
-  const reportedFeeValidator = (value?: string) =>
-    !isMonetaryAmountValid(value) ? { reportedFeeErrorMessage: 'You must enter the reported fee in a valid format' } : {};
-  const utilisationValidator = (value?: string) =>
-    !isMonetaryAmountValid(value) ? { utilisationErrorMessage: 'You must enter the utilisation in a valid format' } : {};
+
+  const reportedCurrencyValidator = (value?: string) => ({ reportedCurrencyErrorMessage: getReportedCurrencyValidationError(value) });
+
+  const reportedFeeValidator = (value?: string) => ({ reportedFeeErrorMessage: getReportedFeeValidationError(value) });
+
+  const utilisationValidator = (value?: string) => ({ utilisationErrorMessage: getUtilisationValidationError(value) });
+
   const otherReasonValidator = (value?: string) => ({ additionalCommentsErrorMessage: getAdditionalCommentsValidationError(reasons, value) });
 
   return {
@@ -143,7 +144,7 @@ export const validateRecordCorrectionTransientFormValues = async (
   formValues: RecordCorrectionFormValues,
   reasons: RecordCorrectionReason[],
 ): Promise<{ formHasErrors: boolean; errors: RecordCorrectionFormValueValidationErrors }> => {
-  validateNoUnexpectedReasonValues(formValues, reasons);
+  validateNoUnexpectedFormValues(formValues, reasons);
 
   const errors = await getValidationErrorsForRequiredFormValues(formValues, reasons);
 

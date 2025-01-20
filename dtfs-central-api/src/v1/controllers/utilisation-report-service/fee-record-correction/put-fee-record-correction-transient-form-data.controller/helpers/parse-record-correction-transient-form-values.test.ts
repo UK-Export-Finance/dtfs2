@@ -47,7 +47,7 @@ describe('parse-record-correction-transient-form-values', () => {
       expect(parsedFormValues).toEqual(expectedParsedFormValues);
     });
 
-    it('should convert string monetary values to numbers', () => {
+    it('should convert monetary values with thousands separators to numbers', () => {
       // Arrange
       const formValues = {
         utilisation: '123,456.78',

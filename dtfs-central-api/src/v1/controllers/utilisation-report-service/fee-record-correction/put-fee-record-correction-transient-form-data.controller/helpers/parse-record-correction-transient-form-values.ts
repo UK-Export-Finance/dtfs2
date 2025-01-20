@@ -7,9 +7,13 @@ import { getMonetaryValueAsNumber, isCurrencyValid, RecordCorrectionFormValues, 
  */
 export const parseValidatedRecordCorrectionTransientFormValues = (formValues: RecordCorrectionFormValues): RecordCorrectionTransientFormData => {
   const utilisation = formValues.utilisation ? getMonetaryValueAsNumber(formValues.utilisation) : undefined;
+
   const reportedCurrency = isCurrencyValid(formValues.reportedCurrency) ? formValues.reportedCurrency : undefined;
+
   const reportedFee = formValues.reportedFee ? getMonetaryValueAsNumber(formValues.reportedFee) : undefined;
+
   const additionalComments = formValues.additionalComments?.trim();
+
   const { facilityId } = formValues;
 
   return {

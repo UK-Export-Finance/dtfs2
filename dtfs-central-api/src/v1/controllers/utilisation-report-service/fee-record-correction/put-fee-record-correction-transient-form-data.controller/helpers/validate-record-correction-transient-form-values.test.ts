@@ -3,7 +3,7 @@ import {
   getFormValueForReason,
   getValidationErrorsForRequiredFormValues,
   hasValidationErrors,
-  validateNoUnexpectedReasonValues,
+  validateNoUnexpectedFormValues,
   validateRecordCorrectionTransientFormValues,
 } from './validate-record-correction-transient-form-values';
 import { TfmFacilitiesRepo } from '../../../../../../repositories/tfm-facilities-repo';
@@ -97,7 +97,7 @@ describe('validate-record-correction-transient-form-values', () => {
     });
   });
 
-  describe('validateNoUnexpectedReasonValues', () => {
+  describe('validateNoUnexpectedFormValues', () => {
     it('should throw error when form value is present for an unexpected reason', () => {
       // Arrange
       const formValues = {
@@ -107,7 +107,7 @@ describe('validate-record-correction-transient-form-values', () => {
       const reasons = [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT];
 
       // Act & Assert
-      expect(() => validateNoUnexpectedReasonValues(formValues, reasons)).toThrow(
+      expect(() => validateNoUnexpectedFormValues(formValues, reasons)).toThrow(
         `Unexpected form value "500.00" for reason "${RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT}" not in the correction request reasons.`,
       );
     });
@@ -121,7 +121,7 @@ describe('validate-record-correction-transient-form-values', () => {
       const reasons = [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT];
 
       // Act & Assert
-      expect(() => validateNoUnexpectedReasonValues(formValues, reasons)).not.toThrow();
+      expect(() => validateNoUnexpectedFormValues(formValues, reasons)).not.toThrow();
     });
 
     it('should not throw error when there are form values for unexpected reasons are set to "undefined"', () => {
@@ -133,7 +133,7 @@ describe('validate-record-correction-transient-form-values', () => {
       const reasons = [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT];
 
       // Act & Assert
-      expect(() => validateNoUnexpectedReasonValues(formValues, reasons)).not.toThrow();
+      expect(() => validateNoUnexpectedFormValues(formValues, reasons)).not.toThrow();
     });
 
     it(`should not throw error when an "additionalComments" form value is provided and "${RECORD_CORRECTION_REASON.OTHER}" is not in the correction reasons`, () => {
@@ -145,7 +145,7 @@ describe('validate-record-correction-transient-form-values', () => {
       const reasons = [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT];
 
       // Act & Assert
-      expect(() => validateNoUnexpectedReasonValues(formValues, reasons)).not.toThrow();
+      expect(() => validateNoUnexpectedFormValues(formValues, reasons)).not.toThrow();
     });
   });
 
