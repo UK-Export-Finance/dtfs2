@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { IsNull, Not } from 'typeorm';
 import {
-  AMENDMENT_STATUS,
+  TFM_AMENDMENT_STATUS,
   convertMillisecondsToSeconds,
   FacilityUtilisationDataEntity,
   FacilityUtilisationDataEntityMockBuilder,
@@ -399,7 +399,7 @@ describe(`POST ${BASE_URL}`, () => {
         {
           ...aTfmFacilityAmendment(),
           value: 350000,
-          status: AMENDMENT_STATUS.COMPLETED,
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
           // Effective dates are stored in unix epoch time in seconds not milliseconds.
           effectiveDate: convertMillisecondsToSeconds(dateAfterReportPeriodEnd.getTime()),
           // 365 days after report period end
@@ -408,7 +408,7 @@ describe(`POST ${BASE_URL}`, () => {
         {
           ...aTfmFacilityAmendment(),
           value: 300000,
-          status: AMENDMENT_STATUS.COMPLETED,
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
           // Effective dates are stored in unix epoch time in seconds not milliseconds.
           effectiveDate: convertMillisecondsToSeconds(dateWithinReportPeriod.getTime()),
           // 730 days after report period end

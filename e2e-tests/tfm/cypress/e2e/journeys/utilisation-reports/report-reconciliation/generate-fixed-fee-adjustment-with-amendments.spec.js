@@ -4,7 +4,7 @@ import {
   UtilisationReportEntityMockBuilder,
   FacilityUtilisationDataEntityMockBuilder,
   PaymentEntityMockBuilder,
-  AMENDMENT_STATUS,
+  TFM_AMENDMENT_STATUS,
   CURRENCY,
   FEE_RECORD_STATUS,
   convertMillisecondsToSeconds,
@@ -65,21 +65,21 @@ context.skip('Fixed fee calculation uses effective amendment to cover end date a
     },
     amendments: [
       {
-        status: AMENDMENT_STATUS.COMPLETED,
+        status: TFM_AMENDMENT_STATUS.COMPLETED,
         // Effective date is stored as unix epoch time in seconds not milliseconds.
         effectiveDate: convertMillisecondsToSeconds(dateAfterReportPeriodEnd.getTime()),
         // 365 days after report period end
         coverEndDate: new Date('2025-03-01').getTime(),
       },
       {
-        status: AMENDMENT_STATUS.IN_PROGRESS,
+        status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
         // Effective date is stored as unix epoch time in seconds not milliseconds.
         effectiveDate: convertMillisecondsToSeconds(dateBeforeReportPeriodEnd.getTime()),
         // 370 days after report period end
         coverEndDate: new Date('2025-03-06').getTime(),
       },
       {
-        status: AMENDMENT_STATUS.COMPLETED,
+        status: TFM_AMENDMENT_STATUS.COMPLETED,
         // Effective date is stored as unix epoch time in seconds not milliseconds.
         effectiveDate: convertMillisecondsToSeconds(dateBeforeDateBeforeReportPeriodEnd.getTime()),
         // 730 days after report period end
