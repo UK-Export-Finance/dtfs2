@@ -10,10 +10,14 @@ require('dotenv').config();
 
 const { TFM_API_URL, TFM_API_KEY } = process.env;
 
-const generateHeaders = (token) => ({
-  Authorization: token,
+const generateHeaders = () => ({
   [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   'x-api-key': TFM_API_KEY,
+});
+
+const generateHeadersWithToken = (token) => ({
+  Authorization: token,
+  ...generateHeaders(),
 });
 
 /**
@@ -44,7 +48,7 @@ const getDeal = async (id, token, tasksFilters = {}, activityFilters = {}) => {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/deals/${id}`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
       params: queryParams,
     });
     return response?.data;
@@ -66,7 +70,7 @@ const getFacilities = async (queryParams, token) => {
   const response = await axios({
     method: 'get',
     url: `${TFM_API_URL}/v1/facilities`,
-    headers: generateHeaders(token),
+    headers: generateHeadersWithToken(token),
     params: queryParams,
   });
   const { facilities, pagination } = response.data;
@@ -93,7 +97,7 @@ const getDeals = async (queryParams, token) => {
   const response = await axios({
     method: 'get',
     url: `${TFM_API_URL}/v1/deals`,
-    headers: generateHeaders(token),
+    headers: generateHeadersWithToken(token),
     params: queryParams,
   });
   const { deals, pagination } = response.data;
@@ -120,7 +124,7 @@ const getFacility = async (id, token) => {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/facilities/${id}`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
     });
     return response.data.facility;
   } catch (error) {
@@ -135,7 +139,7 @@ const getTeamMembers = async (teamId, token) => {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/teams/${teamId}/members`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
     });
     return response?.data?.teamMembers ? response?.data?.teamMembers : fallbackTeamMembers;
   } catch (error) {
@@ -156,7 +160,7 @@ const updateParty = async (id, partyUpdate, token) => {
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/parties/${id}`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
       data: partyUpdate,
     });
     return response.data;
@@ -178,7 +182,7 @@ const updateFacility = async (id, facilityUpdate, token) => {
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/facilities/${id}`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
       data: facilityUpdate,
     });
 
@@ -201,7 +205,7 @@ const updateFacilityRiskProfile = async (id, facilityUpdate, token) => {
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/facilities/${id}`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
       data: facilityUpdate,
     });
     return response.data;
@@ -233,7 +237,7 @@ const updateTask = async (dealId, groupId, taskId, taskUpdate, token) => {
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/deals/${dealId}/tasks/${groupId}/${taskId}`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
       data: taskUpdate,
     });
 
@@ -262,7 +266,7 @@ const updateCreditRating = async (dealId, creditRatingUpdate, token) => {
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/deals/${dealId}`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
       data: dealUpdate,
     });
 
@@ -291,7 +295,7 @@ const updateLossGivenDefault = async (dealId, lossGivenDefaultUpdate, token) => 
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/deals/${dealId}`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
       data: dealUpdate,
     });
 
@@ -320,7 +324,7 @@ const updateProbabilityOfDefault = async (dealId, probabilityOfDefaultUpdate, to
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/deals/${dealId}`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
       data: dealUpdate,
     });
 
@@ -342,7 +346,7 @@ const updateUnderwriterManagersDecision = async (dealId, newUnderwriterManagersD
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/deals/${dealId}/underwriting/managers-decision`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
       data: newUnderwriterManagersDecision,
     });
 
@@ -365,7 +369,7 @@ const updateLeadUnderwriter = async ({ dealId, token, leadUnderwriterUpdate }) =
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/deals/${dealId}/underwriting/lead-underwriter`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
       data: leadUnderwriterUpdate,
     });
 
@@ -393,7 +397,7 @@ const createActivity = async (dealId, activityUpdate, token) => {
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/deals/${dealId}`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
       data: dealUpdate,
     });
 
@@ -435,7 +439,7 @@ const handleSsoRedirectForm = async (handleSsoRedirectFormRequest) => {
       method: 'post',
       url: `${TFM_API_URL}/v1/sso/handle-sso-redirect-form`,
       headers: {
-        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+        ...generateHeaders(),
       },
       data: handleSsoRedirectFormRequest,
     });
@@ -458,7 +462,7 @@ const getAuthCodeUrl = async ({ successRedirect }) => {
       method: 'get',
       url: `${TFM_API_URL}/v1/sso/auth-code-url`,
       headers: {
-        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+        ...generateHeaders(),
       },
       params: { successRedirect },
     });
@@ -482,7 +486,7 @@ const updateUserPassword = async (userId, update, token) => {
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/users/${userId}`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
       data: update,
     }).catch((error) => {
       console.error('Unable to update user details in axios request %o', error);
@@ -500,7 +504,7 @@ const createFeedback = async (formData, token) => {
   const response = await axios({
     method: 'post',
     url: `${TFM_API_URL}/v1/feedback`,
-    headers: generateHeaders(token),
+    headers: generateHeadersWithToken(token),
     data: formData,
   });
   return response.data;
@@ -518,7 +522,7 @@ const getUser = async (userId, token) => {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/users/${userId}`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
     });
 
     return response.data.user;
@@ -540,7 +544,7 @@ const createFacilityAmendment = async (facilityId, token) => {
     const response = await axios({
       method: 'post',
       url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
       data: { facilityId },
     });
 
@@ -569,7 +573,7 @@ const updateAmendment = async (facilityId, amendmentId, data, token) => {
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/${amendmentId}`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
       data,
     });
 
@@ -592,7 +596,7 @@ const getAmendmentInProgress = async (facilityId, token) => {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/in-progress`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
     });
 
     return { status: 200, data: response.data };
@@ -607,7 +611,7 @@ const getAllAmendmentsInProgress = async (token) => {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/amendments/in-progress`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
     });
 
     return { status: 200, data: response.data };
@@ -629,7 +633,7 @@ const getCompletedAmendment = async (facilityId, token) => {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/completed`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
     });
 
     return { status: 200, data: response.data };
@@ -651,7 +655,7 @@ const getLatestCompletedAmendmentValue = async (facilityId, token) => {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/completed/latest-value`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
     });
 
     return { status: 200, data: response.data };
@@ -673,7 +677,7 @@ const getLatestCompletedAmendmentDate = async (facilityId, token) => {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/completed/latest-cover-end-date`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
     });
 
     return { status: 200, data: response.data };
@@ -700,7 +704,7 @@ const getLatestCompletedAmendmentFacilityEndDate = async (facilityId, token) => 
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/completed/latest-facility-end-date`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
     });
 
     return { status: 200, data: response.data };
@@ -728,7 +732,7 @@ const getAmendmentById = async (facilityId, amendmentId, token) => {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/${amendmentId}`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
     });
 
     return { status: 200, data: response.data };
@@ -750,7 +754,7 @@ const getAmendmentsByFacilityId = async (facilityId, token) => {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
     });
 
     return { status: 200, data: response.data };
@@ -772,7 +776,7 @@ const getAmendmentsByDealId = async (dealId, token) => {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/deals/${dealId}/amendments`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
     });
 
     return { status: 200, data: response.data };
@@ -794,7 +798,7 @@ const getAmendmentInProgressByDealId = async (dealId, token) => {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/deals/${dealId}/amendments/in-progress`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
     });
 
     return { status: 200, data: response.data };
@@ -816,7 +820,7 @@ const getCompletedAmendmentByDealId = async (dealId, token) => {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/deals/${dealId}/amendments/completed`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
     });
 
     return { status: 200, data: response.data };
@@ -838,7 +842,7 @@ const getLatestCompletedAmendmentByDealId = async (dealId, token) => {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/deals/${dealId}/amendments/completed/latest`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
     });
 
     return { status: 200, data: response.data };
@@ -860,7 +864,7 @@ const getParty = async (partyUrn, token) => {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/party/urn/${partyUrn}`,
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
     });
 
     return {
@@ -880,7 +884,7 @@ const getParty = async (partyUrn, token) => {
 const getUkBankHolidays = async (token) => {
   try {
     const { data } = await axios.get(`${TFM_API_URL}/v1/bank-holidays`, {
-      headers: generateHeaders(token),
+      headers: generateHeadersWithToken(token),
     });
 
     return data;
@@ -901,7 +905,7 @@ const getUtilisationReportsReconciliationSummary = async (submissionMonth, userT
     assertValidIsoMonth(submissionMonth);
 
     const { data } = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/reconciliation-summary/${submissionMonth}`, {
-      headers: generateHeaders(userToken),
+      headers: generateHeadersWithToken(userToken),
     });
 
     return data;
@@ -924,7 +928,7 @@ const getUtilisationReportsReconciliationSummary = async (submissionMonth, userT
 const downloadUtilisationReport = async (userToken, id) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${id}/download`, {
     responseType: 'stream',
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
   });
 
   return {
@@ -943,7 +947,7 @@ const updateUtilisationReportStatus = async (user, reportsWithStatus, userToken)
   await axios({
     method: 'put',
     url: `${TFM_API_URL}/v1/utilisation-reports/set-status`,
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
     data: {
       user,
       reportsWithStatus,
@@ -959,7 +963,7 @@ const updateUtilisationReportStatus = async (user, reportsWithStatus, userToken)
  */
 const getUtilisationReportReconciliationDetailsById = async (reportId, premiumPaymentsFilters, paymentDetailsFilters, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/reconciliation-details/${reportId}`, {
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
     params: { premiumPaymentsFilters, paymentDetailsFilters },
   });
 
@@ -976,7 +980,7 @@ const getUtilisationReportReconciliationDetailsById = async (reportId, premiumPa
  */
 const getSelectedFeeRecordsDetailsWithAvailablePaymentGroups = async (reportId, feeRecordIds, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
     params: {
       includeAvailablePaymentGroups: true,
     },
@@ -998,7 +1002,7 @@ const getSelectedFeeRecordsDetailsWithAvailablePaymentGroups = async (reportId, 
  */
 const getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups = async (reportId, feeRecordIds, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/selected-fee-records-details`, {
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
     params: {
       includeAvailablePaymentGroups: false,
     },
@@ -1018,7 +1022,7 @@ const getSelectedFeeRecordsDetailsWithoutAvailablePaymentGroups = async (reportI
 const getAllBanks = async (userToken) => {
   try {
     const { data } = await axios.get(`${TFM_API_URL}/v1/banks`, {
-      headers: generateHeaders(userToken),
+      headers: generateHeadersWithToken(userToken),
     });
 
     return data;
@@ -1036,7 +1040,7 @@ const getAllBanks = async (userToken) => {
 const getAllBanksWithReportingYears = async (userToken) => {
   try {
     const { data } = await axios.get(`${TFM_API_URL}/v1/banks?includeReportingYears=true`, {
-      headers: generateHeaders(userToken),
+      headers: generateHeadersWithToken(userToken),
     });
 
     return data;
@@ -1059,7 +1063,7 @@ const getReportSummariesByBankAndYear = async (userToken, bankId, year) => {
     assertValidIsoYear(year);
 
     const { data } = await axios.get(`${TFM_API_URL}/v1/bank/${bankId}/utilisation-reports/reconciliation-summary-by-year/${year}`, {
-      headers: generateHeaders(userToken),
+      headers: generateHeadersWithToken(userToken),
     });
 
     return data;
@@ -1084,7 +1088,7 @@ const addPaymentToFeeRecords = async (reportId, parsedAddPaymentFormValues, feeR
   const response = await axios({
     method: 'post',
     url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment`,
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
     data: {
       feeRecordIds,
       paymentCurrency,
@@ -1109,7 +1113,7 @@ const createFeeRecordCorrection = async (reportId, feeRecordId, user, userToken)
   const response = await axios({
     method: 'post',
     url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/corrections`,
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
     data: {
       user,
     },
@@ -1129,7 +1133,7 @@ const generateKeyingData = async (reportId, user, userToken) => {
   const response = await axios({
     method: 'post',
     url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/keying-data`,
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
     data: {
       user,
     },
@@ -1149,7 +1153,7 @@ const markKeyingDataAsDone = async (reportId, feeRecordIds, user, userToken) => 
   const response = await axios({
     method: 'put',
     url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/keying-data/mark-as-done`,
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
     data: {
       user,
       feeRecordIds,
@@ -1170,7 +1174,7 @@ const markKeyingDataAsToDo = async (reportId, feeRecordIds, user, userToken) => 
   const response = await axios({
     method: 'put',
     url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/keying-data/mark-as-to-do`,
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
     data: {
       user,
       feeRecordIds,
@@ -1188,7 +1192,7 @@ const markKeyingDataAsToDo = async (reportId, feeRecordIds, user, userToken) => 
  */
 const getUtilisationReportWithFeeRecordsToKey = async (reportId, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records-to-key`, {
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
   });
   return response.data;
 };
@@ -1202,7 +1206,7 @@ const getUtilisationReportWithFeeRecordsToKey = async (reportId, userToken) => {
  */
 const getPaymentDetailsWithFeeRecords = async (reportId, paymentId, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`, {
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
     params: {
       includeFeeRecords: true,
     },
@@ -1219,7 +1223,7 @@ const getPaymentDetailsWithFeeRecords = async (reportId, paymentId, userToken) =
  */
 const getPaymentDetailsWithoutFeeRecords = async (reportId, paymentId, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`, {
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
     params: {
       includeFeeRecords: false,
     },
@@ -1239,7 +1243,7 @@ const deletePaymentById = async (reportId, paymentId, user, userToken) => {
   await axios({
     url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`,
     method: 'delete',
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
     data: { user },
   });
 };
@@ -1257,7 +1261,7 @@ const editPayment = async (reportId, paymentId, parsedEditPaymentFormValues, use
   await axios({
     url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}`,
     method: 'patch',
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
     data: {
       paymentAmount,
       datePaymentReceived,
@@ -1279,7 +1283,7 @@ const removeFeesFromPayment = async (reportId, paymentId, selectedFeeRecordIds, 
   await axios({
     url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/payment/${paymentId}/remove-selected-fees`,
     method: 'post',
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
     data: {
       selectedFeeRecordIds,
       user,
@@ -1299,7 +1303,7 @@ const addFeesToAnExistingPayment = async (reportId, feeRecordIds, paymentIds, us
   const response = await axios({
     method: 'post',
     url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/add-to-an-existing-payment`,
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
     data: {
       feeRecordIds,
       paymentIds,
@@ -1321,7 +1325,7 @@ const updateDealCancellation = async (dealId, cancellationUpdate, userToken) => 
     await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/deals/${dealId}/cancellation`,
-      headers: generateHeaders(userToken),
+      headers: generateHeadersWithToken(userToken),
       data: cancellationUpdate,
     });
   } catch (error) {
@@ -1341,7 +1345,7 @@ const getDealCancellation = async (dealId, userToken) => {
     const response = await axios({
       method: 'get',
       url: `${TFM_API_URL}/v1/deals/${dealId}/cancellation`,
-      headers: generateHeaders(userToken),
+      headers: generateHeadersWithToken(userToken),
     });
 
     return response.data;
@@ -1362,7 +1366,7 @@ const deleteDealCancellation = async (dealId, userToken) => {
     await axios({
       method: 'delete',
       url: `${TFM_API_URL}/v1/deals/${dealId}/cancellation`,
-      headers: generateHeaders(userToken),
+      headers: generateHeadersWithToken(userToken),
     });
   } catch (error) {
     console.error('Failed to get deal cancellation', error);
@@ -1382,7 +1386,7 @@ const submitDealCancellation = async (dealId, cancellation, userToken) => {
     await axios({
       method: 'post',
       url: `${TFM_API_URL}/v1/deals/${dealId}/cancellation/submit`,
-      headers: generateHeaders(userToken),
+      headers: generateHeadersWithToken(userToken),
       data: cancellation,
     });
   } catch (error) {
@@ -1400,7 +1404,7 @@ const submitDealCancellation = async (dealId, cancellation, userToken) => {
  */
 const getFeeRecord = async (reportId, feeRecordId, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}`, {
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
   });
   return response.data;
 };
@@ -1415,7 +1419,7 @@ const getFeeRecord = async (reportId, feeRecordId, userToken) => {
  */
 const getFeeRecordCorrectionRequestReview = async (reportId, feeRecordId, userId, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-request-review/${userId}`, {
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
   });
   return response.data;
 };
@@ -1435,7 +1439,7 @@ const updateFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
     await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data`,
-      headers: generateHeaders(userToken),
+      headers: generateHeadersWithToken(userToken),
       data: {
         formData,
         user,
@@ -1460,7 +1464,7 @@ const getFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, us
     const userId = user._id;
 
     const { data } = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data/${userId}`, {
-      headers: generateHeaders(userToken),
+      headers: generateHeadersWithToken(userToken),
     });
 
     return data;
@@ -1485,7 +1489,7 @@ const deleteFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
     await axios({
       method: 'delete',
       url: `${TFM_API_URL}/v1/utilisation-reports/${reportId}/fee-records/${feeRecordId}/correction-transient-form-data/${userId}`,
-      headers: generateHeaders(userToken),
+      headers: generateHeadersWithToken(userToken),
     });
   } catch (error) {
     console.error('Failed to delete fee record correction transient form data %o', error);
