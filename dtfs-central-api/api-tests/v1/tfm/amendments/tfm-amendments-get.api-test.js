@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, AMENDMENT_STATUS, CURRENCY } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, TFM_AMENDMENT_STATUS, CURRENCY } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases-backend');
 const wipeDB = require('../../../wipeDB');
@@ -59,7 +59,7 @@ describe('GET TFM amendments', () => {
       const { body: bodyPostResponse } = await testApi
         .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
         .to(`/v1/tfm/facilities/${facilityId}/amendments`);
-      const updatePayload = { status: AMENDMENT_STATUS.IN_PROGRESS };
+      const updatePayload = { status: TFM_AMENDMENT_STATUS.IN_PROGRESS };
       await testApi
         .put({ payload: updatePayload, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
         .to(`/v1/tfm/facilities/${facilityId}/amendments/${bodyPostResponse.amendmentId}`);
@@ -147,7 +147,7 @@ describe('GET TFM amendments', () => {
       const { body: bodyPostResponse } = await testApi
         .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
         .to(`/v1/tfm/facilities/${facilityId}/amendments`);
-      const updatePayload = { status: AMENDMENT_STATUS.IN_PROGRESS };
+      const updatePayload = { status: TFM_AMENDMENT_STATUS.IN_PROGRESS };
       await testApi
         .put({ payload: updatePayload, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
         .to(`/v1/tfm/facilities/${facilityId}/amendments/${bodyPostResponse.amendmentId}`);
@@ -207,7 +207,7 @@ describe('GET TFM amendments', () => {
       } = await testApi.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
       await testApi
         .put({
-          payload: { status: AMENDMENT_STATUS.COMPLETED },
+          payload: { status: TFM_AMENDMENT_STATUS.COMPLETED },
           auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
         })
         .to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId}`);
@@ -217,7 +217,7 @@ describe('GET TFM amendments', () => {
       } = await testApi.post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) }).to(`/v1/tfm/facilities/${facilityId}/amendments`);
       await testApi
         .put({
-          payload: { status: AMENDMENT_STATUS.COMPLETED },
+          payload: { status: TFM_AMENDMENT_STATUS.COMPLETED },
           auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id),
         })
         .to(`/v1/tfm/facilities/${facilityId}/amendments/${amendmentId2}`);
@@ -292,7 +292,7 @@ describe('GET TFM amendments', () => {
       await testApi
         .put({
           payload: {
-            status: AMENDMENT_STATUS.COMPLETED,
+            status: TFM_AMENDMENT_STATUS.COMPLETED,
             submittedByPim: true,
             requireUkefApproval: false,
             changeFacilityValue: true,
@@ -347,7 +347,7 @@ describe('GET TFM amendments', () => {
       const { body: bodyPostResponse1 } = await testApi
         .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
         .to(`/v1/tfm/facilities/${facilityId1}/amendments`);
-      const updatePayload1 = { status: AMENDMENT_STATUS.IN_PROGRESS };
+      const updatePayload1 = { status: TFM_AMENDMENT_STATUS.IN_PROGRESS };
       await testApi
         .put({ payload: updatePayload1, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
         .to(`/v1/tfm/facilities/${facilityId1}/amendments/${bodyPostResponse1.amendmentId}`);
@@ -366,7 +366,7 @@ describe('GET TFM amendments', () => {
       const { body: bodyPostResponse2 } = await testApi
         .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
         .to(`/v1/tfm/facilities/${facilityId2}/amendments`);
-      const updatePayload2 = { status: AMENDMENT_STATUS.IN_PROGRESS };
+      const updatePayload2 = { status: TFM_AMENDMENT_STATUS.IN_PROGRESS };
       await testApi
         .put({ payload: updatePayload2, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
         .to(`/v1/tfm/facilities/${facilityId2}/amendments/${bodyPostResponse2.amendmentId}`);
