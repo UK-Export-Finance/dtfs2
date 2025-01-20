@@ -7,7 +7,7 @@ import { ApiError } from './api.error';
  */
 export class EligibilityCriteriaNotFoundError extends ApiError {
   constructor() {
-    const message = 'Latest eligibility criteria not found';
+    const message = 'Eligibility criteria not found';
     super({ message, status: HttpStatusCode.NotFound });
 
     this.name = 'EligibilityCriteriaNotFoundError';

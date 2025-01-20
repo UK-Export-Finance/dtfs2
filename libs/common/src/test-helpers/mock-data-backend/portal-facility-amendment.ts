@@ -28,4 +28,8 @@ export const aPortalFacilityAmendment = (): PortalFacilityAmendment => ({
   createdAt: getUnixTime(new Date()),
   updatedAt: getUnixTime(new Date()),
   status: AMENDMENT_STATUS.IN_PROGRESS,
+  eligibilityCriteria: {
+    criteria: [{ id: 1, text: 'item 1', answer: null }],
+    version: 1,
+  },
 });

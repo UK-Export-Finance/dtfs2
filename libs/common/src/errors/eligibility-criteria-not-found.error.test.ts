@@ -7,7 +7,7 @@ describe('EligibilityCriteriaNotFoundError', () => {
     const exception = new EligibilityCriteriaNotFoundError();
 
     // Assert
-    expect(exception.message).toEqual('Latest eligibility criteria not found');
+    expect(exception.message).toEqual('Eligibility criteria not found');
   });
 
   it('should be an instance of EligibilityCriteriaNotFoundError', () => {
