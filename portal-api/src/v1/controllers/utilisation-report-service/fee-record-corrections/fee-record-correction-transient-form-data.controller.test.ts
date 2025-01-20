@@ -1,7 +1,7 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
 import { Response } from 'express';
-import { aRecordCorrectionFormValues, RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
+import { aRecordCorrectionFormValues, RecordCorrectionFormValueValidationErrors, RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import {
   getFeeRecordCorrectionTransientFormData,
@@ -170,6 +170,21 @@ describe('fee-record-correction-transient-form-data.controller', () => {
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+    });
+
+    it('should return any validation errors in the response body', async () => {
+      // Arrange
+      const validationErrors: RecordCorrectionFormValueValidationErrors = {
+        facilityIdErrorMessage: 'A facility ID error message',
+      };
+
+      jest.mocked(api.putFeeRecordCorrectionTransientFormData).mockResolvedValue(validationErrors);
+
+      // Act
+      await putFeeRecordCorrectionTransientFormData(req, res);
+
+      // Assert
+      expect(res._getData()).toEqual(validationErrors);
     });
 
     it(`should return a ${HttpStatusCode.InternalServerError} status code if an unknown error is thrown`, async () => {
