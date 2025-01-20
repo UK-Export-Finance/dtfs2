@@ -6,8 +6,8 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const flash = require('connect-flash');
+const { unauthenticatedAuthRoutes } = require('./routes/auth');
 
-const { getUnauthenticatedAuthRouter } = require('./routes/auth/configs');
 const routes = require('./routes');
 const feedbackRoutes = require('./routes/feedback');
 const configureNunjucks = require('./nunjucks-configuration');
@@ -64,11 +64,10 @@ const generateApp = () => {
   app.use('/', feedbackRoutes);
   // We add a conditional check here as there are no auth routes for the non sso journey, and
   // we cannot call app.use with './', undefined.
-  const unauthenticatedAuthRouters = getUnauthenticatedAuthRouter();
-
-  if (unauthenticatedAuthRouters) {
-    app.use(unauthenticatedAuthRouters);
+  if (unauthenticatedAuthRoutes) {
+    app.use('/', unauthenticatedAuthRoutes);
   }
+
   app.use(
     csrf({
       cookie: {
