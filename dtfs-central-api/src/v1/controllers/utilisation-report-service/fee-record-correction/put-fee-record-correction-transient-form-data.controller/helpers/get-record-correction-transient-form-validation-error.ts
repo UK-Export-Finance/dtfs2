@@ -1,4 +1,4 @@
-import { RecordCorrectionReason, MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, isMonetaryValueValid, isCurrencyValid } from '@ukef/dtfs2-common';
+import { MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, isMonetaryValueValid, isCurrencyValid } from '@ukef/dtfs2-common';
 import { UKEF_FACILITY_ID_REGEX } from '../../../../../../constants/regex';
 import { TfmFacilitiesRepo } from '../../../../../../repositories/tfm-facilities-repo';
 
@@ -69,17 +69,33 @@ export const getUtilisationValidationError = (utilisationValue?: string): string
 /**
  * Validates the additional comments field for a record correction request.
  *
+ * If the additional comments field is required, the validation will fail if
+ * the field value is undefined, empty, or contains only whitespace.
+ *
+ * If the additional comments field is not required, the validation will not
+ * return an error message if the field value is undefined or empty.
+ *
  * If the character count exceeds the maximum allowed character count of
  * {@link MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT}, the
  * input field referenced in the error message is matched to the fields label.
  *
- * @param correctionReasons - The reasons for the record correction request.
+ * @param isOtherSoleCorrectionReason - Flag for if correction request has a
+ * single correction reason and this is {@link RECORD_CORRECTION_REASON.OTHER}.
+ * @param isRequired - Flag for if the additional comments field is required.
  * @param additionalComments - The additional comments text to validate.
  * @returns An error message if validation fails, undefined otherwise.
  */
-export const getAdditionalCommentsValidationError = (correctionReasons: RecordCorrectionReason[], additionalComments?: string): string | undefined => {
+export const getAdditionalCommentsValidationError = (
+  isOtherSoleCorrectionReason: boolean,
+  isRequired: boolean,
+  additionalComments?: string,
+): string | undefined => {
   if (!additionalComments || !additionalComments.trim()) {
-    return 'You must enter a comment';
+    if (isRequired) {
+      return 'You must enter a comment';
+    }
+
+    return undefined;
   }
 
   if (additionalComments.length < MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT) {
@@ -88,7 +104,7 @@ export const getAdditionalCommentsValidationError = (correctionReasons: RecordCo
 
   const baseCharacterLimitExceededErrorMessage = `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the`;
 
-  if (correctionReasons.length === 1) {
+  if (isOtherSoleCorrectionReason) {
     return `${baseCharacterLimitExceededErrorMessage} record information box`;
   }
 
