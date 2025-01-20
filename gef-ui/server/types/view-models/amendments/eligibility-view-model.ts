@@ -1,10 +1,10 @@
-import { AmendmentsEligibilityCriterion } from '@ukef/dtfs2-common';
+import { AmendmentsEligibilityCriterionWithAnswer } from '@ukef/dtfs2-common';
 import { ViewModelErrors } from '../view-model-errors';
 
 export type EligibilityViewModel = {
   exporterName: string;
   previousPage: string;
   cancelUrl: string;
-  criteria?: AmendmentsEligibilityCriterion[];
+  criteria?: AmendmentsEligibilityCriterionWithAnswer[];
   errors?: ViewModelErrors | null;
 };

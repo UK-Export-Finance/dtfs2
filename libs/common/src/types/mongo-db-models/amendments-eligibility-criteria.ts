@@ -4,7 +4,7 @@ import { FacilityType } from '../facility-type';
 import { AuditDatabaseRecord } from '../audit-database-record';
 import { UnixTimestampMilliseconds } from '../date';
 
-type EligibilityCriterion = { id: number; text: string; textList?: string[] };
+export type AmendmentsEligibilityCriterion = { id: number; text: string; textList?: string[] };
 
 /**
  * Type of the mongo db "eligibilityCriteriaAmendments" collection
@@ -16,6 +16,6 @@ export type AmendmentsEligibilityCriteria = {
   facilityType: FacilityType[];
   isInDraft: boolean;
   createdAt: UnixTimestampMilliseconds;
-  criteria: EligibilityCriterion[];
+  criteria: AmendmentsEligibilityCriterion[];
   auditRecord?: AuditDatabaseRecord;
 };

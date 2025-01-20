@@ -1,4 +1,4 @@
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, AmendmentsEligibilityCriterion, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { AMENDMENT_STATUS, AMENDMENT_TYPES, AmendmentsEligibilityCriterionWithAnswer, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { getUnixTime } from 'date-fns';
 
 export class PortalFacilityAmendmentWithUkefIdMockBuilder {
@@ -47,7 +47,7 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
     return this;
   }
 
-  public withCriteria(criteria: AmendmentsEligibilityCriterion[]) {
+  public withCriteria(criteria: AmendmentsEligibilityCriterionWithAnswer[]) {
     this.amendment.eligibilityCriteria = {
       version: 1,
       criteria,
