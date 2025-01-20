@@ -1,3 +1,4 @@
+import { HttpStatusCode } from 'axios';
 import { ApiError } from './api.error';
 import { EligibilityCriteriaNotFoundError } from './eligibility-criteria-not-found.error';
 
@@ -8,6 +9,14 @@ describe('EligibilityCriteriaNotFoundError', () => {
 
     // Assert
     expect(exception.message).toEqual('Eligibility criteria not found');
+  });
+
+  it('exposes the 404 (Not Found) status code', () => {
+    // Act
+    const exception = new EligibilityCriteriaNotFoundError();
+
+    // Assert
+    expect(exception.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it('should be an instance of EligibilityCriteriaNotFoundError', () => {
