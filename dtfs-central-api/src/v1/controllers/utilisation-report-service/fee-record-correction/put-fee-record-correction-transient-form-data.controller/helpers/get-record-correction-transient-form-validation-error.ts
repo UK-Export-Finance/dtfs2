@@ -1,4 +1,4 @@
-import { RecordCorrectionReason, MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, isMonetaryValueValid, isCurrencyValid } from '@ukef/dtfs2-common';
+import { MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, isMonetaryValueValid, isCurrencyValid } from '@ukef/dtfs2-common';
 import { UKEF_FACILITY_ID_REGEX } from '../../../../../../constants/regex';
 import { TfmFacilitiesRepo } from '../../../../../../repositories/tfm-facilities-repo';
 
@@ -73,11 +73,12 @@ export const getUtilisationValidationError = (utilisationValue?: string): string
  * {@link MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT}, the
  * input field referenced in the error message is matched to the fields label.
  *
- * @param correctionReasons - The reasons for the record correction request.
+ * @param isOtherSoleCorrectionReason - Flag for if correction request has a
+ * single correction reason and this is {@link RECORD_CORRECTION_REASON.OTHER}.
  * @param additionalComments - The additional comments text to validate.
  * @returns An error message if validation fails, undefined otherwise.
  */
-export const getAdditionalCommentsValidationError = (correctionReasons: RecordCorrectionReason[], additionalComments?: string): string | undefined => {
+export const getAdditionalCommentsValidationError = (isOtherSoleCorrectionReason: boolean, additionalComments?: string): string | undefined => {
   if (!additionalComments || !additionalComments.trim()) {
     return 'You must enter a comment';
   }
@@ -88,7 +89,7 @@ export const getAdditionalCommentsValidationError = (correctionReasons: RecordCo
 
   const baseCharacterLimitExceededErrorMessage = `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the`;
 
-  if (correctionReasons.length === 1) {
+  if (isOtherSoleCorrectionReason) {
     return `${baseCharacterLimitExceededErrorMessage} record information box`;
   }
 

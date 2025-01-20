@@ -1,4 +1,4 @@
-import { RECORD_CORRECTION_REASON, MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, CURRENCY } from '@ukef/dtfs2-common';
+import { MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, CURRENCY, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../../../repositories/tfm-facilities-repo';
 import {
   getAdditionalCommentsValidationError,
@@ -228,12 +228,12 @@ describe('get-record-correction-transient-form-validation-error', () => {
     const requiredCommentErrorMessage = 'You must enter a comment';
 
     describe('when "additionalComments" is undefined', () => {
-      const reasons = [RECORD_CORRECTION_REASON.OTHER];
+      const isOtherSoleCorrectionReason = true;
       const additionalComments = undefined;
 
       it('should return error message', () => {
         // Act
-        const errorMessage = getAdditionalCommentsValidationError(reasons, additionalComments);
+        const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, additionalComments);
 
         // Assert
         expect(errorMessage).toEqual(requiredCommentErrorMessage);
@@ -241,12 +241,12 @@ describe('get-record-correction-transient-form-validation-error', () => {
     });
 
     describe('when "additionalComments" is an empty string', () => {
-      const reasons = [RECORD_CORRECTION_REASON.OTHER];
+      const isOtherSoleCorrectionReason = true;
       const additionalComments = '';
 
       it('should return error message', () => {
         // Act
-        const errorMessage = getAdditionalCommentsValidationError(reasons, additionalComments);
+        const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, additionalComments);
 
         // Assert
         expect(errorMessage).toEqual(requiredCommentErrorMessage);
@@ -254,12 +254,12 @@ describe('get-record-correction-transient-form-validation-error', () => {
     });
 
     describe('when "additionalComments" is only whitespace', () => {
-      const reasons = [RECORD_CORRECTION_REASON.OTHER];
+      const isOtherSoleCorrectionReason = true;
       const additionalComments = '   ';
 
       it('should return error message', () => {
         // Act
-        const errorMessage = getAdditionalCommentsValidationError(reasons, additionalComments);
+        const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, additionalComments);
 
         // Assert
         expect(errorMessage).toEqual(requiredCommentErrorMessage);
@@ -267,12 +267,12 @@ describe('get-record-correction-transient-form-validation-error', () => {
     });
 
     describe('when "additionalComments" length is less than maximum', () => {
-      const reasons = [RECORD_CORRECTION_REASON.OTHER];
+      const isOtherSoleCorrectionReason = true;
       const additionalComments = 'Some valid additional comments';
 
       it('should return undefined', () => {
         // Act
-        const errorMessage = getAdditionalCommentsValidationError(reasons, additionalComments);
+        const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, additionalComments);
 
         // Assert
         expect(errorMessage).toBeUndefined();
@@ -282,12 +282,12 @@ describe('get-record-correction-transient-form-validation-error', () => {
     describe('when "additionalComments" exceeds maximum length', () => {
       const longComment = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT + 1);
 
-      it('should return error message referring to "record information box" for single reason', () => {
+      it(`should return error message referring to "record information box" when "${RECORD_CORRECTION_REASON.OTHER}" is the sole correction reason`, () => {
         // Arrange
-        const reasons = [RECORD_CORRECTION_REASON.OTHER];
+        const isOtherSoleCorrectionReason = true;
 
         // Act
-        const errorMessage = getAdditionalCommentsValidationError(reasons, longComment);
+        const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, longComment);
 
         // Assert
         const expectedErrorMessage = `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the record information box`;
@@ -297,10 +297,10 @@ describe('get-record-correction-transient-form-validation-error', () => {
 
       it('should return error message referring to "additional comments box" for multiple reasons', () => {
         // Arrange
-        const reasons = [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT, RECORD_CORRECTION_REASON.OTHER];
+        const isOtherSoleCorrectionReason = false;
 
         // Act
-        const errorMessage = getAdditionalCommentsValidationError(reasons, longComment);
+        const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, longComment);
 
         // Assert
         const expectedErrorMessage = `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the additional comments box`;

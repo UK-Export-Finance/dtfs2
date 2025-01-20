@@ -30,7 +30,8 @@ const getValidatorMap = (reasons: RecordCorrectionReason[]): ValidatorMap => {
 
   const utilisationValidator = (value?: string) => ({ utilisationErrorMessage: getUtilisationValidationError(value) });
 
-  const otherReasonValidator = (value?: string) => ({ additionalCommentsErrorMessage: getAdditionalCommentsValidationError(reasons, value) });
+  const isSingleCorrectionReason = reasons.length === 1;
+  const otherReasonValidator = (value?: string) => ({ additionalCommentsErrorMessage: getAdditionalCommentsValidationError(isSingleCorrectionReason, value) });
 
   return {
     [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT]: facilityIdValidator,
