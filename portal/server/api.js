@@ -1054,6 +1054,23 @@ const getFeeRecordCorrectionTransientFormData = async (token, bankId, id) => {
 };
 
 /**
+ * Deletes a fee record correction transient form data for the user by correction id.
+ * @param {string} token - The user token
+ * @param {string} bankId - The bank id
+ * @param {string} id - The correction id
+ */
+const deleteFeeRecordCorrectionTransientFormData = async (token, bankId, id) => {
+  await axios({
+    method: 'delete',
+    url: `${PORTAL_API_URL}/v1/banks/${bankId}/fee-record-correction/${id}/transient-form-data`,
+    headers: {
+      Authorization: token,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+    },
+  });
+};
+
+/**
  * Gets a fee record correction by id.
  * @param {string} token - The user token
  * @param {string} bankId - The bank id
@@ -1098,6 +1115,26 @@ const putFeeRecordCorrection = async (token, bankId, correctionId, formData) => 
  */
 const getFeeRecordCorrectionReview = async (bankId, correctionId, userId, token) => {
   const { data } = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/fee-record-correction-review/${correctionId}/user/${userId}`, {
+    headers: {
+      Authorization: token,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+    },
+  });
+
+  return data;
+};
+
+/**
+ * Saves a fee record correction.
+ * @param {string} token - The user token
+ * @param {string} bankId - The bank id
+ * @param {string} id - The correction id
+ * @returns {Promise<import('./api-response-types').SaveFeeRecordCorrectionResponseBody>} Returns a promise that resolves to the fee record correction sent data
+ */
+const saveFeeRecordCorrection = async (token, bankId, id) => {
+  const { data } = await axios({
+    method: 'put',
+    url: `${PORTAL_API_URL}/v1/banks/${bankId}/fee-record-correction/${id}`,
     headers: {
       Authorization: token,
       [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
@@ -1165,4 +1202,6 @@ module.exports = {
   getFeeRecordCorrection,
   putFeeRecordCorrection,
   getFeeRecordCorrectionReview,
+  deleteFeeRecordCorrectionTransientFormData,
+  saveFeeRecordCorrection,
 };

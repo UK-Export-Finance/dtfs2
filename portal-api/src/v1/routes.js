@@ -338,14 +338,15 @@ authRouter
 
 authRouter
   .route('/banks/:bankId/fee-record-correction/:correctionId')
-  .get(
+  .all(
     validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
     bankIdValidation,
     sqlIdValidation('correctionId'),
     handleExpressValidatorResult,
     validateUserAndBankIdMatch,
-    utilisationReportControllers.getFeeRecordCorrection,
-  );
+  )
+  .get(utilisationReportControllers.getFeeRecordCorrection)
+  .put(utilisationReportControllers.saveFeeRecordCorrection);
 
 authRouter
   .route('/banks/:bankId/fee-record-correction/:correctionId/transient-form-data')
@@ -357,7 +358,8 @@ authRouter
     validateUserAndBankIdMatch,
   )
   .get(utilisationReportControllers.getFeeRecordCorrectionTransientFormData)
-  .put(utilisationReportControllers.putFeeRecordCorrectionTransientFormData);
+  .put(utilisationReportControllers.putFeeRecordCorrectionTransientFormData)
+  .delete(utilisationReportControllers.deleteFeeRecordCorrectionTransientFormData);
 
 authRouter
   .route('/banks/:bankId/fee-record-correction-review/:correctionId/user/:userId')

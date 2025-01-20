@@ -6,11 +6,12 @@ export const aUtilisationReportCorrectionInformationViewModel = (): UtilisationR
   user: aPortalSessionUser(),
   primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
   backLinkHref: '/utilisation-reports/provide-correction/7',
+  cancelLinkHref: '/utilisation-reports/cancel-correction/7',
   feeRecord: {
     exporter: 'An exporter',
     reportedFees: {
       currency: 'GBP',
-      amount: 123,
+      formattedAmount: '1,234.56',
     },
   },
   formattedReasons: 'Facility ID is incorrect, Reported currency is incorrect',

@@ -3,6 +3,7 @@ import { InvalidDealIdError, InvalidFacilityIdError, MOCK_COMPANY_REGISTRATION_N
 import Axios from '../axios';
 import api from '../api';
 import CONSTANTS from '../../constants';
+import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../test-helpers/mock-amendment';
 
 jest.mock('../axios');
 
@@ -369,11 +370,33 @@ describe('getAddressesByPostcode()', () => {
 });
 
 describe('getAmendment()', () => {
-  it(`should return the response body when the amendment can be found`, async () => {
-    const mockAmendment = { facilityId: validMongoId, amendmentId: validMongoId, dealId: validMongoId, changeCoverEndDate: true };
+  it(`should parse the response body when the amendment can be found`, async () => {
+    // Arrange
+    const facilityEndDate = new Date();
+    const mockAmendment = {
+      ...new PortalFacilityAmendmentWithUkefIdMockBuilder().withIsUsingFacilityEndDate(true).build(),
+      facilityEndDate: facilityEndDate.toISOString(),
+    };
+
     Axios.get.mockReturnValue(Promise.resolve({ data: mockAmendment }));
+
+    // Act
     const response = await api.getAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken });
-    expect(response).toEqual(mockAmendment);
+
+    // Assert
+    expect(response).toEqual(new PortalFacilityAmendmentWithUkefIdMockBuilder().withFacilityEndDate(facilityEndDate).build());
+  });
+
+  it(`should throw an error if the response body cannot be parsed`, async () => {
+    // Arrange
+    const mockAmendment = {
+      ...new PortalFacilityAmendmentWithUkefIdMockBuilder().withIsUsingFacilityEndDate(true).build(),
+      facilityEndDate: 'Invalid',
+    };
+    Axios.get.mockReturnValue(Promise.resolve({ data: mockAmendment }));
+
+    // Act + Assert
+    await expect(api.getAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken })).rejects.toThrow();
   });
 
   it('should throw an error if there is an api error', async () => {

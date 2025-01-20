@@ -1,4 +1,4 @@
-const { AMENDMENT_STATUS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const mapTenor = require('./mapTenor');
 
 describe('mapTenor()', () => {
@@ -91,7 +91,7 @@ describe('mapTenor()', () => {
 
   it('should return tenor from GEF amendment when completed amendment exists', () => {
     mockGefFacility.amendments[0] = {
-      status: AMENDMENT_STATUS.COMPLETED,
+      status: TFM_AMENDMENT_STATUS.COMPLETED,
       tfm: {
         ...mockAmendmentDateResponse,
       },

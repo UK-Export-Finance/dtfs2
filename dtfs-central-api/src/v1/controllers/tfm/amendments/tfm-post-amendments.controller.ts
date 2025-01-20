@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
-import { CustomExpressRequest, ApiError, TfmFacilityAmendment, AUDIT_USER_TYPES, AMENDMENT_STATUS, ApiErrorResponseBody } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, ApiError, TfmFacilityAmendment, AUDIT_USER_TYPES, TFM_AMENDMENT_STATUS, ApiErrorResponseBody } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { PostFacilityAmendmentPayload } from '../../../routes/middleware/payload-validation';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
@@ -26,7 +26,7 @@ export const postTfmAmendment = async (req: PostTfmAmendmentRequest, res: PostTf
       throw new NotFoundError('The current facility does not exist');
     }
 
-    const inProgressAmendments = await TfmFacilitiesRepo.findAmendmentsByFacilityIdAndStatus(facilityId, AMENDMENT_STATUS.IN_PROGRESS);
+    const inProgressAmendments = await TfmFacilitiesRepo.findTfmAmendmentsByFacilityIdAndStatus(facilityId, TFM_AMENDMENT_STATUS.IN_PROGRESS);
     if (inProgressAmendments.length !== 0) {
       throw new ResourceAlreadyExistsError('The current facility already has an amendment in progress');
     }
@@ -42,7 +42,7 @@ export const postTfmAmendment = async (req: PostTfmAmendmentRequest, res: PostTf
       dealId,
       createdAt: getUnixTime(new Date()),
       updatedAt: getUnixTime(new Date()),
-      status: AMENDMENT_STATUS.NOT_STARTED,
+      status: TFM_AMENDMENT_STATUS.NOT_STARTED,
       version: latestCompletedAmendmentVersion ? latestCompletedAmendmentVersion + 1 : 1,
     };
     await TfmFacilitiesRepo.updateOneById(facilityId, {

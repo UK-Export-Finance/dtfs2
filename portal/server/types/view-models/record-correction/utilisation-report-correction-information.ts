@@ -1,11 +1,15 @@
-import { CurrencyAndAmount } from '@ukef/dtfs2-common';
+import { Currency } from '@ukef/dtfs2-common';
 import { BaseViewModel } from '../base-view-model';
 
 export type UtilisationReportCorrectionInformationViewModel = BaseViewModel & {
+  cancelLinkHref: string;
   backLinkHref: string;
   feeRecord: {
     exporter: string;
-    reportedFees: CurrencyAndAmount;
+    reportedFees: {
+      currency: Currency;
+      formattedAmount: string;
+    };
   };
   formattedReasons: string;
   errorSummary: string;

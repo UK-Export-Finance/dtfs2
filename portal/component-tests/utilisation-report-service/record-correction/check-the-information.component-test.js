@@ -64,17 +64,15 @@ describe('page', () => {
 
   it('should render the original reported fees paid', () => {
     // Arrange
-    const reportedFees = 12345.67;
+    const reportedFeesPaid = '12,345.67';
     const viewModel = aUtilisationReportCorrectionInformationViewModel();
-    viewModel.feeRecord.reportedFees.amount = reportedFees;
-
-    const expectedReportedFees = '12345.67';
+    viewModel.feeRecord.reportedFees.formattedAmount = reportedFeesPaid;
 
     // Act
     const wrapper = render(viewModel);
 
     // Assert
-    wrapper.expectText(definitionDescriptionSelector(originalValuesSelector, 'Reported fees paid')).toRead(expectedReportedFees);
+    wrapper.expectText(definitionDescriptionSelector(originalValuesSelector, 'Reported fees paid')).toRead(reportedFeesPaid);
   });
 
   it('should render the record correction details table heading', () => {
@@ -236,7 +234,8 @@ describe('page', () => {
 
   it('should render cancel button', () => {
     // Arrange
-    const viewModel = aUtilisationReportCorrectionInformationViewModel();
+    const cancelLinkHref = '/utilisation-reports/cancel-correction/12345';
+    const viewModel = { ...aUtilisationReportCorrectionInformationViewModel(), cancelLinkHref };
 
     // Act
     const wrapper = render(viewModel);
@@ -244,8 +243,8 @@ describe('page', () => {
     // Assert
     const cancelButtonSelector = '[data-cy="cancel-button"]';
     wrapper.expectElement(cancelButtonSelector).toExist();
-    wrapper.expectText(cancelButtonSelector).toRead('Cancel record correction');
+    wrapper.expectElement(cancelButtonSelector).toHaveAttribute('value', 'Cancel record correction');
     wrapper.expectElement(cancelButtonSelector).hasClass('govuk-button--secondary');
-    wrapper.expectElement(cancelButtonSelector).toHaveAttribute('href', '/utilisation-report-upload');
+    wrapper.expectElement(cancelButtonSelector).toHaveAttribute('formaction', cancelLinkHref);
   });
 });

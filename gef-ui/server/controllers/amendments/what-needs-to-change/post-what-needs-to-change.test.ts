@@ -21,7 +21,7 @@ import { WhatNeedsToChangeViewModel } from '../../../types/view-models/amendment
 import { STB_PIM_EMAIL } from '../../../constants/emails.ts';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment.ts';
 import { Deal } from '../../../types/deal.ts';
-import { getNextPage } from '../helpers/navigation.helper.ts';
+import { getAmendmentsUrl, getNextPage } from '../helpers/navigation.helper.ts';
 import { validateWhatNeedsToChange } from './validation.ts';
 import { ValidationError } from '../../../types/validation-error.ts';
 import { validationErrorHandler } from '../../../utils/helpers';
@@ -139,6 +139,7 @@ describe('postWhatNeedsToChange', () => {
       exporterName: companyName,
       previousPage: `/gef/application-details/${dealId}`,
       amendmentFormEmail: STB_PIM_EMAIL,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       changeCoverEndDate,
       changeFacilityValue,
       errors: expectedErrors,

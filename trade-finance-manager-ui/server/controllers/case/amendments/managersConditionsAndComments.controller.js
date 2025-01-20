@@ -1,6 +1,6 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
 const sanitizeHtml = require('sanitize-html');
-const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 
 const { userCanEditManagersDecision, ukefDecisionRejected, validateUkefDecision } = require('../../helpers');
@@ -19,7 +19,7 @@ const getManagersConditionsAndComments = async (req, res) => {
     }
     const facility = await api.getFacility(facilityId, userToken);
 
-    const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
 
     if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
       amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
@@ -52,7 +52,7 @@ const postManagersConditionsAndComments = async (req, res) => {
 
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const facility = await api.getFacility(facilityId, userToken);
-  const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
 
   const { errorsObject, amendmentManagersDecisionConditionsErrors } = amendmentManagersDecisionConditionsValidation(req.body, amendment);
 
@@ -120,7 +120,7 @@ const getManagersConditionsAndCommentsSummary = async (req, res) => {
     }
     const facility = await api.getFacility(facilityId, userToken);
 
-    const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
 
     if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
       amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
@@ -170,7 +170,7 @@ const postManagersConditionsAndCommentsSummary = async (req, res) => {
 
     // sets amendment to complete if declined
     if (ukefDecisionRejected(amendment)) {
-      payload.status = AMENDMENT_STATUS.COMPLETED;
+      payload.status = TFM_AMENDMENT_STATUS.COMPLETED;
     }
 
     const { status } = await api.updateAmendment(facilityId, amendmentId, payload, userToken);

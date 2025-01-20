@@ -36,7 +36,7 @@
             text: "Reported fees paid"
           },
           value: {
-            text: feeRecord.reportedFees.amount
+            text: feeRecord.reportedFees.formattedAmount
           }
         }
       ],
@@ -134,17 +134,15 @@
       }) }}
     </form>
 
-    {# TODO FN-3736: Add clear behaviour when this button is clicked. Note that this will need changing to be an input with a formaction attribute (see check-the-information template in TFM). #}
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-      {{ govukButton({
-        text: "Cancel record correction",
-        classes: "govuk-button govuk-button--secondary",
-        href: "/utilisation-report-upload",
-        attributes: {
-          'data-cy': 'cancel-button'
-        }
-      }) }}
+      <input
+        class="govuk-button govuk-button--secondary"
+        formaction="{{ cancelLinkHref }}"
+        value="Cancel record correction"
+        data-module="govuk-button"
+        type="submit"
+        data-cy="cancel-button"/>
     </form>
   </div>
 

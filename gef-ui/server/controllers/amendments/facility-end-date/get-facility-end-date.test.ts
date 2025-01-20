@@ -14,7 +14,7 @@ import { FacilityEndDateViewModel } from '../../../types/view-models/amendments/
 import { MOCK_UNISSUED_FACILITY, MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
-import { getPreviousPage } from '../helpers/navigation.helper';
+import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
@@ -112,7 +112,7 @@ describe('getFacilityEndDate', () => {
     // Assert
     const expectedRenderData: FacilityEndDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
-      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment),
       facilityEndDate: undefined,
     };
@@ -144,7 +144,7 @@ describe('getFacilityEndDate', () => {
     // Assert
     const expectedRenderData: FacilityEndDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
-      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment),
       facilityEndDate: {
         day: format(facilityEndDate, 'd'),

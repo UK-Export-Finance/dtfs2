@@ -28,6 +28,13 @@
  *               type: string
  *             exporter:
  *               type: string
+ *             reportedFees:
+ *               type: object
+ *               $ref: '#/definitions/CurrencyAndAmount'
  *             additionalInfo:
  *               type: string
+ *             reasons:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/RecordCorrectionReason'
  */

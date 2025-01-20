@@ -7,7 +7,7 @@ const updateAmendmentMock = jest.fn();
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { aPortalSessionUser, PORTAL_LOGIN_STATUS, DEAL_SUBMISSION_TYPE, DEAL_STATUS, Currency, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { aPortalSessionUser, PORTAL_LOGIN_STATUS, DEAL_SUBMISSION_TYPE, DEAL_STATUS, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { postFacilityValue, PostFacilityValueRequest } from './post-facility-value';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
@@ -15,7 +15,7 @@ import { FacilityValueViewModel } from '../../../types/view-models/amendments/fa
 import { getCurrencySymbol } from './getCurrencySymbol';
 import { validationErrorHandler } from '../../../utils/helpers';
 import { validateFacilityValue } from './validation';
-import { getNextPage } from '../helpers/navigation.helper';
+import { getAmendmentsUrl, getNextPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { ValidationError } from '../../../types/validation-error';
@@ -125,9 +125,9 @@ describe('postFacilityValue', () => {
     // Assert
     const expectedRenderData: FacilityValueViewModel = {
       exporterName: mockDeal.exporter.companyName,
-      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage,
-      currencySymbol: getCurrencySymbol(MOCK_ISSUED_FACILITY.details.currency.id as Currency),
+      currencySymbol: getCurrencySymbol(MOCK_ISSUED_FACILITY.details.currency!.id),
       errors: validationErrorHandler((validateFacilityValue(facilityValue) as { errors: ValidationError[] }).errors),
       facilityValue,
     };

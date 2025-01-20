@@ -1,3 +1,4 @@
+import { CurrencyAndAmountString } from '@ukef/dtfs2-common';
 import { BaseViewModel } from '../base-view-model';
 
 export type PendingCorrectionViewModel = {
@@ -5,6 +6,8 @@ export type PendingCorrectionViewModel = {
   facilityId: string;
   exporter: string;
   additionalInfo: string;
+  formattedReasons: string;
+  formattedReportedFees: CurrencyAndAmountString;
 };
 
 export type NextActionViewModel =
