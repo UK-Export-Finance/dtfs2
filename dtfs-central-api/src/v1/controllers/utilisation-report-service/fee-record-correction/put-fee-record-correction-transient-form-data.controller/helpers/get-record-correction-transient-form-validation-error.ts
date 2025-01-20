@@ -24,7 +24,6 @@ export const getFacilityIdValidationError = async (facilityIdValue?: string): Pr
   return undefined;
 };
 
-// TODO FN-3688: Add unit tests
 /**
  * Validates a reported currency value.
  * @param reportedCurrencyValue - The reported currency value to validate.
@@ -39,7 +38,6 @@ export const getReportedCurrencyValidationError = (reportedCurrencyValue?: strin
   return undefined;
 };
 
-// TODO FN-3688: Add unit tests
 /**
  * Validates a reported fee value.
  * @param reportedFeeValue - The reported fee value to validate.
@@ -54,7 +52,6 @@ export const getReportedFeeValidationError = (reportedFeeValue?: string): string
   return undefined;
 };
 
-// TODO FN-3688: Add unit tests
 /**
  * Validates a utilisation value.
  * @param utilisationValue - The utilisation value to validate.
