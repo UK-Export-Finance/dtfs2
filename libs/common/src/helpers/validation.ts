@@ -1,4 +1,4 @@
-import { COMPANY_REGISTRATION_NUMBER, CURRENCY_NUMBER_WITH_OPTIONAL_THOUSANDS_SEPARATORS_REGEX, MAX_PAYMENT_REFERENCE_CHARACTER_COUNT } from '../constants';
+import { COMPANY_REGISTRATION_NUMBER, MONETARY_VALUE_WITH_OPTIONAL_THOUSANDS_SEPARATORS_REGEX, MAX_PAYMENT_REFERENCE_CHARACTER_COUNT } from '../constants';
 import { isNonEmptyString, isString } from './string';
 
 /**
@@ -43,14 +43,14 @@ export const isPaymentReferenceOverMaxCharacterCount = (paymentReference: string
 };
 
 /**
- * Tests if a string value matches the currency number format with optional
+ * Tests if a string value matches the monetary value format with optional
  * thousands separators.
  * @param value - The string value to test.
- * @returns True if the value matches the currency number format,
- * false otherwise.
+ * @returns True if the value matches the monetary value format, false
+ * otherwise.
  */
-const isCurrencyNumberOptionallyWithThousandsSeparators = (value: string) => {
-  return CURRENCY_NUMBER_WITH_OPTIONAL_THOUSANDS_SEPARATORS_REGEX.test(value);
+const isMonetaryValueOptionallyWithThousandsSeparators = (value: string) => {
+  return MONETARY_VALUE_WITH_OPTIONAL_THOUSANDS_SEPARATORS_REGEX.test(value);
 };
 
 /**
@@ -59,6 +59,6 @@ const isCurrencyNumberOptionallyWithThousandsSeparators = (value: string) => {
  * @param monetaryValue - The monetary value string to validate.
  * @returns True if the monetary value is valid, false otherwise.
  */
-export const isMonetaryAmountValid = (monetaryValue?: string): boolean => {
-  return isNonEmptyString(monetaryValue) && isCurrencyNumberOptionallyWithThousandsSeparators(monetaryValue);
+export const isMonetaryValueValid = (monetaryValue?: string): boolean => {
+  return isNonEmptyString(monetaryValue) && isMonetaryValueOptionallyWithThousandsSeparators(monetaryValue);
 };

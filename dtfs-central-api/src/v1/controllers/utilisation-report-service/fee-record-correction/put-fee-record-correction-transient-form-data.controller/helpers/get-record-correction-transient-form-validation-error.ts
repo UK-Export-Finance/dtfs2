@@ -1,4 +1,4 @@
-import { RecordCorrectionReason, MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, isMonetaryAmountValid, isCurrencyValid } from '@ukef/dtfs2-common';
+import { RecordCorrectionReason, MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, isMonetaryValueValid, isCurrencyValid } from '@ukef/dtfs2-common';
 import { UKEF_FACILITY_ID_REGEX } from '../../../../../../constants/regex';
 import { TfmFacilitiesRepo } from '../../../../../../repositories/tfm-facilities-repo';
 
@@ -45,7 +45,7 @@ export const getReportedCurrencyValidationError = (reportedCurrencyValue?: strin
  * The error message will indicate if the reported fee amount is missing or in an invalid format.
  */
 export const getReportedFeeValidationError = (reportedFeeValue?: string): string | undefined => {
-  if (!isMonetaryAmountValid(reportedFeeValue)) {
+  if (!isMonetaryValueValid(reportedFeeValue)) {
     return 'You must enter the reported fee in a valid format';
   }
 
@@ -59,7 +59,7 @@ export const getReportedFeeValidationError = (reportedFeeValue?: string): string
  * The error message will indicate if the utilisation is missing or in an invalid format.
  */
 export const getUtilisationValidationError = (utilisationValue?: string): string | undefined => {
-  if (!isMonetaryAmountValid(utilisationValue)) {
+  if (!isMonetaryValueValid(utilisationValue)) {
     return 'You must enter the utilisation in a valid format';
   }
 

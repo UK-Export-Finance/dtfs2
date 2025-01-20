@@ -1,4 +1,4 @@
-import { asString, isMonetaryAmountValid, isPaymentReferenceOverMaxCharacterCount, isValidCompanyRegistrationNumber } from './validation';
+import { asString, isMonetaryValueValid, isPaymentReferenceOverMaxCharacterCount, isValidCompanyRegistrationNumber } from './validation';
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '..';
 
 const {
@@ -150,7 +150,7 @@ describe('validation helpers', () => {
     });
   });
 
-  describe('isMonetaryAmountValid', () => {
+  describe('isMonetaryValueValid', () => {
     it.each`
       scenario                                   | input
       ${'simple whole number'}                   | ${'100'}
@@ -158,7 +158,7 @@ describe('validation helpers', () => {
       ${'number with single thousands group'}    | ${'10,234.56'}
       ${'number with multiple thousands groups'} | ${'1,234,567.89'}
     `('should return true for $scenario: "$input"', ({ input }: { input: string }) => {
-      expect(isMonetaryAmountValid(input)).toEqual(true);
+      expect(isMonetaryValueValid(input)).toEqual(true);
     });
 
     it.each`
@@ -174,7 +174,7 @@ describe('validation helpers', () => {
       ${'invalid thousands group size'}                  | ${'1,00'}
       ${'incorrect thousands group format'}              | ${'1,000,00'}
     `('should return false for $scenario: "$input"', ({ input }: { input: string | undefined }) => {
-      expect(isMonetaryAmountValid(input)).toEqual(false);
+      expect(isMonetaryValueValid(input)).toEqual(false);
     });
   });
 });

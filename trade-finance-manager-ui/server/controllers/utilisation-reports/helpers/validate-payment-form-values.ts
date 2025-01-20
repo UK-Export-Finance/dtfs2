@@ -1,4 +1,4 @@
-import { Currency, isNonEmptyString, isCurrencyValid, isPaymentReferenceOverMaxCharacterCount, isMonetaryAmountValid } from '@ukef/dtfs2-common';
+import { Currency, isNonEmptyString, isCurrencyValid, isPaymentReferenceOverMaxCharacterCount, isMonetaryValueValid } from '@ukef/dtfs2-common';
 import { isBefore, isValid, parseISO, startOfDay } from 'date-fns';
 import { REGEX } from '../../../constants';
 import { PaymentErrorsViewModel, PaymentDateErrorViewModel, ErrorSummaryViewModel, AddToAnExistingPaymentErrorsViewModel } from '../../../types/view-models';
@@ -124,7 +124,7 @@ const getPaymentDateHref = (paymentDateError: PaymentDateErrorViewModel): string
 const validateCommonPaymentRequestFormValues = (formValues: AddPaymentFormValues | EditPaymentFormValues): PaymentErrorsViewModel => {
   const errorSummary: ErrorSummaryViewModel[] = [];
 
-  const paymentAmountErrorMessage = isMonetaryAmountValid(formValues.paymentAmount) ? undefined : 'Enter a valid amount received';
+  const paymentAmountErrorMessage = isMonetaryValueValid(formValues.paymentAmount) ? undefined : 'Enter a valid amount received';
   if (paymentAmountErrorMessage) {
     errorSummary.push({ text: paymentAmountErrorMessage, href: '#paymentAmount' });
   }
