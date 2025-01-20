@@ -1,7 +1,7 @@
-import { CURRENCY, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
+import { CURRENCY, InvalidPayloadError, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import {
   getFormValueForReason,
-  getKeyForReason,
+  getFormKeyForReason,
   getValidationErrorsForRequiredFormValues,
   hasValidationErrors,
   validateNoUnexpectedFormValues,
@@ -10,13 +10,13 @@ import {
 import { TfmFacilitiesRepo } from '../../../../../../repositories/tfm-facilities-repo';
 
 describe('validate-record-correction-transient-form-values', () => {
-  describe('getKeyForReason', () => {
+  describe('getFormKeyForReason', () => {
     it(`should return "facilityId" when reason is ${RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT}`, () => {
       // Arrange
       const reason = RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT;
 
       // Act
-      const formFieldKey = getKeyForReason(reason);
+      const formFieldKey = getFormKeyForReason(reason);
 
       // Assert
       expect(formFieldKey).toEqual('facilityId');
@@ -27,7 +27,7 @@ describe('validate-record-correction-transient-form-values', () => {
       const reason = RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT;
 
       // Act
-      const formFieldKey = getKeyForReason(reason);
+      const formFieldKey = getFormKeyForReason(reason);
 
       // Assert
       expect(formFieldKey).toEqual('reportedCurrency');
@@ -38,7 +38,7 @@ describe('validate-record-correction-transient-form-values', () => {
       const reason = RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT;
 
       // Act
-      const formFieldKey = getKeyForReason(reason);
+      const formFieldKey = getFormKeyForReason(reason);
 
       // Assert
       expect(formFieldKey).toEqual('reportedFee');
@@ -49,7 +49,7 @@ describe('validate-record-correction-transient-form-values', () => {
       const reason = RECORD_CORRECTION_REASON.UTILISATION_INCORRECT;
 
       // Act
-      const formFieldKey = getKeyForReason(reason);
+      const formFieldKey = getFormKeyForReason(reason);
 
       // Assert
       expect(formFieldKey).toEqual('utilisation');
@@ -60,7 +60,7 @@ describe('validate-record-correction-transient-form-values', () => {
       const reason = RECORD_CORRECTION_REASON.OTHER;
 
       // Act
-      const formFieldKey = getKeyForReason(reason);
+      const formFieldKey = getFormKeyForReason(reason);
 
       // Assert
       expect(formFieldKey).toEqual('additionalComments');
@@ -71,7 +71,7 @@ describe('validate-record-correction-transient-form-values', () => {
       const reason = 'INVALID_REASON' as RecordCorrectionReason;
 
       // Act & Assert
-      expect(() => getKeyForReason(reason)).toThrow('Invalid record correction reason: INVALID_REASON');
+      expect(() => getFormKeyForReason(reason)).toThrow('Invalid record correction reason: INVALID_REASON');
     });
   });
 
@@ -174,7 +174,7 @@ describe('validate-record-correction-transient-form-values', () => {
 
       // Act & Assert
       expect(() => validateNoUnexpectedFormValues(formValues, reasons)).toThrow(
-        `Expected form field "reportedFee" to be undefined as it does not have an associated reason in the correction request.`,
+        new InvalidPayloadError(`Expected form field "reportedFee" to be undefined as it does not have an associated reason in the correction request.`),
       );
     });
 

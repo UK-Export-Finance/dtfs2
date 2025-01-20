@@ -1,4 +1,10 @@
-import { RECORD_CORRECTION_REASON, RecordCorrectionFormValues, RecordCorrectionFormValueValidationErrors, RecordCorrectionReason } from '@ukef/dtfs2-common';
+import {
+  InvalidPayloadError,
+  RECORD_CORRECTION_REASON,
+  RecordCorrectionFormValues,
+  RecordCorrectionFormValueValidationErrors,
+  RecordCorrectionReason,
+} from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
 import {
   getAdditionalCommentsValidationError,
@@ -14,7 +20,7 @@ import {
  * @returns The form field key corresponding to the specified reason.
  * @throws Error if an invalid record correction reason is provided.
  */
-export const getKeyForReason = (reason: RecordCorrectionReason): keyof RecordCorrectionFormValues => {
+export const getFormKeyForReason = (reason: RecordCorrectionReason): keyof RecordCorrectionFormValues => {
   switch (reason) {
     case RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT:
       return 'facilityId';
@@ -38,7 +44,7 @@ export const getKeyForReason = (reason: RecordCorrectionReason): keyof RecordCor
  * @throws Error if an invalid record correction reason is provided.
  */
 export const getFormValueForReason = (formValues: RecordCorrectionFormValues, reason: RecordCorrectionReason): string | undefined => {
-  const reasonKey = getKeyForReason(reason);
+  const reasonKey = getFormKeyForReason(reason);
 
   return formValues[reasonKey];
 };
@@ -59,17 +65,19 @@ const formFieldKeysWithoutAdditionalComments: (keyof RecordCorrectionFormValues)
  * regardless of the correction reasons.
  * @param formValues - The form values to validate.
  * @param reasons - The reasons for the record correction that determine which form values are expected.
- * @throws Error if there are any form values provided for reasons not in the correction request.
+ * @throws InvalidPayloadError if there are any form values provided for reasons not in the correction request.
  */
 export const validateNoUnexpectedFormValues = (formValues: RecordCorrectionFormValues, reasons: RecordCorrectionReason[]) => {
-  const requiredFormFieldKeys = reasons.map((reason) => getKeyForReason(reason));
+  const requiredFormFieldKeys = reasons.map((reason) => getFormKeyForReason(reason));
   const unexpectedFormFieldKeys = difference(formFieldKeysWithoutAdditionalComments, requiredFormFieldKeys);
 
   unexpectedFormFieldKeys.forEach((formFieldKey) => {
     const formFieldValue = formValues[formFieldKey];
 
     if (formFieldValue) {
-      throw new Error(`Expected form field "${formFieldKey}" to be undefined as it does not have an associated reason in the correction request.`);
+      throw new InvalidPayloadError(
+        `Expected form field "${formFieldKey}" to be undefined as it does not have an associated reason in the correction request.`,
+      );
     }
   });
 };
