@@ -21,7 +21,6 @@ export const validateAndParseCoverEndDate = (dayMonthYear: DayMonthYearInput, co
   }
 
   const coverEndDate = formattingErrorsOrDate.parsedDate;
-
   const now = startOfDay(new Date());
   const maximumCoverEndDate = add(now, { years: COVER_END_DATE_MAXIMUM_YEARS_IN_FUTURE });
 

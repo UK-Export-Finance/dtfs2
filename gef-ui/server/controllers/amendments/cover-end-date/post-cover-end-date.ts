@@ -6,7 +6,7 @@ import { asLoggedInUserSession } from '../../../utils/express-session';
 import { getNextPage, getAmendmentsUrl } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { validateAndParseCoverEndDate } from './validation';
-import { getCoverStartDateOrStartOfToday } from '../../../utils/get-cover-start-date-or-start-of-today';
+import { getCoverStartDateOrToday } from '../../../utils/get-cover-start-date-or-today';
 import { validationErrorHandler } from '../../../utils/helpers';
 
 export type PostCoverEndDateRequest = CustomExpressRequest<{
@@ -44,7 +44,7 @@ export const postCoverEndDate = async (req: PostCoverEndDateRequest, res: Respon
       return res.redirect('/not-found');
     }
 
-    const validationErrorsOrValue = validateAndParseCoverEndDate(coverEndDateDayMonthYear, getCoverStartDateOrStartOfToday(facility));
+    const validationErrorsOrValue = validateAndParseCoverEndDate(coverEndDateDayMonthYear, getCoverStartDateOrToday(facility));
 
     if ('errors' in validationErrorsOrValue) {
       const viewModel: CoverEndDateViewModel = {

@@ -1,7 +1,7 @@
 import { parseISO, startOfDay } from 'date-fns';
 import { Facility } from '../types/facility';
 
-export const getCoverStartDateOrStartOfToday = (facility: Facility): Date => {
+export const getCoverStartDateOrToday = (facility: Facility): Date => {
   if (facility.coverStartDate) {
     return startOfDay(parseISO(facility.coverStartDate));
   }

@@ -3,14 +3,14 @@ const getFacilityMock = jest.fn();
 const updateFacilityMock = jest.fn();
 const updateApplicationMock = jest.fn();
 const validateAndParseBankReviewDateMock = jest.fn();
-const getCoverStartDateOrStartOfTodayMock = jest.fn();
+const getCoverStartDateOrTodayMock = jest.fn();
 
 import httpMocks from 'node-mocks-http';
 import { aPortalSessionUser, DayMonthYearInput, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { postBankReviewDate, PostBankReviewDateRequest } from './post-bank-review-date';
 
 jest.mock('../../utils/get-cover-start-date-or-start-of-today', () => ({
-  getCoverStartDateOrStartOfToday: getCoverStartDateOrStartOfTodayMock,
+  getCoverStartDateOrToday: getCoverStartDateOrTodayMock,
 }));
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('../../services/api', () => ({
@@ -75,7 +75,7 @@ describe('postBankReviewDate', () => {
         dealId,
       },
     });
-    getCoverStartDateOrStartOfTodayMock.mockReturnValueOnce(coverStartDate);
+    getCoverStartDateOrTodayMock.mockReturnValueOnce(coverStartDate);
   });
 
   describe('when the bank review date is valid and has changed', () => {
