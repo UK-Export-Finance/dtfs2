@@ -62,7 +62,7 @@ context('Amendments - change facility value journey - happy path', () => {
 
     whatDoYouNeedToChange.coverEndDateCheckbox().should('not.be.checked');
     whatDoYouNeedToChange.facilityValueCheckbox().should('not.be.checked');
-    whatDoYouNeedToChange.pageTitle().contains('What do you need to change?');
+    whatDoYouNeedToChange.pageHeading().contains('What do you need to change?');
     whatDoYouNeedToChange.backLink();
     whatDoYouNeedToChange.warning().contains('Check your records for the most up-to-date values');
 

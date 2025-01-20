@@ -1,5 +1,5 @@
 /* eslint-disable import/first */
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, AmendmentsEligibilityCriteria, InvalidAuditDetailsError } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, InvalidAuditDetailsError, AmendmentsEligibilityCriteria } from '@ukef/dtfs2-common';
 
 const mockFindOneUser = jest.fn();
 const mockFindOneFacility = jest.fn();
@@ -132,7 +132,7 @@ describe('PortalFacilityAmendmentService', () => {
         facilityId: new ObjectId(facilityId),
         amendmentId: expect.any(ObjectId) as ObjectId,
         type: AMENDMENT_TYPES.PORTAL,
-        status: AMENDMENT_STATUS.IN_PROGRESS,
+        status: PORTAL_AMENDMENT_STATUS.DRAFT,
         createdAt: getUnixTime(new Date()),
         updatedAt: getUnixTime(new Date()),
         eligibilityCriteria: {
@@ -169,7 +169,7 @@ describe('PortalFacilityAmendmentService', () => {
         facilityId: new ObjectId(facilityId),
         amendmentId: expect.any(ObjectId) as ObjectId,
         type: AMENDMENT_TYPES.PORTAL,
-        status: AMENDMENT_STATUS.IN_PROGRESS,
+        status: PORTAL_AMENDMENT_STATUS.DRAFT,
         createdAt: getUnixTime(new Date()),
         updatedAt: getUnixTime(new Date()),
         eligibilityCriteria: {

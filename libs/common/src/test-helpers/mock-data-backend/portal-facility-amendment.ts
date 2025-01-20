@@ -1,6 +1,6 @@
 import { getUnixTime } from 'date-fns';
 import { ObjectId } from 'mongodb';
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, CURRENCY } from '../../constants';
+import { AMENDMENT_TYPES, CURRENCY, PORTAL_AMENDMENT_STATUS } from '../../constants';
 import { PortalFacilityAmendment } from '../../types';
 import { PortalFacilityAmendmentUserValues } from '../../types/portal/amendment';
 
@@ -27,7 +27,7 @@ export const aPortalFacilityAmendment = (): PortalFacilityAmendment => ({
   dealId: new ObjectId(),
   createdAt: getUnixTime(new Date()),
   updatedAt: getUnixTime(new Date()),
-  status: AMENDMENT_STATUS.IN_PROGRESS,
+  status: PORTAL_AMENDMENT_STATUS.DRAFT,
   eligibilityCriteria: {
     criteria: [{ id: 1, text: 'item 1', answer: null }],
     version: 1,

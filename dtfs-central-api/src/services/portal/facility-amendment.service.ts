@@ -1,5 +1,4 @@
 import {
-  AMENDMENT_STATUS,
   AMENDMENT_TYPES,
   FacilityAmendmentWithUkefId,
   getUnixTimestampSeconds,
@@ -7,6 +6,7 @@ import {
   PortalAuditDetails,
   PortalFacilityAmendment,
   PortalFacilityAmendmentUserValues,
+  PORTAL_AMENDMENT_STATUS,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { findOneUser } from '../../v1/controllers/user/get-user.controller';
@@ -53,7 +53,7 @@ export class PortalFacilityAmendmentService {
       facilityId: new ObjectId(facilityId),
       amendmentId: new ObjectId(),
       type: AMENDMENT_TYPES.PORTAL,
-      status: AMENDMENT_STATUS.IN_PROGRESS,
+      status: PORTAL_AMENDMENT_STATUS.DRAFT,
       createdAt: getUnixTimestampSeconds(new Date()),
       updatedAt: getUnixTimestampSeconds(new Date()),
       eligibilityCriteria: { version, criteria: updatedCriteria },

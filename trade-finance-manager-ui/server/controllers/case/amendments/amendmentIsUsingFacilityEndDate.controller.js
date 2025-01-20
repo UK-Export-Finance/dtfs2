@@ -1,4 +1,4 @@
-const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const api = require('../../../api');
 const { isUsingFacilityEndDateValidation } = require('./validation/amendmentIsUsingFacilityEndDate.validate');
@@ -28,7 +28,7 @@ const getAmendmentIsUsingFacilityEndDate = async (req, res) => {
     return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/amendment-options`);
   }
 
-  const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
 
   return res.render('case/amendments/amendment-is-using-facility-end-date.njk', {
     dealId,
@@ -64,7 +64,7 @@ const postAmendmentIsUsingFacilityEndDate = async (req, res) => {
   if (errors.errorSummary?.length) {
     const isFacilityEndDateEnabled = facility.facilitySnapshot.isGef;
 
-    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate && isFacilityEndDateEnabled;
+    const isEditable = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate && isFacilityEndDateEnabled;
     return res.render('case/amendments/amendment-is-using-facility-end-date.njk', {
       errors,
       dealId,

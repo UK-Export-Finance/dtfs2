@@ -1,4 +1,4 @@
-import { AMENDMENT_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
+import { TFM_AMENDMENT_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
@@ -68,7 +68,7 @@ describe('controllers - case', () => {
           ukefFacilityId: '1234',
           facilityId: '12345',
           submittedByPim: true,
-          status: AMENDMENT_STATUS.IN_PROGRESS,
+          status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
         },
       ];
 
@@ -765,7 +765,7 @@ describe('controllers - case', () => {
         dealId: '625e99cb88eeeb001e33bf47',
         createdAt: 1652866533,
         updatedAt: 1652876975,
-        status: AMENDMENT_STATUS.IN_PROGRESS,
+        status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
         version: 1,
         createdBy: {},
         requestDate: 1652876967,

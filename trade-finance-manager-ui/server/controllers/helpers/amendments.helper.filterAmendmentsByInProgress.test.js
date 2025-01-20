@@ -1,23 +1,23 @@
-const { TFM_DEAL_STAGE, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { TFM_DEAL_STAGE, TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { getAmendmentsInProgress } = require('./amendments.helper');
 
 const notStartedAmendment = () => ({
-  status: AMENDMENT_STATUS.NOT_STARTED,
+  status: TFM_AMENDMENT_STATUS.NOT_STARTED,
   submittedByPim: false,
 });
 
 const unsubmittedInProgressAmendment = () => ({
-  status: AMENDMENT_STATUS.IN_PROGRESS,
+  status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
   submittedByPim: false,
 });
 
 const submittedInProgressAmendment = () => ({
-  status: AMENDMENT_STATUS.IN_PROGRESS,
+  status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
   submittedByPim: true,
 });
 
 const completedAmendment = () => ({
-  status: AMENDMENT_STATUS.COMPLETED,
+  status: TFM_AMENDMENT_STATUS.COMPLETED,
   submittedByPim: true,
 });
 

@@ -1,4 +1,4 @@
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, AmendmentsEligibilityCriterionWithAnswer, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, AmendmentsEligibilityCriterionWithAnswer, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { getUnixTime } from 'date-fns';
 
 export class PortalFacilityAmendmentWithUkefIdMockBuilder {
@@ -10,7 +10,7 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
       facilityId: '6776cb6f3e2efb60a50fbc41',
       amendmentId: '6777c4ca826649ec990c1adf',
       type: AMENDMENT_TYPES.PORTAL,
-      status: AMENDMENT_STATUS.IN_PROGRESS,
+      status: PORTAL_AMENDMENT_STATUS.DRAFT,
       createdAt: getUnixTime(new Date()),
       updatedAt: getUnixTime(new Date()),
       createdBy: {
