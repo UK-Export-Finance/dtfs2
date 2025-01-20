@@ -1,4 +1,4 @@
-const { CURRENCY, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { CURRENCY, TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { orderBy, cloneDeep } = require('lodash');
 const { formattedNumber } = require('../../../utils/number');
 const { decimalsCount, roundNumber } = require('../../helpers/number');
@@ -83,7 +83,7 @@ const findLatestCompletedAmendment = (amendments) => {
   if (!amendments) {
     return {};
   }
-  const completedAmendments = amendments.filter(({ status }) => status === AMENDMENT_STATUS.COMPLETED);
+  const completedAmendments = amendments.filter(({ status }) => status === TFM_AMENDMENT_STATUS.COMPLETED);
   const sortedAmendments = orderBy(completedAmendments, ['updatedAt', 'version'], ['desc', 'asc']);
 
   /**

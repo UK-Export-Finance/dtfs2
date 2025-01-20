@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, AnyObject, PortalFacilityAmendmentWithUkefId, Role } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, AnyObject, PortalFacilityAmendmentWithUkefId, Role } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import app from '../../../../src/createApp';
 import testUserCache from '../../../api-test-users';
@@ -121,7 +121,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
           ukefFacilityId: '123',
           createdAt: 1702061978881,
           updatedAt: 1702061978881,
-          status: AMENDMENT_STATUS.IN_PROGRESS,
+          status: PORTAL_AMENDMENT_STATUS.DRAFT,
         };
 
         jest.mocked(getPortalFacilityAmendmentMock).mockResolvedValue(amendment);

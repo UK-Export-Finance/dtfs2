@@ -1,4 +1,4 @@
-const { TEAM_IDS, AMENDMENT_STATUS, DEAL_STATUS, TFM_DEAL_STAGE } = require('@ukef/dtfs2-common');
+const { TEAM_IDS, TFM_AMENDMENT_STATUS, DEAL_STATUS, TFM_DEAL_STAGE } = require('@ukef/dtfs2-common');
 const { DECISIONS, DEAL } = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
 
@@ -81,7 +81,7 @@ const getAmendmentsInProgress = ({ amendments, deal }) => {
   }
 
   if (Array.isArray(amendments) && amendments.length) {
-    return amendments.filter(({ status, submittedByPim }) => status === AMENDMENT_STATUS.IN_PROGRESS && submittedByPim);
+    return amendments.filter(({ status, submittedByPim }) => status === TFM_AMENDMENT_STATUS.IN_PROGRESS && submittedByPim);
   }
 
   return [];

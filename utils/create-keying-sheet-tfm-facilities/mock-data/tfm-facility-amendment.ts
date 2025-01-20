@@ -1,14 +1,14 @@
 import { ObjectId } from 'mongodb';
 import { faker } from '@faker-js/faker';
 import { addMonths } from 'date-fns';
-import { AMENDMENT_STATUS, TfmFacilityAmendment, UnixTimestamp } from '@ukef/dtfs2-common';
+import { TFM_AMENDMENT_STATUS, TfmFacilityAmendment, UnixTimestamp } from '@ukef/dtfs2-common';
 
 const TODAY = new Date();
 
 const EARLIEST_COVER_END_DATE = addMonths(TODAY, 12);
 const getRandomCoverEndDateTimestamp = (): UnixTimestamp => faker.date.future({ years: 2, refDate: EARLIEST_COVER_END_DATE }).getTime();
 
-const getRandomAmendmentStatus = () => faker.helpers.arrayElement(Object.values(AMENDMENT_STATUS));
+const getRandomAmendmentStatus = () => faker.helpers.arrayElement(Object.values(TFM_AMENDMENT_STATUS));
 
 export const aTfmFacilityAmendmentWithFacilityIdAndDealId = (facilityId: ObjectId, dealId: ObjectId): TfmFacilityAmendment => {
   const amendment: TfmFacilityAmendment = {

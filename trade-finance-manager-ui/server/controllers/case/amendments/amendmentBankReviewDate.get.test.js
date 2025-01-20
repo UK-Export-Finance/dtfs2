@@ -1,4 +1,4 @@
-import { AMENDMENT_STATUS, FACILITY_TYPE, MAPPED_FACILITY_TYPE, TEAM_IDS } from '@ukef/dtfs2-common';
+import { TFM_AMENDMENT_STATUS, FACILITY_TYPE, MAPPED_FACILITY_TYPE, TEAM_IDS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import {
@@ -139,7 +139,7 @@ describe('amendmentBankReviewDate routes', () => {
     });
 
     it('should render the template with isEditable false when amendment is found but has been completed', async () => {
-      const COMPLETED_AMENDMENT = { ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE, status: AMENDMENT_STATUS.COMPLETED };
+      const COMPLETED_AMENDMENT = { ...MOCK_AMENDMENT_COVERENDDATE_CHANGE_USING_BANK_REVIEW_DATE, status: TFM_AMENDMENT_STATUS.COMPLETED };
 
       api.getAmendmentById.mockResolvedValueOnce({ status: 200, data: COMPLETED_AMENDMENT });
       api.getFacility = jest.fn().mockResolvedValueOnce(gefFacility);
