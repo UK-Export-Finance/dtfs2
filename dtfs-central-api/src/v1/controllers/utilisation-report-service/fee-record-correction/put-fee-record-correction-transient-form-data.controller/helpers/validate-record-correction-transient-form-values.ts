@@ -1,6 +1,6 @@
 import { RecordCorrectionFormValues, RecordCorrectionFormValueValidationErrors, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { validateNoUnexpectedFormValues } from './validate-no-unexpected-record-correction-transient-form-values';
-import { getValidationErrorsForRequiredFormValues } from './get-record-correction-transient-form-required-field-validation-errors';
+import { getValidationErrorsForFormValues } from './get-record-correction-transient-form-required-field-validation-errors';
 
 /**
  * Checks if there are any validation errors present in the validation errors object.
@@ -26,7 +26,7 @@ export const validateRecordCorrectionTransientFormValues = async (
 ): Promise<{ formHasErrors: boolean; errors: RecordCorrectionFormValueValidationErrors }> => {
   validateNoUnexpectedFormValues(formValues, reasons);
 
-  const errors = await getValidationErrorsForRequiredFormValues(formValues, reasons);
+  const errors = await getValidationErrorsForFormValues(formValues, reasons);
 
   const formHasErrors = hasValidationErrors(errors);
 

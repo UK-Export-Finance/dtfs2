@@ -30,8 +30,12 @@ const getValidatorMap = (reasons: RecordCorrectionReason[]): ValidatorMap => {
 
   const utilisationValidator = (value?: string) => ({ utilisationErrorMessage: getUtilisationValidationError(value) });
 
-  const isSingleCorrectionReason = reasons.length === 1;
-  const otherReasonValidator = (value?: string) => ({ additionalCommentsErrorMessage: getAdditionalCommentsValidationError(isSingleCorrectionReason, value) });
+  const isOtherInReasons = reasons.includes(RECORD_CORRECTION_REASON.OTHER);
+  const isOtherSoleCorrectionReason = reasons.length === 1 && isOtherInReasons;
+
+  const otherReasonValidator = (value?: string) => ({
+    additionalCommentsErrorMessage: getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, isOtherInReasons, value),
+  });
 
   return {
     [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT]: facilityIdValidator,
@@ -43,12 +47,18 @@ const getValidatorMap = (reasons: RecordCorrectionReason[]): ValidatorMap => {
 };
 
 /**
- * Gets validation errors for form values that are required based on the selected reasons.
+ * Gets validation errors for form values.
+ *
+ * Validates all form values that are required based on the selected reasons.
+ *
+ * If {@link RECORD_CORRECTION_REASON.OTHER"} is included in the reasons,
+ * the "additional comments" field is validated as required. Otherwise,
+ * it is validated as optional and does not include a minimum length check.
  * @param formValues - The form values to validate.
  * @param reasons - The reasons for the record correction that determine which form values are required.
  * @returns An object containing validation error messages for any invalid required form values.
  */
-export const getValidationErrorsForRequiredFormValues = async (
+export const getValidationErrorsForFormValues = async (
   formValues: RecordCorrectionFormValues,
   reasons: RecordCorrectionReason[],
 ): Promise<RecordCorrectionFormValueValidationErrors> => {
@@ -56,7 +66,9 @@ export const getValidationErrorsForRequiredFormValues = async (
 
   let validationErrors: RecordCorrectionFormValueValidationErrors = {};
 
-  for (const reason of reasons) {
+  const reasonsWithOther = [...reasons, RECORD_CORRECTION_REASON.OTHER];
+
+  for (const reason of reasonsWithOther) {
     const reasonValidator = validatorMap[reason];
 
     if (!reasonValidator) {

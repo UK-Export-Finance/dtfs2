@@ -227,85 +227,175 @@ describe('get-record-correction-transient-form-validation-error', () => {
   describe('getAdditionalCommentsValidationError', () => {
     const requiredCommentErrorMessage = 'You must enter a comment';
 
-    describe('when "additionalComments" is undefined', () => {
-      const isOtherSoleCorrectionReason = true;
-      const additionalComments = undefined;
+    describe('when the "additionalComments" field is required', () => {
+      const isRequired = true;
 
-      it('should return error message', () => {
-        // Act
-        const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, additionalComments);
-
-        // Assert
-        expect(errorMessage).toEqual(requiredCommentErrorMessage);
-      });
-    });
-
-    describe('when "additionalComments" is an empty string', () => {
-      const isOtherSoleCorrectionReason = true;
-      const additionalComments = '';
-
-      it('should return error message', () => {
-        // Act
-        const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, additionalComments);
-
-        // Assert
-        expect(errorMessage).toEqual(requiredCommentErrorMessage);
-      });
-    });
-
-    describe('when "additionalComments" is only whitespace', () => {
-      const isOtherSoleCorrectionReason = true;
-      const additionalComments = '   ';
-
-      it('should return error message', () => {
-        // Act
-        const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, additionalComments);
-
-        // Assert
-        expect(errorMessage).toEqual(requiredCommentErrorMessage);
-      });
-    });
-
-    describe('when "additionalComments" length is less than maximum', () => {
-      const isOtherSoleCorrectionReason = true;
-      const additionalComments = 'Some valid additional comments';
-
-      it('should return undefined', () => {
-        // Act
-        const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, additionalComments);
-
-        // Assert
-        expect(errorMessage).toBeUndefined();
-      });
-    });
-
-    describe('when "additionalComments" exceeds maximum length', () => {
-      const longComment = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT + 1);
-
-      it(`should return error message referring to "record information box" when "${RECORD_CORRECTION_REASON.OTHER}" is the sole correction reason`, () => {
-        // Arrange
+      describe('and is undefined', () => {
         const isOtherSoleCorrectionReason = true;
+        const additionalComments = undefined;
 
-        // Act
-        const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, longComment);
+        it('should return error message', () => {
+          // Act
+          const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, isRequired, additionalComments);
 
-        // Assert
-        const expectedErrorMessage = `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the record information box`;
-
-        expect(errorMessage).toEqual(expectedErrorMessage);
+          // Assert
+          expect(errorMessage).toEqual(requiredCommentErrorMessage);
+        });
       });
 
-      it('should return error message referring to "additional comments box" for multiple reasons', () => {
-        // Arrange
-        const isOtherSoleCorrectionReason = false;
+      describe('and is an empty string', () => {
+        const isOtherSoleCorrectionReason = true;
+        const additionalComments = '';
 
-        // Act
-        const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, longComment);
+        it('should return error message', () => {
+          // Act
+          const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, isRequired, additionalComments);
 
-        // Assert
-        const expectedErrorMessage = `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the additional comments box`;
+          // Assert
+          expect(errorMessage).toEqual(requiredCommentErrorMessage);
+        });
+      });
 
-        expect(errorMessage).toEqual(expectedErrorMessage);
+      describe('and contains only whitespace', () => {
+        const isOtherSoleCorrectionReason = true;
+        const additionalComments = '   ';
+
+        it('should return error message', () => {
+          // Act
+          const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, isRequired, additionalComments);
+
+          // Assert
+          expect(errorMessage).toEqual(requiredCommentErrorMessage);
+        });
+      });
+
+      describe('and has a length less than the maximum', () => {
+        const isOtherSoleCorrectionReason = true;
+        const additionalComments = 'Some valid additional comments';
+
+        it('should return undefined', () => {
+          // Act
+          const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, isRequired, additionalComments);
+
+          // Assert
+          expect(errorMessage).toBeUndefined();
+        });
+      });
+
+      describe('and exceeds the maximum length', () => {
+        const longComment = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT + 1);
+
+        it(`should return error message referring to "record information box" when "${RECORD_CORRECTION_REASON.OTHER}" is the sole correction reason`, () => {
+          // Arrange
+          const isOtherSoleCorrectionReason = true;
+
+          // Act
+          const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, isRequired, longComment);
+
+          // Assert
+          const expectedErrorMessage = `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the record information box`;
+
+          expect(errorMessage).toEqual(expectedErrorMessage);
+        });
+
+        it('should return error message referring to "additional comments box" for multiple reasons', () => {
+          // Arrange
+          const isOtherSoleCorrectionReason = false;
+
+          // Act
+          const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, isRequired, longComment);
+
+          // Assert
+          const expectedErrorMessage = `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the additional comments box`;
+
+          expect(errorMessage).toEqual(expectedErrorMessage);
+        });
+      });
+    });
+
+    describe('when the "additionalComments" field is not required', () => {
+      const isRequired = false;
+
+      describe('and is undefined', () => {
+        const isOtherSoleCorrectionReason = true;
+        const additionalComments = undefined;
+
+        it('should return undefined', () => {
+          // Act
+          const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, isRequired, additionalComments);
+
+          // Assert
+          expect(errorMessage).toBeUndefined();
+        });
+      });
+
+      describe('and is an empty string', () => {
+        const isOtherSoleCorrectionReason = true;
+        const additionalComments = '';
+
+        it('should return undefined', () => {
+          // Act
+          const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, isRequired, additionalComments);
+
+          // Assert
+          expect(errorMessage).toBeUndefined();
+        });
+      });
+
+      describe('and contains only whitespace', () => {
+        const isOtherSoleCorrectionReason = true;
+        const additionalComments = '   ';
+
+        it('should return undefined', () => {
+          // Act
+          const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, isRequired, additionalComments);
+
+          // Assert
+          expect(errorMessage).toBeUndefined();
+        });
+      });
+
+      describe('and has a length less than the maximum', () => {
+        const isOtherSoleCorrectionReason = true;
+        const additionalComments = 'Some valid additional comments';
+
+        it('should return undefined', () => {
+          // Act
+          const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, isRequired, additionalComments);
+
+          // Assert
+          expect(errorMessage).toBeUndefined();
+        });
+      });
+
+      describe('and exceeds the maximum length', () => {
+        const longComment = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT + 1);
+
+        it(`should return error message referring to "record information box" when "${RECORD_CORRECTION_REASON.OTHER}" is the sole correction reason`, () => {
+          // Arrange
+          const isOtherSoleCorrectionReason = true;
+
+          // Act
+          const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, isRequired, longComment);
+
+          // Assert
+          const expectedErrorMessage = `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the record information box`;
+
+          expect(errorMessage).toEqual(expectedErrorMessage);
+        });
+
+        it('should return error message referring to "additional comments box" for multiple reasons', () => {
+          // Arrange
+          const isOtherSoleCorrectionReason = false;
+
+          // Act
+          const errorMessage = getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, isRequired, longComment);
+
+          // Assert
+          const expectedErrorMessage = `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the additional comments box`;
+
+          expect(errorMessage).toEqual(expectedErrorMessage);
+        });
       });
     });
   });

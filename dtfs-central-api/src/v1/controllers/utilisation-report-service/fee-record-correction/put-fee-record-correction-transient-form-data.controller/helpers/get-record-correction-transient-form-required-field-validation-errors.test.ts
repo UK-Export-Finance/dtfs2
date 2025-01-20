@@ -1,9 +1,9 @@
-import { RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
+import { CURRENCY, MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../../../repositories/tfm-facilities-repo';
-import { getValidationErrorsForRequiredFormValues } from './get-record-correction-transient-form-required-field-validation-errors';
+import { getValidationErrorsForFormValues } from './get-record-correction-transient-form-required-field-validation-errors';
 
 describe('get-record-correction-transient-form-required-field-validation-errors', () => {
-  describe('getValidationErrorsForRequiredFormValues', () => {
+  describe('getValidationErrorsForFormValues', () => {
     describe('when validating facility ID', () => {
       beforeEach(() => {
         jest.spyOn(TfmFacilitiesRepo, 'ukefGefFacilityExists').mockResolvedValue(false);
@@ -15,7 +15,7 @@ describe('get-record-correction-transient-form-required-field-validation-errors'
         const reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT];
 
         // Act
-        const validationErrors = await getValidationErrorsForRequiredFormValues(formValues, reasons);
+        const validationErrors = await getValidationErrorsForFormValues(formValues, reasons);
 
         // Assert
         const expectedFacilityIdErrorMessage = 'You must enter a facility ID between 8 and 10 digits using the numbers 0-9 only';
@@ -34,7 +34,7 @@ describe('get-record-correction-transient-form-required-field-validation-errors'
         const reasons = [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT];
 
         // Act
-        const validationErrors = await getValidationErrorsForRequiredFormValues(formValues, reasons);
+        const validationErrors = await getValidationErrorsForFormValues(formValues, reasons);
 
         // Assert
         const expectedReportedCurrencyErrorMessage = 'You must select a currency';
@@ -53,7 +53,7 @@ describe('get-record-correction-transient-form-required-field-validation-errors'
         const reasons = [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT];
 
         // Act
-        const validationErrors = await getValidationErrorsForRequiredFormValues(formValues, reasons);
+        const validationErrors = await getValidationErrorsForFormValues(formValues, reasons);
 
         // Assert
         const expectedReportedFeeErrorMessage = 'You must enter the reported fee in a valid format';
@@ -72,7 +72,7 @@ describe('get-record-correction-transient-form-required-field-validation-errors'
         const reasons = [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT];
 
         // Act
-        const validationErrors = await getValidationErrorsForRequiredFormValues(formValues, reasons);
+        const validationErrors = await getValidationErrorsForFormValues(formValues, reasons);
 
         // Assert
         const expectedUtilisationErrorMessage = 'You must enter the utilisation in a valid format';
@@ -85,21 +85,66 @@ describe('get-record-correction-transient-form-required-field-validation-errors'
     });
 
     describe('when validating additional comments', () => {
-      it('should return validation error when comments are missing', async () => {
-        // Arrange
-        const formValues = { additionalComments: undefined };
+      const requiredAdditionalCommentsErrorMessage = 'You must enter a comment';
+
+      describe(`and "${RECORD_CORRECTION_REASON.OTHER}" is a correction reason`, () => {
         const reasons = [RECORD_CORRECTION_REASON.OTHER];
 
-        // Act
-        const validationErrors = await getValidationErrorsForRequiredFormValues(formValues, reasons);
+        it('should return validation error when comments are missing', async () => {
+          // Arrange
+          const formValues = { additionalComments: undefined };
 
-        // Assert
-        const expectedAdditionalCommentsErrorMessage = 'You must enter a comment';
-        const expectedErrors = {
-          additionalCommentsErrorMessage: expectedAdditionalCommentsErrorMessage,
-        };
+          // Act
+          const validationErrors = await getValidationErrorsForFormValues(formValues, reasons);
 
-        expect(validationErrors).toEqual(expectedErrors);
+          // Assert
+          const expectedAdditionalCommentsErrorMessage = requiredAdditionalCommentsErrorMessage;
+          const expectedErrors = {
+            additionalCommentsErrorMessage: expectedAdditionalCommentsErrorMessage,
+          };
+
+          expect(validationErrors).toEqual(expectedErrors);
+        });
+      });
+
+      describe(`and "${RECORD_CORRECTION_REASON.OTHER}" is not a correction reason`, () => {
+        const reasons = [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT];
+
+        it('should not return a validation error when comments are missing', async () => {
+          // Arrange
+          const formValues = {
+            reportedCurrency: CURRENCY.GBP,
+            additionalComments: undefined,
+          };
+
+          // Act
+          const validationErrors = await getValidationErrorsForFormValues(formValues, reasons);
+
+          // Assert
+          const expectedErrors = {};
+
+          expect(validationErrors).toEqual(expectedErrors);
+        });
+
+        it('should return validation error when comments are over the maximum character limit', async () => {
+          // Arrange
+          const additionalComments = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT + 1);
+          const formValues = {
+            reportedCurrency: CURRENCY.GBP,
+            additionalComments,
+          };
+
+          // Act
+          const validationErrors = await getValidationErrorsForFormValues(formValues, reasons);
+
+          // Assert
+          const expectedAdditionalCommentsErrorMessage = `You cannot enter more than ${MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT} characters in the additional comments box`;
+          const expectedErrors = {
+            additionalCommentsErrorMessage: expectedAdditionalCommentsErrorMessage,
+          };
+
+          expect(validationErrors).toEqual(expectedErrors);
+        });
       });
     });
 
@@ -113,7 +158,7 @@ describe('get-record-correction-transient-form-required-field-validation-errors'
         const reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT];
 
         // Act
-        const validationErrors = await getValidationErrorsForRequiredFormValues(formValues, reasons);
+        const validationErrors = await getValidationErrorsForFormValues(formValues, reasons);
 
         // Assert
         const expectedFacilityIdErrorMessage = 'You must enter a facility ID between 8 and 10 digits using the numbers 0-9 only';
@@ -135,7 +180,7 @@ describe('get-record-correction-transient-form-required-field-validation-errors'
         const reasons = ['INVALID_REASON' as RecordCorrectionReason];
 
         // Act & Assert
-        await expect(getValidationErrorsForRequiredFormValues(formValues, reasons)).rejects.toThrow('Invalid record correction reason: INVALID_REASON');
+        await expect(getValidationErrorsForFormValues(formValues, reasons)).rejects.toThrow('Invalid record correction reason: INVALID_REASON');
       });
     });
   });
