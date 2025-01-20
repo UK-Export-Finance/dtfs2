@@ -41,11 +41,6 @@ export const getEligibility = async (req: GetEligibilityRequest, res: Response) 
       return res.redirect('/not-found');
     }
 
-    if (!amendment.eligibilityCriteria) {
-      console.error('Eligibility criteria was not found on facility %s', facilityId);
-      return res.redirect('/not-found');
-    }
-
     const { criteria } = amendment.eligibilityCriteria;
 
     const viewModel: EligibilityViewModel = {
