@@ -6,16 +6,9 @@ const updateAmendmentMock = jest.fn();
 
 import { createMocks } from 'node-mocks-http';
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import {
-  aPortalSessionUser,
-  DEAL_STATUS,
-  DEAL_SUBMISSION_TYPE,
-  Facility,
-  PORTAL_LOGIN_STATUS,
-  PortalFacilityAmendmentWithUkefId,
-  ROLES,
-} from '@ukef/dtfs2-common';
+import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, PortalFacilityAmendmentWithUkefId, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
+import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PostWhatNeedsToChangeRequest, postWhatNeedsToChange } from './post-what-needs-to-change.ts';
 import { WhatNeedsToChangeViewModel } from '../../../types/view-models/amendments/what-needs-to-change-view-model.ts';
 import { STB_PIM_EMAIL } from '../../../constants/emails.ts';
@@ -63,10 +56,6 @@ const getHttpMocks = (amendmentOptions: string[] = ['changeCoverEndDate', 'chang
 
 const mockDeal = { exporter: { companyName }, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as Deal;
 
-const mockFacility = {
-  hasBeenIssued: true,
-} as Facility;
-
 describe('postWhatNeedsToChange', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
 
@@ -77,7 +66,7 @@ describe('postWhatNeedsToChange', () => {
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().withDealId(dealId).withFacilityId(facilityId).withAmendmentId(amendmentId).build();
 
     getApplicationMock.mockResolvedValue(mockDeal);
-    getFacilityMock.mockResolvedValue({ details: mockFacility });
+    getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     updateAmendmentMock.mockResolvedValue(amendment);
   });
 
@@ -137,6 +126,7 @@ describe('postWhatNeedsToChange', () => {
 
     const expectedRenderData: WhatNeedsToChangeViewModel = {
       exporterName: companyName,
+      facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage: `/gef/application-details/${dealId}`,
       amendmentFormEmail: STB_PIM_EMAIL,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),

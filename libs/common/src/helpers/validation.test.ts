@@ -1,4 +1,4 @@
-import { asString, isPaymentReferenceOverMaxCharacterCount, isValidCompanyRegistrationNumber } from './validation';
+import { asString, isMonetaryValueValid, isPaymentReferenceOverMaxCharacterCount, isValidCompanyRegistrationNumber } from './validation';
 import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '..';
 
 const {
@@ -147,6 +147,34 @@ describe('validation helpers', () => {
 
         expect(result).toEqual(true);
       });
+    });
+  });
+
+  describe('isMonetaryValueValid', () => {
+    it.each`
+      scenario                                   | input
+      ${'simple whole number'}                   | ${'100'}
+      ${'number with two decimal places'}        | ${'100.23'}
+      ${'number with single thousands group'}    | ${'10,234.56'}
+      ${'number with multiple thousands groups'} | ${'1,234,567.89'}
+    `('should return true for $scenario: "$input"', ({ input }: { input: string }) => {
+      expect(isMonetaryValueValid(input)).toEqual(true);
+    });
+
+    it.each`
+      scenario                                           | input
+      ${'undefined value'}                               | ${undefined}
+      ${'empty string'}                                  | ${''}
+      ${'non-numeric characters'}                        | ${'abc'}
+      ${'more than two decimal places'}                  | ${'100.000'}
+      ${'incorrect thousands separator placement'}       | ${'1,00.00'}
+      ${'comma decimal separator'}                       | ${'1,000,00'}
+      ${'period thousands separator'}                    | ${'1.000.00'}
+      ${'period thousands and comma decimal separators'} | ${'1.000,00'}
+      ${'invalid thousands group size'}                  | ${'1,00'}
+      ${'incorrect thousands group format'}              | ${'1,000,00'}
+    `('should return false for $scenario: "$input"', ({ input }: { input: string | undefined }) => {
+      expect(isMonetaryValueValid(input)).toEqual(false);
     });
   });
 });
