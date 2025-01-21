@@ -14,6 +14,7 @@ import {
   handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent,
   handleFeeRecordCorrectionRequestedEvent,
 } from './event-handlers';
+import { handleFeeRecordCorrectionReceivedEvent } from './event-handlers/correction-received';
 
 /**
  * The fee record state machine class
@@ -81,7 +82,12 @@ export class FeeRecordStateMachine {
             return this.handleInvalidTransition(event);
         }
       case FEE_RECORD_STATUS.PENDING_CORRECTION:
-        return this.handleInvalidTransition(event);
+        switch (event.type) {
+          case 'CORRECTION_RECEIVED':
+            return handleFeeRecordCorrectionReceivedEvent(this.feeRecord, event.payload);
+          default:
+            return this.handleInvalidTransition(event);
+        }
       case FEE_RECORD_STATUS.MATCH:
         switch (event.type) {
           case 'PAYMENT_DELETED':
