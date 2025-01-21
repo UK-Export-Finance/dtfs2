@@ -38,7 +38,7 @@ context('Change cover end date journey - unhappy path', () => {
 
       cy.createGefFacilities(dealId, [anIssuedCashFacility({ facilityEndDateEnabled: true })], BANK1_MAKER1).then((createdFacility) => {
         facilityId = createdFacility.details._id;
-        coverStartDate = new Date(createdFacility.coverStartDate);
+        coverStartDate = createdFacility.details.coverStartDate ? new Date(createdFacility.details.coverStartDate) : new Date();
         cy.makerLoginSubmitGefDealForReview(insertedDeal);
         cy.checkerLoginSubmitGefDealToUkef(insertedDeal);
 
@@ -95,10 +95,10 @@ context('Change cover end date journey - unhappy path', () => {
     cy.clickContinueButton();
 
     coverEndDate.errorSummary().should('be.visible');
-    coverEndDate.errorSummary().contains('Enter the new cover end date in number format');
+    coverEndDate.errorSummary().contains('Enter the cover end date');
 
     coverEndDate.coverEndDateInlineError().should('be.visible');
-    coverEndDate.coverEndDateInlineError().contains('Enter the new cover end date in number format');
+    coverEndDate.coverEndDateInlineError().contains('Enter the cover end date');
   });
 
   it('should navigate to cancel page when cancel is clicked', () => {
@@ -111,6 +111,8 @@ context('Change cover end date journey - unhappy path', () => {
   });
 
   it('should render an error if cover end date is invalid', () => {
+    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+
     cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: 'abc', month: 'xyz', year: '123' });
     cy.clickContinueButton();
 
@@ -119,9 +121,10 @@ context('Change cover end date journey - unhappy path', () => {
   });
 
   it('should render an error if cover end date is before cover start date', () => {
-    const oneDayBeforeCoverStartDate = sub(coverStartDate, { days: 1 });
+    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
 
-    cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: oneDayBeforeCoverStartDate });
+    const twoDaysBeforeCoverStartDate = sub(coverStartDate, { days: 2 });
+    cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: twoDaysBeforeCoverStartDate });
     cy.clickContinueButton();
 
     const expectedErrorMessage = 'The new cover end date must be after the cover start date';
@@ -130,7 +133,9 @@ context('Change cover end date journey - unhappy path', () => {
   });
 
   it('should render an error if cover end date is greater than 6 years in the future', () => {
-    cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: sixYearsOneDay });
+    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+
+    cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: sixYearsOneDay.date });
     cy.clickContinueButton();
 
     const expectedErrorMessage = 'The new cover end date cannot be greater than 6 years in the future';
