@@ -112,7 +112,7 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
           });
 
           it('should redirect to the "Report GEF utilisation and fees paid" page', () => {
-            cy.url().should('eq', relative(`/utilisation-reports/provide-correction/${pendingCorrectionDetails.id}/check-the-information`));
+            cy.url().should('eq', relative('/utilisation-report-upload'));
           });
         });
 
