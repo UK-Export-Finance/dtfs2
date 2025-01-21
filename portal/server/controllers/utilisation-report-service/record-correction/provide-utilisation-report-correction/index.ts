@@ -93,7 +93,7 @@ export const postProvideUtilisationReportCorrection = async (req: PostProvideUti
       additionalComments,
     };
 
-    const validationErrors = await api.putFeeRecordCorrection(userToken, bankId, correctionId, formData);
+    const { validationErrors } = await api.putFeeRecordCorrection(userToken, bankId, correctionId, formData);
 
     if (!validationErrors) {
       return res.redirect(`/utilisation-reports/provide-correction/${correctionId}/check-the-information`);

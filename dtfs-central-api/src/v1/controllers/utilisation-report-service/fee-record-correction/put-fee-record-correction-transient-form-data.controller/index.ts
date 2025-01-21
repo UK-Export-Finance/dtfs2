@@ -42,10 +42,10 @@ export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordC
       throw new NotFoundError(`Failed to find a correction with id '${correctionId}' for bank id '${bankId}'`);
     }
 
-    const { formHasErrors, errors } = await validateRecordCorrectionTransientFormValues(formData, correction.reasons);
+    const { formHasErrors, errors: validationErrors } = await validateRecordCorrectionTransientFormValues(formData, correction.reasons);
 
     if (formHasErrors) {
-      return res.status(HttpStatusCode.Ok).send(errors);
+      return res.status(HttpStatusCode.Ok).send({ validationErrors });
     }
 
     const parsedFormData = parseValidatedRecordCorrectionTransientFormValues(formData);
@@ -62,7 +62,7 @@ export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordC
 
     await FeeRecordCorrectionTransientFormDataRepo.save(newTransientFormData);
 
-    return res.sendStatus(HttpStatusCode.Ok);
+    return res.status(HttpStatusCode.Ok).send({ validationErrors });
   } catch (error) {
     const errorMessage = 'Failed to put fee record correction transient form data';
     console.error('%s %o', errorMessage, error);

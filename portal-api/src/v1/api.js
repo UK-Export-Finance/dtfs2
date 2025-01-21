@@ -543,7 +543,7 @@ const getFeeRecordCorrectionTransientFormData = async (correctionId, userId) => 
  * @param {number} correctionId - The ID of the correction
  * @param {string} userId - The ID of the user
  * @param {import('@ukef/dtfs2-common').RecordCorrectionFormValues} formData - The form data
- * @returns {Promise<import('@ukef/dtfs2-common').RecordCorrectionFormValueValidationErrors | void>} Promise that resolves to validation errors, if any
+ * @returns {Promise<import('./api-response-types').PutFeeRecordCorrectionResponseBody>} Promise that resolves to the put fee record correction response
  */
 const putFeeRecordCorrectionTransientFormData = async (bankId, correctionId, userId, formData) => {
   try {
