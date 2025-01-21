@@ -24,6 +24,7 @@ import { getAdditionalCommentsFieldLabels, mapToProvideCorrectionFormValuesViewM
 import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
 import { aGetFeeRecordCorrectionResponseBody } from '../../../../../test-helpers/test-data/get-fee-record-correction-response';
 import { GetFeeRecordCorrectionTransientFormDataResponseBody } from '../../../../api-response-types';
+import { mapValidationErrorsToViewModel } from './validation-errors-map-helper';
 
 jest.mock('../../../../api');
 
@@ -425,6 +426,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         const expectedCorrectionRequestDetails = mapToCorrectionRequestDetailsViewModel(feeRecordCorrectionResponse);
         const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems();
         const expectedAdditionalLabels = getAdditionalCommentsFieldLabels(reasons);
+        const expectedValidationErrors = mapValidationErrorsToViewModel(validationErrors);
 
         const expected = {
           user: mockUser,
@@ -433,9 +435,8 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
           paymentCurrencyOptions: expectedPaymentCurrencyOptions,
           additionalComments: expectedAdditionalLabels,
           formValues: mapToProvideCorrectionFormValuesViewModel(formValues),
+          errors: expectedValidationErrors,
         };
-
-        // TODO FN-3688 PR 3: Expect that the validation errors are passed through to the ViewModel.
 
         expect(res._getRenderData() as ProvideUtilisationReportCorrectionViewModel).toEqual<ProvideUtilisationReportCorrectionViewModel>(expected);
       });

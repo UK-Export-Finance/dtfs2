@@ -6,6 +6,7 @@ import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/v
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { getAdditionalCommentsFieldLabels, mapToProvideCorrectionFormValuesViewModel, mapToCorrectionRequestDetailsViewModel } from './helpers';
 import { GetFeeRecordCorrectionTransientFormDataResponseBody } from '../../../../api-response-types';
+import { mapValidationErrorsToViewModel } from './validation-errors-map-helper';
 
 export type GetProvideUtilisationReportCorrection = Request & {
   params: {
@@ -104,6 +105,8 @@ export const postProvideUtilisationReportCorrection = async (req: PostProvideUti
 
     const additionalCommentsLabels = getAdditionalCommentsFieldLabels(feeRecordCorrection.reasons);
 
+    const mappedValidationErrors = mapValidationErrorsToViewModel(validationErrors);
+
     const viewModel: ProvideUtilisationReportCorrectionViewModel = {
       user,
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
@@ -111,6 +114,7 @@ export const postProvideUtilisationReportCorrection = async (req: PostProvideUti
       paymentCurrencyOptions,
       additionalComments: additionalCommentsLabels,
       formValues: mapToProvideCorrectionFormValuesViewModel(formData),
+      errors: mappedValidationErrors,
     };
 
     return res.render('utilisation-report-service/record-correction/provide-utilisation-report-correction.njk', viewModel);
