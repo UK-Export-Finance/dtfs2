@@ -1,4 +1,4 @@
-import { ApiError, FeeRecordCorrectionTransientFormDataEntity, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
+import { ApiError, FeeRecordCorrectionTransientFormDataEntity, RecordCorrectionFormValueValidationErrors, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { CustomExpressRequest } from '../../../../../types/custom-express-request';
@@ -16,6 +16,8 @@ export type PutFeeRecordCorrectionTransientFormDataRequest = CustomExpressReques
   reqBody: PutFeeRecordCorrectionTransientFormDataPayload;
 }>;
 
+type PutFeeRecordCorrectionTransientFormDataResponse = Response<{ validationErrors?: RecordCorrectionFormValueValidationErrors } | string>;
+
 /**
  * Controller for the PUT fee record correction transient form data route.
  *
@@ -26,9 +28,12 @@ export type PutFeeRecordCorrectionTransientFormDataRequest = CustomExpressReques
  * If there are no validation errors, creates a new fee record correction transient
  * form data entity with the correction id, user id and form data, and saves it.
  * @param req - The {@link PutFeeRecordCorrectionTransientFormDataRequest} request object
- * @param res - The response object
+ * @param res - The {@link PutFeeRecordCorrectionTransientFormDataResponse} response object
  */
-export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordCorrectionTransientFormDataRequest, res: Response) => {
+export const putFeeRecordCorrectionTransientFormData = async (
+  req: PutFeeRecordCorrectionTransientFormDataRequest,
+  res: PutFeeRecordCorrectionTransientFormDataResponse,
+) => {
   try {
     const { correctionId: correctionIdString, bankId } = req.params;
     const { user, formData } = req.body;
@@ -62,7 +67,7 @@ export const putFeeRecordCorrectionTransientFormData = async (req: PutFeeRecordC
 
     await FeeRecordCorrectionTransientFormDataRepo.save(newTransientFormData);
 
-    return res.status(HttpStatusCode.Ok).send({ validationErrors });
+    return res.status(HttpStatusCode.Ok).send({});
   } catch (error) {
     const errorMessage = 'Failed to put fee record correction transient form data';
     console.error('%s %o', errorMessage, error);

@@ -185,9 +185,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
         await putFeeRecordCorrectionTransientFormData(req, res);
 
         // Assert
-        const expectedResponse = {
-          validationErrors: {},
-        };
+        const expectedResponse = {};
 
         expect(res._getData()).toEqual(expectedResponse);
       });

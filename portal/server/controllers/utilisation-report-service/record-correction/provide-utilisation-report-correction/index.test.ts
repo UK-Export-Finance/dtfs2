@@ -344,7 +344,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
     describe('when there are no validation errors', () => {
       it("should redirect to the 'check the information' screen", async () => {
         // Arrange
-        jest.mocked(api.putFeeRecordCorrection);
+        jest.mocked(api.putFeeRecordCorrection).mockResolvedValue({});
 
         const expectedRedirectUrl = `/utilisation-reports/provide-correction/${correctionId}/check-the-information`;
 
@@ -357,7 +357,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
       it('should not call the "getFeeRecordCorrection" api endpoint', async () => {
         // Arrange
-        jest.mocked(api.putFeeRecordCorrection);
+        jest.mocked(api.putFeeRecordCorrection).mockResolvedValue({});
 
         // Act
         await postProvideUtilisationReportCorrection(req, res);
@@ -373,7 +373,12 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         const validationErrors: RecordCorrectionFormValueValidationErrors = {
           reportedCurrencyErrorMessage: 'Invalid currency',
         };
-        jest.mocked(api.putFeeRecordCorrection).mockResolvedValue(validationErrors);
+
+        const putResponse = {
+          validationErrors,
+        };
+
+        jest.mocked(api.putFeeRecordCorrection).mockResolvedValue(putResponse);
 
         jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(aGetFeeRecordCorrectionResponseBody());
 
@@ -415,7 +420,11 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
           utilisationErrorMessage: 'Invalid utilisation',
         };
 
-        jest.mocked(api.putFeeRecordCorrection).mockResolvedValue(validationErrors);
+        const putResponse = {
+          validationErrors,
+        };
+
+        jest.mocked(api.putFeeRecordCorrection).mockResolvedValue(putResponse);
 
         // Act
         await postProvideUtilisationReportCorrection(req, res);
