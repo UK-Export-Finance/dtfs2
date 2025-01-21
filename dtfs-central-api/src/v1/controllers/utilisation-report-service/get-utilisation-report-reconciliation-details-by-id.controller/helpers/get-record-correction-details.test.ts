@@ -30,7 +30,7 @@ describe('get-record-correction-details', () => {
 
   describe('when a record correction is provided with one reason for 1 fee record', () => {
     const feeRecord = new FeeRecordEntityMockBuilder().withId(feeRecordId).build();
-    const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
+    const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false)
       .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT])
       .withDateRequested(new Date())
       .build();
@@ -62,7 +62,7 @@ describe('get-record-correction-details', () => {
 
   describe('when a record correction is provided with multiple reasons for 1 fee record', () => {
     const feeRecord = new FeeRecordEntityMockBuilder().withId(feeRecordId).build();
-    const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
+    const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false)
       .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT])
       .withDateRequested(new Date())
       .build();
@@ -94,12 +94,12 @@ describe('get-record-correction-details', () => {
 
   describe('when a feeRecord is provided with multiple corrections', () => {
     const feeRecord = new FeeRecordEntityMockBuilder().withId(feeRecordId).build();
-    const correction1 = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
+    const correction1 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false)
       .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT])
       .withDateRequested(new Date())
       .build();
 
-    const correction2 = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
+    const correction2 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false)
       .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT])
       .withDateRequested(new Date())
       .build();
@@ -149,17 +149,17 @@ describe('get-record-correction-details', () => {
     const feeRecord1 = new FeeRecordEntityMockBuilder().withId(feeRecordId).build();
     const feeRecord2 = new FeeRecordEntityMockBuilder().withId(feeRecordId2).build();
 
-    const correction1 = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord1)
+    const correction1 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord1, false)
       .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT])
       .withDateRequested(new Date())
       .build();
 
-    const correction2 = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord1)
+    const correction2 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord1, false)
       .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT])
       .withDateRequested(new Date())
       .build();
 
-    const correction3 = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord2)
+    const correction3 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord2, false)
       .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT])
       .withDateRequested(new Date())
       .build();
@@ -225,17 +225,17 @@ describe('get-record-correction-details', () => {
     const feeRecord2 = new FeeRecordEntityMockBuilder().withId(feeRecordId2).build();
     const feeRecord3 = new FeeRecordEntityMockBuilder().withId(feeRecordId3).withCorrections([]).build();
 
-    const correction1 = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord1)
+    const correction1 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord1, false)
       .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT])
       .withDateRequested(new Date())
       .build();
 
-    const correction2 = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord1)
+    const correction2 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord1, false)
       .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT])
       .withDateRequested(new Date())
       .build();
 
-    const correction3 = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord2)
+    const correction3 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord2, false)
       .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT])
       .withDateRequested(new Date())
       .build();
