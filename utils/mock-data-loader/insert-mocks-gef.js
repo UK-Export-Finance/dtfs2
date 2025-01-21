@@ -1,7 +1,9 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const portalApi = require('./api');
 const api = require('./gef/api');
 const MOCKS = require('./gef');
 const { BANK1_MAKER1 } = require('./portal-users');
+const { mongoDbClient } = require('../drivers/db-client');
 
 const insertMocks = async (token) => {
   console.info('inserting GEF mocks');
@@ -14,6 +16,10 @@ const insertMocks = async (token) => {
   for (const item of MOCKS.ELIGIBILITY_CRITERIA) {
     await api.createEligibilityCriteria(item, token);
   }
+
+  console.info('inserting GEF eligibility-criteria-amendments');
+  const eligibilityCriteriaAmendmentsCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA_AMENDMENTS);
+  await eligibilityCriteriaAmendmentsCollection.insertMany(MOCKS.ELIGIBILITY_CRITERIA_AMENDMENTS);
 
   console.info('inserting GEF deals');
 
