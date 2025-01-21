@@ -5,14 +5,17 @@ import {
   FeeRecordCorrectionEntityMockBuilder,
   FeeRecordEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
+  RECORD_CORRECTION_REASON,
+  RecordCorrectionFormValueValidationErrors,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
+import { Response } from 'supertest';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { ObjectId } from 'mongodb';
 import { testApi } from '../../../test-api';
 import { SqlDbHelper } from '../../../sql-db-helper';
 import wipeDB from '../../../wipeDB';
-import { aBank } from '../../../../test-helpers';
+import { aBank, aFacility, aTfmFacility } from '../../../../test-helpers';
 import { PutFeeRecordCorrectionTransientFormDataPayload } from '../../../../src/v1/routes/middleware/payload-validation';
 import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
 import { mongoDbClient } from '../../../../src/drivers/db-client';
@@ -20,18 +23,25 @@ import { CustomErrorResponse } from '../../../helpers/custom-error-response';
 
 console.error = jest.fn();
 
+interface PutFeeRecordCorrectionTransientFormDataResponse extends Response {
+  body: RecordCorrectionFormValueValidationErrors | string | undefined;
+}
+
 const BASE_URL = '/v1/bank/:bankId/fee-record-corrections/:correctionId/transient-form-data';
 
 describe(`PUT ${BASE_URL}`, () => {
   const bankId = '1';
   const correctionId = 2;
 
+  const facilityId = '11111111';
+  const correctionReasons = Object.values(RECORD_CORRECTION_REASON);
+
   const mockBank = { ...aBank(), id: bankId, _id: new ObjectId() };
 
   const aValidRequestBody = () => ({
     formData: {
       utilisation: '1,000,000',
-      facilityId: '12345678',
+      facilityId,
       reportedCurrency: CURRENCY.GBP,
       reportedFee: '2,000',
       additionalComments: 'these are some additional comments',
@@ -53,12 +63,24 @@ describe(`PUT ${BASE_URL}`, () => {
 
     const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withBankId(bankId).build();
 
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION).build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION).withFacilityId(facilityId).build();
 
-    const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false).withId(correctionId).build();
+    const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false)
+      .withId(correctionId)
+      .withReasons(correctionReasons)
+      .build();
 
     feeRecord.corrections = [correction];
     report.feeRecords = [feeRecord];
+
+    const tfmFacilitiesCollection = await mongoDbClient.getCollection('tfm-facilities');
+    await tfmFacilitiesCollection.insertOne({
+      ...aTfmFacility(),
+      facilitySnapshot: {
+        ...aFacility(),
+        ukefFacilityId: facilityId,
+      },
+    });
 
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
   });
@@ -122,14 +144,52 @@ describe(`PUT ${BASE_URL}`, () => {
     expect(status).toEqual(HttpStatusCode.NotFound);
   });
 
-  it(`should return '${HttpStatusCode.Ok}' if the correction exists`, async () => {
-    // Arrange
-    const requestBody = aValidRequestBody();
+  describe('when there are validation errors', () => {
+    it(`should return '${HttpStatusCode.Ok}' with the errors in the response body`, async () => {
+      // Arrange
+      const formData = {
+        utilisation: 'invalid-utilisation',
+        facilityId: '123',
+        reportedCurrency: 'invalid-currency',
+        reportedFee: 'invalid-reported-fee',
+        additionalComments: ' ',
+      };
 
-    // Act
-    const { status } = await testApi.put(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { bankId, correctionId }));
+      const requestBody = {
+        ...aValidRequestBody(),
+        formData,
+      };
 
-    // Assert
-    expect(status).toEqual(HttpStatusCode.Ok);
+      // Act
+      const { status, body } = (await testApi
+        .put(requestBody)
+        .to(replaceUrlParameterPlaceholders(BASE_URL, { bankId, correctionId }))) as PutFeeRecordCorrectionTransientFormDataResponse;
+
+      // Assert
+      const expectedBody: RecordCorrectionFormValueValidationErrors = {
+        facilityIdErrorMessage: 'You must enter a facility ID between 8 and 10 digits using the numbers 0-9 only',
+        reportedCurrencyErrorMessage: 'You must select a currency',
+        reportedFeeErrorMessage: 'You must enter the reported fee in a valid format',
+        utilisationErrorMessage: 'You must enter the utilisation in a valid format',
+        additionalCommentsErrorMessage: 'You must enter a comment',
+      };
+
+      expect(status).toEqual(HttpStatusCode.Ok);
+
+      expect(body).toEqual(expectedBody);
+    });
+  });
+
+  describe('when there are no validation errors', () => {
+    it(`should return '${HttpStatusCode.Ok}' if the correction exists`, async () => {
+      // Arrange
+      const requestBody = aValidRequestBody();
+
+      // Act
+      const { status } = await testApi.put(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { bankId, correctionId }));
+
+      // Assert
+      expect(status).toEqual(HttpStatusCode.Ok);
+    });
   });
 });

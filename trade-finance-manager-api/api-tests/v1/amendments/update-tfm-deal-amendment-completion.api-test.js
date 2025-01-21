@@ -1,6 +1,6 @@
 const { format } = require('date-fns');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { AUDIT_USER_TYPES, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { AUDIT_USER_TYPES, TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const amendmentController = require('../../../src/v1/controllers/amendment.controller');
 const api = require('../../../src/v1/api');
 const { updateFacilityAmendment } = require('../../helpers/updateFacilityAmendment');
@@ -13,7 +13,7 @@ describe('update tfm-deals on amendment completion', () => {
     dealId: '6463805ebf6e581d581f9ce0',
     facilityId: '64638083a6970b4aec385180',
     amendmentId: '6463808aecc838173927d090',
-    status: AMENDMENT_STATUS.COMPLETED,
+    status: TFM_AMENDMENT_STATUS.COMPLETED,
   };
 
   const mockDeal = {

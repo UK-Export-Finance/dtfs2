@@ -1,9 +1,10 @@
 const { HttpStatusCode } = require('axios');
 const {
-  aRecordCorrectionFormValues,
   UtilisationReportEntityMockBuilder,
   FeeRecordCorrectionEntityMockBuilder,
   FeeRecordEntityMockBuilder,
+  CURRENCY,
+  RECORD_CORRECTION_REASON,
 } = require('@ukef/dtfs2-common');
 const { SqlDbHelper } = require('../../../sql-db-helper.ts');
 const app = require('../../../../src/createApp.js');
@@ -22,6 +23,12 @@ describe('PUT /v1/banks/:bankId/fee-record-correction/:correctionId/transient-fo
   let matchingBankId;
   const correctionId = 123;
 
+  const aValidRequestBody = () => ({
+    utilisation: '10,000.23',
+    reportedCurrency: CURRENCY.GBP,
+    additionalComments: 'Some additional comments',
+  });
+
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     aPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).one();
@@ -35,34 +42,37 @@ describe('PUT /v1/banks/:bankId/fee-record-correction/:correctionId/transient-fo
     const aFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).build();
     utilisationReport.feeRecords = [aFeeRecord];
 
-    const aFeeRecordCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(aFeeRecord, false).withId(correctionId).build();
+    const aFeeRecordCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(aFeeRecord, false)
+      .withId(correctionId)
+      .withReasons([RECORD_CORRECTION_REASON.UTILISATION_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT, RECORD_CORRECTION_REASON.OTHER])
+      .build();
 
     await SqlDbHelper.saveNewEntries('UtilisationReport', [utilisationReport]);
     await SqlDbHelper.saveNewEntries('FeeRecordCorrection', [aFeeRecordCorrection]);
   });
 
   withClientAuthenticationTests({
-    makeRequestWithoutAuthHeader: () => put(correctionFormDataUrl(matchingBankId, correctionId), aRecordCorrectionFormValues()),
+    makeRequestWithoutAuthHeader: () => put(correctionFormDataUrl(matchingBankId, correctionId), aValidRequestBody()),
     makeRequestWithAuthHeader: (authHeader) =>
-      put(correctionFormDataUrl(matchingBankId, correctionId), aRecordCorrectionFormValues(), { headers: { Authorization: authHeader } }),
+      put(correctionFormDataUrl(matchingBankId, correctionId), aValidRequestBody(), { headers: { Authorization: authHeader } }),
   });
 
   withRoleAuthorisationTests({
     allowedRoles: [PAYMENT_REPORT_OFFICER],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
-    makeRequestAsUser: (user) => as(user).put(aRecordCorrectionFormValues()).to(correctionFormDataUrl(matchingBankId, correctionId)),
+    makeRequestAsUser: (user) => as(user).put(aValidRequestBody()).to(correctionFormDataUrl(matchingBankId, correctionId)),
     successStatusCode: HttpStatusCode.Ok,
   });
 
   it(`should respond with a ${HttpStatusCode.BadRequest} to requests that do not have a valid bank id`, async () => {
-    const { status } = await as(aPaymentReportOfficer).put(aRecordCorrectionFormValues()).to(correctionFormDataUrl('invalid-bank-id', correctionId));
+    const { status } = await as(aPaymentReportOfficer).put(aValidRequestBody()).to(correctionFormDataUrl('invalid-bank-id', correctionId));
 
     expect(status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it(`should respond with a ${HttpStatusCode.Unauthorized} if user's bank does not match request bank`, async () => {
     const { status } = await as(aPaymentReportOfficer)
-      .put(aRecordCorrectionFormValues())
+      .put(aValidRequestBody())
       .to(correctionFormDataUrl(matchingBankId - 1, correctionId));
 
     expect(status).toEqual(HttpStatusCode.Unauthorized);

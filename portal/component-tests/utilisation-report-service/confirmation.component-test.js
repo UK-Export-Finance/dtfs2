@@ -16,8 +16,8 @@ describe(page, () => {
     wrapper.expectText('[data-cy="main-heading"]').toRead(`${reportPeriod} GEF report sent to UKEF`);
   });
 
-  it('should render paragraph', () => {
-    wrapper.expectText('[data-cy="paragraph"]').toRead('A confirmation email has been sent to:');
+  it('should render email confirmation list', () => {
+    wrapper.expectText('[data-cy="email-text"]').toRead('A confirmation email has been sent to:');
     for (const paymentOfficerEmail of paymentOfficerEmails) {
       wrapper.expectElement(`ul.govuk-list > li:contains("${paymentOfficerEmail}")`).toExist();
     }

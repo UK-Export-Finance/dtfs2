@@ -1,4 +1,4 @@
-const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { amendFacilityValueValidation } = require('./validation/amendFacilityValue.validate');
 const { formattedNumber } = require('../../../helpers/number');
@@ -16,7 +16,7 @@ const getAmendFacilityValue = async (req, res) => {
   const { data: latestAmendmentValue } = await api.getLatestCompletedAmendmentValue(facilityId, userToken);
 
   const { dealId, value } = amendment;
-  const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeFacilityValue;
+  const isEditable = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS && amendment.changeFacilityValue;
   const { currency } = facility.facilitySnapshot;
   let currentFacilityValue = facility.facilitySnapshot.facilityValueExportCurrency;
 
@@ -57,7 +57,7 @@ const postAmendFacilityValue = async (req, res) => {
   const { dealId } = amendment;
 
   if (amendFacilityValueErrors.length) {
-    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeFacilityValue;
+    const isEditable = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS && amendment.changeFacilityValue;
     return res.render('case/amendments/amendment-facility-value.njk', {
       errors: errorsObject.errors,
       dealId,

@@ -1,4 +1,4 @@
-const { TEAM_IDS, AMENDMENT_STATUS, FACILITY_TYPE, DEAL_TYPE } = require('@ukef/dtfs2-common');
+const { TEAM_IDS, TFM_AMENDMENT_STATUS, FACILITY_TYPE, DEAL_TYPE } = require('@ukef/dtfs2-common');
 const { AMENDMENTS, DEAL, DECISIONS } = require('../constants');
 
 const MOCK_DEAL = {
@@ -51,7 +51,7 @@ const MOCK_AMENDMENT = {
   dealId: '999',
   ukefFacilityId: '1234567890',
   type: FACILITY_TYPE.CASH,
-  status: AMENDMENT_STATUS.IN_PROGRESS,
+  status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
   submittedByPim: true,
   requireUkefApproval: true,
   leadUnderwriter: null,
@@ -59,13 +59,13 @@ const MOCK_AMENDMENT = {
 
 const MOCK_AMENDMENT_AUTOMATIC_APPROVAL = {
   ...MOCK_AMENDMENT,
-  status: AMENDMENT_STATUS.COMPLETED,
+  status: TFM_AMENDMENT_STATUS.COMPLETED,
   requireUkefApproval: false,
 };
 
 const MOCK_AMENDMENT_UNSUBMITTED = {
   ...MOCK_AMENDMENT,
-  status: AMENDMENT_STATUS.IN_PROGRESS,
+  status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
   submittedByPim: false,
 };
 

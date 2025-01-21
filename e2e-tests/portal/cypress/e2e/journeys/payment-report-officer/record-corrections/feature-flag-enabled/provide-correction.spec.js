@@ -14,15 +14,18 @@ import { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } from '../../../../../../../
 import relative from '../../../../relativeURL';
 import { provideCorrection, pendingCorrections, reviewCorrection } from '../../../../pages';
 import { correctionRequestDetails } from '../../../../partials';
+import { tfmFacilityForReport } from '../../../../../fixtures/mockUtilisationReportDetails';
 
 context('Provide correction - Fee record correction feature flag enabled', () => {
   context('Report GEF utilisation and fees page', () => {
     beforeEach(() => {
       cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+      cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
     });
 
     after(() => {
       cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+      cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
     });
 
     context('When there is a pending correction', () => {
@@ -109,6 +112,16 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
           const additionalComments = 'Some additional comments & Some more additional comments';
 
           beforeEach(() => {
+            const matchingTfmFacility = {
+              ...tfmFacilityForReport,
+              facilitySnapshot: {
+                ...tfmFacilityForReport.facilitySnapshot,
+                ukefFacilityId: newFacilityId,
+              },
+            };
+
+            cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, [matchingTfmFacility]);
+
             cy.keyboardInput(provideCorrection.facilityIdInput(), newFacilityId);
             cy.keyboardInput(provideCorrection.reportedFeeInput(), newReportedFee);
             provideCorrection.reportedCurrency.radioInput(newReportedCurrency).click();
