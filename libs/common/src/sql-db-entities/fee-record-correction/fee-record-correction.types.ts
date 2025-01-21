@@ -14,4 +14,5 @@ export type CompleteCorrectionParams = {
   previousValues: RecordCorrectionValues;
   correctedValues: RecordCorrectionValues;
   bankCommentary: string | null;
+  requestSource: DbRequestSource;
 };

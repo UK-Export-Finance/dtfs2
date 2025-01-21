@@ -122,8 +122,9 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
    * @param param.previousValues - The previous values
    * @param param.correctedValues - The corrected values
    * @param param.bankCommentary - The bank commentary
+   * @param param.requestSource - The request source
    */
-  public completeCorrection({ previousValues, correctedValues, bankCommentary }: CompleteCorrectionParams): void {
+  public completeCorrection({ previousValues, correctedValues, bankCommentary, requestSource }: CompleteCorrectionParams): void {
     this.correctedValues = correctedValues;
     this.previousValues = previousValues;
     this.bankCommentary = bankCommentary;
@@ -131,5 +132,7 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
     this.dateReceived = new Date();
 
     this.isCompleted = true;
+
+    this.updateLastUpdatedBy(requestSource);
   }
 }
