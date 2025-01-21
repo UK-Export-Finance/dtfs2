@@ -45,6 +45,7 @@ export const getCancelPortalFacilityAmendment = async (req: GetCancelPortalFacil
 
     const viewModel: CancelAmendmentViewModel = {
       exporterName: deal.exporter.companyName,
+      facilityType: facility.type,
       previousPage,
     };
 

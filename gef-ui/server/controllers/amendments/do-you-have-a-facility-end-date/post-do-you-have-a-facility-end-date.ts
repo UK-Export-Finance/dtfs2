@@ -37,6 +37,7 @@ export const postDoYouHaveAFacilityEndDate = async (req: PostDoYouHaveAFacilityE
     if ('errors' in errorsOrValue) {
       const viewModel: DoYouHaveAFacilityEndDateViewModel = {
         exporterName: deal.exporter.companyName,
+        facilityType: facility.type,
         cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
         previousPage,
         errors: validationErrorHandler(errorsOrValue.errors),
