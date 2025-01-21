@@ -1,5 +1,5 @@
 import { formatInTimeZone } from 'date-fns-tz';
-import { now, getNowAsUtcISOString, getMonthName, getISO8601, getUnixTimestampSeconds } from './date';
+import { now, getNowAsUtcISOString, getMonthName, getISO8601, getUnixTimestampSeconds, addYear, getEpochMs } from './date';
 
 describe('date helpers', () => {
   describe('getNowAsUtcISOString', () => {
@@ -89,6 +89,75 @@ describe('date helpers', () => {
 
       // Assert
       expect(result).toEqual(expected);
+    });
+  });
+
+  describe('addYear', () => {
+    it('should add one year provided date object', () => {
+      const year = 1;
+      const date = new Date('20-09-1989');
+      const oneYear = date.getFullYear() + year;
+
+      const result = addYear(year, date);
+
+      expect(result.getFullYear()).toBe(oneYear);
+    });
+
+    it('should add ten years provided date object', () => {
+      const year = 10;
+      const date = new Date();
+      const tenYears = date.getFullYear() + year;
+
+      const result = addYear(year, date);
+
+      expect(result.getFullYear()).toBe(tenYears);
+    });
+
+    it('should add two years to now', () => {
+      const year = 2;
+      const date = now();
+      const twoYears = date.getFullYear() + year;
+
+      const result = addYear(year);
+
+      expect(result.getFullYear()).toBe(twoYears);
+    });
+  });
+
+  describe('getEpochMs', () => {
+    it('should return EPOCH with milliseconds for now with an argument', () => {
+      // Arrange
+      const date = new Date();
+      const epoch = date.valueOf();
+
+      // Act
+      const result = getEpochMs(date);
+
+      // Assert
+      expect(result).toBe(epoch);
+    });
+
+    it('should return EPOCH with milliseconds for now with no argument', () => {
+      // Arrange
+      const epoch = new Date().valueOf();
+
+      // Act
+      const result = getEpochMs();
+
+      // Assert
+      expect(result).toBe(epoch);
+    });
+
+    it('should return EPOCH with milliseconds for 20/09/1989', () => {
+      // Arrange
+      const date = new Date('1989-09-20');
+      const epoch = date.valueOf();
+
+      // Act
+      const result = getEpochMs(date);
+
+      // Assert
+      expect(result).toBe(epoch);
     });
   });
 });
