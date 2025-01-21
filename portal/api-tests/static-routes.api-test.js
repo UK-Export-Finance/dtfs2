@@ -41,9 +41,10 @@ describe('/.well-known/security.txt', () => {
       // Only get the YYYY-MM-DD
       const addOneYear = addYear(1);
       const oneYearFromToday = getISO8601(addOneYear);
+      const OneYearFromTodayDate = oneYearFromToday.split('T')[0];
 
       // Assert
-      expect(response.text).toContain(`Expires: ${oneYearFromToday}`);
+      expect(response.text).toContain(`Expires: ${OneYearFromTodayDate}`);
     });
 
     it('should contain acknowledgments information', async () => {
