@@ -3,7 +3,7 @@ import { DbRequestSource, FeeRecordCorrectionEntity, FeeRecordEntity, RecordCorr
 import { BaseFeeRecordEvent } from '../../event/base-fee-record.event';
 import { getCorrectionCorrectedValuesFromFormData, getCorrectionPreviousValuesFromFeeRecord } from '../../../../../helpers';
 
-type CorrectionReceivedEventPayload = {
+export type CorrectionReceivedEventPayload = {
   transactionEntityManager: EntityManager;
   requestSource: DbRequestSource;
   correctionEntity: FeeRecordCorrectionEntity;
@@ -29,7 +29,7 @@ export const handleFeeRecordCorrectionReceivedEvent = async (
   const previousValues = getCorrectionPreviousValuesFromFeeRecord(feeRecord, reasons);
   const correctedValues = getCorrectionCorrectedValuesFromFormData(correctionFormData, reasons);
 
-  correctionEntity.completeCorrection({ previousValues, correctedValues, bankCommentary: correctionFormData.additionalComments ?? null });
+  correctionEntity.completeCorrection({ previousValues, correctedValues, bankCommentary: correctionFormData.additionalComments ?? null, requestSource });
 
   await transactionEntityManager.save(FeeRecordCorrectionEntity, correctionEntity);
 
