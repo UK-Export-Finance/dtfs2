@@ -57,9 +57,12 @@ export const lookup = async (req: Request, res: Response) => {
  * const res = { status: () => res, send: () => {} };
  * await getOrCreateParty(req, res);
  */
-export const getOrCreateParty = async (req: CustomExpressRequest<{ reqBody: { companyRegNo: string; companyName: string } }>, res: Response) => {
+export const getOrCreateParty = async (
+  req: CustomExpressRequest<{ reqBody: { companyRegNo: string; companyName: string; probabilityOfDefault: number } }>,
+  res: Response,
+) => {
   try {
-    const { companyRegNo: companyRegistrationNumber, companyName } = req.body;
+    const { companyRegNo: companyRegistrationNumber, companyName, probabilityOfDefault } = req.body;
 
     if (!isValidCompanyRegistrationNumber(companyRegistrationNumber)) {
       console.error('Invalid company registration number provided %s', companyRegistrationNumber);
@@ -71,6 +74,11 @@ export const getOrCreateParty = async (req: CustomExpressRequest<{ reqBody: { co
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company name' });
     }
 
+    if (!probabilityOfDefault) {
+      console.error('No probability of default provided');
+      return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid probability of default' });
+    }
+
     const response: { status: number; data: unknown } = await axios({
       method: 'post',
       url: `${APIM_MDM_URL}customers`,
@@ -78,6 +86,7 @@ export const getOrCreateParty = async (req: CustomExpressRequest<{ reqBody: { co
       data: {
         companyRegistrationNumber,
         companyName,
+        probabilityOfDefault,
       },
     });
     const { status, data } = response;
