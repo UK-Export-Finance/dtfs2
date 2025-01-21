@@ -112,6 +112,7 @@ describe('getFacilityEndDate', () => {
     // Assert
     const expectedRenderData: FacilityEndDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
+      facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment),
       facilityEndDate: undefined,
@@ -144,6 +145,7 @@ describe('getFacilityEndDate', () => {
     // Assert
     const expectedRenderData: FacilityEndDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
+      facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment),
       facilityEndDate: {

@@ -45,6 +45,7 @@ export const getEligibility = async (req: GetEligibilityRequest, res: Response) 
 
     const viewModel: EligibilityViewModel = {
       exporterName: deal.exporter.companyName,
+      facilityType: facility.type,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.ELIGIBILITY, amendment),
     };
