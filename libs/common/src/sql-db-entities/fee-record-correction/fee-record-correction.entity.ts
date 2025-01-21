@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } f
 import { FeeRecordEntity } from '../fee-record/fee-record.entity';
 import { CorrectionValuesPartialEntity, RequestedByUserPartialEntity } from '../partial-entities';
 import { AuditableBaseEntity } from '../base-entities';
-import { CreateFeeRecordCorrectionParams } from './fee-record-correction.types';
+import { CompleteCorrectionParams, CreateFeeRecordCorrectionParams } from './fee-record-correction.types';
 import { RecordCorrectionReason } from '../../types';
 
 @Entity('FeeRecordCorrection')
@@ -114,5 +114,22 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
     recordCorrection.isCompleted = false;
     recordCorrection.updateLastUpdatedBy(requestSource);
     return recordCorrection;
+  }
+
+  /**
+   * Updates a correction with correct values
+   * @param param - The correction parameters
+   * @param param.previousValues - The previous values
+   * @param param.correctedValues - The corrected values
+   * @param param.bankCommentary - The bank commentary
+   */
+  public completeCorrection({ previousValues, correctedValues, bankCommentary }: CompleteCorrectionParams): void {
+    this.correctedValues = correctedValues;
+    this.previousValues = previousValues;
+    this.bankCommentary = bankCommentary;
+
+    this.dateReceived = new Date();
+
+    this.isCompleted = true;
   }
 }
