@@ -76,15 +76,25 @@ context('Check the information page - Fee record correction feature flag enabled
       pendingCorrections.row(1).correctionLink().click();
 
       provideCorrection.reportedCurrency.radioInput(newReportedFees.currency).click();
-      cy.keyboardInput(provideCorrection.reportedFeeInput(), newReportedFees.amount);
-      cy.keyboardInput(provideCorrection.utilisationInput(), newUtilisation);
-      cy.keyboardInput(provideCorrection.additionalComments(), bankAdditionalComments);
+      cy.keyboardInput(provideCorrection.reportedFeeInput.container(), newReportedFees.amount);
+      cy.keyboardInput(provideCorrection.utilisationInput.container(), newUtilisation);
+      cy.keyboardInput(provideCorrection.additionalComments.input(), bankAdditionalComments);
 
       cy.clickContinueButton();
     });
 
     after(() => {
       cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+    });
+
+    context('and when the user clicks cancel', () => {
+      beforeEach(() => {
+        cy.clickCancelButton();
+      });
+
+      it('should redirect to the "Report GEF utilisation and fees paid" page', () => {
+        cy.url().should('eq', relative('/utilisation-report-upload'));
+      });
     });
 
     it('should be able to view the form values and other details of correction request', () => {
