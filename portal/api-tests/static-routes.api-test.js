@@ -40,8 +40,7 @@ describe('/.well-known/security.txt', () => {
       const response = await get('/.well-known/security.txt');
       // Only get the YYYY-MM-DD
       const addOneYear = addYear(1);
-      const expiry = getISO8601(addOneYear);
-      const oneYearFromToday = expiry.split('T')[0];
+      const oneYearFromToday = getISO8601(addOneYear);
 
       // Assert
       expect(response.text).toContain(`Expires: ${oneYearFromToday}`);

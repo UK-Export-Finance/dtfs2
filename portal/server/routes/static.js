@@ -2,8 +2,8 @@ import express from 'express';
 import { addYear, getISO8601 } from '@ukef/dtfs2-common';
 
 const router = express.Router();
-const addOneYear = addYear(1);
-const expiry = getISO8601(addOneYear);
+const oneYearInFutureDate = addYear(1);
+const IsoExpiryDate = getISO8601(oneYearInFutureDate);
 
 router.get('/.well-known/security.txt', (req, res) => {
   res.type('text/plain');
@@ -11,7 +11,7 @@ router.get('/.well-known/security.txt', (req, res) => {
   res.write('Contact: https://www.gov.uk/contact/govuk\n');
   res.write('Contact: https://hackerone.com/7af14fd9-fe4e-4f39-bea1-8f8a364061b8/embedded_submissions/new\n');
   res.write('Contact: https://get-a-guarantee-for-export-finance.service.gov.uk/feedback\n');
-  res.write(`Expires: ${expiry}\n`);
+  res.write(`Expires: ${IsoExpiryDate}\n`);
   res.write('Acknowledgments: https://get-a-guarantee-for-export-finance.service.gov.uk/thanks.txt\n');
   res.write('Preferred-Languages: en\n');
   res.write('Canonical: https://get-a-guarantee-for-export-finance.service.gov.uk/.well-known/security.txt\n');

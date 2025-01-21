@@ -76,6 +76,67 @@ describe('date helpers', () => {
       expect(result).toContain('T');
       expect(result).toContain('Z');
     });
+
+    it('should return the current date and time in ISO 8601 format', () => {
+      // Act
+      const result = getISO8601();
+      const year = now().getFullYear();
+      const month = (now().getMonth() + 1).toString().padStart(2, '0');
+      const date = now().getDate();
+
+      // Assert
+      expect(result).toContain(`${year}-${month}-${date}`);
+      expect(result).toContain('T');
+      expect(result).toContain('Z');
+    });
+
+    it('should return the provided date in ISO 8601 format', () => {
+      // Arrange
+      const date = new Date('2023-01-01T00:00:00Z');
+      const expected = date.toISOString();
+
+      // Act
+      const result = getISO8601(date);
+
+      // Assert
+      expect(result).toEqual(expected);
+    });
+
+    it('should handle leap year dates correctly', () => {
+      // Arrange
+      const date = new Date('2020-02-29T00:00:00Z');
+      const expected = date.toISOString();
+
+      // Act
+      const result = getISO8601(date);
+
+      // Assert
+      expect(result).toEqual(expected);
+    });
+
+    it('should handle dates before 1970 correctly', () => {
+      // Arrange
+      const date = new Date('1969-12-31T23:59:59Z');
+      const expected = date.toISOString();
+
+      // Act
+      const result = getISO8601(date);
+
+      // Assert
+      expect(result).toEqual(expected);
+    });
+
+    it('should handle future dates correctly', () => {
+      // Arrange
+      const date = new Date('2100-01-01T00:00:00Z');
+      const expected = date.toISOString();
+
+      // Act
+      const result = getISO8601(date);
+
+      // Assert
+      expect(result).toEqual(expected);
+    });
   });
 
   describe('getUnixTimestampSeconds', () => {
@@ -93,34 +154,65 @@ describe('date helpers', () => {
   });
 
   describe('addYear', () => {
-    it('should add one year provided date object', () => {
-      const year = 1;
-      const date = new Date('20-09-1989');
-      const oneYear = date.getFullYear() + year;
+    const yearsToAdd = [
+      {
+        year: 0,
+      },
+      {
+        year: 1,
+      },
+      {
+        year: 2,
+      },
+      {
+        year: 10,
+      },
+      {
+        year: 100,
+      },
+      {
+        year: 1000,
+      },
+      {
+        year: 3000,
+      },
+      {
+        year: 10000,
+      },
+    ];
 
-      const result = addYear(year, date);
+    it.each(yearsToAdd)('should add $year year(s) to the provided date object', ({ year }) => {
+      // Arrange
+      const pastDate = new Date('1989-09-20');
+      const expectedYear = pastDate.getFullYear() + year;
+      // JavaScript month are 0 indexed
+      const expectedMonth = 8;
+      const expectedDate = 20;
 
-      expect(result.getFullYear()).toBe(oneYear);
+      // Act
+      const result = addYear(year, pastDate);
+
+      // Assert
+      expect(result.getFullYear()).toBe(expectedYear);
+      expect(result.getMonth()).toBe(expectedMonth);
+      expect(result.getDate()).toBe(expectedDate);
     });
 
-    it('should add ten years provided date object', () => {
-      const year = 10;
-      const date = new Date();
-      const tenYears = date.getFullYear() + year;
+    it.each(yearsToAdd)('should add $year year(s) with no date argument', ({ year }) => {
+      // Arrange
+      const todayDate = now();
+      const expectedYear = todayDate.getFullYear() + year;
+      // JavaScript month are 0 indexed
+      const expectedMonth = todayDate.getMonth();
+      const expectedDate = todayDate.getDate();
 
-      const result = addYear(year, date);
+      // Act
+      const result = addYear(year, todayDate);
 
-      expect(result.getFullYear()).toBe(tenYears);
-    });
-
-    it('should add two years to now', () => {
-      const year = 2;
-      const date = now();
-      const twoYears = date.getFullYear() + year;
-
-      const result = addYear(year);
-
-      expect(result.getFullYear()).toBe(twoYears);
+      // Assert
+      expect(result.getFullYear()).toBe(expectedYear);
+      expect(result.getMonth()).toBe(expectedMonth);
+      expect(result.getDate()).toBe(expectedDate);
     });
   });
 
@@ -151,6 +243,41 @@ describe('date helpers', () => {
     it('should return EPOCH with milliseconds for 20/09/1989', () => {
       // Arrange
       const date = new Date('1989-09-20');
+      const epoch = date.valueOf();
+
+      // Act
+      const result = getEpochMs(date);
+
+      // Assert
+      expect(result).toBe(epoch);
+    });
+
+    it('should return EPOCH with milliseconds for 01/01/1970', () => {
+      // Arrange
+      const date = new Date('1970-01-01');
+
+      // Act
+      const result = getEpochMs(date);
+
+      // Assert
+      expect(result).toBe(0);
+    });
+
+    it('should return EPOCH with milliseconds for a future date', () => {
+      // Arrange
+      const date = new Date('2100-01-01');
+      const epoch = date.valueOf();
+
+      // Act
+      const result = getEpochMs(date);
+
+      // Assert
+      expect(result).toBe(epoch);
+    });
+
+    it('should return EPOCH with milliseconds for a leap year date', () => {
+      // Arrange
+      const date = new Date('2020-02-29');
       const epoch = date.valueOf();
 
       // Act

@@ -38,9 +38,10 @@ export const getUnixTimestampSeconds: (date: Date) => UnixTimestampSeconds = get
 /**
  * Returns the current date and time in ISO 8601 format.
  *
- * @returns {IsoDateTimeStamp} The current date and time as an ISO 8601 string.
+ * @param {Date} date JavaScript date object
+ * @returns {String} The current date and time as an ISO 8601 string.
  */
-export const getISO8601 = (): IsoDateTimeStamp => now().toISOString();
+export const getISO8601 = (date: Date = now()): string => date.toISOString();
 
 /**
  * Adds a specified number of years to a given date.
