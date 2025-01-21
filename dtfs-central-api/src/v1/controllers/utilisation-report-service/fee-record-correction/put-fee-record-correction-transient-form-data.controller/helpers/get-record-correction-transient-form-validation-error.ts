@@ -90,7 +90,7 @@ export const getAdditionalCommentsValidationError = (
   isRequired: boolean,
   additionalComments?: string,
 ): string | undefined => {
-  if (!additionalComments || !additionalComments.trim()) {
+  if (!additionalComments?.trim()) {
     if (isRequired) {
       return 'You must enter a comment';
     }
