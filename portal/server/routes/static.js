@@ -5,6 +5,17 @@ const router = express.Router();
 const oneYearInFutureDate = addYear(1);
 const IsoExpiryDate = getISO8601(oneYearInFutureDate);
 
+/**
+ * get
+ * Handles the GET request to serve the security.txt file.
+ *
+ * This controller returns a plain text response containing various security-related
+ * contact information, acknowledgments, preferred languages, canonical URL, policy,
+ * and hiring information.
+ * @param {Express.Request} Express request
+ * @param {Express.Response} Express response
+ * @returns {Express.Response.send} security.txt file
+ */
 router.get('/.well-known/security.txt', (req, res) => {
   res.type('text/plain');
 
@@ -21,6 +32,17 @@ router.get('/.well-known/security.txt', (req, res) => {
   res.send();
 });
 
+/**
+ * get
+ *  Handles the GET request for the thank you page.
+ *
+ * This controller sets the response type to plain text and writes a thank you message
+ * with a placeholder for the date, name, and description.
+ *
+ * @param {Express.Request} Express request
+ * @param {Express.Response} Express response
+ * @returns {Express.Response.render} thanks.txt file
+ */
 router.get('/thanks.txt', (req, res) => {
   res.type('text/plain');
 
