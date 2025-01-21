@@ -8,9 +8,20 @@
 
 {% import "./_macros/correction-request-details-table.njk" as correctionRequestDetailsTable %}
 
+{% set hasErrors = errors.errorSummary | length %}
+
 {% block pageTitle %}Record correction{% endblock %}
 
 {% block content %}
+  {% if hasErrors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        'data-cy': 'error-summary'
+      }
+    }) }}
+  {% endif %}
 
   <h1 class="govuk-heading-xl">
     Report GEF utilisation and fees
@@ -61,6 +72,12 @@
             classes: "govuk-input--width-20",
             attributes: {
               "data-cy": "FACILITY_ID_INCORRECT-input"
+            },
+            errorMessage: errors.facilityIdErrorMessage and {
+              text: errors.facilityIdErrorMessage,
+              attributes: {
+                'data-cy': 'FACILITY_ID_INCORRECT-error'
+              }
             }
           }) }}
         {% endif %}
@@ -82,8 +99,14 @@
             name: "reportedCurrency",
             items: paymentCurrencyOptions,
             attributes: {
-              id: 'reported-currency',
+              id: 'reportedCurrency',
               'data-cy': 'REPORTED_CURRENCY_INCORRECT-input'
+            },
+            errorMessage: errors.reportedCurrencyErrorMessage and {
+              text: errors.reportedCurrencyErrorMessage,
+              attributes: {
+                'data-cy': 'REPORTED_CURRENCY_INCORRECT-error'
+              }
             }
           }) }}
         {% endif %}
@@ -109,6 +132,12 @@
             classes: "govuk-input--width-20",
             attributes: {
               "data-cy": "REPORTED_FEE_INCORRECT-input"
+            },
+            errorMessage: errors.reportedFeeErrorMessage and {
+              text: errors.reportedFeeErrorMessage,
+              attributes: {
+                'data-cy': 'REPORTED_FEE_INCORRECT-error'
+              }
             }
           }) }}
         {% endif %}
@@ -134,6 +163,12 @@
             classes: "govuk-input--width-20",
             attributes: {
               "data-cy": "UTILISATION_INCORRECT-input"
+            },
+            errorMessage: errors.utilisationErrorMessage and {
+              text: errors.utilisationErrorMessage,
+              attributes: {
+                'data-cy': 'UTILISATION_INCORRECT-error'
+              }
             }
           }) }}
         {% endif %}
@@ -159,6 +194,12 @@
           rows: 4,
           attributes: {
             "data-cy": "additional-comments-input"
+          },
+          errorMessage: errors.additionalCommentsErrorMessage and {
+            text: errors.additionalCommentsErrorMessage,
+            attributes: {
+              "data-cy": "additional-comments-error"
+            }
           }
         }) }}
 

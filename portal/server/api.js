@@ -1094,15 +1094,17 @@ const getFeeRecordCorrection = async (token, bankId, id) => {
  * @param {string} bankId - The bank id
  * @param {string} correctionId - The correction id
  * @param {import('@ukef/dtfs2-common').RecordCorrectionFormValues} formData - The form data
- * @returns {Promise<void>}
+ * @returns {Promise<import('./api-response-types').PutFeeRecordCorrectionResponseBody>} Returns a promise that resolves to the put fee record correction data
  */
 const putFeeRecordCorrection = async (token, bankId, correctionId, formData) => {
-  await axios.put(`${PORTAL_API_URL}/v1/banks/${bankId}/fee-record-correction/${correctionId}/transient-form-data`, formData, {
+  const { data } = await axios.put(`${PORTAL_API_URL}/v1/banks/${bankId}/fee-record-correction/${correctionId}/transient-form-data`, formData, {
     headers: {
       Authorization: token,
       [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
   });
+
+  return data;
 };
 
 /**

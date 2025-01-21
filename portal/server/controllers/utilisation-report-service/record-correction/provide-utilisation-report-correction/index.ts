@@ -6,6 +6,7 @@ import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/v
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { getAdditionalCommentsFieldLabels, mapToProvideCorrectionFormValuesViewModel, mapToCorrectionRequestDetailsViewModel } from './helpers';
 import { GetFeeRecordCorrectionTransientFormDataResponseBody } from '../../../../api-response-types';
+import { mapValidationErrorsToViewModel } from './validation-errors-map-helper';
 
 export type GetProvideUtilisationReportCorrection = Request & {
   params: {
@@ -84,7 +85,7 @@ export const postProvideUtilisationReportCorrection = async (req: PostProvideUti
 
     const bankId = user.bank.id;
 
-    const formData = {
+    const formData: RecordCorrectionFormValues = {
       utilisation,
       facilityId,
       reportedCurrency,
@@ -92,10 +93,31 @@ export const postProvideUtilisationReportCorrection = async (req: PostProvideUti
       additionalComments,
     };
 
-    // TODO FN-3688 PR 3: Handle validation response once implemented, render page errors if defined.
-    await api.putFeeRecordCorrection(userToken, bankId, correctionId, formData);
+    const { validationErrors } = await api.putFeeRecordCorrection(userToken, bankId, correctionId, formData);
 
-    return res.redirect(`/utilisation-reports/provide-correction/${correctionId}/check-the-information`);
+    if (!validationErrors) {
+      return res.redirect(`/utilisation-reports/provide-correction/${correctionId}/check-the-information`);
+    }
+
+    const feeRecordCorrection = await api.getFeeRecordCorrection(userToken, bankId, correctionId);
+
+    const paymentCurrencyOptions = mapCurrenciesToRadioItems(reportedCurrency);
+
+    const additionalCommentsLabels = getAdditionalCommentsFieldLabels(feeRecordCorrection.reasons);
+
+    const mappedValidationErrors = mapValidationErrorsToViewModel(validationErrors);
+
+    const viewModel: ProvideUtilisationReportCorrectionViewModel = {
+      user,
+      primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
+      correctionRequestDetails: mapToCorrectionRequestDetailsViewModel(feeRecordCorrection),
+      paymentCurrencyOptions,
+      additionalComments: additionalCommentsLabels,
+      formValues: mapToProvideCorrectionFormValuesViewModel(formData),
+      errors: mappedValidationErrors,
+    };
+
+    return res.render('utilisation-report-service/record-correction/provide-utilisation-report-correction.njk', viewModel);
   } catch (error) {
     console.error('Failed to post provide utilisation report correction %o', error);
 

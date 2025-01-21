@@ -122,7 +122,11 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
           additionalCommentsErrorMessage: 'You must enter a comment',
         };
 
-        expect(res._getData()).toEqual(expectedValidationErrors);
+        const expectedResponse = {
+          validationErrors: expectedValidationErrors,
+        };
+
+        expect(res._getData()).toEqual(expectedResponse);
       });
 
       it('should not call the correction repo to save the form data', async () => {
@@ -167,6 +171,23 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
 
         expect(mockSaveTransientFormData).toHaveBeenCalledTimes(1);
         expect(mockSaveTransientFormData).toHaveBeenCalledWith(expectedTransientFormDataEntity);
+      });
+
+      it(`should respond with no validation errors in the response body`, async () => {
+        // Arrange
+        const correctionReasons = [RECORD_CORRECTION_REASON.OTHER];
+
+        mockFindCorrection.mockResolvedValue(new FeeRecordCorrectionEntityMockBuilder().withReasons(correctionReasons).build());
+
+        req.body.formData = { additionalComments };
+
+        // Act
+        await putFeeRecordCorrectionTransientFormData(req, res);
+
+        // Assert
+        const expectedResponse = {};
+
+        expect(res._getData()).toEqual(expectedResponse);
       });
     });
 

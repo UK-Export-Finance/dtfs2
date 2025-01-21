@@ -1,8 +1,11 @@
 import {
   getFormattedCurrencyAndAmount,
   getFormattedMonetaryValue,
+  getMonetaryValueAsNumber,
+  isMonetaryValueValid,
   mapReasonsToDisplayValues,
   RECORD_CORRECTION_REASON,
+  RecordCorrectionFormValues,
   RecordCorrectionReason,
 } from '@ukef/dtfs2-common';
 import { GetFeeRecordCorrectionResponseBody, GetFeeRecordCorrectionTransientFormDataResponseBody } from '../../../../api-response-types';
@@ -90,20 +93,47 @@ export const getAdditionalCommentsFieldLabels = (correctionReasons: RecordCorrec
 };
 
 /**
- * Maps the saved form values to the form values view model.
- * @param savedFormValues - The saved transient form values
+ * Maps a monetary value string to a monetary form value.
+ *
+ * If the value is undefined, returns null.
+ * If the value is a valid monetary value, it will be formatted with two
+ * decimal places and thousands separators.
+ * If the value is invalid, returns the original string.
+ * @param monetaryValue - The monetary value to format
+ * @returns Formatted monetary value string, null if undefined, or original string if invalid
+ */
+export const mapMonetaryValueToProvideCorrectionFormValue = (monetaryValue?: string | number): string | null => {
+  if (monetaryValue === undefined) {
+    return null;
+  }
+
+  const monetaryValueAsString = String(monetaryValue);
+
+  if (isMonetaryValueValid(monetaryValueAsString)) {
+    const monetaryValueAsNumber = getMonetaryValueAsNumber(monetaryValueAsString);
+
+    return getFormattedMonetaryValue(monetaryValueAsNumber);
+  }
+
+  return monetaryValueAsString;
+};
+
+/**
+ * Maps the form values to the form values view model.
+ * @param formValues - The form values
  * @returns The view model for the saved form values
  */
 export const mapToProvideCorrectionFormValuesViewModel = (
-  savedFormValues: GetFeeRecordCorrectionTransientFormDataResponseBody,
+  formValues: GetFeeRecordCorrectionTransientFormDataResponseBody | RecordCorrectionFormValues,
 ): ProvideCorrectionFormValuesViewModel => {
-  const utilisation = savedFormValues.utilisation !== undefined ? getFormattedMonetaryValue(savedFormValues.utilisation) : null;
-  const reportedFee = savedFormValues.reportedFee !== undefined ? getFormattedMonetaryValue(savedFormValues.reportedFee) : null;
+  const utilisation = mapMonetaryValueToProvideCorrectionFormValue(formValues.utilisation);
+
+  const reportedFee = mapMonetaryValueToProvideCorrectionFormValue(formValues.reportedFee);
 
   return {
     utilisation,
     reportedFee,
-    facilityId: savedFormValues.facilityId ?? null,
-    additionalComments: savedFormValues.additionalComments ?? null,
+    facilityId: formValues.facilityId ?? null,
+    additionalComments: formValues.additionalComments ?? null,
   };
 };

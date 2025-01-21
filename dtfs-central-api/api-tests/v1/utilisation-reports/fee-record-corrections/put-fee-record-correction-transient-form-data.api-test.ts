@@ -24,7 +24,7 @@ import { CustomErrorResponse } from '../../../helpers/custom-error-response';
 console.error = jest.fn();
 
 interface PutFeeRecordCorrectionTransientFormDataResponse extends Response {
-  body: RecordCorrectionFormValueValidationErrors | string | undefined;
+  body: { validationErrors?: RecordCorrectionFormValueValidationErrors } | string;
 }
 
 const BASE_URL = '/v1/bank/:bankId/fee-record-corrections/:correctionId/transient-form-data';
@@ -167,12 +167,16 @@ describe(`PUT ${BASE_URL}`, () => {
         .to(replaceUrlParameterPlaceholders(BASE_URL, { bankId, correctionId }))) as PutFeeRecordCorrectionTransientFormDataResponse;
 
       // Assert
-      const expectedBody: RecordCorrectionFormValueValidationErrors = {
+      const validationErrors: RecordCorrectionFormValueValidationErrors = {
         facilityIdErrorMessage: 'You must enter a facility ID between 8 and 10 digits using the numbers 0-9 only',
         reportedCurrencyErrorMessage: 'You must select a currency',
         reportedFeeErrorMessage: 'You must enter the reported fee in a valid format',
         utilisationErrorMessage: 'You must enter the utilisation in a valid format',
         additionalCommentsErrorMessage: 'You must enter a comment',
+      };
+
+      const expectedBody = {
+        validationErrors,
       };
 
       expect(status).toEqual(HttpStatusCode.Ok);
@@ -182,15 +186,21 @@ describe(`PUT ${BASE_URL}`, () => {
   });
 
   describe('when there are no validation errors', () => {
-    it(`should return '${HttpStatusCode.Ok}' if the correction exists`, async () => {
+    it(`should return '${HttpStatusCode.Ok}' if the correction exists with an empty response body`, async () => {
       // Arrange
       const requestBody = aValidRequestBody();
 
       // Act
-      const { status } = await testApi.put(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { bankId, correctionId }));
+      const { status, body } = (await testApi
+        .put(requestBody)
+        .to(replaceUrlParameterPlaceholders(BASE_URL, { bankId, correctionId }))) as PutFeeRecordCorrectionTransientFormDataResponse;
 
       // Assert
+      const expectedBody = {};
+
       expect(status).toEqual(HttpStatusCode.Ok);
+
+      expect(body).toEqual(expectedBody);
     });
   });
 });
