@@ -1,3 +1,4 @@
+import { FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { validationErrorHandler } from '../../../server/utils/helpers';
 import { FacilityEndDateViewModel } from '../../../server/types/view-models/amendments/facility-end-date-view-model';
 import pageRenderer from '../../pageRenderer';
@@ -10,12 +11,14 @@ describe(page, () => {
   const cancelUrl = 'cancelUrl';
   const facilityEndDate = { day: '14', month: '2', year: '2024' };
   const exporterName = 'exporterName';
+  const facilityType = FACILITY_TYPE.CASH;
 
   const params: FacilityEndDateViewModel = {
     previousPage,
     cancelUrl,
     facilityEndDate,
     exporterName,
+    facilityType,
   };
 
   it('should render the page heading', () => {
@@ -97,9 +100,9 @@ describe(page, () => {
       .toContain('The facility end date is the deadline for a committed loan to be repaid at which point the contract will be terminated.');
   });
 
-  it('should render the exporter name in the heading caption', () => {
+  it('should render the exporter name and facility type in the heading caption', () => {
     const wrapper = render(params);
 
-    wrapper.expectText('[data-cy="heading-caption"]').toRead(exporterName);
+    wrapper.expectText('[data-cy="heading-caption"]').toRead(`${exporterName}, ${facilityType} facility`);
   });
 });

@@ -13,7 +13,7 @@
 {% set headingHtml %}
 <header>
   <span class="govuk-caption-l" data-cy="heading-caption">
-    {{ exporterName }}
+    {{ exporterName }}, {{ facilityType }} facility
   </span>
 
   <h1 class="govuk-label-wrapper" data-cy="page-heading">
@@ -75,7 +75,7 @@
               value: facilityEndDate.day,
               attributes: {
                 'data-cy': 'facility-end-date-day'
-              }            
+              }
             },
             {
               classes: (errors.fieldErrors['facilityEndDate-month'] and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
@@ -83,7 +83,7 @@
               value: facilityEndDate.month,
               attributes: {
                 'data-cy': 'facility-end-date-month'
-              }   
+              }
             },
             {
               classes: (errors.fieldErrors['facilityEndDate-year'] and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
@@ -91,7 +91,7 @@
               value: facilityEndDate.year,
               attributes: {
                 'data-cy': 'facility-end-date-year'
-              }   
+              }
             }
           ]
         }) }}
