@@ -278,4 +278,88 @@ describe(page, () => {
     wrapper.expectElement(cancelButtonSelector).toHaveAttribute('value', 'Cancel record correction');
     wrapper.expectElement(cancelButtonSelector).hasClass('govuk-button--secondary');
   });
+
+  describe('when there are validation errors', () => {
+    const formValues = {
+      additionalComments: '',
+      facilityId: 'invalid',
+      utilisation: 'one',
+      reportedFee: 'two',
+      reportedCurrency: 'invalid',
+    };
+
+    const errorsViewModel = {
+      errorSummary: [{ text: 'error summary', href: '#errorSummary' }],
+      facilityIdErrorMessage: 'some facility id error',
+      reportedCurrencyErrorMessage: 'some reported currency error',
+      reportedFeeErrorMessage: 'some reported fee error',
+      utilisationErrorMessage: 'some utilisation error',
+      additionalCommentsErrorMessage: 'some additional comments error',
+    };
+
+    const viewModel = {
+      ...aProvideUtilisationReportCorrectionViewModel(),
+      correctionRequestDetails: {
+        ...aProvideUtilisationReportCorrectionViewModel().correctionRequestDetails,
+        reasons: [
+          RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT,
+          RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT,
+          RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT,
+          RECORD_CORRECTION_REASON.UTILISATION_INCORRECT,
+          RECORD_CORRECTION_REASON.OTHER,
+        ],
+      },
+      paymentCurrencyOptions: mapCurrenciesToRadioItems(CURRENCY.JPY),
+      formValues,
+      errors: errorsViewModel,
+    };
+
+    it('should render the error summary', () => {
+      // Act
+      const wrapper = render(viewModel);
+
+      // Assert
+      wrapper.expectText('[data-cy="error-summary"]').toContain(errorsViewModel.errorSummary[0].text);
+    });
+
+    it('should render the inline error for the "facility id" input', () => {
+      // Act
+      const wrapper = render(viewModel);
+
+      // Assert
+      wrapper.expectText('[data-cy="FACILITY_ID_INCORRECT-error"]').toRead(`Error: ${errorsViewModel.facilityIdErrorMessage}`);
+    });
+
+    it('should render the inline error for the "reported currency" input', () => {
+      // Act
+      const wrapper = render(viewModel);
+
+      // Assert
+      wrapper.expectText('[data-cy="REPORTED_CURRENCY_INCORRECT-error"]').toRead(`Error: ${errorsViewModel.reportedCurrencyErrorMessage}`);
+    });
+
+    it('should render the inline error for the "reported fee" input', () => {
+      // Act
+      const wrapper = render(viewModel);
+
+      // Assert
+      wrapper.expectText('[data-cy="REPORTED_FEE_INCORRECT-error"]').toRead(`Error: ${errorsViewModel.reportedFeeErrorMessage}`);
+    });
+
+    it('should render the inline error for the "utilisation" input', () => {
+      // Act
+      const wrapper = render(viewModel);
+
+      // Assert
+      wrapper.expectText('[data-cy="UTILISATION_INCORRECT-error"]').toRead(`Error: ${errorsViewModel.utilisationErrorMessage}`);
+    });
+
+    it('should render the inline error for the "additional comments" input', () => {
+      // Act
+      const wrapper = render(viewModel);
+
+      // Assert
+      wrapper.expectText('[data-cy="additional-comments-error"]').toRead(`Error: ${errorsViewModel.additionalCommentsErrorMessage}`);
+    });
+  });
 });
