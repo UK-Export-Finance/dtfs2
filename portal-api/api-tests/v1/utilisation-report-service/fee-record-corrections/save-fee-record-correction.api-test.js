@@ -37,9 +37,8 @@ describe('PUT /v1/banks/:bankId/fee-record-correction/:correctionId', () => {
 
     const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withBankId(matchingBankId).build();
     const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION).build();
-    const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
+    const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false)
       .withId(correctionId)
-      .withIsCompleted(false)
       .withReasons([RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT])
       .build();
 

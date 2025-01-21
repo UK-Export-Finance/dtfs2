@@ -65,9 +65,8 @@ describe(`PUT ${BASE_URL}`, () => {
 
     const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION).withFacilityId(facilityId).build();
 
-    const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
+    const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false)
       .withId(correctionId)
-      .withIsCompleted(false)
       .withReasons(correctionReasons)
       .build();
 

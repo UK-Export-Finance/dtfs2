@@ -28,7 +28,7 @@ describe('map-fee-records-to-pending-corrections', () => {
         .withId(1)
         .withFacilityId('FAC123')
         .withExporter('Test Exporter')
-        .withCorrections([new FeeRecordCorrectionEntityMockBuilder().withIsCompleted(true).build()])
+        .withCorrections([FeeRecordCorrectionEntityMockBuilder.forIsCompleted(true).build()])
         .build();
 
       // Act
@@ -52,21 +52,18 @@ describe('map-fee-records-to-pending-corrections', () => {
         .withFeesPaidToUkefForThePeriod(feesPaidToUkefForThePeriod)
         .withFeesPaidToUkefForThePeriodCurrency(feesPaidToUkefForThePeriodCurrency)
         .withCorrections([
-          new FeeRecordCorrectionEntityMockBuilder()
+          FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false)
             .withId(1)
-            .withIsCompleted(false)
             .withAdditionalInfo('Pending correction 1')
             .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT])
             .build(),
-          new FeeRecordCorrectionEntityMockBuilder()
+          FeeRecordCorrectionEntityMockBuilder.forIsCompleted(true)
             .withId(2)
-            .withIsCompleted(true)
             .withAdditionalInfo('Completed correction')
             .withReasons([RECORD_CORRECTION_REASON.OTHER])
             .build(),
-          new FeeRecordCorrectionEntityMockBuilder()
+          FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false)
             .withId(3)
-            .withIsCompleted(false)
             .withAdditionalInfo('Pending correction 2')
             .withReasons([RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT])
             .build(),
@@ -122,7 +119,7 @@ describe('map-fee-records-to-pending-corrections', () => {
       const feeRecords = statusesExludingPendingCorrection.map((status) =>
         new FeeRecordEntityMockBuilder()
           .withStatus(status)
-          .withCorrections([new FeeRecordCorrectionEntityMockBuilder().withIsCompleted(false).withAdditionalInfo('Pending correction 1').build()])
+          .withCorrections([FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).withAdditionalInfo('Pending correction 1').build()])
           .build(),
       );
 
@@ -152,11 +149,11 @@ describe('map-fee-records-to-pending-corrections', () => {
       const feeRecords = [
         new FeeRecordEntityMockBuilder()
           .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
-          .withCorrections([new FeeRecordCorrectionEntityMockBuilder().withIsCompleted(true).build()])
+          .withCorrections([FeeRecordCorrectionEntityMockBuilder.forIsCompleted(true).build()])
           .build(),
         new FeeRecordEntityMockBuilder()
           .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
-          .withCorrections([new FeeRecordCorrectionEntityMockBuilder().withIsCompleted(true).build()])
+          .withCorrections([FeeRecordCorrectionEntityMockBuilder.forIsCompleted(true).build()])
           .build(),
       ];
 
@@ -173,13 +170,13 @@ describe('map-fee-records-to-pending-corrections', () => {
         new FeeRecordEntityMockBuilder()
           .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
           .withCorrections([
-            new FeeRecordCorrectionEntityMockBuilder().withIsCompleted(false).withAdditionalInfo('Pending correction 1').build(),
-            new FeeRecordCorrectionEntityMockBuilder().withIsCompleted(true).withAdditionalInfo('Completed correction').build(),
+            FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).withAdditionalInfo('Pending correction 1').build(),
+            FeeRecordCorrectionEntityMockBuilder.forIsCompleted(true).withAdditionalInfo('Completed correction').build(),
           ])
           .build(),
         new FeeRecordEntityMockBuilder()
           .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
-          .withCorrections([new FeeRecordCorrectionEntityMockBuilder().withIsCompleted(false).withAdditionalInfo('Pending correction 2').build()])
+          .withCorrections([FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).withAdditionalInfo('Pending correction 2').build()])
           .build(),
       ];
 
