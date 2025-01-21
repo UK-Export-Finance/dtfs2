@@ -99,14 +99,71 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
         });
 
         it('should be able to see only the form fields relevant to the correction request reasons', () => {
-          provideCorrection.facilityIdInput().should('exist');
-          provideCorrection.reportedFeeInput().should('exist');
+          provideCorrection.facilityIdInput.container().should('exist');
+          provideCorrection.reportedFeeInput.container().should('exist');
           provideCorrection.reportedCurrency.container().should('exist');
-          provideCorrection.utilisationInput().should('not.exist');
+          provideCorrection.utilisationInput.container().should('not.exist');
           provideCorrection.additionalComments.input().should('exist');
         });
 
-        context('and when the user has entered values and clicked save and review changes', () => {
+        context('and when the user clicks cancel', () => {
+          beforeEach(() => {
+            cy.clickCancelButton();
+          });
+
+          it('should redirect to the "Report GEF utilisation and fees paid" page', () => {
+            cy.url().should('eq', relative(`/utilisation-reports/provide-correction/${pendingCorrectionDetails.id}/check-the-information`));
+          });
+        });
+
+        context('and when the user has entered invalid values and clicked "save and review changes"', () => {
+          const newFacilityId = 'abc';
+          const newReportedFee = 'INVALID';
+          const additionalComments = ' ';
+
+          beforeEach(() => {
+            cy.keyboardInput(provideCorrection.facilityIdInput.container(), newFacilityId);
+            cy.keyboardInput(provideCorrection.reportedFeeInput.container(), newReportedFee);
+            cy.keyboardInput(provideCorrection.additionalComments.input(), additionalComments);
+
+            cy.clickContinueButton();
+          });
+
+          it('should display the validation errors', () => {
+            const expectedFacilityIdInputError = 'Error: You must enter a facility ID between 8 and 10 digits using the numbers 0-9 only';
+            const expectedReportedCurrencyError = 'Error: You must select a currency';
+            const expectedReportedFeeInputError = 'Error: You must enter the reported fee in a valid format';
+            const expectedAdditionalCommentsError = 'Error: You must enter a comment';
+
+            provideCorrection.errorSummary.items().should('have.length', 4);
+
+            provideCorrection.facilityIdInput.error().should('exist');
+            cy.assertText(provideCorrection.facilityIdInput.error(), expectedFacilityIdInputError);
+
+            provideCorrection.reportedCurrency.error().should('exist');
+            cy.assertText(provideCorrection.reportedCurrency.error(), expectedReportedCurrencyError);
+
+            provideCorrection.reportedFeeInput.error().should('exist');
+            cy.assertText(provideCorrection.reportedFeeInput.error(), expectedReportedFeeInputError);
+
+            provideCorrection.utilisationInput.error().should('not.exist');
+
+            provideCorrection.additionalComments.error().should('exist');
+            cy.assertText(provideCorrection.additionalComments.error(), expectedAdditionalCommentsError);
+          });
+
+          it('should retain the values entered by the user', () => {
+            provideCorrection.facilityIdInput.container().should('have.value', newFacilityId);
+            provideCorrection.reportedFeeInput.container().should('have.value', newReportedFee);
+            provideCorrection.additionalComments.input().should('have.value', additionalComments);
+
+            Object.values(CURRENCY).forEach((currency) => {
+              provideCorrection.reportedCurrency.radioInput(currency).should('not.be.checked');
+            });
+          });
+        });
+
+        context('and when the user has entered valid values and clicked "save and review changes"', () => {
           const newFacilityId = '77777777';
           const newReportedFee = '12345.67';
           const newReportedCurrency = CURRENCY.JPY;
@@ -123,19 +180,23 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
 
             cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, [matchingTfmFacility]);
 
-            cy.keyboardInput(provideCorrection.facilityIdInput(), newFacilityId);
-            cy.keyboardInput(provideCorrection.reportedFeeInput(), newReportedFee);
+            cy.keyboardInput(provideCorrection.facilityIdInput.container(), newFacilityId);
+            cy.keyboardInput(provideCorrection.reportedFeeInput.container(), newReportedFee);
             provideCorrection.reportedCurrency.radioInput(newReportedCurrency).click();
             cy.keyboardInput(provideCorrection.additionalComments.input(), additionalComments);
 
             cy.clickContinueButton();
           });
 
+          it('should redirect to the review page', () => {
+            cy.url().should('eq', relative(`/utilisation-reports/provide-correction/${pendingCorrectionDetails.id}/check-the-information`));
+          });
+
           it('should retain the values entered by the user when they return to the page via the review page change link', () => {
             reviewCorrection.changeNewValuesLink().click();
 
-            provideCorrection.facilityIdInput().should('have.value', newFacilityId);
-            provideCorrection.reportedFeeInput().should('have.value', getFormattedMonetaryValue(newReportedFee));
+            provideCorrection.facilityIdInput.container().should('have.value', newFacilityId);
+            provideCorrection.reportedFeeInput.container().should('have.value', getFormattedMonetaryValue(newReportedFee));
             provideCorrection.reportedCurrency.radioInput(newReportedCurrency).should('be.checked');
             provideCorrection.additionalComments.input().should('have.value', additionalComments);
           });
@@ -145,8 +206,8 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
 
             pendingCorrections.row(1).correctionLink().click();
 
-            provideCorrection.facilityIdInput().should('have.value', '');
-            provideCorrection.reportedFeeInput().should('have.value', '');
+            provideCorrection.facilityIdInput.container().should('have.value', '');
+            provideCorrection.reportedFeeInput.container().should('have.value', '');
             provideCorrection.reportedCurrency.radioInput(newReportedCurrency).should('not.be.checked');
             provideCorrection.additionalComments.input().should('have.value', '');
           });
@@ -156,8 +217,8 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
 
             cy.visit(relative(`/utilisation-reports/provide-correction/${pendingCorrectionDetails.id}`));
 
-            provideCorrection.facilityIdInput().should('have.value', '');
-            provideCorrection.reportedFeeInput().should('have.value', '');
+            provideCorrection.facilityIdInput.container().should('have.value', '');
+            provideCorrection.reportedFeeInput.container().should('have.value', '');
             provideCorrection.reportedCurrency.radioInput(newReportedCurrency).should('not.be.checked');
             provideCorrection.additionalComments.input().should('have.value', '');
           });
