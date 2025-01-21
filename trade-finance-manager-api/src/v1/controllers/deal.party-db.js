@@ -81,7 +81,7 @@ const addPartyUrns = async (deal, auditDetails) => {
   const { hasExporter, hasIndemnifier, hasAgent, hasBuyer } = identifyDealParties(deal);
   const companyRegNo = deal.exporter.companiesHouseRegistrationNumber;
   const { companyName } = deal.exporter;
-  const { probabilityOfDefault } = deal.exporter.probabilityOfDefault.toString();
+  const { probabilityOfDefault } = deal.exporter;
 
   const dealUpdate = {
     tfm: {
