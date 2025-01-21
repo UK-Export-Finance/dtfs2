@@ -241,7 +241,7 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   /**
    * Updates the fee record with a correction
    * @param param - The update parameters
-   * @param param.status - The status
+   * @param param.correctedValues - The corrected values, each field can be null if not being corrected
    * @param param.requestSource - The request source
    */
   public updateWithCorrection({ requestSource, correctedValues }: UpdateWithCorrectionParams): void {
