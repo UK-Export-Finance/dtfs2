@@ -121,6 +121,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
           utilisationErrorMessage: 'You must enter the utilisation in a valid format',
           additionalCommentsErrorMessage: 'You must enter a comment',
         };
+
         const expectedResponse = {
           validationErrors: expectedValidationErrors,
         };
