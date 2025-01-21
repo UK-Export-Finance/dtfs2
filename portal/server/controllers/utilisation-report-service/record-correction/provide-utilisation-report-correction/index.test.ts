@@ -105,6 +105,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
         jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(feeRecordCorrectionResponse);
 
+        const expectedCancelLinkHref = `/utilisation-reports/cancel-correction/${correctionId}`;
         const expectedCorrectionRequestDetails = mapToCorrectionRequestDetailsViewModel(feeRecordCorrectionResponse);
         const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems();
         const { label: expectedAdditionalCommentsLabel, hint: expectedAdditionalCommentsHint } = getAdditionalCommentsFieldLabels(reasons);
@@ -118,6 +119,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         const expected = {
           user: mockUser,
           primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
+          cancelLinkHref: expectedCancelLinkHref,
           correctionRequestDetails: expectedCorrectionRequestDetails,
           paymentCurrencyOptions: expectedPaymentCurrencyOptions,
           additionalComments: {
@@ -175,6 +177,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
           jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(feeRecordCorrectionResponse);
 
+          const expectedCancelLinkHref = `/utilisation-reports/cancel-correction/${correctionId}`;
           const expectedCorrectionRequestDetails = mapToCorrectionRequestDetailsViewModel(feeRecordCorrectionResponse);
           const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems();
           const { label: expectedAdditionalCommentsLabel, hint: expectedAdditionalCommentsHint } = getAdditionalCommentsFieldLabels(reasons);
@@ -188,6 +191,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
           const expected = {
             user: mockUser,
             primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
+            cancelLinkHref: expectedCancelLinkHref,
             correctionRequestDetails: expectedCorrectionRequestDetails,
             paymentCurrencyOptions: expectedPaymentCurrencyOptions,
             additionalComments: {
@@ -222,6 +226,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
           jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(feeRecordCorrectionResponse);
 
+          const expectedCancelLinkHref = `/utilisation-reports/cancel-correction/${correctionId}`;
           const expectedCorrectionRequestDetails = mapToCorrectionRequestDetailsViewModel(feeRecordCorrectionResponse);
           const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems(savedFormValues.reportedCurrency);
           const { label: expectedAdditionalCommentsLabel, hint: expectedAdditionalCommentsHint } = getAdditionalCommentsFieldLabels(reasons);
@@ -235,6 +240,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
           const expected = {
             user: mockUser,
             primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
+            cancelLinkHref: expectedCancelLinkHref,
             correctionRequestDetails: expectedCorrectionRequestDetails,
             paymentCurrencyOptions: expectedPaymentCurrencyOptions,
             additionalComments: {
@@ -432,6 +438,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         // Assert
         expect(res._getRenderView()).toEqual('utilisation-report-service/record-correction/provide-utilisation-report-correction.njk');
 
+        const expectedCancelLinkHref = `/utilisation-reports/cancel-correction/${correctionId}`;
         const expectedCorrectionRequestDetails = mapToCorrectionRequestDetailsViewModel(feeRecordCorrectionResponse);
         const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems();
         const expectedAdditionalLabels = getAdditionalCommentsFieldLabels(reasons);
@@ -440,6 +447,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         const expected = {
           user: mockUser,
           primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
+          cancelLinkHref: expectedCancelLinkHref,
           correctionRequestDetails: expectedCorrectionRequestDetails,
           paymentCurrencyOptions: expectedPaymentCurrencyOptions,
           additionalComments: expectedAdditionalLabels,

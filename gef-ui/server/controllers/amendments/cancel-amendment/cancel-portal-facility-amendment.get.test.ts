@@ -115,6 +115,7 @@ describe('getCancelPortalFacilityAmendment', () => {
     // Assert
     const expectedRenderData: CancelAmendmentViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
+      facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage: getPreviousAmendmentPageUrl(req.headers.referer, dealId, facilityId, amendmentId),
     };
 

@@ -49,6 +49,7 @@ export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: 
     if ('errors' in validationErrorsOrValue) {
       const viewModel: FacilityEndDateViewModel = {
         exporterName: deal.exporter.companyName,
+        facilityType: facility.type,
         cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
         previousPage,
         facilityEndDate: facilityEndDateDayMonthYear,
