@@ -9,7 +9,7 @@ import httpMocks from 'node-mocks-http';
 import { aPortalSessionUser, DayMonthYearInput, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { postBankReviewDate, PostBankReviewDateRequest } from './post-bank-review-date';
 
-jest.mock('../../utils/get-cover-start-date-or-start-of-today', () => ({
+jest.mock('../../utils/get-cover-start-date-or-today', () => ({
   getCoverStartDateOrToday: getCoverStartDateOrTodayMock,
 }));
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
