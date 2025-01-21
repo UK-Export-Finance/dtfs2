@@ -15,7 +15,6 @@ const errorKeyToHrefMap: Record<keyof RecordCorrectionFormValueValidationErrors,
   additionalCommentsErrorMessage: '#additionalComments',
 };
 
-// TODO FN-3688: Add TSDOC
 /**
  * Maps validation errors to a view model for displaying error messages.
  * @param validationErrors - Object containing validation error messages for form values.
