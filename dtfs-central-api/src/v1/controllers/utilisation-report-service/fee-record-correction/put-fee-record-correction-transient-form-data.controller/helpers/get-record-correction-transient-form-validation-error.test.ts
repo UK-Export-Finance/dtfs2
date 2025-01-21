@@ -15,7 +15,7 @@ describe('get-record-correction-transient-form-validation-error', () => {
     describe('when facility id is undefined', () => {
       it('should return "invalid format" error message', async () => {
         // Act
-        const errorMessage = await getFacilityIdValidationError(undefined);
+        const errorMessage = await getFacilityIdValidationError();
 
         // Assert
         expect(errorMessage).toEqual(invalidFormatErrorMessage);
@@ -86,11 +86,9 @@ describe('get-record-correction-transient-form-validation-error', () => {
 
   describe('getReportedCurrencyValidationError', () => {
     describe('when currency is undefined', () => {
-      const reportedCurrency = undefined;
-
       it('should return error message', () => {
         // Act
-        const errorMessage = getReportedCurrencyValidationError(reportedCurrency);
+        const errorMessage = getReportedCurrencyValidationError();
 
         // Assert
         expect(errorMessage).toEqual('You must select a currency');
@@ -124,11 +122,9 @@ describe('get-record-correction-transient-form-validation-error', () => {
 
   describe('getReportedFeeValidationError', () => {
     describe('when reported fee is undefined', () => {
-      const reportedFee = undefined;
-
       it('should return error message', () => {
         // Act
-        const errorMessage = getReportedFeeValidationError(reportedFee);
+        const errorMessage = getReportedFeeValidationError();
 
         // Assert
         expect(errorMessage).toEqual('You must enter the reported fee in a valid format');
@@ -176,11 +172,9 @@ describe('get-record-correction-transient-form-validation-error', () => {
     const invalidFormatErrorMessage = 'You must enter the utilisation in a valid format';
 
     describe('when utilisation is undefined', () => {
-      const utilisation = undefined;
-
       it('should return error message', () => {
         // Act
-        const errorMessage = getUtilisationValidationError(utilisation);
+        const errorMessage = getUtilisationValidationError();
 
         // Assert
         expect(errorMessage).toEqual(invalidFormatErrorMessage);
