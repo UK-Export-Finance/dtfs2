@@ -35,6 +35,7 @@ export type ProvideUtilisationReportCorrectionErrorsViewModel = RecordCorrection
 };
 
 export type ProvideUtilisationReportCorrectionViewModel = BaseViewModel & {
+  cancelLinkHref: string;
   correctionRequestDetails: CorrectionRequestDetailsViewModel;
   paymentCurrencyOptions: RadioItem[];
   additionalComments: AdditionalCommentsFieldLabels;

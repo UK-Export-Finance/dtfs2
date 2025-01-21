@@ -267,7 +267,11 @@ describe(page, () => {
 
   it('should render the cancel button', () => {
     // Arrange
-    const viewModel = aProvideUtilisationReportCorrectionViewModel();
+    const cancelLinkHref = '/utilisation-reports/cancel-correction/7';
+    const viewModel = {
+      ...aProvideUtilisationReportCorrectionViewModel(),
+      cancelLinkHref,
+    };
     const cancelButtonSelector = '[data-cy="cancel-button"]';
 
     // Act
@@ -277,6 +281,7 @@ describe(page, () => {
     wrapper.expectElement(cancelButtonSelector).toExist();
     wrapper.expectElement(cancelButtonSelector).toHaveAttribute('value', 'Cancel record correction');
     wrapper.expectElement(cancelButtonSelector).hasClass('govuk-button--secondary');
+    wrapper.expectElement(cancelButtonSelector).toHaveAttribute('formaction', cancelLinkHref);
   });
 
   describe('when there are validation errors', () => {

@@ -44,6 +44,8 @@ export const getProvideUtilisationReportCorrection = async (req: GetProvideUtili
       savedFormValues = await api.getFeeRecordCorrectionTransientFormData(userToken, bankId, correctionId);
     }
 
+    const cancelLinkHref = `/utilisation-reports/cancel-correction/${correctionId}`;
+
     const paymentCurrencyOptions = mapCurrenciesToRadioItems(savedFormValues.reportedCurrency);
 
     const additionalCommentsLabels = getAdditionalCommentsFieldLabels(feeRecordCorrection.reasons);
@@ -51,6 +53,7 @@ export const getProvideUtilisationReportCorrection = async (req: GetProvideUtili
     const viewModel: ProvideUtilisationReportCorrectionViewModel = {
       user,
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
+      cancelLinkHref,
       correctionRequestDetails: mapToCorrectionRequestDetailsViewModel(feeRecordCorrection),
       paymentCurrencyOptions,
       additionalComments: additionalCommentsLabels,
@@ -101,6 +104,8 @@ export const postProvideUtilisationReportCorrection = async (req: PostProvideUti
 
     const feeRecordCorrection = await api.getFeeRecordCorrection(userToken, bankId, correctionId);
 
+    const cancelLinkHref = `/utilisation-reports/cancel-correction/${correctionId}`;
+
     const paymentCurrencyOptions = mapCurrenciesToRadioItems(reportedCurrency);
 
     const additionalCommentsLabels = getAdditionalCommentsFieldLabels(feeRecordCorrection.reasons);
@@ -110,6 +115,7 @@ export const postProvideUtilisationReportCorrection = async (req: PostProvideUti
     const viewModel: ProvideUtilisationReportCorrectionViewModel = {
       user,
       primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
+      cancelLinkHref,
       correctionRequestDetails: mapToCorrectionRequestDetailsViewModel(feeRecordCorrection),
       paymentCurrencyOptions,
       additionalComments: additionalCommentsLabels,
