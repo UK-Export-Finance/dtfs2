@@ -18,10 +18,11 @@ type ValidatorMap = Record<
 
 /**
  * Creates a map of validation functions for each record correction reason.
- * @param reasons - Array of record correction reasons that determine validation rules
+ * @param reasonsCount - The total number of correction reasons
+ * @param isOtherInReasons - Whether {@link RECORD_CORRECTION_REASON.OTHER} is included in the selected reasons
  * @returns A ValidatorMap object containing validation functions for each record correction reason type
  */
-const getValidatorMap = (reasons: RecordCorrectionReason[]): ValidatorMap => {
+const getValidatorMap = (reasonsCount: number, isOtherInReasons: boolean): ValidatorMap => {
   const facilityIdValidator = async (value?: string) => ({ facilityIdErrorMessage: await getFacilityIdValidationError(value) });
 
   const reportedCurrencyValidator = (value?: string) => ({ reportedCurrencyErrorMessage: getReportedCurrencyValidationError(value) });
@@ -30,8 +31,7 @@ const getValidatorMap = (reasons: RecordCorrectionReason[]): ValidatorMap => {
 
   const utilisationValidator = (value?: string) => ({ utilisationErrorMessage: getUtilisationValidationError(value) });
 
-  const isOtherInReasons = reasons.includes(RECORD_CORRECTION_REASON.OTHER);
-  const isOtherSoleCorrectionReason = reasons.length === 1 && isOtherInReasons;
+  const isOtherSoleCorrectionReason = reasonsCount === 1 && isOtherInReasons;
 
   const otherReasonValidator = (value?: string) => ({
     additionalCommentsErrorMessage: getAdditionalCommentsValidationError(isOtherSoleCorrectionReason, isOtherInReasons, value),
@@ -62,11 +62,14 @@ export const getValidationErrorsForFormValues = async (
   formValues: RecordCorrectionFormValues,
   reasons: RecordCorrectionReason[],
 ): Promise<RecordCorrectionFormValueValidationErrors> => {
-  const validatorMap = getValidatorMap(reasons);
+  const reasonsCount = reasons.length;
+  const isOtherInReasons = reasons.includes(RECORD_CORRECTION_REASON.OTHER);
+
+  const validatorMap = getValidatorMap(reasonsCount, isOtherInReasons);
 
   let validationErrors: RecordCorrectionFormValueValidationErrors = {};
 
-  const reasonsWithOther = [...reasons, RECORD_CORRECTION_REASON.OTHER];
+  const reasonsWithOther = isOtherInReasons ? reasons : [...reasons, RECORD_CORRECTION_REASON.OTHER];
 
   for (const reason of reasonsWithOther) {
     const reasonValidator = validatorMap[reason];
