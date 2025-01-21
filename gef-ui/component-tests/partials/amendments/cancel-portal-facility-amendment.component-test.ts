@@ -1,3 +1,4 @@
+import { FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { CancelAmendmentViewModel } from '../../../server/types/view-models/amendments/cancel-amendment-view-model';
 import pageRenderer from '../../pageRenderer';
 
@@ -7,10 +8,12 @@ const render = pageRenderer(page);
 describe(page, () => {
   const exporterName = 'exporterName';
   const previousPage = 'previousPage';
+  const facilityType = FACILITY_TYPE.CASH;
 
   const params: CancelAmendmentViewModel = {
     exporterName,
     previousPage,
+    facilityType,
   };
 
   it(`should render the 'Back' link`, () => {
@@ -31,9 +34,9 @@ describe(page, () => {
     wrapper.expectSecondaryButton('[data-cy="no-go-back-button"]').toLinkTo(previousPage, 'No, go back');
   });
 
-  it('should render the exporter name in the heading caption', () => {
+  it('should render the exporter name and facility type in the heading caption', () => {
     const wrapper = render(params);
 
-    wrapper.expectText('[data-cy="heading-caption"]').toRead(exporterName);
+    wrapper.expectText('[data-cy="heading-caption"]').toRead(`${exporterName}, ${facilityType} facility`);
   });
 });

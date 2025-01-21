@@ -1,3 +1,4 @@
+import { FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { validationErrorHandler } from '../../../server/utils/helpers';
 import pageRenderer from '../../pageRenderer';
 import { WhatNeedsToChangeViewModel } from '../../../server/types/view-models/amendments/what-needs-to-change-view-model.ts';
@@ -10,12 +11,14 @@ describe(page, () => {
   const cancelUrl = 'cancelUrl';
   const exporterName = 'exporterName';
   const amendmentFormEmail = 'amendmentFormEmail';
+  const facilityType = FACILITY_TYPE.CASH;
 
   const params: WhatNeedsToChangeViewModel = {
     previousPage,
     cancelUrl,
     amendmentFormEmail,
     exporterName,
+    facilityType,
   };
 
   it('should render the page heading', () => {
@@ -24,10 +27,10 @@ describe(page, () => {
     wrapper.expectText('[data-cy="page-heading"]').toRead('What do you need to change?');
   });
 
-  it('should render the exporter name in the heading caption', () => {
+  it('should render the exporter name and facility type in the heading caption', () => {
     const wrapper = render(params);
 
-    wrapper.expectText('[data-cy="heading-caption"]').toRead(exporterName);
+    wrapper.expectText('[data-cy="heading-caption"]').toRead(`${exporterName}, ${facilityType} facility`);
   });
 
   it(`should render the 'Back' link`, () => {

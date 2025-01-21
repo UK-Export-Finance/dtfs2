@@ -46,6 +46,7 @@ export const getWhatNeedsToChange = async (req: GetWhatNeedsToChangeRequest, res
 
     const viewModel: WhatNeedsToChangeViewModel = {
       exporterName: deal.exporter.companyName,
+      facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: `/gef/application-details/${dealId}`,
       amendmentFormEmail: STB_PIM_EMAIL,
