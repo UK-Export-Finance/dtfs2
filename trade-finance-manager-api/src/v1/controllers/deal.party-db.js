@@ -49,6 +49,11 @@ const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault }) 
       return '';
     }
 
+    if (!probabilityOfDefault) {
+      console.error('No probability of default provided');
+      return '';
+    }
+
     partyDbInfo = await api.getOrCreatePartyDbInfo({ companyRegNo, companyName, probabilityOfDefault });
   } else {
     partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
