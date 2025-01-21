@@ -48,25 +48,36 @@ const generateApp = () => {
     watch: true,
   });
 
+  app.use(compression());
+
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+
+  app.use(
+    morgan('dev', {
+      skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
+    }),
+  );
+
   app.use(
     session({
       ...sessionConfiguration,
       cookie,
     }),
   );
-  app.use(compression());
 
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
 
-  // Unauthenticated routes
-  app.use('/', feedbackRoutes);
+  app.use('/assets', express.static('node_modules/govuk-frontend/dist/govuk/assets'), express.static(path.join(__dirname, '..', 'public')));
+
   // We add a conditional check here as there are no auth routes for the non sso journey, and
-  // we cannot call app.use with './', undefined.
+  // we cannot call app.use with './', undefined.s
   if (unauthenticatedAuthRoutes) {
     app.use('/', unauthenticatedAuthRoutes);
   }
+
+  // Unauthenticated routes
+  app.use('/', feedbackRoutes);
 
   app.use(
     csrf({
@@ -78,14 +89,6 @@ const generateApp = () => {
   );
   app.use(csrfToken());
   app.use(sanitizeXss());
-
-  app.use(
-    morgan('dev', {
-      skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
-    }),
-  );
-
-  app.use('/assets', express.static('node_modules/govuk-frontend/dist/govuk/assets'), express.static(path.join(__dirname, '..', 'public')));
 
   app.use(createRateLimit());
   app.use(healthcheck);
