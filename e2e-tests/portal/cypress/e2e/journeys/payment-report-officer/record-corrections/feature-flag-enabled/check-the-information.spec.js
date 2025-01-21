@@ -30,7 +30,7 @@ context('Check the information page - Fee record correction feature flag enabled
       amount: 123.45,
     };
 
-    const newUtilisation = 10000.23;
+    const newUtilisation = 100.23;
     const newReportedFees = {
       currency: CURRENCY.USD,
       amount: 543.21,
@@ -104,8 +104,8 @@ context('Check the information page - Fee record correction feature flag enabled
       reviewCorrection.originalValuesSummaryList().should('contain', oldReportedFees.amount);
 
       const expectedCorrectionReasons = mapReasonsToDisplayValues(reasons).join(', ');
-      const expectedOldValues = `${oldReportedFees.currency}, ${oldReportedFees.amount}, ${oldUtilisation}`;
-      const expectedNewValues = `${newReportedFees.currency}, ${newReportedFees.amount}, ${newUtilisation}`;
+      const expectedOldValues = `${oldUtilisation}, ${oldReportedFees.currency}, ${oldReportedFees.amount}`;
+      const expectedNewValues = `${newUtilisation}, ${newReportedFees.currency}, ${newReportedFees.amount}`;
 
       reviewCorrection.recordCorrectionDetailsSummaryList().should('exist');
       reviewCorrection.recordCorrectionDetailsSummaryList().should('contain', expectedCorrectionReasons);
