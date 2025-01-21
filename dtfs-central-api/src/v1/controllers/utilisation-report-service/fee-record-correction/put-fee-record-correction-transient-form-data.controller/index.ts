@@ -16,7 +16,11 @@ export type PutFeeRecordCorrectionTransientFormDataRequest = CustomExpressReques
   reqBody: PutFeeRecordCorrectionTransientFormDataPayload;
 }>;
 
-type PutFeeRecordCorrectionTransientFormDataResponse = Response<{ validationErrors?: RecordCorrectionFormValueValidationErrors } | string>;
+type PutFeeRecordCorrectionTransientFormDataResponseBody = {
+  validationErrors?: RecordCorrectionFormValueValidationErrors;
+};
+
+type PutFeeRecordCorrectionTransientFormDataResponse = Response<PutFeeRecordCorrectionTransientFormDataResponseBody | string>;
 
 /**
  * Controller for the PUT fee record correction transient form data route.

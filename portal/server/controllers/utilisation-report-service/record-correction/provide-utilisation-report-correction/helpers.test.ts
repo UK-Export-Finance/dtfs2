@@ -187,7 +187,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       const mappedValue = mapMonetaryValueToProvideCorrectionFormValue(monetaryValue);
 
       // Assert
-      expect(mappedValue).toBe('1,234.56');
+      expect(mappedValue).toEqual('1,234.56');
     });
 
     it('should return formatted monetary value when value is a number', () => {
@@ -198,7 +198,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       const mappedValue = mapMonetaryValueToProvideCorrectionFormValue(monetaryValue);
 
       // Assert
-      expect(mappedValue).toBe('1,234.56');
+      expect(mappedValue).toEqual('1,234.56');
     });
 
     it('should return original string when value is invalid monetary value', () => {
@@ -209,7 +209,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       const mappedValue = mapMonetaryValueToProvideCorrectionFormValue(monetaryValue);
 
       // Assert
-      expect(mappedValue).toBe('INVALID');
+      expect(mappedValue).toEqual('INVALID');
     });
 
     it('should format the number zero correctly', () => {
@@ -220,7 +220,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       const mappedValue = mapMonetaryValueToProvideCorrectionFormValue(monetaryValue);
 
       // Assert
-      expect(mappedValue).toBe('0.00');
+      expect(mappedValue).toEqual('0.00');
     });
   });
 

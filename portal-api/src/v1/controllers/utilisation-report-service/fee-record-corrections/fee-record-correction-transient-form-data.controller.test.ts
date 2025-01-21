@@ -178,13 +178,17 @@ describe('fee-record-correction-transient-form-data.controller', () => {
         facilityIdErrorMessage: 'A facility ID error message',
       };
 
-      jest.mocked(api.putFeeRecordCorrectionTransientFormData).mockResolvedValue(validationErrors);
+      const putResponse = {
+        validationErrors,
+      };
+
+      jest.mocked(api.putFeeRecordCorrectionTransientFormData).mockResolvedValue(putResponse);
 
       // Act
       await putFeeRecordCorrectionTransientFormData(req, res);
 
       // Assert
-      expect(res._getData()).toEqual(validationErrors);
+      expect(res._getData()).toEqual(putResponse);
     });
 
     it(`should return a ${HttpStatusCode.InternalServerError} status code if an unknown error is thrown`, async () => {
