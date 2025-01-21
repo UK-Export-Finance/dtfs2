@@ -67,9 +67,8 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
             .withFeesPaidToUkefForThePeriodCurrency(pendingCorrectionDetails.reportedFee.currency)
             .withFeesPaidToUkefForThePeriod(pendingCorrectionDetails.reportedFee.amount)
             .build();
-          const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
+          const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false)
             .withId(pendingCorrectionDetails.id)
-            .withIsCompleted(false)
             .withReasons(pendingCorrectionDetails.reasons)
             .withAdditionalInfo(pendingCorrectionDetails.additionalInfo)
             .build();

@@ -61,7 +61,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it(`should return '${HttpStatusCode.Ok}' and the fee record correction response`, async () => {
     // Arrange
-    const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
+    const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false)
       .withId(correctionId)
       .withReasons([RECORD_CORRECTION_REASON.OTHER])
       .withAdditionalInfo('Some additional information')
@@ -88,7 +88,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   it(`should return '${HttpStatusCode.NotFound}' when no fee record correction with the supplied id can be found`, async () => {
     // Arrange
-    const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord).withId(correctionId).build();
+    const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false).withId(correctionId).build();
 
     await SqlDbHelper.saveNewEntry('FeeRecordCorrection', feeRecordCorrectionEntity);
 
