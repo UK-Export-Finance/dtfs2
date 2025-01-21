@@ -26,7 +26,7 @@ describe('EligibilityCriteriaAmendmentsRepo', () => {
       jest.spyOn(mongoDbClient, 'getCollection').mockImplementation(getCollectionMock);
     });
 
-    it(`calls getCollection with ${MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA_AMENDMENTS}`, async () => {
+    it(`should call getCollection with ${MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA_AMENDMENTS}`, async () => {
       // Act
       await EligibilityCriteriaAmendmentsRepo.findLatestEligibilityCriteria(FACILITY_TYPE.CASH);
 
@@ -35,7 +35,7 @@ describe('EligibilityCriteriaAmendmentsRepo', () => {
       expect(getCollectionMock).toHaveBeenCalledWith(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA_AMENDMENTS);
     });
 
-    it('calls find with the expected parameters', async () => {
+    it('should call find with the expected parameters', async () => {
       // Act
       const facilityType = FACILITY_TYPE.CASH;
       await EligibilityCriteriaAmendmentsRepo.findLatestEligibilityCriteria(facilityType);
@@ -47,7 +47,7 @@ describe('EligibilityCriteriaAmendmentsRepo', () => {
       expect(findMock).toHaveBeenCalledWith(expectedFilter);
     });
 
-    it('returns the found latest eligibility criteria', async () => {
+    it('should return the found latest eligibility criteria', async () => {
       // Act
       const facilityType = FACILITY_TYPE.CASH;
       const result = await EligibilityCriteriaAmendmentsRepo.findLatestEligibilityCriteria(facilityType);

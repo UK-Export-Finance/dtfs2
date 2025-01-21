@@ -11,7 +11,7 @@ describe('EligibilityCriteriaNotFoundError', () => {
     expect(exception.message).toEqual('Eligibility criteria not found');
   });
 
-  it('exposes the 404 (Not Found) status code', () => {
+  it('should expose the 404 (Not Found) status code', () => {
     // Act
     const exception = new EligibilityCriteriaNotFoundError();
 
