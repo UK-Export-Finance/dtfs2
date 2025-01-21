@@ -1,3 +1,4 @@
+import { FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { DoYouHaveAFacilityEndDateViewModel } from '../../../server/types/view-models/amendments/do-you-have-a-facility-end-date-view-model';
 import pageRenderer from '../../pageRenderer';
 
@@ -8,11 +9,13 @@ describe(page, () => {
   const previousPage = 'previousPage';
   const cancelUrl = 'cancelUrl';
   const exporterName = 'exporterName';
+  const facilityType = FACILITY_TYPE.CASH;
 
   const params: DoYouHaveAFacilityEndDateViewModel = {
     previousPage,
     cancelUrl,
     exporterName,
+    facilityType,
   };
 
   it('should render the page heading', () => {
@@ -87,10 +90,10 @@ describe(page, () => {
     wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(cancelUrl, 'Cancel');
   });
 
-  it('should render the exporter name in the heading caption', () => {
+  it('should render the exporter name and facility type in the heading caption', () => {
     const wrapper = render(params);
 
-    wrapper.expectText('[data-cy="heading-caption"]').toRead(exporterName);
+    wrapper.expectText('[data-cy="heading-caption"]').toRead(`${exporterName}, ${facilityType} facility`);
   });
 
   it('should render `What is a facility end date` details', () => {

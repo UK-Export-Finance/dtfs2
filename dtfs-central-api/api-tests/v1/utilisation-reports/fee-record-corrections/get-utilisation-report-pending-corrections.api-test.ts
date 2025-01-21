@@ -82,7 +82,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   describe('when there are no reports with pending corrections', () => {
     const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withId(1).withBankId(bankId).build();
-    const completedCorrection = new FeeRecordCorrectionEntityMockBuilder().withIsCompleted(true).build();
+    const completedCorrection = FeeRecordCorrectionEntityMockBuilder.forIsCompleted(true).build();
     const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withStatus(FEE_RECORD_STATUS.TO_DO).withCorrections([completedCorrection]).build();
     report.feeRecords = [feeRecord];
 
@@ -123,15 +123,13 @@ describe(`GET ${BASE_URL}`, () => {
       .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.USD)
       .build();
 
-    const completedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
+    const completedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, true)
       .withId(1)
-      .withIsCompleted(true)
       .withAdditionalInfo('This correction has been completed')
       .build();
 
-    const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
+    const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false)
       .withId(2)
-      .withIsCompleted(false)
       .withAdditionalInfo('This is some additional information')
       .withReasons([RECORD_CORRECTION_REASON.UTILISATION_INCORRECT])
       .build();
@@ -232,9 +230,8 @@ describe(`GET ${BASE_URL}`, () => {
       .withFeesPaidToUkefForThePeriod(200)
       .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.EUR)
       .build();
-    const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
+    const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false)
       .withId(1)
-      .withIsCompleted(false)
       .withAdditionalInfo('This is the first correction to be made')
       .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER])
       .build();
@@ -255,9 +252,8 @@ describe(`GET ${BASE_URL}`, () => {
       .withFacilityId('5566778899')
       .withExporter('Another Test Exporter')
       .build();
-    const otherPendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(otherFeeRecord)
+    const otherPendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(otherFeeRecord, false)
       .withId(2)
-      .withIsCompleted(false)
       .withAdditionalInfo('This is another correction that needs to be made')
       .build();
 
