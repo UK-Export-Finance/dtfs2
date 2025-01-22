@@ -44,7 +44,7 @@ describe('controllers - login (sso)', () => {
         const { req, res } = getHttpMocks();
 
         // Act
-        await loginController.getLogin(req, res, next);
+        await loginController.getLogin(req, res);
 
         // Assert
         expect(res._getRedirectUrl()).toEqual('/home');
@@ -62,7 +62,7 @@ describe('controllers - login (sso)', () => {
           const { req, res } = httpMocks.createMocks({ session: {} });
 
           // Act
-          await loginController.getLogin(req, res, next);
+          await loginController.getLogin(req, res);
 
           // Assert
           expect(res._getRedirectUrl()).toEqual(mockAuthCodeUrl);
@@ -77,7 +77,7 @@ describe('controllers - login (sso)', () => {
           req.session.loginData = { authCodeUrlRequest: 'old-auth-code-url-request' as unknown as AuthorizationUrlRequest };
 
           // Act
-          await loginController.getLogin(req, res, next);
+          await loginController.getLogin(req, res);
 
           // Assert
           expect(req.session.loginData).toEqual({ authCodeUrlRequest: mockAuthCodeUrlRequest });
@@ -96,7 +96,7 @@ describe('controllers - login (sso)', () => {
           getAuthCodeUrlMock.mockRejectedValueOnce(error);
 
           // Act
-          await loginController.getLogin(req, res, next);
+          await loginController.getLogin(req, res);
 
           // Assert
           expect(next).toHaveBeenCalledWith(error);

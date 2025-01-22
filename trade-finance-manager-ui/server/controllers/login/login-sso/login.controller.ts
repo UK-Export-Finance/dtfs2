@@ -84,7 +84,6 @@ export class LoginController {
     }
   }
 
-  // TODO DTFS2-6892: Update this logout handling
   /**
    * Handles the logout process for the user.
    *

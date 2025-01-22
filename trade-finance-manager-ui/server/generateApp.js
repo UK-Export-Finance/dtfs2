@@ -48,6 +48,15 @@ const generateApp = () => {
     watch: true,
   });
 
+  app.use(
+    session({
+      ...sessionConfiguration,
+      cookie,
+    }),
+  );
+
+  app.use(cookieParser());
+
   app.use(compression());
 
   app.use(express.json());
@@ -59,16 +68,9 @@ const generateApp = () => {
     }),
   );
 
-  app.use(
-    session({
-      ...sessionConfiguration,
-      cookie,
-    }),
-  );
-
-  app.use(cookieParser());
-
   app.use('/assets', express.static('node_modules/govuk-frontend/dist/govuk/assets'), express.static(path.join(__dirname, '..', 'public')));
+
+  app.use(createRateLimit());
 
   // We add a conditional check here as there are no auth routes for the non sso journey, and
   // we cannot call app.use with './', undefined.s
@@ -90,7 +92,6 @@ const generateApp = () => {
   app.use(csrfToken());
   app.use(sanitizeXss());
 
-  app.use(createRateLimit());
   app.use(healthcheck);
   app.use('/', routes);
 
