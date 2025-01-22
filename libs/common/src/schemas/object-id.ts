@@ -21,6 +21,8 @@ export const OBJECT_ID_STRING = z.union([z.string().refine((id) => ObjectId.isVa
 
 /**
  * A zod schema that represents a valid ObjectId as an ObjectId object or a string
- * This schema does not do any transformation
+ * This schema does not do any transformation, only validates.
+ * This is because we check to see if the value is an ObjectId prior to applying the OBJECT_ID_STRING
+ * schema, and zod union returns the first valid schema
  */
-export const OBJECT_ID_OR_OBJECT_ID_STRING = z.union([z.instanceof(ObjectId), OBJECT_ID_STRING, z.string().refine((id) => ObjectId.isValid(id))]);
+export const OBJECT_ID_OR_OBJECT_ID_STRING = z.union([z.instanceof(ObjectId), OBJECT_ID_STRING]);
