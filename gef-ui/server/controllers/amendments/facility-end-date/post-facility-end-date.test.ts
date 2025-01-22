@@ -26,7 +26,7 @@ import { ValidationError } from '../../../types/validation-error';
 import { postFacilityEndDate, PostFacilityEndDateRequest } from './post-facility-end-date';
 import * as facilityEndDateValidation from '../../facility-end-date/validation';
 import { FacilityEndDateViewModel } from '../../../types/view-models/amendments/facility-end-date-view-model';
-import { getCoverStartDateOrStartOfToday } from '../../../utils/get-cover-start-date-or-start-of-today';
+import { getCoverStartDateOrToday } from '../../../utils/get-cover-start-date-or-today';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
@@ -128,7 +128,7 @@ describe('postFacilityEndDate', () => {
     expect(facilityEndDateValidation.validateAndParseFacilityEndDate).toHaveBeenCalledTimes(1);
     expect(facilityEndDateValidation.validateAndParseFacilityEndDate).toHaveBeenCalledWith(
       facilityEndDateDayMonthYear,
-      getCoverStartDateOrStartOfToday(MOCK_ISSUED_FACILITY.details),
+      getCoverStartDateOrToday(MOCK_ISSUED_FACILITY.details),
     );
   });
 
@@ -163,6 +163,7 @@ describe('postFacilityEndDate', () => {
     // Assert
     const expectedRenderData: FacilityEndDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
+      facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage,
       errors: validationErrorHandler(

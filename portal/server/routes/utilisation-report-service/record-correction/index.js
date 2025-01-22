@@ -18,12 +18,11 @@ router
   .get((req, res) => getProvideUtilisationReportCorrection(req, res))
   .post((req, res) => postProvideUtilisationReportCorrection(req, res));
 
-router.get(
-  '/utilisation-reports/provide-correction/:correctionId/check-the-information',
-  [validateFeeRecordCorrectionFeatureFlagIsEnabled, validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] })],
-  validateSqlId('correctionId'),
-  (req, res) => getUtilisationReportCorrectionReview(req, res),
-);
+router
+  .route('/utilisation-reports/provide-correction/:correctionId/check-the-information')
+  .all(validateFeeRecordCorrectionFeatureFlagIsEnabled, validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] }), validateSqlId('correctionId'))
+  .get((req, res) => getUtilisationReportCorrectionReview(req, res))
+  .post((req, res) => postUtilisationReportCorrectionReview(req, res));
 
 router.post(
   '/utilisation-reports/cancel-correction/:correctionId',
@@ -37,10 +36,5 @@ router.get(
   [validateFeeRecordCorrectionFeatureFlagIsEnabled, validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] })],
   (req, res) => getRecordCorrectionSent(req, res),
 );
-
-router
-  .route('/utilisation-reports/provide-correction/:correctionId/check-the-information')
-  .all(validateFeeRecordCorrectionFeatureFlagIsEnabled, validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] }))
-  .post((req, res) => postUtilisationReportCorrectionReview(req, res));
 
 module.exports = router;

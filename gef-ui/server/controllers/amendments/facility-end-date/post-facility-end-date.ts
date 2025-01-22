@@ -6,7 +6,7 @@ import { asLoggedInUserSession } from '../../../utils/express-session';
 import { getNextPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { validateAndParseFacilityEndDate } from '../../facility-end-date/validation';
-import { getCoverStartDateOrStartOfToday } from '../../../utils/get-cover-start-date-or-start-of-today';
+import { getCoverStartDateOrToday } from '../../../utils/get-cover-start-date-or-today';
 import { validationErrorHandler } from '../../../utils/helpers';
 
 export type PostFacilityEndDateRequest = CustomExpressRequest<{
@@ -44,11 +44,12 @@ export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: 
       return res.redirect('/not-found');
     }
 
-    const validationErrorsOrValue = validateAndParseFacilityEndDate(facilityEndDateDayMonthYear, getCoverStartDateOrStartOfToday(facility));
+    const validationErrorsOrValue = validateAndParseFacilityEndDate(facilityEndDateDayMonthYear, getCoverStartDateOrToday(facility));
 
     if ('errors' in validationErrorsOrValue) {
       const viewModel: FacilityEndDateViewModel = {
         exporterName: deal.exporter.companyName,
+        facilityType: facility.type,
         cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
         previousPage,
         facilityEndDate: facilityEndDateDayMonthYear,

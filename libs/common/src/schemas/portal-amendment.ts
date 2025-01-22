@@ -1,8 +1,8 @@
 import z from 'zod';
 import { parseISO } from 'date-fns';
+import { getEpochMs } from '../helpers';
 import { AMENDMENT_TYPES, CURRENCY } from '../constants';
 import { Currency, IsoDateTimeStamp } from '../types';
-import { UNIX_TIMESTAMP_SECONDS_SCHEMA } from './unix-timestamp.schema';
 /**
  * Portal Amendment schema to validate an object contains user provided values for the type `PortalFacilityAmendment`
  *
@@ -11,8 +11,8 @@ import { UNIX_TIMESTAMP_SECONDS_SCHEMA } from './unix-timestamp.schema';
 export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
   .object({
     changeCoverEndDate: z.boolean().optional(),
-    coverEndDate: UNIX_TIMESTAMP_SECONDS_SCHEMA.optional(),
-    currentCoverEndDate: UNIX_TIMESTAMP_SECONDS_SCHEMA.optional(),
+    coverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().nonnegative().optional()),
+    currentCoverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().nonnegative().optional()),
     isUsingFacilityEndDate: z.boolean().optional(),
     facilityEndDate: z
       .string()

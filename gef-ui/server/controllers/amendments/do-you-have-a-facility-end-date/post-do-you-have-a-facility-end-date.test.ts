@@ -149,6 +149,7 @@ describe('postDoYouHaveAFacilityEndDate', () => {
     // Assert
     const expectedRenderData: DoYouHaveAFacilityEndDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
+      facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage,
       errors: validationErrorHandler((validateIsUsingFacilityEndDate(isUsingFacilityEndDate) as { errors: ValidationError[] }).errors),
