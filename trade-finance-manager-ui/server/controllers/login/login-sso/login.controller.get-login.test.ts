@@ -53,7 +53,7 @@ describe('controllers - login (sso)', () => {
           mockSuccessfulGetAuthCodeUrl();
         });
 
-        it('should redirect to login URL', async () => {
+        it('should redirect to auth code URL', async () => {
           // Arrange
           const { req, res } = httpMocks.createMocks({ session: {} });
 
@@ -69,8 +69,6 @@ describe('controllers - login (sso)', () => {
           const { req, res } = httpMocks.createMocks({
             session: { loginData: { authCodeUrlRequest: 'an old auth code url request', aField: 'another field' } },
           });
-
-          req.session.loginData = { authCodeUrlRequest: 'old-auth-code-url-request' };
 
           // Act
           await loginController.getLogin(req, res, next);
