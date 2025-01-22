@@ -48,7 +48,7 @@ export const getCoverEndDate = async (req: GetCoverEndDateRequest, res: Response
       return res.redirect(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE }));
     }
 
-    const currentCoverEndDate: Date | undefined = (amendment.coverEndDate && fromUnixTime(amendment.coverEndDate)) || undefined;
+    const currentCoverEndDate: Date | undefined = (amendment.coverEndDate && fromUnixTime(amendment.coverEndDate / 1000)) || undefined;
 
     const coverEndDateDayMonthYear: DayMonthYearInput | undefined = currentCoverEndDate && convertDateToDayMonthYearInput(currentCoverEndDate);
 

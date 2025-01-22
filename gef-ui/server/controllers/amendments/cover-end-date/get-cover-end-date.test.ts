@@ -26,7 +26,7 @@ const dealId = 'dealId';
 const facilityId = 'facilityId';
 const amendmentId = 'amendmentId';
 
-const aMockError = () => new Error();
+const mockError = () => new Error();
 
 const getHttpMocks = () =>
   createMocks<GetCoverEndDateRequest>({
@@ -207,7 +207,6 @@ describe('getCoverEndDate', () => {
 
   it('should render `problem with service` if getApplication throws an error', async () => {
     // Arrange
-    const mockError = aMockError();
     getApplicationMock.mockRejectedValue(mockError);
     const { req, res } = getHttpMocks();
 
@@ -222,7 +221,6 @@ describe('getCoverEndDate', () => {
 
   it('should render `problem with service` if getFacility throws an error', async () => {
     // Arrange
-    const mockError = aMockError();
     getFacilityMock.mockRejectedValue(mockError);
     const { req, res } = getHttpMocks();
 
@@ -237,7 +235,6 @@ describe('getCoverEndDate', () => {
 
   it('should render `problem with service` if getAmendment throws an error', async () => {
     // Arrange
-    const mockError = aMockError();
     getAmendmentMock.mockRejectedValue(mockError);
     const { req, res } = getHttpMocks();
 

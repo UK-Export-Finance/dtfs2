@@ -48,5 +48,5 @@ export const validateAndParseCoverEndDate = (dayMonthYear: DayMonthYearInput, co
     };
   }
 
-  return { value: getUnixTime(coverEndDate) };
+  return { value: getUnixTime(coverEndDate) * 1000 };
 };
