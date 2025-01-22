@@ -3,7 +3,6 @@ const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const ELIGIBILITY_CRITERIA_AMENDMENTS = [
   {
     version: 1,
-    product: 'GEF',
     isInDraft: false,
     facilityType: [FACILITY_TYPE.CASH, FACILITY_TYPE.CONTINGENT],
     createdAt: 1649876028968,

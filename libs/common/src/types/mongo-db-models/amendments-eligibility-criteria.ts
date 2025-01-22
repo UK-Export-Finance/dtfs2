@@ -1,7 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { DealType } from '../deal-type';
 import { FacilityType } from '../facility-type';
-import { AuditDatabaseRecord } from '../audit-database-record';
 import { UnixTimestampMilliseconds } from '../date';
 
 export type AmendmentsEligibilityCriterion = { id: number; text: string; textList?: string[] };
@@ -12,10 +10,8 @@ export type AmendmentsEligibilityCriterion = { id: number; text: string; textLis
 export type AmendmentsEligibilityCriteria = {
   _id: ObjectId;
   version: number;
-  product: DealType;
   facilityType: FacilityType[];
   isInDraft: boolean;
   createdAt: UnixTimestampMilliseconds;
   criteria: AmendmentsEligibilityCriterion[];
-  auditRecord?: AuditDatabaseRecord;
 };
