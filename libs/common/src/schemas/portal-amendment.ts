@@ -11,14 +11,8 @@ import { Currency, IsoDateTimeStamp } from '../types';
 export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
   .object({
     changeCoverEndDate: z.boolean().optional(),
-    coverEndDate: z
-      .date()
-      .transform((date) => getEpochMs(date))
-      .optional(),
-    currentCoverEndDate: z
-      .date()
-      .transform((date) => getEpochMs(date))
-      .optional(),
+    coverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().nonnegative().optional()),
+    currentCoverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().nonnegative().optional()),
     isUsingFacilityEndDate: z.boolean().optional(),
     facilityEndDate: z
       .string()
