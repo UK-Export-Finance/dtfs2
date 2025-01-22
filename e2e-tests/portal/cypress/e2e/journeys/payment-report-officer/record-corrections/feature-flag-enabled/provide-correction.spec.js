@@ -130,6 +130,15 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
             cy.clickContinueButton();
           });
 
+          it('should retain the values entered by the user when they return to the page via the review page back link', () => {
+            cy.clickBackLink();
+
+            provideCorrection.facilityIdInput().should('have.value', newFacilityId);
+            provideCorrection.reportedFeeInput().should('have.value', getFormattedMonetaryValue(newReportedFee));
+            provideCorrection.reportedCurrency.radioInput(newReportedCurrency).should('be.checked');
+            provideCorrection.additionalComments.input().should('have.value', additionalComments);
+          });
+
           it('should retain the values entered by the user when they return to the page via the review page change link', () => {
             reviewCorrection.changeNewValuesLink().click();
 
