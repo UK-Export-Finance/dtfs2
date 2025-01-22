@@ -1,4 +1,4 @@
-import { AmendmentsEligibilityCriterionWithAnswer } from '@ukef/dtfs2-common';
+import { AmendmentsEligibilityCriterionWithAnswer, FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { validationErrorHandler } from '../../../server/utils/helpers';
 import pageRenderer from '../../pageRenderer';
 import { EligibilityViewModel } from '../../../server/types/view-models/amendments/eligibility-view-model.ts';
@@ -15,12 +15,14 @@ describe(page, () => {
     { id: 3, text: 'Test third criteria', textList: ['criterion 3 bullet point 1', 'criterion 3 bullet point 2', 'criterion 3 bullet point 3'], answer: null },
   ];
   const exporterName = 'exporterName';
+  const facilityType = FACILITY_TYPE.CASH;
 
   const params: EligibilityViewModel = {
     previousPage,
     cancelUrl,
     criteria,
     exporterName,
+    facilityType,
   };
 
   it('should render the page heading', () => {
@@ -47,10 +49,10 @@ describe(page, () => {
     wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(cancelUrl, 'Cancel');
   });
 
-  it('should render the exporter name in the heading caption', () => {
+  it('should render the exporter name and facility type in the heading caption', () => {
     const wrapper = render(params);
 
-    wrapper.expectText('[data-cy="heading-caption"]').toRead(exporterName);
+    wrapper.expectText('[data-cy="heading-caption"]').toRead(`${exporterName}, ${facilityType} facility`);
   });
 
   it('should render the `Help with declarations` accordion', () => {

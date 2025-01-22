@@ -65,16 +65,14 @@ context('Pending corrections - Fee record correction feature flag enabled', () =
             .withFeesPaidToUkefForThePeriodCurrency(pendingCorrectionDetails.reportedCurrency)
             .build();
 
-          const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
+          const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false)
             .withId(1)
-            .withIsCompleted(false)
             .withAdditionalInfo(pendingCorrectionDetails.additionalInfo)
             .withReasons(pendingCorrectionDetails.reasons)
             .build();
 
-          const completedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
+          const completedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, true)
             .withId(2)
-            .withIsCompleted(true)
             .withAdditionalInfo('This should not be displayed because this correction has been completed')
             .build();
 

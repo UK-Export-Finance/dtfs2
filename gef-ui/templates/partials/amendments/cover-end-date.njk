@@ -11,7 +11,7 @@
 {% set headingHtml %}
 <header>
   <span class="govuk-caption-l" data-cy="heading-caption">
-    {{ exporterName }}
+    {{ exporterName }}, {{ facilityType }} facility
   </span>
   <h1 class="govuk-label-wrapper" data-cy="page-heading">
     <label class="govuk-label govuk-label--xl govuk-!-padding-bottom-3" for="cover-end-date">
@@ -30,7 +30,7 @@
           'data-cy': 'error-summary'
         },
         classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
-      }) 
+      })
     }}
   {% endif %}
 
@@ -40,7 +40,7 @@
       attributes: {
         'data-cy': 'back-link'
       }
-    }) 
+    })
   }}
 
   <div class="govuk-grid-row govuk-!-margin-bottom-3">
@@ -73,7 +73,7 @@
             attributes: {
             'data-cy': 'continue-button'
             }
-            }) 
+            })
           }}
 
           <a href={{cancelUrl}}  data-cy="cancel-link" class="govuk-link">Cancel</a>

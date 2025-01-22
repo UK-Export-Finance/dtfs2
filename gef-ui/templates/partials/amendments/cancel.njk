@@ -7,7 +7,7 @@
 {%- endblock %}
 
 {% set headingHtml %}
-  
+
 {% endset %}
 
 {% block content %}
@@ -17,7 +17,7 @@
       attributes: {
         'data-cy': 'back-link'
       }
-    }) 
+    })
   }}
 
 
@@ -25,7 +25,7 @@
     <div class="govuk-grid-column-two-thirds">
       <header>
         <span class="govuk-caption-l" data-cy="heading-caption">
-          {{ exporterName }}
+          {{ exporterName }}, {{ facilityType }} facility
         </span>
         <h1 class="govuk-label-wrapper" data-cy="page-heading">
           <span class="govuk-heading-xl govuk-!-margin-bottom-1">Are you sure you want to cancel the request?</span>
@@ -37,8 +37,8 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         <input type="hidden" name="previousPage" value="{{ previousPage }}">
 
-        <div 
-          class="govuk-button-group govuk-!-margin-top-4" 
+        <div
+          class="govuk-button-group govuk-!-margin-top-4"
         >
           {{ govukButton({
             text: "Yes, cancel",

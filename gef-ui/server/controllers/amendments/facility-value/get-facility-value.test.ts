@@ -13,6 +13,7 @@ import {
   PORTAL_LOGIN_STATUS,
   ROLES,
   PortalFacilityAmendmentWithUkefId,
+  FACILITY_TYPE,
 } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
@@ -52,6 +53,7 @@ const mockFacility = {
   currency: {
     id: CURRENCY.GBP,
   },
+  type: FACILITY_TYPE.CASH,
   hasBeenIssued: true,
 } as Facility;
 
@@ -124,6 +126,7 @@ describe('getFacilityValue', () => {
     // Assert
     const expectedRenderData: FacilityValueViewModel = {
       exporterName: companyName,
+      facilityType: mockFacility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment),
       currencySymbol: getCurrencySymbol(mockFacility.currency.id),
@@ -155,6 +158,7 @@ describe('getFacilityValue', () => {
     // Assert
     const expectedRenderData: FacilityValueViewModel = {
       exporterName: companyName,
+      facilityType: mockFacility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment),
       currencySymbol: getCurrencySymbol(mockFacility.currency.id),

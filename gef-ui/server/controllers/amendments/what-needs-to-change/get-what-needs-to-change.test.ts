@@ -6,16 +6,9 @@ const getAmendmentMock = jest.fn();
 
 import { createMocks } from 'node-mocks-http';
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import {
-  aPortalSessionUser,
-  DEAL_STATUS,
-  DEAL_SUBMISSION_TYPE,
-  Facility,
-  PORTAL_LOGIN_STATUS,
-  PortalFacilityAmendmentWithUkefId,
-  ROLES,
-} from '@ukef/dtfs2-common';
+import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, PortalFacilityAmendmentWithUkefId, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
+import { MOCK_ISSUED_FACILITY, MOCK_UNISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { getAmendmentsUrl } from '../helpers/navigation.helper.ts';
 import { WhatNeedsToChangeViewModel } from '../../../types/view-models/amendments/what-needs-to-change-view-model.ts';
 import { getWhatNeedsToChange, GetWhatNeedsToChangeRequest } from './get-what-needs-to-change.ts';
@@ -59,10 +52,6 @@ const getHttpMocks = () =>
 
 const mockDeal = { exporter: { companyName }, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as Deal;
 
-const mockFacility = {
-  hasBeenIssued: true,
-} as Facility;
-
 describe('getWhatNeedsToChange', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
 
@@ -73,7 +62,7 @@ describe('getWhatNeedsToChange', () => {
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().withDealId(dealId).withFacilityId(facilityId).withAmendmentId(amendmentId).build();
 
     getApplicationMock.mockResolvedValue(mockDeal);
-    getFacilityMock.mockResolvedValue({ details: mockFacility });
+    getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getAmendmentMock.mockResolvedValue(amendment);
   });
 
@@ -131,6 +120,7 @@ describe('getWhatNeedsToChange', () => {
     // Assert
     const expectedRenderData: WhatNeedsToChangeViewModel = {
       exporterName: companyName,
+      facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage: `/gef/application-details/${dealId}`,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       amendmentFormEmail: STB_PIM_EMAIL,
@@ -161,6 +151,7 @@ describe('getWhatNeedsToChange', () => {
     // Assert
     const expectedRenderData: WhatNeedsToChangeViewModel = {
       exporterName: companyName,
+      facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage: `/gef/application-details/${dealId}`,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       amendmentFormEmail: STB_PIM_EMAIL,
@@ -223,7 +214,7 @@ describe('getWhatNeedsToChange', () => {
   it('should redirect if the facility cannot be amended', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
-    getFacilityMock.mockResolvedValue({ details: { ...mockFacility, hasBeenIssued: false } });
+    getFacilityMock.mockResolvedValue(MOCK_UNISSUED_FACILITY);
 
     // Act
     await getWhatNeedsToChange(req, res);
