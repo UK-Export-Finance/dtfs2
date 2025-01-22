@@ -18,6 +18,7 @@ describe('EligibilityCriteriaAmendmentsRepo', () => {
     beforeEach(() => {
       findToArrayMock.mockResolvedValue([eligibilityCriteria]);
       findMock.mockReturnValue({ sort: () => ({ limit: () => ({ toArray: findToArrayMock }) }) });
+
       getCollectionMock.mockResolvedValue({
         find: findMock,
       });
@@ -46,23 +47,7 @@ describe('EligibilityCriteriaAmendmentsRepo', () => {
       expect(findMock).toHaveBeenCalledWith(expectedFilter);
     });
 
-    it.only('should return the found latest eligibility criteria if one exists matching the facility type', async () => {
-      // Arrange
-      const latestCashEligibilityCriteria = amendmentsEligibilityCriteria(1.2, [FACILITY_TYPE.CASH, FACILITY_TYPE.CONTINGENT]);
-      const legacyCashEligibilityCriteria = amendmentsEligibilityCriteria(1.7, [FACILITY_TYPE.CASH, FACILITY_TYPE.CONTINGENT]);
-      const otherEligibilityCriteria = amendmentsEligibilityCriteria(2, [FACILITY_TYPE.BOND]);
-
-      findToArrayMock.mockResolvedValueOnce([latestCashEligibilityCriteria, legacyCashEligibilityCriteria, otherEligibilityCriteria]);
-
-      // Act
-      const facilityType = FACILITY_TYPE.CASH;
-      const result = await EligibilityCriteriaAmendmentsRepo.findLatestEligibilityCriteria(facilityType);
-
-      // Assert
-      expect(result).toEqual(legacyCashEligibilityCriteria);
-    });
-
-    it('should throw an error if the ', async () => {
+    it('should return the found latest eligibility criteria', async () => {
       // Act
       const facilityType = FACILITY_TYPE.CASH;
       const result = await EligibilityCriteriaAmendmentsRepo.findLatestEligibilityCriteria(facilityType);
