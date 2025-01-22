@@ -5,7 +5,7 @@ const updateAmendmentMock = jest.fn();
 
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { format, startOfDay, getUnixTime } from 'date-fns';
+import { format, startOfDay } from 'date-fns';
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import {
   aPortalSessionUser,
@@ -14,6 +14,7 @@ import {
   DEAL_STATUS,
   PortalFacilityAmendmentWithUkefId,
   DayMonthYearInput,
+  getEpochMs,
 } from '@ukef/dtfs2-common';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
@@ -143,6 +144,7 @@ describe('postCoverEndDate', () => {
     // Assert
     const expectedRenderData: CoverEndDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
+      facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage,
       errors: validationErrorHandler(
@@ -170,7 +172,7 @@ describe('postCoverEndDate', () => {
 
     // Assert
     expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
-    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { coverEndDate: getUnixTime(today) }, userToken });
+    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { coverEndDate: getEpochMs(today) }, userToken });
   });
 
   it('should not call console.error if the coverEndDate is valid', async () => {

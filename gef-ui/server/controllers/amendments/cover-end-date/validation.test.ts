@@ -1,5 +1,5 @@
-import { applyStandardValidationAndParseDateInput, COVER_END_DATE_MAXIMUM_YEARS_IN_FUTURE, DayMonthYearInput, now } from '@ukef/dtfs2-common';
-import { add, format, startOfDay, getUnixTime } from 'date-fns';
+import { getEpochMs, applyStandardValidationAndParseDateInput, COVER_END_DATE_MAXIMUM_YEARS_IN_FUTURE, DayMonthYearInput, now } from '@ukef/dtfs2-common';
+import { add, format, startOfDay } from 'date-fns';
 import { validateAndParseCoverEndDate } from './validation';
 import { mapValidationError } from '../../../utils/map-validation-error';
 
@@ -87,7 +87,7 @@ describe('validateAndParseCoverEndDate', () => {
 
     // Assert
     expect(result).toEqual({
-      value: getUnixTime(coverEndDate) * 1000,
+      value: getEpochMs(coverEndDate),
     });
   });
 
@@ -101,7 +101,7 @@ describe('validateAndParseCoverEndDate', () => {
 
     // Assert
     expect(result).toEqual({
-      value: getUnixTime(coverEndDate) * 1000,
+      value: getEpochMs(coverEndDate),
     });
   });
 

@@ -49,6 +49,7 @@ export const postCoverEndDate = async (req: PostCoverEndDateRequest, res: Respon
     if ('errors' in validationErrorsOrValue) {
       const viewModel: CoverEndDateViewModel = {
         exporterName: deal.exporter.companyName,
+        facilityType: facility.type,
         cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
         previousPage,
         coverEndDate: coverEndDateDayMonthYear,
