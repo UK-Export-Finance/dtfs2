@@ -10,6 +10,9 @@ const cleanEligibilityCriteria = async (token) => {
   }
 };
 
+/**
+ * Deletes all entries in the eligibilityCriteriaAmendments collection
+ */
 const cleanEligibilityCriteriaAmendments = async () => {
   console.info('cleaning GEF tables');
   console.info('cleaning GEF eligibilityCriteriaAmendments');

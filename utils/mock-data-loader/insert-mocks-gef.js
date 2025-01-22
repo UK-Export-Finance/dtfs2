@@ -17,7 +17,10 @@ const insertMocks = async (token) => {
     await api.createEligibilityCriteria(item, token);
   }
 
-  console.info('inserting GEF eligibility-criteria-amendments');
+  /**
+   * Inserts mock entries into the eligibilityCriteriaAmendments collection
+   */
+  console.info('Inserting GEF eligibility criteria amendments');
   const eligibilityCriteriaAmendmentsCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA_AMENDMENTS);
   await eligibilityCriteriaAmendmentsCollection.insertMany(MOCKS.ELIGIBILITY_CRITERIA_AMENDMENTS);
 
