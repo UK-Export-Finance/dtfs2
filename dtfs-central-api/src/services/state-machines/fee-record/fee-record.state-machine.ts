@@ -13,8 +13,8 @@ import {
   handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent,
   handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent,
   handleFeeRecordCorrectionRequestedEvent,
+  handleFeeRecordCorrectionReceivedEvent,
 } from './event-handlers';
-import { handleFeeRecordCorrectionReceivedEvent } from './event-handlers/correction-received';
 
 /**
  * The fee record state machine class
