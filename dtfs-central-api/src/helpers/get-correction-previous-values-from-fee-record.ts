@@ -34,6 +34,5 @@ const valueGetters: Record<RecordCorrectionReason, CorrectionValueGetter<FeeReco
  * @param reasons - the reasons for the record correction
  * @returns the previous values
  */
-export const getCorrectionPreviousValuesFromFeeRecord = (feeRecord: FeeRecordEntity, reasons: RecordCorrectionReason[]): RecordCorrectionValues => {
-  return getCorrectionValues(feeRecord, reasons, valueGetters);
-};
+export const getCorrectionPreviousValuesFromFeeRecord = (feeRecord: FeeRecordEntity, reasons: RecordCorrectionReason[]): RecordCorrectionValues =>
+  getCorrectionValues(feeRecord, reasons, valueGetters);

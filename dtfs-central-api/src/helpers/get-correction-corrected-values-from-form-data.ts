@@ -37,6 +37,4 @@ const valueGetters: Record<RecordCorrectionReason, CorrectionValueGetter<RecordC
 export const getCorrectionCorrectedValuesFromFormData = (
   formData: RecordCorrectionTransientFormData,
   reasons: RecordCorrectionReason[],
-): RecordCorrectionValues => {
-  return getCorrectionValues(formData, reasons, valueGetters);
-};
+): RecordCorrectionValues => getCorrectionValues(formData, reasons, valueGetters);
