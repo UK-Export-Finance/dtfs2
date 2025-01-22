@@ -44,7 +44,7 @@ export const lookup = async (req: Request, res: Response) => {
  * to get or create the party. If validation fails or an error occurs, it returns the appropriate HTTP status and error message.
  *
  * @param {CustomExpressRequest<{ reqBody: { companyName: string } }>} req - The Express request object, which contains:
- *   - `req.body` - The company name (`companyName`) and companies house number (`companyReg`).
+ *   - `req.body` - The company name (`companyName`), companies house number (`companyReg`) and probability of default (`probabilityOfDefault`).
  * @param {Response} res - The Express response object used to send the HTTP response.
  *
  * @returns {Promise<Response>} A promise that resolves to an HTTP response. The response contains:
@@ -53,7 +53,7 @@ export const lookup = async (req: Request, res: Response) => {
  *
  * @example
  * // Example usage:
- * const req = { body: { companyReg: '12345678', companyName: 'Test Corp' } };
+ * const req = { body: { companyReg: '12345678', companyName: 'Test Corp', probabilityOfDefault: 14.1 } };
  * const res = { status: () => res, send: () => {} };
  * await getOrCreateParty(req, res);
  */
