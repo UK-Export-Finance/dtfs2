@@ -1,5 +1,4 @@
 const express = require('express');
-const { authRoutes } = require('./auth');
 const homeRoutes = require('./home');
 const caseRoutes = require('./case');
 const dealsRoutes = require('./deals');
@@ -17,7 +16,6 @@ const router = express.Router();
 
 router.use('/home', homeRoutes);
 router.use('/', loginRoutes);
-router.use('/', authRoutes);
 router.use('/case', validateUser, caseRoutes);
 router.use('/deals', validateUser, dealsRoutes);
 router.use('/facilities', validateUser, facilitiesRoutes);

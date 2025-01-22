@@ -7,19 +7,19 @@ import { UnauthenticatedAuthController } from '../../../controllers/auth/auth-ss
 
 export const getUnauthenticatedAuthSsoRouter: GetRouter = () => {
   const unauthenticatedAuthSsoController = new UnauthenticatedAuthController();
-
   const unauthenticatedAuthSsoRouter = express.Router();
-
-  unauthenticatedAuthSsoRouter.post('/auth/sso-redirect', (req, res) => {
-    unauthenticatedAuthSsoController.postSsoRedirect(req, res);
-  });
 
   const loginService = new LoginService();
   const userSessionService = new UserSessionService();
   const loginController = new LoginController({ loginService, userSessionService });
 
+  unauthenticatedAuthSsoRouter.post('/auth/sso-redirect', (req, res) => {
+    unauthenticatedAuthSsoController.postSsoRedirect(req, res);
+  });
+
   unauthenticatedAuthSsoRouter.post('/auth/sso-redirect/form', (req, res, next) => {
     loginController.handleSsoRedirectForm(req, res).catch(next);
   });
+
   return unauthenticatedAuthSsoRouter;
 };
