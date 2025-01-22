@@ -31,9 +31,8 @@ context('Correction sent page - Fee record correction feature flag enabled', () 
 
         const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION).build();
 
-        const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
+        const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false)
           .withId(3)
-          .withIsCompleted(false)
           .withReasons([RECORD_CORRECTION_REASON.UTILISATION_INCORRECT])
           .build();
 

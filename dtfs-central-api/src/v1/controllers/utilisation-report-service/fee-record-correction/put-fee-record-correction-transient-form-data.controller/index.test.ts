@@ -70,7 +70,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
 
     it('should call the correction repo to fetch the correction', async () => {
       // Arrange
-      mockFindCorrection.mockResolvedValue(new FeeRecordCorrectionEntityMockBuilder().build());
+      mockFindCorrection.mockResolvedValue(FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).build());
 
       // Act
       await putFeeRecordCorrectionTransientFormData(req, res);
@@ -102,7 +102,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
           RECORD_CORRECTION_REASON.OTHER,
         ];
 
-        mockFindCorrection.mockResolvedValue(new FeeRecordCorrectionEntityMockBuilder().withReasons(correctionReasons).build());
+        mockFindCorrection.mockResolvedValue(FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).withReasons(correctionReasons).build());
 
         req.body.formData = {
           reportedCurrency: CURRENCY.GBP,
@@ -131,7 +131,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
 
       it('should not call the correction repo to save the form data', async () => {
         // Arrange
-        mockFindCorrection.mockResolvedValue(new FeeRecordCorrectionEntityMockBuilder().build());
+        mockFindCorrection.mockResolvedValue(FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).build());
 
         // Act
         await putFeeRecordCorrectionTransientFormData(req, res);
@@ -151,7 +151,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
           RECORD_CORRECTION_REASON.OTHER,
         ];
 
-        mockFindCorrection.mockResolvedValue(new FeeRecordCorrectionEntityMockBuilder().withReasons(correctionReasons).build());
+        mockFindCorrection.mockResolvedValue(FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).withReasons(correctionReasons).build());
 
         const expectedTransientFormDataEntity = FeeRecordCorrectionTransientFormDataEntity.create({
           userId,

@@ -6,11 +6,15 @@ import { RecordCorrectionReason, RequestedByUser } from '../../types';
 export class FeeRecordCorrectionEntityMockBuilder {
   private readonly correction: FeeRecordCorrectionEntity;
 
-  public constructor(correction?: FeeRecordCorrectionEntity) {
-    this.correction = correction ?? FeeRecordCorrectionEntityMockBuilder.forFeeRecord(new FeeRecordEntityMockBuilder().build()).correction;
+  private constructor(correction: FeeRecordCorrectionEntity) {
+    this.correction = correction;
   }
 
-  public static forFeeRecord(feeRecord: FeeRecordEntity): FeeRecordCorrectionEntityMockBuilder {
+  public static forIsCompleted(isCompleted: boolean): FeeRecordCorrectionEntityMockBuilder {
+    return FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(new FeeRecordEntityMockBuilder().build(), isCompleted);
+  }
+
+  public static forFeeRecordAndIsCompleted(feeRecord: FeeRecordEntity, isCompleted: boolean): FeeRecordCorrectionEntityMockBuilder {
     const data = new FeeRecordCorrectionEntity();
     const userId = '5ce819935e539c343f141ece';
     const requestSource: DbRequestSource = {
@@ -27,7 +31,9 @@ export class FeeRecordCorrectionEntityMockBuilder {
     };
     data.additionalInfo = 'some info';
     data.reasons = [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT];
-    data.isCompleted = false;
+
+    data.isCompleted = isCompleted;
+
     data.updateLastUpdatedBy(requestSource);
     return new FeeRecordCorrectionEntityMockBuilder(data);
   }
@@ -54,11 +60,6 @@ export class FeeRecordCorrectionEntityMockBuilder {
 
   public withDateRequested(dateRequested: Date): FeeRecordCorrectionEntityMockBuilder {
     this.correction.dateRequested = dateRequested;
-    return this;
-  }
-
-  public withIsCompleted(isCompleted: boolean): FeeRecordCorrectionEntityMockBuilder {
-    this.correction.isCompleted = isCompleted;
     return this;
   }
 

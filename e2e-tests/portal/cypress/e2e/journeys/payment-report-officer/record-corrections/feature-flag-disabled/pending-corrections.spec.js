@@ -20,7 +20,7 @@ context('Pending corrections - Fee record correction feature flag disabled', () 
 
         const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withUploadedByUserId(_id.toString()).withBankId(bankId).build();
         const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION).build();
-        const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord).withId(1).withIsCompleted(false).build();
+        const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false).withId(1).build();
 
         cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
         cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
