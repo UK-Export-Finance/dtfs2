@@ -121,9 +121,9 @@ export interface TfmFacilityAmendment extends BaseAmendment {
   };
 }
 
-export type AmendmentsEligibilityCriterionWithAnswer = AmendmentsEligibilityCriterion & {
+export interface AmendmentsEligibilityCriterionWithAnswer extends AmendmentsEligibilityCriterion {
   answer: boolean | null;
-};
+}
 
 /**
  * Amendments created in Portal
