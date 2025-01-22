@@ -14,6 +14,13 @@ export type FeeRecordCorrectionReceivedEvent = BaseFeeRecordEvent<'CORRECTION_RE
 
 /**
  * Handler for the correction received event
+ *
+ * This handler will update the fee record with the correct values,
+ * saving the previous and new values against the correction entity.
+ *
+ * Sets the correction entity to completed, and updates the fee record's
+ * status to TO_DO_UPDATED
+ *
  * @param feeRecord - The fee record
  * @param param - The payload
  * @param param.transactionEntityManager - The transaction entity manager

@@ -27,6 +27,7 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
           facilityId: null,
           facilityUtilisation: null,
         };
+
         expect(result).toEqual(expected);
       },
     );
@@ -57,6 +58,7 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
           facilityId: expectedFacilityId,
           facilityUtilisation: null,
         };
+
         expect(result).toEqual(expected);
       },
     );
@@ -88,6 +90,7 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
           facilityId: null,
           facilityUtilisation: expectedFacilityUtilisation,
         };
+
         expect(result).toEqual(expected);
       },
     );
@@ -119,6 +122,7 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
           facilityId: null,
           facilityUtilisation: null,
         };
+
         expect(result).toEqual(expected);
       },
     );
@@ -140,6 +144,7 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
         facilityId: null,
         facilityUtilisation: null,
       };
+
       expect(result).toEqual(expected);
     });
   });
@@ -172,6 +177,7 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
         facilityId: mockFormData.facilityId,
         facilityUtilisation: mockFormData.utilisation,
       };
+
       expect(result).toEqual(expected);
     });
   });

@@ -27,6 +27,13 @@ const valueGetters: Record<RecordCorrectionReason, CorrectionValueGetter<RecordC
   [RECORD_CORRECTION_REASON.OTHER]: emptyGetter,
 };
 
+/**
+ * Extracts the corrected values from the form data based on the reasons provided
+ * to save against the correction record in the database
+ * @param formData - the form data
+ * @param reasons - the reasons for the record correction
+ * @returns the corrected values
+ */
 export const getCorrectionCorrectedValuesFromFormData = (
   formData: RecordCorrectionTransientFormData,
   reasons: RecordCorrectionReason[],

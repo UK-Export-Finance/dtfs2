@@ -185,7 +185,7 @@ describe('handleFeeRecordCorrectionReceivedEvent', () => {
       .withFeesPaidToUkefForThePeriod(500)
       .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.JPY)
       .withFacilityUtilisation(8000)
-      .withFacilityId('00000000')
+      .withFacilityId('00000001')
       .build();
 
     const correctionFormData: RecordCorrectionTransientFormData = {
@@ -205,7 +205,7 @@ describe('handleFeeRecordCorrectionReceivedEvent', () => {
     expect(feeRecord.feesPaidToUkefForThePeriod).toEqual(400);
     expect(feeRecord.feesPaidToUkefForThePeriodCurrency).toEqual(CURRENCY.USD);
 
-    expect(feeRecord.facilityId).toEqual('00000000');
+    expect(feeRecord.facilityId).toEqual('00000001');
     expect(feeRecord.facilityUtilisation).toEqual(8000);
   });
 

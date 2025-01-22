@@ -53,6 +53,7 @@ describe('getCorrectionValues', () => {
       facilityId: null,
       facilityUtilisation: null,
     };
+
     expect(result).toEqual(expected);
   });
 
@@ -70,6 +71,7 @@ describe('getCorrectionValues', () => {
       facilityId: mockFacilityId,
       facilityUtilisation: null,
     };
+
     expect(result).toEqual(expected);
   });
 
@@ -89,6 +91,7 @@ describe('getCorrectionValues', () => {
       facilityId: null,
       facilityUtilisation: null,
     };
+
     expect(result).toEqual(expected);
   });
 
@@ -108,6 +111,7 @@ describe('getCorrectionValues', () => {
       facilityId: null,
       facilityUtilisation: null,
     };
+
     expect(result).toEqual(expected);
   });
 });

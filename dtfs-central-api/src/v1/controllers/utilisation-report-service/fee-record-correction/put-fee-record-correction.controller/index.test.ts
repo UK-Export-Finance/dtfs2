@@ -173,8 +173,7 @@ describe('putFeeRecordCorrection', () => {
           await putFeeRecordCorrection(req, res);
 
           // Assert
-          expect(mockHandleEvent).toHaveBeenCalledTimes(1);
-          expect(mockHandleEvent).toHaveBeenCalledWith({
+          const expected = {
             type: FEE_RECORD_EVENT_TYPE.CORRECTION_RECEIVED,
             payload: {
               transactionEntityManager: mockEntityManager,
@@ -185,7 +184,10 @@ describe('putFeeRecordCorrection', () => {
                 userId: portalUserId,
               },
             },
-          });
+          };
+
+          expect(mockHandleEvent).toHaveBeenCalledTimes(1);
+          expect(mockHandleEvent).toHaveBeenCalledWith(expected);
         });
 
         it('should call the repo to delete the transient form data', async () => {

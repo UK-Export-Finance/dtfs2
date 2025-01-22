@@ -20,7 +20,7 @@ describe('FeeRecordEntity', () => {
   });
 
   describe('getFeesPaidToUkefForThePeriodInThePaymentCurrency', () => {
-    it('returns the fees paid to ukef for the period with no exchange rate applied when the payment and fees paid currencies match', () => {
+    it('should return the fees paid to ukef for the period with no exchange rate applied when the payment and fees paid currencies match', () => {
       // Arrange
       const feesPaidToUkefForThePeriod = 100.0;
       const feesPaidToUkefForThePeriodCurrency: Currency = 'GBP';
@@ -45,7 +45,7 @@ describe('FeeRecordEntity', () => {
       expect(feesPaidToUkefForThePeriodInThePaymentCurrency).toEqual(expectedFeesPaidToUkefForThePeriodInThePaymentCurrency);
     });
 
-    it('returns the fees paid to ukef for the period in the payment currency using the payment exchange rate', () => {
+    it('should return the fees paid to ukef for the period in the payment currency using the payment exchange rate', () => {
       // Arrange
       const feesPaidToUkefForThePeriod = 100.0;
       const feesPaidToUkefForThePeriodCurrency: Currency = 'EUR';
@@ -70,7 +70,7 @@ describe('FeeRecordEntity', () => {
   });
 
   describe('updateWithStatus', () => {
-    it.each(Object.values(FEE_RECORD_STATUS))("sets the report status to '%s' and updates the 'lastUpdatedBy...' fields", (status) => {
+    it.each(Object.values(FEE_RECORD_STATUS))("should set the report status to '%s' and updates the 'lastUpdatedBy...' fields", (status) => {
       // Arrange
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withStatus(status).build();
 
@@ -89,7 +89,7 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.lastUpdatedByTfmUserId).toEqual(userId);
     });
 
-    it(`sets the dateReconciled field to now when the status to set is ${FEE_RECORD_STATUS.RECONCILED}`, () => {
+    it(`should set the dateReconciled field to now when the status to set is ${FEE_RECORD_STATUS.RECONCILED}`, () => {
       // Arrange
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withStatus(FEE_RECORD_STATUS.MATCH).withDateReconciled(null).build();
 
@@ -105,7 +105,7 @@ describe('FeeRecordEntity', () => {
   });
 
   describe('removeAllPayments', () => {
-    it(`removes all payments, sets the record status to ${FEE_RECORD_STATUS.TO_DO} and updates the 'lastUpdatedBy...' fields`, () => {
+    it(`should remove all payments, sets the record status to ${FEE_RECORD_STATUS.TO_DO} and updates the 'lastUpdatedBy...' fields`, () => {
       // Arrange
       const paymentCurrency: Currency = 'GBP';
       const paymentId = 123;
@@ -137,7 +137,7 @@ describe('FeeRecordEntity', () => {
   });
 
   describe('markAsReconciled', () => {
-    it('sets the fee record dateReconciled to now and the reconciledByUserId to the supplied value', () => {
+    it('should set the fee record dateReconciled to now and the reconciledByUserId to the supplied value', () => {
       // Arrange
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withDateReconciled(null).build();
 
@@ -149,7 +149,7 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.reconciledByUserId).toEqual('abc123');
     });
 
-    it("sets the fee record status to RECONCILED and updates the 'lastUpdatedBy...' fields", () => {
+    it("should set the fee record status to RECONCILED and updates the 'lastUpdatedBy...' fields", () => {
       // Arrange
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
         .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
@@ -170,7 +170,7 @@ describe('FeeRecordEntity', () => {
   });
 
   describe('markAsReadyToKey', () => {
-    it('sets the fee record dateReconciled and reconciledByUserId to null', () => {
+    it('should set the fee record dateReconciled and reconciledByUserId to null', () => {
       // Arrange
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withDateReconciled(new Date('2024')).withReconciledByUserId('abc123').build();
 
@@ -182,7 +182,7 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.reconciledByUserId).toBeNull();
     });
 
-    it("sets the fee record status to READY_TO_KEY and updates the 'lastUpdatedBy...' fields", () => {
+    it("should set the fee record status to READY_TO_KEY and updates the 'lastUpdatedBy...' fields", () => {
       // Arrange
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
         .withStatus(FEE_RECORD_STATUS.RECONCILED)
@@ -206,7 +206,7 @@ describe('FeeRecordEntity', () => {
     describe(`when the status to set is ${FEE_RECORD_STATUS.READY_TO_KEY}`, () => {
       const status = FEE_RECORD_STATUS.READY_TO_KEY;
 
-      it(`sets the fee record status to ${FEE_RECORD_STATUS.READY_TO_KEY} and updates the principalBalanceAdjustment, fixedFeeAdjustment and 'lastUpdatedBy...' fields`, () => {
+      it(`should set the fee record status to ${FEE_RECORD_STATUS.READY_TO_KEY} and updates the principalBalanceAdjustment, fixedFeeAdjustment and 'lastUpdatedBy...' fields`, () => {
         // Arrange
         const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
           .withStatus(FEE_RECORD_STATUS.MATCH)
@@ -234,7 +234,7 @@ describe('FeeRecordEntity', () => {
         expect(feeRecord.lastUpdatedByTfmUserId).toEqual('abc123');
       });
 
-      it('does not set the fee record dateReconciled or the reconciledByUserId', () => {
+      it('should not set the fee record dateReconciled or the reconciledByUserId', () => {
         // Arrange
         const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
           .withStatus(FEE_RECORD_STATUS.MATCH)
@@ -259,7 +259,7 @@ describe('FeeRecordEntity', () => {
     describe(`when the status to set is ${FEE_RECORD_STATUS.RECONCILED}`, () => {
       const status = FEE_RECORD_STATUS.RECONCILED;
 
-      it(`sets the fee record status to ${FEE_RECORD_STATUS.RECONCILED} and updates the principalBalanceAdjustment, fixedFeeAdjustment and 'lastUpdatedBy...' fields`, () => {
+      it(`should set the fee record status to ${FEE_RECORD_STATUS.RECONCILED} and updates the principalBalanceAdjustment, fixedFeeAdjustment and 'lastUpdatedBy...' fields`, () => {
         // Arrange
         const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
           .withStatus(FEE_RECORD_STATUS.MATCH)
@@ -287,7 +287,7 @@ describe('FeeRecordEntity', () => {
         expect(feeRecord.lastUpdatedByTfmUserId).toEqual('abc123');
       });
 
-      it('sets the dateReconciled to now and does not set the reconciledByUserId', () => {
+      it('should set the dateReconciled to now and does not set the reconciledByUserId', () => {
         // Arrange
         const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withStatus(FEE_RECORD_STATUS.MATCH).withDateReconciled(null).build();
 
@@ -307,7 +307,7 @@ describe('FeeRecordEntity', () => {
   });
 
   describe('updateWithCorrection', () => {
-    it('updates the fee record with corrected values', () => {
+    it('should update the fee record with corrected values', () => {
       // Arrange
       const correctedValues = {
         facilityUtilisation: 5000,
@@ -337,7 +337,7 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.facilityId).toEqual(correctedValues.facilityId);
     });
 
-    it('sets the status to TO_DO_AMENDED when corrected values are not all null', () => {
+    it('should set the status to TO_DO_AMENDED when corrected values are not all null', () => {
       // Arrange
       const correctedValues = {
         facilityUtilisation: null,
@@ -358,7 +358,7 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.TO_DO_AMENDED);
     });
 
-    it('sets the status to TO_DO_AMENDED when corrected values are all null', () => {
+    it('should set the status to TO_DO_AMENDED when corrected values are all null', () => {
       // Arrange
       const correctedValues = {
         facilityUtilisation: null,
@@ -379,7 +379,7 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.TO_DO_AMENDED);
     });
 
-    it('updates the lastUpdatedBy fields', () => {
+    it('should update the lastUpdatedBy fields', () => {
       // Arrange
       const correctedValues = aRecordCorrectionValues();
 
@@ -403,7 +403,7 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.lastUpdatedByTfmUserId).toEqual(userId);
     });
 
-    it('does not change values of fields that are null in corrected values', () => {
+    it('should not change values of fields that are null in corrected values', () => {
       // Arrange
       const correctedValues = {
         facilityUtilisation: null,
@@ -441,7 +441,7 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.facilityId).toEqual(correctedValues.facilityId);
     });
 
-    it('does not change values of any fields if all corrected values are null', () => {
+    it('should not change values of any fields if all corrected values are null', () => {
       // Arrange
       const correctedValues = {
         facilityUtilisation: null,
@@ -478,7 +478,7 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.facilityId).toEqual(originalValues.facilityId);
     });
 
-    it('updates numerical fields to zero if corrected values are zero', () => {
+    it('should update numerical fields to zero if corrected values are zero', () => {
       // Arrange
       const correctedValues = {
         ...aRecordCorrectionValues(),

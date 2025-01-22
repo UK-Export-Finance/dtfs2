@@ -27,6 +27,13 @@ const valueGetters: Record<RecordCorrectionReason, CorrectionValueGetter<FeeReco
   [RECORD_CORRECTION_REASON.OTHER]: emptyGetter,
 };
 
+/**
+ * Extracts the previous values from the fee record based on the reasons provided
+ * to save against the correction record in the database
+ * @param feeRecord - the fee record
+ * @param reasons - the reasons for the record correction
+ * @returns the previous values
+ */
 export const getCorrectionPreviousValuesFromFeeRecord = (feeRecord: FeeRecordEntity, reasons: RecordCorrectionReason[]): RecordCorrectionValues => {
   return getCorrectionValues(feeRecord, reasons, valueGetters);
 };

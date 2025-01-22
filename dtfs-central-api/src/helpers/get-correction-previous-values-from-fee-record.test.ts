@@ -20,6 +20,7 @@ describe('getCorrectionPreviousValuesFromFeeRecord', () => {
         facilityId: null,
         facilityUtilisation: null,
       };
+
       expect(result).toEqual(expected);
     });
   });
@@ -42,6 +43,7 @@ describe('getCorrectionPreviousValuesFromFeeRecord', () => {
         facilityId,
         facilityUtilisation: null,
       };
+
       expect(result).toEqual(expected);
     });
   });
@@ -69,6 +71,7 @@ describe('getCorrectionPreviousValuesFromFeeRecord', () => {
           facilityId: null,
           facilityUtilisation: expectedFacilityUtilisation,
         };
+
         expect(result).toEqual(expected);
       },
     );
@@ -103,6 +106,7 @@ describe('getCorrectionPreviousValuesFromFeeRecord', () => {
           facilityId: null,
           facilityUtilisation: null,
         };
+
         expect(result).toEqual(expected);
       },
     );
@@ -124,6 +128,7 @@ describe('getCorrectionPreviousValuesFromFeeRecord', () => {
         facilityId: null,
         facilityUtilisation: null,
       };
+
       expect(result).toEqual(expected);
     });
   });
@@ -161,6 +166,7 @@ describe('getCorrectionPreviousValuesFromFeeRecord', () => {
         facilityId,
         facilityUtilisation,
       };
+
       expect(result).toEqual(expected);
     });
   });
