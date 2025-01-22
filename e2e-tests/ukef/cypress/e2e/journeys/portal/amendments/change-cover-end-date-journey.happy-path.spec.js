@@ -91,6 +91,15 @@ context('Change cover end date journey - happy path', () => {
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/do-you-have-a-facility-end-date`));
   });
 
+  it('should navigate to cancel page when cancel is clicked', () => {
+    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+
+    coverEndDate.pageHeading().contains('New cover end date');
+    coverEndDate.cancelLink().click();
+
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`));
+  });
+
   it('should navigate through the journey correctly if cover end date is the same with cover start date', () => {
     cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
 

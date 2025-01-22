@@ -81,18 +81,13 @@ context('Change cover end date journey - unhappy path', () => {
     whatDoYouNeedToChange.amendmentOptionsInlineError().contains('Select if you need to change the facility cover end date, value or both');
   });
 
-  it('should navigate to cover end date page', () => {
+  it('should render an error if no cover end date is provided', () => {
     cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
 
     whatDoYouNeedToChange.coverEndDateCheckbox().click();
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
-  });
-
-  it('should render an error if no cover end date is provided', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
-
     cy.clickContinueButton();
 
     coverEndDate.errorSummary().should('be.visible');
@@ -100,15 +95,6 @@ context('Change cover end date journey - unhappy path', () => {
 
     coverEndDate.coverEndDateInlineError().should('be.visible');
     coverEndDate.coverEndDateInlineError().contains('Enter the cover end date');
-  });
-
-  it('should navigate to cancel page when cancel is clicked', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
-
-    coverEndDate.pageHeading().contains('New cover end date');
-    coverEndDate.cancelLink().click();
-
-    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`));
   });
 
   it('should render an error if cover end date is invalid', () => {
