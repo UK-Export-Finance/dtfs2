@@ -4,6 +4,7 @@ import { RecordCorrectionRequestInformationViewModel } from '../../../../types/v
 import { asUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import api from '../../../../api';
+import { recordCorrectionRequestAlreadySubmitted, isRecordCorrectionRequestReviewResponseType } from '../../helpers';
 
 /**
  * Renders the "check the information" page for a record correction request
@@ -15,7 +16,29 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
     const { reportId, feeRecordId } = req.params;
     const { user, userToken } = asUserSession(req.session);
 
-    const { bank, reportPeriod, correctionRequestDetails } = await api.getFeeRecordCorrectionRequestReview(reportId, feeRecordId, user._id, userToken);
+    const bankCorrectionRequestReviewResponse = await api.getFeeRecordCorrectionRequestReview(reportId, feeRecordId, user._id, userToken);
+
+    /**
+     * if record correction is already submitted
+     * should render page-not-found with custom reason
+     */
+    if (recordCorrectionRequestAlreadySubmitted(bankCorrectionRequestReviewResponse)) {
+      return res.render('utilisation-reports/page-not-found.njk', {
+        reason: 'The record correction request has been sent to the bank. You cannot make any changes to the request',
+        reportId,
+      });
+    }
+
+    /**
+     * if bankCorrectionRequestReviewResponse returns an incorrect response type (should be FeeRecordCorrectionRequestReviewResponseBody)
+     * throws error
+     */
+    if (!isRecordCorrectionRequestReviewResponseType(bankCorrectionRequestReviewResponse)) {
+      throw new Error('Invalid response body for record correction request review');
+    }
+
+    const { bank, reportPeriod, correctionRequestDetails } = bankCorrectionRequestReviewResponse;
+
     const { facilityId, exporter, reasons, additionalInfo, contactEmailAddresses } = correctionRequestDetails;
 
     const viewModel: RecordCorrectionRequestInformationViewModel = {

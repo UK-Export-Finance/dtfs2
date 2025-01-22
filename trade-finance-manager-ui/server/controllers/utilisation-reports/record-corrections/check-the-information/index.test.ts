@@ -1,5 +1,5 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
-import { mapReasonsToDisplayValues, getFormattedReportPeriodWithLongMonth, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
+import { mapReasonsToDisplayValues, getFormattedReportPeriodWithLongMonth, RECORD_CORRECTION_REASON, STATUS } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
@@ -43,32 +43,52 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
       bank,
       reportPeriod,
       correctionRequestDetails,
+      errorKey: null,
     };
 
-    beforeEach(() => {
-      jest.mocked(api.getFeeRecordCorrectionRequestReview).mockResolvedValue(mockApiResponse);
+    describe('if a record correction is NOT submitted', () => {
+      beforeEach(() => {
+        jest.mocked(api.getFeeRecordCorrectionRequestReview).mockResolvedValue(mockApiResponse);
+      });
+
+      it('should render check the information page', async () => {
+        // Act
+        await getRecordCorrectionRequestInformation(req, res);
+
+        // Assert
+        const expectedReasons = mapReasonsToDisplayValues(correctionRequestDetails.reasons).join(', ');
+
+        expect(res._getRenderView()).toEqual('utilisation-reports/record-corrections/check-the-information.njk');
+        expect(res._getRenderData()).toEqual({
+          user,
+          activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
+          bank: { name: bank.name },
+          reportId,
+          feeRecordId,
+          facilityId: correctionRequestDetails.facilityId,
+          exporter: correctionRequestDetails.exporter,
+          formattedReportPeriod: getFormattedReportPeriodWithLongMonth(reportPeriod),
+          reasonForRecordCorrection: expectedReasons,
+          additionalInfo: correctionRequestDetails.additionalInfo,
+          contactEmailAddresses: correctionRequestDetails.contactEmailAddresses,
+        });
+      });
     });
 
-    it('should render check the information page', async () => {
-      // Act
-      await getRecordCorrectionRequestInformation(req, res);
+    describe('if a record correction is already submitted', () => {
+      beforeEach(() => {
+        jest.mocked(api.getFeeRecordCorrectionRequestReview).mockResolvedValue({ errorKey: STATUS.INVALID });
+      });
 
-      // Assert
-      const expectedReasons = mapReasonsToDisplayValues(correctionRequestDetails.reasons).join(', ');
+      it('should render page not found page', async () => {
+        // Act
+        await getRecordCorrectionRequestInformation(req, res);
 
-      expect(res._getRenderView()).toEqual('utilisation-reports/record-corrections/check-the-information.njk');
-      expect(res._getRenderData()).toEqual({
-        user,
-        activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
-        bank: { name: bank.name },
-        reportId,
-        feeRecordId,
-        facilityId: correctionRequestDetails.facilityId,
-        exporter: correctionRequestDetails.exporter,
-        formattedReportPeriod: getFormattedReportPeriodWithLongMonth(reportPeriod),
-        reasonForRecordCorrection: expectedReasons,
-        additionalInfo: correctionRequestDetails.additionalInfo,
-        contactEmailAddresses: correctionRequestDetails.contactEmailAddresses,
+        expect(res._getRenderView()).toEqual('utilisation-reports/page-not-found.njk');
+        expect(res._getRenderData()).toEqual({
+          reason: 'The record correction request has been sent to the bank. You cannot make any changes to the request',
+          reportId,
+        });
       });
     });
   });

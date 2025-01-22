@@ -6,6 +6,8 @@ import {
   RECORD_CORRECTION_REASON,
   TestApiError,
   UtilisationReportEntityMockBuilder,
+  FEE_RECORD_STATUS,
+  STATUS,
 } from '@ukef/dtfs2-common';
 import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
 import { aBank } from '../../../../../../test-helpers';
@@ -22,6 +24,12 @@ describe('get-fee-record-correction-request-review.controller', () => {
     const reportId = 3;
     const feeRecordId = 14;
     const userId = '123';
+    const bankId = '12356';
+
+    const commonFeeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().withBankId(bankId).build())
+      .withFacilityId('0011223344')
+      .withExporter('Test company')
+      .build();
 
     const getHttpMocks = () =>
       httpMocks.createMocks<GetFeeRecordCorrectionRequestReviewRequest>({
@@ -31,6 +39,10 @@ describe('get-fee-record-correction-request-review.controller', () => {
     const findFeeRecordSpy = jest.spyOn(FeeRecordRepo, 'findOneByIdAndReportIdWithReport');
     const findFormDataSpy = jest.spyOn(FeeRecordCorrectionRequestTransientFormDataRepo, 'findByUserIdAndFeeRecordId');
     const findBankSpy = jest.spyOn(BanksRepo, 'getBankById');
+
+    beforeEach(() => {
+      findFeeRecordSpy.mockResolvedValue(commonFeeRecord);
+    });
 
     afterEach(() => {
       jest.resetAllMocks();
@@ -76,11 +88,13 @@ describe('get-fee-record-correction-request-review.controller', () => {
 
     it(`should respond with a ${HttpStatusCode.NotFound} when the bank cannot be found`, async () => {
       // Arrange
-      const bankId = '1234567';
+      const incorrectBankId = '1234567';
       const { req, res } = getHttpMocks();
 
       findFormDataSpy.mockResolvedValue(new FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder().build());
-      findFeeRecordSpy.mockResolvedValue(FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().withBankId(bankId).build()).build());
+      findFeeRecordSpy.mockResolvedValue(
+        FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().withBankId(incorrectBankId).build()).build(),
+      );
       findBankSpy.mockResolvedValue(null);
 
       // Act
@@ -88,10 +102,10 @@ describe('get-fee-record-correction-request-review.controller', () => {
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
-      const expectedErrorMessage = `Failed to find bank with id: ${bankId}`;
+      const expectedErrorMessage = `Failed to find bank with id: ${incorrectBankId}`;
       expect(res._getData()).toEqual(`Failed to get fee record correction request review: ${expectedErrorMessage}`);
       expect(findBankSpy).toHaveBeenCalledTimes(1);
-      expect(findBankSpy).toHaveBeenCalledWith(bankId);
+      expect(findBankSpy).toHaveBeenCalledWith(incorrectBankId);
     });
 
     it("should respond with the specific error status if fetching the review throws an 'ApiError'", async () => {
@@ -149,8 +163,6 @@ describe('get-fee-record-correction-request-review.controller', () => {
     });
 
     describe('when the request is successful', () => {
-      const bankId = '12356';
-
       const formData = new FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder()
         .withFormData({
           reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT],
@@ -248,6 +260,42 @@ describe('get-fee-record-correction-request-review.controller', () => {
         // Assert
         expect(findBankSpy).toHaveBeenCalledTimes(1);
         expect(findBankSpy).toHaveBeenCalledWith(bankId);
+      });
+
+      describe('when a record correction request is already submitted', () => {
+        const pendingCorrectionFeeRecord = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().withBankId(bankId).build())
+          .withFacilityId('0011223344')
+          .withExporter('Test company')
+          .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
+          .build();
+
+        beforeEach(() => {
+          findFormDataSpy.mockResolvedValue(formData);
+          findFeeRecordSpy.mockResolvedValue(pendingCorrectionFeeRecord);
+          findBankSpy.mockResolvedValue(bank);
+        });
+
+        it(`should respond with a ${HttpStatusCode.Ok}`, async () => {
+          // Arrange
+          const { req, res } = getHttpMocks();
+
+          // Act
+          await getFeeRecordCorrectionRequestReview(req, res);
+
+          // Assert
+          expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+        });
+
+        it('should respond with the correction request details', async () => {
+          // Arrange
+          const { req, res } = getHttpMocks();
+
+          // Act
+          await getFeeRecordCorrectionRequestReview(req, res);
+
+          // Assert
+          expect(res._getData()).toEqual({ errorKey: STATUS.INVALID });
+        });
       });
     });
   });
