@@ -7,8 +7,8 @@ import { getEpochMs } from '../../helpers';
 
 export const aPortalFacilityAmendmentUserValues = (): PortalFacilityAmendmentUserValues => ({
   changeCoverEndDate: true,
-  coverEndDate: getEpochMs(new Date()),
-  currentCoverEndDate: getEpochMs(new Date()),
+  coverEndDate: getEpochMs(),
+  currentCoverEndDate: getEpochMs(),
   isUsingFacilityEndDate: true,
   facilityEndDate: new Date(),
   bankReviewDate: new Date(),
