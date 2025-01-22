@@ -1,31 +1,18 @@
-import { CURRENCY, Currency, isNonEmptyString, isPaymentReferenceOverMaxCharacterCount } from '@ukef/dtfs2-common';
+import { Currency, isNonEmptyString, isCurrencyValid, isPaymentReferenceOverMaxCharacterCount, isMonetaryValueValid } from '@ukef/dtfs2-common';
 import { isBefore, isValid, parseISO, startOfDay } from 'date-fns';
 import { REGEX } from '../../../constants';
 import { PaymentErrorsViewModel, PaymentDateErrorViewModel, ErrorSummaryViewModel, AddToAnExistingPaymentErrorsViewModel } from '../../../types/view-models';
 import { AddPaymentFormValues } from '../../../types/add-payment-form-values';
 import { EditPaymentFormValues } from '../../../types/edit-payment-form-values';
 
-const isCurrencyNumberOptionallyWithThousandsSeparators = (value: string) => {
-  const currencyNumberWithOptionalThousandsSeparatorsRegex = /^(\d+|\d{1,3}(,\d{3})+)(\.\d{1,2})?$/;
-  return currencyNumberWithOptionalThousandsSeparatorsRegex.test(value);
-};
-
-const isPaymentCurrencyValid = (paymentCurrency: string | undefined): paymentCurrency is Currency => {
-  return isNonEmptyString(paymentCurrency) && (Object.values(CURRENCY) as string[]).includes(paymentCurrency);
-};
-
 const getPaymentCurrencyValidationsErrors = (paymentCurrency: string | undefined, feeRecordPaymentCurrency: Currency): string | undefined => {
-  if (!isPaymentCurrencyValid(paymentCurrency)) {
+  if (!isCurrencyValid(paymentCurrency)) {
     return 'Select payment currency';
   }
   if (paymentCurrency !== feeRecordPaymentCurrency) {
     return 'The new payment currency must be the same as the reported payment currency of the selected fees';
   }
   return undefined;
-};
-
-const isPaymentAmountValid = (paymentAmount: string | undefined): boolean => {
-  return isNonEmptyString(paymentAmount) && isCurrencyNumberOptionallyWithThousandsSeparators(paymentAmount);
 };
 
 const isAddAnotherPaymentChoiceValid = (addAnotherPaymentChoice: string | undefined): boolean => {
@@ -137,7 +124,7 @@ const getPaymentDateHref = (paymentDateError: PaymentDateErrorViewModel): string
 const validateCommonPaymentRequestFormValues = (formValues: AddPaymentFormValues | EditPaymentFormValues): PaymentErrorsViewModel => {
   const errorSummary: ErrorSummaryViewModel[] = [];
 
-  const paymentAmountErrorMessage = isPaymentAmountValid(formValues.paymentAmount) ? undefined : 'Enter a valid amount received';
+  const paymentAmountErrorMessage = isMonetaryValueValid(formValues.paymentAmount) ? undefined : 'Enter a valid amount received';
   if (paymentAmountErrorMessage) {
     errorSummary.push({ text: paymentAmountErrorMessage, href: '#paymentAmount' });
   }

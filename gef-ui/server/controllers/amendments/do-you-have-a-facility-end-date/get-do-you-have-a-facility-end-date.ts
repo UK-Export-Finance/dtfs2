@@ -50,6 +50,7 @@ export const getDoYouHaveAFacilityEndDate = async (req: GetDoYouHaveAFacilityEnd
 
     const viewModel: DoYouHaveAFacilityEndDateViewModel = {
       exporterName: deal.exporter.companyName,
+      facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE, amendment),
       isUsingFacilityEndDate,

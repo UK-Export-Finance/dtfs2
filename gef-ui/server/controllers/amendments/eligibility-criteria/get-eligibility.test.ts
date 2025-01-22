@@ -107,6 +107,7 @@ describe('getEligibilityCriteria', () => {
     // Assert
     const expectedRenderData: EligibilityViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
+      facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.ELIGIBILITY, amendment),
     };

@@ -1,9 +1,12 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
 import {
+  CURRENCY,
   FeeRecordCorrectionEntityMockBuilder,
   FeeRecordCorrectionTransientFormDataEntity,
-  RecordCorrectionTransientFormData,
+  getMonetaryValueAsNumber,
+  RECORD_CORRECTION_REASON,
+  RecordCorrectionFormValueValidationErrors,
   REQUEST_PLATFORM_TYPE,
   TestApiError,
 } from '@ukef/dtfs2-common';
@@ -26,10 +29,15 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
 
     const userId = new ObjectId().toString();
 
-    const formData = { utilisation: '12345' };
+    const additionalComments = 'Some additional comments';
+    const formData = { reportedCurrency: CURRENCY.EUR, reportedFee: '123.45', utilisation: '10,000.23', additionalComments };
 
-    // TODO FN-3688 PR 2: Remove the "as unknown as RecordCorrectionTransientFormData".
-    const validatedFormData = formData as unknown as RecordCorrectionTransientFormData;
+    const validatedFormData = {
+      utilisation: getMonetaryValueAsNumber(formData.utilisation),
+      reportedCurrency: formData.reportedCurrency,
+      reportedFee: getMonetaryValueAsNumber(formData.reportedFee),
+      additionalComments,
+    };
 
     const aValidRequestQuery = () => ({ bankId, correctionId: correctionId.toString() });
 
@@ -60,32 +68,9 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
       jest.resetAllMocks();
     });
 
-    it(`should respond with a '${HttpStatusCode.Ok}' if the transient form data is saved successfully`, async () => {
-      // Arrange
-      mockFindCorrection.mockResolvedValue(new FeeRecordCorrectionEntityMockBuilder().build());
-      const expectedTransientFormDataEntity = FeeRecordCorrectionTransientFormDataEntity.create({
-        userId,
-        correctionId,
-        formData: validatedFormData,
-        requestSource: {
-          platform: REQUEST_PLATFORM_TYPE.PORTAL,
-          userId,
-        },
-      });
-
-      // Act
-      await putFeeRecordCorrectionTransientFormData(req, res);
-
-      // Assert
-      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-
-      expect(mockSaveTransientFormData).toHaveBeenCalledTimes(1);
-      expect(mockSaveTransientFormData).toHaveBeenCalledWith(expectedTransientFormDataEntity);
-    });
-
     it('should call the correction repo to fetch the correction', async () => {
       // Arrange
-      mockFindCorrection.mockResolvedValue(new FeeRecordCorrectionEntityMockBuilder().build());
+      mockFindCorrection.mockResolvedValue(FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).build());
 
       // Act
       await putFeeRecordCorrectionTransientFormData(req, res);
@@ -105,6 +90,84 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
       expect(mockSaveTransientFormData).not.toHaveBeenCalled();
+    });
+
+    describe('when there are form validation errors', () => {
+      it(`should respond with a '${HttpStatusCode.Ok}' and the validation errors in the body`, async () => {
+        // Arrange
+        const correctionReasons = [
+          RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT,
+          RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT,
+          RECORD_CORRECTION_REASON.UTILISATION_INCORRECT,
+          RECORD_CORRECTION_REASON.OTHER,
+        ];
+
+        mockFindCorrection.mockResolvedValue(FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).withReasons(correctionReasons).build());
+
+        req.body.formData = {
+          reportedCurrency: CURRENCY.GBP,
+          reportedFee: '1abc',
+          utilisation: 'invalid',
+        };
+
+        // Act
+        await putFeeRecordCorrectionTransientFormData(req, res);
+
+        // Assert
+        expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+
+        const expectedValidationErrors: RecordCorrectionFormValueValidationErrors = {
+          reportedFeeErrorMessage: 'You must enter the reported fee in a valid format',
+          utilisationErrorMessage: 'You must enter the utilisation in a valid format',
+          additionalCommentsErrorMessage: 'You must enter a comment',
+        };
+
+        expect(res._getData()).toEqual(expectedValidationErrors);
+      });
+
+      it('should not call the correction repo to save the form data', async () => {
+        // Arrange
+        mockFindCorrection.mockResolvedValue(FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).build());
+
+        // Act
+        await putFeeRecordCorrectionTransientFormData(req, res);
+
+        // Assert
+        expect(mockSaveTransientFormData).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when there are no form validation errors', () => {
+      it(`should respond with a '${HttpStatusCode.Ok}' if the transient form data is saved successfully`, async () => {
+        // Arrange
+        const correctionReasons = [
+          RECORD_CORRECTION_REASON.UTILISATION_INCORRECT,
+          RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT,
+          RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT,
+          RECORD_CORRECTION_REASON.OTHER,
+        ];
+
+        mockFindCorrection.mockResolvedValue(FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).withReasons(correctionReasons).build());
+
+        const expectedTransientFormDataEntity = FeeRecordCorrectionTransientFormDataEntity.create({
+          userId,
+          correctionId,
+          formData: validatedFormData,
+          requestSource: {
+            platform: REQUEST_PLATFORM_TYPE.PORTAL,
+            userId,
+          },
+        });
+
+        // Act
+        await putFeeRecordCorrectionTransientFormData(req, res);
+
+        // Assert
+        expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+
+        expect(mockSaveTransientFormData).toHaveBeenCalledTimes(1);
+        expect(mockSaveTransientFormData).toHaveBeenCalledWith(expectedTransientFormDataEntity);
+      });
     });
 
     it("should respond with the specific error status if an 'ApiError' is thrown", async () => {
