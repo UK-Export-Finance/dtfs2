@@ -43,7 +43,9 @@ export class PortalFacilityAmendmentService {
 
     const { type: facilityType } = await findOneFacility(facilityId);
 
-    const { version, criteria } = await EligibilityCriteriaAmendmentsRepo.findLatestEligibilityCriteria(facilityType);
+    const eligibilityCriteria = await EligibilityCriteriaAmendmentsRepo.findLatestEligibilityCriteria(facilityType);
+
+    const { version, criteria } = eligibilityCriteria;
 
     const updatedCriteria = criteria.map((criterion) => ({ ...criterion, answer: null }));
 
