@@ -1,7 +1,7 @@
 import { AmendmentsEligibilityCriteria, FACILITY_TYPE, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { mongoDbClient } from '../../drivers/db-client';
 import { EligibilityCriteriaAmendmentsRepo } from './eligibility-criteria-amendments.repo';
-import { anAmendmentsEligibilityCriteria } from '../../../test-helpers/test-data/eligibility-criteria-amendments';
+import { amendmentsEligibilityCriteria } from '../../../test-helpers/test-data/eligibility-criteria-amendments';
 
 describe('EligibilityCriteriaAmendmentsRepo', () => {
   const findToArrayMock = jest.fn();
@@ -13,7 +13,7 @@ describe('EligibilityCriteriaAmendmentsRepo', () => {
   });
 
   describe('findLatestEligibilityCriteria', () => {
-    const eligibilityCriteria: AmendmentsEligibilityCriteria = anAmendmentsEligibilityCriteria();
+    const eligibilityCriteria: AmendmentsEligibilityCriteria = amendmentsEligibilityCriteria();
 
     beforeEach(() => {
       findToArrayMock.mockResolvedValue([eligibilityCriteria]);

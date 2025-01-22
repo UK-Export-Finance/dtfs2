@@ -2,7 +2,10 @@ import { ObjectId } from 'mongodb';
 import { AmendmentsEligibilityCriteria, DEAL_TYPE, FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { generateMockPortalUserAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
 
-export const anAmendmentsEligibilityCriteria = (): AmendmentsEligibilityCriteria => ({
+/**
+ * Instantiates an AmendmentsEligibilityCriteria object
+ */
+export const amendmentsEligibilityCriteria = (): AmendmentsEligibilityCriteria => ({
   _id: new ObjectId(),
   version: 1,
   product: DEAL_TYPE.GEF,

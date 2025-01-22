@@ -10,7 +10,7 @@ import { HttpStatusCode } from 'axios';
 import { getUnixTime } from 'date-fns';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
-import { anAmendmentsEligibilityCriteria } from '../../../test-helpers/test-data/eligibility-criteria-amendments';
+import { amendmentsEligibilityCriteria } from '../../../test-helpers/test-data/eligibility-criteria-amendments';
 import { PortalFacilityAmendmentService } from './facility-amendment.service';
 import { aFacility, aPortalUser } from '../../../test-helpers';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
@@ -36,7 +36,7 @@ const facilityId = new ObjectId().toString();
 const amendment = aPortalFacilityAmendmentUserValues();
 const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
 const facility = aFacility();
-const eligibilityCriteria = anAmendmentsEligibilityCriteria();
+const eligibilityCriteria = amendmentsEligibilityCriteria();
 
 describe('PortalFacilityAmendmentService', () => {
   beforeAll(() => {
