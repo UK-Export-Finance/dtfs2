@@ -1,4 +1,5 @@
 import { sub } from 'date-fns';
+import { now } from '@ukef/dtfs2-common';
 import relative from '../../../relativeURL';
 import MOCK_USERS from '../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../e2e-fixtures/gef/mocks/mock-deals';
@@ -38,7 +39,7 @@ context('Change cover end date journey - unhappy path', () => {
 
       cy.createGefFacilities(dealId, [anIssuedCashFacility({ facilityEndDateEnabled: true })], BANK1_MAKER1).then((createdFacility) => {
         facilityId = createdFacility.details._id;
-        coverStartDate = createdFacility.details.coverStartDate ? new Date(createdFacility.details.coverStartDate) : new Date();
+        coverStartDate = createdFacility.details.coverStartDate ? new Date(createdFacility.details.coverStartDate) : now();
         cy.makerLoginSubmitGefDealForReview(insertedDeal);
         cy.checkerLoginSubmitGefDealToUkef(insertedDeal);
 

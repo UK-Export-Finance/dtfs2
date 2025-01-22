@@ -1,3 +1,4 @@
+import { now } from '@ukef/dtfs2-common';
 import relative from '../../../relativeURL';
 import MOCK_USERS from '../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../e2e-fixtures/gef/mocks/mock-deals';
@@ -22,6 +23,10 @@ context('Change cover end date journey - happy path', () => {
    * @type {string}
    */
   let amendmentId;
+  /**
+   * @type {Date}
+   */
+  let coverStartDate;
 
   const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
 
@@ -33,6 +38,7 @@ context('Change cover end date journey - happy path', () => {
 
       cy.createGefFacilities(dealId, [mockFacility], BANK1_MAKER1).then((createdFacility) => {
         facilityId = createdFacility.details._id;
+        coverStartDate = createdFacility.details.coverStartDate ? new Date(createdFacility.details.coverStartDate) : now();
         cy.makerLoginSubmitGefDealForReview(insertedDeal);
         cy.checkerLoginSubmitGefDealToUkef(insertedDeal);
 
@@ -57,8 +63,13 @@ context('Change cover end date journey - happy path', () => {
     cy.clearSessionCookies();
   });
 
+  beforeEach(() => {
+    cy.clearSessionCookies();
+    cy.login(BANK1_MAKER1);
+  });
+
   it('should navigate through the journey correctly', () => {
-    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
+    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
 
     whatDoYouNeedToChange.coverEndDateCheckbox().should('not.be.checked');
     whatDoYouNeedToChange.facilityValueCheckbox().should('not.be.checked');
@@ -75,6 +86,15 @@ context('Change cover end date journey - happy path', () => {
     coverEndDate.backLink();
 
     cy.completeDateFormFields({ idPrefix: 'cover-end-date' });
+    cy.clickContinueButton();
+
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/do-you-have-a-facility-end-date`));
+  });
+
+  it('should navigate through the journey correctly if cover end date is the same with cover start date', () => {
+    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+
+    cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: coverStartDate });
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/do-you-have-a-facility-end-date`));
