@@ -6,8 +6,8 @@ import { asLoggedInUserSession } from '../../../utils/express-session';
 import { getNextPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { validateAndParseBankReviewDate } from '../../bank-review-date/validation';
-import { getCoverStartDateOrStartOfToday } from '../../../utils/get-cover-start-date-or-start-of-today';
 import { validationErrorHandler } from '../../../utils/helpers';
+import { getCoverStartDateOrToday } from '../../../utils/get-cover-start-date-or-today.ts';
 
 export type PostBankReviewDateRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -44,11 +44,12 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
       return res.redirect('/not-found');
     }
 
-    const validationErrorsOrValue = validateAndParseBankReviewDate(bankReviewDateDayMonthYear, getCoverStartDateOrStartOfToday(facility));
+    const validationErrorsOrValue = validateAndParseBankReviewDate(bankReviewDateDayMonthYear, getCoverStartDateOrToday(facility));
 
     if ('errors' in validationErrorsOrValue) {
       const viewModel: BankReviewDateViewModel = {
         exporterName: deal.exporter.companyName,
+        facilityType: facility.type,
         cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
         previousPage,
         bankReviewDate: bankReviewDateDayMonthYear,

@@ -16,6 +16,7 @@ import {
   PortalFacilityAmendmentWithUkefId,
   DayMonthYearInput,
 } from '@ukef/dtfs2-common';
+import { getCoverStartDateOrToday } from '../../../utils/get-cover-start-date-or-today.ts';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { validationErrorHandler } from '../../../utils/helpers';
@@ -26,7 +27,6 @@ import { ValidationError } from '../../../types/validation-error';
 import { postBankReviewDate, PostBankReviewDateRequest } from './post-bank-review-date';
 import * as bankReviewDateValidation from '../../bank-review-date/validation';
 import { BankReviewDateViewModel } from '../../../types/view-models/amendments/bank-review-date-view-model';
-import { getCoverStartDateOrStartOfToday } from '../../../utils/get-cover-start-date-or-start-of-today';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
@@ -128,7 +128,7 @@ describe('postBankReviewDate', () => {
     expect(bankReviewDateValidation.validateAndParseBankReviewDate).toHaveBeenCalledTimes(1);
     expect(bankReviewDateValidation.validateAndParseBankReviewDate).toHaveBeenCalledWith(
       bankReviewDateDayMonthYear,
-      getCoverStartDateOrStartOfToday(MOCK_ISSUED_FACILITY.details),
+      getCoverStartDateOrToday(MOCK_ISSUED_FACILITY.details),
     );
   });
 
@@ -164,6 +164,7 @@ describe('postBankReviewDate', () => {
     const expectedRenderData: BankReviewDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage,
       errors: validationErrorHandler(
         (
