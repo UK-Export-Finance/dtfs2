@@ -43,7 +43,6 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
       bank,
       reportPeriod,
       correctionRequestDetails,
-      errorKey: null,
     };
 
     describe('if a record correction is NOT submitted', () => {
