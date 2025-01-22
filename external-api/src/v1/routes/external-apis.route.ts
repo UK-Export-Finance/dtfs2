@@ -379,10 +379,11 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
  *       content:
  *         application/json:
  *           schema:
- *             name: companyName
- *              schema:
- *               type: string
- *               example: 'Some Name'
+ *             type: object
+ *             properties:
+ *               companyName:
+ *                 type: string
+ *                 example: 'Some Name'
  *     responses:
  *       200:
  *         description: OK
