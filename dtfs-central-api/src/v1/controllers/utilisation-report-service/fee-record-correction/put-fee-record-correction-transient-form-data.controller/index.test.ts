@@ -177,7 +177,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
         // Arrange
         const correctionReasons = [RECORD_CORRECTION_REASON.OTHER];
 
-        mockFindCorrection.mockResolvedValue(new FeeRecordCorrectionEntityMockBuilder().withReasons(correctionReasons).build());
+        mockFindCorrection.mockResolvedValue(FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).withReasons(correctionReasons).build());
 
         req.body.formData = { additionalComments };
 
