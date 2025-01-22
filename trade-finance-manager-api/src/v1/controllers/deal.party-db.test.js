@@ -2,6 +2,7 @@ const { isSalesforceCustomerCreationEnabled } = require('@ukef/dtfs2-common');
 const { getPartyDbInfo, getOrCreatePartyDbInfo } = require('../api.js');
 
 const api = require('./deal.party-db');
+const { PROBABILITY_OF_DEFAULT } = require('../../constants/deals.js');
 
 const mockCompany = {
   partyUrn: '1234',
@@ -161,6 +162,19 @@ describe('when automatic Salesforce customer creation feature flag is enabled', 
     getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
 
     const companyData = { companyRegNo: '12345678', companyName: 'name', probabilityOfDefault: 3 };
+
+    const result = await api.getPartyUrn(companyData);
+
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith(companyData);
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(1);
+
+    expect(result).toBe('TEST_URN');
+  });
+
+  it('should allow a probability of default set to its default value', async () => {
+    getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
+
+    const companyData = { companyRegNo: '12345678', companyName: 'name', probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE };
 
     const result = await api.getPartyUrn(companyData);
 

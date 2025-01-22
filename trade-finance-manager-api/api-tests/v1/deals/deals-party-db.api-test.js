@@ -4,7 +4,7 @@ const { addPartyUrns } = require('../../../src/v1/controllers/deal.party-db');
 const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
 const api = require('../../../src/v1/api');
 const { MOCK_PORTAL_USERS } = require('../../../src/v1/__mocks__/mock-portal-users');
-const { COMPANY_REGISTRATION_NUMBER } = require('../../../src/constants/deals');
+const { COMPANY_REGISTRATION_NUMBER, PROBABILITY_OF_DEFAULT } = require('../../../src/constants/deals');
 
 describe('add partyUrn to deal', () => {
   beforeEach(() => {
@@ -27,6 +27,7 @@ describe('add partyUrn to deal', () => {
       exporter: {
         companiesHouseRegistrationNumber: '',
         companyName: 'some name',
+        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
       },
     };
 
@@ -42,6 +43,7 @@ describe('add partyUrn to deal', () => {
       exporter: {
         companiesHouseRegistrationNumber: COMPANY_REGISTRATION_NUMBER.NO_MATCH,
         companyName: 'some name',
+        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
       },
     };
 
@@ -57,6 +59,7 @@ describe('add partyUrn to deal', () => {
       exporter: {
         companiesHouseRegistrationNumber: COMPANY_REGISTRATION_NUMBER.MATCH,
         companyName: 'some name',
+        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
       },
     };
 
@@ -72,6 +75,7 @@ describe('add partyUrn to deal', () => {
       exporter: {
         companiesHouseRegistrationNumber: COMPANY_REGISTRATION_NUMBER.MATCH,
         companyName: 'some name',
+        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
       },
       tfm: {
         mockField: 'mock data',
