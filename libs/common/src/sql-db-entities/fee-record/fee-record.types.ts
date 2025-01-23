@@ -1,5 +1,5 @@
 import { DbRequestSource, DbRequestSourceParam } from '../helpers';
-import { Currency, FeeRecordStatus } from '../../types';
+import { Currency, FeeRecordStatus, RecordCorrectionValues } from '../../types';
 import { UtilisationReportEntity } from '../utilisation-report';
 
 export type CreateFeeRecordParams = DbRequestSourceParam & {
@@ -21,6 +21,11 @@ export type CreateFeeRecordParams = DbRequestSourceParam & {
 export type UpdateWithStatusParams = {
   status: FeeRecordStatus;
   requestSource: DbRequestSource;
+};
+
+export type UpdateWithCorrectionParams = {
+  requestSource: DbRequestSource;
+  correctedValues: RecordCorrectionValues;
 };
 
 export type UpdateWithKeyingDataParams = {
