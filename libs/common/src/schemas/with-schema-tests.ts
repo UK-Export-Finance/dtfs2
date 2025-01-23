@@ -3,6 +3,8 @@ import { ZodSchema } from 'zod';
 type SchemaTestCases = { aTestCase: () => any; description: string }[];
 
 /**
+ * @deprecated Use withSchemaValidationTests instead
+ *
  * This is a reusable test to allow for complete testing of zod schemas
  * It can be used on it's own, or built into further test helpers
  */
