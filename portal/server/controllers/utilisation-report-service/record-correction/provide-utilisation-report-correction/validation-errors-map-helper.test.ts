@@ -155,7 +155,7 @@ describe('validation-errors-map-helper', () => {
       const mappedValidationErrors = mapValidationErrorsToViewModel(validationErrors);
 
       // Assert
-      expect(mappedValidationErrors).toEqual({
+      const expectedMappedValidationErrors = {
         ...validationErrors,
         errorSummary: [
           {
@@ -179,7 +179,43 @@ describe('validation-errors-map-helper', () => {
             href: '#additionalComments',
           },
         ],
-      });
+      };
+
+      expect(mappedValidationErrors).toEqual(expectedMappedValidationErrors);
+    });
+
+    it('should not map undefined validation errors to view model', () => {
+      // Arrange
+      const reportedCurrencyErrorMessage = 'Invalid currency';
+      const utilisationErrorMessage = 'Invalid utilisation';
+
+      const validationErrors = {
+        facilityIdErrorMessage: undefined,
+        reportedCurrencyErrorMessage,
+        reportedFeeErrorMessage: undefined,
+        utilisationErrorMessage,
+        additionalCommentsErrorMessage: undefined,
+      };
+
+      // Act
+      const mappedValidationErrors = mapValidationErrorsToViewModel(validationErrors);
+
+      // Assert
+      const expectedMappedValidationErrors = {
+        ...validationErrors,
+        errorSummary: [
+          {
+            text: reportedCurrencyErrorMessage,
+            href: '#reportedCurrency',
+          },
+          {
+            text: utilisationErrorMessage,
+            href: '#utilisation',
+          },
+        ],
+      };
+
+      expect(mappedValidationErrors).toEqual(expectedMappedValidationErrors);
     });
   });
 });

@@ -24,20 +24,14 @@ const errorKeyToHrefMap: Record<keyof RecordCorrectionFormValueValidationErrors,
 export const mapValidationErrorsToViewModel = (
   validationErrors: RecordCorrectionFormValueValidationErrors,
 ): ProvideUtilisationReportCorrectionErrorsViewModel => {
-  const errorSummary: ErrorSummaryViewModel[] = [];
+  const validationErrorPairs = Object.entries(validationErrors) as [keyof RecordCorrectionFormValueValidationErrors, string][];
 
-  const validationErrorKeys = Object.keys(validationErrors) as (keyof RecordCorrectionFormValueValidationErrors)[];
-
-  validationErrorKeys.forEach((key) => {
-    const errorMessage = validationErrors[key];
-
-    if (errorMessage) {
-      errorSummary.push({
-        text: errorMessage,
-        href: errorKeyToHrefMap[key],
-      });
-    }
-  });
+  const errorSummary: ErrorSummaryViewModel[] = validationErrorPairs
+    .filter(([, errorMessage]) => errorMessage)
+    .map(([key, errorMessage]) => ({
+      text: errorMessage,
+      href: errorKeyToHrefMap[key],
+    }));
 
   return {
     ...validationErrors,
