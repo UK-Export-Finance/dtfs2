@@ -338,33 +338,6 @@ describe('FeeRecordEntity', () => {
     });
 
     describe('when the fee record payment currency is the same as the fees paid to ukef for the period currency', () => {
-      it('should apply any change to the fees paid to ukef for the period to the payment currency also', () => {
-        // Arrange
-        const correctedValues = {
-          ...aRecordCorrectionValues(),
-          feesPaidToUkefForThePeriodCurrency: CURRENCY.USD,
-        };
-
-        const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
-          .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
-          .withPaymentCurrency(CURRENCY.GBP)
-          .withPaymentExchangeRate(1)
-          .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
-          .build();
-
-        // Act
-        feeRecord.updateWithCorrection({
-          correctedValues,
-          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
-        });
-
-        // Assert
-        expect(feeRecord.feesPaidToUkefForThePeriodCurrency).toEqual(correctedValues.feesPaidToUkefForThePeriodCurrency);
-        expect(feeRecord.paymentCurrency).toEqual(correctedValues.feesPaidToUkefForThePeriodCurrency);
-      });
-    });
-
-    describe('when the fee record payment currency is the same as the fees paid to ukef for the period currency', () => {
       const originalFeesPaidToUkefForThePeriodCurrency = CURRENCY.GBP;
       const originalPaymentCurrency = originalFeesPaidToUkefForThePeriodCurrency;
       const correctionCurrency = CURRENCY.USD;
