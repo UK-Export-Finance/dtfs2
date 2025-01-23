@@ -452,6 +452,26 @@ const getNextReportPeriodByBankId = async (bankId) => {
 };
 
 /**
+ * Call the central API to get the pending corrections for a bank's utilisation reports if there are any
+ * @param {string} bankId
+ * @returns {Promise<import('./api-response-types').UtilisationReportPendingCorrectionsResponseBody | string>} response of API call or wrapped error response
+ */
+const getUtilisationReportPendingCorrectionsByBankId = async (bankId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports/pending-corrections`,
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get pending corrections: %o', error);
+    throw error;
+  }
+};
+
+/**
  * Gets fee record correction by id.
  * @param {number} correctionId - The ID of the correction
  * @returns {Promise<import('./api-response-types').GetFeeRecordCorrectionResponseBody>} response of API call or wrapped error response
@@ -467,6 +487,101 @@ const getFeeRecordCorrectionById = async (correctionId) => {
     console.error('Unable to get fee record correction with id %s: %o', correctionId, error);
     throw error;
   }
+};
+
+/**
+ * Saves a fee record correction.
+ *
+ * The user id is sent in the body as saving uses the current
+ * users saved fee record correction transient form data.
+ *
+ * @param {string} bankId - The ID of the bank
+ * @param {number} correctionId - The ID of the correction
+ * @param {string} userId - The ID of the user
+ * @returns {Promise<import('./api-response-types').SaveFeeRecordCorrectionResponseBody>} response of API call
+ */
+const saveFeeRecordCorrection = async (bankId, correctionId, userId) => {
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/fee-record-corrections/${correctionId}`,
+      headers: headers.central,
+      data: {
+        user: { _id: userId },
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to save fee record correction with id %s and bank id %s: %o', correctionId, bankId, error);
+    throw error;
+  }
+};
+
+/**
+ * Gets fee record correction transient form data by correction id and user id.
+ * @param {number} correctionId - The ID of the correction
+ * @param {string} userId - The ID of the user
+ * @returns {Promise<import('./api-response-types').GetFeeRecordCorrectionTransientFormDataResponseBody>} response of API call
+ */
+const getFeeRecordCorrectionTransientFormData = async (correctionId, userId) => {
+  try {
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/fee-record-corrections/${correctionId}/transient-form-data/${userId}`, {
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get fee record correction transient form data with correction id %s and user id %s: %o', correctionId, userId, error);
+    throw error;
+  }
+};
+
+/**
+ * Puts fee record correction transient form data by bank id, correction id, and user id.
+ * @param {string} bankId - The ID of the bank
+ * @param {number} correctionId - The ID of the correction
+ * @param {string} userId - The ID of the user
+ * @param {import('@ukef/dtfs2-common').RecordCorrectionFormValues} formData - The form data
+ */
+const putFeeRecordCorrectionTransientFormData = async (bankId, correctionId, userId, formData) => {
+  try {
+    const response = await axios.put(
+      `${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/fee-record-corrections/${correctionId}/transient-form-data`,
+      {
+        formData,
+        user: { _id: userId },
+      },
+      {
+        headers: headers.central,
+      },
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      'Unable to put fee record correction transient form data with bank id %s, correction id %s, and user id %s: %o',
+      bankId,
+      correctionId,
+      userId,
+      error,
+    );
+
+    throw error;
+  }
+};
+
+/**
+ * Deletes a fee record correction transient form data for the user by correction id.
+ * @param {number} correctionId - The ID of the correction
+ * @param {string} userId - The ID of the user
+ */
+const deleteFeeRecordCorrectionTransientFormData = async (correctionId, userId) => {
+  await axios({
+    method: 'delete',
+    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/fee-record-corrections/${correctionId}/transient-form-data/${userId}`,
+    headers: headers.central,
+  });
 };
 
 /**
@@ -528,6 +643,69 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
   }
 };
 
+/**
+ * Gets fee record correction review information by correction id and user id.
+ * @param {number} correctionId - The ID of the correction
+ * @param {string} userId - The ID of the user
+ * @returns {Promise<import('@ukef/dtfs2-common').FeeRecordCorrectionReviewInformation>} response of API call or wrapped error response
+ */
+const getFeeRecordCorrectionReview = async (correctionId, userId) => {
+  try {
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/fee-record-correction-review/${correctionId}/user/${userId}`, {
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get fee record correction review (correction id: %s, user id: %s): %o', correctionId, userId, error);
+    throw error;
+  }
+};
+
+/**
+ * Updates a portal facility amendment with the provided details.
+ * @param {Object} params
+ * @param {string} params.facilityId - id of the facility to amend.
+ * @param {string} params.amendmentId - id of the amendment.
+ * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} params.update - the updates to amend the amendment with.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - The audit details for the update.
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>} - the amendment
+ */
+const patchPortalFacilityAmendment = async ({ facilityId, amendmentId, update, auditDetails }) => {
+  try {
+    const response = await axios({
+      method: 'patch',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments/${amendmentId}`,
+      headers: headers.central,
+      data: {
+        facilityId,
+        amendmentId,
+        update,
+        auditDetails,
+      },
+    });
+
+    const { success, error, data } = PORTAL_FACILITY_AMENDMENT.safeParse(response.data);
+
+    if (success) {
+      return data;
+    }
+
+    console.error('Type validation error occurred when receiving portal amendment from dtfs-central %o', error);
+
+    throw new Error('Type validation error occurred');
+  } catch (error) {
+    console.error(
+      'Error updating portal facility amendment with id %s for facility with id %s with the following update %o, %o',
+      amendmentId,
+      facilityId,
+      update,
+      error,
+    );
+    throw error;
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -548,7 +726,14 @@ module.exports = {
   getBankById,
   getAllBanks,
   getNextReportPeriodByBankId,
+  getUtilisationReportPendingCorrectionsByBankId,
   getFeeRecordCorrectionById,
+  deleteFeeRecordCorrectionTransientFormData,
+  saveFeeRecordCorrection,
+  getFeeRecordCorrectionTransientFormData,
   getPortalFacilityAmendment,
   putPortalFacilityAmendment,
+  getFeeRecordCorrectionReview,
+  patchPortalFacilityAmendment,
+  putFeeRecordCorrectionTransientFormData,
 };

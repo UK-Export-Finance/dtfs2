@@ -1,6 +1,15 @@
-import { getFormattedCurrencyAndAmount, mapReasonsToDisplayValues, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
-import { GetFeeRecordCorrectionResponseBody } from '../../../../api-response-types';
-import { CorrectionRequestDetailsViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
+import {
+  getFormattedCurrencyAndAmount,
+  getFormattedMonetaryValue,
+  mapReasonsToDisplayValues,
+  RECORD_CORRECTION_REASON,
+  RecordCorrectionReason,
+} from '@ukef/dtfs2-common';
+import { GetFeeRecordCorrectionResponseBody, GetFeeRecordCorrectionTransientFormDataResponseBody } from '../../../../api-response-types';
+import {
+  CorrectionRequestDetailsViewModel,
+  ProvideCorrectionFormValuesViewModel,
+} from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
 
 /**
  * Maps the correction response to a correction request view model.
@@ -78,4 +87,23 @@ export const getAdditionalCommentsFieldLabels = (correctionReasons: RecordCorrec
   }
 
   return requiredAdditionalCommentsFieldLabelsForManyReasons;
+};
+
+/**
+ * Maps the saved form values to the form values view model.
+ * @param savedFormValues - The saved transient form values
+ * @returns The view model for the saved form values
+ */
+export const mapToProvideCorrectionFormValuesViewModel = (
+  savedFormValues: GetFeeRecordCorrectionTransientFormDataResponseBody,
+): ProvideCorrectionFormValuesViewModel => {
+  const utilisation = savedFormValues.utilisation !== undefined ? getFormattedMonetaryValue(savedFormValues.utilisation) : null;
+  const reportedFee = savedFormValues.reportedFee !== undefined ? getFormattedMonetaryValue(savedFormValues.reportedFee) : null;
+
+  return {
+    utilisation,
+    reportedFee,
+    facilityId: savedFormValues.facilityId ?? null,
+    additionalComments: savedFormValues.additionalComments ?? null,
+  };
 };

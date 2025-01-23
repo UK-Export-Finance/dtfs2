@@ -39,16 +39,23 @@ const { getFeeRecord } = require('../controllers/utilisation-report-service/get-
 const {
   getFeeRecordCorrectionRequestReview,
 } = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction-request-review.controller');
+const { getFeeRecordCorrectionReview } = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction-review.controller');
 const {
   putFeeRecordCorrectionRequestTransientFormData,
 } = require('../controllers/utilisation-report-service/fee-record-correction/put-fee-record-correction-request-transient-form-data.controller');
 const {
   getFeeRecordCorrectionRequestTransientFormData,
 } = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction-request-transient-form-data.controller');
+const {
+  getFeeRecordCorrectionTransientFormData,
+} = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction-transient-form-data.controller');
 const { postFeeRecordCorrection } = require('../controllers/utilisation-report-service/fee-record-correction/post-fee-record-correction.controller');
 const {
   deleteFeeRecordCorrectionRequestTransientFormData,
 } = require('../controllers/utilisation-report-service/fee-record-correction/delete-fee-record-correction-request-transient-form-data.controller');
+const {
+  deleteFeeRecordCorrectionTransientFormData,
+} = require('../controllers/utilisation-report-service/fee-record-correction/delete-fee-record-correction-transient-form-data.controller');
 const { getFeeRecordCorrection } = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction.controller');
 
 const utilisationReportsRouter = express.Router();
@@ -1010,6 +1017,50 @@ utilisationReportsRouter
 
 /**
  * @openapi
+ * /utilisation-reports/fee-records-corrections/:correctionId/transient-form-data/:userId:
+ *   get:
+ *     summary: Gets the fee record correction transient form data against a user and correction
+ *     tags: [Utilisation Report]
+ *     description: Gets the fee record correction transient form data against a user and correction
+ *     parameters:
+ *       - in: path
+ *         name: correctionId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the correction
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the user
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               oneOf:
+ *                 - type: object
+ *                   $ref: '#/definitions/FeeRecordCorrectionTransientFormDataResponseBody'
+ *                 - type: object
+ *                   properties: {}
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/fee-record-corrections/:correctionId/transient-form-data/:userId')
+  .all(validation.sqlIdValidation('correctionId'), validation.mongoIdValidation('userId'), handleExpressValidatorResult)
+  .get(getFeeRecordCorrectionTransientFormData)
+  .delete(deleteFeeRecordCorrectionTransientFormData);
+
+/**
+ * @openapi
  * /utilisation-reports/:reportId/fee-records/:feeRecordId/correction-request-review/:userId:
  *   get:
  *     summary: Get correction request review information to check before sending
@@ -1053,5 +1104,45 @@ utilisationReportsRouter
   .route('/:reportId/fee-records/:feeRecordId/correction-request-review/:userId')
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), validation.mongoIdValidation('userId'), handleExpressValidatorResult)
   .get(getFeeRecordCorrectionRequestReview);
+
+/**
+ * @openapi
+ * /utilisation-reports/fee-record-correction-review/:correctionId/user/:userId:
+ *   get:
+ *     summary: Get fee record correction review information to check before sending
+ *     tags: [Utilisation Report]
+ *     description: Get fee record correction review information to check before sending
+ *     parameters:
+ *       - in: path
+ *         name: correctionId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for correction
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the user requesting the correction
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/FeeRecordCorrectionReview'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/fee-record-correction-review/:correctionId/user/:userId')
+  .all(validation.sqlIdValidation('correctionId'), validation.mongoIdValidation('userId'), handleExpressValidatorResult)
+  .get(getFeeRecordCorrectionReview);
 
 module.exports = utilisationReportsRouter;

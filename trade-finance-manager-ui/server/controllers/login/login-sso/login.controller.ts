@@ -15,10 +15,10 @@ export class LoginController {
         return res.redirect('/home');
       }
 
-      const { authCodeUrl, authCodeUrlRequest } = await this.loginService.getAuthCodeUrl({ successRedirect: '/' });
-
+      const { authCodeUrl, authCodeUrlRequest } = await this.loginService.getAuthCodeUrl({ successRedirect: req.originalUrl ? req.originalUrl : '/' });
       // As this is the user logging in, there should be no existing login data in the session.
       // if there is, it should be cleared and set to the authCodeUrlRequest.
+
       req.session.loginData = { authCodeUrlRequest };
 
       return res.redirect(authCodeUrl);

@@ -31,7 +31,7 @@ describe('get-fee-record-correction.controller helpers', () => {
       const reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT];
       const additionalInfo = 'Some additional info.';
 
-      const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecordEntity)
+      const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecordEntity, false)
         .withId(correctionId)
         .withReasons(reasons)
         .withAdditionalInfo(additionalInfo)

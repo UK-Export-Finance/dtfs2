@@ -1,4 +1,4 @@
-import { CURRENCY_NUMBER_REGEX } from '../../../constants/regex';
+import { CURRENCY_NUMBER_REGEX } from '@ukef/dtfs2-common';
 import { CSV } from '../../../constants/csv';
 import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';
 

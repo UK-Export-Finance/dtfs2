@@ -1,5 +1,5 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
-const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const api = require('../../../api');
 const { formattedNumber } = require('../../../helpers/number');
@@ -16,7 +16,7 @@ const getAmendmentAnswers = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
   const requestDate = format(fromUnixTime(amendment.requestDate), 'dd MMM yyyy');
   const coverEndDate = amendment?.coverEndDate ? format(fromUnixTime(amendment.coverEndDate), 'dd MMM yyyy') : '';
   const isUsingFacilityEndDate = amendment?.isUsingFacilityEndDate;
@@ -82,7 +82,7 @@ const postAmendmentAnswers = async (req, res) => {
     }
 
     if (!requireUkefApproval) {
-      payload.status = AMENDMENT_STATUS.COMPLETED;
+      payload.status = TFM_AMENDMENT_STATUS.COMPLETED;
       payload.submissionDate = getUnixTime(new Date());
       payload.automaticApprovalEmail = true;
       // flag to update tfm-deals last updated

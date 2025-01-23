@@ -61,8 +61,8 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
     .withPayments([payment])
     .build();
 
-  const { premiumPaymentsTab } = pages.utilisationReportPage;
-  const { premiumPaymentsTable } = premiumPaymentsTab;
+  const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
+  const { premiumPaymentsTable } = premiumPaymentsContent;
   const { selectedReportedFeesDetailsTable, recordedPaymentsDetailsTable, insetToleranceText } = pages.utilisationReportAddPaymentPage;
 
   beforeEach(() => {
@@ -174,10 +174,10 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
 
     cy.assertText(premiumPaymentsTable.status(FEE_RECORD_ID_ONE), 'Match');
 
-    cy.assertText(premiumPaymentsTab.matchSuccessNotificationHeading(), 'Match payment recorded');
+    cy.assertText(premiumPaymentsContent.matchSuccessNotificationHeading(), 'Match payment recorded');
 
     cy.assertText(
-      premiumPaymentsTab.matchSuccessNotificationMessage(),
+      premiumPaymentsContent.matchSuccessNotificationMessage(),
       'The fee(s) are now at a Match state. Further payments cannot be added to the fee record.',
     );
   });
@@ -240,7 +240,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
         premiumPaymentsTable.checkbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
         premiumPaymentsTable.checkbox([FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
 
-        premiumPaymentsTab.addAPaymentButton().click();
+        premiumPaymentsContent.addAPaymentButton().click();
         cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-payment`));
 
         cy.clickBackLink();
@@ -268,7 +268,7 @@ context('PDC_RECONCILE users can add a payment to a report', () => {
         premiumPaymentsTable.checkbox([FEE_RECORD_ID_THREE], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
         premiumPaymentsTable.checkbox([FEE_RECORD_ID_FOUR], PAYMENT_CURRENCY, FEE_RECORD_STATUS.TO_DO).check();
 
-        premiumPaymentsTab.addAPaymentButton().click();
+        premiumPaymentsContent.addAPaymentButton().click();
         cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/add-payment`));
 
         cy.clickCancelLink();

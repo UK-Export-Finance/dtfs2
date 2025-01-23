@@ -26,8 +26,7 @@ export class SsoController {
 
   public async getAuthCodeUrl(req: GetAuthCodeUrlApiRequest, res: GetAuthCodeUrlApiResponse) {
     try {
-      const { successRedirect } = req.params;
-      const getAuthCodeUrlResponse = await this.entraIdService.getAuthCodeUrl({ successRedirect });
+      const getAuthCodeUrlResponse = await this.entraIdService.getAuthCodeUrl({ successRedirect: req.originalUrl || '/' });
       res.json(getAuthCodeUrlResponse);
     } catch (error) {
       const errorMessage = 'Failed to get auth code url';

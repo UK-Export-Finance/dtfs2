@@ -2,12 +2,14 @@ import {
   CURRENCY,
   CurrencyAndAmount,
   getFormattedCurrencyAndAmount,
+  getFormattedMonetaryValue,
   mapReasonToDisplayValue,
   RECORD_CORRECTION_REASON,
   RecordCorrectionReason,
 } from '@ukef/dtfs2-common';
 import {
   getAdditionalCommentsFieldLabels,
+  mapToProvideCorrectionFormValuesViewModel,
   mapToCorrectionRequestDetailsViewModel,
   optionalAdditionalCommentsFieldLabels,
   requiredAdditionalCommentsFieldLabelsForManyReasons,
@@ -160,6 +162,173 @@ describe('provide-utilisation-report-correction helpers', () => {
         // Assert
         expect(() => getAdditionalCommentsFieldLabels(reasons)).toThrow('Corrections must have at least one reason');
       });
+    });
+  });
+
+  describe('mapToProvideCorrectionFormValuesViewModel', () => {
+    it('should map facilityId without changing the value when provided', () => {
+      // Arrange
+      const savedFormValues = {
+        facilityId: '123',
+      };
+
+      // Act
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
+
+      // Assert
+      expect(result.facilityId).toEqual(savedFormValues.facilityId);
+    });
+
+    it('should set facilityId to null if not provided', () => {
+      // Arrange
+      const savedFormValues = {};
+
+      // Act
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
+
+      // Assert
+      expect(result.facilityId).toBeNull();
+    });
+
+    it('should map utilisation to formatted monetary string when non-zero', () => {
+      // Arrange
+      const savedFormValues = {
+        utilisation: 1234.56,
+      };
+
+      // Act
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
+
+      // Assert
+      expect(result.utilisation).toEqual(getFormattedMonetaryValue(savedFormValues.utilisation));
+    });
+
+    it('should map utilisation to formatted monetary string when zero', () => {
+      // Arrange
+      const savedFormValues = {
+        utilisation: 0,
+      };
+
+      // Act
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
+
+      // Assert
+      expect(result.utilisation).toEqual(getFormattedMonetaryValue(savedFormValues.utilisation));
+    });
+
+    it('should set utilisation to null if not provided', () => {
+      // Arrange
+      const savedFormValues = {};
+
+      // Act
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
+
+      // Assert
+      expect(result.utilisation).toBeNull();
+    });
+
+    it('should map reportedFee to formatted monetary string when non-zero', () => {
+      // Arrange
+      const savedFormValues = {
+        reportedFee: 1234.56,
+      };
+
+      // Act
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
+
+      // Assert
+      expect(result.reportedFee).toEqual(getFormattedMonetaryValue(savedFormValues.reportedFee));
+    });
+
+    it('should map reportedFee to formatted monetary string when zero', () => {
+      // Arrange
+      const savedFormValues = {
+        reportedFee: 0,
+      };
+
+      // Act
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
+
+      // Assert
+      expect(result.reportedFee).toEqual(getFormattedMonetaryValue(savedFormValues.reportedFee));
+    });
+
+    it('should set reportedFee to null if not provided', () => {
+      // Arrange
+      const savedFormValues = {};
+
+      // Act
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
+
+      // Assert
+      expect(result.reportedFee).toBeNull();
+    });
+
+    it('should set additionalComments to null if not provided', () => {
+      // Arrange
+      const savedFormValues = {};
+
+      // Act
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
+
+      // Assert
+      expect(result.additionalComments).toBeNull();
+    });
+
+    it('should map additionalComments without changing the value when provided', () => {
+      // Arrange
+      const savedFormValues = {
+        additionalComments: 'Some additional comments.',
+      };
+
+      // Act
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
+
+      // Assert
+      expect(result.additionalComments).toEqual(savedFormValues.additionalComments);
+    });
+
+    it('should map all provided fields', () => {
+      // Arrange
+      const savedFormValues = {
+        facilityId: '123',
+        utilisation: 1234.56,
+        reportedFee: 1234.56,
+        additionalComments: 'Some additional comments.',
+      };
+
+      const expected = {
+        facilityId: savedFormValues.facilityId,
+        utilisation: getFormattedMonetaryValue(savedFormValues.utilisation),
+        reportedFee: getFormattedMonetaryValue(savedFormValues.reportedFee),
+        additionalComments: savedFormValues.additionalComments,
+      };
+
+      // Act
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
+
+      // Assert
+      expect(result).toEqual(expected);
+    });
+
+    it('should ignore reported currency', () => {
+      // Arrange
+      const savedFormValues = {
+        reportedCurrency: CURRENCY.GBP,
+      };
+
+      const expected = {
+        facilityId: null,
+        utilisation: null,
+        reportedFee: null,
+        additionalComments: null,
+      };
+
+      // Act
+      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
+
+      // Assert
+      expect(result).toEqual(expected);
     });
   });
 });

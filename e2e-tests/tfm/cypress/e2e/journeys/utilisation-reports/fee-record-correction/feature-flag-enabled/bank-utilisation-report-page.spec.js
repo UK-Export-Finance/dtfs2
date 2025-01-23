@@ -31,13 +31,13 @@ context('When fee record correction feature flag is enabled', () => {
       cy.visit(`utilisation-reports/${reportId}`);
     });
 
-    it('should display the record correction history tab', () => {
-      cy.assertText(utilisationReportPage.recordCorrectionHistoryTabLink(), 'Record correction history');
+    it('should display the record correction log tab', () => {
+      cy.assertUrl(utilisationReportPage.tabs.recordCorrectionLog(), '#record-correction-log', 'Record correction log');
     });
 
     it('should display the record correction text', () => {
       cy.assertText(
-        utilisationReportPage.premiumPaymentsTab.createRecordCorrectionRequestText(),
+        utilisationReportPage.tabs.premiumPaymentsContent.createRecordCorrectionRequestText(),
         `If there is an error with the fee record, select the record to create a record correction request to send a query to the bank.`,
       );
     });
@@ -51,13 +51,13 @@ context('When fee record correction feature flag is enabled', () => {
       cy.visit(`utilisation-reports/${reportId}`);
     });
 
-    it('should display the record correction history tab', () => {
-      cy.assertText(utilisationReportPage.recordCorrectionHistoryTabLink(), 'Record correction history');
+    it('should display the record correction log tab', () => {
+      cy.assertText(utilisationReportPage.tabs.recordCorrectionLog(), 'Record correction log');
     });
 
     it('should display the record correction text', () => {
       cy.assertText(
-        utilisationReportPage.premiumPaymentsTab.createRecordCorrectionRequestText(),
+        utilisationReportPage.tabs.premiumPaymentsContent.createRecordCorrectionRequestText(),
         'Errors with a fee record can be addressed and queried with the bank through a record correction request.',
       );
     });

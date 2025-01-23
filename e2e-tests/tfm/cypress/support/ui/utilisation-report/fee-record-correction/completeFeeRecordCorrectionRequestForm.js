@@ -1,7 +1,7 @@
 import { RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import pages from '../../../../e2e/pages';
 
-const { premiumPaymentsTab } = pages.utilisationReportPage;
+const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
 const { createFeeRecordCorrectionRequestPage } = pages;
 
 /**
@@ -23,9 +23,9 @@ const completeFeeRecordCorrectionRequestForm = ({
 }) => {
   cy.visit(`utilisation-reports/${reportId}`);
 
-  premiumPaymentsTab.premiumPaymentsTable.checkbox([feeRecord.id], feeRecord.paymentCurrency, feeRecord.status).click();
+  premiumPaymentsContent.premiumPaymentsTable.checkbox([feeRecord.id], feeRecord.paymentCurrency, feeRecord.status).click();
 
-  premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+  premiumPaymentsContent.createRecordCorrectionRequestButton().click();
 
   reasons.forEach((reason) => {
     createFeeRecordCorrectionRequestPage.reasonCheckbox(reason).check();

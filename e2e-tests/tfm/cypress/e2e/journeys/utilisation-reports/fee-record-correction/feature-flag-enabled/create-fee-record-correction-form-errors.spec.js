@@ -18,7 +18,7 @@ context('When fee record correction feature flag is enabled', () => {
   const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(reportId).withBankId(bankId).build();
   const feeRecordAtToDoStatus = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build();
 
-  const { premiumPaymentsTab } = pages.utilisationReportPage;
+  const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
   const { reasonCheckbox, reasonsInputError, additionalInfoInput, additionalInfoInputError, errorSummaryErrors } = pages.createFeeRecordCorrectionRequestPage;
 
   before(() => {
@@ -44,10 +44,12 @@ context('When fee record correction feature flag is enabled', () => {
 
       cy.visit(`utilisation-reports/${reportId}`);
 
-      premiumPaymentsTab.premiumPaymentsTable.checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status).click();
+      premiumPaymentsContent.premiumPaymentsTable
+        .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
+        .click();
 
-      premiumPaymentsTab.createRecordCorrectionRequestButton().should('exist');
-      premiumPaymentsTab.createRecordCorrectionRequestButton().click();
+      premiumPaymentsContent.createRecordCorrectionRequestButton().should('exist');
+      premiumPaymentsContent.createRecordCorrectionRequestButton().click();
     });
 
     it('should not allow user to create fee record correction request with an empty form', () => {

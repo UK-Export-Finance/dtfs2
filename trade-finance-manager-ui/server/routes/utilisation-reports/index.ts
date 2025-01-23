@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
-import { PDC_TEAM_IDS } from '@ukef/dtfs2-common';
+import { PDC_TEAM_IDS, validateFeeRecordCorrectionFeatureFlagIsEnabled } from '@ukef/dtfs2-common';
 import { getUtilisationReports } from '../../controllers/utilisation-reports';
 import { updateUtilisationReportStatus } from '../../controllers/utilisation-reports/update-utilisation-report-status';
 import {
@@ -10,7 +10,6 @@ import {
   validatePostAddPaymentRequestBody,
   validateTfmPaymentReconciliationFeatureFlagIsNotEnabled,
   validatePostRemoveFeesFromPaymentRequestBody,
-  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
 } from '../../middleware';
 import { getReportDownload } from '../../controllers/utilisation-reports/report-download';
 import { getUtilisationReportReconciliationByReportId } from '../../controllers/utilisation-reports/utilisation-report-reconciliation-for-report';
@@ -154,7 +153,7 @@ utilisationReportsRoutes.post(
 
 utilisationReportsRoutes.post(
   '/:reportId/create-record-correction-request',
-  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateFeeRecordCorrectionFeatureFlagIsEnabled,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   postInitiateRecordCorrectionRequest,
@@ -162,7 +161,7 @@ utilisationReportsRoutes.post(
 
 utilisationReportsRoutes.get(
   '/:reportId/create-record-correction-request/:feeRecordId',
-  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateFeeRecordCorrectionFeatureFlagIsEnabled,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   validateSqlId('feeRecordId'),
@@ -171,7 +170,7 @@ utilisationReportsRoutes.get(
 
 utilisationReportsRoutes.post(
   '/:reportId/create-record-correction-request/:feeRecordId',
-  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateFeeRecordCorrectionFeatureFlagIsEnabled,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   validateSqlId('feeRecordId'),
@@ -180,7 +179,7 @@ utilisationReportsRoutes.post(
 
 utilisationReportsRoutes.get(
   '/:reportId/create-record-correction-request/:feeRecordId/check-the-information',
-  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateFeeRecordCorrectionFeatureFlagIsEnabled,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   validateSqlId('feeRecordId'),
@@ -189,7 +188,7 @@ utilisationReportsRoutes.get(
 
 utilisationReportsRoutes.post(
   '/:reportId/create-record-correction-request/:feeRecordId/check-the-information',
-  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateFeeRecordCorrectionFeatureFlagIsEnabled,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   validateSqlId('feeRecordId'),
@@ -198,7 +197,7 @@ utilisationReportsRoutes.post(
 
 utilisationReportsRoutes.get(
   '/:reportId/create-record-correction-request/:feeRecordId/request-sent',
-  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateFeeRecordCorrectionFeatureFlagIsEnabled,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   validateSqlId('feeRecordId'),
@@ -207,7 +206,7 @@ utilisationReportsRoutes.get(
 
 utilisationReportsRoutes.post(
   '/:reportId/create-record-correction-request/:feeRecordId/cancel',
-  validateTfmFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateFeeRecordCorrectionFeatureFlagIsEnabled,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   validateSqlId('feeRecordId'),

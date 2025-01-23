@@ -7,13 +7,6 @@ import { asUserSession } from '../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../constants';
 import { UtilisationReportsViewModel } from '../../types/view-models';
 
-const renderUtilisationReportsPage = (res: Response, viewModel: UtilisationReportsViewModel) => {
-  if (!isTfmPaymentReconciliationFeatureFlagEnabled()) {
-    return res.render('utilisation-reports/utilisation-reports-manual-reconciliation.njk', viewModel);
-  }
-  return res.render('utilisation-reports/utilisation-reports.njk', viewModel);
-};
-
 export const getUtilisationReports = async (req: Request, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
 
@@ -22,14 +15,20 @@ export const getUtilisationReports = async (req: Request, res: Response) => {
     const reconciliationSummariesApiResponse = await api.getUtilisationReportsReconciliationSummary(currentPeriodSubmissionMonth, userToken);
     const reconciliationSummariesViewModel = await getReportReconciliationSummariesViewModel(reconciliationSummariesApiResponse, userToken);
 
-    return renderUtilisationReportsPage(res, {
+    const viewModel: UtilisationReportsViewModel = {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       reportPeriodSummaries: reconciliationSummariesViewModel,
       isPDCReconcileUser: isPDCReconcileUser(user),
-    });
+    };
+
+    if (!isTfmPaymentReconciliationFeatureFlagEnabled()) {
+      return res.render('utilisation-reports/utilisation-reports-manual-reconciliation.njk', viewModel);
+    }
+
+    return res.render('utilisation-reports/utilisation-reports.njk', viewModel);
   } catch (error) {
-    console.error('Error rendering utilisation reports page', error);
+    console.error('Error rendering utilisation reports page: %o', error);
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };
