@@ -286,7 +286,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
           expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
         });
 
-        it('should respond with the correction request details', async () => {
+        it(`should respond with an error key set as ${STATUS.INVALID}`, async () => {
           // Arrange
           const { req, res } = getHttpMocks();
 

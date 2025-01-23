@@ -19,7 +19,7 @@ describe('record-correction-request-already-submitted', () => {
   });
 
   describe(`when errorKey with status ${STATUS.INVALID} is provided`, () => {
-    it('should return false', () => {
+    it('should return true', () => {
       const result = recordCorrectionRequestAlreadySubmitted({ errorKey: STATUS.INVALID });
 
       expect(result).toEqual(true);

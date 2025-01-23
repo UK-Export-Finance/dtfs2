@@ -20,7 +20,9 @@ describe('get-fee-record-correction-request-review.controller', () => {
         params: { reportId, feeRecordId, user },
       });
 
-    const aResponseBody = (): FeeRecordCorrectionRequestReviewResponseBody => feeRecordCorrectionRequestReviewResponseBodyMock;
+    const aResponseBody = (): FeeRecordCorrectionRequestReviewResponseBody => ({
+      ...feeRecordCorrectionRequestReviewResponseBodyMock,
+    });
 
     afterEach(() => {
       jest.resetAllMocks();

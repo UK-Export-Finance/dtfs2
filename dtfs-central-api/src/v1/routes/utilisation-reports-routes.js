@@ -1063,9 +1063,9 @@ utilisationReportsRouter
  * @openapi
  * /utilisation-reports/:reportId/fee-records/:feeRecordId/correction-request-review/:userId:
  *   get:
- *     summary: Get correction request review information to check before sending
+ *     summary: Get correction request review information to check before sending or error key if already submitted
  *     tags: [Utilisation Report]
- *     description: Get correction request review information to check before sending
+ *     description: Get correction request review information to check before sending or error key if already submitted
  *     parameters:
  *       - in: path
  *         name: reportId

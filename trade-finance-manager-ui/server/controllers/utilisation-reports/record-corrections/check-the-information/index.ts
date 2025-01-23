@@ -1,6 +1,6 @@
 import { Response, Request } from 'express';
 import { mapReasonsToDisplayValues, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
-import { RecordCorrectionRequestInformationViewModel } from '../../../../types/view-models';
+import { RecordCorrectionRequestInformationViewModel, ProblemWithServiceViewModel } from '../../../../types/view-models';
 import { asUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import api from '../../../../api';
@@ -18,15 +18,17 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
 
     const bankCorrectionRequestReviewResponse = await api.getFeeRecordCorrectionRequestReview(reportId, feeRecordId, user._id, userToken);
 
+    const problemWithServiceViewModel: ProblemWithServiceViewModel = {
+      reason: 'The record correction request has been sent to the bank. You cannot make any changes to the request',
+      reportId,
+    };
+
     /**
      * if record correction is already submitted
      * should render page-not-found with custom reason
      */
     if (recordCorrectionRequestAlreadySubmitted(bankCorrectionRequestReviewResponse)) {
-      return res.render('utilisation-reports/page-not-found.njk', {
-        reason: 'The record correction request has been sent to the bank. You cannot make any changes to the request',
-        reportId,
-      });
+      return res.render('utilisation-reports/page-not-found.njk', problemWithServiceViewModel);
     }
 
     /**
@@ -41,7 +43,7 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
 
     const { facilityId, exporter, reasons, additionalInfo, contactEmailAddresses } = correctionRequestDetails;
 
-    const viewModel: RecordCorrectionRequestInformationViewModel = {
+    const checkTheInformationViewModel: RecordCorrectionRequestInformationViewModel = {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       bank: {
@@ -57,7 +59,7 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
       contactEmailAddresses,
     };
 
-    return res.render('utilisation-reports/record-corrections/check-the-information.njk', viewModel);
+    return res.render('utilisation-reports/record-corrections/check-the-information.njk', checkTheInformationViewModel);
   } catch (error) {
     console.error('Failed to render create record correction request - "check the information" page %o', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });

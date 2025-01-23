@@ -12,8 +12,8 @@ export type FeeRecordCorrectionRequestReviewResponse = {
   };
 };
 
-export type FeeRecordCorrectionRequestReviewErrorKey = {
+export type FeeRecordCorrectionRequestReviewErrorKeyResponse = {
   errorKey: string;
 };
 
-export type FeeRecordCorrectionRequestReviewResponseBody = FeeRecordCorrectionRequestReviewResponse | FeeRecordCorrectionRequestReviewErrorKey;
+export type FeeRecordCorrectionRequestReviewResponseBody = FeeRecordCorrectionRequestReviewResponse | FeeRecordCorrectionRequestReviewErrorKeyResponse;
