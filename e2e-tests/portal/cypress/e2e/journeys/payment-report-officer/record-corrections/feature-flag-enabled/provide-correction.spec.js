@@ -98,10 +98,10 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
         });
 
         it('should be able to see only the form fields relevant to the correction request reasons', () => {
-          provideCorrection.facilityIdInput.container().should('exist');
-          provideCorrection.reportedFeeInput.container().should('exist');
+          provideCorrection.facilityIdInput().should('exist');
+          provideCorrection.reportedFeeInput().should('exist');
           provideCorrection.reportedCurrency.container().should('exist');
-          provideCorrection.utilisationInput.container().should('not.exist');
+          provideCorrection.utilisationInput().should('not.exist');
           provideCorrection.additionalComments.input().should('exist');
         });
 
@@ -111,8 +111,8 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
           const additionalComments = ' ';
 
           beforeEach(() => {
-            cy.keyboardInput(provideCorrection.facilityIdInput.container(), newFacilityId);
-            cy.keyboardInput(provideCorrection.reportedFeeInput.container(), newReportedFee);
+            cy.keyboardInput(provideCorrection.facilityIdInput(), newFacilityId);
+            cy.keyboardInput(provideCorrection.reportedFeeInput(), newReportedFee);
             cy.keyboardInput(provideCorrection.additionalComments.input(), additionalComments);
 
             cy.clickContinueButton();
@@ -124,26 +124,26 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
             const expectedReportedFeeInputError = 'Error: You must enter the reported fee in a valid format';
             const expectedAdditionalCommentsError = 'Error: You must enter a comment';
 
-            provideCorrection.errorSummary.items().should('have.length', 4);
+            provideCorrection.errorSummaryItems().should('have.length', 4);
 
-            provideCorrection.facilityIdInput.error().should('exist');
-            cy.assertText(provideCorrection.facilityIdInput.error(), expectedFacilityIdInputError);
+            provideCorrection.facilityIdError().should('exist');
+            cy.assertText(provideCorrection.facilityIdError(), expectedFacilityIdInputError);
 
             provideCorrection.reportedCurrency.error().should('exist');
             cy.assertText(provideCorrection.reportedCurrency.error(), expectedReportedCurrencyError);
 
-            provideCorrection.reportedFeeInput.error().should('exist');
-            cy.assertText(provideCorrection.reportedFeeInput.error(), expectedReportedFeeInputError);
+            provideCorrection.reportedFeeError().should('exist');
+            cy.assertText(provideCorrection.reportedFeeError(), expectedReportedFeeInputError);
 
-            provideCorrection.utilisationInput.error().should('not.exist');
+            provideCorrection.utilisationError().should('not.exist');
 
             provideCorrection.additionalComments.error().should('exist');
             cy.assertText(provideCorrection.additionalComments.error(), expectedAdditionalCommentsError);
           });
 
           it('should retain the values entered by the user', () => {
-            provideCorrection.facilityIdInput.container().should('have.value', newFacilityId);
-            provideCorrection.reportedFeeInput.container().should('have.value', newReportedFee);
+            provideCorrection.facilityIdInput().should('have.value', newFacilityId);
+            provideCorrection.reportedFeeInput().should('have.value', newReportedFee);
             provideCorrection.additionalComments.input().should('have.value', additionalComments);
 
             Object.values(CURRENCY).forEach((currency) => {
@@ -169,8 +169,8 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
 
             cy.task(NODE_TASKS.INSERT_TFM_FACILITIES_INTO_DB, [matchingTfmFacility]);
 
-            cy.keyboardInput(provideCorrection.facilityIdInput.container(), newFacilityId);
-            cy.keyboardInput(provideCorrection.reportedFeeInput.container(), newReportedFee);
+            cy.keyboardInput(provideCorrection.facilityIdInput(), newFacilityId);
+            cy.keyboardInput(provideCorrection.reportedFeeInput(), newReportedFee);
             provideCorrection.reportedCurrency.radioInput(newReportedCurrency).click();
             cy.keyboardInput(provideCorrection.additionalComments.input(), additionalComments);
 
@@ -193,8 +193,8 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
           it('should retain the values entered by the user when they return to the page via the review page change link', () => {
             reviewCorrection.changeNewValuesLink().click();
 
-            provideCorrection.facilityIdInput.container().should('have.value', newFacilityId);
-            provideCorrection.reportedFeeInput.container().should('have.value', getFormattedMonetaryValue(newReportedFee));
+            provideCorrection.facilityIdInput().should('have.value', newFacilityId);
+            provideCorrection.reportedFeeInput().should('have.value', getFormattedMonetaryValue(newReportedFee));
             provideCorrection.reportedCurrency.radioInput(newReportedCurrency).should('be.checked');
             provideCorrection.additionalComments.input().should('have.value', additionalComments);
           });
@@ -204,8 +204,8 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
 
             pendingCorrections.row(1).correctionLink().click();
 
-            provideCorrection.facilityIdInput.container().should('have.value', '');
-            provideCorrection.reportedFeeInput.container().should('have.value', '');
+            provideCorrection.facilityIdInput().should('have.value', '');
+            provideCorrection.reportedFeeInput().should('have.value', '');
             provideCorrection.reportedCurrency.radioInput(newReportedCurrency).should('not.be.checked');
             provideCorrection.additionalComments.input().should('have.value', '');
           });
@@ -215,8 +215,8 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
 
             cy.visit(relative(`/utilisation-reports/provide-correction/${pendingCorrectionDetails.id}`));
 
-            provideCorrection.facilityIdInput.container().should('have.value', '');
-            provideCorrection.reportedFeeInput.container().should('have.value', '');
+            provideCorrection.facilityIdInput().should('have.value', '');
+            provideCorrection.reportedFeeInput().should('have.value', '');
             provideCorrection.reportedCurrency.radioInput(newReportedCurrency).should('not.be.checked');
             provideCorrection.additionalComments.input().should('have.value', '');
           });
