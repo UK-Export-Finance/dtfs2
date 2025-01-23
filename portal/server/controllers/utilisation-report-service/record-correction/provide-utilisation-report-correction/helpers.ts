@@ -96,7 +96,7 @@ export const getAdditionalCommentsFieldLabels = (correctionReasons: RecordCorrec
  * If the value is undefined, returns null.
  * If the value is a number, it will be formatted as a string with two decimal
  * places and thousands separators.
- * If the value is invalid, returns the original string.
+ * If the value is a string, returns the original string.
  * @param inputValue - The input value to format
  * @returns Formatted monetary value string, null if undefined, or original string if invalid
  */

@@ -290,7 +290,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       expect(result.utilisation).toEqual(getFormattedMonetaryValue(savedFormValues.utilisation));
     });
 
-    it('should map string utilisation to formatted monetary string when zero', () => {
+    it('should map numeric utilisation to formatted monetary string when zero', () => {
       // Arrange
       const savedFormValues = {
         utilisation: 0,
