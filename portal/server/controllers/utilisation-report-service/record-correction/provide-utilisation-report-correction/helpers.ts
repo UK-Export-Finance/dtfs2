@@ -1,8 +1,6 @@
 import {
   getFormattedCurrencyAndAmount,
   getFormattedMonetaryValue,
-  getMonetaryValueAsNumber,
-  isMonetaryValueValid,
   mapReasonsToDisplayValues,
   RECORD_CORRECTION_REASON,
   RecordCorrectionFormValues,
@@ -93,29 +91,25 @@ export const getAdditionalCommentsFieldLabels = (correctionReasons: RecordCorrec
 };
 
 /**
- * Maps a monetary value string to a monetary form value.
+ * Maps an input value to a formatted monetary value or returns the original value.
  *
  * If the value is undefined, returns null.
- * If the value is a valid monetary value, it will be formatted with two
- * decimal places and thousands separators.
+ * If the value is a number, it will be formatted as a string with two decimal
+ * places and thousands separators.
  * If the value is invalid, returns the original string.
- * @param monetaryValue - The monetary value to format
+ * @param inputValue - The input value to format
  * @returns Formatted monetary value string, null if undefined, or original string if invalid
  */
-export const mapMonetaryValueToProvideCorrectionFormValue = (monetaryValue?: string | number): string | null => {
-  if (monetaryValue === undefined) {
+export const mapInputValueToFormattedMonetaryValueOrOriginal = (inputValue?: string | number): string | null => {
+  if (inputValue === undefined) {
     return null;
   }
 
-  const monetaryValueAsString = String(monetaryValue);
-
-  if (isMonetaryValueValid(monetaryValueAsString)) {
-    const monetaryValueAsNumber = getMonetaryValueAsNumber(monetaryValueAsString);
-
-    return getFormattedMonetaryValue(monetaryValueAsNumber);
+  if (typeof inputValue === 'number') {
+    return getFormattedMonetaryValue(inputValue);
   }
 
-  return monetaryValueAsString;
+  return inputValue;
 };
 
 /**
@@ -126,9 +120,9 @@ export const mapMonetaryValueToProvideCorrectionFormValue = (monetaryValue?: str
 export const mapToProvideCorrectionFormValuesViewModel = (
   formValues: GetFeeRecordCorrectionTransientFormDataResponseBody | RecordCorrectionFormValues,
 ): ProvideCorrectionFormValuesViewModel => {
-  const utilisation = mapMonetaryValueToProvideCorrectionFormValue(formValues.utilisation);
+  const utilisation = mapInputValueToFormattedMonetaryValueOrOriginal(formValues.utilisation);
 
-  const reportedFee = mapMonetaryValueToProvideCorrectionFormValue(formValues.reportedFee);
+  const reportedFee = mapInputValueToFormattedMonetaryValueOrOriginal(formValues.reportedFee);
 
   return {
     utilisation,

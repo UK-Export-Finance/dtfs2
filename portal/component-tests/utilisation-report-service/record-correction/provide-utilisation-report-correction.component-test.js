@@ -7,6 +7,28 @@ const page = 'utilisation-report-service/record-correction/provide-utilisation-r
 const render = pageRenderer(page);
 
 describe(page, () => {
+  it('should add error prefix to page title when there are errors', () => {
+    const viewModel = aProvideUtilisationReportCorrectionViewModel();
+    viewModel.errors = {
+      errorSummary: [{ text: 'an error', href: 'error-href' }],
+    };
+
+    const wrapper = render(viewModel);
+
+    wrapper.expectPageTitle().toRead('Error - Record correction');
+  });
+
+  it('should not add error prefix to page title when there are no errors', () => {
+    const viewModel = aProvideUtilisationReportCorrectionViewModel();
+    viewModel.errors = {
+      errorSummary: [],
+    };
+
+    const wrapper = render(viewModel);
+
+    wrapper.expectPageTitle().toRead('Record correction');
+  });
+
   it('should render the current record details table', () => {
     // Arrange
     const viewModel = aProvideUtilisationReportCorrectionViewModel();

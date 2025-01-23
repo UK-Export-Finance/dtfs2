@@ -10,7 +10,9 @@
 
 {% set hasErrors = errors.errorSummary | length %}
 
-{% block pageTitle %}Record correction{% endblock %}
+{% block pageTitle %}
+  {{ 'Record correction' | formatPageTitle(hasErrors) }}
+{% endblock %}
 
 {% block content %}
   {% if hasErrors %}

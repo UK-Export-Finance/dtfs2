@@ -15,7 +15,7 @@ import {
   optionalAdditionalCommentsFieldLabels,
   requiredAdditionalCommentsFieldLabelsForManyReasons,
   requiredAdditionalCommentsFieldLabelsForSingleReason,
-  mapMonetaryValueToProvideCorrectionFormValue,
+  mapInputValueToFormattedMonetaryValueOrOriginal,
 } from './helpers';
 import { aGetFeeRecordCorrectionResponseBody } from '../../../../../test-helpers/test-data/get-fee-record-correction-response';
 import { GetFeeRecordCorrectionResponseBody } from '../../../../api-response-types';
@@ -167,27 +167,16 @@ describe('provide-utilisation-report-correction helpers', () => {
     });
   });
 
-  describe('mapMonetaryValueToProvideCorrectionFormValue', () => {
+  describe('mapInputValueToFormattedMonetaryValueOrOriginal', () => {
     it('should return null when monetary value is undefined', () => {
       // Arrange
       const monetaryValue = undefined;
 
       // Act
-      const mappedValue = mapMonetaryValueToProvideCorrectionFormValue(monetaryValue);
+      const mappedValue = mapInputValueToFormattedMonetaryValueOrOriginal(monetaryValue);
 
       // Assert
       expect(mappedValue).toBeNull();
-    });
-
-    it('should return formatted monetary value when value is a valid string', () => {
-      // Arrange
-      const monetaryValue = '1234.56';
-
-      // Act
-      const mappedValue = mapMonetaryValueToProvideCorrectionFormValue(monetaryValue);
-
-      // Assert
-      expect(mappedValue).toEqual('1,234.56');
     });
 
     it('should return formatted monetary value when value is a number', () => {
@@ -195,10 +184,21 @@ describe('provide-utilisation-report-correction helpers', () => {
       const monetaryValue = 1234.56;
 
       // Act
-      const mappedValue = mapMonetaryValueToProvideCorrectionFormValue(monetaryValue);
+      const mappedValue = mapInputValueToFormattedMonetaryValueOrOriginal(monetaryValue);
 
       // Assert
       expect(mappedValue).toEqual('1,234.56');
+    });
+
+    it('should return original string when value is a monetary value but is a string', () => {
+      // Arrange
+      const monetaryValue = '1234.56';
+
+      // Act
+      const mappedValue = mapInputValueToFormattedMonetaryValueOrOriginal(monetaryValue);
+
+      // Assert
+      expect(mappedValue).toEqual(monetaryValue);
     });
 
     it('should return original string when value is invalid monetary value', () => {
@@ -206,7 +206,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       const monetaryValue = 'INVALID';
 
       // Act
-      const mappedValue = mapMonetaryValueToProvideCorrectionFormValue(monetaryValue);
+      const mappedValue = mapInputValueToFormattedMonetaryValueOrOriginal(monetaryValue);
 
       // Assert
       expect(mappedValue).toEqual('INVALID');
@@ -217,7 +217,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       const monetaryValue = 0;
 
       // Act
-      const mappedValue = mapMonetaryValueToProvideCorrectionFormValue(monetaryValue);
+      const mappedValue = mapInputValueToFormattedMonetaryValueOrOriginal(monetaryValue);
 
       // Assert
       expect(mappedValue).toEqual('0.00');
@@ -293,14 +293,14 @@ describe('provide-utilisation-report-correction helpers', () => {
     it('should map string utilisation to formatted monetary string when zero', () => {
       // Arrange
       const savedFormValues = {
-        utilisation: '0',
+        utilisation: 0,
       };
 
       // Act
       const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
-      const expectedUtilisation = getFormattedMonetaryValue(getMonetaryValueAsNumber(savedFormValues.utilisation));
+      const expectedUtilisation = getFormattedMonetaryValue(savedFormValues.utilisation);
 
       expect(result.utilisation).toEqual(expectedUtilisation);
     });
