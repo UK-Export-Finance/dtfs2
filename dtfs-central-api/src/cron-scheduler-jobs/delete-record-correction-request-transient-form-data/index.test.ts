@@ -1,7 +1,7 @@
 import { deleteRecordCorrectionRequestTransientFormData, deleteRecordCorrectionRequestTransientFormDataJob } from '.';
 import { FeeRecordCorrectionRequestTransientFormDataRepo } from '../../repositories/fee-record-correction-request-transient-form-data-repo/fee-record-correction-request-transient-form-data.repo';
 
-describe('delete-transient-record-correction-requests', () => {
+describe('delete-record-correction-request-transient-form-data', () => {
   const mockDelete = jest.fn();
 
   beforeEach(() => {
@@ -9,7 +9,7 @@ describe('delete-transient-record-correction-requests', () => {
     FeeRecordCorrectionRequestTransientFormDataRepo.deleteAllOlderThanOneDay = mockDelete;
   });
 
-  describe('deleteOldRecordCorrectionRequestTransientFormData', () => {
+  describe('deleteRecordCorrectionRequestTransientFormData', () => {
     it('should delete records older than one day', async () => {
       await deleteRecordCorrectionRequestTransientFormData();
 
