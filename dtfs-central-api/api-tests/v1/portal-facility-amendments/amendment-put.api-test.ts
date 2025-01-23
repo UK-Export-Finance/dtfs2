@@ -46,7 +46,7 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
 
   beforeAll(async () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_FACILITIES, MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA_AMENDMENTS]);
-    await db.getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA_AMENDMENTS).then((c) => c.insertMany(eligibilityCriteriaList));
+    await db.getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA_AMENDMENTS).then((collection) => collection.insertMany(eligibilityCriteriaList));
 
     portalUserId = (await createPortalUser())._id;
   });
