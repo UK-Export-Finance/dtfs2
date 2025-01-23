@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
-import { TfmSessionUser } from '../../../types/tfm-session-user';
+import { CustomExpressRequest, TfmSessionUser } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { validationErrorHandler } from '../../../helpers/validationErrorHandler.helper';
 

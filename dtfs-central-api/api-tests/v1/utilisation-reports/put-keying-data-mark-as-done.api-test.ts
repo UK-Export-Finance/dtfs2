@@ -5,6 +5,7 @@ import {
   FeeRecordEntityMockBuilder,
   RECONCILIATION_COMPLETED,
   RECONCILIATION_IN_PROGRESS,
+  TfmSessionUser,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -12,7 +13,6 @@ import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-c
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { aTfmSessionUser } from '../../../test-helpers';
-import { TfmSessionUser } from '../../../src/types/tfm/tfm-session-user';
 
 console.error = jest.fn();
 

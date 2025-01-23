@@ -5,7 +5,7 @@ import {
   RECORD_CORRECTION_REASON,
   RecordCorrectionReason,
 } from '@ukef/dtfs2-common';
-import { TfmSessionUserSchema } from './schemas';
+import { TFM_SESSION_USER_SCHEMA } from '@ukef/dtfs2-common/schemas';
 
 /**
  * Schema for validating record correction reasons are of type
@@ -18,7 +18,7 @@ const RecordCorrectionReasonSchema = z.enum(Object.values(RECORD_CORRECTION_REAS
  * Includes user information and form data with reasons and additional info.
  */
 const PutFeeRecordCorrectionRequestTransientFormDataPayload = z.object({
-  user: TfmSessionUserSchema,
+  user: TFM_SESSION_USER_SCHEMA,
   formData: z.object({
     reasons: z.array(RecordCorrectionReasonSchema).min(1),
     additionalInfo: z.string().min(1).max(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT),
