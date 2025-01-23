@@ -23,10 +23,6 @@ context('BSS/EWCS AIN deal - When TFM submits a pending deal cancellation - Port
         dealFacilities.push(...createdFacilities);
       });
     });
-
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
-    cy.getCookies().should('be.empty');
   });
 
   after(() => {
@@ -34,10 +30,6 @@ context('BSS/EWCS AIN deal - When TFM submits a pending deal cancellation - Port
     cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
-  });
-
-  beforeEach(() => {
-    cy.saveSession();
   });
 
   describe('effective date in the future', () => {
@@ -64,6 +56,12 @@ context('BSS/EWCS AIN deal - When TFM submits a pending deal cancellation - Port
       cy.tfmLogin(PIM_USER_1);
 
       cy.submitDealCancellation({ dealId, effectiveDate: tomorrow.date });
+
+      cy.login(BANK1_MAKER1);
+    });
+
+    beforeEach(() => {
+      cy.saveSession();
     });
 
     it(`should render deal status ${DEAL_STATUS.PENDING_CANCELLATION} on deal summary page`, () => {

@@ -25,21 +25,11 @@ context('BSS/EWCS MIN deal - When TFM submits a deal cancellation - Portal statu
     });
   });
 
-  before(() => {
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
-    cy.getCookies().should('be.empty');
-  });
-
   after(() => {
     cy.clearCookies();
     cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
-  });
-
-  beforeEach(() => {
-    cy.saveSession();
   });
 
   describe('effective date in the past', () => {
@@ -69,6 +59,11 @@ context('BSS/EWCS MIN deal - When TFM submits a deal cancellation - Portal statu
       cy.tfmLogin(PIM_USER_1);
 
       cy.submitDealCancellation({ dealId, effectiveDate: yesterday.date });
+      cy.login(BANK1_MAKER1);
+    });
+
+    beforeEach(() => {
+      cy.saveSession();
     });
 
     it(`should render deal status ${DEAL_STATUS.CANCELLED} on deal summary page`, () => {

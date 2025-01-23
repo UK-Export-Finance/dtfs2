@@ -23,10 +23,6 @@ context('BSS/EWCS AIN deal - When TFM submits a deal cancellation - Portal statu
         dealFacilities.push(...createdFacilities);
       });
     });
-
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
-    cy.getCookies().should('be.empty');
   });
 
   after(() => {
@@ -64,6 +60,11 @@ context('BSS/EWCS AIN deal - When TFM submits a deal cancellation - Portal statu
       cy.tfmLogin(PIM_USER_1);
 
       cy.submitDealCancellation({ dealId, effectiveDate: yesterday.date });
+      cy.login(BANK1_MAKER1);
+    });
+
+    beforeEach(() => {
+      cy.saveSession();
     });
 
     it(`should render deal status ${DEAL_STATUS.CANCELLED} on deal summary page`, () => {
