@@ -37,9 +37,9 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
     const reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT];
 
     it.each`
-      facilityId   | expectedFacilityId | description
-      ${'FAC123'}  | ${'FAC123'}        | ${'defined'}
-      ${undefined} | ${null}            | ${'undefined'}
+      facilityId    | expectedFacilityId | description
+      ${'12345678'} | ${'12345678'}      | ${'defined'}
+      ${undefined}  | ${null}            | ${'undefined'}
     `(
       'should set the facilityId to the facilityId form value when facilityId is $description',
       ({ facilityId, expectedFacilityId }: { facilityId?: string; expectedFacilityId?: string }) => {
@@ -154,7 +154,7 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
       // Arrange
       const mockFormData: RecordCorrectionTransientFormData = {
         reportedCurrency: CURRENCY.GBP,
-        facilityId: 'FAC123',
+        facilityId: '12345678',
         utilisation: 1000,
         reportedFee: 500,
       };

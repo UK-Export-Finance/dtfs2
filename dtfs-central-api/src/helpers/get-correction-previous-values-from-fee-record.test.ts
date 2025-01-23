@@ -30,7 +30,7 @@ describe('getCorrectionPreviousValuesFromFeeRecord', () => {
 
     it('should set the facilityId to the facilityId fee record value when facilityId is defined', () => {
       // Arrange
-      const facilityId = 'FAC123';
+      const facilityId = '12345678';
       const feeRecord = new FeeRecordEntityMockBuilder().withFacilityId(facilityId).build();
 
       // Act
@@ -137,7 +137,7 @@ describe('getCorrectionPreviousValuesFromFeeRecord', () => {
     it('should set the previous values for each reason', () => {
       // Arrange
       const feesPaidToUkefForThePeriodCurrency = CURRENCY.GBP;
-      const facilityId = 'FAC123';
+      const facilityId = '12345678';
       const facilityUtilisation = 1000;
       const feesPaidToUkefForThePeriod = 500;
 

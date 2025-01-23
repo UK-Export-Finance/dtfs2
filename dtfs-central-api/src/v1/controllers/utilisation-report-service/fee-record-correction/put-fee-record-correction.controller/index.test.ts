@@ -8,6 +8,7 @@ import {
   FeeRecordEntityMockBuilder,
   PaymentOfficerTeam,
   PENDING_RECONCILIATION,
+  REQUEST_PLATFORM_TYPE,
   TestApiError,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -180,7 +181,7 @@ describe('putFeeRecordCorrection', () => {
               correctionEntity: correction,
               correctionFormData: formData,
               requestSource: {
-                platform: 'TFM',
+                platform: REQUEST_PLATFORM_TYPE.PORTAL,
                 userId: portalUserId,
               },
             },

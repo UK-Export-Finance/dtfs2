@@ -313,14 +313,14 @@ describe('FeeRecordEntity', () => {
         facilityUtilisation: 5000,
         feesPaidToUkefForThePeriod: 200,
         feesPaidToUkefForThePeriodCurrency: CURRENCY.USD,
-        facilityId: 'FAC00000',
+        facilityId: '11111111',
       };
 
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
         .withFacilityUtilisation(1000)
         .withFeesPaidToUkefForThePeriod(100)
         .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
-        .withFacilityId('FAC11111')
+        .withFacilityId('22222222')
         .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
         .build();
 
@@ -343,7 +343,7 @@ describe('FeeRecordEntity', () => {
         facilityUtilisation: null,
         feesPaidToUkefForThePeriodCurrency: null,
         feesPaidToUkefForThePeriod: null,
-        facilityId: 'FAC111111',
+        facilityId: '11111111',
       };
 
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION).build();
@@ -409,14 +409,14 @@ describe('FeeRecordEntity', () => {
         facilityUtilisation: null,
         feesPaidToUkefForThePeriodCurrency: null,
         feesPaidToUkefForThePeriod: 200,
-        facilityId: 'FAC111111',
+        facilityId: '11111111',
       };
 
       const originalValues = {
         facilityUtilisation: 1000,
         feesPaidToUkefForThePeriodCurrency: CURRENCY.USD,
         feesPaidToUkefForThePeriod: 100,
-        facilityId: 'FAC00000',
+        facilityId: '22222222',
       };
 
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
@@ -454,7 +454,7 @@ describe('FeeRecordEntity', () => {
         facilityUtilisation: 1000,
         feesPaidToUkefForThePeriodCurrency: CURRENCY.USD,
         feesPaidToUkefForThePeriod: 100,
-        facilityId: 'FAC00000',
+        facilityId: '11111111',
       };
 
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)

@@ -78,7 +78,7 @@ export const putFeeRecordCorrection = async (req: PutFeeRecordCorrectionRequest,
             correctionEntity,
             correctionFormData: transientFormDataEntity.formData,
             requestSource: {
-              platform: REQUEST_PLATFORM_TYPE.TFM,
+              platform: REQUEST_PLATFORM_TYPE.PORTAL,
               userId: user._id.toString(),
             },
           },
