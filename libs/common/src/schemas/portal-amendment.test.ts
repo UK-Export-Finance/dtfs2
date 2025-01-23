@@ -158,6 +158,75 @@ describe('PORTAL_FACILITY_AMENDMENT_USER_VALUES', () => {
           coveredPercentage: 'not a number',
         }),
       },
+      {
+        description: 'eligibilityCriteria contains a non numerical version value',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          eligibilityCriteria: { version: '1', criteria: [] },
+        }),
+      },
+      {
+        description: 'eligibilityCriteria is missing version',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          eligibilityCriteria: { criteria: [] },
+        }),
+      },
+      {
+        description: 'eligibilityCriteria is missing criteria',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          eligibilityCriteria: { version: 1 },
+        }),
+      },
+      {
+        description: 'criteria has a non numerical id',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          eligibilityCriteria: { version: 1, criteria: [{ id: '1', text: 'test-text', answer: true }] },
+        }),
+      },
+      {
+        description: 'criteria is missing id',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          eligibilityCriteria: { version: 1, criteria: [{ text: 'test-text', answer: true }] },
+        }),
+      },
+      {
+        description: 'criteria is missing text',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          eligibilityCriteria: {
+            version: 1,
+            criteria: [
+              { id: 1, answer: true },
+              { id: 2, answer: false, text: 'test-text' },
+            ],
+          },
+        }),
+      },
+      {
+        description: 'criteria is missing answer',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          eligibilityCriteria: { version: 1, criteria: [{ id: 1, text: 'test-text' }] },
+        }),
+      },
+      {
+        description: 'criteria has a non boolean answer',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          eligibilityCriteria: { version: 1, criteria: [{ id: 1, text: 'test-text', answer: 'true' }] },
+        }),
+      },
+      {
+        description: 'criteria has a null answer',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          eligibilityCriteria: { version: 1, criteria: [{ id: 1, text: 'test-text', answer: null }] },
+        }),
+      },
     ];
   }
 

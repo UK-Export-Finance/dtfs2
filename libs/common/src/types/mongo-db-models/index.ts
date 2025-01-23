@@ -12,3 +12,4 @@ export * from './tfm-deals';
 export * from './deals';
 export * from './tfm-deal-cancellation';
 export * from './tfm-activity';
+export * from './amendments-eligibility-criteria';

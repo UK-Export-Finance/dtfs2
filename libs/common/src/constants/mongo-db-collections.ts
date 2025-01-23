@@ -4,6 +4,7 @@ export const MONGO_DB_COLLECTIONS = {
   DEALS: 'deals',
   DURABLE_FUNCTIONS_LOG: 'durable-functions-log',
   ELIGIBILITY_CRITERIA: 'eligibilityCriteria',
+  ELIGIBILITY_CRITERIA_AMENDMENTS: 'eligibilityCriteriaAmendments',
   FACILITIES: 'facilities',
   GEF_ELIGIBILITY_CRITERIA: 'gef-eligibilityCriteria',
   GEF_MANDATORY_CRITERIA_VERSIONED: 'gef-mandatoryCriteriaVersioned',
