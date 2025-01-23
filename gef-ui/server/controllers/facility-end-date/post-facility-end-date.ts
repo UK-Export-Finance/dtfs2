@@ -6,7 +6,7 @@ import * as api from '../../services/api';
 import { validateAndParseFacilityEndDate } from './validation';
 import { asLoggedInUserSession, LoggedInUserSession } from '../../utils/express-session';
 import { FacilityEndDateViewModel } from '../../types/view-models/facility-end-date-view-model';
-import { getCoverStartDateOrStartOfToday } from '../../utils/get-cover-start-date-or-start-of-today';
+import { getCoverStartDateOrToday } from '../../utils/get-cover-start-date-or-today';
 import { Facility } from '../../types/facility';
 
 type FacilityEndDatePostBody = { 'facility-end-date-day': string; 'facility-end-date-month': string; 'facility-end-date-year': string };
@@ -85,7 +85,7 @@ const postFacilityEndDate = async ({ req, res, uris }: HandlePostFacilityEndDate
         month: facilityEndDateMonth,
         year: facilityEndDateYear,
       },
-      getCoverStartDateOrStartOfToday(facility),
+      getCoverStartDateOrToday(facility),
     );
 
     if ('errors' in facilityEndDateErrorsAndDate) {

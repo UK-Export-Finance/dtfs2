@@ -5,7 +5,7 @@ import { isTrueSet, validationErrorHandler } from '../../utils/helpers';
 import * as api from '../../services/api';
 import { validateAndParseBankReviewDate } from './validation';
 import { asLoggedInUserSession, LoggedInUserSession } from '../../utils/express-session';
-import { getCoverStartDateOrStartOfToday } from '../../utils/get-cover-start-date-or-start-of-today';
+import { getCoverStartDateOrToday } from '../../utils/get-cover-start-date-or-today';
 import { BankReviewDateViewModel } from '../../types/view-models/bank-review-date-view-model';
 import { Facility } from '../../types/facility';
 
@@ -92,7 +92,7 @@ export const postBankReviewDate = async ({ req, res, uris }: PostBankReviewDateP
         month: bankReviewDateMonth,
         year: bankReviewDateYear,
       },
-      getCoverStartDateOrStartOfToday(facility),
+      getCoverStartDateOrToday(facility),
     );
 
     if ('errors' in bankReviewDateErrorsAndValue) {
