@@ -56,7 +56,8 @@ context('Amendments - change facility value journey - unhappy path', () => {
   });
 
   beforeEach(() => {
-    cy.saveSession();
+    cy.clearSessionCookies();
+    cy.login(BANK1_MAKER1);
   });
 
   it('should render an error if nothing is selected to change', () => {

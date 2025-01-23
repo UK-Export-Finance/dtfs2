@@ -61,7 +61,8 @@ context('Amendments - change facility end date - unhappy path', () => {
   });
 
   beforeEach(() => {
-    cy.saveSession();
+    cy.clearSessionCookies();
+    cy.login(BANK1_MAKER1);
   });
 
   it('should render an error if nothing is selected to change', () => {
@@ -76,7 +77,7 @@ context('Amendments - change facility end date - unhappy path', () => {
     whatDoYouNeedToChange.amendmentOptionsInlineError().contains('Select if you need to change the facility cover end date, value or both');
   });
 
-  it('should navigate to the "Do you have a facility end date?" page', () => {
+  it('should render an error if nothing is selected on the "Do you have a facility end date?" page', () => {
     cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
 
     whatDoYouNeedToChange.coverEndDateCheckbox().click();
@@ -88,11 +89,6 @@ context('Amendments - change facility end date - unhappy path', () => {
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/do-you-have-a-facility-end-date`));
-  });
-
-  it('should render an error if nothing is selected', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/do-you-have-a-facility-end-date`));
-
     cy.clickContinueButton();
 
     doYouHaveAFacilityEndDate.errorSummary().should('be.visible');
@@ -102,17 +98,13 @@ context('Amendments - change facility end date - unhappy path', () => {
     doYouHaveAFacilityEndDate.inlineError().contains('Select if there is an end date for this facility');
   });
 
-  it('should navigate to the facility end date page', () => {
+  it('should render an error on the facility end date page if no date is provided', () => {
     cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/do-you-have-a-facility-end-date`));
 
     doYouHaveAFacilityEndDate.yesRadioButton().click();
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-end-date`));
-  });
-
-  it('should render an error if no facility end date is provided', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-end-date`));
     cy.clickContinueButton();
 
     facilityEndDate.errorSummary().should('be.visible');
@@ -146,7 +138,7 @@ context('Amendments - change facility end date - unhappy path', () => {
   ];
 
   facilityEndDateErrorTestCases.forEach(({ description, dateFieldInput, expectedErrorMessage }) => {
-    it(`should render an error if ${description}`, () => {
+    it(`should render an error on the facility end date page if ${description}`, () => {
       cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-end-date`));
 
       cy.completeDateFormFields({ idPrefix: 'facility-end-date', ...dateFieldInput });

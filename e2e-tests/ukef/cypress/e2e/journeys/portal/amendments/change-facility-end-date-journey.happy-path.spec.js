@@ -62,7 +62,8 @@ context('Amendments - Change facility end date journey - happy path', () => {
   });
 
   beforeEach(() => {
-    cy.saveSession();
+    cy.clearSessionCookies();
+    cy.login(BANK1_MAKER1);
   });
 
   it('should navigate through the journey correctly', () => {
