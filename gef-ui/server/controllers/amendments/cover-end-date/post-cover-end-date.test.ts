@@ -1,4 +1,3 @@
-// TODO: DTFS2-7724 - remove this eslint-disable
 /* eslint-disable import/first */
 const getFacilityMock = jest.fn();
 const getApplicationMock = jest.fn();
@@ -15,18 +14,18 @@ import {
   DEAL_STATUS,
   PortalFacilityAmendmentWithUkefId,
   DayMonthYearInput,
+  getEpochMs,
 } from '@ukef/dtfs2-common';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { validationErrorHandler } from '../../../utils/helpers';
-import { getNextPage } from '../helpers/navigation.helper';
+import { getNextPage, getAmendmentsUrl } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { ValidationError } from '../../../types/validation-error';
-import { postFacilityEndDate, PostFacilityEndDateRequest } from './post-facility-end-date';
-import * as facilityEndDateValidation from '../../facility-end-date/validation';
-import { FacilityEndDateViewModel } from '../../../types/view-models/amendments/facility-end-date-view-model';
-import { getCoverStartDateOrToday } from '../../../utils/get-cover-start-date-or-today';
+import { postCoverEndDate, PostCoverEndDateRequest } from './post-cover-end-date';
+import { validateAndParseCoverEndDate } from './validation';
+import { CoverEndDateViewModel } from '../../../types/view-models/amendments/cover-end-date-view-model';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
@@ -47,8 +46,8 @@ const userToken = 'userToken';
 
 const today = startOfDay(new Date());
 
-const getHttpMocks = (facilityEndDateDayMonthYear: DayMonthYearInput = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') }) =>
-  httpMocks.createMocks<PostFacilityEndDateRequest>({
+const getHttpMocks = (coverEndDateDayMonthYear: DayMonthYearInput = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') }) =>
+  httpMocks.createMocks<PostCoverEndDateRequest>({
     params: {
       dealId,
       facilityId,
@@ -61,30 +60,28 @@ const getHttpMocks = (facilityEndDateDayMonthYear: DayMonthYearInput = { day: fo
     },
     body: {
       previousPage,
-      'facility-end-date-day': facilityEndDateDayMonthYear.day,
-      'facility-end-date-month': facilityEndDateDayMonthYear.month,
-      'facility-end-date-year': facilityEndDateDayMonthYear.year,
+      'cover-end-date-day': coverEndDateDayMonthYear.day,
+      'cover-end-date-month': coverEndDateDayMonthYear.month,
+      'cover-end-date-year': coverEndDateDayMonthYear.year,
     },
   });
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 
-describe('postFacilityEndDate', () => {
+describe('postCoverEndDate', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
 
   beforeEach(() => {
     jest.resetAllMocks();
-    jest.restoreAllMocks();
 
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
     jest.spyOn(console, 'error');
-    jest.spyOn(facilityEndDateValidation, 'validateAndParseFacilityEndDate');
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
-      .withFacilityEndDate(today)
+      .withChangeCoverEndDate(true)
       .build();
 
     getApplicationMock.mockResolvedValue(mockDeal);
@@ -97,7 +94,7 @@ describe('postFacilityEndDate', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await postFacilityEndDate(req, res);
+    await postCoverEndDate(req, res);
 
     // Assert
     expect(getApplicationMock).toHaveBeenCalledTimes(1);
@@ -109,117 +106,98 @@ describe('postFacilityEndDate', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await postFacilityEndDate(req, res);
+    await postCoverEndDate(req, res);
 
     // Assert
     expect(getFacilityMock).toHaveBeenCalledTimes(1);
     expect(getFacilityMock).toHaveBeenCalledWith({ facilityId, userToken: req.session.userToken });
   });
 
-  it('should call validateAndParseFacilityEndDate', async () => {
+  it('should not call updateAmendment if the coverEndDate is invalid', async () => {
     // Arrange
-    const facilityEndDateDayMonthYear = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
-    const { req, res } = getHttpMocks(facilityEndDateDayMonthYear);
-
-    // Act
-    await postFacilityEndDate(req, res);
-
-    // Assert
-    expect(facilityEndDateValidation.validateAndParseFacilityEndDate).toHaveBeenCalledTimes(1);
-    expect(facilityEndDateValidation.validateAndParseFacilityEndDate).toHaveBeenCalledWith(
-      facilityEndDateDayMonthYear,
-      getCoverStartDateOrToday(MOCK_ISSUED_FACILITY.details),
-    );
-  });
-
-  it('should not call updateAmendment if the facilityEndDate is invalid', async () => {
-    // Arrange
-    const facilityEndDateDayMonthYear = {
+    const coverEndDateDayMonthYear = {
       day: '100',
       month: '100',
       year: '100',
     };
-    const { req, res } = getHttpMocks(facilityEndDateDayMonthYear);
+    const { req, res } = getHttpMocks(coverEndDateDayMonthYear);
 
     // Act
-    await postFacilityEndDate(req, res);
+    await postCoverEndDate(req, res);
 
     // Assert
     expect(updateAmendmentMock).toHaveBeenCalledTimes(0);
   });
 
-  it('should render the page with validation errors if facilityEndDate is invalid', async () => {
+  it('should render the page with validation errors if coverEndDate is invalid', async () => {
     // Arrange
-    const facilityEndDateDayMonthYear = {
+    const coverEndDateDayMonthYear = {
       day: '100',
       month: '100',
       year: '100',
     };
-    const { req, res } = getHttpMocks(facilityEndDateDayMonthYear);
+    const { req, res } = getHttpMocks(coverEndDateDayMonthYear);
 
     // Act
-    await postFacilityEndDate(req, res);
+    await postCoverEndDate(req, res);
 
     // Assert
-    const expectedRenderData: FacilityEndDateViewModel = {
+    const expectedRenderData: CoverEndDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
-      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage,
       errors: validationErrorHandler(
         (
-          facilityEndDateValidation.validateAndParseFacilityEndDate(
-            facilityEndDateDayMonthYear,
-            new Date(MOCK_ISSUED_FACILITY.details.coverStartDate as dtfsCommon.IsoDateTimeStamp),
-          ) as {
+          validateAndParseCoverEndDate(coverEndDateDayMonthYear, new Date(MOCK_ISSUED_FACILITY.details.coverStartDate as dtfsCommon.IsoDateTimeStamp)) as {
             errors: ValidationError[];
           }
         ).errors,
       ),
-      facilityEndDate: facilityEndDateDayMonthYear,
+      coverEndDate: coverEndDateDayMonthYear,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-    expect(res._getRenderView()).toEqual('partials/amendments/facility-end-date.njk');
+    expect(res._getRenderView()).toEqual('partials/amendments/cover-end-date.njk');
     expect(res._getRenderData()).toEqual(expectedRenderData);
   });
 
-  it('should call updateAmendment if the facilityEndDate is valid', async () => {
+  it('should call updateAmendment if the coverEndDate is valid', async () => {
     // Arrange
-    const facilityEndDateDayMonthYear = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
-    const { req, res } = getHttpMocks(facilityEndDateDayMonthYear);
+    const coverEndDateDayMonthYear = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
+    const { req, res } = getHttpMocks(coverEndDateDayMonthYear);
 
     // Act
-    await postFacilityEndDate(req, res);
+    await postCoverEndDate(req, res);
 
     // Assert
     expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
-    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { facilityEndDate: today }, userToken });
+    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { coverEndDate: getEpochMs(today) }, userToken });
   });
 
-  it('should not call console.error if the facilityEndDate is valid', async () => {
+  it('should not call console.error if the coverEndDate is valid', async () => {
     // Arrange
-    const facilityEndDateDayMonthYear = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
-    const { req, res } = getHttpMocks(facilityEndDateDayMonthYear);
+    const coverEndDateDayMonthYear = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
+    const { req, res } = getHttpMocks(coverEndDateDayMonthYear);
 
     // Act
-    await postFacilityEndDate(req, res);
+    await postCoverEndDate(req, res);
 
     // Assert
     expect(console.error).toHaveBeenCalledTimes(0);
   });
 
-  it('should redirect to the next page if facilityEndDate is valid', async () => {
+  it('should redirect to the next page if coverEndDate is valid', async () => {
     // Arrange
-    const facilityEndDateDayMonthYear = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
-    const { req, res } = getHttpMocks(facilityEndDateDayMonthYear);
+    const coverEndDateDayMonthYear = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
+    const { req, res } = getHttpMocks(coverEndDateDayMonthYear);
 
     // Act
-    await postFacilityEndDate(req, res);
+    await postCoverEndDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
-    expect(res._getRedirectUrl()).toEqual(getNextPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment));
+    expect(res._getRedirectUrl()).toEqual(getNextPage(PORTAL_AMENDMENT_PAGES.COVER_END_DATE, amendment));
   });
 
   it('should redirect if the facility is not found', async () => {
@@ -228,7 +206,7 @@ describe('postFacilityEndDate', () => {
     getFacilityMock.mockResolvedValue({ details: undefined });
 
     // Act
-    await postFacilityEndDate(req, res);
+    await postCoverEndDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
@@ -243,7 +221,7 @@ describe('postFacilityEndDate', () => {
     getApplicationMock.mockResolvedValue(undefined);
 
     // Act
-    await postFacilityEndDate(req, res);
+    await postCoverEndDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
@@ -259,12 +237,12 @@ describe('postFacilityEndDate', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await postFacilityEndDate(req, res);
+    await postCoverEndDate(req, res);
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error posting amendments facility end date page %o', mockError);
+    expect(console.error).toHaveBeenCalledWith('Error posting amendments cover end date page %o', mockError);
   });
 
   it('should render `problem with service` if getFacility throws an error', async () => {
@@ -274,12 +252,12 @@ describe('postFacilityEndDate', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await postFacilityEndDate(req, res);
+    await postCoverEndDate(req, res);
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error posting amendments facility end date page %o', mockError);
+    expect(console.error).toHaveBeenCalledWith('Error posting amendments cover end date page %o', mockError);
   });
 
   it('should render `problem with service` if updateAmendment throws an error', async () => {
@@ -289,11 +267,11 @@ describe('postFacilityEndDate', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await postFacilityEndDate(req, res);
+    await postCoverEndDate(req, res);
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error posting amendments facility end date page %o', mockError);
+    expect(console.error).toHaveBeenCalledWith('Error posting amendments cover end date page %o', mockError);
   });
 });

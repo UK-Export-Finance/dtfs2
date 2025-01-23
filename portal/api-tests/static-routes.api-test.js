@@ -10,7 +10,7 @@ jest.mock('../server/api', () => ({
   validateToken: () => true,
 }));
 
-const { ROLES, getISO8601 } = require('@ukef/dtfs2-common');
+const { ROLES, getISO8601, addYear } = require('@ukef/dtfs2-common');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
 const { get } = require('./create-api').createApi(app);
@@ -39,10 +39,12 @@ describe('/.well-known/security.txt', () => {
       // Act
       const response = await get('/.well-known/security.txt');
       // Only get the YYYY-MM-DD
-      const todayDate = getISO8601().split('T')[0];
+      const addOneYear = addYear(1);
+      const oneYearFromToday = getISO8601(addOneYear);
+      const OneYearFromTodayDate = oneYearFromToday.split('T')[0];
 
       // Assert
-      expect(response.text).toContain(`Expires: ${todayDate}`);
+      expect(response.text).toContain(`Expires: ${OneYearFromTodayDate}`);
     });
 
     it('should contain acknowledgments information', async () => {
