@@ -1,4 +1,4 @@
-const { TEAM_IDS, AMENDMENT_STATUS, DEAL_STATUS } = require('@ukef/dtfs2-common');
+const { TEAM_IDS, TFM_AMENDMENT_STATUS, DEAL_STATUS, TFM_DEAL_STAGE } = require('@ukef/dtfs2-common');
 const { DECISIONS, DEAL } = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
 
@@ -64,21 +64,26 @@ const ukefDecisionRejected = (amendment) => {
  */
 const validateUkefDecision = (ukefDecision, decisionType) => ukefDecision?.coverEndDate === decisionType || ukefDecision?.value === decisionType;
 
-const hasAmendmentInProgressDealStage = (amendments) => {
-  if (Array.isArray(amendments) && amendments.length) {
-    const amendmentsInProgress = amendments.filter(({ status, submittedByPim }) => status === AMENDMENT_STATUS.IN_PROGRESS && submittedByPim);
-    const hasAmendmentInProgress = amendmentsInProgress.length > 0;
-    if (hasAmendmentInProgress) {
-      return true;
-    }
-  }
-  return false;
-};
+/**
+ * A deal with one of these stages cannot be amended
+ */
+const nonAmendableDealStages = [TFM_DEAL_STAGE.CANCELLED];
 
-const amendmentsInProgressByDeal = (amendments) => {
-  if (Array.isArray(amendments) && amendments.length) {
-    return amendments.filter(({ status, submittedByPim }) => status === AMENDMENT_STATUS.IN_PROGRESS && submittedByPim);
+/**
+ * @param {Object} getAmendmentsInProgress Params
+ * @param {import('@ukef/dtfs2-common').TfmDeal} getAmendmentsInProgress Params.deal - the deal
+ * @param {import('@ukef/dtfs2-common').TfmFacilityAmendment[]} getAmendmentsInProgress Params.amendments - the amendments
+ * @returns {import('@ukef/dtfs2-common').TfmFacilityAmendment[]} - the amendments that are in progress
+ */
+const getAmendmentsInProgress = ({ amendments, deal }) => {
+  if (nonAmendableDealStages.includes(deal.tfm.stage)) {
+    return [];
   }
+
+  if (Array.isArray(amendments) && amendments.length) {
+    return amendments.filter(({ status, submittedByPim }) => status === TFM_AMENDMENT_STATUS.IN_PROGRESS && submittedByPim);
+  }
+
   return [];
 };
 
@@ -88,6 +93,5 @@ module.exports = {
   userCanEditBankDecision,
   ukefDecisionRejected,
   validateUkefDecision,
-  hasAmendmentInProgressDealStage,
-  amendmentsInProgressByDeal,
+  getAmendmentsInProgress,
 };

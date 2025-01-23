@@ -1,3 +1,5 @@
+import { CurrencyAndAmount } from './currency';
+import { RecordCorrectionReason } from './record-correction-reason';
 import { FeeRecordStatus } from './utilisation-reports';
 
 export type RequestedByUser = {
@@ -6,13 +8,22 @@ export type RequestedByUser = {
   lastName: string;
 };
 
+export type PendingCorrection = {
+  correctionId: number;
+  facilityId: string;
+  exporter: string;
+  reportedFees: CurrencyAndAmount;
+  additionalInfo: string;
+  reasons: RecordCorrectionReason[];
+};
+
 export type FeeRecordCorrectionSummary = {
   correctionId: number;
   feeRecordId: number;
-  facilityId: string;
   exporter: string;
   formattedReasons: string;
   formattedDateSent: string;
-  requestedBy: string;
   status: FeeRecordStatus;
+  formattedOldRecords: string;
+  formattedCorrectRecords: string;
 };

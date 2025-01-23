@@ -16,9 +16,11 @@ const externalApi = require('./controllers/externalApi.controller');
 const files = require('./controllers/files.controller');
 const companies = require('../controllers/companies.controller');
 const { getAmendment } = require('../controllers/amendments/get-amendment.controller');
+const { patchAmendment } = require('../controllers/amendments/patch-amendment.controller');
 const { putAmendment } = require('../controllers/amendments/put-amendment.controller');
 const { handleExpressValidatorResult } = require('../validation/route-validators/express-validator-result-handler');
-const { validatePutPortalFacilityAmendmentPayload } = require('../validation/route-validators/validate-put-portal-facility-amendment-payload');
+const { validatePutPortalFacilityAmendmentPayload } = require('../validation/route-validators/amendments/validate-put-portal-facility-amendment-payload');
+const { validatePatchPortalFacilityAmendmentPayload } = require('../validation/route-validators/amendments/validate-patch-portal-facility-amendment-payload');
 
 const router = express.Router();
 
@@ -126,7 +128,8 @@ router
     mongoIdValidation('amendmentId'),
     handleExpressValidatorResult,
   )
-  .get(getAmendment);
+  .get(getAmendment)
+  .patch(validatePatchPortalFacilityAmendmentPayload, patchAmendment);
 
 router
   .route('/facilities/:facilityId/amendments')

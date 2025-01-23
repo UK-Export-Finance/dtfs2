@@ -21,8 +21,9 @@ context(`users can filter payment details by facility id and payment reference a
     .withDateUploaded(new Date())
     .build();
 
-  const { paymentDetailsTabLink, paymentDetailsTab } = pages.utilisationReportPage;
-  const { filters, paymentDetailsTable } = paymentDetailsTab;
+  const { tabs } = pages.utilisationReportPage;
+  const { paymentDetailsContent } = tabs;
+  const { filters, paymentDetailsTable } = paymentDetailsContent;
 
   const aPaymentWithFeeRecords = (feeRecords) => PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withFeeRecords(feeRecords).build();
 
@@ -63,7 +64,7 @@ context(`users can filter payment details by facility id and payment reference a
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      paymentDetailsTabLink().click();
+      tabs.paymentDetails().click();
 
       // On first page load, the filter panel should be visible.
       filters.panel().should('be.visible');
@@ -99,7 +100,7 @@ context(`users can filter payment details by facility id and payment reference a
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      paymentDetailsTabLink().click();
+      tabs.paymentDetails().click();
     });
 
     it('should display all the payments attached to the utilisation report', () => {
@@ -147,7 +148,7 @@ context(`users can filter payment details by facility id and payment reference a
 
       cy.visit(`/utilisation-reports/${reportId}`);
 
-      paymentDetailsTabLink().click();
+      tabs.paymentDetails().click();
 
       filters.paymentCurrencyRadioInput(paymentCurrencyFilter).click();
       cy.keyboardInput(filters.paymentReferenceInput(), partialPaymentReferenceFilter);

@@ -1,5 +1,5 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
-const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 
 const api = require('../../../api');
 const { AMENDMENT_BANK_DECISION } = require('../../../constants/amendments');
@@ -19,7 +19,7 @@ const getAmendmentBankDecisionChoice = async (req, res) => {
   }
 
   const { user } = req.session;
-  const isEditable = userCanEditBankDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = userCanEditBankDecision(amendment, user) && amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
 
   return res.render('case/amendments/amendment-add-banks-decision.njk', {
     amendment,
@@ -41,7 +41,7 @@ const postAmendmentBankDecisionChoice = async (req, res) => {
   }
 
   // checks amendment in progress and user can edit
-  const isEditable = userCanEditBankDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = userCanEditBankDecision(amendment, user) && amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
 
   // checks that choice has been filled
   const { errorsObject, amendmentBankDecisionValidationErrors } = amendmentBankDecisionValidation(decision);
@@ -84,7 +84,7 @@ const getAmendmentBankDecisionReceivedDate = async (req, res) => {
   }
 
   const { user } = req.session;
-  const isEditable = userCanEditBankDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = userCanEditBankDecision(amendment, user) && amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
 
   // gets date from stored epoch format if user has previously entered it
   const receivedDateDay = amendment?.bankDecision?.receivedDate ? format(fromUnixTime(amendment.bankDecision.receivedDate), 'dd') : '';
@@ -113,7 +113,7 @@ const postAmendmentBankDecisionReceivedDate = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const isEditable = userCanEditBankDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = userCanEditBankDecision(amendment, user) && amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
 
   // type for id of date input on form and error message
   const type = 'bankDecisionDate';
@@ -170,7 +170,7 @@ const getAmendmentBankDecisionEffectiveDate = async (req, res) => {
   }
 
   const { user } = req.session;
-  const isEditable = userCanEditBankDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = userCanEditBankDecision(amendment, user) && amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
 
   // converts date from epoch format to day month year if in database
   const effectiveDateDay = amendment?.bankDecision?.effectiveDate ? format(fromUnixTime(amendment.bankDecision.effectiveDate), 'dd') : '';
@@ -199,7 +199,7 @@ const postAmendmentBankDecisionEffectiveDate = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const isEditable = userCanEditBankDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = userCanEditBankDecision(amendment, user) && amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
 
   const type = 'bankDecisionDate';
   const message = 'Enter the date the amendment will be effective from';
@@ -250,7 +250,7 @@ const getAmendmentBankDecisionAnswers = async (req, res) => {
   }
 
   const { user } = req.session;
-  const isEditable = userCanEditBankDecision(amendment, user) && amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = userCanEditBankDecision(amendment, user) && amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
 
   // formats received and effective date from epoch
   const receivedDateFormatted = amendment.bankDecision?.receivedDate ? format(fromUnixTime(amendment.bankDecision.receivedDate), 'dd MMM yyyy') : '';
@@ -279,7 +279,7 @@ const postAmendmentBankDecisionAnswers = async (req, res) => {
   try {
     // updates amendment with status to completed and submitted flag as true on bank decision
     const payload = {
-      status: AMENDMENT_STATUS.COMPLETED,
+      status: TFM_AMENDMENT_STATUS.COMPLETED,
       bankDecision: {
         submitted: true,
         banksDecisionEmail: true,

@@ -74,7 +74,7 @@ context('Portal to TFM utilisation report submission', () => {
    * @param {object} expectedValues - The expected values to be found in the row
    */
   const assertPremiumPaymentsTableContainsRowWithExpectedValues = (expectedValues) => {
-    const row = tfmPages.utilisationReportPage.premiumPaymentsTab.premiumPaymentsTable.rowWithExporter(expectedValues.exporter);
+    const row = tfmPages.utilisationReportPage.tabs.premiumPaymentsContent.premiumPaymentsTable.rowWithExporter(expectedValues.exporter);
     cy.assertText(row.facilityId(), expectedValues.facilityId);
     cy.assertText(row.exporter(), expectedValues.exporter);
     cy.assertText(row.reportedFees(), expectedValues.reportedFees);
@@ -89,7 +89,7 @@ context('Portal to TFM utilisation report submission', () => {
    * @param {object} expectedValues - The expected values to be found in the row
    */
   const assertUtilisationTableContainsRowWithExpectedValues = (expectedValues) => {
-    const row = tfmPages.utilisationReportPage.utilisationTab.table.rowWithExporter(expectedValues.exporter);
+    const row = tfmPages.utilisationReportPage.tabs.utilisationContent.table.rowWithExporter(expectedValues.exporter);
     cy.assertText(row.facilityId(), expectedValues.facilityId);
     cy.assertText(row.exporter(), expectedValues.exporter);
     cy.assertText(row.feesPayable(), expectedValues.reportedFees);
@@ -128,7 +128,7 @@ context('Portal to TFM utilisation report submission', () => {
     assertPremiumPaymentsTableContainsRowWithExpectedValues(february2023ExpectedValues.secondReportRow);
     assertPremiumPaymentsTableContainsRowWithExpectedValues(february2023ExpectedValues.thirdReportRow);
 
-    tfmPages.utilisationReportPage.utilisationTabLink().click();
+    tfmPages.utilisationReportPage.tabs.utilisation().click();
 
     assertUtilisationTableContainsRowWithExpectedValues(february2023ExpectedValues.firstReportRow);
     assertUtilisationTableContainsRowWithExpectedValues(february2023ExpectedValues.secondReportRow);

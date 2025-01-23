@@ -1,5 +1,6 @@
+import { CURRENCY } from '../constants';
 import { CurrencyAndAmount } from '../types';
-import { getFormattedCurrencyAndAmount } from './currency';
+import { getFormattedCurrencyAndAmount, isCurrencyValid } from './currency';
 
 describe('currency helpers', () => {
   describe('getFormattedCurrencyAndAmount', () => {
@@ -49,6 +50,49 @@ describe('currency helpers', () => {
 
       // Assert
       expect(formattedCurrencyAndAmount).toEqual(expectedFormattedCurrencyAndAmount);
+    });
+  });
+
+  describe('isCurrencyValid', () => {
+    it.each(Object.values(CURRENCY))('should return true when currency is "%s"', (currency) => {
+      // Act
+      const result = isCurrencyValid(currency);
+
+      // Assert
+      expect(result).toBe(true);
+    });
+
+    it('should return false when currency is not a valid CURRENCY enum value', () => {
+      // Arrange
+      const invalidCurrency = 'INVALID';
+
+      // Act
+      const result = isCurrencyValid(invalidCurrency);
+
+      // Assert
+      expect(result).toBe(false);
+    });
+
+    it('should return false when currency is undefined', () => {
+      // Arrange
+      const undefinedCurrency = undefined;
+
+      // Act
+      const result = isCurrencyValid(undefinedCurrency);
+
+      // Assert
+      expect(result).toBe(false);
+    });
+
+    it('should return false when currency is an empty string', () => {
+      // Arrange
+      const emptyCurrency = '';
+
+      // Act
+      const result = isCurrencyValid(emptyCurrency);
+
+      // Assert
+      expect(result).toBe(false);
     });
   });
 });
