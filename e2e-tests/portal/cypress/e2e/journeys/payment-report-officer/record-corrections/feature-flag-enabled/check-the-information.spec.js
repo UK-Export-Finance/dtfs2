@@ -58,9 +58,8 @@ context('Check the information page - Fee record correction feature flag enabled
           .withFeesPaidToUkefForThePeriodCurrency(oldReportedFees.currency)
           .build();
 
-        const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(feeRecord)
+        const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false)
           .withId(3)
-          .withIsCompleted(false)
           .withReasons(reasons)
           .withAdditionalInfo(pdcErrorSummary)
           .build();
