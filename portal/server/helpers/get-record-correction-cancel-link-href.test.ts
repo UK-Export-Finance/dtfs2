@@ -11,7 +11,7 @@ describe('get-record-correction-cancel-link-href', () => {
       const result = getRecordCorrectionCancelLinkHref(correctionId);
 
       // Assert
-      expect(result).toBe(expectedPath);
+      expect(result).toEqual(expectedPath);
     });
   });
 });

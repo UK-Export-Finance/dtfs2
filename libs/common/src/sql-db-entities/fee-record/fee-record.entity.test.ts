@@ -1,5 +1,5 @@
-import { FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE } from '../../constants';
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
+import { CURRENCY, FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE } from '../../constants';
+import { aRecordCorrectionValues, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
 import { Currency } from '../../types';
 
 describe('FeeRecordEntity', () => {
@@ -20,7 +20,7 @@ describe('FeeRecordEntity', () => {
   });
 
   describe('getFeesPaidToUkefForThePeriodInThePaymentCurrency', () => {
-    it('returns the fees paid to ukef for the period with no exchange rate applied when the payment and fees paid currencies match', () => {
+    it('should return the fees paid to ukef for the period with no exchange rate applied when the payment and fees paid currencies match', () => {
       // Arrange
       const feesPaidToUkefForThePeriod = 100.0;
       const feesPaidToUkefForThePeriodCurrency: Currency = 'GBP';
@@ -45,7 +45,7 @@ describe('FeeRecordEntity', () => {
       expect(feesPaidToUkefForThePeriodInThePaymentCurrency).toEqual(expectedFeesPaidToUkefForThePeriodInThePaymentCurrency);
     });
 
-    it('returns the fees paid to ukef for the period in the payment currency using the payment exchange rate', () => {
+    it('should return the fees paid to ukef for the period in the payment currency using the payment exchange rate', () => {
       // Arrange
       const feesPaidToUkefForThePeriod = 100.0;
       const feesPaidToUkefForThePeriodCurrency: Currency = 'EUR';
@@ -70,7 +70,7 @@ describe('FeeRecordEntity', () => {
   });
 
   describe('updateWithStatus', () => {
-    it.each(Object.values(FEE_RECORD_STATUS))("sets the report status to '%s' and updates the 'lastUpdatedBy...' fields", (status) => {
+    it.each(Object.values(FEE_RECORD_STATUS))("should set the report status to '%s' and updates the 'lastUpdatedBy...' fields", (status) => {
       // Arrange
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withStatus(status).build();
 
@@ -89,7 +89,7 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.lastUpdatedByTfmUserId).toEqual(userId);
     });
 
-    it(`sets the dateReconciled field to now when the status to set is ${FEE_RECORD_STATUS.RECONCILED}`, () => {
+    it(`should set the dateReconciled field to now when the status to set is ${FEE_RECORD_STATUS.RECONCILED}`, () => {
       // Arrange
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withStatus(FEE_RECORD_STATUS.MATCH).withDateReconciled(null).build();
 
@@ -105,7 +105,7 @@ describe('FeeRecordEntity', () => {
   });
 
   describe('removeAllPayments', () => {
-    it(`removes all payments, sets the record status to ${FEE_RECORD_STATUS.TO_DO} and updates the 'lastUpdatedBy...' fields`, () => {
+    it(`should remove all payments, sets the record status to ${FEE_RECORD_STATUS.TO_DO} and updates the 'lastUpdatedBy...' fields`, () => {
       // Arrange
       const paymentCurrency: Currency = 'GBP';
       const paymentId = 123;
@@ -137,7 +137,7 @@ describe('FeeRecordEntity', () => {
   });
 
   describe('markAsReconciled', () => {
-    it('sets the fee record dateReconciled to now and the reconciledByUserId to the supplied value', () => {
+    it('should set the fee record dateReconciled to now and the reconciledByUserId to the supplied value', () => {
       // Arrange
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withDateReconciled(null).build();
 
@@ -149,7 +149,7 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.reconciledByUserId).toEqual('abc123');
     });
 
-    it("sets the fee record status to RECONCILED and updates the 'lastUpdatedBy...' fields", () => {
+    it("should set the fee record status to RECONCILED and updates the 'lastUpdatedBy...' fields", () => {
       // Arrange
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
         .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
@@ -170,7 +170,7 @@ describe('FeeRecordEntity', () => {
   });
 
   describe('markAsReadyToKey', () => {
-    it('sets the fee record dateReconciled and reconciledByUserId to null', () => {
+    it('should set the fee record dateReconciled and reconciledByUserId to null', () => {
       // Arrange
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withDateReconciled(new Date('2024')).withReconciledByUserId('abc123').build();
 
@@ -182,7 +182,7 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.reconciledByUserId).toBeNull();
     });
 
-    it("sets the fee record status to READY_TO_KEY and updates the 'lastUpdatedBy...' fields", () => {
+    it("should set the fee record status to READY_TO_KEY and updates the 'lastUpdatedBy...' fields", () => {
       // Arrange
       const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
         .withStatus(FEE_RECORD_STATUS.RECONCILED)
@@ -206,7 +206,7 @@ describe('FeeRecordEntity', () => {
     describe(`when the status to set is ${FEE_RECORD_STATUS.READY_TO_KEY}`, () => {
       const status = FEE_RECORD_STATUS.READY_TO_KEY;
 
-      it(`sets the fee record status to ${FEE_RECORD_STATUS.READY_TO_KEY} and updates the principalBalanceAdjustment, fixedFeeAdjustment and 'lastUpdatedBy...' fields`, () => {
+      it(`should set the fee record status to ${FEE_RECORD_STATUS.READY_TO_KEY} and updates the principalBalanceAdjustment, fixedFeeAdjustment and 'lastUpdatedBy...' fields`, () => {
         // Arrange
         const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
           .withStatus(FEE_RECORD_STATUS.MATCH)
@@ -234,7 +234,7 @@ describe('FeeRecordEntity', () => {
         expect(feeRecord.lastUpdatedByTfmUserId).toEqual('abc123');
       });
 
-      it('does not set the fee record dateReconciled or the reconciledByUserId', () => {
+      it('should not set the fee record dateReconciled or the reconciledByUserId', () => {
         // Arrange
         const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
           .withStatus(FEE_RECORD_STATUS.MATCH)
@@ -259,7 +259,7 @@ describe('FeeRecordEntity', () => {
     describe(`when the status to set is ${FEE_RECORD_STATUS.RECONCILED}`, () => {
       const status = FEE_RECORD_STATUS.RECONCILED;
 
-      it(`sets the fee record status to ${FEE_RECORD_STATUS.RECONCILED} and updates the principalBalanceAdjustment, fixedFeeAdjustment and 'lastUpdatedBy...' fields`, () => {
+      it(`should set the fee record status to ${FEE_RECORD_STATUS.RECONCILED} and updates the principalBalanceAdjustment, fixedFeeAdjustment and 'lastUpdatedBy...' fields`, () => {
         // Arrange
         const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
           .withStatus(FEE_RECORD_STATUS.MATCH)
@@ -287,7 +287,7 @@ describe('FeeRecordEntity', () => {
         expect(feeRecord.lastUpdatedByTfmUserId).toEqual('abc123');
       });
 
-      it('sets the dateReconciled to now and does not set the reconciledByUserId', () => {
+      it('should set the dateReconciled to now and does not set the reconciledByUserId', () => {
         // Arrange
         const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withStatus(FEE_RECORD_STATUS.MATCH).withDateReconciled(null).build();
 
@@ -303,6 +303,204 @@ describe('FeeRecordEntity', () => {
         expect(feeRecord.dateReconciled).toEqual(mockDate);
         expect(feeRecord.reconciledByUserId).toBeNull();
       });
+    });
+  });
+
+  describe('updateWithCorrection', () => {
+    it('should update the fee record with corrected values', () => {
+      // Arrange
+      const correctedValues = {
+        facilityUtilisation: 5000,
+        feesPaidToUkefForThePeriod: 200,
+        feesPaidToUkefForThePeriodCurrency: CURRENCY.USD,
+        facilityId: '11111111',
+      };
+
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withFacilityUtilisation(1000)
+        .withFeesPaidToUkefForThePeriod(100)
+        .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
+        .withFacilityId('22222222')
+        .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
+        .build();
+
+      // Act
+      feeRecord.updateWithCorrection({
+        correctedValues,
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: 'abc123' },
+      });
+
+      // Assert
+      expect(feeRecord.facilityUtilisation).toEqual(correctedValues.facilityUtilisation);
+      expect(feeRecord.feesPaidToUkefForThePeriod).toEqual(correctedValues.feesPaidToUkefForThePeriod);
+      expect(feeRecord.feesPaidToUkefForThePeriodCurrency).toEqual(correctedValues.feesPaidToUkefForThePeriodCurrency);
+      expect(feeRecord.facilityId).toEqual(correctedValues.facilityId);
+    });
+
+    it('should set the status to TO_DO_AMENDED when corrected values are not all null', () => {
+      // Arrange
+      const correctedValues = {
+        facilityUtilisation: null,
+        feesPaidToUkefForThePeriodCurrency: null,
+        feesPaidToUkefForThePeriod: null,
+        facilityId: '11111111',
+      };
+
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION).build();
+
+      // Act
+      feeRecord.updateWithCorrection({
+        correctedValues,
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: 'abc123' },
+      });
+
+      // Assert
+      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.TO_DO_AMENDED);
+    });
+
+    it('should set the status to TO_DO_AMENDED when corrected values are all null', () => {
+      // Arrange
+      const correctedValues = {
+        facilityUtilisation: null,
+        feesPaidToUkefForThePeriodCurrency: null,
+        feesPaidToUkefForThePeriod: null,
+        facilityId: null,
+      };
+
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION).build();
+
+      // Act
+      feeRecord.updateWithCorrection({
+        correctedValues,
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: 'abc123' },
+      });
+
+      // Assert
+      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.TO_DO_AMENDED);
+    });
+
+    it('should update the lastUpdatedBy fields', () => {
+      // Arrange
+      const correctedValues = aRecordCorrectionValues();
+
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withLastUpdatedByIsSystemUser(true)
+        .withLastUpdatedByPortalUserId(null)
+        .withLastUpdatedByTfmUserId(null)
+        .build();
+
+      const userId = 'abc123';
+
+      // Act
+      feeRecord.updateWithCorrection({
+        correctedValues,
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId },
+      });
+
+      // Assert
+      expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
+      expect(feeRecord.lastUpdatedByPortalUserId).toEqual(userId);
+      expect(feeRecord.lastUpdatedByTfmUserId).toBeNull();
+    });
+
+    it('should not change values of fields that are null in corrected values', () => {
+      // Arrange
+      const correctedValues = {
+        facilityUtilisation: null,
+        feesPaidToUkefForThePeriodCurrency: null,
+        feesPaidToUkefForThePeriod: 200,
+        facilityId: '11111111',
+      };
+
+      const originalValues = {
+        facilityUtilisation: 1000,
+        feesPaidToUkefForThePeriodCurrency: CURRENCY.USD,
+        feesPaidToUkefForThePeriod: 100,
+        facilityId: '22222222',
+      };
+
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withFacilityUtilisation(originalValues.facilityUtilisation)
+        .withFeesPaidToUkefForThePeriod(originalValues.feesPaidToUkefForThePeriod)
+        .withFeesPaidToUkefForThePeriodCurrency(originalValues.feesPaidToUkefForThePeriodCurrency)
+        .withFacilityId(originalValues.facilityId)
+        .withStatus(FEE_RECORD_STATUS.MATCH)
+        .build();
+
+      // Act
+      feeRecord.updateWithCorrection({
+        correctedValues,
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: 'abc123' },
+      });
+
+      // Assert
+      expect(feeRecord.facilityUtilisation).toEqual(originalValues.facilityUtilisation);
+      expect(feeRecord.feesPaidToUkefForThePeriodCurrency).toEqual(originalValues.feesPaidToUkefForThePeriodCurrency);
+
+      expect(feeRecord.feesPaidToUkefForThePeriod).toEqual(correctedValues.feesPaidToUkefForThePeriod);
+      expect(feeRecord.facilityId).toEqual(correctedValues.facilityId);
+    });
+
+    it('should not change values of any fields if all corrected values are null', () => {
+      // Arrange
+      const correctedValues = {
+        facilityUtilisation: null,
+        feesPaidToUkefForThePeriodCurrency: null,
+        feesPaidToUkefForThePeriod: null,
+        facilityId: null,
+      };
+
+      const originalValues = {
+        facilityUtilisation: 1000,
+        feesPaidToUkefForThePeriodCurrency: CURRENCY.USD,
+        feesPaidToUkefForThePeriod: 100,
+        facilityId: '11111111',
+      };
+
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withFacilityUtilisation(originalValues.facilityUtilisation)
+        .withFeesPaidToUkefForThePeriod(originalValues.feesPaidToUkefForThePeriod)
+        .withFeesPaidToUkefForThePeriodCurrency(originalValues.feesPaidToUkefForThePeriodCurrency)
+        .withFacilityId(originalValues.facilityId)
+        .withStatus(FEE_RECORD_STATUS.MATCH)
+        .build();
+
+      // Act
+      feeRecord.updateWithCorrection({
+        correctedValues,
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: '123' },
+      });
+
+      // Assert
+      expect(feeRecord.facilityUtilisation).toEqual(originalValues.facilityUtilisation);
+      expect(feeRecord.feesPaidToUkefForThePeriodCurrency).toEqual(originalValues.feesPaidToUkefForThePeriodCurrency);
+      expect(feeRecord.feesPaidToUkefForThePeriod).toEqual(originalValues.feesPaidToUkefForThePeriod);
+      expect(feeRecord.facilityId).toEqual(originalValues.facilityId);
+    });
+
+    it('should update numerical fields to zero if corrected values are zero', () => {
+      // Arrange
+      const correctedValues = {
+        ...aRecordCorrectionValues(),
+        facilityUtilisation: 0,
+        feesPaidToUkefForThePeriod: 0,
+      };
+
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withFacilityUtilisation(1000)
+        .withFeesPaidToUkefForThePeriod(100)
+        .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
+        .build();
+
+      // Act
+      feeRecord.updateWithCorrection({
+        correctedValues,
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: 'abc123' },
+      });
+
+      // Assert
+      expect(feeRecord.facilityUtilisation).toEqual(correctedValues.facilityUtilisation);
+      expect(feeRecord.feesPaidToUkefForThePeriod).toEqual(correctedValues.feesPaidToUkefForThePeriod);
     });
   });
 });
