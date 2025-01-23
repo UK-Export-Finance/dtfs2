@@ -1063,9 +1063,9 @@ utilisationReportsRouter
  * @openapi
  * /utilisation-reports/:reportId/fee-records/:feeRecordId/correction-request-review/:userId:
  *   get:
- *     summary: Get correction request review information to check before sending or error key if already submitted
+ *     summary: Get correction request review information to check before sending
  *     tags: [Utilisation Report]
- *     description: Get correction request review information to check before sending or error key if already submitted
+ *     description: Get correction request review information to check before sending
  *     parameters:
  *       - in: path
  *         name: reportId
@@ -1091,8 +1091,13 @@ utilisationReportsRouter
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               $ref: '#/definitions/FeeRecordCorrectionRequestReview'
+ *               oneOf:
+ *                 - $ref: '#/definitions/FeeRecordCorrectionRequestReview'
+ *                 - type: object
+ *                   properties:
+ *                     errorKey:
+ *                       type: string
+ *                       description: Error key if the correction request has already been submitted
  *       400:
  *         description: Bad request
  *       404:

@@ -14,6 +14,10 @@ export type GetFeeRecordCorrectionRequestReviewRequest = CustomExpressRequest<{
   };
 }>;
 
+const INVALID_STATUS = STATUS.INVALID;
+
+export type InvalidStatusType = typeof INVALID_STATUS;
+
 /**
  * Response body type for the GET fee record correction request review route.
  */
@@ -29,7 +33,7 @@ export type GetFeeRecordCorrectionRequestReviewResponseBody =
         contactEmailAddresses: string[];
       };
     }
-  | { errorKey: string };
+  | { errorKey: InvalidStatusType };
 
 type GetFeeRecordCorrectionRequestReviewResponse = Response<GetFeeRecordCorrectionRequestReviewResponseBody | string>;
 

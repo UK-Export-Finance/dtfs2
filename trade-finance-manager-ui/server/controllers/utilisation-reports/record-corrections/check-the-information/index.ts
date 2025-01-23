@@ -21,6 +21,7 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
     const problemWithServiceViewModel: ProblemWithServiceViewModel = {
       reason: 'The record correction request has been sent to the bank. You cannot make any changes to the request',
       reportId,
+      user: req.session.user,
     };
 
     /**
