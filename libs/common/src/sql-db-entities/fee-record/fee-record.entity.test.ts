@@ -327,7 +327,7 @@ describe('FeeRecordEntity', () => {
       // Act
       feeRecord.updateWithCorrection({
         correctedValues,
-        requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: 'abc123' },
       });
 
       // Assert
@@ -351,7 +351,7 @@ describe('FeeRecordEntity', () => {
       // Act
       feeRecord.updateWithCorrection({
         correctedValues,
-        requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: 'abc123' },
       });
 
       // Assert
@@ -372,7 +372,7 @@ describe('FeeRecordEntity', () => {
       // Act
       feeRecord.updateWithCorrection({
         correctedValues,
-        requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: 'abc123' },
       });
 
       // Assert
@@ -394,13 +394,13 @@ describe('FeeRecordEntity', () => {
       // Act
       feeRecord.updateWithCorrection({
         correctedValues,
-        requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId },
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId },
       });
 
       // Assert
       expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
-      expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
-      expect(feeRecord.lastUpdatedByTfmUserId).toEqual(userId);
+      expect(feeRecord.lastUpdatedByPortalUserId).toEqual(userId);
+      expect(feeRecord.lastUpdatedByTfmUserId).toBeNull();
     });
 
     it('should not change values of fields that are null in corrected values', () => {
@@ -430,7 +430,7 @@ describe('FeeRecordEntity', () => {
       // Act
       feeRecord.updateWithCorrection({
         correctedValues,
-        requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: 'abc123' },
       });
 
       // Assert
@@ -468,7 +468,7 @@ describe('FeeRecordEntity', () => {
       // Act
       feeRecord.updateWithCorrection({
         correctedValues,
-        requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: '123' },
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: '123' },
       });
 
       // Assert
@@ -495,7 +495,7 @@ describe('FeeRecordEntity', () => {
       // Act
       feeRecord.updateWithCorrection({
         correctedValues,
-        requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: 'abc123' },
       });
 
       // Assert

@@ -10,7 +10,6 @@ const COMMA_SEPARATED_IDS_REGEX_GROUP = `(?<commaSeparatedIds>(\\d+,?)+)`;
 const COMMA_SEPARATED_IDS_REGEX = new RegExp(COMMA_SEPARATED_IDS_REGEX_GROUP);
 
 /**
- * Regular expression group to match valid fee record statuses within.
  * This regex captures any of the status values defined in the FEE_RECORD_STATUS enum.
  * Example matches: "TO_DO", "DOES_NOT_MATCH", etc.
  */
@@ -28,7 +27,7 @@ const FEE_RECORD_STATUS_WITHIN_CHECKBOX_ID_REGEX_GROUP = `status-${FEE_RECORD_ST
 const FEE_RECORD_STATUS_WITHIN_CHECKBOX_ID_REGEX = new RegExp(FEE_RECORD_STATUS_WITHIN_CHECKBOX_ID_REGEX_GROUP);
 
 const PREMIUM_PAYMENTS_TABLE_CHECKBOX_ID_REGEX = new RegExp(
-  `feeRecordIds-${COMMA_SEPARATED_IDS_REGEX_GROUP}-reportedPaymentsCurrency-${CURRENCY_REGEX_GROUP}-status-${FEE_RECORD_STATUS_REGEX_GROUP}`,
+  `feeRecordIds-${COMMA_SEPARATED_IDS_REGEX_GROUP}-reportedPaymentsCurrency-${CURRENCY_REGEX_GROUP}-status-${FEE_RECORD_STATUS_REGEX_GROUP}$`,
 );
 
 export const getPremiumPaymentsCheckboxIdsFromObjectKeys = (object: object): PremiumPaymentsTableCheckboxId[] =>
