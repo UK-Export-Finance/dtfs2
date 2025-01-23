@@ -18,6 +18,7 @@ import { getFacilityEndDate } from '../../../controllers/amendments/facility-end
 import { postFacilityEndDate } from '../../../controllers/amendments/facility-end-date/post-facility-end-date';
 import { getBankReviewDate } from '../../../controllers/amendments/bank-review-date/get-bank-review-date.ts';
 import { getEligibility } from '../../../controllers/amendments/eligibility-criteria/get-eligibility.ts';
+import { postEligibility } from '../../../controllers/amendments/eligibility-criteria/post-eligibility.ts';
 
 const { WHAT_DO_YOU_NEED_TO_CHANGE, COVER_END_DATE, FACILITY_VALUE, DO_YOU_HAVE_A_FACILITY_END_DATE, FACILITY_END_DATE, BANK_REVIEW_DATE, ELIGIBILITY } =
   PORTAL_AMENDMENT_PAGES;
@@ -72,6 +73,7 @@ router
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${ELIGIBILITY}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
-  .get(getEligibility);
+  .get(getEligibility)
+  .post(postEligibility);
 
 export default router;
