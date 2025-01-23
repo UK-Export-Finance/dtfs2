@@ -76,7 +76,7 @@ context('Check the information page - Fee record correction feature flag enabled
       pendingCorrections.row(1).correctionLink().click();
 
       provideCorrection.reportedCurrency.radioInput(newReportedFees.currency).click();
-      cy.keyboardInput(provideCorrection.reportedFeeInput.container(), newReportedFees.amount);
+      cy.keyboardInput(provideCorrection.reportedFeeInput(), newReportedFees.amount);
       cy.keyboardInput(provideCorrection.utilisationInput(), newUtilisation);
       cy.keyboardInput(provideCorrection.additionalComments.input(), bankAdditionalComments);
 
