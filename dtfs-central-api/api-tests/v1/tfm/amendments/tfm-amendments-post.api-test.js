@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, AUDIT_USER_TYPES, TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { withMongoIdPathParameterValidationTests } = require('@ukef/dtfs2-common/test-cases-backend');
 const wipeDB = require('../../../wipeDB');
@@ -92,7 +92,7 @@ describe('POST TFM amendments', () => {
           .post({ auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
           .to(`/v1/tfm/facilities/${facilityId}/amendments`);
 
-        const updatePayload1 = { status: AMENDMENT_STATUS.IN_PROGRESS };
+        const updatePayload1 = { status: TFM_AMENDMENT_STATUS.IN_PROGRESS };
         await testApi
           .put({ payload: updatePayload1, auditDetails: generateTfmAuditDetails(MOCK_TFM_USER._id) })
           .to(`/v1/tfm/facilities/${facilityId}/amendments/${bodyPostResponse1.amendmentId}`);

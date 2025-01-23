@@ -1,4 +1,3 @@
-import { NextFunction } from 'express';
 import { GetAuthCodeUrlApiRequest, GetAuthCodeUrlApiResponse } from '@ukef/dtfs2-common';
 import { EntraIdService } from '../services/entra-id.service';
 
@@ -9,13 +8,13 @@ export class SsoController {
     this.entraIdService = entraIdService;
   }
 
-  async getAuthCodeUrl(req: GetAuthCodeUrlApiRequest, res: GetAuthCodeUrlApiResponse, next: NextFunction) {
+  async getAuthCodeUrl(req: GetAuthCodeUrlApiRequest, res: GetAuthCodeUrlApiResponse) {
     try {
-      const { successRedirect } = req.params;
-      const getAuthCodeUrlResponse = await this.entraIdService.getAuthCodeUrl({ successRedirect });
-      return res.json(getAuthCodeUrlResponse);
+      const getAuthCodeUrlResponse = await this.entraIdService.getAuthCodeUrl(req.params);
+      res.json(getAuthCodeUrlResponse);
     } catch (error) {
-      return next(error);
+      console.error('An error occurred while getting the auth code URL:', error);
+      throw error;
     }
   }
 }

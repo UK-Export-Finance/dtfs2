@@ -1,4 +1,4 @@
-const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { overrideFacilitiesIfAmendmentsInProgress } = require('./overrideFacilitiesIfAmendmentsInProgress.helper');
 
 describe('overrideFacilitiesIfAmendmentsInProgress', () => {
@@ -15,22 +15,22 @@ describe('overrideFacilitiesIfAmendmentsInProgress', () => {
 
   const amendmentsOneCorresponding = [
     {
-      status: AMENDMENT_STATUS.IN_PROGRESS,
+      status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
       facilityId: '0',
     },
     {
-      status: AMENDMENT_STATUS.NOT_STARTED,
+      status: TFM_AMENDMENT_STATUS.NOT_STARTED,
       facilityId: '1',
     },
   ];
 
   const amendmentsNoneCorresponding = [
     {
-      status: AMENDMENT_STATUS.IN_PROGRESS,
+      status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
       facilityId: '2',
     },
     {
-      status: AMENDMENT_STATUS.NOT_STARTED,
+      status: TFM_AMENDMENT_STATUS.NOT_STARTED,
       facilityId: '1',
     },
   ];

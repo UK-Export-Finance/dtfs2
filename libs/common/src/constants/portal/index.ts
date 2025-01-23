@@ -5,3 +5,4 @@ export * from './login-status';
 export * from './deal-status';
 export * from './facility-status';
 export * from './facility-stage';
+export * from './cover-end-date';

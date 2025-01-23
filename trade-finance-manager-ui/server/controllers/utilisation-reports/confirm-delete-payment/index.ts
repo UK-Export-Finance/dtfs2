@@ -9,9 +9,6 @@ import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { ReconciliationForReportTab } from '../../../types/reconciliation-for-report-tab';
 import { getReconciliationForReportHref } from '../helpers';
 
-const renderConfirmDeletePayment = (res: Response, viewModel: ConfirmDeletePaymentViewModel) =>
-  res.render('utilisation-reports/confirm-delete-payment.njk', viewModel);
-
 const getPaymentSummaryListRows = (paymentResponse: GetPaymentDetailsWithoutFeeRecordsResponseBody) => {
   const formattedDateReceived = format(new Date(paymentResponse.payment.dateReceived), 'd MMM yyyy');
   return [
@@ -46,9 +43,11 @@ export const getConfirmDeletePayment = async (req: GetConfirmDeletePaymentReques
 
     const paymentSummaryListRows = getPaymentSummaryListRows(paymentResponse);
 
-    return renderConfirmDeletePayment(res, { paymentSummaryListRows, redirectTab });
+    const viewModel: ConfirmDeletePaymentViewModel = { paymentSummaryListRows, redirectTab };
+
+    return res.render('utilisation-reports/confirm-delete-payment.njk', viewModel);
   } catch (error) {
-    console.error('Failed to render confirm delete payment page', error);
+    console.error('Failed to render confirm delete payment page: %o', error);
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };
@@ -76,7 +75,7 @@ export const postConfirmDeletePayment = async (req: PostConfirmDeletePaymentRequ
 
     return res.redirect(`/utilisation-reports/${reportId}/edit-payment/${paymentId}?redirectTab=${redirectTab}`);
   } catch (error) {
-    console.error('Failed to delete payment', error);
+    console.error('Failed to delete payment: %o', error);
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };

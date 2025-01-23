@@ -1,5 +1,5 @@
 const { format, fromUnixTime, set } = require('date-fns');
-const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const mapCoverEndDate = require('./mapCoverEndDate');
 const { formatYear } = require('../../../../utils/date');
 
@@ -94,7 +94,7 @@ describe('mapCoverEndDate', () => {
       const mockFacility = {
         amendments: [
           {
-            status: AMENDMENT_STATUS.COMPLETED,
+            status: TFM_AMENDMENT_STATUS.COMPLETED,
             tfm: {
               coverEndDate: coverEndDateUnix,
             },

@@ -5,9 +5,6 @@ import { asUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import api from '../../../../api';
 
-const renderRequestSentPage = (res: Response, viewModel: RecordCorrectionRequestSentViewModel) =>
-  res.render('utilisation-reports/record-corrections/request-sent.njk', viewModel);
-
 /**
  * Renders the "request sent" page for a record correction request.
  *
@@ -33,7 +30,7 @@ export const getRecordCorrectionRequestSent = async (req: Request, res: Response
     const requestedByUserEmail = user.email;
     const emailsWithoutRequestedByUserEmail = emails.filter((email) => email !== requestedByUserEmail);
 
-    return renderRequestSentPage(res, {
+    const viewModel: RecordCorrectionRequestSentViewModel = {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       bank: {
@@ -43,7 +40,9 @@ export const getRecordCorrectionRequestSent = async (req: Request, res: Response
       formattedReportPeriod: getFormattedReportPeriodWithLongMonth(feeRecord.reportPeriod),
       requestedByUserEmail,
       emailsWithoutRequestedByUserEmail,
-    });
+    };
+
+    return res.render('utilisation-reports/record-corrections/request-sent.njk', viewModel);
   } catch (error) {
     console.error('Failed to render create record correction request - "request sent" page %o', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });

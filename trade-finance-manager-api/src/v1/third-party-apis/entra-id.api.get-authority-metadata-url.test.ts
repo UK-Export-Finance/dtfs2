@@ -24,7 +24,7 @@ describe('EntraIdApi', () => {
       mockAxios.onGet(authorityMetadataUrl).reply(200, { aMetaDataObject: 'a-meta-data-value' });
     });
 
-    it('returns the response data from the api call', async () => {
+    it('should return the response data from the api call', async () => {
       // Act
       const result = entraIdApi.getAuthorityMetadataUrl();
 

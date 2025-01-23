@@ -402,7 +402,7 @@ const createActivity = async (dealId, activityUpdate, token) => {
   }
 };
 
-// TODO DTFS2-6892 - remove this function
+// TODO DTFS2-7772 - remove this function
 const login = async (username, password) => {
   try {
     const response = await axios({
