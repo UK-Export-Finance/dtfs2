@@ -1,5 +1,6 @@
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { FeeRecordCorrectionTransientFormDataEntity } from '@ukef/dtfs2-common';
+import { EntityManager } from 'typeorm';
 
 /**
  * Repository for managing fee record correction  transient form data.
@@ -30,5 +31,14 @@ export const FeeRecordCorrectionTransientFormDataRepo = SqlDbDataSource.getRepos
       userId,
       correctionId,
     });
+  },
+
+  withTransaction(transactionEntityManager: EntityManager) {
+    const transactionRepository = transactionEntityManager.getRepository(FeeRecordCorrectionTransientFormDataEntity);
+
+    return {
+      findByUserIdAndCorrectionId: this.findByUserIdAndCorrectionId.bind(transactionRepository),
+      deleteByUserIdAndCorrectionId: this.deleteByUserIdAndCorrectionId.bind(transactionRepository),
+    };
   },
 });
