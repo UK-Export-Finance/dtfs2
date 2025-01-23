@@ -44,7 +44,7 @@ export const lookup = async (req: Request, res: Response) => {
  * to get or create the party. If validation fails or an error occurs, it returns the appropriate HTTP status and error message.
  *
  * @param {CustomExpressRequest<{ reqBody: { companyName: string } }>} req - The Express request object, which contains:
- *   - `req.body` - The company name (`companyName`) and companies house number (`companyReg`).
+ *   - `req.body` - The company name (`companyName`), companies house number (`companyReg`) and probability of default (`probabilityOfDefault`).
  * @param {Response} res - The Express response object used to send the HTTP response.
  *
  * @returns {Promise<Response>} A promise that resolves to an HTTP response. The response contains:
@@ -53,13 +53,16 @@ export const lookup = async (req: Request, res: Response) => {
  *
  * @example
  * // Example usage:
- * const req = { body: { companyReg: '12345678', companyName: 'Test Corp' } };
+ * const req = { body: { companyReg: '12345678', companyName: 'Test Corp', probabilityOfDefault: 14.1 } };
  * const res = { status: () => res, send: () => {} };
  * await getOrCreateParty(req, res);
  */
-export const getOrCreateParty = async (req: CustomExpressRequest<{ reqBody: { companyRegNo: string; companyName: string } }>, res: Response) => {
+export const getOrCreateParty = async (
+  req: CustomExpressRequest<{ reqBody: { companyRegNo: string; companyName: string; probabilityOfDefault: number } }>,
+  res: Response,
+) => {
   try {
-    const { companyRegNo: companyRegistrationNumber, companyName } = req.body;
+    const { companyRegNo: companyRegistrationNumber, companyName, probabilityOfDefault } = req.body;
 
     if (!isValidCompanyRegistrationNumber(companyRegistrationNumber)) {
       console.error('Invalid company registration number provided %s', companyRegistrationNumber);
@@ -71,6 +74,11 @@ export const getOrCreateParty = async (req: CustomExpressRequest<{ reqBody: { co
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company name' });
     }
 
+    if (!probabilityOfDefault) {
+      console.error('No probability of default provided');
+      return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid probability of default' });
+    }
+
     const response: { status: number; data: unknown } = await axios({
       method: 'post',
       url: `${APIM_MDM_URL}customers`,
@@ -78,6 +86,7 @@ export const getOrCreateParty = async (req: CustomExpressRequest<{ reqBody: { co
       data: {
         companyRegistrationNumber,
         companyName,
+        probabilityOfDefault,
       },
     });
     const { status, data } = response;

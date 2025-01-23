@@ -34,9 +34,10 @@ const getCompany = async (req, res) => {
  * Gets a PartyURN
  * @param {string} companyRegNo The company registration number
  * @param {string} companyName The company name
+ * @param {string} probabilityOfDefault The probability of default
  * @returns {Promise<string>} PartyURN or '' if there is an error
  */
-const getPartyUrn = async ({ companyRegNo, companyName }) => {
+const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault }) => {
   if (!companyRegNo) {
     return '';
   }
@@ -48,7 +49,12 @@ const getPartyUrn = async ({ companyRegNo, companyName }) => {
       return '';
     }
 
-    partyDbInfo = await api.getOrCreatePartyDbInfo({ companyRegNo, companyName });
+    if (!probabilityOfDefault) {
+      console.error('No probability of default provided');
+      return '';
+    }
+
+    partyDbInfo = await api.getOrCreatePartyDbInfo({ companyRegNo, companyName, probabilityOfDefault });
   } else {
     partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
   }
@@ -80,13 +86,14 @@ const addPartyUrns = async (deal, auditDetails) => {
   const { hasExporter, hasIndemnifier, hasAgent, hasBuyer } = identifyDealParties(deal);
   const companyRegNo = deal.exporter.companiesHouseRegistrationNumber;
   const { companyName } = deal.exporter;
+  const { probabilityOfDefault } = deal.exporter;
 
   const dealUpdate = {
     tfm: {
       ...deal.tfm,
       parties: {
         exporter: {
-          partyUrn: await getPartyUrn({ companyRegNo, companyName }),
+          partyUrn: await getPartyUrn({ companyRegNo, companyName, probabilityOfDefault }),
           partyUrnRequired: hasExporter,
         },
         buyer: {
