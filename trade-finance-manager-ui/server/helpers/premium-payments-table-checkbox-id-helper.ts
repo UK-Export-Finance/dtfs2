@@ -10,22 +10,31 @@ const COMMA_SEPARATED_IDS_REGEX_GROUP = `(?<commaSeparatedIds>(\\d+,?)+)`;
 const COMMA_SEPARATED_IDS_REGEX = new RegExp(COMMA_SEPARATED_IDS_REGEX_GROUP);
 
 /**
- * Regular expression group to match valid fee record statuses.
  * This regex captures any of the status values defined in the FEE_RECORD_STATUS enum.
  * Example matches: "TO_DO", "DOES_NOT_MATCH", etc.
  */
 const FEE_RECORD_STATUS_REGEX_GROUP = `(?<status>${Object.values(FEE_RECORD_STATUS).join('|')})`;
-const FEE_RECORD_STATUS_REGEX = new RegExp(FEE_RECORD_STATUS_REGEX_GROUP);
+
+/**
+ * Regular expression group to match fee record status values, specifying
+ * the preceding and succeeding characters to ensure a complete match
+ * and accurate match.
+ *
+ * Without the surrounding characters there is a risk TO_DO_AMENDED gets
+ * parsed as TO_DO for example.
+ */
+const FEE_RECORD_STATUS_WITHIN_CHECKBOX_ID_REGEX_GROUP = `status-${FEE_RECORD_STATUS_REGEX_GROUP}$`;
+const FEE_RECORD_STATUS_WITHIN_CHECKBOX_ID_REGEX = new RegExp(FEE_RECORD_STATUS_WITHIN_CHECKBOX_ID_REGEX_GROUP);
 
 const PREMIUM_PAYMENTS_TABLE_CHECKBOX_ID_REGEX = new RegExp(
-  `feeRecordIds-${COMMA_SEPARATED_IDS_REGEX_GROUP}-reportedPaymentsCurrency-${CURRENCY_REGEX_GROUP}-status-${FEE_RECORD_STATUS_REGEX_GROUP}`,
+  `feeRecordIds-${COMMA_SEPARATED_IDS_REGEX_GROUP}-reportedPaymentsCurrency-${CURRENCY_REGEX_GROUP}-status-${FEE_RECORD_STATUS_REGEX_GROUP}$`,
 );
 
 export const getPremiumPaymentsCheckboxIdsFromObjectKeys = (object: object): PremiumPaymentsTableCheckboxId[] =>
   Object.keys(object).filter((key) => PREMIUM_PAYMENTS_TABLE_CHECKBOX_ID_REGEX.test(key)) as PremiumPaymentsTableCheckboxId[];
 
 export const getFeeRecordStatusFromPremiumPaymentsCheckboxId = (checkboxId: PremiumPaymentsTableCheckboxId): FeeRecordStatus => {
-  const { status } = FEE_RECORD_STATUS_REGEX.exec(checkboxId)!.groups!;
+  const { status } = FEE_RECORD_STATUS_WITHIN_CHECKBOX_ID_REGEX.exec(checkboxId)!.groups!;
   return status as FeeRecordStatus;
 };
 
