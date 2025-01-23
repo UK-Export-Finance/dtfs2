@@ -37,7 +37,7 @@ export const FeeRecordCorrectionRequestTransientFormDataRepo = SqlDbDataSource.g
   /**
    * deletes the transient form data which is older than a day old
    */
-  async deleteAllOlderThanOneDay(): Promise<void> {
+  async deleteByLastUpdatedOlderThanOneDayAgo(): Promise<void> {
     const today = new Date();
     const oneDayAgo = today.setDate(today.getDate() - 1);
 
