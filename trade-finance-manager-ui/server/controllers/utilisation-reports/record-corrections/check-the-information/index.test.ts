@@ -87,6 +87,7 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
         expect(res._getRenderData()).toEqual({
           reason: 'The record correction request has been sent to the bank. You cannot make any changes to the request',
           reportId,
+          user,
         });
       });
     });
