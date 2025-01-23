@@ -11,6 +11,8 @@ import aDeal from '../deal-builder';
 import { aPortalUser } from '../../mocks/test-users/portal-user';
 import { createPortalUser } from '../../helpers/create-portal-user';
 import { createPortalFacilityAmendment } from '../../helpers/create-portal-facility-amendment';
+import { mongoDbClient as db } from '../../../src/drivers/db-client';
+import { amendmentsEligibilityCriteria } from '../../../test-helpers/test-data/eligibility-criteria-amendments';
 
 const originalEnv = { ...process.env };
 
@@ -33,7 +35,10 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/', () => {
   let portalUserId: string;
 
   beforeAll(async () => {
-    await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_FACILITIES, MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA_AMENDMENTS]);
+    await db
+      .getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA_AMENDMENTS)
+      .then((collection) => collection.insertOne(amendmentsEligibilityCriteria(1, [FACILITY_TYPE.CASH, FACILITY_TYPE.CONTINGENT])));
 
     portalUserId = (await createPortalUser())._id;
   });
