@@ -25,6 +25,7 @@ import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/v
 import { aGetFeeRecordCorrectionResponseBody } from '../../../../../test-helpers/test-data/get-fee-record-correction-response';
 import { GetFeeRecordCorrectionTransientFormDataResponseBody } from '../../../../api-response-types';
 import { mapValidationErrorsToViewModel } from './validation-errors-map-helper';
+import { getRecordCorrectionCancelLinkHref } from '../../../../helpers';
 
 jest.mock('../../../../api');
 
@@ -105,7 +106,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
         jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(feeRecordCorrectionResponse);
 
-        const expectedCancelLinkHref = `/utilisation-reports/cancel-correction/${correctionId}`;
+        const expectedCancelLinkHref = getRecordCorrectionCancelLinkHref(correctionId);
         const expectedCorrectionRequestDetails = mapToCorrectionRequestDetailsViewModel(feeRecordCorrectionResponse);
         const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems();
         const { label: expectedAdditionalCommentsLabel, hint: expectedAdditionalCommentsHint } = getAdditionalCommentsFieldLabels(reasons);
@@ -177,7 +178,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
           jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(feeRecordCorrectionResponse);
 
-          const expectedCancelLinkHref = `/utilisation-reports/cancel-correction/${correctionId}`;
+          const expectedCancelLinkHref = getRecordCorrectionCancelLinkHref(correctionId);
           const expectedCorrectionRequestDetails = mapToCorrectionRequestDetailsViewModel(feeRecordCorrectionResponse);
           const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems();
           const { label: expectedAdditionalCommentsLabel, hint: expectedAdditionalCommentsHint } = getAdditionalCommentsFieldLabels(reasons);
@@ -226,7 +227,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
           jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(feeRecordCorrectionResponse);
 
-          const expectedCancelLinkHref = `/utilisation-reports/cancel-correction/${correctionId}`;
+          const expectedCancelLinkHref = getRecordCorrectionCancelLinkHref(correctionId);
           const expectedCorrectionRequestDetails = mapToCorrectionRequestDetailsViewModel(feeRecordCorrectionResponse);
           const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems(savedFormValues.reportedCurrency);
           const { label: expectedAdditionalCommentsLabel, hint: expectedAdditionalCommentsHint } = getAdditionalCommentsFieldLabels(reasons);
@@ -396,7 +397,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         expect(api.getFeeRecordCorrection).toHaveBeenCalledWith(userToken, bankId, correctionId);
       });
 
-      it('should render the "provide utilisation report correction" page', async () => {
+      it('should render the "provide utilisation report correction" page with errors', async () => {
         // Arrange
         const reasons = [
           RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT,
@@ -438,7 +439,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         // Assert
         expect(res._getRenderView()).toEqual('utilisation-report-service/record-correction/provide-utilisation-report-correction.njk');
 
-        const expectedCancelLinkHref = `/utilisation-reports/cancel-correction/${correctionId}`;
+        const expectedCancelLinkHref = getRecordCorrectionCancelLinkHref(correctionId);
         const expectedCorrectionRequestDetails = mapToCorrectionRequestDetailsViewModel(feeRecordCorrectionResponse);
         const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems();
         const expectedAdditionalLabels = getAdditionalCommentsFieldLabels(reasons);

@@ -4,6 +4,7 @@ import api from '../../../../api';
 import { asLoggedInUserSession, LoggedInUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { UtilisationReportCorrectionInformationViewModel } from '../../../../types/view-models/record-correction/utilisation-report-correction-information';
+import { getRecordCorrectionCancelLinkHref } from '../../../../helpers';
 
 export type UtilisationReportCorrectionReviewRequest = Request & {
   params: {
@@ -34,7 +35,7 @@ export const getUtilisationReportCorrectionReview = async (req: UtilisationRepor
 
     const backLinkHref = `/utilisation-reports/provide-correction/${correctionId}`;
 
-    const cancelLinkHref = `/utilisation-reports/cancel-correction/${correctionId}`;
+    const cancelLinkHref = getRecordCorrectionCancelLinkHref(correctionId);
 
     const { exporter, reportedFees } = feeRecord;
     const { currency, amount } = reportedFees;

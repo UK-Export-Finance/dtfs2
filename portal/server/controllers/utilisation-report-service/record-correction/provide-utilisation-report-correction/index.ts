@@ -7,6 +7,7 @@ import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { getAdditionalCommentsFieldLabels, mapToProvideCorrectionFormValuesViewModel, mapToCorrectionRequestDetailsViewModel } from './helpers';
 import { GetFeeRecordCorrectionTransientFormDataResponseBody } from '../../../../api-response-types';
 import { mapValidationErrorsToViewModel } from './validation-errors-map-helper';
+import { getRecordCorrectionCancelLinkHref } from '../../../../helpers';
 
 export type GetProvideUtilisationReportCorrection = Request & {
   params: {
@@ -44,7 +45,7 @@ export const getProvideUtilisationReportCorrection = async (req: GetProvideUtili
       savedFormValues = await api.getFeeRecordCorrectionTransientFormData(userToken, bankId, correctionId);
     }
 
-    const cancelLinkHref = `/utilisation-reports/cancel-correction/${correctionId}`;
+    const cancelLinkHref = getRecordCorrectionCancelLinkHref(correctionId);
 
     const paymentCurrencyOptions = mapCurrenciesToRadioItems(savedFormValues.reportedCurrency);
 
@@ -104,7 +105,7 @@ export const postProvideUtilisationReportCorrection = async (req: PostProvideUti
 
     const feeRecordCorrection = await api.getFeeRecordCorrection(userToken, bankId, correctionId);
 
-    const cancelLinkHref = `/utilisation-reports/cancel-correction/${correctionId}`;
+    const cancelLinkHref = getRecordCorrectionCancelLinkHref(correctionId);
 
     const paymentCurrencyOptions = mapCurrenciesToRadioItems(reportedCurrency);
 
