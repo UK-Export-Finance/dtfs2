@@ -49,11 +49,12 @@ context('GEF deals - When TFM submits a deal cancellation - Portal maker should 
         });
       });
     });
+
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {
-    cy.clearSessionCookies();
-    cy.login(BANK1_MAKER1);
+    cy.saveSession();
   });
 
   after(() => {

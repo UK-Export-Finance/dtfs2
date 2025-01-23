@@ -25,12 +25,10 @@ context('BSS/EWCS MIN deal - When TFM submits a deal cancellation - Portal statu
     });
   });
 
-  beforeEach(() => {
+  before(() => {
     cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
-
-    cy.login(BANK1_MAKER1);
   });
 
   after(() => {
@@ -38,6 +36,10 @@ context('BSS/EWCS MIN deal - When TFM submits a deal cancellation - Portal statu
     cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
+  });
+
+  beforeEach(() => {
+    cy.saveSession();
   });
 
   describe('effective date in the past', () => {

@@ -41,11 +41,12 @@ context('GEF MIN deal - When TFM submits a deal cancellation - Portal status and
         });
       });
     });
+
+    cy.login(BANK1_MAKER1);
   });
 
   beforeEach(() => {
-    cy.clearSessionCookies();
-    cy.login(BANK1_MAKER1);
+    cy.saveSession();
 
     cy.visit(relative(`/gef/application-details/${dealId}`));
 

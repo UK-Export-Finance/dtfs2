@@ -36,12 +36,11 @@ context('BSS/EWCS deals - When TFM submits a deal cancellation - Portal maker sh
         });
       });
     });
-  });
 
-  beforeEach(() => {
     cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
+
     cy.login(BANK1_MAKER1);
   });
 
@@ -50,6 +49,10 @@ context('BSS/EWCS deals - When TFM submits a deal cancellation - Portal maker sh
     cy.clearCookie('dtfs-session');
     cy.clearCookie('_csrf');
     cy.getCookies().should('be.empty');
+  });
+
+  beforeEach(() => {
+    cy.saveSession();
   });
 
   describe('when a deal has unissued facilities submitted to UKEF and the deal has already been cancelled', () => {
