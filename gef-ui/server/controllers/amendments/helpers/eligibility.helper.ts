@@ -32,18 +32,10 @@ export const parseEligibilityResponse = (
   responseBody: EligibilityReqBody,
   currentCriteriaResponses: AmendmentsEligibilityCriterionWithAnswer[],
 ): AmendmentsEligibilityCriterionWithAnswer[] => {
-  const criteriaWithNewResponses: AmendmentsEligibilityCriterionWithAnswer[] = [];
+  const criteriaWithNewResponses = currentCriteriaResponses.map((criterion: AmendmentsEligibilityCriterionWithAnswer) => {
+    const newAnswer = responseBody[criterion.id.toString()] ? parseStringAsBoolean(responseBody[criterion.id.toString()]) : null;
 
-  currentCriteriaResponses.forEach((item: AmendmentsEligibilityCriterionWithAnswer) => {
-    const { id, text, textList } = item;
-
-    const answer = responseBody[id.toString()] ? parseStringAsBoolean(responseBody[id.toString()]) : null;
-
-    if (textList?.length) {
-      criteriaWithNewResponses.push({ id, text, textList, answer });
-    } else {
-      criteriaWithNewResponses.push({ id, text, answer });
-    }
+    return { ...criterion, answer: newAnswer };
   });
 
   return criteriaWithNewResponses;

@@ -4,7 +4,7 @@ import * as api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { EligibilityReqBody, parseEligibilityResponse } from '../helpers/eligibility.helper.ts';
 import { EligibilityViewModel } from '../../../types/view-models/amendments/eligibility-view-model.ts';
-import { getNextPage } from '../helpers/navigation.helper.ts';
+import { getAmendmentsUrl, getNextPage } from '../helpers/navigation.helper.ts';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
 import { validationErrorHandler } from '../../../utils/helpers';
 import { validateEligibilityResponse } from './validation.ts';
@@ -56,7 +56,7 @@ export const postEligibility = async (req: PostEligibilityRequest, res: Response
       const viewModel: EligibilityViewModel = {
         exporterName: deal.exporter.companyName,
         facilityType: facility.type,
-        cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+        cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
         previousPage,
         criteria: parsedResponse,
         errors: validationErrorHandler(errorsOrValidCriteria.errors),

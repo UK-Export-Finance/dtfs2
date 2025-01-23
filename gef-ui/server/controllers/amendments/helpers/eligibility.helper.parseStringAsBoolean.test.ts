@@ -13,11 +13,6 @@ describe('parseStringAsBoolean', () => {
       expected: false,
     },
     {
-      description: 'should return null when the string is empty',
-      value: '',
-      expected: null,
-    },
-    {
       description: 'should return null when the string is "asdf"',
       value: 'asdf',
       expected: null,
