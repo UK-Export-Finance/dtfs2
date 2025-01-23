@@ -13,3 +13,5 @@ export * from './create-tfm-user-request';
 export * from './upsert-tfm-user-request';
 export * from './record-correction-mock';
 export * from './fee-record-correction-request-transient-form-data.entity.mock-builder';
+export * from './get-auth-code-url-response';
+export * from './get-auth-code-url-params';
