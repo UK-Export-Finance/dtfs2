@@ -13,6 +13,7 @@ import {
   PORTAL_LOGIN_STATUS,
   ROLES,
   PortalFacilityAmendmentWithUkefId,
+  FACILITY_TYPE,
 } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
@@ -22,7 +23,7 @@ import { FacilityValueViewModel } from '../../../types/view-models/amendments/fa
 import { getCurrencySymbol } from './getCurrencySymbol';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
-import { getPreviousPage } from '../helpers/navigation.helper';
+import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
@@ -52,6 +53,7 @@ const mockFacility = {
   currency: {
     id: CURRENCY.GBP,
   },
+  type: FACILITY_TYPE.CASH,
   hasBeenIssued: true,
 } as Facility;
 
@@ -124,9 +126,43 @@ describe('getFacilityValue', () => {
     // Assert
     const expectedRenderData: FacilityValueViewModel = {
       exporterName: companyName,
-      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      facilityType: mockFacility.type,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment),
       currencySymbol: getCurrencySymbol(mockFacility.currency.id),
+      facilityValue: '',
+    };
+
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+    expect(res._getRenderView()).toEqual('partials/amendments/facility-value.njk');
+    expect(res._getRenderData()).toEqual(expectedRenderData);
+  });
+
+  it('should render the facility value template with the existing facility value', async () => {
+    // Arrange
+    const existingFacilityValue = 1000;
+    const { req, res } = getHttpMocks();
+
+    amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withDealId(dealId)
+      .withFacilityId(facilityId)
+      .withAmendmentId(amendmentId)
+      .withChangeFacilityValue(true)
+      .withFacilityValue(existingFacilityValue)
+      .build();
+    getAmendmentMock.mockResolvedValue(amendment);
+
+    // Act
+    await getFacilityValue(req, res);
+
+    // Assert
+    const expectedRenderData: FacilityValueViewModel = {
+      exporterName: companyName,
+      facilityType: mockFacility.type,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
+      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment),
+      currencySymbol: getCurrencySymbol(mockFacility.currency.id),
+      facilityValue: String(existingFacilityValue),
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
@@ -143,7 +179,6 @@ describe('getFacilityValue', () => {
     await getFacilityValue(req, res);
 
     // Assert
-
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
@@ -157,7 +192,6 @@ describe('getFacilityValue', () => {
     await getFacilityValue(req, res);
 
     // Assert
-
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
@@ -185,7 +219,6 @@ describe('getFacilityValue', () => {
     await getFacilityValue(req, res);
 
     // Assert
-
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/gef/application-details/${dealId}`);
   });

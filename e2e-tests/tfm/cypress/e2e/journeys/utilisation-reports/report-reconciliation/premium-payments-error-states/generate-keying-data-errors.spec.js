@@ -13,7 +13,7 @@ context('PDC_RECONCILE users cannot generate keying data when no data to generat
   const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(reportId).withBankId(bankId).build();
   const toDoFeeRecord = FeeRecordEntityMockBuilder.forReport(report).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO).build();
 
-  const { premiumPaymentsTab } = pages.utilisationReportPage;
+  const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
 
   before(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
@@ -41,12 +41,12 @@ context('PDC_RECONCILE users cannot generate keying data when no data to generat
   });
 
   it('should not allow user to generate keying data when there are no fees at MATCH status', () => {
-    premiumPaymentsTab.generateKeyingDataButton().click();
+    premiumPaymentsContent.generateKeyingDataButton().click();
 
     cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
 
     errorSummary().contains('No matched fees to generate keying data with');
-    premiumPaymentsTab.premiumPaymentsTable.error().should('exist');
-    cy.assertText(premiumPaymentsTab.premiumPaymentsTable.error(), 'Error: No matched fees to generate keying data with');
+    premiumPaymentsContent.premiumPaymentsTable.error().should('exist');
+    cy.assertText(premiumPaymentsContent.premiumPaymentsTable.error(), 'Error: No matched fees to generate keying data with');
   });
 });

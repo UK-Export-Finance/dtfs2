@@ -1,6 +1,5 @@
 import { TFM_USER_SCHEMA } from './tfm-user.schema';
 
-// TODO update docs, tests
 /**
  * Used during the SSO login process when a user is required to be created in TFM
  * It is used as a foundation to the upsert user request

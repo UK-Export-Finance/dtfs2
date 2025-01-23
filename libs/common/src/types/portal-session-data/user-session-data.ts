@@ -1,4 +1,4 @@
-import { ReportPeriod } from '../utilisation-reports';
+import { ReportPeriod, UtilisationReportCsvRowData } from '../utilisation-reports';
 import { PortalSessionUser } from './portal-session-user';
 
 /**
@@ -22,6 +22,16 @@ export type LoggedInPortalSessionData = {
   dashboardFilters?: unknown;
   utilisationReport?: {
     formattedReportPeriod: string;
+    reportPeriod: ReportPeriod;
+    fileBuffer?: Buffer | null;
+    reportData?: UtilisationReportCsvRowData[];
+    filename?: string;
+    bankName?: string;
+    submittedBy?: string;
+    paymentOfficerEmails?: string[];
+  };
+  recordCorrectionSent?: {
+    sentToEmails: string[];
     reportPeriod: ReportPeriod;
   };
 };

@@ -11,7 +11,7 @@ describe('OBJECT_ID_SCHEMA', () => {
   });
 });
 
-describe('OBJECT_ID_STRING', () => {
+describe('OBJECT_ID_STRING_SCHEMA', () => {
   withObjectIdStringSchemaTests({
     schema: OBJECT_ID_STRING_SCHEMA,
     getTestObjectWithUpdatedParameter: (newValue) => newValue,
@@ -19,7 +19,7 @@ describe('OBJECT_ID_STRING', () => {
   });
 });
 
-describe('OBJECT_ID_OR_OBJECT_ID_STRING', () => {
+describe('OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA', () => {
   withObjectIdOrObjectIdStringSchemaTests({
     schema: OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA,
     getTestObjectWithUpdatedParameter: (newValue) => newValue,

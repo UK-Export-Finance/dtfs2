@@ -1,8 +1,8 @@
 import z from 'zod';
+import { getEpochMs } from '../helpers';
 import { AMENDMENT_TYPES } from '../constants';
-import { UNIX_TIMESTAMP_SECONDS_SCHEMA } from './unix-timestamp.schema';
-import { CURRENCY_SCHEMA } from './currency.schema';
 import { ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA } from './iso-date-time-stamp-to-date.schema';
+import { CURRENCY_SCHEMA } from './currency.schema';
 /**
  * Portal Amendment schema to validate an object contains user provided values for the type `PortalFacilityAmendment`
  *
@@ -11,8 +11,8 @@ import { ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA } from './iso-date-time-stamp-to-dat
 export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
   .object({
     changeCoverEndDate: z.boolean().optional(),
-    coverEndDate: UNIX_TIMESTAMP_SECONDS_SCHEMA.optional(),
-    currentCoverEndDate: UNIX_TIMESTAMP_SECONDS_SCHEMA.optional(),
+    coverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().nonnegative().optional()),
+    currentCoverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().nonnegative().optional()),
     isUsingFacilityEndDate: z.boolean().optional(),
     facilityEndDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.optional(),
     bankReviewDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.optional(),
@@ -22,6 +22,20 @@ export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
     currency: CURRENCY_SCHEMA.optional(),
     ukefExposure: z.number().optional(),
     coveredPercentage: z.number().optional(),
+    eligibilityCriteria: z
+      .object({
+        version: z.number(),
+        criteria: z.array(
+          z.object({
+            id: z.number(),
+            text: z.string(),
+            textList: z.array(z.string()).optional(),
+            /* When eligibilityCriteria is updated through a patch request with user values, all answers are required */
+            answer: z.boolean(),
+          }),
+        ),
+      })
+      .optional(),
   })
   .strict();
 
@@ -46,6 +60,18 @@ export const PORTAL_FACILITY_AMENDMENT = PORTAL_FACILITY_AMENDMENT_USER_VALUES.m
         email: z.string().email(),
       })
       .optional(),
+    eligibilityCriteria: z.object({
+      version: z.number(),
+      criteria: z.array(
+        z.object({
+          id: z.number(),
+          text: z.string(),
+          textList: z.array(z.string()).optional(),
+          /* When eligibilityCriteria is fetched from the database all the `answer` fields may be null: this is the case before the user has submitted their eligibility responses. */
+          answer: z.boolean().nullable(),
+        }),
+      ),
+    }),
   }),
 );
 

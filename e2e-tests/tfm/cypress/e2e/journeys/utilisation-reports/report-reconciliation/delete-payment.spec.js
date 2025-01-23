@@ -73,7 +73,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     cy.visit(`/utilisation-reports/${report.id}`);
 
-    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(payment.id);
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(payment.id);
 
     cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
@@ -105,7 +105,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     cy.visit(`/utilisation-reports/${report.id}`);
 
     cy.get('strong[data-cy="fee-record-status"]:contains("Match")').should('exist');
-    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(firstPayment.id);
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(firstPayment.id);
 
     cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
@@ -118,7 +118,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     cy.url().should('eq', relative(`/utilisation-reports/${report.id}#premium-payments`));
 
-    pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(firstPayment.id).should('not.exist');
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.getPaymentLink(firstPayment.id).should('not.exist');
     cy.get('strong[data-cy="fee-record-status"]:contains("Does not match")').should('exist');
   });
 
@@ -140,7 +140,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     cy.visit(`/utilisation-reports/${report.id}`);
 
     cy.get('strong[data-cy="fee-record-status"]:contains("Does not match")').should('exist');
-    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(firstPayment.id);
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(firstPayment.id);
 
     cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
@@ -153,7 +153,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     cy.url().should('eq', relative(`/utilisation-reports/${report.id}#premium-payments`));
 
-    pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(firstPayment.id).should('not.exist');
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.getPaymentLink(firstPayment.id).should('not.exist');
     cy.get('strong[data-cy="fee-record-status"]:contains("Match")').should('exist');
   });
 
@@ -172,7 +172,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     cy.visit(`/utilisation-reports/${report.id}`);
 
-    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(payment.id);
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(payment.id);
 
     cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
@@ -183,7 +183,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     pages.utilisationReportConfirmDeletePaymentPage.selectYesRadio();
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();
 
-    pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(payment.id).should('not.exist');
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.getPaymentLink(payment.id).should('not.exist');
     cy.get('strong[data-cy="fee-record-status"]:contains("To do")').should('exist');
   });
 
@@ -203,7 +203,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     cy.visit(`/utilisation-reports/${report.id}`);
 
-    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(payment.id);
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(payment.id);
 
     cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
@@ -214,7 +214,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
     pages.utilisationReportConfirmDeletePaymentPage.selectYesRadio();
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();
 
-    pages.utilisationReportPage.premiumPaymentsTab.getPaymentLink(payment.id).should('not.exist');
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.getPaymentLink(payment.id).should('not.exist');
     cy.get('strong[data-cy="fee-record-status"]:contains("To do")').should('exist');
   });
 
