@@ -10,7 +10,7 @@ import facilityEndDate from '../../../../../../gef/cypress/e2e/pages/amendments/
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('Change facility end date journey - happy path', () => {
+context('Amendments - Change facility end date journey - happy path', () => {
   /**
    * @type {string}
    */
@@ -62,8 +62,7 @@ context('Change facility end date journey - happy path', () => {
   });
 
   beforeEach(() => {
-    cy.clearSessionCookies();
-    cy.login(BANK1_MAKER1);
+    cy.saveSession();
   });
 
   it('should navigate through the journey correctly', () => {

@@ -64,8 +64,7 @@ context('Change cover end date journey - happy path', () => {
   });
 
   beforeEach(() => {
-    cy.clearSessionCookies();
-    cy.login(BANK1_MAKER1);
+    cy.saveSession();
   });
 
   it('should navigate through the journey correctly', () => {

@@ -12,7 +12,7 @@ import { sixYearsOneDay } from '../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('Amendments - change facility value journey - unhappy path', () => {
+context('Amendments - change facility end date - unhappy path', () => {
   /**
    * @type {string}
    */
@@ -27,11 +27,6 @@ context('Amendments - change facility value journey - unhappy path', () => {
    */
   let amendmentId;
 
-  /**
-   * @type {Date}
-   */
-  let coverStartDate;
-
   before(() => {
     cy.insertOneGefDeal(MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
@@ -40,7 +35,7 @@ context('Amendments - change facility value journey - unhappy path', () => {
 
       cy.createGefFacilities(dealId, [anIssuedCashFacility({ facilityEndDateEnabled: true })], BANK1_MAKER1).then((createdFacility) => {
         facilityId = createdFacility.details._id;
-        coverStartDate = createdFacility.details.coverStartDate ? new Date(createdFacility.details.coverStartDate) : now();
+
         cy.makerLoginSubmitGefDealForReview(insertedDeal);
         cy.checkerLoginSubmitGefDealToUkef(insertedDeal);
 
@@ -66,8 +61,7 @@ context('Amendments - change facility value journey - unhappy path', () => {
   });
 
   beforeEach(() => {
-    cy.clearSessionCookies();
-    cy.login(BANK1_MAKER1);
+    cy.saveSession();
   });
 
   it('should render an error if nothing is selected to change', () => {
@@ -109,7 +103,7 @@ context('Amendments - change facility value journey - unhappy path', () => {
   });
 
   it('should navigate to the facility end date page', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
+    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/do-you-have-a-facility-end-date`));
 
     doYouHaveAFacilityEndDate.yesRadioButton().click();
     cy.clickContinueButton();
@@ -128,8 +122,6 @@ context('Amendments - change facility value journey - unhappy path', () => {
     facilityEndDate.facilityEndDateInlineError().contains('Enter the facility end date');
   });
 
-  const twoDaysBeforeCoverStartDate = sub(coverStartDate, { days: 2 });
-
   const facilityEndDateErrorTestCases = [
     {
       description: 'the facility end date consists of invalid characters',
@@ -138,7 +130,7 @@ context('Amendments - change facility value journey - unhappy path', () => {
     },
     {
       description: 'the facility end date is missing a field',
-      dateFieldInput: { day: 'aa', year: 2025 },
+      dateFieldInput: { day: 2, month: null, year: 2025 },
       expectedErrorMessage: 'Facility end date must include a month',
     },
     {
@@ -148,7 +140,7 @@ context('Amendments - change facility value journey - unhappy path', () => {
     },
     {
       description: 'the facility end date is before the cover start date',
-      dateFieldInput: { date: twoDaysBeforeCoverStartDate },
+      dateFieldInput: { date: sub(now(), { days: 2 }) },
       expectedErrorMessage: 'Facility end date cannot be before the cover start date',
     },
   ];
