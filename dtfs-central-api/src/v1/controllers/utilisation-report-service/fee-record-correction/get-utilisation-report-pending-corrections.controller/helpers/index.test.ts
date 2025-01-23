@@ -69,7 +69,7 @@ describe('get-utilisation-report-pending-corrections.controller helpers', () => 
           .withFeeRecords([
             new FeeRecordEntityMockBuilder()
               .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
-              .withCorrections([new FeeRecordCorrectionEntityMockBuilder().withIsCompleted(false).build()])
+              .withCorrections([FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).build()])
               .build(),
           ])
           .build();

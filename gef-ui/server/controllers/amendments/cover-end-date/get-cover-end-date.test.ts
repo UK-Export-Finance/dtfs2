@@ -26,6 +26,8 @@ const dealId = 'dealId';
 const facilityId = 'facilityId';
 const amendmentId = 'amendmentId';
 
+const mockError = () => new Error();
+
 const getHttpMocks = () =>
   createMocks<GetCoverEndDateRequest>({
     params: { dealId, facilityId, amendmentId },
@@ -44,6 +46,7 @@ describe('getCoverEndDate', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
+    jest.spyOn(console, 'error');
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
       .withDealId(dealId)
@@ -107,6 +110,7 @@ describe('getCoverEndDate', () => {
     // Assert
     const expectedRenderData: CoverEndDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
+      facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.COVER_END_DATE, amendment),
     };
@@ -128,6 +132,8 @@ describe('getCoverEndDate', () => {
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Deal %s or Facility %s was not found', dealId, facilityId);
   });
 
   it('should redirect if the deal is not found', async () => {
@@ -141,6 +147,8 @@ describe('getCoverEndDate', () => {
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Deal %s or Facility %s was not found', dealId, facilityId);
   });
 
   it('should redirect if the amendment is not found', async () => {
@@ -154,6 +162,8 @@ describe('getCoverEndDate', () => {
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Amendment %s was not found on facility %s', amendmentId, facilityId);
   });
 
   it('should redirect if the facility cannot be amended', async () => {
@@ -167,6 +177,8 @@ describe('getCoverEndDate', () => {
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/gef/application-details/${dealId}`);
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('User cannot amend facility %s on deal %s', facilityId, dealId);
   });
 
   it('should redirect if the amendment is not changing the cover end date', async () => {
@@ -189,11 +201,13 @@ describe('getCoverEndDate', () => {
     expect(res._getRedirectUrl()).toEqual(
       `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
     );
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Amendment %s not changing cover end date', amendmentId);
   });
 
   it('should render `problem with service` if getApplication throws an error', async () => {
     // Arrange
-    getApplicationMock.mockRejectedValue(new Error('test error'));
+    getApplicationMock.mockRejectedValue(mockError);
     const { req, res } = getHttpMocks();
 
     // Act
@@ -201,11 +215,13 @@ describe('getCoverEndDate', () => {
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Error getting amendments cover end date page %o', mockError);
   });
 
   it('should render `problem with service` if getFacility throws an error', async () => {
     // Arrange
-    getFacilityMock.mockRejectedValue(new Error('test error'));
+    getFacilityMock.mockRejectedValue(mockError);
     const { req, res } = getHttpMocks();
 
     // Act
@@ -213,11 +229,13 @@ describe('getCoverEndDate', () => {
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Error getting amendments cover end date page %o', mockError);
   });
 
   it('should render `problem with service` if getAmendment throws an error', async () => {
     // Arrange
-    getAmendmentMock.mockRejectedValue(new Error('test error'));
+    getAmendmentMock.mockRejectedValue(mockError);
     const { req, res } = getHttpMocks();
 
     // Act
@@ -225,5 +243,7 @@ describe('getCoverEndDate', () => {
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Error getting amendments cover end date page %o', mockError);
   });
 });

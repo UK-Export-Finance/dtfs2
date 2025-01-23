@@ -39,6 +39,10 @@ const getHttpMocks = () =>
   });
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
+const criteria = [
+  { id: 1, text: 'test criteria 1', answer: true },
+  { id: 2, text: 'test criteria 2', answer: false },
+];
 
 describe('getEligibilityCriteria', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
@@ -50,7 +54,12 @@ describe('getEligibilityCriteria', () => {
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
     jest.spyOn(console, 'error');
 
-    amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().withDealId(dealId).withFacilityId(facilityId).withAmendmentId(amendmentId).build();
+    amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withDealId(dealId)
+      .withFacilityId(facilityId)
+      .withAmendmentId(amendmentId)
+      .withCriteria(criteria)
+      .build();
 
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
@@ -107,8 +116,10 @@ describe('getEligibilityCriteria', () => {
     // Assert
     const expectedRenderData: EligibilityViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
+      facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.ELIGIBILITY, amendment),
+      criteria,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);

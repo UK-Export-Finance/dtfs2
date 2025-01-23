@@ -35,7 +35,7 @@ describe('get-fee-record-correction.controller', () => {
 
     it(`should respond with a '${HttpStatusCode.Ok}' and the mapped fee record correction if a fee record correction entity exists`, async () => {
       // Arrange
-      const feeRecordCorrectionEntity = new FeeRecordCorrectionEntityMockBuilder().build();
+      const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).build();
 
       mockFeeRecordCorrectionFind.mockResolvedValue(feeRecordCorrectionEntity);
 

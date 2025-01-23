@@ -58,7 +58,7 @@ describe('get-fee-record-correction-review.controller', () => {
 
       mockCorrectionTransientFormDataFind.mockResolvedValue(correctionTransientFormDataEntity);
 
-      const feeRecordCorrectionEntity = new FeeRecordCorrectionEntityMockBuilder().withReasons(correctionReasons).build();
+      const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).withReasons(correctionReasons).build();
 
       mockCorrectionFind.mockResolvedValue(feeRecordCorrectionEntity);
 
@@ -76,7 +76,7 @@ describe('get-fee-record-correction-review.controller', () => {
 
     it('should call fee record correction transient form data find once with the correct parameters', async () => {
       // Arrange
-      const feeRecordCorrectionEntity = new FeeRecordCorrectionEntityMockBuilder().build();
+      const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).build();
 
       mockCorrectionFind.mockResolvedValue(feeRecordCorrectionEntity);
 

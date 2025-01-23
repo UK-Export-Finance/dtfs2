@@ -60,6 +60,7 @@ export const getBankReviewDate = async (req: GetBankReviewDateRequest, res: Resp
 
     const viewModel: BankReviewDateViewModel = {
       exporterName: deal.exporter.companyName,
+      facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE, amendment),
       bankReviewDate,

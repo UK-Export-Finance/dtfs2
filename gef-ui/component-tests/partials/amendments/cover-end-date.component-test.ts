@@ -1,3 +1,4 @@
+import { FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { CoverEndDateViewModel } from '../../../server/types/view-models/amendments/cover-end-date-view-model';
 import pageRenderer from '../../pageRenderer';
 
@@ -5,16 +6,18 @@ const page = 'partials/amendments/cover-end-date.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
-  const coverEndDate = '2030-01-01T00:00:00.000Z';
+  const coverEndDate = { day: '01', month: '02', year: '2024' };
   const exporterName = 'exporterName';
   const previousPage = 'previousPage';
   const cancelUrl = 'cancelUrl';
+  const facilityType = FACILITY_TYPE.CASH;
 
   const params: CoverEndDateViewModel = {
     coverEndDate,
     exporterName,
     previousPage,
     cancelUrl,
+    facilityType,
   };
 
   it('should render the page heading', () => {
@@ -47,9 +50,9 @@ describe(page, () => {
     wrapper.expectLink('[data-cy="cancel-link"]').toLinkTo(cancelUrl, 'Cancel');
   });
 
-  it('should render the exporter name in the heading caption', () => {
+  it('should render the exporter name and facility type in the heading caption', () => {
     const wrapper = render(params);
 
-    wrapper.expectText('[data-cy="heading-caption"]').toRead(exporterName);
+    wrapper.expectText('[data-cy="heading-caption"]').toRead(`${exporterName}, ${facilityType} facility`);
   });
 });

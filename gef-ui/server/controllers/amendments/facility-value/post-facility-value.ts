@@ -44,6 +44,7 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
       const viewModel: FacilityValueViewModel = {
         facilityValue,
         exporterName: deal.exporter.companyName,
+        facilityType: facility.type,
         cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
         previousPage,
         currencySymbol,

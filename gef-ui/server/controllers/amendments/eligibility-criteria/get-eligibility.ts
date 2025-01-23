@@ -41,12 +41,14 @@ export const getEligibility = async (req: GetEligibilityRequest, res: Response) 
       return res.redirect('/not-found');
     }
 
-    // TODO 7765: Fetch criteria using GET endpoint from database and add to viewModel
+    const { criteria } = amendment.eligibilityCriteria;
 
     const viewModel: EligibilityViewModel = {
       exporterName: deal.exporter.companyName,
+      facilityType: facility.type,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.ELIGIBILITY, amendment),
+      criteria,
     };
 
     return res.render('partials/amendments/eligibility.njk', viewModel);
