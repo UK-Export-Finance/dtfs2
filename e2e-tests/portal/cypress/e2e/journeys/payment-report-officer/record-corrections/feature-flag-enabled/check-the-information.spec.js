@@ -87,16 +87,6 @@ context('Check the information page - Fee record correction feature flag enabled
       cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
     });
 
-    context('and when the user clicks cancel', () => {
-      beforeEach(() => {
-        cy.clickCancelButton();
-      });
-
-      it('should redirect to the "Report GEF utilisation and fees paid" page', () => {
-        cy.url().should('eq', relative('/utilisation-report-upload'));
-      });
-    });
-
     it('should be able to view the form values and other details of correction request', () => {
       reviewCorrection.originalValuesSummaryList().should('exist');
       reviewCorrection.originalValuesSummaryList().should('contain', exporter);
@@ -113,6 +103,16 @@ context('Check the information page - Fee record correction feature flag enabled
       reviewCorrection.recordCorrectionDetailsSummaryList().should('contain', expectedOldValues);
       reviewCorrection.recordCorrectionDetailsSummaryList().should('contain', expectedNewValues);
       reviewCorrection.recordCorrectionDetailsSummaryList().should('contain', bankAdditionalComments);
+    });
+
+    context('and when the user clicks cancel', () => {
+      beforeEach(() => {
+        cy.clickCancelButton();
+      });
+
+      it('should redirect to the "Report GEF utilisation and fees paid" page', () => {
+        cy.url().should('eq', relative('/utilisation-report-upload'));
+      });
     });
   });
 });

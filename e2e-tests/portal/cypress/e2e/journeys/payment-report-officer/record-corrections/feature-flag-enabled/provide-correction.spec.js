@@ -105,16 +105,6 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
           provideCorrection.additionalComments.input().should('exist');
         });
 
-        context('and when the user clicks cancel', () => {
-          beforeEach(() => {
-            cy.clickCancelButton();
-          });
-
-          it('should redirect to the "Report GEF utilisation and fees paid" page', () => {
-            cy.url().should('eq', relative('/utilisation-report-upload'));
-          });
-        });
-
         context('and when the user has entered invalid values and clicked "save and review changes"', () => {
           const newFacilityId = 'abc';
           const newReportedFee = 'INVALID';
@@ -229,6 +219,16 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
             provideCorrection.reportedFeeInput.container().should('have.value', '');
             provideCorrection.reportedCurrency.radioInput(newReportedCurrency).should('not.be.checked');
             provideCorrection.additionalComments.input().should('have.value', '');
+          });
+        });
+
+        context('and when the user clicks cancel', () => {
+          beforeEach(() => {
+            cy.clickCancelButton();
+          });
+
+          it('should redirect to the "Report GEF utilisation and fees paid" page', () => {
+            cy.url().should('eq', relative('/utilisation-report-upload'));
           });
         });
       });
