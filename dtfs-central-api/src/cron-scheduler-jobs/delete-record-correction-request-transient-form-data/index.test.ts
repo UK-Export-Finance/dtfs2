@@ -9,22 +9,33 @@ describe('delete-record-correction-request-transient-form-data', () => {
 
   const mockDelete = jest.fn();
 
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
+
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   beforeEach(() => {
     jest.resetAllMocks();
     FeeRecordCorrectionRequestTransientFormDataRepo.delete = mockDelete;
   });
 
   describe('deleteRecordCorrectionRequestTransientFormData', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+      FeeRecordCorrectionRequestTransientFormDataRepo.delete = mockDelete;
+      jest.useFakeTimers().setSystemTime(new Date('2025-01-02 12:10:00'));
+    });
+
     it('should delete records older than one day', async () => {
       await deleteRecordCorrectionRequestTransientFormData();
-
-      const today = new Date();
-      const oneDayAgo = today.setDate(today.getDate() - 1);
 
       expect(mockDelete).toHaveBeenCalledTimes(1);
 
       expect(mockDelete).toHaveBeenCalledWith({
-        lastUpdatedAt: LessThan(new Date(oneDayAgo)),
+        lastUpdatedAt: LessThan(new Date('2025-01-01:12:10:00')),
       });
     });
 
@@ -42,6 +53,7 @@ describe('delete-record-correction-request-transient-form-data', () => {
     beforeEach(() => {
       jest.resetAllMocks();
       FeeRecordCorrectionRequestTransientFormDataRepo.delete = mockDelete;
+      jest.useFakeTimers().setSystemTime(new Date('2025-01-02 12:10:00'));
     });
 
     it('should be scheduled to run', () => {
@@ -56,14 +68,11 @@ describe('delete-record-correction-request-transient-form-data', () => {
       // Act
       await deleteRecordCorrectionRequestTransientFormDataJob.task('manual');
 
-      const today = new Date();
-      const oneDayAgo = today.setDate(today.getDate() - 1);
-
       // Assert
       expect(mockDelete).toHaveBeenCalledTimes(1);
 
       expect(mockDelete).toHaveBeenCalledWith({
-        lastUpdatedAt: LessThan(new Date(oneDayAgo)),
+        lastUpdatedAt: LessThan(new Date('2025-01-01:12:10:00')),
       });
     });
   });
