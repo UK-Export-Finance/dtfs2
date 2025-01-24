@@ -10,20 +10,17 @@ type GetPreviousReportsRequest = Request & {
   };
 };
 
-const renderPreviousReportsPage = (res: Response, context: PreviousReportsViewModel) => {
-  res.render('utilisation-report-service/previous-reports/previous-reports.njk', context);
-};
-
 export const getPreviousReports = async (req: GetPreviousReportsRequest, res: Response) => {
   const { user, userToken } = asLoggedInUserSession(req.session);
   const { targetYear: targetYearQuery } = req.query;
 
   try {
     const previousReportsByBank = await api.getPreviousUtilisationReportsByBank(userToken, user.bank.id);
-    const previousReportsViewModel = mapToPreviousReportsViewModel(targetYearQuery, user, previousReportsByBank);
-    return renderPreviousReportsPage(res, previousReportsViewModel);
+    const previousReportsViewModel: PreviousReportsViewModel = mapToPreviousReportsViewModel(targetYearQuery, user, previousReportsByBank);
+
+    return res.render('utilisation-report-service/previous-reports/previous-reports.njk', previousReportsViewModel);
   } catch (error) {
-    console.error('Failed to get previous reports: %s', error);
+    console.error('Failed to get previous reports: %o', error);
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };

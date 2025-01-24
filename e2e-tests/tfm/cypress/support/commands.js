@@ -11,6 +11,8 @@ Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
 // Assert an element has some exact text
 Cypress.Commands.add('assertText', require('./utils/assertText'));
 
+Cypress.Commands.add('assertUrl', require('./utils/assertUrl'));
+
 Cypress.Commands.add('getInputByLabelText', require('./utils/getInputByLabelText'));
 
 Cypress.Commands.add('completeDateFormFields', require('./trade-finance-manager-ui/completeDateFormFields'));

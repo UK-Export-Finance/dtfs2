@@ -31,9 +31,6 @@ export type GetUtilisationReportReconciliationRequest = CustomExpressRequest<{
 const premiumPaymentsGroupsHaveAtLeastOnePaymentReceived = (premiumPaymentsGroups: PremiumPaymentsGroup[]): boolean =>
   premiumPaymentsGroups.some(({ paymentsReceived }) => paymentsReceived !== null);
 
-const renderUtilisationReportReconciliationForReport = (res: Response, viewModel: UtilisationReportReconciliationForReportViewModel) =>
-  res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', viewModel);
-
 /**
  * Controller for the GET utilisation report reconciliation for report route.
  *
@@ -119,7 +116,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
 
     const recordCorrectionViewModel = mapToRecordCorrectionViewModel(recordCorrectionDetails);
 
-    return renderUtilisationReportReconciliationForReport(res, {
+    const viewModel: UtilisationReportReconciliationForReportViewModel = {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       bank,
@@ -131,9 +128,11 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       recordCorrectionDetails: recordCorrectionViewModel,
       keyingSheet: keyingSheetViewModel,
       isFeeRecordCorrectionFeatureFlagEnabled: isFeeRecordCorrectionFeatureFlagEnabled(),
-    });
+    };
+
+    return res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', viewModel);
   } catch (error) {
-    console.error(`Failed to render utilisation report with id ${reportId}`, error);
+    console.error('Failed to render utilisation report with id %s: %o', reportId, error);
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };

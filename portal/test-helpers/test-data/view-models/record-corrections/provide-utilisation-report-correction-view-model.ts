@@ -1,8 +1,9 @@
-import { CURRENCY, mapCurrenciesToRadioItems, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
+import { aPortalSessionUser, CURRENCY, mapCurrenciesToRadioItems, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { ProvideUtilisationReportCorrectionViewModel } from '../../../../server/types/view-models/record-correction/provide-utilisation-report-correction';
 import { PRIMARY_NAV_KEY } from '../../../../server/constants';
 
 export const aProvideUtilisationReportCorrectionViewModel = (): ProvideUtilisationReportCorrectionViewModel => ({
+  user: aPortalSessionUser(),
   primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
   correctionRequestDetails: {
     facilityId: '12345678',
@@ -17,5 +18,11 @@ export const aProvideUtilisationReportCorrectionViewModel = (): ProvideUtilisati
   additionalComments: {
     label: 'Additional comments label',
     hint: 'Additional comments hint',
+  },
+  formValues: {
+    additionalComments: 'Some additional comments',
+    facilityId: null,
+    utilisation: null,
+    reportedFee: null,
   },
 });

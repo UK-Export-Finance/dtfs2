@@ -15,4 +15,5 @@ module.exports = {
   setApplicationStatus: jest.fn(),
   getAmendment: jest.fn(),
   upsertAmendment: jest.fn(),
+  updateAmendment: jest.fn(),
 };

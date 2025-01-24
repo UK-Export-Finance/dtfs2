@@ -1,9 +1,9 @@
-import { AMENDMENT_STATUS, AmendmentStatus } from '@ukef/dtfs2-common';
+import { TFM_AMENDMENT_STATUS, TfmAmendmentStatus } from '@ukef/dtfs2-common';
 import { AmendmentStatusSchema } from './amendment-status.schema';
 
 describe('amendment-status.schema', () => {
   describe('AmendmentStatusSchema', () => {
-    it.each(Object.values(AMENDMENT_STATUS))("sets the 'success' property to true when the amendment status is '%s'", (status) => {
+    it.each(Object.values(TFM_AMENDMENT_STATUS))("sets the 'success' property to true when the amendment status is '%s'", (status) => {
       // Act
       const { success } = AmendmentStatusSchema.safeParse(status);
 
@@ -24,7 +24,7 @@ describe('amendment-status.schema', () => {
 
     it("sets the 'data' property to the parsed amendment status", () => {
       // Arrange
-      const status: AmendmentStatus = 'Completed';
+      const status: TfmAmendmentStatus = 'Completed';
 
       // Act
       const { data } = AmendmentStatusSchema.safeParse(status);

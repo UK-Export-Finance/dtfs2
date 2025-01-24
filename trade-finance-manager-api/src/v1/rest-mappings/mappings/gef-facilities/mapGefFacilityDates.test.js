@@ -1,4 +1,4 @@
-import { AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 
 const { format } = require('date-fns');
 const mapGefFacilityDates = require('./mapGefFacilityDates');
@@ -78,7 +78,7 @@ describe('mapGefFacilityDates', () => {
         {
           updatedAt: 1723641632,
           version: 1,
-          status: AMENDMENT_STATUS.COMPLETED,
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
           tfm: {
             coverEndDate: 1723641632,
           },
@@ -103,7 +103,7 @@ describe('mapGefFacilityDates', () => {
         {
           updatedAt: 1723641632,
           version: 1,
-          status: AMENDMENT_STATUS.COMPLETED,
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
           tfm: {
             coverEndDate: 1723641632,
           },
@@ -127,7 +127,7 @@ describe('mapGefFacilityDates', () => {
         {
           updatedAt: 1723641632,
           version: 1,
-          status: AMENDMENT_STATUS.COMPLETED,
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
           tfm: {
             coverEndDate: 1723641632,
           },
@@ -151,7 +151,7 @@ describe('mapGefFacilityDates', () => {
         {
           updatedAt: 1723641632,
           version: 1,
-          status: AMENDMENT_STATUS.COMPLETED,
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
           tfm: {
             coverEndDate: 1723641632,
           },
@@ -175,7 +175,7 @@ describe('mapGefFacilityDates', () => {
         {
           updatedAt: 1723641632,
           version: 1,
-          status: AMENDMENT_STATUS.COMPLETED,
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
           tfm: {
             coverEndDate: 1723641632,
             isUsingFacilityEndDate: true,
@@ -185,7 +185,7 @@ describe('mapGefFacilityDates', () => {
         {
           updatedAt: 1723641640,
           version: 2,
-          status: AMENDMENT_STATUS.COMPLETED,
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
           tfm: {
             coverEndDate: 1723641640,
           },

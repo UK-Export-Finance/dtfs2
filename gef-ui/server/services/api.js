@@ -1,5 +1,6 @@
 const FormData = require('form-data');
 const { isValidCompanyRegistrationNumber, InvalidFacilityIdError, InvalidDealIdError } = require('@ukef/dtfs2-common');
+const { PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID } = require('@ukef/dtfs2-common/schemas');
 const { HttpStatusCode } = require('axios');
 const Axios = require('./axios');
 const { apiErrorHandler } = require('../utils/helpers');
@@ -358,8 +359,14 @@ const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
   }
 
   try {
-    const { data } = await Axios.get(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, config(userToken));
-    return data;
+    const response = await Axios.get(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, config(userToken));
+    const { success, error, data } = PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID.safeParse(response.data);
+
+    if (success) {
+      return data;
+    }
+
+    throw new Error(`Failed to parse response body from portal-api. ${error}`);
   } catch (error) {
     console.error('Failed to get the amendment with facility id %s and amendment id %s: %o', facilityId, amendmentId, error);
     throw error;
@@ -400,6 +407,38 @@ const upsertAmendment = async ({ facilityId, dealId, amendment, userToken }) => 
   }
 };
 
+/**
+ * @param {Object} param
+ * @param {string} param.facilityId
+ * @param {string} param.amendmentId
+ * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} param.update
+ * @param {string} param.userToken
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}>}
+ */
+const updateAmendment = async ({ facilityId, amendmentId, update, userToken }) => {
+  if (!isValidMongoId(facilityId)) {
+    console.error('Invalid facility ID %s', facilityId);
+    throw new InvalidFacilityIdError(facilityId);
+  }
+
+  if (!isValidMongoId(amendmentId)) {
+    console.error('Invalid amendment ID %s', amendmentId);
+    throw new Error('Invalid amendment ID');
+  }
+
+  const payload = {
+    update,
+  };
+
+  try {
+    const { data } = await Axios.patch(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, payload, { ...config(userToken) });
+    return data;
+  } catch (error) {
+    console.error('Failed to update the amendment with id %s on facility with id %s with update: %o %o', amendmentId, facilityId, payload, error);
+    throw error;
+  }
+};
+
 module.exports = {
   validateToken,
   validateBank,
@@ -423,4 +462,5 @@ module.exports = {
   updateSupportingInformation,
   getAmendment,
   upsertAmendment,
+  updateAmendment,
 };

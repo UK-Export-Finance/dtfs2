@@ -15,4 +15,6 @@ export * from './upsert-tfm-user-request';
 export * from './record-correction-mock';
 export * from './entra-id-auth-code-redirect-response-body';
 export * from './fee-record-correction-request-transient-form-data.entity.mock-builder';
+export * from './get-auth-code-url-params';
+export * from './fee-record-correction-transient-form-data.entity.mock-builder';
 export * from './get-auth-code-url-response.mock';

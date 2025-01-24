@@ -36,7 +36,7 @@ export class LoginController {
         return res.redirect('/home');
       }
 
-      const { authCodeUrl, authCodeUrlRequest } = await this.loginService.getAuthCodeUrl({ successRedirect: '/' });
+      const { authCodeUrl, authCodeUrlRequest } = await this.loginService.getAuthCodeUrl({ successRedirect: req.originalUrl ? req.originalUrl : '/' });
 
       this.userSessionService.createPartiallyLoggedInSession({ session: req.session, authCodeUrlRequest });
 
