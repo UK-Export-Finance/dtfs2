@@ -11,6 +11,6 @@ export class UnauthenticatedAuthController {
 
     const { code, client_info: clientInfo, state, session_state: sessionState } = req.body;
 
-    return res.render('sso/accept-sso-redirect.njk', { code, clientInfo, state, sessionState });
+    return res.render('auth/accept-sso-redirect.njk', { code, clientInfo, state, sessionState });
   }
 }
