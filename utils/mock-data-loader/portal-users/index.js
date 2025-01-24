@@ -3,6 +3,7 @@ import MOCK_BANKS from '../banks';
 
 const UKEF_TEST_BANK_1 = MOCK_BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated)');
 const UKEF_TEST_BANK_2 = MOCK_BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated) 2');
+const BARCLAYS = MOCK_BANKS.find((bank) => bank.name === 'Barclays Bank');
 const UKEF_GEF_ONLY_BANK = MOCK_BANKS.find((bank) => bank.name === 'GEF Only Bank');
 
 export const BANK1_MAKER1 = {
@@ -121,7 +122,7 @@ export const BANK1_PAYMENT_REPORT_OFFICER1 = {
   email: 'payment-officer1@ukexportfinance.gov.uk',
   timezone: 'Europe/London',
   roles: [ROLES.PAYMENT_REPORT_OFFICER],
-  bank: UKEF_TEST_BANK_1,
+  bank: BARCLAYS,
   isTrusted: false,
 };
 

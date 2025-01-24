@@ -1,6 +1,6 @@
 import { FeeRecordCorrectionSummary } from '@ukef/dtfs2-common';
-import { RecordCorrectionRowViewModel, RecordCorrectionsViewModel, FeeRecordDisplayStatus } from '../../../types/view-models';
-import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
+import { RecordCorrectionRowViewModel, RecordCorrectionsViewModel, RecordCorrectionDisplayStatus } from '../../../types/view-models';
+import { setRecordCorrectionStatus, setRecordCorrectionDisplayStatus } from './set-record-correction-status';
 
 /**
  * Maps a fee record correction object to the correct format to be used by the table view model
@@ -10,14 +10,14 @@ import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
  */
 export const mapToRecordCorrectionTableRowViewModel = (
   feeRecordCorrection: FeeRecordCorrectionSummary,
-  displayStatus: FeeRecordDisplayStatus,
+  displayStatus: RecordCorrectionDisplayStatus,
 ): RecordCorrectionRowViewModel => ({
   correctionId: feeRecordCorrection.correctionId,
   feeRecordId: feeRecordCorrection.feeRecordId,
   exporter: feeRecordCorrection.exporter,
   reasons: feeRecordCorrection.formattedReasons,
   dateSent: feeRecordCorrection.formattedDateSent,
-  status: feeRecordCorrection.status,
+  status: setRecordCorrectionStatus(feeRecordCorrection.isCompleted),
   displayStatus,
   formattedCorrectRecords: feeRecordCorrection.formattedCorrectRecords,
   formattedOldRecords: feeRecordCorrection.formattedOldRecords,
@@ -30,7 +30,7 @@ export const mapToRecordCorrectionTableRowViewModel = (
  */
 export const mapToRecordCorrectionViewModel = (recordCorrectionDetails: FeeRecordCorrectionSummary[]): RecordCorrectionsViewModel => {
   const mappedRows = recordCorrectionDetails.map((recordCorrection) => {
-    const displayStatus = getFeeRecordDisplayStatus(recordCorrection.status);
+    const displayStatus = setRecordCorrectionDisplayStatus(recordCorrection.isCompleted);
     return mapToRecordCorrectionTableRowViewModel(recordCorrection, displayStatus);
   });
 

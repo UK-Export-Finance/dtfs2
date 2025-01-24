@@ -1,6 +1,10 @@
 import { format } from 'date-fns';
-import { FeeRecordEntity, FeeRecordCorrectionSummary, mapReasonsToDisplayValues, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
-import { mapCorrectionReasonsToFormattedOldValues } from '../../../../../helpers/map-correction-reasons-to-formatted-values';
+import { FeeRecordEntity, FeeRecordCorrectionSummary, mapReasonsToDisplayValues } from '@ukef/dtfs2-common';
+import { mapCorrectionReasonsToFormattedOldFeeRecordValues } from '../../../../../helpers/map-correction-reasons-to-formatted-old-fee-record-values';
+import {
+  mapCorrectionReasonsToFormattedCorrectValues,
+  mapCorrectionReasonsToFormattedPreviousValues,
+} from '../../../../../helpers/map-correction-reasons-to-formatted-values';
 
 /**
  * Retrieves and constructs record correction data for the given fee records.
@@ -18,15 +22,36 @@ export const getRecordCorrectionDetails = (feeRecords: FeeRecordEntity[]): FeeRe
     const { id: feeRecordId, exporter } = feeRecord;
 
     return feeRecord.corrections.map((correction) => {
-      const { id: correctionId, dateRequested } = correction;
+      const { id: correctionId, dateRequested, isCompleted } = correction;
 
       /**
        * maps the reasons array to display the current fee record values as old records
        * constructs a comma seperated string if there are more than one reason
        * the "old records" are the values before being corrected
+       * set to a let as these values are not used if status is TO_DO_AMENDED
+       * (as the values are then stored in correction.correctedValues or correction.previousValues)
        */
-      const oldRecords = mapCorrectionReasonsToFormattedOldValues(feeRecord, correction.reasons);
-      const formattedOldRecords = oldRecords.join(', ');
+      const oldRecords = mapCorrectionReasonsToFormattedOldFeeRecordValues(feeRecord, correction.reasons);
+      let formattedOldRecords = oldRecords.join(', ');
+
+      let formattedCorrectRecords = '-';
+
+      /**
+       * if the status isCompleted
+       * then the required values are in correction.correctedValues and correction.previousValues
+       * and are NOT in the base feeRecord object
+       * maps the previous and the correct records and formats them
+       * constructs a comma seperated string if there are more than one reason
+       * formattedOldRecords are the mapped previous values
+       * formattedCorrectRecords are the mapped correct values
+       */
+      if (isCompleted) {
+        const previousRecords = mapCorrectionReasonsToFormattedPreviousValues(correction, correction.reasons);
+        formattedOldRecords = previousRecords.join(', ');
+
+        const correctRecords = mapCorrectionReasonsToFormattedCorrectValues(correction, correction.reasons);
+        formattedCorrectRecords = correctRecords.join(', ');
+      }
 
       /**
        * maps the reasons as an array of strings to display values
@@ -40,11 +65,11 @@ export const getRecordCorrectionDetails = (feeRecords: FeeRecordEntity[]): FeeRe
         correctionId,
         feeRecordId,
         exporter,
-        status: FEE_RECORD_STATUS.PENDING_CORRECTION,
         formattedReasons,
         formattedDateSent: format(dateRequested, 'dd MMM yyyy'),
         formattedOldRecords,
-        formattedCorrectRecords: '-',
+        formattedCorrectRecords,
+        isCompleted,
       };
     });
   });
