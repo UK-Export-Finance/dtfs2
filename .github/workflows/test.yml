@@ -390,6 +390,7 @@ jobs:
       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
       FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
       FF_TFM_SSO_ENABLED: 'true'
+      FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true'
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
