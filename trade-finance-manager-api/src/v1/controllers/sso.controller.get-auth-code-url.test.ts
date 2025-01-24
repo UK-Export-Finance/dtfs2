@@ -26,7 +26,7 @@ describe('SsoController', () => {
       })
       .build();
 
-    userService = new UserServiceMockBuilder().withDefaults().build();
+    userService = new UserServiceMockBuilder().build();
 
     ssoController = new SsoController({ entraIdService, userService });
   });
