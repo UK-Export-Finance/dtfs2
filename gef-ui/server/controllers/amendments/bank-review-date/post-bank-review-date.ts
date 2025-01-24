@@ -1,0 +1,71 @@
+import { CustomExpressRequest, DayMonthYearInput } from '@ukef/dtfs2-common';
+import { Response } from 'express';
+import * as api from '../../../services/api';
+import { BankReviewDateViewModel } from '../../../types/view-models/amendments/bank-review-date-view-model';
+import { asLoggedInUserSession } from '../../../utils/express-session';
+import { getNextPage } from '../helpers/navigation.helper';
+import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
+import { validateAndParseBankReviewDate } from '../../bank-review-date/validation';
+import { validationErrorHandler } from '../../../utils/helpers';
+import { getCoverStartDateOrToday } from '../../../utils/get-cover-start-date-or-today.ts';
+
+export type PostBankReviewDateRequest = CustomExpressRequest<{
+  params: { dealId: string; facilityId: string; amendmentId: string };
+  reqBody: {
+    'bank-review-date-day': string;
+    'bank-review-date-month': string;
+    'bank-review-date-year': string;
+    previousPage: string;
+  };
+}>;
+
+/**
+ * Controller to post the `Bank review date` page
+ * @param req - the request object
+ * @param res - the response object
+ */
+export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Response) => {
+  try {
+    const { dealId, facilityId, amendmentId } = req.params;
+    const { previousPage } = req.body;
+    const { userToken } = asLoggedInUserSession(req.session);
+
+    const bankReviewDateDayMonthYear: DayMonthYearInput = {
+      day: req.body['bank-review-date-day'],
+      month: req.body['bank-review-date-month'],
+      year: req.body['bank-review-date-year'],
+    };
+
+    const deal = await api.getApplication({ dealId, userToken });
+    const { details: facility } = await api.getFacility({ facilityId, userToken });
+
+    if (!deal || !facility) {
+      console.error('Deal %s or Facility %s was not found', dealId, facilityId);
+      return res.redirect('/not-found');
+    }
+
+    const validationErrorsOrValue = validateAndParseBankReviewDate(bankReviewDateDayMonthYear, getCoverStartDateOrToday(facility));
+
+    if ('errors' in validationErrorsOrValue) {
+      const viewModel: BankReviewDateViewModel = {
+        exporterName: deal.exporter.companyName,
+        facilityType: facility.type,
+        cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+        previousPage,
+        bankReviewDate: bankReviewDateDayMonthYear,
+        errors: validationErrorHandler(validationErrorsOrValue.errors),
+      };
+
+      return res.render('partials/amendments/bank-review-date.njk', viewModel);
+    }
+
+    const update = { bankReviewDate: validationErrorsOrValue.value };
+
+    const amendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
+
+    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE, amendment));
+  } catch (error) {
+    console.error('Error posting amendments bank review date page %o', error);
+    return res.render('partials/problem-with-service.njk');
+  }
+};
