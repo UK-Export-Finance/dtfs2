@@ -1,17 +1,17 @@
-import relative from '../../../relativeURL';
-import MOCK_USERS from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../e2e-fixtures/gef/mocks/mock-deals';
-import { anIssuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';
-import { applicationPreview } from '../../../../../../gef/cypress/e2e/pages';
-import whatDoYouNeedToChange from '../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
-import coverEndDate from '../../../../../../gef/cypress/e2e/pages/amendments/cover-end-date';
-import doYouHaveAFacilityEndDate from '../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
-import facilityEndDate from '../../../../../../gef/cypress/e2e/pages/amendments/facility-end-date';
-import eligibility from '../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
+import relative from '../../../../relativeURL';
+import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
+import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
+import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
+import coverEndDate from '../../../../../../../gef/cypress/e2e/pages/amendments/cover-end-date';
+import doYouHaveAFacilityEndDate from '../../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
+import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
+import bankReviewDate from '../../../../../../../gef/cypress/e2e/pages/amendments/bank-review-date';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('Amendments - Change facility end date journey - happy path', () => {
+context('Amendments - Change cover end date with bank review date - full journey', () => {
   /**
    * @type {string}
    */
@@ -94,15 +94,15 @@ context('Amendments - Change facility end date journey - happy path', () => {
     doYouHaveAFacilityEndDate.pageHeading().contains('Do you have a facility end date?');
     doYouHaveAFacilityEndDate.backLink();
 
-    doYouHaveAFacilityEndDate.yesRadioButton().click();
+    doYouHaveAFacilityEndDate.noRadioButton().click();
     cy.clickContinueButton();
 
-    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-end-date`));
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/bank-review-date`));
 
-    facilityEndDate.pageHeading().contains('Facility end date');
-    facilityEndDate.backLink();
+    bankReviewDate.pageHeading().contains('Bank review date');
+    bankReviewDate.backLink();
 
-    cy.completeDateFormFields({ idPrefix: 'facility-end-date' });
+    cy.completeDateFormFields({ idPrefix: 'bank-review-date' });
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/eligibility`));
@@ -120,14 +120,9 @@ context('Amendments - Change facility end date journey - happy path', () => {
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/effective-date`));
-  });
 
-  it('should navigate to cancel page when cancel is clicked', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-end-date`));
+    // TODO DTFS2-7524: add steps for effective from date
 
-    facilityEndDate.pageHeading().contains('Facility end date');
-    facilityEndDate.cancelLink().click();
-
-    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`));
+    // TODO DTFS2-7519: add steps for check your answer page
   });
 });

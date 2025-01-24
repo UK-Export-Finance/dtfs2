@@ -1,15 +1,18 @@
-import relative from '../../../relativeURL';
-import MOCK_USERS from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../e2e-fixtures/gef/mocks/mock-deals';
-import { anIssuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';
-import { applicationPreview } from '../../../../../../gef/cypress/e2e/pages';
-import whatDoYouNeedToChange from '../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
-import facilityValue from '../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
-import eligibility from '../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
+import relative from '../../../../relativeURL';
+import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
+import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
+import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
+import coverEndDate from '../../../../../../../gef/cypress/e2e/pages/amendments/cover-end-date';
+import doYouHaveAFacilityEndDate from '../../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
+import facilityEndDate from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-end-date';
+import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
+import facilityValue from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('Amendments - change facility value journey - happy path', () => {
+context('Amendments - Change both cover end date and facility value - full journey', () => {
   /**
    * @type {string}
    */
@@ -23,7 +26,9 @@ context('Amendments - change facility value journey - happy path', () => {
    * @type {string}
    */
   let amendmentId;
-
+  /**
+   * @type {Date}
+   */
   const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
 
   before(() => {
@@ -58,8 +63,13 @@ context('Amendments - change facility value journey - happy path', () => {
     cy.clearSessionCookies();
   });
 
+  beforeEach(() => {
+    cy.clearSessionCookies();
+    cy.login(BANK1_MAKER1);
+  });
+
   it('should navigate through the journey correctly', () => {
-    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
+    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
 
     whatDoYouNeedToChange.coverEndDateCheckbox().should('not.be.checked');
     whatDoYouNeedToChange.facilityValueCheckbox().should('not.be.checked');
@@ -67,7 +77,34 @@ context('Amendments - change facility value journey - happy path', () => {
     whatDoYouNeedToChange.backLink();
     whatDoYouNeedToChange.warning().contains('Check your records for the most up-to-date values');
 
+    whatDoYouNeedToChange.coverEndDateCheckbox().click();
     whatDoYouNeedToChange.facilityValueCheckbox().click();
+    cy.clickContinueButton();
+
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+
+    coverEndDate.pageHeading().contains('New cover end date');
+    coverEndDate.backLink();
+
+    cy.completeDateFormFields({ idPrefix: 'cover-end-date' });
+    cy.clickContinueButton();
+
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/do-you-have-a-facility-end-date`));
+
+    doYouHaveAFacilityEndDate.noRadioButton().should('not.be.checked');
+    doYouHaveAFacilityEndDate.yesRadioButton().should('not.be.checked');
+    doYouHaveAFacilityEndDate.pageHeading().contains('Do you have a facility end date?');
+    doYouHaveAFacilityEndDate.backLink();
+
+    doYouHaveAFacilityEndDate.yesRadioButton().click();
+    cy.clickContinueButton();
+
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-end-date`));
+
+    facilityEndDate.pageHeading().contains('Facility end date');
+    facilityEndDate.backLink();
+
+    cy.completeDateFormFields({ idPrefix: 'facility-end-date' });
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`));
@@ -94,5 +131,9 @@ context('Amendments - change facility value journey - happy path', () => {
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/effective-date`));
+
+    // TODO DTFS2-7524: add steps for effective from date
+
+    // TODO DTFS2-7519: add steps for check your answer page
   });
 });

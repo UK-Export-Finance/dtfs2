@@ -1,15 +1,15 @@
-import relative from '../../../relativeURL';
-import MOCK_USERS from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../e2e-fixtures/gef/mocks/mock-deals';
-import { anIssuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';
-import { applicationPreview } from '../../../../../../gef/cypress/e2e/pages';
-import whatDoYouNeedToChange from '../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
-import facilityValue from '../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
-import eligibility from '../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
+import relative from '../../../../relativeURL';
+import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
+import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
+import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
+import facilityValue from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
+import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('Amendments - change facility end date - unhappy path', () => {
+context('Amendments - Eligibility - page tests', () => {
   /**
    * @type {string}
    */
@@ -48,6 +48,11 @@ context('Amendments - change facility end date - unhappy path', () => {
 
           amendmentId = urlSplit[9];
         });
+
+        whatDoYouNeedToChange.facilityValueCheckbox().click();
+        cy.clickContinueButton();
+        cy.keyboardInput(facilityValue.facilityValue(), '10000');
+        cy.clickContinueButton();
       });
     });
   });
@@ -60,24 +65,10 @@ context('Amendments - change facility end date - unhappy path', () => {
   beforeEach(() => {
     cy.clearSessionCookies();
     cy.login(BANK1_MAKER1);
+    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/eligibility`));
   });
 
   it('should render an error if nothing is selected on the "Eligibility" page', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
-
-    whatDoYouNeedToChange.facilityValueCheckbox().click();
-    cy.clickContinueButton();
-
-    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`));
-
-    facilityValue.pageHeading().contains('New facility value');
-    cy.keyboardInput(facilityValue.facilityValue(), '10000');
-    cy.clickContinueButton();
-
-    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/eligibility`));
-
-    eligibility.pageHeading().contains('Eligibility');
-
     eligibility.allTrueRadioButtons().should('not.be.checked');
     eligibility.allFalseRadioButtons().should('not.be.checked');
     cy.clickContinueButton();
@@ -94,10 +85,6 @@ context('Amendments - change facility end date - unhappy path', () => {
   });
 
   it('should render an error if only some items are selected on the "Eligibility" page', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/eligibility`));
-
-    eligibility.pageHeading().contains('Eligibility');
-
     eligibility.allTrueRadioButtons().should('not.be.checked');
     eligibility.allFalseRadioButtons().should('not.be.checked');
 
@@ -113,5 +100,11 @@ context('Amendments - change facility end date - unhappy path', () => {
 
     eligibility.criterionInlineError(2).should('be.visible');
     eligibility.criterionInlineError(2).contains('Select if neither the Exporter, nor its UK Parent Obligor is an Affected Person');
+  });
+
+  it('should navigate to cancel page when cancel is clicked', () => {
+    eligibility.cancelLink().click();
+
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`));
   });
 });
