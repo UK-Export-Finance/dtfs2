@@ -8,6 +8,7 @@ import {
   MarkAsReadyToKeyParams,
   MarkAsReconciledParams,
   RemoveAllPaymentsParams,
+  UpdateWithCorrectionParams,
   UpdateWithKeyingDataParams,
   UpdateWithStatusParams,
 } from './fee-record.types';
@@ -235,6 +236,44 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     if (status === FEE_RECORD_STATUS.RECONCILED) {
       this.dateReconciled = new Date();
     }
+  }
+
+  /**
+   * Updates the fee record with a correction
+   * @param param - The update parameters
+   * @param param.correctedValues - The corrected values, each field can be null if not being corrected
+   * @param param.requestSource - The request source
+   */
+  public updateWithCorrection({ requestSource, correctedValues }: UpdateWithCorrectionParams): void {
+    this.status = FEE_RECORD_STATUS.TO_DO_AMENDED;
+
+    if (correctedValues.facilityUtilisation !== null) {
+      this.facilityUtilisation = correctedValues.facilityUtilisation;
+    }
+
+    if (correctedValues.feesPaidToUkefForThePeriod !== null) {
+      this.feesPaidToUkefForThePeriod = correctedValues.feesPaidToUkefForThePeriod;
+    }
+
+    if (correctedValues.feesPaidToUkefForThePeriodCurrency !== null) {
+      /**
+       * If the bank does not provide a payment currency in the report or provides a payment
+       * currency which is the same as the fees paid to ukef for the period currency, any
+       * change to feesPaidToUkefForThePeriodCurrency should also update the payment currency
+       * to keep them in sync with each other.
+       */
+      if (this.feesPaidToUkefForThePeriodCurrency === this.paymentCurrency) {
+        this.paymentCurrency = correctedValues.feesPaidToUkefForThePeriodCurrency;
+      }
+
+      this.feesPaidToUkefForThePeriodCurrency = correctedValues.feesPaidToUkefForThePeriodCurrency;
+    }
+
+    if (correctedValues.facilityId !== null) {
+      this.facilityId = correctedValues.facilityId;
+    }
+
+    this.updateLastUpdatedBy(requestSource);
   }
 
   /**

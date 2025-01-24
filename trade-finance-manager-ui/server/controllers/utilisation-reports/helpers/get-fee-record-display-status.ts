@@ -8,6 +8,7 @@ const feeRecordStatusToDisplayStatus: Record<FeeRecordStatus, FeeRecordDisplaySt
   READY_TO_KEY: 'Ready to key',
   RECONCILED: 'Reconciled',
   PENDING_CORRECTION: 'Record correction sent',
+  TO_DO_AMENDED: 'To do (amended)',
 };
 
 export const getFeeRecordDisplayStatus = (status: FeeRecordStatus): FeeRecordDisplayStatus => feeRecordStatusToDisplayStatus[status];

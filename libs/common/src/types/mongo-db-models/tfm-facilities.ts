@@ -6,6 +6,7 @@ import { Facility } from './facility';
 import { AnyObject } from '../any-object';
 import { AuditDatabaseRecord } from '../audit-database-record';
 import { AMENDMENT_TYPES } from '../../constants';
+import { AmendmentsEligibilityCriterion } from './amendments-eligibility-criteria';
 
 type SubmittedByUser = {
   _id: ObjectId;
@@ -120,12 +121,20 @@ export interface TfmFacilityAmendment extends BaseAmendment {
   };
 }
 
+export interface AmendmentsEligibilityCriterionWithAnswer extends AmendmentsEligibilityCriterion {
+  answer: boolean | null;
+}
+
 /**
  * Amendments created in Portal
  */
 export interface PortalFacilityAmendment extends BaseAmendment {
   type: typeof AMENDMENT_TYPES.PORTAL;
   status: PortalAmendmentStatus;
+  eligibilityCriteria: {
+    version: number;
+    criteria: AmendmentsEligibilityCriterionWithAnswer[];
+  };
 }
 
 /**

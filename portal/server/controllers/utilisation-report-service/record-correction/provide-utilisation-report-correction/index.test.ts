@@ -8,6 +8,8 @@ import {
   mapCurrenciesToRadioItems,
   PORTAL_LOGIN_STATUS,
   RECORD_CORRECTION_REASON,
+  RecordCorrectionFormValues,
+  RecordCorrectionFormValueValidationErrors,
   RecordCorrectionReason,
 } from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
@@ -22,6 +24,8 @@ import { getAdditionalCommentsFieldLabels, mapToProvideCorrectionFormValuesViewM
 import { ProvideUtilisationReportCorrectionViewModel } from '../../../../types/view-models/record-correction/provide-utilisation-report-correction';
 import { aGetFeeRecordCorrectionResponseBody } from '../../../../../test-helpers/test-data/get-fee-record-correction-response';
 import { GetFeeRecordCorrectionTransientFormDataResponseBody } from '../../../../api-response-types';
+import { mapValidationErrorsToViewModel } from './validation-errors-map-helper';
+import { getRecordCorrectionCancelLinkHref } from '../../../../helpers';
 
 jest.mock('../../../../api');
 
@@ -102,6 +106,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
         jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(feeRecordCorrectionResponse);
 
+        const expectedCancelLinkHref = getRecordCorrectionCancelLinkHref(correctionId);
         const expectedCorrectionRequestDetails = mapToCorrectionRequestDetailsViewModel(feeRecordCorrectionResponse);
         const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems();
         const { label: expectedAdditionalCommentsLabel, hint: expectedAdditionalCommentsHint } = getAdditionalCommentsFieldLabels(reasons);
@@ -115,6 +120,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         const expected = {
           user: mockUser,
           primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
+          cancelLinkHref: expectedCancelLinkHref,
           correctionRequestDetails: expectedCorrectionRequestDetails,
           paymentCurrencyOptions: expectedPaymentCurrencyOptions,
           additionalComments: {
@@ -172,6 +178,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
           jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(feeRecordCorrectionResponse);
 
+          const expectedCancelLinkHref = getRecordCorrectionCancelLinkHref(correctionId);
           const expectedCorrectionRequestDetails = mapToCorrectionRequestDetailsViewModel(feeRecordCorrectionResponse);
           const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems();
           const { label: expectedAdditionalCommentsLabel, hint: expectedAdditionalCommentsHint } = getAdditionalCommentsFieldLabels(reasons);
@@ -185,6 +192,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
           const expected = {
             user: mockUser,
             primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
+            cancelLinkHref: expectedCancelLinkHref,
             correctionRequestDetails: expectedCorrectionRequestDetails,
             paymentCurrencyOptions: expectedPaymentCurrencyOptions,
             additionalComments: {
@@ -219,6 +227,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
           jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(feeRecordCorrectionResponse);
 
+          const expectedCancelLinkHref = getRecordCorrectionCancelLinkHref(correctionId);
           const expectedCorrectionRequestDetails = mapToCorrectionRequestDetailsViewModel(feeRecordCorrectionResponse);
           const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems(savedFormValues.reportedCurrency);
           const { label: expectedAdditionalCommentsLabel, hint: expectedAdditionalCommentsHint } = getAdditionalCommentsFieldLabels(reasons);
@@ -232,6 +241,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
           const expected = {
             user: mockUser,
             primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
+            cancelLinkHref: expectedCancelLinkHref,
             correctionRequestDetails: expectedCorrectionRequestDetails,
             paymentCurrencyOptions: expectedPaymentCurrencyOptions,
             additionalComments: {
@@ -325,19 +335,6 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       jest.resetAllMocks();
     });
 
-    it("should redirect to the 'check the information' screen if no errors", async () => {
-      // Arrange
-      jest.mocked(api.putFeeRecordCorrection);
-
-      const expectedRedirectUrl = `/utilisation-reports/provide-correction/${correctionId}/check-the-information`;
-
-      // Act
-      await postProvideUtilisationReportCorrection(req, res);
-
-      // Assert
-      expect(res._getRedirectUrl()).toEqual(expectedRedirectUrl);
-    });
-
     it('should call the "putFeeRecordCorrection" api endpoint once with the correct parameters', async () => {
       // Arrange
       const formData = aRecordCorrectionFormValues();
@@ -349,6 +346,118 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       // Assert
       expect(api.putFeeRecordCorrection).toHaveBeenCalledTimes(1);
       expect(api.putFeeRecordCorrection).toHaveBeenCalledWith(userToken, bankId, correctionId, formData);
+    });
+
+    describe('when there are no validation errors', () => {
+      it("should redirect to the 'check the information' screen", async () => {
+        // Arrange
+        jest.mocked(api.putFeeRecordCorrection).mockResolvedValue({});
+
+        const expectedRedirectUrl = `/utilisation-reports/provide-correction/${correctionId}/check-the-information`;
+
+        // Act
+        await postProvideUtilisationReportCorrection(req, res);
+
+        // Assert
+        expect(res._getRedirectUrl()).toEqual(expectedRedirectUrl);
+      });
+
+      it('should not call the "getFeeRecordCorrection" api endpoint', async () => {
+        // Arrange
+        jest.mocked(api.putFeeRecordCorrection).mockResolvedValue({});
+
+        // Act
+        await postProvideUtilisationReportCorrection(req, res);
+
+        // Assert
+        expect(api.getFeeRecordCorrection).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('when there are validation errors', () => {
+      it('should call the "getFeeRecordCorrection" api endpoint once with the correct parameters', async () => {
+        // Arrange
+        const validationErrors: RecordCorrectionFormValueValidationErrors = {
+          reportedCurrencyErrorMessage: 'Invalid currency',
+        };
+
+        const putResponse = {
+          validationErrors,
+        };
+
+        jest.mocked(api.putFeeRecordCorrection).mockResolvedValue(putResponse);
+
+        jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(aGetFeeRecordCorrectionResponseBody());
+
+        // Act
+        await postProvideUtilisationReportCorrection(req, res);
+
+        // Assert
+        expect(api.getFeeRecordCorrection).toHaveBeenCalledTimes(1);
+        expect(api.getFeeRecordCorrection).toHaveBeenCalledWith(userToken, bankId, correctionId);
+      });
+
+      it('should render the "provide utilisation report correction" page with errors', async () => {
+        // Arrange
+        const reasons = [
+          RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT,
+          RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT,
+          RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT,
+          RECORD_CORRECTION_REASON.UTILISATION_INCORRECT,
+          RECORD_CORRECTION_REASON.OTHER,
+        ];
+        const feeRecordCorrectionResponse = {
+          ...aGetFeeRecordCorrectionResponseBody(),
+          reasons,
+        };
+
+        jest.mocked(api.getFeeRecordCorrection).mockResolvedValue(feeRecordCorrectionResponse);
+
+        const formValues: RecordCorrectionFormValues = {
+          utilisation: 'INVALID123',
+          facilityId: '77777777',
+          reportedCurrency: 'INVALID456',
+          reportedFee: '1234.56',
+          additionalComments: 'Some additional comments',
+        };
+        req.body = formValues;
+
+        const validationErrors: RecordCorrectionFormValueValidationErrors = {
+          reportedCurrencyErrorMessage: 'Invalid currency',
+          utilisationErrorMessage: 'Invalid utilisation',
+        };
+
+        const putResponse = {
+          validationErrors,
+        };
+
+        jest.mocked(api.putFeeRecordCorrection).mockResolvedValue(putResponse);
+
+        // Act
+        await postProvideUtilisationReportCorrection(req, res);
+
+        // Assert
+        expect(res._getRenderView()).toEqual('utilisation-report-service/record-correction/provide-utilisation-report-correction.njk');
+
+        const expectedCancelLinkHref = getRecordCorrectionCancelLinkHref(correctionId);
+        const expectedCorrectionRequestDetails = mapToCorrectionRequestDetailsViewModel(feeRecordCorrectionResponse);
+        const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems();
+        const expectedAdditionalLabels = getAdditionalCommentsFieldLabels(reasons);
+        const expectedValidationErrors = mapValidationErrorsToViewModel(validationErrors);
+
+        const expected = {
+          user: mockUser,
+          primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
+          cancelLinkHref: expectedCancelLinkHref,
+          correctionRequestDetails: expectedCorrectionRequestDetails,
+          paymentCurrencyOptions: expectedPaymentCurrencyOptions,
+          additionalComments: expectedAdditionalLabels,
+          formValues: mapToProvideCorrectionFormValuesViewModel(formValues),
+          errors: expectedValidationErrors,
+        };
+
+        expect(res._getRenderData() as ProvideUtilisationReportCorrectionViewModel).toEqual<ProvideUtilisationReportCorrectionViewModel>(expected);
+      });
     });
 
     it('should render the "problem with service" page when an error occurs', async () => {

@@ -29,4 +29,8 @@ export const aPortalFacilityAmendment = (): PortalFacilityAmendment => ({
   createdAt: getUnixTime(new Date()),
   updatedAt: getUnixTime(new Date()),
   status: PORTAL_AMENDMENT_STATUS.DRAFT,
+  eligibilityCriteria: {
+    criteria: [{ id: 1, text: 'item 1', answer: null }],
+    version: 1,
+  },
 });

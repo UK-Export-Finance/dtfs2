@@ -10,6 +10,7 @@ import { PRIMARY_NAV_KEY } from '../../../constants';
 import { filterReportJsonToRelevantKeys } from '../../../helpers/filterReportJsonToRelevantKeys';
 import { asLoggedInUserSession, LoggedInUserSession } from '../../../helpers/express-session';
 import { isNonEmptyPendingCorrectionsResponseBody, mapToPendingCorrectionsViewModel } from './pending-corrections-helper';
+import { ErrorSummaryViewModel } from '../../../types/view-models/error-summary-view-model';
 
 /**
  * Sets the utilisation report session data for the report upload journey
@@ -189,7 +190,7 @@ export const postUtilisationReportUpload = async (req: Request, res: Response) =
     const { csvValidationErrors } = await api.generateValidationErrorsForUtilisationReportData(filteredCsvJson, bankId, userToken);
 
     if (csvValidationErrors.length > 0) {
-      const errorSummary = [
+      const errorSummary: ErrorSummaryViewModel[] = [
         {
           text: 'You must correct these errors before you can upload the report',
           href: '#validation-errors-table',
