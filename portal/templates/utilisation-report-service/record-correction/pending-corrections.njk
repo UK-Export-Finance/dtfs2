@@ -1,0 +1,98 @@
+{% extends "index.njk" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% block pageTitle %}Report GEF utilisation and fees - Record correction{% endblock %}
+{% block content %}
+  <h1 class="govuk-heading-l" data-cy="main-heading">
+    Report GEF utilisation and fees
+  </h1>
+  <h2 class="govuk-heading-m" data-cy="pending-corrections-heading">Record correction</h2>
+  <p class="govuk-body" data-cy="corrections-info-text">
+    The following errors in the {{ formattedReportPeriod }} report uploaded by {{ uploadedByFullName }} on {{ formattedDateUploaded }} have been identified by UKEF:
+  </p>
+  <p class="govuk-body" data-cy="selection-text">
+    Select the record you would like to amend from the list below
+  </p>
+
+  {% set rows = [] %}
+  {% for correction in corrections %}
+    {% set facilityIdHtml %}
+      <a
+        class="govuk-link"
+        href="/utilisation-reports/provide-correction/{{ correction.correctionId }}"
+        aria-label="Amend record"
+        data-cy="correction-link">
+        {{ correction.facilityId }}
+      </a>
+    {% endset %}
+
+    {% set row = [
+      {
+        html: facilityIdHtml,
+        attributes: { "data-cy": "pending-corrections-row--facility-id" }
+      },
+      {
+        text: correction.exporter,
+        attributes: { "data-cy": "pending-corrections-row--exporter" }
+      },
+      {
+        text: correction.formattedReportedFees,
+        format: 'numeric',
+        attributes: { "data-cy": "pending-corrections-row--reported-fees-paid" }
+      },
+      {
+        text: correction.formattedReasons,
+        attributes: { "data-cy": "pending-corrections-row--error-type" }
+      },
+      {
+        html: (correction.additionalInfo | replaceNewLinesWithBrTags),
+        attributes: { "data-cy": "pending-corrections-row--error-summary" }
+      }
+    ] %}
+    {% set rows = rows.concat([row]) %}
+  {% endfor %}
+
+  {{ govukTable({
+    firstCellIsHeader: false,
+    head: [
+      {
+        text: "Facility ID"
+      },
+      {
+        text: "Exporter"
+      },
+      {
+        text: "Reported fees paid",
+        format: 'numeric'
+      },
+      {
+        text: "Error type(s)"
+      },
+      {
+        text: "Error summary"
+      }
+    ],
+    rows: rows,
+    attributes: {
+      "data-cy": "pending-corrections-table"
+    }
+  }) }}
+
+  {% if nextAction.reportCurrentlyDueForUpload %}
+    {% set nextReportPeriod = nextAction.reportCurrentlyDueForUpload.formattedReportPeriod %}
+    <h2 class="govuk-heading-m" data-cy="next-report-due-heading">{{ nextReportPeriod }} report</h2>
+    <p class="govuk-body" data-cy="next-report-due-text">
+      The {{ nextReportPeriod }} report is due, but cannot be uploaded until the record corrections for the {{ formattedReportPeriod }} have been completed.
+    </p>
+  {% endif %}
+
+  {% if nextAction.reportSoonToBeDueForUpload %}
+    {% set nextReportPeriod = nextAction.reportSoonToBeDueForUpload.formattedReportPeriod %}
+    {% set nextReportUploadFromDate = nextAction.reportSoonToBeDueForUpload.formattedUploadFromDate %}
+
+    <h2 class="govuk-heading-m" data-cy="no-report-due-heading">Report not currently due for upload</h2>
+    <p class="govuk-body" data-cy="no-report-due-text">
+      The {{ nextReportPeriod }} report can be uploaded from {{ nextReportUploadFromDate }}
+    </p>
+  {% endif %}
+{% endblock %}

@@ -1,4 +1,4 @@
-const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { requestApprovalValidation } = require('./validation/amendmentRequestApproval.validate');
 const { SUBMISSION_TYPE } = require('../../../constants/amendments');
@@ -14,7 +14,7 @@ const getAmendmentRequestApproval = async (req, res) => {
 
     const { dealId } = amendment;
     const requireUkefApproval = amendment.requireUkefApproval ?? '';
-    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
 
     return res.render('case/amendments/amendment-request-approval.njk', {
       dealId,
@@ -41,7 +41,7 @@ const postAmendmentRequestApproval = async (req, res) => {
   const { dealId } = amendment;
 
   if (amendmentRequestApprovalErrors.length) {
-    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+    const isEditable = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
     return res.render('case/amendments/amendment-request-approval.njk', {
       errors: errorsObject.errors,
       dealId,

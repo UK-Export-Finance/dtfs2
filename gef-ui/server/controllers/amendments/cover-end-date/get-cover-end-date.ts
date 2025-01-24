@@ -1,11 +1,13 @@
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, DayMonthYearInput } from '@ukef/dtfs2-common';
+import { fromUnixTime } from 'date-fns';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { CoverEndDateViewModel } from '../../../types/view-models/amendments/cover-end-date-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper';
-import { getPreviousPage } from '../helpers/navigation.helper';
+import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
+import { convertDateToDayMonthYearInput } from '../helpers/dates.helper.ts';
 
 export type GetCoverEndDateRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -37,21 +39,25 @@ export const getCoverEndDate = async (req: GetCoverEndDateRequest, res: Response
     const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
 
     if (!amendment) {
-      console.error('Amendment %s not found on facility %s', amendmentId, facilityId);
+      console.error('Amendment %s was not found on facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 
     if (!amendment.changeCoverEndDate) {
       console.error('Amendment %s not changing cover end date', amendmentId);
-      return res.redirect(
-        `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`,
-      );
+      return res.redirect(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE }));
     }
+
+    const currentCoverEndDate: Date | undefined = (amendment.coverEndDate && fromUnixTime(amendment.coverEndDate / 1000)) || undefined;
+
+    const coverEndDateDayMonthYear: DayMonthYearInput | undefined = currentCoverEndDate && convertDateToDayMonthYearInput(currentCoverEndDate);
 
     const viewModel: CoverEndDateViewModel = {
       exporterName: deal.exporter.companyName,
-      cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+      facilityType: facility.type,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.COVER_END_DATE, amendment),
+      coverEndDate: coverEndDateDayMonthYear,
     };
 
     return res.render('partials/amendments/cover-end-date.njk', viewModel);

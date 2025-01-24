@@ -1,5 +1,5 @@
 const { fromUnixTime, format } = require('date-fns');
-const { CURRENCY, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { CURRENCY, TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const dealReducer = require('./deal');
 const mapGefDeal = require('./mappings/gef-deal/mapGefDeal');
 
@@ -10,14 +10,14 @@ describe('gef deal with amendments', () => {
   const coverEndDateUnix = 1658403289;
 
   const mockAmendmentValueResponse = {
-    status: AMENDMENT_STATUS.COMPLETED,
+    status: TFM_AMENDMENT_STATUS.COMPLETED,
     value: 5000,
     currency: CURRENCY.GBP,
     amendmentId: '1234',
   };
 
   const mockAmendmentDateResponse = {
-    status: AMENDMENT_STATUS.COMPLETED,
+    status: TFM_AMENDMENT_STATUS.COMPLETED,
     coverEndDate: coverEndDateUnix,
     amendmentId: '1234',
   };

@@ -11,7 +11,7 @@
 {% set headingHtml %}
 <header>
   <span class="govuk-caption-l" data-cy="heading-caption">
-    {{ exporterName }}
+    {{ exporterName }}, {{ facilityType }} facility
   </span>
 
   <h1 class="govuk-label-wrapper" data-cy="page-heading">
@@ -46,19 +46,27 @@
     <div class="govuk-grid-column-three-quarters">
       <form method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="previousPage" value="{{ previousPage }}">
 
         {{ govukInput({
-          id: "facility-value",
+          id: "facilityValue",
           classes: "govuk-input--width-10",
           label: {
             html: headingHtml,
             isPageHeading: true
           },
+          name: "facilityValue",
           value: facilityValue,
           prefix: {
             text: currencySymbol,
             attributes: {
               "data-cy": "facility-value-prefix"
+            }
+          },
+          errorMessage: errors and errors.fieldErrors.facilityValue and {
+            text: errors.fieldErrors.facilityValue.text,
+            attributes: {
+              'data-cy': 'facility-value-inline-error'
             }
           },
           spellcheck: false,

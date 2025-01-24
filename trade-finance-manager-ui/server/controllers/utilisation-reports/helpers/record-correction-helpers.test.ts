@@ -13,13 +13,13 @@ describe('record-correction-helpers', () => {
       const expected = {
         correctionId: feeRecordCorrection.correctionId,
         feeRecordId: feeRecordCorrection.feeRecordId,
-        facilityId: feeRecordCorrection.facilityId,
         exporter: feeRecordCorrection.exporter,
         reasons: feeRecordCorrection.formattedReasons,
         dateSent: feeRecordCorrection.formattedDateSent,
-        requestedBy: feeRecordCorrection.requestedBy,
         status: feeRecordCorrection.status,
         displayStatus,
+        formattedCorrectRecords: feeRecordCorrection.formattedCorrectRecords,
+        formattedOldRecords: feeRecordCorrection.formattedOldRecords,
       };
 
       expect(result).toEqual(expected);

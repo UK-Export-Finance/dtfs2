@@ -1,4 +1,5 @@
 import { FEE_RECORD_STATUS, FeeRecordEntity, PendingCorrection } from '@ukef/dtfs2-common';
+import { mapFeeRecordEntityToReportedFees } from '../../../../../../mapping/fee-record-mapper';
 
 /**
  * Maps a fee record to an array of pending corrections
@@ -7,15 +8,21 @@ import { FEE_RECORD_STATUS, FeeRecordEntity, PendingCorrection } from '@ukef/dtf
  * mapped to the response type
  */
 export const mapFeeRecordToPendingCorrectionsArray = (feeRecord: FeeRecordEntity): PendingCorrection[] => {
+  const { facilityId, exporter } = feeRecord;
+
+  const reportedFees = mapFeeRecordEntityToReportedFees(feeRecord);
+
   return feeRecord.corrections.flatMap((correction) => {
     if (correction.isCompleted) {
       return [];
     }
 
     return {
+      facilityId,
+      exporter,
+      reportedFees,
       correctionId: correction.id,
-      facilityId: feeRecord.facilityId,
-      exporter: feeRecord.exporter,
+      reasons: correction.reasons,
       additionalInfo: correction.additionalInfo,
     };
   });

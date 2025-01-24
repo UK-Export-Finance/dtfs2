@@ -63,7 +63,7 @@ describe('controllers/utilisation-report-service/utilisation-report-upload', () 
         await getUtilisationReportUpload(req, res);
 
         // Assert
-        expect(res._getRenderView()).toEqual('utilisation-report-service/record-corrections/pending-corrections.njk');
+        expect(res._getRenderView()).toEqual('utilisation-report-service/record-correction/pending-corrections.njk');
         expect(res._getRenderData()).toEqual(mapToPendingCorrectionsViewModel(pendingCorrectionsResponseBody, user));
       });
 

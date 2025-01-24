@@ -1,6 +1,7 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import path from 'path';
 import { sqlDbConfig } from './config';
+import { CustomNamingStrategy } from './custom-naming-strategy';
 
 const { SQL_DB_HOST, SQL_DB_PORT, SQL_DB_USERNAME, SQL_DB_PASSWORD, SQL_DB_NAME, SQL_DB_LOGGING_ENABLED } = sqlDbConfig;
 
@@ -19,6 +20,7 @@ const dataSourceOptions: DataSourceOptions = {
     encrypt: true,
     trustServerCertificate: true,
   },
+  namingStrategy: new CustomNamingStrategy(),
 };
 
 export const SqlDbDataSource = new DataSource(dataSourceOptions);

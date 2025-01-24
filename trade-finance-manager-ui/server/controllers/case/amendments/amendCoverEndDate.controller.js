@@ -1,5 +1,5 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
-const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const api = require('../../../api');
 const { coverEndDateValidation } = require('./validation/amendCoverEndDateDate.validate');
@@ -32,7 +32,7 @@ const getAmendCoverEndDate = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate;
+  const isEditable = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate;
   const { dealId, coverEndDate } = amendment;
 
   let coverEndDateDay = '';
@@ -82,7 +82,7 @@ const postAmendCoverEndDate = async (req, res) => {
   const { coverEndDate, errorsObject, coverEndDateErrors } = coverEndDateValidation(req.body, currentCoverEndDate);
 
   if (coverEndDateErrors.length) {
-    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate;
+    const isEditable = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate;
     return res.render('case/amendments/amendment-cover-end-date.njk', {
       dealId: amendment.dealId,
       facilityId,
