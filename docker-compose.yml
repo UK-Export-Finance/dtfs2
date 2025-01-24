@@ -89,6 +89,8 @@ services:
       - FF_TFM_DEAL_CANCELLATION_ENABLED
       - DEAL_CANCELLATION_SCHEDULE
       - FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
+      - UKEF_GEF_REPORTING_EMAIL_RECIPIENT
+      - TFM_UI_URL=http://localhost:5003
 
   trade-finance-manager-ui:
     build:
