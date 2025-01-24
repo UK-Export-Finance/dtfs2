@@ -8,3 +8,4 @@ export * from './remove-from-payment-group';
 export * from './other-fee-removed-from-payment-group';
 export * from './other-fee-added-to-payment-group';
 export * from './correction-requested';
+export * from './correction-received';

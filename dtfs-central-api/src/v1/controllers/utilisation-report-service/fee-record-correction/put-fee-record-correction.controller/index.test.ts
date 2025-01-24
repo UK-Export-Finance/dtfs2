@@ -8,18 +8,25 @@ import {
   FeeRecordEntityMockBuilder,
   PaymentOfficerTeam,
   PENDING_RECONCILIATION,
+  REQUEST_PLATFORM_TYPE,
   TestApiError,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
+import { EntityManager } from 'typeorm';
 import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
 import { FeeRecordCorrectionRepo } from '../../../../../repositories/fee-record-correction-repo';
 import { putFeeRecordCorrection, PutFeeRecordCorrectionRequest } from '.';
 import { getBankById } from '../../../../../repositories/banks-repo';
 import { aBank } from '../../../../../../test-helpers';
+import { executeWithSqlTransaction } from '../../../../../helpers';
+import { FeeRecordStateMachine } from '../../../../../services/state-machines/fee-record/fee-record.state-machine';
+import { FEE_RECORD_EVENT_TYPE } from '../../../../../services/state-machines/fee-record/event/fee-record.event-type';
 
 jest.mock('../../../../../repositories/fee-record-correction-transient-form-data-repo');
 jest.mock('../../../../../repositories/fee-record-correction-repo');
 jest.mock('../../../../../repositories/banks-repo');
+jest.mock('../../../../../helpers');
+jest.mock('../../../../../services/state-machines/fee-record/fee-record.state-machine');
 
 describe('putFeeRecordCorrection', () => {
   const mockFindCorrection = jest.fn();
@@ -36,10 +43,31 @@ describe('putFeeRecordCorrection', () => {
   let req: PutFeeRecordCorrectionRequest;
   let res: MockResponse<Response>;
 
+  const mockEntityManager = {} as unknown as EntityManager;
+  const mockHandleEvent = jest.fn();
+  const mockForFeeRecord = jest.fn();
+
   beforeEach(() => {
-    FeeRecordCorrectionRepo.findOneByIdAndBankIdWithFeeRecordAndReport = mockFindCorrection;
-    FeeRecordCorrectionTransientFormDataRepo.findByUserIdAndCorrectionId = mockFindCorrectionTransientFormData;
-    FeeRecordCorrectionTransientFormDataRepo.deleteByUserIdAndCorrectionId = mockDeleteTransientFormData;
+    jest.spyOn(FeeRecordCorrectionRepo, 'withTransaction').mockReturnValue({
+      findOneByIdWithFeeRecord: jest.fn(),
+      findOneByIdWithFeeRecordAndReport: jest.fn(),
+      findOneByIdAndBankIdWithFeeRecordAndReport: mockFindCorrection,
+      findByIdAndBankId: jest.fn(),
+    });
+
+    jest.spyOn(FeeRecordCorrectionTransientFormDataRepo, 'withTransaction').mockReturnValue({
+      findByUserIdAndCorrectionId: mockFindCorrectionTransientFormData,
+      deleteByUserIdAndCorrectionId: mockDeleteTransientFormData,
+    });
+
+    jest.mocked(executeWithSqlTransaction).mockImplementation(async (functionToExecute) => {
+      return await functionToExecute(mockEntityManager);
+    });
+
+    mockForFeeRecord.mockReturnValue({
+      handleEvent: mockHandleEvent,
+    });
+    FeeRecordStateMachine.forFeeRecord = mockForFeeRecord;
 
     req = httpMocks.createRequest<PutFeeRecordCorrectionRequest>({
       params: aValidRequestParams(),
@@ -139,6 +167,28 @@ describe('putFeeRecordCorrection', () => {
 
         beforeEach(() => {
           jest.mocked(getBankById).mockResolvedValue(bank);
+        });
+
+        it('should call the fee record state machine to handle the correction received event', async () => {
+          // Act
+          await putFeeRecordCorrection(req, res);
+
+          // Assert
+          const expected = {
+            type: FEE_RECORD_EVENT_TYPE.CORRECTION_RECEIVED,
+            payload: {
+              transactionEntityManager: mockEntityManager,
+              correctionEntity: correction,
+              correctionFormData: formData,
+              requestSource: {
+                platform: REQUEST_PLATFORM_TYPE.PORTAL,
+                userId: portalUserId,
+              },
+            },
+          };
+
+          expect(mockHandleEvent).toHaveBeenCalledTimes(1);
+          expect(mockHandleEvent).toHaveBeenCalledWith(expected);
         });
 
         it('should call the repo to delete the transient form data', async () => {

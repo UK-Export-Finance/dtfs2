@@ -23,6 +23,7 @@ describe(component, () => {
 
   it.each([
     { status: FEE_RECORD_STATUS.TO_DO, expectedColourClass: undefined },
+    { status: FEE_RECORD_STATUS.TO_DO_AMENDED, expectedColourClass: undefined },
     { status: FEE_RECORD_STATUS.MATCH, expectedColourClass: 'govuk-tag--green' },
     { status: FEE_RECORD_STATUS.DOES_NOT_MATCH, expectedColourClass: 'govuk-tag--red' },
     { status: FEE_RECORD_STATUS.READY_TO_KEY, expectedColourClass: 'govuk-tag--yellow' },

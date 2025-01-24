@@ -5,6 +5,7 @@ import { PRIMARY_NAV_KEY } from '../../../../server/constants';
 export const aProvideUtilisationReportCorrectionViewModel = (): ProvideUtilisationReportCorrectionViewModel => ({
   user: aPortalSessionUser(),
   primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
+  cancelLinkHref: '/utilisation-reports/cancel-correction/987',
   correctionRequestDetails: {
     facilityId: '12345678',
     exporter: 'exporter name',
