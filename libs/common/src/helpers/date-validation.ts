@@ -1,6 +1,6 @@
 import { isValid, parseISO } from 'date-fns';
 import z from 'zod';
-import { DayMonthYearInput } from '../types';
+import { DayMonthYearInput, GenericValidationError } from '../types';
 
 type ValueAndFieldRefs = {
   value: string;
@@ -9,19 +9,13 @@ type ValueAndFieldRefs = {
   year: string;
 };
 
-type ValidationError = {
-  message: string;
-  ref: string;
-  fieldRefs: string[];
-};
-
 type ErrorOrDate =
   | {
       error: null;
       parsedDate: Date;
     }
   | {
-      error: ValidationError;
+      error: GenericValidationError;
       parsedDate: undefined;
     };
 
@@ -36,7 +30,7 @@ const parseDate = ({ day, month, year }: DayMonthYearInput): Date => {
   return parseISO(isoDateString);
 };
 
-const validateAllFieldsArePresent = ({ day, month, year }: DayMonthYearInput, valueName: string, refs: ValueAndFieldRefs): ValidationError | null => {
+const validateAllFieldsArePresent = ({ day, month, year }: DayMonthYearInput, valueName: string, refs: ValueAndFieldRefs): GenericValidationError | null => {
   const capitalisedValueName = capitalizeFirstLetter(valueName);
   const dateIsBlank = !day && !month && !year;
   if (dateIsBlank) {
@@ -95,7 +89,7 @@ const validateAllFieldsArePresent = ({ day, month, year }: DayMonthYearInput, va
   return null;
 };
 
-const validateEachFieldIsValid = ({ day, month, year }: DayMonthYearInput, valueName: string, refs: ValueAndFieldRefs): ValidationError | null => {
+const validateEachFieldIsValid = ({ day, month, year }: DayMonthYearInput, valueName: string, refs: ValueAndFieldRefs): GenericValidationError | null => {
   const capitalisedValueName = capitalizeFirstLetter(valueName);
 
   let yearFormatError;
@@ -184,7 +178,10 @@ export const applyStandardValidationAndParseDateInput = (inputtedDate: DayMonthY
     year: `${valueRef}-year`,
   };
 
-  const trimmedInputtedDate = { day: inputtedDate.day.trim(), month: inputtedDate.month.trim(), year: inputtedDate.year.trim() };
+  const trimmedInputtedDay = inputtedDate.day?.trim() || '';
+  const trimmedInputtedMonth = inputtedDate.month?.trim() || '';
+  const trimmedInputtedYear = inputtedDate.year?.trim() || '';
+  const trimmedInputtedDate = { day: trimmedInputtedDay, month: trimmedInputtedMonth, year: trimmedInputtedYear };
 
   const allFieldsPresentError = validateAllFieldsArePresent(trimmedInputtedDate, valueName, valueAndFieldRefs);
   if (allFieldsPresentError) {

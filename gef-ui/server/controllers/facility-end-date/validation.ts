@@ -1,30 +1,21 @@
 import { add, isAfter, isBefore, startOfDay } from 'date-fns';
-import { uniq } from 'lodash';
-import { DayMonthYearInput, FACILITY_END_DATE_MAXIMUM_YEARS_IN_FUTURE } from '@ukef/dtfs2-common';
-import { validateAndParseDayMonthYear } from '../../utils/day-month-year-validation';
-import { ErrorsOrDate } from '../../types/errors-or-date';
+import { applyStandardValidationAndParseDateInput, DayMonthYearInput, FACILITY_END_DATE_MAXIMUM_YEARS_IN_FUTURE } from '@ukef/dtfs2-common';
+import { ErrorsOrValue } from '../../types/errors-or-value';
+import { mapValidationError } from '../../utils/map-validation-error';
 
-export const validateAndParseFacilityEndDate = (dayMonthYear: DayMonthYearInput, coverStartDate: Date): ErrorsOrDate => {
+export const validateAndParseFacilityEndDate = (dayMonthYear: DayMonthYearInput, coverStartDate: Date): ErrorsOrValue<Date> => {
   const errRef = 'facilityEndDate';
+  const variableDisplayName = 'facility end date';
 
-  const formattingErrorsOrDate = validateAndParseDayMonthYear(dayMonthYear, {
-    errRef,
-    variableDisplayName: 'facility end date',
-  });
+  const formattingErrorsOrDate = applyStandardValidationAndParseDateInput(dayMonthYear, variableDisplayName, errRef);
 
-  if ('errors' in formattingErrorsOrDate) {
+  if (formattingErrorsOrDate.error) {
     return {
-      errors: [
-        {
-          errRef,
-          errMsg: 'Facility end date must be in the correct format DD/MM/YYYY',
-          subFieldErrorRefs: uniq(formattingErrorsOrDate.errors.flatMap((error) => error.subFieldErrorRefs ?? [])),
-        },
-      ],
+      errors: [mapValidationError(formattingErrorsOrDate.error)],
     };
   }
 
-  const facilityEndDate = formattingErrorsOrDate.date;
+  const facilityEndDate = formattingErrorsOrDate.parsedDate;
 
   const now = startOfDay(new Date());
   const maximumFacilityEndDate = add(now, { years: FACILITY_END_DATE_MAXIMUM_YEARS_IN_FUTURE });
@@ -53,5 +44,5 @@ export const validateAndParseFacilityEndDate = (dayMonthYear: DayMonthYearInput,
     };
   }
 
-  return { date: facilityEndDate };
+  return { value: facilityEndDate };
 };

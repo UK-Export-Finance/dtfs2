@@ -4,7 +4,6 @@ import { DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA, ENTRA_ID_AUTHENTICATION_RESULT_
 import { EntraIdConfig } from '../configs/entra-id.config';
 import { EntraIdApi } from '../third-party-apis/entra-id.api';
 
-// Todo remove this and commonise
 export type GetAuthCodeUrlParams = {
   successRedirect?: string;
 };
@@ -69,7 +68,6 @@ export class EntraIdService {
       throw new Error('No auth code URL request found in session');
     }
 
-    // TODO -- This validates the user as well, lets consider renaming this
     const { entraIdUser } = await this.getEntraIdUserByAuthCode({
       authCodeResponse,
       originalAuthCodeUrlRequest,

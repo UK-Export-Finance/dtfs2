@@ -28,7 +28,7 @@ export type GetUploadErrorsResponse = Response & {
   };
 };
 
-type UploadErrors = {
+export type UtilisationReportUploadErrors = {
   uploadErrorSummary: {
     text: string;
     href: string;
@@ -44,7 +44,7 @@ type UploadErrors = {
  * @param res - The response object
  * @returns An object containing the upload errors (returns `null` if there are no errors)
  */
-export const getUploadErrors = (req: GetUploadErrorsRequest, res: GetUploadErrorsResponse): UploadErrors | null => {
+export const getUploadErrors = (req: GetUploadErrorsRequest, res: GetUploadErrorsResponse): UtilisationReportUploadErrors | null => {
   const href = '#utilisation-report-file-upload';
 
   if (res?.locals?.fileUploadError) {

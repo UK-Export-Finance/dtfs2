@@ -1,5 +1,5 @@
 import {
-  AMENDMENT_STATUS,
+  TFM_AMENDMENT_STATUS,
   CURRENCY,
   FEE_RECORD_STATUS,
   FeeRecordEntityMockBuilder,
@@ -42,7 +42,7 @@ context('Users can view utilisation', () => {
   const dateWithinReportPeriod = new Date('2024-01-01');
   const dateAfterReportPeriodEnd = new Date('2024-03-01');
 
-  const { utilisationTab } = pages.utilisationReportPage;
+  const { utilisationContent } = pages.utilisationReportPage.tabs;
 
   before(() => {
     cy.task(NODE_TASKS.DELETE_ALL_TFM_FACILITIES_FROM_DB);
@@ -63,7 +63,7 @@ context('Users can view utilisation', () => {
       amendments: [
         {
           value: 350000,
-          status: AMENDMENT_STATUS.COMPLETED,
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
           /**
            * This amendment is not in effect for the report in question
            * so should be ignored.
@@ -74,7 +74,7 @@ context('Users can view utilisation', () => {
         },
         {
           value: 300000,
-          status: AMENDMENT_STATUS.COMPLETED,
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
           /**
            * This amendment is in effect for the report in question
            * so it's value should be used.
@@ -159,114 +159,114 @@ context('Users can view utilisation', () => {
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
 
-    pages.utilisationReportPage.utilisationTabLink().click();
+    pages.utilisationReportPage.tabs.utilisation().click();
   });
 
   it('should render the utilisation for each fee record', () => {
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_ONE).facilityId(), FACILITY_ID_ONE);
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_ONE).exporter(), firstExporter);
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_ONE).baseCurrency(), CURRENCY.GBP);
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_ONE).value(), '1,000,000.00');
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_ONE).utilisation(), firstUtilisationString);
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_ONE).coverPercentage(), '80%');
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_ONE).facilityId(), FACILITY_ID_ONE);
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_ONE).exporter(), firstExporter);
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_ONE).baseCurrency(), CURRENCY.GBP);
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_ONE).value(), '1,000,000.00');
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_ONE).utilisation(), firstUtilisationString);
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_ONE).coverPercentage(), '80%');
     // 80% of 500,000 is 400,000
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_ONE).exposure(), '400,000.00');
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_ONE).feesAccrued(), `${CURRENCY.EUR} 300.00`);
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_ONE).feesPayable(), `${CURRENCY.JPY} 100.00`);
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_ONE).exposure(), '400,000.00');
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_ONE).feesAccrued(), `${CURRENCY.EUR} 300.00`);
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_ONE).feesPayable(), `${CURRENCY.JPY} 100.00`);
 
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_TWO).facilityId(), FACILITY_ID_TWO);
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_TWO).exporter(), secondExporter);
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_TWO).baseCurrency(), CURRENCY.GBP);
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_TWO).value(), '300,000.00');
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_TWO).utilisation(), secondUtilisationString);
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_TWO).coverPercentage(), '85%');
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_TWO).facilityId(), FACILITY_ID_TWO);
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_TWO).exporter(), secondExporter);
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_TWO).baseCurrency(), CURRENCY.GBP);
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_TWO).value(), '300,000.00');
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_TWO).utilisation(), secondUtilisationString);
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_TWO).coverPercentage(), '85%');
     // 85% of 199,999.99 is 169,999.9915
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_TWO).exposure(), '169,999.99');
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_TWO).feesAccrued(), `${CURRENCY.EUR} 200.00`);
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_TWO).feesPayable(), `${CURRENCY.GBP} 100.00`);
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_TWO).exposure(), '169,999.99');
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_TWO).feesAccrued(), `${CURRENCY.EUR} 200.00`);
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_TWO).feesPayable(), `${CURRENCY.GBP} 100.00`);
 
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_THREE).facilityId(), FACILITY_ID_THREE);
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_THREE).exporter(), thirdExporter);
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_THREE).baseCurrency(), CURRENCY.GBP);
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_THREE).value(), '1,050,000.00');
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_THREE).utilisation(), thirdUtilisationString);
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_THREE).coverPercentage(), '80%');
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_THREE).facilityId(), FACILITY_ID_THREE);
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_THREE).exporter(), thirdExporter);
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_THREE).baseCurrency(), CURRENCY.GBP);
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_THREE).value(), '1,050,000.00');
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_THREE).utilisation(), thirdUtilisationString);
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_THREE).coverPercentage(), '80%');
     // 85% of 90,000 is 72,000
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_THREE).exposure(), '72,000.00');
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_THREE).feesAccrued(), `${CURRENCY.EUR} 200.00`);
-    cy.assertText(utilisationTab.table.row(FEE_RECORD_ID_THREE).feesPayable(), `${CURRENCY.GBP} 100.00`);
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_THREE).exposure(), '72,000.00');
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_THREE).feesAccrued(), `${CURRENCY.EUR} 200.00`);
+    cy.assertText(utilisationContent.table.row(FEE_RECORD_ID_THREE).feesPayable(), `${CURRENCY.GBP} 100.00`);
   });
 
   describe('when sorting by ascending utilisation', () => {
     it('should sort the reports correctly by utilisation', () => {
-      utilisationTab.table.utilisationHeader().click();
+      utilisationContent.table.utilisationHeader().click();
 
-      cy.assertText(utilisationTab.table.rowIndex(0).utilisation(), thirdUtilisationString);
-      cy.assertText(utilisationTab.table.rowIndex(1).utilisation(), secondUtilisationString);
-      cy.assertText(utilisationTab.table.rowIndex(2).utilisation(), firstUtilisationString);
+      cy.assertText(utilisationContent.table.rowIndex(0).utilisation(), thirdUtilisationString);
+      cy.assertText(utilisationContent.table.rowIndex(1).utilisation(), secondUtilisationString);
+      cy.assertText(utilisationContent.table.rowIndex(2).utilisation(), firstUtilisationString);
     });
   });
 
   describe('when sorting by descending utilisation', () => {
     it('should sort the reports correctly by utilisation', () => {
       // click twice for descending sort
-      utilisationTab.table.utilisationHeader().click();
-      utilisationTab.table.utilisationHeader().click();
+      utilisationContent.table.utilisationHeader().click();
+      utilisationContent.table.utilisationHeader().click();
 
-      cy.assertText(utilisationTab.table.rowIndex(0).utilisation(), firstUtilisationString);
-      cy.assertText(utilisationTab.table.rowIndex(1).utilisation(), secondUtilisationString);
-      cy.assertText(utilisationTab.table.rowIndex(2).utilisation(), thirdUtilisationString);
+      cy.assertText(utilisationContent.table.rowIndex(0).utilisation(), firstUtilisationString);
+      cy.assertText(utilisationContent.table.rowIndex(1).utilisation(), secondUtilisationString);
+      cy.assertText(utilisationContent.table.rowIndex(2).utilisation(), thirdUtilisationString);
     });
   });
 
   describe('when sorting by ascending value', () => {
     it('should sort the reports correctly by value', () => {
-      utilisationTab.table.valueHeader().click();
+      utilisationContent.table.valueHeader().click();
 
-      cy.assertText(utilisationTab.table.rowIndex(0).value(), secondValueString);
-      cy.assertText(utilisationTab.table.rowIndex(1).value(), firstValueString);
-      cy.assertText(utilisationTab.table.rowIndex(2).value(), thirdValueString);
+      cy.assertText(utilisationContent.table.rowIndex(0).value(), secondValueString);
+      cy.assertText(utilisationContent.table.rowIndex(1).value(), firstValueString);
+      cy.assertText(utilisationContent.table.rowIndex(2).value(), thirdValueString);
     });
   });
 
   describe('when sorting by descending value', () => {
     it('should sort the reports correctly by value', () => {
       // click twice for descending sort
-      utilisationTab.table.valueHeader().click();
-      utilisationTab.table.valueHeader().click();
+      utilisationContent.table.valueHeader().click();
+      utilisationContent.table.valueHeader().click();
 
-      cy.assertText(utilisationTab.table.rowIndex(0).value(), thirdValueString);
-      cy.assertText(utilisationTab.table.rowIndex(1).value(), firstValueString);
-      cy.assertText(utilisationTab.table.rowIndex(2).value(), secondValueString);
+      cy.assertText(utilisationContent.table.rowIndex(0).value(), thirdValueString);
+      cy.assertText(utilisationContent.table.rowIndex(1).value(), firstValueString);
+      cy.assertText(utilisationContent.table.rowIndex(2).value(), secondValueString);
     });
   });
 
   describe('when sorting by ascending exposure', () => {
     it('should sort the reports correctly by exposure', () => {
-      utilisationTab.table.exposureHeader().click();
+      utilisationContent.table.exposureHeader().click();
 
-      cy.assertText(utilisationTab.table.rowIndex(0).exposure(), thirdExposureString);
-      cy.assertText(utilisationTab.table.rowIndex(1).exposure(), secondExposureString);
-      cy.assertText(utilisationTab.table.rowIndex(2).exposure(), firstExposureString);
+      cy.assertText(utilisationContent.table.rowIndex(0).exposure(), thirdExposureString);
+      cy.assertText(utilisationContent.table.rowIndex(1).exposure(), secondExposureString);
+      cy.assertText(utilisationContent.table.rowIndex(2).exposure(), firstExposureString);
     });
   });
 
   describe('when sorting by descending exposure', () => {
     it('should sort the reports correctly by exposure', () => {
       // click twice for descending sort
-      utilisationTab.table.exposureHeader().click();
-      utilisationTab.table.exposureHeader().click();
+      utilisationContent.table.exposureHeader().click();
+      utilisationContent.table.exposureHeader().click();
 
-      cy.assertText(utilisationTab.table.rowIndex(0).exposure(), firstExposureString);
-      cy.assertText(utilisationTab.table.rowIndex(1).exposure(), secondExposureString);
-      cy.assertText(utilisationTab.table.rowIndex(2).exposure(), thirdExposureString);
+      cy.assertText(utilisationContent.table.rowIndex(0).exposure(), firstExposureString);
+      cy.assertText(utilisationContent.table.rowIndex(1).exposure(), secondExposureString);
+      cy.assertText(utilisationContent.table.rowIndex(2).exposure(), thirdExposureString);
     });
   });
 
   it('should render a link to download the report', () => {
-    cy.assertText(utilisationTab.downloadReportLink(), 'Download the report submitted by the bank as a CSV');
+    cy.assertText(utilisationContent.downloadReportLink(), 'Download the report submitted by the bank as a CSV');
 
-    utilisationTab.downloadReportLink().click();
+    utilisationContent.downloadReportLink().click();
     cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}/download`));
   });
 });

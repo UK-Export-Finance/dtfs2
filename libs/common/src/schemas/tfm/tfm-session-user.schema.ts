@@ -1,5 +1,5 @@
 import { TFM_USER_SCHEMA } from './tfm-user.schema';
-import { OBJECT_ID_STRING_SCHEMA } from '../object-id';
+import { OBJECT_ID_STRING_SCHEMA } from '../object-id.schema';
 
 export const TFM_SESSION_USER_SCHEMA = TFM_USER_SCHEMA.pick({
   username: true,

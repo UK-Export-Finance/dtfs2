@@ -12,21 +12,8 @@ import {
 import { getFindReportSummaryItemViewModel } from '../helpers';
 import { BankWithReportingYearsResponseBody } from '../../../api-response-types';
 
-/**
- * Renders the find utilisation reports by year page
- * @param res - The response object
- * @param viewModel - The view model
- */
-const renderFindUtilisationReportsByYearPage = (res: Response, viewModel: FindUtilisationReportsByYearViewModel) =>
-  res.render('utilisation-reports/find-utilisation-reports-by-year.njk', viewModel);
-
-/**
- * Renders the utilisation reports by bank and year results page
- * @param res - The response object
- * @param viewModel - The view model
- */
-const renderUtilisationReportsByBankAndYearResults = (res: Response, viewModel: UtilisationReportsByBankAndYearViewModel) =>
-  res.render('utilisation-reports/utilisation-reports-by-bank-and-year-results.njk', viewModel);
+const findUtilisationReportsByYearTemplate = 'utilisation-reports/find-utilisation-reports-by-year.njk';
+const utilisationReportsByBankAndYearResultsTemplate = 'utilisation-reports/utilisation-reports-by-bank-and-year-results.njk';
 
 /**
  * Gets tha bank id query and year query as string
@@ -79,7 +66,7 @@ export const getFindReportsByYear = async (req: Request, res: Response) => {
     const bankReportingYearsDataLists = banksVisibleInTfm.map(mapBankWithReportingYearsToDataListViewModel);
 
     if (!originalUrl.includes('?')) {
-      return renderFindUtilisationReportsByYearPage(res, {
+      const viewModel: FindUtilisationReportsByYearViewModel = {
         user,
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         bankItems,
@@ -87,7 +74,9 @@ export const getFindReportsByYear = async (req: Request, res: Response) => {
         errorSummary: [],
         bankError: undefined,
         yearError: undefined,
-      });
+      };
+
+      return res.render(findUtilisationReportsByYearTemplate, viewModel);
     }
 
     const { errorSummary, bankError, yearError, bankIdAsString, yearAsString } = validateSearchInput({
@@ -97,7 +86,7 @@ export const getFindReportsByYear = async (req: Request, res: Response) => {
     });
 
     if (errorSummary.length !== 0) {
-      return renderFindUtilisationReportsByYearPage(res, {
+      const viewModel: FindUtilisationReportsByYearViewModel = {
         user,
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         bankItems,
@@ -107,7 +96,9 @@ export const getFindReportsByYear = async (req: Request, res: Response) => {
         yearError,
         selectedBank: isNonEmptyString(bankIdQuery) ? bankIdQuery : undefined,
         selectedYear: isNonEmptyString(yearQuery) ? yearQuery : undefined,
-      });
+      };
+
+      return res.render(findUtilisationReportsByYearTemplate, viewModel);
     }
 
     const { bankName, year, reports } = await api.getReportSummariesByBankAndYear(userToken, bankIdAsString, yearAsString);
@@ -115,16 +106,18 @@ export const getFindReportsByYear = async (req: Request, res: Response) => {
     const reportSummaryItemsViewModel = reports.map(getFindReportSummaryItemViewModel);
     const isTfmPaymentReconciliationFeatureEnabled = isTfmPaymentReconciliationFeatureFlagEnabled();
 
-    return renderUtilisationReportsByBankAndYearResults(res, {
+    const viewModel: UtilisationReportsByBankAndYearViewModel = {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       bankName,
       year,
       reports: reportSummaryItemsViewModel,
       isTfmPaymentReconciliationFeatureFlagEnabled: isTfmPaymentReconciliationFeatureEnabled,
-    });
+    };
+
+    return res.render(utilisationReportsByBankAndYearResultsTemplate, viewModel);
   } catch (error) {
-    console.error('Failed to render find reports by year page:', error);
+    console.error('Failed to render find reports by year page: %o', error);
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };
