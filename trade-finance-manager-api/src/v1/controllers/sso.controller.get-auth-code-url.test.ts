@@ -1,13 +1,16 @@
 import { aGetAuthCodeUrlParams, aGetAuthCodeUrlResponse, GetAuthCodeUrlApiRequest, GetAuthCodeUrlApiResponse } from '@ukef/dtfs2-common';
 import { resetAllWhenMocks } from 'jest-when';
 import httpMocks from 'node-mocks-http';
+import { HttpStatusCode } from 'axios';
 import { SsoController } from './sso.controller';
 import { EntraIdService } from '../services/entra-id.service';
-import { EntraIdServiceMockBuilder } from '../__mocks__/builders';
+import { EntraIdServiceMockBuilder, UserServiceMockBuilder } from '../__mocks__/builders';
+import { UserService } from '../services/user.service';
 
 describe('SsoController', () => {
   let ssoController: SsoController;
   let entraIdService: EntraIdService;
+  let userService: UserService;
 
   console.error = jest.fn();
 
@@ -23,7 +26,9 @@ describe('SsoController', () => {
       })
       .build();
 
-    ssoController = new SsoController({ entraIdService });
+    userService = new UserServiceMockBuilder().withDefaults().build();
+
+    ssoController = new SsoController({ entraIdService, userService });
   });
 
   it('should call getAuthCodeUrl with the correct params', async () => {
@@ -45,6 +50,17 @@ describe('SsoController', () => {
     await ssoController.getAuthCodeUrl(req, res);
 
     expect(res._getJSONData()).toEqual(getAuthCodeUrlResponse);
+  });
+
+  it('should return a 200 status code on success', async () => {
+    const { req, res } = getHttpMocks(aGetAuthCodeUrlParams());
+
+    const getAuthCodeUrlResponse = aGetAuthCodeUrlResponse();
+    getAuthCodeUrlMock.mockResolvedValue(getAuthCodeUrlResponse);
+
+    await ssoController.getAuthCodeUrl(req, res);
+
+    expect(res.statusCode).toBe(HttpStatusCode.Ok);
   });
 
   it('should pass through thrown errors', async () => {

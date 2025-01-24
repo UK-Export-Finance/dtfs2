@@ -1,14 +1,26 @@
 import { AuditDetails, EntraIdUser, MultipleUsersFoundError, TfmUser, UpsertTfmUserRequest } from '@ukef/dtfs2-common';
 import { ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA } from '@ukef/dtfs2-common/schemas';
+import { ObjectId } from 'mongodb';
 import { UserRepo } from '../repo/user.repo';
 
-type UpsertTfmUserFromEntraIdUserParams = {
+export type UpsertTfmUserFromEntraIdUserParams = {
   entraIdUser: EntraIdUser;
+  auditDetails: AuditDetails;
+};
+
+export type saveUserLoginInformationParams = {
+  userId: ObjectId;
+  sessionIdentifier: string;
   auditDetails: AuditDetails;
 };
 
 export type UpsertTfmUserFromEntraIdUserResponse = TfmUser;
 
+/**
+ * User service, primarily used for SSO.
+ * Note: User repo is not dependency injected as a constructor as it may be used in non-DI code
+ * DI code is only used for SSO due to existing documentation and other implementations
+ */
 export class UserService {
   /**
    * Used as part of the SSO process
@@ -16,7 +28,7 @@ export class UserService {
    * @param entraIdUser
    * @returns The upsert user request
    */
-  public static transformEntraIdUserToUpsertTfmUserRequest(entraIdUser: EntraIdUser): UpsertTfmUserRequest {
+  public transformEntraIdUserToUpsertTfmUserRequest(entraIdUser: EntraIdUser): UpsertTfmUserRequest {
     return ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA.parse(entraIdUser);
   }
 
@@ -40,11 +52,8 @@ export class UserService {
    * @returns The upserted user
    * @throws MultipleUsersFoundError if multiple users are found
    */
-  public static async upsertTfmUserFromEntraIdUser({
-    entraIdUser,
-    auditDetails,
-  }: UpsertTfmUserFromEntraIdUserParams): Promise<UpsertTfmUserFromEntraIdUserResponse> {
-    const upsertTfmUserRequest = UserService.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
+  public async upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails }: UpsertTfmUserFromEntraIdUserParams): Promise<UpsertTfmUserFromEntraIdUserResponse> {
+    const upsertTfmUserRequest = this.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
     const findResult = await UserRepo.findUsersByEmailAddresses([...entraIdUser.verified_primary_email, ...entraIdUser.verified_secondary_email]);
 
     let upsertedUser: TfmUser;
@@ -59,5 +68,16 @@ export class UserService {
         throw new MultipleUsersFoundError({ userIdsFound: findResult.map((user) => user._id.toString()) });
     }
     return upsertedUser;
+  }
+
+  public async saveUserLoginInformation({ userId, sessionIdentifier, auditDetails }: saveUserLoginInformationParams) {
+    await UserRepo.updateUserById({
+      userId,
+      userUpdate: {
+        lastLogin: Date.now(),
+        sessionIdentifier,
+      },
+      auditDetails,
+    });
   }
 }
