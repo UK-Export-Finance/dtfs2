@@ -9,7 +9,7 @@ import eligibility from '../../../../../../gef/cypress/e2e/pages/amendments/elig
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('Amendments - change facility value journey - happy path', () => {
+context('Amendments - change facility end date - unhappy path', () => {
   /**
    * @type {string}
    */
@@ -24,16 +24,15 @@ context('Amendments - change facility value journey - happy path', () => {
    */
   let amendmentId;
 
-  const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
-
   before(() => {
     cy.insertOneGefDeal(MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
 
       cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1);
 
-      cy.createGefFacilities(dealId, [mockFacility], BANK1_MAKER1).then((createdFacility) => {
+      cy.createGefFacilities(dealId, [anIssuedCashFacility({ facilityEndDateEnabled: true })], BANK1_MAKER1).then((createdFacility) => {
         facilityId = createdFacility.details._id;
+
         cy.makerLoginSubmitGefDealForReview(insertedDeal);
         cy.checkerLoginSubmitGefDealToUkef(insertedDeal);
 
@@ -58,14 +57,13 @@ context('Amendments - change facility value journey - happy path', () => {
     cy.clearSessionCookies();
   });
 
-  it('should navigate through the journey correctly', () => {
-    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
+  beforeEach(() => {
+    cy.clearSessionCookies();
+    cy.login(BANK1_MAKER1);
+  });
 
-    whatDoYouNeedToChange.coverEndDateCheckbox().should('not.be.checked');
-    whatDoYouNeedToChange.facilityValueCheckbox().should('not.be.checked');
-    whatDoYouNeedToChange.pageHeading().contains('What do you need to change?');
-    whatDoYouNeedToChange.backLink();
-    whatDoYouNeedToChange.warning().contains('Check your records for the most up-to-date values');
+  it('should render an error if nothing is selected on the "Eligibility" page', () => {
+    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
 
     whatDoYouNeedToChange.facilityValueCheckbox().click();
     cy.clickContinueButton();
@@ -73,26 +71,47 @@ context('Amendments - change facility value journey - happy path', () => {
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`));
 
     facilityValue.pageHeading().contains('New facility value');
-    facilityValue.backLink();
-    facilityValue.facilityValuePrefix().contains('£');
-
     cy.keyboardInput(facilityValue.facilityValue(), '10000');
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/eligibility`));
 
     eligibility.pageHeading().contains('Eligibility');
-    eligibility.backLink();
+
+    eligibility.allTrueRadioButtons().should('not.be.checked');
+    eligibility.allFalseRadioButtons().should('not.be.checked');
+    cy.clickContinueButton();
+
+    eligibility.errorSummary().should('be.visible');
+    eligibility.errorSummary().contains('Select if the Facility is not an Affected Facility');
+    eligibility.errorSummary().contains('Select if neither the Exporter, nor its UK Parent Obligor is an Affected Person');
+
+    eligibility.criterionInlineError(1).should('be.visible');
+    eligibility.criterionInlineError(1).contains('Select if the Facility is not an Affected Facility');
+
+    eligibility.criterionInlineError(2).should('be.visible');
+    eligibility.criterionInlineError(2).contains('Select if neither the Exporter, nor its UK Parent Obligor is an Affected Person');
+  });
+
+  it('should render an error if only some items are selected on the "Eligibility" page', () => {
+    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/eligibility`));
+
+    eligibility.pageHeading().contains('Eligibility');
 
     eligibility.allTrueRadioButtons().should('not.be.checked');
     eligibility.allFalseRadioButtons().should('not.be.checked');
 
-    eligibility.criterionRadiosText(1).contains('The Facility is not an Affected Facility');
-    eligibility.criterionRadiosText(2).contains('Neither the Exporter, nor its UK Parent Obligor is an Affected Person');
-
-    eligibility.allTrueRadioButtons().click({ multiple: true });
+    eligibility.criterionTrueRadioButton(1).click();
     cy.clickContinueButton();
 
-    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/effective-date`));
+    eligibility.errorSummary().should('be.visible');
+    eligibility.errorSummary().should('not.contain', 'Select if the Facility is not an Affected Facility');
+    eligibility.errorSummary().contains('Select if neither the Exporter, nor its UK Parent Obligor is an Affected Person');
+
+    eligibility.criterionInlineError(1).should('not.exist');
+    eligibility.criterionTrueRadioButton(1).should('be.checked');
+
+    eligibility.criterionInlineError(2).should('be.visible');
+    eligibility.criterionInlineError(2).contains('Select if neither the Exporter, nor its UK Parent Obligor is an Affected Person');
   });
 });

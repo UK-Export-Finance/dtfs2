@@ -7,6 +7,7 @@ import whatDoYouNeedToChange from '../../../../../../gef/cypress/e2e/pages/amend
 import coverEndDate from '../../../../../../gef/cypress/e2e/pages/amendments/cover-end-date';
 import doYouHaveAFacilityEndDate from '../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
 import facilityEndDate from '../../../../../../gef/cypress/e2e/pages/amendments/facility-end-date';
+import eligibility from '../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -105,6 +106,20 @@ context('Amendments - Change facility end date journey - happy path', () => {
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/eligibility`));
+
+    eligibility.pageHeading().contains('Eligibility');
+    eligibility.backLink();
+
+    eligibility.allTrueRadioButtons().should('not.be.checked');
+    eligibility.allFalseRadioButtons().should('not.be.checked');
+
+    eligibility.criterionRadiosText(1).contains('The Facility is not an Affected Facility');
+    eligibility.criterionRadiosText(2).contains('Neither the Exporter, nor its UK Parent Obligor is an Affected Person');
+
+    eligibility.allTrueRadioButtons().click({ multiple: true });
+    cy.clickContinueButton();
+
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/effective-date`));
   });
 
   it('should navigate to cancel page when cancel is clicked', () => {
