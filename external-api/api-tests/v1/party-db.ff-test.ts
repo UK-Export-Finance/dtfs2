@@ -12,7 +12,7 @@
 
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
-import { MOCK_COMPANY_REGISTRATION_NUMBERS, isSalesforceCustomerCreationEnabled } from '@ukef/dtfs2-common';
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
 import { app } from '../../src/createApp';
 import { api } from '../api';
 
@@ -24,7 +24,6 @@ let axiosMock: MockAdapter;
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
-  isSalesforceCustomerCreationEnabled: jest.fn(),
 }));
 
 beforeEach(() => {
@@ -37,10 +36,6 @@ beforeEach(() => {
 
 afterEach(() => {
   axiosMock.resetHistory();
-});
-
-beforeEach(() => {
-  jest.mocked(isSalesforceCustomerCreationEnabled).mockReturnValue(true);
 });
 
 describe('GET /party-db', () => {

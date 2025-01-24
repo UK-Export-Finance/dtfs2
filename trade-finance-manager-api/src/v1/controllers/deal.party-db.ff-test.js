@@ -1,4 +1,3 @@
-const { isSalesforceCustomerCreationEnabled } = require('@ukef/dtfs2-common');
 const { getPartyDbInfo, getOrCreatePartyDbInfo } = require('../api.js');
 
 const api = require('./deal.party-db');
@@ -68,12 +67,10 @@ jest.mock('../api.js', () => ({
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
-  isSalesforceCustomerCreationEnabled: jest.fn(),
 }));
 
 beforeEach(() => {
   jest.clearAllMocks();
-  jest.mocked(isSalesforceCustomerCreationEnabled).mockReturnValue(true);
 });
 
 const invalidQueryParameters = [
