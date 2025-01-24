@@ -1,4 +1,4 @@
-import { ApiError, CustomExpressRequest, RecordCorrectionReason, ReportPeriod, SessionBank, FEE_RECORD_STATUS, STATUS } from '@ukef/dtfs2-common';
+import { ApiError, CustomExpressRequest, RecordCorrectionReason, ReportPeriod, SessionBank, FEE_RECORD_STATUS, ERROR_KEY } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import { getBankById } from '../../../../../repositories/banks-repo';
@@ -14,7 +14,7 @@ export type GetFeeRecordCorrectionRequestReviewRequest = CustomExpressRequest<{
   };
 }>;
 
-const INVALID_STATUS = STATUS.INVALID;
+const { INVALID_STATUS } = ERROR_KEY;
 
 export type InvalidStatusType = typeof INVALID_STATUS;
 
@@ -69,7 +69,7 @@ export const getFeeRecordCorrectionRequestReview = async (
      */
     if (feeRecord.status === FEE_RECORD_STATUS.PENDING_CORRECTION) {
       return res.status(HttpStatusCode.Ok).send({
-        errorKey: STATUS.INVALID,
+        errorKey: ERROR_KEY.INVALID_STATUS,
       });
     }
 

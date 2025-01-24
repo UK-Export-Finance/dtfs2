@@ -1,5 +1,5 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
-import { mapReasonsToDisplayValues, getFormattedReportPeriodWithLongMonth, RECORD_CORRECTION_REASON, STATUS } from '@ukef/dtfs2-common';
+import { mapReasonsToDisplayValues, getFormattedReportPeriodWithLongMonth, RECORD_CORRECTION_REASON, ERROR_KEY } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
@@ -76,7 +76,7 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
 
     describe('if a record correction is already submitted', () => {
       beforeEach(() => {
-        jest.mocked(api.getFeeRecordCorrectionRequestReview).mockResolvedValue({ errorKey: STATUS.INVALID });
+        jest.mocked(api.getFeeRecordCorrectionRequestReview).mockResolvedValue({ errorKey: ERROR_KEY.INVALID_STATUS });
       });
 
       it('should render page not found page', async () => {

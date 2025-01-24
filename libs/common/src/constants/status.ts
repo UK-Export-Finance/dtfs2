@@ -1,3 +1,3 @@
-export const STATUS = {
-  INVALID: 'INVALID_STATUS',
+export const ERROR_KEY = {
+  INVALID_STATUS: 'INVALID_STATUS',
 };

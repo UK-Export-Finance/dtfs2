@@ -7,7 +7,7 @@ import {
   TestApiError,
   UtilisationReportEntityMockBuilder,
   FEE_RECORD_STATUS,
-  STATUS,
+  ERROR_KEY,
 } from '@ukef/dtfs2-common';
 import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
 import { aBank } from '../../../../../../test-helpers';
@@ -286,7 +286,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
           expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
         });
 
-        it(`should respond with an error key set as ${STATUS.INVALID}`, async () => {
+        it(`should respond with an error key set as ${ERROR_KEY.INVALID_STATUS}`, async () => {
           // Arrange
           const { req, res } = getHttpMocks();
 
@@ -294,7 +294,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
           await getFeeRecordCorrectionRequestReview(req, res);
 
           // Assert
-          expect(res._getData()).toEqual({ errorKey: STATUS.INVALID });
+          expect(res._getData()).toEqual({ errorKey: ERROR_KEY.INVALID_STATUS });
         });
       });
     });
