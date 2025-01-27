@@ -13,6 +13,7 @@ import {
   TfmFacilityAmendment,
   FacilityAmendmentWithUkefId,
   PORTAL_AMENDMENT_STATUS,
+  PortalAuditDetails,
 } from '@ukef/dtfs2-common';
 import { deleteMany, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
@@ -401,5 +402,42 @@ export class TfmFacilitiesRepo {
       console.error('Error updating portal facility amendment %o', error);
       throw error;
     }
+  }
+
+  /**
+   * Delete a portal amendment for a facility in the database
+   * @param deletePortalFacilityAmendment.facilityId - The facility id
+   * @param deletePortalFacilityAmendment.amendmentId - The amendment id
+   * @param deletePortalFacilityAmendment.auditDetails - The audit details
+   * @returns The delete result
+   */
+  public static async deletePortalFacilityAmendment({
+    facilityId,
+    amendmentId,
+    auditDetails,
+  }: {
+    facilityId: ObjectId;
+    amendmentId: ObjectId;
+    auditDetails: PortalAuditDetails;
+  }): Promise<UpdateResult> {
+    const collection = await this.getCollection();
+
+    const findFilter: Filter<TfmFacility> = {
+      _id: { $eq: new ObjectId(facilityId) },
+      'amendments._id': { $eq: new ObjectId(amendmentId) },
+    };
+
+    const updateFilter: UpdateFilter<TfmFacility> = {
+      $unset: { amendments: '' },
+      $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
+    };
+
+    const updateResult = await collection.updateOne(findFilter, updateFilter);
+
+    if (!updateResult.modifiedCount) {
+      throw new AmendmentNotFoundError(amendmentId.toString(), facilityId.toString());
+    }
+
+    return updateResult;
   }
 }
