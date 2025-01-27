@@ -1,0 +1,31 @@
+{% extends "index.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle -%}
+  Page not found
+{%- endblock %}
+
+{% block content %}
+
+  <section class="govuk-!-margin-top-9">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl" data-cy="main-heading">Page not found</h1>
+        
+        <p class="govuk-body" data-cy="reason">
+          {{ reason }}
+        </p>
+
+        {{ govukButton({
+          text: "Return to premium payments",
+          classes: "govuk-button--secondary",
+          href: "/utilisation-reports/" + reportId,
+          attributes: {
+            'data-cy': 'return-to-premium-payments-button'
+          }
+        }) }}
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

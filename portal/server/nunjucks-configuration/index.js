@@ -32,6 +32,7 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('countriesWithEmptyInitialOption', countriesWithEmptyInitialOption);
   nunjucksEnvironment.addFilter('replaceWhiteSpaceWithDash', replaceWhiteSpaceWithDash);
   nunjucksEnvironment.addFilter('replaceNewLinesWithBrTags', replaceNewLinesWithBrTags);
+  nunjucksEnvironment.addFilter('formatPageTitle', (title, hasErrors) => (hasErrors ? `Error - ${title}` : title));
 
   mojFilters = Object.assign(mojFilters);
 
