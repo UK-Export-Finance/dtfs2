@@ -256,6 +256,16 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     }
 
     if (correctedValues.feesPaidToUkefForThePeriodCurrency !== null) {
+      /**
+       * If the bank does not provide a payment currency in the report or provides a payment
+       * currency which is the same as the fees paid to ukef for the period currency, any
+       * change to feesPaidToUkefForThePeriodCurrency should also update the payment currency
+       * to keep them in sync with each other.
+       */
+      if (this.feesPaidToUkefForThePeriodCurrency === this.paymentCurrency) {
+        this.paymentCurrency = correctedValues.feesPaidToUkefForThePeriodCurrency;
+      }
+
       this.feesPaidToUkefForThePeriodCurrency = correctedValues.feesPaidToUkefForThePeriodCurrency;
     }
 

@@ -91,6 +91,7 @@ services:
       - FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
       - UKEF_GEF_REPORTING_EMAIL_RECIPIENT
       - TFM_UI_URL=http://localhost:5003
+      - RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE
 
   trade-finance-manager-ui:
     build:
