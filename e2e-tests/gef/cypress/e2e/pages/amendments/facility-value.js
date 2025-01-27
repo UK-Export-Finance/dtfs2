@@ -5,6 +5,7 @@ const facilityValue = {
   pageHeading: () => cy.get('[data-cy="page-heading"]'),
   backLink: () => cy.get('[data-cy="back-link"]'),
   facilityValuePrefix: () => cy.get('[data-cy="facility-value-prefix"]'),
+  cancelLink: () => cy.get('[data-cy="cancel-link"]'),
 };
 
 module.exports = facilityValue;

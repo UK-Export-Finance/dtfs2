@@ -1,4 +1,4 @@
-import { ApiError, CustomExpressRequest, RecordCorrectionReason, ReportPeriod, SessionBank } from '@ukef/dtfs2-common';
+import { ApiError, CustomExpressRequest, RecordCorrectionReason, ReportPeriod, SessionBank, FEE_RECORD_STATUS, ERROR_KEY } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import { getBankById } from '../../../../../repositories/banks-repo';
@@ -14,20 +14,26 @@ export type GetFeeRecordCorrectionRequestReviewRequest = CustomExpressRequest<{
   };
 }>;
 
+const { INVALID_STATUS } = ERROR_KEY;
+
+export type InvalidStatusType = typeof INVALID_STATUS;
+
 /**
  * Response body type for the GET fee record correction request review route.
  */
-export type GetFeeRecordCorrectionRequestReviewResponseBody = {
-  bank: SessionBank;
-  reportPeriod: ReportPeriod;
-  correctionRequestDetails: {
-    facilityId: string;
-    exporter: string;
-    reasons: RecordCorrectionReason[];
-    additionalInfo: string;
-    contactEmailAddresses: string[];
-  };
-};
+export type GetFeeRecordCorrectionRequestReviewResponseBody =
+  | {
+      bank: SessionBank;
+      reportPeriod: ReportPeriod;
+      correctionRequestDetails: {
+        facilityId: string;
+        exporter: string;
+        reasons: RecordCorrectionReason[];
+        additionalInfo: string;
+        contactEmailAddresses: string[];
+      };
+    }
+  | { errorKey: InvalidStatusType };
 
 type GetFeeRecordCorrectionRequestReviewResponse = Response<GetFeeRecordCorrectionRequestReviewResponseBody | string>;
 
@@ -51,16 +57,26 @@ export const getFeeRecordCorrectionRequestReview = async (
     const reportId = Number(reportIdString);
     const feeRecordId = Number(feeRecordIdString);
 
-    const formDataEntity = await FeeRecordCorrectionRequestTransientFormDataRepo.findByUserIdAndFeeRecordId(userId, feeRecordId);
-
-    if (!formDataEntity) {
-      throw new NotFoundError(`Failed to find fee record correction request transient form data with userId: ${userId} and feeRecordId: ${feeRecordId}`);
-    }
-
     const feeRecord = await FeeRecordRepo.findOneByIdAndReportIdWithReport(feeRecordId, reportId);
 
     if (!feeRecord) {
       throw new NotFoundError(`Failed to find fee record with id: ${feeRecordId} and reportId: ${reportId}`);
+    }
+
+    /**
+     * if fee record status us PENDING_CORRECTION then it means record correction request has been submitted
+     * should return errorKey if so
+     */
+    if (feeRecord.status === FEE_RECORD_STATUS.PENDING_CORRECTION) {
+      return res.status(HttpStatusCode.Ok).send({
+        errorKey: ERROR_KEY.INVALID_STATUS,
+      });
+    }
+
+    const formDataEntity = await FeeRecordCorrectionRequestTransientFormDataRepo.findByUserIdAndFeeRecordId(userId, feeRecordId);
+
+    if (!formDataEntity) {
+      throw new NotFoundError(`Failed to find fee record correction request transient form data with userId: ${userId} and feeRecordId: ${feeRecordId}`);
     }
 
     const { report } = feeRecord;
