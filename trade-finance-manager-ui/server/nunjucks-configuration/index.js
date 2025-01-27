@@ -2,7 +2,7 @@ const dotenv = require('dotenv');
 const path = require('path');
 const nunjucks = require('nunjucks');
 let mojFilters = require('@ministryofjustice/frontend/moj/filters/all')();
-const { replaceNewLinesWithBrTags } = require('@ukef/dtfs2-common');
+const { replaceNewLinesWithBrTags, isTfmSsoFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { localiseTimestamp } = require('./filter-localiseTimestamp');
 const { formatDateString } = require('./filter-formatDateString');
 const { formatIsoDateString } = require('./filter-formatIsoDateString');
@@ -40,6 +40,7 @@ const configureNunjucks = (opts) => {
 
   nunjucksEnvironment.addGlobal('CONTACT_US_SELF_SERVICE_PORTAL_URL', CONTACT_US_SELF_SERVICE_PORTAL_URL);
   nunjucksEnvironment.addGlobal('CONTACT_US_EMAIL_ADDRESS', CONTACT_US_EMAIL_ADDRESS);
+  nunjucksEnvironment.addGlobal('IS_SSO_ENABLED', isTfmSsoFeatureFlagEnabled());
 
   nunjucksEnvironment.addFilter('localiseTimestamp', localiseTimestamp);
   nunjucksEnvironment.addFilter('formatDateString', formatDateString);
