@@ -73,6 +73,11 @@ context('Amendments - Cover end date - page tests', () => {
     cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
   });
 
+  it('should render key features of the page', () => {
+    coverEndDate.pageHeading().contains('New cover end date');
+    coverEndDate.backLink();
+  });
+
   it('should render an error if no cover end date is provided', () => {
     cy.clickContinueButton();
 

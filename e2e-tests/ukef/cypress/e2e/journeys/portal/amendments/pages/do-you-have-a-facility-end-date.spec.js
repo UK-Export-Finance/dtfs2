@@ -67,6 +67,13 @@ context('Amendments - Do you have a facility end date? - page tests', () => {
     cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/do-you-have-a-facility-end-date`));
   });
 
+  it('should render key features of the page', () => {
+    doYouHaveAFacilityEndDate.pageHeading().contains('Do you have a facility end date?');
+    doYouHaveAFacilityEndDate.backLink();
+    doYouHaveAFacilityEndDate.noRadioButton().should('not.be.checked');
+    doYouHaveAFacilityEndDate.yesRadioButton().should('not.be.checked');
+  });
+
   it('should render an error if nothing is selected', () => {
     cy.clickContinueButton();
 

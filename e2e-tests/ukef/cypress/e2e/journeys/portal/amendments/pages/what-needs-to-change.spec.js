@@ -60,6 +60,17 @@ context('Amendments - What needs to change - page tests', () => {
     cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
   });
 
+  it('should render key features of the page', () => {
+    whatDoYouNeedToChange.pageHeading().contains('What do you need to change?');
+    whatDoYouNeedToChange.backLink();
+    whatDoYouNeedToChange.warning().contains('Check your records for the most up-to-date values');
+  });
+
+  it('should render the selection boxes initially unchecked', () => {
+    whatDoYouNeedToChange.coverEndDateCheckbox().should('not.be.checked');
+    whatDoYouNeedToChange.facilityValueCheckbox().should('not.be.checked');
+  });
+
   it('should render an error if nothing is selected to change', () => {
     cy.clickContinueButton();
 

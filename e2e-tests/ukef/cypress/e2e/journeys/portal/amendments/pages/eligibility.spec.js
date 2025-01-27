@@ -68,6 +68,19 @@ context('Amendments - Eligibility - page tests', () => {
     cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/eligibility`));
   });
 
+  it('should render key features of the page', () => {
+    eligibility.pageHeading().contains('Eligibility');
+    eligibility.backLink();
+  });
+
+  it('should render all the radio buttons unselected initially', () => {
+    eligibility.allTrueRadioButtons().should('not.be.checked');
+    eligibility.allFalseRadioButtons().should('not.be.checked');
+
+    eligibility.criterionRadiosText(1).contains('The Facility is not an Affected Facility');
+    eligibility.criterionRadiosText(2).contains('Neither the Exporter, nor its UK Parent Obligor is an Affected Person');
+  });
+
   it('should render an error if nothing is selected on the "Eligibility" page', () => {
     eligibility.allTrueRadioButtons().should('not.be.checked');
     eligibility.allFalseRadioButtons().should('not.be.checked');

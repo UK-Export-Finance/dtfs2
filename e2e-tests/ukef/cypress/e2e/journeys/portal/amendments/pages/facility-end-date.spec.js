@@ -75,6 +75,11 @@ context('Amendments - Facility End Date - page tests', () => {
     cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-end-date`));
   });
 
+  it('should render key features of the page', () => {
+    facilityEndDate.pageHeading().contains('Facility end date');
+    facilityEndDate.backLink();
+  });
+
   it('should render an error if no date is provided', () => {
     cy.clickContinueButton();
 

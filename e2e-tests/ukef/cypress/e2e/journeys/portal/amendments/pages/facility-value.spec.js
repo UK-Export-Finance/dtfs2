@@ -64,6 +64,12 @@ context('Amendments - Facility value - page tests', () => {
     cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`));
   });
 
+  it('should render key features of the page', () => {
+    facilityValue.pageHeading().contains('New facility value');
+    facilityValue.backLink();
+    facilityValue.facilityValuePrefix().contains('£');
+  });
+
   it('should render an error if no facility value is provided', () => {
     cy.clickContinueButton();
 

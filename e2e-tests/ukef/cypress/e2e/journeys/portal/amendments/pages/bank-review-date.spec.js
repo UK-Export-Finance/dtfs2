@@ -75,6 +75,11 @@ context('Amendments - Bank Review Date - page tests', () => {
     cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/bank-review-date`));
   });
 
+  it('should render key features of the page', () => {
+    bankReviewDate.pageHeading().contains('Bank review date');
+    bankReviewDate.backLink();
+  });
+
   it('should render an error if no date is provided', () => {
     cy.clickContinueButton();
 

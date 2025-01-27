@@ -60,36 +60,14 @@ context('Amendments - change facility value - full journey', () => {
 
   it('should navigate through the journey correctly', () => {
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
-
-    whatDoYouNeedToChange.coverEndDateCheckbox().should('not.be.checked');
-    whatDoYouNeedToChange.facilityValueCheckbox().should('not.be.checked');
-    whatDoYouNeedToChange.pageHeading().contains('What do you need to change?');
-    whatDoYouNeedToChange.backLink();
-    whatDoYouNeedToChange.warning().contains('Check your records for the most up-to-date values');
-
     whatDoYouNeedToChange.facilityValueCheckbox().click();
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`));
-
-    facilityValue.pageHeading().contains('New facility value');
-    facilityValue.backLink();
-    facilityValue.facilityValuePrefix().contains('£');
-
     cy.keyboardInput(facilityValue.facilityValue(), '10000');
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/eligibility`));
-
-    eligibility.pageHeading().contains('Eligibility');
-    eligibility.backLink();
-
-    eligibility.allTrueRadioButtons().should('not.be.checked');
-    eligibility.allFalseRadioButtons().should('not.be.checked');
-
-    eligibility.criterionRadiosText(1).contains('The Facility is not an Affected Facility');
-    eligibility.criterionRadiosText(2).contains('Neither the Exporter, nor its UK Parent Obligor is an Affected Person');
-
     eligibility.allTrueRadioButtons().click({ multiple: true });
     cy.clickContinueButton();
 
