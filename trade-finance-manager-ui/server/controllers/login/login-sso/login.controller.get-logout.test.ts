@@ -16,7 +16,7 @@ describe('controllers - login (sso)', () => {
       loginController = new LoginController({ loginService, userSessionService });
     });
 
-    it('redirects to /', () => {
+    it('renders the logout page', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
@@ -24,7 +24,7 @@ describe('controllers - login (sso)', () => {
       loginController.getLogout(req, res);
 
       // Assert
-      expect(res._getRedirectUrl()).toEqual('/');
+      expect(res._getRenderView()).toEqual('_partials/user-logged-out.njk');
     });
 
     it('destroys the session', () => {
