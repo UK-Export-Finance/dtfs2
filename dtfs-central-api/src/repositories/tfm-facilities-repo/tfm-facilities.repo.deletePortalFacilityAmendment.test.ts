@@ -1,5 +1,5 @@
 import { ObjectId, UpdateResult } from 'mongodb';
-import { MONGO_DB_COLLECTIONS, AmendmentNotFoundError } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, AMENDMENT_TYPES, AmendmentNotFoundError } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { TfmFacilitiesRepo } from './tfm-facilities.repo';
 import { mongoDbClient } from '../../drivers/db-client';
@@ -59,7 +59,7 @@ describe('TfmFacilitiesRepo', () => {
 
       const expectedUpdateFilter = {
         $pull: {
-          amendments: { _id: new ObjectId(amendmentId) },
+          amendments: { type: AMENDMENT_TYPES.PORTAL, _id: new ObjectId(amendmentId) },
         },
         $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
       };

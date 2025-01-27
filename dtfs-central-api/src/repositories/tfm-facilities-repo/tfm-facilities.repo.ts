@@ -429,7 +429,7 @@ export class TfmFacilitiesRepo {
 
     const updateFilter: UpdateFilter<TfmFacility> = {
       $pull: {
-        amendments: { _id: new ObjectId(amendmentId) },
+        amendments: { type: AMENDMENT_TYPES.PORTAL, _id: new ObjectId(amendmentId) },
       },
       $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
     };
