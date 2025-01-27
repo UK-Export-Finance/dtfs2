@@ -406,6 +406,7 @@ export class TfmFacilitiesRepo {
 
   /**
    * Delete a portal amendment for a facility in the database
+   * @param deletePortalFacilityAmendmentParams
    * @param deletePortalFacilityAmendment.facilityId - The facility id
    * @param deletePortalFacilityAmendment.amendmentId - The amendment id
    * @param deletePortalFacilityAmendment.auditDetails - The audit details

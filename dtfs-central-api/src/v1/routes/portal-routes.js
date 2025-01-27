@@ -603,7 +603,7 @@ portalRouter.route('/facilities/:id/status').put(updateFacilityStatusController.
  *         required: true
  *         description: Amendment ID to get
  *     responses:
- *       200:
+ *       204:
  *         description: OK
  *       404:
  *         description: Not found

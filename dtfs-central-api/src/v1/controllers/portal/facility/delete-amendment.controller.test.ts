@@ -15,7 +15,7 @@ console.error = jest.fn();
 const generateHttpMocks = ({ auditDetails }: { auditDetails: unknown }) =>
   createMocks<DeletePortalAmendmentRequest>({ params: { facilityId, amendmentId }, body: { auditDetails } });
 
-describe('deleteAmendment', () => {
+describe('deletePortalAmendment', () => {
   beforeEach(() => {
     jest.resetAllMocks();
 
