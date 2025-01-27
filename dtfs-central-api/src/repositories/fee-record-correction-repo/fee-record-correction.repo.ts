@@ -62,6 +62,15 @@ export const FeeRecordCorrectionRepo = SqlDbDataSource.getRepository(FeeRecordCo
     return await this.findOneBy({ id: correctionId, feeRecord: { report: { bankId } } });
   },
 
+  /**
+   * Finds completed fee record corrections with the given bank id.
+   * @param bankId - The id of the bank.
+   * @returns The found fee record corrections.
+   */
+  async findCompletedCorrectionsByBankId(bankId: string): Promise<FeeRecordCorrectionEntity[]> {
+    return await this.findBy({ isCompleted: true, feeRecord: { report: { bankId } } });
+  },
+
   withTransaction(transactionEntityManager: EntityManager) {
     const transactionRepository = transactionEntityManager.getRepository(FeeRecordCorrectionEntity);
 
