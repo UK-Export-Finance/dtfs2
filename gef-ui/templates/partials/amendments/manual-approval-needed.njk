@@ -1,0 +1,51 @@
+{% extends "index.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle -%}
+  This amendment cannot be automatically approved
+{%- endblock %}
+
+{% set headingHtml %}
+
+{% endset %}
+
+{% block content %}
+  {{ govukBackLink({
+      text: "Back",
+      href: previousPage,
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    })
+  }}
+
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <header>
+        <span class="govuk-caption-l" data-cy="heading-caption">
+          {{ exporterName }}, {{ facilityType }} facility
+        </span>
+        <h1 class="govuk-label-wrapper" data-cy="page-heading">
+          <span class="govuk-heading-xl govuk-!-margin-bottom-1">This amendment cannot be automatically approved</span>
+          </label>
+        </h1>
+      </header>
+      <form method="POST" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="previousPage" value="{{ previousPage }}">
+
+        <div
+          class="govuk-button-group govuk-!-margin-top-4"
+        >
+          <p>Complete the Schedule 8 form (Amendment and Notification Request) and email to <a class="govuk-link govuk-!-margin-0" href="mailTo:{{ amendmentFormEmail }}" data-cy="form-email-link">{{ amendmentFormEmail }}</a>.</p>
+          <p>Include any supporting information and documents needed for UKEF to review and process the amendments.</p>
+          <p><a class="govuk-link govuk-!-margin-0" href="{{ returnLink }}" data-cy="return-link">Return to all applications and notices</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+{% endblock %}
