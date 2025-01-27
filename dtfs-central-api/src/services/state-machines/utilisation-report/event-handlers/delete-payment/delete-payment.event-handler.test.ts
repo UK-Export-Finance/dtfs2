@@ -1,6 +1,7 @@
 import { EntityManager } from 'typeorm';
 import {
   CURRENCY,
+  FeeRecordCorrectionEntityMockBuilder,
   FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   PaymentEntity,
@@ -41,7 +42,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     jest.restoreAllMocks();
   });
 
-  it('throws a NotFoundError if there is no payment for that payment id', async () => {
+  it('should throw a NotFoundError if there is no payment for that payment id', async () => {
     // Arrange
     const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
     when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(null);
@@ -56,7 +57,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     ).rejects.toThrow(NotFoundError);
   });
 
-  it('removes payment if there are no linked fee records', async () => {
+  it('should remove payment if there are no linked fee records', async () => {
     // Arrange
     const paymentId = 12;
     const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
@@ -72,12 +73,12 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
 
     // Assert
     expect(mockFindOne).toHaveBeenCalledTimes(1);
-    expect(mockFindOne).toHaveBeenCalledWith(PaymentEntity, { where: { id: paymentId }, relations: { feeRecords: true } });
+    expect(mockFindOne).toHaveBeenCalledWith(PaymentEntity, { where: { id: paymentId }, relations: { feeRecords: { corrections: true } } });
     expect(mockRemove).toHaveBeenCalledTimes(1);
     expect(mockRemove).toHaveBeenCalledWith(paymentEntity);
   });
 
-  it('throws a NotFoundError if a fee record with the id of the fee record attached to the payment cannot be found', async () => {
+  it('should throw a NotFoundError if a fee record with the id of a fee record attached to the payment cannot be found', async () => {
     // Arrange
     const paymentId = 12;
     const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
@@ -106,7 +107,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     expect(mockFindOne).toHaveBeenCalledTimes(2);
   });
 
-  it('removes payment if there are linked fee records', async () => {
+  it('should remove payment if there are linked fee records', async () => {
     // Arrange
     const paymentId = 123;
     const feeRecordId = 456;
@@ -125,13 +126,13 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
 
     // Assert
     expect(mockFindOne).toHaveBeenCalledTimes(2);
-    expect(mockFindOne).toHaveBeenCalledWith(PaymentEntity, { where: { id: paymentId }, relations: { feeRecords: true } });
+    expect(mockFindOne).toHaveBeenCalledWith(PaymentEntity, { where: { id: paymentId }, relations: { feeRecords: { corrections: true } } });
     expect(mockFindOne).toHaveBeenCalledWith(FeeRecordEntity, { where: { id: feeRecordId }, relations: { payments: true } });
     expect(mockRemove).toHaveBeenCalledTimes(1);
     expect(mockRemove).toHaveBeenCalledWith(paymentEntity);
   });
 
-  it('handles payment deleted event for each linked fee record', async () => {
+  it('should call payment deleted event for each linked fee record', async () => {
     // Arrange
     const requestSource = aDbRequestSource();
     const paymentId = 123;
@@ -178,7 +179,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     );
   });
 
-  it('sets feeRecordsAndPayments matched to true when they match', async () => {
+  it('should set feeRecordsAndPayments matched to true when they match', async () => {
     // Arrange
     const requestSource = aDbRequestSource();
     const paymentId = 123;
@@ -214,7 +215,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     );
   });
 
-  it('sets feeRecordsAndPayments matched to false when they do not match', async () => {
+  it('should set feeRecordsAndPayments matched to false when they do not match', async () => {
     // Arrange
     const requestSource = aDbRequestSource();
     const paymentId = 123;
@@ -250,7 +251,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     );
   });
 
-  it('sets hasAttachedPayments matched to true when linked fee records have attached payments after payment is deleted', async () => {
+  it('should set hasAttachedPayments matched to true when linked fee records have attached payments after payment is deleted', async () => {
     // Arrange
     const requestSource = aDbRequestSource();
     const paymentId = 123;
@@ -290,7 +291,7 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
     );
   });
 
-  it('sets hasAttachedPayments matched to false when linked fee records have no attached payments after payment is deleted', async () => {
+  it('should set hasAttachedPayments matched to false when linked fee records have no attached payments after payment is deleted', async () => {
     // Arrange
     const requestSource = aDbRequestSource();
     const paymentId = 123;
@@ -322,6 +323,138 @@ describe('handleUtilisationReportPaymentDeletedEvent', () => {
       expect.objectContaining({
         payload: expect.objectContaining({
           hasAttachedPayments: false,
+        }) as FeeRecordPaymentDeletedEvent,
+      }),
+    );
+  });
+
+  it('should set hasCorrections to true when the fee record has corrections', async () => {
+    // Arrange
+    const requestSource = aDbRequestSource();
+    const paymentId = 123;
+
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
+
+    const linkedFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(report).withId(456).build();
+    const correctionEntity = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(linkedFeeRecordEntity, true).build();
+    linkedFeeRecordEntity.corrections = [correctionEntity];
+
+    const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(paymentId).withFeeRecords([linkedFeeRecordEntity]).build();
+    when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
+    when(mockFindOne).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(linkedFeeRecordEntity);
+
+    const mockEventHandler = aMockEventHandler();
+    const feeRecordStateMachine = aMockFeeRecordStateMachine(mockEventHandler);
+    jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockReturnValue(feeRecordStateMachine);
+
+    jest.mocked(feeRecordsAndPaymentsMatch).mockResolvedValue(true);
+
+    // Act
+    await handleUtilisationReportDeletePaymentEvent(report, {
+      transactionEntityManager: mockEntityManager,
+      paymentId,
+      requestSource,
+    });
+
+    // Assert
+    expect(mockEventHandler).toHaveBeenCalledTimes(1);
+    expect(mockEventHandler).toHaveBeenCalledWith(
+      expect.objectContaining({
+        payload: expect.objectContaining({
+          hasCorrections: true,
+        }) as FeeRecordPaymentDeletedEvent,
+      }),
+    );
+  });
+
+  it('should set hasCorrections to false when the fee record does not have corrections', async () => {
+    // Arrange
+    const requestSource = aDbRequestSource();
+    const paymentId = 123;
+
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
+
+    const linkedFeeRecordEntity = FeeRecordEntityMockBuilder.forReport(report).withId(456).withCorrections([]).build();
+
+    const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(paymentId).withFeeRecords([linkedFeeRecordEntity]).build();
+    when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
+    when(mockFindOne).calledWith(FeeRecordEntity, expect.anything()).mockResolvedValue(linkedFeeRecordEntity);
+
+    const mockEventHandler = aMockEventHandler();
+    const feeRecordStateMachine = aMockFeeRecordStateMachine(mockEventHandler);
+    jest.spyOn(FeeRecordStateMachine, 'forFeeRecord').mockReturnValue(feeRecordStateMachine);
+
+    jest.mocked(feeRecordsAndPaymentsMatch).mockResolvedValue(true);
+
+    // Act
+    await handleUtilisationReportDeletePaymentEvent(report, {
+      transactionEntityManager: mockEntityManager,
+      paymentId,
+      requestSource,
+    });
+
+    // Assert
+    expect(mockEventHandler).toHaveBeenCalledTimes(1);
+    expect(mockEventHandler).toHaveBeenCalledWith(
+      expect.objectContaining({
+        payload: expect.objectContaining({
+          hasCorrections: false,
+        }) as FeeRecordPaymentDeletedEvent,
+      }),
+    );
+  });
+
+  it('should set hasCorrections for each linked fee record independently', async () => {
+    // Arrange
+    const requestSource = aDbRequestSource();
+    const paymentId = 123;
+
+    const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
+
+    const linkedFeeRecordEntityOne = FeeRecordEntityMockBuilder.forReport(report).withId(456).withCorrections([]).build();
+    const linkedFeeRecordEntityTwo = FeeRecordEntityMockBuilder.forReport(report).withId(789).build();
+    const correctionEntity = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(linkedFeeRecordEntityTwo, true).build();
+    linkedFeeRecordEntityTwo.corrections = [correctionEntity];
+
+    const paymentEntity = PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP)
+      .withId(paymentId)
+      .withFeeRecords([linkedFeeRecordEntityOne, linkedFeeRecordEntityTwo])
+      .build();
+    when(mockFindOne).calledWith(PaymentEntity, expect.anything()).mockResolvedValue(paymentEntity);
+
+    const mockEventHandlerOne = aMockEventHandler();
+    const mockEventHandlerTwo = aMockEventHandler();
+    const feeRecordStateMachineOne = aMockFeeRecordStateMachine(mockEventHandlerOne);
+    const feeRecordStateMachineTwo = aMockFeeRecordStateMachine(mockEventHandlerTwo);
+
+    jest
+      .spyOn(FeeRecordStateMachine, 'forFeeRecord')
+      .mockImplementation((feeRecord) => (feeRecord.id === linkedFeeRecordEntityOne.id ? feeRecordStateMachineOne : feeRecordStateMachineTwo));
+
+    jest.mocked(feeRecordsAndPaymentsMatch).mockResolvedValue(false);
+
+    // Act
+    await handleUtilisationReportDeletePaymentEvent(report, {
+      transactionEntityManager: mockEntityManager,
+      paymentId,
+      requestSource,
+    });
+
+    // Assert
+    expect(mockEventHandlerOne).toHaveBeenCalledTimes(1);
+    expect(mockEventHandlerOne).toHaveBeenCalledWith(
+      expect.objectContaining({
+        payload: expect.objectContaining({
+          hasCorrections: false,
+        }) as FeeRecordPaymentDeletedEvent,
+      }),
+    );
+
+    expect(mockEventHandlerTwo).toHaveBeenCalledTimes(1);
+    expect(mockEventHandlerTwo).toHaveBeenCalledWith(
+      expect.objectContaining({
+        payload: expect.objectContaining({
+          hasCorrections: true,
         }) as FeeRecordPaymentDeletedEvent,
       }),
     );
