@@ -160,6 +160,7 @@ env:
   FF_TFM_DEAL_CANCELLATION_ENABLED: ${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }}
   FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: ${{ vars.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED }}
   FF_TFM_SSO_ENABLED: ${{ vars.FF_TFM_SSO_ENABLED }}
+  FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: ${{ vars.FF_SALESFORCE_CUSTOMER_CREATION_ENABLED }}
   GEF_DEAL_VERSION: ${{ vars.GEF_DEAL_VERSION }}
   ENTRA_ID_CLIENT_ID: ${{ vars.ENTRA_ID_CLIENT_ID }}
   ENTRA_ID_CLOUD_INSTANCE: ${{ vars.ENTRA_ID_CLOUD_INSTANCE }}
@@ -386,9 +387,11 @@ jobs:
     env:
       # Various feature flags
       FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
+      FF_FEE_RECORD_CORRECTION_ENABLED: 'true'
       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
       FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
       FF_TFM_SSO_ENABLED: 'true'
+      FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true'
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -846,9 +849,12 @@ jobs:
     needs: [setup]
     env:
       # Various feature flags
+      FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
       FF_FEE_RECORD_CORRECTION_ENABLED: 'true'
       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
       FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
+      FF_TFM_SSO_ENABLED: 'true'
+      FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true'
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
