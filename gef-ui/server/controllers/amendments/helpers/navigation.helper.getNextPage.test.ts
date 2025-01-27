@@ -14,6 +14,7 @@ const {
   ELIGIBILITY,
   EFFECTIVE_DATE,
   CHECK_YOUR_ANSWERS,
+  MANUAL_APPROVAL_NEEDED,
 } = PORTAL_AMENDMENT_PAGES;
 
 describe('getNextPage', () => {
@@ -161,9 +162,37 @@ describe('getNextPage', () => {
     currentPage: ELIGIBILITY,
     successTestCases: [
       {
-        description: '',
+        description: 'when eligibility responses have all been answered with "true"',
         expectedNextPage: EFFECTIVE_DATE,
-        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().build(),
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withCriteria([
+            { id: 1, text: 'Criterion 1', answer: true },
+            { id: 2, text: 'Criterion 2', answer: true },
+            { id: 3, text: 'Criterion 3', answer: true },
+          ])
+          .build(),
+      },
+      {
+        description: 'when all eligibility responses have all been answered with "false"',
+        expectedNextPage: MANUAL_APPROVAL_NEEDED,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withCriteria([
+            { id: 1, text: 'Criterion 1', answer: false },
+            { id: 2, text: 'Criterion 2', answer: false },
+            { id: 3, text: 'Criterion 3', answer: false },
+          ])
+          .build(),
+      },
+      {
+        description: 'when any eligibility responses have been answered with "false"',
+        expectedNextPage: MANUAL_APPROVAL_NEEDED,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withCriteria([
+            { id: 1, text: 'Criterion 1', answer: true },
+            { id: 2, text: 'Criterion 2', answer: false },
+            { id: 3, text: 'Criterion 3', answer: true },
+          ])
+          .build(),
       },
     ],
   });
