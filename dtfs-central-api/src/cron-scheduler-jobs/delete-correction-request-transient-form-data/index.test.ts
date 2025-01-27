@@ -18,11 +18,6 @@ describe('delete-record-correction-request-transient-form-data', () => {
     jest.useRealTimers();
   });
 
-  beforeEach(() => {
-    jest.resetAllMocks();
-    FeeRecordCorrectionRequestTransientFormDataRepo.delete = mockDelete;
-  });
-
   describe('deleteRecordCorrectionRequestTransientFormData', () => {
     beforeEach(() => {
       jest.resetAllMocks();

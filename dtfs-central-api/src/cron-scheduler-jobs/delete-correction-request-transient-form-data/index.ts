@@ -4,11 +4,7 @@ import { FeeRecordCorrectionRequestTransientFormDataRepo } from '../../repositor
 const { RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE } = process.env;
 
 /**
- * Gets and deletes record correction request transient form data if older than 1 day
- * gets all from the database which are older than 1 day
- * returns if none found
- * gets an array of feeIds
- * deletes transient form data based on provided ids
+ * Deletes record correction request transient form data more than 1 day old
  */
 export const deleteCorrectionRequestTransientFormData = async (): Promise<void> => {
   try {
