@@ -1,27 +1,20 @@
 {#
     Macro: render
-    Description: Renders the facility stage based on the facility's properties.
+    Description: This macro determines and renders the stage of a facility based on its properties.
     Parameters:
-        - facility: An object representing the facility with properties:
+        - facility: An object representing the facility with the following properties:
             - facilityStage: A string indicating the current stage of the facility.
             - hasBeenIssued: A boolean indicating whether the facility has been issued.
-    Output: Returns the stage of the facility as a string.
-    Usage:
-        {% from 'path/to/facility-stage.njk' import render %}
-        {{ render(facility) }}
+    Returns: A string representing the stage of the facility, which can be 'Risk expired', 'Issued', or 'Unissued'.
 #}
 {% macro render(facility) %}
 
 {% if facility.facilityStage == 'Risk expired' %}
     {% set stage = 'Risk expired' %}
-{% endif %}
-
-{% if not facility.facilityStage %}
-    {% if facility.hasBeenIssued  %}
-        {% set stage = 'Issued' %}
-    {% else %}
-        {%  set stage = 'Unissued' %}
-    {% endif %}
+{% elif facility.hasBeenIssued  %}
+    {% set stage = 'Issued' %}
+{% else %}
+    {%  set stage = 'Unissued' %}
 {% endif %}
 
 {{ stage }}
