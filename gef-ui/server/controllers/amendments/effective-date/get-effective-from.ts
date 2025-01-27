@@ -55,7 +55,7 @@ export const getEffectiveFrom = async (req: GetEffectiveDateRequest, res: Respon
       effectiveFrom,
     };
 
-    return res.render('partials/amendments/effective-date.njk', viewModel);
+    return res.render('partials/amendments/effective-from.njk', viewModel);
   } catch (error) {
     console.error('Error getting amendments effective date page %o', error);
     return res.render('partials/problem-with-service.njk');
