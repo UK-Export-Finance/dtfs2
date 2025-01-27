@@ -16,10 +16,8 @@
     {{ exporterName }}, {{ facilityType }} facility
   </span>
 
-  <h1 class="govuk-label-wrapper" data-cy="page-heading">
-    <label class="govuk-label govuk-label--xl govuk-!-padding-bottom-3" for="facility-end-date">
-      Facility end date
-    </label>
+  <h1 class="govuk-label govuk-label--xl" data-cy="page-heading">
+    Facility end date
   </h1>
 </header>
 {% endset %}
@@ -56,7 +54,6 @@
           fieldset: {
             legend: {
               html: headingHtml,
-              isPageHeading: true
             }
           },
           hint: {

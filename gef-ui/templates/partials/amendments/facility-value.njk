@@ -14,10 +14,8 @@
     {{ exporterName }}, {{ facilityType }} facility
   </span>
 
-  <h1 class="govuk-label-wrapper" data-cy="page-heading">
-    <label class="govuk-label govuk-label--xl govuk-!-padding-bottom-3" for="facility-value">
-      New facility value
-    </label>
+  <h1 class="govuk-label govuk-label--xl" data-cy="page-heading">
+    New facility value
   </h1>
 </header>
 {% endset %}
@@ -53,7 +51,6 @@
           classes: "govuk-input--width-10",
           label: {
             html: headingHtml,
-            isPageHeading: true
           },
           name: "facilityValue",
           value: facilityValue,

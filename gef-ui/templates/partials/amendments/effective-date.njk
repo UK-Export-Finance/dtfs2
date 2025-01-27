@@ -15,9 +15,9 @@
     {{ exporterName }}, {{ facilityType }} facility
   </span>
 
-  <label class="govuk-label govuk-label--xl" for="effective-date" data-cy="page-heading">
+  <h1 class="govuk-label govuk-label--xl" data-cy="page-heading">
     Date amendment effective from
-  </label>
+  </h1>
 </header>
 {% endset %}
 
@@ -57,8 +57,7 @@
           namePrefix: "effective-date",
           fieldset: {
             legend: {
-              html: headingHtml,
-              isPageHeading: true
+              html: headingHtml
             }
           },
           hint: {
