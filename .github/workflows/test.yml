@@ -831,7 +831,7 @@ jobs:
         env:
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
         run: npm run db:migrate
-  
+
       - name: Execute
         uses: ./.github/actions/rerun
         with:
