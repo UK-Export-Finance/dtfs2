@@ -64,9 +64,9 @@ export const FeeRecordCorrectionRepo = SqlDbDataSource.getRepository(FeeRecordCo
 
   /**
    * Finds completed fee record corrections with the given bank id, with
-   * the fee record attached
+   * each of their fee records attached.
    * @param bankId - The id of the bank.
-   * @returns The found fee record corrections.
+   * @returns The found fee record corrections with each of their fee records attached.
    */
   async findCompletedCorrectionsByBankIdWithFeeRecord(bankId: string): Promise<FeeRecordCorrectionEntity[]> {
     return await this.find({ where: { isCompleted: true, feeRecord: { report: { bankId } } }, relations: { feeRecord: true } });
