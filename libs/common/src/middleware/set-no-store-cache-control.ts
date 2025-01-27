@@ -8,7 +8,7 @@ import { Request, Response, NextFunction } from 'express';
  * @param res
  * @param next
  */
-export const setCacheControl = (_req: Request, res: Response, next: NextFunction) => {
+export const setNoStoreCacheControl = (_req: Request, res: Response, next: NextFunction) => {
   res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
 
   next();
