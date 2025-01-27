@@ -65,7 +65,7 @@ const getJourneyForAmendment = (amendment: PortalFacilityAmendmentWithUkefId): P
 
   pages.push(ELIGIBILITY);
 
-  if (amendment.eligibilityCriteria.criteria.some((c) => c.answer === false)) {
+  if (amendment.eligibilityCriteria.criteria.some((criterion) => criterion.answer === false)) {
     pages.push(MANUAL_APPROVAL_NEEDED);
   } else {
     pages.push(...endPages);

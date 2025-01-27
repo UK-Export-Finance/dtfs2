@@ -162,7 +162,7 @@ describe('getNextPage', () => {
     currentPage: ELIGIBILITY,
     successTestCases: [
       {
-        description: 'when eligibility responses have all been answered with "true"',
+        description: 'when all eligibility criteria answers are "true"',
         expectedNextPage: EFFECTIVE_DATE,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
           .withCriteria([
@@ -173,7 +173,7 @@ describe('getNextPage', () => {
           .build(),
       },
       {
-        description: 'when all eligibility responses have all been answered with "false"',
+        description: 'when all eligibility criteria answers are "false"',
         expectedNextPage: MANUAL_APPROVAL_NEEDED,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
           .withCriteria([
@@ -184,7 +184,7 @@ describe('getNextPage', () => {
           .build(),
       },
       {
-        description: 'when any eligibility responses have been answered with "false"',
+        description: 'when some eligibility criteria answers are "false"',
         expectedNextPage: MANUAL_APPROVAL_NEEDED,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
           .withCriteria([

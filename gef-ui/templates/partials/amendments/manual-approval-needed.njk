@@ -20,7 +20,6 @@
     })
   }}
 
-
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <header>
@@ -36,13 +35,12 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         <input type="hidden" name="previousPage" value="{{ previousPage }}">
 
-        <div
-          class="govuk-button-group govuk-!-margin-top-4"
-        >
+        <div class="govuk-button-group govuk-!-margin-top-4">
           <p>Complete the Schedule 8 form (Amendment and Notification Request) and email to <a class="govuk-link govuk-!-margin-0" href="mailTo:{{ amendmentFormEmail }}" data-cy="form-email-link">{{ amendmentFormEmail }}</a>.</p>
           <p>Include any supporting information and documents needed for UKEF to review and process the amendments.</p>
           <p><a class="govuk-link govuk-!-margin-0" href="{{ returnLink }}" data-cy="return-link">Return to all applications and notices</a></p>
         </div>
+
       </form>
     </div>
   </div>
