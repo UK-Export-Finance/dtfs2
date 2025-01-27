@@ -103,6 +103,7 @@ const generateApp = () => {
       res.status(error.statusCode || HttpStatusCode.InternalServerError);
       res.redirect('/');
     } else {
+      console.error(error);
       res.status(HttpStatusCode.InternalServerError);
       res.render('_partials/problem-with-service.njk');
     }
