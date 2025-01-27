@@ -1129,8 +1129,13 @@ utilisationReportsRouter
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               $ref: '#/definitions/FeeRecordCorrectionRequestReview'
+ *               oneOf:
+ *                 - $ref: '#/definitions/FeeRecordCorrectionRequestReview'
+ *                 - type: object
+ *                   properties:
+ *                     errorKey:
+ *                       type: string
+ *                       description: Error key if the correction request has already been submitted
  *       400:
  *         description: Bad request
  *       404:

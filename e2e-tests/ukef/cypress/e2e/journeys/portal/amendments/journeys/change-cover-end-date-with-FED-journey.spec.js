@@ -1,16 +1,15 @@
-import relative from '../../../relativeURL';
-import MOCK_USERS from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../e2e-fixtures/gef/mocks/mock-deals';
-import { anIssuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';
-import { applicationPreview } from '../../../../../../gef/cypress/e2e/pages';
-import whatDoYouNeedToChange from '../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
-import coverEndDate from '../../../../../../gef/cypress/e2e/pages/amendments/cover-end-date';
-import doYouHaveAFacilityEndDate from '../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
-import facilityEndDate from '../../../../../../gef/cypress/e2e/pages/amendments/facility-end-date';
+import relative from '../../../../relativeURL';
+import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
+import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
+import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
+import doYouHaveAFacilityEndDate from '../../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
+import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('Amendments - Change facility end date journey - happy path', () => {
+context('Amendments - Change cover end date with facility end date - full journey', () => {
   /**
    * @type {string}
    */
@@ -68,51 +67,29 @@ context('Amendments - Change facility end date journey - happy path', () => {
 
   it('should navigate through the journey correctly', () => {
     cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
-
-    whatDoYouNeedToChange.coverEndDateCheckbox().should('not.be.checked');
-    whatDoYouNeedToChange.facilityValueCheckbox().should('not.be.checked');
-    whatDoYouNeedToChange.pageHeading().contains('What do you need to change?');
-    whatDoYouNeedToChange.backLink();
-    whatDoYouNeedToChange.warning().contains('Check your records for the most up-to-date values');
-
     whatDoYouNeedToChange.coverEndDateCheckbox().click();
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
-
-    coverEndDate.pageHeading().contains('New cover end date');
-    coverEndDate.backLink();
-
     cy.completeDateFormFields({ idPrefix: 'cover-end-date' });
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/do-you-have-a-facility-end-date`));
-
-    doYouHaveAFacilityEndDate.noRadioButton().should('not.be.checked');
-    doYouHaveAFacilityEndDate.yesRadioButton().should('not.be.checked');
-    doYouHaveAFacilityEndDate.pageHeading().contains('Do you have a facility end date?');
-    doYouHaveAFacilityEndDate.backLink();
-
     doYouHaveAFacilityEndDate.yesRadioButton().click();
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-end-date`));
-
-    facilityEndDate.pageHeading().contains('Facility end date');
-    facilityEndDate.backLink();
-
     cy.completeDateFormFields({ idPrefix: 'facility-end-date' });
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/eligibility`));
-  });
+    eligibility.allTrueRadioButtons().click({ multiple: true });
+    cy.clickContinueButton();
 
-  it('should navigate to cancel page when cancel is clicked', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-end-date`));
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/effective-date`));
 
-    facilityEndDate.pageHeading().contains('Facility end date');
-    facilityEndDate.cancelLink().click();
+    // TODO DTFS2-7524: add steps for effective from date
 
-    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`));
+    // TODO DTFS2-7519: add steps for check your answer page
   });
 });

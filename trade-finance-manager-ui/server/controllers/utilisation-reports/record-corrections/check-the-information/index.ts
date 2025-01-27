@@ -1,9 +1,10 @@
 import { Response, Request } from 'express';
 import { mapReasonsToDisplayValues, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
-import { RecordCorrectionRequestInformationViewModel } from '../../../../types/view-models';
+import { RecordCorrectionRequestInformationViewModel, ProblemWithServiceViewModel } from '../../../../types/view-models';
 import { asUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import api from '../../../../api';
+import { recordCorrectionRequestAlreadySubmitted, isRecordCorrectionRequestReviewResponseType } from '../../helpers';
 
 /**
  * Renders the "check the information" page for a record correction request
@@ -15,10 +16,35 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
     const { reportId, feeRecordId } = req.params;
     const { user, userToken } = asUserSession(req.session);
 
-    const { bank, reportPeriod, correctionRequestDetails } = await api.getFeeRecordCorrectionRequestReview(reportId, feeRecordId, user._id, userToken);
+    const bankCorrectionRequestReviewResponse = await api.getFeeRecordCorrectionRequestReview(reportId, feeRecordId, user._id, userToken);
+
+    const problemWithServiceViewModel: ProblemWithServiceViewModel = {
+      reason: 'The record correction request has been sent to the bank. You cannot make any changes to the request',
+      reportId,
+      user: req.session.user,
+    };
+
+    /**
+     * if record correction is already submitted
+     * should render page-not-found with custom reason
+     */
+    if (recordCorrectionRequestAlreadySubmitted(bankCorrectionRequestReviewResponse)) {
+      return res.render('utilisation-reports/page-not-found.njk', problemWithServiceViewModel);
+    }
+
+    /**
+     * if bankCorrectionRequestReviewResponse returns an incorrect response type (should be FeeRecordCorrectionRequestReviewResponseBody)
+     * throws error
+     */
+    if (!isRecordCorrectionRequestReviewResponseType(bankCorrectionRequestReviewResponse)) {
+      throw new Error('Invalid response body for record correction request review');
+    }
+
+    const { bank, reportPeriod, correctionRequestDetails } = bankCorrectionRequestReviewResponse;
+
     const { facilityId, exporter, reasons, additionalInfo, contactEmailAddresses } = correctionRequestDetails;
 
-    const viewModel: RecordCorrectionRequestInformationViewModel = {
+    const checkTheInformationViewModel: RecordCorrectionRequestInformationViewModel = {
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       bank: {
@@ -34,7 +60,7 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
       contactEmailAddresses,
     };
 
-    return res.render('utilisation-reports/record-corrections/check-the-information.njk', viewModel);
+    return res.render('utilisation-reports/record-corrections/check-the-information.njk', checkTheInformationViewModel);
   } catch (error) {
     console.error('Failed to render create record correction request - "check the information" page %o', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
