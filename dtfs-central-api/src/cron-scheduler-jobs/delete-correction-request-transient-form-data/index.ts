@@ -10,20 +10,18 @@ const { RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE } = process.env;
  * gets an array of feeIds
  * deletes transient form data based on provided ids
  */
-export const deleteRecordCorrectionRequestTransientFormData = async (): Promise<void> => {
+export const deleteCorrectionRequestTransientFormData = async (): Promise<void> => {
   try {
-    console.info('Getting and deleting old transient record correction requests - deleteRecordCorrectionRequestTransientFormDataJob CRON job');
+    console.info('Getting and deleting old transient record correction requests - deleteCorrectionRequestTransientFormDataJob CRON job');
 
     await FeeRecordCorrectionRequestTransientFormDataRepo.deleteByLastUpdatedOlderThanOneDayAgo();
   } catch (error) {
-    console.error('Error deleting old transient record correction requests - deleteRecordCorrectionRequestTransientFormDataJob CRON job: %o', error);
-
-    throw error;
+    console.error('Error deleting old transient record correction requests - deleteCorrectionRequestTransientFormDataJob CRON job: %o', error);
   }
 };
 
-export const deleteRecordCorrectionRequestTransientFormDataJob: CronSchedulerJob = {
+export const deleteCorrectionRequestTransientFormDataJob: CronSchedulerJob = {
   cronExpression: asString(RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE, 'RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE'),
   description: 'Delete record correction transient form data older than 1 day',
-  task: deleteRecordCorrectionRequestTransientFormData,
+  task: deleteCorrectionRequestTransientFormData,
 };
