@@ -12,7 +12,7 @@ context('Select a scheme', () => {
   });
 
   it('should display validation error if submitted without confirming a scheme', () => {
-    pages.selectScheme.continue().click();
+    cy.clickContinueButton();
 
     cy.url().should('eq', relative('/select-scheme'));
     cy.title().should('eq', `What scheme do you want to apply for?${pages.defaults.pageTitleAppend}`);
@@ -29,14 +29,14 @@ context('Select a scheme', () => {
 
   it('should start BSS/EWC journey if option selected', () => {
     pages.selectScheme.bss().click();
-    pages.selectScheme.continue().click();
+    cy.clickContinueButton();
 
     cy.url().should('eq', relative('/before-you-start'));
   });
 
   it('should start BSS/EWC journey if option selected', () => {
     pages.selectScheme.gef().click();
-    pages.selectScheme.continue().click();
+    cy.clickContinueButton();
 
     cy.url().should('eq', relative('/gef/mandatory-criteria'));
   });
