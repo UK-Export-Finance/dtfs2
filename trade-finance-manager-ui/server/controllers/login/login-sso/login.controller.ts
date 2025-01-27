@@ -88,7 +88,8 @@ export class LoginController {
    * Handles the logout process for the user.
    *
    * This method logs out the user from the Trade Finance Manager (TFM) application.
-   * It destroys the user's session and redirects them to the home page.
+   * It destroys the user's session and redirects them to a page they won't
+   * automattically be re-logged-in from.
    *
    * @param req - The HTTP request object.
    * @param res - The HTTP response object.
@@ -96,7 +97,7 @@ export class LoginController {
   public getLogout = (req: Request, res: Response) => {
     console.info('User has been logged out from TFM');
     req.session.destroy(() => {
-      res.redirect('/');
+      res.render('_partials/user-logged-out.njk');
     });
   };
 }

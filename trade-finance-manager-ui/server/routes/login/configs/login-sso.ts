@@ -9,9 +9,12 @@ export const getLoginSsoRouter: GetRouter = () => {
   const userSessionService = new UserSessionService();
   const loginController = new LoginController({ loginService, userSessionService });
   const loginSsoRouter = express.Router();
+
   loginSsoRouter.get('/', (req, res, next) => {
     loginController.getLogin(req, res).catch(next);
   });
+
+  loginSsoRouter.get('/logout', loginController.getLogout);
 
   return loginSsoRouter;
 };
