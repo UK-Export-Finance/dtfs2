@@ -1,10 +1,10 @@
 import { RECORD_CORRECTION_REASON, CURRENCY, getFormattedMonetaryValue, CorrectionValuesPartialEntity, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
-import { getFormattedCorrectionValueForCorrectionReason, mapCorrectionReasonsAndValuesToFormattedValues } from './map-reasons-and-values-to-formatted-string';
+import { getFormattedCorrectionValueForCorrectionReason, mapCorrectionReasonsAndValuesToFormattedValues } from './map-reasons-and-values-to-formatted-values';
 
 console.error = jest.fn();
 
-describe('get-completed-fee-record-corrections.controller map-reasons-and-values-to-formatted-string helpers', () => {
+describe('get-completed-fee-record-corrections.controller map-reasons-and-values-to-formatted-values helpers', () => {
   const anEmptyCorrectionValuesPartialEntity = (): CorrectionValuesPartialEntity => ({
     facilityId: null,
     facilityUtilisation: null,

@@ -1,5 +1,5 @@
 import { FeeRecordCorrectionEntity, mapReasonsToDisplayValues } from '@ukef/dtfs2-common';
-import { mapCorrectionReasonsAndValuesToFormattedValues } from './map-reasons-and-values-to-formatted-string';
+import { mapCorrectionReasonsAndValuesToFormattedValues } from './map-reasons-and-values-to-formatted-values';
 import { GetCompletedFeeRecordCorrectionsResponseBody } from '..';
 
 /**

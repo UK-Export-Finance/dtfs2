@@ -16,8 +16,7 @@ import { mongoDbClient } from '../../../../src/drivers/db-client';
 import { wipe } from '../../../wipeDB';
 import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
 
-// TODO: Uncomment after debug
-// console.error = jest.fn();
+console.error = jest.fn();
 
 const BASE_URL = '/v1/utilisation-reports/completed-fee-record-corrections/:bankId';
 

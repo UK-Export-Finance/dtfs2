@@ -1018,7 +1018,6 @@ utilisationReportsRouter
   .all(validation.sqlIdValidation('correctionId'), handleExpressValidatorResult)
   .get(getFeeRecordCorrection);
 
-// TODO: Add in openapi docs.
 /**
  * @openapi
  * /utilisation-reports/completed-fee-record-corrections/:bankId:
