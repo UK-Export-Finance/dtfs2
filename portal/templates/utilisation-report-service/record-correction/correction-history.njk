@@ -1,0 +1,33 @@
+{# TODO FN-3671: Add component tests. #}
+
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% block pageTitle %}
+    Record correction history
+{% endblock %}
+
+{% block content %}
+    <h1 class="govuk-heading-l" data-cy="main-heading">
+        Record correction history
+    </h1>
+
+    {% if completedCorrections.length === 0 %}
+        <p class="govuk-body" data-cy="no-corrections-text">
+            There are no previous record correction requests.
+
+            Records will be automatically added to this page once they have been sent back to UKEF.
+        </p>
+    {% else %}
+        <p class="govuk-body" data-cy="corrections-text">
+            Previous record correction requests are shown below.
+            
+            Records are automatically added to this page once they have been sent back to UKEF.
+        </p>
+
+        {# TODO FN-3671: Pass completed corrections to table macro. #}
+    {% endif %}
+
+{% endblock %}
