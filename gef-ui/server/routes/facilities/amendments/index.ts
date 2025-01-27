@@ -17,6 +17,7 @@ import { postDoYouHaveAFacilityEndDate } from '../../../controllers/amendments/d
 import { getFacilityEndDate } from '../../../controllers/amendments/facility-end-date/get-facility-end-date';
 import { postFacilityEndDate } from '../../../controllers/amendments/facility-end-date/post-facility-end-date';
 import { getBankReviewDate } from '../../../controllers/amendments/bank-review-date/get-bank-review-date.ts';
+import { postBankReviewDate } from '../../../controllers/amendments/bank-review-date/post-bank-review-date.ts';
 import { getEligibility } from '../../../controllers/amendments/eligibility-criteria/get-eligibility.ts';
 import { postEligibility } from '../../../controllers/amendments/eligibility-criteria/post-eligibility.ts';
 
@@ -68,7 +69,8 @@ router
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${BANK_REVIEW_DATE}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
-  .get(getBankReviewDate);
+  .get(getBankReviewDate)
+  .post(postBankReviewDate);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${ELIGIBILITY}`)
