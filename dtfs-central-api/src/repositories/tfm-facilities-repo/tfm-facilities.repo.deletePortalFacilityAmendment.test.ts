@@ -57,7 +57,12 @@ describe('TfmFacilitiesRepo', () => {
       // Assert
       const expectedFindFilter = { _id: { $eq: new ObjectId(facilityId) }, 'amendments._id': { $eq: new ObjectId(amendmentId) } };
 
-      const expectedUpdateFilter = { $unset: { amendments: '' }, $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) } };
+      const expectedUpdateFilter = {
+        $pull: {
+          amendments: { _id: new ObjectId(amendmentId) },
+        },
+        $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
+      };
 
       expect(mockUpdateOne).toHaveBeenCalledTimes(1);
       expect(mockUpdateOne).toHaveBeenCalledWith(expectedFindFilter, expectedUpdateFilter);

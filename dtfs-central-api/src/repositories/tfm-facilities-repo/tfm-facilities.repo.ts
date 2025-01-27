@@ -428,7 +428,9 @@ export class TfmFacilitiesRepo {
     };
 
     const updateFilter: UpdateFilter<TfmFacility> = {
-      $unset: { amendments: '' },
+      $pull: {
+        amendments: { _id: new ObjectId(amendmentId) },
+      },
       $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
     };
 
