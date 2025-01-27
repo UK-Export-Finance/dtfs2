@@ -53,8 +53,8 @@
         <input type="hidden" name="previousPage" value="{{ previousPage }}">
 
         {{ govukDateInput({
-          id: "effectiveDate",
-          namePrefix: "effective-date",
+          id: "effectiveFrom",
+          namePrefix: "effective-from",
           fieldset: {
             legend: {
               html: headingHtml
@@ -63,35 +63,35 @@
           hint: {
             html: hintHtml
           },
-          errorMessage: errors and errors.fieldErrors.effectiveDate and {
-            text: errors.fieldErrors.effectiveDate.text,
+          errorMessage: errors and errors.fieldErrors.effectiveFrom and {
+            text: errors.fieldErrors.effectiveFrom.text,
             attributes: {
-              'data-cy': 'effective-date-inline-error'
+              'data-cy': 'effective-from-inline-error'
             }
           },
           items: [
             {
-              classes: (errors.fieldErrors['effectiveDate-day'] and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
+              classes: (errors.fieldErrors['effectiveFrom-day'] and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
               name: "day",
-              value: effectiveDate.day,
+              value: effectiveFrom.day,
               attributes: {
-                'data-cy': 'effective-date-day'
+                'data-cy': 'effective-from-day'
               }
             },
             {
-              classes: (errors.fieldErrors['effectiveDate-month'] and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
+              classes: (errors.fieldErrors['effectiveFrom-month'] and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
               name: "month",
-              value: effectiveDate.month,
+              value: effectiveFrom.month,
               attributes: {
-                'data-cy': 'effective-date-month'
+                'data-cy': 'effective-from-month'
               }
             },
             {
-              classes: (errors.fieldErrors['effectiveDate-year'] and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
+              classes: (errors.fieldErrors['effectiveFrom-year'] and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
               name: "year",
-              value: effectiveDate.year,
+              value: effectiveFrom.year,
               attributes: {
-                'data-cy': 'effective-date-year'
+                'data-cy': 'effective-from-year'
               }
             }
           ]

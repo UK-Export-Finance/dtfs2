@@ -20,7 +20,7 @@ import { getBankReviewDate } from '../../../controllers/amendments/bank-review-d
 import { postBankReviewDate } from '../../../controllers/amendments/bank-review-date/post-bank-review-date.ts';
 import { getEligibility } from '../../../controllers/amendments/eligibility-criteria/get-eligibility.ts';
 import { postEligibility } from '../../../controllers/amendments/eligibility-criteria/post-eligibility.ts';
-import { getEffectiveDate } from '../../../controllers/amendments/effective-date/get-effective-date.ts';
+import { getEffectiveFrom } from '../../../controllers/amendments/effective-date/get-effective-from.ts';
 
 const {
   WHAT_DO_YOU_NEED_TO_CHANGE,
@@ -91,6 +91,6 @@ router
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${EFFECTIVE_DATE}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
-  .get(getEffectiveDate);
+  .get(getEffectiveFrom);
 
 export default router;
