@@ -49,6 +49,18 @@ describe('monetary value helpers', () => {
       // Assert
       expect(formattedValue).toEqual(expectedFormattedValue);
     });
+
+    it('should format the number zero to 2 decimal places', () => {
+      // Arrange
+      const value = 0;
+      const expectedFormattedValue = '0.00';
+
+      // Act
+      const formattedValue = getFormattedMonetaryValue(value);
+
+      // Assert
+      expect(formattedValue).toEqual(expectedFormattedValue);
+    });
   });
 
   describe('getMonetaryValueAsNumber', () => {

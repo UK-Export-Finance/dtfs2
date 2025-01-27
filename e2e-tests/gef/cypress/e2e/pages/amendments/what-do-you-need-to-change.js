@@ -6,6 +6,7 @@ const whatDoYouNeedToChange = {
   pageHeading: () => cy.get('[data-cy="page-heading"]'),
   backLink: () => cy.get('[data-cy="back-link"]'),
   warning: () => cy.get('[data-cy="warning"]'),
+  cancelLink: () => cy.get('[data-cy="cancel-link"]'),
 };
 
 module.exports = whatDoYouNeedToChange;
