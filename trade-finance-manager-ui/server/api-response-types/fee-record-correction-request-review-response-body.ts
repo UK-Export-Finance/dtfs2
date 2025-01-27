@@ -1,6 +1,6 @@
 import { RecordCorrectionReason, ReportPeriod, SessionBank } from '@ukef/dtfs2-common';
 
-export type FeeRecordCorrectionRequestReviewResponseBody = {
+export type FeeRecordCorrectionRequestReviewResponse = {
   bank: SessionBank;
   reportPeriod: ReportPeriod;
   correctionRequestDetails: {
@@ -11,3 +11,9 @@ export type FeeRecordCorrectionRequestReviewResponseBody = {
     contactEmailAddresses: string[];
   };
 };
+
+export type FeeRecordCorrectionRequestReviewErrorKeyResponse = {
+  errorKey: string;
+};
+
+export type FeeRecordCorrectionRequestReviewResponseBody = FeeRecordCorrectionRequestReviewResponse | FeeRecordCorrectionRequestReviewErrorKeyResponse;
