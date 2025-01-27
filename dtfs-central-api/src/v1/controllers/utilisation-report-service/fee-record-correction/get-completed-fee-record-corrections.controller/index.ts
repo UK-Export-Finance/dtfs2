@@ -42,7 +42,7 @@ export const getCompletedFeeRecordCorrections = async (req: GetCompletedFeeRecor
   const { bankId } = req.params;
 
   try {
-    const completedCorrections = await FeeRecordCorrectionRepo.findCompletedCorrectionsByBankId(bankId);
+    const completedCorrections = await FeeRecordCorrectionRepo.findCompletedCorrectionsByBankIdWithFeeRecord(bankId);
 
     if (completedCorrections.length === 0) {
       throw new NotFoundError(`Failed to find any completed fee record corrections with bank id ${bankId}`);

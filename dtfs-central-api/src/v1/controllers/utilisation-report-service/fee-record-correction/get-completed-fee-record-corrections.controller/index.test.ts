@@ -26,7 +26,7 @@ describe('get-completed-fee-record-corrections.controller', () => {
     let res: MockResponse<GetCompletedFeeRecordCorrectionsResponse>;
 
     beforeEach(() => {
-      FeeRecordCorrectionRepo.findCompletedCorrectionsByBankId = mockCompletedCorrectionsFind;
+      FeeRecordCorrectionRepo.findCompletedCorrectionsByBankIdWithFeeRecord = mockCompletedCorrectionsFind;
 
       req = httpMocks.createRequest<GetCompletedFeeRecordCorrectionsRequest>({
         params: aValidRequestParams(),
