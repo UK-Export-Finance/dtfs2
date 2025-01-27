@@ -24,6 +24,8 @@ export const mapCompletedFeeRecordCorrectionsToResponse = (completedCorrections:
 
     const formattedCorrectedValues = mapCorrectionReasonsAndValuesToFormattedValues(reasons, correctedValues).join(', ');
 
+    const mappedBankCommentary = bankCommentary ?? undefined;
+
     return {
       id,
       dateSent,
@@ -31,6 +33,6 @@ export const mapCompletedFeeRecordCorrectionsToResponse = (completedCorrections:
       formattedReasons,
       formattedPreviousValues,
       formattedCorrectedValues,
-      bankCommentary: bankCommentary ?? undefined,
+      bankCommentary: mappedBankCommentary,
     };
   });

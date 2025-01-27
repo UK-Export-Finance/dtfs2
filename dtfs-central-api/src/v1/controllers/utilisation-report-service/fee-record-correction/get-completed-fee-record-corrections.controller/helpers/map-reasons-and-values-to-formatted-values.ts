@@ -12,11 +12,11 @@ import { validateRequiredCorrectionField } from '../../../../../../helpers';
  * so that the {@link RECORD_CORRECTION_REASON.OTHER} reference in the
  * 'reasons' column has a corresponding value.
  *
- * @param {CorrectionValuesPartialEntity} correctionValues - The correction values entity.
- * @param {RecordCorrectionReason} reason - The correction reason to get the formatted value for.
- * @returns {string} The formatted value for the correction reason.
- * @throws {Error} If the correction reason is unknown.
- * @throws {Error} If a required correction value is missing for the given reason.
+ * @param correctionValues - The correction values entity.
+ * @param reason - The correction reason to get the formatted value for.
+ * @returns The formatted value for the correction reason.
+ * @throws Error if the correction reason is unknown.
+ * @throws Error if a required correction value is missing for the given reason.
  */
 export const getFormattedCorrectionValueForCorrectionReason = (correctionValues: CorrectionValuesPartialEntity, reason: RecordCorrectionReason): string => {
   switch (reason) {
@@ -45,9 +45,9 @@ export const getFormattedCorrectionValueForCorrectionReason = (correctionValues:
 
 /**
  * Maps an array of correction reasons and their corresponding values to an array of formatted string values.
- * @param {RecordCorrectionReason[]} reasons - Array of correction reasons to map.
- * @param {CorrectionValuesPartialEntity} correctionValues - The correction values.
- * @returns {string} An array of formatted correction values.
+ * @param reasons - Array of correction reasons to map.
+ * @param correctionValues - The correction values.
+ * @returns An array of formatted correction values.
  */
 export const mapCorrectionReasonsAndValuesToFormattedValues = (reasons: RecordCorrectionReason[], correctionValues: CorrectionValuesPartialEntity): string[] =>
   reasons.map((reason) => getFormattedCorrectionValueForCorrectionReason(correctionValues, reason));

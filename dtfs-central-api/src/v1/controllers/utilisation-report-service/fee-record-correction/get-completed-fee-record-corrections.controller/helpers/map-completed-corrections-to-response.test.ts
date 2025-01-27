@@ -32,14 +32,17 @@ describe('get-completed-fee-record-corrections.controller map-completed-correcti
       const correctionId = 123;
       const dateReceived = new Date();
       const reasons = [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT];
+
       const previousValues = {
         feesPaidToUkefForThePeriod: 123.45,
         feesPaidToUkefForThePeriodCurrency: CURRENCY.USD,
       };
+
       const correctedValues = {
         feesPaidToUkefForThePeriod: 987.65,
         feesPaidToUkefForThePeriodCurrency: CURRENCY.EUR,
       };
+
       const bankCommentary = 'Some bank commentary';
 
       const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecordEntity, true)
