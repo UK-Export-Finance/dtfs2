@@ -6,6 +6,7 @@ type PaymentDeletedEventPayload = {
   transactionEntityManager: EntityManager;
   feeRecordsAndPaymentsMatch: boolean;
   hasAttachedPayments: boolean;
+  hasCorrections: boolean;
   requestSource: DbRequestSource;
 };
 
@@ -23,7 +24,7 @@ export type FeeRecordPaymentDeletedEvent = BaseFeeRecordEvent<'PAYMENT_DELETED',
  */
 export const handleFeeRecordPaymentDeletedEvent = async (
   feeRecord: FeeRecordEntity,
-  { transactionEntityManager, feeRecordsAndPaymentsMatch, hasAttachedPayments, requestSource }: PaymentDeletedEventPayload,
+  { transactionEntityManager, feeRecordsAndPaymentsMatch, hasAttachedPayments, hasCorrections, requestSource }: PaymentDeletedEventPayload,
 ): Promise<FeeRecordEntity> => {
   if (hasAttachedPayments) {
     const status: FeeRecordStatus = feeRecordsAndPaymentsMatch ? FEE_RECORD_STATUS.MATCH : FEE_RECORD_STATUS.DOES_NOT_MATCH;
@@ -31,6 +32,7 @@ export const handleFeeRecordPaymentDeletedEvent = async (
     return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
   }
 
-  feeRecord.updateWithStatus({ status: FEE_RECORD_STATUS.TO_DO, requestSource });
+  const status = hasCorrections ? FEE_RECORD_STATUS.TO_DO_AMENDED : FEE_RECORD_STATUS.TO_DO;
+  feeRecord.updateWithStatus({ status, requestSource });
   return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
 };
