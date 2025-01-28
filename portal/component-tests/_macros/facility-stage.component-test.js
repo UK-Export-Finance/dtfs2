@@ -22,7 +22,7 @@ describe('_macros/facility-stage.njk', () => {
     expect(wrapper.html).toContain(FACILITY_STAGE.UNISSUED);
   });
 
-  it(`should render facility stage as ${FACILITY_STAGE.UNISSUED}, with an empty facility object`, () => {
+  it(`should render facility stage as ${FACILITY_STAGE.UNISSUED}, where the facility object is falsy`, () => {
     // Act
     const wrapper = render(deal.loanTransactions.items[3]);
 

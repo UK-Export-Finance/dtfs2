@@ -202,7 +202,8 @@ const deal = {
         dayCountBasis: '365',
         status: 'Completed',
       },
-      // Empty facility object for exceptional handling and edge case
+      // Empty facility object for exceptional handling and edge case.
+      // This should not occur in a normal operation.
       {},
     ],
   },
