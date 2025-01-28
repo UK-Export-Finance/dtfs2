@@ -1,4 +1,4 @@
-import { Currency, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { allStatusesAreTheSameOrCombinationOfToDoStatuses, Currency, FEE_RECORD_STATUS, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { NextFunction, Request, Response } from 'express';
 import axios from 'axios';
 import { asUserSession } from '../../helpers/express-session';
@@ -67,16 +67,6 @@ const getSetOfSelectedFeeRecordStatuses = (checkedCheckboxIds: PremiumPaymentsTa
 };
 
 /**
- * Checks if all statuses in the set are the same.
- * Treats TO_DO and TO_DO_AMENDED as the same status.
- * @param statuses - A set of fee record statuses.
- * @returns True if all statuses are the same, false otherwise.
- */
-const allStatusesMatch = (statuses: Set<FeeRecordStatus>) => {
-  return statuses.size === 1 || (statuses.size === 2 && statuses.has(FEE_RECORD_STATUS.TO_DO) && statuses.has(FEE_RECORD_STATUS.TO_DO_AMENDED));
-};
-
-/**
  * Middleware to validate the request body for adding a payment.
  * @param req - The Express request object.
  * @param res - The Express response object.
@@ -104,7 +94,7 @@ export const validatePostAddPaymentRequestBody = (req: Request, res: Response, n
   }
 
   const selectedFeeRecordStatuses = getSetOfSelectedFeeRecordStatuses(checkedCheckboxIds);
-  if (!allStatusesMatch(selectedFeeRecordStatuses)) {
+  if (!allStatusesAreTheSameOrCombinationOfToDoStatuses(selectedFeeRecordStatuses)) {
     return redirectWithError(req, res, reportId, ADD_PAYMENT_ERROR_KEY.DIFFERENT_STATUSES, mapCheckedCheckboxesToRecord(checkedCheckboxIds));
   }
 
