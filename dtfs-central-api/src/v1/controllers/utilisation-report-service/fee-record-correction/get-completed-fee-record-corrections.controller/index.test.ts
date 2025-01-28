@@ -59,6 +59,20 @@ describe('get-completed-fee-record-corrections.controller', () => {
       expect(responseBody).toEqual(expectedMappedCompletedCorrections);
     });
 
+    it(`should respond with a '${HttpStatusCode.Ok}' and an empty array if no completed fee record corrections with the provided bank id are found`, async () => {
+      // Arrange
+      mockCompletedCorrectionsFind.mockResolvedValue([]);
+
+      // Act
+      await getCompletedFeeRecordCorrections(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+
+      const responseBody = res._getData() as GetCompletedFeeRecordCorrectionsResponseBody;
+      expect(responseBody).toEqual([]);
+    });
+
     it('should call "completed fee record corrections" find method once with the correct parameters', async () => {
       // Act
       await getCompletedFeeRecordCorrections(req, res);
@@ -68,20 +82,9 @@ describe('get-completed-fee-record-corrections.controller', () => {
       expect(mockCompletedCorrectionsFind).toHaveBeenCalledWith(bankId);
     });
 
-    it(`should respond with a '${HttpStatusCode.NotFound}' if no completed fee record corrections with the provided bank id are found`, async () => {
-      // Arrange
-      mockCompletedCorrectionsFind.mockResolvedValue([]);
-
-      // Act
-      await getCompletedFeeRecordCorrections(req, res);
-
-      // Assert
-      expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
-    });
-
     it("should respond with the specific error status if retrieving the completed fee record corrections throws an 'ApiError'", async () => {
       // Arrange
-      const errorStatus = HttpStatusCode.NotFound;
+      const errorStatus = HttpStatusCode.BadRequest;
       mockCompletedCorrectionsFind.mockRejectedValue(new TestApiError({ status: errorStatus }));
 
       // Act

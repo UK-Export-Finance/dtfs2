@@ -20,8 +20,8 @@ describe('GET /v1/banks/:bankId/utilisation-reports/completed-corrections', () =
   const getUrl = ({ bankId }) => `/v1/banks/${bankId}/utilisation-reports/completed-corrections`;
 
   let testUsers;
-  let barclaysBank;
   let aBarclaysPaymentReportOfficer;
+  let barclaysBank;
 
   const exporter = 'An exporter';
   const correctionId = 7;
@@ -94,5 +94,17 @@ describe('GET /v1/banks/:bankId/utilisation-reports/completed-corrections', () =
     ];
 
     expect(response.body).toEqual(expectedResponseBody);
+  });
+
+  it(`should respond with a ${HttpStatusCode.BadRequest} to requests that do not have a valid bank id`, async () => {
+    const { status } = await as(aBarclaysPaymentReportOfficer).get(getUrl({ bankId: 'invalid-bank-id' }));
+
+    expect(status).toEqual(HttpStatusCode.BadRequest);
+  });
+
+  it(`should respond with a ${HttpStatusCode.Unauthorized} if user's bank does not match request bank`, async () => {
+    const { status } = await as(aBarclaysPaymentReportOfficer).get(getUrl({ bankId: barclaysBank.id - 1 }));
+
+    expect(status).toEqual(HttpStatusCode.Unauthorized);
   });
 });
