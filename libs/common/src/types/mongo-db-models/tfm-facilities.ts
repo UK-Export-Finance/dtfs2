@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { UnixTimestamp } from '../date';
+import { UnixTimestamp, UnixTimestampSeconds } from '../date';
 import { PortalAmendmentStatus, TfmAmendmentStatus } from '../amendment-status';
 import { Currency } from '../currency';
 import { Facility } from './facility';
@@ -55,7 +55,7 @@ interface BaseAmendment {
   changeFacilityValue?: boolean;
   value?: number | null;
   currency?: Currency | null;
-  effectiveDate?: number;
+  effectiveDate?: UnixTimestampSeconds;
   createdBy?: {
     username: string;
     name: string;
