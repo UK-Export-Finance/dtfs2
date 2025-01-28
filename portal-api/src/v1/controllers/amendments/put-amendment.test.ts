@@ -54,6 +54,11 @@ describe('controllers - facility amendment', () => {
         updatedAt: 1702061978881,
         status: PORTAL_AMENDMENT_STATUS.DRAFT,
         eligibilityCriteria: { version: 1, criteria: [] },
+        createdBy: {
+          username: user.username,
+          name: user.firstname,
+          email: user.email,
+        },
       };
 
       jest.mocked(api.putPortalFacilityAmendment).mockResolvedValue(mockPortalAmendmentResponse);
