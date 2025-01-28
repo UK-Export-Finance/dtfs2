@@ -16,7 +16,7 @@ describe('controllers - login (sso)', () => {
       loginController = new LoginController({ loginService, userSessionService });
     });
 
-    it('renders the logout page', () => {
+    it('should render the logout page', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
@@ -27,7 +27,7 @@ describe('controllers - login (sso)', () => {
       expect(res._getRenderView()).toEqual('user-logged-out.njk');
     });
 
-    it('destroys the session', () => {
+    it('should destroy the session', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
