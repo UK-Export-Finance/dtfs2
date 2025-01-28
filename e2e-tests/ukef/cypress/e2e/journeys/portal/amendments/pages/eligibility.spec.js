@@ -120,4 +120,27 @@ context('Amendments - Eligibility - page tests', () => {
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`));
   });
+
+  it('should navigate to the manual approval information page if "false" is selected for all criteria', () => {
+    eligibility.allFalseRadioButtons().click({ multiple: true });
+    cy.clickContinueButton();
+
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/manual-approval-needed`));
+  });
+
+  it('should navigate to the manual approval information page if "false" is selected for all criteria', () => {
+    eligibility.allTrueRadioButtons().click({ multiple: true });
+    eligibility.criterionFalseRadioButton(2).click();
+
+    cy.clickContinueButton();
+
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/manual-approval-needed`));
+  });
+
+  it('should navigate to the effective from page if "true" is selected for all criteria', () => {
+    eligibility.allTrueRadioButtons().click({ multiple: true });
+    cy.clickContinueButton();
+
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/effective-date`));
+  });
 });
