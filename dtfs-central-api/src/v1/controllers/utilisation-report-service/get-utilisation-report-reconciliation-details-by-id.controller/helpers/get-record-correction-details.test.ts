@@ -309,7 +309,7 @@ describe('get-record-correction-details', () => {
     feeRecord1.corrections = [correction1, correction2];
     feeRecord2.corrections = [correction3];
 
-    it('should populate formattedOldRecords and formattedCorrectRecords from mapCorrectionReasonsToFormattedPreviousValues and mapCorrectionReasonsToFormattedCorrectValues', () => {
+    it('should populate formattedOldRecords and formattedCorrectRecords from mapCorrectionReasonsAndValuesToFormattedValues', () => {
       const result = getRecordCorrectionDetails([feeRecord1, feeRecord2, feeRecord3]);
 
       const reasonsArray1 = mapReasonsToDisplayValues(feeRecord1.corrections[0].reasons);
