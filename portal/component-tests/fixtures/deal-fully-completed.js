@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { subDays, addMonths, format } = require('date-fns');
 const { DATE } = require('../../server/constants');
@@ -103,7 +104,7 @@ const deal = {
   loanTransactions: {
     items: [
       {
-        _id: '123456',
+        _id: new ObjectId(),
         facilityStage: 'Unconditional',
         hasBeenIssued: true,
         'requestedCoverStartDate-day': `${format(now, 'dd')}`,
@@ -136,7 +137,7 @@ const deal = {
         status: 'Completed',
       },
       {
-        _id: '789123',
+        _id: new ObjectId(),
         facilityStage: 'Unconditional',
         hasBeenIssued: false,
         'requestedCoverStartDate-day': `${format(now, 'dd')}`,
@@ -169,7 +170,7 @@ const deal = {
         status: 'Completed',
       },
       {
-        _id: '789123',
+        _id: new ObjectId(),
         facilityStage: 'Risk expired',
         hasBeenIssued: true,
         'requestedCoverStartDate-day': `${format(now, 'dd')}`,
