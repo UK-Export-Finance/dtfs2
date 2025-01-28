@@ -7,6 +7,8 @@ import {
   PaymentDetailsFilters,
   PremiumPaymentsFilters,
   RadioItem,
+  RecordCorrectionDisplayStatus,
+  RecordCorrectionStatus,
   SessionBank,
 } from '@ukef/dtfs2-common';
 import { ErrorSummaryViewModel } from './error-summary-view-model';
@@ -144,10 +146,6 @@ export type UtilisationTableRowViewModel = {
     dataSortValue: number;
   };
 };
-
-export type RecordCorrectionDisplayStatus = 'Record correction sent' | 'Record correction received';
-
-export type RecordCorrectionStatus = 'RECORD_CORRECTION_SENT' | 'RECORD_CORRECTION_RECEIVED';
 
 export type RecordCorrectionStatusObject = {
   status: RecordCorrectionStatus;

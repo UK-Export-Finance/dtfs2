@@ -1,11 +1,11 @@
 import { mockRecordCorrectionDetails, FeeRecordCorrectionSummary } from '@ukef/dtfs2-common';
 import { mapToRecordCorrectionTableRowViewModel, mapToRecordCorrectionViewModel } from './record-correction-helpers';
-import { setRecordCorrectionStatus } from './set-record-correction-status';
+import { mapToRecordCorrectionStatus } from './map-record-correction-status';
 
 describe('record-correction-helpers', () => {
   const feeRecordCorrection = mockRecordCorrectionDetails[0];
 
-  const { status, displayStatus } = setRecordCorrectionStatus(feeRecordCorrection.isCompleted);
+  const { status, displayStatus } = mapToRecordCorrectionStatus(feeRecordCorrection.isCompleted);
 
   describe('mapToRecordCorrectionTableRowViewModel', () => {
     it('should correctly map a fee record correction object to the correct format', () => {

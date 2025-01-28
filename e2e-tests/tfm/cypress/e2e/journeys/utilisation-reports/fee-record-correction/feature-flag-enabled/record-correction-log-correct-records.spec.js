@@ -44,13 +44,13 @@ const correctionEntity1 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIs
     facilityUtilisation: 600000,
     feesPaidToUkefForThePeriod: 12345,
     feesPaidToUkefForThePeriodCurrency: CURRENCY.GBP,
-    facilityId: firstFeeRecord.facilityId,
+    facilityId: '654321',
   })
   .withCorrectedValues({
     facilityUtilisation: 100000,
     feesPaidToUkefForThePeriod: 1111,
     feesPaidToUkefForThePeriodCurrency: CURRENCY.JPY,
-    facilityId: '654321',
+    facilityId: firstFeeRecord.facilityId,
   })
   .build();
 
@@ -61,13 +61,13 @@ const correctionEntity2 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIs
     facilityUtilisation: null,
     feesPaidToUkefForThePeriod: null,
     feesPaidToUkefForThePeriodCurrency: null,
-    facilityId: secondFacilityId,
+    facilityId: '654321',
   })
   .withCorrectedValues({
     facilityUtilisation: null,
     feesPaidToUkefForThePeriod: null,
     feesPaidToUkefForThePeriodCurrency: null,
-    facilityId: '654321',
+    facilityId: secondFacilityId,
   })
   .build();
 

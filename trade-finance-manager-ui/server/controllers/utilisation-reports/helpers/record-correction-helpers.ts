@@ -1,6 +1,6 @@
 import { FeeRecordCorrectionSummary } from '@ukef/dtfs2-common';
 import { RecordCorrectionRowViewModel, RecordCorrectionsViewModel } from '../../../types/view-models';
-import { setRecordCorrectionStatus } from './set-record-correction-status';
+import { mapToRecordCorrectionStatus } from './map-record-correction-status';
 
 /**
  * Maps a fee record correction object to the correct format to be used by the table view model
@@ -9,7 +9,7 @@ import { setRecordCorrectionStatus } from './set-record-correction-status';
  * @returns the view model for the row in the record correction table
  */
 export const mapToRecordCorrectionTableRowViewModel = (feeRecordCorrection: FeeRecordCorrectionSummary): RecordCorrectionRowViewModel => {
-  const { status, displayStatus } = setRecordCorrectionStatus(feeRecordCorrection.isCompleted);
+  const { status, displayStatus } = mapToRecordCorrectionStatus(feeRecordCorrection.isCompleted);
 
   return {
     correctionId: feeRecordCorrection.correctionId,
