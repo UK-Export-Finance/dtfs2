@@ -198,6 +198,26 @@ describe('getNextPage', () => {
   });
 
   withNextPageTests({
+    currentPage: MANUAL_APPROVAL_NEEDED,
+    errorTestCases: [
+      {
+        description: 'when all eligibility criteria answers are all valid',
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().build(),
+      },
+      {
+        description: 'when any eligibility criteria answers are all "false"',
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withCriteria([
+            { id: 1, text: 'Criterion 1', answer: false },
+            { id: 2, text: 'Criterion 2', answer: false },
+            { id: 3, text: 'Criterion 3', answer: false },
+          ])
+          .build(),
+      },
+    ],
+  });
+
+  withNextPageTests({
     currentPage: EFFECTIVE_DATE,
     successTestCases: [
       {

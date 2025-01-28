@@ -178,7 +178,6 @@ describe('getManualApprovalNeeded', () => {
     await getManualApprovalNeeded(req, res);
 
     // Assert
-
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
