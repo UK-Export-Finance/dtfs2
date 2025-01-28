@@ -1,17 +1,10 @@
-import { RECORD_CORRECTION_REASON, CURRENCY, getFormattedMonetaryValue, CorrectionValuesPartialEntity, RecordCorrectionReason } from '@ukef/dtfs2-common';
+import { RECORD_CORRECTION_REASON, CURRENCY, getFormattedMonetaryValue, RecordCorrectionReason, aRecordCorrectionValues } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
 import { getFormattedCorrectionValueForCorrectionReason, mapCorrectionReasonsAndValuesToFormattedValues } from './map-reasons-and-values-to-formatted-values';
 
 console.error = jest.fn();
 
 describe('get-completed-fee-record-corrections.controller map-reasons-and-values-to-formatted-values helpers', () => {
-  const anEmptyCorrectionValuesPartialEntity = (): CorrectionValuesPartialEntity => ({
-    facilityId: null,
-    facilityUtilisation: null,
-    feesPaidToUkefForThePeriod: null,
-    feesPaidToUkefForThePeriodCurrency: null,
-  });
-
   describe('getFormattedCorrectionValueForCorrectionReason', () => {
     const reasonsExcludingOther = difference(Object.values(RECORD_CORRECTION_REASON), [RECORD_CORRECTION_REASON.OTHER]);
 
@@ -20,7 +13,7 @@ describe('get-completed-fee-record-corrections.controller map-reasons-and-values
       const reason = RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT;
       const facilityId = 'some-value';
       const correctionValues = {
-        ...anEmptyCorrectionValuesPartialEntity(),
+        ...aRecordCorrectionValues(),
         facilityId,
       };
 
@@ -36,7 +29,7 @@ describe('get-completed-fee-record-corrections.controller map-reasons-and-values
       const reason = RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT;
       const feesPaidToUkefForThePeriodCurrency = CURRENCY.GBP;
       const correctionValues = {
-        ...anEmptyCorrectionValuesPartialEntity(),
+        ...aRecordCorrectionValues(),
         feesPaidToUkefForThePeriodCurrency,
       };
 
@@ -52,7 +45,7 @@ describe('get-completed-fee-record-corrections.controller map-reasons-and-values
       const reason = RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT;
       const feesPaidToUkefForThePeriod = 123.45;
       const correctionValues = {
-        ...anEmptyCorrectionValuesPartialEntity(),
+        ...aRecordCorrectionValues(),
         feesPaidToUkefForThePeriod,
       };
 
@@ -68,7 +61,7 @@ describe('get-completed-fee-record-corrections.controller map-reasons-and-values
       const reason = RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT;
       const feesPaidToUkefForThePeriod = 0;
       const correctionValues = {
-        ...anEmptyCorrectionValuesPartialEntity(),
+        ...aRecordCorrectionValues(),
         feesPaidToUkefForThePeriod,
       };
 
@@ -84,7 +77,7 @@ describe('get-completed-fee-record-corrections.controller map-reasons-and-values
       const reason = RECORD_CORRECTION_REASON.UTILISATION_INCORRECT;
       const facilityUtilisation = 10000.23;
       const correctionValues = {
-        ...anEmptyCorrectionValuesPartialEntity(),
+        ...aRecordCorrectionValues(),
         facilityUtilisation,
       };
 
@@ -100,7 +93,7 @@ describe('get-completed-fee-record-corrections.controller map-reasons-and-values
       const reason = RECORD_CORRECTION_REASON.UTILISATION_INCORRECT;
       const facilityUtilisation = 0;
       const correctionValues = {
-        ...anEmptyCorrectionValuesPartialEntity(),
+        ...aRecordCorrectionValues(),
         facilityUtilisation,
       };
 
@@ -114,7 +107,7 @@ describe('get-completed-fee-record-corrections.controller map-reasons-and-values
     it(`should map reason "${RECORD_CORRECTION_REASON.OTHER}" to a hyphen character`, () => {
       // Arrange
       const reason = RECORD_CORRECTION_REASON.OTHER;
-      const correctionValues = anEmptyCorrectionValuesPartialEntity();
+      const correctionValues = aRecordCorrectionValues();
 
       // Act
       const formattedValue = getFormattedCorrectionValueForCorrectionReason(correctionValues, reason);
@@ -141,7 +134,7 @@ describe('get-completed-fee-record-corrections.controller map-reasons-and-values
     it('should return an empty array if no reasons are provided', () => {
       // Arrange
       const reasons: RecordCorrectionReason[] = [];
-      const correctionValues = anEmptyCorrectionValuesPartialEntity();
+      const correctionValues = aRecordCorrectionValues();
 
       // Act
       const formattedValues = mapCorrectionReasonsAndValuesToFormattedValues(reasons, correctionValues);
@@ -157,7 +150,7 @@ describe('get-completed-fee-record-corrections.controller map-reasons-and-values
       const facilityUtilisation = 10000.23;
 
       const correctionValues = {
-        ...anEmptyCorrectionValuesPartialEntity(),
+        ...aRecordCorrectionValues(),
         facilityUtilisation,
       };
 
@@ -179,7 +172,7 @@ describe('get-completed-fee-record-corrections.controller map-reasons-and-values
       const facilityId = '12345678';
 
       const correctionValues = {
-        ...anEmptyCorrectionValuesPartialEntity(),
+        ...aRecordCorrectionValues(),
         feesPaidToUkefForThePeriod,
         facilityId,
       };
