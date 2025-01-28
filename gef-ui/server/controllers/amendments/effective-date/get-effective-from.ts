@@ -7,7 +7,7 @@ import { userCanAmendFacility } from '../../../utils/facility-amendments.helper.
 import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper.ts';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
 import { convertDateToDayMonthYearInput } from '../helpers/dates.helper.ts';
-import { EffectiveFromViewModel } from '../../../types/view-models/amendments/effective-date-view-model.ts';
+import { EffectiveFromViewModel } from '../../../types/view-models/amendments/effective-from-view-model.ts';
 
 export type GetEffectiveDateRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };

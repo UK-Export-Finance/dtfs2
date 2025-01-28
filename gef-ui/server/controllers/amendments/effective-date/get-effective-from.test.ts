@@ -10,7 +10,7 @@ import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
 import { getEffectiveFrom, GetEffectiveDateRequest } from './get-effective-from';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
-import { EffectiveFromViewModel } from '../../../types/view-models/amendments/effective-date-view-model';
+import { EffectiveFromViewModel } from '../../../types/view-models/amendments/effective-from-view-model';
 import { MOCK_UNISSUED_FACILITY, MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
@@ -114,7 +114,7 @@ describe('getEffectiveFrom', () => {
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-    expect(res._getRenderView()).toEqual('partials/amendments/effective-date.njk');
+    expect(res._getRenderView()).toEqual('partials/amendments/effective-from.njk');
     expect(res._getRenderData()).toEqual(expectedRenderData);
     expect(console.error).toHaveBeenCalledTimes(0);
   });
@@ -151,7 +151,7 @@ describe('getEffectiveFrom', () => {
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-    expect(res._getRenderView()).toEqual('partials/amendments/effective-date.njk');
+    expect(res._getRenderView()).toEqual('partials/amendments/effective-from.njk');
     expect(res._getRenderData()).toEqual(expectedRenderData);
     expect(console.error).toHaveBeenCalledTimes(0);
   });

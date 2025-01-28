@@ -1,7 +1,7 @@
 import { FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { validationErrorHandler } from '../../../server/utils/helpers';
 import pageRenderer from '../../pageRenderer';
-import { EffectiveFromViewModel } from '../../../server/types/view-models/amendments/effective-date-view-model';
+import { EffectiveFromViewModel } from '../../../server/types/view-models/amendments/effective-from-view-model';
 
 const page = 'partials/amendments/effective-from.njk';
 const render = pageRenderer(page);
