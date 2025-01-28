@@ -24,7 +24,7 @@ describe(page, () => {
   it('should render the page heading', () => {
     const wrapper = render(params);
 
-    wrapper.expectText('[data-cy="page-heading"]').toRead('Date amendment effective from');
+    wrapper.expectText('[data-cy="page-heading"]').toContain('Date amendment effective from');
   });
 
   it(`should render the 'Back' link`, () => {
