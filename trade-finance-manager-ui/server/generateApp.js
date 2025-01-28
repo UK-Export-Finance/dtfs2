@@ -96,7 +96,6 @@ const generateApp = () => {
   app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
 
   // error handler
-  // eslint-disable-next-line no-unused-vars
   app.use((error, req, res, _next) => {
     if (error.code === 'EBADCSRFTOKEN') {
       // handle CSRF token errors here
