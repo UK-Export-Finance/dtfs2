@@ -8,6 +8,7 @@ import {
   REQUEST_PLATFORM_TYPE,
   UtilisationReportEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
+  FeeRecordCorrectionEntity,
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordRemoveFromPaymentGroupEvent } from './remove-from-payment-group.event-handler';
 import { aDbRequestSource } from '../../../../../../test-helpers';
@@ -16,9 +17,16 @@ describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
   const RECONCILIATION_IN_PROGRESS_REPORT = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
 
   const mockSave = jest.fn();
+  const mockExistsBy = jest.fn();
+
   const mockEntityManager = {
     save: mockSave,
+    existsBy: mockExistsBy,
   } as unknown as EntityManager;
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
   it('removes all payments from the fee record', async () => {
     // Arrange
@@ -39,18 +47,50 @@ describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
     expect(feeRecord.payments).toHaveLength(0);
   });
 
-  it(`sets the fee record status to ${FEE_RECORD_STATUS.TO_DO}`, async () => {
-    // Arrange
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus(FEE_RECORD_STATUS.MATCH).build();
-
-    // Act
-    await handleFeeRecordRemoveFromPaymentGroupEvent(feeRecord, {
-      transactionEntityManager: mockEntityManager,
-      requestSource: aDbRequestSource(),
+  describe('when the fee record has no corrections', () => {
+    beforeEach(() => {
+      mockExistsBy.mockReturnValue(false);
     });
 
-    // Assert
-    expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.TO_DO);
+    it(`should set the fee record status to ${FEE_RECORD_STATUS.TO_DO}`, async () => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus(FEE_RECORD_STATUS.MATCH).build();
+
+      // Act
+      await handleFeeRecordRemoveFromPaymentGroupEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        requestSource: aDbRequestSource(),
+      });
+
+      // Assert
+      expect(mockExistsBy).toHaveBeenCalledTimes(1);
+      expect(mockExistsBy).toHaveBeenCalledWith(FeeRecordCorrectionEntity, { feeRecord: { id: feeRecord.id } });
+
+      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.TO_DO);
+    });
+  });
+
+  describe('when the fee record has no corrections', () => {
+    beforeEach(() => {
+      mockExistsBy.mockReturnValue(true);
+    });
+
+    it(`should set the fee record status to ${FEE_RECORD_STATUS.TO_DO_AMENDED}`, async () => {
+      // Arrange
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(RECONCILIATION_IN_PROGRESS_REPORT).withStatus(FEE_RECORD_STATUS.MATCH).build();
+
+      // Act
+      await handleFeeRecordRemoveFromPaymentGroupEvent(feeRecord, {
+        transactionEntityManager: mockEntityManager,
+        requestSource: aDbRequestSource(),
+      });
+
+      // Assert
+      expect(mockExistsBy).toHaveBeenCalledTimes(1);
+      expect(mockExistsBy).toHaveBeenCalledWith(FeeRecordCorrectionEntity, { feeRecord: { id: feeRecord.id } });
+
+      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.TO_DO_AMENDED);
+    });
   });
 
   it('updates the last updated by fields to the request source', async () => {
