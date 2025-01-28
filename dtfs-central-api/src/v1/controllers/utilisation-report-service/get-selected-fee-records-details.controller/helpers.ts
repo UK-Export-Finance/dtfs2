@@ -74,8 +74,11 @@ export const canFeeRecordsBeAddedToExistingPayment = async (reportId: string, fe
     return false;
   }
 
-  const anyFeeRecordDoesNotHaveStatusToDo = feeRecords.some((record) => record.status !== FEE_RECORD_STATUS.TO_DO);
-  if (anyFeeRecordDoesNotHaveStatusToDo) {
+  const allFeeRecordsHaveToDoStatus = feeRecords.every(
+    (record) => record.status === FEE_RECORD_STATUS.TO_DO || record.status === FEE_RECORD_STATUS.TO_DO_AMENDED,
+  );
+
+  if (!allFeeRecordsHaveToDoStatus) {
     return false;
   }
 

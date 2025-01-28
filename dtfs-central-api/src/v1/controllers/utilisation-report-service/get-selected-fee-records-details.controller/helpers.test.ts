@@ -10,6 +10,7 @@ import {
   SelectedFeeRecordsPaymentDetails,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
+import difference from 'lodash/difference';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import {
   canFeeRecordsBeAddedToExistingPayment,
@@ -35,16 +36,14 @@ describe('get selected fee record details controller helpers', () => {
   describe('mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups', () => {
     const gbpTolerance = 1;
 
-    it('sets bank name', async () => {
-      // Act
+    it('should set bank name', async () => {
+      // Arrange
       const bankId = '123';
-      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(
-        bankId,
-        aReportPeriod(),
-        [aFeeRecordWithStatusToDo()],
-        false,
-        gbpTolerance,
-      );
+      const feeRecords = [new FeeRecordEntityMockBuilder().withPaymentCurrency(CURRENCY.GBP).withStatus(FEE_RECORD_STATUS.TO_DO).build()];
+
+      // Act
+
+      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(bankId, aReportPeriod(), feeRecords, false, gbpTolerance);
 
       // Assert
       expect(result.bank).toEqual({ name: BANK_NAME });
@@ -63,19 +62,20 @@ describe('get selected fee record details controller helpers', () => {
       expect(result.gbpTolerance).toEqual(tolerance);
     });
 
-    it('maps report period', async () => {
+    it('should map report period', async () => {
       // Arrange
       const bankId = '123';
       const reportPeriod = aReportPeriod();
+      const feeRecords = [new FeeRecordEntityMockBuilder().withPaymentCurrency(CURRENCY.GBP).withStatus(FEE_RECORD_STATUS.TO_DO).build()];
 
       // Act
-      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(bankId, reportPeriod, [aFeeRecordWithStatusToDo()], false, gbpTolerance);
+      const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(bankId, reportPeriod, feeRecords, false, gbpTolerance);
 
       // Assert
       expect(result.reportPeriod).toEqual(reportPeriod);
     });
 
-    it('maps the fee record facilityId, id and exporter', async () => {
+    it('should map the fee record facilityId, id and exporter', async () => {
       // Arrange
       const bankId = '123';
       const feeRecord = FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build())
@@ -90,7 +90,7 @@ describe('get selected fee record details controller helpers', () => {
       expect(result.feeRecords[0]).toEqual(expect.objectContaining({ id: 2, facilityId: '00012345', exporter: 'Test company' }));
     });
 
-    it('maps the fees paid to ukef for period to reported payment with no conversion when payment currency matches fees paid to ukef for the period currency', async () => {
+    it('should map the fees paid to ukef for period to reported payment with no conversion when payment currency matches fees paid to ukef for the period currency', async () => {
       // Arrange
       const bankId = '123';
       const feeRecord = FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build())
@@ -105,7 +105,7 @@ describe('get selected fee record details controller helpers', () => {
       expect(result.feeRecords[0].reportedPayments).toEqual<CurrencyAndAmount>({ amount: 200, currency: 'USD' });
     });
 
-    it('sets the reported payment to the fees paid to ukef for the period converted into the payment currency when the payment currency does not match the fees paid to ukef for the period currency', async () => {
+    it('should set the reported payment to the fees paid to ukef for the period converted into the payment currency when the payment currency does not match the fees paid to ukef for the period currency', async () => {
       // Arrange
       const bankId = '123';
       const feeRecord = FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build())
@@ -122,7 +122,7 @@ describe('get selected fee record details controller helpers', () => {
       expect(result.feeRecords[0].reportedPayments).toEqual<CurrencyAndAmount>({ amount: 2000, currency: CURRENCY.GBP });
     });
 
-    it('maps the fees paid to ukef for the period to the reported fee', async () => {
+    it('should map the fees paid to ukef for the period to the reported fee', async () => {
       // Arrange
       const bankId = '123';
       const feeRecord = FeeRecordEntityMockBuilder.forReport(UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build())
@@ -136,7 +136,7 @@ describe('get selected fee record details controller helpers', () => {
       expect(result.feeRecords[0].reportedFee).toEqual<CurrencyAndAmount>({ amount: 2200, currency: 'EUR' });
     });
 
-    it('maps fee record payments removing any duplicates', async () => {
+    it('should map fee record payments removing any duplicates', async () => {
       // Arrange
       const bankId = '123';
       const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
@@ -175,7 +175,7 @@ describe('get selected fee record details controller helpers', () => {
       ]);
     });
 
-    it('sets payments to empty array when fee records have no attached payments', async () => {
+    it('should set payments to empty array when fee records have no attached payments', async () => {
       // Arrange
       const bankId = '123';
       const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
@@ -195,7 +195,7 @@ describe('get selected fee record details controller helpers', () => {
       expect(result.payments).toEqual([]);
     });
 
-    it('calculates total reported payments in payment currency by adding up reported payments of all fee records', async () => {
+    it('should calculate total reported payments in payment currency by adding up reported payments of all fee records', async () => {
       // Arrange
       const bankId = '123';
       const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
@@ -224,16 +224,17 @@ describe('get selected fee record details controller helpers', () => {
       expect(result.totalReportedPayments).toEqual<CurrencyAndAmount>({ amount: 3000, currency: CURRENCY.GBP });
     });
 
-    it('maps can add to existing payment flag', async () => {
+    it('should map can add to existing payment flag', async () => {
       // Arrange
       const bankId = '123';
       const canAddToExistingPayment = true;
+      const feeRecords = [new FeeRecordEntityMockBuilder().withPaymentCurrency(CURRENCY.GBP).withStatus(FEE_RECORD_STATUS.TO_DO).build()];
 
       // Act
       const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(
         bankId,
         aReportPeriod(),
-        [aFeeRecordWithStatusToDo()],
+        feeRecords,
         canAddToExistingPayment,
         gbpTolerance,
       );
@@ -243,16 +244,17 @@ describe('get selected fee record details controller helpers', () => {
     });
 
     describe('when availablePaymentGroups is undefined', () => {
-      it('returns an object which does not contain the available fee record payment groups', async () => {
+      it('should return an object which does not contain the available fee record payment groups', async () => {
         // Arrange
         const bankId = '123';
         const canAddToExistingPayment = false;
+        const feeRecords = [new FeeRecordEntityMockBuilder().withPaymentCurrency(CURRENCY.GBP).withStatus(FEE_RECORD_STATUS.TO_DO).build()];
 
         // Act
         const result = await mapToSelectedFeeRecordDetailsWithoutAvailablePaymentGroups(
           bankId,
           aReportPeriod(),
-          [aFeeRecordWithStatusToDo()],
+          feeRecords,
           canAddToExistingPayment,
           gbpTolerance,
         );
@@ -322,44 +324,83 @@ describe('get selected fee record details controller helpers', () => {
   });
 
   describe('canFeeRecordsBeAddedToExistingPayment', () => {
-    it('returns true when payment exists on report with matching reported currency and fee records all have status TO_DO', async () => {
-      // Arrange
-      const existsUnmatchedPaymentSpy = jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(true);
-      // Act
-      const result = await canFeeRecordsBeAddedToExistingPayment('123', [aFeeRecordWithStatusToDo()]);
+    describe.each([FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.TO_DO_AMENDED])('when all fee records have status %s', (status) => {
+      const feeRecords = [new FeeRecordEntityMockBuilder().withPaymentCurrency(CURRENCY.GBP).withStatus(status).build()];
 
-      // Assert
-      expect(result).toEqual(true);
-      expect(existsUnmatchedPaymentSpy).toHaveBeenCalledWith(123, CURRENCY.GBP);
+      it('should return true when payment exists on report with matching reported currency', async () => {
+        // Arrange
+        const existsUnmatchedPaymentSpy = jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(true);
+
+        // Act
+        const result = await canFeeRecordsBeAddedToExistingPayment('123', feeRecords);
+
+        // Assert
+        expect(result).toEqual(true);
+        expect(existsUnmatchedPaymentSpy).toHaveBeenCalledWith(123, CURRENCY.GBP);
+      });
+
+      it('should return false when payment does not exist on report with matching reported currency', async () => {
+        // Arrange
+        const existsUnmatchedPaymentSpy = jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(false);
+
+        // Act
+        const result = await canFeeRecordsBeAddedToExistingPayment('123', feeRecords);
+
+        // Assert
+        expect(result).toEqual(false);
+        expect(existsUnmatchedPaymentSpy).toHaveBeenCalledWith(123, CURRENCY.GBP);
+      });
     });
 
-    it('returns false when no matching payment exists', async () => {
-      // Arrange
-      const existsUnmatchedPaymentSpy = jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(false);
+    describe(`when fee records have a mix of ${FEE_RECORD_STATUS.TO_DO} and ${FEE_RECORD_STATUS.TO_DO_AMENDED} statuses`, () => {
+      const feeRecords = [
+        new FeeRecordEntityMockBuilder().withPaymentCurrency(CURRENCY.GBP).withStatus(FEE_RECORD_STATUS.TO_DO).build(),
+        new FeeRecordEntityMockBuilder().withPaymentCurrency(CURRENCY.GBP).withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED).build(),
+      ];
 
-      // Act
-      const result = await canFeeRecordsBeAddedToExistingPayment('123', [aFeeRecordWithStatusToDo()]);
+      it('should return true when payment exists on report with matching reported currency', async () => {
+        // Arrange
+        const existsUnmatchedPaymentSpy = jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(true);
 
-      // Assert
-      expect(result).toEqual(false);
-      expect(existsUnmatchedPaymentSpy).toHaveBeenCalledWith(123, CURRENCY.GBP);
+        // Act
+        const result = await canFeeRecordsBeAddedToExistingPayment('123', feeRecords);
+
+        // Assert
+        expect(result).toEqual(true);
+        expect(existsUnmatchedPaymentSpy).toHaveBeenCalledWith(123, CURRENCY.GBP);
+      });
+
+      it('should return false when payment does not exist on report with matching reported currency', async () => {
+        // Arrange
+        const existsUnmatchedPaymentSpy = jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(false);
+
+        // Act
+        const result = await canFeeRecordsBeAddedToExistingPayment('123', feeRecords);
+
+        // Assert
+        expect(result).toEqual(false);
+        expect(existsUnmatchedPaymentSpy).toHaveBeenCalledWith(123, CURRENCY.GBP);
+      });
     });
 
-    it('returns false when matching payment exists but fee record status is not TO_DO', async () => {
-      // Arrange
-      const existsUnmatchedPaymentSpy = jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(true);
-      const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('USD').withStatus(FEE_RECORD_STATUS.READY_TO_KEY).build();
+    it.each(difference(Object.values(FEE_RECORD_STATUS), [FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.TO_DO_AMENDED]))(
+      'should return false when matching payment exists but fee record status is %s',
+      async (status) => {
+        // Arrange
+        const existsUnmatchedPaymentSpy = jest.spyOn(PaymentRepo, 'existsUnmatchedPaymentOfCurrencyForReportWithId').mockResolvedValue(true);
+        const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
+        const feeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency('USD').withStatus(status).build();
 
-      // Act
-      const result = await canFeeRecordsBeAddedToExistingPayment('123', [feeRecord]);
+        // Act
+        const result = await canFeeRecordsBeAddedToExistingPayment('123', [feeRecord]);
 
-      // Assert
-      expect(result).toEqual(false);
-      expect(existsUnmatchedPaymentSpy).not.toHaveBeenCalled();
-    });
+        // Assert
+        expect(result).toEqual(false);
+        expect(existsUnmatchedPaymentSpy).not.toHaveBeenCalled();
+      },
+    );
 
-    it('returns false when no fee records', async () => {
+    it('should return false when no fee records', async () => {
       // Arrange
       const bankId = '123';
       const emptyFeeRecords: FeeRecordEntity[] = [];
@@ -371,9 +412,4 @@ describe('get selected fee record details controller helpers', () => {
       expect(result).toEqual(false);
     });
   });
-
-  function aFeeRecordWithStatusToDo(): FeeRecordEntity {
-    const aUtilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).build();
-    return FeeRecordEntityMockBuilder.forReport(aUtilisationReport).withPaymentCurrency(CURRENCY.GBP).withStatus(FEE_RECORD_STATUS.TO_DO).build();
-  }
 });
