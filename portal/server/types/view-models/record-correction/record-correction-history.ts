@@ -1,7 +1,10 @@
 import { BaseViewModel } from '../base-view-model';
 
 export type CompletedCorrectionViewModel = {
-  dateSent: string;
+  dateSent: {
+    formattedDateSent: string;
+    dataSortValue: number;
+  };
   exporter: string;
   formattedReasons: string;
   formattedPreviousValues: string;

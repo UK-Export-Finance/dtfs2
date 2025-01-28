@@ -83,6 +83,9 @@ const assertions = (wrapper, html) => ({
     toHaveAttribute: (attribute, value) => {
       expect(wrapper(selector).attr(attribute)).toEqual(value);
     },
+    notToHaveAttribute: (attribute) => {
+      expect(wrapper(selector).attr(attribute)).toBeUndefined();
+    },
     lengthToEqual: (expectedLength) => {
       const expected = expectedLength + 1; // cheerio html() assertion automatically adds 1.
       expect(wrapper(selector).html().length).toEqual(expected);

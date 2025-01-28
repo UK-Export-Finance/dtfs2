@@ -3,6 +3,7 @@ import { asLoggedInUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import api from '../../../../api';
 import { RecordCorrectionHistoryViewModel } from '../../../../types/view-models/record-correction/record-correction-history';
+import { mapCompletedCorrectionsToViewModel } from './helpers';
 
 /**
  * Controller for the GET record correction history route.
@@ -17,11 +18,12 @@ export const getRecordCorrectionHistory = async (req: Request, res: Response) =>
 
     const completedCorrections = await api.getCompletedFeeRecordCorrections(userToken, bankId);
 
-    // TODO FN-3671: Add support here for sorting on date (extract getKeyToDateSortValueMap) and exporter
+    const mappedCompletedCorrections = mapCompletedCorrectionsToViewModel(completedCorrections);
+
     const viewModel: RecordCorrectionHistoryViewModel = {
       user,
       primaryNav: PRIMARY_NAV_KEY.RECORD_CORRECTION_HISTORY,
-      completedCorrections,
+      completedCorrections: mappedCompletedCorrections,
     };
 
     return res.render('utilisation-report-service/record-correction/correction-history.njk', viewModel);
