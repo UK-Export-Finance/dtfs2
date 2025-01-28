@@ -13,7 +13,7 @@ afterEach(() => {
 });
 
 describe('getUkBankHolidays', () => {
-  it('gets the bank holidays', async () => {
+  it('should get the bank holidays', async () => {
     // Arrange
     mockAxios.onGet().reply(200, MOCK_BANK_HOLIDAYS);
 
@@ -24,7 +24,7 @@ describe('getUkBankHolidays', () => {
     expect(response).toEqual(MOCK_BANK_HOLIDAYS);
   });
 
-  it('throws when the api TFM API request fails', async () => {
+  it('should throw when the api TFM API request fails', async () => {
     // Arrange
     mockAxios.onGet().reply(404);
 
