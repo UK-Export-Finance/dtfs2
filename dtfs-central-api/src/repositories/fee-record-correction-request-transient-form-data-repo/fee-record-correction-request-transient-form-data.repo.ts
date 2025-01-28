@@ -1,6 +1,6 @@
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { FeeRecordCorrectionRequestTransientFormDataEntity } from '@ukef/dtfs2-common';
-import { EntityManager } from 'typeorm';
+import { EntityManager, LessThan } from 'typeorm';
 
 /**
  * Repository for managing fee record correction request transient form data.
@@ -31,6 +31,18 @@ export const FeeRecordCorrectionRequestTransientFormDataRepo = SqlDbDataSource.g
     await this.delete({
       userId,
       feeRecordId,
+    });
+  },
+
+  /**
+   * deletes the transient form data which is older than a day old
+   */
+  async deleteByLastUpdatedOlderThanOneDayAgo(): Promise<void> {
+    const today = new Date();
+    const oneDayAgo = today.setDate(today.getDate() - 1);
+
+    await this.delete({
+      lastUpdatedAt: LessThan(new Date(oneDayAgo)),
     });
   },
 
