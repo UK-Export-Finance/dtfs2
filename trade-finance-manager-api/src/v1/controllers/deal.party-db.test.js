@@ -1,3 +1,5 @@
+const { getPartyDbInfo, getOrCreatePartyDbInfo } = require('../api.js');
+
 const api = require('./deal.party-db');
 
 const mockCompany = {
@@ -9,6 +11,9 @@ const mockCompany = {
   subtype: null,
   isLegacyRecord: false,
 };
+
+console.error = jest.fn();
+
 const res = {
   redirect: jest.fn(),
   render: jest.fn(),
@@ -51,5 +56,61 @@ describe('getCompany returns company', () => {
 
     expect(result.status).toEqual(200);
     expect(result.data).toEqual(mockCompany);
+  });
+});
+
+jest.mock('../api.js', () => ({
+  getPartyDbInfo: jest.fn(),
+  getOrCreatePartyDbInfo: jest.fn(),
+}));
+
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+}));
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
+describe('getPartyUrn', () => {
+  it('should return an empty string if no companyRegNo is provided', async () => {
+    const result = await api.getPartyUrn({});
+    expect(result).toBe('');
+  });
+
+  it('should call getPartyDbInfo and return urn', async () => {
+    getPartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
+
+    const companyData = { companyRegNo: '12345678' };
+
+    const result = await api.getPartyUrn(companyData);
+
+    expect(getPartyDbInfo).toHaveBeenCalledWith(companyData);
+    expect(getPartyDbInfo).toHaveBeenCalledTimes(1);
+
+    expect(result).toBe('TEST_URN');
+  });
+
+  it('should not call getOrCreatePartyDbInfo', async () => {
+    getPartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
+
+    const companyData = { companyRegNo: '12345678' };
+
+    await api.getPartyUrn(companyData);
+
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(0);
+  });
+
+  it('should return an empty string if getPartyDbInfo returns false', async () => {
+    getPartyDbInfo.mockResolvedValue(false);
+
+    const companyData = { companyRegNo: '12345678' };
+
+    const result = await api.getPartyUrn(companyData);
+
+    expect(getPartyDbInfo).toHaveBeenCalledWith(companyData);
+    expect(getPartyDbInfo).toHaveBeenCalledTimes(1);
+
+    expect(result).toBe('');
   });
 });
