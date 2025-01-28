@@ -1,38 +1,30 @@
-import { setRecordCorrectionStatus, setRecordCorrectionDisplayStatus } from './set-record-correction-status';
+import { setRecordCorrectionStatus } from './set-record-correction-status';
 
 describe('set-record=correction-status', () => {
   describe('setRecordCorrectionStatus', () => {
     describe('isCompleted is true', () => {
-      it('should return RECORD_CORRECTION_RECEIVED', () => {
+      it('should return "RECORD_CORRECTION_RECEIVED" and "Record correction received"', () => {
         const result = setRecordCorrectionStatus(true);
 
-        expect(result).toEqual('RECORD_CORRECTION_RECEIVED');
+        const expected = {
+          displayStatus: 'Record correction received',
+          status: 'RECORD_CORRECTION_RECEIVED',
+        };
+
+        expect(result).toEqual(expected);
       });
     });
 
     describe('isCompleted is false', () => {
-      it('should return RECORD_CORRECTION_SENT', () => {
+      it('should return "RECORD_CORRECTION_SENT" and "Record correction sent"', () => {
         const result = setRecordCorrectionStatus(false);
 
-        expect(result).toEqual('RECORD_CORRECTION_SENT');
-      });
-    });
-  });
+        const expected = {
+          displayStatus: 'Record correction sent',
+          status: 'RECORD_CORRECTION_SENT',
+        };
 
-  describe('setRecordCorrectionDisplayStatus', () => {
-    describe('isCompleted is true', () => {
-      it('should return "Record correction received"', () => {
-        const result = setRecordCorrectionDisplayStatus(true);
-
-        expect(result).toEqual('Record correction received');
-      });
-    });
-
-    describe('isCompleted is false', () => {
-      it('should return "Record correction sent"', () => {
-        const result = setRecordCorrectionDisplayStatus(false);
-
-        expect(result).toEqual('Record correction sent');
+        expect(result).toEqual(expected);
       });
     });
   });

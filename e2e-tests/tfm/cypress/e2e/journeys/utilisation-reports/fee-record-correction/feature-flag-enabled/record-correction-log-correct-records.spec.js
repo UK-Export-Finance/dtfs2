@@ -6,6 +6,7 @@ import {
   RECORD_CORRECTION_REASON,
   getFormattedMonetaryValue,
   FeeRecordCorrectionEntityMockBuilder,
+  CURRENCY,
 } from '@ukef/dtfs2-common';
 import pages from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
@@ -18,13 +19,14 @@ const reportId = 1;
 const fee = 50000;
 const correctionId1 = 1;
 const correctionId2 = 2;
+const secondFacilityId = '987654321';
 
 const firstReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(reportId).withBankId(bankId).build();
 
 const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(firstReport).withId(1).withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED).build();
 const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(firstReport)
   .withId(2)
-  .withFacilityId('987654321')
+  .withFacilityId(secondFacilityId)
   .withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED)
   .withFeesPaidToUkefForThePeriod(fee)
   .build();
@@ -41,13 +43,13 @@ const correctionEntity1 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIs
   .withPreviousValues({
     facilityUtilisation: 600000,
     feesPaidToUkefForThePeriod: 12345,
-    feesPaidToUkefForThePeriodCurrency: 'GBP',
-    facilityId: '123456',
+    feesPaidToUkefForThePeriodCurrency: CURRENCY.GBP,
+    facilityId: firstFeeRecord.facilityId,
   })
   .withCorrectedValues({
     facilityUtilisation: 100000,
     feesPaidToUkefForThePeriod: 1111,
-    feesPaidToUkefForThePeriodCurrency: 'JPY',
+    feesPaidToUkefForThePeriodCurrency: CURRENCY.JPY,
     facilityId: '654321',
   })
   .build();
@@ -56,15 +58,15 @@ const correctionEntity2 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIs
   .withId(correctionId2)
   .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT])
   .withPreviousValues({
-    facilityUtilisation: 600000,
-    feesPaidToUkefForThePeriod: 12345,
-    feesPaidToUkefForThePeriodCurrency: 'GBP',
-    facilityId: '123456',
+    facilityUtilisation: null,
+    feesPaidToUkefForThePeriod: null,
+    feesPaidToUkefForThePeriodCurrency: null,
+    facilityId: secondFacilityId,
   })
   .withCorrectedValues({
-    facilityUtilisation: 100000,
-    feesPaidToUkefForThePeriod: 1111,
-    feesPaidToUkefForThePeriodCurrency: 'JPY',
+    facilityUtilisation: null,
+    feesPaidToUkefForThePeriod: null,
+    feesPaidToUkefForThePeriodCurrency: null,
     facilityId: '654321',
   })
   .build();
@@ -111,7 +113,7 @@ context('When fee record correction feature flag is enabled - record correction 
     recordCorrectionLogContent.recordCorrectionLogTable().should('be.visible');
   });
 
-  it('should only have 2 rows in the table', () => {
+  it('should have one row per correction in the table', () => {
     recordCorrectionLogContent.recordCorrectionLogTable().find('tr[data-cy^="record-correction-log-table-row-"]').should('have.length', 2);
   });
 

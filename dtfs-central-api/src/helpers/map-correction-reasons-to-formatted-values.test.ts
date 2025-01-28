@@ -1,6 +1,6 @@
 import { FeeRecordEntityMockBuilder, RECORD_CORRECTION_REASON, getFormattedMonetaryValue, FeeRecordCorrectionEntityMockBuilder } from '@ukef/dtfs2-common';
 import {
-  getFormattedCorrectValueForCorrectionReason,
+  getFormattedValueForCorrectionReason,
   mapCorrectionReasonsToFormattedCorrectValues,
   mapCorrectionReasonsToFormattedPreviousValues,
 } from './map-correction-reasons-to-formatted-values';
@@ -33,11 +33,11 @@ describe('map-correction-reasons-to-formatted-values', () => {
     })
     .build();
 
-  describe('getFormattedCorrectValueForCorrectionReason', () => {
+  describe('getFormattedValueForCorrectionReason', () => {
     describe('previousValues', () => {
       describe(`when the reason is ${RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT}`, () => {
         it('should return the facility id of the previousValues', () => {
-          const result = getFormattedCorrectValueForCorrectionReason(correctionEntity.previousValues, RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT);
+          const result = getFormattedValueForCorrectionReason(correctionEntity.previousValues, RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT);
           const expected = correctionEntity.previousValues.facilityId;
           expect(result).toEqual(expected);
         });
@@ -45,7 +45,7 @@ describe('map-correction-reasons-to-formatted-values', () => {
 
       describe(`when the reason is ${RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT}`, () => {
         it('should return feesPaidToUkefForThePeriodCurrency from the previousValues', () => {
-          const result = getFormattedCorrectValueForCorrectionReason(correctionEntity.previousValues, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT);
+          const result = getFormattedValueForCorrectionReason(correctionEntity.previousValues, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT);
 
           const expected = correctionEntity.previousValues.feesPaidToUkefForThePeriodCurrency;
 
@@ -55,7 +55,7 @@ describe('map-correction-reasons-to-formatted-values', () => {
 
       describe(`when the reason is ${RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT}`, () => {
         it('should return feesPaidToUkefForThePeriod from the previousValues', () => {
-          const result = getFormattedCorrectValueForCorrectionReason(correctionEntity.previousValues, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT);
+          const result = getFormattedValueForCorrectionReason(correctionEntity.previousValues, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT);
 
           const expected = getFormattedMonetaryValue(Number(correctionEntity.previousValues.feesPaidToUkefForThePeriod));
 
@@ -65,7 +65,7 @@ describe('map-correction-reasons-to-formatted-values', () => {
 
       describe(`when the reason is ${RECORD_CORRECTION_REASON.UTILISATION_INCORRECT}`, () => {
         it('should return facilityUtilisation from the previousValues', () => {
-          const result = getFormattedCorrectValueForCorrectionReason(correctionEntity.previousValues, RECORD_CORRECTION_REASON.UTILISATION_INCORRECT);
+          const result = getFormattedValueForCorrectionReason(correctionEntity.previousValues, RECORD_CORRECTION_REASON.UTILISATION_INCORRECT);
 
           const expected = getFormattedMonetaryValue(Number(correctionEntity.previousValues.facilityUtilisation));
 
@@ -75,7 +75,7 @@ describe('map-correction-reasons-to-formatted-values', () => {
 
       describe(`when the reason is ${RECORD_CORRECTION_REASON.OTHER}`, () => {
         it('should return a dash', () => {
-          const result = getFormattedCorrectValueForCorrectionReason(correctionEntity.previousValues, RECORD_CORRECTION_REASON.OTHER);
+          const result = getFormattedValueForCorrectionReason(correctionEntity.previousValues, RECORD_CORRECTION_REASON.OTHER);
 
           expect(result).toEqual('-');
         });
@@ -85,7 +85,7 @@ describe('map-correction-reasons-to-formatted-values', () => {
     describe('correctValues', () => {
       describe(`when the reason is ${RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT}`, () => {
         it('should return the facility id of the correctedValues', () => {
-          const result = getFormattedCorrectValueForCorrectionReason(correctionEntity.correctedValues, RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT);
+          const result = getFormattedValueForCorrectionReason(correctionEntity.correctedValues, RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT);
           const expected = correctionEntity.correctedValues.facilityId;
           expect(result).toEqual(expected);
         });
@@ -93,7 +93,7 @@ describe('map-correction-reasons-to-formatted-values', () => {
 
       describe(`when the reason is ${RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT}`, () => {
         it('should return feesPaidToUkefForThePeriodCurrency from the correctedValues', () => {
-          const result = getFormattedCorrectValueForCorrectionReason(correctionEntity.correctedValues, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT);
+          const result = getFormattedValueForCorrectionReason(correctionEntity.correctedValues, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT);
 
           const expected = correctionEntity.correctedValues.feesPaidToUkefForThePeriodCurrency;
 
@@ -103,7 +103,7 @@ describe('map-correction-reasons-to-formatted-values', () => {
 
       describe(`when the reason is ${RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT}`, () => {
         it('should return feesPaidToUkefForThePeriod from the correctedValues', () => {
-          const result = getFormattedCorrectValueForCorrectionReason(correctionEntity.correctedValues, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT);
+          const result = getFormattedValueForCorrectionReason(correctionEntity.correctedValues, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT);
 
           const expected = getFormattedMonetaryValue(Number(correctionEntity.correctedValues.feesPaidToUkefForThePeriod));
 
@@ -113,7 +113,7 @@ describe('map-correction-reasons-to-formatted-values', () => {
 
       describe(`when the reason is ${RECORD_CORRECTION_REASON.UTILISATION_INCORRECT}`, () => {
         it('should return facilityUtilisation from the correctedValues', () => {
-          const result = getFormattedCorrectValueForCorrectionReason(correctionEntity.correctedValues, RECORD_CORRECTION_REASON.UTILISATION_INCORRECT);
+          const result = getFormattedValueForCorrectionReason(correctionEntity.correctedValues, RECORD_CORRECTION_REASON.UTILISATION_INCORRECT);
 
           const expected = getFormattedMonetaryValue(Number(correctionEntity.correctedValues.facilityUtilisation));
 
@@ -123,7 +123,7 @@ describe('map-correction-reasons-to-formatted-values', () => {
 
       describe(`when the reason is ${RECORD_CORRECTION_REASON.OTHER}`, () => {
         it('should return a dash', () => {
-          const result = getFormattedCorrectValueForCorrectionReason(correctionEntity.correctedValues, RECORD_CORRECTION_REASON.OTHER);
+          const result = getFormattedValueForCorrectionReason(correctionEntity.correctedValues, RECORD_CORRECTION_REASON.OTHER);
 
           expect(result).toEqual('-');
         });

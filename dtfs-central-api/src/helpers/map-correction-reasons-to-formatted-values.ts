@@ -9,20 +9,20 @@ import {
 /**
  * returns the value of the provided correction values that corresponds to the reason
  * or '-' if the reason is RECORD_CORRECTION_REASON.OTHER
- * @param correctedValues - the previousValues or correctedValues
+ * @param correctionValues - the previousValues or correctedValues
  * @param reason - the reason for the correction
- * @returns - string with the value of the previous or corrected values that corresponds to the reason
+ * @returns - string with the value of the correction value that corresponds to the reason
  */
-export const getFormattedCorrectValueForCorrectionReason = (correctedValues: RecordCorrectionValues, reason: RecordCorrectionReason) => {
+export const getFormattedValueForCorrectionReason = (correctionValues: RecordCorrectionValues, reason: RecordCorrectionReason) => {
   switch (reason) {
     case RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT:
-      return correctedValues.facilityId;
+      return correctionValues.facilityId;
     case RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT:
-      return correctedValues.feesPaidToUkefForThePeriodCurrency;
+      return correctionValues.feesPaidToUkefForThePeriodCurrency;
     case RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT:
-      return getFormattedMonetaryValue(Number(correctedValues.feesPaidToUkefForThePeriod));
+      return getFormattedMonetaryValue(Number(correctionValues.feesPaidToUkefForThePeriod));
     case RECORD_CORRECTION_REASON.UTILISATION_INCORRECT:
-      return getFormattedMonetaryValue(Number(correctedValues.facilityUtilisation));
+      return getFormattedMonetaryValue(Number(correctionValues.facilityUtilisation));
     default:
       return '-';
   }
@@ -37,7 +37,7 @@ export const getFormattedCorrectValueForCorrectionReason = (correctedValues: Rec
  * @returns an array of the values of each correctedValues property that corresponds to each reason
  */
 export const mapCorrectionReasonsToFormattedCorrectValues = (correction: FeeRecordCorrectionEntity, reasons: RecordCorrectionReason[]) => {
-  return reasons.map((reason) => getFormattedCorrectValueForCorrectionReason(correction.correctedValues, reason));
+  return reasons.map((reason) => getFormattedValueForCorrectionReason(correction.correctedValues, reason));
 };
 
 /**
@@ -49,5 +49,5 @@ export const mapCorrectionReasonsToFormattedCorrectValues = (correction: FeeReco
  * @returns an array of the values of each previousValues property that corresponds to each reason
  */
 export const mapCorrectionReasonsToFormattedPreviousValues = (correction: FeeRecordCorrectionEntity, reasons: RecordCorrectionReason[]) => {
-  return reasons.map((reason) => getFormattedCorrectValueForCorrectionReason(correction.previousValues, reason));
+  return reasons.map((reason) => getFormattedValueForCorrectionReason(correction.previousValues, reason));
 };
