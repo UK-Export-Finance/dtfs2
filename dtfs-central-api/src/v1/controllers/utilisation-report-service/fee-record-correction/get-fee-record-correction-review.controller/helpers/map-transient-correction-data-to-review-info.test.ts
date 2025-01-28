@@ -7,7 +7,7 @@ import {
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { mapTransientCorrectionDataToReviewInformation } from './map-transient-correction-data-to-review-info';
-import { mapCorrectionReasonsToFormattedOldValues } from '../../../../../../helpers/map-correction-reasons-to-formatted-values';
+import { mapCorrectionReasonsToFormattedOldFeeRecordValues } from '../../../../../../helpers/map-correction-reasons-to-formatted-old-fee-record-values';
 import { mapFormDataToFormattedValues } from './map-form-data-values';
 
 console.error = jest.fn();
@@ -59,7 +59,7 @@ describe('get-fee-record-correction-review.controller map-transient-correction-d
         },
         reasons,
         errorSummary: additionalInfo,
-        formattedOldValues: mapCorrectionReasonsToFormattedOldValues(feeRecordEntity, reasons).join(', '),
+        formattedOldValues: mapCorrectionReasonsToFormattedOldFeeRecordValues(feeRecordEntity, reasons).join(', '),
         formattedNewValues: mapFormDataToFormattedValues(transientFormData, reasons).join(', '),
         bankCommentary: transientFormData.additionalComments,
       };

@@ -1,5 +1,5 @@
 import { FeeRecordCorrectionEntity, FeeRecordCorrectionReviewInformation, RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
-import { mapCorrectionReasonsToFormattedOldValues } from '../../../../../../helpers/map-correction-reasons-to-formatted-values';
+import { mapCorrectionReasonsToFormattedOldFeeRecordValues } from '../../../../../../helpers/map-correction-reasons-to-formatted-old-fee-record-values';
 import { mapFormDataToFormattedValues } from './map-form-data-values';
 
 /**
@@ -22,7 +22,7 @@ export const mapTransientCorrectionDataToReviewInformation = (
     },
   };
 
-  const formattedOldValues = mapCorrectionReasonsToFormattedOldValues(feeRecord, reasons).join(', ');
+  const formattedOldValues = mapCorrectionReasonsToFormattedOldFeeRecordValues(feeRecord, reasons).join(', ');
   const formattedNewValues = mapFormDataToFormattedValues(formData, reasons).join(', ');
 
   return {

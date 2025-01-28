@@ -1,0 +1,21 @@
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
+{% macro render(params) %}
+  {% set status = params.status %}
+  {% set displayStatus = params.displayStatus %}
+
+  {% set tagColourClassForStatus = {
+    'RECORD_CORRECTION_RECEIVED': 'govuk-tag--green',
+    'RECORD_CORRECTION_SENT': 'govuk-tag--pink'
+  } %}
+
+  {% set tagColourClass = tagColourClassForStatus[status] %}
+
+  {{ govukTag({
+    text: displayStatus,
+    classes: tagColourClass,
+    attributes: {
+      'data-cy': 'record-correction-status'
+    }
+  }) }}
+{% endmacro %}

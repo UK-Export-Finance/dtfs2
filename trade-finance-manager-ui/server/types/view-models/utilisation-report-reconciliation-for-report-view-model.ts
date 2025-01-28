@@ -145,14 +145,23 @@ export type UtilisationTableRowViewModel = {
   };
 };
 
+export type RecordCorrectionDisplayStatus = 'Record correction sent' | 'Record correction received';
+
+export type RecordCorrectionStatus = 'RECORD_CORRECTION_SENT' | 'RECORD_CORRECTION_RECEIVED';
+
+export type RecordCorrectionStatusObject = {
+  status: RecordCorrectionStatus;
+  displayStatus: RecordCorrectionDisplayStatus;
+};
+
 export type RecordCorrectionRowViewModel = {
   feeRecordId: number;
   correctionId: number;
   exporter: string;
   reasons: string;
   dateSent: string;
-  status: FeeRecordStatus;
-  displayStatus: FeeRecordDisplayStatus;
+  status: RecordCorrectionStatus;
+  displayStatus: RecordCorrectionDisplayStatus;
   formattedOldRecords: string;
   formattedCorrectRecords: string;
 };
