@@ -79,7 +79,7 @@ describe('get-completed-fee-record-corrections.controller map-completed-correcti
       expect(response).toEqual(expectedResponse);
     });
 
-    it('should return undefined when bank commentary is null', () => {
+    it('should set the mapped corrections "bankCommentary" attribute to undefined when a corrections bank commentary is null', () => {
       // Arrange
       const feeRecordEntity = new FeeRecordEntityMockBuilder().build();
 

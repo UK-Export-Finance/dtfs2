@@ -1020,7 +1020,7 @@ utilisationReportsRouter
 
 /**
  * @openapi
- * /utilisation-reports/completed-fee-record-corrections/:bankId:
+ * /banks/:bankId/utilisation-reports/completed-corrections:
  *   get:
  *     summary: Gets completed fee record corrections by bank id
  *     tags: [Utilisation Report]
@@ -1049,8 +1049,8 @@ utilisationReportsRouter
  *         description: Internal Server Error
  */
 utilisationReportsRouter
-  .route('/completed-fee-record-corrections/:bankId')
-  .all(validation.sqlIdValidation('bankId'), handleExpressValidatorResult)
+  .route('/banks/:bankId/utilisation-reports/completed-corrections')
+  .all(validation.bankIdValidation, handleExpressValidatorResult)
   .get(getCompletedFeeRecordCorrections);
 
 /**
