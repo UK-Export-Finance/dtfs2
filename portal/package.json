@@ -60,6 +60,7 @@
     "json2csv": "^5.0.7",
     "lodash": "^4.17.21",
     "lodash.isequal": "^4.5.0",
+    "mongodb": "^4.17.2",
     "morgan": "1.10.0",
     "multer": "1.4.5-lts.1",
     "node-fetch": "^2.7.0",

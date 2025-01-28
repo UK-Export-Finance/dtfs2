@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { subDays, addMonths, format } = require('date-fns');
 const { DATE } = require('../../server/constants');
@@ -103,7 +104,7 @@ const deal = {
   loanTransactions: {
     items: [
       {
-        _id: '123456',
+        _id: new ObjectId(),
         facilityStage: 'Unconditional',
         hasBeenIssued: true,
         'requestedCoverStartDate-day': `${format(now, 'dd')}`,
@@ -136,8 +137,41 @@ const deal = {
         status: 'Completed',
       },
       {
-        _id: '789123',
+        _id: new ObjectId(),
         facilityStage: 'Unconditional',
+        hasBeenIssued: false,
+        'requestedCoverStartDate-day': `${format(now, 'dd')}`,
+        'requestedCoverStartDate-month': `${format(now, 'MM')}`,
+        'requestedCoverStartDate-year': `${format(now, 'yyyy')}`,
+        'coverEndDate-day': `${format(nextMonth, 'dd')}`,
+        'coverEndDate-month': `${format(nextMonth, 'MM')}`,
+        'coverEndDate-year': `${format(nextMonth, 'yyyy')}`,
+        ukefGuaranteeInMonths: '12',
+        name: '12345678',
+        guaranteeFeePayableByBank: '10.8000',
+        value: '12345678.00',
+        currencySameAsSupplyContractCurrency: 'false',
+        currency: {
+          text: 'AUD - Australian Dollars',
+          id: 'AUD',
+        },
+        conversionRate: '80',
+        'conversionRateDate-day': `${format(yesterday, 'dd')}`,
+        'conversionRateDate-month': `${format(yesterday, 'MM')}`,
+        'conversionRateDate-year': `${format(yesterday, 'yyyy')}`,
+        disbursementAmount: '100.00',
+        interestMarginFee: '12',
+        coveredPercentage: '30',
+        minimumQuarterlyFee: '200',
+        ukefExposure: '3,703,703.40',
+        premiumFrequency: 'Semi-annually',
+        premiumType: 'In advance',
+        dayCountBasis: '365',
+        status: 'Completed',
+      },
+      {
+        _id: new ObjectId(),
+        facilityStage: 'Risk expired',
         hasBeenIssued: true,
         'requestedCoverStartDate-day': `${format(now, 'dd')}`,
         'requestedCoverStartDate-month': `${format(now, 'MM')}`,
@@ -168,6 +202,8 @@ const deal = {
         dayCountBasis: '365',
         status: 'Completed',
       },
+      // Empty facility object for exceptional handling and edge case
+      {},
     ],
   },
   eligibility: {
