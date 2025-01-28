@@ -1,4 +1,4 @@
-import { CorrectionValuesPartialEntity, getFormattedMonetaryValue, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
+import { getFormattedMonetaryValue, RECORD_CORRECTION_REASON, RecordCorrectionReason, RecordCorrectionValues } from '@ukef/dtfs2-common';
 import { validateRequiredCorrectionField } from '../../../../../../helpers';
 
 /**
@@ -18,7 +18,7 @@ import { validateRequiredCorrectionField } from '../../../../../../helpers';
  * @throws Error if the correction reason is unknown.
  * @throws Error if a required correction value is missing for the given reason.
  */
-export const getFormattedCorrectionValueForCorrectionReason = (correctionValues: CorrectionValuesPartialEntity, reason: RecordCorrectionReason): string => {
+export const getFormattedCorrectionValueForCorrectionReason = (correctionValues: RecordCorrectionValues, reason: RecordCorrectionReason): string => {
   switch (reason) {
     case RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT:
       validateRequiredCorrectionField(correctionValues.facilityId, reason);
@@ -49,5 +49,5 @@ export const getFormattedCorrectionValueForCorrectionReason = (correctionValues:
  * @param correctionValues - The correction values.
  * @returns An array of formatted correction values.
  */
-export const mapCorrectionReasonsAndValuesToFormattedValues = (reasons: RecordCorrectionReason[], correctionValues: CorrectionValuesPartialEntity): string[] =>
+export const mapCorrectionReasonsAndValuesToFormattedValues = (reasons: RecordCorrectionReason[], correctionValues: RecordCorrectionValues): string[] =>
   reasons.map((reason) => getFormattedCorrectionValueForCorrectionReason(correctionValues, reason));

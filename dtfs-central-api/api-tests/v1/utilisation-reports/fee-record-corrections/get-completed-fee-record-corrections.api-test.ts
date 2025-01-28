@@ -8,7 +8,6 @@ import {
   RECORD_CORRECTION_REASON,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
-import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../../test-api';
 import { SqlDbHelper } from '../../../sql-db-helper';
 import { aBank } from '../../../../test-helpers';
@@ -18,7 +17,7 @@ import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replac
 
 console.error = jest.fn();
 
-const BASE_URL = '/v1/utilisation-reports/completed-fee-record-corrections/:bankId';
+const BASE_URL = '/v1/bank/:bankId/utilisation-reports/completed-corrections';
 
 describe(`GET ${BASE_URL}`, () => {
   const bankId = '123';
@@ -49,11 +48,6 @@ describe(`GET ${BASE_URL}`, () => {
   afterAll(async () => {
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
     await wipe(['banks']);
-  });
-
-  withSqlIdPathParameterValidationTests({
-    baseUrl: BASE_URL,
-    makeRequest: (url) => testApi.get(url),
   });
 
   it(`should return '${HttpStatusCode.Ok}' and the completed fee record corrections response`, async () => {
@@ -98,7 +92,7 @@ describe(`GET ${BASE_URL}`, () => {
     expect(response.body).toEqual(expectedMappedCompletedCorrections);
   });
 
-  it(`should return '${HttpStatusCode.NotFound}' when no completed fee record corrections with the supplied bank id can be found`, async () => {
+  it(`should return '${HttpStatusCode.Ok}' and an empty array when no completed fee record corrections with the supplied bank id can be found`, async () => {
     // Arrange
     const feeRecordCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, true).build();
 
@@ -108,6 +102,8 @@ describe(`GET ${BASE_URL}`, () => {
     const response = await testApi.get(replaceUrlParameterPlaceholders(BASE_URL, { bankId: `${bankId}123` }));
 
     // Assert
-    expect(response.status).toEqual(HttpStatusCode.NotFound);
+    expect(response.status).toEqual(HttpStatusCode.Ok);
+
+    expect(response.body).toEqual([]);
   });
 });

@@ -1,7 +1,6 @@
 import { ApiError, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { NotFoundError } from '../../../../../errors';
 import { FeeRecordCorrectionRepo } from '../../../../../repositories/fee-record-correction-repo';
 import { mapCompletedFeeRecordCorrectionsToResponse } from './helpers';
 
@@ -43,10 +42,6 @@ export const getCompletedFeeRecordCorrections = async (req: GetCompletedFeeRecor
 
   try {
     const completedCorrections = await FeeRecordCorrectionRepo.findCompletedCorrectionsByBankIdWithFeeRecord(bankId);
-
-    if (completedCorrections.length === 0) {
-      throw new NotFoundError(`Failed to find any completed fee record corrections with bank id ${bankId}`);
-    }
 
     const mappedCompletedCorrections = mapCompletedFeeRecordCorrectionsToResponse(completedCorrections);
 

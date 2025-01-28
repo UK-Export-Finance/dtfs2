@@ -10,9 +10,9 @@ import { GetCompletedFeeRecordCorrectionsResponseBody } from '..';
  */
 export const mapCompletedFeeRecordCorrectionsToResponse = (completedCorrections: FeeRecordCorrectionEntity[]): GetCompletedFeeRecordCorrectionsResponseBody =>
   completedCorrections.map((feeRecordCorrection) => {
-    const { id, feeRecord, dateReceived: dateSent, reasons, previousValues, correctedValues, bankCommentary } = feeRecordCorrection;
+    const { id, feeRecord, dateReceived, reasons, previousValues, correctedValues, bankCommentary } = feeRecordCorrection;
 
-    if (dateSent === null) {
+    if (dateReceived === null) {
       throw new Error('Invalid state: "dateReceived" is null but correction is marked as completed.');
     }
 
@@ -28,7 +28,7 @@ export const mapCompletedFeeRecordCorrectionsToResponse = (completedCorrections:
 
     return {
       id,
-      dateSent,
+      dateSent: dateReceived,
       exporter,
       formattedReasons,
       formattedPreviousValues,

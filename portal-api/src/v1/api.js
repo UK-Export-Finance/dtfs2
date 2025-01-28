@@ -496,7 +496,7 @@ const getFeeRecordCorrectionById = async (correctionId) => {
  */
 const getCompletedFeeRecordCorrections = async (bankId) => {
   try {
-    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/completed-fee-record-corrections/${bankId}`, {
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports/completed-corrections`, {
       headers: headers.central,
     });
 
