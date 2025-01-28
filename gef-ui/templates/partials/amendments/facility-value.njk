@@ -8,16 +8,6 @@
   New facility value
 {%- endblock %}
 
-{% set headingHtml %}
-  <h1 class="govuk-caption-l" data-cy="heading-caption">
-    {{ exporterName }}, {{ facilityType }} facility
-  </h1>
-
-  <h2 class="govuk-heading-xl govuk-!-margin-bottom-6 govuk-!-margin-top-1" data-cy="page-heading">
-    New facility value
-  </h2>
-{% endset %}
-
 {% block content %}
   {% if errors %}
     {{ govukErrorSummary({
@@ -44,12 +34,19 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         <input type="hidden" name="previousPage" value="{{ previousPage }}">
 
+        <h1 class="govuk-caption-l" data-cy="heading-caption">
+          {{ exporterName }}, {{ facilityType }} facility
+        </h1>
+
+        <h2 class="govuk-label-wrapper">
+          <label class="govuk-heading-xl govuk-!-margin-bottom-6 govuk-!-margin-top-1" data-cy="page-heading" for="facilityValue">
+            New facility value
+          </label>
+        </h2>
+
         {{ govukInput({
           id: "facilityValue",
           classes: "govuk-input--width-10",
-          label: {
-            html: headingHtml
-          },
           name: "facilityValue",
           value: facilityValue,
           prefix: {
