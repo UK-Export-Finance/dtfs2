@@ -10,15 +10,13 @@
 {%- endblock %}
 
 {% set headingHtml %}
-<header>
-  <span class="govuk-caption-l" data-cy="heading-caption">
-    {{ exporterName }}, {{ facilityType }} facility
-  </span>
+<h1 class="govuk-caption-l" data-cy="heading-caption">
+  {{ exporterName }}, {{ facilityType }} facility
+</h1>
 
-  <h1 class="govuk-label govuk-label--xl" data-cy="page-heading">
+<h2 class="govuk-heading-xl govuk-!-margin-bottom-6 govuk-!-margin-top-1" data-cy="page-heading">
     Date amendment effective from
-  </h1>
-</header>
+</h2>
 {% endset %}
 
 {% set hintHtml %}

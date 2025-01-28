@@ -11,16 +11,14 @@
   Do you have a facility end date?
 {%- endblock %}
 
-{% set legendHtml %}
-<header>
-  <span class="govuk-caption-l" data-cy="heading-caption">
+{% set headingHtml %}
+  <h1 class="govuk-caption-l" data-cy="heading-caption">
     {{ exporterName }}, {{ facilityType }} facility
-  </span>
-
-  <h1 class="govuk-label govuk-label--xl" data-cy="page-heading">
-    Do you have a facility end date?
   </h1>
-</header>
+
+  <h2 class="govuk-heading-xl govuk-!-margin-bottom-6 govuk-!-margin-top-1" data-cy="page-heading">
+    Do you have a facility end date?
+  </h2>
 {% endset %}
 
 {% block content %}
@@ -55,7 +53,7 @@
           classes: "govuk-radios--inline",
           fieldset: {
             legend: {
-              html: legendHtml
+              html: headingHtml
             }
           },
           attributes: {
