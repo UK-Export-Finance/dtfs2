@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
-import { PDC_TEAM_IDS, validateFeeRecordCorrectionFeatureFlagIsEnabled } from '@ukef/dtfs2-common';
+import { PDC_TEAM_IDS, validateFeeRecordCorrectionFeatureFlagIsEnabled, setNoStoreCacheControl } from '@ukef/dtfs2-common';
 import { getUtilisationReports } from '../../controllers/utilisation-reports';
 import { updateUtilisationReportStatus } from '../../controllers/utilisation-reports/update-utilisation-report-status';
 import {
@@ -162,6 +162,7 @@ utilisationReportsRoutes.post(
 utilisationReportsRoutes.get(
   '/:reportId/create-record-correction-request/:feeRecordId',
   validateFeeRecordCorrectionFeatureFlagIsEnabled,
+  setNoStoreCacheControl,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   validateSqlId('feeRecordId'),
@@ -179,6 +180,7 @@ utilisationReportsRoutes.post(
 
 utilisationReportsRoutes.get(
   '/:reportId/create-record-correction-request/:feeRecordId/check-the-information',
+  setNoStoreCacheControl,
   validateFeeRecordCorrectionFeatureFlagIsEnabled,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
