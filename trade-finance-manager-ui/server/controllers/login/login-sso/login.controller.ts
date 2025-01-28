@@ -97,7 +97,7 @@ export class LoginController {
   public getLogout = (req: Request, res: Response) => {
     console.info('User has been logged out from TFM');
     req.session.destroy(() => {
-      res.render('_partials/user-logged-out.njk');
+      res.render('user-logged-out.njk');
     });
   };
 }

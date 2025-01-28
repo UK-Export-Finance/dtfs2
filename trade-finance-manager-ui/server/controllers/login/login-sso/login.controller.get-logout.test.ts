@@ -24,7 +24,7 @@ describe('controllers - login (sso)', () => {
       loginController.getLogout(req, res);
 
       // Assert
-      expect(res._getRenderView()).toEqual('_partials/user-logged-out.njk');
+      expect(res._getRenderView()).toEqual('user-logged-out.njk');
     });
 
     it('destroys the session', () => {

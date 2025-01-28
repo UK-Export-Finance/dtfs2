@@ -4,17 +4,17 @@
   You have been logged out
 {%- endblock %}
 
-{% block content %}
+{% block content -%}
 
   <section class="govuk-!-margin-top-9">
     <div class="govuk-grid-row" data-cy="you-have-been-logged-out">
       <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-xl">You have been logged out</h1>
-        <p class="govuk-body">
+        <h1 class="govuk-heading-xl" data-cy="you-have-been-logged-out-heading">You have been logged out</h1>
+        <p class="govuk-body" data-cy="you-have-been-logged-out-message">
         You have been logged out of Trade Finance Manager, but your Microsoft account remains active.
         </p>
       </div>
     </div>
   </section>
 
-{% endblock %}
+{%- endblock %}
