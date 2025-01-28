@@ -36,6 +36,7 @@ export type UpdateWithKeyingDataParams = {
 };
 
 export type RemoveAllPaymentsParams = {
+  status: FeeRecordStatus;
   requestSource: DbRequestSource;
 };
 
