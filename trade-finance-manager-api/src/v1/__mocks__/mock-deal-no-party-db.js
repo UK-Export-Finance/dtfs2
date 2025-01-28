@@ -1,6 +1,7 @@
 const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { MOCK_FACILITIES } = require('./mock-facilities');
 const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
+const { COMPANY_REGISTRATION_NUMBER } = require('../../constants/deals');
 
 const MOCK_DEAL_NO_PARTY_DB = {
   _id: 'NO_PARTY_DB',
@@ -68,7 +69,7 @@ const MOCK_DEAL_NO_PARTY_DB = {
     'supplier-address-line-3': 'test',
     'supplier-address-postcode': 'test',
     'supplier-address-town': 'test',
-    'supplier-companies-house-registration-number': 'NO_MATCH',
+    'supplier-companies-house-registration-number': COMPANY_REGISTRATION_NUMBER.NO_MATCH,
     'supplier-correspondence-address-country': {
       code: 'GBR',
       name: 'United Kingdom',
