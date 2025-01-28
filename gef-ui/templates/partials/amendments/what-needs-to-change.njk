@@ -13,13 +13,13 @@
 {%- endblock %}
 
 {% set headingHtml %}
-  <h1 class="govuk-caption-l" data-cy="heading-caption">
-    {{ exporterName }}, {{ facilityType }} facility
-  </h1>
 
-  <h2 class="govuk-heading-xl govuk-!-margin-bottom-6 govuk-!-margin-top-1" data-cy="page-heading">
+  <h1 class="govuk-heading-xl govuk-!-margin-bottom-6 govuk-!-margin-top-1" data-cy="page-heading">
+    <span class="govuk-caption-l" data-cy="heading-caption">
+      {{ exporterName }}, {{ facilityType }} facility
+    </span>
     What do you need to change?
-  </h2>
+  </h1>
 {% endset %}
 
 {% block content %}

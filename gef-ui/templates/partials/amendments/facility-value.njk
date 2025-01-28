@@ -34,15 +34,14 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         <input type="hidden" name="previousPage" value="{{ previousPage }}">
 
-        <h1 class="govuk-caption-l" data-cy="heading-caption">
-          {{ exporterName }}, {{ facilityType }} facility
-        </h1>
-
-        <h2 class="govuk-label-wrapper">
+        <h1 class="govuk-label-wrapper">
+          <span class="govuk-caption-l" data-cy="heading-caption">
+            {{ exporterName }}, {{ facilityType }} facility
+          </span>
           <label class="govuk-heading-xl govuk-!-margin-bottom-6 govuk-!-margin-top-1" data-cy="page-heading" for="facilityValue">
             New facility value
           </label>
-        </h2>
+        </h1>
 
         {{ govukInput({
           id: "facilityValue",

@@ -33,10 +33,12 @@
   <div class="govuk-grid-row govuk-!-margin-bottom-3">
     <div class="govuk-grid-column-three-quarters">
       <form method="post">
-        <h1 class="govuk-caption-l" data-cy="heading-caption">
-          {{ exporterName }}, {{ facilityType }} facility
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-4 govuk-!-margin-top-1" data-cy="page-heading">
+          <span class="govuk-caption-l" data-cy="heading-caption">
+            {{ exporterName }}, {{ facilityType }} facility
+          </span>
+          Eligibility
         </h1>
-        <h2 class="govuk-heading-xl govuk-!-margin-bottom-4 govuk-!-margin-top-1" data-cy="page-heading">Eligibility</h2>
 
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         <input type="hidden" name="previousPage" value="{{ previousPage }}">
