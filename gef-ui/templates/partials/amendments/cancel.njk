@@ -22,15 +22,13 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <header>
-        <h1 class="govuk-heading-xl govuk-!-margin-bottom-1" data-cy="page-heading">
-          <span class="govuk-caption-l" data-cy="heading-caption">
-            {{ exporterName }}, {{ facilityType }} facility
-          </span>
-          Are you sure you want to cancel the request?
-        </h1>
-        <p>You'll lose all the data you have entered and return to deal summary</p>
-      </header>
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-1" data-cy="page-heading">
+        <span class="govuk-caption-l" data-cy="heading-caption">
+          {{ exporterName }}, {{ facilityType }} facility
+        </span>
+        Are you sure you want to cancel the request?
+      </h1>
+      <p>You'll lose all the data you have entered and return to deal summary</p>
       <form method="POST" autocomplete="off">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         <input type="hidden" name="previousPage" value="{{ previousPage }}">
