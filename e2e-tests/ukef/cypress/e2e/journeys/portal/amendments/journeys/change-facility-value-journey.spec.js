@@ -72,8 +72,10 @@ context('Amendments - change facility value - full journey', () => {
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/effective-date`));
+    cy.completeDateFormFields({ idPrefix: 'effective-from' });
+    cy.clickContinueButton();
 
-    // TODO DTFS2-7524: add steps for effective from date
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/check-your-answers`));
 
     // TODO DTFS2-7519: add steps for check your answer page
   });
