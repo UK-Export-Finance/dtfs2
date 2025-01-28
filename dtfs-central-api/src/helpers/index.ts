@@ -12,4 +12,5 @@ export { calculateUkefShareOfUtilisation } from './calculate-ukef-share-of-utili
 export { getKeyingSheetCalculationFacilityValues } from './get-keying-sheet-calculation-facility-values';
 export { getCorrectionPreviousValuesFromFeeRecord } from './get-correction-previous-values-from-fee-record';
 export { getCorrectionCorrectedValuesFromFormData } from './get-correction-corrected-values-from-form-data';
+export { validateRequiredCorrectionField } from './validate-required-correction-field';
 export * from './amendments';

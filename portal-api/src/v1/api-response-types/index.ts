@@ -7,3 +7,4 @@ export * from './get-fee-record-correction-response-body';
 export * from './get-fee-record-correction-transient-form-data-response-body';
 export * from './save-fee-record-correction-response-body';
 export * from './put-fee-record-correction-response-body';
+export * from './get-completed-fee-record-corrections-response-body';

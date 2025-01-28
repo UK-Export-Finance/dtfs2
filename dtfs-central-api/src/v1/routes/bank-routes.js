@@ -18,6 +18,9 @@ const {
 const {
   getUtilisationReportSummariesByBankIdAndYear,
 } = require('../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller');
+const {
+  getCompletedFeeRecordCorrections,
+} = require('../controllers/utilisation-report-service/fee-record-correction/get-completed-fee-record-corrections.controller');
 
 const validation = require('../validation/route-validators/route-validators');
 const handleExpressValidatorResult = require('../validation/route-validators/express-validator-result-handler');
@@ -351,5 +354,40 @@ bankRouter
 bankRouter
   .route('/:bankId/utilisation-reports/pending-corrections')
   .get(validation.bankIdValidation, handleExpressValidatorResult, getUtilisationReportPendingCorrectionsByBankId);
+
+/**
+ * @openapi
+ * /bank/:bankId/utilisation-reports/completed-corrections:
+ *   get:
+ *     summary: Gets completed fee record corrections by bank id
+ *     tags: [Utilisation Report]
+ *     description: Gets completed fee record corrections by bank id
+ *     parameters:
+ *       - in: path
+ *         name: bankId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for the bank
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/definitions/CompletedFeeRecordCorrection'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal Server Error
+ */
+bankRouter
+  .route('/:bankId/utilisation-reports/completed-corrections')
+  .all(validation.bankIdValidation, handleExpressValidatorResult)
+  .get(getCompletedFeeRecordCorrections);
 
 module.exports = bankRouter;

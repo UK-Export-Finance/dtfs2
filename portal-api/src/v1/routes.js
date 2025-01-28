@@ -373,4 +373,14 @@ authRouter
     utilisationReportControllers.getFeeRecordCorrectionReview,
   );
 
+authRouter
+  .route('/banks/:bankId/utilisation-reports/completed-corrections')
+  .get(
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
+    bankIdValidation,
+    handleExpressValidatorResult,
+    validateUserAndBankIdMatch,
+    utilisationReportControllers.getCompletedFeeRecordCorrections,
+  );
+
 module.exports = { openRouter, authRouter };
