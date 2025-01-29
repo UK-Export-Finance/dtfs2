@@ -41,4 +41,4 @@ export const LONG_FORM_DATE = 'do MMMM yyyy';
  *
  * {@link https://date-fns.org/v3.3.1/docs/format}
  */
-export const SHORT_FORM_DATE = 'd MMM yyyy';
+export const SHORT_FORM_DATE = 'dd MMM yyyy';

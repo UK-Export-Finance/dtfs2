@@ -4,7 +4,6 @@ import { SHORT_FORM_DATE } from '../../../../constants/date';
 import { CompletedCorrectionViewModel } from '../../../../types/view-models/record-correction/record-correction-history';
 import { GetCompletedFeeRecordCorrectionsResponseBody } from '../../../../api-response-types';
 
-// TODO FN-3671: Add unit tests.
 /**
  * Formats the date sent
  * @param dateSent - The date sent
@@ -14,8 +13,11 @@ import { GetCompletedFeeRecordCorrectionsResponseBody } from '../../../../api-re
  */
 export const getFormattedDateSent = (dateSent: IsoDateTimeStamp): string => format(parseISO(dateSent), SHORT_FORM_DATE);
 
-// TODO FN-3671: TSDOC
-// TODO FN-3671: Add unit tests
+/**
+ * Maps completed corrections to a view model.
+ * @param completedCorrections - The completed corrections response body.
+ * @returns An array of completed correction view models.
+ */
 export const mapCompletedCorrectionsToViewModel = (completedCorrections: GetCompletedFeeRecordCorrectionsResponseBody): CompletedCorrectionViewModel[] => {
   const correctionIdToDateSentDataSortValueMap = getKeyToDateSortValueMap(completedCorrections.map(({ id, dateSent }) => ({ key: id, date: dateSent })));
 
