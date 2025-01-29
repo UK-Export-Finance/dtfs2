@@ -77,11 +77,11 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
-    pages.utilisationReportEditPaymentPage.clickDeletePaymentButton();
+    pages.utilisationReportEditPaymentPage.deletePaymentButton().click();
 
     cy.url().should('eq', relative(`${editPaymentUrl}/confirm-delete?redirectTab=premium-payments`));
 
-    pages.utilisationReportConfirmDeletePaymentPage.selectNoRadio();
+    pages.utilisationReportConfirmDeletePaymentPage.noRadio().click();
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();
 
     cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
@@ -109,11 +109,11 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
-    pages.utilisationReportEditPaymentPage.clickDeletePaymentButton();
+    pages.utilisationReportEditPaymentPage.deletePaymentButton().click();
 
     cy.url().should('eq', relative(`${editPaymentUrl}/confirm-delete?redirectTab=premium-payments`));
 
-    pages.utilisationReportConfirmDeletePaymentPage.selectYesRadio();
+    pages.utilisationReportConfirmDeletePaymentPage.yesRadio().click();
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();
 
     cy.url().should('eq', relative(`/utilisation-reports/${report.id}#premium-payments`));
@@ -144,11 +144,11 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
-    pages.utilisationReportEditPaymentPage.clickDeletePaymentButton();
+    pages.utilisationReportEditPaymentPage.deletePaymentButton().click();
 
     cy.url().should('eq', relative(`${editPaymentUrl}/confirm-delete?redirectTab=premium-payments`));
 
-    pages.utilisationReportConfirmDeletePaymentPage.selectYesRadio();
+    pages.utilisationReportConfirmDeletePaymentPage.yesRadio().click();
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();
 
     cy.url().should('eq', relative(`/utilisation-reports/${report.id}#premium-payments`));
@@ -176,11 +176,11 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
-    pages.utilisationReportEditPaymentPage.clickDeletePaymentButton();
+    pages.utilisationReportEditPaymentPage.deletePaymentButton().click();
 
     cy.url().should('eq', relative(`${editPaymentUrl}/confirm-delete?redirectTab=premium-payments`));
 
-    pages.utilisationReportConfirmDeletePaymentPage.selectYesRadio();
+    pages.utilisationReportConfirmDeletePaymentPage.yesRadio().click();
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();
 
     pages.utilisationReportPage.tabs.premiumPaymentsContent.getPaymentLink(payment.id).should('not.exist');
@@ -207,11 +207,11 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can delete payments`, () => {
 
     cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
-    pages.utilisationReportEditPaymentPage.clickDeletePaymentButton();
+    pages.utilisationReportEditPaymentPage.deletePaymentButton().click();
 
     cy.url().should('eq', relative(`${editPaymentUrl}/confirm-delete?redirectTab=premium-payments`));
 
-    pages.utilisationReportConfirmDeletePaymentPage.selectYesRadio();
+    pages.utilisationReportConfirmDeletePaymentPage.yesRadio().click();
     pages.utilisationReportConfirmDeletePaymentPage.clickContinueButton();
 
     pages.utilisationReportPage.tabs.premiumPaymentsContent.getPaymentLink(payment.id).should('not.exist');
