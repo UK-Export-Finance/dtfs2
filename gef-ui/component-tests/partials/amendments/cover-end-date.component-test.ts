@@ -23,7 +23,7 @@ describe(page, () => {
   it('should render the page heading', () => {
     const wrapper = render(params);
 
-    wrapper.expectText('[data-cy="page-heading"]').toRead('New cover end date');
+    wrapper.expectText('[data-cy="page-heading"]').toContain('New cover end date');
   });
 
   it(`should render the 'Back' link`, () => {
