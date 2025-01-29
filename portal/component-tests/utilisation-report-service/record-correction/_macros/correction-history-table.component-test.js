@@ -13,7 +13,7 @@ describe(component, () => {
     formattedReasons: 'Facility ID is incorrect, Other',
     formattedPreviousValues: '11111111, -',
     formattedCorrectedValues: '22222222, -',
-    bankCommentary: 'Some bank commentary',
+    formattedBankCommentary: 'Some bank commentary',
   };
 
   const secondCompletedCorrection = {
@@ -25,7 +25,7 @@ describe(component, () => {
     formattedReasons: 'Facility ID is incorrect, Utilisation is incorrect',
     formattedPreviousValues: '33333333, 123.45',
     formattedCorrectedValues: '44444444, 987.65',
-    bankCommentary: 'Some other bank commentary',
+    formattedBankCommentary: 'Some other bank commentary',
   };
 
   const firstRowSelector = 'tr:nth-of-type(1)';
@@ -98,7 +98,7 @@ describe(component, () => {
     wrapper
       .expectText(`${firstRowSelector} [data-cy="correction-history-row--formatted-previous-values"]`)
       .toRead(firstCompletedCorrection.formattedPreviousValues);
-    wrapper.expectText(`${firstRowSelector} [data-cy="correction-history-row--bank-commentary"]`).toRead(firstCompletedCorrection.bankCommentary);
+    wrapper.expectText(`${firstRowSelector} [data-cy="correction-history-row--bank-commentary"]`).toRead(firstCompletedCorrection.formattedBankCommentary);
 
     wrapper.expectText(`${secondRowSelector} [data-cy="correction-history-row--date-sent"]`).toRead(secondCompletedCorrection.dateSent.formattedDateSent);
     wrapper.expectText(`${secondRowSelector} [data-cy="correction-history-row--exporter"]`).toRead(secondCompletedCorrection.exporter);
@@ -109,7 +109,7 @@ describe(component, () => {
     wrapper
       .expectText(`${secondRowSelector} [data-cy="correction-history-row--formatted-previous-values"]`)
       .toRead(secondCompletedCorrection.formattedPreviousValues);
-    wrapper.expectText(`${secondRowSelector} [data-cy="correction-history-row--bank-commentary"]`).toRead(secondCompletedCorrection.bankCommentary);
+    wrapper.expectText(`${secondRowSelector} [data-cy="correction-history-row--bank-commentary"]`).toRead(secondCompletedCorrection.formattedBankCommentary);
   });
 
   it('should render the corrections "date sent" with the "data-sort-value" attribute', () => {

@@ -22,6 +22,8 @@ export const mapCompletedCorrectionsToViewModel = (completedCorrections: GetComp
   return completedCorrections.map((correction) => {
     const { exporter, formattedReasons, formattedPreviousValues, formattedCorrectedValues, bankCommentary } = correction;
 
+    const formattedBankCommentary = bankCommentary ?? '-';
+
     return {
       dateSent: {
         formattedDateSent: getFormattedDateSent(correction.dateSent),
@@ -31,7 +33,7 @@ export const mapCompletedCorrectionsToViewModel = (completedCorrections: GetComp
       formattedReasons,
       formattedPreviousValues,
       formattedCorrectedValues,
-      bankCommentary,
+      formattedBankCommentary,
     };
   });
 };

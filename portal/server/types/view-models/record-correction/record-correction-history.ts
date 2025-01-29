@@ -9,7 +9,7 @@ export type CompletedCorrectionViewModel = {
   formattedReasons: string;
   formattedPreviousValues: string;
   formattedCorrectedValues: string;
-  bankCommentary?: string;
+  formattedBankCommentary: string;
 };
 
 export type RecordCorrectionHistoryViewModel = BaseViewModel & {

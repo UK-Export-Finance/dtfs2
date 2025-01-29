@@ -48,7 +48,7 @@ describe(page, () => {
           formattedReasons: 'Facility ID is incorrect, Other',
           formattedPreviousValues: '11111111, -',
           formattedCorrectedValues: '22222222, -',
-          bankCommentary: 'Some bank commentary',
+          formattedBankCommentary: 'Some bank commentary',
         },
       ],
     };
