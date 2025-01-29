@@ -9,15 +9,27 @@ import { PIM_USER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN, CURRENC
 import caseDealPage from '../../../pages/caseDealPage';
 
 context('Amendments - Manual approval journey', () => {
-  // If the expiry & commencement date are the same day of the month then we add one to the month
-  // difference for BS (but not for EWCS)
+  // The tenor is based on full months based on the date of the month of the commencement and
+  // expiry date.
+  //
+  // Notably, If the expiry & commencement date are the same day of the month then we add one to the
+  // month difference for BS (but not for EWCS)
   // BUT... If the commencement date is end of month and the expiry date isn't then we don't add one
   //
   // In these tests, the mock start date is two years ago today & the mock end date is a month today.
   // Therefore if today is EOM and a month from now is not EOM we need to NOT add one to the tenor
-  const todayIsEndOfMonth = add(new Date(), { days: 1 }).getDate() === 1;
-  const aMonthFromNowIsEndOfMonth = add(new Date(), { months: 1, days: 1 }).getDate() === 1;
-  const facilityTenor = todayIsEndOfMonth && !aMonthFromNowIsEndOfMonth ? '25 months' : '26 months';
+  //
+  // This should match up with the logic here:
+  // https://github.com/UK-Export-Finance/databases-datateam/blob/163d71b0aef58652db5e6ccf29edce2ce3df30ca/MASTER_DATA/dbo/Functions/fn_DATEDIFF_FULLMONTH.sql
+  const todayPlusOneMonth = add(new Date(), { months: 1 });
+  let facilityTenor = '26 months';
+  if (today.date.getDate() > todayPlusOneMonth.getDate()) {
+    facilityTenor = '25 months';
+  } else if (today.date.getDate() === todayPlusOneMonth.getDate()) {
+    const todayIsEndOfMonth = add(new Date(), { days: 1 }).getDate() === 1;
+    const aMonthFromNowIsEndOfMonth = add(new Date(), { months: 1, days: 1 }).getDate() === 1;
+    facilityTenor = todayIsEndOfMonth && !aMonthFromNowIsEndOfMonth ? '25 months' : '26 months';
+  }
 
   describe('Amendment details - Change the Cover end date AND Facility value', () => {
     let dealId;
