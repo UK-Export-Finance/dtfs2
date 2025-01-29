@@ -23,8 +23,10 @@ describe(page, () => {
       const wrapper = render(viewModel);
 
       // Assert
-      wrapper.expectText('[data-cy="no-corrections-text-1"]').toRead('There are no previous record correction requests.');
-      wrapper.expectText('[data-cy="no-corrections-text-2"]').toRead('Records will be automatically added to this page once they have been sent back to UKEF.');
+      wrapper.expectText('[data-cy="no-corrections-text-line-1"]').toRead('There are no previous record correction requests.');
+      wrapper
+        .expectText('[data-cy="no-corrections-text-line-2"]')
+        .toRead('Records will be automatically added to this page once they have been sent back to UKEF.');
     });
 
     it('should not render the correction history table', () => {
@@ -58,8 +60,8 @@ describe(page, () => {
       const wrapper = render(viewModel);
 
       // Assert
-      wrapper.expectText('[data-cy="corrections-text-1"]').toRead('Previous record correction requests are shown below.');
-      wrapper.expectText('[data-cy="corrections-text-2"]').toRead('Records are automatically added to this page once they have been sent back to UKEF.');
+      wrapper.expectText('[data-cy="corrections-text-line-1"]').toRead('Previous record correction requests are shown below.');
+      wrapper.expectText('[data-cy="corrections-text-line-2"]').toRead('Records are automatically added to this page once they have been sent back to UKEF.');
     });
 
     it('should render the correction history table', () => {

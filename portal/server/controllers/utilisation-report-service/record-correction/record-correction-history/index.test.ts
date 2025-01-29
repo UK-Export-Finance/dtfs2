@@ -52,7 +52,7 @@ describe('controllers/utilisation-reports/record-corrections/record-correction-h
       // Arrange
       const firstCompletedCorrection = {
         id: 1,
-        dateSent: '2024-02-01T12:30:00.000',
+        dateSent: new Date('2024-02-01').toISOString(),
         exporter: 'Exporter A',
         formattedReasons: 'Facility ID is incorrect',
         formattedPreviousValues: '11111111',
@@ -62,7 +62,7 @@ describe('controllers/utilisation-reports/record-corrections/record-correction-h
 
       const secondCompletedCorrection = {
         id: 2,
-        dateSent: '2024-03-17T12:30:00.000',
+        dateSent: new Date('2024-03-17').toISOString(),
         exporter: 'Exporter B',
         formattedReasons: 'Utilisation is incorrect',
         formattedPreviousValues: '123.45',
