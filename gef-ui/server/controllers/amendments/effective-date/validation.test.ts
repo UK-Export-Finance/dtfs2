@@ -62,7 +62,7 @@ describe('validateAndParseEffectiveFrom', () => {
     });
   });
 
-  it(`should return error if date is ${AMENDMENT_MAXIMUM_EFFECTIVE_FROM_DAYS_IN_FUTURE} days in the future`, () => {
+  it(`should return error if date is more than ${AMENDMENT_MAXIMUM_EFFECTIVE_FROM_DAYS_IN_FUTURE} days in the future`, () => {
     // Arrange
     const effectiveFrom = add(today, { days: AMENDMENT_MAXIMUM_EFFECTIVE_FROM_DAYS_IN_FUTURE + 1 });
     const coverStartDate = add(today, { days: 1 });
