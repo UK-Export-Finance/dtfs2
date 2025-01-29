@@ -86,8 +86,8 @@ describe('put-fee-record-correction.controller helpers', () => {
         tfmHomepageUrl,
       };
 
-      expect(externalApi.sendEmail).toHaveBeenCalledWith(expectedTemplateId, firstGefReportingEmail, expect.objectContaining(expectedVariables));
-      expect(externalApi.sendEmail).toHaveBeenCalledWith(expectedTemplateId, secondGefReportingEmail, expect.objectContaining(expectedVariables));
+      expect(externalApi.sendEmail).toHaveBeenCalledWith(expectedTemplateId, firstGefReportingEmail, expectedVariables);
+      expect(externalApi.sendEmail).toHaveBeenCalledWith(expectedTemplateId, secondGefReportingEmail, expectedVariables);
     });
   });
 
@@ -136,8 +136,8 @@ describe('put-fee-record-correction.controller helpers', () => {
         expect(externalApi.sendEmail).toHaveBeenCalledWith(expectedBankTemplateId, firstPaymentOfficerEmail, expectedBankVariables);
         expect(externalApi.sendEmail).toHaveBeenCalledWith(expectedBankTemplateId, secondPaymentOfficerEmail, expectedBankVariables);
 
-        expect(externalApi.sendEmail).toHaveBeenCalledWith(expectedUkefTemplateId, firstGefReportingEmail, expect.objectContaining(expectedUkefVariables));
-        expect(externalApi.sendEmail).toHaveBeenCalledWith(expectedUkefTemplateId, secondGefReportingEmail, expect.objectContaining(expectedUkefVariables));
+        expect(externalApi.sendEmail).toHaveBeenCalledWith(expectedUkefTemplateId, firstGefReportingEmail, expectedUkefVariables);
+        expect(externalApi.sendEmail).toHaveBeenCalledWith(expectedUkefTemplateId, secondGefReportingEmail, expectedUkefVariables);
       });
 
       it('should return the notified bank email addresses', async () => {

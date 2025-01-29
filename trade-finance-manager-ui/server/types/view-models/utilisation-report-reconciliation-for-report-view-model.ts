@@ -7,6 +7,8 @@ import {
   PaymentDetailsFilters,
   PremiumPaymentsFilters,
   RadioItem,
+  RecordCorrectionDisplayStatus,
+  RecordCorrectionStatus,
   SessionBank,
 } from '@ukef/dtfs2-common';
 import { ErrorSummaryViewModel } from './error-summary-view-model';
@@ -145,14 +147,19 @@ export type UtilisationTableRowViewModel = {
   };
 };
 
+export type RecordCorrectionStatusObject = {
+  status: RecordCorrectionStatus;
+  displayStatus: RecordCorrectionDisplayStatus;
+};
+
 export type RecordCorrectionRowViewModel = {
   feeRecordId: number;
   correctionId: number;
   exporter: string;
   reasons: string;
   dateSent: string;
-  status: FeeRecordStatus;
-  displayStatus: FeeRecordDisplayStatus;
+  status: RecordCorrectionStatus;
+  displayStatus: RecordCorrectionDisplayStatus;
   formattedOldRecords: string;
   formattedCorrectRecords: string;
 };
