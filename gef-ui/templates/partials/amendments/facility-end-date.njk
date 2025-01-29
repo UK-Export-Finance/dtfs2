@@ -11,17 +11,12 @@
 {%- endblock %}
 
 {% set headingHtml %}
-<header>
-  <span class="govuk-caption-l" data-cy="heading-caption">
-    {{ exporterName }}, {{ facilityType }} facility
-  </span>
-
-  <h1 class="govuk-label-wrapper" data-cy="page-heading">
-    <label class="govuk-label govuk-label--xl govuk-!-padding-bottom-3" for="facility-end-date">
-      Facility end date
-    </label>
+  <h1 class="govuk-heading-xl govuk-!-margin-bottom-6 govuk-!-margin-top-1" data-cy="page-heading">
+    <span class="govuk-caption-l" data-cy="heading-caption">
+      {{ exporterName }}, {{ facilityType }} facility
+    </span>
+    Facility end date
   </h1>
-</header>
 {% endset %}
 
 {% block content %}
@@ -55,8 +50,7 @@
           namePrefix: "facility-end-date",
           fieldset: {
             legend: {
-              html: headingHtml,
-              isPageHeading: true
+              html: headingHtml
             }
           },
           hint: {

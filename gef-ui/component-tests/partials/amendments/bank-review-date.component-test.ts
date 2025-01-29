@@ -24,7 +24,7 @@ describe(page, () => {
   it('should render the page heading', () => {
     const wrapper = render(params);
 
-    wrapper.expectText('[data-cy="page-heading"]').toRead('Bank review date');
+    wrapper.expectText('[data-cy="page-heading"]').toContain('Bank review date');
   });
 
   it(`should render the 'Back' link`, () => {
