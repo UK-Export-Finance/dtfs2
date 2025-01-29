@@ -407,9 +407,9 @@ export class TfmFacilitiesRepo {
   /**
    * Delete a portal amendment for a facility in the database
    * @param deletePortalFacilityAmendmentParams
-   * @param deletePortalFacilityAmendment.facilityId - The facility id
-   * @param deletePortalFacilityAmendment.amendmentId - The amendment id
-   * @param deletePortalFacilityAmendment.auditDetails - The audit details
+   * @param deletePortalFacilityAmendmentParams.facilityId - The facility id
+   * @param deletePortalFacilityAmendmentParams.amendmentId - The amendment id
+   * @param deletePortalFacilityAmendmentParams.auditDetails - The audit details
    * @returns The delete result
    */
   public static async deletePortalFacilityAmendment({
@@ -425,23 +425,17 @@ export class TfmFacilitiesRepo {
 
     const findFilter: Filter<TfmFacility> = {
       _id: { $eq: new ObjectId(facilityId) },
-      'amendments.amendmentId': { $eq: new ObjectId(amendmentId) },
-      'amendments.type': { $eq: AMENDMENT_TYPES.PORTAL },
+      amendments: { $elemMatch: { amendmentId: { $eq: new ObjectId(amendmentId) }, type: AMENDMENT_TYPES.PORTAL } },
     };
 
     const updateFilter: UpdateFilter<TfmFacility> = {
       $pull: {
-        amendments: { type: AMENDMENT_TYPES.PORTAL, _id: new ObjectId(amendmentId) },
+        amendments: { type: AMENDMENT_TYPES.PORTAL, amendmentId: new ObjectId(amendmentId) },
       },
       $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
     };
 
     const updateResult = await collection.updateOne(findFilter, updateFilter);
-
-    if (!updateResult.modifiedCount) {
-      console.error('Amendment with ID %s not found in facility with ID %s', amendmentId.toString(), facilityId.toString());
-      throw new AmendmentNotFoundError(amendmentId.toString(), facilityId.toString());
-    }
 
     return updateResult;
   }

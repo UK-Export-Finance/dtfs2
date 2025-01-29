@@ -118,6 +118,20 @@ describe('DELETE /v1/portal/facilities/:facilityId/amendments/:amendmentId', () 
       });
     });
 
+    it(`should return ${HttpStatusCode.NotFound} when the facility does not exist`, async () => {
+      const aValidButNonExistentFacilityId = new ObjectId().toString();
+
+      const { body, status } = (await testApi
+        .remove({ auditDetails: generatePortalAuditDetails(portalUserId) })
+        .to(generateUrl(aValidButNonExistentFacilityId, amendmentId))) as ErrorResponse;
+
+      expect(status).toEqual(HttpStatusCode.NotFound);
+      expect(body).toEqual({
+        status: HttpStatusCode.NotFound,
+        message: `Amendment not found: ${amendmentId} on facility: ${aValidButNonExistentFacilityId}`,
+      });
+    });
+
     it(`should return ${HttpStatusCode.NotFound} when the amendment does not exist`, async () => {
       const aValidButNonExistentAmendmentId = new ObjectId().toString();
 

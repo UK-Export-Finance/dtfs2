@@ -1,5 +1,5 @@
 import { ObjectId, UpdateResult } from 'mongodb';
-import { MONGO_DB_COLLECTIONS, AMENDMENT_TYPES, AmendmentNotFoundError } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, AMENDMENT_TYPES } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { TfmFacilitiesRepo } from './tfm-facilities.repo';
 import { mongoDbClient } from '../../drivers/db-client';
@@ -7,7 +7,6 @@ import { aPortalUser } from '../../../test-helpers';
 
 const mockGetCollection = jest.fn();
 const mockUpdateOne = jest.fn() as jest.Mock<Promise<UpdateResult>>;
-console.error = jest.fn();
 
 const facilityId = new ObjectId();
 const amendmentId = new ObjectId();
@@ -58,13 +57,12 @@ describe('TfmFacilitiesRepo', () => {
       // Assert
       const expectedFindFilter = {
         _id: { $eq: new ObjectId(facilityId) },
-        'amendments.amendmentId': { $eq: new ObjectId(amendmentId) },
-        'amendments.type': { $eq: AMENDMENT_TYPES.PORTAL },
+        amendments: { $elemMatch: { amendmentId: { $eq: new ObjectId(amendmentId) }, type: AMENDMENT_TYPES.PORTAL } },
       };
 
       const expectedUpdateFilter = {
         $pull: {
-          amendments: { type: AMENDMENT_TYPES.PORTAL, _id: new ObjectId(amendmentId) },
+          amendments: { type: AMENDMENT_TYPES.PORTAL, amendmentId: new ObjectId(amendmentId) },
         },
         $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
       };
@@ -79,14 +77,6 @@ describe('TfmFacilitiesRepo', () => {
 
       // Assert
       expect(response).toEqual(mockUpdateResult);
-    });
-
-    it('should throw an AmendmentNotFoundError if no documents are matched', async () => {
-      // Arrange
-      mockUpdateOne.mockResolvedValue({ ...mockUpdateResult, modifiedCount: 0 });
-
-      // Act + Assert
-      await expect(() => TfmFacilitiesRepo.deletePortalFacilityAmendment({ facilityId, amendmentId, auditDetails })).rejects.toThrow(AmendmentNotFoundError);
     });
   });
 });
