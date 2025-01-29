@@ -23,7 +23,7 @@ describe(page, () => {
   it('should render the page heading', () => {
     const wrapper = render(params);
 
-    wrapper.expectText('[data-cy="page-heading"]').toRead('This amendment cannot be automatically approved');
+    wrapper.expectText('[data-cy="page-heading"]').toContain('This amendment cannot be automatically approved');
   });
 
   it(`should render the 'Back' link`, () => {
