@@ -19,12 +19,14 @@ import { FEE_RECORD_EVENT_TYPE } from '../../../../../services/state-machines/fe
 import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
 import { sendFeeRecordCorrectionRequestEmails } from './helpers';
 import { FeeRecordCorrectionRequestEmailAddresses } from '../../../../../types/utilisation-reports';
+import { getBankPaymentOfficerTeamDetails } from '../../helpers/get-bank-payment-officer-team-details';
 
 jest.mock('../../../../../helpers');
 jest.mock('../../../../../services/state-machines/fee-record/fee-record.state-machine');
 jest.mock('../../../../../repositories/fee-record-correction-request-transient-form-data-repo');
 jest.mock('../../../../../repositories/fee-record-repo');
 jest.mock('./helpers');
+jest.mock('../../helpers/get-bank-payment-officer-team-details');
 
 console.error = jest.fn();
 
@@ -40,6 +42,14 @@ describe('post-fee-record-correction.controller', () => {
     const mockHandleEvent = jest.fn();
     const mockForFeeRecordStateMachineConstructor = jest.fn();
 
+    const mockTeamName = 'Mock team name';
+    const mockEmails = ['test1@ukexportfinance.gov.uk', 'test2@ukexportfinance.gov.uk'];
+
+    const getBankPaymentOfficerTeamDetailsResponse = {
+      teamName: mockTeamName,
+      emails: mockEmails,
+    };
+
     beforeEach(() => {
       jest.mocked(executeWithSqlTransaction).mockImplementation(async (functionToExecute) => {
         return await functionToExecute(mockEntityManager);
@@ -54,6 +64,7 @@ describe('post-fee-record-correction.controller', () => {
         deleteByUserIdAndFeeRecordId: mockDeleteTransientFormData,
       });
       jest.spyOn(FeeRecordRepo, 'withTransaction').mockReturnValue({ findOneByIdAndReportIdWithReport: mockFindFeeRecordWithReport });
+      jest.mocked(getBankPaymentOfficerTeamDetails).mockResolvedValue(getBankPaymentOfficerTeamDetailsResponse);
     });
 
     afterEach(() => {
@@ -171,6 +182,8 @@ describe('post-fee-record-correction.controller', () => {
             platform: REQUEST_PLATFORM_TYPE.TFM,
             userId,
           },
+          bankTeamName: mockTeamName,
+          bankTeamEmails: mockEmails.join(', '),
         };
 
         // Act

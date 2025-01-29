@@ -23,6 +23,9 @@ describe('handleFeeRecordCorrectionRequestedEvent', () => {
     lastName: 'User',
   };
 
+  const bankTeamName = 'Payment Officer Team';
+  const bankTeamEmails = 'test@ukexportfinance.gov.uk';
+
   const aCorrectionRequestedEventPayload = (): FeeRecordCorrectionRequestedEvent['payload'] => ({
     transactionEntityManager: mockEntityManager,
     reasons: [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT],
@@ -31,6 +34,8 @@ describe('handleFeeRecordCorrectionRequestedEvent', () => {
       ...requestedByUser,
     },
     requestSource: aDbRequestSource(),
+    bankTeamName,
+    bankTeamEmails,
   });
 
   afterEach(() => {
@@ -104,6 +109,8 @@ describe('handleFeeRecordCorrectionRequestedEvent', () => {
       additionalInfo,
       requestedByUser,
       requestSource,
+      bankTeamName,
+      bankTeamEmails,
     });
 
     // Assert
@@ -113,6 +120,8 @@ describe('handleFeeRecordCorrectionRequestedEvent', () => {
       reasons,
       additionalInfo,
       requestSource,
+      bankTeamName,
+      bankTeamEmails,
     });
     expect(mockSave).toHaveBeenCalledWith(FeeRecordCorrectionEntity, newCorrection);
   });

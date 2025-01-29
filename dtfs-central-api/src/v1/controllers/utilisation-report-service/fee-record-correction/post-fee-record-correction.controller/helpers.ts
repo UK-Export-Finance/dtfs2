@@ -2,8 +2,7 @@ import { getFormattedReportPeriodWithLongMonth, mapReasonToDisplayValue, RecordC
 import externalApi from '../../../../../external-api/api';
 import EMAIL_TEMPLATE_IDS from '../../../../../constants/email-template-ids';
 import { FeeRecordCorrectionRequestEmails, FeeRecordCorrectionRequestEmailAddresses } from '../../../../../types/utilisation-reports';
-import { getBankById } from '../../../../../repositories/banks-repo';
-import { NotFoundError } from '../../../../../errors';
+import { getBankPaymentOfficerTeamDetails } from '../../helpers/get-bank-payment-officer-team-details';
 
 /**
  * Formats the reasons for record correction into a bulleted list.
@@ -34,14 +33,7 @@ export const generateFeeRecordCorrectionRequestEmailParameters = async (
   bankId: string,
   requestedByUserEmail: string,
 ): Promise<FeeRecordCorrectionRequestEmails> => {
-  const bank = await getBankById(bankId);
-
-  if (!bank) {
-    console.error('Bank not found: %s', bankId);
-    throw new NotFoundError(`Bank not found: ${bankId}`);
-  }
-
-  const { teamName, emails } = bank.paymentOfficerTeam;
+  const { teamName, emails } = await getBankPaymentOfficerTeamDetails(bankId);
 
   const reportPeriodString = getFormattedReportPeriodWithLongMonth(reportPeriod);
 
