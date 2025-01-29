@@ -1,14 +1,15 @@
 import { mockRecordCorrectionDetails, FeeRecordCorrectionSummary } from '@ukef/dtfs2-common';
 import { mapToRecordCorrectionTableRowViewModel, mapToRecordCorrectionViewModel } from './record-correction-helpers';
-import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
+import { mapToRecordCorrectionStatus } from './map-record-correction-status';
 
 describe('record-correction-helpers', () => {
   const feeRecordCorrection = mockRecordCorrectionDetails[0];
-  const displayStatus = getFeeRecordDisplayStatus(feeRecordCorrection.status);
+
+  const { status, displayStatus } = mapToRecordCorrectionStatus(feeRecordCorrection.isCompleted);
 
   describe('mapToRecordCorrectionTableRowViewModel', () => {
     it('should correctly map a fee record correction object to the correct format', () => {
-      const result = mapToRecordCorrectionTableRowViewModel(feeRecordCorrection, displayStatus);
+      const result = mapToRecordCorrectionTableRowViewModel(feeRecordCorrection);
 
       const expected = {
         correctionId: feeRecordCorrection.correctionId,
@@ -16,7 +17,7 @@ describe('record-correction-helpers', () => {
         exporter: feeRecordCorrection.exporter,
         reasons: feeRecordCorrection.formattedReasons,
         dateSent: feeRecordCorrection.formattedDateSent,
-        status: feeRecordCorrection.status,
+        status,
         displayStatus,
         formattedCorrectRecords: feeRecordCorrection.formattedCorrectRecords,
         formattedOldRecords: feeRecordCorrection.formattedOldRecords,
@@ -44,7 +45,7 @@ describe('record-correction-helpers', () => {
         const result = mapToRecordCorrectionViewModel([recordCorrectionDetails]);
 
         const expected = {
-          recordCorrectionRows: [mapToRecordCorrectionTableRowViewModel(feeRecordCorrection, displayStatus)],
+          recordCorrectionRows: [mapToRecordCorrectionTableRowViewModel(feeRecordCorrection)],
         };
 
         expect(result).toEqual(expected);
@@ -59,8 +60,8 @@ describe('record-correction-helpers', () => {
 
         const expected = {
           recordCorrectionRows: [
-            mapToRecordCorrectionTableRowViewModel(multipleRecordCorrectionDetails[0], displayStatus),
-            mapToRecordCorrectionTableRowViewModel(multipleRecordCorrectionDetails[1], displayStatus),
+            mapToRecordCorrectionTableRowViewModel(multipleRecordCorrectionDetails[0]),
+            mapToRecordCorrectionTableRowViewModel(multipleRecordCorrectionDetails[1]),
           ],
         };
 

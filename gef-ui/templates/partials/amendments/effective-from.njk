@@ -1,25 +1,26 @@
 {% extends "index.njk" %}
-{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
-{% import '../../_macros/change-something-else-details.njk' as changeSomethingElseDetails %}
-
 {% block pageTitle -%}
-  What do you need to change?
+  Date amendment effective from
 {%- endblock %}
 
 {% set headingHtml %}
-
   <h1 class="govuk-heading-xl govuk-!-margin-bottom-6 govuk-!-margin-top-1" data-cy="page-heading">
     <span class="govuk-caption-l" data-cy="heading-caption">
       {{ exporterName }}, {{ facilityType }} facility
     </span>
-    What do you need to change?
+    Date amendment effective from
   </h1>
+{% endset %}
+
+{% set hintHtml %}
+<div class="govuk-body">Amendments can be effective within the next 30 days. For later amendments, return later or use the ‘schedule 8’ paper form.</div>
+<div class="govuk-hint">For example, 31 8 2026</div>
 {% endset %}
 
 {% block content %}
@@ -35,64 +36,62 @@
   {% endif %}
 
   {{ govukBackLink({
-    text: "Back",
-    href: previousPage,
-    attributes: {
-      'data-cy': 'back-link'
-    }
+      text: "Back",
+      href: previousPage,
+      attributes: {
+        'data-cy': 'back-link'
+      }
   }) }}
 
   <div class="govuk-grid-row govuk-!-margin-bottom-3">
     <div class="govuk-grid-column-three-quarters">
       <form method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="previousPage" value="{{ previousPage }}">
 
-        {{ govukCheckboxes({
-          name: "amendmentOptions",
+        {{ govukDateInput({
+          id: "effectiveFrom",
+          namePrefix: "effective-from",
           fieldset: {
             legend: {
               html: headingHtml
             }
           },
-          id: "amendmentOptions",
-          attributes: {
-            "data-cy": "change-checkbox-selection"
-          },
           hint: {
-            text: "This change will only affect this facility"
+            html: hintHtml
           },
-          errorMessage: errors and errors.fieldErrors.amendmentOptions and {
-            text: errors.fieldErrors.amendmentOptions.text,
+          errorMessage: errors and errors.fieldErrors.effectiveFrom and {
+            text: errors.fieldErrors.effectiveFrom.text,
             attributes: {
-              "data-cy": "amendment-options-inline-error"
+              'data-cy': 'effective-from-inline-error'
             }
           },
           items: [
             {
-              value: "changeCoverEndDate",
-              text: "Cover end date",
-              checked: changeCoverEndDate,
+              classes: (errors.fieldErrors['effectiveFrom-day'] and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
+              name: "day",
+              value: effectiveFrom.day,
               attributes: {
-                "data-cy": "cover-end-date-checkbox"
+                'data-cy': 'effective-from-day'
               }
             },
             {
-              value: "changeFacilityValue",
-              text: "Facility value",
-              checked: changeFacilityValue,
+              classes: (errors.fieldErrors['effectiveFrom-month'] and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
+              name: "month",
+              value: effectiveFrom.month,
               attributes: {
-                "data-cy": "facility-value-checkbox"
+                'data-cy': 'effective-from-month'
+              }
+            },
+            {
+              classes: (errors.fieldErrors['effectiveFrom-year'] and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
+              name: "year",
+              value: effectiveFrom.year,
+              attributes: {
+                'data-cy': 'effective-from-year'
               }
             }
           ]
-        }) }}
-
-        {{ govukWarningText({
-          text: "Check your records for the most up-to-date values",
-          iconFallbackText: "Warning",
-          attributes: {
-            "data-cy": "warning"
-          }
         }) }}
 
         <div class="govuk-button-group">
@@ -105,9 +104,6 @@
 
           <a href="{{ cancelUrl }}"  data-cy="cancel-link" class="govuk-link">Cancel</a>
         </div>
-
-        {{ changeSomethingElseDetails.render(amendmentFormEmail) }}
-
       </form>
     </div>
   </div>
