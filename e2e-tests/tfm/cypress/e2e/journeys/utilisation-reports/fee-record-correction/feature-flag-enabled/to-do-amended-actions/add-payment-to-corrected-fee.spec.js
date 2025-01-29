@@ -53,8 +53,8 @@ context('When fee record correction feature flag is enabled', () => {
     const correctionTwo = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(correctedFeeRecordOne, true)
       .withId(222)
       .withReasons([RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT])
-      .withCorrectedValues({ feesPaidToUkefForThePeriod: null, feesPaidToUkefForThePeriodCurrency: CURRENCY.GBP, facilityId: null, facilityUtilisation: null })
-      .withPreviousValues({ feesPaidToUkefForThePeriod: null, feesPaidToUkefForThePeriodCurrency: CURRENCY.EUR, facilityId: null, facilityUtilisation: null })
+      .withCorrectedValues({ feesPaidToUkefForThePeriodCurrency: CURRENCY.GBP })
+      .withPreviousValues({ feesPaidToUkefForThePeriodCurrency: CURRENCY.EUR })
       .build();
 
     const feeRecordWithoutCorrection = FeeRecordEntityMockBuilder.forReport(report)

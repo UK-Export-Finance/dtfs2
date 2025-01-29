@@ -34,8 +34,8 @@ context('When fee record correction feature flag is enabled', () => {
     const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(correctedFeeRecord, true)
       .withId(111)
       .withReasons([RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT])
-      .withCorrectedValues({ feesPaidToUkefForThePeriod: 200, feesPaidToUkefForThePeriodCurrency: null, facilityId: null, facilityUtilisation: null })
-      .withPreviousValues({ feesPaidToUkefForThePeriod: 100, feesPaidToUkefForThePeriodCurrency: null, facilityId: null, facilityUtilisation: null })
+      .withCorrectedValues({ feesPaidToUkefForThePeriod: 200 })
+      .withPreviousValues({ feesPaidToUkefForThePeriod: 100 })
       .build();
 
     const feeRecordWithoutCorrection = FeeRecordEntityMockBuilder.forReport(report)
