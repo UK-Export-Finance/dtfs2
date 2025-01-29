@@ -50,7 +50,8 @@ context('When fee record correction feature flag is enabled', () => {
       .withPayments([])
       .build();
 
-    const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
+    const { utilisationReportAddPaymentPage, utilisationReportPage } = pages;
+    const { premiumPaymentsContent } = utilisationReportPage.tabs;
     const { premiumPaymentsTable } = premiumPaymentsContent;
 
     before(() => {
@@ -95,9 +96,9 @@ context('When fee record correction feature flag is enabled', () => {
 
       premiumPaymentsTable.checkbox([correctedFeeRecord.id], correctedFeeRecord.paymentCurrency, correctedFeeRecord.status).click();
 
-      cy.get('[type="submit"]').contains('Add a payment').click();
+      premiumPaymentsContent.addAPaymentButton().click();
 
-      pages.utilisationReportAddPaymentPage.addFeesToAnExistingPaymentButton().click();
+      utilisationReportAddPaymentPage.addFeesToAnExistingPaymentButton().click();
 
       cy.clickContinueButton();
 

@@ -1,6 +1,7 @@
 import pages from '../../../../e2e/pages';
 
-const { premiumPaymentsTable } = pages.utilisationReportPage.tabs.premiumPaymentsContent;
+const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
+const { premiumPaymentsTable } = premiumPaymentsContent;
 
 /**
  * adds a payment to the provided fee records through the ui
@@ -16,7 +17,7 @@ const addPaymentToFeeRecords = ({ feeRecords, reportId, paymentCurrency, amountR
     premiumPaymentsTable.checkbox([feeRecord.id], feeRecord.paymentCurrency, feeRecord.status).click();
   });
 
-  cy.get('[type="submit"]').contains('Add a payment').click();
+  premiumPaymentsContent.addAPaymentButton().click();
 
   cy.getInputByLabelText(paymentCurrency).click();
 

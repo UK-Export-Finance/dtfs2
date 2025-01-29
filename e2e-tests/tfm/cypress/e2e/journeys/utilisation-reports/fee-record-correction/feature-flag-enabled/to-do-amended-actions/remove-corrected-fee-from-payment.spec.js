@@ -50,7 +50,8 @@ context('When fee record correction feature flag is enabled', () => {
       .withPayments([])
       .build();
 
-    const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
+    const { utilisationReportPage, utilisationReportEditPaymentPage } = pages;
+    const { premiumPaymentsContent } = utilisationReportPage.tabs;
     const { premiumPaymentsTable } = premiumPaymentsContent;
 
     before(() => {
@@ -93,17 +94,17 @@ context('When fee record correction feature flag is enabled', () => {
 
       cy.visit(`utilisation-reports/${REPORT_ID}`);
 
-      pages.utilisationReportPage.tabs.paymentDetails().click();
+      utilisationReportPage.tabs.paymentDetails().click();
 
-      pages.utilisationReportPage.tabs.paymentDetailsContent.paymentLinks().first().click();
+      utilisationReportPage.tabs.paymentDetailsContent.paymentLinks().first().click();
 
-      pages.utilisationReportEditPaymentPage.feeRecordCheckbox(correctedFeeRecord.id).check();
+      utilisationReportEditPaymentPage.feeRecordCheckbox(correctedFeeRecord.id).check();
 
-      pages.utilisationReportEditPaymentPage.removeSelectedFeesButton().click();
+      utilisationReportEditPaymentPage.removeSelectedFeesButton().click();
 
       cy.clickBackLink();
 
-      pages.utilisationReportPage.tabs.premiumPayments().click();
+      utilisationReportPage.tabs.premiumPayments().click();
 
       cy.assertText(premiumPaymentsTable.status(correctedFeeRecord.id), 'To do (amended)');
       cy.assertText(premiumPaymentsTable.status(feeRecordWithoutCorrection.id), 'Match');

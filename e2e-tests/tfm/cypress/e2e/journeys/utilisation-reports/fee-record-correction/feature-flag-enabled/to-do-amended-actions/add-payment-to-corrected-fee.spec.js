@@ -105,7 +105,7 @@ context('When fee record correction feature flag is enabled', () => {
     it(`should be able to add payment to fee record at ${FEE_RECORD_STATUS.TO_DO_AMENDED}`, () => {
       premiumPaymentsTable.checkbox([correctedFeeRecordOne.id], correctedFeeRecordOne.paymentCurrency, correctedFeeRecordOne.status).click();
 
-      cy.get('[type="submit"]').contains('Add a payment').click();
+      premiumPaymentsContent.addAPaymentButton().click();
 
       cy.getInputByLabelText(correctedFeeRecordOne.paymentCurrency).click();
 
@@ -124,7 +124,7 @@ context('When fee record correction feature flag is enabled', () => {
       premiumPaymentsTable.checkbox([correctedFeeRecordTwo.id], correctedFeeRecordTwo.paymentCurrency, correctedFeeRecordTwo.status).click();
       premiumPaymentsTable.checkbox([feeRecordWithoutCorrection.id], feeRecordWithoutCorrection.paymentCurrency, feeRecordWithoutCorrection.status).click();
 
-      cy.get('[type="submit"]').contains('Add a payment').click();
+      premiumPaymentsContent.addAPaymentButton().click();
 
       cy.getInputByLabelText(correctedFeeRecordTwo.paymentCurrency).click();
 

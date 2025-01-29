@@ -39,7 +39,8 @@ context('When fee record correction feature flag is enabled', () => {
       .withBankCommentary('Sorry the issue is actually with the reported currency, it should be JPY not GBP.')
       .build();
 
-    const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
+    const { feeRecordCorrectionRequestSentPage, utilisationReportPage } = pages;
+    const { premiumPaymentsContent } = utilisationReportPage.tabs;
     const { premiumPaymentsTable } = premiumPaymentsContent;
 
     before(() => {
@@ -81,7 +82,7 @@ context('When fee record correction feature flag is enabled', () => {
         reasons: [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT],
       });
 
-      pages.feeRecordCorrectionRequestSentPage.backToPremiumPaymentsButton().click();
+      feeRecordCorrectionRequestSentPage.backToPremiumPaymentsButton().click();
 
       cy.assertText(premiumPaymentsTable.status(correctedFeeRecord.id), 'Record correction sent');
     });

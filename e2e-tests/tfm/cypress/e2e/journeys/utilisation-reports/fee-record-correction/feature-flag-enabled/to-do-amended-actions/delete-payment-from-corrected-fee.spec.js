@@ -38,7 +38,8 @@ context('When fee record correction feature flag is enabled', () => {
       .withPreviousValues({ feesPaidToUkefForThePeriod: 100, feesPaidToUkefForThePeriodCurrency: null, facilityId: null, facilityUtilisation: null })
       .build();
 
-    const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
+    const { utilisationReportPage, utilisationReportConfirmDeletePaymentPage, utilisationReportEditPaymentPage } = pages;
+    const { premiumPaymentsContent } = utilisationReportPage.tabs;
     const { premiumPaymentsTable } = premiumPaymentsContent;
 
     before(() => {
@@ -81,16 +82,16 @@ context('When fee record correction feature flag is enabled', () => {
 
       cy.visit(`utilisation-reports/${REPORT_ID}`);
 
-      pages.utilisationReportPage.tabs.paymentDetails().click();
+      utilisationReportPage.tabs.paymentDetails().click();
 
-      pages.utilisationReportPage.tabs.paymentDetailsContent.paymentLinks().first().click();
+      utilisationReportPage.tabs.paymentDetailsContent.paymentLinks().first().click();
 
-      pages.utilisationReportEditPaymentPage.deletePaymentButton().click();
+      utilisationReportEditPaymentPage.deletePaymentButton().click();
 
-      pages.utilisationReportConfirmDeletePaymentPage.yesRadio().click();
-      pages.utilisationReportConfirmDeletePaymentPage.continueButton().click();
+      utilisationReportConfirmDeletePaymentPage.yesRadio().click();
+      utilisationReportConfirmDeletePaymentPage.continueButton().click();
 
-      pages.utilisationReportPage.tabs.premiumPayments().click();
+      utilisationReportPage.tabs.premiumPayments().click();
 
       cy.assertText(premiumPaymentsTable.status(correctedFeeRecord.id), 'To do (amended)');
     });
