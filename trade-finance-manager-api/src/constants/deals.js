@@ -79,6 +79,11 @@ const UKEF_ID = {
   TEST: '100000',
 };
 
+const COMPANY_REGISTRATION_NUMBER = {
+  MATCH: 'MATCH',
+  NO_MATCH: 'NO_MATCH',
+};
+
 module.exports = {
   DEAL_TYPE,
   DEAL_PRODUCT_CODE,
@@ -95,4 +100,5 @@ module.exports = {
   AMENDMENT_BANK_DECISION,
   DEFAULT_COUNTRY,
   UKEF_ID,
+  COMPANY_REGISTRATION_NUMBER,
 };
