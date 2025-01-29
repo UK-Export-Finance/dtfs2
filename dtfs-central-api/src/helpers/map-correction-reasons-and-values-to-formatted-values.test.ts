@@ -1,6 +1,9 @@
 import { RECORD_CORRECTION_REASON, CURRENCY, getFormattedMonetaryValue, RecordCorrectionReason, aRecordCorrectionValues } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
-import { getFormattedCorrectionValueForCorrectionReason, mapCorrectionReasonsAndValuesToFormattedValues } from './map-reasons-and-values-to-formatted-values';
+import {
+  getFormattedCorrectionValueForCorrectionReason,
+  mapCorrectionReasonsAndValuesToFormattedValues,
+} from './map-correction-reasons-and-values-to-formatted-values';
 
 console.error = jest.fn();
 

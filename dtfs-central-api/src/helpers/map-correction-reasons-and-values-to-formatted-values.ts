@@ -1,5 +1,5 @@
 import { getFormattedMonetaryValue, RECORD_CORRECTION_REASON, RecordCorrectionReason, RecordCorrectionValues } from '@ukef/dtfs2-common';
-import { validateRequiredCorrectionField } from '../../../../../../helpers';
+import { validateRequiredCorrectionField } from '.';
 
 /**
  * Gets a formatted string value for a given correction reason from the correction values.
