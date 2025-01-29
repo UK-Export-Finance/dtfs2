@@ -1,9 +1,6 @@
 import { FeeRecordEntity, FeeRecordCorrectionEntity } from '@ukef/dtfs2-common';
-import {
-  mapCorrectionReasonsToFormattedCorrectValues,
-  mapCorrectionReasonsToFormattedPreviousValues,
-} from '../../../../../helpers/map-correction-reasons-to-formatted-values';
 import { mapCorrectionReasonsToFormattedOldFeeRecordValues } from '../../../../../helpers/map-correction-reasons-to-formatted-old-fee-record-values';
+import { mapCorrectionReasonsAndValuesToFormattedValues } from '../../../../../helpers/map-correction-reasons-and-values-to-formatted-values';
 
 /**
  * generates formattedOldRecords and formattedCorrectRecords from correction and feeRecord
@@ -22,9 +19,9 @@ export const getFormattedOldAndCorrectValues = (
    * will have been stored against the correction.
    */
   if (correction.isCompleted) {
-    const previousRecords = mapCorrectionReasonsToFormattedPreviousValues(correction, correction.reasons);
+    const previousRecords = mapCorrectionReasonsAndValuesToFormattedValues(correction.reasons, correction.previousValues);
 
-    const correctRecords = mapCorrectionReasonsToFormattedCorrectValues(correction, correction.reasons);
+    const correctRecords = mapCorrectionReasonsAndValuesToFormattedValues(correction.reasons, correction.correctedValues);
 
     return {
       formattedOldRecords: previousRecords.join(', '),

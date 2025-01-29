@@ -17,6 +17,7 @@ describe(page, () => {
 
     itDoesNotRenderAUtilisationReportUploadLink();
     itDoesNotRenderAPreviousReportsLink();
+    itDoesNotRenderARecordCorrectionHistoryLink();
     itDoesNotRenderAUsersLink();
   });
 
@@ -30,6 +31,7 @@ describe(page, () => {
 
     itDoesNotRenderAUtilisationReportUploadLink();
     itDoesNotRenderAPreviousReportsLink();
+    itDoesNotRenderARecordCorrectionHistoryLink();
     itDoesNotRenderAUsersLink();
   });
 
@@ -44,6 +46,7 @@ describe(page, () => {
 
     itDoesNotRenderAUtilisationReportUploadLink();
     itDoesNotRenderAPreviousReportsLink();
+    itDoesNotRenderARecordCorrectionHistoryLink();
   });
 
   describe(`viewed by role '${ROLES.READ_ONLY}'`, () => {
@@ -56,6 +59,7 @@ describe(page, () => {
     itDoesNotRenderAReportsLink();
     itDoesNotRenderAUtilisationReportUploadLink();
     itDoesNotRenderAPreviousReportsLink();
+    itDoesNotRenderARecordCorrectionHistoryLink();
     itDoesNotRenderAUsersLink();
   });
 
@@ -66,6 +70,7 @@ describe(page, () => {
 
     itRendersAUtilisationReportUploadLink();
     itRendersAPreviousReportsLink();
+    itRendersARecordCorrectionHistoryLink();
 
     itDoesNotRenderAHomeLink();
     itDoesNotRenderAReportsLink();
@@ -81,6 +86,7 @@ describe(page, () => {
     itDoesNotRenderAReportsLink();
     itDoesNotRenderAUtilisationReportUploadLink();
     itDoesNotRenderAPreviousReportsLink();
+    itDoesNotRenderARecordCorrectionHistoryLink();
     itDoesNotRenderAUsersLink();
   });
 
@@ -129,6 +135,18 @@ describe(page, () => {
   function itDoesNotRenderAPreviousReportsLink() {
     it('does not render a previous reports link', () => {
       wrapper.expectLink('[data-cy="previous_reports"]').notToExist();
+    });
+  }
+
+  function itRendersARecordCorrectionHistoryLink() {
+    it('renders a record correction history link', () => {
+      wrapper.expectLink('[data-cy="record_correction_history"]').toLinkTo('/utilisation-reports/correction-history', 'Record correction history');
+    });
+  }
+
+  function itDoesNotRenderARecordCorrectionHistoryLink() {
+    it('does not render a record correction history link', () => {
+      wrapper.expectLink('[data-cy="record_correction_history"]').notToExist();
     });
   }
 

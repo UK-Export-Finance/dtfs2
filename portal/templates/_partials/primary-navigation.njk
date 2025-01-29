@@ -46,6 +46,14 @@
       "data-cy": "previous_reports"
     }
   } %}
+  {% set recordCorrectionHistoryNavItem = {
+    text: "Record correction history",
+    href: "/utilisation-reports/correction-history",
+    active: primaryNav == "record_correction_history",
+    attributes: {
+      "data-cy": "record_correction_history"
+    }
+  } %}
   {% set usersNavItem = {
     text: "Users",
     href: "/admin/users",
@@ -66,7 +74,7 @@
   {% endif %}
 
   {% if isPaymentReportOfficer %}
-    {% set navItems = (navItems.push(reportGefUtilisationAndFeesNavItem, previousGefReportsNavItem), navItems) %}
+    {% set navItems = (navItems.push(reportGefUtilisationAndFeesNavItem, previousGefReportsNavItem, recordCorrectionHistoryNavItem), navItems) %}
   {% endif %}
 
   {% if isAdmin %}

@@ -4,4 +4,5 @@ export const PRIMARY_NAV_KEY = {
   REPORTS: 'reports',
   USERS: 'users',
   UTILISATION_REPORT_UPLOAD: 'utilisation_report_upload',
+  RECORD_CORRECTION_HISTORY: 'record_correction_history',
 } as const;

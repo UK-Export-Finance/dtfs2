@@ -1,0 +1,87 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% macro render(params) %}
+  {% set completedCorrections = params.completedCorrections %}
+
+  {% set rows = [] %}
+
+  {% for correction in completedCorrections %}
+    {% set correctionRow = [
+      {
+        text: correction.dateSent.formattedDateSent,
+        attributes: {
+          "data-sort-value": correction.dateSent.dataSortValue,
+          "data-cy": "correction-history-row--date-sent"
+        }
+      },
+      {
+        text: correction.exporter,
+        attributes: {
+          "data-cy": "correction-history-row--exporter"
+        }
+      },
+      {
+        text: correction.formattedReasons,
+        attributes: {
+          "data-cy": "correction-history-row--formatted-reasons"
+        }
+      },
+      {
+        text: correction.formattedCorrectedValues,
+        attributes: {
+          "data-cy": "correction-history-row--formatted-corrected-values"
+        }
+      },
+      {
+        text: correction.formattedPreviousValues,
+        attributes: {
+          "data-cy": "correction-history-row--formatted-previous-values"
+        }
+      },
+      {
+        text: correction.formattedBankCommentary,
+        attributes: {
+          "data-cy": "correction-history-row--bank-commentary"
+        }
+      }
+    ] %}
+
+    {% set rows = (rows.push(correctionRow), rows) %}
+  {% endfor %}
+
+  {{ govukTable({
+    firstCellIsHeader: false,
+    head: [
+      {
+        text: "Date sent",
+        attributes: {
+          "aria-sort": "ascending"
+        }
+      },
+      {
+        text: "Exporter",
+        attributes: {
+          "aria-sort": "ascending"
+        }
+      },
+      {
+        text: "Reason(s) for correction"
+      },
+      {
+        text: "Correct record"
+      },
+      {
+        text: "Old record"
+      },
+      {
+        text: "Correction notes"
+      }
+    ],
+    rows: rows,
+    attributes: {
+      "data-module": "moj-sortable-table",
+      "data-cy": "correction-history-table"
+    }
+  }) }}
+
+{% endmacro %}
