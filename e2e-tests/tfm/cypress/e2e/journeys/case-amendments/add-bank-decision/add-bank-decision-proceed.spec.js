@@ -17,7 +17,9 @@ context('Amendments underwriting - add banks decision - proceed', () => {
    * The tenor is calculated using the SQL here:
    * https://github.com/UK-Export-Finance/databases-datateam/blob/163d71b0aef58652db5e6ccf29edce2ce3df30ca/MASTER_DATA/dbo/Functions/fn_DATEDIFF_FULLMONTH.sql
    *
-   * This boils down to the tenor being 25 months except for:
+   * In these tests, the mock start date is two years ago today & the mock end date is a month today.
+   *
+   * So in this case it boils down to the tenor being 25 months except for:
    * - if expiry and commencement dates are the same date of month then you add one
    * - if today is end of month and a month from now is also end of month you add one
    */
