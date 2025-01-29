@@ -13,16 +13,13 @@
 {%- endblock %}
 
 {% set headingHtml %}
-  <header>
+
+  <h1 class="govuk-heading-xl govuk-!-margin-bottom-6 govuk-!-margin-top-1" data-cy="page-heading">
     <span class="govuk-caption-l" data-cy="heading-caption">
       {{ exporterName }}, {{ facilityType }} facility
     </span>
-    <h1 class="govuk-label-wrapper" data-cy="page-heading">
-      <label class="govuk-label govuk-label--xl" for="what-needs-to-change">
-        What do you need to change?
-      </label>
-    </h1>
-  </header>
+    What do you need to change?
+  </h1>
 {% endset %}
 
 {% block content %}
