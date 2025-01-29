@@ -1,8 +1,9 @@
 import { ApiError, AUDIT_USER_TYPES, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
+import { ObjectId } from 'mongodb';
 import { Response } from 'express';
 import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
-import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
+import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 import { DeletePortalFacilityAmendmentPayload } from '../../../routes/middleware/payload-validation/validate-delete-portal-facility-amendment-payload';
 
 type DeletePortalAmendmentRequestParams = { facilityId: string; amendmentId: string };
@@ -20,7 +21,7 @@ export const deletePortalAmendment = async (req: DeletePortalAmendmentRequest, r
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.PORTAL);
 
-    await PortalFacilityAmendmentService.deletePortalFacilityAmendment({ facilityId, amendmentId, auditDetails });
+    await TfmFacilitiesRepo.deletePortalFacilityAmendment({ facilityId: new ObjectId(facilityId), amendmentId: new ObjectId(amendmentId), auditDetails });
 
     return res.sendStatus(HttpStatusCode.NoContent);
   } catch (error) {
@@ -29,7 +30,7 @@ export const deletePortalAmendment = async (req: DeletePortalAmendmentRequest, r
       return res.status(status).send({ status, message, code });
     }
 
-    console.error(`Error deleting amendment on facilityId ${facilityId}: %o`, error);
+    console.error('Error deleting amendment on facilityId %s: %o', facilityId, error);
 
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,

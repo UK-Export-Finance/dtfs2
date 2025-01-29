@@ -7,6 +7,7 @@ import { aPortalUser } from '../../../test-helpers';
 
 const mockGetCollection = jest.fn();
 const mockUpdateOne = jest.fn() as jest.Mock<Promise<UpdateResult>>;
+console.error = jest.fn();
 
 const facilityId = new ObjectId();
 const amendmentId = new ObjectId();
@@ -55,7 +56,11 @@ describe('TfmFacilitiesRepo', () => {
       await TfmFacilitiesRepo.deletePortalFacilityAmendment({ facilityId, amendmentId, auditDetails });
 
       // Assert
-      const expectedFindFilter = { _id: { $eq: new ObjectId(facilityId) }, 'amendments._id': { $eq: new ObjectId(amendmentId) } };
+      const expectedFindFilter = {
+        _id: { $eq: new ObjectId(facilityId) },
+        'amendments.amendmentId': { $eq: new ObjectId(amendmentId) },
+        'amendments.type': { $eq: AMENDMENT_TYPES.PORTAL },
+      };
 
       const expectedUpdateFilter = {
         $pull: {

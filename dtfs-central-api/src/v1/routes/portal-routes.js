@@ -585,7 +585,7 @@ portalRouter.route('/facilities/:id/status').put(updateFacilityStatusController.
  *               $ref: '#/definitions/PortalAmendment'
  *       404:
  *         description: Not found
- *     delete:
+ *   delete:
  *     summary: Delete a Portal GEF facility amendment
  *     tags: [Portal - Amendments]
  *     description: Delete a Portal GEF facility amendment
@@ -604,11 +604,11 @@ portalRouter.route('/facilities/:id/status').put(updateFacilityStatusController.
  *         description: Amendment ID to get
  *     responses:
  *       204:
- *         description: OK
+ *         description: No content
  *       404:
  *         description: Not found
  *       500:
- *         description: Fail
+ *         description: Internal server error
  */
 portalRouter
   .route('/facilities/:facilityId/amendments/:amendmentId')

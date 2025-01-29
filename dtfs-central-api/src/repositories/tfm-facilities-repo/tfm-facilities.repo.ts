@@ -425,7 +425,8 @@ export class TfmFacilitiesRepo {
 
     const findFilter: Filter<TfmFacility> = {
       _id: { $eq: new ObjectId(facilityId) },
-      'amendments._id': { $eq: new ObjectId(amendmentId) },
+      'amendments.amendmentId': { $eq: new ObjectId(amendmentId) },
+      'amendments.type': { $eq: AMENDMENT_TYPES.PORTAL },
     };
 
     const updateFilter: UpdateFilter<TfmFacility> = {
@@ -438,6 +439,7 @@ export class TfmFacilitiesRepo {
     const updateResult = await collection.updateOne(findFilter, updateFilter);
 
     if (!updateResult.modifiedCount) {
+      console.error('Amendment with ID %s not found in facility with ID %s', amendmentId.toString(), facilityId.toString());
       throw new AmendmentNotFoundError(amendmentId.toString(), facilityId.toString());
     }
 

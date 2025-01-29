@@ -113,30 +113,4 @@ export class PortalFacilityAmendmentService {
 
     return updatedAmendment;
   }
-
-  /**
-   * Delete the portal amendment on a facility
-   *
-   * @param params
-   * @param params.facilityId - the facility Id the amendment is for
-   * @param params.amendment - the amendment to delete
-   * @param params.auditDetails - the users audit details
-   */
-  public static async deletePortalFacilityAmendment({
-    facilityId,
-    amendmentId,
-    auditDetails,
-  }: {
-    facilityId: string;
-    amendmentId: string;
-    auditDetails: PortalAuditDetails;
-  }): Promise<void> {
-    const user = await findOneUser(auditDetails.id);
-
-    if (!user || `status` in user) {
-      throw new InvalidAuditDetailsError(`Supplied auditDetails 'id' ${auditDetails.id.toString()} does not correspond to a valid user`);
-    }
-
-    await TfmFacilitiesRepo.deletePortalFacilityAmendment({ facilityId: new ObjectId(facilityId), amendmentId: new ObjectId(amendmentId), auditDetails });
-  }
 }
