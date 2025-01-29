@@ -13,7 +13,7 @@ export const getUkefGefReportingEmailRecipients = () => {
     const emails = EmailsSchema.parse(JSON.parse(asString(process.env.UKEF_GEF_REPORTING_EMAIL_RECIPIENT, 'UKEF_GEF_REPORTING_EMAIL_RECIPIENT')));
     return emails;
   } catch (error) {
-    console.error('Failed to parse UKEF_GEF_REPORTING_EMAIL_RECIPIENT ', error);
+    console.error('Failed to parse UKEF_GEF_REPORTING_EMAIL_RECIPIENT %o', error);
     throw new InvalidEnvironmentVariableError('Failed to parse UKEF_GEF_REPORTING_EMAIL_RECIPIENT');
   }
 };
