@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { UnixTimestamp } from '../date';
+import { UnixTimestamp, UnixTimestampSeconds } from '../date';
 import { PortalAmendmentStatus, TfmAmendmentStatus } from '../amendment-status';
 import { Currency } from '../currency';
 import { Facility } from './facility';
@@ -49,22 +49,13 @@ interface BaseAmendment {
   updatedAt: UnixTimestamp;
   changeCoverEndDate?: boolean;
   coverEndDate?: UnixTimestamp | null;
-  currentCoverEndDate?: UnixTimestamp | null;
   isUsingFacilityEndDate?: boolean;
   facilityEndDate?: Date;
   bankReviewDate?: Date;
   changeFacilityValue?: boolean;
   value?: number | null;
-  currentValue?: number | null;
   currency?: Currency | null;
-  requestDate?: number;
-  ukefExposure?: number | null;
-  coveredPercentage?: number;
-  requireUkefApproval?: boolean;
-  submissionType?: string;
-  submittedAt?: UnixTimestamp;
-  submissionDate?: UnixTimestamp;
-  effectiveDate?: number;
+  effectiveDate?: UnixTimestampSeconds;
   createdBy?: {
     username: string;
     name: string;
@@ -80,6 +71,15 @@ interface BaseAmendment {
  */
 export interface TfmFacilityAmendment extends BaseAmendment {
   type?: typeof AMENDMENT_TYPES.TFM;
+  currentCoverEndDate?: UnixTimestamp | null;
+  currentValue?: number | null;
+  requestDate?: UnixTimestamp;
+  ukefExposure?: number | null;
+  coveredPercentage?: number;
+  requireUkefApproval?: boolean;
+  submissionType?: string;
+  submittedAt?: UnixTimestamp;
+  submissionDate?: UnixTimestamp;
   status: TfmAmendmentStatus;
   version: number;
   submittedByPim?: boolean;
