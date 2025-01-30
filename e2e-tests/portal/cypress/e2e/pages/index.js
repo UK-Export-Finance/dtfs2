@@ -60,4 +60,5 @@ module.exports = {
   correctionSent: require('./utilisation-report-service/record-corrections/correctionSent'),
   problemWithService: require('./problem-with-service'),
   pendingCorrections: require('./utilisation-report-service/record-corrections/pendingCorrections'),
+  correctionHistory: require('./utilisation-report-service/record-corrections/correctionHistory'),
 };
