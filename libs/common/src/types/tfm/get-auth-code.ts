@@ -7,6 +7,8 @@ export type GetAuthCodeUrlParams = {
   successRedirect: string;
 };
 
+// This is used to differentiate between the request body leaving TFM UI to TFM API,
+// and the parameters that get passed around functions internal to the respective services
 export type GetAuthCodeUrlRequest = GetAuthCodeUrlParams;
 
 export type GetAuthCodeUrlResponse = {
@@ -14,6 +16,6 @@ export type GetAuthCodeUrlResponse = {
   authCodeUrlRequest: AuthorizationUrlRequest;
 };
 
-export type GetAuthCodeUrlApiRequest = CustomExpressRequest<{ params: GetAuthCodeUrlParams }>;
+export type GetAuthCodeUrlApiRequest = CustomExpressRequest<{ reqBody: GetAuthCodeUrlParams }>;
 
 export type GetAuthCodeUrlApiResponse = Response<GetAuthCodeUrlResponse | ApiErrorResponseBody>;

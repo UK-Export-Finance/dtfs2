@@ -26,7 +26,7 @@ export class SsoController {
 
   public async getAuthCodeUrl(req: GetAuthCodeUrlApiRequest, res: GetAuthCodeUrlApiResponse) {
     try {
-      const { successRedirect } = req.params;
+      const { successRedirect } = req.body;
       const getAuthCodeUrlResponse = await this.entraIdService.getAuthCodeUrl({ successRedirect });
       res.json(getAuthCodeUrlResponse);
     } catch (error) {

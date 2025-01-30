@@ -4,6 +4,7 @@ import {
   GetAuthCodeUrlApiRequest,
   GetAuthCodeUrlApiResponse,
   GetAuthCodeUrlParams,
+  GetAuthCodeUrlRequest,
   GetAuthCodeUrlResponse,
   withApiErrorTests,
 } from '@ukef/dtfs2-common';
@@ -26,7 +27,7 @@ describe('SsoController', () => {
 
     const getHttpMocks = () =>
       httpMocks.createMocks<GetAuthCodeUrlApiRequest, GetAuthCodeUrlApiResponse>({
-        params: { successRedirect: aSuccessRedirect } as GetAuthCodeUrlParams,
+        body: { successRedirect: aSuccessRedirect } as GetAuthCodeUrlRequest,
       });
 
     beforeEach(() => {
