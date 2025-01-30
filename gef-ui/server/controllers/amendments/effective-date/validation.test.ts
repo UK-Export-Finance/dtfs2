@@ -102,6 +102,19 @@ describe('validateAndParseEffectiveFrom', () => {
     });
   });
 
+  it(`should return effective from date if it is valid`, () => {
+    // Arrange
+    const effectiveFrom = today;
+    const coverStartDate = sub(today, { years: 1 });
+    // Act
+    const result = validateAndParseEffectiveFrom(getFormattedDate(effectiveFrom), coverStartDate);
+
+    // Assert
+    expect(result).toEqual({
+      value: getUnixTime(effectiveFrom),
+    });
+  });
+
   it('should return effective from date if it is the same as the cover start date', () => {
     // Act
     const result = validateAndParseEffectiveFrom(getFormattedDate(today), today);
