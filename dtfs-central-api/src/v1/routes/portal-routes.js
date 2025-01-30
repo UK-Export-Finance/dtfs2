@@ -35,7 +35,7 @@ const getFacilityAmendmentController = require('../controllers/portal/facility/g
 const putFacilityAmendmentController = require('../controllers/portal/facility/put-amendment.controller');
 const patchFacilityAmendmentController = require('../controllers/portal/facility/patch-amendment.controller');
 
-const getFacilityAmendmentsForDealController = require('../controllers/portal/facility/get-amendments-for-deal.controller');
+const getFacilityAmendmentsForDealController = require('../controllers/portal/facility/get-amendments-on-deal.controller');
 
 const durableFunctionsController = require('../controllers/durable-functions/durable-functions.controller');
 const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controller');

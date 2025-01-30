@@ -3,7 +3,7 @@ import { HttpStatusCode } from 'axios';
 import { PORTAL_AMENDMENT_STATUS, TestApiError } from '@ukef/dtfs2-common';
 import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
-import { GetDealAmendmentsRequest, getPortalAmendmentsByDealId } from './get-amendments-for-deal.controller';
+import { GetDealAmendmentsRequest, getPortalAmendmentsByDealId } from './get-amendments-on-deal.controller';
 
 const dealId = 'dealId';
 
