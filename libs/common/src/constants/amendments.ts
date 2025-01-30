@@ -19,6 +19,10 @@ export const PORTAL_AMENDMENT_STATUS = {
    * This is not displayed in the UI
    */
   DRAFT: 'Draft',
+  /**
+   * Amendment has been submitted by the maker to the checker
+   */
+  READY_FOR_CHECKERS_APPROVAL: "Ready for checker's approval",
 } as const;
 
 export const AMENDMENT_QUERIES = {

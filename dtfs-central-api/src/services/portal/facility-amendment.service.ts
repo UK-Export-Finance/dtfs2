@@ -113,4 +113,49 @@ export class PortalFacilityAmendmentService {
 
     return updatedAmendment;
   }
+
+  /**
+   * Updates portal facility amendment status to `Ready for checker's approval`.
+   *
+   * @param params
+   * @param params.amendmentId - The amendment id
+   * @param params.facilityId - The facility id
+   * @param params.dealId - The deal id
+   * @param params.auditDetails - The audit details for the update operation.
+   * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithUkefId)>} A promise that resolves when the update operation is complete.
+   */
+  public static async submitPortalFacilityAmendmentToChecker({
+    amendmentId,
+    facilityId,
+    auditDetails,
+  }: {
+    amendmentId: string;
+    facilityId: string;
+    dealId: string;
+    auditDetails: PortalAuditDetails;
+  }): Promise<FacilityAmendmentWithUkefId> {
+    const amendmentUpdate: Partial<PortalFacilityAmendment> = {
+      status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+    };
+
+    // TODO: check that there is not an existing amendment on the deal.
+
+    await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({
+      amendmentId: new ObjectId(amendmentId),
+      facilityId: new ObjectId(facilityId),
+      update: amendmentUpdate,
+      auditDetails,
+    });
+
+    const facilityMongoId = new ObjectId(facilityId);
+    const amendmentMongoId = new ObjectId(amendmentId);
+
+    const updatedAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityMongoId, amendmentMongoId);
+
+    if (updatedAmendment?.type !== AMENDMENT_TYPES.PORTAL) {
+      throw new Error(`Could not find amendment to return`);
+    }
+
+    return updatedAmendment;
+  }
 }

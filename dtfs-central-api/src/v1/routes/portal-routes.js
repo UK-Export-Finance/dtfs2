@@ -4,6 +4,9 @@ const validation = require('../validation/route-validators/route-validators');
 const { validatePutPortalFacilityAmendmentPayload } = require('./middleware/payload-validation/validate-put-portal-facility-amendment-payload');
 const { validatePatchPortalFacilityAmendmentPayload } = require('./middleware/payload-validation/validate-patch-portal-facility-amendment-payload');
 const { validateDeletePortalFacilityAmendmentPayload } = require('./middleware/payload-validation/validate-delete-portal-facility-amendment-payload');
+const {
+  validatePostSubmitPortalFacilityAmendmentToCheckerPayload,
+} = require('./middleware/payload-validation/validate-post-submit-portal-facility-amendment-to-checker-payload');
 
 const portalRouter = express.Router();
 const createDealController = require('../controllers/portal/deal/create-deal.controller');
@@ -36,6 +39,7 @@ const getFacilityAmendmentController = require('../controllers/portal/facility/g
 const putFacilityAmendmentController = require('../controllers/portal/facility/put-amendment.controller');
 const patchFacilityAmendmentController = require('../controllers/portal/facility/patch-amendment.controller');
 const deleteFacilityAmendmentController = require('../controllers/portal/facility/delete-amendment.controller');
+const submitAmendmentToCheckerController = require('../controllers/portal/facility/post-submit-amendment-to-checker.controller');
 
 const durableFunctionsController = require('../controllers/durable-functions/durable-functions.controller');
 const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controller');
@@ -616,6 +620,60 @@ portalRouter
   .get(getFacilityAmendmentController.getAmendment)
   .patch(validatePatchPortalFacilityAmendmentPayload, patchFacilityAmendmentController.patchAmendment)
   .delete(validateDeletePortalFacilityAmendmentPayload, deleteFacilityAmendmentController.deletePortalAmendment);
+
+/**
+ * @openapi
+ * /facilities/:facilityId/amendments/:amendmentId:/submit-to-checker
+ *   patch:
+ *     summary: Submit a Portal GEF facility amendment to checker
+ *     tags: [Portal - Amendments]
+ *     description: Submit a Portal GEF facility amendment to checker
+ *     parameters:
+ *       - in: path
+ *         name: facilityId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Facility ID amendment should exist on
+ *       - in: path
+ *         name: amendmentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Amendment ID to get
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               dealId:
+ *                type: string
+ *                example: '123456abcdef123456abcdef'
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/PortalAmendment'
+ *       404:
+ *         description: Not found
+ */
+portalRouter
+  .route('/facilities/:facilityId/amendments/:amendmentId/submit-to-checker')
+  .post(
+    validatePortalFacilityAmendmentsEnabled,
+    validation.mongoIdValidation('facilityId'),
+    validation.mongoIdValidation('amendmentId'),
+    validatePostSubmitPortalFacilityAmendmentToCheckerPayload,
+    submitAmendmentToCheckerController.postSubmitAmendmentToChecker,
+  );
 
 /**
  * @openapi
