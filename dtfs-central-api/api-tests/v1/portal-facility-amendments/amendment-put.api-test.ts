@@ -1,9 +1,18 @@
 import { Response } from 'supertest';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { AnyObject, API_ERROR_CODE, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE, MONGO_DB_COLLECTIONS, PortalFacilityAmendment } from '@ukef/dtfs2-common';
+import {
+  AnyObject,
+  API_ERROR_CODE,
+  DEAL_SUBMISSION_TYPE,
+  DEAL_TYPE,
+  FACILITY_TYPE,
+  MONGO_DB_COLLECTIONS,
+  PORTAL_AMENDMENT_STATUS,
+  PortalFacilityAmendment,
+} from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
+import { aPortalFacilityAmendment, aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
 import wipeDB from '../../wipeDB';
 import { testApi } from '../../test-api';
 import { createDeal, submitDealToTfm } from '../../helpers/create-deal';
@@ -13,6 +22,7 @@ import { createPortalUser } from '../../helpers/create-portal-user';
 import { createPortalFacilityAmendment } from '../../helpers/create-portal-facility-amendment';
 import { amendmentsEligibilityCriteria } from '../../../test-helpers/test-data/eligibility-criteria-amendments';
 import { mongoDbClient as db } from '../../../src/drivers/db-client';
+import { aTfmFacility, aTfmFacilityAmendment } from '../../../test-helpers';
 
 const originalEnv = { ...process.env };
 
@@ -38,6 +48,11 @@ const otherEligibilityCriteria = amendmentsEligibilityCriteria(2, [FACILITY_TYPE
 
 const eligibilityCriteriaList = [draftCashEligibilityCriteria, legacyCashEligibilityCriteria, latestCashEligibilityCriteria, otherEligibilityCriteria];
 
+const aReadyForApprovalPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.READY_FOR_APPROVAL });
+const aDraftPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.DRAFT });
+const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED });
+const aTfmAmendment = aTfmFacilityAmendment();
+
 describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
   let dealId: string;
   let facilityId: string;
@@ -52,6 +67,8 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
   });
 
   beforeEach(async () => {
+    await wipeDB.wipe([MONGO_DB_COLLECTIONS.FACILITIES, MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
+
     const createDealResponse: { body: { _id: string } } = await createDeal({ deal: newDeal, user: aPortalUser() });
     dealId = createDealResponse.body._id;
 
@@ -127,6 +144,41 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
         message: ["amendment: Unrecognized key(s) in object: 'extraField' (unrecognized_keys)"],
         code: API_ERROR_CODE.INVALID_PAYLOAD,
       });
+    });
+
+    it(`should return ${HttpStatusCode.Conflict} when there is an existing amendment under way on the deal`, async () => {
+      // Arrange
+      const facilityOnSameDealWithUnderwayAmendment = aTfmFacility({ amendments: [aReadyForApprovalPortalAmendment], dealId });
+      await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES).then((collection) => collection.insertOne(facilityOnSameDealWithUnderwayAmendment));
+
+      // Act
+      const { body, status } = (await testApi
+        .put({ dealId, amendment: aPortalFacilityAmendmentUserValues(), auditDetails: generatePortalAuditDetails(portalUserId) })
+        .to(generateUrl(facilityId))) as FacilityAmendmentResponse;
+
+      // Assert
+      expect(status).toEqual(HttpStatusCode.Conflict);
+      expect(body).toEqual({
+        status: HttpStatusCode.Conflict,
+        message: `There is already a portal facility amendment under way on deal ${dealId}`,
+      });
+    });
+
+    it(`should not throw an error when there is an existing ${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}, ${PORTAL_AMENDMENT_STATUS.DRAFT} or TFM amendment on the deal`, async () => {
+      // Arrange
+      const facilityOnSameDealWithNoUnderwayAmendment = aTfmFacility({
+        amendments: [aDraftPortalAmendment, anAcknowledgedPortalAmendment, aTfmAmendment],
+        dealId,
+      });
+      await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES).then((collection) => collection.insertOne(facilityOnSameDealWithNoUnderwayAmendment));
+
+      // Act
+      const { status } = (await testApi
+        .put({ dealId, amendment: aPortalFacilityAmendmentUserValues(), auditDetails: generatePortalAuditDetails(portalUserId) })
+        .to(generateUrl(facilityId))) as FacilityAmendmentResponse;
+
+      // Assert
+      expect(status).toEqual(HttpStatusCode.Ok);
     });
 
     it('should return the new amendment', async () => {
