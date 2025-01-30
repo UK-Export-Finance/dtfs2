@@ -8,10 +8,10 @@ const {
 } = require('@ukef/dtfs2-common');
 const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../../e2e-fixtures');
 const relativeURL = require('../../../../relativeURL');
-const { correctionHistory } = require('../../../../pages');
+const { correctionLog } = require('../../../../pages');
 const { mainHeading } = require('../../../../partials');
 
-context('Correction history - Fee record correction feature flag enabled', () => {
+context('Correction log - Fee record correction feature flag enabled', () => {
   before(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
   });
@@ -48,27 +48,27 @@ context('Correction history - Fee record correction feature flag enabled', () =>
 
     beforeEach(() => {
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
-      cy.visit(relativeURL(`/utilisation-reports/correction-history`));
+      cy.visit(relativeURL(`/utilisation-reports/correction-log`));
     });
 
     it('should display page heading', () => {
       mainHeading().should('exist');
-      cy.assertText(mainHeading(), 'Record correction history');
+      cy.assertText(mainHeading(), 'Record correction log');
     });
 
-    it('should not display correction history table', () => {
-      correctionHistory.table().should('not.exist');
+    it('should not display correction log table', () => {
+      correctionLog.table().should('not.exist');
     });
 
     it('should display an info message explaining there are no completed record correction requests to the user', () => {
-      correctionHistory.noCorrectionsTextLine1().should('exist');
-      cy.assertText(correctionHistory.noCorrectionsTextLine1(), 'There are no previous record correction requests.');
+      correctionLog.noCorrectionsTextLine1().should('exist');
+      cy.assertText(correctionLog.noCorrectionsTextLine1(), 'There are no previous record correction requests.');
 
-      correctionHistory.noCorrectionsTextLine2().should('exist');
-      cy.assertText(correctionHistory.noCorrectionsTextLine2(), 'Records will be automatically added to this page once they have been sent back to UKEF.');
+      correctionLog.noCorrectionsTextLine2().should('exist');
+      cy.assertText(correctionLog.noCorrectionsTextLine2(), 'Records will be automatically added to this page once they have been sent back to UKEF.');
 
-      correctionHistory.correctionsTextLine1().should('not.exist');
-      correctionHistory.correctionsTextLine2().should('not.exist');
+      correctionLog.correctionsTextLine1().should('not.exist');
+      correctionLog.correctionsTextLine2().should('not.exist');
     });
   });
 
@@ -161,62 +161,64 @@ context('Correction history - Fee record correction feature flag enabled', () =>
 
     beforeEach(() => {
       cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
-      cy.visit(relativeURL(`/utilisation-reports/correction-history`));
+      cy.visit(relativeURL(`/utilisation-reports/correction-log`));
     });
 
     it('should display page heading', () => {
       mainHeading().should('exist');
-      cy.assertText(mainHeading(), 'Record correction history');
+      cy.assertText(mainHeading(), 'Record correction log');
     });
 
-    it('should display completed corrections', () => {
+    it('should display expected number of completed correction rows', () => {
       // Number of rows is number of completed corrections + 1 for the header
-      correctionHistory.rows().should('have.length', 4);
+      correctionLog.rows().should('have.length', 4);
+    });
 
-      cy.assertText(correctionHistory.row(1).dateSent(), '07 Apr 2024');
-      cy.assertText(correctionHistory.row(1).exporter(), 'Exporter A');
-      cy.assertText(correctionHistory.row(1).reasons(), 'Facility ID is incorrect, Other');
-      cy.assertText(correctionHistory.row(1).correctRecord(), '22222222, -');
-      cy.assertText(correctionHistory.row(1).oldRecord(), '11111111, -');
-      cy.assertText(correctionHistory.row(1).correctionNotes(), 'Some bank commentary');
+    it('should display completed correction details as row', () => {
+      cy.assertText(correctionLog.row(1).dateSent(), '07 Apr 2024');
+      cy.assertText(correctionLog.row(1).exporter(), 'Exporter A');
+      cy.assertText(correctionLog.row(1).reasons(), 'Facility ID is incorrect, Other');
+      cy.assertText(correctionLog.row(1).correctRecord(), '22222222, -');
+      cy.assertText(correctionLog.row(1).oldRecord(), '11111111, -');
+      cy.assertText(correctionLog.row(1).correctionNotes(), 'Some bank commentary');
     });
 
     it('should display info message to the user', () => {
-      correctionHistory.correctionsTextLine1().should('exist');
-      cy.assertText(correctionHistory.correctionsTextLine1(), 'Previous record correction requests are shown below.');
+      correctionLog.correctionsTextLine1().should('exist');
+      cy.assertText(correctionLog.correctionsTextLine1(), 'Previous record correction requests are shown below.');
 
-      correctionHistory.correctionsTextLine2().should('exist');
-      cy.assertText(correctionHistory.correctionsTextLine2(), 'Records are automatically added to this page once they have been sent back to UKEF.');
+      correctionLog.correctionsTextLine2().should('exist');
+      cy.assertText(correctionLog.correctionsTextLine2(), 'Records are automatically added to this page once they have been sent back to UKEF.');
 
-      correctionHistory.noCorrectionsTextLine1().should('not.exist');
-      correctionHistory.noCorrectionsTextLine2().should('not.exist');
+      correctionLog.noCorrectionsTextLine1().should('not.exist');
+      correctionLog.noCorrectionsTextLine2().should('not.exist');
     });
 
     context('When "date sent" column heading is clicked', () => {
       beforeEach(() => {
-        correctionHistory.tableHeaders.dateSent().click();
+        correctionLog.tableHeaders.dateSent().click();
       });
 
       it('should sort the rows by "date sent" in ascending order', () => {
-        cy.assertText(correctionHistory.row(1).dateSent(), '14 Mar 2024');
+        cy.assertText(correctionLog.row(1).dateSent(), '14 Mar 2024');
 
-        cy.assertText(correctionHistory.row(2).dateSent(), '14 Mar 2024');
+        cy.assertText(correctionLog.row(2).dateSent(), '14 Mar 2024');
 
-        cy.assertText(correctionHistory.row(3).dateSent(), '07 Apr 2024');
+        cy.assertText(correctionLog.row(3).dateSent(), '07 Apr 2024');
       });
     });
 
     context('When "exporter" column heading is clicked', () => {
       beforeEach(() => {
-        correctionHistory.tableHeaders.exporter().click();
+        correctionLog.tableHeaders.exporter().click();
       });
 
       it('should sort the rows by "exporter" in descending order', () => {
-        cy.assertText(correctionHistory.row(1).exporter(), 'Exporter C');
+        cy.assertText(correctionLog.row(1).exporter(), 'Exporter C');
 
-        cy.assertText(correctionHistory.row(2).exporter(), 'Exporter B');
+        cy.assertText(correctionLog.row(2).exporter(), 'Exporter B');
 
-        cy.assertText(correctionHistory.row(3).exporter(), 'Exporter A');
+        cy.assertText(correctionLog.row(3).exporter(), 'Exporter A');
       });
     });
   });
