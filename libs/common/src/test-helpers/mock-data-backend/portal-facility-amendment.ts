@@ -8,16 +8,12 @@ import { getEpochMs } from '../../helpers';
 export const aPortalFacilityAmendmentUserValues = (): PortalFacilityAmendmentUserValues => ({
   changeCoverEndDate: true,
   coverEndDate: getEpochMs(),
-  currentCoverEndDate: getEpochMs(),
   isUsingFacilityEndDate: true,
   facilityEndDate: new Date(),
   bankReviewDate: new Date(),
   changeFacilityValue: true,
   value: 1800,
-  currentValue: 1500,
   currency: CURRENCY.GBP,
-  ukefExposure: 10,
-  coveredPercentage: 23,
 });
 
 export const aPortalFacilityAmendment = (): PortalFacilityAmendment => ({
