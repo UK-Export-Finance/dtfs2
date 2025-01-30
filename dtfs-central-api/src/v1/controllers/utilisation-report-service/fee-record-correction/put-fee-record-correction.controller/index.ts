@@ -6,10 +6,10 @@ import { NotFoundError } from '../../../../../errors';
 import { FeeRecordCorrectionRepo } from '../../../../../repositories/fee-record-correction-repo';
 import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
 import { PutFeeRecordCorrectionPayload } from '../../../../routes/middleware/payload-validation';
-import { getBankById } from '../../../../../repositories/banks-repo';
 import { executeWithSqlTransaction } from '../../../../../helpers';
 import { FEE_RECORD_EVENT_TYPE } from '../../../../../services/state-machines/fee-record/event/fee-record.event-type';
 import { FeeRecordStateMachine } from '../../../../../services/state-machines/fee-record/fee-record.state-machine';
+import { sendFeeRecordCorrectionReceivedEmails } from './helpers';
 
 export type PutFeeRecordCorrectionRequest = CustomExpressRequest<{
   params: {
@@ -43,7 +43,7 @@ export const putFeeRecordCorrection = async (req: PutFeeRecordCorrectionRequest,
     const correctionId = Number(correctionIdString);
     const userId = user._id;
 
-    const { paymentOfficerEmails, reportPeriod } = await executeWithSqlTransaction<{ paymentOfficerEmails: string[]; reportPeriod: ReportPeriod }>(
+    const { sentToEmails, reportPeriod } = await executeWithSqlTransaction<{ sentToEmails: string[]; reportPeriod: ReportPeriod }>(
       async (transactionEntityManager) => {
         const correctionEntity = await FeeRecordCorrectionRepo.withTransaction(transactionEntityManager).findOneByIdAndBankIdWithFeeRecordAndReport(
           correctionId,
@@ -63,12 +63,6 @@ export const putFeeRecordCorrection = async (req: PutFeeRecordCorrectionRequest,
           throw new NotFoundError(`Failed to find transient form data with user id '${userId}' for correction id '${correctionId}'`);
         }
 
-        const bank = await getBankById(bankId);
-
-        if (!bank) {
-          throw new NotFoundError(`Failed to find bank with id '${bankId}'`);
-        }
-
         const feeRecordStateMachine = FeeRecordStateMachine.forFeeRecord(correctionEntity.feeRecord);
 
         await feeRecordStateMachine.handleEvent({
@@ -86,12 +80,15 @@ export const putFeeRecordCorrection = async (req: PutFeeRecordCorrectionRequest,
 
         await FeeRecordCorrectionTransientFormDataRepo.withTransaction(transactionEntityManager).deleteByUserIdAndCorrectionId(userId, correctionId);
 
-        // TODO: FN-3675 - second PR send confirmation emails
-        return { reportPeriod: correctionEntity.feeRecord.report.reportPeriod, paymentOfficerEmails: bank.paymentOfficerTeam.emails };
+        const { exporter } = correctionEntity.feeRecord;
+
+        const { emails } = await sendFeeRecordCorrectionReceivedEmails(exporter, bankId);
+
+        return { reportPeriod: correctionEntity.feeRecord.report.reportPeriod, sentToEmails: emails };
       },
     );
 
-    return res.status(HttpStatusCode.Ok).send({ sentToEmails: paymentOfficerEmails, reportPeriod });
+    return res.status(HttpStatusCode.Ok).send({ sentToEmails, reportPeriod });
   } catch (error) {
     const errorMessage = 'Failed to put fee record correction';
     console.error('%s %o', errorMessage, error);
