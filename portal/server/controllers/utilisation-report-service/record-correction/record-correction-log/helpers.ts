@@ -1,6 +1,5 @@
-import { getKeyToDateSortValueMap, IsoDateTimeStamp } from '@ukef/dtfs2-common';
+import { DATE_FORMATS, getKeyToDateSortValueMap, IsoDateTimeStamp } from '@ukef/dtfs2-common';
 import { format, parseISO } from 'date-fns';
-import { SHORT_FORM_DATE } from '../../../../constants/date';
 import { CompletedCorrectionViewModel } from '../../../../types/view-models/record-correction/record-correction-log';
 import { GetCompletedFeeRecordCorrectionsResponseBody } from '../../../../api-response-types';
 
@@ -11,7 +10,7 @@ import { GetCompletedFeeRecordCorrectionsResponseBody } from '../../../../api-re
  * @example
  * getFormattedDateSent('2024-01-01T12:30:00.000'); // '01 Jan 2024'
  */
-export const getFormattedDateSent = (dateSent: IsoDateTimeStamp): string => format(parseISO(dateSent), SHORT_FORM_DATE);
+export const getFormattedDateSent = (dateSent: IsoDateTimeStamp): string => format(parseISO(dateSent), DATE_FORMATS.DD_MMM_YYYY);
 
 /**
  * Maps completed corrections to a view model.
