@@ -113,7 +113,7 @@ context('Amendments - Date amendment effective from - page tests', () => {
 
   effectiveFromErrorTestCases.forEach(({ description, dateFieldInput, expectedErrorMessage }) => {
     it(`should render an error on the bank review date page if ${description}`, () => {
-      cy.completeDateFormFields({ idPrefix: 'bank-review-date', ...dateFieldInput });
+      cy.completeDateFormFields({ idPrefix: 'effective-from', ...dateFieldInput });
       cy.clickContinueButton();
 
       effectiveFrom.errorSummary().should('be.visible');
