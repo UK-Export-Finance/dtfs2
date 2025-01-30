@@ -94,7 +94,7 @@ describe('FeeRecordStateMachine', () => {
           additionalInfo: 'some additional information',
           requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
           bankTeamName: 'Payment Officer Team',
-          bankTeamEmails: 'test@ukexportfinance.gov.uk',
+          bankTeamEmails: ['test@ukexportfinance.gov.uk'],
         },
       });
 

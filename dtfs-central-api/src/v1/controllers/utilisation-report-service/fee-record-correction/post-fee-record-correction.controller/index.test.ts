@@ -160,8 +160,9 @@ describe('post-fee-record-correction.controller', () => {
           reasons,
           mockReport.reportPeriod,
           mockFeeRecord.exporter,
-          mockReport.bankId,
           user.email,
+          mockTeamName,
+          mockEmails,
         );
       });
 
@@ -183,7 +184,7 @@ describe('post-fee-record-correction.controller', () => {
             userId,
           },
           bankTeamName: mockTeamName,
-          bankTeamEmails: mockEmails.join(', '),
+          bankTeamEmails: mockEmails,
         };
 
         // Act

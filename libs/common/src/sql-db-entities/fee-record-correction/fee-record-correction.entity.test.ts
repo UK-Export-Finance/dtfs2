@@ -22,7 +22,7 @@ describe('FeeRecordEntity', () => {
       };
 
       const bankTeamName = 'Payment Officer Team';
-      const bankTeamEmails = 'test@ukexportfinance.gov.uk';
+      const bankTeamEmails = ['test@ukexportfinance.gov.uk', 'test2@ukexportfinance.gov.uk'];
 
       // Act
       const correctionEntity = FeeRecordCorrectionEntity.createRequestedCorrection({
@@ -41,7 +41,7 @@ describe('FeeRecordEntity', () => {
       expect(correctionEntity.requestedByUser).toEqual(requestedByUser);
       expect(correctionEntity.isCompleted).toEqual(false);
       expect(correctionEntity.bankTeamName).toEqual(bankTeamName);
-      expect(correctionEntity.bankTeamEmails).toEqual(bankTeamEmails);
+      expect(correctionEntity.bankTeamEmails).toEqual('test@ukexportfinance.gov.uk, test2@ukexportfinance.gov.uk');
     });
   });
 

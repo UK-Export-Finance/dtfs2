@@ -24,7 +24,7 @@ describe('handleFeeRecordCorrectionRequestedEvent', () => {
   };
 
   const bankTeamName = 'Payment Officer Team';
-  const bankTeamEmails = 'test@ukexportfinance.gov.uk';
+  const bankTeamEmails = ['test@ukexportfinance.gov.uk'];
 
   const aCorrectionRequestedEventPayload = (): FeeRecordCorrectionRequestedEvent['payload'] => ({
     transactionEntityManager: mockEntityManager,

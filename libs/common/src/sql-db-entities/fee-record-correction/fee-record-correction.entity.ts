@@ -109,6 +109,8 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
    * @param param.reasons - The reasons for the correction
    * @param param.additionalInfo - The user provided additional information
    * @param param.requestSource - The request source
+   * @param param.bankTeamName - The bank payment officer team name
+   * @param param.bankTeamEmails - The bank payment officer team email address array
    * @returns The fee record correction
    */
   static createRequestedCorrection({
@@ -128,7 +130,7 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
     recordCorrection.isCompleted = false;
     recordCorrection.updateLastUpdatedBy(requestSource);
     recordCorrection.bankTeamName = bankTeamName;
-    recordCorrection.bankTeamEmails = bankTeamEmails;
+    recordCorrection.bankTeamEmails = bankTeamEmails.join(', ');
     return recordCorrection;
   }
 

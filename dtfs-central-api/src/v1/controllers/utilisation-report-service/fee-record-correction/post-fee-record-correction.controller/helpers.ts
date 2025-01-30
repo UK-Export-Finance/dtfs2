@@ -2,7 +2,6 @@ import { getFormattedReportPeriodWithLongMonth, mapReasonToDisplayValue, RecordC
 import externalApi from '../../../../../external-api/api';
 import EMAIL_TEMPLATE_IDS from '../../../../../constants/email-template-ids';
 import { FeeRecordCorrectionRequestEmails, FeeRecordCorrectionRequestEmailAddresses } from '../../../../../types/utilisation-reports';
-import { getBankPaymentOfficerTeamDetails } from '../../helpers/get-bank-payment-officer-team-details';
 
 /**
  * Formats the reasons for record correction into a bulleted list.
@@ -26,21 +25,20 @@ export const formatReasonsAsBulletedListForEmail = (reasons: RecordCorrectionRea
  * @param report
  * @returns emails and variables for the email
  */
-export const generateFeeRecordCorrectionRequestEmailParameters = async (
+export const generateFeeRecordCorrectionRequestEmailParameters = (
   reasons: RecordCorrectionReason[],
   reportPeriod: ReportPeriod,
   exporter: string,
-  bankId: string,
   requestedByUserEmail: string,
-): Promise<FeeRecordCorrectionRequestEmails> => {
-  const { teamName, emails } = await getBankPaymentOfficerTeamDetails(bankId);
-
+  recipient: string,
+  paymentOfficerTeamEmails: string[],
+): FeeRecordCorrectionRequestEmails => {
   const reportPeriodString = getFormattedReportPeriodWithLongMonth(reportPeriod);
 
   return {
-    emails: [...emails, requestedByUserEmail],
+    emails: [...paymentOfficerTeamEmails, requestedByUserEmail],
     variables: {
-      recipient: teamName,
+      recipient,
       reportPeriod: reportPeriodString,
       exporterName: exporter,
       reasonsList: formatReasonsAsBulletedListForEmail(reasons),
@@ -65,10 +63,18 @@ export const sendFeeRecordCorrectionRequestEmails = async (
   reasons: RecordCorrectionReason[],
   reportPeriod: ReportPeriod,
   exporter: string,
-  bankId: string,
   requestedByUserEmail: string,
+  recipient: string,
+  paymentOfficerTeamEmails: string[],
 ): Promise<FeeRecordCorrectionRequestEmailAddresses> => {
-  const { emails, variables } = await generateFeeRecordCorrectionRequestEmailParameters(reasons, reportPeriod, exporter, bankId, requestedByUserEmail);
+  const { emails, variables } = generateFeeRecordCorrectionRequestEmailParameters(
+    reasons,
+    reportPeriod,
+    exporter,
+    requestedByUserEmail,
+    recipient,
+    paymentOfficerTeamEmails,
+  );
 
   try {
     await Promise.all(emails.map((email) => externalApi.sendEmail(EMAIL_TEMPLATE_IDS.FEE_RECORD_CORRECTION_REQUEST, email, variables)));

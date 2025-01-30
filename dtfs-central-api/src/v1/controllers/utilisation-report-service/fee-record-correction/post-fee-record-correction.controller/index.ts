@@ -67,8 +67,6 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
 
       const { teamName, emails } = await getBankPaymentOfficerTeamDetails(feeRecord.report.bankId);
 
-      const bankTeamEmails = emails.join(', ');
-
       const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
 
       await stateMachine.handleEvent({
@@ -87,7 +85,7 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
             userId,
           },
           bankTeamName: teamName,
-          bankTeamEmails,
+          bankTeamEmails: emails,
         },
       });
 
@@ -97,8 +95,9 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
         reasons,
         feeRecord.report.reportPeriod,
         feeRecord.exporter,
-        feeRecord.report.bankId,
         user.email,
+        teamName,
+        emails,
       );
 
       return notifiedEmails;

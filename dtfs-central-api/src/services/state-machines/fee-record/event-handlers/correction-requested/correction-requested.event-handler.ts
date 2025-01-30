@@ -9,7 +9,7 @@ type CorrectionRequestedEventPayload = {
   reasons: RecordCorrectionReason[];
   additionalInfo: string;
   bankTeamName: string;
-  bankTeamEmails: string;
+  bankTeamEmails: string[];
 };
 
 export type FeeRecordCorrectionRequestedEvent = BaseFeeRecordEvent<'CORRECTION_REQUESTED', CorrectionRequestedEventPayload>;

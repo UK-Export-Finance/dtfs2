@@ -9,7 +9,7 @@ export type CreateFeeRecordCorrectionParams = {
   additionalInfo: string;
   requestSource: DbRequestSource;
   bankTeamName: string;
-  bankTeamEmails: string;
+  bankTeamEmails: string[];
 };
 
 export type CompleteCorrectionParams = {
