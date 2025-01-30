@@ -3,6 +3,7 @@ import {
   FacilityAmendmentWithUkefId,
   getUnixTimestampSeconds,
   InvalidAuditDetailsError,
+  PortalFacilityAmendmentConflictError,
   PortalAuditDetails,
   PortalFacilityAmendment,
   PortalFacilityAmendmentUserValues,
@@ -15,6 +16,30 @@ import { EligibilityCriteriaAmendmentsRepo } from '../../repositories/portal/eli
 import { findOneFacility } from '../../v1/controllers/portal/facility/get-facility.controller';
 
 export class PortalFacilityAmendmentService {
+  /**
+   * Finds all portal amendments across all facilities for a deal
+   *
+   * @param params
+   * @param params.dealId - The amendment id
+   * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendment[])>} A promise that resolves when the find operation is complete.
+   */
+  public static async findPortalAmendmentsForDeal({ dealId }: { dealId: string }): Promise<PortalFacilityAmendment[]> {
+    const facilities = await TfmFacilitiesRepo.findByDealId(dealId);
+    const portalAmendments: PortalFacilityAmendment[] = [];
+
+    facilities.forEach((facility) => {
+      if (facility.amendments) {
+        facility.amendments.forEach((amendment) => {
+          if (amendment?.type === AMENDMENT_TYPES.PORTAL) {
+            portalAmendments.push(amendment);
+          }
+        });
+      }
+    });
+
+    return portalAmendments;
+  }
+
   /**
    * Upserts the portal amendment draft on a facility
    *
@@ -39,6 +64,18 @@ export class PortalFacilityAmendmentService {
 
     if (!user || `status` in user) {
       throw new InvalidAuditDetailsError(`Supplied auditDetails 'id' ${auditDetails.id.toString()} does not correspond to a valid user`);
+    }
+
+    const existingPortalAmendmentsOnDeal = await this.findPortalAmendmentsForDeal({ dealId });
+
+    if (
+      existingPortalAmendmentsOnDeal.some(
+        (portalAmendment) =>
+          portalAmendment.status === PORTAL_AMENDMENT_STATUS.CHANGES_REQUIRED || portalAmendment.status === PORTAL_AMENDMENT_STATUS.READY_FOR_APPROVAL,
+      )
+    ) {
+      console.error('There is a portal facility amendment already under way on this deal');
+      throw new PortalFacilityAmendmentConflictError(dealId);
     }
 
     const { type: facilityType } = await findOneFacility(facilityId);
