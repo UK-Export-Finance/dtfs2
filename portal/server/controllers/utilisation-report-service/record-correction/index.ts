@@ -2,4 +2,4 @@ export { getProvideUtilisationReportCorrection, postProvideUtilisationReportCorr
 export { getUtilisationReportCorrectionReview, postUtilisationReportCorrectionReview } from './check-the-information';
 export { getRecordCorrectionSent } from './record-correction-sent';
 export { cancelUtilisationReportCorrection } from './cancel-correction';
-export { getRecordCorrectionHistory } from './record-correction-history';
+export { getRecordCorrectionLog } from './record-correction-log';

@@ -11,37 +11,37 @@
         text: correction.dateSent.formattedDateSent,
         attributes: {
           "data-sort-value": correction.dateSent.dataSortValue,
-          "data-cy": "correction-history-row--date-sent"
+          "data-cy": "correction-log-row--date-sent"
         }
       },
       {
         text: correction.exporter,
         attributes: {
-          "data-cy": "correction-history-row--exporter"
+          "data-cy": "correction-log-row--exporter"
         }
       },
       {
         text: correction.formattedReasons,
         attributes: {
-          "data-cy": "correction-history-row--formatted-reasons"
+          "data-cy": "correction-log-row--formatted-reasons"
         }
       },
       {
         text: correction.formattedCorrectedValues,
         attributes: {
-          "data-cy": "correction-history-row--formatted-corrected-values"
+          "data-cy": "correction-log-row--formatted-corrected-values"
         }
       },
       {
         text: correction.formattedPreviousValues,
         attributes: {
-          "data-cy": "correction-history-row--formatted-previous-values"
+          "data-cy": "correction-log-row--formatted-previous-values"
         }
       },
       {
         text: correction.formattedBankCommentary,
         attributes: {
-          "data-cy": "correction-history-row--bank-commentary"
+          "data-cy": "correction-log-row--bank-commentary"
         }
       }
     ] %}
@@ -56,37 +56,37 @@
         text: "Date sent",
         attributes: {
           "aria-sort": "descending",
-          "data-cy": "correction-history-header--date-sent"
+          "data-cy": "correction-log-header--date-sent"
         }
       },
       {
         text: "Exporter",
         attributes: {
           "aria-sort": "ascending",
-          "data-cy": "correction-history-header--exporter"
+          "data-cy": "correction-log-header--exporter"
         }
       },
       {
         text: "Reason(s) for correction",
-        "data-cy": "correction-history-header--formatted-reasons"
+        "data-cy": "correction-log-header--formatted-reasons"
       },
       {
         text: "Correct record",
-        "data-cy": "correction-history-header--formatted-corrected-values"
+        "data-cy": "correction-log-header--formatted-corrected-values"
       },
       {
         text: "Old record",
-        "data-cy": "correction-history-header--formatted-previous-values"
+        "data-cy": "correction-log-header--formatted-previous-values"
       },
       {
         text: "Correction notes",
-        "data-cy": "correction-history-header--bank-commentary"
+        "data-cy": "correction-log-header--bank-commentary"
       }
     ],
     rows: rows,
     attributes: {
       "data-module": "moj-sortable-table",
-      "data-cy": "correction-history-table"
+      "data-cy": "correction-log-table"
     }
   }) }}
 

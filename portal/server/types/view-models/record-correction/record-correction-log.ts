@@ -12,6 +12,6 @@ export type CompletedCorrectionViewModel = {
   formattedBankCommentary: string;
 };
 
-export type RecordCorrectionHistoryViewModel = BaseViewModel & {
+export type RecordCorrectionLogViewModel = BaseViewModel & {
   completedCorrections: CompletedCorrectionViewModel[];
 };

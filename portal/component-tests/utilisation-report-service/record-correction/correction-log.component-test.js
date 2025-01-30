@@ -1,7 +1,7 @@
 const pageRenderer = require('../../pageRenderer');
 const { aPendingCorrectionsViewModel } = require('../../../test-helpers/test-data/view-models');
 
-const page = 'utilisation-report-service/record-correction/correction-history.njk';
+const page = 'utilisation-report-service/record-correction/correction-log.njk';
 const render = pageRenderer(page);
 
 describe(page, () => {
@@ -10,7 +10,7 @@ describe(page, () => {
     const wrapper = render(aPendingCorrectionsViewModel());
 
     // Assert
-    wrapper.expectText('[data-cy="main-heading"]').toRead('Record correction history');
+    wrapper.expectText('[data-cy="main-heading"]').toRead('Record correction log');
   });
 
   describe('when there are no completed corrections', () => {
@@ -29,12 +29,12 @@ describe(page, () => {
         .toRead('Records will be automatically added to this page once they have been sent back to UKEF.');
     });
 
-    it('should not render the correction history table', () => {
+    it('should not render the correction log table', () => {
       // Act
       const wrapper = render(viewModel);
 
       // Assert
-      wrapper.expectElement('[data-cy="correction-history-table"]').notToExist();
+      wrapper.expectElement('[data-cy="correction-log-table"]').notToExist();
     });
   });
 
@@ -64,12 +64,12 @@ describe(page, () => {
       wrapper.expectText('[data-cy="corrections-text-line-2"]').toRead('Records are automatically added to this page once they have been sent back to UKEF.');
     });
 
-    it('should render the correction history table', () => {
+    it('should render the correction log table', () => {
       // Act
       const wrapper = render(viewModel);
 
       // Assert
-      wrapper.expectElement('[data-cy="correction-history-table"]').toExist();
+      wrapper.expectElement('[data-cy="correction-log-table"]').toExist();
     });
   });
 });

@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import difference from 'lodash.difference';
+import { difference } from 'lodash';
 import { validateAuditDetails, validateAuditDetailsAndUserType } from './validate-audit-details';
 import { AUDIT_USER_TYPES_AS_ARRAY, AUDIT_USER_TYPES_NOT_REQUIRING_ID, AUDIT_USER_TYPES_REQUIRING_ID } from '../constants';
 import { InvalidAuditDetailsError } from '../errors';

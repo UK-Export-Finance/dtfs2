@@ -22,4 +22,4 @@ export * from './is-ukef-email';
 export * from './fee-record-corrections';
 export * from './decode-html-entities';
 export * from './map-currencies-to-radio-items';
-export * from './get-key-to-date-sort-value-map-helper';
+export * from './table-data-sort';

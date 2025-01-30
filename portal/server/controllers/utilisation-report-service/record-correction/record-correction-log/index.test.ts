@@ -3,16 +3,16 @@ import { Request, Response } from 'express';
 import { aPortalSessionBank, aPortalSessionUser, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import api from '../../../../api';
-import { getRecordCorrectionHistory } from '.';
+import { getRecordCorrectionLog } from '.';
 import { GetCompletedFeeRecordCorrectionsResponseBody } from '../../../../api-response-types';
 import { mapCompletedCorrectionsToViewModel } from './helpers';
-import { RecordCorrectionHistoryViewModel } from '../../../../types/view-models/record-correction/record-correction-history';
+import { RecordCorrectionLogViewModel } from '../../../../types/view-models/record-correction/record-correction-log';
 
 jest.mock('../../../../api');
 
 console.error = jest.fn();
 
-describe('controllers/utilisation-reports/record-corrections/record-correction-history', () => {
+describe('controllers/utilisation-reports/record-corrections/record-correction-log', () => {
   const bankId = '123';
   const userId = 'user-id';
   const mockUser = {
@@ -47,8 +47,8 @@ describe('controllers/utilisation-reports/record-corrections/record-correction-h
     jest.resetAllMocks();
   });
 
-  describe('getRecordCorrectionHistory', () => {
-    it('should render the "record correction history" page', async () => {
+  describe('getRecordCorrectionLog', () => {
+    it('should render the "record correction log" page', async () => {
       // Arrange
       const firstCompletedCorrection = {
         id: 1,
@@ -74,20 +74,20 @@ describe('controllers/utilisation-reports/record-corrections/record-correction-h
       jest.mocked(api.getCompletedFeeRecordCorrections).mockResolvedValue(completedCorrectionsResponseBody);
 
       // Act
-      await getRecordCorrectionHistory(req, res);
+      await getRecordCorrectionLog(req, res);
 
       // Assert
       const expectedCompletedCorrections = mapCompletedCorrectionsToViewModel(completedCorrectionsResponseBody);
 
-      const expectedResponse: RecordCorrectionHistoryViewModel = {
+      const expectedResponse: RecordCorrectionLogViewModel = {
         user: mockUser,
-        primaryNav: PRIMARY_NAV_KEY.RECORD_CORRECTION_HISTORY,
+        primaryNav: PRIMARY_NAV_KEY.RECORD_CORRECTION_LOG,
         completedCorrections: expectedCompletedCorrections,
       };
 
-      expect(res._getRenderView()).toEqual('utilisation-report-service/record-correction/correction-history.njk');
+      expect(res._getRenderView()).toEqual('utilisation-report-service/record-correction/correction-log.njk');
 
-      expect(res._getRenderData() as RecordCorrectionHistoryViewModel).toEqual(expectedResponse);
+      expect(res._getRenderData() as RecordCorrectionLogViewModel).toEqual(expectedResponse);
     });
 
     it('should fetch the completed fee record corrections using the users bank id', async () => {
@@ -95,7 +95,7 @@ describe('controllers/utilisation-reports/record-corrections/record-correction-h
       jest.mocked(api.getCompletedFeeRecordCorrections).mockResolvedValue([]);
 
       // Act
-      await getRecordCorrectionHistory(req, res);
+      await getRecordCorrectionLog(req, res);
 
       // Assert
       expect(api.getCompletedFeeRecordCorrections).toHaveBeenCalledTimes(1);
@@ -107,7 +107,7 @@ describe('controllers/utilisation-reports/record-corrections/record-correction-h
       jest.mocked(api.getCompletedFeeRecordCorrections).mockRejectedValue(new Error());
 
       // Act
-      await getRecordCorrectionHistory(req, res);
+      await getRecordCorrectionLog(req, res);
 
       // Assert
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');

@@ -7,7 +7,7 @@ const {
   postUtilisationReportCorrectionReview,
   getRecordCorrectionSent,
   cancelUtilisationReportCorrection,
-  getRecordCorrectionHistory,
+  getRecordCorrectionLog,
 } = require('../../../controllers/utilisation-report-service/record-correction');
 const { validateRole, validateToken, validateSqlId } = require('../../middleware');
 
@@ -39,9 +39,9 @@ router.get(
 );
 
 router.get(
-  '/utilisation-reports/correction-history',
+  '/utilisation-reports/correction-log',
   [validateFeeRecordCorrectionFeatureFlagIsEnabled, validateToken, validateRole({ role: [ROLES.PAYMENT_REPORT_OFFICER] })],
-  (req, res) => getRecordCorrectionHistory(req, res),
+  (req, res) => getRecordCorrectionLog(req, res),
 );
 
 module.exports = router;
