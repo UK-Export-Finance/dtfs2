@@ -5,7 +5,7 @@ import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import caseDealPage from '../../../pages/caseDealPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { oneMonth, today, twoDays, yearWithZeroLetter } from '../../../../../../e2e-fixtures/dateConstants';
+import { oneMonth, twoDays, twoYearsAgo, yearWithZeroLetter } from '../../../../../../e2e-fixtures/dateConstants';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS } from '../../../../../../e2e-fixtures';
 import pages from '../../../pages';
 import { CURRENCY } from '../../../../../../e2e-fixtures/constants.fixture';
@@ -21,18 +21,18 @@ context('Amendments underwriting - add banks decision - proceed', () => {
    *
    * So in this case it boils down to the tenor being 25 months except for:
    * - if expiry and commencement dates are the same date of month then you add one
-   * - if today is end of month and a month from now is also end of month you add one
+   * - if commencement is end of month and expiry is also end of month you add one
    */
   let facilityTenor = '25 months';
 
-  if (today.date.getDate() === oneMonth.date.getDate()) {
+  if (twoYearsAgo.date.getDate() === oneMonth.date.getDate()) {
     facilityTenor = '26 months';
   }
 
-  const isTodayEndOfMonth = add(today.date, { days: 1 }).getDate() === 1;
-  const isMonthFromNowEndOfMonth = add(today.date, { months: 1, days: 1 }).getDate() === 1;
+  const isCommencementDateEndOfMonth = add(twoYearsAgo.date, { days: 1 }).getDate() === 1;
+  const isExpiryDateEndOFMonth = add(oneMonth.date, { days: 1 }).getDate() === 1;
 
-  if (isTodayEndOfMonth && isMonthFromNowEndOfMonth) {
+  if (isCommencementDateEndOfMonth && isExpiryDateEndOFMonth) {
     facilityTenor = '26 months';
   }
 
