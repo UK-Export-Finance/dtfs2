@@ -5,19 +5,34 @@ import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import caseDealPage from '../../../pages/caseDealPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { fourDaysAgo, oneMonth, today, twoMonths, yearWithZeroLetter } from '../../../../../../e2e-fixtures/dateConstants';
+import { fourDaysAgo, oneMonth, today, twoMonths, yearWithZeroLetter, twoYearsAgo } from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN, CURRENCY } from '../../../../../../e2e-fixtures';
 
 context('Amendments - automatic approval journey', () => {
-  // If the expiry & commencement date are the same day of the month then we add one to the month
-  // difference for BS (but not for EWCS)
-  // BUT... If the commencement date is end of month and the expiry date isn't then we don't add one
-  //
-  // In these tests, the mock start date is two years ago today & the mock end date is a month today.
-  // Therefore if today is EOM and a month from now is not EOM we need to NOT add one to the tenor
-  const todayIsEndOfMonth = add(new Date(), { days: 1 }).getDate() === 1;
-  const aMonthFromNowIsEndOfMonth = add(new Date(), { months: 1, days: 1 }).getDate() === 1;
-  const facilityTenor = todayIsEndOfMonth && !aMonthFromNowIsEndOfMonth ? '25 months' : '26 months';
+  /**
+   * The deal in the test is a BSS deal.
+   *
+   * The tenor is calculated using a SQL function used by MDM.
+   *
+   * In these tests, the mock start date is two years ago from today
+   * & the mock end date is a month from today.
+   *
+   * So in this case it boils down to the tenor being 25 months except for:
+   * - if expiry and commencement dates are the same date of month then you add one
+   * - if commencement is end of month and expiry is also end of month you add one
+   */
+  let facilityTenor = '25 months';
+
+  if (twoYearsAgo.date.getDate() === oneMonth.date.getDate()) {
+    facilityTenor = '26 months';
+  }
+
+  const isCommencementDateEndOfMonth = add(twoYearsAgo.date, { days: 1 }).getDate() === 1;
+  const isExpiryDateEndOFMonth = add(oneMonth.date, { days: 1 }).getDate() === 1;
+
+  if (isCommencementDateEndOfMonth && isExpiryDateEndOFMonth) {
+    facilityTenor = '26 months';
+  }
 
   describe('Amendment details - Change the Cover end date AND Facility value', () => {
     let dealId;
