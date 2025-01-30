@@ -17,7 +17,7 @@ describe(page, () => {
 
     itDoesNotRenderAUtilisationReportUploadLink();
     itDoesNotRenderAPreviousReportsLink();
-    itDoesNotRenderARecordCorrectionHistoryLink();
+    itDoesNotRenderARecordCorrectionLogLink();
     itDoesNotRenderAUsersLink();
   });
 
@@ -31,7 +31,7 @@ describe(page, () => {
 
     itDoesNotRenderAUtilisationReportUploadLink();
     itDoesNotRenderAPreviousReportsLink();
-    itDoesNotRenderARecordCorrectionHistoryLink();
+    itDoesNotRenderARecordCorrectionLogLink();
     itDoesNotRenderAUsersLink();
   });
 
@@ -46,7 +46,7 @@ describe(page, () => {
 
     itDoesNotRenderAUtilisationReportUploadLink();
     itDoesNotRenderAPreviousReportsLink();
-    itDoesNotRenderARecordCorrectionHistoryLink();
+    itDoesNotRenderARecordCorrectionLogLink();
   });
 
   describe(`viewed by role '${ROLES.READ_ONLY}'`, () => {
@@ -59,7 +59,7 @@ describe(page, () => {
     itDoesNotRenderAReportsLink();
     itDoesNotRenderAUtilisationReportUploadLink();
     itDoesNotRenderAPreviousReportsLink();
-    itDoesNotRenderARecordCorrectionHistoryLink();
+    itDoesNotRenderARecordCorrectionLogLink();
     itDoesNotRenderAUsersLink();
   });
 
@@ -70,7 +70,7 @@ describe(page, () => {
 
     itRendersAUtilisationReportUploadLink();
     itRendersAPreviousReportsLink();
-    itRendersARecordCorrectionHistoryLink();
+    itRendersARecordCorrectionLogLink();
 
     itDoesNotRenderAHomeLink();
     itDoesNotRenderAReportsLink();
@@ -86,7 +86,7 @@ describe(page, () => {
     itDoesNotRenderAReportsLink();
     itDoesNotRenderAUtilisationReportUploadLink();
     itDoesNotRenderAPreviousReportsLink();
-    itDoesNotRenderARecordCorrectionHistoryLink();
+    itDoesNotRenderARecordCorrectionLogLink();
     itDoesNotRenderAUsersLink();
   });
 
@@ -138,15 +138,15 @@ describe(page, () => {
     });
   }
 
-  function itRendersARecordCorrectionHistoryLink() {
-    it('renders a record correction history link', () => {
-      wrapper.expectLink('[data-cy="record_correction_history"]').toLinkTo('/utilisation-reports/correction-history', 'Record correction history');
+  function itRendersARecordCorrectionLogLink() {
+    it('renders a record correction log link', () => {
+      wrapper.expectLink('[data-cy="record_correction_log"]').toLinkTo('/utilisation-reports/correction-log', 'Record correction log');
     });
   }
 
-  function itDoesNotRenderARecordCorrectionHistoryLink() {
-    it('does not render a record correction history link', () => {
-      wrapper.expectLink('[data-cy="record_correction_history"]').notToExist();
+  function itDoesNotRenderARecordCorrectionLogLink() {
+    it('does not render a record correction log link', () => {
+      wrapper.expectLink('[data-cy="record_correction_log"]').notToExist();
     });
   }
 

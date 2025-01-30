@@ -3,16 +3,16 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 
-{% import "./_macros/correction-history-table.njk" as correctionHistoryTable %}
+{% import "./_macros/correction-log-table.njk" as correctionLogTable %}
 
 {% block pageTitle %}
-  Record correction history
+  Record correction log
 {% endblock %}
 
 {% block content %}
 
   <h1 class="govuk-heading-l" data-cy="main-heading">
-    Record correction history
+    Record correction log
   </h1>
 
   {% if completedCorrections.length === 0 %}
@@ -35,7 +35,7 @@
       Records are automatically added to this page once they have been sent back to UKEF.
     </p>
 
-    {{ correctionHistoryTable.render({
+    {{ correctionLogTable.render({
       completedCorrections: completedCorrections
     }) }}
 

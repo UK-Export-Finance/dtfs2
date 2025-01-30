@@ -1,6 +1,6 @@
 const componentRenderer = require('../../../componentRenderer');
 
-const component = 'utilisation-report-service/record-correction/_macros/correction-history-table.njk';
+const component = 'utilisation-report-service/record-correction/_macros/correction-log-table.njk';
 const render = componentRenderer(component, true);
 
 describe(component, () => {
@@ -89,27 +89,27 @@ describe(component, () => {
     // Assert
     wrapper.expectElement('tr').toHaveCount(3); // 2 completed corrections + 1 header row
 
-    wrapper.expectText(`${firstRowSelector} [data-cy="correction-history-row--date-sent"]`).toRead(firstCompletedCorrection.dateSent.formattedDateSent);
-    wrapper.expectText(`${firstRowSelector} [data-cy="correction-history-row--exporter"]`).toRead(firstCompletedCorrection.exporter);
-    wrapper.expectText(`${firstRowSelector} [data-cy="correction-history-row--formatted-reasons"]`).toRead(firstCompletedCorrection.formattedReasons);
+    wrapper.expectText(`${firstRowSelector} [data-cy="correction-log-row--date-sent"]`).toRead(firstCompletedCorrection.dateSent.formattedDateSent);
+    wrapper.expectText(`${firstRowSelector} [data-cy="correction-log-row--exporter"]`).toRead(firstCompletedCorrection.exporter);
+    wrapper.expectText(`${firstRowSelector} [data-cy="correction-log-row--formatted-reasons"]`).toRead(firstCompletedCorrection.formattedReasons);
     wrapper
-      .expectText(`${firstRowSelector} [data-cy="correction-history-row--formatted-corrected-values"]`)
+      .expectText(`${firstRowSelector} [data-cy="correction-log-row--formatted-corrected-values"]`)
       .toRead(firstCompletedCorrection.formattedCorrectedValues);
     wrapper
-      .expectText(`${firstRowSelector} [data-cy="correction-history-row--formatted-previous-values"]`)
+      .expectText(`${firstRowSelector} [data-cy="correction-log-row--formatted-previous-values"]`)
       .toRead(firstCompletedCorrection.formattedPreviousValues);
-    wrapper.expectText(`${firstRowSelector} [data-cy="correction-history-row--bank-commentary"]`).toRead(firstCompletedCorrection.formattedBankCommentary);
+    wrapper.expectText(`${firstRowSelector} [data-cy="correction-log-row--bank-commentary"]`).toRead(firstCompletedCorrection.formattedBankCommentary);
 
-    wrapper.expectText(`${secondRowSelector} [data-cy="correction-history-row--date-sent"]`).toRead(secondCompletedCorrection.dateSent.formattedDateSent);
-    wrapper.expectText(`${secondRowSelector} [data-cy="correction-history-row--exporter"]`).toRead(secondCompletedCorrection.exporter);
-    wrapper.expectText(`${secondRowSelector} [data-cy="correction-history-row--formatted-reasons"]`).toRead(secondCompletedCorrection.formattedReasons);
+    wrapper.expectText(`${secondRowSelector} [data-cy="correction-log-row--date-sent"]`).toRead(secondCompletedCorrection.dateSent.formattedDateSent);
+    wrapper.expectText(`${secondRowSelector} [data-cy="correction-log-row--exporter"]`).toRead(secondCompletedCorrection.exporter);
+    wrapper.expectText(`${secondRowSelector} [data-cy="correction-log-row--formatted-reasons"]`).toRead(secondCompletedCorrection.formattedReasons);
     wrapper
-      .expectText(`${secondRowSelector} [data-cy="correction-history-row--formatted-corrected-values"]`)
+      .expectText(`${secondRowSelector} [data-cy="correction-log-row--formatted-corrected-values"]`)
       .toRead(secondCompletedCorrection.formattedCorrectedValues);
     wrapper
-      .expectText(`${secondRowSelector} [data-cy="correction-history-row--formatted-previous-values"]`)
+      .expectText(`${secondRowSelector} [data-cy="correction-log-row--formatted-previous-values"]`)
       .toRead(secondCompletedCorrection.formattedPreviousValues);
-    wrapper.expectText(`${secondRowSelector} [data-cy="correction-history-row--bank-commentary"]`).toRead(secondCompletedCorrection.formattedBankCommentary);
+    wrapper.expectText(`${secondRowSelector} [data-cy="correction-log-row--bank-commentary"]`).toRead(secondCompletedCorrection.formattedBankCommentary);
   });
 
   it('should render the corrections "date sent" with the "data-sort-value" attribute', () => {

@@ -172,9 +172,9 @@ describe('utilisation-report routes', () => {
     });
   });
 
-  describe('GET /utilisation-reports/correction-history', () => {
+  describe('GET /utilisation-reports/correction-log', () => {
     const originalProcessEnv = { ...process.env };
-    const url = '/utilisation-reports/correction-history';
+    const url = '/utilisation-reports/correction-log';
 
     describe('when FF_FEE_RECORD_CORRECTION_ENABLED is set to `true`', () => {
       beforeAll(() => {
