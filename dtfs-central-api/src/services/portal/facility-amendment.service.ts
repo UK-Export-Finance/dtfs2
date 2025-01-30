@@ -95,15 +95,15 @@ export class PortalFacilityAmendmentService {
       updatedAt: getUnixTimestampSeconds(new Date()),
     };
 
+    const facilityMongoId = new ObjectId(facilityId);
+    const amendmentMongoId = new ObjectId(amendmentId);
+
     await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({
-      amendmentId: new ObjectId(amendmentId),
-      facilityId: new ObjectId(facilityId),
+      amendmentId: amendmentMongoId,
+      facilityId: facilityMongoId,
       update: amendmentUpdate,
       auditDetails,
     });
-
-    const facilityMongoId = new ObjectId(facilityId);
-    const amendmentMongoId = new ObjectId(amendmentId);
 
     const updatedAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityMongoId, amendmentMongoId);
 
@@ -138,17 +138,17 @@ export class PortalFacilityAmendmentService {
       status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
     };
 
-    // TODO: check that there is not an existing amendment on the deal.
-
-    await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({
-      amendmentId: new ObjectId(amendmentId),
-      facilityId: new ObjectId(facilityId),
-      update: amendmentUpdate,
-      auditDetails,
-    });
+    // TODO: DTFS2-7793 - check that there is not an existing amendment on the deal.
 
     const facilityMongoId = new ObjectId(facilityId);
     const amendmentMongoId = new ObjectId(amendmentId);
+
+    await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({
+      amendmentId: amendmentMongoId,
+      facilityId: facilityMongoId,
+      update: amendmentUpdate,
+      auditDetails,
+    });
 
     const updatedAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityMongoId, amendmentMongoId);
 
