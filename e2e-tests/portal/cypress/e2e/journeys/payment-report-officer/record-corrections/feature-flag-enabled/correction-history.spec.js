@@ -21,7 +21,7 @@ context('Correction history - Fee record correction feature flag enabled', () =>
   });
 
   context('When there are no completed corrections', () => {
-    beforeEach(() => {
+    before(() => {
       cy.task('getUserFromDbByEmail', BANK1_PAYMENT_REPORT_OFFICER1.email).then((user) => {
         const { _id, bank } = user;
         const bankId = bank.id;
@@ -40,13 +40,15 @@ context('Correction history - Fee record correction feature flag enabled', () =>
         cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [feeRecord]);
         cy.task(NODE_TASKS.INSERT_FEE_RECORD_CORRECTIONS_INTO_DB, [pendingCorrection]);
       });
-
-      cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
-      cy.visit(relativeURL(`/utilisation-reports/correction-history`));
     });
 
-    afterEach(() => {
+    after(() => {
       cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+    });
+
+    beforeEach(() => {
+      cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
+      cy.visit(relativeURL(`/utilisation-reports/correction-history`));
     });
 
     it('should display page heading', () => {
@@ -71,26 +73,9 @@ context('Correction history - Fee record correction feature flag enabled', () =>
   });
 
   context('When there are are completed corrections', () => {
-    const completedCorrectionDetails = {
-      exporter: 'Exporter A',
-      reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER],
-      formattedReasons: 'Facility ID is incorrect, Other',
-      dateReceived: new Date('2024-02-07'),
-      formattedDateSent: '07 Feb 2024',
-      previousValues: {
-        facilityId: '11111111',
-      },
-      formattedPreviousValues: '11111111, -',
-      correctedValues: {
-        facilityId: '22222222',
-      },
-      formattedCorrectedValues: '22222222, -',
-      bankCommentary: 'Some bank commentary %$£%&^@&^',
-    };
-
     const pendingCorrectionReportPeriod = { start: { month: 1, year: 2021 }, end: { month: 1, year: 2021 } };
 
-    beforeEach(() => {
+    before(() => {
       cy.task('getUserFromDbByEmail', BANK1_PAYMENT_REPORT_OFFICER1.email).then((user) => {
         const { _id, bank } = user;
         const bankId = bank.id;
@@ -105,13 +90,13 @@ context('Correction history - Fee record correction feature flag enabled', () =>
         const feeRecordPendingCorrection = FeeRecordEntityMockBuilder.forReport(report)
           .withId(1)
           .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
-          .withExporter(completedCorrectionDetails.exporter)
+          .withExporter('An exporter')
           .build();
 
         const firstFeeRecordCorrectionReceived = FeeRecordEntityMockBuilder.forReport(report)
           .withId(2)
           .withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED)
-          .withExporter(completedCorrectionDetails.exporter)
+          .withExporter('Exporter A')
           .build();
 
         const secondFeeRecordCorrectionReceived = FeeRecordEntityMockBuilder.forReport(report)
@@ -133,16 +118,20 @@ context('Correction history - Fee record correction feature flag enabled', () =>
 
         const firstCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(firstFeeRecordCorrectionReceived, true)
           .withId(2)
-          .withReasons(completedCorrectionDetails.reasons)
-          .withDateReceived(completedCorrectionDetails.dateReceived)
-          .withPreviousValues(completedCorrectionDetails.previousValues)
-          .withCorrectedValues(completedCorrectionDetails.correctedValues)
-          .withBankCommentary(completedCorrectionDetails.bankCommentary)
+          .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER])
+          .withDateReceived(new Date('2024-04-07'))
+          .withPreviousValues({
+            facilityId: '11111111',
+          })
+          .withCorrectedValues({
+            facilityId: '22222222',
+          })
+          .withBankCommentary('Some bank commentary')
           .build();
 
         const secondCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(secondFeeRecordCorrectionReceived, true)
           .withId(3)
-          .withDateReceived(new Date('2024-04-21'))
+          .withDateReceived(new Date('2024-02-21'))
           .build();
 
         const thirdCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(thirdFeeRecordCorrectionReceived, true)
@@ -164,13 +153,15 @@ context('Correction history - Fee record correction feature flag enabled', () =>
           thirdCompletedCorrection,
         ]);
       });
-
-      cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
-      cy.visit(relativeURL(`/utilisation-reports/correction-history`));
     });
 
-    afterEach(() => {
+    after(() => {
       cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
+    });
+
+    beforeEach(() => {
+      cy.login(BANK1_PAYMENT_REPORT_OFFICER1);
+      cy.visit(relativeURL(`/utilisation-reports/correction-history`));
     });
 
     it('should display page heading', () => {
@@ -180,14 +171,14 @@ context('Correction history - Fee record correction feature flag enabled', () =>
 
     it('should display completed corrections', () => {
       // Number of rows is number of completed corrections + 1 for the header
-      correctionHistory.rows().should('have.length', 2);
+      correctionHistory.rows().should('have.length', 4);
 
-      cy.assertText(correctionHistory.row(1).dateSent(), completedCorrectionDetails.formattedDateSent);
-      cy.assertText(correctionHistory.row(1).exporter(), completedCorrectionDetails.exporter);
-      cy.assertText(correctionHistory.row(1).reasons(), completedCorrectionDetails.formattedReasons);
-      cy.assertText(correctionHistory.row(1).correctRecord(), completedCorrectionDetails.formattedCorrectedValues);
-      cy.assertText(correctionHistory.row(1).oldRecord(), completedCorrectionDetails.formattedPreviousValues);
-      cy.assertText(correctionHistory.row(1).correctionNotes(), completedCorrectionDetails.bankCommentary);
+      cy.assertText(correctionHistory.row(1).dateSent(), '07 Apr 2024');
+      cy.assertText(correctionHistory.row(1).exporter(), 'Exporter A');
+      cy.assertText(correctionHistory.row(1).reasons(), 'Facility ID is incorrect, Other');
+      cy.assertText(correctionHistory.row(1).correctRecord(), '22222222, -');
+      cy.assertText(correctionHistory.row(1).oldRecord(), '11111111, -');
+      cy.assertText(correctionHistory.row(1).correctionNotes(), 'Some bank commentary');
     });
 
     it('should display info message to the user', () => {
@@ -207,11 +198,11 @@ context('Correction history - Fee record correction feature flag enabled', () =>
       });
 
       it('should sort the rows by "date sent" in ascending order', () => {
-        cy.assertText(correctionHistory.row(1).dateSent(), '07 Feb 2024');
+        cy.assertText(correctionHistory.row(1).dateSent(), '21 Feb 2024');
 
         cy.assertText(correctionHistory.row(2).dateSent(), '14 Mar 2024');
 
-        cy.assertText(correctionHistory.row(3).dateSent(), '21 Apr 2024');
+        cy.assertText(correctionHistory.row(3).dateSent(), '07 Apr 2024');
       });
     });
 
