@@ -5,15 +5,18 @@ import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-strea
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
 import { PostSubmitPortalFacilityAmendmentToCheckerPayload } from '../../../routes/middleware/payload-validation/validate-post-submit-portal-facility-amendment-to-checker-payload';
 
-type PutAmendmentRequestParams = { facilityId: string; amendmentId: string };
-export type PutAmendmentRequest = CustomExpressRequest<{ params: PutAmendmentRequestParams; reqBody: PostSubmitPortalFacilityAmendmentToCheckerPayload }>;
+type PostSubmitAmendmentToCheckerRequestParams = { facilityId: string; amendmentId: string };
+export type PostSubmitAmendmentToCheckerRequest = CustomExpressRequest<{
+  params: PostSubmitAmendmentToCheckerRequestParams;
+  reqBody: PostSubmitPortalFacilityAmendmentToCheckerPayload;
+}>;
 
 /**
  * post portal facility amendment submit to checker
  * @param req - request
  * @param res - response
  */
-export const postSubmitAmendmentToChecker = async (req: PutAmendmentRequest, res: Response) => {
+export const postSubmitAmendmentToChecker = async (req: PostSubmitAmendmentToCheckerRequest, res: Response) => {
   const { facilityId, amendmentId } = req.params;
   const { auditDetails, dealId } = req.body;
 
