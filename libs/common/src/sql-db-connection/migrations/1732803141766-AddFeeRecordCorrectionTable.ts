@@ -19,9 +19,9 @@ export class AddFeeRecordCorrectionTable1732803141766 implements MigrationInterf
                 "lastUpdatedByPortalUserId" nvarchar(255),
                 "lastUpdatedByTfmUserId" nvarchar(255),
                 "lastUpdatedByIsSystemUser" bit NOT NULL CONSTRAINT "DF_da9ebf56aea47e1ca26c5d38cff" DEFAULT 0,
-                CONSTRAINT "PK_b9f1a68a02c0d2bafcf977331e5" PRIMARY KEY ("id"),
                 "bankTeamName" nvarchar(500),
-                "bankTeamEmails" nvarchar(1000)
+                "bankTeamEmails" nvarchar(1000),
+                CONSTRAINT "PK_b9f1a68a02c0d2bafcf977331e5" PRIMARY KEY ("id")
             )
         `);
     await queryRunner.query(`
