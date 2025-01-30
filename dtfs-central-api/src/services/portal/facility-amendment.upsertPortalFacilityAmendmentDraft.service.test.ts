@@ -15,7 +15,7 @@ import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { getUnixTime } from 'date-fns';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { aPortalFacilityAmendment, aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
+import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
 import { amendmentsEligibilityCriteria } from '../../../test-helpers/test-data/eligibility-criteria-amendments';
 import { PortalFacilityAmendmentService } from './facility-amendment.service';
 import { aFacility, aPortalUser } from '../../../test-helpers';
@@ -36,9 +36,7 @@ jest.mock('../../repositories/portal/eligibility-criteria-amendments.repo', () =
 }));
 
 const mockUpsertPortalFacilityAmendmentDraft = jest.fn();
-const mockFindPortalAmendmentsForDeal = jest.fn();
-
-console.error = jest.fn();
+const mockValidateNoOtherAmendmentsUnderWayOnDeal = jest.fn();
 
 const dealId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
@@ -46,11 +44,6 @@ const amendment = aPortalFacilityAmendmentUserValues();
 const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
 const facility = aFacility();
 const eligibilityCriteria = amendmentsEligibilityCriteria();
-
-const aDraftPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.DRAFT });
-const aReadyForApprovalPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.READY_FOR_APPROVAL });
-const aChangesRequiredPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.CHANGES_REQUIRED });
-const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED });
 
 describe('PortalFacilityAmendmentService', () => {
   beforeAll(() => {
@@ -61,13 +54,13 @@ describe('PortalFacilityAmendmentService', () => {
     jest.resetAllMocks();
 
     jest.spyOn(TfmFacilitiesRepo, 'upsertPortalFacilityAmendmentDraft').mockImplementation(mockUpsertPortalFacilityAmendmentDraft);
-    jest.spyOn(PortalFacilityAmendmentService, 'findPortalAmendmentsForDeal').mockImplementation(mockFindPortalAmendmentsForDeal);
+    jest.spyOn(PortalFacilityAmendmentService, 'validateNoOtherAmendmentsUnderWayOnDeal').mockImplementation(mockValidateNoOtherAmendmentsUnderWayOnDeal);
 
     mockFindOneUser.mockResolvedValue(aPortalUser());
     mockFindOneFacility.mockResolvedValue(facility);
     mockFindOneFacility.mockResolvedValue(facility);
     mockFindLatestEligibilityCriteria.mockResolvedValue(eligibilityCriteria);
-    mockFindPortalAmendmentsForDeal.mockResolvedValue([]);
+    mockValidateNoOtherAmendmentsUnderWayOnDeal.mockResolvedValue(undefined);
   });
 
   afterAll(() => {
@@ -132,7 +125,7 @@ describe('PortalFacilityAmendmentService', () => {
       expect(mockFindLatestEligibilityCriteria).toHaveBeenCalledWith(facility.type);
     });
 
-    it('should call findPortalAmendmentsForDeal with the dealId', async () => {
+    it('should call validateNoOtherAmendmentsUnderWayOnDeal with the dealId', async () => {
       // Act
       await PortalFacilityAmendmentService.upsertPortalFacilityAmendmentDraft({
         dealId,
@@ -142,16 +135,16 @@ describe('PortalFacilityAmendmentService', () => {
       });
 
       // Assert
-      expect(mockFindPortalAmendmentsForDeal).toHaveBeenCalledTimes(1);
-      expect(mockFindPortalAmendmentsForDeal).toHaveBeenCalledWith({ dealId });
+      expect(mockValidateNoOtherAmendmentsUnderWayOnDeal).toHaveBeenCalledTimes(1);
+      expect(mockValidateNoOtherAmendmentsUnderWayOnDeal).toHaveBeenCalledWith({ dealId });
     });
 
-    it(`should throw an error if there is an existing portal amendment on the deal with the status ${PORTAL_AMENDMENT_STATUS.READY_FOR_APPROVAL}`, async () => {
+    it(`should throw an error if validateNoOtherAmendmentsUnderWayOnDeal throws an error`, async () => {
       // Arrange
-      mockFindPortalAmendmentsForDeal.mockResolvedValueOnce([aDraftPortalAmendment, aReadyForApprovalPortalAmendment]);
+      const mockError = new PortalFacilityAmendmentConflictError(dealId);
+      mockValidateNoOtherAmendmentsUnderWayOnDeal.mockRejectedValue(mockError);
 
-      // Act
-      // Assert
+      // Act + Assert
       await expect(() =>
         PortalFacilityAmendmentService.upsertPortalFacilityAmendmentDraft({
           dealId,
@@ -160,45 +153,7 @@ describe('PortalFacilityAmendmentService', () => {
           auditDetails,
         }),
       ).rejects.toThrow(PortalFacilityAmendmentConflictError);
-
-      expect(console.error).toHaveBeenCalledWith('There is a portal facility amendment already under way on this deal');
       expect(mockUpsertPortalFacilityAmendmentDraft).toHaveBeenCalledTimes(0);
-    });
-
-    it(`should throw an error if there is an existing portal amendment on the deal with the status ${PORTAL_AMENDMENT_STATUS.CHANGES_REQUIRED}`, async () => {
-      // Arrange
-      mockFindPortalAmendmentsForDeal.mockResolvedValueOnce([aDraftPortalAmendment, aChangesRequiredPortalAmendment]);
-
-      // Act
-      // Assert
-      await expect(() =>
-        PortalFacilityAmendmentService.upsertPortalFacilityAmendmentDraft({
-          dealId,
-          facilityId,
-          amendment,
-          auditDetails,
-        }),
-      ).rejects.toThrow(PortalFacilityAmendmentConflictError);
-
-      expect(console.error).toHaveBeenCalledWith('There is a portal facility amendment already under way on this deal');
-      expect(mockUpsertPortalFacilityAmendmentDraft).toHaveBeenCalledTimes(0);
-    });
-
-    it(`should not throw an error if there is an existing portal amendment on the deal with the status ${PORTAL_AMENDMENT_STATUS.DRAFT} or ${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}`, async () => {
-      // Arrange
-      mockFindPortalAmendmentsForDeal.mockResolvedValueOnce([aDraftPortalAmendment, anAcknowledgedPortalAmendment]);
-
-      // Act
-      await PortalFacilityAmendmentService.upsertPortalFacilityAmendmentDraft({
-        dealId,
-        facilityId,
-        amendment,
-        auditDetails,
-      });
-
-      // Assert
-      expect(mockUpsertPortalFacilityAmendmentDraft).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledTimes(0);
     });
 
     it('should call TfmFacilitiesRepo.upsertPortalFacilityAmendmentDraft with correct params', async () => {

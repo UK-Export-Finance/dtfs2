@@ -41,6 +41,27 @@ export class PortalFacilityAmendmentService {
   }
 
   /**
+   * Finds all portal amendments across all facilities for a deal
+   *
+   * @param params
+   * @param params.dealId - The amendment id
+   * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendment[])>} A promise that resolves when the find operation is complete.
+   */
+  public static async validateNoOtherAmendmentsUnderWayOnDeal({ dealId }: { dealId: string }): Promise<void> {
+    const existingPortalAmendmentsOnDeal = await this.findPortalAmendmentsForDeal({ dealId });
+
+    if (
+      existingPortalAmendmentsOnDeal.some(
+        (portalAmendment) =>
+          portalAmendment.status === PORTAL_AMENDMENT_STATUS.CHANGES_REQUIRED || portalAmendment.status === PORTAL_AMENDMENT_STATUS.READY_FOR_APPROVAL,
+      )
+    ) {
+      console.error('There is a portal facility amendment already under way on this deal');
+      throw new PortalFacilityAmendmentConflictError(dealId);
+    }
+  }
+
+  /**
    * Upserts the portal amendment draft on a facility
    *
    * @param updateStatusParams
@@ -66,17 +87,7 @@ export class PortalFacilityAmendmentService {
       throw new InvalidAuditDetailsError(`Supplied auditDetails 'id' ${auditDetails.id.toString()} does not correspond to a valid user`);
     }
 
-    const existingPortalAmendmentsOnDeal = await this.findPortalAmendmentsForDeal({ dealId });
-
-    if (
-      existingPortalAmendmentsOnDeal.some(
-        (portalAmendment) =>
-          portalAmendment.status === PORTAL_AMENDMENT_STATUS.CHANGES_REQUIRED || portalAmendment.status === PORTAL_AMENDMENT_STATUS.READY_FOR_APPROVAL,
-      )
-    ) {
-      console.error('There is a portal facility amendment already under way on this deal');
-      throw new PortalFacilityAmendmentConflictError(dealId);
-    }
+    await this.validateNoOtherAmendmentsUnderWayOnDeal({ dealId });
 
     const { type: facilityType } = await findOneFacility(facilityId);
 
