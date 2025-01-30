@@ -20,7 +20,7 @@ export class LoginController {
    * @param res - The HTTP response object.
    * @returns - A promise that resolves when the login process is complete.
    */
-  public static async getLogin(req: Request, res: Response) {
+  public static getLogin = async (req: Request, res: Response) => {
     try {
       // TODO: This validation is legacy code, and can be improved
       if (req.session.user) {
@@ -37,7 +37,7 @@ export class LoginController {
       console.error('Unable to log in user: %o', error);
       return res.render('_partials/problem-with-service.njk');
     }
-  }
+  };
 
   /**
    * Handles the SSO redirect form submission.
@@ -51,7 +51,7 @@ export class LoginController {
    * @param res - The response object used to redirect or render a page.
    * @returns - A promise that resolves when the operation is complete.
    */
-  public static async handleSsoRedirectForm(req: HandleSsoRedirectFormUiRequest, res: Response) {
+  public static handleSsoRedirectForm = async (req: HandleSsoRedirectFormUiRequest, res: Response) => {
     try {
       const { body, session } = req;
       const partiallyLoggedInSession = asPartiallyLoggedInUserSession(session);
@@ -74,7 +74,7 @@ export class LoginController {
       console.error('Unable to redirect the user after login %o', error);
       return res.render('_partials/problem-with-service.njk');
     }
-  }
+  };
 
   /**
    * Handles the logout process for the user.

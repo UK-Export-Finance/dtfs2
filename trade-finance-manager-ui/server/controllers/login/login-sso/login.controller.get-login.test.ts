@@ -1,8 +1,8 @@
 import httpMocks from 'node-mocks-http';
 import { resetAllWhenMocks, when } from 'jest-when';
-import { anAuthorisationCodeRequest } from '@ukef/dtfs2-common';
+import { anAuthorisationUrlRequest } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
-import { aTfmSessionUser } from '../../../../test-helpers';
+import { aRequestSession } from '../../../../test-helpers';
 import { LoginController } from './login.controller';
 import { LoginService } from '../../../services/login.service';
 
@@ -19,7 +19,7 @@ describe('controllers - login (sso)', () => {
 
     const requestOriginalUrl = '/the-original-url';
     const mockAuthCodeUrl = `mock-auth-code-url`;
-    const mockAuthCodeUrlRequest = anAuthorisationCodeRequest();
+    const mockAuthCodeUrlRequest = anAuthorisationUrlRequest();
     const getAuthCodeUrlMock = jest.mocked(LoginService.getAuthCodeUrl);
 
     beforeEach(() => {
@@ -30,10 +30,7 @@ describe('controllers - login (sso)', () => {
     describe('when there is a user session', () => {
       beforeEach(() => {
         ({ req, res } = httpMocks.createMocks({
-          session: {
-            user: aTfmSessionUser(),
-            userToken: 'abc123',
-          },
+          session: aRequestSession(),
           originalUrl: requestOriginalUrl,
         }));
       });
