@@ -4,28 +4,28 @@ import { TfmSessionUser } from '@ukef/dtfs2-common';
 import { Session, SessionData } from 'express-session';
 
 export class UserSessionService {
-  private deleteExistingPartiallyLoggedInSession(session: Session & Partial<SessionData>) {
+  private static deleteExistingPartiallyLoggedInSession(session: Session & Partial<SessionData>) {
     delete session.loginData;
   }
 
-  private deleteExistingLoggedInSession(session: Session & Partial<SessionData>) {
+  private static deleteExistingLoggedInSession(session: Session & Partial<SessionData>) {
     delete session.user;
     delete session.userToken;
   }
 
-  public createPartiallyLoggedInSession({
+  public static createPartiallyLoggedInSession({
     session,
     authCodeUrlRequest,
   }: {
     session: Session & Partial<SessionData>;
     authCodeUrlRequest: AuthorizationUrlRequest;
   }) {
-    this.deleteExistingLoggedInSession(session);
+    UserSessionService.deleteExistingLoggedInSession(session);
     session.loginData = { authCodeUrlRequest };
   }
 
-  public createLoggedInSession({ session, user, userToken }: { session: Session & Partial<SessionData>; user: TfmSessionUser; userToken: string }) {
-    this.deleteExistingPartiallyLoggedInSession(session);
+  public static createLoggedInSession({ session, user, userToken }: { session: Session & Partial<SessionData>; user: TfmSessionUser; userToken: string }) {
+    UserSessionService.deleteExistingPartiallyLoggedInSession(session);
     session.user = user;
     session.userToken = userToken;
   }

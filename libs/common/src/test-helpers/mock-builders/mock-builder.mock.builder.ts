@@ -6,7 +6,7 @@ type Mocked<T> = {
 };
 
 /**
- * Base class for class test data and class builders.
+ * Base class for instantiated class test data and instantiated class builders.
  *
  * Pass in default values for the instance so that you can build an instance with
  * those values and override them as needed.
