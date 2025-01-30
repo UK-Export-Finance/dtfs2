@@ -14,6 +14,11 @@ export const getFormattedDateSent = (dateSent: IsoDateTimeStamp): string => form
 
 /**
  * Maps completed corrections to a view model.
+ *
+ * Formats the "date sent" timestamp for each completed correction.
+ * Generates a sort value map for the completed corrections "date sent"
+ * timestamp and uses this to determine a data sort value for each correction.
+ * This sort value is passed through the view model to be used for sorting.
  * @param completedCorrections - The completed corrections response body.
  * @returns An array of completed correction view models.
  */
