@@ -1,5 +1,5 @@
 import { ObjectId, UpdateResult } from 'mongodb';
-import { MONGO_DB_COLLECTIONS, AMENDMENT_TYPES } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, AMENDMENT_TYPES, AmendmentNotFoundError } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { TfmFacilitiesRepo } from './tfm-facilities.repo';
 import { mongoDbClient } from '../../drivers/db-client';
@@ -77,6 +77,14 @@ describe('TfmFacilitiesRepo', () => {
 
       // Assert
       expect(response).toEqual(mockUpdateResult);
+    });
+
+    it('should throw an AmendmentNotFoundError if no documents are matched', async () => {
+      // Arrange
+      mockUpdateOne.mockResolvedValue({ ...mockUpdateResult, modifiedCount: 0 });
+
+      // Act + Assert
+      await expect(() => TfmFacilitiesRepo.deletePortalFacilityAmendment({ amendmentId, facilityId, auditDetails })).rejects.toThrow(AmendmentNotFoundError);
     });
   });
 });

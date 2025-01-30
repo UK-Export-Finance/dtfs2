@@ -1,4 +1,4 @@
-import { ApiError, AUDIT_USER_TYPES, CustomExpressRequest, AmendmentNotFoundError } from '@ukef/dtfs2-common';
+import { ApiError, AUDIT_USER_TYPES, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { Response } from 'express';
@@ -21,21 +21,17 @@ export const deletePortalAmendment = async (req: DeletePortalAmendmentRequest, r
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.PORTAL);
 
-    const updateResult = await TfmFacilitiesRepo.deletePortalFacilityAmendment({
+    await TfmFacilitiesRepo.deletePortalFacilityAmendment({
       facilityId: new ObjectId(facilityId),
       amendmentId: new ObjectId(amendmentId),
       auditDetails,
     });
 
-    if (!updateResult.modifiedCount) {
-      console.error('Amendment with ID %s not found in facility with ID %s', amendmentId, facilityId);
-      throw new AmendmentNotFoundError(amendmentId, facilityId);
-    }
-
     return res.sendStatus(HttpStatusCode.NoContent);
   } catch (error) {
     if (error instanceof ApiError) {
       const { status, message, code } = error;
+      console.error('Error deleting amendment: %s', message);
       return res.status(status).send({ status, message, code });
     }
 

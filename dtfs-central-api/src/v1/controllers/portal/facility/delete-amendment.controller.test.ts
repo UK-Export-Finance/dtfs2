@@ -1,38 +1,26 @@
-import { ObjectId, UpdateResult } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { TestApiError } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
 import { deletePortalAmendment, DeletePortalAmendmentRequest } from './delete-amendment.controller';
+import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 
 const facilityId = new ObjectId().toString();
 const amendmentId = new ObjectId().toString();
 
-const mockDeletePortalFacilityAmendment = jest.fn() as jest.Mock<Promise<UpdateResult>>;
+const mockDeletePortalFacilityAmendment = jest.fn();
 console.error = jest.fn();
 
 const generateHttpMocks = ({ auditDetails }: { auditDetails: unknown }) =>
   createMocks<DeletePortalAmendmentRequest>({ params: { facilityId, amendmentId }, body: { auditDetails } });
 
-const updateResult = {
-  modifiedCount: 1,
-  acknowledged: true,
-  upsertedId: new ObjectId(facilityId),
-  matchedCount: 1,
-  upsertedCount: 1,
-};
-
-jest.mock('../../../../repositories/tfm-facilities-repo', () => ({
-  TfmFacilitiesRepo: {
-    deletePortalFacilityAmendment: (amendment: { facilityId: ObjectId; amendmentId: ObjectId; auditDetails: unknown }) =>
-      mockDeletePortalFacilityAmendment(amendment),
-  },
-}));
-
 describe('deletePortalAmendment', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
+
+    jest.spyOn(TfmFacilitiesRepo, 'deletePortalFacilityAmendment').mockImplementation(mockDeletePortalFacilityAmendment);
   });
 
   it('should call TfmFacilitiesRepo.deletePortalFacilityAmendment with the correct params', async () => {
@@ -52,22 +40,8 @@ describe('deletePortalAmendment', () => {
     });
   });
 
-  it(`should throw ${HttpStatusCode.NotFound} if no documents are matched`, async () => {
-    // Arrange
-    mockDeletePortalFacilityAmendment.mockResolvedValue({ ...updateResult, modifiedCount: 0 });
-    const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
-    const { req, res } = generateHttpMocks({ auditDetails });
-
-    // Act
-    await deletePortalAmendment(req, res);
-
-    // Assert
-    expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
-  });
-
   it(`should return ${HttpStatusCode.NoContent}`, async () => {
     // Arrange
-    mockDeletePortalFacilityAmendment.mockResolvedValue(updateResult);
     const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
     const { req, res } = generateHttpMocks({ auditDetails });
 

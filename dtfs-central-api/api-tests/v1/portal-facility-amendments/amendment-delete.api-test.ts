@@ -153,5 +153,27 @@ describe('DELETE /v1/portal/facilities/:facilityId/amendments/:amendmentId', () 
 
       expect(status).toEqual(HttpStatusCode.NoContent);
     });
+
+    it('should overwrite any existing amendment', async () => {
+      // Arrange
+      const existingAmendment = await createPortalFacilityAmendment({ facilityId, dealId, userId: portalUserId });
+      const existingAmendmentId = existingAmendment.amendmentId.toString();
+
+      // Act
+      const { status } = (await testApi
+        .remove({ auditDetails: generatePortalAuditDetails(portalUserId) })
+        .to(generateUrl(facilityId, existingAmendmentId))) as ErrorResponse;
+
+      expect(status).toEqual(HttpStatusCode.NoContent);
+
+      // Assert
+      const getExistingAmendmentResponse = await testApi.get(`/v1/portal/facilities/${facilityId}/amendments/${existingAmendmentId}`);
+
+      expect(getExistingAmendmentResponse.status).toEqual(HttpStatusCode.NotFound);
+      expect(getExistingAmendmentResponse.body).toEqual({
+        status: HttpStatusCode.NotFound,
+        message: `Amendment not found: ${existingAmendmentId} on facility: ${facilityId}`,
+      });
+    });
   });
 });

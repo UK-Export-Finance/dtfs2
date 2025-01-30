@@ -437,6 +437,10 @@ export class TfmFacilitiesRepo {
 
     const updateResult = await collection.updateOne(findFilter, updateFilter);
 
+    if (!updateResult.modifiedCount) {
+      throw new AmendmentNotFoundError(amendmentId.toString(), facilityId.toString());
+    }
+
     return updateResult;
   }
 }
