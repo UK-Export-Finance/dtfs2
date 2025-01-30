@@ -10,12 +10,12 @@ import { PIM_USER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN, CURRENC
 
 context('Amendments - automatic approval journey', () => {
   /**
-   * The deal in the test is a BS deal.
+   * The deal in the test is a BSS deal.
    *
-   * The tenor is calculated using the SQL here:
-   * https://github.com/UK-Export-Finance/databases-datateam/blob/163d71b0aef58652db5e6ccf29edce2ce3df30ca/MASTER_DATA/dbo/Functions/fn_DATEDIFF_FULLMONTH.sql
+   * The tenor is calculated using a SQL function used by MDM.
    *
-   * In these tests, the mock start date is two years ago today & the mock end date is a month today.
+   * In these tests, the mock start date is two years ago from today
+   * & the mock end date is a month from today.
    *
    * So in this case it boils down to the tenor being 25 months except for:
    * - if expiry and commencement dates are the same date of month then you add one
