@@ -287,41 +287,36 @@ describe('get-record-correction-details', () => {
   });
 
   describe('when a record correction is completed', () => {
+    const previousFeeRecordValues = {
+      facilityUtilisation: 123.45,
+    };
+    const correctedFeeRecordValues = {
+      facilityUtilisation: 987.65,
+    };
+
     const feeRecord1 = new FeeRecordEntityMockBuilder().withId(feeRecordId).withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED).build();
     const feeRecord2 = new FeeRecordEntityMockBuilder().withId(feeRecordId2).withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED).build();
     const feeRecord3 = new FeeRecordEntityMockBuilder().withId(feeRecordId3).withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED).withCorrections([]).build();
 
     const correction1 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord1, true)
-      .withReasons([RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT])
+      .withReasons([RECORD_CORRECTION_REASON.UTILISATION_INCORRECT])
       .withDateRequested(new Date())
-      .withPreviousValues({
-        feesPaidToUkefForThePeriod: 123.45,
-      })
-      .withCorrectedValues({
-        feesPaidToUkefForThePeriod: 987.65,
-      })
+      .withPreviousValues(previousFeeRecordValues)
+      .withCorrectedValues(correctedFeeRecordValues)
       .build();
 
     const correction2 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord1, true)
       .withReasons([RECORD_CORRECTION_REASON.UTILISATION_INCORRECT])
       .withDateRequested(new Date())
-      .withPreviousValues({
-        facilityUtilisation: 123.45,
-      })
-      .withCorrectedValues({
-        facilityUtilisation: 987.65,
-      })
+      .withPreviousValues(previousFeeRecordValues)
+      .withCorrectedValues(correctedFeeRecordValues)
       .build();
 
     const correction3 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord2, true)
       .withReasons([RECORD_CORRECTION_REASON.UTILISATION_INCORRECT])
       .withDateRequested(new Date())
-      .withPreviousValues({
-        facilityUtilisation: 123.45,
-      })
-      .withCorrectedValues({
-        facilityUtilisation: 987.65,
-      })
+      .withPreviousValues(previousFeeRecordValues)
+      .withCorrectedValues(correctedFeeRecordValues)
       .build();
 
     feeRecord1.corrections = [correction1, correction2];
@@ -387,30 +382,29 @@ describe('get-record-correction-details', () => {
   });
 
   describe('when provided with corrections which are complete and not complete', () => {
+    const previousFeeRecordValues = {
+      facilityUtilisation: 123.45,
+    };
+    const correctedFeeRecordValues = {
+      facilityUtilisation: 987.65,
+    };
+
     const feeRecord1 = new FeeRecordEntityMockBuilder().withId(feeRecordId).withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED).build();
     const feeRecord2 = new FeeRecordEntityMockBuilder().withId(feeRecordId2).withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION).build();
     const feeRecord3 = new FeeRecordEntityMockBuilder().withId(feeRecordId3).withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED).withCorrections([]).build();
 
     const correction1 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord1, true)
-      .withReasons([RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT])
+      .withReasons([RECORD_CORRECTION_REASON.UTILISATION_INCORRECT])
       .withDateRequested(new Date())
-      .withPreviousValues({
-        feesPaidToUkefForThePeriod: 123.45,
-      })
-      .withCorrectedValues({
-        feesPaidToUkefForThePeriod: 987.65,
-      })
+      .withPreviousValues(previousFeeRecordValues)
+      .withCorrectedValues(correctedFeeRecordValues)
       .build();
 
     const correction2 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord1, true)
       .withReasons([RECORD_CORRECTION_REASON.UTILISATION_INCORRECT])
       .withDateRequested(new Date())
-      .withPreviousValues({
-        facilityUtilisation: 123.45,
-      })
-      .withCorrectedValues({
-        facilityUtilisation: 987.65,
-      })
+      .withPreviousValues(previousFeeRecordValues)
+      .withCorrectedValues(correctedFeeRecordValues)
       .build();
 
     const correction3 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord2, false)
