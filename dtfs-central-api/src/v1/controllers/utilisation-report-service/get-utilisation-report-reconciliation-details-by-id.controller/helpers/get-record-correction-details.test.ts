@@ -287,29 +287,42 @@ describe('get-record-correction-details', () => {
   });
 
   describe('when a record correction is completed', () => {
+    const previousFeeRecordValues = {
+      facilityUtilisation: 123.45,
+    };
+    const correctedFeeRecordValues = {
+      facilityUtilisation: 987.65,
+    };
+
     const feeRecord1 = new FeeRecordEntityMockBuilder().withId(feeRecordId).withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED).build();
     const feeRecord2 = new FeeRecordEntityMockBuilder().withId(feeRecordId2).withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED).build();
     const feeRecord3 = new FeeRecordEntityMockBuilder().withId(feeRecordId3).withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED).withCorrections([]).build();
 
     const correction1 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord1, true)
-      .withReasons([RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT])
+      .withReasons([RECORD_CORRECTION_REASON.UTILISATION_INCORRECT])
       .withDateRequested(new Date())
+      .withPreviousValues(previousFeeRecordValues)
+      .withCorrectedValues(correctedFeeRecordValues)
       .build();
 
     const correction2 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord1, true)
       .withReasons([RECORD_CORRECTION_REASON.UTILISATION_INCORRECT])
       .withDateRequested(new Date())
+      .withPreviousValues(previousFeeRecordValues)
+      .withCorrectedValues(correctedFeeRecordValues)
       .build();
 
     const correction3 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord2, true)
       .withReasons([RECORD_CORRECTION_REASON.UTILISATION_INCORRECT])
       .withDateRequested(new Date())
+      .withPreviousValues(previousFeeRecordValues)
+      .withCorrectedValues(correctedFeeRecordValues)
       .build();
 
     feeRecord1.corrections = [correction1, correction2];
     feeRecord2.corrections = [correction3];
 
-    it('should populate formattedOldRecords and formattedCorrectRecords from mapCorrectionReasonsToFormattedPreviousValues and mapCorrectionReasonsToFormattedCorrectValues', () => {
+    it('should populate formattedOldRecords and formattedCorrectRecords from mapCorrectionReasonsAndValuesToFormattedValues', () => {
       const result = getRecordCorrectionDetails([feeRecord1, feeRecord2, feeRecord3]);
 
       const reasonsArray1 = mapReasonsToDisplayValues(feeRecord1.corrections[0].reasons);
@@ -369,18 +382,29 @@ describe('get-record-correction-details', () => {
   });
 
   describe('when provided with corrections which are complete and not complete', () => {
+    const previousFeeRecordValues = {
+      facilityUtilisation: 123.45,
+    };
+    const correctedFeeRecordValues = {
+      facilityUtilisation: 987.65,
+    };
+
     const feeRecord1 = new FeeRecordEntityMockBuilder().withId(feeRecordId).withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED).build();
     const feeRecord2 = new FeeRecordEntityMockBuilder().withId(feeRecordId2).withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION).build();
     const feeRecord3 = new FeeRecordEntityMockBuilder().withId(feeRecordId3).withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED).withCorrections([]).build();
 
     const correction1 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord1, true)
-      .withReasons([RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT])
+      .withReasons([RECORD_CORRECTION_REASON.UTILISATION_INCORRECT])
       .withDateRequested(new Date())
+      .withPreviousValues(previousFeeRecordValues)
+      .withCorrectedValues(correctedFeeRecordValues)
       .build();
 
     const correction2 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord1, true)
       .withReasons([RECORD_CORRECTION_REASON.UTILISATION_INCORRECT])
       .withDateRequested(new Date())
+      .withPreviousValues(previousFeeRecordValues)
+      .withCorrectedValues(correctedFeeRecordValues)
       .build();
 
     const correction3 = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord2, false)
