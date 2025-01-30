@@ -3,7 +3,6 @@ import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { AnyObject, API_ERROR_CODE, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
 import wipeDB from '../../wipeDB';
 import { testApi } from '../../test-api';
 import { createDeal, submitDealToTfm } from '../../helpers/create-deal';
@@ -21,7 +20,7 @@ interface ErrorResponse extends Response {
 }
 
 const generateUrl = (facilityId: string, amendmentId: string): string => {
-  return `/v1/portal/facilities/${facilityId}/amendments/${amendmentId}`;
+  return `/v1/portal/facilities/${facilityId}/amendments/${amendmentId}/submit-to-checker`;
 };
 
 const newDeal = aDeal({
@@ -29,7 +28,7 @@ const newDeal = aDeal({
   submissionType: DEAL_SUBMISSION_TYPE.AIN,
 }) as AnyObject;
 
-describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId', () => {
+describe('post /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit-to-checker', () => {
   let dealId: string;
   let facilityId: string;
   let portalUserId: string;
@@ -68,9 +67,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId', () =
     it(`should return ${HttpStatusCode.NotFound}`, async () => {
       const amendmentId = new ObjectId().toString();
 
-      const { status } = await testApi
-        .patch({ update: aPortalFacilityAmendmentUserValues(), auditDetails: generatePortalAuditDetails(portalUserId) })
-        .to(generateUrl(facilityId, amendmentId));
+      const { status } = await testApi.post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) }).to(generateUrl(facilityId, amendmentId));
 
       expect(status).toEqual(HttpStatusCode.NotFound);
     });
@@ -93,7 +90,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId', () =
       const anInvalidFacilityId = 'InvalidId';
 
       const { body, status } = (await testApi
-        .patch({ update: aPortalFacilityAmendmentUserValues(), auditDetails: generatePortalAuditDetails(portalUserId) })
+        .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(anInvalidFacilityId, amendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
@@ -108,7 +105,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId', () =
       const anInvalidAmendmentId = 'InvalidId';
 
       const { body, status } = (await testApi
-        .patch({ update: aPortalFacilityAmendmentUserValues(), auditDetails: generatePortalAuditDetails(portalUserId) })
+        .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(facilityId, anInvalidAmendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
@@ -119,18 +116,18 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId', () =
       });
     });
 
-    it(`should return ${HttpStatusCode.BadRequest} when the update has extra fields`, async () => {
+    it(`should return ${HttpStatusCode.BadRequest} when the deal id is invalid`, async () => {
+      const anInvalidDealId = 'dealId';
+
       const { body, status } = (await testApi
-        .patch({
-          update: { ...(aPortalFacilityAmendmentUserValues() as AnyObject), additional: 'property' },
-          auditDetails: generatePortalAuditDetails(portalUserId),
-        })
+        .post({ dealId: anInvalidDealId, auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
+
       expect(body).toEqual({
         status: HttpStatusCode.BadRequest,
-        message: ["update: Unrecognized key(s) in object: 'additional' (unrecognized_keys)"],
+        message: ['dealId: _id must be a valid mongo object id (custom)'],
         code: API_ERROR_CODE.INVALID_PAYLOAD,
       });
     });
@@ -139,7 +136,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId', () =
       const aValidButNonExistentFacilityId = new ObjectId().toString();
 
       const { body, status } = (await testApi
-        .patch({ update: aPortalFacilityAmendmentUserValues(), auditDetails: generatePortalAuditDetails(portalUserId) })
+        .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(aValidButNonExistentFacilityId, amendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.NotFound);
@@ -153,7 +150,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId', () =
       const aValidButNonExistentAmendmentId = new ObjectId().toString();
 
       const { body, status } = (await testApi
-        .patch({ update: aPortalFacilityAmendmentUserValues(), auditDetails: generatePortalAuditDetails(portalUserId) })
+        .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(facilityId, aValidButNonExistentAmendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.NotFound);
@@ -165,7 +162,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId', () =
 
     it(`should return ${HttpStatusCode.Ok} when the payload is valid & the amendment exists`, async () => {
       const { status } = (await testApi
-        .patch({ update: aPortalFacilityAmendmentUserValues(), auditDetails: generatePortalAuditDetails(portalUserId) })
+        .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.Ok);
