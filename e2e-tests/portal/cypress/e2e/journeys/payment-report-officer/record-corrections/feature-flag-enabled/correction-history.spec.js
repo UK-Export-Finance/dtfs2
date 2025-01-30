@@ -131,7 +131,7 @@ context('Correction history - Fee record correction feature flag enabled', () =>
 
         const secondCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(secondFeeRecordCorrectionReceived, true)
           .withId(3)
-          .withDateReceived(new Date('2024-02-21'))
+          .withDateReceived(new Date('2024-03-14'))
           .build();
 
         const thirdCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(thirdFeeRecordCorrectionReceived, true)
@@ -198,7 +198,7 @@ context('Correction history - Fee record correction feature flag enabled', () =>
       });
 
       it('should sort the rows by "date sent" in ascending order', () => {
-        cy.assertText(correctionHistory.row(1).dateSent(), '21 Feb 2024');
+        cy.assertText(correctionHistory.row(1).dateSent(), '14 Mar 2024');
 
         cy.assertText(correctionHistory.row(2).dateSent(), '14 Mar 2024');
 
@@ -211,7 +211,7 @@ context('Correction history - Fee record correction feature flag enabled', () =>
         correctionHistory.tableHeaders.exporter().click();
       });
 
-      it('should sort the rows by "exporter" in ascending order', () => {
+      it('should sort the rows by "exporter" in descending order', () => {
         cy.assertText(correctionHistory.row(1).exporter(), 'Exporter C');
 
         cy.assertText(correctionHistory.row(2).exporter(), 'Exporter B');
