@@ -16,6 +16,12 @@ describe(page, () => {
     facilityType,
   };
 
+  it('should render the page heading', () => {
+    const wrapper = render(params);
+
+    wrapper.expectText('[data-cy="page-heading"]').toContain('Are you sure you want to cancel the request?');
+  });
+
   it(`should render the 'Back' link`, () => {
     const wrapper = render(params);
 
