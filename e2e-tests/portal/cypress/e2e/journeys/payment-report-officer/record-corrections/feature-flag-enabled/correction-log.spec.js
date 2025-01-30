@@ -93,19 +93,19 @@ context('Correction log - Fee record correction feature flag enabled', () => {
           .withExporter('An exporter')
           .build();
 
-        const firstFeeRecordCorrectionReceived = FeeRecordEntityMockBuilder.forReport(report)
+        const firstCorrectionReceived = FeeRecordEntityMockBuilder.forReport(report)
           .withId(2)
           .withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED)
           .withExporter('Exporter A')
           .build();
 
-        const secondFeeRecordCorrectionReceived = FeeRecordEntityMockBuilder.forReport(report)
+        const secondCorrectionReceived = FeeRecordEntityMockBuilder.forReport(report)
           .withId(3)
           .withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED)
           .withExporter('Exporter C')
           .build();
 
-        const thirdFeeRecordCorrectionReceived = FeeRecordEntityMockBuilder.forReport(report)
+        const thirdCorrectionReceived = FeeRecordEntityMockBuilder.forReport(report)
           .withId(4)
           .withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED)
           .withExporter('Exporter B')
@@ -116,7 +116,7 @@ context('Correction log - Fee record correction feature flag enabled', () => {
           .withAdditionalInfo('This should not be displayed because this correction is pending')
           .build();
 
-        const firstCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(firstFeeRecordCorrectionReceived, true)
+        const firstCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(firstCorrectionReceived, true)
           .withId(2)
           .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER])
           .withDateReceived(new Date('2024-04-07'))
@@ -129,12 +129,12 @@ context('Correction log - Fee record correction feature flag enabled', () => {
           .withBankCommentary('Some bank commentary')
           .build();
 
-        const secondCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(secondFeeRecordCorrectionReceived, true)
+        const secondCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(secondCorrectionReceived, true)
           .withId(3)
           .withDateReceived(new Date('2024-03-14'))
           .build();
 
-        const thirdCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(thirdFeeRecordCorrectionReceived, true)
+        const thirdCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(thirdCorrectionReceived, true)
           .withId(4)
           .withDateReceived(new Date('2024-03-14'))
           .build();
@@ -142,9 +142,9 @@ context('Correction log - Fee record correction feature flag enabled', () => {
         cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
         cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [
           feeRecordPendingCorrection,
-          firstFeeRecordCorrectionReceived,
-          secondFeeRecordCorrectionReceived,
-          thirdFeeRecordCorrectionReceived,
+          firstCorrectionReceived,
+          secondCorrectionReceived,
+          thirdCorrectionReceived,
         ]);
         cy.task(NODE_TASKS.INSERT_FEE_RECORD_CORRECTIONS_INTO_DB, [
           pendingCorrection,
@@ -174,7 +174,7 @@ context('Correction log - Fee record correction feature flag enabled', () => {
       correctionLog.rows().should('have.length', 4);
     });
 
-    it('should display completed correction details as row', () => {
+    it('should display a completed corrections details as a single row', () => {
       cy.assertText(correctionLog.row(1).dateSent(), '07 Apr 2024');
       cy.assertText(correctionLog.row(1).exporter(), 'Exporter A');
       cy.assertText(correctionLog.row(1).reasons(), 'Facility ID is incorrect, Other');
