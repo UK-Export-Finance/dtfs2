@@ -14,6 +14,7 @@ const {
   ELIGIBILITY,
   EFFECTIVE_DATE,
   CHECK_YOUR_ANSWERS,
+  MANUAL_APPROVAL_NEEDED,
 } = PORTAL_AMENDMENT_PAGES;
 
 describe('getPreviousPage', () => {
@@ -168,6 +169,35 @@ describe('getPreviousPage', () => {
         description: `when amendment is not changing facility value or changing the cover end date`,
         expectedPreviousPage: WHAT_DO_YOU_NEED_TO_CHANGE,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeFacilityValue(false).withChangeCoverEndDate(false).build(),
+      },
+    ],
+  });
+
+  withPreviousPageTests({
+    currentPage: MANUAL_APPROVAL_NEEDED,
+    successTestCases: [
+      {
+        description: 'when eligibility criteria have at least one "false" answer',
+        expectedPreviousPage: ELIGIBILITY,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withCriteria([
+            { id: 1, text: 'Criterion 1', answer: true },
+            { id: 2, text: 'Criterion 2', answer: false },
+            { id: 3, text: 'Criterion 3', answer: true },
+          ])
+          .build(),
+      },
+    ],
+    errorTestCases: [
+      {
+        description: 'when eligibility criteria all have "true" answers',
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withCriteria([
+            { id: 1, text: 'Criterion 1', answer: true },
+            { id: 2, text: 'Criterion 2', answer: true },
+            { id: 3, text: 'Criterion 3', answer: true },
+          ])
+          .build(),
       },
     ],
   });
