@@ -174,6 +174,7 @@ describe('FeeRecordStateMachine', () => {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAndPaymentsMatch: true,
           hasAttachedPayments: false,
+          hasCorrections: false,
           requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
@@ -292,6 +293,7 @@ describe('FeeRecordStateMachine', () => {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAndPaymentsMatch: true,
           hasAttachedPayments: false,
+          hasCorrections: false,
           requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
