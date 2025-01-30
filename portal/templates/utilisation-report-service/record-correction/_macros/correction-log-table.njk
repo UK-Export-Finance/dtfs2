@@ -55,26 +55,32 @@
       {
         text: "Date sent",
         attributes: {
-          "aria-sort": "ascending"
+          "aria-sort": "descending",
+          "data-cy": "correction-log-header--date-sent"
         }
       },
       {
         text: "Exporter",
         attributes: {
-          "aria-sort": "ascending"
+          "aria-sort": "ascending",
+          "data-cy": "correction-log-header--exporter"
         }
       },
       {
-        text: "Reason(s) for correction"
+        text: "Reason(s) for correction",
+        "data-cy": "correction-log-header--formatted-reasons"
       },
       {
-        text: "Correct record"
+        text: "Correct record",
+        "data-cy": "correction-log-header--formatted-corrected-values"
       },
       {
-        text: "Old record"
+        text: "Old record",
+        "data-cy": "correction-log-header--formatted-previous-values"
       },
       {
-        text: "Correction notes"
+        text: "Correction notes",
+        "data-cy": "correction-log-header--bank-commentary"
       }
     ],
     rows: rows,

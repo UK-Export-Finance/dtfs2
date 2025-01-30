@@ -46,13 +46,13 @@ describe(component, () => {
     wrapper.expectElement('table thead th').toHaveCount(6);
   });
 
-  it('renders the "date sent" heading with the aria-sort attribute set to ascending', () => {
+  it('renders the "date sent" heading with the aria-sort attribute set to descending', () => {
     // Act
     const wrapper = render(viewModel);
 
     // Assert
     wrapper.expectElement(tableHeaderSelector('Date sent')).toExist();
-    wrapper.expectElement(tableHeaderSelector('Date sent')).toHaveAttribute('aria-sort', 'ascending');
+    wrapper.expectElement(tableHeaderSelector('Date sent')).toHaveAttribute('aria-sort', 'descending');
   });
 
   it('renders the "exporter" heading with the aria-sort attribute set to ascending', () => {
@@ -135,14 +135,14 @@ describe(component, () => {
     const wrapper = render({ completedCorrections });
 
     // Assert
-    wrapper.expectElement(`${firstRowSelector} td:contains("${firstCompletedCorrection.dateSent.formattedDateSent}")`).toExist();
-    wrapper
-      .expectElement(`${firstRowSelector} td:contains("${firstCompletedCorrection.dateSent.formattedDateSent}")`)
-      .toHaveAttribute('data-sort-value', firstCompletedCorrection.dateSent.dataSortValue.toString());
+    const firstCorrectionDateSentSelector = `${firstRowSelector} td:contains("${firstCompletedCorrection.dateSent.formattedDateSent}")`;
 
-    wrapper.expectElement(`${secondRowSelector} td:contains("${secondCompletedCorrection.dateSent.formattedDateSent}")`).toExist();
-    wrapper
-      .expectElement(`${secondRowSelector} td:contains("${secondCompletedCorrection.dateSent.formattedDateSent}")`)
-      .toHaveAttribute('data-sort-value', secondCompletedCorrection.dateSent.dataSortValue.toString());
+    wrapper.expectElement(firstCorrectionDateSentSelector).toExist();
+    wrapper.expectElement(firstCorrectionDateSentSelector).toHaveAttribute('data-sort-value', firstCompletedCorrection.dateSent.dataSortValue.toString());
+
+    const secondCorrectionDateSentSelector = `${secondRowSelector} td:contains("${secondCompletedCorrection.dateSent.formattedDateSent}")`;
+
+    wrapper.expectElement(secondCorrectionDateSentSelector).toExist();
+    wrapper.expectElement(secondCorrectionDateSentSelector).toHaveAttribute('data-sort-value', secondCompletedCorrection.dateSent.dataSortValue.toString());
   });
 });

@@ -146,16 +146,12 @@ describe('record-correction-log helpers', () => {
       // Assert
       expect(viewModel).toHaveLength(6);
 
-      const expectedMappedDateSentValues = [
-        { formattedDateSent: '01 Jun 2024', dataSortValue: 3 },
-        { formattedDateSent: '28 Jul 2024', dataSortValue: 5 },
-        { formattedDateSent: '14 Mar 2024', dataSortValue: 0 },
-        { formattedDateSent: '07 May 2024', dataSortValue: 2 },
-        { formattedDateSent: '01 Apr 2024', dataSortValue: 1 },
-        { formattedDateSent: '21 Jun 2024', dataSortValue: 4 },
-      ];
-
-      expect(viewModel.map(({ dateSent }) => dateSent)).toEqual(expectedMappedDateSentValues);
+      expect(viewModel[0].dateSent).toEqual({ formattedDateSent: '01 Jun 2024', dataSortValue: 3 });
+      expect(viewModel[1].dateSent).toEqual({ formattedDateSent: '28 Jul 2024', dataSortValue: 5 });
+      expect(viewModel[2].dateSent).toEqual({ formattedDateSent: '14 Mar 2024', dataSortValue: 0 });
+      expect(viewModel[3].dateSent).toEqual({ formattedDateSent: '07 May 2024', dataSortValue: 2 });
+      expect(viewModel[4].dateSent).toEqual({ formattedDateSent: '01 Apr 2024', dataSortValue: 1 });
+      expect(viewModel[5].dateSent).toEqual({ formattedDateSent: '21 Jun 2024', dataSortValue: 4 });
     });
   });
 });
