@@ -73,18 +73,36 @@ context('Correction log - Fee record correction feature flag enabled', () => {
   });
 
   context('When there are are completed corrections', () => {
-    const pendingCorrectionReportPeriod = { start: { month: 1, year: 2021 }, end: { month: 1, year: 2021 } };
+    const firstCompletedCorrectionDetails = {
+      reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER],
+      formattedReasons: 'Facility ID is incorrect, Other',
+      dateSent: new Date('2024-04-07'),
+      formattedDateSent: '07 Apr 2024',
+      previousValues: {
+        facilityId: '11111111',
+      },
+      formattedPreviousValues: '11111111, -',
+      correctedValues: {
+        facilityId: '22222222',
+      },
+      formattedCorrectedValues: '22222222, -',
+      bankCommentary: 'Some bank commentary',
+    };
+
+    const firstCorrectedFeeRecordExporter = 'Exporter A';
 
     before(() => {
       cy.task('getUserFromDbByEmail', BANK1_PAYMENT_REPORT_OFFICER1.email).then((user) => {
         const { _id, bank } = user;
         const bankId = bank.id;
 
+        const reportPeriod = { start: { month: 1, year: 2021 }, end: { month: 1, year: 2021 } };
+
         const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
           .withId(1)
           .withUploadedByUserId(_id.toString())
           .withBankId(bankId)
-          .withReportPeriod(pendingCorrectionReportPeriod)
+          .withReportPeriod(reportPeriod)
           .build();
 
         const feeRecordPendingCorrection = FeeRecordEntityMockBuilder.forReport(report)
@@ -93,19 +111,19 @@ context('Correction log - Fee record correction feature flag enabled', () => {
           .withExporter('An exporter')
           .build();
 
-        const firstCorrectionReceived = FeeRecordEntityMockBuilder.forReport(report)
+        const firstCorrectedFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
           .withId(2)
           .withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED)
-          .withExporter('Exporter A')
+          .withExporter(firstCorrectedFeeRecordExporter)
           .build();
 
-        const secondCorrectionReceived = FeeRecordEntityMockBuilder.forReport(report)
+        const secondCorrectedFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
           .withId(3)
           .withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED)
           .withExporter('Exporter C')
           .build();
 
-        const thirdCorrectionReceived = FeeRecordEntityMockBuilder.forReport(report)
+        const thirdCorrectedFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
           .withId(4)
           .withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED)
           .withExporter('Exporter B')
@@ -116,25 +134,21 @@ context('Correction log - Fee record correction feature flag enabled', () => {
           .withAdditionalInfo('This should not be displayed because this correction is pending')
           .build();
 
-        const firstCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(firstCorrectionReceived, true)
+        const firstCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(firstCorrectedFeeRecord, true)
           .withId(2)
-          .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER])
-          .withDateReceived(new Date('2024-04-07'))
-          .withPreviousValues({
-            facilityId: '11111111',
-          })
-          .withCorrectedValues({
-            facilityId: '22222222',
-          })
-          .withBankCommentary('Some bank commentary')
+          .withReasons(firstCompletedCorrectionDetails.reasons)
+          .withDateReceived(firstCompletedCorrectionDetails.dateSent)
+          .withPreviousValues(firstCompletedCorrectionDetails.previousValues)
+          .withCorrectedValues(firstCompletedCorrectionDetails.correctedValues)
+          .withBankCommentary(firstCompletedCorrectionDetails.bankCommentary)
           .build();
 
-        const secondCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(secondCorrectionReceived, true)
+        const secondCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(secondCorrectedFeeRecord, true)
           .withId(3)
           .withDateReceived(new Date('2024-03-14'))
           .build();
 
-        const thirdCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(thirdCorrectionReceived, true)
+        const thirdCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(thirdCorrectedFeeRecord, true)
           .withId(4)
           .withDateReceived(new Date('2024-03-14'))
           .build();
@@ -142,9 +156,9 @@ context('Correction log - Fee record correction feature flag enabled', () => {
         cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
         cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [
           feeRecordPendingCorrection,
-          firstCorrectionReceived,
-          secondCorrectionReceived,
-          thirdCorrectionReceived,
+          firstCorrectedFeeRecord,
+          secondCorrectedFeeRecord,
+          thirdCorrectedFeeRecord,
         ]);
         cy.task(NODE_TASKS.INSERT_FEE_RECORD_CORRECTIONS_INTO_DB, [
           pendingCorrection,
@@ -175,12 +189,12 @@ context('Correction log - Fee record correction feature flag enabled', () => {
     });
 
     it('should display a completed corrections details as a single row', () => {
-      cy.assertText(correctionLog.row(1).dateSent(), '07 Apr 2024');
-      cy.assertText(correctionLog.row(1).exporter(), 'Exporter A');
-      cy.assertText(correctionLog.row(1).reasons(), 'Facility ID is incorrect, Other');
-      cy.assertText(correctionLog.row(1).correctRecord(), '22222222, -');
-      cy.assertText(correctionLog.row(1).oldRecord(), '11111111, -');
-      cy.assertText(correctionLog.row(1).correctionNotes(), 'Some bank commentary');
+      cy.assertText(correctionLog.row(1).dateSent(), firstCompletedCorrectionDetails.formattedDateSent);
+      cy.assertText(correctionLog.row(1).exporter(), firstCorrectedFeeRecordExporter);
+      cy.assertText(correctionLog.row(1).reasons(), firstCompletedCorrectionDetails.formattedReasons);
+      cy.assertText(correctionLog.row(1).correctRecord(), firstCompletedCorrectionDetails.formattedCorrectedValues);
+      cy.assertText(correctionLog.row(1).oldRecord(), firstCompletedCorrectionDetails.formattedPreviousValues);
+      cy.assertText(correctionLog.row(1).correctionNotes(), firstCompletedCorrectionDetails.bankCommentary);
     });
 
     it('should display info message to the user', () => {
