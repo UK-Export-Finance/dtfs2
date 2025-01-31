@@ -8,6 +8,8 @@ import {
   PortalFacilityAmendmentUserValues,
   PORTAL_AMENDMENT_STATUS,
   PortalAmendmentStatus,
+  AmendmentNotFoundError,
+  AmendmentIncompleteError,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { cloneDeep } from 'lodash';
@@ -169,6 +171,8 @@ export class PortalFacilityAmendmentService {
     dealId: string;
     auditDetails: PortalAuditDetails;
   }): Promise<FacilityAmendmentWithUkefId> {
+    await this.validateAmendmentIsComplete({ amendmentId, facilityId });
+
     const amendmentUpdate: Partial<PortalFacilityAmendment> = {
       status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
     };
@@ -185,6 +189,53 @@ export class PortalFacilityAmendmentService {
       auditDetails,
       allowedStatuses: [PORTAL_AMENDMENT_STATUS.DRAFT],
     });
+  }
+
+  public static async validateAmendmentIsComplete({ amendmentId, facilityId }: { amendmentId: string; facilityId: string }) {
+    const existingAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
+
+    if (existingAmendment?.type !== AMENDMENT_TYPES.PORTAL) {
+      throw new AmendmentNotFoundError(amendmentId, facilityId);
+    }
+
+    if (!existingAmendment.changeCoverEndDate && !existingAmendment.changeFacilityValue) {
+      throw new AmendmentIncompleteError(facilityId, amendmentId, 'neither changeCoverEndDate nor changeFacilityValue is true');
+    }
+
+    const coverEndDateSectionEmpty =
+      !existingAmendment.coverEndDate && !existingAmendment.isUsingFacilityEndDate && !existingAmendment.bankReviewDate && !existingAmendment.facilityEndDate;
+
+    const amendmentHasBankReviewDate = existingAmendment.isUsingFacilityEndDate === false && existingAmendment.bankReviewDate;
+    const amendmentHasFacilityEndDate = existingAmendment.isUsingFacilityEndDate === true && existingAmendment.facilityEndDate;
+    const coverEndDateSectionFullyComplete = existingAmendment.coverEndDate && (amendmentHasBankReviewDate || amendmentHasFacilityEndDate);
+
+    if (existingAmendment.changeCoverEndDate === false && !coverEndDateSectionEmpty) {
+      throw new AmendmentIncompleteError(facilityId, amendmentId, 'changeCoverEndDate is false but cover end date values are provided');
+    }
+
+    if (existingAmendment.changeCoverEndDate === true && !coverEndDateSectionFullyComplete) {
+      throw new AmendmentIncompleteError(facilityId, amendmentId, 'changeCoverEndDate is true but cover end date section incomplete');
+    }
+
+    if (!existingAmendment.changeFacilityValue && existingAmendment.value) {
+      throw new AmendmentIncompleteError(facilityId, amendmentId, 'changeFacilityValue is false but value provided');
+    }
+
+    if (existingAmendment.changeFacilityValue && !existingAmendment.value) {
+      throw new AmendmentIncompleteError(facilityId, amendmentId, 'changeFacilityValue is true but a value has not been provided');
+    }
+
+    if (!existingAmendment.effectiveDate) {
+      throw new AmendmentIncompleteError(facilityId, amendmentId, 'effectiveDate not provided');
+    }
+
+    if (!existingAmendment.eligibilityCriteria) {
+      throw new AmendmentIncompleteError(facilityId, amendmentId, 'eligibilityCriteria not provided');
+    }
+
+    if (existingAmendment.eligibilityCriteria.criteria.some(({ answer }) => !answer)) {
+      throw new AmendmentIncompleteError(facilityId, amendmentId, 'eligibilityCriteria answers are not all true');
+    }
   }
 
   public static generatePortalFacilityAmendment(update: PortalFacilityAmendmentUserValues): PortalFacilityAmendmentUserValues {
