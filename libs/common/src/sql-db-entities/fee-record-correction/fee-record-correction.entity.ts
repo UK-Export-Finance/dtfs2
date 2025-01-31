@@ -130,7 +130,7 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
     recordCorrection.isCompleted = false;
     recordCorrection.updateLastUpdatedBy(requestSource);
     recordCorrection.bankTeamName = bankTeamName;
-    recordCorrection.bankTeamEmails = bankTeamEmails.join(', ');
+    recordCorrection.bankTeamEmails = bankTeamEmails.join(',');
     return recordCorrection;
   }
 
