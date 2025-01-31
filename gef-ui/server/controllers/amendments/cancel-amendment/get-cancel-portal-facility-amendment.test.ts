@@ -14,7 +14,7 @@ import { CancelAmendmentViewModel } from '../../../types/view-models/amendments/
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_UNISSUED_FACILITY, MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
-import { getCancelPortalFacilityAmendment, GetCancelPortalFacilityAmendmentRequest } from './cancel-portal-facility-amendment';
+import { getCancelPortalFacilityAmendment, GetCancelPortalFacilityAmendmentRequest } from './get-cancel-portal-facility-amendment';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
