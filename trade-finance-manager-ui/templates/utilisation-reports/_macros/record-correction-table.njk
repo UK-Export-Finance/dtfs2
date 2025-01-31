@@ -1,4 +1,4 @@
-{% import "./fee-record-status.njk" as feeRecordStatus %}
+{% import "./record-correction-status.njk" as recordCorrectionStatus %}
 
 {% macro render(params) %}
   {% set recordCorrectionRows = params.recordCorrectionRows %}
@@ -24,7 +24,7 @@
           <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-correct-record">{{ recordCorrectionRow.formattedCorrectRecords }}</td>
           <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-old-record">{{ recordCorrectionRow.formattedOldRecords }}</td>
           <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-status">
-           {{ feeRecordStatus.render({
+           {{ recordCorrectionStatus.render({
               status: recordCorrectionRow.status,
               displayStatus: recordCorrectionRow.displayStatus
             }) }}

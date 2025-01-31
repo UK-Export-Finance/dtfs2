@@ -24,7 +24,7 @@ describe('getUtilisationReportPendingCorrectionsByBankId', () => {
     corrections: [
       {
         correctionId: 1,
-        facilityId: 'FAC123',
+        facilityId: '12345678',
         exporter: 'Exporter A',
         additionalInfo: 'Correction details A',
         reportedFees: {
