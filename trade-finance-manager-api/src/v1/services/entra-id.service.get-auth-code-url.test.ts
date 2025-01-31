@@ -35,7 +35,6 @@ describe('EntraIdService', () => {
       });
 
       entraIdConfig = new EntraIdConfigMockBuilder()
-        .withDefaults()
         .with({
           authorityMetadataUrl: mockAuthorityMetaDataUrl,
           scopes: mockScope,
@@ -43,7 +42,7 @@ describe('EntraIdService', () => {
         })
         .build();
 
-      entraIdApi = new EntraIdApiMockBuilder().withDefaults().build();
+      entraIdApi = new EntraIdApiMockBuilder().build();
     });
 
     it('should call base64Encode with the expected stringifiedstate', async () => {
