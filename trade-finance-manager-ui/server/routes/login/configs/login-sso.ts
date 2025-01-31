@@ -9,7 +9,7 @@ export const getLoginSsoRouter: GetRouter = () => {
     LoginController.getLogin(req, res).catch(next);
   });
 
-  loginSsoRouter.get('/logout', loginController.getLogout);
+  loginSsoRouter.get('/logout', LoginController.getLogout);
 
   return loginSsoRouter;
 };
