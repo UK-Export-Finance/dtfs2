@@ -494,3 +494,33 @@ describe('updateAmendment()', () => {
     await expect(returned).rejects.toThrow(InvalidFacilityIdError);
   });
 });
+
+describe('deleteAmendment()', () => {
+  it(`should return the correct response`, async () => {
+    // Arrange
+    Axios.delete.mockReturnValue(Promise.resolve(undefined));
+
+    // Act
+    await api.deleteAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken });
+
+    // Assert
+    expect(Axios.delete).toHaveBeenCalledTimes(1);
+    expect(api.deleteAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken })).resolves.toBeUndefined();
+  });
+
+  it.each(invalidMongoIdTestCases)('should throw an error when given an invalid amendment Id', async (invalidMongoId) => {
+    // Act
+    const returned = api.deleteAmendment({ facilityId: validMongoId, amendmentId: invalidMongoId, userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow('Invalid amendment ID');
+  });
+
+  it.each(invalidMongoIdTestCases)('should throw an error when given an invalid facility Id', async (invalidMongoId) => {
+    // Act
+    const returned = api.deleteAmendment({ facilityId: invalidMongoId, amendmentId: validMongoId, userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow(InvalidFacilityIdError);
+  });
+});
