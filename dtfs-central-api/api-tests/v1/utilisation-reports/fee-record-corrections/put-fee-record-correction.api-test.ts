@@ -6,6 +6,7 @@ import {
   FeeRecordCorrectionEntityMockBuilder,
   FeeRecordCorrectionTransientFormDataEntity,
   FeeRecordCorrectionTransientFormDataEntityMockBuilder,
+  FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
   RECORD_CORRECTION_REASON,
@@ -163,6 +164,19 @@ describe(`PUT ${BASE_URL}`, () => {
 
     // Assert
     expect(status).toEqual(HttpStatusCode.Ok);
+  });
+
+  it(`should update the fee record with corrected values and set status to ${FEE_RECORD_STATUS.TO_DO_AMENDED}`, async () => {
+    // Arrange
+    const requestBody = aValidRequestBody();
+
+    // Act
+    await testApi.put(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { bankId, correctionId }));
+
+    // Assert
+    const feeRecord = await SqlDbHelper.manager.findOneBy(FeeRecordEntity, { id: feeRecordId });
+    expect(feeRecord?.facilityId).toEqual(correctFacilityId);
+    expect(feeRecord?.status).toEqual(FEE_RECORD_STATUS.TO_DO_AMENDED);
   });
 
   it('should save the previous and corrected values on the correction and complete it', async () => {

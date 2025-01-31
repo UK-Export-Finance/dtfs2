@@ -490,6 +490,24 @@ const getFeeRecordCorrectionById = async (correctionId) => {
 };
 
 /**
+ * Gets completed fee record corrections by bank id.
+ * @param {number} bankId - The ID of the bank
+ * @returns {Promise<import('./api-response-types').GetCompletedFeeRecordCorrectionsResponseBody>} response of API call or wrapped error response
+ */
+const getCompletedFeeRecordCorrections = async (bankId) => {
+  try {
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports/completed-corrections`, {
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get completed fee record corrections for bank with id %s: %o', bankId, error);
+    throw error;
+  }
+};
+
+/**
  * Saves a fee record correction.
  *
  * The user id is sent in the body as saving uses the current
@@ -762,4 +780,5 @@ module.exports = {
   patchPortalFacilityAmendment,
   putFeeRecordCorrectionTransientFormData,
   deletePortalFacilityAmendment,
+  getCompletedFeeRecordCorrections,
 };
