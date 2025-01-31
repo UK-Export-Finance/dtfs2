@@ -7,6 +7,7 @@ import {
   PortalFacilityAmendment,
   PortalFacilityAmendmentUserValues,
   PORTAL_AMENDMENT_STATUS,
+  PortalAmendmentStatus,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { findOneUser } from '../../v1/controllers/user/get-user.controller';
@@ -84,17 +85,20 @@ export class PortalFacilityAmendmentService {
     facilityId,
     update,
     auditDetails,
+    allowedStatuses,
   }: {
     amendmentId: ObjectId;
     facilityId: ObjectId;
     update: Partial<PortalFacilityAmendment>;
     auditDetails: PortalAuditDetails;
+    allowedStatuses: PortalAmendmentStatus[];
   }): Promise<FacilityAmendmentWithUkefId> {
     await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({
       amendmentId,
       facilityId,
       update,
       auditDetails,
+      allowedStatuses,
     });
 
     const updatedAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
@@ -135,7 +139,13 @@ export class PortalFacilityAmendmentService {
     const facilityMongoId = new ObjectId(facilityId);
     const amendmentMongoId = new ObjectId(amendmentId);
 
-    return await this.updatePortalFacilityAmendment({ amendmentId: amendmentMongoId, facilityId: facilityMongoId, update: amendmentUpdate, auditDetails });
+    return await this.updatePortalFacilityAmendment({
+      amendmentId: amendmentMongoId,
+      facilityId: facilityMongoId,
+      update: amendmentUpdate,
+      auditDetails,
+      allowedStatuses: [PORTAL_AMENDMENT_STATUS.DRAFT],
+    });
   }
 
   /**
@@ -167,6 +177,12 @@ export class PortalFacilityAmendmentService {
     const facilityMongoId = new ObjectId(facilityId);
     const amendmentMongoId = new ObjectId(amendmentId);
 
-    return await this.updatePortalFacilityAmendment({ amendmentId: amendmentMongoId, facilityId: facilityMongoId, update: amendmentUpdate, auditDetails });
+    return await this.updatePortalFacilityAmendment({
+      amendmentId: amendmentMongoId,
+      facilityId: facilityMongoId,
+      update: amendmentUpdate,
+      auditDetails,
+      allowedStatuses: [PORTAL_AMENDMENT_STATUS.DRAFT],
+    });
   }
 }
