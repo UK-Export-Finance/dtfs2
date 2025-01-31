@@ -13,7 +13,7 @@ const ELIGIBILITY_CRITERIA_AMENDMENTS = [
       },
       {
         id: 2,
-        text: 'Neither the Exporter, not its UK Parent Obligor is an Affected Person',
+        text: 'Neither the Exporter, nor its UK Parent Obligor is an Affected Person',
       },
       {
         id: 3,
@@ -29,7 +29,7 @@ const ELIGIBILITY_CRITERIA_AMENDMENTS = [
       },
       {
         id: 6,
-        text: 'The Bank is the sole and legal beneficial owner of, and has good title to, the Facility and any Utilisation thereunder.',
+        text: 'The Bank is the sole and legal beneficial owner of, and has good title to, the Facility and any Utilisation thereunder',
       },
       {
         id: 7,

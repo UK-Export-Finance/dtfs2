@@ -47,7 +47,7 @@ describe('user service', () => {
         createUserSpy = jest.spyOn(UserRepo, 'createUser');
       });
 
-      it('creates a new user in the database', async () => {
+      it('should create a new user in the database', async () => {
         await userService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
 
         expect(createUserSpy).toHaveBeenCalledWith({
@@ -64,7 +64,7 @@ describe('user service', () => {
         updateUserByIdSpy = jest.spyOn(UserRepo, 'updateUserById');
       });
 
-      it('updates the user in the database', async () => {
+      it('should update the user in the database', async () => {
         await userService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
 
         expect(updateUserByIdSpy).toHaveBeenCalledWith({
@@ -81,7 +81,7 @@ describe('user service', () => {
         jest.spyOn(UserRepo, 'findUsersByEmailAddresses').mockResolvedValue([existingUser, existingUser]);
       });
 
-      it('throws an error', async () => {
+      it('should throw an error', async () => {
         await expect(userService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails })).rejects.toThrowError();
       });
     });

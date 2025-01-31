@@ -33,5 +33,7 @@ export * from './facility-fee-frequency';
 export * from './facility-day-count-basis';
 export * from './e2e-fixtures';
 export * from './regex';
+export * from './status';
+export * from './record-correction-status';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';

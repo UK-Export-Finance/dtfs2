@@ -2,11 +2,14 @@ import { HttpStatusCode } from 'axios';
 import { Response } from 'supertest';
 import {
   FEE_RECORD_STATUS,
+  FeeRecordCorrectionEntity,
   FeeRecordCorrectionEntityMockBuilder,
   FeeRecordCorrectionTransientFormDataEntity,
   FeeRecordCorrectionTransientFormDataEntityMockBuilder,
+  FeeRecordEntity,
   FeeRecordEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
+  RECORD_CORRECTION_REASON,
   ReportPeriod,
   UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
@@ -33,12 +36,13 @@ const BASE_URL = '/v1/bank/:bankId/fee-record-corrections/:correctionId';
 
 describe(`PUT ${BASE_URL}`, () => {
   const bankId = '1';
+  const feeRecordId = 1;
   const correctionId = 2;
   const userId = new ObjectId().toString();
 
   const reportPeriod = { start: { month: 3, year: 2023 }, end: { month: 4, year: 2023 } };
 
-  const paymentOfficerTeamEmails = ['email1@ukexportfinance.gov.uk'];
+  const paymentOfficerTeamEmails = ['payment-officer1@ukexportfinance.gov.uk'];
 
   const mockBank = {
     ...aBank(),
@@ -52,6 +56,11 @@ describe(`PUT ${BASE_URL}`, () => {
   const aValidRequestBody = () => ({
     user: { _id: userId },
   });
+
+  const reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT];
+
+  const incorrectFacilityId = '11111111';
+  const correctFacilityId = '22222222';
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();
@@ -68,16 +77,24 @@ describe(`PUT ${BASE_URL}`, () => {
 
     const report = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS).withBankId(bankId).withReportPeriod(reportPeriod).build();
 
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION).build();
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(report)
+      .withId(feeRecordId)
+      .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
+      .withFacilityId(incorrectFacilityId)
+      .build();
 
-    const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false).withId(correctionId).build();
+    const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false).withId(correctionId).withReasons(reasons).build();
 
     feeRecord.corrections = [correction];
     report.feeRecords = [feeRecord];
 
     await SqlDbHelper.saveNewEntry('UtilisationReport', report);
 
-    const formData = new FeeRecordCorrectionTransientFormDataEntityMockBuilder().withCorrectionId(correctionId).withUserId(userId).build();
+    const formData = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()
+      .withCorrectionId(correctionId)
+      .withUserId(userId)
+      .withFormData({ facilityId: correctFacilityId })
+      .build();
 
     await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', formData);
   });
@@ -147,6 +164,50 @@ describe(`PUT ${BASE_URL}`, () => {
 
     // Assert
     expect(status).toEqual(HttpStatusCode.Ok);
+  });
+
+  it(`should update the fee record with corrected values and set status to ${FEE_RECORD_STATUS.TO_DO_AMENDED}`, async () => {
+    // Arrange
+    const requestBody = aValidRequestBody();
+
+    // Act
+    await testApi.put(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { bankId, correctionId }));
+
+    // Assert
+    const feeRecord = await SqlDbHelper.manager.findOneBy(FeeRecordEntity, { id: feeRecordId });
+    expect(feeRecord?.facilityId).toEqual(correctFacilityId);
+    expect(feeRecord?.status).toEqual(FEE_RECORD_STATUS.TO_DO_AMENDED);
+  });
+
+  it('should save the previous and corrected values on the correction and complete it', async () => {
+    // Arrange
+    const requestBody = aValidRequestBody();
+
+    // Act
+    await testApi.put(requestBody).to(replaceUrlParameterPlaceholders(BASE_URL, { bankId, correctionId }));
+
+    // Assert
+    const correction = await SqlDbHelper.manager.findOneBy(FeeRecordCorrectionEntity, { id: correctionId });
+
+    const expectedPreviousValues = {
+      facilityId: incorrectFacilityId,
+      feesPaidToUkefForThePeriod: null,
+      feesPaidToUkefForThePeriodCurrency: null,
+      facilityUtilisation: null,
+    };
+
+    expect(correction?.previousValues).toEqual(expectedPreviousValues);
+
+    const expectedCorrectedValues = {
+      facilityId: correctFacilityId,
+      feesPaidToUkefForThePeriod: null,
+      feesPaidToUkefForThePeriodCurrency: null,
+      facilityUtilisation: null,
+    };
+
+    expect(correction?.correctedValues).toEqual(expectedCorrectedValues);
+
+    expect(correction?.isCompleted).toEqual(true);
   });
 
   it('should delete the transient form data', async () => {
