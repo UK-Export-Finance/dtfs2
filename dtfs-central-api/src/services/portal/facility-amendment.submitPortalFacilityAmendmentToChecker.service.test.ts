@@ -8,6 +8,7 @@ import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 
 const mockUpdatePortalFacilityAmendmentByAmendmentId = jest.fn();
 const mockFindOneAmendmentByFacilityIdAndAmendmentId = jest.fn();
+const mockValidateAmendmentIsComplete = jest.fn();
 
 const amendmentId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
@@ -27,6 +28,8 @@ describe('PortalFacilityAmendmentService', () => {
     jest.spyOn(TfmFacilitiesRepo, 'updatePortalFacilityAmendmentByAmendmentId').mockImplementation(mockUpdatePortalFacilityAmendmentByAmendmentId);
     jest.spyOn(TfmFacilitiesRepo, 'findOneAmendmentByFacilityIdAndAmendmentId').mockImplementation(mockFindOneAmendmentByFacilityIdAndAmendmentId);
 
+    jest.spyOn(PortalFacilityAmendmentService, 'validateAmendmentIsComplete').mockImplementation(mockValidateAmendmentIsComplete);
+
     mockUpdatePortalFacilityAmendmentByAmendmentId.mockResolvedValue({});
     mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValue(updatedAmendment);
   });
@@ -36,6 +39,23 @@ describe('PortalFacilityAmendmentService', () => {
   });
 
   describe('submitPortalFacilityAmendmentToChecker', () => {
+    it('should call PortalFacilityAmendmentService.validateAmendmentIsComplete', async () => {
+      // Act
+      await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+        amendmentId,
+        facilityId,
+        dealId,
+        auditDetails,
+      });
+
+      // Assert
+      expect(mockValidateAmendmentIsComplete).toHaveBeenCalledTimes(1);
+      expect(mockValidateAmendmentIsComplete).toHaveBeenCalledWith({
+        facilityId,
+        amendmentId,
+      });
+    });
+
     it('should call TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId with the correct params', async () => {
       // Act
       await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
@@ -56,66 +76,67 @@ describe('PortalFacilityAmendmentService', () => {
         facilityId: new ObjectId(facilityId),
         amendmentId: new ObjectId(amendmentId),
         auditDetails,
+        allowedStatuses: [PORTAL_AMENDMENT_STATUS.DRAFT],
       });
     });
-  });
 
-  it('should call TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId with the correct params', async () => {
-    // Act
-    await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
-      amendmentId,
-      facilityId,
-      dealId,
-      auditDetails,
+    it('should call TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId with the correct params', async () => {
+      // Act
+      await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+        amendmentId,
+        facilityId,
+        dealId,
+        auditDetails,
+      });
+
+      // Assert
+      expect(mockFindOneAmendmentByFacilityIdAndAmendmentId).toHaveBeenCalledTimes(1);
+      expect(mockFindOneAmendmentByFacilityIdAndAmendmentId).toHaveBeenCalledWith(new ObjectId(facilityId), new ObjectId(amendmentId));
     });
 
-    // Assert
-    expect(mockFindOneAmendmentByFacilityIdAndAmendmentId).toHaveBeenCalledTimes(1);
-    expect(mockFindOneAmendmentByFacilityIdAndAmendmentId).toHaveBeenCalledWith(new ObjectId(facilityId), new ObjectId(amendmentId));
-  });
+    it('should return the result of TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId', async () => {
+      // Act
+      const expected = await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+        amendmentId,
+        facilityId,
+        dealId,
+        auditDetails,
+      });
 
-  it('should return the result of TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId', async () => {
-    // Act
-    const expected = await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
-      amendmentId,
-      facilityId,
-      dealId,
-      auditDetails,
+      // Assert
+      expect(expected).toEqual(updatedAmendment);
     });
 
-    // Assert
-    expect(expected).toEqual(updatedAmendment);
-  });
+    it('should throw an error if no amendment is found when calling TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId', async () => {
+      // Arrange
+      mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce(null);
 
-  it('should throw an error if no amendment is found when calling TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId', async () => {
-    // Arrange
-    mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce(null);
+      // Act
+      const returned = PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+        amendmentId,
+        facilityId,
+        dealId,
+        auditDetails,
+      });
 
-    // Act
-    const returned = PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
-      amendmentId,
-      facilityId,
-      dealId,
-      auditDetails,
+      // Assert
+      await expect(returned).rejects.toThrow(new Error('Could not find amendment to return'));
     });
 
-    // Assert
-    await expect(returned).rejects.toThrow(new Error('Could not find amendment to return'));
-  });
+    it(`should throw an error if an amendment without a ${AMENDMENT_TYPES.PORTAL} amendment type is returned from TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId`, async () => {
+      // Arrange
+      mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce({ ...updatedAmendment, type: AMENDMENT_TYPES.TFM });
 
-  it(`should throw an error if an amendment without a ${AMENDMENT_TYPES.PORTAL} amendment type is returned from TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId`, async () => {
-    // Arrange
-    mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce({ ...updatedAmendment, type: AMENDMENT_TYPES.TFM });
+      // Act
+      const returned = PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+        amendmentId,
+        facilityId,
+        dealId,
+        auditDetails,
+      });
 
-    // Act
-    const returned = PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
-      amendmentId,
-      facilityId,
-      dealId,
-      auditDetails,
+      // Assert
+      await expect(returned).rejects.toThrow(new Error('Could not find amendment to return'));
     });
-
-    // Assert
-    await expect(returned).rejects.toThrow(new Error('Could not find amendment to return'));
   });
 });

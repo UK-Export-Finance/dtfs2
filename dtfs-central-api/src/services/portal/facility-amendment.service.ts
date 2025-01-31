@@ -74,7 +74,7 @@ export class PortalFacilityAmendmentService {
   }
 
   /**
-   * Updates a portal facility amendment with the provided details.
+   * Updates a portal facility amendment
    *
    * @param params
    * @param params.amendmentId - The amendment id
@@ -114,7 +114,7 @@ export class PortalFacilityAmendmentService {
   }
 
   /**
-   * Updates a portal facility amendment with the provided details.
+   * Updates a portal facility amendment with user provided values.
    *
    * @param params
    * @param params.amendmentId - The amendment id

@@ -1,4 +1,4 @@
-import { AMENDMENT_TYPES } from '@ukef/dtfs2-common';
+import { AMENDMENT_TYPES, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
@@ -13,9 +13,10 @@ const mockFindOneAmendmentByFacilityIdAndAmendmentId = jest.fn();
 const amendmentId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
 const update = {
-  changeCoverStartDate: true,
   isUsingFacilityEndDate: true,
   facilityEndDate: new Date(),
+  bankReviewDate: null,
+  changeCoverEndDate: true,
 };
 const updatedAmendment = { ...aPortalFacilityAmendment(), ...update };
 const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
@@ -61,6 +62,7 @@ describe('PortalFacilityAmendmentService', () => {
         facilityId: new ObjectId(facilityId),
         amendmentId: new ObjectId(amendmentId),
         auditDetails,
+        allowedStatuses: [PORTAL_AMENDMENT_STATUS.DRAFT],
       });
     });
   });
