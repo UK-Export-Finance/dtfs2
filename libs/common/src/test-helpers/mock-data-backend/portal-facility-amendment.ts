@@ -10,7 +10,7 @@ export const aPortalFacilityAmendmentUserValues = (): PortalFacilityAmendmentUse
   coverEndDate: getEpochMs(),
   isUsingFacilityEndDate: true,
   facilityEndDate: new Date(),
-  bankReviewDate: new Date(),
+  bankReviewDate: null,
   changeFacilityValue: true,
   value: 1800,
   currency: CURRENCY.GBP,
