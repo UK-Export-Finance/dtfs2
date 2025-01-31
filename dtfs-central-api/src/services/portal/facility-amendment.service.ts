@@ -191,6 +191,15 @@ export class PortalFacilityAmendmentService {
     });
   }
 
+  /**
+   * Validates if the amendment for a facility is complete.
+   *
+   * @param params - The parameters for the validation.
+   * @param params.amendmentId - The ID of the amendment to validate.
+   * @param params.facilityId - The ID of the facility associated with the amendment.
+   * @throws {AmendmentNotFoundError} If a portal amendment is not found
+   * @throws {AmendmentIncompleteError} If the amendment is incomplete.
+   */
   public static async validateAmendmentIsComplete({ amendmentId, facilityId }: { amendmentId: string; facilityId: string }) {
     const existingAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
 
@@ -238,6 +247,12 @@ export class PortalFacilityAmendmentService {
     }
   }
 
+  /**
+   * Maps an amendment update to ensure values provided are consistent (e.g. if `changeCoverEndDate` is `false`, the `coverEndDate` should be `null`)
+   *
+   * @param update - The user values for the amendment.
+   * @returns The modified update.
+   */
   public static generatePortalFacilityAmendment(update: PortalFacilityAmendmentUserValues): PortalFacilityAmendmentUserValues {
     const draftUpdate = cloneDeep(update);
 
