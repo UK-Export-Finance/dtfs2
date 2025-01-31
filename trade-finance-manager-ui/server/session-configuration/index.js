@@ -13,7 +13,7 @@ const sessionConfig = () => {
     name: secureCookieName,
     secret: SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false, // Keep false to avoid a new empty session being created during SSO flow
   };
 
   if (process.env.REDIS_HOSTNAME) {
