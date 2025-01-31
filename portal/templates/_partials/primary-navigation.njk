@@ -74,10 +74,10 @@
   {% endif %}
 
   {% if isPaymentReportOfficer %}
-    {% if FF_FEE_RECORD_CORRECTION_ENABLED == "true" %}
-      {% set navItems = (navItems.push(reportGefUtilisationAndFeesNavItem, previousGefReportsNavItem, recordCorrectionLogNavItem), navItems) %}
-    {% else %}
-      {% set navItems = (navItems.push(reportGefUtilisationAndFeesNavItem, previousGefReportsNavItem), navItems) %}
+    {% set navItems = (navItems.push(reportGefUtilisationAndFeesNavItem, previousGefReportsNavItem), navItems) %}
+
+    {% if FF_FEE_RECORD_CORRECTION_ENABLED === "true" %}
+      {% set navItems = (navItems.push(recordCorrectionLogNavItem), navItems) %}
     {% endif %}
   {% endif %}
 
