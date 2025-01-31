@@ -10,6 +10,7 @@ import {
   PortalAmendmentStatus,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
+import { cloneDeep } from 'lodash';
 import { findOneUser } from '../../v1/controllers/user/get-user.controller';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 import { EligibilityCriteriaAmendmentsRepo } from '../../repositories/portal/eligibility-criteria-amendments.repo';
@@ -49,7 +50,7 @@ export class PortalFacilityAmendmentService {
     const updatedCriteria = criteria.map((criterion) => ({ ...criterion, answer: null }));
 
     const amendmentToInsert: PortalFacilityAmendment = {
-      ...amendment,
+      ...this.generatePortalFacilityAmendment(amendment),
       dealId: new ObjectId(dealId),
       facilityId: new ObjectId(facilityId),
       amendmentId: new ObjectId(),
@@ -131,8 +132,8 @@ export class PortalFacilityAmendmentService {
     update: PortalFacilityAmendmentUserValues;
     auditDetails: PortalAuditDetails;
   }): Promise<FacilityAmendmentWithUkefId> {
-    const amendmentUpdate: Partial<PortalFacilityAmendment> = {
-      ...update,
+    const amendmentUpdate = {
+      ...this.generatePortalFacilityAmendment(update),
       updatedAt: getUnixTimestampSeconds(new Date()),
     };
 
@@ -184,5 +185,42 @@ export class PortalFacilityAmendmentService {
       auditDetails,
       allowedStatuses: [PORTAL_AMENDMENT_STATUS.DRAFT],
     });
+  }
+
+  public static generatePortalFacilityAmendment(update: PortalFacilityAmendmentUserValues): PortalFacilityAmendmentUserValues {
+    const draftUpdate = cloneDeep(update);
+
+    if (draftUpdate.changeCoverEndDate === false) {
+      draftUpdate.coverEndDate = null;
+      draftUpdate.isUsingFacilityEndDate = null;
+      draftUpdate.bankReviewDate = null;
+      draftUpdate.facilityEndDate = null;
+    }
+
+    if (draftUpdate.coverEndDate) {
+      draftUpdate.changeCoverEndDate = true;
+    }
+
+    if (draftUpdate.isUsingFacilityEndDate || draftUpdate.facilityEndDate) {
+      draftUpdate.changeCoverEndDate = true;
+      draftUpdate.isUsingFacilityEndDate = true;
+      draftUpdate.bankReviewDate = null;
+    }
+
+    if (draftUpdate.isUsingFacilityEndDate === false || draftUpdate.bankReviewDate) {
+      draftUpdate.changeCoverEndDate = true;
+      draftUpdate.isUsingFacilityEndDate = false;
+      draftUpdate.facilityEndDate = null;
+    }
+
+    if (draftUpdate.changeFacilityValue === false) {
+      draftUpdate.value = null;
+    }
+
+    if (draftUpdate.value) {
+      draftUpdate.changeFacilityValue = true;
+    }
+
+    return draftUpdate;
   }
 }
