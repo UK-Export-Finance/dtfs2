@@ -190,7 +190,13 @@ context('Review UKEF decision MIA -> confirm coverStartDate without issuing faci
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeMonthsOneDay.date });
+      /**
+       * 3 months in the future in codebase is calculated as 90 days from today
+       * hence to get date over 3 months in the future to cause an error to be displayed
+       * add 91 days to today
+       */
+      const days = 91;
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: addDays(days).date });
 
       cy.clickContinueButton();
 
