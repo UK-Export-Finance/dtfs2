@@ -1,11 +1,11 @@
-import { ApiError, AUDIT_USER_TYPES, CustomExpressRequest } from '@ukef/dtfs2-common';
+import { ApiError, AUDIT_USER_TYPES, CustomExpressRequest, InvalidParameterError, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
 import { PostSubmitPortalFacilityAmendmentToCheckerPayload } from '../../../routes/middleware/payload-validation/validate-post-submit-portal-facility-amendment-to-checker-payload';
 
-type PostSubmitAmendmentToCheckerRequestParams = { facilityId: string; amendmentId: string };
+type PostSubmitAmendmentToCheckerRequestParams = { facilityId: string; amendmentId: string; newStatus: string };
 export type PostSubmitAmendmentToCheckerRequest = CustomExpressRequest<{
   params: PostSubmitAmendmentToCheckerRequestParams;
   reqBody: PostSubmitPortalFacilityAmendmentToCheckerPayload;
@@ -16,16 +16,20 @@ export type PostSubmitAmendmentToCheckerRequest = CustomExpressRequest<{
  * @param req - request
  * @param res - response
  */
-export const postSubmitAmendmentToChecker = async (req: PostSubmitAmendmentToCheckerRequest, res: Response) => {
-  const { facilityId, amendmentId } = req.params;
+export const postAmendmentStatus = async (req: PostSubmitAmendmentToCheckerRequest, res: Response) => {
+  const { facilityId, amendmentId, newStatus } = req.params;
   const { auditDetails, dealId } = req.body;
 
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.PORTAL);
 
-    const updatedAmendment = await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({ facilityId, amendmentId, dealId, auditDetails });
+    if (newStatus === PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL) {
+      const updatedAmendment = await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({ facilityId, amendmentId, dealId, auditDetails });
 
-    return res.status(HttpStatusCode.Ok).send(updatedAmendment);
+      return res.status(HttpStatusCode.Ok).send(updatedAmendment);
+    }
+
+    throw new InvalidParameterError('newStatus', newStatus);
   } catch (error) {
     if (error instanceof ApiError) {
       const { status, message, code } = error;

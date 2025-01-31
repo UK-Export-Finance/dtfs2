@@ -4,7 +4,7 @@ import { HttpStatusCode } from 'axios';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
-import { postSubmitAmendmentToChecker, PostSubmitAmendmentToCheckerRequest } from './post-submit-amendment-to-checker.controller';
+import { postAmendmentStatus, PostSubmitAmendmentToCheckerRequest } from './post-submit-amendment-to-checker.controller';
 
 const amendmentId = 'amendmentId';
 const facilityId = 'facilityId';
@@ -15,9 +15,12 @@ const mockUpdatedAmendment = { facilityId, dealId, type: AMENDMENT_TYPES.PORTAL,
 const mockSubmitPortalFacilityAmendmentToChecker = jest.fn();
 
 const generateHttpMocks = ({ auditDetails }: { auditDetails: unknown }) =>
-  createMocks<PostSubmitAmendmentToCheckerRequest>({ params: { facilityId, amendmentId }, body: { auditDetails, dealId } });
+  createMocks<PostSubmitAmendmentToCheckerRequest>({
+    params: { facilityId, amendmentId, newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL },
+    body: { auditDetails, dealId },
+  });
 
-describe('postSubmitAmendmentToChecker', () => {
+describe('postAmendmentStatus', () => {
   beforeEach(() => {
     jest.resetAllMocks();
 
@@ -31,7 +34,7 @@ describe('postSubmitAmendmentToChecker', () => {
     const { req, res } = generateHttpMocks({ auditDetails });
 
     // Act
-    await postSubmitAmendmentToChecker(req, res);
+    await postAmendmentStatus(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
@@ -42,13 +45,32 @@ describe('postSubmitAmendmentToChecker', () => {
     });
   });
 
+  it(`should return ${HttpStatusCode.BadRequest} if the new status is not ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}`, async () => {
+    // Arrange
+    const invalidNewStatus = 'invalid status';
+    const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
+    const { req, res } = generateHttpMocks({ auditDetails });
+
+    req.params.newStatus = invalidNewStatus;
+
+    // Act
+    await postAmendmentStatus(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
+    expect(res._getData()).toEqual({
+      status: HttpStatusCode.BadRequest,
+      message: `Invalid newStatus: "${invalidNewStatus}"`,
+    });
+  });
+
   it('should call PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker with the correct params', async () => {
     // Arrange
     const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
     const { req, res } = generateHttpMocks({ auditDetails });
 
     // Act
-    await postSubmitAmendmentToChecker(req, res);
+    await postAmendmentStatus(req, res);
 
     // Assert
 
@@ -62,7 +84,7 @@ describe('postSubmitAmendmentToChecker', () => {
     const { req, res } = generateHttpMocks({ auditDetails });
 
     // Act
-    await postSubmitAmendmentToChecker(req, res);
+    await postAmendmentStatus(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
@@ -79,7 +101,7 @@ describe('postSubmitAmendmentToChecker', () => {
     const { req, res } = generateHttpMocks({ auditDetails });
 
     // Act
-    await postSubmitAmendmentToChecker(req, res);
+    await postAmendmentStatus(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(status);
@@ -98,7 +120,7 @@ describe('postSubmitAmendmentToChecker', () => {
     const { req, res } = generateHttpMocks({ auditDetails });
 
     // Act
-    await postSubmitAmendmentToChecker(req, res);
+    await postAmendmentStatus(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);

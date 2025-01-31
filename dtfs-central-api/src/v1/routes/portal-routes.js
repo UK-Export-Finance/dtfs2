@@ -666,7 +666,7 @@ portalRouter
  *         description: Not found
  */
 portalRouter
-  .route('/facilities/:facilityId/amendments/:amendmentId/submit-to-checker')
+  .route('/facilities/:facilityId/amendments/:amendmentId/status/:newStatus')
   .post(
     validatePortalFacilityAmendmentsEnabled,
     validation.mongoIdValidation('facilityId'),
