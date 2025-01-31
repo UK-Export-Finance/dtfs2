@@ -70,7 +70,7 @@ describe('handleFeeRecordRemoveFromPaymentGroupEvent', () => {
     });
   });
 
-  describe('when the fee record has no corrections', () => {
+  describe('when the fee record has corrections', () => {
     beforeEach(() => {
       mockExistsBy.mockReturnValue(true);
     });

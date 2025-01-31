@@ -62,6 +62,12 @@ context('When fee record correction feature flag is enabled', () => {
     beforeEach(() => {
       pages.landingPage.visit();
       cy.login(USERS.PDC_RECONCILE);
+      cy.addPaymentToFeeRecords({
+        feeRecords: [correctedFeeRecord],
+        reportId: REPORT_ID,
+        paymentCurrency: correctedFeeRecord.paymentCurrency,
+        amountReceived: correctedFeeRecord.feesPaidToUkefForThePeriod,
+      });
 
       cy.visit(`utilisation-reports/${REPORT_ID}`);
     });
@@ -73,15 +79,6 @@ context('When fee record correction feature flag is enabled', () => {
     });
 
     it(`should be able to delete payment and status should go back to ${FEE_RECORD_STATUS.TO_DO_AMENDED}`, () => {
-      cy.addPaymentToFeeRecords({
-        feeRecords: [correctedFeeRecord],
-        reportId: REPORT_ID,
-        paymentCurrency: correctedFeeRecord.paymentCurrency,
-        amountReceived: correctedFeeRecord.feesPaidToUkefForThePeriod,
-      });
-
-      cy.visit(`utilisation-reports/${REPORT_ID}`);
-
       utilisationReportPage.tabs.paymentDetails().click();
 
       utilisationReportPage.tabs.paymentDetailsContent.paymentLinks().first().click();

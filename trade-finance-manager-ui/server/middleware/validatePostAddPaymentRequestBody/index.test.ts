@@ -240,40 +240,24 @@ describe('validatePostAddPaymentRequestBody', () => {
     });
   });
 
-  it(`should call the 'next' function when the body contains multiple checkbox ids with the ${FEE_RECORD_STATUS.TO_DO} fee record status`, () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
+  it.each([FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.TO_DO_AMENDED])(
+    "should call the 'next' function when the body contains multiple checkbox ids with the %s fee record status",
+    () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
 
-    const checkedCheckboxIds = [getCheckboxId(1, CURRENCY.GBP, FEE_RECORD_STATUS.TO_DO), getCheckboxId(2, CURRENCY.GBP, FEE_RECORD_STATUS.TO_DO)];
-    req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
+      const checkedCheckboxIds = [getCheckboxId(1, CURRENCY.GBP, FEE_RECORD_STATUS.TO_DO), getCheckboxId(2, CURRENCY.GBP, FEE_RECORD_STATUS.TO_DO)];
+      req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
 
-    const next = jest.fn();
+      const next = jest.fn();
 
-    // Act
-    validatePostAddPaymentRequestBody(req, res, next);
+      // Act
+      validatePostAddPaymentRequestBody(req, res, next);
 
-    // Assert
-    expect(next).toHaveBeenCalled();
-  });
-
-  it(`should call the 'next' function when the body contains multiple checkbox ids with the ${FEE_RECORD_STATUS.TO_DO_AMENDED} fee record status`, () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-
-    const checkedCheckboxIds = [
-      getCheckboxId(1, CURRENCY.GBP, FEE_RECORD_STATUS.TO_DO_AMENDED),
-      getCheckboxId(2, CURRENCY.GBP, FEE_RECORD_STATUS.TO_DO_AMENDED),
-    ];
-    req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
-
-    const next = jest.fn();
-
-    // Act
-    validatePostAddPaymentRequestBody(req, res, next);
-
-    // Assert
-    expect(next).toHaveBeenCalled();
-  });
+      // Assert
+      expect(next).toHaveBeenCalled();
+    },
+  );
 
   it(`should call the 'next' function when the body contains checkbox ids with the ${FEE_RECORD_STATUS.TO_DO} and ${FEE_RECORD_STATUS.TO_DO_AMENDED} fee record status`, () => {
     // Arrange
@@ -291,51 +275,22 @@ describe('validatePostAddPaymentRequestBody', () => {
     expect(next).toHaveBeenCalled();
   });
 
-  it(`should call the 'next' function when the body contains one checkbox id with the ${FEE_RECORD_STATUS.TO_DO_AMENDED} fee record status`, () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
+  it.each([FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.TO_DO_AMENDED, FEE_RECORD_STATUS.DOES_NOT_MATCH])(
+    "should call the 'next' function when the body contains one checkbox id with the %s fee record status",
+    (status) => {
+      // Arrange
+      const { req, res } = getHttpMocks();
 
-    const checkedCheckboxIds = [getCheckboxId(1, CURRENCY.GBP, FEE_RECORD_STATUS.TO_DO_AMENDED)];
-    req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
+      const checkedCheckboxIds = [getCheckboxId(1, CURRENCY.GBP, status)];
+      req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
 
-    const next = jest.fn();
+      const next = jest.fn();
 
-    // Act
-    validatePostAddPaymentRequestBody(req, res, next);
+      // Act
+      validatePostAddPaymentRequestBody(req, res, next);
 
-    // Assert
-    expect(next).toHaveBeenCalled();
-  });
-
-  it(`should call the 'next' function when the body contains one checkbox id with the ${FEE_RECORD_STATUS.TO_DO} fee record status`, () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-
-    const checkedCheckboxIds = [getCheckboxId(1, CURRENCY.GBP, FEE_RECORD_STATUS.TO_DO)];
-    req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
-
-    const next = jest.fn();
-
-    // Act
-    validatePostAddPaymentRequestBody(req, res, next);
-
-    // Assert
-    expect(next).toHaveBeenCalled();
-  });
-
-  it(`should call the 'next' function when the body contains one checkbox id with the ${FEE_RECORD_STATUS.DOES_NOT_MATCH} fee record status`, () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-
-    const checkedCheckboxIds = [getCheckboxId(1, CURRENCY.GBP, FEE_RECORD_STATUS.DOES_NOT_MATCH)];
-    req.body = getRequestBodyFromCheckboxIds(checkedCheckboxIds);
-
-    const next = jest.fn();
-
-    // Act
-    validatePostAddPaymentRequestBody(req, res, next);
-
-    // Assert
-    expect(next).toHaveBeenCalled();
-  });
+      // Assert
+      expect(next).toHaveBeenCalled();
+    },
+  );
 });

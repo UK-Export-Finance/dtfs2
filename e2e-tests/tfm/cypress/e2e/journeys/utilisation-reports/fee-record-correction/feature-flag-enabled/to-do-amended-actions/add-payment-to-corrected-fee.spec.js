@@ -19,13 +19,15 @@ context('When fee record correction feature flag is enabled', () => {
 
     const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(REPORT_ID).withBankId(BANK_ID).build();
 
+    const correctionOneCorrectedFee = 200;
+
     const correctedFeeRecordOne = FeeRecordEntityMockBuilder.forReport(report)
       .withId(11)
       .withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED)
       .withFacilityId('11111111')
       .withExporter('Exporter 1')
       .withPaymentCurrency(CURRENCY.GBP)
-      .withFeesPaidToUkefForThePeriod(200)
+      .withFeesPaidToUkefForThePeriod(correctionOneCorrectedFee)
       .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
       .withPaymentExchangeRate(1)
       .withPayments([])
@@ -34,18 +36,20 @@ context('When fee record correction feature flag is enabled', () => {
     const correctionOne = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(correctedFeeRecordOne, true)
       .withId(111)
       .withReasons([RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT])
-      .withCorrectedValues({ feesPaidToUkefForThePeriod: 200, feesPaidToUkefForThePeriodCurrency: null, facilityId: null, facilityUtilisation: null })
-      .withPreviousValues({ feesPaidToUkefForThePeriod: 100, feesPaidToUkefForThePeriodCurrency: null, facilityId: null, facilityUtilisation: null })
+      .withCorrectedValues({ feesPaidToUkefForThePeriod: correctionOneCorrectedFee })
+      .withPreviousValues({ feesPaidToUkefForThePeriod: 100 })
       .build();
+
+    const correctionTwoCorrectedCurrency = CURRENCY.GBP;
 
     const correctedFeeRecordTwo = FeeRecordEntityMockBuilder.forReport(report)
       .withId(22)
       .withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED)
       .withFacilityId('22222222')
       .withExporter('Exporter 2')
-      .withPaymentCurrency(CURRENCY.GBP)
+      .withPaymentCurrency(correctionTwoCorrectedCurrency)
       .withFeesPaidToUkefForThePeriod(100)
-      .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
+      .withFeesPaidToUkefForThePeriodCurrency(correctionTwoCorrectedCurrency)
       .withPaymentExchangeRate(1)
       .withPayments([])
       .build();
@@ -53,7 +57,7 @@ context('When fee record correction feature flag is enabled', () => {
     const correctionTwo = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(correctedFeeRecordOne, true)
       .withId(222)
       .withReasons([RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT])
-      .withCorrectedValues({ feesPaidToUkefForThePeriodCurrency: CURRENCY.GBP })
+      .withCorrectedValues({ feesPaidToUkefForThePeriodCurrency: correctionTwoCorrectedCurrency })
       .withPreviousValues({ feesPaidToUkefForThePeriodCurrency: CURRENCY.EUR })
       .build();
 

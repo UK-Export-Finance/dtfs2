@@ -8,5 +8,9 @@ import { FeeRecordStatus } from '../types';
  * @returns True if all statuses are the same, false otherwise.
  */
 export const allStatusesAreTheSameOrCombinationOfToDoStatuses = (statuses: Set<FeeRecordStatus>) => {
-  return statuses.size === 1 || (statuses.size === 2 && statuses.has(FEE_RECORD_STATUS.TO_DO) && statuses.has(FEE_RECORD_STATUS.TO_DO_AMENDED));
+  const allStatusesAreTheSame = statuses.size === 1;
+  const statusesAreACombinationOfToDoStatuses = statuses.size === 2 && statuses.has(FEE_RECORD_STATUS.TO_DO) && statuses.has(FEE_RECORD_STATUS.TO_DO_AMENDED);
+  return allStatusesAreTheSame || statusesAreACombinationOfToDoStatuses;
 };
+
+export const isStatusToDoOrToDoAmended = (status: FeeRecordStatus): boolean => status === FEE_RECORD_STATUS.TO_DO || status === FEE_RECORD_STATUS.TO_DO_AMENDED;

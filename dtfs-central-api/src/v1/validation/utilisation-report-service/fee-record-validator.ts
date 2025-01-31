@@ -1,4 +1,4 @@
-import { allStatusesAreTheSameOrCombinationOfToDoStatuses, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { allStatusesAreTheSameOrCombinationOfToDoStatuses, FeeRecordEntity, FeeRecordStatus, isStatusToDoOrToDoAmended } from '@ukef/dtfs2-common';
 import { FeeRecordRepo } from '../../../repositories/fee-record-repo';
 import { InvalidPayloadError } from '../../../errors';
 
@@ -39,7 +39,7 @@ export const validateFeeRecordsFormCompleteGroup = async (ids: number[]) => {
   const firstFeeRecord = feeRecords[0];
 
   // Fee records with TO_DO (or TO_DO_AMENDED) status do not have any payments attached, so do not have an existing payment group
-  if (firstFeeRecord.status === FEE_RECORD_STATUS.TO_DO || firstFeeRecord.status === FEE_RECORD_STATUS.TO_DO_AMENDED) {
+  if (isStatusToDoOrToDoAmended(firstFeeRecord.status)) {
     return;
   }
 

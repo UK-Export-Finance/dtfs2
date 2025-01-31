@@ -13,11 +13,13 @@ import { NODE_TASKS } from '../../../../../../../../e2e-fixtures';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context('When fee record correction feature flag is enabled', () => {
-  context('PDC_RECONCILE users can delete a payment attached to a corrected fee', () => {
+  context('PDC_RECONCILE users can add a corrected fee to an existing payment', () => {
     const BANK_ID = '961';
     const REPORT_ID = 1;
 
     const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(REPORT_ID).withBankId(BANK_ID).build();
+
+    const correctedFee = 200;
 
     const correctedFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
       .withId(11)
@@ -25,7 +27,7 @@ context('When fee record correction feature flag is enabled', () => {
       .withFacilityId('11111111')
       .withExporter('Exporter 1')
       .withPaymentCurrency(CURRENCY.GBP)
-      .withFeesPaidToUkefForThePeriod(200)
+      .withFeesPaidToUkefForThePeriod(correctedFee)
       .withFeesPaidToUkefForThePeriodCurrency(CURRENCY.GBP)
       .withPaymentExchangeRate(1)
       .withPayments([])
@@ -34,7 +36,7 @@ context('When fee record correction feature flag is enabled', () => {
     const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(correctedFeeRecord, true)
       .withId(111)
       .withReasons([RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT])
-      .withCorrectedValues({ feesPaidToUkefForThePeriod: 200 })
+      .withCorrectedValues({ feesPaidToUkefForThePeriod: correctedFee })
       .withPreviousValues({ feesPaidToUkefForThePeriod: 100 })
       .build();
 
@@ -75,6 +77,13 @@ context('When fee record correction feature flag is enabled', () => {
       pages.landingPage.visit();
       cy.login(USERS.PDC_RECONCILE);
 
+      cy.addPaymentToFeeRecords({
+        feeRecords: [feeRecordWithoutCorrection],
+        reportId: REPORT_ID,
+        paymentCurrency: feeRecordWithoutCorrection.paymentCurrency,
+        amountReceived: feeRecordWithoutCorrection.feesPaidToUkefForThePeriod + correctedFeeRecord.feesPaidToUkefForThePeriod,
+      });
+
       cy.visit(`utilisation-reports/${REPORT_ID}`);
     });
 
@@ -84,16 +93,7 @@ context('When fee record correction feature flag is enabled', () => {
       cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
     });
 
-    it(`should be able to delete payment and status should go back to ${FEE_RECORD_STATUS.TO_DO_AMENDED}`, () => {
-      cy.addPaymentToFeeRecords({
-        feeRecords: [feeRecordWithoutCorrection],
-        reportId: REPORT_ID,
-        paymentCurrency: feeRecordWithoutCorrection.paymentCurrency,
-        amountReceived: feeRecordWithoutCorrection.feesPaidToUkefForThePeriod + correctedFeeRecord.feesPaidToUkefForThePeriod,
-      });
-
-      cy.visit(`utilisation-reports/${REPORT_ID}`);
-
+    it('should be able add corrected fee to existing payment', () => {
       premiumPaymentsTable.checkbox([correctedFeeRecord.id], correctedFeeRecord.paymentCurrency, correctedFeeRecord.status).click();
 
       premiumPaymentsContent.addAPaymentButton().click();
