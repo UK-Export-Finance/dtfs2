@@ -13,3 +13,5 @@ export * from './get-reconciliation-for-report-href';
 export * from './is-pdc-reconcile-user';
 export * from './premium-payments-errors';
 export * from './get-link-to-premium-payments-tab';
+export * from './record-correction-request-already-submitted';
+export * from './is-record-correction-request-review-response-type';

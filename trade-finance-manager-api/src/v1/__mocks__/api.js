@@ -7,6 +7,7 @@ const MOCK_BANK_HOLIDAYS = require('./mock-bank-holidays');
 const { MOCK_UTILISATION_REPORT } = require('./mock-utilisation-report');
 const MOCK_CASH_CONTINGENT_FACILITIES = require('./mock-cash-contingent-facilities');
 const ALL_MOCK_DEALS = require('./mock-deals');
+const { COMPANY_REGISTRATION_NUMBER } = require('../../constants/deals');
 
 const ALL_MOCK_FACILITIES = [...MOCK_FACILITIES, ...MOCK_BSS_FACILITIES_USD_CURRENCY, ...MOCK_CASH_CONTINGENT_FACILITIES];
 
@@ -178,14 +179,32 @@ module.exports = {
   getFacilityExposurePeriod: jest.fn(() => ({
     exposurePeriodInMonths: 12,
   })),
-  getPartyDbInfo: ({ companyRegNo }) =>
-    companyRegNo === 'NO_MATCH'
-      ? false
-      : [
-          {
-            partyUrn: 'testPartyUrn',
-          },
-        ],
+  getPartyDbInfo: ({ companyRegNo }) => {
+    const noCompanyMatch = companyRegNo === COMPANY_REGISTRATION_NUMBER.NO_MATCH;
+
+    if (noCompanyMatch) {
+      return false;
+    }
+
+    return [
+      {
+        partyUrn: 'testPartyUrn',
+      },
+    ];
+  },
+  getOrCreatePartyDbInfo: ({ companyRegNo }) => {
+    const noCompanyMatch = companyRegNo === COMPANY_REGISTRATION_NUMBER.NO_MATCH;
+
+    if (noCompanyMatch) {
+      return false;
+    }
+
+    return [
+      {
+        partyUrn: 'testPartyUrn',
+      },
+    ];
+  },
   findUser: (username) => {
     if (username === 'invalidUser') {
       return false;

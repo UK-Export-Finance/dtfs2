@@ -1,7 +1,10 @@
 import { FeeRecordEntityMockBuilder, RECORD_CORRECTION_REASON, getFormattedMonetaryValue } from '@ukef/dtfs2-common';
-import { mapCorrectionReasonsToFormattedOldValues, getFormattedOldValueForCorrectionReason } from './map-correction-reasons-to-formatted-values';
+import {
+  mapCorrectionReasonsToFormattedOldFeeRecordValues,
+  getFormattedOldValueForCorrectionReason,
+} from './map-correction-reasons-to-formatted-old-fee-record-values';
 
-describe('map-correction-reasons-to-formatted-values', () => {
+describe('map-correction-reasons-to-formatted-old-fee-record-values', () => {
   const feeRecord = new FeeRecordEntityMockBuilder().build();
 
   describe('getFormattedOldValueForCorrectionReason', () => {
@@ -54,7 +57,7 @@ describe('map-correction-reasons-to-formatted-values', () => {
     });
   });
 
-  describe('mapCorrectionReasonsToFormattedOldValues', () => {
+  describe('mapCorrectionReasonsToFormattedOldFeeRecordValues', () => {
     describe('when the reasons array contains all the reasons', () => {
       it('should return an array of the values of each fee record property that corresponds to each reason', () => {
         const reasons = [
@@ -65,7 +68,7 @@ describe('map-correction-reasons-to-formatted-values', () => {
           RECORD_CORRECTION_REASON.OTHER,
         ];
 
-        const result = mapCorrectionReasonsToFormattedOldValues(feeRecord, reasons);
+        const result = mapCorrectionReasonsToFormattedOldFeeRecordValues(feeRecord, reasons);
 
         const expected = [
           feeRecord.facilityId,
@@ -83,7 +86,7 @@ describe('map-correction-reasons-to-formatted-values', () => {
       it('should return an array of the value of the fee record property that corresponds to the reason', () => {
         const reasons = [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT];
 
-        const result = mapCorrectionReasonsToFormattedOldValues(feeRecord, reasons);
+        const result = mapCorrectionReasonsToFormattedOldFeeRecordValues(feeRecord, reasons);
 
         const expected = [feeRecord.facilityId];
 
@@ -95,7 +98,7 @@ describe('map-correction-reasons-to-formatted-values', () => {
       it('should return an array with a string "-"', () => {
         const reasons = [RECORD_CORRECTION_REASON.OTHER];
 
-        const result = mapCorrectionReasonsToFormattedOldValues(feeRecord, reasons);
+        const result = mapCorrectionReasonsToFormattedOldFeeRecordValues(feeRecord, reasons);
 
         const expected = ['-'];
 

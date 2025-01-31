@@ -1,6 +1,5 @@
 import { CurrencyAndAmount } from './currency';
 import { RecordCorrectionReason } from './record-correction-reason';
-import { FeeRecordStatus } from './utilisation-reports';
 
 export type RequestedByUser = {
   id: string;
@@ -23,7 +22,7 @@ export type FeeRecordCorrectionSummary = {
   exporter: string;
   formattedReasons: string;
   formattedDateSent: string;
-  status: FeeRecordStatus;
+  isCompleted: boolean;
   formattedOldRecords: string;
   formattedCorrectRecords: string;
 };
