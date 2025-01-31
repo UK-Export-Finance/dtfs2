@@ -1,4 +1,5 @@
 export * from './authorisation-code-request.mock';
+export * from './authorisation-url-request.mock';
 export * from './azure-file-info.mock';
 export * from './utilisation-report.entity.mock-builder';
 export * from './fee-record.entity.mock-builder';

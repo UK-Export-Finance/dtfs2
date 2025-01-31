@@ -8,7 +8,6 @@ jest.mock('../api');
 describe('login service', () => {
   describe('handleSsoRedirectForm', () => {
     const handleSsoRedirectFormSpy = jest.spyOn(api, 'handleSsoRedirectForm');
-    const loginService = new LoginService();
 
     afterEach(() => {
       handleSsoRedirectFormSpy.mockReset();
@@ -16,7 +15,7 @@ describe('login service', () => {
 
     it('calls api.handleSsoRedirectForm with the request', async () => {
       // Act
-      await loginService.handleSsoRedirectForm(aHandleSsoRedirectFormRequest());
+      await LoginService.handleSsoRedirectForm(aHandleSsoRedirectFormRequest());
 
       // Assert
       expect(handleSsoRedirectFormSpy).toHaveBeenCalledWith(aHandleSsoRedirectFormRequest());
@@ -31,7 +30,7 @@ describe('login service', () => {
 
       it('returns the auth code url', async () => {
         // Act
-        const result = await loginService.handleSsoRedirectForm(aHandleSsoRedirectFormRequest());
+        const result = await LoginService.handleSsoRedirectForm(aHandleSsoRedirectFormRequest());
 
         // Assert
         expect(result).toEqual(handleSsoRedirectFormResponse);
@@ -47,7 +46,7 @@ describe('login service', () => {
 
       it('throws the error', async () => {
         // Act & Assert
-        await expect(loginService.handleSsoRedirectForm(aHandleSsoRedirectFormRequest())).rejects.toThrow(error);
+        await expect(LoginService.handleSsoRedirectForm(aHandleSsoRedirectFormRequest())).rejects.toThrow(error);
       });
     });
   });
