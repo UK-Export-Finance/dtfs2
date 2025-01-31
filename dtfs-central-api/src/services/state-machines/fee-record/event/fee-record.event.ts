@@ -9,6 +9,7 @@ import {
   FeeRecordMarkAsReconciledEvent,
   FeeRecordOtherFeeAddedToPaymentGroupEvent,
   FeeRecordCorrectionRequestedEvent,
+  FeeRecordCorrectionReceivedEvent,
 } from '../event-handlers';
 
 export type FeeRecordEvent =
@@ -21,4 +22,5 @@ export type FeeRecordEvent =
   | FeeRecordRemoveFromPaymentGroupEvent
   | FeeRecordOtherFeeRemovedFromPaymentGroupEvent
   | FeeRecordOtherFeeAddedToPaymentGroupEvent
-  | FeeRecordCorrectionRequestedEvent;
+  | FeeRecordCorrectionRequestedEvent
+  | FeeRecordCorrectionReceivedEvent;

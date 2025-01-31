@@ -19,6 +19,7 @@ const constructPayload = require('./constructPayload');
 const { getBusinessDayOfMonth } = require('./getBusinessDayOfMonth');
 const { getNowAsEpoch } = require('./date');
 const { convertUserFormDataToRequest } = require('./convertUserFormDataToRequest');
+const { getRecordCorrectionCancelLinkHref } = require('./get-record-correction-cancel-link-href');
 
 module.exports = {
   isEveryDealFormComplete,
@@ -43,4 +44,5 @@ module.exports = {
   getBusinessDayOfMonth,
   getNowAsEpoch,
   convertUserFormDataToRequest,
+  getRecordCorrectionCancelLinkHref,
 };

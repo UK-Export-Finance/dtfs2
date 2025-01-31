@@ -123,6 +123,11 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
           updatedAt: 1702061978881,
           status: PORTAL_AMENDMENT_STATUS.DRAFT,
           eligibilityCriteria: { version: 1, criteria: [] },
+          createdBy: {
+            username: aMaker.username,
+            name: aMaker.firstname,
+            email: aMaker.email,
+          },
         };
 
         jest.mocked(getPortalFacilityAmendmentMock).mockResolvedValue(amendment);
