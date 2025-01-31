@@ -36,14 +36,14 @@ const getFacilityIdsAtToDoOrDoesNotMatchStatus = async (entityManager: EntityMan
  * @param entityManager - The entity manager
  */
 const updateFeeRecordPaymentJoinTable = async (keyingSheetFeePaymentShares: KeyingSheetFeePaymentShare[], entityManager: EntityManager): Promise<void> => {
-  await Promise.all(
-    keyingSheetFeePaymentShares.map(({ feeRecordId, paymentId, feePaymentAmount }) =>
-      entityManager.update(FeeRecordPaymentJoinTableEntity, { feeRecordId, paymentId }, { paymentAmountUsedForFeeRecord: feePaymentAmount }).catch((error) => {
+  for (const { feeRecordId, paymentId, feePaymentAmount } of keyingSheetFeePaymentShares) {
+    await entityManager
+      .update(FeeRecordPaymentJoinTableEntity, { feeRecordId, paymentId }, { paymentAmountUsedForFeeRecord: feePaymentAmount })
+      .catch((error) => {
         console.error(`Failed to update fee record payment join table for fee record id '${feeRecordId}' and payment id '${paymentId}'`);
         throw error;
-      }),
-    ),
-  );
+      });
+  }
 };
 
 type GenerateKeyingDataEventPayload = {
@@ -90,15 +90,13 @@ export const handleUtilisationReportGenerateKeyingDataEvent = async (
     };
   });
 
-  await Promise.all(
-    feeRecordsWithPayloads.map(async ({ feeRecord, payload }) => {
-      const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
-      return stateMachine.handleEvent({
-        type: 'GENERATE_KEYING_DATA',
-        payload,
-      });
-    }),
-  );
+  for (const { feeRecord, payload } of feeRecordsWithPayloads) {
+    const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
+    await stateMachine.handleEvent({
+      type: 'GENERATE_KEYING_DATA',
+      payload,
+    });
+  }
 
   const KeyingSheetFeePaymentShares = getKeyingSheetFeePaymentSharesForFeeRecords(feeRecordsAtMatchStatusWithPayments);
   await updateFeeRecordPaymentJoinTable(KeyingSheetFeePaymentShares, transactionEntityManager);
