@@ -13,7 +13,7 @@ describe('map-fee-records-to-pending-corrections', () => {
   describe('mapFeeRecordToPendingCorrectionsArray', () => {
     it(`should return an empty array if the fee record doesn't have any corrections`, () => {
       // Arrange
-      const feeRecord = new FeeRecordEntityMockBuilder().withId(1).withFacilityId('FAC123').withExporter('Test Exporter').withCorrections([]).build();
+      const feeRecord = new FeeRecordEntityMockBuilder().withId(1).withFacilityId('12345678').withExporter('Test Exporter').withCorrections([]).build();
 
       // Act
       const result = mapFeeRecordToPendingCorrectionsArray(feeRecord);
@@ -26,7 +26,7 @@ describe('map-fee-records-to-pending-corrections', () => {
       // Arrange
       const feeRecord = new FeeRecordEntityMockBuilder()
         .withId(1)
-        .withFacilityId('FAC123')
+        .withFacilityId('12345678')
         .withExporter('Test Exporter')
         .withCorrections([FeeRecordCorrectionEntityMockBuilder.forIsCompleted(true).build()])
         .build();
@@ -43,7 +43,7 @@ describe('map-fee-records-to-pending-corrections', () => {
       const feesPaidToUkefForThePeriod = 1000;
       const feesPaidToUkefForThePeriodCurrency = CURRENCY.JPY;
       const exporter = 'Test Exporter';
-      const facilityId = 'FAC123';
+      const facilityId = '12345678';
 
       const feeRecord = new FeeRecordEntityMockBuilder()
         .withId(1)

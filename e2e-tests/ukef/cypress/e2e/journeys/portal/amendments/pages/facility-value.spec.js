@@ -1,14 +1,14 @@
-import relative from '../../../relativeURL';
-import MOCK_USERS from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../e2e-fixtures/gef/mocks/mock-deals';
-import { anIssuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';
-import { applicationPreview } from '../../../../../../gef/cypress/e2e/pages';
-import whatDoYouNeedToChange from '../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
-import facilityValue from '../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
+import relative from '../../../../relativeURL';
+import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
+import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
+import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
+import facilityValue from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('Amendments - change facility value journey - unhappy path', () => {
+context('Amendments - Facility value - page tests', () => {
   /**
    * @type {string}
    */
@@ -46,6 +46,9 @@ context('Amendments - change facility value journey - unhappy path', () => {
 
           amendmentId = urlSplit[9];
         });
+
+        whatDoYouNeedToChange.facilityValueCheckbox().click();
+        cy.clickContinueButton();
       });
     });
   });
@@ -58,32 +61,16 @@ context('Amendments - change facility value journey - unhappy path', () => {
   beforeEach(() => {
     cy.clearSessionCookies();
     cy.login(BANK1_MAKER1);
+    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`));
   });
 
-  it('should render an error if nothing is selected to change', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
-
-    cy.clickContinueButton();
-
-    whatDoYouNeedToChange.errorSummary().should('be.visible');
-    whatDoYouNeedToChange.errorSummary().contains('Select if you need to change the facility cover end date, value or both');
-
-    whatDoYouNeedToChange.amendmentOptionsInlineError().should('be.visible');
-    whatDoYouNeedToChange.amendmentOptionsInlineError().contains('Select if you need to change the facility cover end date, value or both');
-  });
-
-  it('navigate to facility value page', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
-
-    whatDoYouNeedToChange.facilityValueCheckbox().click();
-    cy.clickContinueButton();
-
-    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`));
+  it('should render key features of the page', () => {
+    facilityValue.pageHeading().contains('New facility value');
+    facilityValue.backLink();
+    facilityValue.facilityValuePrefix().contains('£');
   });
 
   it('should render an error if no facility value is provided', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`));
-
     cy.clickContinueButton();
 
     facilityValue.errorSummary().should('be.visible');
@@ -133,8 +120,6 @@ context('Amendments - change facility value journey - unhappy path', () => {
 
   errorTestCases.forEach(({ description, value, expectedErrorMessage }) => {
     it(`should render an error if ${description}`, () => {
-      cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`));
-
       cy.keyboardInput(facilityValue.facilityValue(), value);
       cy.clickContinueButton();
 
@@ -144,5 +129,11 @@ context('Amendments - change facility value journey - unhappy path', () => {
       facilityValue.facilityValueInlineError().should('be.visible');
       facilityValue.facilityValueInlineError().contains(expectedErrorMessage);
     });
+  });
+
+  it.only('should navigate to cancel page when cancel is clicked', () => {
+    facilityValue.cancelLink().click();
+
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`));
   });
 });

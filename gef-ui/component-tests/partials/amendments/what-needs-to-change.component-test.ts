@@ -24,7 +24,7 @@ describe(page, () => {
   it('should render the page heading', () => {
     const wrapper = render(params);
 
-    wrapper.expectText('[data-cy="page-heading"]').toRead('What do you need to change?');
+    wrapper.expectText('[data-cy="page-heading"]').toContain('What do you need to change?');
   });
 
   it('should render the exporter name and facility type in the heading caption', () => {

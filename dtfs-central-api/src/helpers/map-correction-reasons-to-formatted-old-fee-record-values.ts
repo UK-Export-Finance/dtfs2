@@ -30,6 +30,6 @@ export const getFormattedOldValueForCorrectionReason = (feeRecord: FeeRecordEnti
  * @param reasons - the reasons for the correction
  * @returns an array of the values of each fee record property that corresponds to each reason
  */
-export const mapCorrectionReasonsToFormattedOldValues = (feeRecord: FeeRecordEntity, reasons: RecordCorrectionReason[]) => {
+export const mapCorrectionReasonsToFormattedOldFeeRecordValues = (feeRecord: FeeRecordEntity, reasons: RecordCorrectionReason[]) => {
   return reasons.map((reason) => getFormattedOldValueForCorrectionReason(feeRecord, reason));
 };

@@ -11,6 +11,7 @@ export {
   isTfmDealCancellationFeatureFlagEnabled,
   isTfmSsoFeatureFlagEnabled,
   isPortalFacilityAmendmentsFeatureFlagEnabled,
+  isSalesforceCustomerCreationEnabled,
 } from './is-feature-flag-enabled';
 export * from './gef-deal-versioning';
 export * from './monetary-value';
@@ -21,3 +22,4 @@ export * from './is-ukef-email';
 export * from './fee-record-corrections';
 export * from './decode-html-entities';
 export * from './map-currencies-to-radio-items';
+export * from './utilisation-report-emails';

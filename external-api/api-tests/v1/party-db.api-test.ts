@@ -19,10 +19,23 @@ import { api } from '../api';
 const { APIM_MDM_URL } = process.env;
 const { VALID, VALID_WITH_LETTERS } = MOCK_COMPANY_REGISTRATION_NUMBERS;
 const { get } = api(app);
+let axiosMock: MockAdapter;
 
-const axiosMock = new MockAdapter(axios);
-axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID}`).reply(HttpStatusCode.Ok, {});
-axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+}));
+
+beforeEach(() => {
+  axiosMock = new MockAdapter(axios);
+
+  axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID}`).reply(HttpStatusCode.Ok, {});
+  axiosMock.onGet(`${APIM_MDM_URL}customers?companyReg=${VALID_WITH_LETTERS}`).reply(HttpStatusCode.Ok, {});
+  axiosMock.onPost(`${APIM_MDM_URL}customers`).reply(HttpStatusCode.Ok);
+});
+
+afterEach(() => {
+  axiosMock.resetHistory();
+});
 
 describe('/party-db', () => {
   describe('GET /party-db', () => {
@@ -32,7 +45,7 @@ describe('/party-db', () => {
       expect(status).toEqual(HttpStatusCode.Ok);
     });
 
-    it(`returns a ${HttpStatusCode.Ok} response with a valid companies house number`, async () => {
+    it(`returns a ${HttpStatusCode.Ok} response with a valid companies house number with letters`, async () => {
       const { status } = await get(`/party-db/${VALID_WITH_LETTERS}`);
 
       expect(status).toEqual(HttpStatusCode.Ok);
