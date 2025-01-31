@@ -12,8 +12,6 @@ export class AddFeeRecordCorrectionTable1732803141766 implements MigrationInterf
                 "dateRequested" datetime2 NOT NULL CONSTRAINT "DF_489233b45b51a528c7c12d9e999" DEFAULT getdate(),
                 "isCompleted" bit NOT NULL,
                 "feeRecordId" int NOT NULL,
-                "bankTeamName" nvarchar(500),
-                "bankTeamEmails" nvarchar(1000),
                 "requestedByUserId" nvarchar(255) NOT NULL,
                 "requestedByUserFirstname" nvarchar(255) NOT NULL,
                 "requestedByUserLastname" nvarchar(255) NOT NULL,

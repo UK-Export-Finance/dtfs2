@@ -30,7 +30,7 @@ export const generateFeeRecordCorrectionRequestEmailParameters = (
   reportPeriod: ReportPeriod,
   exporter: string,
   requestedByUserEmail: string,
-  recipient: string,
+  paymentOfficerTeamName: string,
   paymentOfficerTeamEmails: string[],
 ): FeeRecordCorrectionRequestEmails => {
   const reportPeriodString = getFormattedReportPeriodWithLongMonth(reportPeriod);
@@ -38,7 +38,7 @@ export const generateFeeRecordCorrectionRequestEmailParameters = (
   return {
     emails: [...paymentOfficerTeamEmails, requestedByUserEmail],
     variables: {
-      recipient,
+      recipient: paymentOfficerTeamName,
       reportPeriod: reportPeriodString,
       exporterName: exporter,
       reasonsList: formatReasonsAsBulletedListForEmail(reasons),
@@ -53,9 +53,9 @@ export const generateFeeRecordCorrectionRequestEmailParameters = (
  * @param reasons - The reasons for the record correction request
  * @param reportPeriod - The report period of the fee's report
  * @param exporter - The exporter of the fee record
- * @param bankId - The id of the bank
- * @param requestedByUserEmail - The email of the TFM user who is
- *    requesting the correction
+ * @param requestedByUserEmail - The email of the TFM user who is requesting the correction
+ * @param paymentOfficerTeamName - The name of the bank payment officer team
+ * @param paymentOfficerTeamEmails - The email addresses of the bank payment officer team
  * @returns A promise that resolves to an object containing the email addresses
  * that were notified.
  */
@@ -64,7 +64,7 @@ export const sendFeeRecordCorrectionRequestEmails = async (
   reportPeriod: ReportPeriod,
   exporter: string,
   requestedByUserEmail: string,
-  recipient: string,
+  paymentOfficerTeamName: string,
   paymentOfficerTeamEmails: string[],
 ): Promise<FeeRecordCorrectionRequestEmailAddresses> => {
   const { emails, variables } = generateFeeRecordCorrectionRequestEmailParameters(
@@ -72,7 +72,7 @@ export const sendFeeRecordCorrectionRequestEmails = async (
     reportPeriod,
     exporter,
     requestedByUserEmail,
-    recipient,
+    paymentOfficerTeamName,
     paymentOfficerTeamEmails,
   );
 
