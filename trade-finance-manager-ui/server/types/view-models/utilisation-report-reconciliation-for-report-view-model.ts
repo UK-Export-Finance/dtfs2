@@ -7,6 +7,8 @@ import {
   PaymentDetailsFilters,
   PremiumPaymentsFilters,
   RadioItem,
+  RecordCorrectionDisplayStatus,
+  RecordCorrectionStatus,
   SessionBank,
 } from '@ukef/dtfs2-common';
 import { ErrorSummaryViewModel } from './error-summary-view-model';
@@ -19,7 +21,7 @@ export type SortedAndFormattedCurrencyAndAmount = {
   dataSortValue: number;
 };
 
-export type FeeRecordDisplayStatus = 'To do' | 'Match' | 'Does not match' | 'Ready to key' | 'Reconciled' | 'Record correction sent';
+export type FeeRecordDisplayStatus = 'To do' | 'Match' | 'Does not match' | 'Ready to key' | 'Reconciled' | 'Record correction sent' | 'To do (amended)';
 
 export type FeeRecordViewModelItem = {
   id: number;
@@ -145,16 +147,21 @@ export type UtilisationTableRowViewModel = {
   };
 };
 
+export type RecordCorrectionStatusObject = {
+  status: RecordCorrectionStatus;
+  displayStatus: RecordCorrectionDisplayStatus;
+};
+
 export type RecordCorrectionRowViewModel = {
   feeRecordId: number;
   correctionId: number;
-  facilityId: string;
   exporter: string;
   reasons: string;
   dateSent: string;
-  requestedBy: string;
-  status: FeeRecordStatus;
-  displayStatus: FeeRecordDisplayStatus;
+  status: RecordCorrectionStatus;
+  displayStatus: RecordCorrectionDisplayStatus;
+  formattedOldRecords: string;
+  formattedCorrectRecords: string;
 };
 
 export type UtilisationDetailsViewModel = {

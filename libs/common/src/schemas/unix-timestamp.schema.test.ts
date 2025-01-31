@@ -5,6 +5,7 @@ describe('UNIX_TIMESTAMP_SCHEMA', () => {
   withUnixTimestampSchemaTests({
     schema: UNIX_TIMESTAMP_SCHEMA,
     getTestObjectWithUpdatedParameter: (newValue) => newValue,
+    getUpdatedParameterFromParsedTestObject: (data) => data,
   });
 });
 
@@ -12,6 +13,7 @@ describe('UNIX_TIMESTAMP_MILLISECONDS_SCHEMA', () => {
   withUnixTimestampMillisecondsSchemaTests({
     schema: UNIX_TIMESTAMP_MILLISECONDS_SCHEMA,
     getTestObjectWithUpdatedParameter: (newValue) => newValue,
+    getUpdatedParameterFromParsedTestObject: (data) => data,
   });
 });
 
@@ -19,5 +21,6 @@ describe('UNIX_TIMESTAMP_SECONDS_SCHEMA', () => {
   withUnixTimestampSecondsSchemaTests({
     schema: UNIX_TIMESTAMP_SECONDS_SCHEMA,
     getTestObjectWithUpdatedParameter: (newValue) => newValue,
+    getUpdatedParameterFromParsedTestObject: (data) => data,
   });
 });

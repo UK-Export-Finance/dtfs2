@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http';
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, API_ERROR_CODE, TestApiError } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, API_ERROR_CODE, TestApiError } from '@ukef/dtfs2-common';
 import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
 import { HttpStatusCode } from 'axios';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
@@ -11,7 +11,7 @@ const facilityId = 'facilityId';
 const dealId = 'dealId';
 const amendment = aPortalFacilityAmendmentUserValues();
 
-const mockUpsertedAmendment = { facilityId, dealId, amendment, type: AMENDMENT_TYPES.PORTAL, status: AMENDMENT_STATUS.IN_PROGRESS };
+const mockUpsertedAmendment = { facilityId, dealId, amendment, type: AMENDMENT_TYPES.PORTAL, status: PORTAL_AMENDMENT_STATUS.DRAFT };
 
 const mockUpsertPortalFacilityAmendmentDraft = jest.fn();
 

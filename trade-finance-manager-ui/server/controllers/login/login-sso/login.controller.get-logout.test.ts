@@ -16,7 +16,7 @@ describe('controllers - login (sso)', () => {
       loginController = new LoginController({ loginService, userSessionService });
     });
 
-    it('redirects to /', () => {
+    it('should redirect to /', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
@@ -27,7 +27,7 @@ describe('controllers - login (sso)', () => {
       expect(res._getRedirectUrl()).toEqual('/');
     });
 
-    it('destroys the session', () => {
+    it('should destroy the session', () => {
       // Arrange
       const { req, res } = getHttpMocks();
 

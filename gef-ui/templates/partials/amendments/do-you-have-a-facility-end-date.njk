@@ -1,0 +1,109 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% import '../../_macros/what-is-a-facility-end-date.njk' as whatIsAFacilityEndDate %}
+{% import '../../_macros/what-is-a-bank-review-date.njk' as whatIsABankReviewDate %}
+
+{% block pageTitle -%}
+  Do you have a facility end date?
+{%- endblock %}
+
+{% set headingHtml %}
+  <h1 class="govuk-heading-xl govuk-!-margin-bottom-6 govuk-!-margin-top-1" data-cy="page-heading">
+    <span class="govuk-caption-l" data-cy="heading-caption">
+      {{ exporterName }}, {{ facilityType }} facility
+    </span>
+    Do you have a facility end date?
+  </h1>
+{% endset %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        "data-cy": "error-summary"
+      },
+      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: previousPage,
+    attributes: {
+      "data-cy": "back-link"
+    }
+  }) }}
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-three-quarters">
+      <form method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="previousPage" value="{{ previousPage }}">
+
+        {{ govukRadios({
+          idPrefix: "isUsingFacilityEndDate",
+          name: "isUsingFacilityEndDate",
+          classes: "govuk-radios--inline",
+          fieldset: {
+            legend: {
+              html: headingHtml
+            }
+          },
+          attributes: {
+            "data-cy": "is-using-facility-end-date"
+          },
+          hint: {
+            text: "You have to provide UKEF either a facility end date or a bank review date for this GEF cash facility as per an updated version of the GEF user guide."
+          },
+          errorMessage: errors and errors.fieldErrors.isUsingFacilityEndDate and {
+            text: errors.fieldErrors.isUsingFacilityEndDate.text,
+            attributes: {
+              "data-cy": "is-using-facility-end-date-error"
+            }
+          },
+          items: [
+            {
+              value: "true",
+              text: "Yes",
+              checked: isUsingFacilityEndDate === 'true',
+              attributes: {
+                "data-cy": "is-using-facility-end-date-yes"
+              }
+            },
+            {
+              value: "false",
+              text: "No",
+              checked: isUsingFacilityEndDate === 'false',
+              attributes: {
+                "data-cy": "is-using-facility-end-date-no"
+              }
+            }
+          ]
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            attributes: {
+              "data-cy": "continue-button"
+            }
+          }) }}
+
+          <a href="{{ cancelUrl }}"  data-cy="cancel-link" class="govuk-link">Cancel</a>
+        </div>
+      </form>
+
+      {{ whatIsAFacilityEndDate.render() }}
+
+      {{ whatIsABankReviewDate.render() }}
+
+    </div>
+  </div>
+
+{% endblock %}

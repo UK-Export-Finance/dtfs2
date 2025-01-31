@@ -1,4 +1,4 @@
-const { CURRENCY, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { CURRENCY, TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const mapFacilityValue = require('./mapFacilityValue');
 const { formattedNumber } = require('../../../../utils/number');
 
@@ -82,7 +82,7 @@ describe('mapFacilityValue', () => {
       const amendmentValue = 2000;
 
       mockFacility.amendments[0] = {
-        status: AMENDMENT_STATUS.COMPLETED,
+        status: TFM_AMENDMENT_STATUS.COMPLETED,
         tfm: {
           value: {
             value: amendmentValue,

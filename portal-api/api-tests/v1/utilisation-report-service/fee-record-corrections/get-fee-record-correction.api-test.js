@@ -55,7 +55,7 @@ describe('GET /v1/banks/:bankId/fee-record-correction/:correctionId', () => {
       .build();
     utilisationReport.feeRecords = [aFeeRecord];
 
-    const aFeeRecordCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecord(aFeeRecord)
+    const aFeeRecordCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(aFeeRecord, false)
       .withId(correctionId)
       .withReasons(reasons)
       .withAdditionalInfo(additionalInfo)

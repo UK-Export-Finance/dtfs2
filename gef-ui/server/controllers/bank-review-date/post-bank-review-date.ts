@@ -5,7 +5,7 @@ import { isTrueSet, validationErrorHandler } from '../../utils/helpers';
 import * as api from '../../services/api';
 import { validateAndParseBankReviewDate } from './validation';
 import { asLoggedInUserSession, LoggedInUserSession } from '../../utils/express-session';
-import { getCoverStartDateOrStartOfToday } from '../../utils/get-cover-start-date-or-start-of-today';
+import { getCoverStartDateOrToday } from '../../utils/get-cover-start-date-or-today';
 import { BankReviewDateViewModel } from '../../types/view-models/bank-review-date-view-model';
 import { Facility } from '../../types/facility';
 
@@ -86,18 +86,18 @@ export const postBankReviewDate = async ({ req, res, uris }: PostBankReviewDateP
 
     const { details: facility } = await api.getFacility({ facilityId, userToken });
 
-    const bankReviewDateErrorsAndDate = validateAndParseBankReviewDate(
+    const bankReviewDateErrorsAndValue = validateAndParseBankReviewDate(
       {
         day: bankReviewDateDay,
         month: bankReviewDateMonth,
         year: bankReviewDateYear,
       },
-      getCoverStartDateOrStartOfToday(facility),
+      getCoverStartDateOrToday(facility),
     );
 
-    if ('errors' in bankReviewDateErrorsAndDate) {
+    if ('errors' in bankReviewDateErrorsAndValue) {
       const bankReviewDateViewModel: BankReviewDateViewModel = {
-        errors: validationErrorHandler(bankReviewDateErrorsAndDate.errors),
+        errors: validationErrorHandler(bankReviewDateErrorsAndValue.errors),
         dealId,
         facilityId,
         bankReviewDate: {
@@ -111,7 +111,7 @@ export const postBankReviewDate = async ({ req, res, uris }: PostBankReviewDateP
       return res.render('partials/bank-review-date.njk', bankReviewDateViewModel);
     }
 
-    await updateBankReviewDateIfChanged(facility, bankReviewDateErrorsAndDate.date, asLoggedInUserSession(req.session));
+    await updateBankReviewDateIfChanged(facility, bankReviewDateErrorsAndValue.value, asLoggedInUserSession(req.session));
 
     if (isTrueSet(saveAndReturn)) {
       return res.redirect(uris.saveAndReturn);

@@ -9,6 +9,7 @@ import { utilisationReportAddToAnExistingPaymentPage } from './utilisationReport
 import { createFeeRecordCorrectionRequestPage } from './fee-record-correction/createFeeRecordCorrectionRequestPage';
 import { checkFeeRecordCorrectionRequestPage } from './fee-record-correction/checkFeeRecordCorrectionRequestPage';
 import { feeRecordCorrectionRequestSentPage } from './fee-record-correction/feeRecordCorrectionRequestSentPage';
+import utilisationReportPageNotFoundPage from './pageNotFoundPage';
 
 export const utilisationReportPages = {
   utilisationReportsSummaryPage,
@@ -23,4 +24,5 @@ export const utilisationReportPages = {
   createFeeRecordCorrectionRequestPage,
   checkFeeRecordCorrectionRequestPage,
   feeRecordCorrectionRequestSentPage,
+  utilisationReportPageNotFoundPage,
 };

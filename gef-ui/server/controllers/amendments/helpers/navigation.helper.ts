@@ -12,11 +12,33 @@ const {
   ELIGIBILITY,
   EFFECTIVE_DATE,
   CHECK_YOUR_ANSWERS,
+  MANUAL_APPROVAL_NEEDED,
 } = PORTAL_AMENDMENT_PAGES;
 
 const startPages = [WHAT_DO_YOU_NEED_TO_CHANGE] as const;
-const endPages = [ELIGIBILITY, EFFECTIVE_DATE, CHECK_YOUR_ANSWERS] as const;
+const endPages = [EFFECTIVE_DATE, CHECK_YOUR_ANSWERS] as const;
 const coverEndDatePages = [COVER_END_DATE, DO_YOU_HAVE_A_FACILITY_END_DATE] as const;
+
+/**
+ * @param dealId - the deal ID
+ * @param facilityId - the facility ID
+ * @param amendmentId - the amendment ID
+ * @param page - the amendments page
+ * @returns the url for the given amendments page
+ */
+export const getAmendmentsUrl = ({
+  dealId,
+  facilityId,
+  amendmentId,
+  page,
+}: {
+  dealId: string;
+  facilityId: string;
+  amendmentId: string;
+  page: PortalAmendmentPage;
+}) => {
+  return `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${page}`;
+};
 
 /**
  * @param amendment - the amendment
@@ -41,7 +63,13 @@ const getJourneyForAmendment = (amendment: PortalFacilityAmendmentWithUkefId): P
     pages.push(FACILITY_VALUE);
   }
 
-  pages.push(...endPages);
+  pages.push(ELIGIBILITY);
+
+  if (amendment.eligibilityCriteria.criteria.some((criterion) => criterion.answer === false)) {
+    pages.push(MANUAL_APPROVAL_NEEDED);
+  } else {
+    pages.push(...endPages);
+  }
 
   return pages;
 };
@@ -61,7 +89,10 @@ export const getPreviousPage = (currentPage: PortalAmendmentPage, amendment: Por
     throw new Error(`Cannot get previous page for ${currentPage}`);
   }
 
-  return `/gef/application-details/${amendment.dealId}/facilities/${amendment.facilityId}/amendments/${amendment.amendmentId}/${journey[currentPageIndex - 1]}`;
+  const { dealId, facilityId, amendmentId } = amendment;
+  const page = journey[currentPageIndex - 1];
+
+  return getAmendmentsUrl({ dealId, facilityId, amendmentId, page });
 };
 
 /**
@@ -78,5 +109,8 @@ export const getNextPage = (currentPage: PortalAmendmentPage, amendment: PortalF
     throw new Error(`Cannot get next page for ${currentPage}`);
   }
 
-  return `/gef/application-details/${amendment.dealId}/facilities/${amendment.facilityId}/amendments/${amendment.amendmentId}/${journey[currentPageIndex + 1]}`;
+  const { dealId, facilityId, amendmentId } = amendment;
+  const page = journey[currentPageIndex + 1];
+
+  return getAmendmentsUrl({ dealId, facilityId, amendmentId, page });
 };

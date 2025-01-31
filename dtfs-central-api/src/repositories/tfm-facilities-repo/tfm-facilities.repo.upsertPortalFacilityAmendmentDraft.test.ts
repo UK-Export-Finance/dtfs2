@@ -1,5 +1,5 @@
 import { ObjectId, UpdateResult } from 'mongodb';
-import { AMENDMENT_TYPES, MONGO_DB_COLLECTIONS, AMENDMENT_STATUS, FacilityNotFoundError } from '@ukef/dtfs2-common';
+import { AMENDMENT_TYPES, MONGO_DB_COLLECTIONS, FacilityNotFoundError, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { TfmFacilitiesRepo } from './tfm-facilities.repo';
@@ -68,7 +68,7 @@ describe('TfmFacilitiesRepo', () => {
       const expectedFindFilter = { _id: { $eq: new ObjectId(facilityId) }, 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } };
 
       const expectedFirstUpdateFilter = {
-        $pull: { amendments: { type: AMENDMENT_TYPES.PORTAL, status: { $ne: AMENDMENT_STATUS.COMPLETED } } },
+        $pull: { amendments: { type: AMENDMENT_TYPES.PORTAL, status: { $eq: PORTAL_AMENDMENT_STATUS.DRAFT } } },
         $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
       };
 

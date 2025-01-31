@@ -1,4 +1,4 @@
-import { AMENDMENT_STATUS, FacilityAmendment, isValidDate } from '@ukef/dtfs2-common';
+import { TFM_AMENDMENT_STATUS, FacilityAmendment, isValidDate } from '@ukef/dtfs2-common';
 import { isBefore } from 'date-fns';
 import { orderBy } from 'lodash';
 import { convertTimestampToDate } from '../convert-timestamp-to-date';
@@ -17,7 +17,7 @@ import { convertTimestampToDate } from '../convert-timestamp-to-date';
  */
 export const filterAndSortCompletedEffectiveAmendments = (tfmFacilityAmendments: FacilityAmendment[], latestEffectiveDate: Date): FacilityAmendment[] => {
   const filteredAmendments = tfmFacilityAmendments.filter(({ status, effectiveDate, updatedAt, amendmentId }) => {
-    if (status !== AMENDMENT_STATUS.COMPLETED) {
+    if (status !== TFM_AMENDMENT_STATUS.COMPLETED) {
       return false;
     }
 

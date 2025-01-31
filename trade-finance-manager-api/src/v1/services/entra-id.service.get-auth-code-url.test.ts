@@ -45,7 +45,7 @@ describe('EntraIdService', () => {
       entraIdApi = new EntraIdApiMockBuilder().build();
     });
 
-    it('calls base64Encode with the expected stringifiedstate', async () => {
+    it('should call base64Encode with the expected stringifiedstate', async () => {
       // Arrange
       const successRedirect = 'a-success-redirect';
       const service = getAEntraIdServiceInstance();
@@ -57,7 +57,7 @@ describe('EntraIdService', () => {
       expect(base64EncodeSpy).toHaveBeenCalledWith(JSON.stringify({ csrfToken: mockGuid, successRedirect }));
     });
 
-    it('returns the auth code url from the msal app', async () => {
+    it('should return the auth code url from the msal app', async () => {
       // Arrange
       const service = getAEntraIdServiceInstance();
 
@@ -68,7 +68,7 @@ describe('EntraIdService', () => {
       expect(authCodeUrl).toEqual(authCodeUrlFromMsalApp);
     });
 
-    it('returns the auth code url request', async () => {
+    it('should return the auth code url request', async () => {
       // Arrange
       const service = getAEntraIdServiceInstance();
 

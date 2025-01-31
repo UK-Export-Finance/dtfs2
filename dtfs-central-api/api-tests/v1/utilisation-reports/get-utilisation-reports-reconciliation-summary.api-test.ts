@@ -20,6 +20,7 @@ import { UtilisationReportReconciliationSummary, UtilisationReportReconciliation
 import { withoutMongoId } from '../../../src/helpers/mongodb';
 import { aPortalUser } from '../../../test-helpers';
 import { mongoDbClient } from '../../../src/drivers/db-client';
+import { CustomErrorResponse } from '../../helpers/custom-error-response';
 
 console.error = jest.fn();
 
@@ -96,10 +97,6 @@ describe(`GET ${BASE_URL}`, () => {
     expect(response.body[0].items[0].reportedFeesLeftToReconcile).toEqual(feeRecords.length);
   });
 });
-
-interface CustomErrorResponse extends Response {
-  body: { errors: { msg: string }[] };
-}
 
 interface CustomSuccessResponse extends Response {
   body: {

@@ -1,4 +1,10 @@
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import {
+  PORTAL_AMENDMENT_STATUS,
+  AMENDMENT_TYPES,
+  AmendmentsEligibilityCriterionWithAnswer,
+  PortalFacilityAmendmentWithUkefId,
+  UnixTimestampSeconds,
+} from '@ukef/dtfs2-common';
 import { getUnixTime } from 'date-fns';
 
 export class PortalFacilityAmendmentWithUkefIdMockBuilder {
@@ -10,7 +16,7 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
       facilityId: '6776cb6f3e2efb60a50fbc41',
       amendmentId: '6777c4ca826649ec990c1adf',
       type: AMENDMENT_TYPES.PORTAL,
-      status: AMENDMENT_STATUS.IN_PROGRESS,
+      status: PORTAL_AMENDMENT_STATUS.DRAFT,
       createdAt: getUnixTime(new Date()),
       updatedAt: getUnixTime(new Date()),
       createdBy: {
@@ -19,6 +25,16 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
         email: 'maker1@ukexportfinance.gov.uk',
       },
       ukefFacilityId: '0041282190',
+      eligibilityCriteria: {
+        version: 1,
+        criteria: [
+          {
+            id: 1,
+            text: 'Criteria 1',
+            answer: null,
+          },
+        ],
+      },
     };
   }
 
@@ -37,6 +53,14 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
     return this;
   }
 
+  public withCriteria(criteria: AmendmentsEligibilityCriterionWithAnswer[]) {
+    this.amendment.eligibilityCriteria = {
+      version: 1,
+      criteria,
+    };
+    return this;
+  }
+
   public withChangeCoverEndDate(changeCoverEndDate: boolean) {
     this.amendment.changeCoverEndDate = changeCoverEndDate;
     return this;
@@ -48,7 +72,37 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
   }
 
   public withIsUsingFacilityEndDate(isUsingFacilityEndDate: boolean) {
+    this.withChangeCoverEndDate(true);
     this.amendment.isUsingFacilityEndDate = isUsingFacilityEndDate;
+
+    if (isUsingFacilityEndDate) {
+      delete this.amendment.bankReviewDate;
+    } else {
+      delete this.amendment.facilityEndDate;
+    }
+
+    return this;
+  }
+
+  public withFacilityValue(facilityValue: number) {
+    this.amendment.value = facilityValue;
+    return this;
+  }
+
+  public withFacilityEndDate(facilityEndDate: Date) {
+    this.withIsUsingFacilityEndDate(true);
+    this.amendment.facilityEndDate = facilityEndDate;
+    return this;
+  }
+
+  public withBankReviewDate(bankReviewDate: Date) {
+    this.withIsUsingFacilityEndDate(false);
+    this.amendment.bankReviewDate = bankReviewDate;
+    return this;
+  }
+
+  public withEffectiveFrom(effectiveFrom: UnixTimestampSeconds) {
+    this.amendment.effectiveFrom = effectiveFrom;
     return this;
   }
 
