@@ -29,4 +29,13 @@ export const aPortalFacilityAmendment = (): PortalFacilityAmendment => ({
     criteria: [{ id: 1, text: 'item 1', answer: null }],
     version: 1,
   },
+  effectiveDate: getUnixTime(new Date()),
+});
+
+export const aCompletedPortalFacilityAmendment = (): PortalFacilityAmendment => ({
+  ...aPortalFacilityAmendment(),
+  eligibilityCriteria: {
+    criteria: [{ id: 1, text: 'item 1', answer: true }],
+    version: 1,
+  },
 });

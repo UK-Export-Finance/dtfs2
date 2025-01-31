@@ -238,11 +238,7 @@ export class PortalFacilityAmendmentService {
       throw new AmendmentIncompleteError(facilityId, amendmentId, 'effectiveDate not provided');
     }
 
-    if (!existingAmendment.eligibilityCriteria) {
-      throw new AmendmentIncompleteError(facilityId, amendmentId, 'eligibilityCriteria not provided');
-    }
-
-    if (existingAmendment.eligibilityCriteria.criteria.some(({ answer }) => !answer)) {
+    if (!existingAmendment.eligibilityCriteria?.criteria.every(({ answer }) => answer)) {
       throw new AmendmentIncompleteError(facilityId, amendmentId, 'eligibilityCriteria answers are not all true');
     }
   }
