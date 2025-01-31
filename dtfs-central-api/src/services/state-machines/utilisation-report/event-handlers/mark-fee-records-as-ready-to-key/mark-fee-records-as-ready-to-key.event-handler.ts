@@ -28,18 +28,16 @@ export const handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent = async (
   report: UtilisationReportEntity,
   { requestSource, transactionEntityManager, feeRecordsToMarkAsReadyToKey }: MarkFeeRecordsAsReadyToKeyEventPayload,
 ): Promise<UtilisationReportEntity> => {
-  const feeRecordStateMachines = feeRecordsToMarkAsReadyToKey.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
-  await Promise.all(
-    feeRecordStateMachines.map((stateMachine) =>
-      stateMachine.handleEvent({
-        type: 'MARK_AS_READY_TO_KEY',
-        payload: {
-          transactionEntityManager,
-          requestSource,
-        },
-      }),
-    ),
-  );
+  for (const feeRecord of feeRecordsToMarkAsReadyToKey) {
+    const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
+    await stateMachine.handleEvent({
+      type: 'MARK_AS_READY_TO_KEY',
+      payload: {
+        transactionEntityManager,
+        requestSource,
+      },
+    });
+  }
 
   if (report.status === RECONCILIATION_COMPLETED) {
     report.updateWithStatus({ status: RECONCILIATION_IN_PROGRESS, requestSource });
