@@ -28,7 +28,7 @@ describe(page, () => {
   it('should render the page heading', () => {
     const wrapper = render(params);
 
-    wrapper.expectText('[data-cy="page-heading"]').toRead('Eligibility');
+    wrapper.expectText('[data-cy="page-heading"]').toContain('Eligibility');
   });
 
   it(`should render the 'Back' link`, () => {

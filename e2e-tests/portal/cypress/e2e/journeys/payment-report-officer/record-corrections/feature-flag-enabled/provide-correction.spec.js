@@ -105,7 +105,54 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
           provideCorrection.additionalComments.input().should('exist');
         });
 
-        context('and when the user has entered values and clicked save and review changes', () => {
+        context('and when the user has entered invalid values and clicked "save and review changes"', () => {
+          const newFacilityId = 'abc';
+          const newReportedFee = 'INVALID';
+          const additionalComments = ' ';
+
+          beforeEach(() => {
+            cy.keyboardInput(provideCorrection.facilityIdInput(), newFacilityId);
+            cy.keyboardInput(provideCorrection.reportedFeeInput(), newReportedFee);
+            cy.keyboardInput(provideCorrection.additionalComments.input(), additionalComments);
+
+            cy.clickContinueButton();
+          });
+
+          it('should display the validation errors', () => {
+            const expectedFacilityIdInputError = 'Error: You must enter a facility ID between 8 and 10 digits using the numbers 0-9 only';
+            const expectedReportedCurrencyError = 'Error: You must select a currency';
+            const expectedReportedFeeInputError = 'Error: You must enter the reported fee in a valid format';
+            const expectedAdditionalCommentsError = 'Error: You must enter a comment';
+
+            provideCorrection.errorSummaryItems().should('have.length', 4);
+
+            provideCorrection.facilityIdError().should('exist');
+            cy.assertText(provideCorrection.facilityIdError(), expectedFacilityIdInputError);
+
+            provideCorrection.reportedCurrency.error().should('exist');
+            cy.assertText(provideCorrection.reportedCurrency.error(), expectedReportedCurrencyError);
+
+            provideCorrection.reportedFeeError().should('exist');
+            cy.assertText(provideCorrection.reportedFeeError(), expectedReportedFeeInputError);
+
+            provideCorrection.utilisationError().should('not.exist');
+
+            provideCorrection.additionalComments.error().should('exist');
+            cy.assertText(provideCorrection.additionalComments.error(), expectedAdditionalCommentsError);
+          });
+
+          it('should retain the values entered by the user', () => {
+            provideCorrection.facilityIdInput().should('have.value', newFacilityId);
+            provideCorrection.reportedFeeInput().should('have.value', newReportedFee);
+            provideCorrection.additionalComments.input().should('have.value', additionalComments);
+
+            Object.values(CURRENCY).forEach((currency) => {
+              provideCorrection.reportedCurrency.radioInput(currency).should('not.be.checked');
+            });
+          });
+        });
+
+        context('and when the user has entered valid values and clicked "save and review changes"', () => {
           const newFacilityId = '77777777';
           const newReportedFee = '12345.67';
           const newReportedCurrency = CURRENCY.JPY;
@@ -128,6 +175,10 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
             cy.keyboardInput(provideCorrection.additionalComments.input(), additionalComments);
 
             cy.clickContinueButton();
+          });
+
+          it('should redirect to the review page', () => {
+            cy.url().should('eq', relative(`/utilisation-reports/provide-correction/${pendingCorrectionDetails.id}/check-the-information`));
           });
 
           it('should retain the values entered by the user when they return to the page via the review page back link', () => {
@@ -168,6 +219,16 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
             provideCorrection.reportedFeeInput().should('have.value', '');
             provideCorrection.reportedCurrency.radioInput(newReportedCurrency).should('not.be.checked');
             provideCorrection.additionalComments.input().should('have.value', '');
+          });
+        });
+
+        context('and when the user clicks cancel', () => {
+          beforeEach(() => {
+            cy.clickCancelButton();
+          });
+
+          it('should redirect to the "Report GEF utilisation and fees paid" page', () => {
+            cy.url().should('eq', relative('/utilisation-report-upload'));
           });
         });
       });

@@ -16,6 +16,7 @@ import { getUtilisationReportCorrectionReview, UtilisationReportCorrectionReview
 import { UtilisationReportCorrectionInformationViewModel } from '../../../../types/view-models/record-correction/utilisation-report-correction-information';
 import { SaveFeeRecordCorrectionResponseBody } from '../../../../api-response-types';
 import { LoggedInUserSession } from '../../../../helpers/express-session';
+import { getRecordCorrectionCancelLinkHref } from '../../../../helpers';
 
 jest.mock('../../../../api');
 
@@ -100,7 +101,7 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
       const expectedResponse: UtilisationReportCorrectionInformationViewModel = {
         user: mockUser,
         primaryNav: PRIMARY_NAV_KEY.UTILISATION_REPORT_UPLOAD,
-        cancelLinkHref: `/utilisation-reports/cancel-correction/${correctionId}`,
+        cancelLinkHref: getRecordCorrectionCancelLinkHref(correctionId),
         backLinkHref: `/utilisation-reports/provide-correction/${correctionId}`,
         feeRecord: expectedFeeRecord,
         formattedReasons: expectedFormattedReasons,

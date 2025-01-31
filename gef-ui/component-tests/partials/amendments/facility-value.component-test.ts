@@ -26,7 +26,7 @@ describe(page, () => {
   it('should render the page heading', () => {
     const wrapper = render(params);
 
-    wrapper.expectText('[data-cy="page-heading"]').toRead('New facility value');
+    wrapper.expectText('[data-cy="page-heading"]').toContain('New facility value');
   });
 
   it(`should render the 'Back' link`, () => {

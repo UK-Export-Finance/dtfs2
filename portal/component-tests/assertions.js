@@ -115,6 +115,14 @@ const assertions = (wrapper, html) => ({
       expect(wrapper(selector).attr('aria-label')).toEqual(text);
     },
   }),
+  expectPageTitle: () => ({
+    toRead: (text) => {
+      const titleText = wrapper('title').first().text();
+      const result = titleText.replace('- UK Export Finance', '').trim();
+
+      expect(result).toEqual(text);
+    },
+  }),
 });
 
 module.exports = assertions;
