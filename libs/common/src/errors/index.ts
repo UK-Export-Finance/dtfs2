@@ -20,4 +20,4 @@ export * from './user-token-not-defined.error';
 export * from './multiple-users-found.error';
 export * from './amendment-not-found.error';
 export * from './eligibility-criteria-not-found.error';
-export * from './amendment-incomplete-error';
+export * from './amendment-incomplete.error';
