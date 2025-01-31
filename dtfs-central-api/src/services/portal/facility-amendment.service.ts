@@ -79,7 +79,44 @@ export class PortalFacilityAmendmentService {
    * @param params.auditDetails - The audit details for the update operation.
    * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithUkefId)>} A promise that resolves when the update operation is complete.
    */
-  public static async updatePortalFacilityAmendment({
+  private static async updatePortalFacilityAmendment({
+    amendmentId,
+    facilityId,
+    update,
+    auditDetails,
+  }: {
+    amendmentId: ObjectId;
+    facilityId: ObjectId;
+    update: Partial<PortalFacilityAmendment>;
+    auditDetails: PortalAuditDetails;
+  }): Promise<FacilityAmendmentWithUkefId> {
+    await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({
+      amendmentId,
+      facilityId,
+      update,
+      auditDetails,
+    });
+
+    const updatedAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
+
+    if (updatedAmendment?.type !== AMENDMENT_TYPES.PORTAL) {
+      throw new Error(`Could not find amendment to return`);
+    }
+
+    return updatedAmendment;
+  }
+
+  /**
+   * Updates a portal facility amendment with the provided details.
+   *
+   * @param params
+   * @param params.amendmentId - The amendment id
+   * @param params.facilityId - The facility id
+   * @param params.update - The update payload for the amendment.
+   * @param params.auditDetails - The audit details for the update operation.
+   * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithUkefId)>} A promise that resolves when the update operation is complete.
+   */
+  public static async updatePortalFacilityAmendmentUserValues({
     amendmentId,
     facilityId,
     update,
@@ -98,20 +135,7 @@ export class PortalFacilityAmendmentService {
     const facilityMongoId = new ObjectId(facilityId);
     const amendmentMongoId = new ObjectId(amendmentId);
 
-    await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({
-      amendmentId: amendmentMongoId,
-      facilityId: facilityMongoId,
-      update: amendmentUpdate,
-      auditDetails,
-    });
-
-    const updatedAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityMongoId, amendmentMongoId);
-
-    if (updatedAmendment?.type !== AMENDMENT_TYPES.PORTAL) {
-      throw new Error(`Could not find amendment to return`);
-    }
-
-    return updatedAmendment;
+    return await this.updatePortalFacilityAmendment({ amendmentId: amendmentMongoId, facilityId: facilityMongoId, update: amendmentUpdate, auditDetails });
   }
 
   /**
@@ -143,19 +167,6 @@ export class PortalFacilityAmendmentService {
     const facilityMongoId = new ObjectId(facilityId);
     const amendmentMongoId = new ObjectId(amendmentId);
 
-    await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({
-      amendmentId: amendmentMongoId,
-      facilityId: facilityMongoId,
-      update: amendmentUpdate,
-      auditDetails,
-    });
-
-    const updatedAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityMongoId, amendmentMongoId);
-
-    if (updatedAmendment?.type !== AMENDMENT_TYPES.PORTAL) {
-      throw new Error(`Could not find amendment to return`);
-    }
-
-    return updatedAmendment;
+    return await this.updatePortalFacilityAmendment({ amendmentId: amendmentMongoId, facilityId: facilityMongoId, update: amendmentUpdate, auditDetails });
   }
 }

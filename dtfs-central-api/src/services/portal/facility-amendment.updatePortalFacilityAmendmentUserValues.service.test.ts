@@ -42,7 +42,7 @@ describe('PortalFacilityAmendmentService', () => {
   describe('updatePortalFacilityAmendment', () => {
     it('should call TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId with the correct params', async () => {
       // Act
-      await PortalFacilityAmendmentService.updatePortalFacilityAmendment({
+      await PortalFacilityAmendmentService.updatePortalFacilityAmendmentUserValues({
         amendmentId,
         facilityId,
         update,
@@ -67,7 +67,7 @@ describe('PortalFacilityAmendmentService', () => {
 
   it('should call TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId with the correct params', async () => {
     // Act
-    await PortalFacilityAmendmentService.updatePortalFacilityAmendment({
+    await PortalFacilityAmendmentService.updatePortalFacilityAmendmentUserValues({
       amendmentId,
       facilityId,
       update,
@@ -81,7 +81,7 @@ describe('PortalFacilityAmendmentService', () => {
 
   it('should return the result of TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId', async () => {
     // Act
-    const expected = await PortalFacilityAmendmentService.updatePortalFacilityAmendment({
+    const expected = await PortalFacilityAmendmentService.updatePortalFacilityAmendmentUserValues({
       amendmentId,
       facilityId,
       update,
@@ -97,7 +97,7 @@ describe('PortalFacilityAmendmentService', () => {
     mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce(null);
 
     // Act
-    const returned = PortalFacilityAmendmentService.updatePortalFacilityAmendment({
+    const returned = PortalFacilityAmendmentService.updatePortalFacilityAmendmentUserValues({
       amendmentId,
       facilityId,
       update,
@@ -113,7 +113,7 @@ describe('PortalFacilityAmendmentService', () => {
     mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce({ ...updatedAmendment, type: AMENDMENT_TYPES.TFM });
 
     // Act
-    const returned = PortalFacilityAmendmentService.updatePortalFacilityAmendment({
+    const returned = PortalFacilityAmendmentService.updatePortalFacilityAmendmentUserValues({
       amendmentId,
       facilityId,
       update,
