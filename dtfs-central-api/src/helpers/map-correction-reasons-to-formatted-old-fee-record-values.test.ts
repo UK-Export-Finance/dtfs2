@@ -4,7 +4,7 @@ import {
   getFormattedOldValueForCorrectionReason,
 } from './map-correction-reasons-to-formatted-old-fee-record-values';
 
-describe('map-correction-reasons-to-formatted-values', () => {
+describe('map-correction-reasons-to-formatted-old-fee-record-values', () => {
   const feeRecord = new FeeRecordEntityMockBuilder().build();
 
   describe('getFormattedOldValueForCorrectionReason', () => {
