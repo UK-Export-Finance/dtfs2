@@ -44,19 +44,17 @@ export const handleUtilisationReportEditPaymentEvent = async (
 
   const feeRecordsAndPaymentsMatch = await feeRecordsMatchAttachedPayments(feeRecords, transactionEntityManager);
 
-  const feeRecordStateMachines = feeRecords.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
-  await Promise.all(
-    feeRecordStateMachines.map((stateMachine) =>
-      stateMachine.handleEvent({
-        type: 'PAYMENT_EDITED',
-        payload: {
-          transactionEntityManager,
-          feeRecordsAndPaymentsMatch,
-          requestSource,
-        },
-      }),
-    ),
-  );
+  for (const feeRecord of feeRecords) {
+    const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
+    await stateMachine.handleEvent({
+      type: 'PAYMENT_EDITED',
+      payload: {
+        transactionEntityManager,
+        feeRecordsAndPaymentsMatch,
+        requestSource,
+      },
+    });
+  }
 
   report.updateLastUpdatedBy(requestSource);
   return await transactionEntityManager.save(UtilisationReportEntity, report);
