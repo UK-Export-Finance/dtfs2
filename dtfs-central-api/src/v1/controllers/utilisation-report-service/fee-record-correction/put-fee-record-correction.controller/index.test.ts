@@ -6,7 +6,6 @@ import {
   FeeRecordCorrectionEntityMockBuilder,
   FeeRecordCorrectionTransientFormDataEntityMockBuilder,
   FeeRecordEntityMockBuilder,
-  PaymentOfficerTeam,
   PENDING_RECONCILIATION,
   REQUEST_PLATFORM_TYPE,
   TestApiError,
@@ -16,17 +15,16 @@ import { EntityManager } from 'typeorm';
 import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
 import { FeeRecordCorrectionRepo } from '../../../../../repositories/fee-record-correction-repo';
 import { putFeeRecordCorrection, PutFeeRecordCorrectionRequest } from '.';
-import { getBankById } from '../../../../../repositories/banks-repo';
-import { aBank } from '../../../../../../test-helpers';
 import { executeWithSqlTransaction } from '../../../../../helpers';
 import { FeeRecordStateMachine } from '../../../../../services/state-machines/fee-record/fee-record.state-machine';
 import { FEE_RECORD_EVENT_TYPE } from '../../../../../services/state-machines/fee-record/event/fee-record.event-type';
+import { sendFeeRecordCorrectionReceivedEmails } from './helpers';
 
 jest.mock('../../../../../repositories/fee-record-correction-transient-form-data-repo');
 jest.mock('../../../../../repositories/fee-record-correction-repo');
-jest.mock('../../../../../repositories/banks-repo');
 jest.mock('../../../../../helpers');
 jest.mock('../../../../../services/state-machines/fee-record/fee-record.state-machine');
+jest.mock('./helpers');
 
 describe('putFeeRecordCorrection', () => {
   const mockFindCorrection = jest.fn();
@@ -109,7 +107,9 @@ describe('putFeeRecordCorrection', () => {
 
     const report = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withReportPeriod(reportPeriod).withBankId(bankId).build();
 
-    const feeRecord = FeeRecordEntityMockBuilder.forReport(report).build();
+    const exporter = 'Test exporter';
+
+    const feeRecord = FeeRecordEntityMockBuilder.forReport(report).withExporter(exporter).build();
 
     const correction = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false).withId(correctionId).build();
 
@@ -142,79 +142,67 @@ describe('putFeeRecordCorrection', () => {
         .withFormData(formData)
         .build();
 
+      const sentToEmails = ['email1@ukexportfinance.gov.uk', 'email2@ukexportfinance.gov.uk'];
+
       beforeEach(() => {
         mockFindCorrectionTransientFormData.mockResolvedValue(transientFormDataEntity);
+        jest.mocked(sendFeeRecordCorrectionReceivedEmails).mockResolvedValue({ emails: sentToEmails });
       });
 
-      describe('and when the bank is not found', () => {
-        beforeEach(() => {
-          jest.mocked(getBankById).mockResolvedValue(null);
-        });
+      it('should call the fee record state machine to handle the correction received event', async () => {
+        // Act
+        await putFeeRecordCorrection(req, res);
 
-        it(`should respond with ${HttpStatusCode.NotFound} if bank is not found`, async () => {
-          // Act
-          await putFeeRecordCorrection(req, res);
-
-          // Assert
-          expect(res._getStatusCode()).toBe(HttpStatusCode.NotFound);
-          expect(res._getData()).toBe(`Failed to put fee record correction: Failed to find bank with id '${bankId}'`);
-        });
-      });
-
-      describe('and when the bank is found', () => {
-        const paymentOfficerTeam: PaymentOfficerTeam = { emails: ['email1@ukexportfinance.gov.uk', 'email2@ukexportfinance.gov.uk'], teamName: 'This Team' };
-        const bank = { ...aBank(), paymentOfficerTeam };
-
-        beforeEach(() => {
-          jest.mocked(getBankById).mockResolvedValue(bank);
-        });
-
-        it('should call the fee record state machine to handle the correction received event', async () => {
-          // Act
-          await putFeeRecordCorrection(req, res);
-
-          // Assert
-          const expected = {
-            type: FEE_RECORD_EVENT_TYPE.CORRECTION_RECEIVED,
-            payload: {
-              transactionEntityManager: mockEntityManager,
-              correctionEntity: correction,
-              correctionFormData: formData,
-              requestSource: {
-                platform: REQUEST_PLATFORM_TYPE.PORTAL,
-                userId: portalUserId,
-              },
+        // Assert
+        const expected = {
+          type: FEE_RECORD_EVENT_TYPE.CORRECTION_RECEIVED,
+          payload: {
+            transactionEntityManager: mockEntityManager,
+            correctionEntity: correction,
+            correctionFormData: formData,
+            requestSource: {
+              platform: REQUEST_PLATFORM_TYPE.PORTAL,
+              userId: portalUserId,
             },
-          };
+          },
+        };
 
-          expect(mockHandleEvent).toHaveBeenCalledTimes(1);
-          expect(mockHandleEvent).toHaveBeenCalledWith(expected);
-        });
+        expect(mockHandleEvent).toHaveBeenCalledTimes(1);
+        expect(mockHandleEvent).toHaveBeenCalledWith(expected);
+      });
 
-        it('should call the repo to delete the transient form data', async () => {
-          // Act
-          await putFeeRecordCorrection(req, res);
+      it('should call the repo to delete the transient form data', async () => {
+        // Act
+        await putFeeRecordCorrection(req, res);
 
-          // Assert
-          expect(mockDeleteTransientFormData).toHaveBeenCalledTimes(1);
-          expect(mockDeleteTransientFormData).toHaveBeenCalledWith(portalUserId, correctionId);
-        });
+        // Assert
+        expect(mockDeleteTransientFormData).toHaveBeenCalledTimes(1);
+        expect(mockDeleteTransientFormData).toHaveBeenCalledWith(portalUserId, correctionId);
+      });
 
-        it(`should respond with ${HttpStatusCode.Ok}`, async () => {
-          // Act
-          await putFeeRecordCorrection(req, res);
+      it('should send correction received notification emails', async () => {
+        // Act
+        await putFeeRecordCorrection(req, res);
 
-          // Assert
-          expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
-        });
+        // Assert
+        expect(sendFeeRecordCorrectionReceivedEmails).toHaveBeenCalledTimes(1);
+        expect(sendFeeRecordCorrectionReceivedEmails).toHaveBeenCalledWith(exporter, bankId);
+      });
 
-        it('should respond with the payment officer emails and report period', async () => {
-          // Act
-          await putFeeRecordCorrection(req, res);
+      it(`should respond with ${HttpStatusCode.Ok}`, async () => {
+        // Act
+        await putFeeRecordCorrection(req, res);
 
-          // Assert
-          expect(res._getData()).toEqual({ sentToEmails: paymentOfficerTeam.emails, reportPeriod });
-        });
+        // Assert
+        expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
+      });
+
+      it('should respond with the sent to emails and report period', async () => {
+        // Act
+        await putFeeRecordCorrection(req, res);
+
+        // Assert
+        expect(res._getData()).toEqual({ sentToEmails, reportPeriod });
       });
     });
 

@@ -12,10 +12,11 @@ const {
   ELIGIBILITY,
   EFFECTIVE_DATE,
   CHECK_YOUR_ANSWERS,
+  MANUAL_APPROVAL_NEEDED,
 } = PORTAL_AMENDMENT_PAGES;
 
 const startPages = [WHAT_DO_YOU_NEED_TO_CHANGE] as const;
-const endPages = [ELIGIBILITY, EFFECTIVE_DATE, CHECK_YOUR_ANSWERS] as const;
+const endPages = [EFFECTIVE_DATE, CHECK_YOUR_ANSWERS] as const;
 const coverEndDatePages = [COVER_END_DATE, DO_YOU_HAVE_A_FACILITY_END_DATE] as const;
 
 /**
@@ -62,7 +63,13 @@ const getJourneyForAmendment = (amendment: PortalFacilityAmendmentWithUkefId): P
     pages.push(FACILITY_VALUE);
   }
 
-  pages.push(...endPages);
+  pages.push(ELIGIBILITY);
+
+  if (amendment.eligibilityCriteria.criteria.some((criterion) => criterion.answer === false)) {
+    pages.push(MANUAL_APPROVAL_NEEDED);
+  } else {
+    pages.push(...endPages);
+  }
 
   return pages;
 };

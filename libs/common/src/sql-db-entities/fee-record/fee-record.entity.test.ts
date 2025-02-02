@@ -1,5 +1,11 @@
 import { CURRENCY, FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE } from '../../constants';
-import { aRecordCorrectionValues, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
+import {
+  aRecordCorrectionValues,
+  FacilityUtilisationDataEntityMockBuilder,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  UtilisationReportEntityMockBuilder,
+} from '../../test-helpers';
 import { Currency } from '../../types';
 
 describe('FeeRecordEntity', () => {
@@ -335,6 +341,95 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.feesPaidToUkefForThePeriod).toEqual(correctedValues.feesPaidToUkefForThePeriod);
       expect(feeRecord.feesPaidToUkefForThePeriodCurrency).toEqual(correctedValues.feesPaidToUkefForThePeriodCurrency);
       expect(feeRecord.facilityId).toEqual(correctedValues.facilityId);
+    });
+
+    it('should update facilityUtilisationData id to new facilityId when facilityId is corrected', () => {
+      // Arrange
+      const correctedValues = {
+        facilityUtilisation: null,
+        feesPaidToUkefForThePeriod: null,
+        feesPaidToUkefForThePeriodCurrency: null,
+        facilityId: '77777777',
+      };
+
+      const oldFacilityId = '11111111';
+
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withFacilityUtilisationData(FacilityUtilisationDataEntityMockBuilder.forId(oldFacilityId).build())
+        .withFacilityId(oldFacilityId)
+        .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
+        .build();
+
+      // Act
+      feeRecord.updateWithCorrection({
+        correctedValues,
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: 'abc123' },
+      });
+
+      // Assert
+      expect(feeRecord.facilityUtilisationData.id).toEqual(correctedValues.facilityId);
+    });
+
+    describe('when the fee record payment currency is the same as the fees paid to ukef for the period currency', () => {
+      const originalFeesPaidToUkefForThePeriodCurrency = CURRENCY.GBP;
+      const originalPaymentCurrency = originalFeesPaidToUkefForThePeriodCurrency;
+      const correctionCurrency = CURRENCY.USD;
+
+      it('should apply any change to the fees paid to ukef for the period currency to the payment currency also', () => {
+        // Arrange
+        const correctedValues = {
+          ...aRecordCorrectionValues(),
+          feesPaidToUkefForThePeriodCurrency: correctionCurrency,
+        };
+
+        const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+          .withFeesPaidToUkefForThePeriodCurrency(originalFeesPaidToUkefForThePeriodCurrency)
+          .withPaymentCurrency(originalPaymentCurrency)
+          .withPaymentExchangeRate(1)
+          .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
+          .build();
+
+        // Act
+        feeRecord.updateWithCorrection({
+          correctedValues,
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
+        });
+
+        // Assert
+        expect(feeRecord.feesPaidToUkefForThePeriodCurrency).toEqual(correctionCurrency);
+        expect(feeRecord.paymentCurrency).toEqual(correctionCurrency);
+      });
+    });
+
+    describe('when the fee record payment currency is NOT the same as the fees paid to ukef for the period currency', () => {
+      const originalPaymentCurrency = CURRENCY.EUR;
+      const originalFeesPaidToUkefForThePeriodCurrency = CURRENCY.GBP;
+      const correctionCurrency = CURRENCY.USD;
+
+      it('should not change the payment currency', () => {
+        // Arrange
+        const correctedValues = {
+          ...aRecordCorrectionValues(),
+          feesPaidToUkefForThePeriodCurrency: correctionCurrency,
+        };
+
+        const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+          .withFeesPaidToUkefForThePeriodCurrency(originalFeesPaidToUkefForThePeriodCurrency)
+          .withPaymentCurrency(originalPaymentCurrency)
+          .withPaymentExchangeRate(1)
+          .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
+          .build();
+
+        // Act
+        feeRecord.updateWithCorrection({
+          correctedValues,
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
+        });
+
+        // Assert
+        expect(feeRecord.feesPaidToUkefForThePeriodCurrency).toEqual(correctionCurrency);
+        expect(feeRecord.paymentCurrency).toEqual(originalPaymentCurrency);
+      });
     });
 
     it('should set the status to TO_DO_AMENDED when corrected values are not all null', () => {

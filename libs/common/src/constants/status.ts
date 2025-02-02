@@ -1,0 +1,3 @@
+export const ERROR_KEY = {
+  INVALID_STATUS: 'INVALID_STATUS',
+};
