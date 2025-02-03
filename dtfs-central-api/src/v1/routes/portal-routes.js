@@ -39,7 +39,7 @@ const getFacilityAmendmentController = require('../controllers/portal/facility/g
 const putFacilityAmendmentController = require('../controllers/portal/facility/put-amendment.controller');
 const patchFacilityAmendmentController = require('../controllers/portal/facility/patch-amendment.controller');
 const deleteFacilityAmendmentController = require('../controllers/portal/facility/delete-amendment.controller');
-const submitAmendmentToCheckerController = require('../controllers/portal/facility/post-submit-amendment-to-checker.controller');
+const postAmendmentStatusController = require('../controllers/portal/facility/post-amendment-status.controller');
 
 const durableFunctionsController = require('../controllers/durable-functions/durable-functions.controller');
 const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controller');
@@ -623,7 +623,7 @@ portalRouter
 
 /**
  * @openapi
- * /facilities/:facilityId/amendments/:amendmentId:/submit-to-checker
+ * /facilities/:facilityId/amendments/:amendmentId:/status/:newStatus
  *   patch:
  *     summary: Submit a Portal GEF facility amendment to checker
  *     tags: [Portal - Amendments]
@@ -641,6 +641,13 @@ portalRouter
  *           type: string
  *         required: true
  *         description: Amendment ID to get
+ *       - in: path
+ *         name: newStatus
+ *         schema:
+ *           type: string
+ *           enum: ["Ready for checker's approval"]
+ *         required: true
+ *         description: status update to make
  *     requestBody:
  *       required: true
  *       content:
@@ -672,7 +679,7 @@ portalRouter
     validation.mongoIdValidation('facilityId'),
     validation.mongoIdValidation('amendmentId'),
     validatePostSubmitPortalFacilityAmendmentToCheckerPayload,
-    submitAmendmentToCheckerController.postSubmitAmendmentToChecker,
+    postAmendmentStatusController.postAmendmentStatus,
   );
 
 /**

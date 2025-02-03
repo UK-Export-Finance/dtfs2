@@ -4,7 +4,7 @@ import { HttpStatusCode } from 'axios';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
-import { postAmendmentStatus, PostSubmitAmendmentToCheckerRequest } from './post-submit-amendment-to-checker.controller';
+import { postAmendmentStatus, PostSubmitAmendmentToCheckerRequest } from './post-amendment-status.controller';
 
 const amendmentId = 'amendmentId';
 const facilityId = 'facilityId';
