@@ -8,5 +8,6 @@ export const PORTAL_AMENDMENT_PAGES = {
   ELIGIBILITY: 'eligibility',
   EFFECTIVE_DATE: 'effective-date',
   CHECK_YOUR_ANSWERS: 'check-your-answers',
+  MANUAL_APPROVAL_NEEDED: 'manual-approval-needed',
   CANCEL: 'cancel',
 } as const;
