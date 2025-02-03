@@ -1,8 +1,9 @@
 import { Response } from 'supertest';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { AnyObject, API_ERROR_CODE, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import { AnyObject, API_ERROR_CODE, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE, MONGO_DB_COLLECTIONS, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
+import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
 import wipeDB from '../../wipeDB';
 import { testApi } from '../../test-api';
 import { createDeal, submitDealToTfm } from '../../helpers/create-deal';
@@ -19,8 +20,8 @@ interface ErrorResponse extends Response {
   body: { status?: number; message: string; code?: string };
 }
 
-const generateUrl = (facilityId: string, amendmentId: string): string => {
-  return `/v1/portal/facilities/${facilityId}/amendments/${amendmentId}/submit-to-checker`;
+const generateUrl = (facilityId: string, amendmentId: string, newStatus: string): string => {
+  return `/v1/portal/facilities/${facilityId}/amendments/${amendmentId}/status/${encodeURI(newStatus)}`;
 };
 
 const newDeal = aDeal({
@@ -28,7 +29,7 @@ const newDeal = aDeal({
   submissionType: DEAL_SUBMISSION_TYPE.AIN,
 }) as AnyObject;
 
-describe('post /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit-to-checker', () => {
+describe('POST /v1/portal/facilities/:facilityId/amendments/:amendmentId/status/:newStatus', () => {
   let dealId: string;
   let facilityId: string;
   let portalUserId: string;
@@ -67,7 +68,9 @@ describe('post /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit-
     it(`should return ${HttpStatusCode.NotFound}`, async () => {
       const amendmentId = new ObjectId().toString();
 
-      const { status } = await testApi.post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) }).to(generateUrl(facilityId, amendmentId));
+      const { status } = await testApi
+        .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .to(generateUrl(facilityId, amendmentId, 'a new status'));
 
       expect(status).toEqual(HttpStatusCode.NotFound);
     });
@@ -81,7 +84,18 @@ describe('post /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit-
     });
 
     beforeEach(async () => {
-      const existingAmendment = await createPortalFacilityAmendment({ facilityId, dealId, userId: portalUserId });
+      const existingAmendment = await createPortalFacilityAmendment({
+        facilityId,
+        dealId,
+        userId: portalUserId,
+        amendment: {
+          ...aPortalFacilityAmendmentUserValues(),
+          eligibilityCriteria: {
+            criteria: [{ id: 1, text: 'item 1', answer: true }],
+            version: 1,
+          },
+        },
+      });
 
       amendmentId = existingAmendment.amendmentId.toString();
     });
@@ -91,7 +105,7 @@ describe('post /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit-
 
       const { body, status } = (await testApi
         .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
-        .to(generateUrl(anInvalidFacilityId, amendmentId))) as ErrorResponse;
+        .to(generateUrl(anInvalidFacilityId, amendmentId, 'a new status'))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
 
@@ -106,7 +120,7 @@ describe('post /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit-
 
       const { body, status } = (await testApi
         .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
-        .to(generateUrl(facilityId, anInvalidAmendmentId))) as ErrorResponse;
+        .to(generateUrl(facilityId, anInvalidAmendmentId, 'a new status'))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
 
@@ -121,7 +135,7 @@ describe('post /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit-
 
       const { body, status } = (await testApi
         .post({ dealId: anInvalidDealId, auditDetails: generatePortalAuditDetails(portalUserId) })
-        .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;
+        .to(generateUrl(facilityId, amendmentId, 'a new status'))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
 
@@ -132,40 +146,81 @@ describe('post /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit-
       });
     });
 
-    it(`should return ${HttpStatusCode.NotFound} when the facility does not exist`, async () => {
-      const aValidButNonExistentFacilityId = new ObjectId().toString();
+    it(`should return ${HttpStatusCode.BadRequest} when the new status is invalid`, async () => {
+      const anInvalidStatus = 'a new status';
 
       const { body, status } = (await testApi
         .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
-        .to(generateUrl(aValidButNonExistentFacilityId, amendmentId))) as ErrorResponse;
+        .to(generateUrl(facilityId, amendmentId, anInvalidStatus))) as ErrorResponse;
 
-      expect(status).toEqual(HttpStatusCode.NotFound);
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+
       expect(body).toEqual({
-        status: HttpStatusCode.NotFound,
-        message: `Amendment not found: ${amendmentId} on facility: ${aValidButNonExistentFacilityId}`,
+        status: HttpStatusCode.BadRequest,
+        message: `Invalid newStatus: ${JSON.stringify(anInvalidStatus)}`,
       });
     });
 
-    it(`should return ${HttpStatusCode.NotFound} when the amendment does not exist`, async () => {
-      const aValidButNonExistentAmendmentId = new ObjectId().toString();
+    describe(`when newStatus is ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}`, () => {
+      const newStatus = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
 
-      const { body, status } = (await testApi
-        .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
-        .to(generateUrl(facilityId, aValidButNonExistentAmendmentId))) as ErrorResponse;
+      it(`should return ${HttpStatusCode.NotFound} when the facility does not exist`, async () => {
+        const aValidButNonExistentFacilityId = new ObjectId().toString();
 
-      expect(status).toEqual(HttpStatusCode.NotFound);
-      expect(body).toEqual({
-        status: HttpStatusCode.NotFound,
-        message: `Amendment not found: ${aValidButNonExistentAmendmentId} on facility: ${facilityId}`,
+        const { body, status } = (await testApi
+          .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
+          .to(generateUrl(aValidButNonExistentFacilityId, amendmentId, newStatus))) as ErrorResponse;
+
+        expect(status).toEqual(HttpStatusCode.NotFound);
+        expect(body).toEqual({
+          status: HttpStatusCode.NotFound,
+          message: `Facility not found: ${aValidButNonExistentFacilityId}`,
+        });
       });
-    });
 
-    it(`should return ${HttpStatusCode.Ok} when the payload is valid & the amendment exists`, async () => {
-      const { status } = (await testApi
-        .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
-        .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;
+      it(`should return ${HttpStatusCode.NotFound} when the amendment does not exist`, async () => {
+        const aValidButNonExistentAmendmentId = new ObjectId().toString();
 
-      expect(status).toEqual(HttpStatusCode.Ok);
+        const { body, status } = (await testApi
+          .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
+          .to(generateUrl(facilityId, aValidButNonExistentAmendmentId, newStatus))) as ErrorResponse;
+
+        expect(status).toEqual(HttpStatusCode.NotFound);
+        expect(body).toEqual({
+          status: HttpStatusCode.NotFound,
+          message: `Amendment not found: ${aValidButNonExistentAmendmentId} on facility: ${facilityId}`,
+        });
+      });
+
+      it(`should return ${HttpStatusCode.Conflict} when the amendment is incomplete`, async () => {
+        // Arrange
+        const anIncompleteAmendment = await createPortalFacilityAmendment({
+          facilityId,
+          dealId,
+          userId: portalUserId,
+        });
+        const incompleteAmendmentId = anIncompleteAmendment.amendmentId.toString();
+
+        // Act
+        const { body, status } = (await testApi
+          .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
+          .to(generateUrl(facilityId, incompleteAmendmentId, newStatus))) as ErrorResponse;
+
+        // Assert
+        expect(status).toEqual(HttpStatusCode.Conflict);
+        expect(body).toEqual({
+          status: HttpStatusCode.Conflict,
+          message: `Amendment ${incompleteAmendmentId} on facility ${facilityId} is incomplete: neither changeCoverEndDate nor changeFacilityValue is true`,
+        });
+      });
+
+      it(`should return ${HttpStatusCode.Ok} when the payload is valid & the amendment exists`, async () => {
+        const { status } = (await testApi
+          .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
+          .to(generateUrl(facilityId, amendmentId, newStatus))) as ErrorResponse;
+
+        expect(status).toEqual(HttpStatusCode.Ok);
+      });
     });
   });
 });

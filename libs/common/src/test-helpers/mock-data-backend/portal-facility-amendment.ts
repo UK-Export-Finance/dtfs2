@@ -14,6 +14,7 @@ export const aPortalFacilityAmendmentUserValues = (): PortalFacilityAmendmentUse
   changeFacilityValue: true,
   value: 1800,
   currency: CURRENCY.GBP,
+  effectiveDate: getUnixTime(new Date()),
 });
 
 export const aPortalFacilityAmendment = (): PortalFacilityAmendment => ({

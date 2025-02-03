@@ -164,9 +164,9 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId', () =
     });
 
     it(`should return ${HttpStatusCode.Ok} when the payload is valid & the amendment exists`, async () => {
-      const { status } = (await testApi
+      const { status } = await testApi
         .patch({ update: aPortalFacilityAmendmentUserValues(), auditDetails: generatePortalAuditDetails(portalUserId) })
-        .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;
+        .to(generateUrl(facilityId, amendmentId));
 
       expect(status).toEqual(HttpStatusCode.Ok);
     });
