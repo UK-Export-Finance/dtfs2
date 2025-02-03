@@ -7,7 +7,7 @@ import { userCanAmendFacility } from '../../../utils/facility-amendments.helper.
 import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper.ts';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
 import { convertDateToDayMonthYearInput } from '../helpers/dates.helper.ts';
-import { EffectiveFromViewModel } from '../../../types/view-models/amendments/effective-from-view-model.ts';
+import { EffectiveDateViewModel } from '../../../types/view-models/amendments/effective-date-view-model.ts';
 
 export type GetEffectiveDateRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -18,7 +18,7 @@ export type GetEffectiveDateRequest = CustomExpressRequest<{
  * @param req - the request object
  * @param res - the response object
  */
-export const getEffectiveFrom = async (req: GetEffectiveDateRequest, res: Response) => {
+export const getEffectiveDate = async (req: GetEffectiveDateRequest, res: Response) => {
   try {
     const { dealId, facilityId, amendmentId } = req.params;
     const { userToken, user } = asLoggedInUserSession(req.session);
@@ -43,19 +43,19 @@ export const getEffectiveFrom = async (req: GetEffectiveDateRequest, res: Respon
       return res.redirect('/not-found');
     }
 
-    const effectiveFrom: DayMonthYearInput | undefined = amendment.effectiveFrom
-      ? convertDateToDayMonthYearInput(fromUnixTime(amendment.effectiveFrom))
+    const effectiveDate: DayMonthYearInput | undefined = amendment.effectiveDate
+      ? convertDateToDayMonthYearInput(fromUnixTime(amendment.effectiveDate))
       : undefined;
 
-    const viewModel: EffectiveFromViewModel = {
+    const viewModel: EffectiveDateViewModel = {
       exporterName: deal.exporter.companyName,
       facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, amendment),
-      effectiveFrom,
+      effectiveDate,
     };
 
-    return res.render('partials/amendments/effective-from.njk', viewModel);
+    return res.render('partials/amendments/effective-date.njk', viewModel);
   } catch (error) {
     console.error('Error getting amendments effective date page %o', error);
     return res.render('partials/problem-with-service.njk');
