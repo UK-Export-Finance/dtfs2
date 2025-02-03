@@ -8,7 +8,7 @@ import {
   PortalFacilityAmendment,
   PortalFacilityAmendmentUserValues,
   PORTAL_AMENDMENT_STATUS,
-  PORTAL_AMENDMENT_UNDER_WAY_STATUSES,
+  PORTAL_AMENDMENT_UNDERWAY_STATUSES,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { findOneUser } from '../../v1/controllers/user/get-user.controller';
@@ -27,7 +27,7 @@ export class PortalFacilityAmendmentService {
   public static async validateNoOtherAmendmentsUnderWayOnDeal({ dealId }: { dealId: string }): Promise<void> {
     const existingPortalAmendmentsUnderWay = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({
       dealId,
-      statuses: PORTAL_AMENDMENT_UNDER_WAY_STATUSES,
+      statuses: PORTAL_AMENDMENT_UNDERWAY_STATUSES,
     });
 
     if (existingPortalAmendmentsUnderWay.length > 0) {
