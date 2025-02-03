@@ -1,5 +1,4 @@
-import { AuthorizationCodeRequest } from '@azure/msal-node';
-import { GetAuthCodeUrlResponse } from '@ukef/dtfs2-common';
+import { aGetAuthCodeUrlResponse, GetAuthCodeUrlResponse } from '@ukef/dtfs2-common';
 import { LoginService } from './login.service';
 import * as api from '../api';
 
@@ -25,10 +24,7 @@ describe('login service', () => {
     });
 
     describe('when the getAuthCodeUrl api call is successful', () => {
-      const mockGetAuthCodeResponse: GetAuthCodeUrlResponse = {
-        authCodeUrl: 'a-auth-code-url',
-        authCodeUrlRequest: {} as AuthorizationCodeRequest,
-      };
+      const mockGetAuthCodeResponse: GetAuthCodeUrlResponse = aGetAuthCodeUrlResponse();
 
       beforeEach(() => {
         getAuthCodeUrlSpy.mockResolvedValueOnce(mockGetAuthCodeResponse);
