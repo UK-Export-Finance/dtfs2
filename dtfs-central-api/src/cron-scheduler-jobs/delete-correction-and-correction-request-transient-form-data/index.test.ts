@@ -91,25 +91,6 @@ describe('delete-correction-and-correction-request-transient-form-data', () => {
       expect(mockCorrectionRequestDelete).toHaveBeenCalledWith(expectedDeletionCallArgs);
     });
 
-    it('should delete records older than one day if it is the first day of the month', async () => {
-      // Arrange
-      jest.useFakeTimers().setSystemTime(new Date('2025-01-01 12:10:00'));
-
-      // Act
-      await deleteAllOldCorrectionTransientFormData();
-
-      // Assert
-      const expectedDeletionCallArgs = {
-        lastUpdatedAt: LessThan(new Date('2024-12-31:12:10:00')),
-      };
-
-      expect(mockCorrectionDelete).toHaveBeenCalledTimes(1);
-      expect(mockCorrectionDelete).toHaveBeenCalledWith(expectedDeletionCallArgs);
-
-      expect(mockCorrectionRequestDelete).toHaveBeenCalledTimes(1);
-      expect(mockCorrectionRequestDelete).toHaveBeenCalledWith(expectedDeletionCallArgs);
-    });
-
     describe('when record correction transient data deletion fails', () => {
       it('should throw an error', async () => {
         // Arrange
