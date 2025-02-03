@@ -1,4 +1,4 @@
-import difference from 'lodash.difference';
+import { difference } from 'lodash';
 import { FEE_RECORD_STATUS } from '../constants';
 import { FeeRecordStatus } from '../types';
 import { allStatusesAreTheSameOrCombinationOfToDoStatuses, isStatusToDoOrToDoAmended } from './fee-record-status';

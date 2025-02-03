@@ -46,18 +46,17 @@ export const handleUtilisationReportAddAPaymentEvent = async (
   const feeRecordsAndPaymentsMatch = await feeRecordsMatchAttachedPayments(feeRecords, transactionEntityManager);
 
   const feeRecordStateMachines = feeRecords.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
-  await Promise.all(
-    feeRecordStateMachines.map((stateMachine) =>
-      stateMachine.handleEvent({
-        type: 'PAYMENT_ADDED',
-        payload: {
-          transactionEntityManager,
-          feeRecordsAndPaymentsMatch,
-          requestSource,
-        },
-      }),
-    ),
-  );
+
+  for (const stateMachine of feeRecordStateMachines) {
+    await stateMachine.handleEvent({
+      type: 'PAYMENT_ADDED',
+      payload: {
+        transactionEntityManager,
+        feeRecordsAndPaymentsMatch,
+        requestSource,
+      },
+    });
+  }
 
   if (report.status === PENDING_RECONCILIATION) {
     report.updateWithStatus({ status: RECONCILIATION_IN_PROGRESS, requestSource });

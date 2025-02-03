@@ -57,24 +57,22 @@ export const handleUtilisationReportDeletePaymentEvent = async (
 
   const hasAttachedPayments = remainingLinkedPayments.length > 0;
 
-  await Promise.all(
-    linkedFeeRecords.map((feeRecord) => {
-      const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
+  for (const feeRecord of linkedFeeRecords) {
+    const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
 
-      const hasCorrections = feeRecord.corrections.length > 0;
+    const hasCorrections = feeRecord.corrections.length > 0;
 
-      return stateMachine.handleEvent({
-        type: 'PAYMENT_DELETED',
-        payload: {
-          transactionEntityManager,
-          feeRecordsAndPaymentsMatch: feesAndPaymentsMatch,
-          hasAttachedPayments,
-          hasCorrections,
-          requestSource,
-        },
-      });
-    }),
-  );
+    await stateMachine.handleEvent({
+      type: 'PAYMENT_DELETED',
+      payload: {
+        transactionEntityManager,
+        feeRecordsAndPaymentsMatch: feesAndPaymentsMatch,
+        hasAttachedPayments,
+        hasCorrections,
+        requestSource,
+      },
+    });
+  }
 
   return report;
 };
