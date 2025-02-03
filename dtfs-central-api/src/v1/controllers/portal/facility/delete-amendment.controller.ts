@@ -17,13 +17,15 @@ export type DeletePortalAmendmentRequest = CustomExpressRequest<{ params: Delete
 export const deletePortalAmendment = async (req: DeletePortalAmendmentRequest, res: Response) => {
   const { facilityId, amendmentId } = req.params;
   const { auditDetails } = req.body;
+  const facilityMongoId = new ObjectId(facilityId);
+  const amendmentMongoId = new ObjectId(amendmentId);
 
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.PORTAL);
 
     await TfmFacilitiesRepo.deletePortalFacilityAmendment({
-      facilityId: new ObjectId(facilityId),
-      amendmentId: new ObjectId(amendmentId),
+      facilityId: facilityMongoId,
+      amendmentId: amendmentMongoId,
       auditDetails,
     });
 
