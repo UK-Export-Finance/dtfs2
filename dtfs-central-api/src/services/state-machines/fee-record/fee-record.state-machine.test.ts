@@ -93,6 +93,8 @@ describe('FeeRecordStateMachine', () => {
           reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT],
           additionalInfo: 'some additional information',
           requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
+          bankTeamName: 'Payment Officer Team',
+          bankTeamEmails: ['test@ukexportfinance.gov.uk'],
         },
       });
 
