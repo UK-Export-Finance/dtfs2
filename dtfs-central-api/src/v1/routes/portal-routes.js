@@ -632,6 +632,8 @@ portalRouter
  *               $ref: '#/definitions/PortalAmendment'
  *       404:
  *         description: Not found
+ *       409:
+ *         description: Conflict
  */
 portalRouter
   .route('/facilities/:facilityId/amendments')
@@ -652,6 +654,15 @@ portalRouter
  *           type: string
  *         required: true
  *         description: Deal ID to get amendments for
+ *     - in: query
+ *         name: statuses
+ *         schema:
+ *           type: array
+ *               items:
+ *               type: string
+ *               example: ['Draft']
+ *           required: false
+ *         description: The portal amendment statuses to filter on
  *     responses:
  *       200:
  *         description: OK
@@ -665,7 +676,7 @@ portalRouter
 portalRouter
   .route('/deals/:dealId/amendments')
   .all(validation.mongoIdValidation('dealId'))
-  .get(getFacilityAmendmentsForDealController.getPortalAmendmentsByDealId);
+  .get(getFacilityAmendmentsForDealController.getPortalAmendmentsOnDeal);
 
 /**
  * @openapi

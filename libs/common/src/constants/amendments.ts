@@ -22,16 +22,18 @@ export const PORTAL_AMENDMENT_STATUS = {
   /**
    * Amendment has been submitted by the maker and is awaiting the checker's approval
    */
-  READY_FOR_APPROVAL: "Ready for Checker's approval",
+  READY_FOR_CHECKERS_APPROVAL: "Ready for Checker's approval",
   /**
    * Checker has requested changes from the maker
    */
-  CHANGES_REQUIRED: "Further Maker's input required",
+  FURTHER_MAKERS_INPUT_REQUIRED: "Further Maker's input required",
   /**
    * Amendment has been acknowledged by the checker
    */
   ACKNOWLEDGED: 'Acknowledged',
 } as const;
+
+export const PORTAL_AMENDMENT_UNDER_WAY_STATUSES = [PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL, PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED];
 
 export const AMENDMENT_QUERIES = {
   LATEST_VALUE: 'latest-value',

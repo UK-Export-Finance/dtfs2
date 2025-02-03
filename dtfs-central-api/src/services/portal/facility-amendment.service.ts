@@ -8,6 +8,7 @@ import {
   PortalFacilityAmendment,
   PortalFacilityAmendmentUserValues,
   PORTAL_AMENDMENT_STATUS,
+  PORTAL_AMENDMENT_UNDER_WAY_STATUSES,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { findOneUser } from '../../v1/controllers/user/get-user.controller';
@@ -17,45 +18,19 @@ import { findOneFacility } from '../../v1/controllers/portal/facility/get-facili
 
 export class PortalFacilityAmendmentService {
   /**
-   * Finds all portal amendments across all facilities for a deal
+   * Checks if there are any other portal amendments under way on a deal, throws an error if there are.
    *
    * @param params
-   * @param params.dealId - The amendment id
-   * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendment[])>} A promise that resolves when the find operation is complete.
-   */
-  public static async findPortalAmendmentsForDeal({ dealId }: { dealId: string }): Promise<PortalFacilityAmendment[]> {
-    const facilities = await TfmFacilitiesRepo.findByDealId(dealId);
-    const portalAmendments: PortalFacilityAmendment[] = [];
-
-    facilities.forEach((facility) => {
-      if (facility.amendments) {
-        facility.amendments.forEach((amendment) => {
-          if (amendment?.type === AMENDMENT_TYPES.PORTAL) {
-            portalAmendments.push(amendment);
-          }
-        });
-      }
-    });
-
-    return portalAmendments;
-  }
-
-  /**
-   * Finds all portal amendments across all facilities for a deal
-   *
-   * @param params
-   * @param params.dealId - The amendment id
-   * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendment[])>} A promise that resolves when the find operation is complete.
+   * @param params.dealId - The deal id
+   * @returns {Promise<void>} A promise that resolves when the find operation is complete.
    */
   public static async validateNoOtherAmendmentsUnderWayOnDeal({ dealId }: { dealId: string }): Promise<void> {
-    const existingPortalAmendmentsOnDeal = await this.findPortalAmendmentsForDeal({ dealId });
+    const existingPortalAmendmentsUnderWay = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({
+      dealId,
+      statuses: PORTAL_AMENDMENT_UNDER_WAY_STATUSES,
+    });
 
-    if (
-      existingPortalAmendmentsOnDeal.some(
-        (portalAmendment) =>
-          portalAmendment.status === PORTAL_AMENDMENT_STATUS.CHANGES_REQUIRED || portalAmendment.status === PORTAL_AMENDMENT_STATUS.READY_FOR_APPROVAL,
-      )
-    ) {
+    if (existingPortalAmendmentsUnderWay.length > 0) {
       console.error('There is a portal facility amendment already under way on this deal');
       throw new PortalFacilityAmendmentConflictError(dealId);
     }

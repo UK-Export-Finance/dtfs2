@@ -48,7 +48,7 @@ const otherEligibilityCriteria = amendmentsEligibilityCriteria(2, [FACILITY_TYPE
 
 const eligibilityCriteriaList = [draftCashEligibilityCriteria, legacyCashEligibilityCriteria, latestCashEligibilityCriteria, otherEligibilityCriteria];
 
-const aReadyForApprovalPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.READY_FOR_APPROVAL });
+const aReadyForApprovalPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL });
 const aDraftPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.DRAFT });
 const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED });
 const aTfmAmendment = aTfmFacilityAmendment();

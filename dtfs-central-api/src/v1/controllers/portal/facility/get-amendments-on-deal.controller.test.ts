@@ -1,41 +1,59 @@
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { PORTAL_AMENDMENT_STATUS, TestApiError } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, PortalAmendmentStatus, TestApiError } from '@ukef/dtfs2-common';
 import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
-import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
-import { GetDealAmendmentsRequest, getPortalAmendmentsByDealId } from './get-amendments-on-deal.controller';
+import { GetPortalAmendmentsOnDealRequest, getPortalAmendmentsOnDeal } from './get-amendments-on-deal.controller';
+import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 
 const dealId = 'dealId';
+const mockStatuses = [PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL, PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED];
 
 const aDraftPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.DRAFT });
-const aReadyForApprovalPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.READY_FOR_APPROVAL });
+const aReadyForApprovalPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL });
 const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED });
 const mockReturnedPortalAmendments = [aDraftPortalAmendment, aReadyForApprovalPortalAmendment, anAcknowledgedPortalAmendment];
 
-const mockFindPortalAmendmentsForDeal = jest.fn();
+const mockFindPortalAmendmentsByDealIdAndStatus = jest.fn();
 
-const generateHttpMocks = () => createMocks<GetDealAmendmentsRequest>({ params: { dealId } });
+const generateHttpMocks = ({ statuses }: { statuses?: PortalAmendmentStatus[] } = {}) =>
+  createMocks<GetPortalAmendmentsOnDealRequest>({ params: { dealId }, query: { statuses } });
 
 describe('getPortalAmendmentsByDealId', () => {
   beforeEach(() => {
     jest.resetAllMocks();
 
-    jest.spyOn(PortalFacilityAmendmentService, 'findPortalAmendmentsForDeal').mockImplementation(mockFindPortalAmendmentsForDeal);
-    mockFindPortalAmendmentsForDeal.mockResolvedValue(mockReturnedPortalAmendments);
+    jest.spyOn(TfmFacilitiesRepo, 'findPortalAmendmentsByDealIdAndStatus').mockImplementation(mockFindPortalAmendmentsByDealIdAndStatus);
+    mockFindPortalAmendmentsByDealIdAndStatus.mockResolvedValue(mockReturnedPortalAmendments);
   });
 
-  it('should call PortalFacilityAmendmentService.findPortalAmendmentsForDeal with the correct params', async () => {
+  it('should call TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus with the correct params when no statuses are passed in the body', async () => {
     // Arrange
     const { req, res } = generateHttpMocks();
 
     // Act
-    await getPortalAmendmentsByDealId(req, res);
+    await getPortalAmendmentsOnDeal(req, res);
 
     // Assert
 
-    expect(mockFindPortalAmendmentsForDeal).toHaveBeenCalledTimes(1);
-    expect(mockFindPortalAmendmentsForDeal).toHaveBeenCalledWith({
+    expect(mockFindPortalAmendmentsByDealIdAndStatus).toHaveBeenCalledTimes(1);
+    expect(mockFindPortalAmendmentsByDealIdAndStatus).toHaveBeenCalledWith({
       dealId,
+    });
+  });
+
+  it('should call TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus with the correct params when statuses are passed in the body', async () => {
+    // Arrange
+    const { req, res } = generateHttpMocks({ statuses: mockStatuses });
+
+    // Act
+    await getPortalAmendmentsOnDeal(req, res);
+
+    // Assert
+
+    expect(mockFindPortalAmendmentsByDealIdAndStatus).toHaveBeenCalledTimes(1);
+    expect(mockFindPortalAmendmentsByDealIdAndStatus).toHaveBeenCalledWith({
+      dealId,
+      statuses: mockStatuses,
     });
   });
 
@@ -44,23 +62,23 @@ describe('getPortalAmendmentsByDealId', () => {
     const { req, res } = generateHttpMocks();
 
     // Act
-    await getPortalAmendmentsByDealId(req, res);
+    await getPortalAmendmentsOnDeal(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     expect(res._getData()).toEqual(mockReturnedPortalAmendments);
   });
 
-  it('should return the correct status and body if PortalFacilityAmendmentService.updatePortalFacilityAmendment throws an api error', async () => {
+  it('should return the correct status and body if TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus throws an api error', async () => {
     // Arrange
     const status = HttpStatusCode.Forbidden;
     const message = 'Test error message';
-    mockFindPortalAmendmentsForDeal.mockRejectedValue(new TestApiError({ status, message }));
+    mockFindPortalAmendmentsByDealIdAndStatus.mockRejectedValue(new TestApiError({ status, message }));
 
     const { req, res } = generateHttpMocks();
 
     // Act
-    await getPortalAmendmentsByDealId(req, res);
+    await getPortalAmendmentsOnDeal(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(status);
@@ -70,15 +88,15 @@ describe('getPortalAmendmentsByDealId', () => {
     });
   });
 
-  it(`should return ${HttpStatusCode.InternalServerError} if PortalFacilityAmendmentService.updatePortalFacilityAmendment throws an unknown error`, async () => {
+  it(`should return ${HttpStatusCode.InternalServerError} if PTfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus throws an unknown error`, async () => {
     // Arrange
     const message = 'Test error message';
-    mockFindPortalAmendmentsForDeal.mockRejectedValue(new Error(message));
+    mockFindPortalAmendmentsByDealIdAndStatus.mockRejectedValue(new Error(message));
 
     const { req, res } = generateHttpMocks();
 
     // Act
-    await getPortalAmendmentsByDealId(req, res);
+    await getPortalAmendmentsOnDeal(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
