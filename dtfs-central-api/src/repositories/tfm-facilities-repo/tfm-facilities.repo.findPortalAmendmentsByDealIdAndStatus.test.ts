@@ -11,9 +11,11 @@ const getCollectionMock = jest.fn();
 const findMock = jest.fn();
 const findToArrayMock = jest.fn();
 
-const aDraftPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.DRAFT });
-const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED });
-const aReadyForCheckersApprovalPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL });
+const { DRAFT, ACKNOWLEDGED, READY_FOR_CHECKERS_APPROVAL } = PORTAL_AMENDMENT_STATUS;
+
+const aDraftPortalAmendment = aPortalFacilityAmendment({ status: DRAFT });
+const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: ACKNOWLEDGED });
+const aReadyForCheckersApprovalPortalAmendment = aPortalFacilityAmendment({ status: READY_FOR_CHECKERS_APPROVAL });
 
 const aTfmAmendment = aTfmFacilityAmendment();
 
@@ -76,7 +78,7 @@ describe('TfmFacilitiesRepo', () => {
       findToArrayMock.mockResolvedValueOnce([facilityWithPortalAmendments, facilityWithMixedAmendments]);
 
       // Act
-      const result = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({ dealId, statuses: [PORTAL_AMENDMENT_STATUS.DRAFT] });
+      const result = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({ dealId, statuses: [DRAFT] });
 
       // Assert
       expect(result).toEqual([aDraftPortalAmendment]);
@@ -89,7 +91,7 @@ describe('TfmFacilitiesRepo', () => {
       // Act
       const result = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({
         dealId,
-        statuses: [PORTAL_AMENDMENT_STATUS.DRAFT, PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL],
+        statuses: [DRAFT, READY_FOR_CHECKERS_APPROVAL],
       });
 
       // Assert
@@ -103,7 +105,7 @@ describe('TfmFacilitiesRepo', () => {
       // Act
       const result = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({
         dealId,
-        statuses: [PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL],
+        statuses: [READY_FOR_CHECKERS_APPROVAL],
       });
 
       // Assert

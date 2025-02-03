@@ -10,7 +10,7 @@ describe('PortalFacilityAmendmentConflictError', () => {
     const exception = new PortalFacilityAmendmentConflictError(dealId);
 
     // Assert
-    expect(exception.message).toEqual('There is already a portal facility amendment under way on deal Example deal id');
+    expect(exception.message).toEqual(`There is already a portal facility amendment under way on deal ${dealId}`);
   });
 
   it('has the default message if no dealId is provided', () => {

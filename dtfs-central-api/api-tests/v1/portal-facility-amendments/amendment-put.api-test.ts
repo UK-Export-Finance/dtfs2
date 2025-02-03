@@ -164,13 +164,19 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
       });
     });
 
-    it(`should not throw an error when there is an existing ${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}, ${PORTAL_AMENDMENT_STATUS.DRAFT} or TFM amendment on the deal`, async () => {
+    const validExistingAmendments = [
+      { description: PORTAL_AMENDMENT_STATUS.DRAFT, amendment: aDraftPortalAmendment },
+      { description: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, amendment: anAcknowledgedPortalAmendment },
+      { description: 'TFM', amendment: aTfmAmendment },
+    ];
+
+    it.each(validExistingAmendments)('should not throw an error when there is an existing `$description` amendment', async ({ amendment }) => {
       // Arrange
-      const facilityOnSameDealWithNoUnderwayAmendment = aTfmFacility({
-        amendments: [aDraftPortalAmendment, anAcknowledgedPortalAmendment, aTfmAmendment],
+      const facilityWithAmendment = aTfmFacility({
+        amendments: [amendment],
         dealId,
       });
-      await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES).then((collection) => collection.insertOne(facilityOnSameDealWithNoUnderwayAmendment));
+      await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES).then((collection) => collection.insertOne(facilityWithAmendment));
 
       // Act
       const { status } = (await testApi

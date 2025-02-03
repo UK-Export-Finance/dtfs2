@@ -5,12 +5,14 @@ import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { GetPortalAmendmentsOnDealRequest, getPortalAmendmentsOnDeal } from './get-amendments-on-deal.controller';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 
-const dealId = 'dealId';
-const mockStatuses = [PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL, PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED];
+const { DRAFT, ACKNOWLEDGED, READY_FOR_CHECKERS_APPROVAL, FURTHER_MAKERS_INPUT_REQUIRED } = PORTAL_AMENDMENT_STATUS;
 
-const aDraftPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.DRAFT });
-const aReadyForApprovalPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL });
-const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED });
+const dealId = 'dealId';
+const mockStatuses = [READY_FOR_CHECKERS_APPROVAL, FURTHER_MAKERS_INPUT_REQUIRED];
+
+const aDraftPortalAmendment = aPortalFacilityAmendment({ status: DRAFT });
+const aReadyForApprovalPortalAmendment = aPortalFacilityAmendment({ status: READY_FOR_CHECKERS_APPROVAL });
+const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: ACKNOWLEDGED });
 const mockReturnedPortalAmendments = [aDraftPortalAmendment, aReadyForApprovalPortalAmendment, anAcknowledgedPortalAmendment];
 
 const mockFindPortalAmendmentsByDealIdAndStatus = jest.fn();

@@ -12,6 +12,8 @@ interface PortalAmendmentsResponse extends Response {
   body: PortalFacilityAmendment[];
 }
 
+const { DRAFT, ACKNOWLEDGED, READY_FOR_CHECKERS_APPROVAL, FURTHER_MAKERS_INPUT_REQUIRED } = PORTAL_AMENDMENT_STATUS;
+
 const generateUrl = ({ dealId, statuses }: { dealId: string; statuses?: PortalAmendmentStatus[] }): string => {
   const statusFilterQuery = statuses ? `?statusFilter=${statuses.map((item) => item.replace(/ /g, '%20')).join(',')}` : '';
   return `/v1/portal/deals/${dealId}/amendments${statusFilterQuery}`;
@@ -20,10 +22,10 @@ const generateUrl = ({ dealId, statuses }: { dealId: string; statuses?: PortalAm
 describe('GET /v1/portal/deals/:dealId/amendments', () => {
   const dealId = new ObjectId().toString();
 
-  const aDraftPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.DRAFT });
-  const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED });
-  const aReadyForCheckersApprovalPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL });
-  const aFurtherMakersInputRequiredPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED });
+  const aDraftPortalAmendment = aPortalFacilityAmendment({ status: DRAFT });
+  const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: ACKNOWLEDGED });
+  const aReadyForCheckersApprovalPortalAmendment = aPortalFacilityAmendment({ status: READY_FOR_CHECKERS_APPROVAL });
+  const aFurtherMakersInputRequiredPortalAmendment = aPortalFacilityAmendment({ status: FURTHER_MAKERS_INPUT_REQUIRED });
 
   const aTfmAmendment = aTfmFacilityAmendment();
   const aCompletedTfmAmendment = aCompletedTfmFacilityAmendment();
@@ -87,9 +89,7 @@ describe('GET /v1/portal/deals/:dealId/amendments', () => {
       );
 
     // Assert
-    const { status, body } = (await testApi.get(
-      generateUrl({ dealId, statuses: [PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED] }),
-    )) as PortalAmendmentsResponse;
+    const { status, body } = (await testApi.get(generateUrl({ dealId, statuses: [FURTHER_MAKERS_INPUT_REQUIRED] }))) as PortalAmendmentsResponse;
 
     // Act
     expect(status).toEqual(HttpStatusCode.Ok);
@@ -137,9 +137,7 @@ describe('GET /v1/portal/deals/:dealId/amendments', () => {
       );
 
     // Assert
-    const { status, body } = (await testApi.get(
-      generateUrl({ dealId, statuses: [PORTAL_AMENDMENT_STATUS.DRAFT, PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL] }),
-    )) as PortalAmendmentsResponse;
+    const { status, body } = (await testApi.get(generateUrl({ dealId, statuses: [DRAFT, READY_FOR_CHECKERS_APPROVAL] }))) as PortalAmendmentsResponse;
 
     // Act
     expect(status).toEqual(HttpStatusCode.Ok);
