@@ -36,7 +36,6 @@ describe('getPortalAmendmentsByDealId', () => {
     await getPortalAmendmentsOnDeal(req, res);
 
     // Assert
-
     expect(mockFindPortalAmendmentsByDealIdAndStatus).toHaveBeenCalledTimes(1);
     expect(mockFindPortalAmendmentsByDealIdAndStatus).toHaveBeenCalledWith({
       dealId,
@@ -51,7 +50,6 @@ describe('getPortalAmendmentsByDealId', () => {
     await getPortalAmendmentsOnDeal(req, res);
 
     // Assert
-
     expect(mockFindPortalAmendmentsByDealIdAndStatus).toHaveBeenCalledTimes(1);
     expect(mockFindPortalAmendmentsByDealIdAndStatus).toHaveBeenCalledWith({
       dealId,
