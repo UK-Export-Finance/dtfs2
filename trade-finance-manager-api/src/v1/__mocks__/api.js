@@ -254,7 +254,6 @@ module.exports = {
   getBanks: jest.fn(() => Promise.resolve([])),
   getUtilisationReportsReconciliationSummary: jest.fn(),
   getUtilisationReportById: jest.fn(() => Promise.resolve(MOCK_UTILISATION_REPORT)),
-  updateUtilisationReportStatus: jest.fn(),
   getUtilisationReportReconciliationDetailsById: jest.fn(),
   addPaymentToFeeRecords: jest.fn(),
   generateKeyingData: jest.fn(),
