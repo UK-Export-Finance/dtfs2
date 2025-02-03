@@ -21,4 +21,5 @@ export * from './is-ukef-email';
 export * from './fee-record-corrections';
 export * from './decode-html-entities';
 export * from './map-currencies-to-radio-items';
+export * from './table-data-sort';
 export * from './utilisation-report-emails';
