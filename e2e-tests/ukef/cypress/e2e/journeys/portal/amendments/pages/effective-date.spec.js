@@ -6,8 +6,8 @@ import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
 import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 import facilityValue from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
-import effectiveFrom from '../../../../../../../gef/cypress/e2e/pages/amendments/effective-from';
-import { twoDaysAgo, twoMonths, yesterday } from '../../../../../../../e2e-fixtures/dateConstants';
+import effectiveDate from '../../../../../../../gef/cypress/e2e/pages/amendments/effective-date';
+import { twoDaysAgo, twoMonths, today } from '../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -73,31 +73,31 @@ context('Amendments - Date amendment effective from - page tests', () => {
   });
 
   it('should render key features of the page', () => {
-    effectiveFrom.pageHeading().contains('Date amendment effective from');
-    effectiveFrom.backLink();
-    effectiveFrom.cancelLink();
+    effectiveDate.pageHeading().contains('Date amendment effective from');
+    effectiveDate.backLink();
+    effectiveDate.cancelLink();
   });
 
   it('should render an error if no date is provided', () => {
     cy.clickContinueButton();
 
-    effectiveFrom.errorSummary().should('be.visible');
-    effectiveFrom.errorSummary().contains('Enter the date amendment effective from');
+    effectiveDate.errorSummary().should('be.visible');
+    effectiveDate.errorSummary().contains('Enter the date amendment effective from');
 
-    effectiveFrom.effectiveFromInlineError().should('be.visible');
-    effectiveFrom.effectiveFromInlineError().contains('Enter the date amendment effective from');
+    effectiveDate.effectiveDateInlineError().should('be.visible');
+    effectiveDate.effectiveDateInlineError().contains('Enter the date amendment effective from');
   });
 
-  const effectiveFromErrorTestCases = [
+  const effectiveDateErrorTestCases = [
     {
       description: 'the date amendment effective from consists of invalid characters',
       dateFieldInput: { day: 'aa', month: '11', year: '2025' },
-      expectedErrorMessage: 'date amendment effective from must be a real date',
+      expectedErrorMessage: 'Date amendment effective from must be a real date',
     },
     {
       description: 'the date amendment effective from is missing a field',
-      dateFieldInput: { day: '2', month: '', year: '2025' },
-      expectedErrorMessage: 'date amendment effective from must include a month',
+      dateFieldInput: { day: '2', month: ' ', year: '2025' },
+      expectedErrorMessage: 'Date amendment effective from must include a month',
     },
     {
       description: 'the date amendment effective from is greater than 30 days in the future',
@@ -107,19 +107,19 @@ context('Amendments - Date amendment effective from - page tests', () => {
     {
       description: 'the date amendment effective from is before the cover start date',
       dateFieldInput: twoDaysAgo,
-      expectedErrorMessage: `Date amendment effective from cannot be before the cover start date ${yesterday.d_MMMM_yyyy}`,
+      expectedErrorMessage: `Date amendment effective from cannot be before the cover start date ${today.d_MMMM_yyyy}`,
     },
   ];
 
-  effectiveFromErrorTestCases.forEach(({ description, dateFieldInput, expectedErrorMessage }) => {
+  effectiveDateErrorTestCases.forEach(({ description, dateFieldInput, expectedErrorMessage }) => {
     it(`should render an error on the bank review date page if ${description}`, () => {
-      cy.completeDateFormFields({ idPrefix: 'effective-from', ...dateFieldInput });
+      cy.completeDateFormFields({ idPrefix: 'effective-date', ...dateFieldInput });
       cy.clickContinueButton();
 
-      effectiveFrom.errorSummary().should('be.visible');
-      effectiveFrom.errorSummary().contains(expectedErrorMessage);
-      effectiveFrom.effectiveFromInlineError().should('be.visible');
-      effectiveFrom.effectiveFromInlineError().contains(expectedErrorMessage);
+      effectiveDate.errorSummary().should('be.visible');
+      effectiveDate.errorSummary().contains(expectedErrorMessage);
+      effectiveDate.effectiveDateInlineError().should('be.visible');
+      effectiveDate.effectiveDateInlineError().contains(expectedErrorMessage);
     });
   });
 

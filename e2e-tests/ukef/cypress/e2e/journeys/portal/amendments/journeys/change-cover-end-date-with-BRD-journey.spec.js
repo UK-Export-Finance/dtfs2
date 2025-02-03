@@ -88,7 +88,7 @@ context('Amendments - Change cover end date with bank review date - full journey
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/effective-date`));
-    cy.completeDateFormFields({ idPrefix: 'effective-from' });
+    cy.completeDateFormFields({ idPrefix: 'effective-date' });
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/check-your-answers`));

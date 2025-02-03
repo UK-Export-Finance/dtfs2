@@ -93,7 +93,7 @@ context('Amendments - Change both cover end date and facility value - full journ
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/effective-date`));
-    cy.completeDateFormFields({ idPrefix: 'effective-from' });
+    cy.completeDateFormFields({ idPrefix: 'effective-date' });
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/check-your-answers`));
