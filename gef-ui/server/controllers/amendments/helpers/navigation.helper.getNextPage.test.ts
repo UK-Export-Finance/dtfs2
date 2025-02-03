@@ -14,6 +14,7 @@ const {
   ELIGIBILITY,
   EFFECTIVE_DATE,
   CHECK_YOUR_ANSWERS,
+  MANUAL_APPROVAL_NEEDED,
 } = PORTAL_AMENDMENT_PAGES;
 
 describe('getNextPage', () => {
@@ -161,9 +162,57 @@ describe('getNextPage', () => {
     currentPage: ELIGIBILITY,
     successTestCases: [
       {
-        description: '',
+        description: 'when all eligibility criteria answers are "true"',
         expectedNextPage: EFFECTIVE_DATE,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withCriteria([
+            { id: 1, text: 'Criterion 1', answer: true },
+            { id: 2, text: 'Criterion 2', answer: true },
+            { id: 3, text: 'Criterion 3', answer: true },
+          ])
+          .build(),
+      },
+      {
+        description: 'when all eligibility criteria answers are "false"',
+        expectedNextPage: MANUAL_APPROVAL_NEEDED,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withCriteria([
+            { id: 1, text: 'Criterion 1', answer: false },
+            { id: 2, text: 'Criterion 2', answer: false },
+            { id: 3, text: 'Criterion 3', answer: false },
+          ])
+          .build(),
+      },
+      {
+        description: 'when some eligibility criteria answers are "false"',
+        expectedNextPage: MANUAL_APPROVAL_NEEDED,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withCriteria([
+            { id: 1, text: 'Criterion 1', answer: true },
+            { id: 2, text: 'Criterion 2', answer: false },
+            { id: 3, text: 'Criterion 3', answer: true },
+          ])
+          .build(),
+      },
+    ],
+  });
+
+  withNextPageTests({
+    currentPage: MANUAL_APPROVAL_NEEDED,
+    errorTestCases: [
+      {
+        description: 'when all eligibility criteria answers are all valid',
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().build(),
+      },
+      {
+        description: 'when any eligibility criteria answers are all "false"',
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withCriteria([
+            { id: 1, text: 'Criterion 1', answer: false },
+            { id: 2, text: 'Criterion 2', answer: false },
+            { id: 3, text: 'Criterion 3', answer: false },
+          ])
+          .build(),
       },
     ],
   });
