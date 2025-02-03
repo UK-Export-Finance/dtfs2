@@ -69,6 +69,18 @@ const getTotalReportedPayments = (feeRecords: SelectedFeeRecordDetails[]): Curre
   amount: feeRecords.map((feeRecord) => feeRecord.reportedPayments.amount).reduce((total, currentAmount) => total + currentAmount, 0),
 });
 
+/**
+ * Determines whether fee records can be added to an existing payment.
+ *
+ * Only fee records at TO_DO and TO_DO_AMENDED status can be added
+ * to an existing payment, and only if there is an existing payment
+ * in the same payment currency which is not already matched.
+ *
+ * @param reportId - The report id as a string
+ * @param feeRecords - The fee records
+ * @returns true if the fee records can be added to an existing payment,
+ * false otherwise.
+ */
 export const canFeeRecordsBeAddedToExistingPayment = async (reportId: string, feeRecords: FeeRecordEntity[]): Promise<boolean> => {
   if (feeRecords.length === 0) {
     return false;
