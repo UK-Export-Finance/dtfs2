@@ -1,5 +1,5 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FeeRecordEntity } from '@ukef/dtfs2-common';
+import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordCorrectionEntity, FeeRecordEntity } from '@ukef/dtfs2-common';
 import { BaseFeeRecordEvent } from '../../event/base-fee-record.event';
 
 type RemoveFromPaymentGroupEventPayload = {
@@ -21,6 +21,11 @@ export const handleFeeRecordRemoveFromPaymentGroupEvent = async (
   feeRecord: FeeRecordEntity,
   { transactionEntityManager, requestSource }: RemoveFromPaymentGroupEventPayload,
 ): Promise<FeeRecordEntity> => {
-  feeRecord.removeAllPayments({ requestSource });
+  const hasCorrections = await transactionEntityManager.existsBy(FeeRecordCorrectionEntity, { feeRecord: { id: feeRecord.id } });
+
+  const status = hasCorrections ? FEE_RECORD_STATUS.TO_DO_AMENDED : FEE_RECORD_STATUS.TO_DO;
+
+  feeRecord.removeAllPayments({ requestSource, status });
+
   return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
 };

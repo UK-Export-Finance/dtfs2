@@ -111,7 +111,7 @@ describe('FeeRecordEntity', () => {
   });
 
   describe('removeAllPayments', () => {
-    it(`should remove all payments, sets the record status to ${FEE_RECORD_STATUS.TO_DO} and updates the 'lastUpdatedBy...' fields`, () => {
+    it(`should remove all payments, sets the record status and updates the 'lastUpdatedBy...' fields`, () => {
       // Arrange
       const paymentCurrency: Currency = 'GBP';
       const paymentId = 123;
@@ -128,14 +128,17 @@ describe('FeeRecordEntity', () => {
 
       const userId = 'abc123';
 
+      const statusToUpdateTo = FEE_RECORD_STATUS.TO_DO;
+
       // Act
       feeRecord.removeAllPayments({
+        status: statusToUpdateTo,
         requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId },
       });
 
       // Assert
       expect(feeRecord.payments).toHaveLength(0);
-      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.TO_DO);
+      expect(feeRecord.status).toEqual(statusToUpdateTo);
       expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
       expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
       expect(feeRecord.lastUpdatedByTfmUserId).toEqual(userId);

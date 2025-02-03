@@ -346,7 +346,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].status).toEqual(status);
     });
 
-    const selectableFeeRecordStatuses = [FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH];
+    const selectableFeeRecordStatuses = [FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH, FEE_RECORD_STATUS.TO_DO_AMENDED];
 
     it.each(selectableFeeRecordStatuses)('should set isSelectable to true if the group status is %s', (status: FeeRecordStatus) => {
       // Arrange
