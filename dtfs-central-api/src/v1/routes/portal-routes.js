@@ -654,15 +654,15 @@ portalRouter
  *           type: string
  *         required: true
  *         description: Deal ID to get amendments for
- *     - in: query
- *         name: statuses
- *         schema:
- *           type: array
- *               items:
- *               type: string
- *               example: ['Draft']
- *           required: false
- *         description: The portal amendment statuses to filter on
+ *      - in: query
+ *        name: statuses
+ *        schema:
+ *          type: array
+ *          items:
+ *          type: string
+ *          example: ['Draft']
+ *          required: false
+ *       description: The portal amendment statuses to filter on
  *     responses:
  *       200:
  *         description: OK
