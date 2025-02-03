@@ -1146,6 +1146,23 @@ const saveFeeRecordCorrection = async (token, bankId, id) => {
   return data;
 };
 
+/**
+ * Gets all completed fee record corrections by bank id.
+ * @param {string} token - The user token
+ * @param {string} bankId - The bank id
+ * @returns {Promise<import('./api-response-types').GetCompletedFeeRecordCorrectionsResponseBody>} Returns a promise that resolves to the completed fee record corrections data
+ */
+const getCompletedFeeRecordCorrections = async (token, bankId) => {
+  const { data } = await axios.get(`${PORTAL_API_URL}/v1/banks/${bankId}/utilisation-reports/completed-corrections`, {
+    headers: {
+      Authorization: token,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+    },
+  });
+
+  return data;
+};
+
 module.exports = {
   allDeals,
   allFacilities,
@@ -1206,4 +1223,5 @@ module.exports = {
   getFeeRecordCorrectionReview,
   deleteFeeRecordCorrectionTransientFormData,
   saveFeeRecordCorrection,
+  getCompletedFeeRecordCorrections,
 };
