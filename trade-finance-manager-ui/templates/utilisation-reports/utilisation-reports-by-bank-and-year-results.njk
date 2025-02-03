@@ -16,8 +16,7 @@
       {% else %}
         {{ searchReportsTable.render({
           user: user,
-          reports: reports,
-          isTfmPaymentReconciliationFeatureFlagEnabled: isTfmPaymentReconciliationFeatureFlagEnabled
+          reports: reports
         }) }}
       {% endif %}
     </div>
