@@ -23,3 +23,4 @@ export * from './decode-html-entities';
 export * from './map-currencies-to-radio-items';
 export * from './table-data-sort';
 export * from './utilisation-report-emails';
+export * from './fee-record-status';
