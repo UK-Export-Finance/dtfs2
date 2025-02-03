@@ -4,6 +4,7 @@ import {
   FeeRecordStatus,
   getFormattedCurrencyAndAmount,
   getFormattedMonetaryValue,
+  getKeyToDateSortValueMap,
   IsoDateTimeStamp,
   KeyingSheetAdjustment,
   mapCurrenciesToRadioItems,
@@ -27,7 +28,6 @@ import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-
 import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
 import { getKeyingSheetDisplayStatus } from './get-keying-sheet-display-status';
 import { KeyingSheetCheckboxId } from '../../../types/keying-sheet-checkbox-id';
-import { getKeyToDateSortValueMap } from './get-key-to-date-sort-value-map-helper';
 
 /**
  * Sort fee records by reported payments

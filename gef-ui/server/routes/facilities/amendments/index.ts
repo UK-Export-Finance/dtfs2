@@ -22,6 +22,7 @@ import { getEligibility } from '../../../controllers/amendments/eligibility-crit
 import { postEligibility } from '../../../controllers/amendments/eligibility-criteria/post-eligibility.ts';
 import { getEffectiveDate } from '../../../controllers/amendments/effective-date/get-effective-date.ts';
 import { postEffectiveDate } from '../../../controllers/amendments/effective-date/post-effective-date.ts';
+import { getManualApprovalNeeded } from '../../../controllers/amendments/manual-approval-needed/get-manual-approval-needed.ts';
 
 const {
   WHAT_DO_YOU_NEED_TO_CHANGE,
@@ -31,6 +32,7 @@ const {
   FACILITY_END_DATE,
   BANK_REVIEW_DATE,
   ELIGIBILITY,
+  MANUAL_APPROVAL_NEEDED,
   EFFECTIVE_DATE,
   CANCEL,
 } = PORTAL_AMENDMENT_PAGES;
@@ -88,6 +90,11 @@ router
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getEligibility)
   .post(postEligibility);
+
+router
+  .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${MANUAL_APPROVAL_NEEDED}`)
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(getManualApprovalNeeded);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${EFFECTIVE_DATE}`)

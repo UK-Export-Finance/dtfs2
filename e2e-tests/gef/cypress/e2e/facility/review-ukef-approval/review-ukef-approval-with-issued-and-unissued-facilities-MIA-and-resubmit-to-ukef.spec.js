@@ -1,7 +1,7 @@
 import { PORTAL_ACTIVITY_LABEL } from '@ukef/dtfs2-common';
 import relative from '../../relativeURL';
 import CONSTANTS from '../../../fixtures/constants';
-import { threeDaysAgo, threeMonthsOneDay, twoMonths, threeMonths } from '../../../../../e2e-fixtures/dateConstants';
+import { threeDaysAgo, addDays, twoMonths, threeMonths } from '../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../../e2e-fixtures/portal-users.fixture';
 import { anIssuedCashFacilityWithCoverDateConfirmed, multipleMockGefFacilities } from '../../../../../e2e-fixtures/mock-gef-facilities';
@@ -205,7 +205,13 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeMonthsOneDay.date });
+      /**
+       * 3 months in the future in codebase is calculated as 90 days from today
+       * hence to get date over 3 months in the future to cause an error to be displayed
+       * add 91 days to today
+       */
+      const days = 91;
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: addDays(days).date });
 
       cy.clickContinueButton();
 
