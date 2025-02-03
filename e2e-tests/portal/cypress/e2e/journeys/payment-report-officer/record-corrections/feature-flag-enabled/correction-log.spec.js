@@ -89,7 +89,19 @@ context('Correction log - Fee record correction feature flag enabled', () => {
       bankCommentary: 'Some bank commentary',
     };
 
+    const secondCompletedCorrectionDetails = {
+      dateSent: new Date('2024-03-14'),
+      formattedDateSent: '14 Mar 2024',
+    };
+
+    const thirdCompletedCorrectionDetails = {
+      dateSent: new Date('2024-03-14'),
+      formattedDateSent: '14 Mar 2024',
+    };
+
     const firstCorrectedFeeRecordExporter = 'Exporter A';
+    const secondCorrectedFeeRecordExporter = 'Exporter C';
+    const thirdCorrectedFeeRecordExporter = 'Exporter B';
 
     before(() => {
       cy.task('getUserFromDbByEmail', BANK1_PAYMENT_REPORT_OFFICER1.email).then((user) => {
@@ -120,13 +132,13 @@ context('Correction log - Fee record correction feature flag enabled', () => {
         const secondCorrectedFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
           .withId(3)
           .withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED)
-          .withExporter('Exporter C')
+          .withExporter(secondCorrectedFeeRecordExporter)
           .build();
 
         const thirdCorrectedFeeRecord = FeeRecordEntityMockBuilder.forReport(report)
           .withId(4)
           .withStatus(FEE_RECORD_STATUS.TO_DO_AMENDED)
-          .withExporter('Exporter B')
+          .withExporter(thirdCorrectedFeeRecordExporter)
           .build();
 
         const pendingCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecordPendingCorrection, false)
@@ -145,12 +157,12 @@ context('Correction log - Fee record correction feature flag enabled', () => {
 
         const secondCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(secondCorrectedFeeRecord, true)
           .withId(3)
-          .withDateReceived(new Date('2024-03-14'))
+          .withDateReceived(secondCompletedCorrectionDetails.dateSent)
           .build();
 
         const thirdCompletedCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(thirdCorrectedFeeRecord, true)
           .withId(4)
-          .withDateReceived(new Date('2024-03-14'))
+          .withDateReceived(thirdCompletedCorrectionDetails.dateSent)
           .build();
 
         cy.task(NODE_TASKS.INSERT_UTILISATION_REPORTS_INTO_DB, [report]);
@@ -214,11 +226,11 @@ context('Correction log - Fee record correction feature flag enabled', () => {
       });
 
       it('should sort the rows by "date sent" in ascending order', () => {
-        cy.assertText(correctionLog.row(1).dateSent(), '14 Mar 2024');
+        cy.assertText(correctionLog.row(1).dateSent(), secondCompletedCorrectionDetails.formattedDateSent);
 
-        cy.assertText(correctionLog.row(2).dateSent(), '14 Mar 2024');
+        cy.assertText(correctionLog.row(2).dateSent(), thirdCompletedCorrectionDetails.formattedDateSent);
 
-        cy.assertText(correctionLog.row(3).dateSent(), '07 Apr 2024');
+        cy.assertText(correctionLog.row(3).dateSent(), firstCompletedCorrectionDetails.formattedDateSent);
       });
     });
 
@@ -228,11 +240,11 @@ context('Correction log - Fee record correction feature flag enabled', () => {
       });
 
       it('should sort the rows by "exporter" in descending order', () => {
-        cy.assertText(correctionLog.row(1).exporter(), 'Exporter C');
+        cy.assertText(correctionLog.row(1).exporter(), secondCorrectedFeeRecordExporter);
 
-        cy.assertText(correctionLog.row(2).exporter(), 'Exporter B');
+        cy.assertText(correctionLog.row(2).exporter(), thirdCorrectedFeeRecordExporter);
 
-        cy.assertText(correctionLog.row(3).exporter(), 'Exporter A');
+        cy.assertText(correctionLog.row(3).exporter(), firstCorrectedFeeRecordExporter);
       });
     });
   });
