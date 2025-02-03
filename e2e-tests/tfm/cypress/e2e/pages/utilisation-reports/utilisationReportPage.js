@@ -67,6 +67,7 @@ const utilisationReportPage = {
         cy.get(`[data-cy="keying-sheet-row-${feeRecordId}"] td[data-cy="principal-balance-adjustment--decrease"]`),
     },
     paymentDetailsContent: {
+      paymentLinks: () => cy.get('[data-cy^="payment-details-tab-edit-payment-link"]'),
       clickPaymentLink: (paymentId) => cy.get(`a[data-cy="payment-details-tab-edit-payment-link--paymentId-${paymentId}"]`).click(),
       errorSummaryErrors: () => cy.get('[data-cy="payment-details-error-summary"] a'),
       paymentDetailsTable: {
