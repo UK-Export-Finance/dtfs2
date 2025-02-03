@@ -35,6 +35,7 @@ export const handleUtilisationReportMarkFeeRecordsAsReconciledEvent = async (
   try {
     for (const feeRecord of feeRecordsToReconcile) {
       const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
+
       await stateMachine.handleEvent({
         type: 'MARK_AS_RECONCILED',
         payload: {

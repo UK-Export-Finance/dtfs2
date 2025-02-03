@@ -46,6 +46,7 @@ export const handleUtilisationReportEditPaymentEvent = async (
 
   for (const feeRecord of feeRecords) {
     const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
+
     await stateMachine.handleEvent({
       type: 'PAYMENT_EDITED',
       payload: {

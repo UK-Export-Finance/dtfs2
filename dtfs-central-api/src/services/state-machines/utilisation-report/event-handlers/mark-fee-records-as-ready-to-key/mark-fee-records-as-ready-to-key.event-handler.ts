@@ -30,6 +30,7 @@ export const handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent = async (
 ): Promise<UtilisationReportEntity> => {
   for (const feeRecord of feeRecordsToMarkAsReadyToKey) {
     const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
+
     await stateMachine.handleEvent({
       type: 'MARK_AS_READY_TO_KEY',
       payload: {
