@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { Role } from '@ukef/dtfs2-common';
+import { Role, AnyObject } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import app from '../../../../src/createApp';
 import testUserCache from '../../../api-test-users';
@@ -12,6 +12,13 @@ import { withClientAuthenticationTests } from '../../../common-tests/client-auth
 import { deleteAmendmentUrl } from './amendment-urls';
 
 const { as, remove } = createApi(app);
+
+const deletePortalFacilityAmendmentMock = jest.fn() as jest.Mock<Promise<void>>;
+
+jest.mock('../../../../src/v1/api', () => ({
+  ...jest.requireActual<AnyObject>('../../../../src/v1/api'),
+  deletePortalFacilityAmendment: () => deletePortalFacilityAmendmentMock(),
+}));
 
 const originalProcessEnv = { ...process.env };
 
@@ -108,10 +115,8 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
       });
 
       it(`should return a ${HttpStatusCode.Ok} response if the api request is successful`, async () => {
-        const amendmentId = new ObjectId().toString();
-        const facilityId = new ObjectId().toString();
-
-        const url = deleteAmendmentUrl({ facilityId, amendmentId });
+        // Arrange
+        const url = deleteAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
 
         // Act
         const response = await as(aMaker).remove(url);
