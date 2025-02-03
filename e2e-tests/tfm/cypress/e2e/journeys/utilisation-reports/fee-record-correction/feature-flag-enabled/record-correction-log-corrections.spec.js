@@ -51,7 +51,7 @@ context('When fee record correction feature flag is enabled', () => {
 
     cy.login(USERS.PDC_RECONCILE);
 
-    cy.createAndSubmitFeeRecordCorrectionRequestForm({
+    cy.completeAndSubmitFeeRecordCorrectionRequestForm({
       feeRecord: firstFeeRecord,
       reportId,
       additionalInfoUserInput,
@@ -60,7 +60,7 @@ context('When fee record correction feature flag is enabled', () => {
 
     cy.login(USERS.PDC_RECONCILE);
 
-    cy.createAndSubmitFeeRecordCorrectionRequestForm({
+    cy.completeAndSubmitFeeRecordCorrectionRequestForm({
       feeRecord: secondFeeRecord,
       reportId,
       additionalInfoUserInput,
