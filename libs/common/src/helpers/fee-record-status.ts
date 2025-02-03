@@ -9,7 +9,9 @@ import { FeeRecordStatus } from '../types';
  */
 export const allStatusesAreTheSameOrCombinationOfToDoStatuses = (statuses: Set<FeeRecordStatus>) => {
   const allStatusesAreTheSame = statuses.size === 1;
+
   const statusesAreACombinationOfToDoStatuses = statuses.size === 2 && statuses.has(FEE_RECORD_STATUS.TO_DO) && statuses.has(FEE_RECORD_STATUS.TO_DO_AMENDED);
+
   return allStatusesAreTheSame || statusesAreACombinationOfToDoStatuses;
 };
 
