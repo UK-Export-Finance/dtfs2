@@ -8,10 +8,10 @@ import { oneMonth, tomorrow, yearWithZeroLetter } from '../../../../../../e2e-fi
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS } from '../../../../../../e2e-fixtures';
 import pages from '../../../pages';
 import { CURRENCY } from '../../../../../../e2e-fixtures/constants.fixture';
-import { FACILITY_TENOR } from '../../../../fixtures/facility-tenor';
+import { calculateTestFacilityTenorValue } from '../../../../support/utils/facility-tenor';
 
 context('Amendments underwriting - add banks decision - proceed', () => {
-  const facilityTenor = FACILITY_TENOR.BSS.COMMENCEMENT_TWO_YEARS_AGO_EXPIRY_IN_ONE_MONTH;
+  const facilityTenor = calculateTestFacilityTenorValue;
 
   const updatedFacilityTenor = '25 months';
 

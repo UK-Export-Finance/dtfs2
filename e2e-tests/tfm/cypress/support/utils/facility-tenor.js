@@ -1,5 +1,5 @@
 import { add } from 'date-fns';
-import { oneMonth, twoYearsAgo } from '../../../e2e-fixtures/dateConstants';
+import { oneMonth, twoYearsAgo } from '../../../../e2e-fixtures/dateConstants';
 
 /**
  * Function to calculate facility tenor for a BSS facility with a commencement date
@@ -11,13 +11,13 @@ import { oneMonth, twoYearsAgo } from '../../../e2e-fixtures/dateConstants';
  * The tenor is calculated by MDM using a SQL function.
  *
  * The tenor is the difference in months between the expiry date and the commencement date.
- * But in some cases we add one.
+ * But in some cases for BSS facilities we add one to the difference.
  *
  * Specifically in the case of these tests, the tenor is 25 months except for:
  * - if expiry and commencement dates are the same date of month then you add one
  * - if commencement is end of month and expiry is also end of month you add one
  */
-const calculateFacilityTenorForBssFacilityWithCommencementDateTwoYearsAgoAndExpiryDateOneMonthFromToday = () => {
+export const calculateTestFacilityTenorValue = () => {
   let facilityTenor = '25 months';
 
   if (twoYearsAgo.date.getDate() === oneMonth.date.getDate()) {
@@ -32,10 +32,4 @@ const calculateFacilityTenorForBssFacilityWithCommencementDateTwoYearsAgoAndExpi
   }
 
   return facilityTenor;
-};
-
-export const FACILITY_TENOR = {
-  BSS: {
-    COMMENCEMENT_TWO_YEARS_AGO_EXPIRY_IN_ONE_MONTH: calculateFacilityTenorForBssFacilityWithCommencementDateTwoYearsAgoAndExpiryDateOneMonthFromToday(),
-  },
 };

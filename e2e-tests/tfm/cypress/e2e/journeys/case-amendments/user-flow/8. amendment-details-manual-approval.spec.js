@@ -6,10 +6,10 @@ import { oneMonth, today, tomorrow } from '../../../../../../e2e-fixtures/dateCo
 import { NOT_ADDED } from '../../../../fixtures/constants';
 import { PIM_USER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN, CURRENCY } from '../../../../../../e2e-fixtures';
 import caseDealPage from '../../../pages/caseDealPage';
-import { FACILITY_TENOR } from '../../../../fixtures/facility-tenor';
+import { calculateTestFacilityTenorValue } from '../../../../support/utils/facility-tenor';
 
 context('Amendments - Manual approval journey', () => {
-  const facilityTenor = FACILITY_TENOR.BSS.COMMENCEMENT_TWO_YEARS_AGO_EXPIRY_IN_ONE_MONTH;
+  const facilityTenor = calculateTestFacilityTenorValue();
 
   describe('Amendment details - Change the Cover end date AND Facility value', () => {
     let dealId;
