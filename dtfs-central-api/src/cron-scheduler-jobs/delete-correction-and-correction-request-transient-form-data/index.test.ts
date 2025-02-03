@@ -1,5 +1,5 @@
 import { LessThan } from 'typeorm';
-import { deleteCorrectionAndCorrectionRequestTransientFormData, deleteCorrectionAndCorrectionRequestTransientFormDataJob } from '.';
+import { deleteAllOldCorrectionTransientFormData, deleteAllOldCorrectionTransientFormDataJob } from '.';
 import { FeeRecordCorrectionRequestTransientFormDataRepo } from '../../repositories/fee-record-correction-request-transient-form-data-repo/fee-record-correction-request-transient-form-data.repo';
 import { FeeRecordCorrectionTransientFormDataRepo } from '../../repositories/fee-record-correction-transient-form-data-repo';
 
@@ -21,7 +21,7 @@ describe('delete-correction-and-correction-request-transient-form-data', () => {
     jest.useRealTimers();
   });
 
-  describe('deleteCorrectionAndCorrectionRequestTransientFormData', () => {
+  describe('deleteAllOldCorrectionTransientFormData', () => {
     beforeEach(() => {
       jest.useFakeTimers().setSystemTime(new Date('2025-01-02 12:10:00'));
 
@@ -33,9 +33,9 @@ describe('delete-correction-and-correction-request-transient-form-data', () => {
       jest.resetAllMocks();
     });
 
-    it('should delete records older than one day', async () => {
+    it('should delete "correction transient data" records older than one day', async () => {
       // Act
-      await deleteCorrectionAndCorrectionRequestTransientFormData();
+      await deleteAllOldCorrectionTransientFormData();
 
       // Assert
       const expectedDeletionCallArgs = {
@@ -44,6 +44,48 @@ describe('delete-correction-and-correction-request-transient-form-data', () => {
 
       expect(mockCorrectionDelete).toHaveBeenCalledTimes(1);
       expect(mockCorrectionDelete).toHaveBeenCalledWith(expectedDeletionCallArgs);
+    });
+
+    it('should delete "correction request transient data" records older than one day', async () => {
+      // Act
+      await deleteAllOldCorrectionTransientFormData();
+
+      // Assert
+      const expectedDeletionCallArgs = {
+        lastUpdatedAt: LessThan(new Date('2025-01-01:12:10:00')),
+      };
+
+      expect(mockCorrectionRequestDelete).toHaveBeenCalledTimes(1);
+      expect(mockCorrectionRequestDelete).toHaveBeenCalledWith(expectedDeletionCallArgs);
+    });
+
+    it('should delete "correction transient data" records older than one day if it is the first day of the month', async () => {
+      // Arrange
+      jest.useFakeTimers().setSystemTime(new Date('2025-01-01 12:10:00'));
+
+      // Act
+      await deleteAllOldCorrectionTransientFormData();
+
+      // Assert
+      const expectedDeletionCallArgs = {
+        lastUpdatedAt: LessThan(new Date('2024-12-31:12:10:00')),
+      };
+
+      expect(mockCorrectionDelete).toHaveBeenCalledTimes(1);
+      expect(mockCorrectionDelete).toHaveBeenCalledWith(expectedDeletionCallArgs);
+    });
+
+    it('should delete "correction request transient data" records older than one day if it is the first day of the month', async () => {
+      // Arrange
+      jest.useFakeTimers().setSystemTime(new Date('2025-01-01 12:10:00'));
+
+      // Act
+      await deleteAllOldCorrectionTransientFormData();
+
+      // Assert
+      const expectedDeletionCallArgs = {
+        lastUpdatedAt: LessThan(new Date('2024-12-31:12:10:00')),
+      };
 
       expect(mockCorrectionRequestDelete).toHaveBeenCalledTimes(1);
       expect(mockCorrectionRequestDelete).toHaveBeenCalledWith(expectedDeletionCallArgs);
@@ -54,7 +96,7 @@ describe('delete-correction-and-correction-request-transient-form-data', () => {
       jest.useFakeTimers().setSystemTime(new Date('2025-01-01 12:10:00'));
 
       // Act
-      await deleteCorrectionAndCorrectionRequestTransientFormData();
+      await deleteAllOldCorrectionTransientFormData();
 
       // Assert
       const expectedDeletionCallArgs = {
@@ -77,7 +119,7 @@ describe('delete-correction-and-correction-request-transient-form-data', () => {
         jest.mocked(mockCorrectionDelete).mockRejectedValue(error);
 
         // Act
-        await deleteCorrectionAndCorrectionRequestTransientFormData();
+        await deleteAllOldCorrectionTransientFormData();
 
         // Assert
         expect(mockCorrectionDelete).toHaveBeenCalledTimes(1);
@@ -91,7 +133,7 @@ describe('delete-correction-and-correction-request-transient-form-data', () => {
 
       it('should still call record correction request transient data deletion', async () => {
         // Act
-        await deleteCorrectionAndCorrectionRequestTransientFormData();
+        await deleteAllOldCorrectionTransientFormData();
 
         // Assert
         expect(mockCorrectionRequestDelete).toHaveBeenCalledTimes(1);
@@ -107,7 +149,7 @@ describe('delete-correction-and-correction-request-transient-form-data', () => {
         jest.mocked(mockCorrectionRequestDelete).mockRejectedValue(error);
 
         // Act
-        await deleteCorrectionAndCorrectionRequestTransientFormData();
+        await deleteAllOldCorrectionTransientFormData();
 
         // Assert
         expect(mockCorrectionRequestDelete).toHaveBeenCalledTimes(1);
@@ -121,7 +163,7 @@ describe('delete-correction-and-correction-request-transient-form-data', () => {
 
       it('should still call record correction transient data deletion', async () => {
         // Act
-        await deleteCorrectionAndCorrectionRequestTransientFormData();
+        await deleteAllOldCorrectionTransientFormData();
 
         // Assert
         expect(mockCorrectionDelete).toHaveBeenCalledTimes(1);
@@ -143,21 +185,19 @@ describe('delete-correction-and-correction-request-transient-form-data', () => {
 
     it('should be scheduled to run', () => {
       // Assert
-      expect(deleteCorrectionAndCorrectionRequestTransientFormDataJob.cronExpression).toEqual(
-        process.env.RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE,
-      );
+      expect(deleteAllOldCorrectionTransientFormDataJob.cronExpression).toEqual(process.env.RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE);
     });
 
     it('should have the correct description', () => {
       // Assert
-      expect(deleteCorrectionAndCorrectionRequestTransientFormDataJob.description).toEqual(
+      expect(deleteAllOldCorrectionTransientFormDataJob.description).toEqual(
         'Deletes record correction and record correction request transient form data older than 1 day',
       );
     });
 
     it('should call FeeRecordCorrectionTransientFormDataRepo.delete', async () => {
       // Act
-      await deleteCorrectionAndCorrectionRequestTransientFormDataJob.task('manual');
+      await deleteAllOldCorrectionTransientFormDataJob.task('manual');
 
       // Assert
       expect(mockCorrectionDelete).toHaveBeenCalledTimes(1);
@@ -169,7 +209,7 @@ describe('delete-correction-and-correction-request-transient-form-data', () => {
 
     it('should call FeeRecordCorrectionRequestTransientFormDataRepo.delete', async () => {
       // Act
-      await deleteCorrectionAndCorrectionRequestTransientFormDataJob.task('manual');
+      await deleteAllOldCorrectionTransientFormDataJob.task('manual');
 
       // Assert
       expect(mockCorrectionRequestDelete).toHaveBeenCalledTimes(1);
