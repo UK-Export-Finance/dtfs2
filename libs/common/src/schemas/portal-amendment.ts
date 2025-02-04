@@ -11,20 +11,22 @@ import { Currency, IsoDateTimeStamp } from '../types';
 export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
   .object({
     changeCoverEndDate: z.boolean().optional(),
-    coverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().nonnegative().optional()),
-    isUsingFacilityEndDate: z.boolean().optional(),
+    coverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().nonnegative().nullable().optional()),
+    isUsingFacilityEndDate: z.boolean().nullable().optional(),
     facilityEndDate: z
       .string()
       .datetime({ offset: true })
       .transform((isoTimestamp: IsoDateTimeStamp) => parseISO(isoTimestamp))
+      .nullable()
       .optional(),
     bankReviewDate: z
       .string()
       .datetime({ offset: true })
       .transform((isoTimestamp: IsoDateTimeStamp) => parseISO(isoTimestamp))
+      .nullable()
       .optional(),
     changeFacilityValue: z.boolean().optional(),
-    value: z.number().optional(),
+    value: z.number().nullable().optional(),
     currency: z.enum(Object.values(CURRENCY) as [Currency] & Currency[]).optional(),
     eligibilityCriteria: z
       .object({

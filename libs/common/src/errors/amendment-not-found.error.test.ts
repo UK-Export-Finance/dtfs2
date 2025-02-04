@@ -1,3 +1,4 @@
+import { HttpStatusCode } from 'axios';
 import { AmendmentNotFoundError } from './amendment-not-found.error';
 import { ApiError } from './api.error';
 
@@ -11,6 +12,14 @@ describe('AmendmentNotFoundError', () => {
 
     // Assert
     expect(exception.message).toEqual(`Amendment not found: ${amendmentId} on facility: ${facilityId}`);
+  });
+
+  it('should have status 404', () => {
+    // Act
+    const exception = new AmendmentNotFoundError(amendmentId, facilityId);
+
+    // Assert
+    expect(exception.status).toEqual(HttpStatusCode.NotFound);
   });
 
   it('should be an instance of AmendmentNotFoundError', () => {

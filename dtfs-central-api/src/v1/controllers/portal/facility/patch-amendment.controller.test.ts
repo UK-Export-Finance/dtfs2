@@ -25,7 +25,7 @@ describe('patchAmendment', () => {
   beforeEach(() => {
     jest.resetAllMocks();
 
-    jest.spyOn(PortalFacilityAmendmentService, 'updatePortalFacilityAmendment').mockImplementation(mockUpdatePortalFacilityAmendment);
+    jest.spyOn(PortalFacilityAmendmentService, 'updatePortalFacilityAmendmentUserValues').mockImplementation(mockUpdatePortalFacilityAmendment);
     mockUpdatePortalFacilityAmendment.mockResolvedValue(mockUpdatedAmendment);
   });
 

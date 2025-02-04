@@ -7,8 +7,12 @@ import {
   PortalFacilityAmendment,
   PortalFacilityAmendmentUserValues,
   PORTAL_AMENDMENT_STATUS,
+  PortalAmendmentStatus,
+  AmendmentNotFoundError,
+  AmendmentIncompleteError,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
+import { cloneDeep } from 'lodash';
 import { findOneUser } from '../../v1/controllers/user/get-user.controller';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 import { EligibilityCriteriaAmendmentsRepo } from '../../repositories/portal/eligibility-criteria-amendments.repo';
@@ -48,7 +52,7 @@ export class PortalFacilityAmendmentService {
     const updatedCriteria = criteria.map((criterion) => ({ ...criterion, answer: null }));
 
     const amendmentToInsert: PortalFacilityAmendment = {
-      ...amendment,
+      ...this.generatePortalFacilityAmendment(amendment),
       dealId: new ObjectId(dealId),
       facilityId: new ObjectId(facilityId),
       amendmentId: new ObjectId(),
@@ -70,7 +74,7 @@ export class PortalFacilityAmendmentService {
   }
 
   /**
-   * Updates a portal facility amendment with the provided details.
+   * Updates a portal facility amendment
    *
    * @param params
    * @param params.amendmentId - The amendment id
@@ -79,7 +83,47 @@ export class PortalFacilityAmendmentService {
    * @param params.auditDetails - The audit details for the update operation.
    * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithUkefId)>} A promise that resolves when the update operation is complete.
    */
-  public static async updatePortalFacilityAmendment({
+  private static async updatePortalFacilityAmendment({
+    amendmentId,
+    facilityId,
+    update,
+    auditDetails,
+    allowedStatuses,
+  }: {
+    amendmentId: ObjectId;
+    facilityId: ObjectId;
+    update: Partial<PortalFacilityAmendment>;
+    auditDetails: PortalAuditDetails;
+    allowedStatuses: PortalAmendmentStatus[];
+  }): Promise<FacilityAmendmentWithUkefId> {
+    await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({
+      amendmentId,
+      facilityId,
+      update,
+      auditDetails,
+      allowedStatuses,
+    });
+
+    const updatedAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
+
+    if (updatedAmendment?.type !== AMENDMENT_TYPES.PORTAL) {
+      throw new Error(`Could not find amendment to return`);
+    }
+
+    return updatedAmendment;
+  }
+
+  /**
+   * Updates a portal facility amendment with user provided values.
+   *
+   * @param params
+   * @param params.amendmentId - The amendment id
+   * @param params.facilityId - The facility id
+   * @param params.update - The update payload for the amendment.
+   * @param params.auditDetails - The audit details for the update operation.
+   * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithUkefId)>} A promise that resolves when the update operation is complete.
+   */
+  public static async updatePortalFacilityAmendmentUserValues({
     amendmentId,
     facilityId,
     update,
@@ -90,27 +134,155 @@ export class PortalFacilityAmendmentService {
     update: PortalFacilityAmendmentUserValues;
     auditDetails: PortalAuditDetails;
   }): Promise<FacilityAmendmentWithUkefId> {
-    const amendmentUpdate: Partial<PortalFacilityAmendment> = {
-      ...update,
+    const amendmentUpdate = {
+      ...this.generatePortalFacilityAmendment(update),
       updatedAt: getUnixTimestampSeconds(new Date()),
     };
-
-    await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({
-      amendmentId: new ObjectId(amendmentId),
-      facilityId: new ObjectId(facilityId),
-      update: amendmentUpdate,
-      auditDetails,
-    });
 
     const facilityMongoId = new ObjectId(facilityId);
     const amendmentMongoId = new ObjectId(amendmentId);
 
-    const updatedAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityMongoId, amendmentMongoId);
+    return await this.updatePortalFacilityAmendment({
+      amendmentId: amendmentMongoId,
+      facilityId: facilityMongoId,
+      update: amendmentUpdate,
+      auditDetails,
+      allowedStatuses: [PORTAL_AMENDMENT_STATUS.DRAFT],
+    });
+  }
 
-    if (updatedAmendment?.type !== AMENDMENT_TYPES.PORTAL) {
-      throw new Error(`Could not find amendment to return`);
+  /**
+   * Updates portal facility amendment status to `Ready for checker's approval`.
+   *
+   * @param params
+   * @param params.amendmentId - The amendment id
+   * @param params.facilityId - The facility id
+   * @param params.dealId - The deal id
+   * @param params.auditDetails - The audit details for the update operation.
+   * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithUkefId)>} A promise that resolves when the update operation is complete.
+   */
+  public static async submitPortalFacilityAmendmentToChecker({
+    amendmentId,
+    facilityId,
+    auditDetails,
+  }: {
+    amendmentId: string;
+    facilityId: string;
+    dealId: string;
+    auditDetails: PortalAuditDetails;
+  }): Promise<FacilityAmendmentWithUkefId> {
+    await this.validateAmendmentIsComplete({ amendmentId, facilityId });
+
+    const amendmentUpdate: Partial<PortalFacilityAmendment> = {
+      status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+    };
+
+    // TODO: DTFS2-7793 - check that there is not an existing amendment on the deal.
+
+    const facilityMongoId = new ObjectId(facilityId);
+    const amendmentMongoId = new ObjectId(amendmentId);
+
+    return await this.updatePortalFacilityAmendment({
+      amendmentId: amendmentMongoId,
+      facilityId: facilityMongoId,
+      update: amendmentUpdate,
+      auditDetails,
+      allowedStatuses: [PORTAL_AMENDMENT_STATUS.DRAFT],
+    });
+  }
+
+  /**
+   * Validates if the amendment for a facility is complete.
+   *
+   * @param params - The parameters for the validation.
+   * @param params.amendmentId - The ID of the amendment to validate.
+   * @param params.facilityId - The ID of the facility associated with the amendment.
+   * @throws {AmendmentNotFoundError} If a portal amendment is not found
+   * @throws {AmendmentIncompleteError} If the amendment is incomplete.
+   */
+  public static async validateAmendmentIsComplete({ amendmentId, facilityId }: { amendmentId: string; facilityId: string }) {
+    const existingAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
+
+    if (existingAmendment?.type !== AMENDMENT_TYPES.PORTAL) {
+      throw new AmendmentNotFoundError(amendmentId, facilityId);
     }
 
-    return updatedAmendment;
+    if (!existingAmendment.changeCoverEndDate && !existingAmendment.changeFacilityValue) {
+      throw new AmendmentIncompleteError(facilityId, amendmentId, 'neither changeCoverEndDate nor changeFacilityValue is true');
+    }
+
+    const coverEndDateSectionEmpty =
+      !existingAmendment.coverEndDate && !existingAmendment.isUsingFacilityEndDate && !existingAmendment.bankReviewDate && !existingAmendment.facilityEndDate;
+
+    const amendmentHasBankReviewDate = existingAmendment.isUsingFacilityEndDate === false && existingAmendment.bankReviewDate;
+    const amendmentHasFacilityEndDate = existingAmendment.isUsingFacilityEndDate === true && existingAmendment.facilityEndDate;
+    const coverEndDateSectionFullyComplete = existingAmendment.coverEndDate && (amendmentHasBankReviewDate || amendmentHasFacilityEndDate);
+
+    if (existingAmendment.changeCoverEndDate === false && !coverEndDateSectionEmpty) {
+      throw new AmendmentIncompleteError(facilityId, amendmentId, 'changeCoverEndDate is false but cover end date values are provided');
+    }
+
+    if (existingAmendment.changeCoverEndDate === true && !coverEndDateSectionFullyComplete) {
+      throw new AmendmentIncompleteError(facilityId, amendmentId, 'changeCoverEndDate is true but cover end date section incomplete');
+    }
+
+    if (!existingAmendment.changeFacilityValue && existingAmendment.value) {
+      throw new AmendmentIncompleteError(facilityId, amendmentId, 'changeFacilityValue is false but value provided');
+    }
+
+    if (existingAmendment.changeFacilityValue && !existingAmendment.value) {
+      throw new AmendmentIncompleteError(facilityId, amendmentId, 'changeFacilityValue is true but a value has not been provided');
+    }
+
+    if (!existingAmendment.effectiveDate) {
+      throw new AmendmentIncompleteError(facilityId, amendmentId, 'effectiveDate not provided');
+    }
+
+    if (!existingAmendment.eligibilityCriteria?.criteria.every(({ answer }) => answer)) {
+      throw new AmendmentIncompleteError(facilityId, amendmentId, 'eligibilityCriteria answers are not all true');
+    }
+  }
+
+  /**
+   * Maps an amendment update to ensure values provided are consistent (e.g. if `changeCoverEndDate` is `false`, the `coverEndDate` should be `null`)
+   *
+   * @param update - The user values for the amendment.
+   * @returns The modified update.
+   */
+  public static generatePortalFacilityAmendment(update: PortalFacilityAmendmentUserValues): PortalFacilityAmendmentUserValues {
+    const draftUpdate = cloneDeep(update);
+
+    if (draftUpdate.changeCoverEndDate === false) {
+      draftUpdate.coverEndDate = null;
+      draftUpdate.isUsingFacilityEndDate = null;
+      draftUpdate.bankReviewDate = null;
+      draftUpdate.facilityEndDate = null;
+    }
+
+    if (draftUpdate.coverEndDate) {
+      draftUpdate.changeCoverEndDate = true;
+    }
+
+    if (draftUpdate.isUsingFacilityEndDate || draftUpdate.facilityEndDate) {
+      draftUpdate.changeCoverEndDate = true;
+      draftUpdate.isUsingFacilityEndDate = true;
+      draftUpdate.bankReviewDate = null;
+    }
+
+    if (draftUpdate.isUsingFacilityEndDate === false || draftUpdate.bankReviewDate) {
+      draftUpdate.changeCoverEndDate = true;
+      draftUpdate.isUsingFacilityEndDate = false;
+      draftUpdate.facilityEndDate = null;
+    }
+
+    if (draftUpdate.changeFacilityValue === false) {
+      draftUpdate.value = null;
+    }
+
+    if (draftUpdate.value) {
+      draftUpdate.changeFacilityValue = true;
+    }
+
+    return draftUpdate;
   }
 }

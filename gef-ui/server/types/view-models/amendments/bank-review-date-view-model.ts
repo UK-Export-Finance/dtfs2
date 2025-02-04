@@ -7,5 +7,5 @@ export type BankReviewDateViewModel = {
   previousPage: string;
   cancelUrl: string;
   errors?: ViewModelErrors | null;
-  bankReviewDate?: DayMonthYearInput;
+  bankReviewDate?: DayMonthYearInput | null;
 };

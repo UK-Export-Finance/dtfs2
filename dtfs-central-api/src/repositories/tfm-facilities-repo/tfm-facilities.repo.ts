@@ -14,6 +14,7 @@ import {
   FacilityAmendmentWithUkefId,
   PORTAL_AMENDMENT_STATUS,
   PortalAuditDetails,
+  PortalAmendmentStatus,
 } from '@ukef/dtfs2-common';
 import { deleteMany, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
@@ -364,6 +365,7 @@ export class TfmFacilitiesRepo {
    * @param updatePortalFacilityAmendmentByAmendmentIdParams.facilityId - the facility id
    * @param updatePortalFacilityAmendmentByAmendmentIdParams.update - the update to apply
    * @param updatePortalFacilityAmendmentByAmendmentIdParams.auditDetails - the users audit details
+   * @param updatePortalFacilityAmendmentByAmendmentIdParams.allowedStatuses - the statuses of the amendment
    *
    * @returns The update result.
    */
@@ -372,18 +374,26 @@ export class TfmFacilitiesRepo {
     facilityId,
     update,
     auditDetails,
+    allowedStatuses,
   }: {
     update: Partial<PortalFacilityAmendment>;
     amendmentId: ObjectId;
     facilityId: ObjectId;
     auditDetails: AuditDetails;
+    allowedStatuses: PortalAmendmentStatus[];
   }): Promise<UpdateResult> {
     try {
       const collection = await this.getCollection();
 
       const findFilter: Filter<TfmFacility> = {
         _id: { $eq: new ObjectId(facilityId) },
-        amendments: { $elemMatch: { amendmentId: { $eq: new ObjectId(amendmentId) }, type: AMENDMENT_TYPES.PORTAL } },
+        amendments: {
+          $elemMatch: {
+            amendmentId: { $eq: new ObjectId(amendmentId) },
+            type: { $eq: AMENDMENT_TYPES.PORTAL },
+            status: { $in: allowedStatuses },
+          },
+        },
       };
 
       const updateFilter: UpdateFilter<TfmFacility> = flatten({
