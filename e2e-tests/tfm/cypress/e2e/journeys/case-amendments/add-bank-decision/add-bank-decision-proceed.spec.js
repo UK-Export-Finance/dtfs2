@@ -11,7 +11,7 @@ import { CURRENCY } from '../../../../../../e2e-fixtures/constants.fixture';
 import { calculateTestFacilityTenorValue } from '../../../../support/utils/facility-tenor';
 
 context('Amendments underwriting - add banks decision - proceed', () => {
-  const facilityTenor = calculateTestFacilityTenorValue;
+  const facilityTenor = calculateTestFacilityTenorValue();
 
   const updatedFacilityTenor = '25 months';
 
