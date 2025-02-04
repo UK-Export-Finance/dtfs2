@@ -20,8 +20,8 @@ interface ErrorResponse extends Response {
   body: { status?: number; message: string; code?: string };
 }
 
-const generateUrl = (facilityId: string, amendmentId: string, newStatus: string): string => {
-  return `/v1/portal/facilities/${facilityId}/amendments/${amendmentId}/status/${encodeURI(newStatus)}`;
+const generateUrl = (facilityId: string, amendmentId: string): string => {
+  return `/v1/portal/facilities/${facilityId}/amendments/${amendmentId}/status`;
 };
 
 const newDeal = aDeal({
@@ -48,7 +48,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/status
     dealId = createDealResponse.body._id;
 
     const createFacilityResponse: { body: { _id: string } } = await testApi
-      .patch({ dealId, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
+      .post({ dealId, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
       .to('/v1/portal/gef/facilities');
 
     facilityId = createFacilityResponse.body._id;
@@ -69,8 +69,8 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/status
       const amendmentId = new ObjectId().toString();
 
       const { status } = await testApi
-        .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
-        .to(generateUrl(facilityId, amendmentId, 'a new status'));
+        .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId), newStatus: 'a new status' })
+        .to(generateUrl(facilityId, amendmentId));
 
       expect(status).toEqual(HttpStatusCode.NotFound);
     });
@@ -104,8 +104,8 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/status
       const anInvalidFacilityId = 'InvalidId';
 
       const { body, status } = (await testApi
-        .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
-        .to(generateUrl(anInvalidFacilityId, amendmentId, 'a new status'))) as ErrorResponse;
+        .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId), newStatus: 'a new status' })
+        .to(generateUrl(anInvalidFacilityId, amendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
 
@@ -119,8 +119,8 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/status
       const anInvalidAmendmentId = 'InvalidId';
 
       const { body, status } = (await testApi
-        .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
-        .to(generateUrl(facilityId, anInvalidAmendmentId, 'a new status'))) as ErrorResponse;
+        .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId), newStatus: 'a new status' })
+        .to(generateUrl(facilityId, anInvalidAmendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
 
@@ -134,8 +134,12 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/status
       const anInvalidDealId = 'dealId';
 
       const { body, status } = (await testApi
-        .patch({ dealId: anInvalidDealId, auditDetails: generatePortalAuditDetails(portalUserId) })
-        .to(generateUrl(facilityId, amendmentId, 'a new status'))) as ErrorResponse;
+        .patch({
+          dealId: anInvalidDealId,
+          auditDetails: generatePortalAuditDetails(portalUserId),
+          newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+        })
+        .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
 
@@ -150,14 +154,15 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/status
       const anInvalidStatus = 'a new status';
 
       const { body, status } = (await testApi
-        .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
-        .to(generateUrl(facilityId, amendmentId, anInvalidStatus))) as ErrorResponse;
+        .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId), newStatus: anInvalidStatus })
+        .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
 
       expect(body).toEqual({
         status: HttpStatusCode.BadRequest,
-        message: `Invalid newStatus: ${JSON.stringify(anInvalidStatus)}`,
+        code: 'INVALID_PAYLOAD',
+        message: [`newStatus: Invalid enum value. Expected 'Ready for checker's approval', received '${anInvalidStatus}' (invalid_enum_value)`],
       });
     });
 
@@ -168,8 +173,8 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/status
         const aValidButNonExistentFacilityId = new ObjectId().toString();
 
         const { body, status } = (await testApi
-          .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
-          .to(generateUrl(aValidButNonExistentFacilityId, amendmentId, newStatus))) as ErrorResponse;
+          .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId), newStatus })
+          .to(generateUrl(aValidButNonExistentFacilityId, amendmentId))) as ErrorResponse;
 
         expect(status).toEqual(HttpStatusCode.NotFound);
         expect(body).toEqual({
@@ -182,8 +187,8 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/status
         const aValidButNonExistentAmendmentId = new ObjectId().toString();
 
         const { body, status } = (await testApi
-          .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
-          .to(generateUrl(facilityId, aValidButNonExistentAmendmentId, newStatus))) as ErrorResponse;
+          .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId), newStatus })
+          .to(generateUrl(facilityId, aValidButNonExistentAmendmentId))) as ErrorResponse;
 
         expect(status).toEqual(HttpStatusCode.NotFound);
         expect(body).toEqual({
@@ -203,8 +208,8 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/status
 
         // Act
         const { body, status } = (await testApi
-          .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
-          .to(generateUrl(facilityId, incompleteAmendmentId, newStatus))) as ErrorResponse;
+          .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId), newStatus })
+          .to(generateUrl(facilityId, incompleteAmendmentId))) as ErrorResponse;
 
         // Assert
         expect(status).toEqual(HttpStatusCode.Conflict);
@@ -215,9 +220,9 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/status
       });
 
       it(`should return ${HttpStatusCode.Ok} when the payload is valid & the amendment exists`, async () => {
-        const { status } = (await testApi
-          .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
-          .to(generateUrl(facilityId, amendmentId, newStatus))) as ErrorResponse;
+        const { status } = await testApi
+          .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId), newStatus })
+          .to(generateUrl(facilityId, amendmentId));
 
         expect(status).toEqual(HttpStatusCode.Ok);
       });
