@@ -8,9 +8,9 @@ import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STA
 import { format, getUnixTime } from 'date-fns';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
-import { getEffectiveFrom, GetEffectiveDateRequest } from './get-effective-from';
+import { getEffectiveDate, GetEffectiveDateRequest } from './get-effective-date';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
-import { EffectiveFromViewModel } from '../../../types/view-models/amendments/effective-from-view-model';
+import { EffectiveDateViewModel } from '../../../types/view-models/amendments/effective-date-view-model';
 import { MOCK_UNISSUED_FACILITY, MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
@@ -40,7 +40,7 @@ const getHttpMocks = () =>
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 
-describe('getEffectiveFrom', () => {
+describe('getEffectiveDate', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
 
   beforeEach(() => {
@@ -66,7 +66,7 @@ describe('getEffectiveFrom', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getEffectiveFrom(req, res);
+    await getEffectiveDate(req, res);
 
     // Assert
     expect(getApplicationMock).toHaveBeenCalledTimes(1);
@@ -78,7 +78,7 @@ describe('getEffectiveFrom', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getEffectiveFrom(req, res);
+    await getEffectiveDate(req, res);
 
     // Assert
     expect(getFacilityMock).toHaveBeenCalledTimes(1);
@@ -90,44 +90,44 @@ describe('getEffectiveFrom', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getEffectiveFrom(req, res);
+    await getEffectiveDate(req, res);
 
     // Assert
     expect(getAmendmentMock).toHaveBeenCalledTimes(1);
     expect(getAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, userToken: req.session.userToken });
   });
 
-  it('should render the correct template when the amendment does not have an existing effectiveFrom', async () => {
+  it('should render the correct template when the amendment does not have an existing effectiveDate', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
     // Act
-    await getEffectiveFrom(req, res);
+    await getEffectiveDate(req, res);
 
     // Assert
-    const expectedRenderData: EffectiveFromViewModel = {
+    const expectedRenderData: EffectiveDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, amendment),
-      effectiveFrom: undefined,
+      effectiveDate: undefined,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-    expect(res._getRenderView()).toEqual('partials/amendments/effective-from.njk');
+    expect(res._getRenderView()).toEqual('partials/amendments/effective-date.njk');
     expect(res._getRenderData()).toEqual(expectedRenderData);
     expect(console.error).toHaveBeenCalledTimes(0);
   });
 
-  it('should render the correct template when the amendment has an existing effectiveFrom', async () => {
+  it('should render the correct template when the amendment has an existing effectiveDate', async () => {
     // Arrange
-    const effectiveFrom = new Date();
+    const effectiveDate = new Date();
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
-      .withEffectiveFrom(getUnixTime(effectiveFrom))
+      .withEffectiveDate(getUnixTime(effectiveDate))
       .build();
 
     getAmendmentMock.mockResolvedValue(amendment);
@@ -135,23 +135,23 @@ describe('getEffectiveFrom', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getEffectiveFrom(req, res);
+    await getEffectiveDate(req, res);
 
     // Assert
-    const expectedRenderData: EffectiveFromViewModel = {
+    const expectedRenderData: EffectiveDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, amendment),
-      effectiveFrom: {
-        day: format(effectiveFrom, 'd'),
-        month: format(effectiveFrom, 'M'),
-        year: format(effectiveFrom, 'yyyy'),
+      effectiveDate: {
+        day: format(effectiveDate, 'd'),
+        month: format(effectiveDate, 'M'),
+        year: format(effectiveDate, 'yyyy'),
       },
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-    expect(res._getRenderView()).toEqual('partials/amendments/effective-from.njk');
+    expect(res._getRenderView()).toEqual('partials/amendments/effective-date.njk');
     expect(res._getRenderData()).toEqual(expectedRenderData);
     expect(console.error).toHaveBeenCalledTimes(0);
   });
@@ -162,7 +162,7 @@ describe('getEffectiveFrom', () => {
     getFacilityMock.mockResolvedValue({ details: undefined });
 
     // Act
-    await getEffectiveFrom(req, res);
+    await getEffectiveDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
@@ -177,7 +177,7 @@ describe('getEffectiveFrom', () => {
     getApplicationMock.mockResolvedValue(undefined);
 
     // Act
-    await getEffectiveFrom(req, res);
+    await getEffectiveDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
@@ -192,7 +192,7 @@ describe('getEffectiveFrom', () => {
     getAmendmentMock.mockResolvedValue(undefined);
 
     // Act
-    await getEffectiveFrom(req, res);
+    await getEffectiveDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
@@ -207,7 +207,7 @@ describe('getEffectiveFrom', () => {
     getFacilityMock.mockResolvedValue(MOCK_UNISSUED_FACILITY);
 
     // Act
-    await getEffectiveFrom(req, res);
+    await getEffectiveDate(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
@@ -223,7 +223,7 @@ describe('getEffectiveFrom', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getEffectiveFrom(req, res);
+    await getEffectiveDate(req, res);
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
@@ -238,7 +238,7 @@ describe('getEffectiveFrom', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getEffectiveFrom(req, res);
+    await getEffectiveDate(req, res);
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
@@ -253,7 +253,7 @@ describe('getEffectiveFrom', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getEffectiveFrom(req, res);
+    await getEffectiveDate(req, res);
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
