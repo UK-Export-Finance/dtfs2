@@ -19,7 +19,8 @@ export type TestCaseTypes =
   | 'AUDIT_DATABASE_RECORD_SCHEMA'
   | 'ENTRA_ID_USER_SCHEMA'
   | 'CURRENCY_SCHEMA'
-  | 'ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA';
+  | 'ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA'
+  | 'UPSERT_TFM_USER_REQUEST_SCHEMA';
 
 /**
  * The test case to be tested, including the type and any options that are required
@@ -46,4 +47,5 @@ export type TestCase =
   | TestCaseWithType<'AUDIT_DATABASE_RECORD_SCHEMA'>
   | TestCaseWithType<'ENTRA_ID_USER_SCHEMA'>
   | TestCaseWithType<'CURRENCY_SCHEMA'>
-  | TestCaseWithType<'ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA'>;
+  | TestCaseWithType<'ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA'>
+  | TestCaseWithType<'UPSERT_TFM_USER_REQUEST_SCHEMA'>;
