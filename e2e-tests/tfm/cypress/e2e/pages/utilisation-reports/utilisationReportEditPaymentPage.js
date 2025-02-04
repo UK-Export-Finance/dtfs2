@@ -1,7 +1,8 @@
 const utilisationReportEditPaymentPage = {
-  clickSaveChangesButton: () => cy.get('input[data-cy="save-changes-button"]').click(),
-  clickDeletePaymentButton: () => cy.get('a[data-cy="delete-payment-button"]').click(),
-  clickRemoveSelectedPaymentsButton: () => cy.get('input[data-cy="remove-selected-fees-button"]').click(),
+  saveChangesButton: () => cy.get('input[data-cy="save-changes-button"]'),
+  deletePaymentButton: () => cy.get('a[data-cy="delete-payment-button"]'),
+  feeRecordCheckbox: (feeRecordId) => cy.get(`[type="checkbox"][id="feeRecordId-${feeRecordId}"]`),
+  removeSelectedFeesButton: () => cy.get('input[data-cy="remove-selected-fees-button"]'),
 };
 
 module.exports = { utilisationReportEditPaymentPage };

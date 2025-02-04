@@ -44,7 +44,7 @@ context('Pressing the back button after a record correction request is submitted
     cy.login(USERS.PDC_RECONCILE);
 
     // submit a record correction request
-    cy.createAndSubmitFeeRecordCorrectionRequestForm({
+    cy.completeAndSubmitFeeRecordCorrectionRequestForm({
       feeRecord,
       reportId,
       additionalInfoUserInput,
