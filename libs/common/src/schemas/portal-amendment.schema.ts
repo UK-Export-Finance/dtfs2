@@ -1,8 +1,8 @@
 import z from 'zod';
-import { parseISO } from 'date-fns';
 import { getEpochMs } from '../helpers';
-import { AMENDMENT_TYPES, CURRENCY } from '../constants';
-import { Currency, IsoDateTimeStamp } from '../types';
+import { AMENDMENT_TYPES } from '../constants';
+import { ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA } from './iso-date-time-stamp-to-date.schema';
+import { CURRENCY_SCHEMA } from './currency.schema';
 /**
  * Portal Amendment schema to validate an object contains user provided values for the type `PortalFacilityAmendment`
  *
@@ -13,19 +13,11 @@ export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
     changeCoverEndDate: z.boolean().optional(),
     coverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().nonnegative().optional()),
     isUsingFacilityEndDate: z.boolean().optional(),
-    facilityEndDate: z
-      .string()
-      .datetime({ offset: true })
-      .transform((isoTimestamp: IsoDateTimeStamp) => parseISO(isoTimestamp))
-      .optional(),
-    bankReviewDate: z
-      .string()
-      .datetime({ offset: true })
-      .transform((isoTimestamp: IsoDateTimeStamp) => parseISO(isoTimestamp))
-      .optional(),
+    facilityEndDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.optional(),
+    bankReviewDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.optional(),
     changeFacilityValue: z.boolean().optional(),
     value: z.number().optional(),
-    currency: z.enum(Object.values(CURRENCY) as [Currency] & Currency[]).optional(),
+    currency: CURRENCY_SCHEMA.optional(),
     eligibilityCriteria: z
       .object({
         version: z.number(),
