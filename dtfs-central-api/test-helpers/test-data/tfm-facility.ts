@@ -4,7 +4,10 @@ import { generateMockPortalUserAuditDatabaseRecord } from '@ukef/dtfs2-common/ch
 import { aFacility } from './facility';
 import { KeyingSheetCalculationFacilityValues } from '../../src/types/tfm/tfm-facility';
 
-export const aTfmFacility = ({ amendments = [] }: { amendments?: FacilityAmendment[] } = {}): TfmFacility => {
+export const aTfmFacility = ({
+  amendments = [],
+  dealId = new ObjectId(),
+}: { amendments?: FacilityAmendment[]; dealId?: ObjectId | string } = {}): TfmFacility => {
   const tfmFacilityId = new ObjectId();
 
   return {
@@ -12,6 +15,7 @@ export const aTfmFacility = ({ amendments = [] }: { amendments?: FacilityAmendme
     facilitySnapshot: {
       ...aFacility(),
       _id: tfmFacilityId,
+      dealId: new ObjectId(dealId),
     },
     amendments,
     tfm: {},

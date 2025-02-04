@@ -3,10 +3,12 @@ import {
   FacilityAmendmentWithUkefId,
   getUnixTimestampSeconds,
   InvalidAuditDetailsError,
+  PortalFacilityAmendmentConflictError,
   PortalAuditDetails,
   PortalFacilityAmendment,
   PortalFacilityAmendmentUserValues,
   PORTAL_AMENDMENT_STATUS,
+  PORTAL_AMENDMENT_UNDERWAY_STATUSES,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { findOneUser } from '../../v1/controllers/user/get-user.controller';
@@ -15,6 +17,25 @@ import { EligibilityCriteriaAmendmentsRepo } from '../../repositories/portal/eli
 import { findOneFacility } from '../../v1/controllers/portal/facility/get-facility.controller';
 
 export class PortalFacilityAmendmentService {
+  /**
+   * Checks if there are any other portal amendments under way on a deal, throws an error if there are.
+   *
+   * @param params
+   * @param params.dealId - The deal id
+   * @returns {Promise<void>} A promise that resolves when the find operation is complete.
+   */
+  public static async validateNoOtherAmendmentsUnderWayOnDeal({ dealId }: { dealId: string }): Promise<void> {
+    const existingPortalAmendmentsUnderWay = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({
+      dealId,
+      statuses: PORTAL_AMENDMENT_UNDERWAY_STATUSES,
+    });
+
+    if (existingPortalAmendmentsUnderWay.length > 0) {
+      console.error('There is a portal facility amendment already under way on this deal');
+      throw new PortalFacilityAmendmentConflictError(dealId);
+    }
+  }
+
   /**
    * Upserts the portal amendment draft on a facility
    *
@@ -40,6 +61,8 @@ export class PortalFacilityAmendmentService {
     if (!user || `status` in user) {
       throw new InvalidAuditDetailsError(`Supplied auditDetails 'id' ${auditDetails.id.toString()} does not correspond to a valid user`);
     }
+
+    await this.validateNoOtherAmendmentsUnderWayOnDeal({ dealId });
 
     const { type: facilityType } = await findOneFacility(facilityId);
 

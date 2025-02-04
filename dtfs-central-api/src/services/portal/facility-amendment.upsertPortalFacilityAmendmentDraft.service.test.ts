@@ -1,5 +1,11 @@
 /* eslint-disable import/first */
-import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, InvalidAuditDetailsError, AmendmentsEligibilityCriteria } from '@ukef/dtfs2-common';
+import {
+  PORTAL_AMENDMENT_STATUS,
+  AMENDMENT_TYPES,
+  InvalidAuditDetailsError,
+  AmendmentsEligibilityCriteria,
+  PortalFacilityAmendmentConflictError,
+} from '@ukef/dtfs2-common';
 
 const mockFindOneUser = jest.fn();
 const mockFindOneFacility = jest.fn();
@@ -30,6 +36,7 @@ jest.mock('../../repositories/portal/eligibility-criteria-amendments.repo', () =
 }));
 
 const mockUpsertPortalFacilityAmendmentDraft = jest.fn();
+const mockValidateNoOtherAmendmentsUnderWayOnDeal = jest.fn();
 
 const dealId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
@@ -47,11 +54,13 @@ describe('PortalFacilityAmendmentService', () => {
     jest.resetAllMocks();
 
     jest.spyOn(TfmFacilitiesRepo, 'upsertPortalFacilityAmendmentDraft').mockImplementation(mockUpsertPortalFacilityAmendmentDraft);
+    jest.spyOn(PortalFacilityAmendmentService, 'validateNoOtherAmendmentsUnderWayOnDeal').mockImplementation(mockValidateNoOtherAmendmentsUnderWayOnDeal);
 
     mockFindOneUser.mockResolvedValue(aPortalUser());
     mockFindOneFacility.mockResolvedValue(facility);
     mockFindOneFacility.mockResolvedValue(facility);
     mockFindLatestEligibilityCriteria.mockResolvedValue(eligibilityCriteria);
+    mockValidateNoOtherAmendmentsUnderWayOnDeal.mockResolvedValue(undefined);
   });
 
   afterAll(() => {
@@ -114,6 +123,37 @@ describe('PortalFacilityAmendmentService', () => {
       // Assert
       expect(mockFindLatestEligibilityCriteria).toHaveBeenCalledTimes(1);
       expect(mockFindLatestEligibilityCriteria).toHaveBeenCalledWith(facility.type);
+    });
+
+    it('should call validateNoOtherAmendmentsUnderWayOnDeal with the dealId', async () => {
+      // Act
+      await PortalFacilityAmendmentService.upsertPortalFacilityAmendmentDraft({
+        dealId,
+        facilityId,
+        amendment,
+        auditDetails,
+      });
+
+      // Assert
+      expect(mockValidateNoOtherAmendmentsUnderWayOnDeal).toHaveBeenCalledTimes(1);
+      expect(mockValidateNoOtherAmendmentsUnderWayOnDeal).toHaveBeenCalledWith({ dealId });
+    });
+
+    it(`should throw an error if validateNoOtherAmendmentsUnderWayOnDeal throws an error`, async () => {
+      // Arrange
+      const mockError = new PortalFacilityAmendmentConflictError(dealId);
+      mockValidateNoOtherAmendmentsUnderWayOnDeal.mockRejectedValue(mockError);
+
+      // Act + Assert
+      await expect(() =>
+        PortalFacilityAmendmentService.upsertPortalFacilityAmendmentDraft({
+          dealId,
+          facilityId,
+          amendment,
+          auditDetails,
+        }),
+      ).rejects.toThrow(PortalFacilityAmendmentConflictError);
+      expect(mockUpsertPortalFacilityAmendmentDraft).toHaveBeenCalledTimes(0);
     });
 
     it('should call TfmFacilitiesRepo.upsertPortalFacilityAmendmentDraft with correct params', async () => {

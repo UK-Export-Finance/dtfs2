@@ -35,6 +35,8 @@ const getFacilityAmendmentController = require('../controllers/portal/facility/g
 const putFacilityAmendmentController = require('../controllers/portal/facility/put-amendment.controller');
 const patchFacilityAmendmentController = require('../controllers/portal/facility/patch-amendment.controller');
 
+const getFacilityAmendmentsForDealController = require('../controllers/portal/facility/get-amendments-on-deal.controller');
+
 const durableFunctionsController = require('../controllers/durable-functions/durable-functions.controller');
 const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controller');
 
@@ -630,11 +632,51 @@ portalRouter
  *               $ref: '#/definitions/PortalAmendment'
  *       404:
  *         description: Not found
+ *       409:
+ *         description: Conflict
  */
 portalRouter
   .route('/facilities/:facilityId/amendments')
   .all(validatePortalFacilityAmendmentsEnabled, validation.mongoIdValidation('facilityId'))
   .put(validatePutPortalFacilityAmendmentPayload, putFacilityAmendmentController.putAmendmentDraft);
+
+/**
+ * @openapi
+ * /deals/:dealId/amendments:
+ *   get:
+ *     summary: Get all the Portal facility amendments on a given deal
+ *     tags: [Portal - Amendments]
+ *     description: Get all the Portal facility amendments on a given deal
+ *     parameters:
+ *       - in: path
+ *         name: dealId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to get amendments for
+ *       - in: query
+ *         name: statuses
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ['Draft']
+ *         required: false
+ *         description: The portal amendment statuses to filter on
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/definitions/PortalAmendment'
+ *       404:
+ *         description: Not found
+ */
+portalRouter
+  .route('/deals/:dealId/amendments')
+  .all(validation.mongoIdValidation('dealId'))
+  .get(getFacilityAmendmentsForDealController.getPortalAmendmentsOnDeal);
 
 /**
  * @openapi
