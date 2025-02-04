@@ -1,4 +1,4 @@
-import { getKeyToDateSortValueMap, GetKeyToDateSortValueMapItem } from './get-key-to-date-sort-value-map-helper';
+import { GetKeyToDateSortValueMapItem, getKeyToDateSortValueMap } from './get-key-to-date-sort-value-map-helper';
 
 describe('get-key-to-currency-and-amount-sort-value-map-helper', () => {
   describe('getKeyToCurrencyAndAmountSortValueMap', () => {
