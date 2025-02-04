@@ -21,6 +21,7 @@ describe('user service', () => {
     let userId: ObjectId;
     let createUserSpy: jest.SpyInstance;
     let updateUserByIdSpy: jest.SpyInstance;
+    let userService: UserService;
 
     beforeAll(() => {
       jest.useFakeTimers();
@@ -30,7 +31,8 @@ describe('user service', () => {
       jest.resetAllMocks();
       entraIdUser = anEntraIdUser();
       auditDetails = generateSystemAuditDetails();
-      transformedUser = UserService.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
+      userService = new UserService();
+      transformedUser = userService.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
       userId = new ObjectId();
       existingUser = { ...transformedUser, _id: userId, status: USER_STATUS.ACTIVE };
     });
@@ -45,8 +47,8 @@ describe('user service', () => {
         createUserSpy = jest.spyOn(UserRepo, 'createUser');
       });
 
-      it('creates a new user in the database', async () => {
-        await UserService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
+      it('should create a new user in the database', async () => {
+        await userService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
 
         expect(createUserSpy).toHaveBeenCalledWith({
           user: transformedUser,
@@ -62,8 +64,8 @@ describe('user service', () => {
         updateUserByIdSpy = jest.spyOn(UserRepo, 'updateUserById');
       });
 
-      it('updates the user in the database', async () => {
-        await UserService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
+      it('should update the user in the database', async () => {
+        await userService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
 
         expect(updateUserByIdSpy).toHaveBeenCalledWith({
           userId,
@@ -79,8 +81,8 @@ describe('user service', () => {
         jest.spyOn(UserRepo, 'findUsersByEmailAddresses').mockResolvedValue([existingUser, existingUser]);
       });
 
-      it('throws an error', async () => {
-        await expect(UserService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails })).rejects.toThrowError();
+      it('should throw an error', async () => {
+        await expect(userService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails })).rejects.toThrowError();
       });
     });
   });

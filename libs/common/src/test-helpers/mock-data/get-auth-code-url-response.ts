@@ -1,9 +1,7 @@
 import { GetAuthCodeUrlResponse } from '../../types';
+import { anAuthorisationCodeRequest } from './authorisation-code-request.mock';
 
 export const aGetAuthCodeUrlResponse = (): GetAuthCodeUrlResponse => ({
   authCodeUrl: 'https://auth-code-url',
-  authCodeUrlRequest: {
-    scopes: ['user.read'],
-    redirectUri: 'https://redirect-uri',
-  },
+  authCodeUrlRequest: anAuthorisationCodeRequest(),
 });
