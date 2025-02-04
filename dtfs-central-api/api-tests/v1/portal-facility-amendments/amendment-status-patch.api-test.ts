@@ -29,7 +29,7 @@ const newDeal = aDeal({
   submissionType: DEAL_SUBMISSION_TYPE.AIN,
 }) as AnyObject;
 
-describe('POST /v1/portal/facilities/:facilityId/amendments/:amendmentId/status/:newStatus', () => {
+describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/status/:newStatus', () => {
   let dealId: string;
   let facilityId: string;
   let portalUserId: string;
@@ -48,7 +48,7 @@ describe('POST /v1/portal/facilities/:facilityId/amendments/:amendmentId/status/
     dealId = createDealResponse.body._id;
 
     const createFacilityResponse: { body: { _id: string } } = await testApi
-      .post({ dealId, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
+      .patch({ dealId, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
       .to('/v1/portal/gef/facilities');
 
     facilityId = createFacilityResponse.body._id;
@@ -69,7 +69,7 @@ describe('POST /v1/portal/facilities/:facilityId/amendments/:amendmentId/status/
       const amendmentId = new ObjectId().toString();
 
       const { status } = await testApi
-        .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(facilityId, amendmentId, 'a new status'));
 
       expect(status).toEqual(HttpStatusCode.NotFound);
@@ -104,7 +104,7 @@ describe('POST /v1/portal/facilities/:facilityId/amendments/:amendmentId/status/
       const anInvalidFacilityId = 'InvalidId';
 
       const { body, status } = (await testApi
-        .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(anInvalidFacilityId, amendmentId, 'a new status'))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
@@ -119,7 +119,7 @@ describe('POST /v1/portal/facilities/:facilityId/amendments/:amendmentId/status/
       const anInvalidAmendmentId = 'InvalidId';
 
       const { body, status } = (await testApi
-        .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(facilityId, anInvalidAmendmentId, 'a new status'))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
@@ -134,7 +134,7 @@ describe('POST /v1/portal/facilities/:facilityId/amendments/:amendmentId/status/
       const anInvalidDealId = 'dealId';
 
       const { body, status } = (await testApi
-        .post({ dealId: anInvalidDealId, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .patch({ dealId: anInvalidDealId, auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(facilityId, amendmentId, 'a new status'))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
@@ -150,7 +150,7 @@ describe('POST /v1/portal/facilities/:facilityId/amendments/:amendmentId/status/
       const anInvalidStatus = 'a new status';
 
       const { body, status } = (await testApi
-        .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
+        .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
         .to(generateUrl(facilityId, amendmentId, anInvalidStatus))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
@@ -168,7 +168,7 @@ describe('POST /v1/portal/facilities/:facilityId/amendments/:amendmentId/status/
         const aValidButNonExistentFacilityId = new ObjectId().toString();
 
         const { body, status } = (await testApi
-          .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
+          .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
           .to(generateUrl(aValidButNonExistentFacilityId, amendmentId, newStatus))) as ErrorResponse;
 
         expect(status).toEqual(HttpStatusCode.NotFound);
@@ -182,7 +182,7 @@ describe('POST /v1/portal/facilities/:facilityId/amendments/:amendmentId/status/
         const aValidButNonExistentAmendmentId = new ObjectId().toString();
 
         const { body, status } = (await testApi
-          .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
+          .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
           .to(generateUrl(facilityId, aValidButNonExistentAmendmentId, newStatus))) as ErrorResponse;
 
         expect(status).toEqual(HttpStatusCode.NotFound);
@@ -203,7 +203,7 @@ describe('POST /v1/portal/facilities/:facilityId/amendments/:amendmentId/status/
 
         // Act
         const { body, status } = (await testApi
-          .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
+          .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
           .to(generateUrl(facilityId, incompleteAmendmentId, newStatus))) as ErrorResponse;
 
         // Assert
@@ -216,7 +216,7 @@ describe('POST /v1/portal/facilities/:facilityId/amendments/:amendmentId/status/
 
       it(`should return ${HttpStatusCode.Ok} when the payload is valid & the amendment exists`, async () => {
         const { status } = (await testApi
-          .post({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
+          .patch({ dealId, auditDetails: generatePortalAuditDetails(portalUserId) })
           .to(generateUrl(facilityId, amendmentId, newStatus))) as ErrorResponse;
 
         expect(status).toEqual(HttpStatusCode.Ok);

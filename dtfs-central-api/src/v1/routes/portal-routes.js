@@ -5,8 +5,8 @@ const { validatePutPortalFacilityAmendmentPayload } = require('./middleware/payl
 const { validatePatchPortalFacilityAmendmentPayload } = require('./middleware/payload-validation/validate-patch-portal-facility-amendment-payload');
 const { validateDeletePortalFacilityAmendmentPayload } = require('./middleware/payload-validation/validate-delete-portal-facility-amendment-payload');
 const {
-  validatePostSubmitPortalFacilityAmendmentToCheckerPayload,
-} = require('./middleware/payload-validation/validate-post-submit-portal-facility-amendment-to-checker-payload');
+  validatePatchPortalFacilityAmendmentStatusPayload,
+} = require('./middleware/payload-validation/validate-patch-portal-facility-amendment-status-payload');
 
 const portalRouter = express.Router();
 const createDealController = require('../controllers/portal/deal/create-deal.controller');
@@ -39,7 +39,7 @@ const getFacilityAmendmentController = require('../controllers/portal/facility/g
 const putFacilityAmendmentController = require('../controllers/portal/facility/put-amendment.controller');
 const patchFacilityAmendmentController = require('../controllers/portal/facility/patch-amendment.controller');
 const deleteFacilityAmendmentController = require('../controllers/portal/facility/delete-amendment.controller');
-const postAmendmentStatusController = require('../controllers/portal/facility/post-amendment-status.controller');
+const patchAmendmentStatusController = require('../controllers/portal/facility/patch-amendment-status.controller');
 
 const durableFunctionsController = require('../controllers/durable-functions/durable-functions.controller');
 const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controller');
@@ -625,9 +625,9 @@ portalRouter
  * @openapi
  * /facilities/:facilityId/amendments/:amendmentId:/status/:newStatus
  *   patch:
- *     summary: Submit a Portal GEF facility amendment to checker
+ *     summary: update a Portal GEF facility amendment status
  *     tags: [Portal - Amendments]
- *     description: Submit a Portal GEF facility amendment to checker
+ *     description: update a Portal GEF facility amendment status
  *     parameters:
  *       - in: path
  *         name: facilityId
@@ -647,7 +647,7 @@ portalRouter
  *           type: string
  *           enum: ["Ready for checker's approval"]
  *         required: true
- *         description: status update to make
+ *         description: Status update to make
  *     requestBody:
  *       required: true
  *       content:
@@ -656,8 +656,8 @@ portalRouter
  *             type: object
  *             properties:
  *               dealId:
- *                type: string
- *                example: '123456abcdef123456abcdef'
+ *                 type: string
+ *                 example: '123456abcdef123456abcdef'
  *               auditDetails:
  *                 type: object
  *                 $ref: '#/definitions/PortalAuditDetails'
@@ -671,15 +671,17 @@ portalRouter
  *               $ref: '#/definitions/PortalAmendment'
  *       404:
  *         description: Not found
+ *       409:
+ *         description: Conflict - amendment cannot currently be updated to the given status
  */
 portalRouter
   .route('/facilities/:facilityId/amendments/:amendmentId/status/:newStatus')
-  .post(
+  .patch(
     validatePortalFacilityAmendmentsEnabled,
     validation.mongoIdValidation('facilityId'),
     validation.mongoIdValidation('amendmentId'),
-    validatePostSubmitPortalFacilityAmendmentToCheckerPayload,
-    postAmendmentStatusController.postAmendmentStatus,
+    validatePatchPortalFacilityAmendmentStatusPayload,
+    patchAmendmentStatusController.patchAmendmentStatus,
   );
 
 /**

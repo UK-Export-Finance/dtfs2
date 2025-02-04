@@ -3,20 +3,20 @@ import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
-import { PostSubmitPortalFacilityAmendmentToCheckerPayload } from '../../../routes/middleware/payload-validation/validate-post-submit-portal-facility-amendment-to-checker-payload';
+import { PatchPortalFacilityAmendmentStatusPayload } from '../../../routes/middleware/payload-validation/validate-patch-portal-facility-amendment-status-payload';
 
-type PostSubmitAmendmentToCheckerRequestParams = { facilityId: string; amendmentId: string; newStatus: string };
-export type PostSubmitAmendmentToCheckerRequest = CustomExpressRequest<{
-  params: PostSubmitAmendmentToCheckerRequestParams;
-  reqBody: PostSubmitPortalFacilityAmendmentToCheckerPayload;
+type PatchSubmitAmendmentToCheckerRequestParams = { facilityId: string; amendmentId: string; newStatus: string };
+export type PatchSubmitAmendmentToCheckerRequest = CustomExpressRequest<{
+  params: PatchSubmitAmendmentToCheckerRequestParams;
+  reqBody: PatchPortalFacilityAmendmentStatusPayload;
 }>;
 
 /**
- * post portal facility amendment submit to checker
+ * patch portal facility amendment submit to checker
  * @param req - request
  * @param res - response
  */
-export const postAmendmentStatus = async (req: PostSubmitAmendmentToCheckerRequest, res: Response) => {
+export const patchAmendmentStatus = async (req: PatchSubmitAmendmentToCheckerRequest, res: Response) => {
   const { facilityId, amendmentId, newStatus } = req.params;
   const { auditDetails, dealId } = req.body;
 

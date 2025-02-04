@@ -4,7 +4,7 @@ import { HttpStatusCode } from 'axios';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
-import { postAmendmentStatus, PostSubmitAmendmentToCheckerRequest } from './post-amendment-status.controller';
+import { patchAmendmentStatus, PatchSubmitAmendmentToCheckerRequest } from './patch-amendment-status.controller';
 
 const amendmentId = 'amendmentId';
 const facilityId = 'facilityId';
@@ -15,12 +15,12 @@ const mockUpdatedAmendment = { facilityId, dealId, type: AMENDMENT_TYPES.PORTAL,
 const mockSubmitPortalFacilityAmendmentToChecker = jest.fn();
 
 const generateHttpMocks = ({ auditDetails }: { auditDetails: unknown }) =>
-  createMocks<PostSubmitAmendmentToCheckerRequest>({
+  createMocks<PatchSubmitAmendmentToCheckerRequest>({
     params: { facilityId, amendmentId, newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL },
     body: { auditDetails, dealId },
   });
 
-describe('postAmendmentStatus', () => {
+describe('patchAmendmentStatus', () => {
   beforeEach(() => {
     jest.resetAllMocks();
 
@@ -34,7 +34,7 @@ describe('postAmendmentStatus', () => {
     const { req, res } = generateHttpMocks({ auditDetails });
 
     // Act
-    await postAmendmentStatus(req, res);
+    await patchAmendmentStatus(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
@@ -54,7 +54,7 @@ describe('postAmendmentStatus', () => {
     req.params.newStatus = invalidNewStatus;
 
     // Act
-    await postAmendmentStatus(req, res);
+    await patchAmendmentStatus(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
@@ -70,7 +70,7 @@ describe('postAmendmentStatus', () => {
     const { req, res } = generateHttpMocks({ auditDetails });
 
     // Act
-    await postAmendmentStatus(req, res);
+    await patchAmendmentStatus(req, res);
 
     // Assert
 
@@ -84,7 +84,7 @@ describe('postAmendmentStatus', () => {
     const { req, res } = generateHttpMocks({ auditDetails });
 
     // Act
-    await postAmendmentStatus(req, res);
+    await patchAmendmentStatus(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
@@ -101,7 +101,7 @@ describe('postAmendmentStatus', () => {
     const { req, res } = generateHttpMocks({ auditDetails });
 
     // Act
-    await postAmendmentStatus(req, res);
+    await patchAmendmentStatus(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(status);
@@ -120,7 +120,7 @@ describe('postAmendmentStatus', () => {
     const { req, res } = generateHttpMocks({ auditDetails });
 
     // Act
-    await postAmendmentStatus(req, res);
+    await patchAmendmentStatus(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
