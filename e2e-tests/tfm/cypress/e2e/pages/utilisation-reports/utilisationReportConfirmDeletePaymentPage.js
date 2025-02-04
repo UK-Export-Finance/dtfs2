@@ -1,7 +1,7 @@
 const utilisationReportConfirmDeletePaymentPage = {
-  selectNoRadio: () => cy.get('input[type=radio][value="no"]').click(),
-  selectYesRadio: () => cy.get('input[type=radio][value="yes"]').click(),
-  clickContinueButton: () => cy.get('button:contains("Continue")').click(),
+  noRadio: () => cy.get('input[type=radio][value="no"]'),
+  yesRadio: () => cy.get('input[type=radio][value="yes"]'),
+  continueButton: () => cy.get('button:contains("Continue")'),
 };
 
 module.exports = { utilisationReportConfirmDeletePaymentPage };
