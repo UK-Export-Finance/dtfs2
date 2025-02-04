@@ -40,7 +40,7 @@ describe('PortalFacilityAmendmentService', () => {
     jest.useRealTimers();
   });
 
-  describe('updatePortalFacilityAmendment', () => {
+  describe('updatePortalFacilityAmendmentUserValues', () => {
     it('should call TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId with the correct params', async () => {
       // Act
       await PortalFacilityAmendmentService.updatePortalFacilityAmendmentUserValues({
