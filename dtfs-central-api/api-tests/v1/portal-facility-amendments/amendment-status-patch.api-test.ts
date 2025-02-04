@@ -29,7 +29,7 @@ const newDeal = aDeal({
   submissionType: DEAL_SUBMISSION_TYPE.AIN,
 }) as AnyObject;
 
-describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/status/:newStatus', () => {
+describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/status', () => {
   let dealId: string;
   let facilityId: string;
   let portalUserId: string;
