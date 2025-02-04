@@ -101,8 +101,8 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
     return this;
   }
 
-  public withEffectiveFrom(effectiveFrom: UnixTimestampSeconds) {
-    this.amendment.effectiveFrom = effectiveFrom;
+  public withEffectiveDate(effectiveDate: UnixTimestampSeconds) {
+    this.amendment.effectiveDate = effectiveDate;
     return this;
   }
 
