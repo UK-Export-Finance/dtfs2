@@ -61,17 +61,9 @@ export class TfmFacilitiesRepo {
       )
       .toArray();
 
-    const matchingPortalAmendments: PortalFacilityAmendment[] = [];
-
-    facilitiesOnDealWithPortalAmendments.forEach((facility) => {
-      if (facility.amendments) {
-        facility.amendments.forEach((amendment) => {
-          if (amendment?.type === AMENDMENT_TYPES.PORTAL && (!statuses || statuses.includes(amendment.status))) {
-            matchingPortalAmendments.push(amendment);
-          }
-        });
-      }
-    });
+    const matchingPortalAmendments = facilitiesOnDealWithPortalAmendments
+      .flatMap((facility) => facility.amendments || [])
+      .filter((amendment) => amendment?.type === AMENDMENT_TYPES.PORTAL && (!statuses || statuses.includes(amendment.status))) as PortalFacilityAmendment[];
 
     return matchingPortalAmendments;
   }

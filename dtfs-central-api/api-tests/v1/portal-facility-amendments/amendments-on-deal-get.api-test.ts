@@ -15,7 +15,7 @@ interface PortalAmendmentsResponse extends Response {
 const { DRAFT, ACKNOWLEDGED, READY_FOR_CHECKERS_APPROVAL, FURTHER_MAKERS_INPUT_REQUIRED } = PORTAL_AMENDMENT_STATUS;
 
 const generateUrl = ({ dealId, statuses }: { dealId: string; statuses?: PortalAmendmentStatus[] }): string => {
-  const statusFilterQuery = statuses ? `?statuses=${statuses.map((item) => item.replace(/ /g, '%20')).join(',')}` : '';
+  const statusFilterQuery = statuses ? `?statuses=${statuses.map((item) => encodeURI(item)).join(',')}` : '';
   return `/v1/portal/deals/${dealId}/amendments${statusFilterQuery}`;
 };
 

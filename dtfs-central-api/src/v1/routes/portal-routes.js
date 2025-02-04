@@ -660,7 +660,7 @@ portalRouter
  *           type: array
  *           items:
  *             type: string
- *             example: ['Draft']
+ *           example: ['Draft']
  *         required: false
  *         description: The portal amendment statuses to filter on
  *     responses:

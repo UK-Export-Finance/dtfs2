@@ -88,7 +88,7 @@ describe('getPortalAmendmentsByDealId', () => {
     });
   });
 
-  it(`should return ${HttpStatusCode.InternalServerError} if PTfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus throws an unknown error`, async () => {
+  it(`should return ${HttpStatusCode.InternalServerError} if TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus throws an unknown error`, async () => {
     // Arrange
     const message = 'Test error message';
     mockFindPortalAmendmentsByDealIdAndStatus.mockRejectedValue(new Error(message));
