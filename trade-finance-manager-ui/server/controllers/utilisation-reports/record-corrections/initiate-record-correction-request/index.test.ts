@@ -13,6 +13,12 @@ jest.mock('../../../../api');
 console.error = jest.fn();
 
 describe('controllers/utilisation-reports/record-corrections/initiate-record-correction-request', () => {
+  const correctableStatuses: FeeRecordStatus[] = [FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.TO_DO_AMENDED] as const;
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
   describe('validateRecordCorrectionRequestFeeSelections', () => {
     describe('when no checkboxes are selected', () => {
       const checkedCheckboxIds: PremiumPaymentsTableCheckboxId[] = [];
@@ -41,24 +47,21 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
       });
     });
 
-    describe.each(difference(Object.values(FEE_RECORD_STATUS), [FEE_RECORD_STATUS.TO_DO]))(
-      'when a checkbox in status %s is selected',
-      (status: FeeRecordStatus) => {
-        const checkboxId: PremiumPaymentsTableCheckboxId = `feeRecordIds-456-reportedPaymentsCurrency-GBP-status-${status}`;
-        const checkedCheckboxIds: PremiumPaymentsTableCheckboxId[] = [checkboxId];
+    describe.each(difference(Object.values(FEE_RECORD_STATUS), correctableStatuses))('when a checkbox in status %s is selected', (status: FeeRecordStatus) => {
+      const checkboxId: PremiumPaymentsTableCheckboxId = `feeRecordIds-456-reportedPaymentsCurrency-GBP-status-${status}`;
+      const checkedCheckboxIds: PremiumPaymentsTableCheckboxId[] = [checkboxId];
 
-        it(`should return '${INITIATE_RECORD_CORRECTION_ERROR_KEY.INVALID_STATUS}' error key`, () => {
-          // Act
-          const result = validateRecordCorrectionRequestFeeSelections(checkedCheckboxIds);
+      it(`should return '${INITIATE_RECORD_CORRECTION_ERROR_KEY.INVALID_STATUS}' error key`, () => {
+        // Act
+        const result = validateRecordCorrectionRequestFeeSelections(checkedCheckboxIds);
 
-          // Assert
-          expect(result).toEqual({ errorKey: INITIATE_RECORD_CORRECTION_ERROR_KEY.INVALID_STATUS, selectedFeeRecordId: null });
-        });
-      },
-    );
+        // Assert
+        expect(result).toEqual({ errorKey: INITIATE_RECORD_CORRECTION_ERROR_KEY.INVALID_STATUS, selectedFeeRecordId: null });
+      });
+    });
 
-    describe(`when a single checkbox in status ${FEE_RECORD_STATUS.TO_DO} is selected`, () => {
-      const checkedCheckboxIds: PremiumPaymentsTableCheckboxId[] = ['feeRecordIds-456-reportedPaymentsCurrency-GBP-status-TO_DO'];
+    describe.each(correctableStatuses)('when a single checkbox in status %s is selected', (status) => {
+      const checkedCheckboxIds: PremiumPaymentsTableCheckboxId[] = [`feeRecordIds-456-reportedPaymentsCurrency-GBP-status-${status}`];
 
       it(`should return selected fee record id`, () => {
         // Act
@@ -69,13 +72,13 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
       });
     });
 
-    describe(`when a single checkbox in status ${FEE_RECORD_STATUS.TO_DO} is selected but has multiple fee records in checkbox id`, () => {
-      const checkedCheckboxIds: PremiumPaymentsTableCheckboxId[] = ['feeRecordIds-456,789-reportedPaymentsCurrency-GBP-status-TO_DO'];
+    describe.each(correctableStatuses)('when a single checkbox in status %s is selected but has multiple fee records in checkbox id', (status) => {
+      const checkedCheckboxIds: PremiumPaymentsTableCheckboxId[] = [`feeRecordIds-456,789-reportedPaymentsCurrency-GBP-status-${status}`];
 
       it(`should throw an error`, () => {
         // Act + Assert
         expect(() => validateRecordCorrectionRequestFeeSelections(checkedCheckboxIds)).toThrow(
-          new Error(`Invalid premium payments checkbox id encountered for fee record at ${FEE_RECORD_STATUS.TO_DO} status ${checkedCheckboxIds[0]}`),
+          new Error(`Invalid premium payments checkbox id encountered for fee record at ${status} status ${checkedCheckboxIds[0]}`),
         );
       });
     });
@@ -143,42 +146,41 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
       });
     });
 
-    describe.each(difference(Object.values(FEE_RECORD_STATUS), [FEE_RECORD_STATUS.TO_DO]))(
-      'when a checkbox in status %s is selected',
-      (status: FeeRecordStatus) => {
-        const checkboxId: PremiumPaymentsTableCheckboxId = `feeRecordIds-456-reportedPaymentsCurrency-GBP-status-${status}`;
-        const requestBody = {
-          [checkboxId]: 'on',
-        };
+    describe.each(difference(Object.values(FEE_RECORD_STATUS), correctableStatuses))('when a checkbox in status %s is selected', (status: FeeRecordStatus) => {
+      const checkboxId: PremiumPaymentsTableCheckboxId = `feeRecordIds-456-reportedPaymentsCurrency-GBP-status-${status}`;
+      const requestBody = {
+        [checkboxId]: 'on',
+      };
 
-        const expectedCheckedCheckboxIds = {
-          [checkboxId]: true,
-        };
+      const expectedCheckedCheckboxIds = {
+        [checkboxId]: true,
+      };
 
-        it(`should redirect to premium payments page with '${INITIATE_RECORD_CORRECTION_ERROR_KEY.INVALID_STATUS}' error`, async () => {
-          // Arrange
-          const reportId = '123';
-          const { req, res } = httpMocks.createMocks<PostInitiateRecordCorrectionRequest>({
-            params: { reportId },
-            session: aRequestSession(),
-            body: requestBody,
-          });
-
-          // Act
-          await postInitiateRecordCorrectionRequest(req, res);
-
-          // Assert
-          expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}`);
-          expect(req.session.initiateRecordCorrectionRequestErrorKey).toEqual(INITIATE_RECORD_CORRECTION_ERROR_KEY.INVALID_STATUS);
-          expect(req.session.checkedCheckboxIds).toEqual(expectedCheckedCheckboxIds);
+      it(`should redirect to premium payments page with '${INITIATE_RECORD_CORRECTION_ERROR_KEY.INVALID_STATUS}' error`, async () => {
+        // Arrange
+        const reportId = '123';
+        const { req, res } = httpMocks.createMocks<PostInitiateRecordCorrectionRequest>({
+          params: { reportId },
+          session: aRequestSession(),
+          body: requestBody,
         });
-      },
-    );
 
-    describe(`when a single checkbox in status ${FEE_RECORD_STATUS.TO_DO} is selected`, () => {
+        // Act
+        await postInitiateRecordCorrectionRequest(req, res);
+
+        // Assert
+        expect(res._getRedirectUrl()).toEqual(`/utilisation-reports/${reportId}`);
+        expect(req.session.initiateRecordCorrectionRequestErrorKey).toEqual(INITIATE_RECORD_CORRECTION_ERROR_KEY.INVALID_STATUS);
+        expect(req.session.checkedCheckboxIds).toEqual(expectedCheckedCheckboxIds);
+      });
+    });
+
+    describe.each(correctableStatuses)('when a single checkbox in status %s is selected', (status) => {
       const selectedFeeRecordId = '456';
-      const requestBody: PremiumPaymentsTableCheckboxSelectionsRequestBody = {
-        [`feeRecordIds-${selectedFeeRecordId}-reportedPaymentsCurrency-GBP-status-TO_DO`]: 'on',
+      const checkboxId: PremiumPaymentsTableCheckboxId = `feeRecordIds-${selectedFeeRecordId}-reportedPaymentsCurrency-GBP-status-${status}`;
+
+      const requestBody = {
+        [checkboxId]: 'on',
       };
 
       it('should clear transient form data', async () => {
@@ -217,9 +219,11 @@ describe('controllers/utilisation-reports/record-corrections/initiate-record-cor
       });
     });
 
-    describe(`when a single checkbox in status ${FEE_RECORD_STATUS.TO_DO} is selected but has multiple fee records in checkbox id`, () => {
-      const requestBody: PremiumPaymentsTableCheckboxSelectionsRequestBody = {
-        'feeRecordIds-456,789-reportedPaymentsCurrency-GBP-status-TO_DO': 'on',
+    describe.each(correctableStatuses)('when a single checkbox in status %s is selected but has multiple fee records in checkbox id', (status) => {
+      const checkboxId: PremiumPaymentsTableCheckboxId = `feeRecordIds-456,789-reportedPaymentsCurrency-GBP-status-${status}`;
+
+      const requestBody = {
+        [checkboxId]: 'on',
       };
 
       it(`should render problem with service page`, async () => {

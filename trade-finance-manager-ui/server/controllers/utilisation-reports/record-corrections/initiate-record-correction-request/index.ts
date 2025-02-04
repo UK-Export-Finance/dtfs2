@@ -1,4 +1,4 @@
-import { CustomExpressRequest, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, isStatusToDoOrToDoAmended } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import axios from 'axios';
 import { PremiumPaymentsTableCheckboxSelectionsRequestBody } from '../../helpers';
@@ -48,14 +48,14 @@ export const validateRecordCorrectionRequestFeeSelections = (checkedCheckboxIds:
   const checkedCheckboxId = checkedCheckboxIds[0];
   const selectedCheckboxStatus = getFeeRecordStatusFromPremiumPaymentsCheckboxId(checkedCheckboxId);
 
-  if (selectedCheckboxStatus !== FEE_RECORD_STATUS.TO_DO) {
+  if (!isStatusToDoOrToDoAmended(selectedCheckboxStatus)) {
     return { errorKey: INITIATE_RECORD_CORRECTION_ERROR_KEY.INVALID_STATUS, selectedFeeRecordId: null };
   }
 
   const selectedFeeRecordIds = getFeeRecordIdsFromPremiumPaymentsCheckboxIds([checkedCheckboxId]);
 
   if (selectedFeeRecordIds.length !== 1) {
-    throw new Error(`Invalid premium payments checkbox id encountered for fee record at ${FEE_RECORD_STATUS.TO_DO} status ${checkedCheckboxId}`);
+    throw new Error(`Invalid premium payments checkbox id encountered for fee record at ${selectedCheckboxStatus} status ${checkedCheckboxId}`);
   }
 
   return { selectedFeeRecordId: selectedFeeRecordIds[0], errorKey: null };
