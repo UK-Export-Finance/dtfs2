@@ -1,40 +1,17 @@
-import { add } from 'date-fns';
 import relative from '../../../relativeURL';
 import { caseSubNavigation, continueButton, errorSummary } from '../../../partials';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
 import caseDealPage from '../../../pages/caseDealPage';
 import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { oneMonth, tomorrow, twoYearsAgo, yearWithZeroLetter } from '../../../../../../e2e-fixtures/dateConstants';
+import { oneMonth, tomorrow, yearWithZeroLetter } from '../../../../../../e2e-fixtures/dateConstants';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS } from '../../../../../../e2e-fixtures';
 import pages from '../../../pages';
 import { CURRENCY } from '../../../../../../e2e-fixtures/constants.fixture';
+import { calculateTestFacilityTenorValue } from '../../../../support/utils/facility-tenor';
 
 context('Amendments underwriting - add banks decision - proceed', () => {
-  /**
-   * The deal in the test is a BSS deal.
-   *
-   * The tenor is calculated using a SQL function used by MDM.
-   *
-   * In these tests, the mock start date is two years ago from today
-   * & the mock end date is a month from today.
-   *
-   * So in this case it boils down to the tenor being 25 months except for:
-   * - if expiry and commencement dates are the same date of month then you add one
-   * - if commencement is end of month and expiry is also end of month you add one
-   */
-  let facilityTenor = '25 months';
-
-  if (twoYearsAgo.date.getDate() === oneMonth.date.getDate()) {
-    facilityTenor = '26 months';
-  }
-
-  const isCommencementDateEndOfMonth = add(twoYearsAgo.date, { days: 1 }).getDate() === 1;
-  const isExpiryDateEndOFMonth = add(oneMonth.date, { days: 1 }).getDate() === 1;
-
-  if (isCommencementDateEndOfMonth && isExpiryDateEndOFMonth) {
-    facilityTenor = '26 months';
-  }
+  const facilityTenor = calculateTestFacilityTenorValue();
 
   const updatedFacilityTenor = '25 months';
 
