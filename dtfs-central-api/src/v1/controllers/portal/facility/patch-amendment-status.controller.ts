@@ -29,7 +29,8 @@ export const patchAmendmentStatus = async (req: PatchSubmitAmendmentToCheckerReq
         return res.status(HttpStatusCode.Ok).send(updatedAmendment);
       }
       default: {
-        throw new InvalidPayloadError('Invalid requested status update: newStatus');
+        // This error should never be thrown since the payload is validated by Zod middleware
+        throw new InvalidPayloadError(`Invalid requested status update: ${newStatus}`);
       }
     }
   } catch (error) {
@@ -38,11 +39,11 @@ export const patchAmendmentStatus = async (req: PatchSubmitAmendmentToCheckerReq
       return res.status(status).send({ status, message, code });
     }
 
-    console.error(`Error submitting amendment to checker on facilityId ${facilityId}: %o`, error);
+    console.error(`Error updating portal amendment status: %o`, error);
 
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
-      message: 'Unknown error occurred when submitting amendment to checker',
+      message: 'Unknown error occurred when updating portal amendment status',
     });
   }
 };

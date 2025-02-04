@@ -14,10 +14,10 @@ const mockUpdatedAmendment = { facilityId, dealId, type: AMENDMENT_TYPES.PORTAL,
 
 const mockSubmitPortalFacilityAmendmentToChecker = jest.fn();
 
-const generateHttpMocks = ({ auditDetails }: { auditDetails: unknown }) =>
+const generateHttpMocks = ({ auditDetails, newStatus }: { auditDetails: unknown; newStatus: string }) =>
   createMocks<PatchSubmitAmendmentToCheckerRequest>({
-    params: { facilityId, amendmentId, newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL },
-    body: { auditDetails, dealId },
+    params: { facilityId, amendmentId },
+    body: { auditDetails, dealId, newStatus },
   });
 
 describe('patchAmendmentStatus', () => {
@@ -31,7 +31,7 @@ describe('patchAmendmentStatus', () => {
   it(`should return ${HttpStatusCode.BadRequest} if the audit details are invalid`, async () => {
     // Arrange
     const auditDetails = { type: 'not a type' };
-    const { req, res } = generateHttpMocks({ auditDetails });
+    const { req, res } = generateHttpMocks({ auditDetails, newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL });
 
     // Act
     await patchAmendmentStatus(req, res);
@@ -45,13 +45,11 @@ describe('patchAmendmentStatus', () => {
     });
   });
 
-  it(`should return ${HttpStatusCode.BadRequest} if the new status is not ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}`, async () => {
+  it(`should return ${HttpStatusCode.BadRequest} if the new status is invalid`, async () => {
     // Arrange
     const invalidNewStatus = 'invalid status';
     const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
-    const { req, res } = generateHttpMocks({ auditDetails });
-
-    req.params.newStatus = invalidNewStatus;
+    const { req, res } = generateHttpMocks({ auditDetails, newStatus: invalidNewStatus });
 
     // Act
     await patchAmendmentStatus(req, res);
@@ -60,73 +58,77 @@ describe('patchAmendmentStatus', () => {
     expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
     expect(res._getData()).toEqual({
       status: HttpStatusCode.BadRequest,
-      message: `Invalid newStatus: "${invalidNewStatus}"`,
+      message: `Invalid requested status update: ${invalidNewStatus}`,
     });
   });
 
-  it('should call PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker with the correct params', async () => {
-    // Arrange
-    const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
-    const { req, res } = generateHttpMocks({ auditDetails });
+  describe(`when the newStatus is ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}`, () => {
+    const newStatus = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
 
-    // Act
-    await patchAmendmentStatus(req, res);
+    it('should call PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker with the correct params', async () => {
+      // Arrange
+      const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus });
 
-    // Assert
+      // Act
+      await patchAmendmentStatus(req, res);
 
-    expect(mockSubmitPortalFacilityAmendmentToChecker).toHaveBeenCalledTimes(1);
-    expect(mockSubmitPortalFacilityAmendmentToChecker).toHaveBeenCalledWith({ facilityId, amendmentId, dealId, auditDetails });
-  });
+      // Assert
 
-  it(`should return ${HttpStatusCode.Ok} and the updated amendment`, async () => {
-    // Arrange
-    const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
-    const { req, res } = generateHttpMocks({ auditDetails });
-
-    // Act
-    await patchAmendmentStatus(req, res);
-
-    // Assert
-    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-    expect(res._getData()).toEqual(mockUpdatedAmendment);
-  });
-
-  it('should return the correct status and body if PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker throws an api error', async () => {
-    // Arrange
-    const status = HttpStatusCode.Forbidden;
-    const message = 'Test error message';
-    mockSubmitPortalFacilityAmendmentToChecker.mockRejectedValue(new TestApiError({ status, message }));
-
-    const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
-    const { req, res } = generateHttpMocks({ auditDetails });
-
-    // Act
-    await patchAmendmentStatus(req, res);
-
-    // Assert
-    expect(res._getStatusCode()).toEqual(status);
-    expect(res._getData()).toEqual({
-      status,
-      message,
+      expect(mockSubmitPortalFacilityAmendmentToChecker).toHaveBeenCalledTimes(1);
+      expect(mockSubmitPortalFacilityAmendmentToChecker).toHaveBeenCalledWith({ facilityId, amendmentId, dealId, auditDetails });
     });
-  });
 
-  it(`should return ${HttpStatusCode.InternalServerError} if PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker throws an unknown error`, async () => {
-    // Arrange
-    const message = 'Test error message';
-    mockSubmitPortalFacilityAmendmentToChecker.mockRejectedValue(new Error(message));
+    it(`should return ${HttpStatusCode.Ok} and the updated amendment`, async () => {
+      // Arrange
+      const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus });
 
-    const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
-    const { req, res } = generateHttpMocks({ auditDetails });
+      // Act
+      await patchAmendmentStatus(req, res);
 
-    // Act
-    await patchAmendmentStatus(req, res);
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+      expect(res._getData()).toEqual(mockUpdatedAmendment);
+    });
 
-    // Assert
-    expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
-    expect(res._getData()).toEqual({
-      status: HttpStatusCode.InternalServerError,
-      message: 'Unknown error occurred when submitting amendment to checker',
+    it('should return the correct status and body if PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker throws an api error', async () => {
+      // Arrange
+      const status = HttpStatusCode.Forbidden;
+      const message = 'Test error message';
+      mockSubmitPortalFacilityAmendmentToChecker.mockRejectedValue(new TestApiError({ status, message }));
+
+      const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus });
+
+      // Act
+      await patchAmendmentStatus(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(status);
+      expect(res._getData()).toEqual({
+        status,
+        message,
+      });
+    });
+
+    it(`should return ${HttpStatusCode.InternalServerError} if PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker throws an unknown error`, async () => {
+      // Arrange
+      const message = 'Test error message';
+      mockSubmitPortalFacilityAmendmentToChecker.mockRejectedValue(new Error(message));
+
+      const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus });
+
+      // Act
+      await patchAmendmentStatus(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+      expect(res._getData()).toEqual({
+        status: HttpStatusCode.InternalServerError,
+        message: 'Unknown error occurred when updating portal amendment status',
+      });
     });
   });
 });
