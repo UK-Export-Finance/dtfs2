@@ -1,11 +1,11 @@
-import { ApiError, AUDIT_USER_TYPES, CustomExpressRequest, InvalidParameterError, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { ApiError, AUDIT_USER_TYPES, CustomExpressRequest, InvalidPayloadError, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
 import { PatchPortalFacilityAmendmentStatusPayload } from '../../../routes/middleware/payload-validation/validate-patch-portal-facility-amendment-status-payload';
 
-type PatchSubmitAmendmentToCheckerRequestParams = { facilityId: string; amendmentId: string; newStatus: string };
+type PatchSubmitAmendmentToCheckerRequestParams = { facilityId: string; amendmentId: string };
 export type PatchSubmitAmendmentToCheckerRequest = CustomExpressRequest<{
   params: PatchSubmitAmendmentToCheckerRequestParams;
   reqBody: PatchPortalFacilityAmendmentStatusPayload;
@@ -17,19 +17,21 @@ export type PatchSubmitAmendmentToCheckerRequest = CustomExpressRequest<{
  * @param res - response
  */
 export const patchAmendmentStatus = async (req: PatchSubmitAmendmentToCheckerRequest, res: Response) => {
-  const { facilityId, amendmentId, newStatus } = req.params;
-  const { auditDetails, dealId } = req.body;
+  const { facilityId, amendmentId } = req.params;
+  const { auditDetails, dealId, newStatus } = req.body;
 
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.PORTAL);
 
-    if (newStatus === PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL) {
-      const updatedAmendment = await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({ facilityId, amendmentId, dealId, auditDetails });
-
-      return res.status(HttpStatusCode.Ok).send(updatedAmendment);
+    switch (newStatus) {
+      case PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL: {
+        const updatedAmendment = await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({ facilityId, amendmentId, dealId, auditDetails });
+        return res.status(HttpStatusCode.Ok).send(updatedAmendment);
+      }
+      default: {
+        throw new InvalidPayloadError('Invalid requested status update: newStatus');
+      }
     }
-
-    throw new InvalidParameterError('newStatus', newStatus);
   } catch (error) {
     if (error instanceof ApiError) {
       const { status, message, code } = error;

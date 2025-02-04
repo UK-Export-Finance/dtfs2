@@ -623,7 +623,7 @@ portalRouter
 
 /**
  * @openapi
- * /facilities/:facilityId/amendments/:amendmentId:/status/:newStatus
+ * /facilities/:facilityId/amendments/:amendmentId:/status
  *   patch:
  *     summary: update a Portal GEF facility amendment status
  *     tags: [Portal - Amendments]
@@ -641,13 +641,6 @@ portalRouter
  *           type: string
  *         required: true
  *         description: Amendment ID to get
- *       - in: path
- *         name: newStatus
- *         schema:
- *           type: string
- *           enum: ["Ready for checker's approval"]
- *         required: true
- *         description: Status update to make
  *     requestBody:
  *       required: true
  *       content:
@@ -661,6 +654,9 @@ portalRouter
  *               auditDetails:
  *                 type: object
  *                 $ref: '#/definitions/PortalAuditDetails'
+ *               newStatus
+ *                  type: string
+ *                  enum: ["Ready for checker's approval"]
  *     responses:
  *       200:
  *         description: OK
@@ -675,7 +671,7 @@ portalRouter
  *         description: Conflict - amendment cannot currently be updated to the given status
  */
 portalRouter
-  .route('/facilities/:facilityId/amendments/:amendmentId/status/:newStatus')
+  .route('/facilities/:facilityId/amendments/:amendmentId/status')
   .patch(
     validatePortalFacilityAmendmentsEnabled,
     validation.mongoIdValidation('facilityId'),
