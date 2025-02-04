@@ -139,58 +139,6 @@ describe('handleFeeRecordGenerateKeyingDataEvent', () => {
       expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
     });
 
-    /**
-     * This test is skipped because fixed fee adjustments are temporarily turned off.
-     *
-     * TODO FN-3639: Remove this skip and reenable mocks.
-     */
-    it.skip(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the fixed fee adjustment is greater than zero`, async () => {
-      // Arrange
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport())
-        .withStatus(FEE_RECORD_STATUS.MATCH)
-        .withFeesPaidToUkefForThePeriod(0)
-        .build();
-      jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(0);
-      // jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(0.01);
-
-      // Act
-      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
-        transactionEntityManager: mockEntityManager,
-        isFinalFeeRecordForFacility,
-        reportPeriod: aReportPeriod(),
-        requestSource,
-      });
-
-      // Assert
-      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
-    });
-
-    /**
-     * This test is skipped because fixed fee adjustments are temporarily turned off.
-     *
-     * TODO FN-3639: Remove this skip and reenable mocks.
-     */
-    it.skip(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the fixed fee adjustment is less than zero`, async () => {
-      // Arrange
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport())
-        .withStatus(FEE_RECORD_STATUS.MATCH)
-        .withFeesPaidToUkefForThePeriod(0)
-        .build();
-      jest.mocked(calculatePrincipalBalanceAdjustment).mockReturnValue(0);
-      // jest.mocked(calculateFixedFeeAdjustment).mockReturnValue(-0.01);
-
-      // Act
-      await handleFeeRecordGenerateKeyingDataEvent(feeRecord, {
-        transactionEntityManager: mockEntityManager,
-        isFinalFeeRecordForFacility,
-        reportPeriod: aReportPeriod(),
-        requestSource,
-      });
-
-      // Assert
-      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
-    });
-
     it(`updates the fee record status to '${FEE_RECORD_STATUS.READY_TO_KEY}' if the principal balance adjustment is greater than zero`, async () => {
       // Arrange
       const feeRecord = FeeRecordEntityMockBuilder.forReport(aReconciliationInProgressReport())
