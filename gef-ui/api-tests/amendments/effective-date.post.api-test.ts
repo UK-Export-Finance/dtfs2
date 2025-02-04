@@ -55,7 +55,7 @@ describe(`POST ${url}`, () => {
         .withDealId(dealId)
         .withFacilityId(facilityId)
         .withAmendmentId(amendmentId)
-        .withEffectiveFrom(getUnixTime(today))
+        .withEffectiveDate(getUnixTime(today))
         .build(),
     );
   });
@@ -74,9 +74,9 @@ describe(`POST ${url}`, () => {
     it('should redirect to /not-found', async () => {
       // Arrange
       const body = {
-        'effective-from-day': format(today, 'd'),
-        'effective-from-month': format(today, 'M'),
-        'effective-from-year': format(today, 'yyyy'),
+        'effective-date-day': format(today, 'd'),
+        'effective-date-month': format(today, 'M'),
+        'effective-date-year': format(today, 'yyyy'),
       };
 
       // Act
@@ -96,9 +96,9 @@ describe(`POST ${url}`, () => {
     it('should redirect to /not-found', async () => {
       // Arrange
       const body = {
-        'effective-from-day': format(today, 'd'),
-        'effective-from-month': format(today, 'M'),
-        'effective-from-year': format(today, 'yyyy'),
+        'effective-date-day': format(today, 'd'),
+        'effective-date-month': format(today, 'M'),
+        'effective-date-year': format(today, 'yyyy'),
       };
 
       // Act
@@ -119,9 +119,9 @@ describe(`POST ${url}`, () => {
       makeRequestWithHeaders: (headers: Headers) =>
         post(
           {
-            'effective-from-day': format(today, 'd'),
-            'effective-from-month': format(today, 'M'),
-            'effective-from-year': format(today, 'yyyy'),
+            'effective-date-day': format(today, 'd'),
+            'effective-date-month': format(today, 'M'),
+            'effective-date-year': format(today, 'yyyy'),
           },
           headers,
         ).to(url),
@@ -134,9 +134,9 @@ describe(`POST ${url}`, () => {
       mockGetFacility.mockResolvedValue({ details: undefined });
 
       const body = {
-        'effective-from-day': format(today, 'd'),
-        'effective-from-month': format(today, 'M'),
-        'effective-from-year': format(today, 'yyyy'),
+        'effective-date-day': format(today, 'd'),
+        'effective-date-month': format(today, 'M'),
+        'effective-date-year': format(today, 'yyyy'),
       };
 
       // Act
@@ -151,9 +151,9 @@ describe(`POST ${url}`, () => {
       mockGetApplication.mockResolvedValue(undefined);
 
       const body = {
-        'effective-from-day': format(today, 'd'),
-        'effective-from-month': format(today, 'M'),
-        'effective-from-year': format(today, 'yyyy'),
+        'effective-date-day': format(today, 'd'),
+        'effective-date-month': format(today, 'M'),
+        'effective-date-year': format(today, 'yyyy'),
       };
 
       // Act
@@ -164,9 +164,9 @@ describe(`POST ${url}`, () => {
       expect(response.headers.location).toEqual('/not-found');
     });
 
-    it('should render date amendment effective from page with errors if effective from is invalid', async () => {
+    it('should render date amendment effective date page with errors if effective date is invalid', async () => {
       // Arrange
-      const body = { 'effective-from-day': '1000', 'effective-from-month': '100', 'effective-from-year': '100' };
+      const body = { 'effective-date-day': '1000', 'effective-date-month': '100', 'effective-date-year': '100' };
 
       // Act
       const response = await postWithSessionCookie(body, sessionCookie);
@@ -177,9 +177,9 @@ describe(`POST ${url}`, () => {
       expect(response.text).toContain('Date amendment effective from must be a real date');
     });
 
-    it('should render date amendment effective from page with errors if effective from is not provided', async () => {
+    it('should render date amendment effective date page with errors if effective date is not provided', async () => {
       // Arrange
-      const body = { 'effective-from-day': '', 'effective-from-month': '', 'effective-from-year': '' };
+      const body = { 'effective-date-day': '', 'effective-date-month': '', 'effective-date-year': '' };
 
       // Act
       const response = await postWithSessionCookie(body, sessionCookie);
@@ -190,12 +190,12 @@ describe(`POST ${url}`, () => {
       expect(response.text).toContain('Enter the date amendment effective from');
     });
 
-    it('should redirect to the next page if the effective from is valid', async () => {
+    it('should redirect to the next page if the effective date is valid', async () => {
       // Arrange
       const body = {
-        'effective-from-day': format(today, 'd'),
-        'effective-from-month': format(today, 'M'),
-        'effective-from-year': format(today, 'yyyy'),
+        'effective-date-day': format(today, 'd'),
+        'effective-date-month': format(today, 'M'),
+        'effective-date-year': format(today, 'yyyy'),
       };
 
       // Act
@@ -213,9 +213,9 @@ describe(`POST ${url}`, () => {
       mockGetApplication.mockRejectedValue(new Error('test error'));
 
       const body = {
-        'effective-from-day': format(today, 'd'),
-        'effective-from-month': format(today, 'M'),
-        'effective-from-year': format(today, 'yyyy'),
+        'effective-date-day': format(today, 'd'),
+        'effective-date-month': format(today, 'M'),
+        'effective-date-year': format(today, 'yyyy'),
       };
 
       // Act
@@ -231,9 +231,9 @@ describe(`POST ${url}`, () => {
       mockGetFacility.mockRejectedValue(new Error('test error'));
 
       const body = {
-        'effective-from-day': format(today, 'd'),
-        'effective-from-month': format(today, 'M'),
-        'effective-from-year': format(today, 'yyyy'),
+        'effective-date-day': format(today, 'd'),
+        'effective-date-month': format(today, 'M'),
+        'effective-date-year': format(today, 'yyyy'),
       };
 
       // Act
@@ -249,9 +249,9 @@ describe(`POST ${url}`, () => {
       mockUpdateAmendment.mockRejectedValue(new Error('test error'));
 
       const body = {
-        'effective-from-day': format(today, 'd'),
-        'effective-from-month': format(today, 'M'),
-        'effective-from-year': format(today, 'yyyy'),
+        'effective-date-day': format(today, 'd'),
+        'effective-date-month': format(today, 'M'),
+        'effective-date-year': format(today, 'yyyy'),
       };
 
       // Act
