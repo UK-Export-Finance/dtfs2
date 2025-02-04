@@ -1,5 +1,5 @@
 import { AxiosError, HttpStatusCode } from 'axios';
-import { InvalidDealIdError, InvalidFacilityIdError, MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
+import { InvalidDealIdError, InvalidFacilityIdError, MOCK_COMPANY_REGISTRATION_NUMBERS, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import Axios from '../axios';
 import api from '../api';
 import CONSTANTS from '../../constants';
@@ -492,5 +492,38 @@ describe('updateAmendment()', () => {
 
     // Assert
     await expect(returned).rejects.toThrow(InvalidFacilityIdError);
+  });
+});
+
+describe('getAmendmentsOnDeal()', () => {
+  it(`should return the found amendments`, async () => {
+    // Arrange
+    const mockAmendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().build();
+    Axios.get.mockReturnValue(Promise.resolve({ data: [mockAmendment] }));
+
+    // Act
+    const response = await api.getAmendmentsOnDeal({ dealId: validMongoId, userToken });
+
+    // Assert
+    expect(response).toEqual([mockAmendment]);
+  });
+
+  it('should throw an error if there is an api error', async () => {
+    // Arrange
+    Axios.get.mockReturnValue(Promise.reject(new AxiosError()));
+
+    // Act
+    const returned = api.getAmendmentsOnDeal({ dealId: validMongoId, statuses: [PORTAL_AMENDMENT_STATUS.DRAFT], userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow(AxiosError);
+  });
+
+  it.each(invalidMongoIdTestCases)('should throw an error when given an invalid facility Id', async (invalidMongoId) => {
+    // Act
+    const returned = api.getAmendmentsOnDeal({ dealId: invalidMongoId, userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow(InvalidDealIdError);
   });
 });

@@ -16,4 +16,5 @@ module.exports = {
   getAmendment: jest.fn(),
   upsertAmendment: jest.fn(),
   updateAmendment: jest.fn(),
+  getAmendmentsOnDeal: jest.fn(),
 };
