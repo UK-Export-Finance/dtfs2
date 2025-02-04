@@ -14,9 +14,10 @@ const options = {
   algorithms: ['RS256'],
 };
 
+// TODO replace with zod parsing
 /**
  * @param {import('@ukef/dtfs2-common').TfmUser} user - The user
- * @returns {import('../../../types/tfm-session-user').TfmSessionUser} The user with confidential data removed
+ * @returns {import('@ukef/dtfs2-common').TfmSessionUser} The user with confidential data removed
  */
 const sanitize = (user) => ({
   username: user.username,

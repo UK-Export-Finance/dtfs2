@@ -8,5 +8,4 @@ export const aCreateTfmUserRequest = (): CreateTfmUserRequest => ({
   timezone: 'Europe/London',
   firstName: 'a-first-name',
   lastName: 'a-last-name',
-  lastLogin: Date.now(),
 });

@@ -1,5 +1,5 @@
+import { TfmSessionUser } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
-import { TfmSessionUser } from '../../src/types/tfm/tfm-session-user';
 
 export const aTfmSessionUser = (): TfmSessionUser => ({
   username: 'test-user',

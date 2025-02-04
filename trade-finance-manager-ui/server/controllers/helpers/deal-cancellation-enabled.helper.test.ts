@@ -1,4 +1,4 @@
-import { DEAL_SUBMISSION_TYPE, TEAM_IDS, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
+import { DEAL_SUBMISSION_TYPE, TEAM_IDS, TFM_DEAL_CANCELLATION_STATUS, TfmSessionUser } from '@ukef/dtfs2-common';
 import {
   canDealBeCancelled,
   canSubmissionTypeBeCancelled,
@@ -6,7 +6,6 @@ import {
   isDealCancellationInDraft,
   isDealCancellationEnabled,
 } from './deal-cancellation-enabled.helper';
-import { TfmSessionUser } from '../../types/tfm-session-user';
 
 const pimUser = { teams: [TEAM_IDS.PIM] } as TfmSessionUser;
 const nonPimUser = { teams: [TEAM_IDS.UNDERWRITERS] } as TfmSessionUser;

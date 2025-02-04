@@ -1,5 +1,4 @@
-import { TEAM_IDS } from '@ukef/dtfs2-common';
-import { TfmSessionUser } from '../../../types/tfm-session-user';
+import { TEAM_IDS, TfmSessionUser } from '@ukef/dtfs2-common';
 
 /**
  * returns true if user is in PDC_RECONCILE team
