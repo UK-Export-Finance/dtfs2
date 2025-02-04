@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { asString, isNonEmptyString, isTfmPaymentReconciliationFeatureFlagEnabled } from '@ukef/dtfs2-common';
+import { asString, isNonEmptyString } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { validateSearchInput } from './search-input-validator';
@@ -104,7 +104,6 @@ export const getFindReportsByYear = async (req: Request, res: Response) => {
     const { bankName, year, reports } = await api.getReportSummariesByBankAndYear(userToken, bankIdAsString, yearAsString);
 
     const reportSummaryItemsViewModel = reports.map(getFindReportSummaryItemViewModel);
-    const isTfmPaymentReconciliationFeatureEnabled = isTfmPaymentReconciliationFeatureFlagEnabled();
 
     const viewModel: UtilisationReportsByBankAndYearViewModel = {
       user,
@@ -112,7 +111,6 @@ export const getFindReportsByYear = async (req: Request, res: Response) => {
       bankName,
       year,
       reports: reportSummaryItemsViewModel,
-      isTfmPaymentReconciliationFeatureFlagEnabled: isTfmPaymentReconciliationFeatureEnabled,
     };
 
     return res.render(utilisationReportsByBankAndYearResultsTemplate, viewModel);

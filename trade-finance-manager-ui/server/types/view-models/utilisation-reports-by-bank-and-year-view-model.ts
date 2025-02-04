@@ -11,5 +11,4 @@ export type UtilisationReportsByBankAndYearViewModel = BaseViewModel & {
   bankName: string;
   year: string;
   reports: FindReportSummaryItemViewModel[];
-  isTfmPaymentReconciliationFeatureFlagEnabled: boolean;
 };

@@ -1,13 +1,5 @@
 import { endOfDay, format, isPast, isSameMonth, parseISO, subMonths } from 'date-fns';
-import {
-  IsoMonthStamp,
-  REPORT_NOT_RECEIVED,
-  ReportPeriod,
-  UtilisationReportStatus,
-  getFormattedReportPeriodWithShortMonth,
-  isEqualMonthAndYear,
-  isTfmPaymentReconciliationFeatureFlagEnabled,
-} from '@ukef/dtfs2-common';
+import { IsoMonthStamp, REPORT_NOT_RECEIVED, ReportPeriod, UtilisationReportStatus, isEqualMonthAndYear } from '@ukef/dtfs2-common';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../types/utilisation-reports';
 import { getReportDueDate } from '../../../services/utilisation-report-service';
 import api from '../../../api';
@@ -51,24 +43,6 @@ const getSummaryItemViewModel = (apiItem: UtilisationReportReconciliationSummary
 };
 
 /**
- * Get distinct report periods by start month
- * @param reportPeriods - The report periods
- * @returns The report periods list filtered to distinct report periods
- */
-const getDistinctReportPeriodsByStartMonth = (reportPeriods: ReportPeriod[]): ReportPeriod[] => {
-  const yearMonthConcatenatedSet = new Set<number>();
-  const distinctPeriods: ReportPeriod[] = [];
-  reportPeriods.forEach((period) => {
-    const yearMonthConcatenated = period.start.month + period.start.year * 100;
-    if (!yearMonthConcatenatedSet.has(yearMonthConcatenated)) {
-      yearMonthConcatenatedSet.add(yearMonthConcatenated);
-      distinctPeriods.push(period);
-    }
-  });
-  return distinctPeriods;
-};
-
-/**
  * Get the report due date text for the given report due date
  * @param reportDueDate - The report due date
  * @returns The due date text
@@ -77,22 +51,6 @@ export const getDueDateText = (reportDueDate: Date) => {
   const reportIsPastDue = isPast(endOfDay(reportDueDate));
   const formattedReportDueDate = format(reportDueDate, 'd MMMM yyyy');
   return `Reports${reportIsPastDue ? ' were ' : ' '}due to be received by ${formattedReportDueDate}.`;
-};
-
-/**
- * Get report period heading with all periods
- * @param submissionMonth - The submission month
- * @param reportPeriods - List of report periods
- * @returns Report period heading with the report periods listed
- */
-const getReportPeriodHeadingWithAllPeriods = (submissionMonth: IsoMonthStamp, reportPeriods: ReportPeriod[]) => {
-  const isCurrentSubmissionMonth = isSameMonth(new Date(submissionMonth), new Date());
-
-  const formattedReportPeriods = reportPeriods.map((reportPeriod) => getFormattedReportPeriodWithShortMonth(reportPeriod, true)).join(' and ');
-
-  return `${
-    isCurrentSubmissionMonth ? BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.CURRENT_PERIOD : BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.OPEN_PERIOD
-  }: ${formattedReportPeriods}`;
 };
 
 /**
@@ -118,10 +76,8 @@ const getReportPeriodHeadingWithPeriodEnd = (submissionMonth: IsoMonthStamp) => 
  * @param reportPeriods - the report periods
  * @returns The report period heading
  */
-export const getReportPeriodHeading = (submissionMonth: IsoMonthStamp, reportPeriods: ReportPeriod[]) => {
-  return isTfmPaymentReconciliationFeatureFlagEnabled()
-    ? getReportPeriodHeadingWithPeriodEnd(submissionMonth)
-    : getReportPeriodHeadingWithAllPeriods(submissionMonth, reportPeriods);
+export const getReportPeriodHeading = (submissionMonth: IsoMonthStamp) => {
+  return getReportPeriodHeadingWithPeriodEnd(submissionMonth);
 };
 
 /**
@@ -148,12 +104,11 @@ export const getReportReconciliationSummariesViewModel = async (
 
   return summariesApiResponse.map(({ items: apiItems, submissionMonth }) => {
     const reportDueDate = getReportDueDate(bankHolidays, submissionMonth);
-    const distinctReportPeriods = getDistinctReportPeriodsByStartMonth(apiItems.map((item) => item.reportPeriod));
 
     return {
       items: apiItems.map(getSummaryItemViewModel),
       submissionMonth,
-      reportPeriodHeading: getReportPeriodHeading(submissionMonth, distinctReportPeriods),
+      reportPeriodHeading: getReportPeriodHeading(submissionMonth),
       dueDateText: getDueDateText(reportDueDate),
     };
   });

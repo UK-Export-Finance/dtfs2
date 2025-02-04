@@ -41,7 +41,7 @@ describe(component, () => {
     process.env = originalProcessEnv;
   });
 
-  const getWrapper = ({ isTfmPaymentReconciliationFeatureFlagEnabled } = {}) => {
+  const getWrapper = () => {
     const getReportPeriod = (month) => {
       return {
         start: {
@@ -75,7 +75,6 @@ describe(component, () => {
     const params = {
       user: MOCK_TFM_SESSION_USER,
       reports: mockReports,
-      isTfmPaymentReconciliationFeatureFlagEnabled: isTfmPaymentReconciliationFeatureFlagEnabled ?? false,
     };
     return render(params);
   };
@@ -90,29 +89,8 @@ describe(component, () => {
     wrapper.expectElement(`${tableSelector} thead th:contains("Reported fees left to reconcile")`).toExist();
   });
 
-  it('should render the table data with no links to the utilisation report reconciliation for bank page when the feature is disabled', async () => {
-    const wrapper = await getWrapper({ isTfmPaymentReconciliationFeatureFlagEnabled: false });
-    const { reports } = wrapper.params;
-
-    reports.forEach((report) => {
-      wrapper.expectElement(`td:contains("${report.formattedReportPeriod}")`).toExist();
-      wrapper.expectElement(`td > a`).notToExist();
-
-      wrapper.expectElement(`td:contains("${report.displayStatus}")`).toExist();
-      if (report.formattedDateUploaded) {
-        wrapper.expectElement(`td:contains("${report.formattedDateUploaded}")`).toExist();
-      }
-      if (report.totalFeesReported) {
-        wrapper.expectElement(`td:contains("${report.totalFeesReported}")`).toExist();
-      }
-      if (report.reportedFeesLeftToReconcile) {
-        wrapper.expectElement(`td:contains("${report.reportedFeesLeftToReconcile}")`).toExist();
-      }
-    });
-  });
-
-  it('should render the table data with links to the utilisation report reconciliation for bank page when the feature is enabled', async () => {
-    const wrapper = await getWrapper({ isTfmPaymentReconciliationFeatureFlagEnabled: true });
+  it('should render the table data with links to the utilisation report reconciliation for bank page', async () => {
+    const wrapper = await getWrapper();
     const { reports } = wrapper.params;
 
     reports.forEach((report) => {
