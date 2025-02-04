@@ -1,5 +1,5 @@
 const partial = {
-  userLink: () => cy.get('[data-cy="header-user-link"]'),
+  userLink: () => cy.get('[data-cy="header-user-name"]'),
   signOutLink: () => cy.get('[data-cy="header-sign-out-link"]'),
   ukefLogo: () => cy.get('[data-cy="header-ukef-logo"]'),
   headerName: () => cy.get('[data-cy="header-TFM-header-name"]'),
