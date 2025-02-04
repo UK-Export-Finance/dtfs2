@@ -55,6 +55,10 @@ module.exports = (app) => ({
         to: async (url) => request(app).put(url).set(headers).send(data),
       }),
 
+      patch: (data) => ({
+        to: async (url) => request(app).patch(url).set(headers).send(data),
+      }),
+
       putMultipartForm: (data, files = []) => ({
         to: async (url) => {
           const apiRequest = request(app).put(url).set(headers);
@@ -88,6 +92,13 @@ module.exports = (app) => ({
   },
   put: (url, data, { headers } = {}) => {
     const requestInProgress = request(app).put(url);
+    if (headers) {
+      requestInProgress.set(headers);
+    }
+    return requestInProgress.send(data);
+  },
+  patch: (url, data, { headers } = {}) => {
+    const requestInProgress = request(app).patch(url);
     if (headers) {
       requestInProgress.set(headers);
     }

@@ -1,4 +1,4 @@
-import { getFormattedMonetaryValue } from './monetary-value';
+import { getFormattedMonetaryValue, getMonetaryValueAsNumber } from './monetary-value';
 
 describe('monetary value helpers', () => {
   describe('getFormattedMonetaryValue', () => {
@@ -48,6 +48,68 @@ describe('monetary value helpers', () => {
 
       // Assert
       expect(formattedValue).toEqual(expectedFormattedValue);
+    });
+
+    it('should format the number zero to 2 decimal places', () => {
+      // Arrange
+      const value = 0;
+      const expectedFormattedValue = '0.00';
+
+      // Act
+      const formattedValue = getFormattedMonetaryValue(value);
+
+      // Assert
+      expect(formattedValue).toEqual(expectedFormattedValue);
+    });
+  });
+
+  describe('getMonetaryValueAsNumber', () => {
+    it('should handle monetary string with commas', () => {
+      // Arrange
+      const value = '1,234,567.89';
+      const expectedValue = 1234567.89;
+
+      // Act
+      const result = getMonetaryValueAsNumber(value);
+
+      // Assert
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('should handle monetary string without commas', () => {
+      // Arrange
+      const value = '1234.56';
+      const expectedValue = 1234.56;
+
+      // Act
+      const result = getMonetaryValueAsNumber(value);
+
+      // Assert
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('should handle monetary string without decimal places', () => {
+      // Arrange
+      const value = '1,234,567';
+      const expectedValue = 1234567;
+
+      // Act
+      const result = getMonetaryValueAsNumber(value);
+
+      // Assert
+      expect(result).toEqual(expectedValue);
+    });
+
+    it('should handle monetary string with zero value', () => {
+      // Arrange
+      const value = '0.00';
+      const expectedValue = 0;
+
+      // Act
+      const result = getMonetaryValueAsNumber(value);
+
+      // Assert
+      expect(result).toEqual(expectedValue);
     });
   });
 });

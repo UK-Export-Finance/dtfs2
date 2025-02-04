@@ -5,5 +5,6 @@ describe('ENTRA_ID_USER_SCHEMA', () => {
   withEntraIdUserSchemaTests({
     schema: ENTRA_ID_USER_SCHEMA,
     getTestObjectWithUpdatedParameter: (newValue: unknown) => newValue,
+    getUpdatedParameterFromParsedTestObject: (data) => data,
   });
 });

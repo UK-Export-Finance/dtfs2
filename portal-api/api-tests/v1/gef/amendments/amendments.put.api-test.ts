@@ -1,5 +1,12 @@
 import { ObjectId } from 'mongodb';
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, AnyObject, PortalFacilityAmendmentUserValues, PortalFacilityAmendmentWithUkefId, Role } from '@ukef/dtfs2-common';
+import {
+  PORTAL_AMENDMENT_STATUS,
+  AMENDMENT_TYPES,
+  AnyObject,
+  PortalFacilityAmendmentUserValues,
+  PortalFacilityAmendmentWithUkefId,
+  Role,
+} from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import app from '../../../../src/createApp';
 import testUserCache from '../../../api-test-users';
@@ -107,6 +114,19 @@ describe('/v1/gef/facilities/:facilityId/amendments', () => {
         expect(response.status).toEqual(HttpStatusCode.BadRequest);
       });
 
+      it(`should return a ${HttpStatusCode.BadRequest} response when the payload is invalid`, async () => {
+        // Arrange
+        const url = putAmendmentUrl({ facilityId: validFacilityId });
+
+        const invalidPayload = { dealId, amendment: { changeCoverEndDate: 'yes' } };
+
+        // Act
+        const response = await as(aMaker).put(invalidPayload).to(url);
+
+        // Assert
+        expect(response.status).toEqual(HttpStatusCode.BadRequest);
+      });
+
       it(`should return a ${HttpStatusCode.Ok} response and the amendment for an authenticated user`, async () => {
         const amendmentId = new ObjectId().toString();
         const facilityId = new ObjectId().toString();
@@ -120,7 +140,13 @@ describe('/v1/gef/facilities/:facilityId/amendments', () => {
           ukefFacilityId: '123',
           createdAt: 1702061978881,
           updatedAt: 1702061978881,
-          status: AMENDMENT_STATUS.IN_PROGRESS,
+          status: PORTAL_AMENDMENT_STATUS.DRAFT,
+          eligibilityCriteria: { version: 1, criteria: [] },
+          createdBy: {
+            username: aMaker.username,
+            name: aMaker.firstname,
+            email: aMaker.email,
+          },
         };
 
         jest.mocked(putPortalFacilityAmendmentMock).mockResolvedValue(amendment);

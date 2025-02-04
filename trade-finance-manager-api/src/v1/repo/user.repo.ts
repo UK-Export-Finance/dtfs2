@@ -57,7 +57,7 @@ export class UserRepo {
 
     const query = { email: emailRegex };
 
-    return await collection.findOne(query);
+    return collection.findOne(query);
   }
 
   /**

@@ -29,7 +29,7 @@ describe('controllers - unauthenticated auth (sso)', () => {
   });
 
   describe('postSsoRedirect', () => {
-    it('throws an error if body validation fails', () => {
+    it('should throw an error if body validation fails', () => {
       jest.mocked(isVerifiedPayload).mockReturnValue(false);
 
       expect(() => unauthenticatedAuthController.postSsoRedirect(req, res)).toThrow('Invalid payload from SSO redirect');

@@ -22,9 +22,6 @@ type AddToAnExistingPaymentRequest = CustomExpressRequest<{
   reqBody: PremiumPaymentsTableCheckboxSelectionsRequestBody;
 }>;
 
-const renderAddToAnExistingPaymentPage = (res: Response, context: AddToAnExistingPaymentViewModel) =>
-  res.render('utilisation-reports/add-to-an-existing-payment.njk', context);
-
 export const addToAnExistingPayment = async (req: AddToAnExistingPaymentRequest, res: Response) => {
   try {
     const { user, userToken } = asUserSession(req.session);
@@ -60,9 +57,10 @@ export const addToAnExistingPayment = async (req: AddToAnExistingPaymentRequest,
       errors,
       backLinkHref: getLinkToPremiumPaymentsTab(reportId, feeRecordIds),
     };
-    return renderAddToAnExistingPaymentPage(res, addToAnExistingPaymentViewModel);
+
+    return res.render('utilisation-reports/add-to-an-existing-payment.njk', addToAnExistingPaymentViewModel);
   } catch (error) {
-    console.error('Failed to add fees to an existing payment', error);
+    console.error('Failed to add fees to an existing payment: %o', error);
     return res.render('_partials/problem-with-service.njk', { user: req.session.user });
   }
 };

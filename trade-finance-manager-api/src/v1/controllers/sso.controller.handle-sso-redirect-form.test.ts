@@ -2,6 +2,7 @@ import httpMocks, { MockRequest, MockResponse } from 'node-mocks-http';
 import {
   anAuthorisationCodeRequest,
   anEntraIdAuthCodeRedirectResponseBody,
+  API_ERROR_CODE,
   AuditDetails,
   HandleSsoRedirectFormApiRequest,
   HandleSsoRedirectFormApiResponse,
@@ -66,7 +67,7 @@ describe('SsoController', () => {
           expect(res._getData()).toEqual({
             status: 400,
             message: "Failed to handle redirect form: Supplied auditDetails 'userType' must be 'system' (was 'tfm')",
-            code: 'INVALID_AUDIT_DETAILS',
+            code: API_ERROR_CODE.INVALID_AUDIT_DETAILS,
           });
         });
       });
@@ -89,7 +90,7 @@ describe('SsoController', () => {
           expect(res._getData()).toEqual({
             status: 400,
             message: "Failed to handle redirect form: Supplied auditDetails must contain a 'userType' property",
-            code: 'INVALID_AUDIT_DETAILS',
+            code: API_ERROR_CODE.INVALID_AUDIT_DETAILS,
           });
         });
       });
@@ -130,19 +131,12 @@ describe('SsoController', () => {
         // Act
         await ssoController.handleSsoRedirectForm(req, res);
 
-        // Assert
+        // Assert        ]
+        expect(handleRedirectMock).toHaveBeenCalledTimes(1);
         expect(handleRedirectMock).toHaveBeenCalledWith({
           authCodeResponse: req.body.authCodeResponse,
           originalAuthCodeUrlRequest: req.body.originalAuthCodeUrlRequest,
         });
-      });
-
-      it('should call handleRedirect once', async () => {
-        // Act
-        await ssoController.handleSsoRedirectForm(req, res);
-
-        // Assert
-        expect(handleRedirectMock).toHaveBeenCalledTimes(1);
       });
 
       describe('when handling the redirect is unsuccessful', () => {

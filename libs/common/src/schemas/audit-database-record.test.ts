@@ -5,5 +5,6 @@ describe('AUDIT_DATABASE_RECORD', () => {
   withAuditDatabaseRecordSchemaTests({
     schema: AUDIT_DATABASE_RECORD_SCHEMA,
     getTestObjectWithUpdatedParameter: (newValue) => newValue,
+    getUpdatedParameterFromParsedTestObject: (data) => data,
   });
 });

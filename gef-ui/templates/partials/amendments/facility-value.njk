@@ -8,26 +8,13 @@
   New facility value
 {%- endblock %}
 
-{% set headingHtml %}
-<header>
-  <span class="govuk-caption-l" data-cy="heading-caption">
-    {{ exporterName }}
-  </span>
-  <h1 class="govuk-label-wrapper" data-cy="page-heading">
-    <label class="govuk-label govuk-label--xl govuk-!-padding-bottom-3" for="facility-value">
-        New facility value
-      </label>
-  </h1>
-</header>
-{% endset %}
-
 {% block content %}
   {% if errors %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
       errorList: errors.errorSummary,
       attributes: {
-        'data-cy': 'error-summary'
+        "data-cy": "error-summary"
       },
       classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
     }) }}
@@ -37,7 +24,7 @@
     text: "Back",
     href: previousPage,
     attributes: {
-      'data-cy': 'back-link'
+      "data-cy": "back-link"
     }
   }) }}
 
@@ -45,24 +32,37 @@
     <div class="govuk-grid-column-three-quarters">
       <form method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="previousPage" value="{{ previousPage }}">
+
+        <h1 class="govuk-label-wrapper">
+          <span class="govuk-caption-l" data-cy="heading-caption">
+            {{ exporterName }}, {{ facilityType }} facility
+          </span>
+          <label class="govuk-heading-xl govuk-!-margin-bottom-6 govuk-!-margin-top-1" data-cy="page-heading" for="facilityValue">
+            New facility value
+          </label>
+        </h1>
 
         {{ govukInput({
-          id: "facility-value",
+          id: "facilityValue",
           classes: "govuk-input--width-10",
-          label: {
-            html: headingHtml,
-            isPageHeading: true
-          },
+          name: "facilityValue",
           value: facilityValue,
           prefix: {
             text: currencySymbol,
             attributes: {
-            'data-cy': 'facility-value-prefix'
-          }
+              "data-cy": "facility-value-prefix"
+            }
+          },
+          errorMessage: errors and errors.fieldErrors.facilityValue and {
+            text: errors.fieldErrors.facilityValue.text,
+            attributes: {
+              'data-cy': 'facility-value-inline-error'
+            }
           },
           spellcheck: false,
           attributes: {
-            'data-cy': 'facility-value'
+            "data-cy": "facility-value"
           }
         }) }}
 
@@ -70,11 +70,11 @@
           {{ govukButton({
             text: "Continue",
             attributes: {
-              'data-cy': 'continue-button'
+              "data-cy": "continue-button"
             }
           }) }}
 
-          <a href={{cancelUrl}}  data-cy="cancel-link" class="govuk-link">Cancel</a>
+          <a href="{{ cancelUrl }}"  data-cy="cancel-link" class="govuk-link">Cancel</a>
         </div>
       </form>
     </div>
