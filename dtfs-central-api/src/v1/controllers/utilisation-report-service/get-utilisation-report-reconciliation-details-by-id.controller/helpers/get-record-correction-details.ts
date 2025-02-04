@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { FeeRecordEntity, FeeRecordCorrectionSummary, mapReasonsToDisplayValues } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, FeeRecordCorrectionSummary, mapReasonsToDisplayValues, DATE_FORMATS } from '@ukef/dtfs2-common';
 import { getFormattedOldAndCorrectValues } from './get-formatted-old-and-correct-values';
 
 /**
@@ -39,7 +39,7 @@ export const getRecordCorrectionDetails = (feeRecords: FeeRecordEntity[]): FeeRe
         feeRecordId,
         exporter,
         formattedReasons,
-        formattedDateSent: format(dateRequested, 'dd MMM yyyy'),
+        formattedDateSent: format(dateRequested, DATE_FORMATS.DD_MMM_YYYY),
         formattedOldRecords,
         formattedCorrectRecords,
         isCompleted,
