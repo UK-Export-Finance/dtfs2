@@ -59,6 +59,8 @@ export const twelveMonthsOneDayAgo = getFormattedValues(sub(todayDate, { months:
 export const oneYearAgo = getFormattedValues(sub(todayDate, { years: 1 }));
 export const twoYearsAgo = getFormattedValues(sub(todayDate, { years: 2 }));
 
+export const addDays = (days) => getFormattedValues(add(todayDate, { days }));
+
 // Dates calculated from other values
 /**
  * This constant is used for calculating the deadline for issuing a facility with submission date three days ago.

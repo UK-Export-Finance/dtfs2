@@ -62,6 +62,18 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
   bankCommentary!: string | null;
 
   /**
+   * Bank team name
+   */
+  @Column({ type: 'nvarchar', length: '500' })
+  bankTeamName!: string;
+
+  /**
+   * Bank team emails
+   */
+  @Column({ type: 'nvarchar', length: '1000' })
+  bankTeamEmails!: string;
+
+  /**
    * The previous values of the fields of the fee record that the
    * correction is correcting
    */
@@ -97,6 +109,8 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
    * @param param.reasons - The reasons for the correction
    * @param param.additionalInfo - The user provided additional information
    * @param param.requestSource - The request source
+   * @param param.bankTeamName - The bank payment officer team name
+   * @param param.bankTeamEmails - The bank payment officer team email address array
    * @returns The fee record correction
    */
   static createRequestedCorrection({
@@ -105,6 +119,8 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
     reasons,
     additionalInfo,
     requestSource,
+    bankTeamName,
+    bankTeamEmails,
   }: CreateFeeRecordCorrectionParams): FeeRecordCorrectionEntity {
     const recordCorrection = new FeeRecordCorrectionEntity();
     recordCorrection.feeRecord = feeRecord;
@@ -113,6 +129,8 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
     recordCorrection.additionalInfo = additionalInfo;
     recordCorrection.isCompleted = false;
     recordCorrection.updateLastUpdatedBy(requestSource);
+    recordCorrection.bankTeamName = bankTeamName;
+    recordCorrection.bankTeamEmails = bankTeamEmails.join(',');
     return recordCorrection;
   }
 

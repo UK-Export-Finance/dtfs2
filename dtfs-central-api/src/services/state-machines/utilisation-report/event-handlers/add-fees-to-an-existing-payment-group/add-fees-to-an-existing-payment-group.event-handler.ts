@@ -33,29 +33,26 @@ const addSelectedFeeRecordsToPaymentGroup = async (
   payments: PaymentEntity[],
   requestSource: DbRequestSource,
 ): Promise<void> => {
-  await Promise.all(
-    payments.map(async (payment) => {
-      payment.updateWithAdditionalFeeRecords({
-        additionalFeeRecords: feeRecordsToAdd,
-        requestSource,
-      });
-      await transactionEntityManager.save(PaymentEntity, payment);
-    }),
-  );
+  for (const payment of payments) {
+    payment.updateWithAdditionalFeeRecords({
+      additionalFeeRecords: feeRecordsToAdd,
+      requestSource,
+    });
+    await transactionEntityManager.save(PaymentEntity, payment);
+  }
 
   const feeRecordStateMachines = feeRecordsToAdd.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
-  await Promise.all(
-    feeRecordStateMachines.map((stateMachine) =>
-      stateMachine.handleEvent({
-        type: 'PAYMENT_ADDED',
-        payload: {
-          transactionEntityManager,
-          feeRecordsAndPaymentsMatch,
-          requestSource,
-        },
-      }),
-    ),
-  );
+
+  for (const stateMachine of feeRecordStateMachines) {
+    await stateMachine.handleEvent({
+      type: 'PAYMENT_ADDED',
+      payload: {
+        transactionEntityManager,
+        feeRecordsAndPaymentsMatch,
+        requestSource,
+      },
+    });
+  }
 };
 
 /**
@@ -72,18 +69,17 @@ const updateExistingFeeRecordsInPaymentGroup = async (
   requestSource: DbRequestSource,
 ): Promise<void> => {
   const feeRecordStateMachines = feeRecordsToUpdate.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
-  await Promise.all(
-    feeRecordStateMachines.map((stateMachine) =>
-      stateMachine.handleEvent({
-        type: 'OTHER_FEE_ADDED_TO_PAYMENT_GROUP',
-        payload: {
-          transactionEntityManager,
-          feeRecordsAndPaymentsMatch,
-          requestSource,
-        },
-      }),
-    ),
-  );
+
+  for (const stateMachine of feeRecordStateMachines) {
+    await stateMachine.handleEvent({
+      type: 'OTHER_FEE_ADDED_TO_PAYMENT_GROUP',
+      payload: {
+        transactionEntityManager,
+        feeRecordsAndPaymentsMatch,
+        requestSource,
+      },
+    });
+  }
 };
 
 /**

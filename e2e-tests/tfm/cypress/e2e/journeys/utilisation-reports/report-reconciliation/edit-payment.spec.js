@@ -178,7 +178,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       cy.keyboardInput(cy.getInputByLabelText('Payment reference (optional)'), 'This is valid');
 
-      pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
+      pages.utilisationReportEditPaymentPage.saveChangesButton().click();
 
       getFeeRecordCheckbox(feeRecord.id).should('be.checked');
       getFeeRecordCheckbox(anotherFeeRecord.id).should('not.be.checked');
@@ -227,7 +227,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       cy.keyboardInput(cy.getInputByLabelText('Payment reference (optional)'), newPaymentReference);
 
-      pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
+      pages.utilisationReportEditPaymentPage.saveChangesButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
 
@@ -263,7 +263,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       cy.keyboardInput(cy.getInputByLabelText('Amount received'), '100');
 
-      pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
+      pages.utilisationReportEditPaymentPage.saveChangesButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
       cy.get('strong[data-cy="fee-record-status"]:contains("Does not match")').should('exist');
@@ -289,7 +289,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       cy.keyboardInput(cy.getInputByLabelText('Amount received'), '200');
 
-      pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
+      pages.utilisationReportEditPaymentPage.saveChangesButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
       cy.get('strong[data-cy="fee-record-status"]:contains("Does not match")').should('not.exist');
@@ -305,7 +305,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       cy.keyboardInput(cy.getInputByLabelText('Amount received'), '200');
 
-      pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
+      pages.utilisationReportEditPaymentPage.saveChangesButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}#premium-payments`));
     });
@@ -321,7 +321,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can edit payments`, () => {
 
       cy.keyboardInput(cy.getInputByLabelText('Amount received'), '200');
 
-      pages.utilisationReportEditPaymentPage.clickSaveChangesButton();
+      pages.utilisationReportEditPaymentPage.saveChangesButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}#payment-details`));
     });

@@ -1,8 +1,6 @@
 import { getFormattedReportPeriodWithLongMonth, mapReasonToDisplayValue, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { formatReasonsAsBulletedListForEmail, generateFeeRecordCorrectionRequestEmailParameters, sendFeeRecordCorrectionRequestEmails } from './helpers';
-import { aBank, aReportPeriod } from '../../../../../../test-helpers';
-import { getBankById } from '../../../../../repositories/banks-repo';
-import { NotFoundError } from '../../../../../errors';
+import { aReportPeriod } from '../../../../../../test-helpers';
 import externalApi from '../../../../../external-api/api';
 import EMAIL_TEMPLATE_IDS from '../../../../../constants/email-template-ids';
 
@@ -19,14 +17,7 @@ describe('post-fee-record-correction.controller helpers', () => {
   const firstPaymentOfficerEmail = 'officer-1@example.com';
   const secondPaymentOfficerEmail = 'officer-2@example.com';
   const teamName = 'Payment Officer Team';
-
-  const bank = {
-    ...aBank(),
-    paymentOfficerTeam: {
-      teamName,
-      emails: [firstPaymentOfficerEmail, secondPaymentOfficerEmail],
-    },
-  };
+  const teamEmails = [firstPaymentOfficerEmail, secondPaymentOfficerEmail];
 
   describe('formatReasonsAsBulletedListForEmail', () => {
     it('should format reasons as a bulleted list when there is a single reasons', () => {
@@ -61,15 +52,11 @@ describe('post-fee-record-correction.controller helpers', () => {
     const reasons: RecordCorrectionReason[] = [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT];
     const reportPeriod = aReportPeriod();
     const exporter = 'Test Exporter';
-    const bankId = '123';
     const requestedByUserEmail = 'user@example.com';
 
-    it('should generate email parameters', async () => {
-      // Arrange
-      jest.mocked(getBankById).mockResolvedValue(bank);
-
+    it('should generate email parameters', () => {
       // Act
-      const result = await generateFeeRecordCorrectionRequestEmailParameters(reasons, reportPeriod, exporter, bankId, requestedByUserEmail);
+      const result = generateFeeRecordCorrectionRequestEmailParameters(reasons, reportPeriod, exporter, requestedByUserEmail, teamName, teamEmails);
 
       // Assert
       expect(result).toEqual({
@@ -82,17 +69,6 @@ describe('post-fee-record-correction.controller helpers', () => {
         },
       });
     });
-
-    it('should throw a NotFoundError if the bank is not found', async () => {
-      // Arrange
-      jest.mocked(getBankById).mockResolvedValue(null);
-
-      // Act & Assert
-      await expect(generateFeeRecordCorrectionRequestEmailParameters(reasons, reportPeriod, exporter, bankId, requestedByUserEmail)).rejects.toThrow(
-        new NotFoundError(`Bank not found: ${bankId}`),
-      );
-      expect(console.error).toHaveBeenCalledWith('Bank not found: %s', bankId);
-    });
   });
 
   describe('sendFeeRecordCorrectionRequestEmails', () => {
@@ -101,16 +77,13 @@ describe('post-fee-record-correction.controller helpers', () => {
       const reasons: RecordCorrectionReason[] = [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT];
       const reportPeriod = aReportPeriod();
       const exporter = 'Potato exporter';
-      const bankId = '567';
       const requestedByUserEmail = 'tfm-user@email.com';
 
-      jest.mocked(getBankById).mockResolvedValue(bank);
-
       // Act
-      await sendFeeRecordCorrectionRequestEmails(reasons, reportPeriod, exporter, bankId, requestedByUserEmail);
+      await sendFeeRecordCorrectionRequestEmails(reasons, reportPeriod, exporter, requestedByUserEmail, teamName, teamEmails);
 
       // Assert
-      const { variables } = await generateFeeRecordCorrectionRequestEmailParameters(reasons, reportPeriod, exporter, bankId, requestedByUserEmail);
+      const { variables } = generateFeeRecordCorrectionRequestEmailParameters(reasons, reportPeriod, exporter, requestedByUserEmail, teamName, teamEmails);
       expect(externalApi.sendEmail).toHaveBeenCalledTimes(3);
       expect(externalApi.sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.FEE_RECORD_CORRECTION_REQUEST, firstPaymentOfficerEmail, variables);
       expect(externalApi.sendEmail).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.FEE_RECORD_CORRECTION_REQUEST, secondPaymentOfficerEmail, variables);
@@ -122,49 +95,23 @@ describe('post-fee-record-correction.controller helpers', () => {
       const reasons: RecordCorrectionReason[] = [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT];
       const reportPeriod = aReportPeriod();
       const exporter = 'Potato exporter';
-      const bankId = '567';
       const requestedByUserEmail = 'tfm-user@email.com';
 
-      jest.mocked(getBankById).mockResolvedValue(bank);
-
       // Act
-      const response = await sendFeeRecordCorrectionRequestEmails(reasons, reportPeriod, exporter, bankId, requestedByUserEmail);
+      const response = await sendFeeRecordCorrectionRequestEmails(reasons, reportPeriod, exporter, requestedByUserEmail, teamName, teamEmails);
 
       // Assert
-      const { emails } = await generateFeeRecordCorrectionRequestEmailParameters(reasons, reportPeriod, exporter, bankId, requestedByUserEmail);
+      const { emails } = generateFeeRecordCorrectionRequestEmailParameters(reasons, reportPeriod, exporter, requestedByUserEmail, teamName, teamEmails);
 
       expect(response).toEqual({ emails });
     });
 
-    it('should throw NotFoundError error if the bank cannot be found', async () => {
-      // Arrange
-      const bankId = '123';
-      jest.mocked(getBankById).mockResolvedValue(null);
-
-      const expectedError = new NotFoundError(`Bank not found: ${bankId}`);
-
-      // Act + Assert
-      await expect(sendFeeRecordCorrectionRequestEmails([], aReportPeriod(), 'test exporter', bankId, 'test@test.com')).rejects.toThrow(expectedError);
-      expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Bank not found: %s', bankId);
-    });
-
     it('should log and rethrow error if sending an email fails', async () => {
-      // Arrange
-      const bankId = '123';
-      jest.mocked(getBankById).mockResolvedValue({
-        ...aBank(),
-        paymentOfficerTeam: {
-          teamName,
-          emails: ['test1@test.com'],
-        },
-      });
-
       const error = new Error('Failed to send second email');
       jest.mocked(externalApi.sendEmail).mockResolvedValueOnce().mockRejectedValueOnce(error);
 
       // Act + Assert
-      await expect(sendFeeRecordCorrectionRequestEmails([], aReportPeriod(), 'test exporter', bankId, 'test2@test.com')).rejects.toThrow(error);
+      await expect(sendFeeRecordCorrectionRequestEmails([], aReportPeriod(), 'test exporter', 'test2@test.com', teamName, teamEmails)).rejects.toThrow(error);
       expect(console.error).toHaveBeenCalledWith('Error sending fee record correction request email: %o', error);
     });
   });
