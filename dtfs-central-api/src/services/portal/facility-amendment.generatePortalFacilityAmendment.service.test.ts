@@ -23,6 +23,8 @@ describe('PortalFacilityAmendmentService', () => {
   });
 
   describe('generatePortalFacilityAmendment', () => {
+    const completePortalFacilityAmendmentUserValues = aPortalFacilityAmendmentUserValues();
+
     const testCases: {
       description: string;
       amendment: PortalFacilityAmendmentUserValues;
@@ -119,8 +121,8 @@ describe('PortalFacilityAmendmentService', () => {
       },
       {
         description: 'when all values are provided it should return the amendment',
-        amendment: aPortalFacilityAmendmentUserValues(),
-        expectedResult: aPortalFacilityAmendmentUserValues(),
+        amendment: completePortalFacilityAmendmentUserValues,
+        expectedResult: completePortalFacilityAmendmentUserValues,
       },
     ];
 
