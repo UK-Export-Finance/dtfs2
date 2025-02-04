@@ -3,6 +3,8 @@ export * from './facility-stage';
 export * from './team-id';
 export * from './team';
 export * from './deal-cancellation-status';
+export * from './get-auth-code';
+export * from './entra-id';
 export * from './entra-id-user';
 export * from './create-tfm-user-request';
 export * from './update-tfm-user-request';
