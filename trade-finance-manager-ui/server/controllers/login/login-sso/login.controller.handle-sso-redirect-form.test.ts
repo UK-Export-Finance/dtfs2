@@ -63,7 +63,7 @@ describe('controllers - login (sso)', () => {
         it('logs an error', async () => {
           await loginController.handleSsoRedirectForm(req, res);
 
-          expect(consoleErrorMock).toHaveBeenCalledWith('Unable to redirect user after login: %O', expect.any(UserPartialLoginDataNotDefinedError));
+          expect(consoleErrorMock).toHaveBeenCalledWith('Unable to redirect the user after login %o', expect.any(UserPartialLoginDataNotDefinedError));
         });
 
         it('renders the problem with service page', async () => {
@@ -95,7 +95,7 @@ describe('controllers - login (sso)', () => {
         it('logs an error', async () => {
           await loginController.handleSsoRedirectForm(req, res);
 
-          expect(consoleErrorMock).toHaveBeenCalledWith('Unable to redirect user after login: %O', expect.any(InvalidPayloadError));
+          expect(consoleErrorMock).toHaveBeenCalledWith('Unable to redirect the user after login %o', expect.any(InvalidPayloadError));
         });
 
         it('renders the problem with service page', async () => {
@@ -140,7 +140,7 @@ describe('controllers - login (sso)', () => {
           it('logs an error', async () => {
             await loginController.handleSsoRedirectForm(req, res);
 
-            expect(consoleErrorMock).toHaveBeenCalledWith('Unable to redirect user after login: %O', thrownError);
+            expect(consoleErrorMock).toHaveBeenCalledWith('Unable to redirect the user after login %o', thrownError);
           });
 
           it('renders the problem with service page', async () => {
