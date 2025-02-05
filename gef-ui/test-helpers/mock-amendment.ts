@@ -1,4 +1,10 @@
-import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, AmendmentsEligibilityCriterionWithAnswer, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import {
+  PORTAL_AMENDMENT_STATUS,
+  AMENDMENT_TYPES,
+  AmendmentsEligibilityCriterionWithAnswer,
+  PortalFacilityAmendmentWithUkefId,
+  UnixTimestampSeconds,
+} from '@ukef/dtfs2-common';
 import { getUnixTime } from 'date-fns';
 
 export class PortalFacilityAmendmentWithUkefIdMockBuilder {
@@ -92,6 +98,11 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
   public withBankReviewDate(bankReviewDate: Date) {
     this.withIsUsingFacilityEndDate(false);
     this.amendment.bankReviewDate = bankReviewDate;
+    return this;
+  }
+
+  public withEffectiveDate(effectiveDate: UnixTimestampSeconds) {
+    this.amendment.effectiveDate = effectiveDate;
     return this;
   }
 

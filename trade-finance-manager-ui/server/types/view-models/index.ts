@@ -18,3 +18,4 @@ export * from './deal-cancellation/cancel-cancellation-view-model';
 export * from './deal-cancellation/check-details-view-model';
 export * from './record-correction';
 export * from './team-checking-view-model';
+export * from './problem-with-service-view-model';

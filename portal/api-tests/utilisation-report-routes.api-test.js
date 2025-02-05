@@ -171,4 +171,44 @@ describe('utilisation-report routes', () => {
       });
     });
   });
+
+  describe('GET /utilisation-reports/correction-log', () => {
+    const originalProcessEnv = { ...process.env };
+    const url = '/utilisation-reports/correction-log';
+
+    describe('when FF_FEE_RECORD_CORRECTION_ENABLED is set to `true`', () => {
+      beforeAll(() => {
+        process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'true';
+      });
+
+      afterAll(() => {
+        process.env = { ...originalProcessEnv };
+      });
+
+      withRoleValidationApiTests({
+        makeRequestWithHeaders: (headers) => get(url, {}, headers),
+        whitelistedRoles: [ROLES.PAYMENT_REPORT_OFFICER],
+        successCode: HttpStatusCode.Ok,
+        disableHappyPath: true,
+      });
+    });
+
+    describe('when FF_FEE_RECORD_CORRECTION_ENABLED is set to `false`', () => {
+      beforeAll(() => {
+        process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'false';
+      });
+
+      afterAll(() => {
+        process.env = { ...originalProcessEnv };
+      });
+
+      it(`should redirect to "/not-found"`, async () => {
+        // Act
+        const response = await get(url);
+
+        // Assert
+        expect(response.headers.location).toEqual('/not-found');
+      });
+    });
+  });
 });

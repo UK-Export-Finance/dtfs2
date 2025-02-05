@@ -81,10 +81,10 @@ context('Correction sent page - Fee record correction feature flag enabled', () 
       cy.assertText(correctionSent.ukefNotifiedText(), 'UKEF will be notified via email that a record has been updated.');
     });
 
-    it('should redirect to the Report GEF utilisation and fees paid when continue is clicked', () => {
+    it('should redirect to the report upload page when continue is clicked', () => {
       cy.clickContinueButton();
 
-      cy.assertText(mainHeading(), 'Report GEF utilisation and fees');
+      cy.url().should('eq', relative('/utilisation-report-upload'));
     });
   });
 });

@@ -9,16 +9,12 @@
 {%- endblock %}
 
 {% set headingHtml %}
-<header>
-  <span class="govuk-caption-l" data-cy="heading-caption">
-    {{ exporterName }}, {{ facilityType }} facility
-  </span>
-  <h1 class="govuk-label-wrapper" data-cy="page-heading">
-    <label class="govuk-label govuk-label--xl govuk-!-padding-bottom-3" for="cover-end-date">
-      New cover end date
-    </label>
+  <h1 class="govuk-heading-xl govuk-!-margin-bottom-6 govuk-!-margin-top-1" data-cy="page-heading">
+    <span class="govuk-caption-l" data-cy="heading-caption">
+      {{ exporterName }}, {{ facilityType }} facility
+    </span>
+    New cover end date
   </h1>
-</header>
 {% endset %}
 
 {% block content %}
@@ -54,7 +50,6 @@
             fieldset: {
             legend: {
                 html: headingHtml,
-                isPageHeading: true,
                 classes: "govuk-fieldset__legend--l"
             }
             },

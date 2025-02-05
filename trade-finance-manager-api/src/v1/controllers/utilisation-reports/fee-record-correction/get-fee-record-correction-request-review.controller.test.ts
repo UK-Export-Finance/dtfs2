@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
-import { RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
+import { feeRecordCorrectionRequestReviewResponseBodyMock } from '@ukef/dtfs2-common';
 import { getFeeRecordCorrectionRequestReview, GetFeeRecordCorrectionRequestReviewRequest } from './get-fee-record-correction-request-review.controller';
 import api from '../../../api';
 import { FeeRecordCorrectionRequestReviewResponseBody } from '../../../api-response-types';
@@ -21,18 +21,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
       });
 
     const aResponseBody = (): FeeRecordCorrectionRequestReviewResponseBody => ({
-      bank: { id: '123', name: 'Test bank' },
-      reportPeriod: {
-        start: { month: 1, year: 2024 },
-        end: { month: 1, year: 2024 },
-      },
-      correctionRequestDetails: {
-        facilityId: '0012345678',
-        exporter: 'A sample exporter',
-        reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT],
-        additionalInfo: 'this is the reason',
-        contactEmailAddresses: ['test@test.com'],
-      },
+      ...feeRecordCorrectionRequestReviewResponseBodyMock,
     });
 
     afterEach(() => {

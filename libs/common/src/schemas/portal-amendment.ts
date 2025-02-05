@@ -12,7 +12,6 @@ export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
   .object({
     changeCoverEndDate: z.boolean().optional(),
     coverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().nonnegative().optional()),
-    currentCoverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().nonnegative().optional()),
     isUsingFacilityEndDate: z.boolean().optional(),
     facilityEndDate: z
       .string()
@@ -26,10 +25,7 @@ export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
       .optional(),
     changeFacilityValue: z.boolean().optional(),
     value: z.number().optional(),
-    currentValue: z.number().optional(),
     currency: z.enum(Object.values(CURRENCY) as [Currency] & Currency[]).optional(),
-    ukefExposure: z.number().optional(),
-    coveredPercentage: z.number().optional(),
     eligibilityCriteria: z
       .object({
         version: z.number(),
@@ -44,6 +40,7 @@ export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
         ),
       })
       .optional(),
+    effectiveDate: z.number().nonnegative().optional(),
   })
   .strict();
 
@@ -61,13 +58,11 @@ export const PORTAL_FACILITY_AMENDMENT = PORTAL_FACILITY_AMENDMENT_USER_VALUES.m
     createdAt: z.number(),
     updatedAt: z.number(),
     status: z.string(),
-    createdBy: z
-      .object({
-        username: z.string(),
-        name: z.string(),
-        email: z.string().email(),
-      })
-      .optional(),
+    createdBy: z.object({
+      username: z.string(),
+      name: z.string(),
+      email: z.string().email(),
+    }),
     eligibilityCriteria: z.object({
       version: z.number(),
       criteria: z.array(

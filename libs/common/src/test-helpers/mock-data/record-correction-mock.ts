@@ -1,4 +1,4 @@
-import { RECORD_CORRECTION_REASON, FEE_RECORD_STATUS } from '../../constants';
+import { RECORD_CORRECTION_REASON } from '../../constants';
 import { FeeRecordCorrectionSummary } from '../../types';
 
 /**
@@ -12,7 +12,7 @@ export const mockRecordCorrectionDetails: FeeRecordCorrectionSummary[] = [
     exporter: 'test exporter',
     formattedReasons: RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT,
     formattedDateSent: new Date().toISOString(),
-    status: FEE_RECORD_STATUS.PENDING_CORRECTION,
+    isCompleted: false,
     formattedOldRecords: '101111',
     formattedCorrectRecords: '-',
   },
@@ -22,7 +22,7 @@ export const mockRecordCorrectionDetails: FeeRecordCorrectionSummary[] = [
     exporter: 'test exporter 1',
     formattedReasons: RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT,
     formattedDateSent: new Date().toISOString(),
-    status: FEE_RECORD_STATUS.PENDING_CORRECTION,
+    isCompleted: false,
     formattedOldRecords: '101112',
     formattedCorrectRecords: '-',
   },

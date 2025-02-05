@@ -490,6 +490,24 @@ const getFeeRecordCorrectionById = async (correctionId) => {
 };
 
 /**
+ * Gets completed fee record corrections by bank id.
+ * @param {number} bankId - The ID of the bank
+ * @returns {Promise<import('./api-response-types').GetCompletedFeeRecordCorrectionsResponseBody>} response of API call or wrapped error response
+ */
+const getCompletedFeeRecordCorrections = async (bankId) => {
+  try {
+    const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/bank/${bankId}/utilisation-reports/completed-corrections`, {
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get completed fee record corrections for bank with id %s: %o', bankId, error);
+    throw error;
+  }
+};
+
+/**
  * Saves a fee record correction.
  *
  * The user id is sent in the body as saving uses the current
@@ -543,6 +561,7 @@ const getFeeRecordCorrectionTransientFormData = async (correctionId, userId) => 
  * @param {number} correctionId - The ID of the correction
  * @param {string} userId - The ID of the user
  * @param {import('@ukef/dtfs2-common').RecordCorrectionFormValues} formData - The form data
+ * @returns {Promise<import('./api-response-types').PutFeeRecordCorrectionResponseBody>} Promise that resolves to the put fee record correction response
  */
 const putFeeRecordCorrectionTransientFormData = async (bankId, correctionId, userId, formData) => {
   try {
@@ -736,4 +755,5 @@ module.exports = {
   getFeeRecordCorrectionReview,
   patchPortalFacilityAmendment,
   putFeeRecordCorrectionTransientFormData,
+  getCompletedFeeRecordCorrections,
 };

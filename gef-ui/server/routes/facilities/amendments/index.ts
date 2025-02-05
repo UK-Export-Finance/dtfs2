@@ -17,11 +17,25 @@ import { postDoYouHaveAFacilityEndDate } from '../../../controllers/amendments/d
 import { getFacilityEndDate } from '../../../controllers/amendments/facility-end-date/get-facility-end-date';
 import { postFacilityEndDate } from '../../../controllers/amendments/facility-end-date/post-facility-end-date';
 import { getBankReviewDate } from '../../../controllers/amendments/bank-review-date/get-bank-review-date.ts';
+import { postBankReviewDate } from '../../../controllers/amendments/bank-review-date/post-bank-review-date.ts';
 import { getEligibility } from '../../../controllers/amendments/eligibility-criteria/get-eligibility.ts';
 import { postEligibility } from '../../../controllers/amendments/eligibility-criteria/post-eligibility.ts';
+import { getEffectiveDate } from '../../../controllers/amendments/effective-date/get-effective-date.ts';
+import { postEffectiveDate } from '../../../controllers/amendments/effective-date/post-effective-date.ts';
+import { getManualApprovalNeeded } from '../../../controllers/amendments/manual-approval-needed/get-manual-approval-needed.ts';
 
-const { WHAT_DO_YOU_NEED_TO_CHANGE, COVER_END_DATE, FACILITY_VALUE, DO_YOU_HAVE_A_FACILITY_END_DATE, FACILITY_END_DATE, BANK_REVIEW_DATE, ELIGIBILITY } =
-  PORTAL_AMENDMENT_PAGES;
+const {
+  WHAT_DO_YOU_NEED_TO_CHANGE,
+  COVER_END_DATE,
+  FACILITY_VALUE,
+  DO_YOU_HAVE_A_FACILITY_END_DATE,
+  FACILITY_END_DATE,
+  BANK_REVIEW_DATE,
+  ELIGIBILITY,
+  MANUAL_APPROVAL_NEEDED,
+  EFFECTIVE_DATE,
+  CANCEL,
+} = PORTAL_AMENDMENT_PAGES;
 
 const router = express.Router();
 
@@ -49,7 +63,7 @@ router
   .post(postCoverEndDate);
 
 router
-  .route('/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/cancel')
+  .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${CANCEL}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getCancelPortalFacilityAmendment);
 
@@ -68,12 +82,24 @@ router
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${BANK_REVIEW_DATE}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
-  .get(getBankReviewDate);
+  .get(getBankReviewDate)
+  .post(postBankReviewDate);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${ELIGIBILITY}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getEligibility)
   .post(postEligibility);
+
+router
+  .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${MANUAL_APPROVAL_NEEDED}`)
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(getManualApprovalNeeded);
+
+router
+  .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${EFFECTIVE_DATE}`)
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(getEffectiveDate)
+  .post(postEffectiveDate);
 
 export default router;

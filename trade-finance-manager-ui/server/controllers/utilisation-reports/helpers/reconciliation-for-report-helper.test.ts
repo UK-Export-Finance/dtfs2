@@ -346,7 +346,7 @@ describe('reconciliation-for-report-helper', () => {
       expect(viewModel[0].status).toEqual(status);
     });
 
-    const selectableFeeRecordStatuses = [FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH];
+    const selectableFeeRecordStatuses = [FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH, FEE_RECORD_STATUS.TO_DO_AMENDED];
 
     it.each(selectableFeeRecordStatuses)('should set isSelectable to true if the group status is %s', (status: FeeRecordStatus) => {
       // Arrange
@@ -381,6 +381,8 @@ describe('reconciliation-for-report-helper', () => {
       { feeRecordStatus: FEE_RECORD_STATUS.DOES_NOT_MATCH, feeRecordDisplayStatus: 'Does not match' },
       { feeRecordStatus: FEE_RECORD_STATUS.READY_TO_KEY, feeRecordDisplayStatus: 'Ready to key' },
       { feeRecordStatus: FEE_RECORD_STATUS.RECONCILED, feeRecordDisplayStatus: 'Reconciled' },
+      { feeRecordStatus: FEE_RECORD_STATUS.PENDING_CORRECTION, feeRecordDisplayStatus: 'Record correction sent' },
+      { feeRecordStatus: FEE_RECORD_STATUS.TO_DO_AMENDED, feeRecordDisplayStatus: 'To do (amended)' },
     ] as const)(
       "maps the fee record status '$feeRecordStatus' to the view model display status '$feeRecordDisplayStatus'",
       ({ feeRecordStatus, feeRecordDisplayStatus }) => {

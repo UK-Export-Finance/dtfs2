@@ -4,6 +4,7 @@ import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { feeRecordsMatchAttachedPayments } from '../helpers';
 import { UTILISATION_REPORT_EVENT_TYPE } from '../../event/utilisation-report.event-type';
+import { FEE_RECORD_EVENT_TYPE } from '../../../fee-record/event/fee-record.event-type';
 
 type RemoveFeesFromPaymentGroupEventPayload = {
   transactionEntityManager: EntityManager;
@@ -28,18 +29,17 @@ const removeSelectedFeeRecordsFromGroup = async (
   feeRecords: FeeRecordEntity[],
   requestSource: DbRequestSource,
 ): Promise<void> => {
-  const feeRecordStateMachines = feeRecords.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
-  await Promise.all(
-    feeRecordStateMachines.map((stateMachine) =>
-      stateMachine.handleEvent({
-        type: 'REMOVE_FROM_PAYMENT_GROUP',
-        payload: {
-          transactionEntityManager,
-          requestSource,
-        },
-      }),
-    ),
-  );
+  for (const feeRecord of feeRecords) {
+    const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
+
+    await stateMachine.handleEvent({
+      type: FEE_RECORD_EVENT_TYPE.REMOVE_FROM_PAYMENT_GROUP,
+      payload: {
+        transactionEntityManager,
+        requestSource,
+      },
+    });
+  }
 };
 
 /**
@@ -55,19 +55,18 @@ const updateRemainingFeeRecords = async (
 ): Promise<void> => {
   const feeRecordsAndPaymentsMatch = await feeRecordsMatchAttachedPayments(feeRecords, transactionEntityManager);
 
-  const feeRecordStateMachines = feeRecords.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
-  await Promise.all(
-    feeRecordStateMachines.map((stateMachine) =>
-      stateMachine.handleEvent({
-        type: 'OTHER_FEE_REMOVED_FROM_PAYMENT_GROUP',
-        payload: {
-          transactionEntityManager,
-          feeRecordsAndPaymentsMatch,
-          requestSource,
-        },
-      }),
-    ),
-  );
+  for (const feeRecord of feeRecords) {
+    const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
+
+    await stateMachine.handleEvent({
+      type: FEE_RECORD_EVENT_TYPE.OTHER_FEE_REMOVED_FROM_PAYMENT_GROUP,
+      payload: {
+        transactionEntityManager,
+        feeRecordsAndPaymentsMatch,
+        requestSource,
+      },
+    });
+  }
 };
 
 /**
