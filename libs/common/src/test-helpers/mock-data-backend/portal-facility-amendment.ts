@@ -1,7 +1,7 @@
 import { getUnixTime } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import { AMENDMENT_TYPES, CURRENCY, PORTAL_AMENDMENT_STATUS } from '../../constants';
-import { PortalFacilityAmendment } from '../../types';
+import { PortalAmendmentStatus, PortalFacilityAmendment } from '../../types';
 import { PortalFacilityAmendmentUserValues } from '../../types/portal/amendment';
 import { getEpochMs } from '../../helpers';
 
@@ -17,7 +17,7 @@ export const aPortalFacilityAmendmentUserValues = (): PortalFacilityAmendmentUse
   effectiveDate: getUnixTime(new Date()),
 });
 
-export const aPortalFacilityAmendment = (): PortalFacilityAmendment => ({
+export const aPortalFacilityAmendment = ({ status = PORTAL_AMENDMENT_STATUS.DRAFT }: { status?: PortalAmendmentStatus } = {}): PortalFacilityAmendment => ({
   ...aPortalFacilityAmendmentUserValues(),
   type: AMENDMENT_TYPES.PORTAL,
   amendmentId: new ObjectId(),
@@ -25,7 +25,7 @@ export const aPortalFacilityAmendment = (): PortalFacilityAmendment => ({
   dealId: new ObjectId(),
   createdAt: getUnixTime(new Date()),
   updatedAt: getUnixTime(new Date()),
-  status: PORTAL_AMENDMENT_STATUS.DRAFT,
+  status,
   eligibilityCriteria: {
     criteria: [{ id: 1, text: 'item 1', answer: null }],
     version: 1,

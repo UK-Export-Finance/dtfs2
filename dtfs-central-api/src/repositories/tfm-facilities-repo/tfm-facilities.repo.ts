@@ -13,6 +13,7 @@ import {
   TfmFacilityAmendment,
   FacilityAmendmentWithUkefId,
   PORTAL_AMENDMENT_STATUS,
+  PortalAmendmentStatus,
   PortalAuditDetails,
   PortalAmendmentStatus,
 } from '@ukef/dtfs2-common';
@@ -33,6 +34,40 @@ export class TfmFacilitiesRepo {
   public static async findByDealId(dealId: string | ObjectId): Promise<TfmFacility[]> {
     const collection = await this.getCollection();
     return await collection.find({ 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } }).toArray();
+  }
+
+  /**
+   * Finds the portal amendments across all facilities for a deal for a given status or set of statuses
+   * @param dealId - The deal id
+   * @param statuses - An array of portal amendment statuses to filter on
+   * @returns The matching portal amendments
+   */
+  public static async findPortalAmendmentsByDealIdAndStatus({
+    dealId,
+    statuses,
+  }: {
+    dealId: string | ObjectId;
+    statuses?: PortalAmendmentStatus[];
+  }): Promise<PortalFacilityAmendment[]> {
+    const collection = await this.getCollection();
+
+    const facilitiesOnDealWithPortalAmendments = await collection
+      .find(
+        {
+          'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) },
+          'amendments.type': {
+            $eq: AMENDMENT_TYPES.PORTAL,
+          },
+        },
+        { projection: { amendments: 1 } },
+      )
+      .toArray();
+
+    const matchingPortalAmendments = facilitiesOnDealWithPortalAmendments
+      .flatMap((facility) => facility.amendments || [])
+      .filter((amendment) => amendment?.type === AMENDMENT_TYPES.PORTAL && (!statuses || statuses.includes(amendment.status))) as PortalFacilityAmendment[];
+
+    return matchingPortalAmendments;
   }
 
   /**
