@@ -1,5 +1,5 @@
-import { ENTRA_ID_USER_SCHEMA } from '@ukef/dtfs2-common/schemas';
 import { z } from 'zod';
+import { ENTRA_ID_USER_SCHEMA } from './entra-id-user.schema';
 
 export const DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA = z.object({
   csrfToken: z.string(),
