@@ -42,9 +42,9 @@ describe('FeeRecordStateMachine', () => {
 
   const UPLOADED_REPORT = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
 
-  describe(`when the fee record has the '${FEE_RECORD_STATUS.TO_DO}' status`, () => {
+  describe.each([FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.TO_DO_AMENDED])("when the fee record has the '%s' status", (toDoStatus: FeeRecordStatus) => {
     // Arrange
-    const TO_DO_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus(FEE_RECORD_STATUS.TO_DO).build();
+    const TO_DO_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus(toDoStatus).build();
 
     const VALID_TO_DO_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [FEE_RECORD_EVENT_TYPE.PAYMENT_ADDED, FEE_RECORD_EVENT_TYPE.CORRECTION_REQUESTED];
     const INVALID_TO_DO_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_TO_DO_FEE_RECORD_EVENT_TYPES);
@@ -93,6 +93,8 @@ describe('FeeRecordStateMachine', () => {
           reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT],
           additionalInfo: 'some additional information',
           requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
+          bankTeamName: 'Payment Officer Team',
+          bankTeamEmails: ['test@ukexportfinance.gov.uk'],
         },
       });
 
@@ -174,6 +176,7 @@ describe('FeeRecordStateMachine', () => {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAndPaymentsMatch: true,
           hasAttachedPayments: false,
+          hasCorrections: false,
           requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
@@ -292,6 +295,7 @@ describe('FeeRecordStateMachine', () => {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAndPaymentsMatch: true,
           hasAttachedPayments: false,
+          hasCorrections: false,
           requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });

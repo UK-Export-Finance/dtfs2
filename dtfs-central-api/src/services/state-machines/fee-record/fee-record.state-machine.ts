@@ -73,6 +73,7 @@ export class FeeRecordStateMachine {
   public async handleEvent(event: FeeRecordEvent): Promise<FeeRecordEntity> {
     switch (this.feeRecord.status) {
       case FEE_RECORD_STATUS.TO_DO:
+      case FEE_RECORD_STATUS.TO_DO_AMENDED:
         switch (event.type) {
           case 'PAYMENT_ADDED':
             return handleFeeRecordPaymentAddedEvent(this.feeRecord, event.payload);

@@ -1,5 +1,11 @@
 import { CURRENCY, FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE } from '../../constants';
-import { aRecordCorrectionValues, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
+import {
+  aRecordCorrectionValues,
+  FacilityUtilisationDataEntityMockBuilder,
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  UtilisationReportEntityMockBuilder,
+} from '../../test-helpers';
 import { Currency } from '../../types';
 
 describe('FeeRecordEntity', () => {
@@ -105,7 +111,7 @@ describe('FeeRecordEntity', () => {
   });
 
   describe('removeAllPayments', () => {
-    it(`should remove all payments, sets the record status to ${FEE_RECORD_STATUS.TO_DO} and updates the 'lastUpdatedBy...' fields`, () => {
+    it(`should remove all payments, sets the record status and updates the 'lastUpdatedBy...' fields`, () => {
       // Arrange
       const paymentCurrency: Currency = 'GBP';
       const paymentId = 123;
@@ -122,14 +128,17 @@ describe('FeeRecordEntity', () => {
 
       const userId = 'abc123';
 
+      const statusToUpdateTo = FEE_RECORD_STATUS.TO_DO;
+
       // Act
       feeRecord.removeAllPayments({
+        status: statusToUpdateTo,
         requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId },
       });
 
       // Assert
       expect(feeRecord.payments).toHaveLength(0);
-      expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.TO_DO);
+      expect(feeRecord.status).toEqual(statusToUpdateTo);
       expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
       expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
       expect(feeRecord.lastUpdatedByTfmUserId).toEqual(userId);
@@ -335,6 +344,33 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.feesPaidToUkefForThePeriod).toEqual(correctedValues.feesPaidToUkefForThePeriod);
       expect(feeRecord.feesPaidToUkefForThePeriodCurrency).toEqual(correctedValues.feesPaidToUkefForThePeriodCurrency);
       expect(feeRecord.facilityId).toEqual(correctedValues.facilityId);
+    });
+
+    it('should update facilityUtilisationData id to new facilityId when facilityId is corrected', () => {
+      // Arrange
+      const correctedValues = {
+        facilityUtilisation: null,
+        feesPaidToUkefForThePeriod: null,
+        feesPaidToUkefForThePeriodCurrency: null,
+        facilityId: '77777777',
+      };
+
+      const oldFacilityId = '11111111';
+
+      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
+        .withFacilityUtilisationData(FacilityUtilisationDataEntityMockBuilder.forId(oldFacilityId).build())
+        .withFacilityId(oldFacilityId)
+        .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
+        .build();
+
+      // Act
+      feeRecord.updateWithCorrection({
+        correctedValues,
+        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: 'abc123' },
+      });
+
+      // Assert
+      expect(feeRecord.facilityUtilisationData.id).toEqual(correctedValues.facilityId);
     });
 
     describe('when the fee record payment currency is the same as the fees paid to ukef for the period currency', () => {

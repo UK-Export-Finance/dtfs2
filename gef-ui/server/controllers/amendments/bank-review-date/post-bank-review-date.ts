@@ -3,7 +3,7 @@ import { Response } from 'express';
 import * as api from '../../../services/api';
 import { BankReviewDateViewModel } from '../../../types/view-models/amendments/bank-review-date-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
-import { getNextPage } from '../helpers/navigation.helper';
+import { getAmendmentsUrl, getNextPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { validateAndParseBankReviewDate } from '../../bank-review-date/validation';
 import { validationErrorHandler } from '../../../utils/helpers';
@@ -50,7 +50,7 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
       const viewModel: BankReviewDateViewModel = {
         exporterName: deal.exporter.companyName,
         facilityType: facility.type,
-        cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
+        cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
         previousPage,
         bankReviewDate: bankReviewDateDayMonthYear,
         errors: validationErrorHandler(validationErrorsOrValue.errors),
