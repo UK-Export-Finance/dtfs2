@@ -10,6 +10,7 @@ import {
 import { handleUtilisationReportRemoveFeesFromPaymentGroupEvent } from './remove-fees-from-payment-group.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { feeRecordsMatchAttachedPayments } from '../helpers';
+import { FEE_RECORD_EVENT_TYPE } from '../../../fee-record/event/fee-record.event-type';
 
 jest.mock('../helpers');
 
@@ -117,7 +118,7 @@ describe('handleUtilisationReportRemoveFeesFromPaymentGroupEvent', () => {
       expectedOtherFeeRecordsInGroup.forEach(({ id }) => {
         const eventHandler = eventHandlers[id];
         expect(eventHandler).toHaveBeenCalledWith({
-          type: 'OTHER_FEE_REMOVED_FROM_PAYMENT_GROUP',
+          type: FEE_RECORD_EVENT_TYPE.OTHER_FEE_REMOVED_FROM_PAYMENT_GROUP,
           payload: {
             transactionEntityManager: mockEntityManager,
             feeRecordsAndPaymentsMatch,

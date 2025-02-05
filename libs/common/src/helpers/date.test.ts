@@ -69,7 +69,7 @@ describe('date helpers', () => {
       const result = getISO8601();
       const year = now().getFullYear();
       const month = (now().getMonth() + 1).toString().padStart(2, '0');
-      const date = now().getDate();
+      const date = now().getDate().toString().padStart(2, '0');
 
       // Assert
       expect(result).toContain(`${year}-${month}-${date}`);
@@ -82,7 +82,7 @@ describe('date helpers', () => {
       const result = getISO8601();
       const year = now().getFullYear();
       const month = (now().getMonth() + 1).toString().padStart(2, '0');
-      const date = now().getDate();
+      const date = now().getDate().toString().padStart(2, '0');
 
       // Assert
       expect(result).toContain(`${year}-${month}-${date}`);

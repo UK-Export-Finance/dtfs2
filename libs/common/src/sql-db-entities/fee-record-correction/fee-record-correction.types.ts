@@ -8,6 +8,8 @@ export type CreateFeeRecordCorrectionParams = {
   reasons: RecordCorrectionReason[];
   additionalInfo: string;
   requestSource: DbRequestSource;
+  bankTeamName: string;
+  bankTeamEmails: string[];
 };
 
 export type CompleteCorrectionParams = {
