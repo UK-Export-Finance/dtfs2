@@ -38,4 +38,7 @@ const BASE_TFM_USER_SCHEMA = z.object({
   auditRecord: AUDIT_DATABASE_RECORD.optional(),
 });
 
+/**
+ * The user schema can contain a mix of login specific properties
+ */
 export const TFM_USER_SCHEMA = BASE_TFM_USER_SCHEMA.merge(TFM_USER_NON_SSO_SPECIFIC_SCHEMA.partial()).merge(TFM_USER_SSO_SPECIFIC_SCHEMA.partial());
