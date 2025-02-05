@@ -9,12 +9,14 @@ export const withTfmSessionUserSchemaTests = <Schema extends ZodSchema>({
   schema,
   options = {},
   getTestObjectWithUpdatedParameter,
+  getUpdatedParameterFromParsedTestObject,
 }: WithSchemaTestParams<Schema>) => {
   describe('with TFM_SESSION_USER_SCHEMA tests', () => {
     withDefaultOptionsTests({
       schema,
       options,
       getTestObjectWithUpdatedParameter,
+      getUpdatedParameterFromParsedTestObject,
     });
 
     withSchemaValidationTests({
