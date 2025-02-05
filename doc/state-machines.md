@@ -77,6 +77,10 @@ In the example above you can see that if the report is in `'RECONCILIATION_IN_PR
 
 Note: all source `.drawio` files for the following state machine diagrams are contained with the [assets](./assets) directory, so they can easily be updated if required.
 
-### Utilisation Reports
+### Utilisation Report
 
 ![utilisation report state machine](./assets/utilisation-report-state-machine.png)
+
+### Fee Record
+
+![fee record state machine](./assets/fee-record-state-machine.png)
