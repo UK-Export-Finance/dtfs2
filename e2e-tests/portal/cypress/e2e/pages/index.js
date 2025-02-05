@@ -55,5 +55,10 @@ module.exports = {
   previousReports: require('./utilisation-report-service/previousReports'),
   confirmAndSend: require('./utilisation-report-service/confirmAndSend'),
   confirmation: require('./utilisation-report-service/confirmation'),
+  provideCorrection: require('./utilisation-report-service/record-corrections/provideCorrection'),
+  reviewCorrection: require('./utilisation-report-service/record-corrections/reviewCorrection'),
+  correctionSent: require('./utilisation-report-service/record-corrections/correctionSent'),
   problemWithService: require('./problem-with-service'),
+  pendingCorrections: require('./utilisation-report-service/record-corrections/pendingCorrections'),
+  correctionLog: require('./utilisation-report-service/record-corrections/correctionLog'),
 };

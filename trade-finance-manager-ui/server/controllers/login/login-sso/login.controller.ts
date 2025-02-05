@@ -34,7 +34,7 @@ export class LoginController {
 
       return res.redirect(authCodeUrl);
     } catch (error) {
-      console.error('Unable to log in user: %o', error);
+      console.error('Unable to log in user %o', error);
       return res.render('_partials/problem-with-service.njk');
     }
   };
@@ -69,7 +69,8 @@ export class LoginController {
 
       UserSessionService.createLoggedInSession({ session, user, userToken: token });
 
-      return res.redirect(successRedirect ?? '/');
+      const url = successRedirect ?? '/';
+      return res.redirect(url);
     } catch (error) {
       console.error('Unable to redirect the user after login %o', error);
       return res.render('_partials/problem-with-service.njk');

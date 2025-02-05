@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { AMENDMENT_STATUS, AMENDMENT_TYPES, PortalFacilityAmendmentWithUkefId, TestApiError } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, PortalFacilityAmendmentWithUkefId, TestApiError, aPortalSessionUser } from '@ukef/dtfs2-common';
 import api from '../../api';
 import { getAmendment, GetAmendmentRequest } from './get-amendment.controller';
 
@@ -41,7 +41,13 @@ describe('controllers - facility amendment', () => {
         dealId,
         createdAt: 1702061978881,
         updatedAt: 1702061978881,
-        status: AMENDMENT_STATUS.IN_PROGRESS,
+        status: PORTAL_AMENDMENT_STATUS.DRAFT,
+        eligibilityCriteria: { version: 1, criteria: [] },
+        createdBy: {
+          username: aPortalSessionUser().username,
+          name: aPortalSessionUser().firstname,
+          email: aPortalSessionUser().email,
+        },
       };
 
       jest.mocked(api.getPortalFacilityAmendment).mockResolvedValue(mockPortalAmendmentResponse);

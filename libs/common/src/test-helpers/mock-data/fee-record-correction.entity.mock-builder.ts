@@ -1,16 +1,20 @@
 import { DbRequestSource, FeeRecordEntity, FeeRecordCorrectionEntity } from '../../sql-db-entities';
 import { RECORD_CORRECTION_REASON, REQUEST_PLATFORM_TYPE } from '../../constants';
 import { FeeRecordEntityMockBuilder } from './fee-record.entity.mock-builder';
-import { RecordCorrectionReason, RequestedByUser } from '../../types';
+import { RecordCorrectionReason, RecordCorrectionValues, RequestedByUser } from '../../types';
 
 export class FeeRecordCorrectionEntityMockBuilder {
   private readonly correction: FeeRecordCorrectionEntity;
 
-  public constructor(correction?: FeeRecordCorrectionEntity) {
-    this.correction = correction ?? FeeRecordCorrectionEntityMockBuilder.forFeeRecord(new FeeRecordEntityMockBuilder().build()).correction;
+  private constructor(correction: FeeRecordCorrectionEntity) {
+    this.correction = correction;
   }
 
-  public static forFeeRecord(feeRecord: FeeRecordEntity): FeeRecordCorrectionEntityMockBuilder {
+  public static forIsCompleted(isCompleted: boolean): FeeRecordCorrectionEntityMockBuilder {
+    return FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(new FeeRecordEntityMockBuilder().build(), isCompleted);
+  }
+
+  public static forFeeRecordAndIsCompleted(feeRecord: FeeRecordEntity, isCompleted: boolean): FeeRecordCorrectionEntityMockBuilder {
     const data = new FeeRecordCorrectionEntity();
     const userId = '5ce819935e539c343f141ece';
     const requestSource: DbRequestSource = {
@@ -27,7 +31,47 @@ export class FeeRecordCorrectionEntityMockBuilder {
     };
     data.additionalInfo = 'some info';
     data.reasons = [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT];
-    data.isCompleted = false;
+    data.bankTeamName = 'some team';
+    data.bankTeamEmails = 'test1@ukexportfinance.gov.uk, test2@ukexportfinance.gov.uk';
+
+    if (isCompleted) {
+      data.isCompleted = true;
+      data.dateReceived = new Date();
+      data.bankCommentary = 'some commentary';
+
+      data.previousValues = {
+        facilityUtilisation: 600000,
+        feesPaidToUkefForThePeriod: null,
+        feesPaidToUkefForThePeriodCurrency: null,
+        facilityId: null,
+      };
+
+      data.correctedValues = {
+        facilityUtilisation: 500000,
+        feesPaidToUkefForThePeriod: null,
+        feesPaidToUkefForThePeriodCurrency: null,
+        facilityId: null,
+      };
+    } else {
+      data.isCompleted = false;
+      data.dateReceived = null;
+      data.bankCommentary = null;
+
+      data.previousValues = {
+        facilityUtilisation: null,
+        feesPaidToUkefForThePeriod: null,
+        feesPaidToUkefForThePeriodCurrency: null,
+        facilityId: null,
+      };
+
+      data.correctedValues = {
+        facilityUtilisation: null,
+        feesPaidToUkefForThePeriod: null,
+        feesPaidToUkefForThePeriodCurrency: null,
+        facilityId: null,
+      };
+    }
+
     data.updateLastUpdatedBy(requestSource);
     return new FeeRecordCorrectionEntityMockBuilder(data);
   }
@@ -57,11 +101,6 @@ export class FeeRecordCorrectionEntityMockBuilder {
     return this;
   }
 
-  public withIsCompleted(isCompleted: boolean): FeeRecordCorrectionEntityMockBuilder {
-    this.correction.isCompleted = isCompleted;
-    return this;
-  }
-
   public withLastUpdatedByIsSystemUser(isSystemUser: boolean): FeeRecordCorrectionEntityMockBuilder {
     this.correction.lastUpdatedByIsSystemUser = isSystemUser;
     return this;
@@ -74,6 +113,36 @@ export class FeeRecordCorrectionEntityMockBuilder {
 
   public withLastUpdatedByTfmUserId(userId: string | null): FeeRecordCorrectionEntityMockBuilder {
     this.correction.lastUpdatedByTfmUserId = userId;
+    return this;
+  }
+
+  public withDateReceived(dateReceived: Date | null): FeeRecordCorrectionEntityMockBuilder {
+    this.correction.dateReceived = dateReceived;
+    return this;
+  }
+
+  public withBankCommentary(bankCommentary: string | null): FeeRecordCorrectionEntityMockBuilder {
+    this.correction.bankCommentary = bankCommentary;
+    return this;
+  }
+
+  public withPreviousValues(previousValues: Partial<RecordCorrectionValues>): FeeRecordCorrectionEntityMockBuilder {
+    this.correction.previousValues = {
+      facilityUtilisation: previousValues.facilityUtilisation ?? null,
+      feesPaidToUkefForThePeriod: previousValues.feesPaidToUkefForThePeriod ?? null,
+      feesPaidToUkefForThePeriodCurrency: previousValues.feesPaidToUkefForThePeriodCurrency ?? null,
+      facilityId: previousValues.facilityId ?? null,
+    };
+    return this;
+  }
+
+  public withCorrectedValues(correctedValues: Partial<RecordCorrectionValues>): FeeRecordCorrectionEntityMockBuilder {
+    this.correction.correctedValues = {
+      facilityUtilisation: correctedValues.facilityUtilisation ?? null,
+      feesPaidToUkefForThePeriod: correctedValues.feesPaidToUkefForThePeriod ?? null,
+      feesPaidToUkefForThePeriodCurrency: correctedValues.feesPaidToUkefForThePeriodCurrency ?? null,
+      facilityId: correctedValues.facilityId ?? null,
+    };
     return this;
   }
 

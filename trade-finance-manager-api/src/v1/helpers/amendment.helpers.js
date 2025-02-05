@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const { CURRENCY, AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { CURRENCY, TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const sendTfmEmail = require('../services/send-tfm-email');
 const { UNDERWRITER_MANAGER_DECISIONS } = require('../../constants/amendments');
@@ -284,7 +284,7 @@ const canSendToAcbs = (amendment) => {
   // Ensure at least one of the attribute has been amended
   const hasBeenAmended = amendment.changeCoverEndDate || amendment.changeFacilityValue;
   // Amendment status is marked as `Completed`
-  const completed = amendment.status === AMENDMENT_STATUS.COMPLETED;
+  const completed = amendment.status === TFM_AMENDMENT_STATUS.COMPLETED;
   // Amendment has been submitted by PIM team
   const pim = amendment.submittedByPim;
   // Manual amendment verification

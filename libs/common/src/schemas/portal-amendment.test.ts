@@ -1,65 +1,260 @@
-import { PORTAL_FACILITY_AMENDMENT_USER_VALUES } from './portal-amendment';
-import { withSchemaValidationTests } from '../test-helpers';
 import { aPortalFacilityAmendmentUserValues } from '../test-helpers/mock-data-backend';
-import { PortalFacilityAmendmentUserValues } from '../types';
+import { AnyObject } from '../types';
+import { PORTAL_FACILITY_AMENDMENT_USER_VALUES } from './portal-amendment.schema';
+import { withSchemaTests } from './with-schema-tests';
 
-const aValidPayload = () => JSON.parse(JSON.stringify(aPortalFacilityAmendmentUserValues())) as PortalFacilityAmendmentUserValues;
+const aValidPayload = () => JSON.parse(JSON.stringify(aPortalFacilityAmendmentUserValues())) as AnyObject;
 
 describe('PORTAL_FACILITY_AMENDMENT_USER_VALUES', () => {
-  withSchemaValidationTests({
+  withSchemaTests({
+    successTestCases: getSuccessTestCases(),
+    failureTestCases: getFailureTestCases(),
     schema: PORTAL_FACILITY_AMENDMENT_USER_VALUES,
-    schemaTestOptions: {
-      isStrict: true,
-    },
-    aValidPayload,
-    testCases: [
+  });
+
+  function getSuccessTestCases() {
+    return [
       {
-        parameterPath: 'changeCoverEndDate',
-        type: 'boolean',
-        options: { isOptional: true },
+        description: 'the payload is valid',
+        aTestCase: aValidPayload,
+      },
+    ];
+  }
+
+  function getFailureTestCases() {
+    return [
+      {
+        description: 'amendment is undefined',
+        aTestCase: () => undefined,
       },
       {
-        parameterPath: 'coverEndDate',
-        type: 'UNIX_TIMESTAMP_SECONDS_SCHEMA',
-        options: { isOptional: true },
+        description: 'amendment is null',
+        aTestCase: () => null,
       },
       {
-        parameterPath: 'currentCoverEndDate',
-        type: 'UNIX_TIMESTAMP_SECONDS_SCHEMA',
-        options: { isOptional: true },
+        description: 'amendment is a number',
+        aTestCase: () => 1,
       },
       {
-        parameterPath: 'isUsingFacilityEndDate',
-        type: 'boolean',
-        options: { isOptional: true },
+        description: 'amendment is a string',
+        aTestCase: () => 'not an object',
       },
       {
-        parameterPath: 'facilityEndDate',
-        type: 'ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA',
-        options: { isOptional: true },
+        description: 'object contains additional properties',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          extra: 'property',
+        }),
       },
       {
-        parameterPath: 'bankReviewDate',
-        type: 'ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA',
-        options: { isOptional: true },
+        description: 'changeCoverEndDate is a string',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          changeCoverEndDate: 'true',
+        }),
       },
       {
-        parameterPath: 'changeFacilityValue',
-        type: 'boolean',
-        options: { isOptional: true },
+        description: 'coverEndDate is not an integer',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          coverEndDate: 'not an integer',
+        }),
       },
       {
-        parameterPath: 'value',
-        type: 'number',
-        options: { isOptional: true },
+        description: 'coverEndDate is negative',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          coverEndDate: -42,
+        }),
       },
       {
-        parameterPath: 'currentValue',
-        type: 'number',
-        options: { isOptional: true },
+        description: 'currentCoverEndDate is not an integer',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          currentCoverEndDate: 'not an integer',
+        }),
       },
-      { parameterPath: 'currency', type: 'CURRENCY_SCHEMA', options: { isOptional: true } },
-      { parameterPath: 'coveredPercentage', type: 'number', options: { isOptional: true } },
-    ],
+      {
+        description: 'currentCoverEndDate is negative',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          currentCoverEndDate: -42,
+        }),
+      },
+      {
+        description: 'isUsingFacilityEndDate is not a boolean',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          isUsingFacilityEndDate: 'not a boolean',
+        }),
+      },
+      {
+        description: 'facilityEndDate is not a number',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          facilityEndDate: 'not a number',
+        }),
+      },
+      {
+        description: 'facilityEndDate is negative',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          facilityEndDate: -23,
+        }),
+      },
+      {
+        description: 'bankReviewDate is not a number',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          bankReviewDate: 'not a number',
+        }),
+      },
+      {
+        description: 'bankReviewDate is negative',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          bankReviewDate: -23,
+        }),
+      },
+      {
+        description: 'changeFacilityValue is not a boolean',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          changeFacilityValue: 'not a boolean',
+        }),
+      },
+      {
+        description: 'value is not a number',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          value: 'not a number',
+        }),
+      },
+      {
+        description: 'currentValue is not a number',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          currentValue: 'not a number',
+        }),
+      },
+      {
+        description: 'currency is not a valid enum value',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          currency: 'invalid currency',
+        }),
+      },
+      {
+        description: 'ukefExposure is not a number',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          ukefExposure: 'not a number',
+        }),
+      },
+      {
+        description: 'coveredPercentage is not a number',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          coveredPercentage: 'not a number',
+        }),
+      },
+      {
+        description: 'eligibilityCriteria contains a non numerical version value',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          eligibilityCriteria: { version: '1', criteria: [] },
+        }),
+      },
+      {
+        description: 'eligibilityCriteria is missing version',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          eligibilityCriteria: { criteria: [] },
+        }),
+      },
+      {
+        description: 'eligibilityCriteria is missing criteria',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          eligibilityCriteria: { version: 1 },
+        }),
+      },
+      {
+        description: 'criteria has a non numerical id',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          eligibilityCriteria: { version: 1, criteria: [{ id: '1', text: 'test-text', answer: true }] },
+        }),
+      },
+      {
+        description: 'criteria is missing id',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          eligibilityCriteria: { version: 1, criteria: [{ text: 'test-text', answer: true }] },
+        }),
+      },
+      {
+        description: 'criteria is missing text',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          eligibilityCriteria: {
+            version: 1,
+            criteria: [
+              { id: 1, answer: true },
+              { id: 2, answer: false, text: 'test-text' },
+            ],
+          },
+        }),
+      },
+      {
+        description: 'criteria is missing answer',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          eligibilityCriteria: { version: 1, criteria: [{ id: 1, text: 'test-text' }] },
+        }),
+      },
+      {
+        description: 'criteria has a non boolean answer',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          eligibilityCriteria: { version: 1, criteria: [{ id: 1, text: 'test-text', answer: 'true' }] },
+        }),
+      },
+      {
+        description: 'criteria has a null answer',
+        aTestCase: () => ({
+          ...aValidPayload(),
+          eligibilityCriteria: { version: 1, criteria: [{ id: 1, text: 'test-text', answer: null }] },
+        }),
+      },
+    ];
+  }
+
+  it('should parse `facilityEndDate` from ISO-8601 into a Date', () => {
+    const facilityEndDate = new Date();
+    const amendment = {
+      facilityEndDate: JSON.parse(JSON.stringify(facilityEndDate)) as string,
+    };
+
+    // Act
+    const { success, data } = PORTAL_FACILITY_AMENDMENT_USER_VALUES.safeParse(amendment);
+
+    // Assert
+    expect(success).toEqual(true);
+    expect(data).toEqual({ facilityEndDate });
+  });
+
+  it('should parse `bankReviewDate` from ISO-8601 into a Date', () => {
+    const bankReviewDate = new Date();
+    const amendment = {
+      bankReviewDate: JSON.parse(JSON.stringify(bankReviewDate)) as string,
+    };
+
+    // Act
+    const { success, data } = PORTAL_FACILITY_AMENDMENT_USER_VALUES.safeParse(amendment);
+
+    // Assert
+    expect(success).toEqual(true);
+    expect(data).toEqual({ bankReviewDate });
   });
 });

@@ -32,12 +32,12 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "@types/lodash": "^4.17.13",
+    "@types/lodash": "^4.17.14",
     "@ukef/dtfs2-common": "1.0.0",
     "axios": "1.7.8",
     "compression": "^1.7.5",
     "cors": "^2.8.5",
-    "cron": "^3.3.2",
+    "cron": "^3.4.0",
     "date-fns": "^2.30.0",
     "dotenv": "16.3.1",
     "express": "^4.21.2",
@@ -51,7 +51,7 @@
     "swagger-ui-express": "^4.6.3",
     "ts-node": "^10.9.2",
     "tslib": "^2.8.1",
-    "typescript": "^5.7.2",
+    "typescript": "^5.7.3",
     "validator": "^13.12.0"
   },
   "devDependencies": {

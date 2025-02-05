@@ -13,6 +13,8 @@ import USERS from '../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../e2e-fixtures';
 import relative from '../../../relativeURL';
 
+const { keyingSheetContent, premiumPaymentsContent } = pages.utilisationReportPage.tabs;
+
 context('PDC_RECONCILE users can generate keying data', () => {
   const BANK_ID = '961';
   const REPORT_ID = 1;
@@ -79,7 +81,7 @@ context('PDC_RECONCILE users can generate keying data', () => {
     cy.login(USERS.PDC_RECONCILE);
   });
 
-  it('can generate keying data when only one fee record for a facility is at MATCH status but does not generate the fixed fee adjustment or principal balance adjustment', () => {
+  it('can generate keying data when only one fee record for a facility is at MATCH status but does not generate any fixed fee adjustment or principal balance adjustment', () => {
     const matchingPayment = PaymentEntityMockBuilder.forCurrency(PAYMENT_CURRENCY).withAmount(100).build();
     const matchingFeeRecord = FeeRecordEntityMockBuilder.forReport(CURRENT_PERIOD_UTILISATION_REPORT)
       .withId(FIRST_FEE_RECORD_ID)
@@ -108,19 +110,19 @@ context('PDC_RECONCILE users can generate keying data', () => {
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, [matchingFeeRecord, toDoFeeRecord]);
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
-    pages.utilisationReportPage.premiumPaymentsTab.generateKeyingDataButton().click();
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.generateKeyingDataButton().click();
     pages.checkKeyingDataPage.generateKeyingSheetDataButton().click();
 
     cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}#keying-sheet`));
 
-    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FIRST_FEE_RECORD_ID).should('contain', 'To do');
-    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(SECOND_FEE_RECORD_ID).should('not.exist');
+    keyingSheetContent.keyingSheetTableRow(FIRST_FEE_RECORD_ID).should('contain', 'To do');
+    keyingSheetContent.keyingSheetTableRow(SECOND_FEE_RECORD_ID).should('not.exist');
 
-    pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentDecrease(FIRST_FEE_RECORD_ID).should('contain', '-');
-    pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentIncrease(FIRST_FEE_RECORD_ID).should('contain', '-');
+    keyingSheetContent.fixedFeeAdjustmentDecrease(FIRST_FEE_RECORD_ID).should('contain', '-');
+    keyingSheetContent.fixedFeeAdjustmentIncrease(FIRST_FEE_RECORD_ID).should('contain', '-');
 
-    pages.utilisationReportPage.keyingSheetTab.principalBalanceAdjustmentDecrease(FIRST_FEE_RECORD_ID).should('contain', '-');
-    pages.utilisationReportPage.keyingSheetTab.principalBalanceAdjustmentIncrease(FIRST_FEE_RECORD_ID).should('contain', '-');
+    keyingSheetContent.principalBalanceAdjustmentDecrease(FIRST_FEE_RECORD_ID).should('contain', '-');
+    keyingSheetContent.principalBalanceAdjustmentIncrease(FIRST_FEE_RECORD_ID).should('contain', '-');
   });
 
   it('calculates the fixed fee adjustment and principal balance adjustment when all fee records for a facility are at MATCH status for only one of the fee records for the facility', () => {
@@ -155,13 +157,13 @@ context('PDC_RECONCILE users can generate keying data', () => {
     cy.task(NODE_TASKS.INSERT_FEE_RECORDS_INTO_DB, matchingFeeRecords);
 
     cy.visit(`utilisation-reports/${REPORT_ID}`);
-    pages.utilisationReportPage.premiumPaymentsTab.generateKeyingDataButton().click();
+    premiumPaymentsContent.generateKeyingDataButton().click();
     pages.checkKeyingDataPage.generateKeyingSheetDataButton().click();
 
     cy.url().should('eq', relative(`/utilisation-reports/${REPORT_ID}#keying-sheet`));
 
-    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(FIRST_FEE_RECORD_ID).should('contain', 'To do');
-    pages.utilisationReportPage.keyingSheetTab.keyingSheetTableRow(SECOND_FEE_RECORD_ID).should('contain', 'To do');
+    keyingSheetContent.keyingSheetTableRow(FIRST_FEE_RECORD_ID).should('contain', 'To do');
+    keyingSheetContent.keyingSheetTableRow(SECOND_FEE_RECORD_ID).should('contain', 'To do');
 
     /**
      * The principal balance adjustment is simply the
@@ -171,21 +173,19 @@ context('PDC_RECONCILE users can generate keying data', () => {
     const expectedPrincipalBalanceAdjustment = '128,000.00'; // 200000 - (180000 * 0.4), DECREASE
 
     /**
-     * Fixed fee adjustments are currently turned off and so should always be
-     * zero, which is displayed as a dash.
-     *
-     * TODO FN-3639: update with new calculation requirements.
+     * The fixed fee is not being used and so is always zero
+     * which is displayed as a dash
      */
     const expectedFixedFeeAdjustment = '-';
 
-    pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentDecrease(FIRST_FEE_RECORD_ID).should('contain', '-');
-    pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentIncrease(FIRST_FEE_RECORD_ID).should('contain', expectedFixedFeeAdjustment);
-    pages.utilisationReportPage.keyingSheetTab.principalBalanceAdjustmentDecrease(FIRST_FEE_RECORD_ID).should('contain', expectedPrincipalBalanceAdjustment);
-    pages.utilisationReportPage.keyingSheetTab.principalBalanceAdjustmentIncrease(FIRST_FEE_RECORD_ID).should('contain', '-');
+    keyingSheetContent.fixedFeeAdjustmentDecrease(FIRST_FEE_RECORD_ID).should('contain', '-');
+    keyingSheetContent.fixedFeeAdjustmentIncrease(FIRST_FEE_RECORD_ID).should('contain', expectedFixedFeeAdjustment);
+    keyingSheetContent.principalBalanceAdjustmentDecrease(FIRST_FEE_RECORD_ID).should('contain', expectedPrincipalBalanceAdjustment);
+    keyingSheetContent.principalBalanceAdjustmentIncrease(FIRST_FEE_RECORD_ID).should('contain', '-');
 
-    pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentDecrease(SECOND_FEE_RECORD_ID).should('contain', '-');
-    pages.utilisationReportPage.keyingSheetTab.fixedFeeAdjustmentIncrease(SECOND_FEE_RECORD_ID).should('contain', '-');
-    pages.utilisationReportPage.keyingSheetTab.principalBalanceAdjustmentDecrease(SECOND_FEE_RECORD_ID).should('contain', '-');
-    pages.utilisationReportPage.keyingSheetTab.principalBalanceAdjustmentIncrease(SECOND_FEE_RECORD_ID).should('contain', '-');
+    keyingSheetContent.fixedFeeAdjustmentDecrease(SECOND_FEE_RECORD_ID).should('contain', '-');
+    keyingSheetContent.fixedFeeAdjustmentIncrease(SECOND_FEE_RECORD_ID).should('contain', '-');
+    keyingSheetContent.principalBalanceAdjustmentDecrease(SECOND_FEE_RECORD_ID).should('contain', '-');
+    keyingSheetContent.principalBalanceAdjustmentIncrease(SECOND_FEE_RECORD_ID).should('contain', '-');
   });
 });

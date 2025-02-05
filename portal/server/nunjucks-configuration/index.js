@@ -13,7 +13,7 @@ const replaceWhiteSpaceWithDash = require('./filter-replaceWhiteSpaceWithDash');
 dotenv.config();
 
 const configureNunjucks = (opts) => {
-  const { CONTACT_US_EMAIL_ADDRESS } = process.env;
+  const { CONTACT_US_EMAIL_ADDRESS, FF_FEE_RECORD_CORRECTION_ENABLED } = process.env;
 
   const appViews = [
     path.resolve(__dirname, '../../../node_modules/govuk-frontend/dist'),
@@ -24,6 +24,7 @@ const configureNunjucks = (opts) => {
   const nunjucksEnvironment = nunjucks.configure(appViews, opts);
 
   nunjucksEnvironment.addGlobal('CONTACT_US_EMAIL_ADDRESS', CONTACT_US_EMAIL_ADDRESS);
+  nunjucksEnvironment.addGlobal('FF_FEE_RECORD_CORRECTION_ENABLED', FF_FEE_RECORD_CORRECTION_ENABLED);
 
   nunjucksEnvironment.addFilter('localiseTimestamp', filterLocaliseTimestamp);
   nunjucksEnvironment.addFilter('dashIfEmpty', dashIfEmpty);
@@ -32,6 +33,7 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('countriesWithEmptyInitialOption', countriesWithEmptyInitialOption);
   nunjucksEnvironment.addFilter('replaceWhiteSpaceWithDash', replaceWhiteSpaceWithDash);
   nunjucksEnvironment.addFilter('replaceNewLinesWithBrTags', replaceNewLinesWithBrTags);
+  nunjucksEnvironment.addFilter('formatPageTitle', (title, hasErrors) => (hasErrors ? `Error - ${title}` : title));
 
   mojFilters = Object.assign(mojFilters);
 

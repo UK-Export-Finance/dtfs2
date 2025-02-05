@@ -94,7 +94,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
   });
 
   it('should display errors when form submitted with invalid fee selections and persist the selected fees and inputted values', () => {
-    pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
+    pages.utilisationReportEditPaymentPage.removeSelectedFeesButton().click();
     errorSummary().contains('Select fee or fees to remove from the payment');
 
     clearFormValues();
@@ -113,7 +113,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
 
     cy.keyboardInput(cy.getInputByLabelText('Payment reference (optional)'), 'Some payment reference');
 
-    pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
+    pages.utilisationReportEditPaymentPage.removeSelectedFeesButton().click();
 
     errorSummary().contains('You cannot remove all the fees. Delete the payment instead.');
 
@@ -146,7 +146,7 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
 
     cy.keyboardInput(cy.getInputByLabelText('Payment reference (optional)'), 'Some payment reference');
 
-    pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
+    pages.utilisationReportEditPaymentPage.removeSelectedFeesButton().click();
 
     cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
@@ -176,12 +176,12 @@ context(`${PDC_TEAMS.PDC_RECONCILE} users can remove fees from payments`, () => 
     cy.visit(`/utilisation-reports/${reportId}`);
 
     cy.get('strong[data-cy="fee-record-status"]:contains("Match")').should('exist');
-    pages.utilisationReportPage.premiumPaymentsTab.clickPaymentLink(paymentId);
+    pages.utilisationReportPage.tabs.premiumPaymentsContent.clickPaymentLink(paymentId);
 
     cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 
     getFeeRecordCheckbox(1).check();
-    pages.utilisationReportEditPaymentPage.clickRemoveSelectedPaymentsButton();
+    pages.utilisationReportEditPaymentPage.removeSelectedFeesButton().click();
 
     cy.url().should('eq', relative(`${editPaymentUrl}?redirectTab=premium-payments`));
 

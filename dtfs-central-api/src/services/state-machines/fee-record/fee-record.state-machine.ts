@@ -13,6 +13,7 @@ import {
   handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent,
   handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent,
   handleFeeRecordCorrectionRequestedEvent,
+  handleFeeRecordCorrectionReceivedEvent,
 } from './event-handlers';
 
 /**
@@ -72,6 +73,7 @@ export class FeeRecordStateMachine {
   public async handleEvent(event: FeeRecordEvent): Promise<FeeRecordEntity> {
     switch (this.feeRecord.status) {
       case FEE_RECORD_STATUS.TO_DO:
+      case FEE_RECORD_STATUS.TO_DO_AMENDED:
         switch (event.type) {
           case 'PAYMENT_ADDED':
             return handleFeeRecordPaymentAddedEvent(this.feeRecord, event.payload);
@@ -81,7 +83,12 @@ export class FeeRecordStateMachine {
             return this.handleInvalidTransition(event);
         }
       case FEE_RECORD_STATUS.PENDING_CORRECTION:
-        return this.handleInvalidTransition(event);
+        switch (event.type) {
+          case 'CORRECTION_RECEIVED':
+            return handleFeeRecordCorrectionReceivedEvent(this.feeRecord, event.payload);
+          default:
+            return this.handleInvalidTransition(event);
+        }
       case FEE_RECORD_STATUS.MATCH:
         switch (event.type) {
           case 'PAYMENT_DELETED':

@@ -3,17 +3,19 @@ import { ObjectId } from 'mongodb';
 import { WithSchemaTestParams } from '../with-schema-test.type';
 import { generateTfmUserAuditDatabaseRecord } from '../../../change-stream';
 import { withSchemaValidationTests } from '../with-schema-validation.tests';
-import { withDefaultOptionsTests } from '../primitive-object-tests/with-default-options.tests';
+import { withDefaultOptionsTests } from '../primitive-types-tests/with-default-options.tests';
 
 export const withAuditDatabaseRecordSchemaTests = <Schema extends ZodSchema>({
   schema,
   options = {},
   getTestObjectWithUpdatedParameter,
+  getUpdatedParameterFromParsedTestObject,
 }: WithSchemaTestParams<Schema>) => {
   describe('with AUDIT_DATABASE_RECORD_SCHEMA tests', () => {
     withDefaultOptionsTests({
       schema,
       getTestObjectWithUpdatedParameter,
+      getUpdatedParameterFromParsedTestObject,
       options,
     });
 

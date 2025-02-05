@@ -7,8 +7,6 @@ import { CheckKeyingDataViewModel, FeeRecordToKeyViewModelItem } from '../../../
 import { getFeeRecordDisplayStatus, getKeyToCurrencyAndAmountSortValueMap } from '../helpers';
 import { GENERATE_KEYING_DATA_ERROR_KEY } from '../../../constants/premium-payment-tab-error-keys';
 
-const renderCheckKeyingDataPage = (res: Response, viewModel: CheckKeyingDataViewModel) => res.render('utilisation-reports/check-keying-data.njk', viewModel);
-
 const getFeeRecordsToKeyViewModel = (feeRecords: FeeRecordToKey[]): FeeRecordToKeyViewModelItem[] => {
   const reportedFeesDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(feeRecords.map(({ reportedFees }, index) => ({ ...reportedFees, key: index })));
   const reportedPaymentsDataSortValueMap = getKeyToCurrencyAndAmountSortValueMap(
@@ -49,15 +47,17 @@ export const postCheckKeyingData = async (req: Request, res: Response) => {
 
     const feeRecordsToKeyViewModel = getFeeRecordsToKeyViewModel(feeRecords);
 
-    return renderCheckKeyingDataPage(res, {
+    const viewModel: CheckKeyingDataViewModel = {
       reportId,
       bank,
       formattedReportPeriod: getFormattedReportPeriodWithLongMonth(reportPeriod),
       feeRecords: feeRecordsToKeyViewModel,
       numberOfMatchingFacilities,
-    });
+    };
+
+    return res.render('utilisation-reports/check-keying-data.njk', viewModel);
   } catch (error) {
-    console.error('Failed to add payment', error);
+    console.error('Failed to add payment: %o', error);
     return res.render('_partials/problem-with-service.njk', { user });
   }
 };

@@ -4,15 +4,16 @@ import {
   AuditDetails,
   TfmFacility,
   FacilityAmendment,
-  AmendmentStatus,
+  TfmAmendmentStatus,
   FacilityNotFoundError,
   AmendmentNotFoundError,
   AMENDMENT_TYPES,
-  AMENDMENT_STATUS,
   PortalFacilityAmendment,
   GEF_FACILITY_TYPE,
   TfmFacilityAmendment,
   FacilityAmendmentWithUkefId,
+  PORTAL_AMENDMENT_STATUS,
+  PortalAuditDetails,
 } from '@ukef/dtfs2-common';
 import { deleteMany, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
@@ -128,14 +129,14 @@ export class TfmFacilitiesRepo {
   }
 
   /**
-   * Find amendments by the amendment status
-   * @param status - The amendment status
+   * Find TFM amendments by the amendment status
+   * @param status - The tfm amendment status
    * @returns The found amendments
    */
-  public static async findAmendmentsByStatus(status: AmendmentStatus): Promise<Document[]> {
+  public static async findTfmAmendmentsByStatus(status: TfmAmendmentStatus): Promise<Document[]> {
     const collection = await this.getCollection();
     return await collection
-      .aggregate(aggregatePipelines.amendmentsByStatus(status))
+      .aggregate(aggregatePipelines.tfmAmendmentsByStatus(status))
       .map<Document>((doc) => doc.amendments as Document)
       .toArray();
   }
@@ -154,15 +155,15 @@ export class TfmFacilitiesRepo {
   }
 
   /**
-   * Finds amendments by the facility id and status
+   * Finds tfm amendments by the facility id and status
    * @param facilityId - The facility id
-   * @param status - The amendment status
+   * @param status - The TFM amendment status
    * @returns The found amendments
    */
-  public static async findAmendmentsByFacilityIdAndStatus(facilityId: string | ObjectId, status: AmendmentStatus): Promise<FacilityAmendment[]> {
+  public static async findTfmAmendmentsByFacilityIdAndStatus(facilityId: string | ObjectId, status: TfmAmendmentStatus): Promise<FacilityAmendment[]> {
     const collection = await this.getCollection();
     return await collection
-      .aggregate(aggregatePipelines.amendmentsByFacilityIdAndStatus(facilityId, status))
+      .aggregate(aggregatePipelines.tfmAmendmentsByFacilityIdAndStatus(facilityId, status))
       .map<FacilityAmendment>((doc) => doc.amendments as FacilityAmendment)
       .toArray();
   }
@@ -214,15 +215,15 @@ export class TfmFacilitiesRepo {
   }
 
   /**
-   * Finds amendments by the deal id and status
+   * Finds tfm amendments by the deal id and status
    * @param dealId - The deal id
-   * @param status - The amendment status
+   * @param status - The tfm amendment status
    * @returns The found amendments
    */
-  public static async findAmendmentsByDealIdAndStatus(dealId: string | ObjectId, status: AmendmentStatus): Promise<Document[]> {
+  public static async findTfmAmendmentsByDealIdAndStatus(dealId: string | ObjectId, status: TfmAmendmentStatus): Promise<Document[]> {
     const collection = await this.getCollection();
     return await collection
-      .aggregate(aggregatePipelines.amendmentsByDealIdAndStatus(dealId, status))
+      .aggregate(aggregatePipelines.tfmAmendmentsByDealIdAndStatus(dealId, status))
       .map<Document>((doc) => doc.amendments as Document)
       .toArray();
   }
@@ -332,7 +333,7 @@ export class TfmFacilitiesRepo {
 
     const removeDraftAmendmentsFilter: UpdateFilter<TfmFacility> = {
       $pull: {
-        amendments: { type: AMENDMENT_TYPES.PORTAL, status: { $ne: AMENDMENT_STATUS.COMPLETED } },
+        amendments: { type: AMENDMENT_TYPES.PORTAL, status: { $eq: PORTAL_AMENDMENT_STATUS.DRAFT } },
       },
       $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
     };
@@ -401,5 +402,45 @@ export class TfmFacilitiesRepo {
       console.error('Error updating portal facility amendment %o', error);
       throw error;
     }
+  }
+
+  /**
+   * Delete a portal amendment for a facility in the database
+   * @param deletePortalFacilityAmendmentParams
+   * @param deletePortalFacilityAmendmentParams.facilityId - The facility id
+   * @param deletePortalFacilityAmendmentParams.amendmentId - The amendment id
+   * @param deletePortalFacilityAmendmentParams.auditDetails - The audit details
+   * @returns The delete result
+   */
+  public static async deletePortalFacilityAmendment({
+    facilityId,
+    amendmentId,
+    auditDetails,
+  }: {
+    facilityId: ObjectId;
+    amendmentId: ObjectId;
+    auditDetails: PortalAuditDetails;
+  }): Promise<UpdateResult> {
+    const collection = await this.getCollection();
+
+    const findFilter: Filter<TfmFacility> = {
+      _id: { $eq: new ObjectId(facilityId) },
+      amendments: { $elemMatch: { amendmentId: { $eq: new ObjectId(amendmentId) }, type: AMENDMENT_TYPES.PORTAL } },
+    };
+
+    const updateFilter: UpdateFilter<TfmFacility> = {
+      $pull: {
+        amendments: { type: AMENDMENT_TYPES.PORTAL, amendmentId: new ObjectId(amendmentId) },
+      },
+      $set: { auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) },
+    };
+
+    const updateResult = await collection.updateOne(findFilter, updateFilter);
+
+    if (!updateResult.modifiedCount) {
+      throw new AmendmentNotFoundError(amendmentId.toString(), facilityId.toString());
+    }
+
+    return updateResult;
   }
 }

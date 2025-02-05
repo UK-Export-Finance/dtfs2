@@ -2,7 +2,7 @@ import z from 'zod';
 import { TfmTeamSchema } from './tfm-team.schema';
 import { UNIX_TIMESTAMP_MILLISECONDS_SCHEMA } from '../unix-timestamp.schema';
 import { AUDIT_DATABASE_RECORD_SCHEMA } from '../audit-database-record.schema';
-import { OBJECT_ID_SCHEMA } from '../object-id';
+import { OBJECT_ID_SCHEMA } from '../object-id.schema';
 
 // TODO update docs, tests
 const TFM_USER_NON_SSO_SPECIFIC_SCHEMA = z.object({

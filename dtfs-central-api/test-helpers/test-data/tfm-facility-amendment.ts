@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { AMENDMENT_STATUS, TfmFacilityAmendment } from '@ukef/dtfs2-common';
+import { TFM_AMENDMENT_STATUS, TfmFacilityAmendment } from '@ukef/dtfs2-common';
 
 export const aTfmFacilityAmendment = (): TfmFacilityAmendment => ({
   amendmentId: new ObjectId(),
@@ -7,11 +7,11 @@ export const aTfmFacilityAmendment = (): TfmFacilityAmendment => ({
   dealId: new ObjectId(),
   createdAt: new Date().getTime(),
   updatedAt: new Date().getTime(),
-  status: AMENDMENT_STATUS.IN_PROGRESS,
+  status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
   version: 0,
 });
 
 export const aCompletedTfmFacilityAmendment = (): TfmFacilityAmendment => ({
   ...aTfmFacilityAmendment(),
-  status: AMENDMENT_STATUS.COMPLETED,
+  status: TFM_AMENDMENT_STATUS.COMPLETED,
 });

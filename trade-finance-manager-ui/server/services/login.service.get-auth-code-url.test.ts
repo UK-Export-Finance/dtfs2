@@ -1,5 +1,4 @@
-import { AuthorizationCodeRequest } from '@azure/msal-node';
-import { GetAuthCodeUrlResponse } from '@ukef/dtfs2-common';
+import { aGetAuthCodeUrlResponse } from '@ukef/dtfs2-common';
 import { LoginService } from './login.service';
 import * as api from '../api';
 
@@ -14,25 +13,23 @@ describe('login service', () => {
       getAuthCodeUrlSpy.mockReset();
     });
 
-    it('calls api.getAuthCodeUrl with the request', async () => {
+    it('should call api.getAuthCodeUrl with the request', async () => {
       // Act
       await LoginService.getAuthCodeUrl({ successRedirect });
 
       // Assert
+      expect(getAuthCodeUrlSpy).toHaveBeenCalledTimes(1);
       expect(getAuthCodeUrlSpy).toHaveBeenCalledWith({ successRedirect });
     });
 
     describe('when the getAuthCodeUrl api call is successful', () => {
-      const mockGetAuthCodeResponse: GetAuthCodeUrlResponse = {
-        authCodeUrl: 'a-auth-code-url',
-        authCodeUrlRequest: {} as AuthorizationCodeRequest,
-      };
+      const mockGetAuthCodeResponse = aGetAuthCodeUrlResponse();
 
       beforeEach(() => {
         getAuthCodeUrlSpy.mockResolvedValueOnce(mockGetAuthCodeResponse);
       });
 
-      it('returns the auth code url', async () => {
+      it('should return the auth code url', async () => {
         // Act
         const result = await LoginService.getAuthCodeUrl({ successRedirect });
 
@@ -48,7 +45,7 @@ describe('login service', () => {
         getAuthCodeUrlSpy.mockRejectedValueOnce(error);
       });
 
-      it('throws the error', async () => {
+      it('should throw the error', async () => {
         // Act & Assert
         await expect(LoginService.getAuthCodeUrl({ successRedirect })).rejects.toThrow(error);
       });

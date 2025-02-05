@@ -16,6 +16,6 @@ export type GetAuthCodeUrlResponse = {
   authCodeUrlRequest: AuthorizationUrlRequest;
 };
 
-export type GetAuthCodeUrlApiRequest = CustomExpressRequest<{ reqBody: GetAuthCodeUrlParams }>;
+export type GetAuthCodeUrlApiRequest = CustomExpressRequest<{ reqBody: GetAuthCodeUrlRequest }>;
 
 export type GetAuthCodeUrlApiResponse = Response<GetAuthCodeUrlResponse | ApiErrorResponseBody>;

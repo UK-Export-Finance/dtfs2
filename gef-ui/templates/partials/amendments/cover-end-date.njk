@@ -9,16 +9,12 @@
 {%- endblock %}
 
 {% set headingHtml %}
-<header>
-  <span class="govuk-caption-l" data-cy="heading-caption">
-    {{ exporterName }}
-  </span>
-  <h1 class="govuk-label-wrapper" data-cy="page-heading">
-    <label class="govuk-label govuk-label--xl govuk-!-padding-bottom-3" for="cover-end-date">
-      New cover end date
-    </label>
+  <h1 class="govuk-heading-xl govuk-!-margin-bottom-6 govuk-!-margin-top-1" data-cy="page-heading">
+    <span class="govuk-caption-l" data-cy="heading-caption">
+      {{ exporterName }}, {{ facilityType }} facility
+    </span>
+    New cover end date
   </h1>
-</header>
 {% endset %}
 
 {% block content %}
@@ -30,7 +26,7 @@
           'data-cy': 'error-summary'
         },
         classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
-      }) 
+      })
     }}
   {% endif %}
 
@@ -40,7 +36,7 @@
       attributes: {
         'data-cy': 'back-link'
       }
-    }) 
+    })
   }}
 
   <div class="govuk-grid-row govuk-!-margin-bottom-3">
@@ -54,7 +50,6 @@
             fieldset: {
             legend: {
                 html: headingHtml,
-                isPageHeading: true,
                 classes: "govuk-fieldset__legend--l"
             }
             },
@@ -63,7 +58,39 @@
             },
             attributes: {
                 'data-cy': "cover-end-date"
-            }
+            },
+            errorMessage: errors and errors.fieldErrors.coverEndDate and {
+              text: errors.fieldErrors.coverEndDate.text,
+              attributes: {
+                'data-cy': 'cover-end-date-inline-error'
+              }
+            },
+            items: [
+              {
+                classes: (errors.fieldErrors['coverEndDate-day'] and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
+                name: "day",
+                value: coverEndDate.day,
+                attributes: {
+                  'data-cy': 'cover-end-date-day'
+                }            
+              },
+              {
+                classes: (errors.fieldErrors['coverEndDate-month'] and "govuk-input--width-2 govuk-input--error") or "govuk-input--width-2",
+                name: "month",
+                value: coverEndDate.month,
+                attributes: {
+                  'data-cy': 'cover-end-date-month'
+                }   
+              },
+              {
+                classes: (errors.fieldErrors['coverEndDate-year'] and "govuk-input--width-4 govuk-input--error") or "govuk-input--width-4",
+                name: "year",
+                value: coverEndDate.year,
+                attributes: {
+                  'data-cy': 'cover-end-date-year'
+                }   
+              }
+            ]
           })
         }}
 
@@ -73,7 +100,7 @@
             attributes: {
             'data-cy': 'continue-button'
             }
-            }) 
+            })
           }}
 
           <a href={{cancelUrl}}  data-cy="cancel-link" class="govuk-link">Cancel</a>

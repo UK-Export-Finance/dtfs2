@@ -1,6 +1,6 @@
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { API_ERROR_CODE, TestApiError } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, API_ERROR_CODE, TestApiError } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
 import { aPortalUser } from '../../../../../test-helpers';
@@ -8,7 +8,13 @@ import { PortalFacilityAmendmentService } from '../../../../services/portal/faci
 import { patchAmendment, PatchAmendmentRequest } from './patch-amendment.controller';
 
 const facilityId = 'facilityId';
+const dealId = 'dealId';
 const amendmentId = 'amendmentId';
+const amendment = aPortalFacilityAmendmentUserValues();
+const type = AMENDMENT_TYPES.PORTAL;
+const amendmentStatus = PORTAL_AMENDMENT_STATUS.DRAFT;
+
+const mockUpdatedAmendment = { facilityId, dealId, amendment, type, status: amendmentStatus };
 
 const mockUpdatePortalFacilityAmendment = jest.fn();
 
@@ -20,6 +26,7 @@ describe('patchAmendment', () => {
     jest.resetAllMocks();
 
     jest.spyOn(PortalFacilityAmendmentService, 'updatePortalFacilityAmendment').mockImplementation(mockUpdatePortalFacilityAmendment);
+    mockUpdatePortalFacilityAmendment.mockResolvedValue(mockUpdatedAmendment);
   });
 
   it(`should return ${HttpStatusCode.BadRequest} if the audit details are invalid`, async () => {
@@ -58,7 +65,7 @@ describe('patchAmendment', () => {
     });
   });
 
-  it(`should return ${HttpStatusCode.Ok}`, async () => {
+  it(`should return ${HttpStatusCode.Ok} and the updated amendment`, async () => {
     // Arrange
     const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
     const { req, res } = generateHttpMocks({ auditDetails });
@@ -68,6 +75,7 @@ describe('patchAmendment', () => {
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+    expect(res._getData()).toEqual(mockUpdatedAmendment);
   });
 
   it('should return the correct status and body if PortalFacilityAmendmentService.updatePortalFacilityAmendment throws an api error', async () => {

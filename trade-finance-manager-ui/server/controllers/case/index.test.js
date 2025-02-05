@@ -1,4 +1,4 @@
-import { AMENDMENT_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
+import { TFM_AMENDMENT_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
@@ -21,8 +21,6 @@ jest.mock('../helpers/deal-cancellation-enabled.helper', () => ({
 const { DRAFT, COMPLETED } = TFM_DEAL_CANCELLATION_STATUS;
 
 const mockSuccessBannerMessage = 'mock success message';
-console.error = jest.fn();
-
 const res = mockRes();
 
 const token = 'test-token';
@@ -41,6 +39,8 @@ const session = {
 describe('controllers - case', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.restoreAllMocks();
+    jest.spyOn(console, 'error');
   });
 
   describe('GET case deal', () => {
@@ -67,8 +67,8 @@ describe('controllers - case', () => {
         {
           ukefFacilityId: '1234',
           facilityId: '12345',
-          submittedByPim: false,
-          status: AMENDMENT_STATUS.IN_PROGRESS,
+          submittedByPim: true,
+          status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
         },
       ];
 
@@ -765,7 +765,7 @@ describe('controllers - case', () => {
         dealId: '625e99cb88eeeb001e33bf47',
         createdAt: 1652866533,
         updatedAt: 1652876975,
-        status: AMENDMENT_STATUS.IN_PROGRESS,
+        status: TFM_AMENDMENT_STATUS.IN_PROGRESS,
         version: 1,
         createdBy: {},
         requestDate: 1652876967,
@@ -914,12 +914,14 @@ describe('controllers - case', () => {
           ukefDealId: 'ukefDealId',
         },
         mock: true,
+        tfm: {},
       };
 
       beforeEach(() => {
         api.getDeal = () => Promise.resolve(mockDeal);
         api.getAmendmentsByDealId = () => Promise.resolve({ data: [] });
         api.getDealCancellation = jest.fn(() => Promise.resolve({}));
+        mockGetDealSuccessBannerMessage.mockResolvedValue(mockSuccessBannerMessage);
       });
 
       it('should render documents template with data', async () => {

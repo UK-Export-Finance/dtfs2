@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
-import { FeeRecordEntity, FeeRecordCorrectionSummary, mapReasonsToDisplayValues, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, FeeRecordCorrectionSummary, mapReasonsToDisplayValues, DATE_FORMATS } from '@ukef/dtfs2-common';
+import { getFormattedOldAndCorrectValues } from './get-formatted-old-and-correct-values';
 
 /**
  * Retrieves and constructs record correction data for the given fee records.
@@ -14,10 +15,16 @@ export const getRecordCorrectionDetails = (feeRecords: FeeRecordEntity[]): FeeRe
       return [];
     }
 
-    const { facilityId, id: feeRecordId, exporter } = feeRecord;
+    const { id: feeRecordId, exporter } = feeRecord;
 
     return feeRecord.corrections.map((correction) => {
-      const { id: correctionId, dateRequested, requestedByUser } = correction;
+      const { id: correctionId, dateRequested, isCompleted } = correction;
+
+      /**
+       * return formatted old records and formatted correct records
+       * returns - if correction is not completed for formattedCorrectRecords
+       */
+      const { formattedOldRecords, formattedCorrectRecords } = getFormattedOldAndCorrectValues(correction, feeRecord);
 
       /**
        * maps the reasons as an array of strings to display values
@@ -30,12 +37,12 @@ export const getRecordCorrectionDetails = (feeRecords: FeeRecordEntity[]): FeeRe
       return {
         correctionId,
         feeRecordId,
-        facilityId,
         exporter,
-        status: FEE_RECORD_STATUS.PENDING_CORRECTION,
         formattedReasons,
-        formattedDateSent: format(dateRequested, 'dd MMM yyyy'),
-        requestedBy: `${requestedByUser.firstName} ${requestedByUser.lastName}`,
+        formattedDateSent: format(dateRequested, DATE_FORMATS.DD_MMM_YYYY),
+        formattedOldRecords,
+        formattedCorrectRecords,
+        isCompleted,
       };
     });
   });

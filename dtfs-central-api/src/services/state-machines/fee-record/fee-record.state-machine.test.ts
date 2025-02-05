@@ -8,6 +8,7 @@ import {
   REQUEST_PLATFORM_TYPE,
   PENDING_RECONCILIATION,
   RECORD_CORRECTION_REASON,
+  FeeRecordCorrectionEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { InvalidStateMachineTransitionError } from '../../../errors';
 import { FEE_RECORD_EVENT_TYPE, FEE_RECORD_EVENT_TYPES, FeeRecordEventType } from './event/fee-record.event-type';
@@ -23,6 +24,7 @@ import {
   handleFeeRecordOtherFeeRemovedFromPaymentGroupEvent,
   handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent,
   handleFeeRecordCorrectionRequestedEvent,
+  handleFeeRecordCorrectionReceivedEvent,
 } from './event-handlers';
 import { aReportPeriod } from '../../../../test-helpers';
 
@@ -40,9 +42,9 @@ describe('FeeRecordStateMachine', () => {
 
   const UPLOADED_REPORT = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).build();
 
-  describe(`when the fee record has the '${FEE_RECORD_STATUS.TO_DO}' status`, () => {
+  describe.each([FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.TO_DO_AMENDED])("when the fee record has the '%s' status", (toDoStatus: FeeRecordStatus) => {
     // Arrange
-    const TO_DO_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus(FEE_RECORD_STATUS.TO_DO).build();
+    const TO_DO_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus(toDoStatus).build();
 
     const VALID_TO_DO_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [FEE_RECORD_EVENT_TYPE.PAYMENT_ADDED, FEE_RECORD_EVENT_TYPE.CORRECTION_REQUESTED];
     const INVALID_TO_DO_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_TO_DO_FEE_RECORD_EVENT_TYPES);
@@ -91,6 +93,8 @@ describe('FeeRecordStateMachine', () => {
           reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT],
           additionalInfo: 'some additional information',
           requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
+          bankTeamName: 'Payment Officer Team',
+          bankTeamEmails: ['test@ukexportfinance.gov.uk'],
         },
       });
 
@@ -103,7 +107,7 @@ describe('FeeRecordStateMachine', () => {
     // Arrange
     const PENDING_CORRECTION_FEE_RECORD = FeeRecordEntityMockBuilder.forReport(UPLOADED_REPORT).withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION).build();
 
-    const VALID_PENDING_CORRECTION_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [];
+    const VALID_PENDING_CORRECTION_FEE_RECORD_EVENT_TYPES: FeeRecordEventType[] = [FEE_RECORD_EVENT_TYPE.CORRECTION_RECEIVED];
     const INVALID_PENDING_CORRECTION_FEE_RECORD_EVENT_TYPES = difference(FEE_RECORD_EVENT_TYPES, VALID_PENDING_CORRECTION_FEE_RECORD_EVENT_TYPES);
 
     if (INVALID_PENDING_CORRECTION_FEE_RECORD_EVENT_TYPES.length !== 0) {
@@ -118,6 +122,25 @@ describe('FeeRecordStateMachine', () => {
         },
       );
     }
+
+    it(`should handle the '${FEE_RECORD_EVENT_TYPE.CORRECTION_RECEIVED}' event`, async () => {
+      // Arrange
+      const stateMachine = FeeRecordStateMachine.forFeeRecord(PENDING_CORRECTION_FEE_RECORD);
+
+      // Act
+      await stateMachine.handleEvent({
+        type: FEE_RECORD_EVENT_TYPE.CORRECTION_RECEIVED,
+        payload: {
+          transactionEntityManager: {} as EntityManager,
+          correctionEntity: FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(PENDING_CORRECTION_FEE_RECORD, false).build(),
+          correctionFormData: {},
+          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
+        },
+      });
+
+      // Assert
+      expect(handleFeeRecordCorrectionReceivedEvent).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe(`when the fee record has the '${FEE_RECORD_STATUS.MATCH}' status`, () => {
@@ -153,6 +176,7 @@ describe('FeeRecordStateMachine', () => {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAndPaymentsMatch: true,
           hasAttachedPayments: false,
+          hasCorrections: false,
           requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
@@ -271,6 +295,7 @@ describe('FeeRecordStateMachine', () => {
           transactionEntityManager: {} as EntityManager,
           feeRecordsAndPaymentsMatch: true,
           hasAttachedPayments: false,
+          hasCorrections: false,
           requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });

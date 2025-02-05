@@ -11,6 +11,7 @@ import { PostFeeRecordCorrectionPayload } from '../../../../routes/middleware/pa
 import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
 import { sendFeeRecordCorrectionRequestEmails } from './helpers';
 import { FeeRecordCorrectionRequestEmailAddresses } from '../../../../../types/utilisation-reports';
+import { getBankPaymentOfficerTeamDetails } from '../../helpers/get-bank-payment-officer-team-details';
 
 export type PostFeeRecordCorrectionRequest = CustomExpressRequest<{
   params: {
@@ -64,6 +65,8 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
         throw new NotFoundError(`Failed to find a fee record with id ${feeRecordId} and report id ${reportId}`);
       }
 
+      const { teamName, emails } = await getBankPaymentOfficerTeamDetails(feeRecord.report.bankId);
+
       const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
 
       await stateMachine.handleEvent({
@@ -81,6 +84,8 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
             platform: REQUEST_PLATFORM_TYPE.TFM,
             userId,
           },
+          bankTeamName: teamName,
+          bankTeamEmails: emails,
         },
       });
 
@@ -90,8 +95,9 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
         reasons,
         feeRecord.report.reportPeriod,
         feeRecord.exporter,
-        feeRecord.report.bankId,
         user.email,
+        teamName,
+        emails,
       );
 
       return notifiedEmails;

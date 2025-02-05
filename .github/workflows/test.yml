@@ -160,6 +160,7 @@ env:
   FF_TFM_DEAL_CANCELLATION_ENABLED: ${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }}
   FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: ${{ vars.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED }}
   FF_TFM_SSO_ENABLED: ${{ vars.FF_TFM_SSO_ENABLED }}
+  FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: ${{ vars.FF_SALESFORCE_CUSTOMER_CREATION_ENABLED }}
   GEF_DEAL_VERSION: ${{ vars.GEF_DEAL_VERSION }}
   ENTRA_ID_CLIENT_ID: ${{ vars.ENTRA_ID_CLIENT_ID }}
   ENTRA_ID_CLOUD_INSTANCE: ${{ vars.ENTRA_ID_CLOUD_INSTANCE }}
@@ -167,6 +168,8 @@ env:
   ENTRA_ID_CLIENT_SECRET: ${{ vars.ENTRA_ID_CLIENT_SECRET }}
   ENTRA_ID_REDIRECT_URL: ${{ vars.ENTRA_ID_REDIRECT_URL }}
   DEAL_CANCELLATION_SCHEDULE: ${{ vars.DEAL_CANCELLATION_SCHEDULE }}
+  RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE: ${{ vars.RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE }}
+  UKEF_GEF_REPORTING_EMAIL_RECIPIENT: ${{ secrets.UKEF_GEF_REPORTING_EMAIL_RECIPIENT }}
 
 jobs:
   # 1. Setup test infrastructure
@@ -386,9 +389,11 @@ jobs:
     env:
       # Various feature flags
       FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
+      FF_FEE_RECORD_CORRECTION_ENABLED: 'true'
       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
       FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
       FF_TFM_SSO_ENABLED: 'true'
+      FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true'
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -498,7 +503,9 @@ jobs:
             'maker-loan/**/*.spec.js',
             'read-only/**/*.spec.js',
             'reports/**/*.spec.js',
-            'payment-report-officer/**/*.spec.js',
+            'payment-report-officer/utilisation-report-upload/**/*.spec.js',
+            'payment-report-officer/previous-reports/**/*.spec.js',
+            'payment-report-officer/record-corrections/feature-flag-disabled/**/*.spec.js',
           ]
 
     concurrency:
@@ -826,7 +833,7 @@ jobs:
         env:
           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
         run: npm run db:migrate
-  
+
       - name: Execute
         uses: ./.github/actions/rerun
         with:
@@ -844,9 +851,12 @@ jobs:
     needs: [setup]
     env:
       # Various feature flags
+      FF_TFM_PAYMENT_RECONCILIATION_ENABLED: 'true'
       FF_FEE_RECORD_CORRECTION_ENABLED: 'true'
       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
       FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
+      FF_TFM_SSO_ENABLED: 'false'
+      FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true'
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -892,7 +902,9 @@ jobs:
             './portal/cypress/e2e/journeys/maker-loan/**/*.spec.js',
             './portal/cypress/e2e/journeys/read-only/**/*.spec.js',
             './portal/cypress/e2e/journeys/reports/**/*.spec.js',
-            './portal/cypress/e2e/journeys/payment-report-officer/**/*.spec.js',
+            './portal/cypress/e2e/journeys/payment-report-officer/utilisation-report-upload/**/*.spec.js',
+            './portal/cypress/e2e/journeys/payment-report-officer/previous-reports/**/*.spec.js',
+            './portal/cypress/e2e/journeys/payment-report-officer/record-corrections/feature-flag-enabled/**/*.spec.js',
             './gef/cypress/e2e/*.spec.js',
             './gef/cypress/e2e/application/**/*.spec.js',
             './gef/cypress/e2e/checker/**/*.spec.js',
@@ -951,6 +963,7 @@ jobs:
             './tfm/cypress/e2e/journeys/users/**/*.spec.js',
             './tfm/cypress/e2e/journeys/utilisation-reports/fee-record-correction/feature-flag-enabled/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/**/*.spec.js',
           ]
 
     concurrency:

@@ -8,7 +8,7 @@ export type UpsertTfmUserFromEntraIdUserParams = {
   auditDetails: AuditDetails;
 };
 
-export type saveUserLoginInformationParams = {
+export type SaveUserLoginInformationParams = {
   userId: ObjectId;
   sessionIdentifier: string;
   auditDetails: AuditDetails;
@@ -63,7 +63,7 @@ export class UserService {
     return upsertedUser;
   }
 
-  public async saveUserLoginInformation({ userId, sessionIdentifier, auditDetails }: saveUserLoginInformationParams) {
+  public async saveUserLoginInformation({ userId, sessionIdentifier, auditDetails }: SaveUserLoginInformationParams) {
     await UserRepo.updateUserById({
       userId,
       userUpdate: {

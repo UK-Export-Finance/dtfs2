@@ -4,7 +4,7 @@ import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import {
   UpsertTfmUserFromEntraIdUserParams,
   UpsertTfmUserFromEntraIdUserResponse,
-  saveUserLoginInformationParams,
+  SaveUserLoginInformationParams,
   UserService,
 } from '../../services/user.service';
 
@@ -20,10 +20,10 @@ export class UserServiceMockBuilder extends BaseMockBuilder<UserService> {
         transformEntraIdUserToUpsertTfmUserRequest(entraIdUser: EntraIdUser): UpsertTfmUserRequest {
           return userService.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
         },
-        upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails }: UpsertTfmUserFromEntraIdUserParams): Promise<UpsertTfmUserFromEntraIdUserResponse> {
+        upsertTfmUserFromEntraIdUser(upsertTfmUserFromEntraIdUserParams: UpsertTfmUserFromEntraIdUserParams): Promise<UpsertTfmUserFromEntraIdUserResponse> {
           return Promise.resolve(aTfmUser());
         },
-        saveUserLoginInformation({ userId, sessionIdentifier, auditDetails }: saveUserLoginInformationParams): Promise<void> {
+        saveUserLoginInformation(saveUserLoginInformationParams: SaveUserLoginInformationParams): Promise<void> {
           return Promise.resolve();
         },
       },

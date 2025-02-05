@@ -1,8 +1,8 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { FeeRecordEntity } from '../fee-record/fee-record.entity';
-import { RequestedByUserPartialEntity } from '../partial-entities';
+import { CorrectionValuesPartialEntity, RequestedByUserPartialEntity } from '../partial-entities';
 import { AuditableBaseEntity } from '../base-entities';
-import { CreateFeeRecordCorrectionParams } from './fee-record-correction.types';
+import { CompleteCorrectionParams, CreateFeeRecordCorrectionParams } from './fee-record-correction.types';
 import { RecordCorrectionReason } from '../../types';
 
 @Entity('FeeRecordCorrection')
@@ -44,10 +44,48 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
   dateRequested!: Date;
 
   /**
+   * The date the correction was received
+   */
+  @Column({ type: 'datetime2', nullable: true })
+  dateReceived!: Date | null;
+
+  /**
    * Whether the record correction has been completed
    */
   @Column()
   isCompleted!: boolean;
+
+  /**
+   * Comments about the correction provided by the bank
+   */
+  @Column({ type: 'nvarchar', length: '500', nullable: true })
+  bankCommentary!: string | null;
+
+  /**
+   * Bank team name
+   */
+  @Column({ type: 'nvarchar', length: '500' })
+  bankTeamName!: string;
+
+  /**
+   * Bank team emails
+   */
+  @Column({ type: 'nvarchar', length: '1000' })
+  bankTeamEmails!: string;
+
+  /**
+   * The previous values of the fields of the fee record that the
+   * correction is correcting
+   */
+  @Column(() => CorrectionValuesPartialEntity, { prefix: 'previous' })
+  previousValues!: CorrectionValuesPartialEntity;
+
+  /**
+   * The corrected values of the fields of the fee record that the
+   * correction is correcting
+   */
+  @Column(() => CorrectionValuesPartialEntity, { prefix: 'corrected' })
+  correctedValues!: CorrectionValuesPartialEntity;
 
   /**
    * The reasons for the record correction
@@ -71,6 +109,8 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
    * @param param.reasons - The reasons for the correction
    * @param param.additionalInfo - The user provided additional information
    * @param param.requestSource - The request source
+   * @param param.bankTeamName - The bank payment officer team name
+   * @param param.bankTeamEmails - The bank payment officer team email address array
    * @returns The fee record correction
    */
   static createRequestedCorrection({
@@ -79,6 +119,8 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
     reasons,
     additionalInfo,
     requestSource,
+    bankTeamName,
+    bankTeamEmails,
   }: CreateFeeRecordCorrectionParams): FeeRecordCorrectionEntity {
     const recordCorrection = new FeeRecordCorrectionEntity();
     recordCorrection.feeRecord = feeRecord;
@@ -87,6 +129,28 @@ export class FeeRecordCorrectionEntity extends AuditableBaseEntity {
     recordCorrection.additionalInfo = additionalInfo;
     recordCorrection.isCompleted = false;
     recordCorrection.updateLastUpdatedBy(requestSource);
+    recordCorrection.bankTeamName = bankTeamName;
+    recordCorrection.bankTeamEmails = bankTeamEmails.join(',');
     return recordCorrection;
+  }
+
+  /**
+   * Updates a correction with correct values
+   * @param param - The correction parameters
+   * @param param.previousValues - The previous values
+   * @param param.correctedValues - The corrected values
+   * @param param.bankCommentary - The bank commentary
+   * @param param.requestSource - The request source
+   */
+  public completeCorrection({ previousValues, correctedValues, bankCommentary, requestSource }: CompleteCorrectionParams): void {
+    this.correctedValues = correctedValues;
+    this.previousValues = previousValues;
+    this.bankCommentary = bankCommentary;
+
+    this.dateReceived = new Date();
+
+    this.isCompleted = true;
+
+    this.updateLastUpdatedBy(requestSource);
   }
 }

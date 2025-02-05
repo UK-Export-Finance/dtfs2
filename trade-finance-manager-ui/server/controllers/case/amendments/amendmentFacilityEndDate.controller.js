@@ -1,4 +1,4 @@
-const { AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const { format, parseISO } = require('date-fns');
 const api = require('../../../api');
@@ -32,7 +32,7 @@ const getAmendmentFacilityEndDate = async (req, res) => {
     return res.redirect(`/case/${amendment.dealId}/facility/${facilityId}/amendment/${amendmentId}/is-using-facility-end-date`);
   }
 
-  const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS;
+  const isEditable = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
 
   const enteredFacilityEndDate = facilityEndDate ? parseISO(facilityEndDate) : undefined;
 
@@ -71,7 +71,7 @@ const postAmendmentFacilityEndDate = async (req, res) => {
   if (error?.fields) {
     const isFacilityEndDateEnabled = facility.facilitySnapshot.isGef;
 
-    const isEditable = amendment.status === AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate && isFacilityEndDateEnabled;
+    const isEditable = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS && amendment.changeCoverEndDate && isFacilityEndDateEnabled;
 
     const currentFacilityEndDate = facility?.facilitySnapshot?.dates?.facilityEndDate
       ? format(parseISO(facility?.facilitySnapshot?.dates?.facilityEndDate), 'dd MMMM yyyy')

@@ -33,7 +33,7 @@ context('PDC_RECONCILE users cannot add payments with invalid fee selections', (
     .withPayments([PaymentEntityMockBuilder.forCurrency(CURRENCY.GBP).withId(2).build()])
     .build();
 
-  const { premiumPaymentsTab } = pages.utilisationReportPage;
+  const { premiumPaymentsContent } = pages.utilisationReportPage.tabs;
 
   before(() => {
     cy.task(NODE_TASKS.DELETE_ALL_FROM_SQL_DB);
@@ -62,57 +62,57 @@ context('PDC_RECONCILE users cannot add payments with invalid fee selections', (
     });
 
     it('should not allow user to add a payment with no fees selected', () => {
-      premiumPaymentsTab.addAPaymentButton().click();
+      premiumPaymentsContent.addAPaymentButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
 
       errorSummary().contains('Select a fee or fees to add a payment to');
-      premiumPaymentsTab.premiumPaymentsTable.error().should('exist');
-      cy.assertText(premiumPaymentsTab.premiumPaymentsTable.error(), 'Error: Select a fee or fees to add a payment to');
+      premiumPaymentsContent.premiumPaymentsTable.error().should('exist');
+      cy.assertText(premiumPaymentsContent.premiumPaymentsTable.error(), 'Error: Select a fee or fees to add a payment to');
     });
 
     it('should not allow user to add a payment to multiple fees with different statuses', () => {
-      premiumPaymentsTab.premiumPaymentsTable.checkbox([toDoGbpFeeRecord.id], toDoGbpFeeRecord.paymentCurrency, toDoGbpFeeRecord.status).click();
-      premiumPaymentsTab.premiumPaymentsTable
+      premiumPaymentsContent.premiumPaymentsTable.checkbox([toDoGbpFeeRecord.id], toDoGbpFeeRecord.paymentCurrency, toDoGbpFeeRecord.status).click();
+      premiumPaymentsContent.premiumPaymentsTable
         .checkbox([doesNotMatchGbpFeeRecord.id], doesNotMatchGbpFeeRecord.paymentCurrency, doesNotMatchGbpFeeRecord.status)
         .click();
 
-      premiumPaymentsTab.addAPaymentButton().click();
+      premiumPaymentsContent.addAPaymentButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
 
       errorSummary().contains('Select a fee or fees with the same status');
-      premiumPaymentsTab.premiumPaymentsTable.error().should('exist');
-      cy.assertText(premiumPaymentsTab.premiumPaymentsTable.error(), 'Error: Select a fee or fees with the same status');
+      premiumPaymentsContent.premiumPaymentsTable.error().should('exist');
+      cy.assertText(premiumPaymentsContent.premiumPaymentsTable.error(), 'Error: Select a fee or fees with the same status');
     });
 
     it('should not allow user to add a payment to multiple fees with DOES_NOT_MATCH status', () => {
-      premiumPaymentsTab.premiumPaymentsTable
+      premiumPaymentsContent.premiumPaymentsTable
         .checkbox([doesNotMatchGbpFeeRecord.id], doesNotMatchGbpFeeRecord.paymentCurrency, doesNotMatchGbpFeeRecord.status)
         .click();
-      premiumPaymentsTab.premiumPaymentsTable
+      premiumPaymentsContent.premiumPaymentsTable
         .checkbox([anotherDoesNotMatchGbpFeeRecord.id], anotherDoesNotMatchGbpFeeRecord.paymentCurrency, anotherDoesNotMatchGbpFeeRecord.status)
         .click();
 
-      premiumPaymentsTab.addAPaymentButton().click();
+      premiumPaymentsContent.addAPaymentButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
 
       errorSummary().contains("Select only one fee or fee group at 'Does not match' status");
-      premiumPaymentsTab.premiumPaymentsTable.error().should('exist');
-      cy.assertText(premiumPaymentsTab.premiumPaymentsTable.error(), "Error: Select only one fee or fee group at 'Does not match' status");
+      premiumPaymentsContent.premiumPaymentsTable.error().should('exist');
+      cy.assertText(premiumPaymentsContent.premiumPaymentsTable.error(), "Error: Select only one fee or fee group at 'Does not match' status");
     });
 
     it('should not allow user to add a payment to fees with different payment currencies', () => {
-      premiumPaymentsTab.premiumPaymentsTable.checkbox([toDoGbpFeeRecord.id], toDoGbpFeeRecord.paymentCurrency, toDoGbpFeeRecord.status).click();
-      premiumPaymentsTab.premiumPaymentsTable.checkbox([toDoEurFeeRecord.id], toDoEurFeeRecord.paymentCurrency, toDoEurFeeRecord.status).click();
-      premiumPaymentsTab.addAPaymentButton().click();
+      premiumPaymentsContent.premiumPaymentsTable.checkbox([toDoGbpFeeRecord.id], toDoGbpFeeRecord.paymentCurrency, toDoGbpFeeRecord.status).click();
+      premiumPaymentsContent.premiumPaymentsTable.checkbox([toDoEurFeeRecord.id], toDoEurFeeRecord.paymentCurrency, toDoEurFeeRecord.status).click();
+      premiumPaymentsContent.addAPaymentButton().click();
 
       cy.url().should('eq', relative(`/utilisation-reports/${reportId}`));
 
       errorSummary().contains('Select fees with the same Reported payment currency');
-      premiumPaymentsTab.premiumPaymentsTable.error().should('exist');
-      cy.assertText(premiumPaymentsTab.premiumPaymentsTable.error(), 'Error: Select fees with the same Reported payment currency');
+      premiumPaymentsContent.premiumPaymentsTable.error().should('exist');
+      cy.assertText(premiumPaymentsContent.premiumPaymentsTable.error(), 'Error: Select fees with the same Reported payment currency');
     });
   });
 });

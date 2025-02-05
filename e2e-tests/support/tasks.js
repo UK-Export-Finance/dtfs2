@@ -8,6 +8,7 @@ const {
   AzureFileInfoEntity,
   FacilityUtilisationDataEntity,
   PaymentMatchingToleranceEntity,
+  FeeRecordCorrectionTransientFormDataEntity,
   FeeRecordCorrectionRequestTransientFormDataEntity,
   FeeRecordCorrectionEntity,
 } = require('@ukef/dtfs2-common');
@@ -124,6 +125,15 @@ module.exports = {
     };
 
     /**
+     * Inserts fee record corrections into the SQL database
+     * @param {FeeRecordCorrectionEntity[]} corrections
+     * @returns {Promise<FeeRecordEntity[]>} The inserted fee records
+     */
+    const insertFeeRecordCorrectionsIntoDb = async (corrections) => {
+      return await SqlDbDataSource.manager.save(FeeRecordCorrectionEntity, corrections);
+    };
+
+    /**
      * Fetches fee records with corrections and payments from the SQL database by ID
      * @param {string} feeRecordId
      * @returns The feeRecord with the specified ID
@@ -181,6 +191,12 @@ module.exports = {
       await SqlDbDataSource.manager.delete(FeeRecordCorrectionRequestTransientFormDataEntity, {});
 
     /**
+     * Deletes all rows from the fee record request transient form data table
+     */
+    const removeAllFeeRecordCorrectionTransientFormDataFromDb = async () =>
+      await SqlDbDataSource.manager.delete(FeeRecordCorrectionTransientFormDataEntity, {});
+
+    /**
      * Deletes all data from the SQL database
      */
     const deleteAllFromSqlDb = async () =>
@@ -192,6 +208,7 @@ module.exports = {
         await SqlDbDataSource.manager.delete(FacilityUtilisationDataEntity, {}),
         await SqlDbDataSource.manager.delete(PaymentMatchingToleranceEntity, {}),
         await SqlDbDataSource.manager.delete(FeeRecordCorrectionRequestTransientFormDataEntity, {}),
+        await SqlDbDataSource.manager.delete(FeeRecordCorrectionTransientFormDataEntity, {}),
         await SqlDbDataSource.manager.delete(FeeRecordCorrectionEntity, {}),
       ]);
 
@@ -317,6 +334,7 @@ module.exports = {
       insertVersion0Deal,
       insertVersion0Facility,
       insertFeeRecordsIntoDb,
+      insertFeeRecordCorrectionsIntoDb,
       getFeeRecordById,
       removeAllPaymentMatchingTolerancesFromDb,
       reinsertZeroThresholdPaymentMatchingTolerances,
@@ -326,6 +344,7 @@ module.exports = {
       removeAllFeeRecordsFromDb,
       deleteAllFromSqlDb,
       removeAllFeeRecordCorrectionRequestTransientFormDataFromDb,
+      removeAllFeeRecordCorrectionTransientFormDataFromDb,
     };
   },
 };

@@ -32,6 +32,32 @@
  *           - IN_PROGRESS
  *           - COMPLETED
  *         description: The current status of the amendment.
+ *       eligibilityCriteria:
+ *         type: object
+ *         properties:
+ *           version:
+ *             type: integer
+ *             description: The version number of the eligibility criteria.
+ *           criteria:
+ *             type: array
+ *             items:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   description: The ID of the criteria.
+ *                 text:
+ *                   type: string
+ *                   description: The text of the criteria.
+ *                 textList:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   description: The list of text items for the criteria.
+ *                 answer:
+ *                   type: boolean
+ *                   nullable: true
+ *                   description: The answer to the criteria.
  *       version:
  *         type: integer
  *         description: The version number of the amendment.
@@ -106,6 +132,10 @@
  *       effectiveDate:
  *         type: integer
  *         description: The effective date of the amendment in seconds.
+ *       effectiveFrom:
+ *         type: integer
+ *         format: int64
+ *         description: The effective from date of the amendment in seconds.
  *       createdBy:
  *         type: object
  *         properties:
@@ -129,11 +159,6 @@
  *         format: int64
  *         nullable: true
  *         description: The new cover end date in seconds.
- *       currentCoverEndDate:
- *         type: integer
- *         format: int64
- *         nullable: true
- *         description: The current cover end date in seconds.
  *       isUsingFacilityEndDate:
  *         type: boolean
  *         description: Indicates if the facility end date is being used.
@@ -152,10 +177,6 @@
  *         type: number
  *         nullable: true
  *         description: The new value of the facility.
- *       currentValue:
- *         type: number
- *         nullable: true
- *         description: The current value of the facility.
  *       currency:
  *         type: string
  *         enum:
@@ -165,11 +186,29 @@
  *           - JPY
  *         nullable: true
  *         description: The currency of the facility value.
- *       ukefExposure:
- *         type: number
- *         nullable: true
- *         description: The UKEF exposure amount.
- *       coveredPercentage:
- *         type: number
- *         description: The percentage of the facility covered.
+ *       eligibilityCriteria:
+ *         type: object
+ *         properties:
+ *           version:
+ *             type: integer
+ *             description: The version number of the eligibility criteria.
+ *           criteria:
+ *             type: array
+ *             items:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   description: The ID of the criteria.
+ *                 text:
+ *                   type: string
+ *                   description: The text of the criteria.
+ *                 textList:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   description: The list of text items for the criteria.
+ *                 answer:
+ *                   type: boolean
+ *                   description: The answer to the criteria.
  */

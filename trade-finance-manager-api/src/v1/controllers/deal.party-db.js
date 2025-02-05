@@ -1,3 +1,5 @@
+const { isSalesforceCustomerCreationEnabled } = require('@ukef/dtfs2-common');
+
 const api = require('../api');
 
 /**
@@ -28,17 +30,45 @@ const getCompany = async (req, res) => {
   }
 };
 
-const getPartyUrn = async ({ companyRegNo }) => {
+/**
+ * Gets a PartyURN
+ * @param {string} companyRegNo The company registration number
+ * @param {string} companyName The company name
+ * @param {string} probabilityOfDefault The probability of default
+ * @returns {Promise<string>} PartyURN or '' if there is an error
+ */
+const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault }) => {
   if (!companyRegNo) {
     return '';
   }
 
-  const partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
+  let partyDbInfo = null;
+  if (isSalesforceCustomerCreationEnabled()) {
+    if (!companyName) {
+      console.error('No company name provided');
+      return '';
+    }
+
+    if (!probabilityOfDefault) {
+      console.error('No probability of default provided');
+      return '';
+    }
+
+    partyDbInfo = await api.getOrCreatePartyDbInfo({ companyRegNo, companyName, probabilityOfDefault });
+  } else {
+    partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
+  }
   if (!partyDbInfo) {
+    console.error('No partyDbInfo returned');
     return '';
   }
 
-  return partyDbInfo[0].partyUrn;
+  const partyUrn = partyDbInfo?.[0]?.partyUrn;
+  if (partyUrn) {
+    return partyUrn;
+  }
+  console.error('No PartyURN in response');
+  return '';
 };
 
 const identifyDealParties = (deal) => ({
@@ -54,13 +84,16 @@ const addPartyUrns = async (deal, auditDetails) => {
   }
 
   const { hasExporter, hasIndemnifier, hasAgent, hasBuyer } = identifyDealParties(deal);
+  const companyRegNo = deal.exporter.companiesHouseRegistrationNumber;
+  const { companyName } = deal.exporter;
+  const { probabilityOfDefault } = deal.exporter;
 
   const dealUpdate = {
     tfm: {
       ...deal.tfm,
       parties: {
         exporter: {
-          partyUrn: await getPartyUrn({ companyRegNo: deal.exporter.companiesHouseRegistrationNumber }),
+          partyUrn: await getPartyUrn({ companyRegNo, companyName, probabilityOfDefault }),
           partyUrnRequired: hasExporter,
         },
         buyer: {
@@ -90,4 +123,5 @@ const addPartyUrns = async (deal, auditDetails) => {
 module.exports = {
   getCompany,
   addPartyUrns,
+  getPartyUrn,
 };

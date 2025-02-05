@@ -101,7 +101,7 @@ const getDeals = async (queryParams, token) => {
   });
   const { deals, pagination } = response.data;
 
-  if (queryParams.page >= pagination.totalPages) {
+  if (queryParams.page >= pagination?.totalPages) {
     throw new PageOutOfBoundsError('Requested page number exceeds the maximum page number');
   }
 
@@ -407,7 +407,7 @@ const createActivity = async (dealId, activityUpdate, token) => {
   }
 };
 
-// TODO DTFS2-6892 - remove this function
+// TODO DTFS2-7772 - remove this function
 const login = async (username, password) => {
   try {
     const response = await axios({
@@ -1099,7 +1099,7 @@ const addPaymentToFeeRecords = async (reportId, parsedAddPaymentFormValues, feeR
  * Create a record correction
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The user
  * @param {string} userToken - The user token
  * @returns {Promise<import('./api-response-types').PostFeeRecordCorrectionResponseBody>}
  */
@@ -1423,7 +1423,7 @@ const getFeeRecordCorrectionRequestReview = async (reportId, feeRecordId, userId
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
  * @param {import('@ukef/dtfs2-common').RecordCorrectionRequestTransientFormData} formData - The transient form data
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The session user
  * @param {string} userToken - The user token
  * @returns {Promise<void>}
  * @throws {Error} If the API request fails
@@ -1449,7 +1449,7 @@ const updateFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
  * Gets the fee record by report id, fee record id and user
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The session user
  * @param {string} userToken - The user token
  * @returns {Promise<import('@ukef/dtfs2-common').RecordCorrectionRequestTransientFormData | {}>}
  */
@@ -1472,7 +1472,7 @@ const getFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, us
  * Deletes the fee record by report id, fee record id and user
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The session user
  * @param {string} userToken - The user token
  * @returns {Promise<void>}
  */

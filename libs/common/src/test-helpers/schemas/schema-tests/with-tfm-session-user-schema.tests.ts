@@ -3,18 +3,20 @@ import { ObjectId } from 'mongodb';
 import { WithSchemaTestParams } from '../with-schema-test.type';
 import { TEAM_IDS } from '../../../constants';
 import { withSchemaValidationTests } from '../with-schema-validation.tests';
-import { withDefaultOptionsTests } from '../primitive-object-tests';
+import { withDefaultOptionsTests } from '../primitive-types-tests';
 
 export const withTfmSessionUserSchemaTests = <Schema extends ZodSchema>({
   schema,
   options = {},
   getTestObjectWithUpdatedParameter,
+  getUpdatedParameterFromParsedTestObject,
 }: WithSchemaTestParams<Schema>) => {
   describe('with TFM_SESSION_USER_SCHEMA tests', () => {
     withDefaultOptionsTests({
       schema,
       options,
       getTestObjectWithUpdatedParameter,
+      getUpdatedParameterFromParsedTestObject,
     });
 
     withSchemaValidationTests({

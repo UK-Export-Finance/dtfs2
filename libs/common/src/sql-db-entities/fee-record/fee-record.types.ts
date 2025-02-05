@@ -1,5 +1,5 @@
 import { DbRequestSource, DbRequestSourceParam } from '../helpers';
-import { Currency, FeeRecordStatus } from '../../types';
+import { Currency, FeeRecordStatus, RecordCorrectionValues } from '../../types';
 import { UtilisationReportEntity } from '../utilisation-report';
 
 export type CreateFeeRecordParams = DbRequestSourceParam & {
@@ -23,6 +23,11 @@ export type UpdateWithStatusParams = {
   requestSource: DbRequestSource;
 };
 
+export type UpdateWithCorrectionParams = {
+  requestSource: DbRequestSource;
+  correctedValues: RecordCorrectionValues;
+};
+
 export type UpdateWithKeyingDataParams = {
   status: Extract<FeeRecordStatus, 'READY_TO_KEY' | 'RECONCILED'>;
   fixedFeeAdjustment: number;
@@ -31,6 +36,7 @@ export type UpdateWithKeyingDataParams = {
 };
 
 export type RemoveAllPaymentsParams = {
+  status: FeeRecordStatus;
   requestSource: DbRequestSource;
 };
 
