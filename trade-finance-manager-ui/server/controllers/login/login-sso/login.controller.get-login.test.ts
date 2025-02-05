@@ -17,7 +17,8 @@ describe('controllers - login (sso)', () => {
     let userSessionService: UserSessionService;
 
     const getAuthCodeUrlMock = jest.fn();
-    const next = jest.fn();
+
+    console.error = jest.fn();
 
     beforeEach(() => {
       resetAllWhenMocks();
@@ -114,7 +115,7 @@ describe('controllers - login (sso)', () => {
           mockFailedGetAuthCodeUrl();
         });
 
-        it('should call next with error', async () => {
+        it('should call console.error', async () => {
           // Arrange
           const { req, res } = httpMocks.createMocks({ session: {}, originalUrl: aRedirectUrl });
 
@@ -125,7 +126,19 @@ describe('controllers - login (sso)', () => {
           await loginController.getLogin(req, res);
 
           // Assert
-          expect(next).toHaveBeenCalledWith(error);
+          expect(console.error).toHaveBeenCalledWith('Unable to log in user %o', error);
+        });
+
+        it('should redirect to problem-with-service page', async () => {
+          // Arrange
+
+          const { req, res } = httpMocks.createMocks({ session: {}, originalUrl: aRedirectUrl });
+
+          // Act
+          await loginController.getLogin(req, res);
+
+          // Assert
+          expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
         });
       });
     });
