@@ -24,11 +24,6 @@ describe('PORTAL_FACILITY_AMENDMENT_USER_VALUES', () => {
         options: { isOptional: true },
       },
       {
-        parameterPath: 'currentCoverEndDate',
-        type: 'UNIX_TIMESTAMP_SECONDS_SCHEMA',
-        options: { isOptional: true },
-      },
-      {
         parameterPath: 'isUsingFacilityEndDate',
         type: 'boolean',
         options: { isOptional: true },
@@ -53,13 +48,12 @@ describe('PORTAL_FACILITY_AMENDMENT_USER_VALUES', () => {
         type: 'number',
         options: { isOptional: true },
       },
+      { parameterPath: 'currency', type: 'CURRENCY_SCHEMA', options: { isOptional: true } },
       {
-        parameterPath: 'currentValue',
+        parameterPath: 'effectiveDate',
         type: 'number',
         options: { isOptional: true },
       },
-      { parameterPath: 'currency', type: 'CURRENCY_SCHEMA', options: { isOptional: true } },
-      { parameterPath: 'coveredPercentage', type: 'number', options: { isOptional: true } },
     ],
   });
 });
