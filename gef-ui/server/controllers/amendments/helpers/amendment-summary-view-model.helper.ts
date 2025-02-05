@@ -97,7 +97,6 @@ const generateFacilityValueSummaryRows = (amendment: PortalFacilityAmendmentWith
         ],
       },
     },
-    ...generateFacilityEndDateSummaryRows(amendment),
   ];
 };
 
@@ -130,25 +129,25 @@ ${amendment.changeFacilityValue ? `<li>Facility value</li>` : ''}
 };
 
 const generateAmendmentSummaryEligibilityRows = (amendment: PortalFacilityAmendmentWithUkefId): SummaryListRow[] => {
-  return amendment.eligibilityCriteria.criteria.map((criteria) => {
+  return amendment.eligibilityCriteria.criteria.map((criterion) => {
     const formattedListHtml =
-      criteria.textList &&
+      criterion.textList &&
       `<ol type="i" class="govuk-!-margin-bottom-0 govuk-!-margin-top-1">
-${criteria.textList.map((item) => `<li>${item}</li>`).join('')}
+${criterion.textList.map((item) => `<li>${item}</li>`).join('')}
 </ol>`;
 
     let formattedAnswer = '-';
 
-    if (criteria.answer === true) {
+    if (criterion.answer === true) {
       formattedAnswer = 'True';
     }
-    if (criteria.answer === false) {
+    if (criterion.answer === false) {
       formattedAnswer = 'False';
     }
 
     return {
       key: {
-        html: `${criteria.id}. ${criteria.text} ${formattedListHtml ?? ''}`,
+        html: `${criterion.id}. ${criterion.text}${formattedListHtml ?? ''}`,
       },
       value: {
         text: formattedAnswer,
@@ -156,9 +155,9 @@ ${criteria.textList.map((item) => `<li>${item}</li>`).join('')}
       actions: {
         items: [
           {
-            href: `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.ELIGIBILITY })}/#${criteria.id}`,
+            href: `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.ELIGIBILITY })}/#${criterion.id}`,
             text: 'Change',
-            visuallyHiddenText: `response to eligibility criteria ${criteria.id}`,
+            visuallyHiddenText: `response to eligibility criteria ${criterion.id}`,
           },
         ],
       },

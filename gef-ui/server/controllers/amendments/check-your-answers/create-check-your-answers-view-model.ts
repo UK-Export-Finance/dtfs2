@@ -4,7 +4,7 @@ import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { CheckYourAnswersViewModel } from '../../../types/view-models/amendments/check-your-answers-view-model';
 import { Facility } from '../../../types/facility';
 import { Deal } from '../../../types/deal';
-import { mapAmendmentToAmendmentSummaryListParams } from '../helpers/map-amendment-to-amendment-summary-view-model';
+import { mapAmendmentToAmendmentSummaryListParams } from '../helpers/amendment-summary-view-model.helper';
 
 export const createCheckYourAnswersViewModel = ({
   amendment,
