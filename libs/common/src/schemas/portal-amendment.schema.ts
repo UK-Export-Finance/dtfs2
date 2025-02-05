@@ -32,7 +32,7 @@ export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
         ),
       })
       .optional(),
-    effectiveFrom: z.number().nonnegative().optional(),
+    effectiveDate: z.number().nonnegative().optional(),
   })
   .strict();
 
