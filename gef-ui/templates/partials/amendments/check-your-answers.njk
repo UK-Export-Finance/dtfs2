@@ -1,0 +1,69 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% import '../../_macros/amendments/amendment-summary-list.njk' as amendmentSummaryList %}
+
+{% block pageTitle -%}
+  Check your answers before submitting the amendment request
+{%- endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors.errorSummary,
+      attributes: {
+        "data-cy": "error-summary"
+      },
+      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: previousPage,
+    attributes: {
+      "data-cy": "back-link"
+    }
+  }) }}
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <div class="govuk-grid-column-three-quarters">
+      <form method="post">
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-4 govuk-!-margin-top-1" data-cy="page-heading">
+          <span class="govuk-caption-l" data-cy="heading-caption">
+            {{ exporterName }}, {{ facilityType }} facility
+          </span>
+          Check your answers before submitting the amendment request
+        </h1>
+
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ amendmentSummaryList.render(amendmentRows, eligibilityRows, effectiveDateRows) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Submit to be checked at your bank",
+            attributes: {
+              "data-cy": "submit-button"
+            }
+          }) }}
+
+          <a href="{{ cancelUrl }}"  data-cy="cancel-link" class="govuk-link">Cancel</a>
+        </div>
+
+        {{ govukDetails({
+          summaryText: "Help with declarations",
+          text: 'Read the Master Guarantee Agreement (MGA) definitions and interpretation document for terminology used in the declarations.',
+          attributes: {
+            'data-cy': 'help-with-declarations'
+          }
+        }) }}
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

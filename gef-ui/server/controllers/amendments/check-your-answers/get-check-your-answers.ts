@@ -3,8 +3,7 @@ import { Response } from 'express';
 import * as api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper';
-import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper';
-import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
+import { createCheckYourAnswersViewModel } from '../helpers/create-check-your-answers-view-model';
 
 export type GetCheckYourAnswersRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -40,15 +39,7 @@ export const getCheckYourAnswers = async (req: GetCheckYourAnswersRequest, res: 
       return res.redirect('/not-found');
     }
 
-    const viewModel = {
-      exporterName: deal.exporter.companyName,
-      facilityType: facility.type,
-      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.CHECK_YOUR_ANSWERS, amendment),
-      amendment,
-    };
-
-    return res.render('partials/amendments/check-your-answers.njk', viewModel);
+    return res.render('partials/amendments/check-your-answers.njk', createCheckYourAnswersViewModel({ amendment, facility, deal }));
   } catch (error) {
     console.error('Error getting amendments check your answers page %o', error);
     return res.render('partials/problem-with-service.njk');
