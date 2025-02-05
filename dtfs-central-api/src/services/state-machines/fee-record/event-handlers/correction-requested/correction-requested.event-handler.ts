@@ -8,6 +8,8 @@ type CorrectionRequestedEventPayload = {
   requestedByUser: RequestedByUser;
   reasons: RecordCorrectionReason[];
   additionalInfo: string;
+  bankTeamName: string;
+  bankTeamEmails: string[];
 };
 
 export type FeeRecordCorrectionRequestedEvent = BaseFeeRecordEvent<'CORRECTION_REQUESTED', CorrectionRequestedEventPayload>;
@@ -25,7 +27,7 @@ export type FeeRecordCorrectionRequestedEvent = BaseFeeRecordEvent<'CORRECTION_R
  */
 export const handleFeeRecordCorrectionRequestedEvent = async (
   feeRecord: FeeRecordEntity,
-  { transactionEntityManager, requestSource, requestedByUser, reasons, additionalInfo }: CorrectionRequestedEventPayload,
+  { transactionEntityManager, requestSource, requestedByUser, reasons, additionalInfo, bankTeamName, bankTeamEmails }: CorrectionRequestedEventPayload,
 ): Promise<FeeRecordEntity> => {
   const correction = FeeRecordCorrectionEntity.createRequestedCorrection({
     feeRecord,
@@ -33,6 +35,8 @@ export const handleFeeRecordCorrectionRequestedEvent = async (
     reasons,
     additionalInfo,
     requestSource,
+    bankTeamName,
+    bankTeamEmails,
   });
 
   await transactionEntityManager.save(FeeRecordCorrectionEntity, correction);

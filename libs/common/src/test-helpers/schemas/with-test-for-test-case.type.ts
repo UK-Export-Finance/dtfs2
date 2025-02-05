@@ -20,7 +20,8 @@ export type TestCaseTypes =
   | 'ENTRA_ID_USER_SCHEMA'
   | 'CURRENCY_SCHEMA'
   | 'ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA'
-  | 'TFM_SESSION_USER_SCHEMA';
+  | 'TFM_SESSION_USER_SCHEMA'
+  | 'UPSERT_TFM_USER_REQUEST_SCHEMA';
 
 /**
  * The test case to be tested, including the type and any options that are required
@@ -48,4 +49,5 @@ export type TestCase =
   | TestCaseWithType<'ENTRA_ID_USER_SCHEMA'>
   | TestCaseWithType<'CURRENCY_SCHEMA'>
   | TestCaseWithType<'ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA'>
-  | TestCaseWithType<'TFM_SESSION_USER_SCHEMA'>;
+  | TestCaseWithType<'TFM_SESSION_USER_SCHEMA'>
+  | TestCaseWithType<'UPSERT_TFM_USER_REQUEST_SCHEMA'>;
