@@ -60,13 +60,13 @@ describe('controllers - login (sso)', () => {
           }));
         });
 
-        it('logs an error', async () => {
+        it('should log an error', async () => {
           await loginController.handleSsoRedirectForm(req, res);
 
-          expect(consoleErrorMock).toHaveBeenCalledWith('Unable to redirect user after login: %O', expect.any(UserPartialLoginDataNotDefinedError));
+          expect(consoleErrorMock).toHaveBeenCalledWith('Unable to redirect the user after login %o', expect.any(UserPartialLoginDataNotDefinedError));
         });
 
-        it('renders the problem with service page', async () => {
+        it('should render the problem with service page', async () => {
           await loginController.handleSsoRedirectForm(req, res);
 
           expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
@@ -92,13 +92,13 @@ describe('controllers - login (sso)', () => {
           }));
         });
 
-        it('logs an error', async () => {
+        it('should log an error', async () => {
           await loginController.handleSsoRedirectForm(req, res);
 
-          expect(consoleErrorMock).toHaveBeenCalledWith('Unable to redirect user after login: %O', expect.any(InvalidPayloadError));
+          expect(consoleErrorMock).toHaveBeenCalledWith('Unable to redirect the user after login %o', expect.any(InvalidPayloadError));
         });
 
-        it('renders the problem with service page', async () => {
+        it('should render the problem with service page', async () => {
           await loginController.handleSsoRedirectForm(req, res);
 
           expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
@@ -113,7 +113,7 @@ describe('controllers - login (sso)', () => {
           }));
         });
 
-        it('calls loginService.handleSsoRedirectForm with the correct parameters', async () => {
+        it('should call loginService.handleSsoRedirectForm with the correct parameters', async () => {
           await loginController.handleSsoRedirectForm(req, res);
 
           expect(handleSsoRedirectFormMock).toHaveBeenCalledWith({
@@ -123,7 +123,7 @@ describe('controllers - login (sso)', () => {
           });
         });
 
-        it('calls loginService.handleSsoRedirectForm once', async () => {
+        it('should call loginService.handleSsoRedirectForm once', async () => {
           await loginController.handleSsoRedirectForm(req, res);
 
           expect(handleSsoRedirectFormMock).toHaveBeenCalledTimes(1);
@@ -137,13 +137,13 @@ describe('controllers - login (sso)', () => {
             handleSsoRedirectFormMock.mockRejectedValueOnce(thrownError);
           });
 
-          it('logs an error', async () => {
+          it('should log an error', async () => {
             await loginController.handleSsoRedirectForm(req, res);
 
-            expect(consoleErrorMock).toHaveBeenCalledWith('Unable to redirect user after login: %O', thrownError);
+            expect(consoleErrorMock).toHaveBeenCalledWith('Unable to redirect the user after login %o', thrownError);
           });
 
-          it('renders the problem with service page', async () => {
+          it('should render the problem with service page', async () => {
             await loginController.handleSsoRedirectForm(req, res);
 
             expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
@@ -160,7 +160,7 @@ describe('controllers - login (sso)', () => {
               handleSsoRedirectFormMock.mockResolvedValueOnce(handleSsoRedirectFormResponse);
             });
 
-            it('updates the session', async () => {
+            it('should update the session', async () => {
               await loginController.handleSsoRedirectForm(req, res);
 
               expect(createLoggedInSessionMock).toHaveBeenCalledWith({
@@ -170,13 +170,13 @@ describe('controllers - login (sso)', () => {
               });
             });
 
-            it('updates the session once', async () => {
+            it('should update the session once', async () => {
               await loginController.handleSsoRedirectForm(req, res);
 
               expect(createLoggedInSessionMock).toHaveBeenCalledTimes(1);
             });
 
-            it('redirects to the home page', async () => {
+            it('should redirect to the home page', async () => {
               await loginController.handleSsoRedirectForm(req, res);
 
               expect(res._getRedirectUrl()).toEqual('/');
@@ -191,7 +191,7 @@ describe('controllers - login (sso)', () => {
               handleSsoRedirectFormMock.mockResolvedValueOnce(handleSsoRedirectFormResponse);
             });
 
-            it('updates the session', async () => {
+            it('should update the session', async () => {
               await loginController.handleSsoRedirectForm(req, res);
 
               expect(createLoggedInSessionMock).toHaveBeenCalledWith({
@@ -201,13 +201,13 @@ describe('controllers - login (sso)', () => {
               });
             });
 
-            it('updates the session once', async () => {
+            it('should update the session once', async () => {
               await loginController.handleSsoRedirectForm(req, res);
 
               expect(createLoggedInSessionMock).toHaveBeenCalledTimes(1);
             });
 
-            it('redirects to the success redirect parameter', async () => {
+            it('should redirect to the success redirect parameter', async () => {
               await loginController.handleSsoRedirectForm(req, res);
 
               expect(res._getRedirectUrl()).toEqual(handleSsoRedirectFormResponse.successRedirect);
