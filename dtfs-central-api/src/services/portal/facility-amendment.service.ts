@@ -14,7 +14,7 @@ import {
   PORTAL_AMENDMENT_UNDERWAY_STATUSES,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, remove } from 'lodash';
 import { findOneUser } from '../../v1/controllers/user/get-user.controller';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 import { EligibilityCriteriaAmendmentsRepo } from '../../repositories/portal/eligibility-criteria-amendments.repo';
@@ -28,11 +28,15 @@ export class PortalFacilityAmendmentService {
    * @param params.dealId - The deal id
    * @returns {Promise<void>} A promise that resolves when the find operation is complete.
    */
-  public static async validateNoOtherAmendmentsUnderWayOnDeal({ dealId }: { dealId: string }): Promise<void> {
+  public static async validateNoOtherAmendmentsUnderWayOnDeal({ dealId, amendmentId }: { dealId: string; amendmentId?: string }): Promise<void> {
     const existingPortalAmendmentsUnderWay = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({
       dealId,
       statuses: PORTAL_AMENDMENT_UNDERWAY_STATUSES,
     });
+
+    if (amendmentId) {
+      remove(existingPortalAmendmentsUnderWay, (amendment) => new ObjectId(amendmentId) === amendment.amendmentId);
+    }
 
     if (existingPortalAmendmentsUnderWay.length > 0) {
       console.error('There is a portal facility amendment already under way on this deal');
@@ -187,6 +191,7 @@ export class PortalFacilityAmendmentService {
   public static async submitPortalFacilityAmendmentToChecker({
     amendmentId,
     facilityId,
+    dealId,
     auditDetails,
   }: {
     amendmentId: string;
@@ -200,7 +205,7 @@ export class PortalFacilityAmendmentService {
       status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
     };
 
-    // TODO: DTFS2-7793 - check that there is not an existing amendment on the deal.
+    await this.validateNoOtherAmendmentsUnderWayOnDeal({ dealId, amendmentId });
 
     const facilityMongoId = new ObjectId(facilityId);
     const amendmentMongoId = new ObjectId(amendmentId);
