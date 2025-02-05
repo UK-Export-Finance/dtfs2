@@ -4,17 +4,26 @@ import { UNIX_TIMESTAMP_MILLISECONDS_SCHEMA } from '../unix-timestamp.schema';
 import { AUDIT_DATABASE_RECORD_SCHEMA } from '../audit-database-record.schema';
 import { OBJECT_ID_SCHEMA } from '../object-id.schema';
 
-// TODO update docs, tests
+/**
+ * These fields only are relevant to users when SSO is not enabled
+ */
 const TFM_USER_NON_SSO_SPECIFIC_SCHEMA = z.object({
   salt: z.string(),
   hash: z.string(),
   loginFailureCount: z.number().optional(),
 });
 
+/**
+ * These fields only are relevant to users when SSO is enabled
+ */
 const TFM_USER_SSO_SPECIFIC_SCHEMA = z.object({
   azureOid: z.string(),
 });
 
+/**
+ * The base schema for a TFM user
+ * This schema contains login agnostic properties of a TFM user
+ */
 const BASE_TFM_USER_SCHEMA = z.object({
   _id: OBJECT_ID_SCHEMA,
   username: z.string(),
@@ -29,4 +38,7 @@ const BASE_TFM_USER_SCHEMA = z.object({
   auditRecord: AUDIT_DATABASE_RECORD_SCHEMA.optional(),
 });
 
+/**
+ * The user schema can contain a mix of login specific properties
+ */
 export const TFM_USER_SCHEMA = BASE_TFM_USER_SCHEMA.merge(TFM_USER_NON_SSO_SPECIFIC_SCHEMA.partial()).merge(TFM_USER_SSO_SPECIFIC_SCHEMA.partial());
