@@ -7,7 +7,7 @@ jest.mock('@ukef/dtfs2-common', () => ({
   isTfmSsoFeatureFlagEnabled: jest.fn(),
 }));
 
-jest.mock('./authSso', () => ({
+jest.mock('./auth-sso', () => ({
   getAuthSsoRouter: jest.fn(),
 }));
 
