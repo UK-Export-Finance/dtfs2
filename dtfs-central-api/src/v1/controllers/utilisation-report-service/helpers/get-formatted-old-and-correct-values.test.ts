@@ -1,7 +1,7 @@
 import { FeeRecordEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { getFormattedOldAndCorrectValues } from './get-formatted-old-and-correct-values';
-import { mapCorrectionReasonsToFormattedOldFeeRecordValues } from '../../../../../helpers/map-correction-reasons-to-formatted-old-fee-record-values';
-import { mapCorrectionReasonsAndValuesToFormattedValues } from '../../../../../helpers/map-correction-reasons-and-values-to-formatted-values';
+import { mapCorrectionReasonsToFormattedOldFeeRecordValues } from '../../../../helpers/map-correction-reasons-to-formatted-old-fee-record-values';
+import { mapCorrectionReasonsAndValuesToFormattedValues } from '../../../../helpers/map-correction-reasons-and-values-to-formatted-values';
 
 describe('get-formatted-old-and-correct-values', () => {
   const feeRecordId = 11;

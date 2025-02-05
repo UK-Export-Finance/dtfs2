@@ -40,3 +40,4 @@ export * from './fee-record-correction-review-information';
 export * from './validation-error';
 export * from './record-correction-form-values';
 export * from './record-correction-form-value-validation-errors';
+export * from './record-correction-log';
