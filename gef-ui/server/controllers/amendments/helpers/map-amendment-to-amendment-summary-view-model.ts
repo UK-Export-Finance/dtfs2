@@ -1,10 +1,7 @@
 import { format, fromUnixTime } from 'date-fns';
 import { DATE_FORMATS, PortalFacilityAmendmentWithUkefId, SummaryListRow } from '@ukef/dtfs2-common';
-import { getAmendmentsUrl, getPreviousPage } from './navigation.helper';
+import { getAmendmentsUrl } from './navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
-import { CheckYourAnswersViewModel } from '../../../types/view-models/amendments/check-your-answers-view-model';
-import { Facility } from '../../../types/facility';
-import { Deal } from '../../../types/deal';
 
 const generateFacilityEndDateSummaryRows = (amendment: PortalFacilityAmendmentWithUkefId): SummaryListRow[] => {
   if (amendment.isUsingFacilityEndDate) {
@@ -191,19 +188,7 @@ const generateAmendmentSummaryEffectiveDateRows = (amendment: PortalFacilityAmen
   ];
 };
 
-export const createCheckYourAnswersViewModel = ({
-  amendment,
-  facility,
-  deal,
-}: {
-  amendment: PortalFacilityAmendmentWithUkefId;
-  facility: Facility;
-  deal: Deal;
-}): CheckYourAnswersViewModel => ({
-  exporterName: deal.exporter.companyName,
-  facilityType: facility.type,
-  cancelUrl: getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-  previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.CHECK_YOUR_ANSWERS, amendment),
+export const mapAmendmentToAmendmentSummaryListParams = (amendment: PortalFacilityAmendmentWithUkefId) => ({
   amendmentRows: generateAmendmentSummaryAmendmentRows(amendment),
   eligibilityRows: generateAmendmentSummaryEligibilityRows(amendment),
   effectiveDateRows: generateAmendmentSummaryEffectiveDateRows(amendment),

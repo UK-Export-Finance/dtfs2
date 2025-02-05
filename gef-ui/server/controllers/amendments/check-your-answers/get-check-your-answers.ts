@@ -3,7 +3,7 @@ import { Response } from 'express';
 import * as api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper';
-import { createCheckYourAnswersViewModel } from '../helpers/create-check-your-answers-view-model';
+import { createCheckYourAnswersViewModel } from './create-check-your-answers-view-model';
 
 export type GetCheckYourAnswersRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };

@@ -5,7 +5,9 @@ export type CheckYourAnswersViewModel = {
   facilityType: FacilityType;
   previousPage: string;
   cancelUrl: string;
-  amendmentRows: SummaryListRow[];
-  eligibilityRows: SummaryListRow[];
-  effectiveDateRows: SummaryListRow[];
+  amendmentSummaryListParams: {
+    amendmentRows: SummaryListRow[];
+    eligibilityRows: SummaryListRow[];
+    effectiveDateRows: SummaryListRow[];
+  };
 };
