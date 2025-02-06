@@ -5,7 +5,13 @@ const configureNunjucks = require('../server/nunjucks-configuration');
 
 const nunjucks = configureNunjucks({});
 
-const componentRenderer = (componentLocation) => (params) => {
+/**
+ *
+ * @param {string} componentLocation
+ * @param {any} params
+ * @returns {import("./assertionsWrapper.types").AssertionsWrapper}
+ */
+const render = (componentLocation, params) => {
   const fakePage = `
     {% import '${componentLocation}' as componentUnderTest %}
     <div>
@@ -17,5 +23,10 @@ const componentRenderer = (componentLocation) => (params) => {
   const wrapper = cheerio.load(html);
   return assertions(wrapper, html, params);
 };
+
+/**
+ * @param {string} componentLocation
+ */
+const componentRenderer = (componentLocation) => (params) => render(componentLocation, params);
 
 module.exports = componentRenderer;

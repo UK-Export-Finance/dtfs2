@@ -1,3 +1,9 @@
+/**
+ *
+ * @param {import("cheerio").CheerioAPI} wrapper
+ * @param {string} html
+ * @returns {import("./assertionsWrapper.types").AssertionsWrapper}
+ */
 const assertions = (wrapper, html) => ({
   html,
   expectLink: (selector) => ({
