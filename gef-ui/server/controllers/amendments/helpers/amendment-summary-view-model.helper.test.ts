@@ -278,7 +278,7 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
             text: 'Changes',
           },
           value: {
-            html: expect.stringContaining(`<li>Facility value</li>`) as string,
+            html: expect.stringMatching(/<li>Cover end date and Facility end date<\/li>\w*\n\w*<li>Facility value<\/li>/) as string,
           },
         },
         {
