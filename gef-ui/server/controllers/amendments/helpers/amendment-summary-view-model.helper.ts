@@ -15,7 +15,7 @@ const generateFacilityEndDateSummaryRows = (amendment: PortalFacilityAmendmentWi
           text: 'New facility end date',
         },
         value: {
-          text: amendment.facilityEndDate === undefined ? '-' : format(amendment.facilityEndDate, DATE_FORMATS.D_MMMM_YYYY),
+          text: amendment.facilityEndDate ? format(amendment.facilityEndDate, DATE_FORMATS.D_MMMM_YYYY) : '-',
         },
         actions: {
           items: [
@@ -39,7 +39,7 @@ const generateFacilityEndDateSummaryRows = (amendment: PortalFacilityAmendmentWi
         text: 'New bank review date',
       },
       value: {
-        text: amendment.bankReviewDate === undefined ? '-' : format(amendment.bankReviewDate, DATE_FORMATS.D_MMMM_YYYY),
+        text: amendment.bankReviewDate ? format(amendment.bankReviewDate, DATE_FORMATS.D_MMMM_YYYY) : '-',
       },
       actions: {
         items: [
@@ -72,7 +72,7 @@ const generateCoverEndDateSummaryRows = (amendment: PortalFacilityAmendmentWithU
         text: 'New cover end date',
       },
       value: {
-        text: amendment.coverEndDate === undefined ? '-' : format(new Date(amendment.coverEndDate), DATE_FORMATS.D_MMMM_YYYY),
+        text: amendment.coverEndDate ? format(new Date(amendment.coverEndDate), DATE_FORMATS.D_MMMM_YYYY) : '-',
       },
       actions: {
         items: [
@@ -214,7 +214,7 @@ const generateAmendmentSummaryEffectiveDateRows = (amendment: PortalFacilityAmen
         text: 'Date',
       },
       value: {
-        text: amendment.effectiveDate === undefined ? '-' : format(fromUnixTime(amendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY),
+        text: amendment.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY) : '-',
       },
       actions: {
         items: [
