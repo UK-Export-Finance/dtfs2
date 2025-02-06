@@ -667,7 +667,7 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
  * @param {Object} params
  * @param {string} params.amendmentId - the amendment id.
  * @param {string} params.facilityId - the facility id
- * @param {(import('@ukef/dtfs2-common').PortalFacilityAmendmentStatus)} params.newStatus - the facility id
+ * @param {(import('@ukef/dtfs2-common').PortalAmendmentStatus)} params.newStatus - the facility id
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - The audit details for the update.
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>} - the updatedamendment
  */
