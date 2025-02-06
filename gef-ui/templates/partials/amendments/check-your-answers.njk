@@ -9,17 +9,6 @@
 {%- endblock %}
 
 {% block content %}
-  {% if errors %}
-    {{ govukErrorSummary({
-      titleText: "There is a problem",
-      errorList: errors.errorSummary,
-      attributes: {
-        "data-cy": "error-summary"
-      },
-      classes: "govuk-!-margin-top-4 govuk-!-margin-bottom-4"
-    }) }}
-  {% endif %}
-
   {{ govukBackLink({
     text: "Back",
     href: previousPage,

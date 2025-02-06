@@ -22,6 +22,7 @@ describe(page, () => {
       effectiveDateRows: [],
     },
   };
+
   it('should render the page heading', () => {
     const wrapper = render(params);
 
