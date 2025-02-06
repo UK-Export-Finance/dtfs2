@@ -15,7 +15,6 @@ import {
   PORTAL_AMENDMENT_STATUS,
   PortalAmendmentStatus,
   PortalAuditDetails,
-  PortalAmendmentStatus,
 } from '@ukef/dtfs2-common';
 import { deleteMany, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
