@@ -271,34 +271,6 @@ export class FeeRecordEntity extends AuditableBaseEntity {
 
     if (correctedValues.facilityId !== null) {
       this.facilityId = correctedValues.facilityId;
-
-      /**
-       * If we don't manually update this reference then the
-       * change to facilityId gets ignored but the transaction
-       * gets committed without an error.
-       *
-       * If there is an existing facilityUtilisationData with the
-       * new facilityId, then only the reference changes and it will
-       * now be linked to the existing facilityUtilisationDate entity.
-       *
-       * If no facilityUtilisationData with the new facilityId
-       * exists then typeorm creates a new entry with all the other
-       * fields the same as the previous data.
-       *
-       * This second behaviour could lead to incorrect utilisation
-       * adjustments since the initial utilisation will have been
-       * calculated using the values of an incorrect facility.
-       * However, utilisation adjustments are not currently
-       * being used so this is an accepted behaviour for now with
-       * FN-3813 having been raised to address this.
-       *
-       * TODO FN-3813: Remove this line. If we are not removing utilisation
-       * adjustments, we need to recalculate initial utilisation
-       * for any new facilityId without existing facilityUtilisationData
-       * rather than copying the values from the pre-correction data
-       * for the reasons explained in the above paragraph.
-       */
-      this.facilityUtilisationData.id = this.facilityId;
     }
 
     this.updateLastUpdatedBy(requestSource);
