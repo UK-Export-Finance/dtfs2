@@ -24,8 +24,12 @@ const checkApiKey = require('./middleware/headers/check-api-key');
 const { teamsRoutes } = require('./teams/routes');
 const { dealsOpenRouter, dealsAuthRouter } = require('./deals/routes');
 const { tasksRouter } = require('./tasks/routes');
+const { ssoOpenRouter } = require('./sso/routes');
 
 openRouter.use(checkApiKey);
+
+openRouter.use('/sso', ssoOpenRouter);
+
 authRouter.use(passport.authenticate('jwt', { session: false }));
 
 authRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
