@@ -72,8 +72,10 @@ const generateApp = () => {
 
   app.use(createRateLimit());
 
-  // We add a conditional check here as there are no auth routes for the non sso journey, and
-  // we cannot call app.use with './', undefined.s
+  /**
+   * Unauthenticated auth routes only exist on SSO implementation
+   * and not the traditional login journey
+   */
   if (unauthenticatedAuthRoutes) {
     app.use('/', unauthenticatedAuthRoutes);
   }
