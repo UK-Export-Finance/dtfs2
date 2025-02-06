@@ -96,7 +96,13 @@ const generateApp = () => {
   app.use('/', routes);
 
   app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
-  // error handler
+
+  /**
+   * Error handler configuration
+   * Currently, this only handles CSRF token errors, and
+   * any other errors are passed to expresses default error handler
+   * https://expressjs.com/en/guide/error-handling.html
+   */
   app.use((error, req, res, next) => {
     if (error.code === 'EBADCSRFTOKEN') {
       // handle CSRF token errors here
