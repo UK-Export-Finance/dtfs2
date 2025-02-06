@@ -162,7 +162,9 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/status
       expect(body).toEqual({
         status: HttpStatusCode.BadRequest,
         code: 'INVALID_PAYLOAD',
-        message: [`newStatus: Invalid enum value. Expected 'Ready for checker's approval', received '${anInvalidStatus}' (invalid_enum_value)`],
+        message: [
+          `newStatus: Invalid enum value. Expected '${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}', received '${anInvalidStatus}' (invalid_enum_value)`,
+        ],
       });
     });
 
