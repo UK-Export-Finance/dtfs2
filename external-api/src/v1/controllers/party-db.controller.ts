@@ -73,6 +73,7 @@ export const getOrCreateParty = async (
       console.error('No company name provided');
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company name' });
     }
+
     const response: { status: number; data: unknown } = await axios({
       method: 'post',
       url: `${APIM_MDM_URL}customers`,
