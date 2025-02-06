@@ -23,6 +23,9 @@ const generateFacilityEndDateSummaryRows = (amendment: PortalFacilityAmendmentWi
               href: `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE })}/#facilityEndDate-day`,
               text: 'Change',
               visuallyHiddenText: 'facility end date',
+              attributes: {
+                'data-cy': 'change-facility-end-date-link',
+              },
             },
           ],
         },
@@ -44,6 +47,9 @@ const generateFacilityEndDateSummaryRows = (amendment: PortalFacilityAmendmentWi
             href: `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE })}/#bankReviewDate-day`,
             text: 'Change',
             visuallyHiddenText: 'bank review date',
+            attributes: {
+              'data-cy': 'change-bank-review-date-link',
+            },
           },
         ],
       },
@@ -74,6 +80,9 @@ const generateCoverEndDateSummaryRows = (amendment: PortalFacilityAmendmentWithU
             href: `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.COVER_END_DATE })}/#coverEndDate-day`,
             text: 'Change',
             visuallyHiddenText: 'cover end date',
+            attributes: {
+              'data-cy': 'change-cover-end-date-link',
+            },
           },
         ],
       },
@@ -105,6 +114,9 @@ const generateFacilityValueSummaryRows = (amendment: PortalFacilityAmendmentWith
             href: `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/#facilityValue`,
             text: 'Change',
             visuallyHiddenText: 'facility value',
+            attributes: {
+              'data-cy': 'change-facility-value-link',
+            },
           },
         ],
       },
@@ -134,7 +146,10 @@ ${amendment.changeFacilityValue ? `<li>Facility value</li>` : ''}
           {
             href: `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE })}/#amendmentOptions`,
             text: 'Change',
-            visuallyHiddenText: 'whether amendending cover end date or facility value',
+            visuallyHiddenText: 'whether amending cover end date or facility value',
+            attributes: {
+              'data-cy': 'change-amendment-options-link',
+            },
           },
         ],
       },
@@ -177,7 +192,10 @@ ${criterion.textList.map((item) => `<li>${item}</li>`).join('')}
           {
             href: `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.ELIGIBILITY })}/#${criterion.id}`,
             text: 'Change',
-            visuallyHiddenText: `response to eligibility criteria ${criterion.id}`,
+            visuallyHiddenText: `response to eligibility criterion ${criterion.id}`,
+            attributes: {
+              'data-cy': `change-eligibility-criterion-${criterion.id}-link`,
+            },
           },
         ],
       },
@@ -204,6 +222,9 @@ const generateAmendmentSummaryEffectiveDateRows = (amendment: PortalFacilityAmen
             href: `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE })}/#effectiveDate-day`,
             text: 'Change',
             visuallyHiddenText: 'date amendment effective from',
+            attributes: {
+              'data-cy': 'change-effective-date-link',
+            },
           },
         ],
       },
