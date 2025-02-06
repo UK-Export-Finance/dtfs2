@@ -12,8 +12,8 @@ import { getCheckYourAnswers, GetCheckYourAnswersRequest } from './get-check-you
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_UNISSUED_FACILITY, MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
-import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
-import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper';
+import { createCheckYourAnswersViewModel } from './create-check-your-answers-view-model';
+import { Deal } from '../../../types/deal';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
@@ -37,7 +37,7 @@ const getHttpMocks = () =>
     },
   });
 
-const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
+const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
 
 describe('getCheckYourAnswers', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
@@ -104,13 +104,7 @@ describe('getCheckYourAnswers', () => {
     await getCheckYourAnswers(req, res);
 
     // Assert
-    const expectedRenderData = {
-      exporterName: MOCK_BASIC_DEAL.exporter.companyName,
-      facilityType: MOCK_ISSUED_FACILITY.details.type,
-      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.CHECK_YOUR_ANSWERS, amendment),
-      amendment,
-    };
+    const expectedRenderData = createCheckYourAnswersViewModel({ amendment, deal: mockDeal, facility: MOCK_ISSUED_FACILITY.details });
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     expect(res._getRenderView()).toEqual('partials/amendments/check-your-answers.njk');
