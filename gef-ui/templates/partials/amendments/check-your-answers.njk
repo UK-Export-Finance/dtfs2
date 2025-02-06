@@ -2,8 +2,6 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/details/macro.njk" import govukDetails %}
 {% import '../../_macros/amendments/amendment-summary-list.njk' as amendmentSummaryList %}
 
 {% block pageTitle -%}
@@ -54,14 +52,6 @@
 
           <a href="{{ cancelUrl }}"  data-cy="cancel-link" class="govuk-link">Cancel</a>
         </div>
-
-        {{ govukDetails({
-          summaryText: "Help with declarations",
-          text: 'Read the Master Guarantee Agreement (MGA) definitions and interpretation document for terminology used in the declarations.',
-          attributes: {
-            'data-cy': 'help-with-declarations'
-          }
-        }) }}
       </form>
     </div>
   </div>
