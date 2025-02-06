@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
-import { FeeRecordEntity, mapReasonsToDisplayValues, FeeRecordCorrectionEntity, DATE_FORMATS } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, mapReasonsToDisplayValues, FeeRecordCorrectionEntity, DATE_FORMATS, RecordCorrectionFields } from '@ukef/dtfs2-common';
 import { getFormattedOldAndCorrectValues } from './get-formatted-old-and-correct-values';
+import { getDateReceivedAndBankCommentary } from './get-date-received-and-bank-commentary';
 
 /**
  * gets all the fields from a record correction or fee record in the correct format for a number of pages
@@ -9,9 +10,19 @@ import { getFormattedOldAndCorrectValues } from './get-formatted-old-and-correct
  * @param correction - the fee record correction
  * @returns formatted fields for the record correction and fee record
  */
-export const getRecordCorrectionFields = (feeRecord: FeeRecordEntity, correction: FeeRecordCorrectionEntity) => {
+export const getRecordCorrectionFields = (feeRecord: FeeRecordEntity, correction: FeeRecordCorrectionEntity): RecordCorrectionFields => {
   const { id: feeRecordId, exporter, facilityId } = feeRecord;
-  const { id: correctionId, dateRequested, isCompleted, bankTeamName, bankTeamEmails, additionalInfo, bankCommentary, dateReceived } = correction;
+  const {
+    id: correctionId,
+    dateRequested,
+    isCompleted,
+    bankTeamName,
+    bankTeamEmails,
+    additionalInfo,
+    bankCommentary,
+    dateReceived,
+    requestedByUser,
+  } = correction;
 
   /**
    * return formatted old records and formatted correct records
@@ -27,18 +38,13 @@ export const getRecordCorrectionFields = (feeRecord: FeeRecordEntity, correction
   const reasonsArray = mapReasonsToDisplayValues(correction.reasons);
   const formattedReasons = reasonsArray.join(', ');
 
-  let formattedDateReceived = '-';
-  let formattedBankCommentary = '-';
+  const { formattedDateReceived, formattedBankCommentary } = getDateReceivedAndBankCommentary(isCompleted, dateReceived, bankCommentary);
 
-  /**
-   * if correction is completed and date received and bank commentary are present
-   * sets their value in the correct format
-   * else they will be '-'
-   */
-  if (isCompleted && dateReceived && bankCommentary) {
-    formattedDateReceived = format(dateReceived, DATE_FORMATS.DD_MMM_YYYY);
-    formattedBankCommentary = bankCommentary;
-  }
+  const formattedBankTeamEmails = bankTeamEmails.replace(/,/g, ', ');
+
+  const formattedDateSent = format(dateRequested, DATE_FORMATS.DD_MMM_YYYY);
+
+  const formattedRequestedByUser = `${requestedByUser.firstName} ${requestedByUser.lastName}`;
 
   return {
     facilityId,
@@ -46,14 +52,15 @@ export const getRecordCorrectionFields = (feeRecord: FeeRecordEntity, correction
     feeRecordId,
     exporter,
     formattedReasons,
-    formattedDateSent: format(dateRequested, DATE_FORMATS.DD_MMM_YYYY),
+    formattedDateSent,
     formattedOldRecords,
     formattedCorrectRecords,
     isCompleted,
     bankTeamName,
-    bankTeamEmails: bankTeamEmails.replace(/,/g, ', '),
+    formattedBankTeamEmails,
     additionalInfo,
     formattedBankCommentary,
     formattedDateReceived,
+    formattedRequestedByUser,
   };
 };

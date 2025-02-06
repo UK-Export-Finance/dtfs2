@@ -1469,7 +1469,7 @@ const deleteFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
 
 /**
  * Gets the record correction log details by id
- * @param {string} correctionId - The report id
+ * @param {string} correctionId - The correction id
  * @param {string} userToken - The user token
  * @returns {Promise<import('@ukef/dtfs2-common').GetRecordCorrectionLogDetailsResponseBody>}
  */

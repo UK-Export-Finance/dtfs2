@@ -10,6 +10,7 @@ describe('get-record-correction-fields', () => {
   describe('when a correction is not completed - isCompleted=false', () => {
     const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false)
       .withDateRequested(today)
+      .withDateReceived(today)
       .withBankTeamEmails(`${bankTeamEmails[0]},${bankTeamEmails[1]}`)
       .build();
 
@@ -30,10 +31,11 @@ describe('get-record-correction-fields', () => {
         formattedCorrectRecords: '-',
         isCompleted: false,
         bankTeamName: feeRecordCorrectionEntity.bankTeamName,
-        bankTeamEmails: `${bankTeamEmails[0]}, ${bankTeamEmails[1]}`,
+        formattedBankTeamEmails: `${bankTeamEmails[0]}, ${bankTeamEmails[1]}`,
         additionalInfo: feeRecordCorrectionEntity.additionalInfo,
         formattedBankCommentary: '-',
         formattedDateReceived: '-',
+        formattedRequestedByUser: `${feeRecordCorrectionEntity.requestedByUser.firstName} ${feeRecordCorrectionEntity.requestedByUser.lastName}`,
       };
 
       expect(result).toEqual(expected);
@@ -63,10 +65,11 @@ describe('get-record-correction-fields', () => {
         formattedCorrectRecords,
         isCompleted: true,
         bankTeamName: feeRecordCorrectionEntity.bankTeamName,
-        bankTeamEmails: `${bankTeamEmails[0]}, ${bankTeamEmails[1]}`,
+        formattedBankTeamEmails: `${bankTeamEmails[0]}, ${bankTeamEmails[1]}`,
         additionalInfo: feeRecordCorrectionEntity.additionalInfo,
         formattedBankCommentary: feeRecordCorrectionEntity.bankCommentary,
-        formattedDateReceived: format(feeRecordCorrectionEntity.dateReceived as Date, DATE_FORMATS.DD_MMM_YYYY),
+        formattedDateReceived: format(feeRecordCorrectionEntity.dateReceived!, DATE_FORMATS.DD_MMM_YYYY),
+        formattedRequestedByUser: `${feeRecordCorrectionEntity.requestedByUser.firstName} ${feeRecordCorrectionEntity.requestedByUser.lastName}`,
       };
 
       expect(result).toEqual(expected);

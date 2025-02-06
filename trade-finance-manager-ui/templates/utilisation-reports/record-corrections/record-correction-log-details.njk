@@ -7,7 +7,7 @@
 {% block pageTitle %}Record correction log{% endblock %}
 
 {% block content %}
-  <div class="govuk-grid-row" data-cy="application-submit-page">
+  <div class="govuk-grid-row" data-cy="record-correction-log-details-page">
     <div class="govuk-grid-column-two-thirds-from-desktop">
       <div class="govuk-!-padding-top-7">
           <span class="govuk-caption-l" data-cy="heading-caption">{{ bankName }}, {{ formattedReportPeriod }}</span>
@@ -33,7 +33,7 @@
           text: "Exporter"
         },
         value: {
-          text: mappedCorrectionLog.exporter
+          text: correctionDetails.exporter
         }
       },
       {
@@ -41,7 +41,7 @@
           text: "Facility ID"
         },
         value: {
-          text: mappedCorrectionLog.facilityId
+          text: correctionDetails.facilityId
         }
       },
       {
@@ -49,7 +49,7 @@
           text: "Date sent"
         },
         value: {
-          text: mappedCorrectionLog.formattedDateSent
+          text: correctionDetails.formattedDateSent
         }
       },
       {
@@ -57,15 +57,15 @@
           text: "Contact name"
         },
         value: {
-          text: mappedCorrectionLog.bankTeamName
+          text: correctionDetails.bankTeamName
         }
       },
       {
         key: {
-          text: "Contact email address"
+          text: "Contact email address(es)"
         },
         value: {
-          text: mappedCorrectionLog.bankTeamEmails
+          text: correctionDetails.formattedBankTeamEmails
         }
       },
       {
@@ -73,7 +73,7 @@
           text: "Requested by"
         },
         value: {
-          text: 'todo'
+          text: correctionDetails.formattedRequestedByUser
         }
       },
       {
@@ -81,7 +81,7 @@
           text: "Reason(s) for correction"
         },
         value: {
-          text: mappedCorrectionLog.formattedReasons
+          text: correctionDetails.formattedReasons
         }
       },
       {
@@ -89,7 +89,7 @@
           text: "Additional information"
         },
         value: {
-          text: mappedCorrectionLog.additionalInfo
+          text: correctionDetails.additionalInfo
         }
       },
       {
@@ -97,7 +97,7 @@
           text: "Old record(s)"
         },
         value: {
-          text: mappedCorrectionLog.formattedOldRecords
+          text: correctionDetails.formattedOldRecords
         }
       },
       {
@@ -105,7 +105,7 @@
           text: "New record"
         },
         value: {
-          text: mappedCorrectionLog.formattedCorrectRecords
+          text: correctionDetails.formattedCorrectRecords
         }
       },
       {
@@ -113,7 +113,7 @@
           text: "Bank commentary"
         },
         value: {
-          text: mappedCorrectionLog.formattedBankCommentary
+          text: correctionDetails.formattedBankCommentary
         }
       },
       {
@@ -121,7 +121,7 @@
           text: "Date correction received"
         },
         value: {
-          text: mappedCorrectionLog.formattedDateReceived
+          text: correctionDetails.formattedDateReceived
         }
       }
     ],

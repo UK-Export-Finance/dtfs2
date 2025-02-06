@@ -5,6 +5,7 @@ import { getRecordCorrectionLogDetails } from '.';
 import { FeeRecordCorrectionRepo } from '../../../../repositories/fee-record-correction-repo';
 import { getRecordCorrectionFields } from '../helpers/get-record-correction-fields';
 import { getBankNameById } from '../../../../repositories/banks-repo';
+import { NotFoundError } from '../../../../errors';
 
 console.error = jest.fn();
 
@@ -38,82 +39,27 @@ describe('get-record-correction-log-details.controller', () => {
       findRecordCorrectionSpy.mockResolvedValue(null);
     });
 
-    it(`should respond with ${HttpStatusCode.NotFound}`, async () => {
+    it('should throw a NotFoundError', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      // Act
-      await getRecordCorrectionLogDetails(req, res);
-
       // Assert
-      expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
-      expect(res._getData()).toEqual('Record correction not found');
-    });
-
-    it('should call FeeRecordCorrectionRepo.findOneByIdWithFeeRecordAndReport once with the correctionId', async () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
-
-      // Act
-      await getRecordCorrectionLogDetails(req, res);
-
-      // Assert
-      expect(findRecordCorrectionSpy).toHaveBeenCalledTimes(1);
-      expect(findRecordCorrectionSpy).toHaveBeenCalledWith(correctionId);
-    });
-
-    it('should NOT call getBankNameById', async () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
-
-      // Act
-      await getRecordCorrectionLogDetails(req, res);
-
-      // Assert
-      expect(getBankNameById).toHaveBeenCalledTimes(0);
+      await expect(getRecordCorrectionLogDetails(req, res)).rejects.toThrow(new NotFoundError('Record correction not found'));
     });
   });
 
   describe('when a bank is not found', () => {
     beforeEach(() => {
       findRecordCorrectionSpy.mockResolvedValue(feeRecordCorrectionEntity);
-      jest.mocked(getBankNameById).mockResolvedValue('');
+      jest.mocked(getBankNameById).mockResolvedValue(undefined);
     });
 
-    it(`should respond with ${HttpStatusCode.NotFound}`, async () => {
+    it('should throw a NotFoundError', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
-      // Act
-      await getRecordCorrectionLogDetails(req, res);
-
       // Assert
-      expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
-      expect(res._getData()).toEqual('Bank not found');
-    });
-
-    it('should call FeeRecordCorrectionRepo.findOneByIdWithFeeRecordAndReport once with the correctionId', async () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
-
-      // Act
-      await getRecordCorrectionLogDetails(req, res);
-
-      // Assert
-      expect(findRecordCorrectionSpy).toHaveBeenCalledTimes(1);
-      expect(findRecordCorrectionSpy).toHaveBeenCalledWith(correctionId);
-    });
-
-    it('should call getBankNameById once with the bankId', async () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
-
-      // Act
-      await getRecordCorrectionLogDetails(req, res);
-
-      // Assert
-      expect(getBankNameById).toHaveBeenCalledTimes(1);
-      expect(getBankNameById).toHaveBeenCalledWith(feeRecordCorrectionEntity.feeRecord.report.bankId);
+      await expect(getRecordCorrectionLogDetails(req, res)).rejects.toThrow(new NotFoundError('Bank not found'));
     });
   });
 
@@ -130,8 +76,38 @@ describe('get-record-correction-log-details.controller', () => {
       // Act
       await getRecordCorrectionLogDetails(req, res);
 
+      const {
+        facilityId,
+        exporter,
+        formattedReasons,
+        formattedDateSent,
+        formattedOldRecords,
+        formattedCorrectRecords,
+        bankTeamName,
+        isCompleted,
+        formattedBankTeamEmails,
+        additionalInfo,
+        formattedBankCommentary,
+        formattedDateReceived,
+        formattedRequestedByUser,
+      } = getRecordCorrectionFields(feeRecordCorrectionEntity.feeRecord, feeRecordCorrectionEntity);
+
       const expected = {
-        fields: getRecordCorrectionFields(feeRecordCorrectionEntity.feeRecord, feeRecordCorrectionEntity),
+        correctionDetails: {
+          facilityId,
+          exporter,
+          formattedReasons,
+          formattedDateSent,
+          formattedOldRecords,
+          formattedCorrectRecords,
+          bankTeamName,
+          isCompleted,
+          formattedBankTeamEmails,
+          additionalInfo,
+          formattedBankCommentary,
+          formattedDateReceived,
+          formattedRequestedByUser,
+        },
         bankName,
         reportPeriod: feeRecordCorrectionEntity.feeRecord.report.reportPeriod,
       };

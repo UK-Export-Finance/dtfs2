@@ -16,15 +16,15 @@ export const getRecordCorrectionLogDetails = async (req: Request, res: Response)
     const { user, userToken } = asUserSession(req.session);
     const { correctionId } = req.params;
 
-    const { fields, bankName, reportPeriod } = await api.getRecordCorrectionLogDetailsById(correctionId, userToken);
+    const { correctionDetails, bankName, reportPeriod } = await api.getRecordCorrectionLogDetailsById(correctionId, userToken);
 
-    const { status, displayStatus } = mapToRecordCorrectionStatus(fields.isCompleted);
+    const { status, displayStatus } = mapToRecordCorrectionStatus(correctionDetails.isCompleted);
 
     const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(reportPeriod);
 
     const viewModel: RecordCorrectionLogDetailsViewModel = {
       user,
-      mappedCorrectionLog: fields,
+      correctionDetails,
       status,
       displayStatus,
       formattedReportPeriod,

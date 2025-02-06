@@ -4,6 +4,7 @@ import { GetRecordCorrectionLogDetailsResponse } from '@ukef/dtfs2-common';
 import { FeeRecordCorrectionRepo } from '../../../../repositories/fee-record-correction-repo';
 import { getRecordCorrectionFields } from '../helpers/get-record-correction-fields';
 import { getBankNameById } from '../../../../repositories/banks-repo';
+import { ApiError, NotFoundError } from '../../../../errors';
 
 /**
  * gets record correction log details by id
@@ -14,29 +15,66 @@ import { getBankNameById } from '../../../../repositories/banks-repo';
  * @returns formatted fields for the record correction and fee record
  */
 export const getRecordCorrectionLogDetails = async (req: Request, res: GetRecordCorrectionLogDetailsResponse) => {
-  const { correctionId: correctionIdString } = req.params;
+  try {
+    const { correctionId: correctionIdString } = req.params;
 
-  const correctionId = Number(correctionIdString);
+    const correctionId = Number(correctionIdString);
 
-  const response = await FeeRecordCorrectionRepo.findOneByIdWithFeeRecordAndReport(correctionId);
+    const correction = await FeeRecordCorrectionRepo.findOneByIdWithFeeRecordAndReport(correctionId);
 
-  if (!response || !response?.feeRecord || !response?.feeRecord?.report) {
-    return res.status(HttpStatusCode.NotFound).send('Record correction not found');
+    if (!correction || !correction?.feeRecord || !correction?.feeRecord?.report) {
+      throw new NotFoundError('Record correction not found');
+    }
+
+    const bankName = await getBankNameById(correction.feeRecord.report.bankId);
+
+    if (!bankName) {
+      throw new NotFoundError('Bank not found');
+    }
+
+    const {
+      facilityId,
+      exporter,
+      formattedReasons,
+      formattedDateSent,
+      formattedOldRecords,
+      formattedCorrectRecords,
+      bankTeamName,
+      isCompleted,
+      formattedBankTeamEmails,
+      additionalInfo,
+      formattedBankCommentary,
+      formattedDateReceived,
+      formattedRequestedByUser,
+    } = getRecordCorrectionFields(correction.feeRecord, correction);
+
+    const responseObject = {
+      correctionDetails: {
+        facilityId,
+        exporter,
+        formattedReasons,
+        formattedDateSent,
+        formattedOldRecords,
+        formattedCorrectRecords,
+        bankTeamName,
+        isCompleted,
+        formattedBankTeamEmails,
+        additionalInfo,
+        formattedBankCommentary,
+        formattedDateReceived,
+        formattedRequestedByUser,
+      },
+      bankName,
+      reportPeriod: correction.feeRecord.report.reportPeriod,
+    };
+
+    return res.status(HttpStatusCode.Ok).send(responseObject);
+  } catch (error) {
+    const errorMessage = `Failed to get record correction log details`;
+    console.error('%s %o', errorMessage, error);
+    if (error instanceof ApiError) {
+      return res.status(error.status).send(`${errorMessage}: ${error.message}`);
+    }
+    return res.status(HttpStatusCode.InternalServerError).send(errorMessage);
   }
-
-  const bankName = await getBankNameById(response.feeRecord.report.bankId);
-
-  if (!bankName?.length) {
-    return res.status(HttpStatusCode.NotFound).send('Bank not found');
-  }
-
-  const fields = getRecordCorrectionFields(response.feeRecord, response);
-
-  const responseObject = {
-    fields,
-    bankName,
-    reportPeriod: response.feeRecord.report.reportPeriod,
-  };
-
-  return res.status(HttpStatusCode.Ok).send(responseObject);
 };

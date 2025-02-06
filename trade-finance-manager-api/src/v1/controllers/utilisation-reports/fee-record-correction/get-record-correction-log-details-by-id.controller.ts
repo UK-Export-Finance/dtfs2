@@ -12,9 +12,9 @@ export const getRecordCorrectionLogDetailsById = async (req: Request, res: GetRe
   try {
     const { correctionId } = req.params;
 
-    const utilisationReportReconciliationDetails = await api.getRecordCorrectionLogDetailsById(correctionId);
+    const recordCorrectionLogDetails = await api.getRecordCorrectionLogDetailsById(correctionId);
 
-    return res.status(HttpStatusCode.Ok).send(utilisationReportReconciliationDetails);
+    return res.status(HttpStatusCode.Ok).send(recordCorrectionLogDetails);
   } catch (error) {
     const errorMessage = 'Failed to get record correction log details';
     const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;

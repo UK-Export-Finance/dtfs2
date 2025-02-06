@@ -3,8 +3,6 @@ import { ReportPeriodPartialEntity } from '../sql-db-entities';
 
 export type RecordCorrectionLogFields = {
   facilityId: string;
-  correctionId: number;
-  feeRecordId: number;
   exporter: string;
   formattedReasons: string;
   formattedDateSent: string;
@@ -12,14 +10,15 @@ export type RecordCorrectionLogFields = {
   formattedCorrectRecords: string;
   isCompleted: boolean;
   bankTeamName: string;
-  bankTeamEmails: string;
+  formattedBankTeamEmails: string;
   additionalInfo: string;
   formattedBankCommentary: string;
   formattedDateReceived: string;
+  formattedRequestedByUser: string;
 };
 
 export type GetRecordCorrectionLogDetailsResponseBody = {
-  fields: RecordCorrectionLogFields;
+  correctionDetails: RecordCorrectionLogFields;
   bankName: string;
   reportPeriod: ReportPeriodPartialEntity;
 };

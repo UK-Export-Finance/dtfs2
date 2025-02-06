@@ -32,18 +32,18 @@ describe('controllers/utilisation-reports/record-corrections/record-correction-l
       jest.mocked(api.getRecordCorrectionLogDetailsById).mockResolvedValue(recordCorrectionLogDetailsMock);
     });
 
-    it('should render check the information page', async () => {
+    it('should render "record correction log details" page', async () => {
       // Act
       await getRecordCorrectionLogDetails(req, res);
 
       // Assert
-      const { status, displayStatus } = mapToRecordCorrectionStatus(recordCorrectionLogDetailsMock.fields.isCompleted);
+      const { status, displayStatus } = mapToRecordCorrectionStatus(recordCorrectionLogDetailsMock.correctionDetails.isCompleted);
 
       const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(recordCorrectionLogDetailsMock.reportPeriod);
 
       const expectedViewModel = {
         user,
-        mappedCorrectionLog: recordCorrectionLogDetailsMock.fields,
+        mappedCorrectionLog: recordCorrectionLogDetailsMock.correctionDetails,
         status,
         displayStatus,
         formattedReportPeriod,

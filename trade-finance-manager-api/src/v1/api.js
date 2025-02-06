@@ -1807,7 +1807,7 @@ const createFeeRecordCorrection = async (reportId, feeRecordId, user) => {
 
 /**
  * Gets the record correction log details by report id
- * @param {string} correctionId - The report id
+ * @param {string} correctionId - The correction id
  * @returns {Promise<import('@ukef/dtfs2-common').GetRecordCorrectionLogDetailsResponseBody>}
  */
 const getRecordCorrectionLogDetailsById = async (correctionId) => {
