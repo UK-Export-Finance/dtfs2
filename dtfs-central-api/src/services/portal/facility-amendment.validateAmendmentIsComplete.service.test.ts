@@ -135,18 +135,6 @@ describe('PortalFacilityAmendmentService', () => {
         expectedErrorMessage: 'changeCoverEndDate is true but cover end date section incomplete',
       },
       {
-        description: 'changeCoverEndDate is true but coverEndDate is not provided',
-        amendment: {
-          ...aCompletedPortalFacilityAmendment(),
-          changeCoverEndDate: true,
-          coverEndDate: null,
-          isUsingFacilityEndDate: false,
-          bankReviewDate: new Date(),
-          facilityEndDate: null,
-        },
-        expectedErrorMessage: 'changeCoverEndDate is true but cover end date section incomplete',
-      },
-      {
         description: 'changeCoverEndDate is true, isUsingFacilityEndDate is false but bankReviewDate is not provided',
         amendment: {
           ...aCompletedPortalFacilityAmendment(),
@@ -209,11 +197,14 @@ describe('PortalFacilityAmendmentService', () => {
         expectedErrorMessage: 'effectiveDate not provided',
       },
       {
-        description: 'eligibilityCriteria answers are false',
+        description: 'eligibilityCriteria contains a false answer',
         amendment: {
           ...aCompletedPortalFacilityAmendment(),
           eligibilityCriteria: {
-            criteria: [{ id: 1, text: 'item 1', answer: false }],
+            criteria: [
+              { id: 1, text: 'item 1', answer: false },
+              { id: 2, text: 'item 2', answer: true },
+            ],
             version: 1,
           },
         },

@@ -12,7 +12,7 @@ export type PatchSubmitAmendmentToCheckerRequest = CustomExpressRequest<{
 }>;
 
 /**
- * patch portal facility amendment submit to checker
+ * patch portal facility amendment status
  * @param req - request
  * @param res - response
  */
