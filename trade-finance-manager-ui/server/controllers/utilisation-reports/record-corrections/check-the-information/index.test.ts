@@ -5,6 +5,7 @@ import { aTfmSessionUser } from '../../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import { getRecordCorrectionRequestInformation, postRecordCorrectionRequestInformation } from '.';
 import api from '../../../../api';
+import { getRecordCorrectionRequestCancelLinkHref } from '../helpers';
 
 jest.mock('../../../../api');
 
@@ -70,6 +71,7 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
           reasonForRecordCorrection: expectedReasons,
           additionalInfo: correctionRequestDetails.additionalInfo,
           contactEmailAddresses: correctionRequestDetails.contactEmailAddresses,
+          cancelLinkHref: getRecordCorrectionRequestCancelLinkHref(reportId, feeRecordId),
         });
       });
     });

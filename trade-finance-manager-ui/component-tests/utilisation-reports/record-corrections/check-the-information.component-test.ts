@@ -184,13 +184,11 @@ describe('page', () => {
 
   it('should render cancel button', () => {
     // Arrange
+    const cancelLink = '/utilisation-reports/123/create-record-correction-request/456/cancel';
     const viewModel: RecordCorrectionRequestInformationViewModel = {
       ...aRecordCorrectionRequestInformationViewModel(),
-      reportId,
-      feeRecordId,
+      cancelLinkHref: cancelLink,
     };
-
-    const cancelLink = `/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordId}/cancel`;
 
     // Act
     const wrapper = render(viewModel);

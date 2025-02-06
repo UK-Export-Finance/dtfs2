@@ -14,4 +14,5 @@ export const aRecordCorrectionRequestInformationViewModel = (): RecordCorrection
   reasonForRecordCorrection: 'not valid',
   additionalInfo: 'this is some more information',
   contactEmailAddresses: ['one@ukexportfinance.gov.uk', 'two@ukexportfinance.gov.uk'],
+  cancelLinkHref: 'utilisation-reports/correction-request/cancel',
 });

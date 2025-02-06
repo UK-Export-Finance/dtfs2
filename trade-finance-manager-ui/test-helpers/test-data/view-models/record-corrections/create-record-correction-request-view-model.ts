@@ -6,6 +6,7 @@ export const aCreateRecordCorrectionRequestViewModel = (): CreateRecordCorrectio
   user: aTfmSessionUser(),
   activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
   reportId: '123',
+  cancelLinkHref: 'utilisation-reports/correction-request/cancel',
   bank: { name: 'Test bank ' },
   formattedReportPeriod: 'Some reporting period',
   feeRecord: {
