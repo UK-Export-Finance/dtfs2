@@ -48,19 +48,19 @@ The state machine determines whether the event type is valid for the current sta
 public async handleEvent(event: UtilisationReportEvent): Promise<UtilisationReportEntity> {
   switch (this.report?.status) {
     ...
-    case 'RECONCILIATION_IN_PROGRESS':
+    case REPORT_NOT_RECEIVED:
       switch (event.type) {
-        case 'PAYMENT_REMOVED_FROM_FEE_RECORD':
-          return handleUtilisationReportPaymentRemovedFromFeeRecordEvent(this.report, event.payload);
-        case 'FEE_RECORD_KEYED':
-          return handleUtilisationReportFeeRecordKeyedEvent(this.report, event.payload);
+        case UTILISATION_REPORT_EVENT_TYPE.REPORT_UPLOADED:
+          return handleUtilisationReportReportUploadedEvent(this.report, event.payload);
         default:
           return this.handleInvalidTransition(event);
       }
-    case 'RECONCILIATION_COMPLETED':
+    case PENDING_RECONCILIATION:
       switch (event.type) {
-        case 'MANUALLY_SET_INCOMPLETE':
-          return handleUtilisationReportManuallySetIncompleteEvent(this.report);
+        case UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT:
+          return handleUtilisationReportAddAPaymentEvent(this.report, event.payload);
+        case UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA:
+          return handleUtilisationReportGenerateKeyingDataEvent(this.report, event.payload);
         default:
           return this.handleInvalidTransition(event);
       }
