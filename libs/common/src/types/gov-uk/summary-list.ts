@@ -19,6 +19,9 @@ type ActionItem = Prettify<
   }
 >;
 
+/**
+ * Type of the `rows array object` for the {@link https://design-system.service.gov.uk/components/summary-list/ | GOV.UK Summary List component }
+ */
 export type SummaryListRow = {
   key: GovUkField;
   value: GovUkField;
