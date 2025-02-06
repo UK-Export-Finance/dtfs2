@@ -3,6 +3,10 @@ import { DATE_FORMATS, PortalFacilityAmendmentWithUkefId, SummaryListRow } from 
 import { getAmendmentsUrl } from './navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 
+/**
+ * @param amendment - the amendment
+ * @returns the SummaryListRows containing `New facility end date` or `New bank review date`
+ */
 const generateFacilityEndDateSummaryRows = (amendment: PortalFacilityAmendmentWithUkefId): SummaryListRow[] => {
   if (amendment.isUsingFacilityEndDate) {
     return [
@@ -47,6 +51,10 @@ const generateFacilityEndDateSummaryRows = (amendment: PortalFacilityAmendmentWi
   ];
 };
 
+/**
+ * @param amendment - the amendment
+ * @returns the SummaryListRows for the Cover end date section
+ */
 const generateCoverEndDateSummaryRows = (amendment: PortalFacilityAmendmentWithUkefId): SummaryListRow[] => {
   if (!amendment.changeCoverEndDate) {
     return [];
@@ -74,6 +82,10 @@ const generateCoverEndDateSummaryRows = (amendment: PortalFacilityAmendmentWithU
   ];
 };
 
+/**
+ * @param amendment - the amendment
+ * @returns the SummaryListRows containing `New facility value`
+ */
 const generateFacilityValueSummaryRows = (amendment: PortalFacilityAmendmentWithUkefId): SummaryListRow[] => {
   if (!amendment.changeFacilityValue) {
     return [];
@@ -100,6 +112,10 @@ const generateFacilityValueSummaryRows = (amendment: PortalFacilityAmendmentWith
   ];
 };
 
+/**
+ * @param amendment - the amendment
+ * @returns the SummaryListRows for the amendments section
+ */
 const generateAmendmentSummaryAmendmentRows = (amendment: PortalFacilityAmendmentWithUkefId): SummaryListRow[] => {
   return [
     {
@@ -128,6 +144,10 @@ ${amendment.changeFacilityValue ? `<li>Facility value</li>` : ''}
   ];
 };
 
+/**
+ * @param amendment - the amendment
+ * @returns the SummaryListRows for the eligibility criteria section
+ */
 const generateAmendmentSummaryEligibilityRows = (amendment: PortalFacilityAmendmentWithUkefId): SummaryListRow[] => {
   return amendment.eligibilityCriteria.criteria.map((criterion) => {
     const formattedListHtml =
@@ -165,6 +185,10 @@ ${criterion.textList.map((item) => `<li>${item}</li>`).join('')}
   });
 };
 
+/**
+ * @param amendment - the amendment
+ * @returns the SummaryListRows for the Date amendment effective from section
+ */
 const generateAmendmentSummaryEffectiveDateRows = (amendment: PortalFacilityAmendmentWithUkefId): SummaryListRow[] => {
   return [
     {
@@ -187,6 +211,10 @@ const generateAmendmentSummaryEffectiveDateRows = (amendment: PortalFacilityAmen
   ];
 };
 
+/**
+ * @param amendment - the amendment
+ * @returns the amendment summary list component parameters
+ */
 export const mapAmendmentToAmendmentSummaryListParams = (amendment: PortalFacilityAmendmentWithUkefId) => ({
   amendmentRows: generateAmendmentSummaryAmendmentRows(amendment),
   eligibilityRows: generateAmendmentSummaryEligibilityRows(amendment),

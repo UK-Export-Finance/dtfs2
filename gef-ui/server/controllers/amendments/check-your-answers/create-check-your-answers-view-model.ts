@@ -6,6 +6,13 @@ import { Facility } from '../../../types/facility';
 import { Deal } from '../../../types/deal';
 import { mapAmendmentToAmendmentSummaryListParams } from '../helpers/amendment-summary-view-model.helper';
 
+/**
+ * Create check your answers page view model
+ * @param createCheckYourAnswersViewModelParams
+ * @param createCheckYourAnswersViewModelParams.amendment - the amendment
+ * @param createCheckYourAnswersViewModelParams.facility - the facility
+ * @param createCheckYourAnswersViewModelParams.deal - the deal
+ */
 export const createCheckYourAnswersViewModel = ({
   amendment,
   facility,
