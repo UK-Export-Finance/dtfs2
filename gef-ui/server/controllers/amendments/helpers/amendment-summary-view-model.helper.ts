@@ -137,7 +137,7 @@ const generateAmendmentSummaryAmendmentRows = (amendment: PortalFacilityAmendmen
       value: {
         html: `
 <ul class="govuk-list">
-${amendment.changeCoverEndDate ? `<li>Cover end date and Facility end date</li>` : ''}
+${amendment.changeCoverEndDate ? `<li>Cover end date and \n${amendment.isUsingFacilityEndDate ? 'Facility end date' : 'Bank review date'}</li>` : ''}
 ${amendment.changeFacilityValue ? `<li>Facility value</li>` : ''}
 </ul>`,
       },
