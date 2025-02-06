@@ -9,6 +9,6 @@ export const patchAmendmentUrl = ({ facilityId, amendmentId }: { facilityId: str
 export const putAmendmentUrl = ({ facilityId }: { facilityId: string }) => `/v1/gef/facilities/${facilityId}/amendments`;
 
 export const getAmendmentsOnDealUrl = ({ dealId, statuses }: { dealId: string; statuses?: PortalAmendmentStatus[] }) => {
-  const statusFilterQuery = statuses ? `?statuses=${statuses.map((item) => item.replace(/ /g, '%20')).join(',')}` : '';
+  const statusFilterQuery = statuses ? `?statuses=${statuses.map((item) => encodeURI(item)).join(',')}` : '';
   return `/v1/gef/deals/${dealId}/amendments/${statusFilterQuery}`;
 };

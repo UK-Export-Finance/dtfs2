@@ -499,7 +499,7 @@ describe('getAmendmentsOnDeal()', () => {
   it(`should return the found amendments`, async () => {
     // Arrange
     const mockAmendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().build();
-    Axios.get.mockReturnValue(Promise.resolve({ data: [mockAmendment] }));
+    Axios.get.mockResolvedValueOnce({ data: [mockAmendment] });
 
     // Act
     const response = await api.getAmendmentsOnDeal({ dealId: validMongoId, userToken });
@@ -510,7 +510,7 @@ describe('getAmendmentsOnDeal()', () => {
 
   it('should throw an error if there is an api error', async () => {
     // Arrange
-    Axios.get.mockReturnValue(Promise.reject(new AxiosError()));
+    Axios.get.mockRejectedValueOnce(new AxiosError());
 
     // Act
     const returned = api.getAmendmentsOnDeal({ dealId: validMongoId, statuses: [PORTAL_AMENDMENT_STATUS.DRAFT], userToken });
