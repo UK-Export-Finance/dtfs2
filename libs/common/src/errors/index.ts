@@ -21,3 +21,4 @@ export * from './multiple-users-found.error';
 export * from './user-partial-login-data-not-defined.error';
 export * from './amendment-not-found.error';
 export * from './eligibility-criteria-not-found.error';
+export * from './portal-facility-amendment-conflict.error';
