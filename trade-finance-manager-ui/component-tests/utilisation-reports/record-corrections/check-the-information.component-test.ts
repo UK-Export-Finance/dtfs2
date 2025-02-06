@@ -197,7 +197,7 @@ describe('page', () => {
     const cancelButtonSelector = '[data-cy="cancel-button"]';
     wrapper.expectElement(cancelButtonSelector).toExist();
     wrapper.expectElement(cancelButtonSelector).toHaveAttribute('value', 'Cancel record correction request');
-    wrapper.expectElement(cancelButtonSelector).hasClass('govuk-button--secondary');
+    wrapper.expectElement(cancelButtonSelector).hasClass('govuk-button--warning');
     wrapper.expectElement(cancelButtonSelector).toHaveAttribute('formaction', cancelLink);
   });
 

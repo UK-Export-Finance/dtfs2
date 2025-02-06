@@ -208,6 +208,25 @@ describe(page, () => {
     wrapper.expectText('[data-cy="continue-button"]').toRead('Continue');
   });
 
+  it('should render cancel button', () => {
+    // Arrange
+    const cancelLink = '/utilisation-reports/123/create-record-correction-request/456/cancel';
+    const viewModel: CreateRecordCorrectionRequestViewModel = {
+      ...aCreateRecordCorrectionRequestViewModel(),
+      cancelLinkHref: cancelLink,
+    };
+
+    // Act
+    const wrapper = render(viewModel);
+
+    // Assert
+    const cancelButtonSelector = '[data-cy="cancel-button"]';
+    wrapper.expectElement(cancelButtonSelector).toExist();
+    wrapper.expectElement(cancelButtonSelector).toHaveAttribute('value', 'Cancel record correction request');
+    wrapper.expectElement(cancelButtonSelector).hasClass('govuk-button--warning');
+    wrapper.expectElement(cancelButtonSelector).toHaveAttribute('formaction', cancelLink);
+  });
+
   it('should render the main reasons hint', () => {
     // Arrange
     const viewModel = aCreateRecordCorrectionRequestViewModel();
