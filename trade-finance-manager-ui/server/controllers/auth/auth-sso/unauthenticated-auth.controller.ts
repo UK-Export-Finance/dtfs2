@@ -1,8 +1,7 @@
 import { Response } from 'express';
-import { CustomExpressRequest, InvalidPayloadError } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, EntraIdAuthCodeRedirectResponseBody, InvalidPayloadError } from '@ukef/dtfs2-common';
 import { isVerifiedPayload } from '@ukef/dtfs2-common/payload-verification';
-import { EntraIdAuthCodeRedirectResponseBody } from '../../../types/entra-id';
-import { ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA } from '../../../schemas';
+import { ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA } from '@ukef/dtfs2-common/schemas';
 
 export class UnauthenticatedAuthController {
   postSsoRedirect(req: CustomExpressRequest<{ reqBody: EntraIdAuthCodeRedirectResponseBody }>, res: Response) {
