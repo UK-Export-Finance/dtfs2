@@ -4,11 +4,10 @@ import { GetRouter } from '../../../types/get-router';
 import { UnauthenticatedAuthController } from '../../../controllers/auth/auth-sso/unauthenticated-auth.controller';
 
 export const getUnauthenticatedAuthSsoRouter: GetRouter = () => {
-  const unauthenticatedAuthSsoController = new UnauthenticatedAuthController();
   const unauthenticatedAuthSsoRouter = express.Router();
 
   unauthenticatedAuthSsoRouter.post('/auth/sso-redirect', (req, res) => {
-    unauthenticatedAuthSsoController.postSsoRedirect(req, res);
+    UnauthenticatedAuthController.postSsoRedirect(req, res);
   });
 
   unauthenticatedAuthSsoRouter.post('/auth/sso-redirect/form', (req, res, next) => {
