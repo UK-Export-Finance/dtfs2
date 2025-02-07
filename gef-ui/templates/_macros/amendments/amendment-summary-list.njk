@@ -1,7 +1,7 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% macro render(params) %}
-  <h2> Amendments </h2>
+  <h2>Amendments</h2>
 
   {{ govukSummaryList({
     rows: params.amendmentRows,
@@ -11,7 +11,7 @@
     }
   }) }}
 
-  <h2> Eligibility criteria </h2>
+  <h2>Eligibility criteria</h2>
 
   {{ govukSummaryList({
     rows: params.eligibilityRows,
@@ -21,7 +21,7 @@
     }
   }) }}
 
-  <h2> Date amendment effective from </h2>
+  <h2>Date amendment effective from</h2>
 
   {{ govukSummaryList({
     rows: params.effectiveDateRows,
