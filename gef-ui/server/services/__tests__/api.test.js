@@ -1,5 +1,11 @@
 import { AxiosError, HttpStatusCode } from 'axios';
-import { InvalidDealIdError, InvalidFacilityIdError, MOCK_COMPANY_REGISTRATION_NUMBERS, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import {
+  InvalidDealIdError,
+  InvalidFacilityIdError,
+  MOCK_COMPANY_REGISTRATION_NUMBERS,
+  PORTAL_AMENDMENT_STATUS,
+  PORTAL_AMENDMENT_UNDERWAY_STATUSES,
+} from '@ukef/dtfs2-common';
 import Axios from '../axios';
 import api from '../api';
 import CONSTANTS from '../../constants';
@@ -498,11 +504,11 @@ describe('updateAmendment()', () => {
 describe('getAmendmentsOnDeal()', () => {
   it(`should return the found amendments`, async () => {
     // Arrange
-    const mockAmendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().build();
+    const mockAmendment = { ...new PortalFacilityAmendmentWithUkefIdMockBuilder().build(), status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL };
     Axios.get.mockResolvedValueOnce({ data: [mockAmendment] });
 
     // Act
-    const response = await api.getAmendmentsOnDeal({ dealId: validMongoId, userToken });
+    const response = await api.getAmendmentsOnDeal({ dealId: validMongoId, userToken, statuses: PORTAL_AMENDMENT_UNDERWAY_STATUSES });
 
     // Assert
     expect(response).toEqual([mockAmendment]);

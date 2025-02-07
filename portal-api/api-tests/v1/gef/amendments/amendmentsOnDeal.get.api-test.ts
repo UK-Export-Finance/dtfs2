@@ -1,5 +1,12 @@
 import { ObjectId } from 'mongodb';
-import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, AnyObject, PortalFacilityAmendmentWithUkefId, Role } from '@ukef/dtfs2-common';
+import {
+  PORTAL_AMENDMENT_STATUS,
+  AMENDMENT_TYPES,
+  AnyObject,
+  PortalFacilityAmendmentWithUkefId,
+  Role,
+  PORTAL_AMENDMENT_UNDERWAY_STATUSES,
+} from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import app from '../../../../src/createApp';
 import testUserCache from '../../../api-test-users';
@@ -21,7 +28,7 @@ jest.mock('../../../../src/v1/api', () => ({
 }));
 
 const validDealId = new ObjectId().toString();
-const statuses = [PORTAL_AMENDMENT_STATUS.DRAFT, PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL];
+const statuses = PORTAL_AMENDMENT_UNDERWAY_STATUSES;
 
 const invalidId = 'invalid-id';
 
@@ -85,7 +92,7 @@ describe('/v1/gef/deals/:dealId/amendments', () => {
         ukefFacilityId: '123',
         createdAt: 1702061978881,
         updatedAt: 1702061978881,
-        status: PORTAL_AMENDMENT_STATUS.DRAFT,
+        status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
         eligibilityCriteria: { version: 1, criteria: [] },
         createdBy: {
           username: aMaker.username,
