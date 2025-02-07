@@ -12,6 +12,7 @@ import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
 import { MOCK_BASIC_DEAL } from '../../server/utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY, MOCK_UNISSUED_FACILITY } from '../../server/utils/mocks/mock-facilities';
 import { getAmendmentsUrl } from '../../server/controllers/amendments/helpers/navigation.helper.ts';
+import { withGetAmendmentPageErrorHandlingTests } from './with-get-amendment-page-error-handling.api-tests';
 
 const originalEnv = { ...process.env };
 
@@ -108,6 +109,13 @@ describe(`GET ${url}`, () => {
       successCode: HttpStatusCode.Ok,
     });
 
+    withGetAmendmentPageErrorHandlingTests({
+      makeRequest: () => getWithSessionCookie(sessionCookie),
+      mockGetAmendment,
+      mockGetApplication,
+      mockGetFacility,
+    });
+
     it('should render manual approval needed page', async () => {
       // Act
       const response = await getWithSessionCookie(sessionCookie);
@@ -115,42 +123,6 @@ describe(`GET ${url}`, () => {
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Ok);
       expect(response.text).toContain('This amendment cannot be automatically approved');
-    });
-
-    it('should redirect to /not-found when facility not found', async () => {
-      // Arrange
-      mockGetFacility.mockResolvedValue({ details: undefined });
-
-      // Act
-      const response = await getWithSessionCookie(sessionCookie);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.Found);
-      expect(response.headers.location).toEqual('/not-found');
-    });
-
-    it('should redirect to /not-found when deal not found', async () => {
-      // Arrange
-      mockGetApplication.mockResolvedValue(undefined);
-
-      // Act
-      const response = await getWithSessionCookie(sessionCookie);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.Found);
-      expect(response.headers.location).toEqual('/not-found');
-    });
-
-    it('should redirect to /not-found when amendment not found', async () => {
-      // Arrange
-      mockGetAmendment.mockResolvedValue(undefined);
-
-      // Act
-      const response = await getWithSessionCookie(sessionCookie);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.Found);
-      expect(response.headers.location).toEqual('/not-found');
     });
 
     it('should redirect to deal summary page when facility cannot be amended', async () => {
@@ -185,42 +157,6 @@ describe(`GET ${url}`, () => {
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.ELIGIBILITY }));
-    });
-
-    it('should render `problem with service` if getApplication throws an error', async () => {
-      // Arrange
-      mockGetApplication.mockRejectedValue(new Error('test error'));
-
-      // Act
-      const response = await getWithSessionCookie(sessionCookie);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.Ok);
-      expect(response.text).toContain('Problem with the service');
-    });
-
-    it('should render `problem with service` if getFacility throws an error', async () => {
-      // Arrange
-      mockGetFacility.mockRejectedValue(new Error('test error'));
-
-      // Act
-      const response = await getWithSessionCookie(sessionCookie);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.Ok);
-      expect(response.text).toContain('Problem with the service');
-    });
-
-    it('should render `problem with service` if getAmendment throws an error', async () => {
-      // Arrange
-      mockGetAmendment.mockRejectedValue(new Error('test error'));
-
-      // Act
-      const response = await getWithSessionCookie(sessionCookie);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.Ok);
-      expect(response.text).toContain('Problem with the service');
     });
   });
 });
