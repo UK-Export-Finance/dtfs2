@@ -1,5 +1,5 @@
 import { endOfDay, format, isPast, isSameMonth, parseISO, subMonths } from 'date-fns';
-import { IsoMonthStamp, REPORT_NOT_RECEIVED, ReportPeriod, UtilisationReportStatus, isEqualMonthAndYear } from '@ukef/dtfs2-common';
+import { IsoMonthStamp, ReportPeriod, UtilisationReportStatus, isEqualMonthAndYear } from '@ukef/dtfs2-common';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../types/utilisation-reports';
 import { getReportDueDate } from '../../../services/utilisation-report-service';
 import api from '../../../api';
@@ -31,14 +31,13 @@ const getUtilisationReportDisplayFrequency = (reportPeriod: ReportPeriod): Utili
  * @returns The summary item view model
  */
 const getSummaryItemViewModel = (apiItem: UtilisationReportReconciliationSummaryItem): UtilisationReportSummaryViewModel => {
-  const { status, dateUploaded, reportId, reportPeriod } = apiItem;
+  const { status, dateUploaded, reportPeriod } = apiItem;
 
   return {
     ...apiItem,
     frequency: getUtilisationReportDisplayFrequency(reportPeriod),
     displayStatus: reconciliationStatusCodeToDisplayStatus[status],
     formattedDateUploaded: dateUploaded ? format(parseISO(dateUploaded), 'd MMM yyyy') : undefined,
-    downloadPath: status !== REPORT_NOT_RECEIVED ? `/utilisation-reports/${reportId}/download` : undefined,
   };
 };
 

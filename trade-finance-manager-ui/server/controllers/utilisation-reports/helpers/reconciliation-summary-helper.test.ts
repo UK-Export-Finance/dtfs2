@@ -112,7 +112,6 @@ describe('reconciliation-summary-helper', () => {
               frequency: 'Quarterly',
               displayStatus: 'Pending reconciliation',
               formattedDateUploaded: '3 Dec 2023',
-              downloadPath: `/utilisation-reports/${pendingReconciliationSummaryItem.reportId}/download`,
             },
           ],
           submissionMonth,
