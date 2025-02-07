@@ -67,7 +67,7 @@ describe('add partyUrn to deal', () => {
     expect(match.tfm.parties.exporter.partyUrn).toEqual('testPartyUrn');
   });
 
-  it('should return the deal with partyUrn is successfully matched and probability of default is not provided', async () => {
+  it('should return the deal with partyUrn is successfully matched and probability of default is undefined', async () => {
     mockUpdateDeal();
 
     const deal = {
@@ -76,6 +76,21 @@ describe('add partyUrn to deal', () => {
         companiesHouseRegistrationNumber: COMPANY_REGISTRATION_NUMBER.MATCH,
         companyName: 'some name',
         probabilityOfDefault: undefined,
+      },
+    };
+
+    const match = await addPartyUrns(deal, generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id));
+    expect(match.tfm.parties.exporter.partyUrn).toEqual('testPartyUrn');
+  });
+
+  it('should return the deal with partyUrn is successfully matched and probability of default is not provided', async () => {
+    mockUpdateDeal();
+
+    const deal = {
+      ...MOCK_DEAL,
+      exporter: {
+        companiesHouseRegistrationNumber: COMPANY_REGISTRATION_NUMBER.MATCH,
+        companyName: 'some name',
       },
     };
 
