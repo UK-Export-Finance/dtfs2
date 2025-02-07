@@ -7,9 +7,15 @@ import { EntraIdApi } from '../third-party-apis/entra-id.api';
 import { EntraIdConfig } from '../configs/entra-id.config';
 import { UserService } from '../services/user.service';
 import { validateGetAuthCodePayloadUrl } from '../middleware/validate-get-auth-code-url-payload';
+import { validateSsoFeatureFlagIsOn } from '../middleware/validate-sso-feature-flag';
 
 export const ssoOpenRouter = express.Router();
 
+/**
+ * This conditional check is to stop the dependency injection instances being
+ * initialised if SSO is not enabled -- Avoiding errors if the environmental variables
+ * are not set
+ */
 if (isTfmSsoFeatureFlagEnabled()) {
   const entraIdConfig = new EntraIdConfig();
   const entraIdApi = new EntraIdApi({ entraIdConfig });
@@ -19,10 +25,18 @@ if (isTfmSsoFeatureFlagEnabled()) {
 
   ssoOpenRouter
     .route('/auth-code-url')
-    .all(validateGetAuthCodePayloadUrl)
+    .all(validateSsoFeatureFlagIsOn, validateGetAuthCodePayloadUrl)
     .get((req: GetAuthCodeUrlApiRequest, res: GetAuthCodeUrlApiResponse, next) => {
       ssoController.getAuthCodeUrl(req, res).catch(next);
     });
 
-  ssoOpenRouter.route('/handle-sso-redirect-form').post((req, res) => ssoController.handleSsoRedirectForm(req, res));
+  /**
+   * Validation for this route is done in controller itself
+   * as we only verify the parts of the payload that are not derived from the
+   * msal library
+   */
+  ssoOpenRouter
+    .route('/handle-sso-redirect-form')
+    .get(validateSsoFeatureFlagIsOn)
+    .post((req, res) => ssoController.handleSsoRedirectForm(req, res));
 }
