@@ -43,7 +43,7 @@ describe('controllers/utilisation-reports/record-corrections/record-correction-l
 
       const expectedViewModel = {
         user,
-        mappedCorrectionLog: recordCorrectionLogDetailsMock.correctionDetails,
+        correctionDetails: recordCorrectionLogDetailsMock.correctionDetails,
         status,
         displayStatus,
         formattedReportPeriod,

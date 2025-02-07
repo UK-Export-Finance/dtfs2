@@ -5,7 +5,6 @@ import { getRecordCorrectionLogDetails } from '.';
 import { FeeRecordCorrectionRepo } from '../../../../repositories/fee-record-correction-repo';
 import { getRecordCorrectionFields } from '../helpers/get-record-correction-fields';
 import { getBankNameById } from '../../../../repositories/banks-repo';
-import { NotFoundError } from '../../../../errors';
 
 console.error = jest.fn();
 
@@ -39,12 +38,17 @@ describe('get-record-correction-log-details.controller', () => {
       findRecordCorrectionSpy.mockResolvedValue(null);
     });
 
-    it('should throw a NotFoundError', async () => {
+    it(`should respond with a ${HttpStatusCode.NotFound}`, async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
       // Assert
-      await expect(getRecordCorrectionLogDetails(req, res)).rejects.toThrow(new NotFoundError('Record correction not found'));
+      await getRecordCorrectionLogDetails(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
+      const expectedErrorMessage = 'Record correction not found';
+      expect(res._getData()).toEqual(`Failed to get record correction log details: ${expectedErrorMessage}`);
     });
   });
 
@@ -54,12 +58,17 @@ describe('get-record-correction-log-details.controller', () => {
       jest.mocked(getBankNameById).mockResolvedValue(undefined);
     });
 
-    it('should throw a NotFoundError', async () => {
+    it(`should respond with a ${HttpStatusCode.NotFound}`, async () => {
       // Arrange
       const { req, res } = getHttpMocks();
 
       // Assert
-      await expect(getRecordCorrectionLogDetails(req, res)).rejects.toThrow(new NotFoundError('Bank not found'));
+      await getRecordCorrectionLogDetails(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
+      const expectedErrorMessage = 'Bank not found';
+      expect(res._getData()).toEqual(`Failed to get record correction log details: ${expectedErrorMessage}`);
     });
   });
 
