@@ -58,7 +58,7 @@ export const getDueDateText = (reportDueDate: Date) => {
  * @param submissionMonth - The submission month
  * @returns Report period heading with the report period end
  */
-const getReportPeriodHeadingWithPeriodEnd = (submissionMonth: IsoMonthStamp) => {
+export const getReportPeriodHeading = (submissionMonth: IsoMonthStamp) => {
   const submissionMonthDate = new Date(submissionMonth);
   const isCurrentSubmissionMonth = isSameMonth(submissionMonthDate, new Date());
 
@@ -68,16 +68,6 @@ const getReportPeriodHeadingWithPeriodEnd = (submissionMonth: IsoMonthStamp) => 
   return `${
     isCurrentSubmissionMonth ? BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.CURRENT_PERIOD_END : BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.OPEN_PERIOD_END
   }: ${formattedReportPeriodEnd}`;
-};
-
-/**
- * Get the report period heading for the given submission month and report periods
- * @param submissionMonth - the submission month
- * @param reportPeriods - the report periods
- * @returns The report period heading
- */
-export const getReportPeriodHeading = (submissionMonth: IsoMonthStamp) => {
-  return getReportPeriodHeadingWithPeriodEnd(submissionMonth);
 };
 
 /**
