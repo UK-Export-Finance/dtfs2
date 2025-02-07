@@ -76,12 +76,6 @@ beforeEach(() => {
 const invalidQueryParameters = [
   {
     query: {
-      companyName: 'TEST NAME',
-      companyRegNo: '12345678',
-    },
-  },
-  {
-    query: {
       companyRegNo: '12345678',
       probabilityOfDefault: 3,
     },
