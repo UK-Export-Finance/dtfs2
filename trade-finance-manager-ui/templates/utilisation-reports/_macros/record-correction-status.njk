@@ -5,15 +5,15 @@
   {% set displayStatus = params.displayStatus %}
 
   {% set tagColourClassForStatus = {
-    'RECORD_CORRECTION_RECEIVED': 'govuk-tag--green govuk-!-text-align-left',
-    'RECORD_CORRECTION_SENT': 'govuk-tag--pink govuk-!-text-align-left'
+    'RECORD_CORRECTION_RECEIVED': 'govuk-tag--green',
+    'RECORD_CORRECTION_SENT': 'govuk-tag--pink'
   } %}
 
   {% set tagColourClass = tagColourClassForStatus[status] %}
 
   {{ govukTag({
     text: displayStatus,
-    classes: tagColourClass,
+    classes: tagColourClass + " govuk-!-text-align-left",
     attributes: {
       'data-cy': 'record-correction-status'
     }

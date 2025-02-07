@@ -56,6 +56,14 @@ describe(page, () => {
     wrapper.expectText(definitionDescriptionSelector('Date sent')).toRead(correctionDetails.formattedDateSent);
   });
 
+  it('should render the contact name', () => {
+    // Act
+    const wrapper = render(viewModel);
+
+    // Assert
+    wrapper.expectText(definitionDescriptionSelector('Contact name')).toRead(correctionDetails.bankTeamName);
+  });
+
   it('should render the contact email addresses', () => {
     // Act
     const wrapper = render(viewModel);
