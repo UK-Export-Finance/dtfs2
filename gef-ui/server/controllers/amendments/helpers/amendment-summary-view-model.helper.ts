@@ -235,6 +235,10 @@ const generateAmendmentSummaryEffectiveDateRows = (amendment: PortalFacilityAmen
 /**
  * @param amendment - the amendment
  * @returns the amendment summary list component parameters
+ *
+ * The returned arrays are passed into a GOV.UK summary list component in order to render the amendment details.
+ * This object does contain html and it would be preferable to create this in a nunjucks file, but the complicated object
+ * to array mapping lends itself to typescript
  */
 export const mapAmendmentToAmendmentSummaryListParams = (amendment: PortalFacilityAmendmentWithUkefId) => ({
   amendmentRows: generateAmendmentSummaryAmendmentRows(amendment),
