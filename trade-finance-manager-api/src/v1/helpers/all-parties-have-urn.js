@@ -4,7 +4,6 @@ const allPartiesHaveUrn = ({ dealSnapshot, tfm }) => {
   const facilitiesHaveUrn = dealSnapshot.facilities.every(({ facilitySnapshot, tfm: facilityTfm }) => {
     const hasRequiredIssuerUrn = !facilitySnapshot?.bondIssuer || facilityTfm?.bondIssuerPartyUrn;
     const hasRequiredBeneficiaryUrn = !facilitySnapshot?.bondBeneficiary || facilityTfm?.bondBeneficiaryPartyUrn;
-
     return Boolean(hasRequiredIssuerUrn && hasRequiredBeneficiaryUrn);
   });
 

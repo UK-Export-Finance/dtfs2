@@ -2,12 +2,12 @@ const { DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const MOCK_DEAL_ACBS = require('../__mocks__/mock-deal-acbs');
-const { MOCK_ACBS_TASK_LINK, MOCK_ACBS_FACILITY_LINK } = require('../__mocks__/mock-durable-tasks');
+const { MOCK_ACBS_TASK_LINK, MOCK_ACBS_DEAL_LINK, MOCK_ACBS_FACILITY_LINK } = require('../__mocks__/mock-durable-tasks');
 
-const { createACBS, issueAcbsFacilities, addToACBSLog, updateIssuedFacilityAcbs, updateAmendedFacilityAcbs } = require('./acbs.controller');
+const { createACBS, issueAcbsFacilities, addToACBSLog, updateIssuedFacilityAcbs, updateAmendedFacilityAcbs, updateDealAcbs } = require('./acbs.controller');
 const { mongoDbClient: db } = require('../../drivers/db-client');
 const { findOneTfmDeal } = require('./deal.controller');
-const { updateFacilityAcbs } = require('./tfm.controller');
+const { updateFacilityAcbs, updateAcbs } = require('./tfm.controller');
 
 const consoleErrorMock = jest.spyOn(console, 'error');
 consoleErrorMock.mockImplementation();
@@ -39,6 +39,7 @@ jest.mock('./deal.controller', () => ({
  */
 jest.mock('./tfm.controller', () => ({
   updateFacilityAcbs: jest.fn().mockResolvedValue(true),
+  updateAcbs: jest.fn().mockResolvedValue(true),
 }));
 
 const updateACBSFacilityMock = jest.spyOn(api, 'issueACBSfacility');
@@ -502,5 +503,31 @@ describe('updateAmendedFacilityAcbs', () => {
     // Assert
     expect(updateFacilityAcbs).toHaveBeenCalledTimes(1);
     expect(updateFacilityAcbs).toHaveBeenCalledWith(_id, mockAcbsUpdate);
+  });
+});
+
+describe('updateDealAcbs', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should update the deal tfm.acbs and facility tfm.acbs object when successfully executed in ACBS', async () => {
+    // Arrange
+    const { output } = MOCK_ACBS_DEAL_LINK.acbsTaskResult;
+    const { facilities } = output;
+    const facility = facilities[0];
+    const { facilityIdentifier, ...acbsFacility } = facility;
+
+    // Act
+    await updateDealAcbs(output);
+
+    // Assert
+    // Deal
+    expect(updateAcbs).toHaveBeenCalledTimes(1);
+    expect(updateAcbs).toHaveBeenCalledWith(output);
+
+    // Facilities
+    expect(updateFacilityAcbs).toHaveBeenCalledTimes(1);
+    expect(updateFacilityAcbs).toHaveBeenCalledWith(facilityIdentifier, acbsFacility);
   });
 });
