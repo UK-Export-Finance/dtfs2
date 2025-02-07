@@ -56,7 +56,7 @@ describe(page, () => {
       wrapper.expectPageTitle().toRead('Error - Create record correction request');
     });
 
-    it('should render error summary', () => {
+    it('should render the error summary', () => {
       // Arrange
       const errorSummaryText = 'error summary text';
 
@@ -208,7 +208,7 @@ describe(page, () => {
     wrapper.expectText('[data-cy="continue-button"]').toRead('Continue');
   });
 
-  it('should render cancel button', () => {
+  it('should render the cancel button', () => {
     // Arrange
     const cancelLink = '/utilisation-reports/123/create-record-correction-request/456/cancel';
     const viewModel: CreateRecordCorrectionRequestViewModel = {
