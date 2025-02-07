@@ -137,6 +137,19 @@ it('should allow a probability of default set to undefined', async () => {
   expect(result).toBe('TEST_URN');
 });
 
+it('should allow a probability of default not provided', async () => {
+  getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
+
+  const companyData = { companyRegNo: '12345678', companyName: 'name' };
+
+  const result = await api.getPartyUrn(companyData);
+
+  expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith(companyData);
+  expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(1);
+
+  expect(result).toBe('TEST_URN');
+});
+
 it('should not call getPartyDbInfo', async () => {
   getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
 
