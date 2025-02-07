@@ -30,7 +30,7 @@ describe('PortalFacilityAmendmentService', () => {
   });
 
   describe('validateNoOtherAmendmentsUnderWayOnDeal', () => {
-    it('should call findPortalAmendmentsForDeal with the dealId and correct filters', async () => {
+    it('should call findPortalAmendmentsByDealIdAndStatus with the dealId and correct filters', async () => {
       // Act
       await PortalFacilityAmendmentService.validateNoOtherAmendmentsUnderWayOnDeal({
         dealId,
