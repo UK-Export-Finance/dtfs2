@@ -35,7 +35,7 @@ export class PortalFacilityAmendmentService {
     });
 
     if (amendmentId) {
-      remove(existingPortalAmendmentsUnderWay, (amendment) => new ObjectId(amendmentId) === amendment.amendmentId);
+      remove(existingPortalAmendmentsUnderWay, (amendment) => amendment.amendmentId.equals(amendmentId));
     }
 
     if (existingPortalAmendmentsUnderWay.length > 0) {

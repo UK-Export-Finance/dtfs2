@@ -10,7 +10,6 @@ console.error = jest.fn();
 
 const dealId = new ObjectId().toString();
 
-const aDraftPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.DRAFT });
 const aReadyForApprovalPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL });
 const aChangesRequiredPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED });
 
@@ -47,7 +46,7 @@ describe('PortalFacilityAmendmentService', () => {
 
     it(`should throw an error if there is an existing portal amendment on the deal with the status ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}`, async () => {
       // Arrange
-      mockFindPortalAmendmentsByDealIdAndStatus.mockResolvedValueOnce([aDraftPortalAmendment, aReadyForApprovalPortalAmendment]);
+      mockFindPortalAmendmentsByDealIdAndStatus.mockResolvedValueOnce([aReadyForApprovalPortalAmendment]);
 
       // Act + Assert
       await expect(() =>
@@ -60,7 +59,7 @@ describe('PortalFacilityAmendmentService', () => {
 
     it(`should throw an error if there is an existing portal amendment on the deal with the status ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}`, async () => {
       // Arrange
-      mockFindPortalAmendmentsByDealIdAndStatus.mockResolvedValueOnce([aDraftPortalAmendment, aChangesRequiredPortalAmendment]);
+      mockFindPortalAmendmentsByDealIdAndStatus.mockResolvedValueOnce([aChangesRequiredPortalAmendment]);
 
       // Act
       // Assert
@@ -71,6 +70,21 @@ describe('PortalFacilityAmendmentService', () => {
       ).rejects.toThrow(PortalFacilityAmendmentConflictError);
 
       expect(console.error).toHaveBeenCalledWith('There is a portal facility amendment already under way on this deal');
+    });
+
+    it(`should not throw an error if the in progress amendment corresponds to the provided amendmentId`, async () => {
+      // Arrange
+      const amendmentId = aReadyForApprovalPortalAmendment.amendmentId.toString();
+      mockFindPortalAmendmentsByDealIdAndStatus.mockResolvedValueOnce([aReadyForApprovalPortalAmendment]);
+
+      // Act
+      await PortalFacilityAmendmentService.validateNoOtherAmendmentsUnderWayOnDeal({
+        dealId,
+        amendmentId,
+      });
+
+      // Assert
+      expect(console.error).toHaveBeenCalledTimes(0);
     });
 
     it(`should not throw an error if no under way amendments are returned`, async () => {
