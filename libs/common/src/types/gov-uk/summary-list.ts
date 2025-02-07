@@ -1,6 +1,6 @@
 import { Prettify } from '../types-helper';
 
-type GovUkField = Prettify<
+type GovUkField =
   | {
       text: string;
       classes?: string;
@@ -8,8 +8,7 @@ type GovUkField = Prettify<
   | {
       html: string;
       classes?: string;
-    }
->;
+    };
 
 type ActionItem = Prettify<
   GovUkField & {
