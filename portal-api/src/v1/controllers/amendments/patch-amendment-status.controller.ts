@@ -4,7 +4,7 @@ import { ApiError, CustomExpressRequest, PortalAmendmentStatus } from '@ukef/dtf
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import api from '../../api';
 
-export type PatchAmendmentRequest = CustomExpressRequest<{
+export type PatchAmendmentStatusRequest = CustomExpressRequest<{
   params: {
     facilityId: string;
     amendmentId: string;
@@ -19,7 +19,7 @@ export type PatchAmendmentRequest = CustomExpressRequest<{
  * @param req - The request object
  * @param res - The response object
  */
-export const patchAmendmentStatus = async (req: PatchAmendmentRequest, res: Response) => {
+export const patchAmendmentStatus = async (req: PatchAmendmentStatusRequest, res: Response) => {
   const { facilityId, amendmentId } = req.params;
   const { newStatus } = req.body;
 
