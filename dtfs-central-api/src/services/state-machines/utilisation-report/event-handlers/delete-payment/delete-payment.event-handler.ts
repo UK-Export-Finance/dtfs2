@@ -27,13 +27,14 @@ export const handleUtilisationReportDeletePaymentEvent = async (
   report: UtilisationReportEntity,
   { paymentId, transactionEntityManager, requestSource }: DeletePaymentEventPayload,
 ): Promise<UtilisationReportEntity> => {
-  const payment = await transactionEntityManager.findOne(PaymentEntity, { where: { id: paymentId }, relations: { feeRecords: true } });
+  const payment = await transactionEntityManager.findOne(PaymentEntity, { where: { id: paymentId }, relations: { feeRecords: { corrections: true } } });
 
   if (!payment) {
     throw new NotFoundError(`Failed to find a payment with id: ${paymentId}`);
   }
 
   const linkedFeeRecords = payment.feeRecords;
+
   if (linkedFeeRecords.length === 0) {
     await transactionEntityManager.remove(payment);
     return report;
@@ -41,32 +42,37 @@ export const handleUtilisationReportDeletePaymentEvent = async (
 
   await transactionEntityManager.remove(payment);
 
-  const feeRecordsWithPayments = await transactionEntityManager.findOne(FeeRecordEntity, {
+  const feeRecordFromGroupWithPayments = await transactionEntityManager.findOne(FeeRecordEntity, {
     where: { id: linkedFeeRecords[0].id },
     relations: { payments: true },
   });
 
-  if (!feeRecordsWithPayments) {
+  if (!feeRecordFromGroupWithPayments) {
     throw new NotFoundError(`Failed to find a fee record with id '${linkedFeeRecords[0].id}'`);
   }
 
-  const remainingLinkedPayments = feeRecordsWithPayments.payments;
+  const remainingLinkedPayments = feeRecordFromGroupWithPayments.payments;
 
   const feesAndPaymentsMatch = await feeRecordsAndPaymentsMatch(linkedFeeRecords, remainingLinkedPayments, transactionEntityManager);
-  const feeRecordStateMachines = linkedFeeRecords.map((feeRecord) => FeeRecordStateMachine.forFeeRecord(feeRecord));
-  await Promise.all(
-    feeRecordStateMachines.map((stateMachine) =>
-      stateMachine.handleEvent({
-        type: 'PAYMENT_DELETED',
-        payload: {
-          transactionEntityManager,
-          feeRecordsAndPaymentsMatch: feesAndPaymentsMatch,
-          hasAttachedPayments: remainingLinkedPayments.length > 0,
-          requestSource,
-        },
-      }),
-    ),
-  );
+
+  const hasAttachedPayments = remainingLinkedPayments.length > 0;
+
+  for (const feeRecord of linkedFeeRecords) {
+    const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
+
+    const hasCorrections = feeRecord.corrections.length > 0;
+
+    await stateMachine.handleEvent({
+      type: 'PAYMENT_DELETED',
+      payload: {
+        transactionEntityManager,
+        feeRecordsAndPaymentsMatch: feesAndPaymentsMatch,
+        hasAttachedPayments,
+        hasCorrections,
+        requestSource,
+      },
+    });
+  }
 
   return report;
 };
