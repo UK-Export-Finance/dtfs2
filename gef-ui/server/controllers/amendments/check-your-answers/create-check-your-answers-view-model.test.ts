@@ -9,7 +9,7 @@ import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { mapAmendmentToAmendmentSummaryListParams } from '../helpers/amendment-summary-view-model.helper';
 
 describe('createCheckYourAnswersViewModel', () => {
-  it('returns the expected view model', () => {
+  it('should return the expected view model', () => {
     // Arrange
     const deal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
     const facility = MOCK_ISSUED_FACILITY.details;

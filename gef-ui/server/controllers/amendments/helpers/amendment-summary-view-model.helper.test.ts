@@ -11,7 +11,7 @@ const dealId = 'dealId';
 
 describe('mapAmendmentToAmendmentSummaryListParams', () => {
   describe('when changing cover end date only', () => {
-    it('generates the correct amendment rows when using facility end date', () => {
+    it('should return the correct amendment rows when using facility end date', () => {
       // Arrange
       const facilityEndDate = new Date();
       const coverEndDate = new Date();
@@ -94,7 +94,7 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
       expect(result.amendmentRows).toEqual(expectedAmendmentRows);
     });
 
-    it('generates the correct amendment rows when using bank review date', () => {
+    it('should return the correct amendment rows when using bank review date', () => {
       // Arrange
       const bankReviewDate = new Date();
       const coverEndDate = new Date();
@@ -179,7 +179,7 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
   });
 
   describe('when changing facility value only', () => {
-    it('generates the correct amendment rows', () => {
+    it('should return the correct amendment rows', () => {
       // Arrange
       const facilityValue = 100;
       const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
@@ -241,7 +241,7 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
   });
 
   describe('when changing facility value and cover end date', () => {
-    it('generates the correct amendment rows', () => {
+    it('should return the correct amendment rows', () => {
       // Arrange
       const facilityValue = 100;
       const facilityEndDate = new Date();
@@ -346,7 +346,7 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
     });
   });
 
-  it('returns the correct eligibility criteria rows', () => {
+  it('should return the correct eligibility criteria rows', () => {
     // Arrange
     const criteria = [
       { id: 1, text: 'Criterion 1', answer: true },
@@ -409,7 +409,7 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
     expect(result.eligibilityRows).toEqual(expectedCriteriaRows);
   });
 
-  it('returns the correct effective date rows', () => {
+  it('should return the correct effective date rows', () => {
     // Arrange
     const effectiveDate = new Date();
 
