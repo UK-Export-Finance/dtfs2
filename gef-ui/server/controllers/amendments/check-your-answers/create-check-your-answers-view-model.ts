@@ -27,5 +27,4 @@ export const createCheckYourAnswersViewModel = ({
   cancelUrl: getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
   previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.CHECK_YOUR_ANSWERS, amendment),
   amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment),
-  amendment,
 });

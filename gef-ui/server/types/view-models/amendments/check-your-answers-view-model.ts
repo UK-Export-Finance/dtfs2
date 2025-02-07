@@ -1,4 +1,4 @@
-import { FacilityType, PortalFacilityAmendmentWithUkefId, SummaryListRow } from '@ukef/dtfs2-common';
+import { FacilityType, SummaryListRow } from '@ukef/dtfs2-common';
 
 export type CheckYourAnswersViewModel = {
   exporterName: string;
@@ -10,5 +10,4 @@ export type CheckYourAnswersViewModel = {
     eligibilityRows: SummaryListRow[];
     effectiveDateRows: SummaryListRow[];
   };
-  amendment: PortalFacilityAmendmentWithUkefId;
 };

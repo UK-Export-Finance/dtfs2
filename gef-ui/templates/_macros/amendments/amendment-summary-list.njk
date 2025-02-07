@@ -1,82 +1,33 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
-{% macro render(amendment) %}
-  {% set changesCoverEndDateListItem -%}
-    <li>
-      Cover end date and
-      <br>
-      {{ 'Facility end date' if amendment.isUsingFacilityEndDate else 'Bank review date'}}
-    </li>
-  {% endset %}
-
-  {% set changesValueHtml-%}
-    <ul class="govuk-list">
-      {{ changesCoverEndDateListItem | safe if amendment.changeCoverEndDate }}
-      {{'<li>Facility value</li>' | safe if amendment.changeFacilityValue }}
-    </ul>
-  {%- endset %}
-
-  {% set changesRow =
-    {
-      key: {
-        text: 'Changes'
-      },
-      value: {
-        html: changesValueHtml
-      },
-        actions: {
-          items: [
-            {
-              href: '/gef/application-details/' + amendment.dealId + '/facilities/' + amendment.facilityId + '/amendments/' + amendment.amendmentId + '/what-do-you-need-to-change#amendmentOptions',
-              text: 'Change',
-              visuallyHiddenText: 'whether amending cover end date or facility value',
-              attributes: {
-                'data-cy': 'change-amendment-options-link'
-              }
-            }
-          ]
-        }
-    }
-   %}
-
-  {% set facilityValueRow =
-    {
-      key: {
-        text: 'New Facility value'
-      },
-      value: {
-        text: amendment.value | dashIfEmpty
-      },
-        actions: {
-          items: [
-            {
-              href: '/gef/application-details/' + amendment.dealId + '/facilities/' + amendment.facilityId + '/amendments/' + amendment.amendmentId + '/facility-value#facilityValue',
-              text: 'Change',
-              visuallyHiddenText: 'facility value',
-              attributes: {
-                'data-cy': 'change-facility-value-link'
-              }
-            }
-          ]
-        }
-    }
-   %}
-
-
-  {% set amendmentRows = [changesRow] %}
-  {% if amendment.changeFacilityValue %}
-    {% set amendmentRows = (amendmentRows.push(facilityValueRow), amendmentRows) %}
-  {% endif %}
-
-  
-
+{% macro render(params) %}
   <h2>Amendments</h2>
+
   {{ govukSummaryList({
-    rows: amendmentRows,
+    rows: params.amendmentRows,
     attributes: {
       'data-cy': 'amendments-summary-list',
       id: item.facilityId
     }
   }) }}
 
+  <h2>Eligibility criteria</h2>
+
+  {{ govukSummaryList({
+    rows: params.eligibilityRows,
+    attributes: {
+      'data-cy': 'eligibility-summary-list',
+      id: item.facilityId
+    }
+  }) }}
+
+  <h2>Date amendment effective from</h2>
+
+  {{ govukSummaryList({
+    rows: params.effectiveDateRows,
+    attributes: {
+      'data-cy': 'effective-date-summary-list',
+      id: item.facilityId
+    }
+  }) }}
 {% endmacro %}
