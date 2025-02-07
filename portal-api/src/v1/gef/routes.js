@@ -22,6 +22,9 @@ const { patchAmendmentStatus } = require('../controllers/amendments/patch-amendm
 const { handleExpressValidatorResult } = require('../validation/route-validators/express-validator-result-handler');
 const { validatePutPortalFacilityAmendmentPayload } = require('../validation/route-validators/amendments/validate-put-portal-facility-amendment-payload');
 const { validatePatchPortalFacilityAmendmentPayload } = require('../validation/route-validators/amendments/validate-patch-portal-facility-amendment-payload');
+const {
+  validatePatchPortalFacilityAmendmentStatusPayload,
+} = require('../validation/route-validators/amendments/validate-patch-portal-facility-amendment-status-payload');
 
 const router = express.Router();
 
@@ -132,15 +135,17 @@ router
   .get(getAmendment)
   .patch(validatePatchPortalFacilityAmendmentPayload, patchAmendment);
 
-router.route('/facilities/:facilityId/amendments/:amendmentId/status').patch(
-  validatePortalFacilityAmendmentsEnabled,
-  validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }),
-  mongoIdValidation('facilityId'),
-  mongoIdValidation('amendmentId'),
-  handleExpressValidatorResult,
-  // validatePatchPortalFacilityAmendmentPayload,
-  patchAmendmentStatus,
-);
+router
+  .route('/facilities/:facilityId/amendments/:amendmentId/status')
+  .patch(
+    validatePortalFacilityAmendmentsEnabled,
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }),
+    mongoIdValidation('facilityId'),
+    mongoIdValidation('amendmentId'),
+    handleExpressValidatorResult,
+    validatePatchPortalFacilityAmendmentStatusPayload,
+    patchAmendmentStatus,
+  );
 
 router
   .route('/facilities/:facilityId/amendments')

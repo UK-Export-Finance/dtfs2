@@ -1,17 +1,16 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { ApiError, CustomExpressRequest, PortalAmendmentStatus } from '@ukef/dtfs2-common';
+import { ApiError, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import api from '../../api';
+import { PatchPortalFacilityAmendmentStatusPayload } from '../../validation/route-validators/amendments/validate-patch-portal-facility-amendment-status-payload';
 
 export type PatchAmendmentStatusRequest = CustomExpressRequest<{
   params: {
     facilityId: string;
     amendmentId: string;
   };
-  reqBody: {
-    newStatus: PortalAmendmentStatus;
-  };
+  reqBody: PatchPortalFacilityAmendmentStatusPayload;
 }>;
 
 /**
