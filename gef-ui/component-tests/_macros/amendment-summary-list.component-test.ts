@@ -10,73 +10,9 @@ const changeEligibilityHref = '/eligibility';
 const changeEffectiveDateDataCy = 'change-effective-date-link';
 const changeEffectiveDateHref = '/effective-date';
 
-const params = {
-  amendmentRows: [
-    {
-      actions: {
-        items: [
-          {
-            href: changeAmendmentHref,
-            text: 'Change',
-            attributes: {
-              'data-cy': changeAmendmentDataCy,
-            },
-          },
-        ],
-      },
-      key: {
-        text: 'Amendment',
-      },
-      value: {
-        text: 'value',
-      },
-    },
-  ],
-  eligibilityRows: [
-    {
-      actions: {
-        items: [
-          {
-            href: changeEligibilityHref,
-            text: 'Change',
-            attributes: {
-              'data-cy': changeEligibilityDataCy,
-            },
-          },
-        ],
-      },
-      key: {
-        text: 'Eligibility',
-      },
-      value: {
-        text: 'value',
-      },
-    },
-  ],
-  effectiveDateRows: [
-    {
-      actions: {
-        items: [
-          {
-            href: changeEffectiveDateHref,
-            text: 'Change',
-            attributes: {
-              'data-cy': changeEffectiveDateDataCy,
-            },
-          },
-        ],
-      },
-      key: {
-        text: 'Effective date',
-      },
-      value: {
-        text: 'value',
-      },
-    },
-  ],
-};
-
 describe(component, () => {
+  const params = getParams();
+
   it('should render amendment summary list', () => {
     const wrapper = render(params);
 
@@ -112,4 +48,72 @@ describe(component, () => {
 
     wrapper.expectLink(`[data-cy="${changeEffectiveDateDataCy}"]`).toLinkTo(changeEffectiveDateHref, 'Change');
   });
+
+  function getParams() {
+    return {
+      amendmentRows: [
+        {
+          actions: {
+            items: [
+              {
+                href: changeAmendmentHref,
+                text: 'Change',
+                attributes: {
+                  'data-cy': changeAmendmentDataCy,
+                },
+              },
+            ],
+          },
+          key: {
+            text: 'Amendment',
+          },
+          value: {
+            text: 'value',
+          },
+        },
+      ],
+      eligibilityRows: [
+        {
+          actions: {
+            items: [
+              {
+                href: changeEligibilityHref,
+                text: 'Change',
+                attributes: {
+                  'data-cy': changeEligibilityDataCy,
+                },
+              },
+            ],
+          },
+          key: {
+            text: 'Eligibility',
+          },
+          value: {
+            text: 'value',
+          },
+        },
+      ],
+      effectiveDateRows: [
+        {
+          actions: {
+            items: [
+              {
+                href: changeEffectiveDateHref,
+                text: 'Change',
+                attributes: {
+                  'data-cy': changeEffectiveDateDataCy,
+                },
+              },
+            ],
+          },
+          key: {
+            text: 'Effective date',
+          },
+          value: {
+            text: 'value',
+          },
+        },
+      ],
+    };
+  }
 });
