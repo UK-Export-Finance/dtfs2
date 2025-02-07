@@ -47,7 +47,7 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
             text: 'Changes',
           },
           value: {
-            html: expect.stringContaining(`<li>Cover end date and Facility end date</li>`) as string,
+            html: expect.stringContaining(`<li>Cover end date and <br>Facility end date</li>`) as string,
           },
         },
         {
@@ -130,7 +130,7 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
             text: 'Changes',
           },
           value: {
-            html: expect.stringContaining(`<li>Cover end date and Bank review date</li>`) as string,
+            html: expect.stringContaining(`<li>Cover end date and <br>Bank review date</li>`) as string,
           },
         },
         {
@@ -278,7 +278,7 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
             text: 'Changes',
           },
           value: {
-            html: expect.stringMatching(/<li>Cover end date and Facility end date<\/li>\w*\n\w*<li>Facility value<\/li>/) as string,
+            html: expect.stringMatching(/<li>Cover end date and <br>Facility end date<\/li>\w*\n\w*<li>Facility value<\/li>/) as string,
           },
         },
         {
