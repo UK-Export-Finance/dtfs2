@@ -56,7 +56,7 @@ describe(page, () => {
       wrapper.expectPageTitle().toRead('Error - Create record correction request');
     });
 
-    it('should render error summary', () => {
+    it('should render the error summary', () => {
       // Arrange
       const errorSummaryText = 'error summary text';
 
@@ -206,6 +206,25 @@ describe(page, () => {
     // Assert
     wrapper.expectElement('[data-cy="continue-button"]').toExist();
     wrapper.expectText('[data-cy="continue-button"]').toRead('Continue');
+  });
+
+  it('should render the cancel button', () => {
+    // Arrange
+    const cancelLink = '/utilisation-reports/123/create-record-correction-request/456/cancel';
+    const viewModel: CreateRecordCorrectionRequestViewModel = {
+      ...aCreateRecordCorrectionRequestViewModel(),
+      cancelLinkHref: cancelLink,
+    };
+
+    // Act
+    const wrapper = render(viewModel);
+
+    // Assert
+    const cancelButtonSelector = '[data-cy="cancel-button"]';
+    wrapper.expectElement(cancelButtonSelector).toExist();
+    wrapper.expectElement(cancelButtonSelector).toHaveAttribute('value', 'Cancel record correction request');
+    wrapper.expectElement(cancelButtonSelector).hasClass('govuk-button--warning');
+    wrapper.expectElement(cancelButtonSelector).toHaveAttribute('formaction', cancelLink);
   });
 
   it('should render the main reasons hint', () => {
