@@ -34,7 +34,7 @@ const validPayload = {
   newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
 };
 
-describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
+describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/status', () => {
   let testUsers: Awaited<ReturnType<typeof testUserCache.initialise>>;
   let aMaker: TestUser;
 
