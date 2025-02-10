@@ -33,7 +33,7 @@
           text: "Exporter"
         },
         value: {
-          text: correctionDetails.exporter
+          html: '<span data-cy="exporter">' + correctionDetails.exporter + '</span>'
         }
       },
       {
@@ -41,7 +41,7 @@
           text: "Facility ID"
         },
         value: {
-          text: correctionDetails.facilityId
+          html: '<span data-cy="facility-id">' + correctionDetails.facilityId + '</span>'
         }
       },
       {
@@ -49,7 +49,7 @@
           text: "Date sent"
         },
         value: {
-          text: correctionDetails.formattedDateSent
+          html: '<span data-cy="date-sent">' + correctionDetails.formattedDateSent + '</span>'
         }
       },
       {
@@ -57,7 +57,7 @@
           text: "Contact name"
         },
         value: {
-          text: correctionDetails.bankTeamName
+          html: '<span data-cy="contact-name">' + correctionDetails.bankTeamName + '</span>'
         }
       },
       {
@@ -65,7 +65,7 @@
           text: "Contact email address(es)"
         },
         value: {
-          html: (correctionDetails.bankTeamEmails | join(",<br>") | safe),
+          html: '<span data-cy="contact-email-addresses">' + (correctionDetails.bankTeamEmails | join(",<br>") | safe) + '</span>',
           classes: "ukef-word-break-break-all"
         }
       },
@@ -74,7 +74,7 @@
           text: "Requested by"
         },
         value: {
-          text: correctionDetails.formattedRequestedByUser
+          html: '<span data-cy="requested-by">' + correctionDetails.formattedRequestedByUser + '</span>'
         }
       },
       {
@@ -82,7 +82,7 @@
           text: "Reason(s) for correction"
         },
         value: {
-          text: correctionDetails.formattedReasons
+          html: '<span data-cy="reasons">' + correctionDetails.formattedReasons + '</span>'
         }
       },
       {
@@ -90,7 +90,7 @@
           text: "Additional information"
         },
         value: {
-          text: correctionDetails.additionalInfo
+          html: '<span data-cy="additional-info">' + correctionDetails.additionalInfo + '</span>'
         }
       },
       {
@@ -98,7 +98,7 @@
           text: "Old record(s)"
         },
         value: {
-          text: correctionDetails.formattedOldRecords
+          html: '<span data-cy="old-values">' + correctionDetails.formattedOldRecords + '</span>'
         }
       },
       {
@@ -106,7 +106,7 @@
           text: "New record"
         },
         value: {
-          text: correctionDetails.formattedCorrectRecords
+          html: '<span data-cy="new-values">' + correctionDetails.formattedCorrectRecords + '</span>'
         }
       },
       {
@@ -114,7 +114,7 @@
           text: "Bank commentary"
         },
         value: {
-          text: correctionDetails.formattedBankCommentary
+          html: '<span data-cy="bank-commentary">' + correctionDetails.formattedBankCommentary + '</span>'
         }
       },
       {
@@ -122,7 +122,7 @@
           text: "Date correction received"
         },
         value: {
-          text: correctionDetails.formattedDateReceived
+          html: '<span data-cy="date-received">' + correctionDetails.formattedDateReceived + '</span>'
         }
       }
     ],

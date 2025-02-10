@@ -157,6 +157,7 @@ const utilisationReportPage = {
         oldRecordHeader: () => cy.get('[data-cy="record-correction-log-table-old-record-header"]'),
         statusHeader: () => cy.get('[data-cy="record-correction-log-table-status-header"]'),
         row: (feeRecordId) => ({
+          detailsLink: () => cy.get(`[data-cy="record-correction-log-table-row-${feeRecordId}-details-link"]`),
           exporter: () => cy.get(`[data-cy="record-correction-log-table-row-${feeRecordId}-exporter"]`),
           reasons: () => cy.get(`[data-cy="record-correction-log-table-row-${feeRecordId}-reasons"]`),
           dateSent: () => cy.get(`[data-cy="record-correction-log-table-row-${feeRecordId}-date-sent"]`),
