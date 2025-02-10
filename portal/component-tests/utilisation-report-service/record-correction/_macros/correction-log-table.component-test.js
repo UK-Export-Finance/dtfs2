@@ -55,13 +55,13 @@ describe(component, () => {
     wrapper.expectElement(tableHeaderSelector('Date sent')).toHaveAttribute('aria-sort', 'descending');
   });
 
-  it('renders the "exporter" heading with the aria-sort attribute set to ascending', () => {
+  it('renders the "exporter" heading with the aria-sort attribute set to none', () => {
     // Act
     const wrapper = render(viewModel);
 
     // Assert
     wrapper.expectElement(tableHeaderSelector('Exporter')).toExist();
-    wrapper.expectElement(tableHeaderSelector('Exporter')).toHaveAttribute('aria-sort', 'ascending');
+    wrapper.expectElement(tableHeaderSelector('Exporter')).toHaveAttribute('aria-sort', 'none');
   });
 
   it('renders the "reasons for correction", "correct record", "old record", and "correction notes" headings as not sortable', () => {
