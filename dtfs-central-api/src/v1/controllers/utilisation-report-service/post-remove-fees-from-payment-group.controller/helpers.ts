@@ -1,6 +1,5 @@
-import { FeeRecordEntity, REQUEST_PLATFORM_TYPE, UtilisationReportEntity } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, REQUEST_PLATFORM_TYPE, TfmSessionUser, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
-import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 
