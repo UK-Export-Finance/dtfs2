@@ -116,7 +116,7 @@ describe(`GET ${BASE_URL}`, () => {
         formattedCorrectRecords: '-',
         isCompleted: false,
         bankTeamName: recordCorrection.bankTeamName,
-        formattedBankTeamEmails: 'test1@ukexportfinance.gov.uk, test2@ukexportfinance.gov.uk',
+        bankTeamEmails: ['test1@ukexportfinance.gov.uk', 'test2@ukexportfinance.gov.uk'],
         additionalInfo: recordCorrection.additionalInfo,
         formattedBankCommentary: '-',
         formattedDateReceived: '-',

@@ -10,7 +10,7 @@ export const recordCorrectionLogDetailsMock: GetRecordCorrectionLogDetailsRespon
     formattedCorrectRecords: 'Correct records',
     isCompleted: true,
     bankTeamName: 'Test bank team',
-    formattedBankTeamEmails: 'test@ukexportfinance.gov.uk',
+    bankTeamEmails: ['test@ukexportfinance.gov.uk'],
     additionalInfo: '123',
     formattedBankCommentary: '-',
     formattedDateReceived: '-',

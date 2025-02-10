@@ -65,7 +65,8 @@
           text: "Contact email address(es)"
         },
         value: {
-          text: correctionDetails.formattedBankTeamEmails
+          html: (correctionDetails.bankTeamEmails | join(",<br>") | safe),
+          classes: "ukef-word-break-break-all"
         }
       },
       {

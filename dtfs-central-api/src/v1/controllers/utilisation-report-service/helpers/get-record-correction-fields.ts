@@ -17,7 +17,7 @@ export const getRecordCorrectionFields = (feeRecord: FeeRecordEntity, correction
     dateRequested,
     isCompleted,
     bankTeamName,
-    bankTeamEmails,
+    bankTeamEmails: bankTeamEmailsSerialized,
     additionalInfo,
     bankCommentary,
     dateReceived,
@@ -40,7 +40,7 @@ export const getRecordCorrectionFields = (feeRecord: FeeRecordEntity, correction
 
   const { formattedDateReceived, formattedBankCommentary } = getDateReceivedAndBankCommentary(isCompleted, dateReceived, bankCommentary);
 
-  const formattedBankTeamEmails = bankTeamEmails.replace(/,/g, ', ');
+  const bankTeamEmails = bankTeamEmailsSerialized.split(',');
 
   const formattedDateSent = format(dateRequested, DATE_FORMATS.DD_MMM_YYYY);
 
@@ -57,7 +57,7 @@ export const getRecordCorrectionFields = (feeRecord: FeeRecordEntity, correction
     formattedCorrectRecords,
     isCompleted,
     bankTeamName,
-    formattedBankTeamEmails,
+    bankTeamEmails,
     additionalInfo,
     formattedBankCommentary,
     formattedDateReceived,
