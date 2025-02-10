@@ -12,7 +12,7 @@ export const parseValidatedRecordCorrectionTransientFormValues = (formValues: Re
 
   const reportedFee = formValues.reportedFee ? getMonetaryValueAsNumber(formValues.reportedFee) : undefined;
 
-  const additionalComments = formValues.additionalComments?.trim();
+  const additionalComments = formValues.additionalComments?.trim() || undefined;
 
   const { facilityId } = formValues;
 

@@ -86,5 +86,18 @@ describe('parse-record-correction-transient-form-values', () => {
 
       expect(parsedFormValues).toEqual(expectedParsedFormValues);
     });
+
+    it('should handle empty additional comments form value', () => {
+      // Arrange
+      const formValues = {
+        additionalComments: '',
+      };
+
+      // Act
+      const parsedFormValues = parseValidatedRecordCorrectionTransientFormValues(formValues);
+
+      // Assert
+      expect(parsedFormValues).toEqual({});
+    });
   });
 });

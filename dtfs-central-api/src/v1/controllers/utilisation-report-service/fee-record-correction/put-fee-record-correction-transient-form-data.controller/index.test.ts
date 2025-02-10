@@ -187,6 +187,37 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
         // Assert
         expect(res._getData()).toEqual({});
       });
+
+      it(`should save an empty "additional comments" form value as undefined`, async () => {
+        // Arrange
+        const correctionReasons = [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT];
+
+        mockFindCorrection.mockResolvedValue(FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).withReasons(correctionReasons).build());
+
+        req.body.formData = {
+          reportedCurrency: CURRENCY.GBP,
+          additionalComments: '',
+        };
+
+        const expectedTransientFormDataEntity = FeeRecordCorrectionTransientFormDataEntity.create({
+          userId,
+          correctionId,
+          formData: {
+            reportedCurrency: CURRENCY.GBP,
+          },
+          requestSource: {
+            platform: REQUEST_PLATFORM_TYPE.PORTAL,
+            userId,
+          },
+        });
+
+        // Act
+        await putFeeRecordCorrectionTransientFormData(req, res);
+
+        // Assert
+        expect(mockSaveTransientFormData).toHaveBeenCalledTimes(1);
+        expect(mockSaveTransientFormData).toHaveBeenCalledWith(expectedTransientFormDataEntity);
+      });
     });
 
     it("should respond with the specific error status if an 'ApiError' is thrown", async () => {
