@@ -49,9 +49,9 @@ interface BaseAmendment {
   updatedAt: UnixTimestamp;
   changeCoverEndDate?: boolean;
   coverEndDate?: UnixTimestamp | null;
-  isUsingFacilityEndDate?: boolean;
-  facilityEndDate?: Date;
-  bankReviewDate?: Date;
+  isUsingFacilityEndDate?: boolean | null;
+  facilityEndDate?: Date | null;
+  bankReviewDate?: Date | null;
   changeFacilityValue?: boolean;
   value?: number | null;
   currency?: Currency | null;
