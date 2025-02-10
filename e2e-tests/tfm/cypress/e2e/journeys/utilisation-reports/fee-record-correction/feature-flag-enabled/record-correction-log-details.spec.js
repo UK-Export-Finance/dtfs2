@@ -56,7 +56,6 @@ context('When fee record correction feature flag is enabled - record correction 
     .withReasons([RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT])
     .withBankTeamEmails(bankTeamEmailsSerialized)
     .withDateRequested(dateRequested)
-    .withDateReceived(dateReceived)
     .build();
 
   const matchingTfmFacilities = getMatchingTfmFacilitiesForFeeRecords([feeRecordWithToDoAmendedStatus, feeRecordWithPendingCorrectionStatus]);
