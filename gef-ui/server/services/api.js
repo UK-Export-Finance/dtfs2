@@ -353,11 +353,11 @@ const downloadFile = async ({ fileId, userToken }) => {
 };
 
 /**
- * @param {Object} param
- * @param {string} param.facilityId
- * @param {string} param.amendmentId
- * @param {string} param.userToken
- * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}>}
+ * @param {Object} - param
+ * @param {string} - param.facilityId
+ * @param {string} - param.amendmentId
+ * @param {string} - param.userToken
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}
  */
 const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
   if (!isValidMongoId(facilityId)) {
@@ -384,12 +384,12 @@ const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
 };
 
 /**
- * @param {Object} param
- * @param {string} param.facilityId
- * @param {string} param.dealId
- * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} param.amendment
- * @param {string} param.userToken
- * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}>}
+ * @param {Object} - param
+ * @param {string} - param.facilityId
+ * @param {string} - param.dealId
+ * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} - param.amendment
+ * @param {string} - param.userToken
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}
  */
 const upsertAmendment = async ({ facilityId, dealId, amendment, userToken }) => {
   if (!isValidMongoId(facilityId)) {
@@ -418,12 +418,12 @@ const upsertAmendment = async ({ facilityId, dealId, amendment, userToken }) => 
 };
 
 /**
- * @param {Object} param
- * @param {string} param.facilityId
- * @param {string} param.amendmentId
- * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} param.update
- * @param {string} param.userToken
- * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}>}
+ * @param {Object} -  param
+ * @param {string} -  param.facilityId
+ * @param {string} -  param.amendmentId
+ * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} - param.update
+ * @param {string} -  param.userToken
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}
  */
 const updateAmendment = async ({ facilityId, amendmentId, update, userToken }) => {
   if (!isValidMongoId(facilityId)) {
@@ -445,6 +445,38 @@ const updateAmendment = async ({ facilityId, amendmentId, update, userToken }) =
     return data;
   } catch (error) {
     console.error('Failed to update the amendment with id %s on facility with id %s with update: %o %o', amendmentId, facilityId, payload, error);
+    throw error;
+  }
+};
+
+/**
+ * @param {Object} - param
+ * @param {string} - param.facilityId
+ * @param {string} - param.amendmentId
+ * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus} - param.newStatus
+ * @param {string} - param.userToken
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}
+ */
+const updateAmendmentStatus = async ({ facilityId, amendmentId, newStatus, userToken }) => {
+  if (!isValidMongoId(facilityId)) {
+    console.error('Invalid facility ID %s', facilityId);
+    throw new InvalidFacilityIdError(facilityId);
+  }
+
+  if (!isValidMongoId(amendmentId)) {
+    console.error('Invalid amendment ID %s', amendmentId);
+    throw new Error('Invalid amendment ID');
+  }
+
+  const payload = {
+    newStatus,
+  };
+
+  try {
+    const { data } = await Axios.patch(`/gef/facilities/${facilityId}/amendments/${amendmentId}/status`, payload, { ...config(userToken) });
+    return data;
+  } catch (error) {
+    console.error('Failed to update the status of amendment with id %s on facility with id %s to status: %s %o', amendmentId, facilityId, newStatus, error);
     throw error;
   }
 };

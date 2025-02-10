@@ -15,6 +15,7 @@ const {
   EFFECTIVE_DATE,
   CHECK_YOUR_ANSWERS,
   MANUAL_APPROVAL_NEEDED,
+  CANCEL,
 } = PORTAL_AMENDMENT_PAGES;
 
 describe('getPreviousPage', () => {
@@ -219,6 +220,16 @@ describe('getPreviousPage', () => {
       {
         description: '',
         expectedPreviousPage: EFFECTIVE_DATE,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().build(),
+      },
+    ],
+  });
+
+  withPreviousPageTests({
+    currentPage: CANCEL,
+    errorTestCases: [
+      {
+        description: '',
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().build(),
       },
     ],
