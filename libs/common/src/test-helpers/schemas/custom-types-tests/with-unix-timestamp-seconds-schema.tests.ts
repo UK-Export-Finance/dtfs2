@@ -30,7 +30,7 @@ export const withUnixTimestampSecondsSchemaTests = <Schema extends ZodSchema>({
     });
 
     it('should fail parsing if the parameter is not an int number', () => {
-      const { success } = schema.safeParse(getTestObjectWithUpdatedParameter(-1));
+      const { success } = schema.safeParse(getTestObjectWithUpdatedParameter(1.1));
       expect(success).toBe(false);
     });
   });
