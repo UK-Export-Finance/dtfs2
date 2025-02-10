@@ -184,19 +184,16 @@ export class PortalFacilityAmendmentService {
    * @param params
    * @param params.amendmentId - The amendment id
    * @param params.facilityId - The facility id
-   * @param params.dealId - The deal id
    * @param params.auditDetails - The audit details for the update operation.
    * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithUkefId)>} A promise that resolves when the update operation is complete.
    */
   public static async submitPortalFacilityAmendmentToChecker({
     amendmentId,
     facilityId,
-    dealId,
     auditDetails,
   }: {
     amendmentId: string;
     facilityId: string;
-    dealId: string;
     auditDetails: PortalAuditDetails;
   }): Promise<FacilityAmendmentWithUkefId> {
     await this.validateAmendmentIsComplete({ amendmentId, facilityId });
@@ -205,7 +202,13 @@ export class PortalFacilityAmendmentService {
       status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
     };
 
-    await this.validateNoOtherAmendmentsUnderWayOnDeal({ dealId, amendmentId });
+    const existingAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
+
+    if (!existingAmendment || existingAmendment.type === AMENDMENT_TYPES.TFM) {
+      throw new AmendmentNotFoundError(amendmentId, facilityId);
+    }
+
+    await this.validateNoOtherAmendmentsUnderWayOnDeal({ dealId: existingAmendment.dealId.toString(), amendmentId });
 
     const facilityMongoId = new ObjectId(facilityId);
     const amendmentMongoId = new ObjectId(amendmentId);

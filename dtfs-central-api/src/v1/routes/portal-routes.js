@@ -650,9 +650,6 @@ portalRouter
  *           schema:
  *             type: object
  *             properties:
- *               dealId:
- *                 type: string
- *                 example: '123456abcdef123456abcdef'
  *               auditDetails:
  *                 type: object
  *                 $ref: '#/definitions/PortalAuditDetails'
