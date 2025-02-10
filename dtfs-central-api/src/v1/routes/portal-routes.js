@@ -3,6 +3,7 @@ const { validatePortalFacilityAmendmentsEnabled } = require('@ukef/dtfs2-common'
 const validation = require('../validation/route-validators/route-validators');
 const { validatePutPortalFacilityAmendmentPayload } = require('./middleware/payload-validation/validate-put-portal-facility-amendment-payload');
 const { validatePatchPortalFacilityAmendmentPayload } = require('./middleware/payload-validation/validate-patch-portal-facility-amendment-payload');
+const { validateDeletePortalFacilityAmendmentPayload } = require('./middleware/payload-validation/validate-delete-portal-facility-amendment-payload');
 
 const portalRouter = express.Router();
 const createDealController = require('../controllers/portal/deal/create-deal.controller');
@@ -34,6 +35,9 @@ const updateGefFacilityController = require('../controllers/portal/gef-facility/
 const getFacilityAmendmentController = require('../controllers/portal/facility/get-amendment.controller');
 const putFacilityAmendmentController = require('../controllers/portal/facility/put-amendment.controller');
 const patchFacilityAmendmentController = require('../controllers/portal/facility/patch-amendment.controller');
+const deleteFacilityAmendmentController = require('../controllers/portal/facility/delete-amendment.controller');
+
+const getFacilityAmendmentsForDealController = require('../controllers/portal/facility/get-amendments-on-deal.controller');
 
 const durableFunctionsController = require('../controllers/durable-functions/durable-functions.controller');
 const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controller');
@@ -583,12 +587,37 @@ portalRouter.route('/facilities/:id/status').put(updateFacilityStatusController.
  *               $ref: '#/definitions/PortalAmendment'
  *       404:
  *         description: Not found
+ *   delete:
+ *     summary: Delete a Portal GEF facility amendment
+ *     tags: [Portal - Amendments]
+ *     description: Delete a Portal GEF facility amendment
+ *     parameters:
+ *       - in: path
+ *         name: facilityId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Facility ID amendment should exist on
+ *       - in: path
+ *         name: amendmentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Amendment ID to get
+ *     responses:
+ *       204:
+ *         description: No content
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
 portalRouter
   .route('/facilities/:facilityId/amendments/:amendmentId')
   .all(validatePortalFacilityAmendmentsEnabled, validation.mongoIdValidation('facilityId'), validation.mongoIdValidation('amendmentId'))
   .get(getFacilityAmendmentController.getAmendment)
-  .patch(validatePatchPortalFacilityAmendmentPayload, patchFacilityAmendmentController.patchAmendment);
+  .patch(validatePatchPortalFacilityAmendmentPayload, patchFacilityAmendmentController.patchAmendment)
+  .delete(validateDeletePortalFacilityAmendmentPayload, deleteFacilityAmendmentController.deletePortalAmendment);
 
 /**
  * @openapi
@@ -630,11 +659,51 @@ portalRouter
  *               $ref: '#/definitions/PortalAmendment'
  *       404:
  *         description: Not found
+ *       409:
+ *         description: Conflict
  */
 portalRouter
   .route('/facilities/:facilityId/amendments')
   .all(validatePortalFacilityAmendmentsEnabled, validation.mongoIdValidation('facilityId'))
   .put(validatePutPortalFacilityAmendmentPayload, putFacilityAmendmentController.putAmendmentDraft);
+
+/**
+ * @openapi
+ * /deals/:dealId/amendments:
+ *   get:
+ *     summary: Get all the Portal facility amendments on a given deal
+ *     tags: [Portal - Amendments]
+ *     description: Get all the Portal facility amendments on a given deal
+ *     parameters:
+ *       - in: path
+ *         name: dealId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to get amendments for
+ *       - in: query
+ *         name: statuses
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ['Draft']
+ *         required: false
+ *         description: The portal amendment statuses to filter on
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/definitions/PortalAmendment'
+ *       404:
+ *         description: Not found
+ */
+portalRouter
+  .route('/deals/:dealId/amendments')
+  .all(validation.mongoIdValidation('dealId'))
+  .get(getFacilityAmendmentsForDealController.getPortalAmendmentsOnDeal);
 
 /**
  * @openapi

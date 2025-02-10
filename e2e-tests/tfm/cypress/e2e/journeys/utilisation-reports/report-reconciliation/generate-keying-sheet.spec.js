@@ -81,7 +81,7 @@ context('PDC_RECONCILE users can generate keying data', () => {
     cy.login(USERS.PDC_RECONCILE);
   });
 
-  it('can generate keying data when only one fee record for a facility is at MATCH status but does not generate the fixed fee adjustment or principal balance adjustment', () => {
+  it('can generate keying data when only one fee record for a facility is at MATCH status but does not generate any fixed fee adjustment or principal balance adjustment', () => {
     const matchingPayment = PaymentEntityMockBuilder.forCurrency(PAYMENT_CURRENCY).withAmount(100).build();
     const matchingFeeRecord = FeeRecordEntityMockBuilder.forReport(CURRENT_PERIOD_UTILISATION_REPORT)
       .withId(FIRST_FEE_RECORD_ID)
@@ -173,10 +173,8 @@ context('PDC_RECONCILE users can generate keying data', () => {
     const expectedPrincipalBalanceAdjustment = '128,000.00'; // 200000 - (180000 * 0.4), DECREASE
 
     /**
-     * Fixed fee adjustments are currently turned off and so should always be
-     * zero, which is displayed as a dash.
-     *
-     * TODO FN-3639: update with new calculation requirements.
+     * The fixed fee is not being used and so is always zero
+     * which is displayed as a dash
      */
     const expectedFixedFeeAdjustment = '-';
 

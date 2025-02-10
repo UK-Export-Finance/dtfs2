@@ -32,6 +32,7 @@ import {
 import { postInitiateRecordCorrectionRequest } from '../../controllers/utilisation-reports/record-corrections/initiate-record-correction-request';
 import { getRecordCorrectionRequestSent } from '../../controllers/utilisation-reports/record-corrections/request-sent';
 import { postCancelRecordCorrectionRequest } from '../../controllers/utilisation-reports/record-corrections/cancel-record-correction-request';
+import { getRecordCorrectionLogDetails } from '../../controllers/utilisation-reports/record-corrections/record-correction-log-details';
 
 export const utilisationReportsRoutes = express.Router();
 
@@ -213,4 +214,12 @@ utilisationReportsRoutes.post(
   validateSqlId('reportId'),
   validateSqlId('feeRecordId'),
   postCancelRecordCorrectionRequest,
+);
+
+utilisationReportsRoutes.get(
+  '/record-correction-log-details/:correctionId',
+  validateFeeRecordCorrectionFeatureFlagIsEnabled,
+  validateUserTeam(Object.values(PDC_TEAM_IDS)),
+  validateSqlId('correctionId'),
+  getRecordCorrectionLogDetails,
 );

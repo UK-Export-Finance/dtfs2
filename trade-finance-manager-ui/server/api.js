@@ -402,6 +402,7 @@ const createActivity = async (dealId, activityUpdate, token) => {
   }
 };
 
+// TODO DTFS2-7772 - remove this function
 const login = async (username, password) => {
   try {
     const response = await axios({
@@ -417,6 +418,29 @@ const login = async (username, password) => {
   } catch (error) {
     console.error('Unable to log in %o', error?.response?.data);
     return { status: error?.response?.status || 500, data: 'Failed to login' };
+  }
+};
+
+/**
+ * Gets the auth code URL for the SSO login process
+ * @param {import('@ukef/dtfs2-common').GetAuthCodeUrlRequest} getAuthCodeUrlParams
+ * @returns {Promise<import('@ukef/dtfs2-common').GetAuthCodeUrlResponse>}
+ */
+const getAuthCodeUrl = async ({ successRedirect }) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/sso/auth-code-url`,
+      headers: {
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+      },
+      params: { successRedirect },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get auth code url %o', error?.response?.data);
+    throw error;
   }
 };
 
@@ -1443,6 +1467,20 @@ const deleteFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
   }
 };
 
+/**
+ * Gets the record correction log details by id
+ * @param {string} correctionId - The correction id
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('@ukef/dtfs2-common').GetRecordCorrectionLogDetailsResponseBody>}
+ */
+const getRecordCorrectionLogDetailsById = async (correctionId, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/record-correction-log-details/${correctionId}`, {
+    headers: generateHeaders(userToken),
+  });
+
+  return response.data;
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1461,6 +1499,7 @@ module.exports = {
   updateLeadUnderwriter,
   createActivity,
   login,
+  getAuthCodeUrl,
   getFacilities,
   createFeedback,
   updateAmendment,
@@ -1509,4 +1548,5 @@ module.exports = {
   updateFeeRecordCorrectionTransientFormData,
   getFeeRecordCorrectionTransientFormData,
   deleteFeeRecordCorrectionTransientFormData,
+  getRecordCorrectionLogDetailsById,
 };
