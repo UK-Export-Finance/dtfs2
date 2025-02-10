@@ -127,4 +127,17 @@ describe(page, () => {
     // Assert
     wrapper.expectText(definitionDescriptionSelector('Date correction received')).toRead(correctionDetails.formattedDateReceived);
   });
+
+  it('should render the back link', () => {
+    // Arrange
+    const backLinkHref = 'some-bank-link-href';
+
+    // Act
+    const wrapper = render({
+      backLinkHref,
+    });
+
+    // Assert
+    wrapper.expectLink('[data-cy="back-link"]').toLinkTo(backLinkHref, 'Back');
+  });
 });

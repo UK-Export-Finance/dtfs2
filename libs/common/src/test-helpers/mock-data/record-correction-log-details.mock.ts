@@ -17,6 +17,7 @@ export const recordCorrectionLogDetailsMock: GetRecordCorrectionLogDetailsRespon
     formattedRequestedByUser: 'test name',
   },
   bankName: 'test bank',
+  reportId: 123,
   reportPeriod: {
     start: { month: 1, year: 2023 },
     end: { month: 1, year: 2023 },

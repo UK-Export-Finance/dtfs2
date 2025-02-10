@@ -4,7 +4,7 @@ import { getRecordCorrectionFields } from './get-record-correction-fields';
 import { getFormattedOldAndCorrectValues } from './get-formatted-old-and-correct-values';
 
 describe('get-record-correction-fields', () => {
-  const bankTeamEmails = ['test1@ukexportfinance.gov.uk', 'test2@ukexportfinance.gpv.uk'];
+  const bankTeamEmails = ['test1@ukexportfinance.gov.uk', 'test2@ukexportfinance.gov.uk'];
 
   describe('when a correction is not completed - isCompleted=false', () => {
     const dateRequested = new Date('2024-01-01');

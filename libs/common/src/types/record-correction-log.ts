@@ -20,6 +20,7 @@ export type RecordCorrectionLogFields = {
 export type GetRecordCorrectionLogDetailsResponseBody = {
   correctionDetails: RecordCorrectionLogFields;
   bankName: string;
+  reportId: number;
   reportPeriod: ReportPeriodPartialEntity;
 };
 

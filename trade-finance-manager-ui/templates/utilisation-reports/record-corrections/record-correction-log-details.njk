@@ -2,7 +2,7 @@
 {% import "../_macros/record-correction-status.njk" as recordCorrectionStatus %}
 {% extends "index.njk" %}
 
-{% set backLink = { "href": "/utilisation-reports/" + reportId + "#record-correction-log" } %}
+{% set backLink = { "href": backLinkHref } %}
 
 {% block pageTitle %}Record correction log{% endblock %}
 

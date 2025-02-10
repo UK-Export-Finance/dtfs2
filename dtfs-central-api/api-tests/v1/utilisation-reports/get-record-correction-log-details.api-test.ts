@@ -123,6 +123,7 @@ describe(`GET ${BASE_URL}`, () => {
         formattedRequestedByUser: `${recordCorrection.requestedByUser.firstName} ${recordCorrection.requestedByUser.lastName}`,
       },
       bankName,
+      reportId,
       reportPeriod,
     };
 
