@@ -1,24 +1,15 @@
 import { FacilityDashboard, FACILITY_STAGE } from '@ukef/dtfs2-common';
 
 /**
- * Maps the facility stage based on the current facility properties.
+ * Maps the facility stage of a given facility based on its issuance status.
  *
- * @param {Facility} facility - The facility object to map the stage for.
- * @returns {Facility} The facility object with the mapped stage.
- *
- * The function checks the `facilityStage` property of the input `facility`.
- * If the `facilityStage` is `FACILITY_STAGE.RISK_EXPIRED`, it sets the `facilityStage`
- * of the returned facility to `FACILITY_STAGE.RISK_EXPIRED`.
- * Otherwise, it sets the `facilityStage` based on the `hasBeenIssued` property:
- * - If `hasBeenIssued` is `true`, it sets the `facilityStage` to `FACILITY_STAGE.ISSUED`.
- * - If `hasBeenIssued` is `false`, it sets the `facilityStage` to `FACILITY_STAGE.UNISSUED`.
+ * @param {FacilityDashboard} facility - The facility object to map.
+ * @returns {FacilityDashboard} The facility object with the mapped facility stage.
  */
 const mapFacilityStage = (facility: FacilityDashboard): FacilityDashboard => {
   const mappedFacility = facility;
 
-  if (facility.facilityStage === FACILITY_STAGE.RISK_EXPIRED) {
-    mappedFacility.facilityStage = FACILITY_STAGE.RISK_EXPIRED;
-  } else {
+  if (facility.facilityStage !== FACILITY_STAGE.RISK_EXPIRED) {
     mappedFacility.facilityStage = facility.hasBeenIssued ? FACILITY_STAGE.ISSUED : FACILITY_STAGE.UNISSUED;
   }
 

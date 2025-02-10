@@ -1,4 +1,5 @@
 import { FacilityDashboard, BSS_EWCS_FACILITY_TYPE, GEF_FACILITY_TYPE, FACILITY_STAGE, CURRENCY, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+import { cloneDeep } from 'lodash';
 import { mapFacilityProperties } from './map-facility-properties';
 
 const mockFacilities: FacilityDashboard[] = [
@@ -58,7 +59,7 @@ describe('mapFacilityProperties', () => {
 
     it(`should return ${FACILITY_STAGE.RISK_EXPIRED} for all facilities`, () => {
       // Arrange
-      const riskExpiredFacilities = [...mockFacilities];
+      const riskExpiredFacilities = cloneDeep(mockFacilities);
 
       riskExpiredFacilities[0].facilityStage = FACILITY_STAGE.RISK_EXPIRED;
       riskExpiredFacilities[1].facilityStage = FACILITY_STAGE.RISK_EXPIRED;
@@ -75,11 +76,11 @@ describe('mapFacilityProperties', () => {
 
     it('should return correct facility stages', () => {
       // Arrange
-      const noFacilityStageFacilities = [...mockFacilities];
+      const noFacilityStageFacilities = cloneDeep(mockFacilities);
 
-      noFacilityStageFacilities[0].facilityStage = '';
-      noFacilityStageFacilities[1].facilityStage = '';
-      noFacilityStageFacilities[2].facilityStage = '';
+      delete noFacilityStageFacilities[0].facilityStage;
+      delete noFacilityStageFacilities[1].facilityStage;
+      delete noFacilityStageFacilities[2].facilityStage;
 
       // Act
       const result = mapFacilityProperties(noFacilityStageFacilities);
@@ -92,7 +93,7 @@ describe('mapFacilityProperties', () => {
 
     it(`should return ${FACILITY_STAGE.UNISSUED} for all facilities with no facility stage and hasBeenIssued to false`, () => {
       // Arrange
-      const noFacilityStageFacilities = [...mockFacilities];
+      const noFacilityStageFacilities = cloneDeep(mockFacilities);
 
       delete noFacilityStageFacilities[0].facilityStage;
       noFacilityStageFacilities[0].hasBeenIssued = false;
