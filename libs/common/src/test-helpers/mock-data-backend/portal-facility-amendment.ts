@@ -10,10 +10,11 @@ export const aPortalFacilityAmendmentUserValues = (): PortalFacilityAmendmentUse
   coverEndDate: getEpochMs(),
   isUsingFacilityEndDate: true,
   facilityEndDate: new Date(),
-  bankReviewDate: new Date(),
+  bankReviewDate: null,
   changeFacilityValue: true,
   value: 1800,
   currency: CURRENCY.GBP,
+  effectiveDate: getUnixTime(new Date()),
 });
 
 export const aPortalFacilityAmendment = ({ status = PORTAL_AMENDMENT_STATUS.DRAFT }: { status?: PortalAmendmentStatus } = {}): PortalFacilityAmendment => ({
@@ -27,6 +28,14 @@ export const aPortalFacilityAmendment = ({ status = PORTAL_AMENDMENT_STATUS.DRAF
   status,
   eligibilityCriteria: {
     criteria: [{ id: 1, text: 'item 1', answer: null }],
+    version: 1,
+  },
+});
+
+export const aCompletedPortalFacilityAmendment = (): PortalFacilityAmendment => ({
+  ...aPortalFacilityAmendment(),
+  eligibilityCriteria: {
+    criteria: [{ id: 1, text: 'item 1', answer: true }],
     version: 1,
   },
 });

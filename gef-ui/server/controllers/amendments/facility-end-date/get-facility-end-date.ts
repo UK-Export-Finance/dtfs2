@@ -1,4 +1,4 @@
-import { CustomExpressRequest, DayMonthYearInput } from '@ukef/dtfs2-common';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { FacilityEndDateViewModel } from '../../../types/view-models/amendments/facility-end-date-view-model';
@@ -52,7 +52,7 @@ export const getFacilityEndDate = async (req: GetFacilityEndDateRequest, res: Re
       return res.redirect(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE }));
     }
 
-    const facilityEndDate: DayMonthYearInput | undefined = amendment.facilityEndDate && convertDateToDayMonthYearInput(amendment.facilityEndDate);
+    const facilityEndDate = amendment.facilityEndDate && convertDateToDayMonthYearInput(amendment.facilityEndDate);
 
     const viewModel: FacilityEndDateViewModel = {
       exporterName: deal.exporter.companyName,
