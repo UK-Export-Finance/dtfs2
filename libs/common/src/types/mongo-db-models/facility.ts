@@ -4,6 +4,7 @@ import { Currency } from '../currency';
 import { FacilityType } from '../facility-type';
 import { AuditDatabaseRecord } from '../audit-database-record';
 import { FacilityStatus } from '../portal';
+import { DealSubmissionType } from '../tfm/deal-submission-type';
 
 /**
  * These properties will not exist if on a BSS/EWCS deal or the deal version is less than 1
@@ -74,3 +75,23 @@ export type Facility = {
   previousStatus?: string; // BSS/EWCS facilities only
   facilityStage?: string;
 } & FacilityEndDateProperties;
+
+/**
+ * Portal dashboard facilities
+ */
+export type FacilityDashboard = {
+  _id: string | ObjectId;
+  dealId: string | ObjectId;
+  name: string | null;
+  currency: { id: Currency } | null;
+  value: number | string;
+  type: FacilityType;
+  submissionType?: DealSubmissionType;
+  hasBeenIssued: boolean;
+  updatedAt: UnixTimestamp;
+  lowerExporter: string;
+  ukefFacilityId?: string;
+  submittedAsIssuedDate?: UnixTimestampString | null;
+  exporter?: string;
+  facilityStage?: string;
+};

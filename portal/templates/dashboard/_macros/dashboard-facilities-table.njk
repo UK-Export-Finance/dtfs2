@@ -1,5 +1,4 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
-{% import '../../_macros/facility-stage.njk' as facilityStage %}
 
 {% macro render(params) %}
   {% set facilities = params.facilities %}
@@ -36,7 +35,6 @@
 
       {% endset %}
 
-      {% set stage =  facilityStage.render(facility) %}
       {% set currencyAndValue = '-' %}
 
       {% if facility.currency.id and facility.value %}
@@ -76,7 +74,7 @@
           classes: "govuk-body-s"
         },
         {
-          text: stage  | dashIfEmpty,
+          text: facility.facilityStage  | dashIfEmpty,
           attributes: { "data-cy": "facility__bankStage--" + facility._id },
           classes: "govuk-body-s"
         },
