@@ -1784,6 +1784,19 @@ const createFeeRecordCorrection = async (reportId, feeRecordId, user) => {
   return response.data;
 };
 
+/**
+ * Gets the record correction log details by report id
+ * @param {string} correctionId - The correction id
+ * @returns {Promise<import('@ukef/dtfs2-common').GetRecordCorrectionLogDetailsResponseBody>}
+ */
+const getRecordCorrectionLogDetailsById = async (correctionId) => {
+  const response = await axios.get(`${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/record-correction-log-details/${correctionId}`, {
+    headers: headers.central,
+  });
+
+  return response.data;
+};
+
 module.exports = {
   findOneDeal,
   findOnePortalDeal,
@@ -1867,4 +1880,5 @@ module.exports = {
   getFeeRecordCorrectionTransientFormData,
   deleteFeeRecordCorrectionTransientFormData,
   createFeeRecordCorrection,
+  getRecordCorrectionLogDetailsById,
 };

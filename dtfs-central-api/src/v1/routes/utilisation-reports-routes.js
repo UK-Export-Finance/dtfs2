@@ -57,6 +57,8 @@ const {
 } = require('../controllers/utilisation-report-service/fee-record-correction/delete-fee-record-correction-transient-form-data.controller');
 const { getFeeRecordCorrection } = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction.controller');
 
+const { getRecordCorrectionLogDetails } = require('../controllers/utilisation-report-service/get-record-correction-log-details.controller');
+
 const utilisationReportsRouter = express.Router();
 
 /**
@@ -1119,5 +1121,38 @@ utilisationReportsRouter
   .route('/fee-record-correction-review/:correctionId/user/:userId')
   .all(validation.sqlIdValidation('correctionId'), validation.mongoIdValidation('userId'), handleExpressValidatorResult)
   .get(getFeeRecordCorrectionReview);
+
+/**
+ * @openapi
+ * /utilisation-reports/record-correction-log-details/:correctionId:
+ *   get:
+ *     summary: Get the record correction log details for a record correction via correction id
+ *     tags: [Utilisation Report]
+ *     description: Gets the record correction log details for a record correction via correction id
+ *     parameters:
+ *       - in: path
+ *         name: correctionId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for correction
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/GetRecordCorrectionLogDetailsResponse'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found (if either the correction with matching id or bank with matching id cannot be found)
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/record-correction-log-details/:correctionId')
+  .get(validation.sqlIdValidation('correctionId'), handleExpressValidatorResult, getRecordCorrectionLogDetails);
 
 module.exports = utilisationReportsRouter;

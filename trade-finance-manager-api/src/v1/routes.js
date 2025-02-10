@@ -228,4 +228,8 @@ authRouter
   .get(utilisationReportsController.getFeeRecordCorrectionTransientFormData)
   .delete(utilisationReportsController.deleteFeeRecordCorrectionTransientFormData);
 
+authRouter
+  .route('/utilisation-reports/record-correction-log-details/:correctionId')
+  .get(validation.sqlIdValidation('correctionId'), handleExpressValidatorResult, utilisationReportsController.getRecordCorrectionLogDetailsById);
+
 module.exports = { authRouter, openRouter };
