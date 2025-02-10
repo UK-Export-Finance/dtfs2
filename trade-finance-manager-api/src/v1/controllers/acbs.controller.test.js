@@ -1,4 +1,5 @@
 const { DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
+const { cloneDeep } = require('lodash');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const MOCK_DEAL_ACBS = require('../__mocks__/mock-deal-acbs');
@@ -529,5 +530,30 @@ describe('updateDealAcbs', () => {
     // Facilities
     expect(updateFacilityAcbs).toHaveBeenCalledTimes(1);
     expect(updateFacilityAcbs).toHaveBeenCalledWith(facilityIdentifier, acbsFacility);
+  });
+
+  /**
+   * This is not a real word scenario as deals are always submitted with an
+   * atleast one minimum facility.
+   *
+   * This test case asserts filter logic.
+   */
+  it('should update the deal tfm.acbs when successfully executed in ACBS', async () => {
+    // Arrange
+    const noFacilityResult = cloneDeep(MOCK_ACBS_DEAL_LINK.acbsTaskResult);
+    noFacilityResult.output.facilities = [];
+
+    const { output } = noFacilityResult;
+
+    // Act
+    await updateDealAcbs(output);
+
+    // Assert
+    // Deal
+    expect(updateAcbs).toHaveBeenCalledTimes(1);
+    expect(updateAcbs).toHaveBeenCalledWith(output);
+
+    // Facilities
+    expect(updateFacilityAcbs).toHaveBeenCalledTimes(0);
   });
 });
