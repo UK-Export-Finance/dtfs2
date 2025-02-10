@@ -1,5 +1,4 @@
-import { TeamId } from '@ukef/dtfs2-common';
-import { TfmSessionUser } from '../types/tfm-session-user';
+import { TeamId, TfmSessionUser } from '@ukef/dtfs2-common';
 
 export const userFullName = (user: TfmSessionUser) => {
   const { firstName, lastName } = user;
