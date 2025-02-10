@@ -641,7 +641,6 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
       headers: headers.central,
       data: {
         dealId,
-        facilityId,
         amendment,
         auditDetails,
       },
@@ -678,7 +677,6 @@ const patchPortalFacilityAmendmentStatus = async ({ facilityId, amendmentId, aud
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments/${amendmentId}/status`,
       headers: headers.central,
       data: {
-        facilityId,
         newStatus,
         auditDetails,
       },
@@ -734,8 +732,6 @@ const patchPortalFacilityAmendment = async ({ facilityId, amendmentId, update, a
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments/${amendmentId}`,
       headers: headers.central,
       data: {
-        facilityId,
-        amendmentId,
         update,
         auditDetails,
       },
