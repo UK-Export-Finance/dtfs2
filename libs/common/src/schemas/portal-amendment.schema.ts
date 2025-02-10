@@ -11,7 +11,7 @@ import { CURRENCY_SCHEMA } from './currency.schema';
 export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
   .object({
     changeCoverEndDate: z.boolean().optional(),
-    coverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().nonnegative().nullable().optional()),
+    coverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().nullable().optional()),
     isUsingFacilityEndDate: z.boolean().nullable().optional(),
     facilityEndDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.nullable().optional(),
     bankReviewDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.nullable().optional(),
