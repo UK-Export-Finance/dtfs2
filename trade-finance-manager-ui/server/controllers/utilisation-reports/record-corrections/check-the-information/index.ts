@@ -5,6 +5,7 @@ import { asUserSession } from '../../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import api from '../../../../api';
 import { recordCorrectionRequestAlreadySubmitted, isRecordCorrectionRequestReviewResponseType } from '../../helpers';
+import { getRecordCorrectionRequestCancelLinkHref } from '../helpers';
 
 /**
  * Renders the "check the information" page for a record correction request
@@ -58,6 +59,7 @@ export const getRecordCorrectionRequestInformation = async (req: Request, res: R
       reasonForRecordCorrection: mapReasonsToDisplayValues(reasons).join(', '),
       additionalInfo,
       contactEmailAddresses,
+      cancelLinkHref: getRecordCorrectionRequestCancelLinkHref(reportId, feeRecordId),
     };
 
     return res.render('utilisation-reports/record-corrections/check-the-information.njk', checkTheInformationViewModel);

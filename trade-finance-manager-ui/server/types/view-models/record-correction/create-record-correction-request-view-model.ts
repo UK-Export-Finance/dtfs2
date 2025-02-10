@@ -15,6 +15,7 @@ export type CreateRecordCorrectionRequestFormValues = {
 
 export type CreateRecordCorrectionRequestViewModel = BaseViewModel & {
   reportId: string;
+  cancelLinkHref: string;
   bank: { name: string };
   formattedReportPeriod: string;
   feeRecord: {
