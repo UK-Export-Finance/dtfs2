@@ -1,12 +1,12 @@
 import { Response } from 'supertest';
 import * as z from 'zod';
 import { PORTAL_FACILITY_AMENDMENT_USER_VALUES } from '@ukef/dtfs2-common/schemas';
-import { PortalFacilityAmendment } from '@ukef/dtfs2-common';
+import { PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { testApi } from '../test-api';
 
 interface FacilityAmendmentResponse extends Response {
-  body: PortalFacilityAmendment;
+  body: PortalFacilityAmendmentWithUkefId;
 }
 
 /**
@@ -32,5 +32,13 @@ export const createPortalFacilityAmendment = async ({
   const { body } = (await testApi
     .put({ dealId, amendment, auditDetails: generatePortalAuditDetails(userId) })
     .to(`/v1/portal/facilities/${facilityId}/amendments/`)) as FacilityAmendmentResponse;
+
+  // Eligibility Criteria is overwritten in the PUT request
+  if (amendment.eligibilityCriteria) {
+    await testApi
+      .patch({ update: { eligibilityCriteria: amendment.eligibilityCriteria }, auditDetails: generatePortalAuditDetails(userId) })
+      .to(`/v1/portal/facilities/${facilityId}/amendments/${body.amendmentId}`);
+  }
+
   return body;
 };

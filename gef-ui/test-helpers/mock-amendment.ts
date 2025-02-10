@@ -4,6 +4,7 @@ import {
   AmendmentsEligibilityCriterionWithAnswer,
   PortalFacilityAmendmentWithUkefId,
   UnixTimestampSeconds,
+  UnixTimestampMilliseconds,
 } from '@ukef/dtfs2-common';
 import { getUnixTime } from 'date-fns';
 
@@ -85,6 +86,7 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
   }
 
   public withFacilityValue(facilityValue: number) {
+    this.withChangeFacilityValue(true);
     this.amendment.value = facilityValue;
     return this;
   }
@@ -98,6 +100,12 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
   public withBankReviewDate(bankReviewDate: Date) {
     this.withIsUsingFacilityEndDate(false);
     this.amendment.bankReviewDate = bankReviewDate;
+    return this;
+  }
+
+  public withCoverEndDate(coverEndDate: UnixTimestampMilliseconds) {
+    this.withChangeCoverEndDate(true);
+    this.amendment.coverEndDate = coverEndDate;
     return this;
   }
 
