@@ -37,16 +37,9 @@ describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  const validPayloads = [PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL].map((status) => ({
-    description: `the newStatus is ${status}`,
-    payload: {
-      newStatus: status,
-    },
-  }));
-
-  it.each(validPayloads)('should call next when $description', ({ payload }) => {
+  it.each([PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL])('should call next when newStatus is "%s"', (newStatus) => {
     // Arrange
-    const { req, res } = createMocks({ body: payload });
+    const { req, res } = createMocks({ body: { newStatus } });
     const next = jest.fn();
 
     // Act
