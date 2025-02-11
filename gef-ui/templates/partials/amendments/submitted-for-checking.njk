@@ -14,7 +14,6 @@
       {{ govukPanel({
         attributes: {
           'data-cy': 'submitted-for-checking-confirmation-panel',
-          'aria-label': titleComponentData.submissionType + ' ' + titleComponentData.text,
           'tabIndex': 0
         },
         titleText: "Amendment submitted for checking at your bank",
@@ -31,7 +30,7 @@
             <li>submit it for automatic approval with UKEF</li>
             <li>send it back to you for changes</li>
           </ul>
-        <p><a class="govuk-link govuk-!-margin-0" href="{{ returnLink }}" data-cy="return-link">Return to all applications and notices</a></p>
+        <p><a class="govuk-link govuk-!-margin-0" href="/dashboard/deals" data-cy="return-link">Return to all applications and notices</a></p>
       </div>
     </div>
   </div>
