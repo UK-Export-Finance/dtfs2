@@ -1,4 +1,5 @@
 import {
+  anEmptyRecordCorrectionTransientFormData,
   CURRENCY,
   CurrencyAndAmount,
   getFormattedCurrencyAndAmount,
@@ -7,6 +8,7 @@ import {
   mapReasonToDisplayValue,
   RECORD_CORRECTION_REASON,
   RecordCorrectionReason,
+  RecordCorrectionTransientFormData,
 } from '@ukef/dtfs2-common';
 import {
   getAdditionalCommentsFieldLabels,
@@ -179,6 +181,17 @@ describe('provide-utilisation-report-correction helpers', () => {
       expect(mappedValue).toBeNull();
     });
 
+    it('should return null when monetary value is null', () => {
+      // Arrange
+      const monetaryValue = null;
+
+      // Act
+      const mappedValue = mapInputValueToFormattedMonetaryValueOrOriginal(monetaryValue);
+
+      // Assert
+      expect(mappedValue).toBeNull();
+    });
+
     it('should return formatted monetary value when value is a number', () => {
       // Arrange
       const monetaryValue = 1234.56;
@@ -227,9 +240,9 @@ describe('provide-utilisation-report-correction helpers', () => {
   describe('mapToProvideCorrectionFormValuesViewModel', () => {
     it('should map facilityId without changing the value when provided', () => {
       // Arrange
-      const savedFormValues = {
+      const savedFormValues: RecordCorrectionTransientFormData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
         facilityId: '123',
-        additionalComments: null,
       };
 
       // Act
@@ -252,16 +265,18 @@ describe('provide-utilisation-report-correction helpers', () => {
 
     it('should map numeric utilisation to formatted monetary string when non-zero', () => {
       // Arrange
-      const savedFormValues = {
-        utilisation: 1234.56,
-        additionalComments: null,
+      const utilisation = 1234.56;
+
+      const savedFormValues: RecordCorrectionTransientFormData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
+        utilisation,
       };
 
       // Act
       const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
-      expect(result.utilisation).toEqual(getFormattedMonetaryValue(savedFormValues.utilisation));
+      expect(result.utilisation).toEqual(getFormattedMonetaryValue(utilisation));
     });
 
     it('should map string utilisation to formatted monetary string when non-zero', () => {
@@ -281,32 +296,18 @@ describe('provide-utilisation-report-correction helpers', () => {
 
     it('should map numeric utilisation to formatted monetary string when zero', () => {
       // Arrange
-      const savedFormValues = {
-        utilisation: 0,
-        additionalComments: null,
+      const utilisation = 0;
+
+      const savedFormValues: RecordCorrectionTransientFormData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
+        utilisation,
       };
 
       // Act
       const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
-      expect(result.utilisation).toEqual(getFormattedMonetaryValue(savedFormValues.utilisation));
-    });
-
-    it('should map numeric utilisation to formatted monetary string when zero', () => {
-      // Arrange
-      const savedFormValues = {
-        utilisation: 0,
-        additionalComments: null,
-      };
-
-      // Act
-      const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
-
-      // Assert
-      const expectedUtilisation = getFormattedMonetaryValue(savedFormValues.utilisation);
-
-      expect(result.utilisation).toEqual(expectedUtilisation);
+      expect(result.utilisation).toEqual(getFormattedMonetaryValue(utilisation));
     });
 
     it('should set utilisation to null if not provided', () => {
@@ -322,30 +323,34 @@ describe('provide-utilisation-report-correction helpers', () => {
 
     it('should map reportedFee to formatted monetary string when non-zero', () => {
       // Arrange
-      const savedFormValues = {
-        reportedFee: 1234.56,
-        additionalComments: null,
+      const reportedFee = 1234.56;
+
+      const savedFormValues: RecordCorrectionTransientFormData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
+        reportedFee,
       };
 
       // Act
       const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
-      expect(result.reportedFee).toEqual(getFormattedMonetaryValue(savedFormValues.reportedFee));
+      expect(result.reportedFee).toEqual(getFormattedMonetaryValue(reportedFee));
     });
 
     it('should map reportedFee to formatted monetary string when zero', () => {
       // Arrange
-      const savedFormValues = {
-        reportedFee: 0,
-        additionalComments: null,
+      const reportedFee = 0;
+
+      const savedFormValues: RecordCorrectionTransientFormData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
+        reportedFee,
       };
 
       // Act
       const result = mapToProvideCorrectionFormValuesViewModel(savedFormValues);
 
       // Assert
-      expect(result.reportedFee).toEqual(getFormattedMonetaryValue(savedFormValues.reportedFee));
+      expect(result.reportedFee).toEqual(getFormattedMonetaryValue(reportedFee));
     });
 
     it('should set reportedFee to null if not provided', () => {
@@ -385,17 +390,21 @@ describe('provide-utilisation-report-correction helpers', () => {
 
     it('should map all provided fields', () => {
       // Arrange
-      const savedFormValues = {
+      const utilisation = 1234.56;
+      const reportedFee = 9876.54;
+
+      const savedFormValues: RecordCorrectionTransientFormData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
         facilityId: '123',
-        utilisation: 1234.56,
-        reportedFee: 1234.56,
+        utilisation,
+        reportedFee,
         additionalComments: 'Some additional comments.',
       };
 
       const expected = {
         facilityId: savedFormValues.facilityId,
-        utilisation: getFormattedMonetaryValue(savedFormValues.utilisation),
-        reportedFee: getFormattedMonetaryValue(savedFormValues.reportedFee),
+        utilisation: getFormattedMonetaryValue(utilisation),
+        reportedFee: getFormattedMonetaryValue(reportedFee),
         additionalComments: savedFormValues.additionalComments,
       };
 

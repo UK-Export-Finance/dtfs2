@@ -1,5 +1,9 @@
 import { HttpStatusCode } from 'axios';
-import { FeeRecordCorrectionTransientFormDataEntityMockBuilder, RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
+import {
+  anEmptyRecordCorrectionTransientFormData,
+  FeeRecordCorrectionTransientFormDataEntityMockBuilder,
+  RecordCorrectionTransientFormData,
+} from '@ukef/dtfs2-common';
 import { withSqlAndMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { ObjectId } from 'mongodb';
 import { testApi } from '../../../test-api';
@@ -18,8 +22,8 @@ describe(`GET ${BASE_URL}`, () => {
   const otherUserId = new ObjectId().toString();
 
   const transientFormData: RecordCorrectionTransientFormData = {
+    ...anEmptyRecordCorrectionTransientFormData(),
     utilisation: 10000,
-    additionalComments: null,
   };
 
   const transientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()

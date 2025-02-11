@@ -1,5 +1,9 @@
 import { HttpStatusCode } from 'axios';
-import { FeeRecordCorrectionTransientFormDataEntityMockBuilder, RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
+import {
+  anEmptyRecordCorrectionTransientFormData,
+  FeeRecordCorrectionTransientFormDataEntityMockBuilder,
+  RecordCorrectionTransientFormData,
+} from '@ukef/dtfs2-common';
 import { withSqlAndMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../../test-api';
 import { SqlDbHelper } from '../../../sql-db-helper';
@@ -35,8 +39,8 @@ describe(`DELETE ${BASE_URL}`, () => {
   it(`should return '${HttpStatusCode.NoContent}' if the request is valid and transient form data exists`, async () => {
     // Arrange
     const formData: RecordCorrectionTransientFormData = {
+      ...anEmptyRecordCorrectionTransientFormData(),
       utilisation: 1000,
-      additionalComments: null,
     };
 
     const transientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()

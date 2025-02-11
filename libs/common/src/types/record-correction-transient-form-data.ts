@@ -1,10 +1,9 @@
 import { Currency } from './currency';
 
-// TODO FN-3843: Update the remainder of these to be null rather than undefined?
 export type RecordCorrectionTransientFormData = {
-  utilisation?: number;
-  reportedCurrency?: Currency;
-  reportedFee?: number;
-  facilityId?: string;
+  utilisation: number | null;
+  reportedCurrency: Currency | null;
+  reportedFee: number | null;
+  facilityId: string | null;
   additionalComments: string | null;
 };

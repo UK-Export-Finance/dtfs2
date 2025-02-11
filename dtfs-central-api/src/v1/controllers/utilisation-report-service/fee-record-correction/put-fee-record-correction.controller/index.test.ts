@@ -3,6 +3,7 @@ import httpMocks, { MockResponse } from 'node-mocks-http';
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
 import {
+  anEmptyRecordCorrectionTransientFormData,
   FeeRecordCorrectionEntityMockBuilder,
   FeeRecordCorrectionTransientFormDataEntityMockBuilder,
   FeeRecordEntityMockBuilder,
@@ -136,8 +137,8 @@ describe('putFeeRecordCorrection', () => {
 
     describe('and when the transient form data is found', () => {
       const formData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
         utilisation: 500000,
-        additionalComments: null,
       };
 
       const transientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()

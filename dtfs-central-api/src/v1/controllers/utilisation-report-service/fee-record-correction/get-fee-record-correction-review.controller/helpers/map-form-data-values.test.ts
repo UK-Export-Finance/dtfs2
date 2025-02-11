@@ -1,4 +1,10 @@
-import { CURRENCY, getFormattedMonetaryValue, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
+import {
+  anEmptyRecordCorrectionTransientFormData,
+  CURRENCY,
+  getFormattedMonetaryValue,
+  RECORD_CORRECTION_REASON,
+  RecordCorrectionReason,
+} from '@ukef/dtfs2-common';
 import { mapFormDataToFormattedValues } from './map-form-data-values';
 
 console.error = jest.fn();
@@ -8,9 +14,7 @@ describe('get-fee-record-correction-review.controller map-form-data-values helpe
     it('should return an empty array if no reasons are provided', () => {
       // Arrange
       const reasons: RecordCorrectionReason[] = [];
-      const formData = {
-        additionalComments: null,
-      };
+      const formData = anEmptyRecordCorrectionTransientFormData();
 
       // Act
       const formattedValues = mapFormDataToFormattedValues(formData, reasons);
@@ -23,8 +27,8 @@ describe('get-fee-record-correction-review.controller map-form-data-values helpe
       // Arrange
       const reasons = [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT];
       const formData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
         utilisation: 10000.23,
-        additionalComments: null,
       };
 
       const expectedFormattedValues = [getFormattedMonetaryValue(formData.utilisation)];
@@ -41,6 +45,7 @@ describe('get-fee-record-correction-review.controller map-form-data-values helpe
       // Arrange
       const reasons = [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT, RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER];
       const formData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
         reportedFee: 123.45,
         facilityId: '22222222',
         additionalComments: 'Some additional bank comments',

@@ -1,4 +1,4 @@
-import { CURRENCY } from '@ukef/dtfs2-common';
+import { anEmptyRecordCorrectionTransientFormData, CURRENCY } from '@ukef/dtfs2-common';
 import { parseValidatedRecordCorrectionTransientFormValues } from './parse-record-correction-transient-form-values';
 
 describe('parse-record-correction-transient-form-values', () => {
@@ -28,7 +28,7 @@ describe('parse-record-correction-transient-form-values', () => {
       expect(parsedFormValues).toEqual(expectedParsedFormValues);
     });
 
-    it('should handle undefined form values', () => {
+    it('should parse all provided form values when only values for some fields are provided', () => {
       // Arrange
       const formValues = {
         utilisation: '123.45',
@@ -40,6 +40,7 @@ describe('parse-record-correction-transient-form-values', () => {
 
       // Assert
       const expectedParsedFormValues = {
+        ...anEmptyRecordCorrectionTransientFormData(),
         utilisation: 123.45,
         reportedCurrency: CURRENCY.EUR,
       };
@@ -61,6 +62,7 @@ describe('parse-record-correction-transient-form-values', () => {
 
       // Assert
       const expectedParsedFormValues = {
+        ...anEmptyRecordCorrectionTransientFormData(),
         utilisation: 123456.78,
         reportedCurrency: CURRENCY.USD,
         reportedFee: 76543.21,
@@ -80,14 +82,12 @@ describe('parse-record-correction-transient-form-values', () => {
       const parsedFormValues = parseValidatedRecordCorrectionTransientFormValues(formValues);
 
       // Assert
-      const expectedParsedFormValues = {
-        additionalComments: 'A comment with whitespace',
-      };
+      const expectedAdditionalComments = 'A comment with whitespace';
 
-      expect(parsedFormValues).toEqual(expectedParsedFormValues);
+      expect(parsedFormValues.additionalComments).toEqual(expectedAdditionalComments);
     });
 
-    it('should handle empty additional comments form value', () => {
+    it('should parse an empty "additional comments" string as null', () => {
       // Arrange
       const formValues = {
         additionalComments: '',
@@ -97,7 +97,20 @@ describe('parse-record-correction-transient-form-values', () => {
       const parsedFormValues = parseValidatedRecordCorrectionTransientFormValues(formValues);
 
       // Assert
-      expect(parsedFormValues).toEqual({});
+      expect(parsedFormValues.additionalComments).toBeNull();
+    });
+
+    it('should parse undefined form values as null', () => {
+      // Arrange
+      const formValues = {};
+
+      // Act
+      const parsedFormValues = parseValidatedRecordCorrectionTransientFormValues(formValues);
+
+      // Assert
+      const expectedParsedFormValues = anEmptyRecordCorrectionTransientFormData();
+
+      expect(parsedFormValues).toEqual(expectedParsedFormValues);
     });
   });
 });

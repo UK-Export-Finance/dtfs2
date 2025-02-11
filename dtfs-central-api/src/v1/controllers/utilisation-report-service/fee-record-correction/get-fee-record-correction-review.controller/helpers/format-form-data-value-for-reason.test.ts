@@ -1,4 +1,4 @@
-import { CURRENCY, getFormattedMonetaryValue, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
+import { anEmptyRecordCorrectionTransientFormData, CURRENCY, getFormattedMonetaryValue, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
 import { getFormattedFormDataValueForCorrectionReason } from './format-form-data-value-for-reason';
 
@@ -13,8 +13,8 @@ describe('get-fee-record-correction-review.controller format-form-data-value-for
       const reason = RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT;
       const facilityId = 'some-value';
       const formData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
         facilityId,
-        additionalComments: null,
       };
 
       // Act
@@ -29,8 +29,8 @@ describe('get-fee-record-correction-review.controller format-form-data-value-for
       const reason = RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT;
       const reportedCurrency = CURRENCY.GBP;
       const formData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
         reportedCurrency,
-        additionalComments: null,
       };
 
       // Act
@@ -45,8 +45,8 @@ describe('get-fee-record-correction-review.controller format-form-data-value-for
       const reason = RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT;
       const reportedFee = 123.45;
       const formData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
         reportedFee,
-        additionalComments: null,
       };
 
       // Act
@@ -61,8 +61,8 @@ describe('get-fee-record-correction-review.controller format-form-data-value-for
       const reason = RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT;
       const reportedFee = 0;
       const formData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
         reportedFee,
-        additionalComments: null,
       };
 
       // Act
@@ -77,8 +77,8 @@ describe('get-fee-record-correction-review.controller format-form-data-value-for
       const reason = RECORD_CORRECTION_REASON.UTILISATION_INCORRECT;
       const utilisation = 10000.23;
       const formData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
         utilisation,
-        additionalComments: null,
       };
 
       // Act
@@ -93,8 +93,8 @@ describe('get-fee-record-correction-review.controller format-form-data-value-for
       const reason = RECORD_CORRECTION_REASON.UTILISATION_INCORRECT;
       const utilisation = 0;
       const formData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
         utilisation,
-        additionalComments: null,
       };
 
       // Act
@@ -108,6 +108,7 @@ describe('get-fee-record-correction-review.controller format-form-data-value-for
       // Arrange
       const reason = RECORD_CORRECTION_REASON.OTHER;
       const formData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
         additionalComments: 'Some additional bank comments',
       };
 
@@ -120,9 +121,7 @@ describe('get-fee-record-correction-review.controller format-form-data-value-for
 
     it.each(reasonsExcludingOther)('should throw error when required value for reason "%s" is missing from the transient form data', (reason) => {
       // Arrange
-      const formData = {
-        additionalComments: null,
-      };
+      const formData = anEmptyRecordCorrectionTransientFormData();
 
       // Act & Assert
       expect(() => getFormattedFormDataValueForCorrectionReason(formData, reason)).toThrow();

@@ -1,6 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'supertest';
 import {
+  anEmptyRecordCorrectionTransientFormData,
   FEE_RECORD_STATUS,
   FeeRecordCorrectionEntity,
   FeeRecordCorrectionEntityMockBuilder,
@@ -94,8 +95,8 @@ describe(`PUT ${BASE_URL}`, () => {
       .withCorrectionId(correctionId)
       .withUserId(userId)
       .withFormData({
+        ...anEmptyRecordCorrectionTransientFormData(),
         facilityId: correctFacilityId,
-        additionalComments: null,
       })
       .build();
 
