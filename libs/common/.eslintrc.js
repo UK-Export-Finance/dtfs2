@@ -57,7 +57,7 @@ const baseRules = {
     },
   ],
   'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
-  'no-unused-vars': ['error', { ignoreRestSiblings: true }],
+  'no-unused-vars': ['error', { ignoreRestSiblings: true, argsIgnorePattern: '^_' }],
   'object-curly-newline': [
     'error',
     {

@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const flash = require('connect-flash');
+const { HttpStatusCode } = require('axios');
 
 const routes = require('./routes');
 const { unauthenticatedLoginRoutes } = require('./routes/login');
@@ -96,14 +97,17 @@ const generateApp = () => {
   app.use('/', routes);
 
   app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
+
   // error handler
-  app.use((error, req, res, next) => {
+  app.use((error, req, res, _next) => {
     if (error.code === 'EBADCSRFTOKEN') {
       // handle CSRF token errors here
-      res.status(error.statusCode || 500);
+      res.status(error.statusCode || HttpStatusCode.InternalServerError);
       res.redirect('/');
     } else {
-      next(error);
+      console.error(error);
+      res.status(HttpStatusCode.InternalServerError);
+      res.render('_partials/problem-with-service.njk');
     }
   });
 
