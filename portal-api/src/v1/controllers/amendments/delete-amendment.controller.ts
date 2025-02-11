@@ -1,41 +1,32 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { ApiError, CustomExpressRequest, PortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common';
+import { ApiError, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import api from '../../api';
 
-export type PatchAmendmentRequest = CustomExpressRequest<{
+export type DeleteAmendmentRequest = CustomExpressRequest<{
   params: {
     facilityId: string;
     amendmentId: string;
   };
-  reqBody: {
-    update: PortalFacilityAmendmentUserValues;
-  };
 }>;
 
 /**
- * Updates a portal facility amendment
+ * Delete a portal facility amendment
  * @param req - The request object
  * @param res - The response object
  */
-export const patchAmendment = async (req: PatchAmendmentRequest, res: Response) => {
+export const deleteAmendment = async (req: DeleteAmendmentRequest, res: Response) => {
   const { facilityId, amendmentId } = req.params;
-  const { update } = req.body;
 
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
   try {
-    const updatedAmendment = await api.patchPortalFacilityAmendment({
-      facilityId,
-      amendmentId,
-      update,
-      auditDetails,
-    });
+    await api.deletePortalFacilityAmendment(facilityId, amendmentId, auditDetails);
 
-    return res.status(HttpStatusCode.Ok).send(updatedAmendment);
+    return res.status(HttpStatusCode.Ok).send();
   } catch (error) {
-    const errorMessage = 'Failed to update the amendment';
+    const errorMessage = 'Failed to delete the amendment';
     console.error(errorMessage, error);
 
     if (error instanceof ApiError) {

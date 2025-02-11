@@ -1,35 +1,34 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { ApiError, CustomExpressRequest, PortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common';
+import { ApiError, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import api from '../../api';
+import { PatchPortalFacilityAmendmentStatusPayload } from '../../validation/route-validators/amendments/validate-patch-portal-facility-amendment-status-payload';
 
-export type PatchAmendmentRequest = CustomExpressRequest<{
+export type PatchAmendmentStatusRequest = CustomExpressRequest<{
   params: {
     facilityId: string;
     amendmentId: string;
   };
-  reqBody: {
-    update: PortalFacilityAmendmentUserValues;
-  };
+  reqBody: PatchPortalFacilityAmendmentStatusPayload;
 }>;
 
 /**
- * Updates a portal facility amendment
+ * Updates a portal facility amendment status
  * @param req - The request object
  * @param res - The response object
  */
-export const patchAmendment = async (req: PatchAmendmentRequest, res: Response) => {
+export const patchAmendmentStatus = async (req: PatchAmendmentStatusRequest, res: Response) => {
   const { facilityId, amendmentId } = req.params;
-  const { update } = req.body;
+  const { newStatus } = req.body;
 
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
   try {
-    const updatedAmendment = await api.patchPortalFacilityAmendment({
+    const updatedAmendment = await api.patchPortalFacilityAmendmentStatus({
       facilityId,
       amendmentId,
-      update,
+      newStatus,
       auditDetails,
     });
 
