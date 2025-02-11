@@ -1,4 +1,5 @@
 import { FacilityDashboard, FACILITY_STAGE } from '@ukef/dtfs2-common';
+import { cloneDeep } from 'lodash';
 
 /**
  * Maps the facility stage of a given facility based on its issuance status.
@@ -7,7 +8,7 @@ import { FacilityDashboard, FACILITY_STAGE } from '@ukef/dtfs2-common';
  * @returns {FacilityDashboard} The facility object with the mapped facility stage.
  */
 const mapFacilityStage = (facility: FacilityDashboard): FacilityDashboard => {
-  const mappedFacility = facility;
+  const mappedFacility = cloneDeep(facility);
 
   if (facility.facilityStage !== FACILITY_STAGE.RISK_EXPIRED) {
     mappedFacility.facilityStage = facility.hasBeenIssued ? FACILITY_STAGE.ISSUED : FACILITY_STAGE.UNISSUED;

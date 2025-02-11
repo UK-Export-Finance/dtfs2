@@ -533,7 +533,7 @@ describe('updateDealAcbs', () => {
   });
 
   /**
-   * This is not a real word scenario as deals are always submitted with an
+   * This is not a real word scenario as deals are always submitted with a
    * atleast one minimum facility.
    *
    * This test case asserts filter logic.
