@@ -18,9 +18,14 @@ const companies = require('../controllers/companies.controller');
 const { getAmendment } = require('../controllers/amendments/get-amendment.controller');
 const { patchAmendment } = require('../controllers/amendments/patch-amendment.controller');
 const { putAmendment } = require('../controllers/amendments/put-amendment.controller');
+const { deleteAmendment } = require('../controllers/amendments/delete-amendment.controller');
+const { patchAmendmentStatus } = require('../controllers/amendments/patch-amendment-status.controller');
 const { handleExpressValidatorResult } = require('../validation/route-validators/express-validator-result-handler');
 const { validatePutPortalFacilityAmendmentPayload } = require('../validation/route-validators/amendments/validate-put-portal-facility-amendment-payload');
 const { validatePatchPortalFacilityAmendmentPayload } = require('../validation/route-validators/amendments/validate-patch-portal-facility-amendment-payload');
+const {
+  validatePatchPortalFacilityAmendmentStatusPayload,
+} = require('../validation/route-validators/amendments/validate-patch-portal-facility-amendment-status-payload');
 
 const router = express.Router();
 
@@ -129,7 +134,20 @@ router
     handleExpressValidatorResult,
   )
   .get(getAmendment)
-  .patch(validatePatchPortalFacilityAmendmentPayload, patchAmendment);
+  .patch(validatePatchPortalFacilityAmendmentPayload, patchAmendment)
+  .delete(deleteAmendment);
+
+router
+  .route('/facilities/:facilityId/amendments/:amendmentId/status')
+  .patch(
+    validatePortalFacilityAmendmentsEnabled,
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }),
+    mongoIdValidation('facilityId'),
+    mongoIdValidation('amendmentId'),
+    handleExpressValidatorResult,
+    validatePatchPortalFacilityAmendmentStatusPayload,
+    patchAmendmentStatus,
+  );
 
 router
   .route('/facilities/:facilityId/amendments')
