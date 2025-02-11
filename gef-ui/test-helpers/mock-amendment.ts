@@ -4,6 +4,7 @@ import {
   AmendmentsEligibilityCriterionWithAnswer,
   PortalFacilityAmendmentWithUkefId,
   UnixTimestampSeconds,
+  PortalAmendmentStatus,
   UnixTimestampMilliseconds,
 } from '@ukef/dtfs2-common';
 import { getUnixTime } from 'date-fns';
@@ -111,6 +112,11 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
 
   public withEffectiveDate(effectiveDate: UnixTimestampSeconds) {
     this.amendment.effectiveDate = effectiveDate;
+    return this;
+  }
+
+  public withStatus(status: PortalAmendmentStatus) {
+    this.amendment.status = status;
     return this;
   }
 
