@@ -1,13 +1,9 @@
 import { EntityManager } from 'typeorm';
-import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordStatus, ReportPeriod } from '@ukef/dtfs2-common';
+import { DbRequestSource, FEE_RECORD_STATUS, FeeRecordEntity } from '@ukef/dtfs2-common';
 import { BaseFeeRecordEvent } from '../../event/base-fee-record.event';
-import { calculatePrincipalBalanceAdjustment, updateFacilityUtilisationData } from '../helpers';
-import { calculateUkefShareOfUtilisation, getKeyingSheetCalculationFacilityValues } from '../../../../../helpers';
 
 type GenerateKeyingDataEventPayload = {
   transactionEntityManager: EntityManager;
-  isFinalFeeRecordForFacility: boolean;
-  reportPeriod: ReportPeriod;
   requestSource: DbRequestSource;
 };
 
@@ -18,63 +14,18 @@ export type FeeRecordGenerateKeyingDataEvent = BaseFeeRecordEvent<'GENERATE_KEYI
  * @param feeRecord - The fee record
  * @param param - The payload
  * @param param.transactionEntityManager - The transaction entity manager
- * @param param.isFinalFeeRecordForFacility - Whether or not the fee record is the final fee record for a facility
- * @param param.reportPeriod - The report period
  * @param param.requestSource - The request source
  * @returns The modified fee record
  */
 export const handleFeeRecordGenerateKeyingDataEvent = async (
   feeRecord: FeeRecordEntity,
-  { transactionEntityManager, isFinalFeeRecordForFacility, reportPeriod, requestSource }: GenerateKeyingDataEventPayload,
+  { transactionEntityManager, requestSource }: GenerateKeyingDataEventPayload,
 ): Promise<FeeRecordEntity> => {
-  if (!isFinalFeeRecordForFacility) {
-    const statusToUpdateTo = getStatusToUpdateTo(feeRecord.feesPaidToUkefForThePeriod);
-    feeRecord.updateWithStatus({ status: statusToUpdateTo, requestSource });
-    return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
-  }
+  const feeRecordCanBeAutoReconciled = feeRecord.feesPaidToUkefForThePeriod === 0;
 
-  const { coverPercentage } = await getKeyingSheetCalculationFacilityValues(feeRecord.facilityId);
+  const statusToUpdateTo = feeRecordCanBeAutoReconciled ? FEE_RECORD_STATUS.RECONCILED : FEE_RECORD_STATUS.READY_TO_KEY;
 
-  const ukefShareOfUtilisation = calculateUkefShareOfUtilisation(feeRecord.facilityUtilisation, coverPercentage);
+  feeRecord.updateWithStatus({ status: statusToUpdateTo, requestSource });
 
-  const fixedFee = 0;
-
-  const fixedFeeAdjustment = 0;
-
-  const principalBalanceAdjustment = calculatePrincipalBalanceAdjustment(ukefShareOfUtilisation, feeRecord.facilityUtilisationData);
-
-  const statusToUpdateTo = getStatusToUpdateTo(feeRecord.feesPaidToUkefForThePeriod, fixedFeeAdjustment, principalBalanceAdjustment);
-
-  feeRecord.updateWithKeyingData({
-    status: statusToUpdateTo,
-    fixedFeeAdjustment,
-    principalBalanceAdjustment,
-    requestSource,
-  });
-
-  await transactionEntityManager.save(FeeRecordEntity, feeRecord);
-
-  await updateFacilityUtilisationData(feeRecord.facilityUtilisationData, {
-    reportPeriod,
-    requestSource,
-    ukefShareOfUtilisation,
-    entityManager: transactionEntityManager,
-    fixedFee,
-  });
-
-  return feeRecord;
+  return await transactionEntityManager.save(FeeRecordEntity, feeRecord);
 };
-
-function getStatusToUpdateTo(
-  feesPaidToUkefForThePeriod: number,
-  fixedFeeAdjustment: number = 0,
-  principalBalanceAdjustment: number = 0,
-): Extract<FeeRecordStatus, 'READY_TO_KEY' | 'RECONCILED'> {
-  return feeRecordCanBeAutoReconciled(feesPaidToUkefForThePeriod, fixedFeeAdjustment, principalBalanceAdjustment)
-    ? FEE_RECORD_STATUS.RECONCILED
-    : FEE_RECORD_STATUS.READY_TO_KEY;
-}
-
-function feeRecordCanBeAutoReconciled(feesPaidToUkefForThePeriod: number, fixedFeeAdjustment: number, principalBalanceAdjustment: number): boolean {
-  return feesPaidToUkefForThePeriod === 0 && fixedFeeAdjustment === 0 && principalBalanceAdjustment === 0;
-}

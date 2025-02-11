@@ -9,7 +9,6 @@ import {
   MarkAsReconciledParams,
   RemoveAllPaymentsParams,
   UpdateWithCorrectionParams,
-  UpdateWithKeyingDataParams,
   UpdateWithStatusParams,
 } from './fee-record.types';
 import { MonetaryColumn, ExchangeRateColumn } from '../custom-columns';
@@ -274,25 +273,6 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     }
 
     this.updateLastUpdatedBy(requestSource);
-  }
-
-  /**
-   * Updates a fee record with keying data
-   * @param param - The update parameters
-   * @param param.fixedFeeAdjustment - The fixed fee adjustment
-   * @param param.principalBalanceAdjustment - The principal balance adjustment
-   * @param param.status - The status
-   * @param param.requestSource - The request source
-   */
-  public updateWithKeyingData({ fixedFeeAdjustment, principalBalanceAdjustment, status, requestSource }: UpdateWithKeyingDataParams): void {
-    this.status = status;
-    this.fixedFeeAdjustment = fixedFeeAdjustment;
-    this.principalBalanceAdjustment = principalBalanceAdjustment;
-    this.updateLastUpdatedBy(requestSource);
-
-    if (status === FEE_RECORD_STATUS.RECONCILED) {
-      this.dateReconciled = new Date();
-    }
   }
 
   /**
