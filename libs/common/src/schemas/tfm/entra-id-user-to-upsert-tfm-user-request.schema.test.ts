@@ -55,7 +55,6 @@ function itShouldReturnAValidUpsertTfmUserRequest(request: EntraIdUser) {
       timezone: timezoneConfig.DEFAULT,
       firstName: request.given_name,
       lastName: request.family_name,
-      lastLogin: Date.now(),
     });
   });
 }

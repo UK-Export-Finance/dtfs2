@@ -23,6 +23,7 @@ import { postEligibility } from '../../../controllers/amendments/eligibility-cri
 import { getEffectiveDate } from '../../../controllers/amendments/effective-date/get-effective-date.ts';
 import { postEffectiveDate } from '../../../controllers/amendments/effective-date/post-effective-date.ts';
 import { getManualApprovalNeeded } from '../../../controllers/amendments/manual-approval-needed/get-manual-approval-needed.ts';
+import { getCheckYourAnswers } from '../../../controllers/amendments/check-your-answers/get-check-your-answers.ts';
 
 const {
   WHAT_DO_YOU_NEED_TO_CHANGE,
@@ -34,6 +35,7 @@ const {
   ELIGIBILITY,
   MANUAL_APPROVAL_NEEDED,
   EFFECTIVE_DATE,
+  CHECK_YOUR_ANSWERS,
   CANCEL,
 } = PORTAL_AMENDMENT_PAGES;
 
@@ -101,5 +103,10 @@ router
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getEffectiveDate)
   .post(postEffectiveDate);
+
+router
+  .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${CHECK_YOUR_ANSWERS}`)
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(getCheckYourAnswers);
 
 export default router;
