@@ -1,6 +1,5 @@
-import { format } from 'date-fns';
-import { FeeRecordEntity, FeeRecordCorrectionSummary, mapReasonsToDisplayValues } from '@ukef/dtfs2-common';
-import { getFormattedOldAndCorrectValues } from './get-formatted-old-and-correct-values';
+import { FeeRecordEntity, FeeRecordCorrectionSummary } from '@ukef/dtfs2-common';
+import { getRecordCorrectionFields } from '../../helpers/get-record-correction-fields';
 
 /**
  * Retrieves and constructs record correction data for the given fee records.
@@ -15,31 +14,16 @@ export const getRecordCorrectionDetails = (feeRecords: FeeRecordEntity[]): FeeRe
       return [];
     }
 
-    const { id: feeRecordId, exporter } = feeRecord;
-
     return feeRecord.corrections.map((correction) => {
-      const { id: correctionId, dateRequested, isCompleted } = correction;
-
-      /**
-       * return formatted old records and formatted correct records
-       * returns - if correction is not completed for formattedCorrectRecords
-       */
-      const { formattedOldRecords, formattedCorrectRecords } = getFormattedOldAndCorrectValues(correction, feeRecord);
-
-      /**
-       * maps the reasons as an array of strings to display values
-       * constructs a comma seperated string if there are more than one reason
-       * else constructs a string with the single reason
-       */
-      const reasonsArray = mapReasonsToDisplayValues(correction.reasons);
-      const formattedReasons = reasonsArray.join(', ');
+      const { correctionId, feeRecordId, exporter, formattedReasons, formattedDateSent, formattedCorrectRecords, formattedOldRecords, isCompleted } =
+        getRecordCorrectionFields(feeRecord, correction);
 
       return {
         correctionId,
         feeRecordId,
         exporter,
         formattedReasons,
-        formattedDateSent: format(dateRequested, 'dd MMM yyyy'),
+        formattedDateSent,
         formattedOldRecords,
         formattedCorrectRecords,
         isCompleted,

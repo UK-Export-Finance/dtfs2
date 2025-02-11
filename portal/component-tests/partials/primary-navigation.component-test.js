@@ -17,6 +17,7 @@ describe(page, () => {
 
     itDoesNotRenderAUtilisationReportUploadLink();
     itDoesNotRenderAPreviousReportsLink();
+    itDoesNotRenderARecordCorrectionLogLink();
     itDoesNotRenderAUsersLink();
   });
 
@@ -30,6 +31,7 @@ describe(page, () => {
 
     itDoesNotRenderAUtilisationReportUploadLink();
     itDoesNotRenderAPreviousReportsLink();
+    itDoesNotRenderARecordCorrectionLogLink();
     itDoesNotRenderAUsersLink();
   });
 
@@ -44,6 +46,7 @@ describe(page, () => {
 
     itDoesNotRenderAUtilisationReportUploadLink();
     itDoesNotRenderAPreviousReportsLink();
+    itDoesNotRenderARecordCorrectionLogLink();
   });
 
   describe(`viewed by role '${ROLES.READ_ONLY}'`, () => {
@@ -56,16 +59,46 @@ describe(page, () => {
     itDoesNotRenderAReportsLink();
     itDoesNotRenderAUtilisationReportUploadLink();
     itDoesNotRenderAPreviousReportsLink();
+    itDoesNotRenderARecordCorrectionLogLink();
     itDoesNotRenderAUsersLink();
   });
 
-  describe(`viewed by role '${ROLES.PAYMENT_REPORT_OFFICER}'`, () => {
+  describe(`viewed by role '${ROLES.PAYMENT_REPORT_OFFICER}' and FF_FEE_RECORD_CORRECTION_ENABLED is set to "true"`, () => {
+    const originalProcessEnv = { ...process.env };
+
     beforeAll(() => {
+      process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'true';
       wrapper = render({ user: { roles: [ROLES.PAYMENT_REPORT_OFFICER] } });
+    });
+
+    afterAll(() => {
+      process.env = originalProcessEnv;
     });
 
     itRendersAUtilisationReportUploadLink();
     itRendersAPreviousReportsLink();
+    itRendersARecordCorrectionLogLink();
+
+    itDoesNotRenderAHomeLink();
+    itDoesNotRenderAReportsLink();
+    itDoesNotRenderAUsersLink();
+  });
+
+  describe(`viewed by role '${ROLES.PAYMENT_REPORT_OFFICER}' and FF_FEE_RECORD_CORRECTION_ENABLED is set to "false"`, () => {
+    const originalProcessEnv = { ...process.env };
+
+    beforeAll(() => {
+      process.env.FF_FEE_RECORD_CORRECTION_ENABLED = 'false';
+      wrapper = render({ user: { roles: [ROLES.PAYMENT_REPORT_OFFICER] } });
+    });
+
+    afterAll(() => {
+      process.env = originalProcessEnv;
+    });
+
+    itRendersAUtilisationReportUploadLink();
+    itRendersAPreviousReportsLink();
+    itDoesNotRenderARecordCorrectionLogLink();
 
     itDoesNotRenderAHomeLink();
     itDoesNotRenderAReportsLink();
@@ -81,6 +114,7 @@ describe(page, () => {
     itDoesNotRenderAReportsLink();
     itDoesNotRenderAUtilisationReportUploadLink();
     itDoesNotRenderAPreviousReportsLink();
+    itDoesNotRenderARecordCorrectionLogLink();
     itDoesNotRenderAUsersLink();
   });
 
@@ -129,6 +163,18 @@ describe(page, () => {
   function itDoesNotRenderAPreviousReportsLink() {
     it('does not render a previous reports link', () => {
       wrapper.expectLink('[data-cy="previous_reports"]').notToExist();
+    });
+  }
+
+  function itRendersARecordCorrectionLogLink() {
+    it('renders a record correction log link', () => {
+      wrapper.expectLink('[data-cy="record_correction_log"]').toLinkTo('/utilisation-reports/correction-log', 'Record correction log');
+    });
+  }
+
+  function itDoesNotRenderARecordCorrectionLogLink() {
+    it('does not render a record correction log link', () => {
+      wrapper.expectLink('[data-cy="record_correction_log"]').notToExist();
     });
   }
 

@@ -106,8 +106,8 @@
     <form method="post">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
       <input
-        class="govuk-button govuk-button--secondary"
-        formaction="/utilisation-reports/{{ reportId }}/create-record-correction-request/{{ feeRecordId }}/cancel"
+        class="govuk-button govuk-button--warning"
+        formaction="{{ cancelLinkHref }}"
         value="Cancel record correction request"
         data-module="govuk-button"
         type="submit"

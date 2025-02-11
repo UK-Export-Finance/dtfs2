@@ -74,11 +74,6 @@ export const getOrCreateParty = async (
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company name' });
     }
 
-    if (!probabilityOfDefault) {
-      console.error('No probability of default provided');
-      return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid probability of default' });
-    }
-
     const response: { status: number; data: unknown } = await axios({
       method: 'post',
       url: `${APIM_MDM_URL}customers`,

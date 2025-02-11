@@ -4,6 +4,7 @@ import {
   FeeRecordStatus,
   getFormattedCurrencyAndAmount,
   getFormattedMonetaryValue,
+  getKeyToDateSortValueMap,
   IsoDateTimeStamp,
   KeyingSheetAdjustment,
   mapCurrenciesToRadioItems,
@@ -27,7 +28,8 @@ import { PremiumPaymentsTableCheckboxId } from '../../../types/premium-payments-
 import { getFeeRecordDisplayStatus } from './get-fee-record-display-status';
 import { getKeyingSheetDisplayStatus } from './get-keying-sheet-display-status';
 import { KeyingSheetCheckboxId } from '../../../types/keying-sheet-checkbox-id';
-import { getKeyToDateSortValueMap } from './get-key-to-date-sort-value-map-helper';
+
+const SELECTABLE_FEE_RECORD_STATUSES: FeeRecordStatus[] = [FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH, FEE_RECORD_STATUS.TO_DO_AMENDED] as const;
 
 /**
  * Sort fee records by reported payments
@@ -130,7 +132,7 @@ export const mapPremiumPaymentsToViewModelItems = (
     const feeRecordViewModelItems = mapFeeRecordsToFeeRecordViewModelItems(feeRecordsSortedByReportedPayments);
     const paymentViewModelItems = mapPaymentsToPaymentViewModelItems(paymentsReceived);
 
-    const isSelectable = status === FEE_RECORD_STATUS.TO_DO || status === FEE_RECORD_STATUS.DOES_NOT_MATCH;
+    const isSelectable = SELECTABLE_FEE_RECORD_STATUSES.includes(status);
 
     return {
       feeRecords: feeRecordViewModelItems,

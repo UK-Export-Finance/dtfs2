@@ -1,6 +1,6 @@
 import { ObjectId, UpdateResult } from 'mongodb';
 import { flatten } from 'mongo-dot-notation';
-import { MONGO_DB_COLLECTIONS, AMENDMENT_TYPES, AmendmentNotFoundError } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, AMENDMENT_TYPES, AmendmentNotFoundError, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { TfmFacilitiesRepo } from './tfm-facilities.repo';
 import { mongoDbClient } from '../../drivers/db-client';
@@ -16,6 +16,7 @@ const update = {
 };
 const amendmentId = new ObjectId();
 const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
+const allowedStatuses = [PORTAL_AMENDMENT_STATUS.DRAFT];
 
 const mockUpdateResult = {
   modifiedCount: 1,
@@ -48,7 +49,7 @@ describe('TfmFacilitiesRepo', () => {
 
     it(`should call getCollection with ${MONGO_DB_COLLECTIONS.TFM_FACILITIES}`, async () => {
       // Act
-      await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({ amendmentId, facilityId, update, auditDetails });
+      await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({ amendmentId, facilityId, update, auditDetails, allowedStatuses });
 
       // Assert
       expect(mockGetCollection).toHaveBeenCalledTimes(1);
@@ -57,13 +58,19 @@ describe('TfmFacilitiesRepo', () => {
 
     it(`should call updateOne with the correct parameters`, async () => {
       // Act
-      await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({ amendmentId, facilityId, update, auditDetails });
+      await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({ amendmentId, facilityId, update, auditDetails, allowedStatuses });
 
       // Assert
 
       const expectedFindFilter = {
         _id: { $eq: new ObjectId(facilityId) },
-        amendments: { $elemMatch: { amendmentId: { $eq: new ObjectId(amendmentId) }, type: AMENDMENT_TYPES.PORTAL } },
+        amendments: {
+          $elemMatch: {
+            amendmentId: { $eq: new ObjectId(amendmentId) },
+            type: { $eq: AMENDMENT_TYPES.PORTAL },
+            status: { $in: allowedStatuses },
+          },
+        },
       };
 
       const expectedUpdateFilter = flatten({
@@ -77,7 +84,7 @@ describe('TfmFacilitiesRepo', () => {
 
     it(`should return the updateResult`, async () => {
       // Act
-      const response = await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({ amendmentId, facilityId, update, auditDetails });
+      const response = await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({ amendmentId, facilityId, update, auditDetails, allowedStatuses });
 
       // Assert
       expect(response).toEqual(mockUpdateResult);
@@ -88,9 +95,9 @@ describe('TfmFacilitiesRepo', () => {
       mockUpdateOne.mockResolvedValue({ ...mockUpdateResult, modifiedCount: 0 });
 
       // Act + Assert
-      await expect(() => TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({ amendmentId, facilityId, update, auditDetails })).rejects.toThrow(
-        AmendmentNotFoundError,
-      );
+      await expect(() =>
+        TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({ amendmentId, facilityId, update, auditDetails, allowedStatuses }),
+      ).rejects.toThrow(AmendmentNotFoundError);
     });
   });
 });

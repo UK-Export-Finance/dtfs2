@@ -36,20 +36,6 @@ describe('controllers - facility amendment', () => {
       expect(api.deletePortalFacilityAmendment).toHaveBeenCalledWith(facilityId, amendmentId, generatePortalAuditDetails(user._id));
     });
 
-    it('should call the deletePortalFacilityAmendment api endpoint once', async () => {
-      // Arrange
-      const { req, res } = httpMocks.createMocks<DeleteAmendmentRequest>({
-        params: { facilityId, amendmentId },
-        user,
-      });
-
-      // Act
-      await deleteAmendment(req, res);
-
-      // Assert
-      expect(api.deletePortalFacilityAmendment).toHaveBeenCalledTimes(1);
-    });
-
     it(`should return a ${HttpStatusCode.Ok} status code if the api request is successful`, async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<DeleteAmendmentRequest>({

@@ -24,8 +24,12 @@ const checkApiKey = require('./middleware/headers/check-api-key');
 const { teamsRoutes } = require('./teams/routes');
 const { dealsOpenRouter, dealsAuthRouter } = require('./deals/routes');
 const { tasksRouter } = require('./tasks/routes');
+const { ssoOpenRouter } = require('./sso/routes');
 
 openRouter.use(checkApiKey);
+
+openRouter.use('/sso', ssoOpenRouter);
+
 authRouter.use(passport.authenticate('jwt', { session: false }));
 
 authRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
@@ -227,5 +231,9 @@ authRouter
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), validation.userIdValidation, handleExpressValidatorResult)
   .get(utilisationReportsController.getFeeRecordCorrectionTransientFormData)
   .delete(utilisationReportsController.deleteFeeRecordCorrectionTransientFormData);
+
+authRouter
+  .route('/utilisation-reports/record-correction-log-details/:correctionId')
+  .get(validation.sqlIdValidation('correctionId'), handleExpressValidatorResult, utilisationReportsController.getRecordCorrectionLogDetailsById);
 
 module.exports = { authRouter, openRouter };

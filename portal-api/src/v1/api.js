@@ -641,7 +641,6 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
       headers: headers.central,
       data: {
         dealId,
-        facilityId,
         amendment,
         auditDetails,
       },
@@ -658,6 +657,42 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
     throw new Error('Type validation error occurred');
   } catch (error) {
     console.error('Error upserting portal facility amendment for facility with id %s: with amendment details: %o, %o', facilityId, amendment, error);
+    throw error;
+  }
+};
+
+/**
+ * Upserts a draft amendment for a portal facility in the database.
+ * @param {Object} params
+ * @param {string} params.amendmentId - the amendment id.
+ * @param {string} params.facilityId - the facility id
+ * @param {(import('@ukef/dtfs2-common').PortalAmendmentStatus)} params.newStatus - the facility id
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - The audit details for the update.
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>} - the updatedamendment
+ */
+const patchPortalFacilityAmendmentStatus = async ({ facilityId, amendmentId, auditDetails, newStatus }) => {
+  try {
+    const response = await axios({
+      method: 'patch',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments/${amendmentId}/status`,
+      headers: headers.central,
+      data: {
+        newStatus,
+        auditDetails,
+      },
+    });
+
+    const { success, error, data } = PORTAL_FACILITY_AMENDMENT.safeParse(response.data);
+
+    if (success) {
+      return data;
+    }
+
+    console.error('Type validation error occurred when receiving portal amendment from dtfs-central %o', error);
+
+    throw new Error('Type validation error occurred');
+  } catch (error) {
+    console.error('Error updating the status of amendment with id %s on facility with id %s: %o', amendmentId, facilityId, error);
     throw error;
   }
 };
@@ -697,8 +732,6 @@ const patchPortalFacilityAmendment = async ({ facilityId, amendmentId, update, a
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments/${amendmentId}`,
       headers: headers.central,
       data: {
-        facilityId,
-        amendmentId,
         update,
         auditDetails,
       },
@@ -735,7 +768,7 @@ const patchPortalFacilityAmendment = async ({ facilityId, amendmentId, update, a
  */
 const deletePortalFacilityAmendment = async (facilityId, amendmentId, auditDetails) => {
   try {
-    return await axios({
+    await axios({
       method: 'delete',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments/${amendmentId}`,
       headers: headers.central,
@@ -744,7 +777,7 @@ const deletePortalFacilityAmendment = async (facilityId, amendmentId, auditDetai
       },
     });
   } catch (error) {
-    console.error('Error deleting portal facility amendment with facility id %s and amendment id %s: %o', facilityId, amendmentId, error);
+    console.error('Error deleting portal facility amendment with facility ID %s and amendment ID %s %o', facilityId, amendmentId, error);
     throw error;
   }
 };
@@ -778,6 +811,7 @@ module.exports = {
   putPortalFacilityAmendment,
   getFeeRecordCorrectionReview,
   patchPortalFacilityAmendment,
+  patchPortalFacilityAmendmentStatus,
   putFeeRecordCorrectionTransientFormData,
   deletePortalFacilityAmendment,
   getCompletedFeeRecordCorrections,

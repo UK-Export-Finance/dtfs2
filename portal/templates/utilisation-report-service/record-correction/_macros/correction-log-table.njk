@@ -1,0 +1,93 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% macro render(params) %}
+  {% set completedCorrections = params.completedCorrections %}
+
+  {% set rows = [] %}
+
+  {% for correction in completedCorrections %}
+    {% set correctionRow = [
+      {
+        text: correction.dateSent.formattedDateSent,
+        attributes: {
+          "data-sort-value": correction.dateSent.dataSortValue,
+          "data-cy": "correction-log-row--date-sent"
+        }
+      },
+      {
+        text: correction.exporter,
+        attributes: {
+          "data-cy": "correction-log-row--exporter"
+        }
+      },
+      {
+        text: correction.formattedReasons,
+        attributes: {
+          "data-cy": "correction-log-row--formatted-reasons"
+        }
+      },
+      {
+        text: correction.formattedCorrectedValues,
+        attributes: {
+          "data-cy": "correction-log-row--formatted-corrected-values"
+        }
+      },
+      {
+        text: correction.formattedPreviousValues,
+        attributes: {
+          "data-cy": "correction-log-row--formatted-previous-values"
+        }
+      },
+      {
+        text: correction.formattedBankCommentary,
+        attributes: {
+          "data-cy": "correction-log-row--bank-commentary"
+        }
+      }
+    ] %}
+
+    {% set rows = (rows.push(correctionRow), rows) %}
+  {% endfor %}
+
+  {{ govukTable({
+    firstCellIsHeader: false,
+    head: [
+      {
+        text: "Date sent",
+        attributes: {
+          "aria-sort": "descending",
+          "data-cy": "correction-log-header--date-sent"
+        }
+      },
+      {
+        text: "Exporter",
+        attributes: {
+          "aria-sort": "ascending",
+          "data-cy": "correction-log-header--exporter"
+        }
+      },
+      {
+        text: "Reason(s) for correction",
+        "data-cy": "correction-log-header--formatted-reasons"
+      },
+      {
+        text: "Correct record",
+        "data-cy": "correction-log-header--formatted-corrected-values"
+      },
+      {
+        text: "Old record",
+        "data-cy": "correction-log-header--formatted-previous-values"
+      },
+      {
+        text: "Correction notes",
+        "data-cy": "correction-log-header--bank-commentary"
+      }
+    ],
+    rows: rows,
+    attributes: {
+      "data-module": "moj-sortable-table",
+      "data-cy": "correction-log-table"
+    }
+  }) }}
+
+{% endmacro %}
