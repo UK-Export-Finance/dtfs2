@@ -220,6 +220,14 @@ context('Correction log - Fee record correction feature flag enabled', () => {
       correctionLog.noCorrectionsTextLine2().should('not.exist');
     });
 
+    it('should sort the rows by "date sent" in descending order by default', () => {
+      cy.assertText(correctionLog.row(1).dateSent(), firstCompletedCorrectionDetails.formattedDateSent);
+
+      cy.assertText(correctionLog.row(2).dateSent(), thirdCompletedCorrectionDetails.formattedDateSent);
+
+      cy.assertText(correctionLog.row(3).dateSent(), secondCompletedCorrectionDetails.formattedDateSent);
+    });
+
     context('When "date sent" column heading is clicked', () => {
       beforeEach(() => {
         correctionLog.tableHeaders.dateSent().click();
