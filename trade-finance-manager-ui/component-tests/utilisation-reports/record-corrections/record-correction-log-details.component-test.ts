@@ -115,11 +115,12 @@ describe(page, () => {
     const wrapper = getWrapper(viewModel);
 
     // Assert
-    const emailsSelector = definitionDescriptionSelector('Contact email address(es)');
-    const expectedContent = 'one@ukexportfinance.gov.uk,<br>two@ukexportfinance.gov.uk';
-
-    wrapper.expectElement(emailsSelector).toHaveHtmlContent(expectedContent);
+    const emailsSelector = `${definitionDescriptionSelector('Contact email address(es)')}`;
     wrapper.expectElement(emailsSelector).hasClass('ukef-word-break-break-all');
+
+    const emailsContentSelector = `${emailsSelector} span`;
+    const expectedContent = 'one@ukexportfinance.gov.uk,<br>two@ukexportfinance.gov.uk';
+    wrapper.expectElement(emailsContentSelector).toHaveHtmlContent(expectedContent);
   });
 
   it("should render the requesting user's first and last names", () => {
