@@ -662,7 +662,7 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
 };
 
 /**
- * Upserts a draft amendment for a portal facility in the database.
+ * Update portal facility amendment status.
  * @param {Object} params
  * @param {string} params.amendmentId - the amendment id.
  * @param {string} params.facilityId - the facility id
