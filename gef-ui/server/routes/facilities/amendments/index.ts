@@ -23,6 +23,7 @@ import { postEligibility } from '../../../controllers/amendments/eligibility-cri
 import { getEffectiveDate } from '../../../controllers/amendments/effective-date/get-effective-date.ts';
 import { postEffectiveDate } from '../../../controllers/amendments/effective-date/post-effective-date.ts';
 import { getManualApprovalNeeded } from '../../../controllers/amendments/manual-approval-needed/get-manual-approval-needed.ts';
+import { getSubmittedForChecking } from '../../../controllers/amendments/submitted-for-checking/get-submitted-for-checking.ts';
 
 const {
   WHAT_DO_YOU_NEED_TO_CHANGE,
@@ -35,6 +36,7 @@ const {
   MANUAL_APPROVAL_NEEDED,
   EFFECTIVE_DATE,
   CANCEL,
+  SUBMITTED_FOR_CHECKING,
 } = PORTAL_AMENDMENT_PAGES;
 
 const router = express.Router();
@@ -101,5 +103,10 @@ router
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getEffectiveDate)
   .post(postEffectiveDate);
+
+router
+  .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${SUBMITTED_FOR_CHECKING}`)
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(getSubmittedForChecking);
 
 export default router;
