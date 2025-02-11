@@ -93,7 +93,10 @@ describe(`PUT ${BASE_URL}`, () => {
     const formData = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()
       .withCorrectionId(correctionId)
       .withUserId(userId)
-      .withFormData({ facilityId: correctFacilityId })
+      .withFormData({
+        facilityId: correctFacilityId,
+        additionalComments: null,
+      })
       .build();
 
     await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', formData);

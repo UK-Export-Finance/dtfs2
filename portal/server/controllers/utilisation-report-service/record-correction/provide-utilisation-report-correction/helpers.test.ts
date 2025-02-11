@@ -229,6 +229,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       // Arrange
       const savedFormValues = {
         facilityId: '123',
+        additionalComments: null,
       };
 
       // Act
@@ -253,6 +254,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       // Arrange
       const savedFormValues = {
         utilisation: 1234.56,
+        additionalComments: null,
       };
 
       // Act
@@ -281,6 +283,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       // Arrange
       const savedFormValues = {
         utilisation: 0,
+        additionalComments: null,
       };
 
       // Act
@@ -294,6 +297,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       // Arrange
       const savedFormValues = {
         utilisation: 0,
+        additionalComments: null,
       };
 
       // Act
@@ -320,6 +324,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       // Arrange
       const savedFormValues = {
         reportedFee: 1234.56,
+        additionalComments: null,
       };
 
       // Act
@@ -333,6 +338,7 @@ describe('provide-utilisation-report-correction helpers', () => {
       // Arrange
       const savedFormValues = {
         reportedFee: 0,
+        additionalComments: null,
       };
 
       // Act

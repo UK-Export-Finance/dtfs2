@@ -133,7 +133,9 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           correctionEntity: FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(PENDING_CORRECTION_FEE_RECORD, false).build(),
-          correctionFormData: {},
+          correctionFormData: {
+            additionalComments: null,
+          },
           requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });

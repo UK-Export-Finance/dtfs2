@@ -157,6 +157,7 @@ describe('handleFeeRecordCorrectionReceivedEvent', () => {
 
     const correctionFormData: RecordCorrectionTransientFormData = {
       reportedFee: 400,
+      additionalComments: null,
     };
 
     // Act

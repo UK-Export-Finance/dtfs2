@@ -135,7 +135,11 @@ describe('putFeeRecordCorrection', () => {
     });
 
     describe('and when the transient form data is found', () => {
-      const formData = { utilisation: 500000 };
+      const formData = {
+        utilisation: 500000,
+        additionalComments: null,
+      };
+
       const transientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()
         .withCorrectionId(correctionId)
         .withUserId(portalUserId)

@@ -8,7 +8,9 @@ describe('get-fee-record-correction-review.controller map-form-data-values helpe
     it('should return an empty array if no reasons are provided', () => {
       // Arrange
       const reasons: RecordCorrectionReason[] = [];
-      const formData = {};
+      const formData = {
+        additionalComments: null,
+      };
 
       // Act
       const formattedValues = mapFormDataToFormattedValues(formData, reasons);
@@ -22,6 +24,7 @@ describe('get-fee-record-correction-review.controller map-form-data-values helpe
       const reasons = [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT];
       const formData = {
         utilisation: 10000.23,
+        additionalComments: null,
       };
 
       const expectedFormattedValues = [getFormattedMonetaryValue(formData.utilisation)];

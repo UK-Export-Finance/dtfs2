@@ -15,6 +15,7 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
         // Arrange
         const mockFormData: RecordCorrectionTransientFormData = {
           reportedCurrency,
+          additionalComments: null,
         };
 
         // Act
@@ -46,6 +47,7 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
         // Arrange
         const mockFormData: RecordCorrectionTransientFormData = {
           facilityId,
+          additionalComments: null,
         };
 
         // Act
@@ -78,6 +80,7 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
         // Arrange
         const mockFormData: RecordCorrectionTransientFormData = {
           utilisation,
+          additionalComments: null,
         };
 
         // Act
@@ -110,6 +113,7 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
         // Arrange
         const mockFormData: RecordCorrectionTransientFormData = {
           reportedFee,
+          additionalComments: null,
         };
 
         // Act
@@ -157,6 +161,7 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
         facilityId: '12345678',
         utilisation: 1000,
         reportedFee: 500,
+        additionalComments: 'Some additional comments',
       };
 
       const reasons = [

@@ -204,6 +204,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
           correctionId,
           formData: {
             reportedCurrency: CURRENCY.GBP,
+            additionalComments: null,
           },
           requestSource: {
             platform: REQUEST_PLATFORM_TYPE.PORTAL,

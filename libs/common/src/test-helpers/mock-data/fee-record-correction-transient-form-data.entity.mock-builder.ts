@@ -11,6 +11,7 @@ export class FeeRecordCorrectionTransientFormDataEntityMockBuilder {
     data.correctionId = 123;
     data.formData = {
       utilisation: 10000,
+      additionalComments: null,
     };
 
     this.transientFormData = data;

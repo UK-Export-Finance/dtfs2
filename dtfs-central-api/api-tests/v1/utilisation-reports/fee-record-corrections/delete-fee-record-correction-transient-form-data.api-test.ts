@@ -36,7 +36,9 @@ describe(`DELETE ${BASE_URL}`, () => {
     // Arrange
     const formData: RecordCorrectionTransientFormData = {
       utilisation: 1000,
+      additionalComments: null,
     };
+
     const transientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()
       .withCorrectionId(correctionId)
       .withUserId(userId)

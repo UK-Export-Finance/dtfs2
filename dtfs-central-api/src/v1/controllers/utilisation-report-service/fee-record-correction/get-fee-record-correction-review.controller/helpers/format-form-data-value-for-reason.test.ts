@@ -14,6 +14,7 @@ describe('get-fee-record-correction-review.controller format-form-data-value-for
       const facilityId = 'some-value';
       const formData = {
         facilityId,
+        additionalComments: null,
       };
 
       // Act
@@ -29,6 +30,7 @@ describe('get-fee-record-correction-review.controller format-form-data-value-for
       const reportedCurrency = CURRENCY.GBP;
       const formData = {
         reportedCurrency,
+        additionalComments: null,
       };
 
       // Act
@@ -44,6 +46,7 @@ describe('get-fee-record-correction-review.controller format-form-data-value-for
       const reportedFee = 123.45;
       const formData = {
         reportedFee,
+        additionalComments: null,
       };
 
       // Act
@@ -59,6 +62,7 @@ describe('get-fee-record-correction-review.controller format-form-data-value-for
       const reportedFee = 0;
       const formData = {
         reportedFee,
+        additionalComments: null,
       };
 
       // Act
@@ -74,6 +78,7 @@ describe('get-fee-record-correction-review.controller format-form-data-value-for
       const utilisation = 10000.23;
       const formData = {
         utilisation,
+        additionalComments: null,
       };
 
       // Act
@@ -89,6 +94,7 @@ describe('get-fee-record-correction-review.controller format-form-data-value-for
       const utilisation = 0;
       const formData = {
         utilisation,
+        additionalComments: null,
       };
 
       // Act
@@ -114,7 +120,9 @@ describe('get-fee-record-correction-review.controller format-form-data-value-for
 
     it.each(reasonsExcludingOther)('should throw error when required value for reason "%s" is missing from the transient form data', (reason) => {
       // Arrange
-      const formData = {};
+      const formData = {
+        additionalComments: null,
+      };
 
       // Act & Assert
       expect(() => getFormattedFormDataValueForCorrectionReason(formData, reason)).toThrow();

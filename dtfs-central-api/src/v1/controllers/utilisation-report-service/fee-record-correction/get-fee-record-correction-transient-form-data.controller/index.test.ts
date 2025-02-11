@@ -49,6 +49,7 @@ describe('get-fee-record-correction-transient-form-data.controller', () => {
       // Arrange
       const formData: RecordCorrectionTransientFormData = {
         utilisation: 500000,
+        additionalComments: null,
       };
       const transientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder().withFormData(formData).build();
 

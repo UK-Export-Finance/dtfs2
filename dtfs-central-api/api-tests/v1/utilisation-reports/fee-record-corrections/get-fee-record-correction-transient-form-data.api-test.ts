@@ -19,6 +19,7 @@ describe(`GET ${BASE_URL}`, () => {
 
   const transientFormData: RecordCorrectionTransientFormData = {
     utilisation: 10000,
+    additionalComments: null,
   };
 
   const transientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()
