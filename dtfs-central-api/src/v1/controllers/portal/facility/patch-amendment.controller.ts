@@ -20,7 +20,7 @@ export const patchAmendment = async (req: PatchAmendmentRequest, res: Response) 
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.PORTAL);
 
-    const updatedAmendment = await PortalFacilityAmendmentService.updatePortalFacilityAmendment({ amendmentId, facilityId, update, auditDetails });
+    const updatedAmendment = await PortalFacilityAmendmentService.updatePortalFacilityAmendmentUserValues({ amendmentId, facilityId, update, auditDetails });
 
     return res.status(HttpStatusCode.Ok).send(updatedAmendment);
   } catch (error) {

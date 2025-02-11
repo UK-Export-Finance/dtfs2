@@ -1,0 +1,134 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% import "../_macros/record-correction-status.njk" as recordCorrectionStatus %}
+{% extends "index.njk" %}
+
+{% set backLink = { "href": "/utilisation-reports/" + reportId + "#record-correction-log" } %}
+
+{% block pageTitle %}Record correction log{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row" data-cy="record-correction-log-details-page">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+      <div class="govuk-!-padding-top-7">
+          <span class="govuk-caption-l" data-cy="heading-caption">{{ bankName }}, {{ formattedReportPeriod }}</span>
+          <h1 class="govuk-heading-l" data-cy="main-heading">Record correction log</h1>
+      </div>
+    </div>
+    <div>
+      <div class="govuk-grid-column-one-third-from-desktop govuk-!-text-align-right">
+        <div class="govuk-!-padding-top-8">
+          {{ recordCorrectionStatus.render({
+            status: status,
+            displayStatus: displayStatus
+          }) }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{ govukSummaryList({
+    rows: [
+      {
+        key: {
+          text: "Exporter"
+        },
+        value: {
+          text: correctionDetails.exporter
+        }
+      },
+      {
+        key: {
+          text: "Facility ID"
+        },
+        value: {
+          text: correctionDetails.facilityId
+        }
+      },
+      {
+        key: {
+          text: "Date sent"
+        },
+        value: {
+          text: correctionDetails.formattedDateSent
+        }
+      },
+      {
+        key: {
+          text: "Contact name"
+        },
+        value: {
+          text: correctionDetails.bankTeamName
+        }
+      },
+      {
+        key: {
+          text: "Contact email address(es)"
+        },
+        value: {
+          text: correctionDetails.formattedBankTeamEmails
+        }
+      },
+      {
+        key: {
+          text: "Requested by"
+        },
+        value: {
+          text: correctionDetails.formattedRequestedByUser
+        }
+      },
+      {
+        key: {
+          text: "Reason(s) for correction"
+        },
+        value: {
+          text: correctionDetails.formattedReasons
+        }
+      },
+      {
+        key: {
+          text: "Additional information"
+        },
+        value: {
+          text: correctionDetails.additionalInfo
+        }
+      },
+      {
+        key: {
+          text: "Old record(s)"
+        },
+        value: {
+          text: correctionDetails.formattedOldRecords
+        }
+      },
+      {
+        key: {
+          text: "New record"
+        },
+        value: {
+          text: correctionDetails.formattedCorrectRecords
+        }
+      },
+      {
+        key: {
+          text: "Bank commentary"
+        },
+        value: {
+          text: correctionDetails.formattedBankCommentary
+        }
+      },
+      {
+        key: {
+          text: "Date correction received"
+        },
+        value: {
+          text: correctionDetails.formattedDateReceived
+        }
+      }
+    ],
+    attributes: {
+      'data-cy': 'summary-list'
+    }
+  }) }}
+
+{% endblock %}
+{% block sub_content %}{% endblock %}

@@ -1,4 +1,4 @@
-import { TfmSessionUser } from '../tfm-session-user';
+import { TfmSessionUser } from '@ukef/dtfs2-common';
 
 export type ProblemWithServiceViewModel = {
   reason: string;
