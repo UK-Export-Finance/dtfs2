@@ -4,7 +4,7 @@
 
 {% set backLink = { "href": backLinkHref } %}
 
-{% macro renderSpan(content, dataCy) %}
+{% macro span(content, dataCy) %}
   <span data-cy="{{ dataCy }}">{{ content }}</span>
 {% endmacro %}
 
@@ -37,7 +37,7 @@
           text: "Exporter"
         },
         value: {
-          html: renderSpan(correctionDetails.exporter, "exporter")
+          html: span(correctionDetails.exporter, "exporter")
         }
       },
       {
@@ -45,7 +45,7 @@
           text: "Facility ID"
         },
         value: {
-          html: renderSpan(correctionDetails.facilityId, "facility-id")
+          html: span(correctionDetails.facilityId, "facility-id")
         }
       },
       {
@@ -53,7 +53,7 @@
           text: "Date sent"
         },
         value: {
-          html: renderSpan(correctionDetails.formattedDateSent, "date-sent")
+          html: span(correctionDetails.formattedDateSent, "date-sent")
         }
       },
       {
@@ -61,7 +61,7 @@
           text: "Contact name"
         },
         value: {
-          html: renderSpan(correctionDetails.bankTeamName, "contact-name")
+          html: span(correctionDetails.bankTeamName, "contact-name")
         }
       },
       {
@@ -69,7 +69,7 @@
           text: "Contact email address(es)"
         },
         value: {
-          html: renderSpan((correctionDetails.bankTeamEmails | join(",<br>") | safe), "contact-email-addresses"),
+          html: span((correctionDetails.bankTeamEmails | join(",<br>") | safe), "contact-email-addresses"),
           classes: "ukef-word-break-break-all"
         }
       },
@@ -78,7 +78,7 @@
           text: "Requested by"
         },
         value: {
-          html: renderSpan(correctionDetails.formattedRequestedByUser, "requested-by")
+          html: span(correctionDetails.formattedRequestedByUser, "requested-by")
         }
       },
       {
@@ -86,7 +86,7 @@
           text: "Reason(s) for correction"
         },
         value: {
-          html: renderSpan(correctionDetails.formattedReasons, "reasons")
+          html: span(correctionDetails.formattedReasons, "reasons")
         }
       },
       {
@@ -94,7 +94,7 @@
           text: "Additional information"
         },
         value: {
-          html: renderSpan(correctionDetails.additionalInfo , "additional-info")
+          html: span(correctionDetails.additionalInfo , "additional-info")
         }
       },
       {
@@ -102,7 +102,7 @@
           text: "Old record(s)"
         },
         value: {
-          html: renderSpan(correctionDetails.formattedOldRecords , "old-values")
+          html: span(correctionDetails.formattedOldRecords , "old-values")
         }
       },
       {
@@ -110,7 +110,7 @@
           text: "New record"
         },
         value: {
-          html: renderSpan(correctionDetails.formattedCorrectRecords , "new-values")
+          html: span(correctionDetails.formattedCorrectRecords , "new-values")
         }
       },
       {
@@ -118,7 +118,7 @@
           text: "Bank commentary"
         },
         value: {
-          html: renderSpan(correctionDetails.formattedBankCommentary , "bank-commentary")
+          html: span(correctionDetails.formattedBankCommentary , "bank-commentary")
         }
       },
       {
@@ -126,7 +126,7 @@
           text: "Date correction received"
         },
         value: {
-          html: renderSpan(correctionDetails.formattedDateReceived , "date-received")
+          html: span(correctionDetails.formattedDateReceived , "date-received")
         }
       }
     ],
