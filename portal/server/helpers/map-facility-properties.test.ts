@@ -60,8 +60,21 @@ describe('mapFacilityProperties', () => {
         facilityStage: FACILITY_STAGE.RISK_EXPIRED,
       });
       const loanUnissuedRiskExpired = mockDashboardFacility({ type: BSS_EWCS_FACILITY_TYPE.LOAN, facilityStage: FACILITY_STAGE.RISK_EXPIRED });
+      const loanUnconditionalFacilityStage = mockDashboardFacility({
+        type: BSS_EWCS_FACILITY_TYPE.LOAN,
+        hasBeenIssued: true,
+        facilityStage: FACILITY_STAGE.UNCONDITIONAL,
+      });
+      const loanConditionalFacilityStage = mockDashboardFacility({ type: BSS_EWCS_FACILITY_TYPE.LOAN, facilityStage: FACILITY_STAGE.CONDITIONAL });
 
-      const mockDashboardFacilities = [loanUnissued, loanIssued, loanIssuedRiskExpired, loanUnissuedRiskExpired];
+      const mockDashboardFacilities = [
+        loanUnissued,
+        loanIssued,
+        loanIssuedRiskExpired,
+        loanUnissuedRiskExpired,
+        loanUnconditionalFacilityStage,
+        loanConditionalFacilityStage,
+      ];
 
       // Act
       const result = mapFacilityProperties(mockDashboardFacilities);
@@ -71,6 +84,8 @@ describe('mapFacilityProperties', () => {
       expect(result[1].facilityStage).toBe(FACILITY_STAGE.ISSUED);
       expect(result[2].facilityStage).toBe(FACILITY_STAGE.RISK_EXPIRED);
       expect(result[3].facilityStage).toBe(FACILITY_STAGE.RISK_EXPIRED);
+      expect(result[4].facilityStage).toBe(FACILITY_STAGE.ISSUED);
+      expect(result[5].facilityStage).toBe(FACILITY_STAGE.UNISSUED);
     });
 
     it('should return correct facility stages for facility type cash (GEF)', () => {
