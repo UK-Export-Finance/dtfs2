@@ -38,8 +38,7 @@ describe(`GET ${BASE_URL}`, () => {
   const bankName = 'Test bank';
 
   const bankTeamName = 'Test Bank Payment Reporting Team';
-  const bankTeamEmails = ['test1@ukexportfinance.gov.uk', 'test2@ukexportfinance.gov.uk'];
-  const bankTeamEmailsSerialized = bankTeamEmails.join(',');
+  const bankTeamEmails = ['latest-bank-email-1@ukexportfinance.gov.uk', 'latest-bank-email-2@ukexportfinance.gov.uk'];
 
   const bank: Bank = {
     ...aBank(),
@@ -67,10 +66,12 @@ describe(`GET ${BASE_URL}`, () => {
 
   const feeRecord = FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport).withId(feeRecordId).build();
 
+  const recordCorrectionBankTeamEmails = ['old-bank-email-1@ukexportfinance.gov.uk', 'old-bank-email-2@ukexportfinance.gov.uk'];
+
   const recordCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false)
     .withDateRequested(today)
     .withBankTeamName(bankTeamName)
-    .withBankTeamEmails(bankTeamEmailsSerialized)
+    .withBankTeamEmails(recordCorrectionBankTeamEmails.join(','))
     .build();
 
   beforeAll(async () => {
@@ -131,7 +132,7 @@ describe(`GET ${BASE_URL}`, () => {
         formattedCorrectRecords: '-',
         isCompleted: false,
         bankTeamName,
-        bankTeamEmails,
+        bankTeamEmails: recordCorrectionBankTeamEmails,
         additionalInfo: recordCorrection.additionalInfo,
         formattedBankCommentary: '-',
         formattedDateReceived: '-',
