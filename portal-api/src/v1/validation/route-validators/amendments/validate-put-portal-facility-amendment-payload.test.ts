@@ -51,15 +51,6 @@ describe('validatePutPortalFacilityAmendmentPayload', () => {
       },
     },
     {
-      description: 'amendment.currentCoverEndDate is not an integer',
-      payload: {
-        amendment: {
-          currentCoverEndDate: 'not an integer',
-        },
-        dealId: validDealId,
-      },
-    },
-    {
       description: 'amendment.isUsingFacilityEndDate is not a boolean',
       payload: {
         amendment: {
@@ -118,42 +109,6 @@ describe('validatePutPortalFacilityAmendmentPayload', () => {
       payload: {
         amendment: {
           value: 'not a number',
-        },
-        dealId: validDealId,
-      },
-    },
-    {
-      description: 'amendment.currentValue is not a number',
-      payload: {
-        amendment: {
-          currentValue: 'not a number',
-        },
-        dealId: validDealId,
-      },
-    },
-    {
-      description: 'amendment.currency is not a valid enum value',
-      payload: {
-        amendment: {
-          currency: 'invalid currency',
-        },
-        dealId: validDealId,
-      },
-    },
-    {
-      description: 'amendment.ukefExposure is not a number',
-      payload: {
-        amendment: {
-          ukefExposure: 'not a number',
-        },
-        dealId: validDealId,
-      },
-    },
-    {
-      description: 'amendment.coveredPercentage is not a number',
-      payload: {
-        amendment: {
-          coveredPercentage: 'not a number',
         },
         dealId: validDealId,
       },

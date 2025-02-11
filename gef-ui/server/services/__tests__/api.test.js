@@ -12,6 +12,7 @@ import CONSTANTS from '../../constants';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../test-helpers/mock-amendment';
 
 jest.mock('../axios');
+console.error = jest.fn();
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -495,6 +496,50 @@ describe('updateAmendment()', () => {
   it.each(invalidMongoIdTestCases)('should throw an error when given an invalid facility Id', async (invalidMongoId) => {
     // Act
     const returned = api.updateAmendment({ facilityId: invalidMongoId, amendmentId: validMongoId, update: {}, userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow(InvalidFacilityIdError);
+  });
+});
+
+describe('deleteAmendment()', () => {
+  it(`should return the correct response`, async () => {
+    // Arrange
+    Axios.delete.mockReturnValue(Promise.resolve(undefined));
+
+    // Act
+    await api.deleteAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken });
+
+    // Assert
+    expect(Axios.delete).toHaveBeenCalledTimes(1);
+    await expect(api.deleteAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken })).resolves.toBeUndefined();
+  });
+
+  it('should throw an error if there is an api error', async () => {
+    // Arrange
+    Axios.delete.mockReturnValue(Promise.reject(new AxiosError('API Error')));
+
+    // Act + Assert
+    try {
+      await api.deleteAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken });
+    } catch (error) {
+      expect(error).toBeInstanceOf(AxiosError);
+      expect(error.message).toBe('API Error');
+    }
+    expect(Axios.delete).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(invalidMongoIdTestCases)('should throw an error when given an invalid amendment Id', async (invalidMongoId) => {
+    // Act
+    const returned = api.deleteAmendment({ facilityId: validMongoId, amendmentId: invalidMongoId, userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow('Invalid amendment ID');
+  });
+
+  it.each(invalidMongoIdTestCases)('should throw an error when given an invalid facility Id', async (invalidMongoId) => {
+    // Act
+    const returned = api.deleteAmendment({ facilityId: invalidMongoId, amendmentId: validMongoId, userToken });
 
     // Assert
     await expect(returned).rejects.toThrow(InvalidFacilityIdError);

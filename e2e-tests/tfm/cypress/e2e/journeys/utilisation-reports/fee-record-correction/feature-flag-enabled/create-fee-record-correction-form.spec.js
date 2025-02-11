@@ -128,6 +128,26 @@ context('When fee record correction feature flag is enabled', () => {
       });
     });
 
+    context('when user clicks cancel', () => {
+      beforeEach(() => {
+        premiumPaymentsContent.premiumPaymentsTable
+          .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
+          .click();
+
+        premiumPaymentsContent.createRecordCorrectionRequestButton().click();
+
+        cy.clickCancelButton();
+      });
+
+      it('should redirect to the utilisation report page with the fee record still checked', () => {
+        cy.url().should('eq', relative(`/utilisation-reports/${reportId}?selectedFeeRecordIds=${feeRecordAtToDoStatus.id}`));
+
+        premiumPaymentsContent.premiumPaymentsTable
+          .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
+          .should('be.checked');
+      });
+    });
+
     it('should let the user enter additional info equal to the character limit containing special characters', () => {
       premiumPaymentsContent.premiumPaymentsTable
         .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)

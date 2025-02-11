@@ -1,8 +1,7 @@
 import { Response } from 'express';
 import { HttpStatusCode, isAxiosError } from 'axios';
-import { IsoDateTimeStamp, CustomExpressRequest } from '@ukef/dtfs2-common';
+import { IsoDateTimeStamp, CustomExpressRequest, TfmSessionUser } from '@ukef/dtfs2-common';
 import api from '../../api';
-import { TfmSessionUser } from '../../../types/tfm-session-user';
 
 export type PatchPaymentRequest = CustomExpressRequest<{
   reqBody: {
