@@ -735,7 +735,7 @@ const patchPortalFacilityAmendment = async ({ facilityId, amendmentId, update, a
  */
 const deletePortalFacilityAmendment = async (facilityId, amendmentId, auditDetails) => {
   try {
-    return await axios({
+    await axios({
       method: 'delete',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments/${amendmentId}`,
       headers: headers.central,

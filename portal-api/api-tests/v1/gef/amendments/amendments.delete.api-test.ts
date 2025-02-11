@@ -19,6 +19,7 @@ jest.mock('../../../../src/v1/api', () => ({
   ...jest.requireActual<AnyObject>('../../../../src/v1/api'),
   deletePortalFacilityAmendment: () => deletePortalFacilityAmendmentMock(),
 }));
+console.error = jest.fn();
 
 const originalProcessEnv = { ...process.env };
 
@@ -106,6 +107,17 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
       it(`should return a ${HttpStatusCode.BadRequest} response when the facility id path param is invalid`, async () => {
         // Arrange
         const url = deleteAmendmentUrl({ facilityId: invalidId, amendmentId: validAmendmentId });
+
+        // Act
+        const response = await as(aMaker).remove(url);
+
+        // Assert
+        expect(response.status).toEqual(HttpStatusCode.BadRequest);
+      });
+
+      it(`should return a ${HttpStatusCode.BadRequest} response when the amendment id path param is invalid`, async () => {
+        // Arrange
+        const url = deleteAmendmentUrl({ facilityId: validFacilityId, amendmentId: invalidId });
 
         // Act
         const response = await as(aMaker).remove(url);
