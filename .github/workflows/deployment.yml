@@ -41,7 +41,7 @@
 #
 
 name: Deployment
-run-name: 🚀 Deploying to ${{ github.event.workflow_run.head_branch }}
+run-name: 🚀 Deploying to ${{ github.head_branch }}
 
 on:
   push:
@@ -53,7 +53,7 @@ on:
 
 env:
   PRODUCT: dtfs
-  ENVIRONMENT: ${{ github.event.workflow_run.head_branch }}
+  ENVIRONMENT: ${{ github.head_branch }}
   TIMEZONE: ${{ vars.TIMEZONE }}
   # Base artifact
   FROM: latest
@@ -76,7 +76,7 @@ jobs:
           elif [[ "${{ env.ENVIRONMENT }}" == *release* ]]; then
             echo "environment=staging" >> "$GITHUB_OUTPUT"
           else
-            echo "environment=${{ github.event.workflow_run.head_branch }}" >> "$GITHUB_OUTPUT"
+            echo "environment=${{ github.head_branch }}" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Timezone 🌐
@@ -139,7 +139,7 @@ jobs:
       - name: Repository 🗃️
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_branch }}
+          ref: ${{ github.head_branch }}
 
       - name: Defaults ✨
         uses: azure/cli@v2.1.0
@@ -243,7 +243,7 @@ jobs:
       - name: Repository 🗃️
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_branch }}
+          ref: ${{ github.head_branch }}
 
       - name: Defaults ✨
         uses: azure/cli@v2.1.0
