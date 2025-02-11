@@ -202,7 +202,7 @@ const deal = {
         status: 'Completed',
       },
       // Empty facility object for exceptional handling and edge case.
-      // This should not occur in a normal operation.
+      // This should not occur in a real-world scenario.
       {},
     ],
   },
