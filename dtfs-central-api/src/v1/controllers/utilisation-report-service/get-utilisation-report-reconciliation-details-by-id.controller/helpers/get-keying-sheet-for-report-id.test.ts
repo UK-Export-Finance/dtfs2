@@ -119,8 +119,6 @@ describe('getKeyingSheetForReportId', () => {
     expect(keyingSheet[0].facilityId).toEqual('11111111');
     expect(keyingSheet[0].exporter).toEqual('Test exporter 1');
     expect(keyingSheet[0].baseCurrency).toEqual(CURRENCY.GBP);
-    expect(keyingSheet[0].fixedFeeAdjustment).toEqual({ change: 'INCREASE', amount: 1234.56 });
-    expect(keyingSheet[0].principalBalanceAdjustment).toEqual({ change: 'INCREASE', amount: 9876543.21 });
   });
 
   it('creates a keying sheet row fee payments item for each payment attached to the same unique fee record in the join table', async () => {

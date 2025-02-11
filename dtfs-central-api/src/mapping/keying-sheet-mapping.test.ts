@@ -68,50 +68,6 @@ describe('keying sheet mapping', () => {
       expect(keyingSheetRow.baseCurrency).toBe<Currency>('EUR');
     });
 
-    it.each([
-      { condition: 'is null', value: null, expectedMappedValue: null },
-      { condition: 'is zero', value: 0, expectedMappedValue: { amount: 0, change: 'NONE' } },
-      { condition: 'is positive', value: 100, expectedMappedValue: { amount: 100, change: 'INCREASE' } },
-      { condition: 'is negative', value: -100, expectedMappedValue: { amount: 100, change: 'DECREASE' } },
-    ])(
-      'sets the keying sheet row fixedFeeAdjustment to $expectedMappedValue when the fee record entity fixedFeeAdjustment $condition',
-      ({ value, expectedMappedValue }) => {
-        // Arrange
-        const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
-          .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
-          .withFixedFeeAdjustment(value)
-          .build();
-
-        // Act
-        const keyingSheetRow = mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments(feeRecordEntity);
-
-        // Assert
-        expect(keyingSheetRow.fixedFeeAdjustment).toEqual(expectedMappedValue);
-      },
-    );
-
-    it.each([
-      { condition: 'is null', value: null, expectedMappedValue: null },
-      { condition: 'is zero', value: 0, expectedMappedValue: { amount: 0, change: 'NONE' } },
-      { condition: 'is positive', value: 100, expectedMappedValue: { amount: 100, change: 'INCREASE' } },
-      { condition: 'is negative', value: -100, expectedMappedValue: { amount: 100, change: 'DECREASE' } },
-    ])(
-      'sets the keying sheet row principalBalanceAdjustment to $expectedMappedValue when the fee record entity principalBalanceAdjustment $condition',
-      ({ value, expectedMappedValue }) => {
-        // Arrange
-        const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
-          .withStatus(FEE_RECORD_STATUS.READY_TO_KEY)
-          .withPrincipalBalanceAdjustment(value)
-          .build();
-
-        // Act
-        const keyingSheetRow = mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments(feeRecordEntity);
-
-        // Assert
-        expect(keyingSheetRow.principalBalanceAdjustment).toEqual(expectedMappedValue);
-      },
-    );
-
     it('does not set the keying sheet row feePayments field', () => {
       // Arrange
       const feeRecordEntity = FeeRecordEntityMockBuilder.forReport(new UtilisationReportEntityMockBuilder().build())
