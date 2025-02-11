@@ -5,7 +5,7 @@ import { asLoggedInUserSession } from '../../../utils/express-session';
 import { getNextPage } from '../helpers/navigation.helper.ts';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
 
-export type PostEligibilityRequest = CustomExpressRequest<{
+export type PostCheckYourAnswersRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
 }>;
 
@@ -14,7 +14,7 @@ export type PostEligibilityRequest = CustomExpressRequest<{
  * @param req - The express request
  * @param res - The express response
  */
-export const postCheckYourAnswers = async (req: PostEligibilityRequest, res: Response) => {
+export const postCheckYourAnswers = async (req: PostCheckYourAnswersRequest, res: Response) => {
   try {
     const { facilityId, amendmentId } = req.params;
     const { userToken } = asLoggedInUserSession(req.session);
@@ -28,7 +28,7 @@ export const postCheckYourAnswers = async (req: PostEligibilityRequest, res: Res
 
     return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.CHECK_YOUR_ANSWERS, updatedAmendment));
   } catch (error) {
-    console.error('Error posting amendments eligibility page %o', error);
+    console.error('Error posting amendments check your answers page %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
