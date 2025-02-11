@@ -4,7 +4,7 @@ import * as api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 
 export type GetSubmittedForCheckingRequest = CustomExpressRequest<{
-  params: { dealId: string; facilityId: string; amendmentId: string };
+  params: { facilityId: string; amendmentId: string };
 }>;
 
 /**

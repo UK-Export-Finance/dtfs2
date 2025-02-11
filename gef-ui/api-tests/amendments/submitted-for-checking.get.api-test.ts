@@ -117,7 +117,6 @@ describe(`GET ${url}`, () => {
 
     it(`should redirect to /not-found if the amendment has a status which is not ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}`, async () => {
       // Arrange
-
       const draftAmendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
         .withDealId(dealId)
         .withFacilityId(facilityId)
