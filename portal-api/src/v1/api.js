@@ -744,7 +744,7 @@ const deletePortalFacilityAmendment = async (facilityId, amendmentId, auditDetai
       },
     });
   } catch (error) {
-    console.error('Error deleting portal facility amendment with facility id %s and amendment id %s: %o', facilityId, amendmentId, error);
+    console.error('Error deleting portal facility amendment with facility ID %s and amendment ID %s %o', facilityId, amendmentId, error);
     throw error;
   }
 };

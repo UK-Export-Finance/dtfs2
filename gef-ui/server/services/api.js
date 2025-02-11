@@ -470,7 +470,7 @@ const deleteAmendment = async ({ facilityId, amendmentId, userToken }) => {
   try {
     await Axios.delete(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, { ...config(userToken) });
   } catch (error) {
-    console.error('Failed to delete the amendment with id %s on facility with id %s : %o', amendmentId, facilityId, error);
+    console.error('Failed to delete the amendment with id %s on facility with id %s %o', amendmentId, facilityId, error);
     throw error;
   }
 };
