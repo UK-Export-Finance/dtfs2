@@ -908,7 +908,7 @@ const downloadUtilisationReport = async (userToken, id) => {
 };
 
 /**
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - the session user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - the session user
  * @param {import('./types/utilisation-reports').ReportWithStatus[]} reportsWithStatus - array of reports with the status to set
  * @param {string} userToken - token to validate session
  * @returns {Promise<import('axios').AxiosResponse>}
@@ -1048,7 +1048,7 @@ const getReportSummariesByBankAndYear = async (userToken, bankId, year) => {
  * @param {string} reportId - The report id
  * @param {import('./types/add-payment-form-values').ParsedAddPaymentFormValues} parsedAddPaymentFormValues - The parsed submitted form values
  * @param {number[]} feeRecordIds - The list of fee record ids to add the payment to
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user adding the payment
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The user adding the payment
  * @param {string} userToken - The user token
  * @returns {Promise<import('./api-response-types').AddPaymentResponseBody>}
  */
@@ -1075,7 +1075,7 @@ const addPaymentToFeeRecords = async (reportId, parsedAddPaymentFormValues, feeR
  * Create a record correction
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The user
  * @param {string} userToken - The user token
  * @returns {Promise<import('./api-response-types').PostFeeRecordCorrectionResponseBody>}
  */
@@ -1095,7 +1095,7 @@ const createFeeRecordCorrection = async (reportId, feeRecordId, user, userToken)
  * Generates keying data for the utilisation report
  * with the supplied id
  * @param {string} reportId - The report id
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The session user
  * @param {string} userToken - The user token
  * @returns {Promise<{}>}
  */
@@ -1115,7 +1115,7 @@ const generateKeyingData = async (reportId, user, userToken) => {
  * Updates keying sheet fee records with supplied ids to DONE
  * @param {string} reportId - The report id
  * @param {number[]} feeRecordIds - The ids of the fee records to mark as DONE
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The session user
  * @param {string} userToken - The user token
  * @returns {Promise<{}>}
  */
@@ -1136,7 +1136,7 @@ const markKeyingDataAsDone = async (reportId, feeRecordIds, user, userToken) => 
  * Updates keying sheet fee records with supplied ids to TO_DO
  * @param {string} reportId - The report id
  * @param {number[]} feeRecordIds - The ids of the fee records to mark as TO_DO
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The session user
  * @param {string} userToken - The user token
  * @returns {Promise<{}>}
  */
@@ -1205,7 +1205,7 @@ const getPaymentDetailsWithoutFeeRecords = async (reportId, paymentId, userToken
  * Deletes the payment with the specified id
  * @param {string} reportId - The report id
  * @param {string} paymentId - The payment id
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The session user
  * @param {string} userToken - The user token
  * @returns {Promise<void>}
  */
@@ -1223,7 +1223,7 @@ const deletePaymentById = async (reportId, paymentId, user, userToken) => {
  * @param {string} reportId - The report id
  * @param {string} paymentId - The payment id
  * @param {import('./types/edit-payment-form-values').ParsedEditPaymentFormValues} parsedEditPaymentFormValues - The parsed edit payment form values
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The user
  * @param {string} userToken - The user token
  */
 const editPayment = async (reportId, paymentId, parsedEditPaymentFormValues, user, userToken) => {
@@ -1246,7 +1246,7 @@ const editPayment = async (reportId, paymentId, parsedEditPaymentFormValues, use
  * @param {string} reportId - The report id
  * @param {string} paymentId - The payment id
  * @param {number[]} selectedFeeRecordIds - The list of fee record ids to remove from the payment
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The user
  * @param {string} userToken - The user token
  */
 const removeFeesFromPayment = async (reportId, paymentId, selectedFeeRecordIds, user, userToken) => {
@@ -1266,7 +1266,7 @@ const removeFeesFromPayment = async (reportId, paymentId, selectedFeeRecordIds, 
  * @param {string} reportId - The report id
  * @param {number[]} feeRecordIds - The list of fee record ids to add to the payment
  * @param {number[]} paymentIds - The list of payment ids for the fee records to be added to
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - The user adding the payment
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The user adding the payment
  * @param {string} userToken - The user token
  */
 const addFeesToAnExistingPayment = async (reportId, feeRecordIds, paymentIds, user, userToken) => {
@@ -1399,7 +1399,7 @@ const getFeeRecordCorrectionRequestReview = async (reportId, feeRecordId, userId
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
  * @param {import('@ukef/dtfs2-common').RecordCorrectionRequestTransientFormData} formData - The transient form data
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The session user
  * @param {string} userToken - The user token
  * @returns {Promise<void>}
  * @throws {Error} If the API request fails
@@ -1425,7 +1425,7 @@ const updateFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
  * Gets the fee record by report id, fee record id and user
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The session user
  * @param {string} userToken - The user token
  * @returns {Promise<import('@ukef/dtfs2-common').RecordCorrectionRequestTransientFormData | {}>}
  */
@@ -1448,7 +1448,7 @@ const getFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId, us
  * Deletes the fee record by report id, fee record id and user
  * @param {string} reportId - The report id
  * @param {string} feeRecordId - The fee record id
- * @param {import('./types/tfm-session-user').TfmSessionUser} user - The session user
+ * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The session user
  * @param {string} userToken - The user token
  * @returns {Promise<void>}
  */
