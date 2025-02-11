@@ -1,116 +1,122 @@
-import { FacilityDashboard, BSS_EWCS_FACILITY_TYPE, GEF_FACILITY_TYPE, FACILITY_STAGE, CURRENCY, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
-import { cloneDeep } from 'lodash';
+import { FacilityDashboard, BSS_EWCS_FACILITY_TYPE, FACILITY_STAGE, CURRENCY, GEF_FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { mapFacilityProperties } from './map-facility-properties';
 
-const mockFacilities: FacilityDashboard[] = [
-  {
+const mockDashboardFacility = (properties?: Partial<FacilityDashboard>): FacilityDashboard => {
+  return {
     _id: '67a9e986dd0c179cf70141da',
     dealId: '67a9e95add0c179cf70141d8',
     name: 'ABC',
-    currency: null,
     value: '1000.00',
-    type: BSS_EWCS_FACILITY_TYPE.LOAN,
-    hasBeenIssued: true,
-    updatedAt: 1739188642683,
-    lowerExporter: '',
-  },
-  {
-    _id: '67a9e95cdd0c179cf70141d9',
-    dealId: '67a9e95add0c179cf70141d8',
-    name: null,
-    currency: null,
-    value: '1000.00',
-    type: BSS_EWCS_FACILITY_TYPE.BOND,
-    hasBeenIssued: false,
-    updatedAt: 1739188612379,
-    lowerExporter: '',
-  },
-  {
-    _id: '67a5ed9c674f4ad7a17e3359',
-    dealId: '67a5ed89674f4ad7a17e3358',
-    submissionType: DEAL_SUBMISSION_TYPE.AIN,
-    name: 'ABC',
-    ukefFacilityId: '0020027639',
     currency: {
       id: CURRENCY.GBP,
     },
-    value: 1000,
-    type: GEF_FACILITY_TYPE.CASH,
-    hasBeenIssued: true,
-    submittedAsIssuedDate: '1738937285806',
-    updatedAt: 1738937285814,
-    exporter: 'TEST LTD',
-    lowerExporter: 'test ltd',
-    facilityStage: FACILITY_STAGE.RISK_EXPIRED,
-  },
-];
+    updatedAt: 1739188642683,
+    lowerExporter: '',
+    type: BSS_EWCS_FACILITY_TYPE.BOND,
+    hasBeenIssued: false,
+    ...properties,
+  };
+};
 
 describe('mapFacilityProperties', () => {
   describe('mapFacilityStage', () => {
-    it('should return correct facility stages', () => {
-      // Act
-      const result = mapFacilityProperties(mockFacilities);
-
-      // Assert
-      expect(result[0].facilityStage).toBe(FACILITY_STAGE.ISSUED);
-      expect(result[1].facilityStage).toBe(FACILITY_STAGE.UNISSUED);
-      expect(result[2].facilityStage).toBe(FACILITY_STAGE.RISK_EXPIRED);
-    });
-
-    it(`should return ${FACILITY_STAGE.RISK_EXPIRED} for all facilities`, () => {
+    it('should return correct facility stages for facility type bond (BSS/EWCS)', () => {
       // Arrange
-      const riskExpiredFacilities = cloneDeep(mockFacilities);
+      const bondUnissued = mockDashboardFacility();
+      const bondIssued = mockDashboardFacility({ hasBeenIssued: true });
+      const bondIssuedRiskExpired = mockDashboardFacility({ hasBeenIssued: true, facilityStage: FACILITY_STAGE.RISK_EXPIRED });
+      const bondUnissuedRiskExpired = mockDashboardFacility({ facilityStage: FACILITY_STAGE.RISK_EXPIRED });
+      const bondUnissuedFacilityStage = mockDashboardFacility({ hasBeenIssued: false, facilityStage: FACILITY_STAGE.UNISSUED });
+      const bondIssuedFacilityStage = mockDashboardFacility({ hasBeenIssued: true, facilityStage: FACILITY_STAGE.ISSUED });
 
-      riskExpiredFacilities[0].facilityStage = FACILITY_STAGE.RISK_EXPIRED;
-      riskExpiredFacilities[1].facilityStage = FACILITY_STAGE.RISK_EXPIRED;
-      riskExpiredFacilities[2].facilityStage = FACILITY_STAGE.RISK_EXPIRED;
-
-      // Act
-      const result = mapFacilityProperties(riskExpiredFacilities);
-
-      // Assert
-      expect(result[0].facilityStage).toBe(FACILITY_STAGE.RISK_EXPIRED);
-      expect(result[1].facilityStage).toBe(FACILITY_STAGE.RISK_EXPIRED);
-      expect(result[2].facilityStage).toBe(FACILITY_STAGE.RISK_EXPIRED);
-    });
-
-    it('should return correct facility stages', () => {
-      // Arrange
-      const noFacilityStageFacilities = cloneDeep(mockFacilities);
-
-      delete noFacilityStageFacilities[0].facilityStage;
-      delete noFacilityStageFacilities[1].facilityStage;
-      delete noFacilityStageFacilities[2].facilityStage;
+      const mockDashboardFacilities = [
+        bondUnissued,
+        bondIssued,
+        bondIssuedRiskExpired,
+        bondUnissuedRiskExpired,
+        bondUnissuedFacilityStage,
+        bondIssuedFacilityStage,
+      ];
 
       // Act
-      const result = mapFacilityProperties(noFacilityStageFacilities);
-
-      // Assert
-      expect(result[0].facilityStage).toBe(FACILITY_STAGE.ISSUED);
-      expect(result[1].facilityStage).toBe(FACILITY_STAGE.UNISSUED);
-      expect(result[2].facilityStage).toBe(FACILITY_STAGE.ISSUED);
-    });
-
-    it(`should return ${FACILITY_STAGE.UNISSUED} for all facilities with no facility stage and hasBeenIssued to false`, () => {
-      // Arrange
-      const noFacilityStageFacilities = cloneDeep(mockFacilities);
-
-      delete noFacilityStageFacilities[0].facilityStage;
-      noFacilityStageFacilities[0].hasBeenIssued = false;
-
-      delete noFacilityStageFacilities[1].facilityStage;
-      noFacilityStageFacilities[1].hasBeenIssued = false;
-
-      delete noFacilityStageFacilities[2].facilityStage;
-      noFacilityStageFacilities[2].hasBeenIssued = false;
-
-      // Act
-      const result = mapFacilityProperties(noFacilityStageFacilities);
+      const result = mapFacilityProperties(mockDashboardFacilities);
 
       // Assert
       expect(result[0].facilityStage).toBe(FACILITY_STAGE.UNISSUED);
-      expect(result[1].facilityStage).toBe(FACILITY_STAGE.UNISSUED);
-      expect(result[2].facilityStage).toBe(FACILITY_STAGE.UNISSUED);
+      expect(result[1].facilityStage).toBe(FACILITY_STAGE.ISSUED);
+      expect(result[2].facilityStage).toBe(FACILITY_STAGE.RISK_EXPIRED);
+      expect(result[3].facilityStage).toBe(FACILITY_STAGE.RISK_EXPIRED);
+      expect(result[4].facilityStage).toBe(FACILITY_STAGE.UNISSUED);
+      expect(result[5].facilityStage).toBe(FACILITY_STAGE.ISSUED);
+    });
+
+    it('should return correct facility stages for facility type loan (BSS/EWCS)', () => {
+      // Arrange
+      const loanUnissued = mockDashboardFacility({ type: BSS_EWCS_FACILITY_TYPE.LOAN });
+      const loanIssued = mockDashboardFacility({ type: BSS_EWCS_FACILITY_TYPE.LOAN, hasBeenIssued: true });
+      const loanIssuedRiskExpired = mockDashboardFacility({
+        type: BSS_EWCS_FACILITY_TYPE.LOAN,
+        hasBeenIssued: true,
+        facilityStage: FACILITY_STAGE.RISK_EXPIRED,
+      });
+      const loanUnissuedRiskExpired = mockDashboardFacility({ type: BSS_EWCS_FACILITY_TYPE.LOAN, facilityStage: FACILITY_STAGE.RISK_EXPIRED });
+
+      const mockDashboardFacilities = [loanUnissued, loanIssued, loanIssuedRiskExpired, loanUnissuedRiskExpired];
+
+      // Act
+      const result = mapFacilityProperties(mockDashboardFacilities);
+
+      // Assert
+      expect(result[0].facilityStage).toBe(FACILITY_STAGE.UNISSUED);
+      expect(result[1].facilityStage).toBe(FACILITY_STAGE.ISSUED);
+      expect(result[2].facilityStage).toBe(FACILITY_STAGE.RISK_EXPIRED);
+      expect(result[3].facilityStage).toBe(FACILITY_STAGE.RISK_EXPIRED);
+    });
+
+    it('should return correct facility stages for facility type cash (GEF)', () => {
+      // Arrange
+      const cashUnissued = mockDashboardFacility({ type: GEF_FACILITY_TYPE.CASH });
+      const cashIssued = mockDashboardFacility({ type: GEF_FACILITY_TYPE.CASH, hasBeenIssued: true });
+      const cashIssuedRiskExpired = mockDashboardFacility({
+        type: GEF_FACILITY_TYPE.CASH,
+        hasBeenIssued: true,
+        facilityStage: FACILITY_STAGE.RISK_EXPIRED,
+      });
+      const cashUnissuedRiskExpired = mockDashboardFacility({ type: GEF_FACILITY_TYPE.CASH, facilityStage: FACILITY_STAGE.RISK_EXPIRED });
+
+      const mockDashboardFacilities = [cashUnissued, cashIssued, cashIssuedRiskExpired, cashUnissuedRiskExpired];
+
+      // Act
+      const result = mapFacilityProperties(mockDashboardFacilities);
+
+      // Assert
+      expect(result[0].facilityStage).toBe(FACILITY_STAGE.UNISSUED);
+      expect(result[1].facilityStage).toBe(FACILITY_STAGE.ISSUED);
+      expect(result[2].facilityStage).toBe(FACILITY_STAGE.RISK_EXPIRED);
+      expect(result[3].facilityStage).toBe(FACILITY_STAGE.RISK_EXPIRED);
+    });
+
+    it('should return correct facility stages for facility type contingent (GEF)', () => {
+      // Arrange
+      const contingentUnissued = mockDashboardFacility({ type: GEF_FACILITY_TYPE.CONTINGENT });
+      const contingentIssued = mockDashboardFacility({ type: GEF_FACILITY_TYPE.CONTINGENT, hasBeenIssued: true });
+      const contingentIssuedRiskExpired = mockDashboardFacility({
+        type: GEF_FACILITY_TYPE.CONTINGENT,
+        hasBeenIssued: true,
+        facilityStage: FACILITY_STAGE.RISK_EXPIRED,
+      });
+      const contingentUnissuedRiskExpired = mockDashboardFacility({ type: GEF_FACILITY_TYPE.CONTINGENT, facilityStage: FACILITY_STAGE.RISK_EXPIRED });
+
+      const mockDashboardFacilities = [contingentUnissued, contingentIssued, contingentIssuedRiskExpired, contingentUnissuedRiskExpired];
+
+      // Act
+      const result = mapFacilityProperties(mockDashboardFacilities);
+
+      // Assert
+      expect(result[0].facilityStage).toBe(FACILITY_STAGE.UNISSUED);
+      expect(result[1].facilityStage).toBe(FACILITY_STAGE.ISSUED);
+      expect(result[2].facilityStage).toBe(FACILITY_STAGE.RISK_EXPIRED);
+      expect(result[3].facilityStage).toBe(FACILITY_STAGE.RISK_EXPIRED);
     });
   });
 });
