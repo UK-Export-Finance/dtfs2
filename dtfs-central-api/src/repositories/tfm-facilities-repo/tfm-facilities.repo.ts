@@ -312,18 +312,6 @@ export class TfmFacilitiesRepo {
   }
 
   /**
-   * Finds a facility which matches the supplied ukef facility id
-   * @param ukefFacilityId - The ukef facility id
-   * @returns The found document (or null if not found)
-   */
-  public static async findOneByUkefFacilityId(ukefFacilityId: string): Promise<TfmFacility | null> {
-    const collection = await this.getCollection();
-    return await collection.findOne({
-      'facilitySnapshot.ukefFacilityId': { $eq: ukefFacilityId },
-    });
-  }
-
-  /**
    * Finds the TFM facilities with the supplied ukef facility ids
    * @param ukefFacilityIds - The ukef facility ids
    * @returns The found TFM facilities
