@@ -1,4 +1,4 @@
-const componentRenderer = require('../../component-tests/componentRenderer');
+const componentRenderer = require('../componentRenderer');
 
 const component = '../templates/_macros/eligibility-criteria-answer-tag.njk';
 const render = componentRenderer(component);

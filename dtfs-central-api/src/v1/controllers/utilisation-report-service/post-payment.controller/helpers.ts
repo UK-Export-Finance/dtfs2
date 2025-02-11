@@ -1,9 +1,8 @@
 import { In } from 'typeorm';
-import { FeeRecordEntity, FeeRecordStatus, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
+import { FeeRecordEntity, FeeRecordStatus, REQUEST_PLATFORM_TYPE, TfmSessionUser } from '@ukef/dtfs2-common';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { InvalidPayloadError, NotFoundError } from '../../../../errors';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';
-import { TfmSessionUser } from '../../../../types/tfm/tfm-session-user';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';

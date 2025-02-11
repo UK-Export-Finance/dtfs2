@@ -1,4 +1,4 @@
-import { TfmSessionUser } from './tfm-session-user';
+import { TfmSessionUser } from '@ukef/dtfs2-common';
 import { RemoveFeesFromPaymentErrorKey } from '../controllers/utilisation-reports/helpers';
 import { EditPaymentFormValues } from './edit-payment-form-values';
 import { AddPaymentErrorKey, InitiateRecordCorrectionRequestErrorKey, GenerateKeyingDataErrorKey } from './premium-payments-tab-error-keys';

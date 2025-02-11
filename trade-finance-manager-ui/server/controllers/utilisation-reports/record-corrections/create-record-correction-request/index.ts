@@ -8,6 +8,7 @@ import { getLinkToPremiumPaymentsTab } from '../../helpers';
 import api from '../../../../api';
 import { CreateRecordCorrectionRequestFormRequestBody, extractCreateRecordCorrectionRequestFormValues } from './form-helpers';
 import { validateCreateRecordCorrectionRequestFormValues } from './validate-form-values';
+import { getRecordCorrectionRequestCancelLinkHref } from '../helpers';
 
 const createRecordCorrectionRequestTemplate = 'utilisation-reports/record-corrections/create-record-correction-request.njk';
 
@@ -37,6 +38,7 @@ export const getCreateRecordCorrectionRequest = async (req: GetCreateRecordCorre
       user,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       reportId,
+      cancelLinkHref: getRecordCorrectionRequestCancelLinkHref(reportId, feeRecordId),
       bank: {
         name: feeRecord.bank.name,
       },
@@ -102,6 +104,7 @@ export const postCreateRecordCorrectionRequest = async (req: PostCreateRecordCor
       formValues,
       errors,
       backLinkHref: getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]),
+      cancelLinkHref: getRecordCorrectionRequestCancelLinkHref(reportId, feeRecordId),
     };
 
     return res.render(createRecordCorrectionRequestTemplate, viewModel);
