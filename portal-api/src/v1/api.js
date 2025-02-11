@@ -758,6 +758,30 @@ const patchPortalFacilityAmendment = async ({ facilityId, amendmentId, update, a
   }
 };
 
+/**
+ * Delete a portal facility amendment with the provided details.
+ * @param {Object} params
+ * @param {string} params.facilityId - id of the facility to amend.
+ * @param {string} params.amendmentId - id of the amendment.
+ * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - The audit details for the update.
+ * @returns {Promise<void>}
+ */
+const deletePortalFacilityAmendment = async (facilityId, amendmentId, auditDetails) => {
+  try {
+    await axios({
+      method: 'delete',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments/${amendmentId}`,
+      headers: headers.central,
+      data: {
+        auditDetails,
+      },
+    });
+  } catch (error) {
+    console.error('Error deleting portal facility amendment with facility ID %s and amendment ID %s %o', facilityId, amendmentId, error);
+    throw error;
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -789,5 +813,6 @@ module.exports = {
   patchPortalFacilityAmendment,
   patchPortalFacilityAmendmentStatus,
   putFeeRecordCorrectionTransientFormData,
+  deletePortalFacilityAmendment,
   getCompletedFeeRecordCorrections,
 };

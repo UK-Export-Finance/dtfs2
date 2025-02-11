@@ -18,6 +18,7 @@ const companies = require('../controllers/companies.controller');
 const { getAmendment } = require('../controllers/amendments/get-amendment.controller');
 const { patchAmendment } = require('../controllers/amendments/patch-amendment.controller');
 const { putAmendment } = require('../controllers/amendments/put-amendment.controller');
+const { deleteAmendment } = require('../controllers/amendments/delete-amendment.controller');
 const { patchAmendmentStatus } = require('../controllers/amendments/patch-amendment-status.controller');
 const { handleExpressValidatorResult } = require('../validation/route-validators/express-validator-result-handler');
 const { validatePutPortalFacilityAmendmentPayload } = require('../validation/route-validators/amendments/validate-put-portal-facility-amendment-payload');
@@ -133,7 +134,8 @@ router
     handleExpressValidatorResult,
   )
   .get(getAmendment)
-  .patch(validatePatchPortalFacilityAmendmentPayload, patchAmendment);
+  .patch(validatePatchPortalFacilityAmendmentPayload, patchAmendment)
+  .delete(deleteAmendment);
 
 router
   .route('/facilities/:facilityId/amendments/:amendmentId/status')
