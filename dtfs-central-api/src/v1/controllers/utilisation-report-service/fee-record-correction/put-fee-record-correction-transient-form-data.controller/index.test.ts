@@ -207,7 +207,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
         expect(res._getData()).toEqual({});
       });
 
-      it(`should save an empty "additional comments" form value as undefined`, async () => {
+      it(`should save an empty "additional comments" form value as null`, async () => {
         // Arrange
         const correctionReasons = [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT];
 
@@ -220,7 +220,11 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
           reportedCurrency,
         };
 
-        const expectedFormData = anEmptyRecordCorrectionTransientFormData();
+        const expectedFormData = {
+          ...anEmptyRecordCorrectionTransientFormData(),
+          additionalComments: null,
+          reportedCurrency,
+        };
 
         const expectedTransientFormDataEntity = FeeRecordCorrectionTransientFormDataEntity.create({
           userId,

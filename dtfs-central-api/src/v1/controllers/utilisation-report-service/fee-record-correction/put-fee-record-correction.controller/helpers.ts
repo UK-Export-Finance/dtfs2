@@ -58,13 +58,12 @@ export const sendFeeRecordCorrectionReceivedEmails = async (exporter: string, ba
     throw new NotFoundError(`Bank not found: ${bankId}`);
   }
 
-  const { emails } = bank.paymentOfficerTeam;
+  const { teamName, emails } = bank.paymentOfficerTeam;
 
   try {
-    // TODO: DO NOT COMMIT
-    // await sendCorrectionReceivedBankNotificationEmails(emails, teamName, exporter);
+    await sendCorrectionReceivedBankNotificationEmails(emails, teamName, exporter);
 
-    // await sendCorrectionReceivedUkefNotificationEmails(exporter, bank.name);
+    await sendCorrectionReceivedUkefNotificationEmails(exporter, bank.name);
 
     return { emails };
   } catch (error) {
