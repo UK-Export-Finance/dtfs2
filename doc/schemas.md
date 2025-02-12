@@ -25,6 +25,14 @@ As a result, we are working towards a new approach to schema testing to make wri
 
 The result of this structure means that the majority of tests will be effectively 'free' to write. The only exception here are schemas that use types or schemas where a test case does not already exist.
 
+### Note on backend schema tests
+
+We currently run our UI tests using mongodb in a [jsdom environment] (https://stackoverflow.com/questions/68468203/why-am-i-getting-textencoder-is-not-defined-in-jest). E2E tests also run in the jsdom environment.
+
+As part of our schema tests, we export tests that contain `mongodb`'s `ObjectId`. This `ObjectId` eventually references the `whatwg-url` library, which in turn calls `TextEncoder`. `TextEncoder` is a node global and is not available in the `jsdom` environments.
+
+As we should only be using `ObjectId` in the backend, we have seperated out these test files into `backend-filename` tests and do not export these by default in `libs/common` (much like other backend-specific functionality in `libs/common`).
+
 ### Writing tests
 
 To test -- We create a new file, referencing the `withSchemaValidationTests` function, and follow the instructions found in `with-schema-validation.tests.ts`.
@@ -45,12 +53,14 @@ However, sometimes you'll have created a new nested schema or type that doesn't 
 
 ### To create your own primitive/custom type test:
 
+**Note: If your schema requires testing ObjectId use the folders and files prefixed `backend`**
+
 - Create a new file in the correct folder (ie `with-string.tests.ts`)
 - Follow the existing pattern (see `with-string.tests.ts` for an example)
 - Ensure you have `withDefaultTestCases` in your test file
 - Add any type specific options as required (see `with-array.tests.ts` for an example)
 - Add export of the test to the `index.ts` file in the same folder
-- Add your test case name to `with-test-for-test-case.type` in both the `TestCaseTypes` and `TestCaseWithType` declarations
+- Add your test case name to `with-test-for-test-case.type` in the `TestCaseWithType` declaration
 - Add your test case to the `withTestsForTestcase` function to call your test case when provided with the test case name as the `type` in a `testCase`
 - This can now be called as
 
@@ -79,7 +89,7 @@ n.b. transformation tests use a different test case type to allow access to a fu
 - Ensure you have `withDefaultTestCases` in your test file
 - Add any type specific options as required (see `with-array.tests.ts` for an example)
 - Add export of the test to the `index.ts` file in the same folder
-- Add your test case name to `with-test-for-test-case.type` in both the `TestCaseTypes` and `TestCaseWithType` declarations
+- Add your test case name to `with-test-for-test-case.type` in the `TestCaseWithType` declaration
 - Add your test case to the `withTestsForTestcase` function to call your test case when provided with the test case name as the `type` in a `testCase`
 - This can now be called as
 

@@ -5,4 +5,4 @@
  *
  * See schemas.md for more information
  */
-export * from './with-audit-database-record-schema.tests';
+export * from './with-tests-for-backend-testcase';
