@@ -9,6 +9,7 @@ import {
   PENDING_RECONCILIATION,
   RECORD_CORRECTION_REASON,
   FeeRecordCorrectionEntityMockBuilder,
+  anEmptyRecordCorrectionTransientFormData,
 } from '@ukef/dtfs2-common';
 import { InvalidStateMachineTransitionError } from '../../../errors';
 import { FEE_RECORD_EVENT_TYPE, FEE_RECORD_EVENT_TYPES, FeeRecordEventType } from './event/fee-record.event-type';
@@ -133,7 +134,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           correctionEntity: FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(PENDING_CORRECTION_FEE_RECORD, false).build(),
-          correctionFormData: {},
+          correctionFormData: anEmptyRecordCorrectionTransientFormData(),
           requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });

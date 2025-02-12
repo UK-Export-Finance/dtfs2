@@ -1,5 +1,6 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import {
+  anEmptyRecordCorrectionTransientFormData,
   FeeRecordCorrectionEntityMockBuilder,
   FeeRecordCorrectionReviewInformation,
   FeeRecordCorrectionTransientFormDataEntityMockBuilder,
@@ -50,6 +51,7 @@ describe('get-fee-record-correction-review.controller', () => {
       // Arrange
       const correctionReasons = [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT, RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT];
       const transientFormData: RecordCorrectionTransientFormData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
         utilisation: 10000.23,
         facilityId: '99999999',
       };
