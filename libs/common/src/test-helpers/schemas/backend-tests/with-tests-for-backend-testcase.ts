@@ -1,26 +1,19 @@
 import { ZodSchema } from 'zod';
-import { TestCase } from './with-test-for-test-case.type';
-import { withObjectIdSchemaTests } from './custom-types-tests/with-object-id-schema.tests';
-import { withObjectIdStringSchemaTests } from './custom-types-tests/with-object-id-string-schema.tests';
-import { withObjectIdOrObjectIdStringSchemaTests } from './custom-types-tests/with-object-id-or-object-id-string-schema.tests';
-import { withAuditDatabaseRecordSchemaTests } from './schema-tests';
+import { BackendTestCase } from '../backend-test-cases/backend-test-cases';
+import { withObjectIdSchemaTests } from '../backend-custom-types-tests/with-object-id-schema.tests';
+import { withObjectIdStringSchemaTests } from '../backend-custom-types-tests/with-object-id-string-schema.tests';
+import { withObjectIdOrObjectIdStringSchemaTests } from '../backend-custom-types-tests/with-object-id-or-object-id-string-schema.tests';
+import { withAuditDatabaseRecordSchemaTests } from '../backend-schema-tests';
+import { WithTestsForTestCaseProps } from '../types/with-tests-for-test-case';
+import { withTestsForTestcase } from '../tests/with-tests-for-testcase';
 
 /**
  * Gets tests for a test case, using the test case type to determine which tests to run
  *
  * These tests are all available tests that can be easily used to test a parameter, and should be extended
  */
-export const withTestsForTestcase = <Schema extends ZodSchema>({
-  schema,
-  testCase,
-  getTestObjectWithUpdatedParameter,
-  getUpdatedParameterFromParsedTestObject,
-}: {
-  schema: Schema;
-  testCase: TestCase;
-  getTestObjectWithUpdatedParameter: (newValue: unknown) => unknown;
-  getUpdatedParameterFromParsedTestObject: (parsedTestObject: unknown) => unknown;
-}) => {
+export const withTestsForBackendTestcase = <Schema extends ZodSchema>(props: WithTestsForTestCaseProps<Schema, BackendTestCase>): void => {
+  const { schema, testCase, getTestObjectWithUpdatedParameter, getUpdatedParameterFromParsedTestObject } = props;
   const { type, options } = testCase;
 
   switch (type) {
@@ -61,6 +54,12 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
       break;
 
     default:
-      throw Error(`There are no existing test cases for the type ${type}`);
+      // We fall through to the normal tests by default, which throws an error if the type is not found
+      withTestsForTestcase({
+        schema,
+        testCase,
+        getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
+      });
   }
 };

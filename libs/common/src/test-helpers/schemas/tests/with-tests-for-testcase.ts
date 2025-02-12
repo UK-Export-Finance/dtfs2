@@ -6,28 +6,20 @@ import {
   withIsoDateTimeStampSchemaTests,
   withTfmTeamSchemaTests,
   withCurrencySchemaTests,
-} from './custom-types-tests';
-import { withStringTests, withNumberTests, withBooleanTests, withArrayTests } from './primitive-types-tests';
-import { withEntraIdUserSchemaTests, withUpsertTfmUserRequestSchemaTests } from './schema-tests';
-import { TestCase } from './with-test-for-test-case.type';
-import { withIsoDateTimeStampToDateSchemaTests } from './transformation-tests';
+} from '../custom-types-tests';
+import { withStringTests, withNumberTests, withBooleanTests, withArrayTests } from '../primitive-types-tests';
+import { withEntraIdUserSchemaTests, withUpsertTfmUserRequestSchemaTests } from '../schema-tests';
+import { withIsoDateTimeStampToDateSchemaTests } from '../transformation-tests';
+import { WithTestsForTestCaseProps } from '../types/with-tests-for-test-case';
+import { TestCase } from '../test-cases/test-case';
 
 /**
  * Gets tests for a test case, using the test case type to determine which tests to run
  *
  * These tests are all available tests that can be easily used to test a parameter, and should be extended
  */
-export const withTestsForTestcase = <Schema extends ZodSchema>({
-  schema,
-  testCase,
-  getTestObjectWithUpdatedParameter,
-  getUpdatedParameterFromParsedTestObject,
-}: {
-  schema: Schema;
-  testCase: TestCase;
-  getTestObjectWithUpdatedParameter: (newValue: unknown) => unknown;
-  getUpdatedParameterFromParsedTestObject: (parsedTestObject: unknown) => unknown;
-}) => {
+export const withTestsForTestcase = <Schema extends ZodSchema>(props: WithTestsForTestCaseProps<Schema, TestCase>): void => {
+  const { schema, testCase, getTestObjectWithUpdatedParameter, getUpdatedParameterFromParsedTestObject } = props;
   const { type, options } = testCase;
 
   switch (type) {

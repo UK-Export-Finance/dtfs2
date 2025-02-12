@@ -1,0 +1,9 @@
+import { TestCase } from '../test-cases/test-case';
+import { TestCaseWithType } from '../types/test-case-with-type.type';
+
+export type BackendTestCase =
+  | TestCase
+  | TestCaseWithType<'OBJECT_ID_SCHEMA'>
+  | TestCaseWithType<'OBJECT_ID_STRING_SCHEMA'>
+  | TestCaseWithType<'OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA'>
+  | TestCaseWithType<'AUDIT_DATABASE_RECORD_SCHEMA'>;
