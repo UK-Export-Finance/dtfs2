@@ -1,7 +1,12 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
 import { Response } from 'express';
-import { aRecordCorrectionFormValues, RecordCorrectionFormValueValidationErrors, RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
+import {
+  anEmptyRecordCorrectionTransientFormData,
+  aRecordCorrectionFormValues,
+  RecordCorrectionFormValueValidationErrors,
+  RecordCorrectionTransientFormData,
+} from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import {
   getFeeRecordCorrectionTransientFormData,
@@ -50,7 +55,10 @@ describe('fee-record-correction-transient-form-data.controller', () => {
     });
 
     describe('when the api request is successful and returns form data', () => {
-      const formData: RecordCorrectionTransientFormData = { utilisation: 500000 };
+      const formData: RecordCorrectionTransientFormData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
+        utilisation: 500000,
+      };
 
       beforeEach(() => {
         jest.mocked(api.getFeeRecordCorrectionTransientFormData).mockResolvedValue(formData);
