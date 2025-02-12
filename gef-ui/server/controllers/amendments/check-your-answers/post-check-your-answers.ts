@@ -6,7 +6,7 @@ import { getNextPage } from '../helpers/navigation.helper.ts';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
 
 export type PostCheckYourAnswersRequest = CustomExpressRequest<{
-  params: { dealId: string; facilityId: string; amendmentId: string };
+  params: { facilityId: string; amendmentId: string };
 }>;
 
 /**
