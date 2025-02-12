@@ -16,26 +16,26 @@ const checkYourAnswers = {
   cancelLink: () => cy.get('[data-cy="cancel-link"]'),
 
   amendmentSummaryListTable: () => ({
-    amendmentOptionsAction: () => cyGetAmendmentsSummaryListChild('[data-cy="change-amendment-options-link"]'),
+    amendmentOptionsChangeLink: () => cyGetAmendmentsSummaryListChild('[data-cy="change-amendment-options-link"]'),
     amendmentOptionsValue: () => cyGetAmendmentsSummaryListValue('[data-cy="change-amendment-options-link"]'),
+    coverEndDateChangeLink: () => cyGetAmendmentsSummaryListChild('[data-cy="change-cover-end-date-link"]'),
     coverEndDateValue: () => cyGetAmendmentsSummaryListValue('[data-cy="change-cover-end-date-link"]'),
-    coverEndDateAction: () => cyGetAmendmentsSummaryListChild('[data-cy="change-cover-end-date-link"]'),
-    facilityEndDateAction: () => cyGetAmendmentsSummaryListChild('[data-cy="change-facility-end-date-link"]'),
+    facilityEndDateChangeLink: () => cyGetAmendmentsSummaryListChild('[data-cy="change-facility-end-date-link"]'),
     facilityEndDateValue: () => cyGetAmendmentsSummaryListValue('[data-cy="change-facility-end-date-link"]'),
-    bankReviewDateAction: () => cyGetAmendmentsSummaryListChild('[data-cy="change-bank-review-date-link"]'),
+    bankReviewDateChangeLink: () => cyGetAmendmentsSummaryListChild('[data-cy="change-bank-review-date-link"]'),
     bankReviewDateValue: () => cyGetAmendmentsSummaryListValue('[data-cy="change-bank-review-date-link"]'),
-    facilityValueAction: () => cyGetAmendmentsSummaryListChild('[data-cy="change-facility-value-link"]'),
+    facilityValueChangeLink: () => cyGetAmendmentsSummaryListChild('[data-cy="change-facility-value-link"]'),
     facilityValueValue: () => cyGetAmendmentsSummaryListValue('[data-cy="change-facility-value-link"]'),
   }),
 
   eligibilityCriteriaSummaryListTable: () => ({
-    eligibilityCriterionAction: (id) => cyGetEligibilitySummaryListChild(`[data-cy="change-eligibility-criterion-${id}-link"]`),
+    eligibilityCriterionChangeLink: (id) => cyGetEligibilitySummaryListChild(`[data-cy="change-eligibility-criterion-${id}-link"]`),
     eligibilityCriterionValue: (id) => cyGetEligibilitySummaryListValue(`[data-cy="change-eligibility-criterion-${id}-link"]`),
-    allEligibilityCriterionActions: () => cyGetEligibilitySummaryListChild('[data-cy^="change-eligibility-criterion-"]'),
+    allEligibilityCriterionChangeLinks: () => cyGetEligibilitySummaryListChild('[data-cy^="change-eligibility-criterion-"]'),
   }),
 
   effectiveDateSummaryListTable: () => ({
-    effectiveDateAction: () => cyGetEffectiveDateSummaryListChild('[data-cy="change-effective-date-link"]'),
+    effectiveDateChangeLink: () => cyGetEffectiveDateSummaryListChild('[data-cy="change-effective-date-link"]'),
     effectiveDateValue: () => cyGetEffectiveDateSummaryListValue('[data-cy="change-effective-date-link"]'),
   }),
 };

@@ -102,11 +102,11 @@ context('Amendments - Change cover end date with bank review date - full journey
 
     checkYourAnswers.amendmentSummaryListTable().coverEndDateValue().contains(today.d_MMMM_yyyy);
     checkYourAnswers.amendmentSummaryListTable().bankReviewDateValue().contains(today.d_MMMM_yyyy);
-    checkYourAnswers.amendmentSummaryListTable().facilityEndDateAction().should('not.exist');
+    checkYourAnswers.amendmentSummaryListTable().facilityEndDateChangeLink().should('not.exist');
 
     checkYourAnswers
       .eligibilityCriteriaSummaryListTable()
-      .allEligibilityCriterionActions()
+      .allEligibilityCriterionChangeLinks()
       .each(($ele, index) => {
         checkYourAnswers
           .eligibilityCriteriaSummaryListTable()

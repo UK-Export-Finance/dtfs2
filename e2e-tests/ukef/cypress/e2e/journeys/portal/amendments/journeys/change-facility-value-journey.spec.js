@@ -83,14 +83,14 @@ context('Amendments - change facility value - full journey', () => {
     checkYourAnswers.amendmentSummaryListTable().amendmentOptionsValue().contains('Facility value');
     checkYourAnswers.amendmentSummaryListTable().amendmentOptionsValue().should('not.contain', 'Cover end date');
 
-    checkYourAnswers.amendmentSummaryListTable().coverEndDateAction().should('not.exist');
-    checkYourAnswers.amendmentSummaryListTable().bankReviewDateAction().should('not.exist');
-    checkYourAnswers.amendmentSummaryListTable().facilityEndDateAction().should('not.exist');
+    checkYourAnswers.amendmentSummaryListTable().coverEndDateChangeLink().should('not.exist');
+    checkYourAnswers.amendmentSummaryListTable().bankReviewDateChangeLink().should('not.exist');
+    checkYourAnswers.amendmentSummaryListTable().facilityEndDateChangeLink().should('not.exist');
     checkYourAnswers.amendmentSummaryListTable().facilityValueValue().contains('10000');
 
     checkYourAnswers
       .eligibilityCriteriaSummaryListTable()
-      .allEligibilityCriterionActions()
+      .allEligibilityCriterionChangeLinks()
       .each(($ele, index) => {
         checkYourAnswers
           .eligibilityCriteriaSummaryListTable()
