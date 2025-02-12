@@ -7,4 +7,5 @@ export type RecordCorrectionLogDetailsViewModel = BaseViewModel & {
   displayStatus: string;
   formattedReportPeriod: string;
   bankName: string;
+  backLinkHref: string;
 };

@@ -20,8 +20,10 @@
  *         type: string
  *       isCompleted:
  *         type: boolean
- *       formattedBankTeamEmails:
- *         type: string
+ *       bankTeamEmails:
+ *         type: array
+ *         items:
+ *           type: string
  *       additionalInfo:
  *         type: string
  *       formattedBankCommentary:

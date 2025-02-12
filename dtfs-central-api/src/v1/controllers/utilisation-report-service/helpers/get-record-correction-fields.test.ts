@@ -4,13 +4,13 @@ import { getRecordCorrectionFields } from './get-record-correction-fields';
 import { getFormattedOldAndCorrectValues } from './get-formatted-old-and-correct-values';
 
 describe('get-record-correction-fields', () => {
-  const today = new Date();
-  const bankTeamEmails = ['test1@ukexportfinance.gov.uk', 'test2@ukexportfinance.gpv.uk'];
+  const bankTeamEmails = ['test1@ukexportfinance.gov.uk', 'test2@ukexportfinance.gov.uk'];
 
   describe('when a correction is not completed - isCompleted=false', () => {
+    const dateRequested = new Date('2024-01-01');
+
     const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false)
-      .withDateRequested(today)
-      .withDateReceived(today)
+      .withDateRequested(dateRequested)
       .withBankTeamEmails(`${bankTeamEmails[0]},${bankTeamEmails[1]}`)
       .build();
 
@@ -26,12 +26,12 @@ describe('get-record-correction-fields', () => {
         feeRecordId: feeRecordCorrectionEntity.feeRecord.id,
         exporter: feeRecordCorrectionEntity.feeRecord.exporter,
         formattedReasons: reasonsArray.join(', '),
-        formattedDateSent: format(today, DATE_FORMATS.DD_MMM_YYYY),
+        formattedDateSent: format(dateRequested, DATE_FORMATS.DD_MMM_YYYY),
         formattedOldRecords,
         formattedCorrectRecords: '-',
         isCompleted: false,
         bankTeamName: feeRecordCorrectionEntity.bankTeamName,
-        formattedBankTeamEmails: `${bankTeamEmails[0]}, ${bankTeamEmails[1]}`,
+        bankTeamEmails,
         additionalInfo: feeRecordCorrectionEntity.additionalInfo,
         formattedBankCommentary: '-',
         formattedDateReceived: '-',
@@ -43,8 +43,12 @@ describe('get-record-correction-fields', () => {
   });
 
   describe('when a correction is completed - isCompleted=true', () => {
+    const dateRequested = new Date('2024-02-01');
+    const dateReceived = new Date('2024-02-10');
+
     const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forIsCompleted(true)
-      .withDateRequested(today)
+      .withDateRequested(dateRequested)
+      .withDateReceived(dateReceived)
       .withBankTeamEmails(`${bankTeamEmails[0]},${bankTeamEmails[1]}`)
       .build();
 
@@ -60,15 +64,15 @@ describe('get-record-correction-fields', () => {
         feeRecordId: feeRecordCorrectionEntity.feeRecord.id,
         exporter: feeRecordCorrectionEntity.feeRecord.exporter,
         formattedReasons: reasonsArray.join(', '),
-        formattedDateSent: format(today, DATE_FORMATS.DD_MMM_YYYY),
+        formattedDateSent: format(dateRequested, DATE_FORMATS.DD_MMM_YYYY),
         formattedOldRecords,
         formattedCorrectRecords,
         isCompleted: true,
         bankTeamName: feeRecordCorrectionEntity.bankTeamName,
-        formattedBankTeamEmails: `${bankTeamEmails[0]}, ${bankTeamEmails[1]}`,
+        bankTeamEmails,
         additionalInfo: feeRecordCorrectionEntity.additionalInfo,
         formattedBankCommentary: feeRecordCorrectionEntity.bankCommentary,
-        formattedDateReceived: format(feeRecordCorrectionEntity.dateReceived!, DATE_FORMATS.DD_MMM_YYYY),
+        formattedDateReceived: format(dateReceived, DATE_FORMATS.DD_MMM_YYYY),
         formattedRequestedByUser: `${feeRecordCorrectionEntity.requestedByUser.firstName} ${feeRecordCorrectionEntity.requestedByUser.lastName}`,
       };
 

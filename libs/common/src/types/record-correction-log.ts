@@ -10,7 +10,7 @@ export type RecordCorrectionLogFields = {
   formattedCorrectRecords: string;
   isCompleted: boolean;
   bankTeamName: string;
-  formattedBankTeamEmails: string;
+  bankTeamEmails: string[];
   additionalInfo: string;
   formattedBankCommentary: string;
   formattedDateReceived: string;
@@ -20,6 +20,7 @@ export type RecordCorrectionLogFields = {
 export type GetRecordCorrectionLogDetailsResponseBody = {
   correctionDetails: RecordCorrectionLogFields;
   bankName: string;
+  reportId: number;
   reportPeriod: ReportPeriodPartialEntity;
 };
 
