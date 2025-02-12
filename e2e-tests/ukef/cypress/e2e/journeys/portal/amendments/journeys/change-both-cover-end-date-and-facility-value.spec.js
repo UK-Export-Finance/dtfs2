@@ -119,5 +119,8 @@ context('Amendments - Change both cover end date and facility value - full journ
       });
 
     checkYourAnswers.effectiveDateSummaryListTable().effectiveDateValue().contains(today.d_MMMM_yyyy);
+    cy.clickSubmitButton();
+
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/submitted-for-checking`));
   });
 });

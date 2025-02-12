@@ -97,5 +97,8 @@ context('Amendments - change facility value - full journey', () => {
       });
 
     checkYourAnswers.effectiveDateSummaryListTable().effectiveDateValue().contains(today.d_MMMM_yyyy);
+    cy.clickSubmitButton();
+
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/submitted-for-checking`));
   });
 });
