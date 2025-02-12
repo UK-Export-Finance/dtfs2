@@ -95,7 +95,7 @@ describe(page, () => {
       wrapper
         .expectText(`[data-cy="how-to-generate-keying-data-text"]`)
         .toRead(
-          "When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected.",
+          "When payments show as matched, the data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected.",
         );
 
       wrapper
@@ -138,7 +138,7 @@ describe(page, () => {
       wrapper
         .expectText(`[data-cy="received-payments-text"]`)
         .toRead(
-          'Received payments are entered against reported fees. When payments show as matched, the adjustment data for keying into ACBS will be automatically generated.',
+          'Received payments are entered against reported fees. When payments show as matched, the data for keying into ACBS will be automatically generated.',
         );
 
       wrapper
@@ -325,7 +325,7 @@ describe(page, () => {
       wrapper.expectElement(keyingSheetTabSelector).toExist();
 
       wrapper.expectText(`${keyingSheetTabSelector} h2[data-cy="keying-sheet-heading"]`).toRead('Keying sheet');
-      wrapper.expectText(`[data-cy="select-payments-text"]`).toRead('Select payments and mark as done when the adjustments have been keyed into ACBS.');
+      wrapper.expectText(`[data-cy="select-payments-text"]`).toRead('Select payments and mark as done when they have been keyed into ACBS.');
       wrapper
         .expectText(`[data-cy="payments-on-premium-payments-tab-text"]`)
         .toRead('Payments on the premium payments tab will show as reconciled when they have been marked as done here.');
