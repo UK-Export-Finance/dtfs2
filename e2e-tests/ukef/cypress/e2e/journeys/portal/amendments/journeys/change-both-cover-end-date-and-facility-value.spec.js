@@ -6,7 +6,9 @@ import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
 import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 import doYouHaveAFacilityEndDate from '../../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
 import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
+import checkYourAnswers from '../../../../../../../gef/cypress/e2e/pages/amendments/check-your-answers';
 import facilityValue from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
+import { today } from '../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -97,7 +99,25 @@ context('Amendments - Change both cover end date and facility value - full journ
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/check-your-answers`));
+    checkYourAnswers.amendmentSummaryListTable().amendmentOptionsValue().contains('Cover end date');
+    checkYourAnswers.amendmentSummaryListTable().amendmentOptionsValue().contains('Facility end date');
+    checkYourAnswers.amendmentSummaryListTable().amendmentOptionsValue().contains('Facility value');
 
-    // TODO DTFS2-7519: add steps for check your answer page
+    checkYourAnswers.amendmentSummaryListTable().coverEndDateValue().contains(today.d_MMMM_yyyy);
+    checkYourAnswers.amendmentSummaryListTable().facilityEndDateValue().contains(today.d_MMMM_yyyy);
+    checkYourAnswers.amendmentSummaryListTable().bankReviewDateAction().should('not.exist');
+    checkYourAnswers.amendmentSummaryListTable().facilityValueValue().contains('10000');
+
+    checkYourAnswers
+      .eligibilityCriteriaSummaryListTable()
+      .allEligibilityCriterionActions()
+      .each(($ele, index) => {
+        checkYourAnswers
+          .eligibilityCriteriaSummaryListTable()
+          .eligibilityCriterionValue(index + 1)
+          .contains('True');
+      });
+
+    checkYourAnswers.effectiveDateSummaryListTable().effectiveDateValue().contains(today.d_MMMM_yyyy);
   });
 });
