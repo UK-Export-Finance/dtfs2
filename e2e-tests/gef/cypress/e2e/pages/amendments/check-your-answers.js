@@ -11,6 +11,10 @@ const cyGetEffectiveDateSummaryListValue = (actionSelector) =>
   cyGetEffectiveDateSummaryListChild(actionSelector).parent().parent().find('.govuk-summary-list__value');
 
 const checkYourAnswers = {
+  pageHeading: () => cy.get('[data-cy="page-heading"]'),
+  backLink: () => cy.get('[data-cy="back-link"]'),
+  cancelLink: () => cy.get('[data-cy="cancel-link"]'),
+
   amendmentSummaryListTable: () => ({
     amendmentOptionsAction: () => cyGetAmendmentsSummaryListChild('[data-cy="change-amendment-options-link"]'),
     amendmentOptionsValue: () => cyGetAmendmentsSummaryListValue('[data-cy="change-amendment-options-link"]'),
