@@ -8,6 +8,7 @@ import doYouHaveAFacilityEndDate from '../../../../../../../gef/cypress/e2e/page
 import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
 import checkYourAnswers from '../../../../../../../gef/cypress/e2e/pages/amendments/check-your-answers';
 import facilityValue from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
+import submittedForChecking from '../../../../../../../gef/cypress/e2e/pages/amendments/submitted-for-checking';
 import { today } from '../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
@@ -122,5 +123,9 @@ context('Amendments - Change both cover end date and facility value - full journ
     cy.clickSubmitButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/submitted-for-checking`));
+    submittedForChecking.submittedForCheckingConfirmationPanel().contains('Amendment submitted for checking at your bank');
+    submittedForChecking.returnLink().click();
+
+    cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 });

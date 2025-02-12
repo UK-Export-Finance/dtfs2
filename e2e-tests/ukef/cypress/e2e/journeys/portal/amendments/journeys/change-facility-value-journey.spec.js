@@ -7,6 +7,7 @@ import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/am
 import facilityValue from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
 import checkYourAnswers from '../../../../../../../gef/cypress/e2e/pages/amendments/check-your-answers';
+import submittedForChecking from '../../../../../../../gef/cypress/e2e/pages/amendments/submitted-for-checking';
 import { today } from '../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
@@ -82,9 +83,10 @@ context('Amendments - change facility value - full journey', () => {
     checkYourAnswers.amendmentSummaryListTable().amendmentOptionsValue().contains('Facility value');
     checkYourAnswers.amendmentSummaryListTable().amendmentOptionsValue().should('not.contain', 'Cover end date');
 
-    checkYourAnswers.amendmentSummaryListTable().coverEndDateValue().should('not.exist');
-    checkYourAnswers.amendmentSummaryListTable().bankReviewDateValue().should('not.exist');
-    checkYourAnswers.amendmentSummaryListTable().facilityEndDateValue().contains('10000');
+    checkYourAnswers.amendmentSummaryListTable().coverEndDateAction().should('not.exist');
+    checkYourAnswers.amendmentSummaryListTable().bankReviewDateAction().should('not.exist');
+    checkYourAnswers.amendmentSummaryListTable().facilityEndDateAction().should('not.exist');
+    checkYourAnswers.amendmentSummaryListTable().facilityValueValue().contains('10000');
 
     checkYourAnswers
       .eligibilityCriteriaSummaryListTable()
@@ -100,5 +102,9 @@ context('Amendments - change facility value - full journey', () => {
     cy.clickSubmitButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/submitted-for-checking`));
+    submittedForChecking.submittedForCheckingConfirmationPanel().contains('Amendment submitted for checking at your bank');
+    submittedForChecking.returnLink().click();
+
+    cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 });
