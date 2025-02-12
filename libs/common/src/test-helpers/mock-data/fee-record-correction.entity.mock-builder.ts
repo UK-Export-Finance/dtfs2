@@ -126,6 +126,11 @@ export class FeeRecordCorrectionEntityMockBuilder {
     return this;
   }
 
+  public withBankTeamName(bankTeamName: string): FeeRecordCorrectionEntityMockBuilder {
+    this.correction.bankTeamName = bankTeamName;
+    return this;
+  }
+
   public withBankTeamEmails(bankTeamEmails: string): FeeRecordCorrectionEntityMockBuilder {
     this.correction.bankTeamEmails = bankTeamEmails;
     return this;

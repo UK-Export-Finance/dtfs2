@@ -15,4 +15,5 @@ export const aCreateRecordCorrectionLogDetailsViewModel = (): RecordCorrectionLo
   displayStatus,
   ...recordCorrectionLogDetailsMock,
   formattedReportPeriod,
+  backLinkHref: '/utilisation-reports/123#record-correction-log',
 });
