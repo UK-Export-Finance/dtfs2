@@ -82,8 +82,6 @@ describe('handleUtilisationReportGenerateKeyingDataEvent', () => {
         type: 'GENERATE_KEYING_DATA',
         payload: {
           transactionEntityManager: mockEntityManager,
-          isFinalFeeRecordForFacility: true,
-          reportPeriod: utilisationReport.reportPeriod,
           requestSource,
         },
       });

@@ -181,10 +181,6 @@ describe(component, () => {
       wrapper.expectElement('tr:eq(1) td:contains("EUR")').notToExist();
       wrapper.expectElement('tr:eq(2) td:contains("EUR")').notToExist();
 
-      wrapper.expectElement('tr:eq(0) td:contains("-")').toHaveCount(4);
-      wrapper.expectElement('tr:eq(1) td:contains("-")').notToExist();
-      wrapper.expectElement('tr:eq(2) td:contains("-")').notToExist();
-
       wrapper.expectElement('tr:eq(0) td:has(input[type="checkbox"])').toExist();
       wrapper.expectElement('tr:eq(1) td:has(input[type="checkbox"])').notToExist();
       wrapper.expectElement('tr:eq(2) td:has(input[type="checkbox"])').notToExist();
@@ -223,8 +219,9 @@ describe(component, () => {
       };
       const wrapper = getWrapper({ keyingSheetRow });
 
-      wrapper.expectElement('tr:eq(0) td.no-border').toHaveCount(11);
-      wrapper.expectElement('tr:eq(1) td.no-border').toHaveCount(11);
+      // The 7 cells of a row are status, facility id, exporter, date, fee payment, base currency, selection checkbox
+      wrapper.expectElement('tr:eq(0) td.no-border').toHaveCount(7);
+      wrapper.expectElement('tr:eq(1) td.no-border').toHaveCount(7);
       wrapper.expectElement('tr:eq(2) td.no-border').notToExist();
     });
 
