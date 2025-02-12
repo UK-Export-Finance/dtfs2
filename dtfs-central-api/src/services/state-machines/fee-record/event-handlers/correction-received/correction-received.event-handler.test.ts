@@ -1,5 +1,6 @@
 import { EntityManager } from 'typeorm';
 import {
+  anEmptyRecordCorrectionTransientFormData,
   CURRENCY,
   FEE_RECORD_STATUS,
   FeeRecordCorrectionEntity,
@@ -22,7 +23,7 @@ describe('handleFeeRecordCorrectionReceivedEvent', () => {
     transactionEntityManager: mockEntityManager,
     requestSource: aDbRequestSource(),
     correctionEntity: FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).withReasons([RECORD_CORRECTION_REASON.OTHER]).build(),
-    correctionFormData: { additionalComments: 'Some additional comments' },
+    correctionFormData: anEmptyRecordCorrectionTransientFormData(),
   });
 
   beforeAll(() => {
@@ -98,9 +99,9 @@ describe('handleFeeRecordCorrectionReceivedEvent', () => {
     const feeRecord = new FeeRecordEntityMockBuilder().withFeesPaidToUkefForThePeriod(500).withFeesPaidToUkefForThePeriodCurrency(CURRENCY.JPY).build();
 
     const correctionFormData: RecordCorrectionTransientFormData = {
+      ...anEmptyRecordCorrectionTransientFormData(),
       reportedFee: 400,
       reportedCurrency: CURRENCY.USD,
-      additionalComments: 'Here are some comments provided by the bank',
     };
 
     const reasons = [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT];
@@ -139,6 +140,7 @@ describe('handleFeeRecordCorrectionReceivedEvent', () => {
     const correctionEntity = FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).withReasons([RECORD_CORRECTION_REASON.OTHER]).build();
 
     const correctionFormData: RecordCorrectionTransientFormData = {
+      ...anEmptyRecordCorrectionTransientFormData(),
       additionalComments: 'Some additional comments from the bank',
     };
 
@@ -156,7 +158,8 @@ describe('handleFeeRecordCorrectionReceivedEvent', () => {
     const correctionEntity = FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).withReasons([RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT]).build();
 
     const correctionFormData: RecordCorrectionTransientFormData = {
-      reportedFee: 400,
+      ...anEmptyRecordCorrectionTransientFormData(),
+      additionalComments: null,
     };
 
     // Act
@@ -189,9 +192,9 @@ describe('handleFeeRecordCorrectionReceivedEvent', () => {
       .build();
 
     const correctionFormData: RecordCorrectionTransientFormData = {
+      ...anEmptyRecordCorrectionTransientFormData(),
       reportedFee: 400,
       reportedCurrency: CURRENCY.USD,
-      additionalComments: 'Here are some comments provided by the bank',
     };
 
     const reasons = [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT, RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT];

@@ -32,7 +32,7 @@ export class FeeRecordCorrectionEntityMockBuilder {
     data.additionalInfo = 'some info';
     data.reasons = [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT];
     data.bankTeamName = 'some team';
-    data.bankTeamEmails = 'test1@ukexportfinance.gov.uk, test2@ukexportfinance.gov.uk';
+    data.bankTeamEmails = 'test1@ukexportfinance.gov.uk,test2@ukexportfinance.gov.uk';
 
     if (isCompleted) {
       data.isCompleted = true;
@@ -123,6 +123,16 @@ export class FeeRecordCorrectionEntityMockBuilder {
 
   public withBankCommentary(bankCommentary: string | null): FeeRecordCorrectionEntityMockBuilder {
     this.correction.bankCommentary = bankCommentary;
+    return this;
+  }
+
+  public withBankTeamName(bankTeamName: string): FeeRecordCorrectionEntityMockBuilder {
+    this.correction.bankTeamName = bankTeamName;
+    return this;
+  }
+
+  public withBankTeamEmails(bankTeamEmails: string): FeeRecordCorrectionEntityMockBuilder {
+    this.correction.bankTeamEmails = bankTeamEmails;
     return this;
   }
 

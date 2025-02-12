@@ -8,11 +8,11 @@ import {
   withObjectIdOrObjectIdStringSchemaTests,
   withIsoDateTimeStampSchemaTests,
   withTfmTeamSchemaTests,
+  withCurrencySchemaTests,
 } from './custom-types-tests';
 import { withStringTests, withNumberTests, withBooleanTests, withArrayTests } from './primitive-types-tests';
 import { withAuditDatabaseRecordSchemaTests, withEntraIdUserSchemaTests, withUpsertTfmUserRequestSchemaTests } from './schema-tests';
 import { TestCase } from './with-test-for-test-case.type';
-import { withCurrencySchemaTests } from './custom-types-tests/with-currency-schema.tests';
 import { withIsoDateTimeStampToDateSchemaTests } from './transformation-tests';
 
 /**

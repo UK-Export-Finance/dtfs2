@@ -1,14 +1,12 @@
 import { Headers } from 'node-mocks-http';
 import { NextFunction, Request, Response } from 'express';
-import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
 import { createApi } from '../create-api';
 import api from '../../server/services/api';
 import * as storage from '../test-helpers/storage/storage';
-import { MOCK_BASIC_DEAL } from '../../server/utils/mocks/mock-applications';
-import { MOCK_UNISSUED_FACILITY, MOCK_ISSUED_FACILITY } from '../../server/utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
 
@@ -21,19 +19,13 @@ jest.mock('../../server/middleware/csrf', () => ({
   csrfToken: () => (_req: Request, _res: Response, next: NextFunction) => next(),
 }));
 
-const mockGetFacility = jest.fn();
-const mockGetApplication = jest.fn();
 const mockGetAmendment = jest.fn();
-
-const aMockError = () => new Error();
 
 const dealId = '123';
 const facilityId = '111';
 const amendmentId = '111';
 
-const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
-
-const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE}`;
+const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.SUBMITTED_FOR_CHECKING}`;
 
 describe(`GET ${url}`, () => {
   let sessionCookie: string;
@@ -43,14 +35,15 @@ describe(`GET ${url}`, () => {
     jest.resetAllMocks();
 
     ({ sessionCookie } = await storage.saveUserSession([ROLES.MAKER]));
-    jest.spyOn(api, 'getFacility').mockImplementation(mockGetFacility);
-    jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
     jest.spyOn(api, 'getAmendment').mockImplementation(mockGetAmendment);
 
-    mockGetFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
-    mockGetApplication.mockResolvedValue(mockDeal);
     mockGetAmendment.mockResolvedValue(
-      new PortalFacilityAmendmentWithUkefIdMockBuilder().withDealId(dealId).withFacilityId(facilityId).withAmendmentId(amendmentId).build(),
+      new PortalFacilityAmendmentWithUkefIdMockBuilder()
+        .withDealId(dealId)
+        .withFacilityId(facilityId)
+        .withAmendmentId(amendmentId)
+        .withStatus(PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL)
+        .build(),
     );
   });
 
@@ -60,7 +53,7 @@ describe(`GET ${url}`, () => {
     process.env = originalEnv;
   });
 
-  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED feature flag is disabled', () => {
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
     beforeEach(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'false';
     });
@@ -101,42 +94,18 @@ describe(`GET ${url}`, () => {
       successCode: HttpStatusCode.Ok,
     });
 
-    it('should render `Date amendment effective from` page', async () => {
+    it('should render submitted for checking page', async () => {
       // Act
       const response = await getWithSessionCookie(sessionCookie);
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Ok);
-      expect(response.text).toContain('Date amendment effective from');
-    });
-
-    it('should redirect to /not-found when facility not found', async () => {
-      // Arrange
-      mockGetFacility.mockResolvedValue({ details: undefined });
-
-      // Act
-      const response = await getWithSessionCookie(sessionCookie);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.Found);
-      expect(response.headers.location).toEqual('/not-found');
-    });
-
-    it('should redirect to /not-found when deal not found', async () => {
-      // Arrange
-      mockGetApplication.mockResolvedValue(undefined);
-
-      // Act
-      const response = await getWithSessionCookie(sessionCookie);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.Found);
-      expect(response.headers.location).toEqual('/not-found');
+      expect(response.text).toContain('Amendment submitted for checking at your bank');
     });
 
     it('should redirect to /not-found when amendment not found', async () => {
       // Arrange
-      mockGetAmendment.mockResolvedValue(undefined);
+      mockGetAmendment.mockResolvedValueOnce(undefined);
 
       // Act
       const response = await getWithSessionCookie(sessionCookie);
@@ -146,45 +115,27 @@ describe(`GET ${url}`, () => {
       expect(response.headers.location).toEqual('/not-found');
     });
 
-    it('should redirect to deal summary page when facility cannot be amended', async () => {
+    it(`should redirect to /not-found if the amendment has a status which is not ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}`, async () => {
       // Arrange
-      mockGetApplication.mockResolvedValue(MOCK_UNISSUED_FACILITY);
+      const draftAmendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+        .withDealId(dealId)
+        .withFacilityId(facilityId)
+        .withAmendmentId(amendmentId)
+        .build();
+
+      mockGetAmendment.mockResolvedValueOnce(draftAmendment);
 
       // Act
       const response = await getWithSessionCookie(sessionCookie);
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Found);
-      expect(response.headers.location).toEqual(`/gef/application-details/${dealId}`);
-    });
-
-    it('should render `problem with service` if getApplication throws an error', async () => {
-      // Arrange
-      mockGetApplication.mockRejectedValue(aMockError());
-
-      // Act
-      const response = await getWithSessionCookie(sessionCookie);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.Ok);
-      expect(response.text).toContain('Problem with the service');
-    });
-
-    it('should render `problem with service` if getFacility throws an error', async () => {
-      // Arrange
-      mockGetFacility.mockRejectedValue(aMockError());
-
-      // Act
-      const response = await getWithSessionCookie(sessionCookie);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.Ok);
-      expect(response.text).toContain('Problem with the service');
+      expect(response.headers.location).toEqual('/not-found');
     });
 
     it('should render `problem with service` if getAmendment throws an error', async () => {
       // Arrange
-      mockGetAmendment.mockRejectedValue(aMockError());
+      mockGetAmendment.mockRejectedValue(new Error('test error'));
 
       // Act
       const response = await getWithSessionCookie(sessionCookie);
