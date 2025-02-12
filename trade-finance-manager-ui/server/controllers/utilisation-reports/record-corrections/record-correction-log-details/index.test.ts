@@ -5,6 +5,9 @@ import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import { getRecordCorrectionLogDetails } from '.';
 import api from '../../../../api';
 import { mapToRecordCorrectionStatus } from '../../helpers/map-record-correction-status';
+import { RecordCorrectionLogDetailsViewModel } from '../../../../types/view-models';
+import { getReconciliationForReportHref } from '../../helpers';
+import { RECONCILIATION_FOR_REPORT_TABS } from '../../../../constants/reconciliation-for-report-tabs';
 
 jest.mock('../../../../api');
 
@@ -41,7 +44,12 @@ describe('controllers/utilisation-reports/record-corrections/record-correction-l
 
       const formattedReportPeriod = getFormattedReportPeriodWithLongMonth(recordCorrectionLogDetailsMock.reportPeriod);
 
-      const expectedViewModel = {
+      const expectedBackLinkHref = getReconciliationForReportHref(
+        recordCorrectionLogDetailsMock.reportId.toString(),
+        RECONCILIATION_FOR_REPORT_TABS.RECORD_CORRECTION_LOG,
+      );
+
+      const expectedViewModel: RecordCorrectionLogDetailsViewModel = {
         user,
         correctionDetails: recordCorrectionLogDetailsMock.correctionDetails,
         status,
@@ -49,6 +57,7 @@ describe('controllers/utilisation-reports/record-corrections/record-correction-l
         formattedReportPeriod,
         bankName: recordCorrectionLogDetailsMock.bankName,
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
+        backLinkHref: expectedBackLinkHref,
       };
 
       expect(res._getRenderView()).toEqual('utilisation-reports/record-corrections/record-correction-log-details.njk');

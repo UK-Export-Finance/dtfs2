@@ -36,10 +36,18 @@ describe(`GET ${BASE_URL}`, () => {
 
   const bankId = '123';
   const bankName = 'Test bank';
+
+  const bankTeamName = 'Test Bank Payment Reporting Team';
+  const bankTeamEmails = ['latest-bank-email-1@ukexportfinance.gov.uk', 'latest-bank-email-2@ukexportfinance.gov.uk'];
+
   const bank: Bank = {
     ...aBank(),
     id: bankId,
     name: bankName,
+    paymentOfficerTeam: {
+      teamName: bankTeamName,
+      emails: bankTeamEmails,
+    },
   };
 
   const reportPeriod: ReportPeriod = {
@@ -58,7 +66,13 @@ describe(`GET ${BASE_URL}`, () => {
 
   const feeRecord = FeeRecordEntityMockBuilder.forReport(reconciliationInProgressReport).withId(feeRecordId).build();
 
-  const recordCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false).withDateRequested(today).build();
+  const recordCorrectionBankTeamEmails = ['old-bank-email-1@ukexportfinance.gov.uk', 'old-bank-email-2@ukexportfinance.gov.uk'];
+
+  const recordCorrection = FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(feeRecord, false)
+    .withDateRequested(today)
+    .withBankTeamName(bankTeamName)
+    .withBankTeamEmails(recordCorrectionBankTeamEmails.join(','))
+    .build();
 
   beforeAll(async () => {
     await SqlDbHelper.initialize();
@@ -87,6 +101,8 @@ describe(`GET ${BASE_URL}`, () => {
     await SqlDbHelper.deleteAllEntries('FeeRecord');
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
     await SqlDbHelper.deleteAllEntries('FeeRecordCorrection');
+
+    await wipe(['banks']);
   });
 
   withSqlIdPathParameterValidationTests({
@@ -115,14 +131,15 @@ describe(`GET ${BASE_URL}`, () => {
         formattedOldRecords: '100.00',
         formattedCorrectRecords: '-',
         isCompleted: false,
-        bankTeamName: recordCorrection.bankTeamName,
-        formattedBankTeamEmails: 'test1@ukexportfinance.gov.uk, test2@ukexportfinance.gov.uk',
+        bankTeamName,
+        bankTeamEmails: recordCorrectionBankTeamEmails,
         additionalInfo: recordCorrection.additionalInfo,
         formattedBankCommentary: '-',
         formattedDateReceived: '-',
         formattedRequestedByUser: `${recordCorrection.requestedByUser.firstName} ${recordCorrection.requestedByUser.lastName}`,
       },
       bankName,
+      reportId,
       reportPeriod,
     };
 

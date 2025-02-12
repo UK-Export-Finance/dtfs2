@@ -2,7 +2,11 @@
 {% import "../_macros/record-correction-status.njk" as recordCorrectionStatus %}
 {% extends "index.njk" %}
 
-{% set backLink = { "href": "/utilisation-reports/" + reportId + "#record-correction-log" } %}
+{% set backLink = { "href": backLinkHref } %}
+
+{% macro span(content, dataCy) %}
+  <span data-cy="{{ dataCy }}">{{ content }}</span>
+{% endmacro %}
 
 {% block pageTitle %}Record correction log{% endblock %}
 
@@ -33,7 +37,7 @@
           text: "Exporter"
         },
         value: {
-          text: correctionDetails.exporter
+          html: span(correctionDetails.exporter, "exporter")
         }
       },
       {
@@ -41,7 +45,7 @@
           text: "Facility ID"
         },
         value: {
-          text: correctionDetails.facilityId
+          html: span(correctionDetails.facilityId, "facility-id")
         }
       },
       {
@@ -49,7 +53,7 @@
           text: "Date sent"
         },
         value: {
-          text: correctionDetails.formattedDateSent
+          html: span(correctionDetails.formattedDateSent, "date-sent")
         }
       },
       {
@@ -57,7 +61,7 @@
           text: "Contact name"
         },
         value: {
-          text: correctionDetails.bankTeamName
+          html: span(correctionDetails.bankTeamName, "contact-name")
         }
       },
       {
@@ -65,7 +69,8 @@
           text: "Contact email address(es)"
         },
         value: {
-          text: correctionDetails.formattedBankTeamEmails
+          html: span((correctionDetails.bankTeamEmails | join(",<br>") | safe), "contact-email-addresses"),
+          classes: "ukef-word-break-break-all"
         }
       },
       {
@@ -73,7 +78,7 @@
           text: "Requested by"
         },
         value: {
-          text: correctionDetails.formattedRequestedByUser
+          html: span(correctionDetails.formattedRequestedByUser, "requested-by")
         }
       },
       {
@@ -81,7 +86,7 @@
           text: "Reason(s) for correction"
         },
         value: {
-          text: correctionDetails.formattedReasons
+          html: span(correctionDetails.formattedReasons, "reasons")
         }
       },
       {
@@ -89,7 +94,7 @@
           text: "Additional information"
         },
         value: {
-          text: correctionDetails.additionalInfo
+          html: span(correctionDetails.additionalInfo , "additional-info")
         }
       },
       {
@@ -97,7 +102,7 @@
           text: "Old record(s)"
         },
         value: {
-          text: correctionDetails.formattedOldRecords
+          html: span(correctionDetails.formattedOldRecords , "old-values")
         }
       },
       {
@@ -105,7 +110,7 @@
           text: "New record"
         },
         value: {
-          text: correctionDetails.formattedCorrectRecords
+          html: span(correctionDetails.formattedCorrectRecords , "new-values")
         }
       },
       {
@@ -113,7 +118,7 @@
           text: "Bank commentary"
         },
         value: {
-          text: correctionDetails.formattedBankCommentary
+          html: span(correctionDetails.formattedBankCommentary , "bank-commentary")
         }
       },
       {
@@ -121,7 +126,7 @@
           text: "Date correction received"
         },
         value: {
-          text: correctionDetails.formattedDateReceived
+          html: span(correctionDetails.formattedDateReceived , "date-received")
         }
       }
     ],

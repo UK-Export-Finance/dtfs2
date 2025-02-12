@@ -16,6 +16,7 @@ const externalApi = require('./controllers/externalApi.controller');
 const files = require('./controllers/files.controller');
 const companies = require('../controllers/companies.controller');
 const { getAmendment } = require('../controllers/amendments/get-amendment.controller');
+const { getFacilityAmendmentsOnDeal } = require('../controllers/amendments/get-amendments-on-deal.controller');
 const { patchAmendment } = require('../controllers/amendments/patch-amendment.controller');
 const { putAmendment } = require('../controllers/amendments/put-amendment.controller');
 const { deleteAmendment } = require('../controllers/amendments/delete-amendment.controller');
@@ -159,5 +160,7 @@ router
     validatePutPortalFacilityAmendmentPayload,
     putAmendment,
   );
+
+router.route('/deals/:dealId/amendments').all(mongoIdValidation('dealId'), handleExpressValidatorResult).get(getFacilityAmendmentsOnDeal);
 
 module.exports = router;
