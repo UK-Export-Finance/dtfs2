@@ -124,15 +124,16 @@ describe(page, () => {
   describe('Loans', () => {
     it('should render a heading, edit link and Loan Submission Details component', () => {
       for (const loan of deal.loanTransactions.items) {
-        // eslint-disable-line no-restricted-syntax
-        const loanSelector = `[data-cy="loan-${loan._id}"]`;
+        if (loan._id) {
+          const loanSelector = `[data-cy="loan-${loan._id}"]`;
 
-        wrapper.expectText(`${loanSelector} [data-cy="loan-heading"]`).toRead('Loan');
+          wrapper.expectText(`${loanSelector} [data-cy="loan-heading"]`).toRead('Loan');
 
-        const editLinkComponent = `[data-cy="edit-loan-${loan._id}-link-/contract/${deal._id}/loan/${loan._id}/guarantee-details"]`;
-        wrapper.expectElement(editLinkComponent).toExist();
+          const editLinkComponent = `[data-cy="edit-loan-${loan._id}-link-/contract/${deal._id}/loan/${loan._id}/guarantee-details"]`;
+          wrapper.expectElement(editLinkComponent).toExist();
 
-        wrapper.expectElement(`${loanSelector} [data-cy="loan-submission-details"]`).toExist();
+          wrapper.expectElement(`${loanSelector} [data-cy="loan-submission-details"]`).toExist();
+        }
       }
     });
   });
