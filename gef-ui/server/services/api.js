@@ -531,5 +531,6 @@ module.exports = {
   getAmendment,
   upsertAmendment,
   updateAmendment,
+  updateAmendmentStatus,
   deleteAmendment,
 };
