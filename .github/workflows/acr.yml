@@ -1,0 +1,110 @@
+name: ACR
+run-name: 🧹Artefacts purge
+
+on:
+  schedule:
+    - cron: '3 0 * * *'
+
+  push:
+    branches:
+      # Manual deployment
+      - dev
+
+env:
+  PRODUCT: dtfs
+  ENVIRONMENT: dev
+  TIMEZONE: ${{ vars.TIMEZONE }}
+
+jobs:
+  # 1. Base actions configrations
+  setup:
+    name: Setup 🔧
+    runs-on: [self-hosted, linux, deployment]
+    outputs:
+      product: ${{ env.PRODUCT }}
+      environment: ${{ steps.environment.outputs.environment }}
+      timezone: ${{ env.TIMEZONE }}
+
+    steps:
+      - name: Environment 🧪
+        id: environment
+        run: |
+          echo "environment=dev" >> "$GITHUB_OUTPUT"
+
+      - name: Timezone 🌐
+        run: echo "Timezone set to ${{ env.TIMEZONE }}"
+
+  # 2. Artefacts purge
+  purge:
+    name: Purge 🗑️
+    needs: [setup]
+    environment: ${{ needs.setup.outputs.environment }}
+    runs-on: [self-hosted, DTFS, deployment]
+    env:
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+
+    strategy:
+      max-parallel: 1
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        acr: ['tfsdev', 'tfsstaging', 'tfsfeatureacrhhpiuy2cio7ma']
+
+    concurrency:
+      group: acr-purge-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.acr }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Repository 🗂️
+        uses: actions/checkout@v4
+
+      - name: Execute ⚡
+        uses: ./.github/actions/acr
+        with:
+          group: ${{ }}
+          acr: ${{ matrix.acr }}
+          days: ${{ vars.ACR_PURGE_NONPROD_DAYS }}
+
+      - name: Notification  🔔
+        uses: ./.github/actions/notify
+        with:
+          title: "🗑️ ${{ matrix.acr }} purge"
+          summary: "Purged artefacts from ${{ matrix.acr }} Azure container registry"
+          sections: {
+            "activityTitle": "Branch deployment",
+            "activitySubtitle": "Deployed **main** branch to **${{ env.ENVIRONMENT }}** DTFS environment.",
+            "facts": [
+                {
+                    "name": "Branch",
+                    "value": "main"
+                },
+                {
+                    "name": "Environment",
+                    "value": "${{ env.ENVIRONMENT }}"
+                },
+                {
+                    "name": "Commit",
+                    "value": "${{ github.sha }}"
+                },
+                {
+                    "name": "Status",
+                    "value": "Successfull"
+                }
+            ],
+            "markdown": true
+                  }
+              ],
+            "potentialAction": [
+              {
+              "@type": "OpenUri",
+              "name": "Deployment",
+                "targets": [
+                  {
+                      "os": "default",
+                      "uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                  }
+                ]
+              }
+            ]
+          }'

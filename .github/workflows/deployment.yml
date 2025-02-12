@@ -166,9 +166,6 @@ jobs:
       WEBHOOK: ${{ secrets.MSTEAMS_WEBHOOK }}
 
     steps:
-      - name: Facts
-        run: |
-
       - name: MS Teams
         run: |
           curl --location '${{ env.WEBHOOK }}' \
@@ -179,8 +176,7 @@ jobs:
           "themeColor": "00703c",
           "title": "🚀 main : ${{ env.ENVIRONMENT }}",
           "summary": "Deployed '\''main'\'' branch to '\''${{ env.ENVIRONMENT }}'\'' DTFS environment",
-          "sections": [
-          {
+          "sections": {
             "activityTitle": "Branch deployment",
             "activitySubtitle": "Deployed **main** branch to **${{ env.ENVIRONMENT }}** DTFS environment.",
             "facts": [
