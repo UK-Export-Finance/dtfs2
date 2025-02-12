@@ -1,9 +1,8 @@
-import { FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, TfmSessionUser } from '@ukef/dtfs2-common';
 import { PRIMARY_NAVIGATION_KEYS } from '../../server/constants';
 import { pageRenderer } from '../pageRenderer';
 import { aTfmSessionUser } from '../../test-helpers/test-data/tfm-session-user';
 import { UtilisationReportReconciliationForReportViewModel } from '../../server/types/view-models';
-import { TfmSessionUser } from '../../server/types/tfm-session-user';
 import { aUtilisationTableRowViewModel } from '../../test-helpers';
 
 const page = '../templates/utilisation-reports/utilisation-report-reconciliation-for-report.njk';

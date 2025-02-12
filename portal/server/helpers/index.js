@@ -20,6 +20,7 @@ const { getBusinessDayOfMonth } = require('./getBusinessDayOfMonth');
 const { getNowAsEpoch } = require('./date');
 const { convertUserFormDataToRequest } = require('./convertUserFormDataToRequest');
 const { getRecordCorrectionCancelLinkHref } = require('./get-record-correction-cancel-link-href');
+const { mapFacilityProperties } = require('./map-facility-properties');
 
 module.exports = {
   isEveryDealFormComplete,
@@ -45,4 +46,5 @@ module.exports = {
   getNowAsEpoch,
   convertUserFormDataToRequest,
   getRecordCorrectionCancelLinkHref,
+  mapFacilityProperties,
 };

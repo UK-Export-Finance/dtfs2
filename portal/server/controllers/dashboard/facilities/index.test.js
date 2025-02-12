@@ -1,4 +1,5 @@
-import { ROLES } from '@ukef/dtfs2-common';
+import { BSS_EWCS_FACILITY_TYPE, GEF_FACILITY_TYPE, FACILITY_STAGE, CURRENCY, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
+import { cloneDeep } from 'lodash';
 import {
   getAllFacilitiesData,
   getTemplateVariables,
@@ -8,7 +9,7 @@ import {
   removeAllFacilitiesFilters,
 } from '.';
 import mockResponse from '../../../helpers/responseMock';
-import { getFlashSuccessMessage } from '../../../helpers';
+import { mapFacilityProperties, getFlashSuccessMessage } from '../../../helpers';
 import api from '../../../api';
 import { dashboardFacilitiesFiltersQuery } from './facilities-filters-query';
 import { submittedFiltersArray, submittedFiltersObject } from '../filters/helpers';
@@ -18,23 +19,70 @@ import { selectedFilters } from './selected-filters';
 import CONSTANTS from '../../../constants';
 
 const { CHECKER, MAKER } = ROLES;
+const mockFacilities = [
+  {
+    _id: '67a9e986dd0c179cf70141da',
+    dealId: '67a9e95add0c179cf70141d8',
+    name: 'ABC',
+    currency: null,
+    value: '1000.00',
+    type: BSS_EWCS_FACILITY_TYPE.LOAN,
+    hasBeenIssued: true,
+    updatedAt: 1739188642683,
+    lowerExporter: '',
+  },
+  {
+    _id: '67a9e95cdd0c179cf70141d9',
+    dealId: '67a9e95add0c179cf70141d8',
+    name: null,
+    currency: null,
+    value: '1000.00',
+    type: BSS_EWCS_FACILITY_TYPE.BOND,
+    hasBeenIssued: false,
+    updatedAt: 1739188612379,
+    lowerExporter: '',
+  },
+  {
+    _id: '67a5ed9c674f4ad7a17e3359',
+    dealId: '67a5ed89674f4ad7a17e3358',
+    submissionType: DEAL_SUBMISSION_TYPE.AIN,
+    name: 'ABC',
+    ukefFacilityId: '0020027639',
+    currency: {
+      id: CURRENCY.GBP,
+    },
+    value: 1000,
+    type: GEF_FACILITY_TYPE.CASH,
+    hasBeenIssued: true,
+    submittedAsIssuedDate: '1738937285806',
+    updatedAt: 1738937285814,
+    exporter: 'TEST LTD',
+    lowerExporter: 'test ltd',
+    facilityStage: FACILITY_STAGE.RISK_EXPIRED,
+  },
+];
+
+// Mock mapFacilityProperties response
+const mockReturn = cloneDeep(mockFacilities);
+mockReturn[0].facilityStage = FACILITY_STAGE.ISSUED;
+mockReturn[1].facilityStage = FACILITY_STAGE.UNISSUED;
+mockReturn[2].facilityStage = FACILITY_STAGE.RISK_EXPIRED;
 
 jest.mock('../../../api', () => ({
   allFacilities: jest.fn(),
 }));
 
-const mockFacilities = [{ _id: 'mockFacility' }, { _id: 'mockFacility2' }];
-
 jest.mock('../../../helpers', () => ({
   __esModule: true,
   getApiData: jest.fn(() => ({
-    count: 2,
+    count: 3,
     facilities: mockFacilities,
   })),
   getFlashSuccessMessage: jest.fn(),
   requestParams: jest.fn(() => ({ userToken: 'mock-token' })),
   isSuperUser: jest.requireActual('../../../helpers').isSuperUser,
   getUserRoles: jest.fn(() => ({ isMaker: true })),
+  mapFacilityProperties: jest.fn(() => mockReturn),
 }));
 
 describe('controllers/dashboard/facilities', () => {
@@ -114,7 +162,7 @@ describe('controllers/dashboard/facilities', () => {
         user: mockReq.session.user,
         primaryNav: CONSTANTS.DASHBOARD.PRIMARY_NAV,
         tab: CONSTANTS.DASHBOARD.TABS.FACILITIES,
-        facilities: mockFacilities,
+        facilities: mapFacilityProperties(mockFacilities),
         pages: expectedPages,
         filters: templateFilters(expectedFiltersObj),
         selectedFilters: selectedFilters(expectedFiltersObj),

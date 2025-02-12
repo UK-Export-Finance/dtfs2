@@ -1,6 +1,6 @@
 import { FeeRecordEntity, FeeRecordCorrectionEntity } from '@ukef/dtfs2-common';
-import { mapCorrectionReasonsToFormattedOldFeeRecordValues } from '../../../../../helpers/map-correction-reasons-to-formatted-old-fee-record-values';
-import { mapCorrectionReasonsAndValuesToFormattedValues } from '../../../../../helpers/map-correction-reasons-and-values-to-formatted-values';
+import { mapCorrectionReasonsToFormattedOldFeeRecordValues } from '../../../../helpers/map-correction-reasons-to-formatted-old-fee-record-values';
+import { mapCorrectionReasonsAndValuesToFormattedValues } from '../../../../helpers/map-correction-reasons-and-values-to-formatted-values';
 
 /**
  * generates formattedOldRecords and formattedCorrectRecords from correction and feeRecord

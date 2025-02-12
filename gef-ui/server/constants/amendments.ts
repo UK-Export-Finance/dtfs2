@@ -10,4 +10,5 @@ export const PORTAL_AMENDMENT_PAGES = {
   CHECK_YOUR_ANSWERS: 'check-your-answers',
   MANUAL_APPROVAL_NEEDED: 'manual-approval-needed',
   CANCEL: 'cancel',
+  SUBMITTED_FOR_CHECKING: 'submitted-for-checking',
 } as const;

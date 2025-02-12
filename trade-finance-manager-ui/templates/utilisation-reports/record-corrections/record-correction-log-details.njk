@@ -1,0 +1,139 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% import "../_macros/record-correction-status.njk" as recordCorrectionStatus %}
+{% extends "index.njk" %}
+
+{% set backLink = { "href": backLinkHref } %}
+
+{% macro span(content, dataCy) %}
+  <span data-cy="{{ dataCy }}">{{ content }}</span>
+{% endmacro %}
+
+{% block pageTitle %}Record correction log{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row" data-cy="record-correction-log-details-page">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+      <div class="govuk-!-padding-top-7">
+          <span class="govuk-caption-l" data-cy="heading-caption">{{ bankName }}, {{ formattedReportPeriod }}</span>
+          <h1 class="govuk-heading-l" data-cy="main-heading">Record correction log</h1>
+      </div>
+    </div>
+    <div>
+      <div class="govuk-grid-column-one-third-from-desktop govuk-!-text-align-right">
+        <div class="govuk-!-padding-top-8">
+          {{ recordCorrectionStatus.render({
+            status: status,
+            displayStatus: displayStatus
+          }) }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{ govukSummaryList({
+    rows: [
+      {
+        key: {
+          text: "Exporter"
+        },
+        value: {
+          html: span(correctionDetails.exporter, "exporter")
+        }
+      },
+      {
+        key: {
+          text: "Facility ID"
+        },
+        value: {
+          html: span(correctionDetails.facilityId, "facility-id")
+        }
+      },
+      {
+        key: {
+          text: "Date sent"
+        },
+        value: {
+          html: span(correctionDetails.formattedDateSent, "date-sent")
+        }
+      },
+      {
+        key: {
+          text: "Contact name"
+        },
+        value: {
+          html: span(correctionDetails.bankTeamName, "contact-name")
+        }
+      },
+      {
+        key: {
+          text: "Contact email address(es)"
+        },
+        value: {
+          html: span((correctionDetails.bankTeamEmails | join(",<br>") | safe), "contact-email-addresses"),
+          classes: "ukef-word-break-break-all"
+        }
+      },
+      {
+        key: {
+          text: "Requested by"
+        },
+        value: {
+          html: span(correctionDetails.formattedRequestedByUser, "requested-by")
+        }
+      },
+      {
+        key: {
+          text: "Reason(s) for correction"
+        },
+        value: {
+          html: span(correctionDetails.formattedReasons, "reasons")
+        }
+      },
+      {
+        key: {
+          text: "Additional information"
+        },
+        value: {
+          html: span(correctionDetails.additionalInfo , "additional-info")
+        }
+      },
+      {
+        key: {
+          text: "Old record(s)"
+        },
+        value: {
+          html: span(correctionDetails.formattedOldRecords , "old-values")
+        }
+      },
+      {
+        key: {
+          text: "New record"
+        },
+        value: {
+          html: span(correctionDetails.formattedCorrectRecords , "new-values")
+        }
+      },
+      {
+        key: {
+          text: "Bank commentary"
+        },
+        value: {
+          html: span(correctionDetails.formattedBankCommentary , "bank-commentary")
+        }
+      },
+      {
+        key: {
+          text: "Date correction received"
+        },
+        value: {
+          html: span(correctionDetails.formattedDateReceived , "date-received")
+        }
+      }
+    ],
+    attributes: {
+      'data-cy': 'summary-list'
+    }
+  }) }}
+
+{% endblock %}
+{% block sub_content %}{% endblock %}

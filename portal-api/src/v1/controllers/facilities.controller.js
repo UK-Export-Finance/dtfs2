@@ -117,6 +117,8 @@ const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize =
           exporter: '$deal.exporter.companyName',
           // exporter in lowercase for sorting
           lowerExporter: { $toLower: '$deal.exporter.companyName' },
+          // Facility stage - specifically used for Risk expired
+          facilityStage: '$facilityStage',
         },
       },
       {

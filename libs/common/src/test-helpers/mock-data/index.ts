@@ -17,3 +17,4 @@ export * from './get-auth-code-url-params';
 export * from './fee-record-correction-transient-form-data.entity.mock-builder';
 export * from './fee-record-correction-request-review-response-body-mock';
 export * from './record-correction-values';
+export * from './record-correction-log-details.mock';
