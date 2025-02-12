@@ -1,6 +1,6 @@
-export type WithTestsForTestCaseProps<Schema, TestCase> = {
+export type WithTestsForTestCaseProps<Schema, T> = {
   schema: Schema;
-  testCase: TestCase;
+  testCase: T;
   getTestObjectWithUpdatedParameter: (newValue: unknown) => unknown;
   getUpdatedParameterFromParsedTestObject: (parsedTestObject: unknown) => unknown;
 };

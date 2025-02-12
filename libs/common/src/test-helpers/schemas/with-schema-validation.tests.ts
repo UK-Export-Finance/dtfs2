@@ -4,7 +4,7 @@ import { withTestsForTestcase } from './tests/with-tests-for-testcase';
 import { SchemaTestOptions } from './types/schema-test-options.type';
 import { TestCaseWithPathParameter } from './types/test-case-with-path-parameter.type';
 import { WithTestsForTestCaseProps } from './types/with-tests-for-test-case';
-import { TestCase } from './test-cases/test-case';
+import { BaseTestCase } from './test-cases/base-test-case';
 
 /**
  * This function orchestrates a schema's test cases.
@@ -67,7 +67,7 @@ import { TestCase } from './test-cases/test-case';
  * }]
  * ```
  */
-export const withSchemaValidationTests = <Schema extends ZodSchema, T extends TestCase>({
+export const withSchemaValidationTests = <Schema extends ZodSchema, T extends BaseTestCase>({
   schema,
   schemaTestOptions = {},
   aValidPayload,

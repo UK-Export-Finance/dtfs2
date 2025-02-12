@@ -3,10 +3,12 @@ import z from 'zod';
 import { generatePortalUserAuditDatabaseRecord } from '../change-stream';
 import { UPDATE } from './portal-user.schema';
 import { withSchemaValidationTests } from '../test-helpers';
+import { withTestsForBackendTestcase } from '../test-helpers/schemas/backend-tests/with-tests-for-backend-testcase';
 
 describe('PORTAL_USER', () => {
   describe('UPDATE', () => {
     withSchemaValidationTests({
+      withTestsForTestCases: withTestsForBackendTestcase,
       schema: UPDATE,
       schemaTestOptions: {
         isPartial: true,

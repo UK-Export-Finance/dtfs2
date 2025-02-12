@@ -1,18 +1,18 @@
 import { ZodSchema } from 'zod';
-import { BackendTestCase } from '../backend-test-cases/backend-test-cases';
 import { withObjectIdSchemaTests } from '../backend-custom-types-tests/with-object-id-schema.tests';
 import { withObjectIdStringSchemaTests } from '../backend-custom-types-tests/with-object-id-string-schema.tests';
 import { withObjectIdOrObjectIdStringSchemaTests } from '../backend-custom-types-tests/with-object-id-or-object-id-string-schema.tests';
 import { withAuditDatabaseRecordSchemaTests } from '../backend-schema-tests';
 import { WithTestsForTestCaseProps } from '../types/with-tests-for-test-case';
 import { withTestsForTestcase } from '../tests/with-tests-for-testcase';
+import { BaseTestCase } from '../test-cases/base-test-case';
 
 /**
  * Gets tests for a test case, using the test case type to determine which tests to run
  *
  * These tests are all available tests that can be easily used to test a parameter, and should be extended
  */
-export const withTestsForBackendTestcase = <Schema extends ZodSchema>(props: WithTestsForTestCaseProps<Schema, BackendTestCase>): void => {
+export const withTestsForBackendTestcase = <Schema extends ZodSchema>(props: WithTestsForTestCaseProps<Schema, BaseTestCase>): void => {
   const { schema, testCase, getTestObjectWithUpdatedParameter, getUpdatedParameterFromParsedTestObject } = props;
   const { type, options } = testCase;
 
