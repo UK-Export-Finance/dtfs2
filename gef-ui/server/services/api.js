@@ -353,10 +353,10 @@ const downloadFile = async ({ fileId, userToken }) => {
 };
 
 /**
- * @param {Object} - param
- * @param {string} - param.facilityId
- * @param {string} - param.amendmentId
- * @param {string} - param.userToken
+ * @param {Object} param
+ * @param {string} param.facilityId
+ * @param {string} param.amendmentId
+ * @param {string} param.userToken
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}
  */
 const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
@@ -441,11 +441,11 @@ const upsertAmendment = async ({ facilityId, dealId, amendment, userToken }) => 
 };
 
 /**
- * @param {Object} -  param
- * @param {string} -  param.facilityId
- * @param {string} -  param.amendmentId
- * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} - param.update
- * @param {string} -  param.userToken
+ * @param {Object} param
+ * @param {string} param.facilityId
+ * @param {string} param.amendmentId
+ * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} param.update
+ * @param {string} param.userToken
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}
  */
 const updateAmendment = async ({ facilityId, amendmentId, update, userToken }) => {
@@ -473,11 +473,11 @@ const updateAmendment = async ({ facilityId, amendmentId, update, userToken }) =
 };
 
 /**
- * @param {Object} - param
- * @param {string} - param.facilityId
- * @param {string} - param.amendmentId
- * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus} - param.newStatus
- * @param {string} - param.userToken
+ * @param {Object} param
+ * @param {string} param.facilityId
+ * @param {string} param.amendmentId
+ * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus} param.newStatus
+ * @param {string} param.userToken
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}
  */
 const updateAmendmentStatus = async ({ facilityId, amendmentId, newStatus, userToken }) => {
