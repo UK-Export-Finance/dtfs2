@@ -87,8 +87,6 @@ describe('getKeyingSheetForReportId', () => {
       .withFacilityId('11111111')
       .withExporter('Test exporter 1')
       .withBaseCurrency(CURRENCY.GBP)
-      .withFixedFeeAdjustment(1234.56)
-      .withPrincipalBalanceAdjustment(9876543.21)
       .build();
 
     const joinTableEntities = [aFeeRecordPaymentJoinTableEntityWith({ feeRecord, payment, paymentAmountUsedForFeeRecord: 1 })];

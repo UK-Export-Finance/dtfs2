@@ -34,8 +34,6 @@ export class FeeRecordEntityMockBuilder {
     data.status = FEE_RECORD_STATUS.TO_DO;
     data.payments = [];
     data.corrections = [];
-    data.fixedFeeAdjustment = null;
-    data.principalBalanceAdjustment = null;
     data.reconciledByUserId = null;
     data.dateReconciled = null;
     data.updateLastUpdatedBy(requestSource);
@@ -114,16 +112,6 @@ export class FeeRecordEntityMockBuilder {
 
   public withCorrections(corrections: FeeRecordCorrectionEntity[]): FeeRecordEntityMockBuilder {
     this.feeRecord.corrections = corrections;
-    return this;
-  }
-
-  public withFixedFeeAdjustment(fixedFeeAdjustment: number | null): FeeRecordEntityMockBuilder {
-    this.feeRecord.fixedFeeAdjustment = fixedFeeAdjustment;
-    return this;
-  }
-
-  public withPrincipalBalanceAdjustment(principalBalanceAdjustment: number | null): FeeRecordEntityMockBuilder {
-    this.feeRecord.principalBalanceAdjustment = principalBalanceAdjustment;
     return this;
   }
 

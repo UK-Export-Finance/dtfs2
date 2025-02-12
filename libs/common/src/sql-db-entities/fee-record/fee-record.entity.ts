@@ -118,18 +118,6 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   payments!: PaymentEntity[];
 
   /**
-   * The keying sheet fixed fee adjustment
-   */
-  @MonetaryColumn({ nullable: true })
-  fixedFeeAdjustment!: number | null;
-
-  /**
-   * The keying sheet principal balance adjustment
-   */
-  @MonetaryColumn({ nullable: true })
-  principalBalanceAdjustment!: number | null;
-
-  /**
    * The user who reconciled the fee record
    */
   @Column({ type: 'nvarchar', length: 255, nullable: true })
@@ -188,8 +176,6 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     feeRecord.report = report;
     feeRecord.updateLastUpdatedBy(requestSource);
     feeRecord.payments = [];
-    feeRecord.fixedFeeAdjustment = null;
-    feeRecord.principalBalanceAdjustment = null;
     feeRecord.reconciledByUserId = null;
     feeRecord.dateReconciled = null;
     return feeRecord;
