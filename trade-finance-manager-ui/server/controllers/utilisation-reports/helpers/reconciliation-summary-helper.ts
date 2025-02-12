@@ -65,7 +65,7 @@ export const getReportPeriodHeading = (submissionMonth: IsoMonthStamp) => {
   const formattedReportPeriodEnd = format(reportPeriodEnd, 'MMMM yyyy');
 
   return `${
-    isCurrentSubmissionMonth ? BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.CURRENT_PERIOD_END : BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.OPEN_PERIOD_END
+    isCurrentSubmissionMonth ? BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.CURRENT_PERIOD : BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.OPEN_PERIOD
   }: ${formattedReportPeriodEnd}`;
 };
 
