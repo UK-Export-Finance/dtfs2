@@ -8,16 +8,15 @@ import { patchAmendmentStatus, PatchSubmitAmendmentToCheckerRequest } from './pa
 
 const amendmentId = 'amendmentId';
 const facilityId = 'facilityId';
-const dealId = 'dealId';
 
-const mockUpdatedAmendment = { facilityId, dealId, type: AMENDMENT_TYPES.PORTAL, status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL };
+const mockUpdatedAmendment = { facilityId, type: AMENDMENT_TYPES.PORTAL, status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL };
 
 const mockSubmitPortalFacilityAmendmentToChecker = jest.fn();
 
 const generateHttpMocks = ({ auditDetails, newStatus }: { auditDetails: unknown; newStatus: string }) =>
   createMocks<PatchSubmitAmendmentToCheckerRequest>({
     params: { facilityId, amendmentId },
-    body: { auditDetails, dealId, newStatus },
+    body: { auditDetails, newStatus },
   });
 
 describe('patchAmendmentStatus', () => {
@@ -76,7 +75,7 @@ describe('patchAmendmentStatus', () => {
       // Assert
 
       expect(mockSubmitPortalFacilityAmendmentToChecker).toHaveBeenCalledTimes(1);
-      expect(mockSubmitPortalFacilityAmendmentToChecker).toHaveBeenCalledWith({ facilityId, amendmentId, dealId, auditDetails });
+      expect(mockSubmitPortalFacilityAmendmentToChecker).toHaveBeenCalledWith({ facilityId, amendmentId, auditDetails });
     });
 
     it(`should return ${HttpStatusCode.Ok} and the updated amendment`, async () => {

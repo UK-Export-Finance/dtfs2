@@ -18,14 +18,14 @@ export type PatchSubmitAmendmentToCheckerRequest = CustomExpressRequest<{
  */
 export const patchAmendmentStatus = async (req: PatchSubmitAmendmentToCheckerRequest, res: Response) => {
   const { facilityId, amendmentId } = req.params;
-  const { auditDetails, dealId, newStatus } = req.body;
+  const { auditDetails, newStatus } = req.body;
 
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.PORTAL);
 
     switch (newStatus) {
       case PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL: {
-        const updatedAmendment = await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({ facilityId, amendmentId, dealId, auditDetails });
+        const updatedAmendment = await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({ facilityId, amendmentId, auditDetails });
         return res.status(HttpStatusCode.Ok).send(updatedAmendment);
       }
       default: {

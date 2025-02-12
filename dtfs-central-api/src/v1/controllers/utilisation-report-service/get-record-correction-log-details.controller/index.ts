@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { HttpStatusCode } from 'axios';
-import { GetRecordCorrectionLogDetailsResponse } from '@ukef/dtfs2-common';
+import { GetRecordCorrectionLogDetailsResponse, GetRecordCorrectionLogDetailsResponseBody } from '@ukef/dtfs2-common';
 import { FeeRecordCorrectionRepo } from '../../../../repositories/fee-record-correction-repo';
 import { getRecordCorrectionFields } from '../helpers/get-record-correction-fields';
 import { getBankNameById } from '../../../../repositories/banks-repo';
@@ -41,14 +41,16 @@ export const getRecordCorrectionLogDetails = async (req: Request, res: GetRecord
       formattedCorrectRecords,
       bankTeamName,
       isCompleted,
-      formattedBankTeamEmails,
+      bankTeamEmails,
       additionalInfo,
       formattedBankCommentary,
       formattedDateReceived,
       formattedRequestedByUser,
     } = getRecordCorrectionFields(correction.feeRecord, correction);
 
-    const responseObject = {
+    const { id: reportId } = correction.feeRecord.report;
+
+    const responseObject: GetRecordCorrectionLogDetailsResponseBody = {
       correctionDetails: {
         facilityId,
         exporter,
@@ -58,13 +60,14 @@ export const getRecordCorrectionLogDetails = async (req: Request, res: GetRecord
         formattedCorrectRecords,
         bankTeamName,
         isCompleted,
-        formattedBankTeamEmails,
+        bankTeamEmails,
         additionalInfo,
         formattedBankCommentary,
         formattedDateReceived,
         formattedRequestedByUser,
       },
       bankName,
+      reportId,
       reportPeriod: correction.feeRecord.report.reportPeriod,
     };
 

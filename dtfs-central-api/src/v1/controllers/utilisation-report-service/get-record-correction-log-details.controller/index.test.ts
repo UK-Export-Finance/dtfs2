@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { FeeRecordCorrectionEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FeeRecordCorrectionEntityMockBuilder, GetRecordCorrectionLogDetailsResponseBody } from '@ukef/dtfs2-common';
 import { getRecordCorrectionLogDetails } from '.';
 import { FeeRecordCorrectionRepo } from '../../../../repositories/fee-record-correction-repo';
 import { getRecordCorrectionFields } from '../helpers/get-record-correction-fields';
@@ -23,6 +23,7 @@ describe('get-record-correction-log-details.controller', () => {
 
   const findRecordCorrectionSpy = jest.spyOn(FeeRecordCorrectionRepo, 'findOneByIdWithFeeRecordAndReport');
   const feeRecordCorrectionEntity = FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).withDateRequested(today).build();
+  const reportId = feeRecordCorrectionEntity.feeRecord.report.id;
 
   beforeEach(() => {
     findRecordCorrectionSpy.mockResolvedValue(null);
@@ -94,14 +95,14 @@ describe('get-record-correction-log-details.controller', () => {
         formattedCorrectRecords,
         bankTeamName,
         isCompleted,
-        formattedBankTeamEmails,
+        bankTeamEmails,
         additionalInfo,
         formattedBankCommentary,
         formattedDateReceived,
         formattedRequestedByUser,
       } = getRecordCorrectionFields(feeRecordCorrectionEntity.feeRecord, feeRecordCorrectionEntity);
 
-      const expected = {
+      const expected: GetRecordCorrectionLogDetailsResponseBody = {
         correctionDetails: {
           facilityId,
           exporter,
@@ -111,13 +112,14 @@ describe('get-record-correction-log-details.controller', () => {
           formattedCorrectRecords,
           bankTeamName,
           isCompleted,
-          formattedBankTeamEmails,
+          bankTeamEmails,
           additionalInfo,
           formattedBankCommentary,
           formattedDateReceived,
           formattedRequestedByUser,
         },
         bankName,
+        reportId,
         reportPeriod: feeRecordCorrectionEntity.feeRecord.report.reportPeriod,
       };
 

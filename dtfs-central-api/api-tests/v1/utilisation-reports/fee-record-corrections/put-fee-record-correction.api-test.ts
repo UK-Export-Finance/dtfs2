@@ -1,6 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'supertest';
 import {
+  anEmptyRecordCorrectionTransientFormData,
   FEE_RECORD_STATUS,
   FeeRecordCorrectionEntity,
   FeeRecordCorrectionEntityMockBuilder,
@@ -93,7 +94,10 @@ describe(`PUT ${BASE_URL}`, () => {
     const formData = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()
       .withCorrectionId(correctionId)
       .withUserId(userId)
-      .withFormData({ facilityId: correctFacilityId })
+      .withFormData({
+        ...anEmptyRecordCorrectionTransientFormData(),
+        facilityId: correctFacilityId,
+      })
       .build();
 
     await SqlDbHelper.saveNewEntry('FeeRecordCorrectionTransientFormData', formData);

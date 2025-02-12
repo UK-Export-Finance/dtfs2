@@ -1,5 +1,6 @@
 import { HttpStatusCode } from 'axios';
 import {
+  anEmptyRecordCorrectionTransientFormData,
   Bank,
   CURRENCY,
   FEE_RECORD_STATUS,
@@ -124,6 +125,7 @@ describe(`GET ${BASE_URL}`, () => {
     await SqlDbHelper.saveNewEntry('FeeRecordCorrection', feeRecordCorrectionEntity);
 
     const formData: RecordCorrectionTransientFormData = {
+      ...anEmptyRecordCorrectionTransientFormData(),
       facilityId: '77777777',
       reportedCurrency: CURRENCY.USD,
       additionalComments: 'Some additional bank comments',

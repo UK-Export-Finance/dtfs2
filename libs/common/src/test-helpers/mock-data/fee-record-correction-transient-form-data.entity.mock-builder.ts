@@ -1,5 +1,6 @@
 import { FeeRecordCorrectionTransientFormDataEntity } from '../../sql-db-entities';
 import { RecordCorrectionTransientFormData } from '../../types';
+import { anEmptyRecordCorrectionTransientFormData } from '../record-correction-transient-form-data';
 
 export class FeeRecordCorrectionTransientFormDataEntityMockBuilder {
   private readonly transientFormData: FeeRecordCorrectionTransientFormDataEntity;
@@ -10,6 +11,7 @@ export class FeeRecordCorrectionTransientFormDataEntityMockBuilder {
     data.userId = 'abc123';
     data.correctionId = 123;
     data.formData = {
+      ...anEmptyRecordCorrectionTransientFormData(),
       utilisation: 10000,
     };
 
