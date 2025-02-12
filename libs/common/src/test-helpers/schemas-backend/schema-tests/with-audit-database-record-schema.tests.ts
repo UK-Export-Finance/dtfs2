@@ -1,9 +1,9 @@
 import { ZodSchema } from 'zod';
 import { ObjectId } from 'mongodb';
-import { WithSchemaTestParams } from '../with-schema-test.type';
+import { WithSchemaTestParams } from '../../schemas/with-schema-test.type';
 import { generateTfmUserAuditDatabaseRecord } from '../../../change-stream';
-import { withSchemaValidationTests } from '../with-schema-validation.tests';
-import { withDefaultOptionsTests } from '../primitive-types-tests/with-default-options.tests';
+import { withSchemaValidationTests } from '../../schemas/with-schema-validation.tests';
+import { withDefaultOptionsTests } from '../../schemas/primitive-types-tests/with-default-options.tests';
 
 export const withAuditDatabaseRecordSchemaTests = <Schema extends ZodSchema>({
   schema,

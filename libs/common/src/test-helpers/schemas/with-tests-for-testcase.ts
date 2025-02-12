@@ -3,15 +3,12 @@ import {
   withUnixTimestampMillisecondsSchemaTests,
   withUnixTimestampSecondsSchemaTests,
   withUnixTimestampSchemaTests,
-  withObjectIdSchemaTests,
-  withObjectIdStringSchemaTests,
-  withObjectIdOrObjectIdStringSchemaTests,
   withIsoDateTimeStampSchemaTests,
   withTfmTeamSchemaTests,
   withCurrencySchemaTests,
 } from './custom-types-tests';
 import { withStringTests, withNumberTests, withBooleanTests, withArrayTests } from './primitive-types-tests';
-import { withAuditDatabaseRecordSchemaTests, withEntraIdUserSchemaTests, withUpsertTfmUserRequestSchemaTests } from './schema-tests';
+import { withEntraIdUserSchemaTests, withUpsertTfmUserRequestSchemaTests } from './schema-tests';
 import { TestCase } from './with-test-for-test-case.type';
 import { withIsoDateTimeStampToDateSchemaTests } from './transformation-tests';
 
@@ -106,44 +103,8 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
       });
       break;
 
-    case 'OBJECT_ID_SCHEMA':
-      withObjectIdSchemaTests({
-        schema,
-        options,
-        getTestObjectWithUpdatedParameter,
-        getUpdatedParameterFromParsedTestObject,
-      });
-      break;
-
-    case 'OBJECT_ID_STRING_SCHEMA':
-      withObjectIdStringSchemaTests({
-        schema,
-        options,
-        getTestObjectWithUpdatedParameter,
-        getUpdatedParameterFromParsedTestObject,
-      });
-      break;
-
-    case 'OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA':
-      withObjectIdOrObjectIdStringSchemaTests({
-        schema,
-        options,
-        getTestObjectWithUpdatedParameter,
-        getUpdatedParameterFromParsedTestObject,
-      });
-      break;
-
     case 'ISO_DATE_TIME_STAMP_SCHEMA':
       withIsoDateTimeStampSchemaTests({
-        schema,
-        options,
-        getTestObjectWithUpdatedParameter,
-        getUpdatedParameterFromParsedTestObject,
-      });
-      break;
-
-    case 'AUDIT_DATABASE_RECORD_SCHEMA':
-      withAuditDatabaseRecordSchemaTests({
         schema,
         options,
         getTestObjectWithUpdatedParameter,
