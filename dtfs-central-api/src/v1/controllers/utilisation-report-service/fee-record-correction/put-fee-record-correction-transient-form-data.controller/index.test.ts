@@ -1,6 +1,7 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
 import {
+  anEmptyRecordCorrectionTransientFormData,
   CURRENCY,
   FeeRecordCorrectionEntityMockBuilder,
   FeeRecordCorrectionTransientFormDataEntity,
@@ -16,6 +17,7 @@ import { putFeeRecordCorrectionTransientFormData, PutFeeRecordCorrectionTransien
 import { FeeRecordCorrectionRepo } from '../../../../../repositories/fee-record-correction-repo';
 import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
 import { PutFeeRecordCorrectionTransientFormDataPayload } from '../../../../routes/middleware/payload-validation';
+import { TfmFacilitiesRepo } from '../../../../../repositories/tfm-facilities-repo';
 
 jest.mock('../../../../../repositories/fee-record-correction-repo');
 jest.mock('../../../../../repositories/fee-record-correction-transient-form-data-repo');
@@ -30,12 +32,19 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
     const userId = new ObjectId().toString();
 
     const additionalComments = 'Some additional comments';
-    const formData = { reportedCurrency: CURRENCY.EUR, reportedFee: '123.45', utilisation: '10,000.23', additionalComments };
+    const formData = {
+      reportedCurrency: CURRENCY.EUR,
+      reportedFee: '123.45',
+      utilisation: '10,000.23',
+      facilityId: '11111111',
+      additionalComments,
+    };
 
     const validatedFormData = {
       utilisation: getMonetaryValueAsNumber(formData.utilisation),
       reportedCurrency: formData.reportedCurrency,
       reportedFee: getMonetaryValueAsNumber(formData.reportedFee),
+      facilityId: formData.facilityId,
       additionalComments,
     };
 
@@ -48,6 +57,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
 
     const mockFindCorrection = jest.fn();
     const mockSaveTransientFormData = jest.fn();
+    const mockUkefGefFacilityExists = jest.fn();
 
     let req: PutFeeRecordCorrectionTransientFormDataRequest;
     let res: MockResponse<Response>;
@@ -56,6 +66,8 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
       FeeRecordCorrectionRepo.findByIdAndBankId = mockFindCorrection;
 
       FeeRecordCorrectionTransientFormDataRepo.save = mockSaveTransientFormData;
+
+      TfmFacilitiesRepo.ukefGefFacilityExists = mockUkefGefFacilityExists;
 
       req = httpMocks.createRequest<PutFeeRecordCorrectionTransientFormDataRequest>({
         params: aValidRequestQuery(),
@@ -99,10 +111,13 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
           RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT,
           RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT,
           RECORD_CORRECTION_REASON.UTILISATION_INCORRECT,
+          RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT,
           RECORD_CORRECTION_REASON.OTHER,
         ];
 
         mockFindCorrection.mockResolvedValue(FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).withReasons(correctionReasons).build());
+
+        mockUkefGefFacilityExists.mockResolvedValue(false);
 
         req.body.formData = {
           reportedCurrency: CURRENCY.GBP,
@@ -117,6 +132,7 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
         expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
 
         const expectedValidationErrors: RecordCorrectionFormValueValidationErrors = {
+          facilityIdErrorMessage: 'You must enter a facility ID between 8 and 10 digits using the numbers 0-9 only',
           reportedFeeErrorMessage: 'You must enter the reported fee in a valid format',
           utilisationErrorMessage: 'You must enter the utilisation in a valid format',
           additionalCommentsErrorMessage: 'You must enter a comment',
@@ -148,10 +164,13 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
           RECORD_CORRECTION_REASON.UTILISATION_INCORRECT,
           RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT,
           RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT,
+          RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT,
           RECORD_CORRECTION_REASON.OTHER,
         ];
 
         mockFindCorrection.mockResolvedValue(FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).withReasons(correctionReasons).build());
+
+        mockUkefGefFacilityExists.mockResolvedValue(true);
 
         const expectedTransientFormDataEntity = FeeRecordCorrectionTransientFormDataEntity.create({
           userId,
@@ -186,6 +205,43 @@ describe('put-fee-record-correction-transient-form-data.controller', () => {
 
         // Assert
         expect(res._getData()).toEqual({});
+      });
+
+      it(`should save an empty "additional comments" form value as null`, async () => {
+        // Arrange
+        const correctionReasons = [RECORD_CORRECTION_REASON.REPORTED_CURRENCY_INCORRECT];
+
+        mockFindCorrection.mockResolvedValue(FeeRecordCorrectionEntityMockBuilder.forIsCompleted(false).withReasons(correctionReasons).build());
+
+        const reportedCurrency = CURRENCY.GBP;
+
+        req.body.formData = {
+          additionalComments: '',
+          reportedCurrency,
+        };
+
+        const expectedFormData = {
+          ...anEmptyRecordCorrectionTransientFormData(),
+          additionalComments: null,
+          reportedCurrency,
+        };
+
+        const expectedTransientFormDataEntity = FeeRecordCorrectionTransientFormDataEntity.create({
+          userId,
+          correctionId,
+          formData: expectedFormData,
+          requestSource: {
+            platform: REQUEST_PLATFORM_TYPE.PORTAL,
+            userId,
+          },
+        });
+
+        // Act
+        await putFeeRecordCorrectionTransientFormData(req, res);
+
+        // Assert
+        expect(mockSaveTransientFormData).toHaveBeenCalledTimes(1);
+        expect(mockSaveTransientFormData).toHaveBeenCalledWith(expectedTransientFormDataEntity);
       });
     });
 

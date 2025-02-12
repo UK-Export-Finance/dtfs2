@@ -12,7 +12,6 @@ export type PatchAmendmentRequest = CustomExpressRequest<{
   reqBody: {
     update: PortalFacilityAmendmentUserValues;
   };
-  query: { dealId: string };
 }>;
 
 /**

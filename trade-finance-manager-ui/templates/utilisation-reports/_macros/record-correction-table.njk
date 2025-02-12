@@ -19,7 +19,14 @@
 
         <tr class="govuk-table__row" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}">
           <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-date-sent">{{ recordCorrectionRow.dateSent }}</td>
-          <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-exporter">{{ recordCorrectionRow.exporter }}</td>
+          <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-exporter">
+            <a
+              href="/utilisation-reports/record-correction-log-details/{{ recordCorrectionRow.correctionId }}"
+              data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-details-link"
+            >
+              {{ recordCorrectionRow.exporter }}
+            </a>
+          </td>
           <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-reasons">{{ recordCorrectionRow.reasons }}</td>
           <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-correct-record">{{ recordCorrectionRow.formattedCorrectRecords }}</td>
           <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-old-record">{{ recordCorrectionRow.formattedOldRecords }}</td>

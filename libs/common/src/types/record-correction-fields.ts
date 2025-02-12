@@ -9,7 +9,7 @@ export type RecordCorrectionFields = {
   formattedCorrectRecords: string;
   isCompleted: boolean;
   bankTeamName: string;
-  formattedBankTeamEmails: string;
+  bankTeamEmails: string[];
   additionalInfo: string;
   formattedBankCommentary: string;
   formattedDateReceived: string;
