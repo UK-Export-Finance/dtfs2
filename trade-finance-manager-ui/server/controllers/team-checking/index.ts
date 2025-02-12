@@ -22,6 +22,7 @@ export const renderTeamsChecker = (req: Request, res: Response, { teamCombinatio
   const isUserInTeam = !!currentPageTeamRestrictions && userIsInTeam(user, currentPageTeamRestrictions.teams);
 
   const teamCheckingPageViewModel: TeamCheckingPageViewModel = {
+    user,
     currentUserTeams: user.teams,
     currentPageTeamRestrictions,
     isUserInTeam,

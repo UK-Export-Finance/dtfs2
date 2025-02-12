@@ -25,6 +25,6 @@ router.use('/thank-you-feedback', thankYouFeedbackRoutes);
 router.use('/user', userRoutes);
 router.use('/utilisation-reports', validateUser, utilisationReportsRoutes);
 router.use('/', footerRoutes);
-router.use('/team-checking', teamCheckingRoutes);
+router.use('/team-checking', validateUser, teamCheckingRoutes);
 
 module.exports = router;

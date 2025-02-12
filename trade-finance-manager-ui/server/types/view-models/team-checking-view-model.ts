@@ -1,4 +1,4 @@
-import { TeamId } from '@ukef/dtfs2-common';
+import { TeamId, TfmSessionUser } from '@ukef/dtfs2-common';
 import { TeamToCheck } from '../../helpers/team-checking.helper';
 
 /**
@@ -7,6 +7,7 @@ import { TeamToCheck } from '../../helpers/team-checking.helper';
  * as well as the current user's teams and whether they are in the current team.
  */
 export type TeamCheckingPageViewModel = {
+  user: TfmSessionUser;
   currentUserTeams: TeamId[];
   currentPageTeamRestrictions?: TeamToCheck;
   isUserInTeam: boolean;
