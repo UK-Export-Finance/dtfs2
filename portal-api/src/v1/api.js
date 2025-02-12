@@ -625,6 +625,28 @@ const getPortalFacilityAmendment = async (facilityId, amendmentId) => {
 };
 
 /**
+ * Gets portal facility amendments on the deal filtered by status
+ * @param {string} dealId - id of the facility to amend
+ * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus[] | undefined} statuses - an optional array of statuses to filter the amendments by
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId[])>} - the amendments on the deal with a matching status
+ */
+const getPortalFacilityAmendmentsOnDeal = async (dealId, statuses) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/amendments`,
+      params: { statuses },
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error getting portal facility amendments on deal with id %s: %o', dealId, error);
+    throw error;
+  }
+};
+
+/**
  * Upserts a draft amendment for a portal facility in the database.
  * @param {Object} params
  * @param {string} params.dealId - id of the deal with the relevant facility.
@@ -808,6 +830,7 @@ module.exports = {
   saveFeeRecordCorrection,
   getFeeRecordCorrectionTransientFormData,
   getPortalFacilityAmendment,
+  getPortalFacilityAmendmentsOnDeal,
   putPortalFacilityAmendment,
   getFeeRecordCorrectionReview,
   patchPortalFacilityAmendment,
