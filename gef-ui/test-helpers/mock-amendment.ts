@@ -6,7 +6,6 @@ import {
   UnixTimestampSeconds,
   PortalAmendmentStatus,
   UnixTimestampMilliseconds,
-  PortalAmendmentStatus,
 } from '@ukef/dtfs2-common';
 import { getUnixTime } from 'date-fns';
 
