@@ -12,6 +12,7 @@ import {
 import { generateSystemAuditDetails, generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
 import { TFM_SESSION_USER_SCHEMA } from '@ukef/dtfs2-common/schemas';
+import { HttpStatusCode } from 'axios';
 import { aHandleRedirectResponse, anUpsertTfmUserFromEntraIdUserResponse } from '../../../test-helpers';
 import { EntraIdServiceMockBuilder, UserServiceMockBuilder } from '../__mocks__/builders';
 import { EntraIdService, HandleRedirectResponse } from '../services/entra-id.service';
@@ -59,12 +60,12 @@ describe('SsoController', () => {
           }));
         });
 
-        it('should return a 400 with error details', async () => {
+        it(`should return a ${HttpStatusCode.BadRequest} with error details`, async () => {
           // Act
           await ssoController.handleSsoRedirectForm(req, res);
 
           // Assert
-          expect(res._getStatusCode()).toEqual(400);
+          expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
           expect(res._getData()).toEqual({
             status: 400,
             message: "Failed to handle redirect form: Supplied auditDetails 'userType' must be 'system' (was 'tfm')",
@@ -270,7 +271,7 @@ describe('SsoController', () => {
                 saveUserLoginInformationMock.mockResolvedValue(undefined);
               });
 
-              it('should return a 200 with the user, token, expires and successRedirect', async () => {
+              it(`should return a ${HttpStatusCode.Ok} with the user, token, expires and successRedirect`, async () => {
                 // Arrange
                 const expectedResponse = {
                   user: TFM_SESSION_USER_SCHEMA.parse(upsertTfmUserFromEntraIdUserResponse),
@@ -283,7 +284,7 @@ describe('SsoController', () => {
                 await ssoController.handleSsoRedirectForm(req, res);
 
                 // Assert
-                expect(res._getStatusCode()).toEqual(200);
+                expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
                 expect(res._getData()).toEqual(expectedResponse);
               });
             });

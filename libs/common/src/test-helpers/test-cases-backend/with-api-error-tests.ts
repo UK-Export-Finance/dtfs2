@@ -54,7 +54,7 @@ export const withApiErrorTests = ({ mockAnError, makeRequest, getRes, endpointEr
     });
 
     describe('when a non-api error is thrown', () => {
-      it('should return a 500 with a generic error message', async () => {
+      it(`should return a ${HttpStatusCode.InternalServerError} with a generic error message`, async () => {
         // Arrange
         const errorMessage = 'a message that should not be exposed';
 
