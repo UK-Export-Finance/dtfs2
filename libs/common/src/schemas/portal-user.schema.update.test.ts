@@ -108,10 +108,10 @@ describe('PORTAL_USER', () => {
 
 function aValidPayload(): z.infer<typeof UPDATE> {
   return {
-    username: 'HSBC-maker-1',
+    username: 'maker-1',
     firstname: 'Mister',
     surname: 'One',
-    email: 'one@email.com',
+    email: 'one@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['maker'],
     bank: {

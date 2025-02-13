@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { BaseMockBuilder, EntraIdUser, UpsertTfmUserRequest } from '@ukef/dtfs2-common';
 import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import { UpsertTfmUserFromEntraIdUserResponse, UserService } from '../../services/user.service';

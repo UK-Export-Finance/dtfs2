@@ -1,7 +1,7 @@
 import relative from '../../../relativeURL';
 import CONSTANTS from '../../../../fixtures/constants';
 import { fourDaysAgo, tomorrow, threeDaysAgo, threeMonths, threeMonthsOneDay, twoMonths, twentyEightDays } from '../../../../../../e2e-fixtures/dateConstants';
-import { MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
+import { MOCK_APPLICATION_MIA_DRAFT, MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 import { mainHeading, errorSummary } from '../../../partials';
@@ -27,7 +27,7 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
       .then(() => {
         cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
           dealId = body._id;
-          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
+          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA_DRAFT).then(() => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               facilityOneId = facility.body.details._id;
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
@@ -41,7 +41,10 @@ context('Unissued Facilities MIN - about unissued facility page', () => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
             );
-            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
+            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF).then(() => {
+              cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN);
+              cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
+            });
           });
         });
       });

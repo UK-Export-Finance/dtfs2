@@ -1,0 +1,218 @@
+# Deployment Workflow
+# *******************
+#
+# This GitHub Actions workflow automates the deployment process for web apps and Azure Functions to Azure.
+# completion and includes the following key steps:
+#
+# Key Stages:
+# 1. Setup: Configures environment variables for the product, environment, and timezone.
+# 2. SQL Database Migration: Deploys any new SQL migrations to the environment's SQL database.
+# 3. WebApp Deployment: Sequentially deploys a list of web apps defined in the matrix (`portal-ui`, `gef-ui`, etc.) to Azure.
+# 4. Function Deployment: Sequentially deploys a list of functions (e.g., `acbs-function`) to Azure.
+#
+# Key Points:
+# - The workflow runs only after a successful QAT workflow.
+# - The deployment environment is specified via environment variables (e.g., `dev`, `feature`, `staging`, `prod`).
+# - Matrix strategies are used for iterative deployment across multiple web apps and functions.
+# - Temporary deployment slots are used to minimize downtime during deployments.
+# - The workflow uses concurrency control to ensure that multiple deployments do not run simultaneously for the same app/function.
+#
+# Triggers: This workflow is triggered by a push to the specified branch.
+#
+# Environment Variables:
+# - `PRODUCT`: The product being deployed (e.g., `dtfs`).
+# - `ENVIRONMENT`: The environment where the deployment occurs (e.g., `feature`).
+# - `TIMEZONE`: The timezone for deployment logging and scheduling.
+
+name: Deployment
+run-name: 🚀 Deploying to feature
+
+on:
+  push:
+    branches:
+      # Manual deployment
+      - release-2.7
+
+env:
+  PRODUCT: dtfs
+  ENVIRONMENT: feature
+  TIMEZONE: ${{ vars.TIMEZONE }}
+
+jobs:
+  # 1. Base actions configrations
+  setup:
+    name: Setup 🔧
+    runs-on: [self-hosted, linux, deployment]
+    outputs:
+      product: ${{ env.PRODUCT }}
+      environment: ${{ steps.environment.outputs.environment }}
+      timezone: ${{ env.TIMEZONE }}
+
+    steps:
+      - name: Environment 🧪
+        id: environment
+        run: |
+          echo "environment=feature" >> "$GITHUB_OUTPUT"
+
+      - name: Timezone 🌐
+        run: echo "Timezone set to ${{ env.TIMEZONE }}"
+
+  # 2. Database schema migration
+  database:
+    name: MSSQL 🗄️
+    needs: [setup]
+    environment: ${{ needs.setup.outputs.environment }}
+    runs-on: [self-hosted, DTFS, deployment]
+    env:
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+
+    steps:
+      - name: Repository 🗂️
+        uses: actions/checkout@v4
+
+      - name: Deploy ⚡
+        uses: ./.github/actions/mssql
+        with:
+          branch: ${{ vars.BRANCH }}
+          host: ${{ secrets.SQL_DB_HOST }}
+          port: ${{ secrets.SQL_DB_PORT }}
+          username: ${{ secrets.SQL_DB_USERNAME }}
+          password: ${{ secrets.SQL_DB_PASSWORD }}
+          database: ${{ secrets.SQL_DB_NAME }}
+          node: ${{ vars.NODE_VERSION }}
+          log: ${{ vars.SQL_DB_LOGGING_ENABLED }}
+
+  # 3. micro-serices WebApp deployments
+  webapp:
+    name: WebApp 🌐
+    needs: [setup, database]
+    environment: ${{ needs.setup.outputs.environment }}
+    runs-on: [self-hosted, DTFS, deployment]
+    env:
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+
+    strategy:
+      max-parallel: 1
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'dtfs-central-api', 'external-api', 'trade-finance-manager-api']
+
+    concurrency:
+      group: deployment-webapp-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.webapp }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Repository 🗂️
+        uses: actions/checkout@v4
+
+      - name: Deploy ⚡
+        uses: ./.github/actions/webapp
+        with:
+          branch: ${{ vars.BRANCH }}
+          region: ${{ vars.REGION }}
+          group: ${{ secrets.RESOURCE_GROUP }}
+          credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          acr: ${{ secrets.ACR_PASSWORD }}
+          webapp: ${{ matrix.webapp }}
+
+  # 4. micro-serices Functions deployments
+  functions:
+    name: Functions ⚡
+    needs: [setup, database, webapp]
+    environment: ${{ needs.setup.outputs.environment }}
+    runs-on: [self-hosted, DTFS, deployment]
+
+    env:
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+
+    strategy:
+      max-parallel: 1
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        functions: ['acbs-function']
+
+    concurrency:
+      group: deployment-functions-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Repository 🗂️
+        uses: actions/checkout@v4
+
+      - name: Deploy ⚡
+        uses: ./.github/actions/functions
+        with:
+          branch: ${{ vars.BRANCH }}
+          region: ${{ vars.REGION }}
+          group: ${{ secrets.RESOURCE_GROUP }}
+          credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          acr: ${{ secrets.ACR_PASSWORD }}
+          functions: ${{ matrix.functions }}
+
+  # 5. Notification
+  notify:
+    name: Notification 🔔
+    needs: [setup, database, webapp, functions]
+    environment: ${{ needs.setup.outputs.environment }}
+    runs-on: [self-hosted, DTFS, deployment]
+
+    env:
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+      WEBHOOK: ${{ secrets.MSTEAMS_WEBHOOK }}
+
+    steps:
+      - name: Facts
+        run: |
+
+      - name: MS Teams
+        run: |
+          curl --location '${{ env.WEBHOOK }}' \
+          --header 'Content-Type: application/json' \
+          --data-raw '{
+          "@type": "MessageCard",
+          "@context": "http://schema.org/extensions",
+          "themeColor": "00703c",
+          "title": "🚀 ${{ vars.BRANCH }} : ${{ env.ENVIRONMENT }}",
+          "summary": "Deployed '\''${{ vars.BRANCH }}'\'' branch to '\''${{ env.ENVIRONMENT }}'\'' DTFS environment",
+          "sections": [
+          {
+            "activityTitle": "Branch deployment",
+            "activitySubtitle": "Deployed **${{ vars.BRANCH }}** branch to **${{ env.ENVIRONMENT }}** DTFS environment.",
+            "facts": [
+                {
+                    "name": "Branch",
+                    "value": "${{ vars.BRANCH }}"
+                },
+                {
+                    "name": "Environment",
+                    "value": "${{ env.ENVIRONMENT }}"
+                },
+                {
+                    "name": "Commit",
+                    "value": "${{ github.sha }}"
+                },
+                {
+                    "name": "Status",
+                    "value": "Successfull"
+                }
+            ],
+            "markdown": true
+                  }
+              ],
+            "potentialAction": [
+              {
+              "@type": "OpenUri",
+              "name": "Deployment",
+                "targets": [
+                  {
+                      "os": "default",
+                      "uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                  }
+                ]
+              }
+            ]
+          }'
