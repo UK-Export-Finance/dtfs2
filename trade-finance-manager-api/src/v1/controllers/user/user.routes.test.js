@@ -1,7 +1,6 @@
 const httpMocks = require('node-mocks-http');
-const { anEntraIdUser, ApiError } = require('@ukef/dtfs2-common');
+const { anEntraIdUser, ApiError, TEAMS } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
-const { getEntraIdUserSuccessTestCases, getEntraIdUserFailureTestCases } = require('@ukef/dtfs2-common');
 const { upsertTfmUserFromEntraIdUser } = require('./user.routes');
 const userController = require('./user.controller');
 const { withValidatePayloadTests } = require('../../../../test-helpers');
@@ -113,3 +112,113 @@ describe('user routes', () => {
     }
   });
 });
+
+function getEntraIdUserFailureTestCases({ getTestObjectWithUpdatedEntraIdUserParams = (entraIdUser) => entraIdUser }) {
+  return [
+    {
+      aTestCase: () => {
+        const { oid: _oid, ...rest } = anEntraIdUser();
+        return getTestObjectWithUpdatedEntraIdUserParams(rest);
+      },
+      description: 'the oid is missing',
+    },
+    {
+      aTestCase: () => {
+        const { verified_primary_email: _verifiedPrimaryEmail, ...rest } = anEntraIdUser();
+        return getTestObjectWithUpdatedEntraIdUserParams(rest);
+      },
+      description: 'the verified primary email is missing',
+    },
+    {
+      aTestCase: () => {
+        const { verified_secondary_email: _verifiedSecondaryEmail, ...rest } = anEntraIdUser();
+        return getTestObjectWithUpdatedEntraIdUserParams(rest);
+      },
+      description: 'the verified secondary email is missing',
+    },
+    {
+      aTestCase: () => {
+        const { given_name: _givenName, ...rest } = anEntraIdUser();
+        return getTestObjectWithUpdatedEntraIdUserParams(rest);
+      },
+      description: 'the given name is missing',
+    },
+
+    {
+      aTestCase: () => {
+        const { family_name: _familyName, ...rest } = anEntraIdUser();
+        return getTestObjectWithUpdatedEntraIdUserParams(rest);
+      },
+      description: 'the family name is missing',
+    },
+    {
+      aTestCase: () => {
+        const { roles: _roles, ...rest } = anEntraIdUser();
+        return getTestObjectWithUpdatedEntraIdUserParams(rest);
+      },
+      description: 'the roles are missing',
+    },
+    {
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), oid: 1 }),
+      description: 'the oid is not a string',
+    },
+    {
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), verified_primary_email: [] }),
+      description: 'the verify primary email array is empty',
+    },
+    {
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), verified_primary_email: [1] }),
+      description: 'the verify primary email is not a string array',
+    },
+    {
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), verified_primary_email: '1' }),
+      description: 'the verify primary email is not an array',
+    },
+    {
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), verified_secondary_email: [1] }),
+      description: 'the verify secondary email is not a string array',
+    },
+    {
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), verified_secondary_email: '1' }),
+      description: 'the verify secondary email is not an array',
+    },
+    {
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), given_name: 1 }),
+      description: 'the given name is not a string',
+    },
+    {
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), family_name: 1 }),
+      description: 'the family name is not a string',
+    },
+    {
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), roles: ['NOT_A_USER_ROLE'] }),
+      description: 'the roles are not an array of user roles',
+    },
+    {
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), roles: TEAMS.BUSINESS_SUPPORT.id }),
+      description: 'the roles are not an array',
+    },
+    {
+      aTestCase: () => ({}),
+      description: 'the object is empty',
+    },
+  ];
+}
+
+function getEntraIdUserSuccessTestCases({ getTestObjectWithUpdatedEntraIdUserParams = (entraIdUser) => entraIdUser }) {
+  return [
+    { aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams(anEntraIdUser()), description: 'a complete valid payload is present' },
+    {
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), verified_secondary_email: [] }),
+      description: 'the verified secondary email array is empty',
+    },
+    {
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), roles: [] }),
+      description: 'the roles array is empty',
+    },
+    {
+      aTestCase: () => getTestObjectWithUpdatedEntraIdUserParams({ ...anEntraIdUser(), extraField: 'extra' }),
+      description: 'there is an extra field',
+    },
+  ];
+}
