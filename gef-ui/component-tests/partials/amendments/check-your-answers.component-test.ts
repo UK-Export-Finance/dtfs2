@@ -56,7 +56,7 @@ describe(page, () => {
   it('should render amendment summary list', () => {
     const wrapper = render(params);
 
-    wrapper.expectElement('[data-cy="amendments-summary-list"]').toExist();
+    wrapper.expectElement('[data-cy="amendment-summary-list"]').toExist();
   });
 
   it('should render eligibility summary list', () => {

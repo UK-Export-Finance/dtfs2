@@ -6,6 +6,9 @@ import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
 import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 import facilityValue from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
+import checkYourAnswers from '../../../../../../../gef/cypress/e2e/pages/amendments/check-your-answers';
+import submittedForChecking from '../../../../../../../gef/cypress/e2e/pages/amendments/submitted-for-checking';
+import { today } from '../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -77,6 +80,31 @@ context('Amendments - change facility value - full journey', () => {
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/check-your-answers`));
 
-    // TODO DTFS2-7519: add steps for check your answer page
+    checkYourAnswers.amendmentSummaryListTable().amendmentOptionsValue().contains('Facility value');
+    checkYourAnswers.amendmentSummaryListTable().amendmentOptionsValue().should('not.contain', 'Cover end date');
+
+    checkYourAnswers.amendmentSummaryListTable().coverEndDateChangeLink().should('not.exist');
+    checkYourAnswers.amendmentSummaryListTable().bankReviewDateChangeLink().should('not.exist');
+    checkYourAnswers.amendmentSummaryListTable().facilityEndDateChangeLink().should('not.exist');
+    checkYourAnswers.amendmentSummaryListTable().facilityValueValue().contains('10000');
+
+    checkYourAnswers
+      .eligibilityCriteriaSummaryListTable()
+      .allEligibilityCriterionChangeLinks()
+      .each(($ele, index) => {
+        checkYourAnswers
+          .eligibilityCriteriaSummaryListTable()
+          .eligibilityCriterionValue(index + 1)
+          .contains('True');
+      });
+
+    checkYourAnswers.effectiveDateSummaryListTable().effectiveDateValue().contains(today.d_MMMM_yyyy);
+    cy.clickSubmitButton();
+
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/submitted-for-checking`));
+    submittedForChecking.submittedForCheckingConfirmationPanel().contains('Amendment submitted for checking at your bank');
+    submittedForChecking.returnLink().click();
+
+    cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 });

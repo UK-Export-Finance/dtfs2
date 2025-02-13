@@ -11,7 +11,7 @@ import { Deal } from '../types/deal';
 import { Facility } from '../types/facility';
 
 /**
- * returns a boolean indicating whether the user can amend issued facilities based on the submission type, deal status and user roles.
+ * returns a boolean indicating whether the user can amend issued facilities in general for a deal based on the deal submission type, deal status and user roles.
  * @param submissionType - the submission type
  * @param dealStatus - the deal status
  * @param userRoles - a list of the user roles
@@ -27,7 +27,7 @@ export const canUserAmendIssuedFacilities = (submissionType: DealSubmissionType,
 };
 
 /**
- * Determines if a user can amend a facility.
+ * Determines if a user can amend a given facility.
  *
  * @param facility - The facility to check.
  * @param deal - The deal associated with the facility.

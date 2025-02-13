@@ -625,7 +625,7 @@ portalRouter
 
 /**
  * @openapi
- * /facilities/:facilityId/amendments/:amendmentId:/status
+ * /facilities/:facilityId/amendments/:amendmentId:/status:
  *   patch:
  *     summary: update a Portal GEF facility amendment status
  *     tags: [Portal - Amendments]
@@ -650,13 +650,10 @@ portalRouter
  *           schema:
  *             type: object
  *             properties:
- *               dealId:
- *                 type: string
- *                 example: '123456abcdef123456abcdef'
  *               auditDetails:
  *                 type: object
  *                 $ref: '#/definitions/PortalAuditDetails'
- *               newStatus
+ *               newStatus:
  *                  type: string
  *                  enum: ["Ready for checker's approval"]
  *     responses:

@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb';
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { AUDIT_USER_TYPES, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
@@ -6,7 +5,6 @@ import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
 import { validatePatchPortalFacilityAmendmentStatusPayload } from './validate-patch-portal-facility-amendment-status-payload';
 
-const validDealId = new ObjectId().toString();
 const validAuditDetails = generatePortalAuditDetails(aPortalUser()._id);
 
 describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
@@ -14,7 +12,6 @@ describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
     {
       description: 'status is undefined',
       payload: {
-        dealId: validDealId,
         auditDetails: validAuditDetails,
       },
     },
@@ -22,7 +19,6 @@ describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
       description: 'status is invalid',
       payload: {
         newStatus: 'invalid',
-        dealId: validDealId,
         auditDetails: validAuditDetails,
       },
     },
@@ -30,7 +26,6 @@ describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
       description: 'auditDetails is undefined',
       payload: {
         newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
-        dealId: validDealId,
         auditDetails: undefined,
       },
     },
@@ -39,14 +34,12 @@ describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
       payload: {
         newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
         auditDetails: {},
-        dealId: validDealId,
       },
     },
     {
       description: 'auditDetails.userType is undefined',
       payload: {
         newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
-        dealId: validDealId,
         auditDetails: {
           userType: undefined,
         },
@@ -56,27 +49,10 @@ describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
       description: 'auditDetails.id is invalid and type is portal',
       payload: {
         newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
-        dealId: validDealId,
         auditDetails: {
           userType: AUDIT_USER_TYPES.PORTAL,
           id: 'invalid',
         },
-      },
-    },
-    {
-      description: 'dealId is not a string',
-      payload: {
-        newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
-        dealId: 123456123456123456,
-        auditDetails: validAuditDetails,
-      },
-    },
-    {
-      description: 'dealId is not an object Id',
-      payload: {
-        newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
-        dealId: 'invalid deal id',
-        auditDetails: validAuditDetails,
       },
     },
   ];
@@ -100,7 +76,6 @@ describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
     const payload = {
       newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
       auditDetails: validAuditDetails,
-      dealId: validDealId,
     };
 
     const { req, res } = createMocks({ body: payload });

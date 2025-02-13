@@ -4,16 +4,11 @@
 {% macro render(params) %}
   {% set user = params.user %}
   {% set reports = params.reports %}
-  {% set isTfmPaymentReconciliationFeatureFlagEnabled = params.isTfmPaymentReconciliationFeatureFlagEnabled %}
   {% set reportRows = [] %}
 
   {% for report in reports %}
     {% set reportPeriodHtml %}
-      {% if isTfmPaymentReconciliationFeatureFlagEnabled %}
-        <a class="govuk-link govuk-link--no-visited-state" href="/utilisation-reports/{{report.reportId}}"> {{report.formattedReportPeriod}}</a>
-      {% else %}
-        <p class="govuk-body govuk-!-margin-0"> {{report.formattedReportPeriod}} </p>
-      {% endif %}
+      <a class="govuk-link govuk-link--no-visited-state" href="/utilisation-reports/{{report.reportId}}"> {{report.formattedReportPeriod}}</a>
     {% endset %}
 
     {% set reportRows = (reportRows.push([

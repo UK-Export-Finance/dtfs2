@@ -1433,27 +1433,6 @@ const getUtilisationReportById = async (id) => {
 };
 
 /**
- * Sends a payload to DTFS central API to update
- * the status of one or more utilisation reports
- * @param {import('@ukef/dtfs2-common').ReportWithStatus[]} reportsWithStatus
- * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - The current user stored in the session
- * @returns {Promise<{ status: number }>}
- */
-const updateUtilisationReportStatus = async (reportsWithStatus, user) => {
-  const response = await axios({
-    method: 'put',
-    url: `${DTFS_CENTRAL_API_URL}/v1/utilisation-reports/set-status`,
-    headers: headers.central,
-    data: {
-      user,
-      reportsWithStatus,
-    },
-  });
-
-  return response.data;
-};
-
-/**
  * Gets the utilisation report reconciliation details by report id
  * @param {string} reportId - The report id
  * @param {import('@ukef/dtfs2-common').PremiumPaymentsFilters)} premiumPaymentsFilters - Filters to apply to the premium payments tab
@@ -1882,7 +1861,6 @@ module.exports = {
   getBankHolidays,
   getUtilisationReportsReconciliationSummary,
   getUtilisationReportById,
-  updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
   getSelectedFeeRecordsDetails,
   getUtilisationReportSummariesByBankIdAndYear,
