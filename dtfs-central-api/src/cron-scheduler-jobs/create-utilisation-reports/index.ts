@@ -1,9 +1,11 @@
-import { asString, CronSchedulerJob, getCurrentReportPeriodForBankSchedule, Bank, UtilisationReportEntity, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
+import { asString, CronSchedulerJob, getCurrentReportPeriodForBankSchedule, Bank, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { validateUtilisationReportPeriodSchedule } from './utilisation-report-period-schedule-validator';
 import { UtilisationReportRepo } from '../../repositories/utilisation-reports-repo';
 import { getAllBanks } from '../../repositories/banks-repo';
 import externalApi from '../../external-api/api';
 import EMAIL_TEMPLATE_IDS from '../../constants/email-template-ids';
+import { UtilisationReportStateMachine } from '../../services/state-machines/utilisation-report/utilisation-report.state-machine';
+import { UTILISATION_REPORT_EVENT_TYPE } from '../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 
 const { UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE, UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS } = process.env;
 
@@ -62,15 +64,19 @@ const createUtilisationReportForBanks = async (): Promise<void> => {
         console.info('Attempting to insert report for bank with id %s', id);
         const reportPeriod = getCurrentReportPeriodForBankSchedule(utilisationReportPeriodSchedule);
 
-        const newUtilisationReport = UtilisationReportEntity.createNotReceived({
-          bankId: id,
-          reportPeriod,
-          requestSource: {
-            platform: REQUEST_PLATFORM_TYPE.SYSTEM,
+        const stateMachine = UtilisationReportStateMachine.forUninitialisedReport();
+
+        await stateMachine.handleEvent({
+          type: UTILISATION_REPORT_EVENT_TYPE.DUE_REPORT_INITIALISED,
+          payload: {
+            bankId: id,
+            reportPeriod,
+            requestSource: {
+              platform: REQUEST_PLATFORM_TYPE.SYSTEM,
+            },
           },
         });
 
-        await UtilisationReportRepo.save(newUtilisationReport);
         console.info('Successfully inserted report for bank with id %s', id);
       } catch (error) {
         console.error('Error inserting report for bank with id %s. %o', id, error);

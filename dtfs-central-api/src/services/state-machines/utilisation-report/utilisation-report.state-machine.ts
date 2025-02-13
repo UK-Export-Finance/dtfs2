@@ -34,6 +34,14 @@ export class UtilisationReportStateMachine {
   }
 
   /**
+   * Creates a state machine for an uninitialised report
+   * @returns The state machine
+   */
+  public static forUninitialisedReport(): UtilisationReportStateMachine {
+    return new UtilisationReportStateMachine(null);
+  }
+
+  /**
    * Creates a state machine for the supplied report
    * @param report - The report to create a state machine for
    * @returns The state machine
