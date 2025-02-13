@@ -25,6 +25,7 @@ import { getEffectiveDate } from '../../../controllers/amendments/effective-date
 import { postEffectiveDate } from '../../../controllers/amendments/effective-date/post-effective-date.ts';
 import { getManualApprovalNeeded } from '../../../controllers/amendments/manual-approval-needed/get-manual-approval-needed.ts';
 import { getCheckYourAnswers } from '../../../controllers/amendments/check-your-answers/get-check-your-answers.ts';
+import { postCheckYourAnswers } from '../../../controllers/amendments/check-your-answers/post-check-your-answers.ts';
 import { getSubmittedForChecking } from '../../../controllers/amendments/submitted-for-checking/get-submitted-for-checking.ts';
 
 const {
@@ -111,7 +112,8 @@ router
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${CHECK_YOUR_ANSWERS}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
-  .get(getCheckYourAnswers);
+  .get(getCheckYourAnswers)
+  .post(postCheckYourAnswers);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${SUBMITTED_FOR_CHECKING}`)
