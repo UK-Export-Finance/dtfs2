@@ -33,7 +33,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
               facilityOneId = facility.body.details._id;
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
             });
-            cy.submitDealToTfm(dealId, token);
+            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF);
           });
         });
       });

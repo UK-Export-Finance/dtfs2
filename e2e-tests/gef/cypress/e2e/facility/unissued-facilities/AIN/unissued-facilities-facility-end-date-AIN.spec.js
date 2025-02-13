@@ -51,7 +51,7 @@ context('Unissued Facilities AIN - facility end date page', () => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
             );
-            cy.submitDealToTfm(dealId, token);
+            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF);
           });
         });
       });

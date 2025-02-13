@@ -45,7 +45,7 @@ context('Unissued Facilities MIN - change to issued from preview page', () => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
             );
-            cy.submitDealToTfm(dealId, token).then(() => {
+            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF).then(() => {
               cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN);
               cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
             });

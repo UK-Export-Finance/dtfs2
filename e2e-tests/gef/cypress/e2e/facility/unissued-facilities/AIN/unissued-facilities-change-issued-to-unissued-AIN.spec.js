@@ -42,7 +42,7 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility),
             );
-            cy.submitDealToTfm(dealId, token);
+            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF);
           });
         });
       });

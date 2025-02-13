@@ -1,5 +1,6 @@
-import { DEAL_STATUS, HEADERS } from '@ukef/dtfs2-common';
+import { HEADERS } from '@ukef/dtfs2-common';
 import { SIGN_IN_TOKENS } from '../../fixtures/constants';
+import { BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../e2e-fixtures/portal-users.fixture';
 import { UNDERWRITER_1_WITH_MOCK_ID } from '../../../../e2e-fixtures/tfm-users.fixture';
 
 const portalApi = 'http://localhost:5001/v1';
@@ -217,16 +218,13 @@ const tfmLogin = (username, password) =>
       return resp.body.token;
     });
 
-const submitDealToTfm = (dealId, token) =>
+const submitDealToTfm = (dealId, dealType) =>
   cy
     .request({
-      url: `${portalApi}/gef/application/status/${dealId}`,
+      url: `${centralApiUrl()}/v1/tfm/deals/submit`,
       method: 'PUT',
-      body: { status: DEAL_STATUS.SUBMITTED_TO_UKEF },
-      headers: {
-        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
-        Authorization: token,
-      },
+      body: { dealId, dealType, checker: BANK1_CHECKER1_WITH_MOCK_ID },
+      headers,
     })
     .then((resp) => {
       expect(resp.status).to.equal(200);
