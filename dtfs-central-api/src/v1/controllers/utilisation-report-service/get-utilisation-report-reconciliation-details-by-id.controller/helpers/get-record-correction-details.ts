@@ -14,20 +14,6 @@ export const getRecordCorrectionDetails = (feeRecords: FeeRecordEntity[]): FeeRe
       return [];
     }
 
-    return feeRecord.corrections.map((correction) => {
-      const { correctionId, feeRecordId, exporter, formattedReasons, formattedDateSent, formattedCorrectRecords, formattedOldRecords, isCompleted } =
-        getRecordCorrectionFields(feeRecord, correction);
-
-      return {
-        correctionId,
-        feeRecordId,
-        exporter,
-        formattedReasons,
-        formattedDateSent,
-        formattedOldRecords,
-        formattedCorrectRecords,
-        isCompleted,
-      };
-    });
+    return feeRecord.corrections.map((correction) => getRecordCorrectionFields(feeRecord, correction));
   });
 };
