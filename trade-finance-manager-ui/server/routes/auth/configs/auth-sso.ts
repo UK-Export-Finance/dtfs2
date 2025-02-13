@@ -16,7 +16,6 @@ export const getAuthSsoRouter: GetRouter = () => {
   const loginController = new LoginController({ loginService, userSessionService });
   const authSsoRouter = express.Router();
 
-  // Todo: update this to check the right token
   authSsoRouter.post('/auth/sso-redirect/form', (req, res, next) => {
     loginController.handleSsoRedirectForm(req, res).catch(next);
   });
