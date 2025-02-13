@@ -10,11 +10,6 @@ export type ReportPeriod = {
   end: MonthAndYear;
 };
 
-export type ReportWithStatus = {
-  status: UtilisationReportStatus;
-  reportId: number;
-};
-
 type UtilisationReportHeader = ValuesOf<typeof UTILISATION_REPORT_HEADERS>;
 
 type OptionalUtilisationReportHeader = Extract<
