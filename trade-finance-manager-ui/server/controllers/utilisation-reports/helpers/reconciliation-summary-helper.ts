@@ -1,13 +1,5 @@
 import { endOfDay, format, isPast, isSameMonth, parseISO, subMonths } from 'date-fns';
-import {
-  IsoMonthStamp,
-  REPORT_NOT_RECEIVED,
-  ReportPeriod,
-  UtilisationReportStatus,
-  getFormattedReportPeriodWithShortMonth,
-  isEqualMonthAndYear,
-  isTfmPaymentReconciliationFeatureFlagEnabled,
-} from '@ukef/dtfs2-common';
+import { IsoMonthStamp, ReportPeriod, UtilisationReportStatus, isEqualMonthAndYear } from '@ukef/dtfs2-common';
 import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../types/utilisation-reports';
 import { getReportDueDate } from '../../../services/utilisation-report-service';
 import api from '../../../api';
@@ -39,33 +31,14 @@ const getUtilisationReportDisplayFrequency = (reportPeriod: ReportPeriod): Utili
  * @returns The summary item view model
  */
 const getSummaryItemViewModel = (apiItem: UtilisationReportReconciliationSummaryItem): UtilisationReportSummaryViewModel => {
-  const { status, dateUploaded, reportId, reportPeriod } = apiItem;
+  const { status, dateUploaded, reportPeriod } = apiItem;
 
   return {
     ...apiItem,
     frequency: getUtilisationReportDisplayFrequency(reportPeriod),
     displayStatus: reconciliationStatusCodeToDisplayStatus[status],
     formattedDateUploaded: dateUploaded ? format(parseISO(dateUploaded), 'd MMM yyyy') : undefined,
-    downloadPath: status !== REPORT_NOT_RECEIVED ? `/utilisation-reports/${reportId}/download` : undefined,
   };
-};
-
-/**
- * Get distinct report periods by start month
- * @param reportPeriods - The report periods
- * @returns The report periods list filtered to distinct report periods
- */
-const getDistinctReportPeriodsByStartMonth = (reportPeriods: ReportPeriod[]): ReportPeriod[] => {
-  const yearMonthConcatenatedSet = new Set<number>();
-  const distinctPeriods: ReportPeriod[] = [];
-  reportPeriods.forEach((period) => {
-    const yearMonthConcatenated = period.start.month + period.start.year * 100;
-    if (!yearMonthConcatenatedSet.has(yearMonthConcatenated)) {
-      yearMonthConcatenatedSet.add(yearMonthConcatenated);
-      distinctPeriods.push(period);
-    }
-  });
-  return distinctPeriods;
 };
 
 /**
@@ -80,27 +53,11 @@ export const getDueDateText = (reportDueDate: Date) => {
 };
 
 /**
- * Get report period heading with all periods
- * @param submissionMonth - The submission month
- * @param reportPeriods - List of report periods
- * @returns Report period heading with the report periods listed
- */
-const getReportPeriodHeadingWithAllPeriods = (submissionMonth: IsoMonthStamp, reportPeriods: ReportPeriod[]) => {
-  const isCurrentSubmissionMonth = isSameMonth(new Date(submissionMonth), new Date());
-
-  const formattedReportPeriods = reportPeriods.map((reportPeriod) => getFormattedReportPeriodWithShortMonth(reportPeriod, true)).join(' and ');
-
-  return `${
-    isCurrentSubmissionMonth ? BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.CURRENT_PERIOD : BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.OPEN_PERIOD
-  }: ${formattedReportPeriods}`;
-};
-
-/**
  * Get report period heading with report period end
  * @param submissionMonth - The submission month
  * @returns Report period heading with the report period end
  */
-const getReportPeriodHeadingWithPeriodEnd = (submissionMonth: IsoMonthStamp) => {
+export const getReportPeriodHeading = (submissionMonth: IsoMonthStamp) => {
   const submissionMonthDate = new Date(submissionMonth);
   const isCurrentSubmissionMonth = isSameMonth(submissionMonthDate, new Date());
 
@@ -108,20 +65,8 @@ const getReportPeriodHeadingWithPeriodEnd = (submissionMonth: IsoMonthStamp) => 
   const formattedReportPeriodEnd = format(reportPeriodEnd, 'MMMM yyyy');
 
   return `${
-    isCurrentSubmissionMonth ? BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.CURRENT_PERIOD_END : BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.OPEN_PERIOD_END
+    isCurrentSubmissionMonth ? BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.CURRENT_PERIOD : BANK_REPORTS_FOR_PERIOD_TABLE_HEADER_PREFIX.OPEN_PERIOD
   }: ${formattedReportPeriodEnd}`;
-};
-
-/**
- * Get the report period heading for the given submission month and report periods
- * @param submissionMonth - the submission month
- * @param reportPeriods - the report periods
- * @returns The report period heading
- */
-export const getReportPeriodHeading = (submissionMonth: IsoMonthStamp, reportPeriods: ReportPeriod[]) => {
-  return isTfmPaymentReconciliationFeatureFlagEnabled()
-    ? getReportPeriodHeadingWithPeriodEnd(submissionMonth)
-    : getReportPeriodHeadingWithAllPeriods(submissionMonth, reportPeriods);
 };
 
 /**
@@ -148,12 +93,11 @@ export const getReportReconciliationSummariesViewModel = async (
 
   return summariesApiResponse.map(({ items: apiItems, submissionMonth }) => {
     const reportDueDate = getReportDueDate(bankHolidays, submissionMonth);
-    const distinctReportPeriods = getDistinctReportPeriodsByStartMonth(apiItems.map((item) => item.reportPeriod));
 
     return {
       items: apiItems.map(getSummaryItemViewModel),
       submissionMonth,
-      reportPeriodHeading: getReportPeriodHeading(submissionMonth, distinctReportPeriods),
+      reportPeriodHeading: getReportPeriodHeading(submissionMonth),
       dueDateText: getDueDateText(reportDueDate),
     };
   });
