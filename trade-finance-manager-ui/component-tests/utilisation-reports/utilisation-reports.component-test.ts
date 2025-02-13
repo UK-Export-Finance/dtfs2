@@ -34,7 +34,6 @@ describe(page, () => {
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       reportPeriodSummaries,
       user: MOCK_TFM_SESSION_USER,
-      isTfmPaymentReconciliationFeatureFlagEnabled: false,
       isPDCReconcileUser,
     };
     return render(params);

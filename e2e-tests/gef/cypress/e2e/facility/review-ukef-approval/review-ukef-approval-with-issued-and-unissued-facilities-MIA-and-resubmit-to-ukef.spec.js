@@ -2,7 +2,7 @@ import { PORTAL_ACTIVITY_LABEL } from '@ukef/dtfs2-common';
 import relative from '../../relativeURL';
 import CONSTANTS from '../../../fixtures/constants';
 import { threeDaysAgo, addDays, twoMonths, threeMonths } from '../../../../../e2e-fixtures/dateConstants';
-import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../fixtures/mocks/mock-deals';
+import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_SUBMITTED_TO_UKEF, UKEF_DECISION, underwriterManagersDecision } from '../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../../e2e-fixtures/portal-users.fixture';
 import { anIssuedCashFacilityWithCoverDateConfirmed, multipleMockGefFacilities } from '../../../../../e2e-fixtures/mock-gef-facilities';
 import { toTitleCase } from '../../../fixtures/helpers';
@@ -39,7 +39,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
         // creates application and inserts facilities and changes status
         cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
           dealId = body._id;
-          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA_DRAFT);
+          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA_SUBMITTED_TO_UKEF);
           cy.submitDealAfterUkefIds(dealId, 'GEF', BANK1_CHECKER1_WITH_MOCK_ID);
           cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA).then(() => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {

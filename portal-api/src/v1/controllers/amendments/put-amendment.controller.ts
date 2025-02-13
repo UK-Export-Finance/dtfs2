@@ -12,7 +12,6 @@ export type PutAmendmentRequest = CustomExpressRequest<{
     amendment: PortalFacilityAmendmentUserValues;
     dealId: string;
   };
-  query: { dealId: string };
 }>;
 
 /**

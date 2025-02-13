@@ -1,6 +1,5 @@
 const { param } = require('express-validator');
 const { isValidIsoMonth, isValidIsoYear } = require('@ukef/dtfs2-common');
-const { updateReportStatusPayloadValidation } = require('./update-report-status-payload-validation');
 
 const userParamEscapingSanitization = param('user').isString('User ID must be a string').escape();
 const userParamValidation = param('user').isMongoId().withMessage('The User ID (user) provided should be a Mongo ID');
@@ -55,8 +54,6 @@ exports.partyUrnValidation = [partyURNValidation];
 exports.bankIdValidation = [bankIdValidation];
 
 exports.sqlIdValidation = sqlIdValidation;
-
-exports.updateReportStatusPayloadValidation = updateReportStatusPayloadValidation;
 
 /**
  * Validates that specified route or query parameters are strings in ISO month format 'yyyy-MM'

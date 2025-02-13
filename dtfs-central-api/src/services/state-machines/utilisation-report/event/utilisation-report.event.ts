@@ -1,8 +1,6 @@
 import {
   UtilisationReportDueReportInitialisedEvent,
   UtilisationReportGenerateKeyingDataEvent,
-  UtilisationReportManuallySetCompletedEvent,
-  UtilisationReportManuallySetIncompleteEvent,
   UtilisationReportAddAPaymentEvent,
   UtilisationReportDeletePaymentEvent,
   UtilisationReportReportUploadedEvent,
@@ -16,8 +14,6 @@ import {
 export type UtilisationReportEvent =
   | UtilisationReportDueReportInitialisedEvent
   | UtilisationReportGenerateKeyingDataEvent
-  | UtilisationReportManuallySetCompletedEvent
-  | UtilisationReportManuallySetIncompleteEvent
   | UtilisationReportAddAPaymentEvent
   | UtilisationReportDeletePaymentEvent
   | UtilisationReportReportUploadedEvent

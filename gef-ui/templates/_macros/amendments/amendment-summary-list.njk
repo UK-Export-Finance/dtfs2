@@ -1,0 +1,33 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% macro render(params) %}
+  <h2>Amendments</h2>
+
+  {{ govukSummaryList({
+    rows: params.amendmentRows,
+    attributes: {
+      'data-cy': 'amendment-summary-list',
+      id: item.facilityId
+    }
+  }) }}
+
+  <h2>Eligibility criteria</h2>
+
+  {{ govukSummaryList({
+    rows: params.eligibilityRows,
+    attributes: {
+      'data-cy': 'eligibility-summary-list',
+      id: item.facilityId
+    }
+  }) }}
+
+  <h2>Date amendment effective from</h2>
+
+  {{ govukSummaryList({
+    rows: params.effectiveDateRows,
+    attributes: {
+      'data-cy': 'effective-date-summary-list',
+      id: item.facilityId
+    }
+  }) }}
+{% endmacro %}
