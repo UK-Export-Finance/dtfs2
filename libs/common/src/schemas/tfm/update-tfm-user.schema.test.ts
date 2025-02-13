@@ -3,9 +3,11 @@ import { withSchemaValidationTests } from '../../test-helpers';
 import { UpdateTfmUserRequest } from '../../types';
 import { TEAM_IDS } from '../../constants';
 import { UPDATE_TFM_USER_REQUEST_SCHEMA } from './update-tfm-user-request.schema';
+import { withTestsForBackendTestcase } from '../../test-helpers/schemas/backend-tests/with-tests-for-backend-testcase';
 
 describe('UPDATE_TFM_USER_SCHEMA', () => {
   withSchemaValidationTests({
+    withTestsForTestCases: withTestsForBackendTestcase,
     schema: UPDATE_TFM_USER_REQUEST_SCHEMA,
     schemaTestOptions: {
       isPartial: true,

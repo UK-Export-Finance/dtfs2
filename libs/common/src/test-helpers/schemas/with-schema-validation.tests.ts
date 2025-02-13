@@ -1,22 +1,10 @@
 /* eslint-disable no-param-reassign */
 import { z, ZodSchema } from 'zod';
-import { withTestsForTestcase } from './with-tests-for-testcase';
-import { TestCase } from './with-test-for-test-case.type';
-
-/**
- * Options that are specific to the schema as a whole, for instance, if the schema is a partial
- */
-type SchemaTestOptions = {
-  isPartial?: boolean;
-  isStrict?: boolean;
-};
-
-/**
- * Test cases with the path parameter, used to create the getTestObjectWithUpdatedParameter function
- */
-export type TestCaseWithPathParameter = {
-  parameterPath: string;
-} & TestCase;
+import { withTestsForTestcase } from './tests/with-tests-for-testcase';
+import { SchemaTestOptions } from './types/schema-test-options.type';
+import { TestCaseWithPathParameter } from './types/test-case-with-path-parameter.type';
+import { WithTestsForTestCaseProps } from './types/with-tests-for-test-case';
+import { BaseTestCase } from './test-cases/base-test-case';
 
 /**
  * This function orchestrates a schema's test cases.
@@ -25,6 +13,7 @@ export type TestCaseWithPathParameter = {
  * @param params.schemaTestOptions Options that are specific to the schema as a whole, for instance, if the schema is a partial, or strict
  * @param params.aValidPayload A function that returns a valid payload for the schema
  * @param params.testCases Test cases to test
+ * @param params.withTestsForTestCases pass in withTestsForBackendTestCase when using backend specific test cases, otherwise this can be left as default
  * @see doc\schemas.md for more information
  * @example Schema test options
  * ```ts
@@ -79,16 +68,18 @@ export type TestCaseWithPathParameter = {
  * }]
  * ```
  */
-export const withSchemaValidationTests = <Schema extends ZodSchema>({
+export const withSchemaValidationTests = <Schema extends ZodSchema, T extends BaseTestCase>({
   schema,
   schemaTestOptions = {},
   aValidPayload,
   testCases,
+  withTestsForTestCases = withTestsForTestcase,
 }: {
   schema: Schema;
   schemaTestOptions?: SchemaTestOptions;
-  testCases: TestCaseWithPathParameter[];
+  testCases: TestCaseWithPathParameter<T>[];
   aValidPayload: () => z.infer<Schema>;
+  withTestsForTestCases?: (props: WithTestsForTestCaseProps<Schema, T>) => void;
 }) => {
   const schemaTestOptionsDefaults: Partial<SchemaTestOptions> = { isPartial: false, isStrict: false };
 
@@ -128,7 +119,7 @@ export const withSchemaValidationTests = <Schema extends ZodSchema>({
     };
 
     describe(`${parameterPath} parameter tests`, () => {
-      withTestsForTestcase({
+      withTestsForTestCases({
         schema,
         testCase,
         getTestObjectWithUpdatedParameter,

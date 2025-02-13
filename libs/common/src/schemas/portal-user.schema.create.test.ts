@@ -3,10 +3,12 @@ import z from 'zod';
 import { generatePortalUserAuditDatabaseRecord } from '../change-stream';
 import { CREATE } from './portal-user.schema';
 import { withSchemaValidationTests } from '../test-helpers';
+import { withTestsForBackendTestcase } from '../test-helpers/schemas/backend-tests/with-tests-for-backend-testcase';
 
 describe('PORTAL_USER', () => {
   describe('CREATE', () => {
     withSchemaValidationTests({
+      withTestsForTestCases: withTestsForBackendTestcase,
       schema: CREATE,
       aValidPayload,
       testCases: [

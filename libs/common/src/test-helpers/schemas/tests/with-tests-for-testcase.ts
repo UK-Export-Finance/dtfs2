@@ -3,34 +3,23 @@ import {
   withUnixTimestampMillisecondsSchemaTests,
   withUnixTimestampSecondsSchemaTests,
   withUnixTimestampSchemaTests,
-  withObjectIdSchemaTests,
-  withObjectIdStringSchemaTests,
-  withObjectIdOrObjectIdStringSchemaTests,
   withIsoDateTimeStampSchemaTests,
   withTfmTeamSchemaTests,
   withCurrencySchemaTests,
-} from './custom-types-tests';
-import { withStringTests, withNumberTests, withBooleanTests, withArrayTests } from './primitive-types-tests';
-import { withAuditDatabaseRecordSchemaTests, withEntraIdUserSchemaTests, withUpsertTfmUserRequestSchemaTests } from './schema-tests';
-import { TestCase } from './with-test-for-test-case.type';
-import { withIsoDateTimeStampToDateSchemaTests } from './transformation-tests';
+} from '../custom-types-tests';
+import { withStringTests, withNumberTests, withBooleanTests, withArrayTests } from '../primitive-types-tests';
+import { withEntraIdUserSchemaTests, withUpsertTfmUserRequestSchemaTests } from '../schema-tests';
+import { withIsoDateTimeStampToDateSchemaTests } from '../transformation-tests';
+import { WithTestsForTestCaseProps } from '../types/with-tests-for-test-case';
+import { BaseTestCase } from '../test-cases/base-test-case';
 
 /**
  * Gets tests for a test case, using the test case type to determine which tests to run
  *
  * These tests are all available tests that can be easily used to test a parameter, and should be extended
  */
-export const withTestsForTestcase = <Schema extends ZodSchema>({
-  schema,
-  testCase,
-  getTestObjectWithUpdatedParameter,
-  getUpdatedParameterFromParsedTestObject,
-}: {
-  schema: Schema;
-  testCase: TestCase;
-  getTestObjectWithUpdatedParameter: (newValue: unknown) => unknown;
-  getUpdatedParameterFromParsedTestObject: (parsedTestObject: unknown) => unknown;
-}) => {
+export const withTestsForTestcase = <Schema extends ZodSchema>(props: WithTestsForTestCaseProps<Schema, BaseTestCase>): void => {
+  const { schema, testCase, getTestObjectWithUpdatedParameter, getUpdatedParameterFromParsedTestObject } = props;
   const { type, options } = testCase;
 
   switch (type) {
@@ -106,44 +95,8 @@ export const withTestsForTestcase = <Schema extends ZodSchema>({
       });
       break;
 
-    case 'OBJECT_ID_SCHEMA':
-      withObjectIdSchemaTests({
-        schema,
-        options,
-        getTestObjectWithUpdatedParameter,
-        getUpdatedParameterFromParsedTestObject,
-      });
-      break;
-
-    case 'OBJECT_ID_STRING_SCHEMA':
-      withObjectIdStringSchemaTests({
-        schema,
-        options,
-        getTestObjectWithUpdatedParameter,
-        getUpdatedParameterFromParsedTestObject,
-      });
-      break;
-
-    case 'OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA':
-      withObjectIdOrObjectIdStringSchemaTests({
-        schema,
-        options,
-        getTestObjectWithUpdatedParameter,
-        getUpdatedParameterFromParsedTestObject,
-      });
-      break;
-
     case 'ISO_DATE_TIME_STAMP_SCHEMA':
       withIsoDateTimeStampSchemaTests({
-        schema,
-        options,
-        getTestObjectWithUpdatedParameter,
-        getUpdatedParameterFromParsedTestObject,
-      });
-      break;
-
-    case 'AUDIT_DATABASE_RECORD_SCHEMA':
-      withAuditDatabaseRecordSchemaTests({
         schema,
         options,
         getTestObjectWithUpdatedParameter,

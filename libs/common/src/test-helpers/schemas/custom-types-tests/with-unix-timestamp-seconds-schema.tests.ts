@@ -1,5 +1,5 @@
 import { ZodSchema } from 'zod';
-import { WithSchemaTestParams } from '../with-schema-test.type';
+import { WithSchemaTestParams } from '../types/with-schema-test.type';
 import { withDefaultOptionsTests } from '../primitive-types-tests/with-default-options.tests';
 import { withNumberTests } from '../primitive-types-tests';
 

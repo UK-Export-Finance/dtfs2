@@ -1,7 +1,9 @@
+import {
+  withObjectIdOrObjectIdStringSchemaTests,
+  withObjectIdSchemaTests,
+  withObjectIdStringSchemaTests,
+} from '../test-helpers/schemas/backend-custom-types-tests';
 import { OBJECT_ID_SCHEMA, OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA, OBJECT_ID_STRING_SCHEMA } from './object-id.schema';
-import { withObjectIdSchemaTests } from '../test-helpers/schemas/custom-types-tests/with-object-id-schema.tests';
-import { withObjectIdOrObjectIdStringSchemaTests } from '../test-helpers/schemas/custom-types-tests/with-object-id-or-object-id-string-schema.tests';
-import { withObjectIdStringSchemaTests } from '../test-helpers/schemas/custom-types-tests/with-object-id-string-schema.tests';
 
 describe('OBJECT_ID_SCHEMA', () => {
   withObjectIdSchemaTests({
