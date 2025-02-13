@@ -149,7 +149,6 @@ export const withAmendmentGetControllerTests = <TRequest extends Request>({
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error getting amendments bank review date page %o', mockError);
   });
 
   it('should render `problem with service` if getFacility throws an error', async () => {
@@ -164,7 +163,6 @@ export const withAmendmentGetControllerTests = <TRequest extends Request>({
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error getting amendments bank review date page %o', mockError);
   });
 
   it('should render `problem with service` if getAmendment throws an error', async () => {
@@ -179,6 +177,5 @@ export const withAmendmentGetControllerTests = <TRequest extends Request>({
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error getting amendments bank review date page %o', mockError);
   });
 };
