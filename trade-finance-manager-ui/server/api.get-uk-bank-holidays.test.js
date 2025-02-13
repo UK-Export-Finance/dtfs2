@@ -24,7 +24,7 @@ describe('getUkBankHolidays', () => {
     expect(response).toEqual(MOCK_BANK_HOLIDAYS);
   });
 
-  it('should throw when the api TFM API request fails', async () => {
+  it('should throw when the TFM API request fails', async () => {
     // Arrange
     mockAxios.onGet().reply(404);
 

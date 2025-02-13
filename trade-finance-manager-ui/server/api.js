@@ -932,23 +932,6 @@ const downloadUtilisationReport = async (userToken, id) => {
 };
 
 /**
- * @param {import('@ukef/dtfs2-common').TfmSessionUser} user - the session user
- * @param {import('./types/utilisation-reports').ReportWithStatus[]} reportsWithStatus - array of reports with the status to set
- * @param {string} userToken - token to validate session
- * @returns {Promise<import('axios').AxiosResponse>}
- */
-const updateUtilisationReportStatus = async (user, reportsWithStatus, userToken) =>
-  await axios({
-    method: 'put',
-    url: `${TFM_API_URL}/v1/utilisation-reports/set-status`,
-    headers: generateHeadersWithToken(userToken),
-    data: {
-      user,
-      reportsWithStatus,
-    },
-  });
-
-/**
  * @param {string} reportId - The report id
  * @param {import('@ukef/dtfs2-common').PremiumPaymentsFilters} premiumPaymentsFilters - Filters to apply to the premium payments tab
  * @param {import('@ukef/dtfs2-common').PaymentDetailsFilters} paymentDetailsFilters - Filters to apply to the payment details tab
@@ -1491,6 +1474,20 @@ const deleteFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
   }
 };
 
+/**
+ * Gets the record correction log details by id
+ * @param {string} correctionId - The correction id
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('@ukef/dtfs2-common').GetRecordCorrectionLogDetailsResponseBody>}
+ */
+const getRecordCorrectionLogDetailsById = async (correctionId, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/record-correction-log-details/${correctionId}`, {
+    headers: generateHeaders(userToken),
+  });
+
+  return response.data;
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1531,7 +1528,6 @@ module.exports = {
   getUkBankHolidays,
   getUtilisationReportsReconciliationSummary,
   downloadUtilisationReport,
-  updateUtilisationReportStatus,
   getUtilisationReportReconciliationDetailsById,
   getAllBanks,
   getAllBanksWithReportingYears,
@@ -1559,4 +1555,5 @@ module.exports = {
   updateFeeRecordCorrectionTransientFormData,
   getFeeRecordCorrectionTransientFormData,
   deleteFeeRecordCorrectionTransientFormData,
+  getRecordCorrectionLogDetailsById,
 };

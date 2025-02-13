@@ -11,9 +11,10 @@ import {
 import { CreateRecordCorrectionRequestViewModel } from '../../../../types/view-models';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import { CreateRecordCorrectionRequestFormRequestBody } from './form-helpers';
-import { validateCreateRecordCorrectionRequestFormValues } from './validate-form-values';
+import { getCreateRecordCorrectionRequestFormErrors } from './validate-form-values';
 import api from '../../../../api';
 import { getLinkToPremiumPaymentsTab } from '../../helpers';
+import { getRecordCorrectionRequestCancelLinkHref } from '../helpers';
 
 jest.mock('../../../../api');
 
@@ -71,6 +72,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         user,
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         reportId,
+        cancelLinkHref: getRecordCorrectionRequestCancelLinkHref(reportId, feeRecordId),
         formattedReportPeriod: 'January 2024',
         feeRecord: {
           facilityId: '0012345678',
@@ -153,14 +155,14 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
         const body = {};
         const { req, res } = getHttpMocks(body);
 
-        const { errors } = validateCreateRecordCorrectionRequestFormValues(body);
+        const errors = getCreateRecordCorrectionRequestFormErrors(body);
 
         // Act
         await postCreateRecordCorrectionRequest(req, res);
 
         // Assert
         expect(res._getRenderView()).toEqual('utilisation-reports/record-corrections/create-record-correction-request.njk');
-        expect(res._getRenderData() as CreateRecordCorrectionRequestViewModel).toEqual({
+        expect(res._getRenderData() as CreateRecordCorrectionRequestViewModel).toEqual<CreateRecordCorrectionRequestViewModel>({
           bank: { name: 'Test Bank' },
           user,
           activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
@@ -173,6 +175,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
           formValues: { reasons: [] },
           errors,
           backLinkHref: getLinkToPremiumPaymentsTab(reportId, [456]),
+          cancelLinkHref: getRecordCorrectionRequestCancelLinkHref(reportId, feeRecordId),
         });
       });
 

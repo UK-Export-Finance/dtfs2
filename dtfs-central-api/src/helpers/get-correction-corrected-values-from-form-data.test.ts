@@ -1,4 +1,4 @@
-import { Currency, CURRENCY, RECORD_CORRECTION_REASON, RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
+import { anEmptyRecordCorrectionTransientFormData, Currency, CURRENCY, RECORD_CORRECTION_REASON, RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
 import { getCorrectionCorrectedValuesFromFormData } from './get-correction-corrected-values-from-form-data';
 
 describe('getCorrectionCorrectedValuesFromFormData', () => {
@@ -8,12 +8,13 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
     it.each`
       reportedCurrency | expectedCurrency | description
       ${CURRENCY.GBP}  | ${CURRENCY.GBP}  | ${'defined'}
-      ${undefined}     | ${null}          | ${'undefined'}
+      ${null}          | ${null}          | ${'null'}
     `(
       'should set the feesPaidToUkefForThePeriodCurrency to the reportedCurrency form value when reportedCurrency is $description',
-      ({ reportedCurrency, expectedCurrency }: { reportedCurrency?: Currency; expectedCurrency?: Currency }) => {
+      ({ reportedCurrency, expectedCurrency }: { reportedCurrency: Currency; expectedCurrency: Currency }) => {
         // Arrange
         const mockFormData: RecordCorrectionTransientFormData = {
+          ...anEmptyRecordCorrectionTransientFormData(),
           reportedCurrency,
         };
 
@@ -39,12 +40,13 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
     it.each`
       facilityId    | expectedFacilityId | description
       ${'12345678'} | ${'12345678'}      | ${'defined'}
-      ${undefined}  | ${null}            | ${'undefined'}
+      ${null}       | ${null}            | ${'null'}
     `(
       'should set the facilityId to the facilityId form value when facilityId is $description',
-      ({ facilityId, expectedFacilityId }: { facilityId?: string; expectedFacilityId?: string }) => {
+      ({ facilityId, expectedFacilityId }: { facilityId: string; expectedFacilityId: string }) => {
         // Arrange
         const mockFormData: RecordCorrectionTransientFormData = {
+          ...anEmptyRecordCorrectionTransientFormData(),
           facilityId,
         };
 
@@ -68,15 +70,16 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
     const reasons = [RECORD_CORRECTION_REASON.UTILISATION_INCORRECT];
 
     it.each`
-      utilisation  | expectedFacilityUtilisation | description
-      ${1000}      | ${1000}                     | ${'defined'}
-      ${0}         | ${0}                        | ${'zero'}
-      ${undefined} | ${null}                     | ${'undefined'}
+      utilisation | expectedFacilityUtilisation | description
+      ${1000}     | ${1000}                     | ${'defined'}
+      ${0}        | ${0}                        | ${'zero'}
+      ${null}     | ${null}                     | ${'null'}
     `(
       'should set the facilityUtilisation to the utilisation form value when utilisation is $description',
-      ({ utilisation, expectedFacilityUtilisation }: { utilisation?: number; expectedFacilityUtilisation?: number }) => {
+      ({ utilisation, expectedFacilityUtilisation }: { utilisation: number; expectedFacilityUtilisation: number }) => {
         // Arrange
         const mockFormData: RecordCorrectionTransientFormData = {
+          ...anEmptyRecordCorrectionTransientFormData(),
           utilisation,
         };
 
@@ -100,15 +103,16 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
     const reasons = [RECORD_CORRECTION_REASON.REPORTED_FEE_INCORRECT];
 
     it.each`
-      reportedFee  | expectedFeesPaidToUkefForThePeriod | description
-      ${500}       | ${500}                             | ${'defined'}
-      ${0}         | ${0}                               | ${'zero'}
-      ${undefined} | ${null}                            | ${'undefined'}
+      reportedFee | expectedFeesPaidToUkefForThePeriod | description
+      ${500}      | ${500}                             | ${'defined'}
+      ${0}        | ${0}                               | ${'zero'}
+      ${null}     | ${null}                            | ${'null'}
     `(
       'should set the feesPaidToUkefForThePeriod to the reportedFee form value when reportedFee is $description',
-      ({ reportedFee, expectedFeesPaidToUkefForThePeriod }: { reportedFee?: number; expectedFeesPaidToUkefForThePeriod?: number }) => {
+      ({ reportedFee, expectedFeesPaidToUkefForThePeriod }: { reportedFee: number; expectedFeesPaidToUkefForThePeriod: number }) => {
         // Arrange
         const mockFormData: RecordCorrectionTransientFormData = {
+          ...anEmptyRecordCorrectionTransientFormData(),
           reportedFee,
         };
 
@@ -131,7 +135,10 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
   describe('when other is the only correction reason', () => {
     it('should return all fields as null', () => {
       // Arrange
-      const mockFormData: RecordCorrectionTransientFormData = { additionalComments: 'This record is actually correct' };
+      const mockFormData: RecordCorrectionTransientFormData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
+        additionalComments: 'This record is actually correct',
+      };
       const reasons = [RECORD_CORRECTION_REASON.OTHER];
 
       // Act
@@ -157,6 +164,7 @@ describe('getCorrectionCorrectedValuesFromFormData', () => {
         facilityId: '12345678',
         utilisation: 1000,
         reportedFee: 500,
+        additionalComments: 'Some additional comments',
       };
 
       const reasons = [

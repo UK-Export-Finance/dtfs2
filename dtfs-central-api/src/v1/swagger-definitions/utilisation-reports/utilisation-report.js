@@ -68,15 +68,4 @@
  *       - RECONCILIATION_IN_PROGRESS
  *       - RECONCILIATION_COMPLETED
  *     description: the reconciliation status of a utilisation report
- *   UtilisationReportStatusWithReportId:
- *     type: object
- *     properties:
- *       status:
- *         $ref: '#/definitions/UtilisationReportStatus'
- *       report:
- *         type: object
- *         properties:
- *           id:
- *             type: string
- *             description: Mongo id of the report
  */

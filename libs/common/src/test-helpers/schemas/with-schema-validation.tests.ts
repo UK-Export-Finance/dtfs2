@@ -1,22 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { z, ZodSchema } from 'zod';
-import { withTestsForTestcase } from './with-tests-for-testcase';
-import { TestCase } from './with-test-for-test-case.type';
-
-/**
- * Options that are specific to the schema as a whole, for instance, if the schema is a partial
- */
-type SchemaTestOptions = {
-  isPartial?: boolean;
-  isStrict?: boolean;
-};
-
-/**
- * Test cases with the path parameter, used to create the getTestObjectWithUpdatedParameter function
- */
-export type TestCaseWithPathParameter = {
-  parameterPath: string;
-} & TestCase;
+import { SchemaTestOptions } from './types/schema-test-options.type';
+import { TestCaseWithPathParameter } from './types/test-case-with-path-parameter.type';
+import { withTestsForTestcase } from './tests';
 
 /**
  * This function orchestrates a schema's test cases.

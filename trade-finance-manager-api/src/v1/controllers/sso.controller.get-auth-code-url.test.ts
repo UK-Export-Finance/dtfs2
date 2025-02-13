@@ -47,7 +47,7 @@ describe('SsoController', () => {
     expect(res._getJSONData()).toEqual(getAuthCodeUrlResponse);
   });
 
-  it('should return a 200 status code on success', async () => {
+  it(`should return a ${HttpStatusCode.Ok} status code on success`, async () => {
     const getAuthCodeUrlResponse = aGetAuthCodeUrlResponse();
     getAuthCodeUrlMock.mockResolvedValue(getAuthCodeUrlResponse);
 
@@ -79,7 +79,7 @@ describe('SsoController', () => {
     });
   });
 
-  it('should return a 500 status code on non api error', async () => {
+  it(`should return a ${HttpStatusCode.InternalServerError} status code on non api error`, async () => {
     const error = new Error('Test error');
     getAuthCodeUrlMock.mockRejectedValue(error);
 

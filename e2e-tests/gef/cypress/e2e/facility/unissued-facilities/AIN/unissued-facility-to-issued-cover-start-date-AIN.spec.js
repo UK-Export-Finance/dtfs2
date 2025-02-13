@@ -1,7 +1,7 @@
 import relative from '../../../relativeURL';
 import CONSTANTS from '../../../../fixtures/constants';
 import { threeDaysAgoPlusThreeMonths, threeDaysAgo, threeMonthsOneDay } from '../../../../../../e2e-fixtures/dateConstants';
-import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 import { anUnissuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 import { mainHeading } from '../../../partials';
@@ -28,12 +28,12 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
         // creates application and inserts facilities and changes status
         cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
           dealId = body._id;
-          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN).then(() => {
+          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN_DRAFT).then(() => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               facilityOneId = facility.body.details._id;
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
             });
-            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
+            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF);
           });
         });
       });

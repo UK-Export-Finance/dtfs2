@@ -1,7 +1,6 @@
-import { PORTAL_ACTIVITY_LABEL } from '@ukef/dtfs2-common';
 import relative from '../../../relativeURL';
 import CONSTANTS from '../../../../fixtures/constants';
-import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 import { threeDaysAgo, threeMonthsOneDay, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
 import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
@@ -34,7 +33,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
         // creates application and inserts facilities and changes status
         cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
           dealId = body._id;
-          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN).then(() => {
+          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN_DRAFT).then(() => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               facilityOneId = facility.body.details._id;
               unissuedCashFacility._id = facility.body.details._id;
@@ -51,7 +50,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
               unissuedCashFacilityWith20MonthsOfCover._id = facility.body.details._id;
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover);
             });
-            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
+            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF);
           });
         });
       });
@@ -553,12 +552,8 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[2]._id}`));
     });
 
-    it('should not contain already issued facility or submission message', () => {
+    it('should not contain already issued facilities', () => {
       applicationActivities.subNavigationBarActivities().click();
-
-      applicationActivities.activityTimeline().should('not.contain', PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION);
-      applicationActivities.activityTimeline().should('not.contain', PORTAL_ACTIVITY_LABEL.MIA_SUBMISSION);
-      applicationActivities.activityTimeline().should('not.contain', PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION);
 
       // already issued facility should not appear in the activity list
       applicationActivities.facilityActivityChangedBy(issuedCashFacility.ukefFacilityId).should('not.exist');

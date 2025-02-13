@@ -1,4 +1,5 @@
 import {
+  anEmptyRecordCorrectionTransientFormData,
   CURRENCY,
   FeeRecordCorrectionEntityMockBuilder,
   FeeRecordCorrectionReviewInformation,
@@ -43,6 +44,7 @@ describe('get-fee-record-correction-review.controller map-transient-correction-d
         .build();
 
       const transientFormData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
         facilityId: '77777777',
         reportedFee: 987.65,
         additionalComments: 'Some bank commentary',

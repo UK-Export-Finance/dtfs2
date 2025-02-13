@@ -7,7 +7,6 @@ export type UtilisationReportSummaryViewModel = UtilisationReportReconciliationS
   frequency: UtilisationReportDisplayFrequency;
   displayStatus: string;
   formattedDateUploaded?: string;
-  downloadPath?: string;
 };
 
 export type ReportPeriodSummaryViewModel = {

@@ -1,6 +1,11 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { FeeRecordCorrectionTransientFormDataEntityMockBuilder, RecordCorrectionTransientFormData, TestApiError } from '@ukef/dtfs2-common';
+import {
+  anEmptyRecordCorrectionTransientFormData,
+  FeeRecordCorrectionTransientFormDataEntityMockBuilder,
+  RecordCorrectionTransientFormData,
+  TestApiError,
+} from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { GetFeeRecordCorrectionTransientFormDataRequest, GetFeeRecordCorrectionTransientFormDataResponse, getFeeRecordCorrectionTransientFormData } from '.';
@@ -48,6 +53,7 @@ describe('get-fee-record-correction-transient-form-data.controller', () => {
     it(`should respond with a '${HttpStatusCode.Ok}' and the retrieved form data if a transient form data entity exists`, async () => {
       // Arrange
       const formData: RecordCorrectionTransientFormData = {
+        ...anEmptyRecordCorrectionTransientFormData(),
         utilisation: 500000,
       };
       const transientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder().withFormData(formData).build();

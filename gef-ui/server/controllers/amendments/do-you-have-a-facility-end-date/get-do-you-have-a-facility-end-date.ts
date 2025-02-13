@@ -46,7 +46,8 @@ export const getDoYouHaveAFacilityEndDate = async (req: GetDoYouHaveAFacilityEnd
       return res.redirect(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE }));
     }
 
-    const isUsingFacilityEndDate = amendment.isUsingFacilityEndDate === undefined ? undefined : amendment.isUsingFacilityEndDate.toString();
+    const isUsingFacilityEndDate =
+      amendment.isUsingFacilityEndDate === undefined || amendment.isUsingFacilityEndDate === null ? undefined : amendment.isUsingFacilityEndDate.toString();
 
     const viewModel: DoYouHaveAFacilityEndDateViewModel = {
       exporterName: deal.exporter.companyName,

@@ -55,14 +55,6 @@ describe('validatePatchPortalFacilityAmendmentPayload', () => {
       },
     },
     {
-      description: 'update.currentCoverEndDate is not an integer',
-      payload: {
-        update: {
-          currentCoverEndDate: 'not an integer',
-        },
-      },
-    },
-    {
       description: 'update.isUsingFacilityEndDate is not a boolean',
       payload: {
         update: {
@@ -83,14 +75,6 @@ describe('validatePatchPortalFacilityAmendmentPayload', () => {
       payload: {
         update: {
           facilityEndDate: -23,
-        },
-      },
-    },
-    {
-      description: 'update.facilityEndDate is null',
-      payload: {
-        update: {
-          facilityEndDate: null,
         },
       },
     },
@@ -123,54 +107,6 @@ describe('validatePatchPortalFacilityAmendmentPayload', () => {
       payload: {
         update: {
           value: 'not a number',
-        },
-      },
-    },
-    {
-      description: 'update.currentValue is not a number',
-      payload: {
-        update: {
-          currentValue: 'not a number',
-        },
-      },
-    },
-    {
-      description: 'update.currentValue is null',
-      payload: {
-        update: {
-          currentValue: null,
-        },
-      },
-    },
-    {
-      description: 'update.currency is not a valid enum value',
-      payload: {
-        update: {
-          currency: 'invalid currency',
-        },
-      },
-    },
-    {
-      description: 'update.ukefExposure is not a number',
-      payload: {
-        update: {
-          ukefExposure: 'not a number',
-        },
-      },
-    },
-    {
-      description: 'update.coveredPercentage is not a number',
-      payload: {
-        update: {
-          coveredPercentage: 'not a number',
-        },
-      },
-    },
-    {
-      description: 'update.coveredPercentage is null',
-      payload: {
-        update: {
-          coveredPercentage: null,
         },
       },
     },

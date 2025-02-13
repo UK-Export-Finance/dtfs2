@@ -19,7 +19,8 @@ import { api } from '../api';
 const { APIM_MDM_URL } = process.env;
 const { VALID, VALID_WITH_LETTERS, INVALID_TOO_SHORT, INVALID_TOO_LONG } = MOCK_COMPANY_REGISTRATION_NUMBERS;
 const { get, post } = api(app);
-const bodyValid = { companyRegNo: VALID, companyName: 'Some name', probabilityOfDefault: 3 };
+const bodyValidWithProbabilityOfDefault = { companyRegNo: VALID, companyName: 'Some name', probabilityOfDefault: 3 };
+const bodyValidWithoutProbabilityOfDefault = { companyRegNo: VALID, companyName: 'Some name', probabilityOfDefault: undefined };
 let axiosMock: MockAdapter;
 
 jest.mock('@ukef/dtfs2-common', () => ({
@@ -67,8 +68,14 @@ describe('GET /party-db', () => {
 });
 
 describe('POST /party-db', () => {
-  it(`returns a ${HttpStatusCode.Ok} response with a valid body`, async () => {
-    const { status } = await post(bodyValid).to(`/party-db/`);
+  it(`returns a ${HttpStatusCode.Ok} response with a valid body with probability of default`, async () => {
+    const { status } = await post(bodyValidWithProbabilityOfDefault).to(`/party-db/`);
+
+    expect(status).toEqual(HttpStatusCode.Ok);
+  });
+
+  it(`returns a ${HttpStatusCode.Ok} response with a valid body without probability of default`, async () => {
+    const { status } = await post(bodyValidWithoutProbabilityOfDefault).to(`/party-db/`);
 
     expect(status).toEqual(HttpStatusCode.Ok);
   });
@@ -76,7 +83,6 @@ describe('POST /party-db', () => {
   const invalidBodies = [
     { companyRegNo: null, companyName: 'Some name', probabilityOfDefault: 3 },
     { companyRegNo: VALID, companyName: null, probabilityOfDefault: 3 },
-    { companyRegNo: VALID, companyName: 'Some name', probabilityOfDefault: null },
     { companyRegNo: INVALID_TOO_SHORT, companyName: 'Some name', probabilityOfDefault: 3 },
     { companyRegNo: INVALID_TOO_LONG, companyName: 'Some name', probabilityOfDefault: 3 },
   ];
