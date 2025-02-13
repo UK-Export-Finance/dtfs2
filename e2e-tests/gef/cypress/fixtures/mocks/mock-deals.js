@@ -212,6 +212,21 @@ export const MOCK_APPLICATION_AIN = {
   ...commonApplicationDetails,
 };
 
+export const MOCK_APPLICATION_AIN_DRAFT = {
+  status: DEAL_STATUS.DRAFT,
+  submissionType: DEAL_SUBMISSION_TYPE.AIN,
+  submissionCount: 0,
+  eligibility: eligibilityCriteria(true),
+  supportingInformation: {
+    manualInclusion: [],
+    securityDetails: {},
+    status: 'IN_PROGRESS',
+    requiredFields: [],
+  },
+  ukefDecision: [],
+  ...commonApplicationDetails,
+};
+
 export const MOCK_APPLICATION_MIN = {
   status: DEAL_STATUS.UKEF_ACKNOWLEDGED,
   submissionType: DEAL_SUBMISSION_TYPE.MIN,
@@ -270,6 +285,31 @@ export const UKEF_DECISION = {
 };
 
 export const MOCK_APPLICATION_MIA_DRAFT = {
+  status: DEAL_STATUS.DRAFT,
+  submissionType: DEAL_SUBMISSION_TYPE.MIA,
+  ukefDecisionAccepted: false,
+  submissionCount: 0,
+  eligibility: eligibilityCriteria(false),
+  supportingInformation: {
+    manualInclusion: [
+      {
+        _id: '61d71890a018210013a91c53',
+        parentId: '61d7185aa018210013a91c51',
+        filename: 'test.pdf',
+        mimetype: 'application/pdf',
+        encoding: '7bit',
+        size: 28583,
+        documentPath: 'manualInclusion',
+      },
+    ],
+    securityDetails: { exporter: '456465', application: '4564' },
+    status: 'In progress',
+    requiredFields: ['manualInclusion'],
+  },
+  ...commonApplicationDetails,
+};
+
+export const MOCK_APPLICATION_MIA_SUBMITTED_TO_UKEF = {
   status: DEAL_STATUS.SUBMITTED_TO_UKEF,
   submissionType: DEAL_SUBMISSION_TYPE.MIA,
   ukefDecisionAccepted: false,
