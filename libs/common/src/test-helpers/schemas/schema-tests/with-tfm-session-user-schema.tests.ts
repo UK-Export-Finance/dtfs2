@@ -3,7 +3,6 @@ import { ObjectId } from 'mongodb';
 import { TEAM_IDS } from '../../../constants';
 import { withSchemaValidationTests } from '../with-schema-validation.tests';
 import { withDefaultOptionsTests } from '../primitive-types-tests';
-import { withTestsForBackendTestcase } from '../backend-tests';
 import { WithSchemaTestParams } from '../types/with-schema-test.type';
 
 export const withTfmSessionUserSchemaTests = <Schema extends ZodSchema>({
@@ -21,7 +20,6 @@ export const withTfmSessionUserSchemaTests = <Schema extends ZodSchema>({
     });
 
     withSchemaValidationTests({
-      withTestsForTestCases: withTestsForBackendTestcase,
       schema,
       aValidPayload,
       testCases: [

@@ -10,6 +10,16 @@ The majority of schemas are defined in the `libs/common/src/schemas` directory. 
 
 ## Schema tests
 
+### A note on exporting schema tests in libs/common
+
+These tests are not exported as part of libs/commmon default export as they break several test pipelines.
+
+This is due to us currently run our UI tests using mongodb in a [jsdom environment](https://stackoverflow.com/questions/68468203/why-am-i-getting-textencoder-is-not-defined-in-jest). E2E tests also run in the jsdom environment. This clashes with our schema tests, as we export tests that contain `mongodb`'s `ObjectId`. This `ObjectId` eventually references the `whatwg-url` library, which in turn calls `TextEncoder`. `TextEncoder` is a node global and is not available in the `jsdom` environments.
+
+One solution to this is to create backend-specific schema tests that would not be exported as part of libs/common. However, this is more complicated than just not exporting all schema tests as part of libs/common.
+
+### Schema testing
+
 We have been testing our schemas in a variety of ways. These tests have proven long and difficult to maintain, with a lot of repetition and boilerplate.
 
 As a result, we are working towards a new approach to schema testing to make writing tests easy to write. This approach sees:
@@ -24,23 +34,6 @@ As a result, we are working towards a new approach to schema testing to make wri
   - transformations (schemas that transform data, for instance changing a string to a date -- ie `with-iso-date-time-stamp-to-date.schema`)
 
 The result of this structure means that the majority of tests will be effectively 'free' to write. The only exception here are schemas that use types or schemas where a test case does not already exist.
-
-### Note on backend schema tests
-
-We currently run our UI tests using mongodb in a [jsdom environment] (https://stackoverflow.com/questions/68468203/why-am-i-getting-textencoder-is-not-defined-in-jest). E2E tests also run in the jsdom environment.
-
-As part of our schema tests, we export tests that contain `mongodb`'s `ObjectId`. This `ObjectId` eventually references the `whatwg-url` library, which in turn calls `TextEncoder`. `TextEncoder` is a node global and is not available in the `jsdom` environments.
-
-As we should only be using `ObjectId` in the backend, we have seperated out these test files into `backend-filename` tests and do not export these by default in `libs/common` (much like other backend-specific functionality in `libs/common`).
-
-When back end tests are required to be used (for instance, due to checking objectId etc), we should use the following pattern when calling the schema validation tests:
-
-```ts
-withSchemaValidationTests({
-  withTestsForTestCases: withTestsForBackendTestcase,
-  ...rest,
-});
-```
 
 ### Writing tests
 
@@ -61,8 +54,6 @@ describe('EXAMPLE_SCHEMA', () => {
 However, sometimes you'll have created a new nested schema or type that doesn't have a test case yet. In this case, you'll need to create a new test file. These go in `\libs\common\src\test-helpers\schemas` (in the correct folder, as specified above).
 
 ### To create your own primitive/custom type test:
-
-**Note: If your schema requires testing ObjectId use the folders and files prefixed `backend`**
 
 - Create a new file in the correct folder (ie `with-string.tests.ts`)
 - Follow the existing pattern (see `with-string.tests.ts` for an example)

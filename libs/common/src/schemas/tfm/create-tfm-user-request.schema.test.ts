@@ -1,5 +1,5 @@
 import { TEAM_IDS } from '../../constants';
-import { withSchemaValidationTests } from '../../test-helpers';
+import { withSchemaValidationTests } from '../../test-helpers/schemas';
 import { CreateTfmUserRequest } from '../../types';
 import { CREATE_TFM_USER_REQUEST_SCHEMA } from './create-tfm-user-request.schema';
 
