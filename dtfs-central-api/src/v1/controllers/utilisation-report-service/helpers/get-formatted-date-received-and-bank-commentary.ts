@@ -30,7 +30,7 @@ export const getFormattedDateReceivedAndBankCommentary = (
   }
 
   if (!dateReceived) {
-    throw new Error('dateReceived is required when isCompleted is true');
+    throw new Error('Correction marked as completed, but date received is not set');
   }
 
   return {
