@@ -32,6 +32,7 @@ on:
     branches:
       # Manual deployment
       - release-2.7
+      - feat/DTFS2-7810-feature-deployment
 
 env:
   PRODUCT: dtfs
