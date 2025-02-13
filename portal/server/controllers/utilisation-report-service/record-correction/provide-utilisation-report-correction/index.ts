@@ -47,7 +47,7 @@ export const getProvideUtilisationReportCorrection = async (req: GetProvideUtili
 
     const cancelLinkHref = getRecordCorrectionCancelLinkHref(correctionId);
 
-    const paymentCurrencyOptions = mapCurrenciesToRadioItems(savedFormValues.reportedCurrency);
+    const paymentCurrencyOptions = mapCurrenciesToRadioItems(savedFormValues.reportedCurrency ?? undefined);
 
     const additionalCommentsLabels = getAdditionalCommentsFieldLabels(feeRecordCorrection.reasons);
 

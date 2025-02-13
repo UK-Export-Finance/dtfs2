@@ -1,12 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { BaseMockBuilder, EntraIdUser, UpsertTfmUserRequest } from '@ukef/dtfs2-common';
 import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
-import {
-  UpsertTfmUserFromEntraIdUserParams,
-  UpsertTfmUserFromEntraIdUserResponse,
-  saveUserLoginInformationParams,
-  UserService,
-} from '../../services/user.service';
+import { UpsertTfmUserFromEntraIdUserResponse, UserService } from '../../services/user.service';
 
 export class UserServiceMockBuilder extends BaseMockBuilder<UserService> {
   constructor() {
@@ -20,10 +14,10 @@ export class UserServiceMockBuilder extends BaseMockBuilder<UserService> {
         transformEntraIdUserToUpsertTfmUserRequest(entraIdUser: EntraIdUser): UpsertTfmUserRequest {
           return userService.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
         },
-        upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails }: UpsertTfmUserFromEntraIdUserParams): Promise<UpsertTfmUserFromEntraIdUserResponse> {
+        upsertTfmUserFromEntraIdUser(): Promise<UpsertTfmUserFromEntraIdUserResponse> {
           return Promise.resolve(aTfmUser());
         },
-        saveUserLoginInformation({ userId, sessionIdentifier, auditDetails }: saveUserLoginInformationParams): Promise<void> {
+        saveUserLoginInformation(): Promise<void> {
           return Promise.resolve();
         },
       },

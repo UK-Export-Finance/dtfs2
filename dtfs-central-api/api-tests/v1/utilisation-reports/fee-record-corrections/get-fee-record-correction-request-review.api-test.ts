@@ -33,7 +33,7 @@ describe(`GET ${BASE_URL}`, () => {
     id: bankId,
     name: 'Test bank',
     paymentOfficerTeam: {
-      emails: ['one@email.com', 'two@email.com'],
+      emails: ['one@ukexportfinance.gov.uk', 'two@ukexportfinance.gov.uk'],
       teamName: 'Test team',
     },
   };

@@ -11,6 +11,7 @@ import { MOCK_BASIC_DEAL } from '../../server/utils/mocks/mock-applications';
 import { MOCK_UNISSUED_FACILITY, MOCK_ISSUED_FACILITY } from '../../server/utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
+import { withGetAmendmentPageErrorHandlingTests } from './with-get-amendment-page-error-handling.api-tests';
 
 const originalEnv = { ...process.env };
 
@@ -24,8 +25,6 @@ jest.mock('../../server/middleware/csrf', () => ({
 const mockGetFacility = jest.fn();
 const mockGetApplication = jest.fn();
 const mockGetAmendment = jest.fn();
-
-const aMockError = () => new Error();
 
 const dealId = '123';
 const facilityId = '111';
@@ -106,6 +105,13 @@ describe(`GET ${url}`, () => {
       successCode: HttpStatusCode.Ok,
     });
 
+    withGetAmendmentPageErrorHandlingTests({
+      makeRequest: () => getWithSessionCookie(sessionCookie),
+      mockGetAmendment,
+      mockGetApplication,
+      mockGetFacility,
+    });
+
     it('should render `Facility end date` page', async () => {
       // Act
       const response = await getWithSessionCookie(sessionCookie);
@@ -113,42 +119,6 @@ describe(`GET ${url}`, () => {
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Ok);
       expect(response.text).toContain('Facility end date');
-    });
-
-    it('should redirect to /not-found when facility not found', async () => {
-      // Arrange
-      mockGetFacility.mockResolvedValue({ details: undefined });
-
-      // Act
-      const response = await getWithSessionCookie(sessionCookie);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.Found);
-      expect(response.headers.location).toEqual('/not-found');
-    });
-
-    it('should redirect to /not-found when deal not found', async () => {
-      // Arrange
-      mockGetApplication.mockResolvedValue(undefined);
-
-      // Act
-      const response = await getWithSessionCookie(sessionCookie);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.Found);
-      expect(response.headers.location).toEqual('/not-found');
-    });
-
-    it('should redirect to /not-found when amendment not found', async () => {
-      // Arrange
-      mockGetAmendment.mockResolvedValue(undefined);
-
-      // Act
-      const response = await getWithSessionCookie(sessionCookie);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.Found);
-      expect(response.headers.location).toEqual('/not-found');
     });
 
     it('should redirect to deal summary page when facility cannot be amended', async () => {
@@ -203,42 +173,6 @@ describe(`GET ${url}`, () => {
       expect(response.headers.location).toEqual(
         `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE}`,
       );
-    });
-
-    it('should render `problem with service` if getApplication throws an error', async () => {
-      // Arrange
-      mockGetApplication.mockRejectedValue(aMockError());
-
-      // Act
-      const response = await getWithSessionCookie(sessionCookie);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.Ok);
-      expect(response.text).toContain('Problem with the service');
-    });
-
-    it('should render `problem with service` if getFacility throws an error', async () => {
-      // Arrange
-      mockGetFacility.mockRejectedValue(aMockError());
-
-      // Act
-      const response = await getWithSessionCookie(sessionCookie);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.Ok);
-      expect(response.text).toContain('Problem with the service');
-    });
-
-    it('should render `problem with service` if getAmendment throws an error', async () => {
-      // Arrange
-      mockGetAmendment.mockRejectedValue(aMockError());
-
-      // Act
-      const response = await getWithSessionCookie(sessionCookie);
-
-      // Assert
-      expect(response.status).toEqual(HttpStatusCode.Ok);
-      expect(response.text).toContain('Problem with the service');
     });
   });
 });

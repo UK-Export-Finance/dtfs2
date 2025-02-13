@@ -76,12 +76,6 @@ beforeEach(() => {
 const invalidQueryParameters = [
   {
     query: {
-      companyName: 'TEST NAME',
-      companyRegNo: '12345678',
-    },
-  },
-  {
-    query: {
       companyRegNo: '12345678',
       probabilityOfDefault: 3,
     },
@@ -121,6 +115,32 @@ it('should allow a probability of default set to its default value', async () =>
   getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
 
   const companyData = { companyRegNo: '12345678', companyName: 'name', probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE };
+
+  const result = await api.getPartyUrn(companyData);
+
+  expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith(companyData);
+  expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(1);
+
+  expect(result).toBe('TEST_URN');
+});
+
+it('should allow a probability of default set to undefined', async () => {
+  getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
+
+  const companyData = { companyRegNo: '12345678', companyName: 'name', probabilityOfDefault: undefined };
+
+  const result = await api.getPartyUrn(companyData);
+
+  expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith(companyData);
+  expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(1);
+
+  expect(result).toBe('TEST_URN');
+});
+
+it('should allow a probability of default not provided', async () => {
+  getOrCreatePartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
+
+  const companyData = { companyRegNo: '12345678', companyName: 'name' };
 
   const result = await api.getPartyUrn(companyData);
 

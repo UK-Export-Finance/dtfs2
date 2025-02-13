@@ -140,10 +140,6 @@ authRouter
   .get(validation.sqlIdValidation('id'), handleExpressValidatorResult, utilisationReportsController.getUtilisationReportDownload);
 
 authRouter
-  .route('/utilisation-reports/set-status')
-  .put(validation.updateReportStatusPayloadValidation, handleExpressValidatorResult, utilisationReportsController.updateUtilisationReportStatus);
-
-authRouter
   .route('/utilisation-reports/reconciliation-details/:reportId')
   .get(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.getUtilisationReportReconciliationDetailsById);
 
@@ -227,5 +223,9 @@ authRouter
   .all(validation.sqlIdValidation('reportId'), validation.sqlIdValidation('feeRecordId'), validation.userIdValidation, handleExpressValidatorResult)
   .get(utilisationReportsController.getFeeRecordCorrectionTransientFormData)
   .delete(utilisationReportsController.deleteFeeRecordCorrectionTransientFormData);
+
+authRouter
+  .route('/utilisation-reports/record-correction-log-details/:correctionId')
+  .get(validation.sqlIdValidation('correctionId'), handleExpressValidatorResult, utilisationReportsController.getRecordCorrectionLogDetailsById);
 
 module.exports = { authRouter, openRouter };

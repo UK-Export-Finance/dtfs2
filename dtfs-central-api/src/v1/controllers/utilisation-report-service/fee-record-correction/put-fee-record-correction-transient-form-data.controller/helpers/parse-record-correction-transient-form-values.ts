@@ -6,15 +6,15 @@ import { getMonetaryValueAsNumber, isCurrencyValid, RecordCorrectionFormValues, 
  * @returns A RecordCorrectionTransientFormData object with parsed monetary values and form fields.
  */
 export const parseValidatedRecordCorrectionTransientFormValues = (formValues: RecordCorrectionFormValues): RecordCorrectionTransientFormData => {
-  const utilisation = formValues.utilisation ? getMonetaryValueAsNumber(formValues.utilisation) : undefined;
+  const utilisation = formValues.utilisation ? getMonetaryValueAsNumber(formValues.utilisation) : null;
 
-  const reportedCurrency = isCurrencyValid(formValues.reportedCurrency) ? formValues.reportedCurrency : undefined;
+  const reportedCurrency = isCurrencyValid(formValues.reportedCurrency) ? formValues.reportedCurrency : null;
 
-  const reportedFee = formValues.reportedFee ? getMonetaryValueAsNumber(formValues.reportedFee) : undefined;
+  const reportedFee = formValues.reportedFee ? getMonetaryValueAsNumber(formValues.reportedFee) : null;
 
-  const additionalComments = formValues.additionalComments?.trim();
+  const facilityId = formValues.facilityId || null;
 
-  const { facilityId } = formValues;
+  const additionalComments = formValues.additionalComments?.trim() || null;
 
   return {
     utilisation,

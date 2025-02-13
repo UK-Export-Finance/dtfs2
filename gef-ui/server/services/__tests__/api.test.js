@@ -1,11 +1,18 @@
 import { AxiosError, HttpStatusCode } from 'axios';
-import { InvalidDealIdError, InvalidFacilityIdError, MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
+import {
+  InvalidDealIdError,
+  InvalidFacilityIdError,
+  MOCK_COMPANY_REGISTRATION_NUMBERS,
+  PORTAL_AMENDMENT_STATUS,
+  PORTAL_AMENDMENT_UNDERWAY_STATUSES,
+} from '@ukef/dtfs2-common';
 import Axios from '../axios';
 import api from '../api';
 import CONSTANTS from '../../constants';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../test-helpers/mock-amendment';
 
 jest.mock('../axios');
+console.error = jest.fn();
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -492,5 +499,82 @@ describe('updateAmendment()', () => {
 
     // Assert
     await expect(returned).rejects.toThrow(InvalidFacilityIdError);
+  });
+});
+
+describe('deleteAmendment()', () => {
+  it(`should return the correct response`, async () => {
+    // Arrange
+    Axios.delete.mockReturnValue(Promise.resolve(undefined));
+
+    // Act
+    await api.deleteAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken });
+
+    // Assert
+    expect(Axios.delete).toHaveBeenCalledTimes(1);
+    await expect(api.deleteAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken })).resolves.toBeUndefined();
+  });
+
+  it('should throw an error if there is an api error', async () => {
+    // Arrange
+    Axios.delete.mockReturnValue(Promise.reject(new AxiosError('API Error')));
+
+    // Act + Assert
+    try {
+      await api.deleteAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken });
+    } catch (error) {
+      expect(error).toBeInstanceOf(AxiosError);
+      expect(error.message).toBe('API Error');
+    }
+    expect(Axios.delete).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(invalidMongoIdTestCases)('should throw an error when given an invalid amendment Id', async (invalidMongoId) => {
+    // Act
+    const returned = api.deleteAmendment({ facilityId: validMongoId, amendmentId: invalidMongoId, userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow('Invalid amendment ID');
+  });
+
+  it.each(invalidMongoIdTestCases)('should throw an error when given an invalid facility Id', async (invalidMongoId) => {
+    // Act
+    const returned = api.deleteAmendment({ facilityId: invalidMongoId, amendmentId: validMongoId, userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow(InvalidFacilityIdError);
+  });
+});
+
+describe('getAmendmentsOnDeal()', () => {
+  it(`should return the found amendments`, async () => {
+    // Arrange
+    const mockAmendment = { ...new PortalFacilityAmendmentWithUkefIdMockBuilder().build(), status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL };
+    Axios.get.mockResolvedValueOnce({ data: [mockAmendment] });
+
+    // Act
+    const response = await api.getAmendmentsOnDeal({ dealId: validMongoId, userToken, statuses: PORTAL_AMENDMENT_UNDERWAY_STATUSES });
+
+    // Assert
+    expect(response).toEqual([mockAmendment]);
+  });
+
+  it('should throw an error if there is an api error', async () => {
+    // Arrange
+    Axios.get.mockRejectedValueOnce(new AxiosError());
+
+    // Act
+    const returned = api.getAmendmentsOnDeal({ dealId: validMongoId, statuses: [PORTAL_AMENDMENT_STATUS.DRAFT], userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow(AxiosError);
+  });
+
+  it.each(invalidMongoIdTestCases)('should throw an error when given an invalid facility Id', async (invalidMongoId) => {
+    // Act
+    const returned = api.getAmendmentsOnDeal({ dealId: invalidMongoId, userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow(InvalidDealIdError);
   });
 });

@@ -1,5 +1,6 @@
 import { cloneDeep } from 'lodash';
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE, isPortalFacilityAmendmentsFeatureFlagEnabled, ROLES } from '@ukef/dtfs2-common';
+import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { applicationDetails, postApplicationDetails } from '.';
 import api from '../../services/api';
 import { NON_MAKER_ROLES } from '../../../test-helpers/common-role-lists';
@@ -23,6 +24,7 @@ describe('controllers/application-details', () => {
   let mockFacilityResponse;
   let mockFacilitiesResponse;
   let mockUserResponse;
+  const mockGetAmendmentsOnDealResponse = [];
 
   beforeEach(() => {
     mockResponse = MOCKS.MockResponse();
@@ -35,6 +37,7 @@ describe('controllers/application-details', () => {
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);
+    api.getAmendmentsOnDeal.mockResolvedValue(mockGetAmendmentsOnDealResponse);
     mockRequest.flash = mockSuccessfulFlashResponse();
   });
 
@@ -334,7 +337,7 @@ describe('controllers/application-details', () => {
         );
       });
 
-      it(`renders 'application-preview' with canIssuedFacilitiesBeAmended=true when the deal status is ${DEAL_STATUS.UKEF_ACKNOWLEDGED} and the submission type is valid`, async () => {
+      it(`renders 'application-preview' with canIssuedFacilitiesBeAmended=true when the deal status is ${DEAL_STATUS.UKEF_ACKNOWLEDGED}, the submission type is valid and there are no amendments underway on the deal`, async () => {
         api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
         jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(true);
 
@@ -414,6 +417,26 @@ describe('controllers/application-details', () => {
 
         api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
         jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(true);
+
+        mockApplicationResponse.status = DEAL_STATUS.UKEF_ACKNOWLEDGED;
+        mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
+            canIssuedFacilitiesBeAmended: false,
+          }),
+        );
+      });
+
+      it(`renders 'application-preview' with canIssuedFacilitiesBeAmended=false when there is an amendment already underway on the deal`, async () => {
+        api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
+        jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(true);
+
+        api.getAmendmentsOnDeal.mockResolvedValueOnce([aPortalFacilityAmendment()]);
 
         mockApplicationResponse.status = DEAL_STATUS.UKEF_ACKNOWLEDGED;
         mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
