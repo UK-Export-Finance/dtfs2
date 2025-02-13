@@ -2,6 +2,7 @@ import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
+import { isValidMongoId } from '../../../utils/validateIds';
 
 export type PostCancelPortalFacilityAmendmentRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -18,12 +19,19 @@ export const postCancelPortalFacilityAmendment = async (req: PostCancelPortalFac
     const { dealId, facilityId, amendmentId } = req.params;
     const { userToken } = asLoggedInUserSession(req.session);
 
-    const deal = await api.getApplication({ dealId, userToken });
-    const { details: facility } = await api.getFacility({ facilityId, userToken });
+    if (!isValidMongoId(dealId)) {
+      console.error('deleteAmendment: API call failed for dealId %s', dealId);
+      return false;
+    }
 
-    if (!deal || !facility) {
-      console.error('Deal %s or Facility %s was not found', dealId, facilityId);
-      return res.redirect('/not-found');
+    if (!isValidMongoId(facilityId)) {
+      console.error('deleteAmendment: API call failed for facilityId %s', facilityId);
+      return false;
+    }
+
+    if (!isValidMongoId(amendmentId)) {
+      console.error('deleteAmendment: API call failed for amendmentId %s', amendmentId);
+      return false;
     }
 
     await api.deleteAmendment({ facilityId, amendmentId, userToken });
