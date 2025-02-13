@@ -58,7 +58,7 @@ describe('get-formatted-date-received-and-bank-commentary', () => {
     describe.each`
       bankCommentaryLengthDescription | bankCommentary
       ${'short'}                      | ${'Some bank commentary'}
-      ${'long'}                       | ${'This is a very long bank commentary. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lobortis bibendum sapien et elementum. Morbi vulputate ante luctus, efficitur elit non, venenatis orci. Cras molestie eget sapien at lacinia. Phasellus non accumsan nisl, in consequat tellus. Proin sed dui varius, pretium nibh in, pellentesque lacus. Aenean egestas posuere arcu in placerat. Nullam consequat purus vitae dolor ultricies, sed vulputate nibh accumsan.'}
+      ${'long'}                       | ${'This is a very long bank commentary. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lobortis bibendum sapien et elementum. Morbi vulputate ante luctus, efficitur elit non, venenatis orci. Cras molestie eget sapien at lacinia. Phasellus non accumsan nisl, in consequat tellus. Proin sed dui varius, pretium nibh in, pellentesque lacus. Aenean egestas posuere arcu in placerat. Nullam consequat purus vitae dolor ultricies, sed vulputate nibh accumsan. Some more to get up to 500 chars.'}
     `('when isCompleted is true and bankCommentary is not null and is $bankCommentaryLengthDescription', ({ bankCommentary }: { bankCommentary: string }) => {
       const isCompleted = true;
       const dateReceived = new Date('2024-02-01');
