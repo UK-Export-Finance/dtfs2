@@ -82,39 +82,4 @@ describe('postCancelPortalFacilityAmendment', () => {
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('Error posting cancel amendments page %o', mockError);
   });
-
-  const testData = [
-    {
-      description: 'if dealId is invalid',
-      params: { dealId: 'invalidDealId', facilityId, amendmentId },
-      expected: 'deleteAmendment: API call failed for dealId %s',
-      expectedParam: 'invalidDealId',
-    },
-    {
-      description: 'if facilityId is invalid',
-      params: { dealId, facilityId: 'invalidFacilityId', amendmentId },
-      expected: 'deleteAmendment: API call failed for facilityId %s',
-      expectedParam: 'invalidFacilityId',
-    },
-    {
-      description: 'if amendmentId is invalid',
-      params: { dealId, facilityId, amendmentId: 'invalidAmendmentId' },
-      expected: 'deleteAmendment: API call failed for amendmentId %s',
-      expectedParam: 'invalidAmendmentId',
-    },
-  ];
-
-  it.each(testData)('should return false and log error $description', async ({ params, expected, expectedParam }) => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    req.params = params;
-
-    // Act
-    const result = await postCancelPortalFacilityAmendment(req, res);
-
-    // Assert
-    expect(deleteAmendmentMock).toHaveBeenCalledTimes(0);
-    expect(result).toBe(false);
-    expect(console.error).toHaveBeenCalledWith(expected, expectedParam);
-  });
 });

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
 import { validatePortalFacilityAmendmentsEnabled } from '../../../middleware/feature-flags/portal-facility-amendments';
-import { validateRole, validateToken, validateBank } from '../../../middleware';
+import { validateRole, validateToken, validateBank, validateMongoId } from '../../../middleware';
 import { MAKER } from '../../../constants/roles';
 import { postCreateDraftFacilityAmendment } from '../../../controllers/amendments/create-draft/post-create-draft';
 import { getWhatNeedsToChange } from '../../../controllers/amendments/what-needs-to-change/get-what-needs-to-change';
@@ -70,7 +70,15 @@ router
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${CANCEL}`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .all([
+    validatePortalFacilityAmendmentsEnabled,
+    validateToken,
+    validateBank,
+    validateMongoId('dealId'),
+    validateMongoId('facilityId'),
+    validateMongoId('amendmentId'),
+    validateRole({ role: [MAKER] }),
+  ])
   .get(getCancelPortalFacilityAmendment)
   .post(postCancelPortalFacilityAmendment);
 
