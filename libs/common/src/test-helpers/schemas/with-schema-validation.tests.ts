@@ -2,7 +2,6 @@
 import { z, ZodSchema } from 'zod';
 import { SchemaTestOptions } from './types/schema-test-options.type';
 import { TestCaseWithPathParameter } from './types/test-case-with-path-parameter.type';
-import { TestCase } from './test-cases';
 import { withTestsForTestcase } from './tests';
 
 /**
@@ -66,7 +65,7 @@ import { withTestsForTestcase } from './tests';
  * }]
  * ```
  */
-export const withSchemaValidationTests = <Schema extends ZodSchema, T extends TestCase>({
+export const withSchemaValidationTests = <Schema extends ZodSchema>({
   schema,
   schemaTestOptions = {},
   aValidPayload,
@@ -74,7 +73,7 @@ export const withSchemaValidationTests = <Schema extends ZodSchema, T extends Te
 }: {
   schema: Schema;
   schemaTestOptions?: SchemaTestOptions;
-  testCases: TestCaseWithPathParameter<T>[];
+  testCases: TestCaseWithPathParameter[];
   aValidPayload: () => z.infer<Schema>;
 }) => {
   const schemaTestOptionsDefaults: Partial<SchemaTestOptions> = { isPartial: false, isStrict: false };

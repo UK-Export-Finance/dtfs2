@@ -14,14 +14,13 @@ import { withStringTests, withNumberTests, withBooleanTests, withArrayTests } fr
 import { withAuditDatabaseRecordSchemaTests, withEntraIdUserSchemaTests, withUpsertTfmUserRequestSchemaTests } from '../schema-tests';
 import { withIsoDateTimeStampToDateSchemaTests } from '../transformation-tests';
 import { WithTestsForTestCaseProps } from '../types/with-tests-for-test-case';
-import { TestCase } from '../test-cases';
 
 /**
  * Gets tests for a test case, using the test case type to determine which tests to run
  *
  * These tests are all available tests that can be easily used to test a parameter, and should be extended
  */
-export const withTestsForTestcase = <Schema extends ZodSchema>(props: WithTestsForTestCaseProps<Schema, TestCase>): void => {
+export const withTestsForTestcase = <Schema extends ZodSchema>(props: WithTestsForTestCaseProps<Schema>): void => {
   const { schema, testCase, getTestObjectWithUpdatedParameter, getUpdatedParameterFromParsedTestObject } = props;
   const { type, options } = testCase;
 
