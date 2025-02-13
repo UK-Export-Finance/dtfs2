@@ -1,6 +1,6 @@
 import relative from '../../../relativeURL';
 import CONSTANTS from '../../../../fixtures/constants';
-import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mocks/mock-deals';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../fixtures/mocks/mock-deals';
 import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 import { backLink, cancelLink, continueButton, headingCaption, mainHeading, submitButton } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
@@ -31,7 +31,7 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
         // creates application and inserts facilities and changes status
         cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
           dealId = body._id;
-          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN).then(() => {
+          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_AIN_DRAFT).then(() => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               facilityOneId = facility.body.details._id;
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
@@ -42,7 +42,7 @@ context('Change issued facilities back to unissued AIN (changed to issued facili
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility),
             );
-            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
+            cy.submitDealToTfm(dealId, token);
           });
         });
       });

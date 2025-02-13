@@ -1,8 +1,7 @@
-import { PORTAL_ACTIVITY_LABEL } from '@ukef/dtfs2-common';
 import relative from '../../../relativeURL';
 import CONSTANTS from '../../../../fixtures/constants';
 import { threeDaysAgo, threeMonthsOneDay, twoMonths, today } from '../../../../../../e2e-fixtures/dateConstants';
-import { MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
+import { MOCK_APPLICATION_MIA_DRAFT, MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
 import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 import { continueButton, submitButton } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
@@ -34,7 +33,7 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
         // creates application and inserts facilities and changes status
         cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
           dealId = body._id;
-          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN).then(() => {
+          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA_DRAFT).then(() => {
             cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
               facilityOneId = facility.body.details._id;
               unissuedCashFacility._id = facility.body.details._id;
@@ -51,7 +50,10 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
               unissuedCashFacilityWith20MonthsOfCover._id = facility.body.details._id;
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover);
             });
-            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
+            cy.submitDealToTfm(dealId, token).then(() => {
+              cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN);
+              cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
+            });
           });
         });
       });
@@ -556,14 +558,10 @@ context('Submit to UKEF with unissued to issued facilities', () => {
       cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[2]._id}`));
     });
 
-    it('should not contain already issued facility or submission messages', () => {
+    it('should not contain already issued facilities', () => {
       applicationActivities.subNavigationBarActivities().click();
 
-      applicationActivities.activityTimeline().should('not.contain', PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION);
-      applicationActivities.activityTimeline().should('not.contain', PORTAL_ACTIVITY_LABEL.MIA_SUBMISSION);
-      applicationActivities.activityTimeline().should('not.contain', PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION);
-
-      // already issued facility should not appear in the activity list
+      // already issued facilities should not appear in the activity list
       applicationActivities.facilityActivityChangedBy(issuedCashFacility.ukefFacilityId).should('not.exist');
       applicationActivities.facilityActivityCheckedBy(issuedCashFacility.ukefFacilityId).should('not.exist');
       applicationActivities.previousStatusTag(issuedCashFacility.ukefFacilityId).should('not.exist');

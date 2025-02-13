@@ -212,6 +212,21 @@ export const MOCK_APPLICATION_AIN = {
   ...commonApplicationDetails,
 };
 
+export const MOCK_APPLICATION_AIN_DRAFT = {
+  status: DEAL_STATUS.DRAFT,
+  submissionType: DEAL_SUBMISSION_TYPE.AIN,
+  submissionCount: 0,
+  eligibility: eligibilityCriteria(true),
+  supportingInformation: {
+    manualInclusion: [],
+    securityDetails: {},
+    status: 'IN_PROGRESS',
+    requiredFields: [],
+  },
+  ukefDecision: [],
+  ...commonApplicationDetails,
+};
+
 export const MOCK_APPLICATION_MIN = {
   status: DEAL_STATUS.UKEF_ACKNOWLEDGED,
   submissionType: DEAL_SUBMISSION_TYPE.MIN,
@@ -270,10 +285,10 @@ export const UKEF_DECISION = {
 };
 
 export const MOCK_APPLICATION_MIA_DRAFT = {
-  status: DEAL_STATUS.SUBMITTED_TO_UKEF,
+  status: DEAL_STATUS.DRAFT,
   submissionType: DEAL_SUBMISSION_TYPE.MIA,
   ukefDecisionAccepted: false,
-  submissionCount: 1,
+  submissionCount: 0,
   eligibility: eligibilityCriteria(false),
   supportingInformation: {
     manualInclusion: [
