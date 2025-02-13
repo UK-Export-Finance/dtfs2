@@ -1,0 +1,130 @@
+/* eslint-disable no-param-reassign */
+import { z, ZodSchema } from 'zod';
+import { withTestsForTestcase } from './tests/with-tests-for-testcase';
+import { SchemaTestOptions } from './types/schema-test-options.type';
+import { TestCaseWithPathParameter } from './types/test-case-with-path-parameter.type';
+import { WithTestsForTestCaseProps } from './types/with-tests-for-test-case';
+import { BaseTestCase } from './test-cases/base-test-case';
+
+/**
+ * This function orchestrates a schema's test cases.
+ * It applies schema test options to all test cases, as well as adding and schema-specific tests as required.
+ * @param params.schema The schema to test
+ * @param params.schemaTestOptions Options that are specific to the schema as a whole, for instance, if the schema is a partial, or strict
+ * @param params.aValidPayload A function that returns a valid payload for the schema
+ * @param params.testCases Test cases to test
+ * @param params.withTestsForTestCases pass in withTestsForBackendTestCase when using backend specific test cases, otherwise this can be left as default
+ * @see doc\schemas.md for more information
+ * @example Schema test options
+ * ```ts
+ * const schemaTestOptions = { isPartial: true, isStrict: true }
+ * ```
+ * @example A valid payload
+ * ```ts
+ * const aValidPayload = () => ({ age: 20,
+ *   _id: new ObjectId(),
+ *   sessionIdentifier: 'session-identifier',
+ *   teams: [{ name: 'a-valid-team-name' }]
+ * })
+ * ```
+ *
+ * @example Test case: using a primitive type
+ * ```ts
+ * const testCases = [{
+ *   parameterPath: 'age',
+ *   type: 'number', // with-number.tests will be used for age
+ * }]
+ * ```
+ *
+ * @example Test case: using a custom type
+ * ```ts
+ * const testCases = [{
+ *   parameterPath: '_id',
+ *   type: 'OBJECT_ID_SCHEMA', //  with-object-id-schema.tests will be used for _id
+ * }]
+ * ```
+ *
+ * @example Test case: using options that are available on all types
+ * ```ts
+ * const testCases = [{
+ *   parameterPath: 'sessionIdentifier',
+ *   type: 'string',
+ *   options: { isOptional: true },
+ * }]
+ * ```
+ *
+ * @example Test case: using options that are available on a certain type
+ * ```ts
+ * const testCases = [{
+ *   parameterPath: 'teams',
+ *   type: 'Array',
+ *   options: {
+ *   // In this case, the type specific options allow us to
+ *   //specify the type of each object on the array
+ *     arrayTypeTestCase: {
+ *       type: 'TfmTeamSchema',
+ *     },
+ *   },
+ * }]
+ * ```
+ */
+export const withSchemaValidationTests = <Schema extends ZodSchema, T extends BaseTestCase>({
+  schema,
+  schemaTestOptions = {},
+  aValidPayload,
+  testCases,
+  withTestsForTestCases = withTestsForTestcase,
+}: {
+  schema: Schema;
+  schemaTestOptions?: SchemaTestOptions;
+  testCases: TestCaseWithPathParameter<T>[];
+  aValidPayload: () => z.infer<Schema>;
+  withTestsForTestCases?: (props: WithTestsForTestCaseProps<Schema, T>) => void;
+}) => {
+  const schemaTestOptionsDefaults: Partial<SchemaTestOptions> = { isPartial: false, isStrict: false };
+
+  const mergedSchemaTestOptions = {
+    ...schemaTestOptionsDefaults,
+    ...schemaTestOptions,
+  };
+
+  if (mergedSchemaTestOptions.isStrict) {
+    describe('strict schema validation tests', () => {
+      it('should fail parsing if a parameter not in the schema exists', () => {
+        const { success } = schema.safeParse({ ...aValidPayload(), aFieldThatDoesNotBelong: 'a-value' });
+        expect(success).toBe(false);
+      });
+    });
+  }
+
+  testCases.forEach((testCase) => {
+    const { parameterPath } = testCase;
+
+    // Turns parameter optional if the schema is a partial
+    if (mergedSchemaTestOptions.isPartial) {
+      if (!testCase.options) {
+        testCase.options = {};
+      }
+      testCase.options.isOptional = true;
+    }
+
+    const getTestObjectWithUpdatedParameter =
+      testCase.options?.overrideGetTestObjectWithUpdatedField !== undefined
+        ? testCase.options.overrideGetTestObjectWithUpdatedField
+        : (newValue: unknown): unknown => ({ ...aValidPayload(), [parameterPath]: newValue });
+
+    const getUpdatedParameterFromParsedTestObject = (parsedPayload: unknown) => {
+      const parsedPayloadAsRecord = parsedPayload as Record<string, unknown>;
+      return parsedPayloadAsRecord[parameterPath];
+    };
+
+    describe(`${parameterPath} parameter tests`, () => {
+      withTestsForTestCases({
+        schema,
+        testCase,
+        getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
+      });
+    });
+  });
+};
