@@ -59,17 +59,17 @@ const createUtilisationReportForBanks = async (): Promise<void> => {
   }
 
   await Promise.all(
-    banksWithMissingReports.map(async ({ id, utilisationReportPeriodSchedule }) => {
+    banksWithMissingReports.map(async ({ id: bankId, utilisationReportPeriodSchedule }) => {
       try {
-        console.info('Attempting to insert report for bank with id %s', id);
+        console.info('Attempting to insert report for bank with id %s', bankId);
         const reportPeriod = getCurrentReportPeriodForBankSchedule(utilisationReportPeriodSchedule);
 
-        const stateMachine = UtilisationReportStateMachine.forUninitialisedReport();
+        const stateMachine = await UtilisationReportStateMachine.forBankIdAndReportPeriod(bankId, reportPeriod);
 
         await stateMachine.handleEvent({
           type: UTILISATION_REPORT_EVENT_TYPE.DUE_REPORT_INITIALISED,
           payload: {
-            bankId: id,
+            bankId,
             reportPeriod,
             requestSource: {
               platform: REQUEST_PLATFORM_TYPE.SYSTEM,
@@ -77,12 +77,12 @@ const createUtilisationReportForBanks = async (): Promise<void> => {
           },
         });
 
-        console.info('Successfully inserted report for bank with id %s', id);
+        console.info('Successfully inserted report for bank with id %s', bankId);
       } catch (error) {
-        console.error('Error inserting report for bank with id %s. %o', id, error);
+        console.error('Error inserting report for bank with id %s. %o', bankId, error);
 
         await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.REPORT_INSERTION_CRON_FAILURE, UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS as string, {
-          bank_id: id,
+          bank_id: bankId,
         });
       }
     }),
