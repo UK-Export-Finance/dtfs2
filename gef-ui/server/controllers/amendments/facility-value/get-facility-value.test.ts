@@ -20,7 +20,7 @@ import { createMocks } from 'node-mocks-http';
 import { getFacilityValue, GetFacilityValueRequest } from './get-facility-value';
 import { Deal } from '../../../types/deal';
 import { FacilityValueViewModel } from '../../../types/view-models/amendments/facility-value-view-model';
-import { getCurrencySymbol } from './getCurrencySymbol';
+import { getCurrencySymbol } from './get-currency-symbol';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper';

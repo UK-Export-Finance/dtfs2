@@ -3,7 +3,7 @@ import { Response } from 'express';
 import * as api from '../../../services/api';
 import { FacilityValueViewModel } from '../../../types/view-models/amendments/facility-value-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
-import { getCurrencySymbol } from './getCurrencySymbol';
+import { getCurrencySymbol } from './get-currency-symbol';
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper';
 import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
