@@ -1,4 +1,4 @@
-import { CustomExpressRequest, DayMonthYearInput } from '@ukef/dtfs2-common';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { BankReviewDateViewModel } from '../../../types/view-models/amendments/bank-review-date-view-model';
@@ -56,7 +56,7 @@ export const getBankReviewDate = async (req: GetBankReviewDateRequest, res: Resp
       );
     }
 
-    const bankReviewDate: DayMonthYearInput | undefined = amendment.bankReviewDate && convertDateToDayMonthYearInput(amendment.bankReviewDate);
+    const bankReviewDate = amendment.bankReviewDate && convertDateToDayMonthYearInput(amendment.bankReviewDate);
 
     const viewModel: BankReviewDateViewModel = {
       exporterName: deal.exporter.companyName,

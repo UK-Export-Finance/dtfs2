@@ -31,7 +31,7 @@ describe('validatePutTfmUserPayload', () => {
     },
   ];
 
-  it.each(invalidPayloads)(`responds with a '${HttpStatusCode.BadRequest}' if $description`, ({ payload }) => {
+  it.each(invalidPayloads)(`should respond with a '${HttpStatusCode.BadRequest}' if $description`, ({ payload }) => {
     // Arrange
     const { req, res } = getHttpMocks();
     const next = jest.fn();
@@ -47,7 +47,7 @@ describe('validatePutTfmUserPayload', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it("calls the 'next' function if the payload is valid", () => {
+  it("should call the 'next' function if the payload is valid", () => {
     // Arrange
     const { req, res } = getHttpMocks();
     const next = jest.fn();

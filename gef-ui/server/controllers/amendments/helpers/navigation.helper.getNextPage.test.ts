@@ -1,4 +1,4 @@
-import { PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { getNextPage } from './navigation.helper';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
@@ -15,6 +15,8 @@ const {
   EFFECTIVE_DATE,
   CHECK_YOUR_ANSWERS,
   MANUAL_APPROVAL_NEEDED,
+  SUBMITTED_FOR_CHECKING,
+  CANCEL,
 } = PORTAL_AMENDMENT_PAGES;
 
 describe('getNextPage', () => {
@@ -230,6 +232,33 @@ describe('getNextPage', () => {
 
   withNextPageTests({
     currentPage: CHECK_YOUR_ANSWERS,
+    successTestCases: [
+      {
+        description: `when the amendment has status ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}`,
+        expectedNextPage: SUBMITTED_FOR_CHECKING,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withStatus(PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL).build(),
+      },
+    ],
+    errorTestCases: [
+      {
+        description: `when the amendment has status ${PORTAL_AMENDMENT_STATUS.DRAFT}`,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withStatus(PORTAL_AMENDMENT_STATUS.DRAFT).build(),
+      },
+    ],
+  });
+
+  withNextPageTests({
+    currentPage: CANCEL,
+    errorTestCases: [
+      {
+        description: '',
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().build(),
+      },
+    ],
+  });
+
+  withNextPageTests({
+    currentPage: SUBMITTED_FOR_CHECKING,
     errorTestCases: [
       {
         description: '',

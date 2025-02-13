@@ -21,7 +21,6 @@
 
       <tbody class="govuk-table__body">
       {% for summaryItem in summaryItems %}
-        {% set checkboxId = ['set-status--reportId-', summaryItem.reportId, '-currentStatus-', summaryItem.status] | join %}
         <tr
           class="govuk-table__row"
           data-cy="utilisation-report-reconciliation-table-row-bank-{{ summaryItem.bank.id }}-submission-month-{{ submissionMonth }}"

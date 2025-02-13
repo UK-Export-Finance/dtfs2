@@ -1,5 +1,5 @@
 import { ZodSchema } from 'zod';
-import { WithSchemaTestParams } from '../with-schema-test.type';
+import { WithSchemaTestParams } from '../types/with-schema-test.type';
 import { withDefaultOptionsTests } from '../primitive-types-tests/with-default-options.tests';
 import { withNumberTests } from '../primitive-types-tests';
 
@@ -30,7 +30,7 @@ export const withUnixTimestampSchemaTests = <Schema extends ZodSchema>({
     });
 
     it('should fail parsing if the parameter is not an int number', () => {
-      const { success } = schema.safeParse(getTestObjectWithUpdatedParameter(-1));
+      const { success } = schema.safeParse(getTestObjectWithUpdatedParameter(1.1));
       expect(success).toBe(false);
     });
   });
