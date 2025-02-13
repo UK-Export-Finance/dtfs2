@@ -1,4 +1,4 @@
-import { withCurrencySchemaTests } from '../test-helpers';
+import { withCurrencySchemaTests } from '../test-helpers/schemas';
 import { CURRENCY_SCHEMA } from './currency.schema';
 
 describe('CURRENCY_SCHEMA', () => {

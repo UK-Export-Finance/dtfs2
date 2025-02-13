@@ -1,10 +1,9 @@
 /* eslint-disable no-param-reassign */
 import { z, ZodSchema } from 'zod';
-import { withTestsForTestcase } from './tests/with-tests-for-testcase';
 import { SchemaTestOptions } from './types/schema-test-options.type';
 import { TestCaseWithPathParameter } from './types/test-case-with-path-parameter.type';
-import { WithTestsForTestCaseProps } from './types/with-tests-for-test-case';
-import { BaseTestCase } from './test-cases/base-test-case';
+import { TestCase } from './test-cases';
+import { withTestsForTestcase } from './tests';
 
 /**
  * This function orchestrates a schema's test cases.
@@ -13,7 +12,6 @@ import { BaseTestCase } from './test-cases/base-test-case';
  * @param params.schemaTestOptions Options that are specific to the schema as a whole, for instance, if the schema is a partial, or strict
  * @param params.aValidPayload A function that returns a valid payload for the schema
  * @param params.testCases Test cases to test
- * @param params.withTestsForTestCases pass in withTestsForBackendTestCase when using backend specific test cases, otherwise this can be left as default
  * @see doc\schemas.md for more information
  * @example Schema test options
  * ```ts
@@ -68,18 +66,16 @@ import { BaseTestCase } from './test-cases/base-test-case';
  * }]
  * ```
  */
-export const withSchemaValidationTests = <Schema extends ZodSchema, T extends BaseTestCase>({
+export const withSchemaValidationTests = <Schema extends ZodSchema, T extends TestCase>({
   schema,
   schemaTestOptions = {},
   aValidPayload,
   testCases,
-  withTestsForTestCases = withTestsForTestcase,
 }: {
   schema: Schema;
   schemaTestOptions?: SchemaTestOptions;
   testCases: TestCaseWithPathParameter<T>[];
   aValidPayload: () => z.infer<Schema>;
-  withTestsForTestCases?: (props: WithTestsForTestCaseProps<Schema, T>) => void;
 }) => {
   const schemaTestOptionsDefaults: Partial<SchemaTestOptions> = { isPartial: false, isStrict: false };
 
@@ -119,7 +115,7 @@ export const withSchemaValidationTests = <Schema extends ZodSchema, T extends Ba
     };
 
     describe(`${parameterPath} parameter tests`, () => {
-      withTestsForTestCases({
+      withTestsForTestcase({
         schema,
         testCase,
         getTestObjectWithUpdatedParameter,

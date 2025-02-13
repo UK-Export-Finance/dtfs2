@@ -4,8 +4,7 @@ import { WithSchemaTestParams } from '../types/with-schema-test.type';
 import { generateTfmUserAuditDatabaseRecord } from '../../../change-stream';
 import { withDefaultOptionsTests } from '../primitive-types-tests';
 import { withSchemaValidationTests } from '../with-schema-validation.tests';
-import { withTestsForBackendTestcase } from '../backend-tests/with-tests-for-backend-testcase';
-import { BaseTestCase } from '../test-cases/base-test-case';
+import { TestCase } from '../test-cases';
 
 export const withAuditDatabaseRecordSchemaTests = <Schema extends ZodSchema>({
   schema,
@@ -21,8 +20,7 @@ export const withAuditDatabaseRecordSchemaTests = <Schema extends ZodSchema>({
       options,
     });
 
-    withSchemaValidationTests<Schema, BaseTestCase>({
-      withTestsForTestCases: withTestsForBackendTestcase,
+    withSchemaValidationTests<Schema, TestCase>({
       schema,
       aValidPayload: aValidAuditRecord,
       testCases: [
