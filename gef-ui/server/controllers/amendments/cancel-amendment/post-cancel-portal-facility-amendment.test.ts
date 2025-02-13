@@ -1,18 +1,12 @@
 /* eslint-disable import/first */
-const getFacilityMock = jest.fn();
-const getApplicationMock = jest.fn();
 const deleteAmendmentMock = jest.fn();
 
 import httpMocks from 'node-mocks-http';
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { aPortalSessionUser, PORTAL_LOGIN_STATUS, DEAL_SUBMISSION_TYPE, DEAL_STATUS } from '@ukef/dtfs2-common';
-import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
-import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
+import { aPortalSessionUser, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { postCancelPortalFacilityAmendment, PostCancelPortalFacilityAmendmentRequest } from './post-cancel-portal-facility-amendment';
 
 jest.mock('../../../services/api', () => ({
-  getApplication: getApplicationMock,
-  getFacility: getFacilityMock,
   deleteAmendment: deleteAmendmentMock,
 }));
 
@@ -39,8 +33,6 @@ const getHttpMocks = () =>
     },
   });
 
-const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
-
 describe('postCancelPortalFacilityAmendment', () => {
   beforeEach(() => {
     jest.resetAllMocks();
@@ -48,8 +40,6 @@ describe('postCancelPortalFacilityAmendment', () => {
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
     jest.spyOn(console, 'error');
 
-    getApplicationMock.mockResolvedValue(mockDeal);
-    getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     deleteAmendmentMock.mockResolvedValue(undefined);
   });
 
@@ -77,48 +67,6 @@ describe('postCancelPortalFacilityAmendment', () => {
     expect(res._getRedirectUrl()).toEqual(`/gef/application-details/${dealId}`);
   });
 
-  it('should return false and log error if dealId is invalid', async () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    req.params.dealId = 'invalidDealId';
-
-    // Act
-    const result = await postCancelPortalFacilityAmendment(req, res);
-
-    // Assert
-    expect(deleteAmendmentMock).toHaveBeenCalledTimes(0);
-    expect(result).toBe(false);
-    expect(console.error).toHaveBeenCalledWith('deleteAmendment: API call failed for dealId %s', 'invalidDealId');
-  });
-
-  it('should return false and log error if facilityId is invalid', async () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    req.params.facilityId = 'invalidFacilityId';
-
-    // Act
-    const result = await postCancelPortalFacilityAmendment(req, res);
-
-    // Assert
-    expect(deleteAmendmentMock).toHaveBeenCalledTimes(0);
-    expect(result).toBe(false);
-    expect(console.error).toHaveBeenCalledWith('deleteAmendment: API call failed for facilityId %s', 'invalidFacilityId');
-  });
-
-  it('should return false and log error if amendmentId is invalid', async () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    req.params.amendmentId = 'invalidAmendmentId';
-
-    // Act
-    const result = await postCancelPortalFacilityAmendment(req, res);
-
-    // Assert
-    expect(deleteAmendmentMock).toHaveBeenCalledTimes(0);
-    expect(result).toBe(false);
-    expect(console.error).toHaveBeenCalledWith('deleteAmendment: API call failed for amendmentId %s', 'invalidAmendmentId');
-  });
-
   it('should render `problem with service` if deleteAmendment throws an error', async () => {
     // Arrange
     const mockError = aMockError();
@@ -133,5 +81,40 @@ describe('postCancelPortalFacilityAmendment', () => {
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('Error posting cancel amendments page %o', mockError);
+  });
+
+  const testData = [
+    {
+      description: 'if dealId is invalid',
+      params: { dealId: 'invalidDealId', facilityId, amendmentId },
+      expected: 'deleteAmendment: API call failed for dealId %s',
+      expectedParam: 'invalidDealId',
+    },
+    {
+      description: 'if facilityId is invalid',
+      params: { dealId, facilityId: 'invalidFacilityId', amendmentId },
+      expected: 'deleteAmendment: API call failed for facilityId %s',
+      expectedParam: 'invalidFacilityId',
+    },
+    {
+      description: 'if amendmentId is invalid',
+      params: { dealId, facilityId, amendmentId: 'invalidAmendmentId' },
+      expected: 'deleteAmendment: API call failed for amendmentId %s',
+      expectedParam: 'invalidAmendmentId',
+    },
+  ];
+
+  it.each(testData)('should return false and log error $description', async ({ params, expected, expectedParam }) => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    req.params = params;
+
+    // Act
+    const result = await postCancelPortalFacilityAmendment(req, res);
+
+    // Assert
+    expect(deleteAmendmentMock).toHaveBeenCalledTimes(0);
+    expect(result).toBe(false);
+    expect(console.error).toHaveBeenCalledWith(expected, expectedParam);
   });
 });
