@@ -19,7 +19,6 @@ const { postUploadUtilisationReport } = require('../controllers/utilisation-repo
 const {
   getUtilisationReportsReconciliationSummary,
 } = require('../controllers/utilisation-report-service/get-utilisation-reports-reconciliation-summary.controller');
-const putUtilisationReportStatusController = require('../controllers/utilisation-report-service/put-utilisation-report-status.controller');
 const {
   getUtilisationReportReconciliationDetailsById,
 } = require('../controllers/utilisation-report-service/get-utilisation-report-reconciliation-details-by-id.controller');
@@ -57,6 +56,8 @@ const {
   deleteFeeRecordCorrectionTransientFormData,
 } = require('../controllers/utilisation-report-service/fee-record-correction/delete-fee-record-correction-transient-form-data.controller');
 const { getFeeRecordCorrection } = require('../controllers/utilisation-report-service/fee-record-correction/get-fee-record-correction.controller');
+
+const { getRecordCorrectionLogDetails } = require('../controllers/utilisation-report-service/get-record-correction-log-details.controller');
 
 const utilisationReportsRouter = express.Router();
 
@@ -229,35 +230,6 @@ utilisationReportsRouter.route('/:id').get(validation.sqlIdValidation('id'), han
 utilisationReportsRouter
   .route('/reconciliation-summary/:submissionMonth')
   .get(validation.isoMonthValidation('submissionMonth'), handleExpressValidatorResult, getUtilisationReportsReconciliationSummary);
-
-/**
- * @openapi
- * /utilisation-reports/set-status:
- *   put:
- *     summary: Put utilisation report status for multiple utilisation reports
- *     tags: [Utilisation Report]
- *     description: Set the status of many utilisation reports to completed or not completed.
- *     requestBody:
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               reportsWithStatus:
- *                 type: array
- *                 items:
- *                   $ref: '#/definitions/UtilisationReportStatusWithReportId'
- *               user:
- *                 $ref: '#/definitions/TFMUser'
- *     responses:
- *       200:
- *         description: OK
- *       400:
- *         description: Bad request
- *       500:
- *         description: Internal Server Error
- */
-utilisationReportsRouter.route('/set-status').put(putUtilisationReportStatusController.putUtilisationReportStatus);
 
 /**
  * @openapi
@@ -1149,5 +1121,38 @@ utilisationReportsRouter
   .route('/fee-record-correction-review/:correctionId/user/:userId')
   .all(validation.sqlIdValidation('correctionId'), validation.mongoIdValidation('userId'), handleExpressValidatorResult)
   .get(getFeeRecordCorrectionReview);
+
+/**
+ * @openapi
+ * /utilisation-reports/record-correction-log-details/:correctionId:
+ *   get:
+ *     summary: Get the record correction log details for a record correction via correction id
+ *     tags: [Utilisation Report]
+ *     description: Gets the record correction log details for a record correction via correction id
+ *     parameters:
+ *       - in: path
+ *         name: correctionId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the id for correction
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/GetRecordCorrectionLogDetailsResponse'
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found (if either the correction with matching id or bank with matching id cannot be found)
+ *       500:
+ *         description: Internal Server Error
+ */
+utilisationReportsRouter
+  .route('/record-correction-log-details/:correctionId')
+  .get(validation.sqlIdValidation('correctionId'), handleExpressValidatorResult, getRecordCorrectionLogDetails);
 
 module.exports = utilisationReportsRouter;

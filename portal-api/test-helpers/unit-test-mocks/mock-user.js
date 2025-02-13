@@ -5,10 +5,10 @@ const { MAKER } = require('../../src/v1/roles/roles');
 
 const BASE_TEST_USER = {
   _id: '075bcd157dcb851180e02a7c',
-  username: 'HSBC-maker-1',
+  username: 'maker-1',
   firstname: 'Mister',
   surname: 'One',
-  email: 'one@email.com',
+  email: 'one@ukexportfinance.gov.uk',
   timezone: 'Europe/London',
   roles: [MAKER],
   bank: {

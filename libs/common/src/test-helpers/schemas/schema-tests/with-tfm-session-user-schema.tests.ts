@@ -1,9 +1,9 @@
 import { ZodSchema } from 'zod';
 import { ObjectId } from 'mongodb';
-import { WithSchemaTestParams } from '../with-schema-test.type';
 import { TEAM_IDS } from '../../../constants';
 import { withSchemaValidationTests } from '../with-schema-validation.tests';
 import { withDefaultOptionsTests } from '../primitive-types-tests';
+import { WithSchemaTestParams } from '../types/with-schema-test.type';
 
 export const withTfmSessionUserSchemaTests = <Schema extends ZodSchema>({
   schema,

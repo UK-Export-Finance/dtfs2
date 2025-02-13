@@ -15,4 +15,5 @@ export const aCreateRecordCorrectionRequestViewModel = (): CreateRecordCorrectio
   formValues: {},
   errors: { errorSummary: [] },
   backLinkHref: 'a link',
+  cancelLinkHref: 'a cancel link',
 });

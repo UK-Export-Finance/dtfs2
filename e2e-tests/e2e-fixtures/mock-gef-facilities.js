@@ -232,6 +232,7 @@ const anIssuedContingentFacility = ({ facilityEndDateEnabled = false } = {}) => 
 });
 
 exports.anUnissuedCashFacility = anUnissuedCashFacility;
+exports.anUnissuedContingentFacility = anUnissuedContingentFacility;
 exports.anIssuedCashFacility = anIssuedCashFacility;
 exports.anIssuedCashFacilityWithCoverDateConfirmed = anIssuedCashFacilityWithCoverDateConfirmed;
 exports.anIssuedContingentFacility = anIssuedContingentFacility;
