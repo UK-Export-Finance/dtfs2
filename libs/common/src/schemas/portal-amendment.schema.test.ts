@@ -21,22 +21,22 @@ describe('PORTAL_FACILITY_AMENDMENT_USER_VALUES', () => {
       {
         parameterPath: 'coverEndDate',
         type: 'UNIX_TIMESTAMP_SECONDS_SCHEMA',
-        options: { isOptional: true },
+        options: { isOptional: true, isNullable: true },
       },
       {
         parameterPath: 'isUsingFacilityEndDate',
         type: 'boolean',
-        options: { isOptional: true },
+        options: { isOptional: true, isNullable: true },
       },
       {
         parameterPath: 'facilityEndDate',
         type: 'ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA',
-        options: { isOptional: true },
+        options: { isOptional: true, isNullable: true },
       },
       {
         parameterPath: 'bankReviewDate',
         type: 'ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA',
-        options: { isOptional: true },
+        options: { isOptional: true, isNullable: true },
       },
       {
         parameterPath: 'changeFacilityValue',
@@ -46,7 +46,7 @@ describe('PORTAL_FACILITY_AMENDMENT_USER_VALUES', () => {
       {
         parameterPath: 'value',
         type: 'number',
-        options: { isOptional: true },
+        options: { isOptional: true, isNullable: true },
       },
       { parameterPath: 'currency', type: 'CURRENCY_SCHEMA', options: { isOptional: true } },
       {

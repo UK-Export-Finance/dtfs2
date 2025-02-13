@@ -11,5 +11,5 @@ export type FeeRecordCorrectionReviewInformation = {
   errorSummary: string;
   formattedOldValues: string;
   formattedNewValues: string;
-  bankCommentary?: string;
+  bankCommentary: string | null;
 };

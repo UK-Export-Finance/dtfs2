@@ -1,9 +1,9 @@
 import { Currency } from './currency';
 
 export type RecordCorrectionTransientFormData = {
-  utilisation?: number;
-  reportedCurrency?: Currency;
-  reportedFee?: number;
-  facilityId?: string;
-  additionalComments?: string;
+  utilisation: number | null;
+  reportedCurrency: Currency | null;
+  reportedFee: number | null;
+  facilityId: string | null;
+  additionalComments: string | null;
 };

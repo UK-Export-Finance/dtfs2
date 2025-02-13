@@ -93,15 +93,15 @@ export const getAdditionalCommentsFieldLabels = (correctionReasons: RecordCorrec
 /**
  * Maps an input value to a formatted monetary value or returns the original value.
  *
- * If the value is undefined, returns null.
+ * If the value is undefined or null, returns null.
  * If the value is a number, it will be formatted as a string with two decimal
  * places and thousands separators.
  * If the value is a string, returns the original string.
  * @param inputValue - The input value to format
- * @returns Formatted monetary value string, null if undefined, or original string if invalid
+ * @returns Formatted monetary value string, null if undefined or null, or original string if invalid
  */
-export const mapInputValueToFormattedMonetaryValueOrOriginal = (inputValue?: string | number): string | null => {
-  if (inputValue === undefined) {
+export const mapInputValueToFormattedMonetaryValueOrOriginal = (inputValue?: string | number | null): string | null => {
+  if (inputValue === undefined || inputValue === null) {
     return null;
   }
 

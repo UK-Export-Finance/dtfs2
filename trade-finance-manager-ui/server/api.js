@@ -1493,6 +1493,20 @@ const deleteFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
   }
 };
 
+/**
+ * Gets the record correction log details by id
+ * @param {string} correctionId - The correction id
+ * @param {string} userToken - The user token
+ * @returns {Promise<import('@ukef/dtfs2-common').GetRecordCorrectionLogDetailsResponseBody>}
+ */
+const getRecordCorrectionLogDetailsById = async (correctionId, userToken) => {
+  const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/record-correction-log-details/${correctionId}`, {
+    headers: generateHeaders(userToken),
+  });
+
+  return response.data;
+};
+
 module.exports = {
   getDeal,
   getDeals,
@@ -1561,4 +1575,5 @@ module.exports = {
   updateFeeRecordCorrectionTransientFormData,
   getFeeRecordCorrectionTransientFormData,
   deleteFeeRecordCorrectionTransientFormData,
+  getRecordCorrectionLogDetailsById,
 };

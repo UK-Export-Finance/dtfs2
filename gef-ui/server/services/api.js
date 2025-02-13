@@ -449,6 +449,32 @@ const updateAmendment = async ({ facilityId, amendmentId, update, userToken }) =
   }
 };
 
+/**
+ * @param {Object} param
+ * @param {string} param.facilityId
+ * @param {string} param.amendmentId
+ * @param {string} param.userToken
+ * @returns {Promise<void>}
+ */
+const deleteAmendment = async ({ facilityId, amendmentId, userToken }) => {
+  if (!isValidMongoId(facilityId)) {
+    console.error('Invalid facility ID %s', facilityId);
+    throw new InvalidFacilityIdError(facilityId);
+  }
+
+  if (!isValidMongoId(amendmentId)) {
+    console.error('Invalid amendment ID %s', amendmentId);
+    throw new Error('Invalid amendment ID');
+  }
+
+  try {
+    await Axios.delete(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, { ...config(userToken) });
+  } catch (error) {
+    console.error('Failed to delete the amendment with id %s on facility with id %s %o', amendmentId, facilityId, error);
+    throw error;
+  }
+};
+
 module.exports = {
   validateToken,
   validateBank,
@@ -473,4 +499,5 @@ module.exports = {
   getAmendment,
   upsertAmendment,
   updateAmendment,
+  deleteAmendment,
 };

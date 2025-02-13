@@ -2,7 +2,7 @@ import { ZodSchema } from 'zod';
 import { anEntraIdUser } from '../../mock-data';
 import { withDefaultOptionsTests } from '../primitive-types-tests';
 import { withSchemaValidationTests } from '../with-schema-validation.tests';
-import { WithSchemaTestParams } from '../with-schema-test.type';
+import { WithSchemaTestParams } from '../types/with-schema-test.type';
 
 export const withEntraIdUserSchemaTests = <Schema extends ZodSchema>({
   schema,

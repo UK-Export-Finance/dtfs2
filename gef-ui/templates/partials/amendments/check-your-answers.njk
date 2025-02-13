@@ -1,0 +1,46 @@
+{% extends "index.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% import '../../_macros/amendments/amendment-summary-list.njk' as amendmentSummaryList %}
+
+{% block pageTitle -%}
+  Check your answers before submitting the amendment request
+{%- endblock %}
+
+{% block content -%}
+  {{ govukBackLink({
+    text: "Back",
+    href: previousPage,
+    attributes: {
+      "data-cy": "back-link"
+    }
+  }) }}
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <form method="post">
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-4 govuk-!-margin-top-1" data-cy="page-heading">
+        <span class="govuk-caption-l" data-cy="heading-caption">
+          {{ exporterName }}, {{ facilityType }} facility
+        </span>
+        Check your answers before submitting the amendment request
+      </h1>
+
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+      {{ amendmentSummaryList.render(amendmentSummaryListParams) }}
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Submit to be checked at your bank",
+          attributes: {
+            "data-cy": "submit-button"
+          }
+        }) }}
+
+        <a href="{{ cancelUrl }}"  data-cy="cancel-link" class="govuk-link">Cancel</a>
+      </div>
+    </form>
+  </div>
+
+{%- endblock %}

@@ -4,7 +4,7 @@ const { facilitiesTemplateFilters: templateFilters } = require('./template-filte
 const { selectedFilters } = require('./selected-filters');
 const { submittedFiltersArray, submittedFiltersObject, filtersToText } = require('../filters/helpers');
 const { removeSessionFilter } = require('../filters/remove-filter-from-session');
-const { getApiData, requestParams, getFlashSuccessMessage } = require('../../../helpers');
+const { getApiData, requestParams, getFlashSuccessMessage, mapFacilityProperties } = require('../../../helpers');
 const CONSTANTS = require('../../../constants');
 const { isChecker } = require('../../../helpers/isChecker.helper');
 const { dashboardSortQuery } = require('../sort/helpers');
@@ -40,7 +40,7 @@ const getTemplateVariables = (user, sessionFilters, facilities, count, currentPa
     user,
     primaryNav: CONSTANTS.DASHBOARD.PRIMARY_NAV,
     tab: CONSTANTS.DASHBOARD.TABS.FACILITIES,
-    facilities,
+    facilities: mapFacilityProperties(facilities),
     pages,
     filters: templateFilters(filtersObj),
     selectedFilters: selectedFilters(filtersObj),
