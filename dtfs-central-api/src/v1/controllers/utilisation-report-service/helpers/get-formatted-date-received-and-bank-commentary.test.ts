@@ -29,7 +29,7 @@ describe('get-formatted-date-received-and-bank-commentary', () => {
       const bankCommentary = null;
 
       it('should throw an error', () => {
-        const expectedError = 'dateReceived is required when isCompleted is true';
+        const expectedError = 'Correction marked as completed, but date received is not set';
 
         // Act & Assert
         expect(() => getFormattedDateReceivedAndBankCommentary(isCompleted, dateReceived, bankCommentary)).toThrow(expectedError);
@@ -55,10 +55,13 @@ describe('get-formatted-date-received-and-bank-commentary', () => {
       });
     });
 
-    describe('when isCompleted is true and bankCommentary is not null', () => {
+    describe.each`
+      bankCommentaryLengthDescription | bankCommentary
+      ${'short'}                      | ${'Some bank commentary'}
+      ${'long'}                       | ${'This is a very long bank commentary. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lobortis bibendum sapien et elementum. Morbi vulputate ante luctus, efficitur elit non, venenatis orci. Cras molestie eget sapien at lacinia. Phasellus non accumsan nisl, in consequat tellus. Proin sed dui varius, pretium nibh in, pellentesque lacus. Aenean egestas posuere arcu in placerat. Nullam consequat purus vitae dolor ultricies, sed vulputate nibh accumsan.'}
+    `('when isCompleted is true and bankCommentary is not null and is $bankCommentaryLengthDescription', ({ bankCommentary }: { bankCommentary: string }) => {
       const isCompleted = true;
       const dateReceived = new Date('2024-02-01');
-      const bankCommentary = 'Some bank commentary';
 
       it('should return an object with formattedDateReceived set to the formatted date and formattedBankCommentary set to the bank commentary', () => {
         // Act
