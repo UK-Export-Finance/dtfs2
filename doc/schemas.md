@@ -33,6 +33,15 @@ As part of our schema tests, we export tests that contain `mongodb`'s `ObjectId`
 
 As we should only be using `ObjectId` in the backend, we have seperated out these test files into `backend-filename` tests and do not export these by default in `libs/common` (much like other backend-specific functionality in `libs/common`).
 
+When back end tests are required to be used (for instance, due to checking objectId etc), we should use the following pattern when calling the schema validation tests:
+
+```ts
+withSchemaValidationTests({
+  withTestsForTestCases: withTestsForBackendTestcase,
+  ...rest,
+});
+```
+
 ### Writing tests
 
 To test -- We create a new file, referencing the `withSchemaValidationTests` function, and follow the instructions found in `with-schema-validation.tests.ts`.

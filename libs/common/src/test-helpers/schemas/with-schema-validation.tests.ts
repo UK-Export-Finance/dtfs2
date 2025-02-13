@@ -13,6 +13,7 @@ import { BaseTestCase } from './test-cases/base-test-case';
  * @param params.schemaTestOptions Options that are specific to the schema as a whole, for instance, if the schema is a partial, or strict
  * @param params.aValidPayload A function that returns a valid payload for the schema
  * @param params.testCases Test cases to test
+ * @param params.withTestsForTestCases pass in withTestsForBackendTestCase when using backend specific test cases, otherwise this can be left as default
  * @see doc\schemas.md for more information
  * @example Schema test options
  * ```ts
