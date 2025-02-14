@@ -1482,7 +1482,7 @@ const deleteFeeRecordCorrectionTransientFormData = async (reportId, feeRecordId,
  */
 const getRecordCorrectionLogDetailsById = async (correctionId, userToken) => {
   const response = await axios.get(`${TFM_API_URL}/v1/utilisation-reports/record-correction-log-details/${correctionId}`, {
-    headers: generateHeaders(userToken),
+    headers: generateHeadersWithToken(userToken),
   });
 
   return response.data;
