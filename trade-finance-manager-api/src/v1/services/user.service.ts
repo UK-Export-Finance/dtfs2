@@ -21,6 +21,11 @@ export type UpsertTfmUserFromEntraIdUserResponse = TfmUser;
  * Note: User repo is not dependency injected as a constructor as it may be used in non-DI code
  * DI code is only used for SSO due to existing documentation and other implementations
  */
+/**
+ * User service, primarily used for SSO.
+ * Note: User repo is not dependency injected as a constructor as it may be used in non-DI code
+ * DI code is only used for SSO due to existing documentation and other implementations
+ */
 export class UserService {
   /**
    * Used as part of the SSO process
