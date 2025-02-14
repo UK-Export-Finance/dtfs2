@@ -30,26 +30,10 @@ export const withEntraIdUserSchemaTests = <Schema extends ZodSchema>({
           },
         },
         {
-          parameterPath: 'verified_primary_email',
-          type: 'Array',
+          parameterPath: 'email',
+          type: 'string',
           options: {
-            arrayTypeTestCase: {
-              type: 'string',
-            },
-            overrideGetTestObjectWithUpdatedField: (newValue: unknown) =>
-              getTestObjectWithUpdatedParameter({ ...aValidEntraIdUser(), verified_primary_email: newValue }),
-            isAllowEmpty: false,
-          },
-        },
-        {
-          parameterPath: 'verified_secondary_email',
-          type: 'Array',
-          options: {
-            arrayTypeTestCase: {
-              type: 'string',
-            },
-            overrideGetTestObjectWithUpdatedField: (newValue: unknown) =>
-              getTestObjectWithUpdatedParameter({ ...aValidEntraIdUser(), verified_secondary_email: newValue }),
+            overrideGetTestObjectWithUpdatedField: (newValue: unknown) => getTestObjectWithUpdatedParameter({ ...aValidEntraIdUser(), email: newValue }),
           },
         },
         {

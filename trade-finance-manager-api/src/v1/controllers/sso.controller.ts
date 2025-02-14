@@ -91,7 +91,9 @@ export class SsoController {
       res.send(response);
     } catch (error) {
       const errorMessage = 'Failed to handle redirect form';
+
       console.error(errorMessage, error);
+
       if (error instanceof ApiError) {
         res.status(error.status).send({
           status: error.status,
