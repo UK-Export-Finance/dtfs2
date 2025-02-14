@@ -79,7 +79,7 @@ const createUtilisationReportForBanks = async (): Promise<void> => {
 
         console.info('Successfully inserted report for bank with id %s', bankId);
       } catch (error) {
-        console.error('Error inserting report for bank with id %s. %o', bankId, error);
+        console.error('Error inserting report for bank with id %s %o', bankId, error);
 
         await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.REPORT_INSERTION_CRON_FAILURE, UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS as string, {
           bank_id: bankId,
