@@ -5,7 +5,6 @@ import {
   UtilisationReportEntityMockBuilder,
   MOCK_AZURE_FILE_INFO,
   CURRENCY,
-  DbRequestSource,
   PaymentEntity,
   PENDING_RECONCILIATION,
   RECONCILIATION_COMPLETED,
@@ -15,8 +14,6 @@ import {
 import {
   handleUtilisationReportDueReportInitialisedEvent,
   handleUtilisationReportGenerateKeyingDataEvent,
-  handleUtilisationReportManuallySetCompletedEvent,
-  handleUtilisationReportManuallySetIncompleteEvent,
   handleUtilisationReportAddAPaymentEvent,
   handleUtilisationReportReportUploadedEvent,
   handleUtilisationReportDeletePaymentEvent,
@@ -61,7 +58,7 @@ describe('UtilisationReportStateMachine', () => {
       // Act
       await stateMachine.handleEvent({
         type: 'DUE_REPORT_INITIALISED',
-        payload: { bankId: BANK_ID, reportPeriod: REPORT_PERIOD },
+        payload: { bankId: BANK_ID, reportPeriod: REPORT_PERIOD, requestSource: { platform: REQUEST_PLATFORM_TYPE.SYSTEM } },
       });
 
       // Assert
@@ -170,33 +167,7 @@ describe('UtilisationReportStateMachine', () => {
       expect(handleUtilisationReportGenerateKeyingDataEvent).toHaveBeenCalledTimes(1);
     });
 
-    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED}' event`, async () => {
-      // Arrange
-      const requestSource: DbRequestSource = {
-        platform: REQUEST_PLATFORM_TYPE.TFM,
-        userId: 'abc123',
-      };
-      const transactionEntityManager = {} as unknown as EntityManager;
-      const stateMachine = UtilisationReportStateMachine.forReport(PENDING_RECONCILIATION_REPORT);
-
-      // Act
-      await stateMachine.handleEvent({
-        type: UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED,
-        payload: {
-          requestSource,
-          transactionEntityManager,
-        },
-      });
-
-      // Assert
-      expect(handleUtilisationReportManuallySetCompletedEvent).toHaveBeenCalledTimes(1);
-    });
-
-    const VALID_PENDING_RECONCILIATION_EVENT_TYPES = [
-      UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT,
-      UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED,
-      UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA,
-    ];
+    const VALID_PENDING_RECONCILIATION_EVENT_TYPES = [UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT, UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA];
 
     it.each(difference(UTILISATION_REPORT_EVENT_TYPES, VALID_PENDING_RECONCILIATION_EVENT_TYPES))(
       "throws an 'InvalidStateMachineTransitionError' for event type %p",
@@ -402,28 +373,6 @@ describe('UtilisationReportStateMachine', () => {
   describe(`when report is in '${RECONCILIATION_COMPLETED}' status`, () => {
     const RECONCILIATION_COMPLETED_REPORT = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_COMPLETED).build();
 
-    it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_INCOMPLETE}' event`, async () => {
-      // Arrange
-      const requestSource: DbRequestSource = {
-        platform: REQUEST_PLATFORM_TYPE.TFM,
-        userId: 'abc123',
-      };
-      const transactionEntityManager = {} as unknown as EntityManager;
-      const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_COMPLETED_REPORT);
-
-      // Act
-      await stateMachine.handleEvent({
-        type: UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_INCOMPLETE,
-        payload: {
-          requestSource,
-          transactionEntityManager,
-        },
-      });
-
-      // Assert
-      expect(handleUtilisationReportManuallySetIncompleteEvent).toHaveBeenCalledTimes(1);
-    });
-
     it(`handles the '${UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_READY_TO_KEY}' event`, async () => {
       // Arrange
       const stateMachine = UtilisationReportStateMachine.forReport(RECONCILIATION_COMPLETED_REPORT);
@@ -445,10 +394,7 @@ describe('UtilisationReportStateMachine', () => {
       expect(handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent).toHaveBeenCalledTimes(1);
     });
 
-    const VALID_RECONCILIATION_COMPLETED_EVENT_TYPES = [
-      UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_INCOMPLETE,
-      UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_READY_TO_KEY,
-    ];
+    const VALID_RECONCILIATION_COMPLETED_EVENT_TYPES = [UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_READY_TO_KEY];
 
     it.each(difference(UTILISATION_REPORT_EVENT_TYPES, VALID_RECONCILIATION_COMPLETED_EVENT_TYPES))(
       "throws an 'InvalidStateMachineTransitionError' for event type %p",

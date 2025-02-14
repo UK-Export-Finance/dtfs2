@@ -1,45 +1,44 @@
 import httpMocks from 'node-mocks-http';
+import { Request, Response } from 'express';
 import { LoginController } from './login.controller';
-import { LoginService } from '../../../services/login.service';
-import { LoginServiceMockBuilder } from '../../../../test-helpers/mocks';
 
 describe('controllers - login (sso)', () => {
-  describe('getLogout', () => {
-    let loginService: LoginService;
-    let loginController: LoginController;
+  let consoleInfoMock: jest.Mock;
 
-    beforeEach(() => {
-      loginService = new LoginServiceMockBuilder().build();
-      loginController = new LoginController({ loginService });
+  describe('getLogout', () => {
+    let res: httpMocks.MockResponse<Response>;
+    let req: httpMocks.MockRequest<Request>;
+
+    beforeAll(() => {
+      consoleInfoMock = jest.fn();
+      console.info = consoleInfoMock;
     });
 
-    it('should redirect to /', () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
+    beforeEach(() => {
+      ({ req, res } = httpMocks.createMocks({
+        session: { destroy: jest.fn((callback: () => void) => callback()) },
+      }));
+    });
 
+    afterAll(() => {
+      consoleInfoMock.mockRestore();
+    });
+
+    it('should render the user logged out page', () => {
       // Act
-      loginController.getLogout(req, res);
+      LoginController.getLogout(req, res);
 
       // Assert
-      expect(res._getRedirectUrl()).toEqual('/');
+      expect(res._getRenderView()).toEqual('user-logged-out.njk');
     });
 
     it('should destroy the session', () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
-
       // Act
-      loginController.getLogout(req, res);
+      LoginController.getLogout(req, res);
 
       // Assert
       // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(req.session.destroy).toHaveBeenCalledTimes(1);
     });
-
-    function getHttpMocks() {
-      return httpMocks.createMocks({
-        session: { destroy: jest.fn((callback: () => void) => callback()) },
-      });
-    }
   });
 });

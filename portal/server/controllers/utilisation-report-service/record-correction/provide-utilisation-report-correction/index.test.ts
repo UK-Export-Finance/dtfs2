@@ -1,6 +1,7 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { Response } from 'express';
 import {
+  anEmptyRecordCorrectionTransientFormData,
   aPortalSessionBank,
   aPortalSessionUser,
   aRecordCorrectionFormValues,
@@ -207,10 +208,15 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
       });
 
       describe('when there are saved form values', () => {
+        const facilityId = '11111111';
+        const additionalComments = 'Some comments';
+        const reportedCurrency = CURRENCY.GBP;
+
         const savedFormValues: GetFeeRecordCorrectionTransientFormDataResponseBody = {
-          facilityId: '123',
-          additionalComments: 'Some comments',
-          reportedCurrency: CURRENCY.GBP,
+          ...anEmptyRecordCorrectionTransientFormData(),
+          facilityId,
+          additionalComments,
+          reportedCurrency,
         };
 
         beforeEach(() => {
@@ -229,7 +235,7 @@ describe('controllers/utilisation-reports/record-corrections/create-record-corre
 
           const expectedCancelLinkHref = getRecordCorrectionCancelLinkHref(correctionId);
           const expectedCorrectionRequestDetails = mapToCorrectionRequestDetailsViewModel(feeRecordCorrectionResponse);
-          const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems(savedFormValues.reportedCurrency);
+          const expectedPaymentCurrencyOptions = mapCurrenciesToRadioItems(reportedCurrency);
           const { label: expectedAdditionalCommentsLabel, hint: expectedAdditionalCommentsHint } = getAdditionalCommentsFieldLabels(reasons);
 
           // Act

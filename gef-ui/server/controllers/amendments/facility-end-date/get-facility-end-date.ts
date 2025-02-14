@@ -1,4 +1,4 @@
-import { CustomExpressRequest, DayMonthYearInput } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { FacilityEndDateViewModel } from '../../../types/view-models/amendments/facility-end-date-view-model';
@@ -42,6 +42,11 @@ export const getFacilityEndDate = async (req: GetFacilityEndDateRequest, res: Re
       return res.redirect('/not-found');
     }
 
+    if (!(PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES as string[]).includes(amendment.status)) {
+      console.error('Amendment %s is not assigned to Maker', amendmentId);
+      return res.redirect(`/gef/application-details/${dealId}`);
+    }
+
     if (!amendment.changeCoverEndDate) {
       console.error('Amendment %s is not changing the cover end date', amendmentId);
       return res.redirect(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE }));
@@ -52,7 +57,7 @@ export const getFacilityEndDate = async (req: GetFacilityEndDateRequest, res: Re
       return res.redirect(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE }));
     }
 
-    const facilityEndDate: DayMonthYearInput | undefined = amendment.facilityEndDate && convertDateToDayMonthYearInput(amendment.facilityEndDate);
+    const facilityEndDate = amendment.facilityEndDate && convertDateToDayMonthYearInput(amendment.facilityEndDate);
 
     const viewModel: FacilityEndDateViewModel = {
       exporterName: deal.exporter.companyName,

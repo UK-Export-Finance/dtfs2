@@ -59,12 +59,6 @@ const utilisationReportPage = {
       markAsToDoButton: () => cy.get('[data-cy="keying-sheet-mark-as-to-do-button"]'),
       keyingSheetTableRow: (feeRecordId) => cy.get(`[data-cy="keying-sheet-row-${feeRecordId}"]`),
       selectAllCheckbox: () => cy.get('#keying-sheet [data-cy="table-cell-checkbox--select-all"]'),
-      fixedFeeAdjustmentIncrease: (feeRecordId) => cy.get(`[data-cy="keying-sheet-row-${feeRecordId}"] td[data-cy="fixed-fee-adjustment--increase"]`),
-      fixedFeeAdjustmentDecrease: (feeRecordId) => cy.get(`[data-cy="keying-sheet-row-${feeRecordId}"] td[data-cy="fixed-fee-adjustment--decrease"]`),
-      principalBalanceAdjustmentIncrease: (feeRecordId) =>
-        cy.get(`[data-cy="keying-sheet-row-${feeRecordId}"] td[data-cy="principal-balance-adjustment--increase"]`),
-      principalBalanceAdjustmentDecrease: (feeRecordId) =>
-        cy.get(`[data-cy="keying-sheet-row-${feeRecordId}"] td[data-cy="principal-balance-adjustment--decrease"]`),
     },
     paymentDetailsContent: {
       paymentLinks: () => cy.get('[data-cy^="payment-details-tab-edit-payment-link"]'),
@@ -156,13 +150,14 @@ const utilisationReportPage = {
         correctRecordHeader: () => cy.get('[data-cy="record-correction-log-table-correct-record-header"]'),
         oldRecordHeader: () => cy.get('[data-cy="record-correction-log-table-old-record-header"]'),
         statusHeader: () => cy.get('[data-cy="record-correction-log-table-status-header"]'),
-        row: (feeRecordId) => ({
-          exporter: () => cy.get(`[data-cy="record-correction-log-table-row-${feeRecordId}-exporter"]`),
-          reasons: () => cy.get(`[data-cy="record-correction-log-table-row-${feeRecordId}-reasons"]`),
-          dateSent: () => cy.get(`[data-cy="record-correction-log-table-row-${feeRecordId}-date-sent"]`),
-          correctRecord: () => cy.get(`[data-cy="record-correction-log-table-row-${feeRecordId}-correct-record"]`),
-          oldRecord: () => cy.get(`[data-cy="record-correction-log-table-row-${feeRecordId}-old-record"]`),
-          status: () => cy.get(`[data-cy="record-correction-log-table-row-${feeRecordId}-status"]`),
+        row: (correctionId) => ({
+          detailsLink: () => cy.get(`[data-cy="record-correction-log-table-row-${correctionId}-details-link"]`),
+          exporter: () => cy.get(`[data-cy="record-correction-log-table-row-${correctionId}-exporter"]`),
+          reasons: () => cy.get(`[data-cy="record-correction-log-table-row-${correctionId}-reasons"]`),
+          dateSent: () => cy.get(`[data-cy="record-correction-log-table-row-${correctionId}-date-sent"]`),
+          correctRecord: () => cy.get(`[data-cy="record-correction-log-table-row-${correctionId}-correct-record"]`),
+          oldRecord: () => cy.get(`[data-cy="record-correction-log-table-row-${correctionId}-old-record"]`),
+          status: () => cy.get(`[data-cy="record-correction-log-table-row-${correctionId}-status"]`),
         }),
       },
     },

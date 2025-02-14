@@ -1,4 +1,4 @@
-import { PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { PortalAmendmentPage } from '../../../types/portal-amendments';
 
@@ -13,6 +13,7 @@ const {
   EFFECTIVE_DATE,
   CHECK_YOUR_ANSWERS,
   MANUAL_APPROVAL_NEEDED,
+  SUBMITTED_FOR_CHECKING,
 } = PORTAL_AMENDMENT_PAGES;
 
 const startPages = [WHAT_DO_YOU_NEED_TO_CHANGE] as const;
@@ -69,6 +70,10 @@ const getJourneyForAmendment = (amendment: PortalFacilityAmendmentWithUkefId): P
     pages.push(MANUAL_APPROVAL_NEEDED);
   } else {
     pages.push(...endPages);
+  }
+
+  if (amendment.status === PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL) {
+    pages.push(SUBMITTED_FOR_CHECKING);
   }
 
   return pages;

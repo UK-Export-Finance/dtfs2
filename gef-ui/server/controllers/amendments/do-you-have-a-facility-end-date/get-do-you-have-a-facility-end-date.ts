@@ -1,4 +1,4 @@
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { DoYouHaveAFacilityEndDateViewModel } from '../../../types/view-models/amendments/do-you-have-a-facility-end-date-view-model';
@@ -41,12 +41,18 @@ export const getDoYouHaveAFacilityEndDate = async (req: GetDoYouHaveAFacilityEnd
       return res.redirect('/not-found');
     }
 
+    if (!(PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES as string[]).includes(amendment.status)) {
+      console.error('Amendment %s is not assigned to Maker', amendmentId);
+      return res.redirect(`/gef/application-details/${dealId}`);
+    }
+
     if (!amendment.changeCoverEndDate) {
       console.error('Amendment %s is not changing the cover end date', amendmentId);
       return res.redirect(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE }));
     }
 
-    const isUsingFacilityEndDate = amendment.isUsingFacilityEndDate === undefined ? undefined : amendment.isUsingFacilityEndDate.toString();
+    const isUsingFacilityEndDate =
+      amendment.isUsingFacilityEndDate === undefined || amendment.isUsingFacilityEndDate === null ? undefined : amendment.isUsingFacilityEndDate.toString();
 
     const viewModel: DoYouHaveAFacilityEndDateViewModel = {
       exporterName: deal.exporter.companyName,

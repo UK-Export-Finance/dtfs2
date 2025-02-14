@@ -5,3 +5,6 @@ export * from './create-tfm-user-request.schema';
 export * from './update-tfm-user-request.schema';
 export * from './upsert-tfm-user-request.schema';
 export * from './tfm-team.schema';
+export * from './tfm-user.schema';
+export * from './tfm-session-user.schema';
+export * from './handle-sso-redirect-form-response.schema';

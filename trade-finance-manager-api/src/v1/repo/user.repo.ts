@@ -19,6 +19,7 @@ type CreateUserParams = {
 };
 
 type UpdateUserByIdParams = { userId: ObjectId; userUpdate: UpdateTfmUserRequest; auditDetails: AuditDetails };
+
 export class UserRepo {
   /**
    * Gets the tfm users collection
@@ -42,6 +43,21 @@ export class UserRepo {
     const query = { email: { $in: emailsRegex } };
 
     return await collection.find(query).toArray();
+  }
+
+  /**
+   * Finds a user by email address
+   * @param email email address to search for
+   * @returns the matched TFM user or null if not found
+   */
+  public static async findUserByEmailAddress(email: string): Promise<TfmUser | null> {
+    const collection = await UserRepo.getCollection();
+
+    const emailRegex = getEscapedRegexFromString(email);
+
+    const query = { email: emailRegex };
+
+    return collection.findOne(query);
   }
 
   /**

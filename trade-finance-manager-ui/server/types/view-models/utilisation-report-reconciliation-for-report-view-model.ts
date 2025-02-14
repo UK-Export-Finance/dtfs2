@@ -2,7 +2,6 @@ import {
   Currency,
   CurrencyAndAmountString,
   FeeRecordStatus,
-  KeyingSheetAdjustmentChange,
   KeyingSheetRowStatus,
   PaymentDetailsFilters,
   PremiumPaymentsFilters,
@@ -38,11 +37,6 @@ export type PaymentViewModelItem = {
 
 export type KeyingSheetDisplayStatus = 'To do' | 'Done';
 
-export type KeyingSheetAdjustmentViewModel = {
-  amount: string | undefined;
-  change: KeyingSheetAdjustmentChange;
-};
-
 export type KeyingSheetViewModel = {
   feeRecordId: number;
   status: KeyingSheetRowStatus;
@@ -54,8 +48,6 @@ export type KeyingSheetViewModel = {
     formattedCurrencyAndAmount: CurrencyAndAmountString;
     formattedDateReceived: string | undefined;
   }[];
-  fixedFeeAdjustment: KeyingSheetAdjustmentViewModel;
-  principalBalanceAdjustment: KeyingSheetAdjustmentViewModel;
   checkboxId: KeyingSheetCheckboxId;
   isChecked: boolean;
 }[];

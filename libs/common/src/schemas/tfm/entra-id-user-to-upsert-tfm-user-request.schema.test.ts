@@ -38,8 +38,8 @@ describe('ENTRA_ID_USER_TO_TFM_UPSERT_REQUEST_SCHEMA', () => {
     itShouldThrowAnError(request);
   });
 
-  describe('when no primary email is provided', () => {
-    const request = { ...anEntraIdUser(), verified_primary_email: [] };
+  describe('when no email is provided', () => {
+    const request = { ...anEntraIdUser(), email: undefined };
     itShouldThrowAnError(request);
   });
 });
@@ -49,13 +49,12 @@ function itShouldReturnAValidUpsertTfmUserRequest(request: EntraIdUser) {
     const result = ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA.parse(request);
     expect(result).toEqual({
       azureOid: request.oid,
-      email: request.verified_primary_email[0],
-      username: request.verified_primary_email[0],
+      email: request.email,
+      username: request.email,
       teams: request.roles,
       timezone: timezoneConfig.DEFAULT,
       firstName: request.given_name,
       lastName: request.family_name,
-      lastLogin: Date.now(),
     });
   });
 }

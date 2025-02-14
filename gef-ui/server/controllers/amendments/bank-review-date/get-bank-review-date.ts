@@ -1,4 +1,4 @@
-import { CustomExpressRequest, DayMonthYearInput } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { BankReviewDateViewModel } from '../../../types/view-models/amendments/bank-review-date-view-model';
@@ -42,6 +42,11 @@ export const getBankReviewDate = async (req: GetBankReviewDateRequest, res: Resp
       return res.redirect('/not-found');
     }
 
+    if (!(PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES as string[]).includes(amendment.status)) {
+      console.error('Amendment %s is not assigned to Maker', amendmentId);
+      return res.redirect(`/gef/application-details/${dealId}`);
+    }
+
     if (!amendment.changeCoverEndDate) {
       console.error('Amendment %s is not changing the cover end date', amendmentId);
       return res.redirect(
@@ -56,7 +61,7 @@ export const getBankReviewDate = async (req: GetBankReviewDateRequest, res: Resp
       );
     }
 
-    const bankReviewDate: DayMonthYearInput | undefined = amendment.bankReviewDate && convertDateToDayMonthYearInput(amendment.bankReviewDate);
+    const bankReviewDate = amendment.bankReviewDate && convertDateToDayMonthYearInput(amendment.bankReviewDate);
 
     const viewModel: BankReviewDateViewModel = {
       exporterName: deal.exporter.companyName,

@@ -136,11 +136,11 @@ const updateDealAcbs = async (taskOutput) => {
   await tfmController.updateAcbs(taskOutput);
 
   const facilitiesUpdates = facilities
-    .filter((facility) => facility.facilityId)
+    .filter((facility) => facility.facilityIdentifier)
     .map((facility) => {
-      const { facilityId, ...acbsFacility } = facility;
+      const { facilityIdentifier, ...acbsFacility } = facility;
       // Add `acbs` object to tfm-facilities
-      return tfmController.updateFacilityAcbs(facilityId, acbsFacility);
+      return tfmController.updateFacilityAcbs(facilityIdentifier, acbsFacility);
     });
 
   await Promise.all(facilitiesUpdates);
@@ -327,6 +327,7 @@ const amendAcbsFacility = (amendments, facility, deal) => {
 module.exports = {
   addToACBSLog,
   createACBS,
+  updateDealAcbs,
   checkAzureAcbsFunction,
   issueAcbsFacilities,
   amendAcbsFacility,

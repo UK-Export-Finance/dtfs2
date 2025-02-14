@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { isTfmPaymentReconciliationFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import api from '../../api';
 import { getIsoMonth } from '../../helpers/date';
 import { getReportReconciliationSummariesViewModel, isPDCReconcileUser } from './helpers';
@@ -21,10 +20,6 @@ export const getUtilisationReports = async (req: Request, res: Response) => {
       reportPeriodSummaries: reconciliationSummariesViewModel,
       isPDCReconcileUser: isPDCReconcileUser(user),
     };
-
-    if (!isTfmPaymentReconciliationFeatureFlagEnabled()) {
-      return res.render('utilisation-reports/utilisation-reports-manual-reconciliation.njk', viewModel);
-    }
 
     return res.render('utilisation-reports/utilisation-reports.njk', viewModel);
   } catch (error) {

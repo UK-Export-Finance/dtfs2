@@ -9,6 +9,7 @@ import {
   PENDING_RECONCILIATION,
   RECORD_CORRECTION_REASON,
   FeeRecordCorrectionEntityMockBuilder,
+  anEmptyRecordCorrectionTransientFormData,
 } from '@ukef/dtfs2-common';
 import { InvalidStateMachineTransitionError } from '../../../errors';
 import { FEE_RECORD_EVENT_TYPE, FEE_RECORD_EVENT_TYPES, FeeRecordEventType } from './event/fee-record.event-type';
@@ -26,7 +27,6 @@ import {
   handleFeeRecordCorrectionRequestedEvent,
   handleFeeRecordCorrectionReceivedEvent,
 } from './event-handlers';
-import { aReportPeriod } from '../../../../test-helpers';
 
 jest.mock('./event-handlers');
 
@@ -133,7 +133,7 @@ describe('FeeRecordStateMachine', () => {
         payload: {
           transactionEntityManager: {} as EntityManager,
           correctionEntity: FeeRecordCorrectionEntityMockBuilder.forFeeRecordAndIsCompleted(PENDING_CORRECTION_FEE_RECORD, false).build(),
-          correctionFormData: {},
+          correctionFormData: anEmptyRecordCorrectionTransientFormData(),
           requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });
@@ -194,8 +194,6 @@ describe('FeeRecordStateMachine', () => {
         type: FEE_RECORD_EVENT_TYPE.GENERATE_KEYING_DATA,
         payload: {
           transactionEntityManager: {} as EntityManager,
-          isFinalFeeRecordForFacility: false,
-          reportPeriod: aReportPeriod(),
           requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });

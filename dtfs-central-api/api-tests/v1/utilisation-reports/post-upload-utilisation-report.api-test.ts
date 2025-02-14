@@ -2,14 +2,11 @@ import { HttpStatusCode } from 'axios';
 import { WithoutId } from 'mongodb';
 import {
   AzureFileInfoEntity,
-  FacilityUtilisationDataEntity,
-  FacilityUtilisationDataEntityMockBuilder,
   FeeRecordEntity,
   MOCK_AZURE_FILE_INFO,
   MONGO_DB_COLLECTIONS,
   PENDING_RECONCILIATION,
   REPORT_NOT_RECEIVED,
-  ReportPeriod,
   TfmFacility,
   UtilisationReportEntity,
   UtilisationReportEntityMockBuilder,
@@ -133,70 +130,6 @@ describe(`POST ${getUrl()}`, () => {
     expect(feeRecordCount).toEqual(3);
   });
 
-  it('creates an entry in the FacilityUtilisationData table for each facility id in the report csv data', async () => {
-    // Arrange
-    const facilityIds = ['11111111', '22222222', '33333333'];
-    const reportData: UtilisationReportRawCsvData[] = facilityIds.map((id) => ({
-      ...aUtilisationReportRawCsvData(),
-      'ukef facility id': id,
-    }));
-
-    await insertTfmFacilitiesForFacilityIds(facilityIds);
-
-    const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
-
-    // Act
-    const response = await testApi.post(payload).to(getUrl());
-
-    // Assert
-    expect(response.status).toEqual(HttpStatusCode.Created);
-
-    const facilityIdExists = await Promise.all(facilityIds.map((id) => SqlDbHelper.manager.existsBy(FacilityUtilisationDataEntity, { id })));
-    expect(facilityIdExists).toEqual([true, true, true]);
-  });
-
-  it('should calculate and save initial utilisation and fixed fee using facility values from facility creation', async () => {
-    // Arrange
-    const ukefFacilityId = '11111111';
-    const reportData: UtilisationReportRawCsvData[] = [
-      {
-        ...aUtilisationReportRawCsvData(),
-        'ukef facility id': ukefFacilityId,
-      },
-    ];
-
-    const tfmFacility: WithoutId<TfmFacility> = {
-      ...aTfmFacility(),
-      facilitySnapshot: {
-        ...aTfmFacility().facilitySnapshot,
-        ukefFacilityId,
-        coverPercentage: 80,
-        value: 500000,
-      },
-    };
-
-    const tfmFacilitiesCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES);
-    await tfmFacilitiesCollection.insertOne(tfmFacility);
-
-    const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
-
-    // Act
-    const response = await testApi.post(payload).to(getUrl());
-
-    // Assert
-    expect(response.status).toEqual(HttpStatusCode.Created);
-
-    const facilityUtilisationData = await SqlDbHelper.manager.findOneBy(FacilityUtilisationDataEntity, { id: ukefFacilityId });
-    expect(facilityUtilisationData).not.toBeNull();
-    /**
-     * Initial utilisation is 10% of the facility value * (cover percentage / 100) thus,
-     * utilisation = 0.1 * 500000 * (80 / 100)
-     *             = 40000
-     */
-    expect(facilityUtilisationData?.utilisation).toEqual(40000);
-    expect(facilityUtilisationData?.fixedFee).toEqual(0);
-  });
-
   it('creates an entry in the AzureFileInfo table', async () => {
     // Act
     const response = await testApi.post(aValidPayload()).to(getUrl());
@@ -246,84 +179,5 @@ describe(`POST ${getUrl()}`, () => {
       const numberOfInsertedFeeRecords = await SqlDbHelper.manager.count(FeeRecordEntity, {});
       expect(numberOfInsertedFeeRecords).toEqual(numberOfReportDataEntriesToCreate);
     });
-
-    it('saves each new individual facility utilisation data entity', async () => {
-      // Assert
-      for (const id of ukefFacilityIds) {
-        const facilityUtilisationDataExists = await SqlDbHelper.manager.existsBy(FacilityUtilisationDataEntity, { id });
-        expect(facilityUtilisationDataExists).toEqual(true);
-      }
-    });
-  });
-
-  it('creates a new FacilityUtilisationData row using the previous reportPeriod if the report data has a facility id which does not already exist', async () => {
-    // Arrange
-    await SqlDbHelper.deleteAll();
-
-    const reportPeriod: ReportPeriod = {
-      start: { month: 4, year: 2023 },
-      end: { month: 6, year: 2023 },
-    };
-    const report = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).withId(reportId).withReportPeriod(reportPeriod).build();
-    await SqlDbHelper.saveNewEntry('UtilisationReport', report);
-
-    const ukefFacilityId = '12345678';
-    const reportData: UtilisationReportRawCsvData[] = [{ ...aUtilisationReportRawCsvData(), 'ukef facility id': ukefFacilityId }];
-
-    await insertTfmFacilitiesForFacilityIds([ukefFacilityId]);
-
-    const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
-
-    // Act
-    const response = await testApi.post(payload).to(getUrl());
-
-    // Assert
-    expect(response.status).toEqual(HttpStatusCode.Created);
-
-    const previousReportPeriod = { start: { month: 1, year: 2023 }, end: { month: 3, year: 2023 } };
-
-    const facilityUtilisationDataEntityExists = await SqlDbHelper.manager.existsBy(FacilityUtilisationDataEntity, {
-      id: ukefFacilityId,
-      reportPeriod: previousReportPeriod,
-    });
-    expect(facilityUtilisationDataEntityExists).toEqual(true);
-  });
-
-  it('does not update the existing FacilityUtilisationData row if the report data has a facility id which already exists', async () => {
-    // Arrange
-    await SqlDbHelper.deleteAll();
-
-    const reportReportPeriod: ReportPeriod = {
-      start: { month: 4, year: 2023 },
-      end: { month: 6, year: 2023 },
-    };
-    const report = UtilisationReportEntityMockBuilder.forStatus(REPORT_NOT_RECEIVED).withId(reportId).withReportPeriod(reportReportPeriod).build();
-    await SqlDbHelper.saveNewEntry('UtilisationReport', report);
-
-    const ukefFacilityId = '12345678';
-    const facilityUtilisationDataReportPeriod: ReportPeriod = {
-      start: { month: 1, year: 2021 },
-      end: { month: 2, year: 2022 },
-    };
-    const facilityUtilisationData = FacilityUtilisationDataEntityMockBuilder.forId(ukefFacilityId)
-      .withReportPeriod(facilityUtilisationDataReportPeriod)
-      .build();
-    await SqlDbHelper.saveNewEntry('FacilityUtilisationData', facilityUtilisationData);
-
-    await insertTfmFacilitiesForFacilityIds([ukefFacilityId]);
-
-    const reportData: UtilisationReportRawCsvData[] = [{ ...aUtilisationReportRawCsvData(), 'ukef facility id': ukefFacilityId }];
-
-    const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportData };
-
-    // Act
-    const response = await testApi.post(payload).to(getUrl());
-
-    // Assert
-    expect(response.status).toEqual(HttpStatusCode.Created);
-
-    const facilityUtilisationDataEntity = await SqlDbHelper.manager.findOneByOrFail(FacilityUtilisationDataEntity, { id: ukefFacilityId });
-    expect(facilityUtilisationDataEntity.reportPeriod).not.toEqual(reportReportPeriod);
-    expect(facilityUtilisationDataEntity.reportPeriod).toEqual(facilityUtilisationDataReportPeriod);
   });
 });

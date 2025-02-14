@@ -7,8 +7,8 @@ const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const flash = require('connect-flash');
 const { HttpStatusCode } = require('axios');
+const { unauthenticatedAuthRoutes } = require('./routes/auth');
 
-const { getUnauthenticatedAuthRouter } = require('./routes/auth/configs');
 const routes = require('./routes');
 const feedbackRoutes = require('./routes/feedback');
 const configureNunjucks = require('./nunjucks-configuration');
@@ -55,21 +55,35 @@ const generateApp = () => {
       cookie,
     }),
   );
+
+  app.use(cookieParser());
+
   app.use(compression());
 
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  app.use(cookieParser());
+
+  app.use(
+    morgan('dev', {
+      skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
+    }),
+  );
+
+  app.use('/assets', express.static('node_modules/govuk-frontend/dist/govuk/assets'), express.static(path.join(__dirname, '..', 'public')));
+
+  app.use(createRateLimit());
+
+  /**
+   * Unauthenticated auth routes only exist on SSO implementation
+   * and not the traditional login journey
+   */
+  if (unauthenticatedAuthRoutes) {
+    app.use('/', unauthenticatedAuthRoutes);
+  }
 
   // Unauthenticated routes
   app.use('/', feedbackRoutes);
-  // We add a conditional check here as there are no auth routes for the non sso journey, and
-  // we cannot call app.use with './', undefined.
-  const unauthenticatedAuthRouters = getUnauthenticatedAuthRouter();
 
-  if (unauthenticatedAuthRouters) {
-    app.use(unauthenticatedAuthRouters);
-  }
   app.use(
     csrf({
       cookie: {
@@ -81,22 +95,19 @@ const generateApp = () => {
   app.use(csrfToken());
   app.use(sanitizeXss());
 
-  app.use(
-    morgan('dev', {
-      skip: (req) => req.url.startsWith('/assets') || req.url.startsWith('/main.js'),
-    }),
-  );
-
-  app.use('/assets', express.static('node_modules/govuk-frontend/dist/govuk/assets'), express.static(path.join(__dirname, '..', 'public')));
-
-  app.use(createRateLimit());
   app.use(healthcheck);
   app.use('/', routes);
 
   app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
 
-  // error handler
-  app.use((error, req, res, _next) => {
+  /**
+   * Error handler configuration
+   * Currently, this only handles CSRF token errors, and
+   * any other errors are passed to expresses default error handler
+   * https://expressjs.com/en/guide/error-handling.html
+   */
+  // eslint-disable-next-line no-unused-vars
+  app.use((error, req, res, next) => {
     if (error.code === 'EBADCSRFTOKEN') {
       // handle CSRF token errors here
       console.error('Unable to verify CSRF token %o', error);

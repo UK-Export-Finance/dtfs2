@@ -8,25 +8,17 @@
   <table class="govuk-table" data-module="moj-sortable-table" data-cy="keying-sheet-table">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header" aria-sort="none" rowspan="2">Status</th>
-        <th scope="col" class="govuk-table__header" aria-sort="ascending" rowspan="2">Facility ID</th>
-        <th scope="col" class="govuk-table__header" aria-sort="none" rowspan="2">Exporter</th>
-        <th scope="col" class="govuk-table__header" rowspan="2">Date</th>
-        <th scope="col" class="govuk-table__header govuk-table__header--numeric" rowspan="2">Fee payment</th>
-        <th scope="col" class="govuk-table__header" rowspan="2">Base currency</th>
-        <th scope="colgroup" class="govuk-table__header" colspan="2">Fixed fee adjustment</th>
-        <th scope="colgroup" class="govuk-table__header" colspan="2">Principal balance adjustment</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Status</th>
+        <th scope="col" class="govuk-table__header" aria-sort="ascending">Facility ID</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Exporter</th>
+        <th scope="col" class="govuk-table__header">Date</th>
+        <th scope="col" class="govuk-table__header govuk-table__header--numeric">Fee payment</th>
+        <th scope="col" class="govuk-table__header">Base currency</th>
         {% if userCanEdit %}
-          <td class="govuk-table__header" rowspan="2">
+          <td class="govuk-table__header">
             {{ selectAllTableCellCheckbox.render() }}
           </td>
         {% endif %}
-      </tr>
-      <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header">Increase</th>
-        <th scope="col" class="govuk-table__header">Decrease</th>
-        <th scope="col" class="govuk-table__header">Increase</th>
-        <th scope="col" class="govuk-table__header">Decrease</th>
       </tr>
     </thead>
     <tbody class="govuk-table__body">

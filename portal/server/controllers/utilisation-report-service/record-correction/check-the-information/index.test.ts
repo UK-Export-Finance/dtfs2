@@ -130,11 +130,11 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
       expect(api.getFeeRecordCorrectionReview).toHaveBeenCalledWith(bankId, correctionId, userId, userToken);
     });
 
-    it('should render bankCommentary field with value "-" when the bankCommentary is undefined', async () => {
+    it('should render bankCommentary field with value "-" when the bankCommentary is null', async () => {
       // Arrange
       const feeRecordCorrectionReviewResponse: FeeRecordCorrectionReviewInformation = {
         ...aFeeRecordCorrectionReviewInformation(),
-        bankCommentary: undefined,
+        bankCommentary: null,
       };
 
       jest.mocked(api.getFeeRecordCorrectionReview).mockResolvedValue(feeRecordCorrectionReviewResponse);

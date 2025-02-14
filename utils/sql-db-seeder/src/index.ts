@@ -1,13 +1,6 @@
 import { DataSource } from 'typeorm';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
-import {
-  AzureFileInfoEntity,
-  FacilityUtilisationDataEntity,
-  FeeRecordEntity,
-  PaymentEntity,
-  PaymentMatchingToleranceEntity,
-  UtilisationReportEntity,
-} from '@ukef/dtfs2-common';
+import { AzureFileInfoEntity, FeeRecordEntity, PaymentEntity, PaymentMatchingToleranceEntity, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { seedUtilisationReports } from './utilisation-report';
 import { seedFeeRecordPaymentGroups } from './fee-record-payment-group';
 import { mongoDbClient } from '../../drivers/db-client';
@@ -26,7 +19,6 @@ const clearDatabase = async (dataSource: DataSource): Promise<void> => {
   await dataSource.manager.delete(FeeRecordEntity, {});
   await dataSource.manager.delete(UtilisationReportEntity, {});
   await dataSource.manager.delete(AzureFileInfoEntity, {});
-  await dataSource.manager.delete(FacilityUtilisationDataEntity, {});
   await dataSource.manager.delete(PaymentMatchingToleranceEntity, {});
 
   console.info('✅ MSSQL database has been cleared successfully');

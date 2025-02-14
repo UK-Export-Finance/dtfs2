@@ -136,18 +136,6 @@
  *         type: integer
  *         format: int64
  *         description: The effective from date of the amendment in seconds.
- *       createdBy:
- *         type: object
- *         properties:
- *           username:
- *             type: string
- *             description: The username of the creator.
- *           name:
- *             type: string
- *             description: The name of the creator.
- *           email:
- *             type: string
- *             description: The email of the creator.
  *   PortalAmendmentUserInput:
  *     type: object
  *     properties:
