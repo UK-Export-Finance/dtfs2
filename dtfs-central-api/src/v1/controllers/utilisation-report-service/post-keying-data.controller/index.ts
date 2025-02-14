@@ -12,6 +12,23 @@ export type PostKeyingDataRequest = CustomExpressRequest<{
   reqBody: PostKeyingDataPayload;
 }>;
 
+/**
+ * Handles the post keying data request.
+ *
+ * This will generate keying data for all the fee records at MATCH status
+ * attached to the report with the supplied id.
+ *
+ * For a fee with no payments there will be nothing to key.
+ *
+ * For a fee with payment(s) not in a group, the keying data will simply
+ * be the payment amount.
+ *
+ * For a group of fees sharing a payment, the keying data will be generated
+ * by splitting the payment amounts across the fees in the group.
+ *
+ * @param req - The request
+ * @param res - The response
+ */
 export const postKeyingData = async (req: PostKeyingDataRequest, res: Response) => {
   const { reportId } = req.params;
   const { user } = req.body;

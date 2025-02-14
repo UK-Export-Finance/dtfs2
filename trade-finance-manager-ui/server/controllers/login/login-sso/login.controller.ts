@@ -8,14 +8,6 @@ import { LoginService } from '../../../services/login.service';
 import { UserSessionService } from '../../../services/user-session.service';
 
 export class LoginController {
-  private readonly loginService: LoginService;
-  private readonly userSessionService: UserSessionService;
-
-  constructor({ loginService, userSessionService }: { loginService: LoginService; userSessionService: UserSessionService }) {
-    this.loginService = loginService;
-    this.userSessionService = userSessionService;
-  }
-
   /**
    * Handles the login process for the user.
    *
@@ -28,7 +20,7 @@ export class LoginController {
    * @param res - The HTTP response object.
    * @returns - A promise that resolves when the login process is complete.
    */
-  public async getLogin(req: Request, res: Response) {
+  public static getLogin = async (req: Request, res: Response) => {
     try {
       // TODO: This validation is legacy code, and can be improved
       if (req.session.user) {
@@ -36,16 +28,16 @@ export class LoginController {
         return res.redirect('/home');
       }
 
-      const { authCodeUrl, authCodeUrlRequest } = await this.loginService.getAuthCodeUrl({ successRedirect: req.originalUrl ? req.originalUrl : '/' });
+      const { authCodeUrl, authCodeUrlRequest } = await LoginService.getAuthCodeUrl({ successRedirect: req.originalUrl });
 
-      this.userSessionService.createPartiallyLoggedInSession({ session: req.session, authCodeUrlRequest });
+      UserSessionService.createPartiallyLoggedInSession({ session: req.session, authCodeUrlRequest });
 
       return res.redirect(authCodeUrl);
     } catch (error) {
       console.error('Unable to log in user %o', error);
       return res.render('_partials/problem-with-service.njk');
     }
-  }
+  };
 
   /**
    * Handles the SSO redirect form submission.
@@ -59,7 +51,7 @@ export class LoginController {
    * @param res - The response object used to redirect or render a page.
    * @returns - A promise that resolves when the operation is complete.
    */
-  async handleSsoRedirectForm(req: HandleSsoRedirectFormUiRequest, res: Response) {
+  public static handleSsoRedirectForm = async (req: HandleSsoRedirectFormUiRequest, res: Response) => {
     try {
       const { body, session } = req;
       const partiallyLoggedInSession = asPartiallyLoggedInUserSession(session);
@@ -69,13 +61,13 @@ export class LoginController {
         throw new InvalidPayloadError('Invalid payload from SSO redirect');
       }
 
-      const { successRedirect, user, token } = await this.loginService.handleSsoRedirectForm({
+      const { successRedirect, user, token } = await LoginService.handleSsoRedirectForm({
         authCodeResponse: body,
         originalAuthCodeUrlRequest: partiallyLoggedInSession.loginData.authCodeUrlRequest,
         auditDetails,
       });
 
-      this.userSessionService.createLoggedInSession({ session, user, userToken: token });
+      UserSessionService.createLoggedInSession({ session, user, userToken: token });
 
       const url = successRedirect ?? '/';
       return res.redirect(url);
@@ -83,21 +75,22 @@ export class LoginController {
       console.error('Unable to redirect the user after login %o', error);
       return res.render('_partials/problem-with-service.njk');
     }
-  }
+  };
 
   /**
    * Handles the logout process for the user.
    *
    * This method logs out the user from the Trade Finance Manager (TFM) application.
-   * It destroys the user's session and redirects them to the home page.
+   * It destroys the user's session and redirects them to a page they won't
+   * automattically be re-logged-in from.
    *
    * @param req - The HTTP request object.
    * @param res - The HTTP response object.
    */
-  public getLogout = (req: Request, res: Response) => {
+  public static getLogout = (req: Request, res: Response) => {
     console.info('User has been logged out from TFM');
     req.session.destroy(() => {
-      res.redirect('/');
+      res.render('user-logged-out.njk');
     });
   };
 }

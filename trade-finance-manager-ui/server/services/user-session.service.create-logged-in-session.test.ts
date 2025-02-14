@@ -6,14 +6,11 @@ import { PartiallyLoggedInUserSessionData } from '../types/express-session';
 
 describe('user session service', () => {
   describe('createLoggedInSession', () => {
-    let userSessionService: UserSessionService;
     let tfmSessionUser: TfmSessionUser;
     let userToken: string;
     let session: Session & Partial<SessionData>;
 
     beforeEach(() => {
-      userSessionService = new UserSessionService();
-
       jest.resetAllMocks();
 
       tfmSessionUser = aTfmSessionUser();
@@ -36,25 +33,25 @@ describe('user session service', () => {
       };
     });
 
-    it('deletes existing partially logged in session', () => {
+    it('should delete existing partially logged in session', () => {
       // Act
-      userSessionService.createLoggedInSession({ session, user: tfmSessionUser, userToken });
+      UserSessionService.createLoggedInSession({ session, user: tfmSessionUser, userToken });
 
       // Assert
       expect(session.loginData).toBeUndefined();
     });
 
-    it('sets session.user to user', () => {
+    it('should set session.user to user', () => {
       // Act
-      userSessionService.createLoggedInSession({ session, user: tfmSessionUser, userToken });
+      UserSessionService.createLoggedInSession({ session, user: tfmSessionUser, userToken });
 
       // Assert
       expect(session.user).toEqual(tfmSessionUser);
     });
 
-    it('sets session.userToken to userToken', () => {
+    it('should set session.userToken to userToken', () => {
       // Act
-      userSessionService.createLoggedInSession({ session, user: tfmSessionUser, userToken });
+      UserSessionService.createLoggedInSession({ session, user: tfmSessionUser, userToken });
 
       // Assert
       expect(session.userToken).toEqual(userToken);
