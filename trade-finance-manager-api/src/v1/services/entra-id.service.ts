@@ -126,11 +126,10 @@ export class EntraIdService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { responseMode, ...rest } = originalAuthCodeUrlRequest;
     const tokenRequest = { ...rest, code: authCodeResponse.code };
-
+    const token = await msalApp.acquireTokenByCode(tokenRequest, authCodeResponse);
     const {
       account: { idTokenClaims },
-    } = ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA.parse(await msalApp.acquireTokenByCode(tokenRequest, authCodeResponse));
-
+    } = ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA.parse(token);
     return { entraIdUser: idTokenClaims };
   }
 }

@@ -7,9 +7,6 @@ export { getFeeRecordPaymentEntityGroups } from './get-fee-record-payment-entity
 export { getFeeRecordPaymentEntityGroupStatus } from './get-fee-record-payment-entity-group-status';
 export { getFeeRecordPaymentEntityGroupReconciliationData } from './get-fee-record-payment-entity-group-reconciliation-data';
 export { convertTimestampToDate } from './convert-timestamp-to-date';
-export { getPreviousReportPeriod } from './get-previous-report-period';
-export { calculateUkefShareOfUtilisation } from './calculate-ukef-share-of-utilisation';
-export { getKeyingSheetCalculationFacilityValues } from './get-keying-sheet-calculation-facility-values';
 export { getCorrectionPreviousValuesFromFeeRecord } from './get-correction-previous-values-from-fee-record';
 export { getCorrectionCorrectedValuesFromFormData } from './get-correction-corrected-values-from-form-data';
 export { validateRequiredCorrectionField } from './validate-required-correction-field';

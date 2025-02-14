@@ -28,13 +28,6 @@ export type UpdateWithCorrectionParams = {
   correctedValues: RecordCorrectionValues;
 };
 
-export type UpdateWithKeyingDataParams = {
-  status: Extract<FeeRecordStatus, 'READY_TO_KEY' | 'RECONCILED'>;
-  fixedFeeAdjustment: number;
-  principalBalanceAdjustment: number;
-  requestSource: DbRequestSource;
-};
-
 export type RemoveAllPaymentsParams = {
   status: FeeRecordStatus;
   requestSource: DbRequestSource;

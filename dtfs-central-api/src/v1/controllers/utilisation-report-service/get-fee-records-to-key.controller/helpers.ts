@@ -19,8 +19,9 @@ const mapToFeeRecordToKey = (feeRecordEntity: FeeRecordEntity, paymentsReceived:
 };
 
 /**
- * Maps the fee record entities to the fee records to key
- * @param feeRecordEntities - The fee record entities with 'MATCH' status
+ * Maps the fee record entities to the data needed for the check before keying
+ * generation page.
+ * @param feeRecordEntities - All the fee record entities with 'MATCH' status from the report
  * @returns The fee records to key
  * @throws {Error} If the supplied fee records are not all at the 'MATCH' status
  */
@@ -34,13 +35,15 @@ export const mapToFeeRecordsToKey = (feeRecordEntities: FeeRecordEntity[]): FeeR
   return feeRecordPaymentEntityGroups.reduce((feeRecordsToKey, group) => {
     const { feeRecords, payments } = group;
 
+    // If there is only one fee record in the group, the payments received
+    // should be a list of all the payment amounts.
     if (feeRecords.length === 1) {
-      // If one fee record to many payments, list all the payments
       const paymentsReceived = payments.map(({ currency, amount }) => ({ currency, amount }));
       return [...feeRecordsToKey, ...feeRecords.map((feeRecord) => mapToFeeRecordToKey(feeRecord, paymentsReceived))];
     }
 
-    // Otherwise, fee record payments received should equal fee record reported payments
+    // Otherwise, if the group has multiple fee records, then the payments received
+    // should be set to equal fee record reported payments.
     return [
       ...feeRecordsToKey,
       ...feeRecords.map((feeRecord) => {

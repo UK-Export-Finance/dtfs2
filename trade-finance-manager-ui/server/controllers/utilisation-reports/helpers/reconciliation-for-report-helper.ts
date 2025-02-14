@@ -3,10 +3,8 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordStatus,
   getFormattedCurrencyAndAmount,
-  getFormattedMonetaryValue,
   getKeyToDateSortValueMap,
   IsoDateTimeStamp,
-  KeyingSheetAdjustment,
   mapCurrenciesToRadioItems,
   PaymentDetailsFilters,
 } from '@ukef/dtfs2-common';
@@ -15,7 +13,6 @@ import { FeeRecord, KeyingSheet, KeyingSheetRow, Payment, PaymentDetails, Premiu
 import {
   PremiumPaymentsViewModelItem,
   FeeRecordViewModelItem,
-  KeyingSheetAdjustmentViewModel,
   KeyingSheetViewModel,
   PaymentDetailsPaymentViewModel,
   PaymentViewModelItem,
@@ -156,21 +153,6 @@ export const mapPremiumPaymentsToViewModelItems = (
 };
 
 /**
- * Gets the keying sheet adjustment view model
- * @param adjustment - The keying sheet adjustment
- * @returns The keying sheet adjustment view model
- */
-const getKeyingSheetAdjustmentViewModel = (adjustment: KeyingSheetAdjustment | null): KeyingSheetAdjustmentViewModel => {
-  if (!adjustment) {
-    return { amount: undefined, change: 'NONE' };
-  }
-  return {
-    amount: getFormattedMonetaryValue(adjustment.amount),
-    change: adjustment.change,
-  };
-};
-
-/**
  * Maps the keying sheet fee payments to the keying sheet fee payments view model
  * @param feePayments - The fee payments
  * @returns The fee payments view model
@@ -203,8 +185,6 @@ export const mapKeyingSheetToKeyingSheetViewModel = (keyingSheet: KeyingSheet): 
     exporter: keyingSheetRow.exporter,
     baseCurrency: keyingSheetRow.baseCurrency,
     feePayments: mapKeyingSheetFeePaymentsToKeyingSheetFeePaymentsViewModel(keyingSheetRow.feePayments),
-    fixedFeeAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetRow.fixedFeeAdjustment),
-    principalBalanceAdjustment: getKeyingSheetAdjustmentViewModel(keyingSheetRow.principalBalanceAdjustment),
     checkboxId: getKeyingSheetRowCheckboxId(keyingSheetRow),
     isChecked: false,
   }));
