@@ -1,14 +1,15 @@
 import { format } from 'date-fns';
 import { FeeRecordEntity, mapReasonsToDisplayValues, FeeRecordCorrectionEntity, DATE_FORMATS, RecordCorrectionFields } from '@ukef/dtfs2-common';
 import { getFormattedOldAndCorrectValues } from './get-formatted-old-and-correct-values';
-import { getDateReceivedAndBankCommentary } from './get-date-received-and-bank-commentary';
+import { getFormattedDateReceivedAndBankCommentary } from './get-formatted-date-received-and-bank-commentary';
 
 /**
- * gets all the fields from a record correction or fee record in the correct format for a number of pages
- * returns certain values as '-' if the correction is not completed
- * @param feeRecord - the fee record
- * @param correction - the fee record correction
- * @returns formatted fields for the record correction and fee record
+ * Extracts and formats fields from a fee record and its correction.
+ * If the correction is not completed or bank commentary is not provided, some
+ * formatted values are returned as "-".
+ * @param feeRecord - The fee record entity.
+ * @param correction - The fee record correction entity.
+ * @returns Formatted fields for the fee record and correction.
  */
 export const getRecordCorrectionFields = (feeRecord: FeeRecordEntity, correction: FeeRecordCorrectionEntity): RecordCorrectionFields => {
   const { id: feeRecordId, exporter, facilityId } = feeRecord;
@@ -24,10 +25,6 @@ export const getRecordCorrectionFields = (feeRecord: FeeRecordEntity, correction
     requestedByUser,
   } = correction;
 
-  /**
-   * return formatted old records and formatted correct records
-   * returns - if correction is not completed for formattedCorrectRecords
-   */
   const { formattedOldRecords, formattedCorrectRecords } = getFormattedOldAndCorrectValues(correction, feeRecord);
 
   /**
@@ -38,7 +35,7 @@ export const getRecordCorrectionFields = (feeRecord: FeeRecordEntity, correction
   const reasonsArray = mapReasonsToDisplayValues(correction.reasons);
   const formattedReasons = reasonsArray.join(', ');
 
-  const { formattedDateReceived, formattedBankCommentary } = getDateReceivedAndBankCommentary(isCompleted, dateReceived, bankCommentary);
+  const { formattedDateReceived, formattedBankCommentary } = getFormattedDateReceivedAndBankCommentary(isCompleted, dateReceived, bankCommentary);
 
   const bankTeamEmails = bankTeamEmailsSerialized.split(',');
 

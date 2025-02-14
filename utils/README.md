@@ -76,7 +76,7 @@ If you wish to wipe all data from the SQL database and not replace it,please see
 
 ### Create Keying Sheet TFM Facilities
 
-The `create-keying-sheet-tfm-facilities` directory contains a script which inserts data into the Mongo DB database to line up with the data inserted by the `sql-db-seeder`. This is needed as the "keying sheet" related functionality requires that the `FeeRecord` facility ids which are inserted correspond the UKEF facility ids in the Mongo DB `facilities` and `tfm-facilities` colletion.
+The `create-keying-sheet-tfm-facilities` directory contains a script which inserts data into the Mongo DB database to line up with the data inserted by the `sql-db-seeder`. This is needed because the `FeeRecord` facility ids should correspond to UKEF facility ids in the Mongo DB `facilities` and `tfm-facilities` collection. And if there are not corresponsing facilities then utilisation reporting pages may not load as they will be unable to fetch required data.
 
 You can run this script directly using
 

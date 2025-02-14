@@ -522,8 +522,6 @@ describe('reconciliation-for-report-helper', () => {
       exporter: 'Test exporter',
       feePayments: [],
       baseCurrency: CURRENCY.GBP,
-      fixedFeeAdjustment: null,
-      principalBalanceAdjustment: null,
     });
 
     it('should map the keying sheet status, facility id, feeRecordId, exporter and base currency', () => {
@@ -598,72 +596,6 @@ describe('reconciliation-for-report-helper', () => {
       expect(result[0].feePayments[3].formattedCurrencyAndAmount).toEqual('JPY 0.00');
       expect(result[0].feePayments[3].formattedDateReceived).toEqual(undefined);
     });
-
-    it.each([
-      { condition: 'is null', value: null, expectedMappedValue: { amount: undefined, change: 'NONE' } },
-      { condition: 'has zero amount (no change)', value: { amount: 0, change: 'NONE' }, expectedMappedValue: { amount: '0.00', change: 'NONE' } },
-      {
-        condition: 'has a positive amount (increase)',
-        value: { amount: 1234567.89, change: 'INCREASE' },
-        expectedMappedValue: { amount: '1,234,567.89', change: 'INCREASE' },
-      },
-      {
-        condition: 'has a negative amount (decrease)',
-        value: { amount: 1234567.89, change: 'DECREASE' },
-        expectedMappedValue: { amount: '1,234,567.89', change: 'DECREASE' },
-      },
-    ] as const)(
-      'sets the view model fixedFeeAdjustment to $expectedMappedValue when the fee record entity fixedFeeAdjustment $condition',
-      ({ value, expectedMappedValue }) => {
-        // Arrange
-        const keyingSheet: KeyingSheet = [
-          {
-            ...aKeyingSheetRow(),
-            fixedFeeAdjustment: value,
-          },
-        ];
-
-        // Act
-        const result = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
-
-        // Assert
-        expect(result).toHaveLength(1);
-        expect(result[0].fixedFeeAdjustment).toEqual(expectedMappedValue);
-      },
-    );
-
-    it.each([
-      { condition: 'is null', value: null, expectedMappedValue: { amount: undefined, change: 'NONE' } },
-      { condition: 'has zero amount (no change)', value: { amount: 0, change: 'NONE' }, expectedMappedValue: { amount: '0.00', change: 'NONE' } },
-      {
-        condition: 'has a positive amount (increase)',
-        value: { amount: 1234567.89, change: 'INCREASE' },
-        expectedMappedValue: { amount: '1,234,567.89', change: 'INCREASE' },
-      },
-      {
-        condition: 'has a negative amount (decrease)',
-        value: { amount: 1234567.89, change: 'DECREASE' },
-        expectedMappedValue: { amount: '1,234,567.89', change: 'DECREASE' },
-      },
-    ] as const)(
-      'sets the view model principalBalanceAdjustment to $expectedMappedValue when the keying sheet principalBalanceAdjustment $condition',
-      ({ value, expectedMappedValue }) => {
-        // Arrange
-        const keyingSheet: KeyingSheet = [
-          {
-            ...aKeyingSheetRow(),
-            principalBalanceAdjustment: value,
-          },
-        ];
-
-        // Act
-        const result = mapKeyingSheetToKeyingSheetViewModel(keyingSheet);
-
-        // Assert
-        expect(result).toHaveLength(1);
-        expect(result[0].principalBalanceAdjustment).toEqual(expectedMappedValue);
-      },
-    );
 
     it('should set the keying sheet view model checkbox id using the keying sheet fee record id and status', () => {
       // Arrange

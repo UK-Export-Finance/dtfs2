@@ -1,5 +1,4 @@
-import { FEE_RECORD_STATUS, FeeRecordEntity, KEYING_SHEET_ROW_STATUS, KeyingSheetAdjustment, KeyingSheetRowStatus, PaymentEntity } from '@ukef/dtfs2-common';
-import Big from 'big.js';
+import { FEE_RECORD_STATUS, FeeRecordEntity, KEYING_SHEET_ROW_STATUS, KeyingSheetRowStatus, PaymentEntity } from '@ukef/dtfs2-common';
 import { KeyingSheetFeePayment, KeyingSheetRow } from '../types/fee-records';
 
 const mapFeeRecordEntityToKeyingSheetRowStatus = (feeRecord: FeeRecordEntity): KeyingSheetRowStatus => {
@@ -13,25 +12,6 @@ const mapFeeRecordEntityToKeyingSheetRowStatus = (feeRecord: FeeRecordEntity): K
   }
 };
 
-const getKeyingSheetAdjustmentForAmount = (amount: number | null): KeyingSheetAdjustment | null => {
-  if (amount === null) {
-    return null;
-  }
-
-  const amountAbsoluteValue = new Big(amount).abs().toNumber();
-  if (amountAbsoluteValue === 0) {
-    return {
-      amount: 0,
-      change: 'NONE',
-    };
-  }
-
-  return {
-    amount: amountAbsoluteValue,
-    change: amount > 0 ? 'INCREASE' : 'DECREASE',
-  };
-};
-
 /**
  * Maps a fee record entity to a keying sheet row without any fee payments
  * @param feeRecordEntity - The fee record entity
@@ -43,8 +23,6 @@ export const mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments = (feeRecordEn
   facilityId: feeRecordEntity.facilityId,
   exporter: feeRecordEntity.exporter,
   baseCurrency: feeRecordEntity.baseCurrency,
-  fixedFeeAdjustment: getKeyingSheetAdjustmentForAmount(feeRecordEntity.fixedFeeAdjustment),
-  principalBalanceAdjustment: getKeyingSheetAdjustmentForAmount(feeRecordEntity.principalBalanceAdjustment),
 });
 
 /**

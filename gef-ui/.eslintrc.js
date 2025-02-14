@@ -14,8 +14,8 @@ const baseRules = {
         '_csrf',
         '_getBuffer',
         '_getData',
-        '_getJSONData',
         '_getHeaders',
+        '_getJSONData',
         '_getStatusCode',
         '_getRedirectUrl',
         '_getRenderData',
@@ -32,6 +32,7 @@ const baseRules = {
     {
       devDependencies: [
         '**/*.test.{js,ts}',
+        '**/*.tests.{js,ts}',
         '**/*.ff-test.{js,ts}',
         '**/*.api-test.{js,ts}',
         '**/*.spec.{js,ts}',

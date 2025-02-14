@@ -6,7 +6,7 @@ import { UserRepo } from '../repo/user.repo';
 
 jest.mock('../repo/user.repo.ts', () => ({
   UserRepo: {
-    findUsersByEmailAddresses: jest.fn(),
+    findUserByEmailAddress: jest.fn(),
     createUser: jest.fn(),
     updateUserById: jest.fn(),
   },
@@ -21,6 +21,7 @@ describe('user service', () => {
     let userId: ObjectId;
     let createUserSpy: jest.SpyInstance;
     let updateUserByIdSpy: jest.SpyInstance;
+    let userService: UserService;
 
     beforeAll(() => {
       jest.useFakeTimers();
@@ -30,7 +31,8 @@ describe('user service', () => {
       jest.resetAllMocks();
       entraIdUser = anEntraIdUser();
       auditDetails = generateSystemAuditDetails();
-      transformedUser = UserService.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
+      userService = new UserService();
+      transformedUser = userService.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
       userId = new ObjectId();
       existingUser = { ...transformedUser, _id: userId, status: USER_STATUS.ACTIVE };
     });
@@ -39,14 +41,14 @@ describe('user service', () => {
       jest.useRealTimers();
     });
 
-    describe('when no users are found with the email addresses', () => {
+    describe('when no users are found with the email address', () => {
       beforeEach(() => {
-        jest.spyOn(UserRepo, 'findUsersByEmailAddresses').mockResolvedValue([]);
+        jest.spyOn(UserRepo, 'findUserByEmailAddress').mockResolvedValue(null);
         createUserSpy = jest.spyOn(UserRepo, 'createUser');
       });
 
-      it('creates a new user in the database', async () => {
-        await UserService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
+      it('should create a new user in the database', async () => {
+        await userService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
 
         expect(createUserSpy).toHaveBeenCalledWith({
           user: transformedUser,
@@ -56,14 +58,14 @@ describe('user service', () => {
       });
     });
 
-    describe('when one user is found with the email addresses', () => {
+    describe('when one user is found with the email address', () => {
       beforeEach(() => {
-        jest.spyOn(UserRepo, 'findUsersByEmailAddresses').mockResolvedValue([existingUser]);
+        jest.spyOn(UserRepo, 'findUserByEmailAddress').mockResolvedValue(existingUser);
         updateUserByIdSpy = jest.spyOn(UserRepo, 'updateUserById');
       });
 
-      it('updates the user in the database', async () => {
-        await UserService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
+      it('should update the user in the database', async () => {
+        await userService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
 
         expect(updateUserByIdSpy).toHaveBeenCalledWith({
           userId,
@@ -71,16 +73,6 @@ describe('user service', () => {
           auditDetails,
         });
         expect(updateUserByIdSpy).toHaveBeenCalledTimes(1);
-      });
-    });
-
-    describe('when multiple users are found with the email addresses', () => {
-      beforeEach(() => {
-        jest.spyOn(UserRepo, 'findUsersByEmailAddresses').mockResolvedValue([existingUser, existingUser]);
-      });
-
-      it('throws an error', async () => {
-        await expect(UserService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails })).rejects.toThrowError();
       });
     });
   });
