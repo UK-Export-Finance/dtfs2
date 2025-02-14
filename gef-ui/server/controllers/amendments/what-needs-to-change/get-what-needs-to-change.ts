@@ -1,4 +1,4 @@
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { WhatNeedsToChangeViewModel } from '../../../types/view-models/amendments/what-needs-to-change-view-model.ts';
@@ -38,8 +38,13 @@ export const getWhatNeedsToChange = async (req: GetWhatNeedsToChangeRequest, res
     const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
 
     if (!amendment) {
-      console.error('Amendment %s not found on facility %s', amendmentId, facilityId);
+      console.error('Amendment %s was not found on facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
+    }
+
+    if (!(PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES as string[]).includes(amendment.status)) {
+      console.error('Amendment %s is not assigned to Maker', amendmentId);
+      return res.redirect(`/gef/application-details/${dealId}`);
     }
 
     const { changeCoverEndDate, changeFacilityValue } = amendment;

@@ -6,7 +6,6 @@ import {
   CurrencyAndAmount,
   KeyingSheetRowStatus,
   Currency,
-  KeyingSheetAdjustment,
   FeeRecordUtilisation,
   FeeRecordCorrectionSummary,
 } from '@ukef/dtfs2-common';
@@ -43,8 +42,6 @@ export type KeyingSheetRow = {
     dateReceived: IsoDateTimeStamp | null;
   }[];
   baseCurrency: Currency;
-  fixedFeeAdjustment: KeyingSheetAdjustment | null;
-  principalBalanceAdjustment: KeyingSheetAdjustment | null;
 };
 
 export type KeyingSheet = KeyingSheetRow[];

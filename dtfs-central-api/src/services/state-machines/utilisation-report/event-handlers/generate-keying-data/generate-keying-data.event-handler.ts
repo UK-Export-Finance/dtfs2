@@ -1,10 +1,8 @@
-import { EntityManager, In } from 'typeorm';
+import { EntityManager } from 'typeorm';
 import {
   DbRequestSource,
-  FEE_RECORD_STATUS,
   FeeRecordEntity,
   FeeRecordPaymentJoinTableEntity,
-  FeeRecordStatus,
   PENDING_RECONCILIATION,
   RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntity,
@@ -13,22 +11,6 @@ import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { KeyingSheetFeePaymentShare, getKeyingSheetFeePaymentSharesForFeeRecords } from '../helpers';
 import { UTILISATION_REPORT_EVENT_TYPE } from '../../event/utilisation-report.event-type';
-
-/**
- * Gets the facility ids at the TO_DO or DOES_NOT_MATCH status
- * @param entityManager - The entity manager
- * @param reportId - The report id
- * @returns The facility ids of the fee records at the TO_DO or DOES_NOT_MATCH status
- */
-const getFacilityIdsAtToDoOrDoesNotMatchStatus = async (entityManager: EntityManager, reportId: number): Promise<Set<string>> => {
-  const feeRecordsAtToDoOrDoesNotMatchStatus = await entityManager.find(FeeRecordEntity, {
-    where: {
-      report: { id: reportId },
-      status: In<FeeRecordStatus>([FEE_RECORD_STATUS.TO_DO, FEE_RECORD_STATUS.DOES_NOT_MATCH]),
-    },
-  });
-  return feeRecordsAtToDoOrDoesNotMatchStatus.reduce((facilityIds, { facilityId }) => facilityIds.add(facilityId), new Set<string>());
-};
 
 /**
  * Updates the fee record payment join table with the supplied keying sheet fee payment shares
@@ -70,32 +52,12 @@ export const handleUtilisationReportGenerateKeyingDataEvent = async (
   report: UtilisationReportEntity,
   { transactionEntityManager, feeRecordsAtMatchStatusWithPayments, requestSource }: GenerateKeyingDataEventPayload,
 ): Promise<UtilisationReportEntity> => {
-  const finalFeeRecordFacilityIds = await getFacilityIdsAtToDoOrDoesNotMatchStatus(transactionEntityManager, report.id);
-
-  const { reportPeriod } = report;
-  const feeRecordsWithPayloads = feeRecordsAtMatchStatusWithPayments.map((feeRecord) => {
-    const { facilityId } = feeRecord;
-
-    if (finalFeeRecordFacilityIds.has(facilityId)) {
-      return {
-        feeRecord,
-        payload: { transactionEntityManager, isFinalFeeRecordForFacility: false, reportPeriod, requestSource },
-      };
-    }
-
-    finalFeeRecordFacilityIds.add(facilityId);
-    return {
-      feeRecord,
-      payload: { transactionEntityManager, isFinalFeeRecordForFacility: true, reportPeriod, requestSource },
-    };
-  });
-
-  for (const { feeRecord, payload } of feeRecordsWithPayloads) {
+  for (const feeRecord of feeRecordsAtMatchStatusWithPayments) {
     const stateMachine = FeeRecordStateMachine.forFeeRecord(feeRecord);
 
     await stateMachine.handleEvent({
       type: 'GENERATE_KEYING_DATA',
-      payload,
+      payload: { transactionEntityManager, requestSource },
     });
   }
 

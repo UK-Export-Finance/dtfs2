@@ -27,7 +27,6 @@ import {
   handleFeeRecordCorrectionRequestedEvent,
   handleFeeRecordCorrectionReceivedEvent,
 } from './event-handlers';
-import { aReportPeriod } from '../../../../test-helpers';
 
 jest.mock('./event-handlers');
 
@@ -195,8 +194,6 @@ describe('FeeRecordStateMachine', () => {
         type: FEE_RECORD_EVENT_TYPE.GENERATE_KEYING_DATA,
         payload: {
           transactionEntityManager: {} as EntityManager,
-          isFinalFeeRecordForFacility: false,
-          reportPeriod: aReportPeriod(),
           requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
         },
       });

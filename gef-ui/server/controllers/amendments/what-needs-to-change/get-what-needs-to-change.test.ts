@@ -8,7 +8,7 @@ import { createMocks } from 'node-mocks-http';
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, PortalFacilityAmendmentWithUkefId, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
-import { MOCK_ISSUED_FACILITY, MOCK_UNISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
+import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { getAmendmentsUrl } from '../helpers/navigation.helper.ts';
 import { WhatNeedsToChangeViewModel } from '../../../types/view-models/amendments/what-needs-to-change-view-model.ts';
 import { getWhatNeedsToChange, GetWhatNeedsToChangeRequest } from './get-what-needs-to-change.ts';
@@ -16,6 +16,7 @@ import { STB_PIM_EMAIL } from '../../../constants/emails.ts';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment.ts';
 import { Deal } from '../../../types/deal.ts';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
+import { withAmendmentGetControllerTests } from '../../../../test-helpers/with-amendment-get-controller.tests.ts';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
@@ -29,16 +30,8 @@ const dealId = 'dealId';
 const facilityId = 'facilityId';
 const amendmentId = 'amendmentId';
 
-const aMockError = () => new Error();
-const mockError = aMockError();
-
 const companyName = 'company name ltd';
 const userToken = 'userToken';
-
-const generalConsoleErrorText = 'Error getting amendments what needs to change page %o';
-const facilityOrDealNotFoundConsoleErrorText = 'Deal %s or Facility %s was not found';
-const amendmentNotFoundConsoleErrorText = 'Amendment %s not found on facility %s';
-const userCannotAmendFacilityErrorText = 'User cannot amend facility %s on deal %s';
 
 const getHttpMocks = () =>
   createMocks<GetWhatNeedsToChangeRequest>({
@@ -70,43 +63,15 @@ describe('getWhatNeedsToChange', () => {
     jest.resetAllMocks();
   });
 
-  it('should call getApplication with the correct dealId and userToken', async () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-
-    // Act
-    await getWhatNeedsToChange(req, res);
-
-    // Assert
-    expect(getApplicationMock).toHaveBeenCalledTimes(1);
-    expect(getApplicationMock).toHaveBeenCalledWith({ dealId, userToken });
-    expect(console.error).toHaveBeenCalledTimes(0);
-  });
-
-  it('should call getFacility with the correct facilityId and userToken', async () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-
-    // Act
-    await getWhatNeedsToChange(req, res);
-
-    // Assert
-    expect(getFacilityMock).toHaveBeenCalledTimes(1);
-    expect(getFacilityMock).toHaveBeenCalledWith({ facilityId, userToken: req.session.userToken });
-    expect(console.error).toHaveBeenCalledTimes(0);
-  });
-
-  it('should call getAmendment with the correct facilityId, amendmentId and userToken', async () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-
-    // Act
-    await getWhatNeedsToChange(req, res);
-
-    // Assert
-    expect(getAmendmentMock).toHaveBeenCalledTimes(1);
-    expect(getAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, userToken: req.session.userToken });
-    expect(console.error).toHaveBeenCalledTimes(0);
+  withAmendmentGetControllerTests({
+    makeRequest: getWhatNeedsToChange,
+    getHttpMocks,
+    getFacilityMock,
+    getApplicationMock,
+    getAmendmentMock,
+    dealId,
+    facilityId,
+    amendmentId,
   });
 
   it('should render the "What do you need to change?" template the with correct data when changeFacilityValue and changeFacilityEndDate are undefined', async () => {
@@ -163,108 +128,5 @@ describe('getWhatNeedsToChange', () => {
     expect(res._getRenderView()).toEqual('partials/amendments/what-needs-to-change.njk');
     expect(res._getRenderData()).toEqual(expectedRenderData);
     expect(console.error).toHaveBeenCalledTimes(0);
-  });
-
-  it('should redirect if the deal is not found', async () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    getApplicationMock.mockResolvedValue(undefined);
-
-    // Act
-    await getWhatNeedsToChange(req, res);
-
-    // Assert
-    expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
-    expect(res._getRedirectUrl()).toEqual(`/not-found`);
-    expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith(facilityOrDealNotFoundConsoleErrorText, dealId, facilityId);
-  });
-
-  it('should redirect if the facility is not found', async () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    getFacilityMock.mockResolvedValue({ details: undefined });
-
-    // Act
-    await getWhatNeedsToChange(req, res);
-
-    // Assert
-    expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
-    expect(res._getRedirectUrl()).toEqual(`/not-found`);
-    expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith(facilityOrDealNotFoundConsoleErrorText, dealId, facilityId);
-  });
-
-  it('should redirect if the amendment is not found', async () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    getAmendmentMock.mockResolvedValue(undefined);
-
-    // Act
-    await getWhatNeedsToChange(req, res);
-
-    // Assert
-
-    expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
-    expect(res._getRedirectUrl()).toEqual(`/not-found`);
-    expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith(amendmentNotFoundConsoleErrorText, amendmentId, facilityId);
-  });
-
-  it('should redirect if the facility cannot be amended', async () => {
-    // Arrange
-    const { req, res } = getHttpMocks();
-    getFacilityMock.mockResolvedValue(MOCK_UNISSUED_FACILITY);
-
-    // Act
-    await getWhatNeedsToChange(req, res);
-
-    // Assert
-    expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
-    expect(res._getRedirectUrl()).toEqual(`/gef/application-details/${dealId}`);
-    expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith(userCannotAmendFacilityErrorText, facilityId, dealId);
-  });
-
-  it('should render `problem with service` if getApplication throws an error', async () => {
-    // Arrange
-    getApplicationMock.mockRejectedValueOnce(mockError);
-    const { req, res } = getHttpMocks();
-
-    // Act
-    await getWhatNeedsToChange(req, res);
-
-    // Assert
-    expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
-    expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith(generalConsoleErrorText, mockError);
-  });
-
-  it('should render `problem with service` if getFacility throws an error', async () => {
-    // Arrange
-    getFacilityMock.mockRejectedValueOnce(mockError);
-    const { req, res } = getHttpMocks();
-
-    // Act
-    await getWhatNeedsToChange(req, res);
-
-    // Assert
-    expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
-    expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith(generalConsoleErrorText, mockError);
-  });
-
-  it('should render `problem with service` if getAmendment throws an error', async () => {
-    // Arrange
-    getAmendmentMock.mockRejectedValue(mockError);
-    const { req, res } = getHttpMocks();
-
-    // Act
-    await getWhatNeedsToChange(req, res);
-
-    // Assert
-    expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
-    expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith(generalConsoleErrorText, mockError);
   });
 });

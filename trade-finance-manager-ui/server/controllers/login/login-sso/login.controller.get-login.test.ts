@@ -4,7 +4,8 @@ import { aGetAuthCodeUrlResponse } from '@ukef/dtfs2-common';
 import { aTfmSessionUser } from '../../../../test-helpers';
 import { LoginController } from './login.controller';
 import { LoginService } from '../../../services/login.service';
-import { LoginServiceMockBuilder } from '../../../../test-helpers/mocks';
+import { UserSessionService } from '../../../services/user-session.service';
+import { LoginServiceMockBuilder, UserSessionServiceMockBuilder } from '../../../../test-helpers/mocks';
 
 describe('controllers - login (sso)', () => {
   describe('getLogin', () => {
@@ -13,16 +14,19 @@ describe('controllers - login (sso)', () => {
 
     let loginController: LoginController;
     let loginService: LoginService;
+    let userSessionService: UserSessionService;
+
     const getAuthCodeUrlMock = jest.fn();
-    const next = jest.fn();
+
+    console.error = jest.fn();
 
     beforeEach(() => {
       resetAllWhenMocks();
       jest.resetAllMocks();
 
       loginService = new LoginServiceMockBuilder().with({ getAuthCodeUrl: getAuthCodeUrlMock }).build();
-
-      loginController = new LoginController({ loginService });
+      userSessionService = new UserSessionServiceMockBuilder().build();
+      loginController = new LoginController({ loginService, userSessionService });
     });
 
     describe('when there is a user session', () => {
@@ -41,7 +45,7 @@ describe('controllers - login (sso)', () => {
         const { req, res } = getHttpMocks();
 
         // Act
-        await loginController.getLogin(req, res, next);
+        await loginController.getLogin(req, res);
 
         // Assert
         expect(res._getRedirectUrl()).toEqual('/home');
@@ -55,7 +59,7 @@ describe('controllers - login (sso)', () => {
           const { req, res } = httpMocks.createMocks({ session: {}, originalUrl: aRedirectUrl });
 
           // Act
-          await loginController.getLogin(req, res, next);
+          await loginController.getLogin(req, res);
 
           // Assert
           expect(getAuthCodeUrlMock).toHaveBeenCalledWith({ successRedirect: aRedirectUrl });
@@ -68,7 +72,7 @@ describe('controllers - login (sso)', () => {
           const { req, res } = httpMocks.createMocks({ session: {} });
 
           // Act
-          await loginController.getLogin(req, res, next);
+          await loginController.getLogin(req, res);
 
           // Assert
           expect(getAuthCodeUrlMock).toHaveBeenCalledWith({ successRedirect: '/' });
@@ -85,7 +89,7 @@ describe('controllers - login (sso)', () => {
           const { req, res } = httpMocks.createMocks({ session: {}, originalUrl: aRedirectUrl });
 
           // Act
-          await loginController.getLogin(req, res, next);
+          await loginController.getLogin(req, res);
 
           // Assert
           expect(res._getRedirectUrl()).toEqual(validGetAuthCodeUrlResponse.authCodeUrl);
@@ -99,7 +103,7 @@ describe('controllers - login (sso)', () => {
           });
 
           // Act
-          await loginController.getLogin(req, res, next);
+          await loginController.getLogin(req, res);
 
           // Assert
           expect(req.session.loginData).toEqual({ authCodeUrlRequest: validGetAuthCodeUrlResponse.authCodeUrlRequest });
@@ -111,7 +115,7 @@ describe('controllers - login (sso)', () => {
           mockFailedGetAuthCodeUrl();
         });
 
-        it('should call next with error', async () => {
+        it('should call console.error', async () => {
           // Arrange
           const { req, res } = httpMocks.createMocks({ session: {}, originalUrl: aRedirectUrl });
 
@@ -119,10 +123,22 @@ describe('controllers - login (sso)', () => {
           getAuthCodeUrlMock.mockRejectedValueOnce(error);
 
           // Act
-          await loginController.getLogin(req, res, next);
+          await loginController.getLogin(req, res);
 
           // Assert
-          expect(next).toHaveBeenCalledWith(error);
+          expect(console.error).toHaveBeenCalledWith('Unable to log in user %o', error);
+        });
+
+        it('should redirect to problem-with-service page', async () => {
+          // Arrange
+
+          const { req, res } = httpMocks.createMocks({ session: {}, originalUrl: aRedirectUrl });
+
+          // Act
+          await loginController.getLogin(req, res);
+
+          // Assert
+          expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
         });
       });
     });

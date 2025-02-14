@@ -4,9 +4,7 @@ import {
   Currency,
   FeeRecordEntity,
   PaymentEntity,
-  FacilityUtilisationDataEntity,
   FEE_RECORD_STATUS,
-  ReportPeriod,
   REQUEST_PLATFORM_TYPE,
 } from '@ukef/dtfs2-common';
 import { DataSource } from 'typeorm';
@@ -33,39 +31,29 @@ export class FeeRecordPaymentGroupSeeder {
 
   private readonly feeRecords: FeeRecordEntity[] = [];
 
-  private readonly utilisationDataReportPeriod: ReportPeriod;
-
   private readonly reportIsManuallyReconciled: boolean = false;
 
-  private constructor(
-    report: UtilisationReportEntity,
-    utilisationDataReportPeriod: ReportPeriod,
-    status: FeeRecordStatus,
-    paymentCurrency: Currency | null,
-    reportIsManuallyReconciled: boolean | null,
-  ) {
+  private constructor(report: UtilisationReportEntity, status: FeeRecordStatus, paymentCurrency: Currency | null, reportIsManuallyReconciled: boolean | null) {
     this.status = status;
     this.report = report;
     this.paymentCurrency = paymentCurrency;
     this.reportIsManuallyReconciled = reportIsManuallyReconciled ?? false;
-    this.utilisationDataReportPeriod = utilisationDataReportPeriod;
   }
 
   public static forReportStatusAndPaymentCurrency(
     report: UtilisationReportEntity,
-    utilisationDataReportPeriod: ReportPeriod,
     status: Exclude<FeeRecordStatus, 'TO_DO'>,
     paymentCurrency: Currency,
   ): FeeRecordPaymentGroupSeeder {
-    return new FeeRecordPaymentGroupSeeder(report, utilisationDataReportPeriod, status, paymentCurrency, null);
+    return new FeeRecordPaymentGroupSeeder(report, status, paymentCurrency, null);
   }
 
-  public static forReport(report: UtilisationReportEntity, utilisationDataReportPeriod: ReportPeriod): FeeRecordPaymentGroupSeeder {
-    return new FeeRecordPaymentGroupSeeder(report, utilisationDataReportPeriod, FEE_RECORD_STATUS.TO_DO, null, null);
+  public static forReport(report: UtilisationReportEntity): FeeRecordPaymentGroupSeeder {
+    return new FeeRecordPaymentGroupSeeder(report, FEE_RECORD_STATUS.TO_DO, null, null);
   }
 
   public static forManuallyCompletedReport(report: UtilisationReportEntity): FeeRecordPaymentGroupSeeder {
-    return new FeeRecordPaymentGroupSeeder(report, report.reportPeriod, FEE_RECORD_STATUS.RECONCILED, null, true);
+    return new FeeRecordPaymentGroupSeeder(report, FEE_RECORD_STATUS.RECONCILED, null, true);
   }
 
   public addOneRandomFeeRecord(overrides: AddRandomFeeRecordOverrides = {}): FeeRecordPaymentGroupSeeder {
@@ -103,25 +91,7 @@ export class FeeRecordPaymentGroupSeeder {
     return this;
   }
 
-  private async saveFacilityUtilisationData(dataSource: DataSource): Promise<void> {
-    for (const { facilityId, facilityUtilisation } of this.feeRecords) {
-      const facilityUtilisationDataExists = await dataSource.manager.existsBy(FacilityUtilisationDataEntity, { id: facilityId });
-      if (facilityUtilisationDataExists) {
-        // eslint-disable-next-line no-continue
-        continue;
-      }
-      const facilityUtilisationData = new FacilityUtilisationDataEntity();
-      facilityUtilisationData.id = facilityId;
-      facilityUtilisationData.reportPeriod = this.utilisationDataReportPeriod;
-      facilityUtilisationData.utilisation = facilityUtilisation * faker.number.float({ min: 0.8, max: 1.2 });
-      facilityUtilisationData.updateLastUpdatedBy({ platform: REQUEST_PLATFORM_TYPE.SYSTEM });
-      await dataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationData);
-    }
-  }
-
   public async save(dataSource: DataSource): Promise<void> {
-    await this.saveFacilityUtilisationData(dataSource);
-
     if (!this.reportIsManuallyReconciled && this.status !== FEE_RECORD_STATUS.TO_DO) {
       throw new Error(`Cannot save fee records with status '${this.status}' when there are no payments`);
     }
@@ -135,8 +105,6 @@ export class FeeRecordPaymentGroupSeeder {
   }
 
   public async addPaymentsAndSave(numberOfPayments: number, dataSource: DataSource): Promise<void> {
-    await this.saveFacilityUtilisationData(dataSource);
-
     if (this.status === FEE_RECORD_STATUS.TO_DO) {
       throw new Error(`Cannot add payments to fee records with ${FEE_RECORD_STATUS.TO_DO} status`);
     }
