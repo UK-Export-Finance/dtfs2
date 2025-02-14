@@ -23,8 +23,6 @@ describe('SsoController', () => {
     entraIdService = new EntraIdServiceMockBuilder().with({ getAuthCodeUrl: getAuthCodeUrlMock }).build();
     userService = new UserServiceMockBuilder().build();
     ssoController = new SsoController({ entraIdService, userService });
-
-    ssoController = new SsoController({ entraIdService, userService });
   });
 
   it('should call getAuthCodeUrl with the correct params', async () => {
