@@ -1,23 +1,29 @@
 import { GetAuthCodeUrlRequest } from '@ukef/dtfs2-common';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
+import { Request, Response } from 'express';
 import { validateGetAuthCodePayloadUrl } from './validate-get-auth-code-url-payload';
 
 /**
  * There is not a need to test the full schema validation here
  * as it has already been tested in the common library.
  */
-describe('validateGetAuthCodeUrl', () => {
+describe('validateGetAuthCodePayloadUrl', () => {
+  let res: httpMocks.MockResponse<Response>;
+  let req: httpMocks.MockRequest<Request>;
+  let next: jest.Mock;
   const getHttpMocks = () => httpMocks.createMocks();
 
   const aValidPayload = (): GetAuthCodeUrlRequest => ({
     successRedirect: 'http://success-redirect',
   });
+  beforeEach(() => {
+    ({ req, res } = getHttpMocks());
+    next = jest.fn();
+  });
 
   it.each(getInvalidPayloadTestCases())(`responds with a '${HttpStatusCode.BadRequest}' if $description`, ({ payload }) => {
     // Arrange
-    const { req, res } = getHttpMocks();
-    const next = jest.fn();
 
     req.body = payload;
 
@@ -32,9 +38,6 @@ describe('validateGetAuthCodeUrl', () => {
 
   it("calls the 'next' function if the payload is valid", () => {
     // Arrange
-    const { req, res } = getHttpMocks();
-    const next = jest.fn();
-
     req.body = aValidPayload();
 
     // Act

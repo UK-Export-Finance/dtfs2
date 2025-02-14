@@ -1,4 +1,4 @@
-import { withSchemaValidationTests } from '../../test-helpers';
+import { withSchemaValidationTests } from '../../test-helpers/schemas';
 import { GetAuthCodeUrlParams } from '../../types';
 import { GET_AUTH_CODE_PARAMS_SCHEMA } from './get-auth-code-params.schema';
 

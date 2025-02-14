@@ -37,6 +37,6 @@ if (isTfmSsoFeatureFlagEnabled()) {
    */
   ssoOpenRouter
     .route('/handle-sso-redirect-form')
-    .get(validateSsoFeatureFlagIsOn)
+    .all(validateSsoFeatureFlagIsOn)
     .post((req, res) => ssoController.handleSsoRedirectForm(req, res));
 }
