@@ -35,7 +35,7 @@ type Mocked<T> = {
  * // another-test-file.test.ts
  * // Usage in a test where a field needs to have a specific value
  * const user = new UserMockBuilder()
- *   .with({ email: 'new.email@ukef.gov.uk' })
+ *   .with({ email: 'new.email@ukexportfinance.gov.uk' })
  *   .build()
  * ```
 
