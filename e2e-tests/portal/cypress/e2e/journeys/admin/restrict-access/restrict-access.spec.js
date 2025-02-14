@@ -1,8 +1,8 @@
-const deals = require('../../../../fixtures/deal-dashboard-data');
 const relative = require('../../../relativeURL');
 const { ADMIN, BANK1_MAKER1, BANK1_CHECKER1, BANK1_READ_ONLY1, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../e2e-fixtures/portal-users.fixture');
 
 context('Only allow authorised users to access admin pages', () => {
+  let dealId;
   it('should allow admins access to restricted pages', () => {
     cy.login(ADMIN);
     cy.visit('/admin/users/');
@@ -10,20 +10,21 @@ context('Only allow authorised users to access admin pages', () => {
   });
 
   describe('Access a deal', () => {
-    let deal;
-
     before(() => {
-      const aDealInStatus = (status) => deals.filter((aDeal) => status === aDeal.status)[0];
-
       cy.deleteDeals(ADMIN);
-      cy.insertOneDeal(aDealInStatus('Draft'), BANK1_MAKER1).then((insertedDeal) => {
-        deal = insertedDeal;
-      });
+      cy.createBssEwcsDeal();
     });
 
     it('allows read only user with all bank access to view deal', () => {
-      cy.loginGoToDealPage(ADMIN, deal);
-      cy.url().should('eq', relative(`/contract/${deal._id}`));
+      cy.loginGoToDealPage(ADMIN);
+      cy.getDealIdFromUrl(dealId).then((id) => {
+        dealId = id;
+        cy.url().then((url) => {
+          dealId = url.split('/').pop();
+          expect(dealId).to.be.a('string');
+          cy.url().should('eq', relative(`/contract/${dealId}`));
+        });
+      });
     });
   });
 

@@ -3,15 +3,28 @@ const page = {
   tableHeader: (column) => cy.get(`[data-cy="deal__header--${column}"]`),
   rows: () => cy.get('.govuk-table__body .govuk-table__row'),
   exporterButton: () => cy.get('[data-cy="deal__header--exporter-button"]'),
+
   row: {
-    exporter: (id) => cy.get(`[data-cy="deal__exporter--${id}"]`),
-    bankRef: (id) => cy.get(`[data-cy="deal__bankRef--bankInternalRefName${id}"]`),
-    link: (id) => cy.get(`[data-cy="deal__link--${id}"]`),
-    product: (id) => cy.get(`[data-cy="deal__product--${id}"]`),
-    status: (id) => cy.get(`[data-cy="deal__status--${id}"]`),
-    type: (id) => cy.get(`[data-cy="deal__submissionType--${id}"]`),
-    updated: (id) => cy.get(`[data-cy="deal__updated--${id}"]`),
+    exporter: (id) => cy.get(`[data-cy*="deal__exporter--${id}"]`),
+    bankRef: (id) => cy.get(`[data-cy*="deal__bankRef--${id}"]`),
+    link: (id) => cy.get(`[data-cy*="deal__link--${id}"]`),
+    product: (id) => cy.get(`[data-cy*="deal__product--${id}"]`),
+    status: (id) => cy.get(`[data-cy*="deal__status--${id}"]`),
+    type: (id) => cy.get(`[data-cy*="deal__submissionType--${id}"]`),
+    updated: (id) => cy.get(`[data-cy*="deal__updated--${id}"]`),
   },
+  /**
+   * Get row elements by row index
+   * @param {number} index - the row index to select, starting from 0
+   */
+  rowByIndex: (index) => ({
+    exporter: () => cy.get(`[data-cy*="deal__exporter--index--${index + 1}"]`),
+    link: () => cy.get(`[data-cy*="deal__link--index--${index + 1}"]`),
+    bankRef: () => cy.get('.govuk-table__body .govuk-table__row').eq(index).find('td').eq(1),
+    product: () => cy.get(`[data-cy*="deal__product--index--${index + 1}"]`),
+    type: () => cy.get(`[data-cy*="deal__submissionType--index--${index + 1}"]`),
+    status: () => cy.get(`[data-cy*="deal__status--index--${index + 1}"]`),
+  }),
   paginationNav: () => cy.get('[data-cy="pagination"] nav'),
   first: () => cy.get('[data-cy="First"]'),
   previous: () => cy.get('[data-cy="Previous"]'),
