@@ -24,8 +24,8 @@ const sortPaymentsByAmountAscending = (payments: PaymentIdAndAmount[]): void => 
 };
 
 /**
- * Splits the supplied payments into a set of fee payments for
- * the supplied fee record using a greedy algorithm.
+ * Splits out a set of fee payments from the supplied list of payment
+ * amounts for the supplied fee record using a greedy algorithm.
  *
  * IMPORTANT - This function has a side effect where it modifies
  * the supplied payments array:
@@ -44,8 +44,13 @@ const splitPaymentsIntoKeyingSheetFeePaymentShares = (
   isLastFeeRecordInGroup: boolean,
 ): KeyingSheetFeePaymentShare[] => {
   const feeRecordId = feeRecord.id;
+
+  // Initialise the remaining fee record amount to the fee record's reported payments.
   let remainingFeeRecordAmount = new Big(feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency());
 
+  // If the fee record is the last of the group, it's fee payments
+  // should just be the remaining payment amounts since we need to
+  // use all the received payments in their entirety.
   if (isLastFeeRecordInGroup) {
     return paymentsSortedByAmountAscending.map((payment) => ({
       feeRecordId,
@@ -54,10 +59,20 @@ const splitPaymentsIntoKeyingSheetFeePaymentShares = (
     }));
   }
 
+  // If the fee record is the last of the group we need to take
+  // fee payments from the payments in the group until we
+  // match the fee record's reported payments.
   const feePayments: KeyingSheetFeePaymentShare[] = [];
+
   while (paymentsSortedByAmountAscending.length !== 0) {
     const largestPayment = paymentsSortedByAmountAscending.pop()!;
 
+    // If the largest payment amount is greater than the remaining fee record
+    // amount we need to split the payment into two parts:
+    // - one part to cover the remaining fee record amount which we add to
+    //    the fee payment array.
+    // - one part to be re-inserted into the payments array
+    //    so that the remaining payment gets allocated to another fee record.
     if (largestPayment.amount.gt(remainingFeeRecordAmount)) {
       feePayments.push({
         feeRecordId,
@@ -68,21 +83,32 @@ const splitPaymentsIntoKeyingSheetFeePaymentShares = (
       largestPayment.amount = largestPayment.amount.sub(remainingFeeRecordAmount);
       paymentsSortedByAmountAscending.push(largestPayment);
       sortPaymentsByAmountAscending(paymentsSortedByAmountAscending);
+
+      // Since we have matched the fee record's reported payments
+      // with fee payments we can return the fee payments.
       return feePayments;
     }
 
+    // If the largest payment amount is less than or equal to the remaining
+    // fee record amount we can use the entire payment amount towards the fee record.
     feePayments.push({
       feeRecordId,
       paymentId: largestPayment.id,
       feePaymentAmount: largestPayment.amount.toNumber(),
     });
+
+    // We subtract the payment amount from the remaining fee record amount
+    // and continue to the next payment in the group.
     remainingFeeRecordAmount = remainingFeeRecordAmount.sub(largestPayment.amount);
   }
+
   return feePayments;
 };
 
 /**
- * Gets the fee payments for the fee record payment entity group
+ * Splits the payments in the group into 'fee payments' for each fee record,
+ * where the total of the 'fee payments' for a fee record matches the
+ * fee record payments reported.
  * @param param - The fee record payment entity group
  * @param param.feeRecords - The fee record entities
  * @param param.payments - The payment entities
@@ -94,6 +120,9 @@ const getFeePaymentsForFeeRecordPaymentEntityGroup = ({ feeRecords, payments }: 
 
   const feeRecordsSortedDescendingByAmount = orderBy(feeRecords, [(feeRecord) => feeRecord.getFeesPaidToUkefForThePeriodInThePaymentCurrency()], ['desc']);
 
+  // We loop through the fee records in descending order of amount
+  // and split out 'fee payments' from the list of payment amounts
+  // for each fee record in turn, matching the fee record's payments reported.
   return feeRecordsSortedDescendingByAmount.reduce((feePayments, feeRecord, feeRecordIndex) => {
     const isLastFeeRecordInGroup = feeRecordIndex === feeRecords.length - 1;
     return [...feePayments, ...splitPaymentsIntoKeyingSheetFeePaymentShares(feeRecord, paymentIdsWithAmounts, isLastFeeRecordInGroup)];
@@ -101,7 +130,10 @@ const getFeePaymentsForFeeRecordPaymentEntityGroup = ({ feeRecords, payments }: 
 };
 
 /**
- * Gets a list of keying sheet fee payment shares for the supplied fee records
+ * Gets a list of keying sheet fee payment shares for the supplied fee records.
+ *
+ * This function groups the fee records by the payments they share and
+ * then splits the payment amounts across the fee records in the group.
  * @param matchFeeRecordsWithPayments - The fee records at the `MATCH` status with attached payments
  * @returns The fee payments
  */
