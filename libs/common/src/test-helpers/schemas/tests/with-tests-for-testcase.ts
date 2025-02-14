@@ -6,19 +6,26 @@ import {
   withIsoDateTimeStampSchemaTests,
   withTfmTeamSchemaTests,
   withCurrencySchemaTests,
+  withObjectIdSchemaTests,
+  withObjectIdStringSchemaTests,
+  withObjectIdOrObjectIdStringSchemaTests,
 } from '../custom-types-tests';
 import { withStringTests, withNumberTests, withBooleanTests, withArrayTests } from '../primitive-types-tests';
-import { withEntraIdUserSchemaTests, withUpsertTfmUserRequestSchemaTests } from '../schema-tests';
+import {
+  withAuditDatabaseRecordSchemaTests,
+  withEntraIdUserSchemaTests,
+  withTfmSessionUserSchemaTests,
+  withUpsertTfmUserRequestSchemaTests,
+} from '../schema-tests';
 import { withIsoDateTimeStampToDateSchemaTests } from '../transformation-tests';
 import { WithTestsForTestCaseProps } from '../types/with-tests-for-test-case';
-import { BaseTestCase } from '../test-cases/base-test-case';
 
 /**
  * Gets tests for a test case, using the test case type to determine which tests to run
  *
  * These tests are all available tests that can be easily used to test a parameter, and should be extended
  */
-export const withTestsForTestcase = <Schema extends ZodSchema>(props: WithTestsForTestCaseProps<Schema, BaseTestCase>): void => {
+export const withTestsForTestcase = <Schema extends ZodSchema>(props: WithTestsForTestCaseProps<Schema>): void => {
   const { schema, testCase, getTestObjectWithUpdatedParameter, getUpdatedParameterFromParsedTestObject } = props;
   const { type, options } = testCase;
 
@@ -133,6 +140,50 @@ export const withTestsForTestcase = <Schema extends ZodSchema>(props: WithTestsF
 
     case 'UPSERT_TFM_USER_REQUEST_SCHEMA':
       withUpsertTfmUserRequestSchemaTests({
+        schema,
+        options,
+        getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
+      });
+      break;
+    case 'OBJECT_ID_SCHEMA':
+      withObjectIdSchemaTests({
+        schema,
+        options,
+        getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
+      });
+      break;
+
+    case 'OBJECT_ID_STRING_SCHEMA':
+      withObjectIdStringSchemaTests({
+        schema,
+        options,
+        getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
+      });
+      break;
+
+    case 'OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA':
+      withObjectIdOrObjectIdStringSchemaTests({
+        schema,
+        options,
+        getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
+      });
+      break;
+
+    case 'AUDIT_DATABASE_RECORD_SCHEMA':
+      withAuditDatabaseRecordSchemaTests({
+        schema,
+        options,
+        getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
+      });
+      break;
+
+    case 'TFM_SESSION_USER_SCHEMA':
+      withTfmSessionUserSchemaTests({
         schema,
         options,
         getTestObjectWithUpdatedParameter,

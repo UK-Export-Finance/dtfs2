@@ -1,7 +1,7 @@
 import { Headers } from 'node-mocks-http';
 import { NextFunction, Request, Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { ROLES } from '@ukef/dtfs2-common';
+import { ROLES, API_ERROR_CODE } from '@ukef/dtfs2-common';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
 import { createApi } from '../create-api';
@@ -24,9 +24,9 @@ const dealId = '6597dffeb5ef5ff4267e5044';
 const facilityId = '6597dffeb5ef5ff4267e5045';
 const amendmentId = '6597dffeb5ef5ff4267e5046';
 
-const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.CANCEL}`;
+const validUrl = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.CANCEL}`;
 
-describe(`POST ${url}`, () => {
+describe(`POST ${validUrl}`, () => {
   let sessionCookie: string;
 
   beforeEach(async () => {
@@ -51,7 +51,7 @@ describe(`POST ${url}`, () => {
 
     it('should redirect to /not-found', async () => {
       // Act
-      const response = await postWithSessionCookie(sessionCookie);
+      const response = await postWithSessionCookie(sessionCookie, validUrl);
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Found);
@@ -66,7 +66,7 @@ describe(`POST ${url}`, () => {
 
     it('should redirect to /not-found', async () => {
       // Act
-      const response = await postWithSessionCookie(sessionCookie);
+      const response = await postWithSessionCookie(sessionCookie, validUrl);
 
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Found);
@@ -80,14 +80,53 @@ describe(`POST ${url}`, () => {
     });
 
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers: Headers) => post(headers).to(url),
+      makeRequestWithHeaders: (headers: Headers) => post(headers).to(validUrl),
       whitelistedRoles: [ROLES.MAKER],
       successCode: HttpStatusCode.Found,
     });
 
+    it(`should return ${HttpStatusCode.BadRequest} when the deal id is invalid`, async () => {
+      const invalidDealId = 'InvalidId';
+
+      const invalidUrl = `/application-details/${invalidDealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.CANCEL}`;
+      const response = await postWithSessionCookie(sessionCookie, invalidUrl);
+      expect(response.status).toEqual(HttpStatusCode.BadRequest);
+
+      expect(response.body).toEqual({
+        message: "Expected path parameter 'dealId' to be a valid mongo id",
+        code: API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER,
+      });
+    });
+
+    it(`should return ${HttpStatusCode.BadRequest} when the facility id is invalid`, async () => {
+      const invalidFacilityId = 'InvalidId';
+
+      const invalidUrl = `/application-details/${dealId}/facilities/${invalidFacilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.CANCEL}`;
+      const response = await postWithSessionCookie(sessionCookie, invalidUrl);
+      expect(response.status).toEqual(HttpStatusCode.BadRequest);
+
+      expect(response.body).toEqual({
+        message: "Expected path parameter 'facilityId' to be a valid mongo id",
+        code: API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER,
+      });
+    });
+
+    it(`should return ${HttpStatusCode.BadRequest} when the amendment id is invalid`, async () => {
+      const invalidAmendmentId = 'InvalidId';
+
+      const invalidUrl = `/application-details/${dealId}/facilities/${facilityId}/amendments/${invalidAmendmentId}/${PORTAL_AMENDMENT_PAGES.CANCEL}`;
+      const response = await postWithSessionCookie(sessionCookie, invalidUrl);
+      expect(response.status).toEqual(HttpStatusCode.BadRequest);
+
+      expect(response.body).toEqual({
+        message: "Expected path parameter 'amendmentId' to be a valid mongo id",
+        code: API_ERROR_CODE.INVALID_MONGO_ID_PATH_PARAMETER,
+      });
+    });
+
     it('should not call console.error if the facility and amendment are valid', async () => {
       // Act
-      await postWithSessionCookie(sessionCookie);
+      await postWithSessionCookie(sessionCookie, validUrl);
 
       // Assert
       expect(console.error).not.toHaveBeenCalled();
@@ -95,7 +134,7 @@ describe(`POST ${url}`, () => {
 
     it('should redirect to the applications details page, after the amendment has been deleted successfully', async () => {
       // Act
-      const response = await postWithSessionCookie(sessionCookie);
+      const response = await postWithSessionCookie(sessionCookie, validUrl);
 
       // Assert
       expect(mockDeleteAmendment).toHaveBeenCalledTimes(1);
@@ -108,7 +147,7 @@ describe(`POST ${url}`, () => {
       mockDeleteAmendment.mockRejectedValue(new Error('test error'));
 
       // Act
-      const response = await postWithSessionCookie(sessionCookie);
+      const response = await postWithSessionCookie(sessionCookie, validUrl);
 
       // Assert
       expect(mockDeleteAmendment).toHaveBeenCalledTimes(1);
@@ -118,6 +157,6 @@ describe(`POST ${url}`, () => {
   });
 });
 
-function postWithSessionCookie(sessionCookie: string) {
+function postWithSessionCookie(sessionCookie: string, url: string) {
   return post({}, { Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`] }).to(url);
 }

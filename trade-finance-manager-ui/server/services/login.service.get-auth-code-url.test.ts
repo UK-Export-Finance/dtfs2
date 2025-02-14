@@ -7,7 +7,6 @@ jest.mock('../api');
 describe('login service', () => {
   describe('getAuthCodeUrl', () => {
     const getAuthCodeUrlSpy = jest.spyOn(api, 'getAuthCodeUrl');
-    const loginService = new LoginService();
     const successRedirect = '/';
 
     afterEach(() => {
@@ -16,7 +15,7 @@ describe('login service', () => {
 
     it('should call api.getAuthCodeUrl with the request', async () => {
       // Act
-      await loginService.getAuthCodeUrl({ successRedirect });
+      await LoginService.getAuthCodeUrl({ successRedirect });
 
       // Assert
       expect(getAuthCodeUrlSpy).toHaveBeenCalledTimes(1);
@@ -32,7 +31,7 @@ describe('login service', () => {
 
       it('should return the auth code url', async () => {
         // Act
-        const result = await loginService.getAuthCodeUrl({ successRedirect });
+        const result = await LoginService.getAuthCodeUrl({ successRedirect });
 
         // Assert
         expect(result).toEqual(mockGetAuthCodeResponse);
@@ -48,7 +47,7 @@ describe('login service', () => {
 
       it('should throw the error', async () => {
         // Act & Assert
-        await expect(loginService.getAuthCodeUrl({ successRedirect })).rejects.toThrow(error);
+        await expect(LoginService.getAuthCodeUrl({ successRedirect })).rejects.toThrow(error);
       });
     });
   });

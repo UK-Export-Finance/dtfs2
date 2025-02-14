@@ -1,4 +1,4 @@
-import { withAuditDatabaseRecordSchemaTests } from '../test-helpers/schemas/backend-schema-tests';
+import { withAuditDatabaseRecordSchemaTests } from '../test-helpers/schemas';
 import { AUDIT_DATABASE_RECORD_SCHEMA } from './audit-database-record.schema';
 
 describe('AUDIT_DATABASE_RECORD_SCHEMA', () => {

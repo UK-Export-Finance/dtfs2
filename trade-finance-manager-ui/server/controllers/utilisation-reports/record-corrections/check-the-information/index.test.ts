@@ -37,7 +37,7 @@ describe('controllers/utilisation-reports/record-corrections/check-the-informati
       exporter: 'Test company',
       reasons: [RECORD_CORRECTION_REASON.FACILITY_ID_INCORRECT, RECORD_CORRECTION_REASON.OTHER],
       additionalInfo: 'The facility ID does not match the facility ID held on file',
-      contactEmailAddresses: ['one@email.com', 'two@email.com'],
+      contactEmailAddresses: ['one@ukexportfinance.gov.uk', 'two@ukexportfinance.gov.uk'],
     };
 
     const mockApiResponse = {

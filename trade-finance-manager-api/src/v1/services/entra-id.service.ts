@@ -1,15 +1,30 @@
 import { AuthorizationUrlRequest, ConfidentialClientApplication, Configuration as MsalAppConfig, CryptoProvider } from '@azure/msal-node';
-import { DecodedAuthCodeRequestState } from '@ukef/dtfs2-common';
+import { EntraIdUser, DecodedAuthCodeRequestState, EntraIdAuthCodeRedirectResponseBody, GetAuthCodeUrlResponse } from '@ukef/dtfs2-common';
+import { DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA, ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA } from '@ukef/dtfs2-common/schemas';
 import { EntraIdConfig } from '../configs/entra-id.config';
 import { EntraIdApi } from '../third-party-apis/entra-id.api';
 
-type GetAuthCodeUrlParams = {
+export type GetAuthCodeUrlParams = {
   successRedirect?: string;
 };
 
-type GetAuthCodeUrlResponse = {
-  authCodeUrl: string;
-  authCodeUrlRequest: AuthorizationUrlRequest;
+type HandleRedirectParams = {
+  authCodeResponse: EntraIdAuthCodeRedirectResponseBody;
+  originalAuthCodeUrlRequest?: AuthorizationUrlRequest;
+};
+
+export type HandleRedirectResponse = {
+  entraIdUser: EntraIdUser;
+  successRedirect?: string;
+};
+
+type GetAccessTokenAndEntraIdUserByAuthCodeParams = {
+  authCodeResponse: EntraIdAuthCodeRedirectResponseBody;
+  originalAuthCodeUrlRequest: AuthorizationUrlRequest;
+};
+
+type GetEntraIdUserByAuthCodeResponse = {
+  entraIdUser: EntraIdUser;
 };
 
 export class EntraIdService {
@@ -48,6 +63,33 @@ export class EntraIdService {
     return { authCodeUrl, authCodeUrlRequest };
   }
 
+  public async handleRedirect({ authCodeResponse, originalAuthCodeUrlRequest }: HandleRedirectParams): Promise<HandleRedirectResponse> {
+    if (!originalAuthCodeUrlRequest) {
+      throw new Error('No auth code URL request found in session');
+    }
+
+    const { entraIdUser } = await this.getEntraIdUserByAuthCode({
+      authCodeResponse,
+      originalAuthCodeUrlRequest,
+    });
+
+    const { successRedirect } = this.parseAuthRequestState(authCodeResponse.state);
+
+    return {
+      entraIdUser,
+      successRedirect,
+    };
+  }
+
+  private parseAuthRequestState(encodedState: string): DecodedAuthCodeRequestState {
+    try {
+      return DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA.parse(JSON.parse(this.cryptoProvider.base64Decode(encodedState)));
+    } catch (error) {
+      console.error('Error parsing auth request state: %o', error);
+      throw error;
+    }
+  }
+
   private async getAuthorityMetadata() {
     try {
       return await this.entraIdApi.getAuthorityMetadataUrl();
@@ -66,5 +108,28 @@ export class EntraIdService {
     }
 
     return new ConfidentialClientApplication(this.msalAppConfig);
+  }
+
+  private async getEntraIdUserByAuthCode({
+    authCodeResponse,
+    originalAuthCodeUrlRequest,
+  }: GetAccessTokenAndEntraIdUserByAuthCodeParams): Promise<GetEntraIdUserByAuthCodeResponse> {
+    const msalApp = await this.getMsalAppInstance();
+
+    // The token request uses details from our original auth code request so
+    // that MSAL can validate that the state in our original request matches the
+    // state in the auth code response received via the redirect. This ensures
+    // that the originator of the request and the response received are the
+    // same, which is important for security reasons to protect against CSRF
+    // attacks.
+    // See https://datatracker.ietf.org/doc/html/rfc6819#section-3.6 for details
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { responseMode, ...rest } = originalAuthCodeUrlRequest;
+    const tokenRequest = { ...rest, code: authCodeResponse.code };
+    const token = await msalApp.acquireTokenByCode(tokenRequest, authCodeResponse);
+    const {
+      account: { idTokenClaims },
+    } = ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA.parse(token);
+    return { entraIdUser: idTokenClaims };
   }
 }

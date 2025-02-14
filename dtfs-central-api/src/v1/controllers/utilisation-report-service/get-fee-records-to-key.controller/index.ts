@@ -16,6 +16,17 @@ export type GetFeeRecordsToKeyResponseBody = {
 
 type GetFeeRecordsToKeyResponse = Response<GetFeeRecordsToKeyResponseBody | string>;
 
+/**
+ * Gets all fee records that are ready to have keying data generated.
+ *
+ * A fee record is ready to have keying data generated key if it is at 'MATCH' status.
+ *
+ * This endpoint fetches all such fee records and maps them to the fields
+ * need to display them to the user to check before going ahead with keying
+ * data generation.
+ * @param req - The request
+ * @param res - The response
+ */
 export const getFeeRecordsToKey = async (req: Request, res: GetFeeRecordsToKeyResponse) => {
   const { reportId } = req.params;
 

@@ -1,4 +1,4 @@
-import { CustomExpressRequest, DayMonthYearInput } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, DayMonthYearInput, PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { fromUnixTime } from 'date-fns';
 import * as api from '../../../services/api.js';
@@ -41,6 +41,11 @@ export const getEffectiveDate = async (req: GetEffectiveDateRequest, res: Respon
     if (!amendment) {
       console.error('Amendment %s was not found on facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
+    }
+
+    if (!(PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES as string[]).includes(amendment.status)) {
+      console.error('Amendment %s is not assigned to Maker', amendmentId);
+      return res.redirect(`/gef/application-details/${dealId}`);
     }
 
     const effectiveDate: DayMonthYearInput | undefined = amendment.effectiveDate

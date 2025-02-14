@@ -1,4 +1,4 @@
-import { withSchemaValidationTests } from '../../test-helpers';
+import { withSchemaValidationTests } from '../../test-helpers/schemas';
 import { DecodedAuthCodeRequestState } from '../../types/tfm/entra-id';
 import { DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA } from './entra-id.schema';
 

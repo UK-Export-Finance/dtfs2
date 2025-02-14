@@ -14,4 +14,9 @@ export type TestCase =
   | TestCaseWithType<'ENTRA_ID_USER_SCHEMA'>
   | TestCaseWithType<'CURRENCY_SCHEMA'>
   | TestCaseWithType<'ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA'>
-  | TestCaseWithType<'UPSERT_TFM_USER_REQUEST_SCHEMA'>;
+  | TestCaseWithType<'UPSERT_TFM_USER_REQUEST_SCHEMA'>
+  | TestCaseWithType<'OBJECT_ID_SCHEMA'>
+  | TestCaseWithType<'OBJECT_ID_STRING_SCHEMA'>
+  | TestCaseWithType<'OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA'>
+  | TestCaseWithType<'AUDIT_DATABASE_RECORD_SCHEMA'>
+  | TestCaseWithType<'TFM_SESSION_USER_SCHEMA'>;
