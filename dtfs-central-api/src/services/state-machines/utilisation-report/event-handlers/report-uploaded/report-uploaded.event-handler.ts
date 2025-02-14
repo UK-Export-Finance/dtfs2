@@ -4,7 +4,6 @@ import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.
 import { feeRecordCsvRowToSqlEntity } from '../../../../../helpers';
 import { UTILISATION_REPORT_EVENT_TYPE } from '../../event/utilisation-report.event-type';
 import { CHUNK_SIZE_FOR_SQL_BATCH_SAVING } from '../../../../../constants';
-import { FacilityUtilisationDataService } from '../../../../facility-utilisation-data/facility-utilisation-data.service';
 
 type ReportUploadedEventPayload = {
   azureFileInfo: AzureFileInfo;
@@ -41,19 +40,6 @@ export const handleUtilisationReportReportUploadedEvent = async (
     requestSource,
   });
   await transactionEntityManager.save(UtilisationReportEntity, report);
-
-  const uniqueReportCsvDataFacilityIds = reportCsvData.reduce(
-    (uniqueFacilityIds, { 'ukef facility id': facilityId }) => uniqueFacilityIds.add(facilityId),
-    new Set<string>(),
-  );
-
-  await FacilityUtilisationDataService.initialiseFacilityUtilisationData(
-    uniqueReportCsvDataFacilityIds,
-    report.bankId,
-    report.reportPeriod,
-    requestSource,
-    transactionEntityManager,
-  );
 
   const feeRecordEntities: FeeRecordEntity[] = reportCsvData.map((dataEntry) =>
     feeRecordCsvRowToSqlEntity({

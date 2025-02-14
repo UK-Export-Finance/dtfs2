@@ -1,11 +1,5 @@
 import { CURRENCY, FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE } from '../../constants';
-import {
-  aRecordCorrectionValues,
-  FacilityUtilisationDataEntityMockBuilder,
-  FeeRecordEntityMockBuilder,
-  PaymentEntityMockBuilder,
-  UtilisationReportEntityMockBuilder,
-} from '../../test-helpers';
+import { aRecordCorrectionValues, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '../../test-helpers';
 import { Currency } from '../../types';
 
 describe('FeeRecordEntity', () => {
@@ -211,110 +205,6 @@ describe('FeeRecordEntity', () => {
     });
   });
 
-  describe('updateWithKeyingData', () => {
-    describe(`when the status to set is ${FEE_RECORD_STATUS.READY_TO_KEY}`, () => {
-      const status = FEE_RECORD_STATUS.READY_TO_KEY;
-
-      it(`should set the fee record status to ${FEE_RECORD_STATUS.READY_TO_KEY} and updates the principalBalanceAdjustment, fixedFeeAdjustment and 'lastUpdatedBy...' fields`, () => {
-        // Arrange
-        const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
-          .withStatus(FEE_RECORD_STATUS.MATCH)
-          .withPrincipalBalanceAdjustment(null)
-          .withFixedFeeAdjustment(null)
-          .withLastUpdatedByIsSystemUser(true)
-          .withLastUpdatedByPortalUserId(null)
-          .withLastUpdatedByTfmUserId(null)
-          .build();
-
-        // Act
-        feeRecord.updateWithKeyingData({
-          fixedFeeAdjustment: 1000,
-          principalBalanceAdjustment: 1000000,
-          status,
-          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
-        });
-
-        // Assert
-        expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.READY_TO_KEY);
-        expect(feeRecord.principalBalanceAdjustment).toEqual(1000000);
-        expect(feeRecord.fixedFeeAdjustment).toEqual(1000);
-        expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
-        expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
-        expect(feeRecord.lastUpdatedByTfmUserId).toEqual('abc123');
-      });
-
-      it('should not set the fee record dateReconciled or the reconciledByUserId', () => {
-        // Arrange
-        const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
-          .withStatus(FEE_RECORD_STATUS.MATCH)
-          .withDateReconciled(null)
-          .withReconciledByUserId(null)
-          .build();
-
-        // Act
-        feeRecord.updateWithKeyingData({
-          fixedFeeAdjustment: 1000,
-          principalBalanceAdjustment: 1000000,
-          status,
-          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
-        });
-
-        // Assert
-        expect(feeRecord.dateReconciled).toBeNull();
-        expect(feeRecord.reconciledByUserId).toBeNull();
-      });
-    });
-
-    describe(`when the status to set is ${FEE_RECORD_STATUS.RECONCILED}`, () => {
-      const status = FEE_RECORD_STATUS.RECONCILED;
-
-      it(`should set the fee record status to ${FEE_RECORD_STATUS.RECONCILED} and updates the principalBalanceAdjustment, fixedFeeAdjustment and 'lastUpdatedBy...' fields`, () => {
-        // Arrange
-        const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
-          .withStatus(FEE_RECORD_STATUS.MATCH)
-          .withPrincipalBalanceAdjustment(null)
-          .withFixedFeeAdjustment(null)
-          .withLastUpdatedByIsSystemUser(true)
-          .withLastUpdatedByPortalUserId(null)
-          .withLastUpdatedByTfmUserId(null)
-          .build();
-
-        // Act
-        feeRecord.updateWithKeyingData({
-          fixedFeeAdjustment: 1000,
-          principalBalanceAdjustment: 1000000,
-          status,
-          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
-        });
-
-        // Assert
-        expect(feeRecord.status).toEqual(FEE_RECORD_STATUS.RECONCILED);
-        expect(feeRecord.principalBalanceAdjustment).toEqual(1000000);
-        expect(feeRecord.fixedFeeAdjustment).toEqual(1000);
-        expect(feeRecord.lastUpdatedByIsSystemUser).toEqual(false);
-        expect(feeRecord.lastUpdatedByPortalUserId).toBeNull();
-        expect(feeRecord.lastUpdatedByTfmUserId).toEqual('abc123');
-      });
-
-      it('should set the dateReconciled to now and does not set the reconciledByUserId', () => {
-        // Arrange
-        const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport).withStatus(FEE_RECORD_STATUS.MATCH).withDateReconciled(null).build();
-
-        // Act
-        feeRecord.updateWithKeyingData({
-          fixedFeeAdjustment: 1000,
-          principalBalanceAdjustment: 1000000,
-          status,
-          requestSource: { platform: REQUEST_PLATFORM_TYPE.TFM, userId: 'abc123' },
-        });
-
-        // Assert
-        expect(feeRecord.dateReconciled).toEqual(mockDate);
-        expect(feeRecord.reconciledByUserId).toBeNull();
-      });
-    });
-  });
-
   describe('updateWithCorrection', () => {
     it('should update the fee record with corrected values', () => {
       // Arrange
@@ -344,33 +234,6 @@ describe('FeeRecordEntity', () => {
       expect(feeRecord.feesPaidToUkefForThePeriod).toEqual(correctedValues.feesPaidToUkefForThePeriod);
       expect(feeRecord.feesPaidToUkefForThePeriodCurrency).toEqual(correctedValues.feesPaidToUkefForThePeriodCurrency);
       expect(feeRecord.facilityId).toEqual(correctedValues.facilityId);
-    });
-
-    it('should update facilityUtilisationData id to new facilityId when facilityId is corrected', () => {
-      // Arrange
-      const correctedValues = {
-        facilityUtilisation: null,
-        feesPaidToUkefForThePeriod: null,
-        feesPaidToUkefForThePeriodCurrency: null,
-        facilityId: '77777777',
-      };
-
-      const oldFacilityId = '11111111';
-
-      const feeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
-        .withFacilityUtilisationData(FacilityUtilisationDataEntityMockBuilder.forId(oldFacilityId).build())
-        .withFacilityId(oldFacilityId)
-        .withStatus(FEE_RECORD_STATUS.PENDING_CORRECTION)
-        .build();
-
-      // Act
-      feeRecord.updateWithCorrection({
-        correctedValues,
-        requestSource: { platform: REQUEST_PLATFORM_TYPE.PORTAL, userId: 'abc123' },
-      });
-
-      // Assert
-      expect(feeRecord.facilityUtilisationData.id).toEqual(correctedValues.facilityId);
     });
 
     describe('when the fee record payment currency is the same as the fees paid to ukef for the period currency', () => {
