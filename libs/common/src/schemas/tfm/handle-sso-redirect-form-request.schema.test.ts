@@ -1,4 +1,4 @@
-import { aValidTfmSessionUser, withSchemaValidationTests } from '../../test-helpers';
+import { aValidTfmSessionUser, withSchemaValidationTests } from '../../test-helpers/schemas';
 import { HANDLE_SSO_REDIRECT_FORM_RESPONSE_SCHEMA } from './handle-sso-redirect-form-response.schema';
 
 describe('HANDLE_SSO_REDIRECT_FORM_RESPONSE_SCHEMA', () => {
