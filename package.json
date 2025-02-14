@@ -64,7 +64,6 @@
     ]
   },
   "dependencies": {
-    "@azure/msal-node": "^3.2.2",
     "axios": "1.7.8",
     "express": "^4.21.2",
     "release-please": "^16.15.0"
