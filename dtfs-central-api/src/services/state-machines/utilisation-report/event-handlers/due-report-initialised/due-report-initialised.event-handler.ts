@@ -1,11 +1,12 @@
-import { UtilisationReportEntity, ReportPeriod } from '@ukef/dtfs2-common';
-import { NotImplementedError } from '../../../../../errors';
+import { UtilisationReportEntity, ReportPeriod, DbRequestSource } from '@ukef/dtfs2-common';
 import { BaseUtilisationReportEvent } from '../../event/base-utilisation-report.event';
 import { UTILISATION_REPORT_EVENT_TYPE } from '../../event/utilisation-report.event-type';
+import { UtilisationReportRepo } from '../../../../../repositories/utilisation-reports-repo';
 
 type DueReportInitialisedPayload = {
   bankId: string;
   reportPeriod: ReportPeriod;
+  requestSource: DbRequestSource;
 };
 
 export type UtilisationReportDueReportInitialisedEvent = BaseUtilisationReportEvent<
@@ -19,7 +20,16 @@ export type UtilisationReportDueReportInitialisedEvent = BaseUtilisationReportEv
  * @param param - The payload
  * @returns The modified report
  */
-export const handleUtilisationReportDueReportInitialisedEvent = (payload: DueReportInitialisedPayload): Promise<UtilisationReportEntity> => {
-  console.error('Utilisation due report error payload %o', payload);
-  throw new NotImplementedError('TODO FN-1860');
+export const handleUtilisationReportDueReportInitialisedEvent = async ({
+  bankId,
+  reportPeriod,
+  requestSource,
+}: DueReportInitialisedPayload): Promise<UtilisationReportEntity> => {
+  const newUtilisationReport = UtilisationReportEntity.createNotReceived({
+    bankId,
+    reportPeriod,
+    requestSource,
+  });
+
+  return UtilisationReportRepo.save(newUtilisationReport);
 };

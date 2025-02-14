@@ -37,7 +37,7 @@
         <p class="govuk-body" data-cy="how-to-add-payments-text">Received payments are entered against reported fees through selection and then selection of the 'Add a payment' button.</p>
 
         <p class="govuk-body" data-cy="how-to-generate-keying-data-text">
-          When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected.
+          When payments show as matched, the data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected.
         </p>
          {% if isFeeRecordCorrectionFeatureFlagEnabled %}
           <p class="govuk-body" data-cy="how-to-create-record-correction-request-text">
@@ -45,8 +45,8 @@
           </p>
         {% endif %}
       {% else %}
-        <p class="govuk-body" data-cy="received-payments-text">Received payments are entered against reported fees. When payments show as matched, the adjustment data for keying into ACBS will be automatically generated.</p>
-        
+        <p class="govuk-body" data-cy="received-payments-text">Received payments are entered against reported fees. When payments show as matched, the data for keying into ACBS will be automatically generated.</p>
+
         {% if isFeeRecordCorrectionFeatureFlagEnabled %}
           <p class="govuk-body" data-cy="how-to-create-record-correction-request-text">
             Errors with a fee record can be addressed and queried with the bank through a record correction request.

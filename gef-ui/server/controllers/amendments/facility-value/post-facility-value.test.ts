@@ -12,7 +12,7 @@ import { postFacilityValue, PostFacilityValueRequest } from './post-facility-val
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { FacilityValueViewModel } from '../../../types/view-models/amendments/facility-value-view-model';
-import { getCurrencySymbol } from './getCurrencySymbol';
+import { getCurrencySymbol } from './get-currency-symbol';
 import { validationErrorHandler } from '../../../utils/helpers';
 import { validateFacilityValue } from './validation';
 import { getAmendmentsUrl, getNextPage } from '../helpers/navigation.helper';

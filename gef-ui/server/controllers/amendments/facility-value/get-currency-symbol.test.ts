@@ -1,5 +1,5 @@
 import { Currency, CURRENCY } from '@ukef/dtfs2-common';
-import { getCurrencySymbol } from './getCurrencySymbol';
+import { getCurrencySymbol } from './get-currency-symbol';
 
 describe('getCurrencySymbol', () => {
   const testCases = [

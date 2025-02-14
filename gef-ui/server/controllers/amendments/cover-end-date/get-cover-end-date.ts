@@ -1,4 +1,4 @@
-import { CustomExpressRequest, DayMonthYearInput } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, DayMonthYearInput, PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES } from '@ukef/dtfs2-common';
 import { fromUnixTime } from 'date-fns';
 import { Response } from 'express';
 import * as api from '../../../services/api';
@@ -41,6 +41,11 @@ export const getCoverEndDate = async (req: GetCoverEndDateRequest, res: Response
     if (!amendment) {
       console.error('Amendment %s was not found on facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
+    }
+
+    if (!(PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES as string[]).includes(amendment.status)) {
+      console.error('Amendment %s is not assigned to Maker', amendmentId);
+      return res.redirect(`/gef/application-details/${dealId}`);
     }
 
     if (!amendment.changeCoverEndDate) {
