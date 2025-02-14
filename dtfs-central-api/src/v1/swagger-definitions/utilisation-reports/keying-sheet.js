@@ -6,17 +6,6 @@
  *     enum:
  *       - TO_DO
  *       - DONE
- *   KeyingSheetAdjustment:
- *     type: object
- *     properties:
- *       change:
- *         type: string
- *         enum:
- *           - INCREASE
- *           - DECREASE
- *           - NONE
- *       amount:
- *         type: number
  *   KeyingSheetRow:
  *     type: object
  *     properties:
@@ -38,12 +27,6 @@
  *           $ref: '#/definitions/CurrencyAndAmount'
  *       baseCurrency:
  *         $ref: '#/definitions/Currency'
- *       fixedFeeAdjustment:
- *         $ref: '#/definitions/KeyingSheetAdjustment'
- *         nullable: true
- *       principalBalanceAdjustment:
- *         $ref: '#/definitions/KeyingSheetAdjustment'
- *         nullable: true
  *   KeyingSheet:
  *     type: array
  *     items:

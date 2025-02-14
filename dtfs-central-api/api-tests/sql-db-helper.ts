@@ -1,6 +1,5 @@
 import {
   AzureFileInfoEntity,
-  FacilityUtilisationDataEntity,
   FeeRecordCorrectionEntity,
   FeeRecordCorrectionRequestTransientFormDataEntity,
   FeeRecordCorrectionTransientFormDataEntity,
@@ -17,7 +16,6 @@ type SqlTableName =
   | 'FeeRecord'
   | 'AzureFileInfo'
   | 'Payment'
-  | 'FacilityUtilisationData'
   | 'PaymentMatchingTolerance'
   | 'FeeRecordCorrectionTransientFormData'
   | 'FeeRecordCorrectionRequestTransientFormData'
@@ -36,9 +34,6 @@ const deleteAllEntries = async (tableName: SqlTableName): Promise<void> => {
       return;
     case 'Payment':
       await SqlDbDataSource.manager.delete(PaymentEntity, {});
-      return;
-    case 'FacilityUtilisationData':
-      await SqlDbDataSource.manager.delete(FacilityUtilisationDataEntity, {});
       return;
     case 'PaymentMatchingTolerance':
       await SqlDbDataSource.manager.delete(PaymentMatchingToleranceEntity, {});
@@ -62,7 +57,6 @@ const deleteAll = async (): Promise<void> => {
   await deleteAllEntries('FeeRecord');
   await deleteAllEntries('UtilisationReport');
   await deleteAllEntries('AzureFileInfo');
-  await deleteAllEntries('FacilityUtilisationData');
   await deleteAllEntries('PaymentMatchingTolerance');
   await deleteAllEntries('FeeRecordCorrectionRequestTransientFormData');
   await deleteAllEntries('FeeRecordCorrectionTransientFormData');
@@ -77,8 +71,6 @@ type Entity<TableName extends SqlTableName> = TableName extends 'UtilisationRepo
   ? AzureFileInfoEntity
   : TableName extends 'Payment'
   ? PaymentEntity
-  : TableName extends 'FacilityUtilisationData'
-  ? FacilityUtilisationDataEntity
   : TableName extends 'PaymentMatchingTolerance'
   ? PaymentMatchingToleranceEntity
   : TableName extends 'FeeRecordCorrection'
@@ -89,27 +81,16 @@ type Entity<TableName extends SqlTableName> = TableName extends 'UtilisationRepo
   ? FeeRecordCorrectionRequestTransientFormDataEntity
   : never;
 
-const saveFacilityUtilisationDataIfNotExists = async (facilityUtilisationData: FacilityUtilisationDataEntity): Promise<void> => {
-  const entityExists = await SqlDbDataSource.manager.existsBy(FacilityUtilisationDataEntity, { id: facilityUtilisationData.id });
-  if (entityExists) {
-    return;
-  }
-  await SqlDbDataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationData);
-};
-
 const saveNewEntry = async <TableName extends SqlTableName>(tableName: TableName, entityToInsert: Entity<TableName>): Promise<Entity<TableName>> => {
   switch (tableName) {
     case 'UtilisationReport':
       return (await SqlDbDataSource.manager.save(UtilisationReportEntity, entityToInsert as UtilisationReportEntity)) as Entity<TableName>;
     case 'FeeRecord':
-      await saveFacilityUtilisationDataIfNotExists((entityToInsert as FeeRecordEntity).facilityUtilisationData);
       return (await SqlDbDataSource.manager.save(FeeRecordEntity, entityToInsert as FeeRecordEntity)) as Entity<TableName>;
     case 'AzureFileInfo':
       return (await SqlDbDataSource.manager.save(AzureFileInfoEntity, entityToInsert as AzureFileInfoEntity)) as Entity<TableName>;
     case 'Payment':
       return (await SqlDbDataSource.manager.save(PaymentEntity, entityToInsert as PaymentEntity)) as Entity<TableName>;
-    case 'FacilityUtilisationData':
-      return (await SqlDbDataSource.manager.save(FacilityUtilisationDataEntity, entityToInsert as FacilityUtilisationDataEntity)) as Entity<TableName>;
     case 'PaymentMatchingTolerance':
       return (await SqlDbDataSource.manager.save(PaymentMatchingToleranceEntity, entityToInsert as PaymentMatchingToleranceEntity)) as Entity<TableName>;
     case 'FeeRecordCorrection':
@@ -134,16 +115,11 @@ const saveNewEntries = async <TableName extends SqlTableName>(tableName: TableNa
     case 'UtilisationReport':
       return (await SqlDbDataSource.manager.save(UtilisationReportEntity, entitiesToInsert as UtilisationReportEntity[])) as Entity<TableName>[];
     case 'FeeRecord':
-      for (const { facilityUtilisationData } of entitiesToInsert as FeeRecordEntity[]) {
-        await saveFacilityUtilisationDataIfNotExists(facilityUtilisationData);
-      }
       return (await SqlDbDataSource.manager.save(FeeRecordEntity, entitiesToInsert as FeeRecordEntity[])) as Entity<TableName>[];
     case 'AzureFileInfo':
       return (await SqlDbDataSource.manager.save(AzureFileInfoEntity, entitiesToInsert as AzureFileInfoEntity[])) as Entity<TableName>[];
     case 'Payment':
       return (await SqlDbDataSource.manager.save(PaymentEntity, entitiesToInsert as PaymentEntity[])) as Entity<TableName>[];
-    case 'FacilityUtilisationData':
-      return (await SqlDbDataSource.manager.save(FacilityUtilisationDataEntity, entitiesToInsert as FacilityUtilisationDataEntity[])) as Entity<TableName>[];
     case 'PaymentMatchingTolerance':
       return (await SqlDbDataSource.manager.save(PaymentMatchingToleranceEntity, entitiesToInsert as PaymentMatchingToleranceEntity[])) as Entity<TableName>[];
     case 'FeeRecordCorrection':

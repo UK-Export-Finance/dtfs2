@@ -32,6 +32,7 @@ const baseRules = {
     {
       devDependencies: [
         '**/*.test.{js,ts}',
+        '**/*.tests.{js,ts}',
         '**/*.ff-test.{js,ts}',
         '**/*.api-test.{js,ts}',
         '**/*.spec.{js,ts}',

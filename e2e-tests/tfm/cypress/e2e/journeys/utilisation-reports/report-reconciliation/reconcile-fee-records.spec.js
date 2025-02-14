@@ -123,7 +123,7 @@ context('PDC_RECONCILE users can reconcile fee records', () => {
 
       cy.assertText(
         pages.utilisationReportPage.tabs.premiumPaymentsContent.selectPaymentsText(),
-        'Select payments and mark as done when the adjustments have been keyed into ACBS.',
+        'Select payments and mark as done when they have been keyed into ACBS.',
       );
       cy.assertText(
         pages.utilisationReportPage.tabs.premiumPaymentsContent.paymentsOnPremiumPaymentsText(),

@@ -103,7 +103,7 @@ export function aValidTfmSessionUser() {
   return {
     _id: new ObjectId().toString(),
     username: 'test-user',
-    email: 'test-user@test.com',
+    email: 'test-user@ukexportfinance.gov.uk',
     teams: [TEAM_IDS.PIM],
     timezone: 'Europe/London',
     firstName: 'FirstName',

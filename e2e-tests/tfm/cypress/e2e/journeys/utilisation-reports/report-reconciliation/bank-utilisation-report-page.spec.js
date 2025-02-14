@@ -67,7 +67,7 @@ context('Bank utilisation report page', () => {
 
       cy.assertText(
         utilisationReportPage.tabs.premiumPaymentsContent.howToGenerateKeyingDataText(),
-        `When payments show as matched, the adjustment data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected.`,
+        `When payments show as matched, the data for keying into ACBS will be automatically generated when the 'Generate keying data' button is selected.`,
       );
     });
 
@@ -100,7 +100,7 @@ context('Bank utilisation report page', () => {
     it('should display the correct text', () => {
       cy.assertText(
         utilisationReportPage.tabs.premiumPaymentsContent.receivedPaymentsText(),
-        `Received payments are entered against reported fees. When payments show as matched, the adjustment data for keying into ACBS will be automatically generated.`,
+        `Received payments are entered against reported fees. When payments show as matched, the data for keying into ACBS will be automatically generated.`,
       );
     });
 

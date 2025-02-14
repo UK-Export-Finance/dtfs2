@@ -58,7 +58,7 @@ describe('UtilisationReportStateMachine', () => {
       // Act
       await stateMachine.handleEvent({
         type: 'DUE_REPORT_INITIALISED',
-        payload: { bankId: BANK_ID, reportPeriod: REPORT_PERIOD },
+        payload: { bankId: BANK_ID, reportPeriod: REPORT_PERIOD, requestSource: { platform: REQUEST_PLATFORM_TYPE.SYSTEM } },
       });
 
       // Assert

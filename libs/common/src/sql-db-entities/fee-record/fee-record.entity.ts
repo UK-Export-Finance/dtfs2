@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import Big from 'big.js';
 import { UtilisationReportEntity } from '../utilisation-report';
 import { Currency, FeeRecordStatus } from '../../types';
@@ -9,12 +9,10 @@ import {
   MarkAsReconciledParams,
   RemoveAllPaymentsParams,
   UpdateWithCorrectionParams,
-  UpdateWithKeyingDataParams,
   UpdateWithStatusParams,
 } from './fee-record.types';
 import { MonetaryColumn, ExchangeRateColumn } from '../custom-columns';
 import { PaymentEntity } from '../payment';
-import { FacilityUtilisationDataEntity } from '../facility-utilisation-data';
 import { FEE_RECORD_STATUS } from '../../constants';
 import { FeeRecordCorrectionEntity } from '../fee-record-correction';
 
@@ -28,17 +26,6 @@ export class FeeRecordEntity extends AuditableBaseEntity {
    */
   @Column({ type: 'nvarchar', length: '10' })
   facilityId!: string;
-
-  /**
-   * The linked facility utilisation data
-   */
-  @ManyToOne(() => FacilityUtilisationDataEntity, (facilityUtilisationData) => facilityUtilisationData.feeRecords, {
-    nullable: false,
-    eager: true,
-    cascade: ['insert'],
-  })
-  @JoinColumn({ name: 'facilityId' })
-  facilityUtilisationData!: FacilityUtilisationDataEntity;
 
   /**
    * The associated report from the UtilisationReport table
@@ -131,18 +118,6 @@ export class FeeRecordEntity extends AuditableBaseEntity {
   payments!: PaymentEntity[];
 
   /**
-   * The keying sheet fixed fee adjustment
-   */
-  @MonetaryColumn({ nullable: true })
-  fixedFeeAdjustment!: number | null;
-
-  /**
-   * The keying sheet principal balance adjustment
-   */
-  @MonetaryColumn({ nullable: true })
-  principalBalanceAdjustment!: number | null;
-
-  /**
    * The user who reconciled the fee record
    */
   @Column({ type: 'nvarchar', length: 255, nullable: true })
@@ -201,8 +176,6 @@ export class FeeRecordEntity extends AuditableBaseEntity {
     feeRecord.report = report;
     feeRecord.updateLastUpdatedBy(requestSource);
     feeRecord.payments = [];
-    feeRecord.fixedFeeAdjustment = null;
-    feeRecord.principalBalanceAdjustment = null;
     feeRecord.reconciledByUserId = null;
     feeRecord.dateReconciled = null;
     return feeRecord;
@@ -271,56 +244,9 @@ export class FeeRecordEntity extends AuditableBaseEntity {
 
     if (correctedValues.facilityId !== null) {
       this.facilityId = correctedValues.facilityId;
-
-      /**
-       * If we don't manually update this reference then the
-       * change to facilityId gets ignored but the transaction
-       * gets committed without an error.
-       *
-       * If there is an existing facilityUtilisationData with the
-       * new facilityId, then only the reference changes and it will
-       * now be linked to the existing facilityUtilisationDate entity.
-       *
-       * If no facilityUtilisationData with the new facilityId
-       * exists then typeorm creates a new entry with all the other
-       * fields the same as the previous data.
-       *
-       * This second behaviour could lead to incorrect utilisation
-       * adjustments since the initial utilisation will have been
-       * calculated using the values of an incorrect facility.
-       * However, utilisation adjustments are not currently
-       * being used so this is an accepted behaviour for now with
-       * FN-3813 having been raised to address this.
-       *
-       * TODO FN-3813: Remove this line. If we are not removing utilisation
-       * adjustments, we need to recalculate initial utilisation
-       * for any new facilityId without existing facilityUtilisationData
-       * rather than copying the values from the pre-correction data
-       * for the reasons explained in the above paragraph.
-       */
-      this.facilityUtilisationData.id = this.facilityId;
     }
 
     this.updateLastUpdatedBy(requestSource);
-  }
-
-  /**
-   * Updates a fee record with keying data
-   * @param param - The update parameters
-   * @param param.fixedFeeAdjustment - The fixed fee adjustment
-   * @param param.principalBalanceAdjustment - The principal balance adjustment
-   * @param param.status - The status
-   * @param param.requestSource - The request source
-   */
-  public updateWithKeyingData({ fixedFeeAdjustment, principalBalanceAdjustment, status, requestSource }: UpdateWithKeyingDataParams): void {
-    this.status = status;
-    this.fixedFeeAdjustment = fixedFeeAdjustment;
-    this.principalBalanceAdjustment = principalBalanceAdjustment;
-    this.updateLastUpdatedBy(requestSource);
-
-    if (status === FEE_RECORD_STATUS.RECONCILED) {
-      this.dateReconciled = new Date();
-    }
   }
 
   /**

@@ -88,7 +88,6 @@ describe('controllers - login (sso)', () => {
           },
         };
       });
-
       describe('when the payload is not verified', () => {
         beforeEach(() => {
           ({ req, res } = getHttpMocks({

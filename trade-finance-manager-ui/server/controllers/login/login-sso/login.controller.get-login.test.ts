@@ -123,7 +123,7 @@ describe('controllers - login (sso)', () => {
           expect(consoleErrorMock).toHaveBeenCalled();
         });
 
-        it('should call next with error', async () => {
+        it('should redirect to problem-with-service page', async () => {
           // Act
           await LoginController.getLogin(req, res);
 
@@ -131,16 +131,16 @@ describe('controllers - login (sso)', () => {
           expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
         });
       });
+
+      function mockSuccessfulGetAuthCodeUrl(whenCalledWith = { successRedirect: requestOriginalUrl }) {
+        when(getAuthCodeUrlMock)
+          .calledWith(whenCalledWith)
+          .mockImplementation(() => Promise.resolve({ authCodeUrl: mockAuthCodeUrl, authCodeUrlRequest: mockAuthCodeUrlRequest }));
+      }
+
+      function mockFailedGetAuthCodeUrl() {
+        when(getAuthCodeUrlMock).calledWith({ successRedirect: requestOriginalUrl }).mockRejectedValueOnce(new Error('getAuthCodeUrl error'));
+      }
     });
-
-    function mockSuccessfulGetAuthCodeUrl(whenCalledWith = { successRedirect: requestOriginalUrl }) {
-      when(getAuthCodeUrlMock)
-        .calledWith(whenCalledWith)
-        .mockImplementation(() => Promise.resolve({ authCodeUrl: mockAuthCodeUrl, authCodeUrlRequest: mockAuthCodeUrlRequest }));
-    }
-
-    function mockFailedGetAuthCodeUrl() {
-      when(getAuthCodeUrlMock).calledWith({ successRedirect: requestOriginalUrl }).mockRejectedValueOnce(new Error('getAuthCodeUrl error'));
-    }
   });
 });
