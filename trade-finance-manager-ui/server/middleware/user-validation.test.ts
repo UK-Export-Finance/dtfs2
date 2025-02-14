@@ -6,6 +6,7 @@ import { aRequestSession } from '../../test-helpers';
 import { validateUser } from './user-validation';
 import { LoginController } from '../controllers/login/login-sso/login.controller';
 
+// Mock the isTfmSsoFeatureFlagEnabled function to control SSO feature flag in tests
 jest.mock('@ukef/dtfs2-common', (): typeof import('@ukef/dtfs2-common') => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
   isTfmSsoFeatureFlagEnabled: jest.fn(),

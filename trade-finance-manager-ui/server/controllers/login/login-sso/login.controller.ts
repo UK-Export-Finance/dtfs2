@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { HandleSsoRedirectFormUiRequest, InvalidPayloadError } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, EntraIdAuthCodeRedirectResponseBody, HandleSsoRedirectFormUiRequest, InvalidPayloadError } from '@ukef/dtfs2-common';
 import { isVerifiedPayload } from '@ukef/dtfs2-common/payload-verification';
 import { ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA } from '@ukef/dtfs2-common/schemas';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
@@ -38,6 +38,24 @@ export class LoginController {
       return res.render('_partials/problem-with-service.njk');
     }
   };
+
+  /**
+   * Handles the SSO redirect from the SSO authority (Microsoft Entra).
+   * The SSO authority redirects the user to this endpoint after successful login,
+   * we render a form with hidden fields that is then auto-submitted.
+   * @param req - The request object containing the payload from the SSO authority.
+   * @param res - The response object used to render the form.
+   * @returns - A promise that resolves when the operation is complete.
+   */
+  public static postSsoRedirect(req: CustomExpressRequest<{ reqBody: EntraIdAuthCodeRedirectResponseBody }>, res: Response) {
+    if (!isVerifiedPayload({ payload: req.body, template: ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA })) {
+      throw new InvalidPayloadError('Invalid payload from SSO redirect');
+    }
+
+    const { code, client_info: clientInfo, state, session_state: sessionState } = req.body;
+
+    return res.render('auth/accept-sso-redirect.njk', { code, clientInfo, state, sessionState });
+  }
 
   /**
    * Handles the SSO redirect form submission.

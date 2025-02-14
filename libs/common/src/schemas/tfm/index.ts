@@ -8,3 +8,5 @@ export * from './tfm-team.schema';
 export * from './tfm-user.schema';
 export * from './tfm-session-user.schema';
 export * from './handle-sso-redirect-form-response.schema';
+export * from './get-auth-code-params.schema';
+export * from './get-auth-code-request.schema';
