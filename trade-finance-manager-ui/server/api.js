@@ -447,10 +447,10 @@ const handleSsoRedirectForm = async (handleSsoRedirectFormRequest) => {
 
 /**
  * Gets the auth code URL for the SSO login process
- * @param {import('@ukef/dtfs2-common').GetAuthCodeUrlRequest} getAuthCodeUrlParams
+ * @param {import('@ukef/dtfs2-common').GetAuthCodeUrlRequest} getAuthCodeUrlRequest
  * @returns {Promise<import('@ukef/dtfs2-common').GetAuthCodeUrlResponse>}
  */
-const getAuthCodeUrl = async ({ successRedirect }) => {
+const getAuthCodeUrl = async (getAuthCodeUrlRequest) => {
   try {
     const response = await axios({
       method: 'get',
@@ -458,7 +458,7 @@ const getAuthCodeUrl = async ({ successRedirect }) => {
       headers: {
         ...generateHeaders(),
       },
-      params: { successRedirect },
+      data: getAuthCodeUrlRequest,
     });
 
     return response.data;
