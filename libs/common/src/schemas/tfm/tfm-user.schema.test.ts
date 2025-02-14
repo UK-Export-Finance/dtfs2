@@ -1,13 +1,11 @@
 import { ObjectId } from 'mongodb';
-import { withSchemaValidationTests } from '../../test-helpers';
+import { withSchemaValidationTests } from '../../test-helpers/schemas';
 import { TfmUser } from '../../types';
 import { TFM_USER_SCHEMA } from './tfm-user.schema';
 import { TEAM_IDS } from '../../constants';
-import { withTestsForBackendTestcase } from '../../test-helpers/schemas/backend-tests/with-tests-for-backend-testcase';
 
 describe('TFM_USER_SCHEMA', () => {
   withSchemaValidationTests({
-    withTestsForTestCases: withTestsForBackendTestcase,
     schema: TFM_USER_SCHEMA,
     aValidPayload,
     testCases: [

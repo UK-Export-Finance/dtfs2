@@ -4,3 +4,4 @@
  */
 export * from './with-entra-id-user-schema.tests';
 export * from './with-upsert-tfm-user-request.schema.tests';
+export * from './with-audit-database-record-schema.tests';

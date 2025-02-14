@@ -2,13 +2,11 @@ import { ObjectId } from 'mongodb';
 import z from 'zod';
 import { generatePortalUserAuditDatabaseRecord } from '../change-stream';
 import { CREATE } from './portal-user.schema';
-import { withSchemaValidationTests } from '../test-helpers';
-import { withTestsForBackendTestcase } from '../test-helpers/schemas/backend-tests/with-tests-for-backend-testcase';
+import { withSchemaValidationTests } from '../test-helpers/schemas';
 
 describe('PORTAL_USER', () => {
   describe('CREATE', () => {
     withSchemaValidationTests({
-      withTestsForTestCases: withTestsForBackendTestcase,
       schema: CREATE,
       aValidPayload,
       testCases: [
@@ -74,10 +72,10 @@ describe('PORTAL_USER', () => {
 
 function aValidPayload(): z.infer<typeof CREATE> {
   return {
-    username: 'HSBC-maker-1',
+    username: 'maker-1',
     firstname: 'Mister',
     surname: 'One',
-    email: 'one@email.com',
+    email: 'one@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: ['maker'],
     bank: {

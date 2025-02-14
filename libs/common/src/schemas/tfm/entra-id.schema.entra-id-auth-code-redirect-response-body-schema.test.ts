@@ -1,11 +1,11 @@
-import { withSchemaValidationTests } from '../../test-helpers';
-import { EntraIdAuthCodeRedirectResponseBody } from '../../types/tfm/entra-id';
+import { anEntraIdAuthCodeRedirectResponseBody } from '../../test-helpers';
+import { withSchemaValidationTests } from '../../test-helpers/schemas';
 import { ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA } from './entra-id.schema';
 
 describe('ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA', () => {
   withSchemaValidationTests({
     schema: ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA,
-    aValidPayload,
+    aValidPayload: anEntraIdAuthCodeRedirectResponseBody,
     testCases: [
       {
         parameterPath: 'code',
@@ -28,7 +28,3 @@ describe('ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA', () => {
     ],
   });
 });
-
-function aValidPayload(): EntraIdAuthCodeRedirectResponseBody {
-  return { code: 'a-code', client_info: 'a-client-info', state: 'a-state', session_state: 'a-session-state' };
-}

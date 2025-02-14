@@ -19,6 +19,7 @@ type CreateUserParams = {
 };
 
 type UpdateUserByIdParams = { userId: ObjectId; userUpdate: UpdateTfmUserRequest; auditDetails: AuditDetails };
+
 export class UserRepo {
   /**
    * Gets the tfm users collection
