@@ -99,6 +99,7 @@ const generateApp = () => {
   app.use((error, req, res, _next) => {
     if (error.code === 'EBADCSRFTOKEN') {
       // handle CSRF token errors here
+      console.error('Unable to verify CSRF token %o', error);
       res.status(error.statusCode || HttpStatusCode.InternalServerError);
       res.redirect('/');
     } else {
