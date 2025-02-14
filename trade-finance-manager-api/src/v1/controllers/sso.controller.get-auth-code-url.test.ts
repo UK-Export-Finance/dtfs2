@@ -26,8 +26,6 @@ describe('SsoController', () => {
     userService = new UserServiceMockBuilder().build();
     ssoController = new SsoController({ entraIdService, userService });
 
-    ssoController = new SsoController({ entraIdService, userService });
-
     ({ req, res } = getHttpMocks(aGetAuthCodeUrlRequest()));
   });
 
