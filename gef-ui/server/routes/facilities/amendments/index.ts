@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
+import { validateMongoId } from '@ukef/dtfs2-common';
 import { validatePortalFacilityAmendmentsEnabled } from '../../../middleware/feature-flags/portal-facility-amendments';
-import { validateRole, validateToken, validateBank, validateMongoId } from '../../../middleware';
+import { validateRole, validateToken, validateBank } from '../../../middleware';
 import { MAKER } from '../../../constants/roles';
 import { postCreateDraftFacilityAmendment } from '../../../controllers/amendments/create-draft/post-create-draft';
 import { getWhatNeedsToChange } from '../../../controllers/amendments/what-needs-to-change/get-what-needs-to-change';
