@@ -16,6 +16,7 @@ export const getAuthSsoRouter: GetRouter = () => {
   const loginController = new LoginController({ loginService, userSessionService });
   const authSsoRouter = express.Router();
 
+  // TODO DTFS2-6892: This router is to be deleted in future ticket
   authSsoRouter.post('/auth/sso-redirect/form', (req, res, next) => {
     loginController.handleSsoRedirectForm(req, res).catch(next);
   });
