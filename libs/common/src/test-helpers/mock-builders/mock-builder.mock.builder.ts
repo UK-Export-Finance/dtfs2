@@ -6,13 +6,16 @@ type Mocked<T> = {
 };
 
 /**
- * Base class for class test data builders. Pass in default values for the class
- * instance so that you can build an instance with those values and override
- * them as needed.
+ * Base class for class test data and class builders.
+ *
+ * Pass in default values for the instance so that you can build an instance with
+ * those values and override them as needed.
  *
  * @example
+ * Overriding the defaults of a type:
  * ```ts
- * // Basic builder
+ * // user.mock.builder.ts
+ * // Basic builder for a type
  * export class UserMockBuilder extends BaseMockBuilder<User> {
  *   constructor() {
  *     super({
@@ -24,52 +27,61 @@ type Mocked<T> = {
  *     })
  *   }
  * }
- * ```
- *
- * @example
- * ```ts
- * // With custom static factory methods to initialise the builder
- * export class UserMockBuilder extends BaseMockBuilder<User> {
- *   constructor(defaultInstance?: User) {
- *     super({
- *       defaultInstance: defaultInstance ?? {
- *         id: '72f9ca55-943a-401d-a04c-0a9e03ac7f18',
- *         name: 'Joe Bloggs',
- *         email: 'joe.bloggs@ukef.gov.uk',
- *       },
- *     })
- *   }
- *
- *   public static fromEntity(entity: UserEntity): UserMockBuilder {
- *     return new UserMockBuilder({
- *       id: entity.id,
- *       name: entity.name,
- *       email: entity.email,
- *     })
- *   }
- * }
- * ```
- *
- * @example
- * ```ts
+ * 
+ * // a-test-file.test.ts
  * // Usage in a test where we just need a valid class instance
  * const user = new UserMockBuilder().build()
- * ```
- *
- * @example
- * ```ts
+ * 
+ * // another-test-file.test.ts
  * // Usage in a test where a field needs to have a specific value
  * const user = new UserMockBuilder()
  *   .with({ email: 'new.email@ukef.gov.uk' })
  *   .build()
  * ```
+
+ *
+ * @example
+ * Overriding the defaults of a class:
+ * ```ts
+ * export class LoginServiceMockBuilder extends BaseMockBuilder<LoginService> {
+ *   constructor() {
+ *     super({
+ *       defaultInstance: {
+ *         getAuthCodeUrl: jest.fn(async () => {
+ *           return Promise.resolve({
+ *             authCodeUrl: 'a-auth-code-url',
+ *             authCodeUrlRequest: {} as AuthorizationCodeRequest,
+ *           });
+ *         }),
+ *       },
+ *     });
+ *   }
+ * }
+ * ```
+ * 
+ * Keeping existing implimentations of a class:
+ * ```ts
+ * export class UserServiceMockBuilder extends BaseMockBuilder<UserService> {
+ *  constructor() {
+ *    const userService = new UserService(); // This can be used as a way to inherit methods we do not wish to mock the implimentation for
+ *    super({
+ *      defaultInstance: {
+ *        transformEntraIdUserToUpsertTfmUserRequest(entraIdUser: EntraIdUser): UpsertTfmUserRequest {
+ *          return userService.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
+ *        },
+ *        saveUserLoginInformation({ userId, sessionIdentifier, auditDetails }: saveUserLoginInformationParams): Promise<void> {
+ *          return Promise.resolve();
+ *        },
+ *      },
+ *    });
+ *  }
+ * ```
  */
 export abstract class BaseMockBuilder<TClass extends object> {
-  private readonly defaults: Partial<Mocked<TClass>>;
   private readonly instance: Mocked<TClass> = {} as Mocked<TClass>;
 
-  protected constructor(config: { defaultInstance: Partial<Mocked<TClass>> }) {
-    this.defaults = config.defaultInstance;
+  protected constructor(config: { defaultInstance: Mocked<TClass> }) {
+    this.with(config.defaultInstance);
   }
 
   /**
@@ -88,10 +100,6 @@ export abstract class BaseMockBuilder<TClass extends object> {
   public with(values: Partial<Mocked<TClass>>): BaseMockBuilder<TClass> {
     Object.assign(this.instance, values);
     return this;
-  }
-
-  public withDefaults(): BaseMockBuilder<TClass> {
-    return this.with(this.defaults);
   }
 
   /**

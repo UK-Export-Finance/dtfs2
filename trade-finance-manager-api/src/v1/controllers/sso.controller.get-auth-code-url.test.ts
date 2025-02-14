@@ -19,15 +19,9 @@ describe('SsoController', () => {
   beforeEach(() => {
     resetAllWhenMocks();
     jest.resetAllMocks();
-
-    entraIdService = new EntraIdServiceMockBuilder()
-      .with({
-        getAuthCodeUrl: getAuthCodeUrlMock,
-      })
-      .build();
-
-    userService = new UserServiceMockBuilder().withDefaults().build();
-
+    jest.resetAllMocks();
+    entraIdService = new EntraIdServiceMockBuilder().with({ getAuthCodeUrl: getAuthCodeUrlMock }).build();
+    userService = new UserServiceMockBuilder().build();
     ssoController = new SsoController({ entraIdService, userService });
   });
 

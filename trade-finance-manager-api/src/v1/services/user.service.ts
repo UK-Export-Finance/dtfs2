@@ -8,7 +8,7 @@ export type UpsertTfmUserFromEntraIdUserParams = {
   auditDetails: AuditDetails;
 };
 
-export type saveUserLoginInformationParams = {
+export type SaveUserLoginInformationParams = {
   userId: ObjectId;
   sessionIdentifier: string;
   auditDetails: AuditDetails;
@@ -16,6 +16,11 @@ export type saveUserLoginInformationParams = {
 
 export type UpsertTfmUserFromEntraIdUserResponse = TfmUser;
 
+/**
+ * User service, primarily used for SSO.
+ * Note: User repo is not dependency injected as a constructor as it may be used in non-DI code
+ * DI code is only used for SSO due to existing documentation and other implementations
+ */
 /**
  * User service, primarily used for SSO.
  * Note: User repo is not dependency injected as a constructor as it may be used in non-DI code
@@ -70,7 +75,7 @@ export class UserService {
     return upsertedUser;
   }
 
-  public async saveUserLoginInformation({ userId, sessionIdentifier, auditDetails }: saveUserLoginInformationParams) {
+  public async saveUserLoginInformation({ userId, sessionIdentifier, auditDetails }: SaveUserLoginInformationParams) {
     await UserRepo.updateUserById({
       userId,
       userUpdate: {
