@@ -6,14 +6,11 @@ import { UserSessionData } from '../types/express-session';
 
 describe('user session service', () => {
   describe('createPartiallyLoggedInSession', () => {
-    let userSessionService: UserSessionService;
     let authCodeUrlRequest: AuthorizationUrlRequest;
     let session: Session & Partial<SessionData>;
     let userSessionData: UserSessionData;
 
     beforeEach(() => {
-      userSessionService = new UserSessionService();
-
       jest.resetAllMocks();
 
       authCodeUrlRequest = 'mock-auth-code-url-request' as unknown as AuthorizationUrlRequest;
@@ -36,18 +33,18 @@ describe('user session service', () => {
       };
     });
 
-    it('deletes existing partially logged in session', () => {
+    it('should delete existing partially logged in session', () => {
       // Act
-      userSessionService.createPartiallyLoggedInSession({ session, authCodeUrlRequest });
+      UserSessionService.createPartiallyLoggedInSession({ session, authCodeUrlRequest });
 
       // Assert
       expect(session.user).toBeUndefined();
       expect(session.userToken).toBeUndefined();
     });
 
-    it('sets session.loginData to the login data', () => {
+    it('should delete session.loginData to the login data', () => {
       // Act
-      userSessionService.createPartiallyLoggedInSession({ session, authCodeUrlRequest });
+      UserSessionService.createPartiallyLoggedInSession({ session, authCodeUrlRequest });
 
       // Assert
       expect(session.loginData).toEqual({ authCodeUrlRequest });

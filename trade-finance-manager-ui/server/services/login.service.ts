@@ -5,11 +5,11 @@ export class LoginService {
   /**
    * Gets the URL to redirect the user to in order to log in.
    */
-  public getAuthCodeUrl = async ({ successRedirect }: GetAuthCodeUrlParams): Promise<GetAuthCodeUrlResponse> => {
+  public static getAuthCodeUrl = async ({ successRedirect }: GetAuthCodeUrlParams): Promise<GetAuthCodeUrlResponse> => {
     return api.getAuthCodeUrl({ successRedirect });
   };
 
-  public handleSsoRedirectForm = async ({
+  public static handleSsoRedirectForm = async ({
     authCodeResponse,
     originalAuthCodeUrlRequest,
     auditDetails,

@@ -1,51 +1,43 @@
 import httpMocks from 'node-mocks-http';
 import { resetAllWhenMocks, when } from 'jest-when';
-import { aGetAuthCodeUrlResponse } from '@ukef/dtfs2-common';
-import { aTfmSessionUser } from '../../../../test-helpers';
+import { anAuthorisationUrlRequest } from '@ukef/dtfs2-common';
+import { Request, Response } from 'express';
+import { aRequestSession } from '../../../../test-helpers';
 import { LoginController } from './login.controller';
 import { LoginService } from '../../../services/login.service';
-import { UserSessionService } from '../../../services/user-session.service';
-import { LoginServiceMockBuilder, UserSessionServiceMockBuilder } from '../../../../test-helpers/mocks';
+
+jest.mock('../../../services/login.service', () => ({
+  LoginService: {
+    getAuthCodeUrl: jest.fn(),
+  },
+}));
 
 describe('controllers - login (sso)', () => {
   describe('getLogin', () => {
-    const validGetAuthCodeUrlResponse = aGetAuthCodeUrlResponse();
-    const aRedirectUrl = '/a-redirect-url';
+    let res: httpMocks.MockResponse<Response>;
+    let req: httpMocks.MockRequest<Request>;
 
-    let loginController: LoginController;
-    let loginService: LoginService;
-    let userSessionService: UserSessionService;
-
-    const getAuthCodeUrlMock = jest.fn();
-
-    console.error = jest.fn();
+    const requestOriginalUrl = '/the-original-url';
+    const mockAuthCodeUrl = `mock-auth-code-url`;
+    const mockAuthCodeUrlRequest = anAuthorisationUrlRequest();
+    const getAuthCodeUrlMock = jest.mocked(LoginService.getAuthCodeUrl);
 
     beforeEach(() => {
       resetAllWhenMocks();
       jest.resetAllMocks();
-
-      loginService = new LoginServiceMockBuilder().with({ getAuthCodeUrl: getAuthCodeUrlMock }).build();
-      userSessionService = new UserSessionServiceMockBuilder().build();
-      loginController = new LoginController({ loginService, userSessionService });
     });
 
     describe('when there is a user session', () => {
-      const requestSession = {
-        user: aTfmSessionUser(),
-        userToken: 'abc123',
-      };
+      beforeEach(() => {
+        ({ req, res } = httpMocks.createMocks({
+          session: aRequestSession(),
+          originalUrl: requestOriginalUrl,
+        }));
+      });
 
-      const getHttpMocks = () =>
-        httpMocks.createMocks({
-          session: requestSession,
-        });
-
-      it('should redirect to /home', async () => {
-        // Arrange
-        const { req, res } = getHttpMocks();
-
+      it('redirects to /home', async () => {
         // Act
-        await loginController.getLogin(req, res);
+        await LoginController.getLogin(req, res);
 
         // Assert
         expect(res._getRedirectUrl()).toEqual('/home');
@@ -53,102 +45,102 @@ describe('controllers - login (sso)', () => {
     });
 
     describe('when there is no user session', () => {
-      describe('when an originalUrl exists on the request', () => {
-        it('should call getAuthCodeUrl with the originalUrl if present', async () => {
-          // Arrange
-          const { req, res } = httpMocks.createMocks({ session: {}, originalUrl: aRedirectUrl });
-
-          // Act
-          await loginController.getLogin(req, res);
-
-          // Assert
-          expect(getAuthCodeUrlMock).toHaveBeenCalledWith({ successRedirect: aRedirectUrl });
-        });
-      });
-
-      describe('when an originalUrl does not exist on the request', () => {
-        it('should call getAuthCodeUrl with "/" as the successRedirect', async () => {
-          // Arrange
-          const { req, res } = httpMocks.createMocks({ session: {} });
-
-          // Act
-          await loginController.getLogin(req, res);
-
-          // Assert
-          expect(getAuthCodeUrlMock).toHaveBeenCalledWith({ successRedirect: '/' });
-        });
-      });
-
       describe('when the getAuthCodeUrl api call is successful', () => {
-        beforeEach(() => {
-          mockSuccessfulGetAuthCodeUrl();
-        });
+        describe('when existing session login data is present', () => {
+          beforeEach(() => {
+            ({ req, res } = httpMocks.createMocks({
+              session: { loginData: { authCodeUrlRequest: 'an old auth code url request', aField: 'another field' } },
+              originalUrl: requestOriginalUrl,
+            }));
 
-        it('should redirect to auth code URL', async () => {
-          // Arrange
-          const { req, res } = httpMocks.createMocks({ session: {}, originalUrl: aRedirectUrl });
-
-          // Act
-          await loginController.getLogin(req, res);
-
-          // Assert
-          expect(res._getRedirectUrl()).toEqual(validGetAuthCodeUrlResponse.authCodeUrl);
-        });
-
-        it('should override session login data if present', async () => {
-          // Arrange
-          const { req, res } = httpMocks.createMocks({
-            session: { loginData: { authCodeUrlRequest: 'an old auth code url request', aField: 'another field' } },
-            originalUrl: aRedirectUrl,
+            mockSuccessfulGetAuthCodeUrl();
           });
 
-          // Act
-          await loginController.getLogin(req, res);
+          it('should redirect to login URL', async () => {
+            // Act
+            await LoginController.getLogin(req, res);
 
-          // Assert
-          expect(req.session.loginData).toEqual({ authCodeUrlRequest: validGetAuthCodeUrlResponse.authCodeUrlRequest });
+            // Assert
+            expect(res._getRedirectUrl()).toEqual(mockAuthCodeUrl);
+          });
+
+          it('overrides session login data if present', async () => {
+            // Act
+            await LoginController.getLogin(req, res);
+
+            // Assert
+            expect(req.session.loginData).toEqual({ authCodeUrlRequest: mockAuthCodeUrlRequest });
+          });
+        });
+
+        describe('when existing session login data is not present', () => {
+          beforeEach(() => {
+            ({ req, res } = httpMocks.createMocks({ session: {}, originalUrl: requestOriginalUrl }));
+            mockSuccessfulGetAuthCodeUrl();
+          });
+
+          it('should redirect to login URL', async () => {
+            // Act
+            await LoginController.getLogin(req, res);
+
+            // Assert
+            expect(res._getRedirectUrl()).toEqual(mockAuthCodeUrl);
+          });
+
+          it('should set session login data', async () => {
+            // Act
+            await LoginController.getLogin(req, res);
+
+            // Assert
+            expect(req.session.loginData).toEqual({ authCodeUrlRequest: mockAuthCodeUrlRequest });
+          });
         });
       });
 
-      describe('when the  api call is unsuccessful', () => {
+      describe('when the getAuthCodeUrl api call is unsuccessful', () => {
+        let consoleErrorMock: jest.Mock;
+
+        beforeAll(() => {
+          consoleErrorMock = jest.fn();
+          console.error = consoleErrorMock;
+        });
+
         beforeEach(() => {
+          ({ req, res } = httpMocks.createMocks({ session: {}, originalUrl: requestOriginalUrl }));
+
           mockFailedGetAuthCodeUrl();
         });
 
-        it('should call console.error', async () => {
-          // Arrange
-          const { req, res } = httpMocks.createMocks({ session: {}, originalUrl: aRedirectUrl });
+        afterAll(() => {
+          consoleErrorMock.mockRestore();
+        });
 
-          const error = new Error('getAuthCodeUrl error');
-          getAuthCodeUrlMock.mockRejectedValueOnce(error);
-
+        it('should log the error', async () => {
           // Act
-          await loginController.getLogin(req, res);
+          await LoginController.getLogin(req, res);
 
           // Assert
-          expect(console.error).toHaveBeenCalledWith('Unable to log in user %o', error);
+          expect(consoleErrorMock).toHaveBeenCalled();
         });
 
         it('should redirect to problem-with-service page', async () => {
-          // Arrange
-
-          const { req, res } = httpMocks.createMocks({ session: {}, originalUrl: aRedirectUrl });
-
           // Act
-          await loginController.getLogin(req, res);
+          await LoginController.getLogin(req, res);
 
           // Assert
           expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
         });
       });
+
+      function mockSuccessfulGetAuthCodeUrl(whenCalledWith = { successRedirect: requestOriginalUrl }) {
+        when(getAuthCodeUrlMock)
+          .calledWith(whenCalledWith)
+          .mockImplementation(() => Promise.resolve({ authCodeUrl: mockAuthCodeUrl, authCodeUrlRequest: mockAuthCodeUrlRequest }));
+      }
+
+      function mockFailedGetAuthCodeUrl() {
+        when(getAuthCodeUrlMock).calledWith({ successRedirect: requestOriginalUrl }).mockRejectedValueOnce(new Error('getAuthCodeUrl error'));
+      }
     });
-
-    function mockSuccessfulGetAuthCodeUrl() {
-      when(getAuthCodeUrlMock).calledWith({ successRedirect: aRedirectUrl }).mockResolvedValueOnce(validGetAuthCodeUrlResponse);
-    }
-
-    function mockFailedGetAuthCodeUrl() {
-      when(getAuthCodeUrlMock).calledWith({ successRedirect: aRedirectUrl }).mockRejectedValueOnce(new Error('getAuthCodeUrl error'));
-    }
   });
 });
