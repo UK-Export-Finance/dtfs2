@@ -24,7 +24,7 @@ describe('controllers - login (sso)', () => {
       consoleInfoMock.mockRestore();
     });
 
-    it('should redirect to /', () => {
+    it('should render the user logged out page', () => {
       // Act
       LoginController.getLogout(req, res);
 
