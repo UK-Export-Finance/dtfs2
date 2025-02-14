@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongodb';
+import { z } from 'zod';
 import { Request, Response, NextFunction } from 'express';
 import { HttpStatusCode } from 'axios';
 import { API_ERROR_CODE } from '../../constants/api-error-code';
@@ -9,8 +9,10 @@ import { API_ERROR_CODE } from '../../constants/api-error-code';
  * @returns {import('express').RequestHandler}
  */
 export const validateMongoId = (paramName: string) => (req: Request, res: Response, next: NextFunction) => {
-  const pathParam = req.params[paramName] as string;
-  if (ObjectId.isValid(pathParam)) {
+  const mongoIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/);
+  const pathParam = req.params[paramName];
+  const validationResult = mongoIdSchema.safeParse(pathParam);
+  if (validationResult.success) {
     return next();
   }
   return res.status(HttpStatusCode.BadRequest).send({
