@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
+import { validateMongoId } from '@ukef/dtfs2-common';
 import { validatePortalFacilityAmendmentsEnabled } from '../../../middleware/feature-flags/portal-facility-amendments';
 import { validateRole, validateToken, validateBank } from '../../../middleware';
 import { MAKER } from '../../../constants/roles';
@@ -11,7 +12,8 @@ import { postFacilityValue } from '../../../controllers/amendments/facility-valu
 import { getCoverEndDate } from '../../../controllers/amendments/cover-end-date/get-cover-end-date';
 import { postCoverEndDate } from '../../../controllers/amendments/cover-end-date/post-cover-end-date';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
-import { getCancelPortalFacilityAmendment } from '../../../controllers/amendments/cancel-amendment/cancel-portal-facility-amendment';
+import { getCancelPortalFacilityAmendment } from '../../../controllers/amendments/cancel-amendment/get-cancel-portal-facility-amendment.ts';
+import { postCancelPortalFacilityAmendment } from '../../../controllers/amendments/cancel-amendment/post-cancel-portal-facility-amendment.ts';
 import { getDoYouHaveAFacilityEndDate } from '../../../controllers/amendments/do-you-have-a-facility-end-date/get-do-you-have-a-facility-end-date';
 import { postDoYouHaveAFacilityEndDate } from '../../../controllers/amendments/do-you-have-a-facility-end-date/post-do-you-have-a-facility-end-date';
 import { getFacilityEndDate } from '../../../controllers/amendments/facility-end-date/get-facility-end-date';
@@ -69,8 +71,17 @@ router
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${CANCEL}`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
-  .get(getCancelPortalFacilityAmendment);
+  .all([
+    validatePortalFacilityAmendmentsEnabled,
+    validateToken,
+    validateBank,
+    validateMongoId('dealId'),
+    validateMongoId('facilityId'),
+    validateMongoId('amendmentId'),
+    validateRole({ role: [MAKER] }),
+  ])
+  .get(getCancelPortalFacilityAmendment)
+  .post(postCancelPortalFacilityAmendment);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${DO_YOU_HAVE_A_FACILITY_END_DATE}`)

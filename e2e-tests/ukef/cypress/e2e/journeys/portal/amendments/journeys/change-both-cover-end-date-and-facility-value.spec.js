@@ -18,7 +18,6 @@ context('Amendments - Change both cover end date and facility value - full journ
    * @type {string}
    */
   let dealId;
-
   /**
    * @type {string}
    */
