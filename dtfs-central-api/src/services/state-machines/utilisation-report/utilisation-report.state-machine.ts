@@ -11,8 +11,6 @@ import { InvalidStateMachineTransitionError, NotFoundError } from '../../../erro
 import {
   handleUtilisationReportDueReportInitialisedEvent,
   handleUtilisationReportGenerateKeyingDataEvent,
-  handleUtilisationReportManuallySetCompletedEvent,
-  handleUtilisationReportManuallySetIncompleteEvent,
   handleUtilisationReportAddAPaymentEvent,
   handleUtilisationReportReportUploadedEvent,
   handleUtilisationReportDeletePaymentEvent,
@@ -117,8 +115,6 @@ export class UtilisationReportStateMachine {
         switch (event.type) {
           case UTILISATION_REPORT_EVENT_TYPE.ADD_A_PAYMENT:
             return handleUtilisationReportAddAPaymentEvent(this.report, event.payload);
-          case UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_COMPLETED:
-            return handleUtilisationReportManuallySetCompletedEvent(this.report, event.payload);
           case UTILISATION_REPORT_EVENT_TYPE.GENERATE_KEYING_DATA:
             return handleUtilisationReportGenerateKeyingDataEvent(this.report, event.payload);
           default:
@@ -147,8 +143,6 @@ export class UtilisationReportStateMachine {
         }
       case RECONCILIATION_COMPLETED:
         switch (event.type) {
-          case UTILISATION_REPORT_EVENT_TYPE.MANUALLY_SET_INCOMPLETE:
-            return handleUtilisationReportManuallySetIncompleteEvent(this.report, event.payload);
           case UTILISATION_REPORT_EVENT_TYPE.MARK_FEE_RECORDS_AS_READY_TO_KEY:
             return handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent(this.report, event.payload);
           default:

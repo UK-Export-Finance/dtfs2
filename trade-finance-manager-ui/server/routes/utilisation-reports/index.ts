@@ -2,15 +2,7 @@
 import express from 'express';
 import { PDC_TEAM_IDS, validateFeeRecordCorrectionFeatureFlagIsEnabled, setNoStoreCacheControl } from '@ukef/dtfs2-common';
 import { getUtilisationReports } from '../../controllers/utilisation-reports';
-import { updateUtilisationReportStatus } from '../../controllers/utilisation-reports/update-utilisation-report-status';
-import {
-  validateSqlId,
-  validateUserTeam,
-  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
-  validatePostAddPaymentRequestBody,
-  validateTfmPaymentReconciliationFeatureFlagIsNotEnabled,
-  validatePostRemoveFeesFromPaymentRequestBody,
-} from '../../middleware';
+import { validateSqlId, validateUserTeam, validatePostAddPaymentRequestBody, validatePostRemoveFeesFromPaymentRequestBody } from '../../middleware';
 import { getReportDownload } from '../../controllers/utilisation-reports/report-download';
 import { getUtilisationReportReconciliationByReportId } from '../../controllers/utilisation-reports/utilisation-report-reconciliation-for-report';
 import { getFindReportsByYear } from '../../controllers/utilisation-reports/find-reports-by-year';
@@ -38,20 +30,12 @@ export const utilisationReportsRoutes = express.Router();
 
 utilisationReportsRoutes.get('/', validateUserTeam(Object.values(PDC_TEAM_IDS)), getUtilisationReports);
 
-utilisationReportsRoutes.post(
-  '/',
-  validateTfmPaymentReconciliationFeatureFlagIsNotEnabled,
-  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
-  updateUtilisationReportStatus,
-);
-
 utilisationReportsRoutes.get('/:id/download', validateUserTeam(Object.values(PDC_TEAM_IDS)), validateSqlId('id'), getReportDownload);
 
 utilisationReportsRoutes.get('/find-reports-by-year', validateUserTeam(Object.values(PDC_TEAM_IDS)), getFindReportsByYear);
 
 utilisationReportsRoutes.get(
   '/:reportId',
-  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
   validateUserTeam(Object.values(PDC_TEAM_IDS)),
   validateSqlId('reportId'),
   getUtilisationReportReconciliationByReportId,
@@ -59,7 +43,6 @@ utilisationReportsRoutes.get(
 
 utilisationReportsRoutes.post(
   '/:reportId/add-payment',
-  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   validatePostAddPaymentRequestBody,
@@ -68,23 +51,15 @@ utilisationReportsRoutes.post(
 
 utilisationReportsRoutes.post(
   '/:reportId/add-to-an-existing-payment',
-  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   addToAnExistingPayment,
 );
 
-utilisationReportsRoutes.post(
-  '/:reportId/check-keying-data',
-  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
-  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
-  validateSqlId('reportId'),
-  postCheckKeyingData,
-);
+utilisationReportsRoutes.post('/:reportId/check-keying-data', validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]), validateSqlId('reportId'), postCheckKeyingData);
 
 utilisationReportsRoutes.post(
   '/:reportId/keying-data/mark-as-done',
-  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   postKeyingDataMarkAsDone,
@@ -92,23 +67,15 @@ utilisationReportsRoutes.post(
 
 utilisationReportsRoutes.post(
   '/:reportId/keying-data/mark-as-to-do',
-  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   postKeyingDataMarkAsToDo,
 );
 
-utilisationReportsRoutes.post(
-  '/:reportId/keying-data',
-  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
-  validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
-  validateSqlId('reportId'),
-  postKeyingData,
-);
+utilisationReportsRoutes.post('/:reportId/keying-data', validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]), validateSqlId('reportId'), postKeyingData);
 
 utilisationReportsRoutes.get(
   '/:reportId/edit-payment/:paymentId',
-  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   validateSqlId('paymentId'),
@@ -117,7 +84,6 @@ utilisationReportsRoutes.get(
 
 utilisationReportsRoutes.post(
   '/:reportId/edit-payment/:paymentId',
-  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   validateSqlId('paymentId'),
@@ -126,7 +92,6 @@ utilisationReportsRoutes.post(
 
 utilisationReportsRoutes.get(
   '/:reportId/edit-payment/:paymentId/confirm-delete',
-  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   validateSqlId('paymentId'),
@@ -135,7 +100,6 @@ utilisationReportsRoutes.get(
 
 utilisationReportsRoutes.post(
   '/:reportId/edit-payment/:paymentId/confirm-delete',
-  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   validateSqlId('paymentId'),
@@ -144,7 +108,6 @@ utilisationReportsRoutes.post(
 
 utilisationReportsRoutes.post(
   '/:reportId/edit-payment/:paymentId/remove-selected-fees',
-  validateTfmPaymentReconciliationFeatureFlagIsEnabled,
   validateUserTeam([PDC_TEAM_IDS.PDC_RECONCILE]),
   validateSqlId('reportId'),
   validateSqlId('paymentId'),

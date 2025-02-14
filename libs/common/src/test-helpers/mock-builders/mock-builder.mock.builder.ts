@@ -65,10 +65,10 @@ type Mocked<T> = {
  * ```
  */
 export abstract class BaseMockBuilder<TClass extends object> {
-  private readonly defaults: Mocked<TClass>;
+  private readonly defaults: Partial<Mocked<TClass>>;
   private readonly instance: Mocked<TClass> = {} as Mocked<TClass>;
 
-  protected constructor(config: { defaultInstance: Mocked<TClass> }) {
+  protected constructor(config: { defaultInstance: Partial<Mocked<TClass>> }) {
     this.defaults = config.defaultInstance;
   }
 
