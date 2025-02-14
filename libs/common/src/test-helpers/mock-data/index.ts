@@ -1,3 +1,4 @@
+export * from './authorisation-code-request.mock';
 export * from './azure-file-info.mock';
 export * from './utilisation-report.entity.mock-builder';
 export * from './fee-record.entity.mock-builder';
@@ -12,6 +13,7 @@ export * from './entra-id-user';
 export * from './create-tfm-user-request';
 export * from './upsert-tfm-user-request';
 export * from './record-correction-mock';
+export * from './entra-id-auth-code-redirect-response-body';
 export * from './fee-record-correction-request-transient-form-data.entity.mock-builder';
 export * from './get-auth-code-url-response';
 export * from './get-auth-code-url-params';

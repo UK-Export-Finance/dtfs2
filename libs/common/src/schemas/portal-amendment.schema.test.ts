@@ -1,5 +1,5 @@
 import { PORTAL_FACILITY_AMENDMENT_USER_VALUES } from './portal-amendment.schema';
-import { withSchemaValidationTests } from '../test-helpers';
+import { withSchemaValidationTests } from '../test-helpers/schemas';
 import { aPortalFacilityAmendmentUserValues } from '../test-helpers/mock-data-backend';
 import { PortalFacilityAmendmentUserValues } from '../types';
 
@@ -49,6 +49,11 @@ describe('PORTAL_FACILITY_AMENDMENT_USER_VALUES', () => {
         options: { isOptional: true, isNullable: true },
       },
       { parameterPath: 'currency', type: 'CURRENCY_SCHEMA', options: { isOptional: true } },
+      {
+        parameterPath: 'effectiveDate',
+        type: 'number',
+        options: { isOptional: true },
+      },
     ],
   });
 });

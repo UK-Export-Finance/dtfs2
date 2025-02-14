@@ -1,8 +1,4 @@
-import {
-  withObjectIdOrObjectIdStringSchemaTests,
-  withObjectIdSchemaTests,
-  withObjectIdStringSchemaTests,
-} from '../test-helpers/schemas/backend-custom-types-tests';
+import { withObjectIdOrObjectIdStringSchemaTests, withObjectIdSchemaTests, withObjectIdStringSchemaTests } from '../test-helpers/schemas';
 import { OBJECT_ID_SCHEMA, OBJECT_ID_OR_OBJECT_ID_STRING_SCHEMA, OBJECT_ID_STRING_SCHEMA } from './object-id.schema';
 
 describe('OBJECT_ID_SCHEMA', () => {
