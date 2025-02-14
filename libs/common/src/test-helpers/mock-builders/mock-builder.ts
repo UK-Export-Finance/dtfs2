@@ -91,7 +91,7 @@ export abstract class BaseMockBuilder<TClass extends object> {
    * ```ts
    * const user = new UserMockBuilder()
    *   .with({
-   *     email: 'new.email@ukef.gov.uk',
+   *     email: 'new.email@ukexportfinance.gov.uk',
    *     givenName: 'Fred',
    *   })
    *   .build()

@@ -1,4 +1,4 @@
-import { AuditDetails, EntraIdUser, MultipleUsersFoundError, TfmUser, UpsertTfmUserRequest } from '@ukef/dtfs2-common';
+import { AuditDetails, EntraIdUser, TfmUser, UpsertTfmUserRequest } from '@ukef/dtfs2-common';
 import { ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA } from '@ukef/dtfs2-common/schemas';
 import { ObjectId } from 'mongodb';
 import { UserRepo } from '../repo/user.repo';
@@ -8,7 +8,7 @@ export type UpsertTfmUserFromEntraIdUserParams = {
   auditDetails: AuditDetails;
 };
 
-export type saveUserLoginInformationParams = {
+export type SaveUserLoginInformationParams = {
   userId: ObjectId;
   sessionIdentifier: string;
   auditDetails: AuditDetails;
@@ -16,6 +16,11 @@ export type saveUserLoginInformationParams = {
 
 export type UpsertTfmUserFromEntraIdUserResponse = TfmUser;
 
+/**
+ * User service, primarily used for SSO.
+ * Note: User repo is not dependency injected as a constructor as it may be used in non-DI code
+ * DI code is only used for SSO due to existing documentation and other implementations
+ */
 /**
  * User service, primarily used for SSO.
  * Note: User repo is not dependency injected as a constructor as it may be used in non-DI code
@@ -54,23 +59,16 @@ export class UserService {
    */
   public async upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails }: UpsertTfmUserFromEntraIdUserParams): Promise<UpsertTfmUserFromEntraIdUserResponse> {
     const upsertTfmUserRequest = this.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
-    const findResult = await UserRepo.findUsersByEmailAddresses([...entraIdUser.verified_primary_email, ...entraIdUser.verified_secondary_email]);
+    const findResult = await UserRepo.findUserByEmailAddress(entraIdUser.email);
 
-    let upsertedUser: TfmUser;
-    switch (findResult.length) {
-      case 0:
-        upsertedUser = await UserRepo.createUser({ user: upsertTfmUserRequest, auditDetails });
-        break;
-      case 1:
-        upsertedUser = await UserRepo.updateUserById({ userId: findResult[0]._id, userUpdate: upsertTfmUserRequest, auditDetails });
-        break;
-      default:
-        throw new MultipleUsersFoundError({ userIdsFound: findResult.map((user) => user._id.toString()) });
-    }
+    const upsertedUser = findResult
+      ? await UserRepo.updateUserById({ userId: findResult._id, userUpdate: upsertTfmUserRequest, auditDetails })
+      : await UserRepo.createUser({ user: upsertTfmUserRequest, auditDetails });
+
     return upsertedUser;
   }
 
-  public async saveUserLoginInformation({ userId, sessionIdentifier, auditDetails }: saveUserLoginInformationParams) {
+  public async saveUserLoginInformation({ userId, sessionIdentifier, auditDetails }: SaveUserLoginInformationParams) {
     await UserRepo.updateUserById({
       userId,
       userUpdate: {

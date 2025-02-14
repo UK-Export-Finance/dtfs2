@@ -11,7 +11,12 @@ import {
   withObjectIdOrObjectIdStringSchemaTests,
 } from '../custom-types-tests';
 import { withStringTests, withNumberTests, withBooleanTests, withArrayTests } from '../primitive-types-tests';
-import { withAuditDatabaseRecordSchemaTests, withEntraIdUserSchemaTests, withUpsertTfmUserRequestSchemaTests } from '../schema-tests';
+import {
+  withAuditDatabaseRecordSchemaTests,
+  withEntraIdUserSchemaTests,
+  withTfmSessionUserSchemaTests,
+  withUpsertTfmUserRequestSchemaTests,
+} from '../schema-tests';
 import { withIsoDateTimeStampToDateSchemaTests } from '../transformation-tests';
 import { WithTestsForTestCaseProps } from '../types/with-tests-for-test-case';
 
@@ -170,6 +175,15 @@ export const withTestsForTestcase = <Schema extends ZodSchema>(props: WithTestsF
 
     case 'AUDIT_DATABASE_RECORD_SCHEMA':
       withAuditDatabaseRecordSchemaTests({
+        schema,
+        options,
+        getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
+      });
+      break;
+
+    case 'TFM_SESSION_USER_SCHEMA':
+      withTfmSessionUserSchemaTests({
         schema,
         options,
         getTestObjectWithUpdatedParameter,

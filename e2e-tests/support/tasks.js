@@ -6,7 +6,6 @@ const {
   FeeRecordEntity,
   PaymentEntity,
   AzureFileInfoEntity,
-  FacilityUtilisationDataEntity,
   PaymentMatchingToleranceEntity,
   FeeRecordCorrectionTransientFormDataEntity,
   FeeRecordCorrectionRequestTransientFormDataEntity,
@@ -114,24 +113,14 @@ module.exports = {
      * @param {FeeRecordEntity[]} feeRecords
      * @returns {Promise<FeeRecordEntity[]>} The inserted fee records
      */
-    const insertFeeRecordsIntoDb = async (feeRecords) => {
-      for (const { facilityUtilisationData } of feeRecords) {
-        const entityExists = await SqlDbDataSource.manager.existsBy(FacilityUtilisationDataEntity, { id: facilityUtilisationData.id });
-        if (!entityExists) {
-          await SqlDbDataSource.manager.save(FacilityUtilisationDataEntity, facilityUtilisationData);
-        }
-      }
-      return await SqlDbDataSource.manager.save(FeeRecordEntity, feeRecords);
-    };
+    const insertFeeRecordsIntoDb = async (feeRecords) => await SqlDbDataSource.manager.save(FeeRecordEntity, feeRecords);
 
     /**
      * Inserts fee record corrections into the SQL database
      * @param {FeeRecordCorrectionEntity[]} corrections
      * @returns {Promise<FeeRecordEntity[]>} The inserted fee records
      */
-    const insertFeeRecordCorrectionsIntoDb = async (corrections) => {
-      return await SqlDbDataSource.manager.save(FeeRecordCorrectionEntity, corrections);
-    };
+    const insertFeeRecordCorrectionsIntoDb = async (corrections) => await SqlDbDataSource.manager.save(FeeRecordCorrectionEntity, corrections);
 
     /**
      * Fetches fee records with corrections and payments from the SQL database by ID
@@ -205,7 +194,6 @@ module.exports = {
         await SqlDbDataSource.manager.delete(FeeRecordEntity, {}),
         await SqlDbDataSource.manager.delete(UtilisationReportEntity, {}),
         await SqlDbDataSource.manager.delete(AzureFileInfoEntity, {}),
-        await SqlDbDataSource.manager.delete(FacilityUtilisationDataEntity, {}),
         await SqlDbDataSource.manager.delete(PaymentMatchingToleranceEntity, {}),
         await SqlDbDataSource.manager.delete(FeeRecordCorrectionRequestTransientFormDataEntity, {}),
         await SqlDbDataSource.manager.delete(FeeRecordCorrectionTransientFormDataEntity, {}),

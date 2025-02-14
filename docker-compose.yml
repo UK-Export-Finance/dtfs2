@@ -185,6 +185,7 @@ services:
       - ENTRA_ID_TENANT_ID
       - ENTRA_ID_CLIENT_SECRET
       - ENTRA_ID_REDIRECT_URL
+      - FF_TFM_SSO_ENABLED
 
   portal:
     build:

@@ -41,9 +41,6 @@ export const createRandomFeeRecordForReport = (report: UtilisationReportEntity, 
     to: feeRecord.feesPaidToUkefForThePeriodCurrency,
   });
 
-  feeRecord.fixedFeeAdjustment = null;
-  feeRecord.principalBalanceAdjustment = null;
-
   feeRecord.reconciledByUserId = null;
   feeRecord.dateReconciled = null;
 
@@ -80,9 +77,6 @@ export const createAutoMatchedZeroPaymentFeeRecordForReport = (report: Utilisati
     from: feeRecord.paymentCurrency,
     to: feeRecord.feesPaidToUkefForThePeriodCurrency,
   });
-
-  feeRecord.fixedFeeAdjustment = null;
-  feeRecord.principalBalanceAdjustment = null;
 
   feeRecord.updateLastUpdatedBy({ platform: REQUEST_PLATFORM_TYPE.SYSTEM });
 

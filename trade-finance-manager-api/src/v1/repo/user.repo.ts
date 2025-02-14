@@ -46,6 +46,21 @@ export class UserRepo {
   }
 
   /**
+   * Finds a user by email address
+   * @param email email address to search for
+   * @returns the matched TFM user or null if not found
+   */
+  public static async findUserByEmailAddress(email: string): Promise<TfmUser | null> {
+    const collection = await UserRepo.getCollection();
+
+    const emailRegex = getEscapedRegexFromString(email);
+
+    const query = { email: emailRegex };
+
+    return collection.findOne(query);
+  }
+
+  /**
    * Create user
    * @param createUserParams
    * @param createUserParams.user
