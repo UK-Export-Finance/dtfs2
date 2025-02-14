@@ -9,6 +9,7 @@ const { userRoutes } = require('./user');
 const { loginRoutes } = require('./login');
 const { utilisationReportsRoutes } = require('./utilisation-reports');
 const footerRoutes = require('./footer');
+const { teamCheckingRoutes } = require('./team-checking');
 
 const { validateUser } = require('../middleware');
 
@@ -24,5 +25,6 @@ router.use('/thank-you-feedback', thankYouFeedbackRoutes);
 router.use('/user', userRoutes);
 router.use('/utilisation-reports', validateUser, utilisationReportsRoutes);
 router.use('/', footerRoutes);
+router.use('/team-checking', teamCheckingRoutes);
 
 module.exports = router;

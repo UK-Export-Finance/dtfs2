@@ -9,6 +9,7 @@ import { userRoutes } from './user';
 import { utilisationReportsRoutes } from './utilisation-reports';
 import footerRoutes from './footer';
 import { validateUser } from '../middleware/user-validation';
+import { teamCheckingRoutes } from './team-checking';
 
 const mockCaseRoutes = jest.fn();
 jest.mock('./case', () => mockCaseRoutes);
@@ -23,7 +24,7 @@ describe('routes index', () => {
   });
 
   it('should setup all routes', () => {
-    expect(use).toHaveBeenCalledTimes(10);
+    expect(use).toHaveBeenCalledTimes(11);
     expect(use).toHaveBeenCalledWith('/home', homeRoutes);
     expect(use).toHaveBeenCalledWith('/', loginRoutes);
     expect(use).toHaveBeenCalledWith('/case', validateUser, mockCaseRoutes);
@@ -34,5 +35,6 @@ describe('routes index', () => {
     expect(use).toHaveBeenCalledWith('/user', userRoutes);
     expect(use).toHaveBeenCalledWith('/utilisation-reports', validateUser, utilisationReportsRoutes);
     expect(use).toHaveBeenCalledWith('/', footerRoutes);
+    expect(use).toHaveBeenCalledWith('/team-checking', teamCheckingRoutes);
   });
 });
