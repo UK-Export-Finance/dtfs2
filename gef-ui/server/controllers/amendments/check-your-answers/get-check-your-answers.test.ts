@@ -14,7 +14,7 @@ import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { createCheckYourAnswersViewModel } from './create-check-your-answers-view-model';
 import { Deal } from '../../../types/deal';
-import { withAmendmentGetControllerTests } from '../test-helpers/with-amendment-get-controller.tests.ts';
+import { withAmendmentGetControllerTests } from '../../../../test-helpers/with-amendment-get-controller.tests.ts';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,

@@ -13,7 +13,7 @@ import { getCurrencySymbol } from './get-currency-symbol';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper';
-import { withAmendmentGetControllerTests } from '../test-helpers/with-amendment-get-controller.tests.ts';
+import { withAmendmentGetControllerTests } from '../../../../test-helpers/with-amendment-get-controller.tests.ts';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications.js';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities.js';
 

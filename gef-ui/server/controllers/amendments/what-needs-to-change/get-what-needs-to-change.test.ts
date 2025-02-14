@@ -16,7 +16,7 @@ import { STB_PIM_EMAIL } from '../../../constants/emails.ts';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment.ts';
 import { Deal } from '../../../types/deal.ts';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
-import { withAmendmentGetControllerTests } from '../test-helpers/with-amendment-get-controller.tests.ts';
+import { withAmendmentGetControllerTests } from '../../../../test-helpers/with-amendment-get-controller.tests.ts';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,

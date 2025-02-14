@@ -2,11 +2,23 @@ import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
 import { Mocks } from 'node-mocks-http';
 import { PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
-import { MOCK_UNISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
-import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
+import { MOCK_UNISSUED_FACILITY } from '../server/utils/mocks/mock-facilities';
+import { PortalFacilityAmendmentWithUkefIdMockBuilder } from './mock-amendment';
 
 const aMockError = () => new Error();
 
+/**
+ * Unit tests for maker journey GET controllers. Tests that not founds, api errors and invalid amendments are handled correctly
+ * @param withAmendmentGetControllerTestsParams
+ * @param withAmendmentGetControllerTestsParams.makeRequest - controller function to make request
+ * @param withAmendmentGetControllerTestsParams.getHttpMocks - function to generate req & res objects
+ * @param withAmendmentGetControllerTestsParams.getFacilityMock - api.getFacility mock
+ * @param withAmendmentGetControllerTestsParams.getApplicationMock - api.getApplication mock
+ * @param withAmendmentGetControllerTestsParams.getAmendmentMock - api.getAmendment mock
+ * @param withAmendmentGetControllerTestsParams.dealId - the mock deal id
+ * @param withAmendmentGetControllerTestsParams.facilityId - the mock facility id
+ * @param withAmendmentGetControllerTestsParams.amendmentId - the mock amendment id
+ */
 export const withAmendmentGetControllerTests = <TRequest extends Request>({
   makeRequest,
   getHttpMocks,

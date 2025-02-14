@@ -4,7 +4,7 @@ import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { getPreviousAmendmentPageUrl } from './get-previous-page-url';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
-import { withAmendmentGetControllerTests } from '../test-helpers/with-amendment-get-controller.tests.ts';
+import { withAmendmentGetControllerTests } from '../../../../test-helpers/with-amendment-get-controller.tests.ts';
 
 /* eslint-disable import/first */
 const getApplicationMock = jest.fn();
