@@ -1,4 +1,4 @@
-import { getLoginRouter } from './configs';
+import { getLoginRouter, getUnauthenticatedLoginRouter } from './configs';
 
 /**
  * As the implimentation for SSO vs standard login is so different, it is not possible to simply
@@ -7,3 +7,5 @@ import { getLoginRouter } from './configs';
  * Therefore, we handle what routes are avaliable at the routes level.
  */
 export const loginRoutes = getLoginRouter();
+
+export const unauthenticatedLoginRoutes = getUnauthenticatedLoginRouter();

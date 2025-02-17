@@ -39,6 +39,14 @@ export class EntraIdService {
     this.msalAppConfig = entraIdConfig.msalAppConfig;
   }
 
+  /**
+   * Used as part of the SSO process
+   *
+   * Creates the URL to redirect the user to Entra to login
+   *
+   * The redirect URI is retrieved from Entra later in the process, following a successful login, to allow
+   * the user to be redirected to the original page they were visiting.
+   */
   public async getAuthCodeUrl({ successRedirect }: GetAuthCodeUrlParams): Promise<GetAuthCodeUrlResponse> {
     const msalApp = await this.getMsalAppInstance();
 
@@ -63,6 +71,12 @@ export class EntraIdService {
     return { authCodeUrl, authCodeUrlRequest };
   }
 
+  /**
+   * Used as part of the SSO process
+   *
+   * Handles the TFM-API side of the Entra communications following the automatic redirect from TFM UI.
+   * This includes validating the auth code, and getting the entra user details
+   */
   public async handleRedirect({ authCodeResponse, originalAuthCodeUrlRequest }: HandleRedirectParams): Promise<HandleRedirectResponse> {
     if (!originalAuthCodeUrlRequest) {
       throw new Error('No auth code URL request found in session');
@@ -81,6 +95,9 @@ export class EntraIdService {
     };
   }
 
+  /**
+   * Parses the base 64 encoded auth code request into a known type
+   */
   private parseAuthRequestState(encodedState: string): DecodedAuthCodeRequestState {
     try {
       return DECODED_AUTH_CODE_REQUEST_STATE_SCHEMA.parse(JSON.parse(this.cryptoProvider.base64Decode(encodedState)));
@@ -110,6 +127,12 @@ export class EntraIdService {
     return new ConfidentialClientApplication(this.msalAppConfig);
   }
 
+  /**
+   * Used as part of the SSO process
+   *
+   * Gets entra user details from the auth code response. Includes methods to ensure that the auth code response sent by
+   * the client has not been modified through using a sever side original auth code request.
+   */
   private async getEntraIdUserByAuthCode({
     authCodeResponse,
     originalAuthCodeUrlRequest,
