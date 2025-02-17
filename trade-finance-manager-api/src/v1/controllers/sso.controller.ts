@@ -24,6 +24,14 @@ export class SsoController {
     this.userService = userService;
   }
 
+  /**
+   * Used as part of the SSO process
+   *
+   * Creates the URL to redirect the user to Entra to login
+   *
+   * The redirect URI is retrieved from Entra later in the process, following a successful login, to allow
+   * the user to be redirected to the original page they were visiting.
+   */
   public async getAuthCodeUrl(req: GetAuthCodeUrlApiRequest, res: GetAuthCodeUrlApiResponse) {
     try {
       const { successRedirect } = req.body;
