@@ -1,35 +1,35 @@
 import { isTfmSsoFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { Router } from 'express';
-import { getUnauthenticatedAuthRouter } from '.';
-import { getUnauthenticatedAuthSsoRouter } from './unauthenticated-auth-sso';
+import { getUnauthenticatedLoginRouter } from '.';
+import { getUnauthenticatedLoginSsoRouter } from './unauthenticated-login-sso';
 
 jest.mock('@ukef/dtfs2-common', () => ({
   isTfmSsoFeatureFlagEnabled: jest.fn(),
 }));
 
-jest.mock('./unauthenticated-auth-sso', () => ({
-  getUnauthenticatedAuthSsoRouter: jest.fn(),
+jest.mock('./unauthenticated-login-sso', () => ({
+  getUnauthenticatedLoginSsoRouter: jest.fn(),
 }));
 
-describe('auth router config', () => {
+describe('login router config', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('getUnauthenticatedAuthRouter', () => {
+  describe('getUnauthenticatedLoginRouter', () => {
     describe('when isTfmSsoFeatureFlagEnabled is true', () => {
       beforeEach(() => {
         jest.mocked(isTfmSsoFeatureFlagEnabled).mockReturnValue(true);
-        jest.mocked(getUnauthenticatedAuthSsoRouter).mockReturnValue('unauthenticatedAuthSsoRouter' as unknown as Router);
+        jest.mocked(getUnauthenticatedLoginSsoRouter).mockReturnValue('unauthenticatedAuthSsoRouter' as unknown as Router);
       });
 
       it('should call getUnauthenticatedAuthSsoRouter', () => {
-        getUnauthenticatedAuthRouter();
+        getUnauthenticatedLoginRouter();
 
-        expect(getUnauthenticatedAuthSsoRouter).toHaveBeenCalledTimes(1);
+        expect(getUnauthenticatedLoginSsoRouter).toHaveBeenCalledTimes(1);
       });
       it('should return unauthenticatedAuthSsoRouter', () => {
-        const result = getUnauthenticatedAuthRouter();
+        const result = getUnauthenticatedLoginRouter();
         expect(result).toEqual('unauthenticatedAuthSsoRouter');
       });
     });
@@ -40,13 +40,13 @@ describe('auth router config', () => {
       });
 
       it('should not call getUnauthenticatedAuthSsoRouter', () => {
-        getUnauthenticatedAuthRouter();
+        getUnauthenticatedLoginRouter();
 
-        expect(getUnauthenticatedAuthSsoRouter).not.toHaveBeenCalled();
+        expect(getUnauthenticatedLoginSsoRouter).not.toHaveBeenCalled();
       });
 
       it('should return undefined', () => {
-        const result = getUnauthenticatedAuthRouter();
+        const result = getUnauthenticatedLoginRouter();
         expect(result).toBeUndefined();
       });
     });
