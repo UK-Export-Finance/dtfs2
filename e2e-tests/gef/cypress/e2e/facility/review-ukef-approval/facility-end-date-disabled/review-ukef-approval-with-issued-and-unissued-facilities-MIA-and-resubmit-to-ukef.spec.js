@@ -3,7 +3,7 @@ import CONSTANTS from '../../../../fixtures/constants';
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_DRAFT, UKEF_DECISION, underwriterManagersDecision } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../../../e2e-fixtures/portal-users.fixture';
 import { anIssuedCashFacilityWithCoverDateConfirmed, multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
-import { threeDaysAgo, threeMonths, threeMonthsOneDay, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
+import { threeDaysAgo, threeMonths, nightyOneDays, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
 import { toTitleCase } from '../../../../fixtures/helpers';
 import { continueButton, errorSummary, submitButton } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
@@ -202,7 +202,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
 
       coverStartDate.coverStartDateNo().click();
 
-      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: threeMonthsOneDay.date });
+      cy.completeDateFormFields({ idPrefix: 'ukef-cover-start-date', date: nightyOneDays.date });
 
       cy.clickContinueButton();
 
@@ -220,7 +220,7 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
       cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths.date });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: nightyOneDays.date });
 
       cy.clickContinueButton();
 

@@ -41,6 +41,7 @@ export const oneMonth = getFormattedValues(add(todayDate, { months: 1 }));
 export const twoMonths = getFormattedValues(add(todayDate, { months: 2 }));
 export const threeMonths = getFormattedValues(add(todayDate, { months: 3 }));
 export const threeMonthsOneDay = getFormattedValues(add(todayDate, { months: 3, days: 1 }));
+export const nightyOneDays = getFormattedValues(add(todayDate, { days: 91 }));
 export const oneYear = getFormattedValues(add(todayDate, { years: 1 }));
 export const twelveMonthsOneDay = getFormattedValues(add(todayDate, { months: 12, days: 1 }));
 export const twoYears = getFormattedValues(add(todayDate, { years: 2 }));
