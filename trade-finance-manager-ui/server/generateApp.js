@@ -7,9 +7,8 @@ const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const flash = require('connect-flash');
 const { HttpStatusCode } = require('axios');
-const { unauthenticatedAuthRoutes } = require('./routes/auth');
-
 const routes = require('./routes');
+const { unauthenticatedLoginRoutes } = require('./routes/login');
 const feedbackRoutes = require('./routes/feedback');
 const configureNunjucks = require('./nunjucks-configuration');
 const sessionOptions = require('./session-configuration');
@@ -73,12 +72,10 @@ const generateApp = () => {
 
   app.use(createRateLimit());
 
-  /**
-   * Unauthenticated auth routes only exist on SSO implementation
-   * and not the traditional login journey
-   */
-  if (unauthenticatedAuthRoutes) {
-    app.use('/', unauthenticatedAuthRoutes);
+  // We add a conditional check here as there are no auth routes for the non sso journey, and
+  // we cannot call app.use with './', undefined.
+  if (unauthenticatedLoginRoutes) {
+    app.use('/', unauthenticatedLoginRoutes);
   }
 
   // Unauthenticated routes
