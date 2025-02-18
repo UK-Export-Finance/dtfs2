@@ -210,6 +210,12 @@
 * **FN-3731:** fix assertion dependent on current year ([#4105](https://github.com/UK-Export-Finance/dtfs2/issues/4105)) ([5356e4e](https://github.com/UK-Export-Finance/dtfs2/commit/5356e4e0b7567b40113d3be390edb2889eece6eb))
 * **FN-3843:** fix record correction "bank commentary" being stored as an empty string ([#4215](https://github.com/UK-Export-Finance/dtfs2/issues/4215)) ([63f57a2](https://github.com/UK-Export-Finance/dtfs2/commit/63f57a2c5b0078f635d28a5743ee3edcc0fbdff7))
 
+## [2.5.2](https://github.com/UK-Export-Finance/dtfs2/compare/v2.5.1...v2.5.2) (2024-11-14)
+
+### Bug Fixes
+
+- **DTFS2-7804** updated property name to facility identifier ([#4214](https://github.com/UK-Export-Finance/dtfs2/pull/4212)) ([1575a3b9c45153e075b8bee960fe5ad937b43723](https://github.com/UK-Export-Finance/dtfs2/pull/4212/commits/1575a3b9c45153e075b8bee960fe5ad937b43723))
+
 ## [2.5.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.4.0...v2.5.0) (2024-11-14)
 
 ### Features

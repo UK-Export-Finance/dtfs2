@@ -1,6 +1,10 @@
 {
   "name": "dtfs",
+<<<<<<< HEAD
   "version": "2.6.0",
+=======
+  "version": "2.5.2",
+>>>>>>> origin/release-2.5.2-rc
   "private": true,
   "description": "DTFS",
   "homepage": "https://github.com/UK-Export-Finance/dtfs2#readme",
