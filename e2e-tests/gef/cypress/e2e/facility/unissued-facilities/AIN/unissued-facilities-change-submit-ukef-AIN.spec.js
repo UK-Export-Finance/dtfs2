@@ -2,7 +2,7 @@ import relative from '../../../relativeURL';
 import CONSTANTS from '../../../../fixtures/constants';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { threeDaysAgo, threeMonthsOneDay, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
+import { threeDaysAgo, nightyOneDays, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
 import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 import { continueButton, submitButton } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
@@ -72,13 +72,13 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
       cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: threeDaysAgo.date });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: nightyOneDays.date });
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
 
       cy.clickContinueButton();
 
-      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay.date });
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: nightyOneDays.date });
 
       cy.clickContinueButton();
 
@@ -101,7 +101,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
 
       cy.clickContinueButton();
 
-      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay.date });
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: nightyOneDays.date });
 
       cy.clickContinueButton();
 
@@ -327,8 +327,8 @@ context('Return to maker for unissued to issued facilities', () => {
     it('change unissued to issued from application details whilst changes required', () => {
       const issuedDate = threeDaysAgo.d_MMMM_yyyy;
       const coverStart = twoMonths.d_MMMM_yyyy;
-      const coverEnd = threeMonthsOneDay.d_MMMM_yyyy;
-      const facilityEnd = threeMonthsOneDay.d_MMMM_yyyy;
+      const coverEnd = nightyOneDays.d_MMMM_yyyy;
+      const facilityEnd = nightyOneDays.d_MMMM_yyyy;
 
       applicationDetails.facilitySummaryListTable(3).hasBeenIssuedAction().click();
       cy.url().should('eq', relative(`/gef/application-details/${dealId}/unissued-facilities/${facilityOneId}/change`));
@@ -338,13 +338,13 @@ context('Return to maker for unissued to issued facilities', () => {
       aboutFacilityUnissued.shouldCoverStartOnSubmissionNo().click();
 
       cy.completeDateFormFields({ idPrefix: 'cover-start-date', date: twoMonths.date });
-      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: threeMonthsOneDay.date });
+      cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: nightyOneDays.date });
 
       aboutFacilityUnissued.isUsingFacilityEndDateYes().click();
 
       cy.clickContinueButton();
 
-      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: threeMonthsOneDay.date });
+      cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: nightyOneDays.date });
 
       cy.clickContinueButton();
 
