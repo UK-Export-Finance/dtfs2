@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.6.0...v2.7.0) (2025-02-18)
+
+
+### Features
+
+* **dtfs2-7693:** add routes for role testing tfm ([#4125](https://github.com/UK-Export-Finance/dtfs2/issues/4125)) ([6934970](https://github.com/UK-Export-Finance/dtfs2/commit/6934970419c1eea77c72932e4c0444cf83a10633))
+
 ## [2.6.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.5.0...v2.6.0) (2025-02-17)
 
 ### Features
