@@ -6,7 +6,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const flash = require('connect-flash');
-
+const { HttpStatusCode } = require('axios');
 const routes = require('./routes');
 const { unauthenticatedLoginRoutes } = require('./routes/login');
 const feedbackRoutes = require('./routes/feedback');
@@ -103,13 +103,17 @@ const generateApp = () => {
    * any other errors are passed to expresses default error handler
    * https://expressjs.com/en/guide/error-handling.html
    */
+  // eslint-disable-next-line no-unused-vars
   app.use((error, req, res, next) => {
     if (error.code === 'EBADCSRFTOKEN') {
       // handle CSRF token errors here
-      res.status(error.statusCode || 500);
+      console.error('Unable to verify CSRF token %o', error);
+      res.status(error.statusCode || HttpStatusCode.InternalServerError);
       res.redirect('/');
     } else {
-      next(error);
+      console.error(error);
+      res.status(HttpStatusCode.InternalServerError);
+      res.render('_partials/problem-with-service.njk');
     }
   });
 
