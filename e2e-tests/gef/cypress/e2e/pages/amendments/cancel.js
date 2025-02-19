@@ -1,3 +1,4 @@
+// Selectors for the cancel page elements in the amendments flow
 const cancel = {
   pageHeading: () => cy.get('[data-cy="page-heading"]'),
   backLink: () => cy.get('[data-cy="back-link"]'),

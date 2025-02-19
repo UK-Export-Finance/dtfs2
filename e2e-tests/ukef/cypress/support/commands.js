@@ -8,6 +8,7 @@ import { checkerSubmitDealToUkef } from './portal/checkerSubmitDealToUkef';
 import { getOneDeal } from './portal-api/getOneDeal';
 import { getOneGefDeal } from './portal-api/getOneGefDeal';
 import { clearSessionCookies } from './utils/clearSessionCookies';
+import { getAmendmentIdFromUrl } from './utils/getAmendmentIdFromUrl';
 
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
@@ -45,6 +46,7 @@ Cypress.Commands.add('makerLoginSubmitGefDealForReview', makerLoginSubmitGefDeal
 Cypress.Commands.add('checkerLoginSubmitGefDealToUkef', checkerLoginSubmitGefDealToUkef);
 Cypress.Commands.add('makerSubmitDealForReview', makerSubmitDealForReview);
 Cypress.Commands.add('checkerSubmitDealToUkef', checkerSubmitDealToUkef);
+Cypress.Commands.add('getAmendmentIdFromUrl', getAmendmentIdFromUrl);
 
 Cypress.Commands.add('submitDealCancellation', submitDealCancellation);
 
