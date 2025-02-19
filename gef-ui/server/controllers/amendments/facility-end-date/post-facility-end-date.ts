@@ -17,6 +17,7 @@ export type PostFacilityEndDateRequest = CustomExpressRequest<{
     'facility-end-date-year': string;
     previousPage: string;
   };
+  query: { change: string };
 }>;
 
 /**
@@ -44,6 +45,13 @@ export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: 
       return res.redirect('/not-found');
     }
 
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      console.error('Amendment %s was not found on facility %s', amendmentId, facilityId);
+      return res.redirect('/not-found');
+    }
+
     const validationErrorsOrValue = validateAndParseFacilityEndDate(facilityEndDateDayMonthYear, getCoverStartDateOrToday(facility));
 
     if ('errors' in validationErrorsOrValue) {
@@ -61,9 +69,14 @@ export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: 
 
     const update = { facilityEndDate: validationErrorsOrValue.value };
 
-    const amendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
+    const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
-    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment));
+    const facilityEndDateHasChanged =
+      amendment.facilityEndDate &&
+      updatedAmendment.facilityEndDate &&
+      new Date(amendment.facilityEndDate).getTime() !== new Date(updatedAmendment.facilityEndDate).getTime();
+
+    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, updatedAmendment, req.query.change === 'true' && !facilityEndDateHasChanged));
   } catch (error) {
     console.error('Error posting amendments facility end date page %o', error);
     return res.render('partials/problem-with-service.njk');

@@ -17,6 +17,7 @@ export type PostCoverEndDateRequest = CustomExpressRequest<{
     'cover-end-date-year': string;
     previousPage: string;
   };
+  query: { change: string };
 }>;
 
 /**
@@ -44,6 +45,13 @@ export const postCoverEndDate = async (req: PostCoverEndDateRequest, res: Respon
       return res.redirect('/not-found');
     }
 
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      console.error('Amendment %s was not found on facility %s', amendmentId, facilityId);
+      return res.redirect('/not-found');
+    }
+
     const validationErrorsOrValue = validateAndParseCoverEndDate(coverEndDateDayMonthYear, getCoverStartDateOrToday(facility));
 
     if ('errors' in validationErrorsOrValue) {
@@ -63,7 +71,9 @@ export const postCoverEndDate = async (req: PostCoverEndDateRequest, res: Respon
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
-    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.COVER_END_DATE, updatedAmendment));
+    const coverEndDateHasChanged = amendment.coverEndDate !== updatedAmendment.coverEndDate;
+
+    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.COVER_END_DATE, updatedAmendment, req.query.change === 'true' && !coverEndDateHasChanged));
   } catch (error) {
     console.error('Error posting amendments cover end date page %o', error);
     return res.render('partials/problem-with-service.njk');

@@ -12,6 +12,7 @@ import { validationErrorHandler } from '../../../utils/helpers';
 export type PostWhatNeedsToChangeRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
   reqBody: { amendmentOptions: string[] };
+  query: { change: string };
 }>;
 
 /**
@@ -30,6 +31,13 @@ export const postWhatNeedsToChange = async (req: PostWhatNeedsToChangeRequest, r
 
     if (!deal || !facility) {
       console.error('Deal %s or Facility %s was not found', dealId, facilityId);
+      return res.redirect('/not-found');
+    }
+
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      console.error('Amendment %s was not found on facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 
@@ -62,7 +70,12 @@ export const postWhatNeedsToChange = async (req: PostWhatNeedsToChangeRequest, r
       userToken,
     });
 
-    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE, updatedAmendment));
+    const whatNeedsToChangeHasChanged =
+      amendment.changeCoverEndDate !== updatedAmendment.changeCoverEndDate || amendment.changeFacilityValue !== updatedAmendment.changeFacilityValue;
+
+    return res.redirect(
+      getNextPage(PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE, updatedAmendment, req.query.change === 'true' && !whatNeedsToChangeHasChanged),
+    );
   } catch (error) {
     console.error('Error posting amendments what needs to change page %o', error);
     return res.render('partials/problem-with-service.njk');
