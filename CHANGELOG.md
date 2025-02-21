@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.7.0...v2.8.0) (2025-02-21)
+
+
+### Features
+
+* **DTFS2-7732:** cancel amendment e2e tests ([#4221](https://github.com/UK-Export-Finance/dtfs2/issues/4221)) ([372edfb](https://github.com/UK-Export-Finance/dtfs2/commit/372edfb6adce9404d0e47ae6bed0d987487d8756))
+
 ## [2.7.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.6.0...v2.7.0) (2025-02-18)
 
 
