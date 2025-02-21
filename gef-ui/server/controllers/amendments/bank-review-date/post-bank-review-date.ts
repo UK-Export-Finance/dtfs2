@@ -17,6 +17,7 @@ export type PostBankReviewDateRequest = CustomExpressRequest<{
     'bank-review-date-year': string;
     previousPage: string;
   };
+  query: { change: string };
 }>;
 
 /**
@@ -44,6 +45,13 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
       return res.redirect('/not-found');
     }
 
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      console.error('Amendment %s was not found on facility %s', amendmentId, facilityId);
+      return res.redirect('/not-found');
+    }
+
     const validationErrorsOrValue = validateAndParseBankReviewDate(bankReviewDateDayMonthYear, getCoverStartDateOrToday(facility));
 
     if ('errors' in validationErrorsOrValue) {
@@ -61,9 +69,14 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
 
     const update = { bankReviewDate: validationErrorsOrValue.value };
 
-    const amendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
+    const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
-    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE, amendment));
+    const bankReviewDateHasChanged =
+      amendment.bankReviewDate &&
+      updatedAmendment.bankReviewDate &&
+      new Date(amendment.bankReviewDate).getTime() !== new Date(updatedAmendment.bankReviewDate).getTime();
+
+    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE, updatedAmendment, req.query.change === 'true' && !bankReviewDateHasChanged));
   } catch (error) {
     console.error('Error posting amendments bank review date page %o', error);
     return res.render('partials/problem-with-service.njk');

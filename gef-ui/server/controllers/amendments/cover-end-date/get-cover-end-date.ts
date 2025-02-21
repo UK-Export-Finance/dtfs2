@@ -11,6 +11,7 @@ import { convertDateToDayMonthYearInput } from '../helpers/dates.helper.ts';
 
 export type GetCoverEndDateRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
+  query: { change: string };
 }>;
 
 /**
@@ -61,7 +62,7 @@ export const getCoverEndDate = async (req: GetCoverEndDateRequest, res: Response
       exporterName: deal.exporter.companyName,
       facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.COVER_END_DATE, amendment),
+      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.COVER_END_DATE, amendment, req.query.change === 'true'),
       coverEndDate: coverEndDateDayMonthYear,
     };
 

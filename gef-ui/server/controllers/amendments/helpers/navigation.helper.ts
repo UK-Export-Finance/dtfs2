@@ -83,9 +83,10 @@ const getJourneyForAmendment = (amendment: PortalFacilityAmendmentWithUkefId): P
  *
  * @param currentPage - the current page
  * @param amendment - the amendment
+ * @param change - whether the user is changing the amendment journey
  * @returns the previous page in the journey for this amendment
  */
-export const getPreviousPage = (currentPage: PortalAmendmentPage, amendment: PortalFacilityAmendmentWithUkefId): string => {
+export const getPreviousPage = (currentPage: PortalAmendmentPage, amendment: PortalFacilityAmendmentWithUkefId, change?: boolean): string => {
   const journey = getJourneyForAmendment(amendment);
 
   const currentPageIndex = journey.indexOf(currentPage);
@@ -95,7 +96,7 @@ export const getPreviousPage = (currentPage: PortalAmendmentPage, amendment: Por
   }
 
   const { dealId, facilityId, amendmentId } = amendment;
-  const page = journey[currentPageIndex - 1];
+  const page = change ? CHECK_YOUR_ANSWERS : journey[currentPageIndex - 1];
 
   return getAmendmentsUrl({ dealId, facilityId, amendmentId, page });
 };
@@ -103,9 +104,10 @@ export const getPreviousPage = (currentPage: PortalAmendmentPage, amendment: Por
 /**
  * @param currentPage - the current page
  * @param amendment - the amendment
+ * @param change - whether the user is changing the amendment journey
  * @returns the next page in the journey for this amendment
  */
-export const getNextPage = (currentPage: PortalAmendmentPage, amendment: PortalFacilityAmendmentWithUkefId): string => {
+export const getNextPage = (currentPage: PortalAmendmentPage, amendment: PortalFacilityAmendmentWithUkefId, change?: boolean): string => {
   const journey = getJourneyForAmendment(amendment);
 
   const currentPageIndex = journey.indexOf(currentPage);
@@ -115,7 +117,7 @@ export const getNextPage = (currentPage: PortalAmendmentPage, amendment: PortalF
   }
 
   const { dealId, facilityId, amendmentId } = amendment;
-  const page = journey[currentPageIndex + 1];
+  const page = change ? CHECK_YOUR_ANSWERS : journey[currentPageIndex + 1];
 
   return getAmendmentsUrl({ dealId, facilityId, amendmentId, page });
 };

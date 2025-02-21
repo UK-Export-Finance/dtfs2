@@ -34,7 +34,12 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
           actions: {
             items: [
               {
-                href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE })}/#amendmentOptions`,
+                href: `${getAmendmentsUrl({
+                  amendmentId,
+                  facilityId,
+                  dealId,
+                  page: PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE,
+                })}/?change=true#amendmentOptions`,
                 text: 'Change',
                 visuallyHiddenText: 'whether amending cover end date or facility value',
                 attributes: {
@@ -54,7 +59,7 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
           actions: {
             items: [
               {
-                href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.COVER_END_DATE })}/#coverEndDate-day`,
+                href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.COVER_END_DATE })}/?change=true#coverEndDate-day`,
                 text: 'Change',
                 visuallyHiddenText: 'cover end date',
                 attributes: {
@@ -74,7 +79,12 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
           actions: {
             items: [
               {
-                href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE })}/#facilityEndDate-day`,
+                href: `${getAmendmentsUrl({
+                  amendmentId,
+                  facilityId,
+                  dealId,
+                  page: PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE,
+                })}/?change=true#facilityEndDate-day`,
                 text: 'Change',
                 visuallyHiddenText: 'facility end date',
                 attributes: {
@@ -117,7 +127,12 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
           actions: {
             items: [
               {
-                href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE })}/#amendmentOptions`,
+                href: `${getAmendmentsUrl({
+                  amendmentId,
+                  facilityId,
+                  dealId,
+                  page: PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE,
+                })}/?change=true#amendmentOptions`,
                 text: 'Change',
                 visuallyHiddenText: 'whether amending cover end date or facility value',
                 attributes: {
@@ -137,7 +152,7 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
           actions: {
             items: [
               {
-                href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.COVER_END_DATE })}/#coverEndDate-day`,
+                href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.COVER_END_DATE })}/?change=true#coverEndDate-day`,
                 text: 'Change',
                 visuallyHiddenText: 'cover end date',
                 attributes: {
@@ -157,7 +172,7 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
           actions: {
             items: [
               {
-                href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE })}/#bankReviewDate-day`,
+                href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE })}/?change=true#bankReviewDate-day`,
                 text: 'Change',
                 visuallyHiddenText: 'bank review date',
                 attributes: {
@@ -199,7 +214,12 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
           actions: {
             items: [
               {
-                href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE })}/#amendmentOptions`,
+                href: `${getAmendmentsUrl({
+                  amendmentId,
+                  facilityId,
+                  dealId,
+                  page: PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE,
+                })}/?change=true#amendmentOptions`,
                 text: 'Change',
                 visuallyHiddenText: 'whether amending cover end date or facility value',
                 attributes: {
@@ -219,7 +239,7 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
           actions: {
             items: [
               {
-                href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/#facilityValue`,
+                href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`,
                 text: 'Change',
                 visuallyHiddenText: 'facility value',
                 attributes: {
@@ -265,7 +285,12 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
           actions: {
             items: [
               {
-                href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE })}/#amendmentOptions`,
+                href: `${getAmendmentsUrl({
+                  amendmentId,
+                  facilityId,
+                  dealId,
+                  page: PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE,
+                })}/?change=true#amendmentOptions`,
                 text: 'Change',
                 visuallyHiddenText: 'whether amending cover end date or facility value',
                 attributes: {
@@ -285,7 +310,7 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
           actions: {
             items: [
               {
-                href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.COVER_END_DATE })}/#coverEndDate-day`,
+                href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.COVER_END_DATE })}/?change=true#coverEndDate-day`,
                 text: 'Change',
                 visuallyHiddenText: 'cover end date',
                 attributes: {
@@ -305,7 +330,12 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
           actions: {
             items: [
               {
-                href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE })}/#facilityEndDate-day`,
+                href: `${getAmendmentsUrl({
+                  amendmentId,
+                  facilityId,
+                  dealId,
+                  page: PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE,
+                })}/?change=true#facilityEndDate-day`,
                 text: 'Change',
                 visuallyHiddenText: 'facility end date',
                 attributes: {
@@ -325,7 +355,7 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
           actions: {
             items: [
               {
-                href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/#facilityValue`,
+                href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`,
                 text: 'Change',
                 visuallyHiddenText: 'facility value',
                 attributes: {
@@ -369,7 +399,7 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
         actions: {
           items: [
             {
-              href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.ELIGIBILITY })}/#${criteria[0].id}`,
+              href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.ELIGIBILITY })}/?change=true#${criteria[0].id}`,
               text: 'Change',
               visuallyHiddenText: `response to eligibility criterion ${criteria[0].id}`,
               attributes: {
@@ -389,7 +419,7 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
         actions: {
           items: [
             {
-              href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.ELIGIBILITY })}/#${criteria[1].id}`,
+              href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.ELIGIBILITY })}/?change=true#${criteria[1].id}`,
               text: 'Change',
               visuallyHiddenText: `response to eligibility criterion ${criteria[1].id}`,
               attributes: {
@@ -429,7 +459,7 @@ describe('mapAmendmentToAmendmentSummaryListParams', () => {
         actions: {
           items: [
             {
-              href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE })}/#effectiveDate-day`,
+              href: `${getAmendmentsUrl({ amendmentId, facilityId, dealId, page: PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE })}/?change=true#effectiveDate-day`,
               text: 'Change',
               visuallyHiddenText: `date amendment effective from`,
               attributes: {

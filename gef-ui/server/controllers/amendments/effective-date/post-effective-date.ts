@@ -17,6 +17,7 @@ export type PostEffectiveDateRequest = CustomExpressRequest<{
     'effective-date-year': string;
     previousPage: string;
   };
+  query: { change: string };
 }>;
 
 /**
@@ -44,6 +45,13 @@ export const postEffectiveDate = async (req: PostEffectiveDateRequest, res: Resp
       return res.redirect('/not-found');
     }
 
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      console.error('Amendment %s was not found on facility %s', amendmentId, facilityId);
+      return res.redirect('/not-found');
+    }
+
     const validationErrorsOrValue = validateAndParseEffectiveDate(effectiveDateDayMonthYear, getCoverStartDateOrToday(facility));
 
     if ('errors' in validationErrorsOrValue) {
@@ -61,9 +69,11 @@ export const postEffectiveDate = async (req: PostEffectiveDateRequest, res: Resp
 
     const update = { effectiveDate: validationErrorsOrValue.value };
 
-    const amendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
+    const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
-    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, amendment));
+    const effectiveDateHasChanged = amendment.effectiveDate !== updatedAmendment.effectiveDate;
+
+    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, updatedAmendment, req.query.change === 'true' && !effectiveDateHasChanged));
   } catch (error) {
     console.error('Error posting amendments effective date page %o', error);
     return res.render('partials/problem-with-service.njk');

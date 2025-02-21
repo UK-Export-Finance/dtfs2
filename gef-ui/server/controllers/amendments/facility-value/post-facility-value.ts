@@ -15,6 +15,7 @@ export type PostFacilityValueRequest = CustomExpressRequest<{
     facilityValue: string;
     previousPage: string;
   };
+  query: { change: string };
 }>;
 
 /**
@@ -33,6 +34,13 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
 
     if (!deal || !facility) {
       console.error('Deal %s or Facility %s was not found', dealId, facilityId);
+      return res.redirect('/not-found');
+    }
+
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      console.error('Amendment %s was not found on facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 
@@ -58,7 +66,9 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
-    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, updatedAmendment));
+    const facilityValueHasChanged = amendment.value !== updatedAmendment.value;
+
+    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, updatedAmendment, req.query.change === 'true' && !facilityValueHasChanged));
   } catch (error) {
     console.error('Error posting amendments facility value page %o', error);
     return res.render('partials/problem-with-service.njk');

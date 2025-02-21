@@ -88,7 +88,7 @@ describe('getFacilityValue', () => {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment),
+      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment, req.query.change === 'true'),
       currencySymbol: getCurrencySymbol(MOCK_ISSUED_FACILITY.details.currency!.id),
       facilityValue: '',
     };

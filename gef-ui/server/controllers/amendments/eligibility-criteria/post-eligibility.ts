@@ -12,6 +12,7 @@ import { validateEligibilityResponse } from './validation.ts';
 export type PostEligibilityRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
   reqBody: EligibilityReqBody & { previousPage: string };
+  query: { change: string };
 }>;
 
 /**
@@ -69,7 +70,9 @@ export const postEligibility = async (req: PostEligibilityRequest, res: Response
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
-    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.ELIGIBILITY, updatedAmendment));
+    const eligibilityHasChanged = JSON.stringify(amendment.eligibilityCriteria) !== JSON.stringify(updatedAmendment.eligibilityCriteria);
+
+    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.ELIGIBILITY, updatedAmendment, req.query.change === 'true' && !eligibilityHasChanged));
   } catch (error) {
     console.error('Error posting amendments eligibility page %o', error);
     return res.render('partials/problem-with-service.njk');

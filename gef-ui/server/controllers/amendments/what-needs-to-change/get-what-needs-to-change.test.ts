@@ -86,7 +86,7 @@ describe('getWhatNeedsToChange', () => {
     const expectedRenderData: WhatNeedsToChangeViewModel = {
       exporterName: companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
-      previousPage: `/gef/application-details/${dealId}`,
+      previousPage: req.query.change === 'true' ? PORTAL_AMENDMENT_PAGES.CHECK_YOUR_ANSWERS : `/gef/application-details/${dealId}`,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       amendmentFormEmail: STB_PIM_EMAIL,
     };

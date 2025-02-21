@@ -11,6 +11,7 @@ import { EffectiveDateViewModel } from '../../../types/view-models/amendments/ef
 
 export type GetEffectiveDateRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
+  query: { change: string };
 }>;
 
 /**
@@ -56,7 +57,7 @@ export const getEffectiveDate = async (req: GetEffectiveDateRequest, res: Respon
       exporterName: deal.exporter.companyName,
       facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, amendment),
+      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, amendment, req.query.change === 'true'),
       effectiveDate,
     };
 

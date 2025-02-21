@@ -2,6 +2,7 @@
 /* eslint-disable import/first */
 const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
+const getAmendmentMock = jest.fn();
 const updateAmendmentMock = jest.fn();
 
 import { createMocks } from 'node-mocks-http';
@@ -23,6 +24,7 @@ import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
   getFacility: getFacilityMock,
+  getAmendment: getAmendmentMock,
   updateAmendment: updateAmendmentMock,
 }));
 
@@ -67,6 +69,7 @@ describe('postWhatNeedsToChange', () => {
 
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
+    getAmendmentMock.mockResolvedValue(amendment);
     updateAmendmentMock.mockResolvedValue(amendment);
   });
 
@@ -97,6 +100,19 @@ describe('postWhatNeedsToChange', () => {
     // Assert
     expect(getFacilityMock).toHaveBeenCalledTimes(1);
     expect(getFacilityMock).toHaveBeenCalledWith({ facilityId, userToken: req.session.userToken });
+    expect(console.error).toHaveBeenCalledTimes(0);
+  });
+
+  it('should call getAmendment with the correct amendmentId and userToken', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await postWhatNeedsToChange(req, res);
+
+    // Assert
+    expect(getAmendmentMock).toHaveBeenCalledTimes(1);
+    expect(getAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, userToken: req.session.userToken });
     expect(console.error).toHaveBeenCalledTimes(0);
   });
 
@@ -174,6 +190,19 @@ describe('postWhatNeedsToChange', () => {
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(getNextPage(PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE, amendment));
+  });
+
+  it('should redirect to the next page if selected values are valid and change query param is true', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks(['changeCoverEndDate', 'changeFacilityValue']);
+    req.query = { change: 'true' };
+
+    // Act
+    await postWhatNeedsToChange(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    expect(res._getRedirectUrl()).toEqual(getNextPage(PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE, amendment, req.query.change === 'true'));
   });
 
   it('should redirect if the deal is not found', async () => {
