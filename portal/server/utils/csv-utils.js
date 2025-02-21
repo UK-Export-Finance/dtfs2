@@ -7,6 +7,8 @@ const { CELL_ADDRESS_REGEX } = require('../constants/regex');
 /**
  * @typedef {import('exceljs').Worksheet} Worksheet
  *
+ * @typedef {string | number | boolean | Date | object | null} CellValue
+ *
  * @typedef {Object} ParsedXlsxDataResponse
  * @property {Object} csvData - array representing csv data from the worksheet
  * @property {Object} csvDataWithCellAddresses - array representing csv data from the worksheet with cell addresses included
@@ -64,6 +66,14 @@ const handleFloatingPointRoundingErrors = (number) => {
 };
 
 /**
+ * Checks if the cell value is a rich text value.
+ * returns true if so as needs further processing to convert to a string.
+ * @param {CellValue} cellValue
+ * @returns {boolean} - true if the cell value is a rich text value.
+ */
+const isRichTextValue = (cellValue) => Boolean(cellValue && Array.isArray(cellValue.richText));
+
+/**
  * Extracts the value in the cell of an excel cell and removes any new lines or commas so that it doesn't affect parsing as a csv.
  * @param {Object} cell - excel cell.
  * @returns {string | number} - cell value.
@@ -76,13 +86,28 @@ const extractCellValue = (cell) => {
     return handleFloatingPointRoundingErrors(cellValue);
   }
 
+  // sets the value to the cellValue - replaced if it is a richText value
+  let value = cellValue;
+
+  /**
+   * if cellValue is a richText value
+   * then needs to be converted to a string
+   * by joining the text values of the richText array
+   */
+  if (isRichTextValue(cellValue)) {
+    value = cellValue.richText
+      .filter(({ text }) => text)
+      .map(({ text }) => text)
+      .join(' ');
+  }
+
   const cellValueWithoutNewLines =
-    typeof cellValue === 'string'
-      ? cellValue
+    typeof value === 'string'
+      ? value
           .replace(/\r\n|\r|\n/g, ' ')
           .replace(/,/g, '')
           .trim()
-      : cellValue;
+      : value;
   return cellValueWithoutNewLines;
 };
 
@@ -99,12 +124,15 @@ const parseXlsxToCsvArrays = (worksheet) => {
   let headerCount = 0;
   let columnCount = 0;
   let lastAddress = null;
+
   worksheet.eachRow((row) => {
     const rowData = [];
     const rowDataWithCellAddresses = [];
+
     row.eachCell({ includeEmpty: true }, (cell) => {
       const cellValue = extractCellValue(cell);
       rowData.push(cellValue);
+
       if (firstRow) {
         rowDataWithCellAddresses.push(`${cellValue}`);
         headerCount += 1;
@@ -122,17 +150,25 @@ const parseXlsxToCsvArrays = (worksheet) => {
         rowData.push('');
         // calculate the cell address here given the last address
         const lastAddressMatch = lastAddress.match(CELL_ADDRESS_REGEX);
+
         const [lastColumn, lastRow] = lastAddressMatch.slice(1);
+
         const lastColumnIndex = excelColumnToColumnIndex(lastColumn);
+
         const newColumn = columnIndexToExcelColumn(lastColumnIndex + 1);
+
         rowDataWithCellAddresses.push(`-${newColumn}${lastRow}`);
+
         columnCount += 1;
       }
     }
 
     firstRow = false;
+
     columnCount = 0;
+
     csvData.push(rowData.join(','));
+
     csvDataWithCellAddresses.push(rowDataWithCellAddresses.join(','));
   });
   return { csvData: csvData.join('\n'), csvDataWithCellAddresses };
@@ -296,6 +332,7 @@ module.exports = {
   columnIndexToExcelColumn,
   excelColumnToColumnIndex,
   parseXlsxToCsvArrays,
+  isRichTextValue,
   xlsxBasedCsvToJsonPromise,
   csvBasedCsvToJsonPromise,
   removeCellAddressesFromArray,
