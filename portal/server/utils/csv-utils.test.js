@@ -7,6 +7,7 @@ const {
   csvBasedCsvToJsonPromise,
   removeCellAddressesFromArray,
   extractCellValue,
+  isRichTextValue,
   parseXlsxToCsvArrays,
   handleFloatingPointRoundingErrors,
 } = require('./csv-utils');
@@ -207,6 +208,48 @@ describe('csv-utils', () => {
     });
   });
 
+  describe('isRichTextValue', () => {
+    it('returns true for a rich text value', () => {
+      const cellValue = { richText: [{ text: 'test' }, { text: 'string' }] };
+
+      const result = isRichTextValue(cellValue);
+
+      expect(result).toBe(true);
+    });
+
+    it('returns false for a non-rich text value', () => {
+      const cellValue = 'test string';
+
+      const result = isRichTextValue(cellValue);
+
+      expect(result).toBe(false);
+    });
+
+    it('returns false for a null value', () => {
+      const cellValue = null;
+
+      const result = isRichTextValue(cellValue);
+
+      expect(result).toBe(false);
+    });
+
+    it('returns false for an object without richText property', () => {
+      const cellValue = { text: 'test string' };
+
+      const result = isRichTextValue(cellValue);
+
+      expect(result).toBe(false);
+    });
+
+    it('returns false for an array', () => {
+      const cellValue = ['test', 'string'];
+
+      const result = isRichTextValue(cellValue);
+
+      expect(result).toBe(false);
+    });
+  });
+
   describe('extractCellValue', () => {
     it('returns the cell value', async () => {
       const cellValue = { value: CURRENCY.GBP };
@@ -262,6 +305,24 @@ describe('csv-utils', () => {
       const extractedValue = extractCellValue(cellValue);
 
       expect(extractedValue).toEqual(123);
+    });
+
+    it('returns the cell value as a string if it is a rich string value', () => {
+      const cellValue = {
+        value: {
+          richText: [
+            { text: 'test string  ' },
+            {
+              font: [Object],
+              text: '                                            ',
+            },
+          ],
+        },
+      };
+
+      const extractedValue = extractCellValue(cellValue);
+
+      expect(extractedValue).toEqual('test string');
     });
 
     it('returns the cell value if the cell is using a formula to calculate the value', async () => {
