@@ -214,7 +214,7 @@ describe('csv-utils', () => {
 
       const result = isRichTextValue(cellValue);
 
-      expect(result).toBe(true);
+      expect(result).toEqual(true);
     });
 
     it('returns false for a non-rich text value', () => {
@@ -222,7 +222,7 @@ describe('csv-utils', () => {
 
       const result = isRichTextValue(cellValue);
 
-      expect(result).toBe(false);
+      expect(result).toEqual(false);
     });
 
     it('returns false for a null value', () => {
@@ -230,7 +230,15 @@ describe('csv-utils', () => {
 
       const result = isRichTextValue(cellValue);
 
-      expect(result).toBe(false);
+      expect(result).toEqual(false);
+    });
+
+    it('returns false for an empty string', () => {
+      const cellValue = '';
+
+      const result = isRichTextValue(cellValue);
+
+      expect(result).toEqual(false);
     });
 
     it('returns false for an object without richText property', () => {
@@ -238,7 +246,7 @@ describe('csv-utils', () => {
 
       const result = isRichTextValue(cellValue);
 
-      expect(result).toBe(false);
+      expect(result).toEqual(false);
     });
 
     it('returns false for an array', () => {
@@ -246,7 +254,7 @@ describe('csv-utils', () => {
 
       const result = isRichTextValue(cellValue);
 
-      expect(result).toBe(false);
+      expect(result).toEqual(false);
     });
   });
 
@@ -323,6 +331,43 @@ describe('csv-utils', () => {
       const extractedValue = extractCellValue(cellValue);
 
       expect(extractedValue).toEqual('test string');
+    });
+
+    it('returns the cell value as a string if it is a rich string value with multiple rich text values', () => {
+      const cellValue = {
+        value: {
+          richText: [
+            { text: 'test' },
+            { text: 'string  ' },
+            {
+              font: [Object],
+              text: '                                            ',
+            },
+          ],
+        },
+      };
+
+      const extractedValue = extractCellValue(cellValue);
+
+      expect(extractedValue).toEqual('test string');
+    });
+
+    it('returns the cell value as an empty string if passed as richText with an empty string', () => {
+      const cellValue = {
+        value: {
+          richText: [
+            { text: '' },
+            {
+              font: [Object],
+              text: '                                            ',
+            },
+          ],
+        },
+      };
+
+      const extractedValue = extractCellValue(cellValue);
+
+      expect(extractedValue).toEqual('');
     });
 
     it('returns the cell value if the cell is using a formula to calculate the value', async () => {

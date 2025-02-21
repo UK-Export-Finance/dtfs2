@@ -95,7 +95,10 @@ const extractCellValue = (cell) => {
    * by joining the text values of the richText array
    */
   if (isRichTextValue(cellValue)) {
-    value = cellValue.richText.map(({ text }) => text).join('');
+    value = cellValue.richText
+      .filter(({ text }) => text)
+      .map(({ text }) => text)
+      .join(' ');
   }
 
   const cellValueWithoutNewLines =
