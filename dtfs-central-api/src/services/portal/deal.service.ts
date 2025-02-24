@@ -71,9 +71,9 @@ export class PortalDealService {
   }): Promise<void> {
     if (dealType === DEAL_TYPE.GEF) {
       const newActivity = {
-        label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
+        label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_SCHEDULED,
         text: `Date effective from: ${getLongDateFormat(effectiveFrom)}`,
-        futureCancellation: true,
+        scheduledCancellation: true,
         timestamp: getUnixTime(now()),
         author: {
           _id: author._id,

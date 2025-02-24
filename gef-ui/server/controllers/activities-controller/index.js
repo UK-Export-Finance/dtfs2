@@ -4,7 +4,7 @@ const { getApplication, getUserDetails } = require('../../services/api');
 
 // maps portalActivities array to create array in correct format for mojTimeline
 const mapPortalActivities = (portalActivities) =>
-  portalActivities.map(({ label, text, timestamp, author, facilityType, ukefFacilityId, facilityId, maker, checker, futureCancellation }) => {
+  portalActivities.map(({ label, text, timestamp, author, facilityType, ukefFacilityId, facilityId, maker, checker, scheduledCancellation }) => {
     let byline = author.firstName;
 
     if (author.lastName) {
@@ -24,7 +24,7 @@ const mapPortalActivities = (portalActivities) =>
       facilityId,
       maker,
       checker,
-      futureCancellation,
+      scheduledCancellation,
     };
 
     return mappedActivity;

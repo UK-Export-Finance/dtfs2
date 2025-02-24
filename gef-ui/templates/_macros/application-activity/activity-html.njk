@@ -14,7 +14,7 @@
   {% set ukefFacilityId = params.ukefFacilityId %}
   {% set maker = params.maker %}
   {% set checker = params.checker %}
-  {% set futureCancellation = params.futureCancellation %}
+  {% set scheduledCancellation = params.scheduledCancellation %}
 
   {% if title === 'Bank facility stage changed' %}
 
@@ -32,15 +32,14 @@
 
   {% endif %}
 
-  {% if title === 'Deal cancelled' %}
+  {% if title === 'Deal cancelled' or title === 'Deal scheduled for cancellation' %}
 
     <div class="moj-timeline__description">
       {{ dealCancelledActivity.render({
         text: text,
         dealId: dealId,
         ukefDealId: ukefDealId,
-        previousStatus: previousStatus,
-        futureCancellation: futureCancellation
+        scheduledCancellation: scheduledCancellation
       }) }}
     </div>
 

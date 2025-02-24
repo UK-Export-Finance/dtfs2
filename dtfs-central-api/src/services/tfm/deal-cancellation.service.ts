@@ -35,7 +35,7 @@ export class DealCancellationService {
     cancellation: TfmDealCancellation,
     auditDetails: TfmAuditDetails,
   ): Promise<TfmDealCancellationResponse> {
-    console.info('Submitting deal cancellation for dealId %s', dealId);
+    console.info('Submitting deal cancellation for deal ID %s', dealId);
 
     const effectiveFrom = toDate(cancellation.effectiveFrom);
     const endOfToday = endOfDay(new Date());
@@ -93,7 +93,6 @@ export class DealCancellationService {
     }
 
     // If the deal cancellation effective date is either in past or present
-
     const { cancelledDeal, riskExpiredFacilities } = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, activity, auditDetails });
 
     const {
@@ -133,7 +132,7 @@ export class DealCancellationService {
     cancellation: TfmDealCancellation,
     auditDetails: AuditDetails,
   ): Promise<TfmDealCancellationResponse> {
-    console.info('Processing pending deal cancellation for dealId %s', dealId);
+    console.info('Processing pending deal cancellation for deal ID %s', dealId);
 
     const { cancelledDeal, riskExpiredFacilities } = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, auditDetails });
 
