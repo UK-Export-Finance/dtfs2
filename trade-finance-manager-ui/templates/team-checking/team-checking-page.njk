@@ -1,0 +1,38 @@
+{% extends "index.njk" %}
+{% block content %}
+    {% macro renderLinks(teamCombinations) %}
+        <ul>
+            {% for teamCombination in teamCombinations %}
+                <li>
+                    <a href="/team-checking/{{ teamCombination.url }}">{{ teamCombination.description }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endmacro %}
+    <h1>Team role checker</h1>
+    <p>
+        This tool is designed to aid the checking of team restrictions. It utilises the same method for our tfm-ui middleware.
+    </p>
+    <p>
+        <b>
+            Your current user has the following team assignments: {{ currentUserTeams | join(", ") }}
+        </b>.
+    </p>
+    <p>
+        To get started, click the links below to see how this user behaves when visiting a page with restrictions for teams as stated.
+    </p>
+    <h2>Current page team restrictions:</h2>
+    <b>
+        {% if currentPageTeamRestrictions %}
+            {% if isUserInTeam %}
+                ✅ User has access to a page with the following team restrictions: {{ currentPageTeamRestrictions.description }}
+            {% else %}
+                ❌ User does not have access to a page with the following team restrictions: {{ currentPageTeamRestrictions.description }}
+            {% endif %}
+        {% else %}
+            The current page does not have any team restrictions. Click a link below to check team restrictions.
+        {% endif %}
+    </b>
+    <h2>Click below to check routes restrictions:</h2>
+    {{ renderLinks(teamCombinations) }}
+{% endblock content %}
