@@ -2,29 +2,24 @@ const relative = require('../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const { dashboardDeals } = require('../../../../pages');
 const { dashboardFilters } = require('../../../../partials');
-const { BSS_DEAL_DRAFT, GEF_DEAL_DRAFT } = require('../../fixtures');
+const { GEF_DEAL_DRAFT } = require('../../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
-context('Dashboard Deals - main container selected filters - remove a filter', () => {
-  const ALL_DEALS = [];
+const EXPECTED_DEALS_LENGTH = 2;
 
+context('Dashboard Deals - main container selected filters - remove a filter', () => {
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.createBssEwcsDeal();
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1);
 
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
 
@@ -54,12 +49,11 @@ context('Dashboard Deals - main container selected filters - remove a filter', (
     dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
 
     // should render all deals
-    dashboardDeals.rows().should('have.length', ALL_DEALS.length);
+    dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH);
   });
 
   it('retains other filters when one is removed', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.visit();
 
     // toggle to show filters (hidden by default)
     filters.showHideButton().click();
