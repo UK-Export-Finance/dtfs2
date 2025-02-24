@@ -35,7 +35,7 @@ const createRateLimit = () => {
     // The name of the property on the Express request object to store the rate limit info.
     requestPropertyName: 'threshold',
     // Render the problem with service page when the threshold is exceeded.
-    handler: (req, res, _next, options) => {
+    handler: (req, res, next, options) => {
       console.error('Rate limit threshold exceeded. Rendering error page for request to %s.', req.originalUrl);
       return res.status(options.statusCode).render('_partials/problem-with-service.njk');
     },

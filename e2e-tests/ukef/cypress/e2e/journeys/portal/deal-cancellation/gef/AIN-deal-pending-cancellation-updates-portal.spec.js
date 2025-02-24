@@ -62,8 +62,8 @@ context('GEF AIN deal - When TFM submits a pending deal cancellation - Portal st
   });
 
   describe('activity feed', () => {
-    describe(PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_PENDING, () => {
-      const activity = PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_PENDING;
+    describe(PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED, () => {
+      const activity = PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED;
 
       it('should render an activity title', () => {
         const expected = activity;

@@ -59,3 +59,11 @@ export const addYear = (year: number, date: Date = now()): Date => new Date(date
  * @returns {number} The epoch time in milliseconds.
  */
 export const getEpochMs = (date: Date = now()): number => new Date(date).valueOf();
+
+/**
+ * Returns the given date formatted as a long date string.
+ *
+ * @param {Date} [date=now()] - The date to format. Defaults to the current date and time if not provided.
+ * @returns {string} The formatted date string in the format 'd MMMM yyyy'.
+ */
+export const getLongDateFormat = (date: Date = now()): string => format(date, 'd MMMM yyyy');

@@ -40,7 +40,7 @@ describe('PortalDealService - addGefDealCancellationPendingActivity', () => {
       expect(addPortalActivityMock).toHaveBeenCalledTimes(1);
 
       const expectedActivity = {
-        label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_PENDING,
+        label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
         timestamp: getUnixTime(new Date()),
         author: {
           _id: author._id,

@@ -1,4 +1,4 @@
-import { asString, CronSchedulerJob, TfmDealWithCancellation } from '@ukef/dtfs2-common';
+import { now, asString, CronSchedulerJob, TfmDealWithCancellation } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { endOfDay } from 'date-fns';
 import { TfmDealCancellationRepo } from '../../repositories/tfm-deals-repo';
@@ -23,7 +23,7 @@ const cancelDeals = async (deals: TfmDealWithCancellation[]) => {
 const getDealsWithPastPendingCancellations = async (): Promise<TfmDealWithCancellation[]> => {
   const dealsPendingCancellation = await TfmDealCancellationRepo.findPendingDealCancellations();
 
-  return dealsPendingCancellation.filter((deals) => deals.tfm.cancellation.effectiveFrom < endOfDay(new Date()).valueOf());
+  return dealsPendingCancellation.filter((deals) => deals.tfm.cancellation.effectiveFrom < endOfDay(now()).valueOf());
 };
 
 /**
