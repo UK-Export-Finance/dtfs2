@@ -1,4 +1,4 @@
-import { AuditDetails, ActivityAuthor, DEAL_TYPE, DealStatus, DealType, PORTAL_ACTIVITY_LABEL, UKEF } from '@ukef/dtfs2-common';
+import { AuditDetails, ActivityAuthor, DEAL_TYPE, DealStatus, DealType, PORTAL_ACTIVITY_LABEL, UKEF, getLongDateFormat, now } from '@ukef/dtfs2-common';
 import { getUnixTime } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import { updateBssEwcsDealStatus } from '../../v1/controllers/portal/deal/update-deal-status.controller';
@@ -43,28 +43,38 @@ export class PortalDealService {
   }
 
   /**
-   * Add a "GEF deal cancellation pending" activity
-   * @param addGefDealCancellationPendingActivity
-   * @param addGefDealCancellationPendingActivity.dealId - the deal ID
-   * @param addGefDealCancellationPendingActivity.dealType - the deal type
-   * @param addGefDealCancellationPendingActivity.author - the activity's author
-   * @param addGefDealCancellationPendingActivity.auditDetails - the users audit details
+   * Adds a GEF deal cancelled activity to the portal activity repository.
+   * This function is executed for a future deal cancellation
+   * effective date.
+   *
+   * @param {Object} params - The parameters for adding the activity.
+   * @param {ObjectId | string} params.dealId - The ID of the deal.
+   * @param {DealType} params.dealType - The type of the deal.
+   * @param {ActivityAuthor} params.author - The author of the activity.
+   * @param {AuditDetails} params.auditDetails - The audit details for the activity.
+   * @param {Date} params.effectiveFrom - The date from which the cancellation is effective.
+   *
+   * @returns {Promise<void>} A promise that resolves when the activity is added.
    */
   public static async addGefDealCancellationPendingActivity({
     dealId,
     dealType,
     author,
     auditDetails,
+    effectiveFrom,
   }: {
     dealId: ObjectId | string;
     dealType: DealType;
     author: ActivityAuthor;
     auditDetails: AuditDetails;
+    effectiveFrom: Date;
   }): Promise<void> {
     if (dealType === DEAL_TYPE.GEF) {
       const newActivity = {
-        label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_PENDING,
-        timestamp: getUnixTime(new Date()),
+        label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
+        text: `Date effective from: ${getLongDateFormat(effectiveFrom)}`,
+        futureCancellation: true,
+        timestamp: getUnixTime(now()),
         author: {
           _id: author._id,
           firstName: UKEF.ACRONYM,
@@ -76,27 +86,36 @@ export class PortalDealService {
   }
 
   /**
-   * Add a "GEF deal cancelled" activity
-   * @param addGefDealCancelledActivityParams
-   * @param addGefDealCancelledActivityParams.dealId - the deal ID
-   * @param addGefDealCancelledActivityParams.dealType - the deal type
-   * @param addGefDealCancelledActivityParams.author - the activity's author
-   * @param addGefDealCancelledActivityParams.auditDetails - the users audit details
+   * Adds a GEF deal cancelled activity to the portal activity repository.
+   * This function is executed either for a present or a past deal cancellation
+   * effective date.
+   *
+   * @param {Object} params - The parameters for adding the activity.
+   * @param {ObjectId | string} params.dealId - The ID of the deal.
+   * @param {DealType} params.dealType - The type of the deal.
+   * @param {ActivityAuthor} params.author - The author of the activity.
+   * @param {AuditDetails} params.auditDetails - The audit details for the activity.
+   * @param {Date} params.effectiveFrom - The date from which the cancellation is effective.
+   *
+   * @returns {Promise<void>} A promise that resolves when the activity is added.
    */
   public static async addGefDealCancelledActivity({
     dealId,
     dealType,
     author,
     auditDetails,
+    effectiveFrom,
   }: {
     dealId: ObjectId | string;
     dealType: DealType;
     author: ActivityAuthor;
     auditDetails: AuditDetails;
+    effectiveFrom: Date;
   }): Promise<void> {
     if (dealType === DEAL_TYPE.GEF) {
       const newActivity = {
         label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
+        text: `Date effective from: ${getLongDateFormat(effectiveFrom)}`,
         timestamp: getUnixTime(new Date()),
         author: {
           _id: author._id,

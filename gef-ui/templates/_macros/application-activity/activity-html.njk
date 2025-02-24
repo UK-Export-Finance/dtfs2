@@ -5,6 +5,7 @@
 {% macro render(params) %}
 
   {% set title = params.title %}
+  {% set text = params.text %}
   {% set dealId = params.dealId %}
   {% set ukefDealId = params.ukefDealId %}
   {% set previousStatus = params.previousStatus %}
@@ -13,6 +14,7 @@
   {% set ukefFacilityId = params.ukefFacilityId %}
   {% set maker = params.maker %}
   {% set checker = params.checker %}
+  {% set futureCancellation = params.futureCancellation %}
 
   {% if title === 'Bank facility stage changed' %}
 
@@ -34,9 +36,11 @@
 
     <div class="moj-timeline__description">
       {{ dealCancelledActivity.render({
+        text: text,
         dealId: dealId,
         ukefDealId: ukefDealId,
-        previousStatus: previousStatus
+        previousStatus: previousStatus,
+        futureCancellation: futureCancellation
       }) }}
     </div>
 

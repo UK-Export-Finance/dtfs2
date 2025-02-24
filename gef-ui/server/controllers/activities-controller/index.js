@@ -4,7 +4,7 @@ const { getApplication, getUserDetails } = require('../../services/api');
 
 // maps portalActivities array to create array in correct format for mojTimeline
 const mapPortalActivities = (portalActivities) =>
-  portalActivities.map(({ label, timestamp, author, facilityType, ukefFacilityId, facilityId, maker, checker }) => {
+  portalActivities.map(({ label, text, timestamp, author, facilityType, ukefFacilityId, facilityId, maker, checker, futureCancellation }) => {
     let byline = author.firstName;
 
     if (author.lastName) {
@@ -15,6 +15,7 @@ const mapPortalActivities = (portalActivities) =>
 
     const mappedActivity = {
       title: label,
+      text,
       date: format(date, DATE_FORMATS.D_MMMM_YYYY),
       time: format(date, DATE_FORMATS.H_MMAAA),
       byline,
@@ -23,39 +24,53 @@ const mapPortalActivities = (portalActivities) =>
       facilityId,
       maker,
       checker,
+      futureCancellation,
     };
 
     return mappedActivity;
   });
 
+/**
+ * Retrieves portal activities for a specific deal and renders the application activity page.
+ *
+ * @param {Object} req - The request object.
+ * @param {Object} req.params - The request parameters.
+ * @param {string} req.params.dealId - The ID of the deal.
+ * @param {Object} req.session - The session object.
+ * @param {string} req.session.userToken - The user token.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} - Renders the application activity page with the relevant data.
+ */
 const getPortalActivities = async (req, res) => {
   const { params, session } = req;
   const { dealId } = params;
   const { userToken } = session;
   const deal = await getApplication({ dealId, userToken });
 
-  // returns objects from IDs stored in gef application
+  // Returns objects from IDs stored in gef application
   const checker = await getUserDetails({ userId: deal.checkerId, userToken });
 
-  const mappedPortalActivities = mapPortalActivities(deal.portalActivities);
+  const portalActivities = mapPortalActivities(deal.portalActivities);
+  const checkedBy = `${checker.firstname} ${checker.surname}`;
+  const createdBy = `${deal.maker.firstname} ${deal.maker.surname}`;
 
   /*
-  as activities does not have access to parameters in application-details
+  As activities does not have access to parameters in application-details
   each has to be obtained and rendered to populate the application banner
   */
   return res.render('partials/application-activity.njk', {
     activeSubNavigation: 'activities',
     dealId,
     previousStatus: deal.previousStatus,
-    portalActivities: mappedPortalActivities,
+    portalActivities,
     bankInternalRefName: deal.bankInternalRefName,
     additionalRefName: deal.additionalRefName,
     ukefDealId: deal.ukefDealId,
     applicationStatus: deal.status,
     applicationType: deal.submissionType,
     submissionCount: deal.submissionCount,
-    checkedBy: `${checker.firstname} ${checker.surname}`,
-    createdBy: `${deal.maker.firstname} ${deal.maker.surname}`,
+    checkedBy,
+    createdBy,
     companyName: deal.exporter.companyName,
     dateCreated: deal.createdAt,
     timezone: deal.maker.timezone || timeZoneConfig.DEFAULT,

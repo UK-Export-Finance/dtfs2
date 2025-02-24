@@ -37,10 +37,10 @@ export class DealCancellationService {
   ): Promise<TfmDealCancellationResponse> {
     console.info('Submitting deal cancellation for dealId %s', dealId);
 
-    const effectiveFromDate = toDate(cancellation.effectiveFrom);
+    const effectiveFrom = toDate(cancellation.effectiveFrom);
     const endOfToday = endOfDay(new Date());
 
-    const cancellationIsInFuture = isAfter(effectiveFromDate, endOfToday);
+    const cancellationIsInFuture = isAfter(effectiveFrom, endOfToday);
 
     const user = await TfmUsersRepo.findOneUserById(auditDetails.id);
 
@@ -61,6 +61,7 @@ export class DealCancellationService {
       ...cancellation,
     };
 
+    // If the deal cancellation effective date is in Future
     if (cancellationIsInFuture) {
       const { cancelledDeal, riskExpiredFacilities } = await TfmDealCancellationRepo.scheduleDealCancellation({
         dealId,
@@ -85,10 +86,13 @@ export class DealCancellationService {
         dealType,
         author,
         auditDetails,
+        effectiveFrom,
       });
 
       return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
     }
+
+    // If the deal cancellation effective date is either in past or present
 
     const { cancelledDeal, riskExpiredFacilities } = await TfmDealCancellationRepo.submitDealCancellation({ dealId, cancellation, activity, auditDetails });
 
@@ -110,6 +114,7 @@ export class DealCancellationService {
       dealType,
       author,
       auditDetails,
+      effectiveFrom,
     });
 
     return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
@@ -136,6 +141,8 @@ export class DealCancellationService {
       dealSnapshot: { dealType },
     } = cancelledDeal;
 
+    const effectiveFrom = toDate(cancellation.effectiveFrom);
+
     await PortalDealService.updateStatus({
       dealId,
       newStatus: DEAL_STATUS.CANCELLED,
@@ -159,6 +166,7 @@ export class DealCancellationService {
       dealType,
       author,
       auditDetails,
+      effectiveFrom,
     });
 
     return this.getTfmDealCancellationResponse({ cancelledDeal, riskExpiredFacilities });
