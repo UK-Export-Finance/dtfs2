@@ -88,11 +88,12 @@ describe('getEligibility', () => {
     await getEligibility(req, res);
 
     // Assert
+    const previousPage = getPreviousPage(PORTAL_AMENDMENT_PAGES.ELIGIBILITY, amendment, req.query.change === 'true');
     const expectedRenderData: EligibilityViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.ELIGIBILITY, amendment, req.query.change === 'true'),
+      previousPage,
       criteria,
     };
 

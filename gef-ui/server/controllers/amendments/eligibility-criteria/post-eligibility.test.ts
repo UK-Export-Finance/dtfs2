@@ -176,7 +176,7 @@ describe('postEligibility', () => {
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual('/not-found');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Amendment %s was not found on facility %s', amendmentId, facilityId);
+    expect(console.error).toHaveBeenCalledWith('Amendment %s was not found for the facility %s', amendmentId, facilityId);
   });
 
   it('should render `problem with service` if getApplication throws an error', async () => {

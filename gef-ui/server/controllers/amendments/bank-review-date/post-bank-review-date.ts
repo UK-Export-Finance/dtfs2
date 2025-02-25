@@ -17,7 +17,7 @@ export type PostBankReviewDateRequest = CustomExpressRequest<{
     'bank-review-date-year': string;
     previousPage: string;
   };
-  query: { change: string };
+  query: { change?: 'true' };
 }>;
 
 /**
@@ -48,7 +48,7 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
     const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
 
     if (!amendment) {
-      console.error('Amendment %s was not found on facility %s', amendmentId, facilityId);
+      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 
@@ -71,12 +71,17 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
+    // If change is true, then the previous page is "Check your answers"
+    // If the bank review date has changed, we need to go to the next page of the amendment journey.
+    // Otherwise, the next page should be the previous page "Check your answers".
     const bankReviewDateHasChanged =
       amendment.bankReviewDate &&
       updatedAmendment.bankReviewDate &&
-      new Date(amendment.bankReviewDate).getTime() !== new Date(updatedAmendment.bankReviewDate).getTime();
-
-    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE, updatedAmendment, req.query.change === 'true' && !bankReviewDateHasChanged));
+      new Date(amendment?.bankReviewDate).getTime() !== new Date(updatedAmendment?.bankReviewDate).getTime();
+    const canMakeChange = req.query.change === 'true';
+    const change = canMakeChange && !bankReviewDateHasChanged;
+    const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE, updatedAmendment, change);
+    return res.redirect(nextPage);
   } catch (error) {
     console.error('Error posting amendments bank review date page %o', error);
     return res.render('partials/problem-with-service.njk');

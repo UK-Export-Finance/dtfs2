@@ -10,7 +10,7 @@ import { convertDateToDayMonthYearInput } from '../helpers/dates.helper.ts';
 
 export type GetBankReviewDateRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
-  query: { change: string };
+  query: { change?: 'true' };
 }>;
 
 /**
@@ -39,7 +39,7 @@ export const getBankReviewDate = async (req: GetBankReviewDateRequest, res: Resp
     const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
 
     if (!amendment) {
-      console.error('Amendment %s was not found on facility %s', amendmentId, facilityId);
+      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 

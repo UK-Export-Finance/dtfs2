@@ -84,11 +84,12 @@ describe('getFacilityValue', () => {
     await getFacilityValue(req, res);
 
     // Assert
+    const previousPage = getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment, req.query.change === 'true');
     const expectedRenderData: FacilityValueViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment, req.query.change === 'true'),
+      previousPage,
       currencySymbol: getCurrencySymbol(MOCK_ISSUED_FACILITY.details.currency!.id),
       facilityValue: '',
     };

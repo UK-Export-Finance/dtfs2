@@ -17,7 +17,7 @@ export type PostCoverEndDateRequest = CustomExpressRequest<{
     'cover-end-date-year': string;
     previousPage: string;
   };
-  query: { change: string };
+  query: { change?: 'true' };
 }>;
 
 /**
@@ -48,7 +48,7 @@ export const postCoverEndDate = async (req: PostCoverEndDateRequest, res: Respon
     const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
 
     if (!amendment) {
-      console.error('Amendment %s was not found on facility %s', amendmentId, facilityId);
+      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 
@@ -71,9 +71,13 @@ export const postCoverEndDate = async (req: PostCoverEndDateRequest, res: Respon
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
+    // If change is true, then the previous page is "Check your answers"
+    // If the cover end date has changed, we need to go to the next page of the amendment journey.
+    // Otherwise, the next page should be the previous page "Check your answers".
     const coverEndDateHasChanged = amendment.coverEndDate !== updatedAmendment.coverEndDate;
-
-    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.COVER_END_DATE, updatedAmendment, req.query.change === 'true' && !coverEndDateHasChanged));
+    const change = req.query.change === 'true' && !coverEndDateHasChanged;
+    const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.COVER_END_DATE, updatedAmendment, change);
+    return res.redirect(nextPage);
   } catch (error) {
     console.error('Error posting amendments cover end date page %o', error);
     return res.render('partials/problem-with-service.njk');

@@ -1,5 +1,6 @@
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { Response } from 'express';
+import { isEqual } from 'lodash';
 import * as api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { EligibilityReqBody, parseEligibilityResponse } from '../helpers/eligibility.helper.ts';
@@ -12,7 +13,7 @@ import { validateEligibilityResponse } from './validation.ts';
 export type PostEligibilityRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
   reqBody: EligibilityReqBody & { previousPage: string };
-  query: { change: string };
+  query: { change?: 'true' };
 }>;
 
 /**
@@ -36,7 +37,7 @@ export const postEligibility = async (req: PostEligibilityRequest, res: Response
 
     const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
     if (!amendment) {
-      console.error('Amendment %s was not found on facility %s', amendmentId, facilityId);
+      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 
@@ -70,9 +71,13 @@ export const postEligibility = async (req: PostEligibilityRequest, res: Response
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
-    const eligibilityHasChanged = JSON.stringify(amendment.eligibilityCriteria) !== JSON.stringify(updatedAmendment.eligibilityCriteria);
-
-    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.ELIGIBILITY, updatedAmendment, req.query.change === 'true' && !eligibilityHasChanged));
+    // If change is true, then the previous page is "Check your answers"
+    // If the eligibility has changed, we need to go to the next page of the amendment journey.
+    // Otherwise, the next page should be the previous page "Check your answers".
+    const eligibilityHasChanged = !isEqual(amendment.eligibilityCriteria, updatedAmendment.eligibilityCriteria);
+    const change = req.query.change === 'true' && !eligibilityHasChanged;
+    const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.ELIGIBILITY, updatedAmendment, change);
+    return res.redirect(nextPage);
   } catch (error) {
     console.error('Error posting amendments eligibility page %o', error);
     return res.render('partials/problem-with-service.njk');

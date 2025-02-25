@@ -83,10 +83,11 @@ describe('getWhatNeedsToChange', () => {
     await getWhatNeedsToChange(req, res);
 
     // Assert
+    const previousPage = req.query.change === 'true' ? PORTAL_AMENDMENT_PAGES.CHECK_YOUR_ANSWERS : `/gef/application-details/${dealId}`;
     const expectedRenderData: WhatNeedsToChangeViewModel = {
       exporterName: companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
-      previousPage: req.query.change === 'true' ? PORTAL_AMENDMENT_PAGES.CHECK_YOUR_ANSWERS : `/gef/application-details/${dealId}`,
+      previousPage,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       amendmentFormEmail: STB_PIM_EMAIL,
     };
