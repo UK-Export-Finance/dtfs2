@@ -45,6 +45,7 @@ const getPortalActivities = async (req, res) => {
   const { params, session } = req;
   const { dealId } = params;
   const { userToken } = session;
+
   const deal = await getApplication({ dealId, userToken });
   const checker = await getUserDetails({ userId: deal.checkerId, userToken });
   const portalActivities = mapPortalActivities(deal.portalActivities);

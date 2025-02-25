@@ -305,6 +305,7 @@ describe('date helpers', () => {
       const date = now();
       const month = getMonthName(date.getMonth() + 1);
       const longDate = `${date.getDate()} ${month} ${date.getFullYear()}`;
+
       // Act
       const result = getLongDateFormat();
 
