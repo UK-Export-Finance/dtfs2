@@ -24,11 +24,12 @@ jest.mock('../../server/middleware/csrf', () => ({
 
 const mockGetFacility = jest.fn();
 const mockGetApplication = jest.fn();
+const mockGetAmendment = jest.fn();
 const mockUpdateAmendment = jest.fn();
 
-const dealId = '123';
-const facilityId = '111';
-const amendmentId = '111';
+const dealId = '6597dffeb5ef5ff4267e5044';
+const facilityId = '6597dffeb5ef5ff4267e5045';
+const amendmentId = '6597dffeb5ef5ff4267e5046';
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 
@@ -46,19 +47,20 @@ describe(`POST ${url}`, () => {
     ({ sessionCookie } = await storage.saveUserSession([ROLES.MAKER]));
     jest.spyOn(api, 'getFacility').mockImplementation(mockGetFacility);
     jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
+    jest.spyOn(api, 'getAmendment').mockImplementation(mockGetAmendment);
     jest.spyOn(api, 'updateAmendment').mockImplementation(mockUpdateAmendment);
     jest.spyOn(console, 'error');
 
+    const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withDealId(dealId)
+      .withFacilityId(facilityId)
+      .withAmendmentId(amendmentId)
+      .withChangeCoverEndDate(true)
+      .build();
     mockGetFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
     mockGetApplication.mockResolvedValue(mockDeal);
-    mockUpdateAmendment.mockResolvedValue(
-      new PortalFacilityAmendmentWithUkefIdMockBuilder()
-        .withDealId(dealId)
-        .withFacilityId(facilityId)
-        .withAmendmentId(amendmentId)
-        .withChangeCoverEndDate(true)
-        .build(),
-    );
+    mockGetAmendment.mockResolvedValue(amendment);
+    mockUpdateAmendment.mockResolvedValue(amendment);
   });
 
   afterAll(async () => {
@@ -142,6 +144,25 @@ describe(`POST ${url}`, () => {
 
       // Act
       const response = await postWithSessionCookie(body, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Found);
+      expect(response.headers.location).toEqual('/not-found');
+    });
+
+    it('should redirect to /not-found when amendment not found', async () => {
+      // Arrange
+      mockGetAmendment.mockResolvedValue(undefined);
+
+      const body = {
+        'cover-end-date-day': format(todayPlusTwoYears, 'd'),
+        'cover-end-date-month': format(todayPlusTwoYears, 'M'),
+        'cover-end-date-year': format(todayPlusTwoYears, 'yyyy'),
+      };
+
+      // Act
+      const response = await postWithSessionCookie(body, sessionCookie);
+
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual('/not-found');

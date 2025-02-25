@@ -23,14 +23,15 @@ jest.mock('../../server/middleware/csrf', () => ({
 
 const mockGetFacility = jest.fn();
 const mockGetApplication = jest.fn();
+const mockGetAmendment = jest.fn();
 const mockUpdateAmendment = jest.fn();
 
 const validBody = { amendmentOptions: ['changeFacilityValue'] };
 const invalidBody = { amendmentOptions: [] };
 
-const dealId = '123';
-const facilityId = '111';
-const amendmentId = 'amendmentId';
+const dealId = '6597dffeb5ef5ff4267e5044';
+const facilityId = '6597dffeb5ef5ff4267e5045';
+const amendmentId = '6597dffeb5ef5ff4267e5046';
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 
@@ -46,19 +47,20 @@ describe(`POST ${url}`, () => {
     ({ sessionCookie } = await storage.saveUserSession([ROLES.MAKER]));
     jest.spyOn(api, 'getFacility').mockImplementation(mockGetFacility);
     jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
+    jest.spyOn(api, 'getAmendment').mockImplementation(mockGetAmendment);
     jest.spyOn(api, 'updateAmendment').mockImplementation(mockUpdateAmendment);
 
+    const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withDealId(dealId)
+      .withFacilityId(facilityId)
+      .withAmendmentId(amendmentId)
+      .withChangeCoverEndDate(false)
+      .withChangeFacilityValue(true)
+      .build();
     mockGetFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
     mockGetApplication.mockResolvedValue(mockDeal);
-    mockUpdateAmendment.mockResolvedValue(
-      new PortalFacilityAmendmentWithUkefIdMockBuilder()
-        .withDealId(dealId)
-        .withFacilityId(facilityId)
-        .withAmendmentId(amendmentId)
-        .withChangeCoverEndDate(false)
-        .withChangeFacilityValue(true)
-        .build(),
-    );
+    mockGetAmendment.mockResolvedValue(amendment);
+    mockUpdateAmendment.mockResolvedValue(amendment);
   });
 
   afterAll(async () => {
@@ -111,6 +113,18 @@ describe(`POST ${url}`, () => {
     it('should redirect to /not-found when facility not found', async () => {
       // Arrange
       mockGetFacility.mockResolvedValue({ details: undefined });
+
+      // Act
+      const response = await postWithSessionCookie(validBody, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Found);
+      expect(response.headers.location).toEqual('/not-found');
+    });
+
+    it('should redirect to /not-found when amendment not found', async () => {
+      // Arrange
+      mockGetAmendment.mockResolvedValue(undefined);
 
       // Act
       const response = await postWithSessionCookie(validBody, sessionCookie);
