@@ -61,7 +61,7 @@ export class DealCancellationService {
       ...cancellation,
     };
 
-    // If the deal cancellation effective date is in Future
+    // If the deal cancellation effective date is in future
     if (cancellationIsInFuture) {
       const { cancelledDeal, riskExpiredFacilities } = await TfmDealCancellationRepo.scheduleDealCancellation({
         dealId,

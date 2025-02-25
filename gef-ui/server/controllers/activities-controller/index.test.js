@@ -30,7 +30,7 @@ const dealSubmissionActivity = [
       _id: MOCK_AUTHOR._id,
     },
     text: '',
-    label: 'Automatic inclusion notice submitted to UKEF',
+    label: PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION,
     html: '',
     facilityType: '',
     ukefFacilityId: '',

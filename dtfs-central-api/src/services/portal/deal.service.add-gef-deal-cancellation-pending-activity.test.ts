@@ -65,7 +65,6 @@ describe('addGefDealCancellationPendingActivity', () => {
 
       // Assert
       expect(addPortalActivityMock).toHaveBeenCalledTimes(0);
-      expect(addPortalActivityMock).not.toHaveBeenCalledWith(dealId, expectedActivity, auditDetails);
     });
   });
 });
