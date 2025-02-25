@@ -75,8 +75,8 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
     // If the bank review date has changed, we need to go to the next page of the amendment journey.
     // Otherwise, the next page should be the previous page "Check your answers".
     const bankReviewDateHasChanged =
-      amendment.bankReviewDate &&
-      updatedAmendment.bankReviewDate &&
+      !!amendment.bankReviewDate &&
+      !!updatedAmendment.bankReviewDate &&
       new Date(amendment?.bankReviewDate).getTime() !== new Date(updatedAmendment?.bankReviewDate).getTime();
     const canMakeChange = req.query.change === 'true';
     const change = canMakeChange && !bankReviewDateHasChanged;

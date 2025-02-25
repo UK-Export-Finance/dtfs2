@@ -75,8 +75,8 @@ export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: 
     // If the facility end date has changed, we need to go to the next page of the amendment journey.
     // Otherwise, the next page should be the previous page "Check your answers".
     const facilityEndDateHasChanged =
-      amendment.facilityEndDate &&
-      updatedAmendment.facilityEndDate &&
+      !!amendment.facilityEndDate &&
+      !!updatedAmendment.facilityEndDate &&
       new Date(amendment.facilityEndDate).getTime() !== new Date(updatedAmendment.facilityEndDate).getTime();
     const change = req.query.change === 'true' && !facilityEndDateHasChanged;
     const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, updatedAmendment, change);
