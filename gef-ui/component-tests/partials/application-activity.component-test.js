@@ -208,4 +208,44 @@ describe(page, () => {
       wrapper.expectText(selector).toRead(expected);
     });
   });
+
+  describe(`when the deal has been marked as scheduled for cancellation and then processed for cancellation`, () => {
+    beforeAll(() => {
+      params.portalActivities = [mockActivityDealScheduledCancellation, mockActivityDealCancelled];
+    });
+
+    it('should render an `activity` title', () => {
+      wrapper.expectText(`[data-cy="activity-${mockActivityDealScheduledCancellation.title}-title"]`).toRead(mockActivityDealScheduledCancellation.title);
+      wrapper.expectText(`[data-cy="activity-${mockActivityDealCancelled.title}-title"]`).toRead(mockActivityDealCancelled.title);
+    });
+
+    it('should render an activity byline', () => {
+      wrapper
+        .expectText(`[data-cy="activity-${mockActivityDealScheduledCancellation.title}-byline"]`)
+        .toRead(`by ${mockActivityDealScheduledCancellation.byline}`);
+
+      wrapper.expectText(`[data-cy="activity-${mockActivityDealCancelled.title}-byline"]`).toRead(`by ${mockActivityDealCancelled.byline}`);
+    });
+
+    it('should render an activity date', () => {
+      wrapper.expectText(`[data-cy="activity-${mockActivityDealScheduledCancellation.title}-date"]`).toRead(`${date} ${time}`);
+      wrapper.expectText(`[data-cy="activity-${mockActivityDealCancelled.title}-date"]`).toRead(`${date} ${time}`);
+    });
+
+    it('should render a deal link', () => {
+      const selector = `[data-cy="deal-link-${params.dealId}"]`;
+      const expectedHref = `/gef/application-details/${params.dealId}`;
+      // This is repeated twice due to two deal activities
+      const expectedText = `Deal ID ${params.ukefDealId}Deal ID ${params.ukefDealId}`;
+
+      wrapper.expectLink(selector).toLinkTo(expectedHref, expectedText);
+    });
+
+    it('should render status change, new tag', () => {
+      const selector = `[data-cy="new-status-tag-${params.dealId}"]`;
+
+      // This is repeated twice due to two deal activities
+      wrapper.expectText(selector).toRead(`${DEAL_STATUS.PENDING_CANCELLATION}  ${DEAL_STATUS.CANCELLED}`);
+    });
+  });
 });
