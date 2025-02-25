@@ -165,6 +165,7 @@ export const postUtilisationReportUpload = async (req: Request, res: Response) =
     // File is valid so we can start processing and validating its data
     const file = req.file as Express.Multer.File;
     const { csvJson, fileBuffer, error } = await extractCsvData(file);
+
     if (error) {
       const extractDataErrorSummary = [
         {
@@ -172,10 +173,13 @@ export const postUtilisationReportUpload = async (req: Request, res: Response) =
           href: '#utilisation-report-file-upload',
         },
       ];
+
       const extractDataError = {
         text: 'The selected file could not be uploaded, try again and make sure it is not password protected',
       };
+
       const dueReportPeriods = await getDueReportPeriodsByBankId(userToken, bankId);
+
       return renderPageWithError(req, res, extractDataErrorSummary, extractDataError, dueReportPeriods);
     }
 
