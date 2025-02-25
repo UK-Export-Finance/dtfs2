@@ -5,8 +5,12 @@
   {% set id = params.id %}
   {% set tagColour = params.tagColour %}
 
-  <strong class="govuk-tag govuk-tag--{{ tagColour }} govuk-!-display-inline govuk-!-margin-left-2 govuk-!-margin-right-2" data-cy="previous-status-tag-{{ id }}"> {{ previousStatus }} </strong>
-  &gt;
+  {% if title !== 'Deal cancelled' and title !== 'Deal scheduled for cancellation' %}
+    <strong class="govuk-tag govuk-tag--{{ tagColour }} govuk-!-display-inline govuk-!-margin-left-2 govuk-!-margin-right-2" data-cy="previous-status-tag-{{ id }}"> {{ previousStatus }} </strong>
+    &gt;
+  {% endif %}
+
   <strong class="govuk-tag govuk-tag--{{ tagColour }} govuk-!-display-inline govuk-!-margin-left-2 govuk-!-margin-right-2" data-cy="new-status-tag-{{ id }}"> {{ newStatus }} </strong>
+
 
 {% endmacro %}

@@ -5,6 +5,7 @@ import {
   DEAL_TYPE,
   FACILITY_STAGE,
   InvalidAuditDetailsError,
+  now,
   PortalActivity,
   TfmActivity,
   TfmDeal,
@@ -14,7 +15,7 @@ import {
 } from '@ukef/dtfs2-common';
 import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
-import { add, endOfDay, getUnixTime, startOfDay, sub } from 'date-fns';
+import { add, endOfDay, getUnixTime, startOfDay, sub, toDate } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import { DealCancellationService } from './deal-cancellation.service';
 import { aTfmFacility } from '../../../test-helpers';
@@ -68,52 +69,51 @@ jest.mock('../../repositories/tfm-users-repo', () => ({
 }));
 
 const mockUser = aTfmUser();
-
 const dealId = new ObjectId();
 
 const effectiveFromPresentAndPastTestCases = [
   {
     description: 'the end of today',
-    effectiveFrom: endOfDay(new Date()).valueOf(),
+    effectiveFrom: endOfDay(now()).valueOf(),
   },
   {
     description: 'now',
-    effectiveFrom: new Date().valueOf(),
+    effectiveFrom: now().valueOf(),
   },
   {
     description: 'an hour ago',
-    effectiveFrom: sub(new Date(), { hours: 1 }).valueOf(),
+    effectiveFrom: sub(now(), { hours: 1 }).valueOf(),
   },
   {
     description: 'a day ago',
-    effectiveFrom: sub(new Date(), { days: 1 }).valueOf(),
+    effectiveFrom: sub(now(), { days: 1 }).valueOf(),
   },
   {
     description: '3 months ago',
-    effectiveFrom: sub(new Date(), { months: 3 }).valueOf(),
+    effectiveFrom: sub(now(), { months: 3 }).valueOf(),
   },
   {
     description: '12 months ago',
-    effectiveFrom: sub(new Date(), { months: 12 }).valueOf(),
+    effectiveFrom: sub(now(), { months: 12 }).valueOf(),
   },
 ];
 
 const effectiveFromFutureTestCases = [
   {
     description: 'the start of tomorrow',
-    effectiveFrom: startOfDay(add(new Date(), { days: 1 })).valueOf(),
+    effectiveFrom: startOfDay(add(now(), { days: 1 })).valueOf(),
   },
   {
     description: 'tomorrow',
-    effectiveFrom: add(new Date(), { days: 1 }).valueOf(),
+    effectiveFrom: add(now(), { days: 1 }).valueOf(),
   },
   {
     description: 'next month',
-    effectiveFrom: add(new Date(), { months: 1 }).valueOf(),
+    effectiveFrom: add(now(), { months: 1 }).valueOf(),
   },
   {
     description: '12 months in the future',
-    effectiveFrom: add(new Date(), { months: 12 }).valueOf(),
+    effectiveFrom: add(now(), { months: 12 }).valueOf(),
   },
 ];
 
@@ -139,8 +139,8 @@ describe('DealCancellationService', () => {
 
     const aDealCancellation = (): TfmDealCancellation => ({
       reason: 'a reason',
-      bankRequestDate: new Date().valueOf(),
-      effectiveFrom: new Date().valueOf(),
+      bankRequestDate: now().valueOf(),
+      effectiveFrom: now().valueOf(),
     });
 
     const auditDetails = generateTfmAuditDetails(aTfmUser()._id);
@@ -162,7 +162,7 @@ describe('DealCancellationService', () => {
 
           const expectedActivity: TfmActivity = {
             type: ACTIVITY_TYPES.CANCELLATION,
-            timestamp: getUnixTime(new Date()),
+            timestamp: getUnixTime(now()),
             author: {
               firstName: mockUser.firstName,
               lastName: mockUser.lastName,
@@ -235,6 +235,7 @@ describe('DealCancellationService', () => {
             dealType,
             author: expectedAuthor,
             auditDetails,
+            effectiveFrom: toDate(effectiveFrom),
           });
         });
 
@@ -264,7 +265,7 @@ describe('DealCancellationService', () => {
           // Assert
           const expectedActivity: TfmActivity = {
             type: ACTIVITY_TYPES.CANCELLATION,
-            timestamp: getUnixTime(new Date()),
+            timestamp: getUnixTime(now()),
             author: {
               firstName: mockUser.firstName,
               lastName: mockUser.lastName,
@@ -335,6 +336,7 @@ describe('DealCancellationService', () => {
             dealType,
             author: expectedAuthor,
             auditDetails,
+            effectiveFrom: toDate(effectiveFrom),
           });
         });
 
