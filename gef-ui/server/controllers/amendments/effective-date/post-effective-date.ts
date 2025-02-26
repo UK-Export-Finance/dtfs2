@@ -75,8 +75,10 @@ export const postEffectiveDate = async (req: PostEffectiveDateRequest, res: Resp
     // If the effective date has changed, we need to go to the next page of the amendment journey.
     // Otherwise, the next page should be the previous page "Check your answers".
     const effectiveDateHasChanged = amendment.effectiveDate !== updatedAmendment.effectiveDate;
+
     const change = req.query.change === 'true' && !effectiveDateHasChanged;
     const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, updatedAmendment, change);
+
     return res.redirect(nextPage);
   } catch (error) {
     console.error('Error posting amendments effective date page %o', error);

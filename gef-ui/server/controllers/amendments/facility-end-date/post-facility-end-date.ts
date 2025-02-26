@@ -78,8 +78,10 @@ export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: 
       !!amendment.facilityEndDate &&
       !!updatedAmendment.facilityEndDate &&
       new Date(amendment.facilityEndDate).getTime() !== new Date(updatedAmendment.facilityEndDate).getTime();
+
     const change = req.query.change === 'true' && !facilityEndDateHasChanged;
     const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, updatedAmendment, change);
+
     return res.redirect(nextPage);
   } catch (error) {
     console.error('Error posting amendments facility end date page %o', error);

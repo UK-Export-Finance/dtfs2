@@ -75,8 +75,10 @@ export const postWhatNeedsToChange = async (req: PostWhatNeedsToChangeRequest, r
     // Otherwise, the next page should be the previous page "Check your answers".
     const whatNeedsToChangeHasChanged =
       amendment.changeCoverEndDate !== updatedAmendment.changeCoverEndDate || amendment.changeFacilityValue !== updatedAmendment.changeFacilityValue;
+
     const change = req.query.change === 'true' && !whatNeedsToChangeHasChanged;
     const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE, updatedAmendment, change);
+
     return res.redirect(nextPage);
   } catch (error) {
     console.error('Error posting amendments what needs to change page %o', error);

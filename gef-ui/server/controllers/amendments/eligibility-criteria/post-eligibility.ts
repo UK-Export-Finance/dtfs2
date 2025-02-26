@@ -75,8 +75,10 @@ export const postEligibility = async (req: PostEligibilityRequest, res: Response
     // If the eligibility has changed, we need to go to the next page of the amendment journey.
     // Otherwise, the next page should be the previous page "Check your answers".
     const eligibilityHasChanged = !isEqual(amendment.eligibilityCriteria, updatedAmendment.eligibilityCriteria);
+
     const change = req.query.change === 'true' && !eligibilityHasChanged;
     const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.ELIGIBILITY, updatedAmendment, change);
+
     return res.redirect(nextPage);
   } catch (error) {
     console.error('Error posting amendments eligibility page %o', error);

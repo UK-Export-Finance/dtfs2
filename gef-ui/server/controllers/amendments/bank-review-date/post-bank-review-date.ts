@@ -78,9 +78,11 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
       !!amendment.bankReviewDate &&
       !!updatedAmendment.bankReviewDate &&
       new Date(amendment?.bankReviewDate).getTime() !== new Date(updatedAmendment?.bankReviewDate).getTime();
+
     const canMakeChange = req.query.change === 'true';
     const change = canMakeChange && !bankReviewDateHasChanged;
     const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE, updatedAmendment, change);
+
     return res.redirect(nextPage);
   } catch (error) {
     console.error('Error posting amendments bank review date page %o', error);

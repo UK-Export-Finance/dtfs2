@@ -75,8 +75,10 @@ export const postCoverEndDate = async (req: PostCoverEndDateRequest, res: Respon
     // If the cover end date has changed, we need to go to the next page of the amendment journey.
     // Otherwise, the next page should be the previous page "Check your answers".
     const coverEndDateHasChanged = amendment.coverEndDate !== updatedAmendment.coverEndDate;
+
     const change = req.query.change === 'true' && !coverEndDateHasChanged;
     const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.COVER_END_DATE, updatedAmendment, change);
+
     return res.redirect(nextPage);
   } catch (error) {
     console.error('Error posting amendments cover end date page %o', error);

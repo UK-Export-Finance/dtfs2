@@ -70,8 +70,10 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
     // If the facility value has changed, we need to go to the next page of the amendment journey.
     // Otherwise, the next page should be the previous page "Check your answers".
     const facilityValueHasChanged = amendment.value !== updatedAmendment.value;
+
     const change = req.query.change === 'true' && !facilityValueHasChanged;
     const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, updatedAmendment, change);
+
     return res.redirect(nextPage);
   } catch (error) {
     console.error('Error posting amendments facility value page %o', error);
