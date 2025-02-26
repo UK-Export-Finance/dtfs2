@@ -2,19 +2,15 @@ import relative from '../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { MOCK_JOURNEYS_WITH_BRD, MOCK_JOURNEYS_WITH_FED } from '../../../../../fixtures/check-your-answers-change-journey';
 import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
 
 import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
-import coverEndDate from '../../../../../../../gef/cypress/e2e/pages/amendments/cover-end-date';
 import doYouHaveAFacilityEndDate from '../../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
-import facilityEndDate from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-end-date';
-import bankReviewDate from '../../../../../../../gef/cypress/e2e/pages/amendments/bank-review-date';
 import facilityValue from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
-import effectiveDate from '../../../../../../../gef/cypress/e2e/pages/amendments/effective-date';
 import checkYourAnswers from '../../../../../../../gef/cypress/e2e/pages/amendments/check-your-answers';
 import manualApprovalNeeded from '../../../../../../../gef/cypress/e2e/pages/amendments/manual-approval-needed';
-import { tomorrow } from '../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -35,114 +31,12 @@ context('Amendments - Check your answers change journey', () => {
    * @type {Date}
    */
   const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
+  const CHANGED_FACILITY_VALUE = '10000';
 
-  const eligibilityTestCases = Array.from({ length: 7 }, (_, index) => ({
-    description: 'eligibility',
-    page: 'eligibility',
-    nextPage: 'manual-approval-needed',
-    element: eligibility,
-    nextElement: manualApprovalNeeded,
-    checkYourAnswersChangeElement: () => checkYourAnswers.eligibilityCriteriaSummaryListTable().eligibilityCriterionChangeLink(index + 1),
-    fragment: `${index + 1}`,
-    nextPageHeading: 'This amendment cannot be automatically approved',
-    change: () => {
-      eligibility.allFalseRadioButtons().click({ multiple: true });
-      cy.clickContinueButton();
-    },
-  }));
-
-  const testCasesWithoutBRD = [
-    {
-      description: 'cover end date',
-      page: 'cover-end-date',
-      nextPage: 'do-you-have-a-facility-end-date',
-      element: coverEndDate,
-      nextElement: doYouHaveAFacilityEndDate,
-      checkYourAnswersChangeElement: () => checkYourAnswers.amendmentSummaryListTable().coverEndDateChangeLink(),
-      fragment: 'coverEndDate-day',
-      nextPageHeading: 'Do you have a facility end date?',
-      change: () => {
-        cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: tomorrow.date });
-        cy.clickContinueButton();
-      },
-    },
-    {
-      description: 'facility end date',
-      page: 'facility-end-date',
-      nextPage: 'facility-value',
-      element: facilityEndDate,
-      nextElement: facilityValue,
-      checkYourAnswersChangeElement: () => checkYourAnswers.amendmentSummaryListTable().facilityEndDateChangeLink(),
-      fragment: 'facilityEndDate-day',
-      nextPageHeading: 'New facility value',
-      change: () => {
-        cy.completeDateFormFields({ idPrefix: 'facility-end-date', date: tomorrow.date });
-        cy.clickContinueButton();
-      },
-    },
-    {
-      description: 'facility value',
-      page: 'facility-value',
-      nextPage: 'eligibility',
-      element: facilityValue,
-      nextElement: eligibility,
-      checkYourAnswersChangeElement: () => checkYourAnswers.amendmentSummaryListTable().facilityValueChangeLink(),
-      fragment: 'facilityValue',
-      nextPageHeading: 'Eligibility',
-      change: () => {
-        cy.keyboardInput(facilityValue.facilityValue(), '20000');
-        cy.clickContinueButton();
-      },
-    },
-    {
-      description: 'effective date',
-      page: 'effective-date',
-      nextPage: 'check-your-answers',
-      element: effectiveDate,
-      nextElement: checkYourAnswers,
-      checkYourAnswersChangeElement: () => checkYourAnswers.effectiveDateSummaryListTable().effectiveDateChangeLink(),
-      fragment: 'effectiveDate-day',
-      nextPageHeading: 'Check your answers before submitting the amendment request',
-      change: () => {
-        cy.completeDateFormFields({ idPrefix: 'effective-date', date: tomorrow.date });
-        cy.clickContinueButton();
-      },
-    },
-    ...eligibilityTestCases,
-  ];
-
-  const testCasesWithBRD = [
-    {
-      description: 'what do you need to change',
-      page: 'what-do-you-need-to-change',
-      nextPage: 'cover-end-date',
-      element: whatDoYouNeedToChange,
-      nextElement: coverEndDate,
-      checkYourAnswersChangeElement: () => checkYourAnswers.amendmentSummaryListTable().amendmentOptionsChangeLink(),
-      fragment: 'amendmentOptions',
-      nextPageHeading: 'New cover end date',
-      change: () => {
-        whatDoYouNeedToChange.facilityValueCheckbox().click();
-        cy.clickContinueButton();
-      },
-    },
-    {
-      description: 'bank review date',
-      page: 'bank-review-date',
-      nextPage: 'eligibility',
-      element: bankReviewDate,
-      nextElement: eligibility,
-      checkYourAnswersChangeElement: () => checkYourAnswers.amendmentSummaryListTable().bankReviewDateChangeLink(),
-      fragment: 'bankReviewDate-day',
-      nextPageHeading: 'Eligibility',
-      change: () => {
-        cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: tomorrow.date });
-        cy.clickContinueButton();
-      },
-    },
-  ];
-
-  const setupTest = async (testCases, pageActions, hasBankReviewDate) => {
+  /**
+   * This test suite covers the "Check your answers" change journey for amendments.
+   */
+  const setupTest = (testCases, amendmentPageActions, hasFacilityEndDate) => {
     before(() => {
       cy.insertOneGefDeal(MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1).then((insertedDeal) => {
         dealId = insertedDeal._id;
@@ -163,7 +57,7 @@ context('Amendments - Check your answers change journey', () => {
 
           cy.getAmendmentIdFromUrl().then((amendmentId) => {
             amendmentUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}`;
-            pageActions(hasBankReviewDate);
+            amendmentPageActions(hasFacilityEndDate);
           });
         });
       });
@@ -217,32 +111,42 @@ context('Amendments - Check your answers change journey', () => {
     });
   };
 
-  const pageActions = (hasBankReviewDate) => {
+  // These are the steps the user follows to amend the facility until they reach the "Check your answers" page.
+  const amendmentPageActions = (hasFacilityEndDate) => {
     whatDoYouNeedToChange.coverEndDateCheckbox().click();
     whatDoYouNeedToChange.facilityValueCheckbox().click();
     cy.clickContinueButton();
+
     cy.completeDateFormFields({ idPrefix: 'cover-end-date' });
     cy.clickContinueButton();
-    if (hasBankReviewDate) {
-      doYouHaveAFacilityEndDate.noRadioButton().click();
-      cy.clickContinueButton();
-      cy.completeDateFormFields({ idPrefix: 'bank-review-date' });
-    } else {
+
+    if (hasFacilityEndDate) {
       doYouHaveAFacilityEndDate.yesRadioButton().click();
       cy.clickContinueButton();
       cy.completeDateFormFields({ idPrefix: 'facility-end-date' });
+    } else {
+      doYouHaveAFacilityEndDate.noRadioButton().click();
+      cy.clickContinueButton();
+      cy.completeDateFormFields({ idPrefix: 'bank-review-date' });
     }
     cy.clickContinueButton();
-    cy.keyboardInput(facilityValue.facilityValue(), '10000');
+
+    cy.keyboardInput(facilityValue.facilityValue(), CHANGED_FACILITY_VALUE);
     cy.clickContinueButton();
+
     eligibility.allTrueRadioButtons().click({ multiple: true });
     cy.clickContinueButton();
+
     cy.completeDateFormFields({ idPrefix: 'effective-date' });
     cy.clickContinueButton();
   };
 
-  (async () => {
-    await setupTest(testCasesWithBRD, pageActions, true);
-    await setupTest(testCasesWithoutBRD, pageActions, false);
-  })();
+  // If the amendmentPageActions function is called with false, the bankReviewDate is enabled in the journey
+  describe('Bank Review Date Enabled', () => {
+    setupTest(MOCK_JOURNEYS_WITH_BRD, amendmentPageActions, false);
+  });
+  // If the amendmentPageActions function is called with true, the facilityEndDate is enabled in the journey
+  describe('Facility End Date Endabled', () => {
+    setupTest(MOCK_JOURNEYS_WITH_FED, amendmentPageActions, true);
+  });
 });
