@@ -17,7 +17,7 @@ export type PostFacilityEndDateRequest = CustomExpressRequest<{
     'facility-end-date-year': string;
     previousPage: string;
   };
-  query: { change?: 'true' };
+  query: { change?: string };
 }>;
 
 /**

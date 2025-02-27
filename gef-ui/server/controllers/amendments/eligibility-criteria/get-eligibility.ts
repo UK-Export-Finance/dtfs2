@@ -9,7 +9,7 @@ import { EligibilityViewModel } from '../../../types/view-models/amendments/elig
 
 export type GetEligibilityRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
-  query: { change?: 'true' };
+  query: { change?: string };
 }>;
 
 /**
@@ -48,12 +48,13 @@ export const getEligibility = async (req: GetEligibilityRequest, res: Response) 
     }
 
     const { criteria } = amendment.eligibilityCriteria;
+    const changeQuery = req.query?.change === 'true';
 
     const viewModel: EligibilityViewModel = {
       exporterName: deal.exporter.companyName,
       facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.ELIGIBILITY, amendment, req.query.change === 'true'),
+      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.ELIGIBILITY, amendment, changeQuery),
       criteria,
     };
 

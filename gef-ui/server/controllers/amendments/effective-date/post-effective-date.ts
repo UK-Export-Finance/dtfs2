@@ -17,7 +17,7 @@ export type PostEffectiveDateRequest = CustomExpressRequest<{
     'effective-date-year': string;
     previousPage: string;
   };
-  query: { change?: 'true' };
+  query: { change?: string };
 }>;
 
 /**
@@ -76,7 +76,8 @@ export const postEffectiveDate = async (req: PostEffectiveDateRequest, res: Resp
     // Otherwise, the next page should be the previous page "Check your answers".
     const effectiveDateHasChanged = amendment.effectiveDate !== updatedAmendment.effectiveDate;
 
-    const change = req.query.change === 'true' && !effectiveDateHasChanged;
+    const changeQuery = req.query?.change === 'true';
+    const change = changeQuery && !effectiveDateHasChanged;
     const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, updatedAmendment, change);
 
     return res.redirect(nextPage);

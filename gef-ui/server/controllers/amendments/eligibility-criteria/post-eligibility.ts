@@ -13,7 +13,7 @@ import { validateEligibilityResponse } from './validation.ts';
 export type PostEligibilityRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
   reqBody: EligibilityReqBody & { previousPage: string };
-  query: { change?: 'true' };
+  query: { change?: string };
 }>;
 
 /**
@@ -76,7 +76,8 @@ export const postEligibility = async (req: PostEligibilityRequest, res: Response
     // Otherwise, the next page should be the previous page "Check your answers".
     const eligibilityHasChanged = !isEqual(amendment.eligibilityCriteria, updatedAmendment.eligibilityCriteria);
 
-    const change = req.query.change === 'true' && !eligibilityHasChanged;
+    const changeQuery = req.query?.change === 'true';
+    const change = changeQuery && !eligibilityHasChanged;
     const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.ELIGIBILITY, updatedAmendment, change);
 
     return res.redirect(nextPage);

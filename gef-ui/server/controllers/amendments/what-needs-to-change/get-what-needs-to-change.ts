@@ -10,7 +10,7 @@ import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
 
 export type GetWhatNeedsToChangeRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
-  query: { change?: 'true' };
+  query: { change?: string };
 }>;
 
 /**
@@ -49,15 +49,15 @@ export const getWhatNeedsToChange = async (req: GetWhatNeedsToChangeRequest, res
     }
 
     const { changeCoverEndDate, changeFacilityValue } = amendment;
+    const changeQuery = req.query?.change === 'true';
 
     const viewModel: WhatNeedsToChangeViewModel = {
       exporterName: deal.exporter.companyName,
       facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      previousPage:
-        req.query.change === 'true'
-          ? getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CHECK_YOUR_ANSWERS })
-          : `/gef/application-details/${dealId}`,
+      previousPage: changeQuery
+        ? getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CHECK_YOUR_ANSWERS })
+        : `/gef/application-details/${dealId}`,
       amendmentFormEmail: STB_PIM_EMAIL,
       changeCoverEndDate,
       changeFacilityValue,

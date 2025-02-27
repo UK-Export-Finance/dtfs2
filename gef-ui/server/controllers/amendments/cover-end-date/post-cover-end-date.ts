@@ -17,7 +17,7 @@ export type PostCoverEndDateRequest = CustomExpressRequest<{
     'cover-end-date-year': string;
     previousPage: string;
   };
-  query: { change?: 'true' };
+  query: { change?: string };
 }>;
 
 /**
@@ -76,7 +76,8 @@ export const postCoverEndDate = async (req: PostCoverEndDateRequest, res: Respon
     // Otherwise, the next page should be the previous page "Check your answers".
     const coverEndDateHasChanged = amendment.coverEndDate !== updatedAmendment.coverEndDate;
 
-    const change = req.query.change === 'true' && !coverEndDateHasChanged;
+    const changeQuery = req.query?.change === 'true';
+    const change = changeQuery && !coverEndDateHasChanged;
     const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.COVER_END_DATE, updatedAmendment, change);
 
     return res.redirect(nextPage);

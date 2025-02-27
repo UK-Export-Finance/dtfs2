@@ -12,7 +12,7 @@ import { validationErrorHandler } from '../../../utils/helpers';
 export type PostWhatNeedsToChangeRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
   reqBody: { amendmentOptions: string[] };
-  query: { change?: 'true' };
+  query: { change?: string };
 }>;
 
 /**
@@ -73,10 +73,11 @@ export const postWhatNeedsToChange = async (req: PostWhatNeedsToChangeRequest, r
     // If change is true, then the previous page is "Check your answers"
     // If the what needs to change has changed, we need to go to the next page of the amendment journey.
     // Otherwise, the next page should be the previous page "Check your answers".
-    const whatNeedsToChangeHasChanged =
+    const hasUserAmendedFacility =
       amendment.changeCoverEndDate !== updatedAmendment.changeCoverEndDate || amendment.changeFacilityValue !== updatedAmendment.changeFacilityValue;
 
-    const change = req.query.change === 'true' && !whatNeedsToChangeHasChanged;
+    const changeQuery = req.query?.change === 'true';
+    const change = changeQuery && !hasUserAmendedFacility;
     const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE, updatedAmendment, change);
 
     return res.redirect(nextPage);

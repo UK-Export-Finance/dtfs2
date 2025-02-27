@@ -15,7 +15,7 @@ export type PostFacilityValueRequest = CustomExpressRequest<{
     facilityValue: string;
     previousPage: string;
   };
-  query: { change?: 'true' };
+  query: { change?: string };
 }>;
 
 /**
@@ -71,7 +71,8 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
     // Otherwise, the next page should be the previous page "Check your answers".
     const facilityValueHasChanged = amendment.value !== updatedAmendment.value;
 
-    const change = req.query.change === 'true' && !facilityValueHasChanged;
+    const changeQuery = req.query?.change === 'true';
+    const change = changeQuery && !facilityValueHasChanged;
     const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, updatedAmendment, change);
 
     return res.redirect(nextPage);

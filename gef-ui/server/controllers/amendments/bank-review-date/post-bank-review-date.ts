@@ -17,7 +17,7 @@ export type PostBankReviewDateRequest = CustomExpressRequest<{
     'bank-review-date-year': string;
     previousPage: string;
   };
-  query: { change?: 'true' };
+  query: { change?: string };
 }>;
 
 /**
@@ -79,8 +79,8 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
       !!updatedAmendment.bankReviewDate &&
       new Date(amendment?.bankReviewDate).getTime() !== new Date(updatedAmendment?.bankReviewDate).getTime();
 
-    const canMakeChange = req.query.change === 'true';
-    const change = canMakeChange && !bankReviewDateHasChanged;
+    const changeQuery = req.query.change === 'true';
+    const change = changeQuery && !bankReviewDateHasChanged;
     const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE, updatedAmendment, change);
 
     return res.redirect(nextPage);
