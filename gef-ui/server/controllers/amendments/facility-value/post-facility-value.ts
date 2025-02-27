@@ -66,9 +66,11 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
-    // If change is true, then the previous page is "Check your answers"
-    // If the facility value has changed, we need to go to the next page of the amendment journey.
-    // Otherwise, the next page should be the previous page "Check your answers".
+    /*
+     * If change is true, then the previous page is "Check your answers"
+     * If the facility value has changed, we need to go to the next page of the amendment journey.
+     * Otherwise, the next page should be the previous page "Check your answers".
+     */
     const facilityValueHasChanged = amendment.value !== updatedAmendment.value;
 
     const changeQuery = req.query?.change === 'true';

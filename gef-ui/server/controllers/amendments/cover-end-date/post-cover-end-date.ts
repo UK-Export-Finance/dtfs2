@@ -70,10 +70,11 @@ export const postCoverEndDate = async (req: PostCoverEndDateRequest, res: Respon
     const update = { coverEndDate: validationErrorsOrValue.value };
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
-
-    // If change is true, then the previous page is "Check your answers"
-    // If the cover end date has changed, we need to go to the next page of the amendment journey.
-    // Otherwise, the next page should be the previous page "Check your answers".
+    /*
+     * If change is true, then the previous page is "Check your answers"
+     * If the cover end date has changed, we need to go to the next page of the amendment journey.
+     * Otherwise, the next page should be the previous page "Check your answers".
+     */
     const coverEndDateHasChanged = amendment.coverEndDate !== updatedAmendment.coverEndDate;
 
     const changeQuery = req.query?.change === 'true';

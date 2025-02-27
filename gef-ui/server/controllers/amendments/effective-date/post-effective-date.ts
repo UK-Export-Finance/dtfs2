@@ -71,9 +71,11 @@ export const postEffectiveDate = async (req: PostEffectiveDateRequest, res: Resp
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
-    // If change is true, then the previous page is "Check your answers"
-    // If the effective date has changed, we need to go to the next page of the amendment journey.
-    // Otherwise, the next page should be the previous page "Check your answers".
+    /*
+     * If change is true, then the previous page is "Check your answers"
+     * If the effective date has changed, we need to go to the next page of the amendment journey.
+     * Otherwise, the next page should be the previous page "Check your answers".
+     */
     const effectiveDateHasChanged = amendment.effectiveDate !== updatedAmendment.effectiveDate;
 
     const changeQuery = req.query?.change === 'true';

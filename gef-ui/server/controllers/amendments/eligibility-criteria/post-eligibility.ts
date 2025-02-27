@@ -71,9 +71,11 @@ export const postEligibility = async (req: PostEligibilityRequest, res: Response
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
-    // If change is true, then the previous page is "Check your answers"
-    // If the eligibility has changed, we need to go to the next page of the amendment journey.
-    // Otherwise, the next page should be the previous page "Check your answers".
+    /*
+     * If change is true, then the previous page is "Check your answers"
+     * If the eligibility has changed, we need to go to the next page of the amendment journey.
+     * Otherwise, the next page should be the previous page "Check your answers".
+     */
     const eligibilityHasChanged = !isEqual(amendment.eligibilityCriteria, updatedAmendment.eligibilityCriteria);
 
     const changeQuery = req.query?.change === 'true';

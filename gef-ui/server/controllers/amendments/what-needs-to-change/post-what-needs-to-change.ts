@@ -70,9 +70,11 @@ export const postWhatNeedsToChange = async (req: PostWhatNeedsToChangeRequest, r
       userToken,
     });
 
-    // If change is true, then the previous page is "Check your answers"
-    // If the what needs to change has changed, we need to go to the next page of the amendment journey.
-    // Otherwise, the next page should be the previous page "Check your answers".
+    /*
+     * If change is true, then the previous page is "Check your answers"
+     * If the what needs to change has changed, we need to go to the next page of the amendment journey.
+     * Otherwise, the next page should be the previous page "Check your answers".
+     */
     const hasUserAmendedFacility =
       amendment.changeCoverEndDate !== updatedAmendment.changeCoverEndDate || amendment.changeFacilityValue !== updatedAmendment.changeFacilityValue;
 

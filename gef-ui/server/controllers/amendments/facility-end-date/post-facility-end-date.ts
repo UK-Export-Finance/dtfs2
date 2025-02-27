@@ -71,10 +71,11 @@ export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: 
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
-    // If change is true, then the previous page is "Check your answers"
-    // If the facility end date has changed, we need to go to the next page of the amendment journey.
-    // Otherwise, the next page should be the previous page "Check your answers".
-
+    /*
+     * If change is true, then the previous page is "Check your answers"
+     * If the facility end date has changed, we need to go to the next page of the amendment journey.
+     * Otherwise, the next page should be the previous page "Check your answers".
+     */
     const { facilityEndDate } = amendment;
     const updatedFacilityEndDate = updatedAmendment.facilityEndDate;
     const facilityEndDateHasChanged =
