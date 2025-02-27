@@ -79,7 +79,7 @@ describe('getEffectiveDate', () => {
     await getEffectiveDate(req, res);
 
     // Assert
-    const previousPage = getPreviousPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, amendment, req.query.change === 'true');
+    const previousPage = getPreviousPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, amendment);
     const expectedRenderData: EffectiveDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,

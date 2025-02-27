@@ -84,7 +84,7 @@ describe('getFacilityValue', () => {
     await getFacilityValue(req, res);
 
     // Assert
-    const previousPage = getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment, req.query.change === 'true');
+    const previousPage = getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment);
     const expectedRenderData: FacilityValueViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,

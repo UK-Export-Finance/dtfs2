@@ -243,6 +243,7 @@ describe('postBankReviewDate', () => {
     // Arrange
     const bankReviewDateDayMonthYear = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
     const { req, res } = getHttpMocks(bankReviewDateDayMonthYear);
+    req.query = { change: 'true' };
 
     // Act
     await postBankReviewDate(req, res);

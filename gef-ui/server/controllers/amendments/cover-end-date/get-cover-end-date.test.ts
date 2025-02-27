@@ -82,7 +82,7 @@ describe('getCoverEndDate', () => {
     await getCoverEndDate(req, res);
 
     // Assert
-    const previousPage = getPreviousPage(PORTAL_AMENDMENT_PAGES.COVER_END_DATE, amendment, req.query.change === 'true');
+    const previousPage = getPreviousPage(PORTAL_AMENDMENT_PAGES.COVER_END_DATE, amendment);
     const expectedRenderData: CoverEndDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
