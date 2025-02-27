@@ -133,6 +133,8 @@ function buildBody(app, previewMode, user) {
     canUpdateUnissuedFacilities: canUpdateUnissuedFacilitiesCheck(app, unissuedFacilitiesPresent, facilitiesChangedToIssued, hasUkefDecisionAccepted),
     MIAReturnToMaker: isMIAWithoutChangedToIssuedFacilities(app),
     returnToMakerNoFacilitiesChanged: returnToMakerNoFacilitiesChanged(app, hasChangedFacilities),
+    dealStatusCancelled: app.status === DEAL_STATUS.CANCELLED,
+    dealStatusPendingCancellation: app.status === DEAL_STATUS.PENDING_CANCELLATION,
   };
 
   return appBody;

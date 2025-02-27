@@ -2,6 +2,7 @@ const express = require('express');
 const {
   CURRENCY,
   ROLES: { CHECKER, MAKER },
+  DEAL_STATUS,
 } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const aboutRoutes = require('./about');
@@ -78,6 +79,8 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
     dealHasIssuedFacilitiesToSubmit: dealHasIssuedFacilitiesToSubmit(deal),
     confirmedRequestedCoverStartDates: confirmedRequestedCoverStartDates[dealId] || [],
     allRequestedCoverStartDatesConfirmed: deal.submissionType === 'Automatic Inclusion Notice' || allRequestedCoverStartDatesConfirmed,
+    dealStatusCancelled: deal.status === DEAL_STATUS.CANCELLED,
+    dealStatusPendingCancellation: deal.status === DEAL_STATUS.PENDING_CANCELLATION,
   });
 });
 
