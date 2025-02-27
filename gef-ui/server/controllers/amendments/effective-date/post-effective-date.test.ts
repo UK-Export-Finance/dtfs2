@@ -248,7 +248,7 @@ describe('postEffectiveDate', () => {
     expect(console.error).toHaveBeenCalledWith('Deal %s or Facility %s was not found', dealId, facilityId);
   });
 
-  it('should redirect if the amendment is not found', async () => {
+  it('should redirect to "/not-found" if the amendment is not found', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
     getAmendmentMock.mockResolvedValue(undefined);
