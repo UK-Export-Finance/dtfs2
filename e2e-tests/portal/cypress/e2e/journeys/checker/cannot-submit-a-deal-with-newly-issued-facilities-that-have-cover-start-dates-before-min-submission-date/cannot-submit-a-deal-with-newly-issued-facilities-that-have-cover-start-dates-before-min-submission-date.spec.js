@@ -1,22 +1,8 @@
-import { add } from 'date-fns';
-
 const { contractConfirmSubmission, contract, bondDetails, dashboardDeals } = require('../../../pages');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
+const { today, yesterday } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
-
-const tomorrow = add(new Date(), { days: 1 });
-const startDate = {
-  day: tomorrow.getDate(),
-  month: tomorrow.getMonth(),
-  year: tomorrow.getFullYear(),
-};
-
-const endDate = {
-  day: tomorrow.getDate(),
-  month: tomorrow.getMonth(),
-  year: tomorrow.getFullYear() + 1,
-};
 
 context(
   'Maker cannot submit a deal to checker when facility has cover start dates before the MIN submission date" (should see validation errors, submit button should not exist)',
@@ -36,12 +22,12 @@ context(
       contract.addBondButton().click();
       bondDetails.bondTypeInput().select('Advance payment guarantee');
       bondDetails.facilityStageIssuedInput().click();
-      bondDetails.requestedCoverStartDateDayInput().type(startDate.day);
-      bondDetails.requestedCoverStartDateMonthInput().type(startDate.month);
-      bondDetails.requestedCoverStartDateYearInput().type(startDate.year);
-      bondDetails.coverEndDateDayInput().type(endDate.day);
-      bondDetails.coverEndDateMonthInput().type(endDate.month);
-      bondDetails.coverEndDateYearInput().type(endDate.year);
+      bondDetails.requestedCoverStartDateDayInput().type(yesterday.day);
+      bondDetails.requestedCoverStartDateMonthInput().type(yesterday.month);
+      bondDetails.requestedCoverStartDateYearInput().type(yesterday.year);
+      bondDetails.coverEndDateDayInput().type(today.day);
+      bondDetails.coverEndDateMonthInput().type(today.month);
+      bondDetails.coverEndDateYearInput().type(today.year);
       bondDetails.nameInput().type('1234');
 
       cy.clickSubmitButton();

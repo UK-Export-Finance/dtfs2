@@ -8,7 +8,6 @@ const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { ADMIN, BANK1_CHECKER1, BANK1_MAKER1 } = MOCK_USERS;
 
 context('A checker selects to return a deal to maker from the view-contract page', () => {
-  let dealId;
   before(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal();
@@ -24,14 +23,8 @@ context('A checker selects to return a deal to maker from the view-contract page
     contractReturnToMaker.cancel().click();
 
     // check we've gone to the right page
-    cy.getDealIdFromUrl(dealId).then((id) => {
-      dealId = id;
-      cy.url().then((url) => {
-        dealId = url.split('/').pop();
-        cy.log('dealId', dealId);
-        expect(dealId).to.be.a('string');
-        cy.url().should('eq', relative(`/contract/${dealId}`));
-      });
+    cy.getDealIdFromUrl(4).then((dealId) => {
+      cy.url().should('eq', relative(`/contract/${dealId}`));
     });
   });
 
@@ -45,10 +38,7 @@ context('A checker selects to return a deal to maker from the view-contract page
     cy.clickReturnToMakerButton();
 
     // expect to stay on the abandon page, and see an error
-    cy.url().then((url) => {
-      dealId = url.split('/')[4];
-      expect(dealId).to.be.a('string');
-      cy.log('dealId', dealId);
+    cy.getDealIdFromUrl(4).then((dealId) => {
       cy.url().should('eq', relative(`/contract/${dealId}/return-to-maker`));
     });
 

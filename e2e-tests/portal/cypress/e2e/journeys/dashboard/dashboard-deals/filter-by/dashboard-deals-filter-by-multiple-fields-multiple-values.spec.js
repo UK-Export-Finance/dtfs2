@@ -159,7 +159,7 @@ context('Dashboard Deals filters - filter by multiple fields with multiple value
     dashboardDeals.filters.mainContainer.selectedFilters.statusReadyForChecker().contains(expectedText);
   });
 
-  it.only('renders only deals that have matching fields - MIA, AIN, Draft status, Ready for check status', () => {
+  it('renders only deals that have matching fields - MIA, AIN, Draft status, Ready for check status', () => {
     cy.login(BANK1_MAKER1);
     dashboardDeals.visit();
 

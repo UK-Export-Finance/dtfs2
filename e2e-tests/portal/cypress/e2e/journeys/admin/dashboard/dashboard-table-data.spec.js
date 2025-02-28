@@ -10,6 +10,7 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 context('Admin dashboard', () => {
   let gefDeal;
   const ALL_FACILITIES = [];
+  const deal = dashboardDeals.rowByIndex(1);
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
@@ -43,7 +44,7 @@ context('Admin dashboard', () => {
 
     // check the fields we understand
     expect(dashboardDeals.tableHeader('bankRef').should('exist'));
-    expect(dashboardDeals.rowByIndex(1).bankRef().should('exist'));
+    expect(deal.bankRef().should('exist'));
   });
 
   it('clicking on a gef deal takes you to application details page (Admin)', () => {
@@ -54,8 +55,10 @@ context('Admin dashboard', () => {
 
   it('clicking on a bss deal takes you to application details page (Admin)', () => {
     cy.login(ADMIN);
-    dashboardDeals.rowByIndex(1).link().click();
-    cy.url().should('include', '/contract');
+    deal.link().click();
+    cy.getDealIdFromUrl(4).then((dealId) => {
+      cy.url().should('eq', relative(`/contract/${dealId}`));
+    });
   });
 
   it('renders all facilities (Admin)', () => {
@@ -77,7 +80,7 @@ context('Admin dashboard', () => {
 
   it('clicking on a bss facility takes you to application details focussing on the facility (Admin)', () => {
     cy.login(BANK1_MAKER1);
-    dashboardDeals.rowByIndex(1).link().click();
+    deal.link().click();
     // adds bond
     cy.addBondToDeal();
     // gets bond id
@@ -86,7 +89,9 @@ context('Admin dashboard', () => {
 
       dashboardFacilities.visit();
       dashboardFacilities.row.nameLink(bondId).click();
-      cy.url().should('include', '/contract');
+      cy.getDealIdFromUrl(4).then((dealId) => {
+        cy.url().should('eq', relative(`/contract/${dealId}`));
+      });
     });
 
     // adds loan
@@ -97,7 +102,9 @@ context('Admin dashboard', () => {
 
       dashboardFacilities.visit();
       dashboardFacilities.row.nameLink(loanId).click();
-      cy.url().should('include', `/contract`);
+      cy.getDealIdFromUrl(4).then((dealId) => {
+        cy.url().should('eq', relative(`/contract/${dealId}`));
+      });
     });
   });
 
