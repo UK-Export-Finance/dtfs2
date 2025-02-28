@@ -1,3 +1,19 @@
+/*
+ * Facility guarantee record update DAF
+ * **********************************
+ * This DAF (Durable Activity Function) is never invoked directly.
+ * It is invoked via DOF (Durable Orchestrator Function).
+ *
+ * Pre-requisites
+ * --------------
+ * 0. 'npm install durable-functions'
+ * 1. Durable  HTTP trigger function (acbs-http)
+ * 2. Durable Orchestrator function (DOF) (acbs-issue-facility)
+ *
+ * ------------------
+ * HTTP -> DOF -> DAF
+ * ------------------
+ */
 const df = require('durable-functions');
 const api = require('../../api');
 const { getNowAsIsoString } = require('../../helpers/date');
@@ -20,7 +36,7 @@ const { isHttpErrorStatus } = require('../../helpers/http');
 const handler = async (payload) => {
   try {
     if (!payload) {
-      throw new Error('Invalid facility guarantee update payload');
+      throw new Error('Invalid facility guarantee amendment payload');
     }
 
     /**
@@ -37,7 +53,7 @@ const handler = async (payload) => {
       throw new Error(
         JSON.stringify(
           {
-            name: 'ACBS Facility Guarantee amend error',
+            name: 'ACBS Facility guarantee amend error',
             submittedToACBS,
             receivedFromACBS: getNowAsIsoString(),
             dataReceived: data,

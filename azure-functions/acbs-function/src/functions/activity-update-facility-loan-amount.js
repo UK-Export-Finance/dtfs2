@@ -53,8 +53,8 @@ const handler = async (payload) => {
     }
 
     const submittedToACBS = getNowAsIsoString();
-
     const { status, data } = await api.updateFacilityLoanAmount(facilityIdentifier, loanId, acbsFacilityLoanInput);
+
     if (isHttpErrorStatus(status)) {
       throw new Error(
         JSON.stringify(
