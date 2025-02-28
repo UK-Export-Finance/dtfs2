@@ -16,7 +16,7 @@ describe('facilityCovenantAmend', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should returns the amount as a number with two decimal points when the amount is a string', () => {
+    it('should return the amount as a number with two decimal points when the amount is a string', () => {
       // Arrange
       const payload = { amount: '123,456.7890' };
       const expected = { targetAmount: 123456.79 };
