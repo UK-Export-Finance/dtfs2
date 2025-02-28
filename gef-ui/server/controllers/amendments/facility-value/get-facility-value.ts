@@ -10,6 +10,7 @@ import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 
 export type GetFacilityValueRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
+  query: { change?: string };
 }>;
 
 /**
@@ -38,7 +39,7 @@ export const getFacilityValue = async (req: GetFacilityValueRequest, res: Respon
     const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
 
     if (!amendment) {
-      console.error('Amendment %s was not found on facility %s', amendmentId, facilityId);
+      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 
@@ -55,13 +56,14 @@ export const getFacilityValue = async (req: GetFacilityValueRequest, res: Respon
     const currencySymbol = getCurrencySymbol(facility.currency?.id ?? CURRENCY.GBP);
 
     const facilityValue = amendment.value ? String(amendment.value) : '';
+    const changeQuery = req.query?.change === 'true';
 
     const viewModel: FacilityValueViewModel = {
       facilityValue,
       exporterName: deal.exporter.companyName,
       facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment),
+      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment, changeQuery),
       currencySymbol,
     };
 

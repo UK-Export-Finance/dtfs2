@@ -10,6 +10,7 @@ import { convertDateToDayMonthYearInput } from '../helpers/dates.helper.ts';
 
 export type GetFacilityEndDateRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
+  query: { change?: string };
 }>;
 
 /**
@@ -38,7 +39,7 @@ export const getFacilityEndDate = async (req: GetFacilityEndDateRequest, res: Re
     const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
 
     if (!amendment) {
-      console.error('Amendment %s was not found on facility %s', amendmentId, facilityId);
+      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 
@@ -58,12 +59,13 @@ export const getFacilityEndDate = async (req: GetFacilityEndDateRequest, res: Re
     }
 
     const facilityEndDate = amendment.facilityEndDate && convertDateToDayMonthYearInput(amendment.facilityEndDate);
+    const changeQuery = req.query?.change === 'true';
 
     const viewModel: FacilityEndDateViewModel = {
       exporterName: deal.exporter.companyName,
       facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment),
+      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment, changeQuery),
       facilityEndDate,
     };
 

@@ -71,7 +71,7 @@ describe('getSubmittedForChecking', () => {
     expect(res._getRenderView()).toEqual('partials/amendments/submitted-for-checking.njk');
   });
 
-  it('should redirect if the amendment is not found', async () => {
+  it('should redirect to "/not-found" if the amendment is not found', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
     getAmendmentMock.mockResolvedValue(undefined);

@@ -28,6 +28,8 @@ jest.mock('../../../services/api', () => ({
   updateAmendment: updateAmendmentMock,
 }));
 
+console.error = jest.fn();
+
 const dealId = 'dealId';
 const facilityId = 'facilityId';
 const amendmentId = 'amendmentId';
@@ -120,6 +122,18 @@ describe('postEligibility', () => {
     expect(getFacilityMock).toHaveBeenCalledWith({ facilityId, userToken: req.session.userToken });
   });
 
+  it('should call getAmendment with the correct amendmentId and userToken', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await postEligibility(req, res);
+
+    // Assert
+    expect(getAmendmentMock).toHaveBeenCalledTimes(1);
+    expect(getAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, userToken: req.session.userToken });
+  });
+
   it('should redirect if the facility is not found', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
@@ -150,7 +164,7 @@ describe('postEligibility', () => {
     expect(console.error).toHaveBeenCalledWith('Deal %s or Facility %s was not found', dealId, facilityId);
   });
 
-  it('should redirect if the amendment is not found', async () => {
+  it('should redirect to "/not-found" if the amendment is not found', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
     getAmendmentMock.mockResolvedValue(undefined);
@@ -162,7 +176,7 @@ describe('postEligibility', () => {
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual('/not-found');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Amendment %s was not found on facility %s', amendmentId, facilityId);
+    expect(console.error).toHaveBeenCalledWith('Amendment %s was not found for the facility %s', amendmentId, facilityId);
   });
 
   it('should render `problem with service` if getApplication throws an error', async () => {
@@ -300,6 +314,19 @@ describe('postEligibility', () => {
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
       expect(res._getRedirectUrl()).toEqual(getNextPage(PORTAL_AMENDMENT_PAGES.ELIGIBILITY, amendment));
+    });
+
+    it(`should redirect to the next page if change query parameter is true`, async () => {
+      // Arrange
+      const { req, res } = getHttpMocks(responseWithAllAnswers);
+      req.query = { change: 'true' };
+
+      // Act
+      await postEligibility(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+      expect(res._getRedirectUrl()).toEqual(getNextPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, amendment, req.query.change === 'true'));
     });
 
     it('should render `problem with service` if updateAmendment throws an error', async () => {

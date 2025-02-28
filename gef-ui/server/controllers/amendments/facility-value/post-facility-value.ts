@@ -15,6 +15,7 @@ export type PostFacilityValueRequest = CustomExpressRequest<{
     facilityValue: string;
     previousPage: string;
   };
+  query: { change?: string };
 }>;
 
 /**
@@ -33,6 +34,13 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
 
     if (!deal || !facility) {
       console.error('Deal %s or Facility %s was not found', dealId, facilityId);
+      return res.redirect('/not-found');
+    }
+
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 
@@ -58,7 +66,18 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
-    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, updatedAmendment));
+    /*
+     * If change is true, then the previous page is "Check your answers"
+     * If the facility value has changed, we need to go to the next page of the amendment journey.
+     * Otherwise, the next page should be the previous page "Check your answers".
+     */
+    const facilityValueHasChanged = amendment.value !== updatedAmendment.value;
+
+    const changeQuery = req.query?.change === 'true';
+    const change = changeQuery && !facilityValueHasChanged;
+    const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, updatedAmendment, change);
+
+    return res.redirect(nextPage);
   } catch (error) {
     console.error('Error posting amendments facility value page %o', error);
     return res.render('partials/problem-with-service.njk');
