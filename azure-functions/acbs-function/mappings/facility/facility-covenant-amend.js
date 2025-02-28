@@ -1,41 +1,33 @@
 const { to2Decimals } = require('../../helpers/currency');
+const { formatDate } = require('../../helpers/date');
 
 /**
- * @typedef {number} TargetAmount The guaranteed limit.
- */
-
-/**
- * @typedef {string} ExpirationDate The expiration date
- */
-
-/**
- * @typedef { {} | {TargetAmount} | {ExpirationDate} | {TargetAmount, ExpirationDate} } MappedFacilityCovenantAmendment
- */
-
-/**
- * Maps a facility covenant amendment from DTFS to the acceptable TFS format.
+ * Maps an amendment object to a facility covenant record.
  *
- * @param {Object} amendment - The amendment details.
- * @param {number|string} amendment.amount - The amount to be amended, can be a number or a string. It is required if guaranteeExpiryDate is not provided.
- * @param {Object} amendment.facilityGuaranteeDates - The dates related to the facility guarantee.
- * @param {string} amendment.facilityGuaranteeDates.guaranteeExpiryDate - The expiry date of the guarantee in 'YYYY-MM-DD' format. It is required if amount is not provided.
- * @returns { MappedFacilityCovenantAmendment } - The amended facility guarantee record, or an empty object if there is an error.
+ * @param {Object} amendment - The amendment object containing the details to be mapped.
+ * @param {number} amendment.amount - The amount to be set in the targetAmount field.
+ * @param {string} amendment.coverEndDate - The cover end date to be formatted and set in the expirationDate field.
+ * @returns {Object} The mapped facility covenant record.
  */
 const facilityCovenantAmend = (amendment) => {
   try {
-    const { amount, facilityGuaranteeDates } = amendment;
-    const record = {};
-
-    if (!amount && !facilityGuaranteeDates?.guaranteeExpiryDate) {
-      throw new Error('Invalid argument set provided');
-    }
+    // Default guarantee record
+    let record = {};
+    // De-structure
+    const { amount, coverEndDate } = amendment;
 
     if (amount) {
-      record.targetAmount = to2Decimals(amount);
+      record = {
+        targetAmount: to2Decimals(amount),
+      };
     }
 
-    if (facilityGuaranteeDates?.guaranteeExpiryDate) {
-      record.expirationDate = facilityGuaranteeDates.guaranteeExpiryDate;
+    // 2. Cover end date
+    if (coverEndDate) {
+      record = {
+        ...record,
+        expirationDate: formatDate(coverEndDate),
+      };
     }
 
     // Return amended FCR

@@ -12,6 +12,7 @@
 
 require('dotenv').config();
 const axios = require('axios');
+const { HttpStatusCode } = require('axios');
 const {
   REQUEST: { HEADERS },
 } = require('./constants');
@@ -33,7 +34,7 @@ const mdm = {
 };
 
 const badRequest = {
-  status: 400,
+  status: HttpStatusCode.BadRequest,
   data: {
     error: 'Bad request',
   },

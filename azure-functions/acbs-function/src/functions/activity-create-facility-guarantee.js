@@ -1,4 +1,5 @@
 const df = require('durable-functions');
+const { HttpStatusCode } = require('axios');
 const { getNowAsIsoString } = require('../../helpers/date');
 const api = require('../../api');
 const { isHttpErrorStatus } = require('../../helpers/http');
@@ -41,7 +42,7 @@ const handler = async (payload) => {
      * Multiple guarantee records are possible.
      * Adding `400` (Facility guarantee exists) to status ignore list.
      */
-    if (isHttpErrorStatus(status, 400)) {
+    if (isHttpErrorStatus(status, HttpStatusCode.BadRequest)) {
       throw new Error(
         JSON.stringify(
           {

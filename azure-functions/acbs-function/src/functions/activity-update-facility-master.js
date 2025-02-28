@@ -76,14 +76,13 @@ const handler = async (payload) => {
     }
 
     const submittedToACBS = getNowAsIsoString();
-
     const { status, data } = await api.updateFacility(facilityIdentifier, updateType, acbsFacilityMasterInput, etag);
 
     if (isHttpErrorStatus(status)) {
       throw new Error(
         JSON.stringify(
           {
-            name: 'ACBS Facility update error',
+            name: 'ACBS Facility master amend error',
             submittedToACBS,
             receivedFromACBS: getNowAsIsoString(),
             dataReceived: data,
