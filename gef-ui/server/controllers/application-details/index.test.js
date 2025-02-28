@@ -155,6 +155,8 @@ describe('controllers/application-details', () => {
           canUpdateUnissuedFacilities: expect.any(Boolean),
           MIAReturnToMaker: expect.any(Boolean),
           returnToMakerNoFacilitiesChanged: expect.any(Boolean),
+          dealStatusCancelled: expect.any(Boolean),
+          dealStatusPendingCancellation: expect.any(Boolean),
 
           // actions
           submit: expect.any(Boolean),
