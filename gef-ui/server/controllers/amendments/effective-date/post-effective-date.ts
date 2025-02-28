@@ -17,6 +17,7 @@ export type PostEffectiveDateRequest = CustomExpressRequest<{
     'effective-date-year': string;
     previousPage: string;
   };
+  query: { change?: string };
 }>;
 
 /**
@@ -44,6 +45,13 @@ export const postEffectiveDate = async (req: PostEffectiveDateRequest, res: Resp
       return res.redirect('/not-found');
     }
 
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
+      return res.redirect('/not-found');
+    }
+
     const validationErrorsOrValue = validateAndParseEffectiveDate(effectiveDateDayMonthYear, getCoverStartDateOrToday(facility));
 
     if ('errors' in validationErrorsOrValue) {
@@ -61,9 +69,20 @@ export const postEffectiveDate = async (req: PostEffectiveDateRequest, res: Resp
 
     const update = { effectiveDate: validationErrorsOrValue.value };
 
-    const amendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
+    const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
-    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, amendment));
+    /*
+     * If change is true, then the previous page is "Check your answers"
+     * If the effective date has changed, we need to go to the next page of the amendment journey.
+     * Otherwise, the next page should be the previous page "Check your answers".
+     */
+    const effectiveDateHasChanged = amendment.effectiveDate !== updatedAmendment.effectiveDate;
+
+    const changeQuery = req.query?.change === 'true';
+    const change = changeQuery && !effectiveDateHasChanged;
+    const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, updatedAmendment, change);
+
+    return res.redirect(nextPage);
   } catch (error) {
     console.error('Error posting amendments effective date page %o', error);
     return res.render('partials/problem-with-service.njk');

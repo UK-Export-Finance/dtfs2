@@ -17,6 +17,7 @@ export type PostFacilityEndDateRequest = CustomExpressRequest<{
     'facility-end-date-year': string;
     previousPage: string;
   };
+  query: { change?: string };
 }>;
 
 /**
@@ -44,6 +45,13 @@ export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: 
       return res.redirect('/not-found');
     }
 
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
+      return res.redirect('/not-found');
+    }
+
     const validationErrorsOrValue = validateAndParseFacilityEndDate(facilityEndDateDayMonthYear, getCoverStartDateOrToday(facility));
 
     if ('errors' in validationErrorsOrValue) {
@@ -61,9 +69,22 @@ export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: 
 
     const update = { facilityEndDate: validationErrorsOrValue.value };
 
-    const amendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
+    const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
-    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment));
+    /*
+     * If change is true, then the previous page is "Check your answers"
+     * If the facility end date has changed, we need to go to the next page of the amendment journey.
+     * Otherwise, the next page should be the previous page "Check your answers".
+     */
+    const { facilityEndDate } = amendment;
+    const updatedFacilityEndDate = updatedAmendment.facilityEndDate;
+    const facilityEndDateHasChanged =
+      !!facilityEndDate && !!updatedFacilityEndDate && new Date(facilityEndDate).getTime() !== new Date(updatedFacilityEndDate).getTime();
+
+    const change = req.query.change === 'true' && !facilityEndDateHasChanged;
+    const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, updatedAmendment, change);
+
+    return res.redirect(nextPage);
   } catch (error) {
     console.error('Error posting amendments facility end date page %o', error);
     return res.render('partials/problem-with-service.njk');

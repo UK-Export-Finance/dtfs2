@@ -21,9 +21,9 @@ jest.mock('../../server/middleware/csrf', () => ({
 
 const mockUpdateAmendmentStatus = jest.fn();
 
-const dealId = '123';
-const facilityId = '111';
-const amendmentId = '111';
+const dealId = '6597dffeb5ef5ff4267e5044';
+const facilityId = '6597dffeb5ef5ff4267e5045';
+const amendmentId = '6597dffeb5ef5ff4267e5046';
 
 const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.CHECK_YOUR_ANSWERS}`;
 

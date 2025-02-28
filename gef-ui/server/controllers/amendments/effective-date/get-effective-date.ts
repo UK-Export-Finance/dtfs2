@@ -11,6 +11,7 @@ import { EffectiveDateViewModel } from '../../../types/view-models/amendments/ef
 
 export type GetEffectiveDateRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
+  query: { change?: string };
 }>;
 
 /**
@@ -39,7 +40,7 @@ export const getEffectiveDate = async (req: GetEffectiveDateRequest, res: Respon
     const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
 
     if (!amendment) {
-      console.error('Amendment %s was not found on facility %s', amendmentId, facilityId);
+      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 
@@ -51,12 +52,13 @@ export const getEffectiveDate = async (req: GetEffectiveDateRequest, res: Respon
     const effectiveDate: DayMonthYearInput | undefined = amendment.effectiveDate
       ? convertDateToDayMonthYearInput(fromUnixTime(amendment.effectiveDate))
       : undefined;
+    const changeQuery = req.query?.change === 'true';
 
     const viewModel: EffectiveDateViewModel = {
       exporterName: deal.exporter.companyName,
       facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, amendment),
+      previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, amendment, changeQuery),
       effectiveDate,
     };
 

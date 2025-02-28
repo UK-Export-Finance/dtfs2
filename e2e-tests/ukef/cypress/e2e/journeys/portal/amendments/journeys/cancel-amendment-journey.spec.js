@@ -120,7 +120,7 @@ context('Amendments - Cancel amendment journey', () => {
 
             cy.getAmendmentIdFromUrl().then((amendmentId) => {
               amendmentUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}`;
-              pageActions(amendmentUrl);
+              pageActions();
             });
           });
         });
