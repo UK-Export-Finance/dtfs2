@@ -29,8 +29,20 @@ describe('getNextPage', () => {
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(true).build(),
       },
       {
+        description: 'when changing the cover end date',
+        expectedNextPage: CHECK_YOUR_ANSWERS,
+        change: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(true).build(),
+      },
+      {
         description: 'when changing the facility value but not the cover end date',
         expectedNextPage: FACILITY_VALUE,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(false).withChangeFacilityValue(true).build(),
+      },
+      {
+        description: 'when changing the facility value but not the cover end date',
+        expectedNextPage: CHECK_YOUR_ANSWERS,
+        change: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(false).withChangeFacilityValue(true).build(),
       },
     ],
@@ -42,6 +54,12 @@ describe('getNextPage', () => {
       {
         description: '',
         expectedNextPage: DO_YOU_HAVE_A_FACILITY_END_DATE,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(true).build(),
+      },
+      {
+        description: '',
+        expectedNextPage: CHECK_YOUR_ANSWERS,
+        change: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(true).build(),
       },
     ],
@@ -88,8 +106,28 @@ describe('getNextPage', () => {
           .build(),
       },
       {
+        description: 'when changing the facility value',
+        expectedNextPage: CHECK_YOUR_ANSWERS,
+        change: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withChangeCoverEndDate(true)
+          .withIsUsingFacilityEndDate(true)
+          .withChangeFacilityValue(true)
+          .build(),
+      },
+      {
         description: 'when not changing the facility value',
         expectedNextPage: ELIGIBILITY,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withChangeCoverEndDate(true)
+          .withIsUsingFacilityEndDate(true)
+          .withChangeFacilityValue(false)
+          .build(),
+      },
+      {
+        description: 'when not changing the facility value',
+        expectedNextPage: CHECK_YOUR_ANSWERS,
+        change: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
           .withChangeCoverEndDate(true)
           .withIsUsingFacilityEndDate(true)
@@ -122,8 +160,28 @@ describe('getNextPage', () => {
           .build(),
       },
       {
+        description: 'when changing the facility value',
+        expectedNextPage: CHECK_YOUR_ANSWERS,
+        change: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withChangeCoverEndDate(true)
+          .withIsUsingFacilityEndDate(false)
+          .withChangeFacilityValue(true)
+          .build(),
+      },
+      {
         description: 'when not changing the facility value',
         expectedNextPage: ELIGIBILITY,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withChangeCoverEndDate(true)
+          .withIsUsingFacilityEndDate(false)
+          .withChangeFacilityValue(false)
+          .build(),
+      },
+      {
+        description: 'when not changing the facility value',
+        expectedNextPage: CHECK_YOUR_ANSWERS,
+        change: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
           .withChangeCoverEndDate(true)
           .withIsUsingFacilityEndDate(false)
@@ -151,6 +209,12 @@ describe('getNextPage', () => {
         expectedNextPage: ELIGIBILITY,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeFacilityValue(true).build(),
       },
+      {
+        description: '',
+        expectedNextPage: CHECK_YOUR_ANSWERS,
+        change: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeFacilityValue(true).build(),
+      },
     ],
     errorTestCases: [
       {
@@ -166,6 +230,18 @@ describe('getNextPage', () => {
       {
         description: 'when all eligibility criteria answers are "true"',
         expectedNextPage: EFFECTIVE_DATE,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withCriteria([
+            { id: 1, text: 'Criterion 1', answer: true },
+            { id: 2, text: 'Criterion 2', answer: true },
+            { id: 3, text: 'Criterion 3', answer: true },
+          ])
+          .build(),
+      },
+      {
+        description: 'when all eligibility criteria answers are "true"',
+        expectedNextPage: CHECK_YOUR_ANSWERS,
+        change: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
           .withCriteria([
             { id: 1, text: 'Criterion 1', answer: true },
@@ -227,6 +303,12 @@ describe('getNextPage', () => {
         expectedNextPage: CHECK_YOUR_ANSWERS,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().build(),
       },
+      {
+        description: '',
+        expectedNextPage: CHECK_YOUR_ANSWERS,
+        change: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().build(),
+      },
     ],
   });
 
@@ -276,6 +358,7 @@ function withNextPageTests({
   currentPage: PortalAmendmentPage;
   successTestCases?: {
     expectedNextPage: PortalAmendmentPage;
+    change?: boolean;
     amendment: PortalFacilityAmendmentWithUkefId;
     description: string;
   }[];
@@ -286,9 +369,9 @@ function withNextPageTests({
 }) {
   describe(`when current page is ${currentPage}`, () => {
     if (successTestCases) {
-      it.each(successTestCases)(`should return $expectedNextPage url $description`, ({ expectedNextPage, amendment }) => {
+      it.each(successTestCases)(`should return $expectedNextPage url $description`, ({ expectedNextPage, amendment, change }) => {
         // Act
-        const result = getNextPage(currentPage, amendment);
+        const result = getNextPage(currentPage, amendment, change);
 
         // Assert
         expect(result).toEqual(

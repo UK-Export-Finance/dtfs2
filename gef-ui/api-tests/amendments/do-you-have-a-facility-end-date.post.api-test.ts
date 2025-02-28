@@ -27,9 +27,9 @@ const mockUpdateAmendment = jest.fn();
 
 const aMockError = () => new Error();
 
-const dealId = '123';
-const facilityId = '111';
-const amendmentId = '111';
+const dealId = '6597dffeb5ef5ff4267e5044';
+const facilityId = '6597dffeb5ef5ff4267e5045';
+const amendmentId = '6597dffeb5ef5ff4267e5046';
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 

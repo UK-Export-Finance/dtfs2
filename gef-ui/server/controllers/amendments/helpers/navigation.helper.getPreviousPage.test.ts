@@ -37,6 +37,12 @@ describe('getPreviousPage', () => {
         expectedPreviousPage: WHAT_DO_YOU_NEED_TO_CHANGE,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(true).build(),
       },
+      {
+        description: '',
+        expectedPreviousPage: CHECK_YOUR_ANSWERS,
+        check: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(true).build(),
+      },
     ],
     errorTestCases: [
       {
@@ -69,6 +75,12 @@ describe('getPreviousPage', () => {
       {
         description: '',
         expectedPreviousPage: DO_YOU_HAVE_A_FACILITY_END_DATE,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(true).withIsUsingFacilityEndDate(true).build(),
+      },
+      {
+        description: '',
+        expectedPreviousPage: CHECK_YOUR_ANSWERS,
+        check: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(true).withIsUsingFacilityEndDate(true).build(),
       },
     ],
@@ -118,6 +130,16 @@ describe('getPreviousPage', () => {
           .build(),
       },
       {
+        description: `when amendment is changing the cover end date and amendment is using facility end date`,
+        expectedPreviousPage: CHECK_YOUR_ANSWERS,
+        check: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withChangeFacilityValue(true)
+          .withChangeCoverEndDate(true)
+          .withIsUsingFacilityEndDate(true)
+          .build(),
+      },
+      {
         description: `when amendment changing the cover end date & amendment is not using facility end date`,
         expectedPreviousPage: BANK_REVIEW_DATE,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
@@ -127,8 +149,24 @@ describe('getPreviousPage', () => {
           .build(),
       },
       {
+        description: `when amendment changing the cover end date & amendment is not using facility end date`,
+        expectedPreviousPage: CHECK_YOUR_ANSWERS,
+        check: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withChangeFacilityValue(true)
+          .withChangeCoverEndDate(true)
+          .withIsUsingFacilityEndDate(false)
+          .build(),
+      },
+      {
         description: `when amendment is not changing the cover end date`,
         expectedPreviousPage: WHAT_DO_YOU_NEED_TO_CHANGE,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeFacilityValue(true).withChangeCoverEndDate(false).build(),
+      },
+      {
+        description: `when amendment is not changing the cover end date`,
+        expectedPreviousPage: CHECK_YOUR_ANSWERS,
+        check: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeFacilityValue(true).withChangeCoverEndDate(false).build(),
       },
     ],
@@ -149,8 +187,24 @@ describe('getPreviousPage', () => {
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeFacilityValue(true).build(),
       },
       {
+        description: `when amendment is changing facility value`,
+        expectedPreviousPage: CHECK_YOUR_ANSWERS,
+        check: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeFacilityValue(true).build(),
+      },
+      {
         description: `when amendment is not changing facility value, is changing the cover end date and is using facility end date`,
         expectedPreviousPage: FACILITY_END_DATE,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withChangeFacilityValue(false)
+          .withChangeCoverEndDate(true)
+          .withIsUsingFacilityEndDate(true)
+          .build(),
+      },
+      {
+        description: `when amendment is not changing facility value, is changing the cover end date and is using facility end date`,
+        expectedPreviousPage: CHECK_YOUR_ANSWERS,
+        check: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
           .withChangeFacilityValue(false)
           .withChangeCoverEndDate(true)
@@ -167,8 +221,24 @@ describe('getPreviousPage', () => {
           .build(),
       },
       {
+        description: `when amendment is not changing facility value, is changing the cover end date and is not using facility end date`,
+        expectedPreviousPage: CHECK_YOUR_ANSWERS,
+        check: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withChangeFacilityValue(false)
+          .withChangeCoverEndDate(true)
+          .withIsUsingFacilityEndDate(false)
+          .build(),
+      },
+      {
         description: `when amendment is not changing facility value or changing the cover end date`,
         expectedPreviousPage: WHAT_DO_YOU_NEED_TO_CHANGE,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeFacilityValue(false).withChangeCoverEndDate(false).build(),
+      },
+      {
+        description: `when amendment is not changing facility value or changing the cover end date`,
+        expectedPreviousPage: CHECK_YOUR_ANSWERS,
+        check: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeFacilityValue(false).withChangeCoverEndDate(false).build(),
       },
     ],
@@ -211,6 +281,12 @@ describe('getPreviousPage', () => {
         expectedPreviousPage: ELIGIBILITY,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().build(),
       },
+      {
+        description: '',
+        expectedPreviousPage: CHECK_YOUR_ANSWERS,
+        check: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().build(),
+      },
     ],
   });
 
@@ -244,6 +320,7 @@ function withPreviousPageTests({
   currentPage: PortalAmendmentPage;
   successTestCases?: {
     expectedPreviousPage: PortalAmendmentPage;
+    check?: boolean;
     amendment: PortalFacilityAmendmentWithUkefId;
     description: string;
   }[];
@@ -254,9 +331,9 @@ function withPreviousPageTests({
 }) {
   describe(`when current page is ${currentPage}`, () => {
     if (successTestCases) {
-      it.each(successTestCases)(`should return $expectedPreviousPage url $description`, ({ expectedPreviousPage, amendment }) => {
+      it.each(successTestCases)(`should return $expectedPreviousPage url $description`, ({ expectedPreviousPage, amendment, check }) => {
         // Act
-        const result = getPreviousPage(currentPage, amendment);
+        const result = getPreviousPage(currentPage, amendment, check);
 
         // Assert
         expect(result).toEqual(

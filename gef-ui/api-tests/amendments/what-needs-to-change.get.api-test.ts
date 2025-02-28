@@ -26,9 +26,9 @@ const mockGetFacility = jest.fn();
 const mockGetApplication = jest.fn();
 const mockGetAmendment = jest.fn();
 
-const dealId = '123';
-const facilityId = '111';
-const amendmentId = 'amendmentId';
+const dealId = '6597dffeb5ef5ff4267e5044';
+const facilityId = '6597dffeb5ef5ff4267e5045';
+const amendmentId = '6597dffeb5ef5ff4267e5046';
 
 const mockDeal = { ...MOCK_BASIC_DEAL, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 const mockFacility = MOCK_ISSUED_FACILITY.details;

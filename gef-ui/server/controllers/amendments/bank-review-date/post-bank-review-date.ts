@@ -17,6 +17,7 @@ export type PostBankReviewDateRequest = CustomExpressRequest<{
     'bank-review-date-year': string;
     previousPage: string;
   };
+  query: { change?: string };
 }>;
 
 /**
@@ -44,6 +45,13 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
       return res.redirect('/not-found');
     }
 
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
+      return res.redirect('/not-found');
+    }
+
     const validationErrorsOrValue = validateAndParseBankReviewDate(bankReviewDateDayMonthYear, getCoverStartDateOrToday(facility));
 
     if ('errors' in validationErrorsOrValue) {
@@ -61,9 +69,22 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
 
     const update = { bankReviewDate: validationErrorsOrValue.value };
 
-    const amendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
+    const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
+    /*
+     * If change is true, then the previous page is "Check your answers"
+     * If the bank review date has changed, we need to go to the next page of the amendment journey.
+     * Otherwise, the next page should be the previous page "Check your answers".
+     */
+    const bankReviewDateHasChanged =
+      !!amendment.bankReviewDate &&
+      !!updatedAmendment.bankReviewDate &&
+      new Date(amendment?.bankReviewDate).getTime() !== new Date(updatedAmendment?.bankReviewDate).getTime();
 
-    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE, amendment));
+    const changeQuery = req.query.change === 'true';
+    const change = changeQuery && !bankReviewDateHasChanged;
+    const nextPage = getNextPage(PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE, updatedAmendment, change);
+
+    return res.redirect(nextPage);
   } catch (error) {
     console.error('Error posting amendments bank review date page %o', error);
     return res.render('partials/problem-with-service.njk');

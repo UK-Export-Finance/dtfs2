@@ -2,6 +2,7 @@
 /* eslint-disable import/first */
 const getFacilityMock = jest.fn();
 const getApplicationMock = jest.fn();
+const getAmendmentMock = jest.fn();
 const updateAmendmentMock = jest.fn();
 
 import httpMocks from 'node-mocks-http';
@@ -31,8 +32,11 @@ import { BankReviewDateViewModel } from '../../../types/view-models/amendments/b
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
   getFacility: getFacilityMock,
+  getAmendment: getAmendmentMock,
   updateAmendment: updateAmendmentMock,
 }));
+
+console.error = jest.fn();
 
 const dealId = 'dealId';
 const facilityId = 'facilityId';
@@ -89,6 +93,7 @@ describe('postBankReviewDate', () => {
 
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
+    getAmendmentMock.mockResolvedValue(amendment);
     updateAmendmentMock.mockResolvedValue(amendment);
   });
 
@@ -114,6 +119,18 @@ describe('postBankReviewDate', () => {
     // Assert
     expect(getFacilityMock).toHaveBeenCalledTimes(1);
     expect(getFacilityMock).toHaveBeenCalledWith({ facilityId, userToken: req.session.userToken });
+  });
+
+  it('should call getAmendment with the correct amendmentId and userToken', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await postBankReviewDate(req, res);
+
+    // Assert
+    expect(getAmendmentMock).toHaveBeenCalledTimes(1);
+    expect(getAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, userToken: req.session.userToken });
   });
 
   it('should call validateAndParseBankReviewDate', async () => {
@@ -222,6 +239,20 @@ describe('postBankReviewDate', () => {
     expect(res._getRedirectUrl()).toEqual(getNextPage(PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE, amendment));
   });
 
+  it(`should redirect to the next page if bankReviewDate is valid and the change query parameter is true`, async () => {
+    // Arrange
+    const bankReviewDateDayMonthYear = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
+    const { req, res } = getHttpMocks(bankReviewDateDayMonthYear);
+    req.query = { change: 'true' };
+
+    // Act
+    await postBankReviewDate(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    expect(res._getRedirectUrl()).toEqual(getNextPage(PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE, amendment, req.query.change === 'true'));
+  });
+
   it('should redirect if the facility is not found', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
@@ -235,6 +266,21 @@ describe('postBankReviewDate', () => {
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('Deal %s or Facility %s was not found', dealId, facilityId);
+  });
+
+  it('should redirect to "/not-found" if the amendment is not found', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    getAmendmentMock.mockResolvedValue(undefined);
+
+    // Act
+    await postBankReviewDate(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    expect(res._getRedirectUrl()).toEqual(`/not-found`);
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Amendment %s was not found for the facility %s', amendmentId, facilityId);
   });
 
   it('should redirect if the deal is not found', async () => {

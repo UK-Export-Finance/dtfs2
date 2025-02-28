@@ -21,9 +21,9 @@ jest.mock('../../server/middleware/csrf', () => ({
 
 const mockUpsertFacility = jest.fn();
 
-const dealId = '123';
-const facilityId = '111';
-const amendmentId = '111';
+const dealId = '6597dffeb5ef5ff4267e5044';
+const facilityId = '6597dffeb5ef5ff4267e5045';
+const amendmentId = '6597dffeb5ef5ff4267e5046';
 
 const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/create-draft`;
 
