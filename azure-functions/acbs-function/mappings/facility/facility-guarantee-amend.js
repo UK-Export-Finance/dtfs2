@@ -13,7 +13,6 @@ const facilityGuaranteeAmend = (amendment) => {
   try {
     // Default guarantee record
     let record = {};
-    // De-structure
     const { amount, coverEndDate } = amendment;
 
     // 1. UKEF Exposure

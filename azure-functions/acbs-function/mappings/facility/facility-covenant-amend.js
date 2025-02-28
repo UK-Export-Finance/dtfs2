@@ -13,7 +13,6 @@ const facilityCovenantAmend = (amendment) => {
   try {
     // Default guarantee record
     let record = {};
-    // De-structure
     const { amount, coverEndDate } = amendment;
 
     if (amount) {

@@ -62,10 +62,10 @@ const handler = async (payload) => {
 
     // Replace ISO currency with ACBS currency code
     const currencyReq = await mdm.getCurrency(currency);
+    const acbsCurrencyCode = currencyReq.status === HttpStatusCode.Ok && currencyReq.data.length > 1;
 
     // Default currency code to GBP (O)
-    acbsFacilityCovenantInput.currency =
-      currencyReq.status === HttpStatusCode.Ok && currencyReq.data.length > 1 ? currencyReq.data[0].acbsCode : CONSTANTS.FACILITY.ACBS_CURRENCY_CODE.DEFAULT;
+    acbsFacilityCovenantInput.currency = acbsCurrencyCode ? currencyReq.data[0].acbsCode : CONSTANTS.FACILITY.ACBS_CURRENCY_CODE.DEFAULT;
 
     // Check for mandatory fields
     const missingMandatory = findMissingMandatory(acbsFacilityCovenantInput, mandatoryFields);

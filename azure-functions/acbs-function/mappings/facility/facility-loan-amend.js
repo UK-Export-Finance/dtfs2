@@ -8,11 +8,9 @@ const facilityLoanAmend = (amendment, facility, facilityMasterRecord) => {
   try {
     // Default facility loan record
     let record = {};
-    // De-structure
     const { facilitySnapshot } = facility;
 
     if (amendment && facilitySnapshot) {
-      // De-structure
       const { amount, coverEndDate } = amendment;
       const { type, feeType } = facilitySnapshot;
 

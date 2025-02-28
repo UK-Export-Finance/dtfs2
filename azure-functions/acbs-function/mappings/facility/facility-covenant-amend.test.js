@@ -16,7 +16,7 @@ describe('facilityCovenantAmend', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should returns the amount as a number with two decimal points', () => {
+    it('should returns the amount as a number with two decimal points when the amount is a string', () => {
       // Arrange
       const payload = { amount: '123,456.7890' };
       const expected = { targetAmount: 123456.79 };
@@ -52,7 +52,7 @@ describe('facilityCovenantAmend', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should return cover end in YYYY-MM-DD format', () => {
+    it('should return cover end in YYYY-MM-DD format with cover end date as a string', () => {
       // Arrange
       const payload = { coverEndDate: '1898252717000' };
       const expected = {
@@ -86,8 +86,8 @@ describe('facilityCovenantAmend', () => {
     });
   });
 
-  describe('when both amount and cover end date is being amended', () => {
-    it('should return  amount with two decimal points and cover end in YYYY-MM-DD format', () => {
+  describe('when both amount and cover end date are being amended', () => {
+    it('should return the amount with two decimal points and cover end in YYYY-MM-DD format', () => {
       // Arrange
       const payload = { amount: '123,456.7890', coverEndDate: 1898252717000 };
       const expected = {
@@ -104,7 +104,7 @@ describe('facilityCovenantAmend', () => {
   });
 
   describe('when everything is being amended with additional unknown properties in the payload', () => {
-    it('should return  amount with two decimal points and cover end in YYYY-MM-DD format', () => {
+    it('should return the amount with two decimal points and cover end in YYYY-MM-DD format', () => {
       // Arrange
       const payload = { amount: '123,456.7890', coverEndDate: 1898252717000, unknownProperty: 'unknown' };
       const expected = {
@@ -121,7 +121,7 @@ describe('facilityCovenantAmend', () => {
   });
 
   describe('when nothing is being amended', () => {
-    it('should return an empty object', () => {
+    it('should return an empty object with an empty object payload', () => {
       // Act
       const result = facilityCovenantAmend({});
 
@@ -129,7 +129,7 @@ describe('facilityCovenantAmend', () => {
       expect(result).toEqual({});
     });
 
-    it('should return an empty object', () => {
+    it('should return an empty object with null payload', () => {
       // Act
       const result = facilityCovenantAmend(null);
 
@@ -137,7 +137,7 @@ describe('facilityCovenantAmend', () => {
       expect(result).toEqual({});
     });
 
-    it('should return an empty object', () => {
+    it('should return an empty object with undefined payload', () => {
       // Act
       const result = facilityCovenantAmend(undefined);
 
