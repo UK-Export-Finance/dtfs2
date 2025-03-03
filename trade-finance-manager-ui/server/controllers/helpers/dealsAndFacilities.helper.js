@@ -1,3 +1,4 @@
+const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const CONSTANTS = require('../../constants');
 const PageOutOfBoundsError = require('../../errors/page-out-of-bounds.error');
@@ -60,11 +61,18 @@ const getPageNumber = (page) => {
   return pageNumber;
 };
 
+/**
+ * Returns the default sort configuration for a given collection.
+ *
+ * @param {string} collectionName - The name of the MongoDB collection.
+ * @returns {Object} The default sort configuration for the specified collection.
+ * @throws {InvalidCollectionNameError} If the collection name is not recognized.
+ */
 const getSortByDefault = (collectionName) => {
-  if (collectionName === 'deals') {
+  if (collectionName === MONGO_DB_COLLECTIONS.DEALS) {
     return CONSTANTS.TABLE.SORT_BY.DEFAULT.DEALS;
   }
-  if (collectionName === 'facilities') {
+  if (collectionName === MONGO_DB_COLLECTIONS.FACILITIES) {
     return CONSTANTS.TABLE.SORT_BY.DEFAULT.FACILITIES;
   }
 
@@ -82,27 +90,62 @@ const generateSortByQuery = ({ collectionName, reqQuery }) => {
   };
 };
 
+/**
+ * Retrieves deals or facilities items based on the specified collection name and query parameters.
+ *
+ * @param {string} collectionName - The name of the collection to retrieve items from ('deals' or 'facilities').
+ * @param {Object} queryParams - The query parameters to filter the items.
+ * @param {string} userToken - The user authentication token.
+ * @param {Object} amendments - Amendments to be considered when overriding deals or facilities.
+ * @returns {Promise<{items: Array, pagination: Object}>} A promise that resolves to an object containing the items and pagination information.
+ * @throws Will log an error message if unable to retrieve the items.
+ */
 const getDealsOrFacilitiesItems = async (collectionName, queryParams, userToken, amendments) => {
-  let items;
-  let pagination;
-  if (collectionName === 'deals') {
-    ({ deals: items, pagination } = await api.getDeals(queryParams, userToken));
-    items = overrideDealsIfAmendmentsInProgress(items, amendments);
+  let items = [];
+  let pagination = {
+    totalPages: 0,
+    currentPage: 0,
+    totalItems: 0,
+  };
+
+  try {
+    if (collectionName === MONGO_DB_COLLECTIONS.DEALS) {
+      const response = await api.getDeals(queryParams, userToken);
+
+      if (response.deals) {
+        ({ deals: items, pagination } = response);
+        items = overrideDealsIfAmendmentsInProgress(items, amendments);
+      }
+    }
+    if (collectionName === MONGO_DB_COLLECTIONS.FACILITIES) {
+      const response = await api.getFacilities(queryParams, userToken);
+
+      if (response.facilities) {
+        ({ facilities: items, pagination } = response);
+        items = overrideFacilitiesIfAmendmentsInProgress(items, amendments);
+      }
+    }
+  } catch (error) {
+    console.error('Unable to get deals or facilities search items %o', error);
   }
-  if (collectionName === 'facilities') {
-    ({ facilities: items, pagination } = await api.getFacilities(queryParams, userToken));
-    items = overrideFacilitiesIfAmendmentsInProgress(items, amendments);
-  }
+
   return { items, pagination };
 };
 
+/**
+ * Returns the singular collection name for the given collection name.
+ *
+ * @param {string} collectionName - The name of the collection.
+ * @returns {string} The singular collection name.
+ * @throws {InvalidCollectionNameError} If the collection name is not recognized.
+ */
 const getSingularCollectionName = (collectionName) => {
-  if (collectionName === 'deals') {
-    return 'deal';
+  if (collectionName === MONGO_DB_COLLECTIONS.DEALS) {
+    return MONGO_DB_COLLECTIONS.DEALS;
   }
 
-  if (collectionName === 'facilities') {
-    return 'facility';
+  if (collectionName === MONGO_DB_COLLECTIONS.FACILITIES) {
+    return MONGO_DB_COLLECTIONS.FACILITIES;
   }
 
   throw new InvalidCollectionNameError(collectionName);
@@ -149,10 +192,12 @@ const renderDealsOrFacilitiesPage = async (collectionName, req, res) => {
       queryString: buildQueryStringFromQueryParameterValues(search, sortfield, sortorder),
     });
   } catch (error) {
-    console.error(error);
+    console.error('Error rendering deals or facilities page %o', error);
+
     if (error instanceof PageOutOfBoundsError) {
       return res.redirect('/not-found');
     }
+
     return res.render('_partials/problem-with-service.njk');
   }
 };
