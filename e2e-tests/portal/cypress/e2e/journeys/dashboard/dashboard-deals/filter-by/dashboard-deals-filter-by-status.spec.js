@@ -24,6 +24,7 @@ context('Dashboard Deals filters - filter by status', () => {
     cy.deleteDeals(ADMIN);
 
     cy.createBssEwcsDeal();
+    cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1);
   });
@@ -88,8 +89,6 @@ context('Dashboard Deals filters - filter by status', () => {
   describe('Ready for checker', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
-      cy.createBssEwcsDeal();
-      cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
@@ -146,6 +145,7 @@ context('Dashboard Deals filters - filter by status', () => {
 
   describe('All statuses', () => {
     before(() => {
+      cy.createBssEwcsDeal();
       cy.login(BANK1_MAKER1);
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });

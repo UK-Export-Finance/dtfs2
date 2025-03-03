@@ -8,6 +8,10 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
+const EXPECTED_DEALS_LENGTH = {
+  ALL_STATUSES: 2,
+};
+
 context('Dashboard Deals - panel selected filters - remove a filter', () => {
   const ALL_DEALS = [];
 
@@ -60,6 +64,6 @@ context('Dashboard Deals - panel selected filters - remove a filter', () => {
     dashboardDeals.filters.panel.form.submissionType.MIA.checkbox().should('not.be.checked');
 
     // should render all deals
-    dashboardDeals.rows().should('have.length', 2);
+    dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.ALL_STATUSES);
   });
 });

@@ -75,6 +75,11 @@ context('Dashboard Deals filters - filter by keyword', () => {
     });
 
     it(`renders only deals that have ${MOCK_KEYWORD} in a field`, () => {
+      // Clear existing filters
+      filters.panel.selectedFilters.clearAllLink().click();
+      // Check the number of rows before applying any filter
+      dashboardDeals.rows().should('have.length', 2);
+      filters.showHideButton().click();
       const expectedLength = 1; // only 1x BSS/EWCS deal has MOCK_KEYWORD.
       cy.keyboardInput(filters.panel.form.keyword.input(), MOCK_KEYWORD);
       filters.panel.form.applyFiltersButton().click();

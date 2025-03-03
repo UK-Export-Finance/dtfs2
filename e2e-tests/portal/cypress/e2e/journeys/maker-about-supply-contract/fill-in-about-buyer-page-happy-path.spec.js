@@ -16,7 +16,7 @@ context('about-supply-contract', () => {
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
 
-    cy.title().should('eq', `Buyer information - ${additionalRefName}${defaults.pageTitleAppend}`);
+    cy.assert('title', `Buyer information - ${additionalRefName}${defaults.pageTitleAppend}`);
 
     // fill in the fields
     cy.keyboardInput(contractAboutBuyer.buyerName(), 'Harry Bear');
