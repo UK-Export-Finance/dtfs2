@@ -1,4 +1,4 @@
-import { TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import api from '../../api';
 import PageOutOfBoundsError from '../../errors/page-out-of-bounds.error';
 import { mockRes as generateMockRes } from '../../test-mocks';
@@ -72,7 +72,7 @@ describe('controllers - facilities', () => {
           mockReq.params.pageNumber = '-1';
 
           it('should redirect to not-found route', async () => {
-            await renderDealsOrFacilitiesPage('facilities', mockReq, mockRes);
+            await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
             expect(mockRes.redirect).toHaveBeenCalledWith('/not-found');
           });
         });
@@ -93,7 +93,7 @@ describe('controllers - facilities', () => {
           mockReq.query.sortorder = 'ascending';
 
           it('should make requests to TFM API for the facilities data with the correct arguments', async () => {
-            await renderDealsOrFacilitiesPage('facilities', mockReq, mockRes);
+            await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
             expect(api.getFacilities).toHaveBeenCalledWith(
               {
                 sortBy: {
@@ -108,12 +108,12 @@ describe('controllers - facilities', () => {
           });
 
           it('should render the facilities template with the facilities data and the correct arguments', async () => {
-            await renderDealsOrFacilitiesPage('facilities', mockReq, mockRes);
+            await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
             expect(mockRes.render).toHaveBeenCalledWith('facilities/facilities.njk', {
               heading: 'All facilities',
               facilities: mockFacilities,
               activePrimaryNavigation: 'all facilities',
-              activeSubNavigation: 'facility',
+              activeSubNavigation: MONGO_DB_COLLECTIONS.FACILITIES,
               sortButtonWasClicked: true,
               user: mockReq.session.user,
               activeSortByField: 'tfmFacilities.dealType',
@@ -134,7 +134,7 @@ describe('controllers - facilities', () => {
           mockReq.query.search = 'test';
 
           it('should make requests to TFM API for the facilities data with the correct arguments', async () => {
-            await renderDealsOrFacilitiesPage('facilities', mockReq, mockRes);
+            await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
             expect(api.getFacilities).toHaveBeenCalledWith(
               {
                 sortBy: {
@@ -150,12 +150,12 @@ describe('controllers - facilities', () => {
           });
 
           it('should render the facilities template with the facilities data and the correct arguments', async () => {
-            await renderDealsOrFacilitiesPage('facilities', mockReq, mockRes);
+            await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
             expect(mockRes.render).toHaveBeenCalledWith('facilities/facilities.njk', {
               heading: `${mockFacilities.length} results for "${mockReq.query.search}"`,
               facilities: mockFacilities,
               activePrimaryNavigation: 'all facilities',
-              activeSubNavigation: 'facility',
+              activeSubNavigation: MONGO_DB_COLLECTIONS.FACILITIES,
               sortButtonWasClicked: false,
               user: mockReq.session.user,
               activeSortByField: 'ukefFacilityId',
@@ -198,12 +198,12 @@ describe('controllers - facilities', () => {
         const mockReq = structuredClone(mockReqTemplate);
 
         it('should render the facilities template with the correct arguments and no data', async () => {
-          await renderDealsOrFacilitiesPage('facilities', mockReq, mockRes);
+          await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
           expect(mockRes.render).toHaveBeenCalledWith('facilities/facilities.njk', {
             heading: 'All facilities',
             facilities: [],
             activePrimaryNavigation: 'all facilities',
-            activeSubNavigation: 'facility',
+            activeSubNavigation: MONGO_DB_COLLECTIONS.FACILITIES,
             sortButtonWasClicked: false,
             user: mockReq.session.user,
             activeSortByField: 'ukefFacilityId',
@@ -226,16 +226,44 @@ describe('controllers - facilities', () => {
           api.getFacilities = () => Promise.reject(error);
         });
 
+        it('should render facilities template with zero results', async () => {
+          // Act
+          await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
+
+          // Assert
+          expect(mockRes.render).toHaveBeenCalledWith('facilities/facilities.njk', {
+            heading: 'All facilities',
+            facilities: [],
+            activePrimaryNavigation: 'all facilities',
+            activeSubNavigation: MONGO_DB_COLLECTIONS.FACILITIES,
+            sortButtonWasClicked: false,
+            user: mockReq.session.user,
+            activeSortByField: 'ukefFacilityId',
+            activeSortByOrder: 'ascending',
+            pages: {
+              totalPages: 0,
+              currentPage: 0,
+              totalItems: 0,
+            },
+            queryString: '',
+          });
+        });
+
         it('should log the error thrown by api.getFacilities', async () => {
           const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
-          await renderDealsOrFacilitiesPage('facilities', mockReq, mockRes);
-          expect(consoleErrorMock).toHaveBeenCalledWith(error);
+          await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
+          expect(consoleErrorMock).toHaveBeenCalledWith('Unable to get deals or facilities search items %o', error);
           consoleErrorMock.mockRestore();
         });
 
-        it('should redirect to not-found route', async () => {
-          await renderDealsOrFacilitiesPage('facilities', mockReq, mockRes);
-          expect(mockRes.redirect).toHaveBeenCalledWith('/not-found');
+        it('should not redirect to not-found route', async () => {
+          await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
+          expect(mockRes.redirect).not.toHaveBeenCalledWith('/not-found');
+        });
+
+        it('should not render problem with service page', async () => {
+          await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
+          expect(mockRes.render).not.toHaveBeenCalledWith('/_partials/problem-with-service.njk');
         });
       });
 
@@ -247,16 +275,44 @@ describe('controllers - facilities', () => {
           api.getFacilities = () => Promise.reject(error);
         });
 
+        it('should render facilities template with zero results', async () => {
+          // Act
+          await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
+
+          // Assert
+          expect(mockRes.render).toHaveBeenCalledWith('facilities/facilities.njk', {
+            heading: 'All facilities',
+            facilities: [],
+            activePrimaryNavigation: 'all facilities',
+            activeSubNavigation: MONGO_DB_COLLECTIONS.FACILITIES,
+            sortButtonWasClicked: false,
+            user: mockReq.session.user,
+            activeSortByField: 'ukefFacilityId',
+            activeSortByOrder: 'ascending',
+            pages: {
+              totalPages: 0,
+              currentPage: 0,
+              totalItems: 0,
+            },
+            queryString: '',
+          });
+        });
+
         it('should log the error thrown by api.getFacilities', async () => {
           const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
-          await renderDealsOrFacilitiesPage('facilities', mockReq, mockRes);
-          expect(consoleErrorMock).toHaveBeenCalledWith(error);
+          await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
+          expect(consoleErrorMock).toHaveBeenCalledWith('Unable to get deals or facilities search items %o', error);
           consoleErrorMock.mockRestore();
         });
 
-        it('should render the problem-with-service page', async () => {
-          await renderDealsOrFacilitiesPage('facilities', mockReq, mockRes);
-          expect(mockRes.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+        it('should not redirect to not-found route', async () => {
+          await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
+          expect(mockRes.redirect).not.toHaveBeenCalledWith('/not-found');
+        });
+
+        it('should not render problem with service page', async () => {
+          await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
+          expect(mockRes.render).not.toHaveBeenCalledWith('/_partials/problem-with-service.njk');
         });
       });
     });
@@ -268,7 +324,7 @@ describe('controllers - facilities', () => {
         const mockReq = structuredClone(mockReqTemplate);
 
         it('should redirect to GET facilities without query parameters', async () => {
-          await queryDealsOrFacilities('facilities', mockReq, mockRes);
+          await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
 
           expect(mockRes.redirect).toHaveBeenCalledWith('/facilities/0');
         });
@@ -280,7 +336,7 @@ describe('controllers - facilities', () => {
         mockReq.params.pageNumber = '-1';
 
         it('should redirect to GET facilities (page 0) without query parameters', async () => {
-          await queryDealsOrFacilities('facilities', mockReq, mockRes);
+          await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
 
           expect(mockRes.redirect).toHaveBeenCalledWith('/facilities/0');
         });
@@ -292,7 +348,7 @@ describe('controllers - facilities', () => {
         mockReq.params.pageNumber = 'hello world';
 
         it('should redirect to GET facilities (page 0) without query parameters', async () => {
-          await queryDealsOrFacilities('facilities', mockReq, mockRes);
+          await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
 
           expect(mockRes.redirect).toHaveBeenCalledWith('/facilities/0');
         });
@@ -304,7 +360,7 @@ describe('controllers - facilities', () => {
         mockReq.params.pageNumber = '2';
 
         it('should redirect to GET facilities (page 0) without query parameters', async () => {
-          await queryDealsOrFacilities('facilities', mockReq, mockRes);
+          await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
 
           expect(mockRes.redirect).toHaveBeenCalledWith('/facilities/0');
         });
@@ -317,7 +373,7 @@ describe('controllers - facilities', () => {
           mockReq.body[order] = 'tfmFacilities.dealType';
 
           it('should redirect to GET facilities with the correct query parameters', async () => {
-            await queryDealsOrFacilities('facilities', mockReq, mockRes);
+            await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
 
             expect(mockRes.redirect).toHaveBeenCalledWith(`/facilities/0?sortfield=tfmFacilities.dealType&sortorder=${order}`);
           });
@@ -330,7 +386,7 @@ describe('controllers - facilities', () => {
           mockReq.query.sortorder = order;
 
           it('should redirect to GET facilities with the correct query parameters', async () => {
-            await queryDealsOrFacilities('facilities', mockReq, mockRes);
+            await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
 
             expect(mockRes.redirect).toHaveBeenCalledWith(`/facilities/0?sortfield=tfmFacilities.dealType&sortorder=${order}`);
           });
@@ -345,7 +401,7 @@ describe('controllers - facilities', () => {
         mockReq.query.sortorder = 'ascending';
 
         it('should redirect to GET facilities with query parameters based on the sort specified in the request body', async () => {
-          await queryDealsOrFacilities('facilities', mockReq, mockRes);
+          await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
 
           expect(mockRes.redirect).toHaveBeenCalledWith('/facilities/0?sortfield=tfmFacilities.type&sortorder=descending');
         });
@@ -357,7 +413,7 @@ describe('controllers - facilities', () => {
         mockReq.body.search = 'test';
 
         it('should redirect to GET facilities with the correct query parameters', async () => {
-          await queryDealsOrFacilities('facilities', mockReq, mockRes);
+          await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
 
           expect(mockRes.redirect).toHaveBeenCalledWith('/facilities/0?search=test');
         });
@@ -369,7 +425,7 @@ describe('controllers - facilities', () => {
         mockReq.query.search = 'test';
 
         it('should redirect to GET facilities with the correct query parameters', async () => {
-          await queryDealsOrFacilities('facilities', mockReq, mockRes);
+          await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
 
           expect(mockRes.redirect).toHaveBeenCalledWith('/facilities/0?search=test');
         });
@@ -382,7 +438,7 @@ describe('controllers - facilities', () => {
         mockReq.query.search = 'searchFromQuery';
 
         it('should redirect to GET facilities with query parameters based on the search specified in the request body', async () => {
-          await queryDealsOrFacilities('facilities', mockReq, mockRes);
+          await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
 
           expect(mockRes.redirect).toHaveBeenCalledWith('/facilities/0?search=searchFromBody');
         });
@@ -392,7 +448,7 @@ describe('controllers - facilities', () => {
 
   function itShouldMakeRequestsForFacilitiesDataWithDefaultArguments(mockReq) {
     it('should make requests to TFM API for the facilities data with the default arguments', async () => {
-      await renderDealsOrFacilitiesPage('facilities', mockReq, mockRes);
+      await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
       expect(api.getFacilities).toHaveBeenCalledWith(
         {
           sortBy: {
@@ -410,7 +466,7 @@ describe('controllers - facilities', () => {
 
   function itShouldRenderFacilitiesTemplateWithDefaultArguments({ mockReq, hasAmendmentInProgress }) {
     it('should render the facilities template with the facilities data and the default arguments', async () => {
-      await renderDealsOrFacilitiesPage('facilities', mockReq, mockRes);
+      await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
       expect(mockRes.render).toHaveBeenCalledWith('facilities/facilities.njk', {
         heading: 'All facilities',
         facilities: [
@@ -424,7 +480,7 @@ describe('controllers - facilities', () => {
           },
         ],
         activePrimaryNavigation: 'all facilities',
-        activeSubNavigation: 'facility',
+        activeSubNavigation: MONGO_DB_COLLECTIONS.FACILITIES,
         sortButtonWasClicked: false,
         user: mockReq.session.user,
         activeSortByField: 'ukefFacilityId',
