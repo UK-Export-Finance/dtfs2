@@ -38,11 +38,17 @@
  * @module acbs-amend-facility
  */
 
+require('dotenv').config();
+
 const df = require('durable-functions');
 const retryOptions = require('../../helpers/retryOptions');
 const { DEAL, FACILITY } = require('../../constants');
 
 const acceptableFacilityStage = [FACILITY.STAGE_CODE.ISSUED];
+const { FF_AMENDMENT_COVENANT_GUARANTEE_ENABLED } = process.env;
+const amendCovenantGuarantee = FF_AMENDMENT_COVENANT_GUARANTEE_ENABLED === 'true';
+
+let response;
 
 df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
   const payload = context.df.input;
@@ -138,25 +144,33 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
       amendments,
     });
 
-    // 3. SOF: Facility Covenant Record (FCR)
-    const facilityCovenantRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-covenant-record', {
-      facilityIdentifier,
-      amendments,
-    });
-
-    // 4. SOF: Facility Guarantee Record (FGR)
-    const facilityGuaranteeRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-guarantee-record', {
-      facilityIdentifier,
-      amendments,
-    });
-
-    return {
+    response = {
       facilityIdentifier,
       facilityMasterRecord: facilityMasterRecord.result,
-      facilityCovenantRecord: facilityCovenantRecord.result,
-      facilityGuaranteeRecord: facilityGuaranteeRecord.result,
       facilityLoanRecord: facilityLoanRecord.result,
     };
+
+    if (amendCovenantGuarantee) {
+      // 3. SOF: Facility Covenant Record (FCR)
+      const facilityCovenantRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-covenant-record', {
+        facilityIdentifier,
+        amendments,
+      });
+
+      // 4. SOF: Facility Guarantee Record (FGR)
+      const facilityGuaranteeRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-guarantee-record', {
+        facilityIdentifier,
+        amendments,
+      });
+
+      response = {
+        ...response,
+        facilityCovenantRecord: facilityCovenantRecord.result,
+        facilityGuaranteeRecord: facilityGuaranteeRecord.result,
+      };
+    }
+
+    return response;
   } catch (error) {
     console.error('Error amending facility records %o', error);
     return false;
