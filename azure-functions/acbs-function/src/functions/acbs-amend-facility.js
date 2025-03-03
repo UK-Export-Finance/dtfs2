@@ -44,9 +44,9 @@ const df = require('durable-functions');
 const retryOptions = require('../../helpers/retryOptions');
 const { DEAL, FACILITY } = require('../../constants');
 
-const acceptableFacilityStage = [FACILITY.STAGE_CODE.ISSUED];
 const { FF_AMENDMENT_COVENANT_GUARANTEE_ENABLED } = process.env;
-const amendCovenantGuarantee = FF_AMENDMENT_COVENANT_GUARANTEE_ENABLED === 'true';
+const isAmendCovenantGuarantee = FF_AMENDMENT_COVENANT_GUARANTEE_ENABLED === 'true';
+const acceptableFacilityStage = [FACILITY.STAGE_CODE.ISSUED];
 
 let response;
 
@@ -158,7 +158,7 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
       facilityMasterRecord: facilityMasterRecord.result,
     };
 
-    if (amendCovenantGuarantee) {
+    if (isAmendCovenantGuarantee) {
       // 3. SOF: Facility Covenant Record (FCR)
       const facilityCovenantRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-covenant-record', {
         facilityIdentifier,
