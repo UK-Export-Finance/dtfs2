@@ -1,4 +1,4 @@
-import { TFM_AMENDMENT_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE, TFM_DEAL_CANCELLATION_STATUS } from '@ukef/dtfs2-common';
+import { TFM_AMENDMENT_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE, TFM_DEAL_CANCELLATION_STATUS, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import caseController from '.';
 import api from '../../api';
 import { mockRes } from '../../test-mocks';
@@ -99,7 +99,7 @@ describe('controllers - case', () => {
           deal: mockDeal.dealSnapshot,
           tfm: mockDeal.tfm,
           activePrimaryNavigation: 'manage work',
-          activeSubNavigation: 'deals',
+          activeSubNavigation: MONGO_DB_COLLECTIONS.DEALS,
           dealId: req.params._id,
           user: session.user,
           hasDraftCancellation: false,
@@ -847,7 +847,7 @@ describe('controllers - case', () => {
           facility: mockFacility.facilitySnapshot,
           facilityTfm: mockFacility.tfm,
           activePrimaryNavigation: 'manage work',
-          activeSubNavigation: 'facilities',
+          activeSubNavigation: MONGO_DB_COLLECTIONS.FACILITIES,
           facilityId: req.params.facilityId,
           user: session.user,
           showAmendmentButton: false,

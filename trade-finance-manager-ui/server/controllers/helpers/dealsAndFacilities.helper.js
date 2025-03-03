@@ -117,6 +117,7 @@ const getDealsOrFacilitiesItems = async (collectionName, queryParams, userToken,
         items = overrideDealsIfAmendmentsInProgress(items, amendments);
       }
     }
+
     if (collectionName === MONGO_DB_COLLECTIONS.FACILITIES) {
       const response = await api.getFacilities(queryParams, userToken);
 
