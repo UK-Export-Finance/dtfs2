@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const { TFM_AMENDMENT_STATUS, FLASH_TYPES } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, TFM_AMENDMENT_STATUS, FLASH_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const {
   getTask,
@@ -76,7 +76,7 @@ const getCaseDeal = async (req, res) => {
       tfm: deal.tfm,
       successMessage,
       activePrimaryNavigation: 'manage work',
-      activeSubNavigation: 'deals',
+      activeSubNavigation: MONGO_DB_COLLECTIONS.DEALS,
       dealId,
       user: req.session.user,
       amendments,
@@ -364,7 +364,7 @@ const getCaseFacility = async (req, res) => {
     dealId: deal.dealSnapshot._id,
     facility: facility.facilitySnapshot,
     activePrimaryNavigation: 'manage work',
-    activeSubNavigation: 'facilities',
+    activeSubNavigation: MONGO_DB_COLLECTIONS.FACILITIES,
     facilityId,
     facilityTfm: facility.tfm,
     user: req.session.user,
