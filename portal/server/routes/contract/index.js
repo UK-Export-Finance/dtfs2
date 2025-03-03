@@ -68,6 +68,8 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
     issuedTotal === 0 ||
     (confirmedRequestedCoverStartDates && confirmedRequestedCoverStartDates[dealId] && confirmedRequestedCoverStartDates[dealId].length === issuedTotal);
 
+  const dealCancelledStatus = [DEAL_STATUS.CANCELLED, DEAL_STATUS.PENDING_CANCELLATION];
+
   return res.render('contract/contract-view.njk', {
     successMessage: getFlashSuccessMessage(req),
     deal: dealWithCanIssueOrEditIssueFacilityFlags(user.roles, deal),
@@ -79,8 +81,7 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
     dealHasIssuedFacilitiesToSubmit: dealHasIssuedFacilitiesToSubmit(deal),
     confirmedRequestedCoverStartDates: confirmedRequestedCoverStartDates[dealId] || [],
     allRequestedCoverStartDatesConfirmed: deal.submissionType === 'Automatic Inclusion Notice' || allRequestedCoverStartDatesConfirmed,
-    dealStatusCancelled: deal.status === DEAL_STATUS.CANCELLED,
-    dealStatusPendingCancellation: deal.status === DEAL_STATUS.PENDING_CANCELLATION,
+    canCloneDeal: !dealCancelledStatus.includes(deal.status),
   });
 });
 

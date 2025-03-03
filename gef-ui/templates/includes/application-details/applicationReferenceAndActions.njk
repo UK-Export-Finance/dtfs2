@@ -5,7 +5,7 @@
 <div class="govuk-width-container" data-cy="application-banner">
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full" id="application-reference-and-actions-actions">
-      {% if status and isMaker and not dealStatusCancelled and not dealStatusPendingCancellation %}
+      {% if status and isMaker and canCloneDeal %}
          {{ govukButton({
             text: "Clone",
             attributes: {

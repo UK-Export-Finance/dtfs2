@@ -3,7 +3,7 @@
 {% macro render(params) %}
   {% if params.deal.status %}
 
-    {% if params.user.roles.includes('maker') and not params.dealStatusCancelled and not params.dealStatusPendingCancellation%}
+    {% if params.user.roles.includes('maker') and params.canCloneDeal%}
       <a
         href="/contract/{{ params.deal._id }}/clone/before-you-start"
         class="govuk-link govuk-!-font-size-14"
