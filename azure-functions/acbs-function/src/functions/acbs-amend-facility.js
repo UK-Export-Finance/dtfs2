@@ -123,6 +123,10 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
       amendment,
     };
 
+    response = {
+      facilityIdentifier,
+    };
+
     /**
      * *************************** AMENDMENT SOFs ***************************
      */
@@ -135,6 +139,11 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
       fmr,
     });
 
+    response = {
+      ...response,
+      facilityLoanRecord: facilityLoanRecord.result,
+    };
+
     // 2. SOF: Facility Master Record (FMR)
     const facilityMasterRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-master-record', {
       deal,
@@ -145,9 +154,8 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
     });
 
     response = {
-      facilityIdentifier,
+      ...response,
       facilityMasterRecord: facilityMasterRecord.result,
-      facilityLoanRecord: facilityLoanRecord.result,
     };
 
     if (amendCovenantGuarantee) {
@@ -157,6 +165,11 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
         amendments,
       });
 
+      response = {
+        ...response,
+        facilityCovenantRecord: facilityCovenantRecord.result,
+      };
+
       // 4. SOF: Facility Guarantee Record (FGR)
       const facilityGuaranteeRecord = yield context.df.callSubOrchestrator('acbs-amend-facility-guarantee-record', {
         facilityIdentifier,
@@ -165,7 +178,6 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
 
       response = {
         ...response,
-        facilityCovenantRecord: facilityCovenantRecord.result,
         facilityGuaranteeRecord: facilityGuaranteeRecord.result,
       };
     }
