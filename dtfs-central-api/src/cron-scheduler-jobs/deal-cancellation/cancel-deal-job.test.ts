@@ -1,10 +1,10 @@
 import { add, sub } from 'date-fns';
 import { ObjectId } from 'mongodb';
-import { AuditDetails, TFM_DEAL_CANCELLATION_STATUS, TfmDeal, TfmDealCancellation, TfmDealCancellationResponse } from '@ukef/dtfs2-common';
+import { AuditDetails, now, TFM_DEAL_CANCELLATION_STATUS, TfmDeal, TfmDealCancellation, TfmDealCancellationResponse } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { cancelDealJob } from './cancel-deal-job';
 
-const now = new Date();
+const today = now();
 
 const processPendingCancellationMock = jest.fn() as jest.Mock<Promise<TfmDealCancellationResponse>>;
 const findPendingDealCancellationsMock = jest.fn() as jest.Mock<Promise<TfmDeal[]>>;
@@ -30,15 +30,15 @@ const aDealWithPendingCancellation = ({ effectiveFrom }: { effectiveFrom: number
         status: TFM_DEAL_CANCELLATION_STATUS.PENDING,
         effectiveFrom,
         reason: '',
-        bankRequestDate: sub(now, { days: 1 }).valueOf(),
+        bankRequestDate: sub(today, { days: 1 }).valueOf(),
       },
     },
   }) as TfmDeal;
 
 describe('cancelDealJob', () => {
-  const dealWithCancellationInFuture = aDealWithPendingCancellation({ effectiveFrom: add(now, { days: 1 }).valueOf() });
-  const dealWithCancellationToday = aDealWithPendingCancellation({ effectiveFrom: now.valueOf() });
-  const dealWithCancellationInPast = aDealWithPendingCancellation({ effectiveFrom: sub(now, { days: 1 }).valueOf() });
+  const dealWithCancellationInFuture = aDealWithPendingCancellation({ effectiveFrom: add(today, { days: 1 }).valueOf() });
+  const dealWithCancellationToday = aDealWithPendingCancellation({ effectiveFrom: today.valueOf() });
+  const dealWithCancellationInPast = aDealWithPendingCancellation({ effectiveFrom: sub(today, { days: 1 }).valueOf() });
 
   beforeEach(() => {
     jest.resetAllMocks();
