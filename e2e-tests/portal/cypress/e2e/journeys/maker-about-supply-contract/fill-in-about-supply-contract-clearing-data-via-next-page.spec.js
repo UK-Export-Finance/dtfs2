@@ -10,11 +10,11 @@ context('about-supply-contract', () => {
     cy.createBssEwcsDeal();
   });
 
-  it('A maker picks up a deal with every field filled in and starts deselecting "separate indemnifier correspondence address" etc.', () => {
+  it('should deselect separate indemnifier correspondence address and verify that indemnifier correspondence address fields are cleared for Maker', () => {
     cy.loginGoToDealPage(BANK1_MAKER1);
 
     contract.aboutSupplierDetailsLink().click();
-    contractAboutSupplier.supplierCorrespondenceAddressDifferent().click();
+    contractAboutSupplier.supplierCorrespondenceAddressSame().click();
     contractAboutSupplier.nextPage().click();
 
     dashboardDeals.visit();

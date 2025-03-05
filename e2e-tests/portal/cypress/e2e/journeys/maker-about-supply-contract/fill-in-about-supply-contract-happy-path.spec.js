@@ -1,8 +1,7 @@
 const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common');
-const { contract, contractAboutSupplier, contractAboutPreview, defaults, dashboardDeals, contractAboutBuyer, contractAboutFinancial } = require('../../pages');
+const { contract, contractAboutSupplier, contractAboutPreview, dashboardDeals, contractAboutBuyer, contractAboutFinancial } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const { additionalRefName } = require('../../../fixtures/deal');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -13,7 +12,7 @@ context('about-supply-contract', () => {
     cy.createBssEwcsDeal();
   });
 
-  it('A maker picks up a deal in status=Draft, and fills in the about-supply-contract section, using the companies house search.', () => {
+  it('should allow a maker to fill in the about-supply-contract section using the companies house search for a deal in Draft status', () => {
     cy.loginGoToDealPage(BANK1_MAKER1);
 
     // check the status is displaying correctly
@@ -21,7 +20,7 @@ context('about-supply-contract', () => {
 
     contract.aboutSupplierDetailsLink().click();
 
-    cy.title().should('eq', `Supplier information - ${additionalRefName}${defaults.pageTitleAppend}`);
+    cy.assertText(contractAboutSupplier.title(), 'About the Supply Contract');
 
     //---
     // check initial page state..

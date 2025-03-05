@@ -11,7 +11,7 @@ context('about-buyer', () => {
     cy.createBssEwcsDeal();
   });
 
-  it('A maker picks up a deal in status=Draft, and triggers all validation errors.', () => {
+  it('should trigger all validation errors when a maker picks up a deal in status=Draft', () => {
     cy.loginGoToDealPage(BANK1_MAKER1);
 
     contract.aboutSupplierDetailsLink().click();

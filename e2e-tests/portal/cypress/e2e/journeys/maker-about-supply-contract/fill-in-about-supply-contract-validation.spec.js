@@ -2,6 +2,7 @@ const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common');
 const { contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview, dashboardDeals, contract } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
+const relative = require('../../relativeURL');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
@@ -12,7 +13,7 @@ context('about-supply-contract', () => {
     cy.createBssEwcsDeal();
   });
 
-  it('A maker picks up a deal in status=Draft, and triggers all validation errors.', () => {
+  it('should trigger all validation errors when a maker picks up a deal in Draft status', () => {
     cy.loginGoToDealPage(BANK1_MAKER1);
 
     contract.aboutSupplierDetailsLink().click();
@@ -158,7 +159,7 @@ context('about-supply-contract', () => {
     contractAboutPreview.errors().should('contain', 'Indemnifier correspondence town is required for non-UK addresses');
   });
 
-  it('A maker picks up a deal in status=Draft, triggers Supplier companies house validation errors', () => {
+  it('should trigger Supplier companies house validation errors when a maker picks up a deal in Draft status', () => {
     cy.loginGoToDealPage(BANK1_MAKER1);
 
     contract.aboutSupplierDetailsLink().click();
@@ -168,8 +169,9 @@ context('about-supply-contract', () => {
     //---------------------------------------------------------------
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
-    cy.url().should('include', '/contract');
-    cy.url().should('include', '/about/supplier');
+    cy.getDealIdFromUrl(4).then((dealId) => {
+      cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
+    });
 
     // should see companies house validation errors
     partials.errorSummaryLinks().should('have.length', 1);
@@ -202,7 +204,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
   });
 
-  it('A maker picks up a deal in status=Draft, fills in a field, triggers Supplier companies house validation errors', () => {
+  it('should trigger Supplier companies house validation errors when a maker fills in a field for a deal in Draft status', () => {
     cy.loginGoToDealPage(BANK1_MAKER1);
 
     contract.aboutSupplierDetailsLink().click();
@@ -250,7 +252,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
   });
 
-  it('A maker picks up a deal in status=Draft, triggers Indemnifier companies house validation errors', () => {
+  it('should trigger Indemnifier companies house validation errors when a maker picks up a deal in Draft status', () => {
     cy.loginGoToDealPage(BANK1_MAKER1);
 
     contract.aboutSupplierDetailsLink().click();
@@ -341,7 +343,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
   });
 
-  it('trigger just Supplier companies house validation error', () => {
+  it('should trigger only Supplier companies house validation error', () => {
     cy.loginGoToDealPage(BANK1_MAKER1);
 
     // Click on "View Details" under the "About the Supplier" contract
@@ -404,7 +406,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.expectError('UKEF can only process applications from companies based in the UK');
   });
 
-  it('A maker picks up a deal in status=Draft, misses mandatory field then trigger missed validation error.', () => {
+  it('should trigger missed validation error when a maker misses a mandatory field for a deal in Draft status', () => {
     cy.loginGoToDealPage(BANK1_MAKER1);
 
     contract.aboutSupplierDetailsLink().click();

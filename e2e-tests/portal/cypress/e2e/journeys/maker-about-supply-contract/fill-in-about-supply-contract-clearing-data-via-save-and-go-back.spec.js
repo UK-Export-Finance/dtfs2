@@ -6,69 +6,65 @@ const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 context('about-supply-contract', () => {
   before(() => {
     cy.deleteDeals(ADMIN);
-
     cy.createBssEwcsDeal();
   });
 
-  it('A maker picks up a deal with every field filled in and starts deselecting "separate indemnifier correspondence address" etc.', () => {
+  beforeEach(() => {
     cy.loginGoToDealPage(BANK1_MAKER1);
+  });
 
-    contract.aboutSupplierDetailsLink().click();
-    contractAboutSupplier.indemnifierCorrespondenceAddressNotDifferent().click({ force: true });
-    contractAboutSupplier.saveAndGoBack().click();
-
+  // Helper functions
+  const navigateToPreview = () => {
     dashboardDeals.visit();
     cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
-    contractAboutPreview.indemnifierCorrespondenceAddress().line1().should('not.exist');
-    contractAboutPreview.indemnifierCorrespondenceAddress().line2().should('not.exist');
-    contractAboutPreview.indemnifierCorrespondenceAddress().town().should('not.exist');
-    contractAboutPreview.indemnifierCorrespondenceAddress().line3().should('not.exist');
-    contractAboutPreview.indemnifierCorrespondenceAddress().postcode().should('not.exist');
-    contractAboutPreview.indemnifierCorrespondenceAddress().country().should('not.exist');
+  };
 
-    dashboardDeals.visit();
-    cy.clickDashboardDealLink();
+  const assertAddressFieldsNotExist = (addressObject) => {
+    ['line1', 'line2', 'town', 'line3', 'postcode', 'country'].forEach((field) => {
+      addressObject[field]().should('not.exist');
+    });
+  };
+
+  it('should hide indemnifier correspondence address fields when deselected', () => {
+    contract.aboutSupplierDetailsLink().click();
+    // Check if the parent div is visible and make it visible if it's not
+    cy.get('#additional-form-fields-indemnifier').then(($el) => {
+      if ($el.css('display') === 'none') {
+        cy.wrap($el).invoke('css', 'display', 'block');
+      }
+    });
+    contractAboutSupplier.indemnifierCorrespondenceAddressNotDifferent().click();
+    contractAboutSupplier.saveAndGoBack().click();
+
+    navigateToPreview();
+
+    assertAddressFieldsNotExist(contractAboutPreview.indemnifierCorrespondenceAddress());
+  });
+
+  it('should hide indemnifier fields when not legally distinct', () => {
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.notLegallyDistinct().click();
     contractAboutSupplier.saveAndGoBack().click();
 
-    dashboardDeals.visit();
-    cy.clickDashboardDealLink();
-    contract.aboutSupplierDetailsLink().click();
-    contractAboutSupplier.nextPage().click();
-    contractAboutBuyer.nextPage().click();
-    contractAboutFinancial.preview().click();
+    navigateToPreview();
+
     contractAboutPreview.indemnifierCompaniesHouseRegistrationNumber().should('not.exist');
     contractAboutPreview.indemnifierName().should('not.exist');
-    contractAboutPreview.indemnifierAddress().line1().should('not.exist');
-    contractAboutPreview.indemnifierAddress().line2().should('not.exist');
-    contractAboutPreview.indemnifierAddress().town().should('not.exist');
-    contractAboutPreview.indemnifierAddress().line3().should('not.exist');
-    contractAboutPreview.indemnifierAddress().postcode().should('not.exist');
-    contractAboutPreview.indemnifierAddress().country().should('not.exist');
+    assertAddressFieldsNotExist(contractAboutPreview.indemnifierAddress());
     contractAboutPreview.indemnifierCorrespondenceAddressDifferent().should('not.exist');
+  });
 
-    dashboardDeals.visit();
-    cy.clickDashboardDealLink();
+  it('should hide supplier correspondence address fields when marked as same', () => {
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.supplierCorrespondenceAddressSame().click();
     contractAboutSupplier.saveAndGoBack().click();
 
-    dashboardDeals.visit();
-    cy.clickDashboardDealLink();
-    contract.aboutSupplierDetailsLink().click();
-    contractAboutSupplier.nextPage().click();
-    contractAboutBuyer.nextPage().click();
-    contractAboutFinancial.preview().click();
-    contractAboutPreview.supplierCorrespondenceAddress().line1().should('not.exist');
-    contractAboutPreview.supplierCorrespondenceAddress().line2().should('not.exist');
-    contractAboutPreview.supplierCorrespondenceAddress().town().should('not.exist');
-    contractAboutPreview.supplierCorrespondenceAddress().line3().should('not.exist');
-    contractAboutPreview.supplierCorrespondenceAddress().postcode().should('not.exist');
-    contractAboutPreview.supplierCorrespondenceAddress().country().should('not.exist');
+    navigateToPreview();
+
+    assertAddressFieldsNotExist(contractAboutPreview.supplierCorrespondenceAddress());
   });
 });

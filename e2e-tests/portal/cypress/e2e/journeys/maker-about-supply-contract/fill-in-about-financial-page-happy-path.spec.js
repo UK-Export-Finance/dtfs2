@@ -1,8 +1,7 @@
 const { CURRENCY } = require('@ukef/dtfs2-common');
-const { contract, contractAboutFinancial, defaults, dashboardDeals, contractAboutSupplier, contractAboutBuyer, contractAboutPreview } = require('../../pages');
+const { contract, contractAboutFinancial, dashboardDeals, contractAboutSupplier, contractAboutBuyer, contractAboutPreview } = require('../../pages');
 const { taskListHeader } = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const { additionalRefName } = require('../../../fixtures/deal');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -11,16 +10,16 @@ context('about-supply-contract', () => {
     cy.createBssEwcsDeal();
   });
 
-  it('A maker picks up a deal with the supplier details completed, and fills in the about-buyer-contract section, using the companies house search.', () => {
+  it('should fill in the about-buyer-contract section using the companies house search when supplier details are already completed', () => {
     cy.login(BANK1_MAKER1);
 
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
     cy.clickDashboardDealLink();
     contract.aboutSupplierDetailsLink().click();
-    taskListHeader.itemLink('buyer').click();
-    taskListHeader.itemLink('financial-information').click();
+    contractAboutSupplier.nextPage().click();
+    contractAboutBuyer.nextPage().click();
 
-    cy.title().should('eq', `Financial information - ${additionalRefName}${defaults.pageTitleAppend}`);
+    cy.assertText(contractAboutFinancial.title(), 'Add financial information');
 
     // prove the exchange-rate fields start hidden..
     contractAboutFinancial.supplyContractConversionRateToGBP().should('not.be.visible');

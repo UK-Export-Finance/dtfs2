@@ -10,6 +10,10 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
+const EXPECTED_DEALS_LENGTH = {
+  ALL_STATUSES: 2,
+};
+
 context('Dashboard Deals filters - filter by keyword', () => {
   const MOCK_KEYWORD = 'Special exporter';
 
@@ -78,10 +82,11 @@ context('Dashboard Deals filters - filter by keyword', () => {
       // Clear existing filters
       filters.panel.selectedFilters.clearAllLink().click();
       // Check the number of rows before applying any filter
-      dashboardDeals.rows().should('have.length', 2);
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.ALL_STATUSES);
       filters.showHideButton().click();
       const expectedLength = 1; // only 1x BSS/EWCS deal has MOCK_KEYWORD.
       cy.keyboardInput(filters.panel.form.keyword.input(), MOCK_KEYWORD);
+
       filters.panel.form.applyFiltersButton().click();
 
       dashboardDeals.rows().should('have.length', expectedLength);

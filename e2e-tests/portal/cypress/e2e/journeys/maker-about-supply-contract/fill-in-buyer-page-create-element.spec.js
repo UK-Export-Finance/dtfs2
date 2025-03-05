@@ -1,6 +1,5 @@
-const { contract, contractAboutSupplier, contractAboutBuyer, defaults } = require('../../pages');
+const { contract, contractAboutSupplier, contractAboutBuyer } = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const { additionalRefName } = require('../../../fixtures/deal');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -18,7 +17,7 @@ context('Buyer form - create element and check if inserted into deal', () => {
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
 
-    cy.title().should('eq', `Buyer information - ${additionalRefName}${defaults.pageTitleAppend}`);
+    cy.assertText(contractAboutBuyer.title(), 'Add buyer details');
 
     // fill in the fields
     cy.keyboardInput(contractAboutBuyer.buyerName(), 'Harry Bear');

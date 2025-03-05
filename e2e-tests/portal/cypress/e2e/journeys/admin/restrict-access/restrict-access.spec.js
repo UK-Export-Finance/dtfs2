@@ -14,7 +14,7 @@ context('Only allow authorised users to access admin pages', () => {
       cy.createBssEwcsDeal();
     });
 
-    it('allows read only user with all bank access to view deal', () => {
+    it('should allow a read-only user with all bank access to view a deal', () => {
       cy.loginGoToDealPage(ADMIN);
       cy.getDealIdFromUrl(4).then((dealId) => {
         cy.url().should('eq', relative(`/contract/${dealId}`));
