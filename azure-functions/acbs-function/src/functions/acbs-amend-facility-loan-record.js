@@ -42,7 +42,7 @@ df.app.orchestration('acbs-amend-facility-loan-record', function* amendFacilityL
     let facilityLoanRecordAmendments;
 
     // 1.1. Facility Loan Record (FLR) amendment mapping
-    const flrMapped = mappings.facility.facilityLoanAmend(amendments, facility, fmr);
+    const flrMapped = mappings.facility.facilityLoanAmend(amendment, facility, fmr);
 
     /**
      * Facility amendment on facility type `loan` with only `amount`

@@ -1,4 +1,5 @@
 const df = require('durable-functions');
+const { HttpStatusCode } = require('axios');
 const { getNowAsIsoString } = require('../../helpers/date');
 const api = require('../../api');
 const mdm = require('../../apim-mdm');
@@ -39,7 +40,7 @@ const handler = async (payload) => {
 
     const { status: covenantStatus, data: covenantData } = await api.createFacilityCovenantId(covenantIdPayload);
 
-    if (covenantStatus === 201 && Array.isArray(covenantData)) {
+    if (covenantStatus === HttpStatusCode.Created && Array.isArray(covenantData)) {
       acbsFacilityCovenantInput.covenantIdentifier = covenantData[0].maskedId;
     }
 
@@ -61,10 +62,10 @@ const handler = async (payload) => {
 
     // Replace ISO currency with ACBS currency code
     const currencyReq = await mdm.getCurrency(currency);
+    const acbsCurrencyCode = currencyReq.status === HttpStatusCode.Ok && currencyReq.data.length > 1;
 
     // Default currency code to GBP (O)
-    acbsFacilityCovenantInput.currency =
-      currencyReq.status === 200 && currencyReq.data.length > 1 ? currencyReq.data[0].acbsCode : CONSTANTS.FACILITY.ACBS_CURRENCY_CODE.DEFAULT;
+    acbsFacilityCovenantInput.currency = acbsCurrencyCode ? currencyReq.data[0].acbsCode : CONSTANTS.FACILITY.ACBS_CURRENCY_CODE.DEFAULT;
 
     // Check for mandatory fields
     const missingMandatory = findMissingMandatory(acbsFacilityCovenantInput, mandatoryFields);

@@ -1,3 +1,19 @@
+/*
+ * Facility covenant record update DAF
+ * **********************************
+ * This DAF (Durable Activity Function) is never invoked directly.
+ * It is invoked via DOF (Durable Orchestrator Function).
+ *
+ * Pre-requisites
+ * --------------
+ * 0. 'npm install durable-functions'
+ * 1. Durable  HTTP trigger function (acbs-http)
+ * 2. Durable Orchestrator function (DOF) (acbs-issue-facility)
+ *
+ * ------------------
+ * HTTP -> DOF -> DAF
+ * ------------------
+ */
 const df = require('durable-functions');
 const api = require('../../api');
 const { getNowAsIsoString } = require('../../helpers/date');
@@ -37,7 +53,7 @@ const handler = async (payload) => {
       throw new Error(
         JSON.stringify(
           {
-            name: 'ACBS Facility Covenant amend error',
+            name: 'ACBS Facility covenant amend error',
             submittedToACBS,
             receivedFromACBS: getNowAsIsoString(),
             dataReceived: data,

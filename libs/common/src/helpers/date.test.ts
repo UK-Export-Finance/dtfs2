@@ -1,5 +1,5 @@
 import { formatInTimeZone } from 'date-fns-tz';
-import { now, getNowAsUtcISOString, getMonthName, getISO8601, getUnixTimestampSeconds, addYear, getEpochMs } from './date';
+import { now, getNowAsUtcISOString, getMonthName, getISO8601, getUnixTimestampSeconds, addYear, getEpochMs, getLongDateFormat } from './date';
 
 describe('date helpers', () => {
   describe('getNowAsUtcISOString', () => {
@@ -285,6 +285,32 @@ describe('date helpers', () => {
 
       // Assert
       expect(result).toBe(epoch);
+    });
+  });
+
+  describe('getLongDateFormat', () => {
+    it('should return long date format for given date', () => {
+      // Arrange
+      const date = new Date('1989-09-20');
+
+      // Act
+      const result = getLongDateFormat(date);
+
+      // Assert
+      expect(result).toBe('20 September 1989');
+    });
+
+    it('should return long date format for now', () => {
+      // Arrange
+      const date = now();
+      const month = getMonthName(date.getMonth() + 1);
+      const longDate = `${date.getDate()} ${month} ${date.getFullYear()}`;
+
+      // Act
+      const result = getLongDateFormat();
+
+      // Assert
+      expect(result).toContain(longDate);
     });
   });
 });
