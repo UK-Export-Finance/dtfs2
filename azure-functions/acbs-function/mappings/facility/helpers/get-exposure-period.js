@@ -18,7 +18,6 @@ const getExposurePeriod = (facility, dealType, fmr = null) => {
 
   // Facility amendment exposure calculation
   if (facility.amendment && fmr) {
-    // De-structure object
     const { issueDate } = fmr;
     const { coverEndDate } = facility.amendment;
     // Format in YYYY-MM-DD format

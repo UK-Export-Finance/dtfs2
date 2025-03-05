@@ -5,14 +5,22 @@
 
   {% set dealId = params.dealId %}
   {% set ukefDealId = params.ukefDealId %}
+  {% set effectiveDate = params.text %}
   {% set previousStatus = params.previousStatus %}
 
+  {% if params.scheduledCancellation %}
+    {% set newStatus = "Pending cancellation" %}
+  {% else %}
+    {% set newStatus = "Cancelled" %}
+  {% endif %}
+
   <p class="govuk-!-margin-bottom-0">
+    <p class="colour-light-grey" data-cy="deal-cancellation-effective-date">{{ effectiveDate }}</p>
     <a href="/gef/application-details/{{ dealId }}" class="govuk-link" data-cy="deal-link-{{ dealId }}">Deal ID {{ ukefDealId }}</a>
 
     {{ statusChange.render({
       previousStatus: previousStatus,
-      newStatus: "Cancelled",
+      newStatus: newStatus,
       id: dealId,
       tagColour: "blue"
     }) }}

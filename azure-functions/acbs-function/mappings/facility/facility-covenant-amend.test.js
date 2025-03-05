@@ -1,49 +1,148 @@
 const facilityCovenantAmend = require('./facility-covenant-amend');
 
 describe('facilityCovenantAmend', () => {
-  describe('when there is an amendment amount', () => {
-    const amendment = { amount: 123.456 };
+  describe('when the facility amount is being amended', () => {
+    it('should return amount with two decimal points', () => {
+      // Arrange
+      const payload = { amount: 123.456 };
+      const expected = {
+        targetAmount: 123.46,
+      };
 
-    it('returns the target amount rounded to 2 decimal places', () => {
-      const result = facilityCovenantAmend(amendment);
-      expect(result).toEqual({ targetAmount: 123.46 });
+      // Act
+      const result = facilityCovenantAmend(payload);
+
+      // Assert
+      expect(result).toEqual(expected);
     });
-  });
 
-  describe('when there is a guarantee expiry date', () => {
-    const amendment = { facilityGuaranteeDates: { guaranteeExpiryDate: '2022-01-01' } };
+    it('should return the amount as a number with two decimal points when the amount is a string', () => {
+      // Arrange
+      const payload = { amount: '123,456.7890' };
+      const expected = { targetAmount: 123456.79 };
 
-    it('returns the guarantee expiry date', () => {
-      const result = facilityCovenantAmend(amendment);
-      expect(result).toEqual({ expirationDate: '2022-01-01' });
+      // Act
+      const result = facilityCovenantAmend(payload);
+
+      // Assert
+      expect(result).toEqual(expected);
     });
-  });
 
-  describe('when there is an amendment amount and a guarantee expiry date', () => {
-    const amendment = { amount: 123.456, facilityGuaranteeDates: { guaranteeExpiryDate: '2022-01-01' } };
-    it('returns the target amount rounded to 2 decimal places and the guarantee expiry date', () => {
-      const result = facilityCovenantAmend(amendment);
-      expect(result).toEqual({ expirationDate: '2022-01-01', targetAmount: 123.46 });
-    });
-  });
+    it('should return an empty object', () => {
+      // Act
+      const result = facilityCovenantAmend({});
 
-  describe('when there is no amendment amount or guarantee expiry date', () => {
-    const amendment = {};
-    it('returns an empty object', () => {
-      const result = facilityCovenantAmend(amendment);
+      // Assert
       expect(result).toEqual({});
     });
   });
 
-  describe('when there are extra fields', () => {
-    const amendment = {
-      amount: 123.456,
-      facilityGuaranteeDates: { guaranteeExpiryDate: '2022-01-01', extraField: 'extra field' },
-      extraField: 'extra field',
-    };
-    it('returns the target amount rounded to 2 decimal places and the guarantee expiry date', () => {
-      const result = facilityCovenantAmend(amendment);
-      expect(result).toEqual({ targetAmount: 123.46, expirationDate: '2022-01-01' });
+  describe('when the facility cover end date is being amended', () => {
+    it('should return cover end in YYYY-MM-DD format', () => {
+      // Arrange
+      const payload = { coverEndDate: 1898252717000 };
+      const expected = {
+        expirationDate: '2030-02-25',
+      };
+
+      // Act
+      const result = facilityCovenantAmend(payload);
+
+      // Assert
+      expect(result).toEqual(expected);
+    });
+
+    it('should return cover end in YYYY-MM-DD format with cover end date as a string', () => {
+      // Arrange
+      const payload = { coverEndDate: '1898252717000' };
+      const expected = {
+        expirationDate: '2030-02-25',
+      };
+
+      // Act
+      const result = facilityCovenantAmend(payload);
+
+      // Assert
+      expect(result).toEqual(expected);
+    });
+
+    it('should return an empty object with starting EPOCH', () => {
+      // Arrange
+      const payload = { coverEndDate: 0 };
+
+      // Act
+      const result = facilityCovenantAmend(payload);
+
+      // Assert
+      expect(result).toEqual({});
+    });
+
+    it('should return an empty object', () => {
+      // Act
+      const result = facilityCovenantAmend({});
+
+      // Assert
+      expect(result).toEqual({});
+    });
+  });
+
+  describe('when both amount and cover end date are being amended', () => {
+    it('should return the amount with two decimal points and cover end in YYYY-MM-DD format', () => {
+      // Arrange
+      const payload = { amount: '123,456.7890', coverEndDate: 1898252717000 };
+      const expected = {
+        targetAmount: 123456.79,
+        expirationDate: '2030-02-25',
+      };
+
+      // Act
+      const result = facilityCovenantAmend(payload);
+
+      // Assert
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('when everything is being amended with additional unknown properties in the payload', () => {
+    it('should return the amount with two decimal points and cover end in YYYY-MM-DD format', () => {
+      // Arrange
+      const payload = { amount: '123,456.7890', coverEndDate: 1898252717000, unknownProperty: 'unknown' };
+      const expected = {
+        targetAmount: 123456.79,
+        expirationDate: '2030-02-25',
+      };
+
+      // Act
+      const result = facilityCovenantAmend(payload);
+
+      // Assert
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('when nothing is being amended', () => {
+    it('should return an empty object with an empty object payload', () => {
+      // Act
+      const result = facilityCovenantAmend({});
+
+      // Assert
+      expect(result).toEqual({});
+    });
+
+    it('should return an empty object with null payload', () => {
+      // Act
+      const result = facilityCovenantAmend(null);
+
+      // Assert
+      expect(result).toEqual({});
+    });
+
+    it('should return an empty object with undefined payload', () => {
+      // Act
+      const result = facilityCovenantAmend(undefined);
+
+      // Assert
+      expect(result).toEqual({});
     });
   });
 });

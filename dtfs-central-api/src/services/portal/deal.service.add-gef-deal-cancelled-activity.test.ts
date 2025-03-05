@@ -1,4 +1,4 @@
-import { DEAL_TYPE, PORTAL_ACTIVITY_LABEL, UKEF } from '@ukef/dtfs2-common';
+import { DEAL_TYPE, PORTAL_ACTIVITY_LABEL, UKEF, now, getLongDateFormat } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
 import { getUnixTime } from 'date-fns';
@@ -8,21 +8,29 @@ import { PortalActivityRepo } from '../../repositories/portal/portal-activity.re
 const addPortalActivityMock = jest.fn();
 
 const dealId = new ObjectId();
-
+const effectiveFrom = now();
 const author = {
   firstName: 'First name',
   lastName: 'Last name',
   _id: '1',
 };
-
 const auditDetails = generateSystemAuditDetails();
+const expectedActivity = {
+  label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
+  text: `Date effective from: ${getLongDateFormat(effectiveFrom)}`,
+  timestamp: getUnixTime(now()),
+  author: {
+    _id: author._id,
+    firstName: UKEF.ACRONYM,
+  },
+};
 
-describe('PortalDealService - addGefDealCancelledActivity', () => {
+describe('addGefDealCancelledActivity', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe(`when dealType is ${DEAL_TYPE.GEF}`, () => {
+  describe(`when deal type is ${DEAL_TYPE.GEF}`, () => {
     beforeEach(() => {
       jest.spyOn(PortalActivityRepo, 'addPortalActivity').mockImplementation(addPortalActivityMock);
     });
@@ -34,25 +42,16 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
         dealType: DEAL_TYPE.GEF,
         author,
         auditDetails,
+        effectiveFrom,
       });
 
       // Assert
       expect(addPortalActivityMock).toHaveBeenCalledTimes(1);
-
-      const expectedActivity = {
-        label: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLED,
-        timestamp: getUnixTime(new Date()),
-        author: {
-          _id: author._id,
-          firstName: UKEF.ACRONYM,
-        },
-      };
-
       expect(addPortalActivityMock).toHaveBeenCalledWith(dealId, expectedActivity, auditDetails);
     });
   });
 
-  describe(`when dealType is not ${DEAL_TYPE.GEF}`, () => {
+  describe(`when deal type is not ${DEAL_TYPE.GEF}`, () => {
     it('should not call addPortalActivity', async () => {
       // Act
       await PortalDealService.addGefDealCancelledActivity({
@@ -60,10 +59,12 @@ describe('PortalDealService - addGefDealCancelledActivity', () => {
         dealType: DEAL_TYPE.BSS_EWCS,
         author,
         auditDetails,
+        effectiveFrom,
       });
 
       // Assert
       expect(addPortalActivityMock).toHaveBeenCalledTimes(0);
+      expect(addPortalActivityMock).not.toHaveBeenCalledWith(dealId, expectedActivity, auditDetails);
     });
   });
 });

@@ -116,20 +116,23 @@ describe('DealCancellationService', () => {
     });
 
     it('should call PortalDealService.addGefDealCancellationPendingActivity with the correct params', async () => {
+      // Arrange
+      const expectedAuthor = {
+        firstName: UKEF.ACRONYM,
+      };
+      const effectiveFrom = new Date(cancellation.effectiveFrom);
+
       // Act
       await DealCancellationService.processPendingCancellation(dealId, cancellation, auditDetails);
 
       // Assert
-      const expectedAuthor = {
-        firstName: UKEF.ACRONYM,
-      };
-
       expect(addGefDealCancelledActivityMock).toHaveBeenCalledTimes(1);
       expect(addGefDealCancelledActivityMock).toHaveBeenCalledWith({
         dealId,
         dealType,
         author: expectedAuthor,
         auditDetails,
+        effectiveFrom,
       });
     });
 
