@@ -1,4 +1,4 @@
-const { contractAboutBuyer, contractAboutFinancial, contractAboutPreview, dashboardDeals, contract, contractAboutSupplier } = require('../../pages');
+const { contractAboutBuyer, contractAboutFinancial, contractAboutPreview, contract, contractAboutSupplier } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
@@ -11,23 +11,22 @@ context('about-buyer', () => {
     cy.createBssEwcsDeal();
   });
 
-  it('should trigger all validation errors when a maker picks up a deal in status=Draft', () => {
+  beforeEach(() => {
     cy.loginGoToDealPage(BANK1_MAKER1);
-
     contract.aboutSupplierDetailsLink().click();
+  });
+
+  it('should trigger all validation errors when a maker picks up a deal in status=Draft', () => {
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
 
-    // prove validation of all non-conditional pieces
     contractAboutPreview.expectError('Buyer name is required');
     contractAboutPreview.expectError('Buyer address line 1 is required');
     contractAboutPreview.expectError('Destination of Goods and Services is required');
+  });
 
-    // prove the errors are on the about-buyer page
-    dashboardDeals.visit();
-    cy.clickDashboardDealLink();
-    contract.aboutSupplierDetailsLink().click();
+  it('should display validation errors on the about-buyer page', () => {
     contractAboutSupplier.taskListLinkBuyer().click();
 
     partials.errorSummaryLinks().should('have.length', 5);
@@ -36,11 +35,12 @@ context('about-buyer', () => {
     contractAboutBuyer.expectError('Buyer address line 1 is required');
     contractAboutBuyer.expectError('Buyer town is required for non-UK addresses');
     contractAboutBuyer.expectError('Destination of Goods and Services is required');
+  });
 
-    // switch to UK country
+  it('should trigger UK-specific validation error when switching to UK country', () => {
+    contractAboutSupplier.taskListLinkBuyer().click();
     contractAboutBuyer.buyerAddress().country().select('GBR');
 
-    // click through
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
     contractAboutPreview.errors().should('contain', 'Buyer postcode is required for UK addresses');
