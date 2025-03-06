@@ -4,16 +4,13 @@ const helpers = require('./helpers');
 
 const { FACILITY } = CONSTANTS;
 
-const facilityLoanAmend = (amendments, facility, facilityMasterRecord) => {
+const facilityLoanAmend = (amendment, facility, facilityMasterRecord) => {
   try {
     // Default facility loan record
     let record = {};
-    // De-structure
-    const { amendment } = amendments;
     const { facilitySnapshot } = facility;
 
     if (amendment && facilitySnapshot) {
-      // De-structure
       const { amount, coverEndDate } = amendment;
       const { type, feeType } = facilitySnapshot;
 
@@ -47,6 +44,7 @@ const facilityLoanAmend = (amendments, facility, facilityMasterRecord) => {
       }
     }
 
+    // Return amended FLR
     return record;
   } catch (error) {
     console.error('Unable to map facility loan amendment record %o', error);

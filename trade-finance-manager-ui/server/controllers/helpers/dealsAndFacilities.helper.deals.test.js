@@ -1,4 +1,4 @@
-import { TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import api from '../../api';
 import PageOutOfBoundsError from '../../errors/page-out-of-bounds.error';
 import { mockRes as generateMockRes } from '../../test-mocks';
@@ -79,7 +79,7 @@ describe('controllers - deals', () => {
           mockReq.params.pageNumber = '-1';
 
           it('should redirect to not-found route', async () => {
-            await renderDealsOrFacilitiesPage('deals', mockReq, mockRes);
+            await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
             expect(mockRes.redirect).toHaveBeenCalledWith('/not-found');
           });
         });
@@ -100,7 +100,7 @@ describe('controllers - deals', () => {
           mockReq.query.sortorder = 'ascending';
 
           it('should make requests to TFM API for the deals data with the correct arguments', async () => {
-            await renderDealsOrFacilitiesPage('deals', mockReq, mockRes);
+            await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
             expect(api.getDeals).toHaveBeenCalledWith(
               {
                 sortBy: {
@@ -115,12 +115,12 @@ describe('controllers - deals', () => {
           });
 
           it('should render the deals template with the deals data and the correct arguments', async () => {
-            await renderDealsOrFacilitiesPage('deals', mockReq, mockRes);
+            await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
             expect(mockRes.render).toHaveBeenCalledWith('deals/deals.njk', {
               heading: 'All deals',
               deals: mockDeals,
               activePrimaryNavigation: 'all deals',
-              activeSubNavigation: 'deal',
+              activeSubNavigation: MONGO_DB_COLLECTIONS.DEALS,
               sortButtonWasClicked: true,
               user: mockReq.session.user,
               activeSortByField: 'dealSnapshot.ukefDealId',
@@ -141,7 +141,7 @@ describe('controllers - deals', () => {
           mockReq.query.search = 'test';
 
           it('should make requests to TFM API for the deals data with the correct arguments', async () => {
-            await renderDealsOrFacilitiesPage('deals', mockReq, mockRes);
+            await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
             expect(api.getDeals).toHaveBeenCalledWith(
               {
                 sortBy: {
@@ -157,12 +157,12 @@ describe('controllers - deals', () => {
           });
 
           it('should render the deals template with the deals data and the correct arguments', async () => {
-            await renderDealsOrFacilitiesPage('deals', mockReq, mockRes);
+            await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
             expect(mockRes.render).toHaveBeenCalledWith('deals/deals.njk', {
               heading: `${mockDeals.length} results for "${mockReq.query.search}"`,
               deals: mockDeals,
               activePrimaryNavigation: 'all deals',
-              activeSubNavigation: 'deal',
+              activeSubNavigation: MONGO_DB_COLLECTIONS.DEALS,
               sortButtonWasClicked: false,
               user: mockReq.session.user,
               activeSortByField: 'tfm.dateReceivedTimestamp',
@@ -205,12 +205,12 @@ describe('controllers - deals', () => {
         const mockReq = structuredClone(mockReqTemplate);
 
         it('should render the deals template with the correct arguments and no data', async () => {
-          await renderDealsOrFacilitiesPage('deals', mockReq, mockRes);
+          await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
           expect(mockRes.render).toHaveBeenCalledWith('deals/deals.njk', {
             heading: 'All deals',
             deals: [],
             activePrimaryNavigation: 'all deals',
-            activeSubNavigation: 'deal',
+            activeSubNavigation: MONGO_DB_COLLECTIONS.DEALS,
             sortButtonWasClicked: false,
             user: mockReq.session.user,
             activeSortByField: 'tfm.dateReceivedTimestamp',
@@ -233,16 +233,44 @@ describe('controllers - deals', () => {
           api.getDeals = () => Promise.reject(error);
         });
 
+        it('should render deals template with zero results', async () => {
+          // Act
+          await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
+
+          // Assert
+          expect(mockRes.render).toHaveBeenCalledWith('deals/deals.njk', {
+            heading: 'All deals',
+            deals: [],
+            activePrimaryNavigation: 'all deals',
+            activeSubNavigation: MONGO_DB_COLLECTIONS.DEALS,
+            sortButtonWasClicked: false,
+            user: mockReq.session.user,
+            activeSortByField: 'tfm.dateReceivedTimestamp',
+            activeSortByOrder: 'descending',
+            pages: {
+              totalPages: 0,
+              currentPage: 0,
+              totalItems: 0,
+            },
+            queryString: '',
+          });
+        });
+
         it('should log the error thrown by api.getDeals', async () => {
           const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
-          await renderDealsOrFacilitiesPage('deals', mockReq, mockRes);
-          expect(consoleErrorMock).toHaveBeenCalledWith(error);
+          await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
+          expect(consoleErrorMock).toHaveBeenCalledWith('Unable to get deals or facilities search items %o', error);
           consoleErrorMock.mockRestore();
         });
 
-        it('should redirect to not-found route', async () => {
-          await renderDealsOrFacilitiesPage('deals', mockReq, mockRes);
-          expect(mockRes.redirect).toHaveBeenCalledWith('/not-found');
+        it('should not redirect to not-found route', async () => {
+          await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
+          expect(mockRes.redirect).not.toHaveBeenCalledWith('/not-found');
+        });
+
+        it('should not render problem with service page', async () => {
+          await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
+          expect(mockRes.render).not.toHaveBeenCalledWith('/_partials/problem-with-service.njk');
         });
       });
 
@@ -254,16 +282,44 @@ describe('controllers - deals', () => {
           api.getDeals = () => Promise.reject(error);
         });
 
+        it('should render deals template with zero results', async () => {
+          // Act
+          await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
+
+          // Assert
+          expect(mockRes.render).toHaveBeenCalledWith('deals/deals.njk', {
+            heading: 'All deals',
+            deals: [],
+            activePrimaryNavigation: 'all deals',
+            activeSubNavigation: MONGO_DB_COLLECTIONS.DEALS,
+            sortButtonWasClicked: false,
+            user: mockReq.session.user,
+            activeSortByField: 'tfm.dateReceivedTimestamp',
+            activeSortByOrder: 'descending',
+            pages: {
+              totalPages: 0,
+              currentPage: 0,
+              totalItems: 0,
+            },
+            queryString: '',
+          });
+        });
+
         it('should log the error thrown by api.getDeals', async () => {
           const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
-          await renderDealsOrFacilitiesPage('deals', mockReq, mockRes);
-          expect(consoleErrorMock).toHaveBeenCalledWith(error);
+          await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
+          expect(consoleErrorMock).toHaveBeenCalledWith('Unable to get deals or facilities search items %o', error);
           consoleErrorMock.mockRestore();
         });
 
-        it('should render the problem-with-service page', async () => {
-          await renderDealsOrFacilitiesPage('deals', mockReq, mockRes);
-          expect(mockRes.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
+        it('should not redirect to not-found route', async () => {
+          await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
+          expect(mockRes.redirect).not.toHaveBeenCalledWith('/not-found');
+        });
+
+        it('should not render problem with service page', async () => {
+          await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
+          expect(mockRes.render).not.toHaveBeenCalledWith('/_partials/problem-with-service.njk');
         });
       });
     });
@@ -275,7 +331,7 @@ describe('controllers - deals', () => {
         const mockReq = structuredClone(mockReqTemplate);
 
         it('should redirect to GET deals without query parameters', async () => {
-          await queryDealsOrFacilities('deals', mockReq, mockRes);
+          await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
 
           expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0');
         });
@@ -287,7 +343,7 @@ describe('controllers - deals', () => {
         mockReq.params.pageNumber = '-1';
 
         it('should redirect to GET deals (page 0) without query parameters', async () => {
-          await queryDealsOrFacilities('deals', mockReq, mockRes);
+          await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
 
           expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0');
         });
@@ -299,7 +355,7 @@ describe('controllers - deals', () => {
         mockReq.params.pageNumber = 'hello world';
 
         it('should redirect to GET deals (page 0) without query parameters', async () => {
-          await queryDealsOrFacilities('deals', mockReq, mockRes);
+          await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
 
           expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0');
         });
@@ -311,7 +367,7 @@ describe('controllers - deals', () => {
         mockReq.params.pageNumber = '2';
 
         it('should redirect to GET deals (page 0) without query parameters', async () => {
-          await queryDealsOrFacilities('deals', mockReq, mockRes);
+          await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
 
           expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0');
         });
@@ -324,7 +380,7 @@ describe('controllers - deals', () => {
           mockReq.body[order] = 'dealSnapshot.ukefDealId';
 
           it('should redirect to GET deals with the correct query parameters', async () => {
-            await queryDealsOrFacilities('deals', mockReq, mockRes);
+            await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
 
             expect(mockRes.redirect).toHaveBeenCalledWith(`/deals/0?sortfield=dealSnapshot.ukefDealId&sortorder=${order}`);
           });
@@ -337,7 +393,7 @@ describe('controllers - deals', () => {
           mockReq.query.sortorder = order;
 
           it('should redirect to GET deals with the correct query parameters', async () => {
-            await queryDealsOrFacilities('deals', mockReq, mockRes);
+            await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
 
             expect(mockRes.redirect).toHaveBeenCalledWith(`/deals/0?sortfield=dealSnapshot.ukefDealId&sortorder=${order}`);
           });
@@ -352,7 +408,7 @@ describe('controllers - deals', () => {
         mockReq.query.sortorder = 'ascending';
 
         it('should redirect to GET deals with query parameters based on the sort specified in the request body', async () => {
-          await queryDealsOrFacilities('deals', mockReq, mockRes);
+          await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
 
           expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0?sortfield=dealSnapshot.exporter.companyName&sortorder=descending');
         });
@@ -364,7 +420,7 @@ describe('controllers - deals', () => {
         mockReq.body.search = 'test';
 
         it('should redirect to GET deals with the correct query parameters', async () => {
-          await queryDealsOrFacilities('deals', mockReq, mockRes);
+          await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
 
           expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0?search=test');
         });
@@ -376,7 +432,7 @@ describe('controllers - deals', () => {
         mockReq.query.search = 'test';
 
         it('should redirect to GET deals with the correct query parameters', async () => {
-          await queryDealsOrFacilities('deals', mockReq, mockRes);
+          await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
 
           expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0?search=test');
         });
@@ -389,7 +445,7 @@ describe('controllers - deals', () => {
         mockReq.query.search = 'searchFromQuery';
 
         it('should redirect to GET deals with query parameters based on the search specified in the request body', async () => {
-          await queryDealsOrFacilities('deals', mockReq, mockRes);
+          await queryDealsOrFacilities(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
 
           expect(mockRes.redirect).toHaveBeenCalledWith('/deals/0?search=searchFromBody');
         });
@@ -399,7 +455,7 @@ describe('controllers - deals', () => {
 
   function itShouldMakeRequestsForDealsDataWithDefaultArguments(mockReq) {
     it('should make requests to TFM API for the deals data with the default arguments', async () => {
-      await renderDealsOrFacilitiesPage('deals', mockReq, mockRes);
+      await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
       expect(api.getDeals).toHaveBeenCalledWith(
         {
           sortBy: {
@@ -417,7 +473,7 @@ describe('controllers - deals', () => {
 
   function itShouldRenderDealsTemplateWithDefaultArguments({ mockReq, overrideDealStage }) {
     it('should render the deals template with the deals data and the default arguments', async () => {
-      await renderDealsOrFacilitiesPage('deals', mockReq, mockRes);
+      await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.DEALS, mockReq, mockRes);
       expect(mockRes.render).toHaveBeenCalledWith('deals/deals.njk', {
         heading: 'All deals',
         deals: [
@@ -435,7 +491,7 @@ describe('controllers - deals', () => {
           },
         ],
         activePrimaryNavigation: 'all deals',
-        activeSubNavigation: 'deal',
+        activeSubNavigation: MONGO_DB_COLLECTIONS.DEALS,
         sortButtonWasClicked: false,
         user: mockReq.session.user,
         activeSortByField: 'tfm.dateReceivedTimestamp',
