@@ -2,6 +2,8 @@ const express = require('express');
 const {
   CURRENCY,
   ROLES: { CHECKER, MAKER },
+  DEAL_STATUS,
+  DEAL_SUBMISSION_TYPE,
 } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const aboutRoutes = require('./about');
@@ -67,6 +69,8 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
     issuedTotal === 0 ||
     (confirmedRequestedCoverStartDates && confirmedRequestedCoverStartDates[dealId] && confirmedRequestedCoverStartDates[dealId].length === issuedTotal);
 
+  const dealCancelledStatus = [DEAL_STATUS.CANCELLED, DEAL_STATUS.PENDING_CANCELLATION];
+
   return res.render('contract/contract-view.njk', {
     successMessage: getFlashSuccessMessage(req),
     deal: dealWithCanIssueOrEditIssueFacilityFlags(user.roles, deal),
@@ -77,7 +81,8 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
     userCanSubmit: userCanSubmitDeal(deal, user),
     dealHasIssuedFacilitiesToSubmit: dealHasIssuedFacilitiesToSubmit(deal),
     confirmedRequestedCoverStartDates: confirmedRequestedCoverStartDates[dealId] || [],
-    allRequestedCoverStartDatesConfirmed: deal.submissionType === 'Automatic Inclusion Notice' || allRequestedCoverStartDatesConfirmed,
+    allRequestedCoverStartDatesConfirmed: deal.submissionType === DEAL_SUBMISSION_TYPE.AIN || allRequestedCoverStartDatesConfirmed,
+    canCloneDeal: !dealCancelledStatus.includes(deal.status),
   });
 });
 

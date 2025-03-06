@@ -74,6 +74,7 @@ function buildBody(app, previewMode, user) {
   const unissuedFacilitiesPresent = areUnissuedFacilitiesPresent(app);
   const facilitiesChangedToIssued = facilitiesChangedToIssuedAsArray(app);
   const hasUkefDecisionAccepted = app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false;
+  const dealCancelledStatus = [DEAL_STATUS.CANCELLED, DEAL_STATUS.PENDING_CANCELLATION];
 
   const mapSummaryParams = {
     app,
@@ -143,6 +144,7 @@ function buildBody(app, previewMode, user) {
     canUpdateUnissuedFacilities: canUpdateUnissuedFacilitiesCheck(app, unissuedFacilitiesPresent, facilitiesChangedToIssued, hasUkefDecisionAccepted),
     MIAReturnToMaker: isMIAWithoutChangedToIssuedFacilities(app),
     returnToMakerNoFacilitiesChanged: returnToMakerNoFacilitiesChanged(app, hasChangedFacilities),
+    canCloneDeal: !dealCancelledStatus.includes(app.status),
   };
 
   return appBody;
