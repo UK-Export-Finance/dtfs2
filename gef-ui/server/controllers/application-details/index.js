@@ -1,5 +1,12 @@
 const startCase = require('lodash/startCase');
-const { DEAL_TYPE, timeZoneConfig, DEAL_STATUS, PORTAL_AMENDMENT_UNDERWAY_STATUSES } = require('@ukef/dtfs2-common');
+const {
+  DEAL_TYPE,
+  timeZoneConfig,
+  DEAL_STATUS,
+  DEAL_STATUS_SCHEDULED_OR_CANCELLED,
+  PORTAL_AMENDMENT_SUBMITTED_STATUSES,
+  PORTAL_AMENDMENT_UNDERWAY_STATUSES,
+} = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { canUpdateUnissuedFacilitiesCheck } = require('./canUpdateUnissuedFacilitiesCheck');
 const {
@@ -42,6 +49,8 @@ function buildHeader(app) {
     applicationType: app.submissionType,
     submissionCount: app.submissionCount,
     activeSubNavigation: '/',
+    portalAmendmentStatus: app.portalAmendmentStatus,
+    isPortalAmendmentStatusUnderway: app.isPortalAmendmentStatusUnderway,
   };
 
   let checker = {};
@@ -104,6 +113,7 @@ function buildBody(app, previewMode, user) {
           // ukefFacilityId required for html facility summary table id
           ukefFacilityId: item.details.ukefFacilityId,
           stage: item.details?.facilityStage ?? (item.details.hasBeenIssued ? STAGE.ISSUED : STAGE.UNISSUED),
+          isPortalAmendmentStatusUnderway: item.details._id === app.facilityId,
         }))
         .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
     },
@@ -208,13 +218,25 @@ const applicationDetails = async (req, res, next) => {
       return res.render('partials/problem-with-service.njk');
     }
 
+    const amendments = await api.getAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_SUBMITTED_STATUSES, userToken });
+
     const userAuthorisationLevels = getUserAuthorisationLevelsToApplication(user, application);
     const previewMode = !userAuthorisationLevels.includes(AUTHORISATION_LEVEL.EDIT);
 
     const userRoles = user.roles;
+    const dealHasNotScheduledOrCancelled = !DEAL_STATUS_SCHEDULED_OR_CANCELLED.includes(application.status);
+    const portalAmendmentStatus = dealHasNotScheduledOrCancelled ? amendments[0]?.status : null;
+
+    const isPortalAmendmentStatusUnderway = PORTAL_AMENDMENT_UNDERWAY_STATUSES.includes(portalAmendmentStatus);
+    const amendmentDetails = {
+      portalAmendmentStatus,
+      facilityId: amendments[0]?.facilityId,
+      isPortalAmendmentStatusUnderway,
+    };
 
     const applicationWithUserRoles = {
       ...application,
+      ...amendmentDetails,
       userRoles,
     };
 
@@ -268,7 +290,6 @@ const applicationDetails = async (req, res, next) => {
 
     params.canIssuedFacilitiesBeAmended =
       canUserAmendIssuedFacilities(application.submissionType, application.status, userRoles) && !amendmentsUnderwayOnDeal.length;
-
     return res.render(`partials/${partial}.njk`, params);
   } catch (error) {
     console.error('Unable to build application view %o', error);
