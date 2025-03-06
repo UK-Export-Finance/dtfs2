@@ -3,6 +3,7 @@ const {
   CURRENCY,
   ROLES: { CHECKER, MAKER },
   DEAL_STATUS,
+  DEAL_SUBMISSION_TYPE,
 } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const aboutRoutes = require('./about');
@@ -80,7 +81,7 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
     userCanSubmit: userCanSubmitDeal(deal, user),
     dealHasIssuedFacilitiesToSubmit: dealHasIssuedFacilitiesToSubmit(deal),
     confirmedRequestedCoverStartDates: confirmedRequestedCoverStartDates[dealId] || [],
-    allRequestedCoverStartDatesConfirmed: deal.submissionType === 'Automatic Inclusion Notice' || allRequestedCoverStartDatesConfirmed,
+    allRequestedCoverStartDatesConfirmed: deal.submissionType === DEAL_SUBMISSION_TYPE.AIN || allRequestedCoverStartDatesConfirmed,
     canCloneDeal: !dealCancelledStatus.includes(deal.status),
   });
 });
