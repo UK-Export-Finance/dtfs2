@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.8.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.7.0...v2.8.0) (2025-03-07)
+
+
+### Features
+
+* **DTFS2-6892:** update mock builder, enforce complete defaults, document mocked class methods ([#4113](https://github.com/UK-Export-Finance/dtfs2/issues/4113)) ([e8f23c3](https://github.com/UK-Export-Finance/dtfs2/commit/e8f23c38c997848d479a3e9f756528f456fbd315))
+* **DTFS2-7720:** redirect to check answers page if change query is true ([#4235](https://github.com/UK-Export-Finance/dtfs2/issues/4235)) ([bdc810b](https://github.com/UK-Export-Finance/dtfs2/commit/bdc810b66392d5faafa7db71bc67775974b67544))
+* **DTFS2-7732:** cancel amendment e2e tests ([#4221](https://github.com/UK-Export-Finance/dtfs2/issues/4221)) ([372edfb](https://github.com/UK-Export-Finance/dtfs2/commit/372edfb6adce9404d0e47ae6bed0d987487d8756))
+
+
+### Bug Fixes
+
+* **DTFS2-7813:** estore payload sanitisation ([#4251](https://github.com/UK-Export-Finance/dtfs2/issues/4251)) ([5944e4c](https://github.com/UK-Export-Finance/dtfs2/commit/5944e4cc8d30403f115aa05274c96fca1a273053))
+* **DTFS2-7820:** cancel deal hide clone button ([#4240](https://github.com/UK-Export-Finance/dtfs2/issues/4240)) ([32fa3c5](https://github.com/UK-Export-Finance/dtfs2/commit/32fa3c599b8f1bf9dda295868d95b598e682266e))
+
 ## [2.7.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.6.0...v2.7.0) (2025-02-18)
 
 
