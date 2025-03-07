@@ -1,3 +1,4 @@
+const { formatForSharePoint } = require('@ukef/dtfs2-common');
 const { has } = require('lodash');
 
 /**
@@ -54,7 +55,7 @@ const mapEstoreFiles = (files) => {
         if (has(estoreFiles, file)) {
           documents.push({
             documentType: estoreFiles[file].eStoreName,
-            fileName: val.filename,
+            fileName: formatForSharePoint(val.filename, '_', true),
             fileLocationPath: val.folder ? val.parentId : `${val.parentId}/${val.documentPath}`,
             parentId: val.parentId,
           });

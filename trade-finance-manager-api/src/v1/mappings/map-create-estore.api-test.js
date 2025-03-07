@@ -1,5 +1,5 @@
+const { formatForSharePoint } = require('@ukef/dtfs2-common');
 const mapCreateEstore = require('./map-create-estore');
-const { formatNameForSharepoint, formatExporterNameForSharepoint } = require('../helpers/formatNameForSharepoint');
 const CONSTANTS = require('../../constants');
 
 describe('mapCreateEstore', () => {
@@ -165,8 +165,8 @@ describe('mapCreateEstore', () => {
 
       const expected = {
         dealId: '6221ee3e14a7efbadb431798',
-        exporterName: formatNameForSharepoint(mockBssDeal.exporter.companyName),
-        buyerName: formatExporterNameForSharepoint(mockBssDeal.buyer.name),
+        exporterName: formatForSharePoint(mockBssDeal.exporter.companyName, ' '),
+        buyerName: formatForSharePoint(mockBssDeal.buyer.name, ' '),
         dealIdentifier: mockBssDeal.ukefDealId,
         destinationMarket: mockBssDeal.destinationOfGoodsAndServices.name,
         riskMarket: mockBssDeal.buyer.country.name,
@@ -221,7 +221,7 @@ describe('mapCreateEstore', () => {
 
       const expected = {
         dealId: '6221edcff154ec00136fcfef',
-        exporterName: formatNameForSharepoint(mockGefDeal.exporter.companyName),
+        exporterName: formatForSharePoint(mockGefDeal.exporter.companyName, ' '),
         buyerName: CONSTANTS.DEALS.DEAL_TYPE.GEF,
         dealIdentifier: mockGefDeal.ukefDealId,
         destinationMarket: 'United Kingdom',
