@@ -7,7 +7,7 @@ const MOCK_USERS = require('../../../../../../e2e-fixtures');
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const goToCloneDealPage = (deal) => {
-  cy.loginGoToDealPage(BANK1_MAKER1, deal);
+  cy.loginGoToDealPage(BANK1_MAKER1);
   pages.contract.cloneDealLink().contains('Clone');
   pages.contract
     .cloneDealLink()

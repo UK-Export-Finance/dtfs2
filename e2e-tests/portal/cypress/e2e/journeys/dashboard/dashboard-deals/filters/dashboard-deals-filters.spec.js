@@ -2,11 +2,15 @@ const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../../fixtures/constants');
 const { dashboardDeals } = require('../../../../pages');
 const { dashboardFilters, dashboardSubNavigation } = require('../../../../partials');
-const { BSS_DEAL_DRAFT, GEF_DEAL_DRAFT } = require('../../fixtures');
+const { GEF_DEAL_DRAFT } = require('../../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
+
+const EXPECTED_DEALS_LENGTH = {
+  ALL_STATUSES: 2,
+};
 
 context('Dashboard Deals filters', () => {
   const ALL_DEALS = [];
@@ -15,9 +19,7 @@ context('Dashboard Deals filters', () => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.createBssEwcsDeal();
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       ALL_DEALS.push(deal);
@@ -37,7 +39,7 @@ context('Dashboard Deals filters', () => {
   describe('by default', () => {
     it('renders all deals', () => {
       dashboardDeals.rows().should('be.visible');
-      dashboardDeals.rows().should('have.length', ALL_DEALS.length);
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.ALL_STATUSES);
     });
 
     it('hides filters and renders `show filter` button', () => {
