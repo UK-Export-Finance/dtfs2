@@ -1,5 +1,6 @@
 const {
   ROLES: { MAKER },
+  DEAL_STATUS,
 } = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../componentRenderer');
 
@@ -20,6 +21,7 @@ describe(component, () => {
     { _id: '61f6fbaea2460c018a4189d8', status: DEAL.UKEF_APPROVED_WITH_CONDITIONS },
     { _id: '61f6fbaea2460c018a4189d9', status: DEAL.READY_FOR_APPROVAL },
   ];
+  const canCloneDeal = (status) => ![DEAL_STATUS.CANCELLED, DEAL_STATUS.PENDING_CANCELLATION].includes(status);
 
   describe('when viewed with the role maker', () => {
     const roles = [MAKER];
@@ -27,7 +29,7 @@ describe(component, () => {
 
     it('should be enabled', () => {
       for (const deal of deals) {
-        const wrapper = render({ user: mockUser, deal });
+        const wrapper = render({ user: mockUser, deal, canCloneDeal: canCloneDeal(deal.status) });
         wrapper.expectLink('[data-cy="clone-deal-link"]').toLinkTo(`/contract/${deal._id}/clone/before-you-start`, 'Clone');
       }
     });
@@ -38,7 +40,7 @@ describe(component, () => {
       const mockUser = { roles: [nonMakerRole] };
 
       for (const deal of deals) {
-        const wrapper = render({ user: mockUser, deal });
+        const wrapper = render({ user: mockUser, deal, canCloneDeal: canCloneDeal(deal.status) });
         wrapper.expectLink('[data-cy="clone-deal-link"]').notToExist();
       }
     });
