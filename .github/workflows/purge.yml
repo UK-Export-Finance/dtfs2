@@ -56,6 +56,8 @@ jobs:
     steps:
       - name: Repository 🗂️
         uses: actions/checkout@v4
+        with:
+          ref: feat/DTFS2-7846-acr-purge
 
       - name: Subscription 🛠️
         run: |
