@@ -47,7 +47,6 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        group: ['Digital-Dev', 'Digital-Test']
         acr: ['tfsdev', 'tfsstaging']
 
     concurrency:
@@ -66,11 +65,19 @@ jobs:
             echo "SUBSCRIPTION=${{ secrets.STAGING_SUBSCRIPTION }}" >> $GITHUB_ENV
           fi
 
+      - name: Resource group 🛠️
+        run: |
+          if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
+            echo "RESOURCE_GROUP=${{ secrets.DEV_RESOURCE_GROUP }}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.acr }}" == *"staging"* ]]; then
+            echo "RESOURCE_GROUP=${{ secrets.STAGING_RESOURCE_GROUP }}" >> $GITHUB_ENV
+          fi
+
       - name: Execute ⚡
         uses: ./.github/actions/acr
         with:
           subscription: ${{ env.SUBSCRIPTION }}
-          group: ${{ matrix.group }}
+          group: ${{ env.RESOURCE_GROUP }}
           acr: ${{ matrix.acr }}
           days: ${{ vars.ACR_PURGE_NONPROD_DAYS }}
 
