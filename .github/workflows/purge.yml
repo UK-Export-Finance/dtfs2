@@ -5,6 +5,10 @@ on:
   schedule:
     - cron: '0 1 * * *'
 
+  push:
+    branches:
+      - feat/DTFS2-7846-acr-purge
+
 env:
   APPLICATION: ${{ vars.APPLICATION }}
   ENVIRONMENT: infrastructure
@@ -44,9 +48,9 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        acr: ['tfsdev', 'tfsstaging']
+        subscription: ['${{ secrets.DEV_SUBSCRIPTION }}', '${{ secrets.STAGING_SUBSCRIPTION }}']
         rg: ['Digital-Dev', 'Digital-Test']
-        subscription: ['']
+        acr: ['tfsdev', 'tfsstaging']
 
     concurrency:
       group: acr-purge-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.acr }}
@@ -59,8 +63,9 @@ jobs:
       - name: Execute ⚡
         uses: ./.github/actions/acr
         with:
-          acr: ${{ matrix.acr }}
+          subscription: ${{ matrix.subscription }}
           rg: ${{ matrix.rg }}
+          acr: ${{ matrix.acr }}
           days: ${{ vars.ACR_PURGE_NONPROD_DAYS }}
 
       - name: Notification  🔔
