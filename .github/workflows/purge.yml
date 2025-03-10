@@ -77,7 +77,7 @@ jobs:
       - name: Execute ⚡
         uses: ./.github/actions/azure
         with:
-          credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE }}
           subscription: ${{ env.SUBSCRIPTION }}
           group: ${{ env.RESOURCE_GROUP }}
           acr: ${{ matrix.acr }}
