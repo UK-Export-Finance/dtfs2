@@ -41,14 +41,12 @@ jobs:
     runs-on: [self-hosted, DTFS, deployment]
     env:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
-      SUBSCRIPTION: ${{ secrets.DEV_SUBSCRIPTION }}
 
     strategy:
       # Do not cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
       matrix:
-        subscription: ['${{ env.SUBSCRIPTION }}']
         group: ['Digital-Dev', 'Digital-Test']
         acr: ['tfsdev', 'tfsstaging']
 
@@ -60,10 +58,18 @@ jobs:
       - name: Repository 🗂️
         uses: actions/checkout@v4
 
+      - name: Subscription 🛠️
+        run: |
+          if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
+            echo "SUBSCRIPTION=${{ secrets.DEV_SUBSCRIPTION }}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.acr }}" == *"staging"* ]]; then
+            echo "SUBSCRIPTION=${{ secrets.STAGING_SUBSCRIPTION }}" >> $GITHUB_ENV
+          fi
+
       - name: Execute ⚡
         uses: ./.github/actions/acr
         with:
-          subscription: ${{ matrix.subscription }}
+          subscription: ${{ env.SUBSCRIPTION }}
           group: ${{ matrix.group }}
           acr: ${{ matrix.acr }}
           days: ${{ vars.ACR_PURGE_NONPROD_DAYS }}
