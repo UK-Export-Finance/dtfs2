@@ -5,10 +5,6 @@ on:
   schedule:
     - cron: '0 1 * * *'
 
-  push:
-    branches:
-      - feat/DTFS2-7846-acr-purge
-
 env:
   APPLICATION: ${{ vars.APPLICATION }}
   TIMEZONE: ${{ vars.TIMEZONE }}
@@ -55,8 +51,6 @@ jobs:
     steps:
       - name: Repository 🗂️
         uses: actions/checkout@v4
-        with:
-          ref: feat/DTFS2-7846-acr-purge
 
       - name: Subscription 🛠️
         run: |
@@ -87,4 +81,4 @@ jobs:
         uses: ./.github/actions/notify
         with:
           webhook: ${{ secrets.MSTEAMS_WEBHOOK }}
-          content: '{"@type": "MessageCard","@context": "http://schema.org/extensions","themeColor": "00703c","title": "🗑️ ${{ matrix.acr }} purge","summary": "Purged artifacts from ''${{ matrix.acr }}'' Azure container registry","sections": [{"activityTitle": "ACR Purge","activitySubtitle": "Purged artifacts from **${{ matrix.acr }}** Azure container registry","facts": [{"name": "ACR","value": "${{ matrix.acr }}"},{  "name": "Resource group",  "value": "${{ matrix.rg }}"},{"name": "Commit","value": "${{ github.sha }}"}],"markdown": true}],"potentialAction": [{"@type": "OpenUri","name": "Workflow","targets": [{"os": "default","uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}]}]}'
+          content: '{"@type": "MessageCard","@context": "http://schema.org/extensions","themeColor": "00703c","title": "🗑️ ${{ matrix.acr }} purge","summary": "Purged artifacts from ''${{ matrix.acr }}'' Azure container registry","sections": [{"activityTitle": "ACR Purge","activitySubtitle": "Purged artifacts from **${{ matrix.acr }}** Azure container registry","facts": [{"name": "ACR","value": "${{ matrix.acr }}"},{  "name": "Resource group",  "value": "${{ env.RESOURCE_GROUP }}"},{"name": "Commit","value": "${{ github.sha }}"}],"markdown": true}],"potentialAction": [{"@type": "OpenUri","name": "Workflow","targets": [{"os": "default","uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}]}]}'
