@@ -9,8 +9,13 @@ import MOCKS from '../mocks';
 import CONSTANTS from '../../constants';
 import { ALL_DEAL_STATUSES } from '../../../test-helpers/common-deal-status-lists';
 import { canUserAmendIssuedFacilities } from '../../utils/facility-amendments.helper';
+import { getSubmittedAmendmentDetails } from '../../utils/submitted-amendment-details';
 
 jest.mock('../../services/api');
+
+jest.mock('../../utils/submitted-amendment-details', () => ({
+  getSubmittedAmendmentDetails: jest.fn(),
+}));
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
@@ -25,6 +30,11 @@ describe('controllers/application-details', () => {
   let mockFacilitiesResponse;
   let mockUserResponse;
   const mockGetAmendmentsOnDealResponse = [];
+  const amendmentDetails = {
+    portalAmendmentStatus: null,
+    facilityId: null,
+    isPortalAmendmentStatusUnderway: false,
+  };
 
   beforeEach(() => {
     mockResponse = MOCKS.MockResponse();
@@ -38,6 +48,7 @@ describe('controllers/application-details', () => {
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);
     api.getAmendmentsOnDeal.mockResolvedValue(mockGetAmendmentsOnDealResponse);
+    getSubmittedAmendmentDetails.mockResolvedValue(amendmentDetails);
     mockRequest.flash = mockSuccessfulFlashResponse();
   });
 
@@ -95,10 +106,13 @@ describe('controllers/application-details', () => {
           applicationType: mockApplicationResponse.submissionType,
           submissionCount: mockApplicationResponse.submissionCount,
           activeSubNavigation: '/',
+          portalAmendmentStatus: amendmentDetails.portalAmendmentStatus,
+          isPortalAmendmentStatusUnderway: amendmentDetails.isPortalAmendmentStatusUnderway,
 
           // body
           application: {
             ...mockApplicationResponse,
+            ...amendmentDetails,
             userRoles: mockRequest.session.user.roles,
           },
           status: mockApplicationResponse.status,
