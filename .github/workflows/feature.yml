@@ -35,7 +35,6 @@ on:
 
 env:
   PRODUCT: dtfs
-  ENVIRONMENT: feature
   TIMEZONE: ${{ vars.TIMEZONE }}
 
 jobs:
@@ -92,7 +91,7 @@ jobs:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
     strategy:
-      max-parallel: 1
+      max-parallel: 2
       # Do not cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
@@ -128,7 +127,7 @@ jobs:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
     strategy:
-      max-parallel: 1
+      max-parallel: 2
       # Do not cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
