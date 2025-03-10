@@ -19,7 +19,7 @@ inputs:
     required: true
   days:
     description: 'Retention days for ACR artifacts purge i.e images older than x days will be removed.'
-    required: true
+    required: false
     default: '30'
 
 # Define the steps to run this action.
