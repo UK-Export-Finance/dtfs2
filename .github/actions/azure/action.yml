@@ -29,6 +29,9 @@ runs:
     # Step 1: Check out the repository.
     - name: Repository 🗃️
       uses: actions/checkout@v4
+      with:
+        ref: feat/DTFS2-7846-acr-purge
+
 
     # Step 2: Log in to Azure.
     - name: Azure 🔐
