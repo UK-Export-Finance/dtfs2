@@ -41,15 +41,15 @@ jobs:
     runs-on: [self-hosted, DTFS, deployment]
     env:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+      SUBSCRIPTION: ${{ secrets.DEV_SUBSCRIPTION }}
 
     strategy:
-      max-parallel: 1
       # Do not cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
       matrix:
-        subscription: ['${{ secrets.DEV_SUBSCRIPTION }}', '${{ secrets.STAGING_SUBSCRIPTION }}']
-        rg: ['Digital-Dev', 'Digital-Test']
+        subscription: ['${{ env.SUBSCRIPTION }}']
+        group: ['Digital-Dev', 'Digital-Test']
         acr: ['tfsdev', 'tfsstaging']
 
     concurrency:
@@ -64,7 +64,7 @@ jobs:
         uses: ./.github/actions/acr
         with:
           subscription: ${{ matrix.subscription }}
-          rg: ${{ matrix.rg }}
+          group: ${{ matrix.group }}
           acr: ${{ matrix.acr }}
           days: ${{ vars.ACR_PURGE_NONPROD_DAYS }}
 
