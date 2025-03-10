@@ -11,7 +11,6 @@ on:
 
 env:
   APPLICATION: ${{ vars.APPLICATION }}
-  ENVIRONMENT: infrastructure
   TIMEZONE: ${{ vars.TIMEZONE }}
 
 jobs:
@@ -28,7 +27,7 @@ jobs:
       - name: Environment 🧪
         id: environment
         run: |
-          echo "environment=dev" >> "$GITHUB_OUTPUT"
+          echo "environment=infrastructure" >> "$GITHUB_OUTPUT"
 
       - name: Timezone 🌐
         run: echo "Timezone set to ${{ env.TIMEZONE }}"
@@ -78,6 +77,7 @@ jobs:
       - name: Execute ⚡
         uses: ./.github/actions/azure
         with:
+          credentials: ${{ secrets.AZURE_CREDENTIALS }}
           subscription: ${{ env.SUBSCRIPTION }}
           group: ${{ env.RESOURCE_GROUP }}
           acr: ${{ matrix.acr }}

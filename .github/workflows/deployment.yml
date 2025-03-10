@@ -39,7 +39,6 @@ on:
 
 env:
   PRODUCT: dtfs
-  ENVIRONMENT: dev
   TIMEZONE: ${{ vars.TIMEZONE }}
 
 jobs:
