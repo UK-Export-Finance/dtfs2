@@ -76,7 +76,7 @@ jobs:
           fi
 
       - name: Execute ⚡
-        uses: ./.github/actions/acr
+        uses: ./.github/actions/azure
         with:
           subscription: ${{ env.SUBSCRIPTION }}
           group: ${{ env.RESOURCE_GROUP }}
