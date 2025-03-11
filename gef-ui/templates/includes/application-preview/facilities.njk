@@ -54,9 +54,9 @@
       {% endif %}
     </header>
     {% if item.isPortalAmendmentStatusUnderway %}
-      <div class="govuk-inset-text govuk-!-margin-top-0" data-cy="amendments-in-progress">
+      <div class="govuk-inset-text govuk-!-margin-top-0">
         Amendments in progress:
-        <a href="/gef/application-details/{{ dealId }}/amendment-details" class="govuk-link">See details</a>
+        <a href="/gef/application-details/{{ dealId }}/amendment-details" class="govuk-link" data-cy="amendments-in-progress">See details</a>
       </div>
     {% endif %}
     {{ govukSummaryList({
