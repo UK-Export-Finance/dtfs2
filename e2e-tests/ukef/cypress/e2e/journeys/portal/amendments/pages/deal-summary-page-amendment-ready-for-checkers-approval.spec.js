@@ -38,9 +38,7 @@ context("Amendments ready for checker's approval - Deal summary page", () => {
         cy.visit(relative(`/gef/application-details/${dealId}`));
         applicationPreview.makeAChangeButton(issuedCashFacilityId).click();
 
-        cy.makerLoginSubmitPortalAmendmentForReview('coverEndDate', 'facilityValue', 'facilityEndDate');
-
-        cy.saveSession();
+        cy.makerSubmitPortalAmendmentForReview('coverEndDate', 'facilityValue', 'facilityEndDate');
       });
     });
   });
@@ -60,12 +58,12 @@ context("Amendments ready for checker's approval - Deal summary page", () => {
     cy.assertText(applicationStatusBanner.bannerAmendmentStatus(), PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL);
   });
 
-  it('should display the Amendement details link in the notification banner', () => {
+  it('should display the "Amendement details" link in the notification banner', () => {
     cy.assertText(applicationPreview.amendmentDetailsHeader(), PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL);
     cy.assertText(applicationPreview.amendmentDetailsLink(), 'Amendment details');
   });
 
-  it('should display in the facility section "Amendment in progress: See details"', () => {
+  it('should display "Amendment in progress: See details" link in the facility section', () => {
     cy.assertText(applicationPreview.amendmentsInProgress(), 'See details');
   });
 });

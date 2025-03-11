@@ -11,7 +11,7 @@ import facilityValue from '../../../../gef/cypress/e2e/pages/amendments/facility
  * @param {Boolean} facilityValueExist
  * @param {Boolean} facilityEndDateExist
  */
-export const makerLoginSubmitPortalAmendmentForReview = (coverEndDateExist = '', facilityValueExist = '', facilityEndDateExist = '') => {
+export const makerSubmitPortalAmendmentForReview = (coverEndDateExist = '', facilityValueExist = '', facilityEndDateExist = '') => {
   if (coverEndDateExist) {
     whatDoYouNeedToChange.coverEndDateCheckbox().click();
   }
