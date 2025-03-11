@@ -73,7 +73,7 @@ runs:
         password: ${{ inputs.acr }}
 
     # Step 7: Build and push Docker images.
-    - name: Artifacts 🗃️
+    - name: Artefacts 🗃️
       working-directory: .
       run: |
         # Build images
