@@ -116,3 +116,4 @@ runs:
           az functionapp deployment slot delete \
           --slot ${{ github.sha }} \
           --name ${{ env.FUNCTION }}
+          
