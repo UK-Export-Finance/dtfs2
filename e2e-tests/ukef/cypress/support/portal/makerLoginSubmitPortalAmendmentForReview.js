@@ -5,7 +5,7 @@ import submittedForChecking from '../../../../gef/cypress/e2e/pages/amendments/s
 import facilityValue from '../../../../gef/cypress/e2e/pages/amendments/facility-value';
 
 /**
- * Login as a maker and submit a portal amendment for review
+ * Submit a portal amendment for review
  * @param {string} amendmentUrl
  * @param {Boolean} coverEndDateExist
  * @param {Boolean} facilityValueExist
