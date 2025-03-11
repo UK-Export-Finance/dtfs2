@@ -1,0 +1,49 @@
+# This GitHub Action is designed to execute Azure CLI for artefacts purge
+
+name: 'Azure container registry artefacts purge'
+description: 'This custom GitHub Actions module will execute AZ CLI for artefacts purge'
+
+# Define the inputs required for this action.
+inputs:
+  credentials:
+    description: 'Azure subscription and resource group service principal'
+    required: true
+  subscription:
+    description: 'Azure subscription ID'
+    required: true
+  group:
+    description: 'Azure resource group'
+    required: true
+  acr:
+    description: 'Azure container registry name, without domain prefix.'
+    required: true
+  days:
+    description: 'A Go-style duration string to indicate a duration beyond which images are deleted.'
+    required: false
+    default: '30'
+  keep:
+    description: 'Specifies that the latest x number of to-be-deleted tags are retained. The latest tags are determined by the last modified time of the tag.'
+    required: false
+    default: '3'
+
+# Define the steps to run this action.
+runs:
+  using: 'composite'
+  steps:
+    # Step 1: Check out the repository.
+    - name: Repository 🗃️
+      uses: actions/checkout@v4
+
+    # Step 2: Log in to Azure.
+    - name: Azure 🔐
+      uses: azure/login@v2
+      with:
+        creds: ${{ inputs.credentials }}
+
+    # Step 3: Purge artefacts
+    # https://learn.microsoft.com/en-us/azure/container-registry/container-registry-auto-purge
+    - name: Artefacts 🗃️
+      working-directory: .
+      run: |
+        az acr run --registry ${{ inputs.acr }} --resource-group ${{ inputs.group }} --subscription ${{ inputs.subscription }} --cmd "acr purge --filter 'portal-ui:.*' --filter 'gef-ui:.*' --filter 'trade-finance-manager-ui:.*' --filter 'portal-api:.*' --filter 'trade-finance-manager-api:.*' --filter 'dtfs-central-api:.*' --filter 'external-api:.*' --filter 'azure-function-acbs:.*' --ago ${{ inputs.days }}d --keep ${{ inputs.keep }}" /dev/null
+      shell: bash
