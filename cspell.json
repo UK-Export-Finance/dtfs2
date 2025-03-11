@@ -212,7 +212,11 @@
     "whatwg",
     "wordprocessingml",
     "wovens",
-    "XLXS"
+    "XLXS",
+    "FĞHIJK",
+    "FGHIJK",
+    "MGA",
+    "vaue"
   ],
   "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
   "languageSettings": [
