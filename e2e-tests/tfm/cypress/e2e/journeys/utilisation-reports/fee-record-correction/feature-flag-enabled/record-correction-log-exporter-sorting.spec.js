@@ -11,7 +11,7 @@ const exporters = ['Exporter 101', 'Exporter 113', 'Exporter 102', 'Exporter 104
 
 const firstReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION).withId(reportId).withBankId(bankId).build();
 
-const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(firstReport).withId(1).withExporter('Exporter 101').build();
+const firstFeeRecord = FeeRecordEntityMockBuilder.forReport(firstReport).withId(1).withExporter(exporters[0]).build();
 
 const secondFeeRecord = FeeRecordEntityMockBuilder.forReport(firstReport).withId(2).withExporter(exporters[0]).build();
 
