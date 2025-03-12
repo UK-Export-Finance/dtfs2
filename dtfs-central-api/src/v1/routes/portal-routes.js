@@ -41,6 +41,7 @@ const patchFacilityAmendmentController = require('../controllers/portal/facility
 const deleteFacilityAmendmentController = require('../controllers/portal/facility/delete-amendment.controller');
 const patchAmendmentStatusController = require('../controllers/portal/facility/patch-amendment-status.controller');
 
+const getAllFacilityAmendmentController = require('../controllers/portal/facility/get-all-amendments.controller');
 const getFacilityAmendmentsForDealController = require('../controllers/portal/facility/get-amendments-on-deal.controller');
 
 const durableFunctionsController = require('../controllers/durable-functions/durable-functions.controller');
@@ -380,6 +381,35 @@ portalRouter.route('/facilities').get(getFacilitiesController.findAllGet);
 portalRouter.route('/facilities').post(createFacilityController.createFacilityPost);
 
 portalRouter.route('/multiple-facilities').post(createMultipleFacilitiesController.createMultipleFacilitiesPost);
+
+/**
+ * @openapi
+ * /facilities/amendments:
+ *   get:
+ *     summary: Get all the Portal facility amendments
+ *     tags: [Portal - Amendments]
+ *     description: Get all the Portal facility amendments
+ *     parameters:
+ *       - in: query
+ *         name: statuses
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ['Draft']
+ *         required: false
+ *         description: The portal amendment statuses to filter on
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/definitions/PortalAmendment'
+ *       404:
+ *         description: Not found
+ */
+portalRouter.route('/facilities/amendments').get(getAllFacilityAmendmentController.getAllPortalAmendments);
 
 /**
  * @openapi
