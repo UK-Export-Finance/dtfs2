@@ -5,6 +5,9 @@ description: 'This custom GitHub Actions module deploys from defined source to d
 
 # Define the inputs required for this action.
 inputs:
+  credentials:
+    description: 'Azure subscription and resource group service principal'
+    required: true
   branch:
     description: 'Source Git branch, main if none specified'
     required: false
@@ -14,9 +17,6 @@ inputs:
     required: true
   group:
     description: 'Azure resource group'
-    required: true
-  credentials:
-    description: 'Azure subscription and resource group service principal'
     required: true
   acr:
     description: 'Azure container registry password'
@@ -78,7 +78,7 @@ runs:
       shell: bash
 
     # Step 7: Build and push Docker images.
-    - name: Artifacts 🗃️
+    - name: Artefacts 🗃️
       working-directory: .
       run: |
         # Build images
