@@ -127,19 +127,22 @@
   {% endif %}
 
   {% if portalAmendmentStatus %}
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <div class="govuk-grid-column-one-third">
-          <p>
-            <strong>Amendment Status</strong>
-          </p>
-        </div>
-        <div class="govuk-grid-column-two-thirds">
-          <p>
-            {{ govukTag({ text: portalAmendmentStatus | dashIfEmpty, attributes: { 'data-cy': 'amendment-status' },
+    <div class="govuk-width-container">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+          <div class="govuk-grid-column-one-third">
+            <p>
+              <strong>Amendment Status</strong>
+            </p>
+          </div>
+          <div class="govuk-grid-column-two-thirds">
+            <p>
+              {{ govukTag({ text: portalAmendmentStatus | dashIfEmpty, attributes: { 'data-cy': 'amendment-status' },
               classes: portalAmendmentStatusTagClass}) }}</p>
-          <p></div>
+            <p></div>
+          </div>
         </div>
       </div>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
+</div>
