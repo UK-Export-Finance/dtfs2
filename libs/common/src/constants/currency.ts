@@ -1,6 +1,15 @@
 import { CurrencyInterface } from '../interfaces';
 
+// GEF Currencies
 export const CURRENCY = {
+  GBP: 'GBP',
+  USD: 'USD',
+  EUR: 'EUR',
+  JPY: 'JPY',
+} as const;
+
+// BSS/EWCS Currencies
+export const ALL_CURRENCIES = {
   AED: 'AED',
   AUD: 'AUD',
   BRL: 'BRL',
@@ -386,3 +395,5 @@ export const CURRENCIES: CurrencyInterface[] = [
  */
 export const CURRENCY_REGEX_GROUP = `(?<currency>${Object.values(CURRENCY).join('|')})`;
 export const CURRENCY_REGEX = new RegExp(CURRENCY_REGEX_GROUP);
+export const ALL_CURRENCIES_REGEX_GROUP = `(?<currency>${Object.values(ALL_CURRENCIES).join('|')})`;
+export const ALL_CURRENCIES_REGEX = new RegExp(ALL_CURRENCIES_REGEX_GROUP);
