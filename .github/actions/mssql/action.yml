@@ -27,7 +27,7 @@ inputs:
   log:
     description: 'Enable MSSQL database logging'
     required: false
-    default: false
+    default: 'false'
   node:
     description: 'Node.js setup version'
     required: true
