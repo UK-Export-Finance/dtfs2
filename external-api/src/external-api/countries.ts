@@ -1,6 +1,6 @@
-import { Country } from '../interfaces';
+import { CountryInterface } from '@ukef/dtfs2-common';
 
-export const COUNTRIES: Country[] = [
+export const COUNTRIES: CountryInterface[] = [
   {
     id: 900,
     name: 'Abu Dhabi',

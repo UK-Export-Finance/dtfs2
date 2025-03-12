@@ -1,13 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
+import { HEADERS, IndustrySectorInterface } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
-import { HEADERS } from '@ukef/dtfs2-common';
 import { INDUSTRY_SECTORS } from '../../external-api';
 import { isValidIndustryId, sortArrayAlphabetically } from '../../helpers';
 
@@ -40,7 +38,7 @@ export const findACBSIndustrySector = async (industryId: number) => {
   return response;
 };
 
-const sortIndustrySectors = (industrySectors: object) =>
+const sortIndustrySectors = (industrySectors: IndustrySectorInterface[]) =>
   sortArrayAlphabetically(industrySectors, 'name').map((sector: any) => ({
     ...sector,
     classes: sortArrayAlphabetically(sector.classes, 'name'),
