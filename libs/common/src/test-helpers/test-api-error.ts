@@ -1,9 +1,9 @@
 import { HttpStatusCode } from 'axios';
 import { ApiError } from '../errors';
-import { ApiErrorCode } from '../types';
+import { HttpStatusCodes, ApiErrorCode } from '../types';
 
 type TestApiErrorParams = {
-  status?: HttpStatusCode;
+  status?: HttpStatusCodes;
   message?: string;
   code?: ApiErrorCode;
   cause?: unknown;
