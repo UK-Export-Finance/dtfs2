@@ -2,13 +2,13 @@ const { ROLES } = require('@ukef/dtfs2-common');
 const request = require('supertest');
 const { router } = require('./index');
 const api = require('../../../api');
-const { getApiData } = require('../../../helpers');
 
 const dealId = '123456';
 
 jest.mock('../../../helpers', () => ({
   __esModule: true,
   requestParams: jest.fn(() => ({ userToken: 'token', _id: 123456 })),
+  getApiData: jest.fn(),
 }));
 describe('eligibility criteria', () => {
   const mockReq = {
@@ -46,8 +46,6 @@ describe('eligibility criteria', () => {
 
       api.updateEligibilityCriteria = jest.fn(() => Promise.resolve(mockUpdatedDeal));
 
-      getApiData.mockResolvedValue(mockUpdatedDeal);
-
       await request(router).post(`/contract/${dealId}/eligibility/criteria`).send({});
 
       expect(api.updateEligibilityCriteria).toHaveBeenCalledWith(dealId, {}, 'token');
@@ -64,8 +62,6 @@ describe('eligibility criteria', () => {
       };
 
       api.updateEligibilityCriteria = jest.fn(() => Promise.resolve(mockUpdatedDeal));
-
-      getApiData.mockResolvedValue(mockUpdatedDeal);
 
       mockReq.body = { someCriteria: 'selected' };
 
