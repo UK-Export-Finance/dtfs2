@@ -16,17 +16,7 @@ export interface IndustryClassInterface {
 /**
  * Interface representing an industry sector.
  */
-export interface IndustrySectorInterface {
-  /**
-   * The code of the industry sector.
-   */
-  code: string;
-
-  /**
-   * The name of the industry sector.
-   */
-  name: string;
-
+export interface IndustrySectorInterface extends IndustryClassInterface {
   /**
    * The classes associated with the industry sector.
    */
