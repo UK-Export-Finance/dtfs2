@@ -1,0 +1,29 @@
+# This GitHub Action is designed to dispatch a custom content MS Teams notification
+
+name: 'Notify'
+description: 'This custom GitHub Actions module dispatches MS Teams notification card'
+
+# Define the inputs required for this action.
+inputs:
+  webhook:
+    description: 'MS Teams channel webhook'
+    required: true
+  content:
+    description: 'Notification card content'
+    required: true
+
+# Define the steps to run this action.
+runs:
+  using: 'composite'
+  steps:
+    # Step 1: Check out the repository.
+    - name: Repository 🗃️
+      uses: actions/checkout@v4
+
+    # Step 2: Dispatch notification
+    - name: Notification 🔔
+      shell: bash
+      run: |
+        curl --location '${{ inputs.webhook }}' \
+        --header 'Content-Type: application/json' \
+        --data-raw '${{ inputs.content }}'

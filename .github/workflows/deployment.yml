@@ -39,7 +39,6 @@ on:
 
 env:
   PRODUCT: dtfs
-  ENVIRONMENT: dev
   TIMEZONE: ${{ vars.TIMEZONE }}
 
 jobs:
@@ -95,7 +94,7 @@ jobs:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
     strategy:
-      max-parallel: 1
+      max-parallel: 2
       # Do not cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
@@ -130,7 +129,7 @@ jobs:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
     strategy:
-      max-parallel: 1
+      max-parallel: 2
       # Do not cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
@@ -161,59 +160,45 @@ jobs:
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
 
-    env:
-      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
-      WEBHOOK: ${{ secrets.MSTEAMS_WEBHOOK }}
-
     steps:
-      - name: Facts
-        run: |
-
-      - name: MS Teams
-        run: |
-          curl --location '${{ env.WEBHOOK }}' \
-          --header 'Content-Type: application/json' \
-          --data-raw '{
-          "@type": "MessageCard",
-          "@context": "http://schema.org/extensions",
-          "themeColor": "00703c",
-          "title": "🚀 main : ${{ env.ENVIRONMENT }}",
-          "summary": "Deployed '\''main'\'' branch to '\''${{ env.ENVIRONMENT }}'\'' DTFS environment",
-          "sections": [
-          {
+      - name: Notification  🔔
+        uses: ./.github/actions/notify
+        with:
+          webhook: ${{ secrets.MSTEAMS_WEBHOOK }}
+          content: '{
+            "@type": "MessageCard",
+            "@context": "http://schema.org/extensions",
+            "themeColor": "00703c",
+            "title": "🚀 main : ${{ env.ENVIRONMENT }}",
+            "summary": "Deployed main branch to ${{ env.ENVIRONMENT }} DTFS environment",
+            "sections":
+            [
+            {
             "activityTitle": "Branch deployment",
             "activitySubtitle": "Deployed **main** branch to **${{ env.ENVIRONMENT }}** DTFS environment.",
-            "facts": [
-                {
-                    "name": "Branch",
-                    "value": "main"
-                },
-                {
-                    "name": "Environment",
-                    "value": "${{ env.ENVIRONMENT }}"
-                },
-                {
-                    "name": "Commit",
-                    "value": "${{ github.sha }}"
-                },
-                {
-                    "name": "Status",
-                    "value": "Successfull"
-                }
+            "facts":
+            [
+            { "name": "Branch", "value": "main" },
+            { "name": "Environment", "value": "${{ env.ENVIRONMENT }}" },
+            { "name": "Commit", "value": "${{ github.sha }}" },
+            { "name": "Status", "value": "Successfull" },
             ],
-            "markdown": true
-                  }
-              ],
-            "potentialAction": [
-              {
-              "@type": "OpenUri",
-              "name": "Deployment",
-                "targets": [
-                  {
-                      "os": "default",
-                      "uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                  }
-                ]
-              }
-            ]
-          }'
+            "markdown": true,
+            },
+            ],
+            "potentialAction":
+            [
+            {
+            "@type": "OpenUri",
+            "name": "Deployment",
+            "targets":
+            [
+            {
+            "os": "default",
+            "uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            },
+            ],
+            },
+            ],
+            }
+            '
