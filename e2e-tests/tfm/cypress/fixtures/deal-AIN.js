@@ -1,4 +1,4 @@
-const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+const { BOND_TYPE, ALL_CURRENCIES, CURRENCY } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('./constants');
 const { BANK1_MAKER1 } = require('../../../e2e-fixtures');
 const { twoYearsAgo, oneMonth } = require('../../../e2e-fixtures/dateConstants');
@@ -242,6 +242,53 @@ const MOCK_DEAL = {
       currency: {
         text: 'GBP - UK Sterling',
         id: CURRENCY.GBP,
+      },
+    },
+    {
+      _id: {
+        $oid: '67812a144f26acebc727f7de',
+      },
+      dealId: {
+        $oid: '6781299f4f26acebc727f7d3',
+      },
+      type: CONSTANTS.FACILITY_TYPE.CASH,
+      hasBeenIssued: true,
+      name: 'Test',
+      shouldCoverStartOnSubmission: true,
+      coverStartDate: {
+        $date: '2025-01-10T00:00:00.000Z',
+      },
+      coverEndDate: {
+        $date: '2026-01-10T00:00:00.000Z',
+      },
+      issueDate: null,
+      monthsOfCover: null,
+      details: ['Term basis', 'Revolving or renewing basis', 'Uncommitted basis'],
+      detailsOther: '',
+      currency: {
+        id: ALL_CURRENCIES.AED,
+      },
+      value: 50000,
+      coverPercentage: 80,
+      interestPercentage: 10,
+      paymentType: null,
+      createdAt: 1736518164646,
+      updatedAt: 1736518246789,
+      ukefExposure: 40000,
+      guaranteeFee: 9,
+      submittedAsIssuedDate: '1736518244555',
+      ukefFacilityId: '0041317284',
+      feeType: 'At maturity',
+      feeFrequency: null,
+      dayCountBasis: 360,
+      coverDateConfirmed: false,
+      hasBeenIssuedAndAcknowledged: null,
+      canResubmitIssuedFacilities: null,
+      unissuedToIssuedByMaker: {},
+      isUsingFacilityEndDate: true,
+      bankReviewDate: null,
+      facilityEndDate: {
+        $date: '2025-01-10T00:00:00.000Z',
       },
     },
   ],
