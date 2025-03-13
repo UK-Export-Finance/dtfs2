@@ -325,60 +325,65 @@ const formatAmendmentDetails = (allAmendments) => {
 };
 
 const getCaseFacility = async (req, res) => {
-  const { _id: dealId, facilityId } = req.params;
-  const { userToken } = req.session;
-  const facility = await api.getFacility(facilityId, userToken);
-  const { data: amendment } = await api.getAmendmentInProgress(facilityId, userToken);
-  const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
-  const { data: allAmendmentsByFacilityId } = await api.getAmendmentsByFacilityId(facilityId, userToken);
+  try {
+    const { _id: dealId, facilityId } = req.params;
+    const { userToken } = req.session;
+    const facility = await api.getFacility(facilityId, userToken);
+    const { data: amendment } = await api.getAmendmentInProgress(facilityId, userToken);
+    const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
+    const { data: allAmendmentsByFacilityId } = await api.getAmendmentsByFacilityId(facilityId, userToken);
 
-  if (!facility) {
+    if (!facility) {
+      return res.redirect('/not-found');
+    }
+
+    const allAmendments = formatAmendmentDetails(allAmendmentsByFacilityId);
+
+    const deal = await api.getDeal(dealId, userToken);
+
+    /**
+     * Ensure imperative deal properties exist before rendering
+     */
+    if (!deal?.dealSnapshot?._id || !deal?.tfm) {
+      console.error('An error occurred while rendering a TFM deal %s', dealId);
+      return res.render('_partials/problem-with-service.njk');
+    }
+
+    const hasAmendmentInProgressButton = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
+    const showContinueAmendmentButton = hasAmendmentInProgressButton && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
+
+    const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
+    const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+
+    if (hasAmendmentInProgress) {
+      deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
+    }
+
+    return res.render('case/facility/facility.njk', {
+      deal: deal.dealSnapshot,
+      tfm: deal.tfm,
+      dealId: deal.dealSnapshot._id,
+      facility: facility.facilitySnapshot,
+      activePrimaryNavigation: 'manage work',
+      activeSubNavigation: MONGO_DB_COLLECTIONS.FACILITIES,
+      facilityId,
+      facilityTfm: facility.tfm,
+      user: req.session.user,
+      showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !amendment.amendmentId,
+      showContinueAmendmentButton,
+      amendmentId: amendment?.amendmentId,
+      amendmentVersion: amendment?.version,
+      hasAmendmentInProgress,
+      hasAmendmentInProgressButton,
+      allAmendments,
+      amendments,
+      amendmentsInProgress,
+      showFacilityEndDate: facility.facilitySnapshot.isGef,
+    });
+  } catch (error) {
+    console.error('Error getting case facility %o', error);
     return res.redirect('/not-found');
   }
-
-  const allAmendments = formatAmendmentDetails(allAmendmentsByFacilityId);
-
-  const deal = await api.getDeal(dealId, userToken);
-
-  /**
-   * Ensure imperative deal properties exist before rendering
-   */
-  if (!deal?.dealSnapshot?._id || !deal?.tfm) {
-    console.error('An error occurred while rendering a TFM deal %s', dealId);
-    return res.render('_partials/problem-with-service.njk');
-  }
-
-  const hasAmendmentInProgressButton = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
-  const showContinueAmendmentButton = hasAmendmentInProgressButton && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
-
-  const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
-  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
-
-  if (hasAmendmentInProgress) {
-    deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
-  }
-
-  return res.render('case/facility/facility.njk', {
-    deal: deal.dealSnapshot,
-    tfm: deal.tfm,
-    dealId: deal.dealSnapshot._id,
-    facility: facility.facilitySnapshot,
-    activePrimaryNavigation: 'manage work',
-    activeSubNavigation: MONGO_DB_COLLECTIONS.FACILITIES,
-    facilityId,
-    facilityTfm: facility.tfm,
-    user: req.session.user,
-    showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !amendment.amendmentId,
-    showContinueAmendmentButton,
-    amendmentId: amendment?.amendmentId,
-    amendmentVersion: amendment?.version,
-    hasAmendmentInProgress,
-    hasAmendmentInProgressButton,
-    allAmendments,
-    amendments,
-    amendmentsInProgress,
-    showFacilityEndDate: facility.facilitySnapshot.isGef,
-  });
 };
 
 const postFacilityAmendment = async (req, res) => {

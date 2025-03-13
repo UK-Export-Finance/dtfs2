@@ -6,7 +6,7 @@ import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { today } from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 
-context('Amendments - Facility value', () => {
+context('Amendments - Facility value - AUD', () => {
   let dealId;
   const dealFacilities = [];
 
@@ -16,7 +16,7 @@ context('Amendments - Facility value', () => {
 
       const { dealType, mockFacilities } = MOCK_DEAL_AIN;
 
-      cy.createFacilities(dealId, [mockFacilities[3]], BANK1_MAKER1).then((createdFacilities) => {
+      cy.createFacilities(dealId, [mockFacilities[2]], BANK1_MAKER1).then((createdFacilities) => {
         dealFacilities.push(...createdFacilities);
       });
 
