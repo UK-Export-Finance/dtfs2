@@ -2,7 +2,7 @@
 # *******************
 #
 # This GitHub Actions workflow automates the deployment process for web apps and Azure Functions to Azure.
-# It is triggered when on base default branch i.e. `main` at every day at midnight. The workflow runs after a successful QAT workflow
+# It is triggered everyday at midnight when on base default branch i.e `main`. The workflow runs after a successful QAT workflow.
 # completion and includes the following key steps:
 #
 # Key Stages:
