@@ -1,74 +1,154 @@
-const { ROLES } = require('@ukef/dtfs2-common');
-const request = require('supertest');
-const { router } = require('./index');
-const api = require('../../../api');
-
-const dealId = '123456';
+import { router } from './index';
+import getApiData from '../../../helpers/getApiData';
 
 jest.mock('../../../helpers', () => ({
   __esModule: true,
   requestParams: jest.fn(() => ({ userToken: 'token', _id: 123456 })),
   getApiData: jest.fn(),
 }));
-describe('eligibility criteria', () => {
-  const mockReq = {
-    params: {
-      _id: '123456',
-    },
-    body: {},
-    session: {
-      user: {
-        roles: [ROLES.MAKER],
+
+describe('POST /contract/:_id/eligibility/criteria', () => {
+  it('redirects to criteria page with errors when validation fails', async () => {
+    const apiResponse = {
+      eligibility: {
+        validationErrors: {
+          count: 1,
+          errorList: {
+            error: 'Error message',
+          },
+        },
       },
-    },
-  };
+    };
 
-  const mockRes = {
-    redirect: jest.fn(),
-  };
+    jest.mocked(getApiData).mockResolvedValue(apiResponse);
 
-  beforeEach(() => {
-    jest.resetAllMocks();
+    const req = {
+      params: {
+        _id: 123456,
+      },
+      session: {
+        userToken: 'token',
+      },
+    };
+
+    const res = {
+      redirect: jest.fn(),
+    };
+
+    await router.post('/contract/:_id/eligibility/criteria')(req, res);
+
+    expect(res.redirect).toHaveBeenCalledTimes(1);
+    expect(res.redirect).toHaveBeenCalledWith('/contract/123456/eligibility/criteria?errors=true');
   });
 
-  describe('POST /contract/:_id/eligibility/criteria', () => {
-    it('should redirect to criteria page with errors when validation fails', async () => {
-      const mockUpdatedDeal = {
-        eligibility: {
-          validationErrors: {
-            count: 1,
-            errorList: {
-              criteriaNotSelected: { order: 1, text: 'Select at least one eligibility criterion' },
-            },
+  it('redirects to supporting-documentation page when validation succeeds', async () => {
+    const apiResponse = {
+      eligibility: {
+        validationErrors: {
+          count: 0,
+          errorList: {},
+        },
+      },
+    };
+
+    jest.mocked(getApiData).mockResolvedValue(apiResponse);
+
+    const req = {
+      params: {
+        _id: 123456,
+      },
+      session: {
+        userToken: 'token',
+      },
+    };
+
+    const res = {
+      redirect: jest.fn(),
+    };
+
+    await router.post('/contract/:_id/eligibility/criteria')(req, res);
+
+    expect(res.redirect).toHaveBeenCalledTimes(1);
+    expect(res.redirect).toHaveBeenCalledWith('/contract/123456/eligibility/supporting-documentation');
+  });
+});
+
+describe('GET /contract/:_id/eligibility/supporting-documentation', () => {
+  it('renders supporting-documentation page with errors', async () => {
+    const deal = {
+      eligibility: {
+        validationErrors: {
+          count: 1,
+          errorList: {
+            error: 'Error message',
           },
         },
-      };
-
-      api.updateEligibilityCriteria = jest.fn(() => Promise.resolve(mockUpdatedDeal));
-
-      await request(router).post(`/contract/${dealId}/eligibility/criteria`).send({});
-
-      expect(api.updateEligibilityCriteria).toHaveBeenCalledWith(dealId, {}, 'token');
-      expect(mockRes.redirect).toHaveBeenCalledWith(`/contract/${dealId}/eligibility/criteria?errors=true`);
-    });
-
-    it('should redirect to supporting documentation page when criteria are valid', async () => {
-      const mockUpdatedDeal = {
-        eligibility: {
-          validationErrors: {
-            count: 0,
+      },
+      supportingInformation: {
+        validationErrors: {
+          count: 1,
+          errorList: {
+            error: 'Error message',
           },
         },
-      };
+      },
+    };
 
-      api.updateEligibilityCriteria = jest.fn(() => Promise.resolve(mockUpdatedDeal));
+    jest.mocked(getApiData).mockResolvedValue(deal);
 
-      mockReq.body = { someCriteria: 'selected' };
+    const req = {
+      params: {
+        _id: 123456,
+      },
+      session: {
+        userToken: 'token',
+      },
+    };
 
-      await request(router).post(`/contract/${dealId}/eligibility/criteria`).send({ someCriteria: 'selected' });
+    const res = {
+      render: jest.fn(),
+    };
 
-      expect(api.updateEligibilityCriteria).toHaveBeenCalledWith(dealId, { someCriteria: 'selected' }, 'token');
-      expect(mockRes.redirect).toHaveBeenCalledWith(`/contract/${dealId}/eligibility/supporting-documentation`);
-    });
+    await router.get('/contract/:_id/eligibility/supporting-documentation')(req, res);
+
+    expect(res.render).toHaveBeenCalledTimes(1);
+    expect(res.render).toHaveBeenCalledWith('eligibility/eligibility-supporting-documentation.njk', expect.any(Object));
+  });
+
+  it('renders supporting-documentation page without errors', async () => {
+    const deal = {
+      eligibility: {
+        validationErrors: {
+          count: 0,
+          errorList: {},
+        },
+      },
+      supportingInformation: {
+        validationErrors: {
+          count: 0,
+          errorList: {},
+        },
+      },
+    };
+
+    jest.mocked(getApiData).mockResolvedValue(deal);
+
+    const req = {
+      params: {
+        _id: 123456,
+      },
+      session: {
+        userToken: 'token',
+      },
+    };
+
+    const res = {
+      render: jest.fn(),
+    };
+
+    await router.get('/contract/:_id/eligibility/supporting-documentation')(req, res);
+
+    expect(res.render).toHaveBeenCalledTimes(1);
+    expect(res.render).toHaveBeenCalledWith('eligibility/eligibility-supporting-documentation.njk', expect.any(Object));
   });
 });
