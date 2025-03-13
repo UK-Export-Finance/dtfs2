@@ -18,3 +18,8 @@ export const getAmendmentsOnDealUrl = ({ dealId, statuses }: { dealId: string; s
   const statusFilterQuery = statuses ? `?statuses=${statuses.map((item) => encodeURI(item)).join(',')}` : '';
   return `/v1/gef/deals/${dealId}/amendments/${statusFilterQuery}`;
 };
+
+export const getAllAmendmentsUrl = ({ statuses }: { statuses?: PortalAmendmentStatus[] }) => {
+  const statusFilterQuery = statuses ? `?statuses=${statuses.map((item) => encodeURI(item)).join(',')}` : '';
+  return `/v1/gef/facilities/amendments/${statusFilterQuery}`;
+};
