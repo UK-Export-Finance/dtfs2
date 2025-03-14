@@ -11,6 +11,7 @@
   {% set paymentsReceived = feeRecord.paymentsReceived %}
   {% set status = feeRecord.status %}
   {% set displayStatus = feeRecord.displayStatus %}
+  {% set statusTagColours = params.statusTagColours %}
 
   <tr
     class="govuk-table__row"
@@ -49,7 +50,8 @@
     <td class="govuk-table__cell" data-sort-value="{{ displayStatus }}">
       {{ feeRecordStatus.render({
         status: status,
-        displayStatus: displayStatus
+        displayStatus: displayStatus,
+        statusTagColours: statusTagColours
       }) }}
     </td>
   </tr>

@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { getFormattedReportPeriodWithLongMonth, recordCorrectionLogDetailsMock } from '@ukef/dtfs2-common';
+import { getFormattedReportPeriodWithLongMonth, recordCorrectionLogDetailsMock, UTILISATION_REPORT_STATUS_TAG_COLOURS } from '@ukef/dtfs2-common';
 import { aTfmSessionUser } from '../../../../../test-helpers';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import { getRecordCorrectionLogDetails } from '.';
@@ -58,6 +58,7 @@ describe('controllers/utilisation-reports/record-corrections/record-correction-l
         bankName: recordCorrectionLogDetailsMock.bankName,
         activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
         backLinkHref: expectedBackLinkHref,
+        statusTagColours: UTILISATION_REPORT_STATUS_TAG_COLOURS,
       };
 
       expect(res._getRenderView()).toEqual('utilisation-reports/record-corrections/record-correction-log-details.njk');
