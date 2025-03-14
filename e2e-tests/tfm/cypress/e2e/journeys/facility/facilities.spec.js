@@ -314,7 +314,7 @@ context('Facility page', () => {
 
     pages.facilitiesPage.coverEndDateCell(0).contains('24 Sep 2020');
     pages.facilitiesPage.coverEndDateCell(1).contains('24 Sep 2020');
-    pages.facilitiesPage.coverEndDateCell(2).contains('24 Sep 2020');
+    pages.facilitiesPage.coverEndDateCell(2).contains(oneMonth.dd_MMM_yyyy);
     pages.facilitiesPage.coverEndDateCell(3).contains(oneMonth.dd_MMM_yyyy);
     pages.facilitiesPage.coverEndDateCell(4).contains(oneMonth.dd_MMM_yyyy);
     pages.facilitiesPage.coverEndDateCell(5).contains(oneMonth.dd_MMM_yyyy);
@@ -332,7 +332,7 @@ context('Facility page', () => {
     pages.facilitiesPage.coverEndDateCell(0).contains(oneMonth.dd_MMM_yyyy);
     pages.facilitiesPage.coverEndDateCell(1).contains(oneMonth.dd_MMM_yyyy);
     pages.facilitiesPage.coverEndDateCell(2).contains(oneMonth.dd_MMM_yyyy);
-    pages.facilitiesPage.coverEndDateCell(3).contains('24 Sep 2020');
+    pages.facilitiesPage.coverEndDateCell(3).contains(oneMonth.dd_MMM_yyyy);
     pages.facilitiesPage.coverEndDateCell(4).contains('24 Sep 2020');
     pages.facilitiesPage.coverEndDateCell(5).contains('24 Sep 2020');
   });
