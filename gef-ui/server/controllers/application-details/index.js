@@ -25,6 +25,7 @@ const { FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_SUBMISSION_TYPE, STAGE } = requ
 const Application = require('../../models/application');
 const { MAKER } = require('../../constants/roles');
 const { canUserAmendIssuedFacilities } = require('../../utils/facility-amendments.helper');
+const { getSubmittedAmendmentDetails } = require('../../utils/submitted-amendment-details');
 
 let userSession;
 
@@ -42,6 +43,8 @@ function buildHeader(app) {
     applicationType: app.submissionType,
     submissionCount: app.submissionCount,
     activeSubNavigation: '/',
+    portalAmendmentStatus: app.portalAmendmentStatus,
+    isPortalAmendmentStatusUnderway: app.isPortalAmendmentStatusUnderway,
   };
 
   let checker = {};
@@ -105,6 +108,7 @@ function buildBody(app, previewMode, user) {
           // ukefFacilityId required for html facility summary table id
           ukefFacilityId: item.details.ukefFacilityId,
           stage: item.details?.facilityStage ?? (item.details.hasBeenIssued ? STAGE.ISSUED : STAGE.UNISSUED),
+          isPortalAmendmentStatusUnderway: item.details._id === app.facilityId,
         }))
         .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
     },
@@ -215,8 +219,11 @@ const applicationDetails = async (req, res, next) => {
 
     const userRoles = user.roles;
 
-    const applicationWithUserRoles = {
+    const amendmentDetails = await getSubmittedAmendmentDetails(application, userToken);
+
+    const applicationData = {
       ...application,
+      ...amendmentDetails,
       userRoles,
     };
 
@@ -239,7 +246,7 @@ const applicationDetails = async (req, res, next) => {
 
     const params = {
       user,
-      ...buildView(applicationWithUserRoles, previewMode, user),
+      ...buildView(applicationData, previewMode, user),
       link,
     };
 
@@ -270,7 +277,6 @@ const applicationDetails = async (req, res, next) => {
 
     params.canIssuedFacilitiesBeAmended =
       canUserAmendIssuedFacilities(application.submissionType, application.status, userRoles) && !amendmentsUnderwayOnDeal.length;
-
     return res.render(`partials/${partial}.njk`, params);
   } catch (error) {
     console.error('Unable to build application view %o', error);

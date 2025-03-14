@@ -4,6 +4,7 @@ import { submitDealCancellation } from './trade-finance-manager-ui/submit-deal-c
 import { makerLoginSubmitGefDealForReview } from './portal/makerLoginSubmitGefDealForReview';
 import { checkerLoginSubmitGefDealToUkef } from './portal/checkerLoginSubmitGefDealToUkef';
 import { makerSubmitDealForReview } from './portal/makerSubmitDealForReview';
+import { makerSubmitPortalAmendmentForReview } from './portal/makerSubmitPortalAmendmentForReview';
 import { checkerSubmitDealToUkef } from './portal/checkerSubmitDealToUkef';
 import { getOneDeal } from './portal-api/getOneDeal';
 import { getOneGefDeal } from './portal-api/getOneGefDeal';
@@ -44,6 +45,7 @@ Cypress.Commands.add('completeDateFormFields', require('./portal/completeDateFor
 
 Cypress.Commands.add('makerLoginSubmitGefDealForReview', makerLoginSubmitGefDealForReview);
 Cypress.Commands.add('checkerLoginSubmitGefDealToUkef', checkerLoginSubmitGefDealToUkef);
+Cypress.Commands.add('makerSubmitPortalAmendmentForReview', makerSubmitPortalAmendmentForReview);
 Cypress.Commands.add('makerSubmitDealForReview', makerSubmitDealForReview);
 Cypress.Commands.add('checkerSubmitDealToUkef', checkerSubmitDealToUkef);
 Cypress.Commands.add('getAmendmentIdFromUrl', getAmendmentIdFromUrl);

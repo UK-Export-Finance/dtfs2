@@ -7,6 +7,9 @@ const applicationPreview = {
 
   comments: () => cy.get('[data-cy="latest-comment"]'),
 
+  amendmentDetailsHeader: () => cy.get('[data-cy="amendment-details-header"]'),
+  amendmentDetailsLink: () => cy.get('[data-cy="amendment-details"]'),
+
   ukefReview: () => cy.get('[data-cy="ukef-review"]'),
   ukefReviewLink: () => cy.get('[data-cy="ukef-review-link"]'),
   ukefReviewHeading: () => cy.get('[data-cy="ukef-review-decision-heading"]'),
@@ -90,6 +93,7 @@ const applicationPreview = {
   returnButton: () => cy.get('[data-cy="return-button"]'),
 
   makeAChangeButton: (facilityId) => cy.get(`[data-cy="facility-${facilityId}-make-change-button"]`),
+  amendmentsInProgress: () => cy.get('[data-cy="amendments-in-progress"]'),
 };
 
 export default applicationPreview;
