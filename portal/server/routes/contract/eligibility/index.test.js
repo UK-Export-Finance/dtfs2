@@ -1,13 +1,12 @@
 import { router } from './index';
 import getApiData from '../../../helpers/getApiData';
 
-jest.mock('../../../helpers', () => ({
-  __esModule: true,
-  requestParams: jest.fn(() => ({ userToken: 'token', _id: 123456 })),
-  getApiData: jest.fn(() => Promise.resolve({})),
-}));
+jest.mock('../../../helpers/getApiData', () => jest.fn());
 
 describe('POST /contract/:_id/eligibility/criteria', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
   it('redirects to criteria page with errors when validation fails', async () => {
     const apiResponse = {
       eligibility: {
@@ -20,20 +19,10 @@ describe('POST /contract/:_id/eligibility/criteria', () => {
       },
     };
 
-    getApiData.mockImplementation(() => Promise.resolve(apiResponse));
+    getApiData.mockResolvedValue(apiResponse);
 
-    const req = {
-      params: {
-        _id: 123456,
-      },
-      session: {
-        userToken: 'token',
-      },
-    };
-
-    const res = {
-      redirect: jest.fn(),
-    };
+    const req = { params: { _id: 123456 }, session: { userToken: 'token' } };
+    const res = { redirect: jest.fn() };
 
     await router.post('/contract/:_id/eligibility/criteria')(req, res);
 
@@ -51,20 +40,10 @@ describe('POST /contract/:_id/eligibility/criteria', () => {
       },
     };
 
-    getApiData.mockImplementation(() => Promise.resolve(apiResponse));
+    getApiData.mockResolvedValue(apiResponse);
 
-    const req = {
-      params: {
-        _id: 123456,
-      },
-      session: {
-        userToken: 'token',
-      },
-    };
-
-    const res = {
-      redirect: jest.fn(),
-    };
+    const req = { params: { _id: 123456 }, session: { userToken: 'token' } };
+    const res = { redirect: jest.fn() };
 
     await router.post('/contract/:_id/eligibility/criteria')(req, res);
 
@@ -94,20 +73,10 @@ describe('GET /contract/:_id/eligibility/supporting-documentation', () => {
       },
     };
 
-    getApiData.mockImplementation(() => Promise.resolve(deal));
+    getApiData.mockResolvedValue(deal);
 
-    const req = {
-      params: {
-        _id: 123456,
-      },
-      session: {
-        userToken: 'token',
-      },
-    };
-
-    const res = {
-      render: jest.fn(),
-    };
+    const req = { params: { _id: 123456 }, session: { userToken: 'token' } };
+    const res = { render: jest.fn() };
 
     await router.get('/contract/:_id/eligibility/supporting-documentation')(req, res);
 
@@ -131,20 +100,10 @@ describe('GET /contract/:_id/eligibility/supporting-documentation', () => {
       },
     };
 
-    getApiData.mockImplementation(() => Promise.resolve(deal));
+    getApiData.mockResolvedValue(deal);
 
-    const req = {
-      params: {
-        _id: 123456,
-      },
-      session: {
-        userToken: 'token',
-      },
-    };
-
-    const res = {
-      render: jest.fn(),
-    };
+    const req = { params: { _id: 123456 }, session: { userToken: 'token' } };
+    const res = { render: jest.fn() };
 
     await router.get('/contract/:_id/eligibility/supporting-documentation')(req, res);
 
