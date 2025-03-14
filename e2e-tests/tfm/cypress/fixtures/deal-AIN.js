@@ -1,4 +1,4 @@
-const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+const { BOND_TYPE, ALL_CURRENCIES, CURRENCIES, CURRENCY } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('./constants');
 const { BANK1_MAKER1 } = require('../../../e2e-fixtures');
 const { twoYearsAgo, oneMonth } = require('../../../e2e-fixtures/dateConstants');
@@ -243,6 +243,36 @@ const MOCK_DEAL = {
         text: 'GBP - UK Sterling',
         id: CURRENCY.GBP,
       },
+    },
+    {
+      type: CONSTANTS.FACILITY_TYPE.LOAN,
+      bondIssuer: 'Issuer',
+      bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
+      facilityStage: 'Issued',
+      hasBeenIssued: true,
+      ukefGuaranteeInMonths: '10',
+      bondBeneficiary: 'test',
+      guaranteeFeePayableByBank: '9.0000',
+      value: '12345.00',
+      currencySameAsSupplyContractCurrency: 'true',
+      riskMarginFee: '10',
+      coveredPercentage: '20',
+      minimumRiskMarginFee: '30',
+      ukefExposure: '2,469.00',
+      feeFrequency: 'Quarterly',
+      feeType: 'At maturity',
+      dayCountBasis: '365',
+      currency: {
+        text: CURRENCIES[1].text,
+        id: ALL_CURRENCIES.AUD,
+      },
+      'coverEndDate-day': oneMonth.dayLong,
+      'coverEndDate-month': oneMonth.monthLong,
+      'coverEndDate-year': oneMonth.year,
+      issuedDate: twoYearsAgo.unixMillisecondsString,
+      requestedCoverStartDate: twoYearsAgo.unixMillisecondsString,
+      name: 'Test-123',
+      updatedAt: Date.now(),
     },
   ],
 };

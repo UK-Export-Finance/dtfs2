@@ -740,6 +740,15 @@ describe('controllers - case', () => {
   });
 
   describe('GET case facility', () => {
+    const mockDeal = {
+      _id: '12345678',
+      dealSnapshot: {
+        _id: '12345678',
+        mock: true,
+      },
+      tfm: {},
+    };
+
     describe('when facility exists', () => {
       const mockFacility = {
         _id: '61f6ac5b02fade01b1e8efef',
@@ -777,15 +786,6 @@ describe('controllers - case', () => {
         effectiveDate: 1655027294,
         submissionDate: 1652867309,
         value: 112,
-      };
-
-      const mockDeal = {
-        _id: '12345678',
-        dealSnapshot: {
-          _id: '12345678',
-          mock: true,
-        },
-        tfm: {},
       };
 
       beforeEach(() => {
@@ -861,6 +861,33 @@ describe('controllers - case', () => {
           amendments: expect.any(Array),
           showFacilityEndDate: false,
         });
+      });
+    });
+
+    describe('when facility does not exists', () => {
+      beforeEach(() => {
+        api.getFacility = () => Promise.resolve({});
+        api.getDeal = () => Promise.resolve(mockDeal);
+        api.getAmendmentInProgress = () => Promise.resolve({ status: 200, data: { amendmentId: '626bae8c43c01e02076352e1', version: 1 } });
+        api.getAmendmentsByFacilityId = () => Promise.resolve({ status: 200, data: [] });
+        api.getAmendmentsByDealId = () => Promise.resolve({ status: 200, data: [] });
+      });
+
+      it('should render problem with service page upon an error', async () => {
+        // Arrange
+        const req = {
+          params: {
+            _id: '61f6ac5b02fade01b1e8efef',
+          },
+          session,
+        };
+
+        // Act
+        await caseController.getCaseFacility(req, res);
+
+        // Assert
+        expect(console.error).toHaveBeenCalledWith('Error getting case facility %o', new Error("Cannot read properties of undefined (reading 'isGef')"));
+        expect(res.render).toHaveBeenCalledWith('_partials/problem-with-service.njk');
       });
     });
 
