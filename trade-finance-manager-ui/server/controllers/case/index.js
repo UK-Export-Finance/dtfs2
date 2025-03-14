@@ -382,7 +382,7 @@ const getCaseFacility = async (req, res) => {
     });
   } catch (error) {
     console.error('Error getting case facility %o', error);
-    return res.redirect('/not-found');
+    return res.render('_partials/problem-with-service.njk');
   }
 };
 
