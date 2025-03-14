@@ -4,7 +4,7 @@ import getApiData from '../../../helpers/getApiData';
 jest.mock('../../../helpers', () => ({
   __esModule: true,
   requestParams: jest.fn(() => ({ userToken: 'token', _id: 123456 })),
-  getApiData: jest.fn(),
+  getApiData: jest.fn(() => Promise.resolve({})),
 }));
 
 describe('POST /contract/:_id/eligibility/criteria', () => {
