@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.8.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.7.0...v2.8.0) (2025-03-14)
+
+
+### Features
+
+* **DTFS2-6892:** update mock builder, enforce complete defaults, document mocked class methods ([#4113](https://github.com/UK-Export-Finance/dtfs2/issues/4113)) ([e8f23c3](https://github.com/UK-Export-Finance/dtfs2/commit/e8f23c38c997848d479a3e9f756528f456fbd315))
+* **DTFS2-7720:** redirect to check answers page if change query is true ([#4235](https://github.com/UK-Export-Finance/dtfs2/issues/4235)) ([bdc810b](https://github.com/UK-Export-Finance/dtfs2/commit/bdc810b66392d5faafa7db71bc67775974b67544))
+* **DTFS2-7732:** cancel amendment e2e tests ([#4221](https://github.com/UK-Export-Finance/dtfs2/issues/4221)) ([372edfb](https://github.com/UK-Export-Finance/dtfs2/commit/372edfb6adce9404d0e47ae6bed0d987487d8756))
+* **DTFS2-7834:** standardised tag colours for E2ETF utilisation reports ([#4262](https://github.com/UK-Export-Finance/dtfs2/issues/4262)) ([88ff3e7](https://github.com/UK-Export-Finance/dtfs2/commit/88ff3e700bf36cc5462c3dc9e3eed41a36fcf6e0))
+* **DTFS2-7846:** acr purge github action ([#4253](https://github.com/UK-Export-Finance/dtfs2/issues/4253)) ([68dd68b](https://github.com/UK-Export-Finance/dtfs2/commit/68dd68b72e009dbfd16a7ef13c78bce021a0f7f4))
+
+
+### Bug Fixes
+
+* **CVE-2025-27152:** updated axios version to curcumvent CVE-2025-27152 ([#4254](https://github.com/UK-Export-Finance/dtfs2/issues/4254)) ([08200d1](https://github.com/UK-Export-Finance/dtfs2/commit/08200d1810d7483f1d23dd688d893cd83dea2ac6))
+* **DTFS2-7813:** estore payload sanitisation ([#4251](https://github.com/UK-Export-Finance/dtfs2/issues/4251)) ([5944e4c](https://github.com/UK-Export-Finance/dtfs2/commit/5944e4cc8d30403f115aa05274c96fca1a273053))
+* **DTFS2-7820:** cancel deal hide clone button ([#4240](https://github.com/UK-Export-Finance/dtfs2/issues/4240)) ([32fa3c5](https://github.com/UK-Export-Finance/dtfs2/commit/32fa3c599b8f1bf9dda295868d95b598e682266e))
+* **DTFS2-7825:** added all 58 currencies to the currency type literal ([#4257](https://github.com/UK-Export-Finance/dtfs2/issues/4257)) ([7c26c78](https://github.com/UK-Export-Finance/dtfs2/commit/7c26c78b9d8610c18612abef21fd8024e0a2608c))
+* **DTFS2-7846:** feature deployment and ACR purge ([#4261](https://github.com/UK-Export-Finance/dtfs2/issues/4261)) ([2d99142](https://github.com/UK-Export-Finance/dtfs2/commit/2d99142f44a1175c4797fb275be0d001a0701321))
+* **FN-3671:** fixed sorting issue on exporter sort record correction log ([#4259](https://github.com/UK-Export-Finance/dtfs2/issues/4259)) ([5fc6ec9](https://github.com/UK-Export-Finance/dtfs2/commit/5fc6ec9b9b63d07e82068b324f4914091a972b4f))
+
 ## [2.7.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.6.0...v2.7.0) (2025-02-18)
 
 
