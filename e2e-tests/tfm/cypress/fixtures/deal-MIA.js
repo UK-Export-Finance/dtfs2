@@ -178,7 +178,7 @@ const MOCK_DEAL = {
     },
   },
   exporter: {
-    companyName: 'Test Company',
+    companyName: 'Mock company name',
   },
   mockFacilities: [
     {
