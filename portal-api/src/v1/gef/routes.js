@@ -15,6 +15,7 @@ const eligibilityCriteria = require('./controllers/eligibilityCriteria.controlle
 const externalApi = require('./controllers/externalApi.controller');
 const files = require('./controllers/files.controller');
 const companies = require('../controllers/companies.controller');
+const { getAllFacilityAmendments } = require('../controllers/amendments/get-all-amendments.controller');
 const { getAmendment } = require('../controllers/amendments/get-amendment.controller');
 const { getFacilityAmendmentsOnDeal } = require('../controllers/amendments/get-amendments-on-deal.controller');
 const { patchAmendment } = require('../controllers/amendments/patch-amendment.controller');
@@ -59,6 +60,11 @@ router
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), facilities.getAllGET)
   .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), facilities.create)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), facilities.deleteByDealId);
+
+router
+  .route('/facilities/amendments')
+  .all(validatePortalFacilityAmendmentsEnabled, validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }), handleExpressValidatorResult)
+  .get(getAllFacilityAmendments);
 
 router
   .route('/facilities/:id')
