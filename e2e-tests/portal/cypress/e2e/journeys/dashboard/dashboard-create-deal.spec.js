@@ -10,7 +10,6 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
     describe('Create application as gef-only bank', () => {
       before(() => {
         cy.login(BANK3_GEF_MAKER1);
-        dashboardDeals.visit();
         cy.url().should('eq', relative('/dashboard/deals/0'));
       });
 
@@ -36,7 +35,6 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
     describe('Create application as GEF-and-BSS banks', () => {
       before(() => {
         cy.login(BANK1_MAKER1);
-        dashboardDeals.visit();
         cy.url().should('eq', relative('/dashboard/deals/0'));
       });
 
@@ -54,7 +52,7 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
         dashboard.createNewSubmission().click();
 
         selectScheme.gef().click();
-        selectScheme.continue().click();
+        cy.clickContinueButton();
         cy.url().should('eq', relative('/gef/mandatory-criteria'));
       });
     });
@@ -108,7 +106,7 @@ context('Create application as gef-only bank and GEF-and-BSS bank', () => {
         dashboard.createNewSubmission().click();
 
         selectScheme.gef().click();
-        selectScheme.continue().click();
+        cy.clickContinueButton();
         cy.url().should('eq', relative('/gef/mandatory-criteria'));
       });
     });

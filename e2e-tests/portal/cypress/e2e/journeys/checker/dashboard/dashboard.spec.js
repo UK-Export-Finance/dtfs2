@@ -69,17 +69,12 @@ context('View dashboard deals as a checker', () => {
     cy.insertOneDeal(BSS_DEALS.READY_FOR_CHECK, BANK2_MAKER2);
   });
 
-  it("Only deals with checker status that belong to the checker's bank appear on the dashboard. Each deal goes to correct deal URL", () => {
+  it('should display GEF deal on the dashboard and link to correct deal URL for Checker', () => {
     // login, go to dashboard
     cy.login(BANK1_CHECKER1);
-    dashboardDeals.visit();
 
     const gefDeal = BANK1_DEALS.find(
       ({ dealType, status }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF && status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
-    );
-
-    const bssDeal = BANK1_DEALS.find(
-      ({ dealType, status }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS && status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
     );
 
     const { exporter, bankRef, product, status, type, updated, link } = dashboardDeals.row;
@@ -95,7 +90,7 @@ context('View dashboard deals as a checker', () => {
     cy.get('table tr').eq(1).as('firstRow');
     const gefDealId = gefDeal._id;
 
-    cy.get('table tr').eq(1).find(`[data-cy="deal__status--${gefDeal._id}"]`).should('exist');
+    dashboardDeals.row.status(gefDealId).should('exist');
 
     cy.assertText(exporter(gefDealId), gefDeal.exporter.companyName);
 
@@ -116,15 +111,28 @@ context('View dashboard deals as a checker', () => {
     // link should take you to GEF deal page
     link(gefDealId).click();
     cy.url().should('eq', relative(`/gef/application-details/${gefDealId}`));
+  });
 
-    // go back to the dashboard
-    dashboardDeals.visit();
+  it('should display BSS deal on the dashboard and link to correct deal URL for Checker', () => {
+    // login, go to dashboard
+    cy.login(BANK1_CHECKER1);
+
+    const bssDeal = BANK1_DEALS.find(
+      ({ dealType, status }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS && status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL,
+    );
+
+    const { exporter, bankRef, product, status, type, updated, link } = dashboardDeals.row;
+
+    // should only see 2 deals - ready for check and in Bank 1
+    const EXPECTED_DEALS = BANK1_DEALS.filter((deal) => deal.status === CONSTANTS.DEALS.DEAL_STATUS.READY_FOR_APPROVAL);
+
+    cy.assertText(dashboardDeals.totalItems(), `(${EXPECTED_DEALS.length} items)`);
 
     // second deal (BSS)
     cy.get('table tr').eq(2).as('secondRow');
     const bssDealId = bssDeal._id;
 
-    cy.get('@secondRow').find(`[data-cy="deal__status--${bssDealId}"]`).should('exist');
+    dashboardDeals.row.status(bssDealId).should('exist');
 
     cy.assertText(exporter(bssDealId), bssDeal.exporter.companyName);
 

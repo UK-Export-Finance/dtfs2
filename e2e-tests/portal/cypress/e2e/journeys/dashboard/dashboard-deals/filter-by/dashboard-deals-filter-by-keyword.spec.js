@@ -1,36 +1,30 @@
+const { DEAL_SUBMISSION_TYPE, FACILITY_STAGE } = require('@ukef/dtfs2-common');
+
 const relative = require('../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const { dashboardDeals } = require('../../../../pages');
 const { dashboardFilters } = require('../../../../partials');
-const { BSS_DEAL_DRAFT, GEF_DEAL_DRAFT } = require('../../fixtures');
+const { GEF_DEAL_DRAFT } = require('../../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
+const EXPECTED_DEALS_LENGTH = {
+  ALL_STATUSES: 2,
+};
+
 context('Dashboard Deals filters - filter by keyword', () => {
   const MOCK_KEYWORD = 'Special exporter';
-
-  const ALL_DEALS = [];
-
-  const BSS_DEAL_SPECIAL_EXPORTER = {
-    ...BSS_DEAL_DRAFT,
-    exporter: {
-      companyName: MOCK_KEYWORD,
-    },
-  };
 
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEAL_SPECIAL_EXPORTER, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.createBssEwcsDeal();
+    cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED, exporterCompanyName: MOCK_KEYWORD });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1);
   });
 
   beforeEach(() => {
@@ -85,12 +79,19 @@ context('Dashboard Deals filters - filter by keyword', () => {
     });
 
     it(`renders only deals that have ${MOCK_KEYWORD} in a field`, () => {
-      const ALL_KEYWORD_DEALS = ALL_DEALS.filter(({ exporter }) => exporter.companyName === MOCK_KEYWORD);
-      dashboardDeals.rows().should('have.length', ALL_KEYWORD_DEALS.length);
+      // Clear existing filters
+      filters.panel.selectedFilters.clearAllLink().click();
+      // Check the number of rows before applying any filter
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.ALL_STATUSES);
+      filters.showHideButton().click();
+      const expectedLength = 1; // only 1x BSS/EWCS deal has MOCK_KEYWORD.
+      cy.keyboardInput(filters.panel.form.keyword.input(), MOCK_KEYWORD);
 
-      const firstDraftDeal = ALL_KEYWORD_DEALS[0];
+      filters.panel.form.applyFiltersButton().click();
 
-      dashboardDeals.row.exporter(firstDraftDeal._id).should('have.text', MOCK_KEYWORD);
+      dashboardDeals.rows().should('have.length', expectedLength);
+
+      cy.assertText(dashboardDeals.rowByIndex(0).exporter(), MOCK_KEYWORD);
     });
   });
 });

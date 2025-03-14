@@ -1,40 +1,22 @@
 const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common');
-const { contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview } = require('../../pages');
+const { contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview, dashboardDeals, contract } = require('../../pages');
 const partials = require('../../partials');
-const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
+const relative = require('../../relativeURL');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 context('about-supply-contract', () => {
-  let deal;
-  let dealId;
-
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
 
-    const aDealWithAboutSupplyContractInStatus = (status) => {
-      const candidates = twentyOneDeals.filter((aDeal) => aDeal.submissionDetails && status === aDeal.submissionDetails.status && aDeal.status === 'Draft');
-
-      const aDeal = candidates[0];
-      if (!aDeal) {
-        throw new Error('no suitable test data found');
-      } else {
-        return aDeal;
-      }
-    };
-
-    cy.insertOneDeal(aDealWithAboutSupplyContractInStatus('Incomplete'), BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
-      dealId = insertedDeal._id;
-    });
+    cy.createBssEwcsDeal();
   });
 
-  it('A maker picks up a deal in status=Draft, and triggers all validation errors.', () => {
-    cy.login(BANK1_MAKER1);
+  it('should trigger all validation errors when a maker picks up a deal in Draft status', () => {
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
-    contractAboutSupplier.visit(deal);
+    contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.supplierName().clear();
 
     contractAboutSupplier.nextPage().click();
@@ -67,7 +49,9 @@ context('about-supply-contract', () => {
     contractAboutPreview.expectError('Supply Contract conversion date is required for non-GBP currencies');
 
     // prove the errors are on the about-supplier page
-    contractAboutSupplier.visit(deal);
+    dashboardDeals.visit();
+    cy.clickDashboardDealLink();
+    contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.expectError('Supplier type is required');
     contractAboutSupplier.expectError('Supplier name is required');
     contractAboutSupplier.expectError('Supplier address line 1 is required');
@@ -88,7 +72,9 @@ context('about-supply-contract', () => {
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
 
-    contractAboutSupplier.visit(deal);
+    dashboardDeals.visit();
+    cy.clickDashboardDealLink();
+    contract.aboutSupplierDetailsLink().click();
     // open up the correspondence address to generate more errors..
     contractAboutSupplier.supplierCorrespondenceAddressDifferent().click();
     contractAboutSupplier.supplierCorrespondenceAddress().country().select('GBR');
@@ -102,7 +88,9 @@ context('about-supply-contract', () => {
     contractAboutPreview.expectError('Supplier correspondence postcode is required for UK addresses');
 
     // prove the errors show on the about-supplier page
-    contractAboutSupplier.visit(deal);
+    dashboardDeals.visit();
+    cy.clickDashboardDealLink();
+    contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.expectError('Supplier postcode is required for UK addresses');
     contractAboutSupplier.expectError('Supplier correspondence postcode is required for UK addresses');
 
@@ -115,7 +103,9 @@ context('about-supply-contract', () => {
     contractAboutPreview.errors().should('not.contain', 'Supplier correspondence postcode is required for UK addresses');
     contractAboutPreview.errors().should('contain', 'Supplier correspondence town is required for non-UK addresses');
 
-    contractAboutSupplier.visit(deal);
+    dashboardDeals.visit();
+    cy.clickDashboardDealLink();
+    contract.aboutSupplierDetailsLink().click();
     // open up the legally-distinct indemnifier section to generate more errors...
     contractAboutSupplier.legallyDistinct().click();
     // save + skip ahead to the preview
@@ -127,7 +117,9 @@ context('about-supply-contract', () => {
     contractAboutPreview.expectError('Indemnifier address line 1 is required');
 
     // prove the errors show on the about-supplier page
-    contractAboutSupplier.visit(deal);
+    dashboardDeals.visit();
+    cy.clickDashboardDealLink();
+    contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.expectError('Indemnifier address line 1 is require');
 
     // switch to non-UK country
@@ -140,7 +132,9 @@ context('about-supply-contract', () => {
     contractAboutPreview.errors().should('contain', 'Indemnifier town is required for non-UK addresses');
 
     // open up the indemnifier correspondence address section to generate more errors...
-    contractAboutSupplier.visit(deal);
+    dashboardDeals.visit();
+    cy.clickDashboardDealLink();
+    contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.indemnifierCorrespondenceAddressDifferent().click();
     // save + skip ahead to the preview
     contractAboutSupplier.nextPage().click();
@@ -150,7 +144,9 @@ context('about-supply-contract', () => {
     contractAboutPreview.expectError('Indemnifier correspondence address line 1 is required');
 
     // prove the errors show on the about-supplier page
-    contractAboutSupplier.visit(deal);
+    dashboardDeals.visit();
+    cy.clickDashboardDealLink();
+    contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.expectError('Indemnifier correspondence address line 1 is required');
 
     // switch to non-UK country
@@ -163,19 +159,22 @@ context('about-supply-contract', () => {
     contractAboutPreview.errors().should('contain', 'Indemnifier correspondence town is required for non-UK addresses');
   });
 
-  it('A maker picks up a deal in status=Draft, triggers Supplier companies house validation errors', () => {
-    cy.login(BANK1_MAKER1);
-    contractAboutSupplier.visit(deal);
+  it('should trigger Supplier companies house validation errors when a maker picks up a deal in Draft status', () => {
+    cy.loginGoToDealPage(BANK1_MAKER1);
+
+    contract.aboutSupplierDetailsLink().click();
 
     //---------------------------------------------------------------
     // supplier companies house submit - without providing a value
     //---------------------------------------------------------------
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
-    cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
+    cy.getDealIdFromUrl(4).then((dealId) => {
+      cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
+    });
 
     // should see companies house validation errors
-    partials.errorSummaryLinks().should('have.length', 12);
+    partials.errorSummaryLinks().should('have.length', 1);
     contractAboutSupplier.expectError('Enter a Companies House registration number');
 
     //---------------------------------------------------------------
@@ -185,10 +184,8 @@ context('about-supply-contract', () => {
 
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
-    cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
-
     // should see companies house validation errors
-    partials.errorSummaryLinks().should('have.length', 12);
+    partials.errorSummaryLinks().should('have.length', 1);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     //---------------------------------------------------------------
@@ -207,9 +204,10 @@ context('about-supply-contract', () => {
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
   });
 
-  it('A maker picks up a deal in status=Draft, fills in a field, triggers Supplier companies house validation errors', () => {
-    cy.login(BANK1_MAKER1);
-    contractAboutSupplier.visit(deal);
+  it('should trigger Supplier companies house validation errors when a maker fills in a field for a deal in Draft status', () => {
+    cy.loginGoToDealPage(BANK1_MAKER1);
+
+    contract.aboutSupplierDetailsLink().click();
 
     //---------------------------------------------------------------
     // fill in at least one form field unrelated to Companies House
@@ -223,10 +221,8 @@ context('about-supply-contract', () => {
 
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
-    cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
-
     // should see companies house validation errors
-    partials.errorSummaryLinks().should('have.length', 12);
+    partials.errorSummaryLinks().should('have.length', 1);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     // the unrelated form field we provided earlier should be populated
@@ -256,9 +252,10 @@ context('about-supply-contract', () => {
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
   });
 
-  it('A maker picks up a deal in status=Draft, triggers Indemnifier companies house validation errors', () => {
-    cy.login(BANK1_MAKER1);
-    contractAboutSupplier.visit(deal);
+  it('should trigger Indemnifier companies house validation errors when a maker picks up a deal in Draft status', () => {
+    cy.loginGoToDealPage(BANK1_MAKER1);
+
+    contract.aboutSupplierDetailsLink().click();
 
     //---------------------------------------------------------------
     // indemnifier companies house submit - without providing a value
@@ -266,10 +263,8 @@ context('about-supply-contract', () => {
     contractAboutSupplier.legallyDistinct().click();
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
-    cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
-
     // should see companies house validation errors
-    partials.errorSummaryLinks().should('have.length', 12);
+    partials.errorSummaryLinks().should('have.length', 1);
     contractAboutSupplier.expectError('Enter a Companies House registration number');
 
     //---------------------------------------------------------------
@@ -280,10 +275,8 @@ context('about-supply-contract', () => {
 
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
-    cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
-
     // should see companies house validation errors
-    partials.errorSummaryLinks().should('have.length', 12);
+    partials.errorSummaryLinks().should('have.length', 1);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     //---------------------------------------------------------------------------
@@ -294,10 +287,8 @@ context('about-supply-contract', () => {
 
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
-    cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
-
     // should see companies house validation errors
-    partials.errorSummaryLinks().should('have.length', 12);
+    partials.errorSummaryLinks().should('have.length', 1);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     //---------------------------------------------------------------------------------------
@@ -311,10 +302,8 @@ context('about-supply-contract', () => {
 
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
-    cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
-
     // should see companies house validation errors
-    partials.errorSummaryLinks().should('have.length', 12);
+    partials.errorSummaryLinks().should('have.length', 1);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     //--------------------------------------------------------------------------
@@ -325,10 +314,8 @@ context('about-supply-contract', () => {
 
     contractAboutSupplier.indemnifierSearchCompaniesHouse().click();
 
-    cy.url().should('eq', relative(`/contract/${dealId}/about/supplier`));
-
     // should see companies house validation errors
-    partials.errorSummaryLinks().should('have.length', 12);
+    partials.errorSummaryLinks().should('have.length', 1);
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
 
     // companies house input value should be retained
@@ -356,22 +343,11 @@ context('about-supply-contract', () => {
     contractAboutSupplier.expectError('Enter a valid Companies House registration number');
   });
 
-  it('trigger just Supplier companies house validation error', () => {
-    cy.login(BANK1_MAKER1);
-    cy.visit('/dashboard');
-    // Select "Create new" and choose "Bond Support" as the scheme type
-    cy.get('[data-cy="CreateNewSubmission"]').click();
-    cy.get('[data-cy="scheme-bss"]').click();
-    cy.get('[data-cy="continue-button"]').click();
-    cy.get('[data-cy="criteriaMet-true"]').click();
-    cy.clickSubmitButton();
-
-    cy.keyboardInput(cy.get('[data-cy="bankInternalRefName"]'), 'TestBank1903');
-    cy.keyboardInput(cy.get('[data-cy="additionalRefName"]'), 'TestBank1903');
-    cy.clickSubmitButton();
+  it('should trigger only Supplier companies house validation error', () => {
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
     // Click on "View Details" under the "About the Supplier" contract
-    cy.get('[data-cy="ViewAboutSupplierDetails"]').click();
+    contract.aboutSupplierDetailsLink().click();
 
     //---------------------------------------------------------------------------
     // Invalid Companies House registration number
@@ -430,10 +406,10 @@ context('about-supply-contract', () => {
     contractAboutSupplier.expectError('UKEF can only process applications from companies based in the UK');
   });
 
-  it('A maker picks up a deal in status=Draft, misses mandatory field then trigger missed validation error.', () => {
-    cy.login(BANK1_MAKER1);
+  it('should trigger missed validation error when a maker misses a mandatory field for a deal in Draft status', () => {
+    cy.loginGoToDealPage(BANK1_MAKER1);
 
-    contractAboutSupplier.visit(deal);
+    contract.aboutSupplierDetailsLink().click();
     // click through
     contractAboutSupplier.supplierType().select('Exporter');
     cy.keyboardInput(contractAboutSupplier.supplierName(), 'test');

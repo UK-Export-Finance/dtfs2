@@ -1,28 +1,46 @@
-const { contract, contractAboutSupplier, contractAboutBuyer, contractAboutPreview, defaults } = require('../../pages');
+const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common');
+const { contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const aDealWithAboutSupplyContractComplete = require('./dealWithFirstPageComplete.json');
+const CONSTANTS = require('../../../fixtures/constants');
 
-const { BANK1_MAKER1 } = MOCK_USERS;
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
+const { INDUSTRY_SECTOR_CODES } = CONSTANTS;
 
 context('about-supply-contract', () => {
-  let deal;
-
   before(() => {
-    cy.insertOneDeal(aDealWithAboutSupplyContractComplete, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
-    });
+    cy.createBssEwcsDeal();
   });
 
-  it('A maker picks up a deal with the supplier details completed, and fills in the about-buyer-contract section, using the companies house search.', () => {
-    cy.login(BANK1_MAKER1);
+  after(() => {
+    cy.deleteDeals(ADMIN);
+  });
 
-    // navigate to the about-buyer page
-    contract.visit(deal);
+  it('should successfully fill in the about-buyer-contract section after completing supplier details section', () => {
+    cy.loginGoToDealPage(BANK1_MAKER1);
+
     contract.aboutSupplierDetailsLink().click();
+    //---
+    // use companies-house lookup
+    //---
+    contractAboutSupplier.supplierType().select('Exporter');
+    cy.keyboardInput(contractAboutSupplier.supplierCompaniesHouseRegistrationNumber(), MOCK_COMPANY_REGISTRATION_NUMBERS.VALID);
+    contractAboutSupplier.supplierSearchCompaniesHouse().click();
+
+    //---
+    // fill in the simplest version of the form so we can submit it and save it..
+    //---
+    contractAboutSupplier.supplierCorrespondenceAddressSame().click();
+    contractAboutSupplier.industrySector().select(INDUSTRY_SECTOR_CODES.INFORMATION); // Information and communication
+    contractAboutSupplier.industryClass().should('have.value', '');
+    contractAboutSupplier.industryClass().select(INDUSTRY_SECTOR_CODES.BUSINESS); // Business and domestic software development
+    contractAboutSupplier.smeTypeMicro().click();
+    cy.keyboardInput(contractAboutSupplier.supplyContractDescription(), 'Mock description');
+    contractAboutSupplier.notLegallyDistinct().click();
+
     contractAboutSupplier.nextPage().click();
 
-    cy.title().should('eq', `Buyer information - ${deal.additionalRefName}${defaults.pageTitleAppend}`);
+    cy.assertText(contractAboutBuyer.title(), 'Add buyer details');
 
     // fill in the fields
     cy.keyboardInput(contractAboutBuyer.buyerName(), 'Harry Bear');
@@ -38,8 +56,10 @@ context('about-supply-contract', () => {
     contractAboutBuyer.saveAndGoBack().click();
 
     // check that the preview page renders the Submission Details component
-    contractAboutPreview.visit(deal);
-    contractAboutPreview.submissionDetails().should('be.visible');
+    contract.aboutSupplierDetailsLink().click();
+    contractAboutSupplier.nextPage().click();
+    contractAboutBuyer.nextPage().click();
+    contractAboutFinancial.preview().click();
 
     cy.assertText(partials.taskListHeader.itemStatus('buyer'), 'Completed');
   });
