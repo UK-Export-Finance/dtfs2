@@ -1,7 +1,13 @@
-import { router } from './index';
-import getApiData from '../../../helpers/getApiData';
+const request = require('supertest');
+const express = require('express');
+const router = require('./index');
+const getApiData = require('../../../helpers/getApiData');
 
 jest.mock('../../../helpers/getApiData', () => jest.fn());
+
+const app = express();
+app.use(express.json());
+app.use('/', router);
 
 describe('POST /contract/:_id/eligibility/criteria', () => {
   afterEach(() => {
@@ -21,12 +27,9 @@ describe('POST /contract/:_id/eligibility/criteria', () => {
 
     getApiData.mockResolvedValue(apiResponse);
 
-    const req = { params: { _id: 123456 }, session: { userToken: 'token' } };
-    const res = { redirect: jest.fn() };
+    const res = await request(app).post('/contract/123456/eligibility/criteria').send({ key: 'value' });
 
-    await router.post('/contract/:_id/eligibility/criteria')(req, res);
-
-    expect(res.redirect).toHaveBeenCalledTimes(1);
+    expect(res.statusCode).toBe(302);
     expect(res.redirect).toHaveBeenCalledWith('/contract/123456/eligibility/criteria?errors=true');
   });
 
@@ -42,12 +45,9 @@ describe('POST /contract/:_id/eligibility/criteria', () => {
 
     getApiData.mockResolvedValue(apiResponse);
 
-    const req = { params: { _id: 123456 }, session: { userToken: 'token' } };
-    const res = { redirect: jest.fn() };
+    const res = await request(app).post('/contract/123456/eligibility/criteria').send({ key: 'value' });
 
-    await router.post('/contract/:_id/eligibility/criteria')(req, res);
-
-    expect(res.redirect).toHaveBeenCalledTimes(1);
+    expect(res.statusCode).toBe(302);
     expect(res.redirect).toHaveBeenCalledWith('/contract/123456/eligibility/supporting-documentation');
   });
 });
@@ -75,12 +75,9 @@ describe('GET /contract/:_id/eligibility/supporting-documentation', () => {
 
     getApiData.mockResolvedValue(deal);
 
-    const req = { params: { _id: 123456 }, session: { userToken: 'token' } };
-    const res = { render: jest.fn() };
+    const res = await request(app).get('/contract/123456/eligibility/supporting-documentation');
 
-    await router.get('/contract/:_id/eligibility/supporting-documentation')(req, res);
-
-    expect(res.render).toHaveBeenCalledTimes(1);
+    expect(res.statusCode).toBe(200);
     expect(res.render).toHaveBeenCalledWith('eligibility/eligibility-supporting-documentation.njk', expect.any(Object));
   });
 
@@ -102,12 +99,9 @@ describe('GET /contract/:_id/eligibility/supporting-documentation', () => {
 
     getApiData.mockResolvedValue(deal);
 
-    const req = { params: { _id: 123456 }, session: { userToken: 'token' } };
-    const res = { render: jest.fn() };
+    const res = await request(app).get('/contract/123456/eligibility/supporting-documentation');
 
-    await router.get('/contract/:_id/eligibility/supporting-documentation')(req, res);
-
-    expect(res.render).toHaveBeenCalledTimes(1);
+    expect(res.statusCode).toBe(200);
     expect(res.render).toHaveBeenCalledWith('eligibility/eligibility-supporting-documentation.njk', expect.any(Object));
   });
 });
