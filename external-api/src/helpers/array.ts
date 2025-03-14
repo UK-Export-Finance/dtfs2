@@ -1,9 +1,13 @@
-/* eslint-disable @typescript-eslint/unbound-method */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
+import { CountryInterface, CurrencyInterface, IndustrySectorInterface } from '@ukef/dtfs2-common';
 
-export const sortArrayAlphabetically = (arr: any, field: any) => arr.sort((a: any, b: any) => a[field].localeCompare(b[field]));
+type unionInterface = CountryInterface | CurrencyInterface | IndustrySectorInterface;
+
+/**
+ * Sorts an array of objects alphabetically based on a specified field.
+ *
+ * @param {unionInterface[]} arr - The array of objects to be sorted.
+ * @param {string} field - The field name by which to sort the objects.
+ * @returns {unionInterface[]} The sorted array of objects.
+ */
+export const sortArrayAlphabetically = (arr: unionInterface[], field: string): unionInterface[] =>
+  arr.sort((a: unionInterface, b: unionInterface) => (a[field as keyof unionInterface] as string).localeCompare(b[field as keyof unionInterface] as string));

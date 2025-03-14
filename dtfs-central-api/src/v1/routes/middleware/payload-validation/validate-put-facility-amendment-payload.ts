@@ -1,6 +1,6 @@
 import z from 'zod';
 import { createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
-import { AmendmentStatusSchema, AuditDetailsSchema, CurrencySchema, MongoObjectIdSchema } from './schemas';
+import { AmendmentStatusSchema, AuditDetailsSchema, AllCurrenciesSchema, MongoObjectIdSchema } from './schemas';
 import { dateFromIsoStringSchema } from './schemas/dateFromIsoString.schema';
 
 const SubmittedBySchema = z.object({
@@ -24,7 +24,7 @@ const PutFacilityAmendmentSchema = z.object({
       bankReviewDate: dateFromIsoStringSchema.nullable(),
       ukefExposure: z.number().nullable(),
       coveredPercentage: z.number(),
-      currency: CurrencySchema.nullable(),
+      currency: AllCurrenciesSchema.nullable(),
       status: AmendmentStatusSchema,
       coverEndDate: z.number().nullable(),
       version: z.number(),
@@ -72,7 +72,7 @@ const PutFacilityAmendmentSchema = z.object({
         .object({
           value: z.object({
             value: z.number(),
-            currency: CurrencySchema,
+            currency: AllCurrenciesSchema,
           }),
           amendmentExposurePeriodInMonths: z.number().nullable(),
           exposure: z.object({
