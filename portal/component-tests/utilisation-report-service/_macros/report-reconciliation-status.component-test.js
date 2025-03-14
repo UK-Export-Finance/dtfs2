@@ -1,4 +1,10 @@
-const { REPORT_NOT_RECEIVED, PENDING_RECONCILIATION, RECONCILIATION_IN_PROGRESS, RECONCILIATION_COMPLETED } = require('@ukef/dtfs2-common');
+const {
+  REPORT_NOT_RECEIVED,
+  PENDING_RECONCILIATION,
+  RECONCILIATION_IN_PROGRESS,
+  RECONCILIATION_COMPLETED,
+  UTILISATION_REPORT_STATUS_TAG_COLOURS,
+} = require('@ukef/dtfs2-common');
 const componentRenderer = require('../../componentRenderer');
 
 const component = '../templates/utilisation-report-service/previous-reports/_macros/report-reconciliation-status.njk';
@@ -15,6 +21,7 @@ describe(component, () => {
     const wrapper = render({
       statusCode: REPORT_NOT_RECEIVED,
       displayStatus,
+      statusTagColours: UTILISATION_REPORT_STATUS_TAG_COLOURS,
     });
 
     // Assert
@@ -23,10 +30,10 @@ describe(component, () => {
 
   it.each([
     { status: REPORT_NOT_RECEIVED, expectedColourClass: 'govuk-tag--red' },
-    { status: PENDING_RECONCILIATION, expectedColourClass: 'govuk-tag--blue' },
+    { status: PENDING_RECONCILIATION, expectedColourClass: 'govuk-tag--grey' },
     {
       status: RECONCILIATION_IN_PROGRESS,
-      expectedColourClass: 'govuk-tag--light-blue',
+      expectedColourClass: 'govuk-tag--blue',
     },
     {
       status: RECONCILIATION_COMPLETED,
@@ -40,6 +47,7 @@ describe(component, () => {
     const wrapper = render({
       status,
       displayStatus: 'some text',
+      statusTagColours: UTILISATION_REPORT_STATUS_TAG_COLOURS,
     });
 
     // Assert

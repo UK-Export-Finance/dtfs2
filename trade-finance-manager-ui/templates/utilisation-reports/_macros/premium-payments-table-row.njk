@@ -15,6 +15,7 @@
   {% set checkboxId = feeRecordPaymentGroup.checkboxId %}
   {% set isChecked = feeRecordPaymentGroup.isChecked %}
   {% set checkboxAriaLabel = feeRecordPaymentGroup.checkboxAriaLabel %}
+  {% set statusTagColours = params.statusTagColours %}
 
   {% set hiddenRecordDetailsListHtml %}
       <ul>
@@ -94,7 +95,8 @@
           data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }}-status">
         {{ feeRecordStatus.render({
           status: status,
-          displayStatus: displayStatus
+          displayStatus: displayStatus,
+          statusTagColours: statusTagColours
         }) if isFirstFeeRecordInGroup else "" }}
       </td>
       {% if userCanEdit and showCheckboxColumn %}

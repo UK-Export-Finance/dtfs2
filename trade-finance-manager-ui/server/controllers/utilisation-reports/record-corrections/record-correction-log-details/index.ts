@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { getFormattedReportPeriodWithLongMonth, UTILISATION_REPORT_STATUS_TAG_COLOURS } from '@ukef/dtfs2-common';
 import { asUserSession } from '../../../../helpers/express-session';
 import api from '../../../../api';
 import { mapToRecordCorrectionStatus } from '../../helpers/map-record-correction-status';
@@ -36,6 +36,7 @@ export const getRecordCorrectionLogDetails = async (req: Request, res: Response)
       bankName,
       activePrimaryNavigation: PRIMARY_NAVIGATION_KEYS.UTILISATION_REPORTS,
       backLinkHref,
+      statusTagColours: UTILISATION_REPORT_STATUS_TAG_COLOURS,
     };
 
     return res.render('utilisation-reports/record-corrections/record-correction-log-details.njk', viewModel);
