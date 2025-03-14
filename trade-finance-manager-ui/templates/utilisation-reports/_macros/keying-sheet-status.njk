@@ -2,12 +2,9 @@
 {% macro render(params) %}
   {% set status = params.status %}
   {% set displayStatus = params.displayStatus %}
-  {% set tagColourClassForStatus = {
-    'TO_DO': '',
-    'DONE': 'govuk-tag--green'
-  } %}
+  {% set statusTagColours = params.statusTagColours %}
 
-  {% set tagColourClass = tagColourClassForStatus[status] %}
+  {% set tagColourClass = statusTagColours[status] %}
 
   {{ govukTag({
     text: displayStatus,

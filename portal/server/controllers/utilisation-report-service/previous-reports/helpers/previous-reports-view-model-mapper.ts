@@ -5,6 +5,7 @@ import {
   isEqualMonthAndYear,
   PortalSessionUser,
   getMonthName,
+  UTILISATION_REPORT_STATUS_TAG_COLOURS,
 } from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { PreviousUtilisationReportsResponseBody, UtilisationReportResponseBody } from '../../../../api-response-types';
@@ -46,6 +47,7 @@ export const mapToPreviousReportsViewModel = (
       navItems: [],
       reports: [],
       year: undefined,
+      statusTagColours: UTILISATION_REPORT_STATUS_TAG_COLOURS,
     };
   }
 
@@ -61,5 +63,6 @@ export const mapToPreviousReportsViewModel = (
     navItems,
     reports,
     year: targetYear,
+    statusTagColours: UTILISATION_REPORT_STATUS_TAG_COLOURS,
   };
 };

@@ -9,6 +9,7 @@ import {
   RecordCorrectionDisplayStatus,
   RecordCorrectionStatus,
   SessionBank,
+  StatusTagColours,
 } from '@ukef/dtfs2-common';
 import { ErrorSummaryViewModel } from './error-summary-view-model';
 import { PremiumPaymentsTableCheckboxId } from '../premium-payments-table-checkbox-id';
@@ -185,4 +186,5 @@ export type UtilisationReportReconciliationForReportViewModel = BaseViewModel & 
   utilisationDetails: UtilisationDetailsViewModel;
   recordCorrectionDetails: RecordCorrectionsViewModel;
   isFeeRecordCorrectionFeatureFlagEnabled: boolean;
+  statusTagColours: StatusTagColours;
 };

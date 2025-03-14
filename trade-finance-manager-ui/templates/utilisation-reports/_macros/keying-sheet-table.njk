@@ -5,6 +5,8 @@
   {% set reportId = params.reportId %}
   {% set keyingSheet = params.keyingSheet %}
   {% set userCanEdit = params.userCanEdit %}
+  {% set statusTagColours = params.statusTagColours %}
+
   <table class="govuk-table" data-module="moj-sortable-table" data-cy="keying-sheet-table">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
@@ -25,7 +27,8 @@
       {% for keyingSheetRow in keyingSheet %}
         {{ keyingSheetTableRow.render({
           keyingSheetRow: keyingSheetRow,
-          userCanEdit: userCanEdit
+          userCanEdit: userCanEdit,
+          statusTagColours: statusTagColours
         }) }}
       {% endfor %}
     </tbody>

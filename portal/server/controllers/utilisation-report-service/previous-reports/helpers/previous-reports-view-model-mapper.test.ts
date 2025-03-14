@@ -5,6 +5,7 @@ import {
   REPORT_NOT_RECEIVED,
   UtilisationReportStatus,
   aPortalSessionUser,
+  UTILISATION_REPORT_STATUS_TAG_COLOURS,
 } from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { PreviousUtilisationReportsResponseBody, UtilisationReportResponseBody } from '../../../../api-response-types';
@@ -28,6 +29,7 @@ describe('previous-reports-view-model-mapper', () => {
         navItems: [],
         reports: [],
         year: undefined,
+        statusTagColours: UTILISATION_REPORT_STATUS_TAG_COLOURS,
       });
     });
 

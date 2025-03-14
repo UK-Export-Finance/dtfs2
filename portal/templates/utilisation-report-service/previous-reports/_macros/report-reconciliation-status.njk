@@ -2,15 +2,13 @@
 {% macro render(params) %}
   {% set status = params.status %}
   {% set displayStatus = params.displayStatus %}
-  {% set tagColourClassForStatus = {
-    "REPORT_NOT_RECEIVED": "govuk-tag--red",
-    "PENDING_RECONCILIATION": "govuk-tag--blue",
-    "RECONCILIATION_IN_PROGRESS": "govuk-tag--light-blue",
-    "RECONCILIATION_COMPLETED": "govuk-tag--green"
-  } %}
+  {% set statusTagColours = params.statusTagColours %}
+
+  {% set tagColourClass = statusTagColours[status] %}
+
   {{ govukTag({
     text: displayStatus,
-    classes: tagColourClassForStatus[status],
+    classes: tagColourClass,
     attributes: {
     'data-cy': 'utilisation-report-reconciliation-status'
     }
