@@ -1,3 +1,3 @@
 export type StatusTagColours = {
-  [key: string]: any;
+  [key: string]: string;
 };
