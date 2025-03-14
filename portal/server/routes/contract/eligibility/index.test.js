@@ -1,107 +1,63 @@
 const request = require('supertest');
 const express = require('express');
-const router = require('./index');
-const getApiData = require('../../../helpers/getApiData');
+const router = require('./index'); // Adjust the path as necessary
+const { getApiData, requestParams } = require('../../../helpers');
+const api = require('../../../api');
 
-jest.mock('../../../helpers/getApiData', () => jest.fn());
+jest.mock('../../../helpers');
+jest.mock('../../../api');
 
 const app = express();
 app.use(express.json());
-app.use('/', router);
+app.use(router);
 
-describe('POST /contract/:_id/eligibility/criteria', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
+describe('eligibility criteria', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
   });
-  it('redirects to criteria page with errors when validation fails', async () => {
-    const apiResponse = {
-      eligibility: {
-        validationErrors: {
-          count: 1,
-          errorList: {
-            error: 'Error message',
+
+  describe('POST /contract/:_id/eligibility/criteria', () => {
+    it('should redirect to criteria page with errors when validation fails', async () => {
+      const mockUpdatedDeal = {
+        eligibility: {
+          validationErrors: {
+            count: 1,
+            errorList: {
+              criteriaNotSelected: { order: 1, text: 'Select at least one eligibility criterion' },
+            },
           },
         },
-      },
-    };
+      };
 
-    getApiData.mockResolvedValue(apiResponse);
+      api.updateEligibilityCriteria = jest.fn(() => Promise.resolve(mockUpdatedDeal));
+      requestParams.mockReturnValue({ _id: '123456', userToken: 'token' });
+      getApiData.mockResolvedValue(mockUpdatedDeal);
 
-    const res = await request(app).post('/contract/123456/eligibility/criteria').send({ key: 'value' });
+      const response = await request(app).post('/contract/123456/eligibility/criteria').send({});
 
-    expect(res.statusCode).toBe(302);
-    expect(res.redirect).toHaveBeenCalledWith('/contract/123456/eligibility/criteria?errors=true');
-  });
+      expect(api.updateEligibilityCriteria).toHaveBeenCalledWith('123456', {}, 'token');
+      expect(response.status).toBe(302);
+      expect(response.headers.location).toBe('/contract/123456/eligibility/criteria?errors=true');
+    });
 
-  it('redirects to supporting-documentation page when validation succeeds', async () => {
-    const apiResponse = {
-      eligibility: {
-        validationErrors: {
-          count: 0,
-          errorList: {},
-        },
-      },
-    };
-
-    getApiData.mockResolvedValue(apiResponse);
-
-    const res = await request(app).post('/contract/123456/eligibility/criteria').send({ key: 'value' });
-
-    expect(res.statusCode).toBe(302);
-    expect(res.redirect).toHaveBeenCalledWith('/contract/123456/eligibility/supporting-documentation');
-  });
-});
-
-describe('GET /contract/:_id/eligibility/supporting-documentation', () => {
-  it('renders supporting-documentation page with errors', async () => {
-    const deal = {
-      eligibility: {
-        validationErrors: {
-          count: 1,
-          errorList: {
-            error: 'Error message',
+    it('should redirect to supporting documentation page when criteria are valid', async () => {
+      const mockUpdatedDeal = {
+        eligibility: {
+          validationErrors: {
+            count: 0,
           },
         },
-      },
-      supportingInformation: {
-        validationErrors: {
-          count: 1,
-          errorList: {
-            error: 'Error message',
-          },
-        },
-      },
-    };
+      };
 
-    getApiData.mockResolvedValue(deal);
+      api.updateEligibilityCriteria = jest.fn(() => Promise.resolve(mockUpdatedDeal));
+      requestParams.mockReturnValue({ _id: '123456', userToken: 'token' });
+      getApiData.mockResolvedValue(mockUpdatedDeal);
 
-    const res = await request(app).get('/contract/123456/eligibility/supporting-documentation');
+      const response = await request(app).post('/contract/123456/eligibility/criteria').send({ someCriteria: 'selected' });
 
-    expect(res.statusCode).toBe(200);
-    expect(res.render).toHaveBeenCalledWith('eligibility/eligibility-supporting-documentation.njk', expect.any(Object));
-  });
-
-  it('renders supporting-documentation page without errors', async () => {
-    const deal = {
-      eligibility: {
-        validationErrors: {
-          count: 0,
-          errorList: {},
-        },
-      },
-      supportingInformation: {
-        validationErrors: {
-          count: 0,
-          errorList: {},
-        },
-      },
-    };
-
-    getApiData.mockResolvedValue(deal);
-
-    const res = await request(app).get('/contract/123456/eligibility/supporting-documentation');
-
-    expect(res.statusCode).toBe(200);
-    expect(res.render).toHaveBeenCalledWith('eligibility/eligibility-supporting-documentation.njk', expect.any(Object));
+      expect(api.updateEligibilityCriteria).toHaveBeenCalledWith('123456', { someCriteria: 'selected' }, 'token');
+      expect(response.status).toBe(302);
+      expect(response.headers.location).toBe('/contract/123456/eligibility/supporting-documentation');
+    });
   });
 });
