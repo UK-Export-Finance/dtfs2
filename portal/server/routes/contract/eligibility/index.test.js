@@ -20,7 +20,7 @@ describe('POST /contract/:_id/eligibility/criteria', () => {
       },
     };
 
-    jest.mocked(getApiData).mockResolvedValue(apiResponse);
+    getApiData.mockImplementation(() => Promise.resolve(apiResponse));
 
     const req = {
       params: {
@@ -51,7 +51,7 @@ describe('POST /contract/:_id/eligibility/criteria', () => {
       },
     };
 
-    jest.mocked(getApiData).mockResolvedValue(apiResponse);
+    getApiData.mockImplementation(() => Promise.resolve(apiResponse));
 
     const req = {
       params: {
@@ -94,7 +94,7 @@ describe('GET /contract/:_id/eligibility/supporting-documentation', () => {
       },
     };
 
-    jest.mocked(getApiData).mockResolvedValue(deal);
+    getApiData.mockImplementation(() => Promise.resolve(deal));
 
     const req = {
       params: {
@@ -131,7 +131,7 @@ describe('GET /contract/:_id/eligibility/supporting-documentation', () => {
       },
     };
 
-    jest.mocked(getApiData).mockResolvedValue(deal);
+    getApiData.mockImplementation(() => Promise.resolve(deal));
 
     const req = {
       params: {
