@@ -9,7 +9,8 @@
   {% set userCanEdit = params.userCanEdit %}
   {% set hasSelectableRows = params.hasSelectableRows %}
   {% set errorMessage = params.errorMessage %}
-
+  {% set statusTagColours = params.statusTagColours %}
+  
   {% macro tableHeader(params) %}
     {% set headerText = params.headerText %}
     {% set isNumericColumn = params.isNumericColumn %}
@@ -132,7 +133,7 @@
 
     <tbody class="govuk-table__body">
     {% for feeRecordPaymentGroup in feeRecordPaymentGroups %}
-      {{ premiumPaymentsTableRow.render({ reportId: reportId, feeRecordPaymentGroup: feeRecordPaymentGroup, userCanEdit: userCanEdit, showCheckboxColumn: hasSelectableRows }) }}
+      {{ premiumPaymentsTableRow.render({ reportId: reportId, feeRecordPaymentGroup: feeRecordPaymentGroup, userCanEdit: userCanEdit, showCheckboxColumn: hasSelectableRows, statusTagColours: statusTagColours }) }}
     {% endfor %}
     </tbody>
   </table>

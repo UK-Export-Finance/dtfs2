@@ -33,9 +33,10 @@
                 </span>
                 <span class="task-list__task-tag">
                   {{ reconciliationStatus.render({
-                                    status: report.status,
-                                    displayStatus: report.displayStatus
-                                    }) }}
+                    status: report.status,
+                    displayStatus: report.displayStatus,
+                    statusTagColours: statusTagColours
+                  }) }}
                 </span>
               </li>
             {% endfor %}

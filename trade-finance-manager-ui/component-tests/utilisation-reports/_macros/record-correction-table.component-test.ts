@@ -1,4 +1,4 @@
-import { RECORD_CORRECTION_DISPLAY_STATUS, RECORD_CORRECTION_STATUS } from '@ukef/dtfs2-common';
+import { RECORD_CORRECTION_DISPLAY_STATUS, RECORD_CORRECTION_STATUS, UTILISATION_REPORT_STATUS_TAG_COLOURS } from '@ukef/dtfs2-common';
 import { RecordCorrectionRowViewModel, RecordCorrectionsViewModel } from '../../../server/types/view-models';
 import { componentRenderer } from '../../componentRenderer';
 
@@ -158,7 +158,7 @@ describe(component, () => {
     wrapper.expectText(`[data-cy="record-correction-log-table-row-${correctionId}-old-record"]`).toRead(formattedOldRecords);
   });
 
-  it('should render the "status" value for a record correction', () => {
+  it(`should render the "status" value for a record correction when status is ${RECORD_CORRECTION_STATUS.SENT}`, () => {
     const correctionId = 1;
     const status = RECORD_CORRECTION_STATUS.SENT;
     const displayStatus = RECORD_CORRECTION_DISPLAY_STATUS.SENT;
@@ -172,11 +172,33 @@ describe(component, () => {
       },
     ];
 
-    const wrapper = getWrapper({ ...aRecordCorrectionsViewModel(), recordCorrectionRows });
+    const wrapper = getWrapper({ ...aRecordCorrectionsViewModel(), recordCorrectionRows, statusTagColours: UTILISATION_REPORT_STATUS_TAG_COLOURS });
 
     const selector = `[data-cy="record-correction-log-table-row-${correctionId}-status"] [data-cy="record-correction-status"]`;
 
     wrapper.expectText(selector).toRead(displayStatus);
-    wrapper.expectElement(selector).toHaveAttribute('class', 'govuk-tag govuk-tag--pink govuk-!-text-align-left');
+    wrapper.expectElement(selector).toHaveAttribute('class', 'govuk-tag govuk-tag--grey govuk-!-text-align-left');
+  });
+
+  it(`should render the "status" value for a record correction when status is ${RECORD_CORRECTION_STATUS.RECEIVED}`, () => {
+    const correctionId = 1;
+    const status = RECORD_CORRECTION_STATUS.RECEIVED;
+    const displayStatus = RECORD_CORRECTION_DISPLAY_STATUS.RECEIVED;
+
+    const recordCorrectionRows: RecordCorrectionRowViewModel[] = [
+      {
+        ...aRecordCorrectionRowViewModel(),
+        correctionId,
+        status,
+        displayStatus,
+      },
+    ];
+
+    const wrapper = getWrapper({ ...aRecordCorrectionsViewModel(), recordCorrectionRows, statusTagColours: UTILISATION_REPORT_STATUS_TAG_COLOURS });
+
+    const selector = `[data-cy="record-correction-log-table-row-${correctionId}-status"] [data-cy="record-correction-status"]`;
+
+    wrapper.expectText(selector).toRead(displayStatus);
+    wrapper.expectElement(selector).toHaveAttribute('class', 'govuk-tag govuk-tag--green govuk-!-text-align-left');
   });
 });
