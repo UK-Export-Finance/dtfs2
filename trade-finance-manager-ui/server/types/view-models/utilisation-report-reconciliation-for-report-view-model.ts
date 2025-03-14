@@ -164,6 +164,7 @@ export type UtilisationDetailsViewModel = {
 
 export type RecordCorrectionsViewModel = {
   recordCorrectionRows: RecordCorrectionRowViewModel[];
+  statusTagColours?: StatusTagColours;
 };
 
 export type PremiumPaymentsViewModel = {

@@ -11,7 +11,7 @@ export const UTILISATION_REPORT_STATUS_TAG_COLOURS = {
   [FEE_RECORD_STATUS.MATCH]: 'govuk-tag--green',
   [FEE_RECORD_STATUS.DOES_NOT_MATCH]: 'govuk-tag--red',
   [FEE_RECORD_STATUS.READY_TO_KEY]: 'govuk-tag--blue',
-  [FEE_RECORD_STATUS.RECONCILED]: 'govuk-tag--grey',
+  [FEE_RECORD_STATUS.RECONCILED]: 'govuk-tag--green',
   [FEE_RECORD_STATUS.PENDING_CORRECTION]: 'govuk-tag--grey',
   [KEYING_SHEET_ROW_STATUS.DONE]: 'govuk-tag--green',
   [REPORT_NOT_RECEIVED]: 'govuk-tag--red',
