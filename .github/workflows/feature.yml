@@ -30,7 +30,7 @@ run-name: 🚀 Deploying to feature
 
 on:
   schedule:
-    - cron: '0 1 * * *'
+    - cron: '0 19 * * *'
 
   push:
     branches:
