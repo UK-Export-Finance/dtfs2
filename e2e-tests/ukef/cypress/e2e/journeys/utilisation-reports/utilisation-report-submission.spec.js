@@ -70,7 +70,6 @@ context('Portal to TFM utilisation report submission', () => {
   /**
    * Asserts the values in a given row of the premium payments table match the expected
    * values from the report as defined in february2023ExpectedValues
-   * @param {number} premiumPaymentsRowIndex - The index of the row of the premium payments table
    * @param {Object} expectedValues - The expected values to be found in the row
    */
   const assertPremiumPaymentsTableContainsRowWithExpectedValues = (expectedValues) => {
@@ -85,7 +84,6 @@ context('Portal to TFM utilisation report submission', () => {
   /**
    * Asserts the values in a given row of the utilisation table match the expected
    * values from the report as defined in february2023ExpectedValues
-   * @param {number} utilisationTableRowIndex - The index of the row of utilisation table
    * @param {Object} expectedValues - The expected values to be found in the row
    */
   const assertUtilisationTableContainsRowWithExpectedValues = (expectedValues) => {
