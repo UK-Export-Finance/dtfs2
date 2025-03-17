@@ -5,7 +5,7 @@ const { selectedFilters } = require('./selected-filters');
 const { submittedFiltersArray, submittedFiltersObject, filtersToText } = require('../filters/helpers');
 const { dashboardSortQuery } = require('../sort/helpers');
 const { removeSessionFilter } = require('../filters/remove-filter-from-session');
-const { getApiData, requestParams, getFlashSuccessMessage } = require('../../../helpers');
+const { getApiData, requestParams, getFlashSuccessMessage, getDealIdsWithAmendmentsUnderway } = require('../../../helpers');
 const CONSTANTS = require('../../../constants');
 
 const { PAGE_SIZE } = CONSTANTS.DASHBOARD;
@@ -17,7 +17,12 @@ const getAllDealsData = async (userToken, user, sessionFilters, currentPage, sor
 
   const sortQuery = dashboardSortQuery(sortBy);
 
-  const { count, deals } = await getApiData(api.allDeals(currentPage * PAGE_SIZE, PAGE_SIZE, filtersQuery, userToken, sortQuery), res);
+  const dealIdsWithAmendmentsUnderway = await getDealIdsWithAmendmentsUnderway(user, userToken);
+
+  const { count, deals } = await getApiData(
+    api.allDeals(currentPage * PAGE_SIZE, PAGE_SIZE, filtersQuery, userToken, sortQuery, dealIdsWithAmendmentsUnderway),
+    res,
+  );
 
   return {
     deals,

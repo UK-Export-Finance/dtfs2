@@ -100,12 +100,13 @@ const resetPasswordFromToken = async (resetPwdToken, formData) => {
   }
 };
 
-const allDeals = async (start, pagesize, filters, token, sort) => {
+const allDeals = async (start, pagesize, filters, token, sort, dealIds) => {
   const payload = {
     start,
     pagesize,
     filters,
     sort,
+    dealIds,
   };
 
   const response = await axios({
@@ -137,6 +138,26 @@ const allFacilities = async (start, pagesize, filters, token, sort) => {
       [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
     },
     data: payload,
+  });
+
+  return response.data;
+};
+
+/**
+ * @param {Object} param
+ * @param {string} param.token
+ * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus[] | undefined} param.statuses
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId[])>}>}
+ */
+const getAllAmendments = async ({ statuses, userToken }) => {
+  const response = await axios({
+    method: 'get',
+    url: `${PORTAL_API_URL}/v1/gef/facilities/amendments`,
+    headers: {
+      Authorization: userToken,
+      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+    },
+    params: { statuses },
   });
 
   return response.data;
@@ -1166,6 +1187,7 @@ const getCompletedFeeRecordCorrections = async (token, bankId) => {
 module.exports = {
   allDeals,
   allFacilities,
+  getAllAmendments,
   banks,
   cloneDeal,
   contractBond,

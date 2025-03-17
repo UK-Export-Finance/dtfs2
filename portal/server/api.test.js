@@ -90,3 +90,5 @@ describe('api.loginWithSignInLink', () => {
     await expect(loginPromise).rejects.toEqual(error);
   });
 });
+
+describe('api.getAllAmendments', () => {});
