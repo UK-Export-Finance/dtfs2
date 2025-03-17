@@ -6,6 +6,7 @@ const BOND_FORM_VALUES = require('./bond-form-values');
 const { calculateExpectedGuaranteeFee, calculateExpectedUkefExposure } = require('../../../support/portal/sectionCalculations');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const { yearWithZeroLetter } = require('../../../../../e2e-fixtures/dateConstants');
+const relative = require('../../relativeURL');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
@@ -238,7 +239,9 @@ context('Bond Financial Details', () => {
 
         cy.clickSubmitButton();
         cy.clickSaveGoBackButton();
-        cy.url().should('include', '/contract');
+        cy.getDealIdFromUrl(4).then((dealId) => {
+          cy.url().should('eq', relative(`/contract/${dealId}`));
+        });
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 

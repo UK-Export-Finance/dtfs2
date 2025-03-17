@@ -37,7 +37,7 @@ context('about-buyer', () => {
     contractAboutBuyer.expectError('Destination of Goods and Services is required');
   });
 
-  it('should trigger UK-specific validation error when switching to UK country', () => {
+  it('should trigger UK-specific validation error when switching to UK', () => {
     contractAboutSupplier.taskListLinkBuyer().click();
     contractAboutBuyer.buyerAddress().country().select('GBR');
 

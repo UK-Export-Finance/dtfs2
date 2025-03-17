@@ -5,6 +5,7 @@ const pages = require('../../pages');
 const partials = require('../../partials');
 const BOND_FORM_VALUES = require('./bond-form-values');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
+const relative = require('../../relativeURL');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -88,7 +89,9 @@ context('Add a Bond to a Deal', () => {
         const bondId = bondIdHiddenInput[0].value;
 
         cy.clickSaveGoBackButton();
-        cy.url().should('include', '/contract');
+        cy.getDealIdFromUrl(4).then((dealId) => {
+          cy.url().should('eq', relative(`/contract/${dealId}`));
+        });
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
@@ -176,7 +179,9 @@ context('Add a Bond to a Deal', () => {
         const bondId = bondIdHiddenInput[0].value;
 
         cy.clickSaveGoBackButton();
-        cy.url().should('include', '/contract');
+        cy.getDealIdFromUrl(4).then((dealId) => {
+          cy.url().should('eq', relative(`/contract/${dealId}`));
+        });
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 

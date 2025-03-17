@@ -38,9 +38,18 @@ context('about-buyer', () => {
 
     contractAboutFinancial.expectError('Supply Contract conversion rate is required for non-GBP currencies');
     contractAboutFinancial.expectError('Supply Contract conversion date is required for non-GBP currencies');
+  });
+
+  it('should not display validation errors when GBP currency is selected', () => {
     cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '123.45');
     contractAboutFinancial.supplyContractCurrency().select(CURRENCY.GBP);
     contractAboutFinancial.preview().click();
+
+    contractAboutPreview.expectError('Supply Contract value is required').should('not.exist');
+    contractAboutPreview.expectError('Supply Contract currency is required').should('not.exist');
+
+    contractAboutPreview.expectError('Supply Contract conversion date is required for non-GBP currencies').should('not.exist');
+    contractAboutPreview.expectError('Supply Contract conversion date is required for non-GBP currencies').should('not.exist');
   });
 
   it('should display validation errors when non-GBP currency is selected', () => {

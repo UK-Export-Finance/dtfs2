@@ -31,8 +31,15 @@ context('Bond form - Submit bond with created element on page', () => {
     cy.insertElement('bond-fee-form');
     cy.clickSubmitButton();
 
-    cy.loginGoToDealPage(BANK1_MAKER1).then((bond) => {
-      expect(bond.intruder).to.be.an('undefined');
+    // gets deal
+    cy.getDealIdFromUrl(4).then((dealId) => {
+      cy.getDeal(dealId, BANK1_MAKER1).then((updatedDeal) => {
+        // get bond from deal facility id
+        cy.getFacility(dealId, updatedDeal.facilities[0], BANK1_MAKER1).then((bond) => {
+          // checks bond does not contain inserted field
+          expect(bond.intruder).to.be.an('undefined');
+        });
+      });
     });
   });
 });

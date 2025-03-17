@@ -69,7 +69,7 @@ context('View dashboard deals as a checker', () => {
     cy.insertOneDeal(BSS_DEALS.READY_FOR_CHECK, BANK2_MAKER2);
   });
 
-  it('should display GEF deal on the dashboard and link to correct deal URL for Checker', () => {
+  it('should display the GEF deal on the dashboard and link to correct deal URL for Checker', () => {
     // login, go to dashboard
     cy.login(BANK1_CHECKER1);
 
@@ -113,7 +113,7 @@ context('View dashboard deals as a checker', () => {
     cy.url().should('eq', relative(`/gef/application-details/${gefDealId}`));
   });
 
-  it('should display BSS deal on the dashboard and link to correct deal URL for Checker', () => {
+  it('should display the BSS deal on the dashboard and link to correct deal URL for Checker', () => {
     // login, go to dashboard
     cy.login(BANK1_CHECKER1);
 

@@ -83,8 +83,11 @@ context('Dashboard Deals filters - filter by keyword', () => {
       filters.panel.selectedFilters.clearAllLink().click();
       // Check the number of rows before applying any filter
       dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.ALL_STATUSES);
+
       filters.showHideButton().click();
+
       const expectedLength = 1; // only 1x BSS/EWCS deal has MOCK_KEYWORD.
+
       cy.keyboardInput(filters.panel.form.keyword.input(), MOCK_KEYWORD);
 
       filters.panel.form.applyFiltersButton().click();
