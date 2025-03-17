@@ -1,4 +1,3 @@
-{% import "./fee-record-status.njk" as feeRecordStatus %}
 {% import "../../_macros/table-cell-checkbox.njk" as tableCellCheckbox %}
 {% macro render(params) %}
   {% set reportId = params.reportId %}
@@ -11,6 +10,7 @@
   {% set csrfToken = params.csrfToken %}
   {% set redirectTab = params.redirectTab %}
   {% set reportedFeesHeader = "Reported fees" %}
+  
   {% if params.overrides %}
     {% if params.overrides.reportedFeesHeader %}
       {% set reportedFeesHeader = params.overrides.reportedFeesHeader %}

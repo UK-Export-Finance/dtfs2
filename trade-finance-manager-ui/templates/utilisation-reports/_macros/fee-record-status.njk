@@ -3,19 +3,8 @@
 {% macro render(params) %}
   {% set status = params.status %}
   {% set displayStatus = params.displayStatus %}
-
-  {% set tagColourClassForStatus = {
-    'TO_DO': '',
-    'MATCH': 'govuk-tag--green',
-    'DOES_NOT_MATCH': 'govuk-tag--red',
-    'READY_TO_KEY': 'govuk-tag--yellow',
-    'RECONCILED': 'govuk-tag--grey',
-    'REPORT_COMPLETED': 'govuk-tag--green',
-    'PENDING_CORRECTION': 'govuk-tag--pink',
-    'TO_DO_AMENDED': ''
-  } %}
-
-  {% set tagColourClass = tagColourClassForStatus[status] %}
+  {% set statusTagColours = params.statusTagColours %}
+  {% set tagColourClass = statusTagColours[status] %}
 
   {{ govukTag({
     text: displayStatus,

@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { PORTAL_LOGIN_STATUS, aPortalSessionUser } from '@ukef/dtfs2-common';
+import { PORTAL_LOGIN_STATUS, aPortalSessionUser, UTILISATION_REPORT_STATUS_TAG_COLOURS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { getPreviousReports } from '.';
 import { PRIMARY_NAV_KEY } from '../../../constants';
@@ -45,6 +45,7 @@ describe('previous-reports controller', () => {
         navItems: [],
         reports: [],
         year: undefined,
+        statusTagColours: UTILISATION_REPORT_STATUS_TAG_COLOURS,
       };
       apiGetPreviousReportsSpy.mockResolvedValue(responseBody);
       const mapToPreviousReportsViewModelSpy = jest.spyOn(mapper, 'mapToPreviousReportsViewModel').mockReturnValue(viewModel);

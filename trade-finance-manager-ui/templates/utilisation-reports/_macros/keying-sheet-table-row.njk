@@ -11,6 +11,7 @@
   {% set baseCurrency = params.keyingSheetRow.baseCurrency %}
   {% set checkboxId = params.keyingSheetRow.checkboxId %}
   {% set isChecked = params.keyingSheetRow.isChecked %}
+    {% set statusTagColours = params.statusTagColours %}
 
   {% for feePayment in feePayments %}
     {% set isFirstLineOfRow = loop.index === 1 %}
@@ -19,7 +20,8 @@
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ status }}">
         {{ KeyingSheetRowStatus.render({
           status: status,
-          displayStatus: displayStatus
+          displayStatus: displayStatus,
+          statusTagColours: statusTagColours
         }) if isFirstLineOfRow }}
       </td>
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-sort-value="{{ facilityId }}">{{ facilityId if isFirstLineOfRow }}</td>
