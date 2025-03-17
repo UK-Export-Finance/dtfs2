@@ -1,5 +1,5 @@
 const FormData = require('form-data');
-const { isValidCompanyRegistrationNumber, InvalidFacilityIdError, InvalidDealIdError } = require('@ukef/dtfs2-common');
+const { isValidCompanyRegistrationNumber, InvalidFacilityIdError, InvalidDealIdError, TIMEOUT } = require('@ukef/dtfs2-common');
 const { PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID } = require('@ukef/dtfs2-common/schemas');
 const { HttpStatusCode } = require('axios');
 const Axios = require('./axios');
@@ -124,7 +124,10 @@ const setApplicationStatus = async ({ dealId, status, userToken }) => {
       {
         status,
       },
-      { ...config(userToken), timeout: 30000 },
+      {
+        ...config(userToken),
+        timeout: TIMEOUT.MEDIUM,
+      },
     );
     return data;
   } catch (error) {
