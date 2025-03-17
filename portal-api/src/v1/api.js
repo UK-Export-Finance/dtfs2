@@ -619,7 +619,7 @@ const getAllPortalFacilityAmendments = async (statuses) => {
 
     return response.data;
   } catch (error) {
-    console.error('Error getting all portal facility amendments: %o', error);
+    console.error('Error getting all portal facility amendments %o', error);
     throw error;
   }
 };
