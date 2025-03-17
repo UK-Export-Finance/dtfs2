@@ -4,6 +4,41 @@ const { TIMEOUT } = require('@ukef/dtfs2-common');
 
 const { CLAMAV_HOST, CLAMAV_PORT, CLAMAV_DEBUG_MODE_ENABLED, CLAMAV_SCANNING_ENABLED } = process.env;
 
+/**
+ * Middleware to perform a virus scan on an uploaded file using ClamAV.
+ *
+ * This middleware checks if ClamAV scanning is enabled and scans the uploaded file
+ * (provided in `req.file.buffer`) for viruses. If a virus is detected or the file
+ * is password-protected, it sets an appropriate error message in `res.locals.fileUploadError`.
+ * If the scan fails due to a connection issue or timeout, it sets `res.locals.virusScanFailed` to `true`.
+ *
+ * @async
+ * @function virusScanUpload
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.file - The uploaded file object.
+ * @param {Buffer} req.file.buffer - The buffer containing the file data.
+ * @param {Object} res - The Express response object.
+ * @param {Object} res.locals - The local variables for the response.
+ * @param {Function} next - The next middleware function in the Express stack.
+ *
+ * @throws {Error} If an unexpected error occurs during the virus scan process.
+ *
+ * @example
+ * // Usage in an Express route
+ * const express = require('express');
+ * const app = express();
+ * const virusScanUpload = require('./middleware/virusScanUpload');
+ *
+ * app.post('/upload', virusScanUpload, (req, res) => {
+ *   if (res.locals.fileUploadError) {
+ *     return res.status(400).send(res.locals.fileUploadError.text);
+ *   }
+ *   if (res.locals.virusScanFailed) {
+ *     return res.status(500).send('Virus scan failed. Please try again later.');
+ *   }
+ *   res.send('File uploaded successfully.');
+ * });
+ */
 const virusScanUpload = async (req, res, next) => {
   if (CLAMAV_SCANNING_ENABLED === 'true' && req.file?.buffer) {
     try {
