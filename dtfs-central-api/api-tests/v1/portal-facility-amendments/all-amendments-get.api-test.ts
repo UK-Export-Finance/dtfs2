@@ -1,13 +1,15 @@
 import { Response } from 'supertest';
 import { HttpStatusCode } from 'axios';
-import { MONGO_DB_COLLECTIONS, PORTAL_AMENDMENT_STATUS, PortalAmendmentStatus, PortalFacilityAmendment, TfmFacility } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, PORTAL_AMENDMENT_STATUS, PortalAmendmentStatus, PortalFacilityAmendment, TfmFacility, TestApiError } from '@ukef/dtfs2-common';
 import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { ObjectId } from 'mongodb';
 import wipeDB from '../../wipeDB';
 import { testApi } from '../../test-api';
 import { mongoDbClient as db } from '../../../src/drivers/db-client';
 import { aCompletedTfmFacilityAmendment, aTfmFacility, aTfmFacilityAmendment } from '../../../test-helpers';
+import { TfmFacilitiesRepo } from '../../../src/repositories/tfm-facilities-repo';
 
+console.error = jest.fn();
 interface PortalAmendmentsResponse extends Response {
   body: PortalFacilityAmendment[];
 }
@@ -15,7 +17,8 @@ interface PortalAmendmentsResponse extends Response {
 const { DRAFT, ACKNOWLEDGED, READY_FOR_CHECKERS_APPROVAL, FURTHER_MAKERS_INPUT_REQUIRED } = PORTAL_AMENDMENT_STATUS;
 
 const generateUrl = ({ statuses }: { statuses?: PortalAmendmentStatus[] }): string => {
-  const statusFilterQuery = statuses ? `?statuses=${statuses.map((item) => encodeURI(item)).join(',')}` : '';
+  const getStatusesParameter = (statusesParam?: PortalAmendmentStatus[]) => statusesParam?.map((item) => encodeURI(item)).join(',');
+  const statusFilterQuery = statuses ? `?statuses=${getStatusesParameter(statuses)}` : '';
   return `/v1/portal/facilities/amendments${statusFilterQuery}`;
 };
 
@@ -133,5 +136,18 @@ describe('GET /v1/portal/deals/amendments', () => {
       aDraftPortalAmendment.amendmentId.toString(),
     ];
     expect(body.map((amendment) => amendment.amendmentId)).toEqual(expectedAmendmentIds);
+  });
+
+  it(`should return ${HttpStatusCode.InternalServerError} if it throws an unknown error`, async () => {
+    const errorStatus = HttpStatusCode.InternalServerError;
+    jest.spyOn(TfmFacilitiesRepo, 'findAllPortalAmendmentsByStatus').mockImplementation(() => {
+      throw new TestApiError({ status: errorStatus });
+    });
+
+    // Assert
+    const { status } = (await testApi.get(generateUrl({ statuses: [DRAFT, READY_FOR_CHECKERS_APPROVAL] }))) as PortalAmendmentsResponse;
+
+    // Act
+    expect(status).toEqual(HttpStatusCode.InternalServerError);
   });
 });

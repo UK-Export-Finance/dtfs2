@@ -25,7 +25,7 @@ export const getAmendmentsOnDealUrl = ({ dealId, statuses }: { dealId: string; s
  * @returns {string} The constructed URL with optional statuses filters.
  */
 export const getAllAmendmentsUrl = ({ statuses }: { statuses?: PortalAmendmentStatus[] }) => {
-  const getStatusesParameter = (statusesParam: PortalAmendmentStatus[]) => statusesParam.map((item) => encodeURI(item)).join(',');
+  const getStatusesParameter = (statusesParam?: PortalAmendmentStatus[]) => statusesParam?.map((item) => encodeURI(item)).join(',');
   const statusFilterQuery = statuses ? `?statuses=${getStatusesParameter(statuses)}` : '';
   return `/v1/gef/facilities/amendments/${statusFilterQuery}`;
 };
