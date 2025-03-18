@@ -96,7 +96,7 @@ describe('controller/ukef-cover-start-date', () => {
   let mockUserResponse;
   const amendmentDetails = {
     portalAmendmentStatus: null,
-    facilityId: null,
+    facilityIdWithAmendmentUnderway: null,
     isPortalAmendmentStatusUnderway: false,
   };
 

@@ -108,7 +108,7 @@ function buildBody(app, previewMode, user) {
           // ukefFacilityId required for html facility summary table id
           ukefFacilityId: item.details.ukefFacilityId,
           stage: item.details?.facilityStage ?? (item.details.hasBeenIssued ? STAGE.ISSUED : STAGE.UNISSUED),
-          isPortalAmendmentStatusUnderway: item.details._id === app.facilityId,
+          isPortalAmendmentStatusUnderway: item.details._id === app.facilityIdWithAmendmentUnderway,
         }))
         .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
     },
@@ -277,6 +277,7 @@ const applicationDetails = async (req, res, next) => {
 
     params.canIssuedFacilitiesBeAmended =
       canUserAmendIssuedFacilities(application.submissionType, application.status, userRoles) && !amendmentsUnderwayOnDeal.length;
+
     return res.render(`partials/${partial}.njk`, params);
   } catch (error) {
     console.error('Unable to build application view %o', error);

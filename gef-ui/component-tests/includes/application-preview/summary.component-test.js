@@ -19,6 +19,7 @@ describe(page, () => {
       wrapper = render(params);
 
       wrapper.expectElement(amendmentStatus).toExist();
+      wrapper.expectText(amendmentStatus).toContain(params.portalAmendmentStatus);
     });
 
     it('should not be rendered when portalAmendmentStatus is null', () => {

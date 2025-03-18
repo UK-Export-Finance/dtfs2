@@ -6,7 +6,10 @@ import api from '../services/api';
 const getAmendmentsOnDealMock = jest.fn();
 const userToken = 'test-token';
 const application = MOCK_AIN_APPLICATION;
-const amendments = [{ status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL, facilityId: 'facility1' }];
+const amendments = [
+  { status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL, facilityId: 'facility1' },
+  { status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, facilityId: 'facility2' },
+];
 
 describe('getSubmittedAmendmentDetails', () => {
   beforeEach(() => {
@@ -20,18 +23,18 @@ describe('getSubmittedAmendmentDetails', () => {
 
     expect(result).toEqual({
       portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
-      facilityId: 'facility1',
+      facilityIdWithAmendmentUnderway: 'facility1',
       isPortalAmendmentStatusUnderway: PORTAL_AMENDMENT_UNDERWAY_STATUSES.includes(PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL),
     });
   });
 
-  it('should return null portalAmendmentStatus when deal is scheduled or cancelled', async () => {
+  it('should return portalAmendmentStatus as null when deal is scheduled or cancelled', async () => {
     application.status = DEAL_STATUS.CANCELLED;
     const result = await getSubmittedAmendmentDetails(application, userToken);
 
     expect(result).toEqual({
       portalAmendmentStatus: null,
-      facilityId: 'facility1',
+      facilityIdWithAmendmentUnderway: null,
       isPortalAmendmentStatusUnderway: false,
     });
   });

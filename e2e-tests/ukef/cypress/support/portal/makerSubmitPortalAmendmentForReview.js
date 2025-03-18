@@ -6,25 +6,26 @@ import facilityValue from '../../../../gef/cypress/e2e/pages/amendments/facility
 
 /**
  * Submit a portal amendment for review
- * @param {string} amendmentUrl
  * @param {Boolean} coverEndDateExist
  * @param {Boolean} facilityValueExist
  * @param {Boolean} facilityEndDateExist
  */
-export const makerSubmitPortalAmendmentForReview = (coverEndDateExist = '', facilityValueExist = '', facilityEndDateExist = '') => {
-  if (coverEndDateExist) {
+export const makerSubmitPortalAmendmentForReview = (coverEndDateExists = false, facilityValueExists = false, facilityEndDateExists = false) => {
+  if (coverEndDateExists) {
     whatDoYouNeedToChange.coverEndDateCheckbox().click();
   }
-  if (facilityValueExist) {
+
+  if (facilityValueExists) {
     whatDoYouNeedToChange.facilityValueCheckbox().click();
   }
+
   cy.clickContinueButton();
 
-  if (coverEndDateExist) {
+  if (coverEndDateExists) {
     cy.completeDateFormFields({ idPrefix: 'cover-end-date' });
     cy.clickContinueButton();
 
-    if (facilityEndDateExist) {
+    if (facilityEndDateExists) {
       doYouHaveAFacilityEndDate.yesRadioButton().click();
       cy.clickContinueButton();
       cy.completeDateFormFields({ idPrefix: 'facility-end-date' });
@@ -35,10 +36,11 @@ export const makerSubmitPortalAmendmentForReview = (coverEndDateExist = '', faci
       cy.completeDateFormFields({ idPrefix: 'bank-review-date' });
       cy.clickContinueButton();
     }
+
     cy.clickContinueButton();
   }
 
-  if (facilityValueExist) {
+  if (facilityValueExists) {
     cy.keyboardInput(facilityValue.facilityValue(), '10000');
     cy.clickContinueButton();
   }

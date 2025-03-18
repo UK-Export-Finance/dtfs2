@@ -22,7 +22,9 @@ describe(page, () => {
       wrapper = render(params);
 
       wrapper.expectElement(amendmentDetailsHeader).toExist();
+      wrapper.expectText(amendmentDetailsHeader).toContain(params.portalAmendmentStatus);
       wrapper.expectElement(amendmentDetails).toExist();
+      wrapper.expectText(amendmentDetails).toContain('Amendment details');
     });
 
     it('should not be rendered when portalAmendmentStatus is null', () => {

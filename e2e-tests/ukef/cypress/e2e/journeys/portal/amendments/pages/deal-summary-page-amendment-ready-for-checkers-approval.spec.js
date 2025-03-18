@@ -60,10 +60,14 @@ context("Amendments ready for checker's approval - Deal summary page", () => {
 
   it('should display the "Amendement details" link in the notification banner', () => {
     cy.assertText(applicationPreview.amendmentDetailsHeader(), PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL);
+    const expectedHref = `/gef/application-details/${dealId}/amendment-details`;
+    applicationPreview.amendmentDetailsLink().should('have.attr', 'href', expectedHref);
     cy.assertText(applicationPreview.amendmentDetailsLink(), 'Amendment details');
   });
 
   it('should display "Amendment in progress: See details" link in the facility section', () => {
+    const expectedHref = `/gef/application-details/${dealId}/amendment-details`;
+    applicationPreview.amendmentsInProgress().should('have.attr', 'href', expectedHref);
     cy.assertText(applicationPreview.amendmentsInProgress(), 'See details');
   });
 });

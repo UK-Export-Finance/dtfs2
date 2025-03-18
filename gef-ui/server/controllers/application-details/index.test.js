@@ -32,7 +32,7 @@ describe('controllers/application-details', () => {
   const mockGetAmendmentsOnDealResponse = [];
   const amendmentDetails = {
     portalAmendmentStatus: null,
-    facilityId: null,
+    facilityIdWithAmendmentUnderway: null,
     isPortalAmendmentStatusUnderway: false,
   };
 
