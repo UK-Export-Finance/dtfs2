@@ -36,5 +36,6 @@ export * from './regex';
 export * from './status';
 export * from './record-correction-status';
 export * from './utilisation-report-status-tag-colours';
+export * from './timeout';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';
