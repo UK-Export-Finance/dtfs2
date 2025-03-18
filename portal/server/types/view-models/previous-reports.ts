@@ -1,4 +1,4 @@
-import { UtilisationReportStatus } from '@ukef/dtfs2-common';
+import { UtilisationReportStatus, StatusTagColours } from '@ukef/dtfs2-common';
 import { BaseViewModel } from './base-view-model';
 
 export type PreviousReportNavItemViewModel = {
@@ -20,4 +20,5 @@ export type PreviousReportsViewModel = BaseViewModel & {
   year: string | number | undefined;
   navItems: PreviousReportNavItemViewModel[];
   reports: PreviousReportViewModel[];
+  statusTagColours: StatusTagColours;
 };

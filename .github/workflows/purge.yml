@@ -3,7 +3,7 @@ run-name: 🧹Azure purge
 
 on:
   schedule:
-    - cron: '0 1 * * *'
+    - cron: '0 23 * * *'
 
 env:
   APPLICATION: ${{ vars.APPLICATION }}
@@ -42,7 +42,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        acr: ['tfsdev', 'tfsstaging']
+        acr: ['tfsdev', 'tfsstaging', 'tfsfeatureacrhhpiuy2cio7ma']
 
     concurrency:
       group: acr-purge-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.acr }}
@@ -58,6 +58,8 @@ jobs:
             echo "SUBSCRIPTION=${{ secrets.DEV_SUBSCRIPTION }}" >> $GITHUB_ENV
           elif [[ "${{ matrix.acr }}" == *"staging"* ]]; then
             echo "SUBSCRIPTION=${{ secrets.STAGING_SUBSCRIPTION }}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.acr }}" == *"feature"* ]]; then
+            echo "SUBSCRIPTION=${{ secrets.FEATURE_SUBSCRIPTION }}" >> $GITHUB_ENV
           fi
 
       - name: Resource group 🛠️
@@ -66,6 +68,8 @@ jobs:
             echo "RESOURCE_GROUP=${{ secrets.DEV_RESOURCE_GROUP }}" >> $GITHUB_ENV
           elif [[ "${{ matrix.acr }}" == *"staging"* ]]; then
             echo "RESOURCE_GROUP=${{ secrets.STAGING_RESOURCE_GROUP }}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.acr }}" == *"feature"* ]]; then
+            echo "RESOURCE_GROUP=${{ secrets.FEATURE_RESOURCE_GROUP }}" >> $GITHUB_ENV
           fi
 
       - name: Execute ⚡

@@ -1,26 +1,18 @@
-/* eslint-disable @typescript-eslint/unbound-method */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable no-param-reassign */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable import/no-extraneous-dependencies */
 
+import { CountryInterface } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import { sortArrayAlphabetically } from '../../helpers';
-import { Country } from '../../interfaces';
 import { COUNTRIES } from '../../external-api';
 
-const allCountries: Country[] = COUNTRIES;
+const allCountries: CountryInterface[] = COUNTRIES;
 
 const getCountryFromArray = (arr: any, code: any) => arr.filter((country: any) => country.code.toLowerCase() === code.toLowerCase())[0];
 
 const sortCountries = () => {
-  const countriesWithoutUK = allCountries.filter((country: any) => country.code !== 'GBR');
+  const countriesWithoutUK = allCountries.filter((country: CountryInterface) => country.code !== 'GBR');
   const sortedArray = [getCountryFromArray(COUNTRIES, 'GBR'), ...sortArrayAlphabetically(countriesWithoutUK, 'name')];
   return sortedArray;
 };

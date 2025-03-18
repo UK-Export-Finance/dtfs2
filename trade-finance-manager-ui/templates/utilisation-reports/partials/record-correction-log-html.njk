@@ -6,6 +6,7 @@
 
 {% if recordCorrectionDetails.recordCorrectionRows.length %} 
   {{ recordCorrectionTable.render({
-    recordCorrectionRows: recordCorrectionDetails.recordCorrectionRows
+    recordCorrectionRows: recordCorrectionDetails.recordCorrectionRows,
+    statusTagColours: statusTagColours
   }) }}
 {% endif %}

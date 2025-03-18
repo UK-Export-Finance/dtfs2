@@ -1,6 +1,13 @@
 import httpMocks from 'node-mocks-http';
 import { SessionData } from 'express-session';
-import { CURRENCY, FEE_RECORD_STATUS, FeeRecordUtilisation, isFeeRecordCorrectionFeatureFlagEnabled, mockRecordCorrectionDetails } from '@ukef/dtfs2-common';
+import {
+  CURRENCY,
+  FEE_RECORD_STATUS,
+  FeeRecordUtilisation,
+  isFeeRecordCorrectionFeatureFlagEnabled,
+  mockRecordCorrectionDetails,
+  UTILISATION_REPORT_STATUS_TAG_COLOURS,
+} from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { getUtilisationReportReconciliationByReportId } from '.';
 import { MOCK_TFM_SESSION_USER } from '../../../test-mocks/mock-tfm-session-user';
@@ -270,6 +277,7 @@ describe('controllers/utilisation-reports/utilisation-report-reconciliation-for-
         utilisationDetails: expectedUtilisationDetails,
         recordCorrectionDetails: expectedRecordCorrectionDetails,
         isFeeRecordCorrectionFeatureFlagEnabled: true,
+        statusTagColours: UTILISATION_REPORT_STATUS_TAG_COLOURS,
       });
     });
 

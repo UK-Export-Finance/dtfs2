@@ -99,8 +99,8 @@ describe('/v1/gef/facilities/amendments', () => {
           dealId,
           type: AMENDMENT_TYPES.PORTAL,
           ukefFacilityId: '123',
-          createdAt: 1702061978881,
-          updatedAt: 1702061978881,
+          createdAt: new Date().getTime(),
+          updatedAt: new Date().getTime(),
           status: PORTAL_AMENDMENT_STATUS.DRAFT,
           eligibilityCriteria: { version: 1, criteria: [] },
           createdBy: {

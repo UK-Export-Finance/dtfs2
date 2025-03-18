@@ -11,6 +11,7 @@ export type GetAllPortalAmendmentsRequest = CustomExpressRequest<{
  * get all portal facility amendments
  * @param req - request
  * @param res - response
+ * @returns all portal facility amendments
  */
 export const getAllPortalAmendments = async (req: GetAllPortalAmendmentsRequest, res: Response) => {
   const { statuses } = req.query;
@@ -18,9 +19,13 @@ export const getAllPortalAmendments = async (req: GetAllPortalAmendmentsRequest,
   try {
     const allPortalAmendments = await TfmFacilitiesRepo.findAllPortalAmendmentsByStatus({ statuses });
 
+    if (!allPortalAmendments || !Array.isArray(allPortalAmendments)) {
+      throw new Error('No portal amendments found');
+    }
+
     return res.status(HttpStatusCode.Ok).send(allPortalAmendments);
   } catch (error) {
-    console.error(`Error getting all amendments for all facilities: %o`, error);
+    console.error(`Error getting all amendments for portal facilities: %o`, error);
 
     if (error instanceof ApiError) {
       const { status, message, code } = error;

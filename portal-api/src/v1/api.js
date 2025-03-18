@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { HEADERS } = require('@ukef/dtfs2-common');
+const { TIMEOUT, HEADERS } = require('@ukef/dtfs2-common');
 const { PORTAL_FACILITY_AMENDMENT } = require('@ukef/dtfs2-common/schemas');
 const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 
@@ -235,12 +235,23 @@ const deleteFacility = async (facilityId, user, auditDetails) => {
   }
 };
 
+/**
+ * Submits a deal to the TFM API.
+ *
+ * @async
+ * @function tfmDealSubmit
+ * @param {string} dealId - The unique identifier of the deal to be submitted.
+ * @param {string} dealType - The type of the deal being submitted.
+ * @param {Object} checker - The checker object containing details of the user submitting the deal.
+ * @returns {Promise<Object|boolean>} The response data from the TFM API if successful, or `false` if an error occurs.
+ */
 const tfmDealSubmit = async (dealId, dealType, checker) => {
   try {
     const response = await axios({
       method: 'put',
       url: `${TFM_API_URL}/v1/deals/submit`,
       headers: headers.tfm,
+      timeout: TIMEOUT.LONG,
       data: {
         dealId,
         dealType,
@@ -619,7 +630,7 @@ const getAllPortalFacilityAmendments = async (statuses) => {
 
     return response.data;
   } catch (error) {
-    console.error('Error getting all portal facility amendments: %o', error);
+    console.error('Error getting all portal facility amendments %o', error);
     throw error;
   }
 };

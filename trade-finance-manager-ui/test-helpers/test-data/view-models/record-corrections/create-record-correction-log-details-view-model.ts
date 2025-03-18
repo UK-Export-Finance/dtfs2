@@ -1,4 +1,4 @@
-import { recordCorrectionLogDetailsMock, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { recordCorrectionLogDetailsMock, getFormattedReportPeriodWithLongMonth, UTILISATION_REPORT_STATUS_TAG_COLOURS } from '@ukef/dtfs2-common';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../server/constants';
 import { RecordCorrectionLogDetailsViewModel } from '../../../../server/types/view-models';
 import { aTfmSessionUser } from '../../tfm-session-user';
@@ -16,4 +16,5 @@ export const aCreateRecordCorrectionLogDetailsViewModel = (): RecordCorrectionLo
   ...recordCorrectionLogDetailsMock,
   formattedReportPeriod,
   backLinkHref: '/utilisation-reports/123#record-correction-log',
+  statusTagColours: UTILISATION_REPORT_STATUS_TAG_COLOURS,
 });

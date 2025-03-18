@@ -1,20 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Request, Response } from 'express';
+import { CURRENCIES, CurrencyInterface } from '@ukef/dtfs2-common';
 import { sortArrayAlphabetically } from '../../helpers';
-import { Currency } from '../../interfaces';
-import { CURRENCIES } from '../../external-api';
 
-const allCurrencies: Currency[] = CURRENCIES;
+const currencies: CurrencyInterface[] = CURRENCIES;
 
-export const findOneCurrency = (id: any) => allCurrencies.find((c: any) => c.id.toLowerCase() === id.toLowerCase());
+export const findOneCurrency = (id: string) => currencies.find((c: CurrencyInterface) => c.id.toLowerCase() === id.toLowerCase());
 
 export const findAll = (req: Request, res: Response) =>
   res.status(200).send({
-    count: allCurrencies.length,
-    currencies: sortArrayAlphabetically(allCurrencies, 'id'),
+    count: currencies.length,
+    currencies: sortArrayAlphabetically(currencies, 'id'),
   });
 
 export const findOne = (req: Request, res: Response) => {

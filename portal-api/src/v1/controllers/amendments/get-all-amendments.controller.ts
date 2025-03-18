@@ -20,10 +20,14 @@ export const getAllFacilityAmendments = async (req: GetAllFacilityAmendmentsRequ
   try {
     const amendments = await api.getAllPortalFacilityAmendments(statuses);
 
+    if (!amendments || !Array.isArray(amendments)) {
+      throw new Error('No portal amendments found');
+    }
+
     return res.status(HttpStatusCode.Ok).send(amendments);
   } catch (error) {
     const errorMessage = 'Failed to get all portal amendments';
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
 
     if (error instanceof ApiError) {
       return res.status(error.status).send({
