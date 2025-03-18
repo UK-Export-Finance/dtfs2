@@ -42,7 +42,7 @@ const mapSubmittedToCheckerEmailVariables = (deal: Deal, facility: Facility, ame
   if (changeFacilityValue && value) {
     let currencySymbol = '';
 
-    if (facility?.currency && facility.currency.id) {
+    if (facility?.currency?.id) {
       currencySymbol = getCurrencySymbol(facility?.currency.id);
     }
     formattedFacilityValue = `${currencySymbol}${value}`;
