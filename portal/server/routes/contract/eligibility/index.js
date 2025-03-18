@@ -72,7 +72,9 @@ router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { body } = req;
 
-  const updatedDeal = await getApiData(api.updateEligibilityCriteria(_id, body, userToken), res);
+  const updatedEligibilityCriteria = api.updateEligibilityCriteria(_id, body, userToken);
+
+  const updatedDeal = await getApiData(updatedEligibilityCriteria, res);
 
   if (updatedDeal.eligibility?.validationErrors?.count) {
     // If there are validation errors, redirect back to the criteria page with a query parameter

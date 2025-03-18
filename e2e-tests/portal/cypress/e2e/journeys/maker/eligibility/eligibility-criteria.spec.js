@@ -139,9 +139,12 @@ context('Eligibility Criteria', () => {
     // Check that we have the correct number of error messages
     errorSummaryLinks().should('have.length', criteriaCount);
 
-    // Check for field-level errors (adjust the selector as needed)
-    eligibilityCriteria.eligibilityCriteriaItems().each(($el) => {
-      cy.wrap($el).find('.govuk-error-message').should('be.visible');
+    // Check for field-level errors
+    eligibilityCriteria.eligibilityCriteriaItems().each(($el, index) => {
+      cy.wrap($el)
+        .find('.govuk-error-message')
+        .should('be.visible')
+        .and('contain.text', `Eligibility criterion ${index + 11} is required`);
     });
   });
 
