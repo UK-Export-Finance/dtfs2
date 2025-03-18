@@ -62,7 +62,7 @@ describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
 
   it.each([PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL])('should call next when newStatus is "%s"', (newStatus) => {
     // Arrange
-    const { req, res } = createMocks({ body: { newStatus } });
+    const { req, res } = createMocks({ body: { newStatus, ...portalAmendmentVariables } });
     const next = jest.fn();
 
     // Act
