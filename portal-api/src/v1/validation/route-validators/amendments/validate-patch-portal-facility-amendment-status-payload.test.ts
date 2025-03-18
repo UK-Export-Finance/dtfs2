@@ -1,7 +1,9 @@
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, aPortalAmendmentToCheckerEmailVariables } from '@ukef/dtfs2-common';
 import { validatePatchPortalFacilityAmendmentStatusPayload } from './validate-patch-portal-facility-amendment-status-payload';
+
+const portalAmendmentVariables = aPortalAmendmentToCheckerEmailVariables();
 
 describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
   const invalidPayloads = [
@@ -19,6 +21,27 @@ describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
       description: 'newStatus is not a valid portal amendment status',
       payload: {
         newStatus: 'Invalid status',
+      },
+    },
+    {
+      description: 'string field is undefined',
+      payload: {
+        ...portalAmendmentVariables,
+        exporterName: undefined,
+      },
+    },
+    {
+      description: 'string field is number',
+      payload: {
+        ...portalAmendmentVariables,
+        ukefDealId: 12345,
+      },
+    },
+    {
+      description: 'string field is date',
+      payload: {
+        ...portalAmendmentVariables,
+        newFacilityEndDate: new Date(),
       },
     },
   ];

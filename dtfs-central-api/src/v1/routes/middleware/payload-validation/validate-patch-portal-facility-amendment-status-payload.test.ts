@@ -1,11 +1,12 @@
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { AUDIT_USER_TYPES, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { AUDIT_USER_TYPES, PORTAL_AMENDMENT_STATUS, aPortalAmendmentToCheckerEmailVariables } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
 import { validatePatchPortalFacilityAmendmentStatusPayload } from './validate-patch-portal-facility-amendment-status-payload';
 
 const validAuditDetails = generatePortalAuditDetails(aPortalUser()._id);
+const portalAmendmentVariables = aPortalAmendmentToCheckerEmailVariables();
 
 describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
   const invalidPayloads = [
@@ -55,6 +56,33 @@ describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
         },
       },
     },
+    {
+      description: 'string field is undefined',
+      payload: {
+        newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+        auditDetails: validAuditDetails,
+        ...portalAmendmentVariables,
+        exporterName: undefined,
+      },
+    },
+    {
+      description: 'string field is number',
+      payload: {
+        newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+        auditDetails: validAuditDetails,
+        ...portalAmendmentVariables,
+        ukefDealId: 12345,
+      },
+    },
+    {
+      description: 'string field is date',
+      payload: {
+        newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+        auditDetails: validAuditDetails,
+        ...portalAmendmentVariables,
+        newFacilityEndDate: new Date(),
+      },
+    },
   ];
 
   it.each(invalidPayloads)('should return 400 when $description', ({ payload }) => {
@@ -76,6 +104,16 @@ describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
     const payload = {
       newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
       auditDetails: validAuditDetails,
+      sendToEmailAddress: 'test@ukexportfinance.gov.uk',
+      exporterName: portalAmendmentVariables.exporterName,
+      bankInternalRefName: portalAmendmentVariables.bankInternalRefName,
+      ukefDealId: portalAmendmentVariables.ukefDealId,
+      ukefFacilityId: portalAmendmentVariables.ukefFacilityId,
+      recipientName: portalAmendmentVariables.recipientName,
+      dateEffectiveFrom: portalAmendmentVariables.dateEffectiveFrom,
+      newCoverEndDate: portalAmendmentVariables.newCoverEndDate,
+      newFacilityEndDate: portalAmendmentVariables.newFacilityEndDate,
+      newFacilityValue: portalAmendmentVariables.newFacilityValue,
     };
 
     const { req, res } = createMocks({ body: payload });

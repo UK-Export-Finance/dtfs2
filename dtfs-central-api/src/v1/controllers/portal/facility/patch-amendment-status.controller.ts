@@ -4,8 +4,14 @@ import { Response } from 'express';
 import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
 import { PatchPortalFacilityAmendmentStatusPayload } from '../../../routes/middleware/payload-validation/validate-patch-portal-facility-amendment-status-payload';
+import EMAIL_TEMPLATE_IDS from '../../../../constants/email-template-ids';
+import externalApi from '../../../../external-api/api';
 
-type PatchSubmitAmendmentToCheckerRequestParams = { facilityId: string; amendmentId: string };
+type PatchSubmitAmendmentToCheckerRequestParams = {
+  facilityId: string;
+  amendmentId: string;
+};
+
 export type PatchSubmitAmendmentToCheckerRequest = CustomExpressRequest<{
   params: PatchSubmitAmendmentToCheckerRequestParams;
   reqBody: PatchPortalFacilityAmendmentStatusPayload;
@@ -13,12 +19,14 @@ export type PatchSubmitAmendmentToCheckerRequest = CustomExpressRequest<{
 
 /**
  * patch portal facility amendment status
+ * if newStatus is PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL, submit the amendment to checker
+ * and send an email with the details of the amendment
  * @param req - request
  * @param res - response
  */
 export const patchAmendmentStatus = async (req: PatchSubmitAmendmentToCheckerRequest, res: Response) => {
   const { facilityId, amendmentId } = req.params;
-  const { auditDetails, newStatus } = req.body;
+  const { auditDetails, newStatus, sendToEmailAddress, ...emailVariables } = req.body;
 
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.PORTAL);
@@ -26,6 +34,10 @@ export const patchAmendmentStatus = async (req: PatchSubmitAmendmentToCheckerReq
     switch (newStatus) {
       case PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL: {
         const updatedAmendment = await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({ facilityId, amendmentId, auditDetails });
+
+        // sends email to maker with the details of the amendment
+        await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENTS_SUBMITTED_TO_CHECKER, sendToEmailAddress, emailVariables);
+
         return res.status(HttpStatusCode.Ok).send(updatedAmendment);
       }
       default: {

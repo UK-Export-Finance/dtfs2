@@ -1,7 +1,14 @@
 import { ObjectId } from 'mongodb';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, aPortalSessionUser, PortalFacilityAmendmentWithUkefId, TestApiError } from '@ukef/dtfs2-common';
+import {
+  PORTAL_AMENDMENT_STATUS,
+  AMENDMENT_TYPES,
+  aPortalSessionUser,
+  PortalFacilityAmendmentWithUkefId,
+  TestApiError,
+  aPortalAmendmentToCheckerEmailVariables,
+} from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import api from '../../api';
 import { patchAmendmentStatus, PatchAmendmentStatusRequest } from './patch-amendment-status.controller';
@@ -16,6 +23,7 @@ const dealId = new ObjectId().toString();
 
 const newStatus = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
 const user = aPortalSessionUser();
+const portalAmendmentVariables = aPortalAmendmentToCheckerEmailVariables();
 
 describe('controllers - facility amendment', () => {
   beforeEach(() => {
@@ -27,7 +35,7 @@ describe('controllers - facility amendment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<PatchAmendmentStatusRequest>({
         params: { facilityId, amendmentId },
-        body: { newStatus },
+        body: { newStatus, ...portalAmendmentVariables },
         user,
       });
 
@@ -41,6 +49,7 @@ describe('controllers - facility amendment', () => {
         amendmentId,
         newStatus,
         auditDetails: generatePortalAuditDetails(user._id),
+        ...portalAmendmentVariables,
       });
     });
 
