@@ -1,9 +1,9 @@
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { PORTAL_AMENDMENT_STATUS, aPortalAmendmentToCheckerEmailVariables } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, portalAmendmentToCheckerEmailVariables } from '@ukef/dtfs2-common';
 import { validatePatchPortalFacilityAmendmentStatusPayload } from './validate-patch-portal-facility-amendment-status-payload';
 
-const portalAmendmentVariables = aPortalAmendmentToCheckerEmailVariables();
+const portalAmendmentVariables = portalAmendmentToCheckerEmailVariables();
 
 describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
   const invalidPayloads = [

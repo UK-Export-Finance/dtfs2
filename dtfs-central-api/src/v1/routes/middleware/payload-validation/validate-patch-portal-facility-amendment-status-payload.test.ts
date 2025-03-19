@@ -1,12 +1,12 @@
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { AUDIT_USER_TYPES, PORTAL_AMENDMENT_STATUS, aPortalAmendmentToCheckerEmailVariables } from '@ukef/dtfs2-common';
+import { AUDIT_USER_TYPES, PORTAL_AMENDMENT_STATUS, portalAmendmentToCheckerEmailVariables } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
 import { validatePatchPortalFacilityAmendmentStatusPayload } from './validate-patch-portal-facility-amendment-status-payload';
 
 const validAuditDetails = generatePortalAuditDetails(aPortalUser()._id);
-const portalAmendmentVariables = aPortalAmendmentToCheckerEmailVariables();
+const portalAmendmentVariables = portalAmendmentToCheckerEmailVariables();
 
 describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
   const invalidPayloads = [

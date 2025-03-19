@@ -1,4 +1,4 @@
-export const aPortalAmendmentToCheckerEmailVariables = () => ({
+export const portalAmendmentToCheckerEmailVariables = () => ({
   sendToEmailAddress: 'maker1@ukexportfinance.gov.uk',
   emailVariables: {
     exporterName: 'mock name',

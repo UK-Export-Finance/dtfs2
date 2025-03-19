@@ -46,7 +46,7 @@ export const postCheckYourAnswers = async (req: PostCheckYourAnswersRequest, res
       formattedEffectiveDate,
       formattedFacilityEndDate,
       formattedFacilityValue,
-    } = mapSubmittedToCheckerEmailVariables(deal, facility, amendment, user);
+    } = mapSubmittedToCheckerEmailVariables({ deal, facility, amendment, user });
 
     const emailVariables: PortalAmendmentSubmittedToCheckerEmailVariables = {
       exporterName,

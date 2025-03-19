@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http';
-import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, API_ERROR_CODE, TestApiError, AnyObject, aPortalAmendmentToCheckerEmailVariables } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, API_ERROR_CODE, TestApiError, AnyObject, portalAmendmentToCheckerEmailVariables } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
@@ -18,7 +18,7 @@ let sendEmailSpy = jest.fn();
 
 jest.mock('../../../../external-api/api');
 
-const mockEmailVariables = aPortalAmendmentToCheckerEmailVariables();
+const mockEmailVariables = portalAmendmentToCheckerEmailVariables();
 
 const generateHttpMocks = ({ auditDetails, newStatus, emailVariables }: { auditDetails: unknown; newStatus: string; emailVariables: AnyObject }) =>
   createMocks<PatchSubmitAmendmentToCheckerRequest>({

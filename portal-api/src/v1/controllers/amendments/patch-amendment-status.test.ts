@@ -7,7 +7,7 @@ import {
   aPortalSessionUser,
   PortalFacilityAmendmentWithUkefId,
   TestApiError,
-  aPortalAmendmentToCheckerEmailVariables,
+  portalAmendmentToCheckerEmailVariables,
 } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import api from '../../api';
@@ -23,7 +23,7 @@ const dealId = new ObjectId().toString();
 
 const newStatus = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
 const user = aPortalSessionUser();
-const portalAmendmentVariables = aPortalAmendmentToCheckerEmailVariables();
+const portalAmendmentVariables = portalAmendmentToCheckerEmailVariables();
 
 describe('controllers - facility amendment', () => {
   beforeEach(() => {

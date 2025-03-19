@@ -5,7 +5,7 @@ import { Deal } from '../../../types/deal';
 import { Facility } from '../../../types/facility';
 
 /**
- * maps emailVariables an email on amendment submission to checker
+ * maps emailVariables to an email on amendment submission to checker
  * consumes deal, facility, amendment and user and maps to relevant format
  * @param deal
  * @param facility
@@ -13,7 +13,17 @@ import { Facility } from '../../../types/facility';
  * @param user
  * @returns mapped email variables
  */
-const mapSubmittedToCheckerEmailVariables = (deal: Deal, facility: Facility, amendment: PortalFacilityAmendmentWithUkefId, user: PortalSessionUser) => {
+const mapSubmittedToCheckerEmailVariables = ({
+  deal,
+  facility,
+  amendment,
+  user,
+}: {
+  deal: Deal;
+  facility: Facility;
+  amendment: PortalFacilityAmendmentWithUkefId;
+  user: PortalSessionUser;
+}) => {
   const {
     ukefDealId,
     bankInternalRefName,
@@ -27,7 +37,7 @@ const mapSubmittedToCheckerEmailVariables = (deal: Deal, facility: Facility, ame
   // if effective date is defined, format it from unix timestamp (without ms) to DD MMMM YYYY, otherwise set it to '-'
   const formattedEffectiveDate = effectiveDate ? format(fromUnixTime(effectiveDate), DATE_FORMATS.DD_MMMM_YYYY) : '-';
   // if changeCoverEndDate is true and coverEndDate is defined, format it to DD MMMM YYYY, otherwise set it to '-'
-  const formattedCoverEndDate = changeCoverEndDate && coverEndDate ? format(new Date(coverEndDate), DATE_FORMATS.DD_MMMM_YYYY) : '-';
+  const formattedCoverEndDate = changeCoverEndDate && coverEndDate ? format(coverEndDate, DATE_FORMATS.DD_MMMM_YYYY) : '-';
   // if isUsingFacilityEndDate is true and facilityEndDate is defined, format it to DD MMMM YYYY, otherwise set it to '-'
   const formattedFacilityEndDate = isUsingFacilityEndDate && facilityEndDate ? format(new Date(facilityEndDate), DATE_FORMATS.DD_MMMM_YYYY) : '-';
 
@@ -45,11 +55,11 @@ const mapSubmittedToCheckerEmailVariables = (deal: Deal, facility: Facility, ame
     if (facility?.currency?.id) {
       currencySymbol = getCurrencySymbol(facility?.currency.id);
     }
+
     formattedFacilityValue = `${currencySymbol}${value}`;
   }
 
   const recipientName = `${user.firstname} ${user.surname}`;
-
   const sendToEmailAddress = user.email;
 
   return {

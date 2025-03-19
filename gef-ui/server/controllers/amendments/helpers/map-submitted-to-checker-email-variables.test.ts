@@ -40,7 +40,7 @@ describe('mapSubmittedToCheckerEmailVariables', () => {
         .build();
 
       // Act
-      const result = mapSubmittedToCheckerEmailVariables(mockDeal, mockFacilityDetails, amendmentAllAmendments, mockUser);
+      const result = mapSubmittedToCheckerEmailVariables({ deal: mockDeal, facility: mockFacilityDetails, amendment: amendmentAllAmendments, user: mockUser });
 
       // Assert
       const expected = {
@@ -76,7 +76,7 @@ describe('mapSubmittedToCheckerEmailVariables', () => {
         .build();
 
       // Act
-      const result = mapSubmittedToCheckerEmailVariables(mockDeal, mockFacilityDetails, amendmentNoDates, mockUser);
+      const result = mapSubmittedToCheckerEmailVariables({ deal: mockDeal, facility: mockFacilityDetails, amendment: amendmentNoDates, user: mockUser });
 
       // Assert
       const expected = {
@@ -113,7 +113,7 @@ describe('mapSubmittedToCheckerEmailVariables', () => {
         .build();
 
       // Act
-      const result = mapSubmittedToCheckerEmailVariables(mockDeal, mockFacilityDetails, amendmentDatesNoValue, mockUser);
+      const result = mapSubmittedToCheckerEmailVariables({ deal: mockDeal, facility: mockFacilityDetails, amendment: amendmentDatesNoValue, user: mockUser });
 
       // Assert
       const expected = {
@@ -147,7 +147,7 @@ describe('mapSubmittedToCheckerEmailVariables', () => {
         .withEffectiveDate(effectiveDateWithoutMs)
         .build();
       // Act
-      const result = mapSubmittedToCheckerEmailVariables(mockDeal, mockFacilityDetails, amendmentDateNoValue, mockUser);
+      const result = mapSubmittedToCheckerEmailVariables({ deal: mockDeal, facility: mockFacilityDetails, amendment: amendmentDateNoValue, user: mockUser });
 
       // Assert
       const expected = {
@@ -157,6 +157,36 @@ describe('mapSubmittedToCheckerEmailVariables', () => {
         ukefFacilityId: mockFacilityDetails.ukefFacilityId,
         formattedEffectiveDate: format(fromUnixTime(effectiveDateWithoutMs), DATE_FORMATS.DD_MMMM_YYYY),
         formattedCoverEndDate: format(coverEndDate, DATE_FORMATS.DD_MMMM_YYYY),
+        formattedFacilityEndDate: '-',
+        formattedFacilityValue: '-',
+        recipientName: `${mockUser.firstname} ${mockUser.surname}`,
+        sendToEmailAddress: mockUser.email,
+      };
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('whennothing is being amended', () => {
+    it('should return formatted values', () => {
+      // Arrange
+      const amendmentDateNoValue = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+        .withDealId(dealId)
+        .withFacilityId(facilityId)
+        .withAmendmentId(amendmentId)
+        .withStatus(PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL)
+        .build();
+      // Act
+      const result = mapSubmittedToCheckerEmailVariables({ deal: mockDeal, facility: mockFacilityDetails, amendment: amendmentDateNoValue, user: mockUser });
+
+      // Assert
+      const expected = {
+        ukefDealId: mockDeal.ukefDealId,
+        bankInternalRefName: mockDeal.bankInternalRefName,
+        exporterName: mockDeal.exporter.companyName,
+        ukefFacilityId: mockFacilityDetails.ukefFacilityId,
+        formattedEffectiveDate: '-',
+        formattedCoverEndDate: '-',
         formattedFacilityEndDate: '-',
         formattedFacilityValue: '-',
         recipientName: `${mockUser.firstname} ${mockUser.surname}`,
