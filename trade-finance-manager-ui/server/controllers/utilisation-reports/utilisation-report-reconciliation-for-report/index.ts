@@ -1,5 +1,10 @@
 import { Response } from 'express';
-import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth, isFeeRecordCorrectionFeatureFlagEnabled } from '@ukef/dtfs2-common';
+import {
+  CustomExpressRequest,
+  getFormattedReportPeriodWithLongMonth,
+  isFeeRecordCorrectionFeatureFlagEnabled,
+  UTILISATION_REPORT_STATUS_TAG_COLOURS,
+} from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
@@ -128,6 +133,7 @@ export const getUtilisationReportReconciliationByReportId = async (req: GetUtili
       recordCorrectionDetails: recordCorrectionViewModel,
       keyingSheet: keyingSheetViewModel,
       isFeeRecordCorrectionFeatureFlagEnabled: isFeeRecordCorrectionFeatureFlagEnabled(),
+      statusTagColours: UTILISATION_REPORT_STATUS_TAG_COLOURS,
     };
 
     return res.render('utilisation-reports/utilisation-report-reconciliation-for-report.njk', viewModel);

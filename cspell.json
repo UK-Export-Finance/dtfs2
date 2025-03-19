@@ -59,8 +59,8 @@
     "codecov",
     "codeql",
     "commitlintrc",
-    "commonised",
     "commonisation",
+    "commonised",
     "corejs",
     "creds",
     "crsf",
@@ -95,6 +95,8 @@
     "falsey",
     "FCVT",
     "FFFR",
+    "FGHIJK",
+    "FĞHIJK",
     "fieldname",
     "financials",
     "firstname",
@@ -128,6 +130,7 @@
     "Maluti",
     "Markan",
     "mdm",
+    "MGA",
     "ministryofjustice",
     "mkodockx",
     "mmaaa",
@@ -184,6 +187,7 @@
     "szenius",
     "TFIS",
     "tfsdev",
+    "tfsfeatureacrhhpiuy",
     "tfsprod",
     "tfsproduction",
     "tfsstaging",
@@ -206,23 +210,32 @@
     "UPRN",
     "upserted",
     "upserts",
+    "vaue",
     "venv",
     "VNET",
     "WCAG",
     "whatwg",
     "wordprocessingml",
     "wovens",
-    "XLXS",
-    "FĞHIJK",
-    "FGHIJK",
-    "MGA",
-    "vaue"
+    "XLXS"
   ],
-  "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
+  "dictionaries": [
+    "en-gb",
+    "companies",
+    "softwareTerms",
+    "misc",
+    "lorem-ipsum",
+    "typescript",
+    "node",
+    "bash",
+    "npm"
+  ],
   "languageSettings": [
     {
       "languageId": "commit-msg",
-      "ignoreRegExpList": ["/^#.*/gm"]
+      "ignoreRegExpList": [
+        "/^#.*/gm"
+      ]
     }
   ],
   "version": "0.2"

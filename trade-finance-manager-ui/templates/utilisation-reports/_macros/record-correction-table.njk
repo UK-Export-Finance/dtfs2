@@ -2,6 +2,7 @@
 
 {% macro render(params) %}
   {% set recordCorrectionRows = params.recordCorrectionRows %}
+  {% set statusTagColours = params.statusTagColours %}
 
   <table class="govuk-table" data-module="moj-sortable-table" data-cy="record-correction-log-table">
     <thead class="govuk-table__head">
@@ -19,7 +20,7 @@
 
         <tr class="govuk-table__row" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}">
           <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-date-sent">{{ recordCorrectionRow.dateSent }}</td>
-          <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-exporter">
+          <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-exporter" data-sort-value="{{ recordCorrectionRow.exporter }}">
             <a
               href="/utilisation-reports/record-correction-log-details/{{ recordCorrectionRow.correctionId }}"
               data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-details-link"
@@ -33,7 +34,8 @@
           <td class="govuk-table__cell" data-cy="record-correction-log-table-row-{{ recordCorrectionRow.correctionId }}-status">
            {{ recordCorrectionStatus.render({
               status: recordCorrectionRow.status,
-              displayStatus: recordCorrectionRow.displayStatus
+              displayStatus: recordCorrectionRow.displayStatus,
+              statusTagColours: statusTagColours
             }) }}
           </td>
         </tr>

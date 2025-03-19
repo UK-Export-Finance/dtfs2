@@ -1,4 +1,4 @@
-import { FEE_RECORD_STATUS, TfmSessionUser } from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, TfmSessionUser, UTILISATION_REPORT_STATUS_TAG_COLOURS } from '@ukef/dtfs2-common';
 import { PRIMARY_NAVIGATION_KEYS } from '../../server/constants';
 import { pageRenderer } from '../pageRenderer';
 import { aTfmSessionUser } from '../../test-helpers/test-data/tfm-session-user';
@@ -46,6 +46,7 @@ describe(page, () => {
     utilisationDetails: { utilisationTableRows: [], downloadUrl },
     isFeeRecordCorrectionFeatureFlagEnabled: true,
     recordCorrectionDetails: { recordCorrectionRows: [] },
+    statusTagColours: UTILISATION_REPORT_STATUS_TAG_COLOURS,
   };
 
   const getWrapper = (viewModel: UtilisationReportReconciliationForReportViewModel = params) => render(viewModel);

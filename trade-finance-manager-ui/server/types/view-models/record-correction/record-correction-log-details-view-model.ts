@@ -1,4 +1,4 @@
-import { RecordCorrectionLogFields } from '@ukef/dtfs2-common';
+import { RecordCorrectionLogFields, StatusTagColours } from '@ukef/dtfs2-common';
 import { BaseViewModel } from '../base-view-model';
 
 export type RecordCorrectionLogDetailsViewModel = BaseViewModel & {
@@ -8,4 +8,5 @@ export type RecordCorrectionLogDetailsViewModel = BaseViewModel & {
   formattedReportPeriod: string;
   bankName: string;
   backLinkHref: string;
+  statusTagColours: StatusTagColours;
 };

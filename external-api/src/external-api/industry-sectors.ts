@@ -1,6 +1,6 @@
-import { IndustrySector } from '../interfaces';
+import { IndustrySectorInterface } from '@ukef/dtfs2-common';
 
-export const INDUSTRY_SECTORS: IndustrySector[] = [
+export const INDUSTRY_SECTORS: IndustrySectorInterface[] = [
   {
     code: '1008',
     name: 'Accommodation and food service activities',

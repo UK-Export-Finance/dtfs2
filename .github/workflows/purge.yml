@@ -1,0 +1,123 @@
+name: Purge
+run-name: 🧹Azure purge
+
+on:
+  schedule:
+    - cron: '0 23 * * *'
+
+env:
+  APPLICATION: ${{ vars.APPLICATION }}
+  TIMEZONE: ${{ vars.TIMEZONE }}
+
+jobs:
+  # 1. Base actions configrations
+  setup:
+    name: Setup 🔧
+    runs-on: [self-hosted, linux, deployment]
+    outputs:
+      application: ${{ env.APPLICATION }}
+      environment: ${{ steps.environment.outputs.environment }}
+      timezone: ${{ env.TIMEZONE }}
+
+    steps:
+      - name: Environment 🧪
+        id: environment
+        run: |
+          echo "environment=infrastructure" >> "$GITHUB_OUTPUT"
+
+      - name: Timezone 🌐
+        run: echo "Timezone set to ${{ env.TIMEZONE }}"
+
+  # 2. Azure purge
+  purge:
+    name: Purge 🗑️
+    needs: [setup]
+    environment: ${{ needs.setup.outputs.environment }}
+    runs-on: [self-hosted, DTFS, deployment]
+    env:
+      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        acr: ['tfsdev', 'tfsstaging', 'tfsfeatureacrhhpiuy2cio7ma']
+
+    concurrency:
+      group: acr-purge-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.acr }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Repository 🗂️
+        uses: actions/checkout@v4
+
+      - name: Subscription 🛠️
+        run: |
+          if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
+            echo "SUBSCRIPTION=${{ secrets.DEV_SUBSCRIPTION }}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.acr }}" == *"staging"* ]]; then
+            echo "SUBSCRIPTION=${{ secrets.STAGING_SUBSCRIPTION }}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.acr }}" == *"feature"* ]]; then
+            echo "SUBSCRIPTION=${{ secrets.FEATURE_SUBSCRIPTION }}" >> $GITHUB_ENV
+          fi
+
+      - name: Resource group 🛠️
+        run: |
+          if [[ "${{ matrix.acr }}" == *"dev"* ]]; then
+            echo "RESOURCE_GROUP=${{ secrets.DEV_RESOURCE_GROUP }}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.acr }}" == *"staging"* ]]; then
+            echo "RESOURCE_GROUP=${{ secrets.STAGING_RESOURCE_GROUP }}" >> $GITHUB_ENV
+          elif [[ "${{ matrix.acr }}" == *"feature"* ]]; then
+            echo "RESOURCE_GROUP=${{ secrets.FEATURE_RESOURCE_GROUP }}" >> $GITHUB_ENV
+          fi
+
+      - name: Execute ⚡
+        uses: ./.github/actions/acr
+        with:
+          credentials: ${{ secrets.AZURE_CREDENTIALS_ACR_PURGE }}
+          subscription: ${{ env.SUBSCRIPTION }}
+          group: ${{ env.RESOURCE_GROUP }}
+          acr: ${{ matrix.acr }}
+          days: ${{ vars.ACR_PURGE_NONPROD_DAYS }}
+
+      - name: Notification  🔔
+        uses: ./.github/actions/notify
+        with:
+          webhook: ${{ secrets.MSTEAMS_WEBHOOK }}
+          content: '{
+            "@type": "MessageCard",
+            "@context": "http://schema.org/extensions",
+            "themeColor": "00703c",
+            "title": "🗑️ ${{ matrix.acr }} purge",
+            "summary": "Purged artefacts from ''${{ matrix.acr }}'' Azure container registry",
+            "sections":
+            [
+            {
+            "activityTitle": "ACR Purge",
+            "activitySubtitle": "Purged artefacts from **${{ matrix.acr }}** Azure container registry",
+            "facts":
+            [
+            { "name": "ACR", "value": "${{ matrix.acr }}" },
+            { "name": "Resource group", "value": "${{ env.RESOURCE_GROUP }}" },
+            { "name": "Commit", "value": "${{ github.sha }}" },
+            ],
+            "markdown": true,
+            },
+            ],
+            "potentialAction":
+            [
+            {
+            "@type": "OpenUri",
+            "name": "Workflow",
+            "targets":
+            [
+            {
+            "os": "default",
+            "uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            },
+            ],
+            },
+            ],
+            }
+            '

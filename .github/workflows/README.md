@@ -28,10 +28,10 @@ A couple of places this works are:
 
 ## Pipeline Overview 📊
 
-At a high-level, the pipeline works by building Docker container images (repositories) with various tags associated with them (artifacts), which are then saved under specific ACR (Azure Container Registry) accounts, i.e., `tfsdev`, `tfsstaging`, and `tfsprod`.
+At a high-level, the pipeline works by building Docker container images (repositories) with various tags associated with them (artefacts), which are then saved under specific ACR (Azure Container Registry) accounts, i.e., `tfsdev`, `tfsstaging`, and `tfsprod`.
 
 1. Code is pushed to the `main` branch.
-2. Infrastructure is set up (if any changes) `_infrastructure`, container images are built, pushed, and deployed `_deployment` with correct tags (artifacts).
+2. Infrastructure is set up (if any changes) `_infrastructure`, container images are built, pushed, and deployed `_deployment` with correct tags (artefacts).
 3. Merging to the `infrastructure` branch triggers a refresh of supporting infrastructure (Service Plan, ACR) when a file change is detected in the `infrastructure.yml` file.
 
 ## Deployment 🚚

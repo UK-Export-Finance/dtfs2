@@ -2,6 +2,7 @@
 # *******************
 #
 # This GitHub Actions workflow automates the deployment process for web apps and Azure Functions to Azure.
+# It is triggered everyday at midnight when on base default branch i.e `main`. The workflow runs after a successful QAT workflow.
 # completion and includes the following key steps:
 #
 # Key Stages:
@@ -12,12 +13,12 @@
 #
 # Key Points:
 # - The workflow runs only after a successful QAT workflow.
-# - The deployment environment is specified via environment variables (e.g., `dev`, `feature`, `staging`, `prod`).
+# - The deployment environment is specified via environment variables (e.g., `feature`, `staging`, `prod`).
 # - Matrix strategies are used for iterative deployment across multiple web apps and functions.
 # - Temporary deployment slots are used to minimize downtime during deployments.
 # - The workflow uses concurrency control to ensure that multiple deployments do not run simultaneously for the same app/function.
 #
-# Triggers: This workflow is triggered by a push to the specified branch.
+# Triggers: This workflow is triggered by a push to the `main` branch.
 #
 # Environment Variables:
 # - `PRODUCT`: The product being deployed (e.g., `dtfs`).
@@ -28,14 +29,16 @@ name: Deployment
 run-name: 🚀 Deploying to feature
 
 on:
+  schedule:
+    - cron: '0 21 * * *'
+
   push:
     branches:
       # Manual deployment
-      - release-2.7
+      - dev
 
 env:
   PRODUCT: dtfs
-  ENVIRONMENT: feature
   TIMEZONE: ${{ vars.TIMEZONE }}
 
 jobs:
@@ -73,7 +76,6 @@ jobs:
       - name: Deploy ⚡
         uses: ./.github/actions/mssql
         with:
-          branch: ${{ vars.BRANCH }}
           host: ${{ secrets.SQL_DB_HOST }}
           port: ${{ secrets.SQL_DB_PORT }}
           username: ${{ secrets.SQL_DB_USERNAME }}
@@ -92,7 +94,7 @@ jobs:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
     strategy:
-      max-parallel: 1
+      max-parallel: 2
       # Do not cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
@@ -110,7 +112,6 @@ jobs:
       - name: Deploy ⚡
         uses: ./.github/actions/webapp
         with:
-          branch: ${{ vars.BRANCH }}
           region: ${{ vars.REGION }}
           group: ${{ secrets.RESOURCE_GROUP }}
           credentials: ${{ secrets.AZURE_CREDENTIALS }}
@@ -128,7 +129,7 @@ jobs:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
 
     strategy:
-      max-parallel: 1
+      max-parallel: 2
       # Do not cancel in-progress jobs upon failure
       fail-fast: false
       # Single dimension matrix
@@ -146,7 +147,6 @@ jobs:
       - name: Deploy ⚡
         uses: ./.github/actions/functions
         with:
-          branch: ${{ vars.BRANCH }}
           region: ${{ vars.REGION }}
           group: ${{ secrets.RESOURCE_GROUP }}
           credentials: ${{ secrets.AZURE_CREDENTIALS }}
@@ -160,59 +160,45 @@ jobs:
     environment: ${{ needs.setup.outputs.environment }}
     runs-on: [self-hosted, DTFS, deployment]
 
-    env:
-      ENVIRONMENT: ${{ needs.setup.outputs.environment }}
-      WEBHOOK: ${{ secrets.MSTEAMS_WEBHOOK }}
-
     steps:
-      - name: Facts
-        run: |
-
-      - name: MS Teams
-        run: |
-          curl --location '${{ env.WEBHOOK }}' \
-          --header 'Content-Type: application/json' \
-          --data-raw '{
-          "@type": "MessageCard",
-          "@context": "http://schema.org/extensions",
-          "themeColor": "00703c",
-          "title": "🚀 ${{ vars.BRANCH }} : ${{ env.ENVIRONMENT }}",
-          "summary": "Deployed '\''${{ vars.BRANCH }}'\'' branch to '\''${{ env.ENVIRONMENT }}'\'' DTFS environment",
-          "sections": [
-          {
+      - name: Notification  🔔
+        uses: ./.github/actions/notify
+        with:
+          webhook: ${{ secrets.MSTEAMS_WEBHOOK }}
+          content: '{
+            "@type": "MessageCard",
+            "@context": "http://schema.org/extensions",
+            "themeColor": "00703c",
+            "title": "🚀 main : ${{ env.ENVIRONMENT }}",
+            "summary": "Deployed main branch to ${{ env.ENVIRONMENT }} DTFS environment",
+            "sections":
+            [
+            {
             "activityTitle": "Branch deployment",
-            "activitySubtitle": "Deployed **${{ vars.BRANCH }}** branch to **${{ env.ENVIRONMENT }}** DTFS environment.",
-            "facts": [
-                {
-                    "name": "Branch",
-                    "value": "${{ vars.BRANCH }}"
-                },
-                {
-                    "name": "Environment",
-                    "value": "${{ env.ENVIRONMENT }}"
-                },
-                {
-                    "name": "Commit",
-                    "value": "${{ github.sha }}"
-                },
-                {
-                    "name": "Status",
-                    "value": "Successfull"
-                }
+            "activitySubtitle": "Deployed **main** branch to **${{ env.ENVIRONMENT }}** DTFS environment.",
+            "facts":
+            [
+            { "name": "Branch", "value": "main" },
+            { "name": "Environment", "value": "${{ env.ENVIRONMENT }}" },
+            { "name": "Commit", "value": "${{ github.sha }}" },
+            { "name": "Status", "value": "Successfull" },
             ],
-            "markdown": true
-                  }
-              ],
-            "potentialAction": [
-              {
-              "@type": "OpenUri",
-              "name": "Deployment",
-                "targets": [
-                  {
-                      "os": "default",
-                      "uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                  }
-                ]
-              }
-            ]
-          }'
+            "markdown": true,
+            },
+            ],
+            "potentialAction":
+            [
+            {
+            "@type": "OpenUri",
+            "name": "Deployment",
+            "targets":
+            [
+            {
+            "os": "default",
+            "uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            },
+            ],
+            },
+            ],
+            }
+            '
