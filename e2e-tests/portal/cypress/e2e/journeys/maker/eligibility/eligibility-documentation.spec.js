@@ -32,6 +32,7 @@ context('Eligibility Documentation', () => {
     eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().click({ multiple: true });
     eligibilityCriteria.eligibilityCriteriaFalse(14).click();
     eligibilityCriteria.nextPageButton().click();
+    eligibilityDocumentation.saveButton().click();
     eligibilityDocumentation.fieldErrorMessage('exporterQuestionnaire').should('have.length', 1);
   });
 
@@ -42,6 +43,7 @@ context('Eligibility Documentation', () => {
   });
 
   it('should show optional for optional supporting documentations', () => {
+    eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().click({ multiple: true });
     eligibilityCriteria.nextPageButton().click();
     eligibilityDocumentation.questionnaireFileInput().should('not.contain', '(optional)');
     eligibilityDocumentation.financialStatements().contains('Financial statements for the past 3 years (optional)');
