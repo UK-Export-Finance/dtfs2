@@ -1,4 +1,4 @@
-import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS, PortalAmendmentSubmittedToCheckerEmailVariables } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
@@ -48,12 +48,7 @@ export const postCheckYourAnswers = async (req: PostCheckYourAnswersRequest, res
       formattedFacilityValue,
     } = mapSubmittedToCheckerEmailVariables(deal, facility, amendment, user);
 
-    const updatedAmendment = await api.updateAmendmentStatus({
-      facilityId,
-      amendmentId,
-      newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
-      userToken,
-      sendToEmailAddress,
+    const emailVariables: PortalAmendmentSubmittedToCheckerEmailVariables = {
       exporterName,
       bankInternalRefName: bankInternalRefName!,
       ukefDealId,
@@ -63,6 +58,15 @@ export const postCheckYourAnswers = async (req: PostCheckYourAnswersRequest, res
       newCoverEndDate: formattedCoverEndDate,
       newFacilityEndDate: formattedFacilityEndDate,
       newFacilityValue: formattedFacilityValue,
+    };
+
+    const updatedAmendment = await api.updateAmendmentStatus({
+      facilityId,
+      amendmentId,
+      newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+      userToken,
+      sendToEmailAddress,
+      emailVariables,
     });
 
     return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.CHECK_YOUR_ANSWERS, updatedAmendment));

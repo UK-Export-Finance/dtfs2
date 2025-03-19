@@ -1,5 +1,12 @@
 import { ObjectId } from 'mongodb';
-import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, AnyObject, PortalFacilityAmendmentWithUkefId, Role } from '@ukef/dtfs2-common';
+import {
+  PORTAL_AMENDMENT_STATUS,
+  AMENDMENT_TYPES,
+  AnyObject,
+  PortalFacilityAmendmentWithUkefId,
+  Role,
+  aPortalAmendmentToCheckerEmailVariables,
+} from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import app from '../../../../src/createApp';
 import testUserCache from '../../../api-test-users';
@@ -32,6 +39,7 @@ const dealId = new ObjectId().toString();
 
 const validPayload = {
   newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+  ...aPortalAmendmentToCheckerEmailVariables(),
 };
 
 describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/status', () => {

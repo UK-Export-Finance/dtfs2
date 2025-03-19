@@ -100,15 +100,17 @@ describe('postCheckYourAnswers', () => {
         newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
         userToken,
         sendToEmailAddress: mockUser.email,
-        exporterName: mockDeal.exporter.companyName,
-        bankInternalRefName: mockDeal.bankInternalRefName!,
-        ukefDealId: mockDeal.ukefDealId,
-        ukefFacilityId: mockFacilityDetails.ukefFacilityId,
-        recipientName: `${mockUser.firstname} ${mockUser.surname}`,
-        dateEffectiveFrom: format(fromUnixTime(effectiveDateWithoutMs), DATE_FORMATS.DD_MMMM_YYYY),
-        newCoverEndDate: format(new Date(coverEndDate), DATE_FORMATS.DD_MMMM_YYYY),
-        newFacilityEndDate: format(new Date(facilityEndDate), DATE_FORMATS.DD_MMMM_YYYY),
-        newFacilityValue: `${getCurrencySymbol(mockFacilityDetails?.currency!.id)}${facilityValue}`,
+        emailVariables: {
+          exporterName: mockDeal.exporter.companyName,
+          bankInternalRefName: mockDeal.bankInternalRefName!,
+          ukefDealId: mockDeal.ukefDealId,
+          ukefFacilityId: mockFacilityDetails.ukefFacilityId,
+          recipientName: `${mockUser.firstname} ${mockUser.surname}`,
+          dateEffectiveFrom: format(fromUnixTime(effectiveDateWithoutMs), DATE_FORMATS.DD_MMMM_YYYY),
+          newCoverEndDate: format(new Date(coverEndDate), DATE_FORMATS.DD_MMMM_YYYY),
+          newFacilityEndDate: format(new Date(facilityEndDate), DATE_FORMATS.DD_MMMM_YYYY),
+          newFacilityValue: `${getCurrencySymbol(mockFacilityDetails?.currency!.id)}${facilityValue}`,
+        },
       });
     });
 

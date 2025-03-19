@@ -27,21 +27,30 @@ describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
       description: 'string field is undefined',
       payload: {
         ...portalAmendmentVariables,
-        exporterName: undefined,
+        emailVariables: {
+          ...portalAmendmentVariables.emailVariables,
+          exporterName: undefined,
+        },
       },
     },
     {
       description: 'string field is number',
       payload: {
         ...portalAmendmentVariables,
-        ukefDealId: 12345,
+        emailVariables: {
+          ...portalAmendmentVariables.emailVariables,
+          ukefDealId: 12345,
+        },
       },
     },
     {
       description: 'string field is date',
       payload: {
         ...portalAmendmentVariables,
-        newFacilityEndDate: new Date(),
+        emailVariables: {
+          ...portalAmendmentVariables.emailVariables,
+          newFacilityEndDate: new Date(),
+        },
       },
     },
   ];

@@ -62,7 +62,10 @@ describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
         newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
         auditDetails: validAuditDetails,
         ...portalAmendmentVariables,
-        exporterName: undefined,
+        emailVariables: {
+          ...portalAmendmentVariables.emailVariables,
+          exporterName: undefined,
+        },
       },
     },
     {
@@ -71,7 +74,10 @@ describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
         newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
         auditDetails: validAuditDetails,
         ...portalAmendmentVariables,
-        ukefDealId: 12345,
+        emailVariables: {
+          ...portalAmendmentVariables.emailVariables,
+          ukefDealId: 12345,
+        },
       },
     },
     {
@@ -80,7 +86,10 @@ describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
         newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
         auditDetails: validAuditDetails,
         ...portalAmendmentVariables,
-        newFacilityEndDate: new Date(),
+        emailVariables: {
+          ...portalAmendmentVariables.emailVariables,
+          newFacilityEndDate: new Date(),
+        },
       },
     },
   ];
@@ -104,16 +113,7 @@ describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
     const payload = {
       newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
       auditDetails: validAuditDetails,
-      sendToEmailAddress: 'test@ukexportfinance.gov.uk',
-      exporterName: portalAmendmentVariables.exporterName,
-      bankInternalRefName: portalAmendmentVariables.bankInternalRefName,
-      ukefDealId: portalAmendmentVariables.ukefDealId,
-      ukefFacilityId: portalAmendmentVariables.ukefFacilityId,
-      recipientName: portalAmendmentVariables.recipientName,
-      dateEffectiveFrom: portalAmendmentVariables.dateEffectiveFrom,
-      newCoverEndDate: portalAmendmentVariables.newCoverEndDate,
-      newFacilityEndDate: portalAmendmentVariables.newFacilityEndDate,
-      newFacilityValue: portalAmendmentVariables.newFacilityValue,
+      ...portalAmendmentVariables,
     };
 
     const { req, res } = createMocks({ body: payload });

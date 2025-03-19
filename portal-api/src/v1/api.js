@@ -701,34 +701,11 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
  * @param {string} params.facilityId - the facility id
  * @param {(import('@ukef/dtfs2-common').PortalAmendmentStatus)} params.newStatus - the facility id
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - The audit details for the update.
- * @param {string} params.exporterName - The company name
- * @param {string} params.bankInternalRefName - The bank internal reference name
- * @param {string} params.ukefDealId - The UKEF deal id
- * @param {string} params.ukefFacilityId - The UKEF facility id
  * @param {string} params.sendToEmailAddress - The email address to send the notification to
- * @param {string} params.recipientName - The name of the recipient
- * @param {string} params.dateEffectiveFrom - The date the amendment is effective from
- * @param {string} params.newCoverEndDate - The new cover end date
- * @param {string} params.newFacilityEndDate - The new facility end date
- * @param {string} params.newFacilityValue - The new facility value
+ * @param {import('@ukef/dtfs2-common').PortalAmendmentSubmittedToCheckerEmailVariables} params.emailVariables - The email variables to send with the notification
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>} - the updatedamendment
  */
-const patchPortalFacilityAmendmentStatus = async ({
-  facilityId,
-  amendmentId,
-  auditDetails,
-  newStatus,
-  exporterName,
-  bankInternalRefName,
-  ukefDealId,
-  ukefFacilityId,
-  sendToEmailAddress,
-  recipientName,
-  dateEffectiveFrom,
-  newCoverEndDate,
-  newFacilityEndDate,
-  newFacilityValue,
-}) => {
+const patchPortalFacilityAmendmentStatus = async ({ facilityId, amendmentId, auditDetails, newStatus, sendToEmailAddress, emailVariables }) => {
   try {
     const response = await axios({
       method: 'patch',
@@ -736,17 +713,9 @@ const patchPortalFacilityAmendmentStatus = async ({
       headers: headers.central,
       data: {
         newStatus,
-        exporterName,
-        bankInternalRefName,
-        ukefDealId,
-        ukefFacilityId,
         sendToEmailAddress,
-        recipientName,
         auditDetails,
-        dateEffectiveFrom,
-        newCoverEndDate,
-        newFacilityEndDate,
-        newFacilityValue,
+        emailVariables,
       },
     });
 

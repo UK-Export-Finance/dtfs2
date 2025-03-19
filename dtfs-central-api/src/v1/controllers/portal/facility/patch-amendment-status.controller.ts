@@ -26,7 +26,7 @@ export type PatchSubmitAmendmentToCheckerRequest = CustomExpressRequest<{
  */
 export const patchAmendmentStatus = async (req: PatchSubmitAmendmentToCheckerRequest, res: Response) => {
   const { facilityId, amendmentId } = req.params;
-  const { auditDetails, newStatus, sendToEmailAddress, ...emailVariables } = req.body;
+  const { auditDetails, newStatus, sendToEmailAddress, emailVariables } = req.body;
 
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.PORTAL);

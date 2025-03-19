@@ -481,34 +481,11 @@ const updateAmendment = async ({ facilityId, amendmentId, update, userToken }) =
  * @param {string} param.amendmentId
  * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus} param.newStatus
  * @param {string} param.userToken
- * @param {string} param.exporterName
- * @param {string} param.bankInternalRefName
- * @param {string} param.ukefDealId
- * @param {string} param.ukefFacilityId
  * @param {string} param.sendToEmailAddress
- * @param {string} param.recipientName
- * @param {string} param.dateEffectiveFrom
- * @param {string} param.newCoverEndDate
- * @param {string} param.newFacilityEndDate
- * @param {string} param.newFacilityValue
+ * @param {import('@ukef/dtfs2-common').PortalAmendmentSubmittedToCheckerEmailVariables} param.emailVariables
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}
  */
-const updateAmendmentStatus = async ({
-  facilityId,
-  amendmentId,
-  newStatus,
-  userToken,
-  exporterName,
-  bankInternalRefName,
-  ukefDealId,
-  ukefFacilityId,
-  sendToEmailAddress,
-  recipientName,
-  dateEffectiveFrom,
-  newCoverEndDate,
-  newFacilityEndDate,
-  newFacilityValue,
-}) => {
+const updateAmendmentStatus = async ({ facilityId, amendmentId, newStatus, userToken, sendToEmailAddress, emailVariables }) => {
   if (!isValidMongoId(facilityId)) {
     console.error('Invalid facility ID %s', facilityId);
     throw new InvalidFacilityIdError(facilityId);
@@ -521,16 +498,8 @@ const updateAmendmentStatus = async ({
 
   const payload = {
     newStatus,
-    exporterName,
-    bankInternalRefName,
-    ukefDealId,
-    ukefFacilityId,
     sendToEmailAddress,
-    recipientName,
-    dateEffectiveFrom,
-    newCoverEndDate,
-    newFacilityEndDate,
-    newFacilityValue,
+    emailVariables,
   };
 
   try {
