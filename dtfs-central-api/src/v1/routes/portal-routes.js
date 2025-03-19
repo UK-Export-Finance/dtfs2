@@ -406,6 +406,8 @@ portalRouter.route('/multiple-facilities').post(createMultipleFacilitiesControll
  *           application/json:
  *             schema:
  *                $ref: '#/definitions/PortalAmendment'
+ *       404:
+ *         description: Not found
  *       500:
  *         description: Internal server error
  */
