@@ -98,6 +98,7 @@ describe('patchAmendmentStatus', () => {
     it('should NOT call externalApi.sendEmail', async () => {
       // Arrange
       const { req, res } = generateHttpMocks({ auditDetails, newStatus: invalidNewStatus, emailVariables: mockEmailVariables });
+
       // Act
       await patchAmendmentStatus(req, res);
 
