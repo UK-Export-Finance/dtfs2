@@ -147,7 +147,7 @@ describe('patchAmendmentStatus', () => {
       const { sendToEmailAddress, emailVariables } = mockEmailVariables;
 
       expect(sendEmailSpy).toHaveBeenCalledTimes(1);
-      expect(sendEmailSpy).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENTS_SUBMITTED_TO_CHECKER, sendToEmailAddress, emailVariables);
+      expect(sendEmailSpy).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_CHECKER, sendToEmailAddress, emailVariables);
     });
 
     it('should return the correct status and body if PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker throws an api error', async () => {
