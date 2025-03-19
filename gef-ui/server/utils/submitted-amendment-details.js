@@ -28,7 +28,7 @@ export const getSubmittedAmendmentDetails = async (application, userToken) => {
     const amendmentUnderway = amendments.find((amendment) => PORTAL_AMENDMENT_UNDERWAY_STATUSES.includes(amendment.status));
     const amendmentAcknowledged = amendments.find((amendment) => PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED === amendment.status);
 
-    const portalAmendmentStatus = amendmentUnderway ? amendmentUnderway.status : amendmentAcknowledged.status;
+    const portalAmendmentStatus = amendmentUnderway?.status || amendmentAcknowledged?.status || null;
     const facilityIdWithAmendmentUnderway = amendmentUnderway ? amendmentUnderway.facilityId : null;
 
     const isPortalAmendmentStatusUnderway = PORTAL_AMENDMENT_UNDERWAY_STATUSES.includes(portalAmendmentStatus);
@@ -39,10 +39,7 @@ export const getSubmittedAmendmentDetails = async (application, userToken) => {
     };
   } catch (error) {
     console.error('Error fetching submitted amendment details:', error);
-    return {
-      portalAmendmentStatus: null,
-      facilityIdWithAmendmentUnderway: null,
-      isPortalAmendmentStatusUnderway: false,
-    };
   }
+
+  return {};
 };

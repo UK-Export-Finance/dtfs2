@@ -127,7 +127,7 @@
   {% if portalAmendmentStatus %}
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
-        <div class="govuk-grid-column-one-third" data-cy: 'amendment-status-heading'>
+        <div class="govuk-grid-column-one-third" data-cy="amendment-status-heading">
           <p>
             <strong>Amendment Status</strong>
           </p>
@@ -135,9 +135,11 @@
         <div class="govuk-grid-column-two-thirds">
           <p>
             {{ govukTag({ text: portalAmendmentStatus | dashIfEmpty, attributes: { 'data-cy': 'amendment-status' },
-              classes: portalAmendmentStatusTagClass}) }}</p>
-          <p></div>
+              classes: portalAmendmentStatusTagClass}) }}
+          </p>
         </div>
       </div>
-    {% endif %}
-  </div>
+      <div class="govuk-grid-column-one-half"></div>
+    </div>
+  {% endif %}
+</div>
