@@ -38,7 +38,7 @@ export const getSubmittedAmendmentDetails = async (application, userToken) => {
       isPortalAmendmentStatusUnderway,
     };
   } catch (error) {
-    console.error('Error fetching submitted amendment details:', error);
+    console.error('Error fetching submitted amendment details %o', error);
   }
 
   return {};
