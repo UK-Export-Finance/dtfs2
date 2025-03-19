@@ -125,4 +125,37 @@ context('Eligibility Criteria', () => {
     cy.clickSaveGoBackButton();
     contract.eligibilitySubmissionType().should('be.visible');
   });
+
+  it('should display validation errors when submitting without selecting criteria', () => {
+    // Click the "Next" button without selecting any criteria
+    eligibilityCriteria.nextPageButton().click();
+
+    // Check if we're still on the same page
+    cy.url().should('include', '/eligibility/criteria');
+
+    // Check for validation error messages
+    cy.get('.govuk-error-summary').should('be.visible');
+
+    // Check that we have the correct number of error messages
+    errorSummaryLinks().should('have.length', criteriaCount);
+
+    // Check for field-level errors
+    eligibilityCriteria.eligibilityCriteriaItems().each(($el, index) => {
+      cy.wrap($el)
+        .find('.govuk-error-message')
+        .should('be.visible')
+        .and('contain.text', `Eligibility criterion ${index + 11} is required`);
+    });
+  });
+
+  it('should proceed to supporting documentation page when valid criteria are selected', () => {
+    // Select 'Yes' for all criteria
+    eligibilityCriteria.eligibilityCriteriaItemsRadioButtons.trueInput().click({ multiple: true });
+
+    // Click the "Next" button
+    eligibilityCriteria.nextPageButton().click();
+
+    // Check if we're redirected to the supporting documentation page
+    cy.url().should('include', '/eligibility/supporting-documentation');
+  });
 });
