@@ -32,8 +32,8 @@ describe('controllers/application-details', () => {
   const mockGetAmendmentsOnDealResponse = [];
   const amendmentDetails = {
     portalAmendmentStatus: null,
-    facilityIdWithAmendmentUnderway: null,
-    isPortalAmendmentStatusUnderway: false,
+    facilityIdWithAmendmentInProgress: null,
+    isPortalAmendmentInProgress: false,
   };
 
   beforeEach(() => {
@@ -107,7 +107,7 @@ describe('controllers/application-details', () => {
           submissionCount: mockApplicationResponse.submissionCount,
           activeSubNavigation: '/',
           portalAmendmentStatus: amendmentDetails.portalAmendmentStatus,
-          isPortalAmendmentStatusUnderway: amendmentDetails.isPortalAmendmentStatusUnderway,
+          isPortalAmendmentInProgress: amendmentDetails.isPortalAmendmentInProgress,
 
           // body
           application: {

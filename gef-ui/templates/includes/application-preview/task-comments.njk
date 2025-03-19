@@ -4,7 +4,7 @@
   <header data-cy="application-preview-page">
     {% set bannerHtml %}
 
-    {% if isPortalAmendmentStatusUnderway %}
+    {% if isPortalAmendmentInProgress %}
       <h3 data-cy="amendment-details-header">{{ portalAmendmentStatus }}</h3>
       <div class="govuk-!-margin-bottom-6">
         <a href="/gef/application-details/{{ dealId }}/amendment-details" class="govuk-link" data-cy="amendment-details">Amendment details</a>

@@ -96,8 +96,8 @@ describe('controller/ukef-cover-start-date', () => {
   let mockUserResponse;
   const amendmentDetails = {
     portalAmendmentStatus: null,
-    facilityIdWithAmendmentUnderway: null,
-    isPortalAmendmentStatusUnderway: false,
+    facilityIdWithAmendmentInProgress: null,
+    isPortalAmendmentInProgress: false,
   };
 
   const updateApplicationSpy = jest.fn();

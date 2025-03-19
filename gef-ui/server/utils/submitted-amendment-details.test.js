@@ -1,4 +1,4 @@
-import { DEAL_STATUS, PORTAL_AMENDMENT_UNDERWAY_STATUSES, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { DEAL_STATUS, PORTAL_AMENDMENT_INPROGRESS_STATUSES, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { getSubmittedAmendmentDetails } from './submitted-amendment-details';
 import { MOCK_AIN_APPLICATION } from './mocks/mock-applications';
 import api from '../services/api';
@@ -23,8 +23,8 @@ describe('getSubmittedAmendmentDetails', () => {
 
     expect(result).toEqual({
       portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
-      facilityIdWithAmendmentUnderway: 'facility1',
-      isPortalAmendmentStatusUnderway: PORTAL_AMENDMENT_UNDERWAY_STATUSES.includes(PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL),
+      facilityIdWithAmendmentInProgress: 'facility1',
+      isPortalAmendmentInProgress: PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL),
     });
   });
 
@@ -34,8 +34,8 @@ describe('getSubmittedAmendmentDetails', () => {
 
     expect(result).toEqual({
       portalAmendmentStatus: null,
-      facilityIdWithAmendmentUnderway: null,
-      isPortalAmendmentStatusUnderway: false,
+      facilityIdWithAmendmentInProgress: null,
+      isPortalAmendmentInProgress: false,
     });
   });
 });

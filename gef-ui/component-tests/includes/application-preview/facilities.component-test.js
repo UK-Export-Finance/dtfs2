@@ -71,17 +71,17 @@ describe(page, () => {
   });
 
   describe('Amendment details', () => {
-    issuedCashFacility.isPortalAmendmentStatusUnderway = true;
+    issuedCashFacility.isPortalAmendmentInProgress = true;
     const amendmentsInProgress = `[data-cy="amendments-in-progress"]`;
 
-    it('should be rendered when portalAmendment is underway', () => {
+    it('should be rendered when portalAmendment is in progress', () => {
       wrapper = render(params);
 
       wrapper.expectElement(amendmentsInProgress).toExist();
     });
 
-    it('should not be rendered when portalAmendment is not underway', () => {
-      issuedCashFacility.isPortalAmendmentStatusUnderway = false;
+    it('should not be rendered when portalAmendment is not in progress', () => {
+      issuedCashFacility.isPortalAmendmentInProgress = false;
       wrapper = render({
         ...params,
       });

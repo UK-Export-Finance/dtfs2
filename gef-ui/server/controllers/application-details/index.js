@@ -1,5 +1,5 @@
 const startCase = require('lodash/startCase');
-const { DEAL_TYPE, timeZoneConfig, DEAL_STATUS, PORTAL_AMENDMENT_UNDERWAY_STATUSES } = require('@ukef/dtfs2-common');
+const { DEAL_TYPE, timeZoneConfig, DEAL_STATUS, PORTAL_AMENDMENT_INPROGRESS_STATUSES } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { canUpdateUnissuedFacilitiesCheck } = require('./canUpdateUnissuedFacilitiesCheck');
 const {
@@ -44,7 +44,7 @@ function buildHeader(app) {
     submissionCount: app.submissionCount,
     activeSubNavigation: '/',
     portalAmendmentStatus: app.portalAmendmentStatus,
-    isPortalAmendmentStatusUnderway: app.isPortalAmendmentStatusUnderway,
+    isPortalAmendmentInProgress: app.isPortalAmendmentInProgress,
   };
 
   let checker = {};
@@ -108,7 +108,8 @@ function buildBody(app, previewMode, user) {
           // ukefFacilityId required for html facility summary table id
           ukefFacilityId: item.details.ukefFacilityId,
           stage: item.details?.facilityStage ?? (item.details.hasBeenIssued ? STAGE.ISSUED : STAGE.UNISSUED),
-          isPortalAmendmentStatusUnderway: item.details._id === app.facilityIdWithAmendmentUnderway,
+          // isPortalAmendmentInProgress required for html. A link see details will appear to the user for facility with amendment in progress
+          isPortalAmendmentInProgress: item.details._id === app.facilityIdWithAmendmentInProgress,
         }))
         .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
     },
@@ -273,7 +274,7 @@ const applicationDetails = async (req, res, next) => {
       params.link += '/unissued-facilities';
     }
 
-    const amendmentsUnderwayOnDeal = await api.getAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_UNDERWAY_STATUSES, userToken });
+    const amendmentsUnderwayOnDeal = await api.getAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
 
     params.canIssuedFacilitiesBeAmended =
       canUserAmendIssuedFacilities(application.submissionType, application.status, userRoles) && !amendmentsUnderwayOnDeal.length;

@@ -7,7 +7,7 @@ const render = pageRenderer(page);
 const params = {
   displayComments: true,
   portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
-  isPortalAmendmentStatusUnderway: true,
+  isPortalAmendmentInProgress: true,
   dealId: '123',
 };
 
@@ -29,7 +29,7 @@ describe(page, () => {
 
     it('should not be rendered when portalAmendmentStatus is null', () => {
       params.portalAmendmentStatus = null;
-      params.isPortalAmendmentStatusUnderway = false;
+      params.isPortalAmendmentInProgress = false;
       wrapper = render({
         ...params,
       });

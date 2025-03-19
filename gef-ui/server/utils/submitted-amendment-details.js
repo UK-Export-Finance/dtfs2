@@ -2,7 +2,7 @@ import {
   DEAL_STATUS_SCHEDULED_OR_CANCELLED,
   PORTAL_AMENDMENT_STATUS,
   PORTAL_AMENDMENT_SUBMITTED_STATUSES,
-  PORTAL_AMENDMENT_UNDERWAY_STATUSES,
+  PORTAL_AMENDMENT_INPROGRESS_STATUSES,
 } from '@ukef/dtfs2-common';
 import api from '../services/api';
 
@@ -18,24 +18,25 @@ export const getSubmittedAmendmentDetails = async (application, userToken) => {
 
     const activeDeal = !DEAL_STATUS_SCHEDULED_OR_CANCELLED.includes(application.status);
 
-    if (!amendments || !amendments.length || !activeDeal) {
+    if (!amendments?.length || !activeDeal) {
       return {
         portalAmendmentStatus: null,
-        facilityIdWithAmendmentUnderway: null,
-        isPortalAmendmentStatusUnderway: false,
+        facilityIdWithAmendmentInProgress: null,
+        isPortalAmendmentInProgress: false,
       };
     }
-    const amendmentUnderway = amendments.find((amendment) => PORTAL_AMENDMENT_UNDERWAY_STATUSES.includes(amendment.status));
+    const amendmentInProgress = amendments.find((amendment) => PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(amendment.status));
     const amendmentAcknowledged = amendments.find((amendment) => PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED === amendment.status);
 
-    const portalAmendmentStatus = amendmentUnderway?.status || amendmentAcknowledged?.status || null;
-    const facilityIdWithAmendmentUnderway = amendmentUnderway ? amendmentUnderway.facilityId : null;
+    const portalAmendmentStatus = amendmentInProgress?.status || amendmentAcknowledged?.status || null;
+    const facilityIdWithAmendmentInProgress = amendmentInProgress ? amendmentInProgress.facilityId : null;
 
-    const isPortalAmendmentStatusUnderway = PORTAL_AMENDMENT_UNDERWAY_STATUSES.includes(portalAmendmentStatus);
+    const isPortalAmendmentInProgress = PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(portalAmendmentStatus);
+
     return {
       portalAmendmentStatus,
-      facilityIdWithAmendmentUnderway,
-      isPortalAmendmentStatusUnderway,
+      facilityIdWithAmendmentInProgress,
+      isPortalAmendmentInProgress,
     };
   } catch (error) {
     console.error('Error fetching submitted amendment details %o', error);
