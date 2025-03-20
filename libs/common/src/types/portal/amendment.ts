@@ -7,3 +7,15 @@ export type PortalFacilityAmendmentUserValues = z.infer<typeof PORTAL_FACILITY_A
 export type PortalFacilityAmendmentWithUkefId = z.infer<typeof PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID>;
 
 export type FacilityAmendmentWithUkefId = Prettify<FacilityAmendment & { ukefFacilityId: string | null }>;
+
+export type PortalAmendmentSubmittedToCheckerEmailVariables = {
+  exporterName: string;
+  bankInternalRefName: string;
+  ukefDealId: string;
+  ukefFacilityId: string;
+  recipientName: string;
+  dateEffectiveFrom: string;
+  newCoverEndDate: string;
+  newFacilityEndDate: string;
+  newFacilityValue: string;
+};

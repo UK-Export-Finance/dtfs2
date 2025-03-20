@@ -1,10 +1,12 @@
 import { createMocks } from 'node-mocks-http';
-import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, API_ERROR_CODE, TestApiError } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, API_ERROR_CODE, TestApiError, AnyObject, portalAmendmentToCheckerEmailVariables } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
 import { patchAmendmentStatus, PatchSubmitAmendmentToCheckerRequest } from './patch-amendment-status.controller';
+import externalApi from '../../../../external-api/api';
+import EMAIL_TEMPLATE_IDS from '../../../../constants/email-template-ids';
 
 const amendmentId = 'amendmentId';
 const facilityId = 'facilityId';
@@ -12,11 +14,16 @@ const facilityId = 'facilityId';
 const mockUpdatedAmendment = { facilityId, type: AMENDMENT_TYPES.PORTAL, status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL };
 
 const mockSubmitPortalFacilityAmendmentToChecker = jest.fn();
+let sendEmailSpy = jest.fn();
 
-const generateHttpMocks = ({ auditDetails, newStatus }: { auditDetails: unknown; newStatus: string }) =>
+jest.mock('../../../../external-api/api');
+
+const mockEmailVariables = portalAmendmentToCheckerEmailVariables();
+
+const generateHttpMocks = ({ auditDetails, newStatus, emailVariables }: { auditDetails: unknown; newStatus: string; emailVariables: AnyObject }) =>
   createMocks<PatchSubmitAmendmentToCheckerRequest>({
     params: { facilityId, amendmentId },
-    body: { auditDetails, newStatus },
+    body: { auditDetails, newStatus, ...emailVariables },
   });
 
 describe('patchAmendmentStatus', () => {
@@ -25,49 +32,88 @@ describe('patchAmendmentStatus', () => {
 
     jest.spyOn(PortalFacilityAmendmentService, 'submitPortalFacilityAmendmentToChecker').mockImplementation(mockSubmitPortalFacilityAmendmentToChecker);
     mockSubmitPortalFacilityAmendmentToChecker.mockResolvedValue(mockUpdatedAmendment);
+
+    sendEmailSpy = jest.fn(() => Promise.resolve({}));
+    externalApi.sendEmail = sendEmailSpy;
   });
 
-  it(`should return ${HttpStatusCode.BadRequest} if the audit details are invalid`, async () => {
-    // Arrange
+  describe('when auditDetails are invalid', () => {
     const auditDetails = { type: 'not a type' };
-    const { req, res } = generateHttpMocks({ auditDetails, newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL });
 
-    // Act
-    await patchAmendmentStatus(req, res);
+    it(`should return ${HttpStatusCode.BadRequest}`, async () => {
+      // Arrange
+      const { req, res } = generateHttpMocks({
+        auditDetails,
+        newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+        emailVariables: mockEmailVariables,
+      });
 
-    // Assert
-    expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
-    expect(res._getData()).toEqual({
-      status: HttpStatusCode.BadRequest,
-      message: "Supplied auditDetails must contain a 'userType' property",
-      code: API_ERROR_CODE.INVALID_AUDIT_DETAILS,
+      // Act
+      await patchAmendmentStatus(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
+      expect(res._getData()).toEqual({
+        status: HttpStatusCode.BadRequest,
+        message: "Supplied auditDetails must contain a 'userType' property",
+        code: API_ERROR_CODE.INVALID_AUDIT_DETAILS,
+      });
+    });
+
+    it('should NOT call externalApi.sendEmail', async () => {
+      // Arrange
+      const { req, res } = generateHttpMocks({
+        auditDetails,
+        newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+        emailVariables: mockEmailVariables,
+      });
+
+      // Act
+      await patchAmendmentStatus(req, res);
+
+      // Assert
+      expect(sendEmailSpy).toHaveBeenCalledTimes(0);
     });
   });
 
-  it(`should return ${HttpStatusCode.BadRequest} if the new status is invalid`, async () => {
-    // Arrange
+  describe('when the new status is invalid', () => {
     const invalidNewStatus = 'invalid status';
     const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
-    const { req, res } = generateHttpMocks({ auditDetails, newStatus: invalidNewStatus });
 
-    // Act
-    await patchAmendmentStatus(req, res);
+    it(`should return ${HttpStatusCode.BadRequest}`, async () => {
+      // Arrange
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus: invalidNewStatus, emailVariables: mockEmailVariables });
 
-    // Assert
-    expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
-    expect(res._getData()).toEqual({
-      status: HttpStatusCode.BadRequest,
-      message: `Invalid requested status update: ${invalidNewStatus}`,
+      // Act
+      await patchAmendmentStatus(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.BadRequest);
+      expect(res._getData()).toEqual({
+        status: HttpStatusCode.BadRequest,
+        message: `Invalid requested status update: ${invalidNewStatus}`,
+      });
+    });
+
+    it('should NOT call externalApi.sendEmail', async () => {
+      // Arrange
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus: invalidNewStatus, emailVariables: mockEmailVariables });
+
+      // Act
+      await patchAmendmentStatus(req, res);
+
+      // Assert
+      expect(sendEmailSpy).toHaveBeenCalledTimes(0);
     });
   });
 
   describe(`when the newStatus is ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}`, () => {
     const newStatus = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
+    const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
 
     it('should call PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker with the correct params', async () => {
       // Arrange
-      const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
-      const { req, res } = generateHttpMocks({ auditDetails, newStatus });
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus, emailVariables: mockEmailVariables });
 
       // Act
       await patchAmendmentStatus(req, res);
@@ -80,8 +126,7 @@ describe('patchAmendmentStatus', () => {
 
     it(`should return ${HttpStatusCode.Ok} and the updated amendment`, async () => {
       // Arrange
-      const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
-      const { req, res } = generateHttpMocks({ auditDetails, newStatus });
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus, emailVariables: mockEmailVariables });
 
       // Act
       await patchAmendmentStatus(req, res);
@@ -91,14 +136,27 @@ describe('patchAmendmentStatus', () => {
       expect(res._getData()).toEqual(mockUpdatedAmendment);
     });
 
+    it('should call externalApi.sendEmail with the correct params', async () => {
+      // Arrange
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus, emailVariables: mockEmailVariables });
+
+      // Act
+      await patchAmendmentStatus(req, res);
+
+      // Assert
+      const { sendToEmailAddress, emailVariables } = mockEmailVariables;
+
+      expect(sendEmailSpy).toHaveBeenCalledTimes(1);
+      expect(sendEmailSpy).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_CHECKER, sendToEmailAddress, emailVariables);
+    });
+
     it('should return the correct status and body if PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker throws an api error', async () => {
       // Arrange
       const status = HttpStatusCode.Forbidden;
       const message = 'Test error message';
       mockSubmitPortalFacilityAmendmentToChecker.mockRejectedValue(new TestApiError({ status, message }));
 
-      const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
-      const { req, res } = generateHttpMocks({ auditDetails, newStatus });
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus, emailVariables: mockEmailVariables });
 
       // Act
       await patchAmendmentStatus(req, res);
@@ -116,8 +174,7 @@ describe('patchAmendmentStatus', () => {
       const message = 'Test error message';
       mockSubmitPortalFacilityAmendmentToChecker.mockRejectedValue(new Error(message));
 
-      const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
-      const { req, res } = generateHttpMocks({ auditDetails, newStatus });
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus, emailVariables: mockEmailVariables });
 
       // Act
       await patchAmendmentStatus(req, res);
