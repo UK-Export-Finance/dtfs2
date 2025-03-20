@@ -1,5 +1,5 @@
-import { add } from 'date-fns';
 import { DEAL_SUBMISSION_TYPE, FACILITY_STAGE } from '@ukef/dtfs2-common';
+import { tomorrow, oneYear } from '../../../../e2e-fixtures/dateConstants';
 
 const {
   dashboard,
@@ -21,19 +21,6 @@ const { bank, submissionDetails } = require('../../fixtures/deal');
 const MOCK_USERS = require('../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
-
-const tomorrow = add(new Date(), { days: 1 });
-const startDate = {
-  day: tomorrow.getDate(),
-  month: tomorrow.getMonth(),
-  year: tomorrow.getFullYear(),
-};
-
-const endDate = {
-  day: tomorrow.getDate(),
-  month: tomorrow.getMonth(),
-  year: tomorrow.getFullYear() + 1,
-};
 
 /**
  * Fills in the bank details form with predefined values and submits the form.
@@ -179,18 +166,16 @@ const fillUnissuedBondDetails = () => {
  * This function selects the bond type as 'Advance payment guarantee', sets the facility stage to 'Issued',
  * inputs the requested cover start date, cover end date, and a name, then submits the form.
  *
- * @function
- * @name fillIssuedBondDetails
  */
 const fillIssuedBondDetails = () => {
   bondDetails.bondTypeInput().select('Advance payment guarantee');
   bondDetails.facilityStageIssuedInput().click();
-  cy.keyboardInput(bondDetails.requestedCoverStartDateDayInput(), startDate.day);
-  cy.keyboardInput(bondDetails.requestedCoverStartDateMonthInput(), startDate.month + 1);
-  cy.keyboardInput(bondDetails.requestedCoverStartDateYearInput(), startDate.year);
-  bondDetails.coverEndDateDayInput().type(endDate.day);
-  bondDetails.coverEndDateMonthInput().type(endDate.month);
-  bondDetails.coverEndDateYearInput().type(endDate.year);
+  cy.keyboardInput(bondDetails.requestedCoverStartDateDayInput(), tomorrow.day);
+  cy.keyboardInput(bondDetails.requestedCoverStartDateMonthInput(), tomorrow.month);
+  cy.keyboardInput(bondDetails.requestedCoverStartDateYearInput(), tomorrow.year);
+  bondDetails.coverEndDateDayInput().type(oneYear.day);
+  bondDetails.coverEndDateMonthInput().type(oneYear.month);
+  bondDetails.coverEndDateYearInput().type(oneYear.year);
   cy.keyboardInput(bondDetails.nameInput(), '1234');
   cy.clickSubmitButton();
 };
@@ -298,7 +283,6 @@ const createBssEwcsDeal = () => {
  * @param {string} params.dealSubmissionType - The type of deal submission.
  * @param {typeof FACILITY_STAGE.ISSUED | typeof FACILITY_STAGE.UNISSUED} params.facilityStage - The stage of the facility.
  * @param {string} params.exporterCompanyName - The name of the exporter company.
- * @param {import('@ukef/dtfs2-common').DealType} createBssEwcsDealParams.dealType -
  */
 const completeBssEwcsDealFields = ({ dealSubmissionType, facilityStage, exporterCompanyName }) => {
   fillOutDealDetails({ dealSubmissionType, facilityStage, exporterCompanyName });
