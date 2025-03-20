@@ -4,8 +4,13 @@ import api from '../../services/api';
 import CONSTANTS from '../../constants';
 import MOCKS from '../mocks';
 import { MAKER } from '../../constants/roles';
+import { getSubmittedAmendmentDetails } from '../../utils/submitted-amendment-details';
 
 jest.mock('../../services/api');
+
+jest.mock('../../utils/submitted-amendment-details', () => ({
+  getSubmittedAmendmentDetails: jest.fn(),
+}));
 
 const MockResponse = () => {
   const res = {};
@@ -89,6 +94,11 @@ describe('controller/ukef-cover-start-date', () => {
   let mockApplicationResponse;
   let mockFacilityResponse;
   let mockUserResponse;
+  const amendmentDetails = {
+    portalAmendmentStatus: null,
+    facilityIdWithAmendmentInProgress: null,
+    isPortalAmendmentInProgress: false,
+  };
 
   const updateApplicationSpy = jest.fn();
 
@@ -104,6 +114,7 @@ describe('controller/ukef-cover-start-date', () => {
     api.getUserDetails.mockResolvedValue(mockUserResponse);
     api.updateApplication = updateApplicationSpy;
     api.getFacility.mockResolvedValue(mockFacilityResponse.items[0]);
+    getSubmittedAmendmentDetails.mockResolvedValue(amendmentDetails);
     mockRequest.flash = jest.fn().mockReturnValue([{ message: 'Facility is updated' }]);
   });
 

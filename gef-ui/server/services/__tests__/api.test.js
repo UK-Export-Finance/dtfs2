@@ -4,7 +4,7 @@ import {
   InvalidFacilityIdError,
   MOCK_COMPANY_REGISTRATION_NUMBERS,
   PORTAL_AMENDMENT_STATUS,
-  PORTAL_AMENDMENT_UNDERWAY_STATUSES,
+  PORTAL_AMENDMENT_INPROGRESS_STATUSES,
 } from '@ukef/dtfs2-common';
 import Axios from '../axios';
 import api from '../api';
@@ -553,7 +553,7 @@ describe('getAmendmentsOnDeal()', () => {
     Axios.get.mockResolvedValueOnce({ data: [mockAmendment] });
 
     // Act
-    const response = await api.getAmendmentsOnDeal({ dealId: validMongoId, userToken, statuses: PORTAL_AMENDMENT_UNDERWAY_STATUSES });
+    const response = await api.getAmendmentsOnDeal({ dealId: validMongoId, userToken, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES });
 
     // Assert
     expect(response).toEqual([mockAmendment]);

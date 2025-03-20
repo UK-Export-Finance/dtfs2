@@ -1,5 +1,5 @@
 const startCase = require('lodash/startCase');
-const { DEAL_TYPE, timeZoneConfig, DEAL_STATUS, PORTAL_AMENDMENT_UNDERWAY_STATUSES } = require('@ukef/dtfs2-common');
+const { DEAL_TYPE, timeZoneConfig, DEAL_STATUS, PORTAL_AMENDMENT_INPROGRESS_STATUSES } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { canUpdateUnissuedFacilitiesCheck } = require('./canUpdateUnissuedFacilitiesCheck');
 const {
@@ -25,6 +25,7 @@ const { FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_SUBMISSION_TYPE, STAGE } = requ
 const Application = require('../../models/application');
 const { MAKER } = require('../../constants/roles');
 const { canUserAmendIssuedFacilities } = require('../../utils/facility-amendments.helper');
+const { getSubmittedAmendmentDetails } = require('../../utils/submitted-amendment-details');
 
 let userSession;
 
@@ -42,6 +43,8 @@ function buildHeader(app) {
     applicationType: app.submissionType,
     submissionCount: app.submissionCount,
     activeSubNavigation: '/',
+    portalAmendmentStatus: app.portalAmendmentStatus,
+    isPortalAmendmentInProgress: app.isPortalAmendmentInProgress,
   };
 
   let checker = {};
@@ -105,6 +108,8 @@ function buildBody(app, previewMode, user) {
           // ukefFacilityId required for html facility summary table id
           ukefFacilityId: item.details.ukefFacilityId,
           stage: item.details?.facilityStage ?? (item.details.hasBeenIssued ? STAGE.ISSUED : STAGE.UNISSUED),
+          // isFacilityWithAmendmentInProgress required for html. A link see details will appear to the user for facility with amendment in progress
+          isFacilityWithAmendmentInProgress: item.details._id === app.facilityIdWithAmendmentInProgress,
         }))
         .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
     },
@@ -215,8 +220,11 @@ const applicationDetails = async (req, res, next) => {
 
     const userRoles = user.roles;
 
-    const applicationWithUserRoles = {
+    const amendmentDetails = await getSubmittedAmendmentDetails(application, userToken);
+
+    const applicationData = {
       ...application,
+      ...amendmentDetails,
       userRoles,
     };
 
@@ -239,7 +247,7 @@ const applicationDetails = async (req, res, next) => {
 
     const params = {
       user,
-      ...buildView(applicationWithUserRoles, previewMode, user),
+      ...buildView(applicationData, previewMode, user),
       link,
     };
 
@@ -266,7 +274,7 @@ const applicationDetails = async (req, res, next) => {
       params.link += '/unissued-facilities';
     }
 
-    const amendmentsUnderwayOnDeal = await api.getAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_UNDERWAY_STATUSES, userToken });
+    const amendmentsUnderwayOnDeal = await api.getAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
 
     params.canIssuedFacilitiesBeAmended =
       canUserAmendIssuedFacilities(application.submissionType, application.status, userRoles) && !amendmentsUnderwayOnDeal.length;
