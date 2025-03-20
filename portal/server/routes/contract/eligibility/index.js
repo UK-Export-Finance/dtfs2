@@ -72,8 +72,16 @@ router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { body } = req;
 
-  await getApiData(api.updateEligibilityCriteria(_id, body, userToken), res);
+  const updatedEligibilityCriteria = api.updateEligibilityCriteria(_id, body, userToken);
 
+  const updatedDeal = await getApiData(updatedEligibilityCriteria, res);
+
+  if (updatedDeal.eligibility?.validationErrors?.count) {
+    // If there are validation errors, redirect back to the criteria page with a query parameter
+    return res.redirect(`/contract/${_id}/eligibility/criteria?errors=true`);
+  }
+
+  // If no errors, proceed to the supporting-documentation page
   return res.redirect(`/contract/${_id}/eligibility/supporting-documentation`);
 });
 
@@ -101,13 +109,18 @@ router.get('/contract/:_id/eligibility/supporting-documentation', [validateRole(
 
   const documentationValidationErrors = generateErrorSummary(supportingInformation.validationErrors, eligibilityErrorHref);
 
+  const criteriaValidationErrors = generateErrorSummary(eligibility.validationErrors, eligibilityErrorHref);
+
   const completedForms = completedEligibilityForms(deal.eligibility.status, validationErrors);
 
   return res.render('eligibility/eligibility-supporting-documentation.njk', {
     _id: deal._id,
     supportingInformation,
     eligibility,
-    validationErrors: documentationValidationErrors,
+    validationErrors: {
+      ...documentationValidationErrors,
+      ...criteriaValidationErrors, // Include criteria errors
+    },
     additionalRefName: deal.additionalRefName,
     user: req.session.user,
     taskListItems: eligibilityTaskList(completedForms),

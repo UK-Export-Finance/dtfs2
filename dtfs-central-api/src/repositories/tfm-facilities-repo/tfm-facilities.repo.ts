@@ -55,9 +55,13 @@ export class TfmFacilitiesRepo {
         )
         .toArray();
 
+      const portalAmendment = (amendment: FacilityAmendment) => amendment?.type === AMENDMENT_TYPES.PORTAL;
+      // We want to fetch all the portal amendments even if they do not have the respective statuses
+      const portalAmendmentsWithorWithoutStatuses = (amendment: FacilityAmendment) => !statuses || statuses.includes(amendment.status as PortalAmendmentStatus);
+
       const facilityAmendments = facilitiesWithPortalAmendments
         .flatMap((facility) => facility.amendments || [])
-        .filter((amendment) => amendment?.type === AMENDMENT_TYPES.PORTAL && (!statuses || statuses.includes(amendment.status))) as PortalFacilityAmendment[];
+        .filter((amendment) => portalAmendment(amendment) && portalAmendmentsWithorWithoutStatuses(amendment)) as PortalFacilityAmendment[];
 
       return facilityAmendments;
     } catch (error) {

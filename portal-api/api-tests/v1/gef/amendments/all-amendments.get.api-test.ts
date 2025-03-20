@@ -20,7 +20,7 @@ import { withClientAuthenticationTests } from '../../../common-tests/client-auth
 
 const { as, get } = createApi(app);
 
-const getAllPortalFacilityAmendmentsMock = jest.fn() as jest.Mock<Promise<PortalFacilityAmendmentWithUkefId>>;
+const getAllPortalFacilityAmendmentsMock = jest.fn() as jest.Mock<Promise<PortalFacilityAmendmentWithUkefId[]>>;
 
 jest.mock('../../../../src/v1/api', () => ({
   ...jest.requireActual<AnyObject>('../../../../src/v1/api'),
@@ -110,7 +110,7 @@ describe('/v1/gef/facilities/amendments', () => {
           },
         };
 
-        jest.mocked(getAllPortalFacilityAmendmentsMock).mockResolvedValue(amendment);
+        jest.mocked(getAllPortalFacilityAmendmentsMock).mockResolvedValue([amendment]);
         const url = getAllAmendmentsUrl({});
 
         // Act
@@ -118,7 +118,7 @@ describe('/v1/gef/facilities/amendments', () => {
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.Ok);
-        expect(response.body).toEqual({ ...amendment, amendmentId, facilityId, dealId });
+        expect(response.body).toEqual([{ ...amendment, amendmentId, facilityId, dealId }]);
       });
     });
   });
