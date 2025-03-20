@@ -11,7 +11,7 @@ describe('/v1/bank/:id', () => {
 
   describe('GET /v1/bank/:id', () => {
     it('returns a bank', async () => {
-      const newBank = withoutMongoId(MOCK_BANKS.HSBC);
+      const newBank = withoutMongoId(MOCK_BANKS.TestBank2);
 
       const { body: createdBank } = await testApi.post(newBank).to('/v1/bank');
 

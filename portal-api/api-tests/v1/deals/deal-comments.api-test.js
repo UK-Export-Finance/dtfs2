@@ -22,7 +22,7 @@ describe('deal comments controller', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
+    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Test Bank 1').all();
     [aBarclaysMaker] = barclaysMakers;
   });
 

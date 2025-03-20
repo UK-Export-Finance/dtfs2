@@ -16,14 +16,14 @@ const MONTHLY_REPORT_PERIOD_SCHEDULE = [
 const MOCK_BANKS = [
   {
     id: '956',
-    name: 'Barclays Bank',
+    name: 'Test Bank 1',
     mga: ['Test.pdf'],
     emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '01026167',
     partyUrn: '00300130',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'Barclays Payment Reporting Team',
+      teamName: 'Test Bank 1 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
@@ -31,14 +31,14 @@ const MOCK_BANKS = [
   },
   {
     id: '961',
-    name: 'HSBC',
+    name: 'Test Bank 2',
     mga: ['Test.pdf'],
     emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '00014259',
     partyUrn: '00300342',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'HSBC Payment Reporting Team',
+      teamName: 'Test Bank 2 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
@@ -76,14 +76,14 @@ const MOCK_BANKS = [
   },
   {
     id: '964',
-    name: 'LLOYDS',
+    name: 'Test Bank 3',
     mga: ['Test.pdf'],
     emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '00002065',
     partyUrn: '00300302',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'LLOYDS Payment Reporting Team',
+      teamName: 'Test Bank 3 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: [
@@ -96,14 +96,14 @@ const MOCK_BANKS = [
   },
   {
     id: '1004',
-    name: 'RBS',
+    name: 'Test Bank 4',
     mga: ['Mock.pdf'],
     emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: 'SC090312',
     partyUrn: '00307351',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'RBS Payment Reporting Team',
+      teamName: 'Test Bank 4 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
@@ -111,14 +111,14 @@ const MOCK_BANKS = [
   },
   {
     id: '953',
-    name: 'Santander',
+    name: 'Test Bank 5',
     mga: ['Mock.pdf'],
     emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '02294747',
     partyUrn: '00311081',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'Santander Payment Reporting Team',
+      teamName: 'Test Bank 5 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
@@ -161,14 +161,14 @@ const MOCK_BANKS = [
   },
   {
     id: '12',
-    name: 'ICICI',
+    name: 'Test Bank 6',
     mga: ['Test.pdf'],
     emails: ['maker1@ukexportfinance.gov.uk'],
     companiesHouseNo: 'FC011846',
     partyUrn: '00313097',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'Payment Reporting Team',
+      teamName: 'Test Bank 6 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
