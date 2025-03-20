@@ -84,8 +84,6 @@ describe('/v1/gef/facilities/amendments', () => {
         allowedRoles: [MAKER, CHECKER],
         getUserWithRole: (role: Role) => testUsers().withRole(role).one() as TestUser,
         makeRequestAsUser: (user: TestUser) => as(user).get(getAllAmendmentsUrl({})),
-        mockValue: [],
-        mockFunction: getAllPortalFacilityAmendmentsMock,
         successStatusCode: HttpStatusCode.Ok,
       });
 

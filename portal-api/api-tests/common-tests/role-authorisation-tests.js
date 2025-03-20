@@ -10,7 +10,7 @@ const expectNotAuthorisedResponse = ({ status, body }) => {
 
 const allRoles = Object.values(ROLES);
 
-const withRoleAuthorisationTests = ({ allowedRoles, getUserWithRole, makeRequestAsUser, successStatusCode, mockValue, mockFunction }) => {
+const withRoleAuthorisationTests = ({ allowedRoles, getUserWithRole, makeRequestAsUser, successStatusCode }) => {
   const notAllowedRoles = allRoles.filter((role) => !allowedRoles.includes(role));
 
   if (notAllowedRoles.length) {
@@ -22,9 +22,6 @@ const withRoleAuthorisationTests = ({ allowedRoles, getUserWithRole, makeRequest
   }
 
   it.each(allowedRoles)(`returns a ${successStatusCode} response for requests from a user with role %s`, async (role) => {
-    if (mockValue) {
-      jest.mocked(mockFunction).mockResolvedValue(mockValue);
-    }
     const userWithRole = getUserWithRole(role);
     const { status } = await makeRequestAsUser(userWithRole);
     expect(status).toEqual(successStatusCode);

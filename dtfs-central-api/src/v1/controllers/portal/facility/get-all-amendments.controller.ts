@@ -19,8 +19,8 @@ export const getAllPortalAmendments = async (req: GetAllPortalAmendmentsRequest,
   try {
     const allPortalAmendments = await TfmFacilitiesRepo.findAllPortalAmendmentsByStatus({ statuses });
 
-    if (!allPortalAmendments || !Array.isArray(allPortalAmendments)) {
-      throw new Error('No portal amendments found');
+    if (!allPortalAmendments) {
+      return res.status(HttpStatusCode.NoContent).send({});
     }
 
     return res.status(HttpStatusCode.Ok).send(allPortalAmendments);
