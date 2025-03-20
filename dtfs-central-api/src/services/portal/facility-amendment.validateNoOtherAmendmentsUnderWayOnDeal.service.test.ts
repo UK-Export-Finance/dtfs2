@@ -1,4 +1,4 @@
-import { PORTAL_AMENDMENT_UNDERWAY_STATUSES, PORTAL_AMENDMENT_STATUS, PortalFacilityAmendmentConflictError } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_INPROGRESS_STATUSES, PORTAL_AMENDMENT_STATUS, PortalFacilityAmendmentConflictError } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { PortalFacilityAmendmentService } from './facility-amendment.service';
@@ -40,7 +40,7 @@ describe('PortalFacilityAmendmentService', () => {
       expect(mockFindPortalAmendmentsByDealIdAndStatus).toHaveBeenCalledTimes(1);
       expect(mockFindPortalAmendmentsByDealIdAndStatus).toHaveBeenCalledWith({
         dealId,
-        statuses: PORTAL_AMENDMENT_UNDERWAY_STATUSES,
+        statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES,
       });
     });
 

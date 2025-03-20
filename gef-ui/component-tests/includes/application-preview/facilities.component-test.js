@@ -69,4 +69,24 @@ describe(page, () => {
       });
     });
   });
+
+  describe('Amendment details', () => {
+    issuedCashFacility.isFacilityWithAmendmentInProgress = true;
+    const amendmentsInProgress = `[data-cy="amendments-in-progress"]`;
+
+    it('should be rendered when portalAmendment is in progress', () => {
+      wrapper = render(params);
+
+      wrapper.expectElement(amendmentsInProgress).toExist();
+    });
+
+    it('should not be rendered when portalAmendment is not in progress', () => {
+      issuedCashFacility.isFacilityWithAmendmentInProgress = false;
+      wrapper = render({
+        ...params,
+      });
+
+      wrapper.expectElement(amendmentsInProgress).notToExist();
+    });
+  });
 });

@@ -15,61 +15,131 @@
   </div>
 {% endif %}
 
+{% if isPortalAmendmentInProgress %}
+  {% set portalAmendmentStatusTagClass = 'govuk-tag--yellow' %}
+{% else %}
+  {% set portalAmendmentStatusTagClass = 'govuk-tag--blue' %}
+{% endif %}
+
 {% include "includes/application-details/applicationReferenceAndActions.njk" %}
 
 <div class="application-banner preview-banner" data-cy="application-banner">
-  <div class="govuk-width-container">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <div class="govuk-grid-column-one-third">
-          <div><p><strong>Status</strong></p></div>
-        </div>
-        <div class="govuk-grid-column-two-thirds"><p>
-            {{ govukTag({ text: applicationStatus, attributes: { 'data-cy': 'status' },
-              classes: 'govuk-tag--blue'}) }}</p></div>
-      </div>
-      <div class="govuk-grid-column-one-half">
-        <div class="govuk-grid-column-one-third"><p><strong>Product</strong></p></div>
-        <div class="govuk-grid-column-two-thirds" data-cy="product"><p>General Export Facility</p></div>
-      </div>
-    </div>
-
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <div class="govuk-grid-column-one-third"><p><strong>Date created</strong></p></div>
-        <div class="govuk-grid-column-two-thirds" data-cy="date-created"><p>{{ dateCreated | localiseTimestamp('dd MMM yyyy', timezone)  | dashIfEmpty }}</p>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-column-one-third" data-cy="status-heading">
+        <div>
+          <p>
+            <strong>Status</strong>
+          </p>
         </div>
       </div>
-      <div class="govuk-grid-column-one-half">
-        <div class="govuk-grid-column-one-third"><p><strong>Type</strong></p></div>
-        <div class="govuk-grid-column-two-thirds" data-cy="submission-type"><p>{{ applicationType | dashIfEmpty }}</p></div>
+      <div class="govuk-grid-column-two-thirds">
+        <p>
+          {{ govukTag({ text: applicationStatus, attributes: { 'data-cy': 'status' },
+              classes: 'govuk-tag--blue'}) }}</p>
       </div>
     </div>
-
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <div class="govuk-grid-column-one-third"><p><strong>Created by</strong></p></div>
-        <div class="govuk-grid-column-two-thirds" data-cy="created-by"><p>{{ createdBy | dashIfEmpty }}</p></div>
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-column-one-third" data-cy="product-heading">
+        <p>
+          <strong>Product</strong>
+        </p>
       </div>
-      <div class="govuk-grid-column-one-half">
-        <div class="govuk-grid-column-one-third"><p><strong>Exporter</strong></p></div>
-        <div class="govuk-grid-column-two-thirds" data-cy="exporter"><p>{{ companyName | dashIfEmpty }}</p></div>
+      <div class="govuk-grid-column-two-thirds" data-cy="product">
+        <p>General Export Facility</p>
       </div>
     </div>
+  </div>
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <div class="govuk-grid-column-one-third"><p><strong>Checked by</strong></p></div>
-        <div class="govuk-grid-column-two-thirds" data-cy="checked-by"><p>{{ checkedBy | dashIfEmpty }}</p></div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-column-one-third" data-cy="date-created-heading">
+        <p>
+          <strong>Date created</strong>
+        </p>
       </div>
-      <div class="govuk-grid-column-one-half">
-        <div class="govuk-grid-column-one-third"><p><strong>Buyer</strong></p></div>
-        <div class="govuk-grid-column-two-thirds"><p data-cy="buyer">{{ buyer | dashIfEmpty }}</p></div>
+      <div class="govuk-grid-column-two-thirds" data-cy="date-created">
+        <p>{{ dateCreated | localiseTimestamp('dd MMM yyyy', timezone)  | dashIfEmpty }}</p>
+      </div>
+    </div>
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-column-one-third" data-cy="submission-type-heading">
+        <p>
+          <strong>Type</strong>
+        </p>
+      </div>
+      <div class="govuk-grid-column-two-thirds" data-cy="submission-type">
+        <p>{{ applicationType | dashIfEmpty }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-column-one-third" data-cy="created-by-heading">
+        <p>
+          <strong>Created by</strong>
+        </p>
+      </div>
+      <div class="govuk-grid-column-two-thirds" data-cy="created-by">
+        <p>{{ createdBy | dashIfEmpty }}</p>
+      </div>
+    </div>
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-column-one-third" data-cy="exporter-heading">
+        <p>
+          <strong>Exporter</strong>
+        </p>
+      </div>
+      <div class="govuk-grid-column-two-thirds" data-cy="exporter">
+        <p>{{ companyName | dashIfEmpty }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-column-one-third" data-cy="checked-by-heading">
+        <p>
+          <strong>Checked by</strong>
+        </p>
+      </div>
+      <div class="govuk-grid-column-two-thirds" data-cy="checked-by">
+        <p>{{ checkedBy | dashIfEmpty }}</p>
+      </div>
+    </div>
+    <div class="govuk-grid-column-one-half">
+      <div class="govuk-grid-column-one-third" data-cy="buyer-heading">
+        <p>
+          <strong>Buyer</strong>
+        </p>
+      </div>
+      <div class="govuk-grid-column-two-thirds">
+        <p data-cy="buyer">{{ buyer | dashIfEmpty }}</p>
       </div>
     </div>
   </div>
 
   {% if submissionCount > 0 %}
     {% include "includes/application-preview/deal-submission-details.njk" %}
+  {% endif %}
+
+  {% if portalAmendmentStatus %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <div class="govuk-grid-column-one-third" data-cy="amendment-status-heading">
+          <p>
+            <strong>Amendment Status</strong>
+          </p>
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+          <p>
+            {{ govukTag({ text: portalAmendmentStatus | dashIfEmpty, attributes: { 'data-cy': 'amendment-status' },
+              classes: portalAmendmentStatusTagClass}) }}
+          </p>
+        </div>
+      </div>
+      <div class="govuk-grid-column-one-half"></div>
+    </div>
   {% endif %}
 </div>
