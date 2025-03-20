@@ -615,6 +615,27 @@ const deleteFeeRecordCorrectionTransientFormData = async (correctionId, userId) 
 };
 
 /**
+ * Gets portal facility amendments filtered by status
+ * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus[] | undefined} statuses - an optional array of statuses to filter the amendments by
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId[])>} - the amendments on the deal with a matching status
+ */
+const getAllPortalFacilityAmendments = async (statuses) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/amendments`,
+      params: { statuses },
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error getting all portal facility amendments %o', error);
+    throw error;
+  }
+};
+
+/**
  * Gets the portal facility amendment
  * @param {string} facilityId - id of the facility to amend
  * @param {string} amendmentId - id of the facility amendment
@@ -844,6 +865,7 @@ module.exports = {
   deleteFeeRecordCorrectionTransientFormData,
   saveFeeRecordCorrection,
   getFeeRecordCorrectionTransientFormData,
+  getAllPortalFacilityAmendments,
   getPortalFacilityAmendment,
   getPortalFacilityAmendmentsOnDeal,
   putPortalFacilityAmendment,
