@@ -9,4 +9,5 @@ export const DATE_FORMATS = {
   D_MMMM_YYYY: 'd MMMM yyyy',
   H_MMAAA: 'H:mmaaa', // e.g 12:34am
   DD_MMM_YYYY: 'dd MMM yyyy', // e.g. '01 Feb 2024'
+  DD_MMMM_YYYY: 'dd MMMM yyyy', // e.g. '01 February 2024'
 };

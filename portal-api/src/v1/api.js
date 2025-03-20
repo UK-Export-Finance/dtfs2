@@ -722,9 +722,11 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
  * @param {string} params.facilityId - the facility id
  * @param {(import('@ukef/dtfs2-common').PortalAmendmentStatus)} params.newStatus - the facility id
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - The audit details for the update.
+ * @param {string} params.sendToEmailAddress - The email address to send the notification to
+ * @param {import('@ukef/dtfs2-common').PortalAmendmentSubmittedToCheckerEmailVariables} params.emailVariables - The email variables to send with the notification
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>} - the updatedamendment
  */
-const patchPortalFacilityAmendmentStatus = async ({ facilityId, amendmentId, auditDetails, newStatus }) => {
+const patchPortalFacilityAmendmentStatus = async ({ facilityId, amendmentId, auditDetails, newStatus, sendToEmailAddress, emailVariables }) => {
   try {
     const response = await axios({
       method: 'patch',
@@ -732,7 +734,9 @@ const patchPortalFacilityAmendmentStatus = async ({ facilityId, amendmentId, aud
       headers: headers.central,
       data: {
         newStatus,
+        sendToEmailAddress,
         auditDetails,
+        emailVariables,
       },
     });
 

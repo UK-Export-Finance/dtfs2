@@ -9,6 +9,8 @@ import api from '../../server/services/api';
 import * as storage from '../test-helpers/storage/storage';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
+import { MOCK_BASIC_DEAL } from '../../server/utils/mocks/mock-applications';
+import { MOCK_ISSUED_FACILITY } from '../../server/utils/mocks/mock-facilities';
 
 const originalEnv = { ...process.env };
 
@@ -20,6 +22,9 @@ jest.mock('../../server/middleware/csrf', () => ({
 }));
 
 const mockUpdateAmendmentStatus = jest.fn();
+const getApplicationMock = jest.fn();
+const getFacilityMock = jest.fn();
+const getAmendmentMock = jest.fn();
 
 const dealId = '6597dffeb5ef5ff4267e5044';
 const facilityId = '6597dffeb5ef5ff4267e5045';
@@ -36,6 +41,9 @@ describe(`POST ${url}`, () => {
 
     ({ sessionCookie } = await storage.saveUserSession([ROLES.MAKER]));
     jest.spyOn(api, 'updateAmendmentStatus').mockImplementation(mockUpdateAmendmentStatus);
+    jest.spyOn(api, 'getApplication').mockImplementation(getApplicationMock);
+    jest.spyOn(api, 'getFacility').mockImplementation(getFacilityMock);
+    jest.spyOn(api, 'getAmendment').mockImplementation(getAmendmentMock);
 
     const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
       .withDealId(dealId)
@@ -45,6 +53,9 @@ describe(`POST ${url}`, () => {
       .build();
 
     mockUpdateAmendmentStatus.mockResolvedValue(amendment);
+    getAmendmentMock.mockResolvedValue(amendment);
+    getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
+    getApplicationMock.mockResolvedValue(MOCK_BASIC_DEAL);
   });
 
   afterAll(async () => {

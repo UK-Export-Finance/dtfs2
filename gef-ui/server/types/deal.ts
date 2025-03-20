@@ -28,4 +28,5 @@ export type Deal = {
   editedBy: string[];
   additionalRefName: string | null;
   submissionType: DealSubmissionType;
+  ukefDealId: string;
 };
