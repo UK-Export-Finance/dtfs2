@@ -71,7 +71,7 @@ describe(page, () => {
   });
 
   describe('Amendment details', () => {
-    issuedCashFacility.isPortalAmendmentInProgress = true;
+    issuedCashFacility.isFacilityWithAmendmentInProgress = true;
     const amendmentsInProgress = `[data-cy="amendments-in-progress"]`;
 
     it('should be rendered when portalAmendment is in progress', () => {
@@ -81,7 +81,7 @@ describe(page, () => {
     });
 
     it('should not be rendered when portalAmendment is not in progress', () => {
-      issuedCashFacility.isPortalAmendmentInProgress = false;
+      issuedCashFacility.isFacilityWithAmendmentInProgress = false;
       wrapper = render({
         ...params,
       });
