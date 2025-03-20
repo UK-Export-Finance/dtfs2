@@ -167,6 +167,7 @@ const MockFacilityResponse = () => ({
   items: [
     {
       details: {
+        _id: '1234',
         type: CONSTANTS.FACILITY_TYPE.CASH,
         name: 'UKEF123',
         hasBeenIssued: false,
@@ -355,6 +356,7 @@ const MockFacilitiesResponse = () => ({
   items: [
     {
       details: {
+        _id: '1234',
         type: CONSTANTS.FACILITY_TYPE.CASH,
         name: 'UKEF123',
         hasBeenIssued: true,

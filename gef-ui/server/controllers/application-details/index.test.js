@@ -1,5 +1,13 @@
 import { cloneDeep } from 'lodash';
-import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE, isPortalFacilityAmendmentsFeatureFlagEnabled, ROLES } from '@ukef/dtfs2-common';
+import {
+  DEAL_STATUS,
+  DEAL_SUBMISSION_TYPE,
+  DEAL_TYPE,
+  FACILITY_TYPE,
+  isPortalFacilityAmendmentsFeatureFlagEnabled,
+  PORTAL_AMENDMENT_STATUS,
+  ROLES,
+} from '@ukef/dtfs2-common';
 import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { applicationDetails, postApplicationDetails } from '.';
 import api from '../../services/api';
@@ -9,8 +17,13 @@ import MOCKS from '../mocks';
 import CONSTANTS from '../../constants';
 import { ALL_DEAL_STATUSES } from '../../../test-helpers/common-deal-status-lists';
 import { canUserAmendIssuedFacilities } from '../../utils/facility-amendments.helper';
+import { getSubmittedAmendmentDetails } from '../../utils/submitted-amendment-details';
 
 jest.mock('../../services/api');
+
+jest.mock('../../utils/submitted-amendment-details', () => ({
+  getSubmittedAmendmentDetails: jest.fn(),
+}));
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
@@ -25,6 +38,11 @@ describe('controllers/application-details', () => {
   let mockFacilitiesResponse;
   let mockUserResponse;
   const mockGetAmendmentsOnDealResponse = [];
+  const mockGetSubmittedDetailsResponse = {
+    portalAmendmentStatus: null,
+    facilityIdWithAmendmentInProgress: null,
+    isPortalAmendmentInProgress: false,
+  };
 
   beforeEach(() => {
     mockResponse = MOCKS.MockResponse();
@@ -38,6 +56,7 @@ describe('controllers/application-details', () => {
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);
     api.getAmendmentsOnDeal.mockResolvedValue(mockGetAmendmentsOnDealResponse);
+    getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
     mockRequest.flash = mockSuccessfulFlashResponse();
   });
 
@@ -95,10 +114,13 @@ describe('controllers/application-details', () => {
           applicationType: mockApplicationResponse.submissionType,
           submissionCount: mockApplicationResponse.submissionCount,
           activeSubNavigation: '/',
+          portalAmendmentStatus: mockGetSubmittedDetailsResponse.portalAmendmentStatus,
+          isPortalAmendmentInProgress: mockGetSubmittedDetailsResponse.isPortalAmendmentInProgress,
 
           // body
           application: {
             ...mockApplicationResponse,
+            ...mockGetSubmittedDetailsResponse,
             userRoles: mockRequest.session.user.roles,
           },
           status: mockApplicationResponse.status,
@@ -483,6 +505,96 @@ describe('controllers/application-details', () => {
             applicationStatus: mockApplicationResponse.status,
             unissuedFacilitiesPresent: false,
             facilitiesChangedToIssued: [],
+          }),
+        );
+      });
+    });
+
+    describe('template rendering from amendment.status', () => {
+      const portalAmendmentTestCases = [
+        {
+          template: `application-details`,
+          label: PORTAL_AMENDMENT_STATUS.DRAFT,
+          isPortalAmendmentInProgress: false,
+          portalAmendmentStatus: null,
+          expectObjectContaining: { portalAmendmentStatus: null, isPortalAmendmentInProgress: false },
+        },
+        {
+          template: `application-details`,
+          label: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+          isPortalAmendmentInProgress: true,
+          portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+          expectObjectContaining: { portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL, isPortalAmendmentInProgress: true },
+        },
+        {
+          template: `application-details`,
+          label: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
+          isPortalAmendmentInProgress: true,
+          portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
+          expectObjectContaining: { portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED, isPortalAmendmentInProgress: true },
+        },
+        {
+          template: `application-details`,
+          label: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+          isPortalAmendmentInProgress: false,
+          portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+          expectObjectContaining: { portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, isPortalAmendmentInProgress: false },
+        },
+      ];
+
+      it.each(portalAmendmentTestCases)(
+        'should render `$template` when portalAmendmentStatus is $label',
+        async ({ template, isPortalAmendmentInProgress, portalAmendmentStatus, expectObjectContaining }) => {
+          mockGetSubmittedDetailsResponse.portalAmendmentStatus = portalAmendmentStatus;
+          mockGetSubmittedDetailsResponse.isPortalAmendmentInProgress = isPortalAmendmentInProgress;
+          getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
+
+          await applicationDetails(mockRequest, mockResponse);
+
+          expect(mockResponse.render).toHaveBeenCalledWith(`partials/${template}.njk`, expect.objectContaining(expectObjectContaining));
+        },
+      );
+
+      it('should render `application-details` with facilityIdWithAmendmentInProgress as true when amendment is in progress', async () => {
+        mockGetSubmittedDetailsResponse.portalAmendmentStatus = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
+        mockGetSubmittedDetailsResponse.isPortalAmendmentInProgress = true;
+        mockGetSubmittedDetailsResponse.facilityIdWithAmendmentInProgress = '1234';
+        getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-details.njk',
+          expect.objectContaining({
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.objectContaining({
+                  isFacilityWithAmendmentInProgress: true,
+                }),
+              ]),
+            }),
+          }),
+        );
+      });
+
+      it('should render `application-details` with facilityIdWithAmendmentInProgress as false when amendment is not in progress', async () => {
+        mockGetSubmittedDetailsResponse.portalAmendmentStatus = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
+        mockGetSubmittedDetailsResponse.isPortalAmendmentInProgress = true;
+        mockGetSubmittedDetailsResponse.facilityIdWithAmendmentInProgress = 'other-id';
+        getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-details.njk',
+          expect.objectContaining({
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.objectContaining({
+                  isFacilityWithAmendmentInProgress: false,
+                }),
+              ]),
+            }),
           }),
         );
       });

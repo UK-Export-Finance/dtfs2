@@ -36,6 +36,41 @@ export class TfmFacilitiesRepo {
   }
 
   /**
+   * Finds the portal amendments for all the facilities provided with the given status or an array of statuses.
+   * @param statuses - An array of portal amendment statuses to filter on
+   * @returns The matching portal amendments
+   */
+  public static async findAllPortalAmendmentsByStatus({ statuses }: { statuses?: PortalAmendmentStatus[] }): Promise<PortalFacilityAmendment[]> {
+    try {
+      const collection = await this.getCollection();
+
+      const facilitiesWithPortalAmendments = await collection
+        .find(
+          {
+            'amendments.type': {
+              $eq: AMENDMENT_TYPES.PORTAL,
+            },
+          },
+          { projection: { amendments: 1 } },
+        )
+        .toArray();
+
+      const portalAmendment = (amendment: FacilityAmendment) => amendment?.type === AMENDMENT_TYPES.PORTAL;
+      // We want to fetch all the portal amendments even if they do not have the respective statuses
+      const portalAmendmentsWithorWithoutStatuses = (amendment: FacilityAmendment) => !statuses || statuses.includes(amendment.status as PortalAmendmentStatus);
+
+      const facilityAmendments = facilitiesWithPortalAmendments
+        .flatMap((facility) => facility.amendments || [])
+        .filter((amendment) => portalAmendment(amendment) && portalAmendmentsWithorWithoutStatuses(amendment)) as PortalFacilityAmendment[];
+
+      return facilityAmendments;
+    } catch (error) {
+      console.error('Error finding all portal amendments by status %o', error);
+      throw error;
+    }
+  }
+
+  /**
    * Finds the portal amendments across all facilities for a deal for a given status or set of statuses
    * @param dealId - The deal id
    * @param statuses - An array of portal amendment statuses to filter on

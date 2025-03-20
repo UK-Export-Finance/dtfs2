@@ -4,6 +4,13 @@
   <header data-cy="application-preview-page">
     {% set bannerHtml %}
 
+    {% if isPortalAmendmentInProgress %}
+      <h3 data-cy="amendment-details-header">{{ portalAmendmentStatus }}</h3>
+      <div class="govuk-!-margin-bottom-6">
+        <a href="/gef/application-details/{{ dealId }}/amendment-details" class="govuk-link" data-cy="amendment-details">Amendment details</a>
+      </div>
+    {% endif %}
+
     {% if renderReviewDecisionLink %}
       <div class="govuk-!-margin-bottom-0" data-cy="ukef-review">
         <a href="/gef/application-details/{{ dealId }}/review-decision" class="govuk-link" data-cy="ukef-review-link">Review UKEF decision</a>
@@ -22,7 +29,7 @@
         {% if status === "Further Maker\'s input required" %}
           <h2 data-cy="update-unissued-stage">Change facility details</h2>
         {% else %}
-            <h2 data-cy="update-unissued-stage">Review facility stage</h2>
+          <h2 data-cy="update-unissued-stage">Review facility stage</h2>
         {% endif %}
       {% else %}
         {% if status === "Ready for Checker\'s approval" %}
@@ -58,16 +65,17 @@
       {% endif %}
     {% endif %}
 
-  <div class="govuk-!-margin-top-3" data-cy="latest-comment">
-    {% for comment in comments %}
-      <strong>Comments from {{ comment.firstname }} {{ comment.surname }}</strong>
-      <p>{{ comment.createdAt | localiseTimestamp('dd MMM yyyy h:mmaaa', timezone) }}</p>
-      <p>{{ comment.comment | safe }}</p>
-    {% endfor %}
-  </div>
-  {% endset %}
+    <div class="govuk-!-margin-top-3" data-cy="latest-comment">
+      {% for comment in comments %}
+        <strong>Comments from {{ comment.firstname }}
+          {{ comment.surname }}</strong>
+        <p>{{ comment.createdAt | localiseTimestamp('dd MMM yyyy h:mmaaa', timezone) }}</p>
+        <p>{{ comment.comment | safe }}</p>
+      {% endfor %}
+    </div>
+    {% endset %}
 
-  {{ mojBanner({
+    {{ mojBanner({
       type: 'no-icon',
       html: bannerHtml
     }) }}

@@ -18,3 +18,5 @@ export const DEAL_STATUS = {
   CANCELLED: 'Cancelled',
   PENDING_CANCELLATION: 'Pending cancellation',
 } as const;
+
+export const DEAL_STATUS_SCHEDULED_OR_CANCELLED = [DEAL_STATUS.CANCELLED, DEAL_STATUS.PENDING_CANCELLATION] as const;
