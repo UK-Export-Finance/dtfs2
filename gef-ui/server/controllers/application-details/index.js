@@ -108,8 +108,8 @@ function buildBody(app, previewMode, user) {
           // ukefFacilityId required for html facility summary table id
           ukefFacilityId: item.details.ukefFacilityId,
           stage: item.details?.facilityStage ?? (item.details.hasBeenIssued ? STAGE.ISSUED : STAGE.UNISSUED),
-          // isPortalAmendmentInProgress required for html. A link see details will appear to the user for facility with amendment in progress
-          isPortalAmendmentInProgress: item.details._id === app.facilityIdWithAmendmentInProgress,
+          // isFacilityWithAmendmentInProgress required for html. A link see details will appear to the user for facility with amendment in progress
+          isFacilityWithAmendmentInProgress: item.details._id === app.facilityIdWithAmendmentInProgress,
         }))
         .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
     },
