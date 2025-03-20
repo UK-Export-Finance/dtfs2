@@ -49,14 +49,14 @@ context('Application Details Page', () => {
       applicationDetails.editRefNameLink().should('have.text', 'UKEF Test 123');
 
       statusBanner.bannerStatus().contains('Draft');
-      statusBanner.bannerProduct().should('have.text', 'General Export Facility');
+      cy.assertText(statusBanner.bannerProduct(), 'General Export Facility');
 
       statusBanner.bannerDateCreated().contains(today.dd_MMM_yyyy);
-      statusBanner.bannerSubmissionType().should('have.text', '-');
-      statusBanner.bannerCreatedBy().should('have.text', `${dealWithEmptyExporter.maker.firstname} ${dealWithEmptyExporter.maker.surname}`);
-      statusBanner.bannerExporter().should('have.text', '-');
-      statusBanner.bannerCheckedBy().should('have.text', '-');
-      statusBanner.bannerBuyer().should('have.text', '-');
+      cy.assertText(statusBanner.bannerSubmissionType(), '-');
+      cy.assertText(statusBanner.bannerCreatedBy(), `${dealWithEmptyExporter.maker.firstname} ${dealWithEmptyExporter.maker.surname}`);
+      cy.assertText(statusBanner.bannerExporter(), '-');
+      cy.assertText(statusBanner.bannerCheckedBy(), '-');
+      cy.assertText(statusBanner.bannerBuyer(), '-');
     });
 
     it('displays the correct headings', () => {
@@ -218,7 +218,7 @@ context('Application Details Page', () => {
       applicationDetails.editRefNameLink().should('have.text', 'HSBC 123');
 
       statusBanner.bannerStatus().contains('Draft');
-      statusBanner.bannerSubmissionType().should('have.text', CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
+      cy.assertText(statusBanner.bannerSubmissionType(), CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
       statusBanner.bannerExporter().contains(dealWithCompletedExporterAndFacilities.exporter.companyName);
     });
 
@@ -281,8 +281,7 @@ context('Application Details Page', () => {
 
     it('displays the correct submission type heading and text in banner', () => {
       mainHeading().contains('Manual Inclusion Application');
-
-      statusBanner.bannerSubmissionType().should('have.text', CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);
+      cy.assertText(statusBanner.bannerSubmissionType(), CONSTANTS.DEAL_SUBMISSION_TYPE.MIA);
     });
 
     describe('Supporting information section', () => {

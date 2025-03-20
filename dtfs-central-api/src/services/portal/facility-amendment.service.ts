@@ -11,7 +11,7 @@ import {
   PortalAmendmentStatus,
   AmendmentNotFoundError,
   AmendmentIncompleteError,
-  PORTAL_AMENDMENT_UNDERWAY_STATUSES,
+  PORTAL_AMENDMENT_INPROGRESS_STATUSES,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { cloneDeep, remove } from 'lodash';
@@ -31,7 +31,7 @@ export class PortalFacilityAmendmentService {
   public static async validateNoOtherAmendmentsUnderWayOnDeal({ dealId, amendmentId }: { dealId: string; amendmentId?: string }): Promise<void> {
     const existingPortalAmendmentsUnderWay = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({
       dealId,
-      statuses: PORTAL_AMENDMENT_UNDERWAY_STATUSES,
+      statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES,
     });
 
     if (amendmentId) {

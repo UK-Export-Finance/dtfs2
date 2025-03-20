@@ -5,7 +5,7 @@ import {
   AnyObject,
   PortalFacilityAmendmentWithUkefId,
   Role,
-  PORTAL_AMENDMENT_UNDERWAY_STATUSES,
+  PORTAL_AMENDMENT_INPROGRESS_STATUSES,
 } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import app from '../../../../src/createApp';
@@ -28,7 +28,7 @@ jest.mock('../../../../src/v1/api', () => ({
 }));
 
 const validDealId = new ObjectId().toString();
-const statuses = PORTAL_AMENDMENT_UNDERWAY_STATUSES;
+const statuses = PORTAL_AMENDMENT_INPROGRESS_STATUSES;
 
 const invalidId = 'invalid-id';
 
