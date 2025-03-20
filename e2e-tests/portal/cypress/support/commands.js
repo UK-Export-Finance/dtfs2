@@ -1,5 +1,6 @@
 import 'cypress-file-upload';
 import * as api from '../../../gef/cypress/support/commands/api';
+import * as createBssEwcsDealandFillDealFields from './portal/createBssEwcsDeal';
 
 const { downloadFile } = require('./portal-api/fileshare');
 
@@ -58,6 +59,7 @@ Cypress.Commands.add('clickProceedToReviewButton', require('./portal/click-event
 Cypress.Commands.add('clickProceedToSubmitButton', require('./portal/click-events/click-proceed-to-submit-button'));
 Cypress.Commands.add('clickSaveGoBackButton', require('./portal/click-events/click-save-go-back-button'));
 Cypress.Commands.add('clickSubmitButton', require('./portal/click-events/click-submit-button'));
+Cypress.Commands.add('clickDashboardDealLink', require('./portal/click-events/click-dashboard-deal-link'));
 Cypress.Commands.add('completeDateFormFields', require('./portal/completeDateFormFields'));
 
 Cypress.Commands.add('addBondToDeal', require('./portal/addBondToDeal'));
@@ -78,6 +80,11 @@ Cypress.Commands.add('disablePortalUserByUsername', require('./portal/disablePor
 
 // command to assert row contents in the utilisation report upload journey
 Cypress.Commands.add('assertValidationErrorTableRowContains', require('./portal/utilisation-reports/assertUploadReportValidationErrorTableRowContains'));
+
+Cypress.Commands.add('createBssEwcsDeal', createBssEwcsDealandFillDealFields.createBssEwcsDeal);
+Cypress.Commands.add('completeBssEwcsDealFields', createBssEwcsDealandFillDealFields.completeBssEwcsDealFields);
+
+Cypress.Commands.add('getDealIdFromUrl', require('./portal/getDealIdFromUrl'));
 
 // commands that add/edit facilities directly in central API
 Cypress.Commands.add('deleteFacility', require('./central-api/deleteFacility'));
