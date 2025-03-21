@@ -11,7 +11,7 @@ context('Admin user updates an existing user', () => {
     password: 'AbC!2345',
     firstname: 'first',
     surname: 'last',
-    bank: 'Barclays Bank',
+    bank: 'Test Bank 1',
     roles: ['maker'],
   };
 
