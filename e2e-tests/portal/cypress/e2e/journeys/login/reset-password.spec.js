@@ -121,11 +121,13 @@ context('Password management screens', () => {
 
   context('Contact us section', () => {
     it('should display the correct email address', () => {
-      changePassword.contactUsEmailAddress().toBe(contactUsEmailAddress);
+      changePassword.contactUsEmailAddress().should('be.visible');
+      changePassword.contactUsEmailAddress().contains(contactUsEmailAddress);
     });
 
     it('should display the correct response timeframe text', () => {
-      changePassword.contactUsTimeframeText().toBe('We aim to respond within 2 working days');
+      changePassword.contactUsEmailAddress().should('be.visible');
+      changePassword.contactUsTimeframeText().should('have.text', 'We aim to respond within 2 working days');
     });
   });
 });
