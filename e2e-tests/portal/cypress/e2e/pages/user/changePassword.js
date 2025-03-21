@@ -5,8 +5,8 @@ const changePassword = {
   passwordError: () => cy.get('#password-error'),
   confirmPassword: () => cy.get('[data-cy="confirmPassword"]'),
   passwordConfirmError: () => cy.get('#passwordConfirm-error'),
-  contactUsEmailAddress: () => cy.get('[data-cy="contact_us_email"]'),
-  contactUsTimeframeText: () => cy.get('[data-cy="contact_us_timeframe"]'),
+  contactUsEmailAddress: () => cy.get('[data-cy="contact-us-email"]'),
+  contactUsTimeframeText: () => cy.get('[data-cy="contact-us-timeframe"]'),
 };
 
 module.exports = changePassword;

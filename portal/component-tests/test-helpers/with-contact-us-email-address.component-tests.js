@@ -16,11 +16,11 @@ module.exports.withContactUsEmailAddressTests = ({ page }) => {
     });
 
     it('should render the contact us email address', () => {
-      wrapper.expectText('[data-cy="contact_us_email"]').toRead(mockContactUsEmailAddress);
+      wrapper.expectText('[data-cy="contact-us-email"]').toRead(mockContactUsEmailAddress);
     });
 
     it('should render the respond timeframe text', () => {
-      wrapper.expectText('[data-cy="contact_us_timeframe"]').toRead('We aim to respond within 2 working days');
+      wrapper.expectText('[data-cy="contact-us-timeframe"]').toRead('We aim to respond within 2 working days');
     });
   });
 };
