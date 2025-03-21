@@ -1,4 +1,5 @@
 import { format, fromUnixTime } from 'date-fns';
+import dotenv from 'dotenv';
 import { DATE_FORMATS, DEAL_SUBMISSION_TYPE, DEAL_STATUS, aPortalSessionUser, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { getCurrencySymbol } from '../facility-value/get-currency-symbol';
 import { Deal } from '../../../types/deal';
@@ -6,6 +7,10 @@ import mapSubmittedToCheckerEmailVariables from './map-submitted-to-checker-emai
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment.ts';
+
+dotenv.config();
+
+const { PORTAL_UI_URL } = process.env;
 
 const dealId = 'dealId';
 const facilityId = 'facilityId';
@@ -30,7 +35,7 @@ const formattedNow = format(new Date(), DATE_FORMATS.DD_MMMM_YYYY);
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
 const mockFacilityDetails = MOCK_ISSUED_FACILITY.details;
 
-const portalUrl = 'https://www.google.com';
+const portalUrl = `${PORTAL_UI_URL}/login`;
 
 describe('mapSubmittedToCheckerEmailVariables', () => {
   describe('when an amendment has all types of amendments', () => {

@@ -258,7 +258,7 @@ describe('postCheckYourAnswers', () => {
 
       // Assert
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Checker %s was not found for deal %s', mockDeal.checkerId, dealId);
+      expect(console.error).toHaveBeenCalledWith('Checker %s was not found from the deal %s', mockDeal.checkerId, dealId);
     });
   });
 

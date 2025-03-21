@@ -33,7 +33,7 @@ export const postCheckYourAnswers = async (req: PostCheckYourAnswersRequest, res
     const checker = (await api.getUserDetails({ userId: deal.checkerId, userToken })) as PortalSessionUser;
 
     if (!checker?.firstname || !checker?.surname || !checker?.email) {
-      console.error('Checker %s was not found for deal %s', deal.checkerId, dealId);
+      console.error('Checker %s was not found from the deal %s', deal.checkerId, dealId);
       return res.redirect('/not-found');
     }
 
