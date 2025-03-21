@@ -17,7 +17,7 @@ const MOCK_DEAL = {
 };
 
 const goToPage = (deal) => {
-  cy.loginGoToDealPage(BANK1_MAKER1, deal);
+  cy.loginGoToDealPage(BANK1_MAKER1, deal._id);
   cy.clickAddLoanButton();
   partials.taskListHeader.itemLink('dates-and-repayments').click();
 

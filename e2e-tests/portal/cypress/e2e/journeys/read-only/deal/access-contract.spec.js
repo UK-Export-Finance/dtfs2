@@ -17,7 +17,7 @@ context('Access a deal', () => {
   });
 
   it('allows read only user with all bank access to view deal', () => {
-    cy.loginGoToDealPage(READ_ONLY_ALL_BANKS, deal);
+    cy.loginGoToDealPage(READ_ONLY_ALL_BANKS, deal._id);
     cy.url().should('eq', relative(`/contract/${deal._id}`));
   });
 });
