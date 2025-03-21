@@ -1,4 +1,4 @@
-import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS, PortalAmendmentSubmittedToCheckerEmailVariables } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS, PortalAmendmentSubmittedToCheckerEmailVariables, PortalSessionUser } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
@@ -30,14 +30,24 @@ export const postCheckYourAnswers = async (req: PostCheckYourAnswersRequest, res
       return res.redirect('/not-found');
     }
 
+    const checker = (await api.getUserDetails({ userId: deal.checkerId, userToken })) as PortalSessionUser;
+
+    if (!checker?.firstname || !checker?.surname || !checker?.email) {
+      console.error('Checker %s was not found for deal %s', deal.checkerId, dealId);
+      return res.redirect('/not-found');
+    }
+
     if (!amendment) {
       console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 
     const {
-      sendToEmailAddress,
-      recipientName,
+      makersName,
+      makersEmail,
+      checkersName,
+      checkersEmail,
+      dateSubmittedByMaker,
       ukefDealId,
       exporterName,
       bankInternalRefName,
@@ -46,18 +56,23 @@ export const postCheckYourAnswers = async (req: PostCheckYourAnswersRequest, res
       formattedEffectiveDate,
       formattedFacilityEndDate,
       formattedFacilityValue,
-    } = mapSubmittedToCheckerEmailVariables({ deal, facility, amendment, user });
+      portalUrl,
+    } = mapSubmittedToCheckerEmailVariables({ deal, facility, amendment, user, checker });
 
     const emailVariables: PortalAmendmentSubmittedToCheckerEmailVariables = {
       exporterName,
       bankInternalRefName: bankInternalRefName!,
       ukefDealId,
       ukefFacilityId: ukefFacilityId!,
-      recipientName,
+      makersName,
+      checkersName,
+      dateSubmittedByMaker,
       dateEffectiveFrom: formattedEffectiveDate,
       newCoverEndDate: formattedCoverEndDate,
       newFacilityEndDate: formattedFacilityEndDate,
       newFacilityValue: formattedFacilityValue,
+      portalUrl,
+      makersEmail,
     };
 
     const updatedAmendment = await api.updateAmendmentStatus({
@@ -65,7 +80,8 @@ export const postCheckYourAnswers = async (req: PostCheckYourAnswersRequest, res
       amendmentId,
       newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
       userToken,
-      sendToEmailAddress,
+      makersEmail,
+      checkersEmail,
       emailVariables,
     });
 

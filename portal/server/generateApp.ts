@@ -22,6 +22,7 @@ const RedisStore = connectRedis(session);
 
 export const generateApp = () => {
   const app = express();
+
   const https = Boolean(process.env.HTTPS || 0);
   const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
 

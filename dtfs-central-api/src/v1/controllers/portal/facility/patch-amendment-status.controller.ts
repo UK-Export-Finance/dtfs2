@@ -26,7 +26,7 @@ export type PatchSubmitAmendmentToCheckerRequest = CustomExpressRequest<{
  */
 export const patchAmendmentStatus = async (req: PatchSubmitAmendmentToCheckerRequest, res: Response) => {
   const { facilityId, amendmentId } = req.params;
-  const { auditDetails, newStatus, sendToEmailAddress, emailVariables } = req.body;
+  const { auditDetails, newStatus, makersEmail, checkersEmail, emailVariables } = req.body;
 
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.PORTAL);
@@ -36,7 +36,8 @@ export const patchAmendmentStatus = async (req: PatchSubmitAmendmentToCheckerReq
         const updatedAmendment = await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({ facilityId, amendmentId, auditDetails });
 
         // sends email to maker with the details of the amendment
-        await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_CHECKER, sendToEmailAddress, emailVariables);
+        await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.MAKER_PORTAL_AMENDMENT_SUBMITTED_TO_CHECKER, makersEmail, emailVariables);
+        await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.CHECKER_PORTAL_AMENDMENT_SUBMITTED_TO_CHECKER, checkersEmail, emailVariables);
 
         return res.status(HttpStatusCode.Ok).send(updatedAmendment);
       }

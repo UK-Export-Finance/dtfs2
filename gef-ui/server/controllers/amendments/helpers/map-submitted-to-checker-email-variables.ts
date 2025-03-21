@@ -18,11 +18,13 @@ const mapSubmittedToCheckerEmailVariables = ({
   facility,
   amendment,
   user,
+  checker,
 }: {
   deal: Deal;
   facility: Facility;
   amendment: PortalFacilityAmendmentWithUkefId;
   user: PortalSessionUser;
+  checker: PortalSessionUser;
 }) => {
   const {
     ukefDealId,
@@ -59,8 +61,15 @@ const mapSubmittedToCheckerEmailVariables = ({
     formattedFacilityValue = `${currencySymbol}${value}`;
   }
 
-  const recipientName = `${user.firstname} ${user.surname}`;
-  const sendToEmailAddress = user.email;
+  const makersName = `${user.firstname} ${user.surname}`;
+  const makersEmail = user.email;
+
+  const checkersName = `${checker.firstname} ${checker.surname}`;
+  const checkersEmail = checker.email;
+
+  const dateSubmittedByMaker = format(new Date(), DATE_FORMATS.DD_MMMM_YYYY);
+
+  const portalUrl = 'https://www.google.com';
 
   return {
     ukefDealId,
@@ -71,8 +80,12 @@ const mapSubmittedToCheckerEmailVariables = ({
     formattedCoverEndDate,
     formattedFacilityEndDate,
     formattedFacilityValue,
-    recipientName,
-    sendToEmailAddress,
+    makersName,
+    makersEmail,
+    dateSubmittedByMaker,
+    checkersName,
+    checkersEmail,
+    portalUrl,
   };
 };
 

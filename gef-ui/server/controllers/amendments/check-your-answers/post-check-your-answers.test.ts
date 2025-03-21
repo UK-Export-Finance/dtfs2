@@ -4,6 +4,7 @@ const updateAmendmentStatusMock = jest.fn();
 const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
+const getUserDetailsMock = jest.fn();
 
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
@@ -24,6 +25,7 @@ jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
   getFacility: getFacilityMock,
   getAmendment: getAmendmentMock,
+  getUserDetails: getUserDetailsMock,
 }));
 
 const dealId = 'dealId';
@@ -32,6 +34,13 @@ const amendmentId = 'amendmentId';
 
 const mockUser = aPortalSessionUser();
 const userToken = 'userToken';
+
+const mockChecker = {
+  ...mockUser,
+  firstname: 'checkerFirst',
+  surname: 'checkerLast',
+  email: 'checker@ukexportfinance.gov.uk',
+};
 
 const facilityValue = 12345;
 
@@ -80,6 +89,7 @@ describe('postCheckYourAnswers', () => {
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getAmendmentMock.mockResolvedValue(amendment);
+    getUserDetailsMock.mockResolvedValue(mockChecker);
 
     updateAmendmentStatusMock.mockResolvedValue(amendment);
   });
@@ -99,17 +109,22 @@ describe('postCheckYourAnswers', () => {
         amendmentId,
         newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
         userToken,
-        sendToEmailAddress: mockUser.email,
+        makersEmail: mockUser.email,
+        checkersEmail: mockChecker.email,
         emailVariables: {
           exporterName: mockDeal.exporter.companyName,
           bankInternalRefName: mockDeal.bankInternalRefName!,
           ukefDealId: mockDeal.ukefDealId,
           ukefFacilityId: mockFacilityDetails.ukefFacilityId,
-          recipientName: `${mockUser.firstname} ${mockUser.surname}`,
           dateEffectiveFrom: format(fromUnixTime(effectiveDateWithoutMs), DATE_FORMATS.DD_MMMM_YYYY),
           newCoverEndDate: format(new Date(coverEndDate), DATE_FORMATS.DD_MMMM_YYYY),
           newFacilityEndDate: format(new Date(facilityEndDate), DATE_FORMATS.DD_MMMM_YYYY),
           newFacilityValue: `${getCurrencySymbol(mockFacilityDetails?.currency!.id)}${facilityValue}`,
+          makersName: `${mockUser.firstname} ${mockUser.surname}`,
+          checkersName: `${mockChecker.firstname} ${mockChecker.surname}`,
+          dateSubmittedByMaker: format(new Date(), DATE_FORMATS.DD_MMMM_YYYY),
+          portalUrl: 'https://www.google.com',
+          makersEmail: mockUser.email,
         },
       });
     });
@@ -214,6 +229,36 @@ describe('postCheckYourAnswers', () => {
       // Assert
       expect(console.error).toHaveBeenCalledTimes(1);
       expect(console.error).toHaveBeenCalledWith('Deal %s or Facility %s was not found', dealId, facilityId);
+    });
+  });
+
+  describe('when a checker cannot be found', () => {
+    beforeEach(() => {
+      getUserDetailsMock.mockResolvedValue(null);
+    });
+
+    it('should redirect to not-found', async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+
+      // Act
+      await postCheckYourAnswers(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+      expect(res._getRedirectUrl()).toEqual('/not-found');
+    });
+
+    it('should log an error', async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+
+      // Act
+      await postCheckYourAnswers(req, res);
+
+      // Assert
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Checker %s was not found for deal %s', mockDeal.checkerId, dealId);
     });
   });
 
