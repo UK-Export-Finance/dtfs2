@@ -275,6 +275,8 @@ const createBssEwcsDeal = () => {
   cy.login(BANK1_MAKER1);
   startNewSubmission();
   fillBankDetails();
+  // Return DealId from URL
+  cy.getDealIdFromUrl(4).then((dealId) => dealId);
 };
 
 /**

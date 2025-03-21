@@ -1,5 +1,5 @@
 const page = {
-  visit: (deal) => cy.visit(`/contract/${deal._id}`),
+  visit: (dealId) => cy.visit(`/contract/${dealId}`),
   commentsTab: () => cy.get('[data-cy="comments-tab"]'),
   checkDealDetailsTab: () => cy.get('[data-cy="check-deal-details-tab"]'),
   overviewTable: () => cy.get('[data-cy="contract-overview-table"]'),
