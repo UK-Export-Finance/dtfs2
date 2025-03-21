@@ -9,6 +9,7 @@ const getUserDetailsMock = jest.fn();
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { format, fromUnixTime } from 'date-fns';
+import dotenv from 'dotenv';
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { aPortalSessionUser, PORTAL_LOGIN_STATUS, PORTAL_AMENDMENT_STATUS, DEAL_STATUS, DEAL_SUBMISSION_TYPE, DATE_FORMATS } from '@ukef/dtfs2-common';
 import { getNextPage } from '../helpers/navigation.helper.ts';
@@ -27,6 +28,10 @@ jest.mock('../../../services/api', () => ({
   getAmendment: getAmendmentMock,
   getUserDetails: getUserDetailsMock,
 }));
+
+dotenv.config();
+
+const { PORTAL_UI_URL } = process.env;
 
 const dealId = 'dealId';
 const facilityId = 'facilityId';
@@ -123,7 +128,7 @@ describe('postCheckYourAnswers', () => {
           makersName: `${mockUser.firstname} ${mockUser.surname}`,
           checkersName: `${mockChecker.firstname} ${mockChecker.surname}`,
           dateSubmittedByMaker: format(new Date(), DATE_FORMATS.DD_MMMM_YYYY),
-          portalUrl: 'https://www.google.com',
+          portalUrl: `${PORTAL_UI_URL}/login`,
           makersEmail: mockUser.email,
         },
       });

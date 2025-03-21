@@ -15,7 +15,7 @@ export const portalAmendmentToCheckerEmailVariables = () => ({
     makersName: 'mock maker',
     checkersName: 'mock checker',
     dateSubmittedByMaker: '4th April 2025',
-    portalUrl: 'https://www.google.com',
+    portalUrl: 'http://localhost:9000/login',
     makersEmail,
   },
 });
