@@ -13,9 +13,13 @@ export type PortalAmendmentSubmittedToCheckerEmailVariables = {
   bankInternalRefName: string;
   ukefDealId: string;
   ukefFacilityId: string;
-  recipientName: string;
+  makersName: string;
+  checkersName: string;
   dateEffectiveFrom: string;
   newCoverEndDate: string;
   newFacilityEndDate: string;
   newFacilityValue: string;
+  dateSubmittedByMaker: string;
+  portalUrl: string;
+  makersEmail: string;
 };

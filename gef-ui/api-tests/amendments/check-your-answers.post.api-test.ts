@@ -1,7 +1,7 @@
 import { Headers } from 'node-mocks-http';
 import { NextFunction, Request, Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { AnyObject, PORTAL_AMENDMENT_STATUS, ROLES } from '@ukef/dtfs2-common';
+import { AnyObject, PORTAL_AMENDMENT_STATUS, ROLES, aPortalSessionUser } from '@ukef/dtfs2-common';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
 import { createApi } from '../create-api';
@@ -25,10 +25,13 @@ const mockUpdateAmendmentStatus = jest.fn();
 const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
+const getUserDetailsMock = jest.fn();
 
 const dealId = '6597dffeb5ef5ff4267e5044';
 const facilityId = '6597dffeb5ef5ff4267e5045';
 const amendmentId = '6597dffeb5ef5ff4267e5046';
+
+const mockUser = aPortalSessionUser();
 
 const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.CHECK_YOUR_ANSWERS}`;
 
@@ -44,6 +47,7 @@ describe(`POST ${url}`, () => {
     jest.spyOn(api, 'getApplication').mockImplementation(getApplicationMock);
     jest.spyOn(api, 'getFacility').mockImplementation(getFacilityMock);
     jest.spyOn(api, 'getAmendment').mockImplementation(getAmendmentMock);
+    jest.spyOn(api, 'getUserDetails').mockImplementation(getUserDetailsMock);
 
     const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
       .withDealId(dealId)
@@ -56,6 +60,7 @@ describe(`POST ${url}`, () => {
     getAmendmentMock.mockResolvedValue(amendment);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getApplicationMock.mockResolvedValue(MOCK_BASIC_DEAL);
+    getUserDetailsMock.mockResolvedValue(mockUser);
   });
 
   afterAll(async () => {

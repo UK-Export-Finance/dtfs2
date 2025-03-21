@@ -20,7 +20,7 @@ export type PatchAmendmentStatusRequest = CustomExpressRequest<{
  */
 export const patchAmendmentStatus = async (req: PatchAmendmentStatusRequest, res: Response) => {
   const { facilityId, amendmentId } = req.params;
-  const { newStatus, sendToEmailAddress, emailVariables } = req.body;
+  const { newStatus, makersEmail, checkersEmail, emailVariables } = req.body;
 
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
@@ -30,7 +30,8 @@ export const patchAmendmentStatus = async (req: PatchAmendmentStatusRequest, res
       amendmentId,
       newStatus,
       auditDetails,
-      sendToEmailAddress,
+      makersEmail,
+      checkersEmail,
       emailVariables,
     });
 

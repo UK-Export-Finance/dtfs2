@@ -29,4 +29,5 @@ export type Deal = {
   additionalRefName: string | null;
   submissionType: DealSubmissionType;
   ukefDealId: string;
+  checkerId: string;
 };
