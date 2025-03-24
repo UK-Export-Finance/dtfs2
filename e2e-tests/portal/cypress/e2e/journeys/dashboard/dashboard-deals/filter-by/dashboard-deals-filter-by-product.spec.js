@@ -76,11 +76,10 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
     });
 
     it('should render only BSS deals', () => {
-      filters.showHideButton().click();
       // Check the length of rows after the filter is applied
       dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.BSS);
       // Check the type of the deal is BSS after the filter is applied
-      dashboardDeals.row.product(bssDealId).should('have.text', CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
+      cy.assertText(dashboardDeals.row.product(bssDealId), CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
     });
   });
 
@@ -139,7 +138,7 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
       // Check the length of rows after the filter is applied
       dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.GEF);
       // Check the type of the deal is GEF after the filter is applied
-      dashboardDeals.row.product(ALL_DEALS[0]._id).should('have.text', CONSTANTS.DEALS.DEAL_TYPE.GEF);
+      cy.assertText(dashboardDeals.row.product(ALL_DEALS[0]._id), CONSTANTS.DEALS.DEAL_TYPE.GEF);
     });
   });
 });
