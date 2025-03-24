@@ -18,10 +18,11 @@ context('Only allow authorised users to access admin pages', () => {
       });
     });
 
-    it('allows read only user with all bank access to view deal', () => {
+    it('should allow read only user with all bank access to view deal', () => {
+      const dealUrl = relative(`/contract/${bssDealId}`);
       cy.login(ADMIN);
-      cy.visit(relative(`/contract/${bssDealId}`));
-      cy.url().should('eq', relative(`/contract/${bssDealId}`));
+      cy.visit(dealUrl);
+      cy.url().should('eq', dealUrl);
     });
   });
 

@@ -17,10 +17,12 @@ context('A checker selects to return a deal to maker from the view-contract page
     cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
   });
 
-  it('The cancel button returns the user to the view-contract page.', () => {
+  it('should cancel and return the user to the view-contract page.', () => {
     // log in, visit a deal, select abandon
+    const dealUrl = relative(`/contract/${bssDealId}`);
     cy.login(BANK1_CHECKER1);
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(dealUrl);
+    cy.url().should('eq', dealUrl);
     cy.clickReturnToMakerButton();
 
     // cancel
@@ -31,7 +33,7 @@ context('A checker selects to return a deal to maker from the view-contract page
     cy.url().should('eq', relative(`/contract/${bssDealId}`));
   });
 
-  it('The Return to Maker button generates an error if no comment has been entered.', () => {
+  it('should return an error if no comment has been entered when the Return to Maker button is clicked.', () => {
     // log in, visit a deal, select abandon
     cy.login(BANK1_CHECKER1);
     cy.visit(relative(`/contract/${bssDealId}`));
@@ -45,7 +47,7 @@ context('A checker selects to return a deal to maker from the view-contract page
     contractReturnToMaker.expectError('Comment is required when returning a deal to maker.');
   });
 
-  it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /dashboard', () => {
+  it('should abandon the deal and take the user to /dashboard if a comment has been entered.', () => {
     // log in, visit a deal, select abandon
     cy.login(BANK1_CHECKER1);
     cy.visit(relative(`/contract/${bssDealId}`));
