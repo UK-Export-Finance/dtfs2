@@ -48,7 +48,9 @@ export class LoginController {
    * @returns - A promise that resolves when the operation is complete.
    */
   public static postSsoRedirect(req: CustomExpressRequest<{ reqBody: EntraIdAuthCodeRedirectResponseBody }>, res: Response) {
-    if (!isVerifiedPayload({ payload: req.body, template: ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA })) {
+    const { body: payload } = req;
+
+    if (!isVerifiedPayload({ payload, template: ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA })) {
       throw new InvalidPayloadError('Invalid payload from SSO redirect');
     }
 

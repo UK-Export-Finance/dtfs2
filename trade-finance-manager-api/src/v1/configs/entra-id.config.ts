@@ -37,7 +37,7 @@ export class EntraIdConfig {
 
     this.authorityMetadataUrl = `${authority}/v2.0/.well-known/openid-configuration`;
 
-    this.scopes = [`api://${ENTRA_ID_CLIENT_ID}/authentication`, 'user.read'];
+    this.scopes = [`api://${ENTRA_ID_CLIENT_ID}/SSO`, 'user.read'];
 
     this.redirectUri = ENTRA_ID_REDIRECT_URL;
   }
