@@ -10,19 +10,23 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 const filters = dashboardFilters;
 
 context('Dashboard Deals filters - filter by keyword', () => {
+  let bssDealId;
   const MOCK_KEYWORD = 'Special exporter';
 
   const ALL_DEALS = [];
 
   const EXPECTED_DEALS_LENGTH = {
     ALL_STATUSES: 2,
+    FILTERED_BY_KEYWORD: 1,
   };
 
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal();
+    cy.createBssEwcsDeal().then((dealId) => {
+      bssDealId = dealId;
+    });
     cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED, exporterCompanyName: MOCK_KEYWORD });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
@@ -82,24 +86,9 @@ context('Dashboard Deals filters - filter by keyword', () => {
     });
 
     it(`should render only deals that have the keyword ${MOCK_KEYWORD} in a field`, () => {
-      // Clear existing filters
-      filters.panel.selectedFilters.clearAllLink().click();
-      // Check the number of rows before applying any filter
-      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.ALL_STATUSES);
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.FILTERED_BY_KEYWORD);
 
-      filters.showHideButton().click();
-
-      const expectedLength = 1; // only 1x BSS/EWCS deal has MOCK_KEYWORD.
-
-      cy.keyboardInput(filters.panel.form.keyword.input(), MOCK_KEYWORD);
-
-      filters.panel.form.applyFiltersButton().click();
-
-      // Check the number of rows after applying the filter
-      dashboardDeals.rows().contains(MOCK_KEYWORD);
-
-      // Check the length of the rows
-      dashboardDeals.rows().should('have.length', expectedLength);
+      dashboardDeals.row.exporter(bssDealId).should('have.text', MOCK_KEYWORD);
     });
   });
 });

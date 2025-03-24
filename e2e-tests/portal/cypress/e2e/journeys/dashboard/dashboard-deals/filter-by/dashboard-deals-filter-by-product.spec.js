@@ -10,6 +10,7 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 const filters = dashboardFilters;
 
 context('Dashboard Deals filters - filter by dealType/product', () => {
+  let bssDealId;
   const ALL_DEALS = [];
 
   const EXPECTED_DEALS_LENGTH = {
@@ -21,7 +22,9 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.createBssEwcsDeal();
+    cy.createBssEwcsDeal().then((dealId) => {
+      bssDealId = dealId;
+    });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       ALL_DEALS.push(deal);
@@ -77,7 +80,7 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
       // Check the length of rows after the filter is applied
       dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.BSS);
       // Check the type of the deal is BSS after the filter is applied
-      dashboardDeals.rows().contains(CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
+      dashboardDeals.row.product(bssDealId).should('have.text', CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
     });
   });
 
@@ -133,11 +136,10 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
     });
 
     it('should render only GEF deals', () => {
-      filters.showHideButton().click();
       // Check the length of rows after the filter is applied
       dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.GEF);
       // Check the type of the deal is GEF after the filter is applied
-      dashboardDeals.rows().contains(CONSTANTS.DEALS.DEAL_TYPE.GEF);
+      dashboardDeals.row.product(ALL_DEALS[0]._id).should('have.text', CONSTANTS.DEALS.DEAL_TYPE.GEF);
     });
   });
 });
