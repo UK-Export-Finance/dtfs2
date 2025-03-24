@@ -718,10 +718,10 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
 /**
  * Update portal facility amendment status.
  * @param {Object} params
- * @param {string} params.amendmentId - the amendment id.
  * @param {string} params.facilityId - the facility id
- * @param {(import('@ukef/dtfs2-common').PortalAmendmentStatus)} params.newStatus - the facility id
+ * @param {string} params.amendmentId - the amendment id.
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - The audit details for the update.
+ * @param {(import('@ukef/dtfs2-common').PortalAmendmentStatus)} params.newStatus - the facility id
  * @param {string} params.makersEmail - The maker's email address to send the notification to
  * @param {string} params.checkersEmail - The checker's email address to send the notification to
  * @param {import('@ukef/dtfs2-common').PortalAmendmentSubmittedToCheckerEmailVariables} params.emailVariables - The email variables to send with the notification
