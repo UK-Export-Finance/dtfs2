@@ -1,8 +1,9 @@
+const { DEAL_SUBMISSION_TYPE, FACILITY_STAGE } = require('@ukef/dtfs2-common');
 const relative = require('../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const { dashboardDeals } = require('../../../../pages');
 const { dashboardFilters } = require('../../../../partials');
-const { BSS_DEAL_DRAFT, GEF_DEAL_DRAFT } = require('../../fixtures');
+const { GEF_DEAL_DRAFT } = require('../../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
@@ -13,20 +14,16 @@ context('Dashboard Deals filters - filter by keyword', () => {
 
   const ALL_DEALS = [];
 
-  const BSS_DEAL_SPECIAL_EXPORTER = {
-    ...BSS_DEAL_DRAFT,
-    exporter: {
-      companyName: MOCK_KEYWORD,
-    },
+  const EXPECTED_DEALS_LENGTH = {
+    ALL_STATUSES: 2,
   };
 
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEAL_SPECIAL_EXPORTER, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.createBssEwcsDeal();
+    cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED, exporterCompanyName: MOCK_KEYWORD });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
       ALL_DEALS.push(deal);
@@ -48,7 +45,7 @@ context('Dashboard Deals filters - filter by keyword', () => {
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
-    it('submits the filter and redirects to the dashboard', () => {
+    it('should submit the filter and redirect to the dashboard', () => {
       // apply filter
       cy.keyboardInput(filters.panel.form.keyword.input(), MOCK_KEYWORD);
       filters.panel.form.applyFiltersButton().click();
@@ -56,11 +53,11 @@ context('Dashboard Deals filters - filter by keyword', () => {
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
-    it('renders submitted keyword', () => {
+    it('should render submitted keyword', () => {
       filters.panel.form.keyword.input().should('have.value', MOCK_KEYWORD);
     });
 
-    it('renders the applied keyword in the `applied filters` section', () => {
+    it('should render the applied keyword in the `applied filters` section', () => {
       filters.panel.selectedFilters.container().should('be.visible');
       filters.panel.selectedFilters.list().should('be.visible');
 
@@ -77,20 +74,32 @@ context('Dashboard Deals filters - filter by keyword', () => {
       firstAppliedFilter.should('have.text', expectedText);
     });
 
-    it('renders the applied keyword in the `main container selected filters` section', () => {
+    it('should render the applied keyword in the `main container selected filters` section', () => {
       filters.mainContainer.selectedFilters.keyword(MOCK_KEYWORD).should('be.visible');
 
       const expectedText = `Remove this filter ${MOCK_KEYWORD}`;
       filters.mainContainer.selectedFilters.keyword(MOCK_KEYWORD).contains(expectedText);
     });
 
-    it(`renders only deals that have ${MOCK_KEYWORD} in a field`, () => {
-      const ALL_KEYWORD_DEALS = ALL_DEALS.filter(({ exporter }) => exporter.companyName === MOCK_KEYWORD);
-      dashboardDeals.rows().should('have.length', ALL_KEYWORD_DEALS.length);
+    it(`should render only deals that have the keyword ${MOCK_KEYWORD} in a field`, () => {
+      // Clear existing filters
+      filters.panel.selectedFilters.clearAllLink().click();
+      // Check the number of rows before applying any filter
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.ALL_STATUSES);
 
-      const firstDraftDeal = ALL_KEYWORD_DEALS[0];
+      filters.showHideButton().click();
 
-      dashboardDeals.row.exporter(firstDraftDeal._id).should('have.text', MOCK_KEYWORD);
+      const expectedLength = 1; // only 1x BSS/EWCS deal has MOCK_KEYWORD.
+
+      cy.keyboardInput(filters.panel.form.keyword.input(), MOCK_KEYWORD);
+
+      filters.panel.form.applyFiltersButton().click();
+
+      // Check the number of rows after applying the filter
+      dashboardDeals.rows().contains(MOCK_KEYWORD);
+
+      // Check the length of the rows
+      dashboardDeals.rows().should('have.length', expectedLength);
     });
   });
 });

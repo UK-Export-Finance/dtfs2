@@ -77,6 +77,8 @@ context('Dashboard Deals filters - filter by submissionType/noticeType', () => {
     });
 
     it('renders only MIA deals', () => {
+      dashboardDeals.rows().should('have.length', 1); // Expecting only one MIA deal
+
       dashboardDeals.rows().each((row) => {
         cy.wrap(row).contains(CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
       });
