@@ -209,6 +209,7 @@ services:
       - TZ
       - PORTAL_API_URL=http://portal-api:5001
       - EXTERNAL_API_URL=http://external-api:5002
+      - PORTAL_UI_URL
       - PORTAL_API_KEY
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
@@ -348,6 +349,7 @@ services:
       - TZ
       - PORTAL_API_URL=http://portal-api:5001
       - EXTERNAL_API_URL=http://external-api:5002
+      - PORTAL_UI_URL
       - REDIS_HOSTNAME=redis
       - SESSION_SECRET
       - AZURE_PORTAL_STORAGE_ACCOUNT

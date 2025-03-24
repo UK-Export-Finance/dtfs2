@@ -1,8 +1,13 @@
 import { format, fromUnixTime } from 'date-fns';
-import { PortalFacilityAmendmentWithUkefId, DATE_FORMATS, PortalSessionUser } from '@ukef/dtfs2-common';
+import dotenv from 'dotenv';
+import { PortalFacilityAmendmentWithUkefId, DATE_FORMATS, PortalSessionUser, now } from '@ukef/dtfs2-common';
 import { getCurrencySymbol } from '../facility-value/get-currency-symbol';
 import { Deal } from '../../../types/deal';
 import { Facility } from '../../../types/facility';
+
+dotenv.config();
+
+const { PORTAL_UI_URL } = process.env;
 
 /**
  * maps emailVariables to an email on amendment submission to checker
@@ -18,11 +23,13 @@ const mapSubmittedToCheckerEmailVariables = ({
   facility,
   amendment,
   user,
+  checker,
 }: {
   deal: Deal;
   facility: Facility;
   amendment: PortalFacilityAmendmentWithUkefId;
   user: PortalSessionUser;
+  checker: PortalSessionUser;
 }) => {
   const {
     ukefDealId,
@@ -59,8 +66,15 @@ const mapSubmittedToCheckerEmailVariables = ({
     formattedFacilityValue = `${currencySymbol}${value}`;
   }
 
-  const recipientName = `${user.firstname} ${user.surname}`;
-  const sendToEmailAddress = user.email;
+  const makersName = `${user.firstname} ${user.surname}`;
+  const makersEmail = user.email;
+
+  const checkersName = `${checker.firstname} ${checker.surname}`;
+  const checkersEmail = checker.email;
+
+  const dateSubmittedByMaker = format(now(), DATE_FORMATS.DD_MMMM_YYYY);
+
+  const portalUrl = `${PORTAL_UI_URL}/login`;
 
   return {
     ukefDealId,
@@ -71,8 +85,12 @@ const mapSubmittedToCheckerEmailVariables = ({
     formattedCoverEndDate,
     formattedFacilityEndDate,
     formattedFacilityValue,
-    recipientName,
-    sendToEmailAddress,
+    makersName,
+    makersEmail,
+    dateSubmittedByMaker,
+    checkersName,
+    checkersEmail,
+    portalUrl,
   };
 };
 
