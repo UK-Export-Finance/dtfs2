@@ -3,7 +3,6 @@ const { contract, contractReturnToMaker, contractComments } = require('../../../
 const { successMessage } = require('../../../partials');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
-// const twentyOneDeals = require('../../../../fixtures/deal-dashboard-data');
 
 const { ADMIN, BANK1_CHECKER1 } = MOCK_USERS;
 

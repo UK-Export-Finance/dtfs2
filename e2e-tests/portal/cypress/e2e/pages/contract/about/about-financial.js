@@ -5,7 +5,7 @@ const date = (prefix) => ({
 });
 
 const page = {
-  visit: (dealId) => cy.visit(`/contract/${dealId}/about/financial`),
+  visit: (deal) => cy.visit(`/contract/${deal._id}/about/financial`),
 
   title: () => cy.get('[data-cy="about"]'),
 
