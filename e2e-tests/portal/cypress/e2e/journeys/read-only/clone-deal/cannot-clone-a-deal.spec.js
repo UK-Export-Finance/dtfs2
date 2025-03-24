@@ -45,7 +45,7 @@ context('Clone a deal', () => {
 
   describe('when a read-only user creates a deal', () => {
     it('should have no "clone deal" link', () => {
-      cy.loginGoToDealPage(BANK1_READ_ONLY1, deal._id);
+      cy.loginGoToDealPage(BANK1_READ_ONLY1, deal);
       cy.url().should('eq', relative(`/contract/${deal._id}`));
       contract.cloneDealLink().should('not.exist');
     });

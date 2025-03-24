@@ -270,6 +270,7 @@ const fillOutDealDetails = ({ dealSubmissionType, facilityStage, exporterCompany
 /**
  * Initiates the creation of a BSS/EWCS deal via the UI.
  * This includes logging in, starting a new submission, and filling bank details.
+ * @returns {string} The deal ID of the created deal.
  */
 const createBssEwcsDeal = () => {
   cy.login(BANK1_MAKER1);

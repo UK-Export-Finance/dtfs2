@@ -20,7 +20,7 @@ context('A checker selects to return a deal to maker from the view-contract page
   it('The cancel button returns the user to the view-contract page.', () => {
     // log in, visit a deal, select abandon
     cy.login(BANK1_CHECKER1);
-    contract.visit(bssDealId);
+    cy.visit(relative(`/contract/${bssDealId}`));
     cy.clickReturnToMakerButton();
 
     // cancel
@@ -34,7 +34,7 @@ context('A checker selects to return a deal to maker from the view-contract page
   it('The Return to Maker button generates an error if no comment has been entered.', () => {
     // log in, visit a deal, select abandon
     cy.login(BANK1_CHECKER1);
-    contract.visit(bssDealId);
+    cy.visit(relative(`/contract/${bssDealId}`));
     cy.clickReturnToMakerButton();
 
     // submit without a comment
@@ -48,10 +48,10 @@ context('A checker selects to return a deal to maker from the view-contract page
   it('If a comment has been entered, the Abandon button Abandons the deal and takes the user to /dashboard', () => {
     // log in, visit a deal, select abandon
     cy.login(BANK1_CHECKER1);
-    contract.visit(bssDealId);
+    cy.visit(relative(`/contract/${bssDealId}`));
 
     contract.commentsTab().click();
-    contract.visit(bssDealId);
+    cy.visit(relative(`/contract/${bssDealId}`));
 
     cy.clickReturnToMakerButton();
 
@@ -70,7 +70,7 @@ context('A checker selects to return a deal to maker from the view-contract page
       });
 
     // visit the deal and confirm the updates have been made
-    contract.visit(bssDealId);
+    cy.visit(relative(`/contract/${bssDealId}`));
 
     cy.assertText(contract.status(), "Further Maker's input required");
 

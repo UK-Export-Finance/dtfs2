@@ -22,7 +22,7 @@ const MOCK_DEAL = {
 };
 
 const goToBondFinancialDetailsPage = (deal) => {
-  cy.loginGoToDealPage(BANK1_MAKER1, deal._id);
+  cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
   cy.clickAddBondButton();
   partials.taskListHeader.itemLink('financial-details').click();
@@ -43,7 +43,7 @@ context('Bond Financial Details', () => {
 
   describe('after submitting one form field and navigating back to `Bond Financial Details` page', () => {
     it('should render validation errors for all required fields', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal._id);
+      cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
       cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
@@ -70,7 +70,7 @@ context('Bond Financial Details', () => {
 
   describe('when changing the `risk margin fee` field', () => {
     it('should dynamically update the `Guarantee Fee Payable By Bank` value on blur', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal._id);
+      cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
       cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
@@ -97,7 +97,7 @@ context('Bond Financial Details', () => {
 
   describe('when changing the `bond value` or `covered percentage` field', () => {
     it('should dynamically update the `UKEF exposure` value on blur', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal._id);
+      cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
       cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
@@ -126,7 +126,7 @@ context('Bond Financial Details', () => {
   });
 
   it('should display the correct title for bond financial details', () => {
-    cy.loginGoToDealPage(BANK1_MAKER1, deal._id);
+    cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
     cy.clickAddBondButton();
     partials.taskListHeader.itemLink('financial-details').click();
@@ -135,7 +135,7 @@ context('Bond Financial Details', () => {
   });
 
   it('form submit of all required fields should render a `completed` status tag only for `Bond Financial Details` in task list header', () => {
-    cy.loginGoToDealPage(BANK1_MAKER1, deal._id);
+    cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
     cy.clickAddBondButton();
     partials.taskListHeader.itemLink('financial-details').click();
@@ -151,7 +151,7 @@ context('Bond Financial Details', () => {
 
   describe('When a user submits the `Bond Financial Details` form', () => {
     it('should progress to `Bond Fee Details` page and prepopulate form fields when returning back to `Bond Financial Details` page', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal._id);
+      cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
       cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
@@ -353,7 +353,7 @@ context('Bond Financial Details', () => {
 
   describe('When a user clicks `save and go back` button', () => {
     it('should save the form data, return to Deal page and repopulate form fields when returning back to `Bond Financial Details` page', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal._id);
+      cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
       cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();

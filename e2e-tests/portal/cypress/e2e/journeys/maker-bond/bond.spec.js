@@ -84,7 +84,7 @@ context('Add a Bond to a Deal', () => {
 
   describe('when a user submits a Bond form without completing any fields', () => {
     it('bond should display `Incomplete` status in Deal page', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal._id);
+      cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
       cy.clickAddBondButton();
 
@@ -157,7 +157,7 @@ context('Add a Bond to a Deal', () => {
     });
 
     it('should display a `completed` status tag for all Bond forms in task list header and a `check your answers` link', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal._id);
+      cy.loginGoToDealPage(BANK1_MAKER1, deal);
       cy.addBondToDeal();
       cy.url().should('include', '/check-your-answers');
 
@@ -171,7 +171,7 @@ context('Add a Bond to a Deal', () => {
     });
 
     it('should populate Deal page with the submitted bond, display `Completed` status and link to `Bond Details` page', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal._id);
+      cy.loginGoToDealPage(BANK1_MAKER1, deal);
       cy.addBondToDeal();
       cy.url().should('include', '/check-your-answers');
 
@@ -214,7 +214,7 @@ context('Add a Bond to a Deal', () => {
 
   describe('When a user clicks `save and go back` button in `Bond Preview` page', () => {
     it('should return to Deal page', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal._id);
+      cy.loginGoToDealPage(BANK1_MAKER1, deal);
       cy.addBondToDeal();
       cy.url().should('include', '/check-your-answers');
 

@@ -19,7 +19,8 @@ context('Only allow authorised users to access admin pages', () => {
     });
 
     it('allows read only user with all bank access to view deal', () => {
-      cy.loginGoToDealPage(ADMIN, bssDealId);
+      cy.login(ADMIN);
+      cy.visit(relative(`/contract/${bssDealId}`));
       cy.url().should('eq', relative(`/contract/${bssDealId}`));
     });
   });

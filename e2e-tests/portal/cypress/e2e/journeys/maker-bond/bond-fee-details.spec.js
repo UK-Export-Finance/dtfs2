@@ -18,7 +18,7 @@ const MOCK_DEAL = {
 };
 
 const goToBondFeeDetailsPage = (deal) => {
-  cy.loginGoToDealPage(BANK1_MAKER1, deal._id);
+  cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
   cy.clickAddBondButton();
   partials.taskListHeader.itemLink('fee-details').click();
@@ -75,7 +75,7 @@ context('Bond Fee Details', () => {
   });
 
   it('should display the correct title for bond fee details', () => {
-    cy.loginGoToDealPage(BANK1_MAKER1, deal._id);
+    cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
     cy.clickAddBondButton();
     partials.taskListHeader.itemLink('fee-details').click();
@@ -84,7 +84,7 @@ context('Bond Fee Details', () => {
   });
 
   it('form submit of all required fields should render a `completed` status tag only for `Bond Fee Details` in task list header', () => {
-    cy.loginGoToDealPage(BANK1_MAKER1, deal._id);
+    cy.loginGoToDealPage(BANK1_MAKER1, deal);
 
     cy.clickAddBondButton();
     partials.taskListHeader.itemLink('fee-details').click();
