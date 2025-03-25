@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 const escapeStringRegexp = require('escape-string-regexp');
 const { FACILITY_STAGE } = require('@ukef/dtfs2-common');
+const { ObjectId } = require('mongodb');
 
 /**
  * Objective:
@@ -60,13 +61,19 @@ const recursivelyReplaceEscapeOperators = (filters, result = {}) => {
     // This handles when there is an array -- ie in the case of AND and OR
     if (Array.isArray(filters[key])) {
       const newKeyName = getArrayKeyOperatorName(key);
-      if (!result[newKeyName]) {
-        result[newKeyName] = [];
+
+      if (newKeyName === 'dealIdsWithAmendmentsInProgress') {
+        result._id = { $in: filters[newKeyName].map((dealId) => new ObjectId(dealId)) };
+      } else {
+        if (!result[newKeyName]) {
+          result[newKeyName] = [];
+        }
+        filters[key].forEach((condition, i) => {
+          result[newKeyName][i] = {};
+          recursivelyReplaceEscapeOperators(condition, result[newKeyName][i]);
+        });
       }
-      filters[key].forEach((condition, i) => {
-        result[newKeyName][i] = {};
-        recursivelyReplaceEscapeOperators(condition, result[newKeyName][i]);
-      });
+
       // This handles nested objects ie {example: {REGEX: 'example'}}
     } else if (typeof filters[key] === 'object' && filters[key] !== null) {
       result[key] = {};

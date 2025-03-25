@@ -1,6 +1,6 @@
 const CONSTANTS = require('../../../constants');
 const CONTENT_STRINGS = require('../../../content-strings');
-const { getUserRoles, isSuperUser } = require('../../../helpers');
+const { getUserRoles, isSuperUser, getDealIdsWithAmendmentInprogress } = require('../../../helpers');
 const keywordQuery = require('./deals-filters-keyword-query');
 
 /**
@@ -12,7 +12,7 @@ const keywordQuery = require('./deals-filters-keyword-query');
  * @example ( 'true', [ dealType: ['BSS/EWCS'] ], { _id: '123', firstName: 'Mock' } )
  * @returns { AND: [ { 'bank.id': '9'} ], OR: [{ dealType: 'BSS/EWCS' }] }
  */
-const dashboardDealsFiltersQuery = (filters, user) => {
+const dashboardDealsFiltersQuery = async (filters, user, userToken) => {
   const { isMaker, isChecker } = getUserRoles(user.roles);
   let dashboardFilters = filters;
 
@@ -23,9 +23,12 @@ const dashboardDealsFiltersQuery = (filters, user) => {
   }
 
   if (isChecker && !isMaker) {
-    query.AND.push({
-      [CONSTANTS.FIELD_NAMES.DEAL.STATUS]: CONSTANTS.STATUS.DEAL.READY_FOR_APPROVAL,
-    });
+    const dealIdsWithAmendmentsInProgress = await getDealIdsWithAmendmentInprogress(userToken);
+    const dealIdsExist = dealIdsWithAmendmentsInProgress && dealIdsWithAmendmentsInProgress.length > 0;
+    const orQuery = {
+      OR: [{ [CONSTANTS.FIELD_NAMES.DEAL.STATUS]: CONSTANTS.STATUS.DEAL.READY_FOR_APPROVAL }, ...(dealIdsExist ? [{ dealIdsWithAmendmentsInProgress }] : [])],
+    };
+    query.AND.push(orQuery);
   }
   const filtered = [];
   /* eslint-disable no-unused-vars */

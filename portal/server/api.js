@@ -100,13 +100,12 @@ const resetPasswordFromToken = async (resetPwdToken, formData) => {
   }
 };
 
-const allDeals = async (start, pagesize, filters, token, sort, dealIds) => {
+const allDeals = async (start, pagesize, filters, token, sort) => {
   const payload = {
     start,
     pagesize,
     filters,
     sort,
-    dealIds,
   };
 
   const response = await axios({
