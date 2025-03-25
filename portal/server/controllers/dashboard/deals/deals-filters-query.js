@@ -1,3 +1,4 @@
+const { DEALIDS_AMENDMENTS_INPROGRESS } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../constants');
 const CONTENT_STRINGS = require('../../../content-strings');
 const { getUserRoles, isSuperUser, getDealIdsWithAmendmentInprogress } = require('../../../helpers');
@@ -6,11 +7,11 @@ const keywordQuery = require('./deals-filters-keyword-query');
 /**
  * Generates an array of objects to be sent to API (for DB query)
  *
- * @param {string} createdByYou flag
  * @param {Array} custom filters
  * @param {Object} user
- * @example ( 'true', [ dealType: ['BSS/EWCS'] ], { _id: '123', firstName: 'Mock' } )
- * @returns { AND: [ { 'bank.id': '9'} ], OR: [{ dealType: 'BSS/EWCS' }] }
+ * @param {string} userToken
+ * @example ([ dealType: ['BSS/EWCS'] ], { _id: '123', firstName: 'Mock' }, 'token') )
+ * @returns { AND: [ { 'bank.id': '9'} ], OR: [{ dealType: 'BSS/EWCS' }, dealIdsWithAmendmentsInProgress: [{dealId: 'dealId1'}]] }
  */
 const dashboardDealsFiltersQuery = async (filters, user, userToken) => {
   const { isMaker, isChecker } = getUserRoles(user.roles);
@@ -26,10 +27,15 @@ const dashboardDealsFiltersQuery = async (filters, user, userToken) => {
     const dealIdsWithAmendmentsInProgress = await getDealIdsWithAmendmentInprogress(userToken);
     const dealIdsExist = dealIdsWithAmendmentsInProgress && dealIdsWithAmendmentsInProgress.length > 0;
     const orQuery = {
-      OR: [{ [CONSTANTS.FIELD_NAMES.DEAL.STATUS]: CONSTANTS.STATUS.DEAL.READY_FOR_APPROVAL }, ...(dealIdsExist ? [{ dealIdsWithAmendmentsInProgress }] : [])],
+      OR: [
+        { [CONSTANTS.FIELD_NAMES.DEAL.STATUS]: CONSTANTS.STATUS.DEAL.READY_FOR_APPROVAL },
+        ...(dealIdsExist ? [{ [DEALIDS_AMENDMENTS_INPROGRESS]: dealIdsWithAmendmentsInProgress }] : []),
+      ],
     };
+
     query.AND.push(orQuery);
   }
+
   const filtered = [];
   /* eslint-disable no-unused-vars */
   // eslint-disable-next-line no-restricted-syntax

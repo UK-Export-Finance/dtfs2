@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { when } = require('jest-when');
-const { HEADERS, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
+const { HEADERS, PORTAL_LOGIN_STATUS, PORTAL_AMENDMENT_SUBMITTED_STATUSES } = require('@ukef/dtfs2-common');
 const api = require('./api');
 
 jest.mock('axios');
@@ -91,4 +91,56 @@ describe('api.loginWithSignInLink', () => {
   });
 });
 
-describe('api.getAllAmendments', () => {});
+describe('api.getAllAmendments', () => {
+  const userToken = 'test-token';
+  const mockResponseData = [
+    { dealId: 'deal1', amendmentId: 'amendment1' },
+    { dealId: 'deal2', amendmentId: 'amendment2' },
+  ];
+
+  it('should return all submitted amendments when the API call is successful', async () => {
+    when(axios)
+      .calledWith({
+        method: 'get',
+        url: `${PORTAL_API_URL}/v1/gef/facilities/amendments`,
+        headers: {
+          Authorization: userToken,
+          [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+        },
+        params: { statuses: PORTAL_AMENDMENT_SUBMITTED_STATUSES },
+      })
+      .mockResolvedValue({ data: mockResponseData });
+
+    const result = await api.getAllAmendments({ statuses: PORTAL_AMENDMENT_SUBMITTED_STATUSES, userToken });
+
+    expect(result).toEqual(mockResponseData);
+  });
+
+  it('should throw an error when the API call fails', async () => {
+    const error = new Error('API call failed');
+    axios.mockRejectedValueOnce(error);
+
+    const getAllAmendmentsPromise = api.getAllAmendments({ statuses: PORTAL_AMENDMENT_SUBMITTED_STATUSES, userToken });
+
+    await expect(getAllAmendmentsPromise).rejects.toThrow('API call failed');
+  });
+
+  it('should return all amendments when statuses are an empty array', async () => {
+    const emptyStatuses = [];
+    when(axios)
+      .calledWith({
+        method: 'get',
+        url: `${PORTAL_API_URL}/v1/gef/facilities/amendments`,
+        headers: {
+          Authorization: userToken,
+          [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+        },
+        params: { statuses: emptyStatuses },
+      })
+      .mockResolvedValue({ data: mockResponseData });
+
+    const result = await api.getAllAmendments({ statuses: emptyStatuses, userToken });
+
+    expect(result).toEqual(mockResponseData);
+  });
+});

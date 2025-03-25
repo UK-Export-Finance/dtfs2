@@ -3,6 +3,7 @@ const api = require('../api');
 
 /**
  * Retrieves deal IDs that have amendments in progress.
+ * @param {string} userToken - A valid user token.
  * @returns {Promise<Array<string>>} A promise that resolves to an array of deal IDs with amendments in progress.
  */
 const getDealIdsWithAmendmentInprogress = async (userToken) => {
@@ -11,7 +12,7 @@ const getDealIdsWithAmendmentInprogress = async (userToken) => {
     const dealIds = amendments.map((amendment) => amendment.dealId);
     return dealIds;
   } catch (error) {
-    console.error('Failed to get all amendments in progress:', error);
+    console.error('Failed to get all amendments in progress: %o', error);
     throw new Error(error);
   }
 };
