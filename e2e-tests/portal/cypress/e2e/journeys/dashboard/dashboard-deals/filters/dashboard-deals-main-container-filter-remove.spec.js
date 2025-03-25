@@ -11,17 +11,13 @@ const filters = dashboardFilters;
 const EXPECTED_DEALS_LENGTH = 2;
 
 context('Dashboard Deals - main container selected filters - remove a filter', () => {
-  const ALL_DEALS = [];
-
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
     cy.createBssEwcsDeal();
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1);
 
     cy.login(BANK1_MAKER1);
     dashboardDeals.visit();

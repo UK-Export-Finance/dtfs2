@@ -19,8 +19,6 @@ const EXPECTED_DEALS_LENGTH_BY_STATUS = {
 };
 
 context('Dashboard Deals filters - filter by status', () => {
-  const ALL_DEALS = [];
-
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
@@ -28,9 +26,7 @@ context('Dashboard Deals filters - filter by status', () => {
     cy.createBssEwcsDeal();
     cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1);
   });
 
   describe('Draft', () => {

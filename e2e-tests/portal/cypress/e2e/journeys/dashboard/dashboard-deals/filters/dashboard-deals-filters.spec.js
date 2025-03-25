@@ -13,17 +13,13 @@ const EXPECTED_DEALS_LENGTH = {
 };
 
 context('Dashboard Deals filters', () => {
-  const ALL_DEALS = [];
-
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
     cy.createBssEwcsDeal();
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1);
 
     cy.login(BANK1_MAKER1);
   });
