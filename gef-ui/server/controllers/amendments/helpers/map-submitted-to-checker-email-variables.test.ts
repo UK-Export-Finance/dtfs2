@@ -1,4 +1,5 @@
 import { format, fromUnixTime } from 'date-fns';
+import dotenv from 'dotenv';
 import { DATE_FORMATS, DEAL_SUBMISSION_TYPE, DEAL_STATUS, aPortalSessionUser, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { getCurrencySymbol } from '../facility-value/get-currency-symbol';
 import { Deal } from '../../../types/deal';
@@ -7,19 +8,34 @@ import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment.ts';
 
+dotenv.config();
+
+const { PORTAL_UI_URL } = process.env;
+
 const dealId = 'dealId';
 const facilityId = 'facilityId';
 const amendmentId = 'amendmentId';
 
 const mockUser = aPortalSessionUser();
+
+const mockChecker = {
+  ...mockUser,
+  firstname: 'checkerFirst',
+  surname: 'checkerLast',
+  email: 'checker@ukexportfinance.gov.uk',
+};
+
 const facilityValue = 12345;
 
 const effectiveDateWithoutMs = Number(new Date()) / 1000;
 const coverEndDate = Number(new Date());
 const facilityEndDate = new Date();
+const formattedNow = format(new Date(), DATE_FORMATS.DD_MMMM_YYYY);
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
 const mockFacilityDetails = MOCK_ISSUED_FACILITY.details;
+
+const portalUrl = `${PORTAL_UI_URL}/login`;
 
 describe('mapSubmittedToCheckerEmailVariables', () => {
   describe('when an amendment has all types of amendments', () => {
@@ -40,7 +56,13 @@ describe('mapSubmittedToCheckerEmailVariables', () => {
         .build();
 
       // Act
-      const result = mapSubmittedToCheckerEmailVariables({ deal: mockDeal, facility: mockFacilityDetails, amendment: amendmentAllAmendments, user: mockUser });
+      const result = mapSubmittedToCheckerEmailVariables({
+        deal: mockDeal,
+        facility: mockFacilityDetails,
+        amendment: amendmentAllAmendments,
+        user: mockUser,
+        checker: mockChecker,
+      });
 
       // Assert
       const expected = {
@@ -52,8 +74,12 @@ describe('mapSubmittedToCheckerEmailVariables', () => {
         formattedCoverEndDate: format(coverEndDate, DATE_FORMATS.DD_MMMM_YYYY),
         formattedFacilityEndDate: format(facilityEndDate, DATE_FORMATS.DD_MMMM_YYYY),
         formattedFacilityValue: `${getCurrencySymbol(mockFacilityDetails.currency!.id)}${facilityValue}`,
-        recipientName: `${mockUser.firstname} ${mockUser.surname}`,
-        sendToEmailAddress: mockUser.email,
+        makersName: `${mockUser.firstname} ${mockUser.surname}`,
+        makersEmail: mockUser.email,
+        checkersName: `${mockChecker.firstname} ${mockChecker.surname}`,
+        checkersEmail: mockChecker.email,
+        portalUrl,
+        dateSubmittedByMaker: formattedNow,
       };
 
       expect(result).toEqual(expected);
@@ -76,7 +102,13 @@ describe('mapSubmittedToCheckerEmailVariables', () => {
         .build();
 
       // Act
-      const result = mapSubmittedToCheckerEmailVariables({ deal: mockDeal, facility: mockFacilityDetails, amendment: amendmentNoDates, user: mockUser });
+      const result = mapSubmittedToCheckerEmailVariables({
+        deal: mockDeal,
+        facility: mockFacilityDetails,
+        amendment: amendmentNoDates,
+        user: mockUser,
+        checker: mockChecker,
+      });
 
       // Assert
       const expected = {
@@ -88,8 +120,12 @@ describe('mapSubmittedToCheckerEmailVariables', () => {
         formattedCoverEndDate: '-',
         formattedFacilityEndDate: '-',
         formattedFacilityValue: `${getCurrencySymbol(mockFacilityDetails.currency!.id)}${facilityValue}`,
-        recipientName: `${mockUser.firstname} ${mockUser.surname}`,
-        sendToEmailAddress: mockUser.email,
+        makersName: `${mockUser.firstname} ${mockUser.surname}`,
+        makersEmail: mockUser.email,
+        checkersName: `${mockChecker.firstname} ${mockChecker.surname}`,
+        checkersEmail: mockChecker.email,
+        portalUrl,
+        dateSubmittedByMaker: formattedNow,
       };
 
       expect(result).toEqual(expected);
@@ -113,7 +149,13 @@ describe('mapSubmittedToCheckerEmailVariables', () => {
         .build();
 
       // Act
-      const result = mapSubmittedToCheckerEmailVariables({ deal: mockDeal, facility: mockFacilityDetails, amendment: amendmentDatesNoValue, user: mockUser });
+      const result = mapSubmittedToCheckerEmailVariables({
+        deal: mockDeal,
+        facility: mockFacilityDetails,
+        amendment: amendmentDatesNoValue,
+        user: mockUser,
+        checker: mockChecker,
+      });
 
       // Assert
       const expected = {
@@ -125,8 +167,12 @@ describe('mapSubmittedToCheckerEmailVariables', () => {
         formattedCoverEndDate: format(coverEndDate, DATE_FORMATS.DD_MMMM_YYYY),
         formattedFacilityEndDate: format(facilityEndDate, DATE_FORMATS.DD_MMMM_YYYY),
         formattedFacilityValue: '-',
-        recipientName: `${mockUser.firstname} ${mockUser.surname}`,
-        sendToEmailAddress: mockUser.email,
+        makersName: `${mockUser.firstname} ${mockUser.surname}`,
+        makersEmail: mockUser.email,
+        checkersName: `${mockChecker.firstname} ${mockChecker.surname}`,
+        checkersEmail: mockChecker.email,
+        portalUrl,
+        dateSubmittedByMaker: formattedNow,
       };
 
       expect(result).toEqual(expected);
@@ -147,7 +193,13 @@ describe('mapSubmittedToCheckerEmailVariables', () => {
         .withEffectiveDate(effectiveDateWithoutMs)
         .build();
       // Act
-      const result = mapSubmittedToCheckerEmailVariables({ deal: mockDeal, facility: mockFacilityDetails, amendment: amendmentDateNoValue, user: mockUser });
+      const result = mapSubmittedToCheckerEmailVariables({
+        deal: mockDeal,
+        facility: mockFacilityDetails,
+        amendment: amendmentDateNoValue,
+        user: mockUser,
+        checker: mockChecker,
+      });
 
       // Assert
       const expected = {
@@ -159,8 +211,12 @@ describe('mapSubmittedToCheckerEmailVariables', () => {
         formattedCoverEndDate: format(coverEndDate, DATE_FORMATS.DD_MMMM_YYYY),
         formattedFacilityEndDate: '-',
         formattedFacilityValue: '-',
-        recipientName: `${mockUser.firstname} ${mockUser.surname}`,
-        sendToEmailAddress: mockUser.email,
+        makersName: `${mockUser.firstname} ${mockUser.surname}`,
+        makersEmail: mockUser.email,
+        checkersName: `${mockChecker.firstname} ${mockChecker.surname}`,
+        checkersEmail: mockChecker.email,
+        portalUrl,
+        dateSubmittedByMaker: formattedNow,
       };
 
       expect(result).toEqual(expected);
@@ -177,7 +233,13 @@ describe('mapSubmittedToCheckerEmailVariables', () => {
         .withStatus(PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL)
         .build();
       // Act
-      const result = mapSubmittedToCheckerEmailVariables({ deal: mockDeal, facility: mockFacilityDetails, amendment: amendmentDateNoValue, user: mockUser });
+      const result = mapSubmittedToCheckerEmailVariables({
+        deal: mockDeal,
+        facility: mockFacilityDetails,
+        amendment: amendmentDateNoValue,
+        user: mockUser,
+        checker: mockChecker,
+      });
 
       // Assert
       const expected = {
@@ -189,8 +251,12 @@ describe('mapSubmittedToCheckerEmailVariables', () => {
         formattedCoverEndDate: '-',
         formattedFacilityEndDate: '-',
         formattedFacilityValue: '-',
-        recipientName: `${mockUser.firstname} ${mockUser.surname}`,
-        sendToEmailAddress: mockUser.email,
+        makersName: `${mockUser.firstname} ${mockUser.surname}`,
+        makersEmail: mockUser.email,
+        checkersName: `${mockChecker.firstname} ${mockChecker.surname}`,
+        checkersEmail: mockChecker.email,
+        portalUrl,
+        dateSubmittedByMaker: formattedNow,
       };
 
       expect(result).toEqual(expected);
