@@ -2,26 +2,24 @@ const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../../fixtures/constants');
 const { dashboardDeals } = require('../../../../pages');
 const { dashboardFilters, dashboardSubNavigation } = require('../../../../partials');
-const { BSS_DEAL_DRAFT, GEF_DEAL_DRAFT } = require('../../fixtures');
+const { GEF_DEAL_DRAFT } = require('../../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
-context('Dashboard Deals filters', () => {
-  const ALL_DEALS = [];
+const EXPECTED_DEALS_LENGTH = {
+  ALL_STATUSES: 2,
+};
 
+context('Dashboard Deals filters', () => {
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.createBssEwcsDeal();
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1);
 
     cy.login(BANK1_MAKER1);
   });
@@ -35,12 +33,12 @@ context('Dashboard Deals filters', () => {
   });
 
   describe('by default', () => {
-    it('renders all deals', () => {
+    it('should render all deals', () => {
       dashboardDeals.rows().should('be.visible');
-      dashboardDeals.rows().should('have.length', ALL_DEALS.length);
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.ALL_STATUSES);
     });
 
-    it('hides filters and renders `show filter` button', () => {
+    it('should hide filters and render `show filter` button', () => {
       // toggle to show filters (hidden by default)
       filters.showHideButton().click();
 
@@ -52,29 +50,29 @@ context('Dashboard Deals filters', () => {
   });
 
   describe('clicking `show filter` button', () => {
-    it('renders all filters container', () => {
+    it('should render all filters container', () => {
       filters.panel.container().should('be.visible');
     });
 
-    it('changes show/hide button text', () => {
+    it('should change show/hide button text', () => {
       filters.showHideButton().should('be.visible');
       filters.showHideButton().should('have.text', 'Hide filter');
     });
 
-    it('renders `apply filters` button', () => {
+    it('should render `apply filters` button', () => {
       filters.panel.form.applyFiltersButton().should('be.visible');
       filters.panel.form.applyFiltersButton().contains('Apply filters');
     });
   });
 
   describe('renders all filters empty/unchecked by default', () => {
-    it('keyword', () => {
+    it('should render keyword filter', () => {
       filters.panel.form.keyword.label().contains('Keyword');
       filters.panel.form.keyword.input().should('be.visible');
       filters.panel.form.keyword.input().should('have.value', '');
     });
 
-    it('product/dealType', () => {
+    it('should render product/dealType', () => {
       dashboardDeals.filters.panel.form.dealType.bssEwcs.label().contains(CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
       dashboardDeals.filters.panel.form.dealType.bssEwcs.checkbox().should('exist');
       dashboardDeals.filters.panel.form.dealType.bssEwcs.checkbox().should('not.be.checked');
@@ -84,7 +82,7 @@ context('Dashboard Deals filters', () => {
       dashboardDeals.filters.panel.form.dealType.gef.checkbox().should('not.be.checked');
     });
 
-    it('submissionType/notice type', () => {
+    it('should render submissionType/notice type', () => {
       // AIN
       dashboardDeals.filters.panel.form.submissionType.AIN.label().contains(CONSTANTS.DEALS.SUBMISSION_TYPE.AIN);
       dashboardDeals.filters.panel.form.submissionType.AIN.checkbox().should('exist');
@@ -101,7 +99,7 @@ context('Dashboard Deals filters', () => {
       dashboardDeals.filters.panel.form.submissionType.MIN.checkbox().should('not.be.checked');
     });
 
-    it('status', () => {
+    it('should render status filter', () => {
       // all statuses
       dashboardDeals.filters.panel.form.status.all.label().contains('All statuses');
       dashboardDeals.filters.panel.form.status.all.checkbox().should('exist');
@@ -158,7 +156,7 @@ context('Dashboard Deals filters', () => {
       dashboardDeals.filters.panel.form.status.abandoned.checkbox().should('not.be.checked');
     });
 
-    it('contains the correct aria-label for no deal filters selected', () => {
+    it('should contain the correct aria-label for no deal filters selected', () => {
       dashboardSubNavigation
         .deals()
         .invoke('attr', 'aria-label')
