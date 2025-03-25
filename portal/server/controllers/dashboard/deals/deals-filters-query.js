@@ -25,12 +25,9 @@ const dashboardDealsFiltersQuery = async (filters, user, userToken) => {
 
   if (isChecker && !isMaker) {
     const dealIdsWithAmendmentsInProgress = await getDealIdsWithAmendmentInprogress(userToken);
-    const dealIdsExist = dealIdsWithAmendmentsInProgress && dealIdsWithAmendmentsInProgress.length > 0;
+    const dealIdsQuery = dealIdsWithAmendmentsInProgress?.length ? [{ [DEALIDS_AMENDMENTS_INPROGRESS]: dealIdsWithAmendmentsInProgress }] : [];
     const orQuery = {
-      OR: [
-        { [CONSTANTS.FIELD_NAMES.DEAL.STATUS]: CONSTANTS.STATUS.DEAL.READY_FOR_APPROVAL },
-        ...(dealIdsExist ? [{ [DEALIDS_AMENDMENTS_INPROGRESS]: dealIdsWithAmendmentsInProgress }] : []),
-      ],
+      OR: [{ [CONSTANTS.FIELD_NAMES.DEAL.STATUS]: CONSTANTS.STATUS.DEAL.READY_FOR_APPROVAL }, ...dealIdsQuery],
     };
 
     query.AND.push(orQuery);

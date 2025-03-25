@@ -12,7 +12,7 @@ const getDealIdsWithAmendmentInprogress = async (userToken) => {
     const dealIds = amendments.map((amendment) => amendment.dealId);
     return dealIds;
   } catch (error) {
-    console.error('Failed to get all amendments in progress: %o', error);
+    console.error('Failed to get all amendments in progress %o', error);
     throw new Error(error);
   }
 };
