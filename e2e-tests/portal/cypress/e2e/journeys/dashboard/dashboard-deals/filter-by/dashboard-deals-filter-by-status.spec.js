@@ -85,6 +85,8 @@ context('Dashboard Deals filters - filter by status', () => {
     });
 
     it('should render only draft deals', () => {
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH_BY_STATUS.DRAFT);
+
       dashboardDeals.rows().each((row) => {
         cy.wrap(row).contains(CONSTANTS.DEALS.DEAL_STATUS.DRAFT);
       });
