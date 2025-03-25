@@ -10,6 +10,7 @@ const page = {
   supplierSearchCompaniesHouse: () => cy.get('[data-cy="DoSearch-supplier-companies-house-registration-number"]'),
   supplierName: () => cy.get('[data-cy="supplier-name"]'),
   supplierAddress: () => address('supplier-address'),
+  supplierPostCode: () => cy.get('[data-cy="supplier-address-postcode"]'),
   supplierCorrespondenceAddressSame: () => cy.get('[data-cy="supplier-correspondence-address-is-different-false"]'),
   supplierCorrespondenceAddressDifferent: () => cy.get('[data-cy="supplier-correspondence-address-is-different-true"]'),
   supplierCorrespondenceAddress: () => address('supplier-correspondence-address'),
