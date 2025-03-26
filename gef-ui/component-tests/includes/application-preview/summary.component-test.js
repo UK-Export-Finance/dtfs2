@@ -6,7 +6,6 @@ const render = pageRenderer(page);
 
 const params = {
   portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
-  isPortalAmendmentInProgress: true,
 };
 
 describe(page, () => {
@@ -15,7 +14,7 @@ describe(page, () => {
   describe('Amendment status', () => {
     const amendmentStatus = `[data-cy="amendment-status"]`;
 
-    it('should be rendered when portalAmendmentStatus is submitted for review', () => {
+    it('should be rendered when portalAmendmentStatus is ready for checker approval', () => {
       wrapper = render(params);
 
       wrapper.expectElement(amendmentStatus).toExist();
@@ -24,7 +23,6 @@ describe(page, () => {
 
     it('should not be rendered when portalAmendmentStatus is null', () => {
       params.portalAmendmentStatus = null;
-      params.isPortalAmendmentInProgress = false;
       wrapper = render({
         ...params,
       });

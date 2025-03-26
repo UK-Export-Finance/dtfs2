@@ -13,6 +13,7 @@ const params = {
   facilities: {
     data: [issuedCashFacility, unissuedCashFacility, issuedContingentFacility, unissuedContingentFacility],
   },
+  userRoles: ['maker'],
 };
 
 describe(page, () => {
@@ -72,12 +73,20 @@ describe(page, () => {
 
   describe('Amendment details', () => {
     issuedCashFacility.isFacilityWithAmendmentInProgress = true;
-    const amendmentsInProgress = `[data-cy="amendments-in-progress"]`;
+    const amendmentInProgress = `[data-cy="amendment-in-progress"]`;
 
-    it('should be rendered when portalAmendment is in progress', () => {
+    it('should be rendered when portalAmendment is in progress and login as a maker', () => {
       wrapper = render(params);
 
-      wrapper.expectElement(amendmentsInProgress).toExist();
+      wrapper.expectElement(amendmentInProgress).toExist();
+      wrapper.expectText(amendmentInProgress).toRead('See details');
+    });
+
+    it('should be rendered when portalAmendment is in progress and login as a checker', () => {
+      wrapper = render({ ...params, userRoles: ['checker'] });
+
+      wrapper.expectElement(amendmentInProgress).toExist();
+      wrapper.expectText(amendmentInProgress).toRead('Check amendment details before submitting to UKEF');
     });
 
     it('should not be rendered when portalAmendment is not in progress', () => {
@@ -86,7 +95,7 @@ describe(page, () => {
         ...params,
       });
 
-      wrapper.expectElement(amendmentsInProgress).notToExist();
+      wrapper.expectElement(amendmentInProgress).notToExist();
     });
   });
 });

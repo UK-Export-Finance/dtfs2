@@ -15,7 +15,7 @@
   </div>
 {% endif %}
 
-{% if isPortalAmendmentInProgress %}
+{% if (portalAmendmentStatus === "Ready for Checker\'s approval") or (portalAmendmentStatus === "Further Maker\'s input required")%}
   {% set portalAmendmentStatusTagClass = 'govuk-tag--yellow' %}
 {% else %}
   {% set portalAmendmentStatusTagClass = 'govuk-tag--blue' %}

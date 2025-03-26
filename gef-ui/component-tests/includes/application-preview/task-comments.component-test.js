@@ -7,8 +7,8 @@ const render = pageRenderer(page);
 const params = {
   displayComments: true,
   portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
-  isPortalAmendmentInProgress: true,
   dealId: '123',
+  userRoles: ['maker'],
 };
 
 describe(page, () => {
@@ -18,7 +18,7 @@ describe(page, () => {
     const amendmentDetailsHeader = `[data-cy="amendment-details-header"]`;
     const amendmentDetails = `[data-cy="amendment-details"]`;
 
-    it('should be rendered when portalAmendmentStatus is submitted for review', () => {
+    it('should be rendered when portalAmendmentStatus is submitted for review and login as a maker', () => {
       wrapper = render(params);
 
       wrapper.expectElement(amendmentDetailsHeader).toExist();
@@ -27,9 +27,17 @@ describe(page, () => {
       wrapper.expectText(amendmentDetails).toRead('Amendment details');
     });
 
+    it('should be rendered when portalAmendmentStatus is submitted for review and login as a checker', () => {
+      wrapper = render({ ...params, userRoles: ['checker'] });
+
+      wrapper.expectElement(amendmentDetailsHeader).toExist();
+      wrapper.expectText(amendmentDetailsHeader).toRead(params.portalAmendmentStatus);
+      wrapper.expectElement(amendmentDetails).toExist();
+      wrapper.expectText(amendmentDetails).toRead('Check amendment details before submitting to UKEF');
+    });
+
     it('should not be rendered when portalAmendmentStatus is null', () => {
       params.portalAmendmentStatus = null;
-      params.isPortalAmendmentInProgress = false;
       wrapper = render({
         ...params,
       });

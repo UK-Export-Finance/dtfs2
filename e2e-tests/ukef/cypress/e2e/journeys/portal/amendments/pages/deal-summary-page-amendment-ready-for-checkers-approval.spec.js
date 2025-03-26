@@ -5,7 +5,7 @@ import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/ge
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { applicationPreview, applicationStatusBanner } from '../../../../../../../gef/cypress/e2e/pages';
 
-const { BANK1_MAKER1 } = MOCK_USERS;
+const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 context("Amendments ready for checker's approval - Deal summary page", () => {
   /**
@@ -43,31 +43,63 @@ context("Amendments ready for checker's approval - Deal summary page", () => {
     });
   });
 
-  after(() => {
-    cy.clearCookies();
-    cy.clearSessionCookies();
+  describe('when user login as a Maker', () => {
+    beforeEach(() => {
+      cy.clearSessionCookies();
+      cy.login(BANK1_MAKER1);
+      cy.visit(relative(`/gef/application-details/${dealId}`));
+    });
+
+    after(() => {
+      cy.clearCookies();
+      cy.clearSessionCookies();
+    });
+
+    it('should display the Amendment status on header', () => {
+      cy.assertText(applicationStatusBanner.bannerAmendmentStatus(), PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL);
+    });
+
+    it('should display the "Amendement details" link in the notification banner', () => {
+      cy.assertText(applicationPreview.amendmentDetailsHeader(), PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL);
+      const expectedHref = `/gef/application-details/${dealId}/amendment-details`;
+      applicationPreview.amendmentDetailsLink().should('have.attr', 'href', expectedHref);
+      cy.assertText(applicationPreview.amendmentDetailsLink(), 'Amendment details');
+    });
+
+    it('should display "Amendment in progress: See details" link in the facility section', () => {
+      const expectedHref = `/gef/application-details/${dealId}/amendment-details`;
+      applicationPreview.amendmentInProgress().should('have.attr', 'href', expectedHref);
+      cy.assertText(applicationPreview.amendmentInProgress(), 'See details');
+    });
   });
 
-  beforeEach(() => {
-    cy.clearSessionCookies();
-    cy.login(BANK1_MAKER1);
-    cy.visit(relative(`/gef/application-details/${dealId}`));
-  });
+  describe('when user login as a Checker', () => {
+    beforeEach(() => {
+      cy.clearSessionCookies();
+      cy.login(BANK1_CHECKER1);
+      cy.visit(relative(`/gef/application-details/${dealId}`));
+    });
 
-  it('should display the Amendment status on header', () => {
-    cy.assertText(applicationStatusBanner.bannerAmendmentStatus(), PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL);
-  });
+    after(() => {
+      cy.clearCookies();
+      cy.clearSessionCookies();
+    });
 
-  it('should display the "Amendement details" link in the notification banner', () => {
-    cy.assertText(applicationPreview.amendmentDetailsHeader(), PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL);
-    const expectedHref = `/gef/application-details/${dealId}/amendment-details`;
-    applicationPreview.amendmentDetailsLink().should('have.attr', 'href', expectedHref);
-    cy.assertText(applicationPreview.amendmentDetailsLink(), 'Amendment details');
-  });
+    it('should display the Amendment status on header', () => {
+      cy.assertText(applicationStatusBanner.bannerAmendmentStatus(), PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL);
+    });
 
-  it('should display "Amendment in progress: See details" link in the facility section', () => {
-    const expectedHref = `/gef/application-details/${dealId}/amendment-details`;
-    applicationPreview.amendmentsInProgress().should('have.attr', 'href', expectedHref);
-    cy.assertText(applicationPreview.amendmentsInProgress(), 'See details');
+    it('should display the "Check amendment details before submitting to UKEF" link in the notification banner', () => {
+      cy.assertText(applicationPreview.amendmentDetailsHeader(), PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL);
+      const expectedHref = `/gef/application-details/${dealId}/amendment-details`;
+      applicationPreview.amendmentDetailsLink().should('have.attr', 'href', expectedHref);
+      cy.assertText(applicationPreview.amendmentDetailsLink(), 'Check amendment details before submitting to UKEF');
+    });
+
+    it('should display "Amendment in progress: Check amendment details before submitting to UKEF" link in the facility section', () => {
+      const expectedHref = `/gef/application-details/${dealId}/amendment-details`;
+      applicationPreview.amendmentInProgress().should('have.attr', 'href', expectedHref);
+      cy.assertText(applicationPreview.amendmentInProgress(), 'Check amendment details before submitting to UKEF');
+    });
   });
 });
