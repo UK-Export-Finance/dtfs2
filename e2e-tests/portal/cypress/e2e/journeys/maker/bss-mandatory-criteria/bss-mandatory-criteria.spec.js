@@ -1,21 +1,32 @@
+import { DEAL_SUBMISSION_TYPE, FACILITY_STAGE } from '@ukef/dtfs2-common';
+
 const pages = require('../../../pages');
 const partials = require('../../../partials');
-const dealFullyCompleted = require('../fixtures/dealFullyCompleted');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
 
-const { BANK1_MAKER1 } = MOCK_USERS;
+const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 context('BSS Mandatory criteria: Check deal details page', () => {
-  let deal;
+  let bssDealId;
+
+  const dummyDeal = {
+    bankInternalRefName: '9',
+  };
   beforeEach(() => {
-    cy.insertOneDeal(dealFullyCompleted, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
+    cy.createBssEwcsDeal().then((dealId) => {
+      bssDealId = dealId;
     });
+    cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
+  });
+
+  after(() => {
+    cy.deleteDeals(ADMIN);
   });
   it('should render the mandatory criteria checklist when a new deal is created', () => {
     cy.login(BANK1_MAKER1);
-    cy.visit(relative(`/contract/${deal._id}/submission-details`));
+    cy.visit(relative(`/contract/${bssDealId}/submission-details`));
+    pages.contract.checkDealDetailsTab().click();
     pages.contractSubmissionDetails.mandatoryCriteriaBox().should('exist');
     pages.contractSubmissionDetails.mandatoryCriteriaBox().find('ol > li[value="1"]').should('contain', 'Bank with a duly completed Supplier Declaration');
     pages.contractSubmissionDetails
@@ -36,13 +47,14 @@ context('BSS Mandatory criteria: Check deal details page', () => {
   });
 
   it('should render the mandatory criteria checklist when a deal is cloned', () => {
-    cy.loginGoToDealPage(BANK1_MAKER1, deal);
+    cy.login(BANK1_MAKER1);
+    cy.visit(relative(`/contract/${bssDealId}`));
     pages.contract.cloneDealLink().contains('Clone');
     pages.contract
       .cloneDealLink()
       .invoke('attr', 'aria-label')
       .then((label) => {
-        expect(label).to.equal(`Clone Deal ${deal.bankInternalRefName}`);
+        expect(label).to.equal(`Clone Deal ${dummyDeal.bankInternalRefName}`);
       });
     pages.contract.cloneDealLink().click();
     cy.url().should('include', '/clone/before-you-start');
