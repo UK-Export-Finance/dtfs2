@@ -2,7 +2,7 @@ const { isEveryDealFormComplete, isEveryFacilityInDealComplete } = require('./de
 const errorHref = require('./errorHref');
 const formatCountriesForGDSComponent = require('./formatCountriesForGDSComponent');
 const getApiData = require('./getApiData');
-const getDealIdsWithAmendmentInprogress = require('./getDealIdsWithAmendmentInProgress');
+const getDealIdsCheckersApprovalAmendments = require('./getDealIdsCheckersApprovalAmendments');
 const getFlashSuccessMessage = require('./getFlashSuccessMessage');
 const generateErrorSummary = require('./generateErrorSummary');
 const getUserRoles = require('./getUserRoles');
@@ -29,7 +29,7 @@ module.exports = {
   errorHref,
   formatCountriesForGDSComponent,
   getApiData,
-  getDealIdsWithAmendmentInprogress,
+  getDealIdsCheckersApprovalAmendments,
   getFlashSuccessMessage,
   generateErrorSummary,
   getUserRoles,

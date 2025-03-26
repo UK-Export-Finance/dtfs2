@@ -50,7 +50,7 @@ export const AMENDMENT_QUERIES = {
   LATEST: 'latest',
 } as const;
 
-export const DEALIDS_AMENDMENTS_INPROGRESS = 'dealIdsWithAmendmentsInProgress';
+export const DEALIDS_CHECKERS_APPROVAL_AMENDMENTS = 'dealIdsCheckersApprovalAmendments';
 
 export const AMENDMENT_TYPES = {
   PORTAL: 'PORTAL',

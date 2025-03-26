@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 const escapeStringRegexp = require('escape-string-regexp');
-const { FACILITY_STAGE, DEALIDS_AMENDMENTS_INPROGRESS } = require('@ukef/dtfs2-common');
+const { FACILITY_STAGE, DEALIDS_CHECKERS_APPROVAL_AMENDMENTS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 
 /**
@@ -61,8 +61,8 @@ const recursivelyReplaceEscapeOperators = (filters, result = {}) => {
     // This handles when there is an array -- ie in the case of AND and OR
     if (Array.isArray(filters[key])) {
       const newKeyName = getArrayKeyOperatorName(key);
-      // This handles when there is a key DEALIDS_AMENDMENTS_INPROGRESS to transform filter _id within the array of DEALIDS_AMENDMENTS_INPROGRESS
-      if (newKeyName === DEALIDS_AMENDMENTS_INPROGRESS) {
+      // This handles when there is a key DEALIDS_CHECKERS_APPROVAL_AMENDMENTS to transform filter _id within the array of DEALIDS_CHECKERS_APPROVAL_AMENDMENTS
+      if (newKeyName === DEALIDS_CHECKERS_APPROVAL_AMENDMENTS) {
         result._id = { $in: filters[newKeyName].map((dealId) => new ObjectId(dealId)) };
       } else {
         if (!result[newKeyName]) {

@@ -3,9 +3,9 @@ import { dashboardDealsFiltersQuery } from './deals-filters-query';
 import { STATUS, SUBMISSION_TYPE, FIELD_NAMES, ALL_BANKS_ID } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 import keywordQuery from './deals-filters-keyword-query';
-import getDealIdsWithAmendmentInprogress from '../../../helpers/getDealIdsWithAmendmentInProgress';
+import getDealIdsCheckersApprovalAmendments from '../../../helpers/getDealIdsCheckersApprovalAmendments';
 
-jest.mock('../../../helpers/getDealIdsWithAmendmentInProgress');
+jest.mock('../../../helpers/getDealIdsCheckersApprovalAmendments');
 
 const { MAKER, CHECKER } = ROLES;
 
@@ -72,7 +72,7 @@ describe('controllers/dashboard/deals - filters query', () => {
       const mockFilters = [];
       mockUser.roles = [CHECKER];
       const mockDealIds = [];
-      getDealIdsWithAmendmentInprogress.mockResolvedValue(mockDealIds);
+      getDealIdsCheckersApprovalAmendments.mockResolvedValue(mockDealIds);
 
       const result = await dashboardDealsFiltersQuery(mockFilters, mockUser);
 
@@ -92,7 +92,7 @@ describe('controllers/dashboard/deals - filters query', () => {
       const mockFilters = [];
       mockUser.roles = [CHECKER];
       const mockDealIds = ['deal1', 'deal2'];
-      getDealIdsWithAmendmentInprogress.mockResolvedValue(mockDealIds);
+      getDealIdsCheckersApprovalAmendments.mockResolvedValue(mockDealIds);
 
       const result = await dashboardDealsFiltersQuery(mockFilters, mockUser);
 
@@ -100,7 +100,7 @@ describe('controllers/dashboard/deals - filters query', () => {
         AND: [
           { 'bank.id': mockUser.bank.id },
           {
-            OR: [{ status: STATUS.DEAL.READY_FOR_APPROVAL }, { dealIdsWithAmendmentsInProgress: ['deal1', 'deal2'] }],
+            OR: [{ status: STATUS.DEAL.READY_FOR_APPROVAL }, { dealIdsCheckersApprovalAmendments: ['deal1', 'deal2'] }],
           },
         ],
       };

@@ -1,4 +1,4 @@
-const { FACILITY_STAGE } = require('@ukef/dtfs2-common');
+const { FACILITY_STAGE, DEALIDS_CHECKERS_APPROVAL_AMENDMENTS } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const CONSTANTS = require('../../constants');
 const { escapeOperators } = require('./escapeOperators');
@@ -234,9 +234,9 @@ describe('escapeOperators function', () => {
     expect(result).toEqual(expected);
   });
 
-  it('should handle dealIdsWithAmendmentsInProgress key inside OR operator', () => {
+  it(`should handle ${DEALIDS_CHECKERS_APPROVAL_AMENDMENTS} key inside OR operator`, () => {
     // Arrange
-    const dealIdsWithAmendmentsInProgress = ['123456789654', '123456789777'];
+    const dealIdsCheckersApprovalAmendments = ['123456789654', '123456789777'];
     const filter = {
       AND: [
         {
@@ -247,7 +247,7 @@ describe('escapeOperators function', () => {
             {
               status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL,
             },
-            { dealIdsWithAmendmentsInProgress },
+            { dealIdsCheckersApprovalAmendments },
           ],
         },
       ],
@@ -268,7 +268,7 @@ describe('escapeOperators function', () => {
               status: { $eq: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL },
             },
             {
-              _id: { $in: dealIdsWithAmendmentsInProgress.map((dealId) => new ObjectId(dealId)) },
+              _id: { $in: dealIdsCheckersApprovalAmendments.map((dealId) => new ObjectId(dealId)) },
             },
           ],
         },

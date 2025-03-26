@@ -1,21 +1,21 @@
-const getDealIdsWithAmendmentInprogress = require('./getDealIdsWithAmendmentInProgress');
+const getDealIdsCheckersApprovalAmendments = require('./getDealIdsCheckersApprovalAmendments');
 const api = require('../api');
 
 jest.mock('../api');
 
 const userToken = 'test-token';
-const mockAmendmentsInProgress = [{ dealId: 'deal1' }, { dealId: 'deal2' }, { dealId: 'deal3' }];
+const mockAmendmentsCheckersApproval = [{ dealId: 'deal1' }, { dealId: 'deal2' }, { dealId: 'deal3' }];
 console.error = jest.fn();
 
-describe('getDealIdsWithAmendmentInprogress', () => {
+describe('getDealIdsCheckersApprovalAmendments', () => {
   afterEach(() => {
     jest.resetAllMocks();
   });
 
   it('should return deal IDs when amendments are provided', async () => {
-    api.getAllAmendments.mockResolvedValue(mockAmendmentsInProgress);
+    api.getAllAmendments.mockResolvedValue(mockAmendmentsCheckersApproval);
 
-    const result = await getDealIdsWithAmendmentInprogress(userToken);
+    const result = await getDealIdsCheckersApprovalAmendments(userToken);
 
     expect(result).toEqual(['deal1', 'deal2', 'deal3']);
   });
@@ -23,7 +23,7 @@ describe('getDealIdsWithAmendmentInprogress', () => {
   it('should return an empty array when no amendments are provided', async () => {
     api.getAllAmendments.mockResolvedValue([]);
 
-    const result = await getDealIdsWithAmendmentInprogress(userToken);
+    const result = await getDealIdsCheckersApprovalAmendments(userToken);
 
     expect(result).toEqual([]);
   });
@@ -32,6 +32,6 @@ describe('getDealIdsWithAmendmentInprogress', () => {
     const mockError = new Error('API error');
     api.getAllAmendments.mockRejectedValue(mockError);
 
-    await expect(getDealIdsWithAmendmentInprogress(userToken)).rejects.toThrow('API error');
+    await expect(getDealIdsCheckersApprovalAmendments(userToken)).rejects.toThrow('API error');
   });
 });
