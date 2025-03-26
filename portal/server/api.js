@@ -144,8 +144,8 @@ const allFacilities = async (start, pagesize, filters, token, sort) => {
 
 /**
  * @param {Object} param
- * @param {string} param.token
  * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus[] | undefined} param.statuses
+ * @param {string} param.userToken
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId[])>}>}
  */
 const getAllAmendments = async ({ statuses, userToken }) => {
