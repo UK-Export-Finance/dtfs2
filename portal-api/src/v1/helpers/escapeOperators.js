@@ -61,7 +61,10 @@ const recursivelyReplaceEscapeOperators = (filters, result = {}) => {
     // This handles when there is an array -- ie in the case of AND and OR
     if (Array.isArray(filters[key])) {
       const newKeyName = getArrayKeyOperatorName(key);
-      // This handles when there is a key DEALIDS_CHECKERS_APPROVAL_AMENDMENTS to transform filter _id within the array of DEALIDS_CHECKERS_APPROVAL_AMENDMENTS
+      /**
+       * This handles DEALIDS_CHECKERS_APPROVAL_AMENDMENTS  key
+       * When  key is present, transforms filter _id within the DEALIDS_CHECKERS_APPROVAL_AMENDMENTS array
+       */
       if (newKeyName === DEALIDS_CHECKERS_APPROVAL_AMENDMENTS) {
         result._id = { $in: filters[newKeyName].map((dealId) => new ObjectId(dealId)) };
       } else {
