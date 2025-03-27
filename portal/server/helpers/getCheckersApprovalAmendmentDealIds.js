@@ -11,7 +11,7 @@ const getCheckersApprovalAmendmentDealIds = async (userToken) => {
     const statuses = [PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL];
 
     const amendments = await api.getAllAmendments({ statuses, userToken });
-    const dealIds = amendments.map((amendment) => amendment.dealId);
+    const dealIds = (amendments || []).map((amendment) => amendment.dealId);
 
     return dealIds;
   } catch (error) {

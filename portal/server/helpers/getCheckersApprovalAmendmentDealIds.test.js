@@ -20,6 +20,14 @@ describe('getCheckersApprovalAmendmentDealIds', () => {
     expect(result).toEqual(['deal1', 'deal2', 'deal3']);
   });
 
+  it('should return an empty array when an undefined response is received from the API call', async () => {
+    api.getAllAmendments.mockResolvedValue(undefined);
+
+    const result = await getCheckersApprovalAmendmentDealIds(userToken);
+
+    expect(result).toEqual([]);
+  });
+
   it('should return an empty array when no amendments are provided', async () => {
     api.getAllAmendments.mockResolvedValue([]);
 
