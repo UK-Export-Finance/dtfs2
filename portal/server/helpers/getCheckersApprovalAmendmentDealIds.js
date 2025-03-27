@@ -6,10 +6,13 @@ const api = require('../api');
  * @param {string} userToken - A valid user token.
  * @returns {Promise<Array<string>>} A promise that resolves to an array of deal IDs with amendments in progress.
  */
-const getDealIdsCheckersApprovalAmendments = async (userToken) => {
+const getCheckersApprovalAmendmentDealIds = async (userToken) => {
   try {
-    const amendments = await api.getAllAmendments({ statuses: [PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL], userToken });
+    const statuses = [PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL];
+
+    const amendments = await api.getAllAmendments({ statuses, userToken });
     const dealIds = amendments.map((amendment) => amendment.dealId);
+
     return dealIds;
   } catch (error) {
     console.error("Failed to get amendments for checker's approval %o", error);
@@ -17,4 +20,4 @@ const getDealIdsCheckersApprovalAmendments = async (userToken) => {
   }
 };
 
-module.exports = getDealIdsCheckersApprovalAmendments;
+module.exports = getCheckersApprovalAmendmentDealIds;

@@ -1,7 +1,7 @@
-const { DEALIDS_CHECKERS_APPROVAL_AMENDMENTS } = require('@ukef/dtfs2-common');
+const { CHECKERS_AMENDMENTS_DEAL_ID } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../constants');
 const CONTENT_STRINGS = require('../../../content-strings');
-const { getUserRoles, isSuperUser, getDealIdsCheckersApprovalAmendments } = require('../../../helpers');
+const { getUserRoles, isSuperUser, getCheckersApprovalAmendmentDealIds } = require('../../../helpers');
 const keywordQuery = require('./deals-filters-keyword-query');
 
 /**
@@ -24,8 +24,9 @@ const dashboardDealsFiltersQuery = async (filters, user, userToken) => {
   }
 
   if (isChecker && !isMaker) {
-    const dealIdsCheckersApprovalAmendments = await getDealIdsCheckersApprovalAmendments(userToken);
-    const dealIdsQuery = dealIdsCheckersApprovalAmendments?.length ? [{ [DEALIDS_CHECKERS_APPROVAL_AMENDMENTS]: dealIdsCheckersApprovalAmendments }] : [];
+    const checkersApprovalAmendmentDealIds = await getCheckersApprovalAmendmentDealIds(userToken);
+    const dealIdsQuery = checkersApprovalAmendmentDealIds?.length ? [{ [CHECKERS_AMENDMENTS_DEAL_ID]: checkersApprovalAmendmentDealIds }] : [];
+
     const orQuery = {
       OR: [{ [CONSTANTS.FIELD_NAMES.DEAL.STATUS]: CONSTANTS.STATUS.DEAL.READY_FOR_APPROVAL }, ...dealIdsQuery],
     };
