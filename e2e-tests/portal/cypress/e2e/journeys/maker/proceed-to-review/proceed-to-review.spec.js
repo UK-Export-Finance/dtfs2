@@ -11,10 +11,12 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('Ensure proceed to review button is only visible once facilities are in eligible for submission', () => {
   let bssDealId;
+  let contractUrl;
 
   before(() => {
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
@@ -27,7 +29,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
     cy.login(BANK1_MAKER1);
 
     // Navigate to the deal in question
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
 
     // Ensure proceed to review button does not exist
     pages.contract.proceedToReview().should('not.exist');
@@ -53,7 +55,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
     cy.login(BANK1_MAKER1);
 
     // Navigate to the deal in question
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
 
     // Add loan
     cy.clickAddLoanButton();
@@ -81,7 +83,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
     cy.login(BANK1_MAKER1);
 
     // Navigate to the deal in question
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
 
     // Add bond
     cy.clickAddBondButton();
@@ -104,7 +106,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
     cy.login(BANK1_MAKER1);
 
     // Navigate to the deal in question
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
 
     // Add loan
     cy.clickAddLoanButton();
@@ -132,7 +134,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
     cy.login(BANK1_MAKER1);
 
     // Navigate to the deal in question
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     // Add loan
     cy.clickAddLoanButton();
 
@@ -150,7 +152,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
     cy.clickSubmitButton();
 
     // Navigate to the deal in question
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
 
     // Ensure facility stage is `Incomplete`
     pages.contract.loansTransactionsTableRows().each((row, index) => {
@@ -166,7 +168,7 @@ context('Ensure proceed to review button is only visible once facilities are in 
     cy.login(BANK1_MAKER1);
 
     // Navigate to the deal in question
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
 
     // Proceed to review button
     pages.contract.proceedToReview().should('not.exist');

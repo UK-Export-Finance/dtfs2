@@ -8,7 +8,8 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const goToPage = (bssDealId) => {
   cy.login(BANK1_MAKER1);
-  cy.visit(relative(`/contract/${bssDealId}`));
+  const url = relative(`/contract/${bssDealId}`);
+  cy.visit(url);
   cy.clickAddLoanButton();
   partials.taskListHeader.itemLink('dates-and-repayments').click();
 

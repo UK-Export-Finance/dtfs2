@@ -6,38 +6,36 @@ const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 context('Edit deal name', () => {
   let bssDealId;
-
-  const dummyDeal = {
-    bankInternalRefName: 'abc-1-def',
-    additionalRefName: 'UKEF test bank (Delegated)',
-  };
+  let contractUrl;
+  const additionalRefName = 'UKEF test bank (Delegated)';
 
   before(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
   it('should reject an empty field', () => {
     cy.login(BANK1_MAKER1);
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     contract.editDealName().contains('Edit deal name');
     contract.editDealName().click();
 
-    cy.title().should('eq', `Change name - ${dummyDeal.additionalRefName}${defaults.pageTitleAppend}`);
-    editDealName.additionalRefName().should('have.value', dummyDeal.additionalRefName);
+    cy.title().should('eq', `Change name - ${additionalRefName}${defaults.pageTitleAppend}`);
+    editDealName.additionalRefName().should('have.value', additionalRefName);
     editDealName.additionalRefName().clear();
     cy.clickSubmitButton();
 
-    cy.url().should('eq', relative(`/contract/${bssDealId}/edit-name`));
+    cy.url().should('eq', `${contractUrl}/edit-name`);
 
     editDealName.expectError('A value is required.');
   });
 
   it('should update deal.additionalRefName', () => {
     cy.login(BANK1_MAKER1);
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     contract.editDealName().contains('Edit deal name');
     contract.editDealName().click();
 

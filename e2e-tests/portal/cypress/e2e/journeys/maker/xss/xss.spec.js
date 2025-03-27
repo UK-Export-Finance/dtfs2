@@ -6,18 +6,20 @@ const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 context('Input is cleaned to avoid Cross Site Scripting', () => {
   let bssDealId;
+  let contractUrl;
 
   before(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
   it('should not allow <script> tag', () => {
     // log in, visit a deal, select abandon
     cy.login(BANK1_MAKER1);
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     contract.abandonButton().click();
 
     // submit with a comment with script tag
@@ -28,7 +30,7 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
     cy.url().should('include', '/dashboard');
 
     // visit the deal and confirm the updates have been made
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     contract.commentsTab().click();
 
     contractComments

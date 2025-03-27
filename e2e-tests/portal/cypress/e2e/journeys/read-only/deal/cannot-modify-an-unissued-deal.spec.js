@@ -6,11 +6,13 @@ const { BANK1_READ_ONLY1, ADMIN } = MOCK_USERS;
 
 context('A read-only role viewing a bond that can be issued', () => {
   let bssDealId;
+  let contractUrl;
 
   before(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
@@ -20,9 +22,9 @@ context('A read-only role viewing a bond that can be issued', () => {
 
   it('should not allow for any publishing actions', () => {
     cy.login(BANK1_READ_ONLY1);
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
 
-    cy.url().should('eq', relative(`/contract/${bssDealId}`));
+    cy.url().should('eq', contractUrl);
 
     pages.contract.proceedToSubmit().should('not.exist');
     pages.contract.proceedToReview().should('not.exist');

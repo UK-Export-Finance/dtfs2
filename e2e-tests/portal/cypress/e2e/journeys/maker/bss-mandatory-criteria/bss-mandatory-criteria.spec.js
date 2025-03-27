@@ -9,13 +9,13 @@ const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 context('BSS Mandatory criteria: Check deal details page', () => {
   let bssDealId;
+  let contractUrl;
+  const bankInternalRefName = '9';
 
-  const dummyDeal = {
-    bankInternalRefName: '9',
-  };
   beforeEach(() => {
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
     cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
   });
@@ -25,7 +25,7 @@ context('BSS Mandatory criteria: Check deal details page', () => {
   });
   it('should render the mandatory criteria checklist when a new deal is created', () => {
     cy.login(BANK1_MAKER1);
-    cy.visit(relative(`/contract/${bssDealId}/submission-details`));
+    cy.visit(`${contractUrl}/submission-details`);
     pages.contract.checkDealDetailsTab().click();
     pages.contractSubmissionDetails.mandatoryCriteriaBox().should('exist');
     pages.contractSubmissionDetails.mandatoryCriteriaBox().find('ol > li[value="1"]').should('contain', 'Bank with a duly completed Supplier Declaration');
@@ -48,13 +48,13 @@ context('BSS Mandatory criteria: Check deal details page', () => {
 
   it('should render the mandatory criteria checklist when a deal is cloned', () => {
     cy.login(BANK1_MAKER1);
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     pages.contract.cloneDealLink().contains('Clone');
     pages.contract
       .cloneDealLink()
       .invoke('attr', 'aria-label')
       .then((label) => {
-        expect(label).to.equal(`Clone Deal ${dummyDeal.bankInternalRefName}`);
+        expect(label).to.equal(`Clone Deal ${bankInternalRefName}`);
       });
     pages.contract.cloneDealLink().click();
     cy.url().should('include', '/clone/before-you-start');

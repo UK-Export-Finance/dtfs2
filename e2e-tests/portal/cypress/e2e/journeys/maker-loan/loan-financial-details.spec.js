@@ -10,7 +10,8 @@ const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 const goToPageWithUnconditionalFacilityStage = (bssDealId) => {
   cy.login(BANK1_MAKER1);
-  cy.visit(relative(`/contract/${bssDealId}`));
+  const url = relative(`/contract/${bssDealId}`);
+  cy.visit(url);
   cy.clickAddLoanButton();
 
   pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
@@ -22,7 +23,8 @@ const goToPageWithUnconditionalFacilityStage = (bssDealId) => {
 
 const goToPage = (bssDealId) => {
   cy.login(BANK1_MAKER1);
-  cy.visit(relative(`/contract/${bssDealId}`));
+  const url = relative(`/contract/${bssDealId}`);
+  cy.visit(url);
   cy.clickAddLoanButton();
   partials.taskListHeader.itemLink('loan-financial-details').click();
 
