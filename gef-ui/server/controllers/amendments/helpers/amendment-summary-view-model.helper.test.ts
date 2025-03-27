@@ -84,6 +84,7 @@ describe('amendment-summary-view-model.helper', () => {
             },
             key: {
               text: 'Changes',
+              classes: 'amendment-options-key',
             },
             value: {
               html: expect.stringContaining(`<li>Cover end date and <br>Facility end date</li>`) as string,
@@ -104,9 +105,11 @@ describe('amendment-summary-view-model.helper', () => {
             },
             key: {
               text: 'New cover end date',
+              classes: 'amendment-cover-end-date-key',
             },
             value: {
               text: format(coverEndDate, DATE_FORMATS.D_MMMM_YYYY),
+              classes: 'amendment-cover-end-date-value',
             },
           },
           {
@@ -129,9 +132,11 @@ describe('amendment-summary-view-model.helper', () => {
             },
             key: {
               text: 'New facility end date',
+              classes: 'amendment-facility-end-date-key',
             },
             value: {
               text: format(facilityEndDate, DATE_FORMATS.D_MMMM_YYYY),
+              classes: 'amendment-facility-end-date-value',
             },
           },
         ];
@@ -177,6 +182,7 @@ describe('amendment-summary-view-model.helper', () => {
             },
             key: {
               text: 'Changes',
+              classes: 'amendment-options-key',
             },
             value: {
               html: expect.stringContaining(`<li>Cover end date and <br>Bank review date</li>`) as string,
@@ -197,9 +203,11 @@ describe('amendment-summary-view-model.helper', () => {
             },
             key: {
               text: 'New cover end date',
+              classes: 'amendment-cover-end-date-key',
             },
             value: {
               text: format(coverEndDate, DATE_FORMATS.D_MMMM_YYYY),
+              classes: 'amendment-cover-end-date-value',
             },
           },
           {
@@ -222,9 +230,11 @@ describe('amendment-summary-view-model.helper', () => {
             },
             key: {
               text: 'New bank review date',
+              classes: 'amendment-bank-review-date-key',
             },
             value: {
               text: format(bankReviewDate, DATE_FORMATS.D_MMMM_YYYY),
+              classes: 'amendment-bank-review-date-value',
             },
           },
         ];
@@ -269,6 +279,7 @@ describe('amendment-summary-view-model.helper', () => {
             },
             key: {
               text: 'Changes',
+              classes: 'amendment-options-key',
             },
             value: {
               html: expect.stringContaining(`<li>Facility value</li>`) as string,
@@ -289,9 +300,11 @@ describe('amendment-summary-view-model.helper', () => {
             },
             key: {
               text: 'New facility value',
+              classes: 'amendment-facility-value-key',
             },
             value: {
               text: facilityValue.toString(),
+              classes: 'amendment-facility-value-value',
             },
           },
         ];
@@ -340,6 +353,7 @@ describe('amendment-summary-view-model.helper', () => {
             },
             key: {
               text: 'Changes',
+              classes: 'amendment-options-key',
             },
             value: {
               html: expect.stringMatching(/<li>Cover end date and <br>Facility end date<\/li>\w*\n\w*<li>Facility value<\/li>/) as string,
@@ -360,9 +374,11 @@ describe('amendment-summary-view-model.helper', () => {
             },
             key: {
               text: 'New cover end date',
+              classes: 'amendment-cover-end-date-key',
             },
             value: {
               text: format(coverEndDate, DATE_FORMATS.D_MMMM_YYYY),
+              classes: 'amendment-cover-end-date-value',
             },
           },
           {
@@ -385,9 +401,11 @@ describe('amendment-summary-view-model.helper', () => {
             },
             key: {
               text: 'New facility end date',
+              classes: 'amendment-facility-end-date-key',
             },
             value: {
               text: format(facilityEndDate, DATE_FORMATS.D_MMMM_YYYY),
+              classes: 'amendment-facility-end-date-value',
             },
           },
           {
@@ -405,9 +423,11 @@ describe('amendment-summary-view-model.helper', () => {
             },
             key: {
               text: 'New facility value',
+              classes: 'amendment-facility-value-key',
             },
             value: {
               text: facilityValue.toString(),
+              classes: 'amendment-facility-value-value',
             },
           },
         ];
@@ -449,9 +469,11 @@ describe('amendment-summary-view-model.helper', () => {
           },
           key: {
             html: `${criteria[0].id}. ${criteria[0].text}`,
+            classes: `amendment-eligibility-${criteria[0].id}-key`,
           },
           value: {
             text: 'True',
+            classes: `amendment-eligibility-${criteria[0].id}-value`,
           },
         },
         {
@@ -469,9 +491,11 @@ describe('amendment-summary-view-model.helper', () => {
           },
           key: {
             html: `${criteria[1].id}. ${criteria[1].text}`,
+            classes: `amendment-eligibility-${criteria[1].id}-key`,
           },
           value: {
             text: 'True',
+            classes: `amendment-eligibility-${criteria[1].id}-value`,
           },
         },
       ];
@@ -509,9 +533,11 @@ describe('amendment-summary-view-model.helper', () => {
           },
           key: {
             text: 'Date',
+            classes: 'amendment-effective-date-key',
           },
           value: {
             text: format(effectiveDate, DATE_FORMATS.D_MMMM_YYYY),
+            classes: 'amendment-effective-date-value',
           },
         },
       ];
