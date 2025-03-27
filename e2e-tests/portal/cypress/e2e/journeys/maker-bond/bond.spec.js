@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { DETAILS } from './bond-form-values';
 
 const pages = require('../../pages');
@@ -13,7 +14,7 @@ const MOCK_DEAL = {
   additionalRefName: 'someDealName',
   submissionDetails: {
     supplyContractCurrency: {
-      id: '',
+      id: CURRENCY.GBP,
     },
   },
 };
@@ -24,7 +25,7 @@ context('Add a Bond to a Deal', () => {
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.createBssEwcsDeal().then((dealId) => {
+    cy.createBssEwcsDeal(MOCK_DEAL).then((dealId) => {
       bssDealId = dealId;
       contractUrl = relative(`/contract/${bssDealId}`);
     });
@@ -193,13 +194,7 @@ context('Add a Bond to a Deal', () => {
 
         cy.assertText(row.bondStatus(), 'Completed');
 
-        row
-          .facilityValue()
-          .invoke('text')
-          .then((text) => {
-            const normalizedText = text.replace(/\u00a0/g, '').trim();
-            expect(normalizedText).to.equal(`${MOCK_DEAL.submissionDetails.supplyContractCurrency.id}${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`);
-          });
+        cy.assertText(row.facilityValue(), `${MOCK_DEAL.submissionDetails.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`);
 
         cy.assertText(row.facilityStage(), 'Issued');
 
