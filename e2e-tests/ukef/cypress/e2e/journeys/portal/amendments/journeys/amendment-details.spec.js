@@ -63,6 +63,11 @@ context('Amendments - Amendment details page', () => {
       });
   });
 
+  it('should redirect to the dashboard when clicking the back link', () => {
+    amendmentPage.backLink().click();
+    cy.url().should('eq', dealUrl);
+  });
+
   it('should display a summary list with the correct changes and new facility value', () => {
     amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsKey().contains('Changes');
     amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsValue().contains('Facility value');

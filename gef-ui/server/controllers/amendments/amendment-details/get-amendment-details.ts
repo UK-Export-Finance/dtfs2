@@ -36,14 +36,16 @@ export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: 
       return res.redirect('/not-found');
     }
 
-    const { details: facility } = await api.getFacility({ facilityId: amendments[0].facilityId, userToken });
+    const amendment = amendments[0];
+
+    const { details: facility } = await api.getFacility({ facilityId: amendment.facilityId, userToken });
 
     if (!facility) {
-      console.error('Facility %s was not found', amendments[0].facilityId);
+      console.error('Facility %s was not found', amendment.facilityId);
       return res.redirect('/not-found');
     }
 
-    return res.render('partials/amendments/amendment-details.njk', createAmendmentDetailsViewModel({ amendment: amendments[0], deal, facility }));
+    return res.render('partials/amendments/amendment-details.njk', createAmendmentDetailsViewModel({ amendment, deal, facility }));
   } catch (error) {
     console.error('Error getting amendments details page %o', error);
     return res.render('partials/problem-with-service.njk');
