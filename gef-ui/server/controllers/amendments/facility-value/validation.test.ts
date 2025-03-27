@@ -49,7 +49,7 @@ describe('validateFacilityValue', () => {
       value: '1000.000',
       expectedError: {
         errRef,
-        errMsg: 'Enter a valid facility value',
+        errMsg: 'Enter the new facility value in number format',
       },
     },
     {
@@ -65,7 +65,7 @@ describe('validateFacilityValue', () => {
       value: '.99',
       expectedError: {
         errRef,
-        errMsg: 'Enter a valid facility value',
+        errMsg: 'Enter the new facility value in number format',
       },
     },
     {
@@ -73,7 +73,7 @@ describe('validateFacilityValue', () => {
       value: '123.',
       expectedError: {
         errRef,
-        errMsg: 'Enter a valid facility value',
+        errMsg: 'Enter the new facility value in number format',
       },
     },
     {

@@ -104,22 +104,22 @@ context('Amendments - Facility value - page tests', () => {
     {
       description: 'the value contains too many decimal places',
       value: '1000.000',
-      expectedErrorMessage: 'Enter a valid facility value',
+      expectedErrorMessage: 'Enter the new facility value in number format',
     },
     {
       description: 'the value contains too many decimal points',
       value: '1000.00.0',
-      expectedErrorMessage: 'Enter a valid facility value',
+      expectedErrorMessage: 'Enter the new facility value in number format',
     },
     {
       description: 'the value contains has no leading digit',
       value: '.99',
-      expectedErrorMessage: 'Enter a valid facility value',
+      expectedErrorMessage: 'Enter the new facility value in number format',
     },
     {
       description: 'the value ends with a decimal place',
       value: '123.',
-      expectedErrorMessage: 'Enter a valid facility value',
+      expectedErrorMessage: 'Enter the new facility value in number format',
     },
     {
       description: 'the value is too small',
