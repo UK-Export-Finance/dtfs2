@@ -84,7 +84,22 @@ context('Amendments - Facility value - page tests', () => {
     {
       description: 'the value contains non-numeric characters',
       value: '1000x',
-      expectedErrorMessage: 'Enter a valid facility value',
+      expectedErrorMessage: 'Enter the new facility value in number format',
+    },
+    {
+      description: 'the value contains string characters',
+      value: 'abc',
+      expectedErrorMessage: 'Enter the new facility value in number format',
+    },
+    {
+      description: 'the value contains special characters',
+      value: '!@£',
+      expectedErrorMessage: 'Enter the new facility value in number format',
+    },
+    {
+      description: 'the value contains number and non-numeric characters',
+      value: '1ooo',
+      expectedErrorMessage: 'Enter the new facility value in number format',
     },
     {
       description: 'the value contains too many decimal places',

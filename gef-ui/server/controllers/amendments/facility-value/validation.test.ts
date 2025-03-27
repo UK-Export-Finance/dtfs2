@@ -17,7 +17,31 @@ describe('validateFacilityValue', () => {
       value: '1000x',
       expectedError: {
         errRef,
-        errMsg: 'Enter a valid facility value',
+        errMsg: 'Enter the new facility value in number format',
+      },
+    },
+    {
+      description: 'the value contains too many decimal places',
+      value: 'abc',
+      expectedError: {
+        errRef,
+        errMsg: 'Enter the new facility value in number format',
+      },
+    },
+    {
+      description: 'the value contains too many decimal places',
+      value: '!@£',
+      expectedError: {
+        errRef,
+        errMsg: 'Enter the new facility value in number format',
+      },
+    },
+    {
+      description: 'the value contains too many decimal places',
+      value: '1ooo',
+      expectedError: {
+        errRef,
+        errMsg: 'Enter the new facility value in number format',
       },
     },
     {
@@ -33,7 +57,7 @@ describe('validateFacilityValue', () => {
       value: '1000.00.0',
       expectedError: {
         errRef,
-        errMsg: 'Enter a valid facility value',
+        errMsg: 'Enter the new facility value in number format',
       },
     },
     {

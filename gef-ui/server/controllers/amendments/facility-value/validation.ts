@@ -25,7 +25,7 @@ export const validateFacilityValue = (value: string): ErrorsOrValue<number> => {
 
   if (!CURRENCY_NUMBER_REGEX.test(value)) {
     return {
-      errors: [{ errRef, errMsg: 'Enter a valid facility value' }],
+      errors: [{ errRef, errMsg: 'Enter the new facility value in number format' }],
     };
   }
 
