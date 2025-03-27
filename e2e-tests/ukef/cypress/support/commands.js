@@ -10,6 +10,7 @@ import { getOneDeal } from './portal-api/getOneDeal';
 import { getOneGefDeal } from './portal-api/getOneGefDeal';
 import { clearSessionCookies } from './utils/clearSessionCookies';
 import { getAmendmentIdFromUrl } from './utils/getAmendmentIdFromUrl';
+import { makeAnAmendmentRequest } from './gef/make-an-amendment-request';
 
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
@@ -51,6 +52,8 @@ Cypress.Commands.add('checkerSubmitDealToUkef', checkerSubmitDealToUkef);
 Cypress.Commands.add('getAmendmentIdFromUrl', getAmendmentIdFromUrl);
 
 Cypress.Commands.add('submitDealCancellation', submitDealCancellation);
+
+Cypress.Commands.add('makeAnAmendmentRequest', makeAnAmendmentRequest);
 
 Cypress.Commands.add('forceVisit', (url) => {
   cy.window().then((win) => win.open(url, '_self'));
