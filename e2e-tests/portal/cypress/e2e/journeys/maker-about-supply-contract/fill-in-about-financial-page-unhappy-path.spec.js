@@ -8,10 +8,12 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('about-supply-contract', () => {
   let bssDealId;
+  let contractUrl;
 
   before(() => {
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
@@ -19,7 +21,7 @@ context('about-supply-contract', () => {
     cy.login(BANK1_MAKER1);
 
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     contract.aboutSupplierDetailsLink().click();
     partials.taskListHeader.itemLink('buyer').click();
     partials.taskListHeader.itemLink('financial-information').click();
@@ -43,7 +45,7 @@ context('about-supply-contract', () => {
     contractAboutFinancial.preview().click();
 
     // check that the preview page renders the Submission Details component
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();

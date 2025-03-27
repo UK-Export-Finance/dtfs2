@@ -6,14 +6,13 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Buyer form - create element and check if inserted into deal', () => {
   let bssDealId;
-
-  const dummyDeal = {
-    additionalRefName: 'UKEF test bank (Delegated)',
-  };
+  let contractUrl;
+  const additionalRefName = 'UKEF test bank (Delegated)';
 
   before(() => {
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
@@ -21,11 +20,11 @@ context('Buyer form - create element and check if inserted into deal', () => {
     cy.login(BANK1_MAKER1);
 
     // navigate to the about-buyer page
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
 
-    cy.title().should('eq', `Buyer information - ${dummyDeal.additionalRefName}${defaults.pageTitleAppend}`);
+    cy.title().should('eq', `Buyer information - ${additionalRefName}${defaults.pageTitleAppend}`);
 
     // fill in the fields
     cy.keyboardInput(contractAboutBuyer.buyerName(), 'Harry Bear');
@@ -42,11 +41,9 @@ context('Buyer form - create element and check if inserted into deal', () => {
     // save
     contractAboutBuyer.nextPage().click();
 
-    cy.getDealIdFromUrl(4).then((id) => {
-      cy.getDeal(id, BANK1_MAKER1).then((updatedDeal) => {
-        // ensure the updated deal does not contain additional intruder field
-        expect(updatedDeal.submissionDetails.intruder).to.be.an('undefined');
-      });
+    cy.getDeal(bssDealId, BANK1_MAKER1).then((updatedDeal) => {
+      // ensure the updated deal does not contain additional intruder field
+      expect(updatedDeal.submissionDetails.intruder).to.be.an('undefined');
     });
   });
 });

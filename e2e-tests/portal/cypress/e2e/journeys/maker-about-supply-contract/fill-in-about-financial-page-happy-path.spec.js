@@ -10,15 +10,14 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('about-supply-contract', () => {
   let bssDealId;
-
-  const dummyDeal = {
-    additionalRefName: 'UKEF test bank (Delegated)',
-  };
+  let contractUrl;
+  const additionalRefName = 'UKEF test bank (Delegated)';
 
   before(() => {
     console.info(JSON.stringify(aDealWithAboutBuyerComplete, null, 4));
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
@@ -26,12 +25,12 @@ context('about-supply-contract', () => {
     cy.login(BANK1_MAKER1);
 
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     contract.aboutSupplierDetailsLink().click();
     partials.taskListHeader.itemLink('buyer').click();
     partials.taskListHeader.itemLink('financial-information').click();
 
-    cy.title().should('eq', `Financial information - ${dummyDeal.additionalRefName}${defaults.pageTitleAppend}`);
+    cy.title().should('eq', `Financial information - ${additionalRefName}${defaults.pageTitleAppend}`);
 
     // prove the exchange-rate fields start hidden..
     contractAboutFinancial.supplyContractConversionRateToGBP().should('not.be.visible');
@@ -48,7 +47,7 @@ context('about-supply-contract', () => {
     contractAboutFinancial.saveAndGoBack().click();
 
     // check that the preview page renders the Submission Details component
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
@@ -58,7 +57,7 @@ context('about-supply-contract', () => {
     cy.assertText(partials.taskListHeader.itemStatus('financial-information'), 'Completed');
 
     // since we've cleared all validation at this point the section should show as completed on the deal page
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();

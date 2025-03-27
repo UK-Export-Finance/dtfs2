@@ -6,17 +6,19 @@ const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 context('about-supply-contract', () => {
   let bssDealId;
+  let contractUrl;
 
   before(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
   beforeEach(() => {
     cy.login(BANK1_MAKER1);
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
   });
 
   it('should clear indemnifier correspondence address fields when deselecting separate address', () => {
@@ -24,7 +26,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.supplierCorrespondenceAddressSame().click();
     contractAboutSupplier.nextPage().click();
 
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
@@ -40,7 +42,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.notLegallyDistinct().click();
     contractAboutSupplier.nextPage().click();
 
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
@@ -61,7 +63,7 @@ context('about-supply-contract', () => {
     contractAboutSupplier.supplierCorrespondenceAddressSame().click();
     contractAboutSupplier.nextPage().click();
 
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();

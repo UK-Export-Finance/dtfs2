@@ -9,16 +9,18 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('about-buyer', () => {
   let bssDealId;
+  let contractUrl;
 
   before(() => {
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
   beforeEach(() => {
     cy.login(BANK1_MAKER1);
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();

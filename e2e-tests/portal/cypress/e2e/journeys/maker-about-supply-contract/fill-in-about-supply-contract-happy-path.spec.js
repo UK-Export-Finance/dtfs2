@@ -8,11 +8,13 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('about-supply-contract', () => {
   let bssDealId;
+  let contractUrl;
 
   before(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
@@ -20,7 +22,7 @@ context('about-supply-contract', () => {
     cy.login(BANK1_MAKER1);
 
     // go the long way for the first test- actually clicking via the contract page to prove the link..
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
 
     // check the status is displaying correctly
     cy.assertText(contract.aboutSupplierDetailsStatus(), 'Not started');
@@ -75,7 +77,7 @@ context('about-supply-contract', () => {
     cy.assertText(contract.aboutSupplierDetailsStatus(), 'Incomplete');
 
     // check that the preview page renders the Submission Details component
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
