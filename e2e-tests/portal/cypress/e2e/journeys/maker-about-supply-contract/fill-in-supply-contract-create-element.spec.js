@@ -9,11 +9,13 @@ const { INDUSTRY_SECTOR_CODES } = CONSTANTS;
 
 context('Supply contract form - create element and check if inserted into deal', () => {
   let bssDealId;
+  let contractUrl;
 
   before(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
@@ -21,7 +23,7 @@ context('Supply contract form - create element and check if inserted into deal',
     cy.login(BANK1_MAKER1);
 
     // go the long way for the first test- actually clicking via the contract page to prove the link..
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
 
     contract.aboutSupplierDetailsLink().click();
 
@@ -47,11 +49,9 @@ context('Supply contract form - create element and check if inserted into deal',
 
     contractAboutSupplier.nextPage().click();
 
-    cy.getDealIdFromUrl(4).then((id) => {
-      cy.getDeal(id, BANK1_MAKER1).then((updatedDeal) => {
-        // ensure the updated deal does not contain additional intruder field
-        expect(updatedDeal.submissionDetails.intruder).to.be.an('undefined');
-      });
+    cy.getDeal(bssDealId, BANK1_MAKER1).then((updatedDeal) => {
+      // ensure the updated deal does not contain additional intruder field
+      expect(updatedDeal.submissionDetails.intruder).to.be.an('undefined');
     });
   });
 });

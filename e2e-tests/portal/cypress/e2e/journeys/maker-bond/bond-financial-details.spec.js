@@ -23,18 +23,20 @@ const goToBondFinancialDetailsPage = (bssDealId) => {
 
 context('Bond Financial Details', () => {
   let bssDealId;
+  let contractUrl;
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
   describe('after submitting one form field and navigating back to `Bond Financial Details` page', () => {
     it('should render validation errors for all required fields', () => {
       cy.login(BANK1_MAKER1);
-      cy.visit(relative(`/contract/${bssDealId}`));
+      cy.visit(contractUrl);
 
       cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
@@ -62,7 +64,7 @@ context('Bond Financial Details', () => {
   describe('when changing the `risk margin fee` field', () => {
     it('should dynamically update the `Guarantee Fee Payable By Bank` value on blur', () => {
       cy.login(BANK1_MAKER1);
-      cy.visit(relative(`/contract/${bssDealId}`));
+      cy.visit(contractUrl);
 
       cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
@@ -90,7 +92,7 @@ context('Bond Financial Details', () => {
   describe('when changing the `bond value` or `covered percentage` field', () => {
     it('should dynamically update the `UKEF exposure` value on blur', () => {
       cy.login(BANK1_MAKER1);
-      cy.visit(relative(`/contract/${bssDealId}`));
+      cy.visit(contractUrl);
 
       cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
@@ -120,7 +122,7 @@ context('Bond Financial Details', () => {
 
   it('should display the correct title for bond financial details', () => {
     cy.login(BANK1_MAKER1);
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
 
     cy.clickAddBondButton();
     partials.taskListHeader.itemLink('financial-details').click();
@@ -130,7 +132,7 @@ context('Bond Financial Details', () => {
 
   it('form submit of all required fields should render a `completed` status tag only for `Bond Financial Details` in task list header', () => {
     cy.login(BANK1_MAKER1);
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
 
     cy.clickAddBondButton();
     partials.taskListHeader.itemLink('financial-details').click();
@@ -147,7 +149,7 @@ context('Bond Financial Details', () => {
   describe('When a user submits the `Bond Financial Details` form', () => {
     it('should progress to `Bond Fee Details` page and prepopulate form fields when returning back to `Bond Financial Details` page', () => {
       cy.login(BANK1_MAKER1);
-      cy.visit(relative(`/contract/${bssDealId}`));
+      cy.visit(contractUrl);
 
       cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
@@ -249,7 +251,7 @@ context('Bond Financial Details', () => {
 
         cy.clickSubmitButton();
         cy.clickSaveGoBackButton();
-        cy.url().should('eq', relative(`/contract/${bssDealId}`));
+        cy.url().should('eq', contractUrl);
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
@@ -350,7 +352,7 @@ context('Bond Financial Details', () => {
   describe('When a user clicks `save and go back` button', () => {
     it('should save the form data, return to Deal page and repopulate form fields when returning back to `Bond Financial Details` page', () => {
       cy.login(BANK1_MAKER1);
-      cy.visit(relative(`/contract/${bssDealId}`));
+      cy.visit(contractUrl);
 
       cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();

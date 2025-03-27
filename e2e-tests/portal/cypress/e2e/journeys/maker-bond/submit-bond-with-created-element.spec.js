@@ -6,11 +6,13 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('Bond form - Submit bond with created element on page', () => {
   let bssDealId;
+  let contractUrl;
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
@@ -18,7 +20,7 @@ context('Bond form - Submit bond with created element on page', () => {
     cy.login(BANK1_MAKER1);
 
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
 
     cy.clickAddBondButton();
 
@@ -38,12 +40,10 @@ context('Bond form - Submit bond with created element on page', () => {
     cy.clickSubmitButton();
 
     // gets deal
-    cy.getDealIdFromUrl(4).then((id) => {
-      cy.getDeal(id, BANK1_MAKER1).then((updatedDeal) => {
-        cy.getFacility(id, updatedDeal.facilities[0], BANK1_MAKER1).then((bond) => {
-          // checks bond does not have inserted field
-          expect(bond.intruder).to.be.an('undefined');
-        });
+    cy.getDeal(bssDealId, BANK1_MAKER1).then((updatedDeal) => {
+      cy.getFacility(bssDealId, updatedDeal.facilities[0], BANK1_MAKER1).then((bond) => {
+        // checks bond does not have inserted field
+        expect(bond.intruder).to.be.an('undefined');
       });
     });
   });

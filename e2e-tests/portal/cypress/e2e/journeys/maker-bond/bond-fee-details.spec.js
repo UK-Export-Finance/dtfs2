@@ -18,11 +18,13 @@ const goToBondFeeDetailsPage = (bssDealId) => {
 
 context('Bond Fee Details', () => {
   let bssDealId;
+  let contractUrl;
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
@@ -67,7 +69,7 @@ context('Bond Fee Details', () => {
 
   it('should display the correct title for bond fee details', () => {
     cy.login(BANK1_MAKER1);
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
 
     cy.clickAddBondButton();
     partials.taskListHeader.itemLink('fee-details').click();
@@ -77,7 +79,7 @@ context('Bond Fee Details', () => {
 
   it('form submit of all required fields should render a `completed` status tag only for `Bond Fee Details` in task list header', () => {
     cy.login(BANK1_MAKER1);
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
 
     cy.clickAddBondButton();
     partials.taskListHeader.itemLink('fee-details').click();

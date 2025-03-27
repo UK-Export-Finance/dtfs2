@@ -20,11 +20,13 @@ const MOCK_DEAL = {
 
 context('Add a Bond to a Deal', () => {
   let bssDealId;
+  let contractUrl;
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
@@ -84,7 +86,7 @@ context('Add a Bond to a Deal', () => {
   describe('when a user submits a Bond form without completing any fields', () => {
     it('bond should display `Incomplete` status in Deal page', () => {
       cy.login(BANK1_MAKER1);
-      cy.visit(relative(`/contract/${bssDealId}`));
+      cy.visit(contractUrl);
 
       cy.clickAddBondButton();
 
@@ -93,7 +95,7 @@ context('Add a Bond to a Deal', () => {
         const bondId = bondIdHiddenInput[0].value;
 
         cy.clickSaveGoBackButton();
-        cy.url().should('eq', relative(`/contract/${bssDealId}`));
+        cy.url().should('eq', contractUrl);
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
@@ -173,7 +175,7 @@ context('Add a Bond to a Deal', () => {
 
     it('should populate Deal page with the submitted bond, display `Completed` status and link to `Bond Details` page', () => {
       cy.login(BANK1_MAKER1);
-      cy.visit(relative(`/contract/${bssDealId}`));
+      cy.visit(contractUrl);
       cy.addBondToDeal();
       cy.url().should('include', '/check-your-answers');
 
@@ -183,15 +185,13 @@ context('Add a Bond to a Deal', () => {
         const bondId = bondIdHiddenInput[0].value;
 
         cy.clickSaveGoBackButton();
-        cy.url().should('eq', relative(`/contract/${bssDealId}`));
+        cy.url().should('eq', contractUrl);
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
         cy.assertText(row.uniqueNumberLink(), BOND_FORM_VALUES.DETAILS.name);
 
         cy.assertText(row.bondStatus(), 'Completed');
-
-        // cy.assertText(row.facilityValue(), `${MOCK_DEAL.submissionDetails.supplyContractCurrency.id} ${BOND_FORM_VALUES.FINANCIAL_DETAILS.value}`);
 
         row
           .facilityValue()
@@ -225,7 +225,7 @@ context('Add a Bond to a Deal', () => {
   describe('When a user clicks `save and go back` button in `Bond Preview` page', () => {
     it('should return to Deal page', () => {
       cy.login(BANK1_MAKER1);
-      cy.visit(relative(`/contract/${bssDealId}`));
+      cy.visit(contractUrl);
       cy.addBondToDeal();
       cy.url().should('include', '/check-your-answers');
 

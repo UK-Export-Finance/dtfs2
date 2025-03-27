@@ -9,16 +9,14 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Financial page form - create element and check if inserted into deal', () => {
   let bssDealId;
-
-  const dummyDeal = {
-    bankInternalRefName: 'abc-1-def',
-    additionalRefName: 'UKEF test bank (Delegated)',
-  };
+  let contractUrl;
+  const additionalRefName = 'UKEF test bank (Delegated)';
 
   before(() => {
     console.info(JSON.stringify(aDealWithAboutBuyerComplete, null, 4));
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
@@ -26,12 +24,12 @@ context('Financial page form - create element and check if inserted into deal', 
     cy.login(BANK1_MAKER1);
 
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     contract.aboutSupplierDetailsLink().click();
     partials.taskListHeader.itemLink('buyer').click();
     partials.taskListHeader.itemLink('financial-information').click();
 
-    cy.title().should('eq', `Financial information - ${dummyDeal.additionalRefName}${defaults.pageTitleAppend}`);
+    cy.title().should('eq', `Financial information - ${additionalRefName}${defaults.pageTitleAppend}`);
 
     // set a GBP value, so we don't need to fill in the exchange-rate fields
     cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '10000');
@@ -43,11 +41,9 @@ context('Financial page form - create element and check if inserted into deal', 
 
     contractAboutFinancial.preview().click();
 
-    cy.getDealIdFromUrl(4).then((id) => {
-      cy.getDeal(id, BANK1_MAKER1).then((updatedDeal) => {
-        // ensure the updated deal does not contain additional intruder field
-        expect(updatedDeal.submissionDetails.intruder).to.be.an('undefined');
-      });
+    cy.getDeal(bssDealId, BANK1_MAKER1).then((updatedDeal) => {
+      // ensure the updated deal does not contain additional intruder field
+      expect(updatedDeal.submissionDetails.intruder).to.be.an('undefined');
     });
   });
 });

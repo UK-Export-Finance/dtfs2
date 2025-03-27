@@ -21,11 +21,13 @@ const MOCK_DEAL = {
 
 context('Add a Loan to a Deal', () => {
   let bssDealId;
+  let contractUrl;
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
@@ -67,7 +69,7 @@ context('Add a Loan to a Deal', () => {
 
   it('should populate Deal page with the submitted loan, with `Completed` status and link to `Loan Guarantee Details` page', () => {
     cy.login(BANK1_MAKER1);
-    cy.visit(relative(`/contract/${bssDealId}`));
+    cy.visit(contractUrl);
     cy.clickAddLoanButton();
     fillLoanForm.unconditionalWithCurrencySameAsSupplyContractCurrency();
     fillLoanForm.datesRepayments.inAdvanceAnnually();
@@ -79,7 +81,7 @@ context('Add a Loan to a Deal', () => {
       const loanId = loanIdHiddenInput[0].value;
 
       cy.clickSaveGoBackButton();
-      cy.url().should('eq', relative(`/contract/${bssDealId}`));
+      cy.url().should('eq', contractUrl);
 
       const row = pages.contract.loansTransactionsTable.row(loanId);
 
@@ -112,7 +114,7 @@ context('Add a Loan to a Deal', () => {
   describe('when a user submits Loan forms without completing required fields', () => {
     it('loan should display all validation errors in `Loan Preview` page and `Incomplete` status in Deal page', () => {
       cy.login(BANK1_MAKER1);
-      cy.visit(relative(`/contract/${bssDealId}`));
+      cy.visit(contractUrl);
       cy.clickAddLoanButton();
 
       cy.clickSubmitButton();
