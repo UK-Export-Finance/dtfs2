@@ -6,7 +6,7 @@ import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
 import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 import facilityValue from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
-import checkYourAnswers from '../../../../../../../gef/cypress/e2e/pages/amendments/check-your-answers';
+import amendmentPage from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -73,9 +73,9 @@ context('Amendments - Check your answers - page tests', () => {
   });
 
   it('should render key features of the page', () => {
-    checkYourAnswers.pageHeading().contains('Check your answers before submitting the amendment request');
-    checkYourAnswers.backLink();
-    checkYourAnswers.cancelLink();
+    amendmentPage.pageHeading().contains('Check your answers before submitting the amendment request');
+    amendmentPage.backLink();
+    amendmentPage.cancelLink();
   });
 
   it('should navigate to cancel page when cancel is clicked', () => {
