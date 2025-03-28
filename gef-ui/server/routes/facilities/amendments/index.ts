@@ -28,6 +28,7 @@ import { getManualApprovalNeeded } from '../../../controllers/amendments/manual-
 import { getCheckYourAnswers } from '../../../controllers/amendments/check-your-answers/get-check-your-answers.ts';
 import { postCheckYourAnswers } from '../../../controllers/amendments/check-your-answers/post-check-your-answers.ts';
 import { getSubmittedForChecking } from '../../../controllers/amendments/submitted-for-checking/get-submitted-for-checking.ts';
+import { getAmendmentDetails } from '../../../controllers/amendments/amendment-details/get-amendment-details.ts';
 
 const {
   WHAT_DO_YOU_NEED_TO_CHANGE,
@@ -42,6 +43,7 @@ const {
   CHECK_YOUR_ANSWERS,
   CANCEL,
   SUBMITTED_FOR_CHECKING,
+  AMENDMENT_DETAILS,
 } = PORTAL_AMENDMENT_PAGES;
 
 const router = express.Router();
@@ -128,5 +130,10 @@ router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${SUBMITTED_FOR_CHECKING}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getSubmittedForChecking);
+
+router
+  .route(`/application-details/:dealId/${AMENDMENT_DETAILS}`)
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(getAmendmentDetails);
 
 export default router;
