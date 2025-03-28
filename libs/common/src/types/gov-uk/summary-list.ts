@@ -4,15 +4,18 @@ type GovUkField =
   | {
       text: string;
       classes?: string;
+      attributes?: Record<string, string>;
     }
   | {
       html: string;
       classes?: string;
+      attributes?: Record<string, string>;
     };
 
 type ActionItem = Prettify<
   GovUkField & {
     href?: string;
+    text?: string;
     visuallyHiddenText?: string;
     attributes?: Record<string, string>;
   }
