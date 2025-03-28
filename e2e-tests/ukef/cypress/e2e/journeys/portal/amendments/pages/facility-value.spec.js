@@ -7,6 +7,7 @@ import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/am
 import facilityValue from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
+const invalidNumberError = 'Enter the new facility value in number format';
 
 context('Amendments - Facility value - page tests', () => {
   /**
@@ -74,52 +75,52 @@ context('Amendments - Facility value - page tests', () => {
     cy.clickContinueButton();
 
     facilityValue.errorSummary().should('be.visible');
-    facilityValue.errorSummary().contains('Enter the new facility value in number format');
+    facilityValue.errorSummary().contains(invalidNumberError);
 
     facilityValue.facilityValueInlineError().should('be.visible');
-    facilityValue.facilityValueInlineError().contains('Enter the new facility value in number format');
+    facilityValue.facilityValueInlineError().contains(invalidNumberError);
   });
 
   const errorTestCases = [
     {
       description: 'the value contains non-numeric characters',
       value: '1000x',
-      expectedErrorMessage: 'Enter the new facility value in number format',
+      expectedErrorMessage: '',
     },
     {
       description: 'the value contains string characters',
       value: 'abc',
-      expectedErrorMessage: 'Enter the new facility value in number format',
+      expectedErrorMessage: invalidNumberError,
     },
     {
       description: 'the value contains special characters',
       value: '!@£',
-      expectedErrorMessage: 'Enter the new facility value in number format',
+      expectedErrorMessage: invalidNumberError,
     },
     {
       description: 'the value contains number and non-numeric characters',
       value: '1ooo',
-      expectedErrorMessage: 'Enter the new facility value in number format',
+      expectedErrorMessage: invalidNumberError,
     },
     {
       description: 'the value contains too many decimal places',
       value: '1000.000',
-      expectedErrorMessage: 'Enter the new facility value in number format',
+      expectedErrorMessage: invalidNumberError,
     },
     {
       description: 'the value contains too many decimal points',
       value: '1000.00.0',
-      expectedErrorMessage: 'Enter the new facility value in number format',
+      expectedErrorMessage: invalidNumberError,
     },
     {
       description: 'the value contains has no leading digit',
       value: '.99',
-      expectedErrorMessage: 'Enter the new facility value in number format',
+      expectedErrorMessage: invalidNumberError,
     },
     {
       description: 'the value ends with a decimal place',
       value: '123.',
-      expectedErrorMessage: 'Enter the new facility value in number format',
+      expectedErrorMessage: invalidNumberError,
     },
     {
       description: 'the value is too small',

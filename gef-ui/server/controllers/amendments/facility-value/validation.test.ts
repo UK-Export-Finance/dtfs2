@@ -1,6 +1,7 @@
 import { validateFacilityValue } from './validation';
 
 const errRef = 'facilityValue';
+const invalidNumberError = 'Enter the new facility value in number format';
 
 describe('validateFacilityValue', () => {
   const errorTestCases = [
@@ -9,7 +10,7 @@ describe('validateFacilityValue', () => {
       value: '',
       expectedError: {
         errRef,
-        errMsg: 'Enter the new facility value in number format',
+        errMsg: invalidNumberError,
       },
     },
     {
@@ -17,7 +18,7 @@ describe('validateFacilityValue', () => {
       value: '1000x',
       expectedError: {
         errRef,
-        errMsg: 'Enter the new facility value in number format',
+        errMsg: invalidNumberError,
       },
     },
     {
@@ -25,7 +26,7 @@ describe('validateFacilityValue', () => {
       value: 'abc',
       expectedError: {
         errRef,
-        errMsg: 'Enter the new facility value in number format',
+        errMsg: invalidNumberError,
       },
     },
     {
@@ -33,7 +34,7 @@ describe('validateFacilityValue', () => {
       value: '!@£',
       expectedError: {
         errRef,
-        errMsg: 'Enter the new facility value in number format',
+        errMsg: invalidNumberError,
       },
     },
     {
@@ -41,7 +42,7 @@ describe('validateFacilityValue', () => {
       value: '1ooo',
       expectedError: {
         errRef,
-        errMsg: 'Enter the new facility value in number format',
+        errMsg: invalidNumberError,
       },
     },
     {
@@ -49,7 +50,7 @@ describe('validateFacilityValue', () => {
       value: '1000.000',
       expectedError: {
         errRef,
-        errMsg: 'Enter the new facility value in number format',
+        errMsg: invalidNumberError,
       },
     },
     {
@@ -57,7 +58,7 @@ describe('validateFacilityValue', () => {
       value: '1000.00.0',
       expectedError: {
         errRef,
-        errMsg: 'Enter the new facility value in number format',
+        errMsg: invalidNumberError,
       },
     },
     {
@@ -65,7 +66,7 @@ describe('validateFacilityValue', () => {
       value: '.99',
       expectedError: {
         errRef,
-        errMsg: 'Enter the new facility value in number format',
+        errMsg: invalidNumberError,
       },
     },
     {
@@ -73,7 +74,7 @@ describe('validateFacilityValue', () => {
       value: '123.',
       expectedError: {
         errRef,
-        errMsg: 'Enter the new facility value in number format',
+        errMsg: invalidNumberError,
       },
     },
     {
