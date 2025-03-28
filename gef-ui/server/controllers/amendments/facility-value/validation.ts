@@ -12,20 +12,9 @@ const errRef = 'facilityValue';
  * @returns the value or errors depending on the validation result
  */
 export const validateFacilityValue = (value: string): ErrorsOrValue<number> => {
-  if (!value) {
+  if (!value || !CURRENCY_NUMBER_REGEX.test(value)) {
     return {
-      errors: [
-        {
-          errRef,
-          errMsg: 'Enter the new facility value in number format',
-        },
-      ],
-    };
-  }
-
-  if (!CURRENCY_NUMBER_REGEX.test(value)) {
-    return {
-      errors: [{ errRef, errMsg: 'Enter a valid facility value' }],
+      errors: [{ errRef, errMsg: 'Enter the new facility value in number format' }],
     };
   }
 
