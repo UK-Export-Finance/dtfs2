@@ -93,7 +93,7 @@ const applicationPreview = {
   returnButton: () => cy.get('[data-cy="return-button"]'),
 
   makeAChangeButton: (facilityId) => cy.get(`[data-cy="facility-${facilityId}-make-change-button"]`),
-  amendmentsInProgress: () => cy.get('[data-cy="amendments-in-progress"]'),
+  amendmentInProgress: () => cy.get('[data-cy="amendment-in-progress"]'),
 };
 
 export default applicationPreview;

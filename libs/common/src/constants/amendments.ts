@@ -53,6 +53,8 @@ export const AMENDMENT_QUERIES = {
   LATEST: 'latest',
 } as const;
 
+export const CHECKERS_AMENDMENTS_DEAL_ID = 'checkersAmendmentDealId';
+
 export const AMENDMENT_TYPES = {
   PORTAL: 'PORTAL',
   TFM: 'TFM',
