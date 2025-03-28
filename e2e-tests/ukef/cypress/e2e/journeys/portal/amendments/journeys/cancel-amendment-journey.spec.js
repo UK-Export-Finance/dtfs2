@@ -12,7 +12,7 @@ import bankReviewDate from '../../../../../../../gef/cypress/e2e/pages/amendment
 import facilityValue from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
 import effectiveDate from '../../../../../../../gef/cypress/e2e/pages/amendments/effective-date';
-import checkYourAnswers from '../../../../../../../gef/cypress/e2e/pages/amendments/check-your-answers';
+import amendmentPage from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 
 import cancel from '../../../../../../../gef/cypress/e2e/pages/amendments/cancel';
 
@@ -76,7 +76,7 @@ context('Amendments - Cancel amendment journey', () => {
     {
       description: 'check your answers',
       page: 'check-your-answers',
-      element: checkYourAnswers,
+      element: amendmentPage,
       pageHeading: 'Check your answers before submitting the amendment request',
     },
   ];

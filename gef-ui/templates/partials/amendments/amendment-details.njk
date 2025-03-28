@@ -1,0 +1,29 @@
+{% extends "index.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% import '../../_macros/amendments/amendment-summary-list.njk' as amendmentSummaryList %}
+
+{% block pageTitle -%}
+  Amendment details
+{%- endblock %}
+
+{% block content -%}
+  {{ govukBackLink({
+    text: "Back",
+    href: previousPage,
+    attributes: {
+      "data-cy": "back-link"
+    }
+  }) }}
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-3">
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-4 govuk-!-margin-top-1" data-cy="page-heading">
+      <span class="govuk-caption-l" data-cy="heading-caption">
+        {{ exporterName }}, {{ facilityType }} facility
+      </span>
+      Amendment details
+    </h1>
+
+    {{ amendmentSummaryList.render(amendmentSummaryListParams) }}
+  </div>
+
+{%- endblock %}

@@ -38,7 +38,12 @@ context("Amendments ready for checker's approval - Deal summary page", () => {
         cy.visit(relative(`/gef/application-details/${dealId}`));
         applicationPreview.makeAChangeButton(issuedCashFacilityId).click();
 
-        cy.makerSubmitPortalAmendmentForReview('coverEndDate', 'facilityValue', 'facilityEndDate');
+        cy.makerSubmitPortalAmendmentForReview({
+          coverEndDateExists: true,
+          facilityValueExists: true,
+          facilityEndDateExists: true,
+          changedFacilityValue: '10000',
+        });
       });
     });
   });
