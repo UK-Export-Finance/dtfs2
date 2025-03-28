@@ -36,7 +36,7 @@ context('Amendments - Amendment details page', () => {
 
         applicationPreview.makeAChangeButton(facilityId).click();
 
-        cy.makeAnAmendmentRequest({ hasFacilityEndDate: false, changedFacilityValue: CHANGED_FACILITY_VALUE, shouldSubmit: true });
+        cy.makerSubmitPortalAmendmentForReview({ changedFacilityValue: CHANGED_FACILITY_VALUE, facilityValueExists: true });
       });
     });
   });

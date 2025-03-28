@@ -1,51 +1,58 @@
 import whatDoYouNeedToChange from '../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 import doYouHaveAFacilityEndDate from '../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
-import facilityValue from '../../../../gef/cypress/e2e/pages/amendments/facility-value';
 import eligibility from '../../../../gef/cypress/e2e/pages/amendments/eligibility';
+import facilityValue from '../../../../gef/cypress/e2e/pages/amendments/facility-value';
 
-export const makeAnAmendmentRequest = ({
-  changeCoverEndDate = false,
-  hasFacilityEndDate = false,
-  changeFacilityValue = true,
+/**
+ * completes the maker makes portal amendment request journey up to check your answers
+ * @param {Boolean} param.coverEndDateExists - if cover end date is changed
+ * @param {Boolean} param.facilityValueExists - if facility value is changed
+ * @param {Boolean} param.facilityEndDateExists - if facility end date is changed
+ * @param {String} param.changedFacilityValue - the new value for the facility
+ */
+export const makerMakesPortalAmendmentRequest = ({
+  coverEndDateExists = false,
+  facilityValueExists = false,
+  facilityEndDateExists = false,
   changedFacilityValue,
-  shouldSubmit = false,
 }) => {
-  if (changeCoverEndDate) {
+  if (coverEndDateExists) {
     whatDoYouNeedToChange.coverEndDateCheckbox().click();
   }
 
-  if (changeFacilityValue) {
+  if (facilityValueExists) {
     whatDoYouNeedToChange.facilityValueCheckbox().click();
   }
 
   cy.clickContinueButton();
 
-  if (changeCoverEndDate) {
+  if (coverEndDateExists) {
     cy.completeDateFormFields({ idPrefix: 'cover-end-date' });
     cy.clickContinueButton();
 
-    if (hasFacilityEndDate) {
+    if (facilityEndDateExists) {
       doYouHaveAFacilityEndDate.yesRadioButton().click();
       cy.clickContinueButton();
       cy.completeDateFormFields({ idPrefix: 'facility-end-date' });
+      cy.clickContinueButton();
     } else {
       doYouHaveAFacilityEndDate.noRadioButton().click();
       cy.clickContinueButton();
       cy.completeDateFormFields({ idPrefix: 'bank-review-date' });
+      cy.clickContinueButton();
     }
+
     cy.clickContinueButton();
   }
 
-  cy.keyboardInput(facilityValue.facilityValue(), changedFacilityValue);
-  cy.clickContinueButton();
+  if (facilityValueExists) {
+    cy.keyboardInput(facilityValue.facilityValue(), changedFacilityValue);
+    cy.clickContinueButton();
+  }
 
   eligibility.allTrueRadioButtons().click({ multiple: true });
   cy.clickContinueButton();
 
   cy.completeDateFormFields({ idPrefix: 'effective-date' });
   cy.clickContinueButton();
-
-  if (shouldSubmit) {
-    cy.clickSubmitButton();
-  }
 };

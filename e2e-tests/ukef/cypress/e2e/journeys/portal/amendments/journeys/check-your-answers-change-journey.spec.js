@@ -33,7 +33,7 @@ context('Amendments - Check your answers change journey', () => {
   /**
    * This test suite covers the "Check your answers" change journey for amendments.
    */
-  const setupTest = (testCases, hasFacilityEndDate) => {
+  const setupTest = (testCases, facilityEndDateExists) => {
     before(() => {
       cy.insertOneGefDeal(MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1).then((insertedDeal) => {
         dealId = insertedDeal._id;
@@ -54,7 +54,12 @@ context('Amendments - Check your answers change journey', () => {
 
           cy.getAmendmentIdFromUrl().then((amendmentId) => {
             amendmentUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}`;
-            cy.makeAnAmendmentRequest({ hasFacilityEndDate, changedFacilityValue: CHANGED_FACILITY_VALUE, changeCoverEndDate: true });
+            cy.makerMakesPortalAmendmentRequest({
+              facilityEndDateExists,
+              facilityValueExists: true,
+              changedFacilityValue: CHANGED_FACILITY_VALUE,
+              coverEndDateExists: true,
+            });
           });
         });
       });
@@ -73,35 +78,53 @@ context('Amendments - Check your answers change journey', () => {
     testCases.forEach(({ description, page, nextPage, element, nextElement, checkYourAnswersChangeElement, fragment, nextPageHeading, change }) => {
       it(`should navigate back to "Check your answers" page when no changes are made on the ${description} page`, () => {
         cy.visit(relative(`${amendmentUrl}/check-your-answers`));
+
         checkYourAnswersChangeElement().click();
+
         cy.url().should('eq', relative(`${amendmentUrl}/${page}/?change=true#${fragment}`));
+
         cy.clickContinueButton();
+
         cy.url().should('eq', relative(`${amendmentUrl}/check-your-answers#${fragment}`));
+
         amendmentPage.pageHeading().contains('Check your answers before submitting the amendment request');
       });
 
       it(`should navigate back to "Check your answers" page when the Back link is clicked on the ${description} page`, () => {
         cy.visit(relative(`${amendmentUrl}/check-your-answers`));
+
         checkYourAnswersChangeElement().click();
+
         cy.url().should('eq', relative(`${amendmentUrl}/${page}/?change=true#${fragment}`));
+
         element.backLink().click();
+
         cy.url().should('eq', relative(`${amendmentUrl}/check-your-answers`));
+
         amendmentPage.pageHeading().contains('Check your answers before submitting the amendment request');
       });
 
       it(`should navigate through the amendment journey when changes are made on the ${description} page`, () => {
         cy.visit(relative(`${amendmentUrl}/check-your-answers`));
+
         checkYourAnswersChangeElement().click();
+
         cy.url().should('eq', relative(`${amendmentUrl}/${page}/?change=true#${fragment}`));
         change();
+
         if (nextPage !== 'manual-approval-needed') {
           cy.url().should('eq', relative(`${amendmentUrl}/${nextPage}#${fragment}`));
+
           nextElement.pageHeading().contains(nextPageHeading);
         } else {
           cy.url().should('eq', relative(`${amendmentUrl}/${nextPage}#${fragment}`));
+
           nextElement.pageHeading().contains(nextPageHeading);
+
           manualApprovalNeeded.backLink().click();
+
           eligibility.allTrueRadioButtons().click({ multiple: true });
+
           cy.clickContinueButton();
         }
       });
@@ -112,8 +135,9 @@ context('Amendments - Check your answers change journey', () => {
   describe('Bank Review Date Enabled', () => {
     setupTest(MOCK_JOURNEYS_WITH_BRD, false);
   });
+
   // If the amendmentPageActions function is called with true, the facilityEndDate is enabled in the journey
-  describe('Facility End Date Endabled', () => {
+  describe('Facility End Date Enabled', () => {
     setupTest(MOCK_JOURNEYS_WITH_FED, true);
   });
 });
