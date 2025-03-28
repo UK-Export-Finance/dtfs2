@@ -37,7 +37,7 @@ describe('/v1/deals/:id/additionalRefName', () => {
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     testUser = testUsers().withRole(READ_ONLY).one();
-    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
+    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Test Bank 1').all();
     [aBarclaysMaker, anotherBarclaysMaker] = barclaysMakers;
   });
 

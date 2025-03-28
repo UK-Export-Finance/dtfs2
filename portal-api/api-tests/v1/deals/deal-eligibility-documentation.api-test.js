@@ -22,8 +22,8 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
-    anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Test Bank 1').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('Test Bank 2').one();
     anAdmin = testUsers().withRole(ADMIN).one();
 
     await eligibilityCriteriaCache.initialise(app, anAdmin);
