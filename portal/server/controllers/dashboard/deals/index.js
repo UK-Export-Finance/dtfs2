@@ -13,7 +13,7 @@ const { PAGE_SIZE } = CONSTANTS.DASHBOARD;
 const getAllDealsData = async (userToken, user, sessionFilters, currentPage, sortBy, res) => {
   const filtersArray = submittedFiltersArray(sessionFilters);
 
-  const filtersQuery = dashboardDealsFiltersQuery(filtersArray, user);
+  const filtersQuery = await dashboardDealsFiltersQuery(filtersArray, user, userToken);
 
   const sortQuery = dashboardSortQuery(sortBy);
 
