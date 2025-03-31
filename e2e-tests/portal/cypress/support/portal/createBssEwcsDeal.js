@@ -306,7 +306,6 @@ const completeAboutSupplierSection = ({ exporterCompanyName }) => {
  */
 const inCompleteAboutSupplierSection = () => {
   contract.aboutSupplierDetailsLink().click();
-  contractAboutSupplier.supplierType().select('Exporter');
   contractAboutSupplier.nextPage().click();
 };
 

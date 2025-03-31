@@ -17,6 +17,7 @@ context('about-supply-contract', () => {
       bssDealId = dealId;
       contractUrl = relative(`/contract/${bssDealId}`);
     });
+    cy.inCompleteAboutSupplierSection();
   });
 
   it('A maker picks up a deal in status=Draft, and triggers all validation errors.', () => {
@@ -155,7 +156,7 @@ context('about-supply-contract', () => {
     contractAboutPreview.errors().should('contain', 'Indemnifier correspondence town is required for non-UK addresses');
   });
 
-  it.only('A maker picks up a deal in status=Draft, triggers Supplier companies house validation errors', () => {
+  it('A maker picks up a deal in status=Draft, triggers Supplier companies house validation errors', () => {
     cy.login(BANK1_MAKER1);
     cy.visit(`${contractUrl}/about/supplier`);
 
