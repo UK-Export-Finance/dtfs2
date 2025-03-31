@@ -27,14 +27,6 @@ context('about-supply-contract preview print button', () => {
   });
 
   it('should open a print dialogue when pressing the print button', () => {
-    cy.window().then((win) => {
-      cy.stub(win, 'print').as('printDialog');
-    });
-
-    // Click the print button
-    partials.printButton().click();
-
-    // Assert that the print dialog was triggered
-    cy.get('@printDialog').should('be.calledOnce');
+    cy.assertPrintDialogue(partials.printButton);
   });
 });

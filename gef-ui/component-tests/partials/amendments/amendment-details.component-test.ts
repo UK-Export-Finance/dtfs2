@@ -45,6 +45,14 @@ describe(page, () => {
     wrapper.expectText('[data-cy="print-button"]').toRead('Print page');
   });
 
+  it('should have the correct integrity for the print button', () => {
+    const wrapper = render(params);
+
+    wrapper
+      .expectElement('script[src="/assets/js/printPage.js"]')
+      .toHaveAttribute('integrity', 'sha512-ADkS6GB/rgAPwWTnZ9lAIRfzR1mDYDjDIGGn7x95Um00JgUw+W2IjHkF5TORkvgn5SqpHTVZE7CIvI+/KBgh5w==');
+  });
+
   it('should render amendment summary list', () => {
     const wrapper = render(params);
 

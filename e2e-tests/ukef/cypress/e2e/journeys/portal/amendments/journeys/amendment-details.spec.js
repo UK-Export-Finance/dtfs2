@@ -75,15 +75,7 @@ context('Amendments - Amendment details page', () => {
   });
 
   it('should render the print dialogue when clicking the print button', () => {
-    cy.window().then((win) => {
-      cy.stub(win, 'print').as('printDialog');
-    });
-
-    // Click the print button
-    printButton().click();
-
-    // Assert that the print dialog was triggered
-    cy.get('@printDialog').should('be.calledOnce');
+    cy.assertPrintDialogue(printButton);
   });
 
   it('should display a summary list with the correct changes and new facility value', () => {
