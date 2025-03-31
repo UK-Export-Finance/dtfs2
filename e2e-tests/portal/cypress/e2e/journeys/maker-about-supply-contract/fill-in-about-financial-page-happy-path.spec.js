@@ -1,9 +1,8 @@
 const { CURRENCY } = require('@ukef/dtfs2-common');
-const { contract, contractAboutFinancial, contractAboutPreview, defaults, contractAboutSupplier, contractAboutBuyer } = require('../../pages');
+const { contract, contractAboutFinancial, contractAboutPreview, defaults } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const relative = require('../../relativeURL');
-const { taskListHeader } = require('../../partials');
 const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
@@ -18,6 +17,9 @@ context('about-supply-contract', () => {
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
       contractUrl = relative(`/contract/${bssDealId}`);
+    });
+    cy.completeBssEwcsDealandFillDealFields({
+      exporterCompanyName: 'Exporter Company Name',
     });
   });
 
@@ -47,23 +49,14 @@ context('about-supply-contract', () => {
     contractAboutFinancial.saveAndGoBack().click();
 
     // check that the preview page renders the Submission Details component
-    cy.visit(contractUrl);
-    contract.aboutSupplierDetailsLink().click();
-    contractAboutSupplier.nextPage().click();
-    contractAboutBuyer.nextPage().click();
-    contractAboutFinancial.preview().click();
+    cy.visit(`${contractUrl}/about/check-your-answers`);
     contractAboutPreview.submissionDetails().should('be.visible');
 
     cy.assertText(partials.taskListHeader.itemStatus('financial-information'), 'Completed');
 
     // since we've cleared all validation at this point the section should show as completed on the deal page
     cy.visit(contractUrl);
-    contract.aboutSupplierDetailsLink().click();
-    contractAboutSupplier.nextPage().click();
-    contractAboutBuyer.nextPage().click();
-    contractAboutFinancial.preview().click();
-    contractAboutPreview.submissionDetails().should('be.visible');
 
-    cy.assertText(taskListHeader.itemStatus('financial-information'), 'Completed');
+    cy.assertText(contract.aboutSupplierDetailsStatus(), 'Completed');
   });
 });

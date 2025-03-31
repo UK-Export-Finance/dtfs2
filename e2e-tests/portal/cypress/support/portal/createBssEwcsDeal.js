@@ -281,6 +281,36 @@ const createBssEwcsDeal = () => {
 };
 
 /**
+ * Completes the about supplier and about buyer sections for a BSS/EWCS deal.
+ * @param {Object} params - The parameters for filling out the deal details.
+ * @param {string} params.exporterCompanyName - The name of the exporter company.
+ */
+const completeAboutSupplierAndBuyerSections = ({ exporterCompanyName }) => {
+  fillSupplierDetails(exporterCompanyName);
+  fillBuyerDetails();
+};
+
+/**
+ * Completes the about supplier and about buyer sections for a BSS/EWCS deal.
+ * @param {Object} params - The parameters for filling out the deal details.
+ * @param {string} params.exporterCompanyName - The name of the exporter company.
+ */
+const completeAboutSupplierSection = ({ exporterCompanyName }) => {
+  fillSupplierDetails(exporterCompanyName);
+};
+
+/**
+ * Completes the about supplier and about buyer sections for a BSS/EWCS deal.
+ * @param {Object} params - The parameters for filling out the deal details.
+ *
+ */
+const inCompleteAboutSupplierSection = () => {
+  contract.aboutSupplierDetailsLink().click();
+  contractAboutSupplier.supplierType().select('Exporter');
+  contractAboutSupplier.nextPage().click();
+};
+
+/**
  * Completes the additional fields for a BSS/EWCS deal.
  * @param {Object} params - The parameters for filling out the deal details.
  * @param {string} params.dealSubmissionType - The type of deal submission.
@@ -291,4 +321,4 @@ const completeBssEwcsDealFields = ({ dealSubmissionType, facilityStage, exporter
   fillOutDealDetails({ dealSubmissionType, facilityStage, exporterCompanyName });
 };
 
-export { createBssEwcsDeal, completeBssEwcsDealFields };
+export { createBssEwcsDeal, completeBssEwcsDealFields, completeAboutSupplierAndBuyerSections, completeAboutSupplierSection, inCompleteAboutSupplierSection };

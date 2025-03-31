@@ -15,26 +15,32 @@ context('about-buyer', () => {
       bssDealId = dealId;
       contractUrl = relative(`/contract/${bssDealId}`);
     });
+    cy.completeAboutSupplierSection({
+      exporterCompanyName: 'Exporter Company Name',
+    });
   });
 
   beforeEach(() => {
     cy.login(BANK1_MAKER1);
     cy.visit(contractUrl);
-    contract.aboutSupplierDetailsLink().click();
   });
 
   it('should trigger all validation errors when a maker picks up a deal in status=Draft', () => {
+    contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
 
+    // prove validation of all non-conditional pieces
     contractAboutPreview.expectError('Buyer name is required');
     contractAboutPreview.expectError('Buyer address line 1 is required');
     contractAboutPreview.expectError('Destination of Goods and Services is required');
   });
 
   it('should display validation errors on the about-buyer page', () => {
-    partials.taskListHeader.itemLink('buyer').click();
+    // prove the errors are on the about-buyer page
+    contract.aboutSupplierDetailsLink().click();
+    contractAboutSupplier.nextPage().click();
 
     partials.errorSummaryLinks().should('have.length', 5);
     contractAboutBuyer.expectError('Buyer name is required');
@@ -42,12 +48,11 @@ context('about-buyer', () => {
     contractAboutBuyer.expectError('Buyer address line 1 is required');
     contractAboutBuyer.expectError('Buyer town is required for non-UK addresses');
     contractAboutBuyer.expectError('Destination of Goods and Services is required');
-  });
 
-  it('should trigger UK-specific validation error when switching to UK', () => {
-    partials.taskListHeader.itemLink('buyer').click();
+    // switch to UK country
     contractAboutBuyer.buyerAddress().country().select('GBR');
 
+    // click through
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
     contractAboutPreview.errors().should('contain', 'Buyer postcode is required for UK addresses');

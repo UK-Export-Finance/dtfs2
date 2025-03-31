@@ -1,7 +1,6 @@
 const { contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const relative = require('../../relativeURL');
 const { today } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
@@ -13,7 +12,10 @@ context('about-supply-contract', () => {
   before(() => {
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
-      contractUrl = relative(`/contract/${bssDealId}`);
+      contractUrl = `/contract/${bssDealId}`;
+    });
+    cy.completeBssEwcsDealandFillDealFields({
+      exporterCompanyName: 'Exporter Company Name',
     });
   });
 
@@ -45,11 +47,7 @@ context('about-supply-contract', () => {
     contractAboutFinancial.preview().click();
 
     // check that the preview page renders the Submission Details component
-    cy.visit(contractUrl);
-    contract.aboutSupplierDetailsLink().click();
-    contractAboutSupplier.nextPage().click();
-    contractAboutBuyer.nextPage().click();
-    contractAboutFinancial.preview().click();
+    cy.visit(`${contractUrl}/about/check-your-answers`);
     contractAboutPreview.submissionDetails().should('be.visible');
   });
 });

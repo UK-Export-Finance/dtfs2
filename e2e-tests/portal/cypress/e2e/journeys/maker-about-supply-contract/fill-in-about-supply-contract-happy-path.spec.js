@@ -1,5 +1,5 @@
 const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common');
-const { contract, contractAboutSupplier, contractAboutPreview, contractAboutBuyer, contractAboutFinancial } = require('../../pages');
+const { contract, contractAboutSupplier, contractAboutPreview, defaults } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const relative = require('../../relativeURL');
@@ -9,6 +9,7 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 context('about-supply-contract', () => {
   let bssDealId;
   let contractUrl;
+  const additionalRefName = 'UKEF test bank (Delegated)';
 
   before(() => {
     cy.deleteDeals(ADMIN);
@@ -29,7 +30,7 @@ context('about-supply-contract', () => {
 
     contract.aboutSupplierDetailsLink().click();
 
-    cy.assertText(contractAboutSupplier.title(), 'About the Supply Contract');
+    cy.title().should('eq', `Supplier information - ${additionalRefName}${defaults.pageTitleAppend}`);
 
     //---
     // check initial page state..
@@ -51,7 +52,7 @@ context('about-supply-contract', () => {
 
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
-    // // the search should populate the supplier address fields
+    // the search should populate the supplier address fields
     contractAboutSupplier.supplierName().should('not.have.value', '');
     contractAboutSupplier.supplierAddress().line1().should('not.have.value', '');
     contractAboutSupplier.supplierAddress().town().should('not.have.value', '');
@@ -77,11 +78,7 @@ context('about-supply-contract', () => {
     cy.assertText(contract.aboutSupplierDetailsStatus(), 'Incomplete');
 
     // check that the preview page renders the Submission Details component
-    cy.visit(contractUrl);
-    contract.aboutSupplierDetailsLink().click();
-    contractAboutSupplier.nextPage().click();
-    contractAboutBuyer.nextPage().click();
-    contractAboutFinancial.preview().click();
+    cy.visit(`${contractUrl}/about/check-your-answers`);
     contractAboutPreview.submissionDetails().should('be.visible');
 
     cy.assertText(partials.taskListHeader.itemStatus('supplier-and-counter-indemnifier/guarantor'), 'Completed');

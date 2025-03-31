@@ -14,6 +14,7 @@ context('Buyer form - create element and check if inserted into deal', () => {
       bssDealId = dealId;
       contractUrl = relative(`/contract/${bssDealId}`);
     });
+    cy.inCompleteAboutSupplierSection();
   });
 
   it("should not insert created element's data in the deal", () => {
