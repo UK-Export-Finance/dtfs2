@@ -39,6 +39,12 @@ describe(page, () => {
     wrapper.expectText('[data-cy="heading-caption"]').toRead(`${exporterName}, ${facilityType} facility`);
   });
 
+  it('should render a print button', () => {
+    const wrapper = render(params);
+
+    wrapper.expectText('[data-cy="print-button"]').toRead('Print page');
+  });
+
   it('should render amendment summary list', () => {
     const wrapper = render(params);
 
