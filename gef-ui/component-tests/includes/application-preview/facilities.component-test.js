@@ -89,7 +89,7 @@ describe(page, () => {
       wrapper.expectText(amendmentInProgress).toRead('Check amendment details before submitting to UKEF');
     });
 
-    it('should be rendered when facility has not an amendment in progress', () => {
+    it('should be rendered when facility does not have an amendment in progress', () => {
       issuedCashFacility.isFacilityWithAmendmentInProgress = false;
       wrapper = render({
         ...params,

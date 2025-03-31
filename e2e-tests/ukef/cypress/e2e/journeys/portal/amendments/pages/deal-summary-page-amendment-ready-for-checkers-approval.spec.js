@@ -48,7 +48,7 @@ context("Amendments ready for checker's approval - Deal summary page", () => {
     });
   });
 
-  describe('when user login as a Maker', () => {
+  describe('when a user logs in as a Maker', () => {
     beforeEach(() => {
       cy.clearSessionCookies();
       cy.login(BANK1_MAKER1);
@@ -78,7 +78,7 @@ context("Amendments ready for checker's approval - Deal summary page", () => {
     });
   });
 
-  describe('when user login as a Checker', () => {
+  describe('when a user logs in as a Checker', () => {
     beforeEach(() => {
       cy.clearSessionCookies();
       cy.login(BANK1_CHECKER1);
