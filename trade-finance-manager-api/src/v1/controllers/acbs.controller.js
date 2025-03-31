@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const $ = require('mongo-dot-notation');
-const { DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, DURABLE_FUNCTIONS_LOG } = require('@ukef/dtfs2-common');
 const { generateSystemAuditDetails, generateAuditDatabaseRecordFromAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const {
@@ -48,7 +48,7 @@ const addToACBSLog = async (payload) => {
       auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
     };
 
-    const collection = await db.getCollection('durable-functions-log');
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG);
     return collection.insertOne(logEntry);
   }
 
@@ -197,7 +197,7 @@ const updateAmendedFacilityAcbs = async (taskResult) => {
 const checkAzureAcbsFunction = async () => {
   try {
     // Fetch outstanding functions
-    const collection = await db.getCollection('durable-functions-log');
+    const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DURABLE_FUNCTIONS_LOG);
     const runningTasks = await collection
       .find({
         type: { $eq: DURABLE_FUNCTIONS_LOG.TYPE.ACBS },
@@ -212,7 +212,7 @@ const checkAzureAcbsFunction = async () => {
     taskList.forEach(async (task) => {
       if (task.runtimeStatus) {
         // Update
-        if (task.runtimeStatus !== 'Running') {
+        if (task.runtimeStatus !== DURABLE_FUNCTIONS_LOG.STATUS.RUNNING) {
           await collection.findOneAndUpdate(
             { instanceId: { $eq: task.instanceId } },
             $.flatten({
@@ -223,7 +223,7 @@ const checkAzureAcbsFunction = async () => {
           );
         }
         // ADD `acbs` object to tfm-deals and tfm-facilities
-        if (task.runtimeStatus === 'Completed') {
+        if (task.runtimeStatus === DURABLE_FUNCTIONS_LOG.STATUS.COMPLETED) {
           switch (task.name) {
             case 'acbs-issue-facility':
               await updateIssuedFacilityAcbs(task.output);
