@@ -11,4 +11,5 @@ export const PORTAL_AMENDMENT_PAGES = {
   MANUAL_APPROVAL_NEEDED: 'manual-approval-needed',
   CANCEL: 'cancel',
   SUBMITTED_FOR_CHECKING: 'submitted-for-checking',
+  AMENDMENT_DETAILS: 'amendment-details',
 } as const;

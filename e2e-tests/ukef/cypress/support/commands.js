@@ -4,12 +4,13 @@ import { submitDealCancellation } from './trade-finance-manager-ui/submit-deal-c
 import { makerLoginSubmitGefDealForReview } from './portal/makerLoginSubmitGefDealForReview';
 import { checkerLoginSubmitGefDealToUkef } from './portal/checkerLoginSubmitGefDealToUkef';
 import { makerSubmitDealForReview } from './portal/makerSubmitDealForReview';
-import { makerSubmitPortalAmendmentForReview } from './portal/makerSubmitPortalAmendmentForReview';
 import { checkerSubmitDealToUkef } from './portal/checkerSubmitDealToUkef';
 import { getOneDeal } from './portal-api/getOneDeal';
 import { getOneGefDeal } from './portal-api/getOneGefDeal';
 import { clearSessionCookies } from './utils/clearSessionCookies';
 import { getAmendmentIdFromUrl } from './utils/getAmendmentIdFromUrl';
+import { makerSubmitPortalAmendmentForReview } from './gef/makerSubmitPortalAmendmentForReview';
+import { makerMakesPortalAmendmentRequest } from './gef/makerMakesPortalAmendmentRequest';
 
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
@@ -45,10 +46,12 @@ Cypress.Commands.add('completeDateFormFields', require('./portal/completeDateFor
 
 Cypress.Commands.add('makerLoginSubmitGefDealForReview', makerLoginSubmitGefDealForReview);
 Cypress.Commands.add('checkerLoginSubmitGefDealToUkef', checkerLoginSubmitGefDealToUkef);
-Cypress.Commands.add('makerSubmitPortalAmendmentForReview', makerSubmitPortalAmendmentForReview);
 Cypress.Commands.add('makerSubmitDealForReview', makerSubmitDealForReview);
 Cypress.Commands.add('checkerSubmitDealToUkef', checkerSubmitDealToUkef);
 Cypress.Commands.add('getAmendmentIdFromUrl', getAmendmentIdFromUrl);
+
+Cypress.Commands.add('makerSubmitPortalAmendmentForReview', makerSubmitPortalAmendmentForReview);
+Cypress.Commands.add('makerMakesPortalAmendmentRequest', makerMakesPortalAmendmentRequest);
 
 Cypress.Commands.add('submitDealCancellation', submitDealCancellation);
 
