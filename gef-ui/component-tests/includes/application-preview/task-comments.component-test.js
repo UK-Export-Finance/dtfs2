@@ -18,7 +18,7 @@ describe(page, () => {
     const amendmentDetailsHeader = `[data-cy="amendment-details-header"]`;
     const amendmentDetails = `[data-cy="amendment-details"]`;
 
-    it('should be rendered when portalAmendmentStatus is submitted for review and login as a maker', () => {
+    it(`should be rendered when portalAmendmentStatus is ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL} and the user is logged in as a maker`, () => {
       wrapper = render(params);
 
       wrapper.expectElement(amendmentDetailsHeader).toExist();
@@ -27,7 +27,7 @@ describe(page, () => {
       wrapper.expectText(amendmentDetails).toRead('Amendment details');
     });
 
-    it('should be rendered when portalAmendmentStatus is submitted for review and login as a checker', () => {
+    it(`should be rendered when portalAmendmentStatus is ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL} and the user is logged in as a checker`, () => {
       wrapper = render({ ...params, userRoles: ['checker'] });
 
       wrapper.expectElement(amendmentDetailsHeader).toExist();

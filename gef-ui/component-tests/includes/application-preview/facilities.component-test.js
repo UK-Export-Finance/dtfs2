@@ -75,21 +75,21 @@ describe(page, () => {
     issuedCashFacility.isFacilityWithAmendmentInProgress = true;
     const amendmentInProgress = `[data-cy="amendment-in-progress"]`;
 
-    it('should be rendered when portalAmendment is in progress and login as a maker', () => {
+    it(`should be rendered when facility has an amendment in progress and the user is logged in as a maker`, () => {
       wrapper = render(params);
 
       wrapper.expectElement(amendmentInProgress).toExist();
       wrapper.expectText(amendmentInProgress).toRead('See details');
     });
 
-    it('should be rendered when portalAmendment is in progress and login as a checker', () => {
+    it('should be rendered when facility has an amendment in progress and the user is logged in as a checker', () => {
       wrapper = render({ ...params, userRoles: ['checker'] });
 
       wrapper.expectElement(amendmentInProgress).toExist();
       wrapper.expectText(amendmentInProgress).toRead('Check amendment details before submitting to UKEF');
     });
 
-    it('should not be rendered when portalAmendment is not in progress', () => {
+    it('should be rendered when facility has not an amendment in progress', () => {
       issuedCashFacility.isFacilityWithAmendmentInProgress = false;
       wrapper = render({
         ...params,

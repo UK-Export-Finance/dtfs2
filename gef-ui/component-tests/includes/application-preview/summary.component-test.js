@@ -14,7 +14,7 @@ describe(page, () => {
   describe('Amendment status', () => {
     const amendmentStatus = `[data-cy="amendment-status"]`;
 
-    it('should be rendered when portalAmendmentStatus is ready for checker approval', () => {
+    it(`should be rendered when portalAmendmentStatus is ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}`, () => {
       wrapper = render(params);
 
       wrapper.expectElement(amendmentStatus).toExist();
