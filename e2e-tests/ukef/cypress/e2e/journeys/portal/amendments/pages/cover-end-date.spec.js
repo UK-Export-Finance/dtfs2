@@ -30,6 +30,12 @@ context('Amendments - Cover end date - page tests', () => {
    * @type {Date}
    */
   let coverStartDate;
+  /**
+   * @type {String}
+   */
+  let amendmentUrl;
+
+  const realDateErrorMessage = 'Cover end date must be a real date';
 
   before(() => {
     cy.insertOneGefDeal(MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1).then((insertedDeal) => {
@@ -54,6 +60,7 @@ context('Amendments - Cover end date - page tests', () => {
           const urlSplit = url.split('/');
 
           amendmentId = urlSplit[9];
+          amendmentUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`;
         });
 
         whatDoYouNeedToChange.coverEndDateCheckbox().click();
@@ -70,7 +77,7 @@ context('Amendments - Cover end date - page tests', () => {
   beforeEach(() => {
     cy.clearSessionCookies();
     cy.login(BANK1_MAKER1);
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+    cy.visit(relative(amendmentUrl));
   });
 
   it('should render key features of the page', () => {
@@ -89,13 +96,13 @@ context('Amendments - Cover end date - page tests', () => {
   });
 
   it('should render an error if cover end date is invalid', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+    cy.visit(relative(amendmentUrl));
 
     cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: 'abc', month: 'xyz', year: '123' });
     cy.clickContinueButton();
 
     coverEndDate.coverEndDateInlineError().should('be.visible');
-    coverEndDate.coverEndDateInlineError().contains('Cover end date must be a real date');
+    coverEndDate.coverEndDateInlineError().contains(realDateErrorMessage);
 
     coverEndDate.coverEndDateDay().should('have.class', 'govuk-input--error');
     coverEndDate.coverEndDateMonth().should('have.class', 'govuk-input--error');
@@ -103,13 +110,13 @@ context('Amendments - Cover end date - page tests', () => {
   });
 
   it('should highlight date field only', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+    cy.visit(relative(amendmentUrl));
 
     cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: '32', month: '01', year: '2025' });
     cy.clickContinueButton();
 
     coverEndDate.coverEndDateInlineError().should('be.visible');
-    coverEndDate.coverEndDateInlineError().contains('Cover end date must be a real date');
+    coverEndDate.coverEndDateInlineError().contains(realDateErrorMessage);
 
     coverEndDate.coverEndDateDay().should('have.class', 'govuk-input--error');
     coverEndDate.coverEndDateMonth().should('not.have.class', 'govuk-input--error');
@@ -117,13 +124,13 @@ context('Amendments - Cover end date - page tests', () => {
   });
 
   it('should highlight month field only', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+    cy.visit(relative(amendmentUrl));
 
     cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: '31', month: '13', year: '2025' });
     cy.clickContinueButton();
 
     coverEndDate.coverEndDateInlineError().should('be.visible');
-    coverEndDate.coverEndDateInlineError().contains('Cover end date must be a real date');
+    coverEndDate.coverEndDateInlineError().contains(realDateErrorMessage);
 
     coverEndDate.coverEndDateDay().should('not.have.class', 'govuk-input--error');
     coverEndDate.coverEndDateMonth().should('have.class', 'govuk-input--error');
@@ -131,13 +138,13 @@ context('Amendments - Cover end date - page tests', () => {
   });
 
   it('should highlight year field only', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+    cy.visit(relative(amendmentUrl));
 
     cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: '31', month: '12', year: '025' });
     cy.clickContinueButton();
 
     coverEndDate.coverEndDateInlineError().should('be.visible');
-    coverEndDate.coverEndDateInlineError().contains('Cover end date must be a real date');
+    coverEndDate.coverEndDateInlineError().contains(realDateErrorMessage);
 
     coverEndDate.coverEndDateDay().should('not.have.class', 'govuk-input--error');
     coverEndDate.coverEndDateMonth().should('not.have.class', 'govuk-input--error');
@@ -145,13 +152,13 @@ context('Amendments - Cover end date - page tests', () => {
   });
 
   it('should highlight both date and month fields', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+    cy.visit(relative(amendmentUrl));
 
     cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: '32', month: '13', year: '2025' });
     cy.clickContinueButton();
 
     coverEndDate.coverEndDateInlineError().should('be.visible');
-    coverEndDate.coverEndDateInlineError().contains('Cover end date must be a real date');
+    coverEndDate.coverEndDateInlineError().contains(realDateErrorMessage);
 
     coverEndDate.coverEndDateDay().should('have.class', 'govuk-input--error');
     coverEndDate.coverEndDateMonth().should('have.class', 'govuk-input--error');
@@ -159,13 +166,13 @@ context('Amendments - Cover end date - page tests', () => {
   });
 
   it('should highlight both month and year fields', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+    cy.visit(relative(amendmentUrl));
 
     cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: '31', month: '13', year: '025' });
     cy.clickContinueButton();
 
     coverEndDate.coverEndDateInlineError().should('be.visible');
-    coverEndDate.coverEndDateInlineError().contains('Cover end date must be a real date');
+    coverEndDate.coverEndDateInlineError().contains(realDateErrorMessage);
 
     coverEndDate.coverEndDateDay().should('not.have.class', 'govuk-input--error');
     coverEndDate.coverEndDateMonth().should('have.class', 'govuk-input--error');
@@ -173,13 +180,13 @@ context('Amendments - Cover end date - page tests', () => {
   });
 
   it('should highlight both date and year fields', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+    cy.visit(relative(amendmentUrl));
 
     cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: '32', month: '12', year: '025' });
     cy.clickContinueButton();
 
     coverEndDate.coverEndDateInlineError().should('be.visible');
-    coverEndDate.coverEndDateInlineError().contains('Cover end date must be a real date');
+    coverEndDate.coverEndDateInlineError().contains(realDateErrorMessage);
 
     coverEndDate.coverEndDateDay().should('have.class', 'govuk-input--error');
     coverEndDate.coverEndDateMonth().should('not.have.class', 'govuk-input--error');
@@ -187,7 +194,7 @@ context('Amendments - Cover end date - page tests', () => {
   });
 
   it('should render an error if cover end date is before cover start date', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+    cy.visit(relative(amendmentUrl));
 
     const twoDaysBeforeCoverStartDate = sub(coverStartDate, { days: 2 });
     cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: twoDaysBeforeCoverStartDate });
@@ -199,7 +206,7 @@ context('Amendments - Cover end date - page tests', () => {
   });
 
   it('should render an error if cover end date is greater than 6 years in the future', () => {
-    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+    cy.visit(relative(amendmentUrl));
 
     cy.completeDateFormFields({ idPrefix: 'cover-end-date', date: sixYearsOneDay.date });
     cy.clickContinueButton();

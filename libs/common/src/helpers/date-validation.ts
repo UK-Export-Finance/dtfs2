@@ -175,9 +175,9 @@ const validateEachFieldIsValid = ({ day, month, year }: DayMonthYearInput, value
  * The error returned by the below function should always take priority over any additional custom added checks.
  * In some cases, only specific fields in the date input should be highlighted as containing errors. These fields are returned by errRefs.
  *
- * @param {DayMonthYearInput} inputtedDate - Object containing the values inputted in the 'day', 'month' and 'year' fields
- * @param {string} valueName - the readable name of the field e.g. 'cover end date'. This should be capitalised as you would expect it to appear mid-sentence (typically all lower case).
- * @param {string} valueRef - the internally used ref for the field e.g. 'coverEndDate'
+ * @param inputtedDate - Object containing the values inputted in the 'day', 'month' and 'year' fields
+ * @param valueName - the readable name of the field e.g. 'cover end date'. This should be capitalised as you would expect it to appear mid-sentence (typically all lower case).
+ * @param valueRef - the internally used ref for the field e.g. 'coverEndDate'
  * @returns errRefs and errMsg. errRefs are the refs of fields that should be highlighted.
  * If errRefs includes 'valueRef' then all 3 date fields should be highlighted.
  */
