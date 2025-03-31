@@ -96,6 +96,94 @@ context('Amendments - Cover end date - page tests', () => {
 
     coverEndDate.coverEndDateInlineError().should('be.visible');
     coverEndDate.coverEndDateInlineError().contains('Cover end date must be a real date');
+
+    coverEndDate.coverEndDateDay().should('have.class', 'govuk-input--error');
+    coverEndDate.coverEndDateMonth().should('have.class', 'govuk-input--error');
+    coverEndDate.coverEndDateYear().should('have.class', 'govuk-input--error');
+  });
+
+  it('should highlight date field only', () => {
+    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+
+    cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: '32', month: '01', year: '2025' });
+    cy.clickContinueButton();
+
+    coverEndDate.coverEndDateInlineError().should('be.visible');
+    coverEndDate.coverEndDateInlineError().contains('Cover end date must be a real date');
+
+    coverEndDate.coverEndDateDay().should('have.class', 'govuk-input--error');
+    coverEndDate.coverEndDateMonth().should('not.have.class', 'govuk-input--error');
+    coverEndDate.coverEndDateYear().should('not.have.class', 'govuk-input--error');
+  });
+
+  it('should highlight month field only', () => {
+    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+
+    cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: '31', month: '13', year: '2025' });
+    cy.clickContinueButton();
+
+    coverEndDate.coverEndDateInlineError().should('be.visible');
+    coverEndDate.coverEndDateInlineError().contains('Cover end date must be a real date');
+
+    coverEndDate.coverEndDateDay().should('not.have.class', 'govuk-input--error');
+    coverEndDate.coverEndDateMonth().should('have.class', 'govuk-input--error');
+    coverEndDate.coverEndDateYear().should('not.have.class', 'govuk-input--error');
+  });
+
+  it('should highlight year field only', () => {
+    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+
+    cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: '31', month: '12', year: '025' });
+    cy.clickContinueButton();
+
+    coverEndDate.coverEndDateInlineError().should('be.visible');
+    coverEndDate.coverEndDateInlineError().contains('Cover end date must be a real date');
+
+    coverEndDate.coverEndDateDay().should('not.have.class', 'govuk-input--error');
+    coverEndDate.coverEndDateMonth().should('not.have.class', 'govuk-input--error');
+    coverEndDate.coverEndDateYear().should('have.class', 'govuk-input--error');
+  });
+
+  it('should highlight both date and month fields', () => {
+    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+
+    cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: '32', month: '13', year: '2025' });
+    cy.clickContinueButton();
+
+    coverEndDate.coverEndDateInlineError().should('be.visible');
+    coverEndDate.coverEndDateInlineError().contains('Cover end date must be a real date');
+
+    coverEndDate.coverEndDateDay().should('have.class', 'govuk-input--error');
+    coverEndDate.coverEndDateMonth().should('have.class', 'govuk-input--error');
+    coverEndDate.coverEndDateYear().should('not.have.class', 'govuk-input--error');
+  });
+
+  it('should highlight both month and year fields', () => {
+    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+
+    cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: '31', month: '13', year: '025' });
+    cy.clickContinueButton();
+
+    coverEndDate.coverEndDateInlineError().should('be.visible');
+    coverEndDate.coverEndDateInlineError().contains('Cover end date must be a real date');
+
+    coverEndDate.coverEndDateDay().should('not.have.class', 'govuk-input--error');
+    coverEndDate.coverEndDateMonth().should('have.class', 'govuk-input--error');
+    coverEndDate.coverEndDateYear().should('have.class', 'govuk-input--error');
+  });
+
+  it('should highlight both date and year fields', () => {
+    cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
+
+    cy.completeDateFormFields({ idPrefix: 'cover-end-date', day: '32', month: '12', year: '025' });
+    cy.clickContinueButton();
+
+    coverEndDate.coverEndDateInlineError().should('be.visible');
+    coverEndDate.coverEndDateInlineError().contains('Cover end date must be a real date');
+
+    coverEndDate.coverEndDateDay().should('have.class', 'govuk-input--error');
+    coverEndDate.coverEndDateMonth().should('not.have.class', 'govuk-input--error');
+    coverEndDate.coverEndDateYear().should('have.class', 'govuk-input--error');
   });
 
   it('should render an error if cover end date is before cover start date', () => {

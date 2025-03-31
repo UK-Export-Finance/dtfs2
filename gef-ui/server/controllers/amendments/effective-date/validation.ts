@@ -2,11 +2,10 @@ import {
   UnixTimestampSeconds,
   applyStandardValidationAndParseDateInput,
   DayMonthYearInput,
-  DATE_FORMATS,
   AMENDMENT_MAXIMUM_EFFECTIVE_DATE_DAYS_IN_PAST,
   AMENDMENT_MAXIMUM_EFFECTIVE_DATE_DAYS_IN_FUTURE,
 } from '@ukef/dtfs2-common';
-import { add, sub, isAfter, isBefore, startOfDay, format, getUnixTime } from 'date-fns';
+import { add, sub, isAfter, isBefore, startOfDay, getUnixTime } from 'date-fns';
 import { ErrorsOrValue } from '../../../types/errors-or-value';
 import { mapValidationError } from '../../../utils/map-validation-error';
 
@@ -38,7 +37,7 @@ export const validateAndParseEffectiveDate = (dayMonthYear: DayMonthYearInput, c
       errors: [
         {
           errRef,
-          errMsg: `Date amendment effective from cannot be before the cover start date ${format(coverStartDate, DATE_FORMATS.D_MMMM_YYYY)}`,
+          errMsg: 'The date entered is invalid. Please ensure the date entered does not exceed the allowable timeframe',
           subFieldErrorRefs: ['effectiveDate-day', 'effectiveDate-month', 'effectiveDate-year'],
         },
       ],
@@ -50,7 +49,7 @@ export const validateAndParseEffectiveDate = (dayMonthYear: DayMonthYearInput, c
       errors: [
         {
           errRef,
-          errMsg: `The date entered is invalid. Please ensure the date entered does not exceed the allowable timeframe`,
+          errMsg: 'The date entered is invalid. Please ensure the date entered does not exceed the allowable timeframe',
           subFieldErrorRefs: ['effectiveDate-day', 'effectiveDate-month', 'effectiveDate-year'],
         },
       ],
