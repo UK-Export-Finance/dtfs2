@@ -270,23 +270,14 @@ const fillOutDealDetails = ({ dealSubmissionType, facilityStage, exporterCompany
 /**
  * Initiates the creation of a BSS/EWCS deal via the UI.
  * This includes logging in, starting a new submission, and filling bank details.
- * @param {object} [mockDeal] - Optional mock deal data to use instead of creating a new deal from scratch.
  * @returns {string} The deal ID of the created deal.
  */
-const createBssEwcsDeal = (mockDeal = null) => {
-  if (mockDeal) {
-    // Use the mock deal object to create the deal
-    cy.insertOneDeal(mockDeal, BANK1_MAKER1).then((insertedDeal) => {
-      return insertedDeal._id;
-    });
-  } else {
-    // Create a new deal from scratch (existing code)
-    cy.login(BANK1_MAKER1);
-    startNewSubmission();
-    fillBankDetails();
-    // Return DealId from URL
-    cy.getDealIdFromUrl(4).then((dealId) => dealId);
-  }
+const createBssEwcsDeal = () => {
+  cy.login(BANK1_MAKER1);
+  startNewSubmission();
+  fillBankDetails();
+  // Return DealId from URL
+  cy.getDealIdFromUrl(4).then((dealId) => dealId);
 };
 
 /**

@@ -161,7 +161,7 @@ context('Add a Bond to a Deal', () => {
 
     it('should display a `completed` status tag for all Bond forms in task list header and a `check your answers` link', () => {
       cy.login(BANK1_MAKER1);
-      cy.visit(relative(`/contract/${bssDealId}`));
+      cy.visit(contractUrl);
       cy.addBondToDeal();
       cy.url().should('include', '/check-your-answers');
 
