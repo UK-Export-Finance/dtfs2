@@ -30,6 +30,7 @@ context('Add a Loan to a Deal', () => {
       bssDealId = dealId;
       contractUrl = relative(`/contract/${bssDealId}`);
     });
+    cy.inCompleteFinancialDetails();
   });
 
   it('should allow a user to create a Deal, pass Red Line and add a Loan to the deal', () => {

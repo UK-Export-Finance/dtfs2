@@ -83,6 +83,7 @@ Cypress.Commands.add('assertValidationErrorTableRowContains', require('./portal/
 
 Cypress.Commands.add('createBssEwcsDeal', createBssEwcsDealandFillDealFields.createBssEwcsDeal);
 Cypress.Commands.add('completeBssEwcsDealFields', createBssEwcsDealandFillDealFields.completeBssEwcsDealFields);
+Cypress.Commands.add('inCompleteFinancialDetails', createBssEwcsDealandFillDealFields.inCompleteFinancialDetails);
 
 Cypress.Commands.add('getDealIdFromUrl', require('./portal/getDealIdFromUrl'));
 

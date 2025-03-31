@@ -281,6 +281,22 @@ const createBssEwcsDeal = () => {
 };
 
 /**
+ * Simulates incomplete financial details submission in the contract workflow.
+ *
+ * This function clicks through the supplier details, buyer details, and financial details pages,
+ * selecting 'GBP' as the supply contract currency, and saves the changes.
+ *
+ * @description This function is used to test the contract workflow with incomplete financial details.
+ */
+const inCompleteFinancialDetails = () => {
+  contract.aboutSupplierDetailsLink().click();
+  contractAboutSupplier.nextPage().click();
+  contractAboutBuyer.nextPage().click();
+  contractAboutFinancial.supplyContractCurrency().select('GBP');
+  contractAboutFinancial.saveAndGoBack().click();
+};
+
+/**
  * Completes the additional fields for a BSS/EWCS deal.
  * @param {Object} params - The parameters for filling out the deal details.
  * @param {string} params.dealSubmissionType - The type of deal submission.
@@ -291,4 +307,4 @@ const completeBssEwcsDealFields = ({ dealSubmissionType, facilityStage, exporter
   fillOutDealDetails({ dealSubmissionType, facilityStage, exporterCompanyName });
 };
 
-export { createBssEwcsDeal, completeBssEwcsDealFields };
+export { createBssEwcsDeal, completeBssEwcsDealFields, inCompleteFinancialDetails };

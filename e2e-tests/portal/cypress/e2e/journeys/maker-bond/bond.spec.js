@@ -25,10 +25,11 @@ context('Add a Bond to a Deal', () => {
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.createBssEwcsDeal(MOCK_DEAL).then((dealId) => {
+    cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
       contractUrl = relative(`/contract/${bssDealId}`);
     });
+    cy.inCompleteFinancialDetails();
   });
 
   it('should allow a user to create a Deal, pass Red Line and add a Bond to the deal', () => {
