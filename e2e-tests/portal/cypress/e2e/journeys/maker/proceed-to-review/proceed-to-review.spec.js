@@ -1,5 +1,3 @@
-import { DEAL_SUBMISSION_TYPE, FACILITY_STAGE } from '@ukef/dtfs2-common';
-
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const fillBondForm = require('../../maker-bond/fill-bond-forms');
@@ -17,6 +15,9 @@ context('Ensure proceed to review button is only visible once facilities are in 
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
       contractUrl = relative(`/contract/${bssDealId}`);
+    });
+    cy.completeAboutSupplierSectionAndEligibilityCriteriaSection({
+      exporterCompanyName: 'Exporter Company Name',
     });
   });
 
@@ -74,8 +75,14 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   it('Ensure proceed to review button is visible', () => {
-    cy.createBssEwcsDeal();
-    cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
+    // Login as a `Maker`
+    cy.login(BANK1_MAKER1);
+
+    // Navigate to the deal in question
+    cy.visit(contractUrl);
+
+    // Proceed to review button
+    pages.contract.proceedToReview().should('exist');
   });
 
   it('Add an issued bond', () => {
@@ -125,8 +132,14 @@ context('Ensure proceed to review button is only visible once facilities are in 
   });
 
   it('Ensure proceed to review button is visible', () => {
-    cy.createBssEwcsDeal();
-    cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED });
+    // Login as a `Maker`
+    cy.login(BANK1_MAKER1);
+
+    // Navigate to the deal in question
+    cy.visit(contractUrl);
+
+    // Proceed to review button
+    pages.contract.proceedToReview().should('exist');
   });
 
   it('Add a partial issued (unconditional) loan', () => {

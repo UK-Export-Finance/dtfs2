@@ -281,6 +281,23 @@ const createBssEwcsDeal = () => {
 };
 
 /**
+ * Completes the 'About Supplier' and 'Eligibility Criteria' sections of the application.
+ *
+ * @param {Object} params - Function parameters
+ * @param {string} params.exporterCompanyName - The name of the exporter company
+ *
+ * @description This function automates the completion of two sections of the application:
+ *  - 'About Supplier': fills in supplier details using the provided exporter company name
+ *  - 'Eligibility Criteria': fills in eligibility criteria for the AIN deal submission type
+ */
+const completeAboutSupplierSectionAndEligibilityCriteriaSection = ({ exporterCompanyName }) => {
+  fillSupplierDetails(exporterCompanyName);
+  fillBuyerDetails();
+  fillFinancialDetails();
+  fillEligibilityCriteria(DEAL_SUBMISSION_TYPE.AIN);
+};
+
+/**
  * Completes the additional fields for a BSS/EWCS deal.
  * @param {Object} params - The parameters for filling out the deal details.
  * @param {string} params.dealSubmissionType - The type of deal submission.
@@ -291,4 +308,4 @@ const completeBssEwcsDealFields = ({ dealSubmissionType, facilityStage, exporter
   fillOutDealDetails({ dealSubmissionType, facilityStage, exporterCompanyName });
 };
 
-export { createBssEwcsDeal, completeBssEwcsDealFields };
+export { createBssEwcsDeal, completeBssEwcsDealFields, completeAboutSupplierSectionAndEligibilityCriteriaSection };
