@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { facilityValue, updateFacilityValue } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
@@ -68,10 +69,36 @@ describe('controllers/facility-value', () => {
     jest.resetAllMocks();
   });
 
-  describe('GET Facility Value', () => {
-    it('renders the `Facility Value` template', async () => {
+  describe.only('GET Facility Value', () => {
+    it.only('renders the `Facility Value` template with no facility value', async () => {
       mockRequest.query.status = 'change';
-      mockFacilityValueResponse.details.currency = { id: 'EUR' };
+      mockFacilityValueResponse.details.currency = { id: CURRENCY.GBP };
+      mockFacilityValueResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
+      mockFacilityValueResponse.details.value = null;
+      mockFacilityValueResponse.details.coverPercentage = null;
+      mockFacilityValueResponse.details.interestPercentage = null;
+
+      await facilityValue(mockRequest, mockResponse);
+
+      expect(mockResponse.render).toHaveBeenCalledWith(
+        'partials/facility-value.njk',
+        expect.objectContaining({
+          currency: CURRENCY.GBP,
+          value: '',
+          facilityType: CONSTANTS.FACILITY_TYPE.CASH,
+          coverPercentage: null,
+          interestPercentage: null,
+          facilityTypeString: 'cash',
+          dealId: '123',
+          facilityId: 'xyz',
+          status: 'change',
+        }),
+      );
+    });
+
+    it('renders the `Facility Value` template with pre-existing facility value', async () => {
+      mockRequest.query.status = 'change';
+      mockFacilityValueResponse.details.currency = { id: CURRENCY.EUR };
       mockFacilityValueResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
       mockFacilityValueResponse.details.value = 2000;
       mockFacilityValueResponse.details.coverPercentage = 20;
@@ -82,7 +109,7 @@ describe('controllers/facility-value', () => {
       expect(mockResponse.render).toHaveBeenCalledWith(
         'partials/facility-value.njk',
         expect.objectContaining({
-          currency: 'EUR',
+          currency: CURRENCY.EUR,
           value: '2000',
           facilityType: CONSTANTS.FACILITY_TYPE.CASH,
           coverPercentage: '20',
