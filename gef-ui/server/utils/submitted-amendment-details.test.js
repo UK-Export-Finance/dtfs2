@@ -24,6 +24,7 @@ describe('getSubmittedAmendmentDetails', () => {
     expect(result).toEqual({
       portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
       facilityIdWithAmendmentInProgress: 'facility1',
+      isPortalAmendmentInProgress: true,
     });
   });
 
@@ -34,6 +35,7 @@ describe('getSubmittedAmendmentDetails', () => {
     expect(result).toEqual({
       portalAmendmentStatus: null,
       facilityIdWithAmendmentInProgress: null,
+      isPortalAmendmentInProgress: false,
     });
   });
 });

@@ -1,4 +1,4 @@
-const { PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { PORTAL_AMENDMENT_STATUS, ROLES } = require('@ukef/dtfs2-common');
 const pageRenderer = require('../../pageRenderer');
 
 const page = 'includes/application-preview/task-comments.njk';
@@ -8,7 +8,7 @@ const params = {
   displayComments: true,
   portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
   dealId: '123',
-  userRoles: ['maker'],
+  userRoles: [ROLES.MAKER],
 };
 
 describe(page, () => {
@@ -28,7 +28,7 @@ describe(page, () => {
     });
 
     it(`should be rendered when portalAmendmentStatus is ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL} and the user is logged in as a checker`, () => {
-      wrapper = render({ ...params, userRoles: ['checker'] });
+      wrapper = render({ ...params, userRoles: [ROLES.CHECKER] });
 
       wrapper.expectElement(amendmentDetailsHeader).toExist();
       wrapper.expectText(amendmentDetailsHeader).toRead(params.portalAmendmentStatus);

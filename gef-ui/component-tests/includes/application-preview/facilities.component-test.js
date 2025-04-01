@@ -1,4 +1,4 @@
-const { FACILITY_TYPE, FACILITY_STAGE } = require('@ukef/dtfs2-common');
+const { FACILITY_TYPE, FACILITY_STAGE, ROLES } = require('@ukef/dtfs2-common');
 const pageRenderer = require('../../pageRenderer');
 
 const page = 'includes/application-preview/facilities.njk';
@@ -13,7 +13,8 @@ const params = {
   facilities: {
     data: [issuedCashFacility, unissuedCashFacility, issuedContingentFacility, unissuedContingentFacility],
   },
-  userRoles: ['maker'],
+  userRoles: [ROLES.MAKER],
+  dealId: '123',
 };
 
 describe(page, () => {
@@ -74,22 +75,28 @@ describe(page, () => {
   describe('Amendment details', () => {
     issuedCashFacility.isFacilityWithAmendmentInProgress = true;
     const amendmentInProgress = `[data-cy="amendment-in-progress"]`;
+    const url = `/gef/application-details/${params.dealId}/amendment-details`;
 
     it(`should be rendered when facility has an amendment in progress and the user is logged in as a maker`, () => {
+      const urlText = 'See details';
       wrapper = render(params);
 
       wrapper.expectElement(amendmentInProgress).toExist();
-      wrapper.expectText(amendmentInProgress).toRead('See details');
+      wrapper.expectLink(amendmentInProgress).toLinkTo(url, urlText);
+      wrapper.expectText(amendmentInProgress).toRead(urlText);
     });
 
     it('should be rendered when facility has an amendment in progress and the user is logged in as a checker', () => {
-      wrapper = render({ ...params, userRoles: ['checker'] });
+      const userRoles = [ROLES.CHECKER];
+      const urlText = 'Check amendment details before submitting to UKEF';
+      wrapper = render({ ...params, userRoles });
 
       wrapper.expectElement(amendmentInProgress).toExist();
-      wrapper.expectText(amendmentInProgress).toRead('Check amendment details before submitting to UKEF');
+      wrapper.expectLink(amendmentInProgress).toLinkTo(url, urlText);
+      wrapper.expectText(amendmentInProgress).toRead(urlText);
     });
 
-    it('should be rendered when facility has not an amendment in progress', () => {
+    it('should be rendered when facility does not have an amendment in progress', () => {
       issuedCashFacility.isFacilityWithAmendmentInProgress = false;
       wrapper = render({
         ...params,

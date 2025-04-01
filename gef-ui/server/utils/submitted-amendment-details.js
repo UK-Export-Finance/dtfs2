@@ -22,6 +22,7 @@ export const getSubmittedAmendmentDetails = async (application, userToken) => {
       return {
         portalAmendmentStatus: null,
         facilityIdWithAmendmentInProgress: null,
+        isPortalAmendmentInProgress: false,
       };
     }
     const amendmentInProgress = amendments.find((amendment) => PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(amendment.status));
@@ -30,9 +31,12 @@ export const getSubmittedAmendmentDetails = async (application, userToken) => {
     const portalAmendmentStatus = amendmentInProgress?.status || amendmentAcknowledged?.status || null;
     const facilityIdWithAmendmentInProgress = amendmentInProgress ? amendmentInProgress.facilityId : null;
 
+    const isPortalAmendmentInProgress = PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(portalAmendmentStatus);
+
     return {
       portalAmendmentStatus,
       facilityIdWithAmendmentInProgress,
+      isPortalAmendmentInProgress,
     };
   } catch (error) {
     console.error('Error fetching submitted amendment details %o', error);

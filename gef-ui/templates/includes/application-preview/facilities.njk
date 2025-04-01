@@ -59,6 +59,7 @@
         {% if userRoles.includes('maker') %} 
           <a href="/gef/application-details/{{ dealId }}/amendment-details" class="govuk-link" data-cy="amendment-in-progress">See details</a>
         {% endif %}
+        
         {% if userRoles.includes('checker') %}
           <a href="/gef/application-details/{{ dealId }}/amendment-details" class="govuk-link" data-cy="amendment-in-progress">Check amendment details before submitting to UKEF</a>
         {% endif %}
