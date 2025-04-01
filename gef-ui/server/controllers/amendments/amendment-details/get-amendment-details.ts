@@ -16,7 +16,8 @@ export type GetAmendmentDetailsRequest = CustomExpressRequest<{
 export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: Response) => {
   try {
     const { dealId } = req.params;
-    const { userToken } = asLoggedInUserSession(req.session);
+    const { userToken, user } = asLoggedInUserSession(req.session);
+    const userRoles = user.roles;
 
     const deal = await api.getApplication({ dealId, userToken });
 
@@ -45,7 +46,7 @@ export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: 
       return res.redirect('/not-found');
     }
 
-    return res.render('partials/amendments/amendment-details.njk', createAmendmentDetailsViewModel({ amendment, deal, facility }));
+    return res.render('partials/amendments/amendment-details.njk', createAmendmentDetailsViewModel({ amendment, deal, facility, userRoles }));
   } catch (error) {
     console.error('Error getting amendments details page %o', error);
     return res.render('partials/problem-with-service.njk');

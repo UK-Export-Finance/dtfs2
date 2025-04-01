@@ -53,7 +53,7 @@ const generateFacilityEndDateSummaryRows = (amendment: PortalFacilityAmendmentWi
           classes: 'amendment-facility-end-date-key',
         },
         value: {
-          text: amendment.facilityEndDate ? format(amendment.facilityEndDate, DATE_FORMATS.D_MMMM_YYYY) : '-',
+          text: amendment.facilityEndDate ? format(new Date(amendment.facilityEndDate), DATE_FORMATS.D_MMMM_YYYY) : '-',
           classes: 'amendment-facility-end-date-value',
         },
         actions: {
@@ -75,7 +75,7 @@ const generateFacilityEndDateSummaryRows = (amendment: PortalFacilityAmendmentWi
         classes: 'amendment-bank-review-date-key',
       },
       value: {
-        text: amendment.bankReviewDate ? format(amendment.bankReviewDate, DATE_FORMATS.D_MMMM_YYYY) : '-',
+        text: amendment.bankReviewDate ? format(new Date(amendment.bankReviewDate), DATE_FORMATS.D_MMMM_YYYY) : '-',
         classes: 'amendment-bank-review-date-value',
       },
       actions: {
@@ -119,7 +119,7 @@ const generateCoverEndDateSummaryRows = (amendment: PortalFacilityAmendmentWithU
         }),
       },
     },
-    ...generateFacilityEndDateSummaryRows(amendment),
+    ...generateFacilityEndDateSummaryRows(amendment, renderChangeLink),
   ];
 };
 

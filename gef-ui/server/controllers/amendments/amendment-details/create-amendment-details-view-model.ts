@@ -17,11 +17,14 @@ export const createAmendmentDetailsViewModel = ({
   amendment,
   deal,
   facility,
+  userRoles,
 }: {
   amendment: PortalFacilityAmendmentWithUkefId;
   deal: Deal;
   facility: Facility;
+  userRoles: string[];
 }): AmendmentDetailsViewModel => ({
+  userRoles,
   exporterName: deal.exporter.companyName,
   facilityType: facility.type,
   previousPage: `/gef/application-details/${deal._id}`,

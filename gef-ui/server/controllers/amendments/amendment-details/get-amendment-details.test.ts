@@ -56,13 +56,15 @@ describe('getAmendmentDetails', () => {
   describe('when a deal, facility and amendment are found', () => {
     it('should render the template with the correct variables', async () => {
       // Arrange
+      const userRoles = [ROLES.MAKER];
+      const facility = MOCK_ISSUED_FACILITY.details;
       const { req, res } = getHttpMocks();
 
       // Act
       await getAmendmentDetails(req, res);
 
       // Assert
-      const expectedRenderData = createAmendmentDetailsViewModel({ amendment, deal: mockDeal, facility: MOCK_ISSUED_FACILITY.details });
+      const expectedRenderData = createAmendmentDetailsViewModel({ amendment, deal: mockDeal, facility, userRoles });
 
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
       expect(res._getRenderView()).toEqual('partials/amendments/amendment-details.njk');
