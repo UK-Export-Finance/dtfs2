@@ -824,7 +824,7 @@ describe('amendment-summary-view-model.helper', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should show new facility value - when facility value is not being amended', () => {
+    it('should not show the new facility value, when facility value is not being amended', () => {
       // Arrange
       const facility = MOCK_ISSUED_FACILITY.details;
 
