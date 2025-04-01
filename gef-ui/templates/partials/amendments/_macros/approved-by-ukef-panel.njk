@@ -1,0 +1,14 @@
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% macro render(params) %}
+  {% set amendmentId = params.amendmentId %}
+
+  {{ govukPanel({
+    attributes: {
+      'data-cy': 'approved-by-ukef-confirmation-panel',
+      'tabIndex': 0
+    },
+    titleText: "Amendment approved by UKEF",
+    html: "<div class='govuk-panel__body'><strong data-cy='amendment-reference'>Amendment reference is " + amendmentId + "</strong><br><p data-cy='confirmation-email'>We've sent you a confirmation email.</p></div>"
+  }) }}
+{% endmacro %}

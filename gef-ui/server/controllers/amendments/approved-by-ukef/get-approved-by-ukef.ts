@@ -1,9 +1,11 @@
-import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { format, fromUnixTime } from 'date-fns';
+import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS, DATE_FORMATS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
+import { ApprovedByUkefViewModel } from '../../../types/view-models/amendments/approved-by-ukef-view-model';
 
-export type GetSubmittedForCheckingRequest = CustomExpressRequest<{
+export type GetApprovedByUkefRequest = CustomExpressRequest<{
   params: { facilityId: string; amendmentId: string };
 }>;
 
@@ -13,7 +15,7 @@ export type GetSubmittedForCheckingRequest = CustomExpressRequest<{
  * @param req - The express request
  * @param res - The express response
  */
-export const getSubmittedForChecking = async (req: GetSubmittedForCheckingRequest, res: Response) => {
+export const getApprovedByUkef = async (req: GetApprovedByUkefRequest, res: Response) => {
   try {
     const { facilityId, amendmentId } = req.params;
     const { userToken } = asLoggedInUserSession(req.session);
@@ -25,12 +27,21 @@ export const getSubmittedForChecking = async (req: GetSubmittedForCheckingReques
       return res.redirect('/not-found');
     }
 
+    // TODO: DTFS2-7753 change to submitted status
     if (!(amendment.status === PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL)) {
       console.error("Amendment %s on facility %s is not ready for checker's approval", amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 
-    return res.render('partials/amendments/submitted-page.njk', { submittedToChecker: true });
+    const effectiveDate = format(fromUnixTime(Number(amendment.effectiveDate)), DATE_FORMATS.D_MMMM_YYYY);
+
+    // TODO: DTFS2-7753 add amendmentId
+    const viewModel: ApprovedByUkefViewModel = {
+      approvedByUkef: true,
+      effectiveDate,
+    };
+
+    return res.render('partials/amendments/submitted-page.njk', viewModel);
   } catch (error) {
     console.error('Error getting submitted for checking amendment page %o', error);
     return res.render('partials/problem-with-service.njk');

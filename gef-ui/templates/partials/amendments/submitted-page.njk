@@ -1,0 +1,48 @@
+{% extends "index.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% import './_macros/what-happens-next-submitted-checker.njk' as whatHappensNextChecker %}
+{% import './_macros/what-happens-next-approved-by-ukef.njk' as whatHappensNextApprovedByUkef %}
+{% import './_macros/submitted-to-checker-panel.njk' as submittedToCheckerPanel %}
+{% import './_macros/approved-by-ukef-panel.njk' as approvedByUkefPanel %}
+
+{% block pageTitle -%}
+  Amendment submitted for checking at your bank
+{%- endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {% if submittedToChecker %}
+        {{ submittedToCheckerPanel.render() }}
+      {% endif %}
+
+
+      {% if approvedByUkef %}
+        {{ approvedByUkefPanel.render({
+          amendmentId: amendmentId
+        }) }}
+      {% endif %}
+  
+      <div class="govuk-!-margin-top-4">
+        <h2 class="govuk-!-margin-bottom-0" data-cy="heading">
+          What happens next?
+        </h2>
+
+        {% if submittedToChecker %}
+          {{ whatHappensNextChecker.render() }}
+        {% endif %}
+
+        {% if approvedByUkef %}
+          {{ whatHappensNextApprovedByUkef.render({
+            effectiveDate: effectiveDate
+          }) }}
+        {% endif %}
+
+        <p><a class="govuk-link govuk-!-margin-0" href="/dashboard/deals" data-cy="return-link">Return to all applications and notices</a></p>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}

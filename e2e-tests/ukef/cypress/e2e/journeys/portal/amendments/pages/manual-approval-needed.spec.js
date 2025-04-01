@@ -6,6 +6,7 @@ import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
 import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 import facilityValue from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
+import amendmentPage from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 import manualApprovalNeeded from '../../../../../../../gef/cypress/e2e/pages/amendments/manual-approval-needed';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
@@ -73,13 +74,13 @@ context('Amendments - Eligibility - page tests', () => {
 
   it('should render key features of the page', () => {
     manualApprovalNeeded.pageHeading().contains('This amendment cannot be automatically approved');
-    manualApprovalNeeded.returnLink();
+    amendmentPage.returnLink();
     manualApprovalNeeded.emailLink();
-    manualApprovalNeeded.backLink();
+    amendmentPage.backLink();
   });
 
   it('should navigate to the deals overview page when the return link is clicked', () => {
-    manualApprovalNeeded.returnLink().click();
+    amendmentPage.returnLink().click();
 
     cy.url().should('eq', relative(`/dashboard/deals/0`));
   });
