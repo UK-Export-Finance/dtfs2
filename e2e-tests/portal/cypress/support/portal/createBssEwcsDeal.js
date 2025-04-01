@@ -281,19 +281,33 @@ const createBssEwcsDeal = () => {
 };
 
 /**
- * Simulates incomplete financial details submission in the contract workflow.
+ * Completes the 'About Supplier' section of a form.
  *
- * This function clicks through the supplier details, buyer details, and financial details pages,
- * selecting 'GBP' as the supply contract currency, and saves the changes.
+ * @param {Object} params - Parameters for completing the section.
+ * @param {string} params.exporterCompanyName - The name of the exporting company.
  *
- * @description This function is used to test the contract workflow with incomplete financial details.
+ * @description Calls the `fillSupplierDetails` function to populate the section with supplier details.
  */
-const inCompleteFinancialDetails = () => {
-  contract.aboutSupplierDetailsLink().click();
-  contractAboutSupplier.nextPage().click();
-  contractAboutBuyer.nextPage().click();
-  contractAboutFinancial.supplyContractCurrency().select('GBP');
-  contractAboutFinancial.saveAndGoBack().click();
+const completeAboutSupplierSection = ({ exporterCompanyName }) => {
+  fillSupplierDetails(exporterCompanyName);
+};
+
+/**
+ * Completes the 'About Buyer' section of a form.
+ *
+ * @description Calls the `fillBuyerDetails` function to populate the section with buyer details.
+ */
+const completeAboutBuyerSection = () => {
+  fillBuyerDetails();
+};
+
+/**
+ * Completes the final section of a form.
+ *
+ * @description Calls the `fillFinancialDetails` function to populate the section with financial details.
+ */
+const completeAboutFinancialSection = () => {
+  fillFinancialDetails();
 };
 
 /**
@@ -307,4 +321,4 @@ const completeBssEwcsDealFields = ({ dealSubmissionType, facilityStage, exporter
   fillOutDealDetails({ dealSubmissionType, facilityStage, exporterCompanyName });
 };
 
-export { createBssEwcsDeal, completeBssEwcsDealFields, inCompleteFinancialDetails };
+export { createBssEwcsDeal, completeBssEwcsDealFields, completeAboutSupplierSection, completeAboutBuyerSection, completeAboutFinancialSection };

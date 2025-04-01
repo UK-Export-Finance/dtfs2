@@ -29,7 +29,11 @@ context('Add a Bond to a Deal', () => {
       bssDealId = dealId;
       contractUrl = relative(`/contract/${bssDealId}`);
     });
-    cy.inCompleteFinancialDetails();
+    cy.completeAboutSupplierSection({
+      exporterCompanyName: 'Exporter Company Name',
+    });
+    cy.completeAboutBuyerSection();
+    cy.completeAboutFinancialSection();
   });
 
   it('should allow a user to create a Deal, pass Red Line and add a Bond to the deal', () => {
