@@ -1,6 +1,9 @@
 import 'cypress-file-upload';
 import * as api from '../../../gef/cypress/support/commands/api';
 import * as createBssEwcsDealandFillDealFields from './portal/createBssEwcsDeal';
+import { completeAboutSupplierSection } from './portal/completeAboutSupplierSection';
+import { completeAboutBuyerSection } from './portal/completeAboutBuyerSection';
+import { completeAboutFinancialSection } from './portal/completeAboutFinancialSection';
 import { assertPrintDialogue } from './utils/assertPrintDialogue';
 
 const { downloadFile } = require('./portal-api/fileshare');
@@ -87,9 +90,9 @@ Cypress.Commands.add('assertValidationErrorTableRowContains', require('./portal/
 
 Cypress.Commands.add('createBssEwcsDeal', createBssEwcsDealandFillDealFields.createBssEwcsDeal);
 Cypress.Commands.add('completeBssEwcsDealFields', createBssEwcsDealandFillDealFields.completeBssEwcsDealFields);
-Cypress.Commands.add('completeAboutSupplierSection', createBssEwcsDealandFillDealFields.completeAboutSupplierSection);
-Cypress.Commands.add('completeAboutBuyerSection', createBssEwcsDealandFillDealFields.completeAboutBuyerSection);
-Cypress.Commands.add('completeAboutFinancialSection', createBssEwcsDealandFillDealFields.completeAboutFinancialSection);
+Cypress.Commands.add('completeAboutSupplierSection', completeAboutSupplierSection);
+Cypress.Commands.add('completeAboutBuyerSection', completeAboutBuyerSection);
+Cypress.Commands.add('completeAboutFinancialSection', completeAboutFinancialSection);
 
 Cypress.Commands.add('getDealIdFromUrl', require('./portal/getDealIdFromUrl'));
 

@@ -281,36 +281,6 @@ const createBssEwcsDeal = () => {
 };
 
 /**
- * Completes the 'About Supplier' section of a form.
- *
- * @param {Object} params - Parameters for completing the section.
- * @param {string} params.exporterCompanyName - The name of the exporting company.
- *
- * @description Calls the `fillSupplierDetails` function to populate the section with supplier details.
- */
-const completeAboutSupplierSection = ({ exporterCompanyName }) => {
-  fillSupplierDetails(exporterCompanyName);
-};
-
-/**
- * Completes the 'About Buyer' section of a form.
- *
- * @description Calls the `fillBuyerDetails` function to populate the section with buyer details.
- */
-const completeAboutBuyerSection = () => {
-  fillBuyerDetails();
-};
-
-/**
- * Completes the final section of a form.
- *
- * @description Calls the `fillFinancialDetails` function to populate the section with financial details.
- */
-const completeAboutFinancialSection = () => {
-  fillFinancialDetails();
-};
-
-/**
  * Completes the additional fields for a BSS/EWCS deal.
  * @param {Object} params - The parameters for filling out the deal details.
  * @param {string} params.dealSubmissionType - The type of deal submission.
@@ -321,4 +291,4 @@ const completeBssEwcsDealFields = ({ dealSubmissionType, facilityStage, exporter
   fillOutDealDetails({ dealSubmissionType, facilityStage, exporterCompanyName });
 };
 
-export { createBssEwcsDeal, completeBssEwcsDealFields, completeAboutSupplierSection, completeAboutBuyerSection, completeAboutFinancialSection };
+export { createBssEwcsDeal, completeBssEwcsDealFields, fillSupplierDetails, fillBuyerDetails, fillFinancialDetails };
