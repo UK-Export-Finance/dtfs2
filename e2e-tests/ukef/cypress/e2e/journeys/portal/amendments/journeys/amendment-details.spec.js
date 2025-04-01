@@ -5,6 +5,7 @@ import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
+import { printButton } from '../../../../partials';
 
 import amendmentPage from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 import amendmentSummaryList from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-summary-list';
@@ -67,6 +68,15 @@ context('Amendments - Amendment details page', () => {
   it('should redirect to the dashboard when clicking the back link', () => {
     amendmentPage.backLink().click();
     cy.url().should('eq', dealUrl);
+  });
+
+  it('should render a print button', () => {
+    printButton().should('exist');
+    cy.assertText(printButton(), 'Print page');
+  });
+
+  it('should render the print dialogue when clicking the print button', () => {
+    cy.assertPrintDialogue(printButton);
   });
 
   it('should display a summary list with the correct changes and new facility value', () => {
