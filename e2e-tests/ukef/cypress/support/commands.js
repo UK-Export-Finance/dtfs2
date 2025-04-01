@@ -11,6 +11,7 @@ import { clearSessionCookies } from './utils/clearSessionCookies';
 import { getAmendmentIdFromUrl } from './utils/getAmendmentIdFromUrl';
 import { makerSubmitPortalAmendmentForReview } from './gef/makerSubmitPortalAmendmentForReview';
 import { makerMakesPortalAmendmentRequest } from './gef/makerMakesPortalAmendmentRequest';
+import { assertPrintDialogue } from './utils/assertPrintDialogue';
 
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
@@ -21,6 +22,9 @@ Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
 
 // Assert an element has some exact text
 Cypress.Commands.add('assertText', require('./utils/assertText'));
+
+// Assert that the print dialogue is shown
+Cypress.Commands.add('assertPrintDialogue', assertPrintDialogue);
 
 // commands used to interact directly with portal-api
 Cypress.Commands.add('insertManyDeals', require('./portal-api/insertManyDeals'));
