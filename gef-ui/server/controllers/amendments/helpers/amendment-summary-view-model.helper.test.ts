@@ -576,6 +576,8 @@ describe('amendment-summary-view-model.helper', () => {
         .withFacilityValue(facilityValue)
         .build();
 
+      const href = `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`;
+
       // Act
       const result = generateFacilityValueSummaryRows(amendment, facility);
 
@@ -592,7 +594,7 @@ describe('amendment-summary-view-model.helper', () => {
           },
           actions: {
             items: generateChangeLink({
-              href: `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`,
+              href,
               visuallyHiddenText: 'facility value',
               datacy: 'change-facility-value-link',
               renderChangeLink: true,
@@ -617,6 +619,8 @@ describe('amendment-summary-view-model.helper', () => {
         .withFacilityValue(facilityValue)
         .build();
 
+      const href = `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`;
+
       // Act
       const result = generateFacilityValueSummaryRows(amendment, facility);
 
@@ -633,7 +637,7 @@ describe('amendment-summary-view-model.helper', () => {
           },
           actions: {
             items: generateChangeLink({
-              href: `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`,
+              href,
               visuallyHiddenText: 'facility value',
               datacy: 'change-facility-value-link',
               renderChangeLink: true,
@@ -663,6 +667,8 @@ describe('amendment-summary-view-model.helper', () => {
         .withFacilityValue(facilityValue)
         .build();
 
+      const href = `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`;
+
       // Act
       const result = generateFacilityValueSummaryRows(amendment, facility);
 
@@ -679,7 +685,7 @@ describe('amendment-summary-view-model.helper', () => {
           },
           actions: {
             items: generateChangeLink({
-              href: `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`,
+              href,
               visuallyHiddenText: 'facility value',
               datacy: 'change-facility-value-link',
               renderChangeLink: true,
@@ -709,6 +715,8 @@ describe('amendment-summary-view-model.helper', () => {
         .withFacilityValue(facilityValue)
         .build();
 
+      const href = `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`;
+
       // Act
       const result = generateFacilityValueSummaryRows(amendment, facility);
 
@@ -725,7 +733,7 @@ describe('amendment-summary-view-model.helper', () => {
           },
           actions: {
             items: generateChangeLink({
-              href: `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`,
+              href,
               visuallyHiddenText: 'facility value',
               datacy: 'change-facility-value-link',
               renderChangeLink: true,
@@ -755,6 +763,8 @@ describe('amendment-summary-view-model.helper', () => {
         .withFacilityValue(facilityValue)
         .build();
 
+      const href = `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`;
+
       // Act
       const result = generateFacilityValueSummaryRows(amendment, facility);
 
@@ -771,7 +781,7 @@ describe('amendment-summary-view-model.helper', () => {
           },
           actions: {
             items: generateChangeLink({
-              href: `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`,
+              href,
               visuallyHiddenText: 'facility value',
               datacy: 'change-facility-value-link',
               renderChangeLink: true,
@@ -796,6 +806,8 @@ describe('amendment-summary-view-model.helper', () => {
         .withFacilityValue(facilityValue)
         .build();
 
+      const href = `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`;
+
       // Act
       const result = generateFacilityValueSummaryRows(amendment, facility);
 
@@ -812,7 +824,7 @@ describe('amendment-summary-view-model.helper', () => {
           },
           actions: {
             items: generateChangeLink({
-              href: `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`,
+              href,
               visuallyHiddenText: 'facility value',
               datacy: 'change-facility-value-link',
               renderChangeLink: true,
