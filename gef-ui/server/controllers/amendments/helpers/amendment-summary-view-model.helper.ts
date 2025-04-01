@@ -138,7 +138,6 @@ const generateFacilityValueSummaryRows = (amendment: PortalFacilityAmendmentWith
 
   const currency = facility.currency?.id.toString();
   const value = getFormattedMonetaryValue(Number(amendment.value));
-  const currencyValue = amendment.value ? `${currency} ${value}` : '-';
 
   return [
     {
@@ -147,7 +146,7 @@ const generateFacilityValueSummaryRows = (amendment: PortalFacilityAmendmentWith
         classes: 'amendment-facility-value-key',
       },
       value: {
-        text: currencyValue,
+        text: `${currency} ${value}`,
         classes: 'amendment-facility-value-value',
       },
       actions: {
