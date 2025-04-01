@@ -14,6 +14,7 @@ const params = {
     data: [issuedCashFacility, unissuedCashFacility, issuedContingentFacility, unissuedContingentFacility],
   },
   userRoles: ['maker'],
+  dealId: '123',
 };
 
 describe(page, () => {
@@ -74,19 +75,25 @@ describe(page, () => {
   describe('Amendment details', () => {
     issuedCashFacility.isFacilityWithAmendmentInProgress = true;
     const amendmentInProgress = `[data-cy="amendment-in-progress"]`;
+    const url = `/gef/application-details/${params.dealId}/amendment-details`;
 
     it(`should be rendered when facility has an amendment in progress and the user is logged in as a maker`, () => {
+      const urlText = 'See details';
       wrapper = render(params);
 
       wrapper.expectElement(amendmentInProgress).toExist();
-      wrapper.expectText(amendmentInProgress).toRead('See details');
+      wrapper.expectLink(amendmentInProgress).toLinkTo(url, urlText);
+      wrapper.expectText(amendmentInProgress).toRead(urlText);
     });
 
     it('should be rendered when facility has an amendment in progress and the user is logged in as a checker', () => {
-      wrapper = render({ ...params, userRoles: ['checker'] });
+      const userRoles = ['checker'];
+      const urlText = 'Check amendment details before submitting to UKEF';
+      wrapper = render({ ...params, userRoles });
 
       wrapper.expectElement(amendmentInProgress).toExist();
-      wrapper.expectText(amendmentInProgress).toRead('Check amendment details before submitting to UKEF');
+      wrapper.expectLink(amendmentInProgress).toLinkTo(url, urlText);
+      wrapper.expectText(amendmentInProgress).toRead(urlText);
     });
 
     it('should be rendered when facility does not have an amendment in progress', () => {
