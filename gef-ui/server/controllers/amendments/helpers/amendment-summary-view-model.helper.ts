@@ -92,7 +92,8 @@ const generateFacilityEndDateSummaryRows = (amendment: PortalFacilityAmendmentWi
 };
 
 /**
- * @param amendment - the amendment
+ * @param amendment - Amendment object
+ * @param facility - Facility object
  * @param renderChangeLink - if change link should be rendered - defaults to true
  * @returns the SummaryListRows for the Cover end date section
  */
@@ -125,7 +126,8 @@ const generateCoverEndDateSummaryRows = (amendment: PortalFacilityAmendmentWithU
 };
 
 /**
- * @param amendment - the amendment
+ * @param amendment - Amendment object
+ * @param facility - Facility object
  * @param renderChangeLink - if change link should be rendered - defaults to true
  * @returns the SummaryListRows containing `New facility value`
  */
@@ -134,7 +136,9 @@ const generateFacilityValueSummaryRows = (amendment: PortalFacilityAmendmentWith
     return [];
   }
 
-  const currencyValue = amendment.value ? `${facility.currency?.id.toString()} ${getFormattedMonetaryValue(Number(amendment.value))}` : '-';
+  const currency = facility.currency?.id.toString();
+  const value = getFormattedMonetaryValue(Number(amendment.value));
+  const currencyValue = amendment.value ? `${currency} ${value}` : '-';
 
   return [
     {
@@ -159,7 +163,8 @@ const generateFacilityValueSummaryRows = (amendment: PortalFacilityAmendmentWith
 };
 
 /**
- * @param amendment - the amendment
+ * @param amendment - Amendment object
+ * @param facility - Facility object
  * @param renderChangeLink - if change link should be rendered - defaults to true
  * @returns the SummaryListRows for the amendments section
  */
@@ -263,7 +268,8 @@ const generateAmendmentSummaryEffectiveDateRows = (amendment: PortalFacilityAmen
 };
 
 /**
- * @param amendment - the amendment
+ * @param amendment - Amendment object
+ * @param facility - Facility object
  * @param renderChangeLink - if change link should be rendered - defaults to true
  * @returns the amendment summary list component parameters
  *

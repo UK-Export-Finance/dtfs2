@@ -9,9 +9,9 @@ import { mapAmendmentToAmendmentSummaryListParams } from '../helpers/amendment-s
 /**
  * Create check your answers page view model
  * @param createCheckYourAnswersViewModelParams
- * @param createCheckYourAnswersViewModelParams.amendment - the amendment
- * @param createCheckYourAnswersViewModelParams.facility - the facility
- * @param createCheckYourAnswersViewModelParams.deal - the deal
+ * @param createCheckYourAnswersViewModelParams.amendment - Amendment object
+ * @param createCheckYourAnswersViewModelParams.facility - Facility object
+ * @param createCheckYourAnswersViewModelParams.deal - Deal object
  */
 export const createCheckYourAnswersViewModel = ({
   amendment,
