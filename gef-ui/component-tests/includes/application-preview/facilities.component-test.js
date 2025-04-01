@@ -1,4 +1,4 @@
-const { FACILITY_TYPE, FACILITY_STAGE } = require('@ukef/dtfs2-common');
+const { FACILITY_TYPE, FACILITY_STAGE, ROLES } = require('@ukef/dtfs2-common');
 const pageRenderer = require('../../pageRenderer');
 
 const page = 'includes/application-preview/facilities.njk';
@@ -13,7 +13,7 @@ const params = {
   facilities: {
     data: [issuedCashFacility, unissuedCashFacility, issuedContingentFacility, unissuedContingentFacility],
   },
-  userRoles: ['maker'],
+  userRoles: [ROLES.MAKER],
   dealId: '123',
 };
 
@@ -87,7 +87,7 @@ describe(page, () => {
     });
 
     it('should be rendered when facility has an amendment in progress and the user is logged in as a checker', () => {
-      const userRoles = ['checker'];
+      const userRoles = [ROLES.CHECKER];
       const urlText = 'Check amendment details before submitting to UKEF';
       wrapper = render({ ...params, userRoles });
 
