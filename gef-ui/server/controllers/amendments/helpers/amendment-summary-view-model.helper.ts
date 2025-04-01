@@ -131,7 +131,11 @@ const generateCoverEndDateSummaryRows = (amendment: PortalFacilityAmendmentWithU
  * @param renderChangeLink - if change link should be rendered - defaults to true
  * @returns the SummaryListRows containing `New facility value`
  */
-const generateFacilityValueSummaryRows = (amendment: PortalFacilityAmendmentWithUkefId, facility: Facility, renderChangeLink = true): SummaryListRow[] => {
+export const generateFacilityValueSummaryRows = (
+  amendment: PortalFacilityAmendmentWithUkefId,
+  facility: Facility,
+  renderChangeLink = true,
+): SummaryListRow[] => {
   if (!amendment.changeFacilityValue) {
     return [];
   }
