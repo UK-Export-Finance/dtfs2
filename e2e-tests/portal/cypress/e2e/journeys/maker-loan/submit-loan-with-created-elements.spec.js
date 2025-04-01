@@ -1,28 +1,20 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
 const pages = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const fillLoanForm = require('./fill-loan-forms');
 const LOAN_FORM_VALUES = require('./loan-form-values');
+const relative = require('../../relativeURL');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
-const MOCK_DEAL = {
-  bankInternalRefName: 'someDealId',
-  additionalRefName: 'someDealName',
-  submissionDetails: {
-    supplyContractCurrency: {
-      id: CURRENCY.GBP,
-    },
-  },
-};
-
 context('Loan form - Submit loan with created element on page', () => {
-  let deal;
+  let bssDealId;
+  let contractUrl;
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
+    cy.createBssEwcsDeal().then((dealId) => {
+      bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
@@ -30,7 +22,7 @@ context('Loan form - Submit loan with created element on page', () => {
     cy.login(BANK1_MAKER1);
 
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
-    pages.contract.visit(deal);
+    cy.visit(contractUrl);
 
     cy.clickAddLoanButton();
 
@@ -78,9 +70,8 @@ context('Loan form - Submit loan with created element on page', () => {
     cy.clickSubmitButton();
 
     // gets deal
-    cy.getDeal(deal._id, BANK1_MAKER1).then((updatedDeal) => {
-      // gets facilityId from deal
-      cy.getFacility(deal._id, updatedDeal.facilities[0], BANK1_MAKER1).then((loan) => {
+    cy.getDeal(bssDealId, BANK1_MAKER1).then((updatedDeal) => {
+      cy.getFacility(bssDealId, updatedDeal.facilities[0], BANK1_MAKER1).then((loan) => {
         // checks loan does not have inserted field
         expect(loan.intruder).to.be.an('undefined');
       });
