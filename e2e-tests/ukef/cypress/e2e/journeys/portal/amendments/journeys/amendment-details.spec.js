@@ -1,9 +1,11 @@
+import { CURRENCY, getFormattedMonetaryValue } from '@ukef/dtfs2-common';
 import { today } from '../../../../../../../e2e-fixtures/dateConstants';
 import relative from '../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
+import { printButton } from '../../../../partials';
 
 import amendmentPage from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 import amendmentSummaryList from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-summary-list';
@@ -68,13 +70,25 @@ context('Amendments - Amendment details page', () => {
     cy.url().should('eq', dealUrl);
   });
 
+  it('should render a print button', () => {
+    printButton().should('exist');
+    cy.assertText(printButton(), 'Print page');
+  });
+
+  it('should render the print dialogue when clicking the print button', () => {
+    cy.assertPrintDialogue(printButton);
+  });
+
   it('should display a summary list with the correct changes and new facility value', () => {
     amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsKey().contains('Changes');
     amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsValue().contains('Facility value');
     amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsChangeLink().should('not.exist');
 
     cy.assertText(amendmentSummaryList.amendmentSummaryListTable().facilityValueKey(), 'New facility value');
-    cy.assertText(amendmentSummaryList.amendmentSummaryListTable().facilityValueValue(), CHANGED_FACILITY_VALUE);
+    cy.assertText(
+      amendmentSummaryList.amendmentSummaryListTable().facilityValueValue(),
+      `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE)}`,
+    );
     amendmentSummaryList.amendmentSummaryListTable().facilityValueChangeLink().should('not.exist');
   });
 
@@ -138,7 +152,7 @@ context('Amendments - Amendment details page', () => {
 
   it('should display a summary list the correct effective date', () => {
     cy.assertText(amendmentSummaryList.effectiveDateSummaryListTable().effectiveDateKey(), 'Date');
-    cy.assertText(amendmentSummaryList.effectiveDateSummaryListTable().effectiveDateValue(), today.dd_MMMM_yyyy);
+    cy.assertText(amendmentSummaryList.effectiveDateSummaryListTable().effectiveDateValue(), today.d_MMMM_yyyy);
     amendmentSummaryList.effectiveDateSummaryListTable().effectiveDateChangeLink().should('not.exist');
   });
 });

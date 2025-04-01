@@ -1,7 +1,6 @@
 import {
   applyStandardValidationAndParseDateInput,
   DayMonthYearInput,
-  DATE_FORMATS,
   AMENDMENT_MAXIMUM_EFFECTIVE_DATE_DAYS_IN_FUTURE,
   AMENDMENT_MAXIMUM_EFFECTIVE_DATE_DAYS_IN_PAST,
 } from '@ukef/dtfs2-common';
@@ -55,7 +54,7 @@ describe('validateAndParseEffectiveDate', () => {
       errors: [
         {
           errRef: valueRef,
-          errMsg: `Date amendment effective from cannot be before the cover start date ${format(coverStartDate, DATE_FORMATS.D_MMMM_YYYY)}`,
+          errMsg: 'The date entered is invalid. Please ensure the date entered does not exceed the allowable timeframe',
           subFieldErrorRefs: ['effectiveDate-day', 'effectiveDate-month', 'effectiveDate-year'],
         },
       ],
@@ -95,7 +94,7 @@ describe('validateAndParseEffectiveDate', () => {
       errors: [
         {
           errRef: valueRef,
-          errMsg: `The date entered is invalid. Please ensure the date entered does not exceed the allowable timeframe`,
+          errMsg: 'The date entered is invalid. Please ensure the date entered does not exceed the allowable timeframe',
           subFieldErrorRefs: ['effectiveDate-day', 'effectiveDate-month', 'effectiveDate-year'],
         },
       ],

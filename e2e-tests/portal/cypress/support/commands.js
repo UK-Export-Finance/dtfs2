@@ -1,6 +1,7 @@
 import 'cypress-file-upload';
 import * as api from '../../../gef/cypress/support/commands/api';
 import * as createBssEwcsDealandFillDealFields from './portal/createBssEwcsDeal';
+import { assertPrintDialogue } from './utils/assertPrintDialogue';
 
 const { downloadFile } = require('./portal-api/fileshare');
 
@@ -17,6 +18,9 @@ Cypress.Commands.add('insertElement', require('./utils/insertElement'));
 
 // Mock data loader
 Cypress.Commands.add('loadData', require('../../../gef/cypress/support/commands/loadData'));
+
+// Assert that the print dialogue is shown
+Cypress.Commands.add('assertPrintDialogue', assertPrintDialogue);
 
 // commands used to interact directly with portal-api
 Cypress.Commands.add('insertOneDeal', require('./portal-api/insertOneDeal'));
