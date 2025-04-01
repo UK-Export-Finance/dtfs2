@@ -19,8 +19,8 @@ const facilityValue = async (req, res) => {
       user,
       userToken,
     });
+
     if (!facility) {
-      // eslint-disable-next-line no-console
       console.info('Facility not found, or not authorised');
       return res.redirect('/');
     }

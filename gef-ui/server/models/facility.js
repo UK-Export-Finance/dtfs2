@@ -11,8 +11,8 @@ class Facility {
       }
       const facilityTypeConst = FACILITY_TYPE[details.type?.toUpperCase()];
       const facilityTypeString = facilityTypeConst ? facilityTypeConst.toLowerCase() : '';
-
-      const value = JSON.stringify(details.value);
+      // Ternary operator ensures `null` does not appear on the facility value field
+      const value = details.value ? JSON.stringify(details.value) : '';
       const coverPercentage = JSON.stringify(details.coverPercentage);
       const interestPercentage = JSON.stringify(details.interestPercentage);
 
