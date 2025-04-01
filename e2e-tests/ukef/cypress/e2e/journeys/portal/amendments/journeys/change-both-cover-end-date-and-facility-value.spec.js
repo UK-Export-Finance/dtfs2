@@ -1,3 +1,4 @@
+import { CURRENCY } from '@ukef/dtfs2-common';
 import relative from '../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
@@ -107,7 +108,7 @@ context('Amendments - Change both cover end date and facility value - full journ
     amendmentSummaryList.amendmentSummaryListTable().coverEndDateValue().contains(today.d_MMMM_yyyy);
     amendmentSummaryList.amendmentSummaryListTable().facilityEndDateValue().contains(today.d_MMMM_yyyy);
     amendmentSummaryList.amendmentSummaryListTable().bankReviewDateChangeLink().should('not.exist');
-    amendmentSummaryList.amendmentSummaryListTable().facilityValueValue().contains('10000');
+    amendmentSummaryList.amendmentSummaryListTable().facilityValueValue().contains(`${CURRENCY.GBP} 10,000`);
 
     amendmentSummaryList
       .eligibilityCriteriaSummaryListTable()

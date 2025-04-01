@@ -1,25 +1,16 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
 const pages = require('../../pages');
 const partials = require('../../partials');
 const fillLoanForm = require('./fill-loan-forms');
 const assertLoanFormValues = require('./assert-loan-form-values');
 const LOAN_FORM_VALUES = require('./loan-form-values');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
+const relative = require('../../relativeURL');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
-const MOCK_DEAL = {
-  bankInternalRefName: 'someDealId',
-  additionalRefName: 'someDealName',
-  submissionDetails: {
-    supplyContractCurrency: {
-      id: CURRENCY.GBP,
-    },
-  },
-};
-
-const goToPage = (deal) => {
-  cy.loginGoToDealPage(BANK1_MAKER1, deal);
+const goToPage = (bssDealId) => {
+  cy.login(BANK1_MAKER1);
+  cy.visit(relative(`/contract/${bssDealId}`));
   cy.clickAddLoanButton();
 };
 
@@ -36,18 +27,18 @@ const assertVisibleCoverEndDateInputs = () => {
 };
 
 context('Loan Guarantee Details', () => {
-  let deal;
+  let bssDealId;
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
+    cy.createBssEwcsDeal().then((dealId) => {
+      bssDealId = dealId;
     });
   });
 
   describe('Loan Guarantee title', () => {
     it('should contain the correct title', () => {
-      goToPage(deal);
+      goToPage(bssDealId);
 
       pages.loanGuaranteeDetails.title().contains('Loan');
     });
@@ -55,7 +46,7 @@ context('Loan Guarantee Details', () => {
 
   describe('when submitting an empty form', () => {
     it('should progress to `Loan Financial Details` page and after proceeding to `Loan Preview` page, should render Facility stage validation error in `Loan Guarantee Details` page', () => {
-      goToPage(deal);
+      goToPage(bssDealId);
 
       cy.url().should('include', '/contract');
       cy.url().should('include', '/loan/');
@@ -83,7 +74,7 @@ context('Loan Guarantee Details', () => {
 
   describe('when a maker selects different Facility stage options (`Conditional` or `Unconditional`)', () => {
     it('should render additional form fields', () => {
-      goToPage(deal);
+      goToPage(bssDealId);
 
       // Facility stage = Conditional
       pages.loanGuaranteeDetails.facilityStageConditionalInput().click();
@@ -100,7 +91,7 @@ context('Loan Guarantee Details', () => {
 
   describe('when a maker submits Facility stage as `Conditional`', () => {
     it('should render additional form fields and validation errors when returning to the page ', () => {
-      goToPage(deal);
+      goToPage(bssDealId);
 
       pages.loanGuaranteeDetails.facilityStageConditionalInput().click();
       cy.clickSubmitButton();
@@ -119,7 +110,7 @@ context('Loan Guarantee Details', () => {
 
   describe('when a maker submits Facility stage as `Unconditional`', () => {
     it('should render additional form fields and validation errors when returning to the page and render a `Loan’s reference number not entered` link in the Deal page when (optional) Bank Reference Number is not provided', () => {
-      goToPage(deal);
+      goToPage(bssDealId);
 
       pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
 
@@ -157,7 +148,7 @@ context('Loan Guarantee Details', () => {
     });
 
     it('should show validation errors when incorrect date inputs and show invalid date on contract page', () => {
-      goToPage(deal);
+      goToPage(bssDealId);
 
       pages.loanGuaranteeDetails.facilityStageUnconditionalInput().click();
 
@@ -235,7 +226,7 @@ context('Loan Guarantee Details', () => {
   });
 
   it('should prepopulate form inputs from submitted data and render a checked checkbox in progress nav', () => {
-    goToPage(deal);
+    goToPage(bssDealId);
 
     // Facility stage = Conditional
     fillLoanForm.guaranteeDetails.facilityStageConditional();
@@ -257,7 +248,7 @@ context('Loan Guarantee Details', () => {
 
   describe('When a maker clicks `save and go back` button', () => {
     it('should save the form data, return to Deal page and prepopulate form fields when returning back to `Loan Guarantee Details` page', () => {
-      goToPage(deal);
+      goToPage(bssDealId);
 
       fillLoanForm.guaranteeDetails.facilityStageUnconditional();
 

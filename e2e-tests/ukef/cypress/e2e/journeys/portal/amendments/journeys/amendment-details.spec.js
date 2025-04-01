@@ -1,3 +1,4 @@
+import { CURRENCY, getFormattedMonetaryValue } from '@ukef/dtfs2-common';
 import { today } from '../../../../../../../e2e-fixtures/dateConstants';
 import relative from '../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
@@ -84,7 +85,10 @@ context('Amendments - Amendment details page', () => {
     amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsChangeLink().should('not.exist');
 
     cy.assertText(amendmentSummaryList.amendmentSummaryListTable().facilityValueKey(), 'New facility value');
-    cy.assertText(amendmentSummaryList.amendmentSummaryListTable().facilityValueValue(), CHANGED_FACILITY_VALUE);
+    cy.assertText(
+      amendmentSummaryList.amendmentSummaryListTable().facilityValueValue(),
+      `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE)}`,
+    );
     amendmentSummaryList.amendmentSummaryListTable().facilityValueChangeLink().should('not.exist');
   });
 
@@ -148,7 +152,7 @@ context('Amendments - Amendment details page', () => {
 
   it('should display a summary list the correct effective date', () => {
     cy.assertText(amendmentSummaryList.effectiveDateSummaryListTable().effectiveDateKey(), 'Date');
-    cy.assertText(amendmentSummaryList.effectiveDateSummaryListTable().effectiveDateValue(), today.dd_MMMM_yyyy);
+    cy.assertText(amendmentSummaryList.effectiveDateSummaryListTable().effectiveDateValue(), today.d_MMMM_yyyy);
     amendmentSummaryList.effectiveDateSummaryListTable().effectiveDateChangeLink().should('not.exist');
   });
 });
