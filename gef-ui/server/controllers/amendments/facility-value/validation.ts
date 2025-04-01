@@ -8,7 +8,7 @@ const errRef = 'facilityValue';
 
 /**
  * Validates the facility value
- * @param value - the facility value
+ * @param value - the facility value with commas removed
  * @returns the value or errors depending on the validation result
  */
 export const validateFacilityValue = (value: string | number): ErrorsOrValue<number> => {
