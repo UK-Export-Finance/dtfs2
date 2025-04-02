@@ -1,7 +1,8 @@
 import { format, fromUnixTime } from 'date-fns';
-import { DATE_FORMATS, PortalFacilityAmendmentWithUkefId, SummaryListRow } from '@ukef/dtfs2-common';
+import { DATE_FORMATS, PortalFacilityAmendmentWithUkefId, SummaryListRow, getFormattedMonetaryValue } from '@ukef/dtfs2-common';
 import { getAmendmentsUrl } from './navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
+import { Facility } from '../../../types/facility';
 
 /**
  * generates change link if renderChangeLink is true
@@ -91,11 +92,12 @@ const generateFacilityEndDateSummaryRows = (amendment: PortalFacilityAmendmentWi
 };
 
 /**
- * @param amendment - the amendment
+ * @param amendment - Amendment object
+ * @param facility - Facility object
  * @param renderChangeLink - if change link should be rendered - defaults to true
  * @returns the SummaryListRows for the Cover end date section
  */
-const generateCoverEndDateSummaryRows = (amendment: PortalFacilityAmendmentWithUkefId, renderChangeLink = true): SummaryListRow[] => {
+const generateCoverEndDateSummaryRows = (amendment: PortalFacilityAmendmentWithUkefId, facility: Facility, renderChangeLink = true): SummaryListRow[] => {
   if (!amendment.changeCoverEndDate) {
     return [];
   }
@@ -124,14 +126,22 @@ const generateCoverEndDateSummaryRows = (amendment: PortalFacilityAmendmentWithU
 };
 
 /**
- * @param amendment - the amendment
+ * @param amendment - Amendment object
+ * @param facility - Facility object
  * @param renderChangeLink - if change link should be rendered - defaults to true
  * @returns the SummaryListRows containing `New facility value`
  */
-const generateFacilityValueSummaryRows = (amendment: PortalFacilityAmendmentWithUkefId, renderChangeLink = true): SummaryListRow[] => {
+export const generateFacilityValueSummaryRows = (
+  amendment: PortalFacilityAmendmentWithUkefId,
+  facility: Facility,
+  renderChangeLink = true,
+): SummaryListRow[] => {
   if (!amendment.changeFacilityValue) {
     return [];
   }
+
+  const currency = facility.currency?.id.toString();
+  const value = getFormattedMonetaryValue(Number(amendment.value));
 
   return [
     {
@@ -140,7 +150,7 @@ const generateFacilityValueSummaryRows = (amendment: PortalFacilityAmendmentWith
         classes: 'amendment-facility-value-key',
       },
       value: {
-        text: amendment.value?.toString() ?? '-',
+        text: `${currency} ${value}`,
         classes: 'amendment-facility-value-value',
       },
       actions: {
@@ -156,11 +166,12 @@ const generateFacilityValueSummaryRows = (amendment: PortalFacilityAmendmentWith
 };
 
 /**
- * @param amendment - the amendment
+ * @param amendment - Amendment object
+ * @param facility - Facility object
  * @param renderChangeLink - if change link should be rendered - defaults to true
  * @returns the SummaryListRows for the amendments section
  */
-const generateAmendmentSummaryAmendmentRows = (amendment: PortalFacilityAmendmentWithUkefId, renderChangeLink = true): SummaryListRow[] => {
+const generateAmendmentSummaryAmendmentRows = (amendment: PortalFacilityAmendmentWithUkefId, facility: Facility, renderChangeLink = true): SummaryListRow[] => {
   return [
     {
       key: {
@@ -183,8 +194,8 @@ ${amendment.changeFacilityValue ? `<li>Facility value</li>` : ''}
         }),
       },
     },
-    ...generateCoverEndDateSummaryRows(amendment, renderChangeLink),
-    ...generateFacilityValueSummaryRows(amendment, renderChangeLink),
+    ...generateCoverEndDateSummaryRows(amendment, facility, renderChangeLink),
+    ...generateFacilityValueSummaryRows(amendment, facility, renderChangeLink),
   ];
 };
 
@@ -260,7 +271,8 @@ const generateAmendmentSummaryEffectiveDateRows = (amendment: PortalFacilityAmen
 };
 
 /**
- * @param amendment - the amendment
+ * @param amendment - Amendment object
+ * @param facility - Facility object
  * @param renderChangeLink - if change link should be rendered - defaults to true
  * @returns the amendment summary list component parameters
  *
@@ -268,8 +280,8 @@ const generateAmendmentSummaryEffectiveDateRows = (amendment: PortalFacilityAmen
  * This object does contain html and it would be preferable to create this in a nunjucks file, but the complicated object
  * to array mapping lends itself to typescript
  */
-export const mapAmendmentToAmendmentSummaryListParams = (amendment: PortalFacilityAmendmentWithUkefId, renderChangeLink = true) => ({
-  amendmentRows: generateAmendmentSummaryAmendmentRows(amendment, renderChangeLink),
+export const mapAmendmentToAmendmentSummaryListParams = (amendment: PortalFacilityAmendmentWithUkefId, facility: Facility, renderChangeLink = true) => ({
+  amendmentRows: generateAmendmentSummaryAmendmentRows(amendment, facility, renderChangeLink),
   eligibilityRows: generateAmendmentSummaryEligibilityRows(amendment, renderChangeLink),
   effectiveDateRows: generateAmendmentSummaryEffectiveDateRows(amendment, renderChangeLink),
 });
