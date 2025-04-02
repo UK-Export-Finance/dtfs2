@@ -1,6 +1,15 @@
 import 'cypress-file-upload';
 import * as api from '../../../gef/cypress/support/commands/api';
 import * as createBssEwcsDealandFillDealFields from './portal/createBssEwcsDeal';
+import { fillEligibilityCriteria } from './portal/completeEligibilityCriteria';
+import { fillUnissuedBondDetails } from './portal/completeUnissuedBondDetails';
+import { fillIssuedBondDetails } from './portal/completeIssuedBondDetails';
+import { fillBondFinancialDetails } from './portal/completeBondFinancialDetails';
+import { fillBondFeeDetails } from './portal/completeBondFeeDetails';
+import { addBondDetails } from './portal/addBondDetails';
+import { proceedToReviewAndApproval } from './portal/proceedToReviewAndApproval';
+import { fillBankDetails } from './portal/fillBankDetails';
+import { startNewSubmission } from './portal/startNewSubmission';
 import { completeAboutSupplierSection } from './portal/completeAboutSupplierSection';
 import { completeAboutBuyerSection } from './portal/completeAboutBuyerSection';
 import { completeAboutFinancialSection } from './portal/completeAboutFinancialSection';
@@ -90,6 +99,15 @@ Cypress.Commands.add('assertValidationErrorTableRowContains', require('./portal/
 
 Cypress.Commands.add('createBssEwcsDeal', createBssEwcsDealandFillDealFields.createBssEwcsDeal);
 Cypress.Commands.add('completeBssEwcsDealFields', createBssEwcsDealandFillDealFields.completeBssEwcsDealFields);
+Cypress.Commands.add('completeEligibilityCriteria', fillEligibilityCriteria);
+Cypress.Commands.add('completeUnissuedBondDetails', fillUnissuedBondDetails);
+Cypress.Commands.add('completeIssuedBondDetails', fillIssuedBondDetails);
+Cypress.Commands.add('completeBondFinancialDetails', fillBondFinancialDetails);
+Cypress.Commands.add('completeBondFeeDetails', fillBondFeeDetails);
+Cypress.Commands.add('addBondDetails', addBondDetails);
+Cypress.Commands.add('proceedToReviewAndApproval', proceedToReviewAndApproval);
+Cypress.Commands.add('fillBankDetails', fillBankDetails);
+Cypress.Commands.add('startNewSubmission', startNewSubmission);
 Cypress.Commands.add('completeAboutSupplierSection', completeAboutSupplierSection);
 Cypress.Commands.add('completeAboutBuyerSection', completeAboutBuyerSection);
 Cypress.Commands.add('completeAboutFinancialSection', completeAboutFinancialSection);
