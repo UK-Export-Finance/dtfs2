@@ -42,7 +42,7 @@ describe(page, () => {
       wrapper.expectText('[data-cy="heading"]').toRead('What happens next?');
       wrapper
         .expectText('[data-cy="approved-amendments-effective-date"]')
-        .toRead(`We have approved your amendments and they will take effect from  ${params.effectiveDate}`);
+        .toRead(`We have approved your amendments and they will take effect from ${params.effectiveDate}`);
     });
 
     it(`should render the return link`, () => {
