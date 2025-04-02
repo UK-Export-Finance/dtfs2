@@ -1,6 +1,6 @@
 import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
-import * as api from '../../../services/api';
+import api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 
 export type GetSubmittedForCheckingRequest = CustomExpressRequest<{
@@ -25,12 +25,12 @@ export const getSubmittedForChecking = async (req: GetSubmittedForCheckingReques
       return res.redirect('/not-found');
     }
 
-    if (!(amendment.status === PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL)) {
+    if (amendment.status !== PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL) {
       console.error("Amendment %s on facility %s is not ready for checker's approval", amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 
-    return res.render('partials/amendments/submitted-for-checking.njk');
+    return res.render('partials/amendments/submitted-page.njk', { submittedToChecker: true });
   } catch (error) {
     console.error('Error getting submitted for checking amendment page %o', error);
     return res.render('partials/problem-with-service.njk');
