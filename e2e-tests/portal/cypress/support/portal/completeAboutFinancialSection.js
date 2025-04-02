@@ -1,11 +1,20 @@
-const { fillFinancialDetails } = require('./createBssEwcsDeal');
+const { contractAboutFinancial } = require('../../e2e/pages');
 /**
- * Completes the final section of a form.
+ * Completes the 'About Financial' section of the contract.
  *
- * @description Calls the `fillFinancialDetails` function to populate the section with financial details.
+ * Enters the supply contract value and selects the contract currency.
+ *
+ * @description This function simulates user input to fill out the 'About Financial' section of the contract.
+ *
+ * The function will:
+ * - Enter a supply contract value of £12,000.
+ * - Select GBP (British Pound) as the contract currency.
+ * - Click the 'Save and Go Back' button.
  */
 const completeAboutFinancialSection = () => {
-  fillFinancialDetails();
+  cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '12000');
+  contractAboutFinancial.supplyContractCurrency().select('GBP');
+  contractAboutFinancial.saveAndGoBack().click();
 };
 
 export { completeAboutFinancialSection };
