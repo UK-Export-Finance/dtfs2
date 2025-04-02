@@ -8,17 +8,19 @@ const errRef = 'facilityValue';
 
 /**
  * Validates the facility value
- * @param value - the facility value
+ * @param value - the facility value with commas removed
  * @returns the value or errors depending on the validation result
  */
-export const validateFacilityValue = (value: string): ErrorsOrValue<number> => {
-  if (!value || !CURRENCY_NUMBER_REGEX.test(value)) {
+export const validateFacilityValue = (value: string | number): ErrorsOrValue<number> => {
+  const facilityValue: string = value.toString();
+
+  if (!value || !CURRENCY_NUMBER_REGEX.test(facilityValue)) {
     return {
-      errors: [{ errRef, errMsg: 'Enter the new facility value in number format' }],
+      errors: [{ errRef, errMsg: 'Enter a new facility value' }],
     };
   }
 
-  const valueAsNumber = Number(value);
+  const valueAsNumber = Number(facilityValue);
 
   if (valueAsNumber < MINIMUM_FACILITY_VALUE) {
     return {

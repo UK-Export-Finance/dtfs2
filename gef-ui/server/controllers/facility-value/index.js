@@ -19,10 +19,10 @@ const facilityValue = async (req, res) => {
       user,
       userToken,
     });
+
     if (!facility) {
-      // eslint-disable-next-line no-console
-      console.info('Facility not found, or not authorised');
-      return res.redirect('/');
+      console.error('Unable to fetch facility %s', facilityId);
+      return res.redirect('/not-found');
     }
 
     if (!facility.currency) {
@@ -31,6 +31,7 @@ const facilityValue = async (req, res) => {
 
     return res.render('partials/facility-value.njk', facility);
   } catch (error) {
+    console.error('Unable to get facility value %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };
