@@ -25,5 +25,5 @@ export const createAmendmentDetailsViewModel = ({
   exporterName: deal.exporter.companyName,
   facilityType: facility.type,
   previousPage: `/gef/application-details/${deal._id}`,
-  amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, false),
+  amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
 });

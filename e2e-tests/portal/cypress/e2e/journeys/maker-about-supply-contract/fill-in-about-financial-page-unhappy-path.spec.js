@@ -14,9 +14,10 @@ context('about-supply-contract', () => {
       bssDealId = dealId;
       contractUrl = `/contract/${bssDealId}`;
     });
-    cy.completeBssEwcsDealandFillDealFields({
+    cy.completeAboutSupplierSection({
       exporterCompanyName: 'Exporter Company Name',
     });
+    cy.completeAboutBuyerSection();
   });
 
   it('A maker picks up a deal with the supplier details completed, and fills in the about-buyer-contract section, using the companies house search.', () => {

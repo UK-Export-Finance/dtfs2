@@ -17,6 +17,7 @@ module.exports = {
   returnToMaker: () => cy.get('[data-cy="ReturnToMaker"]'),
   saveGoBackButton: () => cy.get('[data-cy="save-go-back-button"]'),
   submitButton: () => cy.get('[data-cy="submit-button"]'),
+  printButton: () => cy.get('[data-cy="print-button"]'),
   successMessage,
   ukefComments,
   taskListHeader,

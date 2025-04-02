@@ -16,9 +16,10 @@ context('about-buyer', () => {
       bssDealId = dealId;
       contractUrl = relative(`/contract/${bssDealId}`);
     });
-    cy.completeBssEwcsDealandFillDealFields({
+    cy.completeAboutSupplierSection({
       exporterCompanyName: 'Exporter Company Name',
     });
+    cy.completeAboutBuyerSection();
   });
 
   beforeEach(() => {
