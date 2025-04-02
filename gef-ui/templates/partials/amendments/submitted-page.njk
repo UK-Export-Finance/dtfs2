@@ -7,7 +7,13 @@
 {% import './_macros/approved-by-ukef-panel.njk' as approvedByUkefPanel %}
 
 {% block pageTitle -%}
-  Amendment submitted for checking at your bank
+  {% if submittedToChecker %}
+    Amendment submitted for checking at your bank
+  {% endif %}
+
+  {% if approvedByUkef %}
+    Amendment approved by UKEF
+  {% endif %}
 {%- endblock %}
 
 {% block content %}
