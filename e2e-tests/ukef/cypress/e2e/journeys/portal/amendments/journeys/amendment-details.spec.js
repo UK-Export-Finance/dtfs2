@@ -160,6 +160,14 @@ context('Amendments - Amendment details page', () => {
         amendmentSummaryList.effectiveDateSummaryListTable().effectiveDateChangeLink().should('not.exist');
       });
 
+      if (user === BANK1_MAKER1) {
+        it('should display submit the deal action buttons', () => {
+          applicationPreview.submitHeading().should('not.exist');
+          applicationPreview.returnButton().should('not.exist');
+          submitButton().should('not.exist');
+        });
+      }
+
       if (user === BANK1_CHECKER1) {
         it('should display submit the deal action buttons', () => {
           cy.assertText(applicationPreview.submitHeading(), 'Submit or return');
