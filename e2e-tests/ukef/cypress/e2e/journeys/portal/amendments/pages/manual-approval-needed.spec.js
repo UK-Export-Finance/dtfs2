@@ -86,7 +86,7 @@ context('Amendments - Eligibility - page tests', () => {
   });
 
   it('should navigate to the eligibility page with pre-filled data when "back" is clicked', () => {
-    manualApprovalNeeded.backLink().click();
+    amendmentPage.backLink().click();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/eligibility`));
     eligibility.allFalseRadioButtons().should('be.checked');
