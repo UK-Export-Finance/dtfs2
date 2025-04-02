@@ -4,6 +4,8 @@ export type AmendmentDetailsViewModel = {
   userRoles: string[];
   exporterName: string;
   facilityType: string;
+  submitAmendment: boolean;
+  dealId: string;
   previousPage: string;
   amendmentSummaryListParams: {
     amendmentRows: SummaryListRow[];

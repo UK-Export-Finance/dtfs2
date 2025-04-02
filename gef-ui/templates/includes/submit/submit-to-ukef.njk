@@ -3,11 +3,15 @@
 <p class="govuk-heading-l" data-cy="submit-heading">
   Submit or return
 </p>
+{% if submitAmendment %}
+<p class="govuk-body">Submit to UKEF or return to maker for changes</p>
+{% else %}
 <p class="govuk-body">If this is ready, you can submit it to UKEF. Or you can return it to the maker to make changes.</p>
+{% endif %}
 
 {{ govukButton({
   text: "Submit to UKEF",
-  href: dealId + "/submit-to-ukef",
+  href: "/gef/application-details/" + dealId + "/submit-to-ukef",
   attributes: {
     'data-cy': 'submit-button'
   }
@@ -16,7 +20,7 @@
 {{ govukButton({
   text: "Return to maker",
   classes: "govuk-button--secondary",
-  href: dealId + "/return-to-maker",
+  href: "/gef/application-details/" + dealId + "/return-to-maker",
   attributes: {
     'data-cy': 'return-button'
   }
