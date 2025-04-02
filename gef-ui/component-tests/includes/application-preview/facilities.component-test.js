@@ -1,4 +1,4 @@
-const { FACILITY_TYPE, FACILITY_STAGE } = require('@ukef/dtfs2-common');
+const { FACILITY_TYPE, FACILITY_STAGE, ROLES } = require('@ukef/dtfs2-common');
 const pageRenderer = require('../../pageRenderer');
 
 const page = 'includes/application-preview/facilities.njk';
@@ -13,6 +13,8 @@ const params = {
   facilities: {
     data: [issuedCashFacility, unissuedCashFacility, issuedContingentFacility, unissuedContingentFacility],
   },
+  userRoles: [ROLES.MAKER],
+  dealId: '123',
 };
 
 describe(page, () => {
@@ -72,21 +74,35 @@ describe(page, () => {
 
   describe('Amendment details', () => {
     issuedCashFacility.isFacilityWithAmendmentInProgress = true;
-    const amendmentsInProgress = `[data-cy="amendments-in-progress"]`;
+    const amendmentInProgress = `[data-cy="amendment-in-progress"]`;
+    const url = `/gef/application-details/${params.dealId}/amendment-details`;
 
-    it('should be rendered when portalAmendment is in progress', () => {
+    it(`should be rendered when facility has an amendment in progress and the user is logged in as a maker`, () => {
+      const urlText = 'See details';
       wrapper = render(params);
 
-      wrapper.expectElement(amendmentsInProgress).toExist();
+      wrapper.expectElement(amendmentInProgress).toExist();
+      wrapper.expectLink(amendmentInProgress).toLinkTo(url, urlText);
+      wrapper.expectText(amendmentInProgress).toRead(urlText);
     });
 
-    it('should not be rendered when portalAmendment is not in progress', () => {
+    it('should be rendered when facility has an amendment in progress and the user is logged in as a checker', () => {
+      const userRoles = [ROLES.CHECKER];
+      const urlText = 'Check amendment details before submitting to UKEF';
+      wrapper = render({ ...params, userRoles });
+
+      wrapper.expectElement(amendmentInProgress).toExist();
+      wrapper.expectLink(amendmentInProgress).toLinkTo(url, urlText);
+      wrapper.expectText(amendmentInProgress).toRead(urlText);
+    });
+
+    it('should be rendered when facility does not have an amendment in progress', () => {
       issuedCashFacility.isFacilityWithAmendmentInProgress = false;
       wrapper = render({
         ...params,
       });
 
-      wrapper.expectElement(amendmentsInProgress).notToExist();
+      wrapper.expectElement(amendmentInProgress).notToExist();
     });
   });
 });

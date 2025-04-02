@@ -1,16 +1,21 @@
 import whatDoYouNeedToChange from '../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 import doYouHaveAFacilityEndDate from '../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
 import eligibility from '../../../../gef/cypress/e2e/pages/amendments/eligibility';
-import submittedForChecking from '../../../../gef/cypress/e2e/pages/amendments/submitted-for-checking';
 import facilityValue from '../../../../gef/cypress/e2e/pages/amendments/facility-value';
 
 /**
- * Submit a portal amendment for review
- * @param {Boolean} coverEndDateExist
- * @param {Boolean} facilityValueExist
- * @param {Boolean} facilityEndDateExist
+ * completes the maker makes portal amendment request journey up to check your answers
+ * @param {Boolean} param.coverEndDateExists - if cover end date is changed
+ * @param {Boolean} param.facilityValueExists - if facility value is changed
+ * @param {Boolean} param.facilityEndDateExists - if facility end date is changed
+ * @param {String} param.changedFacilityValue - the new value for the facility
  */
-export const makerSubmitPortalAmendmentForReview = (coverEndDateExists = false, facilityValueExists = false, facilityEndDateExists = false) => {
+export const makerMakesPortalAmendmentRequest = ({
+  coverEndDateExists = false,
+  facilityValueExists = false,
+  facilityEndDateExists = false,
+  changedFacilityValue,
+}) => {
   if (coverEndDateExists) {
     whatDoYouNeedToChange.coverEndDateCheckbox().click();
   }
@@ -41,7 +46,7 @@ export const makerSubmitPortalAmendmentForReview = (coverEndDateExists = false, 
   }
 
   if (facilityValueExists) {
-    cy.keyboardInput(facilityValue.facilityValue(), '10000');
+    cy.keyboardInput(facilityValue.facilityValue(), changedFacilityValue);
     cy.clickContinueButton();
   }
 
@@ -50,7 +55,4 @@ export const makerSubmitPortalAmendmentForReview = (coverEndDateExists = false, 
 
   cy.completeDateFormFields({ idPrefix: 'effective-date' });
   cy.clickContinueButton();
-  cy.clickSubmitButton();
-
-  submittedForChecking.returnLink().click();
 };

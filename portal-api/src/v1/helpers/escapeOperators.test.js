@@ -1,4 +1,5 @@
-const { FACILITY_STAGE } = require('@ukef/dtfs2-common');
+const { FACILITY_STAGE, CHECKERS_AMENDMENTS_DEAL_ID } = require('@ukef/dtfs2-common');
+const { ObjectId } = require('mongodb');
 const CONSTANTS = require('../../constants');
 const { escapeOperators } = require('./escapeOperators');
 
@@ -230,6 +231,50 @@ describe('escapeOperators function', () => {
 
     // Assert
     const expected = { $and: [{ $or: [] }] };
+    expect(result).toEqual(expected);
+  });
+
+  it(`should handle ${CHECKERS_AMENDMENTS_DEAL_ID} key inside OR operator`, () => {
+    // Arrange
+    const checkersApprovalAmendmentDealIds = ['123456789654', '123456789777'];
+    const filter = {
+      AND: [
+        {
+          'bank.id': '9',
+        },
+        {
+          OR: [
+            {
+              status: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL,
+            },
+            { [CHECKERS_AMENDMENTS_DEAL_ID]: checkersApprovalAmendmentDealIds },
+          ],
+        },
+      ],
+    };
+
+    // Act
+    const result = escapeOperators(filter);
+
+    // Assert
+    const expected = {
+      $and: [
+        {
+          'bank.id': { $eq: '9' },
+        },
+        {
+          $or: [
+            {
+              status: { $eq: CONSTANTS.DEAL.DEAL_STATUS.READY_FOR_APPROVAL },
+            },
+            {
+              _id: { $in: checkersApprovalAmendmentDealIds.map((dealId) => new ObjectId(dealId)) },
+            },
+          ],
+        },
+      ],
+    };
+
     expect(result).toEqual(expected);
   });
 

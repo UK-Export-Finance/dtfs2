@@ -11,8 +11,6 @@ const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 const filters = dashboardFilters;
 
 context('Dashboard Deals filters - filter by submissionType/noticeType', () => {
-  const ALL_DEALS = [];
-
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
@@ -20,9 +18,7 @@ context('Dashboard Deals filters - filter by submissionType/noticeType', () => {
     cy.createBssEwcsDeal();
     cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.MIA, facilityStage: FACILITY_STAGE.ISSUED });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1);
   });
 
   describe('MIA', () => {
