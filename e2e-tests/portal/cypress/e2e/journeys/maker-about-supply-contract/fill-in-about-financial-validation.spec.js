@@ -28,7 +28,7 @@ context('about-buyer', () => {
     cy.deleteDeals(ADMIN);
   });
 
-  it('should navigate to the about financial page and trigger validation errors', () => {
+  it('A maker picks up a deal with the first 2 pages of about-supply-contract complete, and triggers all validation errors on the financial page.', () => {
     contractAboutBuyer.visit(bssDealId);
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
