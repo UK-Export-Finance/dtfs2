@@ -1,8 +1,6 @@
 const { contract, contractAboutSupplier } = require('../../e2e/pages');
 /**
- * Completes the about supplier and about buyer sections for a BSS/EWCS deal.
- *
- *
+ * Simulates an incomplete 'About Supplier' section by clicking on the 'About Supplier Details' link and then the 'Next Page' button.
  */
 const inCompleteAboutSupplierSection = () => {
   contract.aboutSupplierDetailsLink().click();
