@@ -115,4 +115,4 @@ const completeBssEwcsDealFields = ({ dealSubmissionType, facilityStage, exporter
   fillOutDealDetails({ dealSubmissionType, facilityStage, exporterCompanyName });
 };
 
-export { createBssEwcsDeal, completeBssEwcsDealFields };
+export { createBssEwcsDeal, completeBssEwcsDealFields, fillSupplierDetails, fillBuyerDetails, fillFinancialDetails };

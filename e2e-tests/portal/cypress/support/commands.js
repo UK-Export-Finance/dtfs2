@@ -10,6 +10,9 @@ import { addBondDetails } from './portal/addBondDetails';
 import { proceedToReviewAndApproval } from './portal/proceedToReviewAndApproval';
 import { fillBankDetails } from './portal/fillBankDetails';
 import { startNewSubmission } from './portal/startNewSubmission';
+import { completeAboutSupplierSection } from './portal/completeAboutSupplierSection';
+import { completeAboutBuyerSection } from './portal/completeAboutBuyerSection';
+import { completeAboutFinancialSection } from './portal/completeAboutFinancialSection';
 import { assertPrintDialogue } from './utils/assertPrintDialogue';
 
 const { downloadFile } = require('./portal-api/fileshare');
@@ -105,6 +108,9 @@ Cypress.Commands.add('addBondDetails', addBondDetails);
 Cypress.Commands.add('proceedToReviewAndApproval', proceedToReviewAndApproval);
 Cypress.Commands.add('fillBankDetails', fillBankDetails);
 Cypress.Commands.add('startNewSubmission', startNewSubmission);
+Cypress.Commands.add('completeAboutSupplierSection', completeAboutSupplierSection);
+Cypress.Commands.add('completeAboutBuyerSection', completeAboutBuyerSection);
+Cypress.Commands.add('completeAboutFinancialSection', completeAboutFinancialSection);
 
 Cypress.Commands.add('getDealIdFromUrl', require('./portal/getDealIdFromUrl'));
 

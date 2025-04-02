@@ -4,10 +4,15 @@
   <header data-cy="application-preview-page">
     {% set bannerHtml %}
 
-    {% if isPortalAmendmentInProgress %}
+    {% if portalAmendmentStatus and portalAmendmentStatus !== 'Acknowledged' %}
       <h3 data-cy="amendment-details-header">{{ portalAmendmentStatus }}</h3>
       <div class="govuk-!-margin-bottom-6">
-        <a href="/gef/application-details/{{ dealId }}/amendment-details" class="govuk-link" data-cy="amendment-details">Amendment details</a>
+        {% if userRoles.includes('maker') %}
+          <a href="/gef/application-details/{{ dealId }}/amendment-details" class="govuk-link" data-cy="amendment-details">Amendment details</a>
+        {% endif %}
+        {% if userRoles.includes('checker') %}
+          <a href="/gef/application-details/{{ dealId }}/amendment-details" class="govuk-link" data-cy="amendment-details">Check amendment details before submitting to UKEF</a>
+        {% endif %}
       </div>
     {% endif %}
 
