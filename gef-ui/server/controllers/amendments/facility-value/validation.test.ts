@@ -1,7 +1,7 @@
 import { validateFacilityValue } from './validation';
 
 const errRef = 'facilityValue';
-const invalidNumberError = 'Enter the new facility value in number format';
+const invalidNumberError = 'Enter a new facility value';
 
 describe('validateFacilityValue', () => {
   const errorTestCases = [
@@ -109,8 +109,28 @@ describe('validateFacilityValue', () => {
       value: '1',
     },
     {
+      description: 'the value is 1 as a number',
+      value: 1,
+    },
+    {
+      description: 'the value is 1000 as a number',
+      value: 1000,
+    },
+    {
+      description: 'the value is 1,000,000 with decimal points',
+      value: '1000000.00',
+    },
+    {
       description: 'the value is 1 trillion',
       value: '1000000000000',
+    },
+    {
+      description: 'the value is 1 trillion with decimal points',
+      value: '1000000000000.00',
+    },
+    {
+      description: 'the value is 1 trillion as a number',
+      value: 1000000000000.0,
     },
     {
       description: 'the value has 1 decimal place',
