@@ -7,7 +7,6 @@ import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
 
 import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
 import amendmentPage from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
-import manualApprovalNeeded from '../../../../../../../gef/cypress/e2e/pages/amendments/manual-approval-needed';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -121,7 +120,7 @@ context('Amendments - Check your answers change journey', () => {
 
           nextElement.pageHeading().contains(nextPageHeading);
 
-          manualApprovalNeeded.backLink().click();
+          amendmentPage.backLink().click();
 
           eligibility.allTrueRadioButtons().click({ multiple: true });
 
