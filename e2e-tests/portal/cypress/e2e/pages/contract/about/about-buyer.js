@@ -1,7 +1,7 @@
 const address = require('./address');
 
 const page = {
-  visit: (deal) => cy.visit(`/contract/${deal._id}/about/buyer`),
+  visit: (dealId) => cy.visit(`/contract/${dealId}/about/buyer`),
 
   title: () => cy.get('[data-cy="about"]'),
 
