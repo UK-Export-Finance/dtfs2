@@ -1,0 +1,5 @@
+{% macro render(params) %}
+  {% set effectiveDate = params.effectiveDate %}
+
+  <p data-cy="approved-amendments-effective-date">We have approved your amendments and they will take effect from {{ effectiveDate }}</p>
+{% endmacro %}

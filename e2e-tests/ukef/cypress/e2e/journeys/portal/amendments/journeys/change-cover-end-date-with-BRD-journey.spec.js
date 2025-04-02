@@ -6,6 +6,7 @@ import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
 import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 import doYouHaveAFacilityEndDate from '../../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
 import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
+import amendmentPage from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 import submittedForChecking from '../../../../../../../gef/cypress/e2e/pages/amendments/submitted-for-checking';
 import amendmentSummaryList from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-summary-list';
 import { today } from '../../../../../../../e2e-fixtures/dateConstants';
@@ -119,7 +120,7 @@ context('Amendments - Change cover end date with bank review date - full journey
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/submitted-for-checking`));
     submittedForChecking.submittedForCheckingConfirmationPanel().contains('Amendment submitted for checking at your bank');
-    submittedForChecking.returnLink().click();
+    amendmentPage.returnLink().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });
