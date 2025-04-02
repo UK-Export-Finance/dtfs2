@@ -14,7 +14,7 @@ describe('createAmendmentDetailsViewModel', () => {
     const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().build();
 
     // Act
-    const result = createAmendmentDetailsViewModel({ amendment, facility, deal });
+    const result = createAmendmentDetailsViewModel({ amendment, facility, deal, userRoles: [] });
 
     // Assert
     const expected = {
