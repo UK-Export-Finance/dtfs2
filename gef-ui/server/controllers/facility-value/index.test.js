@@ -3,6 +3,7 @@ import { facilityValue, updateFacilityValue } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
 import { MAKER } from '../../constants/roles';
+import Facility from '../../models/facility';
 
 jest.mock('../../services/api');
 
@@ -52,7 +53,9 @@ describe('controllers/facility-value', () => {
   let mockResponse;
   let mockRequest;
   let mockFacilityValueResponse;
+
   const updateApplicationSpy = jest.fn();
+  console.error = jest.fn();
 
   beforeEach(() => {
     mockResponse = MockResponse();
@@ -69,8 +72,32 @@ describe('controllers/facility-value', () => {
     jest.resetAllMocks();
   });
 
-  describe.only('GET Facility Value', () => {
-    it.only('renders the `Facility Value` template with no facility value', async () => {
+  describe('GET Facility Value', () => {
+    it('should redirect to not found page if facility API response is falsy', async () => {
+      // Arrange
+      jest.spyOn(Facility, 'find').mockResolvedValueOnce(null);
+
+      // Act
+      await facilityValue(mockRequest, mockResponse);
+
+      // Assert
+      expect(console.error).toHaveBeenCalledWith('Unable to fetch facility %s', 'xyz');
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/not-found');
+
+      // Arrange
+      Facility.find.mockRestore(); // Restore to the original implementation
+    });
+
+    it('redirects to currency page when no currency is set for this facility', async () => {
+      // Act
+      await facilityValue(mockRequest, mockResponse);
+
+      // Assert
+      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/facility-currency');
+    });
+
+    it('renders the `Facility Value` template with no facility value', async () => {
+      // Arrange
       mockRequest.query.status = 'change';
       mockFacilityValueResponse.details.currency = { id: CURRENCY.GBP };
       mockFacilityValueResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
@@ -78,25 +105,27 @@ describe('controllers/facility-value', () => {
       mockFacilityValueResponse.details.coverPercentage = null;
       mockFacilityValueResponse.details.interestPercentage = null;
 
+      const expected = {
+        currency: CURRENCY.GBP,
+        value: '',
+        facilityType: CONSTANTS.FACILITY_TYPE.CASH,
+        coverPercentage: null,
+        interestPercentage: null,
+        facilityTypeString: 'cash',
+        dealId: '123',
+        facilityId: 'xyz',
+        status: 'change',
+      };
+
+      // Act
       await facilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-value.njk',
-        expect.objectContaining({
-          currency: CURRENCY.GBP,
-          value: '',
-          facilityType: CONSTANTS.FACILITY_TYPE.CASH,
-          coverPercentage: null,
-          interestPercentage: null,
-          facilityTypeString: 'cash',
-          dealId: '123',
-          facilityId: 'xyz',
-          status: 'change',
-        }),
-      );
+      // Assert
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining(expected));
     });
 
     it('renders the `Facility Value` template with pre-existing facility value', async () => {
+      // Arrange
       mockRequest.query.status = 'change';
       mockFacilityValueResponse.details.currency = { id: CURRENCY.EUR };
       mockFacilityValueResponse.details.type = CONSTANTS.FACILITY_TYPE.CASH;
@@ -104,33 +133,35 @@ describe('controllers/facility-value', () => {
       mockFacilityValueResponse.details.coverPercentage = 20;
       mockFacilityValueResponse.details.interestPercentage = 10;
 
+      const expected = {
+        currency: CURRENCY.EUR,
+        value: '2000',
+        facilityType: CONSTANTS.FACILITY_TYPE.CASH,
+        coverPercentage: '20',
+        interestPercentage: '10',
+        facilityTypeString: 'cash',
+        dealId: '123',
+        facilityId: 'xyz',
+        status: 'change',
+      };
+
+      // Act
       await facilityValue(mockRequest, mockResponse);
 
-      expect(mockResponse.render).toHaveBeenCalledWith(
-        'partials/facility-value.njk',
-        expect.objectContaining({
-          currency: CURRENCY.EUR,
-          value: '2000',
-          facilityType: CONSTANTS.FACILITY_TYPE.CASH,
-          coverPercentage: '20',
-          interestPercentage: '10',
-          facilityTypeString: 'cash',
-          dealId: '123',
-          facilityId: 'xyz',
-          status: 'change',
-        }),
-      );
-    });
-
-    it('redirects to currency page when no currency is set for this facility', async () => {
-      await facilityValue(mockRequest, mockResponse);
-
-      expect(mockResponse.redirect).toHaveBeenCalledWith('/gef/application-details/123/facilities/xyz/facility-currency');
+      // Assert
+      expect(mockResponse.render).toHaveBeenCalledWith('partials/facility-value.njk', expect.objectContaining(expected));
     });
 
     it('redirects user to `problem with service` page if there is an issue with the API', async () => {
+      // Arrange
       api.getFacility.mockRejectedValueOnce();
+
+      // Act
       await facilityValue(mockRequest, mockResponse);
+
+      // Assert
+      expect(console.error).toHaveBeenCalledWith('GEF Facility model error %o', undefined);
+      expect(console.error).toHaveBeenCalledWith('Unable to get facility value %o', new Error('GEF Facility model error'));
       expect(mockResponse.render).toHaveBeenCalledWith('partials/problem-with-service.njk');
     });
   });
