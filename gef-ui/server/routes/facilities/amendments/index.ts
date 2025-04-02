@@ -3,7 +3,7 @@ import express from 'express';
 import { validateMongoId } from '@ukef/dtfs2-common';
 import { validatePortalFacilityAmendmentsEnabled } from '../../../middleware/feature-flags/portal-facility-amendments';
 import { validateRole, validateToken, validateBank } from '../../../middleware';
-import { MAKER } from '../../../constants/roles';
+import { MAKER, CHECKER } from '../../../constants/roles';
 import { postCreateDraftFacilityAmendment } from '../../../controllers/amendments/create-draft/post-create-draft';
 import { getWhatNeedsToChange } from '../../../controllers/amendments/what-needs-to-change/get-what-needs-to-change';
 import { postWhatNeedsToChange } from '../../../controllers/amendments/what-needs-to-change/post-what-needs-to-change';
@@ -141,7 +141,7 @@ router
 
 router
   .route(`/application-details/:dealId/${AMENDMENT_DETAILS}`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER, CHECKER] })])
   .get(getAmendmentDetails);
 
 export default router;
