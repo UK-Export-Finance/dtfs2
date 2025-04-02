@@ -2,19 +2,17 @@ const { CURRENCY } = require('@ukef/dtfs2-common');
 const { contractAboutBuyer, contractAboutFinancial, contractAboutPreview } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const relative = require('../../relativeURL');
+
 const { thirtyFiveDaysAgo } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('about-buyer', () => {
   let bssDealId;
-  let contractUrl;
 
   before(() => {
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
-      contractUrl = relative(`/contract/${bssDealId}`);
     });
     cy.completeAboutSupplierSection({
       exporterCompanyName: 'Exporter Company Name',
@@ -31,7 +29,7 @@ context('about-buyer', () => {
   });
 
   it('should navigate to the about financial page and trigger validation errors', () => {
-    cy.visit(`${contractUrl}/about/buyer`);
+    contractAboutBuyer.visit(bssDealId);
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
 
@@ -40,7 +38,7 @@ context('about-buyer', () => {
     contractAboutPreview.expectError('Supply Contract currency is required');
 
     // prove the errors are on the about-financial page
-    cy.visit(`${contractUrl}/about/financial`);
+    contractAboutFinancial.visit(bssDealId);
 
     partials.errorSummaryLinks().should('have.length', 4);
 
@@ -59,7 +57,7 @@ context('about-buyer', () => {
     contractAboutPreview.errors().should('not.exist');
 
     // switch to non-GBP currency and prove that we now require the exchange-rate + date fields
-    cy.visit(`${contractUrl}/about/financial`);
+    contractAboutFinancial.visit(bssDealId);
     contractAboutFinancial.supplyContractCurrency().select('USD');
 
     contractAboutFinancial.preview().click();
@@ -68,7 +66,7 @@ context('about-buyer', () => {
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date is required for non-GBP currencies');
 
     // prove 6-decimal-place validation
-    cy.visit(`${contractUrl}/about/financial`);
+    contractAboutFinancial.visit(bssDealId);
 
     cy.keyboardInput(contractAboutFinancial.supplyContractConversionRateToGBP(), '{selectall}{backspace}0.1234567');
 
@@ -77,7 +75,7 @@ context('about-buyer', () => {
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion rate must be a number with up to 6 decimal places');
 
     // fix the conversion rate
-    cy.visit(`${contractUrl}/about/financial`);
+    contractAboutFinancial.visit(bssDealId);
 
     cy.keyboardInput(contractAboutFinancial.supplyContractConversionRateToGBP(), '{selectall}{backspace}0.123456');
 
@@ -87,7 +85,7 @@ context('about-buyer', () => {
     contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion rate must be a number with up to 6 decimal places');
 
     // fill in the conversion date field by field..
-    cy.visit(`${contractUrl}/about/financial`);
+    contractAboutFinancial.visit(bssDealId);
 
     cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), '25');
 
@@ -97,7 +95,7 @@ context('about-buyer', () => {
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date Month is required for non-GBP currencies');
     contractAboutPreview.errors().should('contain', 'Supply Contract conversion date Year is required for non-GBP currencies');
 
-    cy.visit(`${contractUrl}/about/financial`);
+    contractAboutFinancial.visit(bssDealId);
 
     cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), '12');
 
@@ -105,7 +103,7 @@ context('about-buyer', () => {
 
     contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion date Month is required for non-GBP currencies');
 
-    cy.visit(`${contractUrl}/about/financial`);
+    contractAboutFinancial.visit(bssDealId);
 
     cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), '2019');
 
@@ -114,7 +112,7 @@ context('about-buyer', () => {
     contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion date is required for non-GBP currencies');
     contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion date Year is required for non-GBP currencies');
 
-    cy.visit(`${contractUrl}/about/financial`);
+    contractAboutFinancial.visit(bssDealId);
 
     cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), '{selectall}{backspace}3019');
 
@@ -124,7 +122,7 @@ context('about-buyer', () => {
 
     const dateTooFarInThePast = thirtyFiveDaysAgo;
 
-    cy.visit(`${contractUrl}/about/financial`);
+    contractAboutFinancial.visit(bssDealId);
 
     cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), `{selectall}{backspace}${dateTooFarInThePast.day}`);
 

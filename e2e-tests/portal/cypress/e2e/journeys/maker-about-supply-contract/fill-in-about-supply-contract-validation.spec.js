@@ -1,5 +1,5 @@
 const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common');
-const { contract, contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview } = require('../../pages');
+const { contractAboutSupplier, contractAboutBuyer, contractAboutFinancial, contractAboutPreview } = require('../../pages');
 const partials = require('../../partials');
 const relative = require('../../relativeURL');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
@@ -8,14 +8,12 @@ const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 context('about-supply-contract', () => {
   let bssDealId;
-  let contractUrl;
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
 
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
-      contractUrl = relative(`/contract/${bssDealId}`);
     });
     cy.inCompleteAboutSupplierSection();
   });
@@ -23,8 +21,7 @@ context('about-supply-contract', () => {
   it('A maker picks up a deal in status=Draft, and triggers all validation errors.', () => {
     cy.login(BANK1_MAKER1);
 
-    cy.visit(contractUrl);
-    contract.aboutSupplierDetailsLink().click();
+    contractAboutSupplier.visit(bssDealId);
     contractAboutSupplier.supplierName().clear();
 
     contractAboutSupplier.nextPage().click();
@@ -57,7 +54,7 @@ context('about-supply-contract', () => {
     contractAboutPreview.expectError('Supply Contract conversion date is required for non-GBP currencies');
 
     // prove the errors are on the about-supplier page
-    cy.visit(`${contractUrl}/about/supplier`);
+    contractAboutSupplier.visit(bssDealId);
 
     contractAboutSupplier.expectError('Supplier type is required');
     contractAboutSupplier.expectError('Supplier name is required');
@@ -79,7 +76,7 @@ context('about-supply-contract', () => {
     contractAboutBuyer.nextPage().click();
     contractAboutFinancial.preview().click();
 
-    cy.visit(`${contractUrl}/about/supplier`);
+    contractAboutSupplier.visit(bssDealId);
 
     // open up the correspondence address to generate more errors..
     contractAboutSupplier.supplierCorrespondenceAddressDifferent().click();
@@ -94,7 +91,7 @@ context('about-supply-contract', () => {
     contractAboutPreview.expectError('Supplier correspondence postcode is required for UK addresses');
 
     // prove the errors show on the about-supplier page
-    cy.visit(`${contractUrl}/about/supplier`);
+    contractAboutSupplier.visit(bssDealId);
     contractAboutSupplier.expectError('Supplier postcode is required for UK addresses');
     contractAboutSupplier.expectError('Supplier correspondence postcode is required for UK addresses');
 
@@ -107,7 +104,7 @@ context('about-supply-contract', () => {
     contractAboutPreview.errors().should('not.contain', 'Supplier correspondence postcode is required for UK addresses');
     contractAboutPreview.errors().should('contain', 'Supplier correspondence town is required for non-UK addresses');
 
-    cy.visit(`${contractUrl}/about/supplier`);
+    contractAboutSupplier.visit(bssDealId);
 
     // open up the legally-distinct indemnifier section to generate more errors...
     contractAboutSupplier.legallyDistinct().click();
@@ -120,7 +117,7 @@ context('about-supply-contract', () => {
     contractAboutPreview.expectError('Indemnifier address line 1 is required');
 
     // prove the errors show on the about-supplier page
-    cy.visit(`${contractUrl}/about/supplier`);
+    contractAboutSupplier.visit(bssDealId);
     contractAboutSupplier.expectError('Indemnifier address line 1 is require');
 
     // switch to non-UK country
@@ -133,7 +130,7 @@ context('about-supply-contract', () => {
     contractAboutPreview.errors().should('contain', 'Indemnifier town is required for non-UK addresses');
 
     // open up the indemnifier correspondence address section to generate more errors...
-    cy.visit(`${contractUrl}/about/supplier`);
+    contractAboutSupplier.visit(bssDealId);
     contractAboutSupplier.indemnifierCorrespondenceAddressDifferent().click();
     // save + skip ahead to the preview
     contractAboutSupplier.nextPage().click();
@@ -143,7 +140,7 @@ context('about-supply-contract', () => {
     contractAboutPreview.expectError('Indemnifier correspondence address line 1 is required');
 
     // prove the errors show on the about-supplier page
-    cy.visit(`${contractUrl}/about/supplier`);
+    contractAboutSupplier.visit(bssDealId);
     contractAboutSupplier.expectError('Indemnifier correspondence address line 1 is required');
 
     // switch to non-UK country
@@ -158,7 +155,7 @@ context('about-supply-contract', () => {
 
   it('A maker picks up a deal in status=Draft, triggers Supplier companies house validation errors', () => {
     cy.login(BANK1_MAKER1);
-    cy.visit(`${contractUrl}/about/supplier`);
+    contractAboutSupplier.visit(bssDealId);
 
     //---------------------------------------------------------------
     // supplier companies house submit - without providing a value
@@ -202,7 +199,7 @@ context('about-supply-contract', () => {
 
   it('A maker picks up a deal in status=Draft, fills in a field, triggers Supplier companies house validation errors', () => {
     cy.login(BANK1_MAKER1);
-    cy.visit(`${contractUrl}/about/supplier`);
+    contractAboutSupplier.visit(bssDealId);
 
     //---------------------------------------------------------------
     // fill in at least one form field unrelated to Companies House
@@ -251,7 +248,7 @@ context('about-supply-contract', () => {
 
   it('A maker picks up a deal in status=Draft, triggers Indemnifier companies house validation errors', () => {
     cy.login(BANK1_MAKER1);
-    cy.visit(`${contractUrl}/about/supplier`);
+    contractAboutSupplier.visit(bssDealId);
 
     //---------------------------------------------------------------
     // indemnifier companies house submit - without providing a value
@@ -426,7 +423,7 @@ context('about-supply-contract', () => {
   it('A maker picks up a deal in status=Draft, misses mandatory field then trigger missed validation error.', () => {
     cy.login(BANK1_MAKER1);
 
-    cy.visit(`${contractUrl}/about/supplier`);
+    contractAboutSupplier.visit(bssDealId);
 
     // click through
     contractAboutSupplier.supplierType().select('Exporter');

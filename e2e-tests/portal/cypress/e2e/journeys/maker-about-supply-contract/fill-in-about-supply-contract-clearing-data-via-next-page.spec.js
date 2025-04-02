@@ -1,18 +1,15 @@
 const { contractAboutSupplier, contractAboutPreview } = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const relative = require('../../relativeURL');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
 context('about-supply-contract', () => {
   let bssDealId;
-  let contractUrl;
 
   before(() => {
     cy.deleteDeals(ADMIN);
     cy.createBssEwcsDeal().then((dealId) => {
       bssDealId = dealId;
-      contractUrl = relative(`/contract/${bssDealId}`);
     });
     cy.completeAboutSupplierSection({
       exporterCompanyName: 'Exporter Company Name',
@@ -24,12 +21,12 @@ context('about-supply-contract', () => {
   });
 
   it('should clear indemnifier correspondence address fields when deselecting separate address', () => {
-    cy.visit(`${contractUrl}/about/supplier`);
+    contractAboutSupplier.visit(bssDealId);
     contractAboutSupplier.legallyDistinct().click();
     contractAboutSupplier.indemnifierCorrespondenceAddressNotDifferent().click();
     contractAboutSupplier.nextPage().click();
 
-    cy.visit(`${contractUrl}/about/check-your-answers`);
+    contractAboutPreview.visit(bssDealId);
 
     contractAboutPreview.indemnifierCorrespondenceAddress().line1().should('not.exist');
     contractAboutPreview.indemnifierCorrespondenceAddress().line2().should('not.exist');
@@ -38,11 +35,11 @@ context('about-supply-contract', () => {
     contractAboutPreview.indemnifierCorrespondenceAddress().postcode().should('not.exist');
     contractAboutPreview.indemnifierCorrespondenceAddress().country().should('not.exist');
 
-    cy.visit(`${contractUrl}/about/supplier`);
+    contractAboutSupplier.visit(bssDealId);
     contractAboutSupplier.notLegallyDistinct().click();
     contractAboutSupplier.nextPage().click();
 
-    cy.visit(`${contractUrl}/about/check-your-answers`);
+    contractAboutPreview.visit(bssDealId);
     contractAboutPreview.indemnifierCompaniesHouseRegistrationNumber().should('not.exist');
     contractAboutPreview.indemnifierName().should('not.exist');
     contractAboutPreview.indemnifierAddress().line1().should('not.exist');
@@ -53,11 +50,11 @@ context('about-supply-contract', () => {
     contractAboutPreview.indemnifierAddress().country().should('not.exist');
     contractAboutPreview.indemnifierCorrespondenceAddressDifferent().should('not.exist');
 
-    cy.visit(`${contractUrl}/about/supplier`);
+    contractAboutSupplier.visit(bssDealId);
     contractAboutSupplier.supplierCorrespondenceAddressSame().click();
     contractAboutSupplier.nextPage().click();
 
-    cy.visit(`${contractUrl}/about/check-your-answers`);
+    contractAboutPreview.visit(bssDealId);
     contractAboutPreview.supplierCorrespondenceAddress().line1().should('not.exist');
     contractAboutPreview.supplierCorrespondenceAddress().line2().should('not.exist');
     contractAboutPreview.supplierCorrespondenceAddress().town().should('not.exist');

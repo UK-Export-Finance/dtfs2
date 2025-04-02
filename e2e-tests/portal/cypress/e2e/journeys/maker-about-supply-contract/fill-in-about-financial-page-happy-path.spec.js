@@ -50,7 +50,7 @@ context('about-supply-contract', () => {
     contractAboutFinancial.saveAndGoBack().click();
 
     // check that the preview page renders the Submission Details component
-    cy.visit(`${contractUrl}/about/check-your-answers`);
+    contractAboutPreview.visit(bssDealId);
     contractAboutPreview.submissionDetails().should('be.visible');
 
     cy.assertText(partials.taskListHeader.itemStatus('financial-information'), 'Completed');
