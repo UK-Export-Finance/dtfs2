@@ -62,7 +62,6 @@ describe('getSubmittedForChecking', () => {
   it('should render the submitted for checking page template', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
-    // const renderSpy = jest.spyOn(res, 'render');
 
     // Act
     await getSubmittedForChecking(req, res);
