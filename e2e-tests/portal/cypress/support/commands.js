@@ -13,6 +13,7 @@ import { startNewSubmission } from './portal/startNewSubmission';
 import { completeAboutSupplierSection } from './portal/completeAboutSupplierSection';
 import { completeAboutBuyerSection } from './portal/completeAboutBuyerSection';
 import { completeAboutFinancialSection } from './portal/completeAboutFinancialSection';
+import { inCompleteAboutSupplierSection } from './portal/inCompleteAboutSupplierSection';
 import { assertPrintDialogue } from './utils/assertPrintDialogue';
 
 const { downloadFile } = require('./portal-api/fileshare');
@@ -111,6 +112,7 @@ Cypress.Commands.add('startNewSubmission', startNewSubmission);
 Cypress.Commands.add('completeAboutSupplierSection', completeAboutSupplierSection);
 Cypress.Commands.add('completeAboutBuyerSection', completeAboutBuyerSection);
 Cypress.Commands.add('completeAboutFinancialSection', completeAboutFinancialSection);
+Cypress.Commands.add('inCompleteAboutSupplierSection', inCompleteAboutSupplierSection);
 
 Cypress.Commands.add('getDealIdFromUrl', require('./portal/getDealIdFromUrl'));
 
