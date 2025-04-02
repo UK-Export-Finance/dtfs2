@@ -64,19 +64,21 @@ describe('getApprovedByUkef', () => {
   it('should render the submitted page template with the correct variables', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
-    const renderSpy = jest.spyOn(res, 'render');
 
     // Act
     await getApprovedByUkef(req, res);
 
     const effectiveDate = format(fromUnixTime(Number(amendment.effectiveDate)), DATE_FORMATS.D_MMMM_YYYY);
 
-    // Assert
-    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-    expect(renderSpy).toHaveBeenCalledWith('partials/amendments/submitted-page.njk', {
+    const expectedRenderData = {
       approvedByUkef: true,
       effectiveDate,
-    });
+    };
+
+    // Assert
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+    expect(res._getRenderView()).toEqual('partials/amendments/submitted-page.njk');
+    expect(res._getRenderData()).toEqual(expectedRenderData);
   });
 
   it('should redirect to "/not-found" if the amendment is not found', async () => {

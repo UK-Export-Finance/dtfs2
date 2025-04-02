@@ -62,16 +62,15 @@ describe('getSubmittedForChecking', () => {
   it('should render the submitted for checking page template', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
-    const renderSpy = jest.spyOn(res, 'render');
+    // const renderSpy = jest.spyOn(res, 'render');
 
     // Act
     await getSubmittedForChecking(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-    expect(renderSpy).toHaveBeenCalledWith('partials/amendments/submitted-page.njk', {
-      submittedToChecker: true,
-    });
+    expect(res._getRenderView()).toEqual('partials/amendments/submitted-page.njk');
+    expect(res._getRenderData()).toEqual({ submittedToChecker: true });
   });
 
   it('should redirect to "/not-found" if the amendment is not found', async () => {
