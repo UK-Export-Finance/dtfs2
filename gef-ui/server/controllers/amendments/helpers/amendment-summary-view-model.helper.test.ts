@@ -1,9 +1,10 @@
 import { format, getUnixTime } from 'date-fns';
-import { DATE_FORMATS } from '@ukef/dtfs2-common';
+import { CURRENCY, DATE_FORMATS, getFormattedMonetaryValue, now } from '@ukef/dtfs2-common';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
-import { mapAmendmentToAmendmentSummaryListParams, generateChangeLink } from './amendment-summary-view-model.helper';
+import { mapAmendmentToAmendmentSummaryListParams, generateFacilityValueSummaryRows, generateChangeLink } from './amendment-summary-view-model.helper';
 import { getAmendmentsUrl } from './navigation.helper';
+import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 
 const amendmentId = 'amendmentId';
 const facilityId = 'facilityId';
@@ -50,6 +51,8 @@ describe('amendment-summary-view-model.helper', () => {
         const facilityEndDate = new Date();
         const coverEndDate = new Date();
 
+        const facility = MOCK_ISSUED_FACILITY.details;
+
         const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
           .withAmendmentId(amendmentId)
           .withFacilityId(facilityId)
@@ -60,7 +63,7 @@ describe('amendment-summary-view-model.helper', () => {
           .build();
 
         // Act
-        const result = mapAmendmentToAmendmentSummaryListParams(amendment);
+        const result = mapAmendmentToAmendmentSummaryListParams(amendment, facility);
 
         // Assert
         const expectedAmendmentRows = [
@@ -148,6 +151,8 @@ describe('amendment-summary-view-model.helper', () => {
         const bankReviewDate = new Date();
         const coverEndDate = new Date();
 
+        const facility = MOCK_ISSUED_FACILITY.details;
+
         const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
           .withAmendmentId(amendmentId)
           .withFacilityId(facilityId)
@@ -158,7 +163,7 @@ describe('amendment-summary-view-model.helper', () => {
           .build();
 
         // Act
-        const result = mapAmendmentToAmendmentSummaryListParams(amendment);
+        const result = mapAmendmentToAmendmentSummaryListParams(amendment, facility);
 
         // Assert
         const expectedAmendmentRows = [
@@ -245,7 +250,11 @@ describe('amendment-summary-view-model.helper', () => {
     describe('when changing facility value only', () => {
       it('should return the correct amendment rows', () => {
         // Arrange
-        const facilityValue = 100;
+        const facilityValue = 100000;
+        const formattedFacilityValue = `${CURRENCY.GBP} ${getFormattedMonetaryValue(facilityValue)}`;
+
+        const facility = MOCK_ISSUED_FACILITY.details;
+
         const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
           .withAmendmentId(amendmentId)
           .withFacilityId(facilityId)
@@ -255,7 +264,7 @@ describe('amendment-summary-view-model.helper', () => {
           .build();
 
         // Act
-        const result = mapAmendmentToAmendmentSummaryListParams(amendment);
+        const result = mapAmendmentToAmendmentSummaryListParams(amendment, facility);
 
         // Assert
         const expectedAmendmentRows = [
@@ -303,7 +312,7 @@ describe('amendment-summary-view-model.helper', () => {
               classes: 'amendment-facility-value-key',
             },
             value: {
-              text: facilityValue.toString(),
+              text: formattedFacilityValue,
               classes: 'amendment-facility-value-value',
             },
           },
@@ -315,9 +324,13 @@ describe('amendment-summary-view-model.helper', () => {
     describe('when changing facility value and cover end date', () => {
       it('should return the correct amendment rows', () => {
         // Arrange
+
         const facilityValue = 100;
         const facilityEndDate = new Date();
         const coverEndDate = new Date();
+        const formattedFacilityValue = `${CURRENCY.GBP} ${getFormattedMonetaryValue(facilityValue)}`;
+
+        const facility = MOCK_ISSUED_FACILITY.details;
 
         const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
           .withAmendmentId(amendmentId)
@@ -329,7 +342,7 @@ describe('amendment-summary-view-model.helper', () => {
           .build();
 
         // Act
-        const result = mapAmendmentToAmendmentSummaryListParams(amendment);
+        const result = mapAmendmentToAmendmentSummaryListParams(amendment, facility);
 
         // Assert
         const expectedAmendmentRows = [
@@ -426,7 +439,7 @@ describe('amendment-summary-view-model.helper', () => {
               classes: 'amendment-facility-value-key',
             },
             value: {
-              text: facilityValue.toString(),
+              text: formattedFacilityValue,
               classes: 'amendment-facility-value-value',
             },
           },
@@ -442,6 +455,8 @@ describe('amendment-summary-view-model.helper', () => {
         { id: 2, text: 'Criterion 2', answer: true },
       ];
 
+      const facility = MOCK_ISSUED_FACILITY.details;
+
       const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
         .withAmendmentId(amendmentId)
         .withFacilityId(facilityId)
@@ -450,7 +465,7 @@ describe('amendment-summary-view-model.helper', () => {
         .build();
 
       // Act
-      const result = mapAmendmentToAmendmentSummaryListParams(amendment);
+      const result = mapAmendmentToAmendmentSummaryListParams(amendment, facility);
 
       // Assert
       const expectedCriteriaRows = [
@@ -506,6 +521,8 @@ describe('amendment-summary-view-model.helper', () => {
       // Arrange
       const effectiveDate = new Date();
 
+      const facility = MOCK_ISSUED_FACILITY.details;
+
       const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
         .withAmendmentId(amendmentId)
         .withFacilityId(facilityId)
@@ -514,7 +531,7 @@ describe('amendment-summary-view-model.helper', () => {
         .build();
 
       // Act
-      const result = mapAmendmentToAmendmentSummaryListParams(amendment);
+      const result = mapAmendmentToAmendmentSummaryListParams(amendment, facility);
 
       // Assert
       const expectedEffectiveDateRows = [
@@ -542,6 +559,300 @@ describe('amendment-summary-view-model.helper', () => {
         },
       ];
       expect(result.effectiveDateRows).toEqual(expectedEffectiveDateRows);
+    });
+  });
+
+  describe('generateFacilityValueSummaryRows', () => {
+    it('should show new facility value as GBP 100', () => {
+      // Arrange
+      const facilityValue = 100;
+      const facility = MOCK_ISSUED_FACILITY.details;
+
+      const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+        .withAmendmentId(amendmentId)
+        .withFacilityId(facilityId)
+        .withDealId(dealId)
+        .withCoverEndDate(now().valueOf())
+        .withFacilityValue(facilityValue)
+        .build();
+
+      const href = `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`;
+
+      // Act
+      const result = generateFacilityValueSummaryRows(amendment, facility);
+
+      // Assert
+      const expected = [
+        {
+          key: {
+            text: 'New facility value',
+            classes: 'amendment-facility-value-key',
+          },
+          value: {
+            text: `${CURRENCY.GBP} 100.00`,
+            classes: 'amendment-facility-value-value',
+          },
+          actions: {
+            items: generateChangeLink({
+              href,
+              visuallyHiddenText: 'facility value',
+              datacy: 'change-facility-value-link',
+              renderChangeLink: true,
+            }),
+          },
+        },
+      ];
+
+      expect(result).toEqual(expected);
+    });
+
+    it('should show new facility value as GBP 1,000', () => {
+      // Arrange
+      const facilityValue = 1000;
+      const facility = MOCK_ISSUED_FACILITY.details;
+
+      const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+        .withAmendmentId(amendmentId)
+        .withFacilityId(facilityId)
+        .withDealId(dealId)
+        .withCoverEndDate(now().valueOf())
+        .withFacilityValue(facilityValue)
+        .build();
+
+      const href = `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`;
+
+      // Act
+      const result = generateFacilityValueSummaryRows(amendment, facility);
+
+      // Assert
+      const expected = [
+        {
+          key: {
+            text: 'New facility value',
+            classes: 'amendment-facility-value-key',
+          },
+          value: {
+            text: `${CURRENCY.GBP} 1,000.00`,
+            classes: 'amendment-facility-value-value',
+          },
+          actions: {
+            items: generateChangeLink({
+              href,
+              visuallyHiddenText: 'facility value',
+              datacy: 'change-facility-value-link',
+              renderChangeLink: true,
+            }),
+          },
+        },
+      ];
+
+      expect(result).toEqual(expected);
+    });
+
+    it('should show new facility value as USD 10,000', () => {
+      // Arrange
+      const facilityValue = 10000;
+      const facility = {
+        ...MOCK_ISSUED_FACILITY.details,
+        currency: {
+          id: CURRENCY.USD,
+        },
+      };
+
+      const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+        .withAmendmentId(amendmentId)
+        .withFacilityId(facilityId)
+        .withDealId(dealId)
+        .withCoverEndDate(now().valueOf())
+        .withFacilityValue(facilityValue)
+        .build();
+
+      const href = `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`;
+
+      // Act
+      const result = generateFacilityValueSummaryRows(amendment, facility);
+
+      // Assert
+      const expected = [
+        {
+          key: {
+            text: 'New facility value',
+            classes: 'amendment-facility-value-key',
+          },
+          value: {
+            text: `${CURRENCY.USD} 10,000.00`,
+            classes: 'amendment-facility-value-value',
+          },
+          actions: {
+            items: generateChangeLink({
+              href,
+              visuallyHiddenText: 'facility value',
+              datacy: 'change-facility-value-link',
+              renderChangeLink: true,
+            }),
+          },
+        },
+      ];
+
+      expect(result).toEqual(expected);
+    });
+
+    it('should show new facility value as EUR 100,000', () => {
+      // Arrange
+      const facilityValue = 100000;
+      const facility = {
+        ...MOCK_ISSUED_FACILITY.details,
+        currency: {
+          id: CURRENCY.EUR,
+        },
+      };
+
+      const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+        .withAmendmentId(amendmentId)
+        .withFacilityId(facilityId)
+        .withDealId(dealId)
+        .withCoverEndDate(now().valueOf())
+        .withFacilityValue(facilityValue)
+        .build();
+
+      const href = `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`;
+
+      // Act
+      const result = generateFacilityValueSummaryRows(amendment, facility);
+
+      // Assert
+      const expected = [
+        {
+          key: {
+            text: 'New facility value',
+            classes: 'amendment-facility-value-key',
+          },
+          value: {
+            text: `${CURRENCY.EUR} 100,000.00`,
+            classes: 'amendment-facility-value-value',
+          },
+          actions: {
+            items: generateChangeLink({
+              href,
+              visuallyHiddenText: 'facility value',
+              datacy: 'change-facility-value-link',
+              renderChangeLink: true,
+            }),
+          },
+        },
+      ];
+
+      expect(result).toEqual(expected);
+    });
+
+    it('should show new facility value as JPY 1,000,000', () => {
+      // Arrange
+      const facilityValue = 1000000;
+      const facility = {
+        ...MOCK_ISSUED_FACILITY.details,
+        currency: {
+          id: CURRENCY.JPY,
+        },
+      };
+
+      const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+        .withAmendmentId(amendmentId)
+        .withFacilityId(facilityId)
+        .withDealId(dealId)
+        .withCoverEndDate(now().valueOf())
+        .withFacilityValue(facilityValue)
+        .build();
+
+      const href = `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`;
+
+      // Act
+      const result = generateFacilityValueSummaryRows(amendment, facility);
+
+      // Assert
+      const expected = [
+        {
+          key: {
+            text: 'New facility value',
+            classes: 'amendment-facility-value-key',
+          },
+          value: {
+            text: `${CURRENCY.JPY} 1,000,000.00`,
+            classes: 'amendment-facility-value-value',
+          },
+          actions: {
+            items: generateChangeLink({
+              href,
+              visuallyHiddenText: 'facility value',
+              datacy: 'change-facility-value-link',
+              renderChangeLink: true,
+            }),
+          },
+        },
+      ];
+
+      expect(result).toEqual(expected);
+    });
+
+    it('should show new facility value as GBP 1,000,000,000', () => {
+      // Arrange
+      const facilityValue = 1000000000;
+      const facility = MOCK_ISSUED_FACILITY.details;
+
+      const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+        .withAmendmentId(amendmentId)
+        .withFacilityId(facilityId)
+        .withDealId(dealId)
+        .withCoverEndDate(now().valueOf())
+        .withFacilityValue(facilityValue)
+        .build();
+
+      const href = `${getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.FACILITY_VALUE })}/?change=true#facilityValue`;
+
+      // Act
+      const result = generateFacilityValueSummaryRows(amendment, facility);
+
+      // Assert
+      const expected = [
+        {
+          key: {
+            text: 'New facility value',
+            classes: 'amendment-facility-value-key',
+          },
+          value: {
+            text: `${CURRENCY.GBP} 1,000,000,000.00`,
+            classes: 'amendment-facility-value-value',
+          },
+          actions: {
+            items: generateChangeLink({
+              href,
+              visuallyHiddenText: 'facility value',
+              datacy: 'change-facility-value-link',
+              renderChangeLink: true,
+            }),
+          },
+        },
+      ];
+
+      expect(result).toEqual(expected);
+    });
+
+    it('should not show the new facility value, when facility value is not being amended', () => {
+      // Arrange
+      const facility = MOCK_ISSUED_FACILITY.details;
+
+      const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+        .withAmendmentId(amendmentId)
+        .withFacilityId(facilityId)
+        .withDealId(dealId)
+        .withCoverEndDate(now().valueOf())
+        .withChangeFacilityValue(false)
+        .build();
+
+      // Act
+      const result = generateFacilityValueSummaryRows(amendment, facility);
+
+      // Assert
+      expect(result).toEqual([]);
     });
   });
 });

@@ -1,3 +1,5 @@
+import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+
 const pages = require('../../../pages');
 const partials = require('../../../partials');
 const fillBondForm = require('../../maker-bond/fill-bond-forms');
@@ -16,9 +18,12 @@ context('Ensure proceed to review button is only visible once facilities are in 
       bssDealId = dealId;
       contractUrl = relative(`/contract/${bssDealId}`);
     });
-    cy.completeAboutSupplierSectionAndEligibilityCriteriaSection({
+    cy.completeAboutSupplierSection({
       exporterCompanyName: 'Exporter Company Name',
     });
+    cy.completeAboutBuyerSection();
+    cy.completeAboutFinancialSection();
+    cy.completeEligibilityCriteria(DEAL_SUBMISSION_TYPE.AIN);
   });
 
   after(() => {

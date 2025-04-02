@@ -24,7 +24,7 @@ describe('createCheckYourAnswersViewModel', () => {
       facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ ...amendment, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.CHECK_YOUR_ANSWERS, amendment),
-      amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment),
+      amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility),
     };
     expect(result).toEqual(expected);
   });

@@ -7,7 +7,7 @@ import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/am
 import facilityValue from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
 import effectiveDate from '../../../../../../../gef/cypress/e2e/pages/amendments/effective-date';
-import { twoDaysAgo, twoMonths, today } from '../../../../../../../e2e-fixtures/dateConstants';
+import { twoDaysAgo, twoMonths } from '../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -107,7 +107,7 @@ context('Amendments - Date amendment effective from - page tests', () => {
     {
       description: 'the date amendment effective from is before the cover start date',
       dateFieldInput: twoDaysAgo,
-      expectedErrorMessage: `Date amendment effective from cannot be before the cover start date ${today.d_MMMM_yyyy}`,
+      expectedErrorMessage: 'The date entered is invalid. Please ensure the date entered does not exceed the allowable timeframe',
     },
   ];
 
