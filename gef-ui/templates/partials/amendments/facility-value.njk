@@ -48,21 +48,22 @@
           classes: "govuk-input--width-10",
           name: "facilityValue",
           value: facilityValue,
+          spellcheck: false,
           prefix: {
             text: currencySymbol,
             attributes: {
               "data-cy": "facility-value-prefix"
             }
           },
+          attributes: {
+            "data-cy": "facility-value",
+            'data-mask': "currency"
+          },
           errorMessage: errors and errors.fieldErrors.facilityValue and {
             text: errors.fieldErrors.facilityValue.text,
             attributes: {
               'data-cy': 'facility-value-inline-error'
             }
-          },
-          spellcheck: false,
-          attributes: {
-            "data-cy": "facility-value"
           }
         }) }}
 

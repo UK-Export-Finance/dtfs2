@@ -131,9 +131,10 @@ describe('postFacilityValue', () => {
     expect(updateAmendmentMock).toHaveBeenCalledTimes(0);
   });
 
-  it('should render the page with validation errors if facilityValue is invalid', async () => {
+  it('should render the page with validation errors if facilityValue is empty', async () => {
     // Arrange
-    const facilityValue = 'not a number';
+    const facilityValue = '';
+    const facilityValueNumerical = dtfsCommon.getMonetaryValueAsNumber(facilityValue);
     const { req, res } = getHttpMocks(facilityValue);
 
     // Act
@@ -146,7 +147,82 @@ describe('postFacilityValue', () => {
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage,
       currencySymbol: getCurrencySymbol(MOCK_ISSUED_FACILITY.details.currency!.id),
-      errors: validationErrorHandler((validateFacilityValue(facilityValue) as { errors: ValidationError[] }).errors),
+      errors: validationErrorHandler((validateFacilityValue(facilityValueNumerical) as { errors: ValidationError[] }).errors),
+      facilityValue,
+    };
+
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+    expect(res._getRenderView()).toEqual('partials/amendments/facility-value.njk');
+    expect(res._getRenderData()).toEqual(expectedRenderData);
+  });
+
+  it('should render the page with validation errors if facilityValue is invalid', async () => {
+    // Arrange
+    const facilityValue = 'not a number';
+    const facilityValueNumerical = dtfsCommon.getMonetaryValueAsNumber(facilityValue);
+    const { req, res } = getHttpMocks(facilityValue);
+
+    // Act
+    await postFacilityValue(req, res);
+
+    // Assert
+    const expectedRenderData: FacilityValueViewModel = {
+      exporterName: mockDeal.exporter.companyName,
+      facilityType: MOCK_ISSUED_FACILITY.details.type,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
+      previousPage,
+      currencySymbol: getCurrencySymbol(MOCK_ISSUED_FACILITY.details.currency!.id),
+      errors: validationErrorHandler((validateFacilityValue(facilityValueNumerical) as { errors: ValidationError[] }).errors),
+      facilityValue,
+    };
+
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+    expect(res._getRenderView()).toEqual('partials/amendments/facility-value.njk');
+    expect(res._getRenderData()).toEqual(expectedRenderData);
+  });
+
+  it('should render the page with validation errors if facilityValue is below 1', async () => {
+    // Arrange
+    const facilityValue = '0.99';
+    const facilityValueNumerical = dtfsCommon.getMonetaryValueAsNumber(facilityValue);
+    const { req, res } = getHttpMocks(facilityValue);
+
+    // Act
+    await postFacilityValue(req, res);
+
+    // Assert
+    const expectedRenderData: FacilityValueViewModel = {
+      exporterName: mockDeal.exporter.companyName,
+      facilityType: MOCK_ISSUED_FACILITY.details.type,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
+      previousPage,
+      currencySymbol: getCurrencySymbol(MOCK_ISSUED_FACILITY.details.currency!.id),
+      errors: validationErrorHandler((validateFacilityValue(facilityValueNumerical) as { errors: ValidationError[] }).errors),
+      facilityValue,
+    };
+
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+    expect(res._getRenderView()).toEqual('partials/amendments/facility-value.njk');
+    expect(res._getRenderData()).toEqual(expectedRenderData);
+  });
+
+  it('should render the page with validation errors if facilityValue is above 1 trillion', async () => {
+    // Arrange
+    const facilityValue = '1,000,000,000,000.01';
+    const facilityValueNumerical = dtfsCommon.getMonetaryValueAsNumber(facilityValue);
+    const { req, res } = getHttpMocks(facilityValue);
+
+    // Act
+    await postFacilityValue(req, res);
+
+    // Assert
+    const expectedRenderData: FacilityValueViewModel = {
+      exporterName: mockDeal.exporter.companyName,
+      facilityType: MOCK_ISSUED_FACILITY.details.type,
+      cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
+      previousPage,
+      currencySymbol: getCurrencySymbol(MOCK_ISSUED_FACILITY.details.currency!.id),
+      errors: validationErrorHandler((validateFacilityValue(facilityValueNumerical) as { errors: ValidationError[] }).errors),
       facilityValue,
     };
 
@@ -157,6 +233,21 @@ describe('postFacilityValue', () => {
 
   it('should call updateAmendment if the facilityValue is valid', async () => {
     // Arrange
+    const facilityValue = '1,000';
+    const facilityValueNumerical = dtfsCommon.getMonetaryValueAsNumber(facilityValue);
+    const { req, res } = getHttpMocks(facilityValue);
+
+    // Act
+    await postFacilityValue(req, res);
+
+    // Assert
+    expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
+    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { value: Number(facilityValueNumerical) }, userToken });
+    expect(console.error).toHaveBeenCalledTimes(0);
+  });
+
+  it('should call updateAmendment if the facilityValue is valid, when javascript is disabled', async () => {
+    // Arrange
     const facilityValue = '1000';
     const { req, res } = getHttpMocks(facilityValue);
 
@@ -166,17 +257,6 @@ describe('postFacilityValue', () => {
     // Assert
     expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
     expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { value: Number(facilityValue) }, userToken });
-  });
-
-  it('should not call console.error if the facilityValue is valid', async () => {
-    // Arrange
-    const facilityValue = '1000';
-    const { req, res } = getHttpMocks(facilityValue);
-
-    // Act
-    await postFacilityValue(req, res);
-
-    // Assert
     expect(console.error).toHaveBeenCalledTimes(0);
   });
 
