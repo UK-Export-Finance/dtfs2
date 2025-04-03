@@ -13,8 +13,6 @@ context('Dashboard Deals filters - filter by keyword', () => {
   let bssDealId;
   const MOCK_KEYWORD = 'Special exporter';
 
-  const ALL_DEALS = [];
-
   const EXPECTED_DEALS_LENGTH = {
     ALL_STATUSES: 2,
     FILTERED_BY_KEYWORD: 1,
@@ -29,9 +27,7 @@ context('Dashboard Deals filters - filter by keyword', () => {
     });
     cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, facilityStage: FACILITY_STAGE.UNISSUED, exporterCompanyName: MOCK_KEYWORD });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1);
   });
 
   beforeEach(() => {

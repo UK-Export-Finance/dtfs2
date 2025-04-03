@@ -1,0 +1,12 @@
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% macro render() %}
+  {{ govukPanel({
+    attributes: {
+      'data-cy': 'submitted-for-checking-confirmation-panel',
+      'tabIndex': 0
+    },
+    titleText: "Amendment submitted for checking at your bank",
+    text: "We've sent you a confirmation email."
+  }) }}
+{% endmacro %}

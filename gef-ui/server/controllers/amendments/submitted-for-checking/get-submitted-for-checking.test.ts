@@ -68,7 +68,8 @@ describe('getSubmittedForChecking', () => {
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-    expect(res._getRenderView()).toEqual('partials/amendments/submitted-for-checking.njk');
+    expect(res._getRenderView()).toEqual('partials/amendments/submitted-page.njk');
+    expect(res._getRenderData()).toEqual({ submittedToChecker: true });
   });
 
   it('should redirect to "/not-found" if the amendment is not found', async () => {

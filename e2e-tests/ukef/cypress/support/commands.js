@@ -4,12 +4,14 @@ import { submitDealCancellation } from './trade-finance-manager-ui/submit-deal-c
 import { makerLoginSubmitGefDealForReview } from './portal/makerLoginSubmitGefDealForReview';
 import { checkerLoginSubmitGefDealToUkef } from './portal/checkerLoginSubmitGefDealToUkef';
 import { makerSubmitDealForReview } from './portal/makerSubmitDealForReview';
-import { makerSubmitPortalAmendmentForReview } from './portal/makerSubmitPortalAmendmentForReview';
 import { checkerSubmitDealToUkef } from './portal/checkerSubmitDealToUkef';
 import { getOneDeal } from './portal-api/getOneDeal';
 import { getOneGefDeal } from './portal-api/getOneGefDeal';
 import { clearSessionCookies } from './utils/clearSessionCookies';
 import { getAmendmentIdFromUrl } from './utils/getAmendmentIdFromUrl';
+import { makerSubmitPortalAmendmentForReview } from './gef/makerSubmitPortalAmendmentForReview';
+import { makerMakesPortalAmendmentRequest } from './gef/makerMakesPortalAmendmentRequest';
+import { assertPrintDialogue } from './utils/assertPrintDialogue';
 
 // Preserve session cookie
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
@@ -20,6 +22,9 @@ Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
 
 // Assert an element has some exact text
 Cypress.Commands.add('assertText', require('./utils/assertText'));
+
+// Assert that the print dialogue is shown
+Cypress.Commands.add('assertPrintDialogue', assertPrintDialogue);
 
 // commands used to interact directly with portal-api
 Cypress.Commands.add('insertManyDeals', require('./portal-api/insertManyDeals'));
@@ -45,10 +50,12 @@ Cypress.Commands.add('completeDateFormFields', require('./portal/completeDateFor
 
 Cypress.Commands.add('makerLoginSubmitGefDealForReview', makerLoginSubmitGefDealForReview);
 Cypress.Commands.add('checkerLoginSubmitGefDealToUkef', checkerLoginSubmitGefDealToUkef);
-Cypress.Commands.add('makerSubmitPortalAmendmentForReview', makerSubmitPortalAmendmentForReview);
 Cypress.Commands.add('makerSubmitDealForReview', makerSubmitDealForReview);
 Cypress.Commands.add('checkerSubmitDealToUkef', checkerSubmitDealToUkef);
 Cypress.Commands.add('getAmendmentIdFromUrl', getAmendmentIdFromUrl);
+
+Cypress.Commands.add('makerSubmitPortalAmendmentForReview', makerSubmitPortalAmendmentForReview);
+Cypress.Commands.add('makerMakesPortalAmendmentRequest', makerMakesPortalAmendmentRequest);
 
 Cypress.Commands.add('submitDealCancellation', submitDealCancellation);
 

@@ -142,9 +142,48 @@ describe(`POST ${url}`, () => {
       expect(response.headers.location).toEqual('/not-found');
     });
 
+    it('should render facility value page with errors if facility value is empty', async () => {
+      // Arrange
+      const facilityValue = '';
+
+      // Act
+      const response = await postWithSessionCookie({ facilityValue }, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain('New facility value');
+      expect(response.text).toContain('Enter a new facility value');
+    });
+
+    it('should render facility value page with errors if facility value is not a number', async () => {
+      // Arrange
+      const facilityValue = '1000x';
+
+      // Act
+      const response = await postWithSessionCookie({ facilityValue }, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain('New facility value');
+      expect(response.text).toContain('Enter a new facility value');
+    });
+
+    it('should render facility value page with errors if facility value is not a number', async () => {
+      // Arrange
+      const facilityValue = '1000.1.0';
+
+      // Act
+      const response = await postWithSessionCookie({ facilityValue }, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain('New facility value');
+      expect(response.text).toContain('Enter a new facility value');
+    });
+
     it('should render facility value page with errors if facility value is invalid', async () => {
       // Arrange
-      const facilityValue = 'not a number';
+      const facilityValue = '0.99';
 
       // Act
       const response = await postWithSessionCookie({ facilityValue }, sessionCookie);
@@ -153,6 +192,19 @@ describe(`POST ${url}`, () => {
       expect(response.status).toEqual(HttpStatusCode.Ok);
       expect(response.text).toContain('New facility value');
       expect(response.text).toContain('Enter a valid facility value');
+    });
+
+    it('should render facility value page with errors if facility value is too high', async () => {
+      // Arrange
+      const facilityValue = '1000000000000.01';
+
+      // Act
+      const response = await postWithSessionCookie({ facilityValue }, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain('New facility value');
+      expect(response.text).toContain('The new facility value is too high');
     });
 
     it('should redirect to the next page if the facility value is valid', async () => {
