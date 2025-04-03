@@ -86,13 +86,12 @@ authRouter.use(passport.authenticate('login-complete', { session: false }));
 
 /**
  * Mandatory Criteria routes
- * Allow POST & PUT of MC HTML tags
+ * Allow POST to MC HTML tags
  * on non-production environments only
  */
 
 // BSS/EWCS
 authRouter.route('/mandatory-criteria').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteria.create);
-authRouter.route('/mandatory-criteria/:version').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteria.update);
 
 // GEF
 authRouter.route('/gef/mandatory-criteria-versioned').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteriaVersioned.create);

@@ -37,5 +37,6 @@ export * from './status';
 export * from './record-correction-status';
 export * from './utilisation-report-status-tag-colours';
 export * from './timeout';
+export * from './environments';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';
