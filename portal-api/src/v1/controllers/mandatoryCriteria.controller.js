@@ -51,6 +51,7 @@ const findOneMandatoryCriteria = async (version, callback) => {
  */
 exports.create = async (req, res) => {
   if (!isVerifiedPayload({ payload: req.body, template: PAYLOAD_VERIFICATION.CRITERIA.MANDATORY.DEFAULT })) {
+    console.error('Invalid BSS/EWCS mandatory criteria payload supplied %o', req.body);
     return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid mandatory criteria payload' });
   }
 
@@ -73,9 +74,9 @@ exports.create = async (req, res) => {
  *
  * @param {Express.Request} req - The Express request object.
  * @param {Express.Response} res - The Express response object.
- * @returns {void}
+ * @returns {Promise<Express.Response>} - A promise that resolves to the Express response object.
  */
-exports.findAll = (req, res) =>
+exports.findAll = async (req, res) =>
   findMandatoryCriteria((mandatoryCriteria) =>
     sortMandatoryCriteria(mandatoryCriteria, (sortedMandatoryCriteria) =>
       res.status(200).send({
@@ -90,9 +91,9 @@ exports.findAll = (req, res) =>
  *
  * @param {Express.Request} req - The Express request object.
  * @param {Express.Response} res - The Express response object.
- * @returns {void}
+ * @returns {Promise<Express.Response>} - A promise that resolves to the Express response object.
  */
-exports.findOne = (req, res) => findOneMandatoryCriteria(req.params.version, (mandatoryCriteria) => res.status(200).send(mandatoryCriteria));
+exports.findOne = async (req, res) => findOneMandatoryCriteria(req.params.version, (mandatoryCriteria) => res.status(200).send(mandatoryCriteria));
 
 /**
  * Finds the latest mandatory criteria.

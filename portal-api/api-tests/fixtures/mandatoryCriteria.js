@@ -162,7 +162,7 @@ const MANDATORY_CRITERIA = [
     ],
   },
   {
-    version: 34,
+    version: 33,
     criteria: [],
   },
 ];

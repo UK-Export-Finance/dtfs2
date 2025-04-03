@@ -10,7 +10,7 @@ describe('isProduction function', () => {
     const result = isProduction();
 
     // Assert
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return true if the environment is development', () => {
@@ -21,7 +21,7 @@ describe('isProduction function', () => {
     const result = isProduction();
 
     // Assert
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return true if the environment is dev', () => {
@@ -32,7 +32,7 @@ describe('isProduction function', () => {
     const result = isProduction();
 
     // Assert
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 
   it('should return true if the environment is undefined', () => {
@@ -43,6 +43,6 @@ describe('isProduction function', () => {
     const result = isProduction();
 
     // Assert
-    expect(result).toBe(false);
+    expect(result).toEqual(false);
   });
 });

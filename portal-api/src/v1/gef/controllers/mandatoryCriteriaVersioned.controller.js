@@ -51,10 +51,11 @@ const findOneMandatoryCriteria = async (id, callback) => {
  * Creates a new mandatory criteria version.
  * @param {Object} req - Express request object.
  * @param {Object} res - Express response object.
- * @returns {Object} - Returns the ID of the inserted mandatory criteria on success, or an error message on failure.
+ * @returns {Promise<Express.Response>} - Returns the ID of the inserted mandatory criteria on success, or an error message on failure.
  */
 exports.create = async (req, res) => {
   if (!isVerifiedPayload({ payload: req.body, template: PAYLOAD_VERIFICATION.CRITERIA.MANDATORY.VERSIONED })) {
+    console.error('Invalid GEF mandatory criteria payload supplied %o', req.body);
     return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid GEF mandatory criteria payload' });
   }
 
@@ -110,7 +111,7 @@ exports.findLatest = async (req, res) => {
  * Deletes a mandatory criteria version.
  * @param {Object} req - Express request object.
  * @param {Object} res - Express response object.
- * @returns {Object} - Returns the result of the deletion operation on success, or an error message on failure.
+ * @returns {Promise<Express.Response>} - Returns the result of the deletion operation on success, or an error message on failure.
  * @throws {Error} - If the provided ID is invalid or the document cannot be deleted.
  */
 exports.delete = async (req, res) => {
