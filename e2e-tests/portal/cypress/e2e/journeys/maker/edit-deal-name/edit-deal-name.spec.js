@@ -25,7 +25,7 @@ context('Edit deal name', () => {
 
     cy.title().should('eq', `Change name - ${additionalRefName}${defaults.pageTitleAppend}`);
     editDealName.additionalRefName().should('have.value', additionalRefName);
-    editDealName.additionalRefName().clear();
+    cy.keyboardInput(editDealName.additionalRefName(), '{selectall}{backspace}');
     cy.clickSubmitButton();
 
     cy.url().should('eq', `${contractUrl}/edit-name`);

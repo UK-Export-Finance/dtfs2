@@ -26,7 +26,6 @@ context('BSS Mandatory criteria: Check deal details page', () => {
   it('should render the mandatory criteria checklist when a new deal is created', () => {
     cy.login(BANK1_MAKER1);
     cy.visit(`${contractUrl}/submission-details`);
-    pages.contract.checkDealDetailsTab().click();
     pages.contractSubmissionDetails.mandatoryCriteriaBox().should('exist');
     pages.contractSubmissionDetails.mandatoryCriteriaBox().find('ol > li[value="1"]').should('contain', 'Bank with a duly completed Supplier Declaration');
     pages.contractSubmissionDetails
