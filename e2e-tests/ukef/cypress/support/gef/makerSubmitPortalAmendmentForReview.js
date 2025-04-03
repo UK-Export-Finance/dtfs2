@@ -1,4 +1,4 @@
-import submittedForChecking from '../../../../gef/cypress/e2e/pages/amendments/submitted-for-checking';
+import amendmentPage from '../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 
 /**
  * Submit a portal amendment for review
@@ -22,5 +22,5 @@ export const makerSubmitPortalAmendmentForReview = ({
 
   cy.clickSubmitButton();
 
-  submittedForChecking.returnLink().click();
+  amendmentPage.returnLink().click();
 };

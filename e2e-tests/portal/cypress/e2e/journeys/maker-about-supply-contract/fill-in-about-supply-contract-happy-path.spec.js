@@ -2,31 +2,20 @@ const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common');
 const { contract, contractAboutSupplier, contractAboutPreview, defaults } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const twentyOneDeals = require('../../../fixtures/deal-dashboard-data');
+const relative = require('../../relativeURL');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 context('about-supply-contract', () => {
-  let deal;
+  let bssDealId;
+  let contractUrl;
+  const additionalRefName = 'UKEF test bank (Delegated)';
 
   before(() => {
-    const aDealWithAboutSupplyContractInStatus = (status) => {
-      const candidates = twentyOneDeals.filter(
-        (aDeal) =>
-          aDeal.submissionDetails && status === aDeal.submissionDetails.status && aDeal.status === 'Draft' && (!aDeal.details || !aDeal.details.submissionDate),
-      );
-
-      const aDeal = candidates[0];
-      if (!aDeal) {
-        throw new Error('no suitable test data found');
-      } else {
-        return aDeal;
-      }
-    };
-
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(aDealWithAboutSupplyContractInStatus('Not started'), BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
+    cy.createBssEwcsDeal().then((dealId) => {
+      bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
@@ -34,14 +23,14 @@ context('about-supply-contract', () => {
     cy.login(BANK1_MAKER1);
 
     // go the long way for the first test- actually clicking via the contract page to prove the link..
-    contract.visit(deal);
+    cy.visit(contractUrl);
 
     // check the status is displaying correctly
     cy.assertText(contract.aboutSupplierDetailsStatus(), 'Not started');
 
     contract.aboutSupplierDetailsLink().click();
 
-    cy.title().should('eq', `Supplier information - ${deal.additionalRefName}${defaults.pageTitleAppend}`);
+    cy.title().should('eq', `Supplier information - ${additionalRefName}${defaults.pageTitleAppend}`);
 
     //---
     // check initial page state..
@@ -63,7 +52,7 @@ context('about-supply-contract', () => {
 
     contractAboutSupplier.supplierSearchCompaniesHouse().click();
 
-    // // the search should populate the supplier address fields
+    // the search should populate the supplier address fields
     contractAboutSupplier.supplierName().should('not.have.value', '');
     contractAboutSupplier.supplierAddress().line1().should('not.have.value', '');
     contractAboutSupplier.supplierAddress().town().should('not.have.value', '');
@@ -89,7 +78,7 @@ context('about-supply-contract', () => {
     cy.assertText(contract.aboutSupplierDetailsStatus(), 'Incomplete');
 
     // check that the preview page renders the Submission Details component
-    contractAboutPreview.visit(deal);
+    contractAboutPreview.visit(bssDealId);
     contractAboutPreview.submissionDetails().should('be.visible');
 
     cy.assertText(partials.taskListHeader.itemStatus('supplier-and-counter-indemnifier/guarantor'), 'Completed');

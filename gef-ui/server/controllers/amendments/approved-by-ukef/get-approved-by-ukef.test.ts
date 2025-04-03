@@ -1,11 +1,12 @@
 /* eslint-disable import/first */
 const getAmendmentMock = jest.fn();
 
+import { format, fromUnixTime } from 'date-fns';
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { aPortalSessionUser, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { aPortalSessionUser, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId, PORTAL_AMENDMENT_STATUS, DATE_FORMATS } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
-import { getSubmittedForChecking, GetSubmittedForCheckingRequest } from './get-submitted-for-checking.ts';
+import { getApprovedByUkef, GetApprovedByUkefRequest } from './get-approved-by-ukef.ts';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 
 jest.mock('../../../services/api', () => ({
@@ -17,7 +18,7 @@ const facilityId = 'facilityId';
 const amendmentId = 'amendmentId';
 
 const getHttpMocks = () =>
-  createMocks<GetSubmittedForCheckingRequest>({
+  createMocks<GetApprovedByUkefRequest>({
     params: { dealId, facilityId, amendmentId },
     session: {
       user: { ...aPortalSessionUser(), roles: [ROLES.MAKER] },
@@ -26,7 +27,7 @@ const getHttpMocks = () =>
     },
   });
 
-describe('getSubmittedForChecking', () => {
+describe('getApprovedByUkef', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
 
   beforeEach(() => {
@@ -38,6 +39,7 @@ describe('getSubmittedForChecking', () => {
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
       .withStatus(PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL)
+      .withEffectiveDate(1743524576)
       .build();
 
     getAmendmentMock.mockResolvedValue(amendment);
@@ -52,24 +54,31 @@ describe('getSubmittedForChecking', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getSubmittedForChecking(req, res);
+    await getApprovedByUkef(req, res);
 
     // Assert
     expect(getAmendmentMock).toHaveBeenCalledTimes(1);
     expect(getAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, userToken: req.session.userToken });
   });
 
-  it('should render the submitted for checking page template', async () => {
+  it('should render the submitted page template with the correct variables', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
     // Act
-    await getSubmittedForChecking(req, res);
+    await getApprovedByUkef(req, res);
+
+    const effectiveDate = format(fromUnixTime(Number(amendment.effectiveDate)), DATE_FORMATS.D_MMMM_YYYY);
+
+    const expectedRenderData = {
+      approvedByUkef: true,
+      effectiveDate,
+    };
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     expect(res._getRenderView()).toEqual('partials/amendments/submitted-page.njk');
-    expect(res._getRenderData()).toEqual({ submittedToChecker: true });
+    expect(res._getRenderData()).toEqual(expectedRenderData);
   });
 
   it('should redirect to "/not-found" if the amendment is not found', async () => {
@@ -78,7 +87,7 @@ describe('getSubmittedForChecking', () => {
     getAmendmentMock.mockResolvedValue(undefined);
 
     // Act
-    await getSubmittedForChecking(req, res);
+    await getApprovedByUkef(req, res);
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
@@ -98,7 +107,7 @@ describe('getSubmittedForChecking', () => {
     getAmendmentMock.mockResolvedValue(draftAmendment);
 
     // Act
-    await getSubmittedForChecking(req, res);
+    await getApprovedByUkef(req, res);
 
     // Assert
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
@@ -110,7 +119,7 @@ describe('getSubmittedForChecking', () => {
     const { req, res } = getHttpMocks();
 
     // Act
-    await getSubmittedForChecking(req, res);
+    await getApprovedByUkef(req, res);
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');

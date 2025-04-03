@@ -1,4 +1,4 @@
-import { CURRENCY, CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CURRENCY, CustomExpressRequest, getMonetaryValueAsNumber } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { FacilityValueViewModel } from '../../../types/view-models/amendments/facility-value-view-model';
@@ -44,7 +44,8 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
       return res.redirect('/not-found');
     }
 
-    const validationErrorOrValue = validateFacilityValue(facilityValue);
+    const facilityValueNumerical = getMonetaryValueAsNumber(facilityValue);
+    const validationErrorOrValue = validateFacilityValue(facilityValueNumerical);
 
     if ('errors' in validationErrorOrValue) {
       const currencySymbol = getCurrencySymbol(facility.currency?.id ?? CURRENCY.GBP);

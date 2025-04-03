@@ -46,7 +46,11 @@ export const generateChangeLink = ({
  * @returns the SummaryListRows containing `New facility end date` or `New bank review date`
  */
 const generateFacilityEndDateSummaryRows = (amendment: PortalFacilityAmendmentWithUkefId, renderChangeLink = true): SummaryListRow[] => {
+  const bankReviewDate = amendment.bankReviewDate ? new Date(amendment.bankReviewDate) : null;
+
   if (amendment.isUsingFacilityEndDate) {
+    const facilityEndDate = amendment.facilityEndDate ? new Date(amendment.facilityEndDate) : null;
+
     return [
       {
         key: {
@@ -54,7 +58,7 @@ const generateFacilityEndDateSummaryRows = (amendment: PortalFacilityAmendmentWi
           classes: 'amendment-facility-end-date-key',
         },
         value: {
-          text: amendment.facilityEndDate ? format(amendment.facilityEndDate, DATE_FORMATS.D_MMMM_YYYY) : '-',
+          text: facilityEndDate ? format(facilityEndDate, DATE_FORMATS.D_MMMM_YYYY) : '-',
           classes: 'amendment-facility-end-date-value',
         },
         actions: {
@@ -76,7 +80,7 @@ const generateFacilityEndDateSummaryRows = (amendment: PortalFacilityAmendmentWi
         classes: 'amendment-bank-review-date-key',
       },
       value: {
-        text: amendment.bankReviewDate ? format(amendment.bankReviewDate, DATE_FORMATS.D_MMMM_YYYY) : '-',
+        text: bankReviewDate ? format(bankReviewDate, DATE_FORMATS.D_MMMM_YYYY) : '-',
         classes: 'amendment-bank-review-date-value',
       },
       actions: {
@@ -102,6 +106,8 @@ const generateCoverEndDateSummaryRows = (amendment: PortalFacilityAmendmentWithU
     return [];
   }
 
+  const coverEndDate = amendment.coverEndDate ? new Date(amendment.coverEndDate) : null;
+
   return [
     {
       key: {
@@ -109,7 +115,7 @@ const generateCoverEndDateSummaryRows = (amendment: PortalFacilityAmendmentWithU
         classes: 'amendment-cover-end-date-key',
       },
       value: {
-        text: amendment.coverEndDate ? format(new Date(amendment.coverEndDate), DATE_FORMATS.D_MMMM_YYYY) : '-',
+        text: coverEndDate ? format(coverEndDate, DATE_FORMATS.D_MMMM_YYYY) : '-',
         classes: 'amendment-cover-end-date-value',
       },
       actions: {
@@ -121,7 +127,7 @@ const generateCoverEndDateSummaryRows = (amendment: PortalFacilityAmendmentWithU
         }),
       },
     },
-    ...generateFacilityEndDateSummaryRows(amendment),
+    ...generateFacilityEndDateSummaryRows(amendment, renderChangeLink),
   ];
 };
 
