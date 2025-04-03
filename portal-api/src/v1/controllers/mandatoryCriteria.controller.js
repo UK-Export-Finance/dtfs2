@@ -6,8 +6,6 @@ const assert = require('assert');
 const { generatePortalAuditDetails, generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../drivers/db-client');
 
-const { NODE_ENV } = process.env;
-
 const sortMandatoryCriteria = (arr, callback) => {
   const sortedArray = arr.sort((a, b) => Number(a.id) - Number(b.id));
   return callback(sortedArray);
@@ -56,7 +54,7 @@ exports.create = async (req, res) => {
     return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid mandatory criteria payload' });
   }
 
-  if (isProduction(NODE_ENV)) {
+  if (isProduction()) {
     return res.status(HttpStatusCode.Unauthorized).send({ status: HttpStatusCode.Unauthorized, message: 'Unauthorised insertion' });
   }
 

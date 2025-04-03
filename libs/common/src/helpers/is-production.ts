@@ -1,9 +1,9 @@
 import { ENVIRONMENTS } from '../constants';
 
+const { NODE_ENV } = process.env;
+
 /**
- * Determines if the given environment is set to production.
- *
- * @param environment - The environment string to check.
- * @returns `true` if the environment is production, otherwise `false`.
+ * Check if the current environment is production.
+ * @returns {boolean} True if the environment is production, false otherwise.
  */
-export const isProduction = (environment: string) => environment === ENVIRONMENTS.PRODUCTION;
+export const isProduction = (): boolean => NODE_ENV === ENVIRONMENTS.PRODUCTION;

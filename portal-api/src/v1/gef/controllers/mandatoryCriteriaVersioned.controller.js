@@ -8,8 +8,6 @@ const { MandatoryCriteria } = require('../models/mandatoryCriteria');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
 const api = require('../../api');
 
-const { NODE_ENV } = process.env;
-
 const sortMandatoryCriteria = (arr, callback) => {
   const sortedArray = arr.sort((a, b) => Number(a.version) - Number(b.version));
   return callback(sortedArray);
@@ -60,7 +58,7 @@ exports.create = async (req, res) => {
     return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid GEF mandatory criteria payload' });
   }
 
-  if (isProduction(NODE_ENV)) {
+  if (isProduction()) {
     return res.status(HttpStatusCode.Unauthorized).send({ status: HttpStatusCode.Unauthorized, message: 'Unauthorised insertion' });
   }
 
