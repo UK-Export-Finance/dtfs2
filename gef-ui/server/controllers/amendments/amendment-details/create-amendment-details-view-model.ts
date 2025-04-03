@@ -27,7 +27,7 @@ export const createAmendmentDetailsViewModel = ({
   userRoles,
   exporterName: deal.exporter.companyName,
   facilityType: facility.type,
-  submitAmendment: true,
+  submitAmendment: userRoles.includes('checker'),
   dealId: deal._id,
   previousPage: `/gef/application-details/${deal._id}`,
   amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),

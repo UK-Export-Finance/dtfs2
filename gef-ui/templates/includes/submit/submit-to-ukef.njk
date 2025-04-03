@@ -1,17 +1,23 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
+{% set message = "If this is ready, you can submit it to UKEF. Or you can return it to the maker to make changes." %}
+{% set submitToUkefUrl = dealId + "/submit-to-ukef" %}
+{% set returnToMakerUrl = dealId + "/return-to-maker" %}
+
+{% if submitAmendment %}
+    {% set message = "Submit to UKEF or return to maker for changes" %}
+    {% set submitToUkefUrl = "/gef/application-details/" + dealId + "/submit-amendment-to-ukef" %}
+    {% set returnToMakerUrl = "/gef/application-details/" + dealId + "/return-amendment-to-maker" %}
+{% endif %}
+
 <p class="govuk-heading-l" data-cy="submit-heading">
   Submit or return
 </p>
-{% if submitAmendment %}
-<p class="govuk-body">Submit to UKEF or return to maker for changes</p>
-{% else %}
-<p class="govuk-body">If this is ready, you can submit it to UKEF. Or you can return it to the maker to make changes.</p>
-{% endif %}
+<p class="govuk-body">{{ message }}</p>
 
 {{ govukButton({
   text: "Submit to UKEF",
-  href: "/gef/application-details/" + dealId + "/submit-to-ukef",
+  href: submitToUkefUrl,
   attributes: {
     'data-cy': 'submit-button'
   }
@@ -20,7 +26,7 @@
 {{ govukButton({
   text: "Return to maker",
   classes: "govuk-button--secondary",
-  href: "/gef/application-details/" + dealId + "/return-to-maker",
+  href: returnToMakerUrl,
   attributes: {
     'data-cy': 'return-button'
   }
