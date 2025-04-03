@@ -5,6 +5,7 @@ const {
   withDeleteOneTests,
   expectAnyPortalUserAuditDatabaseRecord,
 } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { HttpStatusCode } = require('axios');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -19,10 +20,7 @@ const allMandatoryCriteria = require('../../fixtures/gef/mandatoryCriteriaVersio
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const newMandatoryCriteria = allMandatoryCriteria[0];
-const updatedMandatoryCriteria = {
-  ...newMandatoryCriteria,
-  title: 'Updated mandatory criteria versioned',
-};
+const newHTMLMandatoryCriteria = allMandatoryCriteria[2];
 
 const baseUrl = '/v1/gef/mandatory-criteria-versioned';
 
@@ -141,20 +139,35 @@ describe(baseUrl, () => {
 
   describe('POST /v1/gef/mandatory-criteria-versioned', () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
+      // Act
       const { status } = await as().post(newMandatoryCriteria).to(baseUrl);
-      expect(status).toEqual(401);
+
+      // Assert
+      expect(status).toEqual(HttpStatusCode.Unauthorized);
     });
 
-    it('rejects requests that present a valid Authorization token but do not have "admin" role', async () => {
+    it('rejects requests that present a valid Authorization token but do not have an "admin" role', async () => {
+      // Act
       const { status } = await as(aMaker).post(newMandatoryCriteria).to(baseUrl);
 
-      expect(status).toEqual(401);
+      // Assert
+      expect(status).toEqual(HttpStatusCode.Unauthorized);
     });
 
-    it('accepts requests that present a valid Authorization token with "admin" role', async () => {
+    it('accepts requests that present a valid Authorization token with an "admin" role', async () => {
+      // Act
       const { status } = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
 
-      expect(status).toEqual(201);
+      // Assert
+      expect(status).toEqual(HttpStatusCode.Created);
+    });
+
+    it('accepts a HTML payload that present a valid Authorization token with an "admin" role', async () => {
+      // Act
+      const { status } = await as(anAdmin).post(newHTMLMandatoryCriteria).to(baseUrl);
+
+      // Assert
+      expect(status).toEqual(HttpStatusCode.Created);
     });
   });
 

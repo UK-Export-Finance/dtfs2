@@ -5,6 +5,7 @@ const {
   withDeleteOneTests,
   expectAnyPortalUserAuditDatabaseRecord,
 } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { HttpStatusCode } = require('axios');
 const databaseHelper = require('../../database-helper');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
@@ -19,8 +20,9 @@ const allMandatoryCriteria = require('../../fixtures/mandatoryCriteria');
 const { ADMIN } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
-const newMandatoryCriteria = allMandatoryCriteria[0];
-const oldMandatoryCriteria = allMandatoryCriteria[1];
+const newHTMLMandatoryCriteria = allMandatoryCriteria[1];
+const newMandatoryCriteria = allMandatoryCriteria[1];
+const oldMandatoryCriteria = allMandatoryCriteria[2];
 
 describe('/v1/mandatory-criteria', () => {
   let anAdmin;
@@ -122,7 +124,14 @@ describe('/v1/mandatory-criteria', () => {
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       makeRequestAsUser: (user) => as(user).post(newMandatoryCriteria).to(allMandatoryCriteriaUrl),
-      successStatusCode: 200,
+      successStatusCode: HttpStatusCode.Created,
+    });
+
+    withRoleAuthorisationTests({
+      allowedRoles: [ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      makeRequestAsUser: (user) => as(user).post(newHTMLMandatoryCriteria).to(allMandatoryCriteriaUrl),
+      successStatusCode: HttpStatusCode.Created,
     });
   });
 
