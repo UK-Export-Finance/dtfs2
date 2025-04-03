@@ -22,6 +22,7 @@ const countries = require('./controllers/countries.controller');
 const feedback = require('./controllers/feedback.controller');
 const industrySectors = require('./controllers/industrySectors.controller');
 const mandatoryCriteria = require('./controllers/mandatoryCriteria.controller');
+const mandatoryCriteriaVersioned = require('./gef/controllers/mandatoryCriteriaVersioned.controller');
 const eligibilityCriteria = require('./controllers/eligibilityCriteria.controller');
 const loans = require('./controllers/loans.controller');
 const loanIssueFacility = require('./controllers/loan-issue-facility.controller');
@@ -88,9 +89,13 @@ authRouter.use(passport.authenticate('login-complete', { session: false }));
  * Allow POST & PUT of MC HTML tags
  * on non-production environments only
  */
-authRouter.route('/mandatory-criteria').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteria.create);
 
+// BSS/EWCS
+authRouter.route('/mandatory-criteria').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteria.create);
 authRouter.route('/mandatory-criteria/:version').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteria.update);
+
+// GEF
+authRouter.route('/gef/mandatory-criteria-versioned').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteriaVersioned.create);
 
 // Enable XSS
 authRouter.use(cleanXss);

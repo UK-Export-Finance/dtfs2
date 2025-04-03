@@ -158,59 +158,6 @@ describe(baseUrl, () => {
     });
   });
 
-  describe('PUT /v1/gef/mandatory-criteria-versioned/:id', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().put(updatedMandatoryCriteria).to(`${baseUrl}/12345678`);
-      expect(status).toEqual(401);
-    });
-
-    it('rejects requests that present a valid Authorization token but do not have "admin" role', async () => {
-      const { status } = await as(aMaker).put(updatedMandatoryCriteria).to(`${baseUrl}/1`);
-      expect(status).toEqual(401);
-    });
-
-    it('accepts requests that present a valid Authorization token with "admin" role', async () => {
-      const item = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
-      const { status } = await as(anAdmin).put(updatedMandatoryCriteria).to(`${baseUrl}/${item.body._id}`);
-      expect(status).toEqual(200);
-    });
-
-    it('rejects requests that do not have a valid mongodb id', async () => {
-      const { status, body } = await as(anAdmin).put(updatedMandatoryCriteria).to(`${baseUrl}/abc`);
-      expect(status).toEqual(400);
-      expect(body).toStrictEqual({ status: 400, message: 'Invalid Id' });
-    });
-
-    it('successfully updates item', async () => {
-      const item = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
-      const itemUpdate = {
-        ...JSON.parse(item.text),
-        version: 99,
-        isInDraft: true,
-        title: 'test 99',
-        introText: 'intro 99',
-        criteria: [{ id: '1', body: 'Testing' }],
-      };
-      delete itemUpdate._id; // immutable key
-
-      const { status } = await as(anAdmin).put(itemUpdate).to(`${baseUrl}/${item.body._id}`);
-
-      expect(status).toEqual(200);
-
-      const { body } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
-
-      expect(body).toEqual(
-        expectMongoId({
-          ...itemUpdate,
-          createdAt: expect.any(Number),
-          updatedAt: expect.any(Number),
-          criteria: [{ id: '1', body: 'Testing' }],
-          auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(anAdmin._id),
-        }),
-      );
-    });
-  });
-
   describe('DELETE /v1/gef/mandatory-criteria-versioned/:id', () => {
     let criteriaToDeleteId;
 

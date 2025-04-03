@@ -4,7 +4,7 @@
  */
 const MANDATORY_CRITERIA = [
   {
-    version: 34,
+    version: 35,
     criteria: [
       {
         id: 1,
@@ -30,11 +30,11 @@ const MANDATORY_CRITERIA = [
         items: [
           {
             id: 4,
-            copy: 'Where the supplier is not a “Person Within Scope of Windsor Framework”, it is an eligible person OR',
+            copy: 'Where the supplier is not a “Person Within Scope of Windsor Framework”, it is an <a href="/assets/files/financial_difficulty_model_1.1.0.xlsx" class="govuk-link">eligible person</a> OR',
           },
           {
             id: 5,
-            copy: 'Where the supplier is a “Person Within Scope of Windsor Framework”, both it and its parent obligor (if any) is an eligible person.',
+            copy: 'Where the supplier is a “Person Within Scope of Windsor Framework”, both it and its parent obligor (if any) is an <a href="/assets/files/financial_difficulty_model_1.1.0.xlsx" class="govuk-link">eligible person</a>.',
           },
         ],
       },
@@ -83,7 +83,7 @@ const MANDATORY_CRITERIA = [
     ],
   },
   {
-    version: 33,
+    version: 34,
     criteria: [],
   },
 ];

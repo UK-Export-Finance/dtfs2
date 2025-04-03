@@ -70,24 +70,6 @@ exports.findLatest = async (req, res) => {
   return res.status(criteria.status).send();
 };
 
-exports.update = async (req, res) => {
-  const { id } = req.params;
-
-  if (!ObjectId.isValid(id)) {
-    return res.status(400).send({ status: 400, message: 'Invalid Id' });
-  }
-
-  const auditDetails = generatePortalAuditDetails(req.user._id);
-
-  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.GEF_MANDATORY_CRITERIA_VERSIONED);
-  const update = req.body;
-  update.updatedAt = Date.now();
-  update.auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
-  const response = await collection.findOneAndUpdate({ _id: { $eq: ObjectId(id) } }, { $set: update }, { returnNewDocument: true, returnDocument: 'after' });
-
-  return res.status(utils.mongoStatus(response)).send(response.value ? response.value : null);
-};
-
 exports.delete = async (req, res) => {
   const auditDetails = generatePortalAuditDetails(req.user._id);
   const criteriaId = req.params.id;
