@@ -24,6 +24,8 @@ const newHTMLMandatoryCriteria = allMandatoryCriteria[2];
 
 const baseUrl = '/v1/gef/mandatory-criteria-versioned';
 
+console.error = jest.fn();
+
 describe(baseUrl, () => {
   let aMaker;
   let anAdmin;
@@ -75,12 +77,13 @@ describe(baseUrl, () => {
     it('should returns the latest mandatory-criteria version', async () => {
       await as(anAdmin).post(allMandatoryCriteria[0]).to(baseUrl);
       await as(anAdmin).post(allMandatoryCriteria[1]).to(baseUrl);
+      await as(anAdmin).post(allMandatoryCriteria[2]).to(baseUrl);
 
       const { body } = await as(aMaker).get(latestMandatoryCriteriaVersionedUrl);
 
       expect(body).toEqual(
         expect.objectContaining({
-          version: 3,
+          version: 4,
           createdAt: expect.any(Number),
           updatedAt: null,
           isInDraft: false,
@@ -152,6 +155,15 @@ describe(baseUrl, () => {
 
       // Assert
       expect(status).toEqual(HttpStatusCode.Unauthorized);
+    });
+
+    it('should reject a malformed payload send by an admin', async () => {
+      // Act
+      const { status } = await as(anAdmin).post({}).to(baseUrl);
+
+      // Assert
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(console.error).toHaveBeenCalledWith('Invalid GEF mandatory criteria payload supplied %o', {});
     });
 
     it('should accepts requests that present a valid Authorization token with an "admin" role', async () => {

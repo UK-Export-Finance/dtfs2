@@ -32,7 +32,7 @@ const generateVersion0ApplicationToSubmit = () => ({
   additionalRefName: 'Team 1',
   exporter: {},
   createdAt: '2021-01-01T00:00',
-  mandatoryVersionId: 2,
+  mandatoryVersionId: 4,
   status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
   updatedAt: null,
   submissionCount: 0,

@@ -28,6 +28,25 @@ const withRoleAuthorisationTests = ({ allowedRoles, getUserWithRole, makeRequest
   });
 };
 
+const malformedPayloadTests = ({ allowedRoles, getUserWithRole, makeRequestAsUser, successStatusCode }) => {
+  const notAllowedRoles = allRoles.filter((role) => !allowedRoles.includes(role));
+
+  if (notAllowedRoles.length) {
+    it.each(notAllowedRoles)('returns a 401 response for requests from a user with role %s', async (role) => {
+      const userWithRole = getUserWithRole(role);
+      const response = await makeRequestAsUser(userWithRole);
+      expectNotAuthorisedResponse(response);
+    });
+  }
+
+  it.each(allowedRoles)(`returns a ${successStatusCode} response for a malformed requests from a user with role %s`, async (role) => {
+    const userWithRole = getUserWithRole(role);
+    const { status } = await makeRequestAsUser(userWithRole);
+    expect(status).toEqual(successStatusCode);
+  });
+};
+
 module.exports = {
   withRoleAuthorisationTests,
+  malformedPayloadTests,
 };

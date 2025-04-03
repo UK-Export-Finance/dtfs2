@@ -8,7 +8,7 @@ const {
 const { HttpStatusCode } = require('axios');
 const databaseHelper = require('../../database-helper');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
+const { malformedPayloadTests, withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -23,6 +23,8 @@ const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const newHTMLMandatoryCriteria = allMandatoryCriteria[1];
 const newMandatoryCriteria = allMandatoryCriteria[1];
 const oldMandatoryCriteria = allMandatoryCriteria[2];
+
+console.error = jest.fn();
 
 describe('/v1/mandatory-criteria', () => {
   let anAdmin;
@@ -50,6 +52,7 @@ describe('/v1/mandatory-criteria', () => {
     it('returns a list of mandatory-criteria sorted by id', async () => {
       await as(anAdmin).post(allMandatoryCriteria[0]).to(allMandatoryCriteriaUrl);
       await as(anAdmin).post(allMandatoryCriteria[1]).to(allMandatoryCriteriaUrl);
+      await as(anAdmin).post(allMandatoryCriteria[2]).to(allMandatoryCriteriaUrl);
 
       const { body } = await as(testUser).get(allMandatoryCriteriaUrl);
 
@@ -132,6 +135,13 @@ describe('/v1/mandatory-criteria', () => {
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       makeRequestAsUser: (user) => as(user).post(newHTMLMandatoryCriteria).to(allMandatoryCriteriaUrl),
       successStatusCode: HttpStatusCode.Created,
+    });
+
+    malformedPayloadTests({
+      allowedRoles: [ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      makeRequestAsUser: (user) => as(user).post({}).to(allMandatoryCriteriaUrl),
+      successStatusCode: HttpStatusCode.BadRequest,
     });
   });
 
