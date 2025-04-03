@@ -47,9 +47,10 @@ export const generateChangeLink = ({
  */
 const generateFacilityEndDateSummaryRows = (amendment: PortalFacilityAmendmentWithUkefId, renderChangeLink = true): SummaryListRow[] => {
   const bankReviewDate = amendment.bankReviewDate ? new Date(amendment.bankReviewDate) : null;
-  const facilityEndDate = amendment.facilityEndDate ? new Date(amendment.facilityEndDate) : null;
 
   if (amendment.isUsingFacilityEndDate) {
+    const facilityEndDate = amendment.facilityEndDate ? new Date(amendment.facilityEndDate) : null;
+
     return [
       {
         key: {
