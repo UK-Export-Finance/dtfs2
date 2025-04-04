@@ -1,3 +1,4 @@
+const { isProduction } = require('@ukef/dtfs2-common');
 const sendEmail = require('../email');
 const { EMAIL_TEMPLATE_IDS, SIGN_IN_LINK } = require('../../constants');
 const { PORTAL_UI_URL } = require('../../config/sign-in-link.config');
@@ -163,7 +164,7 @@ class SignInLinkService {
    * @throws {Error} - If there is an issue sending the sign-in link email.
    */
   async #sendSignInLinkEmail({ userEmail, userFirstName, userLastName, signInLink }) {
-    if (process.env.NODE_ENV === 'development') {
+    if (isProduction()) {
       console.info('Sending sign-in link %s', signInLink);
     }
 

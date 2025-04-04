@@ -10,7 +10,7 @@ import pages from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
 import relative from '../../../../relativeURL';
-import { feeRecordSummary, mainHeading } from '../../../../partials';
+import { feeRecordSummary, mainHeading, cancelLink } from '../../../../partials';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context('When fee record correction feature flag is enabled', () => {
@@ -69,21 +69,27 @@ context('When fee record correction feature flag is enabled', () => {
       cy.login(USERS.PDC_RECONCILE);
 
       cy.visit(`utilisation-reports/${reportId}`);
-    });
 
-    it('should be able to initiate a record correction request', () => {
       premiumPaymentsContent.premiumPaymentsTable
         .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
         .click();
-
-      premiumPaymentsContent.createRecordCorrectionRequestButton().should('exist');
       premiumPaymentsContent.createRecordCorrectionRequestButton().click();
+    });
 
+    it('should be able to initiate a record correction request', () => {
       cy.assertText(mainHeading(), 'Record correction request');
+    });
+
+    it('should have a cancel link', () => {
+      cy.assertText(cancelLink(), 'Cancel record correction request');
+
+      cancelLink().should('have.attr', 'href', `/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}/cancel`);
     });
 
     context('when a user has initiated the correction request journey', () => {
       beforeEach(() => {
+        cy.visit(`utilisation-reports/${reportId}`);
+
         premiumPaymentsContent.premiumPaymentsTable
           .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
           .click();
@@ -112,12 +118,6 @@ context('When fee record correction feature flag is enabled', () => {
 
     context('when user clicks back on the create record correction request screen', () => {
       it('should return to premium payments tab with the checkbox selected', () => {
-        premiumPaymentsContent.premiumPaymentsTable
-          .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
-          .click();
-
-        premiumPaymentsContent.createRecordCorrectionRequestButton().click();
-
         cy.clickBackLink();
 
         cy.url().should('eq', relative(`/utilisation-reports/${reportId}?selectedFeeRecordIds=${feeRecordAtToDoStatus.id}`));
@@ -130,13 +130,15 @@ context('When fee record correction feature flag is enabled', () => {
 
     context('when user clicks cancel', () => {
       beforeEach(() => {
+        cy.visit(`utilisation-reports/${reportId}`);
+
         premiumPaymentsContent.premiumPaymentsTable
           .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
           .click();
 
         premiumPaymentsContent.createRecordCorrectionRequestButton().click();
 
-        cy.clickCancelButton();
+        cy.clickCancelLink();
       });
 
       it('should redirect to the utilisation report page with the fee record still checked', () => {
@@ -149,12 +151,6 @@ context('When fee record correction feature flag is enabled', () => {
     });
 
     it('should let the user enter additional info equal to the character limit containing special characters', () => {
-      premiumPaymentsContent.premiumPaymentsTable
-        .checkbox([feeRecordAtToDoStatus.id], feeRecordAtToDoStatus.paymentCurrency, feeRecordAtToDoStatus.status)
-        .click();
-
-      premiumPaymentsContent.createRecordCorrectionRequestButton().click();
-
       createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
 
       const specialCharactersToTest = '&!?$£¥€¢^*()_+=-%:;@~/><,.';

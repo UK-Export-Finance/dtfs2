@@ -5,31 +5,26 @@ const {
   withDeleteOneTests,
   expectAnyPortalUserAuditDatabaseRecord,
 } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { HttpStatusCode } = require('axios');
 const databaseHelper = require('../../database-helper');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
+const { malformedPayloadTests, withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
 
-const { as, get, post, put, remove } = require('../../api')(app);
+const { as, get, post, remove } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
 const allMandatoryCriteria = require('../../fixtures/mandatoryCriteria');
 const { ADMIN } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
-const newMandatoryCriteria = allMandatoryCriteria[0];
-const oldMandatoryCriteria = allMandatoryCriteria[1];
-const updatedMandatoryCriteria = {
-  ...newMandatoryCriteria,
-  criteria: [
-    ...newMandatoryCriteria.criteria,
-    {
-      title: 'Updated mandatory criteria',
-    },
-  ],
-};
+const newHTMLMandatoryCriteria = allMandatoryCriteria[1];
+const newMandatoryCriteria = allMandatoryCriteria[1];
+const oldMandatoryCriteria = allMandatoryCriteria[2];
+
+console.error = jest.fn();
 
 describe('/v1/mandatory-criteria', () => {
   let anAdmin;
@@ -54,9 +49,10 @@ describe('/v1/mandatory-criteria', () => {
       makeRequestWithAuthHeader: (authHeader) => get(allMandatoryCriteriaUrl, { headers: { Authorization: authHeader } }),
     });
 
-    it('returns a list of mandatory-criteria sorted by id', async () => {
+    it('should return a list of mandatory-criteria sorted by id', async () => {
       await as(anAdmin).post(allMandatoryCriteria[0]).to(allMandatoryCriteriaUrl);
       await as(anAdmin).post(allMandatoryCriteria[1]).to(allMandatoryCriteriaUrl);
+      await as(anAdmin).post(allMandatoryCriteria[2]).to(allMandatoryCriteriaUrl);
 
       const { body } = await as(testUser).get(allMandatoryCriteriaUrl);
 
@@ -80,7 +76,7 @@ describe('/v1/mandatory-criteria', () => {
       makeRequestWithAuthHeader: (authHeader) => get(latestMandatoryCriteriaUrl, { headers: { Authorization: authHeader } }),
     });
 
-    it('returns the latest mandatory criteria', async () => {
+    it('should return the latest mandatory criteria', async () => {
       await as(anAdmin).post(oldMandatoryCriteria).to('/v1/mandatory-criteria');
       await as(anAdmin).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
 
@@ -104,7 +100,7 @@ describe('/v1/mandatory-criteria', () => {
       makeRequestWithAuthHeader: (authHeader) => get(mandatoryCriteria1Url, { headers: { Authorization: authHeader } }),
     });
 
-    it('returns a mandatory-criteria', async () => {
+    it('should return a mandatory-criteria', async () => {
       await as(anAdmin).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
 
       const { status, body } = await as(anAdmin).get(`/v1/mandatory-criteria/${newMandatoryCriteria.version}`);
@@ -131,44 +127,21 @@ describe('/v1/mandatory-criteria', () => {
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       makeRequestAsUser: (user) => as(user).post(newMandatoryCriteria).to(allMandatoryCriteriaUrl),
-      successStatusCode: 200,
-    });
-  });
-
-  describe('PUT /v1/mandatory-criteria/:version', () => {
-    const mandatoryCriteria1Url = '/v1/mandatory-criteria/1';
-
-    withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => put(mandatoryCriteria1Url, updatedMandatoryCriteria),
-      makeRequestWithAuthHeader: (authHeader) => put(mandatoryCriteria1Url, updatedMandatoryCriteria, { headers: { Authorization: authHeader } }),
+      successStatusCode: HttpStatusCode.Created,
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      makeRequestAsUser: (user) => as(user).put(updatedMandatoryCriteria).to(mandatoryCriteria1Url),
-      successStatusCode: 200,
+      makeRequestAsUser: (user) => as(user).post(newHTMLMandatoryCriteria).to(allMandatoryCriteriaUrl),
+      successStatusCode: HttpStatusCode.Created,
     });
 
-    it('updates a mandatory criteria', async () => {
-      const mandatoryCriteria = allMandatoryCriteria[0];
-      const update = {
-        criteria: [{ title: 'new title' }],
-      };
-
-      await as(anAdmin).post(mandatoryCriteria).to('/v1/mandatory-criteria');
-      await as(anAdmin).put(update).to(`/v1/mandatory-criteria/${mandatoryCriteria.version}`);
-
-      const { status, body } = await as(anAdmin).get(`/v1/mandatory-criteria/${mandatoryCriteria.version}`);
-
-      expect(status).toEqual(200);
-      expect(body).toEqual(
-        expectMongoId({
-          ...mandatoryCriteria,
-          criteria: update.criteria,
-          auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(anAdmin._id),
-        }),
-      );
+    malformedPayloadTests({
+      allowedRoles: [ADMIN],
+      getUserWithRole: (role) => testUsers().withRole(role).one(),
+      makeRequestAsUser: (user) => as(user).post({}).to(allMandatoryCriteriaUrl),
+      successStatusCode: HttpStatusCode.BadRequest,
     });
   });
 

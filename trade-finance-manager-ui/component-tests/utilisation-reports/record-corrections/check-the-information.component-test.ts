@@ -194,11 +194,9 @@ describe('page', () => {
     const wrapper = render(viewModel);
 
     // Assert
-    const cancelButtonSelector = '[data-cy="cancel-button"]';
-    wrapper.expectElement(cancelButtonSelector).toExist();
-    wrapper.expectElement(cancelButtonSelector).toHaveAttribute('value', 'Cancel record correction request');
-    wrapper.expectElement(cancelButtonSelector).hasClass('govuk-button--warning');
-    wrapper.expectElement(cancelButtonSelector).toHaveAttribute('formaction', cancelLink);
+    const cancelLinkSelector = '[data-cy="cancel-link"]';
+    wrapper.expectElement(cancelLinkSelector).toExist();
+    wrapper.expectLink(cancelLinkSelector).toLinkTo(cancelLink, 'Cancel record correction request');
   });
 
   it('should render the back link', () => {
