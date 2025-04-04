@@ -75,3 +75,9 @@ export const PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID = PORTAL_FACILITY_AMENDMENT.
     ukefFacilityId: z.string().optional(),
   }),
 );
+
+export const PORTAL_FACILITY_AMENDMENT_REFERENCE_NUMBER = PORTAL_FACILITY_AMENDMENT.merge(
+  z.object({
+    referenceNumber: z.string().optional(),
+  }),
+);

@@ -13,4 +13,5 @@ export const PORTAL_AMENDMENT_PAGES = {
   SUBMITTED_FOR_CHECKING: 'submitted-for-checking',
   APPROVED_BY_UKEF: 'approved-by-ukef',
   AMENDMENT_DETAILS: 'amendment-details',
+  SUBMIT_AMENDMENT_TO_UKEF: 'submit-amendment-to-ukef',
 } as const;
