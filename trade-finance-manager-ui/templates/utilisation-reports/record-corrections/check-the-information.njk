@@ -93,8 +93,8 @@
     }
   }) }}
 
-  <div class="govuk-button-group">
-    <form method="post">
+  <form method="post">
+    <div class="govuk-button-group">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
       {{ govukButton({
         text: "Send record correction request",
@@ -102,15 +102,16 @@
           'data-cy': 'continue-button'
         }
       }) }}
-    </form>
+    
+      <a
+        class="govuk-link govuk-link--no-visited-state"
+        href="{{ cancelLinkHref }}"
+        data-cy="cancel-link">
+        Cancel record correction request
+      </a>
+    </div>
+  </form>
 
-    <a
-      class="govuk-link govuk-link--no-visited-state"
-      href="{{ cancelLinkHref }}"
-      data-cy="cancel-link">
-      Cancel record correction request
-    </a>
-  </div>
 
 {% endblock %}
 {% block sub_content %}{% endblock %}
