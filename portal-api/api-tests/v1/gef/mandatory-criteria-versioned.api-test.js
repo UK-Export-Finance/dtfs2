@@ -74,7 +74,7 @@ describe(baseUrl, () => {
       successStatusCode: 200,
     });
 
-    it('should returns the latest mandatory-criteria version', async () => {
+    it('should return the latest mandatory-criteria version', async () => {
       await as(anAdmin).post(allMandatoryCriteria[0]).to(baseUrl);
       await as(anAdmin).post(allMandatoryCriteria[1]).to(baseUrl);
       await as(anAdmin).post(allMandatoryCriteria[2]).to(baseUrl);
@@ -141,7 +141,7 @@ describe(baseUrl, () => {
   });
 
   describe('POST /v1/gef/mandatory-criteria-versioned', () => {
-    it('should rejects requests that do not present a valid Authorization token', async () => {
+    it('should reject requests that do not present a valid authorization token', async () => {
       // Act
       const { status } = await as().post(newMandatoryCriteria).to(baseUrl);
 
@@ -149,7 +149,7 @@ describe(baseUrl, () => {
       expect(status).toEqual(HttpStatusCode.Unauthorized);
     });
 
-    it('should rejects requests that present a valid Authorization token but do not have an "admin" role', async () => {
+    it('should reject requests that present a valid authorization token but do not have an "admin" role', async () => {
       // Act
       const { status } = await as(aMaker).post(newMandatoryCriteria).to(baseUrl);
 
@@ -166,7 +166,7 @@ describe(baseUrl, () => {
       expect(console.error).toHaveBeenCalledWith('Invalid GEF mandatory criteria payload supplied %o', {});
     });
 
-    it('should accepts requests that present a valid Authorization token with an "admin" role', async () => {
+    it('should accept requests that present a valid authorization token with an "admin" role', async () => {
       // Act
       const { status } = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
 
@@ -174,7 +174,7 @@ describe(baseUrl, () => {
       expect(status).toEqual(HttpStatusCode.Created);
     });
 
-    it('should accepts a HTML payload that present a valid Authorization token with an "admin" role', async () => {
+    it('should accept a HTML payload that present a valid authorization token with an "admin" role', async () => {
       // Act
       const { status } = await as(anAdmin).post(newHTMLMandatoryCriteria).to(baseUrl);
 
@@ -191,13 +191,13 @@ describe(baseUrl, () => {
       criteriaToDeleteId = new ObjectId(body._id);
     });
 
-    it('should rejects requests that do not present a valid Authorization token', async () => {
+    it('should reject requests that do not present a valid Authorization token', async () => {
       const item = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
       const { status } = await as().remove(`${baseUrl}/${item.body._id}`);
       expect(status).toEqual(401);
     });
 
-    it('should accepts requests that present a valid Authorization token with "admin" role', async () => {
+    it('should accept requests that present a valid authorization token with "admin" role', async () => {
       const item = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
       const { status } = await as(anAdmin).remove(`${baseUrl}/${item.body._id}`);
       expect(status).toEqual(200);

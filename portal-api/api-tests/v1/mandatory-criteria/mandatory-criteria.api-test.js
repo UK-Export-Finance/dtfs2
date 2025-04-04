@@ -49,7 +49,7 @@ describe('/v1/mandatory-criteria', () => {
       makeRequestWithAuthHeader: (authHeader) => get(allMandatoryCriteriaUrl, { headers: { Authorization: authHeader } }),
     });
 
-    it('returns a list of mandatory-criteria sorted by id', async () => {
+    it('should return a list of mandatory-criteria sorted by id', async () => {
       await as(anAdmin).post(allMandatoryCriteria[0]).to(allMandatoryCriteriaUrl);
       await as(anAdmin).post(allMandatoryCriteria[1]).to(allMandatoryCriteriaUrl);
       await as(anAdmin).post(allMandatoryCriteria[2]).to(allMandatoryCriteriaUrl);
@@ -76,7 +76,7 @@ describe('/v1/mandatory-criteria', () => {
       makeRequestWithAuthHeader: (authHeader) => get(latestMandatoryCriteriaUrl, { headers: { Authorization: authHeader } }),
     });
 
-    it('returns the latest mandatory criteria', async () => {
+    it('should return the latest mandatory criteria', async () => {
       await as(anAdmin).post(oldMandatoryCriteria).to('/v1/mandatory-criteria');
       await as(anAdmin).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
 
@@ -100,7 +100,7 @@ describe('/v1/mandatory-criteria', () => {
       makeRequestWithAuthHeader: (authHeader) => get(mandatoryCriteria1Url, { headers: { Authorization: authHeader } }),
     });
 
-    it('returns a mandatory-criteria', async () => {
+    it('should return a mandatory-criteria', async () => {
       await as(anAdmin).post(newMandatoryCriteria).to('/v1/mandatory-criteria');
 
       const { status, body } = await as(anAdmin).get(`/v1/mandatory-criteria/${newMandatoryCriteria.version}`);
