@@ -35,9 +35,9 @@ describe('/v1/deals/:id/status - facilities', () => {
 
     beforeAll(async () => {
       const testUsers = await testUserCache.initialise(app);
-      const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
+      const barclaysMakers = testUsers().withRole(MAKER).withBankName('Test Bank 1').all();
       [aBarclaysMaker] = barclaysMakers;
-      aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Barclays Bank').one();
+      aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Test Bank 1').one();
 
       aSuperuser = testUsers().superuser().one();
     });

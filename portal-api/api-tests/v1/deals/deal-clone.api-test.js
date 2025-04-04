@@ -49,8 +49,8 @@ describe('/v1/deals/:id/clone', () => {
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     testUser = testUsers().withRole(READ_ONLY).one();
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
-    anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Test Bank 1').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('Test Bank 2').one();
   });
 
   beforeEach(async () => {

@@ -10,7 +10,7 @@ describe('/v1/deals', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Test Bank 1').one();
   });
 
   beforeEach(async () => {

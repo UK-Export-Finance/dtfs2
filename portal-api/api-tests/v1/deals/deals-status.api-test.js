@@ -30,12 +30,12 @@ describe('/v1/deals/:id/status', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Barclays Bank').all();
+    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Test Bank 1').all();
     [aBarclaysMaker] = barclaysMakers;
-    anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
-    aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Barclays Bank').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('Test Bank 2').one();
+    aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Test Bank 1').one();
 
-    const barclaysMakerChecker = testUsers().withMultipleRoles(MAKER, CHECKER).withBankName('Barclays Bank').one();
+    const barclaysMakerChecker = testUsers().withMultipleRoles(MAKER, CHECKER).withBankName('Test Bank 1').one();
     aBarclaysMakerChecker = barclaysMakerChecker;
     aSuperuser = testUsers().superuser().one();
   });
