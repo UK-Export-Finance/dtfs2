@@ -208,7 +208,7 @@ describe(page, () => {
     wrapper.expectText('[data-cy="continue-button"]').toRead('Continue');
   });
 
-  it('should render the cancel button', () => {
+  it('should render the cancel link', () => {
     // Arrange
     const cancelLink = '/utilisation-reports/123/create-record-correction-request/456/cancel';
     const viewModel: CreateRecordCorrectionRequestViewModel = {
@@ -220,11 +220,9 @@ describe(page, () => {
     const wrapper = render(viewModel);
 
     // Assert
-    const cancelButtonSelector = '[data-cy="cancel-button"]';
-    wrapper.expectElement(cancelButtonSelector).toExist();
-    wrapper.expectElement(cancelButtonSelector).toHaveAttribute('value', 'Cancel record correction request');
-    wrapper.expectElement(cancelButtonSelector).hasClass('govuk-button--warning');
-    wrapper.expectElement(cancelButtonSelector).toHaveAttribute('formaction', cancelLink);
+    const cancelLinkSelector = '[data-cy="cancel-link"]';
+    wrapper.expectElement(cancelLinkSelector).toExist();
+    wrapper.expectLink(cancelLinkSelector).toLinkTo(cancelLink, 'Cancel record correction request');
   });
 
   it('should render the main reasons hint', () => {

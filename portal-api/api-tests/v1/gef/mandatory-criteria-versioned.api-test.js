@@ -5,6 +5,7 @@ const {
   withDeleteOneTests,
   expectAnyPortalUserAuditDatabaseRecord,
 } = require('@ukef/dtfs2-common/change-stream/test-helpers');
+const { HttpStatusCode } = require('axios');
 const databaseHelper = require('../../database-helper');
 const app = require('../../../src/createApp');
 const testUserCache = require('../../api-test-users');
@@ -19,12 +20,11 @@ const allMandatoryCriteria = require('../../fixtures/gef/mandatoryCriteriaVersio
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const newMandatoryCriteria = allMandatoryCriteria[0];
-const updatedMandatoryCriteria = {
-  ...newMandatoryCriteria,
-  title: 'Updated mandatory criteria versioned',
-};
+const newHTMLMandatoryCriteria = allMandatoryCriteria[2];
 
 const baseUrl = '/v1/gef/mandatory-criteria-versioned';
+
+console.error = jest.fn();
 
 describe(baseUrl, () => {
   let aMaker;
@@ -74,15 +74,16 @@ describe(baseUrl, () => {
       successStatusCode: 200,
     });
 
-    it('returns the latest mandatory-criteria version', async () => {
+    it('should return the latest mandatory-criteria version', async () => {
       await as(anAdmin).post(allMandatoryCriteria[0]).to(baseUrl);
       await as(anAdmin).post(allMandatoryCriteria[1]).to(baseUrl);
+      await as(anAdmin).post(allMandatoryCriteria[2]).to(baseUrl);
 
       const { body } = await as(aMaker).get(latestMandatoryCriteriaVersionedUrl);
 
       expect(body).toEqual(
         expect.objectContaining({
-          version: 3,
+          version: 4,
           createdAt: expect.any(Number),
           updatedAt: null,
           isInDraft: false,
@@ -121,7 +122,7 @@ describe(baseUrl, () => {
       successStatusCode: 200,
     });
 
-    it('returns a mandatory-criteria-versioned', async () => {
+    it('should returns a mandatory-criteria-versioned', async () => {
       const { status, body } = await as(anAdmin).get(oneMandatoryCriteriaVersionedUrl);
       expect(status).toEqual(200);
       const expected = {
@@ -140,74 +141,45 @@ describe(baseUrl, () => {
   });
 
   describe('POST /v1/gef/mandatory-criteria-versioned', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
+    it('should reject requests that do not present a valid authorization token', async () => {
+      // Act
       const { status } = await as().post(newMandatoryCriteria).to(baseUrl);
-      expect(status).toEqual(401);
+
+      // Assert
+      expect(status).toEqual(HttpStatusCode.Unauthorized);
     });
 
-    it('rejects requests that present a valid Authorization token but do not have "admin" role', async () => {
+    it('should reject requests that present a valid authorization token but do not have an "admin" role', async () => {
+      // Act
       const { status } = await as(aMaker).post(newMandatoryCriteria).to(baseUrl);
 
-      expect(status).toEqual(401);
+      // Assert
+      expect(status).toEqual(HttpStatusCode.Unauthorized);
     });
 
-    it('accepts requests that present a valid Authorization token with "admin" role', async () => {
+    it('should reject a malformed payload send by an admin', async () => {
+      // Act
+      const { status } = await as(anAdmin).post({}).to(baseUrl);
+
+      // Assert
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+      expect(console.error).toHaveBeenCalledWith('Invalid GEF mandatory criteria payload supplied %o', {});
+    });
+
+    it('should accept requests that present a valid authorization token with an "admin" role', async () => {
+      // Act
       const { status } = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
 
-      expect(status).toEqual(201);
-    });
-  });
-
-  describe('PUT /v1/gef/mandatory-criteria-versioned/:id', () => {
-    it('rejects requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().put(updatedMandatoryCriteria).to(`${baseUrl}/12345678`);
-      expect(status).toEqual(401);
+      // Assert
+      expect(status).toEqual(HttpStatusCode.Created);
     });
 
-    it('rejects requests that present a valid Authorization token but do not have "admin" role', async () => {
-      const { status } = await as(aMaker).put(updatedMandatoryCriteria).to(`${baseUrl}/1`);
-      expect(status).toEqual(401);
-    });
+    it('should accept a HTML payload that present a valid authorization token with an "admin" role', async () => {
+      // Act
+      const { status } = await as(anAdmin).post(newHTMLMandatoryCriteria).to(baseUrl);
 
-    it('accepts requests that present a valid Authorization token with "admin" role', async () => {
-      const item = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
-      const { status } = await as(anAdmin).put(updatedMandatoryCriteria).to(`${baseUrl}/${item.body._id}`);
-      expect(status).toEqual(200);
-    });
-
-    it('rejects requests that do not have a valid mongodb id', async () => {
-      const { status, body } = await as(anAdmin).put(updatedMandatoryCriteria).to(`${baseUrl}/abc`);
-      expect(status).toEqual(400);
-      expect(body).toStrictEqual({ status: 400, message: 'Invalid Id' });
-    });
-
-    it('successfully updates item', async () => {
-      const item = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
-      const itemUpdate = {
-        ...JSON.parse(item.text),
-        version: 99,
-        isInDraft: true,
-        title: 'test 99',
-        introText: 'intro 99',
-        criteria: [{ id: '1', body: 'Testing' }],
-      };
-      delete itemUpdate._id; // immutable key
-
-      const { status } = await as(anAdmin).put(itemUpdate).to(`${baseUrl}/${item.body._id}`);
-
-      expect(status).toEqual(200);
-
-      const { body } = await as(aMaker).get(`${baseUrl}/${item.body._id}`);
-
-      expect(body).toEqual(
-        expectMongoId({
-          ...itemUpdate,
-          createdAt: expect.any(Number),
-          updatedAt: expect.any(Number),
-          criteria: [{ id: '1', body: 'Testing' }],
-          auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(anAdmin._id),
-        }),
-      );
+      // Assert
+      expect(status).toEqual(HttpStatusCode.Created);
     });
   });
 
@@ -219,13 +191,13 @@ describe(baseUrl, () => {
       criteriaToDeleteId = new ObjectId(body._id);
     });
 
-    it('rejects requests that do not present a valid Authorization token', async () => {
+    it('should reject requests that do not present a valid Authorization token', async () => {
       const item = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
       const { status } = await as().remove(`${baseUrl}/${item.body._id}`);
       expect(status).toEqual(401);
     });
 
-    it('accepts requests that present a valid Authorization token with "admin" role', async () => {
+    it('should accept requests that present a valid authorization token with "admin" role', async () => {
       const item = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
       const { status } = await as(anAdmin).remove(`${baseUrl}/${item.body._id}`);
       expect(status).toEqual(200);

@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import { isProduction } from '@ukef/dtfs2-common';
 import { renderTeamsChecker } from '../../controllers/team-checking';
 import { getTeamCombinations } from '../../helpers/team-checking.helper';
 
@@ -12,7 +13,7 @@ populateTeamCheckingRouter();
  * If the application is running in production mode, the routes are not populated, as these routes are only used to aid in SSO role assignment testing.
  */
 function populateTeamCheckingRouter() {
-  if (process.env.NODE_ENV === 'production') {
+  if (isProduction()) {
     return;
   }
 

@@ -10,7 +10,7 @@ import USERS from '../../../../../fixtures/users';
 import BANKS from '../../../../../fixtures/banks';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';
 import relative from '../../../../relativeURL';
-import { summaryList, mainHeading } from '../../../../partials';
+import { summaryList, mainHeading, cancelLink } from '../../../../partials';
 import { getMatchingTfmFacilitiesForFeeRecords } from '../../../../../support/utils/getMatchingTfmFacilitiesForFeeRecords';
 
 context('When fee record correction feature flag is enabled', () => {
@@ -91,6 +91,12 @@ context('When fee record correction feature flag is enabled', () => {
       });
     });
 
+    it('should have a cancel link', () => {
+      cy.assertText(cancelLink(), 'Cancel record correction request');
+
+      cancelLink().should('have.attr', 'href', `/utilisation-reports/${reportId}/create-record-correction-request/${feeRecordAtToDoStatus.id}/cancel`);
+    });
+
     context('when the user clicks the "continue" button', () => {
       beforeEach(() => {
         cy.clickContinueButton();
@@ -167,9 +173,9 @@ context('When fee record correction feature flag is enabled', () => {
       });
     });
 
-    context('when user abandons their journey by clicking the cancel button', () => {
+    context('when user abandons their journey by clicking the cancel link', () => {
       beforeEach(() => {
-        cy.clickCancelButton();
+        cy.clickCancelLink();
       });
 
       it('should redirect to the utilisation report page with the fee record still checked', () => {
