@@ -6,6 +6,8 @@ export type AmendmentDetailsViewModel = {
   facilityType: string;
   submitAmendment: boolean;
   dealId: string;
+  facilityId: string;
+  amendmentId: string;
   previousPage: string;
   amendmentSummaryListParams: {
     amendmentRows: SummaryListRow[];

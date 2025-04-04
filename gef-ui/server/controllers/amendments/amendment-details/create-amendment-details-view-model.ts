@@ -11,6 +11,7 @@ import { mapAmendmentToAmendmentSummaryListParams } from '../helpers/amendment-s
  * @param createCheckYourAnswersViewModelParams.amendment - the amendment
  * @param createCheckYourAnswersViewModelParams.deal - the deal
  * @param createCheckYourAnswersViewModelParams.facility - the facility
+ * @param createCheckYourAnswersViewModelParams.userRoles - the user roles
  * @returns amendment details view model
  */
 export const createAmendmentDetailsViewModel = ({
@@ -29,6 +30,8 @@ export const createAmendmentDetailsViewModel = ({
   facilityType: facility.type,
   submitAmendment: userRoles.includes('checker'),
   dealId: deal._id,
+  facilityId: facility._id,
+  amendmentId: amendment.amendmentId,
   previousPage: `/gef/application-details/${deal._id}`,
   amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
 });

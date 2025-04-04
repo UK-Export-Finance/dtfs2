@@ -8,6 +8,8 @@ export type PortalFacilityAmendmentWithUkefId = z.infer<typeof PORTAL_FACILITY_A
 
 export type FacilityAmendmentWithUkefId = Prettify<FacilityAmendment & { ukefFacilityId: string | null }>;
 
+export type FacilityAmendmentWithReferenceNumber = Prettify<FacilityAmendment & { referenceNumber: string | null }>;
+
 export type PortalAmendmentSubmittedToCheckerEmailVariables = {
   exporterName: string;
   bankInternalRefName: string;
