@@ -20,7 +20,7 @@ const gefFacilitiesUrl = '/v1/gef/facilities';
 
 // NOTE: to maintain backwards compatibility we shouldn't change this from version 2.1
 const mockEligibilityCriteriaVersion = mockEligibilityCriteria.find((criteria) => criteria.version === 2.1);
-const mockMandatoryCriteriaVersion = mockMandatoryCriteria.find((criteria) => criteria.version === 2);
+const mockMandatoryCriteriaVersion = mockMandatoryCriteria.find((criteria) => criteria.version === 4);
 
 const originalEnv = { ...process.env };
 
