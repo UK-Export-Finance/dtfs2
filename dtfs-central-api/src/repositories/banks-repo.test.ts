@@ -63,14 +63,14 @@ describe('banks-repo', () => {
 
     it('returns the bank name for the bank with the matching id', async () => {
       // Arrange
-      const bankId = MOCK_BANKS.TestBank2.id;
-      findOneMock.mockResolvedValue(MOCK_BANKS.TestBank2);
+      const bankId = MOCK_BANKS.testBank2.id;
+      findOneMock.mockResolvedValue(MOCK_BANKS.testBank2);
 
       // Act
       const bankName = await getBankNameById(bankId);
 
       // Assert
-      expect(bankName).toEqual(MOCK_BANKS.TestBank2.name);
+      expect(bankName).toEqual(MOCK_BANKS.testBank2.name);
     });
 
     it('returns undefined if a bank with the supplied id does not exist', async () => {
@@ -121,14 +121,14 @@ describe('banks-repo', () => {
 
     it('returns the bank for the bank with the matching id', async () => {
       // Arrange
-      const bankId = MOCK_BANKS.TestBank2.id;
-      findOneMock.mockResolvedValue(MOCK_BANKS.TestBank2);
+      const bankId = MOCK_BANKS.testBank2.id;
+      findOneMock.mockResolvedValue(MOCK_BANKS.testBank2);
 
       // Act
       const bank = await getBankById(bankId);
 
       // Assert
-      expect(bank).toEqual(MOCK_BANKS.TestBank2);
+      expect(bank).toEqual(MOCK_BANKS.testBank2);
     });
 
     it('returns null if a bank with the supplied id does not exist', async () => {

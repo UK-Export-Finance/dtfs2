@@ -7,8 +7,8 @@ export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS: Record<Utilis
     reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
     reportId: '65784d376fe2fe26168990e8',
     bank: {
-      id: MOCK_BANKS.TestBank1.id,
-      name: MOCK_BANKS.TestBank1.name,
+      id: MOCK_BANKS.testBank1.id,
+      name: MOCK_BANKS.testBank1.name,
     },
     status: REPORT_NOT_RECEIVED,
   },
@@ -16,8 +16,8 @@ export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS: Record<Utilis
     reportId: '65784d376fe2fe26168990e7',
     reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
     bank: {
-      id: MOCK_BANKS.TestBank2.id,
-      name: MOCK_BANKS.TestBank2.name,
+      id: MOCK_BANKS.testBank2.id,
+      name: MOCK_BANKS.testBank2.name,
     },
     status: PENDING_RECONCILIATION,
     dateUploaded: '2023-12-01T15:04:53Z',
@@ -42,8 +42,8 @@ export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS: Record<Utilis
     reportId: '65784d4953165930828976ae',
     reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
     bank: {
-      id: MOCK_BANKS.TestBank3.id,
-      name: MOCK_BANKS.TestBank3.name,
+      id: MOCK_BANKS.testBank3.id,
+      name: MOCK_BANKS.testBank3.name,
     },
     status: RECONCILIATION_COMPLETED,
     dateUploaded: '2023-12-13T09:23:10Z',

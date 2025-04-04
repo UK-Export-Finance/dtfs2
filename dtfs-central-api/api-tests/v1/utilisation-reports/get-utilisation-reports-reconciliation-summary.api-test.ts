@@ -33,7 +33,7 @@ const BASE_URL = '/v1/utilisation-reports/reconciliation-summary/:submissionMont
 describe(`GET ${BASE_URL}`, () => {
   beforeAll(async () => {
     await wipe([MONGO_DB_COLLECTIONS.BANKS]);
-    await testApi.post(withoutMongoId(MOCK_BANKS.TestBank1)).to('/v1/bank');
+    await testApi.post(withoutMongoId(MOCK_BANKS.testBank1)).to('/v1/bank');
 
     await SqlDbHelper.initialize();
     await SqlDbHelper.deleteAll();
@@ -70,11 +70,11 @@ describe(`GET ${BASE_URL}`, () => {
 
   it('returns a 200 response with the correct number of associated fee records', async () => {
     // Arrange
-    const reportPeriod = getCurrentReportPeriodForBankSchedule(MOCK_BANKS.TestBank1.utilisationReportPeriodSchedule);
+    const reportPeriod = getCurrentReportPeriodForBankSchedule(MOCK_BANKS.testBank1.utilisationReportPeriodSchedule);
     const submissionMonth = getSubmissionMonthForReportPeriod(reportPeriod);
 
     const utilisationReport = UtilisationReportEntityMockBuilder.forStatus(RECONCILIATION_IN_PROGRESS)
-      .withBankId(MOCK_BANKS.TestBank1.id)
+      .withBankId(MOCK_BANKS.testBank1.id)
       .withReportPeriod(reportPeriod)
       .build();
     await SqlDbHelper.saveNewEntry('UtilisationReport', utilisationReport);

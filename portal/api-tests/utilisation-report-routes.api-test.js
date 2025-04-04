@@ -31,7 +31,7 @@ describe('utilisation-report routes', () => {
       makeRequestWithHeaders: (headers) =>
         get(
           getUrl({
-            bankId: MOCK_BANKS.TestBank1.id,
+            bankId: MOCK_BANKS.testBank1.id,
             reportId: '5099803df3f4948bd2f98391',
           }),
           {},

@@ -14,7 +14,7 @@ const MONTHLY_REPORT_PERIOD_SCHEDULE = [
 ];
 
 export const MOCK_BANKS = {
-  TestBank1: {
+  testBank1: {
     id: '956',
     name: 'Test Bank 1',
     mga: ['Test.pdf'],
@@ -29,7 +29,7 @@ export const MOCK_BANKS = {
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
     isVisibleInTfmUtilisationReports: true,
   },
-  TestBank2: {
+  testBank2: {
     id: '961',
     name: 'Test Bank 2',
     mga: ['Test.pdf'],
@@ -59,7 +59,7 @@ export const MOCK_BANKS = {
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
     isVisibleInTfmUtilisationReports: true,
   },
-  TestBank3: {
+  testBank3: {
     id: '964',
     name: 'Test Bank 3',
     mga: ['Test.pdf'],

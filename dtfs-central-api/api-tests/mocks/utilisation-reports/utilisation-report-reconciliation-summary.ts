@@ -6,8 +6,8 @@ const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEM: UtilisationReportReco
   reportId: 12,
   reportPeriod: { start: { month: 1, year: 2023 }, end: { month: 1, year: 2023 } },
   bank: {
-    id: MOCK_BANKS.TestBank1.id,
-    name: MOCK_BANKS.TestBank1.name,
+    id: MOCK_BANKS.testBank1.id,
+    name: MOCK_BANKS.testBank1.name,
   },
   status: PENDING_RECONCILIATION,
   dateUploaded: new Date('2024-01-14T15:36:00Z'),
