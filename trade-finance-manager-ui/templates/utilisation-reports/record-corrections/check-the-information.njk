@@ -103,16 +103,13 @@
         }
       }) }}
     </form>
-    <form method="post">
-      <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-      <input
-        class="govuk-button govuk-button--warning"
-        formaction="{{ cancelLinkHref }}"
-        value="Cancel record correction request"
-        data-module="govuk-button"
-        type="submit"
-        data-cy="cancel-button"/>
-    </form>
+
+    <a
+      class="govuk-link govuk-link--no-visited-state"
+      href="{{ cancelLinkHref }}"
+      data-cy="cancel-link">
+      Cancel record correction request
+    </a>
   </div>
 
 {% endblock %}

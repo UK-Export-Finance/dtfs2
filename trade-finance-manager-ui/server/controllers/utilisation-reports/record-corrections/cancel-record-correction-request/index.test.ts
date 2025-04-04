@@ -1,7 +1,7 @@
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { Response } from 'express';
 import { aTfmSessionUser } from '../../../../../test-helpers';
-import { postCancelRecordCorrectionRequest, PostCancelRecordCorrectionRequestRequest } from '.';
+import { getCancelRecordCorrectionRequest, GetCancelRecordCorrectionRequest } from '.';
 import api from '../../../../api';
 import { getLinkToPremiumPaymentsTab } from '../../helpers';
 
@@ -22,8 +22,8 @@ describe('controllers/utilisation-reports/record-corrections/cancel-record-corre
     jest.resetAllMocks();
   });
 
-  describe('postCancelRecordCorrectionRequest', () => {
-    let req: PostCancelRecordCorrectionRequestRequest;
+  describe('getCancelRecordCorrectionRequest', () => {
+    let req: GetCancelRecordCorrectionRequest;
     let res: MockResponse<Response>;
 
     beforeEach(() => {
@@ -35,7 +35,7 @@ describe('controllers/utilisation-reports/record-corrections/cancel-record-corre
 
     it('should redirect to premium payments tab, with fee records selected, on success', async () => {
       // Act
-      await postCancelRecordCorrectionRequest(req, res);
+      await getCancelRecordCorrectionRequest(req, res);
 
       // Assert
       expect(res._getRedirectUrl()).toEqual(getLinkToPremiumPaymentsTab(reportId, [Number(feeRecordId)]));
@@ -43,7 +43,7 @@ describe('controllers/utilisation-reports/record-corrections/cancel-record-corre
 
     it('should clear transient form data', async () => {
       // Act
-      await postCancelRecordCorrectionRequest(req, res);
+      await getCancelRecordCorrectionRequest(req, res);
 
       // Assert
       expect(api.deleteFeeRecordCorrectionTransientFormData).toHaveBeenCalledTimes(1);
@@ -55,7 +55,7 @@ describe('controllers/utilisation-reports/record-corrections/cancel-record-corre
       jest.mocked(api.deleteFeeRecordCorrectionTransientFormData).mockRejectedValue(new Error('API Error'));
 
       // Act
-      await postCancelRecordCorrectionRequest(req, res);
+      await getCancelRecordCorrectionRequest(req, res);
 
       // Assert
       expect(res._getRenderView()).toEqual('_partials/problem-with-service.njk');
