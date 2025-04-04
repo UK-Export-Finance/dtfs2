@@ -32,12 +32,12 @@
     <ol class="govuk-list govuk-list--spaced">
       {% for criterion in criteria.criteria %}
         <li class="govuk-body">
-          {{ criterion.id}}. {{ criterion.body }}
+          {{ criterion.id}}. {{ criterion.body | safe }}
 
           {% if criterion.childList %}
             <ol class="govuk-list govuk-list--bullet govuk-!-padding-left-7">
               {% for childCriterion in criterion.childList %}
-                <li class="govuk-body">{{ childCriterion }}</li>
+                <li class="govuk-body">{{ childCriterion | safe }}</li>
               {% endfor %}
             </ol>
           {% endif %}

@@ -1,9 +1,9 @@
+const { HttpStatusCode } = require('axios');
 const { ObjectId } = require('mongodb');
-const { PAYLOAD_VERIFICATION, MONGO_DB_COLLECTIONS, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
+const { PAYLOAD_VERIFICATION, MONGO_DB_COLLECTIONS, DocumentNotDeletedError, isProduction } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const assert = require('assert');
 const { generatePortalAuditDetails, generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
-
 const { mongoDbClient: db } = require('../../drivers/db-client');
 
 const sortMandatoryCriteria = (arr, callback) => {
@@ -21,6 +21,14 @@ const findMandatoryCriteria = async (callback) => {
 };
 exports.findMandatoryCriteria = findMandatoryCriteria;
 
+/**
+ * Finds a single mandatory criteria document by version.
+ *
+ * @param {string} version - The version of the mandatory criteria to find. Must be a string that can be converted to a number.
+ * @param {function} callback - A callback function to handle the result. Receives the found document as an argument.
+ * @throws {Error} Throws an error if the version is not a valid string or cannot be converted to a number.
+ * @returns {void} This function does not return a value; the result is passed to the callback.
+ */
 const findOneMandatoryCriteria = async (version, callback) => {
   if (typeof version !== 'string' || Number.isNaN(version)) {
     throw new Error('Invalid Version');
@@ -34,26 +42,41 @@ const findOneMandatoryCriteria = async (version, callback) => {
   });
 };
 
+/**
+ * Creates a new mandatory criteria.
+ *
+ * @param {Express.Request} req - The Express request object.
+ * @param {Express.Response} res - The Express response object.
+ * @returns {Promise<Express.Response>} - A promise that resolves to the Express response object.
+ */
 exports.create = async (req, res) => {
   if (!isVerifiedPayload({ payload: req.body, template: PAYLOAD_VERIFICATION.CRITERIA.MANDATORY.DEFAULT })) {
-    return res.status(400).send({ status: 400, message: 'Invalid mandatory criteria payload' });
+    console.error('Invalid BSS/EWCS mandatory criteria payload supplied %o', req.body);
+    return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid mandatory criteria payload' });
   }
 
-  if (process.env.NODE_ENV === 'production') {
-    return res.status(403).send({ status: 403, message: 'Unauthorised insertion' });
+  if (isProduction()) {
+    return res.status(HttpStatusCode.Unauthorized).send({ status: HttpStatusCode.Unauthorized, message: 'Unauthorised insertion' });
   }
 
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.MANDATORY_CRITERIA);
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
   // MC insertion on non-production environments
-  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.MANDATORY_CRITERIA);
-  const criteria = { ...req?.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
+  const criteria = { ...req.body, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) };
   const result = await collection.insertOne(criteria);
 
-  return res.status(200).send(result);
+  return res.status(HttpStatusCode.Created).send(result);
 };
 
-exports.findAll = (req, res) =>
+/**
+ * Retrieves all mandatory criteria.
+ *
+ * @param {Express.Request} req - The Express request object.
+ * @param {Express.Response} res - The Express response object.
+ * @returns {Promise<Express.Response>} - A promise that resolves to the Express response object.
+ */
+exports.findAll = async (req, res) =>
   findMandatoryCriteria((mandatoryCriteria) =>
     sortMandatoryCriteria(mandatoryCriteria, (sortedMandatoryCriteria) =>
       res.status(200).send({
@@ -63,8 +86,19 @@ exports.findAll = (req, res) =>
     ),
   );
 
-exports.findOne = (req, res) => findOneMandatoryCriteria(req.params.version, (mandatoryCriteria) => res.status(200).send(mandatoryCriteria));
+/**
+ * Finds a mandatory criteria by its version.
+ *
+ * @param {Express.Request} req - The Express request object.
+ * @param {Express.Response} res - The Express response object.
+ * @returns {Promise<Express.Response>} - A promise that resolves to the Express response object.
+ */
+exports.findOne = async (req, res) => findOneMandatoryCriteria(req.params.version, (mandatoryCriteria) => res.status(200).send(mandatoryCriteria));
 
+/**
+ * Finds the latest mandatory criteria.
+ * @returns {Promise<Object>} - A promise that resolves to the latest mandatory criteria.
+ */
 const findLatestMandatoryCriteria = async () => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.MANDATORY_CRITERIA);
   const latest = await collection.find().sort({ version: -1 }).limit(1).toArray();
@@ -72,32 +106,25 @@ const findLatestMandatoryCriteria = async () => {
 };
 exports.findLatestMandatoryCriteria = findLatestMandatoryCriteria;
 
+/**
+ * Finds the latest mandatory criteria and sends it as a response.
+ *
+ * @param {Express.Request} req - The Express request object.
+ * @param {Express.Response} res - The Express response object.
+ * @returns {Promise<Express.Response>} - A promise that resolves to the Express response object.
+ */
 exports.findLatest = async (req, res) => {
   const latest = await findLatestMandatoryCriteria();
   return res.status(200).send(latest);
 };
 
-exports.update = async (req, res) => {
-  if (typeof req.params.version !== 'string') {
-    res.status(400).send({ status: 400, message: 'Invalid Version' });
-  }
-
-  if (process.env.NODE_ENV === 'production') {
-    return res.status(403).send();
-  }
-
-  const auditDetails = generatePortalAuditDetails(req.user._id);
-
-  // MC insertion on non-production environments
-  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.MANDATORY_CRITERIA);
-  const status = await collection.updateOne(
-    { version: { $eq: Number(req.params.version) } },
-    { $set: { criteria: req.body.criteria, auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails) } },
-    {},
-  );
-  return res.status(200).send(status);
-};
-
+/**
+ * Deletes a mandatory criteria.
+ *
+ * @param {Express.Request} req - The Express request object.
+ * @param {Express.Response} res - The Express response object.
+ * @returns {Promise<Express.Response>} - A promise that resolves to the Express response object.
+ */
 exports.delete = async (req, res) => {
   const versionNumber = Number(req.params.version);
   const auditDetails = generatePortalAuditDetails(req.user._id);

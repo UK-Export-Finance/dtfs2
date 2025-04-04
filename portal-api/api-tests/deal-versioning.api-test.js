@@ -20,7 +20,7 @@ const gefFacilitiesUrl = '/v1/gef/facilities';
 
 // NOTE: to maintain backwards compatibility we shouldn't change this from version 2.1
 const mockEligibilityCriteriaVersion = mockEligibilityCriteria.find((criteria) => criteria.version === 2.1);
-const mockMandatoryCriteriaVersion = mockMandatoryCriteria.find((criteria) => criteria.version === 2);
+const mockMandatoryCriteriaVersion = mockMandatoryCriteria.find((criteria) => criteria.version === 4);
 
 const originalEnv = { ...process.env };
 
@@ -32,7 +32,7 @@ const generateVersion0ApplicationToSubmit = () => ({
   additionalRefName: 'Team 1',
   exporter: {},
   createdAt: '2021-01-01T00:00',
-  mandatoryVersionId: 2,
+  mandatoryVersionId: 4,
   status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
   updatedAt: null,
   submissionCount: 0,
