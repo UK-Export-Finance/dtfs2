@@ -18,8 +18,8 @@ describe('controllers/utilisation-reports/find-reports-by-year', () => {
   const BANK_ID_ONE = '1';
   const BANK_ID_TWO = '2';
   const BANK_ID_THREE = '3';
-  const BANK_NAME_ONE = 'Barclays Bank';
-  const BANK_NAME_TWO = 'HSBC';
+  const BANK_NAME_ONE = 'Test Bank 1';
+  const BANK_NAME_TWO = 'Test Bank 2';
   const BANK_NAME_THREE = 'Newable';
   const BANKS: BankWithReportingYearsResponseBody[] = [
     {

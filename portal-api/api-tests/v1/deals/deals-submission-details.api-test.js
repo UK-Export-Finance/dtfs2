@@ -66,7 +66,7 @@ describe('/v1/deals/:id/submission-details', () => {
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
-      getUserWithRole: (role) => testUsers().withBankName('Barclays Bank').withRole(role).one(),
+      getUserWithRole: (role) => testUsers().withBankName('Test Bank 1').withRole(role).one(),
       makeRequestAsUser: (user) => as(user).get(oneDealSubmissionDetailsUrl),
       successStatusCode: 200,
     });

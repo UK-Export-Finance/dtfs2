@@ -122,7 +122,7 @@ describe('/v1/deals/:id/bond', () => {
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, READ_ONLY, ADMIN],
-      getUserWithRole: (role) => testUsers().withRole(role).withBankName('Barclays Bank').one(),
+      getUserWithRole: (role) => testUsers().withRole(role).withBankName('Test Bank 1').one(),
       makeRequestAsUser: (user) => as(user).get(aBarclaysBondUrl),
       successStatusCode: 200,
     });

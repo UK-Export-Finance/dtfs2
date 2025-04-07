@@ -68,7 +68,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
-      getUserWithRole: (role) => testUsers().withRole(role).withBankName('Barclays Bank').one(),
+      getUserWithRole: (role) => testUsers().withRole(role).withBankName('Test Bank 1').one(),
       makeRequestAsUser: (user) => as(user).get(aBarclaysEligibilityDocumentationFileUrl),
       successStatusCode: 200,
     });

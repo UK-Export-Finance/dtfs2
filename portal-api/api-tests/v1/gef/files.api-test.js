@@ -33,7 +33,7 @@ jest.mock('../../../src/drivers/fileshare', () => ({
 }));
 
 describe(baseUrl, () => {
-  const testBankName = 'Test Bank';
+  const testBankName = 'Test Bank 1';
   let aMaker;
   let invalidMaker;
   let mockDeal;

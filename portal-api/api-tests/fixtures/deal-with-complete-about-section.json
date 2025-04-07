@@ -5,7 +5,7 @@
     "additionalRefName": "Tibettan submarine acquisition scheme",
     "bank": {
         "id": "956",
-        "name": "Barclays Bank",
+        "name": "Test Bank 1",
         "emails": [
             "maker4@ukexportfinance.gov.uk",
             "checker4@ukexportfinance.gov.uk"
@@ -21,7 +21,7 @@
             ],
             "bank": {
                 "id": "956",
-                "name": "Barclays Bank",
+                "name": "Test Bank 1",
                 "emails": [
                     "maker4@ukexportfinance.gov.uk",
                     "checker4@ukexportfinance.gov.uk"

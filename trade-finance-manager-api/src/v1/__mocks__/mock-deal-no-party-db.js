@@ -13,7 +13,7 @@ const MOCK_DEAL_NO_PARTY_DB = {
   previousStatus: 'Submitted',
   bank: {
     id: '123',
-    name: 'Barclays Bank',
+    name: 'Test Bank 1',
     emails: ['test1@mock.com', 'test2@mock.com'],
   },
   maker: MOCK_PORTAL_USERS[0],
