@@ -319,6 +319,7 @@ services:
       - APIM_ESTORE_VALUE
       - AZURE_ACBS_FUNCTION_URL=http://acbs
       - GOV_NOTIFY_API_KEY
+      - MOCK_E2E_GOV_NOTIFY_API_KEY
       - MONGO_INITDB_DATABASE
       - MONGODB_URI
       - EXTERNAL_API_URL=http://external-api:5002

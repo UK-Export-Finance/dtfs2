@@ -12,6 +12,7 @@ dotenv.config();
 
 const referenceProxyUrl = process.env.EXTERNAL_API_URL;
 const notifyKey: string = process.env.GOV_NOTIFY_API_KEY || '';
+const mockNotifyKey: string = process.env.MOCK_E2E_GOV_NOTIFY_API_KEY || '';
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
 const headers = {
@@ -29,6 +30,17 @@ export const emailNotification = async (req: Request, res: Response) => {
   const personalisation = emailVariables;
 
   console.info('Calling APIM MDM GovNotify API template id %s', templateId);
+
+  /**
+   * if the notifyKey is the same as the mockNotifyKey,
+   * then we do not call the APIM MDM GovNotify API
+   * and we return a mock 200 OK response
+   * (in E2E tests to stop spamming of GovNotify API)
+   */
+  if (notifyKey === mockNotifyKey) {
+    console.info('Mocking APIM MDM GovNotify API call');
+    return res.status(HttpStatusCode.Ok).send({});
+  }
 
   const response: { status: number | undefined; data: unknown } = await axios({
     method: 'post',
@@ -57,6 +69,11 @@ export const emailNotification = async (req: Request, res: Response) => {
 
 export const sendEmail = async (templateId: string, sendToEmailAddress: string, emailVariables: object) => {
   try {
+    if (notifyKey === mockNotifyKey) {
+      console.info('Mocking APIM MDM GovNotify API call');
+      return {};
+    }
+
     const { data } = await axios({
       method: 'post',
       url: `${referenceProxyUrl}/email`,
