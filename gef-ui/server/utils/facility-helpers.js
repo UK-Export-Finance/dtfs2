@@ -7,11 +7,6 @@ const CONSTANTS = require('../constants');
  * with the "canResubmitIssuedFacilities" flag set to true.
  *
  * @param {Object} application - The application object containing facilities data.
- * @param {Object[]} application.facilities.items - An array of facility objects.
- * @param {Object} application.facilities.items[].details - The details of a facility.
- * @param {string} application.facilities.items[].details.name - The name of the facility.
- * @param {string} application.facilities.items[].details._id - The unique identifier of the facility.
- * @param {boolean} application.facilities.items[].details.canResubmitIssuedFacilities - Flag indicating if the facility can be resubmitted.
  * @returns {Object[]} An array of objects representing facilities that can be resubmitted,
  * each containing the facility's name and ID.
  */
@@ -221,9 +216,6 @@ const facilityTypeStringGenerator = (facilityType) => {
  * Determines if a facility amendment is currently in progress for a given application.
  *
  * @param {Object} application - The application object to check.
- * @param {boolean} application.isPortalAmendmentInProgress - Indicates if a portal amendment is in progress.
- * @param {string} application.facilityIdWithAmendmentInProgress - The ID of the facility with an amendment in progress.
- * @param {string} application.portalAmendmentStatus - The current status of the portal amendment.
  * @returns {boolean} Returns `true` if a facility amendment is in progress and has not been acknowledged; otherwise, `false`.
  */
 const isFacilityAmendmentInProgress = (application) => {
