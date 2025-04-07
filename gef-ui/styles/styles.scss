@@ -5,6 +5,7 @@ $govuk-new-link-styles: true;
 @import "./helpers.scss";
 @import "./footer.scss";
 @import "./accessibility.scss";
+@import "./visibility.scss";
 
 .govuk-section-break {
   &--bold {
