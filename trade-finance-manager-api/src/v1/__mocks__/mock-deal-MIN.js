@@ -12,7 +12,7 @@ const MOCK_DEAL = {
   previousStatus: 'Submitted',
   bank: {
     id: '123',
-    name: 'Test Bank 1',
+    name: 'Bank 1',
     emails: ['test1@mock.com', 'test2@mock.com'],
   },
   maker: MOCK_PORTAL_USERS[0],

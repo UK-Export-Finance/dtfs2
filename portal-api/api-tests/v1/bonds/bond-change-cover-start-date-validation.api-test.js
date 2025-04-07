@@ -78,7 +78,7 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Test Bank 1').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
   });
 
   beforeEach(async () => {

@@ -30,8 +30,8 @@ describe(baseUrl, () => {
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     aChecker = testUsers().withRole(CHECKER).one();
-    aMaker = testUsers().withRole(MAKER).withBankName('Test Bank 1').one();
-    anotherMaker = testUsers().withRole(MAKER).withBankName('Test Bank 2').one();
+    aMaker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    anotherMaker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
     anAdmin = testUsers().withRole(ADMIN).one();
 
     /**

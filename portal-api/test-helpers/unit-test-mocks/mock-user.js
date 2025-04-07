@@ -13,7 +13,7 @@ const BASE_TEST_USER = {
   roles: [MAKER],
   bank: {
     id: '961',
-    name: 'Test Bank 2',
+    name: 'Bank 2',
     emails: ['maker1@ukexportfinance.gov.uk', 'maker2@ukexportfinance.gov.uk'],
   },
   isTrusted: false,

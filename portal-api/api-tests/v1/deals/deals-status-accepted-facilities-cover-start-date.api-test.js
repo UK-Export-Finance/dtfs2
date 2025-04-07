@@ -30,9 +30,9 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
     await databaseHelper.wipe([DB_COLLECTIONS.DEALS]);
     await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
     const testUsers = await testUserCache.initialise(app);
-    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Test Bank 1').all();
+    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Bank 1').all();
     [aBarclaysMaker] = barclaysMakers;
-    aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Test Bank 1').one();
+    aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Bank 1').one();
     aSuperuser = testUsers().superuser().one();
   });
 

@@ -30,12 +30,12 @@ describe('/v1/deals/:id/status', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Test Bank 1').all();
+    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Bank 1').all();
     [aBarclaysMaker] = barclaysMakers;
-    anHSBCMaker = testUsers().withRole(MAKER).withBankName('Test Bank 2').one();
-    aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Test Bank 1').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
+    aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Bank 1').one();
 
-    const barclaysMakerChecker = testUsers().withMultipleRoles(MAKER, CHECKER).withBankName('Test Bank 1').one();
+    const barclaysMakerChecker = testUsers().withMultipleRoles(MAKER, CHECKER).withBankName('Bank 1').one();
     aBarclaysMakerChecker = barclaysMakerChecker;
     aSuperuser = testUsers().superuser().one();
   });
@@ -59,7 +59,7 @@ describe('/v1/deals/:id/status', () => {
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
-      getUserWithRole: (role) => testUsers().withRole(role).withBankName('Test Bank 1').one(),
+      getUserWithRole: (role) => testUsers().withRole(role).withBankName('Bank 1').one(),
       makeRequestAsUser: (user) => as(user).get(urlToGetDealStatus),
       successStatusCode: 200,
     });
@@ -118,7 +118,7 @@ describe('/v1/deals/:id/status', () => {
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER],
-      getUserWithRole: (role) => testUsers().withRole(role).withBankName('Test Bank 1').one(),
+      getUserWithRole: (role) => testUsers().withRole(role).withBankName('Bank 1').one(),
       makeRequestAsUser: (user) => as(user).put(completedDeal).to(urlForDealStatus),
       successStatusCode: 200,
     });

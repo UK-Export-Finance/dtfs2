@@ -33,7 +33,7 @@ jest.mock('../../../src/drivers/fileshare', () => ({
 }));
 
 describe(baseUrl, () => {
-  const testBankName = 'Test Bank 1';
+  const testBankName = 'Bank 1';
   let aMaker;
   let invalidMaker;
   let mockDeal;
@@ -42,7 +42,7 @@ describe(baseUrl, () => {
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     aMaker = testUsers().withRole(MAKER).withBankName(testBankName).one();
-    invalidMaker = testUsers().withRole(MAKER).withBankName('Test Bank 2').one();
+    invalidMaker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
 
     await databaseHelper.wipe([applicationCollectionName]);
 

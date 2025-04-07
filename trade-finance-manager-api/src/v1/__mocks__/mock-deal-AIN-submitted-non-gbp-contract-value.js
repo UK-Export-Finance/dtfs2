@@ -12,7 +12,7 @@ const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = {
   previousStatus: "Ready for Checker's approval",
   bank: {
     id: '123',
-    name: 'Test Bank 1',
+    name: 'Bank 1',
     emails: ['test1@mock.com', 'test2@mock.com'],
   },
   maker: MOCK_PORTAL_USERS[0],

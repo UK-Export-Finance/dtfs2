@@ -14,30 +14,30 @@ const MONTHLY_REPORT_PERIOD_SCHEDULE = [
 ];
 
 const MOCK_BANKS = {
-  testBank1: {
+  bank1: {
     id: '956',
-    name: 'Test Bank 1',
+    name: 'Bank 1',
     mga: ['Test.pdf'],
     emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '01026167',
     partyUrn: '00300130',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'Test Bank 1 Payment Reporting Team',
+      teamName: 'Bank 1 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
   },
-  testBank2: {
+  bank2: {
     id: '961',
-    name: 'Test Bank 2',
+    name: 'Bank 2',
     mga: ['Test.pdf'],
     emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '00014259',
     partyUrn: '00300342',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'Test Bank 2 Payment Reporting Team',
+      teamName: 'Bank 2 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,

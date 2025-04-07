@@ -86,8 +86,8 @@ describe('/v1/deals/:id/bond', () => {
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     testUser = testUsers().withRole(READ_ONLY).one();
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Test Bank 1').one();
-    anHSBCMaker = testUsers().withRole(MAKER).withBankName('Test Bank 2').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
     aSuperuser = testUsers().superuser().one();
   });
 
@@ -122,7 +122,7 @@ describe('/v1/deals/:id/bond', () => {
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, READ_ONLY, ADMIN],
-      getUserWithRole: (role) => testUsers().withRole(role).withBankName('Test Bank 1').one(),
+      getUserWithRole: (role) => testUsers().withRole(role).withBankName('Bank 1').one(),
       makeRequestAsUser: (user) => as(user).get(aBarclaysBondUrl),
       successStatusCode: 200,
     });

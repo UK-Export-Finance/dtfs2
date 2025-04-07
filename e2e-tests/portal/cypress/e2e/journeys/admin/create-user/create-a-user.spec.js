@@ -12,7 +12,7 @@ context('Admin user creates a new user', () => {
     password: 'AbC!2345',
     firstname: 'bob',
     surname: 'builder',
-    bank: 'Test Bank 2',
+    bank: 'Bank 2',
     roles: [MAKER],
   };
 
@@ -22,7 +22,7 @@ context('Admin user creates a new user', () => {
     password: 'aaa',
     firstname: 'alfred',
     surname: 'd. great',
-    bank: 'Test Bank 2',
+    bank: 'Bank 2',
     roles: [MAKER],
   };
 

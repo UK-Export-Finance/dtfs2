@@ -80,7 +80,7 @@ function aValidPayload(): z.infer<typeof CREATE> {
     roles: ['maker'],
     bank: {
       id: '961',
-      name: 'Test Bank 2',
+      name: 'Bank 2',
       emails: ['maker1@ukexportfinance.gov.uk', 'maker2@ukexportfinance.gov.uk'],
     },
     isTrusted: false,

@@ -47,8 +47,8 @@ describe('GET /v1/banks/:bankId/fee-record-correction-review/:correctionId/user/
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
     testUsers = await testUserCache.initialise(app);
-    aBarclaysPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('Test Bank 1').one();
-    aHsbcPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('Test Bank 2').one();
+    aBarclaysPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('Bank 1').one();
+    aHsbcPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('Bank 2').one();
     barclaysBank = aBarclaysPaymentReportOfficer.bank;
     hsbcBank = aHsbcPaymentReportOfficer.bank;
 

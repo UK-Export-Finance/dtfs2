@@ -21,7 +21,7 @@ describe('/v1/industry-sectors', () => {
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     testUser = testUsers().one();
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Test Bank 1').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
   });
 
   describe('GET /v1/industry-sectors', () => {

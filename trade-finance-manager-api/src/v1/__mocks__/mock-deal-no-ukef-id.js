@@ -21,7 +21,7 @@ const MOCK_DEAL_NO_UKEF_ID = {
     submissionCount: 1,
     owningBank: {
       id: '123',
-      name: 'Test Bank 1',
+      name: 'Bank 1',
       emails: ['test1@mock.com', 'test2@mock.com'],
     },
   },

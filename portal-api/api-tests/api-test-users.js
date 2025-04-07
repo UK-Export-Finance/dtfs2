@@ -8,27 +8,27 @@ const { createLoggedInUserSession } = require('../test-helpers/api-test-helpers/
 const { STATUS } = require('../src/constants/user');
 
 const banks = {
-  testBank1: {
+  bank1: {
     id: '956',
-    name: 'Test Bank 1',
+    name: 'Bank 1',
     emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
   },
-  testBank2: {
+  bank2: {
     id: '961',
-    name: 'Test Bank 2',
+    name: 'Bank 2',
     emails: ['maker1@ukexportfinance.gov.uk', 'maker2@ukexportfinance.gov.uk'],
   },
-  testBank3: {
+  bank3: {
     id: '964',
-    name: 'Test Bank 3',
+    name: 'Bank 3',
   },
-  testBank4: {
+  bank4: {
     id: '1004',
-    name: 'Test Bank 4',
+    name: 'Bank 4',
   },
-  testBank5: {
+  bank5: {
     id: '953',
-    name: 'Test Bank 5',
+    name: 'Bank 5',
   },
   UKEF: {
     id: '9',
@@ -49,7 +49,7 @@ const testUsers = [
     email: 'hsbc-maker-1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: [MAKER],
-    bank: banks.testBank2,
+    bank: banks.bank2,
     isTrusted: false,
   },
   {
@@ -60,7 +60,7 @@ const testUsers = [
     email: 'hsbc-maker-2@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: [MAKER],
-    bank: banks.testBank2,
+    bank: banks.bank2,
     isTrusted: false,
   },
   {
@@ -71,7 +71,7 @@ const testUsers = [
     email: 'hsbc-payment-report-officer@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: [PAYMENT_REPORT_OFFICER],
-    bank: banks.testBank2,
+    bank: banks.bank2,
     isTrusted: false,
   },
   {
@@ -82,7 +82,7 @@ const testUsers = [
     email: 'barclays-maker-1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: [MAKER],
-    bank: banks.testBank1,
+    bank: banks.bank1,
     isTrusted: false,
   },
   {
@@ -93,7 +93,7 @@ const testUsers = [
     email: 'barclays-maker-2@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: [MAKER],
-    bank: banks.testBank1,
+    bank: banks.bank1,
     isTrusted: false,
   },
   {
@@ -104,7 +104,7 @@ const testUsers = [
     email: 'barclays-checker-1@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: [CHECKER],
-    bank: banks.testBank1,
+    bank: banks.bank1,
     isTrusted: false,
   },
   {
@@ -115,7 +115,7 @@ const testUsers = [
     email: 'barclays-read-only@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: [READ_ONLY],
-    bank: banks.testBank1,
+    bank: banks.bank1,
     isTrusted: false,
   },
   {
@@ -126,7 +126,7 @@ const testUsers = [
     email: 'barclays-admin@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: [ADMIN],
-    bank: banks.testBank1,
+    bank: banks.bank1,
     isTrusted: false,
   },
   {
@@ -137,7 +137,7 @@ const testUsers = [
     email: 'barclays-payment-officer@ukexportfinance.gov.uk',
     timezone: 'Europe/London',
     roles: [PAYMENT_REPORT_OFFICER],
-    bank: banks.testBank1,
+    bank: banks.bank1,
     isTrusted: false,
   },
   {
@@ -182,7 +182,7 @@ const testUsers = [
     timezone: 'Europe/London',
     roles: [MAKER, CHECKER],
     isTrusted: false,
-    bank: banks.testBank1,
+    bank: banks.bank1,
   },
 
   {

@@ -15,7 +15,7 @@ const deal = {
   previousStatus: 'Draft',
   bank: {
     id: '956',
-    name: 'Test Bank 1',
+    name: 'Bank 1',
     emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
   },
   maker: {

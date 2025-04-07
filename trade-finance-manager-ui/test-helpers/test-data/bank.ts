@@ -4,7 +4,7 @@ import { aMonthlyBankReportPeriodSchedule } from './bank-report-period-schedule'
 export const aBank = (): Bank => ({
   _id: '6597dffeb5ef5ff4267e5044',
   id: '956',
-  name: 'Test Bank 1',
+  name: 'Bank 1',
   mga: ['Test.pdf'],
   emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
   companiesHouseNo: '01026167',

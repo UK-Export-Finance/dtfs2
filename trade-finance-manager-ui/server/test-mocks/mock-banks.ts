@@ -14,31 +14,31 @@ const MONTHLY_REPORT_PERIOD_SCHEDULE = [
 ];
 
 export const MOCK_BANKS = {
-  testBank1: {
+  bank1: {
     id: '956',
-    name: 'Test Bank 1',
+    name: 'Bank 1',
     mga: ['Test.pdf'],
     emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '01026167',
     partyUrn: '00300130',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'Test Bank 1 Payment Reporting Team',
+      teamName: 'Bank 1 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
     isVisibleInTfmUtilisationReports: true,
   },
-  testBank2: {
+  bank2: {
     id: '961',
-    name: 'Test Bank 2',
+    name: 'Bank 2',
     mga: ['Test.pdf'],
     emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '00014259',
     partyUrn: '00300342',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'Test Bank 2 Payment Reporting Team',
+      teamName: 'Bank 2 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
@@ -59,16 +59,16 @@ export const MOCK_BANKS = {
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
     isVisibleInTfmUtilisationReports: true,
   },
-  testBank3: {
+  bank3: {
     id: '964',
-    name: 'Test Bank 3',
+    name: 'Bank 3',
     mga: ['Test.pdf'],
     emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '00002065',
     partyUrn: '00300302',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'Test Bank 3 Payment Reporting Team',
+      teamName: 'Bank 3 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: [

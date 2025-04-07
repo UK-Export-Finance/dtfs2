@@ -35,7 +35,7 @@ describe('PUT /v1/deals/:id/submission-details validation rules', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    anHSBCMaker = testUsers().withRole(MAKER).withBankName('Test Bank 2').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
   });
 
   beforeEach(async () => {
