@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { CURRENCY, DEAL_STATUS } from '@ukef/dtfs2-common';
+import { ROLES, CURRENCY, DEAL_STATUS, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import {
   userToken,
   isObject,
@@ -30,7 +30,6 @@ import {
   MOCK_AIN_APPLICATION_RETURN_MAKER,
   MOCK_AIN_APPLICATION_CHECKER,
   MOCK_AIN_APPLICATION_ISSUED_ONLY,
-  MOCK_AIN_APPLICATION_FALSE_COMMENTS,
   MOCK_AIN_APPLICATION_SUPPORTING_INFO,
   MOCK_AIN_APPLICATION_UNISSUED_ONLY,
 } from './mocks/mock-applications';
@@ -1219,15 +1218,94 @@ describe('summaryItemsConditions()', () => {
 });
 
 describe('displayTaskComments()', () => {
-  it('should return true if any conditions are true', () => {
-    const result = displayTaskComments(MOCK_AIN_APPLICATION);
+  it('should return true if comments are present', () => {
+    // Arrange
+    const mockApplication = {
+      ...MOCK_AIN_APPLICATION,
+      comments: [
+        {
+          roles: [ROLES.MAKER],
+          userName: 'maker1@ukexportfinance.gov.uk',
+          firstname: 'First',
+          surname: 'Last',
+          email: 'maker1@ukexportfinance.gov.uk',
+          createdAt: 1744014786955,
+          comment: '123',
+        },
+      ],
+    };
 
+    // Act
+    const result = displayTaskComments(mockApplication);
+
+    // Assert
     expect(result).toEqual(true);
   });
 
-  it('should return false if all conditions are false', () => {
-    const result = displayTaskComments(MOCK_AIN_APPLICATION_FALSE_COMMENTS);
+  it('should return true if UKEF review is present', () => {
+    // Arrange
+    const mockApplication = {
+      ...MOCK_AIN_APPLICATION,
+      status: DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
+      ukefDecision: [
+        {
+          decision: DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
+        },
+      ],
+    };
 
+    // Act
+    const result = displayTaskComments(mockApplication);
+
+    // Assert
+    expect(result).toEqual(true);
+  });
+
+  it('should return true if un-issued facilities are present', () => {
+    // Act
+    const result = displayTaskComments(MOCK_AIN_APPLICATION_UNISSUED_ONLY);
+
+    // Assert
+    expect(result).toEqual(true);
+  });
+
+  it('should return true if issued facilities are present', () => {
+    // Act
+    const result = displayTaskComments(MOCK_AIN_APPLICATION);
+
+    // Assert
+    expect(result).toEqual(true);
+  });
+
+  it('should return true if issued facility has an amendment in progress', () => {
+    // Arrange
+    const mockApplication = {
+      ...MOCK_AIN_APPLICATION,
+      isPortalAmendmentInProgress: true,
+      facilityIdWithAmendmentInProgress: '67f384b166041f835e52afe8',
+      portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+    };
+
+    // Act
+    const result = displayTaskComments(mockApplication);
+
+    // Assert
+    expect(result).toEqual(true);
+  });
+
+  it('should return false if all checks are false', () => {
+    // Arrange
+    const mockApplication = {
+      ...MOCK_AIN_APPLICATION_ISSUED_ONLY,
+      comments: [],
+      ukefDecision: [],
+      isPortalAmendmentInProgress: false,
+    };
+
+    // Act
+    const result = displayTaskComments(mockApplication);
+
+    // Assert
     expect(result).toEqual(false);
   });
 });

@@ -1,12 +1,23 @@
 const { format, add } = require('date-fns');
+const { PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../constants');
 
-/*
-   Maps through facilities to check for canResubmitIssuedFacilities to be true
-   if true, adds to array and returns array
-*/
+/**
+ * Extracts an array of facilities that have been marked as eligible for resubmission
+ * with the "canResubmitIssuedFacilities" flag set to true.
+ *
+ * @param {Object} application - The application object containing facilities data.
+ * @param {Object[]} application.facilities.items - An array of facility objects.
+ * @param {Object} application.facilities.items[].details - The details of a facility.
+ * @param {string} application.facilities.items[].details.name - The name of the facility.
+ * @param {string} application.facilities.items[].details._id - The unique identifier of the facility.
+ * @param {boolean} application.facilities.items[].details.canResubmitIssuedFacilities - Flag indicating if the facility can be resubmitted.
+ * @returns {Object[]} An array of objects representing facilities that can be resubmitted,
+ * each containing the facility's name and ID.
+ */
 const facilitiesChangedToIssuedAsArray = (application) => {
   const hasChanged = [];
+
   application.facilities.items.map((facility) => {
     if (facility.details.canResubmitIssuedFacilities) {
       const changed = {
@@ -15,8 +26,10 @@ const facilitiesChangedToIssuedAsArray = (application) => {
       };
       hasChanged.push(changed);
     }
+
     return hasChanged;
   });
+
   return hasChanged;
 };
 
@@ -175,16 +188,13 @@ const coverDatesConfirmed = (facilities) => {
   return false;
 };
 
-/*
-   function returns true or false based on length of array
-   of facilities that have changed to issued from unissued
-*/
-const hasChangedToIssued = (application) => {
-  const canResubmitIssuedFacilities = facilitiesChangedToIssuedAsArray(application);
-  return canResubmitIssuedFacilities.length > 0;
-};
-
-const facilitiesChangedPresent = (application) => facilitiesChangedToIssuedAsArray(application).length > 0;
+/**
+ * Determines if any facilities in the given application have been issued.
+ *
+ * @param {Object} application - The application object containing facility data.
+ * @returns {boolean} Returns `true` if one or more facilities have been issued, otherwise `false`.
+ */
+const isFacilityResubmissionAvailable = (application) => facilitiesChangedToIssuedAsArray(application).length > 0;
 
 /**
  * Helper function ascertain whether the facility confirmation message should appear or not.
@@ -193,7 +203,7 @@ const facilitiesChangedPresent = (application) => facilitiesChangedToIssuedAsArr
  * @returns {boolean} Boolean value
  */
 const issuedFacilityConfirmation = (application) => {
-  const hasUnissuedToIssued = hasChangedToIssued(application);
+  const hasUnissuedToIssued = isFacilityResubmissionAvailable(application);
   const { submissionType } = application;
 
   return hasUnissuedToIssued && (submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN || submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);
@@ -207,6 +217,23 @@ const facilityTypeStringGenerator = (facilityType) => {
   return null;
 };
 
+/**
+ * Determines if a facility amendment is currently in progress for a given application.
+ *
+ * @param {Object} application - The application object to check.
+ * @param {boolean} application.sPortalAmendmentInProgress - Indicates if a portal amendment is in progress.
+ * @param {string} application.facilityIdWithAmendmentInProgress - The ID of the facility with an amendment in progress.
+ * @param {string} application.portalAmendmentStatus - The current status of the portal amendment.
+ * @returns {boolean} Returns `true` if a facility amendment is in progress and has not been acknowledged; otherwise, `false`.
+ */
+const isFacilityAmendmentInProgress = (application) => {
+  return Boolean(
+    application.isPortalAmendmentInProgress &&
+      application.facilityIdWithAmendmentInProgress &&
+      application.portalAmendmentStatus !== PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+  );
+};
+
 module.exports = {
   areUnissuedFacilitiesPresent,
   getUnissuedFacilitiesAsArray,
@@ -214,12 +241,12 @@ module.exports = {
   getIssuedFacilitiesAsArray,
   getFacilityCoverStartDate,
   coverDatesConfirmed,
-  hasChangedToIssued,
   facilityIssueDeadline,
-  facilitiesChangedPresent,
+  isFacilityResubmissionAvailable,
   summaryIssuedChangedToIssued,
   summaryIssuedUnchanged,
   issuedFacilityConfirmation,
   facilityTypeStringGenerator,
   formatIssueDeadlineDate,
+  isFacilityAmendmentInProgress,
 };

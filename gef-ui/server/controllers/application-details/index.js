@@ -16,7 +16,7 @@ const {
   getIssuedFacilitiesAsArray,
   getFacilityCoverStartDate,
   coverDatesConfirmed,
-  hasChangedToIssued,
+  isFacilityResubmissionAvailable,
 } = require('../../utils/facility-helpers');
 const { isUkefReviewAvailable, isUkefReviewPositive, makerCanReSubmit } = require('../../utils/deal-helpers');
 const { exporterItems, facilityItems } = require('../../utils/display-items');
@@ -64,7 +64,7 @@ function buildBody(app, previewMode, user) {
   const ukefReviewAvailable = isUkefReviewAvailable(app.status, app.ukefDecision);
   const ukefReviewPositive = isUkefReviewPositive(app.status, app.ukefDecision);
   const coverDates = coverDatesConfirmed(app.facilities);
-  const hasChangedFacilities = hasChangedToIssued(app);
+  const hasChangedFacilities = isFacilityResubmissionAvailable(app);
   const unissuedFacilitiesPresent = areUnissuedFacilitiesPresent(app);
   const facilitiesChangedToIssued = facilitiesChangedToIssuedAsArray(app);
   const hasUkefDecisionAccepted = app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false;

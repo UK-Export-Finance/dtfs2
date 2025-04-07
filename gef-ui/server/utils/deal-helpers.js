@@ -1,6 +1,6 @@
 const CONSTANTS = require('../constants');
 const { MAKER } = require('../constants/roles');
-const { hasChangedToIssued, coverDatesConfirmed, getIssuedFacilitiesAsArray } = require('./facility-helpers');
+const { isFacilityResubmissionAvailable, coverDatesConfirmed, getIssuedFacilitiesAsArray } = require('./facility-helpers');
 
 const status = {
   [CONSTANTS.DEAL_STATUS.NOT_STARTED]: {
@@ -52,7 +52,7 @@ const makerCanReSubmit = (maker, application) => {
 
   // only if AIN -> ensures a facility has changed to issued before resubmitting to bank
   if (application.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED) {
-    facilitiesChangedToIssued = hasChangedToIssued(application);
+    facilitiesChangedToIssued = isFacilityResubmissionAvailable(application);
   }
   const coverDateConfirmed = getIssuedFacilitiesAsArray(application.facilities).length > 0 ? coverDatesConfirmed(application.facilities) : true;
   const ukefDecisionAccepted = application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN ? true : application.ukefDecisionAccepted;
