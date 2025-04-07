@@ -219,10 +219,12 @@ const facilityTypeStringGenerator = (facilityType) => {
  * @returns {boolean} Returns `true` if a facility amendment is in progress and has not been acknowledged; otherwise, `false`.
  */
 const isFacilityAmendmentInProgress = (application) => {
-  return Boolean(
-    application.isPortalAmendmentInProgress &&
-      application.facilityIdWithAmendmentInProgress &&
-      application.portalAmendmentStatus !== PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+  const { isPortalAmendmentInProgress, facilityIdWithAmendmentInProgress, portalAmendmentStatus } = application;
+
+  return (
+    Boolean(isPortalAmendmentInProgress) &&
+    Boolean(facilityIdWithAmendmentInProgress) &&
+    Boolean(portalAmendmentStatus !== PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED)
   );
 };
 
