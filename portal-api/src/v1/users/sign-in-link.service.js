@@ -164,8 +164,8 @@ class SignInLinkService {
    * @throws {Error} - If there is an issue sending the sign-in link email.
    */
   async #sendSignInLinkEmail({ userEmail, userFirstName, userLastName, signInLink }) {
-    if (isProduction()) {
-      console.info('Sending sign-in link %s', signInLink);
+    if (!isProduction()) {
+      console.info('🔑 Sending portal magic link %s', signInLink);
     }
 
     try {

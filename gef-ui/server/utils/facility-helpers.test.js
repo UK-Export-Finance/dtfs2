@@ -1,9 +1,9 @@
 import { format, add } from 'date-fns';
 
+import { PORTAL_AMENDMENT_STATUS, ROLES } from '@ukef/dtfs2-common';
 import {
   getIssuedFacilitiesAsArray,
   coverDatesConfirmed,
-  hasChangedToIssued,
   facilitiesChangedToIssuedAsArray,
   areUnissuedFacilitiesPresent,
   facilityIssueDeadline,
@@ -12,6 +12,7 @@ import {
   summaryIssuedUnchanged,
   issuedFacilityConfirmation,
   facilityTypeStringGenerator,
+  isFacilityAmendmentInProgress,
 } from './facility-helpers';
 
 import {
@@ -29,7 +30,6 @@ import {
 import { MOCK_ISSUED_FACILITY, MOCK_FACILITY, MOCK_ISSUED_FACILITY_UNCHANGED, MOCK_UNISSUED_FACILITY } from './mocks/mock-facilities';
 
 import { MOCK_REQUEST, MOCK_REQUEST_CHECKER } from './mocks/mock-requests';
-import { MAKER } from '../constants/roles';
 
 const CONSTANTS = require('../constants');
 
@@ -39,7 +39,7 @@ const acceptableStatus = [
   CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS,
   CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
 ];
-const acceptableRole = [MAKER];
+const acceptableRole = [ROLES.MAKER];
 const mockParam = {
   acceptableStatus,
   acceptableRole,
@@ -86,15 +86,6 @@ describe('coverDatesConfirmed', () => {
     MOCK_FACILITY.items[0].details.hasBeenIssued = true;
     MOCK_FACILITY.items[0].details.coverDateConfirmed = true;
     expect(coverDatesConfirmed(MOCK_FACILITY)).toEqual(true);
-  });
-});
-
-describe('hasChangedToIssued()', () => {
-  it('should return true when there are facilities changed to issued', () => {
-    expect(hasChangedToIssued(MOCK_AIN_APPLICATION)).toEqual(true);
-  });
-  it('should return false when there are no facilities changed to issued', () => {
-    expect(hasChangedToIssued(MOCK_AIN_APPLICATION_UNISSUED_ONLY)).toEqual(false);
   });
 });
 
@@ -449,5 +440,78 @@ describe('facilityTypeStringGenerator', () => {
   });
   it('Should return `contingent` for Contingent facility', () => {
     expect(facilityTypeStringGenerator(CONSTANTS.FACILITY_TYPE.CONTINGENT)).toEqual('contingent');
+  });
+});
+
+describe('isFacilityAmendmentInProgress', () => {
+  it('should return false if the facility amendment is in draft', () => {
+    // Arrange
+    const mockApplication = {
+      isPortalAmendmentInProgress: false,
+      facilityIdWithAmendmentInProgress: '67f384b166041f835e52afe8',
+      portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.DRAFT,
+    };
+
+    // Act
+    const result = isFacilityAmendmentInProgress(mockApplication);
+
+    // Assert
+    expect(result).toBe(false);
+  });
+
+  it('should return true if the facility amendment status is ready for checkers approval', () => {
+    // Arrange
+    const mockApplication = {
+      isPortalAmendmentInProgress: true,
+      facilityIdWithAmendmentInProgress: '67f384b166041f835e52afe8',
+      portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+    };
+
+    // Act
+    const result = isFacilityAmendmentInProgress(mockApplication);
+
+    // Assert
+    expect(result).toBe(true);
+  });
+
+  it('should return true if the facility amendment status is maker input required', () => {
+    // Arrange
+    const mockApplication = {
+      isPortalAmendmentInProgress: true,
+      facilityIdWithAmendmentInProgress: '67f384b166041f835e52afe8',
+      portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
+    };
+
+    // Act
+    const result = isFacilityAmendmentInProgress(mockApplication);
+
+    // Assert
+    expect(result).toBe(true);
+  });
+
+  it('should return false if the amendment is acknowledged', () => {
+    // Arrange
+    const mockApplication = {
+      isPortalAmendmentInProgress: false,
+      facilityIdWithAmendmentInProgress: '67f384b166041f835e52afe8',
+      portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+    };
+
+    // Act
+    const result = isFacilityAmendmentInProgress(mockApplication);
+
+    // Assert
+    expect(result).toBe(false);
+  });
+
+  it('should return false if facility does not have any amendment in progress', () => {
+    // Arrange
+    const mockApplication = {};
+
+    // Act
+    const result = isFacilityAmendmentInProgress(mockApplication);
+
+    // Assert
+    expect(result).toBe(false);
   });
 });
