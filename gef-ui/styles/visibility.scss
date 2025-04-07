@@ -1,0 +1,11 @@
+.js-enabled .display-none {
+  display: none;
+}
+
+.govuk-button#gef-print-button {
+display: none;
+}
+  
+body.js-enabled .govuk-button#gef-print-button {
+  display: block;
+}
