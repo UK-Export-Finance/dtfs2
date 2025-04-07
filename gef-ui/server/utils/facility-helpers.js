@@ -221,7 +221,7 @@ const facilityTypeStringGenerator = (facilityType) => {
  * Determines if a facility amendment is currently in progress for a given application.
  *
  * @param {Object} application - The application object to check.
- * @param {boolean} application.sPortalAmendmentInProgress - Indicates if a portal amendment is in progress.
+ * @param {boolean} application.isPortalAmendmentInProgress - Indicates if a portal amendment is in progress.
  * @param {string} application.facilityIdWithAmendmentInProgress - The ID of the facility with an amendment in progress.
  * @param {string} application.portalAmendmentStatus - The current status of the portal amendment.
  * @returns {boolean} Returns `true` if a facility amendment is in progress and has not been acknowledged; otherwise, `false`.
