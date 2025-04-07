@@ -30,9 +30,8 @@ const aMockError = () => new Error();
 
 const mockUser = aPortalSessionUser();
 const userToken = 'userToken';
-const confirmSubmitUkef = true;
 
-const getHttpMocks = (confirmSubmitUkefParam: boolean) =>
+const getHttpMocks = (confirmSubmitUkefParam: boolean = true) =>
   httpMocks.createMocks<PostSubmitAmendmentToUkefRequest>({
     params: {
       dealId,
@@ -78,7 +77,7 @@ describe('postSubmitAmendmentToUkef', () => {
 
   it('should call getApplication with the correct dealId and userToken', async () => {
     // Arrange
-    const { req, res } = getHttpMocks(confirmSubmitUkef);
+    const { req, res } = getHttpMocks();
 
     // Act
     await postSubmitAmendmentToUkef(req, res);
@@ -90,7 +89,7 @@ describe('postSubmitAmendmentToUkef', () => {
 
   it('should call createReferenceNumber with the correct dealId facilityId and userToken', async () => {
     // Arrange
-    const { req, res } = getHttpMocks(confirmSubmitUkef);
+    const { req, res } = getHttpMocks();
 
     // Act
     await postSubmitAmendmentToUkef(req, res);
@@ -128,7 +127,7 @@ describe('postSubmitAmendmentToUkef', () => {
   it('should call updateSubmittedAmendment if the confirmSubmitUkef is true', async () => {
     // Arrange
     const status = PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED;
-    const { req, res } = getHttpMocks(confirmSubmitUkef);
+    const { req, res } = getHttpMocks();
 
     // Act
     await postSubmitAmendmentToUkef(req, res);
@@ -140,7 +139,7 @@ describe('postSubmitAmendmentToUkef', () => {
 
   it('should redirect to approved by Ukef page If confirmSubmitUkef is true', async () => {
     // Arrange
-    const { req, res } = getHttpMocks(confirmSubmitUkef);
+    const { req, res } = getHttpMocks();
 
     // Act
     await postSubmitAmendmentToUkef(req, res);
@@ -152,7 +151,7 @@ describe('postSubmitAmendmentToUkef', () => {
 
   it('should redirect to "/not-found" if the deal is not found', async () => {
     // Arrange
-    const { req, res } = getHttpMocks(confirmSubmitUkef);
+    const { req, res } = getHttpMocks();
     getApplicationMock.mockResolvedValue(undefined);
 
     // Act
@@ -167,7 +166,7 @@ describe('postSubmitAmendmentToUkef', () => {
 
   it('should redirect to "/not-found" if the reference number is not found', async () => {
     // Arrange
-    const { req, res } = getHttpMocks(confirmSubmitUkef);
+    const { req, res } = getHttpMocks();
     createReferenceNumberMock.mockResolvedValue(undefined);
 
     // Act
@@ -184,7 +183,7 @@ describe('postSubmitAmendmentToUkef', () => {
     // Arrange
     const mockError = aMockError();
     getApplicationMock.mockRejectedValue(mockError);
-    const { req, res } = getHttpMocks(confirmSubmitUkef);
+    const { req, res } = getHttpMocks();
 
     // Act
     await postSubmitAmendmentToUkef(req, res);
@@ -199,7 +198,7 @@ describe('postSubmitAmendmentToUkef', () => {
     // Arrange
     const mockError = aMockError();
     createReferenceNumberMock.mockRejectedValue(mockError);
-    const { req, res } = getHttpMocks(confirmSubmitUkef);
+    const { req, res } = getHttpMocks();
 
     // Act
     await postSubmitAmendmentToUkef(req, res);
@@ -214,7 +213,7 @@ describe('postSubmitAmendmentToUkef', () => {
     // Arrange
     const mockError = aMockError();
     updateSubmittedAmendmentMock.mockRejectedValue(mockError);
-    const { req, res } = getHttpMocks(confirmSubmitUkef);
+    const { req, res } = getHttpMocks();
 
     // Act
     await postSubmitAmendmentToUkef(req, res);
