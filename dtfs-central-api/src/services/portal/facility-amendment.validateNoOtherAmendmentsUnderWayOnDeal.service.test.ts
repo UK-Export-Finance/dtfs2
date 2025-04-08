@@ -54,7 +54,7 @@ describe('PortalFacilityAmendmentService', () => {
           dealId,
         }),
       ).rejects.toThrow(PortalFacilityAmendmentConflictError);
-      expect(console.error).toHaveBeenCalledWith('There is a portal facility amendment already under way on this deal');
+      expect(console.error).toHaveBeenCalledWith('There is a portal facility amendment already in progress on this deal');
     });
 
     it(`should throw an error if there is an existing portal amendment on the deal with the status ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}`, async () => {
@@ -69,7 +69,7 @@ describe('PortalFacilityAmendmentService', () => {
         }),
       ).rejects.toThrow(PortalFacilityAmendmentConflictError);
 
-      expect(console.error).toHaveBeenCalledWith('There is a portal facility amendment already under way on this deal');
+      expect(console.error).toHaveBeenCalledWith('There is a portal facility amendment already in progress on this deal');
     });
 
     it(`should not throw an error if the in progress amendment corresponds to the provided amendmentId`, async () => {
