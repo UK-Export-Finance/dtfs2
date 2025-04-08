@@ -11,6 +11,7 @@
  * attribute, which also provides accessibility.
  *
  * @preserve
+ * @augments ConfigurableComponent<AccordionConfig>
  */
 
 /**
@@ -24,6 +25,7 @@
  * of the available characters/words has been entered.
  *
  * @preserve
+ * @augments ConfigurableComponent<CharacterCountConfig>
  */
 
 /**
@@ -39,12 +41,21 @@
  * configuration.
  *
  * @preserve
+ * @augments ConfigurableComponent<ErrorSummaryConfig>
  */
 
 /**
  * Exit this page component
  *
  * @preserve
+ * @augments ConfigurableComponent<ExitThisPageConfig>
+ */
+
+/**
+ * File upload component
+ *
+ * @preserve
+ * @augments ConfigurableComponent<FileUploadConfig>
  */
 
 /**
@@ -57,18 +68,21 @@
  * JavaScript enhancements for the Button component
  *
  * @preserve
+ * @augments ConfigurableComponent<ButtonConfig>
  */
 
 /**
  * Notification Banner component
  *
  * @preserve
+ * @augments ConfigurableComponent<NotificationBannerConfig>
  */
 
 /**
  * Password input component
  *
  * @preserve
+ * @augments ConfigurableComponent<PasswordInputConfig>
  */
 
 /**
@@ -87,7 +101,7 @@
  * Skip link component
  *
  * @preserve
- * @augments GOVUKFrontendComponent<HTMLAnchorElement>
+ * @augments Component<HTMLAnchorElement>
  */
 
 /**
