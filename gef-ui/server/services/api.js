@@ -497,7 +497,7 @@ const updateSubmitAmendment = async ({ facilityId, amendmentId, referenceNumber,
 
   const payload = {
     referenceNumber,
-    status,
+    newStatus: status,
   };
 
   try {
