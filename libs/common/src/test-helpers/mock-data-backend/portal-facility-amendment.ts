@@ -26,6 +26,7 @@ export const aPortalFacilityAmendment = ({ status = PORTAL_AMENDMENT_STATUS.DRAF
   createdAt: getUnixTime(new Date()),
   updatedAt: getUnixTime(new Date()),
   status,
+  referenceNumber: `${new ObjectId().toString()}-01`,
   eligibilityCriteria: {
     criteria: [{ id: 1, text: 'item 1', answer: null }],
     version: 1,

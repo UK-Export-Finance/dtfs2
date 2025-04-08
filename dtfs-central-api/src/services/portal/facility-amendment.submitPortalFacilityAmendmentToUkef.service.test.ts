@@ -13,8 +13,9 @@ const mockValidateAmendmentIsComplete = jest.fn();
 
 const amendmentId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
+const referenceNumber = `${facilityId}-01`;
 
-const updatedAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL });
+const updatedAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED });
 const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
 
 describe('PortalFacilityAmendmentService', () => {
@@ -39,12 +40,14 @@ describe('PortalFacilityAmendmentService', () => {
     jest.useRealTimers();
   });
 
-  describe('submitPortalFacilityAmendmentToChecker', () => {
+  describe('submitPortalFacilityAmendmentToUkef', () => {
     it('should call PortalFacilityAmendmentService.validateAmendmentIsComplete', async () => {
       // Act
-      await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+      await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToUkef({
         amendmentId,
         facilityId,
+        newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+        referenceNumber,
         auditDetails,
       });
 
@@ -58,9 +61,11 @@ describe('PortalFacilityAmendmentService', () => {
 
     it('should call PortalFacilityAmendmentService.findOneAmendmentByFacilityIdAndAmendmentId', async () => {
       // Act
-      await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+      await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToUkef({
         amendmentId,
         facilityId,
+        newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+        referenceNumber,
         auditDetails,
       });
 
@@ -74,9 +79,11 @@ describe('PortalFacilityAmendmentService', () => {
       mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce(null);
 
       // Act
-      const returned = PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+      const returned = PortalFacilityAmendmentService.submitPortalFacilityAmendmentToUkef({
         amendmentId,
         facilityId,
+        newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+        referenceNumber,
         auditDetails,
       });
 
@@ -89,9 +96,11 @@ describe('PortalFacilityAmendmentService', () => {
       mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce({ ...updatedAmendment, type: AMENDMENT_TYPES.TFM });
 
       // Act
-      const returned = PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+      const returned = PortalFacilityAmendmentService.submitPortalFacilityAmendmentToUkef({
         amendmentId,
         facilityId,
+        newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+        referenceNumber,
         auditDetails,
       });
 
@@ -105,9 +114,11 @@ describe('PortalFacilityAmendmentService', () => {
       mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce(existingAmendment);
 
       // Act
-      await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+      await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToUkef({
         amendmentId,
         facilityId,
+        newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+        referenceNumber,
         auditDetails,
       });
 
@@ -121,15 +132,17 @@ describe('PortalFacilityAmendmentService', () => {
 
     it('should call TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId with the correct params', async () => {
       // Act
-      await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+      await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToUkef({
         amendmentId,
         facilityId,
+        newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+        referenceNumber,
         auditDetails,
       });
 
       // Assert
       const expectedUpdate = {
-        status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+        status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
       };
 
       expect(mockUpdatePortalFacilityAmendmentByAmendmentId).toHaveBeenCalledTimes(1);
@@ -138,15 +151,17 @@ describe('PortalFacilityAmendmentService', () => {
         facilityId: new ObjectId(facilityId),
         amendmentId: new ObjectId(amendmentId),
         auditDetails,
-        allowedStatuses: [PORTAL_AMENDMENT_STATUS.DRAFT],
+        allowedStatuses: [PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL],
       });
     });
 
     it('should return the result of TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId', async () => {
       // Act
-      const expected = await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+      const expected = await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToUkef({
         amendmentId,
         facilityId,
+        newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+        referenceNumber,
         auditDetails,
       });
 

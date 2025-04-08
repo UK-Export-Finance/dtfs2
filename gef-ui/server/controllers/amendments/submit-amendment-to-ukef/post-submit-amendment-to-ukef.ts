@@ -49,7 +49,7 @@ export const postSubmitAmendmentToUkef = async (req: PostSubmitAmendmentToUkefRe
 
     const status = PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED;
 
-    await api.updateSubmittedAmendment({ facilityId, amendmentId, referenceNumber, status, userToken });
+    await api.updateSubmitAmendment({ facilityId, amendmentId, referenceNumber, status, userToken });
 
     return res.redirect(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.APPROVED_BY_UKEF }));
   } catch (error) {

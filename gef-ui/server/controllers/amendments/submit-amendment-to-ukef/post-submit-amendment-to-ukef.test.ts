@@ -60,7 +60,7 @@ describe('postSubmitAmendmentToUkef', () => {
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
     jest.spyOn(console, 'error');
     jest.spyOn(api, 'getApplication').mockImplementation(getApplicationMock);
-    jest.spyOn(api, 'updateSubmittedAmendment').mockImplementation(updateSubmittedAmendmentMock);
+    jest.spyOn(api, 'updateSubmitAmendment').mockImplementation(updateSubmittedAmendmentMock);
     jest.spyOn(createReferenceNumber, 'createReferenceNumber').mockImplementation(createReferenceNumberMock);
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()

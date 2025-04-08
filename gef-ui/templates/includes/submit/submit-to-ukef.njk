@@ -6,7 +6,7 @@
 
 {% if submitAmendment %}
   {% set message = "Submit to UKEF or return to maker for changes" %}
-  {% set amendmentUrl = "/gef/application-details/" + dealId + "facilities/" + facilityId + "/amendments/" + amendmentId %}
+  {% set amendmentUrl = "/gef/application-details/" + dealId + "/facilities/" + facilityId + "/amendments/" + amendmentId %}
   {% set submitToUkefUrl = amendmentUrl + "/submit-amendment-to-ukef" %}
   {% set returnToMakerUrl = amendmentUrl + "/return-amendment-to-maker" %}
 {% endif %}

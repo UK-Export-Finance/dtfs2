@@ -484,7 +484,7 @@ const updateAmendment = async ({ facilityId, amendmentId, update, userToken }) =
  * @param {string} param.userToken
  * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithReferenceNumber)>}
  */
-const updateSubmittedAmendment = async ({ facilityId, amendmentId, referenceNumber, status, userToken }) => {
+const updateSubmitAmendment = async ({ facilityId, amendmentId, referenceNumber, status, userToken }) => {
   if (!isValidMongoId(facilityId)) {
     console.error('Invalid facility ID %s', facilityId);
     throw new InvalidFacilityIdError(facilityId);
@@ -501,7 +501,7 @@ const updateSubmittedAmendment = async ({ facilityId, amendmentId, referenceNumb
   };
 
   try {
-    const { data } = await Axios.patch(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, payload, { ...config(userToken) });
+    const { data } = await Axios.patch(`/gef/facilities/${facilityId}/amendments/${amendmentId}/submit-amendment`, payload, { ...config(userToken) });
     return data;
   } catch (error) {
     console.error('Failed to update the amendment with id %s on facility with id %s with update: %o %o', amendmentId, facilityId, payload, error);
@@ -598,7 +598,7 @@ module.exports = {
   getAmendment,
   upsertAmendment,
   updateAmendment,
-  updateSubmittedAmendment,
+  updateSubmitAmendment,
   updateAmendmentStatus,
   deleteAmendment,
 };

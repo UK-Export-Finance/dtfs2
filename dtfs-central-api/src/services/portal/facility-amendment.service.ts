@@ -22,24 +22,24 @@ import { findOneFacility } from '../../v1/controllers/portal/facility/get-facili
 
 export class PortalFacilityAmendmentService {
   /**
-   * Checks if there are any other portal amendments under way on a deal, throws an error if there are.
+   * Checks if there are any other portal amendment in progress on a deal, throws an error if there are.
    *
    * @param params
    * @param params.dealId - The deal id
    * @returns {Promise<void>} A promise that resolves when the find operation is complete.
    */
-  public static async validateNoOtherAmendmentsUnderWayOnDeal({ dealId, amendmentId }: { dealId: string; amendmentId?: string }): Promise<void> {
-    const existingPortalAmendmentsUnderWay = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({
+  public static async validateNoOtherAmendmentInProgressOnDeal({ dealId, amendmentId }: { dealId: string; amendmentId?: string }): Promise<void> {
+    const existingPortalAmendmentInProgress = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({
       dealId,
       statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES,
     });
 
     if (amendmentId) {
-      remove(existingPortalAmendmentsUnderWay, (amendment) => amendment.amendmentId.equals(amendmentId));
+      remove(existingPortalAmendmentInProgress, (amendment) => amendment.amendmentId.equals(amendmentId));
     }
 
-    if (existingPortalAmendmentsUnderWay.length > 0) {
-      console.error('There is a portal facility amendment already under way on this deal');
+    if (existingPortalAmendmentInProgress.length > 0) {
+      console.error('There is a portal facility amendment already in progress on this deal');
       throw new PortalFacilityAmendmentConflictError(dealId);
     }
   }
@@ -70,7 +70,7 @@ export class PortalFacilityAmendmentService {
       throw new InvalidAuditDetailsError(`Supplied auditDetails 'id' ${auditDetails.id.toString()} does not correspond to a valid user`);
     }
 
-    await this.validateNoOtherAmendmentsUnderWayOnDeal({ dealId });
+    await this.validateNoOtherAmendmentInProgressOnDeal({ dealId });
 
     const { type: facilityType } = await findOneFacility(facilityId);
 
@@ -184,6 +184,57 @@ export class PortalFacilityAmendmentService {
    * @param params
    * @param params.amendmentId - The amendment id
    * @param params.facilityId - The facility id
+   * @param params.newStatus - The new status to set for the amendment.
+   * @param params.referenceNumber - The reference number
+   * @param params.auditDetails - The audit details for the update operation.
+   * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithReferenceNumber)>} A promise that resolves when the update operation is complete.
+   */
+  public static async submitPortalFacilityAmendmentToUkef({
+    amendmentId,
+    facilityId,
+    newStatus,
+    referenceNumber,
+    auditDetails,
+  }: {
+    amendmentId: string;
+    facilityId: string;
+    newStatus: PortalAmendmentStatus;
+    referenceNumber: string;
+    auditDetails: PortalAuditDetails;
+  }): Promise<FacilityAmendmentWithUkefId> {
+    await this.validateAmendmentIsComplete({ amendmentId, facilityId });
+
+    const amendmentUpdate: Partial<PortalFacilityAmendment> = {
+      status: newStatus,
+      referenceNumber,
+    };
+
+    const existingAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
+
+    if (!existingAmendment || existingAmendment.type === AMENDMENT_TYPES.TFM) {
+      throw new AmendmentNotFoundError(amendmentId, facilityId);
+    }
+
+    await this.validateNoOtherAmendmentInProgressOnDeal({ dealId: existingAmendment.dealId.toString(), amendmentId });
+
+    const facilityMongoId = new ObjectId(facilityId);
+    const amendmentMongoId = new ObjectId(amendmentId);
+
+    return await this.updatePortalFacilityAmendment({
+      amendmentId: amendmentMongoId,
+      facilityId: facilityMongoId,
+      update: amendmentUpdate,
+      auditDetails,
+      allowedStatuses: [PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL],
+    });
+  }
+
+  /**
+   * Updates portal facility amendment status to `Ready for checker's approval`.
+   *
+   * @param params
+   * @param params.amendmentId - The amendment id
+   * @param params.facilityId - The facility id
    * @param params.auditDetails - The audit details for the update operation.
    * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithUkefId)>} A promise that resolves when the update operation is complete.
    */
@@ -208,7 +259,7 @@ export class PortalFacilityAmendmentService {
       throw new AmendmentNotFoundError(amendmentId, facilityId);
     }
 
-    await this.validateNoOtherAmendmentsUnderWayOnDeal({ dealId: existingAmendment.dealId.toString(), amendmentId });
+    await this.validateNoOtherAmendmentInProgressOnDeal({ dealId: existingAmendment.dealId.toString(), amendmentId });
 
     const facilityMongoId = new ObjectId(facilityId);
     const amendmentMongoId = new ObjectId(amendmentId);
