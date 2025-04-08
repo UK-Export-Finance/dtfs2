@@ -25,7 +25,7 @@ jest.mock('../../server/middleware/csrf', () => ({
 
 console.error = jest.fn();
 const getApplicationMock = jest.fn();
-const updateSubmittedAmendmentMock = jest.fn();
+const updateSubmitAmendmentMock = jest.fn();
 const createReferenceNumberMock = jest.fn();
 
 const dealId = '6597dffeb5ef5ff4267e5044';
@@ -48,7 +48,7 @@ describe(`GET ${url}`, () => {
 
     ({ sessionCookie } = await storage.saveUserSession([ROLES.CHECKER]));
     jest.spyOn(api, 'getApplication').mockImplementation(getApplicationMock);
-    jest.spyOn(api, 'updateSubmittedAmendment').mockImplementation(updateSubmittedAmendmentMock);
+    jest.spyOn(api, 'updateSubmitAmendment').mockImplementation(updateSubmitAmendmentMock);
     jest.spyOn(createReferenceNumber, 'createReferenceNumber').mockImplementation(createReferenceNumberMock);
 
     getApplicationMock.mockResolvedValue(mockDeal);
@@ -61,7 +61,7 @@ describe(`GET ${url}`, () => {
       .withStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED)
       .build();
 
-    updateSubmittedAmendmentMock.mockResolvedValue(amendment);
+    updateSubmitAmendmentMock.mockResolvedValue(amendment);
   });
 
   afterAll(async () => {
