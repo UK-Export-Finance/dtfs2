@@ -32,7 +32,7 @@ describe('PortalFacilityAmendmentService', () => {
   describe('validateNoOtherAmendmentsUnderWayOnDeal', () => {
     it('should call findPortalAmendmentsByDealIdAndStatus with the dealId and correct filters', async () => {
       // Act
-      await PortalFacilityAmendmentService.validateNoOtherAmendmentsUnderWayOnDeal({
+      await PortalFacilityAmendmentService.validateNoOtherAmendmentInProgressOnDeal({
         dealId,
       });
 
@@ -50,7 +50,7 @@ describe('PortalFacilityAmendmentService', () => {
 
       // Act + Assert
       await expect(() =>
-        PortalFacilityAmendmentService.validateNoOtherAmendmentsUnderWayOnDeal({
+        PortalFacilityAmendmentService.validateNoOtherAmendmentInProgressOnDeal({
           dealId,
         }),
       ).rejects.toThrow(PortalFacilityAmendmentConflictError);
@@ -64,7 +64,7 @@ describe('PortalFacilityAmendmentService', () => {
       // Act
       // Assert
       await expect(() =>
-        PortalFacilityAmendmentService.validateNoOtherAmendmentsUnderWayOnDeal({
+        PortalFacilityAmendmentService.validateNoOtherAmendmentInProgressOnDeal({
           dealId,
         }),
       ).rejects.toThrow(PortalFacilityAmendmentConflictError);
@@ -78,7 +78,7 @@ describe('PortalFacilityAmendmentService', () => {
       mockFindPortalAmendmentsByDealIdAndStatus.mockResolvedValueOnce([aReadyForApprovalPortalAmendment]);
 
       // Act
-      await PortalFacilityAmendmentService.validateNoOtherAmendmentsUnderWayOnDeal({
+      await PortalFacilityAmendmentService.validateNoOtherAmendmentInProgressOnDeal({
         dealId,
         amendmentId,
       });
@@ -92,7 +92,7 @@ describe('PortalFacilityAmendmentService', () => {
       mockFindPortalAmendmentsByDealIdAndStatus.mockResolvedValueOnce([]);
 
       // Act
-      await PortalFacilityAmendmentService.validateNoOtherAmendmentsUnderWayOnDeal({
+      await PortalFacilityAmendmentService.validateNoOtherAmendmentInProgressOnDeal({
         dealId,
       });
 
