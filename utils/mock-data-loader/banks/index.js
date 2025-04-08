@@ -31,7 +31,7 @@ const MOCK_BANKS = [
   },
   {
     id: '961',
-    name: 'Bank 2',
+    name: 'HSBC',
     mga: ['Test.pdf'],
     emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '00014259',
