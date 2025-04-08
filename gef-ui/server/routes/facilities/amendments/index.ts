@@ -136,17 +136,17 @@ router
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getSubmittedForChecking);
 
-// TODO: DTFS2-7753 - change to checker
-router
-  .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${APPROVED_BY_UKEF}`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [CHECKER] })])
-  .get(getApprovedByUkef);
-
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${SUBMIT_AMENDMENT_TO_UKEF}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [CHECKER] })])
   .get(getSubmitAmendmentToUkef)
   .post(postSubmitAmendmentToUkef);
+
+// TODO: DTFS2-7753 - change to checker
+router
+  .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${APPROVED_BY_UKEF}`)
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(getApprovedByUkef);
 
 router
   .route(`/application-details/:dealId/${AMENDMENT_DETAILS}`)

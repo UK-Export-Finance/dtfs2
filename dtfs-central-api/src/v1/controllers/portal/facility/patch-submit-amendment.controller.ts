@@ -17,7 +17,7 @@ export type PatchSubmitAmendmentToUkefRequest = CustomExpressRequest<{
 
 /**
  * patch portal facility amendment
- * if newStatus is PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL, submit the amendment to ukef
+ * if newStatus is PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, submit the amendment to ukef
  * @param req - request
  * @param res - response
  */

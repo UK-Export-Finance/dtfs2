@@ -143,6 +143,7 @@ describe('PortalFacilityAmendmentService', () => {
       // Assert
       const expectedUpdate = {
         status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+        referenceNumber,
       };
 
       expect(mockUpdatePortalFacilityAmendmentByAmendmentId).toHaveBeenCalledTimes(1);
