@@ -44,3 +44,4 @@ export * from './record-correction-fields';
 export * from './gov-uk';
 export * from './http-status-codes';
 export * from './status-tag-colours';
+export * from './mandatory-criteria';
