@@ -1,12 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
+import dotenv from 'dotenv';
 import axios, { HttpStatusCode } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { sendEmail } from '../../src/v1/controllers/email.controller';
 import { app } from '../../src/createApp';
 import { api } from '../api';
 
-const { APIM_MDM_URL, EXTERNAL_API_URL } = process.env;
+dotenv.config();
+
+const { APIM_MDM_URL, EXTERNAL_API_URL, MOCK_E2E_GOV_NOTIFY_API_KEY } = process.env;
+
+const originalProcessEnv = { ...process.env };
 
 const { post } = api(app);
 
@@ -43,7 +48,19 @@ const mockBody = {
 };
 
 describe('/email', () => {
+  beforeEach(() => {
+    process.env = { ...originalProcessEnv };
+  });
+
+  afterAll(() => {
+    process.env = { ...originalProcessEnv };
+  });
+
   describe('POST /v1/email', () => {
+    beforeEach(() => {
+      process.env = { ...originalProcessEnv };
+    });
+
     it('should return 201 response from MDM GovNotify API', async () => {
       axiosMock.onPost(`${APIM_MDM_URL}emails`).reply(HttpStatusCode.Created, mockSuccessfulResponse.data);
 
@@ -72,6 +89,21 @@ describe('/email', () => {
 
       expect(status).toEqual(unknown500Status);
       expect(body).toEqual({});
+    });
+
+    describe('when GOV_NOTIFY_API_KEY is set to MOCK_E2E_GOV_NOTIFY_API_KEY', () => {
+      beforeEach(() => {
+        process.env.GOV_NOTIFY_API_KEY = MOCK_E2E_GOV_NOTIFY_API_KEY;
+      });
+
+      it('should return 200 response from MDM GovNotify API', async () => {
+        process.env.GOV_NOTIFY_API_KEY = MOCK_E2E_GOV_NOTIFY_API_KEY;
+
+        const { status, body } = await post(mockBody).to('/email');
+
+        expect(status).toEqual(HttpStatusCode.Ok);
+        expect(body).toEqual({});
+      });
     });
   });
 

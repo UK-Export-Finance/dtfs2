@@ -11,19 +11,21 @@ import { getNowAsEpoch } from '../../helpers/date';
 dotenv.config();
 
 const referenceProxyUrl = process.env.EXTERNAL_API_URL;
-const notifyKey: string = process.env.GOV_NOTIFY_API_KEY || '';
-const mockNotifyKey: string = process.env.MOCK_E2E_GOV_NOTIFY_API_KEY || '';
 
 const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
-const headers = {
+
+const headers = (notifyKey: string) => ({
   [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
   [String(MDM.GOV_UK_NOTIFY_KEY_HEADER_NAME)]: notifyKey,
-};
+});
 
 export const emailNotification = async (req: Request, res: Response) => {
   const { templateId, sendToEmailAddress, emailVariables }: { templateId: string; sendToEmailAddress: string; emailVariables: Record<string, string> } =
     req.body;
+  const notifyKey: string = process.env.GOV_NOTIFY_API_KEY || '';
+  const mockNotifyKey: string = process.env.MOCK_E2E_GOV_NOTIFY_API_KEY || '';
+
   // Add a unique reference to an email
   const reference = `${templateId}-${getNowAsEpoch()}`;
 
@@ -45,7 +47,7 @@ export const emailNotification = async (req: Request, res: Response) => {
   const response: { status: number | undefined; data: unknown } = await axios({
     method: 'post',
     url: `${APIM_MDM_URL}emails`,
-    headers,
+    headers: headers(notifyKey),
     data: {
       templateId,
       sendToEmailAddress,
@@ -69,6 +71,9 @@ export const emailNotification = async (req: Request, res: Response) => {
 
 export const sendEmail = async (templateId: string, sendToEmailAddress: string, emailVariables: object) => {
   try {
+    const notifyKey: string = process.env.GOV_NOTIFY_API_KEY || '';
+    const mockNotifyKey: string = process.env.MOCK_E2E_GOV_NOTIFY_API_KEY || '';
+
     if (notifyKey === mockNotifyKey) {
       console.info('Mocking APIM MDM GovNotify API call');
       return {};
