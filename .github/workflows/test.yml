@@ -292,7 +292,7 @@ jobs:
           ]
 
     concurrency:
-      group: dtfs-central-api-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+      group: dtfs-central-api-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.group }}
       cancel-in-progress: true
 
     steps:
