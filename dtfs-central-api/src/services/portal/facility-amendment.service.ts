@@ -22,7 +22,7 @@ import { findOneFacility } from '../../v1/controllers/portal/facility/get-facili
 
 export class PortalFacilityAmendmentService {
   /**
-   * Checks if there are any other portal amendment in progress on a deal, throws an error if there are.
+   * Checks if there is any portal amendment in progress on a deal, throws an error if there is.
    *
    * @param params
    * @param params.dealId - The deal id

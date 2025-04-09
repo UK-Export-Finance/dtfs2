@@ -23,7 +23,7 @@ export const createPortalFacilityAmendment = async ({
   dealId,
   amendment = {},
   userId,
-  status = 'DRAFT',
+  status = PORTAL_AMENDMENT_STATUS.DRAFT,
 }: {
   facilityId: string;
   dealId: string;

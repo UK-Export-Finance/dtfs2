@@ -18,6 +18,7 @@ export const getAmendment = async (req: GetAmendmentRequest, res: Response) => {
     const amendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
 
     if (amendment?.type !== AMENDMENT_TYPES.PORTAL) {
+      console.error('Amendment with facilityId %s and amendmentId %s is not a portal amendment', facilityId, amendmentId);
       throw new AmendmentNotFoundError(amendmentId, facilityId);
     }
 

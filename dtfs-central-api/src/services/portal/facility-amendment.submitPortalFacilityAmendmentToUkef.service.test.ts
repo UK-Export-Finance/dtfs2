@@ -15,7 +15,7 @@ const amendmentId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
 const referenceNumber = `${facilityId}-01`;
 
-const updatedAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED });
+const updatedAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, referenceNumber });
 const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
 
 describe('PortalFacilityAmendmentService', () => {

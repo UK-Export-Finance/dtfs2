@@ -8,7 +8,8 @@ import api from '../../../services/api';
  */
 export const createReferenceNumber = async (dealId: string, facilityId: string, userToken: string): Promise<string> => {
   try {
-    const amendmentsOnDeal = await api.getAmendmentsOnDeal({ dealId, statuses: [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED], userToken });
+    const statuses = [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED];
+    const amendmentsOnDeal = await api.getAmendmentsOnDeal({ dealId, statuses, userToken });
 
     if (!amendmentsOnDeal) {
       console.error('Submitted amendment was not found for the deal %s', dealId);

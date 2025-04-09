@@ -1,4 +1,4 @@
-import { PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { PortalFacilityAmendmentWithUkefId, ROLES } from '@ukef/dtfs2-common';
 import { AmendmentDetailsViewModel } from '../../../types/view-models/amendments/amendment-details-view-model';
 import { Deal } from '../../../types/deal';
 import { Facility } from '../../../types/facility';
@@ -28,7 +28,7 @@ export const createAmendmentDetailsViewModel = ({
   userRoles,
   exporterName: deal.exporter.companyName,
   facilityType: facility.type,
-  submitAmendment: userRoles.includes('checker'),
+  submitAmendment: userRoles.includes(ROLES.CHECKER),
   dealId: deal._id,
   facilityId: facility._id,
   amendmentId: amendment.amendmentId,

@@ -504,7 +504,7 @@ const updateSubmitAmendment = async ({ facilityId, amendmentId, referenceNumber,
     const { data } = await Axios.patch(`/gef/facilities/${facilityId}/amendments/${amendmentId}/submit-amendment`, payload, { ...config(userToken) });
     return data;
   } catch (error) {
-    console.error('Failed to update the amendment with id %s on facility with id %s with update: %o %o', amendmentId, facilityId, payload, error);
+    console.error('Failed to update the amendment with id %s on facility id %s with update %o %o', amendmentId, facilityId, payload, error);
     throw error;
   }
 };
