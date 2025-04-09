@@ -330,8 +330,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: docker compose exec -T dtfs-central-api npm run api-test --workspace=api-tests/v1/${{ matrix.services }}
-          working-directory: ${{ matrix.group }}
+          command: docker compose exec -T dtfs-central-api npm run api-test api-tests/v1/$${{ matrix.services }} --workspace=dtfs-central-api
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
