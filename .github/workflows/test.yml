@@ -268,7 +268,7 @@ jobs:
 
   # 2.1.1 API tests
   dtfs-central-api-api-tests:
-    name: API 👷
+    name: API - dtfs-central-api 👷
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
@@ -280,6 +280,7 @@ jobs:
       # Single dimension matrix
       matrix:
         services: [
+          'api-tests/helpers',
           'api-tests/v1/bank',
           'api-tests/v1/cron-jobs',
           'api-tests/v1/durable-functions',
@@ -345,6 +346,108 @@ jobs:
         uses: ./.github/actions/rerun
         with:
           command: docker compose exec -T dtfs-central-api npm run api-test ${{ matrix.services }} --workspace=dtfs-central-api
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Stop
+        working-directory: ./
+        run: docker compose down
+
+      - name: Coverage
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: api-test
+          verbose: true
+
+  # 2.1.1 Portal API tests
+  portal-api-api-tests:
+    name: API - portal-api 👷
+    needs: [setup]
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        services: [
+          'api-tests/api',
+          'api-tests/common-tests',
+          'api-tests/drivers',
+          'api-tests/v1/bank-holidays',
+          'api-tests/v1/banks',
+          'api-tests/v1/bonds',
+          'api-tests/v1/companies',
+          'api-tests/v1/countries',
+          'api-tests/v1/currencies',
+          'api-tests/v1/deals',
+          'api-tests/v1/eligibility-criteria',
+          'api-tests/v1/feedback',
+          'api-tests/v1/gef',
+          'api-tests/v1/industry-sectors',
+          'api-tests/v1/loan',
+          'api-tests/v1/mandatory-criteria',
+          'api-tests/v1/middleware',
+          'api-tests/v1/reports',
+          'api-tests/v1/users',
+          'api-tests/v1/utilisation-report-service',
+          'api-tests/v1/validate',
+          ]
+
+    concurrency:
+      group: portal-api-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Dependencies
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Start
+        uses: ./.github/actions/rerun
+        with:
+          command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Initialise
+        uses: ./.github/actions/rerun
+        with:
+          command: sleep 100s && npm run load
+          working-directory: ./utils
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: SQL
+        working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+        run: npm run db:migrate
+
+      - name: Execute
+        uses: ./.github/actions/rerun
+        with:
+          command: docker compose exec -T portal-api npm run api-test ${{ matrix.services }} --workspace=portal-api
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}

@@ -1,14 +1,14 @@
 const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const databaseHelper = require('./database-helper');
-const app = require('../src/createApp');
-const testUserCache = require('./api-test-users');
-const { MAKER, ADMIN } = require('../src/v1/roles/roles');
-const { as } = require('./api')(app);
-const { expectMongoId } = require('./expectMongoIds');
-const CONSTANTS = require('../src/constants');
-const mockEligibilityCriteria = require('./fixtures/gef/eligibilityCriteria');
-const mockMandatoryCriteria = require('./fixtures/gef/mandatoryCriteriaVersioned');
+const databaseHelper = require('../../database-helper');
+const app = require('../../../src/createApp');
+const testUserCache = require('../../api-test-users');
+const { MAKER, ADMIN } = require('../../../src/v1/roles/roles');
+const { as } = require('../../api')(app);
+const { expectMongoId } = require('../../expectMongoIds');
+const CONSTANTS = require('../../../src/constants');
+const mockEligibilityCriteria = require('../../fixtures/gef/eligibilityCriteria');
+const mockMandatoryCriteria = require('../../fixtures/gef/mandatoryCriteriaVersioned');
 
 const expectedEligibilityCriteriaAuditRecord = {
   ...generateParsedMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
