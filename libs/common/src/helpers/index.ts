@@ -25,3 +25,5 @@ export * from './table-data-sort';
 export * from './utilisation-report-emails';
 export * from './fee-record-status';
 export * from './is-production';
+export * from './generate-mandatory-criteria';
+export * from './strip-html';
