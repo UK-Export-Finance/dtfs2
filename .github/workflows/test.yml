@@ -281,14 +281,14 @@ jobs:
       matrix:
         group:
           [
-            'v1/bank,v1/cron-jobs,v1/durable-functions,v1/middleware,v1/routes,v1/user',
-            'v1/deals',
-            'v1/facilities',
-            'v1/gef-deals',
-            'v1/gef-facilities',
-            'v1/portal-facility-amendments',
-            'v1/tfm',
-            'v1/utilisation-reports',
+            'api-tests/v1/bank,api-tests/v1/cron-jobs,api-tests/v1/durable-functions,api-tests/v1/middleware,api-tests/v1/routes,api-tests/v1/user',
+            'api-tests/v1/deals',
+            'api-tests/v1/facilities',
+            'api-tests/v1/gef-deals',
+            'api-tests/v1/gef-facilities',
+            'api-tests/v1/portal-facility-amendments',
+            'api-tests/v1/tfm',
+            'api-tests/v1/utilisation-reports',
           ]
 
     concurrency:
@@ -340,7 +340,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: docker compose exec -T dtfs-central-api npm run api-test --testPathPattern=$(echo ${{ matrix.group }} | sed 's/,/|/g')
+          command: docker compose exec -T dtfs-central-api npm run api-test -- --testPathPattern=$(echo ${{ matrix.group }} | sed 's/,/|/g')
           working-directory: ./dtfs-central-api
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
