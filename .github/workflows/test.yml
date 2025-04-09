@@ -281,13 +281,6 @@ jobs:
       matrix:
         group:
           [
-            'api-tests/v1/bank,api-tests/v1/cron-jobs,api-tests/v1/durable-functions,api-tests/v1/middleware,api-tests/v1/routes,api-tests/v1/user',
-            'api-tests/v1/deals',
-            'api-tests/v1/facilities',
-            'api-tests/v1/gef-deals',
-            'api-tests/v1/gef-facilities',
-            'api-tests/v1/portal-facility-amendments',
-            'api-tests/v1/tfm',
             'api-tests/v1/utilisation-reports',
           ]
 
@@ -341,7 +334,6 @@ jobs:
         uses: ./.github/actions/rerun
         with:
           command: docker compose exec -T dtfs-central-api npm run api-test -- --testPathPattern=$(echo ${{ matrix.group }} | sed 's/,/|/g')
-          working-directory: ./dtfs-central-api
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
