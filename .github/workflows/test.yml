@@ -279,7 +279,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        services: ['utilisation-reports']
+        services: ['api-tests/v1/utilisation-reports']
 
     concurrency:
       group: dtfs-central-api-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
@@ -330,8 +330,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: docker compose exec -T dtfs-central-api npm run api-test api-tests/v1/$${{ matrix.services }} --workspace=dtfs-central-api
-          working-directory: ./dtfs-central-api
+          command: docker compose exec -T dtfs-central-api npm run api-test ${{ matrix.services }} --workspace=dtfs-central-api
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
