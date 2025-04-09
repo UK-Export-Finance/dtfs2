@@ -266,7 +266,7 @@ jobs:
           flags: api-test
           verbose: true
 
-  # 2.1.1 API tests
+  # 2.2 API tests
   dtfs-central-api-api-tests:
     name: API - dtfs-central-api 👷
     needs: [setup]
@@ -363,7 +363,7 @@ jobs:
           flags: api-test
           verbose: true
 
-  # 2.1.1 portal-api API tests
+  # 2.3 portal-api API tests
   portal-api-api-tests:
     name: API - portal-api 👷
     needs: [setup]
@@ -467,7 +467,7 @@ jobs:
           flags: api-test
           verbose: true
 
-  # 2.2. API tests
+  # 2.4. API tests
   dof-api-tests:
     name: DOF API 👷
     needs: [setup]
