@@ -340,7 +340,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: docker compose exec -T dtfs-central-api npm run api-test -- --testPathPattern=$(echo ${{ matrix.group }} | sed 's/,/|/g')
+          command: docker compose exec -T dtfs-central-api npm run api-test --testPathPattern=$(echo ${{ matrix.group }} | sed 's/,/|/g')
           working-directory: ./dtfs-central-api
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
