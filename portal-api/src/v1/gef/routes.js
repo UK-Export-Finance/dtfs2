@@ -90,8 +90,7 @@ router
 // Mandatory Criteria
 router
   .route('/mandatory-criteria-versioned')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), mandatoryCriteriaVersioned.findAll)
-  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteriaVersioned.create);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), mandatoryCriteriaVersioned.findAll);
 
 router
   .route('/mandatory-criteria-versioned/latest')
@@ -100,7 +99,6 @@ router
 router
   .route('/mandatory-criteria-versioned/:id')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), mandatoryCriteriaVersioned.findOne)
-  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteriaVersioned.update)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteriaVersioned.delete);
 
 // File Uploads

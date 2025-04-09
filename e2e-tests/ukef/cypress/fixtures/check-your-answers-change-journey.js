@@ -6,7 +6,8 @@ import whatDoYouNeedToChange from '../../../gef/cypress/e2e/pages/amendments/wha
 import doYouHaveAFacilityEndDate from '../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
 import facilityValue from '../../../gef/cypress/e2e/pages/amendments/facility-value';
 import eligibility from '../../../gef/cypress/e2e/pages/amendments/eligibility';
-import checkYourAnswers from '../../../gef/cypress/e2e/pages/amendments/check-your-answers';
+import amendmentPage from '../../../gef/cypress/e2e/pages/amendments/amendment-shared';
+import amendmentSummaryList from '../../../gef/cypress/e2e/pages/amendments/amendment-summary-list';
 import manualApprovalNeeded from '../../../gef/cypress/e2e/pages/amendments/manual-approval-needed';
 import { tomorrow } from '../../../e2e-fixtures/dateConstants';
 
@@ -19,7 +20,7 @@ const MOCK_ELIGIBILITY_TEST_CASES = Array.from({ length: ELIGIBILITY_CRITERIA_CO
   nextPage: 'manual-approval-needed',
   element: eligibility,
   nextElement: manualApprovalNeeded,
-  checkYourAnswersChangeElement: () => checkYourAnswers.eligibilityCriteriaSummaryListTable().eligibilityCriterionChangeLink(index + 1),
+  checkYourAnswersChangeElement: () => amendmentSummaryList.eligibilityCriteriaSummaryListTable().eligibilityCriterionChangeLink(index + 1),
   fragment: `${index + 1}`,
   nextPageHeading: 'This amendment cannot be automatically approved',
   change: () => {
@@ -35,7 +36,7 @@ export const MOCK_JOURNEYS_WITH_FED = [
     nextPage: 'do-you-have-a-facility-end-date',
     element: coverEndDate,
     nextElement: doYouHaveAFacilityEndDate,
-    checkYourAnswersChangeElement: () => checkYourAnswers.amendmentSummaryListTable().coverEndDateChangeLink(),
+    checkYourAnswersChangeElement: () => amendmentSummaryList.amendmentSummaryListTable().coverEndDateChangeLink(),
     fragment: 'coverEndDate-day',
     nextPageHeading: 'Do you have a facility end date?',
     change: () => {
@@ -49,7 +50,7 @@ export const MOCK_JOURNEYS_WITH_FED = [
     nextPage: 'facility-value',
     element: facilityEndDate,
     nextElement: facilityValue,
-    checkYourAnswersChangeElement: () => checkYourAnswers.amendmentSummaryListTable().facilityEndDateChangeLink(),
+    checkYourAnswersChangeElement: () => amendmentSummaryList.amendmentSummaryListTable().facilityEndDateChangeLink(),
     fragment: 'facilityEndDate-day',
     nextPageHeading: 'New facility value',
     change: () => {
@@ -63,7 +64,7 @@ export const MOCK_JOURNEYS_WITH_FED = [
     nextPage: 'eligibility',
     element: facilityValue,
     nextElement: eligibility,
-    checkYourAnswersChangeElement: () => checkYourAnswers.amendmentSummaryListTable().facilityValueChangeLink(),
+    checkYourAnswersChangeElement: () => amendmentSummaryList.amendmentSummaryListTable().facilityValueChangeLink(),
     fragment: 'facilityValue',
     nextPageHeading: 'Eligibility',
     change: () => {
@@ -76,8 +77,8 @@ export const MOCK_JOURNEYS_WITH_FED = [
     page: 'effective-date',
     nextPage: 'check-your-answers',
     element: effectiveDate,
-    nextElement: checkYourAnswers,
-    checkYourAnswersChangeElement: () => checkYourAnswers.effectiveDateSummaryListTable().effectiveDateChangeLink(),
+    nextElement: amendmentPage,
+    checkYourAnswersChangeElement: () => amendmentSummaryList.effectiveDateSummaryListTable().effectiveDateChangeLink(),
     fragment: 'effectiveDate-day',
     nextPageHeading: 'Check your answers before submitting the amendment request',
     change: () => {
@@ -95,7 +96,7 @@ export const MOCK_JOURNEYS_WITH_BRD = [
     nextPage: 'cover-end-date',
     element: whatDoYouNeedToChange,
     nextElement: coverEndDate,
-    checkYourAnswersChangeElement: () => checkYourAnswers.amendmentSummaryListTable().amendmentOptionsChangeLink(),
+    checkYourAnswersChangeElement: () => amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsChangeLink(),
     fragment: 'amendmentOptions',
     nextPageHeading: 'New cover end date',
     change: () => {
@@ -109,7 +110,7 @@ export const MOCK_JOURNEYS_WITH_BRD = [
     nextPage: 'eligibility',
     element: bankReviewDate,
     nextElement: eligibility,
-    checkYourAnswersChangeElement: () => checkYourAnswers.amendmentSummaryListTable().bankReviewDateChangeLink(),
+    checkYourAnswersChangeElement: () => amendmentSummaryList.amendmentSummaryListTable().bankReviewDateChangeLink(),
     fragment: 'bankReviewDate-day',
     nextPageHeading: 'Eligibility',
     change: () => {

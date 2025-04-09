@@ -180,12 +180,12 @@ services:
       - DELETION_AUDIT_LOGS_TTL_SECONDS
       - FF_TFM_DEAL_CANCELLATION_ENABLED
       - FF_SALESFORCE_CUSTOMER_CREATION_ENABLED
+      - FF_TFM_SSO_ENABLED
       - ENTRA_ID_CLIENT_ID
       - ENTRA_ID_CLOUD_INSTANCE
       - ENTRA_ID_TENANT_ID
       - ENTRA_ID_CLIENT_SECRET
       - ENTRA_ID_REDIRECT_URL
-      - FF_TFM_SSO_ENABLED
 
   portal:
     build:
@@ -209,6 +209,7 @@ services:
       - TZ
       - PORTAL_API_URL=http://portal-api:5001
       - EXTERNAL_API_URL=http://external-api:5002
+      - PORTAL_UI_URL
       - PORTAL_API_KEY
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
@@ -348,6 +349,7 @@ services:
       - TZ
       - PORTAL_API_URL=http://portal-api:5001
       - EXTERNAL_API_URL=http://external-api:5002
+      - PORTAL_UI_URL
       - REDIS_HOSTNAME=redis
       - SESSION_SECRET
       - AZURE_PORTAL_STORAGE_ACCOUNT

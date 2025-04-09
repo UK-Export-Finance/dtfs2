@@ -2,125 +2,139 @@ const { CURRENCY } = require('@ukef/dtfs2-common');
 const { contractAboutBuyer, contractAboutFinancial, contractAboutPreview } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const aDealWithAboutBuyerComplete = require('./dealWithSecondPageComplete.json');
+
 const { thirtyFiveDaysAgo } = require('../../../../../e2e-fixtures/dateConstants');
 
-const { BANK1_MAKER1 } = MOCK_USERS;
+const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
-context('about-buyer', () => {
-  let deal;
+context(
+  'about-buyer - A maker picks up a deal with the first 2 pages of about-supply-contract complete, and triggers all validation errors on the financial page.',
+  () => {
+    let bssDealId;
 
-  before(() => {
-    cy.insertOneDeal(aDealWithAboutBuyerComplete, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
+    before(() => {
+      cy.createBssEwcsDeal().then((dealId) => {
+        bssDealId = dealId;
+      });
+      cy.completeAboutSupplierSection({
+        exporterCompanyName: 'Exporter Company Name',
+      });
+      cy.completeAboutBuyerSection();
     });
-  });
 
-  it('A maker picks up a deal with the first 2 pages of about-supply-contract complete, and triggers all validation errors on the financial page.', () => {
-    cy.login(BANK1_MAKER1);
+    beforeEach(() => {
+      cy.login(BANK1_MAKER1);
+    });
 
-    contractAboutBuyer.visit(deal);
-    contractAboutBuyer.nextPage().click();
-    contractAboutFinancial.preview().click();
+    after(() => {
+      cy.deleteDeals(ADMIN);
+    });
 
-    // prove validation of all non-conditional pieces
-    contractAboutPreview.expectError('Supply Contract value is required');
-    contractAboutPreview.expectError('Supply Contract currency is required');
+    it('should pick up a deal as maker with the first 2 pages of about-supply-contract complete, and triggers all validation errors on the financial page.', () => {
+      contractAboutBuyer.visit(bssDealId);
+      contractAboutBuyer.nextPage().click();
+      contractAboutFinancial.preview().click();
 
-    // prove the errors are on the about-financial page
-    contractAboutFinancial.visit(deal);
+      // prove validation of all non-conditional pieces
+      contractAboutPreview.expectError('Supply Contract value is required');
+      contractAboutPreview.expectError('Supply Contract currency is required');
 
-    partials.errorSummaryLinks().should('have.length', 4);
+      // prove the errors are on the about-financial page
+      contractAboutFinancial.visit(bssDealId);
 
-    contractAboutFinancial.expectError('Supply Contract value is required');
-    contractAboutFinancial.expectError('Supply Contract currency is required');
-    contractAboutFinancial.expectError('Supply Contract conversion rate is required for non-GBP currencies');
-    contractAboutFinancial.expectError('Supply Contract conversion date is required for non-GBP currencies');
+      partials.errorSummaryLinks().should('have.length', 4);
 
-    // fill in value + pick currency=GBP to clear validation warnings
-    cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '123.45');
-    contractAboutFinancial.supplyContractCurrency().select(CURRENCY.GBP);
-    contractAboutFinancial.preview().click();
+      contractAboutFinancial.expectError('Supply Contract value is required');
+      contractAboutFinancial.expectError('Supply Contract currency is required');
+      contractAboutFinancial.expectError('Supply Contract conversion rate is required for non-GBP currencies');
+      contractAboutFinancial.expectError('Supply Contract conversion date is required for non-GBP currencies');
 
-    // check the errors have been cleared..
-    contractAboutPreview.errors().should('not.exist');
-    contractAboutPreview.errors().should('not.exist');
+      // fill in value + pick currency=GBP to clear validation warnings
+      cy.keyboardInput(contractAboutFinancial.supplyContractValue(), '123.45');
+      contractAboutFinancial.supplyContractCurrency().select(CURRENCY.GBP);
+      contractAboutFinancial.preview().click();
 
-    // switch to non-GBP currency and prove that we now require the exchange-rate + date fields
-    contractAboutFinancial.visit(deal);
-    contractAboutFinancial.supplyContractCurrency().select('USD');
-    contractAboutFinancial.preview().click();
+      // check the errors have been cleared..
+      contractAboutPreview.errors().should('not.exist');
+      contractAboutPreview.errors().should('not.exist');
 
-    contractAboutPreview.errors().should('contain', 'Supply Contract conversion rate is required for non-GBP currencies');
-    contractAboutPreview.errors().should('contain', 'Supply Contract conversion date is required for non-GBP currencies');
+      // switch to non-GBP currency and prove that we now require the exchange-rate + date fields
+      contractAboutFinancial.visit(bssDealId);
+      contractAboutFinancial.supplyContractCurrency().select('USD');
 
-    // prove 6-decimal-place validation
-    contractAboutFinancial.visit(deal);
+      contractAboutFinancial.preview().click();
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionRateToGBP(), '{selectall}{backspace}0.1234567');
+      contractAboutPreview.errors().should('contain', 'Supply Contract conversion rate is required for non-GBP currencies');
+      contractAboutPreview.errors().should('contain', 'Supply Contract conversion date is required for non-GBP currencies');
 
-    contractAboutFinancial.preview().click();
+      // prove 6-decimal-place validation
+      contractAboutFinancial.visit(bssDealId);
 
-    contractAboutPreview.errors().should('contain', 'Supply Contract conversion rate must be a number with up to 6 decimal places');
+      cy.keyboardInput(contractAboutFinancial.supplyContractConversionRateToGBP(), '{selectall}{backspace}0.1234567');
 
-    // fix the conversion rate
-    contractAboutFinancial.visit(deal);
+      contractAboutFinancial.preview().click();
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionRateToGBP(), '{selectall}{backspace}0.123456');
+      contractAboutPreview.errors().should('contain', 'Supply Contract conversion rate must be a number with up to 6 decimal places');
 
-    contractAboutFinancial.preview().click();
+      // fix the conversion rate
+      contractAboutFinancial.visit(bssDealId);
 
-    contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion rate is required for non-GBP currencies');
-    contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion rate must be a number with up to 6 decimal places');
+      cy.keyboardInput(contractAboutFinancial.supplyContractConversionRateToGBP(), '{selectall}{backspace}0.123456');
 
-    // fill in the conversion date field by field..
-    contractAboutFinancial.visit(deal);
+      contractAboutFinancial.preview().click();
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), '25');
+      contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion rate is required for non-GBP currencies');
+      contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion rate must be a number with up to 6 decimal places');
 
-    contractAboutFinancial.preview().click();
+      // fill in the conversion date field by field..
+      contractAboutFinancial.visit(bssDealId);
 
-    contractAboutPreview.errors().should('contain', 'Supply Contract conversion date is required for non-GBP currencies');
-    contractAboutPreview.errors().should('contain', 'Supply Contract conversion date Month is required for non-GBP currencies');
-    contractAboutPreview.errors().should('contain', 'Supply Contract conversion date Year is required for non-GBP currencies');
+      cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), '25');
 
-    contractAboutFinancial.visit(deal);
+      contractAboutFinancial.preview().click();
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), '12');
+      contractAboutPreview.errors().should('contain', 'Supply Contract conversion date is required for non-GBP currencies');
+      contractAboutPreview.errors().should('contain', 'Supply Contract conversion date Month is required for non-GBP currencies');
+      contractAboutPreview.errors().should('contain', 'Supply Contract conversion date Year is required for non-GBP currencies');
 
-    contractAboutFinancial.preview().click();
+      contractAboutFinancial.visit(bssDealId);
 
-    contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion date Month is required for non-GBP currencies');
+      cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), '12');
 
-    contractAboutFinancial.visit(deal);
+      contractAboutFinancial.preview().click();
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), '2019');
+      contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion date Month is required for non-GBP currencies');
 
-    contractAboutFinancial.preview().click();
+      contractAboutFinancial.visit(bssDealId);
 
-    contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion date is required for non-GBP currencies');
-    contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion date Year is required for non-GBP currencies');
+      cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), '2019');
 
-    contractAboutFinancial.visit(deal);
+      contractAboutFinancial.preview().click();
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), '{selectall}{backspace}3019');
+      contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion date is required for non-GBP currencies');
+      contractAboutPreview.errors().should('not.contain', 'Supply Contract conversion date Year is required for non-GBP currencies');
 
-    contractAboutFinancial.preview().click();
+      contractAboutFinancial.visit(bssDealId);
 
-    contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be in the future');
+      cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), '{selectall}{backspace}3019');
 
-    const dateTooFarInThePast = thirtyFiveDaysAgo;
+      contractAboutFinancial.preview().click();
 
-    contractAboutFinancial.visit(deal);
+      contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be in the future');
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), `{selectall}{backspace}${dateTooFarInThePast.day}`);
+      const dateTooFarInThePast = thirtyFiveDaysAgo;
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), `{selectall}{backspace}${dateTooFarInThePast.month}`);
+      contractAboutFinancial.visit(bssDealId);
 
-    cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), `{selectall}{backspace}${dateTooFarInThePast.year}`);
+      cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().day(), `{selectall}{backspace}${dateTooFarInThePast.day}`);
 
-    contractAboutFinancial.preview().click();
+      cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().month(), `{selectall}{backspace}${dateTooFarInThePast.month}`);
 
-    contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be more than 30 days in the past');
-  });
-});
+      cy.keyboardInput(contractAboutFinancial.supplyContractConversionDate().year(), `{selectall}{backspace}${dateTooFarInThePast.year}`);
+
+      contractAboutFinancial.preview().click();
+
+      contractAboutPreview.errors().should('contain', 'Supply Contract conversion date cannot be more than 30 days in the past');
+    });
+  },
+);

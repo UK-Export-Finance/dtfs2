@@ -51,7 +51,7 @@
   </h3>
 
   {% if deal.mandatoryCriteria %}
-    {{ mandatoryCriteriaBox.render({ mandatoryCriteria: deal.mandatoryCriteria }) }}
+    {{ mandatoryCriteriaBox.render({ mandatoryCriteria: deal.mandatoryCriteria, text: true }) }}
   {% endif %}
 
   {% if deal.eligibility.criteria %}

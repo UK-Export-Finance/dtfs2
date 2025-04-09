@@ -33,6 +33,7 @@ const parseDate = ({ day, month, year }: DayMonthYearInput): Date => {
 const validateAllFieldsArePresent = ({ day, month, year }: DayMonthYearInput, valueName: string, refs: ValueAndFieldRefs): GenericValidationError | null => {
   const capitalisedValueName = capitalizeFirstLetter(valueName);
   const dateIsBlank = !day && !month && !year;
+
   if (dateIsBlank) {
     return {
       message: `Enter the ${valueName}`,
@@ -89,69 +90,80 @@ const validateAllFieldsArePresent = ({ day, month, year }: DayMonthYearInput, va
   return null;
 };
 
+/**
+ * Validates that the provided day, month, and year fields form a valid date.
+ * Ensures that each field adheres to specific formatting rules:
+ * - `year` must be a 4-digit number.
+ * - `month` must be an integer between 1 and 12 (leading zeros allowed).
+ * - `day` must be an integer between 1 and 31 (leading zeros allowed).
+ *
+ * If any of the fields fail validation, an error object is returned containing:
+ * - A descriptive error message.
+ * - A reference to the invalid value.
+ * - References to the specific fields that failed validation.
+ *
+ * @param {DayMonthYearInput} param0 - An object containing the `day`, `month`, and `year` fields to validate.
+ * @param {string} valueName - The name of the value being validated, used in the error message.
+ * @param {ValueAndFieldRefs} refs - References to the value and individual fields for error reporting.
+ * @returns {GenericValidationError | null} - Returns a validation error object if validation fails, or `null` if all fields are valid.
+ */
 const validateEachFieldIsValid = ({ day, month, year }: DayMonthYearInput, valueName: string, refs: ValueAndFieldRefs): GenericValidationError | null => {
   const capitalisedValueName = capitalizeFirstLetter(valueName);
 
-  let yearFormatError;
   // schema to validate that the year is 4 digits long and only numbers
+  let yearFormatError;
   const yearFormatSchema = z.string().length(4).regex(/^\d+$/);
+
   try {
     yearFormatSchema.parse(year);
   } catch {
     yearFormatError = true;
   }
 
-  let monthFormatError;
   // schema which ensures that the month is an integer between 1 and 12 (allows for leading 0s)
+  let monthFormatError;
   const monthFormatSchema = z.string().regex(/^([1-9]|1[012]|0[1-9])$/);
+
   try {
     monthFormatSchema.parse(month);
   } catch {
     monthFormatError = true;
   }
 
-  let dayFormatError;
   // schema which ensures that the day is an integer between 1 and 31 (allows for leading 0s)
+  let dayFormatError;
   const dayFormatSchema = z.string().regex(/^(3[01]|[12][0-9]|[1-9]|0[1-9])$/);
+
   try {
     dayFormatSchema.parse(day);
   } catch {
     dayFormatError = true;
   }
 
-  const hasMoreThanOneFormattingError = (dayFormatError && (monthFormatError || yearFormatError)) || (monthFormatError && yearFormatError);
-
-  if (hasMoreThanOneFormattingError) {
-    return {
-      message: `${capitalisedValueName} must be a real date`,
-      ref: refs.value,
-      fieldRefs: [refs.day, refs.month, refs.year],
-    };
-  }
+  const message = `${capitalisedValueName} must be a real date`;
+  const ref = refs.value;
+  const fieldRefs: Array<string> = [];
 
   if (dayFormatError) {
-    return {
-      message: `${capitalisedValueName} must be a real date`,
-      ref: refs.value,
-      fieldRefs: [refs.day],
-    };
+    fieldRefs.push(refs.day);
   }
 
   if (monthFormatError) {
-    return {
-      message: `${capitalisedValueName} must be a real date`,
-      ref: refs.value,
-      fieldRefs: [refs.month],
-    };
+    fieldRefs.push(refs.month);
   }
 
   if (yearFormatError) {
+    fieldRefs.push(refs.year);
+  }
+
+  if (dayFormatError || monthFormatError || yearFormatError) {
     return {
-      message: `${capitalisedValueName} must be a real date`,
-      ref: refs.value,
-      fieldRefs: [refs.year],
+      message,
+      ref,
+      fieldRefs,
     };
   }
+
   return null;
 };
 
@@ -163,9 +175,9 @@ const validateEachFieldIsValid = ({ day, month, year }: DayMonthYearInput, value
  * The error returned by the below function should always take priority over any additional custom added checks.
  * In some cases, only specific fields in the date input should be highlighted as containing errors. These fields are returned by errRefs.
  *
- * @param {DayMonthYearInput} inputtedDate - Object containing the values inputted in the 'day', 'month' and 'year' fields
- * @param {string} valueName - the readable name of the field e.g. 'cover end date'. This should be capitalised as you would expect it to appear mid-sentence (typically all lower case).
- * @param {string} valueRef - the internally used ref for the field e.g. 'coverEndDate'
+ * @param inputtedDate - Object containing the values inputted in the 'day', 'month' and 'year' fields
+ * @param valueName - the readable name of the field e.g. 'cover end date'. This should be capitalised as you would expect it to appear mid-sentence (typically all lower case).
+ * @param valueRef - the internally used ref for the field e.g. 'coverEndDate'
  * @returns errRefs and errMsg. errRefs are the refs of fields that should be highlighted.
  * If errRefs includes 'valueRef' then all 3 date fields should be highlighted.
  */
@@ -184,17 +196,20 @@ export const applyStandardValidationAndParseDateInput = (inputtedDate: DayMonthY
   const trimmedInputtedDate = { day: trimmedInputtedDay, month: trimmedInputtedMonth, year: trimmedInputtedYear };
 
   const allFieldsPresentError = validateAllFieldsArePresent(trimmedInputtedDate, valueName, valueAndFieldRefs);
+
   if (allFieldsPresentError) {
     return { error: allFieldsPresentError, parsedDate: undefined };
   }
 
   const eachFieldValidError = validateEachFieldIsValid(trimmedInputtedDate, valueName, valueAndFieldRefs);
+
   if (eachFieldValidError) {
     return { error: eachFieldValidError, parsedDate: undefined };
   }
 
   const parsedDate = parseDate(trimmedInputtedDate);
   const capitalisedValueName = capitalizeFirstLetter(valueName);
+
   if (!isValid(parsedDate)) {
     return {
       error: {

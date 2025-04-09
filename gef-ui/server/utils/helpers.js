@@ -16,7 +16,8 @@ const {
   summaryIssuedChangedToIssued,
   summaryIssuedUnchanged,
   areUnissuedFacilitiesPresent,
-  facilitiesChangedPresent,
+  isFacilityResubmissionAvailable,
+  isFacilityAmendmentInProgress,
 } = require('./facility-helpers');
 
 const { isUkefReviewAvailable } = require('./deal-helpers');
@@ -491,16 +492,22 @@ const commentsPresent = (app) => {
   return false;
 };
 
-/*
-  checks if taskComments should be shown on top of application
-  if any of the below conditions are present
-*/
+/**
+ * Determines whether task comments should be displayed based on various conditions.
+ *
+ * @param {Object} app - The application object containing relevant data.
+ * @param {string} app.status - The current status of the application.
+ * @param {string} app.ukefDecision - The UKEF decision associated with the application.
+ * @returns {boolean} - Returns `true` if any of the conditions for displaying task comments are met, otherwise `false`.
+ */
 const displayTaskComments = (app) => {
-  const ukefReviewAvailable = isUkefReviewAvailable(app.status, app.ukefDecision);
-  const unissuedFacilitiesPresent = areUnissuedFacilitiesPresent(app);
-  const facilitiesChanged = facilitiesChangedPresent(app);
-  const appCommentsPresent = commentsPresent(app);
-  return ukefReviewAvailable || unissuedFacilitiesPresent || facilitiesChanged || appCommentsPresent;
+  const comments = commentsPresent(app);
+  const ukefReview = isUkefReviewAvailable(app.status, app.ukefDecision);
+  const unissuedFacilities = areUnissuedFacilitiesPresent(app);
+  const facilityIssued = isFacilityResubmissionAvailable(app);
+  const facilityAmendment = isFacilityAmendmentInProgress(app);
+
+  return comments || ukefReview || unissuedFacilities || facilityIssued || facilityAmendment;
 };
 
 const pastDate = ({ day, month, year }) => {

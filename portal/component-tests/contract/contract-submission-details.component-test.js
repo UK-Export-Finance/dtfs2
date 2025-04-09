@@ -72,8 +72,18 @@ describe(page, () => {
       wrapper.expectElement(selector).toExist();
     });
 
-    it('should render Mandatory criteria component', () => {
+    it('should render mandatory criteria component', () => {
       wrapper.expectElement('[data-cy="mandatory-criteria-box"]').toExist();
+    });
+
+    it('should render mandatory criteria criterion without HTML tags', () => {
+      wrapper
+        .expectText('[data-cy="mandatory-criteria-box"]')
+        .toContain('Where the supplier is not a “Person Within Scope of Windsor Framework”, it is an eligible person OR');
+
+      wrapper
+        .expectText('[data-cy="mandatory-criteria-box"]')
+        .toContain('Where the supplier is a “Person Within Scope of Windsor Framework”, both it and its parent obligor (if any) is an eligible person.');
     });
 
     describe('v1 migrated data', () => {

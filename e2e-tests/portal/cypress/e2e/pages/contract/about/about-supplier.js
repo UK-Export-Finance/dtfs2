@@ -1,7 +1,7 @@
 const address = require('./address');
 
 const page = {
-  visit: (deal) => cy.visit(`/contract/${deal._id}/about/supplier`),
+  visit: (dealId) => cy.visit(`/contract/${dealId}/about/supplier`),
 
   title: () => cy.get('[data-cy="about"]'),
 
@@ -10,6 +10,7 @@ const page = {
   supplierSearchCompaniesHouse: () => cy.get('[data-cy="DoSearch-supplier-companies-house-registration-number"]'),
   supplierName: () => cy.get('[data-cy="supplier-name"]'),
   supplierAddress: () => address('supplier-address'),
+  supplierPostCode: () => cy.get('[data-cy="supplier-address-postcode"]'),
   supplierCorrespondenceAddressSame: () => cy.get('[data-cy="supplier-correspondence-address-is-different-false"]'),
   supplierCorrespondenceAddressDifferent: () => cy.get('[data-cy="supplier-correspondence-address-is-different-true"]'),
   supplierCorrespondenceAddress: () => address('supplier-correspondence-address'),

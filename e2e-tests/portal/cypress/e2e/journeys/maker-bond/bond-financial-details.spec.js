@@ -1,4 +1,3 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
 const pages = require('../../pages');
 const partials = require('../../partials');
 const fillBondForm = require('./fill-bond-forms');
@@ -11,18 +10,9 @@ const { yearWithZeroLetter } = require('../../../../../e2e-fixtures/dateConstant
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
-const MOCK_DEAL = {
-  bankInternalRefName: 'someDealId',
-  additionalRefName: 'someDealName',
-  submissionDetails: {
-    supplyContractCurrency: {
-      id: CURRENCY.GBP,
-    },
-  },
-};
-
-const goToBondFinancialDetailsPage = (deal) => {
-  cy.loginGoToDealPage(BANK1_MAKER1, deal);
+const goToBondFinancialDetailsPage = (bssDealId) => {
+  cy.login(BANK1_MAKER1);
+  cy.visit(relative(`/contract/${bssDealId}`));
 
   cy.clickAddBondButton();
   partials.taskListHeader.itemLink('financial-details').click();
@@ -32,18 +22,21 @@ const goToBondFinancialDetailsPage = (deal) => {
 };
 
 context('Bond Financial Details', () => {
-  let deal;
+  let bssDealId;
+  let contractUrl;
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
+    cy.createBssEwcsDeal().then((dealId) => {
+      bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
   describe('after submitting one form field and navigating back to `Bond Financial Details` page', () => {
     it('should render validation errors for all required fields', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal);
+      cy.login(BANK1_MAKER1);
+      cy.visit(contractUrl);
 
       cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
@@ -70,7 +63,8 @@ context('Bond Financial Details', () => {
 
   describe('when changing the `risk margin fee` field', () => {
     it('should dynamically update the `Guarantee Fee Payable By Bank` value on blur', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal);
+      cy.login(BANK1_MAKER1);
+      cy.visit(contractUrl);
 
       cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
@@ -97,7 +91,8 @@ context('Bond Financial Details', () => {
 
   describe('when changing the `bond value` or `covered percentage` field', () => {
     it('should dynamically update the `UKEF exposure` value on blur', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal);
+      cy.login(BANK1_MAKER1);
+      cy.visit(contractUrl);
 
       cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
@@ -126,7 +121,8 @@ context('Bond Financial Details', () => {
   });
 
   it('should display the correct title for bond financial details', () => {
-    cy.loginGoToDealPage(BANK1_MAKER1, deal);
+    cy.login(BANK1_MAKER1);
+    cy.visit(contractUrl);
 
     cy.clickAddBondButton();
     partials.taskListHeader.itemLink('financial-details').click();
@@ -135,7 +131,8 @@ context('Bond Financial Details', () => {
   });
 
   it('form submit of all required fields should render a `completed` status tag only for `Bond Financial Details` in task list header', () => {
-    cy.loginGoToDealPage(BANK1_MAKER1, deal);
+    cy.login(BANK1_MAKER1);
+    cy.visit(contractUrl);
 
     cy.clickAddBondButton();
     partials.taskListHeader.itemLink('financial-details').click();
@@ -151,7 +148,8 @@ context('Bond Financial Details', () => {
 
   describe('When a user submits the `Bond Financial Details` form', () => {
     it('should progress to `Bond Fee Details` page and prepopulate form fields when returning back to `Bond Financial Details` page', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal);
+      cy.login(BANK1_MAKER1);
+      cy.visit(contractUrl);
 
       cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();
@@ -173,7 +171,7 @@ context('Bond Financial Details', () => {
 
   describe('when a user selects that the currency is NOT the same as the Supply Contract currency', () => {
     it('should render additional form fields', () => {
-      goToBondFinancialDetailsPage(deal);
+      goToBondFinancialDetailsPage(bssDealId);
       pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
 
       pages.bondFinancialDetails.currencyInput().should('be.visible');
@@ -184,7 +182,7 @@ context('Bond Financial Details', () => {
     });
 
     it('form submit should progress to `Bond Fee Details` page and prepopulate submitted form fields when returning back to `Bond Financial Details` page', () => {
-      goToBondFinancialDetailsPage(deal);
+      goToBondFinancialDetailsPage(bssDealId);
       fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
       cy.clickSubmitButton();
 
@@ -200,7 +198,7 @@ context('Bond Financial Details', () => {
 
     describe('after form submit and navigating back to `Bond Financial Details` page', () => {
       it('should render validation errors for required fields and `currency is NOT the same` required fields', () => {
-        goToBondFinancialDetailsPage(deal);
+        goToBondFinancialDetailsPage(bssDealId);
         pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
         cy.clickSubmitButton();
 
@@ -240,7 +238,7 @@ context('Bond Financial Details', () => {
     });
 
     it("should populate the bond's `value` in Deal page with the submitted bond currency", () => {
-      goToBondFinancialDetailsPage(deal);
+      goToBondFinancialDetailsPage(bssDealId);
 
       cy.keyboardInput(pages.bondFinancialDetails.facilityValueInput(), BOND_FORM_VALUES.FINANCIAL_DETAILS.value);
       pages.bondFinancialDetails.currencySameAsSupplyContractCurrencyNoInput().click();
@@ -253,7 +251,7 @@ context('Bond Financial Details', () => {
 
         cy.clickSubmitButton();
         cy.clickSaveGoBackButton();
-        cy.url().should('eq', relative(`/contract/${deal._id}`));
+        cy.url().should('eq', contractUrl);
 
         const row = pages.contract.bondTransactionsTable.row(bondId);
 
@@ -281,7 +279,7 @@ context('Bond Financial Details', () => {
       };
 
       it('should render validation error', () => {
-        goToBondFinancialDetailsPage(deal);
+        goToBondFinancialDetailsPage(bssDealId);
         fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
 
         fillAndSubmitRiskMarginFee('test');
@@ -315,7 +313,7 @@ context('Bond Financial Details', () => {
       };
 
       it('should render validation error', () => {
-        goToBondFinancialDetailsPage(deal);
+        goToBondFinancialDetailsPage(bssDealId);
         fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
 
         fillAndSubmitCoveredPercentage('12.34567');
@@ -340,7 +338,7 @@ context('Bond Financial Details', () => {
     };
 
     it('should render validation error', () => {
-      goToBondFinancialDetailsPage(deal);
+      goToBondFinancialDetailsPage(bssDealId);
       fillBondForm.financialDetails.transactionCurrencyNotTheSameAsSupplyContractCurrency();
 
       fillAndSubmitMinimumRiskMarginFee('12.345');
@@ -353,7 +351,8 @@ context('Bond Financial Details', () => {
 
   describe('When a user clicks `save and go back` button', () => {
     it('should save the form data, return to Deal page and repopulate form fields when returning back to `Bond Financial Details` page', () => {
-      cy.loginGoToDealPage(BANK1_MAKER1, deal);
+      cy.login(BANK1_MAKER1);
+      cy.visit(contractUrl);
 
       cy.clickAddBondButton();
       partials.taskListHeader.itemLink('financial-details').click();

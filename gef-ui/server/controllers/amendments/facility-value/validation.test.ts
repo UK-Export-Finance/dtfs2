@@ -1,6 +1,7 @@
 import { validateFacilityValue } from './validation';
 
 const errRef = 'facilityValue';
+const invalidNumberError = 'Enter a new facility value';
 
 describe('validateFacilityValue', () => {
   const errorTestCases = [
@@ -9,7 +10,7 @@ describe('validateFacilityValue', () => {
       value: '',
       expectedError: {
         errRef,
-        errMsg: 'Enter the new facility value in number format',
+        errMsg: invalidNumberError,
       },
     },
     {
@@ -17,7 +18,31 @@ describe('validateFacilityValue', () => {
       value: '1000x',
       expectedError: {
         errRef,
-        errMsg: 'Enter a valid facility value',
+        errMsg: invalidNumberError,
+      },
+    },
+    {
+      description: 'the value contains too many decimal places',
+      value: 'abc',
+      expectedError: {
+        errRef,
+        errMsg: invalidNumberError,
+      },
+    },
+    {
+      description: 'the value contains too many decimal places',
+      value: '!@£',
+      expectedError: {
+        errRef,
+        errMsg: invalidNumberError,
+      },
+    },
+    {
+      description: 'the value contains too many decimal places',
+      value: '1ooo',
+      expectedError: {
+        errRef,
+        errMsg: invalidNumberError,
       },
     },
     {
@@ -25,7 +50,7 @@ describe('validateFacilityValue', () => {
       value: '1000.000',
       expectedError: {
         errRef,
-        errMsg: 'Enter a valid facility value',
+        errMsg: invalidNumberError,
       },
     },
     {
@@ -33,7 +58,7 @@ describe('validateFacilityValue', () => {
       value: '1000.00.0',
       expectedError: {
         errRef,
-        errMsg: 'Enter a valid facility value',
+        errMsg: invalidNumberError,
       },
     },
     {
@@ -41,7 +66,7 @@ describe('validateFacilityValue', () => {
       value: '.99',
       expectedError: {
         errRef,
-        errMsg: 'Enter a valid facility value',
+        errMsg: invalidNumberError,
       },
     },
     {
@@ -49,7 +74,7 @@ describe('validateFacilityValue', () => {
       value: '123.',
       expectedError: {
         errRef,
-        errMsg: 'Enter a valid facility value',
+        errMsg: invalidNumberError,
       },
     },
     {
@@ -84,8 +109,28 @@ describe('validateFacilityValue', () => {
       value: '1',
     },
     {
+      description: 'the value is 1 as a number',
+      value: 1,
+    },
+    {
+      description: 'the value is 1000 as a number',
+      value: 1000,
+    },
+    {
+      description: 'the value is 1,000,000 with decimal points',
+      value: '1000000.00',
+    },
+    {
       description: 'the value is 1 trillion',
       value: '1000000000000',
+    },
+    {
+      description: 'the value is 1 trillion with decimal points',
+      value: '1000000000000.00',
+    },
+    {
+      description: 'the value is 1 trillion as a number',
+      value: 1000000000000.0,
     },
     {
       description: 'the value has 1 decimal place',
