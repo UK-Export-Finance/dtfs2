@@ -3,6 +3,7 @@ import api from '../../../services/api';
 /**
  * @param dealId - the deal id
  * @param facilityId - the facility id
+ * @param userToken - the user token
  * @returns the reference number
  */
 export const createReferenceNumber = async (dealId: string, facilityId: string, userToken: string): Promise<string> => {

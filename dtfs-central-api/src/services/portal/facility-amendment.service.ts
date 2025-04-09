@@ -14,7 +14,7 @@ import {
   PORTAL_AMENDMENT_INPROGRESS_STATUSES,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
-import { cloneDeep, remove } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { findOneUser } from '../../v1/controllers/user/get-user.controller';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 import { EligibilityCriteriaAmendmentsRepo } from '../../repositories/portal/eligibility-criteria-amendments.repo';
@@ -34,11 +34,9 @@ export class PortalFacilityAmendmentService {
       statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES,
     });
 
-    if (amendmentId) {
-      remove(existingPortalAmendmentInProgress, (amendment) => amendment.amendmentId.equals(amendmentId));
-    }
+    const hasExistingAmendment = existingPortalAmendmentInProgress.some((amendment) => amendment.amendmentId.toString() !== amendmentId);
 
-    if (existingPortalAmendmentInProgress.length > 0) {
+    if (hasExistingAmendment) {
       console.error('There is a portal facility amendment already in progress on this deal');
       throw new PortalFacilityAmendmentConflictError(dealId);
     }
@@ -187,7 +185,7 @@ export class PortalFacilityAmendmentService {
    * @param params.newStatus - The new status to set for the amendment.
    * @param params.referenceNumber - The reference number
    * @param params.auditDetails - The audit details for the update operation.
-   * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithReferenceNumber)>} A promise that resolves when the update operation is complete.
+   * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>} A promise that resolves when the update operation is complete.
    */
   public static async submitPortalFacilityAmendmentToUkef({
     amendmentId,

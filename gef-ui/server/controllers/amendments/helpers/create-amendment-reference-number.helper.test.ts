@@ -1,17 +1,11 @@
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { PORTAL_AMENDMENT_STATUS, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
-
-/* eslint-disable import/first */
-const getAmendmentsOnDealMock = jest.fn();
-
+import api from '../../../services/api';
 import { createReferenceNumber } from './create-amendment-reference-number.helper';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 
+const getAmendmentsOnDealMock = jest.fn();
 console.error = jest.fn();
-
-jest.mock('../../../services/api', () => ({
-  getAmendmentsOnDeal: getAmendmentsOnDealMock,
-}));
 
 const dealId = '6597dffeb5ef5ff4267e5044';
 const facilityId = '6597dffeb5ef5ff4267e5045';
@@ -23,6 +17,7 @@ describe('createReferenceNumber', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
+    jest.spyOn(api, 'getAmendmentsOnDeal').mockImplementation(getAmendmentsOnDealMock);
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
       .withDealId(dealId)
@@ -44,7 +39,6 @@ describe('createReferenceNumber', () => {
 
     expect(getAmendmentsOnDealMock).toHaveBeenCalledWith({
       dealId,
-
       statuses: [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED],
       userToken,
     });

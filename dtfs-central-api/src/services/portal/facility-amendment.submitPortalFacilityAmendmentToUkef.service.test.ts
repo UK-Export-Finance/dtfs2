@@ -60,10 +60,14 @@ describe('PortalFacilityAmendmentService', () => {
     });
 
     it('should call PortalFacilityAmendmentService.findOneAmendmentByFacilityIdAndAmendmentId', async () => {
+      // Arrange
+      const anotherFacilityId = new ObjectId().toString();
+      const anotherAmendmentId = new ObjectId().toString();
+
       // Act
       await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToUkef({
-        amendmentId,
-        facilityId,
+        amendmentId: anotherAmendmentId,
+        facilityId: anotherFacilityId,
         newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
         referenceNumber,
         auditDetails,
@@ -71,44 +75,46 @@ describe('PortalFacilityAmendmentService', () => {
 
       // Assert
       expect(mockFindOneAmendmentByFacilityIdAndAmendmentId).toHaveBeenCalledTimes(2);
-      expect(mockFindOneAmendmentByFacilityIdAndAmendmentId).toHaveBeenCalledWith(facilityId, amendmentId);
+      expect(mockFindOneAmendmentByFacilityIdAndAmendmentId).toHaveBeenCalledWith(anotherFacilityId, anotherAmendmentId);
     });
 
-    it('should throw an AmendmentNotFoundError if no amendment is found when calling TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId', async () => {
-      // Arrange
-      mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce(null);
+    describe('when calling TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId', () => {
+      it('should throw an AmendmentNotFoundError if no amendment is found', async () => {
+        // Arrange
+        mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce(null);
 
-      // Act
-      const returned = PortalFacilityAmendmentService.submitPortalFacilityAmendmentToUkef({
-        amendmentId,
-        facilityId,
-        newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
-        referenceNumber,
-        auditDetails,
+        // Act
+        const returned = PortalFacilityAmendmentService.submitPortalFacilityAmendmentToUkef({
+          amendmentId,
+          facilityId,
+          newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+          referenceNumber,
+          auditDetails,
+        });
+
+        // Assert
+        await expect(returned).rejects.toThrow(new AmendmentNotFoundError(amendmentId, facilityId));
       });
 
-      // Assert
-      await expect(returned).rejects.toThrow(new AmendmentNotFoundError(amendmentId, facilityId));
-    });
+      it(`should throw an AmendmentNotFoundError if an amendment without a ${AMENDMENT_TYPES.PORTAL} amendment type is returned`, async () => {
+        // Arrange
+        mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce({ ...updatedAmendment, type: AMENDMENT_TYPES.TFM });
 
-    it(`should throw an AmendmentNotFoundError if an amendment without a ${AMENDMENT_TYPES.PORTAL} amendment type is returned from TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId`, async () => {
-      // Arrange
-      mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce({ ...updatedAmendment, type: AMENDMENT_TYPES.TFM });
+        // Act
+        const returned = PortalFacilityAmendmentService.submitPortalFacilityAmendmentToUkef({
+          amendmentId,
+          facilityId,
+          newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+          referenceNumber,
+          auditDetails,
+        });
 
-      // Act
-      const returned = PortalFacilityAmendmentService.submitPortalFacilityAmendmentToUkef({
-        amendmentId,
-        facilityId,
-        newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
-        referenceNumber,
-        auditDetails,
+        // Assert
+        await expect(returned).rejects.toThrow(new AmendmentNotFoundError(amendmentId, facilityId));
       });
-
-      // Assert
-      await expect(returned).rejects.toThrow(new AmendmentNotFoundError(amendmentId, facilityId));
     });
 
-    it('should call PortalFacilityAmendmentService.validateNoOtherAmendmentsUnderWayOnDeal', async () => {
+    it('should call PortalFacilityAmendmentService.validateNoOtherAmendmentInProgress', async () => {
       // Arrange
       const existingAmendment = aPortalFacilityAmendment();
       mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce(existingAmendment);

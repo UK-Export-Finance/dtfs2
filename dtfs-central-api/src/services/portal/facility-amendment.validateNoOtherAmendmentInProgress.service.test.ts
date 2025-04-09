@@ -29,7 +29,7 @@ describe('PortalFacilityAmendmentService', () => {
     jest.useRealTimers();
   });
 
-  describe('validateNoOtherAmendmentsUnderWayOnDeal', () => {
+  describe('validateNoOtherAmendmentInProgressOnDeal', () => {
     it('should call findPortalAmendmentsByDealIdAndStatus with the dealId and correct filters', async () => {
       // Act
       await PortalFacilityAmendmentService.validateNoOtherAmendmentInProgressOnDeal({

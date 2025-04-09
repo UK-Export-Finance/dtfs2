@@ -73,7 +73,7 @@ describe('validatePatchPortalFacilitySubmitAmendmentPayload', () => {
     },
   ];
 
-  it.each(invalidPayloads)('should return 400 when $description', ({ payload }) => {
+  it.each(invalidPayloads)(`should return ${HttpStatusCode.BadRequest} when $description`, ({ payload }) => {
     // Arrange
     const { req, res } = createMocks({ body: payload });
     const next = jest.fn();

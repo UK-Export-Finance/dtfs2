@@ -19,7 +19,7 @@ export const postSubmitAmendmentToUkef = async (req: PostSubmitAmendmentToUkefRe
     const { confirmSubmitUkef } = req.body;
     const { userToken } = asLoggedInUserSession(req.session);
 
-    console.info('Portal Amendent is being submitted to TFM');
+    console.info('Portal Amendent %s is being submitted to TFM', amendmentId);
 
     const deal = await api.getApplication({ dealId, userToken });
 

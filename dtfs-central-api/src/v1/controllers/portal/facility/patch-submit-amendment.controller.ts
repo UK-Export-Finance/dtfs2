@@ -46,12 +46,13 @@ export const patchSubmitAmendment = async (req: PatchSubmitAmendmentToUkefReques
       }
     }
   } catch (error) {
+    const errorMessage = 'Error updating portal amendment on submit';
+    console.error('%s %o', errorMessage, error);
+
     if (error instanceof ApiError) {
       const { status, message, code } = error;
       return res.status(status).send({ status, message, code });
     }
-
-    console.error(`Error updating portal amendment on submit %o`, error);
 
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
