@@ -39,6 +39,16 @@ expect.extend({
   },
 });
 
+beforeAll(() => {
+  if (!console.error.mock) {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  }
+});
+
 afterAll(async () => {
   await db.close();
+
+  if (console.error.mock) {
+    console.error.mockRestore();
+  }
 });
