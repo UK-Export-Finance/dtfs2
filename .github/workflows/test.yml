@@ -279,25 +279,10 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        group:
-          [
-            './dtfs-central-api/api-tests/v1/bank',
-            './dtfs-central-api/api-tests/v1/cron-jobs',
-            './dtfs-central-api/api-tests/v1/durable-functions',
-            './dtfs-central-api/api-tests/v1/middleware',
-            './dtfs-central-api/api-tests/v1/routes',
-            './dtfs-central-api/api-tests/v1/user',
-            './dtfs-central-api/api-tests/v1/deals',
-            './dtfs-central-api/api-tests/v1/facilities',
-            './dtfs-central-api/api-tests/v1/gef-deals',
-            './dtfs-central-api/api-tests/v1/gef-facilities',
-            './dtfs-central-api/api-tests/v1/portal-facility-amendments',
-            './dtfs-central-api/api-tests/v1/tfm',
-            './dtfs-central-api/api-tests/v1/utilisation-reports',
-          ]
+        services: ['utilisation-reports']
 
     concurrency:
-      group: dtfs-central-api-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.group }}
+      group: dtfs-central-api-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
       cancel-in-progress: true
 
     steps:
@@ -345,7 +330,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: docker compose exec -T dtfs-central-api npm run api-test
+          command: docker compose exec -T dtfs-central-api npm run api-test --workspace=api-tests/v1/${{ matrix.services }}
           working-directory: ${{ matrix.group }}
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
