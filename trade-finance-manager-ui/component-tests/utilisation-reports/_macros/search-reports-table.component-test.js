@@ -33,7 +33,7 @@ const mapReportToSummaryItem = (bank, report) => {
 
 const BANK = {
   id: '1',
-  name: 'Test Bank 1',
+  name: 'Bank 1',
 };
 
 describe(component, () => {

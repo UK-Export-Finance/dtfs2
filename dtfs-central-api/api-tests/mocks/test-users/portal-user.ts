@@ -8,7 +8,7 @@ export const aPortalUser = (): PortalUser => ({
   surname: 'User',
   username: 'test-user',
   email: 'user@test.com',
-  bank: MOCK_BANKS.BARCLAYS,
+  bank: MOCK_BANKS.bank1,
   roles: [],
   'user-status': 'active',
   timezone: 'London',
