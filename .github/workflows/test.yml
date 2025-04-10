@@ -455,7 +455,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: docker compose exec -T portal-api npm run api-test ${{ matrix.services }}/facilities/facilities/get/api-test.js --workspace=portal-api
+          command: docker compose exec -T portal-api npm run api-test ${{ matrix.services }}/facilities/facilities.get.api-test.js --workspace=portal-api
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
