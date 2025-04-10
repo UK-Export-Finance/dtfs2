@@ -6,6 +6,7 @@ import api from '../../../services/api';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { getAmendmentsUrl } from '../helpers/navigation.helper';
 import { createReferenceNumber } from '../helpers/create-amendment-reference-number.helper';
+import { ConfirmAmendmentSubmissionViewModel } from '../../../types/view-models/amendments/confirm-amendment-submission-view-model';
 
 export type PostSubmitAmendmentToUkefRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -34,10 +35,16 @@ export const postSubmitAmendmentToUkef = async (req: PostSubmitAmendmentToUkefRe
         errMsg: 'Select that you have reviewed the information given and want to proceed with the submission',
       });
 
-      return res.render('partials/submit-to-ukef.njk', {
+      const viewModel: ConfirmAmendmentSubmissionViewModel = {
+        exporterName: deal.exporter.companyName,
         dealId,
+        facilityId,
+        amendmentId,
+        previousPage: `/gef/application-details/${deal._id}/${PORTAL_AMENDMENT_PAGES.AMENDMENT_DETAILS}`,
         errors,
-      });
+      };
+
+      return res.render('partials/submit-to-ukef.njk', viewModel);
     }
 
     const referenceNumber = await createReferenceNumber(dealId, facilityId, userToken);

@@ -2,6 +2,8 @@ import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-commo
 import { Response } from 'express';
 import api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
+import { ConfirmAmendmentSubmissionViewModel } from '../../../types/view-models/amendments/confirm-amendment-submission-view-model';
+import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 
 export type GetSubmitAmendmentToUkefRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -38,11 +40,15 @@ export const getSubmitAmendmentToUkef = async (req: GetSubmitAmendmentToUkefRequ
       return res.redirect('/not-found');
     }
 
-    return res.render('partials/submit-to-ukef.njk', {
+    const viewModel: ConfirmAmendmentSubmissionViewModel = {
+      exporterName: deal.exporter.companyName,
       dealId,
       facilityId,
       amendmentId,
-    });
+      previousPage: `/gef/application-details/${deal._id}/${PORTAL_AMENDMENT_PAGES.AMENDMENT_DETAILS}`,
+    };
+
+    return res.render('partials/submit-to-ukef.njk', viewModel);
   } catch (error) {
     console.error('Error getting for submit amendment to ukef page %o', error);
     return res.render('partials/problem-with-service.njk');
