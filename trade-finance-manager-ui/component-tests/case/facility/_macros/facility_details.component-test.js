@@ -167,7 +167,7 @@ describe(component, () => {
 
   describe('`dates` section', () => {
     it('should render inclusionNoticeReceived as a dash when facilityStage is Commitment', () => {
-      wrapper.expectElement('[data-cy="facility-inclusion-notice-received"]').toRead('-');
+      wrapper.expectText('[data-cy="facility-inclusion-notice-received"]').toRead('-');
     });
 
     describe('when facilityStage is not Commitment', () => {
