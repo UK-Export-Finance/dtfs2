@@ -61,7 +61,7 @@ describe('/email', () => {
       process.env = { ...originalProcessEnv };
     });
 
-    it('should return 201 response from MDM GovNotify API', async () => {
+    it(`should return ${HttpStatusCode.Created} response from MDM GovNotify API`, async () => {
       axiosMock.onPost(`${APIM_MDM_URL}emails`).reply(HttpStatusCode.Created, mockSuccessfulResponse.data);
 
       const { status, body } = await post(mockBody).to('/email');
@@ -96,13 +96,37 @@ describe('/email', () => {
         process.env.GOV_NOTIFY_API_KEY = MOCK_E2E_GOV_NOTIFY_API_KEY;
       });
 
-      it('should return 200 response from MDM GovNotify API', async () => {
+      it(`should return ${HttpStatusCode.Ok} response`, async () => {
         process.env.GOV_NOTIFY_API_KEY = MOCK_E2E_GOV_NOTIFY_API_KEY;
 
         const { status, body } = await post(mockBody).to('/email');
 
         expect(status).toEqual(HttpStatusCode.Ok);
         expect(body).toEqual({});
+      });
+    });
+
+    describe('when MOCK_E2E_GOV_NOTIFY_API_KEY is undefined', () => {
+      it(`should return ${HttpStatusCode.Created} response from MDM GovNotify API`, async () => {
+        process.env.MOCK_E2E_GOV_NOTIFY_API_KEY = undefined;
+        axiosMock.onPost(`${APIM_MDM_URL}emails`).reply(HttpStatusCode.Created, mockSuccessfulResponse.data);
+
+        const { status, body } = await post(mockBody).to('/email');
+
+        expect(status).toEqual(mockSuccessfulResponse.status);
+        expect(body).toEqual(mockSuccessfulResponse.data);
+      });
+    });
+
+    describe('when MOCK_E2E_GOV_NOTIFY_API_KEY is an empty string', () => {
+      it(`should return ${HttpStatusCode.Created} response from MDM GovNotify API`, async () => {
+        process.env.MOCK_E2E_GOV_NOTIFY_API_KEY = '';
+        axiosMock.onPost(`${APIM_MDM_URL}emails`).reply(HttpStatusCode.Created, mockSuccessfulResponse.data);
+
+        const { status, body } = await post(mockBody).to('/email');
+
+        expect(status).toEqual(mockSuccessfulResponse.status);
+        expect(body).toEqual(mockSuccessfulResponse.data);
       });
     });
   });
