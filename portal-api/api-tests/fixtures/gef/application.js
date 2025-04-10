@@ -1,4 +1,7 @@
+const dotenv = require('dotenv');
 const CONSTANTS = require('../../../src/constants');
+
+dotenv.config();
 
 const APPLICATION = [
   {
@@ -15,6 +18,7 @@ const APPLICATION = [
     submissionCount: 0,
     editedBy: [null],
     facilitiesUpdated: null,
+    dealVersion: Number(process.env.GEF_DEAL_VERSION),
   },
   {
     dealType: CONSTANTS.DEAL.DEAL_TYPE.GEF,
