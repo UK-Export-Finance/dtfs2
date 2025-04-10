@@ -10,6 +10,7 @@ const mockUpdatePortalFacilityAmendmentByAmendmentId = jest.fn();
 const mockFindOneAmendmentByFacilityIdAndAmendmentId = jest.fn();
 const mockValidateNoOtherAmendmentInProgressOnDeal = jest.fn();
 const mockValidateAmendmentIsComplete = jest.fn();
+console.error = jest.fn();
 
 const amendmentId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
@@ -111,6 +112,7 @@ describe('PortalFacilityAmendmentService', () => {
 
         // Assert
         await expect(returned).rejects.toThrow(new AmendmentNotFoundError(amendmentId, facilityId));
+        expect(console.error).toHaveBeenCalledWith('Amendment with facilityId %s and amendmentId %s is not a portal amendment', facilityId, amendmentId);
       });
     });
 
