@@ -457,7 +457,7 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             GEF_DEAL_VERSION=${{ vars.GEF_DEAL_VERSION }}
-          retries: ${{ vars.RETRY_LIMIT }}
+          retries: 1
 
       - name: Stop
         working-directory: ./

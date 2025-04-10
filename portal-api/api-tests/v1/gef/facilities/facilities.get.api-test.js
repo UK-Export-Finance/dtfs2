@@ -88,7 +88,7 @@ describe(baseUrl, () => {
 
     it('returns an individual item', async () => {
       // eslint-disable-next-line no-console
-      console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', process.env.GEF_DEAL_VERSION);
+      console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!', getCurrentGefDealVersion());
       const { body } = await as(aMaker).get(oneFacilityUrl);
       expect(body).toEqual(newFacility);
     });
