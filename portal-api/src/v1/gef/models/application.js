@@ -10,8 +10,7 @@ class Application {
       this.dealType = DEAL_TYPE;
 
       this.version = getCurrentGefDealVersion();
-      // eslint-disable-next-line no-console
-      console.log('omg amendmenttttttt', getCurrentGefDealVersion());
+
       // ensure we don't consume any sensitive fields
       const { token: _token, password: _password, lastLogin: _lastLogin, ...sanitisedMaker } = req.maker;
 

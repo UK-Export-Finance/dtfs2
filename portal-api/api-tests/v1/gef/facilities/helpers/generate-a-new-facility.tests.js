@@ -41,7 +41,7 @@ const generateANewFacility = ({ dealId, makerId, dealVersion }) => {
       required: ['monthsOfCover', 'details', 'currency', 'value', 'coverPercentage', 'interestPercentage', 'feeType', 'feeFrequency', 'dayCountBasis'],
     },
   };
-
+  console.log('generating new facility', dealVersion);
   if (dealVersion >= 1) {
     facility.details.bankReviewDate = null;
     facility.details.facilityEndDate = null;
