@@ -35,7 +35,7 @@ describe('GET /v1/banks/:bankId/utilisation-reports/completed-corrections', () =
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
     testUsers = await testUserCache.initialise(app);
-    aBarclaysPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('Barclays Bank').one();
+    aBarclaysPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('Bank 1').one();
     barclaysBank = aBarclaysPaymentReportOfficer.bank;
 
     const aUtilisationReport = new UtilisationReportEntityMockBuilder().withBankId(barclaysBank.id).build();
