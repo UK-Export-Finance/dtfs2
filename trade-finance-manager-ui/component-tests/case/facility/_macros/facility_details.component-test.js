@@ -166,8 +166,26 @@ describe(component, () => {
   });
 
   describe('`dates` section', () => {
-    it('should NOT render inclusionNoticeReceived', () => {
-      wrapper.expectElement('[data-cy="facility-inclusion-notice-received"]').notToExist();
+    it('should render inclusionNoticeReceived as a dash when facilityStage is Commitment', () => {
+      wrapper.expectElement('[data-cy="facility-inclusion-notice-received"]').toRead('-');
+    });
+
+    describe('when facilityStage is not Commitment', () => {
+      beforeEach(() => {
+        const paramsWithNonCommitmentStage = {
+          ...params,
+          facility: {
+            ...params.facility,
+            facilityStage: 'Issued',
+          },
+        };
+        wrapper = render(paramsWithNonCommitmentStage);
+      });
+
+      it('should render inclusionNoticeReceived', () => {
+        const expected = localiseTimestamp(params.facility.dates.inclusionNoticeReceived, 'd MMMM yyyy', params.user.timezone);
+        wrapper.expectText('[data-cy="facility-inclusion-notice-received"]').toRead(expected);
+      });
     });
 
     it('should render bankIssueNoticeReceived', () => {
