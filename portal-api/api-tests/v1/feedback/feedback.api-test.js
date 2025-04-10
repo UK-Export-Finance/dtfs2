@@ -46,8 +46,8 @@ describe('/v1/feedback', () => {
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     testUser = testUsers().withRole(READ_ONLY).one();
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
-    aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Barclays Bank').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Bank 1').one();
     anAdmin = testUsers().withRole(ADMIN).one();
   });
 
