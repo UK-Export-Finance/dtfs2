@@ -22,8 +22,8 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
-    anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
     anAdmin = testUsers().withRole(ADMIN).one();
 
     await eligibilityCriteriaCache.initialise(app, anAdmin);
@@ -68,7 +68,7 @@ describe('/v1/deals/:id/eligibility-documentation', () => {
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
-      getUserWithRole: (role) => testUsers().withRole(role).withBankName('Barclays Bank').one(),
+      getUserWithRole: (role) => testUsers().withRole(role).withBankName('Bank 1').one(),
       makeRequestAsUser: (user) => as(user).get(aBarclaysEligibilityDocumentationFileUrl),
       successStatusCode: 200,
     });

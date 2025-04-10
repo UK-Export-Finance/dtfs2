@@ -19,7 +19,7 @@ module.exports = {
     roles: [MAKER],
     bank: {
       id: '956',
-      name: 'Barclays Bank',
+      name: 'Bank 1',
       emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
     isTrusted: false,
@@ -33,7 +33,7 @@ module.exports = {
     roles: [MAKER],
     bank: {
       id: '956',
-      name: 'Barclays Bank',
+      name: 'Bank 1',
       emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
     isTrusted: false,
@@ -47,7 +47,7 @@ module.exports = {
     roles: [CHECKER],
     bank: {
       id: '956',
-      name: 'Barclays Bank',
+      name: 'Bank 1',
       emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
     isTrusted: false,
@@ -61,7 +61,7 @@ module.exports = {
     roles: [MAKER, CHECKER],
     bank: {
       id: '956',
-      name: 'Barclays Bank',
+      name: 'Bank 1',
       emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
     isTrusted: false,
@@ -75,7 +75,7 @@ module.exports = {
     roles: ['reader'],
     bank: {
       id: '956',
-      name: 'Barclays Bank',
+      name: 'Bank 1',
       emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
     isTrusted: false,
@@ -89,7 +89,7 @@ module.exports = {
     roles: [MAKER],
     bank: {
       id: '961',
-      name: 'HSBC',
+      name: 'Bank 2',
     },
     isTrusted: false,
   },
@@ -102,7 +102,7 @@ module.exports = {
     roles: [CHECKER],
     bank: {
       id: '961',
-      name: 'HSBC',
+      name: 'Bank 2',
     },
     isTrusted: false,
   },
@@ -115,7 +115,7 @@ module.exports = {
     roles: [MAKER, CHECKER],
     bank: {
       id: '961',
-      name: 'HSBC',
+      name: 'Bank 2',
     },
     isTrusted: false,
   },
@@ -128,7 +128,7 @@ module.exports = {
     roles: ['reader'],
     bank: {
       id: '961',
-      name: 'HSBC',
+      name: 'Bank 2',
     },
     isTrusted: false,
   },
