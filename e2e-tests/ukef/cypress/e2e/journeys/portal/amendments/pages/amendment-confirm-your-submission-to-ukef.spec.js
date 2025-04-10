@@ -3,7 +3,7 @@ import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { applicationPreview, submitToUkef } from '../../../../../../../gef/cypress/e2e/pages';
-import { cancelLink, errorSummary, mainHeading, submitButton } from '../../../../../../../gef/cypress/e2e/partials';
+import { errorSummary, mainHeading, submitButton } from '../../../../../../../gef/cypress/e2e/partials';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
@@ -74,7 +74,7 @@ context('Amendments - confirm you submission page', () => {
         );
       });
     submitButton();
-    cancelLink();
+    cy.clickCancelLink();
   });
 
   it('should display an error when the confirmation checkbox is not checked', () => {
@@ -84,12 +84,12 @@ context('Amendments - confirm you submission page', () => {
   });
 
   it('should redirect to the dashboard when clicking the back link', () => {
-    submitToUkef.backLink().click();
+    cy.clickBackLink();
     cy.url().should('eq', relative(amendmentDetailsUrl));
   });
 
   it('should take checker back to application review page when cancelled', () => {
-    cancelLink().click();
+    cy.clickCancelLink();
     cy.location('pathname').should('eq', `/gef/application-details/${dealId}`);
   });
 });

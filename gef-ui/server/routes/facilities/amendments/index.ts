@@ -142,7 +142,6 @@ router
   .get(getSubmitAmendmentToUkef)
   .post(postSubmitAmendmentToUkef);
 
-// TODO: DTFS2-7753 - change to checker
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${APPROVED_BY_UKEF}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
