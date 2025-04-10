@@ -430,6 +430,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            GEF_DEAL_VERSION=${{ vars.GEF_DEAL_VERSION }}
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -439,6 +440,7 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            GEF_DEAL_VERSION=${{ vars.GEF_DEAL_VERSION }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
@@ -454,6 +456,7 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            GEF_DEAL_VERSION=${{ vars.GEF_DEAL_VERSION }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Stop
