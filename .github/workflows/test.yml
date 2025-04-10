@@ -376,27 +376,30 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
+        # services: [
+        #   'api-tests/api',
+        #   'api-tests/drivers',
+        #   'api-tests/v1/bank-holidays',
+        #   'api-tests/v1/banks',
+        #   'api-tests/v1/bonds',
+        #   'api-tests/v1/companies',
+        #   'api-tests/v1/countries',
+        #   'api-tests/v1/currencies',
+        #   'api-tests/v1/deals',
+        #   'api-tests/v1/eligibility-criteria',
+        #   'api-tests/v1/feedback',
+        #   'api-tests/v1/gef',
+        #   'api-tests/v1/industry-sectors',
+        #   'api-tests/v1/loan',
+        #   'api-tests/v1/mandatory-criteria',
+        #   'api-tests/v1/middleware',
+        #   'api-tests/v1/reports',
+        #   'api-tests/v1/users',
+        #   'api-tests/v1/utilisation-report-service',
+        #   'api-tests/v1/validate',
+        #   ]
         services: [
-          'api-tests/api',
-          'api-tests/drivers',
-          'api-tests/v1/bank-holidays',
-          'api-tests/v1/banks',
-          'api-tests/v1/bonds',
-          'api-tests/v1/companies',
-          'api-tests/v1/countries',
-          'api-tests/v1/currencies',
-          'api-tests/v1/deals',
-          'api-tests/v1/eligibility-criteria',
-          'api-tests/v1/feedback',
           'api-tests/v1/gef',
-          'api-tests/v1/industry-sectors',
-          'api-tests/v1/loan',
-          'api-tests/v1/mandatory-criteria',
-          'api-tests/v1/middleware',
-          'api-tests/v1/reports',
-          'api-tests/v1/users',
-          'api-tests/v1/utilisation-report-service',
-          'api-tests/v1/validate',
           ]
 
     concurrency:
