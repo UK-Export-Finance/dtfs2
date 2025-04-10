@@ -25,6 +25,10 @@ users.forEach((user) => {
         userRoles,
         exporterName: deal.exporter.companyName,
         facilityType: facility.type,
+        submitAmendment: userRoles.includes('checker'),
+        dealId: deal._id,
+        facilityId: facility._id,
+        amendmentId: amendment.amendmentId,
         previousPage: `/gef/application-details/${deal._id}`,
         amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
       };

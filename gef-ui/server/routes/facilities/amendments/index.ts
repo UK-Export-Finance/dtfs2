@@ -30,6 +30,8 @@ import { postCheckYourAnswers } from '../../../controllers/amendments/check-your
 import { getSubmittedForChecking } from '../../../controllers/amendments/submitted-for-checking/get-submitted-for-checking.ts';
 import { getApprovedByUkef } from '../../../controllers/amendments/approved-by-ukef/get-approved-by-ukef.ts';
 import { getAmendmentDetails } from '../../../controllers/amendments/amendment-details/get-amendment-details.ts';
+import { getSubmitAmendmentToUkef } from '../../../controllers/amendments/submit-amendment-to-ukef/get-submit-amendment-to-ukef.ts';
+import { postSubmitAmendmentToUkef } from '../../../controllers/amendments/submit-amendment-to-ukef/post-submit-amendment-to-ukef.ts';
 
 const {
   WHAT_DO_YOU_NEED_TO_CHANGE,
@@ -46,6 +48,7 @@ const {
   SUBMITTED_FOR_CHECKING,
   APPROVED_BY_UKEF,
   AMENDMENT_DETAILS,
+  SUBMIT_AMENDMENT_TO_UKEF,
 } = PORTAL_AMENDMENT_PAGES;
 
 const router = express.Router();
@@ -133,7 +136,12 @@ router
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getSubmittedForChecking);
 
-// TODO: DTFS2-7753 - change to checker
+router
+  .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${SUBMIT_AMENDMENT_TO_UKEF}`)
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [CHECKER] })])
+  .get(getSubmitAmendmentToUkef)
+  .post(postSubmitAmendmentToUkef);
+
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${APPROVED_BY_UKEF}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
