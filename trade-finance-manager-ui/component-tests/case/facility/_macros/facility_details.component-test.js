@@ -166,9 +166,8 @@ describe(component, () => {
   });
 
   describe('`dates` section', () => {
-    it('should render inclusionNoticeReceived', () => {
-      const expected = localiseTimestamp(params.facility.dates.inclusionNoticeReceived, 'd MMMM yyyy', params.user.timezone);
-      wrapper.expectText('[data-cy="facility-inclusion-notice-received"]').toRead(expected);
+    it('should NOT render inclusionNoticeReceived', () => {
+      wrapper.expectElement('[data-cy="facility-inclusion-notice-received"]').notToExist();
     });
 
     it('should render bankIssueNoticeReceived', () => {
