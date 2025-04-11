@@ -4,7 +4,7 @@ import { UtilisationReportRepo } from '../../../../repositories/utilisation-repo
 import { parseReportPeriod } from '../../../../utils/report-period';
 import { mapUtilisationReportEntityToGetUtilisationReportResponse } from '../../../../mapping/mapUtilisationReport';
 
-type GetUtilisationReportsByBankIdParam = {
+type GetUtilisationReportsByBankIdParams = {
   bankId: string;
 };
 
@@ -14,7 +14,7 @@ type GetUtilisationReportByBankIdQuery = {
 };
 
 export type GetUtilisationReportsByBankIdAndOptionsRequest = CustomExpressRequest<{
-  params: GetUtilisationReportsByBankIdParam;
+  params: GetUtilisationReportsByBankIdParams;
   query: GetUtilisationReportByBankIdQuery;
 }>;
 
