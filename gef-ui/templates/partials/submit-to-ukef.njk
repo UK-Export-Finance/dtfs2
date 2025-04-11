@@ -1,5 +1,6 @@
 {% extends "index.njk" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
@@ -18,9 +19,24 @@
     }) }}
   {% endif %}
 
+  {% if amendmentId %}
+    {{ govukBackLink({
+    text: "Back",
+    href: previousPage,
+    attributes: {
+      "data-cy": "back-link"
+    }
+  }) }}
+  {% endif %}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
       <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-cy="main-heading">
+        {% if amendmentId %}
+          <span class="govuk-caption-l" data-cy="heading-caption">
+            {{ exporterName }}, {{ facilityType }} facility
+        </span>
+        {% endif %}
         Confirm your submission
       </h1>
 
@@ -52,7 +68,6 @@
           ],
           errorMessage: errors.fieldErrors.confirmSubmitUkef
         }) }}
-
 
         <p class="govuk-button-group govuk-!-margin-top-7" id="submit-to-ukef-submit">
           {{ govukButton({

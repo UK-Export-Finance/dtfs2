@@ -1,7 +1,7 @@
 import { Response } from 'supertest';
 import * as z from 'zod';
 import { PORTAL_FACILITY_AMENDMENT_USER_VALUES } from '@ukef/dtfs2-common/schemas';
-import { PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, PortalFacilityAmendmentWithUkefId, portalAmendmentToCheckerEmailVariables } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { testApi } from '../test-api';
 
@@ -23,11 +23,13 @@ export const createPortalFacilityAmendment = async ({
   dealId,
   amendment = {},
   userId,
+  status = PORTAL_AMENDMENT_STATUS.DRAFT,
 }: {
   facilityId: string;
   dealId: string;
   amendment?: Partial<z.infer<typeof PORTAL_FACILITY_AMENDMENT_USER_VALUES>>;
   userId: string;
+  status?: string;
 }) => {
   const { body } = (await testApi
     .put({ dealId, amendment, auditDetails: generatePortalAuditDetails(userId) })
@@ -38,6 +40,16 @@ export const createPortalFacilityAmendment = async ({
     await testApi
       .patch({ update: { eligibilityCriteria: amendment.eligibilityCriteria }, auditDetails: generatePortalAuditDetails(userId) })
       .to(`/v1/portal/facilities/${facilityId}/amendments/${body.amendmentId}`);
+  }
+
+  if (status === PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL) {
+    await testApi
+      .patch({
+        newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+        auditDetails: generatePortalAuditDetails(userId),
+        ...portalAmendmentToCheckerEmailVariables(),
+      })
+      .to(`/v1/portal/facilities/${facilityId}/amendments/${body.amendmentId}/status`);
   }
 
   return body;

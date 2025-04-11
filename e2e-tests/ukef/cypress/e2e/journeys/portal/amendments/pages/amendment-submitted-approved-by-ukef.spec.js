@@ -13,7 +13,7 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
 const CHANGED_FACILITY_VALUE = '10000';
 
-context('Amendments - Amendment details page', () => {
+context('Amendments - Approved by Ukef page', () => {
   let dealId;
   let facilityId;
   let submittedUrl;

@@ -6,6 +6,7 @@ import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo'
 import { getAmendment, GetAmendmentRequest } from './get-amendment.controller';
 
 const mockFindOneAmendmentByFacilityIdAndAmendmentId = jest.fn() as jest.Mock<Promise<FacilityAmendmentWithUkefId | undefined>>;
+console.error = jest.fn();
 
 const facilityId = new ObjectId().toString();
 const amendmentId = new ObjectId().toString();
@@ -54,6 +55,7 @@ describe('getAmendment', () => {
 
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
+    expect(console.error).toHaveBeenCalledWith('Amendment with facilityId %s and amendmentId %s is not a portal amendment', facilityId, amendmentId);
   });
 
   it(`should set the status to ${HttpStatusCode.NotFound} if the amendment type is undefined`, async () => {
