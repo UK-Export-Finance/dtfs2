@@ -454,8 +454,8 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            ${{ vars.RETRY_LIMIT }}
-
+          retries: ${{ vars.RETRY_LIMIT }}
+          
       - name: Stop
         working-directory: ./
         run: docker compose down
