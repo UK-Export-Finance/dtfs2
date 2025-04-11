@@ -37,6 +37,10 @@ describe(baseUrl, () => {
     aMaker = testUsers().withRole(MAKER).one();
   });
 
+  afterAll(() => {
+    jest.resetAllMocks();
+  });
+
   beforeEach(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES, DB_COLLECTIONS.DEALS]);
   });
