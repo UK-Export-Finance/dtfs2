@@ -17,7 +17,7 @@ const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
 const headers = {
   [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
   [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
-  [String(MDM.GOV_UK_NOTIFY_KEY_HEADER_NAME)]: process.env.GOV_NOTIFY_API_KEY || '',
+  [String(MDM.GOV_UK_NOTIFY_KEY_HEADER_NAME)]: process.env.GOV_NOTIFY_API_KEY ?? '',
 };
 
 export const emailNotification = async (req: Request, res: Response) => {

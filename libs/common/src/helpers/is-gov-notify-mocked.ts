@@ -8,8 +8,8 @@ dotenv.config();
  * @returns true if notifyKey is the same as MOCK_E2E_GOV_NOTIFY_API_KEY
  */
 export const isGovNotifyMocked = (): boolean => {
-  const notifyKey: string = process.env.GOV_NOTIFY_API_KEY || '';
-  const mockNotifyKey: string = process.env.MOCK_E2E_GOV_NOTIFY_API_KEY || '';
+  const notifyKey: string = process.env.GOV_NOTIFY_API_KEY ?? '';
+  const mockNotifyKey: string = process.env.MOCK_E2E_GOV_NOTIFY_API_KEY ?? '';
 
   return notifyKey === mockNotifyKey;
 };
