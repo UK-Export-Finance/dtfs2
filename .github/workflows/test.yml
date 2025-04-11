@@ -266,7 +266,7 @@ jobs:
           flags: api-test
           verbose: true
 
-  # 2.2 API tests
+  # 2.2 dtfs-central-api API tests
   dtfs-central-api-api-tests:
     name: API - dtfs-central-api 👷
     needs: [setup]
