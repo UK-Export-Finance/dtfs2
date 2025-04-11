@@ -1,21 +1,21 @@
 const { getCurrentGefDealVersion, FACILITY_TYPE } = require('@ukef/dtfs2-common');
-const databaseHelper = require('../../database-helper');
+const databaseHelper = require('../../../database-helper');
 
-const app = require('../../../src/createApp');
-const testUserCache = require('../../api-test-users');
-const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const app = require('../../../../src/createApp');
+const testUserCache = require('../../../api-test-users');
+const { withClientAuthenticationTests } = require('../../../common-tests/client-authentication-tests');
+const { withRoleAuthorisationTests } = require('../../../common-tests/role-authorisation-tests');
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../../src/v1/roles/roles');
 
-const { as, get } = require('../../api')(app);
+const { as, get } = require('../../../api')(app);
 
 const baseUrl = '/v1/gef/facilities';
 
 const applicationBaseUrl = '/v1/gef/application';
-const mockApplications = require('../../fixtures/gef/application');
+const mockApplications = require('../../../fixtures/gef/application');
 
-const { DB_COLLECTIONS } = require('../../fixtures/constants');
-const { generateANewFacility } = require('../gef/facilities/helpers/generate-a-new-facility.tests');
+const { DB_COLLECTIONS } = require('../../../fixtures/constants');
+const { generateANewFacility } = require('./helpers/generate-a-new-facility.tests');
 
 describe(baseUrl, () => {
   let aMaker;
