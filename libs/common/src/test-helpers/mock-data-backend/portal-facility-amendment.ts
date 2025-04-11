@@ -17,7 +17,10 @@ export const aPortalFacilityAmendmentUserValues = (): PortalFacilityAmendmentUse
   effectiveDate: getUnixTime(new Date()),
 });
 
-export const aPortalFacilityAmendment = ({ status = PORTAL_AMENDMENT_STATUS.DRAFT }: { status?: PortalAmendmentStatus } = {}): PortalFacilityAmendment => ({
+export const aPortalFacilityAmendment = ({
+  status = PORTAL_AMENDMENT_STATUS.DRAFT,
+  referenceNumber,
+}: { status?: PortalAmendmentStatus; referenceNumber?: string } = {}): PortalFacilityAmendment => ({
   ...aPortalFacilityAmendmentUserValues(),
   type: AMENDMENT_TYPES.PORTAL,
   amendmentId: new ObjectId(),
@@ -26,6 +29,7 @@ export const aPortalFacilityAmendment = ({ status = PORTAL_AMENDMENT_STATUS.DRAF
   createdAt: getUnixTime(new Date()),
   updatedAt: getUnixTime(new Date()),
   status,
+  referenceNumber: referenceNumber || undefined,
   eligibilityCriteria: {
     criteria: [{ id: 1, text: 'item 1', answer: null }],
     version: 1,

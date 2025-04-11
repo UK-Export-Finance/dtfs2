@@ -131,6 +131,7 @@ export interface AmendmentsEligibilityCriterionWithAnswer extends AmendmentsElig
 export interface PortalFacilityAmendment extends BaseAmendment {
   type: typeof AMENDMENT_TYPES.PORTAL;
   status: PortalAmendmentStatus;
+  referenceNumber?: string;
   eligibilityCriteria: {
     version: number;
     criteria: AmendmentsEligibilityCriterionWithAnswer[];

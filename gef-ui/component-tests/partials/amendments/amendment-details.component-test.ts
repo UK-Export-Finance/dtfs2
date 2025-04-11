@@ -5,6 +5,10 @@ import { AmendmentDetailsViewModel } from '../../../server/types/view-models/ame
 const page = 'partials/amendments/amendment-details.njk';
 const render = pageRenderer(page);
 
+const dealId = '6597dffeb5ef5ff4267e5044';
+const facilityId = '6597dffeb5ef5ff4267e5045';
+const amendmentId = '6597dffeb5ef5ff4267e5046';
+
 const users = [ROLES.MAKER, ROLES.CHECKER];
 
 users.forEach((user) => {
@@ -14,12 +18,17 @@ users.forEach((user) => {
       const exporterName = 'exporterName';
       const facilityType = FACILITY_TYPE.CASH;
       const userRoles = [user];
+      const submitAmendment = user.includes(ROLES.CHECKER);
 
       const params: AmendmentDetailsViewModel = {
         userRoles,
-        previousPage,
         exporterName,
         facilityType,
+        submitAmendment,
+        dealId,
+        facilityId,
+        amendmentId,
+        previousPage,
         amendmentSummaryListParams: {
           amendmentRows: [],
           eligibilityRows: [],
