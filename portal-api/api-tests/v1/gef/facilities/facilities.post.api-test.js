@@ -38,6 +38,10 @@ describe(baseUrl, () => {
     await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES, DB_COLLECTIONS.DEALS]);
   });
 
+  afterAll(() => {
+    jest.resetAllMocks();
+  });
+
   describe(`POST ${baseUrl}`, () => {
     describe.each([0, 1])('with GEF_DEAL_VERSION = %s', (dealVersion) => {
       beforeEach(async () => {

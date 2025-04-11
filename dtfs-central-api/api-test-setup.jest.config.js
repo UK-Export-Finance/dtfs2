@@ -13,9 +13,17 @@ jest.mock('./src/services/changeStream/setupChangeStream', () => ({
 
 beforeAll(async () => {
   await testApi.initialise();
+
+  if (!console.error.mock) {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  }
 });
 
 afterAll(async () => {
   await db.close();
   await SqlDbDataSource.destroy();
+
+  if (console.error.mock) {
+    console.error.mockRestore();
+  }
 });
