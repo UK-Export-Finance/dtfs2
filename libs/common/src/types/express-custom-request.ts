@@ -32,7 +32,7 @@ interface RequestQuery {
  * - `params`: An optional {@link RequestParams} object for URL parameters.
  * - `resBody`: An optional response body of any type.
  * - `reqBody`: An optional request body of any type.
- * - `query`: An optional {@link RequestQuery} object for query parameters.
+ * - `query`: An optional {@link RequestQuery} interface or {@link ParsedQs} type for query parameters.
  */
 type CustomExpressRequestOptions = {
   params?: RequestParams;
