@@ -2,8 +2,7 @@ import relative from '../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { applicationPreview, submitToUkef } from '../../../../../../../gef/cypress/e2e/pages';
-import { mainHeading, submitButton } from '../../../../../../../gef/cypress/e2e/partials';
+import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
@@ -58,16 +57,10 @@ context('Amendments - Submit Amendment to UKEF journey', () => {
   });
 
   it('should submit the amendment to Ukef', () => {
-    cy.visit(relative(amendmentDetailsUrl));
-    submitButton().should('exist');
-    cy.assertText(submitButton(), 'Submit to UKEF');
-    cy.clickSubmitButton();
+    const approvedByUkefUrl = `${submittedUrl}/approved-by-ukef`;
 
-    cy.url().should('eq', relative(`${submittedUrl}/submit-amendment-to-ukef`));
-    mainHeading().contains('Confirm your submission');
-    submitToUkef.confirmSubmissionCheckbox().click();
-    cy.clickSubmitButton();
+    cy.checkerSubmitsPortalAmendmentRequest({ submittedUrl: approvedByUkefUrl, amendmentDetailsUrl });
 
-    cy.url().should('eq', relative(`${submittedUrl}/approved-by-ukef`));
+    cy.url().should('eq', relative(approvedByUkefUrl));
   });
 });

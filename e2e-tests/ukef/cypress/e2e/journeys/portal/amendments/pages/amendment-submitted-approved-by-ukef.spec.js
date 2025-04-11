@@ -3,7 +3,7 @@ import relative from '../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { applicationPreview, submitToUkef } from '../../../../../../../gef/cypress/e2e/pages';
+import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
 
 import amendmentPage from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 import approvedByUkef from '../../../../../../../gef/cypress/e2e/pages/amendments/approved-by-ukef';
@@ -38,22 +38,14 @@ context('Amendments - Approved by Ukef page', () => {
 
         cy.getAmendmentIdFromUrl().then((amendmentId) => {
           submittedUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/approved-by-ukef`;
-          cy.makerSubmitPortalAmendmentForReview({
+          const amendmentDetailsUrl = `/gef/application-details/${dealId}/amendment-details`;
+
+          cy.makerAndCheckerSubmitPortalAmendmentRequest({
             facilityValueExists: true,
             changedFacilityValue: CHANGED_FACILITY_VALUE,
+            amendmentDetailsUrl,
+            submittedUrl,
           });
-
-          cy.login(BANK1_CHECKER1);
-
-          const amendmentDetailsUrl = `/gef/application-details/${dealId}/amendment-details`;
-          cy.visit(relative(amendmentDetailsUrl));
-
-          cy.clickSubmitButton();
-
-          submitToUkef.confirmSubmissionCheckbox().click();
-          cy.clickSubmitButton();
-
-          cy.url().should('eq', relative(submittedUrl));
         });
       });
     });
