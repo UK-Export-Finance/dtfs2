@@ -26,13 +26,14 @@ describe(page, () => {
     const params = {
       approvedByUkef: true,
       effectiveDate: '1 January 2023',
+      referenceNumber: '123456-01',
     };
 
     it('should render the confirmation panel', () => {
       const wrapper = render(params);
 
       wrapper.expectText('[data-cy="approved-by-ukef-confirmation-panel"]').toContain('Amendment approved by UKEF');
-      wrapper.expectText('[data-cy="amendment-reference"]').toRead('Amendment reference is undefined');
+      wrapper.expectText('[data-cy="amendment-reference"]').toRead(`Amendment reference is ${params.referenceNumber}`);
       wrapper.expectText('[data-cy="confirmation-email"]').toRead("We've sent you a confirmation email.");
     });
 

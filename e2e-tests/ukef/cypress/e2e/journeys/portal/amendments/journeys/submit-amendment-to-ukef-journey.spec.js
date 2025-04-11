@@ -68,7 +68,6 @@ context('Amendments - Submit Amendment to UKEF journey', () => {
     submitToUkef.confirmSubmissionCheckbox().click();
     cy.clickSubmitButton();
 
-    // TODO: DTFS2 - 7753
-    // cy.url().should('eq', relative(`${submittedUrl}/approved-by-ukef`));
+    cy.url().should('eq', relative(`${submittedUrl}/approved-by-ukef`));
   });
 });

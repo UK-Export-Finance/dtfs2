@@ -3,12 +3,12 @@ import relative from '../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
+import { applicationPreview, submitToUkef } from '../../../../../../../gef/cypress/e2e/pages';
 
 import amendmentPage from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 import approvedByUkef from '../../../../../../../gef/cypress/e2e/pages/amendments/approved-by-ukef';
 
-const { BANK1_MAKER1 } = MOCK_USERS;
+const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
 const CHANGED_FACILITY_VALUE = '10000';
@@ -38,11 +38,22 @@ context('Amendments - Approved by Ukef page', () => {
 
         cy.getAmendmentIdFromUrl().then((amendmentId) => {
           submittedUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/approved-by-ukef`;
-          cy.makerMakesPortalAmendmentRequest({
+          cy.makerSubmitPortalAmendmentForReview({
             facilityValueExists: true,
             changedFacilityValue: CHANGED_FACILITY_VALUE,
           });
+
+          cy.login(BANK1_CHECKER1);
+
+          const amendmentDetailsUrl = `/gef/application-details/${dealId}/amendment-details`;
+          cy.visit(relative(amendmentDetailsUrl));
+
           cy.clickSubmitButton();
+
+          submitToUkef.confirmSubmissionCheckbox().click();
+          cy.clickSubmitButton();
+
+          cy.url().should('eq', relative(submittedUrl));
         });
       });
     });
@@ -55,7 +66,7 @@ context('Amendments - Approved by Ukef page', () => {
 
   beforeEach(() => {
     cy.clearSessionCookies();
-    cy.login(BANK1_MAKER1);
+    cy.login(BANK1_CHECKER1);
     cy.visit(submittedUrl);
   });
 
@@ -63,7 +74,7 @@ context('Amendments - Approved by Ukef page', () => {
     approvedByUkef.approvedByUkefPanel().should('exist');
     approvedByUkef.approvedByUkefPanel().contains('Amendment approved by UKEF');
 
-    cy.assertText(approvedByUkef.amendmentReference(), 'Amendment reference is undefined');
+    cy.assertText(approvedByUkef.amendmentReference(), `Amendment reference is ${mockFacility.ukefFacilityId}-01`);
     cy.assertText(approvedByUkef.confirmationEmail(), "We've sent you a confirmation email.");
   });
 
