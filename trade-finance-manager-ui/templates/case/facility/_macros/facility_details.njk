@@ -101,7 +101,7 @@
       <dl class="govuk-grid-row ukef-list ukef-list-one-column">
         <dt class="govuk-grid-column-one-quarter govuk-body-s">Inclusion notice received</dt>
         <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="facility-inclusion-notice-received">
-          {% if facility.facilityStage === 'Commitment' %}
+          {% if deal.submissionType === 'Manual Inclusion Application' %}
             -
           {% else %}
             {{ facility.dates.inclusionNoticeReceived | localiseTimestamp("d MMMM yyyy", user.timezone) | dashIfEmpty }}

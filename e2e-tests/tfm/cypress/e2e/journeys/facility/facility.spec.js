@@ -2,10 +2,12 @@ import relative from '../../relativeURL';
 import { caseSummary, caseSubNavigation } from '../../partials';
 import facilityPage from '../../pages/facilityPage';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
+import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { T1_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 
 context('Facility page', () => {
   let dealId;
+  let deal1;
   const dealFacilities = [];
 
   before(() => {
@@ -19,6 +21,18 @@ context('Facility page', () => {
       });
 
       cy.submitDeal(dealId, dealType, T1_USER_1);
+    });
+
+    cy.insertOneDeal(MOCK_DEAL_MIA, BANK1_MAKER1).then((insertedDeal) => {
+      deal1 = insertedDeal._id;
+
+      const { dealType, mockFacilities } = MOCK_DEAL_MIA;
+
+      cy.createFacilities(deal1, mockFacilities, BANK1_MAKER1).then((createdFacilities) => {
+        dealFacilities.push(...createdFacilities);
+      });
+
+      cy.submitDeal(deal1, dealType, T1_USER_1);
     });
   });
 
@@ -57,5 +71,23 @@ context('Facility page', () => {
     caseSubNavigation.partiesLink().click();
 
     cy.url().should('eq', relative(`/case/${dealId}/parties`));
+  });
+
+  it('should display Inclusion notice received when submission type is Automatic Inclusion Notice', () => {
+    const facilityId = dealFacilities[0]._id;
+    cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
+
+    // Wait for the page to load
+    cy.contains('Dates').should('be.visible');
+
+    // Check the Inclusion notice received field under the Dates section
+    cy.get('[data-cy="facility-inclusion-notice-received"]').should('not.contain', '-');
+  });
+
+  it('should display dash for Inclusion notice received when submission type is Manual Inclusion Application', () => {
+    const facilityId = dealFacilities[1]._id;
+    cy.visit(relative(`/case/${deal1}/facility/${facilityId}`));
+
+    cy.get('[data-cy="facility-inclusion-notice-received"]').should('contain', '-');
   });
 });
