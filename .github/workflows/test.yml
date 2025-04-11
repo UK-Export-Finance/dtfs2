@@ -399,8 +399,7 @@ jobs:
         #   'api-tests/v1/validate',
         #   ]
         services: [
-          'api-tests/v1/gef/application.api-test.js',
-          'api-tests/v1/gef/facilities.get.api-test.js',
+          'api-tests/v1/test',
           ]
 
     concurrency:
