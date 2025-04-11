@@ -399,7 +399,7 @@ jobs:
         #   'api-tests/v1/validate',
         #   ]
         services: [
-          'api-tests/v1/test',
+          'api-tests/v1/gef',
           ]
 
     concurrency:
