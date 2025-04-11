@@ -1,7 +1,6 @@
-import { ApiError, CurrencyAndAmount, RecordCorrectionReason } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, ApiError, CurrencyAndAmount, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { CustomExpressRequest } from '../../../../../types/custom-express-request';
 import { NotFoundError } from '../../../../../errors';
 import { FeeRecordCorrectionRepo } from '../../../../../repositories/fee-record-correction-repo';
 import { mapFeeRecordCorrectionEntityToResponse } from './helpers';

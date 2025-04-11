@@ -1,7 +1,6 @@
-import { ApiError } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, ApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { PostRemoveFeesFromPaymentGroupPayload } from '../../../routes/middleware/payload-validation/validate-post-remove-fees-from-payment-group-payload';
 import { InvalidPayloadError, NotFoundError } from '../../../../errors';
 import { PaymentRepo } from '../../../../repositories/payment-repo';

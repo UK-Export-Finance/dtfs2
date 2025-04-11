@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { ParsedQs } from 'qs';
 
 /**
  * A type representing the parameters of an Express request.
@@ -37,7 +38,7 @@ type CustomExpressRequestOptions = {
   params?: RequestParams;
   resBody?: any;
   reqBody?: any;
-  query?: RequestQuery;
+  query?: RequestQuery | ParsedQs;
 };
 
 /**
@@ -54,5 +55,5 @@ export type CustomExpressRequest<Options extends CustomExpressRequestOptions> = 
   'params' extends keyof Options ? Options['params'] : RequestParams,
   'resBody' extends keyof Options ? Options['resBody'] : any,
   'reqBody' extends keyof Options ? Options['reqBody'] : any,
-  'query' extends keyof Options ? Options['query'] : RequestQuery
+  'query' extends keyof Options ? Options['query'] : ParsedQs
 >;

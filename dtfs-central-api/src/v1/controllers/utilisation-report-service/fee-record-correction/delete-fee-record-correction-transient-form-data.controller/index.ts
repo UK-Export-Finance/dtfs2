@@ -1,7 +1,6 @@
-import { ApiError } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, ApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { CustomExpressRequest } from '../../../../../types/custom-express-request';
 import { FeeRecordCorrectionTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-transient-form-data-repo';
 
 export type DeleteFeeRecordCorrectionTransientFormDataRequest = CustomExpressRequest<{
