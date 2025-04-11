@@ -144,7 +144,7 @@ router
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${APPROVED_BY_UKEF}`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [CHECKER] })])
   .get(getApprovedByUkef);
 
 router
