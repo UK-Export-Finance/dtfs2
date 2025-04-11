@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import { AddToAnExistingPaymentViewModel } from '../../../types/view-models';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
@@ -7,7 +7,6 @@ import {
   getFeeRecordIdsFromPremiumPaymentsCheckboxIds,
   getPremiumPaymentsCheckboxIdsFromObjectKeys,
 } from '../../../helpers/premium-payments-table-checkbox-id-helper';
-import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import {
   extractAddToAnExistingPaymentRadioPaymentIdsAndValidateIfPresent,

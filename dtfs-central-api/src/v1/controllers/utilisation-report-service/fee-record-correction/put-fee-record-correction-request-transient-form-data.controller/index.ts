@@ -1,7 +1,6 @@
-import { ApiError, FeeRecordCorrectionRequestTransientFormDataEntity, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, ApiError, FeeRecordCorrectionRequestTransientFormDataEntity, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { CustomExpressRequest } from '../../../../../types/custom-express-request';
 import { PutFeeRecordCorrectionRequestTransientFormDataPayload } from '../../../../routes/middleware/payload-validation';
 import { FeeRecordCorrectionRequestTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-request-transient-form-data-repo';
 import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';

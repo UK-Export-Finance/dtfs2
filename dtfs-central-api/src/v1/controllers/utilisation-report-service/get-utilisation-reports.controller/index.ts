@@ -1,18 +1,21 @@
 import { Request, Response } from 'express';
-import { UtilisationReportEntity } from '@ukef/dtfs2-common';
-import { CustomExpressRequest } from '../../../../types/custom-express-request';
+import { CustomExpressRequest, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { parseReportPeriod } from '../../../../utils/report-period';
 import { mapUtilisationReportEntityToGetUtilisationReportResponse } from '../../../../mapping/mapUtilisationReport';
 
+type GetUtilisationReportsByBankIdParams = {
+  bankId: string;
+};
+
+type GetUtilisationReportByBankIdQuery = {
+  reportPeriod?: Request['query'];
+  excludeNotReceived?: 'true' | 'false';
+};
+
 export type GetUtilisationReportsByBankIdAndOptionsRequest = CustomExpressRequest<{
-  params: {
-    bankId: string;
-  };
-  query: {
-    reportPeriod?: Request['query'];
-    excludeNotReceived?: 'true' | 'false';
-  };
+  params: GetUtilisationReportsByBankIdParams;
+  query: GetUtilisationReportByBankIdQuery;
 }>;
 
 /**

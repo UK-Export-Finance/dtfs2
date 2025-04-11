@@ -1,8 +1,7 @@
-import { PaymentDetailsFilters, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PaymentDetailsFilters, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { UtilisationReportReconciliationDetails } from '../../../../types/utilisation-reports';
-import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { NotFoundError, ApiError } from '../../../../errors';
 import { getUtilisationReportReconciliationDetails } from './helpers';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';

@@ -1,7 +1,6 @@
 import { Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { ApiError, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
-import { CustomExpressRequest } from '../../../../types/custom-express-request';
+import { CustomExpressRequest, ApiError, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { PatchPaymentPayload } from '../../../routes/middleware/payload-validation/validate-patch-payment-payload';
 import { executeWithSqlTransaction } from '../../../../helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';

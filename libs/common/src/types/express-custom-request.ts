@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { ParsedQs } from 'qs';
 
 /**
  * A type representing the parameters of an Express request.
@@ -31,13 +32,13 @@ interface RequestQuery {
  * - `params`: An optional {@link RequestParams} object for URL parameters.
  * - `resBody`: An optional response body of any type.
  * - `reqBody`: An optional request body of any type.
- * - `query`: An optional {@link RequestQuery} object for query parameters.
+ * - `query`: An optional {@link RequestQuery} interface or {@link ParsedQs} type for query parameters.
  */
 type CustomExpressRequestOptions = {
   params?: RequestParams;
   resBody?: any;
   reqBody?: any;
-  query?: RequestQuery;
+  query?: RequestQuery | ParsedQs;
 };
 
 /**
@@ -54,5 +55,5 @@ export type CustomExpressRequest<Options extends CustomExpressRequestOptions> = 
   'params' extends keyof Options ? Options['params'] : RequestParams,
   'resBody' extends keyof Options ? Options['resBody'] : any,
   'reqBody' extends keyof Options ? Options['reqBody'] : any,
-  'query' extends keyof Options ? Options['query'] : RequestQuery
+  'query' extends keyof Options ? Options['query'] : ParsedQs
 >;

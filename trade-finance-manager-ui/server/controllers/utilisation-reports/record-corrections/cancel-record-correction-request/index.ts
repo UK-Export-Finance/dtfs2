@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { CustomExpressRequest } from '../../../../types/custom-express-request';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { getLinkToPremiumPaymentsTab } from '../../helpers';
 import { asUserSession } from '../../../../helpers/express-session';
 import api from '../../../../api';
