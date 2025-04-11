@@ -36,6 +36,11 @@ describe(baseUrl, () => {
     await databaseHelper.wipe([DB_COLLECTIONS.ELIGIBILITY_CRITERIA]);
   });
 
+  afterAll(async () => {
+    await as(anAdmin).post(mockEligibilityCriteria[0]).to(baseUrl);
+    await as(anAdmin).post(mockEligibilityCriteria[1]).to(baseUrl);
+  });
+
   describe(`GET ${baseUrl}`, () => {
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => get(baseUrl),

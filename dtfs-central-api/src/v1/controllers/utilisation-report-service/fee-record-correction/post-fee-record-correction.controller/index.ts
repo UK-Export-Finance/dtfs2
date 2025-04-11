@@ -1,7 +1,6 @@
-import { ApiError, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, ApiError, REQUEST_PLATFORM_TYPE } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { CustomExpressRequest } from '../../../../../types/custom-express-request';
 import { executeWithSqlTransaction } from '../../../../../helpers';
 import { FeeRecordStateMachine } from '../../../../../services/state-machines/fee-record/fee-record.state-machine';
 import { FEE_RECORD_EVENT_TYPE } from '../../../../../services/state-machines/fee-record/event/fee-record.event-type';

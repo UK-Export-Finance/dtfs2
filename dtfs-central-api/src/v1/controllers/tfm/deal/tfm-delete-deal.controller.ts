@@ -1,10 +1,16 @@
 import { Response } from 'express';
 import { ObjectId } from 'mongodb';
-import { AuditDetails, MONGO_DB_COLLECTIONS, InvalidAuditDetailsError, DocumentNotDeletedError, DocumentNotFoundError } from '@ukef/dtfs2-common';
+import {
+  CustomExpressRequest,
+  AuditDetails,
+  MONGO_DB_COLLECTIONS,
+  InvalidAuditDetailsError,
+  DocumentNotDeletedError,
+  DocumentNotFoundError,
+} from '@ukef/dtfs2-common';
 import { deleteOne, validateAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { findOneDeal } from './tfm-get-deal.controller';
 import { mongoDbClient } from '../../../../drivers/db-client';
-import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 
 export const deleteDeal = async (req: CustomExpressRequest<{ reqBody: { auditDetails: AuditDetails } }>, res: Response) => {

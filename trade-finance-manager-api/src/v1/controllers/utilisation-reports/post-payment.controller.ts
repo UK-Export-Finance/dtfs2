@@ -1,8 +1,7 @@
 import { isAxiosError, HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { Currency, TfmSessionUser } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, Currency, TfmSessionUser } from '@ukef/dtfs2-common';
 import api from '../../api';
-import { CustomExpressRequest } from '../../../types/custom-express-request';
 
 export type PostPaymentRequestBody = {
   feeRecordIds: number[];

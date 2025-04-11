@@ -1,7 +1,6 @@
 import { Response } from 'express';
-import { AuditDetails, MONGO_DB_COLLECTIONS, DocumentNotFoundError, ApiErrorResponseBody, ApiError } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, AuditDetails, MONGO_DB_COLLECTIONS, DocumentNotFoundError, ApiErrorResponseBody, ApiError } from '@ukef/dtfs2-common';
 import { deleteMany, validateAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { mongoDbClient } from '../../../drivers/db-client';
 
 export const deleteAllEstoreLogs = async (

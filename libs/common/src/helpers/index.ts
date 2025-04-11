@@ -27,3 +27,4 @@ export * from './fee-record-status';
 export * from './is-production';
 export * from './generate-mandatory-criteria';
 export * from './strip-html';
+export * from './is-gov-notify-mocked';
