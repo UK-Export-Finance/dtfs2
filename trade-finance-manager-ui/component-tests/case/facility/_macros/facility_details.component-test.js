@@ -175,6 +175,16 @@ describe(component, () => {
       wrapper.expectText('[data-cy="facility-inclusion-notice-received"]').toRead('-');
     });
 
+    it('should render inclusionNoticeReceived when submissionType is MIN', () => {
+      const paramsWithMIN = {
+        ...params,
+        deal: { submissionType: 'Manual Inclusion Notice' },
+      };
+      wrapper = render(paramsWithMIN);
+      const expected = localiseTimestamp(params.facility.dates.inclusionNoticeReceived, 'd MMMM yyyy', params.user.timezone);
+      wrapper.expectText('[data-cy="facility-inclusion-notice-received"]').toRead(expected);
+    });
+
     describe('when submissionType is AIN', () => {
       beforeEach(() => {
         const paramsWithAIN = {
