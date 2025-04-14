@@ -86,6 +86,8 @@ export class SsoController {
 
       const user = await this.userService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
 
+      console.log('==========>3', user);
+
       const { sessionIdentifier, token, expires } = utils.issueJWT(user);
 
       await this.userService.saveUserLoginInformation({ userId: user._id, sessionIdentifier, auditDetails });

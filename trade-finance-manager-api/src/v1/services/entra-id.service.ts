@@ -87,7 +87,11 @@ export class EntraIdService {
       originalAuthCodeUrlRequest,
     });
 
+    console.log('==========>1', entraIdUser);
+
     const { successRedirect } = this.parseAuthRequestState(authCodeResponse.state);
+
+    console.log('==========>2', successRedirect);
 
     return {
       entraIdUser,
@@ -146,13 +150,17 @@ export class EntraIdService {
     // same, which is important for security reasons to protect against CSRF
     // attacks.
     // See https://datatracker.ietf.org/doc/html/rfc6819#section-3.6 for details
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { responseMode, ...rest } = originalAuthCodeUrlRequest;
-    const tokenRequest = { ...rest, code: authCodeResponse.code };
+
+    console.log('============>0', { originalAuthCodeUrlRequest });
+
+    const originalUrlRequest = originalAuthCodeUrlRequest;
+    const tokenRequest = { ...originalUrlRequest, code: authCodeResponse.code };
     const token = await msalApp.acquireTokenByCode(tokenRequest, authCodeResponse);
+    console.log('=========>', tokenRequest, token);
     const {
       account: { idTokenClaims },
     } = ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA.parse(token);
+
     return { entraIdUser: idTokenClaims };
   }
 }
