@@ -95,7 +95,7 @@ describe('getApprovedByUkef', () => {
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
-  it('should redirect to not found if the amendment is not acknowledged', async () => {
+  it(`should redirect to not found if the amendment is not ${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}`, async () => {
     // Arrange
     const { req, res } = getHttpMocks();
     const draftAmendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
