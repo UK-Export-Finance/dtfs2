@@ -13,6 +13,7 @@ context('Amendments - Submit Amendment to UKEF journey', () => {
   let dealId;
   let facilityId;
   let amendmentDetailsUrl;
+  let submitToUkefUrl;
   let submittedUrl;
 
   before(() => {
@@ -35,7 +36,9 @@ context('Amendments - Submit Amendment to UKEF journey', () => {
         applicationPreview.makeAChangeButton(facilityId).click();
 
         cy.getAmendmentIdFromUrl().then((amendmentId) => {
+          submitToUkefUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/submit-amendment-to-ukef`;
           submittedUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}`;
+
           cy.makerMakesPortalAmendmentRequest({
             facilityValueExists: true,
             changedFacilityValue: CHANGED_FACILITY_VALUE,
@@ -59,7 +62,7 @@ context('Amendments - Submit Amendment to UKEF journey', () => {
   it('should submit the amendment to Ukef', () => {
     const approvedByUkefUrl = `${submittedUrl}/approved-by-ukef`;
 
-    cy.checkerSubmitsPortalAmendmentRequest({ submittedUrl: approvedByUkefUrl, amendmentDetailsUrl });
+    cy.checkerSubmitsPortalAmendmentRequest({ submittedUrl: approvedByUkefUrl, amendmentDetailsUrl, submitToUkefUrl });
 
     cy.url().should('eq', relative(approvedByUkefUrl));
   });

@@ -39,12 +39,14 @@ context('Amendments - Approved by Ukef page', () => {
         cy.getAmendmentIdFromUrl().then((amendmentId) => {
           submittedUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/approved-by-ukef`;
           const amendmentDetailsUrl = `/gef/application-details/${dealId}/amendment-details`;
+          const confirmSubmissionToUkefUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/submit-amendment-to-ukef`;
 
           cy.makerAndCheckerSubmitPortalAmendmentRequest({
             facilityValueExists: true,
             changedFacilityValue: CHANGED_FACILITY_VALUE,
             amendmentDetailsUrl,
             submittedUrl,
+            confirmSubmissionToUkefUrl,
           });
         });
       });

@@ -64,28 +64,48 @@ describe('createReferenceNumber', () => {
   });
 
   it('should throw an error if amendmentsOnDeal is null', async () => {
+    // Arrange
     getAmendmentsOnDealMock.mockResolvedValue(null);
 
-    await expect(createReferenceNumber(dealId, facilityId, userToken)).rejects.toThrow('Submitted amendment was not found for the deal');
+    // Act
+    const response = createReferenceNumber(dealId, facilityId, userToken);
+
+    // Assert
+    await expect(response).rejects.toThrow('Submitted amendment was not found for the deal');
   });
 
   it('should throw an error if getFacility details object is null', async () => {
+    // Arrange
     getFacilityMock.mockResolvedValue({ details: null });
 
-    await expect(createReferenceNumber(dealId, facilityId, userToken)).rejects.toThrow('Facility was not found');
+    // Act
+    const response = createReferenceNumber(dealId, facilityId, userToken);
+
+    // Assert
+    await expect(response).rejects.toThrow('Facility was not found');
   });
 
   it('should throw an error if api.getAmendmentsOnDeal fails', async () => {
+    // Arrange
     const mockError = new Error('API error');
     getAmendmentsOnDealMock.mockRejectedValue(mockError);
 
-    await expect(createReferenceNumber(dealId, facilityId, userToken)).rejects.toThrow(mockError);
+    // Act
+    const response = createReferenceNumber(dealId, facilityId, userToken);
+
+    // Assert
+    await expect(response).rejects.toThrow(mockError);
   });
 
   it('should throw an error if api.getFacility fails', async () => {
+    // Arrange
     const mockError = new Error('API error');
     getFacilityMock.mockRejectedValue(mockError);
 
-    await expect(createReferenceNumber(dealId, facilityId, userToken)).rejects.toThrow(mockError);
+    // Act
+    const response = createReferenceNumber(dealId, facilityId, userToken);
+
+    // Assert
+    await expect(response).rejects.toThrow(mockError);
   });
 });

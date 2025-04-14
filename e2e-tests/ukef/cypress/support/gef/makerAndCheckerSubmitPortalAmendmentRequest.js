@@ -7,6 +7,7 @@ import relative from '../../e2e/relativeURL';
  * @param {Boolean} param.facilityEndDateExists - if facility end date is changed
  * @param {String} param.changedFacilityValue - the new value for the facility
  * @param {String} param.amendmentDetailsUrl - the URL to the amendment details page
+ * @param {String} param.submitToUkefUrl - the URL to the confirm amendment submission page
  * @param {String} param.submittedUrl - the URL to the approved by ukef page
  */
 export const makerAndCheckerSubmitPortalAmendmentRequest = ({
@@ -15,6 +16,7 @@ export const makerAndCheckerSubmitPortalAmendmentRequest = ({
   facilityEndDateExists = false,
   changedFacilityValue,
   amendmentDetailsUrl,
+  confirmSubmissionToUkefUrl,
   submittedUrl,
 }) => {
   // submits maker part of journey
@@ -26,7 +28,7 @@ export const makerAndCheckerSubmitPortalAmendmentRequest = ({
   });
 
   // submits checker part of journey
-  cy.checkerSubmitsPortalAmendmentRequest({ amendmentDetailsUrl, submittedUrl });
+  cy.checkerSubmitsPortalAmendmentRequest({ amendmentDetailsUrl, submittedUrl, confirmSubmissionToUkefUrl });
 
   cy.url().should('eq', relative(submittedUrl));
 };

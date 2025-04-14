@@ -8,13 +8,16 @@ const { BANK1_CHECKER1 } = MOCK_USERS;
  * Checker submits a portal amendment to UKEF
  * @param {String} param.amendmentDetailsUrl - the URL to the amendment details page
  * @param {String} param.submittedUrl - the URL to the approved by ukef page
+ * @param {String} param.confirmSubmissionToUkefUrl - the URL to the confirm amendment submission page
  */
-export const checkerSubmitsPortalAmendmentRequest = ({ amendmentDetailsUrl, submittedUrl }) => {
+export const checkerSubmitsPortalAmendmentRequest = ({ amendmentDetailsUrl, submittedUrl, confirmSubmissionToUkefUrl }) => {
   cy.login(BANK1_CHECKER1);
 
   cy.visit(relative(amendmentDetailsUrl));
+  cy.url().should('eq', relative(amendmentDetailsUrl));
 
   cy.clickSubmitButton();
+  cy.url().should('eq', relative(confirmSubmissionToUkefUrl));
 
   submitToUkef.confirmSubmissionCheckbox().click();
   cy.clickSubmitButton();
