@@ -28,7 +28,7 @@ export const getApprovedByUkef = async (req: GetApprovedByUkefRequest, res: Resp
     }
 
     if (amendment.status !== PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED) {
-      console.error('Amendment %s on facility %s is not acknowledged', amendmentId, facilityId);
+      console.error(`Amendment %s on facility %s is not ${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}`, amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 
