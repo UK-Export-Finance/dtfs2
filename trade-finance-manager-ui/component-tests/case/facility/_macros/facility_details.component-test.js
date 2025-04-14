@@ -166,11 +166,11 @@ describe(component, () => {
   });
 
   describe('`dates` section', () => {
-    it('should render inclusionNoticeReceived as a dash when facilityStage is Commitment', () => {
+    it('should render inclusionNoticeReceived as a dash when submissionType is MIA', () => {
       wrapper.expectText('[data-cy="facility-inclusion-notice-received"]').toRead('-');
     });
 
-    describe('when facilityStage is not Commitment', () => {
+    describe('when submissionType is not MIA', () => {
       beforeEach(() => {
         const paramsWithNonCommitmentStage = {
           ...params,
