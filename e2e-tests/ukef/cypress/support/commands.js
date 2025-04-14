@@ -11,6 +11,8 @@ import { clearSessionCookies } from './utils/clearSessionCookies';
 import { getAmendmentIdFromUrl } from './utils/getAmendmentIdFromUrl';
 import { makerSubmitPortalAmendmentForReview } from './gef/makerSubmitPortalAmendmentForReview';
 import { makerMakesPortalAmendmentRequest } from './gef/makerMakesPortalAmendmentRequest';
+import { makerAndCheckerSubmitPortalAmendmentRequest } from './gef/makerAndCheckerSubmitPortalAmendmentRequest';
+import { checkerSubmitsPortalAmendmentRequest } from './gef/checkerSubmitsPortalAmendmentRequest';
 import { assertPrintDialogue } from './utils/assertPrintDialogue';
 
 // Preserve session cookie
@@ -56,6 +58,8 @@ Cypress.Commands.add('getAmendmentIdFromUrl', getAmendmentIdFromUrl);
 
 Cypress.Commands.add('makerSubmitPortalAmendmentForReview', makerSubmitPortalAmendmentForReview);
 Cypress.Commands.add('makerMakesPortalAmendmentRequest', makerMakesPortalAmendmentRequest);
+Cypress.Commands.add('makerAndCheckerSubmitPortalAmendmentRequest', makerAndCheckerSubmitPortalAmendmentRequest);
+Cypress.Commands.add('checkerSubmitsPortalAmendmentRequest', checkerSubmitsPortalAmendmentRequest);
 
 Cypress.Commands.add('submitDealCancellation', submitDealCancellation);
 

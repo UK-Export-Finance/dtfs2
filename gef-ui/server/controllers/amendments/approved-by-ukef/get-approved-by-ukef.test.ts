@@ -38,7 +38,7 @@ describe('getApprovedByUkef', () => {
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
-      .withStatus(PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL)
+      .withStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED)
       .withEffectiveDate(1743524576)
       .build();
 
@@ -73,6 +73,7 @@ describe('getApprovedByUkef', () => {
     const expectedRenderData = {
       approvedByUkef: true,
       effectiveDate,
+      referenceNumber: amendment.referenceNumber,
     };
 
     // Assert
@@ -94,7 +95,7 @@ describe('getApprovedByUkef', () => {
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
-  it('should redirect to not found if the amendment is not ready for checkers approval', async () => {
+  it(`should redirect to not found if the amendment is not ${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}`, async () => {
     // Arrange
     const { req, res } = getHttpMocks();
     const draftAmendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
