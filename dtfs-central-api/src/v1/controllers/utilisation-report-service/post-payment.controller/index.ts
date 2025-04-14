@@ -1,7 +1,6 @@
-import { ApiError, FeeRecordStatus } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, ApiError, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { PostPaymentPayload } from '../../../routes/middleware/payload-validation/validate-post-payment-payload';
 import { addPaymentToUtilisationReport } from './helpers';
 import { NewPaymentDetails } from '../../../../types/utilisation-reports';

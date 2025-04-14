@@ -1,11 +1,10 @@
 import { Response } from 'express';
 import { format } from 'date-fns';
-import { getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, getFormattedCurrencyAndAmount } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { GetPaymentDetailsWithoutFeeRecordsResponseBody } from '../../../api-response-types';
 import { ConfirmDeletePaymentViewModel } from '../../../types/view-models';
 import { asUserSession } from '../../../helpers/express-session';
-import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { ReconciliationForReportTab } from '../../../types/reconciliation-for-report-tab';
 import { getReconciliationForReportHref } from '../helpers';
 

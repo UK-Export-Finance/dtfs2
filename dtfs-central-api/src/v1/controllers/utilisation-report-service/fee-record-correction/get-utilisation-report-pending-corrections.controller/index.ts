@@ -1,7 +1,6 @@
-import { ApiError, PendingCorrection, ReportPeriod } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, ApiError, PendingCorrection, ReportPeriod } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { CustomExpressRequest } from '../../../../../types/custom-express-request';
 import { NotFoundError } from '../../../../../errors';
 import { getBankById } from '../../../../../repositories/banks-repo';
 import { UtilisationReportRepo } from '../../../../../repositories/utilisation-reports-repo';

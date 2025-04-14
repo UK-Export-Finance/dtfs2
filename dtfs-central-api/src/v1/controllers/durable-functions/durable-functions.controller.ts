@@ -1,7 +1,6 @@
-import { ApiError, ApiErrorResponseBody, AuditDetails, DocumentNotFoundError } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, ApiError, ApiErrorResponseBody, AuditDetails, DocumentNotFoundError } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { validateAuditDetails } from '@ukef/dtfs2-common/change-stream';
-import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { deleteAllDurableFunctionLogs } from '../../../repositories/durable-functions-repo';
 
 export const deleteAllDurableFunctions = async (

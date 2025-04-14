@@ -1,8 +1,7 @@
 import { Response } from 'express';
-import { getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import { CreateRecordCorrectionRequestErrorsViewModel, CreateRecordCorrectionRequestViewModel } from '../../../../types/view-models';
 import { asUserSession } from '../../../../helpers/express-session';
-import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../constants';
 import { getLinkToPremiumPaymentsTab } from '../../helpers';
 import api from '../../../../api';

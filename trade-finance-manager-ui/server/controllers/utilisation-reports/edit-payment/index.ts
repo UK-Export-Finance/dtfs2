@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 import { EditPaymentViewModel } from '../../../types/view-models';
@@ -11,7 +12,6 @@ import {
   validateEditPaymentRequestFormValues,
   getReconciliationForReportHref,
 } from '../helpers';
-import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { ValidatedEditPaymentFormValues } from '../../../types/edit-payment-form-values';
 import { getAndClearFieldsFromRedirectSessionData } from './get-and-clear-fields-from-redirect-session-data';
 import { getEditPaymentsCheckboxIdsFromObjectKeys } from '../../../helpers/edit-payments-table-checkbox-id-helper';

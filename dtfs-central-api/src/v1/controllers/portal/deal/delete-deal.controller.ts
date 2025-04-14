@@ -1,10 +1,16 @@
 import { deleteOne, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
-import { InvalidAuditDetailsError, AuditDetails, MONGO_DB_COLLECTIONS, DocumentNotDeletedError, ApiErrorResponseBody } from '@ukef/dtfs2-common';
+import {
+  CustomExpressRequest,
+  InvalidAuditDetailsError,
+  AuditDetails,
+  MONGO_DB_COLLECTIONS,
+  DocumentNotDeletedError,
+  ApiErrorResponseBody,
+} from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { Response } from 'express';
 import { findOneDeal } from './get-deal.controller';
 import { mongoDbClient as db } from '../../../../drivers/db-client';
-import { CustomExpressRequest } from '../../../../types/custom-express-request';
 
 export const deleteDeal = async (
   req: CustomExpressRequest<{ params: { id: string }; reqBody: { auditDetails: AuditDetails } }>,

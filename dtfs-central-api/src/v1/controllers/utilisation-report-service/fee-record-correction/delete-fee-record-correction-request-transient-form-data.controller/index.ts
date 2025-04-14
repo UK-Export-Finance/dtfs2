@@ -1,7 +1,6 @@
-import { ApiError } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, ApiError } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { CustomExpressRequest } from '../../../../../types/custom-express-request';
 import { FeeRecordCorrectionRequestTransientFormDataRepo } from '../../../../../repositories/fee-record-correction-request-transient-form-data-repo';
 import { NotFoundError } from '../../../../../errors';
 import { FeeRecordRepo } from '../../../../../repositories/fee-record-repo';
