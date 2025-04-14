@@ -1181,7 +1181,8 @@ jobs:
             './tfm/cypress/e2e/journeys/login/**/*.spec.js',
             './tfm/cypress/e2e/journeys/users/**/*.spec.js',
             './tfm/cypress/e2e/journeys/utilisation-reports/fee-record-correction/feature-flag-enabled/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/deal-cancellation/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/deal-cancellation/BSS-EWCS/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/deal-cancellation/gef/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/journeys/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/pages/**/*.spec.js'
           ]
