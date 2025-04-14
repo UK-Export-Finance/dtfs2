@@ -45,13 +45,6 @@ export const postCoverEndDate = async (req: PostCoverEndDateRequest, res: Respon
       return res.redirect('/not-found');
     }
 
-    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
-
-    if (!amendment) {
-      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
-      return res.redirect('/not-found');
-    }
-
     const validationErrorsOrValue = validateAndParseCoverEndDate(coverEndDateDayMonthYear, getCoverStartDateOrToday(facility));
 
     if ('errors' in validationErrorsOrValue) {
@@ -65,6 +58,13 @@ export const postCoverEndDate = async (req: PostCoverEndDateRequest, res: Respon
       };
 
       return res.render('partials/amendments/cover-end-date.njk', viewModel);
+    }
+
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
+      return res.redirect('/not-found');
     }
 
     const update = { coverEndDate: validationErrorsOrValue.value };

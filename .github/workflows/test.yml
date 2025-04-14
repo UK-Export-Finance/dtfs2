@@ -105,7 +105,8 @@ env:
   AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
   AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
   AZURE_UTILISATION_REPORTS_FILESHARE_NAME: ${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}
-  GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY }}
+  GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY}}
+  MOCK_E2E_GOV_NOTIFY_API_KEY: ${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
   GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
   JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
   JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
@@ -198,7 +199,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        services: ['portal', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'trade-finance-manager-api', 'dtfs-central-api', 'external-api']
+        services: ['portal', 'gef-ui', 'trade-finance-manager-ui', 'trade-finance-manager-api', 'external-api']
 
     concurrency:
       group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
@@ -237,6 +238,7 @@ jobs:
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
@@ -264,7 +266,208 @@ jobs:
           flags: api-test
           verbose: true
 
-  # 2.2. API tests
+  # 2.2 dtfs-central-api API tests
+  dtfs-central-api-api-tests:
+    name: API - dtfs-central-api 👷
+    needs: [setup]
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        services: [
+          'api-tests/v1/bank',
+          'api-tests/v1/cron-jobs',
+          'api-tests/v1/durable-functions',
+          'api-tests/v1/middleware',
+          'api-tests/v1/routes',
+          'api-tests/v1/user',
+          'api-tests/v1/deals',
+          'api-tests/v1/facilities',
+          'api-tests/v1/gef-deals',
+          'api-tests/v1/gef-facilities',
+          'api-tests/v1/portal-facility-amendments',
+          'api-tests/v1/tfm',
+          'api-tests/v1/utilisation-reports'
+          ]
+
+    concurrency:
+      group: dtfs-central-api-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Dependencies
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Start
+        uses: ./.github/actions/rerun
+        with:
+          command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
+          env: |
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+
+      - name: Initialise
+        uses: ./.github/actions/rerun
+        with:
+          command: sleep 100s && npm run load
+          working-directory: ./utils
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: SQL
+        working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+        run: npm run db:migrate
+
+      - name: Execute
+        uses: ./.github/actions/rerun
+        with:
+          command: docker compose exec -T dtfs-central-api npm run api-test ${{ matrix.services }} --workspace=dtfs-central-api
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Stop
+        working-directory: ./
+        run: docker compose down
+
+      - name: Coverage
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: api-test
+          verbose: true
+
+  # 2.3 portal-api API tests
+  portal-api-api-tests:
+    name: API - portal-api 👷
+    needs: [setup]
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        services: [
+          'api-tests/api',
+          'api-tests/drivers',
+          'api-tests/v1/bank-holidays',
+          'api-tests/v1/banks',
+          'api-tests/v1/bonds',
+          'api-tests/v1/companies',
+          'api-tests/v1/countries',
+          'api-tests/v1/currencies',
+          'api-tests/v1/deals',
+          'api-tests/v1/eligibility-criteria',
+          'api-tests/v1/feedback',
+          'api-tests/v1/gef',
+          'api-tests/v1/industry-sectors',
+          'api-tests/v1/loan',
+          'api-tests/v1/mandatory-criteria',
+          'api-tests/v1/middleware',
+          'api-tests/v1/reports',
+          'api-tests/v1/users',
+          'api-tests/v1/utilisation-report-service',
+          'api-tests/v1/validate',
+          ]
+
+    concurrency:
+      group: portal-api-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+      - name: Repository
+        uses: actions/checkout@v4
+
+      - name: Dependencies
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Start
+        uses: ./.github/actions/rerun
+        with:
+          command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
+          env: |
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+
+      - name: Initialise
+        uses: ./.github/actions/rerun
+        with:
+          command: sleep 100s && npm run load
+          working-directory: ./utils
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: SQL
+        working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+        run: npm run db:migrate
+
+      - name: Execute
+        uses: ./.github/actions/rerun
+        with:
+          command: docker compose exec -T portal-api npm run api-test ${{ matrix.services }} --workspace=portal-api
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+          retries: ${{ vars.RETRY_LIMIT }}
+          
+      - name: Stop
+        working-directory: ./
+        run: docker compose down
+
+      - name: Coverage
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: api-test
+          verbose: true
+
+  # 2.4. API tests
   dof-api-tests:
     name: DOF API 👷
     needs: [setup]
@@ -309,6 +512,8 @@ jobs:
           command: npm run api-test
           working-directory: ./azure-functions/${{ matrix.functions }}
           retries: ${{ vars.RETRY_LIMIT }}
+          env: |
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
       - name: Coverage
         uses: codecov/codecov-action@v5
@@ -373,6 +578,8 @@ jobs:
           command: npm run unit-test
           working-directory: ${{ matrix.services }}
           retries: ${{ vars.RETRY_LIMIT }}
+          env: |
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
       - name: Coverage
         uses: codecov/codecov-action@v5
@@ -444,6 +651,8 @@ jobs:
           command: npm run unit-test-ff
           working-directory: ${{ matrix.services }}
           retries: ${{ vars.RETRY_LIMIT }}
+          env: |
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
       - name: Coverage
         uses: codecov/codecov-action@v5
@@ -535,6 +744,8 @@ jobs:
         with:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
+          env: |
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -543,6 +754,7 @@ jobs:
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
@@ -559,6 +771,7 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
 
@@ -626,6 +839,8 @@ jobs:
         with:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
+          env: |
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -634,6 +849,7 @@ jobs:
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
@@ -650,6 +866,7 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
 
@@ -737,6 +954,8 @@ jobs:
         with:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
+          env: |
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -745,6 +964,7 @@ jobs:
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
@@ -761,6 +981,7 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
 
@@ -824,6 +1045,7 @@ jobs:
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
@@ -992,6 +1214,8 @@ jobs:
         with:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
+          env: |
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1000,6 +1224,7 @@ jobs:
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
@@ -1022,6 +1247,7 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
 

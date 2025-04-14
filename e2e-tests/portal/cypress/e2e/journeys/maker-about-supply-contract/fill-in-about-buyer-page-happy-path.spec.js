@@ -1,16 +1,22 @@
 const { contract, contractAboutSupplier, contractAboutBuyer, contractAboutPreview, defaults } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const aDealWithAboutSupplyContractComplete = require('./dealWithFirstPageComplete.json');
+const relative = require('../../relativeURL');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('about-supply-contract', () => {
-  let deal;
+  let bssDealId;
+  let contractUrl;
+  const additionalRefName = 'UKEF test bank (Delegated)';
 
   before(() => {
-    cy.insertOneDeal(aDealWithAboutSupplyContractComplete, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
+    cy.createBssEwcsDeal().then((dealId) => {
+      bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
+    });
+    cy.completeAboutSupplierSection({
+      exporterCompanyName: 'Exporter Company Name',
     });
   });
 
@@ -18,11 +24,11 @@ context('about-supply-contract', () => {
     cy.login(BANK1_MAKER1);
 
     // navigate to the about-buyer page
-    contract.visit(deal);
+    cy.visit(contractUrl);
     contract.aboutSupplierDetailsLink().click();
     contractAboutSupplier.nextPage().click();
 
-    cy.title().should('eq', `Buyer information - ${deal.additionalRefName}${defaults.pageTitleAppend}`);
+    cy.title().should('eq', `Buyer information - ${additionalRefName}${defaults.pageTitleAppend}`);
 
     // fill in the fields
     cy.keyboardInput(contractAboutBuyer.buyerName(), 'Harry Bear');
@@ -38,7 +44,7 @@ context('about-supply-contract', () => {
     contractAboutBuyer.saveAndGoBack().click();
 
     // check that the preview page renders the Submission Details component
-    contractAboutPreview.visit(deal);
+    contractAboutPreview.visit(bssDealId);
     contractAboutPreview.submissionDetails().should('be.visible');
 
     cy.assertText(partials.taskListHeader.itemStatus('buyer'), 'Completed');

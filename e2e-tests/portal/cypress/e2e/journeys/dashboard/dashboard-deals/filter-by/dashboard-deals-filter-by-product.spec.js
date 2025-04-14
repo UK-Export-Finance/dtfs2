@@ -3,21 +3,27 @@ const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../../fixtures/constants');
 const { dashboardDeals } = require('../../../../pages');
 const { dashboardFilters } = require('../../../../partials');
-const { BSS_DEAL_DRAFT, GEF_DEAL_DRAFT } = require('../../fixtures');
+const { GEF_DEAL_DRAFT } = require('../../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
 context('Dashboard Deals filters - filter by dealType/product', () => {
+  let bssDealId;
   const ALL_DEALS = [];
+
+  const EXPECTED_DEALS_LENGTH = {
+    BSS: 1,
+    GEF: 1,
+  };
 
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
+    cy.createBssEwcsDeal().then((dealId) => {
+      bssDealId = dealId;
     });
 
     cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
@@ -40,7 +46,7 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
       filters.showHideButton().click();
     });
 
-    it('submits the filter and redirects to the dashboard', () => {
+    it('should submit the filter and redirect to the dashboard', () => {
       // apply filter
       dashboardDeals.filters.panel.form.dealType.bssEwcs.checkbox().click();
       filters.panel.form.applyFiltersButton().click();
@@ -48,11 +54,11 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
-    it('renders checked checkbox', () => {
+    it('should render checked checkbox', () => {
       dashboardDeals.filters.panel.form.dealType.bssEwcs.checkbox().should('be.checked');
     });
 
-    it('renders the applied filter in the `applied filters` section', () => {
+    it('should render the applied filter in the `applied filters` section', () => {
       filters.panel.container().should('be.visible');
       filters.panel.selectedFilters.list().should('be.visible');
 
@@ -69,13 +75,11 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
       firstAppliedFilter.should('have.text', expectedText);
     });
 
-    it('renders only BSS deals', () => {
-      const ALL_BSS_DEALS = ALL_DEALS.filter(({ dealType }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
-      dashboardDeals.rows().should('have.length', ALL_BSS_DEALS.length);
-
-      const firstBssDeal = ALL_BSS_DEALS[0];
-
-      dashboardDeals.row.product(firstBssDeal._id).should('have.text', CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
+    it('should render only BSS deals', () => {
+      // Check the length of rows after the filter is applied
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.BSS);
+      // Check the type of the deal is BSS after the filter is applied
+      cy.assertText(dashboardDeals.row.product(bssDealId), CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS);
     });
   });
 
@@ -94,7 +98,7 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
       filters.showHideButton().click();
     });
 
-    it('submits the filter and redirects to the dashboard', () => {
+    it('should submit the filter and redirect to the dashboard', () => {
       // apply filter
       dashboardDeals.filters.panel.form.dealType.gef.checkbox().click();
       filters.panel.form.applyFiltersButton().click();
@@ -102,11 +106,11 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
       cy.url().should('eq', relative('/dashboard/deals/0'));
     });
 
-    it('renders checked checkbox', () => {
+    it('should render checked checkbox', () => {
       dashboardDeals.filters.panel.form.dealType.gef.checkbox().should('be.checked');
     });
 
-    it('renders the applied filter in the `applied filters` section', () => {
+    it('should render the applied filter in the `applied filters` section', () => {
       filters.panel.container().should('be.visible');
       filters.panel.selectedFilters.list().should('be.visible');
 
@@ -123,20 +127,18 @@ context('Dashboard Deals filters - filter by dealType/product', () => {
       firstAppliedFilter.should('have.text', expectedText);
     });
 
-    it('renders the applied filter in the `main container selected filters` section', () => {
+    it('should render the applied filter in the `main container selected filters` section', () => {
       dashboardDeals.filters.mainContainer.selectedFilters.productGEF().should('be.visible');
 
       const expectedText = `Remove this filter ${CONSTANTS.DEALS.DEAL_TYPE.GEF}`;
       dashboardDeals.filters.mainContainer.selectedFilters.productGEF().contains(expectedText);
     });
 
-    it('renders only GEF deals', () => {
-      const ALL_GEF_DEALS = ALL_DEALS.filter(({ dealType }) => dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF);
-      dashboardDeals.rows().should('have.length', ALL_GEF_DEALS.length);
-
-      const firstGefDeal = ALL_GEF_DEALS[0];
-
-      dashboardDeals.row.product(firstGefDeal._id).should('have.text', CONSTANTS.DEALS.DEAL_TYPE.GEF);
+    it('should render only GEF deals', () => {
+      // Check the length of rows after the filter is applied
+      dashboardDeals.rows().should('have.length', EXPECTED_DEALS_LENGTH.GEF);
+      // Check the type of the deal is GEF after the filter is applied
+      cy.assertText(dashboardDeals.row.product(ALL_DEALS[0]._id), CONSTANTS.DEALS.DEAL_TYPE.GEF);
     });
   });
 });

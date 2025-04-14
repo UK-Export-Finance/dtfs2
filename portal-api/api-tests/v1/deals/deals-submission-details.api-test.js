@@ -39,8 +39,8 @@ describe('/v1/deals/:id/submission-details', () => {
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Barclays Bank').one();
-    anHSBCMaker = testUsers().withRole(MAKER).withBankName('HSBC').one();
+    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    anHSBCMaker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
     aSuperuser = testUsers().superuser().one();
   });
 
@@ -66,7 +66,7 @@ describe('/v1/deals/:id/submission-details', () => {
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
-      getUserWithRole: (role) => testUsers().withBankName('Barclays Bank').withRole(role).one(),
+      getUserWithRole: (role) => testUsers().withBankName('Bank 1').withRole(role).one(),
       makeRequestAsUser: (user) => as(user).get(oneDealSubmissionDetailsUrl),
       successStatusCode: 200,
     });

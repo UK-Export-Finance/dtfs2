@@ -1,8 +1,7 @@
-import { PaymentDetailsFilters, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PaymentDetailsFilters, PremiumPaymentsFilters } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { AxiosError, HttpStatusCode } from 'axios';
 import api from '../../../api';
-import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { UtilisationReportReconciliationDetailsResponseBody } from '../../../api-response-types';
 
 export type GetUtilisationReportReconciliationDetailsByIdRequest = CustomExpressRequest<{

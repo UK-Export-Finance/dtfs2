@@ -1,8 +1,15 @@
-import { ApiError, ApiErrorResponseBody, AuditDetails, DocumentNotDeletedError, InvalidFacilityIdError, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import {
+  CustomExpressRequest,
+  ApiError,
+  ApiErrorResponseBody,
+  AuditDetails,
+  DocumentNotDeletedError,
+  InvalidFacilityIdError,
+  MONGO_DB_COLLECTIONS,
+} from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { Response } from 'express';
 import { deleteOne, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
-import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { findOneFacility } from './get-facility.controller';
 import { removeFacilityIdFromDeal } from '../deal/update-deal.controller';
 import { mongoDbClient as db } from '../../../../drivers/db-client';

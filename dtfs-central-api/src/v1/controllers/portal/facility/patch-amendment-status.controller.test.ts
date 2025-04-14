@@ -136,7 +136,7 @@ describe('patchAmendmentStatus', () => {
       expect(res._getData()).toEqual(mockUpdatedAmendment);
     });
 
-    it('should call externalApi.sendEmail with the correct params', async () => {
+    it('should call externalApi.sendEmail twice with the correct params', async () => {
       // Arrange
       const { req, res } = generateHttpMocks({ auditDetails, newStatus, emailVariables: mockEmailVariables });
 
@@ -144,10 +144,11 @@ describe('patchAmendmentStatus', () => {
       await patchAmendmentStatus(req, res);
 
       // Assert
-      const { sendToEmailAddress, emailVariables } = mockEmailVariables;
+      const { makersEmail, checkersEmail, emailVariables } = mockEmailVariables;
 
-      expect(sendEmailSpy).toHaveBeenCalledTimes(1);
-      expect(sendEmailSpy).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_CHECKER, sendToEmailAddress, emailVariables);
+      expect(sendEmailSpy).toHaveBeenCalledTimes(2);
+      expect(sendEmailSpy).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_CHECKER_MAKER_EMAIL, makersEmail, emailVariables);
+      expect(sendEmailSpy).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_CHECKER_CHECKER_EMAIL, checkersEmail, emailVariables);
     });
 
     it('should return the correct status and body if PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker throws an api error', async () => {

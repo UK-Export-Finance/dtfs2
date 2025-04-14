@@ -1,8 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { SelectedFeeRecordsDetails } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, SelectedFeeRecordsDetails } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
-import { CustomExpressRequest } from '../../../../types/custom-express-request';
 import { NotFoundError, ApiError, InvalidPayloadError } from '../../../../errors';
 import { validateFeeRecordsAllHaveSamePaymentCurrency } from '../../../validation/utilisation-report-service/fee-record-validator';
 import {

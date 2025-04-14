@@ -479,13 +479,48 @@ const updateAmendment = async ({ facilityId, amendmentId, update, userToken }) =
  * @param {Object} param
  * @param {string} param.facilityId
  * @param {string} param.amendmentId
+ * @param {string} param.referenceNumber
+ * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus} param.status
+ * @param {string} param.userToken
+ * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithReferenceNumber)>}
+ */
+const updateSubmitAmendment = async ({ facilityId, amendmentId, referenceNumber, status, userToken }) => {
+  if (!isValidMongoId(facilityId)) {
+    console.error('Invalid facility ID %s', facilityId);
+    throw new InvalidFacilityIdError(facilityId);
+  }
+
+  if (!isValidMongoId(amendmentId)) {
+    console.error('Invalid amendment ID %s', amendmentId);
+    throw new Error('Invalid amendment ID');
+  }
+
+  const payload = {
+    referenceNumber,
+    newStatus: status,
+  };
+
+  try {
+    const { data } = await Axios.patch(`/gef/facilities/${facilityId}/amendments/${amendmentId}/submit-amendment`, payload, { ...config(userToken) });
+    return data;
+  } catch (error) {
+    console.error('Failed to update the amendment with id %s on facility id %s with update %o %o', amendmentId, facilityId, payload, error);
+    throw error;
+  }
+};
+
+/**
+ * @param {Object} param
+ * @param {string} param.facilityId
+ * @param {string} param.amendmentId
  * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus} param.newStatus
  * @param {string} param.userToken
- * @param {string} param.sendToEmailAddress
+ * @param {string} param.makersEmail
+ * @param {string} param.checkersEmail
  * @param {import('@ukef/dtfs2-common').PortalAmendmentSubmittedToCheckerEmailVariables} param.emailVariables
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}
  */
-const updateAmendmentStatus = async ({ facilityId, amendmentId, newStatus, userToken, sendToEmailAddress, emailVariables }) => {
+const updateAmendmentStatus = async ({ facilityId, amendmentId, newStatus, userToken, makersEmail, checkersEmail, emailVariables }) => {
   if (!isValidMongoId(facilityId)) {
     console.error('Invalid facility ID %s', facilityId);
     throw new InvalidFacilityIdError(facilityId);
@@ -498,7 +533,8 @@ const updateAmendmentStatus = async ({ facilityId, amendmentId, newStatus, userT
 
   const payload = {
     newStatus,
-    sendToEmailAddress,
+    makersEmail,
+    checkersEmail,
     emailVariables,
   };
 
@@ -562,6 +598,7 @@ module.exports = {
   getAmendment,
   upsertAmendment,
   updateAmendment,
+  updateSubmitAmendment,
   updateAmendmentStatus,
   deleteAmendment,
 };

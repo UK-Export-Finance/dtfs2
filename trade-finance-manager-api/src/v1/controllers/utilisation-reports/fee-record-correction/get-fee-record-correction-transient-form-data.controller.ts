@@ -1,7 +1,7 @@
 import { isAxiosError, HttpStatusCode } from 'axios';
 import { Response } from 'express';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import api from '../../../api';
-import { CustomExpressRequest } from '../../../../types/custom-express-request';
 
 export type GetFeeRecordCorrectionTransientFormDataRequest = CustomExpressRequest<{
   params: {

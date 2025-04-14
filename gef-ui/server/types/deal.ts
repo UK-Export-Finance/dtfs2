@@ -7,6 +7,7 @@ import { DealStatus, DealType, IsoDateTimeStamp, AnyObject, UnixTimestampMillise
  * to as and when new properties are discovered
  */
 export type Deal = {
+  _id: string;
   dealType: DealType;
   version?: number;
   maker: AnyObject;
@@ -29,4 +30,5 @@ export type Deal = {
   additionalRefName: string | null;
   submissionType: DealSubmissionType;
   ukefDealId: string;
+  checkerId: string;
 };

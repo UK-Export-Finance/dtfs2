@@ -6,4 +6,5 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testTimeout: 80000,
+  setupFilesAfterEnv: ['./api-test-setup.jest.config.js'],
 };

@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { CustomExpressRequest } from '../../../types/custom-express-request';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { getEditPaymentsCheckboxIdsFromObjectKeys, getFeeRecordIdsFromEditPaymentsCheckboxIds } from '../../../helpers/edit-payments-table-checkbox-id-helper';
 import { RemoveFeesFromPaymentFormRequestBody } from '../../../helpers/remove-fees-from-payment-helper';
 import api from '../../../api';

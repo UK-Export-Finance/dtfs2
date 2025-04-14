@@ -5,8 +5,8 @@ const MOCK_BANKS = require('../../../../test-helpers/mock-banks');
 describe('validateBankIdForUser', () => {
   it(`redirects to '/not-found' if the user bank and bankId param do not match`, () => {
     // Arrange
-    const usersBankId = MOCK_BANKS.BARCLAYS.id;
-    const otherBankId = MOCK_BANKS.HSBC.id;
+    const usersBankId = MOCK_BANKS.bank1.id;
+    const otherBankId = MOCK_BANKS.bank2.id;
 
     const { res: mockRes, req: mockReq } = httpMocks.createMocks({
       session: { user: { bank: { id: usersBankId } } },
@@ -26,7 +26,7 @@ describe('validateBankIdForUser', () => {
 
   it('calls the next middleware function if the user bank and bankId param match', () => {
     // Arrange
-    const usersBankId = MOCK_BANKS.BARCLAYS.id;
+    const usersBankId = MOCK_BANKS.bank1.id;
 
     const { res: mockRes, req: mockReq } = httpMocks.createMocks({
       session: { user: { bank: { id: usersBankId } } },

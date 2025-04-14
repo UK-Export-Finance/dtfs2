@@ -36,7 +36,7 @@ jest.mock('../../repositories/portal/eligibility-criteria-amendments.repo', () =
 }));
 
 const mockUpsertPortalFacilityAmendmentDraft = jest.fn();
-const mockValidateNoOtherAmendmentsUnderWayOnDeal = jest.fn();
+const mockValidateNoOtherAmendmentInProgressOnDeal = jest.fn();
 
 const dealId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
@@ -54,13 +54,13 @@ describe('PortalFacilityAmendmentService', () => {
     jest.resetAllMocks();
 
     jest.spyOn(TfmFacilitiesRepo, 'upsertPortalFacilityAmendmentDraft').mockImplementation(mockUpsertPortalFacilityAmendmentDraft);
-    jest.spyOn(PortalFacilityAmendmentService, 'validateNoOtherAmendmentsUnderWayOnDeal').mockImplementation(mockValidateNoOtherAmendmentsUnderWayOnDeal);
+    jest.spyOn(PortalFacilityAmendmentService, 'validateNoOtherAmendmentInProgressOnDeal').mockImplementation(mockValidateNoOtherAmendmentInProgressOnDeal);
 
     mockFindOneUser.mockResolvedValue(aPortalUser());
     mockFindOneFacility.mockResolvedValue(facility);
     mockFindOneFacility.mockResolvedValue(facility);
     mockFindLatestEligibilityCriteria.mockResolvedValue(eligibilityCriteria);
-    mockValidateNoOtherAmendmentsUnderWayOnDeal.mockResolvedValue(undefined);
+    mockValidateNoOtherAmendmentInProgressOnDeal.mockResolvedValue(undefined);
   });
 
   afterAll(() => {
@@ -135,14 +135,14 @@ describe('PortalFacilityAmendmentService', () => {
       });
 
       // Assert
-      expect(mockValidateNoOtherAmendmentsUnderWayOnDeal).toHaveBeenCalledTimes(1);
-      expect(mockValidateNoOtherAmendmentsUnderWayOnDeal).toHaveBeenCalledWith({ dealId });
+      expect(mockValidateNoOtherAmendmentInProgressOnDeal).toHaveBeenCalledTimes(1);
+      expect(mockValidateNoOtherAmendmentInProgressOnDeal).toHaveBeenCalledWith({ dealId });
     });
 
     it(`should throw an error if validateNoOtherAmendmentsUnderWayOnDeal throws an error`, async () => {
       // Arrange
       const mockError = new PortalFacilityAmendmentConflictError(dealId);
-      mockValidateNoOtherAmendmentsUnderWayOnDeal.mockRejectedValue(mockError);
+      mockValidateNoOtherAmendmentInProgressOnDeal.mockRejectedValue(mockError);
 
       // Act + Assert
       await expect(() =>

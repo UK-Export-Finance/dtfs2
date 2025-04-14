@@ -1,6 +1,6 @@
 export const mandatoryCriteria = {
-  _id: '623f30f08b2712001f99f2b9',
-  version: 34,
+  _id: '623f30f08b2712001f99f2c0',
+  version: 35,
   criteria: [
     {
       id: 1,
@@ -26,11 +26,11 @@ export const mandatoryCriteria = {
       items: [
         {
           id: 4,
-          copy: 'Where the supplier is not a “Person Within Scope of Windsor Framework”, it is an eligible person OR',
+          copy: 'Where the supplier is not a “Person Within Scope of Windsor Framework”, it is an <a href="/assets/files/financial_difficulty_model_1.1.0.xlsx" class="govuk-link">eligible person</a> OR',
         },
         {
           id: 5,
-          copy: 'Where the supplier is a “Person Within Scope of Windsor Framework”, both it and its parent obligor (if any) is an eligible person.',
+          copy: 'Where the supplier is a “Person Within Scope of Windsor Framework”, both it and its parent obligor (if any) is an <a href="/assets/files/financial_difficulty_model_1.1.0.xlsx" class="govuk-link">eligible person</a>.',
         },
       ],
     },

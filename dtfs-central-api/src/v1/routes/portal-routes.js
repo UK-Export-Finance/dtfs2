@@ -5,6 +5,9 @@ const { validatePutPortalFacilityAmendmentPayload } = require('./middleware/payl
 const { validatePatchPortalFacilityAmendmentPayload } = require('./middleware/payload-validation/validate-patch-portal-facility-amendment-payload');
 const { validateDeletePortalFacilityAmendmentPayload } = require('./middleware/payload-validation/validate-delete-portal-facility-amendment-payload');
 const {
+  validatePatchPortalFacilitySubmitAmendmentPayload,
+} = require('./middleware/payload-validation/validate-patch-portal-facility-submit-amendment-payload');
+const {
   validatePatchPortalFacilityAmendmentStatusPayload,
 } = require('./middleware/payload-validation/validate-patch-portal-facility-amendment-status-payload');
 
@@ -40,6 +43,7 @@ const putFacilityAmendmentController = require('../controllers/portal/facility/p
 const patchFacilityAmendmentController = require('../controllers/portal/facility/patch-amendment.controller');
 const deleteFacilityAmendmentController = require('../controllers/portal/facility/delete-amendment.controller');
 const patchAmendmentStatusController = require('../controllers/portal/facility/patch-amendment-status.controller');
+const patchSubmitAmendmentController = require('../controllers/portal/facility/patch-submit-amendment.controller');
 
 const getAllFacilityAmendmentController = require('../controllers/portal/facility/get-all-amendments.controller');
 const getFacilityAmendmentsForDealController = require('../controllers/portal/facility/get-amendments-on-deal.controller');
@@ -709,6 +713,64 @@ portalRouter
     validation.mongoIdValidation('amendmentId'),
     validatePatchPortalFacilityAmendmentStatusPayload,
     patchAmendmentStatusController.patchAmendmentStatus,
+  );
+
+/**
+ * @openapi
+ * /facilities/:facilityId/amendments/:amendmentId:/submit-amendment:
+ *   patch:
+ *     summary: update a Portal GEF facility amendment on submit
+ *     tags: [Portal - Amendments]
+ *     description: update a Portal GEF facility amendment on submit
+ *     parameters:
+ *       - in: path
+ *         name: facilityId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Facility ID amendment should exist on
+ *       - in: path
+ *         name: amendmentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Amendment ID to get
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
+ *               newStatus:
+ *                  type: string
+ *                  enum: ["Acknowledged"]
+ *               referenceNumber:
+ *                  type: string
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/definitions/PortalAmendment'
+ *       404:
+ *         description: Not found
+ *       409:
+ *         description: Conflict - amendment cannot currently be updated
+ */
+portalRouter
+  .route('/facilities/:facilityId/amendments/:amendmentId/submit-amendment')
+  .patch(
+    validatePortalFacilityAmendmentsEnabled,
+    validation.mongoIdValidation('facilityId'),
+    validation.mongoIdValidation('amendmentId'),
+    validatePatchPortalFacilitySubmitAmendmentPayload,
+    patchSubmitAmendmentController.patchSubmitAmendment,
   );
 
 /**

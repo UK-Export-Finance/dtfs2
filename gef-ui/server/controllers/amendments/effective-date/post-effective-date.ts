@@ -45,13 +45,6 @@ export const postEffectiveDate = async (req: PostEffectiveDateRequest, res: Resp
       return res.redirect('/not-found');
     }
 
-    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
-
-    if (!amendment) {
-      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
-      return res.redirect('/not-found');
-    }
-
     const validationErrorsOrValue = validateAndParseEffectiveDate(effectiveDateDayMonthYear, getCoverStartDateOrToday(facility));
 
     if ('errors' in validationErrorsOrValue) {
@@ -65,6 +58,13 @@ export const postEffectiveDate = async (req: PostEffectiveDateRequest, res: Resp
       };
 
       return res.render('partials/amendments/effective-date.njk', viewModel);
+    }
+
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
+      return res.redirect('/not-found');
     }
 
     const update = { effectiveDate: validationErrorsOrValue.value };

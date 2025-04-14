@@ -1,27 +1,18 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
-const pages = require('../../pages');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const fillBondForm = require('./fill-bond-forms');
+const relative = require('../../relativeURL');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
-const MOCK_DEAL = {
-  bankInternalRefName: 'someDealId',
-  additionalRefName: 'someDealName',
-  submissionDetails: {
-    supplyContractCurrency: {
-      id: CURRENCY.GBP,
-    },
-  },
-};
-
 context('Bond form - Submit bond with created element on page', () => {
-  let deal;
+  let bssDealId;
+  let contractUrl;
 
   beforeEach(() => {
     cy.deleteDeals(ADMIN);
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
-      deal = insertedDeal;
+    cy.createBssEwcsDeal().then((dealId) => {
+      bssDealId = dealId;
+      contractUrl = relative(`/contract/${bssDealId}`);
     });
   });
 
@@ -29,7 +20,7 @@ context('Bond form - Submit bond with created element on page', () => {
     cy.login(BANK1_MAKER1);
 
     // navigate to the about-buyer page; use the nav so we have it covered in a test..
-    pages.contract.visit(deal);
+    cy.visit(contractUrl);
 
     cy.clickAddBondButton();
 
@@ -49,10 +40,9 @@ context('Bond form - Submit bond with created element on page', () => {
     cy.clickSubmitButton();
 
     // gets deal
-    cy.getDeal(deal._id, BANK1_MAKER1).then((updatedDeal) => {
-      // get bond from deal facility id
-      cy.getFacility(deal._id, updatedDeal.facilities[0], BANK1_MAKER1).then((bond) => {
-        // checks bond does not contain inserted field
+    cy.getDeal(bssDealId, BANK1_MAKER1).then((updatedDeal) => {
+      cy.getFacility(bssDealId, updatedDeal.facilities[0], BANK1_MAKER1).then((bond) => {
+        // checks bond does not have inserted field
         expect(bond.intruder).to.be.an('undefined');
       });
     });

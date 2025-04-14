@@ -7,6 +7,8 @@ const { TEST_EMAIL_NO_GOV_NOTIFY } = require('../../../../../e2e-fixtures/portal
 const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Password management screens', () => {
+  const contactUsEmailAddress = Cypress.env('CONTACT_US_EMAIL_ADDRESS');
+
   beforeEach(() => {
     resetPassword.visitRequestEmail();
   });
@@ -16,7 +18,6 @@ context('Password management screens', () => {
       resetPassword.visitRequestEmail();
     });
 
-    const contactUsEmailAddress = Cypress.env('CONTACT_US_EMAIL_ADDRESS');
     const expectedContactUsMessage = `We've sent an email to the address you have provided. Please check your inbox and spam folder for a message from us. If you require further assistance please contact ${contactUsEmailAddress}.`;
 
     it('Should have email address input, submit and cancel buttons on the page', () => {
@@ -115,6 +116,18 @@ context('Password management screens', () => {
       changePassword.passwordError().contains('Password is not correct.');
       changePassword.passwordConfirmError().should('exist');
       changePassword.passwordConfirmError().contains('Confirm password is not correct.');
+    });
+  });
+
+  context('Contact us section', () => {
+    it('should display the correct email address', () => {
+      changePassword.contactUsEmailAddress().should('be.visible');
+      changePassword.contactUsEmailAddress().contains(contactUsEmailAddress);
+    });
+
+    it('should display the correct response timeframe text', () => {
+      changePassword.contactUsEmailAddress().should('be.visible');
+      changePassword.contactUsTimeframeText().should('have.text', 'We aim to respond within 2 working days');
     });
   });
 });

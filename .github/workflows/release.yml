@@ -183,43 +183,39 @@ jobs:
         with:
           webhook: ${{ secrets.MSTEAMS_WEBHOOK }}
           content: '
-            {
-            "@type": "MessageCard",
-            "@context": "http://schema.org/extensions",
-            "themeColor": "00703c",
-            "title": "🚀 ${{ github.event.workflow_run.head_branch }} : ${{ env.ENVIRONMENT }}",
-            "summary": "Deploying ${{ github.event.workflow_run.head_branch }} branch to ${{ env.ENVIRONMENT }} DTFS environment",
-            "sections":
-            [
-            {
-            "activityTitle": "Release deployment",
-            "activitySubtitle": "Deploying **${{ github.event.workflow_run.head_branch }}** release branch to **${{ env.ENVIRONMENT }}** DTFS environment.",
-            "facts":
-            [
-            {
-            "name": "Release",
-            "value": "${{ github.event.workflow_run.head_branch }}",
-            },
-            { "name": "Environment", "value": "${{ env.ENVIRONMENT }}" },
-            { "name": "Commit", "value": "${{ github.sha }}" },
-            { "name": "Status", "value": "Pending approval" },
-            ],
-            "markdown": true,
-            },
-            ],
-            "potentialAction":
-            [
-            {
-            "@type": "OpenUri",
-            "name": "Deployment",
-            "targets":
-            [
-            {
-            "os": "default",
-            "uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-            },
-            ],
-            },
-            ],
+                      {
+              "@type": "MessageCard",
+              "@context": "http://schema.org/extensions",
+              "themeColor": "00703c",
+              "title": "🚀 ${{ github.event.workflow_run.head_branch }} : ${{ env.ENVIRONMENT }}",
+              "summary": "Deploying ${{ github.event.workflow_run.head_branch }} branch to ${{ env.ENVIRONMENT }} DTFS environment",
+              "sections": [
+                {
+                  "activityTitle": "Release deployment",
+                  "activitySubtitle": "Deploying **${{ github.event.workflow_run.head_branch }}** release branch to **${{ env.ENVIRONMENT }}** DTFS environment.",
+                  "facts": [
+                    {
+                      "name": "Release",
+                      "value": "${{ github.event.workflow_run.head_branch }}"
+                    },
+                    { "name": "Environment", "value": "${{ env.ENVIRONMENT }}" },
+                    { "name": "Commit", "value": "${{ github.sha }}" },
+                    { "name": "Status", "value": "Pending approval" }
+                  ],
+                  "markdown": true
+                }
+              ],
+              "potentialAction": [
+                {
+                  "@type": "OpenUri",
+                  "name": "Deployment",
+                  "targets": [
+                    {
+                      "os": "default",
+                      "uri": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                  ]
+                }
+              ]
             }
             '

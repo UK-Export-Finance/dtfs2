@@ -1,28 +1,24 @@
+const { DEAL_SUBMISSION_TYPE, FACILITY_STAGE } = require('@ukef/dtfs2-common');
 const relative = require('../../../../relativeURL');
 const MOCK_USERS = require('../../../../../../../e2e-fixtures');
 const CONSTANTS = require('../../../../../fixtures/constants');
 const { dashboardDeals } = require('../../../../pages');
 const { dashboardFilters } = require('../../../../partials');
-const { BSS_DEAL_MIA, GEF_DEAL_DRAFT } = require('../../fixtures');
+const { GEF_DEAL_DRAFT } = require('../../fixtures');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 
 const filters = dashboardFilters;
 
 context('Dashboard Deals filters - filter by submissionType/noticeType', () => {
-  const ALL_DEALS = [];
-
   before(() => {
     cy.deleteGefApplications(ADMIN);
     cy.deleteDeals(ADMIN);
 
-    cy.insertOneDeal(BSS_DEAL_MIA, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.createBssEwcsDeal();
+    cy.completeBssEwcsDealFields({ dealSubmissionType: DEAL_SUBMISSION_TYPE.MIA, facilityStage: FACILITY_STAGE.ISSUED });
 
-    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1).then((deal) => {
-      ALL_DEALS.push(deal);
-    });
+    cy.insertOneGefApplication(GEF_DEAL_DRAFT, BANK1_MAKER1);
   });
 
   describe('MIA', () => {
@@ -77,12 +73,11 @@ context('Dashboard Deals filters - filter by submissionType/noticeType', () => {
     });
 
     it('renders only MIA deals', () => {
-      const ALL_MIA_DEALS = ALL_DEALS.filter(({ submissionType }) => submissionType === CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
-      dashboardDeals.rows().should('have.length', ALL_MIA_DEALS.length);
+      dashboardDeals.rows().should('have.length', 1); // Expecting only one MIA deal
 
-      const firstMiaDeal = ALL_MIA_DEALS[0];
-
-      dashboardDeals.row.type(firstMiaDeal._id).should('have.text', CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
+      dashboardDeals.rows().each((row) => {
+        cy.wrap(row).contains(CONSTANTS.DEALS.SUBMISSION_TYPE.MIA);
+      });
     });
   });
 });

@@ -3,7 +3,7 @@ import express from 'express';
 import { validateMongoId } from '@ukef/dtfs2-common';
 import { validatePortalFacilityAmendmentsEnabled } from '../../../middleware/feature-flags/portal-facility-amendments';
 import { validateRole, validateToken, validateBank } from '../../../middleware';
-import { MAKER } from '../../../constants/roles';
+import { MAKER, CHECKER } from '../../../constants/roles';
 import { postCreateDraftFacilityAmendment } from '../../../controllers/amendments/create-draft/post-create-draft';
 import { getWhatNeedsToChange } from '../../../controllers/amendments/what-needs-to-change/get-what-needs-to-change';
 import { postWhatNeedsToChange } from '../../../controllers/amendments/what-needs-to-change/post-what-needs-to-change';
@@ -28,6 +28,10 @@ import { getManualApprovalNeeded } from '../../../controllers/amendments/manual-
 import { getCheckYourAnswers } from '../../../controllers/amendments/check-your-answers/get-check-your-answers.ts';
 import { postCheckYourAnswers } from '../../../controllers/amendments/check-your-answers/post-check-your-answers.ts';
 import { getSubmittedForChecking } from '../../../controllers/amendments/submitted-for-checking/get-submitted-for-checking.ts';
+import { getApprovedByUkef } from '../../../controllers/amendments/approved-by-ukef/get-approved-by-ukef.ts';
+import { getAmendmentDetails } from '../../../controllers/amendments/amendment-details/get-amendment-details.ts';
+import { getSubmitAmendmentToUkef } from '../../../controllers/amendments/submit-amendment-to-ukef/get-submit-amendment-to-ukef.ts';
+import { postSubmitAmendmentToUkef } from '../../../controllers/amendments/submit-amendment-to-ukef/post-submit-amendment-to-ukef.ts';
 
 const {
   WHAT_DO_YOU_NEED_TO_CHANGE,
@@ -42,6 +46,9 @@ const {
   CHECK_YOUR_ANSWERS,
   CANCEL,
   SUBMITTED_FOR_CHECKING,
+  APPROVED_BY_UKEF,
+  AMENDMENT_DETAILS,
+  SUBMIT_AMENDMENT_TO_UKEF,
 } = PORTAL_AMENDMENT_PAGES;
 
 const router = express.Router();
@@ -128,5 +135,21 @@ router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${SUBMITTED_FOR_CHECKING}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getSubmittedForChecking);
+
+router
+  .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${SUBMIT_AMENDMENT_TO_UKEF}`)
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [CHECKER] })])
+  .get(getSubmitAmendmentToUkef)
+  .post(postSubmitAmendmentToUkef);
+
+router
+  .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${APPROVED_BY_UKEF}`)
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(getApprovedByUkef);
+
+router
+  .route(`/application-details/:dealId/${AMENDMENT_DETAILS}`)
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER, CHECKER] })])
+  .get(getAmendmentDetails);
 
 export default router;

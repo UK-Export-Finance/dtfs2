@@ -8,7 +8,7 @@ import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 
 const mockUpdatePortalFacilityAmendmentByAmendmentId = jest.fn();
 const mockFindOneAmendmentByFacilityIdAndAmendmentId = jest.fn();
-const mockValidateNoOtherAmendmentsUnderWayOnDeal = jest.fn();
+const mockValidateNoOtherAmendmentInProgressOnDeal = jest.fn();
 const mockValidateAmendmentIsComplete = jest.fn();
 
 const amendmentId = new ObjectId().toString();
@@ -28,7 +28,7 @@ describe('PortalFacilityAmendmentService', () => {
     jest.spyOn(TfmFacilitiesRepo, 'updatePortalFacilityAmendmentByAmendmentId').mockImplementation(mockUpdatePortalFacilityAmendmentByAmendmentId);
     jest.spyOn(TfmFacilitiesRepo, 'findOneAmendmentByFacilityIdAndAmendmentId').mockImplementation(mockFindOneAmendmentByFacilityIdAndAmendmentId);
 
-    jest.spyOn(PortalFacilityAmendmentService, 'validateNoOtherAmendmentsUnderWayOnDeal').mockImplementation(mockValidateNoOtherAmendmentsUnderWayOnDeal);
+    jest.spyOn(PortalFacilityAmendmentService, 'validateNoOtherAmendmentInProgressOnDeal').mockImplementation(mockValidateNoOtherAmendmentInProgressOnDeal);
     jest.spyOn(PortalFacilityAmendmentService, 'validateAmendmentIsComplete').mockImplementation(mockValidateAmendmentIsComplete);
 
     mockUpdatePortalFacilityAmendmentByAmendmentId.mockResolvedValue({});
@@ -112,8 +112,8 @@ describe('PortalFacilityAmendmentService', () => {
       });
 
       // Assert
-      expect(mockValidateNoOtherAmendmentsUnderWayOnDeal).toHaveBeenCalledTimes(1);
-      expect(mockValidateNoOtherAmendmentsUnderWayOnDeal).toHaveBeenCalledWith({
+      expect(mockValidateNoOtherAmendmentInProgressOnDeal).toHaveBeenCalledTimes(1);
+      expect(mockValidateNoOtherAmendmentInProgressOnDeal).toHaveBeenCalledWith({
         dealId: existingAmendment.dealId.toString(),
         amendmentId,
       });

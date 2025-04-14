@@ -22,9 +22,13 @@ const { patchAmendment } = require('../controllers/amendments/patch-amendment.co
 const { putAmendment } = require('../controllers/amendments/put-amendment.controller');
 const { deleteAmendment } = require('../controllers/amendments/delete-amendment.controller');
 const { patchAmendmentStatus } = require('../controllers/amendments/patch-amendment-status.controller');
+const { patchSubmitAmendment } = require('../controllers/amendments/patch-submit-amendment.controller');
 const { handleExpressValidatorResult } = require('../validation/route-validators/express-validator-result-handler');
 const { validatePutPortalFacilityAmendmentPayload } = require('../validation/route-validators/amendments/validate-put-portal-facility-amendment-payload');
 const { validatePatchPortalFacilityAmendmentPayload } = require('../validation/route-validators/amendments/validate-patch-portal-facility-amendment-payload');
+const {
+  validatePatchPortalFacilitySubmitAmendmentPayload,
+} = require('../validation/route-validators/amendments/validate-patch-portal-facility-submit-amendment-payload');
 const {
   validatePatchPortalFacilityAmendmentStatusPayload,
 } = require('../validation/route-validators/amendments/validate-patch-portal-facility-amendment-status-payload');
@@ -90,8 +94,7 @@ router
 // Mandatory Criteria
 router
   .route('/mandatory-criteria-versioned')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), mandatoryCriteriaVersioned.findAll)
-  .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteriaVersioned.create);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), mandatoryCriteriaVersioned.findAll);
 
 router
   .route('/mandatory-criteria-versioned/latest')
@@ -100,7 +103,6 @@ router
 router
   .route('/mandatory-criteria-versioned/:id')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), mandatoryCriteriaVersioned.findOne)
-  .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteriaVersioned.update)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteriaVersioned.delete);
 
 // File Uploads
@@ -133,16 +135,10 @@ router
 
 router
   .route('/facilities/:facilityId/amendments/:amendmentId')
-  .all(
-    validatePortalFacilityAmendmentsEnabled,
-    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }),
-    mongoIdValidation('facilityId'),
-    mongoIdValidation('amendmentId'),
-    handleExpressValidatorResult,
-  )
-  .get(getAmendment)
-  .patch(validatePatchPortalFacilityAmendmentPayload, patchAmendment)
-  .delete(deleteAmendment);
+  .all(validatePortalFacilityAmendmentsEnabled, mongoIdValidation('facilityId'), mongoIdValidation('amendmentId'), handleExpressValidatorResult)
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }), getAmendment)
+  .patch(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), validatePatchPortalFacilityAmendmentPayload, patchAmendment)
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), deleteAmendment);
 
 router
   .route('/facilities/:facilityId/amendments/:amendmentId/status')
@@ -154,6 +150,18 @@ router
     handleExpressValidatorResult,
     validatePatchPortalFacilityAmendmentStatusPayload,
     patchAmendmentStatus,
+  );
+
+router
+  .route('/facilities/:facilityId/amendments/:amendmentId/submit-amendment')
+  .patch(
+    validatePortalFacilityAmendmentsEnabled,
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [CHECKER] }),
+    mongoIdValidation('facilityId'),
+    mongoIdValidation('amendmentId'),
+    handleExpressValidatorResult,
+    validatePatchPortalFacilitySubmitAmendmentPayload,
+    patchSubmitAmendment,
   );
 
 router

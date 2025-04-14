@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { FEE_RECORD_STATUS, getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, FEE_RECORD_STATUS, getFormattedCurrencyAndAmount, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import { format, parseISO } from 'date-fns';
 import { AddPaymentViewModel, RecordedPaymentDetailsViewModel } from '../../../types/view-models';
 import api from '../../../api';
@@ -9,7 +9,6 @@ import {
   getFeeRecordPaymentCurrencyFromPremiumPaymentsCheckboxId,
   getPremiumPaymentsCheckboxIdsFromObjectKeys,
 } from '../../../helpers/premium-payments-table-checkbox-id-helper';
-import { CustomExpressRequest } from '../../../types/custom-express-request';
 import { ValidatedAddPaymentFormValues } from '../../../types/add-payment-form-values';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../constants';
 import {
