@@ -167,19 +167,21 @@ describe(component, () => {
 
   describe('`dates` section', () => {
     it('should render inclusionNoticeReceived as a dash when submissionType is MIA', () => {
+      const paramsWithMIA = {
+        ...params,
+        deal: { submissionType: 'Manual Inclusion Application' },
+      };
+      wrapper = render(paramsWithMIA);
       wrapper.expectText('[data-cy="facility-inclusion-notice-received"]').toRead('-');
     });
 
-    describe('when submissionType is not MIA', () => {
+    describe('when submissionType is AIN', () => {
       beforeEach(() => {
-        const paramsWithNonCommitmentStage = {
+        const paramsWithAIN = {
           ...params,
-          facility: {
-            ...params.facility,
-            facilityStage: 'Issued',
-          },
+          deal: { submissionType: 'Automatic Inclusion Notice' },
         };
-        wrapper = render(paramsWithNonCommitmentStage);
+        wrapper = render(paramsWithAIN);
       });
 
       it('should render inclusionNoticeReceived', () => {
