@@ -27,7 +27,6 @@ export const getApprovedByUkef = async (req: GetApprovedByUkefRequest, res: Resp
       return res.redirect('/not-found');
     }
 
-    // TODO: DTFS2-7753 change to submitted status
     if (amendment.status !== PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED) {
       console.error('Amendment %s on facility %s is not acknowledged', amendmentId, facilityId);
       return res.redirect('/not-found');
@@ -35,7 +34,6 @@ export const getApprovedByUkef = async (req: GetApprovedByUkefRequest, res: Resp
 
     const effectiveDate = format(fromUnixTime(Number(amendment.effectiveDate)), DATE_FORMATS.D_MMMM_YYYY);
 
-    // TODO: DTFS2-7753 add amendmentId
     const viewModel: ApprovedByUkefViewModel = {
       approvedByUkef: true,
       effectiveDate,
