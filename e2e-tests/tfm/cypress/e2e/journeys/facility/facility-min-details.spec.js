@@ -2,18 +2,14 @@ import relative from '../../relativeURL';
 import MOCK_DEAL_MIN from '../../../fixtures/deal-MIN';
 import { T1_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 
+const { twoYearsAgo } = require('../../../../../e2e-fixtures/dateConstants');
+
 context('Facility page - Manual Inclusion Notice', () => {
   let minDealId;
   const dealFacilities = [];
 
   before(() => {
-    // Create a new MIN deal based on the mock data
-    const newMinDeal = {
-      ...MOCK_DEAL_MIN,
-      _id: undefined, // Remove the _id so MongoDB will generate a new one
-    };
-
-    cy.insertOneDeal(newMinDeal, BANK1_MAKER1).then((insertedDeal) => {
+    cy.insertOneDeal(MOCK_DEAL_MIN, BANK1_MAKER1).then((insertedDeal) => {
       minDealId = insertedDeal._id;
 
       const { dealType, mockFacilities } = MOCK_DEAL_MIN;
@@ -50,11 +46,7 @@ context('Facility page - Manual Inclusion Notice', () => {
       .invoke('text')
       .then((text) => {
         const trimmedText = text.trim();
-        expect(trimmedText).to.match(/^\d{1,2} [A-Za-z]+ \d{4}$/);
-
-        // Parse the date to ensure it's valid
-        const date = new Date(trimmedText);
-        expect(date).to.be.a('date');
+        expect(trimmedText).to.equal(twoYearsAgo.dd_MMMM_yyyy);
       });
   });
 });

@@ -1,3 +1,4 @@
+const { DEAL_SUBMISSION_TYPE } = require('@ukef/dtfs2-common');
 const { componentRenderer } = require('../../../componentRenderer');
 
 const component = '../templates/case/facility/_macros/facility_details.njk';
@@ -169,7 +170,7 @@ describe(component, () => {
     it('should render inclusionNoticeReceived as a dash when submissionType is MIA', () => {
       const paramsWithMIA = {
         ...params,
-        deal: { submissionType: 'Manual Inclusion Application' },
+        deal: { submissionType: DEAL_SUBMISSION_TYPE.MIA },
       };
       wrapper = render(paramsWithMIA);
       wrapper.expectText('[data-cy="facility-inclusion-notice-received"]').toRead('-');
@@ -178,7 +179,7 @@ describe(component, () => {
     it('should render inclusionNoticeReceived when submissionType is MIN', () => {
       const paramsWithMIN = {
         ...params,
-        deal: { submissionType: 'Manual Inclusion Notice' },
+        deal: { submissionType: DEAL_SUBMISSION_TYPE.MIN },
       };
       wrapper = render(paramsWithMIN);
       const expected = localiseTimestamp(params.facility.dates.inclusionNoticeReceived, 'd MMMM yyyy', params.user.timezone);
@@ -189,7 +190,7 @@ describe(component, () => {
       beforeEach(() => {
         const paramsWithAIN = {
           ...params,
-          deal: { submissionType: 'Automatic Inclusion Notice' },
+          deal: { submissionType: DEAL_SUBMISSION_TYPE.AIN },
         };
         wrapper = render(paramsWithAIN);
       });

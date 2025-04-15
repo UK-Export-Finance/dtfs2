@@ -35,6 +35,10 @@ context('Facility page - Manual Inclusion Application', () => {
     const facilityId = dealFacilities[0]._id;
     cy.visit(relative(`/case/${miaDealId}/facility/${facilityId}`));
 
-    cy.get('[data-cy="facility-inclusion-notice-received"]').should('contain', '-');
+    cy.get('[data-cy="facility-inclusion-notice-received"]')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.equal('-');
+      });
   });
 });
