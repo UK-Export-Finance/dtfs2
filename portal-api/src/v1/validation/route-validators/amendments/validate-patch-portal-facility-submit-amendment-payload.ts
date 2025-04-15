@@ -7,6 +7,22 @@ import z from 'zod';
 const PatchPortalFacilitySubmitAmendmentSchema = z.object({
   newStatus: z.enum([PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED]),
   referenceNumber: z.string(),
+  makersEmail: z.string(),
+  checkersEmail: z.string(),
+  pimEmail: z.string(),
+  emailVariables: z.object({
+    exporterName: z.string(),
+    bankInternalRefName: z.string(),
+    ukefDealId: z.string(),
+    ukefFacilityId: z.string(),
+    makersName: z.string(),
+    checkersName: z.string(),
+    dateEffectiveFrom: z.string(),
+    newCoverEndDate: z.string(),
+    newFacilityEndDate: z.string(),
+    newFacilityValue: z.string(),
+    eligibilityCriteria: z.string(),
+  }),
 });
 
 export type PatchPortalFacilitySubmitAmendmentPayload = z.infer<typeof PatchPortalFacilitySubmitAmendmentSchema>;

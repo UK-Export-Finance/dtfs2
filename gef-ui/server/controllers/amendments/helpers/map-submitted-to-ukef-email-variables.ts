@@ -1,13 +1,11 @@
 import { format, fromUnixTime } from 'date-fns';
 import dotenv from 'dotenv';
-import { PortalFacilityAmendmentWithUkefId, DATE_FORMATS, PortalSessionUser, now } from '@ukef/dtfs2-common';
+import { PortalFacilityAmendmentWithUkefId, DATE_FORMATS, PortalSessionUser, generateAmendmentMandatoryCriteria } from '@ukef/dtfs2-common';
 import { getCurrencySymbol } from '../facility-value/get-currency-symbol';
 import { Deal } from '../../../types/deal';
 import { Facility } from '../../../types/facility';
 
 dotenv.config();
-
-const { PORTAL_UI_URL } = process.env;
 
 /**
  * maps emailVariables to an email on amendment submission to checker
@@ -16,26 +14,24 @@ const { PORTAL_UI_URL } = process.env;
  * @param facility
  * @param amendment
  * @param user
- * @param checker
  * @returns mapped email variables
  */
-const mapSubmittedToCheckerEmailVariables = ({
+const mapSubmittedToUkefEmailVariables = ({
   deal,
   facility,
   amendment,
   user,
-  checker,
 }: {
   deal: Deal;
   facility: Facility;
   amendment: PortalFacilityAmendmentWithUkefId;
   user: PortalSessionUser;
-  checker: PortalSessionUser;
 }) => {
   const {
     ukefDealId,
     bankInternalRefName,
     exporter: { companyName: exporterName },
+    maker,
   } = deal;
 
   const { ukefFacilityId } = facility;
@@ -67,32 +63,35 @@ const mapSubmittedToCheckerEmailVariables = ({
     formattedFacilityValue = `${currencySymbol}${value}`;
   }
 
-  const makersName = `${user.firstname} ${user.surname}`;
-  const makersEmail = user.email;
+  const criteria = amendment.eligibilityCriteria?.criteria || [];
+  const formattedEligibilityCriteria = generateAmendmentMandatoryCriteria(criteria);
 
-  const checkersName = `${checker.firstname} ${checker.surname}`;
-  const checkersEmail = checker.email;
+  const makersName = `${String(maker.firstname)} ${String(maker.surname)}`;
+  const makersEmail = String(maker.email);
 
-  const dateSubmittedByMaker = format(now(), DATE_FORMATS.DD_MMMM_YYYY);
+  const checkersName = `${user.firstname} ${user.surname}`;
+  const checkersEmail = user.email;
 
-  const portalUrl = `${PORTAL_UI_URL}/login`;
+  const pimEmail = 'stb.pim@ukexportfinance.gov.uk ';
 
   return {
-    ukefDealId,
-    bankInternalRefName,
-    exporterName,
-    ukefFacilityId,
-    formattedEffectiveDate,
-    formattedCoverEndDate,
-    formattedFacilityEndDate,
-    formattedFacilityValue,
-    makersName,
     makersEmail,
-    dateSubmittedByMaker,
-    checkersName,
     checkersEmail,
-    portalUrl,
+    pimEmail,
+    emailVariables: {
+      ukefDealId,
+      bankInternalRefName: bankInternalRefName!,
+      exporterName,
+      ukefFacilityId: ukefFacilityId!,
+      dateEffectiveFrom: formattedEffectiveDate,
+      newCoverEndDate: formattedCoverEndDate,
+      newFacilityEndDate: formattedFacilityEndDate,
+      newFacilityValue: formattedFacilityValue,
+      makersName,
+      checkersName,
+      eligibilityCriteria: formattedEligibilityCriteria,
+    },
   };
 };
 
-export default mapSubmittedToCheckerEmailVariables;
+export default mapSubmittedToUkefEmailVariables;
