@@ -3,9 +3,10 @@ const express = require('express');
 const passport = require('passport');
 const { param } = require('express-validator');
 
+const { getTfmTeam } = require('./api');
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
 const { validateUserAndBankIdMatch } = require('./validation/validate-user-and-bank-id-match');
-const { bankIdValidation, sqlIdValidation, mongoIdValidation } = require('./validation/route-validators/route-validators');
+const { bankIdValidation, sqlIdValidation, mongoIdValidation, tfmTeamIdValidation } = require('./validation/route-validators/route-validators');
 const { handleExpressValidatorResult } = require('./validation/route-validators/express-validator-result-handler');
 const { MAKER, CHECKER, READ_ONLY, ADMIN, PAYMENT_REPORT_OFFICER } = require('./roles/roles');
 
@@ -386,5 +387,7 @@ authRouter
     validateUserAndBankIdMatch,
     utilisationReportControllers.getCompletedFeeRecordCorrections,
   );
+
+authRouter.route('/tfm/team/:teamId').get(tfmTeamIdValidation, getTfmTeam);
 
 module.exports = { openRouter, authRouter };

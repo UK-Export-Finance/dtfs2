@@ -1,9 +1,9 @@
-import { CustomExpressRequest, PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES, TEAM_IDS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { WhatNeedsToChangeViewModel } from '../../../types/view-models/amendments/what-needs-to-change-view-model.ts';
 import { asLoggedInUserSession } from '../../../utils/express-session';
-import { STB_PIM_EMAIL } from '../../../constants/emails.ts';
+
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper.ts';
 import { getAmendmentsUrl } from '../helpers/navigation.helper.ts';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
@@ -51,6 +51,10 @@ export const getWhatNeedsToChange = async (req: GetWhatNeedsToChangeRequest, res
     const { changeCoverEndDate, changeFacilityValue } = amendment;
     const changeQuery = req.query?.change === 'true';
 
+    const teamId = TEAM_IDS.PIM.toString();
+    const pim = await api.getTfmTeam({ teamId, userToken });
+    const { email: amendmentFormEmail } = pim;
+
     const viewModel: WhatNeedsToChangeViewModel = {
       exporterName: deal.exporter.companyName,
       facilityType: facility.type,
@@ -58,7 +62,7 @@ export const getWhatNeedsToChange = async (req: GetWhatNeedsToChangeRequest, res
       previousPage: changeQuery
         ? getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CHECK_YOUR_ANSWERS })
         : `/gef/application-details/${dealId}`,
-      amendmentFormEmail: STB_PIM_EMAIL,
+      amendmentFormEmail,
       changeCoverEndDate,
       changeFacilityValue,
     };

@@ -4,6 +4,7 @@ const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
 const updateAmendmentMock = jest.fn();
+const getTfmTeamMock = jest.fn();
 
 import { createMocks } from 'node-mocks-http';
 import * as dtfsCommon from '@ukef/dtfs2-common';
@@ -12,7 +13,7 @@ import { HttpStatusCode } from 'axios';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PostWhatNeedsToChangeRequest, postWhatNeedsToChange } from './post-what-needs-to-change.ts';
 import { WhatNeedsToChangeViewModel } from '../../../types/view-models/amendments/what-needs-to-change-view-model.ts';
-import { STB_PIM_EMAIL } from '../../../constants/emails.ts';
+
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment.ts';
 import { Deal } from '../../../types/deal.ts';
 import { getAmendmentsUrl, getNextPage } from '../helpers/navigation.helper.ts';
@@ -26,6 +27,7 @@ jest.mock('../../../services/api', () => ({
   getFacility: getFacilityMock,
   getAmendment: getAmendmentMock,
   updateAmendment: updateAmendmentMock,
+  getTfmTeam: getTfmTeamMock,
 }));
 
 console.error = jest.fn();
@@ -71,6 +73,7 @@ describe('postWhatNeedsToChange', () => {
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getAmendmentMock.mockResolvedValue(amendment);
     updateAmendmentMock.mockResolvedValue(amendment);
+    getTfmTeamMock.mockRejectedValue('test@ukexportfinance.gov.uk');
   });
 
   afterAll(() => {
@@ -144,7 +147,7 @@ describe('postWhatNeedsToChange', () => {
       exporterName: companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage: `/gef/application-details/${dealId}`,
-      amendmentFormEmail: STB_PIM_EMAIL,
+      amendmentFormEmail: 'test@ukexportfinance.gov.uk',
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       changeCoverEndDate,
       changeFacilityValue,

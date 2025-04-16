@@ -3,6 +3,7 @@
 const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
+const getTfmTeamMock = jest.fn();
 
 import { createMocks } from 'node-mocks-http';
 import * as dtfsCommon from '@ukef/dtfs2-common';
@@ -12,7 +13,7 @@ import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { getAmendmentsUrl } from '../helpers/navigation.helper.ts';
 import { WhatNeedsToChangeViewModel } from '../../../types/view-models/amendments/what-needs-to-change-view-model.ts';
 import { getWhatNeedsToChange, GetWhatNeedsToChangeRequest } from './get-what-needs-to-change.ts';
-import { STB_PIM_EMAIL } from '../../../constants/emails.ts';
+
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment.ts';
 import { Deal } from '../../../types/deal.ts';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
@@ -22,6 +23,7 @@ jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
   getFacility: getFacilityMock,
   getAmendment: getAmendmentMock,
+  getTfmTeam: getTfmTeamMock,
 }));
 
 console.error = jest.fn();
@@ -57,6 +59,7 @@ describe('getWhatNeedsToChange', () => {
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getAmendmentMock.mockResolvedValue(amendment);
+    getTfmTeamMock.mockRejectedValue('test@ukexportfinance.gov.uk');
   });
 
   afterAll(() => {
@@ -89,7 +92,7 @@ describe('getWhatNeedsToChange', () => {
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      amendmentFormEmail: STB_PIM_EMAIL,
+      amendmentFormEmail: 'test@ukexportfinance.gov.uk',
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
@@ -120,7 +123,7 @@ describe('getWhatNeedsToChange', () => {
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage: `/gef/application-details/${dealId}`,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      amendmentFormEmail: STB_PIM_EMAIL,
+      amendmentFormEmail: 'test@ukexportfinance.gov.uk',
       changeFacilityValue: true,
       changeCoverEndDate: false,
     };

@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { TIMEOUT, HEADERS } = require('@ukef/dtfs2-common');
-const { PORTAL_FACILITY_AMENDMENT } = require('@ukef/dtfs2-common/schemas');
+const { PORTAL_FACILITY_AMENDMENT, ALL_TEAM_IDS } = require('@ukef/dtfs2-common/schemas');
 const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 
 require('dotenv').config();
@@ -880,6 +880,37 @@ const deletePortalFacilityAmendment = async (facilityId, amendmentId, auditDetai
   }
 };
 
+/**
+ * Retrieves a TFM team by its ID.
+ *
+ * @param {string} teamId - The ID of the TFM team to retrieve.
+ * @returns {Promise<import('@ukef/dtfs2-common').Team>} A promise that resolves to the TFM team data if successful,
+ * or an object containing an error status and message if the operation fails.
+ *
+ * @throws {Error} If an unexpected error occurs during the request.
+ */
+const getTfmTeam = async (teamId) => {
+  try {
+    const isValidId = Object.values(ALL_TEAM_IDS).includes(teamId);
+
+    if (!isValidId) {
+      console.error('Invalid TFM team ID %s provided', teamId);
+      return { status: axios.HttpStatusCode.BadRequest, data: 'Invalid TFM team ID provided' };
+    }
+
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${teamId}`,
+      headers: headers.central,
+    });
+
+    return response.data?.team;
+  } catch (error) {
+    console.error('Unable to get the TFM team with ID %s %o', teamId, error);
+    return { status: error?.code || axios.HttpStatusCode.InternalServerError, data: 'Failed to find team' };
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -916,4 +947,5 @@ module.exports = {
   putFeeRecordCorrectionTransientFormData,
   deletePortalFacilityAmendment,
   getCompletedFeeRecordCorrections,
+  getTfmTeam,
 };

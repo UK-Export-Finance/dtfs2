@@ -3,6 +3,7 @@
 const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
+const getTfmTeamMock = jest.fn();
 
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
@@ -10,7 +11,7 @@ import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
-import { STB_PIM_EMAIL } from '../../../constants/emails.ts';
+
 import { getManualApprovalNeeded, GetManualApprovalNeededRequest } from './get-manual-approval-needed.ts';
 import { Deal } from '../../../types/deal';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
@@ -23,13 +24,12 @@ jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
   getFacility: getFacilityMock,
   getAmendment: getAmendmentMock,
+  getTfmTeam: getTfmTeamMock,
 }));
 
 const dealId = 'dealId';
 const facilityId = 'facilityId';
 const amendmentId = 'amendmentId';
-
-const amendmentFormEmail = STB_PIM_EMAIL;
 const returnLink = '/dashboard/deals';
 
 const getHttpMocks = () =>
@@ -67,6 +67,7 @@ describe('getManualApprovalNeeded', () => {
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getAmendmentMock.mockResolvedValue(amendment);
+    getTfmTeamMock.mockRejectedValue('test@ukexportfinance.gov.uk');
   });
 
   afterAll(() => {
@@ -96,7 +97,7 @@ describe('getManualApprovalNeeded', () => {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.MANUAL_APPROVAL_NEEDED, amendment),
-      amendmentFormEmail,
+      amendmentFormEmail: 'test@ukexportfinance.gov.uk',
       returnLink,
     };
 

@@ -964,17 +964,21 @@ const updateUserTasks = async (userId, updatedTasks) => {
 };
 
 /**
- * find one team
- * @param {string} teamId - the team id
- * @returns {Promise<import('@ukef/dtfs2-common').Team>}
+ * Retrieves a TFM team by its ID.
+ *
+ * @param {string} teamId - The ID of the TFM team to retrieve.
+ * @returns {Promise<import('@ukef/dtfs2-common').Team>} A promise that resolves to the TFM team data if successful,
+ * or an object containing an error status and message if the operation fails.
+ *
+ * @throws {Error} If an unexpected error occurs during the request.
  */
 const findOneTeam = async (teamId) => {
   try {
     const isValidId = isValidTeamId(teamId);
 
     if (!isValidId) {
-      console.error('findOneTeam: Invalid team id %s', teamId);
-      return { status: 400, data: 'Invalid team id provided' };
+      console.error('Invalid TFM team ID %s provided', teamId);
+      return { status: axios.HttpStatusCode.BadRequest, data: 'Invalid TFM team ID provided' };
     }
 
     const response = await axios({
@@ -983,10 +987,10 @@ const findOneTeam = async (teamId) => {
       headers: headers.central,
     });
 
-    return response.data.team;
+    return response.data?.team;
   } catch (error) {
-    console.error('findOneTeam: Failed to find team %o', error);
-    return { status: error?.code || 500, data: 'Failed to find team' };
+    console.error('Unable to get the TFM team with ID %s %o', teamId, error);
+    return { status: error?.code || axios.HttpStatusCode.InternalServerError, data: 'Failed to find team' };
   }
 };
 
