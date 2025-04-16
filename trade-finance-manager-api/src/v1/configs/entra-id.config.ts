@@ -13,7 +13,7 @@ export class EntraIdConfig {
     ENTRA_ID_REDIRECT_URL: z.string(),
   });
 
-  public readonly msalAppConfig: MsalAppConfig;
+  public readonly msalConfig: MsalAppConfig;
 
   public readonly authorityMetadataUrl: string;
 
@@ -27,7 +27,7 @@ export class EntraIdConfig {
 
     const authority = `${ENTRA_ID_CLOUD_INSTANCE}/${ENTRA_ID_TENANT_ID}`;
 
-    this.msalAppConfig = {
+    this.msalConfig = {
       auth: {
         clientId: ENTRA_ID_CLIENT_ID,
         authority,

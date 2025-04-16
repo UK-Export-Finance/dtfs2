@@ -14,7 +14,7 @@ type HandleRedirectParams = {
 };
 
 export type HandleRedirectResponse = {
-  entraIdUser: EntraIdUser;
+  idTokenClaims: EntraIdUser;
   successRedirect?: string;
 };
 
@@ -24,37 +24,72 @@ type GetAccessTokenAndEntraIdUserByAuthCodeParams = {
 };
 
 type GetEntraIdUserByAuthCodeResponse = {
-  entraIdUser: EntraIdUser;
+  idTokenClaims: EntraIdUser;
 };
 
 export class EntraIdService {
-  private readonly msalAppConfig: MsalAppConfig;
-
+  private readonly msalConfig: MsalAppConfig;
   private readonly cryptoProvider = new CryptoProvider();
   private readonly entraIdConfig: EntraIdConfig;
   private readonly entraIdApi: EntraIdApi;
+
   constructor({ entraIdConfig, entraIdApi }: { entraIdConfig: EntraIdConfig; entraIdApi: EntraIdApi }) {
     this.entraIdConfig = entraIdConfig;
     this.entraIdApi = entraIdApi;
-    this.msalAppConfig = entraIdConfig.msalAppConfig;
+    this.msalConfig = entraIdConfig.msalConfig;
   }
 
   /**
-   * Used as part of the SSO process
+   * Retrieves an instance of the `ConfidentialClientApplication` configured with
+   * the necessary authority metadata to optimise performance. If the authority
+   * metadata is not already cached in the `msalConfig`, it fetches the metadata
+   * and stores it for future use.
    *
-   * Creates the URL to redirect the user to Entra to login
+   * @returns {Promise<ConfidentialClientApplication>} A promise that resolves to
+   * an instance of `ConfidentialClientApplication` configured with the cached
+   * authority metadata.
    *
-   * The redirect URI is retrieved from Entra later in the process, following a successful login, to allow
-   * the user to be redirected to the original page they were visiting.
+   * @remarks
+   * This method improves performance by avoiding repeated metadata fetches on
+   * every request. For more details, refer to the MSAL Node performance documentation:
+   * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-node/docs/performance.md
+   *
+   * @throws {Error} If unable to get the MSAL application instance.
+   */
+  private async getMsalInstance(): Promise<ConfidentialClientApplication> {
+    try {
+      if (!this.msalConfig.auth.authorityMetadata) {
+        const metaData = await this.entraIdApi.getAuthorityMetadataUrl();
+        this.msalConfig.auth.authorityMetadata = JSON.stringify(metaData);
+      }
+
+      return new ConfidentialClientApplication(this.msalConfig);
+    } catch (error) {
+      console.error('Unable to get MSAL instance %o', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Generates an authorisation code URL for Entra ID authentication.
+   *
+   * This method creates a URL that can be used to initiate the OAuth 2.0
+   * authorization code flow with Entra ID. It includes a CSRF token in the
+   * state parameter to protect against CSRF attacks, and encodes the state
+   * as a base64 string.
+   *
+   * @param {GetAuthCodeUrlParams} params - Parameters for generating the authorization code URL.
+   * @returns {Promise<GetAuthCodeUrlResponse>} A promise that resolves with the authorization code URL
+   * and the request details used to generate it.
+   *
+   * @throws {Error} If there is an issue creating the MSAL instance or generating the URL.
+   *
+   * @see {@link https://datatracker.ietf.org/doc/html/rfc6819#section-3.6} for details on CSRF protection.
    */
   public async getAuthCodeUrl({ successRedirect }: GetAuthCodeUrlParams): Promise<GetAuthCodeUrlResponse> {
-    const msalApp = await this.getMsalAppInstance();
+    const msalApp = await this.getMsalInstance();
 
     const decodedState: DecodedAuthCodeRequestState = {
-      // Include a random CSRF token in the state parameter to protect against
-      // CSRF attacks. The state will be cached in session then verified when
-      // the response is received back via the redirect from Entra ID.
-      // See https://datatracker.ietf.org/doc/html/rfc6819#section-3.6 for details
       csrfToken: this.cryptoProvider.createNewGuid(),
       successRedirect,
     };
@@ -72,35 +107,11 @@ export class EntraIdService {
   }
 
   /**
-   * Used as part of the SSO process
+   * Parses an encoded authentication request state and validates it against the schema.
    *
-   * Handles the TFM-API side of the Entra communications following the automatic redirect from TFM UI.
-   * This includes validating the auth code, and getting the entra user details
-   */
-  public async handleRedirect({ authCodeResponse, originalAuthCodeUrlRequest }: HandleRedirectParams): Promise<HandleRedirectResponse> {
-    if (!originalAuthCodeUrlRequest) {
-      throw new Error('No auth code URL request found in session');
-    }
-
-    const { entraIdUser } = await this.getEntraIdUserByAuthCode({
-      authCodeResponse,
-      originalAuthCodeUrlRequest,
-    });
-
-    console.log('==========>1', entraIdUser);
-
-    const { successRedirect } = this.parseAuthRequestState(authCodeResponse.state);
-
-    console.log('==========>2', successRedirect);
-
-    return {
-      entraIdUser,
-      successRedirect,
-    };
-  }
-
-  /**
-   * Parses the base 64 encoded auth code request into a known type
+   * @param encodedState - The Base64-encoded string representing the authentication request state.
+   * @returns The decoded and validated authentication request state as a `DecodedAuthCodeRequestState` object.
+   * @throws Will throw an error if the decoding or schema validation fails.
    */
   private parseAuthRequestState(encodedState: string): DecodedAuthCodeRequestState {
     try {
@@ -111,56 +122,80 @@ export class EntraIdService {
     }
   }
 
-  private async getAuthorityMetadata() {
-    try {
-      return await this.entraIdApi.getAuthorityMetadataUrl();
-    } catch (error) {
-      console.error('Error fetching Entra ID authority metadata: %o', error);
-      throw error;
+  /**
+   * Handles the redirect process after an authentication attempt with Entra ID.
+   *
+   * @param {HandleRedirectParams} params - The parameters required for handling the redirect.
+   * @param {AuthCodeResponse} params.authCodeResponse - The response containing the authentication code.
+   * @param {AuthCodeUrlRequest} params.originalAuthCodeUrlRequest - The original authentication code URL request.
+   *
+   * @returns {Promise<HandleRedirectResponse>} A promise that resolves to an object containing the ID token claims
+   * and the success redirect URL.
+   *
+   * @throws {Error} If the original authentication code URL request is not found in the session.
+   */
+  public async handleRedirect({ authCodeResponse, originalAuthCodeUrlRequest }: HandleRedirectParams): Promise<HandleRedirectResponse> {
+    if (!originalAuthCodeUrlRequest) {
+      throw new Error('No auth code URL request found in session');
     }
-  }
 
-  private async getMsalAppInstance(): Promise<ConfidentialClientApplication> {
-    // Improve performance by fetching the authority metadata once and storing
-    // in our cached `msalAppConfig` rather than fetching on every request.
-    // https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-node/docs/performance.md
-    if (!this.msalAppConfig.auth.authorityMetadata) {
-      this.msalAppConfig.auth.authorityMetadata = JSON.stringify(await this.getAuthorityMetadata());
-    }
+    const { idTokenClaims } = await this.getEntraIdUserByAuthCode({
+      authCodeResponse,
+      originalAuthCodeUrlRequest,
+    });
 
-    return new ConfidentialClientApplication(this.msalAppConfig);
+    const { successRedirect } = this.parseAuthRequestState(authCodeResponse.state);
+
+    return {
+      idTokenClaims,
+      successRedirect,
+    };
   }
 
   /**
-   * Used as part of the SSO process
+   * Retrieves an Entra ID user by exchanging an authorization code for an access token.
+   * This method ensures the security of the process by validating the state in the
+   * original authorization code request against the state in the received authorization
+   * code response, protecting against CSRF attacks.
    *
-   * Gets entra user details from the auth code response. Includes methods to ensure that the auth code response sent by
-   * the client has not been modified through using a sever side original auth code request.
+   * @param params - An object containing the authorization code response and the original
+   *                 authorization code URL request.
+   * @param params.authCodeResponse - The response containing the authorization code
+   *                                  received via the redirect.
+   * @param params.originalAuthCodeUrlRequest - The original authorization code URL request
+   *                                            used to initiate the authentication process.
+   *
+   * @returns A promise that resolves to an object containing the ID token claims of the
+   *          authenticated user.
+   *
+   * @throws Will throw an error if an invalid SSO token is received.
+   *
+   * @see {@link https://datatracker.ietf.org/doc/html/rfc6819#section-3.6} for details on
+   *      CSRF attack prevention.
    */
   private async getEntraIdUserByAuthCode({
     authCodeResponse,
     originalAuthCodeUrlRequest,
   }: GetAccessTokenAndEntraIdUserByAuthCodeParams): Promise<GetEntraIdUserByAuthCodeResponse> {
-    const msalApp = await this.getMsalAppInstance();
+    try {
+      const msalApp = await this.getMsalInstance();
+      const originalUrlRequest = originalAuthCodeUrlRequest;
+      const { code } = authCodeResponse;
+      const tokenRequest = { ...originalUrlRequest, code };
+      const token = await msalApp.acquireTokenByCode(tokenRequest, authCodeResponse);
 
-    // The token request uses details from our original auth code request so
-    // that MSAL can validate that the state in our original request matches the
-    // state in the auth code response received via the redirect. This ensures
-    // that the originator of the request and the response received are the
-    // same, which is important for security reasons to protect against CSRF
-    // attacks.
-    // See https://datatracker.ietf.org/doc/html/rfc6819#section-3.6 for details
+      if (!token) {
+        throw new Error('Invalid SSO token received');
+      }
 
-    console.log('============>0', { originalAuthCodeUrlRequest });
+      const {
+        account: { idTokenClaims },
+      } = ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA.parse(token);
 
-    const originalUrlRequest = originalAuthCodeUrlRequest;
-    const tokenRequest = { ...originalUrlRequest, code: authCodeResponse.code };
-    const token = await msalApp.acquireTokenByCode(tokenRequest, authCodeResponse);
-    console.log('=========>', tokenRequest, token);
-    const {
-      account: { idTokenClaims },
-    } = ENTRA_ID_AUTHENTICATION_RESULT_SCHEMA.parse(token);
-
-    return { entraIdUser: idTokenClaims };
+      return { idTokenClaims };
+    } catch (error) {
+      console.error('Error getting Entra ID by authentication code %o', error);
+      throw error;
+    }
   }
 }

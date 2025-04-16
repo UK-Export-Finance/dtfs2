@@ -11,7 +11,7 @@ import { TfmTeamSchema } from './tfm-team.schema';
  */
 export const ENTRA_ID_USER_SCHEMA = z.object({
   oid: z.string(),
-  email: z.string(),
+  verified_primary_email: z.array(z.string().email()),
   given_name: z.string(),
   family_name: z.string(),
   roles: z.array(TfmTeamSchema),
