@@ -34,7 +34,7 @@ describe(`GET ${url}`, () => {
     await storage.flush();
     jest.resetAllMocks();
 
-    ({ sessionCookie } = await storage.saveUserSession([ROLES.MAKER]));
+    ({ sessionCookie } = await storage.saveUserSession([ROLES.CHECKER]));
     jest.spyOn(api, 'getAmendment').mockImplementation(mockGetAmendment);
 
     mockGetAmendment.mockResolvedValue(
@@ -42,7 +42,7 @@ describe(`GET ${url}`, () => {
         .withDealId(dealId)
         .withFacilityId(facilityId)
         .withAmendmentId(amendmentId)
-        .withStatus(PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL)
+        .withStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED)
         .withEffectiveDate(1743524576)
         .build(),
     );
@@ -91,7 +91,7 @@ describe(`GET ${url}`, () => {
 
     withRoleValidationApiTests({
       makeRequestWithHeaders: (headers: Headers) => get(url, {}, headers),
-      whitelistedRoles: [ROLES.MAKER],
+      whitelistedRoles: [ROLES.CHECKER],
       successCode: HttpStatusCode.Ok,
     });
 
@@ -116,7 +116,7 @@ describe(`GET ${url}`, () => {
       expect(response.headers.location).toEqual('/not-found');
     });
 
-    it(`should redirect to /not-found if the amendment has a status which is not ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}`, async () => {
+    it(`should redirect to /not-found if the amendment has a status which is not ${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}`, async () => {
       // Arrange
       const draftAmendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
         .withDealId(dealId)
