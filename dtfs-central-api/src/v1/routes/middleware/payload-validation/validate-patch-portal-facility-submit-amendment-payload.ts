@@ -18,12 +18,15 @@ const PatchPortalFacilitySubmitAmendmentSchema = z.object({
     ukefDealId: z.string(),
     ukefFacilityId: z.string(),
     makersName: z.string(),
+    makersEmail: z.string(),
     checkersName: z.string(),
     dateEffectiveFrom: z.string(),
     newCoverEndDate: z.string(),
     newFacilityEndDate: z.string(),
     newFacilityValue: z.string(),
+    bankName: z.string(),
     eligibilityCriteria: z.string(),
+    referenceNumber: z.string(),
   }),
 });
 

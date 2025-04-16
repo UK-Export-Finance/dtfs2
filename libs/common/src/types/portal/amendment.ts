@@ -30,10 +30,13 @@ export type PortalAmendmentSubmittedToUkefEmailVariables = {
   ukefDealId: string;
   ukefFacilityId: string;
   makersName: string;
+  makersEmail: string;
   checkersName: string;
+  bankName: string;
   dateEffectiveFrom: string;
   newCoverEndDate: string;
   newFacilityEndDate: string;
   newFacilityValue: string;
   eligibilityCriteria: string;
+  referenceNumber: string;
 };

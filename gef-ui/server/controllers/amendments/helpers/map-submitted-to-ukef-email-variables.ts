@@ -21,11 +21,13 @@ const mapSubmittedToUkefEmailVariables = ({
   facility,
   amendment,
   user,
+  referenceNumber,
 }: {
   deal: Deal;
   facility: Facility;
   amendment: PortalFacilityAmendmentWithUkefId;
   user: PortalSessionUser;
+  referenceNumber: string;
 }) => {
   const {
     ukefDealId,
@@ -74,6 +76,9 @@ const mapSubmittedToUkefEmailVariables = ({
 
   const pimEmail = 'stb.pim@ukexportfinance.gov.uk ';
 
+  const makersBank = maker.bank;
+  const bankName = makersBank ? (makersBank as { name: string }).name : '-';
+
   return {
     makersEmail,
     checkersEmail,
@@ -88,8 +93,11 @@ const mapSubmittedToUkefEmailVariables = ({
       newFacilityEndDate: formattedFacilityEndDate,
       newFacilityValue: formattedFacilityValue,
       makersName,
+      makersEmail,
       checkersName,
+      bankName,
       eligibilityCriteria: formattedEligibilityCriteria,
+      referenceNumber,
     },
   };
 };

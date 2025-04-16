@@ -63,7 +63,7 @@ export const postSubmitAmendmentToUkef = async (req: PostSubmitAmendmentToUkefRe
       return res.redirect('/not-found');
     }
 
-    const { makersEmail, checkersEmail, pimEmail, emailVariables } = mapSubmittedToUkefEmailVariables({ deal, facility, amendment, user });
+    const { makersEmail, checkersEmail, pimEmail, emailVariables } = mapSubmittedToUkefEmailVariables({ deal, facility, amendment, user, referenceNumber });
 
     const status = PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED;
 
