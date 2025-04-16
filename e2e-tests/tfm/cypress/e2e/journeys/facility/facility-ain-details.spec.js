@@ -2,7 +2,7 @@ import relative from '../../relativeURL';
 import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { T1_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 
-const { twoYearsAgo } = require('../../../../../e2e-fixtures/dateConstants');
+const { today } = require('../../../../../e2e-fixtures/dateConstants');
 
 context('Facility page - Automatic Inclusion Notice', () => {
   let ainDealId;
@@ -44,7 +44,7 @@ context('Facility page - Automatic Inclusion Notice', () => {
       .invoke('text')
       .then((text) => {
         const trimmedText = text.trim();
-        expect(trimmedText).to.equal(twoYearsAgo.dd_MMMM_yyyy);
+        expect(trimmedText).to.equal(today.dd_MMMM_yyyy);
       });
   });
 });

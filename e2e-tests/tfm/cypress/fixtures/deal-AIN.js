@@ -1,7 +1,7 @@
 const { BOND_TYPE, ALL_CURRENCIES, CURRENCIES, CURRENCY } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('./constants');
 const { BANK1_MAKER1 } = require('../../../e2e-fixtures');
-const { twoYearsAgo, oneMonth } = require('../../../e2e-fixtures/dateConstants');
+const { twoYearsAgo, oneMonth, today } = require('../../../e2e-fixtures/dateConstants');
 
 const MOCK_DEAL = {
   dealType: CONSTANTS.DEAL_TYPE.BSS_EWCS,
@@ -28,7 +28,7 @@ const MOCK_DEAL = {
       firstname: 'Emilio',
       surname: 'Largo',
     },
-    submissionDate: twoYearsAgo.unixMillisecondsString,
+    submissionDate: today.unixMillisecondsString,
     submissionCount: 1,
   },
   submissionDetails: {
