@@ -29,6 +29,13 @@
         attributes: {"data-cy": "back-link"}
       }) }}
 
+      {% if isReturningAmendmentToMaker === true %}
+        <span class="govuk-caption-l" data-cy="heading-caption">
+          {{ exporterName }}, {{ facilityType }} facility
+        </span>
+      {% endif %}
+
+
       <h1 class="govuk-heading-xl govuk-!-margin-bottom-6" data-cy="main-heading">
         Return to maker
       </h1>

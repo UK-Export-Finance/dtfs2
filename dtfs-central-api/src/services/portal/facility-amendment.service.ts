@@ -268,7 +268,51 @@ export class PortalFacilityAmendmentService {
       facilityId: facilityMongoId,
       update: amendmentUpdate,
       auditDetails,
-      allowedStatuses: [PORTAL_AMENDMENT_STATUS.DRAFT],
+      allowedStatuses: [PORTAL_AMENDMENT_STATUS.DRAFT, PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED],
+    });
+  }
+
+  /**
+   * Updates portal facility amendment status to `Further maker's input required`.
+   *
+   * @param params
+   * @param params.amendmentId - The amendment id
+   * @param params.facilityId - The facility id
+   * @param params.auditDetails - The audit details for the update operation.
+   * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithUkefId)>} A promise that resolves when the update operation is complete.
+   */
+  public static async returnPortalFacilityAmendmentToMaker({
+    amendmentId,
+    facilityId,
+    auditDetails,
+  }: {
+    amendmentId: string;
+    facilityId: string;
+    auditDetails: PortalAuditDetails;
+  }): Promise<FacilityAmendmentWithUkefId> {
+    await this.validateAmendmentIsComplete({ amendmentId, facilityId });
+
+    const amendmentUpdate: Partial<PortalFacilityAmendment> = {
+      status: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
+    };
+
+    const existingAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
+
+    if (!existingAmendment || existingAmendment.type === AMENDMENT_TYPES.TFM) {
+      throw new AmendmentNotFoundError(amendmentId, facilityId);
+    }
+
+    await this.validateNoOtherAmendmentInProgressOnDeal({ dealId: existingAmendment.dealId.toString(), amendmentId });
+
+    const facilityMongoId = new ObjectId(facilityId);
+    const amendmentMongoId = new ObjectId(amendmentId);
+
+    return await this.updatePortalFacilityAmendment({
+      amendmentId: amendmentMongoId,
+      facilityId: facilityMongoId,
+      update: amendmentUpdate,
+      auditDetails,
+      allowedStatuses: [PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL],
     });
   }
 

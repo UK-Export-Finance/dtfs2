@@ -13,6 +13,14 @@ describe(page, () => {
       const wrapper = render(params);
 
       wrapper.expectText('[data-cy="submitted-for-checking-confirmation-panel"]').toContain('Amendment submitted for checking at your bank');
+      wrapper.expectElement('[data-cy="returned-to-maker-confirmation-panel"]').notToExist();
+    });
+
+    it('should NOT render confirmation panels for other states', () => {
+      const wrapper = render(params);
+
+      wrapper.expectElement('[data-cy="approved-by-ukef-confirmation-panel"]').notToExist();
+      wrapper.expectElement('[data-cy="returned-to-maker-confirmation-panel"]').notToExist();
     });
 
     it(`should render the return link`, () => {
@@ -37,6 +45,13 @@ describe(page, () => {
       wrapper.expectText('[data-cy="confirmation-email"]').toRead("We've sent you a confirmation email.");
     });
 
+    it('should NOT render confirmation panels for other states', () => {
+      const wrapper = render(params);
+
+      wrapper.expectElement('[data-cy="submitted-for-checking-confirmation-panel"]').notToExist();
+      wrapper.expectElement('[data-cy="returned-to-maker-confirmation-panel"]').notToExist();
+    });
+
     it('should render a what happens next section', () => {
       const wrapper = render(params);
 
@@ -44,6 +59,37 @@ describe(page, () => {
       wrapper
         .expectText('[data-cy="approved-amendments-effective-date"]')
         .toRead(`We have approved your amendments and they will take effect from ${params.effectiveDate}`);
+    });
+
+    it(`should render the return link`, () => {
+      const wrapper = render(params);
+
+      wrapper.expectLink('[data-cy="return-link"]').toLinkTo('/dashboard/deals', 'Return to all applications and notices');
+    });
+  });
+
+  describe('returnedToMaker is true', () => {
+    const params = {
+      returnedToMaker: true,
+    };
+
+    it('should render the confirmation panel', () => {
+      const wrapper = render(params);
+
+      wrapper.expectText('[data-cy="returned-to-maker-confirmation-panel"]').toContain('Amendment returned to maker for further inputs');
+    });
+
+    it('should NOT render confirmation panels for other states', () => {
+      const wrapper = render(params);
+
+      wrapper.expectElement('[data-cy="submitted-for-checking-confirmation-panel"]').notToExist();
+      wrapper.expectElement('[data-cy="approved-by-ukef-confirmation-panel"]').notToExist();
+    });
+
+    it('should render the "what happens next" text', () => {
+      const wrapper = render(params);
+
+      wrapper.expectText('[data-cy="what-happens-next-text"]').toRead("You don't need to do anything");
     });
 
     it(`should render the return link`, () => {
