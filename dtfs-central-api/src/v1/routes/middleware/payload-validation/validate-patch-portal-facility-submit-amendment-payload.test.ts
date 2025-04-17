@@ -130,6 +130,7 @@ describe('validatePatchPortalFacilitySubmitAmendmentPayload', () => {
       newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
       referenceNumber,
       auditDetails: validAuditDetails,
+      ...portalAmendmentVariables,
     };
 
     const { req, res } = createMocks({ body: payload });

@@ -1,10 +1,11 @@
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, portalAmendmentToUkefEmailVariables } from '@ukef/dtfs2-common';
 import { validatePatchPortalFacilitySubmitAmendmentPayload } from './validate-patch-portal-facility-submit-amendment-payload';
 
-const facilityId = '6597dffeb5ef5ff4267e5044';
-const referenceNumber = `${facilityId}-01`;
+const portalAmendmentVariables = portalAmendmentToUkefEmailVariables();
+
+const referenceNumber = `12345-01`;
 
 describe('validatePatchPortalFacilitySubmitAmendmentPayload', () => {
   const invalidPayloads = [
@@ -27,10 +28,40 @@ describe('validatePatchPortalFacilitySubmitAmendmentPayload', () => {
       },
     },
     {
+      description: 'string field is undefined',
+      payload: {
+        ...portalAmendmentVariables,
+        emailVariables: {
+          ...portalAmendmentVariables.emailVariables,
+          exporterName: undefined,
+        },
+      },
+    },
+    {
       description: 'referenceNumber is undefined',
       payload: {
         newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
         referenceNumber: undefined,
+      },
+    },
+    {
+      description: 'string field is number',
+      payload: {
+        ...portalAmendmentVariables,
+        emailVariables: {
+          ...portalAmendmentVariables.emailVariables,
+          ukefDealId: 12345,
+        },
+      },
+    },
+    {
+      description: 'string field is date',
+      payload: {
+        ...portalAmendmentVariables,
+        emailVariables: {
+          ...portalAmendmentVariables.emailVariables,
+          newFacilityEndDate: new Date(),
+        },
       },
     },
   ];

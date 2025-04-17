@@ -16,7 +16,10 @@ export const portalAmendmentToUkefEmailVariables = () => ({
     newFacilityEndDate: '3rd March 2025',
     newFacilityValue: '£100000',
     makersName: 'mock maker',
+    makersEmail,
     checkersName: 'mock checker',
     eligibilityCriteria: 'mock eligibility criteria',
+    referenceNumber: 'mock reference number',
+    bankName: 'mock bank name',
   },
 });
