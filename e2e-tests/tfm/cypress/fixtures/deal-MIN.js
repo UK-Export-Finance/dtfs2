@@ -1,11 +1,11 @@
-const { BOND_TYPE, ALL_CURRENCIES, CURRENCIES, CURRENCY } = require('@ukef/dtfs2-common');
+const { BOND_TYPE, CURRENCY, CURRENCIES, ALL_CURRENCIES } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('./constants');
 const { BANK1_MAKER1 } = require('../../../e2e-fixtures');
 const { twoYearsAgo, oneMonth, today } = require('../../../e2e-fixtures/dateConstants');
 
 const MOCK_DEAL = {
   dealType: CONSTANTS.DEAL_TYPE.BSS_EWCS,
-  submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
+  submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.MIN,
   bankInternalRefName: 'Mock supply contract ID',
   additionalRefName: 'Mock supply contract name',
   status: 'Submitted',
