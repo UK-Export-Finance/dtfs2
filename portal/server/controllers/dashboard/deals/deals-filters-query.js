@@ -1,4 +1,4 @@
-const { CHECKERS_AMENDMENTS_DEAL_ID } = require('@ukef/dtfs2-common');
+const { CHECKERS_AMENDMENTS_DEAL_ID, isPortalFacilityAmendmentsFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../constants');
 const CONTENT_STRINGS = require('../../../content-strings');
 const { getUserRoles, isSuperUser, getCheckersApprovalAmendmentDealIds } = require('../../../helpers');
@@ -24,12 +24,15 @@ const dashboardDealsFiltersQuery = async (filters, user, userToken) => {
   }
 
   if (isChecker && !isMaker) {
-    const checkersApprovalAmendmentDealIds = await getCheckersApprovalAmendmentDealIds(userToken);
-    const dealIdsQuery = checkersApprovalAmendmentDealIds?.length ? [{ [CHECKERS_AMENDMENTS_DEAL_ID]: checkersApprovalAmendmentDealIds }] : [];
+    const isFeatureFlagEnabled = isPortalFacilityAmendmentsFeatureFlagEnabled();
+    const orQuery = { OR: [{ [CONSTANTS.FIELD_NAMES.DEAL.STATUS]: CONSTANTS.STATUS.DEAL.READY_FOR_APPROVAL }] };
 
-    const orQuery = {
-      OR: [{ [CONSTANTS.FIELD_NAMES.DEAL.STATUS]: CONSTANTS.STATUS.DEAL.READY_FOR_APPROVAL }, ...dealIdsQuery],
-    };
+    if (isFeatureFlagEnabled) {
+      const checkersApprovalAmendmentDealIds = await getCheckersApprovalAmendmentDealIds(userToken);
+      if (checkersApprovalAmendmentDealIds?.length) {
+        orQuery.OR.push({ [CHECKERS_AMENDMENTS_DEAL_ID]: checkersApprovalAmendmentDealIds });
+      }
+    }
 
     query.AND.push(orQuery);
   }

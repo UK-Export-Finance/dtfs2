@@ -1,4 +1,4 @@
-import { PORTAL_AMENDMENT_STATUS, ROLES, CHECKERS_AMENDMENTS_DEAL_ID } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, ROLES, CHECKERS_AMENDMENTS_DEAL_ID, isPortalFacilityAmendmentsFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { dashboardDealsFiltersQuery } from './deals-filters-query';
 import { STATUS, SUBMISSION_TYPE, FIELD_NAMES, ALL_BANKS_ID } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
@@ -6,6 +6,11 @@ import keywordQuery from './deals-filters-keyword-query';
 import getCheckersApprovalAmendmentDealIds from '../../../helpers/getCheckersApprovalAmendmentDealIds';
 
 jest.mock('../../../helpers/getCheckersApprovalAmendmentDealIds');
+
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isPortalFacilityAmendmentsFeatureFlagEnabled: jest.fn(),
+}));
 
 const { MAKER, CHECKER } = ROLES;
 
@@ -88,11 +93,33 @@ describe('controllers/dashboard/deals - filters query', () => {
       expect(result).toEqual(expected);
     });
 
-    it(`should return ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL} filter`, async () => {
+    it(`should return ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL} filter when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled`, async () => {
       const mockFilters = [];
       mockUser.roles = [CHECKER];
       const mockDealIds = ['deal1', 'deal2'];
       getCheckersApprovalAmendmentDealIds.mockResolvedValue(mockDealIds);
+      jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(false);
+
+      const result = await dashboardDealsFiltersQuery(mockFilters, mockUser);
+
+      const expected = {
+        AND: [
+          { 'bank.id': mockUser.bank.id },
+          {
+            OR: [{ status: STATUS.DEAL.READY_FOR_APPROVAL }],
+          },
+        ],
+      };
+
+      expect(result).toEqual(expected);
+    });
+
+    it(`should return ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL} filter when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is enabled`, async () => {
+      const mockFilters = [];
+      mockUser.roles = [CHECKER];
+      const mockDealIds = ['deal1', 'deal2'];
+      getCheckersApprovalAmendmentDealIds.mockResolvedValue(mockDealIds);
+      jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(true);
 
       const result = await dashboardDealsFiltersQuery(mockFilters, mockUser);
 
