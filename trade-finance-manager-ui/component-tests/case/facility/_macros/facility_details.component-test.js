@@ -1,3 +1,4 @@
+const { DEAL_SUBMISSION_TYPE } = require('@ukef/dtfs2-common');
 const { componentRenderer } = require('../../../componentRenderer');
 
 const component = '../templates/case/facility/_macros/facility_details.njk';
@@ -166,9 +167,38 @@ describe(component, () => {
   });
 
   describe('`dates` section', () => {
-    it('should render inclusionNoticeReceived', () => {
+    it('should render inclusionNoticeReceived as a dash when submissionType is MIA', () => {
+      const paramsWithMIA = {
+        ...params,
+        deal: { submissionType: DEAL_SUBMISSION_TYPE.MIA },
+      };
+      wrapper = render(paramsWithMIA);
+      wrapper.expectText('[data-cy="facility-inclusion-notice-received"]').toRead('-');
+    });
+
+    it('should render inclusionNoticeReceived when submissionType is MIN', () => {
+      const paramsWithMIN = {
+        ...params,
+        deal: { submissionType: DEAL_SUBMISSION_TYPE.MIN },
+      };
+      wrapper = render(paramsWithMIN);
       const expected = localiseTimestamp(params.facility.dates.inclusionNoticeReceived, 'd MMMM yyyy', params.user.timezone);
       wrapper.expectText('[data-cy="facility-inclusion-notice-received"]').toRead(expected);
+    });
+
+    describe('when submissionType is AIN', () => {
+      beforeEach(() => {
+        const paramsWithAIN = {
+          ...params,
+          deal: { submissionType: DEAL_SUBMISSION_TYPE.AIN },
+        };
+        wrapper = render(paramsWithAIN);
+      });
+
+      it('should render inclusionNoticeReceived', () => {
+        const expected = localiseTimestamp(params.facility.dates.inclusionNoticeReceived, 'd MMMM yyyy', params.user.timezone);
+        wrapper.expectText('[data-cy="facility-inclusion-notice-received"]').toRead(expected);
+      });
     });
 
     it('should render bankIssueNoticeReceived', () => {
