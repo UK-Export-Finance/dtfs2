@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.1](https://github.com/UK-Export-Finance/dtfs2/compare/v2.8.0...v2.8.1) (2025-04-17)
+
+
+### Bug Fixes
+
+* **DTFS2-6425:** inclusion date received should be blank ([#4301](https://github.com/UK-Export-Finance/dtfs2/issues/4301)) ([bb0ce5c](https://github.com/UK-Export-Finance/dtfs2/commit/bb0ce5caa26d33cedeaedb34cab61eb61d3ce9b5))
+
 ## [2.8.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.7.0...v2.8.0) (2025-04-14)
 
 
