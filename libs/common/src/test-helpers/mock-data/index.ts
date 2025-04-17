@@ -23,3 +23,4 @@ export * from './fee-record-correction-request-review-response-body-mock';
 export * from './record-correction-values';
 export * from './record-correction-log-details.mock';
 export * from './portal-amendment-to-checker-email-variables';
+export * from './portal-amendment-to-ukef-email-variables';
