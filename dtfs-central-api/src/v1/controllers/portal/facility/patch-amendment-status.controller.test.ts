@@ -14,6 +14,7 @@ const facilityId = 'facilityId';
 const mockUpdatedAmendment = { facilityId, type: AMENDMENT_TYPES.PORTAL, status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL };
 
 const mockSubmitPortalFacilityAmendmentToChecker = jest.fn();
+const mockReturnPortalFacilityAmendmentToMaker = jest.fn();
 let sendEmailSpy = jest.fn();
 
 jest.mock('../../../../external-api/api');
@@ -31,7 +32,10 @@ describe('patchAmendmentStatus', () => {
     jest.resetAllMocks();
 
     jest.spyOn(PortalFacilityAmendmentService, 'submitPortalFacilityAmendmentToChecker').mockImplementation(mockSubmitPortalFacilityAmendmentToChecker);
+    jest.spyOn(PortalFacilityAmendmentService, 'returnPortalFacilityAmendmentToMaker').mockImplementation(mockReturnPortalFacilityAmendmentToMaker);
+
     mockSubmitPortalFacilityAmendmentToChecker.mockResolvedValue(mockUpdatedAmendment);
+    mockReturnPortalFacilityAmendmentToMaker.mockResolvedValue(mockUpdatedAmendment);
 
     sendEmailSpy = jest.fn(() => Promise.resolve({}));
     externalApi.sendEmail = sendEmailSpy;
@@ -174,6 +178,85 @@ describe('patchAmendmentStatus', () => {
       // Arrange
       const message = 'Test error message';
       mockSubmitPortalFacilityAmendmentToChecker.mockRejectedValue(new Error(message));
+
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus, emailVariables: mockEmailVariables });
+
+      // Act
+      await patchAmendmentStatus(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+      expect(res._getData()).toEqual({
+        status: HttpStatusCode.InternalServerError,
+        message: 'Unknown error occurred when updating portal amendment status',
+      });
+    });
+  });
+
+  describe(`when the newStatus is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}`, () => {
+    const newStatus = PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
+    const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
+
+    it('should call PortalFacilityAmendmentService.returnPortalFacilityAmendmentToMaker with the correct params', async () => {
+      // Arrange
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus, emailVariables: mockEmailVariables });
+
+      // Act
+      await patchAmendmentStatus(req, res);
+
+      // Assert
+
+      expect(mockReturnPortalFacilityAmendmentToMaker).toHaveBeenCalledTimes(1);
+      expect(mockReturnPortalFacilityAmendmentToMaker).toHaveBeenCalledWith({ facilityId, amendmentId, auditDetails });
+    });
+
+    it('should NOT call PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker', async () => {
+      // Arrange
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus, emailVariables: mockEmailVariables });
+
+      // Act
+      await patchAmendmentStatus(req, res);
+
+      // Assert
+
+      expect(mockSubmitPortalFacilityAmendmentToChecker).not.toHaveBeenCalled();
+    });
+
+    it(`should return ${HttpStatusCode.Ok} and the updated amendment`, async () => {
+      // Arrange
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus, emailVariables: mockEmailVariables });
+
+      // Act
+      await patchAmendmentStatus(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
+      expect(res._getData()).toEqual(mockUpdatedAmendment);
+    });
+
+    it('should return the correct status and body if PortalFacilityAmendmentService.returnPortalFacilityAmendmentToMaker throws an api error', async () => {
+      // Arrange
+      const status = HttpStatusCode.Forbidden;
+      const message = 'Test error message';
+      mockReturnPortalFacilityAmendmentToMaker.mockRejectedValue(new TestApiError({ status, message }));
+
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus, emailVariables: mockEmailVariables });
+
+      // Act
+      await patchAmendmentStatus(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(status);
+      expect(res._getData()).toEqual({
+        status,
+        message,
+      });
+    });
+
+    it(`should return ${HttpStatusCode.InternalServerError} if PortalFacilityAmendmentService.returnPortalFacilityAmendmentToMaker throws an unknown error`, async () => {
+      // Arrange
+      const message = 'Test error message';
+      mockReturnPortalFacilityAmendmentToMaker.mockRejectedValue(new Error(message));
 
       const { req, res } = generateHttpMocks({ auditDetails, newStatus, emailVariables: mockEmailVariables });
 

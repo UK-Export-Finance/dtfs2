@@ -152,7 +152,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/status
         status: HttpStatusCode.BadRequest,
         code: 'INVALID_PAYLOAD',
         message: [
-          `newStatus: Invalid enum value. Expected '${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}', received '${anInvalidStatus}' (invalid_enum_value)`,
+          `newStatus: Invalid enum value. Expected '${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}' | '${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}', received '${anInvalidStatus}' (invalid_enum_value)`,
         ],
       });
     });
