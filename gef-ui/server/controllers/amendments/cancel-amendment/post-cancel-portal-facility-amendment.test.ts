@@ -67,7 +67,7 @@ describe('postCancelPortalFacilityAmendment', () => {
     expect(res._getRedirectUrl()).toEqual(`/gef/application-details/${dealId}`);
   });
 
-  it('should render `problem with service` if deleteAmendment throws an error', async () => {
+  it('should render problem with service if deleteAmendment throws an error', async () => {
     // Arrange
     const mockError = aMockError();
     deleteAmendmentMock.mockRejectedValue(mockError);

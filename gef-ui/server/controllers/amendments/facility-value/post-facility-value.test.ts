@@ -332,7 +332,7 @@ describe('postFacilityValue', () => {
     expect(console.error).toHaveBeenCalledWith('Deal %s or Facility %s was not found', dealId, facilityId);
   });
 
-  it('should render `problem with service` if getApplication throws an error', async () => {
+  it('should render problem with service if getApplication throws an error', async () => {
     // Arrange
     const mockError = aMockError();
     getApplicationMock.mockRejectedValue(mockError);
@@ -347,7 +347,7 @@ describe('postFacilityValue', () => {
     expect(console.error).toHaveBeenCalledWith('Error posting amendments facility value page %o', mockError);
   });
 
-  it('should render `problem with service` if getFacility throws an error', async () => {
+  it('should render problem with service if getFacility throws an error', async () => {
     // Arrange
     const mockError = aMockError();
     getFacilityMock.mockRejectedValue(mockError);
@@ -362,7 +362,7 @@ describe('postFacilityValue', () => {
     expect(console.error).toHaveBeenCalledWith('Error posting amendments facility value page %o', mockError);
   });
 
-  it('should render `problem with service` if updateAmendment throws an error', async () => {
+  it('should render problem with service if updateAmendment throws an error', async () => {
     // Arrange
     const mockError = aMockError();
     updateAmendmentMock.mockRejectedValue(mockError);

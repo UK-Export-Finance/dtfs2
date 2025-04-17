@@ -136,7 +136,7 @@ describe('getSubmitAmendmentToUkef', () => {
     expect(console.error).toHaveBeenCalledWith("Amendment %s on facility %s is not ready for checker's approval", amendmentId, facilityId);
   });
 
-  it('should render `problem with service` if getApplication throws an error', async () => {
+  it('should render problem with service if getApplication throws an error', async () => {
     // Arrange
     const mockError = new Error('test error');
     getApplicationMock.mockRejectedValue(mockError);
@@ -151,7 +151,7 @@ describe('getSubmitAmendmentToUkef', () => {
     expect(console.error).toHaveBeenCalledWith('Error getting for submit amendment to ukef page %o', mockError);
   });
 
-  it('should render `problem with service` if getFacility throws an error', async () => {
+  it('should render problem with service if getFacility throws an error', async () => {
     // Arrange
     const mockError = new Error('test error');
     getFacilityMock.mockRejectedValue(mockError);
@@ -166,7 +166,7 @@ describe('getSubmitAmendmentToUkef', () => {
     expect(console.error).toHaveBeenCalledWith('Error getting for submit amendment to ukef page %o', mockError);
   });
 
-  it('should render `problem with service` if updateAmendment throws an error', async () => {
+  it('should render problem with service if updateAmendment throws an error', async () => {
     // Arrange
     const mockError = new Error('test error');
     getAmendmentMock.mockRejectedValue(mockError);

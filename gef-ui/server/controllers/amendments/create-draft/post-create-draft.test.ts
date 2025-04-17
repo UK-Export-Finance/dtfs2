@@ -70,7 +70,7 @@ describe('postCreateDraftFacilityAmendment', () => {
     );
   });
 
-  it('should render `problem with service` if upsertAmendment throws an error', async () => {
+  it('should render problem with service if upsertAmendment throws an error', async () => {
     // Arrange
     upsertAmendmentMock.mockRejectedValue(new Error('test error'));
     const { req, res } = getHttpMocks();

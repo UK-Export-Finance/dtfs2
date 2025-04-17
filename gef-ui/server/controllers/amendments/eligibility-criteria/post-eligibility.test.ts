@@ -179,7 +179,7 @@ describe('postEligibility', () => {
     expect(console.error).toHaveBeenCalledWith('Amendment %s was not found for the facility %s', amendmentId, facilityId);
   });
 
-  it('should render `problem with service` if getApplication throws an error', async () => {
+  it('should render problem with service if getApplication throws an error', async () => {
     // Arrange
     const mockError = aMockError();
     getApplicationMock.mockRejectedValue(mockError);
@@ -194,7 +194,7 @@ describe('postEligibility', () => {
     expect(console.error).toHaveBeenCalledWith('Error posting amendments eligibility page %o', mockError);
   });
 
-  it('should render `problem with service` if getFacility throws an error', async () => {
+  it('should render problem with service if getFacility throws an error', async () => {
     // Arrange
     const mockError = aMockError();
     getFacilityMock.mockRejectedValue(mockError);
@@ -209,7 +209,7 @@ describe('postEligibility', () => {
     expect(console.error).toHaveBeenCalledWith('Error posting amendments eligibility page %o', mockError);
   });
 
-  it('should render `problem with service` if getAmendment throws an error', async () => {
+  it('should render problem with service if getAmendment throws an error', async () => {
     // Arrange
     const mockError = aMockError();
     getAmendmentMock.mockRejectedValue(mockError);
@@ -329,7 +329,7 @@ describe('postEligibility', () => {
       expect(res._getRedirectUrl()).toEqual(getNextPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, amendment, req.query.change === 'true'));
     });
 
-    it('should render `problem with service` if updateAmendment throws an error', async () => {
+    it('should render problem with service if updateAmendment throws an error', async () => {
       // Arrange
       const mockError = aMockError();
       updateAmendmentMock.mockRejectedValue(mockError);

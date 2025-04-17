@@ -9,6 +9,7 @@ import api from '../../server/services/api';
 import * as storage from '../test-helpers/storage/storage';
 import { MOCK_BASIC_DEAL } from '../../server/utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../server/utils/mocks/mock-facilities';
+import { MOCK_PIM } from '../../server/utils/mocks/mock-tfm-teams.js';
 import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers/mock-amendment.ts';
 
@@ -25,16 +26,15 @@ const mockGetFacility = jest.fn();
 const mockGetApplication = jest.fn();
 const mockGetAmendment = jest.fn();
 const mockUpdateAmendment = jest.fn();
+const mockGetTfmTeam = jest.fn();
+console.error = jest.fn();
 
 const validBody = { amendmentOptions: ['changeFacilityValue'] };
 const invalidBody = { amendmentOptions: [] };
-
 const dealId = '6597dffeb5ef5ff4267e5044';
 const facilityId = '6597dffeb5ef5ff4267e5045';
 const amendmentId = '6597dffeb5ef5ff4267e5046';
-
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
-
 const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE}`;
 
 describe(`POST ${url}`, () => {
@@ -49,6 +49,7 @@ describe(`POST ${url}`, () => {
     jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
     jest.spyOn(api, 'getAmendment').mockImplementation(mockGetAmendment);
     jest.spyOn(api, 'updateAmendment').mockImplementation(mockUpdateAmendment);
+    jest.spyOn(api, 'getTfmTeam').mockImplementation(mockGetTfmTeam);
 
     const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
       .withDealId(dealId)
@@ -61,6 +62,7 @@ describe(`POST ${url}`, () => {
     mockGetApplication.mockResolvedValue(mockDeal);
     mockGetAmendment.mockResolvedValue(amendment);
     mockUpdateAmendment.mockResolvedValue(amendment);
+    mockGetTfmTeam.mockResolvedValue(MOCK_PIM);
   });
 
   afterAll(async () => {
@@ -221,7 +223,7 @@ describe(`POST ${url}`, () => {
       );
     });
 
-    it('should render `problem with service` if getApplication throws an error', async () => {
+    it('should render problem with service if getApplication throws an error', async () => {
       // Arrange
       mockGetApplication.mockRejectedValue(new Error('test error'));
 
@@ -233,7 +235,7 @@ describe(`POST ${url}`, () => {
       expect(response.text).toContain('Problem with the service');
     });
 
-    it('should render `problem with service` if getFacility throws an error', async () => {
+    it('should render problem with service if getFacility throws an error', async () => {
       // Arrange
       mockGetFacility.mockRejectedValue(new Error('test error'));
 
@@ -245,7 +247,20 @@ describe(`POST ${url}`, () => {
       expect(response.text).toContain('Problem with the service');
     });
 
-    it('should render `problem with service` if updateAmendment throws an error', async () => {
+    it('should render problem with service if getTfmTeam throws an error', async () => {
+      // Arrange
+      mockGetTfmTeam.mockRejectedValue(new Error('Invalid team'));
+
+      // Act
+      const response = await postWithSessionCookie(validBody, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain('Problem with the service');
+      expect(console.error).toHaveBeenCalledWith('Error posting amendments what needs to change page %o', new Error('Invalid team'));
+    });
+
+    it('should render problem with service if updateAmendment throws an error', async () => {
       // Arrange
       mockUpdateAmendment.mockRejectedValue(new Error('test error'));
 

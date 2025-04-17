@@ -11,6 +11,7 @@ import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers
 import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
 import { MOCK_BASIC_DEAL } from '../../server/utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY, MOCK_UNISSUED_FACILITY } from '../../server/utils/mocks/mock-facilities';
+import { MOCK_PIM } from '../../server/utils/mocks/mock-tfm-teams.js';
 import { getAmendmentsUrl } from '../../server/controllers/amendments/helpers/navigation.helper.ts';
 import { withGetAmendmentPageErrorHandlingTests } from './with-get-amendment-page-error-handling.api-tests';
 
@@ -26,6 +27,8 @@ jest.mock('../../server/middleware/csrf', () => ({
 const mockGetFacility = jest.fn();
 const mockGetApplication = jest.fn();
 const mockGetAmendment = jest.fn();
+const mockGetTfmTeam = jest.fn();
+console.error = jest.fn();
 
 const dealId = '6597dffeb5ef5ff4267e5044';
 const facilityId = '6597dffeb5ef5ff4267e5045';
@@ -46,8 +49,10 @@ describe(`GET ${url}`, () => {
     jest.spyOn(api, 'getFacility').mockImplementation(mockGetFacility);
     jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
     jest.spyOn(api, 'getAmendment').mockImplementation(mockGetAmendment);
+    jest.spyOn(api, 'getTfmTeam').mockImplementation(mockGetTfmTeam);
 
     mockGetFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
+    mockGetTfmTeam.mockResolvedValue(MOCK_PIM);
     mockGetApplication.mockResolvedValue(mockDeal);
     mockGetAmendment.mockResolvedValue(
       new PortalFacilityAmendmentWithUkefIdMockBuilder()
@@ -157,6 +162,19 @@ describe(`GET ${url}`, () => {
       // Assert
       expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.ELIGIBILITY }));
+    });
+
+    it('should render problem with service if getTfmTeam throws an error', async () => {
+      // Arrange
+      mockGetTfmTeam.mockRejectedValue(new Error('Invalid team'));
+
+      // Act
+      const response = await getWithSessionCookie(sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain('Problem with the service');
+      expect(console.error).toHaveBeenCalledWith('Error getting manual approval needed amendment page %o', new Error('Invalid team'));
     });
   });
 });

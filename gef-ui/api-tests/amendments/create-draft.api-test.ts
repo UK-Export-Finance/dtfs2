@@ -85,7 +85,7 @@ describe(`POST ${url}`, () => {
       );
     });
 
-    it('should render `problem with service` if upsertFacility throws an error', async () => {
+    it('should render problem with service if upsertFacility throws an error', async () => {
       // Arrange
       mockUpsertFacility.mockRejectedValue(new Error('test error'));
 

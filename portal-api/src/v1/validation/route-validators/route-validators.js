@@ -35,8 +35,12 @@ const mongoIdValidation = (paramName) => (req, res, next) => {
  */
 const sqlIdValidation = (paramName) => param(paramName).isInt({ min: 0 }).withMessage(`Invalid '${paramName}' path param provided`);
 
+const tfmTeamIdValidation = (teamId) =>
+  param(teamId).exists().withMessage('No TFM team ID was provided').isString().withMessage('The TFM team ID should be a string');
+
 module.exports = {
   bankIdValidation,
   mongoIdValidation,
   sqlIdValidation,
+  tfmTeamIdValidation,
 };
