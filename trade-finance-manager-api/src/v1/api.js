@@ -1000,7 +1000,7 @@ const findTeamMembers = async (teamId) => {
 
     if (!isValidId) {
       console.error('findTeamMembers: Invalid team id %s', teamId);
-      return { status: 400, data: 'Invalid team id provided' };
+      return { status: axios.HttpStatusCode.BadRequest, data: 'Invalid TFM team ID provided' };
     }
 
     const response = await axios({

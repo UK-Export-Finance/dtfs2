@@ -388,6 +388,6 @@ authRouter
     utilisationReportControllers.getCompletedFeeRecordCorrections,
   );
 
-authRouter.route('/tfm/team/:teamId').get(tfmTeamIdValidation, getTfmTeam);
+authRouter.route('/tfm/team/:teamId').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }), tfmTeamIdValidation, getTfmTeam);
 
 module.exports = { openRouter, authRouter };
