@@ -11,6 +11,7 @@ import { MOCK_BASIC_DEAL } from '../../server/utils/mocks/mock-applications';
 import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers/mock-amendment';
 import { Deal } from '../../server/types/deal';
+import { MOCK_ISSUED_FACILITY } from '../../server/utils/mocks/mock-facilities';
 import { getAmendmentsUrl } from '../../server/controllers/amendments/helpers/navigation.helper';
 import * as createReferenceNumber from '../../server/controllers/amendments/helpers/create-amendment-reference-number.helper';
 
@@ -25,6 +26,8 @@ jest.mock('../../server/middleware/csrf', () => ({
 
 console.error = jest.fn();
 const getApplicationMock = jest.fn();
+const getFacilityMock = jest.fn();
+const getAmendmentMock = jest.fn();
 const updateSubmitAmendmentMock = jest.fn();
 const createReferenceNumberMock = jest.fn();
 
@@ -32,15 +35,22 @@ const dealId = '6597dffeb5ef5ff4267e5044';
 const facilityId = '6597dffeb5ef5ff4267e5045';
 const amendmentId = '6597dffeb5ef5ff4267e5046';
 
+const facilityValue = 20000;
+
+const effectiveDateWithoutMs = Number(new Date()) / 1000;
+const coverEndDate = Number(new Date());
+const facilityEndDate = new Date();
+const referenceNumber = `123456-01`;
+
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, submissionCount: 0, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
 
 const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.SUBMIT_AMENDMENT_TO_UKEF}`;
-const referenceNumber = `${facilityId}-01`;
 const confirmSubmitUkef = true;
 
-describe(`GET ${url}`, () => {
+describe(`POST ${url}`, () => {
   let sessionCookie: string;
   let amendment: PortalFacilityAmendmentWithUkefId;
+  let submittedAmendment: PortalFacilityAmendmentWithUkefId;
 
   beforeEach(async () => {
     await storage.flush();
@@ -48,20 +58,66 @@ describe(`GET ${url}`, () => {
 
     ({ sessionCookie } = await storage.saveUserSession([ROLES.CHECKER]));
     jest.spyOn(api, 'getApplication').mockImplementation(getApplicationMock);
+    jest.spyOn(api, 'getFacility').mockImplementation(getFacilityMock);
+    jest.spyOn(api, 'getAmendment').mockImplementation(getAmendmentMock);
     jest.spyOn(api, 'updateSubmitAmendment').mockImplementation(updateSubmitAmendmentMock);
     jest.spyOn(createReferenceNumber, 'createReferenceNumber').mockImplementation(createReferenceNumberMock);
 
     getApplicationMock.mockResolvedValue(mockDeal);
+    getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     createReferenceNumberMock.mockResolvedValue(referenceNumber);
+
+    const criteria = [
+      {
+        id: 1,
+        text: 'Criterion 1',
+        answer: null,
+      },
+      {
+        id: 2,
+        text: 'Criterion 2',
+        textList: ['bullet 1', 'bullet 2'],
+        answer: null,
+      },
+      {
+        id: 3,
+        text: 'Criterion 3',
+        answer: null,
+      },
+    ];
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
-      .withStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED)
+      .withCriteria(criteria)
+      .withStatus(PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL)
+      .withChangeCoverEndDate(true)
+      .withCoverEndDate(coverEndDate)
+      .withIsUsingFacilityEndDate(true)
+      .withFacilityEndDate(facilityEndDate)
+      .withChangeFacilityValue(true)
+      .withFacilityValue(facilityValue)
+      .withEffectiveDate(effectiveDateWithoutMs)
       .build();
 
-    updateSubmitAmendmentMock.mockResolvedValue(amendment);
+    submittedAmendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withDealId(dealId)
+      .withFacilityId(facilityId)
+      .withAmendmentId(amendmentId)
+      .withCriteria(criteria)
+      .withStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED)
+      .withChangeCoverEndDate(true)
+      .withCoverEndDate(coverEndDate)
+      .withIsUsingFacilityEndDate(true)
+      .withFacilityEndDate(facilityEndDate)
+      .withChangeFacilityValue(true)
+      .withFacilityValue(facilityValue)
+      .withEffectiveDate(effectiveDateWithoutMs)
+      .build();
+
+    getAmendmentMock.mockResolvedValue(amendment);
+    updateSubmitAmendmentMock.mockResolvedValue(submittedAmendment);
   });
 
   afterAll(async () => {
@@ -123,6 +179,30 @@ describe(`GET ${url}`, () => {
     it('should redirect to "/not-found" when deal not found', async () => {
       // Arrange
       getApplicationMock.mockResolvedValue(undefined);
+
+      // Act
+      const response = await postWithSessionCookie({ confirmSubmitUkef }, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Found);
+      expect(response.headers.location).toEqual('/not-found');
+    });
+
+    it('should redirect to "/not-found" when facility not found', async () => {
+      // Arrange
+      getFacilityMock.mockResolvedValue({ details: undefined });
+
+      // Act
+      const response = await postWithSessionCookie({ confirmSubmitUkef }, sessionCookie);
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Found);
+      expect(response.headers.location).toEqual('/not-found');
+    });
+
+    it('should redirect to "/not-found" when amendment not found', async () => {
+      // Arrange
+      getAmendmentMock.mockResolvedValue(undefined);
 
       // Act
       const response = await postWithSessionCookie({ confirmSubmitUkef }, sessionCookie);
