@@ -267,7 +267,7 @@ describe('postWhatNeedsToChange', () => {
     expect(console.error).toHaveBeenCalledWith('Amendment %s was not found for the facility %s', amendmentId, facilityId);
   });
 
-  it('should render `problem with service` if getApplication throws an error', async () => {
+  it('should render problem with service if getApplication throws an error', async () => {
     // Arrange
     getApplicationMock.mockRejectedValueOnce(mockError);
     const { req, res } = getHttpMocks();
@@ -281,7 +281,7 @@ describe('postWhatNeedsToChange', () => {
     expect(console.error).toHaveBeenCalledWith(generalConsoleErrorText, mockError);
   });
 
-  it('should render `problem with service` if getFacility throws an error', async () => {
+  it('should render problem with service if getFacility throws an error', async () => {
     // Arrange
     getFacilityMock.mockRejectedValueOnce(mockError);
     const { req, res } = getHttpMocks();
@@ -295,7 +295,7 @@ describe('postWhatNeedsToChange', () => {
     expect(console.error).toHaveBeenCalledWith(generalConsoleErrorText, mockError);
   });
 
-  it('should render `problem with service` if updateAmendment throws an error', async () => {
+  it('should render problem with service if updateAmendment throws an error', async () => {
     // Arrange
     updateAmendmentMock.mockRejectedValue(mockError);
     const { req, res } = getHttpMocks();
