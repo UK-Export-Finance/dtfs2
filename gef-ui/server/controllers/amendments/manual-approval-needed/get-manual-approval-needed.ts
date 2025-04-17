@@ -52,7 +52,7 @@ export const getManualApprovalNeeded = async (req: GetManualApprovalNeededReques
       return res.redirect(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.ELIGIBILITY }));
     }
 
-    const teamId = TEAM_IDS.PIM.toString();
+    const teamId = TEAM_IDS.PIM;
     const pim = await api.getTfmTeam({ teamId, userToken });
     const { email: amendmentFormEmail } = pim;
 

@@ -10,10 +10,10 @@ import * as dtfsCommon from '@ukef/dtfs2-common';
 import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, PortalFacilityAmendmentWithUkefId, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
+import { MOCK_PIM } from '../../../utils/mocks/mock-tfm-teams.js';
 import { getAmendmentsUrl } from '../helpers/navigation.helper.ts';
 import { WhatNeedsToChangeViewModel } from '../../../types/view-models/amendments/what-needs-to-change-view-model.ts';
 import { getWhatNeedsToChange, GetWhatNeedsToChangeRequest } from './get-what-needs-to-change.ts';
-
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment.ts';
 import { Deal } from '../../../types/deal.ts';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
@@ -31,7 +31,7 @@ console.error = jest.fn();
 const dealId = 'dealId';
 const facilityId = 'facilityId';
 const amendmentId = 'amendmentId';
-
+const teamId = String(dtfsCommon.TEAM_IDS.PIM);
 const companyName = 'company name ltd';
 const userToken = 'userToken';
 
@@ -59,7 +59,7 @@ describe('getWhatNeedsToChange', () => {
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getAmendmentMock.mockResolvedValue(amendment);
-    getTfmTeamMock.mockRejectedValue('test@ukexportfinance.gov.uk');
+    getTfmTeamMock.mockResolvedValue(MOCK_PIM);
   });
 
   afterAll(() => {
@@ -131,6 +131,19 @@ describe('getWhatNeedsToChange', () => {
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
     expect(res._getRenderView()).toEqual('partials/amendments/what-needs-to-change.njk');
     expect(res._getRenderData()).toEqual(expectedRenderData);
+    expect(console.error).toHaveBeenCalledTimes(0);
+  });
+
+  it('should call getTfmTeam with the correct teamId and userToken', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await getWhatNeedsToChange(req, res);
+
+    // Assert
+    expect(getTfmTeamMock).toHaveBeenCalledTimes(1);
+    expect(getTfmTeamMock).toHaveBeenCalledWith({ teamId, userToken });
     expect(console.error).toHaveBeenCalledTimes(0);
   });
 });

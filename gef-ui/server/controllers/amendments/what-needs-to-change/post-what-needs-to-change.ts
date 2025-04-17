@@ -44,7 +44,7 @@ export const postWhatNeedsToChange = async (req: PostWhatNeedsToChangeRequest, r
     const changeCoverEndDate = amendmentOptions?.includes('changeCoverEndDate');
     const changeFacilityValue = amendmentOptions?.includes('changeFacilityValue');
 
-    const teamId = TEAM_IDS.PIM.toString();
+    const teamId = TEAM_IDS.PIM;
     const pim = await api.getTfmTeam({ teamId, userToken });
     const { email: amendmentFormEmail } = pim;
 

@@ -11,7 +11,7 @@ import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
-
+import { MOCK_PIM } from '../../../utils/mocks/mock-tfm-teams.js';
 import { getManualApprovalNeeded, GetManualApprovalNeededRequest } from './get-manual-approval-needed.ts';
 import { Deal } from '../../../types/deal';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
@@ -31,6 +31,8 @@ const dealId = 'dealId';
 const facilityId = 'facilityId';
 const amendmentId = 'amendmentId';
 const returnLink = '/dashboard/deals';
+const teamId = String(dtfsCommon.TEAM_IDS.PIM);
+const userToken = 'testToken';
 
 const getHttpMocks = () =>
   createMocks<GetManualApprovalNeededRequest>({
@@ -67,7 +69,7 @@ describe('getManualApprovalNeeded', () => {
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getAmendmentMock.mockResolvedValue(amendment);
-    getTfmTeamMock.mockRejectedValue('test@ukexportfinance.gov.uk');
+    getTfmTeamMock.mockResolvedValue(MOCK_PIM);
   });
 
   afterAll(() => {
@@ -124,5 +126,18 @@ describe('getManualApprovalNeeded', () => {
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.ELIGIBILITY }));
+  });
+
+  it('should call getTfmTeam with the correct teamId and userToken', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await getManualApprovalNeeded(req, res);
+
+    // Assert
+    expect(getTfmTeamMock).toHaveBeenCalledTimes(1);
+    expect(getTfmTeamMock).toHaveBeenCalledWith({ teamId, userToken });
+    expect(console.error).toHaveBeenCalledTimes(0);
   });
 });
