@@ -308,4 +308,21 @@ describe('postWhatNeedsToChange', () => {
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith(generalConsoleErrorText, mockError);
   });
+
+  it('should throw an error if getTfmTeam API call throws an exception', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    const error = new Error('Test error');
+
+    getTfmTeamMock.mockRejectedValueOnce(error);
+
+    // Act
+    await postWhatNeedsToChange(req, res);
+
+    // Assert
+    expect(getTfmTeamMock).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Error posting amendments what needs to change page %o', error);
+    expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
+  });
 });

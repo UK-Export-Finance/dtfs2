@@ -27,7 +27,7 @@ describe('getTfmTeam', () => {
     ROLES.READ_ONLY,
   ];
 
-  const validTeamIds = [ALL_TEAM_IDS[0], ALL_TEAM_IDS[1], ALL_TEAM_IDS[2], ALL_TEAM_IDS[3], ALL_TEAM_IDS[4], ALL_TEAM_IDS[5], ALL_TEAM_IDS[6], ALL_TEAM_IDS[7]];
+  const validTeamIds = ALL_TEAM_IDS;
 
   describe('Argument validation', () => {
     it.each(invalidTeamIds)('should throw an error when an %s TFM id is provided', async (teamId) => {

@@ -146,4 +146,21 @@ describe('getWhatNeedsToChange', () => {
     expect(getTfmTeamMock).toHaveBeenCalledWith({ teamId, userToken });
     expect(console.error).toHaveBeenCalledTimes(0);
   });
+
+  it('should throw an error if getTfmTeam API call throws an exception', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    const error = new Error('Test error');
+
+    getTfmTeamMock.mockRejectedValueOnce(error);
+
+    // Act
+    await getWhatNeedsToChange(req, res);
+
+    // Assert
+    expect(getTfmTeamMock).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Error getting amendments what needs to change page %o', error);
+    expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
+  });
 });
