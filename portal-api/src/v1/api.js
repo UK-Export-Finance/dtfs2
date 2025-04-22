@@ -1,6 +1,6 @@
 const axios = require('axios');
-const { TIMEOUT, HEADERS } = require('@ukef/dtfs2-common');
-const { PORTAL_FACILITY_AMENDMENT, ALL_TEAM_IDS } = require('@ukef/dtfs2-common/schemas');
+const { ALL_TEAM_IDS, TIMEOUT, HEADERS } = require('@ukef/dtfs2-common');
+const { PORTAL_FACILITY_AMENDMENT } = require('@ukef/dtfs2-common/schemas');
 const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 
 require('dotenv').config();
