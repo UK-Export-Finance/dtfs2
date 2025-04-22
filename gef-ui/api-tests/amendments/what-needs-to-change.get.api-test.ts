@@ -10,7 +10,7 @@ import * as storage from '../test-helpers/storage/storage';
 import { MOCK_BASIC_DEAL } from '../../server/utils/mocks/mock-applications';
 import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
 import { MOCK_ISSUED_FACILITY } from '../../server/utils/mocks/mock-facilities';
-import { MOCK_PIM } from '../../server/utils/mocks/mock-tfm-teams.js';
+import { MOCK_PIM_TEAM } from '../../server/utils/mocks/mock-tfm-teams.js';
 import { withGetAmendmentPageErrorHandlingTests } from './with-get-amendment-page-error-handling.api-tests';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers/mock-amendment.ts';
 
@@ -53,7 +53,7 @@ describe(`GET ${url}`, () => {
 
     mockGetFacility.mockResolvedValue({ details: mockFacility });
     mockGetApplication.mockResolvedValue(mockDeal);
-    mockGetTfmTeam.mockResolvedValue(MOCK_PIM);
+    mockGetTfmTeam.mockResolvedValue(MOCK_PIM_TEAM);
     mockGetAmendment.mockResolvedValue(
       new PortalFacilityAmendmentWithUkefIdMockBuilder().withDealId(dealId).withFacilityId(facilityId).withAmendmentId(amendmentId).build(),
     );

@@ -11,7 +11,7 @@ import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
-import { MOCK_PIM } from '../../../utils/mocks/mock-tfm-teams.js';
+import { MOCK_PIM_TEAM } from '../../../utils/mocks/mock-tfm-teams.js';
 import { getManualApprovalNeeded, GetManualApprovalNeededRequest } from './get-manual-approval-needed.ts';
 import { Deal } from '../../../types/deal';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
@@ -69,7 +69,7 @@ describe('getManualApprovalNeeded', () => {
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getAmendmentMock.mockResolvedValue(amendment);
-    getTfmTeamMock.mockResolvedValue(MOCK_PIM);
+    getTfmTeamMock.mockResolvedValue(MOCK_PIM_TEAM);
   });
 
   afterAll(() => {

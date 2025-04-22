@@ -907,7 +907,7 @@ const getTfmTeam = async (teamId) => {
     return response.data?.team;
   } catch (error) {
     console.error('Unable to get the TFM team with ID %s %o', teamId, error);
-    return { status: error?.code || axios.HttpStatusCode.InternalServerError, data: 'Failed to find team' };
+    return { status: error?.code || axios.HttpStatusCode.InternalServerError, data: 'Unable to get the TFM team' };
   }
 };
 

@@ -35,6 +35,15 @@ const mongoIdValidation = (paramName) => (req, res, next) => {
  */
 const sqlIdValidation = (paramName) => param(paramName).isInt({ min: 0 }).withMessage(`Invalid '${paramName}' path param provided`);
 
+/**
+ * Validates the provided TFM team ID.
+ *
+ * This function checks if the `teamId` parameter exists and is a string.
+ * If the validation fails, appropriate error messages are returned.
+ *
+ * @param {string} teamId - The TFM team ID to validate.
+ * @returns {ValidationChain} A validation chain for the TFM team ID.
+ */
 const tfmTeamIdValidation = (teamId) =>
   param(teamId).exists().withMessage('No TFM team ID was provided').isString().withMessage('The TFM team ID should be a string');
 

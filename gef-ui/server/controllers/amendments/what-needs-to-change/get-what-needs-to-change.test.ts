@@ -10,7 +10,7 @@ import * as dtfsCommon from '@ukef/dtfs2-common';
 import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, PortalFacilityAmendmentWithUkefId, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
-import { MOCK_PIM } from '../../../utils/mocks/mock-tfm-teams.js';
+import { MOCK_PIM_TEAM } from '../../../utils/mocks/mock-tfm-teams.js';
 import { getAmendmentsUrl } from '../helpers/navigation.helper.ts';
 import { WhatNeedsToChangeViewModel } from '../../../types/view-models/amendments/what-needs-to-change-view-model.ts';
 import { getWhatNeedsToChange, GetWhatNeedsToChangeRequest } from './get-what-needs-to-change.ts';
@@ -59,7 +59,7 @@ describe('getWhatNeedsToChange', () => {
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getAmendmentMock.mockResolvedValue(amendment);
-    getTfmTeamMock.mockResolvedValue(MOCK_PIM);
+    getTfmTeamMock.mockResolvedValue(MOCK_PIM_TEAM);
   });
 
   afterAll(() => {
