@@ -42,10 +42,6 @@ describe('controllers/dashboard/facilities - template-filters', () => {
           text: FACILITY_STAGE.UNISSUED,
           value: FACILITY_STAGE.UNISSUED,
         },
-        {
-          text: FACILITY_STAGE.RISK_EXPIRED,
-          value: FACILITY_STAGE.RISK_EXPIRED,
-        },
       ];
 
       const expected = generateFiltersArray(expectedFieldName, expectedFieldInputs, mockSubmittedFilters);
