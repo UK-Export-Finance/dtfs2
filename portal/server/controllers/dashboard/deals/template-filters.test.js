@@ -77,6 +77,10 @@ describe('controllers/dashboard/deals - template-filters', () => {
           text: DEAL_STATUS.ABANDONED,
           value: DEAL_STATUS.ABANDONED,
         },
+        {
+          text: DEAL_STATUS.CANCELLED,
+          value: DEAL_STATUS.CANCELLED,
+        },
       ];
 
       const expected = generateFiltersArray(expectedFieldName, expectedFieldInputs, mockSubmittedFilters);
