@@ -27,8 +27,14 @@ const dashboardDealsFiltersQuery = async (filters, user, userToken) => {
     const isFeatureFlagEnabled = isPortalFacilityAmendmentsFeatureFlagEnabled();
     const orQuery = { OR: [{ [CONSTANTS.FIELD_NAMES.DEAL.STATUS]: CONSTANTS.STATUS.DEAL.READY_FOR_APPROVAL }] };
 
+    /**
+     * Feature flag validation for Checker's portal screen.
+     * Portal amendment endpoint will be invoked upon checker login and therefore,
+     * it should only be invoked if Portal amendment feature flag is truthy.
+     */
     if (isFeatureFlagEnabled) {
       const checkersApprovalAmendmentDealIds = await getCheckersApprovalAmendmentDealIds(userToken);
+
       if (checkersApprovalAmendmentDealIds?.length) {
         orQuery.OR.push({ [CHECKERS_AMENDMENTS_DEAL_ID]: checkersApprovalAmendmentDealIds });
       }
