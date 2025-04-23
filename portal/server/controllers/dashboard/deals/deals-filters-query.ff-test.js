@@ -23,7 +23,7 @@ describe('controllers/dashboard/deals - filters query', () => {
         AND: [
           { 'bank.id': mockUser.bank.id },
           {
-            OR: [{ status: STATUS.DEAL.READY_FOR_APPROVAL }, { [CHECKERS_AMENDMENTS_DEAL_ID]: ['deal1', 'deal2'] }],
+            OR: [{ status: STATUS.DEAL.READY_FOR_APPROVAL }, { [CHECKERS_AMENDMENTS_DEAL_ID]: mockDealIds }],
           },
         ],
       };
