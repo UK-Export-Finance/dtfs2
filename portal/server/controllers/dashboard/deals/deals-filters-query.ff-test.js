@@ -18,9 +18,7 @@ describe('controllers/dashboard/deals - filters query', () => {
     it(`should return ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL} filter when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is enabled`, async () => {
       // Arrange
       const mockFilters = [];
-      mockUser.roles = [CHECKER];
       const mockDealIds = ['deal1', 'deal2'];
-      getCheckersApprovalAmendmentDealIds.mockResolvedValue(mockDealIds);
       const expected = {
         AND: [
           { 'bank.id': mockUser.bank.id },
@@ -29,6 +27,9 @@ describe('controllers/dashboard/deals - filters query', () => {
           },
         ],
       };
+
+      mockUser.roles = [CHECKER];
+      getCheckersApprovalAmendmentDealIds.mockResolvedValue(mockDealIds);
 
       // Act
       const result = await dashboardDealsFiltersQuery(mockFilters, mockUser);
