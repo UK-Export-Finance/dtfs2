@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { ALL_TEAM_IDS, TIMEOUT, HEADERS } = require('@ukef/dtfs2-common');
+const { TIMEOUT, HEADERS } = require('@ukef/dtfs2-common');
 const { PORTAL_FACILITY_AMENDMENT } = require('@ukef/dtfs2-common/schemas');
 const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
 
@@ -891,20 +891,11 @@ const deletePortalFacilityAmendment = async (facilityId, amendmentId, auditDetai
  */
 const getTfmTeam = async (teamId) => {
   try {
-    const isValidId = Object.values(ALL_TEAM_IDS).includes(teamId);
-
-    if (!isValidId) {
-      console.error('Invalid TFM team ID %s provided', teamId);
-      return { status: axios.HttpStatusCode.BadRequest, data: 'Invalid TFM team ID provided' };
-    }
-
-    const response = await axios({
+    return await axios({
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${teamId}`,
       headers: headers.central,
     });
-
-    return response.data?.team;
   } catch (error) {
     console.error('Unable to get the TFM team with ID %s %o', teamId, error);
     return { status: error?.code || axios.HttpStatusCode.InternalServerError, data: 'Unable to get the TFM team' };
