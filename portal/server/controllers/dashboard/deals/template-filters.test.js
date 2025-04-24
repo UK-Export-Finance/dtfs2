@@ -73,6 +73,10 @@ describe('controllers/dashboard/deals - template-filters', () => {
           text: DEAL_STATUS.UKEF_REFUSED,
           value: DEAL_STATUS.UKEF_REFUSED,
         },
+        {
+          text: DEAL_STATUS.ABANDONED,
+          value: DEAL_STATUS.ABANDONED,
+        },
       ];
 
       const expected = generateFiltersArray(expectedFieldName, expectedFieldInputs, mockSubmittedFilters);
