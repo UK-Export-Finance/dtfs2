@@ -114,7 +114,7 @@ describe('getApprovedByUkef', () => {
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
   });
 
-  it('should render `problem with service` if getAmendment throws an error', async () => {
+  it('should render problem with service if getAmendment throws an error', async () => {
     // Arrange
     getAmendmentMock.mockRejectedValue(new Error('test error'));
     const { req, res } = getHttpMocks();

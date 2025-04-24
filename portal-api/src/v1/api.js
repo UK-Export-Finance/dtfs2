@@ -880,6 +880,28 @@ const deletePortalFacilityAmendment = async (facilityId, amendmentId, auditDetai
   }
 };
 
+/**
+ * Retrieves a TFM team by its ID.
+ *
+ * @param {string} teamId - The ID of the TFM team to retrieve.
+ * @returns {Promise<import('@ukef/dtfs2-common').Team>} A promise that resolves to the TFM team data if successful,
+ * or an object containing an error status and message if the operation fails.
+ *
+ * @throws {Error} If an unexpected error occurs during the request.
+ */
+const getTfmTeam = async (teamId) => {
+  try {
+    return await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${teamId}`,
+      headers: headers.central,
+    });
+  } catch (error) {
+    console.error('Unable to get the TFM team with ID %s %o', teamId, error);
+    return { status: error?.code || axios.HttpStatusCode.InternalServerError, data: 'Unable to get the TFM team' };
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -916,4 +938,5 @@ module.exports = {
   putFeeRecordCorrectionTransientFormData,
   deletePortalFacilityAmendment,
   getCompletedFeeRecordCorrections,
+  getTfmTeam,
 };

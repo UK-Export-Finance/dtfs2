@@ -206,7 +206,7 @@ describe(`POST ${url}`, () => {
       );
     });
 
-    it('should render `problem with service` if getApplication throws an error', async () => {
+    it('should render problem with service if getApplication throws an error', async () => {
       // Arrange
       mockGetApplication.mockRejectedValue(new Error('test error'));
 
@@ -218,7 +218,7 @@ describe(`POST ${url}`, () => {
       expect(response.text).toContain('Problem with the service');
     });
 
-    it('should render `problem with service` if getFacility throws an error', async () => {
+    it('should render problem with service if getFacility throws an error', async () => {
       // Arrange
       mockGetFacility.mockRejectedValue(new Error('test error'));
 
@@ -230,7 +230,7 @@ describe(`POST ${url}`, () => {
       expect(response.text).toContain('Problem with the service');
     });
 
-    it('should render `problem with service` if getAmendment throws an error', async () => {
+    it('should render problem with service if getAmendment throws an error', async () => {
       // Arrange
       mockGetAmendment.mockRejectedValue(new Error('test error'));
 
@@ -242,7 +242,7 @@ describe(`POST ${url}`, () => {
       expect(response.text).toContain('Problem with the service');
     });
 
-    it('should render `problem with service` if updateAmendment throws an error', async () => {
+    it('should render problem with service if updateAmendment throws an error', async () => {
       // Arrange
       mockUpdateAmendment.mockRejectedValue(new Error('test error'));
 
