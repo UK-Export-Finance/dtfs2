@@ -10,7 +10,7 @@ import * as dtfsCommon from '@ukef/dtfs2-common';
 import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, PortalFacilityAmendmentWithUkefId, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
-import { MOCK_PIM_TEAM } from '../../../utils/mocks/mock-tfm-teams.js';
+import { MOCK_PIM_TEAM } from '../../../utils/mocks/mock-tfm-teams.ts';
 import { getAmendmentsUrl } from '../helpers/navigation.helper.ts';
 import { WhatNeedsToChangeViewModel } from '../../../types/view-models/amendments/what-needs-to-change-view-model.ts';
 import { getWhatNeedsToChange, GetWhatNeedsToChangeRequest } from './get-what-needs-to-change.ts';
@@ -92,7 +92,7 @@ describe('getWhatNeedsToChange', () => {
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      amendmentFormEmail: 'test@ukexportfinance.gov.uk',
+      amendmentFormEmail: MOCK_PIM_TEAM.email,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
@@ -123,7 +123,7 @@ describe('getWhatNeedsToChange', () => {
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage: `/gef/application-details/${dealId}`,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      amendmentFormEmail: 'test@ukexportfinance.gov.uk',
+      amendmentFormEmail: MOCK_PIM_TEAM.email,
       changeFacilityValue: true,
       changeCoverEndDate: false,
     };

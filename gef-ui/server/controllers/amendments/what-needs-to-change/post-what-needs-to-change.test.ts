@@ -11,7 +11,7 @@ import * as dtfsCommon from '@ukef/dtfs2-common';
 import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, PortalFacilityAmendmentWithUkefId, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
-import { MOCK_PIM_TEAM } from '../../../utils/mocks/mock-tfm-teams.js';
+import { MOCK_PIM_TEAM } from '../../../utils/mocks/mock-tfm-teams.ts';
 import { PostWhatNeedsToChangeRequest, postWhatNeedsToChange } from './post-what-needs-to-change.ts';
 import { WhatNeedsToChangeViewModel } from '../../../types/view-models/amendments/what-needs-to-change-view-model.ts';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment.ts';
@@ -120,7 +120,7 @@ describe('postWhatNeedsToChange', () => {
     expect(console.error).toHaveBeenCalledTimes(0);
   });
 
-  it('should call getTfmTeam with the correct teamId and userToken', async () => {
+  it('should call getTfmTeam with the correct params', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
@@ -161,7 +161,7 @@ describe('postWhatNeedsToChange', () => {
       exporterName: companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage: `/gef/application-details/${dealId}`,
-      amendmentFormEmail: 'test@ukexportfinance.gov.uk',
+      amendmentFormEmail: MOCK_PIM_TEAM.email,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       changeCoverEndDate,
       changeFacilityValue,

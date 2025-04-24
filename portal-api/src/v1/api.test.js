@@ -80,65 +80,66 @@ describe('getTfmTeam', () => {
 
       // Assert
       expect(response).toMatchObject(expected);
+      expect(axios).toHaveBeenCalledTimes(1);
       expect(axios).toHaveBeenCalledWith({ method: 'get', url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${teamId}`, headers });
     });
 
     it('should return all the TFM teams object when no argument is providedt', async () => {
       // Arrange
-      const expected = {
+      const mockResponse = {
         teams: [
           {
             _id: '6808ed99f8e01d29283c1d44',
-            id: 'UNDERWRITER_MANAGERS',
+            id: ALL_TEAM_IDS[0],
             name: 'Underwriter managers',
             email: 'checker1@ukexportfinance.gov.uk',
             auditRecord: {},
           },
           {
             _id: '6808ed99f8e01d29283c1d45',
-            id: 'UNDERWRITING_SUPPORT',
+            id: ALL_TEAM_IDS[1],
             name: 'Underwriting support',
             email: 'maker1@ukexportfinance.gov.uk',
             auditRecord: {},
           },
           {
             _id: '6808ed99f8e01d29283c1d46',
-            id: 'BUSINESS_SUPPORT',
+            id: ALL_TEAM_IDS[2],
             name: 'Business support group',
             email: 'maker1@ukexportfinance.gov.uk',
             auditRecord: {},
           },
           {
             _id: '6808ed99f8e01d29283c1d47',
-            id: 'PDC_RECONCILE',
+            id: ALL_TEAM_IDS[3],
             name: 'PDC reconcile',
             email: 'payment-officer3@ukexportfinance.gov.uk',
             auditRecord: {},
           },
           {
             _id: '6808ed99f8e01d29283c1d48',
-            id: 'UNDERWRITERS',
+            id: ALL_TEAM_IDS[4],
             name: 'Underwriters',
             email: 'checker1@ukexportfinance.gov.uk',
             auditRecord: {},
           },
           {
             _id: '6808ed99f8e01d29283c1d49',
-            id: 'RISK_MANAGERS',
+            id: ALL_TEAM_IDS[5],
             name: 'Risk managers',
             email: 'checker1@ukexportfinance.gov.uk',
             auditRecord: {},
           },
           {
             _id: '6808ed99f8e01d29283c1d4a',
-            id: 'PIM',
+            id: ALL_TEAM_IDS[6],
             name: 'PIM',
             email: 'checker2@ukexportfinance.gov.uk',
             auditRecord: {},
           },
           {
             _id: '6808ed99f8e01d29283c1d4b',
-            id: 'PDC_READ',
+            id: ALL_TEAM_IDS[7],
             name: 'PDC read',
             email: 'payment-officer2@ukexportfinance.gov.uk',
             auditRecord: {},
@@ -146,13 +147,13 @@ describe('getTfmTeam', () => {
         ],
       };
 
-      axios.mockResolvedValueOnce(expected);
+      axios.mockResolvedValueOnce(mockResponse);
 
       // Act
       const response = await getTfmTeam();
 
       // Assert
-      expect(response).toMatchObject(expected);
+      expect(response).toMatchObject(mockResponse);
       expect(axios).toHaveBeenCalledWith({ method: 'get', url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/undefined`, headers });
     });
   });

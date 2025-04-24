@@ -11,7 +11,7 @@ import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers
 import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
 import { MOCK_BASIC_DEAL } from '../../server/utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY, MOCK_UNISSUED_FACILITY } from '../../server/utils/mocks/mock-facilities';
-import { MOCK_PIM_TEAM } from '../../server/utils/mocks/mock-tfm-teams.js';
+import { MOCK_PIM_TEAM } from '../../server/utils/mocks/mock-tfm-teams.ts';
 import { getAmendmentsUrl } from '../../server/controllers/amendments/helpers/navigation.helper.ts';
 import { withGetAmendmentPageErrorHandlingTests } from './with-get-amendment-page-error-handling.api-tests';
 

@@ -9,7 +9,7 @@ import api from '../../server/services/api';
 import * as storage from '../test-helpers/storage/storage';
 import { MOCK_BASIC_DEAL } from '../../server/utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../server/utils/mocks/mock-facilities';
-import { MOCK_PIM_TEAM } from '../../server/utils/mocks/mock-tfm-teams.js';
+import { MOCK_PIM_TEAM } from '../../server/utils/mocks/mock-tfm-teams.ts';
 import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers/mock-amendment.ts';
 
