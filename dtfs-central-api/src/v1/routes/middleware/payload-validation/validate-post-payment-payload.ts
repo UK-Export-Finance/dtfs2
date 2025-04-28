@@ -1,5 +1,5 @@
 import z from 'zod';
-import { createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
+import { validateSchema } from '@ukef/dtfs2-common';
 import { TFM_SESSION_USER_SCHEMA } from '@ukef/dtfs2-common/schemas';
 import { CurrencySchema } from './schemas';
 
@@ -14,4 +14,4 @@ const PostPaymentSchema = z.object({
 
 export type PostPaymentPayload = z.infer<typeof PostPaymentSchema>;
 
-export const validatePostPaymentPayload = createValidationMiddlewareForSchema(PostPaymentSchema);
+export const validatePostPaymentPayload = validateSchema(PostPaymentSchema);

@@ -24,11 +24,9 @@ if (isTfmSsoFeatureFlagEnabled()) {
   const ssoController = new SsoController({ entraIdService, userService });
 
   ssoOpenRouter
-    .route('/auth-code-url')
+    .route('/authenticate')
     .all(validateSsoFeatureFlagTrue, validateGetAuthCodePayloadUrl)
-    .get((req: GetAuthCodeUrlApiRequest, res: GetAuthCodeUrlApiResponse, next) => {
-      ssoController.getAuthCodeUrl(req, res).catch(next);
-    });
+    .get((req: GetAuthCodeUrlApiRequest, res: GetAuthCodeUrlApiResponse) => ssoController.getAuthCodeUrl(req, res));
 
   /**
    * Validation for this route is done in controller itself
@@ -36,7 +34,7 @@ if (isTfmSsoFeatureFlagEnabled()) {
    * msal library
    */
   ssoOpenRouter
-    .route('/handle-sso-redirect-form')
+    .route('/redirect')
     .all(validateSsoFeatureFlagTrue)
     .post((req, res) => ssoController.handleSsoRedirectForm(req, res));
 }

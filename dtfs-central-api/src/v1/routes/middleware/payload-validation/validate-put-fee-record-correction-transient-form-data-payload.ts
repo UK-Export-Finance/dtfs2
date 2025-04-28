@@ -1,5 +1,5 @@
 import z from 'zod';
-import { createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
+import { validateSchema } from '@ukef/dtfs2-common';
 import { MongoObjectIdSchema } from './schemas';
 
 /**
@@ -26,4 +26,4 @@ export type PutFeeRecordCorrectionTransientFormDataPayload = z.infer<typeof PutF
 /**
  * Middleware function to validate fee record correction transient form data payload.
  */
-export const validatePutFeeRecordCorrectionTransientFormDataPayload = createValidationMiddlewareForSchema(PutFeeRecordCorrectionTransientFormDataPayload);
+export const validatePutFeeRecordCorrectionTransientFormDataPayload = validateSchema(PutFeeRecordCorrectionTransientFormDataPayload);
