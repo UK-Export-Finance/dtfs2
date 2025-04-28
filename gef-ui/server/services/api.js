@@ -36,6 +36,25 @@ const getMandatoryCriteria = async ({ userToken }) => {
   }
 };
 
+/**
+ * Fetches the details of a TFM team by its ID.
+ *
+ * @param {Object} params - The parameters for the request.
+ * @param {string} params.teamId - The ID of the team to fetch.
+ * @param {string} params.userToken - The user authentication token.
+ * @returns {Promise<import('@ukef/dtfs2-common'.Team)>} A promise that resolves to the team data.
+ * @throws {Error} Throws an error if the request fails.
+ */
+const getTfmTeam = async ({ teamId, userToken }) => {
+  try {
+    const { data } = await Axios.get(`/tfm/team/${teamId}`, config(userToken));
+    return data;
+  } catch (error) {
+    console.error('Unable to get TFM team %s %o', teamId, error);
+    throw error;
+  }
+};
+
 const createApplication = async ({ payload, userToken }) => {
   try {
     const { data } = await Axios.post('/gef/application', payload, config(userToken));
@@ -610,6 +629,7 @@ const deleteAmendment = async ({ facilityId, amendmentId, userToken }) => {
 module.exports = {
   validateToken,
   validateBank,
+  getTfmTeam,
   getMandatoryCriteria,
   createApplication,
   cloneApplication,

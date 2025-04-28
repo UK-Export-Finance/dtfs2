@@ -149,7 +149,7 @@ export const withAmendmentGetControllerTests = <TRequest extends Request>({
     expect(console.error).toHaveBeenCalledWith('User cannot amend facility %s on deal %s', facilityId, dealId);
   });
 
-  it('should render `problem with service` if getApplication throws an error', async () => {
+  it('should render problem with service if getApplication throws an error', async () => {
     // Arrange
     const mockError = aMockError();
     getApplicationMock.mockRejectedValue(mockError);
@@ -163,7 +163,7 @@ export const withAmendmentGetControllerTests = <TRequest extends Request>({
     expect(console.error).toHaveBeenCalledTimes(1);
   });
 
-  it('should render `problem with service` if getFacility throws an error', async () => {
+  it('should render problem with service if getFacility throws an error', async () => {
     // Arrange
     const mockError = aMockError();
     getFacilityMock.mockRejectedValue(mockError);
@@ -177,7 +177,7 @@ export const withAmendmentGetControllerTests = <TRequest extends Request>({
     expect(console.error).toHaveBeenCalledTimes(1);
   });
 
-  it('should render `problem with service` if getAmendment throws an error', async () => {
+  it('should render problem with service if getAmendment throws an error', async () => {
     // Arrange
     const mockError = aMockError();
     getAmendmentMock.mockRejectedValue(mockError);

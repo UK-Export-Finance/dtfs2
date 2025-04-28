@@ -4,15 +4,16 @@ const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
 const updateAmendmentMock = jest.fn();
+const getTfmTeamMock = jest.fn();
 
 import { createMocks } from 'node-mocks-http';
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, PortalFacilityAmendmentWithUkefId, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
+import { MOCK_PIM_TEAM } from '../../../utils/mocks/mock-tfm-teams.ts';
 import { PostWhatNeedsToChangeRequest, postWhatNeedsToChange } from './post-what-needs-to-change.ts';
 import { WhatNeedsToChangeViewModel } from '../../../types/view-models/amendments/what-needs-to-change-view-model.ts';
-import { STB_PIM_EMAIL } from '../../../constants/emails.ts';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment.ts';
 import { Deal } from '../../../types/deal.ts';
 import { getAmendmentsUrl, getNextPage } from '../helpers/navigation.helper.ts';
@@ -26,6 +27,7 @@ jest.mock('../../../services/api', () => ({
   getFacility: getFacilityMock,
   getAmendment: getAmendmentMock,
   updateAmendment: updateAmendmentMock,
+  getTfmTeam: getTfmTeamMock,
 }));
 
 console.error = jest.fn();
@@ -33,6 +35,7 @@ console.error = jest.fn();
 const dealId = 'dealId';
 const facilityId = 'facilityId';
 const amendmentId = 'amendmentId';
+const teamId = String(dtfsCommon.TEAM_IDS.PIM);
 
 const aMockError = () => new Error();
 const mockError = aMockError();
@@ -71,6 +74,7 @@ describe('postWhatNeedsToChange', () => {
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getAmendmentMock.mockResolvedValue(amendment);
     updateAmendmentMock.mockResolvedValue(amendment);
+    getTfmTeamMock.mockResolvedValue(MOCK_PIM_TEAM);
   });
 
   afterAll(() => {
@@ -116,6 +120,19 @@ describe('postWhatNeedsToChange', () => {
     expect(console.error).toHaveBeenCalledTimes(0);
   });
 
+  it('should call getTfmTeam with the correct params', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await postWhatNeedsToChange(req, res);
+
+    // Assert
+    expect(getTfmTeamMock).toHaveBeenCalledTimes(1);
+    expect(getTfmTeamMock).toHaveBeenCalledWith({ teamId, userToken });
+    expect(console.error).toHaveBeenCalledTimes(0);
+  });
+
   it('should not call updateAmendment if neither of changeCoverEndDate or changeFacilityValue are true', async () => {
     // Arrange
     const { req, res } = getHttpMocks([]);
@@ -144,7 +161,7 @@ describe('postWhatNeedsToChange', () => {
       exporterName: companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage: `/gef/application-details/${dealId}`,
-      amendmentFormEmail: STB_PIM_EMAIL,
+      amendmentFormEmail: MOCK_PIM_TEAM.email,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       changeCoverEndDate,
       changeFacilityValue,
@@ -250,7 +267,7 @@ describe('postWhatNeedsToChange', () => {
     expect(console.error).toHaveBeenCalledWith('Amendment %s was not found for the facility %s', amendmentId, facilityId);
   });
 
-  it('should render `problem with service` if getApplication throws an error', async () => {
+  it('should render problem with service if getApplication throws an error', async () => {
     // Arrange
     getApplicationMock.mockRejectedValueOnce(mockError);
     const { req, res } = getHttpMocks();
@@ -264,7 +281,7 @@ describe('postWhatNeedsToChange', () => {
     expect(console.error).toHaveBeenCalledWith(generalConsoleErrorText, mockError);
   });
 
-  it('should render `problem with service` if getFacility throws an error', async () => {
+  it('should render problem with service if getFacility throws an error', async () => {
     // Arrange
     getFacilityMock.mockRejectedValueOnce(mockError);
     const { req, res } = getHttpMocks();
@@ -278,7 +295,7 @@ describe('postWhatNeedsToChange', () => {
     expect(console.error).toHaveBeenCalledWith(generalConsoleErrorText, mockError);
   });
 
-  it('should render `problem with service` if updateAmendment throws an error', async () => {
+  it('should render problem with service if updateAmendment throws an error', async () => {
     // Arrange
     updateAmendmentMock.mockRejectedValue(mockError);
     const { req, res } = getHttpMocks();
@@ -290,5 +307,22 @@ describe('postWhatNeedsToChange', () => {
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith(generalConsoleErrorText, mockError);
+  });
+
+  it('should throw an error if getTfmTeam API call throws an exception', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    const error = new Error('Test error');
+
+    getTfmTeamMock.mockRejectedValueOnce(error);
+
+    // Act
+    await postWhatNeedsToChange(req, res);
+
+    // Assert
+    expect(getTfmTeamMock).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Error posting amendments what needs to change page %o', error);
+    expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
   });
 });
