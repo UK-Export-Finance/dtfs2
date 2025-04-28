@@ -1,9 +1,9 @@
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, TEAM_IDS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { WhatNeedsToChangeViewModel } from '../../../types/view-models/amendments/what-needs-to-change-view-model.ts';
 import { asLoggedInUserSession } from '../../../utils/express-session';
-import { STB_PIM_EMAIL } from '../../../constants/emails.ts';
+
 import { getAmendmentsUrl, getNextPage } from '../helpers/navigation.helper.ts';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
 import { validateWhatNeedsToChange } from './validation.ts';
@@ -44,6 +44,10 @@ export const postWhatNeedsToChange = async (req: PostWhatNeedsToChangeRequest, r
     const changeCoverEndDate = amendmentOptions?.includes('changeCoverEndDate');
     const changeFacilityValue = amendmentOptions?.includes('changeFacilityValue');
 
+    const teamId = TEAM_IDS.PIM;
+    const pim = await api.getTfmTeam({ teamId, userToken });
+    const { email: amendmentFormEmail } = pim;
+
     const validationError = validateWhatNeedsToChange({ changeCoverEndDate, changeFacilityValue });
 
     if (validationError) {
@@ -52,7 +56,7 @@ export const postWhatNeedsToChange = async (req: PostWhatNeedsToChangeRequest, r
         facilityType: facility.type,
         cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
         previousPage: `/gef/application-details/${dealId}`,
-        amendmentFormEmail: STB_PIM_EMAIL,
+        amendmentFormEmail,
         changeCoverEndDate,
         changeFacilityValue,
         errors: validationErrorHandler(validationError),

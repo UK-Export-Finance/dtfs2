@@ -46,7 +46,7 @@ describe('mapTeamMembers', () => {
 
   it(`should return ${HttpStatusCode.BadRequest} for an invalid team identifier`, async () => {
     // Arrange
-    api.findTeamMembers.mockResolvedValue({ status: HttpStatusCode.BadRequest, data: 'Invalid team id provided' });
+    api.findTeamMembers.mockResolvedValue({ status: HttpStatusCode.BadRequest, data: 'Invalid TFM team ID provided' });
     const mockInvalidReq = {
       params: {
         teamId: 'INVALID',
@@ -61,7 +61,7 @@ describe('mapTeamMembers', () => {
     expect(res._getStatusCode()).toBe(HttpStatusCode.BadRequest);
 
     expect(res._getData().status).toBe(HttpStatusCode.BadRequest);
-    expect(res._getData().data).toEqual('Invalid team id provided');
+    expect(res._getData().data).toEqual('Invalid TFM team ID provided');
   });
 
   it(`should return ${HttpStatusCode.InternalServerError} for a caught exception`, async () => {

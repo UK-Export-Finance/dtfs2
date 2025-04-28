@@ -874,7 +874,7 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const expectedResponse = { status: 400, data: 'Invalid team id provided' };
+      const expectedResponse = { status: 400, data: 'Invalid TFM team ID provided' };
 
       const response = await api.findOneTeam(urlTraversal);
 
@@ -882,7 +882,7 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const expectedResponse = { status: 400, data: 'Invalid team id provided' };
+      const expectedResponse = { status: 400, data: 'Invalid TFM team ID provided' };
 
       const response = await api.findOneTeam(localIp);
 
@@ -907,7 +907,7 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a url traversal is supplied', async () => {
-      const expectedResponse = { status: 400, data: 'Invalid team id provided' };
+      const expectedResponse = { status: 400, data: 'Invalid TFM team ID provided' };
 
       const response = await api.findTeamMembers(urlTraversal);
 
@@ -915,7 +915,7 @@ describe('API is protected against SSRF attacks', () => {
     });
 
     it('Returns an error when a local IP is supplied', async () => {
-      const expectedResponse = { status: 400, data: 'Invalid team id provided' };
+      const expectedResponse = { status: 400, data: 'Invalid TFM team ID provided' };
 
       const response = await api.findTeamMembers(localIp);
 
