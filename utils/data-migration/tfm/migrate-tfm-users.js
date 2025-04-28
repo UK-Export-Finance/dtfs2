@@ -26,12 +26,12 @@ const insertTfmUsersAndTeams = async () => {
     await api.deleteUser(user, token);
   }
 
-  console.info('inserting TFM teams');
+  console.info('TFM teams');
   for (const team of TEAMS) {
     await api.createTeam(team, token);
   }
 
-  console.info('inserting TFM users');
+  console.info('TFM users');
   for (const user of USERS) {
     await api.createTfmUser(user);
   }

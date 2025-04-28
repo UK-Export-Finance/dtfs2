@@ -6,6 +6,7 @@ export * from './schema';
 export * from './custom-axios-validate-status';
 export * from './date-validation';
 export {
+  isAuditLogFeatureFlagEnabled,
   isFeeRecordCorrectionFeatureFlagEnabled,
   isTfmDealCancellationFeatureFlagEnabled,
   isTfmSsoFeatureFlagEnabled,

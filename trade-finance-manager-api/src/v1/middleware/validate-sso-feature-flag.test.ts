@@ -2,7 +2,7 @@ import { isTfmSsoFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Request, Response, NextFunction } from 'express';
 import httpMocks, { MockRequest, MockResponse } from 'node-mocks-http';
-import { validateSsoFeatureFlagIsOff, validateSsoFeatureFlagIsOn } from './validate-sso-feature-flag';
+import { validateSsoFeatureFlagFalse, validateSsoFeatureFlagTrue } from './validate-sso-feature-flag';
 
 jest.mock('@ukef/dtfs2-common', () => ({
   isTfmSsoFeatureFlagEnabled: jest.fn(),
@@ -20,8 +20,8 @@ describe('validateSsoFeatureFlag', () => {
     jest.resetAllMocks();
   });
 
-  describe('validateSsoFeatureFlagIsOn', () => {
-    const makeRequest = validateSsoFeatureFlagIsOn;
+  describe('validateSsoFeatureFlagTrue', () => {
+    const makeRequest = validateSsoFeatureFlagTrue;
 
     describe('when the SSO feature flag is disabled', () => {
       beforeEach(() => {
@@ -50,8 +50,8 @@ describe('validateSsoFeatureFlag', () => {
     });
   });
 
-  describe('validateSsoFeatureFlagIsOff', () => {
-    const makeRequest = validateSsoFeatureFlagIsOff;
+  describe('validateSsoFeatureFlagFalse', () => {
+    const makeRequest = validateSsoFeatureFlagFalse;
 
     describe('when the SSO feature flag is disabled', () => {
       beforeEach(() => {

@@ -7,7 +7,7 @@ import { EntraIdApi } from '../third-party-apis/entra-id.api';
 import { EntraIdConfig } from '../configs/entra-id.config';
 import { UserService } from '../services/user.service';
 import { validateGetAuthCodePayloadUrl } from '../middleware/validate-get-auth-code-url-payload';
-import { validateSsoFeatureFlagIsOn } from '../middleware/validate-sso-feature-flag';
+import { validateSsoFeatureFlagTrue } from '../middleware/validate-sso-feature-flag';
 
 export const ssoOpenRouter = express.Router();
 
@@ -25,7 +25,7 @@ if (isTfmSsoFeatureFlagEnabled()) {
 
   ssoOpenRouter
     .route('/auth-code-url')
-    .all(validateSsoFeatureFlagIsOn, validateGetAuthCodePayloadUrl)
+    .all(validateSsoFeatureFlagTrue, validateGetAuthCodePayloadUrl)
     .get((req: GetAuthCodeUrlApiRequest, res: GetAuthCodeUrlApiResponse, next) => {
       ssoController.getAuthCodeUrl(req, res).catch(next);
     });
@@ -37,6 +37,6 @@ if (isTfmSsoFeatureFlagEnabled()) {
    */
   ssoOpenRouter
     .route('/handle-sso-redirect-form')
-    .all(validateSsoFeatureFlagIsOn)
+    .all(validateSsoFeatureFlagTrue)
     .post((req, res) => ssoController.handleSsoRedirectForm(req, res));
 }
