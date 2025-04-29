@@ -15,13 +15,13 @@ const {
 
 describe('csv-utils', () => {
   describe('columnIndexToExcelColumn', () => {
-    it('should returns the correct column for an index below 26', async () => {
+    it('should return the correct column for an index below 26', async () => {
       const excelColumnIndex = columnIndexToExcelColumn(2);
 
       expect(excelColumnIndex).toEqual('C');
     });
 
-    it('should returns the correct column for an index above 26', async () => {
+    it('should return the correct column for an index above 26', async () => {
       const excelColumnIndex = columnIndexToExcelColumn(30);
 
       expect(excelColumnIndex).toEqual('AE');
@@ -29,13 +29,13 @@ describe('csv-utils', () => {
   });
 
   describe('excelColumnToColumnIndex', () => {
-    it('should returns the correct index for a column below 26', async () => {
+    it('should return the correct index for a column below 26', async () => {
       const columnIndex = excelColumnToColumnIndex('C');
 
       expect(columnIndex).toEqual(2);
     });
 
-    it('should returns the correct index for a column above 26', async () => {
+    it('should return the correct index for a column above 26', async () => {
       const columnIndex = excelColumnToColumnIndex('AE');
 
       expect(columnIndex).toEqual(30);
@@ -210,7 +210,7 @@ describe('csv-utils', () => {
   });
 
   describe('isRichTextValue', () => {
-    it('should returns true for a rich text value', () => {
+    it('should return true for a rich text value', () => {
       const cellValue = { richText: [{ text: 'test' }, { text: 'string' }] };
 
       const result = isRichTextValue(cellValue);
@@ -218,7 +218,7 @@ describe('csv-utils', () => {
       expect(result).toEqual(true);
     });
 
-    it('should returns false for a non-rich text value', () => {
+    it('should return false for a non-rich text value', () => {
       const cellValue = 'test string';
 
       const result = isRichTextValue(cellValue);
@@ -226,7 +226,7 @@ describe('csv-utils', () => {
       expect(result).toEqual(false);
     });
 
-    it('should returns false for a null value', () => {
+    it('should return false for a null value', () => {
       const cellValue = null;
 
       const result = isRichTextValue(cellValue);
@@ -234,7 +234,7 @@ describe('csv-utils', () => {
       expect(result).toEqual(false);
     });
 
-    it('should returns false for an empty string', () => {
+    it('should return false for an empty string', () => {
       const cellValue = '';
 
       const result = isRichTextValue(cellValue);
@@ -242,7 +242,7 @@ describe('csv-utils', () => {
       expect(result).toEqual(false);
     });
 
-    it('should returns false for an object without richText property', () => {
+    it('should return false for an object without richText property', () => {
       const cellValue = { text: 'test string' };
 
       const result = isRichTextValue(cellValue);
@@ -250,7 +250,7 @@ describe('csv-utils', () => {
       expect(result).toEqual(false);
     });
 
-    it('should returns false for an array', () => {
+    it('should return false for an array', () => {
       const cellValue = ['test', 'string'];
 
       const result = isRichTextValue(cellValue);
@@ -300,7 +300,7 @@ describe('csv-utils', () => {
   });
 
   describe('extractCellValue', () => {
-    it('should returns the cell value', async () => {
+    it('should return the cell value', async () => {
       const cellValue = { value: CURRENCY.GBP };
 
       const extractedValue = extractCellValue(cellValue);
@@ -308,7 +308,7 @@ describe('csv-utils', () => {
       expect(extractedValue).toEqual(CURRENCY.GBP);
     });
 
-    it('should returns the cell value without new lines', async () => {
+    it('should return the cell value without new lines', async () => {
       const cellValue = { value: 'GBP\na' };
 
       const extractedValue = extractCellValue(cellValue);
@@ -316,7 +316,7 @@ describe('csv-utils', () => {
       expect(extractedValue).toEqual('GBP a');
     });
 
-    it('should returns the cell value without any new line characters', async () => {
+    it('should return the cell value without any new line characters', async () => {
       const cellValue = { value: 'GBP\ra' };
 
       const extractedValue = extractCellValue(cellValue);
@@ -324,7 +324,7 @@ describe('csv-utils', () => {
       expect(extractedValue).toEqual('GBP a');
     });
 
-    it('should returns the cell value without new lines without whitespace at start or end', async () => {
+    it('should return the cell value without new lines without whitespace at start or end', async () => {
       const cellValue = { value: '\r\nGBP\na' };
 
       const extractedValue = extractCellValue(cellValue);
@@ -332,7 +332,7 @@ describe('csv-utils', () => {
       expect(extractedValue).toEqual('GBP a');
     });
 
-    it('should returns the cell value without commas', async () => {
+    it('should return the cell value without commas', async () => {
       const cellValue = { value: 'GBP,' };
 
       const extractedValue = extractCellValue(cellValue);
@@ -340,7 +340,7 @@ describe('csv-utils', () => {
       expect(extractedValue).toEqual(CURRENCY.GBP);
     });
 
-    it('should returns the cell value without commas or new lines', async () => {
+    it('should return the cell value without commas or new lines', async () => {
       const cellValue = { value: '\n100,000' };
 
       const extractedValue = extractCellValue(cellValue);
@@ -348,7 +348,7 @@ describe('csv-utils', () => {
       expect(extractedValue).toEqual('100000');
     });
 
-    it('should returns the cell value if the value is a number', async () => {
+    it('should return the cell value if the value is a number', async () => {
       const cellValue = { value: 123 };
 
       const extractedValue = extractCellValue(cellValue);
@@ -356,7 +356,7 @@ describe('csv-utils', () => {
       expect(extractedValue).toEqual(123);
     });
 
-    it('should returns the cell value as a string if it is a rich string value', () => {
+    it('should return the cell value as a string if it is a rich string value', () => {
       const cellValue = {
         value: {
           richText: [
@@ -374,7 +374,7 @@ describe('csv-utils', () => {
       expect(extractedValue).toEqual('test string');
     });
 
-    it('should returns the cell value as a string if it is a rich string value with multiple rich text values', () => {
+    it('should return the cell value as a string if it is a rich string value with multiple rich text values', () => {
       const cellValue = {
         value: {
           richText: [
@@ -393,7 +393,7 @@ describe('csv-utils', () => {
       expect(extractedValue).toEqual('test string');
     });
 
-    it('should returns the cell value as an empty string if passed as richText with an empty string', () => {
+    it('should return the cell value as an empty string if passed as richText with an empty string', () => {
       const cellValue = {
         value: {
           richText: [
@@ -411,7 +411,7 @@ describe('csv-utils', () => {
       expect(extractedValue).toEqual('');
     });
 
-    it('should returns the cell value if the cell is using a formula to calculate the value', async () => {
+    it('should return the cell value if the cell is using a formula to calculate the value', async () => {
       const cellValue = { value: { result: 123, formula: 'SUM(A1:A2)' } };
 
       const extractedValue = extractCellValue(cellValue);
@@ -419,7 +419,7 @@ describe('csv-utils', () => {
       expect(extractedValue).toEqual(123);
     });
 
-    it('should returns the cell value if the cell is using a formula to calculate the value and the result is missing in the value key', async () => {
+    it('should return the cell value if the cell is using a formula to calculate the value and the result is missing in the value key', async () => {
       const cellValue = { _value: { result: 123, formula: 'SUM(A1:A2)' } };
 
       const extractedValue = extractCellValue(cellValue);
