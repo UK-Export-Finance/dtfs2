@@ -1,5 +1,4 @@
-import { HttpStatusCode } from 'axios';
-
+const { HttpStatusCode } = require('axios');
 const request = require('supertest');
 const express = require('express');
 const router = require('./index'); // Adjust the path as necessary

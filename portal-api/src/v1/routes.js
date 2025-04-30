@@ -35,6 +35,7 @@ const { ukefDecisionReport, unissuedFacilitiesReport } = require('./controllers/
 const utilisationReportControllers = require('./controllers/utilisation-report-service');
 const { getBankHolidays } = require('./controllers/bank-holidays.controller');
 const companies = require('./controllers/companies.controller');
+const tfm = require('./controllers/tfm.controller');
 
 const { cleanXss, fileUpload, utilisationReportFileUpload } = require('./middleware');
 const checkApiKey = require('./middleware/headers/check-api-key');
@@ -386,5 +387,7 @@ authRouter
     validateUserAndBankIdMatch,
     utilisationReportControllers.getCompletedFeeRecordCorrections,
   );
+
+authRouter.route('/tfm/team/:teamId').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }), tfm.tfmTeam);
 
 module.exports = { openRouter, authRouter };

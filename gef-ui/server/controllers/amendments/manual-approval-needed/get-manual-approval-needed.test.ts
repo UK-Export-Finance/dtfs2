@@ -3,6 +3,7 @@
 const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
+const getTfmTeamMock = jest.fn();
 
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
@@ -10,7 +11,7 @@ import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
-import { STB_PIM_EMAIL } from '../../../constants/emails.ts';
+import { MOCK_PIM_TEAM } from '../../../utils/mocks/mock-tfm-teams.ts';
 import { getManualApprovalNeeded, GetManualApprovalNeededRequest } from './get-manual-approval-needed.ts';
 import { Deal } from '../../../types/deal';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
@@ -23,14 +24,15 @@ jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
   getFacility: getFacilityMock,
   getAmendment: getAmendmentMock,
+  getTfmTeam: getTfmTeamMock,
 }));
 
 const dealId = 'dealId';
 const facilityId = 'facilityId';
 const amendmentId = 'amendmentId';
-
-const amendmentFormEmail = STB_PIM_EMAIL;
 const returnLink = '/dashboard/deals';
+const teamId = String(dtfsCommon.TEAM_IDS.PIM);
+const userToken = 'testToken';
 
 const getHttpMocks = () =>
   createMocks<GetManualApprovalNeededRequest>({
@@ -67,6 +69,7 @@ describe('getManualApprovalNeeded', () => {
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getAmendmentMock.mockResolvedValue(amendment);
+    getTfmTeamMock.mockResolvedValue(MOCK_PIM_TEAM);
   });
 
   afterAll(() => {
@@ -96,7 +99,7 @@ describe('getManualApprovalNeeded', () => {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.MANUAL_APPROVAL_NEEDED, amendment),
-      amendmentFormEmail,
+      amendmentFormEmail: MOCK_PIM_TEAM.email,
       returnLink,
     };
 
@@ -123,5 +126,18 @@ describe('getManualApprovalNeeded', () => {
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.ELIGIBILITY }));
+  });
+
+  it('should call getTfmTeam with the correct teamId and userToken', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await getManualApprovalNeeded(req, res);
+
+    // Assert
+    expect(getTfmTeamMock).toHaveBeenCalledTimes(1);
+    expect(getTfmTeamMock).toHaveBeenCalledWith({ teamId, userToken });
+    expect(console.error).toHaveBeenCalledTimes(0);
   });
 });

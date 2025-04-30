@@ -319,7 +319,7 @@ describe('postSubmitAmendmentToUkef', () => {
     expect(console.error).toHaveBeenCalledWith('Reference number could not be created for deal %s and facility %s', dealId, facilityId);
   });
 
-  it('should render `problem with service` if getApplication throws an error', async () => {
+  it('should render problem with service if getApplication throws an error', async () => {
     // Arrange
     const mockError = aMockError();
     getApplicationMock.mockRejectedValue(mockError);
@@ -334,7 +334,7 @@ describe('postSubmitAmendmentToUkef', () => {
     expect(console.error).toHaveBeenCalledWith('Error posting submitted amendment to UKEF %o', mockError);
   });
 
-  it('should render `problem with service` if getFacility throws an error', async () => {
+  it('should render problem with service if getFacility throws an error', async () => {
     // Arrange
     const mockError = aMockError();
     getFacilityMock.mockRejectedValue(mockError);
@@ -349,7 +349,7 @@ describe('postSubmitAmendmentToUkef', () => {
     expect(console.error).toHaveBeenCalledWith('Error posting submitted amendment to UKEF %o', mockError);
   });
 
-  it('should render `problem with service` if getAmendment throws an error', async () => {
+  it('should render problem with service if getAmendment throws an error', async () => {
     // Arrange
     const mockError = aMockError();
     getAmendmentMock.mockRejectedValue(mockError);
@@ -364,7 +364,7 @@ describe('postSubmitAmendmentToUkef', () => {
     expect(console.error).toHaveBeenCalledWith('Error posting submitted amendment to UKEF %o', mockError);
   });
 
-  it('should render `problem with service` if createReferenceNumber throws an error', async () => {
+  it('should render problem with service if createReferenceNumber throws an error', async () => {
     // Arrange
     const mockError = aMockError();
     createReferenceNumberMock.mockRejectedValue(mockError);
@@ -379,7 +379,7 @@ describe('postSubmitAmendmentToUkef', () => {
     expect(console.error).toHaveBeenCalledWith('Error posting submitted amendment to UKEF %o', mockError);
   });
 
-  it('should render `problem with service` if updateSubmittedAmendment throws an error', async () => {
+  it('should render problem with service if updateSubmittedAmendment throws an error', async () => {
     // Arrange
     const mockError = aMockError();
     updateSubmittedAmendmentMock.mockRejectedValue(mockError);
