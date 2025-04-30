@@ -20,6 +20,7 @@ import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-h
 import { postSubmitAmendmentToUkef, PostSubmitAmendmentToUkefRequest } from './post-submit-amendment-to-ukef';
 import * as createReferenceNumber from '../helpers/create-amendment-reference-number.helper';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
+import { MOCK_PIM_TEAM } from '../../../utils/mocks/mock-tfm-teams.ts';
 import { getCurrencySymbol } from '../facility-value/get-currency-symbol';
 
 console.error = jest.fn();
@@ -28,10 +29,13 @@ const getFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
 const updateSubmittedAmendmentMock = jest.fn();
 const createReferenceNumberMock = jest.fn();
+const getTfmTeamMock = jest.fn();
 
 const dealId = '6597dffeb5ef5ff4267e5044';
 const facilityId = '6597dffeb5ef5ff4267e5045';
 const amendmentId = '6597dffeb5ef5ff4267e5046';
+
+const teamId = String(dtfsCommon.TEAM_IDS.PIM);
 
 const aMockError = () => new Error();
 
@@ -78,6 +82,7 @@ describe('postSubmitAmendmentToUkef', () => {
     jest.spyOn(api, 'getFacility').mockImplementation(getFacilityMock);
     jest.spyOn(api, 'getAmendment').mockImplementation(getAmendmentMock);
     jest.spyOn(api, 'updateSubmitAmendment').mockImplementation(updateSubmittedAmendmentMock);
+    jest.spyOn(api, 'getTfmTeam').mockImplementation(getTfmTeamMock);
     jest.spyOn(createReferenceNumber, 'createReferenceNumber').mockImplementation(createReferenceNumberMock);
 
     const criteria = [
@@ -134,6 +139,7 @@ describe('postSubmitAmendmentToUkef', () => {
     getAmendmentMock.mockResolvedValue(amendment);
     createReferenceNumberMock.mockResolvedValue(referenceNumber);
     updateSubmittedAmendmentMock.mockResolvedValue(submittedAmendment);
+    getTfmTeamMock.mockResolvedValue(MOCK_PIM_TEAM);
   });
 
   it('should call getApplication with the correct dealId and userToken', async () => {
@@ -227,7 +233,7 @@ describe('postSubmitAmendmentToUkef', () => {
       userToken,
       makersEmail: mockDeal.maker.email,
       checkersEmail: mockUser.email,
-      pimEmail: 'stb.pim@ukexportfinance.gov.uk',
+      pimEmail: MOCK_PIM_TEAM.email,
       emailVariables: {
         ukefDealId: mockDeal.ukefDealId,
         bankInternalRefName: String(mockDeal.bankInternalRefName),
@@ -245,6 +251,36 @@ describe('postSubmitAmendmentToUkef', () => {
         referenceNumber,
       },
     });
+  });
+
+  it('should call getTfmTeam with the correct teamId and userToken', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await postSubmitAmendmentToUkef(req, res);
+
+    // Assert
+    expect(getTfmTeamMock).toHaveBeenCalledTimes(1);
+    expect(getTfmTeamMock).toHaveBeenCalledWith({ teamId, userToken });
+    expect(console.error).toHaveBeenCalledTimes(0);
+  });
+
+  it('should throw an error if getTfmTeam API call throws an exception', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    const error = new Error('Test error');
+
+    getTfmTeamMock.mockRejectedValueOnce(error);
+
+    // Act
+    await postSubmitAmendmentToUkef(req, res);
+
+    // Assert
+    expect(getTfmTeamMock).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Error posting submitted amendment to UKEF %o', error);
+    expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
   });
 
   it('should redirect to approved by Ukef page If confirmSubmitUkef is true', async () => {

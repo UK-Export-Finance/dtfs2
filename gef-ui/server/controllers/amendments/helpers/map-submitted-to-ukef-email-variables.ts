@@ -75,15 +75,12 @@ const mapSubmittedToUkefEmailVariables = ({
   const checkersName = `${user.firstname} ${user.surname}`;
   const checkersEmail = user.email;
 
-  const pimEmail = 'stb.pim@ukexportfinance.gov.uk';
-
   const makersBank = maker.bank;
   const bankName = makersBank ? (makersBank as { name: string }).name : '-';
 
   return {
     makersEmail,
     checkersEmail,
-    pimEmail,
     emailVariables: {
       ukefDealId,
       bankInternalRefName: bankInternalRefName!,

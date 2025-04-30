@@ -26,7 +26,6 @@ const effectiveDateWithoutMs: number = Math.floor(Date.now() / 1000);
 const coverEndDate = Number(new Date());
 const facilityEndDate = new Date();
 const referenceNumber = `1234-01`;
-const pimEmail = 'stb.pim@ukexportfinance.gov.uk';
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
 const mockFacilityDetails = MOCK_ISSUED_FACILITY.details;
@@ -63,7 +62,6 @@ describe('mapSubmittedToUkefEmailVariables', () => {
       const expected = {
         makersEmail: String(mockDeal.maker.email),
         checkersEmail: String(mockUser.email),
-        pimEmail,
         emailVariables: {
           ukefDealId: mockDeal.ukefDealId,
           bankInternalRefName: String(mockDeal.bankInternalRefName),
@@ -114,7 +112,6 @@ describe('mapSubmittedToUkefEmailVariables', () => {
       const expected = {
         makersEmail: String(mockDeal.maker.email),
         checkersEmail: String(mockUser.email),
-        pimEmail,
         emailVariables: {
           ukefDealId: mockDeal.ukefDealId,
           bankInternalRefName: String(mockDeal.bankInternalRefName),
@@ -166,7 +163,6 @@ describe('mapSubmittedToUkefEmailVariables', () => {
       const expected = {
         makersEmail: String(mockDeal.maker.email),
         checkersEmail: String(mockUser.email),
-        pimEmail,
         emailVariables: {
           ukefDealId: mockDeal.ukefDealId,
           bankInternalRefName: String(mockDeal.bankInternalRefName),
@@ -215,7 +211,6 @@ describe('mapSubmittedToUkefEmailVariables', () => {
       const expected = {
         makersEmail: String(mockDeal.maker.email),
         checkersEmail: String(mockUser.email),
-        pimEmail,
         emailVariables: {
           ukefDealId: mockDeal.ukefDealId,
           bankInternalRefName: String(mockDeal.bankInternalRefName),
@@ -260,7 +255,6 @@ describe('mapSubmittedToUkefEmailVariables', () => {
       const expected = {
         makersEmail: String(mockDeal.maker.email),
         checkersEmail: String(mockUser.email),
-        pimEmail,
         emailVariables: {
           ukefDealId: mockDeal.ukefDealId,
           bankInternalRefName: String(mockDeal.bankInternalRefName),

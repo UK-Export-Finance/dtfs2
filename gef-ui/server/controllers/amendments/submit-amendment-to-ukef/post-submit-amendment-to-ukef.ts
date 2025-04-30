@@ -1,4 +1,4 @@
-import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS, TEAM_IDS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { validationErrorHandler } from '../../../utils/helpers';
 import { asLoggedInUserSession } from '../../../utils/express-session';
@@ -63,7 +63,11 @@ export const postSubmitAmendmentToUkef = async (req: PostSubmitAmendmentToUkefRe
       return res.redirect('/not-found');
     }
 
-    const { makersEmail, checkersEmail, pimEmail, emailVariables } = mapSubmittedToUkefEmailVariables({ deal, facility, amendment, user, referenceNumber });
+    const teamId = TEAM_IDS.PIM;
+    const pim = await api.getTfmTeam({ teamId, userToken });
+    const { email: pimEmail } = pim;
+
+    const { makersEmail, checkersEmail, emailVariables } = mapSubmittedToUkefEmailVariables({ deal, facility, amendment, user, referenceNumber });
 
     const status = PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED;
 
