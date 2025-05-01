@@ -249,7 +249,7 @@ describe('postDoYouHaveAFacilityEndDate', () => {
     expect(res._getRedirectUrl()).toEqual(getNextPage(PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE, amendment));
   });
 
-  it('should render `problem with service` if getApplication throws an error', async () => {
+  it('should render problem with service if getApplication throws an error', async () => {
     // Arrange
     const mockError = aMockError();
     getApplicationMock.mockRejectedValue(mockError);
@@ -264,7 +264,7 @@ describe('postDoYouHaveAFacilityEndDate', () => {
     expect(console.error).toHaveBeenCalledWith('Error posting amendments do you have a facility end date page %o', mockError);
   });
 
-  it('should render `problem with service` if getFacility throws an error', async () => {
+  it('should render problem with service if getFacility throws an error', async () => {
     // Arrange
     const mockError = aMockError();
     getFacilityMock.mockRejectedValue(mockError);
@@ -279,7 +279,7 @@ describe('postDoYouHaveAFacilityEndDate', () => {
     expect(console.error).toHaveBeenCalledWith('Error posting amendments do you have a facility end date page %o', mockError);
   });
 
-  it('should render `problem with service` if updateAmendment throws an error', async () => {
+  it('should render problem with service if updateAmendment throws an error', async () => {
     // Arrange
     const mockError = aMockError();
     updateAmendmentMock.mockRejectedValue(mockError);

@@ -267,7 +267,7 @@ describe('postCheckYourAnswers', () => {
     });
   });
 
-  it('should render `problem with service` if updateAmendmentStatus throws an error', async () => {
+  it('should render problem with service if updateAmendmentStatus throws an error', async () => {
     // Arrange
     const mockError = new Error('an error');
     updateAmendmentStatusMock.mockRejectedValue(mockError);

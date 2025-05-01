@@ -134,7 +134,7 @@ describe(`GET ${url}`, () => {
       expect(response.headers.location).toEqual('/not-found');
     });
 
-    it('should render `problem with service` if getAmendment throws an error', async () => {
+    it('should render problem with service if getAmendment throws an error', async () => {
       // Arrange
       mockGetAmendment.mockRejectedValue(new Error('test error'));
 

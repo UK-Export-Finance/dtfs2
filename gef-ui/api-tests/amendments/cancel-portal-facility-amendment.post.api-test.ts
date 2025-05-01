@@ -142,7 +142,7 @@ describe(`POST ${validUrl}`, () => {
       expect(response.headers.location).toEqual(`/gef/application-details/${dealId}`);
     });
 
-    it('should render `problem with service` if deleteAmendment throws an error', async () => {
+    it('should render problem with service if deleteAmendment throws an error', async () => {
       // Arrange
       mockDeleteAmendment.mockRejectedValue(new Error('test error'));
 

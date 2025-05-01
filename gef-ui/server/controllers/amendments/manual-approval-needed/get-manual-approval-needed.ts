@@ -1,4 +1,4 @@
-import { CustomExpressRequest, PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES, TEAM_IDS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
@@ -6,7 +6,6 @@ import { userCanAmendFacility } from '../../../utils/facility-amendments.helper'
 import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper.ts';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
 import { ManualApprovalNeededViewModel } from '../../../types/view-models/amendments/ManualApprovalNeededViewModel.ts';
-import { STB_PIM_EMAIL } from '../../../constants/emails.ts';
 
 export type GetManualApprovalNeededRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -53,11 +52,15 @@ export const getManualApprovalNeeded = async (req: GetManualApprovalNeededReques
       return res.redirect(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.ELIGIBILITY }));
     }
 
+    const teamId = TEAM_IDS.PIM;
+    const pim = await api.getTfmTeam({ teamId, userToken });
+    const { email: amendmentFormEmail } = pim;
+
     const viewModel: ManualApprovalNeededViewModel = {
       exporterName: deal.exporter.companyName,
       facilityType: facility.type,
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.MANUAL_APPROVAL_NEEDED, amendment),
-      amendmentFormEmail: STB_PIM_EMAIL,
+      amendmentFormEmail,
       returnLink: '/dashboard/deals',
     };
 

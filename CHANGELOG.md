@@ -1,11 +1,56 @@
 # Changelog
 
-## [2.7.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.6.0...v2.7.0) (2025-02-18)
-
+## [2.8.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.7.0...v2.8.0) (2025-04-14)
 
 ### Features
 
-* **dtfs2-7693:** add routes for role testing tfm ([#4125](https://github.com/UK-Export-Finance/dtfs2/issues/4125)) ([6934970](https://github.com/UK-Export-Finance/dtfs2/commit/6934970419c1eea77c72932e4c0444cf83a10633))
+- **DTFS-7852:** filter deals with amendment in progress only checker user ([#4270](https://github.com/UK-Export-Finance/dtfs2/issues/4270)) ([42c5f29](https://github.com/UK-Export-Finance/dtfs2/commit/42c5f29afce6bf86630f334d0be0883ff1d28899))
+- **DTFS2-6892:** update mock builder, enforce complete defaults, document mocked class methods ([#4113](https://github.com/UK-Export-Finance/dtfs2/issues/4113)) ([e8f23c3](https://github.com/UK-Export-Finance/dtfs2/commit/e8f23c38c997848d479a3e9f756528f456fbd315))
+- **DTFS2-7431:** create new createBssEwcsDeal command ([#4269](https://github.com/UK-Export-Finance/dtfs2/issues/4269)) ([9eace98](https://github.com/UK-Export-Finance/dtfs2/commit/9eace9861ba4d71e3f733859978e5dc22642d719))
+- **DTFS2-7431:** e2e tests - create bss ewcs deal through UI ([#4273](https://github.com/UK-Export-Finance/dtfs2/issues/4273)) ([4b2e550](https://github.com/UK-Export-Finance/dtfs2/commit/4b2e5501909559b24375dcd12712c5f67c2c317b))
+- **DTFS2-7515:** amendment confirm your submission ([#4295](https://github.com/UK-Export-Finance/dtfs2/issues/4295)) ([9ffb4d1](https://github.com/UK-Export-Finance/dtfs2/commit/9ffb4d163ef8f3d924dfee140bd383810165a006))
+- **DTFS2-7663:** added maker email functionality for portal amendment submission ([#4267](https://github.com/UK-Export-Finance/dtfs2/issues/4267)) ([0ed8b95](https://github.com/UK-Export-Finance/dtfs2/commit/0ed8b95bc62bf82f16f300671497caf95dd490ab))
+- **DTFS2-7664:** portal amendments request submission checker email ([#4272](https://github.com/UK-Export-Finance/dtfs2/issues/4272)) ([97c2e40](https://github.com/UK-Export-Finance/dtfs2/commit/97c2e406ed49b8343d7e627374b90418fd0776da))
+- **DTFS2-7679:** amendment status ready for checkers approval details page maker ([#4249](https://github.com/UK-Export-Finance/dtfs2/issues/4249)) ([426bc99](https://github.com/UK-Export-Finance/dtfs2/commit/426bc99999fcbfbde845b261f28a36ddbe77fc0b))
+- **DTFS2-7720:** redirect to check answers page if change query is true ([#4235](https://github.com/UK-Export-Finance/dtfs2/issues/4235)) ([bdc810b](https://github.com/UK-Export-Finance/dtfs2/commit/bdc810b66392d5faafa7db71bc67775974b67544))
+- **DTFS2-7721:** added print button to amendment details page ([#4285](https://github.com/UK-Export-Finance/dtfs2/issues/4285)) ([42f6b4b](https://github.com/UK-Export-Finance/dtfs2/commit/42f6b4b1da8349b14eef86a8844f92eb339a1a87))
+- **DTFS2-7732:** cancel amendment e2e tests ([#4221](https://github.com/UK-Export-Finance/dtfs2/issues/4221)) ([372edfb](https://github.com/UK-Export-Finance/dtfs2/commit/372edfb6adce9404d0e47ae6bed0d987487d8756))
+- **DTFS2-7746:** amendment details checker ([#4289](https://github.com/UK-Export-Finance/dtfs2/issues/4289)) ([4ff9afc](https://github.com/UK-Export-Finance/dtfs2/commit/4ff9afcf34e7c4f92251f7b62705324d467e6983))
+- **DTFS2-7753:** added amendment approved by UKEF page ([#4292](https://github.com/UK-Export-Finance/dtfs2/issues/4292)) ([6144c56](https://github.com/UK-Export-Finance/dtfs2/commit/6144c56148c27510128271dcc635229bf5f7271d))
+- **DTFS2-7753:** completed journey for approvedByUkef ([#4303](https://github.com/UK-Export-Finance/dtfs2/issues/4303)) ([7778458](https://github.com/UK-Export-Finance/dtfs2/commit/777845811dbca40feb7e68b3050b2687dcf80092))
+- **DTFS2-7834:** standardised tag colours for E2ETF utilisation reports ([#4262](https://github.com/UK-Export-Finance/dtfs2/issues/4262)) ([88ff3e7](https://github.com/UK-Export-Finance/dtfs2/commit/88ff3e700bf36cc5462c3dc9e3eed41a36fcf6e0))
+- **DTFS2-7846:** acr purge github action ([#4253](https://github.com/UK-Export-Finance/dtfs2/issues/4253)) ([68dd68b](https://github.com/UK-Export-Finance/dtfs2/commit/68dd68b72e009dbfd16a7ef13c78bce021a0f7f4))
+- **DTFS2-7851:** all deals GET endpoint for amendments in progress ([#4260](https://github.com/UK-Export-Finance/dtfs2/issues/4260)) ([d125a39](https://github.com/UK-Export-Finance/dtfs2/commit/d125a395685051e2b5ddc343b91f7e5ecfc33e7e))
+- **DTFS2-7853:** ready for checkers approval checker ([#4278](https://github.com/UK-Export-Finance/dtfs2/issues/4278)) ([be6d6f9](https://github.com/UK-Export-Finance/dtfs2/commit/be6d6f9af15ee29f3c30dc5e410d27f652765d73))
+- **DTFS2-7885:** portal amendments - add amendment details page ([#4282](https://github.com/UK-Export-Finance/dtfs2/issues/4282)) ([5a5dfd9](https://github.com/UK-Export-Finance/dtfs2/commit/5a5dfd92982f4aaf7a61f1b455ccada12ca98117))
+- **DTFS2-7911:** mandatory criteria updates ([#4293](https://github.com/UK-Export-Finance/dtfs2/issues/4293)) ([68e30d1](https://github.com/UK-Export-Finance/dtfs2/commit/68e30d1cf676edae1e7e83136b6c57be2fb5b7ac))
+
+### Bug Fixes
+
+- **CVE-2025-27152:** updated axios version to curcumvent CVE-2025-27152 ([#4254](https://github.com/UK-Export-Finance/dtfs2/issues/4254)) ([08200d1](https://github.com/UK-Export-Finance/dtfs2/commit/08200d1810d7483f1d23dd688d893cd83dea2ac6))
+- **DTFS2-6838:** show validation errors on eligibility criteria page ([#4258](https://github.com/UK-Export-Finance/dtfs2/issues/4258)) ([dafc203](https://github.com/UK-Export-Finance/dtfs2/commit/dafc203618db857ce7363e9ede8c546151b47160))
+- **DTFS2-7519:** fixed currency format ([#4287](https://github.com/UK-Export-Finance/dtfs2/issues/4287)) ([4bd364c](https://github.com/UK-Export-Finance/dtfs2/commit/4bd364c8c108b90580976c3f0f7811b7f7ef5f5c))
+- **DTFS2-7521:** correct validation error ([#4283](https://github.com/UK-Export-Finance/dtfs2/issues/4283)) ([73170b3](https://github.com/UK-Export-Finance/dtfs2/commit/73170b328ba0346bebe919b356f9bd828520086c))
+- **DTFS2-7521:** fixed facility value validation ([#4290](https://github.com/UK-Export-Finance/dtfs2/issues/4290)) ([a16be20](https://github.com/UK-Export-Finance/dtfs2/commit/a16be200a8375f3eb003283d646914966e5cea00))
+- **DTFS2-7522:** fixed error message and field highlighting ([#4286](https://github.com/UK-Export-Finance/dtfs2/issues/4286)) ([2a9698a](https://github.com/UK-Export-Finance/dtfs2/commit/2a9698a8111c43781b4803c1146d280aacd32b07))
+- **DTFS2-7577:** added timeout to heavy TFM API submission ([#4265](https://github.com/UK-Export-Finance/dtfs2/issues/4265)) ([04bc7ce](https://github.com/UK-Export-Finance/dtfs2/commit/04bc7cedd292dad445142df9356052701f6790ed))
+- **DTFS2-7679:** display task comments on application preview page ([#4297](https://github.com/UK-Export-Finance/dtfs2/issues/4297)) ([a635003](https://github.com/UK-Export-Finance/dtfs2/commit/a6350033fe0bd495645d572ab699953c8b306adf))
+- **DTFS2-7749-7721:** amendment details - hide print button if js disabled ([#4296](https://github.com/UK-Export-Finance/dtfs2/issues/4296)) ([698ca6a](https://github.com/UK-Export-Finance/dtfs2/commit/698ca6ab6e5a2c4f8b61ef8b6d7ce43f3f95c472))
+- **DTFS2-7813:** estore payload sanitisation ([#4251](https://github.com/UK-Export-Finance/dtfs2/issues/4251)) ([5944e4c](https://github.com/UK-Export-Finance/dtfs2/commit/5944e4cc8d30403f115aa05274c96fca1a273053))
+- **DTFS2-7820:** cancel deal hide clone button ([#4240](https://github.com/UK-Export-Finance/dtfs2/issues/4240)) ([32fa3c5](https://github.com/UK-Export-Finance/dtfs2/commit/32fa3c599b8f1bf9dda295868d95b598e682266e))
+- **DTFS2-7825:** added all 58 currencies to the currency type literal ([#4257](https://github.com/UK-Export-Finance/dtfs2/issues/4257)) ([7c26c78](https://github.com/UK-Export-Finance/dtfs2/commit/7c26c78b9d8610c18612abef21fd8024e0a2608c))
+- **DTFS2-7846:** feature deployment and ACR purge ([#4261](https://github.com/UK-Export-Finance/dtfs2/issues/4261)) ([2d99142](https://github.com/UK-Export-Finance/dtfs2/commit/2d99142f44a1175c4797fb275be0d001a0701321))
+- **DTFS2-7878:** remove telephone number ([#4271](https://github.com/UK-Export-Finance/dtfs2/issues/4271)) ([1c92202](https://github.com/UK-Export-Finance/dtfs2/commit/1c92202aa57f3e4b55ad60bce6345d110791214b))
+- **DTFS2-7911:** added html and plain text render argument to mc macro ([#4299](https://github.com/UK-Export-Finance/dtfs2/issues/4299)) ([846bf12](https://github.com/UK-Export-Finance/dtfs2/commit/846bf12cec15f2ebb7995d5ba1f2621c6839a9d7))
+- **DTFS2-7917:** record correction - cancel link ([#4294](https://github.com/UK-Export-Finance/dtfs2/issues/4294)) ([e85f4bf](https://github.com/UK-Export-Finance/dtfs2/commit/e85f4bf42153ee7a20e8424ce0343cddb47c24dc))
+- **DTFS2-7935:** added ParsedQs type to custom express request ([#4302](https://github.com/UK-Export-Finance/dtfs2/issues/4302)) ([a34c98e](https://github.com/UK-Export-Finance/dtfs2/commit/a34c98e3171323803a3753c8313a37506fcccb43))
+- **FN-3671:** fixed sorting issue on exporter sort record correction log ([#4259](https://github.com/UK-Export-Finance/dtfs2/issues/4259)) ([5fc6ec9](https://github.com/UK-Export-Finance/dtfs2/commit/5fc6ec9b9b63d07e82068b324f4914091a972b4f))
+
+## [2.7.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.6.0...v2.7.0) (2025-02-18)
+
+### Features
+
+- **dtfs2-7693:** add routes for role testing tfm ([#4125](https://github.com/UK-Export-Finance/dtfs2/issues/4125)) ([6934970](https://github.com/UK-Export-Finance/dtfs2/commit/6934970419c1eea77c72932e4c0444cf83a10633))
 
 ## [2.6.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.5.0...v2.6.0) (2025-02-17)
 
