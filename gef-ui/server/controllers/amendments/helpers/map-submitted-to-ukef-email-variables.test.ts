@@ -25,10 +25,10 @@ const facilityValue = 12345;
 const effectiveDateWithoutMs: number = Math.floor(Date.now() / 1000);
 const coverEndDate = Number(new Date());
 const facilityEndDate = new Date();
-const referenceNumber = `1234-01`;
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
 const mockFacilityDetails = MOCK_ISSUED_FACILITY.details;
+const referenceNumber = `${mockFacilityDetails.ukefFacilityId}-01`;
 const makersBank: { name: string } = mockDeal.maker.bank as { name: string };
 
 describe('mapSubmittedToUkefEmailVariables', () => {
@@ -198,6 +198,7 @@ describe('mapSubmittedToUkefEmailVariables', () => {
         .withChangeFacilityValue(false)
         .withEffectiveDate(effectiveDateWithoutMs)
         .build();
+
       // Act
       const result = mapSubmittedToUkefEmailVariables({
         deal: mockDeal,
@@ -242,6 +243,7 @@ describe('mapSubmittedToUkefEmailVariables', () => {
         .withAmendmentId(amendmentId)
         .withStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED)
         .build();
+
       // Act
       const result = mapSubmittedToUkefEmailVariables({
         deal: mockDeal,

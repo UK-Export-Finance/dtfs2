@@ -1,4 +1,5 @@
 import { createMocks } from 'node-mocks-http';
+import { ObjectId } from 'mongodb';
 import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, API_ERROR_CODE, TestApiError, portalAmendmentToUkefEmailVariables, AnyObject } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
@@ -10,7 +11,7 @@ import EMAIL_TEMPLATE_IDS from '../../../../constants/email-template-ids';
 
 const amendmentId = 'amendmentId';
 const facilityId = '6597dffeb5ef5ff4267e5044';
-const testReferenceNumber = `12345-01`;
+const testReferenceNumber = `${new ObjectId().toString()}-01`;
 
 const mockUpdatedAmendment = { facilityId, type: AMENDMENT_TYPES.PORTAL, status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED };
 

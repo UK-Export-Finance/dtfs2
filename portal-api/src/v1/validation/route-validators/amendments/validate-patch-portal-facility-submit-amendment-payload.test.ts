@@ -1,11 +1,12 @@
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
+import { ObjectId } from 'mongodb';
 import { PORTAL_AMENDMENT_STATUS, portalAmendmentToUkefEmailVariables } from '@ukef/dtfs2-common';
 import { validatePatchPortalFacilitySubmitAmendmentPayload } from './validate-patch-portal-facility-submit-amendment-payload';
 
 const portalAmendmentVariables = portalAmendmentToUkefEmailVariables();
 
-const referenceNumber = `12345-01`;
+const referenceNumber = `${new ObjectId().toString()}-01`;
 
 describe('validatePatchPortalFacilitySubmitAmendmentPayload', () => {
   const invalidPayloads = [

@@ -67,7 +67,7 @@ const facilityEndDate = new Date();
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 const mockFacilityDetails = MOCK_ISSUED_FACILITY.details;
-const referenceNumber = `123456-01`;
+const referenceNumber = `${mockFacilityDetails.ukefFacilityId}-01`;
 
 describe('postSubmitAmendmentToUkef', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;

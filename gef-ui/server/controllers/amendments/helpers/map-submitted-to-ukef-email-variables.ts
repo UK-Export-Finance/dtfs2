@@ -15,7 +15,7 @@ dotenv.config();
  * @param amendment
  * @param user
  * @param referenceNumber
- * @returns mapped email variables
+ * @returns an object with makersEmail checkersEmail and email variables
  */
 const mapSubmittedToUkefEmailVariables = ({
   deal,

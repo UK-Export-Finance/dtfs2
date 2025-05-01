@@ -12,6 +12,7 @@ import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers/mock-amendment';
 import { Deal } from '../../server/types/deal';
 import { MOCK_ISSUED_FACILITY } from '../../server/utils/mocks/mock-facilities';
+import { MOCK_PIM_TEAM } from '../../server/utils/mocks/mock-tfm-teams.ts';
 import { getAmendmentsUrl } from '../../server/controllers/amendments/helpers/navigation.helper';
 import * as createReferenceNumber from '../../server/controllers/amendments/helpers/create-amendment-reference-number.helper';
 
@@ -28,6 +29,7 @@ console.error = jest.fn();
 const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
+const getTfmTeamMock = jest.fn();
 const updateSubmitAmendmentMock = jest.fn();
 const createReferenceNumberMock = jest.fn();
 
@@ -40,7 +42,8 @@ const facilityValue = 20000;
 const effectiveDateWithoutMs = Number(new Date()) / 1000;
 const coverEndDate = Number(new Date());
 const facilityEndDate = new Date();
-const referenceNumber = `123456-01`;
+const mockFacilityDetails = MOCK_ISSUED_FACILITY.details;
+const referenceNumber = `${mockFacilityDetails.ukefFacilityId}-01`;
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, submissionCount: 0, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
 
@@ -60,6 +63,7 @@ describe(`POST ${url}`, () => {
     jest.spyOn(api, 'getApplication').mockImplementation(getApplicationMock);
     jest.spyOn(api, 'getFacility').mockImplementation(getFacilityMock);
     jest.spyOn(api, 'getAmendment').mockImplementation(getAmendmentMock);
+    jest.spyOn(api, 'getTfmTeam').mockImplementation(getTfmTeamMock);
     jest.spyOn(api, 'updateSubmitAmendment').mockImplementation(updateSubmitAmendmentMock);
     jest.spyOn(createReferenceNumber, 'createReferenceNumber').mockImplementation(createReferenceNumberMock);
 
@@ -117,6 +121,7 @@ describe(`POST ${url}`, () => {
       .build();
 
     getAmendmentMock.mockResolvedValue(amendment);
+    getTfmTeamMock.mockResolvedValue(MOCK_PIM_TEAM);
     updateSubmitAmendmentMock.mockResolvedValue(submittedAmendment);
   });
 
