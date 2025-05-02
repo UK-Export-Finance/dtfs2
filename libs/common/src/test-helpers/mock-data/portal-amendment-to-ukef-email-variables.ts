@@ -1,6 +1,6 @@
 const makersEmail = 'maker1@ukexportfinance.gov.uk';
 const checkersEmail = 'checker1@ukexportfinance.gov.uk';
-const pimEmail = '';
+const pimEmail = 'checker2@ukexportfinance.gov.uk';
 
 export const portalAmendmentToUkefEmailVariables = () => ({
   makersEmail,
