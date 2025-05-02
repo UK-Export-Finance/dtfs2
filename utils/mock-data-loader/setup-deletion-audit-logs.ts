@@ -2,7 +2,7 @@ import { MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
 import { mongoDbClient } from '../drivers/db-client';
 
 export const deleteDeletionAuditLogsCollection = async () => {
-  console.info('Dropping deletion audit logs collection');
+  console.info('Audit logs');
   const collection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS);
 
   try {
@@ -13,7 +13,7 @@ export const deleteDeletionAuditLogsCollection = async () => {
 };
 
 export const setupDeletionAuditLogsCollection = async () => {
-  console.info('Setting up deletion audit logs collection');
+  console.info('Audit logs');
   const dbConnection = await mongoDbClient.getConnection();
 
   const collection = await dbConnection.createCollection(MONGO_DB_COLLECTIONS.DELETION_AUDIT_LOGS, {

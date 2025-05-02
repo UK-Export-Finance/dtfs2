@@ -7,7 +7,7 @@ import { EntraIdApi } from '../third-party-apis/entra-id.api';
 import { EntraIdConfig } from '../configs/entra-id.config';
 import { UserService } from '../services/user.service';
 import { validateGetAuthCodePayloadUrl } from '../middleware/validate-get-auth-code-url-payload';
-import { validateSsoFeatureFlagIsOn } from '../middleware/validate-sso-feature-flag';
+import { validateSsoFeatureFlagTrue } from '../middleware/validate-sso-feature-flag';
 
 export const ssoOpenRouter = express.Router();
 
@@ -24,11 +24,9 @@ if (isTfmSsoFeatureFlagEnabled()) {
   const ssoController = new SsoController({ entraIdService, userService });
 
   ssoOpenRouter
-    .route('/auth-code-url')
-    .all(validateSsoFeatureFlagIsOn, validateGetAuthCodePayloadUrl)
-    .get((req: GetAuthCodeUrlApiRequest, res: GetAuthCodeUrlApiResponse, next) => {
-      ssoController.getAuthCodeUrl(req, res).catch(next);
-    });
+    .route('/authenticate')
+    .all(validateSsoFeatureFlagTrue, validateGetAuthCodePayloadUrl)
+    .get((req: GetAuthCodeUrlApiRequest, res: GetAuthCodeUrlApiResponse) => ssoController.getAuthCodeUrl(req, res));
 
   /**
    * Validation for this route is done in controller itself
@@ -36,7 +34,7 @@ if (isTfmSsoFeatureFlagEnabled()) {
    * msal library
    */
   ssoOpenRouter
-    .route('/handle-sso-redirect-form')
-    .all(validateSsoFeatureFlagIsOn)
+    .route('/redirect')
+    .all(validateSsoFeatureFlagTrue)
     .post((req, res) => ssoController.handleSsoRedirectForm(req, res));
 }

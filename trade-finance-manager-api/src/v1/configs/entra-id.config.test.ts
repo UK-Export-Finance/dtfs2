@@ -47,8 +47,8 @@ describe('EntraIdConfig', () => {
       config = new EntraIdConfig();
     });
 
-    it('should configure the msalAppConfig', () => {
-      expect(config.msalAppConfig).toStrictEqual({
+    it('should configure the msalConfig', () => {
+      expect(config.msalConfig).toStrictEqual({
         auth: {
           clientId: mockEntraIdClientId,
           authority: `${mockEntraIdCloudInstance}/${mockEntraIdTenantId}`,

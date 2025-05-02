@@ -1,5 +1,5 @@
 import z from 'zod';
-import { createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
+import { validateSchema } from '@ukef/dtfs2-common';
 import { AmendmentStatusSchema, AuditDetailsSchema, AllCurrenciesSchema, MongoObjectIdSchema } from './schemas';
 import { dateFromIsoStringSchema } from './schemas/dateFromIsoString.schema';
 
@@ -105,4 +105,4 @@ const PutFacilityAmendmentSchema = z.object({
 
 export type PutFacilityAmendmentPayload = z.infer<typeof PutFacilityAmendmentSchema>;
 
-export const validatePutFacilityAmendmentPayload = createValidationMiddlewareForSchema(PutFacilityAmendmentSchema);
+export const validatePutFacilityAmendmentPayload = validateSchema(PutFacilityAmendmentSchema);

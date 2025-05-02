@@ -5,23 +5,22 @@ const MOCK_BANKS = require('./banks');
 const MOCKS = require('./bss');
 
 const insertMocks = async (mockDataLoaderToken) => {
-  console.info('inserting portal mocks');
-  console.info('inserting portal users');
+  console.info('Users');
   for (const user of Object.values(MOCK_PORTAL_USERS)) {
     await api.createUser(user, mockDataLoaderToken);
   }
 
-  console.info('inserting banks');
+  console.info('Banks');
   for (const bank of MOCK_BANKS) {
     await api.createBank(bank, mockDataLoaderToken);
   }
 
-  console.info('inserting BSS mandatory-criteria');
+  console.info('BSS MCs');
   for (const mandatoryCriteria of MOCKS.MANDATORY_CRITERIA) {
     await api.createMandatoryCriteria(mandatoryCriteria, mockDataLoaderToken);
   }
 
-  console.info('inserting BSS eligibility-criteria');
+  console.info('BSS ECs');
   for (const eligibilityCriteria of MOCKS.ELIGIBILITY_CRITERIA) {
     await api.createEligibilityCriteria(eligibilityCriteria, mockDataLoaderToken);
   }
@@ -29,7 +28,7 @@ const insertMocks = async (mockDataLoaderToken) => {
   const maker = MOCK_PORTAL_USERS.BANK1_MAKER3;
   const makerToken = await api.loginViaPortal(maker);
 
-  console.info('inserting BSS deals');
+  console.info('BSS deals');
   const insertedDeals = [];
   for (const deal of MOCKS.DEALS) {
     const { _id } = await api.createDeal(deal, makerToken);
@@ -38,7 +37,7 @@ const insertMocks = async (mockDataLoaderToken) => {
     insertedDeals.push(createdDeal);
   }
 
-  console.info('inserting BSS facilities');
+  console.info('BSS facilities');
   MOCKS.FACILITIES.forEach(async (facility) => {
     const associatedDeal = insertedDeals.find((deal) => deal.mockId === facility.mockDealId);
 

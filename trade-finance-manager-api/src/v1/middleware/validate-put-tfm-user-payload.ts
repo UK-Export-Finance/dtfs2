@@ -1,5 +1,5 @@
 import z from 'zod';
-import { createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
+import { validateSchema } from '@ukef/dtfs2-common';
 import { UPSERT_TFM_USER_REQUEST_SCHEMA } from '@ukef/dtfs2-common/schemas';
 
 /**
@@ -11,4 +11,4 @@ const PUT_TFM_USER_SCHEMA = UPSERT_TFM_USER_REQUEST_SCHEMA;
 
 export type PutTfmUserPayload = z.infer<typeof UPSERT_TFM_USER_REQUEST_SCHEMA>;
 
-export const validateTfmPutUserPayload = createValidationMiddlewareForSchema(PUT_TFM_USER_SCHEMA);
+export const validateTfmPutUserPayload = validateSchema(PUT_TFM_USER_SCHEMA);

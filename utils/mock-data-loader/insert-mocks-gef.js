@@ -6,13 +6,12 @@ const { BANK1_MAKER1 } = require('./portal-users');
 const { mongoDbClient } = require('../drivers/db-client');
 
 const insertMocks = async (token) => {
-  console.info('inserting GEF mocks');
-  console.info('inserting GEF mandatory-criteria-versioned');
+  console.info('GEF MCs');
   for (const item of MOCKS.MANDATORY_CRITERIA_VERSIONED) {
     await api.createMandatoryCriteriaVersioned(item, token);
   }
 
-  console.info('inserting GEF eligibility-criteria');
+  console.info('GEF ECs');
   for (const item of MOCKS.ELIGIBILITY_CRITERIA) {
     await api.createEligibilityCriteria(item, token);
   }
@@ -20,11 +19,11 @@ const insertMocks = async (token) => {
   /**
    * Inserts mock entries into the eligibilityCriteriaAmendments collection
    */
-  console.info('Inserting GEF eligibility criteria amendments');
+  console.info('GEF amendments ECs');
   const eligibilityCriteriaAmendmentsCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA_AMENDMENTS);
   await eligibilityCriteriaAmendmentsCollection.insertMany(MOCKS.ELIGIBILITY_CRITERIA_AMENDMENTS);
 
-  console.info('inserting GEF deals');
+  console.info('GEF deals');
 
   const allUsers = await portalApi.listUsers(token);
   const makerUserId = allUsers.find((user) => user.username === BANK1_MAKER1.username)._id;
@@ -47,7 +46,7 @@ const insertMocks = async (token) => {
 
   const gefDeals = await api.listDeals(token);
 
-  console.info('inserting and updating GEF facilities');
+  console.info('GEF facilities');
   for (const [index, item] of MOCKS.FACILITIES.entries()) {
     for (const subitem of item) {
       subitem.dealId = gefDeals[index]._id;

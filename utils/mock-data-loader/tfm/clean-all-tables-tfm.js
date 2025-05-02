@@ -2,7 +2,7 @@ const { mongoDbClient } = require('../../drivers/db-client');
 const api = require('./api');
 
 const cleanTeams = async () => {
-  console.info('cleaning TFM teams');
+  console.info('Teams');
 
   for (const team of await api.listTeams()) {
     await api.deleteTeam(team);
@@ -10,7 +10,7 @@ const cleanTeams = async () => {
 };
 
 const cleanUsers = async () => {
-  console.info('cleaning TFM users');
+  console.info('Users');
 
   for (const user of await api.listUsers()) {
     if (user.username !== 're-insert-mocks') {
@@ -20,7 +20,7 @@ const cleanUsers = async () => {
 };
 
 const cleanTfmDeals = async () => {
-  console.info('cleaning TFM deals');
+  console.info('Deals');
 
   const tfmDeals = await api.listDeals();
 
@@ -32,14 +32,13 @@ const cleanTfmDeals = async () => {
 };
 
 const cleanTfmFacilities = async () => {
-  console.info('cleaning TFM facilities');
+  console.info('Facilities');
 
   const tfmFacilitiesCollection = await mongoDbClient.getCollection('tfm-facilities');
   await tfmFacilitiesCollection.deleteMany({});
 };
 
 const cleanAllTables = async () => {
-  console.info('cleaning TFM tables');
   await cleanTeams();
   await cleanUsers();
   await cleanTfmDeals();
