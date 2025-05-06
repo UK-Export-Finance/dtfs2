@@ -16,7 +16,7 @@ describe(page, () => {
       wrapper.expectElement('[data-cy="returned-to-maker-confirmation-panel"]').notToExist();
     });
 
-    it('should NOT render confirmation panels for other states', () => {
+    it('should NOT render confirmation panels for other statuses', () => {
       const wrapper = render(params);
 
       wrapper.expectElement('[data-cy="approved-by-ukef-confirmation-panel"]').notToExist();
@@ -45,7 +45,7 @@ describe(page, () => {
       wrapper.expectText('[data-cy="confirmation-email"]').toRead("We've sent you a confirmation email.");
     });
 
-    it('should NOT render confirmation panels for other states', () => {
+    it('should NOT render confirmation panels for other statuses', () => {
       const wrapper = render(params);
 
       wrapper.expectElement('[data-cy="submitted-for-checking-confirmation-panel"]').notToExist();
@@ -79,7 +79,7 @@ describe(page, () => {
       wrapper.expectText('[data-cy="returned-to-maker-confirmation-panel"]').toContain('Amendment returned to maker for further inputs');
     });
 
-    it('should NOT render confirmation panels for other states', () => {
+    it('should NOT render confirmation panels for other statuses', () => {
       const wrapper = render(params);
 
       wrapper.expectElement('[data-cy="submitted-for-checking-confirmation-panel"]').notToExist();

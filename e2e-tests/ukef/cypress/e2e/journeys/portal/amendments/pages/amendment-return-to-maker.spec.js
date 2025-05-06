@@ -5,7 +5,7 @@ import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef
 import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
 import amendmentPage from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 import returnedToMaker from '../../../../../../../gef/cypress/e2e/pages/amendments/returned-to-maker';
-import { mainHeading, headingCaption } from '../../../../../../../gef/cypress/e2e/partials';
+import { mainHeading, headingCaption, backLink, cancelLink } from '../../../../../../../gef/cypress/e2e/partials';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
@@ -63,7 +63,9 @@ context('Amendments - return to maker pages', () => {
 
   it('should display return to maker page', () => {
     cy.assertText(mainHeading(), 'Return to maker');
+    cy.assertText(backLink(), 'Back');
     cy.assertText(headingCaption(), `${exporterName}, ${mockFacility.type} facility`);
+    cy.assertText(cancelLink(), 'Cancel');
   });
 
   it('should display the confirmation page when submitting return to maker', () => {

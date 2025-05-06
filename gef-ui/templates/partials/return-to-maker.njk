@@ -22,12 +22,22 @@
 
   <div class="govuk-grid-row" data-cy="application-submit-page">
     <div class="govuk-grid-column-two-thirds-from-desktop">
-      {{ govukBackLink({
-        text: "Back to application",
-        href: "/gef/application-details/" + dealId,
-        classes: "govuk-!-margin-bottom-6",
-        attributes: {"data-cy": "back-link"}
-      }) }}
+
+      {% if isReturningAmendmentToMaker %}
+        {{ govukBackLink({
+          text: "Back",
+          href: "/gef/application-details/" + dealId + "/amendment-details",
+          classes: "govuk-!-margin-bottom-6",
+          attributes: {"data-cy": "back-link"}
+        }) }}
+        {% else %}
+          {{ govukBackLink({
+            text: "Back to application",
+            href: "/gef/application-details/" + dealId,
+            classes: "govuk-!-margin-bottom-6",
+            attributes: {"data-cy": "back-link"}
+          }) }}
+        {% endif %}
 
       {% if isReturningAmendmentToMaker === true %}
         <span class="govuk-caption-l" data-cy="heading-caption">
