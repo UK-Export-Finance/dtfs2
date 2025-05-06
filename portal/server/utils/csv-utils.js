@@ -74,6 +74,15 @@ const handleFloatingPointRoundingErrors = (number) => {
 const isRichTextValue = (cellValue) => Boolean(cellValue && Array.isArray(cellValue.richText));
 
 /**
+ * Determines if a cell value represents a hyperlinked cell.
+ *
+ * @param {object} cellValue - The value of the cell to check.
+ * @param {string} [cellValue.hyperlink] - The hyperlink property of the cell value.
+ * @returns {boolean} True if the cell value contains a hyperlink, otherwise false.
+ */
+const isHyperlinkedCell = (cellValue) => Boolean(cellValue && cellValue?.hyperlink);
+
+/**
  * Extracts the value in the cell of an excel cell and removes any new lines or commas so that it doesn't affect parsing as a csv.
  * @param {Object} cell - excel cell.
  * @returns {string | number} - cell value.
@@ -88,6 +97,13 @@ const extractCellValue = (cell) => {
 
   // sets the value to the cellValue - replaced if it is a richText value
   let value = cellValue;
+
+  /**
+   * If cell is hyperlinked
+   */
+  if (isHyperlinkedCell(cellValue)) {
+    value = cellValue?.text;
+  }
 
   /**
    * if cellValue is a richText value
@@ -333,6 +349,7 @@ module.exports = {
   excelColumnToColumnIndex,
   parseXlsxToCsvArrays,
   isRichTextValue,
+  isHyperlinkedCell,
   xlsxBasedCsvToJsonPromise,
   csvBasedCsvToJsonPromise,
   removeCellAddressesFromArray,

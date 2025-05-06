@@ -44,7 +44,7 @@ context('Facility page - Automatic Inclusion Notice', () => {
       .invoke('text')
       .then((text) => {
         const trimmedText = text.trim();
-        expect(trimmedText).to.equal(today.dd_MMMM_yyyy);
+        expect(trimmedText).to.equal(today.d_MMMM_yyyy);
       });
   });
 });
