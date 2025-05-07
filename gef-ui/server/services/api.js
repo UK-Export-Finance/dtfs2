@@ -409,17 +409,18 @@ const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
  * @param {Object} param
  * @param {string} param.dealId
  * @param {string} param.userToken
- * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus[] | undefined} param.statuses
+ * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus[] | TfmAmendmentStatus[] | undefined} param.statuses
+ * @param {import('@ukef/dtfs2-common').AmendmentType[]} param.types
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId[])>}>}
  */
-const getAmendmentsOnDeal = async ({ dealId, userToken, statuses }) => {
+const getAmendmentsOnDeal = async ({ dealId, userToken, statuses, types }) => {
   if (!isValidMongoId(dealId)) {
     console.error('Invalid deal ID %s', dealId);
     throw new InvalidDealIdError(dealId);
   }
 
   try {
-    const response = await Axios.get(`/gef/deals/${dealId}/amendments`, { ...config(userToken), params: { statuses } });
+    const response = await Axios.get(`/gef/deals/${dealId}/amendments`, { ...config(userToken), params: { statuses, types } });
 
     return response.data;
   } catch (error) {

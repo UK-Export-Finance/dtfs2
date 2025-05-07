@@ -657,17 +657,18 @@ const getPortalFacilityAmendment = async (facilityId, amendmentId) => {
 };
 
 /**
- * Gets portal facility amendments on the deal filtered by status
+ * Gets facility amendments on the deal filtered by status and type
  * @param {string} dealId - id of the facility to amend
- * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus[] | undefined} statuses - an optional array of statuses to filter the amendments by
- * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId[])>} - the amendments on the deal with a matching status
+ * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus[] | import('@ukef/dtfs2-common').TfmAmendmentStatus[] | undefined} statuses - an optional array of statuses to filter the amendments by
+ * @param {import('@ukef/dtfs2-common').AmendmentType[]} types - an array of amendment types
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId[])>} - the amendments on the deal with a matching status and type
  */
-const getPortalFacilityAmendmentsOnDeal = async (dealId, statuses) => {
+const getFacilityAmendmentsOnDeal = async (dealId, statuses, types) => {
   try {
     const response = await axios({
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/amendments`,
-      params: { statuses },
+      params: { statuses, types },
       headers: headers.central,
     });
 
@@ -929,7 +930,7 @@ module.exports = {
   getFeeRecordCorrectionTransientFormData,
   getAllPortalFacilityAmendments,
   getPortalFacilityAmendment,
-  getPortalFacilityAmendmentsOnDeal,
+  getFacilityAmendmentsOnDeal,
   putPortalFacilityAmendment,
   getFeeRecordCorrectionReview,
   patchPortalFacilityAmendment,

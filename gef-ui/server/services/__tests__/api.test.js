@@ -5,6 +5,7 @@ import {
   MOCK_COMPANY_REGISTRATION_NUMBERS,
   PORTAL_AMENDMENT_STATUS,
   PORTAL_AMENDMENT_INPROGRESS_STATUSES,
+  AMENDMENT_TYPES,
 } from '@ukef/dtfs2-common';
 import Axios from '../axios';
 import api from '../api';
@@ -553,7 +554,12 @@ describe('getAmendmentsOnDeal()', () => {
     Axios.get.mockResolvedValueOnce({ data: [mockAmendment] });
 
     // Act
-    const response = await api.getAmendmentsOnDeal({ dealId: validMongoId, userToken, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES });
+    const response = await api.getAmendmentsOnDeal({
+      dealId: validMongoId,
+      userToken,
+      statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES,
+      types: [AMENDMENT_TYPES.PORTAL, AMENDMENT_TYPES.TFM],
+    });
 
     // Assert
     expect(response).toEqual([mockAmendment]);

@@ -1,4 +1,4 @@
-import { PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES } from '@ukef/dtfs2-common';
 import api from '../../../services/api';
 /**
  * @param dealId - the deal id
@@ -9,7 +9,7 @@ import api from '../../../services/api';
 export const createReferenceNumber = async (dealId: string, facilityId: string, userToken: string): Promise<string> => {
   try {
     const statuses = [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED];
-    const amendmentsOnDeal = await api.getAmendmentsOnDeal({ dealId, statuses, userToken });
+    const amendmentsOnDeal = await api.getAmendmentsOnDeal({ dealId, userToken, statuses, types: [AMENDMENT_TYPES.PORTAL, AMENDMENT_TYPES.TFM] });
     const { details: facility } = await api.getFacility({ facilityId, userToken });
 
     if (!amendmentsOnDeal) {

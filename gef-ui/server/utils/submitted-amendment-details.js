@@ -3,18 +3,24 @@ import {
   PORTAL_AMENDMENT_STATUS,
   PORTAL_AMENDMENT_SUBMITTED_STATUSES,
   PORTAL_AMENDMENT_INPROGRESS_STATUSES,
+  AMENDMENT_TYPES,
 } from '@ukef/dtfs2-common';
 import api from '../services/api';
 
 /**
- * returns the amendment for the given deal, indicating whether the amendment is submitted for review, is underway and has not been either cancelled or scheduled for cancellation.
+ * returns the amendment for the given deal, indicating whether the amendment is submitted for review, is in progress and has not been either cancelled or scheduled for cancellation.
  * @param {Object} application - the application
  * @param {string} userToken - the user authentication token
- * @returns {Object} An object with the amendment details on the deal
+ * @returns An object with the amendment details on the deal
  */
 export const getSubmittedAmendmentDetails = async (application, userToken) => {
   try {
-    const amendments = await api.getAmendmentsOnDeal({ dealId: application._id, statuses: PORTAL_AMENDMENT_SUBMITTED_STATUSES, userToken });
+    const amendments = await api.getAmendmentsOnDeal({
+      dealId: application._id,
+      userToken,
+      statuses: PORTAL_AMENDMENT_SUBMITTED_STATUSES,
+      type: [AMENDMENT_TYPES.PORTAL, AMENDMENT_TYPES.TFM],
+    });
 
     const activeDeal = !DEAL_STATUS_SCHEDULED_OR_CANCELLED.includes(application.status);
 

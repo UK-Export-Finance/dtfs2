@@ -1,0 +1,23 @@
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Amendments
+{% endblock %}
+
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+
+{{ govukPhaseBanner({
+  tag: {
+    text: "Beta"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+
+{% block content %}
+
+  {% include "includes/application-preview/summary.njk" %}
+  {% include "includes/application-preview/application-sub-navigation.njk" %}
+
+  <h1 class="govuk-heading-xl" data-cy="main-amendments-heading">Amendements</h1>
+
+{% endblock %}

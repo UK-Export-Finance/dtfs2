@@ -1,7 +1,7 @@
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
+<div class="govuk-grid-row">
+   <div class="govuk-grid-column-full">
       {{ mojSubNavigation({
          label: 'Sub navigation',
          items: [{
@@ -11,7 +11,16 @@
             attributes: {
                "data-cy": "application-preview-link"
             }
-         }, {
+         }, 
+         {
+            text: 'Amendments',
+            href: '/gef/application-details/' + dealId + '/amendments',
+            active: (activeSubNavigation=='amendments'),
+            attributes: {
+               "data-cy": "application-amendments-link"
+            }
+         },
+         {
             text: 'Activity',
             href: '/gef/application-details/' + dealId + '/activities',
             active: (activeSubNavigation=='activities'),
@@ -23,5 +32,5 @@
           'data-cy': 'application-preview-sub-navigation'
         }
          }) }}
-    </div>
-  </div>
+   </div>
+</div>

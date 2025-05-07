@@ -1,4 +1,4 @@
-import { CustomExpressRequest, PORTAL_AMENDMENT_INPROGRESS_STATUSES } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_INPROGRESS_STATUSES, AMENDMENT_TYPES } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
@@ -30,7 +30,12 @@ export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: 
      * gets amendments in progress
      * will only return 1 as only 1 amendment can be in progress at a time
      */
-    const amendments = await api.getAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
+    const amendments = await api.getAmendmentsOnDeal({
+      dealId,
+      userToken,
+      statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES,
+      types: [AMENDMENT_TYPES.PORTAL, AMENDMENT_TYPES.TFM],
+    });
 
     if (!amendments?.length) {
       console.error('In progress amendment was not found for the deal %s', dealId);

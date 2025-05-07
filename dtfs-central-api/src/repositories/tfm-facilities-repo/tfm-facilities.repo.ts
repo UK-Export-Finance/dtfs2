@@ -15,6 +15,7 @@ import {
   PORTAL_AMENDMENT_STATUS,
   PortalAmendmentStatus,
   PortalAuditDetails,
+  AmendmentType,
 } from '@ukef/dtfs2-common';
 import { deleteMany, generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { mongoDbClient } from '../../drivers/db-client';
@@ -71,37 +72,38 @@ export class TfmFacilitiesRepo {
   }
 
   /**
-   * Finds the portal amendments across all facilities for a deal for a given status or set of statuses
+   * Finds the amendments across all facilities for a deal for a given status or set of statuses and for the given type or types
    * @param dealId - The deal id
-   * @param statuses - An array of portal amendment statuses to filter on
-   * @returns The matching portal amendments
+   * @param statuses - An array of amendment statuses to filter on
+   * @param type - An array of amendment types to filter on
+   * @returns The matching amendments
    */
-  public static async findPortalAmendmentsByDealIdAndStatus({
+  public static async findAmendmentsByDealIStatusAndType({
     dealId,
     statuses,
+    types,
   }: {
     dealId: string | ObjectId;
-    statuses?: PortalAmendmentStatus[];
-  }): Promise<PortalFacilityAmendment[]> {
+    statuses?: (PortalAmendmentStatus | TfmAmendmentStatus)[];
+    types: AmendmentType[];
+  }): Promise<(PortalFacilityAmendment | TfmFacilityAmendment)[]> {
     const collection = await this.getCollection();
 
-    const facilitiesOnDealWithPortalAmendments = await collection
+    const facilitiesOnDealWithAmendments = await collection
       .find(
         {
           'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) },
-          'amendments.type': {
-            $eq: AMENDMENT_TYPES.PORTAL,
-          },
+          'amendments.type': { $in: types },
         },
         { projection: { amendments: 1 } },
       )
       .toArray();
 
-    const matchingPortalAmendments = facilitiesOnDealWithPortalAmendments
+    const matchingAmendments = facilitiesOnDealWithAmendments
       .flatMap((facility) => facility.amendments || [])
-      .filter((amendment) => amendment?.type === AMENDMENT_TYPES.PORTAL && (!statuses || statuses.includes(amendment.status))) as PortalFacilityAmendment[];
+      .filter((amendment) => types.includes(amendment.type as AmendmentType) && (!statuses || statuses.includes(amendment.status)));
 
-    return matchingPortalAmendments;
+    return matchingAmendments;
   }
 
   /**

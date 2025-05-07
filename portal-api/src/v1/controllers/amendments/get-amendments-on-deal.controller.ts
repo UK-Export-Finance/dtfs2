@@ -1,6 +1,6 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
-import { ApiError, CustomExpressRequest, PortalAmendmentStatus } from '@ukef/dtfs2-common';
+import { ApiError, CustomExpressRequest, PortalAmendmentStatus, TfmAmendmentStatus, AmendmentType } from '@ukef/dtfs2-common';
 import api from '../../api';
 
 export type GetFacilityAmendmentsOnDealRequest = CustomExpressRequest<{
@@ -8,21 +8,22 @@ export type GetFacilityAmendmentsOnDealRequest = CustomExpressRequest<{
     dealId: string;
   };
   query: {
-    statuses: PortalAmendmentStatus[];
+    statuses: PortalAmendmentStatus[] | TfmAmendmentStatus[];
+    types: AmendmentType[];
   };
 }>;
 
 /**
- * Get the portal facility amendment
+ * Get the facility amendment
  * @param req - The request object
  * @param res - The response object
  */
 export const getFacilityAmendmentsOnDeal = async (req: GetFacilityAmendmentsOnDealRequest, res: Response) => {
   const { dealId } = req.params;
-  const { statuses } = req.query;
+  const { statuses, types } = req.query;
 
   try {
-    const amendments = await api.getPortalFacilityAmendmentsOnDeal(dealId, statuses);
+    const amendments = await api.getFacilityAmendmentsOnDeal(dealId, statuses, types);
 
     return res.status(HttpStatusCode.Ok).send(amendments);
   } catch (error) {

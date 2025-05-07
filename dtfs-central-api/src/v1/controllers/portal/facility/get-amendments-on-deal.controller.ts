@@ -1,12 +1,12 @@
-import { ApiError, CustomExpressRequest, PortalAmendmentStatus } from '@ukef/dtfs2-common';
+import { AmendmentType, ApiError, CustomExpressRequest, PortalAmendmentStatus, TfmAmendmentStatus } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 
-type GetPortalAmendmentsOnDealRequestParams = { dealId: string };
-export type GetPortalAmendmentsOnDealRequest = CustomExpressRequest<{
-  params: GetPortalAmendmentsOnDealRequestParams;
-  query: { statuses?: PortalAmendmentStatus[] };
+type GetAmendmentsOnDealRequestParams = { dealId: string };
+export type GetAmendmentsOnDealRequest = CustomExpressRequest<{
+  params: GetAmendmentsOnDealRequestParams;
+  query: { statuses?: PortalAmendmentStatus[] | TfmAmendmentStatus[]; types: AmendmentType[] };
 }>;
 
 /**
@@ -14,12 +14,12 @@ export type GetPortalAmendmentsOnDealRequest = CustomExpressRequest<{
  * @param req - request
  * @param res - response
  */
-export const getPortalAmendmentsOnDeal = async (req: GetPortalAmendmentsOnDealRequest, res: Response) => {
+export const getPortalAmendmentsOnDeal = async (req: GetAmendmentsOnDealRequest, res: Response) => {
   const { dealId } = req.params;
-  const { statuses } = req.query;
+  const { statuses, types } = req.query;
 
   try {
-    const portalAmendments = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({ dealId, statuses });
+    const portalAmendments = await TfmFacilitiesRepo.findAmendmentsByDealIStatusAndType({ dealId, statuses, types });
 
     return res.status(HttpStatusCode.Ok).send(portalAmendments);
   } catch (error) {
