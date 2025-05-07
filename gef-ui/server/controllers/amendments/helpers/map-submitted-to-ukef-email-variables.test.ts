@@ -40,7 +40,7 @@ const genericFields = {
     exporterName: mockDeal.exporter.companyName,
     ukefFacilityId: mockFacilityDetails.ukefFacilityId,
     makersName: `${String(mockDeal.maker.firstname)} ${String(mockDeal.maker.surname)}`,
-    makersEmail: mockDeal.maker.email,
+    makersEmail: String(mockDeal.maker.email),
     checkersName: `${mockUser.firstname} ${mockUser.surname}`,
     bankName: `${makersBank.name}`,
     referenceNumber,

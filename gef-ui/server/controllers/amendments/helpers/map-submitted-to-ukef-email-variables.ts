@@ -35,7 +35,7 @@ const mapSubmittedToUkefEmailVariables = ({
   const formattedEligibilityCriteria = generateAmendmentMandatoryCriteria(criteria);
 
   const makersName = `${String(deal.maker.firstname)} ${String(deal.maker.surname)}`;
-  const makersEmail = deal.maker.email;
+  const makersEmail = String(deal.maker.email);
 
   const checkersName = `${user.firstname} ${user.surname}`;
   const checkersEmail = user.email;
