@@ -21,7 +21,7 @@ describe('PortalFacilityAmendmentService', () => {
   beforeEach(() => {
     jest.resetAllMocks();
 
-    jest.spyOn(TfmFacilitiesRepo, 'findPortalAmendmentsByDealIdAndStatus').mockImplementation(mockFindPortalAmendmentsByDealIdAndStatus);
+    jest.spyOn(TfmFacilitiesRepo, 'findAmendmentsByDealIStatusAndType').mockImplementation(mockFindPortalAmendmentsByDealIdAndStatus);
     mockFindPortalAmendmentsByDealIdAndStatus.mockResolvedValue([]);
   });
 
@@ -30,7 +30,7 @@ describe('PortalFacilityAmendmentService', () => {
   });
 
   describe('validateNoOtherAmendmentInProgressOnDeal', () => {
-    it('should call findPortalAmendmentsByDealIdAndStatus with the dealId and correct filters', async () => {
+    it('should call findAmendmentsByDealIStatusAndType with the dealId and correct filters', async () => {
       // Act
       await PortalFacilityAmendmentService.validateNoOtherAmendmentInProgressOnDeal({
         dealId,

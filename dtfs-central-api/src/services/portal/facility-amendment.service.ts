@@ -11,7 +11,7 @@ import {
   PortalAmendmentStatus,
   AmendmentNotFoundError,
   AmendmentIncompleteError,
-  PORTAL_AMENDMENT_INPROGRESS_STATUSES,
+  ALL_AMENDMENT_INPROGRESS_STATUSES,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { cloneDeep } from 'lodash';
@@ -29,9 +29,10 @@ export class PortalFacilityAmendmentService {
    * @returns {Promise<void>} A promise that resolves when the find operation is complete.
    */
   public static async validateNoOtherAmendmentInProgressOnDeal({ dealId, amendmentId }: { dealId: string; amendmentId?: string }): Promise<void> {
-    const existingPortalAmendmentInProgress = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({
+    const existingPortalAmendmentInProgress = await TfmFacilitiesRepo.findAmendmentsByDealIStatusAndType({
       dealId,
-      statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES,
+      statuses: ALL_AMENDMENT_INPROGRESS_STATUSES,
+      types: [AMENDMENT_TYPES.PORTAL, AMENDMENT_TYPES.TFM],
     });
 
     const hasExistingAmendment = existingPortalAmendmentInProgress.some((amendment) => amendment.amendmentId.toString() !== amendmentId);
