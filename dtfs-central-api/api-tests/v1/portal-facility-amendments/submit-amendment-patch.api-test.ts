@@ -62,7 +62,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
       .to('/v1/portal/gef/facilities');
 
     facilityId = createFacilityResponse.body._id;
-    referenceNumber = `${new ObjectId().toString()}-23`;
+    referenceNumber = '0040012345-23';
 
     await submitDealToTfm({ dealId, dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, dealType: DEAL_TYPE.GEF });
   });
@@ -78,9 +78,10 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
 
     it(`should return ${HttpStatusCode.NotFound}`, async () => {
       const amendmentId = new ObjectId().toString();
+      const newStatus = 'a new status';
 
       const { status } = await testApi
-        .patch({ auditDetails: generatePortalAuditDetails(portalUserId), newStatus: 'a new status', referenceNumber, ...portalAmendmentToUkefEmailVariables() })
+        .patch({ auditDetails: generatePortalAuditDetails(portalUserId), newStatus, referenceNumber, ...portalAmendmentToUkefEmailVariables() })
         .to(generateUrl(facilityId, amendmentId));
 
       expect(status).toEqual(HttpStatusCode.NotFound);
@@ -114,9 +115,10 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
 
     it(`should return ${HttpStatusCode.BadRequest} when the facility id is invalid`, async () => {
       const anInvalidFacilityId = 'InvalidId';
+      const newStatus = 'a new status';
 
       const { body, status } = (await testApi
-        .patch({ auditDetails: generatePortalAuditDetails(portalUserId), newStatus: 'a new status', referenceNumber, ...portalAmendmentToUkefEmailVariables() })
+        .patch({ auditDetails: generatePortalAuditDetails(portalUserId), newStatus, referenceNumber, ...portalAmendmentToUkefEmailVariables() })
         .to(generateUrl(anInvalidFacilityId, amendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
@@ -129,9 +131,10 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
 
     it(`should return ${HttpStatusCode.BadRequest} when the amendment id is invalid`, async () => {
       const anInvalidAmendmentId = 'InvalidId';
+      const newStatus = 'a new status';
 
       const { body, status } = (await testApi
-        .patch({ auditDetails: generatePortalAuditDetails(portalUserId), newStatus: 'a new status', referenceNumber, ...portalAmendmentToUkefEmailVariables() })
+        .patch({ auditDetails: generatePortalAuditDetails(portalUserId), newStatus, referenceNumber, ...portalAmendmentToUkefEmailVariables() })
         .to(generateUrl(facilityId, anInvalidAmendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);

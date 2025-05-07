@@ -41,12 +41,17 @@ export const patchSubmitAmendment = async (req: PatchSubmitAmendmentToUkefReques
           auditDetails,
         });
 
-        // sends email to maker with the details of the amendment
-        await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_UKEF_MAKER_EMAIL, makersEmail, emailVariables);
-        // sends email to checker with the details of the amendment
-        await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_UKEF_CHECKER_EMAIL, checkersEmail, emailVariables);
-        // sends email to pim with the details of the amendment
-        await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_UKEF_PIM_EMAIL, pimEmail, emailVariables);
+        const emails = [makersEmail, checkersEmail, pimEmail];
+
+        // sends email to maker, checker and pim with the details of the amendment
+        for (const [index, email] of emails.entries()) {
+          const templateId = [
+            EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_UKEF_MAKER_EMAIL,
+            EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_UKEF_CHECKER_EMAIL,
+            EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_UKEF_PIM_EMAIL,
+          ][index];
+          await externalApi.sendEmail(templateId, email, emailVariables);
+        }
 
         return res.status(HttpStatusCode.Ok).send(updatedSubmitAmendment);
       }

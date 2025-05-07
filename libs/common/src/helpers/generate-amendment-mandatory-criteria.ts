@@ -3,8 +3,8 @@ import { AmendmentsEligibilityCriterionWithAnswer } from '../types/mongo-db-mode
 /**
  * Generates a formatted string of mandatory criteria for GovNotify email template based on the provided criteria array.
  *
- * @param {Array<AmendmentsEligibilityCriterion>} criteria - An array of criteria objects, each containing an `id`, `text`, and optionally an `answer`.
- * @returns {string} A formatted string of mandatory criteria, If no criteria are provided, an empty string is returned.
+ * @param criteria - An array of criteria objects, each containing an `id`, `text`, and optionally an `answer`.
+ * @returns A formatted string of mandatory criteria, If no criteria are provided, an empty string is returned.
  *
  * Each criterion is formatted as:
  * - `<text>`.

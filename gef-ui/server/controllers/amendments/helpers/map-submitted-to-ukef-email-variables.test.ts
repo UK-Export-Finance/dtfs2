@@ -31,6 +31,22 @@ const mockFacilityDetails = MOCK_ISSUED_FACILITY.details;
 const referenceNumber = `${mockFacilityDetails.ukefFacilityId}-01`;
 const makersBank: { name: string } = mockDeal.maker.bank as { name: string };
 
+const genericFields = {
+  makersEmail: String(mockDeal.maker.email),
+  checkersEmail: String(mockUser.email),
+  emailVariables: {
+    ukefDealId: mockDeal.ukefDealId,
+    bankInternalRefName: String(mockDeal.bankInternalRefName),
+    exporterName: mockDeal.exporter.companyName,
+    ukefFacilityId: mockFacilityDetails.ukefFacilityId,
+    makersName: `${String(mockDeal.maker.firstname)} ${String(mockDeal.maker.surname)}`,
+    makersEmail: String(mockDeal.maker.email),
+    checkersName: `${String(mockUser.firstname)} ${String(mockUser.surname)}`,
+    bankName: `${makersBank.name}`,
+    referenceNumber,
+  },
+};
+
 describe('mapSubmittedToUkefEmailVariables', () => {
   describe('when an amendment has all types of amendments', () => {
     it('should return formatted values', () => {
@@ -59,24 +75,17 @@ describe('mapSubmittedToUkefEmailVariables', () => {
       });
 
       // Assert
+      const newFacilityValue = `${getCurrencySymbol(mockFacilityDetails.currency!.id)}${facilityValue}`;
+
       const expected = {
-        makersEmail: String(mockDeal.maker.email),
-        checkersEmail: String(mockUser.email),
+        ...genericFields,
         emailVariables: {
-          ukefDealId: mockDeal.ukefDealId,
-          bankInternalRefName: String(mockDeal.bankInternalRefName),
-          exporterName: mockDeal.exporter.companyName,
-          ukefFacilityId: mockFacilityDetails.ukefFacilityId,
+          ...genericFields.emailVariables,
           dateEffectiveFrom: format(fromUnixTime(effectiveDateWithoutMs), DATE_FORMATS.DD_MMMM_YYYY),
           newCoverEndDate: format(coverEndDate, DATE_FORMATS.DD_MMMM_YYYY),
           newFacilityEndDate: format(facilityEndDate, DATE_FORMATS.DD_MMMM_YYYY),
-          newFacilityValue: `${getCurrencySymbol(mockFacilityDetails.currency!.id)}${facilityValue}`,
-          makersName: `${String(mockDeal.maker.firstname)} ${String(mockDeal.maker.surname)}`,
-          makersEmail: String(mockDeal.maker.email),
-          checkersName: `${String(mockUser.firstname)} ${String(mockUser.surname)}`,
-          bankName: `${makersBank.name}`,
+          newFacilityValue,
           eligibilityCriteria: generateAmendmentMandatoryCriteria(amendmentAllAmendments.eligibilityCriteria?.criteria),
-          referenceNumber,
         },
       };
 
@@ -109,24 +118,17 @@ describe('mapSubmittedToUkefEmailVariables', () => {
       });
 
       // Assert
+      const newFacilityValue = `${getCurrencySymbol(mockFacilityDetails.currency!.id)}${facilityValue}`;
+
       const expected = {
-        makersEmail: String(mockDeal.maker.email),
-        checkersEmail: String(mockUser.email),
+        ...genericFields,
         emailVariables: {
-          ukefDealId: mockDeal.ukefDealId,
-          bankInternalRefName: String(mockDeal.bankInternalRefName),
-          exporterName: mockDeal.exporter.companyName,
-          ukefFacilityId: mockFacilityDetails.ukefFacilityId,
+          ...genericFields.emailVariables,
           dateEffectiveFrom: format(fromUnixTime(effectiveDateWithoutMs), DATE_FORMATS.DD_MMMM_YYYY),
           newCoverEndDate: '-',
           newFacilityEndDate: '-',
-          newFacilityValue: `${getCurrencySymbol(mockFacilityDetails.currency!.id)}${facilityValue}`,
-          makersName: `${String(mockDeal.maker.firstname)} ${String(mockDeal.maker.surname)}`,
-          makersEmail: String(mockDeal.maker.email),
-          checkersName: `${String(mockUser.firstname)} ${String(mockUser.surname)}`,
-          bankName: `${makersBank.name}`,
+          newFacilityValue,
           eligibilityCriteria: generateAmendmentMandatoryCriteria(amendmentNoDates.eligibilityCriteria?.criteria),
-          referenceNumber,
         },
       };
 
@@ -161,23 +163,14 @@ describe('mapSubmittedToUkefEmailVariables', () => {
 
       // Assert
       const expected = {
-        makersEmail: String(mockDeal.maker.email),
-        checkersEmail: String(mockUser.email),
+        ...genericFields,
         emailVariables: {
-          ukefDealId: mockDeal.ukefDealId,
-          bankInternalRefName: String(mockDeal.bankInternalRefName),
-          exporterName: mockDeal.exporter.companyName,
-          ukefFacilityId: mockFacilityDetails.ukefFacilityId,
+          ...genericFields.emailVariables,
           dateEffectiveFrom: format(fromUnixTime(effectiveDateWithoutMs), DATE_FORMATS.DD_MMMM_YYYY),
           newCoverEndDate: format(coverEndDate, DATE_FORMATS.DD_MMMM_YYYY),
           newFacilityEndDate: format(facilityEndDate, DATE_FORMATS.DD_MMMM_YYYY),
           newFacilityValue: '-',
-          makersName: `${String(mockDeal.maker.firstname)} ${String(mockDeal.maker.surname)}`,
-          makersEmail: String(mockDeal.maker.email),
-          checkersName: `${String(mockUser.firstname)} ${String(mockUser.surname)}`,
-          bankName: `${makersBank.name}`,
           eligibilityCriteria: generateAmendmentMandatoryCriteria(amendmentDatesNoValue.eligibilityCriteria?.criteria),
-          referenceNumber,
         },
       };
 
@@ -210,23 +203,14 @@ describe('mapSubmittedToUkefEmailVariables', () => {
 
       // Assert
       const expected = {
-        makersEmail: String(mockDeal.maker.email),
-        checkersEmail: String(mockUser.email),
+        ...genericFields,
         emailVariables: {
-          ukefDealId: mockDeal.ukefDealId,
-          bankInternalRefName: String(mockDeal.bankInternalRefName),
-          exporterName: mockDeal.exporter.companyName,
-          ukefFacilityId: mockFacilityDetails.ukefFacilityId,
+          ...genericFields.emailVariables,
           dateEffectiveFrom: format(fromUnixTime(effectiveDateWithoutMs), DATE_FORMATS.DD_MMMM_YYYY),
           newCoverEndDate: format(coverEndDate, DATE_FORMATS.DD_MMMM_YYYY),
           newFacilityEndDate: '-',
           newFacilityValue: '-',
-          makersName: `${String(mockDeal.maker.firstname)} ${String(mockDeal.maker.surname)}`,
-          makersEmail: String(mockDeal.maker.email),
-          checkersName: `${String(mockUser.firstname)} ${String(mockUser.surname)}`,
-          bankName: `${makersBank.name}`,
           eligibilityCriteria: generateAmendmentMandatoryCriteria(amendmentDateNoValue.eligibilityCriteria?.criteria),
-          referenceNumber,
         },
       };
 
@@ -255,23 +239,14 @@ describe('mapSubmittedToUkefEmailVariables', () => {
 
       // Assert
       const expected = {
-        makersEmail: String(mockDeal.maker.email),
-        checkersEmail: String(mockUser.email),
+        ...genericFields,
         emailVariables: {
-          ukefDealId: mockDeal.ukefDealId,
-          bankInternalRefName: String(mockDeal.bankInternalRefName),
-          exporterName: mockDeal.exporter.companyName,
-          ukefFacilityId: mockFacilityDetails.ukefFacilityId,
+          ...genericFields.emailVariables,
           dateEffectiveFrom: '-',
           newCoverEndDate: '-',
           newFacilityEndDate: '-',
           newFacilityValue: '-',
-          makersName: `${String(mockDeal.maker.firstname)} ${String(mockDeal.maker.surname)}`,
-          makersEmail: String(mockDeal.maker.email),
-          checkersName: `${String(mockUser.firstname)} ${String(mockUser.surname)}`,
-          bankName: `${makersBank.name}`,
           eligibilityCriteria: generateAmendmentMandatoryCriteria(amendmentDateNoValue.eligibilityCriteria?.criteria),
-          referenceNumber,
         },
       };
 
