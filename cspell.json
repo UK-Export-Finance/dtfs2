@@ -19,6 +19,7 @@
     "**.csv",
     "**.css",
     "**.scss",
+    "**.svg",
     "**/migrations/*",
     "**/*.drawio",
     "**/*.sql",
