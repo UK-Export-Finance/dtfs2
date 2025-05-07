@@ -32,16 +32,16 @@ const referenceNumber = `${mockFacilityDetails.ukefFacilityId}-01`;
 const makersBank: { name: string } = mockDeal.maker.bank as { name: string };
 
 const genericFields = {
-  makersEmail: String(mockDeal.maker.email),
-  checkersEmail: String(mockUser.email),
+  makersEmail: mockDeal.maker.email,
+  checkersEmail: mockUser.email,
   emailVariables: {
     ukefDealId: mockDeal.ukefDealId,
-    bankInternalRefName: String(mockDeal.bankInternalRefName),
+    bankInternalRefName: mockDeal.bankInternalRefName,
     exporterName: mockDeal.exporter.companyName,
     ukefFacilityId: mockFacilityDetails.ukefFacilityId,
     makersName: `${String(mockDeal.maker.firstname)} ${String(mockDeal.maker.surname)}`,
-    makersEmail: String(mockDeal.maker.email),
-    checkersName: `${String(mockUser.firstname)} ${String(mockUser.surname)}`,
+    makersEmail: mockDeal.maker.email,
+    checkersName: `${mockUser.firstname} ${mockUser.surname}`,
     bankName: `${makersBank.name}`,
     referenceNumber,
   },
