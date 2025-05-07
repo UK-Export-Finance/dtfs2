@@ -108,10 +108,29 @@ describe('validatePatchPortalFacilityAmendmentStatusPayload', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it('should call next when the payload is valid', () => {
+  it(`should call next when the payload is valid and ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}`, () => {
     // Arrange
     const payload = {
       newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+      auditDetails: validAuditDetails,
+      ...portalAmendmentVariables,
+    };
+
+    const { req, res } = createMocks({ body: payload });
+    const next = jest.fn();
+
+    // Act
+    validatePatchPortalFacilityAmendmentStatusPayload(req, res, next);
+
+    // Assert
+    expect(next).toHaveBeenCalled();
+    expect(res._isEndCalled()).toEqual(false);
+  });
+
+  it(`should call next when the payload is valid and ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}`, () => {
+    // Arrange
+    const payload = {
+      newStatus: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
       auditDetails: validAuditDetails,
       ...portalAmendmentVariables,
     };

@@ -1,0 +1,12 @@
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% macro render() %}
+  {{ govukPanel({
+    attributes: {
+      'data-cy': 'returned-to-maker-confirmation-panel',
+      'tabIndex': 0
+    },
+    titleText: "Amendment returned to maker for further inputs",
+    text: "We've sent you a confirmation email."
+  }) }}
+{% endmacro %}

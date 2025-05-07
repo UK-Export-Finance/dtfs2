@@ -41,6 +41,11 @@ export const patchAmendmentStatus = async (req: PatchSubmitAmendmentToCheckerReq
 
         return res.status(HttpStatusCode.Ok).send(updatedAmendment);
       }
+      case PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED: {
+        const updatedAmendment = await PortalFacilityAmendmentService.returnPortalFacilityAmendmentToMaker({ facilityId, amendmentId, auditDetails });
+
+        return res.status(HttpStatusCode.Ok).send(updatedAmendment);
+      }
       default: {
         // This error should never be thrown since the payload is validated by Zod middleware
         throw new InvalidPayloadError(`Invalid requested status update: ${newStatus}`);
