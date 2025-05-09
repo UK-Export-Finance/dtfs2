@@ -1,6 +1,6 @@
 import axios, { HttpStatusCode } from 'axios';
-import { HEADERS, ROLES, ALL_TEAM_IDS } from '@ukef/dtfs2-common';
-import { getTfmTeam } from './api';
+import { HEADERS, ROLES, ALL_TEAM_IDS, ALL_AMENDMENT_SUBMITTED_STATUSES, PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { getTfmTeam, getFacilityAmendmentsOnDeal } from './api';
 
 const { DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY } = process.env;
 const headers = {
@@ -204,5 +204,73 @@ describe('getTfmTeam', () => {
       expect(console.error).toHaveBeenCalledWith('Unable to get the TFM team with ID %s %o', pim, error);
       expect(response).toStrictEqual(expectedResponse);
     });
+  });
+});
+
+describe('getFacilityAmendmentsOnDeal', () => {
+  const dealId = '507f1f77bcf86cd799439011';
+  const facilityId = '6597dffeb5ef5ff4267e5044';
+  const params = { statuses: ALL_AMENDMENT_SUBMITTED_STATUSES };
+  const mockResponseData = [
+    { dealId, facilityId, amendmentId: 'amendment1', status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED },
+    { dealId, facilityId, amendmentId: 'amendment2', status: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED },
+    { dealId, facilityId, amendmentId: 'amendment3', status: TFM_AMENDMENT_STATUS.COMPLETED },
+  ];
+
+  afterEach(() => {
+    jest.resetAllMocks();
+    jest.restoreAllMocks();
+  });
+
+  it('should return all submitted amendments when the API call is successful', async () => {
+    // Arrange
+    const expected = {
+      data: {
+        mockResponseData,
+      },
+    };
+
+    axios.mockResolvedValueOnce(expected);
+
+    // Act
+    const response = await getFacilityAmendmentsOnDeal(dealId, ALL_AMENDMENT_SUBMITTED_STATUSES);
+
+    // Assert
+    expect(response).toMatchObject(expected.data);
+    expect(axios).toHaveBeenCalledTimes(1);
+    expect(axios).toHaveBeenCalledWith({ method: 'get', url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/all-type-amendments`, params, headers });
+  });
+
+  it('should throw an error when the API call fails', async () => {
+    // Arrange
+    const error = new Error('API call failed');
+    axios.mockRejectedValueOnce(error);
+
+    // Act
+    const response = getFacilityAmendmentsOnDeal(dealId, ALL_AMENDMENT_SUBMITTED_STATUSES);
+
+    // Assert
+    await expect(response).rejects.toThrow('API call failed');
+  });
+
+  it('should return all amendments when statuses are an empty array', async () => {
+    // Arrange
+    const emptyStatuses = [];
+    params.statuses = emptyStatuses;
+    const expected = {
+      data: {
+        mockResponseData,
+      },
+    };
+
+    axios.mockResolvedValueOnce(expected);
+
+    // Act
+    const response = await getFacilityAmendmentsOnDeal(dealId, emptyStatuses);
+
+    // Assert
+    expect(response).toMatchObject(expected.data);
+    expect(axios).toHaveBeenCalledTimes(1);
+    expect(axios).toHaveBeenCalledWith({ method: 'get', url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/all-type-amendments`, params, headers });
   });
 });

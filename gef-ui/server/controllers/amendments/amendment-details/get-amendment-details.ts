@@ -30,7 +30,7 @@ export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: 
      * gets amendments in progress
      * will only return 1 as only 1 amendment can be in progress at a time
      */
-    const amendments = await api.getAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
+    const amendments = await api.getPortalAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
 
     if (!amendments?.length) {
       console.error('In progress amendment was not found for the deal %s', dealId);

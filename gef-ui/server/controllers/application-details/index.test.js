@@ -37,7 +37,7 @@ describe('controllers/application-details', () => {
   let mockFacilityResponse;
   let mockFacilitiesResponse;
   let mockUserResponse;
-  const mockGetAmendmentsOnDealResponse = [];
+  const mockGetPortalAmendmentsOnDealResponse = [];
   const mockGetSubmittedDetailsResponse = {
     portalAmendmentStatus: null,
     facilityIdWithAmendmentInProgress: null,
@@ -55,7 +55,7 @@ describe('controllers/application-details', () => {
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);
-    api.getAmendmentsOnDeal.mockResolvedValue(mockGetAmendmentsOnDealResponse);
+    api.getAmendmentsOnDeal.mockResolvedValue(mockGetPortalAmendmentsOnDealResponse);
     getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
     mockRequest.flash = mockSuccessfulFlashResponse();
   });
