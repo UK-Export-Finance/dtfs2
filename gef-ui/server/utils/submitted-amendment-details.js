@@ -19,7 +19,7 @@ export const getSubmittedAmendmentDetails = async (application, userToken) => {
       dealId: application._id,
       userToken,
       statuses: PORTAL_AMENDMENT_SUBMITTED_STATUSES,
-      type: [AMENDMENT_TYPES.PORTAL, AMENDMENT_TYPES.TFM],
+      types: [AMENDMENT_TYPES.PORTAL],
     });
 
     const activeDeal = !DEAL_STATUS_SCHEDULED_OR_CANCELLED.includes(application.status);

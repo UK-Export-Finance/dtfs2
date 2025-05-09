@@ -657,10 +657,10 @@ const getPortalFacilityAmendment = async (facilityId, amendmentId) => {
 };
 
 /**
- * Gets facility amendments on the deal filtered by status and type
+ * Gets facility amendments on the deal filtered by status and types
  * @param {string} dealId - id of the facility to amend
  * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus[] | import('@ukef/dtfs2-common').TfmAmendmentStatus[] | undefined} statuses - an optional array of statuses to filter the amendments by
- * @param {import('@ukef/dtfs2-common').AmendmentType[]} types - an array of amendment types
+ * @param {import('@ukef/dtfs2-common').AmendmentType[]} types - an array of amendment types to filter the amendments by
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId[])>} - the amendments on the deal with a matching status and type
  */
 const getFacilityAmendmentsOnDeal = async (dealId, statuses, types) => {

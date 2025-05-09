@@ -27,7 +27,7 @@ export const getFacilityAmendmentsOnDeal = async (req: GetFacilityAmendmentsOnDe
 
     return res.status(HttpStatusCode.Ok).send(amendments);
   } catch (error) {
-    const errorMessage = 'Failed to get the portal amendments for the given deal';
+    const errorMessage = 'Failed to get the amendments for the given deal';
     console.error(errorMessage, error);
 
     if (error instanceof ApiError) {

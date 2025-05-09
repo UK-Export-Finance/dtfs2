@@ -6,12 +6,14 @@ import api from '../../api';
 import { getFacilityAmendmentsOnDeal, GetFacilityAmendmentsOnDealRequest } from './get-amendments-on-deal.controller';
 
 jest.mock('../../api');
+console.error = jest.fn();
 
 const dealId = new ObjectId().toString();
 const amendmentId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
 
 const statuses = [PORTAL_AMENDMENT_STATUS.DRAFT, PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED];
+const types = [AMENDMENT_TYPES.PORTAL, AMENDMENT_TYPES.TFM];
 
 describe('controllers - facility amendment', () => {
   beforeEach(() => {
@@ -19,33 +21,34 @@ describe('controllers - facility amendment', () => {
   });
 
   describe('GET - getAmendment', () => {
-    it('should call api.getPortalFacilityAmendmentsOnDeal with just the dealId if no statuses are queried', async () => {
+    it('should call api.getFacilityAmendmentsOnDeal with dealId and types if no statuses are queried', async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<GetFacilityAmendmentsOnDealRequest>({
         params: { dealId },
+        query: { types },
       });
 
       // Act
       await getFacilityAmendmentsOnDeal(req, res);
 
       // Assert
-      expect(api.getPortalFacilityAmendmentsOnDeal).toHaveBeenCalledTimes(1);
-      expect(api.getPortalFacilityAmendmentsOnDeal).toHaveBeenCalledWith(dealId, undefined);
+      expect(api.getFacilityAmendmentsOnDeal).toHaveBeenCalledTimes(1);
+      expect(api.getFacilityAmendmentsOnDeal).toHaveBeenCalledWith(dealId, undefined, types);
     });
 
-    it('should call api.getPortalFacilityAmendmentsOnDeal with the dealId and statuses filter', async () => {
+    it('should call api.getFacilityAmendmentsOnDeal with the dealId, types and statuses filter', async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<GetFacilityAmendmentsOnDealRequest>({
         params: { dealId },
-        query: { statuses },
+        query: { statuses, types },
       });
 
       // Act
       await getFacilityAmendmentsOnDeal(req, res);
 
       // Assert
-      expect(api.getPortalFacilityAmendmentsOnDeal).toHaveBeenCalledTimes(1);
-      expect(api.getPortalFacilityAmendmentsOnDeal).toHaveBeenCalledWith(dealId, statuses);
+      expect(api.getFacilityAmendmentsOnDeal).toHaveBeenCalledTimes(1);
+      expect(api.getFacilityAmendmentsOnDeal).toHaveBeenCalledWith(dealId, statuses, types);
     });
 
     it(`should respond with ${HttpStatusCode.Ok} and return the amendments`, async () => {
@@ -67,10 +70,10 @@ describe('controllers - facility amendment', () => {
         },
       };
 
-      jest.mocked(api.getPortalFacilityAmendmentsOnDeal).mockResolvedValue([mockPortalAmendment]);
+      jest.mocked(api.getFacilityAmendmentsOnDeal).mockResolvedValue([mockPortalAmendment]);
       const { req, res } = httpMocks.createMocks<GetFacilityAmendmentsOnDealRequest>({
         params: { dealId },
-        query: { statuses },
+        query: { statuses, types: [AMENDMENT_TYPES.PORTAL, AMENDMENT_TYPES.TFM] },
       });
 
       // Act
@@ -84,12 +87,12 @@ describe('controllers - facility amendment', () => {
     it('should return an error when there is an API error', async () => {
       const testErrorStatus = HttpStatusCode.ExpectationFailed;
       const testApiErrorMessage = 'test api error message';
-      jest.mocked(api.getPortalFacilityAmendmentsOnDeal).mockRejectedValue(new TestApiError({ status: testErrorStatus, message: testApiErrorMessage }));
+      jest.mocked(api.getFacilityAmendmentsOnDeal).mockRejectedValue(new TestApiError({ status: testErrorStatus, message: testApiErrorMessage }));
 
       // Arrange
       const { req, res } = httpMocks.createMocks<GetFacilityAmendmentsOnDealRequest>({
         params: { dealId },
-        query: { statuses },
+        query: { statuses, types: [AMENDMENT_TYPES.PORTAL, AMENDMENT_TYPES.TFM] },
       });
 
       // Act
@@ -97,16 +100,16 @@ describe('controllers - facility amendment', () => {
 
       // Assert
       expect(res._getStatusCode()).toEqual(testErrorStatus);
-      expect(res._getData()).toEqual({ message: `Failed to get the portal amendments for the given deal: ${testApiErrorMessage}`, status: testErrorStatus });
+      expect(res._getData()).toEqual({ message: `Failed to get the amendments for the given deal: ${testApiErrorMessage}`, status: testErrorStatus });
     });
 
     it('should return an error when there is a general error', async () => {
-      jest.mocked(api.getPortalFacilityAmendmentsOnDeal).mockRejectedValue(new Error('Some error'));
+      jest.mocked(api.getFacilityAmendmentsOnDeal).mockRejectedValue(new Error('Some error'));
 
       // Arrange
       const { req, res } = httpMocks.createMocks<GetFacilityAmendmentsOnDealRequest>({
         params: { dealId },
-        query: { statuses },
+        query: { statuses, types: [AMENDMENT_TYPES.PORTAL, AMENDMENT_TYPES.TFM] },
       });
 
       // Act
@@ -114,7 +117,7 @@ describe('controllers - facility amendment', () => {
 
       // Assert
       expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
-      expect(res._getData()).toEqual({ message: 'Failed to get the portal amendments for the given deal', status: HttpStatusCode.InternalServerError });
+      expect(res._getData()).toEqual({ message: 'Failed to get the amendments for the given deal', status: HttpStatusCode.InternalServerError });
     });
   });
 });

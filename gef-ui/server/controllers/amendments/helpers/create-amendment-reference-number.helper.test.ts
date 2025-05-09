@@ -1,5 +1,5 @@
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { PORTAL_AMENDMENT_STATUS, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import api from '../../../services/api';
 import { createReferenceNumber } from './create-amendment-reference-number.helper';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
@@ -8,6 +8,7 @@ import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 const getAmendmentsOnDealMock = jest.fn();
 const getFacilityMock = jest.fn();
 console.error = jest.fn();
+const types = [AMENDMENT_TYPES.PORTAL, AMENDMENT_TYPES.TFM];
 
 const dealId = '6597dffeb5ef5ff4267e5044';
 const facilityId = '6597dffeb5ef5ff4267e5045';
@@ -46,6 +47,7 @@ describe('createReferenceNumber', () => {
       dealId,
       statuses: [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED],
       userToken,
+      types,
     });
     expect(result).toEqual(`${facility.ukefFacilityId}-03`);
   });
@@ -59,6 +61,7 @@ describe('createReferenceNumber', () => {
       dealId,
       statuses: [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED],
       userToken,
+      types,
     });
     expect(result).toEqual(`${facility.ukefFacilityId}-01`);
   });

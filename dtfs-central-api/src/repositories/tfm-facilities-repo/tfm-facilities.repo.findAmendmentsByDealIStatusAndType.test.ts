@@ -19,11 +19,12 @@ const aReadyForCheckersApprovalPortalAmendment = aPortalFacilityAmendment({ stat
 
 const aTfmAmendment = aTfmFacilityAmendment();
 
-const facilityWithPortalAmendments: TfmFacility = aTfmFacility({ amendments: [aDraftPortalAmendment, anAcknowledgedPortalAmendment], dealId });
+const facilityWithAmendments: TfmFacility = aTfmFacility({ amendments: [aDraftPortalAmendment, anAcknowledgedPortalAmendment], dealId });
 const facilityWithMixedAmendments: TfmFacility = aTfmFacility({ amendments: [aReadyForCheckersApprovalPortalAmendment, aTfmAmendment], dealId });
+const types = [AMENDMENT_TYPES.PORTAL, AMENDMENT_TYPES.TFM];
 
 describe('TfmFacilitiesRepo', () => {
-  describe('findPortalAmendmentsByDealIdAndStatus', () => {
+  describe('findAmendmentsByDealIStatusAndType', () => {
     beforeEach(() => {
       jest.resetAllMocks();
       findToArrayMock.mockResolvedValue([]);
@@ -37,7 +38,7 @@ describe('TfmFacilitiesRepo', () => {
 
     it(`should call getCollection with ${MONGO_DB_COLLECTIONS.TFM_FACILITIES}`, async () => {
       // Act
-      await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({ dealId });
+      await TfmFacilitiesRepo.findAmendmentsByDealIStatusAndType({ dealId, types });
 
       // Assert
       expect(getCollectionMock).toHaveBeenCalledTimes(1);
@@ -46,7 +47,7 @@ describe('TfmFacilitiesRepo', () => {
 
     it('should call find with the expected parameters', async () => {
       // Act
-      await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({ dealId });
+      await TfmFacilitiesRepo.findAmendmentsByDealIStatusAndType({ dealId, types });
 
       // Assert
       const expectedFilter = {
@@ -62,36 +63,37 @@ describe('TfmFacilitiesRepo', () => {
       expect(findMock).toHaveBeenCalledWith(expectedFilter, expectedProjection);
     });
 
-    it('should return the all portal amendments when no status filter is passed in', async () => {
+    it('should return the all type amendments when no status filter is passed in', async () => {
       // Arrange
-      findToArrayMock.mockResolvedValueOnce([facilityWithPortalAmendments, facilityWithMixedAmendments]);
+      findToArrayMock.mockResolvedValueOnce([facilityWithAmendments, facilityWithMixedAmendments]);
 
       // Act
-      const result = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({ dealId });
+      const result = await TfmFacilitiesRepo.findAmendmentsByDealIStatusAndType({ dealId, types });
 
       // Assert
       expect(result).toEqual([aDraftPortalAmendment, anAcknowledgedPortalAmendment, aReadyForCheckersApprovalPortalAmendment]);
     });
 
-    it('should return the portal amendments filtered by status when a single status is passed in', async () => {
+    it('should return the amendments filtered by status and type when a single status is passed in', async () => {
       // Arrange
-      findToArrayMock.mockResolvedValueOnce([facilityWithPortalAmendments, facilityWithMixedAmendments]);
+      findToArrayMock.mockResolvedValueOnce([facilityWithAmendments, facilityWithMixedAmendments]);
 
       // Act
-      const result = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({ dealId, statuses: [DRAFT] });
+      const result = await TfmFacilitiesRepo.findAmendmentsByDealIStatusAndType({ dealId, statuses: [DRAFT], types });
 
       // Assert
       expect(result).toEqual([aDraftPortalAmendment]);
     });
 
-    it('should return the portal amendments filtered by status when a multiple statuses are passed in', async () => {
+    it('should return the amendments filtered by status when a multiple statuses are passed in', async () => {
       // Arrange
-      findToArrayMock.mockResolvedValueOnce([facilityWithPortalAmendments, facilityWithMixedAmendments]);
+      findToArrayMock.mockResolvedValueOnce([facilityWithAmendments, facilityWithMixedAmendments]);
 
       // Act
-      const result = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({
+      const result = await TfmFacilitiesRepo.findAmendmentsByDealIStatusAndType({
         dealId,
         statuses: [DRAFT, READY_FOR_CHECKERS_APPROVAL],
+        types,
       });
 
       // Assert
@@ -100,12 +102,13 @@ describe('TfmFacilitiesRepo', () => {
 
     it('should return an empty array if no returned amendments match the given status type', async () => {
       // Arrange
-      findToArrayMock.mockResolvedValueOnce([facilityWithPortalAmendments]);
+      findToArrayMock.mockResolvedValueOnce([facilityWithAmendments]);
 
       // Act
-      const result = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({
+      const result = await TfmFacilitiesRepo.findAmendmentsByDealIStatusAndType({
         dealId,
         statuses: [READY_FOR_CHECKERS_APPROVAL],
+        types,
       });
 
       // Assert

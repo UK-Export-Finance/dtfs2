@@ -10,18 +10,18 @@ export type GetAmendmentsOnDealRequest = CustomExpressRequest<{
 }>;
 
 /**
- * get portal facility amendments by deal Id
+ * get facility amendments by deal Id
  * @param req - request
  * @param res - response
  */
-export const getPortalAmendmentsOnDeal = async (req: GetAmendmentsOnDealRequest, res: Response) => {
+export const getAmendmentsOnDeal = async (req: GetAmendmentsOnDealRequest, res: Response) => {
   const { dealId } = req.params;
   const { statuses, types } = req.query;
 
   try {
-    const portalAmendments = await TfmFacilitiesRepo.findAmendmentsByDealIStatusAndType({ dealId, statuses, types });
+    const amendments = await TfmFacilitiesRepo.findAmendmentsByDealIStatusAndType({ dealId, statuses, types });
 
-    return res.status(HttpStatusCode.Ok).send(portalAmendments);
+    return res.status(HttpStatusCode.Ok).send(amendments);
   } catch (error) {
     console.error(`Error getting amendments for facilities on deal with id ${dealId}: %o`, error);
 
@@ -32,7 +32,7 @@ export const getPortalAmendmentsOnDeal = async (req: GetAmendmentsOnDealRequest,
 
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
-      message: 'Unknown error occurred when getting portal facility amendments on deal',
+      message: 'Unknown error occurred when getting facility amendments on deal',
     });
   }
 };

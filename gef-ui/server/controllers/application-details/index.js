@@ -278,7 +278,7 @@ const applicationDetails = async (req, res, next) => {
       dealId,
       userToken,
       statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES,
-      type: [AMENDMENT_TYPES.PORTAL, AMENDMENT_TYPES.TFM],
+      types: [AMENDMENT_TYPES.PORTAL],
     });
 
     params.canIssuedFacilitiesBeAmended =
