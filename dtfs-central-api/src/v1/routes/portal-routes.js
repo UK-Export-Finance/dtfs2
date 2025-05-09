@@ -854,10 +854,7 @@ portalRouter
  *       404:
  *         description: Not found
  */
-portalRouter
-  .route('/deals/:dealId/amendments')
-  .all(validation.mongoIdValidation('dealId'))
-  .get(getFacilityAmendmentsForDealController.getPortalAmendmentsOnDeal);
+portalRouter.route('/deals/:dealId/amendments').all(validation.mongoIdValidation('dealId')).get(getFacilityAmendmentsForDealController.getAmendmentsOnDeal);
 
 /**
  * @openapi
