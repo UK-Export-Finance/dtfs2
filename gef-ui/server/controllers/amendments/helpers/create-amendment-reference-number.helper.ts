@@ -9,7 +9,7 @@ import api from '../../../services/api';
 export const createReferenceNumber = async (dealId: string, facilityId: string, userToken: string): Promise<string> => {
   try {
     const statuses = [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED];
-    const amendmentsOnDeal = await api.getAmendmentsOnDeal({ dealId, statuses, userToken });
+    const amendmentsOnDeal = await api.getPortalAmendmentsOnDeal({ dealId, statuses, userToken });
     const { details: facility } = await api.getFacility({ facilityId, userToken });
 
     if (!amendmentsOnDeal) {

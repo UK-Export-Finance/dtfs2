@@ -409,10 +409,33 @@ const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
  * @param {Object} param
  * @param {string} param.dealId
  * @param {string} param.userToken
+ * @param {(import('@ukef/dtfs2-common').PortalAmendmentStatus | import('@ukef/dtfs2-common').TfmAmendmentStatus)[] | undefined} param.statuses
+ * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithUkefId[])>}>}
+ */
+const getAmendmentsOnDeal = async ({ dealId, userToken, statuses }) => {
+  if (!isValidMongoId(dealId)) {
+    console.error('Invalid deal ID %s', dealId);
+    throw new InvalidDealIdError(dealId);
+  }
+
+  try {
+    const response = await Axios.get(`/gef/deals/${dealId}/all-type-amendments`, { ...config(userToken), params: { statuses } });
+
+    return response.data;
+  } catch (error) {
+    console.error('Failed to get the type amendments for facilities on deal with id %s: %o', dealId, error);
+    throw error;
+  }
+};
+
+/**
+ * @param {Object} param
+ * @param {string} param.dealId
+ * @param {string} param.userToken
  * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus[] | undefined} param.statuses
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId[])>}>}
  */
-const getAmendmentsOnDeal = async ({ dealId, userToken, statuses }) => {
+const getPortalAmendmentsOnDeal = async ({ dealId, userToken, statuses }) => {
   if (!isValidMongoId(dealId)) {
     console.error('Invalid deal ID %s', dealId);
     throw new InvalidDealIdError(dealId);
@@ -423,7 +446,7 @@ const getAmendmentsOnDeal = async ({ dealId, userToken, statuses }) => {
 
     return response.data;
   } catch (error) {
-    console.error('Failed to get the amendments for facilities on deal with id %s: %o', dealId, error);
+    console.error('Failed to get portal amendments for facilities on deal with id %s: %o', dealId, error);
     throw error;
   }
 };
@@ -615,6 +638,7 @@ module.exports = {
   downloadFile,
   updateSupportingInformation,
   getAmendmentsOnDeal,
+  getPortalAmendmentsOnDeal,
   getAmendment,
   upsertAmendment,
   updateAmendment,

@@ -3,27 +3,27 @@ import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 
-type GetAmendmentsOnDealRequestParams = { dealId: string };
-export type GetAmendmentsOnDealRequest = CustomExpressRequest<{
-  params: GetAmendmentsOnDealRequestParams;
+type GetPortalAmendmentsOnDealRequestParams = { dealId: string };
+export type GetPortalAmendmentsOnDealRequest = CustomExpressRequest<{
+  params: GetPortalAmendmentsOnDealRequestParams;
   query: { statuses?: PortalAmendmentStatus[] };
 }>;
 
 /**
- * get all type facility amendments by deal Id
+ * get portal facility amendments by deal Id
  * @param req - request
  * @param res - response
  */
-export const getAmendmentsOnDeal = async (req: GetAmendmentsOnDealRequest, res: Response) => {
+export const getPortalAmendmentsOnDeal = async (req: GetPortalAmendmentsOnDealRequest, res: Response) => {
   const { dealId } = req.params;
   const { statuses } = req.query;
 
   try {
-    const amendments = await TfmFacilitiesRepo.findAllTypeAmendmentsByDealIdAndStatus({ dealId, statuses });
+    const portalAmendments = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({ dealId, statuses });
 
-    return res.status(HttpStatusCode.Ok).send(amendments);
+    return res.status(HttpStatusCode.Ok).send(portalAmendments);
   } catch (error) {
-    console.error(`Error getting amendments for facilities on deal with id ${dealId}: %o`, error);
+    console.error(`Error getting portal amendments for facilities on deal with id ${dealId}: %o`, error);
 
     if (error instanceof ApiError) {
       const { status, message, code } = error;
@@ -32,7 +32,7 @@ export const getAmendmentsOnDeal = async (req: GetAmendmentsOnDealRequest, res: 
 
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
-      message: 'Unknown error occurred when getting all type facility amendments on deal',
+      message: 'Unknown error occurred when getting portal facility amendments on deal',
     });
   }
 };
