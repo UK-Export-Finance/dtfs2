@@ -3,6 +3,7 @@ import { CustomExpressRequest, PortalSessionUser, PORTAL_AMENDMENT_STATUS, TFM_A
 import api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { getSubmittedAmendmentDetails } from '../../../utils/submitted-amendment-details';
+import { mapApplicationAmendmentsOnDeal } from '../../../utils/map-application-amendments-on-deal';
 
 export type GetApplicationAmendmentsRequest = CustomExpressRequest<{
   params: { dealId: string };
@@ -41,7 +42,9 @@ export const getApplicationAmendments = async (req: GetApplicationAmendmentsRequ
       return res.redirect('/not-found');
     }
 
-    const amendmentDetailsInProgress = getSubmittedAmendmentDetails(deal, userToken);
+    const getApplicationAmendmentsOnDeal = mapApplicationAmendmentsOnDeal(applicationAmendmentsOnDeal);
+
+    const lastSubmittedPortalAmendmentDetails = await getSubmittedAmendmentDetails(deal, userToken);
 
     const viewModel = {
       activeSubNavigation: 'amendments',
@@ -57,9 +60,10 @@ export const getApplicationAmendments = async (req: GetApplicationAmendmentsRequ
       companyName: deal.exporter.companyName,
       dateCreated: deal.createdAt,
       submissionDate: deal.submissionDate,
-      portalAmendmentStatus: amendmentDetailsInProgress.portalAmendmentStatus,
-      isPortalAmendmentInProgress: amendmentDetailsInProgress.isPortalAmendmentInProgress,
-      applicationAmendmentsOnDeal,
+      portalAmendmentStatus: lastSubmittedPortalAmendmentDetails.portalAmendmentStatus,
+      isPortalAmendmentInProgress: lastSubmittedPortalAmendmentDetails.isPortalAmendmentInProgress,
+      applicationAmendmentsOnDeal: getApplicationAmendmentsOnDeal,
+      // dateFrom: '30-07-2025'
     };
 
     return res.render('partials/amendments/application-amendments.njk', viewModel);

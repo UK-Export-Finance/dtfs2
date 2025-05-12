@@ -89,13 +89,21 @@ export class TfmFacilitiesRepo {
       .find(
         {
           'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) },
+          // this is to ensure we only get the facilities with amendmentId and referenceNumber and not any historical amendments
+          'amendments.amendmentId': { $exists: true, $ne: null },
+          'amendments.referenceNumber': { $exists: true, $ne: null },
         },
-        { projection: { amendments: 1 } },
+        { projection: { amendments: 1, 'facilitySnapshot.name': 1 } },
       )
       .toArray();
 
     const matchingPortalAmendments = facilitiesOnDealWithAmendments
-      .flatMap((facility) => facility.amendments || [])
+      .flatMap((facility) =>
+        (facility.amendments || []).map((amendment) => ({
+          ...amendment,
+          facilityType: facility.facilitySnapshot?.name,
+        })),
+      )
       .filter((amendment) => !statuses || statuses.includes(amendment.status));
 
     return matchingPortalAmendments;
