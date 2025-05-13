@@ -14,14 +14,14 @@ type MappedFacilityAmendmentWithUkefId = {
  * Maps an array of `FacilityAmendmentWithUkefId` to an array of `MappedFacilityAmendmentWithUkefId` objects.
  * This function transforms the structure of the amendments to match the required format.
  *
- * @param amendments - An array of amendments to be mapped. Each amendment contains details about a facility amendment.
+ * @param amendments - An array of amendments ,to be mapped. Each amendment contains details about a facility amendment.
  * @returns An array of mapped amendments
  */
 export const mapApplicationAmendmentsOnDeal = (amendments: FacilityAmendmentWithUkefId[]): MappedFacilityAmendmentWithUkefId[] => {
   return amendments.map((amendment) => {
     const symbol = getCurrencySymbol(amendment.currency ?? CURRENCY.GBP);
     const value = amendment.value ? getFormattedMonetaryValue(Number(amendment.value)) : '';
-
+    const today = new Date();
     let amendmentCreatedByRow = null;
 
     if (amendment.type === AMENDMENT_TYPES.PORTAL) {
@@ -142,6 +142,8 @@ export const mapApplicationAmendmentsOnDeal = (amendments: FacilityAmendmentWith
       type: amendment.type,
       facilityId: amendment.facilityId.toString(),
       amendmentId: amendment.amendmentId.toString(),
+      effectiveDate: amendment.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY) : '',
+      hasFutureEffectiveDate: new Date(fromUnixTime(amendment.effectiveDate ?? 0)) > today,
     };
   });
 };
