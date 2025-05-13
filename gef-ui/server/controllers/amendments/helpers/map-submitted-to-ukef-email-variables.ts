@@ -7,8 +7,8 @@ import { Facility } from '../../../types/facility';
 dotenv.config();
 
 /**
- * maps emailVariables to an email on amendment submission to checker
- * consumes deal, facility, amendment and user and maps to relevant format
+ * maps emailVariables to an email on amendment submission to ukef
+ * consumes deal, facility, amendment user and referenceNumber and maps to relevant format
  * @param deal
  * @param facility
  * @param amendment
