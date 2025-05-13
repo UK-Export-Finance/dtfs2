@@ -38,6 +38,8 @@ const newDeal = aDeal({
   submissionType: DEAL_SUBMISSION_TYPE.AIN,
 }) as AnyObject;
 
+const newStatus = 'a new status';
+
 describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit-amendment', () => {
   let dealId: string;
   let facilityId: string;
@@ -78,7 +80,6 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
 
     it(`should return ${HttpStatusCode.NotFound}`, async () => {
       const amendmentId = new ObjectId().toString();
-      const newStatus = 'a new status';
 
       const { status } = await testApi
         .patch({ auditDetails: generatePortalAuditDetails(portalUserId), newStatus, referenceNumber, ...portalAmendmentToUkefEmailVariables() })
@@ -115,7 +116,6 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
 
     it(`should return ${HttpStatusCode.BadRequest} when the facility id is invalid`, async () => {
       const anInvalidFacilityId = 'InvalidId';
-      const newStatus = 'a new status';
 
       const { body, status } = (await testApi
         .patch({ auditDetails: generatePortalAuditDetails(portalUserId), newStatus, referenceNumber, ...portalAmendmentToUkefEmailVariables() })
@@ -131,7 +131,6 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
 
     it(`should return ${HttpStatusCode.BadRequest} when the amendment id is invalid`, async () => {
       const anInvalidAmendmentId = 'InvalidId';
-      const newStatus = 'a new status';
 
       const { body, status } = (await testApi
         .patch({ auditDetails: generatePortalAuditDetails(portalUserId), newStatus, referenceNumber, ...portalAmendmentToUkefEmailVariables() })
@@ -167,13 +166,18 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
     });
 
     describe(`when newStatus is ${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}`, () => {
-      const newStatus = PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED;
+      const anAcknowledgedStatus = PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED;
 
       it(`should return ${HttpStatusCode.NotFound} when the facility does not exist`, async () => {
         const aValidButNonExistentFacilityId = new ObjectId().toString();
 
         const { body, status } = (await testApi
-          .patch({ auditDetails: generatePortalAuditDetails(portalUserId), newStatus, referenceNumber, ...portalAmendmentToUkefEmailVariables() })
+          .patch({
+            auditDetails: generatePortalAuditDetails(portalUserId),
+            newStatus: anAcknowledgedStatus,
+            referenceNumber,
+            ...portalAmendmentToUkefEmailVariables(),
+          })
           .to(generateUrl(aValidButNonExistentFacilityId, amendmentId))) as ErrorResponse;
 
         expect(status).toEqual(HttpStatusCode.NotFound);
@@ -187,7 +191,12 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
         const aValidButNonExistentAmendmentId = new ObjectId().toString();
 
         const { body, status } = (await testApi
-          .patch({ auditDetails: generatePortalAuditDetails(portalUserId), newStatus, referenceNumber, ...portalAmendmentToUkefEmailVariables() })
+          .patch({
+            auditDetails: generatePortalAuditDetails(portalUserId),
+            newStatus: anAcknowledgedStatus,
+            referenceNumber,
+            ...portalAmendmentToUkefEmailVariables(),
+          })
           .to(generateUrl(facilityId, aValidButNonExistentAmendmentId))) as ErrorResponse;
 
         expect(status).toEqual(HttpStatusCode.NotFound);
@@ -199,7 +208,12 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
 
       it(`should return ${HttpStatusCode.Ok} when the payload is valid & the amendment exists`, async () => {
         const { status } = await testApi
-          .patch({ auditDetails: generatePortalAuditDetails(portalUserId), newStatus, referenceNumber, ...portalAmendmentToUkefEmailVariables() })
+          .patch({
+            auditDetails: generatePortalAuditDetails(portalUserId),
+            newStatus: anAcknowledgedStatus,
+            referenceNumber,
+            ...portalAmendmentToUkefEmailVariables(),
+          })
           .to(generateUrl(facilityId, amendmentId));
 
         expect(status).toEqual(HttpStatusCode.Ok);

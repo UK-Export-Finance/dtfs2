@@ -30,6 +30,10 @@ const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN,
 const mockFacilityDetails = MOCK_ISSUED_FACILITY.details;
 const referenceNumber = `${mockFacilityDetails.ukefFacilityId}-01`;
 const makersBank: { name: string } = mockDeal.maker.bank as { name: string };
+const bankName = `${makersBank.name}`;
+const makersName = `${String(mockDeal.maker.firstname)} ${String(mockDeal.maker.surname)}`;
+const checkersName = `${mockUser.firstname} ${mockUser.surname}`;
+const makersEmail = String(mockDeal.maker.email);
 
 const genericFields = {
   makersEmail: mockDeal.maker.email,
@@ -39,10 +43,10 @@ const genericFields = {
     bankInternalRefName: mockDeal.bankInternalRefName,
     exporterName: mockDeal.exporter.companyName,
     ukefFacilityId: mockFacilityDetails.ukefFacilityId,
-    makersName: `${String(mockDeal.maker.firstname)} ${String(mockDeal.maker.surname)}`,
-    makersEmail: String(mockDeal.maker.email),
-    checkersName: `${mockUser.firstname} ${mockUser.surname}`,
-    bankName: `${makersBank.name}`,
+    makersName,
+    makersEmail,
+    checkersName,
+    bankName,
     referenceNumber,
   },
 };

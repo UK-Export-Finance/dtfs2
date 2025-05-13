@@ -44,12 +44,14 @@ export const patchSubmitAmendment = async (req: PatchSubmitAmendmentToUkefReques
         const emails = [makersEmail, checkersEmail, pimEmail];
 
         // sends email to maker, checker and pim with the details of the amendment
+        const templateIds = [
+          EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_UKEF_MAKER_EMAIL,
+          EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_UKEF_CHECKER_EMAIL,
+          EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_UKEF_PIM_EMAIL,
+        ];
+
         for (const [index, email] of emails.entries()) {
-          const templateId = [
-            EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_UKEF_MAKER_EMAIL,
-            EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_UKEF_CHECKER_EMAIL,
-            EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_UKEF_PIM_EMAIL,
-          ][index];
+          const templateId = templateIds[index];
           await externalApi.sendEmail(templateId, email, emailVariables);
         }
 
