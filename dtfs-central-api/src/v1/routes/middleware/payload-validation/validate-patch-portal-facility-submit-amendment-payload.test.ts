@@ -7,7 +7,7 @@ import { validatePatchPortalFacilitySubmitAmendmentPayload } from './validate-pa
 
 const validAuditDetails = generatePortalAuditDetails(aPortalUser()._id);
 const facilityId = '6597dffeb5ef5ff4267e5044';
-const referenceNumber = `${facilityId}-01`;
+const referenceNumber = `${facilityId}-001`;
 
 describe('validatePatchPortalFacilitySubmitAmendmentPayload', () => {
   const invalidPayloads = [

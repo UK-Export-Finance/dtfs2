@@ -4,7 +4,7 @@ import { PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { validatePatchPortalFacilitySubmitAmendmentPayload } from './validate-patch-portal-facility-submit-amendment-payload';
 
 const facilityId = '6597dffeb5ef5ff4267e5044';
-const referenceNumber = `${facilityId}-01`;
+const referenceNumber = `${facilityId}-001`;
 
 describe('validatePatchPortalFacilitySubmitAmendmentPayload', () => {
   const invalidPayloads = [

@@ -8,7 +8,7 @@ import { patchSubmitAmendment, PatchSubmitAmendmentToUkefRequest } from './patch
 
 const amendmentId = 'amendmentId';
 const facilityId = '6597dffeb5ef5ff4267e5044';
-const testReferenceNumber = `${facilityId}-01`;
+const testReferenceNumber = `${facilityId}-001`;
 
 const mockUpdatedAmendment = { facilityId, type: AMENDMENT_TYPES.PORTAL, status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED };
 

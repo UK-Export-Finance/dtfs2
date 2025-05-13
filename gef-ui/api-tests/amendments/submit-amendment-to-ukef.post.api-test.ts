@@ -35,7 +35,7 @@ const amendmentId = '6597dffeb5ef5ff4267e5046';
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, submissionCount: 0, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
 
 const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.SUBMIT_AMENDMENT_TO_UKEF}`;
-const referenceNumber = `${facilityId}-01`;
+const referenceNumber = `${facilityId}-001`;
 const confirmSubmitUkef = true;
 
 describe(`GET ${url}`, () => {

@@ -30,7 +30,7 @@ const invalidId = 'invalid-id';
 
 const dealId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
-const referenceNumber = `${facilityId}-12`;
+const referenceNumber = `${facilityId}-012`;
 
 const validPayload = {
   newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,

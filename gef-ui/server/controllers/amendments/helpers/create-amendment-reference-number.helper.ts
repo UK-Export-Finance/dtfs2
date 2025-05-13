@@ -23,7 +23,7 @@ export const createReferenceNumber = async (dealId: string, facilityId: string, 
     }
 
     const nextAmendmentNumber = amendmentsOnDeal.length + 1;
-    const paddedNumber = nextAmendmentNumber.toString().padStart(2, '0');
+    const paddedNumber = nextAmendmentNumber.toString().padStart(3, '0');
 
     const referenceNumber = `${facility.ukefFacilityId}-${paddedNumber}`;
 

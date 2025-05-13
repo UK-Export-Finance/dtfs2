@@ -49,7 +49,7 @@ const getHttpMocks = (confirmSubmitUkefParam: boolean = true) =>
   });
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
-const referenceNumber = `${facilityId}-01`;
+const referenceNumber = `${facilityId}-001`;
 
 describe('postSubmitAmendmentToUkef', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
