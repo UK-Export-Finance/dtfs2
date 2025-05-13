@@ -1,9 +1,13 @@
-import { FacilityAmendmentWithUkefId, SummaryListRow, AMENDMENT_TYPES } from '@ukef/dtfs2-common';
+import { FacilityAmendmentWithUkefId, SummaryListRow, AMENDMENT_TYPES, DATE_FORMATS, getFormattedMonetaryValue, CURRENCY } from '@ukef/dtfs2-common';
+import { format, fromUnixTime } from 'date-fns';
+import { getCurrencySymbol } from './get-currency-symbol';
 
 type MappedFacilityAmendmentWithUkefId = {
   referenceNumber: string;
   amendmentRows: SummaryListRow[];
   type?: string;
+  facilityId?: string;
+  amendmentId?: string;
 };
 
 /**
@@ -14,119 +18,130 @@ type MappedFacilityAmendmentWithUkefId = {
  * @returns An array of mapped amendments
  */
 export const mapApplicationAmendmentsOnDeal = (amendments: FacilityAmendmentWithUkefId[]): MappedFacilityAmendmentWithUkefId[] => {
-  return amendments.map((amendment) => ({
-    referenceNumber: amendment.referenceNumber ?? '',
-    amendmentRows: [
-      {
+  return amendments.map((amendment) => {
+    const symbol = getCurrencySymbol(amendment.currency ?? CURRENCY.GBP);
+    const value = amendment.value ? getFormattedMonetaryValue(Number(amendment.value)) : '';
+
+    let amendmentCreatedByRow = null;
+
+    if (amendment.type === AMENDMENT_TYPES.PORTAL) {
+      if (amendment.createdBy) {
+        amendmentCreatedByRow = {
+          key: {
+            text: 'Amendment created by',
+          },
+          value: {
+            text: amendment.createdBy.name,
+          },
+        };
+      }
+    } else {
+      amendmentCreatedByRow = {
         key: {
-          text: 'Facility ID',
+          text: 'Amendment created by',
         },
         value: {
-          text: amendment.facilityId.toString(),
+          text: 'UKEF',
         },
-      },
-      ...(amendment.facilityType
-        ? [
-            {
-              key: {
-                text: 'Facility type',
-              },
-              value: {
-                text: amendment.facilityType.toString(),
-              },
-            },
-          ]
-        : []),
-      {
-        key: {
-          text: 'Status',
+      };
+    }
+
+    return {
+      referenceNumber: amendment.referenceNumber ?? '',
+      amendmentRows: [
+        {
+          key: {
+            text: 'Facility ID',
+          },
+          value: {
+            text: amendment.ukefFacilityId?.toString() ?? '',
+          },
         },
-        value: {
-          text: amendment.status,
+        ...(amendment.facilityType
+          ? [
+              {
+                key: {
+                  text: 'Facility type',
+                },
+                value: {
+                  text: amendment.facilityType.toString(),
+                },
+              },
+            ]
+          : []),
+        {
+          key: {
+            text: 'Status',
+          },
+          value: {
+            text: amendment.status,
+          },
         },
-      },
-      ...(amendment.coverEndDate
-        ? [
-            {
-              key: {
-                text: 'New cover end date',
+        ...(amendment.coverEndDate
+          ? [
+              {
+                key: {
+                  text: 'New cover end date',
+                },
+                value: {
+                  text: format(amendment.coverEndDate, DATE_FORMATS.DD_MMMM_YYYY),
+                },
               },
-              value: {
-                text: amendment.coverEndDate.toString(),
+            ]
+          : []),
+        ...(amendment.facilityEndDate
+          ? [
+              {
+                key: {
+                  text: 'New facility end date',
+                },
+                value: {
+                  text: format(new Date(amendment.facilityEndDate), DATE_FORMATS.DD_MMMM_YYYY),
+                },
               },
-            },
-          ]
-        : []),
-      ...(amendment.facilityEndDate
-        ? [
-            {
-              key: {
-                text: 'New facility end date',
+            ]
+          : []),
+        ...(amendment.bankReviewDate
+          ? [
+              {
+                key: {
+                  text: 'New bank review date',
+                },
+                value: {
+                  text: format(new Date(amendment.bankReviewDate), DATE_FORMATS.DD_MMMM_YYYY),
+                },
               },
-              value: {
-                text: amendment.facilityEndDate.toString(),
+            ]
+          : []),
+        ...(amendment.value
+          ? [
+              {
+                key: {
+                  text: 'New facility value',
+                },
+                value: {
+                  text: `${symbol} ${value}`,
+                },
               },
-            },
-          ]
-        : []),
-      ...(amendment.bankReviewDate
-        ? [
-            {
-              key: {
-                text: 'New bank review date',
+            ]
+          : []),
+        ...(amendment.effectiveDate
+          ? [
+              {
+                key: {
+                  text: 'Date effective from',
+                },
+                value: {
+                  text: format(fromUnixTime(amendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY),
+                },
               },
-              value: {
-                text: amendment.bankReviewDate.toString(),
-              },
-            },
-          ]
-        : []),
-      ...(amendment.value
-        ? [
-            {
-              key: {
-                text: 'New facility value',
-              },
-              value: {
-                text: amendment.value.toString(),
-              },
-            },
-          ]
-        : []),
-      ...(amendment.effectiveDate
-        ? [
-            {
-              key: {
-                text: 'New facility value',
-              },
-              value: {
-                text: amendment.effectiveDate.toString(),
-              },
-            },
-          ]
-        : []),
-      ...(amendment.createdBy && amendment.type === AMENDMENT_TYPES.PORTAL
-        ? [
-            {
-              key: {
-                text: 'Amendment created by',
-              },
-              value: {
-                text: amendment.createdBy.name,
-              },
-            },
-          ]
-        : [
-            {
-              key: {
-                text: 'Amendment created by',
-              },
-              value: {
-                text: 'UKEF',
-              },
-            },
-          ]),
-    ],
-    type: amendment.type,
-  }));
+            ]
+          : []),
+        ...(amendmentCreatedByRow ? [amendmentCreatedByRow] : []),
+      ],
+      type: amendment.type,
+      facilityId: amendment.facilityId.toString(),
+      amendmentId: amendment.amendmentId.toString(),
+    };
+  });
 };

@@ -89,11 +89,14 @@ export class TfmFacilitiesRepo {
       .find(
         {
           'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) },
-          // this is to ensure we only get the facilities with amendmentId and referenceNumber and not any historical amendments
-          'amendments.amendmentId': { $exists: true, $ne: null },
-          'amendments.referenceNumber': { $exists: true, $ne: null },
+          amendments: {
+            $elemMatch: {
+              amendmentId: { $exists: true, $ne: null },
+              referenceNumber: { $exists: true, $ne: null },
+            },
+          },
         },
-        { projection: { amendments: 1, 'facilitySnapshot.name': 1 } },
+        { projection: { amendments: 1, 'facilitySnapshot.name': 1, 'facilitySnapshot.ukefFacilityId': 1, 'facilitySnapshot.currency': 1 } },
       )
       .toArray();
 
@@ -102,6 +105,8 @@ export class TfmFacilitiesRepo {
         (facility.amendments || []).map((amendment) => ({
           ...amendment,
           facilityType: facility.facilitySnapshot?.name,
+          ukefFacilityId: facility.facilitySnapshot?.ukefFacilityId,
+          currency: facility.facilitySnapshot?.currency.id,
         })),
       )
       .filter((amendment) => !statuses || statuses.includes(amendment.status));

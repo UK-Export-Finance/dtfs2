@@ -19,7 +19,7 @@ import { postCheckYourAnswers, PostCheckYourAnswersRequest } from './post-check-
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { Deal } from '../../../types/deal';
-import { getCurrencySymbol } from '../facility-value/get-currency-symbol';
+import { getCurrencySymbol } from '../../../utils/get-currency-symbol.ts';
 
 jest.mock('../../../services/api', () => ({
   updateAmendmentStatus: updateAmendmentStatusMock,

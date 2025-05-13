@@ -6,6 +6,7 @@ import { createAmendmentDetailsViewModel } from './create-amendment-details-view
 
 export type GetAmendmentDetailsRequest = CustomExpressRequest<{
   params: { dealId: string };
+  query: { amendmentId?: string; facilityId?: string };
 }>;
 
 /**
@@ -16,6 +17,7 @@ export type GetAmendmentDetailsRequest = CustomExpressRequest<{
 export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: Response) => {
   try {
     const { dealId } = req.params;
+    const { facilityId, amendmentId } = req.query;
     const { userToken, user } = asLoggedInUserSession(req.session);
     const userRoles = user.roles;
 
@@ -26,18 +28,19 @@ export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: 
       return res.redirect('/not-found');
     }
 
-    /**
-     * gets amendments in progress
-     * will only return 1 as only 1 amendment can be in progress at a time
-     */
-    const amendments = await api.getPortalAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
+    const amendment =
+      facilityId && amendmentId
+        ? await api.getAmendment({ facilityId, amendmentId, userToken })
+        : (await api.getPortalAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken }))?.[0];
 
-    if (!amendments?.length) {
-      console.error('In progress amendment was not found for the deal %s', dealId);
+    if (!amendment) {
+      console.error(
+        facilityId && amendmentId ? 'Amendment %s was not found for the facility %s' : 'In progress amendment was not found for the deal %s',
+        facilityId && amendmentId ? amendmentId : dealId,
+        facilityId,
+      );
       return res.redirect('/not-found');
     }
-
-    const amendment = amendments[0];
 
     const { details: facility } = await api.getFacility({ facilityId: amendment.facilityId, userToken });
 
