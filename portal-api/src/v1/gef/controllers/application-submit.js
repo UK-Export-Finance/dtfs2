@@ -1,8 +1,7 @@
 const { getNowAsEpochMillisecondString } = require('../../helpers/date');
 const { number } = require('../../../external-api/api');
-const { update: updateFacility } = require('./facilities.controller');
+const { getAllFacilitiesByDealId, update: updateFacility } = require('./facilities.controller');
 const { ukefSubmissionPortalActivity, facilityChangePortalActivity } = require('./portal-activities.controller');
-const api = require('../../api');
 
 const CONSTANTS = require('../../../constants');
 
@@ -71,8 +70,7 @@ const generateUkefId = async (entity, application) => {
 };
 
 const addSubmissionDateToIssuedFacilities = async (dealId, auditDetails) => {
-  const facilities = await api.findGefFacilitiesByDealId(dealId);
-
+  const facilities = await getAllFacilitiesByDealId(dealId);
   // eslint-disable-next-line no-restricted-syntax
   for (const facility of facilities) {
     const { _id, hasBeenIssued, canResubmitIssuedFacilities, shouldCoverStartOnSubmission, issueDate, hasBeenIssuedAndAcknowledged } = facility;
@@ -110,8 +108,7 @@ const addSubmissionDateToIssuedFacilities = async (dealId, auditDetails) => {
   Ensures that cannot update this facility anymore
 */
 const updateChangedToIssued = async (dealId, auditDetails) => {
-  const facilities = await api.findGefFacilitiesByDealId(dealId);
-
+  const facilities = await getAllFacilitiesByDealId(dealId);
   await Promise.all(
     facilities
       .filter(({ canResubmitIssuedFacilities }) => canResubmitIssuedFacilities)
@@ -134,7 +131,7 @@ const updateChangedToIssued = async (dealId, auditDetails) => {
  * @throws {Error} - If unable to generate facility ID.
  */
 const addUkefFacilityIdToFacilities = async (dealId, auditDetails) => {
-  const facilities = await api.findGefFacilitiesByDealId(dealId);
+  const facilities = await getAllFacilitiesByDealId(dealId);
 
   await Promise.all(
     facilities.map(async (facility) => {
@@ -170,7 +167,7 @@ const submissionPortalActivity = async (application) => {
   const { submissionCount, submissionType } = application;
   let { portalActivities } = application;
 
-  const facilities = await api.findGefFacilitiesByDealId(application._id.toString());
+  const facilities = await getAllFacilitiesByDealId(application._id);
 
   if (!submissionCount) {
     portalActivities = await ukefSubmissionPortalActivity(application);
@@ -194,8 +191,7 @@ const checkCoverDateConfirmed = async (app, auditDetails) => {
 
   if (app) {
     try {
-      const facilities = await api.findGefFacilitiesByDealId(app._id.toString());
-
+      const facilities = await getAllFacilitiesByDealId(app._id);
       const notYetSubmittedToUKEF = !app.submissionCount;
       const haveFacilities = facilities?.length > 0;
       const isAIN = app.submissionType === CONSTANTS.DEAL.SUBMISSION_TYPE.AIN;

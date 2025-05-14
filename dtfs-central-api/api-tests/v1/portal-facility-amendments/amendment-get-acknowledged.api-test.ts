@@ -11,6 +11,7 @@ import {
   MONGO_DB_COLLECTIONS,
   PortalFacilityAmendment,
   PORTAL_AMENDMENT_STATUS,
+  portalAmendmentToUkefEmailVariables,
 } from '@ukef/dtfs2-common';
 import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
@@ -128,7 +129,7 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/acknowledged', () => 
 
       // submit amendment to make it acknowledged
       await testApi
-        .patch({ auditDetails: generatePortalAuditDetails(portalUserId), newStatus, referenceNumber })
+        .patch({ auditDetails: generatePortalAuditDetails(portalUserId), newStatus, referenceNumber, ...portalAmendmentToUkefEmailVariables() })
         .to(generateSubmitAmendmentUrl(facilityId, amendmentId));
     });
 

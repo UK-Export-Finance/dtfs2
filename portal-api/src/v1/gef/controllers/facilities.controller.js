@@ -70,6 +70,22 @@ exports.create = async (req, res) => {
   }
 };
 
+const getAllFacilitiesByDealId = async (dealId) => {
+  const collection = await db.getCollection(MONGO_DB_COLLECTIONS.FACILITIES);
+  if (!dealId) {
+    // TODO SR-8: This is required to preserve existing behaviour and allow tests to pass, but seems like a bug.
+    return collection.find().toArray();
+  }
+
+  if (!ObjectId.isValid(dealId)) {
+    throw new InvalidDatabaseQueryError('Invalid deal id');
+  }
+  const matchingFacilities = await collection.find({ dealId: { $eq: ObjectId(dealId) } }).toArray();
+
+  return matchingFacilities;
+};
+exports.getAllFacilitiesByDealId = getAllFacilitiesByDealId;
+
 exports.getAllGET = async (req, res) => {
   try {
     let facilities;

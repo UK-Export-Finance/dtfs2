@@ -3,7 +3,7 @@ import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES } from '@ukef/dtfs2-common';
 
 /**
  * Generate aggregate pipeline to get acknowledged portal amendments by facility id
- * @param facilityId - the facility id
+ * @param facilityId - Mongo Facility ID
  * @returns aggregate pipeline to get acknowledged portal amendments by facility id
  */
 export const acknowledgedPortalAmendmentsByFacilityId = (facilityId: string | ObjectId): Document[] => [
