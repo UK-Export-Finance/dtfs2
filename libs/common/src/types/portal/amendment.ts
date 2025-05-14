@@ -34,3 +34,20 @@ export type AmendmentUpdateStatus = {
   emailVariables?: PortalAmendmentSubmittedToCheckerEmailVariables;
   auditDetails?: AuditDetails;
 };
+
+export type PortalAmendmentSubmittedToUkefEmailVariables = {
+  exporterName: string;
+  bankInternalRefName: string;
+  ukefDealId: string;
+  ukefFacilityId: string;
+  makersName: string;
+  makersEmail: string;
+  checkersName: string;
+  bankName: string;
+  dateEffectiveFrom: string;
+  newCoverEndDate: string;
+  newFacilityEndDate: string;
+  newFacilityValue: string;
+  eligibilityCriteria: string;
+  referenceNumber: string;
+};

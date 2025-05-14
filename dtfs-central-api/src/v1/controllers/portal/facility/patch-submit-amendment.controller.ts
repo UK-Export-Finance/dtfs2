@@ -4,6 +4,8 @@ import { Response } from 'express';
 import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
 import { PatchPortalFacilitySubmitAmendmentPayload } from '../../../routes/middleware/payload-validation/validate-patch-portal-facility-submit-amendment-payload';
+import EMAIL_TEMPLATE_IDS from '../../../../constants/email-template-ids';
+import externalApi from '../../../../external-api/api';
 
 type PatchSubmitAmendmentToUkefRequestParams = {
   facilityId: string;
@@ -18,12 +20,13 @@ export type PatchSubmitAmendmentToUkefRequest = CustomExpressRequest<{
 /**
  * patch portal facility amendment
  * if newStatus is PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, submit the amendment to ukef
+ * and send emails with the details of the amendment
  * @param req - request
  * @param res - response
  */
 export const patchSubmitAmendment = async (req: PatchSubmitAmendmentToUkefRequest, res: Response) => {
   const { facilityId, amendmentId } = req.params;
-  const { auditDetails, newStatus, referenceNumber } = req.body;
+  const { auditDetails, newStatus, referenceNumber, makersEmail, checkersEmail, pimEmail, emailVariables } = req.body;
 
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.PORTAL);
@@ -37,6 +40,20 @@ export const patchSubmitAmendment = async (req: PatchSubmitAmendmentToUkefReques
           referenceNumber,
           auditDetails,
         });
+
+        const emails = [makersEmail, checkersEmail, pimEmail];
+
+        // sends email to maker, checker and pim with the details of the amendment
+        const templateIds = [
+          EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_UKEF_MAKER_EMAIL,
+          EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_UKEF_CHECKER_EMAIL,
+          EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_UKEF_PIM_EMAIL,
+        ];
+
+        for (const [index, email] of emails.entries()) {
+          const templateId = templateIds[index];
+          await externalApi.sendEmail(templateId, email, emailVariables);
+        }
 
         return res.status(HttpStatusCode.Ok).send(updatedSubmitAmendment);
       }
