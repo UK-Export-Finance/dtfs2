@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { MONGO_DB_COLLECTIONS, PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS, TfmFacility } from '@ukef/dtfs2-common';
+import { CURRENCY, MONGO_DB_COLLECTIONS, PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS, TfmFacility } from '@ukef/dtfs2-common';
 import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { TfmFacilitiesRepo } from './tfm-facilities.repo';
 import { mongoDbClient } from '../../drivers/db-client';
@@ -14,11 +14,26 @@ const findToArrayMock = jest.fn();
 const { DRAFT, ACKNOWLEDGED, READY_FOR_CHECKERS_APPROVAL } = PORTAL_AMENDMENT_STATUS;
 const { IN_PROGRESS } = TFM_AMENDMENT_STATUS;
 
-const aDraftPortalAmendment = aPortalFacilityAmendment({ status: DRAFT });
-const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: ACKNOWLEDGED });
-const aReadyForCheckersApprovalPortalAmendment = aPortalFacilityAmendment({ status: READY_FOR_CHECKERS_APPROVAL });
+const aDraftPortalAmendment = {
+  ...aPortalFacilityAmendment({ status: DRAFT }),
+  facilityType: 'test cash facility',
+  ukefFacilityId: '0041569417',
+  currency: CURRENCY.GBP,
+};
+const anAcknowledgedPortalAmendment = {
+  ...aPortalFacilityAmendment({ status: ACKNOWLEDGED }),
+  facilityType: 'test cash facility',
+  ukefFacilityId: '0041569417',
+  currency: CURRENCY.GBP,
+};
+const aReadyForCheckersApprovalPortalAmendment = {
+  ...aPortalFacilityAmendment({ status: READY_FOR_CHECKERS_APPROVAL }),
+  facilityType: 'test cash facility',
+  ukefFacilityId: '0041569417',
+  currency: CURRENCY.GBP,
+};
 
-const aTfmAmendment = aTfmFacilityAmendment();
+const aTfmAmendment = { ...aTfmFacilityAmendment(), facilityType: 'test cash facility', ukefFacilityId: '0041569417', currency: CURRENCY.GBP };
 
 const facilityWithPortalAmendments: TfmFacility = aTfmFacility({ amendments: [aDraftPortalAmendment, anAcknowledgedPortalAmendment], dealId });
 const facilityWithMixedAmendments: TfmFacility = aTfmFacility({ amendments: [aReadyForCheckersApprovalPortalAmendment, aTfmAmendment], dealId });
@@ -52,9 +67,22 @@ describe('TfmFacilitiesRepo', () => {
       // Assert
       const expectedFilter = {
         'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) },
+        amendments: {
+          $elemMatch: {
+            amendmentId: { $exists: true, $ne: null },
+            referenceNumber: { $exists: true, $ne: null },
+          },
+        },
       };
 
-      const expectedProjection = { projection: { amendments: 1 } };
+      const expectedProjection = {
+        projection: {
+          amendments: 1,
+          'facilitySnapshot.name': 1,
+          'facilitySnapshot.ukefFacilityId': 1,
+          'facilitySnapshot.currency': 1,
+        },
+      };
 
       expect(findMock).toHaveBeenCalledTimes(1);
       expect(findMock).toHaveBeenCalledWith(expectedFilter, expectedProjection);

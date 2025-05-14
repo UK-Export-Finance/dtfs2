@@ -62,7 +62,7 @@ interface BaseAmendment {
     name: string;
     email: string;
   };
-  referenceNumber?: string;
+  referenceNumber?: string | null;
 }
 
 /**

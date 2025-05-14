@@ -109,7 +109,7 @@ export class TfmFacilitiesRepo {
           currency: facility.facilitySnapshot?.currency.id,
         })),
       )
-      .filter((amendment) => !statuses || statuses.includes(amendment.status));
+      .filter((amendment) => amendment.amendmentId && amendment.referenceNumber && (!statuses || statuses.includes(amendment.status)));
 
     return matchingPortalAmendments;
   }
