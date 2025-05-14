@@ -298,11 +298,15 @@ export class PortalFacilityAmendmentService {
 
     const existingAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
 
-    if (!existingAmendment || existingAmendment.type === AMENDMENT_TYPES.TFM) {
+    const isNotPortalAmendment = !existingAmendment || existingAmendment?.type === AMENDMENT_TYPES.TFM;
+
+    if (isNotPortalAmendment) {
       throw new AmendmentNotFoundError(amendmentId, facilityId);
     }
 
-    await this.validateNoOtherAmendmentInProgressOnDeal({ dealId: existingAmendment.dealId.toString(), amendmentId });
+    const dealId = existingAmendment.dealId.toString();
+
+    await this.validateNoOtherAmendmentInProgressOnDeal({ dealId, amendmentId });
 
     const facilityMongoId = new ObjectId(facilityId);
     const amendmentMongoId = new ObjectId(amendmentId);

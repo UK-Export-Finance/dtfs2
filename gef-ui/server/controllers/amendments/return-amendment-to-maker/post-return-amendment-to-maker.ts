@@ -1,4 +1,4 @@
-import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS, RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
@@ -12,8 +12,6 @@ export type PostReturnToMakerRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
   reqBody: { comment: string };
 }>;
-
-export const MAX_COMMENT_LENGTH = 400;
 
 /**
  * controller to post return amendment to maker
@@ -47,23 +45,29 @@ export const postReturnAmendmentToMaker = async (req: PostReturnToMakerRequest, 
       return res.redirect('/not-found');
     }
 
-    if (comment.length > MAX_COMMENT_LENGTH) {
+    if (comment?.length > RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT) {
       const errors = validationErrorHandler({
         errRef: 'comment',
-        errMsg: `You have entered more than ${MAX_COMMENT_LENGTH} characters`,
+        errMsg: `You have entered more than ${RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT} characters`,
       });
 
+      const exporterName = deal.exporter.companyName;
+      const facilityType = facility.type;
+      const previousPage = `/gef/application-details/${deal._id}/${PORTAL_AMENDMENT_PAGES.AMENDMENT_DETAILS}`;
+      const maxCommentLength = RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT;
+      const isReturningAmendmentToMaker = true;
+
       const viewModel: ReturnAmendmentToMakerViewModel = {
-        exporterName: deal.exporter.companyName,
+        exporterName,
         dealId,
         facilityId,
         amendmentId,
-        facilityType: facility.type,
-        previousPage: `/gef/application-details/${deal._id}/${PORTAL_AMENDMENT_PAGES.AMENDMENT_DETAILS}`,
-        maxCommentLength: MAX_COMMENT_LENGTH,
+        facilityType,
+        previousPage,
+        maxCommentLength,
         errors,
         comment,
-        isReturningAmendmentToMaker: true,
+        isReturningAmendmentToMaker,
       };
 
       return res.render('partials/return-to-maker.njk', viewModel);
@@ -78,9 +82,11 @@ export const postReturnAmendmentToMaker = async (req: PostReturnToMakerRequest, 
       userToken,
     });
 
-    return res.redirect(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.RETURNED_TO_MAKER }));
+    const url = getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.RETURNED_TO_MAKER });
+
+    return res.redirect(url);
   } catch (error) {
-    console.error('Error getting for submit amendment to ukef page %o', error);
+    console.error('Error getting return to maker page %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

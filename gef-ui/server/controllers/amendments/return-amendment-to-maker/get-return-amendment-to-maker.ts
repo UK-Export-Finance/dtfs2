@@ -1,4 +1,4 @@
-import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS, RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
@@ -8,8 +8,6 @@ import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 export type GetReturnToMakerRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
 }>;
-
-export const MAX_COMMENT_LENGTH = 400;
 
 /**
  * controller to get the return amendment to maker page
@@ -42,20 +40,26 @@ export const getReturnAmendmentToMaker = async (req: GetReturnToMakerRequest, re
       return res.redirect('/not-found');
     }
 
+    const exporterName = deal.exporter.companyName;
+    const facilityType = facility.type;
+    const previousPage = `/gef/application-details/${deal._id}/${PORTAL_AMENDMENT_PAGES.AMENDMENT_DETAILS}`;
+    const maxCommentLength = RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT;
+    const isReturningAmendmentToMaker = true;
+
     const viewModel: ReturnAmendmentToMakerViewModel = {
-      exporterName: deal.exporter.companyName,
+      exporterName,
       dealId,
       facilityId,
       amendmentId,
-      facilityType: facility.type,
-      previousPage: `/gef/application-details/${deal._id}/${PORTAL_AMENDMENT_PAGES.AMENDMENT_DETAILS}`,
-      maxCommentLength: MAX_COMMENT_LENGTH,
-      isReturningAmendmentToMaker: true,
+      facilityType,
+      previousPage,
+      maxCommentLength,
+      isReturningAmendmentToMaker,
     };
 
     return res.render('partials/return-to-maker.njk', viewModel);
   } catch (error) {
-    console.error('Error getting for submit amendment to ukef page %o', error);
+    console.error('Error getting return to maker facility amendment page %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

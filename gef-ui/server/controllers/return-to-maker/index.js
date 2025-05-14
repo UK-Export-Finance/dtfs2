@@ -1,9 +1,10 @@
+const { RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT } = require('@ukef/dtfs2-common');
 const { getApplication, setApplicationStatus } = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
 const CONSTANTS = require('../../constants');
 const { addCheckerCommentsToApplication } = require('../../helpers/add-checker-comments-to-application');
 
-const MAX_COMMENT_LENGTH = 400;
+const MAX_COMMENT_LENGTH = RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT;
 
 const getReturnToMaker = async (req, res) => {
   const { params } = req;
