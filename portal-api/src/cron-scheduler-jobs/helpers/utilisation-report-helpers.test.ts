@@ -451,9 +451,9 @@ describe('utilisation-report-helpers', () => {
         paymentOfficerTeam: { emails: [validBarclaysEmail], teamName: validBarclaysTeamName },
       };
 
-      const validHsbcEmail = 'valid-hsbc-email@example.com';
+      const validHsbcEmail = 'valid-bank-1-email@example.com';
       const otherValidHsbcEmail = 'another-valid-hsbc-email@example.com';
-      const validHsbcTeamName = 'HSBC Payment Officer Team';
+      const validHsbcTeamName = 'Bank 1 Payment Officer Team';
       const validHsbcBank: BankResponse = {
         ...aBank(),
         isVisibleInTfmUtilisationReports: true,

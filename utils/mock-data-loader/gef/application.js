@@ -23,7 +23,7 @@ const APPLICATION = [
   {
     // completed
     bank: { id: '9' },
-    bankInternalRefName: 'HSBC 123',
+    bankInternalRefName: 'UKEF Test 123',
     additionalRefName: 'Some Additional Reference',
     mandatoryVersionId: 33,
     exporter: EXPORTER_COMPLETED,
