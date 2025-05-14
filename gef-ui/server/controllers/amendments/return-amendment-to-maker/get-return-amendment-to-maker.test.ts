@@ -1,8 +1,16 @@
-import { aPortalSessionUser, PORTAL_LOGIN_STATUS, ROLES, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import {
+  aPortalSessionUser,
+  PORTAL_LOGIN_STATUS,
+  ROLES,
+  DEAL_STATUS,
+  DEAL_SUBMISSION_TYPE,
+  PORTAL_AMENDMENT_STATUS,
+  RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT,
+} from '@ukef/dtfs2-common';
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import api from '../../../services/api';
-import { getReturnAmendmentToMaker, GetReturnToMakerRequest, MAX_COMMENT_LENGTH } from './get-return-amendment-to-maker';
+import { getReturnAmendmentToMaker, GetReturnToMakerRequest } from './get-return-amendment-to-maker';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
@@ -71,7 +79,7 @@ describe('getReturnAmendmentToMaker', () => {
       amendmentId,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage: `/gef/application-details/${mockDeal._id}/${PORTAL_AMENDMENT_PAGES.AMENDMENT_DETAILS}`,
-      maxCommentLength: MAX_COMMENT_LENGTH,
+      maxCommentLength: RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT,
       isReturningAmendmentToMaker: true,
     };
 

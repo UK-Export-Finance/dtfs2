@@ -7,11 +7,19 @@ const getAmendmentMock = jest.fn();
 const getUserDetailsMock = jest.fn();
 const updateApplicationMock = jest.fn();
 
-import { aPortalSessionUser, PORTAL_LOGIN_STATUS, ROLES, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import {
+  aPortalSessionUser,
+  PORTAL_LOGIN_STATUS,
+  ROLES,
+  DEAL_STATUS,
+  DEAL_SUBMISSION_TYPE,
+  PORTAL_AMENDMENT_STATUS,
+  RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT,
+} from '@ukef/dtfs2-common';
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import api from '../../../services/api';
-import { postReturnAmendmentToMaker, PostReturnToMakerRequest, MAX_COMMENT_LENGTH } from './post-return-amendment-to-maker';
+import { postReturnAmendmentToMaker, PostReturnToMakerRequest } from './post-return-amendment-to-maker';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
@@ -198,7 +206,7 @@ describe('postReturnAmendmentToMaker', () => {
   });
 
   describe('when the comment is too long', () => {
-    const longComment = 'a'.repeat(MAX_COMMENT_LENGTH + 1);
+    const longComment = 'a'.repeat(RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT + 1);
 
     it('should render the return amendment to maker template with errors', async () => {
       // Arrange
@@ -206,7 +214,7 @@ describe('postReturnAmendmentToMaker', () => {
 
       const errors = validationErrorHandler({
         errRef: 'comment',
-        errMsg: `You have entered more than ${MAX_COMMENT_LENGTH} characters`,
+        errMsg: `You have entered more than ${RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT} characters`,
       });
 
       // Act
@@ -219,7 +227,7 @@ describe('postReturnAmendmentToMaker', () => {
         amendmentId,
         facilityType: MOCK_ISSUED_FACILITY.details.type,
         previousPage: `/gef/application-details/${mockDeal._id}/${PORTAL_AMENDMENT_PAGES.AMENDMENT_DETAILS}`,
-        maxCommentLength: MAX_COMMENT_LENGTH,
+        maxCommentLength: RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT,
         comment: longComment,
         errors,
         isReturningAmendmentToMaker: true,
