@@ -19,6 +19,7 @@ const { calculateUkefExposure, calculateGuaranteeFee } = require('../../../../sr
 const { DB_COLLECTIONS } = require('../../../fixtures/constants');
 const { generateANewFacility } = require('./helpers/generate-a-new-facility.tests');
 const { generateACompleteFacilityUpdate } = require('./helpers/generate-a-facility-update.tests');
+const { facilityUpdate } = require('../../../fixtures/gef/facility-update');
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
@@ -172,36 +173,21 @@ describe(baseUrl, () => {
 
       it('name is required if hasBeenIssued', async () => {
         const { details } = newFacility;
-        const update = {
-          hasBeenIssued: true,
-          name: null,
-          shouldCoverStartOnSubmission: true,
-          coverStartDate: null,
-          coverEndDate: '2015-01-01T00:00:00.000Z',
-          monthsOfCover: 12,
-          details: ['test'],
-          detailsOther: null,
-          currency: { id: CURRENCY.GBP },
-          value: '10000000',
-          coverPercentage: 80,
-          interestPercentage: 40,
-          paymentType: 'Monthly',
-          feeType: FACILITY_PAYMENT_TYPE.IN_ADVANCE,
-          feeFrequency: 'Monthly',
-          dayCountBasis: 365,
-        };
+
         const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-        const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
+
+        const { status, body } = await as(aMaker).put(facilityUpdate).to(`${baseUrl}/${item.body.details._id}`);
+
         const expected = {
           status: CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS,
           details: {
             ...details,
-            ...update,
+            ...facilityUpdate,
             updatedAt: expect.any(Number),
             value: expect.any(Number),
             monthsOfCover: null, // this is nullified if `hasBeenIssued` is true
-            ukefExposure: calculateUkefExposure(update, {}),
-            guaranteeFee: calculateGuaranteeFee(update, {}),
+            ukefExposure: calculateUkefExposure(facilityUpdate, {}),
+            guaranteeFee: calculateGuaranteeFee(facilityUpdate, {}),
           },
           validation: {
             required: addFacilityEndDateToValidation(['name'], dealVersion),

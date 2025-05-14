@@ -1,7 +1,10 @@
 const axios = require('axios');
+const { ObjectId } = require('mongodb');
+
 const { TIMEOUT, HEADERS } = require('@ukef/dtfs2-common');
 const { PORTAL_FACILITY_AMENDMENT } = require('@ukef/dtfs2-common/schemas');
 const { isValidMongoId, isValidBankId, isValidReportPeriod } = require('./validation/validateIds');
+const { InvalidDatabaseQueryError } = require('./errors/invalid-database-query.error');
 
 require('dotenv').config();
 
@@ -180,6 +183,25 @@ const findOneFacility = async (facilityId) => {
     const response = await axios({
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}`,
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to find one facility %o', error);
+    return false;
+  }
+};
+
+const findGefFacilitiesByDealId = async (dealId) => {
+  if (!ObjectId.isValid(dealId)) {
+    throw new InvalidDatabaseQueryError('Invalid deal id');
+  }
+
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/gef/deals/${dealId}/facilities`,
       headers: headers.central,
     });
 
@@ -636,6 +658,26 @@ const getAllPortalFacilityAmendments = async (statuses) => {
 };
 
 /**
+ * Gets portal facility amendments by facility id with status 'acknowledged'
+ * @param {string} facilityId - id of the facility to amend
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId[])>} - the amendments on facility with the status 'acknowledged'
+ */
+const getAcknowledgedAmendmentsByFacilityId = async (facilityId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments/acknowledged`,
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error getting acknowledged portal facility amendments %o', error);
+    throw error;
+  }
+};
+
+/**
  * Gets the portal facility amendment
  * @param {string} facilityId - id of the facility to amend
  * @param {string} amendmentId - id of the facility amendment
@@ -911,6 +953,7 @@ module.exports = {
   createFacility,
   createMultipleFacilities,
   findOneFacility,
+  findGefFacilitiesByDealId,
   updateFacility,
   deleteFacility,
   tfmDealSubmit,
@@ -929,6 +972,7 @@ module.exports = {
   getFeeRecordCorrectionTransientFormData,
   getAllPortalFacilityAmendments,
   getPortalFacilityAmendment,
+  getAcknowledgedAmendmentsByFacilityId,
   getPortalFacilityAmendmentsOnDeal,
   putPortalFacilityAmendment,
   getFeeRecordCorrectionReview,

@@ -44,6 +44,7 @@ const patchFacilityAmendmentController = require('../controllers/portal/facility
 const deleteFacilityAmendmentController = require('../controllers/portal/facility/delete-amendment.controller');
 const patchAmendmentStatusController = require('../controllers/portal/facility/patch-amendment-status.controller');
 const patchSubmitAmendmentController = require('../controllers/portal/facility/patch-submit-amendment.controller');
+const getAcknowledgedAmendmentsByFacilityIdController = require('../controllers/portal/facility/get-acknowledged-amendments-by-facility-id.controller');
 
 const getAllFacilityAmendmentController = require('../controllers/portal/facility/get-all-amendments.controller');
 const getFacilityAmendmentsForDealController = require('../controllers/portal/facility/get-amendments-on-deal.controller');
@@ -557,6 +558,35 @@ portalRouter.route('/facilities/:id').delete(deleteFacilityController.deleteFaci
  *         description: Not found
  */
 portalRouter.route('/facilities/:id/status').put(updateFacilityStatusController.updateFacilityStatusPut);
+
+/**
+ * @openapi
+ * /facilities/:facilityId/amendments/acknowledged:
+ *   get:
+ *     summary: Get all acknowledged amendments for a facility
+ *     tags: [Portal - Amendments]
+ *     description:  Get all acknowledged amendments for a facility
+ *     parameters:
+ *       - in: path
+ *         name: facilityId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Facility ID amendment exists on
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/definitions/PortalAmendment'
+ *       404:
+ *         description: Not found
+ */
+portalRouter
+  .route('/facilities/:facilityId/amendments/acknowledged')
+  .all(validatePortalFacilityAmendmentsEnabled, validation.mongoIdValidation('facilityId'))
+  .get(getAcknowledgedAmendmentsByFacilityIdController.getAcknowledgedAmendmentsByFacilityId);
 
 /**
  * @openapi

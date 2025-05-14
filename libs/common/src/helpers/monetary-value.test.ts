@@ -1,4 +1,4 @@
-import { getFormattedMonetaryValue, getMonetaryValueAsNumber } from './monetary-value';
+import { getFormattedMonetaryValue, getFormattedMonetaryValueWithoutDecimals, getMonetaryValueAsNumber } from './monetary-value';
 
 describe('monetary value helpers', () => {
   describe('getFormattedMonetaryValue', () => {
@@ -57,6 +57,68 @@ describe('monetary value helpers', () => {
 
       // Act
       const formattedValue = getFormattedMonetaryValue(value);
+
+      // Assert
+      expect(formattedValue).toEqual(expectedFormattedValue);
+    });
+  });
+
+  describe('getFormattedMonetaryValueWithoutDecimals', () => {
+    it('should format the given value as a string with thousands separated by comma', () => {
+      // Arrange
+      const value = 1234567;
+      const expectedFormattedValue = '1,234,567';
+
+      // Act
+      const formattedValue = getFormattedMonetaryValueWithoutDecimals(value);
+
+      // Assert
+      expect(formattedValue).toEqual(expectedFormattedValue);
+    });
+
+    it('should format the given value as a string with thousands separated by comma rounded up when has decimal places', () => {
+      // Arrange
+      const value = 1234567.85;
+      const expectedFormattedValue = '1,234,568';
+
+      // Act
+      const formattedValue = getFormattedMonetaryValueWithoutDecimals(value);
+
+      // Assert
+      expect(formattedValue).toEqual(expectedFormattedValue);
+    });
+
+    it('should format the given value as a string with thousands separated by comma rounded down when has decimal places under 0.5', () => {
+      // Arrange
+      const value = 1234567.41;
+      const expectedFormattedValue = '1,234,567';
+
+      // Act
+      const formattedValue = getFormattedMonetaryValueWithoutDecimals(value);
+
+      // Assert
+      expect(formattedValue).toEqual(expectedFormattedValue);
+    });
+
+    it('should format the given value as a string without thousand seperators when under 1000', () => {
+      // Arrange
+      const value = 250;
+      const expectedFormattedValue = '250';
+
+      // Act
+      const formattedValue = getFormattedMonetaryValueWithoutDecimals(value);
+
+      // Assert
+      expect(formattedValue).toEqual(expectedFormattedValue);
+    });
+
+    it('should format the given value as a string without thousand seperators when 0', () => {
+      // Arrange
+      const value = 0;
+      const expectedFormattedValue = '0';
+
+      // Act
+      const formattedValue = getFormattedMonetaryValueWithoutDecimals(value);
 
       // Assert
       expect(formattedValue).toEqual(expectedFormattedValue);
