@@ -1,5 +1,12 @@
 import { ObjectId } from 'mongodb';
-import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, AnyObject, PortalFacilityAmendmentWithUkefId, Role } from '@ukef/dtfs2-common';
+import {
+  PORTAL_AMENDMENT_STATUS,
+  AMENDMENT_TYPES,
+  AnyObject,
+  PortalFacilityAmendmentWithUkefId,
+  Role,
+  portalAmendmentToUkefEmailVariables,
+} from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import app from '../../../../src/createApp';
 import testUserCache from '../../../api-test-users';
@@ -29,12 +36,12 @@ const validAmendmentId = new ObjectId().toString();
 const invalidId = 'invalid-id';
 
 const dealId = new ObjectId().toString();
-const facilityId = new ObjectId().toString();
-const referenceNumber = `${facilityId}-12`;
+const referenceNumber = `${new ObjectId().toString()}-01`;
 
 const validPayload = {
   newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
   referenceNumber,
+  ...portalAmendmentToUkefEmailVariables(),
 };
 
 describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/submit-amendment', () => {
