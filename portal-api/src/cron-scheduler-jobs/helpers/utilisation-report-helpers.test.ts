@@ -444,7 +444,7 @@ describe('utilisation-report-helpers', () => {
       jest.mocked(externalApi.bankHolidays).getBankHolidayDatesForRegion.mockResolvedValue([]);
 
       const validBarclaysEmail = 'valid-barclays-email@example.com';
-      const validBarclaysTeamName = 'Barclays Payment Officer Team';
+      const validBarclaysTeamName = 'Bank 1 Payment Officer Team';
       const validBarclaysBank: BankResponse = {
         ...aBank(),
         isVisibleInTfmUtilisationReports: true,
