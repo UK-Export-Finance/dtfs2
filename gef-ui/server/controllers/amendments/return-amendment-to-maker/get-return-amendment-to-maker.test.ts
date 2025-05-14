@@ -257,7 +257,7 @@ describe('getReturnAmendmentToMaker', () => {
 
       // Assert
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Error getting for submit amendment to ukef page %o', mockError);
+      expect(console.error).toHaveBeenCalledWith('Error getting return to maker facility amendment page %o', mockError);
     });
   });
 
@@ -286,7 +286,7 @@ describe('getReturnAmendmentToMaker', () => {
 
       // Assert
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Error getting for submit amendment to ukef page %o', mockError);
+      expect(console.error).toHaveBeenCalledWith('Error getting return to maker facility amendment page %o', mockError);
     });
   });
 
@@ -315,7 +315,7 @@ describe('getReturnAmendmentToMaker', () => {
 
       // Assert
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Error getting for submit amendment to ukef page %o', mockError);
+      expect(console.error).toHaveBeenCalledWith('Error getting return to maker facility amendment page %o', mockError);
     });
   });
 });
