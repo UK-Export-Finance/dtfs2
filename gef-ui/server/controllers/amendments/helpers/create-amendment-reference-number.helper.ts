@@ -1,4 +1,4 @@
-import { PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import api from '../../../services/api';
 /**
  * @param dealId - the deal id
@@ -8,8 +8,8 @@ import api from '../../../services/api';
  */
 export const createReferenceNumber = async (dealId: string, facilityId: string, userToken: string): Promise<string> => {
   try {
-    const statuses = [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED];
-    const amendmentsOnDeal = await api.getPortalAmendmentsOnDeal({ dealId, statuses, userToken });
+    const statuses = [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, TFM_AMENDMENT_STATUS.COMPLETED];
+    const amendmentsOnDeal = await api.getAmendmentsOnDeal({ dealId, statuses, userToken });
     const { details: facility } = await api.getFacility({ facilityId, userToken });
 
     if (!amendmentsOnDeal) {
@@ -22,7 +22,9 @@ export const createReferenceNumber = async (dealId: string, facilityId: string, 
       throw new Error('Facility was not found');
     }
 
-    const nextAmendmentNumber = amendmentsOnDeal.length + 1;
+    const amendmentsOnFacility = amendmentsOnDeal.filter((amendment) => amendment.facilityId.toString() === facilityId);
+
+    const nextAmendmentNumber = amendmentsOnFacility.length + 1;
     const paddedNumber = nextAmendmentNumber.toString().padStart(3, '0');
 
     const referenceNumber = `${facility.ukefFacilityId}-${paddedNumber}`;

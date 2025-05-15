@@ -121,6 +121,7 @@ export interface TfmFacilityAmendment extends BaseAmendment {
     firstName: string;
     lastName: string;
   };
+  eligibilityCriteria: undefined;
 }
 
 export interface AmendmentsEligibilityCriterionWithAnswer extends AmendmentsEligibilityCriterion {

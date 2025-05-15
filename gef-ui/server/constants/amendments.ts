@@ -1,3 +1,13 @@
+import {
+  AMENDMENT_TYPES,
+  AmendmentsEligibilityCriterionWithAnswer,
+  UnixTimestampSeconds,
+  PortalAmendmentStatus,
+  TfmAmendmentStatus,
+  Currency,
+  UnixTimestamp,
+} from '@ukef/dtfs2-common';
+
 export const PORTAL_AMENDMENT_PAGES = {
   WHAT_DO_YOU_NEED_TO_CHANGE: 'what-do-you-need-to-change',
   COVER_END_DATE: 'cover-end-date',
@@ -16,3 +26,32 @@ export const PORTAL_AMENDMENT_PAGES = {
   SUBMIT_AMENDMENT_TO_UKEF: 'submit-amendment-to-ukef',
   ALL_TYPE_AMENDMENTS: 'all-type-amendments',
 } as const;
+
+export interface FacilityAmendmentWithUkefId {
+  amendmentId: string;
+  facilityId: string;
+  dealId: string;
+  changeCoverEndDate?: boolean;
+  coverEndDate?: UnixTimestamp | null;
+  isUsingFacilityEndDate?: boolean | null;
+  facilityEndDate?: Date | null;
+  bankReviewDate?: Date | null;
+  changeFacilityValue?: boolean;
+  value?: number | null;
+  currency?: Currency | null;
+  effectiveDate?: UnixTimestampSeconds;
+  facilityType?: string;
+  createdBy?: {
+    username: string;
+    name: string;
+    email: string;
+  };
+  referenceNumber?: string | null;
+  type: typeof AMENDMENT_TYPES.PORTAL | typeof AMENDMENT_TYPES.TFM;
+  status: PortalAmendmentStatus | TfmAmendmentStatus;
+  ukefFacilityId: string | null;
+  eligibilityCriteria: {
+    version: number;
+    criteria: AmendmentsEligibilityCriterionWithAnswer[];
+  };
+}

@@ -7,13 +7,20 @@ import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { createAmendmentDetailsViewModel } from './create-amendment-details-view-model.ts';
 import { Deal } from '../../../types/deal';
-import * as api from '../../../services/api';
+import api from '../../../services/api';
 
-jest.mock('../../../services/api');
+jest.mock('../../../services/api', () => ({
+  getApplication: jest.fn(),
+  getFacility: jest.fn(),
+  getAmendment: jest.fn(),
+  getPortalAmendmentsOnDeal: jest.fn(),
+}));
 
 const mockGetFacility = jest.fn();
 const mockGetApplication = jest.fn();
+const mockGetPortalAmendments = jest.fn();
 const mockGetAmendment = jest.fn();
+console.error = jest.fn();
 
 const dealId = 'dealId';
 const facilityId = 'facilityId';
@@ -43,11 +50,13 @@ describe('getAmendmentDetails', () => {
 
     jest.spyOn(api, 'getFacility').mockImplementation(mockGetFacility);
     jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
-    jest.spyOn(api, 'getAmendmentsOnDeal').mockImplementation(mockGetAmendment);
+    jest.spyOn(api, 'getAmendment').mockImplementation(mockGetAmendment);
+    jest.spyOn(api, 'getPortalAmendmentsOnDeal').mockImplementation(mockGetPortalAmendments);
 
     mockGetApplication.mockResolvedValue(mockDeal);
     mockGetFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
-    mockGetAmendment.mockResolvedValue([amendment]);
+    mockGetAmendment.mockResolvedValue(amendment);
+    mockGetPortalAmendments.mockResolvedValue([amendment]);
   });
 
   afterAll(() => {
@@ -55,7 +64,7 @@ describe('getAmendmentDetails', () => {
   });
 
   users.forEach((user) => {
-    describe(`when the user is a ${user}`, () => {
+    describe(`when the user is a ${user} and facilityId, amendmentId don't exist`, () => {
       describe('when a deal, facility and amendment are found', () => {
         it('should render the template with the correct variables', async () => {
           // Arrange
@@ -112,24 +121,6 @@ describe('getAmendmentDetails', () => {
         });
       });
 
-      describe('when an amendment is not found', () => {
-        it('should redirect to /not-found', async () => {
-          mockGetAmendment.mockResolvedValue(null);
-
-          // Arrange
-          const { req, res } = getHttpMocks(user);
-
-          // Act
-          await getAmendmentDetails(req, res);
-
-          // Assert
-          expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
-          expect(res._getRedirectUrl()).toEqual('/not-found');
-          expect(console.error).toHaveBeenCalledTimes(1);
-          expect(console.error).toHaveBeenCalledWith('In progress amendment was not found for the deal %s', dealId);
-        });
-      });
-
       describe('when getApplication fails', () => {
         it('should redirect to problem-with service', async () => {
           mockGetApplication.mockRejectedValue({});
@@ -166,9 +157,27 @@ describe('getAmendmentDetails', () => {
         });
       });
 
-      describe('when getAmendmentsOnDeal fails', () => {
+      describe('when a portal amendment is not found', () => {
+        it('should redirect to /not-found', async () => {
+          mockGetPortalAmendments.mockResolvedValue(null);
+
+          // Arrange
+          const { req, res } = getHttpMocks(user);
+
+          // Act
+          await getAmendmentDetails(req, res);
+
+          // Assert
+          expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+          expect(res._getRedirectUrl()).toEqual('/not-found');
+          expect(console.error).toHaveBeenCalledTimes(1);
+          expect(console.error).toHaveBeenCalledWith('In progress amendment was not found for the deal %s', dealId);
+        });
+      });
+
+      describe('when getPortalAmendmentsOnDeal fails', () => {
         it('should redirect to problem-with service', async () => {
-          mockGetAmendment.mockRejectedValue({});
+          mockGetPortalAmendments.mockRejectedValue({});
 
           // Arrange
           const { req, res } = getHttpMocks(user);

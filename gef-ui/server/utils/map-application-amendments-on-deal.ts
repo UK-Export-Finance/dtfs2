@@ -1,6 +1,7 @@
-import { FacilityAmendmentWithUkefId, SummaryListRow, AMENDMENT_TYPES, DATE_FORMATS, getFormattedMonetaryValue, CURRENCY } from '@ukef/dtfs2-common';
+import { SummaryListRow, AMENDMENT_TYPES, DATE_FORMATS, getFormattedMonetaryValue, CURRENCY } from '@ukef/dtfs2-common';
 import { format, fromUnixTime } from 'date-fns';
 import { getCurrencySymbol } from './get-currency-symbol';
+import { FacilityAmendmentWithUkefId } from '../constants/amendments';
 
 type MappedFacilityAmendmentWithUkefId = {
   referenceNumber: string;
@@ -8,6 +9,8 @@ type MappedFacilityAmendmentWithUkefId = {
   type?: string;
   facilityId?: string;
   amendmentId?: string;
+  effectiveDate?: string;
+  hasFutureEffectiveDate?: boolean;
 };
 
 /**

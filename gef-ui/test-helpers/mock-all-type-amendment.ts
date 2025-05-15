@@ -2,25 +2,24 @@ import {
   PORTAL_AMENDMENT_STATUS,
   AMENDMENT_TYPES,
   AmendmentsEligibilityCriterionWithAnswer,
-  PortalFacilityAmendmentWithUkefId,
   UnixTimestampSeconds,
   PortalAmendmentStatus,
   UnixTimestampMilliseconds,
+  TfmAmendmentStatus,
 } from '@ukef/dtfs2-common';
-import { getUnixTime } from 'date-fns';
 
-export class PortalFacilityAmendmentWithUkefIdMockBuilder {
-  private readonly amendment: PortalFacilityAmendmentWithUkefId;
+import { FacilityAmendmentWithUkefId } from '../server/constants/amendments';
 
-  public constructor(amendment?: PortalFacilityAmendmentWithUkefId) {
+export class FacilityAmendmentWithUkefIdMockBuilder {
+  private readonly amendment: FacilityAmendmentWithUkefId;
+
+  public constructor(amendment?: FacilityAmendmentWithUkefId) {
     this.amendment = amendment ?? {
       dealId: '6776cb6f3e2efb60a50fbc3d',
       facilityId: '6776cb6f3e2efb60a50fbc41',
       amendmentId: '6777c4ca826649ec990c1adf',
       type: AMENDMENT_TYPES.PORTAL,
       status: PORTAL_AMENDMENT_STATUS.DRAFT,
-      createdAt: getUnixTime(new Date()),
-      updatedAt: getUnixTime(new Date()),
       createdBy: {
         username: 'maker1@ukexportfinance.gov.uk',
         name: 'First Last',
@@ -115,7 +114,7 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
     return this;
   }
 
-  public withStatus(status: PortalAmendmentStatus) {
+  public withStatus(status: PortalAmendmentStatus | TfmAmendmentStatus) {
     this.amendment.status = status;
     return this;
   }

@@ -29,18 +29,21 @@ export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: 
       return res.redirect('/not-found');
     }
 
-    const amendment =
-      facilityId && amendmentId
-        ? await api.getAmendment({ facilityId, amendmentId, userToken })
-        : (await api.getPortalAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken }))?.[0];
+    let amendment;
+    if (facilityId && amendmentId) {
+      amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
 
-    if (!amendment) {
-      console.error(
-        facilityId && amendmentId ? 'Amendment %s was not found for the facility %s' : 'In progress amendment was not found for the deal %s',
-        facilityId && amendmentId ? amendmentId : dealId,
-        facilityId,
-      );
-      return res.redirect('/not-found');
+      if (!amendment) {
+        console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
+        return res.redirect('/not-found');
+      }
+    } else {
+      const amendments = await api.getPortalAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
+      if (!amendments) {
+        console.error('In progress amendment was not found for the deal %s', dealId);
+        return res.redirect('/not-found');
+      }
+      [amendment] = amendments;
     }
 
     const { details: facility } = await api.getFacility({ facilityId: amendment.facilityId, userToken });

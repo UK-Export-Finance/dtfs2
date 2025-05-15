@@ -1,11 +1,11 @@
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { PORTAL_AMENDMENT_STATUS, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import api from '../../../services/api';
 import { createReferenceNumber } from './create-amendment-reference-number.helper';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 
-const getPortalAmendmentsOnDealMock = jest.fn();
+const getAmendmentsOnDealMock = jest.fn();
 const getFacilityMock = jest.fn();
 console.error = jest.fn();
 
@@ -14,13 +14,13 @@ const facilityId = '6597dffeb5ef5ff4267e5045';
 const userToken = 'test-token';
 const facility = MOCK_ISSUED_FACILITY.details;
 
-describe('createReferenceNumber', () => {
+describe('createAmendmentReferenceNumber', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
 
   beforeEach(() => {
     jest.resetAllMocks();
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
-    jest.spyOn(api, 'getPortalAmendmentsOnDeal').mockImplementation(getPortalAmendmentsOnDealMock);
+    jest.spyOn(api, 'getAmendmentsOnDeal').mockImplementation(getAmendmentsOnDealMock);
     jest.spyOn(api, 'getFacility').mockImplementation(getFacilityMock);
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
@@ -29,7 +29,7 @@ describe('createReferenceNumber', () => {
       .withStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED)
       .build();
 
-    getPortalAmendmentsOnDealMock.mockResolvedValue([amendment]);
+    getAmendmentsOnDealMock.mockResolvedValue([amendment]);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
   });
 
@@ -38,34 +38,34 @@ describe('createReferenceNumber', () => {
   });
 
   it('should return the correct reference number when amendments exist', async () => {
-    getPortalAmendmentsOnDealMock.mockResolvedValue([amendment, amendment]);
+    getAmendmentsOnDealMock.mockResolvedValue([amendment, amendment]);
 
     const result = await createReferenceNumber(dealId, facilityId, userToken);
 
-    expect(getPortalAmendmentsOnDealMock).toHaveBeenCalledWith({
+    expect(getAmendmentsOnDealMock).toHaveBeenCalledWith({
       dealId,
-      statuses: [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED],
+      statuses: [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, TFM_AMENDMENT_STATUS.COMPLETED],
       userToken,
     });
-    expect(result).toEqual(`${facility.ukefFacilityId}-03`);
+    expect(result).toEqual(`${facility.ukefFacilityId}-003`);
   });
 
   it('should return the correct reference number when no amendments exist', async () => {
-    getPortalAmendmentsOnDealMock.mockResolvedValue([]);
+    getAmendmentsOnDealMock.mockResolvedValue([]);
 
     const result = await createReferenceNumber(dealId, facilityId, userToken);
 
-    expect(getPortalAmendmentsOnDealMock).toHaveBeenCalledWith({
+    expect(getAmendmentsOnDealMock).toHaveBeenCalledWith({
       dealId,
-      statuses: [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED],
+      statuses: [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, TFM_AMENDMENT_STATUS.COMPLETED],
       userToken,
     });
-    expect(result).toEqual(`${facility.ukefFacilityId}-01`);
+    expect(result).toEqual(`${facility.ukefFacilityId}-001`);
   });
 
-  it('should throw an error if portalAmendmentsOnDeal is null', async () => {
+  it('should throw an error if amendmentsOnDeal is null', async () => {
     // Arrange
-    getPortalAmendmentsOnDealMock.mockResolvedValue(null);
+    getAmendmentsOnDealMock.mockResolvedValue(null);
 
     // Act
     const response = createReferenceNumber(dealId, facilityId, userToken);
@@ -88,7 +88,7 @@ describe('createReferenceNumber', () => {
   it('should throw an error if api.getAmendmentsOnDeal fails', async () => {
     // Arrange
     const mockError = new Error('API error');
-    getPortalAmendmentsOnDealMock.mockRejectedValue(mockError);
+    getAmendmentsOnDealMock.mockRejectedValue(mockError);
 
     // Act
     const response = createReferenceNumber(dealId, facilityId, userToken);

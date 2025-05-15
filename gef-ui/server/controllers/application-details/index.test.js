@@ -19,7 +19,12 @@ import { ALL_DEAL_STATUSES } from '../../../test-helpers/common-deal-status-list
 import { canUserAmendIssuedFacilities } from '../../utils/facility-amendments.helper';
 import { getSubmittedAmendmentDetails } from '../../utils/submitted-amendment-details';
 
-jest.mock('../../services/api');
+jest.mock('../../services/api', () => ({
+  getApplication: jest.fn(),
+  getFacilities: jest.fn(),
+  getUserDetails: jest.fn(),
+  getPortalAmendmentsOnDeal: jest.fn(),
+}));
 
 jest.mock('../../utils/submitted-amendment-details', () => ({
   getSubmittedAmendmentDetails: jest.fn(),
@@ -55,7 +60,7 @@ describe('controllers/application-details', () => {
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getFacilities.mockResolvedValue(mockFacilitiesResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);
-    api.getAmendmentsOnDeal.mockResolvedValue(mockGetPortalAmendmentsOnDealResponse);
+    api.getPortalAmendmentsOnDeal.mockResolvedValue(mockGetPortalAmendmentsOnDealResponse);
     getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
     mockRequest.flash = mockSuccessfulFlashResponse();
   });
@@ -459,7 +464,7 @@ describe('controllers/application-details', () => {
         api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
         jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(true);
 
-        api.getAmendmentsOnDeal.mockResolvedValueOnce([aPortalFacilityAmendment()]);
+        api.getPortalAmendmentsOnDeal.mockResolvedValueOnce([aPortalFacilityAmendment()]);
 
         mockApplicationResponse.status = DEAL_STATUS.UKEF_ACKNOWLEDGED;
         mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;

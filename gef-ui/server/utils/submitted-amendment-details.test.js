@@ -3,7 +3,7 @@ import { getSubmittedAmendmentDetails } from './submitted-amendment-details';
 import { MOCK_AIN_APPLICATION } from './mocks/mock-applications';
 import api from '../services/api';
 
-const getAmendmentsOnDealMock = jest.fn();
+const getPortalAmendmentsOnDealMock = jest.fn();
 const userToken = 'test-token';
 const application = MOCK_AIN_APPLICATION;
 const amendments = [
@@ -13,9 +13,9 @@ const amendments = [
 
 describe('getSubmittedAmendmentDetails', () => {
   beforeEach(() => {
-    getAmendmentsOnDealMock.mockResolvedValue(amendments);
+    getPortalAmendmentsOnDealMock.mockResolvedValue(amendments);
 
-    jest.spyOn(api, 'getAmendmentsOnDeal').mockImplementation(getAmendmentsOnDealMock);
+    jest.spyOn(api, 'getPortalAmendmentsOnDeal').mockImplementation(getPortalAmendmentsOnDealMock);
   });
 
   it('should return amendment details when deal is not scheduled or cancelled', async () => {

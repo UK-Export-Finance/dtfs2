@@ -410,7 +410,7 @@ const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
  * @param {string} param.dealId
  * @param {string} param.userToken
  * @param {(import('@ukef/dtfs2-common').PortalAmendmentStatus | import('@ukef/dtfs2-common').TfmAmendmentStatus)[] | undefined} param.statuses
- * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithUkefId[])>}>}
+ * @returns {Promise<(import('../constants/amendments').FacilityAmendmentWithUkefId[])>}>}
  */
 const getAmendmentsOnDeal = async ({ dealId, userToken, statuses }) => {
   if (!isValidMongoId(dealId)) {
