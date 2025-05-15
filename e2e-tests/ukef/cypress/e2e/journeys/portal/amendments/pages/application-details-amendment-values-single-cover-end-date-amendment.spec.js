@@ -56,7 +56,7 @@ context('Amendments - Single cover end date amendment - Application details disp
   });
 
   it('should display the updated amendment cover end date on facility summary list', () => {
-    applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(facilityValue));
+    applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(facilityValue, false));
     applicationPreview.facilitySummaryList().contains(format(new Date(), D_MMMM_YYYY_FORMAT));
   });
 });

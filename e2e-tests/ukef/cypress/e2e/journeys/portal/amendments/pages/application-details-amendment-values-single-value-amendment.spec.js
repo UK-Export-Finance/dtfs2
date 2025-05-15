@@ -57,7 +57,7 @@ context('Amendments - Single value amendment - Application details displays amen
   });
 
   it('should display the updated amendment value on facility summary list', () => {
-    applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(CHANGED_FACILITY_VALUE));
+    applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, false));
     applicationPreview.facilitySummaryList().contains(format(coverEndDate, D_MMMM_YYYY_FORMAT));
   });
 });

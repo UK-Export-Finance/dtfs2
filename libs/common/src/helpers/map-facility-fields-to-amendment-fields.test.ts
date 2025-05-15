@@ -33,7 +33,7 @@ describe('map-facility-fields-to-amendment-fields helper', () => {
       const result = mapFacilityFieldsToAmendmentFields([valueAmendment1]);
 
       expect(result.value).toEqual(valueAmendment1.value);
-      expect(result.coverEndDate).toBeNull();
+      expect(result.coverEndDate).toBeUndefined();
     });
   });
 
@@ -41,7 +41,7 @@ describe('map-facility-fields-to-amendment-fields helper', () => {
     it('should return the coverEndDate from the amendment', () => {
       const result = mapFacilityFieldsToAmendmentFields([coverEndDateAmendment1]);
 
-      expect(result.value).toBeNull();
+      expect(result.value).toBeUndefined();
       expect(result.coverEndDate).toEqual(coverEndDateAmendment1.coverEndDate);
     });
   });
@@ -51,7 +51,7 @@ describe('map-facility-fields-to-amendment-fields helper', () => {
       const result = mapFacilityFieldsToAmendmentFields([valueAmendment1, valueAmendment2]);
 
       expect(result.value).toEqual(valueAmendment1.value);
-      expect(result.coverEndDate).toBeNull();
+      expect(result.coverEndDate).toBeUndefined();
     });
   });
 
@@ -59,7 +59,7 @@ describe('map-facility-fields-to-amendment-fields helper', () => {
     it('should return the coverEndDate from the latest amendment', () => {
       const result = mapFacilityFieldsToAmendmentFields([coverEndDateAmendment1, coverEndDateAmendment2]);
 
-      expect(result.value).toBeNull();
+      expect(result.value).toBeUndefined();
       expect(result.coverEndDate).toEqual(coverEndDateAmendment1.coverEndDate);
     });
   });
