@@ -64,8 +64,8 @@ describe('get-utilisation-reports-reconciliation-summary.controller helper', () 
       // Arrange
       const bankIdOne = '1';
       const bankIdTwo = '2';
-      const bankNameOne = 'Barclays';
-      const bankNameTwo = 'HSBC';
+      const bankNameOne = 'Bank 1';
+      const bankNameTwo = 'Bank 2';
       const banks: Bank[] = [
         {
           ...aBank(),

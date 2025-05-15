@@ -1,8 +1,8 @@
 import { ROLES } from '@ukef/dtfs2-common';
 import MOCK_BANKS from '../banks';
 
-const UKEF_TEST_BANK_1 = MOCK_BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated)');
-const UKEF_TEST_BANK_2 = MOCK_BANKS.find((bank) => bank.name === 'UKEF test bank (Delegated) 2');
+const UKEF_TEST_BANK_1 = MOCK_BANKS.find((bank) => bank.name === 'Bank 1');
+const UKEF_TEST_BANK_2 = MOCK_BANKS.find((bank) => bank.name === 'Bank 2');
 const UKEF_GEF_ONLY_BANK = MOCK_BANKS.find((bank) => bank.name === 'GEF Only Bank');
 
 export const BANK1_MAKER1 = {

@@ -11,9 +11,9 @@ const page = '../templates/utilisation-reports/find-utilisation-reports-by-year.
 const render = pageRenderer<FindUtilisationReportsByYearViewModel>(page);
 
 const bankItems: FindUtilisationReportsByYearBankViewModel[] = [
-  { value: '961', text: 'Barclays', attributes: {} },
-  { value: '123', text: 'HSBC', attributes: {} },
-  { value: '24', text: 'Newable', attributes: {} },
+  { value: '961', text: 'Bank 2', attributes: {} },
+  { value: '123', text: 'Bank 1', attributes: {} },
+  { value: '24', text: 'Bank 3', attributes: {} },
 ];
 
 describe(page, () => {

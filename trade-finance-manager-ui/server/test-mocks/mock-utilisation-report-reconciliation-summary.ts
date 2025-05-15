@@ -29,8 +29,8 @@ export const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEMS: Record<Utilis
     reportId: '65784d402e1ea1fbb8414c0b',
     reportPeriod: { start: { month: 11, year: 2023 }, end: { month: 11, year: 2023 } },
     bank: {
-      id: MOCK_BANKS.NEWABLE.id,
-      name: MOCK_BANKS.NEWABLE.name,
+      id: MOCK_BANKS.bank3.id,
+      name: MOCK_BANKS.bank3.name,
     },
     status: RECONCILIATION_IN_PROGRESS,
     dateUploaded: '2023-12-03T17:04:23Z',

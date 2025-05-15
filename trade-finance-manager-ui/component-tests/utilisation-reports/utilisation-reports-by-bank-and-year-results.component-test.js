@@ -6,7 +6,7 @@ const page = '../templates/utilisation-reports/utilisation-reports-by-bank-and-y
 const render = pageRenderer(page);
 
 describe(page, () => {
-  const bankName = 'Barclays';
+  const bankName = 'Bank 1';
   const year = '2024';
   const mockReports = [
     {

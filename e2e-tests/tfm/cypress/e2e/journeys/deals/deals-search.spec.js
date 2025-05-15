@@ -174,16 +174,16 @@ context('User can view and filter multiple deals', () => {
   });
 
   it('search/filter by bank name', () => {
-    const searchString = 'UKEF test bank';
+    const searchString = 'Bank 1';
 
     cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
 
-    const dealsWithMakerUkefTestBank = ALL_SUBMITTED_DEALS.filter((deal) => deal.dealSnapshot.bank.name.includes(searchString));
+    const dealWithBank1 = ALL_SUBMITTED_DEALS.filter((deal) => deal.dealSnapshot.bank.name.includes(searchString));
 
-    pages.dealsPage.dealsTableRows().should('have.length', dealsWithMakerUkefTestBank.length);
+    pages.dealsPage.dealsTableRows().should('have.length', dealWithBank1.length);
 
-    cy.assertText(pages.dealsPage.heading(), `${dealsWithMakerUkefTestBank.length} results for "${searchString}"`);
+    cy.assertText(pages.dealsPage.heading(), `${dealWithBank1.length} results for "${searchString}"`);
   });
 
   it('search/filter by supplier name', () => {

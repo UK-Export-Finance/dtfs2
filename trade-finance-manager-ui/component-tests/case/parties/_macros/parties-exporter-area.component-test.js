@@ -12,7 +12,7 @@ describe(page, () => {
       bankInternalRefName: 'contract-1',
       additionalRefName: 'FirstContract',
       bank: {
-        name: 'Lloyds',
+        name: 'Bank 1',
         emails: ['xxx@yyy.com'],
       },
       submissionType: 'Automatic Inclusion Notice',

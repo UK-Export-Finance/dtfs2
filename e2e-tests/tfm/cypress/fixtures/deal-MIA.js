@@ -10,7 +10,7 @@ const MOCK_DEAL = {
   previousStatus: "Ready for Checker's Approval",
   bank: {
     id: '123',
-    name: 'Barclays Bank',
+    name: 'Bank 1',
     emails: ['test1@mock.com', 'test2@mock.com'],
   },
   maker: {

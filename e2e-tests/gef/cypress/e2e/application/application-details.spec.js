@@ -215,7 +215,7 @@ context('Application Details Page', () => {
     it('displays the application banner', () => {
       statusBanner.applicationBanner();
       applicationDetails.abandonLink();
-      applicationDetails.editRefNameLink().should('have.text', 'HSBC 123');
+      applicationDetails.editRefNameLink().should('have.text', 'UKEF Test 123');
 
       statusBanner.bannerStatus().contains('Draft');
       cy.assertText(statusBanner.bannerSubmissionType(), CONSTANTS.DEAL_SUBMISSION_TYPE.AIN);

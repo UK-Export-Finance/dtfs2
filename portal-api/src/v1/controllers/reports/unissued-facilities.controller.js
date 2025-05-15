@@ -14,7 +14,7 @@ const getUnissuedFacilities = async (bankId) => {
   //     "dealType": "GEF",
   //     "submissionType": "Automatic Inclusion Notice"
   //     "companyName": "Exporter Name",
-  //     "bankInternalRefName": "HSBC 123",
+  //     "bankInternalRefName": "UKEF Test 123",
   //     "ukefFacilityId": "12345",
   //     "value": 30000000,
   //     "currency": "JPY",

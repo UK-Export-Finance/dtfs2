@@ -10,7 +10,7 @@ const getUkefDecision = async (decision, bankId) => {
   // return an array of objects that has the following format
   // [{
   //    dealId: '12345678'
-  //    bankInternalRefName: "HSBC 123"
+  //    bankInternalRefName: "UKEF Test 123"
   //    companyName: "Exporter Name"
   //    dateCreatedEpoch: 1642762583805
   //    dateOfApprovalEpoch: 1642753187
