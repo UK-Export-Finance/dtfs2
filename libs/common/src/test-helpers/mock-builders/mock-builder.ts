@@ -66,8 +66,8 @@ type Mocked<T> = {
  *    const userService = new UserService(); // This can be used as a way to inherit methods we do not wish to mock the implimentation for
  *    super({
  *      defaultInstance: {
- *        transformEntraIdUserToUpsertTfmUserRequest(entraIdUser: EntraIdUser): UpsertTfmUserRequest {
- *          return userService.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
+ *        transformEntraIdUserToUpsertTfmUserRequest(idTokenClaims: EntraIdUser): UpsertTfmUserRequest {
+ *          return userService.transformEntraIdUserToUpsertTfmUserRequest(idTokenClaims);
  *        },
  *        saveUserLoginInformation({ userId, sessionIdentifier, auditDetails }: saveUserLoginInformationParams): Promise<void> {
  *          return Promise.resolve();

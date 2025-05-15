@@ -1,10 +1,5 @@
 import z from 'zod';
-import {
-  createValidationMiddlewareForSchema,
-  MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT,
-  RECORD_CORRECTION_REASON,
-  RecordCorrectionReason,
-} from '@ukef/dtfs2-common';
+import { validateSchema, MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { TFM_SESSION_USER_SCHEMA } from '@ukef/dtfs2-common/schemas';
 
 /**
@@ -33,6 +28,4 @@ export type PutFeeRecordCorrectionRequestTransientFormDataPayload = z.infer<type
 /**
  * Middleware function to validate fee record correction request transient form data payload.
  */
-export const validatePutFeeRecordCorrectionRequestTransientFormDataPayload = createValidationMiddlewareForSchema(
-  PutFeeRecordCorrectionRequestTransientFormDataPayload,
-);
+export const validatePutFeeRecordCorrectionRequestTransientFormDataPayload = validateSchema(PutFeeRecordCorrectionRequestTransientFormDataPayload);

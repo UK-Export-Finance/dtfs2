@@ -1,5 +1,5 @@
 import z from 'zod';
-import { createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
+import { validateSchema } from '@ukef/dtfs2-common';
 import { UtilisationReportCsvRowDataSchema } from './schemas';
 
 const PostReportDataValidationSchema = z.object({
@@ -11,4 +11,4 @@ export type PostReportDataValidationPayload = z.infer<typeof PostReportDataValid
 /**
  * Validates the payload for the post report data validation route
  */
-export const validatePostReportDataValidationPayload = createValidationMiddlewareForSchema(PostReportDataValidationSchema);
+export const validatePostReportDataValidationPayload = validateSchema(PostReportDataValidationSchema);

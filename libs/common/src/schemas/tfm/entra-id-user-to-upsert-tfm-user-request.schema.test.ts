@@ -49,8 +49,8 @@ function itShouldReturnAValidUpsertTfmUserRequest(request: EntraIdUser) {
     const result = ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA.parse(request);
     expect(result).toEqual({
       azureOid: request.oid,
-      email: request.email,
-      username: request.email,
+      email: request.verified_primary_email[0],
+      username: request.verified_primary_email[0],
       teams: request.roles,
       timezone: timezoneConfig.DEFAULT,
       firstName: request.given_name,

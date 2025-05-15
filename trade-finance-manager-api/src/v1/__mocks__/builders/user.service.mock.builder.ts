@@ -11,8 +11,8 @@ export class UserServiceMockBuilder extends BaseMockBuilder<UserService> {
          *  We pass through the actual service implementation for the below method here,
          * as it is an existing pattern that we never mock synchronous methods.
          */
-        transformEntraIdUserToUpsertTfmUserRequest(entraIdUser: EntraIdUser): UpsertTfmUserRequest {
-          return userService.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
+        transformEntraIdUserToUpsertTfmUserRequest(idTokenClaims: EntraIdUser): UpsertTfmUserRequest {
+          return userService.transformEntraIdUserToUpsertTfmUserRequest(idTokenClaims);
         },
         upsertTfmUserFromEntraIdUser(): Promise<UpsertTfmUserFromEntraIdUserResponse> {
           return Promise.resolve(aTfmUser());

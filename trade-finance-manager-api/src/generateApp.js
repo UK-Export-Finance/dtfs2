@@ -4,7 +4,7 @@ const compression = require('compression');
 const swaggerUi = require('swagger-ui-express');
 const mongoSanitise = require('express-mongo-sanitize');
 const { initialiseCronJobScheduler } = require('@ukef/dtfs2-common');
-const { validateSsoFeatureFlagIsOff } = require('./v1/middleware/validate-sso-feature-flag');
+const { validateSsoFeatureFlagFalse } = require('./v1/middleware/validate-sso-feature-flag');
 const healthcheck = require('./healthcheck');
 const { authRouter, openRouter } = require('./v1/routes');
 const loginController = require('./v1/controllers/user/user.routes');
@@ -30,7 +30,7 @@ const generateApp = () => {
   app.use(removeCsrfToken);
   app.use(healthcheck);
   app.use(passport.initialize());
-  app.post('/v1/login', validateSsoFeatureFlagIsOff, loginController.login);
+  app.post('/v1/login', validateSsoFeatureFlagFalse, loginController.login);
   app.use('/v1', openRouter);
   app.use('/v1', authRouter);
 
