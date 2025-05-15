@@ -1,5 +1,5 @@
 import z from 'zod';
-import { createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
+import { validateSchema } from '@ukef/dtfs2-common';
 import { TFM_SESSION_USER_SCHEMA } from '@ukef/dtfs2-common/schemas';
 
 const PostFeeRecordCorrectionSchema = z.object({
@@ -11,4 +11,4 @@ export type PostFeeRecordCorrectionPayload = z.infer<typeof PostFeeRecordCorrect
 /**
  * Validates the payload for the post fee record correction route
  */
-export const validatePostFeeRecordCorrectionPayload = createValidationMiddlewareForSchema(PostFeeRecordCorrectionSchema);
+export const validatePostFeeRecordCorrectionPayload = validateSchema(PostFeeRecordCorrectionSchema);

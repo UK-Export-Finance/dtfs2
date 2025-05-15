@@ -1,5 +1,5 @@
 import z from 'zod';
-import { AuditDetails, createValidationMiddlewareForSchema, TfmDealCancellation } from '@ukef/dtfs2-common';
+import { AuditDetails, validateSchema, TfmDealCancellation } from '@ukef/dtfs2-common';
 import { DEAL_CANCELLATION } from '@ukef/dtfs2-common/schemas';
 import { AuditDetailsSchema } from './schemas';
 
@@ -10,4 +10,4 @@ const PostSubmitDealCancellationSchema: z.ZodType<{ cancellation: TfmDealCancell
 
 export type SubmitDealCancellationPayload = z.infer<typeof PostSubmitDealCancellationSchema>;
 
-export const validatePostSubmitDealCancellationPayload = createValidationMiddlewareForSchema(PostSubmitDealCancellationSchema);
+export const validatePostSubmitDealCancellationPayload = validateSchema(PostSubmitDealCancellationSchema);
