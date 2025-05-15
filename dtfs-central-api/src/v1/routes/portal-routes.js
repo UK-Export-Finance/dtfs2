@@ -580,8 +580,10 @@ portalRouter.route('/facilities/:id/status').put(updateFacilityStatusController.
  *           application/json:
  *             schema:
  *                $ref: '#/definitions/PortalAmendment'
- *       404:
- *         description: Not found
+ *       400:
+ *         description: Invalid facilityId
+ *       500:
+ *        description: Internal server error
  */
 portalRouter
   .route('/facilities/:facilityId/amendments/acknowledged')

@@ -1,8 +1,8 @@
-import { mapAmendmentToFacilityValues } from './map-facility-to-amendment-values';
+import { mapFacilityFieldsToAmendmentFields } from './map-facility-fields-to-amendment-fields';
 import { aPortalFacilityAmendment } from '../test-helpers/mock-data-backend/portal-facility-amendment';
 import { PORTAL_AMENDMENT_STATUS } from '../constants';
 
-describe('map-amendment-to-facility-values helper', () => {
+describe('map-facility-fields-to-amendment-fields helper', () => {
   const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED });
   const valueAmendment1 = {
     ...anAcknowledgedPortalAmendment,
@@ -30,7 +30,7 @@ describe('map-amendment-to-facility-values helper', () => {
 
   describe('when there is one value amendment', () => {
     it('should return the value from the amendment', () => {
-      const result = mapAmendmentToFacilityValues([valueAmendment1]);
+      const result = mapFacilityFieldsToAmendmentFields([valueAmendment1]);
 
       expect(result.value).toEqual(valueAmendment1.value);
       expect(result.coverEndDate).toBeNull();
@@ -39,7 +39,7 @@ describe('map-amendment-to-facility-values helper', () => {
 
   describe('when there is one coverEndDate amendment', () => {
     it('should return the coverEndDate from the amendment', () => {
-      const result = mapAmendmentToFacilityValues([coverEndDateAmendment1]);
+      const result = mapFacilityFieldsToAmendmentFields([coverEndDateAmendment1]);
 
       expect(result.value).toBeNull();
       expect(result.coverEndDate).toEqual(coverEndDateAmendment1.coverEndDate);
@@ -48,7 +48,7 @@ describe('map-amendment-to-facility-values helper', () => {
 
   describe('when there are multiple value amendments', () => {
     it('should return the value from the latest amendment', () => {
-      const result = mapAmendmentToFacilityValues([valueAmendment1, valueAmendment2]);
+      const result = mapFacilityFieldsToAmendmentFields([valueAmendment1, valueAmendment2]);
 
       expect(result.value).toEqual(valueAmendment1.value);
       expect(result.coverEndDate).toBeNull();
@@ -57,7 +57,7 @@ describe('map-amendment-to-facility-values helper', () => {
 
   describe('when there are multiple coverEndDate amendments', () => {
     it('should return the coverEndDate from the latest amendment', () => {
-      const result = mapAmendmentToFacilityValues([coverEndDateAmendment1, coverEndDateAmendment2]);
+      const result = mapFacilityFieldsToAmendmentFields([coverEndDateAmendment1, coverEndDateAmendment2]);
 
       expect(result.value).toBeNull();
       expect(result.coverEndDate).toEqual(coverEndDateAmendment1.coverEndDate);

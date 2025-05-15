@@ -193,6 +193,11 @@ const findOneFacility = async (facilityId) => {
   }
 };
 
+/**
+ * finds and returns gef facilities on a deal
+ * @param {string} dealId
+ * @returns {Facility[]} array of facilities on deal
+ */
 const findGefFacilitiesByDealId = async (dealId) => {
   if (!ObjectId.isValid(dealId)) {
     throw new InvalidDatabaseQueryError('Invalid deal id');
@@ -207,7 +212,7 @@ const findGefFacilitiesByDealId = async (dealId) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to find one facility %o', error);
+    console.error('Unable to find facilities for deal ID %s %o', dealId, error);
     return false;
   }
 };
@@ -672,7 +677,7 @@ const getAcknowledgedAmendmentsByFacilityId = async (facilityId) => {
 
     return response.data;
   } catch (error) {
-    console.error('Error getting acknowledged portal facility amendments %o', error);
+    console.error('Error getting acknowledged portal facility amendments for facility ID %s %o', facilityId, error);
     throw error;
   }
 };

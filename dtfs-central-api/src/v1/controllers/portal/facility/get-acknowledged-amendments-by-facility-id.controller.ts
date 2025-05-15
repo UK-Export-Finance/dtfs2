@@ -19,7 +19,7 @@ export const getAcknowledgedAmendmentsByFacilityId = async (req: GetAcknowledged
 
     return res.status(HttpStatusCode.Ok).send(amendments);
   } catch (error) {
-    console.error(`Error getting acknowledged amendments by facilityId: %o`, error);
+    console.error(`Error getting acknowledged amendments by facilityId %o`, error);
 
     if (error instanceof ApiError) {
       const { status, message, code } = error;

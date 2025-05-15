@@ -319,9 +319,10 @@ export class TfmFacilitiesRepo {
    */
   public static async findAcknowledgedPortalAmendmentsByFacilityId(facilityId: string | ObjectId): Promise<FacilityAmendment[] | null> {
     const collection = await this.getCollection();
+
     const amendments = await collection
       .aggregate(aggregatePipelines.acknowledgedPortalAmendmentsByFacilityId(facilityId))
-      .map<FacilityAmendment>((doc) => doc.amendments as FacilityAmendment)
+      .map<FacilityAmendment>((data) => data.amendments as FacilityAmendment)
       .toArray();
 
     return amendments ?? null;

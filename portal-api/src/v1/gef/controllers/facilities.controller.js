@@ -7,7 +7,7 @@ const {
   DealNotFoundError,
   InvalidDealIdError,
   parseDealVersion,
-  mapAmendmentToFacilityValues,
+  mapFacilityFieldsToAmendmentFields,
 } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteOne, deleteMany } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
@@ -112,17 +112,18 @@ exports.getAllGET = async (req, res) => {
 
     const parsedFacilities = [];
 
-    if (facilities && facilities.length) {
+    if (facilities?.length) {
       for (const facility of facilities) {
         /**
          * Check if the facility has amendments, and if so,
          * update the facility with the amended values.
          */
-        const amendments = await api.getAcknowledgedAmendmentsByFacilityId(facility._id);
+        const { _id } = facility;
+        const amendments = await api.getAcknowledgedAmendmentsByFacilityId(_id);
 
         if (amendments?.length) {
           // sets the coverEndDate and value to the amended values if present
-          const { coverEndDate: amendedCoverEndDate, value: amendedValue } = mapAmendmentToFacilityValues(amendments);
+          const { coverEndDate: amendedCoverEndDate, value: amendedValue } = mapFacilityFieldsToAmendmentFields(amendments);
 
           if (amendedValue) {
             facility.value = amendedValue;

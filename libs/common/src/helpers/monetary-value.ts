@@ -3,22 +3,18 @@
  * @param monetaryValue the value to format
  * @returns the formatted value
  */
-export const getFormattedMonetaryValue = (monetaryValue: number): string => {
+export const getFormattedMonetaryValue = (monetaryValue: number, decimals = true): string => {
+  /**
+   * if decimals is true,
+   * format the value with two decimal places and thousands separators
+   * eg. 1234567.89 -> 1,234,567.89
+   * if decimals is false,
+   * format the value without decimal places and with thousands separator
+   * eg. 1234567 -> 1,234,567
+   */
   const formatter = new Intl.NumberFormat('en-GB', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-  return formatter.format(monetaryValue);
-};
-
-/**
- * Formats the value without decimals and with thousands separators
- * @param monetaryValue the value to format
- * @returns the formatted value
- */
-export const getFormattedMonetaryValueWithoutDecimals = (monetaryValue: number): string => {
-  const formatter = new Intl.NumberFormat('en-GB', {
-    maximumFractionDigits: 0,
+    minimumFractionDigits: decimals ? 2 : 0,
+    maximumFractionDigits: decimals ? 2 : 0,
   });
   return formatter.format(monetaryValue);
 };

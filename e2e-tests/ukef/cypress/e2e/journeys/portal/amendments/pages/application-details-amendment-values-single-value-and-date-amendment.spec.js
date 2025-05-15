@@ -1,4 +1,4 @@
-import { getFormattedMonetaryValueWithoutDecimals } from '@ukef/dtfs2-common';
+import { getFormattedMonetaryValue } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 import { D_MMMM_YYYY_FORMAT } from '../../../../../../../e2e-fixtures/dateConstants';
 import relative from '../../../../relativeURL';
@@ -57,7 +57,7 @@ context('Amendments - Single cover end date AND value amendment - Application de
   });
 
   it('should display the updated amendment value AND cover end date on facility summary list', () => {
-    applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValueWithoutDecimals(CHANGED_FACILITY_VALUE));
+    applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, false));
     applicationPreview.facilitySummaryList().contains(format(new Date(), D_MMMM_YYYY_FORMAT));
   });
 });

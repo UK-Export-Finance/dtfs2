@@ -1,4 +1,4 @@
-import { getFormattedMonetaryValueWithoutDecimals } from '@ukef/dtfs2-common';
+import { getFormattedMonetaryValue } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 import { D_MMMM_YYYY_FORMAT } from '../../../../../../../e2e-fixtures/dateConstants';
 import relative from '../../../../relativeURL';
@@ -66,7 +66,7 @@ context('Amendments - Multiple value amendments - Application details displays a
   });
 
   it('should display the latest updated amendment value on facility summary list', () => {
-    applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValueWithoutDecimals(CHANGED_FACILITY_VALUE_2));
+    applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(CHANGED_FACILITY_VALUE_2, false));
     applicationPreview.facilitySummaryList().contains(format(coverEndDate, D_MMMM_YYYY_FORMAT));
   });
 });
