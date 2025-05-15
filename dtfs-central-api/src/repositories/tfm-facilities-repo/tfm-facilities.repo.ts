@@ -98,6 +98,7 @@ export class TfmFacilitiesRepo {
         },
         { projection: { amendments: 1, 'facilitySnapshot.name': 1, 'facilitySnapshot.ukefFacilityId': 1, 'facilitySnapshot.currency': 1 } },
       )
+      .sort({ 'amendments.referenceNumber': -1 })
       .toArray();
 
     const matchingPortalAmendments = facilitiesOnDealWithAmendments
