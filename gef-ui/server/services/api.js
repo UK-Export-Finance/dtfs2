@@ -281,6 +281,12 @@ const getAddressesByPostcode = async ({ postcode, userToken }) => {
   }
 };
 
+/**
+ * @param {Object} param
+ * @param {string} param.userId
+ * @param {string} param.userToken
+ * @returns {Promise<import('@ukef/dtfs2-common').PortalSessionUser>}
+ */
 const getUserDetails = async ({ userId, userToken }) => {
   if (!userToken || !userId) {
     return false;
@@ -537,7 +543,27 @@ const updateSubmitAmendment = async ({ facilityId, amendmentId, referenceNumber,
 };
 
 /**
- * @param {Object} param
+ * variables for email variables set to empty strings
+ * if emailVariables is not provided, then this is the default object
+ */
+const emptyEmailVariables = {
+  exporterName: '',
+  bankInternalRefName: '',
+  ukefDealId: '',
+  ukefFacilityId: '',
+  makersName: '',
+  checkersName: '',
+  dateSubmittedByMaker: '',
+  dateEffectiveFrom: '',
+  newCoverEndDate: '',
+  newFacilityEndDate: '',
+  newFacilityValue: '',
+  portalUrl: '',
+  makersEmail: '',
+};
+
+/**
+ * @param {import('@ukef/dtfs2-common').AmendmentUpdateStatus} param
  * @param {string} param.facilityId
  * @param {string} param.amendmentId
  * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus} param.newStatus
@@ -547,7 +573,15 @@ const updateSubmitAmendment = async ({ facilityId, amendmentId, referenceNumber,
  * @param {import('@ukef/dtfs2-common').PortalAmendmentSubmittedToCheckerEmailVariables} param.emailVariables
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}
  */
-const updateAmendmentStatus = async ({ facilityId, amendmentId, newStatus, userToken, makersEmail, checkersEmail, emailVariables }) => {
+const updateAmendmentStatus = async ({
+  facilityId,
+  amendmentId,
+  newStatus,
+  userToken,
+  makersEmail = '',
+  checkersEmail = '',
+  emailVariables = emptyEmailVariables,
+}) => {
   if (!isValidMongoId(facilityId)) {
     console.error('Invalid facility ID %s', facilityId);
     throw new InvalidFacilityIdError(facilityId);

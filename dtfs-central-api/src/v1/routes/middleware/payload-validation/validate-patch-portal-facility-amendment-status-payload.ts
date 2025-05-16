@@ -4,7 +4,7 @@ import { AuditDetailsSchema } from './schemas';
 
 const PatchPortalFacilityAmendmentStatusSchema = z.object({
   auditDetails: AuditDetailsSchema,
-  newStatus: z.enum([PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL]),
+  newStatus: z.enum([PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL, PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED]),
   makersEmail: z.string(),
   checkersEmail: z.string(),
   emailVariables: z.object({
