@@ -14,7 +14,7 @@ import { Deal } from '../../server/types/deal';
 import { MOCK_ISSUED_FACILITY } from '../../server/utils/mocks/mock-facilities';
 import { MOCK_PIM_TEAM } from '../../server/utils/mocks/mock-tfm-teams.ts';
 import { getAmendmentsUrl } from '../../server/controllers/amendments/helpers/navigation.helper';
-import * as createReferenceNumber from '../../server/controllers/amendments/helpers/create-amendment-reference-number.helper';
+import * as createReferenceNumberHelper from '../../server/controllers/amendments/helpers/create-amendment-reference-number.helper';
 
 const originalEnv = { ...process.env };
 
@@ -43,7 +43,7 @@ const effectiveDateWithoutMs = Number(new Date()) / 1000;
 const coverEndDate = Number(new Date());
 const facilityEndDate = new Date();
 const mockFacilityDetails = MOCK_ISSUED_FACILITY.details;
-const referenceNumber = `${mockFacilityDetails.ukefFacilityId}-01`;
+const referenceNumber = `${mockFacilityDetails.ukefFacilityId}-001`;
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, submissionCount: 0, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
 
@@ -65,7 +65,7 @@ describe(`POST ${url}`, () => {
     jest.spyOn(api, 'getAmendment').mockImplementation(getAmendmentMock);
     jest.spyOn(api, 'getTfmTeam').mockImplementation(getTfmTeamMock);
     jest.spyOn(api, 'updateSubmitAmendment').mockImplementation(updateSubmitAmendmentMock);
-    jest.spyOn(createReferenceNumber, 'createReferenceNumber').mockImplementation(createReferenceNumberMock);
+    jest.spyOn(createReferenceNumberHelper, 'createReferenceNumberHelper').mockImplementation(createReferenceNumberMock);
 
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);

@@ -32,6 +32,7 @@ import { getApprovedByUkef } from '../../../controllers/amendments/approved-by-u
 import { getAmendmentDetails } from '../../../controllers/amendments/amendment-details/get-amendment-details.ts';
 import { getSubmitAmendmentToUkef } from '../../../controllers/amendments/submit-amendment-to-ukef/get-submit-amendment-to-ukef.ts';
 import { postSubmitAmendmentToUkef } from '../../../controllers/amendments/submit-amendment-to-ukef/post-submit-amendment-to-ukef.ts';
+import { getApplicationAmendments } from '../../../controllers/amendments/application-amendments/get-application-amendments.ts';
 import { getReturnAmendmentToMaker } from '../../../controllers/amendments/return-amendment-to-maker/get-return-amendment-to-maker.ts';
 import { postReturnAmendmentToMaker } from '../../../controllers/amendments/return-amendment-to-maker/post-return-amendment-to-maker.ts';
 import { getReturnedToMaker } from '../../../controllers/amendments/returned-to-maker/get-returned-to-maker.ts';
@@ -52,6 +53,7 @@ const {
   APPROVED_BY_UKEF,
   AMENDMENT_DETAILS,
   SUBMIT_AMENDMENT_TO_UKEF,
+  ALL_TYPE_AMENDMENTS,
   RETURN_TO_MAKER,
   RETURNED_TO_MAKER,
 } = PORTAL_AMENDMENT_PAGES;
@@ -167,5 +169,10 @@ router
   .route(`/application-details/:dealId/${AMENDMENT_DETAILS}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER, CHECKER] })])
   .get(getAmendmentDetails);
+
+router
+  .route(`/application-details/:dealId/${ALL_TYPE_AMENDMENTS}`)
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER, CHECKER] })])
+  .get(getApplicationAmendments);
 
 export default router;

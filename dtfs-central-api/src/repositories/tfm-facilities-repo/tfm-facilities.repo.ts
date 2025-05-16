@@ -71,6 +71,51 @@ export class TfmFacilitiesRepo {
   }
 
   /**
+   * Finds all type amendments across all facilities for a deal for a given status or set of statuses
+   * @param dealId - The deal id
+   * @param statuses - An array of portal amendment statuses to filter on
+   * @returns The matching portal amendments
+   */
+  public static async findAllTypeAmendmentsByDealIdAndStatus({
+    dealId,
+    statuses,
+  }: {
+    dealId: string | ObjectId;
+    statuses?: (PortalAmendmentStatus | TfmAmendmentStatus)[];
+  }): Promise<(PortalFacilityAmendment | TfmFacilityAmendment)[]> {
+    const collection = await this.getCollection();
+
+    const facilitiesOnDealWithAmendments = await collection
+      .find(
+        {
+          'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) },
+          amendments: {
+            $elemMatch: {
+              amendmentId: { $exists: true, $ne: null },
+              referenceNumber: { $exists: true, $ne: null },
+            },
+          },
+        },
+        { projection: { amendments: 1, 'facilitySnapshot.name': 1, 'facilitySnapshot.ukefFacilityId': 1, 'facilitySnapshot.currency': 1 } },
+      )
+      .sort({ 'amendments.referenceNumber': -1 })
+      .toArray();
+
+    const matchingPortalAmendments = facilitiesOnDealWithAmendments
+      .flatMap((facility) =>
+        (facility.amendments || []).map((amendment) => ({
+          ...amendment,
+          facilityType: facility.facilitySnapshot?.name,
+          ukefFacilityId: facility.facilitySnapshot?.ukefFacilityId,
+          currency: facility.facilitySnapshot?.currency.id,
+        })),
+      )
+      .filter((amendment) => amendment.amendmentId && amendment.referenceNumber && (!statuses || statuses.includes(amendment.status)));
+
+    return matchingPortalAmendments;
+  }
+
+  /**
    * Finds the portal amendments across all facilities for a deal for a given status or set of statuses
    * @param dealId - The deal id
    * @param statuses - An array of portal amendment statuses to filter on

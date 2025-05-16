@@ -120,6 +120,11 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
     return this;
   }
 
+  public withReferenceNumber(referenceNumber: string) {
+    this.amendment.referenceNumber = referenceNumber;
+    return this;
+  }
+
   public build() {
     return this.amendment;
   }

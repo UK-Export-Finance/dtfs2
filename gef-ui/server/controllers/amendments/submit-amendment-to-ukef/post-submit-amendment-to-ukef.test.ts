@@ -18,10 +18,10 @@ import { getAmendmentsUrl } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { postSubmitAmendmentToUkef, PostSubmitAmendmentToUkefRequest } from './post-submit-amendment-to-ukef';
-import * as createReferenceNumber from '../helpers/create-amendment-reference-number.helper';
+import * as createReferenceNumberHelper from '../helpers/create-amendment-reference-number.helper';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { MOCK_PIM_TEAM } from '../../../utils/mocks/mock-tfm-teams.ts';
-import { getCurrencySymbol } from '../facility-value/get-currency-symbol';
+import { getCurrencySymbol } from '../../../utils/get-currency-symbol';
 
 console.error = jest.fn();
 const getApplicationMock = jest.fn();
@@ -67,7 +67,7 @@ const facilityEndDate = new Date();
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 const mockFacilityDetails = MOCK_ISSUED_FACILITY.details;
-const referenceNumber = `${mockFacilityDetails.ukefFacilityId}-01`;
+const referenceNumber = `${mockFacilityDetails.ukefFacilityId}-001`;
 
 describe('postSubmitAmendmentToUkef', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
@@ -83,7 +83,7 @@ describe('postSubmitAmendmentToUkef', () => {
     jest.spyOn(api, 'getAmendment').mockImplementation(getAmendmentMock);
     jest.spyOn(api, 'updateSubmitAmendment').mockImplementation(updateSubmittedAmendmentMock);
     jest.spyOn(api, 'getTfmTeam').mockImplementation(getTfmTeamMock);
-    jest.spyOn(createReferenceNumber, 'createReferenceNumber').mockImplementation(createReferenceNumberMock);
+    jest.spyOn(createReferenceNumberHelper, 'createReferenceNumberHelper').mockImplementation(createReferenceNumberMock);
 
     const criteria = [
       {

@@ -1,0 +1,28 @@
+{% from "moj/components/banner/macro.njk" import mojBanner %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% macro render(params) %}
+  <h2>Amendment {{ params.referenceNumber }}</h2>
+
+{% if params.hasFutureEffectiveDate %}
+  {{ mojBanner({
+  type: 'information',
+  text: "This amendment is effective on " + params.effectiveDate,
+  iconFallbackText: 'information',
+  attributes: {
+    'data-cy': 'facility-information-banner'
+  }
+}) }}
+{% endif %}
+
+  {{ govukSummaryList({
+    rows: params.amendmentRows,
+    attributes: {
+      'data-cy': 'submitted-amendment-summary-list'
+    }
+  }) }}
+
+  {% if params.type === 'PORTAL' %}
+    <a href="/gef/application-details/{{ params.dealId }}/amendment-details/?amendmentId={{ params.amendmentId }}&facilityId={{ params.facilityId }}" class="govuk-link" data-cy="amendment-details-link">See further details</a>
+  {% endif %}
+{% endmacro %}
