@@ -62,6 +62,9 @@ export const AMENDMENT_TYPES = {
   TFM: 'TFM',
 } as const;
 
+/**
+ * The statuses for which amendment pages cannot be accessed
+ */
 export const AMENDMENT_UNACCEPTABLE_DEAL_STATUSES = [
   DEAL_STATUS.ABANDONED,
   DEAL_STATUS.CANCELLED,
