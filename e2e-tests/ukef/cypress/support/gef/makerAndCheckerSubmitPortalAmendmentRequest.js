@@ -6,6 +6,7 @@ import relative from '../../e2e/relativeURL';
  * @param {Boolean} param.facilityValueExists - if facility value is changed
  * @param {Boolean} param.facilityEndDateExists - if facility end date is changed
  * @param {String} param.changedFacilityValue - the new value for the facility
+ * @param {String} param.changedCoverEndDate - the new cover end date
  * @param {String} param.amendmentDetailsUrl - the URL to the amendment details page
  * @param {String} param.submitToUkefUrl - the URL to the confirm amendment submission page
  * @param {String} param.submittedUrl - the URL to the approved by ukef page
@@ -15,6 +16,7 @@ export const makerAndCheckerSubmitPortalAmendmentRequest = ({
   facilityValueExists = false,
   facilityEndDateExists = false,
   changedFacilityValue,
+  changedCoverEndDate,
   amendmentDetailsUrl,
   confirmSubmissionToUkefUrl,
   submittedUrl,
@@ -25,6 +27,7 @@ export const makerAndCheckerSubmitPortalAmendmentRequest = ({
     facilityValueExists,
     facilityEndDateExists,
     changedFacilityValue,
+    changedCoverEndDate,
   });
 
   // submits checker part of journey

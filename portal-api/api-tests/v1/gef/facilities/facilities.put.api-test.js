@@ -172,6 +172,7 @@ describe(baseUrl, () => {
 
       it('name is required if hasBeenIssued', async () => {
         const { details } = newFacility;
+
         const update = {
           hasBeenIssued: true,
           name: null,
@@ -190,6 +191,7 @@ describe(baseUrl, () => {
           feeFrequency: 'Monthly',
           dayCountBasis: 365,
         };
+
         const item = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
         const { status, body } = await as(aMaker).put(update).to(`${baseUrl}/${item.body.details._id}`);
         const expected = {
