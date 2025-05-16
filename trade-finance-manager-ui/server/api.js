@@ -637,6 +637,28 @@ const getCompletedAmendment = async (facilityId, token) => {
   }
 };
 
+const getAcknowledgedCompletedAmendments = async (facilityId, token) => {
+  try {
+    const isValidFacilityId = isValidMongoId(facilityId);
+
+    if (!isValidFacilityId) {
+      console.error('getAcknowledgedCompletedAmendments: Invalid facility id provided %s', facilityId);
+      return { status: 400, data: 'Invalid facility id' };
+    }
+
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/acknowledged-or-completed`,
+      headers: generateHeadersWithToken(token),
+    });
+
+    return { status: 200, data: response.data };
+  } catch (error) {
+    console.error('Unable to get the acknowledged or completed amendments %o', error);
+    return { status: error?.response?.status || 500, data: 'Failed to get completed amendment' };
+  }
+};
+
 const getLatestCompletedAmendmentValue = async (facilityId, token) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
@@ -1556,4 +1578,5 @@ module.exports = {
   getFeeRecordCorrectionTransientFormData,
   deleteFeeRecordCorrectionTransientFormData,
   getRecordCorrectionLogDetailsById,
+  getAcknowledgedCompletedAmendments,
 };

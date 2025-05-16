@@ -73,8 +73,8 @@ export class TfmFacilitiesRepo {
   /**
    * Finds all type amendments across all facilities for a deal for a given status or set of statuses
    * @param dealId - The deal id
-   * @param statuses - An array of portal amendment statuses to filter on
-   * @returns The matching portal amendments
+   * @param statuses - An array of amendment statuses to filter on
+   * @returns The matching amendments
    */
   public static async findAllTypeAmendmentsByDealIdAndStatus({
     dealId,
@@ -101,7 +101,7 @@ export class TfmFacilitiesRepo {
       .sort({ 'amendments.referenceNumber': -1 })
       .toArray();
 
-    const matchingPortalAmendments = facilitiesOnDealWithAmendments
+    const matchingAmendments = facilitiesOnDealWithAmendments
       .flatMap((facility) =>
         (facility.amendments || []).map((amendment) => ({
           ...amendment,
@@ -112,7 +112,44 @@ export class TfmFacilitiesRepo {
       )
       .filter((amendment) => amendment.amendmentId && amendment.referenceNumber && (!statuses || statuses.includes(amendment.status)));
 
-    return matchingPortalAmendments;
+    return matchingAmendments;
+  }
+
+  /**
+   * Finds all type amendments by facilityId for a given status or set of statuses
+   * @param facilityId - The facility id
+   * @param statuses - An array of amendment statuses to filter on
+   * @returns The matching amendments
+   */
+  public static async findAllTypeAmendmentsByFacilityIdAndStatus({
+    facilityId,
+    statuses,
+  }: {
+    facilityId: string | ObjectId;
+    statuses?: (PortalAmendmentStatus | TfmAmendmentStatus)[];
+  }): Promise<(PortalFacilityAmendment | TfmFacilityAmendment)[]> {
+    const collection = await this.getCollection();
+
+    const amendmentsOnFacility = await collection
+      .find(
+        {
+          'amendments.facilityId': { $eq: new ObjectId(facilityId) },
+          amendments: {
+            $elemMatch: {
+              amendmentId: { $exists: true, $ne: null },
+              referenceNumber: { $exists: true, $ne: null },
+            },
+          },
+        },
+        { projection: { amendments: 1 } },
+      )
+      .toArray();
+
+    const matchingAmendments = amendmentsOnFacility
+      .flatMap((facility) => facility.amendments || [])
+      .filter((amendment) => amendment.amendmentId && amendment.referenceNumber && (!statuses || statuses.includes(amendment.status)));
+
+    return matchingAmendments;
   }
 
   /**

@@ -10,6 +10,7 @@ const UNDERWRITER_MANAGER_DECISIONS = {
 const AMENDMENT_QUERY_STATUSES = {
   IN_PROGRESS: 'in-progress',
   COMPLETED: 'completed',
+  ACKNOWLEDGEDORCOMPLETED: 'acknowledged-or-completed',
 };
 
 module.exports = {
