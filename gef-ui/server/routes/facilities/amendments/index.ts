@@ -2,7 +2,7 @@
 import express from 'express';
 import { validateMongoId } from '@ukef/dtfs2-common';
 import { validatePortalFacilityAmendmentsEnabled } from '../../../middleware/feature-flags/portal-facility-amendments';
-import { validateRole, validateToken, validateBank } from '../../../middleware';
+import { validateRole, validateToken, validateBank, validateAmendmentDealStatus } from '../../../middleware';
 import { MAKER, CHECKER } from '../../../constants/roles';
 import { postCreateDraftFacilityAmendment } from '../../../controllers/amendments/create-draft/post-create-draft';
 import { getWhatNeedsToChange } from '../../../controllers/amendments/what-needs-to-change/get-what-needs-to-change';
@@ -55,24 +55,24 @@ const router = express.Router();
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/create-draft/`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateAmendmentDealStatus, validateRole({ role: [MAKER] })])
   .post(postCreateDraftFacilityAmendment);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${WHAT_DO_YOU_NEED_TO_CHANGE}/`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateAmendmentDealStatus, validateRole({ role: [MAKER] })])
   .get(getWhatNeedsToChange)
   .post(postWhatNeedsToChange);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${FACILITY_VALUE}/`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateAmendmentDealStatus, validateRole({ role: [MAKER] })])
   .get(getFacilityValue)
   .post(postFacilityValue);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${COVER_END_DATE}/`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateAmendmentDealStatus, validateRole({ role: [MAKER] })])
   .get(getCoverEndDate)
   .post(postCoverEndDate);
 
@@ -85,6 +85,7 @@ router
     validateMongoId('dealId'),
     validateMongoId('facilityId'),
     validateMongoId('amendmentId'),
+    validateAmendmentDealStatus,
     validateRole({ role: [MAKER] }),
   ])
   .get(getCancelPortalFacilityAmendment)
@@ -92,64 +93,64 @@ router
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${DO_YOU_HAVE_A_FACILITY_END_DATE}`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateAmendmentDealStatus, validateRole({ role: [MAKER] })])
   .get(getDoYouHaveAFacilityEndDate)
   .post(postDoYouHaveAFacilityEndDate);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${FACILITY_END_DATE}`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateAmendmentDealStatus, validateRole({ role: [MAKER] })])
   .get(getFacilityEndDate)
   .post(postFacilityEndDate);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${BANK_REVIEW_DATE}`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateAmendmentDealStatus, validateRole({ role: [MAKER] })])
   .get(getBankReviewDate)
   .post(postBankReviewDate);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${ELIGIBILITY}`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateAmendmentDealStatus, validateRole({ role: [MAKER] })])
   .get(getEligibility)
   .post(postEligibility);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${MANUAL_APPROVAL_NEEDED}`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateAmendmentDealStatus, validateRole({ role: [MAKER] })])
   .get(getManualApprovalNeeded);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${EFFECTIVE_DATE}`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateAmendmentDealStatus, validateRole({ role: [MAKER] })])
   .get(getEffectiveDate)
   .post(postEffectiveDate);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${CHECK_YOUR_ANSWERS}`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateAmendmentDealStatus, validateRole({ role: [MAKER] })])
   .get(getCheckYourAnswers)
   .post(postCheckYourAnswers);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${SUBMITTED_FOR_CHECKING}`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateAmendmentDealStatus, validateRole({ role: [MAKER] })])
   .get(getSubmittedForChecking);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${SUBMIT_AMENDMENT_TO_UKEF}`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [CHECKER] })])
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateAmendmentDealStatus, validateRole({ role: [CHECKER] })])
   .get(getSubmitAmendmentToUkef)
   .post(postSubmitAmendmentToUkef);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${APPROVED_BY_UKEF}`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [CHECKER] })])
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateAmendmentDealStatus, validateRole({ role: [CHECKER] })])
   .get(getApprovedByUkef);
 
 router
   .route(`/application-details/:dealId/${AMENDMENT_DETAILS}`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER, CHECKER] })])
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateAmendmentDealStatus, validateRole({ role: [MAKER, CHECKER] })])
   .get(getAmendmentDetails);
 
 export default router;

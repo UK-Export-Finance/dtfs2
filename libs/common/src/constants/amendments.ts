@@ -1,3 +1,5 @@
+import { DEAL_STATUS } from './portal';
+
 export const TFM_AMENDMENT_STATUS = {
   /**
    * Amendment is created but no values have been provided
@@ -59,3 +61,12 @@ export const AMENDMENT_TYPES = {
   PORTAL: 'PORTAL',
   TFM: 'TFM',
 } as const;
+
+export const AMENDMENT_UNACCEPTABLE_DEAL_STATUSES = [
+  DEAL_STATUS.ABANDONED,
+  DEAL_STATUS.CANCELLED,
+  DEAL_STATUS.EXPIRED,
+  DEAL_STATUS.WITHDRAWN,
+  DEAL_STATUS.NOT_STARTED,
+  DEAL_STATUS.DRAFT,
+] as string[];
