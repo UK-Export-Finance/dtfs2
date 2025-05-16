@@ -33,6 +33,9 @@ import { getAmendmentDetails } from '../../../controllers/amendments/amendment-d
 import { getSubmitAmendmentToUkef } from '../../../controllers/amendments/submit-amendment-to-ukef/get-submit-amendment-to-ukef.ts';
 import { postSubmitAmendmentToUkef } from '../../../controllers/amendments/submit-amendment-to-ukef/post-submit-amendment-to-ukef.ts';
 import { getApplicationAmendments } from '../../../controllers/amendments/application-amendments/get-application-amendments.ts';
+import { getReturnAmendmentToMaker } from '../../../controllers/amendments/return-amendment-to-maker/get-return-amendment-to-maker.ts';
+import { postReturnAmendmentToMaker } from '../../../controllers/amendments/return-amendment-to-maker/post-return-amendment-to-maker.ts';
+import { getReturnedToMaker } from '../../../controllers/amendments/returned-to-maker/get-returned-to-maker.ts';
 
 const {
   WHAT_DO_YOU_NEED_TO_CHANGE,
@@ -51,6 +54,8 @@ const {
   AMENDMENT_DETAILS,
   SUBMIT_AMENDMENT_TO_UKEF,
   ALL_TYPE_AMENDMENTS,
+  RETURN_TO_MAKER,
+  RETURNED_TO_MAKER,
 } = PORTAL_AMENDMENT_PAGES;
 
 const router = express.Router();
@@ -132,6 +137,17 @@ router
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER] })])
   .get(getCheckYourAnswers)
   .post(postCheckYourAnswers);
+
+router
+  .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${RETURN_TO_MAKER}`)
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [CHECKER] })])
+  .get(getReturnAmendmentToMaker)
+  .post(postReturnAmendmentToMaker);
+
+router
+  .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${RETURNED_TO_MAKER}`)
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [CHECKER] })])
+  .get(getReturnedToMaker);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${SUBMITTED_FOR_CHECKING}`)

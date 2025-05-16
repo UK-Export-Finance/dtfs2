@@ -15,4 +15,6 @@ export const PORTAL_AMENDMENT_PAGES = {
   AMENDMENT_DETAILS: 'amendment-details',
   SUBMIT_AMENDMENT_TO_UKEF: 'submit-amendment-to-ukef',
   ALL_TYPE_AMENDMENTS: 'all-type-amendments',
+  RETURN_TO_MAKER: 'return-to-maker',
+  RETURNED_TO_MAKER: 'returned-to-maker',
 } as const;

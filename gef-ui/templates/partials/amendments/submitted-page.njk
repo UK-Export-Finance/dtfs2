@@ -3,8 +3,10 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% import './_macros/what-happens-next-submitted-checker.njk' as whatHappensNextChecker %}
 {% import './_macros/what-happens-next-approved-by-ukef.njk' as whatHappensNextApprovedByUkef %}
+{% import './_macros/what-happens-next-returned-to-maker.njk' as whatHappensNextReturnedToMaker %}
 {% import './_macros/submitted-to-checker-panel.njk' as submittedToCheckerPanel %}
 {% import './_macros/approved-by-ukef-panel.njk' as approvedByUkefPanel %}
+{% import './_macros/returned-to-maker-panel.njk' as returnedToMakerPanel %}
 
 {% block pageTitle -%}
   {% if submittedToChecker %}
@@ -29,6 +31,10 @@
           referenceNumber: referenceNumber
         }) }}
       {% endif %}
+
+      {% if returnedToMaker %}
+        {{ returnedToMakerPanel.render() }}
+      {% endif %}
   
       <div class="govuk-!-margin-top-4">
         <h2 class="govuk-!-margin-bottom-0" data-cy="heading">
@@ -37,6 +43,10 @@
 
         {% if submittedToChecker %}
           {{ whatHappensNextChecker.render() }}
+        {% endif %}
+
+        {% if returnedToMaker %}
+          {{ whatHappensNextReturnedToMaker.render() }}
         {% endif %}
 
         {% if approvedByUkef %}
