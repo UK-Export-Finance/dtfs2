@@ -39,10 +39,10 @@ describe('PortalFacilityAmendmentService', () => {
     jest.useRealTimers();
   });
 
-  describe('submitPortalFacilityAmendmentToChecker', () => {
+  describe('returnPortalFacilityAmendmentToMaker', () => {
     it('should call PortalFacilityAmendmentService.validateAmendmentIsComplete', async () => {
       // Act
-      await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+      await PortalFacilityAmendmentService.returnPortalFacilityAmendmentToMaker({
         amendmentId,
         facilityId,
         auditDetails,
@@ -58,7 +58,7 @@ describe('PortalFacilityAmendmentService', () => {
 
     it('should call PortalFacilityAmendmentService.findOneAmendmentByFacilityIdAndAmendmentId', async () => {
       // Act
-      await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+      await PortalFacilityAmendmentService.returnPortalFacilityAmendmentToMaker({
         amendmentId,
         facilityId,
         auditDetails,
@@ -74,7 +74,7 @@ describe('PortalFacilityAmendmentService', () => {
       mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce(null);
 
       // Act
-      const returned = PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+      const returned = PortalFacilityAmendmentService.returnPortalFacilityAmendmentToMaker({
         amendmentId,
         facilityId,
         auditDetails,
@@ -89,7 +89,7 @@ describe('PortalFacilityAmendmentService', () => {
       mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce({ ...updatedAmendment, type: AMENDMENT_TYPES.TFM });
 
       // Act
-      const returned = PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+      const returned = PortalFacilityAmendmentService.returnPortalFacilityAmendmentToMaker({
         amendmentId,
         facilityId,
         auditDetails,
@@ -105,7 +105,7 @@ describe('PortalFacilityAmendmentService', () => {
       mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce(existingAmendment);
 
       // Act
-      await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+      await PortalFacilityAmendmentService.returnPortalFacilityAmendmentToMaker({
         amendmentId,
         facilityId,
         auditDetails,
@@ -121,7 +121,7 @@ describe('PortalFacilityAmendmentService', () => {
 
     it('should call TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId with the correct params', async () => {
       // Act
-      await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+      await PortalFacilityAmendmentService.returnPortalFacilityAmendmentToMaker({
         amendmentId,
         facilityId,
         auditDetails,
@@ -129,7 +129,7 @@ describe('PortalFacilityAmendmentService', () => {
 
       // Assert
       const expectedUpdate = {
-        status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+        status: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
       };
 
       expect(mockUpdatePortalFacilityAmendmentByAmendmentId).toHaveBeenCalledTimes(1);
@@ -138,13 +138,13 @@ describe('PortalFacilityAmendmentService', () => {
         facilityId: new ObjectId(facilityId),
         amendmentId: new ObjectId(amendmentId),
         auditDetails,
-        allowedStatuses: [PORTAL_AMENDMENT_STATUS.DRAFT, PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED],
+        allowedStatuses: [PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL],
       });
     });
 
     it('should return the result of TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId', async () => {
       // Act
-      const expected = await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToChecker({
+      const expected = await PortalFacilityAmendmentService.returnPortalFacilityAmendmentToMaker({
         amendmentId,
         facilityId,
         auditDetails,
