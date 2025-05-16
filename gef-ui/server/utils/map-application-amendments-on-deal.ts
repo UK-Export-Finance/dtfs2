@@ -13,7 +13,7 @@ type MappedFacilityAmendmentWithUkefId = {
 };
 
 /**
- * Maps an array of `FacilityAmendmentWithUkefId` to an array of `MappedFacilityAmendmentWithUkefId` objects.
+ * Maps an array of `FacilityAllTypeAmendmentWithUkefId` to an array of `MappedFacilityAmendmentWithUkefId` objects.
  * This function transforms the structure of the amendments to match the required format.
  *
  * @param amendments - An array of amendments ,to be mapped. Each amendment contains details about a facility amendment.
