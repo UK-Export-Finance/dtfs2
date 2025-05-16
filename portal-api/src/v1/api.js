@@ -745,9 +745,23 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
  * @param {(import('@ukef/dtfs2-common').PortalAmendmentStatus)} params.newStatus - the facility id
  * @param {string} params.referenceNumber - the amendment reference number
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - The audit details for the update.
+ * @param {string} params.makersEmail - The maker's email address to send the notification to
+ * @param {string} params.checkersEmail - The checker's email address to send the notification to
+ * @param {string} params.pimEmail - The pim's email address to send the notification to
+ * @param {import('@ukef/dtfs2-common').PortalAmendmentSubmittedToUkefEmailVariables} params.emailVariables - The email variables to send with the notification
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>} - the updatedamendment
  */
-const patchPortalFacilitySubmitAmendment = async ({ facilityId, amendmentId, newStatus, referenceNumber, auditDetails }) => {
+const patchPortalFacilitySubmitAmendment = async ({
+  facilityId,
+  amendmentId,
+  newStatus,
+  referenceNumber,
+  auditDetails,
+  makersEmail,
+  checkersEmail,
+  pimEmail,
+  emailVariables,
+}) => {
   try {
     const response = await axios({
       method: 'patch',
@@ -757,6 +771,10 @@ const patchPortalFacilitySubmitAmendment = async ({ facilityId, amendmentId, new
         newStatus,
         referenceNumber,
         auditDetails,
+        makersEmail,
+        checkersEmail,
+        pimEmail,
+        emailVariables,
       },
     });
 
