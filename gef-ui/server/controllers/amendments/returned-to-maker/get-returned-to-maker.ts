@@ -37,7 +37,7 @@ export const getReturnedToMaker = async (req: GetReturnedToMakerRequest, res: Re
 
     return res.render('partials/amendments/submitted-page.njk', viewModel);
   } catch (error) {
-    console.error('Error getting approval by ukef page %o', error);
+    console.error('Error getting return to maker page %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

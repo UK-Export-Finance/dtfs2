@@ -165,7 +165,7 @@ describe('getReturnedToMaker', () => {
 
       // Assert
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Error getting approval by ukef page %o', mockError);
+      expect(console.error).toHaveBeenCalledWith('Error getting return to maker page %o', mockError);
     });
   });
 });

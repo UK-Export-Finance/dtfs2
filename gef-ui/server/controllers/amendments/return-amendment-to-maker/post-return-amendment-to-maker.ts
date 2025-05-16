@@ -86,7 +86,7 @@ export const postReturnAmendmentToMaker = async (req: PostReturnToMakerRequest, 
 
     return res.redirect(url);
   } catch (error) {
-    console.error('Error getting return to maker page %o', error);
+    console.error('Error posting facility amendment return to maker %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

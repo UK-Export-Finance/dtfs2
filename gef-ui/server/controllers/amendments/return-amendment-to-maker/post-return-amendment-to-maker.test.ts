@@ -421,7 +421,7 @@ describe('postReturnAmendmentToMaker', () => {
 
       // Assert
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Error getting return to maker page %o', mockError);
+      expect(console.error).toHaveBeenCalledWith('Error posting facility amendment return to maker %o', mockError);
     });
   });
 
@@ -450,7 +450,7 @@ describe('postReturnAmendmentToMaker', () => {
 
       // Assert
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Error getting return to maker page %o', mockError);
+      expect(console.error).toHaveBeenCalledWith('Error posting facility amendment return to maker %o', mockError);
     });
   });
 
@@ -479,7 +479,7 @@ describe('postReturnAmendmentToMaker', () => {
 
       // Assert
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Error getting return to maker page %o', mockError);
+      expect(console.error).toHaveBeenCalledWith('Error posting facility amendment return to maker %o', mockError);
     });
   });
 });
