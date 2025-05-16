@@ -1,5 +1,5 @@
 import z from 'zod';
-import { FacilityAmendment, Prettify } from '..';
+import { FacilityAmendment, PortalFacilityAmendment, Prettify, TfmFacilityAmendment } from '..';
 import { PORTAL_FACILITY_AMENDMENT_USER_VALUES, PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID } from '../../schemas';
 
 export type PortalFacilityAmendmentUserValues = z.infer<typeof PORTAL_FACILITY_AMENDMENT_USER_VALUES>;
@@ -7,6 +7,13 @@ export type PortalFacilityAmendmentUserValues = z.infer<typeof PORTAL_FACILITY_A
 export type PortalFacilityAmendmentWithUkefId = z.infer<typeof PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID>;
 
 export type FacilityAmendmentWithUkefId = Prettify<FacilityAmendment & { ukefFacilityId: string | null }>;
+
+interface FacilityWithStringIds extends Omit<TfmFacilityAmendment | PortalFacilityAmendment, 'dealId' | 'facilityId' | 'amendmentId'> {
+  dealId: string;
+  facilityId: string;
+  amendmentId: string;
+}
+export type FacilityAllTypeAmendmentWithUkefId = Prettify<FacilityWithStringIds & { ukefFacilityId: string | null }>;
 
 export type PortalAmendmentSubmittedToCheckerEmailVariables = {
   exporterName: string;

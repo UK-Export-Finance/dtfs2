@@ -1,42 +1,32 @@
 import {
   PORTAL_AMENDMENT_STATUS,
   AMENDMENT_TYPES,
-  AmendmentsEligibilityCriterionWithAnswer,
   UnixTimestampSeconds,
   PortalAmendmentStatus,
   UnixTimestampMilliseconds,
   TfmAmendmentStatus,
+  FacilityAllTypeAmendmentWithUkefId,
 } from '@ukef/dtfs2-common';
 
-import { FacilityAmendmentWithUkefId } from '../server/constants/amendments';
-
 export class FacilityAmendmentWithUkefIdMockBuilder {
-  private readonly amendment: FacilityAmendmentWithUkefId;
+  private readonly amendment: FacilityAllTypeAmendmentWithUkefId;
 
-  public constructor(amendment?: FacilityAmendmentWithUkefId) {
-    this.amendment = amendment ?? {
-      dealId: '6776cb6f3e2efb60a50fbc3d',
-      facilityId: '6776cb6f3e2efb60a50fbc41',
-      amendmentId: '6777c4ca826649ec990c1adf',
-      type: AMENDMENT_TYPES.PORTAL,
-      status: PORTAL_AMENDMENT_STATUS.DRAFT,
-      createdBy: {
-        username: 'maker1@ukexportfinance.gov.uk',
-        name: 'First Last',
-        email: 'maker1@ukexportfinance.gov.uk',
-      },
-      ukefFacilityId: '0041282190',
-      eligibilityCriteria: {
-        version: 1,
-        criteria: [
-          {
-            id: 1,
-            text: 'Criteria 1',
-            answer: null,
-          },
-        ],
-      },
-    };
+  public constructor(amendment?: FacilityAllTypeAmendmentWithUkefId) {
+    this.amendment =
+      amendment ??
+      ({
+        dealId: '6776cb6f3e2efb60a50fbc3d',
+        facilityId: '6776cb6f3e2efb60a50fbc41',
+        amendmentId: '6777c4ca826649ec990c1adf',
+        type: AMENDMENT_TYPES.PORTAL,
+        status: PORTAL_AMENDMENT_STATUS.DRAFT,
+        createdBy: {
+          username: 'maker1@ukexportfinance.gov.uk',
+          name: 'First Last',
+          email: 'maker1@ukexportfinance.gov.uk',
+        },
+        ukefFacilityId: '0041282190',
+      } as unknown as FacilityAllTypeAmendmentWithUkefId);
   }
 
   public withFacilityId(facilityId: string) {
@@ -51,14 +41,6 @@ export class FacilityAmendmentWithUkefIdMockBuilder {
 
   public withAmendmentId(amendmentId: string) {
     this.amendment.amendmentId = amendmentId;
-    return this;
-  }
-
-  public withCriteria(criteria: AmendmentsEligibilityCriterionWithAnswer[]) {
-    this.amendment.eligibilityCriteria = {
-      version: 1,
-      criteria,
-    };
     return this;
   }
 

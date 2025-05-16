@@ -15,7 +15,7 @@ import { getAmendmentsUrl } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { postSubmitAmendmentToUkef, PostSubmitAmendmentToUkefRequest } from './post-submit-amendment-to-ukef';
-import * as createReferenceNumber from '../helpers/create-amendment-reference-number.helper';
+import * as createReferenceNumberHelper from '../helpers/create-amendment-reference-number.helper';
 
 console.error = jest.fn();
 const getApplicationMock = jest.fn();
@@ -61,7 +61,7 @@ describe('postSubmitAmendmentToUkef', () => {
     jest.spyOn(console, 'error');
     jest.spyOn(api, 'getApplication').mockImplementation(getApplicationMock);
     jest.spyOn(api, 'updateSubmitAmendment').mockImplementation(updateSubmittedAmendmentMock);
-    jest.spyOn(createReferenceNumber, 'createReferenceNumber').mockImplementation(createReferenceNumberMock);
+    jest.spyOn(createReferenceNumberHelper, 'createReferenceNumberHelper').mockImplementation(createReferenceNumberMock);
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
       .withDealId(dealId)

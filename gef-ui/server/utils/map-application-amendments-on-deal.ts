@@ -1,7 +1,6 @@
-import { SummaryListRow, AMENDMENT_TYPES, DATE_FORMATS, getFormattedMonetaryValue, CURRENCY } from '@ukef/dtfs2-common';
+import { SummaryListRow, AMENDMENT_TYPES, DATE_FORMATS, getFormattedMonetaryValue, CURRENCY, FacilityAllTypeAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { format, fromUnixTime } from 'date-fns';
 import { getCurrencySymbol } from './get-currency-symbol';
-import { FacilityAmendmentWithUkefId } from '../constants/amendments';
 
 type MappedFacilityAmendmentWithUkefId = {
   referenceNumber: string;
@@ -20,7 +19,7 @@ type MappedFacilityAmendmentWithUkefId = {
  * @param amendments - An array of amendments ,to be mapped. Each amendment contains details about a facility amendment.
  * @returns An array of mapped amendments
  */
-export const mapApplicationAmendmentsOnDeal = (amendments: FacilityAmendmentWithUkefId[]): MappedFacilityAmendmentWithUkefId[] => {
+export const mapApplicationAmendmentsOnDeal = (amendments: FacilityAllTypeAmendmentWithUkefId[]): MappedFacilityAmendmentWithUkefId[] => {
   return amendments.map((amendment) => {
     const symbol = getCurrencySymbol(amendment.currency ?? CURRENCY.GBP);
     const value = amendment.value ? getFormattedMonetaryValue(Number(amendment.value)) : '';

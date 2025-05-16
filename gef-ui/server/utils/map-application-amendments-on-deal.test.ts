@@ -1,8 +1,7 @@
-import { PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS, DATE_FORMATS } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS, DATE_FORMATS, FacilityAllTypeAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { add, format, fromUnixTime, getUnixTime, startOfDay } from 'date-fns';
 import { mapApplicationAmendmentsOnDeal } from './map-application-amendments-on-deal';
 import { FacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers/mock-all-type-amendment';
-import { FacilityAmendmentWithUkefId } from '../constants/amendments';
 
 const dealId = '6597dffeb5ef5ff4267e5044';
 const facilityId = '6597dffeb5ef5ff4267e5045';
@@ -17,7 +16,7 @@ describe('mapApplicationAmendmentsOnDeal', () => {
   const coverEndDate = Number(new Date());
   const referenceNumber = 'ukefFacilityId-01';
 
-  const portalAmendment: FacilityAmendmentWithUkefId = new FacilityAmendmentWithUkefIdMockBuilder()
+  const portalAmendment: FacilityAllTypeAmendmentWithUkefId = new FacilityAmendmentWithUkefIdMockBuilder()
     .withDealId(dealId)
     .withFacilityId(facilityId)
     .withAmendmentId(amendmentId)
@@ -49,15 +48,15 @@ describe('mapApplicationAmendmentsOnDeal', () => {
         { key: { text: 'Amendment created by' }, value: { text: portalAmendment.createdBy ? portalAmendment.createdBy.name : null } },
       ],
       effectiveDate: portalAmendment.effectiveDate ? format(fromUnixTime(portalAmendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY) : '',
-      facilityId: portalAmendment.facilityId.toString(),
-      amendmentId: portalAmendment.amendmentId.toString(),
+      facilityId: portalAmendment.facilityId && portalAmendment.facilityId.toString(),
+      amendmentId: portalAmendment.amendmentId && portalAmendment.amendmentId.toString(),
       hasFutureEffectiveDate: false,
       referenceNumber: portalAmendment.referenceNumber,
       type: portalAmendment.type,
     },
   ];
 
-  const tfmAmendment: FacilityAmendmentWithUkefId = new FacilityAmendmentWithUkefIdMockBuilder()
+  const tfmAmendment: FacilityAllTypeAmendmentWithUkefId = new FacilityAmendmentWithUkefIdMockBuilder()
     .withDealId(dealId)
     .withFacilityId(facilityId)
     .withAmendmentId(amendmentId)
@@ -89,8 +88,8 @@ describe('mapApplicationAmendmentsOnDeal', () => {
         { key: { text: 'Amendment created by' }, value: { text: tfmAmendment.createdBy ? tfmAmendment.createdBy.name : null } },
       ],
       effectiveDate: tfmAmendment.effectiveDate ? format(fromUnixTime(tfmAmendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY) : '',
-      facilityId: tfmAmendment.facilityId.toString(),
-      amendmentId: tfmAmendment.amendmentId.toString(),
+      facilityId: tfmAmendment.facilityId && tfmAmendment.facilityId.toString(),
+      amendmentId: tfmAmendment.amendmentId && tfmAmendment.amendmentId.toString(),
       hasFutureEffectiveDate: false,
       referenceNumber: tfmAmendment.referenceNumber,
       type: tfmAmendment.type,
