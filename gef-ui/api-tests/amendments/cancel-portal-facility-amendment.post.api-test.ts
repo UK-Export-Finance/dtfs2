@@ -8,6 +8,7 @@ import { createApi } from '../create-api';
 import api from '../../server/services/api';
 import * as storage from '../test-helpers/storage/storage';
 import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
+import { MOCK_AIN_APPLICATION } from '../../server/utils/mocks/mock-applications';
 
 const originalEnv = { ...process.env };
 
@@ -19,6 +20,7 @@ jest.mock('../../server/middleware/csrf', () => ({
 }));
 
 const mockDeleteAmendment = jest.fn();
+const mockGetApplication = jest.fn();
 
 const dealId = '6597dffeb5ef5ff4267e5044';
 const facilityId = '6597dffeb5ef5ff4267e5045';
@@ -35,6 +37,10 @@ describe(`POST ${validUrl}`, () => {
 
     ({ sessionCookie } = await storage.saveUserSession([ROLES.MAKER]));
     jest.spyOn(api, 'deleteAmendment').mockImplementation(mockDeleteAmendment);
+    jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
+
+    mockGetApplication.mockResolvedValue(MOCK_AIN_APPLICATION);
+
     jest.spyOn(console, 'error');
   });
 
