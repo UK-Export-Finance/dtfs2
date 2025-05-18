@@ -1,8 +1,10 @@
-const { getApplication, getUserDetails, updateApplication, setApplicationStatus } = require('../../services/api');
+const { RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT } = require('@ukef/dtfs2-common');
+const { getApplication, setApplicationStatus } = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
 const CONSTANTS = require('../../constants');
+const { addCheckerCommentsToApplication } = require('../../helpers/add-checker-comments-to-application');
 
-const MAX_COMMENT_LENGTH = 400;
+const MAX_COMMENT_LENGTH = RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT;
 
 const getReturnToMaker = async (req, res) => {
   const { params } = req;
@@ -23,8 +25,6 @@ const postReturnToMaker = async (req, res, next) => {
   const { user, userToken } = session;
   const { dealId } = params;
   const { comment } = body;
-  const application = await getApplication({ dealId, userToken });
-  const checker = await getUserDetails({ userId: user._id, userToken });
 
   try {
     if (comment.length > MAX_COMMENT_LENGTH) {
@@ -41,22 +41,8 @@ const postReturnToMaker = async (req, res, next) => {
       });
     }
 
-    if (comment.length > 0) {
-      application.comments = [
-        ...(application.comments || []),
-        {
-          roles: checker.roles,
-          userName: checker.username,
-          firstname: checker.firstname,
-          surname: checker.surname,
-          email: checker.email,
-          createdAt: Date.now(),
-          comment,
-        },
-      ];
-    }
-    application.checkerId = user._id;
-    await updateApplication({ dealId, application, userToken });
+    await addCheckerCommentsToApplication(dealId, userToken, user._id, comment);
+
     await setApplicationStatus({ dealId, status: CONSTANTS.DEAL_STATUS.CHANGES_REQUIRED, userToken });
   } catch (error) {
     return next(error);
