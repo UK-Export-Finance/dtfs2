@@ -5,7 +5,7 @@ import { NODE_TASKS } from '../../../../../../e2e-fixtures';
 
 context('PDC_RECONCILE users can search for reports by bank and year', () => {
   const allBanksAlias = 'allBanksAlias';
-  const BANK_WITH_REPORTS_ID = '956';
+  const BANK_WITH_REPORTS_ID = '9';
   const BANK_WITHOUT_REPORTS_ID = '953';
 
   before(() => {

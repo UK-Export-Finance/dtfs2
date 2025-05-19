@@ -14,7 +14,7 @@ const deal = {
   status: "Ready for Checker's approval",
   previousStatus: 'Draft',
   bank: {
-    id: '956',
+    id: '9',
     name: 'Bank 1',
     emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
   },

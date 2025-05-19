@@ -15,7 +15,7 @@ describe('controllers/utilisation-report-service/due-report-periods', () => {
   });
 
   describe('getDueReportPeriodsByBankId', () => {
-    const mockBankIdParam = '956';
+    const mockBankIdParam = '9';
     const getHttpMocks = () =>
       httpMocks.createMocks({
         params: { bankId: mockBankIdParam },

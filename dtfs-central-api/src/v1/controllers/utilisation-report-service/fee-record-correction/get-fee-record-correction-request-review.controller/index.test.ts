@@ -180,7 +180,7 @@ describe('get-fee-record-correction-request-review.controller', () => {
         id: bankId,
         name: 'Test bank',
         paymentOfficerTeam: {
-          teamName: 'Barclays Payment Reporting Team',
+          teamName: 'Bank 1 Payment Reporting Team',
           emails: ['payment-officer3@ukexportfinance.gov.uk', 'payment-officer4@ukexportfinance.gov.uk'],
         },
       };
