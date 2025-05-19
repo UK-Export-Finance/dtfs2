@@ -15,7 +15,7 @@ const MONTHLY_REPORT_PERIOD_SCHEDULE = [
 
 export const MOCK_BANKS = {
   bank1: {
-    id: '956',
+    id: '9',
     name: 'Bank 1',
     mga: ['Test.pdf'],
     emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
