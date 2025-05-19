@@ -73,8 +73,8 @@ export class TfmFacilitiesRepo {
   /**
    * Finds all type amendments across all facilities for a deal for a given status or set of statuses
    * @param dealId - The deal id
-   * @param statuses - An array of portal amendment statuses to filter on
-   * @returns The matching portal amendments
+   * @param statuses - An array of amendment statuses to filter on
+   * @returns The matching amendments
    */
   public static async findAllTypeAmendmentsByDealIdAndStatus({
     dealId,
@@ -98,10 +98,10 @@ export class TfmFacilitiesRepo {
         },
         { projection: { amendments: 1, 'facilitySnapshot.name': 1, 'facilitySnapshot.ukefFacilityId': 1, 'facilitySnapshot.currency': 1 } },
       )
-      .sort({ 'amendments.referenceNumber': -1 })
+      .sort({ 'amendments.updatedAt': -1 })
       .toArray();
 
-    const matchingPortalAmendments = facilitiesOnDealWithAmendments
+    const matchingAmendments = facilitiesOnDealWithAmendments
       .flatMap((facility) =>
         (facility.amendments || []).map((amendment) => ({
           ...amendment,
@@ -112,7 +112,7 @@ export class TfmFacilitiesRepo {
       )
       .filter((amendment) => amendment.amendmentId && amendment.referenceNumber && (!statuses || statuses.includes(amendment.status)));
 
-    return matchingPortalAmendments;
+    return matchingAmendments;
   }
 
   /**

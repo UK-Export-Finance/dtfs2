@@ -5,7 +5,7 @@ import {
   AnyObject,
   Role,
   PORTAL_AMENDMENT_INPROGRESS_STATUSES,
-  FacilityAmendmentWithUkefId,
+  FacilityAllTypeAmendmentWithUkefId,
 } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import app from '../../../../src/createApp';
@@ -20,7 +20,7 @@ import { withClientAuthenticationTests } from '../../../common-tests/client-auth
 
 const { as, get } = createApi(app);
 
-const getFacilityAmendmentsOnDealMock = jest.fn() as jest.Mock<Promise<FacilityAmendmentWithUkefId[]>>;
+const getFacilityAmendmentsOnDealMock = jest.fn() as jest.Mock<Promise<FacilityAllTypeAmendmentWithUkefId[]>>;
 
 jest.mock('../../../../src/v1/api', () => ({
   ...jest.requireActual<AnyObject>('../../../../src/v1/api'),
@@ -37,17 +37,9 @@ describe('/v1/gef/deals/:dealId/all-type-amendments', () => {
   let aMaker: TestUser;
 
   describe('GET /v1/gef/deals/:dealId/all-type-amendments', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-    });
-
     beforeAll(async () => {
       testUsers = await testUserCache.initialise(app);
       aMaker = testUsers().withRole(MAKER).one() as TestUser;
-    });
-
-    afterAll(() => {
-      jest.resetAllMocks();
     });
 
     afterAll(() => {
@@ -99,7 +91,7 @@ describe('/v1/gef/deals/:dealId/all-type-amendments', () => {
           name: aMaker.firstname,
           email: aMaker.email,
         },
-      } as unknown as FacilityAmendmentWithUkefId;
+      } as FacilityAllTypeAmendmentWithUkefId;
 
       jest.mocked(getFacilityAmendmentsOnDealMock).mockResolvedValue([amendment]);
       const url = getAmendmentsOnDealUrl({ dealId, statuses });

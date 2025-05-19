@@ -429,7 +429,7 @@ const getAmendmentsOnDeal = async ({ dealId, userToken, statuses }) => {
 
     return response.data;
   } catch (error) {
-    console.error('Failed to get the type amendments for facilities on deal with id %s: %o', dealId, error);
+    console.error('Failed to get amendments for facilities on deal with id %s: %o', dealId, error);
     throw error;
   }
 };

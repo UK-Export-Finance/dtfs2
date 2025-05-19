@@ -74,9 +74,8 @@ describe('getAmendmentDetails', () => {
     describe(`when the user is a ${user}`, () => {
       describe('when an application is not found', () => {
         it('should redirect to /not-found', async () => {
-          mockGetApplication.mockResolvedValue(null);
-
           // Arrange
+          mockGetApplication.mockResolvedValue(null);
           const { req, res } = getHttpMocks(user);
 
           // Act
@@ -92,9 +91,8 @@ describe('getAmendmentDetails', () => {
 
       describe('when portal amendments are not found', () => {
         it('should redirect to /not-found', async () => {
-          mockGetAmendments.mockResolvedValue(null);
-
           // Arrange
+          mockGetAmendments.mockResolvedValue(null);
           const { req, res } = getHttpMocks(user);
 
           // Act
@@ -110,9 +108,8 @@ describe('getAmendmentDetails', () => {
 
       describe('when getAmendmentsOnDeal fails', () => {
         it('should redirect to problem-with service', async () => {
-          mockGetAmendments.mockRejectedValue({});
-
           // Arrange
+          mockGetAmendments.mockRejectedValue({});
           const { req, res } = getHttpMocks(user);
 
           // Act
