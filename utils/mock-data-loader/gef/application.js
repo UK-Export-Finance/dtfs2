@@ -5,7 +5,7 @@ const APPLICATION = [
   {
     // not started
     bank: { id: '9' },
-    bankInternalRefName: 'Barclays 123',
+    bankInternalRefName: 'UKEF Test 123',
     additionalRefName: null,
     mandatoryVersionId: 33,
     exporter: EXPORTER_COMPLETED,
@@ -23,7 +23,7 @@ const APPLICATION = [
   {
     // completed
     bank: { id: '9' },
-    bankInternalRefName: 'HSBC 123',
+    bankInternalRefName: 'UKEF Test 123',
     additionalRefName: 'Some Additional Reference',
     mandatoryVersionId: 33,
     exporter: EXPORTER_COMPLETED,

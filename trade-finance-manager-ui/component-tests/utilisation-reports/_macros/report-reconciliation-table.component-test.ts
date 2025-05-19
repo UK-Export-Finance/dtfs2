@@ -92,10 +92,10 @@ describe(component, () => {
 
 function aListOfUtilisationReportSummaryViewModelsWithReportsInEachStatus(): UtilisationReportSummaryViewModel[] {
   return [
-    aReportNotReceivedReportForBank({ id: '1', name: 'Barclays' }),
-    aPendingReconciliationReportForBank({ id: '2', name: 'HSBC' }),
-    aReconciliationInProgressReportForBank({ id: '3', name: 'Newable' }),
-    aReconciliationCompletedReportForBank({ id: '4', name: 'Natwest' }),
+    aReportNotReceivedReportForBank({ id: '1', name: 'Bank 1' }),
+    aPendingReconciliationReportForBank({ id: '2', name: 'Bank 2' }),
+    aReconciliationInProgressReportForBank({ id: '3', name: 'Bank 3' }),
+    aReconciliationCompletedReportForBank({ id: '4', name: 'Bank 4' }),
   ];
 }
 

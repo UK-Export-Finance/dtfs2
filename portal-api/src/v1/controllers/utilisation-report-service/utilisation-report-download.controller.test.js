@@ -16,7 +16,7 @@ describe('controllers/utilisation-report-service/utilisation-report-download', (
   });
 
   describe('getReportDownload', () => {
-    const mockBankIdParam = '956';
+    const mockBankIdParam = '9';
     const mockReportId = 10;
 
     const getHttpMocks = () =>

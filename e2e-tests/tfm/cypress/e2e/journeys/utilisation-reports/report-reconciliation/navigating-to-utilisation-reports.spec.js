@@ -19,7 +19,7 @@ context('Users can route to the payments page for a bank', () => {
   const previousSubmissionMonthStamp = toIsoMonthStamp(subMonths(today, 1));
   const latestQuarterlySubmissionMonthStamp = getLatestQuarterlySubmissionMonthStamp();
   const QUARTERLY_REPORTING_BANK_ID = '10';
-  const MONTHLY_REPORTING_BANK_ID = '956';
+  const MONTHLY_REPORTING_BANK_ID = '9';
 
   before(() => {
     cy.task(NODE_TASKS.REINSERT_ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);

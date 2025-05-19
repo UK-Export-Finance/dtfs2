@@ -155,7 +155,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
 
   it('gets utilisation report summaries', async () => {
     // Arrange
-    const bankId = '956';
+    const bankId = '9';
     const year = '2023';
 
     const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
@@ -178,7 +178,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
 
   it(`gets only the utilisation reports which are not in the ${REPORT_NOT_RECEIVED}`, async () => {
     // Arrange
-    const bankId = '956';
+    const bankId = '9';
     const year = '2023';
 
     const uploadedReport = UtilisationReportEntityMockBuilder.forStatus(PENDING_RECONCILIATION)
@@ -210,7 +210,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
 
   it('gets utilisation reports for specified year', async () => {
     // Arrange
-    const bankId = '956';
+    const bankId = '9';
     const year = '2021';
     const reportPeriod = {
       start: { month: 11, year: 2021 },
@@ -244,7 +244,7 @@ describe('GET /v1/bank/:bankId/utilisation-reports/reconciliation-summary-by-yea
 
   it('returns no reports when no reports exist for specified bank and year', async () => {
     // Arrange
-    const bankId = '956';
+    const bankId = '9';
     const year = '2021';
     const reportPeriod = {
       start: { month: 11, year: 2021 },
