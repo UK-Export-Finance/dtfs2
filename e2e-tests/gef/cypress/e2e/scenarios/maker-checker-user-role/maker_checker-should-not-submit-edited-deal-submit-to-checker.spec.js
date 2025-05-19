@@ -54,7 +54,7 @@ context('Create application as MAKER, submit application to UKEF as MAKER_CHECKE
       cy.location('pathname').should('contain', 'dashboard');
       cy.visit(relative(`/gef/application-details/${dealIds[2]}`));
 
-      applicationDetails.editRefNameLink().should('have.text', 'HSBC 123');
+      applicationDetails.editRefNameLink().should('have.text', 'UKEF Test 123');
 
       // could update the application as the MAKER_CHECKER
       applicationDetails.addCashFacilityButton();

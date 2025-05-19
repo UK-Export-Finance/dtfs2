@@ -4,7 +4,7 @@ export const MOCK_PORTAL_USER = {
   password: '',
   roles: [],
   bank: {
-    id: '956',
+    id: '9',
     name: 'Bank 1',
   },
 };
