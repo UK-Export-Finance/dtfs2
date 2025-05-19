@@ -69,7 +69,7 @@ describe('getPortalAmendmentsByDealId', () => {
     expect(res._getData()).toEqual(mockReturnedPortalAmendments);
   });
 
-  it('should return the correct status and body if TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus throws an api error', async () => {
+  it(`should return a ${HttpStatusCode.Forbidden} status and the body if TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus throws an api error`, async () => {
     // Arrange
     const status = HttpStatusCode.Forbidden;
     const message = 'Test error message';

@@ -59,7 +59,14 @@ export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: 
       return res.redirect('/not-found');
     }
 
-    const banner = facilityId && amendmentId && new Date(fromUnixTime(amendment.effectiveDate ?? 0)) > new Date() ? true : undefined;
+    let banner;
+    const hasFacilityAndAmendmentId = facilityId && amendmentId;
+    const effectiveDate = amendment.effectiveDate ? fromUnixTime(amendment.effectiveDate) : null;
+    const isEffectiveDateInFuture = effectiveDate && new Date(effectiveDate) > new Date();
+
+    if (hasFacilityAndAmendmentId && isEffectiveDateInFuture) {
+      banner = true;
+    }
     return res.render('partials/amendments/amendment-details.njk', createAmendmentDetailsViewModel({ amendment, deal, facility, userRoles, banner }));
   } catch (error) {
     console.error('Error getting amendments details page %o', error);

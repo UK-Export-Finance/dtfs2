@@ -18,7 +18,7 @@ import { getAmendmentsUrl } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { postSubmitAmendmentToUkef, PostSubmitAmendmentToUkefRequest } from './post-submit-amendment-to-ukef';
-import * as createReferenceNumberHelper from '../helpers/create-amendment-reference-number.helper';
+import * as getAmendmentReferenceNumber from '../helpers/get-amendment-reference-number.helper';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { MOCK_PIM_TEAM } from '../../../utils/mocks/mock-tfm-teams.ts';
 import { getCurrencySymbol } from '../../../utils/get-currency-symbol';
@@ -28,7 +28,7 @@ const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
 const updateSubmittedAmendmentMock = jest.fn();
-const createReferenceNumberMock = jest.fn();
+const getAmendmentReferenceNumberMock = jest.fn();
 const getTfmTeamMock = jest.fn();
 
 const dealId = '6597dffeb5ef5ff4267e5044';
@@ -83,7 +83,7 @@ describe('postSubmitAmendmentToUkef', () => {
     jest.spyOn(api, 'getAmendment').mockImplementation(getAmendmentMock);
     jest.spyOn(api, 'updateSubmitAmendment').mockImplementation(updateSubmittedAmendmentMock);
     jest.spyOn(api, 'getTfmTeam').mockImplementation(getTfmTeamMock);
-    jest.spyOn(createReferenceNumberHelper, 'createReferenceNumberHelper').mockImplementation(createReferenceNumberMock);
+    jest.spyOn(getAmendmentReferenceNumber, 'getAmendmentReferenceNumber').mockImplementation(getAmendmentReferenceNumberMock);
 
     const criteria = [
       {
@@ -137,7 +137,7 @@ describe('postSubmitAmendmentToUkef', () => {
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getAmendmentMock.mockResolvedValue(amendment);
-    createReferenceNumberMock.mockResolvedValue(referenceNumber);
+    getAmendmentReferenceNumberMock.mockResolvedValue(referenceNumber);
     updateSubmittedAmendmentMock.mockResolvedValue(submittedAmendment);
     getTfmTeamMock.mockResolvedValue(MOCK_PIM_TEAM);
   });
@@ -178,7 +178,7 @@ describe('postSubmitAmendmentToUkef', () => {
     expect(getAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, userToken: req.session.userToken });
   });
 
-  it('should call createReferenceNumber with the correct dealId facilityId and userToken', async () => {
+  it('should call getAmendmentReferenceNumber with the correct dealId facilityId and userToken', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
@@ -186,8 +186,8 @@ describe('postSubmitAmendmentToUkef', () => {
     await postSubmitAmendmentToUkef(req, res);
 
     // Assert
-    expect(createReferenceNumberMock).toHaveBeenCalledTimes(1);
-    expect(createReferenceNumberMock).toHaveBeenCalledWith(dealId, facilityId, req.session.userToken);
+    expect(getAmendmentReferenceNumberMock).toHaveBeenCalledTimes(1);
+    expect(getAmendmentReferenceNumberMock).toHaveBeenCalledWith(dealId, facilityId, req.session.userToken);
   });
 
   it('should not call updateSubmittedAmendment if the confirmSubmitUkef is false', async () => {
@@ -343,7 +343,7 @@ describe('postSubmitAmendmentToUkef', () => {
   it('should redirect to "/not-found" if the reference number is not found', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
-    createReferenceNumberMock.mockResolvedValue(undefined);
+    getAmendmentReferenceNumberMock.mockResolvedValue(undefined);
 
     // Act
     await postSubmitAmendmentToUkef(req, res);
@@ -400,10 +400,10 @@ describe('postSubmitAmendmentToUkef', () => {
     expect(console.error).toHaveBeenCalledWith('Error posting submitted amendment to UKEF %o', mockError);
   });
 
-  it('should render problem with service if createReferenceNumber throws an error', async () => {
+  it('should render problem with service if getAmendmentReferenceNumber throws an error', async () => {
     // Arrange
     const mockError = aMockError();
-    createReferenceNumberMock.mockRejectedValue(mockError);
+    getAmendmentReferenceNumberMock.mockRejectedValue(mockError);
     const { req, res } = getHttpMocks();
 
     // Act

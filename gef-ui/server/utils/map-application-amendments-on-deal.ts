@@ -24,7 +24,8 @@ export const mapApplicationAmendmentsOnDeal = (amendments: FacilityAllTypeAmendm
     const symbol = getCurrencySymbol(amendment.currency ?? CURRENCY.GBP);
     const value = amendment.value ? getFormattedMonetaryValue(Number(amendment.value)) : '';
     const today = new Date();
-    let amendmentCreatedByRow = null;
+
+    let amendmentCreatedByRow;
 
     if (amendment.type === AMENDMENT_TYPES.PORTAL) {
       if (amendment.createdBy) {

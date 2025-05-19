@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { CustomExpressRequest, PortalSessionUser, PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { getSubmittedAmendmentDetails } from '../../../utils/submitted-amendment-details';
@@ -27,9 +27,18 @@ export const getApplicationAmendments = async (req: GetApplicationAmendmentsRequ
       return res.redirect('/not-found');
     }
 
-    const checker = (await api.getUserDetails({ userId: deal.checkerId, userToken })) as PortalSessionUser;
-    const checkedBy = `${String(checker.firstname ?? '')} ${String(checker.surname ?? '')}`;
-    const createdBy = `${String(deal.maker?.firstname ?? '')} ${String(deal.maker?.surname ?? '')}`;
+    const checker = await api.getUserDetails({ userId: deal.checkerId, userToken });
+
+    let checkedBy;
+    if (checker) {
+      checkedBy = `${String(checker.firstname)} ${String(checker.surname)}`;
+    }
+
+    let createdBy;
+    if (deal.maker) {
+      const { maker } = deal;
+      createdBy = `${String(maker.firstname)} ${String(maker.surname)}`;
+    }
 
     const applicationAmendmentsOnDeal = await api.getAmendmentsOnDeal({
       dealId: deal._id,
@@ -63,7 +72,6 @@ export const getApplicationAmendments = async (req: GetApplicationAmendmentsRequ
       portalAmendmentStatus: lastSubmittedPortalAmendmentDetails.portalAmendmentStatus,
       isPortalAmendmentInProgress: lastSubmittedPortalAmendmentDetails.isPortalAmendmentInProgress,
       applicationAmendmentsOnDeal: getApplicationAmendmentsOnDeal,
-      // dateFrom: '30-07-2025'
     };
 
     return res.render('partials/amendments/application-amendments.njk', viewModel);

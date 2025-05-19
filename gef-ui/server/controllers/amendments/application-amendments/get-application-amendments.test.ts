@@ -84,6 +84,17 @@ describe('getAmendmentDetails', () => {
           // Assert
           expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
           expect(res._getRedirectUrl()).toEqual('/not-found');
+        });
+
+        it('should log a console error', async () => {
+          // Arrange
+          mockGetApplication.mockResolvedValue(null);
+          const { req, res } = getHttpMocks(user);
+
+          // Act
+          await getApplicationAmendments(req, res);
+
+          // Assert
           expect(console.error).toHaveBeenCalledTimes(1);
           expect(console.error).toHaveBeenCalledWith('Deal %s was not found', dealId);
         });

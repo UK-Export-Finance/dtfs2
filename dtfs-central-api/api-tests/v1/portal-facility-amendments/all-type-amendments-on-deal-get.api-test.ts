@@ -24,10 +24,10 @@ const { DRAFT, ACKNOWLEDGED, READY_FOR_CHECKERS_APPROVAL, FURTHER_MAKERS_INPUT_R
 
 const generateUrl = ({ dealId, statuses }: { dealId: string; statuses?: PortalAmendmentStatus[] | TfmAmendmentStatus[] }): string => {
   const statusFilterQuery: string = statuses ? `?statuses=${statuses.map((item) => encodeURIComponent(String(item))).join(',')}` : '';
-  return `/v1/portal/deals/${dealId}/all-type-amendments${statusFilterQuery}`;
+  return `/v1/portal/deals/${dealId}/all-types-amendments${statusFilterQuery}`;
 };
 
-describe('GET /v1/portal/deals/:dealId/all-type-amendments', () => {
+describe('GET /v1/portal/deals/:dealId/all-types-amendments', () => {
   const dealId = new ObjectId().toString();
 
   const aDraftPortalAmendment = aPortalFacilityAmendment({ status: DRAFT });
@@ -59,7 +59,7 @@ describe('GET /v1/portal/deals/:dealId/all-type-amendments', () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
   });
 
-  it(`should return ${HttpStatusCode.BadRequest} when the deal Id is invalid`, async () => {
+  it(`should return ${HttpStatusCode.BadRequest} when the dealId is invalid`, async () => {
     // Arrange
     const anInvalidDealId = 'InvalidId';
 
@@ -120,12 +120,13 @@ describe('GET /v1/portal/deals/:dealId/all-type-amendments', () => {
 
     // Assert
     const { status, body } = (await testApi.get(generateUrl({ dealId }))) as PortalAmendmentsResponse;
+    const result = body.map((amendment) => amendment.amendmentId);
 
     // Act
     expect(status).toEqual(HttpStatusCode.Ok);
 
     const expectedAmendmentIds = [anAcknowledgedPortalAmendment.amendmentId.toString(), aCompletedTfmAmendment.amendmentId.toString()];
-    expect(body.map((amendment) => amendment.amendmentId)).toEqual(expectedAmendmentIds);
+    expect(result).toEqual(expectedAmendmentIds);
   });
 
   it(`should return amendments on the deal matching the provided statuses`, async () => {
@@ -142,9 +143,10 @@ describe('GET /v1/portal/deals/:dealId/all-type-amendments', () => {
 
     // Assert
     const { status, body } = (await testApi.get(generateUrl({ dealId, statuses: [DRAFT, READY_FOR_CHECKERS_APPROVAL] }))) as PortalAmendmentsResponse;
+    const result = body.map((amendment) => amendment.amendmentId);
 
     // Act
     expect(status).toEqual(HttpStatusCode.Ok);
-    expect(body.map((amendment) => amendment.amendmentId)).toEqual([]);
+    expect(result).toEqual([]);
   });
 });
