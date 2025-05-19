@@ -2,7 +2,7 @@ import { validateSchema, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import z from 'zod';
 
 const PatchPortalFacilityAmendmentStatusSchema = z.object({
-  newStatus: z.enum([PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL]),
+  newStatus: z.enum([PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL, PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED]),
   makersEmail: z.string(),
   checkersEmail: z.string(),
   emailVariables: z.object({
