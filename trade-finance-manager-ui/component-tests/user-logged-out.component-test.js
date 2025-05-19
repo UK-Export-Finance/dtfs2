@@ -16,8 +16,6 @@ describe(page, () => {
   });
 
   it('should render user logged out message', () => {
-    wrapper
-      .expectText('[data-cy="you-have-been-logged-out-message"]')
-      .toRead('You have been logged out of Trade Finance Manager, but your Microsoft account remains active.');
+    wrapper.expectText('[data-cy="you-have-been-logged-out-message"]').toRead('You have been logged out of Trade Finance Manager.');
   });
 });

@@ -5,11 +5,10 @@ import { GetRouter } from '../../../types/get-router';
 export const getLoginSsoRouter: GetRouter = () => {
   const loginSsoRouter = express.Router();
 
-  loginSsoRouter.get('/', (req, res, next) => {
+  loginSsoRouter.route('/').get((req, res, next) => {
     LoginController.getLogin(req, res).catch(next);
   });
-
-  loginSsoRouter.get('/logout', LoginController.getLogout);
+  loginSsoRouter.route('/logout').get(LoginController.getLogout);
 
   return loginSsoRouter;
 };

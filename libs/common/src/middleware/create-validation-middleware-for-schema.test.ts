@@ -2,7 +2,7 @@ import { AnyZodObject, SafeParseError, SafeParseSuccess, ZodError, ZodIssue } fr
 import { RequestHandler } from 'express';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { createValidationMiddlewareForSchema } from './create-validation-middleware-for-schema';
+import { validateSchema } from './create-validation-middleware-for-schema';
 
 console.error = jest.fn();
 
@@ -23,7 +23,7 @@ describe('createValidationMiddleware', () => {
     safeParse: mockSafeParse,
   } as unknown as AnyZodObject;
 
-  const runValidator: RequestHandler = (req, res, next) => createValidationMiddlewareForSchema(mockSchema)(req, res, next);
+  const runValidator: RequestHandler = (req, res, next) => validateSchema(mockSchema)(req, res, next);
 
   afterEach(() => {
     jest.resetAllMocks();

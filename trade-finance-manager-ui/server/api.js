@@ -435,7 +435,7 @@ const login = async (username, password) => {
 const handleSsoRedirectForm = async (handleSsoRedirectFormRequest) => {
   const response = await axios({
     method: 'post',
-    url: `${TFM_API_URL}/v1/sso/handle-sso-redirect-form`,
+    url: `${TFM_API_URL}/v1/sso/redirect`,
     headers: {
       ...generateHeaders(),
     },
@@ -454,7 +454,7 @@ const getAuthCodeUrl = async (getAuthCodeUrlRequest) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${TFM_API_URL}/v1/sso/auth-code-url`,
+      url: `${TFM_API_URL}/v1/sso/authenticate`,
       headers: {
         ...generateHeaders(),
       },

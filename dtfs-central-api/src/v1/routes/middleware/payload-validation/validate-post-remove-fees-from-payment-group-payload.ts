@@ -1,5 +1,5 @@
 import z from 'zod';
-import { createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
+import { validateSchema } from '@ukef/dtfs2-common';
 import { TFM_SESSION_USER_SCHEMA } from '@ukef/dtfs2-common/schemas';
 
 const PostRemoveFeesFromPaymentGroupSchema = z.object({
@@ -9,4 +9,4 @@ const PostRemoveFeesFromPaymentGroupSchema = z.object({
 
 export type PostRemoveFeesFromPaymentGroupPayload = z.infer<typeof PostRemoveFeesFromPaymentGroupSchema>;
 
-export const validatePostRemoveFeesFromPaymentGroupPayload = createValidationMiddlewareForSchema(PostRemoveFeesFromPaymentGroupSchema);
+export const validatePostRemoveFeesFromPaymentGroupPayload = validateSchema(PostRemoveFeesFromPaymentGroupSchema);

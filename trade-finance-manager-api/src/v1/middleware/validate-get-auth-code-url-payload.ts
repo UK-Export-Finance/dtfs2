@@ -1,4 +1,4 @@
-import { createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
+import { validateSchema } from '@ukef/dtfs2-common';
 import { GET_AUTH_CODE_REQUEST_SCHEMA } from '@ukef/dtfs2-common/schemas';
 
-export const validateGetAuthCodePayloadUrl = createValidationMiddlewareForSchema(GET_AUTH_CODE_REQUEST_SCHEMA);
+export const validateGetAuthCodePayloadUrl = validateSchema(GET_AUTH_CODE_REQUEST_SCHEMA);

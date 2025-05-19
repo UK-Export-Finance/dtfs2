@@ -3,7 +3,7 @@ import { HandleRedirectResponse } from '../src/v1/services/entra-id.service';
 
 export const aHandleRedirectResponse = (): HandleRedirectResponse => {
   return {
-    entraIdUser: anEntraIdUser(),
+    idTokenClaims: anEntraIdUser(),
     successRedirect: 'a-success-redirect-url',
   };
 };

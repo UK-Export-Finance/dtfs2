@@ -4,7 +4,7 @@ const centralApi = require('./centralApi');
 const { mockDataLoaderUser } = require('./user-helper');
 
 const cleanBanks = async (token) => {
-  console.info('cleaning banks');
+  console.info('Banks');
   const banks = await api.listBanks(token);
 
   if (banks.length > 0) {
@@ -15,7 +15,7 @@ const cleanBanks = async (token) => {
 };
 
 const cleanFacilities = async (token) => {
-  console.info('cleaning all facilities');
+  console.info('Facilities');
 
   const facilities = await centralApi.listFacilities();
   for (const facility of facilities) {
@@ -30,7 +30,7 @@ const cleanFacilities = async (token) => {
 };
 
 const cleanDeals = async (token) => {
-  console.info('cleaning Portal deals');
+  console.info('Deals');
 
   const deals = await api.listDeals(token);
 
@@ -53,7 +53,7 @@ const cleanDeals = async (token) => {
 };
 
 const cleanMandatoryCriteria = async (token) => {
-  console.info('cleaning BSS mandatory-criteria');
+  console.info('BSS MCs');
 
   for (const mandatoryCriteria of await api.listMandatoryCriteria(token)) {
     await api.deleteMandatoryCriteria(mandatoryCriteria.version, token);
@@ -61,7 +61,7 @@ const cleanMandatoryCriteria = async (token) => {
 };
 
 const cleanEligibilityCriteria = async (token) => {
-  console.info('cleaning BSS eligibility-criteria');
+  console.info('BSS ECs');
 
   for (const eligibilityCriteria of await api.listEligibilityCriteria(token)) {
     await api.deleteEligibilityCriteria(eligibilityCriteria.version, token);
@@ -69,7 +69,7 @@ const cleanEligibilityCriteria = async (token) => {
 };
 
 const cleanUsers = async (token) => {
-  console.info('cleaning Portal users');
+  console.info('Users');
 
   for (const user of await api.listUsers(token)) {
     if (user.username !== mockDataLoaderUser.username) {
@@ -79,7 +79,6 @@ const cleanUsers = async (token) => {
 };
 
 const cleanAllTablesPortal = async (token) => {
-  console.info('cleaning portal tables');
   await cleanBanks(token);
   await cleanDeals(token);
   await cleanFacilities(token);
