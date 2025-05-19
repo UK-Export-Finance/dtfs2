@@ -1,19 +1,18 @@
 import z from 'zod';
-import { AuditDetails, FacilityAmendment, PortalFacilityAmendment, Prettify, TfmFacilityAmendment } from '..';
-import { PORTAL_FACILITY_AMENDMENT_USER_VALUES, PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID } from '../../schemas';
+import { AuditDetails, FacilityAmendment, Prettify } from '..';
+import { PORTAL_FACILITY_AMENDMENT_USER_VALUES, PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID, TFM_FACILITY_AMENDMENT_WITH_UKEF_ID } from '../../schemas';
 
 export type PortalFacilityAmendmentUserValues = z.infer<typeof PORTAL_FACILITY_AMENDMENT_USER_VALUES>;
 
 export type PortalFacilityAmendmentWithUkefId = z.infer<typeof PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID>;
 
-export type FacilityAmendmentWithUkefId = Prettify<FacilityAmendment & { ukefFacilityId: string | null }>;
+export type TfmFacilityAmendmentWithUkefId = z.infer<typeof TFM_FACILITY_AMENDMENT_WITH_UKEF_ID>;
 
-interface FacilityWithStringIds extends Omit<TfmFacilityAmendment | PortalFacilityAmendment, 'dealId' | 'facilityId' | 'amendmentId'> {
-  dealId: string;
-  facilityId: string;
-  amendmentId: string;
-}
-export type FacilityAllTypeAmendmentWithUkefId = Prettify<FacilityWithStringIds & { ukefFacilityId: string | null }>;
+export const FACILITY_AMENDMENT_WITH_UKEF_ID = z.union([PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID, TFM_FACILITY_AMENDMENT_WITH_UKEF_ID]);
+
+export type FacilityAllTypeAmendmentWithUkefId = z.infer<typeof FACILITY_AMENDMENT_WITH_UKEF_ID>;
+
+export type FacilityAmendmentWithUkefId = Prettify<FacilityAmendment & { ukefFacilityId: string | null }>;
 
 export type PortalAmendmentSubmittedToCheckerEmailVariables = {
   exporterName: string;
