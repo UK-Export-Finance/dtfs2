@@ -1,9 +1,9 @@
 import { ObjectId } from 'mongodb';
-import { CURRENCY, MONGO_DB_COLLECTIONS, PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS, TfmFacility } from '@ukef/dtfs2-common';
+import { CURRENCY, MONGO_DB_COLLECTIONS, PORTAL_AMENDMENT_STATUS, TfmFacility, TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { TfmFacilitiesRepo } from './tfm-facilities.repo';
 import { mongoDbClient } from '../../drivers/db-client';
-import { aTfmFacility, aTfmFacilityAmendment } from '../../../test-helpers';
+import { aTfmFacility, aTfmFacilityAmendment, aCompletedTfmFacilityAmendment } from '../../../test-helpers';
 
 const dealId = new ObjectId();
 
@@ -12,31 +12,37 @@ const findMock = jest.fn();
 const findToArrayMock = jest.fn();
 
 const { DRAFT, ACKNOWLEDGED, READY_FOR_CHECKERS_APPROVAL } = PORTAL_AMENDMENT_STATUS;
-const { IN_PROGRESS } = TFM_AMENDMENT_STATUS;
+const { IN_PROGRESS, COMPLETED } = TFM_AMENDMENT_STATUS;
 
 const aDraftPortalAmendment = {
   ...aPortalFacilityAmendment({ status: DRAFT }),
-  facilityType: 'test cash facility',
-  ukefFacilityId: '0041569417',
   currency: CURRENCY.GBP,
 };
 const anAcknowledgedPortalAmendment = {
-  ...aPortalFacilityAmendment({ status: ACKNOWLEDGED }),
-  facilityType: 'test cash facility',
-  ukefFacilityId: '0041569417',
+  ...aPortalFacilityAmendment({ status: ACKNOWLEDGED, referenceNumber: '12345678-001' }),
+  facilityType: 'facilityName',
+  ukefFacilityId: '12345678',
   currency: CURRENCY.GBP,
 };
 const aReadyForCheckersApprovalPortalAmendment = {
   ...aPortalFacilityAmendment({ status: READY_FOR_CHECKERS_APPROVAL }),
-  facilityType: 'test cash facility',
-  ukefFacilityId: '0041569417',
   currency: CURRENCY.GBP,
 };
 
-const aTfmAmendment = { ...aTfmFacilityAmendment(), facilityType: 'test cash facility', ukefFacilityId: '0041569417', currency: CURRENCY.GBP };
+const aTfmAmendment = { ...aTfmFacilityAmendment(), currency: CURRENCY.GBP };
+const aCompletedTfmAmendment = {
+  ...aCompletedTfmFacilityAmendment(),
+  facilityType: 'facilityName',
+  ukefFacilityId: '12345678',
+  currency: CURRENCY.GBP,
+  referenceNumber: '12345678-002',
+};
 
 const facilityWithPortalAmendments: TfmFacility = aTfmFacility({ amendments: [aDraftPortalAmendment, anAcknowledgedPortalAmendment], dealId });
-const facilityWithMixedAmendments: TfmFacility = aTfmFacility({ amendments: [aReadyForCheckersApprovalPortalAmendment, aTfmAmendment], dealId });
+const facilityWithMixedAmendments: TfmFacility = aTfmFacility({
+  amendments: [aReadyForCheckersApprovalPortalAmendment, aTfmAmendment, aCompletedTfmAmendment],
+  dealId,
+});
 
 describe('TfmFacilitiesRepo', () => {
   describe('findAllTypeAmendmentsByDealIdAndStatus', () => {
@@ -88,7 +94,7 @@ describe('TfmFacilitiesRepo', () => {
       expect(findMock).toHaveBeenCalledWith(expectedFilter, expectedProjection);
     });
 
-    it('should return the all type amendments when no status filter is passed in', async () => {
+    it('should return all type amendments with an existing referenceNumber and amendmentId when no status filter is passed in', async () => {
       // Arrange
       findToArrayMock.mockResolvedValueOnce([facilityWithPortalAmendments, facilityWithMixedAmendments]);
 
@@ -96,10 +102,21 @@ describe('TfmFacilitiesRepo', () => {
       const result = await TfmFacilitiesRepo.findAllTypeAmendmentsByDealIdAndStatus({ dealId });
 
       // Assert
-      expect(result).toEqual([aDraftPortalAmendment, anAcknowledgedPortalAmendment, aReadyForCheckersApprovalPortalAmendment, aTfmAmendment]);
+      expect(result).toEqual([aCompletedTfmAmendment, anAcknowledgedPortalAmendment]);
     });
 
-    it('should return the amendments filtered by status when a single status is passed in', async () => {
+    it('should return the amendments filtered by status with an existing referenceNumber and amendmentId when a single status is passed in', async () => {
+      // Arrange
+      findToArrayMock.mockResolvedValueOnce([facilityWithPortalAmendments, facilityWithMixedAmendments]);
+
+      // Act
+      const result = await TfmFacilitiesRepo.findAllTypeAmendmentsByDealIdAndStatus({ dealId, statuses: [COMPLETED] });
+
+      // Assert
+      expect(result).toEqual([aCompletedTfmAmendment]);
+    });
+
+    it('should return an empty array when when a single status is passed in and referenceNumber does not exist', async () => {
       // Arrange
       findToArrayMock.mockResolvedValueOnce([facilityWithPortalAmendments, facilityWithMixedAmendments]);
 
@@ -107,21 +124,21 @@ describe('TfmFacilitiesRepo', () => {
       const result = await TfmFacilitiesRepo.findAllTypeAmendmentsByDealIdAndStatus({ dealId, statuses: [DRAFT] });
 
       // Assert
-      expect(result).toEqual([aDraftPortalAmendment]);
+      expect(result).toEqual([]);
     });
 
-    it('should return the amendments filtered by status when a multiple statuses are passed in', async () => {
+    it('should return the amendments filtered by status with an existing referenceNumber and amendmentId when a multiple statuses are passed in', async () => {
       // Arrange
       findToArrayMock.mockResolvedValueOnce([facilityWithPortalAmendments, facilityWithMixedAmendments]);
 
       // Act
       const result = await TfmFacilitiesRepo.findAllTypeAmendmentsByDealIdAndStatus({
         dealId,
-        statuses: [DRAFT, READY_FOR_CHECKERS_APPROVAL, IN_PROGRESS],
+        statuses: [ACKNOWLEDGED, READY_FOR_CHECKERS_APPROVAL, IN_PROGRESS],
       });
 
       // Assert
-      expect(result).toEqual([aDraftPortalAmendment, aReadyForCheckersApprovalPortalAmendment, aTfmAmendment]);
+      expect(result).toEqual([anAcknowledgedPortalAmendment]);
     });
 
     it('should return an empty array if no returned amendments match the given status type', async () => {

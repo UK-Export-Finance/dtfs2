@@ -98,21 +98,22 @@ export class TfmFacilitiesRepo {
         },
         { projection: { amendments: 1, 'facilitySnapshot.name': 1, 'facilitySnapshot.ukefFacilityId': 1, 'facilitySnapshot.currency': 1 } },
       )
-      .sort({ 'amendments.updatedAt': -1 })
       .toArray();
 
-    const matchingAmendments = facilitiesOnDealWithAmendments
-      .flatMap((facility) =>
-        (facility.amendments || []).map((amendment) => ({
-          ...amendment,
-          facilityType: facility.facilitySnapshot?.name,
-          ukefFacilityId: facility.facilitySnapshot?.ukefFacilityId,
-          currency: facility.facilitySnapshot?.currency.id,
-        })),
-      )
-      .filter((amendment) => amendment.amendmentId && amendment.referenceNumber && (!statuses || statuses.includes(amendment.status)));
+    const matchingAmendments = facilitiesOnDealWithAmendments.flatMap((facility) =>
+      (facility.amendments || []).map((amendment) => ({
+        ...amendment,
+        facilityType: facility.facilitySnapshot?.name,
+        ukefFacilityId: facility.facilitySnapshot?.ukefFacilityId,
+        currency: facility.facilitySnapshot?.currency.id,
+      })),
+    );
 
-    return matchingAmendments;
+    const filteredAndSortingAmendments = matchingAmendments
+      .filter((amendment) => amendment.amendmentId && amendment.referenceNumber && (!statuses || statuses.includes(amendment.status)))
+      .sort((a, b) => b.updatedAt - a.updatedAt);
+
+    return filteredAndSortingAmendments;
   }
 
   /**
