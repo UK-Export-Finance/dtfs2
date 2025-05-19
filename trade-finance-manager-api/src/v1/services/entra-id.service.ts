@@ -185,7 +185,8 @@ export class EntraIdService {
       const token = await msalApp.acquireTokenByCode(tokenRequest, authCodeResponse);
 
       if (!token) {
-        throw new Error('Invalid SSO token received');
+        console.error('Unable to get Entra ID from authentication code %o', token);
+        throw new Error('Unable to get Entra ID from authentication code');
       }
 
       const {

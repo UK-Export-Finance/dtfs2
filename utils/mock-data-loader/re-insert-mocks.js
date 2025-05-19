@@ -1,4 +1,4 @@
-const { isAuditLogFeatureFlagEnabled, isTfmSsoFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { isChangeStreamEnabled, isTfmSsoFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { createAndLogInAsInitialTfmUser, createAndLogInAsInitialUser, deleteInitialUser, deleteInitialTFMUser } = require('./user-helper');
 const { mongoDbClient: db } = require('../drivers/db-client');
 const cleanAllTablesPortal = require('./clean-all-tables-portal');
@@ -12,7 +12,7 @@ const insertMocksTfm = require('./tfm/insert-mocks-tfm');
 const { setupDeletionAuditLogsCollection, deleteDeletionAuditLogsCollection } = require('./setup-deletion-audit-logs');
 
 const isTfmSsoEnabled = isTfmSsoFeatureFlagEnabled();
-const isAuditLogEnabled = isAuditLogFeatureFlagEnabled();
+const isAuditLogEnabled = isChangeStreamEnabled();
 
 const init = async () => {
   console.info('\n\r⚡ Mock data loader\n\r');

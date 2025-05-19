@@ -25,7 +25,7 @@ const isFeatureFlagEnabled = (featureFlag: FeatureFlag) => (): boolean => {
   return featureFlags[featureFlag];
 };
 
-export const isAuditLogFeatureFlagEnabled = isFeatureFlagEnabled('CHANGE_STREAM_ENABLED');
+export const isChangeStreamEnabled = isFeatureFlagEnabled('CHANGE_STREAM_ENABLED');
 
 export const isFeeRecordCorrectionFeatureFlagEnabled = isFeatureFlagEnabled('FF_FEE_RECORD_CORRECTION_ENABLED');
 

@@ -51,6 +51,7 @@ export class LoginController {
     const { body: payload } = req;
 
     if (!isVerifiedPayload({ payload, template: ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA })) {
+      console.error('Invalid payload from SSO redirect');
       throw new InvalidPayloadError('Invalid payload from SSO redirect');
     }
 
