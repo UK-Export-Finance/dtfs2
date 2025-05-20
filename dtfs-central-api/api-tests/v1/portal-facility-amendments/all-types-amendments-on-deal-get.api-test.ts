@@ -31,12 +31,12 @@ describe('GET /v1/portal/deals/:dealId/all-types-amendments', () => {
   const dealId = new ObjectId().toString();
 
   const aDraftPortalAmendment = aPortalFacilityAmendment({ status: DRAFT });
-  const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: ACKNOWLEDGED, referenceNumber: `${aFacility().ukefFacilityId}-001` });
+  const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: ACKNOWLEDGED, referenceNumber: `${aFacility().ukefFacilityId}-002` });
   const aReadyForCheckersApprovalPortalAmendment = aPortalFacilityAmendment({ status: READY_FOR_CHECKERS_APPROVAL });
   const aFurtherMakersInputRequiredPortalAmendment = aPortalFacilityAmendment({ status: FURTHER_MAKERS_INPUT_REQUIRED });
 
   const aTfmAmendment = aTfmFacilityAmendment();
-  const aCompletedTfmAmendment = { ...aCompletedTfmFacilityAmendment(), referenceNumber: `${aFacility().ukefFacilityId}-002` };
+  const aCompletedTfmAmendment = { ...aCompletedTfmFacilityAmendment(), referenceNumber: `${aFacility().ukefFacilityId}-001` };
 
   const facilityWithNoAmendments: TfmFacility = aTfmFacility({ amendments: [], dealId });
   const facilityWithATfmAmendment: TfmFacility = aTfmFacility({ amendments: [aTfmAmendment], dealId });
@@ -120,12 +120,13 @@ describe('GET /v1/portal/deals/:dealId/all-types-amendments', () => {
 
     // Assert
     const { status, body } = (await testApi.get(generateUrl({ dealId }))) as PortalAmendmentsResponse;
+
     const result = body.map((amendment) => amendment.amendmentId);
 
     // Act
     expect(status).toEqual(HttpStatusCode.Ok);
 
-    const expectedAmendmentIds = [anAcknowledgedPortalAmendment.amendmentId.toString(), aCompletedTfmAmendment.amendmentId.toString()];
+    const expectedAmendmentIds = [aCompletedTfmAmendment.amendmentId.toString(), anAcknowledgedPortalAmendment.amendmentId.toString()];
     expect(result).toEqual(expectedAmendmentIds);
   });
 
