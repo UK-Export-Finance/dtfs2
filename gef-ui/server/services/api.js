@@ -425,7 +425,7 @@ const getAmendmentsOnDeal = async ({ dealId, userToken, statuses }) => {
   }
 
   try {
-    const response = await Axios.get(`/gef/deals/${dealId}/all-type-amendments`, { ...config(userToken), params: { statuses } });
+    const response = await Axios.get(`/gef/deals/${dealId}/all-types-amendments`, { ...config(userToken), params: { statuses } });
 
     return response.data;
   } catch (error) {

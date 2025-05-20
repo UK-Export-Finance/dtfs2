@@ -238,7 +238,7 @@ describe('getFacilityAmendmentsOnDeal', () => {
     // Assert
     expect(response).toMatchObject(expected.data);
     expect(axios).toHaveBeenCalledTimes(1);
-    expect(axios).toHaveBeenCalledWith({ method: 'get', url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/all-type-amendments`, params, headers });
+    expect(axios).toHaveBeenCalledWith({ method: 'get', url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/all-types-amendments`, params, headers });
   });
 
   it('should throw an error when the API call fails', async () => {
@@ -271,6 +271,6 @@ describe('getFacilityAmendmentsOnDeal', () => {
     // Assert
     expect(response).toMatchObject(expected.data);
     expect(axios).toHaveBeenCalledTimes(1);
-    expect(axios).toHaveBeenCalledWith({ method: 'get', url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/all-type-amendments`, params, headers });
+    expect(axios).toHaveBeenCalledWith({ method: 'get', url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/all-types-amendments`, params, headers });
   });
 });

@@ -24,7 +24,7 @@ export const getPortalAmendmentsOnDealUrl = ({ dealId, statuses }: { dealId: str
 
 export const getAmendmentsOnDealUrl = ({ dealId, statuses }: { dealId: string; statuses?: PortalAmendmentStatus[] }) => {
   const statusFilterQuery = statuses ? `?statuses=${statuses.map((item) => encodeURI(item)).join(',')}` : '';
-  return `/v1/gef/deals/${dealId}/all-type-amendments/${statusFilterQuery}`;
+  return `/v1/gef/deals/${dealId}/all-types-amendments/${statusFilterQuery}`;
 };
 
 /**

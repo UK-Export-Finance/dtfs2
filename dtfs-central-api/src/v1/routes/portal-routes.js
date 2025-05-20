@@ -824,7 +824,7 @@ portalRouter
 
 /**
  * @openapi
- * /deals/:dealId/all-type-amendments:
+ * /deals/:dealId/all-types-amendments:
  *   get:
  *     summary: Get all type facility amendments on a given deal
  *     tags: [Portal - Amendments]
@@ -856,7 +856,7 @@ portalRouter
  *         description: Not found
  */
 portalRouter
-  .route('/deals/:dealId/all-type-amendments')
+  .route('/deals/:dealId/all-types-amendments')
   .all(validation.mongoIdValidation('dealId'))
   .get(getFacilityAmendmentsForDealController.getAmendmentsOnDeal);
 

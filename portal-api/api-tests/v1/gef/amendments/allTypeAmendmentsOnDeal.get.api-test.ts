@@ -32,11 +32,11 @@ const statuses = PORTAL_AMENDMENT_INPROGRESS_STATUSES;
 
 const invalidId = 'invalid-id';
 
-describe('/v1/gef/deals/:dealId/all-type-amendments', () => {
+describe('/v1/gef/deals/:dealId/all-types-amendments', () => {
   let testUsers: Awaited<ReturnType<typeof testUserCache.initialise>>;
   let aMaker: TestUser;
 
-  describe('GET /v1/gef/deals/:dealId/all-type-amendments', () => {
+  describe('GET /v1/gef/deals/:dealId/all-types-amendments', () => {
     beforeAll(async () => {
       testUsers = await testUserCache.initialise(app);
       aMaker = testUsers().withRole(MAKER).one() as TestUser;

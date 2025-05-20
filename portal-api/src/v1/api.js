@@ -666,7 +666,7 @@ const getFacilityAmendmentsOnDeal = async (dealId, statuses) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/all-type-amendments`,
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/all-types-amendments`,
       params: { statuses },
       headers: headers.central,
     });
