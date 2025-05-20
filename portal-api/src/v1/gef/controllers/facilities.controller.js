@@ -86,7 +86,7 @@ const getAllFacilitiesByDealId = async (dealId) => {
 };
 exports.getAllFacilitiesByDealId = getAllFacilitiesByDealId;
 
-exports.getAllGET = async (req, res) => {
+exports.getFacilitiesByDealId = async (req, res) => {
   try {
     let facilities;
 
