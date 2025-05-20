@@ -315,7 +315,7 @@ export class TfmFacilitiesRepo {
   /**
    * Finds acknowledged portal amendments by facility id
    * @param facilityId - The facility id
-   * @returns The latest completed amendment
+   * @returns All acknowledged amendments on a facility
    */
   public static async findAcknowledgedPortalAmendmentsByFacilityId(facilityId: string | ObjectId): Promise<FacilityAmendment[] | null> {
     const collection = await this.getCollection();

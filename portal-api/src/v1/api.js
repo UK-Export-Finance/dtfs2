@@ -213,7 +213,7 @@ const findGefFacilitiesByDealId = async (dealId) => {
     return response.data;
   } catch (error) {
     console.error('Unable to find facilities for deal ID %s %o', dealId, error);
-    return false;
+    return { status: error?.code || 500, data: 'Error when finding facilities by dealId' };
   }
 };
 

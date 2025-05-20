@@ -34,7 +34,7 @@ describe('getAcknowledgedAmendmentsByFacilityId', () => {
     expect(mockGetAcknowledgedAmendmentsByFacilityId).toHaveBeenCalledTimes(1);
   });
 
-  it(`should return ${HttpStatusCode.Ok} and all the amendments for all facilities`, async () => {
+  it(`should return ${HttpStatusCode.Ok} and all the amendments on the facility`, async () => {
     // Arrange
     const { req, res } = generateHttpMocks();
 

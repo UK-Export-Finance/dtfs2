@@ -69,7 +69,7 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/acknowledged', () => 
       .to('/v1/portal/gef/facilities');
 
     facilityId = createFacilityResponse.body._id;
-    referenceNumber = `${facilityId}-23`;
+    referenceNumber = `${facilityId}-023`;
 
     await submitDealToTfm({ dealId, dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, dealType: DEAL_TYPE.GEF });
   });
