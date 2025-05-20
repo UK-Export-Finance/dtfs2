@@ -24,28 +24,28 @@ type SqlTableName =
 const deleteAllEntries = async (tableName: SqlTableName): Promise<void> => {
   switch (tableName) {
     case 'UtilisationReport':
-      await SqlDbDataSource.manager.delete(UtilisationReportEntity, {});
+      await SqlDbDataSource.manager.delete(UtilisationReportEntity, '*');
       return;
     case 'FeeRecord':
-      await SqlDbDataSource.manager.delete(FeeRecordEntity, {});
+      await SqlDbDataSource.manager.delete(FeeRecordEntity, '*');
       return;
     case 'AzureFileInfo':
-      await SqlDbDataSource.manager.delete(AzureFileInfoEntity, {});
+      await SqlDbDataSource.manager.delete(AzureFileInfoEntity, '*');
       return;
     case 'Payment':
-      await SqlDbDataSource.manager.delete(PaymentEntity, {});
+      await SqlDbDataSource.manager.delete(PaymentEntity, '*');
       return;
     case 'PaymentMatchingTolerance':
-      await SqlDbDataSource.manager.delete(PaymentMatchingToleranceEntity, {});
+      await SqlDbDataSource.manager.delete(PaymentMatchingToleranceEntity, '*');
       return;
     case 'FeeRecordCorrection':
-      await SqlDbDataSource.manager.delete(FeeRecordCorrectionEntity, {});
+      await SqlDbDataSource.manager.delete(FeeRecordCorrectionEntity, '*');
       return;
     case 'FeeRecordCorrectionTransientFormData':
-      await SqlDbDataSource.manager.delete(FeeRecordCorrectionTransientFormDataEntity, {});
+      await SqlDbDataSource.manager.delete(FeeRecordCorrectionTransientFormDataEntity, '*');
       return;
     case 'FeeRecordCorrectionRequestTransientFormData':
-      await SqlDbDataSource.manager.delete(FeeRecordCorrectionRequestTransientFormDataEntity, {});
+      await SqlDbDataSource.manager.delete(FeeRecordCorrectionRequestTransientFormDataEntity, '*');
       return;
     default:
       throw new Error(`Cannot delete all entries from table: no entity found for table name '${tableName}'`);
