@@ -14,7 +14,7 @@ describe('controllers/utilisation-report-service/next-report-period', () => {
   });
 
   describe('getNextReportPeriodByBankId', () => {
-    const mockBankIdParam = '956';
+    const mockBankIdParam = '9';
     const getHttpMocks = () =>
       httpMocks.createMocks({
         params: { bankId: mockBankIdParam },

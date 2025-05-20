@@ -45,7 +45,7 @@ describe('UtilisationReportStateMachine', () => {
       jest.spyOn(UtilisationReportRepo, 'findOneByBankIdAndReportPeriod').mockResolvedValue(null);
     });
 
-    const BANK_ID = '956';
+    const BANK_ID = '9';
     const REPORT_PERIOD = {
       start: { month: 12, year: 2023 },
       end: { month: 1, year: 2024 },

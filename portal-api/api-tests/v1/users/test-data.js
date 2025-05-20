@@ -18,7 +18,7 @@ module.exports = {
     email: 'barclaysBankMaker1@ukexportfinance.gov.uk',
     roles: [MAKER],
     bank: {
-      id: '956',
+      id: '9',
       name: 'Bank 1',
       emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
@@ -32,7 +32,7 @@ module.exports = {
     email: 'barclaysBankMaker2@ukexportfinance.gov.uk',
     roles: [MAKER],
     bank: {
-      id: '956',
+      id: '9',
       name: 'Bank 1',
       emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
@@ -46,7 +46,7 @@ module.exports = {
     email: 'barclaysBankChecker1@ukexportfinance.gov.uk',
     roles: [CHECKER],
     bank: {
-      id: '956',
+      id: '9',
       name: 'Bank 1',
       emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
@@ -60,7 +60,7 @@ module.exports = {
     email: 'barclaysBankMakerChecker1@ukexportfinance.gov.uk',
     roles: [MAKER, CHECKER],
     bank: {
-      id: '956',
+      id: '9',
       name: 'Bank 1',
       emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
@@ -74,7 +74,7 @@ module.exports = {
     email: 'barclaysBankReader1@ukexportfinance.gov.uk',
     roles: ['reader'],
     bank: {
-      id: '956',
+      id: '9',
       name: 'Bank 1',
       emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     },
