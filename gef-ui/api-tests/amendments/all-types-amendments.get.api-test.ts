@@ -38,7 +38,7 @@ const amendmentId = '6597dffeb5ef5ff4267e5046';
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, submissionCount: 0, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
 const mockAmendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().withDealId(dealId).withFacilityId(facilityId).withAmendmentId(amendmentId).build();
 const mockUser = aPortalSessionUser();
-const url = `/application-details/${dealId}/${PORTAL_AMENDMENT_PAGES.ALL_TYPE_AMENDMENTS}`;
+const url = `/application-details/${dealId}/${PORTAL_AMENDMENT_PAGES.ALL_TYPES_AMENDMENTS}`;
 const mockGetSubmittedDetailsResponse = {
   portalAmendmentStatus: null,
   facilityIdWithAmendmentInProgress: null,

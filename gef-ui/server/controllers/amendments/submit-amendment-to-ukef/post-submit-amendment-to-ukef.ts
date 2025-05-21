@@ -7,7 +7,7 @@ import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { getAmendmentsUrl } from '../helpers/navigation.helper';
 import { getAmendmentReferenceNumber } from '../helpers/get-amendment-reference-number.helper';
 import { ConfirmAmendmentSubmissionViewModel } from '../../../types/view-models/amendments/confirm-amendment-submission-view-model';
-import mapSubmittedToUkefEmailVariables from '../helpers/map-submitted-to-ukef-email-variables.ts';
+import mapSubmittedToUkefEmailVariables from '../helpers/map-submitted-to-ukef-email-variables';
 
 export type PostSubmitAmendmentToUkefRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
