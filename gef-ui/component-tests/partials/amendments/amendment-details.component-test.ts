@@ -19,6 +19,8 @@ users.forEach((user) => {
       const facilityType = FACILITY_TYPE.CASH;
       const userRoles = [user];
       const submitAmendment = user.includes(ROLES.CHECKER);
+      const effectiveDate = '25/07/2025';
+      const banner = true;
 
       const params: AmendmentDetailsViewModel = {
         userRoles,
@@ -29,6 +31,8 @@ users.forEach((user) => {
         facilityId,
         amendmentId,
         previousPage,
+        effectiveDate,
+        banner,
         amendmentSummaryListParams: {
           amendmentRows: [],
           eligibilityRows: [],
@@ -58,6 +62,12 @@ users.forEach((user) => {
         const wrapper = render(params);
 
         wrapper.expectText('[data-cy="print-button"]').toRead('Print page');
+      });
+
+      it('should render the information banner for effective date', () => {
+        const wrapper = render(params);
+
+        wrapper.expectElement('[data-cy="facility-information-banner"]').toExist();
       });
 
       it('should have the correct integrity for the print button', () => {

@@ -112,7 +112,7 @@ describe('mapApplicationAmendmentsOnDeal', () => {
     const result = mapApplicationAmendmentsOnDeal([portalAmendment]);
 
     // Assert
-    expect(result).toEqual([
+    const expectedResult = [
       {
         ...portalExpectedResult[0],
         effectiveDate: format(fromUnixTime(portalAmendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY),
@@ -128,7 +128,8 @@ describe('mapApplicationAmendmentsOnDeal', () => {
             : row,
         ),
       },
-    ]);
+    ];
+    expect(result).toEqual(expectedResult);
   });
 
   it('should map a tfm amendment with all fields', () => {

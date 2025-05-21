@@ -30,6 +30,9 @@ export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: 
     }
 
     let amendment;
+    /*
+      when facilityId and amendmentId exist, then we get Amendment details for this specific deal
+    */
     if (facilityId && amendmentId) {
       amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
 
@@ -38,6 +41,9 @@ export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: 
         return res.redirect('/not-found');
       }
     } else {
+      /*
+       otherwise we get Amendment details for a portalAmendment in progress
+      */
       const amendments = await api.getPortalAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
       if (!amendments) {
         console.error('In progress amendment was not found for the deal %s', dealId);
@@ -53,7 +59,14 @@ export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: 
       return res.redirect('/not-found');
     }
 
-    const banner = facilityId && amendmentId && new Date(fromUnixTime(amendment.effectiveDate ?? 0)) > new Date() ? true : undefined;
+    let banner;
+    const hasFacilityAndAmendmentId = facilityId && amendmentId;
+    const effectiveDate = amendment.effectiveDate ? fromUnixTime(amendment.effectiveDate) : null;
+    const isEffectiveDateInFuture = effectiveDate && new Date(effectiveDate) > new Date();
+
+    if (hasFacilityAndAmendmentId && isEffectiveDateInFuture) {
+      banner = true;
+    }
     return res.render('partials/amendments/amendment-details.njk', createAmendmentDetailsViewModel({ amendment, deal, facility, userRoles, banner }));
   } catch (error) {
     console.error('Error getting amendments details page %o', error);

@@ -12,14 +12,14 @@ import { format, fromUnixTime } from 'date-fns';
 import dotenv from 'dotenv';
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { aPortalSessionUser, PORTAL_LOGIN_STATUS, PORTAL_AMENDMENT_STATUS, DEAL_STATUS, DEAL_SUBMISSION_TYPE, DATE_FORMATS } from '@ukef/dtfs2-common';
-import { getNextPage } from '../helpers/navigation.helper.ts';
-import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
-import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment.ts';
-import { postCheckYourAnswers, PostCheckYourAnswersRequest } from './post-check-your-answers.ts';
+import { getNextPage } from '../helpers/navigation.helper';
+import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
+import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
+import { postCheckYourAnswers, PostCheckYourAnswersRequest } from './post-check-your-answers';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { Deal } from '../../../types/deal';
-import { getCurrencySymbol } from '../../../utils/get-currency-symbol.ts';
+import { getCurrencySymbol } from '../../../utils/get-currency-symbol';
 
 jest.mock('../../../services/api', () => ({
   updateAmendmentStatus: updateAmendmentStatusMock,

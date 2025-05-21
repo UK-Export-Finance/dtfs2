@@ -14,7 +14,7 @@ describe('controllers/utilisation-report-service/validate-utilisation-report-dat
   });
 
   describe('validateUtilisationReportData', () => {
-    const BANK_ID = '956';
+    const BANK_ID = '9';
     const aValidateUtilisationReportDataRequestBody = (): ValidateUtilisationReportDataRequestBody => ({
       reportData: [{ 'a csv header': { value: 'some value', row: 'A', column: '2' } }],
     });

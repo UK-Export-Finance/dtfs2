@@ -281,6 +281,12 @@ const getAddressesByPostcode = async ({ postcode, userToken }) => {
   }
 };
 
+/**
+ * @param {Object} param
+ * @param {string} param.userId
+ * @param {string} param.userToken
+ * @returns {Promise<import('@ukef/dtfs2-common').PortalSessionUser>}
+ */
 const getUserDetails = async ({ userId, userToken }) => {
   if (!userToken || !userId) {
     return false;
@@ -419,11 +425,11 @@ const getAmendmentsOnDeal = async ({ dealId, userToken, statuses }) => {
   }
 
   try {
-    const response = await Axios.get(`/gef/deals/${dealId}/all-type-amendments`, { ...config(userToken), params: { statuses } });
+    const response = await Axios.get(`/gef/deals/${dealId}/all-types-amendments`, { ...config(userToken), params: { statuses } });
 
     return response.data;
   } catch (error) {
-    console.error('Failed to get the type amendments for facilities on deal with id %s: %o', dealId, error);
+    console.error('Failed to get amendments for facilities on deal with id %s: %o', dealId, error);
     throw error;
   }
 };
@@ -524,9 +530,13 @@ const updateAmendment = async ({ facilityId, amendmentId, update, userToken }) =
  * @param {string} param.referenceNumber
  * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus} param.status
  * @param {string} param.userToken
- * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithReferenceNumber)>}
+ * @param {string} param.makersEmail - The maker's email address to send the notification to
+ * @param {string} param.checkersEmail - The checker's email address to send the notification to
+ * @param {string} param.pimEmail - The pim's email address to send the notification to
+ * @param {import('@ukef/dtfs2-common').PortalAmendmentSubmittedToUkefEmailVariables} param.emailVariables
+ * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}
  */
-const updateSubmitAmendment = async ({ facilityId, amendmentId, referenceNumber, status, userToken }) => {
+const updateSubmitAmendment = async ({ facilityId, amendmentId, referenceNumber, status, userToken, makersEmail, checkersEmail, pimEmail, emailVariables }) => {
   if (!isValidMongoId(facilityId)) {
     console.error('Invalid facility ID %s', facilityId);
     throw new InvalidFacilityIdError(facilityId);
@@ -540,6 +550,10 @@ const updateSubmitAmendment = async ({ facilityId, amendmentId, referenceNumber,
   const payload = {
     referenceNumber,
     newStatus: status,
+    makersEmail,
+    checkersEmail,
+    pimEmail,
+    emailVariables,
   };
 
   try {
@@ -552,7 +566,27 @@ const updateSubmitAmendment = async ({ facilityId, amendmentId, referenceNumber,
 };
 
 /**
- * @param {Object} param
+ * variables for email variables set to empty strings
+ * if emailVariables is not provided, then this is the default object
+ */
+const emptyEmailVariables = {
+  exporterName: '',
+  bankInternalRefName: '',
+  ukefDealId: '',
+  ukefFacilityId: '',
+  makersName: '',
+  checkersName: '',
+  dateSubmittedByMaker: '',
+  dateEffectiveFrom: '',
+  newCoverEndDate: '',
+  newFacilityEndDate: '',
+  newFacilityValue: '',
+  portalUrl: '',
+  makersEmail: '',
+};
+
+/**
+ * @param {import('@ukef/dtfs2-common').AmendmentUpdateStatus} param
  * @param {string} param.facilityId
  * @param {string} param.amendmentId
  * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus} param.newStatus
@@ -562,7 +596,15 @@ const updateSubmitAmendment = async ({ facilityId, amendmentId, referenceNumber,
  * @param {import('@ukef/dtfs2-common').PortalAmendmentSubmittedToCheckerEmailVariables} param.emailVariables
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}
  */
-const updateAmendmentStatus = async ({ facilityId, amendmentId, newStatus, userToken, makersEmail, checkersEmail, emailVariables }) => {
+const updateAmendmentStatus = async ({
+  facilityId,
+  amendmentId,
+  newStatus,
+  userToken,
+  makersEmail = '',
+  checkersEmail = '',
+  emailVariables = emptyEmailVariables,
+}) => {
   if (!isValidMongoId(facilityId)) {
     console.error('Invalid facility ID %s', facilityId);
     throw new InvalidFacilityIdError(facilityId);

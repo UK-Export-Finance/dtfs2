@@ -24,19 +24,19 @@ const { DRAFT, ACKNOWLEDGED, READY_FOR_CHECKERS_APPROVAL, FURTHER_MAKERS_INPUT_R
 
 const generateUrl = ({ dealId, statuses }: { dealId: string; statuses?: PortalAmendmentStatus[] | TfmAmendmentStatus[] }): string => {
   const statusFilterQuery: string = statuses ? `?statuses=${statuses.map((item) => encodeURIComponent(String(item))).join(',')}` : '';
-  return `/v1/portal/deals/${dealId}/all-type-amendments${statusFilterQuery}`;
+  return `/v1/portal/deals/${dealId}/all-types-amendments${statusFilterQuery}`;
 };
 
-describe('GET /v1/portal/deals/:dealId/all-type-amendments', () => {
+describe('GET /v1/portal/deals/:dealId/all-types-amendments', () => {
   const dealId = new ObjectId().toString();
 
   const aDraftPortalAmendment = aPortalFacilityAmendment({ status: DRAFT });
-  const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: ACKNOWLEDGED, referenceNumber: `${aFacility().ukefFacilityId}-001` });
+  const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: ACKNOWLEDGED, referenceNumber: `${aFacility().ukefFacilityId}-002` });
   const aReadyForCheckersApprovalPortalAmendment = aPortalFacilityAmendment({ status: READY_FOR_CHECKERS_APPROVAL });
   const aFurtherMakersInputRequiredPortalAmendment = aPortalFacilityAmendment({ status: FURTHER_MAKERS_INPUT_REQUIRED });
 
   const aTfmAmendment = aTfmFacilityAmendment();
-  const aCompletedTfmAmendment = { ...aCompletedTfmFacilityAmendment(), referenceNumber: `${aFacility().ukefFacilityId}-002` };
+  const aCompletedTfmAmendment = { ...aCompletedTfmFacilityAmendment(), referenceNumber: `${aFacility().ukefFacilityId}-001` };
 
   const facilityWithNoAmendments: TfmFacility = aTfmFacility({ amendments: [], dealId });
   const facilityWithATfmAmendment: TfmFacility = aTfmFacility({ amendments: [aTfmAmendment], dealId });
@@ -59,7 +59,7 @@ describe('GET /v1/portal/deals/:dealId/all-type-amendments', () => {
     await wipeDB.wipe([MONGO_DB_COLLECTIONS.TFM_FACILITIES]);
   });
 
-  it(`should return ${HttpStatusCode.BadRequest} when the deal Id is invalid`, async () => {
+  it(`should return ${HttpStatusCode.BadRequest} when the dealId is invalid`, async () => {
     // Arrange
     const anInvalidDealId = 'InvalidId';
 
@@ -121,11 +121,13 @@ describe('GET /v1/portal/deals/:dealId/all-type-amendments', () => {
     // Assert
     const { status, body } = (await testApi.get(generateUrl({ dealId }))) as PortalAmendmentsResponse;
 
+    const result = body.map((amendment) => amendment.amendmentId);
+
     // Act
     expect(status).toEqual(HttpStatusCode.Ok);
 
-    const expectedAmendmentIds = [anAcknowledgedPortalAmendment.amendmentId.toString(), aCompletedTfmAmendment.amendmentId.toString()];
-    expect(body.map((amendment) => amendment.amendmentId)).toEqual(expectedAmendmentIds);
+    const expectedAmendmentIds = [aCompletedTfmAmendment.amendmentId.toString(), anAcknowledgedPortalAmendment.amendmentId.toString()];
+    expect(result).toEqual(expectedAmendmentIds);
   });
 
   it(`should return amendments on the deal matching the provided statuses`, async () => {
@@ -142,9 +144,10 @@ describe('GET /v1/portal/deals/:dealId/all-type-amendments', () => {
 
     // Assert
     const { status, body } = (await testApi.get(generateUrl({ dealId, statuses: [DRAFT, READY_FOR_CHECKERS_APPROVAL] }))) as PortalAmendmentsResponse;
+    const result = body.map((amendment) => amendment.amendmentId);
 
     // Act
     expect(status).toEqual(HttpStatusCode.Ok);
-    expect(body.map((amendment) => amendment.amendmentId)).toEqual([]);
+    expect(result).toEqual([]);
   });
 });

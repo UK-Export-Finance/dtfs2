@@ -1,4 +1,4 @@
-import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS, PortalAmendmentSubmittedToCheckerEmailVariables, PortalSessionUser } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS, PortalAmendmentSubmittedToCheckerEmailVariables } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
@@ -30,7 +30,7 @@ export const postCheckYourAnswers = async (req: PostCheckYourAnswersRequest, res
       return res.redirect('/not-found');
     }
 
-    const checker = (await api.getUserDetails({ userId: deal.checkerId, userToken })) as PortalSessionUser;
+    const checker = await api.getUserDetails({ userId: deal.checkerId, userToken });
 
     if (!checker?.firstname || !checker?.surname || !checker?.email) {
       console.error('Checker %s was not found from the deal %s', deal.checkerId, dealId);
@@ -52,25 +52,25 @@ export const postCheckYourAnswers = async (req: PostCheckYourAnswersRequest, res
       exporterName,
       bankInternalRefName,
       ukefFacilityId,
-      formattedCoverEndDate,
-      formattedEffectiveDate,
-      formattedFacilityEndDate,
-      formattedFacilityValue,
+      newCoverEndDate,
+      dateEffectiveFrom,
+      newFacilityEndDate,
+      newFacilityValue,
       portalUrl,
     } = mapSubmittedToCheckerEmailVariables({ deal, facility, amendment, user, checker });
 
     const emailVariables: PortalAmendmentSubmittedToCheckerEmailVariables = {
       exporterName,
-      bankInternalRefName: bankInternalRefName!,
+      bankInternalRefName,
       ukefDealId,
-      ukefFacilityId: ukefFacilityId!,
+      ukefFacilityId,
       makersName,
       checkersName,
       dateSubmittedByMaker,
-      dateEffectiveFrom: formattedEffectiveDate,
-      newCoverEndDate: formattedCoverEndDate,
-      newFacilityEndDate: formattedFacilityEndDate,
-      newFacilityValue: formattedFacilityValue,
+      dateEffectiveFrom,
+      newCoverEndDate,
+      newFacilityEndDate,
+      newFacilityValue,
       portalUrl,
       makersEmail,
     };

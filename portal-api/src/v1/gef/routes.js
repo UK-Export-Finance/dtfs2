@@ -176,7 +176,7 @@ router
     putAmendment,
   );
 
-router.route('/deals/:dealId/all-type-amendments').all(mongoIdValidation('dealId'), handleExpressValidatorResult).get(getFacilityAmendmentsOnDeal);
+router.route('/deals/:dealId/all-types-amendments').all(mongoIdValidation('dealId'), handleExpressValidatorResult).get(getFacilityAmendmentsOnDeal);
 
 router.route('/deals/:dealId/amendments').all(mongoIdValidation('dealId'), handleExpressValidatorResult).get(getPortalFacilityAmendmentsOnDeal);
 

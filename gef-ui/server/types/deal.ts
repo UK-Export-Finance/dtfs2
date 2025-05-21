@@ -32,4 +32,5 @@ export type Deal = {
   submissionDate: string;
   ukefDealId: string;
   checkerId: string;
+  comments: AnyObject[];
 };

@@ -26,7 +26,7 @@ export class FacilityAmendmentWithUkefIdMockBuilder {
           email: 'maker1@ukexportfinance.gov.uk',
         },
         ukefFacilityId: '0041282190',
-      } as unknown as FacilityAllTypeAmendmentWithUkefId);
+      } as FacilityAllTypeAmendmentWithUkefId);
   }
 
   public withFacilityId(facilityId: string) {

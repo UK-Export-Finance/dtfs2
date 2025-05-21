@@ -3,7 +3,7 @@ import { aMonthlyBankReportPeriodSchedule } from './bank-report-period-schedule'
 
 export const aBank = (): BankResponse => ({
   _id: 'abc123',
-  id: '956',
+  id: '9',
   name: 'Bank 1',
   mga: ['Test.pdf'],
   emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
@@ -11,7 +11,7 @@ export const aBank = (): BankResponse => ({
   partyUrn: '00300130',
   hasGefAccessOnly: false,
   paymentOfficerTeam: {
-    teamName: 'Barclays Payment Reporting Team',
+    teamName: 'Bank 1 Payment Reporting Team',
     emails: ['payment-officer4@ukexportfinance.gov.uk'],
   },
   utilisationReportPeriodSchedule: aMonthlyBankReportPeriodSchedule(),

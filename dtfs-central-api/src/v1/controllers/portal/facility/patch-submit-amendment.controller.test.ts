@@ -1,25 +1,40 @@
 import { createMocks } from 'node-mocks-http';
-import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, API_ERROR_CODE, TestApiError } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, API_ERROR_CODE, TestApiError, portalAmendmentToUkefEmailVariables, AnyObject } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
 import { patchSubmitAmendment, PatchSubmitAmendmentToUkefRequest } from './patch-submit-amendment.controller';
+import externalApi from '../../../../external-api/api';
+import EMAIL_TEMPLATE_IDS from '../../../../constants/email-template-ids';
 
 const amendmentId = 'amendmentId';
 const facilityId = '6597dffeb5ef5ff4267e5044';
-const testReferenceNumber = `${facilityId}-001`;
+const testReferenceNumber = '0040012345-001';
 
 const mockUpdatedAmendment = { facilityId, type: AMENDMENT_TYPES.PORTAL, status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED };
 
 const mockSubmitPortalFacilityAmendmentToUkef = jest.fn();
+let sendEmailSpy = jest.fn();
 
 jest.mock('../../../../external-api/api');
 
-const generateHttpMocks = ({ auditDetails, newStatus, referenceNumber }: { auditDetails: unknown; newStatus: string; referenceNumber: string }) =>
+const mockEmailVariables = portalAmendmentToUkefEmailVariables();
+
+const generateHttpMocks = ({
+  auditDetails,
+  newStatus,
+  referenceNumber,
+  emailVariables,
+}: {
+  auditDetails: unknown;
+  newStatus: string;
+  referenceNumber: string;
+  emailVariables: AnyObject;
+}) =>
   createMocks<PatchSubmitAmendmentToUkefRequest>({
     params: { facilityId, amendmentId },
-    body: { auditDetails, newStatus, referenceNumber },
+    body: { auditDetails, newStatus, referenceNumber, ...emailVariables },
   });
 
 describe('patchSubmitAmendment', () => {
@@ -28,6 +43,9 @@ describe('patchSubmitAmendment', () => {
 
     jest.spyOn(PortalFacilityAmendmentService, 'submitPortalFacilityAmendmentToUkef').mockImplementation(mockSubmitPortalFacilityAmendmentToUkef);
     mockSubmitPortalFacilityAmendmentToUkef.mockResolvedValue(mockUpdatedAmendment);
+
+    sendEmailSpy = jest.fn(() => Promise.resolve({}));
+    externalApi.sendEmail = sendEmailSpy;
   });
 
   describe('when auditDetails are invalid', () => {
@@ -39,6 +57,7 @@ describe('patchSubmitAmendment', () => {
         auditDetails,
         newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
         referenceNumber: testReferenceNumber,
+        emailVariables: mockEmailVariables,
       });
 
       // Act
@@ -52,6 +71,22 @@ describe('patchSubmitAmendment', () => {
         code: API_ERROR_CODE.INVALID_AUDIT_DETAILS,
       });
     });
+
+    it('should NOT call externalApi.sendEmail', async () => {
+      // Arrange
+      const { req, res } = generateHttpMocks({
+        auditDetails,
+        newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+        referenceNumber: testReferenceNumber,
+        emailVariables: mockEmailVariables,
+      });
+
+      // Act
+      await patchSubmitAmendment(req, res);
+
+      // Assert
+      expect(sendEmailSpy).toHaveBeenCalledTimes(0);
+    });
   });
 
   describe('when the new status is invalid', () => {
@@ -60,7 +95,12 @@ describe('patchSubmitAmendment', () => {
 
     it(`should return ${HttpStatusCode.BadRequest}`, async () => {
       // Arrange
-      const { req, res } = generateHttpMocks({ auditDetails, newStatus: invalidNewStatus, referenceNumber: testReferenceNumber });
+      const { req, res } = generateHttpMocks({
+        auditDetails,
+        newStatus: invalidNewStatus,
+        referenceNumber: testReferenceNumber,
+        emailVariables: mockEmailVariables,
+      });
 
       // Act
       await patchSubmitAmendment(req, res);
@@ -72,6 +112,22 @@ describe('patchSubmitAmendment', () => {
         message: `Invalid requested status update: ${invalidNewStatus}`,
       });
     });
+
+    it('should NOT call externalApi.sendEmail', async () => {
+      // Arrange
+      const { req, res } = generateHttpMocks({
+        auditDetails,
+        newStatus: invalidNewStatus,
+        referenceNumber: testReferenceNumber,
+        emailVariables: mockEmailVariables,
+      });
+
+      // Act
+      await patchSubmitAmendment(req, res);
+
+      // Assert
+      expect(sendEmailSpy).toHaveBeenCalledTimes(0);
+    });
   });
 
   describe(`when the newStatus is ${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}`, () => {
@@ -80,7 +136,7 @@ describe('patchSubmitAmendment', () => {
 
     it('should call PortalFacilityAmendmentService.submitPortalFacilityAmendmentToUkef with the correct params', async () => {
       // Arrange
-      const { req, res } = generateHttpMocks({ auditDetails, newStatus, referenceNumber: testReferenceNumber });
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus, referenceNumber: testReferenceNumber, emailVariables: mockEmailVariables });
 
       // Act
       await patchSubmitAmendment(req, res);
@@ -99,7 +155,7 @@ describe('patchSubmitAmendment', () => {
 
     it(`should return ${HttpStatusCode.Ok} and the updated amendment`, async () => {
       // Arrange
-      const { req, res } = generateHttpMocks({ auditDetails, newStatus, referenceNumber: testReferenceNumber });
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus, referenceNumber: testReferenceNumber, emailVariables: mockEmailVariables });
 
       // Act
       await patchSubmitAmendment(req, res);
@@ -109,13 +165,31 @@ describe('patchSubmitAmendment', () => {
       expect(res._getData()).toEqual(mockUpdatedAmendment);
     });
 
+    it('should call externalApi.sendEmail with the correct params', async () => {
+      // Arrange
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus, referenceNumber: testReferenceNumber, emailVariables: mockEmailVariables });
+
+      // Act
+      await patchSubmitAmendment(req, res);
+
+      // Assert
+      const { makersEmail, checkersEmail, pimEmail, emailVariables } = mockEmailVariables;
+
+      const emails = [makersEmail, checkersEmail, pimEmail];
+
+      expect(sendEmailSpy).toHaveBeenCalledTimes(3);
+      expect(sendEmailSpy).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_UKEF_MAKER_EMAIL, emails[0], emailVariables);
+      expect(sendEmailSpy).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_UKEF_CHECKER_EMAIL, emails[1], emailVariables);
+      expect(sendEmailSpy).toHaveBeenCalledWith(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_UKEF_PIM_EMAIL, emails[2], emailVariables);
+    });
+
     it('should return the correct status and body if PortalFacilityAmendmentService.submitPortalFacilityAmendmentToUkef throws an api error', async () => {
       // Arrange
       const status = HttpStatusCode.Forbidden;
       const message = 'Test error message';
       mockSubmitPortalFacilityAmendmentToUkef.mockRejectedValue(new TestApiError({ status, message }));
 
-      const { req, res } = generateHttpMocks({ auditDetails, newStatus, referenceNumber: testReferenceNumber });
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus, referenceNumber: testReferenceNumber, emailVariables: mockEmailVariables });
 
       // Act
       await patchSubmitAmendment(req, res);
@@ -133,7 +207,7 @@ describe('patchSubmitAmendment', () => {
       const message = 'Test error message';
       mockSubmitPortalFacilityAmendmentToUkef.mockRejectedValue(new Error(message));
 
-      const { req, res } = generateHttpMocks({ auditDetails, newStatus, referenceNumber: testReferenceNumber });
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus, referenceNumber: testReferenceNumber, emailVariables: mockEmailVariables });
 
       // Act
       await patchSubmitAmendment(req, res);

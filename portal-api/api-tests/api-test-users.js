@@ -9,7 +9,7 @@ const { STATUS } = require('../src/constants/user');
 
 const banks = {
   bank1: {
-    id: '956',
+    id: '9',
     name: 'Bank 1',
     emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
   },

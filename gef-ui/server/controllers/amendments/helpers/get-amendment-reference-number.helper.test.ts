@@ -1,7 +1,7 @@
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import { PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import api from '../../../services/api';
-import { createReferenceNumberHelper } from './create-amendment-reference-number.helper';
+import { getAmendmentReferenceNumber } from './get-amendment-reference-number.helper';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 
@@ -40,7 +40,7 @@ describe('createAmendmentReferenceNumber', () => {
   it('should return the correct reference number when amendments exist', async () => {
     getAmendmentsOnDealMock.mockResolvedValue([amendment, amendment]);
 
-    const result = await createReferenceNumberHelper(dealId, facilityId, userToken);
+    const result = await getAmendmentReferenceNumber(dealId, facilityId, userToken);
 
     expect(getAmendmentsOnDealMock).toHaveBeenCalledWith({
       dealId,
@@ -53,7 +53,7 @@ describe('createAmendmentReferenceNumber', () => {
   it('should return the correct reference number when no amendments exist', async () => {
     getAmendmentsOnDealMock.mockResolvedValue([]);
 
-    const result = await createReferenceNumberHelper(dealId, facilityId, userToken);
+    const result = await getAmendmentReferenceNumber(dealId, facilityId, userToken);
 
     expect(getAmendmentsOnDealMock).toHaveBeenCalledWith({
       dealId,
@@ -68,7 +68,7 @@ describe('createAmendmentReferenceNumber', () => {
     getAmendmentsOnDealMock.mockResolvedValue(null);
 
     // Act
-    const response = createReferenceNumberHelper(dealId, facilityId, userToken);
+    const response = getAmendmentReferenceNumber(dealId, facilityId, userToken);
 
     // Assert
     await expect(response).rejects.toThrow('Submitted amendment was not found for the deal');
@@ -79,7 +79,7 @@ describe('createAmendmentReferenceNumber', () => {
     getFacilityMock.mockResolvedValue({ details: null });
 
     // Act
-    const response = createReferenceNumberHelper(dealId, facilityId, userToken);
+    const response = getAmendmentReferenceNumber(dealId, facilityId, userToken);
 
     // Assert
     await expect(response).rejects.toThrow('Facility was not found');
@@ -91,7 +91,7 @@ describe('createAmendmentReferenceNumber', () => {
     getAmendmentsOnDealMock.mockRejectedValue(mockError);
 
     // Act
-    const response = createReferenceNumberHelper(dealId, facilityId, userToken);
+    const response = getAmendmentReferenceNumber(dealId, facilityId, userToken);
 
     // Assert
     await expect(response).rejects.toThrow(mockError);
@@ -103,7 +103,7 @@ describe('createAmendmentReferenceNumber', () => {
     getFacilityMock.mockRejectedValue(mockError);
 
     // Act
-    const response = createReferenceNumberHelper(dealId, facilityId, userToken);
+    const response = getAmendmentReferenceNumber(dealId, facilityId, userToken);
 
     // Assert
     await expect(response).rejects.toThrow(mockError);

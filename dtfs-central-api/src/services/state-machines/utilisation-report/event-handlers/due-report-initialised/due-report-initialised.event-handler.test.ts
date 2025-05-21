@@ -5,7 +5,7 @@ import { UtilisationReportRepo } from '../../../../../repositories/utilisation-r
 jest.mock('../../../../../repositories/utilisation-reports-repo');
 
 describe('handleUtilisationReportDueReportInitialisedEvent', () => {
-  const bankId = '956';
+  const bankId = '9';
   const reportPeriod = {
     start: { month: 12, year: 2023 },
     end: { month: 1, year: 2024 },

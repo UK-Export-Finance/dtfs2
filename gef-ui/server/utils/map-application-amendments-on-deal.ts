@@ -1,6 +1,6 @@
-import { SummaryListRow, AMENDMENT_TYPES, DATE_FORMATS, getFormattedMonetaryValue, CURRENCY, FacilityAllTypeAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { SummaryListRow, DATE_FORMATS, FacilityAllTypeAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { format, fromUnixTime } from 'date-fns';
-import { getCurrencySymbol } from './get-currency-symbol';
+import { getAmendmentCreatedByRow } from '../helpers/get-amendment-created-by-row';
 
 type MappedFacilityAmendmentWithUkefId = {
   referenceNumber: string;
@@ -13,7 +13,7 @@ type MappedFacilityAmendmentWithUkefId = {
 };
 
 /**
- * Maps an array of `FacilityAmendmentWithUkefId` to an array of `MappedFacilityAmendmentWithUkefId` objects.
+ * Maps an array of `FacilityAllTypeAmendmentWithUkefId` to an array of `MappedFacilityAmendmentWithUkefId` objects.
  * This function transforms the structure of the amendments to match the required format.
  *
  * @param amendments - An array of amendments ,to be mapped. Each amendment contains details about a facility amendment.
@@ -21,131 +21,20 @@ type MappedFacilityAmendmentWithUkefId = {
  */
 export const mapApplicationAmendmentsOnDeal = (amendments: FacilityAllTypeAmendmentWithUkefId[]): MappedFacilityAmendmentWithUkefId[] => {
   return amendments.map((amendment) => {
-    const symbol = getCurrencySymbol(amendment.currency ?? CURRENCY.GBP);
-    const value = amendment.value ? getFormattedMonetaryValue(Number(amendment.value)) : '';
     const today = new Date();
-    let amendmentCreatedByRow = null;
-
-    if (amendment.type === AMENDMENT_TYPES.PORTAL) {
-      if (amendment.createdBy) {
-        amendmentCreatedByRow = {
-          key: {
-            text: 'Amendment created by',
-          },
-          value: {
-            text: amendment.createdBy.name,
-          },
-        };
-      }
-    } else {
-      amendmentCreatedByRow = {
-        key: {
-          text: 'Amendment created by',
-        },
-        value: {
-          text: 'UKEF',
-        },
-      };
-    }
+    const referenceNumber = amendment.referenceNumber ?? '';
+    const amendmentRows = getAmendmentCreatedByRow(amendment);
+    const effectiveDate = amendment.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY) : '';
+    const hasFutureEffectiveDate = new Date(fromUnixTime(amendment.effectiveDate ?? 0)) > today;
 
     return {
-      referenceNumber: amendment.referenceNumber ?? '',
-      amendmentRows: [
-        {
-          key: {
-            text: 'Facility ID',
-          },
-          value: {
-            text: amendment.ukefFacilityId?.toString() ?? '',
-          },
-        },
-        ...(amendment.facilityType
-          ? [
-              {
-                key: {
-                  text: 'Facility type',
-                },
-                value: {
-                  text: amendment.facilityType.toString(),
-                },
-              },
-            ]
-          : []),
-        {
-          key: {
-            text: 'Status',
-          },
-          value: {
-            text: amendment.status,
-          },
-        },
-        ...(amendment.coverEndDate
-          ? [
-              {
-                key: {
-                  text: 'New cover end date',
-                },
-                value: {
-                  text: format(amendment.coverEndDate, DATE_FORMATS.DD_MMMM_YYYY),
-                },
-              },
-            ]
-          : []),
-        ...(amendment.facilityEndDate
-          ? [
-              {
-                key: {
-                  text: 'New facility end date',
-                },
-                value: {
-                  text: format(new Date(amendment.facilityEndDate), DATE_FORMATS.DD_MMMM_YYYY),
-                },
-              },
-            ]
-          : []),
-        ...(amendment.bankReviewDate
-          ? [
-              {
-                key: {
-                  text: 'New bank review date',
-                },
-                value: {
-                  text: format(new Date(amendment.bankReviewDate), DATE_FORMATS.DD_MMMM_YYYY),
-                },
-              },
-            ]
-          : []),
-        ...(amendment.value
-          ? [
-              {
-                key: {
-                  text: 'New facility value',
-                },
-                value: {
-                  text: `${symbol} ${value}`,
-                },
-              },
-            ]
-          : []),
-        ...(amendment.effectiveDate
-          ? [
-              {
-                key: {
-                  text: 'Date effective from',
-                },
-                value: {
-                  text: format(fromUnixTime(amendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY),
-                },
-              },
-            ]
-          : []),
-        ...(amendmentCreatedByRow ? [amendmentCreatedByRow] : []),
-      ],
+      referenceNumber,
+      amendmentRows,
       type: amendment.type,
       facilityId: amendment.facilityId.toString(),
       amendmentId: amendment.amendmentId.toString(),
-      effectiveDate: amendment.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY) : '',
-      hasFutureEffectiveDate: new Date(fromUnixTime(amendment.effectiveDate ?? 0)) > today,
+      effectiveDate,
+      hasFutureEffectiveDate,
     };
   });
 };

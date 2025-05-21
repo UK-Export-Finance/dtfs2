@@ -98,58 +98,25 @@ export class TfmFacilitiesRepo {
         },
         { projection: { amendments: 1, 'facilitySnapshot.name': 1, 'facilitySnapshot.ukefFacilityId': 1, 'facilitySnapshot.currency': 1 } },
       )
-      .sort({ 'amendments.referenceNumber': -1 })
       .toArray();
 
-    const matchingAmendments = facilitiesOnDealWithAmendments
-      .flatMap((facility) =>
+    if (facilitiesOnDealWithAmendments?.length) {
+      const matchingAmendments = facilitiesOnDealWithAmendments.flatMap((facility) =>
         (facility.amendments || []).map((amendment) => ({
           ...amendment,
           facilityType: facility.facilitySnapshot?.name,
           ukefFacilityId: facility.facilitySnapshot?.ukefFacilityId,
           currency: facility.facilitySnapshot?.currency.id,
         })),
-      )
-      .filter((amendment) => amendment.amendmentId && amendment.referenceNumber && (!statuses || statuses.includes(amendment.status)));
+      );
 
-    return matchingAmendments;
-  }
+      const filteredAndSortingAmendments = matchingAmendments
+        .filter((amendment) => amendment.amendmentId && amendment.referenceNumber && (!statuses || statuses.includes(amendment.status)))
+        .sort((a, b) => b.updatedAt - a.updatedAt);
 
-  /**
-   * Finds all type amendments by facilityId for a given status or set of statuses
-   * @param facilityId - The facility id
-   * @param statuses - An array of amendment statuses to filter on
-   * @returns The matching amendments
-   */
-  public static async findAllTypeAmendmentsByFacilityIdAndStatus({
-    facilityId,
-    statuses,
-  }: {
-    facilityId: string | ObjectId;
-    statuses?: (PortalAmendmentStatus | TfmAmendmentStatus)[];
-  }): Promise<(PortalFacilityAmendment | TfmFacilityAmendment)[]> {
-    const collection = await this.getCollection();
-
-    const amendmentsOnFacility = await collection
-      .find(
-        {
-          'amendments.facilityId': { $eq: new ObjectId(facilityId) },
-          amendments: {
-            $elemMatch: {
-              amendmentId: { $exists: true, $ne: null },
-              referenceNumber: { $exists: true, $ne: null },
-            },
-          },
-        },
-        { projection: { amendments: 1 } },
-      )
-      .toArray();
-
-    const matchingAmendments = amendmentsOnFacility
-      .flatMap((facility) => facility.amendments || [])
-      .filter((amendment) => amendment.amendmentId && amendment.referenceNumber && (!statuses || statuses.includes(amendment.status)));
-
-    return matchingAmendments;
+      return filteredAndSortingAmendments;
+    }
+    return [];
   }
 
   /**

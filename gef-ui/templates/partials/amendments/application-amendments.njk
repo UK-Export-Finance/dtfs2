@@ -20,7 +20,7 @@
   {% include "includes/application-preview/summary.njk" %}
   {% include "includes/application-preview/application-sub-navigation.njk" %}
 
-  <h1 class="govuk-heading-xl" data-cy="main-amendments-heading">Amendments</h1>
+  <h1 class="govuk-heading-xl" data-cy="tab-heading">Amendments</h1>
 
   {% if applicationAmendmentsOnDeal.length %}
     {% for amendment in applicationAmendmentsOnDeal %}
@@ -38,11 +38,8 @@
     {% endfor %}
   {% else %}
     <span class="govuk-body">
-      <p class="">There are no amendments to display.<br>
+      <p data-cy='no-amendments'>There are no amendments to display.<br>
       Any amendments that have been acknowledged will be shown here.</p>
-      {# <div class="govuk-inset-text govuk-!-margin-top-0">
-        Amendments made before {{ dateFrom }} are not included here. Please refer to your records for any previous amendments requested using the Schedule 8 form.
-      </div> #}
     </span>
   {% endif %}
 

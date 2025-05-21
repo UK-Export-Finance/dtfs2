@@ -1,7 +1,7 @@
-import { format, fromUnixTime } from 'date-fns';
+import { format } from 'date-fns';
 import dotenv from 'dotenv';
 import { PortalFacilityAmendmentWithUkefId, DATE_FORMATS, PortalSessionUser, now } from '@ukef/dtfs2-common';
-import { getCurrencySymbol } from '../../../utils/get-currency-symbol';
+import { mapCommonEmailVariables } from './map-common-email-variables';
 import { Deal } from '../../../types/deal';
 import { Facility } from '../../../types/facility';
 
@@ -16,6 +16,7 @@ const { PORTAL_UI_URL } = process.env;
  * @param facility
  * @param amendment
  * @param user
+ * @param checker
  * @returns mapped email variables
  */
 const mapSubmittedToCheckerEmailVariables = ({
@@ -31,40 +32,7 @@ const mapSubmittedToCheckerEmailVariables = ({
   user: PortalSessionUser;
   checker: PortalSessionUser;
 }) => {
-  const {
-    ukefDealId,
-    bankInternalRefName,
-    exporter: { companyName: exporterName },
-  } = deal;
-
-  const { ukefFacilityId } = facility;
-
-  const { effectiveDate, changeFacilityValue, changeCoverEndDate, coverEndDate, value, isUsingFacilityEndDate, facilityEndDate } = amendment;
-
-  // if effective date is defined, format it from unix timestamp (without ms) to DD MMMM YYYY, otherwise set it to '-'
-  const formattedEffectiveDate = effectiveDate ? format(fromUnixTime(effectiveDate), DATE_FORMATS.DD_MMMM_YYYY) : '-';
-  // if changeCoverEndDate is true and coverEndDate is defined, format it to DD MMMM YYYY, otherwise set it to '-'
-  const formattedCoverEndDate = changeCoverEndDate && coverEndDate ? format(coverEndDate, DATE_FORMATS.DD_MMMM_YYYY) : '-';
-  // if isUsingFacilityEndDate is true and facilityEndDate is defined, format it to DD MMMM YYYY, otherwise set it to '-'
-  const formattedFacilityEndDate = isUsingFacilityEndDate && facilityEndDate ? format(new Date(facilityEndDate), DATE_FORMATS.DD_MMMM_YYYY) : '-';
-
-  // default formattedFacilityValue
-  let formattedFacilityValue = '-';
-
-  /**
-   * if changeFacilityValue is true and value is defined
-   * get the currency symbol from the facility currency id
-   * and set formattedFacilityValue to currency symbol + value
-   */
-  if (changeFacilityValue && value) {
-    let currencySymbol = '';
-
-    if (facility?.currency?.id) {
-      currencySymbol = getCurrencySymbol(facility?.currency.id);
-    }
-
-    formattedFacilityValue = `${currencySymbol}${value}`;
-  }
+  const commonVariables = mapCommonEmailVariables({ deal, facility, amendment });
 
   const makersName = `${user.firstname} ${user.surname}`;
   const makersEmail = user.email;
@@ -77,14 +45,7 @@ const mapSubmittedToCheckerEmailVariables = ({
   const portalUrl = `${PORTAL_UI_URL}/login`;
 
   return {
-    ukefDealId,
-    bankInternalRefName,
-    exporterName,
-    ukefFacilityId,
-    formattedEffectiveDate,
-    formattedCoverEndDate,
-    formattedFacilityEndDate,
-    formattedFacilityValue,
+    ...commonVariables,
     makersName,
     makersEmail,
     dateSubmittedByMaker,

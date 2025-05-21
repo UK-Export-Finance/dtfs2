@@ -67,6 +67,7 @@ export const PORTAL_FACILITY_AMENDMENT = PORTAL_FACILITY_AMENDMENT_USER_VALUES.m
         }),
       ),
     }),
+    facilityType: z.string().optional(),
   }),
 );
 
