@@ -100,20 +100,23 @@ export class TfmFacilitiesRepo {
       )
       .toArray();
 
-    const matchingAmendments = facilitiesOnDealWithAmendments.flatMap((facility) =>
-      (facility.amendments || []).map((amendment) => ({
-        ...amendment,
-        facilityType: facility.facilitySnapshot?.name,
-        ukefFacilityId: facility.facilitySnapshot?.ukefFacilityId,
-        currency: facility.facilitySnapshot?.currency.id,
-      })),
-    );
+    if (facilitiesOnDealWithAmendments?.length) {
+      const matchingAmendments = facilitiesOnDealWithAmendments.flatMap((facility) =>
+        (facility.amendments || []).map((amendment) => ({
+          ...amendment,
+          facilityType: facility.facilitySnapshot?.name,
+          ukefFacilityId: facility.facilitySnapshot?.ukefFacilityId,
+          currency: facility.facilitySnapshot?.currency.id,
+        })),
+      );
 
-    const filteredAndSortingAmendments = matchingAmendments
-      .filter((amendment) => amendment.amendmentId && amendment.referenceNumber && (!statuses || statuses.includes(amendment.status)))
-      .sort((a, b) => b.updatedAt - a.updatedAt);
+      const filteredAndSortingAmendments = matchingAmendments
+        .filter((amendment) => amendment.amendmentId && amendment.referenceNumber && (!statuses || statuses.includes(amendment.status)))
+        .sort((a, b) => b.updatedAt - a.updatedAt);
 
-    return filteredAndSortingAmendments;
+      return filteredAndSortingAmendments;
+    }
+    return [];
   }
 
   /**

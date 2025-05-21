@@ -13,6 +13,7 @@ import { makerSubmitPortalAmendmentForReview } from './gef/makerSubmitPortalAmen
 import { makerMakesPortalAmendmentRequest } from './gef/makerMakesPortalAmendmentRequest';
 import { makerAndCheckerSubmitPortalAmendmentRequest } from './gef/makerAndCheckerSubmitPortalAmendmentRequest';
 import { checkerSubmitsPortalAmendmentRequest } from './gef/checkerSubmitsPortalAmendmentRequest';
+import { submitToUkefMultipleAmendmentsOnFacility } from './gef/submitToUkefMultipleAmendmentsOnFacility';
 import { assertPrintDialogue } from './utils/assertPrintDialogue';
 
 // Preserve session cookie
@@ -60,6 +61,7 @@ Cypress.Commands.add('makerSubmitPortalAmendmentForReview', makerSubmitPortalAme
 Cypress.Commands.add('makerMakesPortalAmendmentRequest', makerMakesPortalAmendmentRequest);
 Cypress.Commands.add('makerAndCheckerSubmitPortalAmendmentRequest', makerAndCheckerSubmitPortalAmendmentRequest);
 Cypress.Commands.add('checkerSubmitsPortalAmendmentRequest', checkerSubmitsPortalAmendmentRequest);
+Cypress.Commands.add('submitToUkefMultipleAmendmentsOnFacility', submitToUkefMultipleAmendmentsOnFacility);
 
 Cypress.Commands.add('submitDealCancellation', submitDealCancellation);
 
