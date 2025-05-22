@@ -36,7 +36,7 @@
         "mongodb": "^4.17.2",
         "mssql": "^11.0.1",
         "reflect-metadata": "^0.2.2",
-        "typeorm": "^0.3.24",
+        "typeorm": "^0.3.22",
         "xml2js": "^0.5.0",
         "zod": "^3.25.17"
     },
