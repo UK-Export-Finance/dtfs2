@@ -12,7 +12,7 @@ const ACTION_TEXT = {
 };
 
 const {
-  facilitiesChangedToIssuedAsArray,
+  canResubmitIssuedFacilities,
   summaryIssuedChangedToIssued,
   summaryIssuedUnchanged,
   areUnissuedFacilitiesPresent,
@@ -313,7 +313,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
   // personalised href for facility to change to unissued from issued (once submitted to UKEF and changed to issued)
   const issuedToUnissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change-to-unissued`;
   // array of facilities which have been changed to issued
-  const facilitiesChanged = facilitiesChangedToIssuedAsArray(app);
+  const facilitiesChanged = canResubmitIssuedFacilities(app);
 
   const params = {
     app,
