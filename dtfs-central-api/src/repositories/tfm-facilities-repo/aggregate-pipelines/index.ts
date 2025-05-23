@@ -6,6 +6,7 @@ import { tfmAmendmentsByDealIdAndStatus } from './tfm-amendments-by-deal-id-and-
 import { latestCompletedTfmAmendmentByFacilityId } from './latest-completed-amendment-by-facility-id';
 import { latestCompletedAmendmentByDealId } from './lastest-completed-amendment-by-deal-id';
 import { allFacilitiesAndFacilityCount } from './all-facilities-and-facility-count';
+import { acknowledgedPortalAmendmentsByFacilityId } from './acknowledged-portal-amendments-by-facility-id';
 
 export { AllFacilitiesAndFacilityCountAggregatePipelineOptions } from './all-facilities-and-facility-count';
 
@@ -18,4 +19,5 @@ export const aggregatePipelines = {
   latestCompletedTfmAmendmentByFacilityId,
   latestCompletedAmendmentByDealId,
   allFacilitiesAndFacilityCount,
+  acknowledgedPortalAmendmentsByFacilityId,
 };

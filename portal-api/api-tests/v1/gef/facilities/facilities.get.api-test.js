@@ -1,4 +1,5 @@
-const { getCurrentGefDealVersion, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { getCurrentGefDealVersion, FACILITY_TYPE, PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { aPortalFacilityAmendment } = require('@ukef/dtfs2-common/mock-data-backend');
 const databaseHelper = require('../../../database-helper');
 
 const app = require('../../../../src/createApp');
@@ -6,6 +7,8 @@ const testUserCache = require('../../../api-test-users');
 const { withClientAuthenticationTests } = require('../../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../../common-tests/role-authorisation-tests');
 const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../../src/v1/roles/roles');
+
+const { facilityUpdate } = require('../../../fixtures/gef/facility-update');
 
 const { as, get } = require('../../../api')(app);
 
@@ -16,6 +19,13 @@ const mockApplications = require('../../../fixtures/gef/application');
 
 const { DB_COLLECTIONS } = require('../../../fixtures/constants');
 const { generateANewFacility } = require('./helpers/generate-a-new-facility.tests');
+
+const getAcknowledgedAmendmentsByFacilityIdMock = jest.fn();
+
+jest.mock('../../../../src/v1/api', () => ({
+  ...jest.requireActual('../../../../src/v1/api'),
+  getAcknowledgedAmendmentsByFacilityId: () => getAcknowledgedAmendmentsByFacilityIdMock(),
+}));
 
 describe(baseUrl, () => {
   let aMaker;
@@ -38,9 +48,28 @@ describe(baseUrl, () => {
 
   describe(`GET ${baseUrl}?dealId=`, () => {
     let facilitiesUrl;
+    let amendment;
+    let facility;
+    let updatedFacility;
 
     beforeEach(async () => {
       facilitiesUrl = `${baseUrl}?dealId=${mockApplication.body._id}`;
+
+      await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
+
+      const {
+        body: { details },
+      } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+      facility = details;
+
+      const {
+        body: { details: update },
+      } = await as(aMaker).put(facilityUpdate).to(`${baseUrl}/${facility._id}`);
+      updatedFacility = update;
+    });
+
+    afterEach(() => {
+      jest.resetAllMocks();
     });
 
     withClientAuthenticationTests({
@@ -59,6 +88,43 @@ describe(baseUrl, () => {
       const { status, body } = await as(aMaker).get(`${baseUrl}?dealId=123`);
       expect(status).toEqual(400);
       expect(body).toStrictEqual({ message: 'Invalid Deal Id', status: 400 });
+    });
+
+    describe('when there are no amendments', () => {
+      it('should return the original facility', async () => {
+        const {
+          body: { items },
+        } = await as(aMaker).get(facilitiesUrl);
+        const response = items[0].details;
+
+        expect(response).toEqual(updatedFacility);
+      });
+    });
+
+    describe('when amendments are present', () => {
+      beforeEach(async () => {
+        const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED });
+        amendment = {
+          ...anAcknowledgedPortalAmendment,
+          value: 5000,
+          facilityId: facility._id,
+          coverEndDate: new Date('2023-01-01'),
+        };
+
+        jest.mocked(getAcknowledgedAmendmentsByFacilityIdMock).mockResolvedValue([amendment]);
+      });
+
+      it('should replace value and coverEndDate with amended values', async () => {
+        const {
+          body: { items },
+        } = await as(aMaker).get(facilitiesUrl);
+        const response = items[0].details;
+
+        updatedFacility.value = amendment.value;
+        updatedFacility.coverEndDate = amendment.coverEndDate.toISOString();
+
+        expect(response).toEqual(updatedFacility);
+      });
     });
   });
 

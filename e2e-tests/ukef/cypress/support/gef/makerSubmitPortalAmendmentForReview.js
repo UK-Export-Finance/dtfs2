@@ -6,18 +6,21 @@ import amendmentPage from '../../../../gef/cypress/e2e/pages/amendments/amendmen
  * @param {Boolean} param.facilityValueExists - if facility value is changed
  * @param {Boolean} param.facilityEndDateExists - if facility end date is changed
  * @param {String} param.changedFacilityValue - the new value for the facility
+ * @param {String} param.changedCoverEndDate - the new cover end date
  */
 export const makerSubmitPortalAmendmentForReview = ({
   coverEndDateExists = false,
   facilityValueExists = false,
   facilityEndDateExists = false,
   changedFacilityValue,
+  changedCoverEndDate,
 }) => {
   cy.makerMakesPortalAmendmentRequest({
     coverEndDateExists,
     facilityValueExists,
     facilityEndDateExists,
     changedFacilityValue,
+    changedCoverEndDate,
   });
 
   cy.clickSubmitButton();
