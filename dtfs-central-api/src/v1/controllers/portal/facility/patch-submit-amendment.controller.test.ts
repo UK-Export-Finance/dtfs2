@@ -10,7 +10,7 @@ import EMAIL_TEMPLATE_IDS from '../../../../constants/email-template-ids';
 
 const amendmentId = 'amendmentId';
 const facilityId = '6597dffeb5ef5ff4267e5044';
-const testReferenceNumber = '0040012345-01';
+const testReferenceNumber = '0040012345-001';
 
 const mockUpdatedAmendment = { facilityId, type: AMENDMENT_TYPES.PORTAL, status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED };
 

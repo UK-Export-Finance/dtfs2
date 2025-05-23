@@ -18,6 +18,7 @@ const companies = require('../controllers/companies.controller');
 const { getAllFacilityAmendments } = require('../controllers/amendments/get-all-amendments.controller');
 const { getAmendment } = require('../controllers/amendments/get-amendment.controller');
 const { getFacilityAmendmentsOnDeal } = require('../controllers/amendments/get-amendments-on-deal.controller');
+const { getPortalFacilityAmendmentsOnDeal } = require('../controllers/amendments/get-portal-amendments-on-deal.controller');
 const { patchAmendment } = require('../controllers/amendments/patch-amendment.controller');
 const { putAmendment } = require('../controllers/amendments/put-amendment.controller');
 const { deleteAmendment } = require('../controllers/amendments/delete-amendment.controller');
@@ -175,6 +176,8 @@ router
     putAmendment,
   );
 
-router.route('/deals/:dealId/amendments').all(mongoIdValidation('dealId'), handleExpressValidatorResult).get(getFacilityAmendmentsOnDeal);
+router.route('/deals/:dealId/all-types-amendments').all(mongoIdValidation('dealId'), handleExpressValidatorResult).get(getFacilityAmendmentsOnDeal);
+
+router.route('/deals/:dealId/amendments').all(mongoIdValidation('dealId'), handleExpressValidatorResult).get(getPortalFacilityAmendmentsOnDeal);
 
 module.exports = router;

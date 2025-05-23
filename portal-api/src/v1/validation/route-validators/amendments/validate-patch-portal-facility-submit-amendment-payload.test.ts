@@ -6,7 +6,7 @@ import { validatePatchPortalFacilitySubmitAmendmentPayload } from './validate-pa
 
 const portalAmendmentVariables = portalAmendmentToUkefEmailVariables();
 
-const referenceNumber = `${new ObjectId().toString()}-01`;
+const referenceNumber = `${new ObjectId().toString()}-001`;
 
 describe('validatePatchPortalFacilitySubmitAmendmentPayload', () => {
   const invalidPayloads = [

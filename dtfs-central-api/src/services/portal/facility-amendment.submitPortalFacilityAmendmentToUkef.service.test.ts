@@ -14,7 +14,7 @@ console.error = jest.fn();
 
 const amendmentId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
-const referenceNumber = `${facilityId}-01`;
+const referenceNumber = `${facilityId}-001`;
 
 const updatedAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, referenceNumber });
 const auditDetails = generatePortalAuditDetails(aPortalUser()._id);

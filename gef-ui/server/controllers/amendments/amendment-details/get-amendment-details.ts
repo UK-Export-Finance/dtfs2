@@ -1,4 +1,5 @@
 import { CustomExpressRequest, PORTAL_AMENDMENT_INPROGRESS_STATUSES } from '@ukef/dtfs2-common';
+import { fromUnixTime } from 'date-fns';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
@@ -6,6 +7,7 @@ import { createAmendmentDetailsViewModel } from './create-amendment-details-view
 
 export type GetAmendmentDetailsRequest = CustomExpressRequest<{
   params: { dealId: string };
+  query: { amendmentId?: string; facilityId?: string };
 }>;
 
 /**
@@ -16,6 +18,7 @@ export type GetAmendmentDetailsRequest = CustomExpressRequest<{
 export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: Response) => {
   try {
     const { dealId } = req.params;
+    const { facilityId, amendmentId } = req.query;
     const { userToken, user } = asLoggedInUserSession(req.session);
     const userRoles = user.roles;
 
@@ -26,18 +29,28 @@ export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: 
       return res.redirect('/not-found');
     }
 
-    /**
-     * gets amendments in progress
-     * will only return 1 as only 1 amendment can be in progress at a time
-     */
-    const amendments = await api.getAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
+    let amendment;
+    /*
+      when facilityId and amendmentId exist, then we get Amendment details for this specific deal
+    */
+    if (facilityId && amendmentId) {
+      amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
 
-    if (!amendments?.length) {
-      console.error('In progress amendment was not found for the deal %s', dealId);
-      return res.redirect('/not-found');
+      if (!amendment) {
+        console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
+        return res.redirect('/not-found');
+      }
+    } else {
+      /*
+       otherwise we get Amendment details for a portalAmendment in progress
+      */
+      const amendments = await api.getPortalAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
+      if (!amendments) {
+        console.error('In progress amendment was not found for the deal %s', dealId);
+        return res.redirect('/not-found');
+      }
+      [amendment] = amendments;
     }
-
-    const amendment = amendments[0];
 
     const { details: facility } = await api.getFacility({ facilityId: amendment.facilityId, userToken });
 
@@ -46,7 +59,15 @@ export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: 
       return res.redirect('/not-found');
     }
 
-    return res.render('partials/amendments/amendment-details.njk', createAmendmentDetailsViewModel({ amendment, deal, facility, userRoles }));
+    let banner;
+    const hasFacilityAndAmendmentId = facilityId && amendmentId;
+    const effectiveDate = amendment.effectiveDate ? fromUnixTime(amendment.effectiveDate) : null;
+    const isEffectiveDateInFuture = effectiveDate && new Date(effectiveDate) > new Date();
+
+    if (hasFacilityAndAmendmentId && isEffectiveDateInFuture) {
+      banner = true;
+    }
+    return res.render('partials/amendments/amendment-details.njk', createAmendmentDetailsViewModel({ amendment, deal, facility, userRoles, banner }));
   } catch (error) {
     console.error('Error getting amendments details page %o', error);
     return res.render('partials/problem-with-service.njk');

@@ -1,7 +1,7 @@
 import { ObjectId, Document } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
-import { Currency, TFM_AMENDMENT_STATUS, AMENDMENT_QUERIES, ApiError, API_ERROR_CODE, FacilityAmendment } from '@ukef/dtfs2-common';
+import { Currency, TFM_AMENDMENT_STATUS, AMENDMENT_QUERIES, ApiError, API_ERROR_CODE, FacilityAmendment, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 import { AMENDMENT_QUERY_STATUSES } from '../../../../constants';
 
@@ -112,6 +112,12 @@ export const getAmendmentsByFacilityId = async (req: Request, res: Response) => 
         } else {
           amendment = await TfmFacilitiesRepo.findTfmAmendmentsByFacilityIdAndStatus(facilityId, TFM_AMENDMENT_STATUS.COMPLETED);
         }
+        break;
+      case AMENDMENT_QUERY_STATUSES.ACKNOWLEDGEDORCOMPLETED:
+        amendment = await TfmFacilitiesRepo.findAllTypeAmendmentsByFacilityIdAndStatus({
+          facilityId,
+          statuses: [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, TFM_AMENDMENT_STATUS.COMPLETED],
+        });
         break;
       default:
         if (amendmentIdOrStatus) {

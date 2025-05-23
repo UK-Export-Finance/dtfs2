@@ -29,7 +29,7 @@ export const aPortalFacilityAmendment = ({
   createdAt: getUnixTime(new Date()),
   updatedAt: getUnixTime(new Date()),
   status,
-  referenceNumber: referenceNumber || undefined,
+  referenceNumber: referenceNumber || null,
   eligibilityCriteria: {
     criteria: [{ id: 1, text: 'item 1', answer: null }],
     version: 1,

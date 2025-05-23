@@ -5,9 +5,9 @@ import { asLoggedInUserSession } from '../../../utils/express-session';
 import api from '../../../services/api';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { getAmendmentsUrl } from '../helpers/navigation.helper';
-import { createReferenceNumber } from '../helpers/create-amendment-reference-number.helper';
+import { getAmendmentReferenceNumber } from '../helpers/get-amendment-reference-number.helper';
 import { ConfirmAmendmentSubmissionViewModel } from '../../../types/view-models/amendments/confirm-amendment-submission-view-model';
-import mapSubmittedToUkefEmailVariables from '../helpers/map-submitted-to-ukef-email-variables.ts';
+import mapSubmittedToUkefEmailVariables from '../helpers/map-submitted-to-ukef-email-variables';
 
 export type PostSubmitAmendmentToUkefRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -56,7 +56,7 @@ export const postSubmitAmendmentToUkef = async (req: PostSubmitAmendmentToUkefRe
       return res.render('partials/submit-to-ukef.njk', viewModel);
     }
 
-    const referenceNumber = await createReferenceNumber(dealId, facilityId, userToken);
+    const referenceNumber = await getAmendmentReferenceNumber(dealId, facilityId, userToken);
 
     if (!referenceNumber) {
       console.error('Reference number could not be created for deal %s and facility %s', dealId, facilityId);
