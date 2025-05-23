@@ -170,7 +170,7 @@ describe('controllers/application-details', () => {
           renderReviewDecisionLink: expect.any(Boolean),
           previewMode: expect.any(Boolean),
           unissuedFacilitiesPresent: expect.any(Boolean),
-          facilitiesChangedToIssued: expect.any(Array),
+          canResubmitIssueFacilities: expect.any(Array),
           displayComments: expect.any(Boolean),
           hasChangedFacilities: expect.any(Boolean),
           displayChangeSupportingInfo: expect.any(Boolean),
@@ -504,7 +504,7 @@ describe('controllers/application-details', () => {
           expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
             unissuedFacilitiesPresent: false,
-            facilitiesChangedToIssued: [],
+            canResubmitIssueFacilities: [],
           }),
         );
       });

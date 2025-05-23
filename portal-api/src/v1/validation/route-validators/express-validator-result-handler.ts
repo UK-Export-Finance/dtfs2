@@ -1,3 +1,4 @@
+import { HttpStatusCode } from 'axios';
 import { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
 
@@ -8,7 +9,7 @@ import { validationResult } from 'express-validator';
 export const handleExpressValidatorResult = (req: Request, res: Response, next: NextFunction): void => {
   const validationResults = validationResult(req);
   if (!validationResults.isEmpty()) {
-    res.status(400).json({ message: 'Bad Request', errors: validationResults.array() });
+    res.status(HttpStatusCode.BadRequest).json({ message: 'Bad Request', errors: validationResults.array() });
     return;
   }
 

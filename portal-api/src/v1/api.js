@@ -909,7 +909,7 @@ const deletePortalFacilityAmendment = async (facilityId, amendmentId, auditDetai
  */
 const getTfmTeam = async (teamId) => {
   try {
-    return await axios({
+    return axios({
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${teamId}`,
       headers: headers.central,
@@ -917,6 +917,27 @@ const getTfmTeam = async (teamId) => {
   } catch (error) {
     console.error('Unable to get the TFM team with ID %s %o', teamId, error);
     return { status: error?.code || axios.HttpStatusCode.InternalServerError, data: 'Unable to get the TFM team' };
+  }
+};
+
+/**
+ * Retrieves the TFM deal from `tfm-deals` collection.
+ *
+ * @async
+ * @function getTfmDeal
+ * @param {string} dealId - Mongo identifier of the TFM deal to retrieve.
+ * @returns {Promise<Object>} The Axios response object if successful, or an error object with status and data if failed.
+ */
+const getTfmDeal = async (dealId) => {
+  try {
+    return axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}`,
+      headers: headers.central,
+    });
+  } catch (error) {
+    console.error('Unable to get the TFM deal with ID %s %o', dealId, error);
+    return { status: error?.code || axios.HttpStatusCode.InternalServerError, data: 'Unable to get the TFM deal' };
   }
 };
 
@@ -957,4 +978,5 @@ module.exports = {
   deletePortalFacilityAmendment,
   getCompletedFeeRecordCorrections,
   getTfmTeam,
+  getTfmDeal,
 };

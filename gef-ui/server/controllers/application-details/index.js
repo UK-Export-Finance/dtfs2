@@ -1,7 +1,7 @@
 const startCase = require('lodash/startCase');
 const { DEAL_TYPE, timeZoneConfig, DEAL_STATUS, PORTAL_AMENDMENT_INPROGRESS_STATUSES } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
-const { canUpdateUnissuedFacilitiesCheck } = require('./canUpdateUnissuedFacilitiesCheck');
+const { canIssueUnissuedFacilities } = require('./canIssueUnissuedFacilities');
 const {
   mapSummaryList,
   displayTaskComments,
@@ -12,7 +12,7 @@ const {
 const {
   areUnissuedFacilitiesPresent,
   getUnissuedFacilitiesAsArray,
-  facilitiesChangedToIssuedAsArray,
+  canResubmitIssuedFacilities,
   getIssuedFacilitiesAsArray,
   getFacilityCoverStartDate,
   coverDatesConfirmed,
@@ -28,6 +28,7 @@ const { canUserAmendIssuedFacilities } = require('../../utils/facility-amendment
 const { getSubmittedAmendmentDetails } = require('../../utils/submitted-amendment-details');
 
 let userSession;
+let apiToken;
 
 function buildHeader(app) {
   const main = {
@@ -58,17 +59,18 @@ function buildHeader(app) {
   return { ...main, ...checker };
 }
 
-function buildBody(app, previewMode, user) {
-  const exporterUrl = `/gef/application-details/${app.id}`;
-  const facilityUrl = `/gef/application-details/${app.id}/facilities`;
+const buildBody = async (app, previewMode, user) => {
+  const exporterUrl = `/gef/application-details/${app._id}`;
+  const facilityUrl = `/gef/application-details/${app._id}/facilities`;
   const ukefReviewAvailable = isUkefReviewAvailable(app.status, app.ukefDecision);
   const ukefReviewPositive = isUkefReviewPositive(app.status, app.ukefDecision);
   const coverDates = coverDatesConfirmed(app.facilities);
   const hasChangedFacilities = isFacilityResubmissionAvailable(app);
   const unissuedFacilitiesPresent = areUnissuedFacilitiesPresent(app);
-  const facilitiesChangedToIssued = facilitiesChangedToIssuedAsArray(app);
+  const canResubmitIssueFacilities = canResubmitIssuedFacilities(app);
   const hasUkefDecisionAccepted = app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false;
   const dealCancelledStatus = [DEAL_STATUS.CANCELLED, DEAL_STATUS.PENDING_CANCELLATION];
+  const tfmDeal = await api.getTfmDeal({ dealId: app._id, userToken: apiToken });
 
   const mapSummaryParams = {
     app,
@@ -119,13 +121,13 @@ function buildBody(app, previewMode, user) {
     },
     bankInternalRefName: app.bankInternalRefName,
     additionalRefName: app.additionalRefName,
-    dealId: app.id,
+    dealId: app._id,
     makerCanSubmit: app.canSubmit,
     checkerCanSubmit: app.checkerCanSubmit,
     makerCanReSubmit: makerCanReSubmit(userSession, app),
     ukefDecision: app.ukefDecision,
     unissuedFacilitiesPresent,
-    facilitiesChangedToIssued,
+    canResubmitIssueFacilities,
     isUkefReviewAvailable: ukefReviewAvailable,
     isUkefReviewPositive: ukefReviewPositive,
     ukefDecisionAccepted: hasUkefDecisionAccepted,
@@ -136,14 +138,20 @@ function buildBody(app, previewMode, user) {
     userRoles: app.userRoles,
     displayComments: displayTaskComments(app),
     displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
-    canUpdateUnissuedFacilities: canUpdateUnissuedFacilitiesCheck(app, unissuedFacilitiesPresent, facilitiesChangedToIssued, hasUkefDecisionAccepted),
+    canUpdateUnissuedFacilities: canIssueUnissuedFacilities({
+      portalDeal: app,
+      tfmDeal,
+      unissuedFacilitiesPresent,
+      canResubmitIssueFacilities,
+      hasUkefDecisionAccepted,
+    }),
     MIAReturnToMaker: isMIAWithoutChangedToIssuedFacilities(app),
     returnToMakerNoFacilitiesChanged: returnToMakerNoFacilitiesChanged(app, hasChangedFacilities),
     canCloneDeal: !dealCancelledStatus.includes(app.status),
   };
 
   return appBody;
-}
+};
 
 function buildActions(app) {
   return {
@@ -152,12 +160,12 @@ function buildActions(app) {
   };
 }
 
-function buildView(app, previewMode, user) {
+const buildView = async (app, previewMode, user) => {
   const header = buildHeader(app);
-  const body = buildBody(app, previewMode, user);
+  const body = await buildBody(app, previewMode, user);
   const actions = buildActions(app);
   return { ...header, ...body, ...actions };
-}
+};
 
 const stateToPartial = (status, url) => {
   // Behaviour depending on application state
@@ -194,7 +202,9 @@ const applicationDetails = async (req, res, next) => {
     session: { user, userToken },
   } = req;
   const facilitiesPartials = ['cover-start-date', 'confirm-cover-start-date', 'unissued-facilities'];
+
   userSession = user;
+  apiToken = userToken;
 
   let facility;
   let url;
@@ -245,9 +255,11 @@ const applicationDetails = async (req, res, next) => {
 
     const partial = stateToPartial(application.status, url);
 
+    const view = await buildView(applicationData, previewMode, user);
+
     const params = {
       user,
-      ...buildView(applicationData, previewMode, user),
+      ...view,
       link,
     };
 

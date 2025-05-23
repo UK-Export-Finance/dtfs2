@@ -10,7 +10,7 @@ const CONSTANTS = require('../constants');
  * @returns {Object[]} An array of objects representing facilities that can be resubmitted,
  * each containing the facility's name and ID.
  */
-const facilitiesChangedToIssuedAsArray = (application) => {
+const canResubmitIssuedFacilities = (application) => {
   const hasChanged = [];
 
   application.facilities.items.map((facility) => {
@@ -189,7 +189,7 @@ const coverDatesConfirmed = (facilities) => {
  * @param {Object} application - The application object containing facility data.
  * @returns {boolean} Returns `true` if one or more facilities have been issued, otherwise `false`.
  */
-const isFacilityResubmissionAvailable = (application) => facilitiesChangedToIssuedAsArray(application).length > 0;
+const isFacilityResubmissionAvailable = (application) => canResubmitIssuedFacilities(application).length > 0;
 
 /**
  * Helper function ascertain whether the facility confirmation message should appear or not.
@@ -231,7 +231,7 @@ const isFacilityAmendmentInProgress = (application) => {
 module.exports = {
   areUnissuedFacilitiesPresent,
   getUnissuedFacilitiesAsArray,
-  facilitiesChangedToIssuedAsArray,
+  canResubmitIssuedFacilities,
   getIssuedFacilitiesAsArray,
   getFacilityCoverStartDate,
   coverDatesConfirmed,

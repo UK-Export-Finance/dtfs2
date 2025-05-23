@@ -48,11 +48,11 @@ const makerCanReSubmit = (maker, application) => {
     CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
     CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED,
   ];
-  let facilitiesChangedToIssued = true;
+  let canResubmitIssuedFacilities = true;
 
   // only if AIN -> ensures a facility has changed to issued before resubmitting to bank
   if (application.status === CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED) {
-    facilitiesChangedToIssued = isFacilityResubmissionAvailable(application);
+    canResubmitIssuedFacilities = isFacilityResubmissionAvailable(application);
   }
   const coverDateConfirmed = getIssuedFacilitiesAsArray(application.facilities).length > 0 ? coverDatesConfirmed(application.facilities) : true;
   const ukefDecisionAccepted = application.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN ? true : application.ukefDecisionAccepted;
@@ -62,7 +62,7 @@ const makerCanReSubmit = (maker, application) => {
   return (
     Boolean(ukefDecisionAccepted) &&
     coverDateConfirmed &&
-    facilitiesChangedToIssued &&
+    canResubmitIssuedFacilities &&
     acceptableStatus.includes(application.status) &&
     makerAuthorised &&
     facilitiesAreCompleted
