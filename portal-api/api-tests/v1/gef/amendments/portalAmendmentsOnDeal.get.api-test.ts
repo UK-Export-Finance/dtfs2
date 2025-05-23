@@ -12,7 +12,7 @@ import app from '../../../../src/createApp';
 import testUserCache from '../../../api-test-users';
 
 import ROLES, { MAKER } from '../../../../src/v1/roles/roles';
-import { getAmendmentsOnDealUrl } from './amendment-urls';
+import { getPortalAmendmentsOnDealUrl } from './amendment-urls';
 import createApi from '../../../api';
 import { TestUser } from '../../../types/test-user';
 import { withRoleAuthorisationTests } from '../../../common-tests/role-authorisation-tests';
@@ -55,21 +55,21 @@ describe('/v1/gef/deals/:dealId/amendments', () => {
     });
 
     withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => get(getAmendmentsOnDealUrl({ dealId: validDealId })),
+      makeRequestWithoutAuthHeader: () => get(getPortalAmendmentsOnDealUrl({ dealId: validDealId })),
       makeRequestWithAuthHeader: (authHeader: string) =>
-        get(getAmendmentsOnDealUrl({ dealId: validDealId, statuses }), { headers: { Authorization: authHeader } }),
+        get(getPortalAmendmentsOnDealUrl({ dealId: validDealId, statuses }), { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: Object.values(ROLES),
       getUserWithRole: (role: Role) => testUsers().withRole(role).one() as TestUser,
-      makeRequestAsUser: (user: TestUser) => as(user).get(getAmendmentsOnDealUrl({ dealId: validDealId, statuses })),
+      makeRequestAsUser: (user: TestUser) => as(user).get(getPortalAmendmentsOnDealUrl({ dealId: validDealId, statuses })),
       successStatusCode: HttpStatusCode.Ok,
     });
 
     it(`should return a ${HttpStatusCode.BadRequest} response when deal id path param is invalid`, async () => {
       // Arrange
-      const url = getAmendmentsOnDealUrl({ dealId: invalidId, statuses });
+      const url = getPortalAmendmentsOnDealUrl({ dealId: invalidId, statuses });
 
       // Act
       const response = await as(aMaker).get(url);
@@ -102,7 +102,7 @@ describe('/v1/gef/deals/:dealId/amendments', () => {
       };
 
       jest.mocked(getPortalFacilityAmendmentsOnDealMock).mockResolvedValue([amendment]);
-      const url = getAmendmentsOnDealUrl({ dealId, statuses });
+      const url = getPortalAmendmentsOnDealUrl({ dealId, statuses });
 
       // Act
       const response = await as(aMaker).get(url);

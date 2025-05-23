@@ -1,7 +1,7 @@
 import { format, fromUnixTime } from 'date-fns';
 import dotenv from 'dotenv';
 import { DATE_FORMATS, DEAL_SUBMISSION_TYPE, DEAL_STATUS, aPortalSessionUser, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
-import { getCurrencySymbol } from '../facility-value/get-currency-symbol';
+import { getCurrencySymbol } from '../../../utils/get-currency-symbol';
 import { Deal } from '../../../types/deal';
 import mapSubmittedToCheckerEmailVariables from './map-submitted-to-checker-email-variables';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';

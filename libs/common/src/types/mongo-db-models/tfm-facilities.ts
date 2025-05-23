@@ -56,11 +56,13 @@ interface BaseAmendment {
   value?: number | null;
   currency?: Currency | null;
   effectiveDate?: UnixTimestampSeconds;
+  facilityType?: string;
   createdBy?: {
     username: string;
     name: string;
     email: string;
   };
+  referenceNumber?: string | null;
 }
 
 /**
@@ -131,7 +133,6 @@ export interface AmendmentsEligibilityCriterionWithAnswer extends AmendmentsElig
 export interface PortalFacilityAmendment extends BaseAmendment {
   type: typeof AMENDMENT_TYPES.PORTAL;
   status: PortalAmendmentStatus;
-  referenceNumber?: string;
   eligibilityCriteria: {
     version: number;
     criteria: AmendmentsEligibilityCriterionWithAnswer[];

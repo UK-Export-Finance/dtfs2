@@ -5,6 +5,7 @@ module.exports = {
   aboutFacility: require('./about-facility'),
   applicationActivities: require('./application-activities'),
   applicationDetails: require('./application-details'),
+  applicationAmendments: require('./application-amendments'),
   applicationPreview: require('./application-preview'),
   applicationStatusBanner: require('./application-status-banner'),
   applicationSubmission: require('./application-submission'),
