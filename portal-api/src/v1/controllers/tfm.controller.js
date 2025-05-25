@@ -64,7 +64,7 @@ exports.tfmDeal = async (req, res) => {
 
     if (!dealId) {
       console.error('Invalid TFM deal ID %s provided', dealId);
-      return res.status(HttpStatusCode.BadRequest).send(`Invalid TFM deal ID provided ${dealId}`);
+      return res.status(HttpStatusCode.BadRequest).send('Invalid TFM deal ID provided');
     }
 
     const response = await getTfmDeal(dealId);
