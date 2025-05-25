@@ -78,7 +78,7 @@ export class EntraIdService {
    * state parameter to protect against CSRF attacks, and encodes the state
    * as a base64 string.
    *
-   * @param {GetAuthCodeUrlParams} params - Parameters for generating the authorization code URL.
+   * @param {GetAuthCodeUrlParams} successRedirect - Parameters for generating the authorization code URL.
    * @returns {Promise<GetAuthCodeUrlResponse>} A promise that resolves with the authorization code URL
    * and the request details used to generate it.
    *
