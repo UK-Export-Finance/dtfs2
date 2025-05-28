@@ -1,5 +1,6 @@
 import { FacilityAllTypeAmendmentWithUkefId } from '../types/portal/amendment';
 /**
+ * Creates a reference number for an amendment based on the number of amendments already on the facility and the UKEF facility id.
  * @param amendmentsOnFacility - the deal id
  * @param ukefFacilityId - the ukefFacility id
  * @returns the reference number

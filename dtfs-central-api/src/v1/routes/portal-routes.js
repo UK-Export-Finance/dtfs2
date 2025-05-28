@@ -854,6 +854,8 @@ portalRouter
  *                $ref: '#/definitions/PortalAmendment'
  *       404:
  *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
 portalRouter
   .route('/deals/:dealId/all-types-amendments')

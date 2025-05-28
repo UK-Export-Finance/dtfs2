@@ -671,9 +671,13 @@ const getFacilityAmendmentsOnDeal = async (dealId, statuses) => {
       headers: headers.central,
     });
 
+    if (!response?.data) {
+      throw new Error('Invalid response received');
+    }
+
     return response.data;
   } catch (error) {
-    console.error('Error getting facility amendments on deal with id %s: %o', dealId, error);
+    console.error('Error getting facility amendments on deal with id %s %o', dealId, error);
     throw error;
   }
 };
