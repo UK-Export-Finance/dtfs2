@@ -85,6 +85,7 @@ export class TfmFacilitiesRepo {
   }): Promise<(PortalFacilityAmendment | TfmFacilityAmendment)[]> {
     const collection = await this.getCollection();
 
+    /* Find facilities on the deal that have amendments with a reference number and amendment id */
     const facilitiesOnDealWithAmendments = await collection
       .find(
         {
@@ -100,22 +101,35 @@ export class TfmFacilitiesRepo {
       )
       .toArray();
 
+    /* If facilities with amendments containing both referenceNumber and amendmentId are found,
+       flatten all amendments, enrich them with facility details, filter by the provided statuses (if any),
+       and sort the results by the most recently updated amendment. */
     if (facilitiesOnDealWithAmendments?.length) {
       const matchingAmendments = facilitiesOnDealWithAmendments.flatMap((facility) =>
-        (facility.amendments || []).map((amendment) => ({
-          ...amendment,
-          facilityType: facility.facilitySnapshot?.name,
-          ukefFacilityId: facility.facilitySnapshot?.ukefFacilityId,
-          currency: facility.facilitySnapshot?.currency.id,
-        })),
+        (facility.amendments || []).map((amendment) => {
+          const { type, ukefFacilityId, currency } = facility.facilitySnapshot;
+          return {
+            ...amendment,
+            facilityType: type,
+            ukefFacilityId,
+            currency: currency.id,
+          };
+        }),
       );
 
       const filteredAndSortingAmendments = matchingAmendments
-        .filter((amendment) => amendment.amendmentId && amendment.referenceNumber && (!statuses || statuses.includes(amendment.status)))
+        .filter((amendment) => {
+          const hasAmendmentId = Boolean(amendment.amendmentId);
+          const hasAmendmentReference = Boolean(amendment.referenceNumber);
+          const hasCorrectAmendmentStatus = !statuses || statuses.includes(amendment.status);
+
+          return hasAmendmentId && hasAmendmentReference && hasCorrectAmendmentStatus;
+        })
         .sort((a, b) => b.updatedAt - a.updatedAt);
 
       return filteredAndSortingAmendments;
     }
+
     return [];
   }
 

@@ -26,11 +26,12 @@ export const mapApplicationAmendmentsOnDeal = (amendments: FacilityAllTypeAmendm
     const amendmentRows = getAmendmentCreatedByRow(amendment);
     const effectiveDate = amendment.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY) : '';
     const hasFutureEffectiveDate = new Date(fromUnixTime(amendment.effectiveDate ?? 0)) > today;
+    const type = `${amendment.type} facility`;
 
     return {
       referenceNumber,
       amendmentRows,
-      type: amendment.type,
+      type,
       facilityId: amendment.facilityId.toString(),
       amendmentId: amendment.amendmentId.toString(),
       effectiveDate,

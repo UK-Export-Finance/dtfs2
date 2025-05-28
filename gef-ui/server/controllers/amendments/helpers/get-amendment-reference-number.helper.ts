@@ -1,6 +1,7 @@
 import { PORTAL_AMENDMENT_STATUS, FacilityAllTypeAmendmentWithUkefId, TFM_AMENDMENT_STATUS, createAmendmentReferenceNumber } from '@ukef/dtfs2-common';
 import api from '../../../services/api';
 /**
+ * Gets the amendment reference number for a given deal and facility.
  * @param dealId - the deal id
  * @param facilityId - the facility id
  * @param userToken - the user token
@@ -25,7 +26,8 @@ export const getAmendmentReferenceNumber = async (dealId: string, facilityId: st
     const amendmentsOnFacility: FacilityAllTypeAmendmentWithUkefId[] = amendmentsOnDeal.filter(
       (amendment: FacilityAllTypeAmendmentWithUkefId) => amendment.facilityId.toString() === facilityId,
     );
-    const referenceNumber = createAmendmentReferenceNumber(amendmentsOnFacility, facility.ukefFacilityId);
+    const { ukefFacilityId } = facility;
+    const referenceNumber = createAmendmentReferenceNumber(amendmentsOnFacility, ukefFacilityId);
 
     return referenceNumber;
   } catch (error) {

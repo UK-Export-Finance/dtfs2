@@ -52,7 +52,7 @@ describe('mapApplicationAmendmentsOnDeal', () => {
       amendmentId: portalAmendment.amendmentId && portalAmendment.amendmentId.toString(),
       hasFutureEffectiveDate: false,
       referenceNumber: portalAmendment.referenceNumber,
-      type: portalAmendment.type,
+      type: `${portalAmendment.type} facility`,
     },
   ];
 
@@ -92,7 +92,7 @@ describe('mapApplicationAmendmentsOnDeal', () => {
       amendmentId: tfmAmendment.amendmentId && tfmAmendment.amendmentId.toString(),
       hasFutureEffectiveDate: false,
       referenceNumber: tfmAmendment.referenceNumber,
-      type: tfmAmendment.type,
+      type: `${tfmAmendment.type} facility`,
     },
   ];
 

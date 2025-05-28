@@ -20,7 +20,7 @@ const aDraftPortalAmendment = {
 };
 const anAcknowledgedPortalAmendment = {
   ...aPortalFacilityAmendment({ status: ACKNOWLEDGED, referenceNumber: '12345678-001' }),
-  facilityType: 'facilityName',
+  facilityType: 'Cash',
   ukefFacilityId: '12345678',
   currency: CURRENCY.GBP,
 };
@@ -32,7 +32,7 @@ const aReadyForCheckersApprovalPortalAmendment = {
 const aTfmAmendment = { ...aTfmFacilityAmendment(), currency: CURRENCY.GBP };
 const aCompletedTfmAmendment = {
   ...aCompletedTfmFacilityAmendment(),
-  facilityType: 'facilityName',
+  facilityType: 'Cash',
   ukefFacilityId: '12345678',
   currency: CURRENCY.GBP,
   referenceNumber: '12345678-002',
