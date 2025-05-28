@@ -1,5 +1,5 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
-const { TFM_AMENDMENT_STATUS, createReferenceNumber } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS, createAmendmentReferenceNumber } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const api = require('../../../api');
 const { formattedNumber } = require('../../../helpers/number');
@@ -55,8 +55,11 @@ const postAmendmentAnswers = async (req, res) => {
   const { dealId, requireUkefApproval } = amendment;
   const facility = await api.getFacility(facilityId, userToken);
 
-  const amendmentsOnFacility = await api.getAcknowledgedCompletedAmendments(facilityId, userToken);
-  const referenceNumber = createReferenceNumber(amendmentsOnFacility, facility.ukefFacilityId);
+  const { response } = await api.getAcknowledgedCompletedAmendments(dealId, userToken);
+  const amendmentsOnDeal = response.data;
+  const amendmentsOnFacility = amendmentsOnDeal.filter((amendmentOnDeal) => amendmentOnDeal.facilityId.toString() === facilityId);
+  const referenceNumber = createAmendmentReferenceNumber(amendmentsOnFacility, facility.facilitySnapshot.ukefFacilityId);
+
   try {
     const payload = {
       submittedByPim: true,

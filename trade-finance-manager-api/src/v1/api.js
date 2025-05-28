@@ -442,6 +442,27 @@ const findFacilitiesByDealId = async (dealId) => {
   }
 };
 
+const getAcknowledgedCompletedAmendments = async (dealId) => {
+  const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
+  if (isValid) {
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/amendments/acknowledged-or-completed`,
+        headers: headers.central,
+      });
+
+      return { status: 200, data: response.data };
+    } catch (error) {
+      console.error('Unable to get the acknowledged or completed amendments %o', error);
+      return { status: error?.response?.status || 500, data: 'Failed to get  the acknowledged or completed amendments' };
+    }
+  } else {
+    console.error('Invalid deal Id %s', dealId);
+    return { status: 400, data: 'Invalid deal Id provided' };
+  }
+};
+
 const updateFacility = async ({ facilityId, tfmUpdate, auditDetails }) => {
   try {
     const isValidFacilityId = isValidMongoId(facilityId);
@@ -529,27 +550,6 @@ const getAmendmentInProgress = async (facilityId) => {
     } catch (error) {
       console.error('Unable to get the amendment in progress %o', error);
       return { status: error?.response?.status || 500, data: 'Failed to get the amendment in progress' };
-    }
-  } else {
-    console.error('Invalid facility Id %s', facilityId);
-    return { status: 400, data: 'Invalid facility Id provided' };
-  }
-};
-
-const getAcknowledgedCompletedAmendments = async (facilityId) => {
-  const isValid = isValidMongoId(facilityId) && hasValidUri(DTFS_CENTRAL_API_URL);
-  if (isValid) {
-    try {
-      const response = await axios({
-        method: 'get',
-        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}/amendments/acknowledged-or-completed`,
-        headers: headers.central,
-      });
-
-      return { status: 200, data: response.data };
-    } catch (error) {
-      console.error('Unable to get the acknowledged or completed amendments %o', error);
-      return { status: error?.response?.status || 500, data: 'Failed to get  the acknowledged or completed amendments' };
     }
   } else {
     console.error('Invalid facility Id %s', facilityId);

@@ -113,12 +113,6 @@ export const getAmendmentsByFacilityId = async (req: Request, res: Response) => 
           amendment = await TfmFacilitiesRepo.findTfmAmendmentsByFacilityIdAndStatus(facilityId, TFM_AMENDMENT_STATUS.COMPLETED);
         }
         break;
-      case AMENDMENT_QUERY_STATUSES.ACKNOWLEDGEDORCOMPLETED:
-        amendment = await TfmFacilitiesRepo.findAllTypeAmendmentsByFacilityIdAndStatus({
-          facilityId,
-          statuses: [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, TFM_AMENDMENT_STATUS.COMPLETED],
-        });
-        break;
       default:
         if (amendmentIdOrStatus) {
           if (!ObjectId.isValid(amendmentIdOrStatus)) {
@@ -159,6 +153,12 @@ export const getAmendmentsByDealId = async (req: Request, res: Response) => {
         } else {
           amendment = await TfmFacilitiesRepo.findTfmAmendmentsByDealIdAndStatus(dealId, TFM_AMENDMENT_STATUS.COMPLETED);
         }
+        break;
+      case AMENDMENT_QUERY_STATUSES.ACKNOWLEDGEDORCOMPLETED:
+        amendment = await TfmFacilitiesRepo.findAllTypeAmendmentsByDealIdAndStatus({
+          dealId,
+          statuses: [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, TFM_AMENDMENT_STATUS.COMPLETED],
+        });
         break;
       default:
         amendment = await TfmFacilitiesRepo.findAmendmentsByDealId(dealId);

@@ -637,22 +637,27 @@ const getCompletedAmendment = async (facilityId, token) => {
   }
 };
 
-const getAcknowledgedCompletedAmendments = async (facilityId, token) => {
+/**
+ * @param {string} dealId - The deal ID
+ * @param {string} token - The user token
+ * @returns {Promise<import('@ukef/dtfs2-common').FacilityAllTypeAmendmentWithUkefId[]>}
+ */
+const getAcknowledgedCompletedAmendments = async (dealId, token) => {
   try {
-    const isValidFacilityId = isValidMongoId(facilityId);
+    const isValidDealId = isValidMongoId(dealId);
 
-    if (!isValidFacilityId) {
-      console.error('getAcknowledgedCompletedAmendments: Invalid facility id provided %s', facilityId);
-      return { status: 400, data: 'Invalid facility id' };
+    if (!isValidDealId) {
+      console.error('getAcknowledgedCompletedAmendments: Invalid deal id provided %s', dealId);
+      return { status: 400, data: 'Invalid deal id' };
     }
 
     const response = await axios({
       method: 'get',
-      url: `${TFM_API_URL}/v1/facilities/${facilityId}/amendments/acknowledged-or-completed`,
+      url: `${TFM_API_URL}/v1/deals/${dealId}/amendments/acknowledged-or-completed`,
       headers: generateHeadersWithToken(token),
     });
 
-    return { status: 200, data: response.data };
+    return { status: 200, response: response.data };
   } catch (error) {
     console.error('Unable to get the acknowledged or completed amendments %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get completed amendment' };

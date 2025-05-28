@@ -142,9 +142,6 @@ const getAmendmentByFacilityId = async (req, res) => {
         amendment = await api.getCompletedAmendment(facilityId);
       }
       break;
-    case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.ACKNOWLEDGEDORCOMPLETED:
-      amendment = await api.getAcknowledgedCompletedAmendments(facilityId);
-      break;
     default:
       if (ObjectId.isValid(amendmentIdOrStatus)) {
         amendment = await api.getAmendmentById(facilityId, amendmentIdOrStatus);
@@ -171,6 +168,9 @@ const getAmendmentsByDealId = async (req, res) => {
       } else {
         amendment = await api.getCompletedAmendmentByDealId(dealId);
       }
+      break;
+    case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.ACKNOWLEDGEDORCOMPLETED:
+      amendment = await api.getAcknowledgedCompletedAmendments(dealId);
       break;
     default:
       if (!status && !type) {
