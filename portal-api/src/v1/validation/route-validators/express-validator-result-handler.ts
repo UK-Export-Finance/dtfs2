@@ -8,6 +8,7 @@ import { validationResult } from 'express-validator';
  */
 export const handleExpressValidatorResult = (req: Request, res: Response, next: NextFunction): void => {
   const validationResults = validationResult(req);
+
   if (!validationResults.isEmpty()) {
     res.status(HttpStatusCode.BadRequest).json({ message: 'Bad Request', errors: validationResults.array() });
     return;

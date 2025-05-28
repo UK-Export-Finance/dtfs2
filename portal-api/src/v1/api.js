@@ -909,7 +909,7 @@ const deletePortalFacilityAmendment = async (facilityId, amendmentId, auditDetai
  */
 const getTfmTeam = async (teamId) => {
   try {
-    return axios({
+    return await axios({
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${teamId}`,
       headers: headers.central,
@@ -930,7 +930,7 @@ const getTfmTeam = async (teamId) => {
  */
 const getTfmDeal = async (dealId) => {
   try {
-    return axios({
+    return await axios({
       method: 'get',
       url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}`,
       headers: headers.central,
