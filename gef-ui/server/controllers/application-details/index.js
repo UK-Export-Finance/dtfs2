@@ -1,6 +1,6 @@
 const startCase = require('lodash/startCase');
 const { DEAL_TYPE, timeZoneConfig, DEAL_STATUS, PORTAL_AMENDMENT_INPROGRESS_STATUSES } = require('@ukef/dtfs2-common');
-const api = require('../../services/api');
+const { getTfmDeal, getAmendmentsOnDeal, getFacilities, getFacility } = require('../../services/api');
 const { canIssueUnissuedFacilities } = require('./canIssueUnissuedFacilities');
 const {
   mapSummaryList,
@@ -59,6 +59,16 @@ function buildHeader(app) {
   return { ...main, ...checker };
 }
 
+/**
+ * Builds the application body object for rendering application details.
+ *
+ * @async
+ * @function buildBody
+ * @param {Object} app - The application object containing all deal and facility data.
+ * @param {boolean} previewMode - Indicates if the application is in preview mode.
+ * @param {Object} user - The user object representing the current user.
+ * @returns {Promise<Object>} The constructed application body object with all relevant details for rendering.
+ */
 const buildBody = async (app, previewMode, user) => {
   const exporterUrl = `/gef/application-details/${app._id}`;
   const facilityUrl = `/gef/application-details/${app._id}/facilities`;
@@ -70,7 +80,7 @@ const buildBody = async (app, previewMode, user) => {
   const canResubmitIssueFacilities = canResubmitIssuedFacilities(app);
   const hasUkefDecisionAccepted = app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false;
   const dealCancelledStatus = [DEAL_STATUS.CANCELLED, DEAL_STATUS.PENDING_CANCELLATION];
-  const tfmDeal = await api.getTfmDeal({ dealId: app._id, userToken: apiToken });
+  const tfmDeal = await getTfmDeal({ dealId: app._id, userToken: apiToken });
 
   const mapSummaryParams = {
     app,
@@ -154,20 +164,49 @@ const buildBody = async (app, previewMode, user) => {
   return appBody;
 };
 
-function buildActions(app) {
+/**
+ * Builds an object representing available actions for a given application.
+ *
+ * @param {Object} app - The application object.
+ * @param {boolean} app.canSubmit - Indicates if the application can be submitted.
+ * @param {string[]} [app.userRoles] - Array of user roles associated with the application.
+ * @param {string} app.status - Current status of the application.
+ * @returns {Object} Actions object with boolean flags for each action.
+ * @returns {boolean} return.submit - Whether the submit action is available.
+ * @returns {boolean} return.abandon - Whether the abandon action is available.
+ */
+const buildActions = (app) => {
   return {
     submit: app.canSubmit,
     abandon: app.userRoles?.includes(MAKER) && [DEAL_STATUS.DRAFT, DEAL_STATUS.CHANGES_REQUIRED].includes(app.status),
   };
-}
+};
 
+/**
+ * Builds the view object for an application, combining header, body, and actions.
+ *
+ * @async
+ * @function
+ * @param {Object} app - The application data object.
+ * @param {boolean} previewMode - Flag indicating if the view is in preview mode.
+ * @param {Object} user - The user object requesting the view.
+ * @returns {Promise<Object>} The combined view object containing header, body, and actions.
+ */
 const buildView = async (app, previewMode, user) => {
   const header = buildHeader(app);
   const body = await buildBody(app, previewMode, user);
   const actions = buildActions(app);
+
   return { ...header, ...body, ...actions };
 };
 
+/**
+ * Determines the appropriate partial template to render based on the application's status and the current URL.
+ *
+ * @param {string} status - The current status of the application, expected to be a value from DEAL_STATUS.
+ * @param {string} url - The current URL or route segment, used to override the template in specific cases.
+ * @returns {string|undefined} The name of the partial template to render, or an empty string if none applies.
+ */
 const stateToPartial = (status, url) => {
   // Behaviour depending on application state
   const template = {
@@ -197,6 +236,19 @@ const stateToPartial = (status, url) => {
   return url in partials ? partials[url] : template[status];
 };
 
+/**
+ * Controller for handling the application details page.
+ *
+ * Retrieves application and facility details, checks user authorisation, determines the appropriate view and partial to render,
+ * and passes relevant data to the template. Handles special cases for facility-related partials and manages success/error messages.
+ *
+ * @async
+ * @function applicationDetails
+ * @param {import('express').Request} req - Express request object, containing route params, session, and flash messages.
+ * @param {import('express').Response} res - Express response object, used to render views or redirect.
+ * @param {import('express').NextFunction} next - Express next middleware function, called on error.
+ * @returns {Promise<void>} Renders the appropriate application details view or redirects on error/unauthorised access.
+ */
 const applicationDetails = async (req, res, next) => {
   const {
     params: { dealId, facilityId },
@@ -228,11 +280,8 @@ const applicationDetails = async (req, res, next) => {
 
     const userAuthorisationLevels = getUserAuthorisationLevelsToApplication(user, application);
     const previewMode = !userAuthorisationLevels.includes(AUTHORISATION_LEVEL.EDIT);
-
     const userRoles = user.roles;
-
     const amendmentDetails = await getSubmittedAmendmentDetails(application, userToken);
-
     const applicationData = {
       ...application,
       ...amendmentDetails,
@@ -246,16 +295,15 @@ const applicationDetails = async (req, res, next) => {
 
     if (facilitiesPartials.includes(url)) {
       if (url === 'cover-start-date') {
-        facility = getIssuedFacilitiesAsArray(await api.getFacilities({ dealId, userToken }));
+        facility = getIssuedFacilitiesAsArray(await getFacilities({ dealId, userToken }));
       } else if (url === 'confirm-cover-start-date') {
-        facility = getFacilityCoverStartDate(await api.getFacility({ facilityId, userToken }));
+        facility = getFacilityCoverStartDate(await getFacility({ facilityId, userToken }));
       } else if (url === 'unissued-facilities') {
-        facility = getUnissuedFacilitiesAsArray(await api.getFacilities({ dealId, userToken }), application);
+        facility = getUnissuedFacilitiesAsArray(await getFacilities({ dealId, userToken }), application);
       }
     }
 
     const partial = stateToPartial(application.status, url);
-
     const view = await buildView(applicationData, previewMode, user);
 
     const params = {
@@ -287,7 +335,7 @@ const applicationDetails = async (req, res, next) => {
       params.link += '/unissued-facilities';
     }
 
-    const amendmentsUnderwayOnDeal = await api.getAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
+    const amendmentsUnderwayOnDeal = await getAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
 
     params.canIssuedFacilitiesBeAmended =
       canUserAmendIssuedFacilities(application.submissionType, application.status, userRoles) && !amendmentsUnderwayOnDeal.length;
@@ -299,9 +347,18 @@ const applicationDetails = async (req, res, next) => {
   }
 };
 
+/**
+ * Handles POST requests for application details.
+ * Redirects the user to the submit page for the specified deal.
+ *
+ * @param {import('express').Request} req - Express request object, containing route parameters.
+ * @param {import('express').Response} res - Express response object, used to redirect the client.
+ * @returns {void}
+ */
 const postApplicationDetails = (req, res) => {
   const { params } = req;
   const { dealId } = params;
+
   return res.redirect(`/gef/application-details/${dealId}/submit`);
 };
 
