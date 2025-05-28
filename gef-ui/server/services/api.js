@@ -652,7 +652,9 @@ const getTfmDeal = async ({ dealId, userToken }) => {
       throw new Error('Invalid deal ID');
     }
 
-    const response = await Axios.get(`/tfm/deal/${dealId}`, { ...config(userToken) });
+    const response = await Axios.get(`/tfm/deal/${dealId}`, {
+      ...config(userToken),
+    });
 
     if (!response?.data) {
       console.error('Invalid TFM deal response received for deal %s', dealId);
@@ -662,7 +664,7 @@ const getTfmDeal = async ({ dealId, userToken }) => {
     return response.data;
   } catch (error) {
     console.error('Unable to get TFM deal %s %o', dealId, error);
-    throw error;
+    return false;
   }
 };
 

@@ -70,98 +70,103 @@ function buildHeader(app) {
  * @returns {Promise<Object>} The constructed application body object with all relevant details for rendering.
  */
 const buildBody = async (app, previewMode, user) => {
-  const exporterUrl = `/gef/application-details/${app._id}`;
-  const facilityUrl = `/gef/application-details/${app._id}/facilities`;
-  const ukefReviewAvailable = isUkefReviewAvailable(app.status, app.ukefDecision);
-  const ukefReviewPositive = isUkefReviewPositive(app.status, app.ukefDecision);
-  const coverDates = coverDatesConfirmed(app.facilities);
-  const hasChangedFacilities = isFacilityResubmissionAvailable(app);
-  const unissuedFacilitiesPresent = areUnissuedFacilitiesPresent(app);
-  const canResubmitIssueFacilities = canResubmitIssuedFacilities(app);
-  const hasUkefDecisionAccepted = app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false;
-  const dealCancelledStatus = [DEAL_STATUS.CANCELLED, DEAL_STATUS.PENDING_CANCELLATION];
-  const tfmDeal = await getTfmDeal({ dealId: app._id, userToken: apiToken });
+  try {
+    const exporterUrl = `/gef/application-details/${app._id}`;
+    const facilityUrl = `/gef/application-details/${app._id}/facilities`;
+    const ukefReviewAvailable = isUkefReviewAvailable(app.status, app.ukefDecision);
+    const ukefReviewPositive = isUkefReviewPositive(app.status, app.ukefDecision);
+    const coverDates = coverDatesConfirmed(app.facilities);
+    const hasChangedFacilities = isFacilityResubmissionAvailable(app);
+    const unissuedFacilitiesPresent = areUnissuedFacilitiesPresent(app);
+    const canResubmitIssueFacilities = canResubmitIssuedFacilities(app);
+    const hasUkefDecisionAccepted = app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false;
+    const dealCancelledStatus = [DEAL_STATUS.CANCELLED, DEAL_STATUS.PENDING_CANCELLATION];
+    const tfmDeal = await getTfmDeal({ dealId: app._id, userToken: apiToken });
 
-  const mapSummaryParams = {
-    app,
-    user,
-    hasChangedFacilities,
-  };
+    const mapSummaryParams = {
+      app,
+      user,
+      hasChangedFacilities,
+    };
 
-  const appBody = {
-    application: app,
-    status: app.status,
-    isAutomaticCover: app.submissionType === DEAL_SUBMISSION_TYPE.AIN,
-    exporter: {
-      status: app.exporterStatus,
-      rows: mapSummaryList(
-        { details: app.exporter }, // wrap in details because mapSummaryList relies on this.
-        exporterItems(exporterUrl, {
-          showIndustryChangeLink: app.exporter?.industries?.length > 1,
-          correspondenceAddressLink: !app.exporter.correspondenceAddress,
-        }),
-        mapSummaryParams,
-        previewMode,
-      ),
-    },
-    eligibility: {
-      status: app.eligibilityCriteriaStatus,
-    },
-    facilities: {
-      status: app.facilitiesStatus,
-      data: app.facilities.items
-        .map((item) => ({
-          heading: startCase(FACILITY_TYPE[item.details.type.toUpperCase()].toLowerCase()),
-          rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details, app.version), mapSummaryParams, previewMode),
-          createdAt: item.details.createdAt,
-          facilityId: item.details._id,
-          // facilityName added for aria-label for accessibility
-          facilityName: item.details.name,
-          // ukefFacilityId required for html facility summary table id
-          ukefFacilityId: item.details.ukefFacilityId,
-          stage: item.details?.facilityStage ?? (item.details.hasBeenIssued ? STAGE.ISSUED : STAGE.UNISSUED),
-          // isFacilityWithAmendmentInProgress required for html. A link see details will appear to the user for facility with amendment in progress
-          isFacilityWithAmendmentInProgress: item.details._id === app.facilityIdWithAmendmentInProgress,
-        }))
-        .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
-    },
-    supportingInfo: {
-      ...app.supportingInformation,
-      status: app.supportingInfoStatus,
-    },
-    bankInternalRefName: app.bankInternalRefName,
-    additionalRefName: app.additionalRefName,
-    dealId: app._id,
-    makerCanSubmit: app.canSubmit,
-    checkerCanSubmit: app.checkerCanSubmit,
-    makerCanReSubmit: makerCanReSubmit(userSession, app),
-    ukefDecision: app.ukefDecision,
-    unissuedFacilitiesPresent,
-    canResubmitIssueFacilities: canResubmitIssueFacilities.length,
-    resubmitIssuedFacilities: canResubmitIssueFacilities,
-    isUkefReviewAvailable: ukefReviewAvailable,
-    isUkefReviewPositive: ukefReviewPositive,
-    ukefDecisionAccepted: hasUkefDecisionAccepted,
-    coverDatesConfirmed: coverDates,
-    renderReviewDecisionLink: ukefReviewAvailable && ukefReviewPositive && !coverDates && !hasUkefDecisionAccepted && app.userRoles.includes(MAKER),
-    previewMode,
-    hasChangedFacilities,
-    userRoles: app.userRoles,
-    displayComments: displayTaskComments(app),
-    displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
-    canIssueFacilities: canIssueUnissuedFacilities({
-      portalDeal: app,
-      tfmDeal,
+    const appBody = {
+      application: app,
+      status: app.status,
+      isAutomaticCover: app.submissionType === DEAL_SUBMISSION_TYPE.AIN,
+      exporter: {
+        status: app.exporterStatus,
+        rows: mapSummaryList(
+          { details: app.exporter }, // wrap in details because mapSummaryList relies on this.
+          exporterItems(exporterUrl, {
+            showIndustryChangeLink: app.exporter?.industries?.length > 1,
+            correspondenceAddressLink: !app.exporter.correspondenceAddress,
+          }),
+          mapSummaryParams,
+          previewMode,
+        ),
+      },
+      eligibility: {
+        status: app.eligibilityCriteriaStatus,
+      },
+      facilities: {
+        status: app.facilitiesStatus,
+        data: app.facilities.items
+          .map((item) => ({
+            heading: startCase(FACILITY_TYPE[item.details.type.toUpperCase()].toLowerCase()),
+            rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details, app.version), mapSummaryParams, previewMode),
+            createdAt: item.details.createdAt,
+            facilityId: item.details._id,
+            // facilityName added for aria-label for accessibility
+            facilityName: item.details.name,
+            // ukefFacilityId required for html facility summary table id
+            ukefFacilityId: item.details.ukefFacilityId,
+            stage: item.details?.facilityStage ?? (item.details.hasBeenIssued ? STAGE.ISSUED : STAGE.UNISSUED),
+            // isFacilityWithAmendmentInProgress required for html. A link see details will appear to the user for facility with amendment in progress
+            isFacilityWithAmendmentInProgress: item.details._id === app.facilityIdWithAmendmentInProgress,
+          }))
+          .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
+      },
+      supportingInfo: {
+        ...app.supportingInformation,
+        status: app.supportingInfoStatus,
+      },
+      bankInternalRefName: app.bankInternalRefName,
+      additionalRefName: app.additionalRefName,
+      dealId: app._id,
+      makerCanSubmit: app.canSubmit,
+      checkerCanSubmit: app.checkerCanSubmit,
+      makerCanReSubmit: makerCanReSubmit(userSession, app),
+      ukefDecision: app.ukefDecision,
       unissuedFacilitiesPresent,
-      canResubmitIssueFacilities,
-      hasUkefDecisionAccepted,
-    }),
-    MIAReturnToMaker: isMIAWithoutChangedToIssuedFacilities(app),
-    returnToMakerNoFacilitiesChanged: returnToMakerNoFacilitiesChanged(app, hasChangedFacilities),
-    canCloneDeal: !dealCancelledStatus.includes(app.status),
-  };
+      canResubmitIssueFacilities: canResubmitIssueFacilities.length,
+      resubmitIssuedFacilities: canResubmitIssueFacilities,
+      isUkefReviewAvailable: ukefReviewAvailable,
+      isUkefReviewPositive: ukefReviewPositive,
+      ukefDecisionAccepted: hasUkefDecisionAccepted,
+      coverDatesConfirmed: coverDates,
+      renderReviewDecisionLink: ukefReviewAvailable && ukefReviewPositive && !coverDates && !hasUkefDecisionAccepted && app.userRoles.includes(MAKER),
+      previewMode,
+      hasChangedFacilities,
+      userRoles: app.userRoles,
+      displayComments: displayTaskComments(app),
+      displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
+      canIssueFacilities: canIssueUnissuedFacilities({
+        portalDeal: app,
+        tfmDeal,
+        unissuedFacilitiesPresent,
+        canResubmitIssueFacilities,
+        hasUkefDecisionAccepted,
+      }),
+      MIAReturnToMaker: isMIAWithoutChangedToIssuedFacilities(app),
+      returnToMakerNoFacilitiesChanged: returnToMakerNoFacilitiesChanged(app, hasChangedFacilities),
+      canCloneDeal: !dealCancelledStatus.includes(app.status),
+    };
 
-  return appBody;
+    return appBody;
+  } catch (error) {
+    console.error('Unable to build GEF application body %o', error);
+    throw new Error('Unable to build GEF application body');
+  }
 };
 
 /**
@@ -193,11 +198,16 @@ const buildActions = (app) => {
  * @returns {Promise<Object>} The combined view object containing header, body, and actions.
  */
 const buildView = async (app, previewMode, user) => {
-  const header = buildHeader(app);
-  const body = await buildBody(app, previewMode, user);
-  const actions = buildActions(app);
+  try {
+    const header = buildHeader(app);
+    const body = await buildBody(app, previewMode, user);
+    const actions = buildActions(app);
 
-  return { ...header, ...body, ...actions };
+    return { ...header, ...body, ...actions };
+  } catch (error) {
+    console.error('Unable to build GEF view %o', error);
+    throw error('Unable to build GEF view');
+  }
 };
 
 /**
@@ -342,7 +352,7 @@ const applicationDetails = async (req, res, next) => {
 
     return res.render(`partials/${partial}.njk`, params);
   } catch (error) {
-    console.error('Unable to build application view %o', error);
+    console.error('Unable to build GEF application details %o', error);
     return next(error);
   }
 };
