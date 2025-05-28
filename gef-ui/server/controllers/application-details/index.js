@@ -127,7 +127,8 @@ const buildBody = async (app, previewMode, user) => {
     makerCanReSubmit: makerCanReSubmit(userSession, app),
     ukefDecision: app.ukefDecision,
     unissuedFacilitiesPresent,
-    canResubmitIssueFacilities,
+    canResubmitIssueFacilities: canResubmitIssueFacilities.length,
+    resubmitIssuedFacilities: canResubmitIssueFacilities,
     isUkefReviewAvailable: ukefReviewAvailable,
     isUkefReviewPositive: ukefReviewPositive,
     ukefDecisionAccepted: hasUkefDecisionAccepted,
@@ -138,7 +139,7 @@ const buildBody = async (app, previewMode, user) => {
     userRoles: app.userRoles,
     displayComments: displayTaskComments(app),
     displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
-    canUpdateUnissuedFacilities: canIssueUnissuedFacilities({
+    canIssueFacilities: canIssueUnissuedFacilities({
       portalDeal: app,
       tfmDeal,
       unissuedFacilitiesPresent,

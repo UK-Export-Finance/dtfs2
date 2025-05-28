@@ -1,6 +1,4 @@
-const { ACBS_FACILITY_STAGE } = require('@ukef/dtfs2-common');
-const CONSTANTS = require('../../constants/index');
-const { MAKER } = require('../../constants/roles');
+const { ROLES, DEAL_SUBMISSION_TYPE, ACBS_FACILITY_STAGE } = require('@ukef/dtfs2-common');
 
 /**
  * Determines if an unissued facility(ies) can be issued for a given deal.
@@ -25,14 +23,14 @@ const { MAKER } = require('../../constants/roles');
  */
 const canIssueUnissuedFacilities = ({ portalDeal, tfmDeal, unissuedFacilitiesPresent, canResubmitIssueFacilities, hasUkefDecisionAccepted }) => {
   // User role
-  const isMaker = portalDeal.userRoles?.includes(MAKER);
+  const isMaker = portalDeal.userRoles?.length ? portalDeal.userRoles?.includes(ROLES.MAKER) : false;
 
   // Facility re-submission
   const canResubmitIssuedFacilities = Boolean(canResubmitIssueFacilities?.length);
 
   // Submission type
-  const isAin = portalDeal.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.AIN;
-  const isMin = portalDeal.submissionType === CONSTANTS.DEAL_SUBMISSION_TYPE.MIN;
+  const isAin = portalDeal.submissionType === DEAL_SUBMISSION_TYPE.AIN;
+  const isMin = portalDeal.submissionType === DEAL_SUBMISSION_TYPE.MIN;
   const isMinApproved = isMin && hasUkefDecisionAccepted;
 
   // ACBS
