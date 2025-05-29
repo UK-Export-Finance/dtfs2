@@ -1,6 +1,7 @@
 import axios, { HttpStatusCode } from 'axios';
+import { ObjectId } from 'mongodb';
 import { HEADERS, ROLES, ALL_TEAM_IDS } from '@ukef/dtfs2-common';
-import { getTfmDeal, getTfmTeam } from './api';
+import { getTfmDeal, getTfmTeam, findGefFacilitiesByDealId } from './api';
 
 const { DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY } = process.env;
 const headers = {
@@ -318,6 +319,73 @@ describe('getTfmDeal', () => {
       expect(console.error).toHaveBeenCalledWith('Unable to get the TFM deal with ID %s %o', dealId, error);
       expect(console.error).toHaveBeenCalledTimes(1);
       expect(response).toStrictEqual(expectedResponse);
+    });
+  });
+});
+
+describe('findGefFacilitiesByDealId ', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+    jest.restoreAllMocks();
+  });
+
+  const dealId = new ObjectId();
+
+  const mockResponse = [
+    {
+      _id: new ObjectId(),
+      hasBeenIssued: false,
+      dealId,
+    },
+    {
+      _id: new ObjectId(),
+      hasBeenIssued: true,
+      dealId,
+    },
+  ];
+
+  describe('when facilities are found', () => {
+    it('should return the facilities', async () => {
+      axios.mockResolvedValueOnce({ data: mockResponse });
+
+      const response = await findGefFacilitiesByDealId(dealId);
+
+      expect(response).toEqual(mockResponse);
+    });
+  });
+
+  describe('when an error occurs', () => {
+    it(`should return ${HttpStatusCode.InternalServerError} and a message`, async () => {
+      const error = new Error('Test error');
+      axios.mockRejectedValueOnce(error);
+
+      const response = await findGefFacilitiesByDealId(dealId);
+
+      const expectedResponse = {
+        status: HttpStatusCode.InternalServerError,
+        data: 'Error when finding facilities by dealId',
+      };
+
+      expect(response).toEqual(expectedResponse);
+    });
+  });
+
+  describe('when an error occurs with custom error code', () => {
+    it(`should return ${HttpStatusCode.BadGateway} and a message`, async () => {
+      const error = {
+        code: HttpStatusCode.BadGateway,
+        data: 'Bad gateway error',
+      };
+      axios.mockRejectedValueOnce(error);
+
+      const response = await findGefFacilitiesByDealId(dealId);
+
+      const expectedResponse = {
+        status: HttpStatusCode.BadGateway,
+        data: 'Error when finding facilities by dealId',
+      };
+
+      expect(response).toEqual(expectedResponse);
     });
   });
 });

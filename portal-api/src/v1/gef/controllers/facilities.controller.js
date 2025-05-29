@@ -7,6 +7,7 @@ const {
   DealNotFoundError,
   InvalidDealIdError,
   parseDealVersion,
+  mapFacilityFieldsToAmendmentFields,
 } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteOne, deleteMany } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
@@ -16,6 +17,7 @@ const { Facility } = require('../models/facilities');
 const { Application } = require('../models/application');
 const { calculateUkefExposure, calculateGuaranteeFee } = require('../calculations/facility-calculations');
 const { InvalidDatabaseQueryError } = require('../../errors/invalid-database-query.error');
+const api = require('../../api');
 
 exports.create = async (req, res) => {
   try {
@@ -84,13 +86,13 @@ const getAllFacilitiesByDealId = async (dealId) => {
 };
 exports.getAllFacilitiesByDealId = getAllFacilitiesByDealId;
 
-exports.getAllGET = async (req, res) => {
+exports.getFacilitiesByDealId = async (req, res) => {
   try {
-    let doc;
+    let facilities;
 
     if (req.query && req.query.dealId) {
       try {
-        doc = await getAllFacilitiesByDealId(req.query.dealId);
+        facilities = await api.findGefFacilitiesByDealId(req.query.dealId);
       } catch (error) {
         if (error instanceof InvalidDatabaseQueryError) {
           console.error(error);
@@ -108,21 +110,41 @@ exports.getAllGET = async (req, res) => {
       throw new DealNotFoundError(req.query.dealId);
     }
 
-    const facilities = [];
+    const parsedFacilities = [];
 
-    if (doc && doc.length) {
-      doc.forEach((facility) => {
-        facilities.push({
+    if (facilities?.length) {
+      for (const facility of facilities) {
+        /**
+         * Check if the facility has amendments, and if so,
+         * update the facility with the amended values.
+         */
+        const { _id } = facility;
+        const amendments = await api.getAcknowledgedAmendmentsByFacilityId(_id);
+
+        if (amendments?.length) {
+          // sets the coverEndDate and value to the amended values if present
+          const { coverEndDate: amendedCoverEndDate, value: amendedValue } = mapFacilityFieldsToAmendmentFields(amendments);
+
+          if (amendedValue) {
+            facility.value = amendedValue;
+          }
+
+          if (amendedCoverEndDate) {
+            facility.coverEndDate = new Date(amendedCoverEndDate);
+          }
+        }
+
+        parsedFacilities.push({
           status: facilitiesStatus(facility, existingDeal.version),
           details: facility,
           validation: facilitiesValidation(facility, existingDeal.version),
         });
-      });
+      }
     }
 
     return res.status(200).send({
-      status: facilitiesOverallStatus(facilities),
-      items: facilities,
+      status: facilitiesOverallStatus(parsedFacilities),
+      items: parsedFacilities,
     });
   } catch (error) {
     if (error instanceof ApiError) {
