@@ -506,7 +506,15 @@ const displayTaskComments = (app, canIssueFacilities) => {
   const facilityIssued = isFacilityResubmissionAvailable(app);
   const facilityAmendment = isFacilityAmendmentInProgress(app);
 
-  return (comments || ukefReview || unissuedFacilities || facilityIssued || facilityAmendment) && canIssueFacilities;
+  const mustDisplay = comments || ukefReview || facilityAmendment || facilityIssued;
+
+  if (mustDisplay) {
+    return true;
+  }
+
+  const conditionalDisplay = unissuedFacilities && canIssueFacilities;
+
+  return conditionalDisplay;
 };
 
 const pastDate = ({ day, month, year }) => {
