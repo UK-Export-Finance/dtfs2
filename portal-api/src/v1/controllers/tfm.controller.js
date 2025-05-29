@@ -70,7 +70,6 @@ exports.tfmDeal = async (req, res) => {
     const response = await getTfmDeal(dealId);
 
     if (!response?.data?.deal) {
-      console.error('Invalid TFM deal response received for deal %s', dealId);
       throw new Error('Invalid TFM deal response received');
     }
 
