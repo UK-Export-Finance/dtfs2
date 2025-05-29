@@ -21,7 +21,7 @@ type BankName = 'bank1' | 'bank2';
 export const MOCK_BANKS: Record<BankName, Bank> = {
   bank1: {
     _id: new ObjectId('6597dffeb5ef5ff4267e5044'),
-    id: '956',
+    id: '9',
     name: 'Bank 1',
     mga: ['Test.pdf'],
     emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],

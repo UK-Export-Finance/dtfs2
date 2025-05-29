@@ -10,6 +10,7 @@ import { getOneGefDeal } from './portal-api/getOneGefDeal';
 import { clearSessionCookies } from './utils/clearSessionCookies';
 import { getAmendmentIdFromUrl } from './utils/getAmendmentIdFromUrl';
 import { makerSubmitPortalAmendmentForReview } from './gef/makerSubmitPortalAmendmentForReview';
+import { loginAndSubmitPortalAmendmentRequestToUkef } from './gef/loginAndSubmitPortalAmendmentRequestToUkef';
 import { makerMakesPortalAmendmentRequest } from './gef/makerMakesPortalAmendmentRequest';
 import { makerAndCheckerSubmitPortalAmendmentRequest } from './gef/makerAndCheckerSubmitPortalAmendmentRequest';
 import { checkerSubmitsPortalAmendmentRequest } from './gef/checkerSubmitsPortalAmendmentRequest';
@@ -60,6 +61,7 @@ Cypress.Commands.add('makerSubmitPortalAmendmentForReview', makerSubmitPortalAme
 Cypress.Commands.add('makerMakesPortalAmendmentRequest', makerMakesPortalAmendmentRequest);
 Cypress.Commands.add('makerAndCheckerSubmitPortalAmendmentRequest', makerAndCheckerSubmitPortalAmendmentRequest);
 Cypress.Commands.add('checkerSubmitsPortalAmendmentRequest', checkerSubmitsPortalAmendmentRequest);
+Cypress.Commands.add('loginAndSubmitPortalAmendmentRequestToUkef', loginAndSubmitPortalAmendmentRequestToUkef);
 
 Cypress.Commands.add('submitDealCancellation', submitDealCancellation);
 
