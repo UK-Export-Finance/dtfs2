@@ -8,6 +8,20 @@ export type PortalFacilityAmendmentWithUkefId = z.infer<typeof PORTAL_FACILITY_A
 
 export type FacilityAmendmentWithUkefId = Prettify<FacilityAmendment & { ukefFacilityId: string | null }>;
 
+export type PortalAmendmentReturnToMakerEmailVariables = {
+  exporterName: string;
+  bankInternalRefName: string;
+  ukefDealId: string;
+  ukefFacilityId: string;
+  makersName: string;
+  checkersName: string;
+  checkersEmail: string;
+  dateEffectiveFrom: string;
+  newCoverEndDate: string;
+  newFacilityEndDate: string;
+  newFacilityValue: string;
+};
+
 export type PortalAmendmentSubmittedToCheckerEmailVariables = {
   exporterName: string;
   bankInternalRefName: string;
@@ -31,7 +45,7 @@ export type AmendmentUpdateStatus = {
   userToken?: string;
   makersEmail?: string;
   checkersEmail?: string;
-  emailVariables?: PortalAmendmentSubmittedToCheckerEmailVariables;
+  emailVariables?: PortalAmendmentSubmittedToCheckerEmailVariables | PortalAmendmentReturnToMakerEmailVariables;
   auditDetails?: AuditDetails;
 };
 
