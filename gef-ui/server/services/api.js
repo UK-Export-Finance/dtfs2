@@ -657,7 +657,6 @@ const getTfmDeal = async ({ dealId, userToken }) => {
     });
 
     if (!response?.data) {
-      console.error('Invalid TFM deal response received for deal %s', dealId);
       throw new Error('Invalid TFM deal response received');
     }
 
