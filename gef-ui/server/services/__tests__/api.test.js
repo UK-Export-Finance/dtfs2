@@ -579,7 +579,7 @@ describe('getAmendmentsOnDeal()', () => {
   });
 });
 
-describe.only('getTfmDeal', () => {
+describe('getTfmDeal', () => {
   const invalidDealIds = ['', undefined, null, '123', 123, 'abc', '!@£', '123123123ABC', {}, []];
   const dealId = '61a7710b2ae62b0013dae687';
 

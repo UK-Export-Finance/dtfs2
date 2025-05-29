@@ -89,6 +89,14 @@ const buildBody = async (app, previewMode, user) => {
       hasChangedFacilities,
     };
 
+    const canIssueFacilities = canIssueUnissuedFacilities({
+      portalDeal: app,
+      tfmDeal,
+      unissuedFacilitiesPresent,
+      canResubmitIssueFacilities,
+      hasUkefDecisionAccepted,
+    });
+
     const appBody = {
       application: app,
       status: app.status,
@@ -148,15 +156,9 @@ const buildBody = async (app, previewMode, user) => {
       previewMode,
       hasChangedFacilities,
       userRoles: app.userRoles,
-      displayComments: displayTaskComments(app),
+      displayComments: displayTaskComments(app, canIssueFacilities),
       displayChangeSupportingInfo: displayChangeSupportingInfo(app, previewMode),
-      canIssueFacilities: canIssueUnissuedFacilities({
-        portalDeal: app,
-        tfmDeal,
-        unissuedFacilitiesPresent,
-        canResubmitIssueFacilities,
-        hasUkefDecisionAccepted,
-      }),
+      canIssueFacilities,
       MIAReturnToMaker: isMIAWithoutChangedToIssuedFacilities(app),
       returnToMakerNoFacilitiesChanged: returnToMakerNoFacilitiesChanged(app, hasChangedFacilities),
       canCloneDeal: !dealCancelledStatus.includes(app.status),

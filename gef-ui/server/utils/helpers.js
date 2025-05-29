@@ -493,21 +493,20 @@ const commentsPresent = (app) => {
 };
 
 /**
- * Determines whether task comments should be displayed based on various conditions.
+ * Determines whether task comments should be displayed based on the application's state and user permissions.
  *
- * @param {Object} app - The application object containing relevant data.
- * @param {string} app.status - The current status of the application.
- * @param {string} app.ukefDecision - The UKEF decision associated with the application.
- * @returns {boolean} - Returns `true` if any of the conditions for displaying task comments are met, otherwise `false`.
+ * @param {Object} app - The application object containing status, ukefDecision, and other relevant properties.
+ * @param {boolean} canIssueFacilities - Indicates if the user has permission to issue facilities.
+ * @returns {boolean} True if task comments should be displayed, otherwise false.
  */
-const displayTaskComments = (app) => {
+const displayTaskComments = (app, canIssueFacilities) => {
   const comments = commentsPresent(app);
   const ukefReview = isUkefReviewAvailable(app.status, app.ukefDecision);
   const unissuedFacilities = areUnissuedFacilitiesPresent(app);
   const facilityIssued = isFacilityResubmissionAvailable(app);
   const facilityAmendment = isFacilityAmendmentInProgress(app);
 
-  return comments || ukefReview || unissuedFacilities || facilityIssued || facilityAmendment;
+  return (comments || ukefReview || unissuedFacilities || facilityIssued || facilityAmendment) && canIssueFacilities;
 };
 
 const pastDate = ({ day, month, year }) => {

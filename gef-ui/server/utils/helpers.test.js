@@ -1236,7 +1236,7 @@ describe('displayTaskComments()', () => {
     };
 
     // Act
-    const result = displayTaskComments(mockApplication);
+    const result = displayTaskComments(mockApplication, true);
 
     // Assert
     expect(result).toEqual(true);
@@ -1255,7 +1255,7 @@ describe('displayTaskComments()', () => {
     };
 
     // Act
-    const result = displayTaskComments(mockApplication);
+    const result = displayTaskComments(mockApplication, true);
 
     // Assert
     expect(result).toEqual(true);
@@ -1263,7 +1263,15 @@ describe('displayTaskComments()', () => {
 
   it('should return true if un-issued facilities are present', () => {
     // Act
-    const result = displayTaskComments(MOCK_AIN_APPLICATION_UNISSUED_ONLY);
+    const result = displayTaskComments(MOCK_AIN_APPLICATION_UNISSUED_ONLY, true);
+
+    // Assert
+    expect(result).toEqual(true);
+  });
+
+  it('should return false if un-issued facilities are present with un-issued facility cannot be issued', () => {
+    // Act
+    const result = displayTaskComments(MOCK_AIN_APPLICATION_UNISSUED_ONLY, false);
 
     // Assert
     expect(result).toEqual(true);
@@ -1271,7 +1279,7 @@ describe('displayTaskComments()', () => {
 
   it('should return true if issued facilities are present', () => {
     // Act
-    const result = displayTaskComments(MOCK_AIN_APPLICATION);
+    const result = displayTaskComments(MOCK_AIN_APPLICATION, true);
 
     // Assert
     expect(result).toEqual(true);
@@ -1287,13 +1295,13 @@ describe('displayTaskComments()', () => {
     };
 
     // Act
-    const result = displayTaskComments(mockApplication);
+    const result = displayTaskComments(mockApplication, true);
 
     // Assert
     expect(result).toEqual(true);
   });
 
-  it('should return false if all checks are false', () => {
+  it('should return false if all checks are false with can issue facility as true', () => {
     // Arrange
     const mockApplication = {
       ...MOCK_AIN_APPLICATION_ISSUED_ONLY,
@@ -1303,7 +1311,23 @@ describe('displayTaskComments()', () => {
     };
 
     // Act
-    const result = displayTaskComments(mockApplication);
+    const result = displayTaskComments(mockApplication, true);
+
+    // Assert
+    expect(result).toEqual(false);
+  });
+
+  it('should return false if all checks are false with can issue facility as false', () => {
+    // Arrange
+    const mockApplication = {
+      ...MOCK_AIN_APPLICATION_ISSUED_ONLY,
+      comments: [],
+      ukefDecision: [],
+      isPortalAmendmentInProgress: false,
+    };
+
+    // Act
+    const result = displayTaskComments(mockApplication, false);
 
     // Assert
     expect(result).toEqual(false);
