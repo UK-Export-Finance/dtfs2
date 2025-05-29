@@ -1269,12 +1269,12 @@ describe('displayTaskComments()', () => {
     expect(result).toEqual(true);
   });
 
-  it('should return false if un-issued facilities are present with un-issued facility cannot be issued', () => {
+  it('should return false if un-issued facilities are present where un-issued facility cannot be issued', () => {
     // Act
     const result = displayTaskComments(MOCK_AIN_APPLICATION_UNISSUED_ONLY, false);
 
     // Assert
-    expect(result).toEqual(true);
+    expect(result).toEqual(false);
   });
 
   it('should return true if issued facilities are present', () => {

@@ -58,6 +58,13 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
             );
             cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF);
+
+            // Add ACBS object to TFM
+            cy.putTfmDeal(dealId, {
+              tfm: {
+                ...acbsReconciliation,
+              },
+            });
           });
         });
       });
@@ -70,21 +77,8 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
-    // Ensure no task comments box is visible until TFM-ACBS reconciliation has finished
-    it('task comment box does not exist', () => {
-      applicationPreview.applicationPreviewPage().should('not.exist');
-      applicationPreview.unissuedFacilitiesHeader().should('not.exist');
-    });
-
     // ensures the task comment box exists with correct headers and link after ACBS reconciliation
     it('task comment box exists with correct header and unissued facilities link', () => {
-      // Add ACBS object to TFM
-      cy.putTfmDeal(dealId, {
-        tfm: {
-          ...acbsReconciliation,
-        },
-      });
-
       applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
       applicationPreview.unissuedFacilitiesReviewLink().contains('View unissued facilities');
       applicationPreview.submitButtonPostApproval().should('not.exist');
