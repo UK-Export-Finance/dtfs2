@@ -21,6 +21,7 @@ const PatchPortalFacilityAmendmentStatusSchema = z.object({
     newFacilityValue: z.string(),
     portalUrl: z.string(),
     makersEmail: z.string(),
+    checkersEmail: z.string(),
   }),
 });
 
