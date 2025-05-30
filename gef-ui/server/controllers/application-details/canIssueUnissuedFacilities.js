@@ -30,7 +30,9 @@ const canIssueUnissuedFacilities = ({ portalDeal, tfmDeal, unissuedFacilitiesPre
 
   // Submission type
   const isAin = portalDeal.submissionType === DEAL_SUBMISSION_TYPE.AIN;
+  const isMia = portalDeal.submissionType === DEAL_SUBMISSION_TYPE.MIA;
   const isMin = portalDeal.submissionType === DEAL_SUBMISSION_TYPE.MIN;
+
   const isMinApproved = isMin && hasUkefDecisionAccepted;
 
   // ACBS
@@ -52,9 +54,10 @@ const canIssueUnissuedFacilities = ({ portalDeal, tfmDeal, unissuedFacilitiesPre
   /**
    * Facilities can be issued if either of the condition is true:
    * 1. Deal submission type is an AIN
-   * 2. Deal submission type is MIN and has been approved by UKEF
+   * 2. Deal submission type is an MIA
+   * 3. Deal submission type is MIN and has been approved by UKEF
    */
-  return isAin || isMinApproved;
+  return isAin || isMia || isMinApproved;
 };
 
 module.exports = {

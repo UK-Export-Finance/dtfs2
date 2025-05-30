@@ -503,10 +503,10 @@ const displayTaskComments = (app, canIssueFacilities) => {
   const comments = commentsPresent(app);
   const ukefReview = isUkefReviewAvailable(app.status, app.ukefDecision);
   const unissuedFacilities = areUnissuedFacilitiesPresent(app);
-  const facilityIssued = isFacilityResubmissionAvailable(app);
+  const facilityResubmission = isFacilityResubmissionAvailable(app);
   const facilityAmendment = isFacilityAmendmentInProgress(app);
 
-  const mustDisplay = comments || ukefReview || facilityAmendment || facilityIssued;
+  const mustDisplay = comments || ukefReview || facilityAmendment || facilityResubmission;
 
   if (mustDisplay) {
     return true;

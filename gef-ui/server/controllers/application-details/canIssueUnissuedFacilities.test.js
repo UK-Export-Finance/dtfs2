@@ -191,7 +191,7 @@ describe('canIssueUnissuedFacilities', () => {
       expect(response).toBe(false);
     });
 
-    it('should return false if the deal submission type is an MIA', () => {
+    it('should return true if the deal submission type is an MIA', () => {
       // Arrange
       const tfmDeal = mockTfmDeal;
       const portalDeal = {
@@ -211,7 +211,7 @@ describe('canIssueUnissuedFacilities', () => {
       });
 
       // Assert
-      expect(response).toBe(false);
+      expect(response).toBe(true);
     });
   });
 
