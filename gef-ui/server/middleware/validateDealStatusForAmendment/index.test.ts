@@ -2,7 +2,7 @@ import { PORTAL_LOGIN_STATUS, aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_T
 import { createMocks } from 'node-mocks-http';
 import { Request, NextFunction } from 'express';
 
-import { validateAmendmentDealStatus } from '.';
+import { validateDealStatusForAmendment } from '.';
 import * as api from '../../services/api';
 import { MOCK_BASIC_DEAL } from '../../utils/mocks/mock-applications';
 import { Deal } from '../../types/deal';
@@ -26,7 +26,7 @@ const getHttpMocks = (user: string) =>
     },
   });
 
-describe('validateAmendmentDealStatus', () => {
+describe('validateDealStatusForAmendment', () => {
   let next: NextFunction;
   jest.spyOn(console, 'error');
 
@@ -50,43 +50,7 @@ describe('validateAmendmentDealStatus', () => {
       const { req, res } = getHttpMocks(mockUser);
 
       // Act
-      await validateAmendmentDealStatus(req, res, next);
-
-      // Assert
-      expect(next).toHaveBeenCalled();
-    });
-
-    it(`should call next when status is ${DEAL_STATUS.SUBMITTED_TO_UKEF}`, async () => {
-      // Arrange
-      const application = {
-        ...mockDeal,
-        status: DEAL_STATUS.SUBMITTED_TO_UKEF,
-      };
-      // Arrange
-      mockGetApplication.mockResolvedValue(application);
-
-      const { req, res } = getHttpMocks(mockUser);
-
-      // Act
-      await validateAmendmentDealStatus(req, res, next);
-
-      // Assert
-      expect(next).toHaveBeenCalled();
-    });
-
-    it(`should call next when status is ${DEAL_STATUS.IN_PROGRESS}`, async () => {
-      // Arrange
-      const application = {
-        ...mockDeal,
-        status: DEAL_STATUS.IN_PROGRESS,
-      };
-      // Arrange
-      mockGetApplication.mockResolvedValue(application);
-
-      const { req, res } = getHttpMocks(mockUser);
-
-      // Act
-      await validateAmendmentDealStatus(req, res, next);
+      await validateDealStatusForAmendment(req, res, next);
 
       // Assert
       expect(next).toHaveBeenCalled();
@@ -104,7 +68,7 @@ describe('validateAmendmentDealStatus', () => {
       const { req, res } = getHttpMocks(mockUser);
 
       // Act
-      await validateAmendmentDealStatus(req, res, next);
+      await validateDealStatusForAmendment(req, res, next);
 
       // Assert
       expect(next).toHaveBeenCalled();
@@ -122,7 +86,7 @@ describe('validateAmendmentDealStatus', () => {
       const { req, res } = getHttpMocks(mockUser);
 
       // Act
-      await validateAmendmentDealStatus(req, res, next);
+      await validateDealStatusForAmendment(req, res, next);
 
       // Assert
       expect(next).toHaveBeenCalled();
@@ -136,6 +100,44 @@ describe('validateAmendmentDealStatus', () => {
       jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
     });
 
+    it(`should NOT call next and should call redirect when status is ${DEAL_STATUS.SUBMITTED_TO_UKEF}`, async () => {
+      // Arrange
+      const application = {
+        ...mockDeal,
+        status: DEAL_STATUS.SUBMITTED_TO_UKEF,
+      };
+      // Arrange
+      mockGetApplication.mockResolvedValue(application);
+
+      const { req, res } = getHttpMocks(mockUser);
+
+      // Act
+      await validateDealStatusForAmendment(req, res, next);
+
+      // Assert
+      expect(next).toHaveBeenCalledTimes(0);
+      expect(res._getRedirectUrl()).toEqual('/not-found');
+    });
+
+    it(`should NOT call next and should call redirect when status is ${DEAL_STATUS.IN_PROGRESS}`, async () => {
+      // Arrange
+      const application = {
+        ...mockDeal,
+        status: DEAL_STATUS.IN_PROGRESS,
+      };
+      // Arrange
+      mockGetApplication.mockResolvedValue(application);
+
+      const { req, res } = getHttpMocks(mockUser);
+
+      // Act
+      await validateDealStatusForAmendment(req, res, next);
+
+      // Assert
+      expect(next).toHaveBeenCalledTimes(0);
+      expect(res._getRedirectUrl()).toEqual('/not-found');
+    });
+
     it(`should NOT call next and should call redirect when status is ${DEAL_STATUS.CANCELLED}`, async () => {
       const application = {
         ...mockDeal,
@@ -147,7 +149,7 @@ describe('validateAmendmentDealStatus', () => {
       const { req, res } = getHttpMocks(mockUser);
 
       // Act
-      await validateAmendmentDealStatus(req, res, next);
+      await validateDealStatusForAmendment(req, res, next);
 
       // Assert
       expect(next).toHaveBeenCalledTimes(0);
@@ -165,11 +167,11 @@ describe('validateAmendmentDealStatus', () => {
       const { req, res } = getHttpMocks(mockUser);
 
       // Act
-      await validateAmendmentDealStatus(req, res, next);
+      await validateDealStatusForAmendment(req, res, next);
 
       // Assert
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Deal %s does not have the correct status for amendments: %s', dealId, DEAL_STATUS.CANCELLED);
+      expect(console.error).toHaveBeenCalledWith('Deal %s does not have the correct status to accept a facility amendment %s', dealId, DEAL_STATUS.CANCELLED);
     });
 
     it(`should NOT call next and should call redirect when status is ${DEAL_STATUS.ABANDONED}`, async () => {
@@ -183,7 +185,7 @@ describe('validateAmendmentDealStatus', () => {
       const { req, res } = getHttpMocks(mockUser);
 
       // Act
-      await validateAmendmentDealStatus(req, res, next);
+      await validateDealStatusForAmendment(req, res, next);
 
       // Assert
       expect(next).toHaveBeenCalledTimes(0);
@@ -201,7 +203,7 @@ describe('validateAmendmentDealStatus', () => {
       const { req, res } = getHttpMocks(mockUser);
 
       // Act
-      await validateAmendmentDealStatus(req, res, next);
+      await validateDealStatusForAmendment(req, res, next);
 
       // Assert
       expect(next).toHaveBeenCalledTimes(0);
@@ -219,7 +221,7 @@ describe('validateAmendmentDealStatus', () => {
       const { req, res } = getHttpMocks(mockUser);
 
       // Act
-      await validateAmendmentDealStatus(req, res, next);
+      await validateDealStatusForAmendment(req, res, next);
 
       // Assert
       expect(next).toHaveBeenCalledTimes(0);
@@ -237,7 +239,7 @@ describe('validateAmendmentDealStatus', () => {
       const { req, res } = getHttpMocks(mockUser);
 
       // Act
-      await validateAmendmentDealStatus(req, res, next);
+      await validateDealStatusForAmendment(req, res, next);
 
       // Assert
       expect(next).toHaveBeenCalledTimes(0);
@@ -255,7 +257,7 @@ describe('validateAmendmentDealStatus', () => {
       const { req, res } = getHttpMocks(mockUser);
 
       // Act
-      await validateAmendmentDealStatus(req, res, next);
+      await validateDealStatusForAmendment(req, res, next);
 
       // Assert
       expect(next).toHaveBeenCalledTimes(0);
@@ -275,7 +277,7 @@ describe('validateAmendmentDealStatus', () => {
       const { req, res } = getHttpMocks(mockUser);
 
       // Act
-      await validateAmendmentDealStatus(req, res, next);
+      await validateDealStatusForAmendment(req, res, next);
 
       // Assert
       expect(next).toHaveBeenCalledTimes(0);
@@ -287,7 +289,7 @@ describe('validateAmendmentDealStatus', () => {
       const { req, res } = getHttpMocks(mockUser);
 
       // Act
-      await validateAmendmentDealStatus(req, res, next);
+      await validateDealStatusForAmendment(req, res, next);
 
       // Assert
       expect(console.error).toHaveBeenCalledTimes(1);
@@ -313,7 +315,7 @@ describe('validateAmendmentDealStatus', () => {
       const { req, res } = getHttpMocks(mockUser);
 
       // Act
-      await validateAmendmentDealStatus(req, res, next);
+      await validateDealStatusForAmendment(req, res, next);
 
       // Assert
       expect(next).toHaveBeenCalledTimes(0);
@@ -325,7 +327,7 @@ describe('validateAmendmentDealStatus', () => {
       const { req, res } = getHttpMocks(mockUser);
 
       // Act
-      await validateAmendmentDealStatus(req, res, next);
+      await validateDealStatusForAmendment(req, res, next);
 
       // Assert
       expect(console.error).toHaveBeenCalledTimes(1);

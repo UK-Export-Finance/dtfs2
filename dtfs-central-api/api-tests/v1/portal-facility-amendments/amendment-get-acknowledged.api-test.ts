@@ -64,12 +64,12 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/acknowledged', () => 
     const createDealResponse: { body: { _id: string } } = await createDeal({ deal: newDeal, user: aPortalUser() });
     dealId = createDealResponse.body._id;
 
-    const createFacilityResponse: { body: { ukefFacilityId: string } } = await testApi
+    const createFacilityResponse: { body: { _id: string } } = await testApi
       .post({ dealId, type: FACILITY_TYPE.CASH, hasBeenIssued: false })
       .to('/v1/portal/gef/facilities');
 
-    facilityId = createFacilityResponse.body.ukefFacilityId;
-    referenceNumber = `${facilityId}-023`;
+    facilityId = createFacilityResponse.body._id;
+    referenceNumber = '123456-023';
 
     await submitDealToTfm({ dealId, dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, dealType: DEAL_TYPE.GEF });
   });

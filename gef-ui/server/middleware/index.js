@@ -1,7 +1,7 @@
 const validateToken = require('./validateToken');
 const validateRole = require('./validateRole');
 const validateBank = require('./validateBank');
-const { validateAmendmentDealStatus } = require('./validateAmendmentDealStatus');
+const { validateDealStatusForAmendment } = require('./validateDealStatusForAmendment');
 const createRateLimit = require('./rateLimit');
 const { csrfToken, copyCsrfTokenFromQueryToBody } = require('./csrf');
 const seo = require('./headers/seo.middleware');
@@ -11,7 +11,7 @@ module.exports = {
   validateRole,
   validateToken,
   validateBank,
-  validateAmendmentDealStatus,
+  validateDealStatusForAmendment,
   createRateLimit,
   csrfToken,
   copyCsrfTokenFromQueryToBody,

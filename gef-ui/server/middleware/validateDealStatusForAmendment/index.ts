@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { AMENDMENT_UNACCEPTABLE_DEAL_STATUSES } from '@ukef/dtfs2-common';
+import { AMENDMENT_ACCEPTABLE_DEAL_STATUSES } from '@ukef/dtfs2-common';
 import { asLoggedInUserSession } from '../../utils/express-session';
 import * as api from '../../services/api';
 
@@ -12,7 +12,7 @@ import * as api from '../../services/api';
  * @param res
  * @param next
  */
-export const validateAmendmentDealStatus = async (req: Request, res: Response, next: NextFunction) => {
+export const validateDealStatusForAmendment = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { dealId } = req.params;
     const { userToken } = asLoggedInUserSession(req.session);
@@ -24,10 +24,10 @@ export const validateAmendmentDealStatus = async (req: Request, res: Response, n
       return res.redirect('/not-found');
     }
 
-    const dealStatusIsUnacceptable = AMENDMENT_UNACCEPTABLE_DEAL_STATUSES.includes(deal.status);
+    const dealStatusIsAcceptable = AMENDMENT_ACCEPTABLE_DEAL_STATUSES.includes(deal.status);
 
-    if (dealStatusIsUnacceptable) {
-      console.error('Deal %s does not have the correct status for amendments: %s', dealId, deal.status);
+    if (!dealStatusIsAcceptable) {
+      console.error('Deal %s does not have the correct status to accept a facility amendment %s', dealId, deal.status);
       return res.redirect('/not-found');
     }
 
