@@ -1,5 +1,5 @@
 import z from 'zod';
-import { FacilityAmendment, Prettify } from '..';
+import { AuditDetails, FacilityAmendment, Prettify } from '..';
 import { PORTAL_FACILITY_AMENDMENT_USER_VALUES, PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID } from '../../schemas';
 
 export type PortalFacilityAmendmentUserValues = z.infer<typeof PORTAL_FACILITY_AMENDMENT_USER_VALUES>;
@@ -22,4 +22,32 @@ export type PortalAmendmentSubmittedToCheckerEmailVariables = {
   dateSubmittedByMaker: string;
   portalUrl: string;
   makersEmail: string;
+};
+
+export type AmendmentUpdateStatus = {
+  facilityId: string;
+  amendmentId: string;
+  newStatus: string;
+  userToken?: string;
+  makersEmail?: string;
+  checkersEmail?: string;
+  emailVariables?: PortalAmendmentSubmittedToCheckerEmailVariables;
+  auditDetails?: AuditDetails;
+};
+
+export type PortalAmendmentSubmittedToUkefEmailVariables = {
+  exporterName: string;
+  bankInternalRefName: string;
+  ukefDealId: string;
+  ukefFacilityId: string;
+  makersName: string;
+  makersEmail: string;
+  checkersName: string;
+  bankName: string;
+  dateEffectiveFrom: string;
+  newCoverEndDate: string;
+  newFacilityEndDate: string;
+  newFacilityValue: string;
+  eligibilityCriteria: string;
+  referenceNumber: string;
 };

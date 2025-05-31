@@ -14,3 +14,8 @@ export const MAX_PAYMENT_REFERENCE_CHARACTER_COUNT = 50;
  * The maximum character count for the record correction request additional information field.
  */
 export const MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT = 500;
+
+/**
+ * The maximum character count for the return to maker comment field.
+ */
+export const RETURN_TO_MAKER_COMMENT_CHARACTER_COUNT = 400;

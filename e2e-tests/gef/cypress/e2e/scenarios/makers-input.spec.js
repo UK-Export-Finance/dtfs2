@@ -54,7 +54,7 @@ context('Review application when returned to maker', () => {
 
   describe('DTFS2-4536 Review AIN when returned to maker', () => {
     it('allows the maker the ability to review an AIN with the status "Return to maker"', () => {
-      applicationDetails.editRefNameLink().should('have.text', 'HSBC 123');
+      applicationDetails.editRefNameLink().should('have.text', 'UKEF Test 123');
       applicationDetails.addCashFacilityButton();
       applicationDetails.addContingentFacilityButton();
 

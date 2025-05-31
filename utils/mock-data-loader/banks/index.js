@@ -15,7 +15,7 @@ const MONTHLY_REPORT_PERIOD_SCHEDULE = [
 
 const MOCK_BANKS = [
   {
-    id: '956',
+    id: '9',
     name: 'Bank 1',
     mga: ['Test.pdf'],
     emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
@@ -31,7 +31,7 @@ const MOCK_BANKS = [
   },
   {
     id: '961',
-    name: 'HSBC',
+    name: 'Bank 2',
     mga: ['Test.pdf'],
     emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '00014259',
@@ -61,14 +61,14 @@ const MOCK_BANKS = [
   },
   {
     id: '5213',
-    name: 'Newable',
+    name: 'Bank 3',
     mga: [''],
     emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '08796862',
     partyUrn: '00319394',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'Newable Payment Reporting Team',
+      teamName: 'Bank 3 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
@@ -76,14 +76,14 @@ const MOCK_BANKS = [
   },
   {
     id: '964',
-    name: 'Bank 3',
+    name: 'Bank 4',
     mga: ['Test.pdf'],
     emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '00002065',
     partyUrn: '00300302',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'Bank 3 Payment Reporting Team',
+      teamName: 'Bank 4 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: [
@@ -96,14 +96,14 @@ const MOCK_BANKS = [
   },
   {
     id: '1004',
-    name: 'Bank 4',
+    name: 'Bank 5',
     mga: ['Mock.pdf'],
     emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: 'SC090312',
     partyUrn: '00307351',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'Bank 4 Payment Reporting Team',
+      teamName: 'Bank 5 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
@@ -111,29 +111,29 @@ const MOCK_BANKS = [
   },
   {
     id: '953',
-    name: 'Bank 5',
+    name: 'Bank 6',
     mga: ['Mock.pdf'],
     emails: ['checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: '02294747',
     partyUrn: '00311081',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'Bank 5 Payment Reporting Team',
+      teamName: 'Bank 6 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
     isVisibleInTfmUtilisationReports: true,
   },
   {
-    id: '9',
-    name: 'UKEF test bank (Delegated)',
+    id: '7',
+    name: 'Bank 7',
     mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
     emails: ['maker1@ukexportfinance.gov.uk', 'checker1@ukexportfinance.gov.uk'],
     companiesHouseNo: 'UKEF0001',
     partyUrn: '00318345',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'UKEF test bank (Delegated) Payment Reporting Team',
+      teamName: 'Bank 7 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
@@ -141,14 +141,14 @@ const MOCK_BANKS = [
   },
   {
     id: '10',
-    name: 'UKEF test bank (Delegated) 2',
+    name: 'Bank 8',
     mga: ['mga_ukef_1.docx', 'mga_ukef_2.docx'],
     emails: ['maker4@ukexportfinance.gov.uk', 'checker4@ukexportfinance.gov.uk'],
     companiesHouseNo: 'UKEF0001',
     partyUrn: '00318345',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'UKEF test bank (Delegated) 2 Payment Reporting Team',
+      teamName: 'Bank 8 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk', 'payment-officer5@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: [
@@ -161,14 +161,14 @@ const MOCK_BANKS = [
   },
   {
     id: '12',
-    name: 'Bank 6',
+    name: 'Bank 9',
     mga: ['Test.pdf'],
     emails: ['maker1@ukexportfinance.gov.uk'],
     companiesHouseNo: 'FC011846',
     partyUrn: '00313097',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'Bank 6 Payment Reporting Team',
+      teamName: 'Bank 9 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,
@@ -176,14 +176,14 @@ const MOCK_BANKS = [
   },
   {
     id: '13',
-    name: 'ABC Bank',
+    name: 'Bank 10',
     mga: ['Test.pdf'],
     emails: ['maker1@ukexportfinance.gov.uk'],
     companiesHouseNo: '02564490',
     partyUrn: '00313709',
     hasGefAccessOnly: false,
     paymentOfficerTeam: {
-      teamName: 'Payment Reporting Team',
+      teamName: 'Bank 10 Payment Reporting Team',
       emails: ['payment-officer4@ukexportfinance.gov.uk'],
     },
     utilisationReportPeriodSchedule: MONTHLY_REPORT_PERIOD_SCHEDULE,

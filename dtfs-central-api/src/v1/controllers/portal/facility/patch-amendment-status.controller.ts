@@ -37,7 +37,13 @@ export const patchAmendmentStatus = async (req: PatchSubmitAmendmentToCheckerReq
 
         // sends email to maker with the details of the amendment
         await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_CHECKER_MAKER_EMAIL, makersEmail, emailVariables);
+        // sends email to checker with the details of the amendment
         await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_SUBMITTED_TO_CHECKER_CHECKER_EMAIL, checkersEmail, emailVariables);
+
+        return res.status(HttpStatusCode.Ok).send(updatedAmendment);
+      }
+      case PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED: {
+        const updatedAmendment = await PortalFacilityAmendmentService.returnPortalFacilityAmendmentToMaker({ facilityId, amendmentId, auditDetails });
 
         return res.status(HttpStatusCode.Ok).send(updatedAmendment);
       }
