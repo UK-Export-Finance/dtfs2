@@ -79,7 +79,7 @@ const CURRENCIES = [
     currencyId: 16,
     text: 'IQD - Iraqi Dinar',
     id: 'IQD',
-    disabled: false,
+    disabled: true,
   },
   {
     currencyId: 17,
