@@ -173,6 +173,7 @@ describe('canIssueUnissuedFacilities', () => {
         ...MOCK_MIA_APPLICATION_UNISSUED_ONLY,
         submissionType: DEAL_SUBMISSION_TYPE.MIN,
         ukefDecisionAccepted: false,
+        userRoles: [ROLES.MAKER],
       };
       const unissuedFacilitiesPresent = true;
       const canResubmitIssueFacilities = [];
@@ -196,6 +197,7 @@ describe('canIssueUnissuedFacilities', () => {
       const tfmDeal = mockTfmDeal;
       const portalDeal = {
         ...MOCK_MIA_APPLICATION_UNISSUED_ONLY,
+        userRoles: [ROLES.MAKER],
       };
       const unissuedFacilitiesPresent = true;
       const canResubmitIssueFacilities = [];
