@@ -169,7 +169,7 @@ export const CURRENCIES: CurrencyInterface[] = [
     currencyId: 16,
     text: 'IQD - Iraqi Dinar',
     id: 'IQD',
-    disabled: true,
+    disabled: false,
   },
   {
     currencyId: 17,
