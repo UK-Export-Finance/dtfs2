@@ -30,3 +30,4 @@ export * from './generate-mandatory-criteria';
 export * from './generate-amendment-mandatory-criteria';
 export * from './strip-html';
 export * from './is-gov-notify-mocked';
+export * from './map-facility-fields-to-amendment-fields';
