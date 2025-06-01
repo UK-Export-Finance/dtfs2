@@ -505,7 +505,7 @@ export const COUNTRIES: CountryInterface[] = [
     id: 368,
     name: 'Iraq',
     code: 'IRQ',
-    disabled: true,
+    disabled: false,
   },
   {
     id: 372,
