@@ -107,10 +107,10 @@ export class TfmFacilitiesRepo {
     if (facilitiesOnDealWithAmendments?.length) {
       const matchingAmendments = facilitiesOnDealWithAmendments.flatMap((facility) =>
         (facility.amendments || []).map((amendment) => {
-          const { type, ukefFacilityId, currency } = facility.facilitySnapshot;
+          const { type: facilityType, ukefFacilityId, currency } = facility.facilitySnapshot;
           return {
             ...amendment,
-            facilityType: type,
+            facilityType,
             ukefFacilityId,
             currency: currency.id,
           };
@@ -373,6 +373,22 @@ export class TfmFacilitiesRepo {
       .map<TfmFacilityAmendment>((doc) => doc.amendments as TfmFacilityAmendment)
       .toArray();
     return amendments.at(0) ?? null;
+  }
+
+  /**
+   * Finds acknowledged portal amendments by facility id
+   * @param facilityId - The facility id
+   * @returns All acknowledged amendments on a facility
+   */
+  public static async findAcknowledgedPortalAmendmentsByFacilityId(facilityId: string | ObjectId): Promise<FacilityAmendment[] | null> {
+    const collection = await this.getCollection();
+
+    const amendments = await collection
+      .aggregate(aggregatePipelines.acknowledgedPortalAmendmentsByFacilityId(facilityId))
+      .map<FacilityAmendment>((data) => data.amendments as FacilityAmendment)
+      .toArray();
+
+    return amendments ?? null;
   }
 
   /**

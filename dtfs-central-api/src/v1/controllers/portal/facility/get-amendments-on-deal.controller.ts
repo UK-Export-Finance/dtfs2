@@ -23,7 +23,7 @@ export const getAmendmentsOnDeal = async (req: GetAmendmentsOnDealRequest, res: 
 
     return res.status(HttpStatusCode.Ok).send(amendments);
   } catch (error) {
-    console.error(`Error getting amendments for facilities on deal with id %s %o`, dealId, error);
+    console.error('Error getting amendments for facilities on deal with id %s %o', dealId, error);
 
     if (error instanceof ApiError) {
       const { status, message, code } = error;
