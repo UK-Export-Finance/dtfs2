@@ -23,7 +23,7 @@ export const getPortalAmendmentsOnDeal = async (req: GetPortalAmendmentsOnDealRe
 
     return res.status(HttpStatusCode.Ok).send(portalAmendments);
   } catch (error) {
-    console.error(`Error getting portal amendments for facilities on deal with id %s %o`, dealId, error);
+    console.error('Error getting portal amendments for facilities on deal with id %s %o', dealId, error);
 
     if (error instanceof ApiError) {
       const { status, message, code } = error;

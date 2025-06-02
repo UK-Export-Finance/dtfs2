@@ -107,10 +107,10 @@ export class TfmFacilitiesRepo {
     if (facilitiesOnDealWithAmendments?.length) {
       const matchingAmendments = facilitiesOnDealWithAmendments.flatMap((facility) =>
         (facility.amendments || []).map((amendment) => {
-          const { type, ukefFacilityId, currency } = facility.facilitySnapshot;
+          const { type: facilityType, ukefFacilityId, currency } = facility.facilitySnapshot;
           return {
             ...amendment,
-            facilityType: type,
+            facilityType,
             ukefFacilityId,
             currency: currency.id,
           };
