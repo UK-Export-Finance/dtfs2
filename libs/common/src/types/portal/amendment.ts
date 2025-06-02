@@ -15,7 +15,7 @@ export type PortalAmendmentReturnToMakerEmailVariables = {
   ukefFacilityId: string;
   makersName: string;
   checkersName: string;
-  checkersEmail: string;
+  checkersEmail?: string;
   dateEffectiveFrom: string;
   newCoverEndDate: string;
   newFacilityEndDate: string;
@@ -33,9 +33,9 @@ export type PortalAmendmentSubmittedToCheckerEmailVariables = {
   newCoverEndDate: string;
   newFacilityEndDate: string;
   newFacilityValue: string;
-  dateSubmittedByMaker: string;
-  portalUrl: string;
-  makersEmail: string;
+  dateSubmittedByMaker?: string;
+  portalUrl?: string;
+  makersEmail?: string;
 };
 
 export type AmendmentUpdateStatus = {
