@@ -376,6 +376,22 @@ export class TfmFacilitiesRepo {
   }
 
   /**
+   * Finds acknowledged portal amendments by facility id
+   * @param facilityId - The facility id
+   * @returns All acknowledged amendments on a facility
+   */
+  public static async findAcknowledgedPortalAmendmentsByFacilityId(facilityId: string | ObjectId): Promise<FacilityAmendment[] | null> {
+    const collection = await this.getCollection();
+
+    const amendments = await collection
+      .aggregate(aggregatePipelines.acknowledgedPortalAmendmentsByFacilityId(facilityId))
+      .map<FacilityAmendment>((data) => data.amendments as FacilityAmendment)
+      .toArray();
+
+    return amendments ?? null;
+  }
+
+  /**
    * Finds the latest completed amendment by deal id
    * @param dealId - The deal id
    * @returns The latest completed amendment

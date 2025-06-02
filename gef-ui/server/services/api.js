@@ -650,10 +650,43 @@ const deleteAmendment = async ({ facilityId, amendmentId, userToken }) => {
   }
 
   try {
-    await Axios.delete(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, { ...config(userToken) });
+    return Axios.delete(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, { ...config(userToken) });
   } catch (error) {
     console.error('Failed to delete the amendment with id %s on facility with id %s %o', amendmentId, facilityId, error);
     throw error;
+  }
+};
+
+/**
+ * Retrieves a TFM deal by its ID from `tfm-deal` collection.
+ *
+ * @async
+ * @function getTfmDeal
+ * @param {Object} params - The parameters for retrieving the deal.
+ * @param {string} params.dealId - The MongoDB ID of the deal to retrieve.
+ * @param {string} params.userToken - The user authentication token.
+ * @returns {Promise<Object>} The Axios response containing the TFM deal data.
+ * @throws {Error} If the deal ID is invalid or the request fails.
+ */
+const getTfmDeal = async ({ dealId, userToken }) => {
+  try {
+    if (!isValidMongoId(dealId)) {
+      console.error('Invalid deal ID %s', dealId);
+      throw new Error('Invalid deal ID');
+    }
+
+    const response = await Axios.get(`/tfm/deal/${dealId}`, {
+      ...config(userToken),
+    });
+
+    if (!response?.data) {
+      throw new Error('Invalid TFM deal response received');
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to get TFM deal %s %o', dealId, error);
+    return false;
   }
 };
 
@@ -687,4 +720,5 @@ module.exports = {
   updateSubmitAmendment,
   updateAmendmentStatus,
   deleteAmendment,
+  getTfmDeal,
 };

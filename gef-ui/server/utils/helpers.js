@@ -12,7 +12,7 @@ const ACTION_TEXT = {
 };
 
 const {
-  facilitiesChangedToIssuedAsArray,
+  canResubmitIssuedFacilities,
   summaryIssuedChangedToIssued,
   summaryIssuedUnchanged,
   areUnissuedFacilitiesPresent,
@@ -313,7 +313,7 @@ const summaryItemsConditions = (summaryItemsObj) => {
   // personalised href for facility to change to unissued from issued (once submitted to UKEF and changed to issued)
   const issuedToUnissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change-to-unissued`;
   // array of facilities which have been changed to issued
-  const facilitiesChanged = facilitiesChangedToIssuedAsArray(app);
+  const facilitiesChanged = canResubmitIssuedFacilities(app);
 
   const params = {
     app,
@@ -493,21 +493,28 @@ const commentsPresent = (app) => {
 };
 
 /**
- * Determines whether task comments should be displayed based on various conditions.
+ * Determines whether task comments should be displayed based on the application's state and user permissions.
  *
- * @param {Object} app - The application object containing relevant data.
- * @param {string} app.status - The current status of the application.
- * @param {string} app.ukefDecision - The UKEF decision associated with the application.
- * @returns {boolean} - Returns `true` if any of the conditions for displaying task comments are met, otherwise `false`.
+ * @param {Object} app - The application object containing status, ukefDecision, and other relevant properties.
+ * @param {boolean} canIssueFacilities - Indicates if the user has permission to issue facilities.
+ * @returns {boolean} True if task comments should be displayed, otherwise false.
  */
-const displayTaskComments = (app) => {
+const displayTaskComments = (app, canIssueFacilities) => {
   const comments = commentsPresent(app);
   const ukefReview = isUkefReviewAvailable(app.status, app.ukefDecision);
   const unissuedFacilities = areUnissuedFacilitiesPresent(app);
-  const facilityIssued = isFacilityResubmissionAvailable(app);
+  const facilityResubmission = isFacilityResubmissionAvailable(app);
   const facilityAmendment = isFacilityAmendmentInProgress(app);
 
-  return comments || ukefReview || unissuedFacilities || facilityIssued || facilityAmendment;
+  const mustDisplay = comments || ukefReview || facilityAmendment || facilityResubmission;
+
+  if (mustDisplay) {
+    return true;
+  }
+
+  const conditionalDisplay = unissuedFacilities && canIssueFacilities;
+
+  return conditionalDisplay;
 };
 
 const pastDate = ({ day, month, year }) => {

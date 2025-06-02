@@ -388,6 +388,10 @@ authRouter
     utilisationReportControllers.getCompletedFeeRecordCorrections,
   );
 
-authRouter.route('/tfm/team/:teamId').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }), tfm.tfmTeam);
+authRouter.route('/tfm/team/:teamId').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }), handleExpressValidatorResult, tfm.tfmTeam);
+
+authRouter
+  .route('/tfm/deal/:dealId')
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), mongoIdValidation('dealId'), handleExpressValidatorResult, tfm.tfmDeal);
 
 module.exports = { openRouter, authRouter };

@@ -3,6 +3,7 @@ import CONSTANTS from '../../../../fixtures/constants';
 import { threeDaysAgo, threeMonthsOneDay, twoMonths, today } from '../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_MIA_DRAFT, MOCK_APPLICATION_MIN } from '../../../../fixtures/mocks/mock-deals';
 import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
+import { acbsReconciliation } from '../../../../../../e2e-fixtures/acbs';
 import { continueButton, submitButton } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';
@@ -53,6 +54,13 @@ context('Unissued Facilities MIN - change all to issued from unissued table', ()
             cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF).then(() => {
               cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIN);
               cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED);
+            });
+
+            // Add ACBS object to TFM
+            cy.putTfmDeal(dealId, {
+              tfm: {
+                ...acbsReconciliation,
+              },
             });
           });
         });
