@@ -21,7 +21,7 @@ const amendmentId = 'amendmentId';
 
 const getHttpMocks = (user: string) =>
   createMocks<GetAmendmentDetailsRequest>({
-    params: { dealId },
+    params: { dealId, facilityId, amendmentId },
     session: {
       user: { ...aPortalSessionUser(), roles: [user] },
       userToken: 'testToken',
@@ -43,11 +43,11 @@ describe('getAmendmentDetails', () => {
 
     jest.spyOn(api, 'getFacility').mockImplementation(mockGetFacility);
     jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
-    jest.spyOn(api, 'getAmendmentsOnDeal').mockImplementation(mockGetAmendment);
+    jest.spyOn(api, 'getAmendment').mockImplementation(mockGetAmendment);
 
     mockGetApplication.mockResolvedValue(mockDeal);
     mockGetFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
-    mockGetAmendment.mockResolvedValue([amendment]);
+    mockGetAmendment.mockResolvedValue(amendment);
   });
 
   afterAll(() => {
@@ -126,7 +126,7 @@ describe('getAmendmentDetails', () => {
           expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
           expect(res._getRedirectUrl()).toEqual('/not-found');
           expect(console.error).toHaveBeenCalledTimes(1);
-          expect(console.error).toHaveBeenCalledWith('In progress amendment was not found for the deal %s', dealId);
+          expect(console.error).toHaveBeenCalledWith('Amendment was not found for the amendment id %s and facility id %s', amendmentId, facilityId);
         });
       });
 
@@ -166,7 +166,7 @@ describe('getAmendmentDetails', () => {
         });
       });
 
-      describe('when getAmendmentsOnDeal fails', () => {
+      describe('when getAmendment fails', () => {
         it('should redirect to problem-with service', async () => {
           mockGetAmendment.mockRejectedValue({});
 

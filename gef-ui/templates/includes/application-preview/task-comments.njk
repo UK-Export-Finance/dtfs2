@@ -4,17 +4,31 @@
   <header data-cy="application-preview-page">
     {% set bannerHtml %}
 
-    {% if portalAmendmentStatus and portalAmendmentStatus !== 'Acknowledged' %}
-      <h3 data-cy="amendment-details-header">{{ portalAmendmentStatus }}</h3>
+    {% if readyForCheckerAmendmentDetailsUrlAndText.length or furtherMakersInputAmendmentDetailsUrlAndText.length %}
       <div class="govuk-!-margin-bottom-6">
-        {% if userRoles.includes('maker') %}
-          <a href="/gef/application-details/{{ dealId }}/amendment-details" class="govuk-link" data-cy="amendment-details">Amendment details</a>
+        {% if readyForCheckerAmendmentDetailsUrlAndText.length %}
+          <h3 data-cy="amendment-details-header">{{ readyForCheckerAmendmentStatusHeading }}</h3>
+          <ul class="govuk-list govuk-list--bullet">
+          {% for amendment in readyForCheckerAmendmentDetailsUrlAndText %}
+              <li>
+                <a href="{{ amendment.amendmentDetailsUrl }}" class="govuk-link" data-cy="amendment-details">{{ amendment.text }}</a>
+              </li>
+          {% endfor %}
+          </ul>
         {% endif %}
-        {% if userRoles.includes('checker') %}
-          <a href="/gef/application-details/{{ dealId }}/amendment-details" class="govuk-link" data-cy="amendment-details">Check amendment details before submitting to UKEF</a>
+        {% if furtherMakersInputAmendmentDetailsUrlAndText.length %}
+          <h3 data-cy="amendment-details-header">{{ furtherMakersInputAmendmentStatusHeading }}</h3>
+          <ul class="govuk-list govuk-list--bullet">
+            {% for amendment in furtherMakersInputAmendmentDetailsUrlAndText %}
+              <li>
+                <a href="{{ amendment.amendmentDetailsUrl }}" class="govuk-link" data-cy="amendment-details">{{ amendment.text }}</a>
+              </li>
+            {% endfor %}
+          </ul>
         {% endif %}
       </div>
     {% endif %}
+
 
     {% if renderReviewDecisionLink %}
       <div class="govuk-!-margin-bottom-0" data-cy="ukef-review">

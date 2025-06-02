@@ -36,3 +36,7 @@ export type Facility = {
   facilityEndDate?: IsoDateTimeStamp | null;
   bankReviewDate?: IsoDateTimeStamp | null;
 };
+
+export interface FacilityParams extends Facility {
+  facilityId: string;
+}

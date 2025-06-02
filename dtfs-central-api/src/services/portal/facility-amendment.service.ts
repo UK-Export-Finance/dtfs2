@@ -25,20 +25,20 @@ export class PortalFacilityAmendmentService {
    * Checks if there is any portal amendment in progress on a deal, throws an error if there is.
    *
    * @param params
-   * @param params.dealId - The deal id
+   * @param params.facilityId - The facility id
    * @returns {Promise<void>} A promise that resolves when the find operation is complete.
    */
-  public static async validateNoOtherAmendmentInProgressOnDeal({ dealId, amendmentId }: { dealId: string; amendmentId?: string }): Promise<void> {
-    const existingPortalAmendmentInProgress = await TfmFacilitiesRepo.findPortalAmendmentsByDealIdAndStatus({
-      dealId,
+  public static async validateNoOtherAmendmentInProgressOnFacility({ facilityId, amendmentId }: { facilityId: string; amendmentId?: string }): Promise<void> {
+    const existingPortalAmendmentInProgress = await TfmFacilitiesRepo.findPortalAmendmentsByFacilityIdAndStatus({
+      facilityId,
       statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES,
     });
 
     const hasExistingAmendment = existingPortalAmendmentInProgress.some((amendment) => amendment.amendmentId.toString() !== amendmentId);
 
     if (hasExistingAmendment) {
-      console.error('There is a portal facility amendment already in progress on this deal');
-      throw new PortalFacilityAmendmentConflictError(dealId);
+      console.error('There is a portal facility amendment already in progress on this facility %s', facilityId);
+      throw new PortalFacilityAmendmentConflictError(facilityId);
     }
   }
 
@@ -68,7 +68,7 @@ export class PortalFacilityAmendmentService {
       throw new InvalidAuditDetailsError(`Supplied auditDetails 'id' ${auditDetails.id.toString()} does not correspond to a valid user`);
     }
 
-    await this.validateNoOtherAmendmentInProgressOnDeal({ dealId });
+    await this.validateNoOtherAmendmentInProgressOnFacility({ facilityId });
 
     const { type: facilityType } = await findOneFacility(facilityId);
 
@@ -214,7 +214,7 @@ export class PortalFacilityAmendmentService {
       throw new AmendmentNotFoundError(amendmentId, facilityId);
     }
 
-    await this.validateNoOtherAmendmentInProgressOnDeal({ dealId: existingAmendment.dealId.toString(), amendmentId });
+    await this.validateNoOtherAmendmentInProgressOnFacility({ facilityId: existingAmendment.facilityId.toString(), amendmentId });
 
     const facilityMongoId = new ObjectId(facilityId);
     const amendmentMongoId = new ObjectId(amendmentId);
@@ -258,7 +258,7 @@ export class PortalFacilityAmendmentService {
       throw new AmendmentNotFoundError(amendmentId, facilityId);
     }
 
-    await this.validateNoOtherAmendmentInProgressOnDeal({ dealId: existingAmendment.dealId.toString(), amendmentId });
+    await this.validateNoOtherAmendmentInProgressOnFacility({ facilityId, amendmentId });
 
     const facilityMongoId = new ObjectId(facilityId);
     const amendmentMongoId = new ObjectId(amendmentId);
@@ -304,9 +304,7 @@ export class PortalFacilityAmendmentService {
       throw new AmendmentNotFoundError(amendmentId, facilityId);
     }
 
-    const dealId = existingAmendment.dealId.toString();
-
-    await this.validateNoOtherAmendmentInProgressOnDeal({ dealId, amendmentId });
+    await this.validateNoOtherAmendmentInProgressOnFacility({ facilityId, amendmentId });
 
     const facilityMongoId = new ObjectId(facilityId);
     const amendmentMongoId = new ObjectId(amendmentId);

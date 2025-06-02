@@ -1,11 +1,11 @@
-import { CustomExpressRequest, PORTAL_AMENDMENT_INPROGRESS_STATUSES } from '@ukef/dtfs2-common';
+import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { createAmendmentDetailsViewModel } from './create-amendment-details-view-model';
 
 export type GetAmendmentDetailsRequest = CustomExpressRequest<{
-  params: { dealId: string };
+  params: { dealId: string; facilityId: string; amendmentId: string };
 }>;
 
 /**
@@ -15,7 +15,7 @@ export type GetAmendmentDetailsRequest = CustomExpressRequest<{
  */
 export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: Response) => {
   try {
-    const { dealId } = req.params;
+    const { dealId, amendmentId, facilityId } = req.params;
     const { userToken, user } = asLoggedInUserSession(req.session);
     const userRoles = user.roles;
 
@@ -30,16 +30,14 @@ export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: 
      * gets amendments in progress
      * will only return 1 as only 1 amendment can be in progress at a time
      */
-    const amendments = await api.getAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
+    const amendment = await api.getAmendment({ amendmentId, facilityId, userToken });
 
-    if (!amendments?.length) {
-      console.error('In progress amendment was not found for the deal %s', dealId);
+    if (!amendment) {
+      console.error('Amendment was not found for the amendment id %s and facility id %s', amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 
-    const amendment = amendments[0];
-
-    const { details: facility } = await api.getFacility({ facilityId: amendment.facilityId, userToken });
+    const { details: facility } = await api.getFacility({ facilityId, userToken });
 
     if (!facility) {
       console.error('Facility %s was not found', amendment.facilityId);

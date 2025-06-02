@@ -1,5 +1,5 @@
 const startCase = require('lodash/startCase');
-const { DEAL_TYPE, timeZoneConfig, DEAL_STATUS, PORTAL_AMENDMENT_INPROGRESS_STATUSES } = require('@ukef/dtfs2-common');
+const { DEAL_TYPE, timeZoneConfig, DEAL_STATUS, PORTAL_AMENDMENT_INPROGRESS_STATUSES, PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { getTfmDeal, getAmendmentsOnDeal, getFacilities, getFacility } = require('../../services/api');
 const { canIssueUnissuedFacilities } = require('./canIssueUnissuedFacilities');
 const {
@@ -26,6 +26,7 @@ const Application = require('../../models/application');
 const { MAKER } = require('../../constants/roles');
 const { canUserAmendIssuedFacilities } = require('../../utils/facility-amendments.helper');
 const { getSubmittedAmendmentDetails } = require('../../utils/submitted-amendment-details');
+const { addAmendmentParamsToFacility } = require('../../helpers/add-amendment-params-to-facility');
 
 let userSession;
 let apiToken;
@@ -129,8 +130,6 @@ const buildBody = async (app, previewMode, user) => {
             // ukefFacilityId required for html facility summary table id
             ukefFacilityId: item.details.ukefFacilityId,
             stage: item.details?.facilityStage ?? (item.details.hasBeenIssued ? STAGE.ISSUED : STAGE.UNISSUED),
-            // isFacilityWithAmendmentInProgress required for html. A link see details will appear to the user for facility with amendment in progress
-            isFacilityWithAmendmentInProgress: item.details._id === app.facilityIdWithAmendmentInProgress,
           }))
           .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
       },
@@ -349,8 +348,66 @@ const applicationDetails = async (req, res, next) => {
 
     const amendmentsUnderwayOnDeal = await getAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
 
-    params.canIssuedFacilitiesBeAmended =
-      canUserAmendIssuedFacilities(application.submissionType, application.status, userRoles) && !amendmentsUnderwayOnDeal.length;
+    // array of facility ids that are currently being amended
+    const amendmentsInProgress = amendmentsUnderwayOnDeal.map((amendment) => ({
+      amendmentId: amendment.amendmentId,
+      facilityId: amendment.facilityId,
+      status: amendment.status,
+    }));
+
+    params.readyForCheckerAmendmentStatusHeading = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
+    params.readyForCheckerAmendmentDetailsUrlAndText = [];
+
+    params.furtherMakersInputAmendmentStatusHeading = PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
+    params.furtherMakersInputAmendmentDetailsUrlAndText = [];
+
+    /**
+     * Flag facilities that are issued and have an amendment in progress
+     * maps through facilities
+     * checks if facility is issued, checks if facility does not have an amendment in progress and checks if user can amend issued facilities
+     * if all 3 are true, set canIssuedFacilitiesBeAmended to true
+     */
+    const facilitiesWithAmendmentFlag = params.facilities.data.map((eachFacility) => {
+      const facilityToMap = eachFacility;
+
+      const isFacilityIssued = eachFacility.stage === STAGE.ISSUED;
+
+      const userCanAmendIssuedFacilities = canUserAmendIssuedFacilities(application.submissionType, application.status, userRoles);
+
+      const isFacilityWithAmendmentInProgress = amendmentsInProgress.find(
+        (item) => item.facilityId === eachFacility.facilityId && PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(item.status),
+      );
+
+      const canIssuedFacilitiesBeAmended = isFacilityIssued && userCanAmendIssuedFacilities && !isFacilityWithAmendmentInProgress;
+
+      facilityToMap.canIssuedFacilitiesBeAmended = canIssuedFacilitiesBeAmended;
+
+      if (isFacilityWithAmendmentInProgress) {
+        const { mappedFacility, readyForCheckerAmendmentDetailsUrlAndText, furtherMakersInputAmendmentDetailsUrlAndText } = addAmendmentParamsToFacility({
+          facility: facilityToMap,
+          dealId,
+          userRoles,
+          isFacilityWithAmendmentInProgress,
+          readyForCheckerAmendmentDetailsUrlAndText: params.readyForCheckerAmendmentDetailsUrlAndText,
+          furtherMakersInputAmendmentDetailsUrlAndText: params.furtherMakersInputAmendmentDetailsUrlAndText,
+        });
+
+        if (readyForCheckerAmendmentDetailsUrlAndText.length) {
+          params.readyForCheckerAmendmentDetailsUrlAndText = readyForCheckerAmendmentDetailsUrlAndText;
+        }
+
+        if (furtherMakersInputAmendmentDetailsUrlAndText.length) {
+          params.furtherMakersInputAmendmentDetailsUrlAndText = furtherMakersInputAmendmentDetailsUrlAndText;
+        }
+
+        return mappedFacility;
+      }
+
+      return facilityToMap;
+    });
+
+    // redeclare params.facilities.data to include the new flag
+    params.facilities.data = facilitiesWithAmendmentFlag;
 
     return res.render(`partials/${partial}.njk`, params);
   } catch (error) {
