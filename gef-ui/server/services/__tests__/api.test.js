@@ -7,7 +7,7 @@ import {
   PORTAL_AMENDMENT_INPROGRESS_STATUSES,
 } from '@ukef/dtfs2-common';
 import Axios from '../axios';
-import api from '../api';
+import api, { getTfmDeal } from '../api';
 import CONSTANTS from '../../constants';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../test-helpers/mock-amendment';
 
@@ -576,5 +576,154 @@ describe('getAmendmentsOnDeal()', () => {
 
     // Assert
     await expect(returned).rejects.toThrow(InvalidDealIdError);
+  });
+});
+
+describe('getTfmDeal', () => {
+  const invalidDealIds = ['', undefined, null, '123', 123, 'abc', '!@£', '123123123ABC', {}, []];
+  const dealId = '61a7710b2ae62b0013dae687';
+
+  describe('MongoID validation', () => {
+    it.each(invalidDealIds)('should throw an error if an invalid Mongo deal ID `%s` is supplied', async (invalidDealId) => {
+      // Arrange
+
+      // Act
+      const response = await getTfmDeal({ dealId: invalidDealId, userToken });
+
+      // Assert
+      expect(console.error).toHaveBeenCalledTimes(2);
+      expect(console.error).toHaveBeenCalledWith('Invalid deal ID %s', invalidDealId);
+      expect(console.error).toHaveBeenCalledWith('Unable to get TFM deal %s %o', invalidDealId, new Error('Invalid deal ID'));
+      expect(response).toBeFalsy();
+    });
+  });
+
+  describe('API call', () => {
+    it('should return TFM deal when a valid Mongo deal ID is supplied', async () => {
+      // Arrange
+      const deal = {
+        _id: dealId,
+        dealSnapshot: {
+          dealId,
+        },
+        tfm: {},
+      };
+
+      const mockResponse = {
+        data: {
+          deal,
+        },
+      };
+
+      Axios.get.mockResolvedValueOnce(mockResponse);
+
+      // Act
+      const response = await getTfmDeal({ dealId, userToken });
+
+      // Assert
+      expect(console.error).not.toHaveBeenCalled();
+      expect(Axios.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
+        headers: { Authorization: userToken },
+      });
+      expect(response).toBe(mockResponse.data);
+    });
+
+    it('should return false when an empty response is received', async () => {
+      // Arrange
+      const mockError = new Error('Invalid TFM deal response received');
+      const mockResponse = {};
+
+      Axios.get.mockResolvedValueOnce(mockResponse);
+
+      // Act
+      const response = await getTfmDeal({ dealId, userToken });
+
+      // Assert
+      expect(Axios.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
+        headers: { Authorization: userToken },
+      });
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get TFM deal %s %o', dealId, mockError);
+      expect(response).toBeFalsy();
+    });
+
+    it('should return false when an undefined response is received', async () => {
+      // Arrange
+      const mockError = new Error('Invalid TFM deal response received');
+      const mockResponse = undefined;
+
+      Axios.get.mockResolvedValueOnce(mockResponse);
+
+      // Act
+      const response = await getTfmDeal({ dealId, userToken });
+
+      // Assert
+      expect(Axios.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
+        headers: { Authorization: userToken },
+      });
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get TFM deal %s %o', dealId, mockError);
+      expect(response).toBeFalsy();
+    });
+
+    it('should return false when a null response is received', async () => {
+      // Arrange
+      const mockError = new Error('Invalid TFM deal response received');
+      const mockResponse = null;
+
+      Axios.get.mockResolvedValueOnce(mockResponse);
+
+      // Act
+      const response = await getTfmDeal({ dealId, userToken });
+
+      // Assert
+      expect(Axios.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
+        headers: { Authorization: userToken },
+      });
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get TFM deal %s %o', dealId, mockError);
+      expect(response).toBeFalsy();
+    });
+
+    it('should return false when an empty data response is received', async () => {
+      // Arrange
+      const mockError = new Error('Invalid TFM deal response received');
+      const mockResponse = {
+        data: undefined,
+      };
+
+      Axios.get.mockResolvedValueOnce(mockResponse);
+
+      // Act
+      const response = await getTfmDeal({ dealId, userToken });
+
+      // Assert
+      expect(Axios.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
+        headers: { Authorization: userToken },
+      });
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get TFM deal %s %o', dealId, mockError);
+      expect(response).toBeFalsy();
+    });
+  });
+
+  describe('Exception handling', () => {
+    it('should catch an error if an exception is thrown', async () => {
+      // Arrange
+      const mockError = new Error('Test error');
+
+      Axios.get.mockRejectedValueOnce(mockError);
+
+      // Act
+      const response = await getTfmDeal({ dealId, userToken });
+
+      // Assert
+      expect(Axios.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
+        headers: { Authorization: userToken },
+      });
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get TFM deal %s %o', dealId, mockError);
+      expect(response).toBeFalsy();
+    });
   });
 });

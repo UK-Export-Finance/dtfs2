@@ -15,6 +15,7 @@ import {
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
+import { acbsReconciliation } from '../../../../../../e2e-fixtures/acbs';
 import { continueButton, errorSummary, mainHeading } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';
@@ -57,6 +58,13 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
             );
             cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF);
+
+            // Add ACBS object to TFM
+            cy.putTfmDeal(dealId, {
+              tfm: {
+                ...acbsReconciliation,
+              },
+            });
           });
         });
       });
@@ -69,7 +77,7 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
-    // ensures the task comment box exists with correct headers and link
+    // ensures the task comment box exists with correct headers and link after ACBS reconciliation
     it('task comment box exists with correct header and unissued facilities link', () => {
       applicationPreview.unissuedFacilitiesHeader().contains('Update facility stage for unissued facilities');
       applicationPreview.unissuedFacilitiesReviewLink().contains('View unissued facilities');

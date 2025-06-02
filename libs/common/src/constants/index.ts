@@ -38,5 +38,6 @@ export * from './record-correction-status';
 export * from './utilisation-report-status-tag-colours';
 export * from './timeout';
 export * from './environments';
+export * from './acbs-facility-stage';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';

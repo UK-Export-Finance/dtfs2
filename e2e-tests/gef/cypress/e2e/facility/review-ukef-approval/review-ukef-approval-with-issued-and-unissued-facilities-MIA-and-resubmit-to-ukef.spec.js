@@ -5,6 +5,7 @@ import { threeDaysAgo, addDays, twoMonths, threeMonths } from '../../../../../e2
 import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_SUBMITTED_TO_UKEF, UKEF_DECISION, underwriterManagersDecision } from '../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../../e2e-fixtures/portal-users.fixture';
 import { anIssuedCashFacilityWithCoverDateConfirmed, multipleMockGefFacilities } from '../../../../../e2e-fixtures/mock-gef-facilities';
+import { acbsReconciliation } from '../../../../../e2e-fixtures/acbs';
 import { toTitleCase } from '../../../fixtures/helpers';
 import { continueButton, errorSummary, submitButton } from '../../partials';
 import applicationPreview from '../../pages/application-preview';
@@ -60,6 +61,13 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
             cy.addCommentObjToDeal(dealId, CONSTANTS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION, UKEF_DECISION);
           });
           cy.addUnderwriterCommentToTfm(dealId, underwriterManagersDecision);
+
+          // Add ACBS object to TFM
+          cy.putTfmDeal(dealId, {
+            tfm: {
+              ...acbsReconciliation,
+            },
+          });
         });
       });
   });

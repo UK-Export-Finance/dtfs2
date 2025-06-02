@@ -1,6 +1,6 @@
 const { ALL_TEAM_IDS } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
-const { getTfmTeam } = require('../api');
+const { getTfmTeam, getTfmDeal } = require('../api');
 
 /**
  * Handles the request to retrieve a TFM team by its ID.
@@ -41,5 +41,41 @@ exports.tfmTeam = async (req, res) => {
   } catch (error) {
     console.error('Unable to get the TFM team with ID %s %o', req.params?.teamId, error);
     return res.status(HttpStatusCode.InternalServerError).send('Unable to get the TFM team');
+  }
+};
+
+/**
+ * Handles the request to retrieve a TFM deal by its ID.
+ *
+ * The endpoint check whether the provided `dealId` is not falsy.
+ * If valid then retiereves the TFM deals from `tfm-deals` collection using
+ * provided `dealId` parameter.
+ * Returns the deal information if successful, or an appropriate error response otherwise.
+ *
+ * @async
+ * @function tfmDeal
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Promise<void>} An express response is returned using the `res` parameter.
+ */
+exports.tfmDeal = async (req, res) => {
+  try {
+    const { dealId } = req.params;
+
+    if (!dealId) {
+      console.error('Invalid TFM deal ID %s provided', dealId);
+      return res.status(HttpStatusCode.BadRequest).send('Invalid TFM deal ID provided');
+    }
+
+    const response = await getTfmDeal(dealId);
+
+    if (!response?.data?.deal) {
+      throw new Error('Invalid TFM deal response received');
+    }
+
+    return res.status(HttpStatusCode.Ok).send(response.data.deal);
+  } catch (error) {
+    console.error('Unable to get the TFM deal with ID %s %o', req.params?.dealId, error);
+    return res.status(HttpStatusCode.InternalServerError).send('Unable to get the TFM deal');
   }
 };
