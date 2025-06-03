@@ -7,8 +7,8 @@ import { Facility } from '../../../types/facility';
 dotenv.config();
 
 /**
- * maps emailVariables to an email on amendment return to maker
- * consumes deal, facility, amendment and user and maps to relevant format
+ * Maps email variables for a GovNotify email when an amendment is returned to the maker.
+ * Consumes deal, facility, amendment and user data and maps to relevant email variables.
  * @param deal
  * @param facility
  * @param amendment
