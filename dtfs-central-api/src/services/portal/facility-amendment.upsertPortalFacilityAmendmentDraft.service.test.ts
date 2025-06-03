@@ -36,10 +36,11 @@ jest.mock('../../repositories/portal/eligibility-criteria-amendments.repo', () =
 }));
 
 const mockUpsertPortalFacilityAmendmentDraft = jest.fn();
-const mockValidateNoOtherAmendmentInProgressOnDeal = jest.fn();
+const mockValidateNoOtherAmendmentInProgressOnFacility = jest.fn();
 
 const dealId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
+
 const amendment = aPortalFacilityAmendmentUserValues();
 const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
 const facility = aFacility();
@@ -54,13 +55,15 @@ describe('PortalFacilityAmendmentService', () => {
     jest.resetAllMocks();
 
     jest.spyOn(TfmFacilitiesRepo, 'upsertPortalFacilityAmendmentDraft').mockImplementation(mockUpsertPortalFacilityAmendmentDraft);
-    jest.spyOn(PortalFacilityAmendmentService, 'validateNoOtherAmendmentInProgressOnDeal').mockImplementation(mockValidateNoOtherAmendmentInProgressOnDeal);
+    jest
+      .spyOn(PortalFacilityAmendmentService, 'validateNoOtherAmendmentInProgressOnFacility')
+      .mockImplementation(mockValidateNoOtherAmendmentInProgressOnFacility);
 
     mockFindOneUser.mockResolvedValue(aPortalUser());
     mockFindOneFacility.mockResolvedValue(facility);
     mockFindOneFacility.mockResolvedValue(facility);
     mockFindLatestEligibilityCriteria.mockResolvedValue(eligibilityCriteria);
-    mockValidateNoOtherAmendmentInProgressOnDeal.mockResolvedValue(undefined);
+    mockValidateNoOtherAmendmentInProgressOnFacility.mockResolvedValue(undefined);
   });
 
   afterAll(() => {
@@ -125,7 +128,7 @@ describe('PortalFacilityAmendmentService', () => {
       expect(mockFindLatestEligibilityCriteria).toHaveBeenCalledWith(facility.type);
     });
 
-    it('should call validateNoOtherAmendmentsUnderWayOnDeal with the dealId', async () => {
+    it('should call validateNoOtherAmendmentsUnderWayOnFacility with the facilityId', async () => {
       // Act
       await PortalFacilityAmendmentService.upsertPortalFacilityAmendmentDraft({
         dealId,
@@ -135,14 +138,14 @@ describe('PortalFacilityAmendmentService', () => {
       });
 
       // Assert
-      expect(mockValidateNoOtherAmendmentInProgressOnDeal).toHaveBeenCalledTimes(1);
-      expect(mockValidateNoOtherAmendmentInProgressOnDeal).toHaveBeenCalledWith({ dealId });
+      expect(mockValidateNoOtherAmendmentInProgressOnFacility).toHaveBeenCalledTimes(1);
+      expect(mockValidateNoOtherAmendmentInProgressOnFacility).toHaveBeenCalledWith({ facilityId });
     });
 
     it(`should throw an error if validateNoOtherAmendmentsUnderWayOnDeal throws an error`, async () => {
       // Arrange
       const mockError = new PortalFacilityAmendmentConflictError(dealId);
-      mockValidateNoOtherAmendmentInProgressOnDeal.mockRejectedValue(mockError);
+      mockValidateNoOtherAmendmentInProgressOnFacility.mockRejectedValue(mockError);
 
       // Act + Assert
       await expect(() =>
