@@ -180,7 +180,7 @@ jobs:
                     { "name": "Branch", "value": "main" },
                     { "name": "Environment", "value": "${{ env.ENVIRONMENT }}" },
                     { "name": "Commit", "value": "${{ github.sha }}" },
-                    { "name": "Status", "value": "Successfull" }
+                    { "name": "Status", "value": "Successful" }
                   ],
                   "markdown": true
                 }

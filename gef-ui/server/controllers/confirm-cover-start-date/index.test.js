@@ -1,4 +1,4 @@
-import { CURRENCY } from '@ukef/dtfs2-common';
+import { ACBS_FACILITY_STAGE, CURRENCY } from '@ukef/dtfs2-common';
 import { processCoverStartDate } from './index';
 import api from '../../services/api';
 import CONSTANTS from '../../constants';
@@ -88,6 +88,26 @@ const MockFacilityResponse = () => {
   return res;
 };
 
+const MockTfmDealResponse = () => {
+  return {
+    dealSnapshot: {},
+    tfm: {
+      facilityGuaranteeDates: { effectiveDate: '2024-08-01', guaranteeCommencementDate: '2024-08-01', guaranteeExpiryDate: '2025-06-01' },
+      feeRecord: null,
+      riskProfile: 'Flat',
+      ukefExposure: 800,
+      ukefExposureCalculationTimestamp: '1722528795105',
+      acbs: {
+        facilities: [
+          {
+            facilityStage: ACBS_FACILITY_STAGE.COMMITMENT,
+          },
+        ],
+      },
+    },
+  };
+};
+
 describe('controller/ukef-cover-start-date', () => {
   let mockResponse;
   let mockRequest;
@@ -114,6 +134,7 @@ describe('controller/ukef-cover-start-date', () => {
     api.getUserDetails.mockResolvedValue(mockUserResponse);
     api.updateApplication = updateApplicationSpy;
     api.getFacility.mockResolvedValue(mockFacilityResponse.items[0]);
+    api.getTfmDeal.mockResolvedValue(MockTfmDealResponse);
     getSubmittedAmendmentDetails.mockResolvedValue(amendmentDetails);
     mockRequest.flash = jest.fn().mockReturnValue([{ message: 'Facility is updated' }]);
   });

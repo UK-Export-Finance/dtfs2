@@ -170,11 +170,12 @@ describe('controllers/application-details', () => {
           renderReviewDecisionLink: expect.any(Boolean),
           previewMode: expect.any(Boolean),
           unissuedFacilitiesPresent: expect.any(Boolean),
-          facilitiesChangedToIssued: expect.any(Array),
+          canResubmitIssueFacilities: expect.any(Number),
+          resubmitIssuedFacilities: expect.any(Array),
           displayComments: expect.any(Boolean),
           hasChangedFacilities: expect.any(Boolean),
           displayChangeSupportingInfo: expect.any(Boolean),
-          canUpdateUnissuedFacilities: expect.any(Boolean),
+          canIssueFacilities: expect.any(Boolean),
           MIAReturnToMaker: expect.any(Boolean),
           returnToMakerNoFacilitiesChanged: expect.any(Boolean),
           canCloneDeal: expect.any(Boolean),
@@ -504,7 +505,8 @@ describe('controllers/application-details', () => {
           expect.objectContaining({
             applicationStatus: mockApplicationResponse.status,
             unissuedFacilitiesPresent: false,
-            facilitiesChangedToIssued: [],
+            canResubmitIssueFacilities: 0,
+            resubmitIssuedFacilities: [],
           }),
         );
       });

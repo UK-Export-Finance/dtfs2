@@ -1,6 +1,6 @@
 const { getApplication, getFacilities, getUserDetails } = require('../services/api');
 const { status } = require('../utils/deal-helpers');
-const { facilitiesChangedToIssuedAsArray } = require('../utils/facility-helpers');
+const { canResubmitIssuedFacilities } = require('../utils/facility-helpers');
 const { DEAL_STATUS, DEAL_SUBMISSION_TYPE } = require('../constants');
 const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../constants/roles');
 
@@ -88,7 +88,7 @@ const applicationCanResubmitAsNotice = (application) =>
   (application.submissionType === DEAL_SUBMISSION_TYPE.AIN || application.submissionType === DEAL_SUBMISSION_TYPE.MIN) &&
   application.submissionCount > 0 &&
   [DEAL_STATUS.CHANGES_REQUIRED].includes(application.status) &&
-  facilitiesChangedToIssuedAsArray(application).length > 0 &&
+  canResubmitIssuedFacilities(application).length > 0 &&
   application.facilitiesStatus.code === DEAL_STATUS.COMPLETED;
 
 // Can only submit when all section statuses are set to complete

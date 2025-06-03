@@ -1,7 +1,7 @@
 import axios, { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { HEADERS, ROLES, ALL_TEAM_IDS } from '@ukef/dtfs2-common';
-import { getTfmTeam, findGefFacilitiesByDealId } from './api';
+import { getTfmDeal, getTfmTeam, findGefFacilitiesByDealId } from './api';
 
 const { DTFS_CENTRAL_API_URL, DTFS_CENTRAL_API_KEY } = process.env;
 const headers = {
@@ -49,10 +49,11 @@ describe('getTfmTeam', () => {
       // Assert
       expect(response.data).toEqual('');
       expect(response.status).toEqual(HttpStatusCode.NotFound);
+      expect(axios).toHaveBeenCalledWith({ method: 'get', url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${teamId}`, headers });
     });
   });
 
-  describe('Successfull API calls', () => {
+  describe('Successful API calls', () => {
     afterEach(() => {
       jest.resetAllMocks();
       jest.restoreAllMocks();
@@ -172,7 +173,7 @@ describe('getTfmTeam', () => {
         data: 'Unable to get the TFM team',
       };
       const underwriter = ALL_TEAM_IDS[0];
-      const error = 'Test error';
+      const error = new Error('Test error');
 
       axios.mockRejectedValueOnce(error);
 
@@ -180,7 +181,9 @@ describe('getTfmTeam', () => {
       const response = await getTfmTeam(underwriter);
 
       // Assert
+      expect(axios).toHaveBeenCalledWith({ method: 'get', url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${underwriter}`, headers });
       expect(console.error).toHaveBeenCalledWith('Unable to get the TFM team with ID %s %o', underwriter, error);
+      expect(console.error).toHaveBeenCalledTimes(1);
       expect(response).toStrictEqual(expectedResponse);
     });
 
@@ -202,7 +205,119 @@ describe('getTfmTeam', () => {
       const response = await getTfmTeam(pim);
 
       // Assert
+      expect(axios).toHaveBeenCalledWith({ method: 'get', url: `${DTFS_CENTRAL_API_URL}/v1/tfm/teams/${pim}`, headers });
       expect(console.error).toHaveBeenCalledWith('Unable to get the TFM team with ID %s %o', pim, error);
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(response).toStrictEqual(expectedResponse);
+    });
+  });
+});
+
+describe('getTfmDeal', () => {
+  const invalidDealIds = ['', undefined, null, {}, []];
+
+  describe('Argument validation', () => {
+    afterEach(() => {
+      jest.resetAllMocks();
+      jest.restoreAllMocks();
+    });
+
+    it.each(invalidDealIds)(`should return ${HttpStatusCode.BadRequest} when an invalid '%s' as a deal ID is supplied`, async (dealId) => {
+      // Arrange
+      axios.mockResolvedValueOnce({
+        message: 'Deal not found',
+        status: HttpStatusCode.NotFound,
+      });
+
+      // Act
+      const response = await getTfmDeal(dealId);
+
+      // Assert
+      expect(response.message).toEqual('Deal not found');
+      expect(response.status).toEqual(HttpStatusCode.NotFound);
+      expect(axios).toHaveBeenCalledWith({ method: 'get', url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}`, headers });
+    });
+  });
+
+  describe('Successful API calls', () => {
+    afterEach(() => {
+      jest.resetAllMocks();
+      jest.restoreAllMocks();
+    });
+
+    it('should return the TFM deal object', async () => {
+      // Arrange
+      const dealId = '68373b75712a02a036441ae8';
+      const mockResponse = {
+        _id: dealId,
+        dealSnaphot: {},
+        tfm: {},
+      };
+
+      axios.mockResolvedValueOnce({
+        status: HttpStatusCode.Ok,
+        data: mockResponse,
+      });
+
+      // Act
+      const response = await getTfmDeal('68373b75712a02a036441ae8');
+
+      // Assert
+      expect(response.data).toMatchObject(mockResponse);
+      expect(response.status).toBe(HttpStatusCode.Ok);
+      expect(axios).toHaveBeenCalledWith({ method: 'get', url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}`, headers });
+    });
+  });
+
+  describe('Exception handling', () => {
+    afterEach(() => {
+      jest.resetAllMocks();
+      jest.restoreAllMocks();
+    });
+
+    const dealId = '68373b75712a02a036441ae8';
+
+    it('should catch an error if an exception has occurred during an API call', async () => {
+      // Arrange
+      const expectedResponse = {
+        status: HttpStatusCode.InternalServerError,
+        data: 'Unable to get the TFM deal',
+      };
+      const error = new Error('Test error');
+
+      axios.mockRejectedValueOnce(error);
+
+      // Act
+      const response = await getTfmDeal(dealId);
+
+      // Assert
+      expect(axios).toHaveBeenCalledWith({ method: 'get', url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}`, headers });
+      expect(console.error).toHaveBeenCalledWith('Unable to get the TFM deal with ID %s %o', dealId, error);
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(response).toStrictEqual(expectedResponse);
+    });
+
+    it('should catch an error if an exception has occurred with custom error code', async () => {
+      // Arrange
+      const expectedResponse = {
+        status: HttpStatusCode.BadGateway,
+        data: 'Unable to get the TFM deal',
+      };
+
+      const error = {
+        code: HttpStatusCode.BadGateway,
+        data: 'Bad gateway error',
+      };
+
+      axios.mockRejectedValueOnce(error);
+
+      // Act
+      const response = await getTfmDeal(dealId);
+
+      // Assert
+      expect(axios).toHaveBeenCalledWith({ method: 'get', url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}`, headers });
+      expect(console.error).toHaveBeenCalledWith('Unable to get the TFM deal with ID %s %o', dealId, error);
+      expect(console.error).toHaveBeenCalledTimes(1);
       expect(response).toStrictEqual(expectedResponse);
     });
   });

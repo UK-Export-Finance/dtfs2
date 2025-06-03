@@ -4,6 +4,7 @@ import { threeDaysAgoPlusThreeMonths, threeDaysAgo, threeMonthsOneDay } from '..
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 import { anUnissuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';
+import { acbsReconciliation } from '../../../../../../e2e-fixtures/acbs';
 import { mainHeading } from '../../../partials';
 import applicationPreview from '../../../pages/application-preview';
 import unissuedFacilityTable from '../../../pages/unissued-facilities';
@@ -34,6 +35,13 @@ context('Unissued Facilities AIN - change all to issued from unissued table', ()
               cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
             });
             cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.SUBMITTED_TO_UKEF);
+
+            // Add ACBS object to TFM
+            cy.putTfmDeal(dealId, {
+              tfm: {
+                ...acbsReconciliation,
+              },
+            });
           });
         });
       });
