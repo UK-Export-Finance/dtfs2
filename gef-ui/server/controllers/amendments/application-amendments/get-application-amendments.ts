@@ -69,8 +69,8 @@ export const getApplicationAmendments = async (req: GetApplicationAmendmentsRequ
       companyName: deal.exporter.companyName,
       dateCreated: deal.createdAt,
       submissionDate: deal.submissionDate,
-      portalAmendmentStatus: lastSubmittedPortalAmendmentDetails.portalAmendmentStatus,
-      isPortalAmendmentInProgress: lastSubmittedPortalAmendmentDetails.isPortalAmendmentInProgress,
+      portalAmendmentStatus: lastSubmittedPortalAmendmentDetails?.portalAmendmentStatus,
+      isPortalAmendmentInProgress: lastSubmittedPortalAmendmentDetails?.isPortalAmendmentInProgress,
       applicationAmendmentsOnDeal: getApplicationAmendmentsOnDeal,
     };
 
