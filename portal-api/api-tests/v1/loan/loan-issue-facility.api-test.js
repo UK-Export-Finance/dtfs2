@@ -59,33 +59,33 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
     name: '1234',
   };
 
-  let aBarclaysMaker;
-  let anHSBCMaker;
+  let aTestbank1Maker;
+  let anTestbank2Maker;
   let aSuperuser;
   let dealId;
   let loanId;
 
   const createLoan = async () => {
-    const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+    const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
     dealId = deal.body._id;
 
-    const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+    const createLoanResponse = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
     loanId = createLoanResponse.body.loanId;
 
-    const { status, body } = await as(aBarclaysMaker).put(allLoanFields).to(`/v1/deals/${dealId}/loan/${loanId}`);
+    const { status, body } = await as(aTestbank1Maker).put(allLoanFields).to(`/v1/deals/${dealId}/loan/${loanId}`);
     expect(body.hasBeenIssued).toEqual(true);
     expect(status).toEqual(200);
   };
 
   const putIssueFacility = async (issueFacilityDealId, issueFacilityLoanId, body) => {
-    const response = await as(aBarclaysMaker).put(body).to(`/v1/deals/${issueFacilityDealId}/loan/${issueFacilityLoanId}/issue-facility`);
+    const response = await as(aTestbank1Maker).put(body).to(`/v1/deals/${issueFacilityDealId}/loan/${issueFacilityLoanId}/issue-facility`);
     return response;
   };
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
-    anHSBCMaker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
+    aTestbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    anTestbank2Maker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
     aSuperuser = testUsers().superuser().one();
     const anAdmin = testUsers().withRole(ADMIN).one();
 
@@ -101,7 +101,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
 
   describe('PUT /v1/deals/:id/loan/:id/issue-facility', () => {
     it('should return 401 when user cannot access the deal', async () => {
-      const { status } = await as(anHSBCMaker).put({}).to(`/v1/deals/${dealId}/loan/${loanId}/issue-facility`);
+      const { status } = await as(anTestbank2Maker).put({}).to(`/v1/deals/${dealId}/loan/${loanId}/issue-facility`);
       expect(status).toEqual(401);
     });
 
@@ -137,7 +137,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
     });
 
     it('should remove loan status when issueFacilityDetailsStarted already exists in the loan', async () => {
-      const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+      const createLoanResponse = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
       loanId = createLoanResponse.body.loanId;
 
       const loanWithIssueFacilityDetailsStarted = {
@@ -146,7 +146,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
         issueFacilityDetailsSubmitted: false,
       };
 
-      await as(aBarclaysMaker).put(loanWithIssueFacilityDetailsStarted).to(`/v1/deals/${dealId}/loan/${loanId}`);
+      await as(aTestbank1Maker).put(loanWithIssueFacilityDetailsStarted).to(`/v1/deals/${dealId}/loan/${loanId}`);
 
       const { body } = await putIssueFacility(dealId, loanId, issueFacilityBody);
 
@@ -181,7 +181,7 @@ describe('/v1/deals/:id/loan/:id/issue-facility', () => {
       describe('when there is no loan.name', () => {
         it('should return validationErrors, the loan with nameRequiredForIssuance', async () => {
           // remove name
-          await as(aBarclaysMaker)
+          await as(aTestbank1Maker)
             .put({
               ...allLoanFields,
               name: '',

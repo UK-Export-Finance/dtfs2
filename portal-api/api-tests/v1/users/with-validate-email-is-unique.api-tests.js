@@ -10,7 +10,7 @@ const withValidateEmailIsUniqueTests = ({ payload, makeRequest, getAdminUser }) 
   describe('when validating the email is unique', () => {
     const EMAIL_MUST_BE_UNIQUE_ERROR = { text: 'Email address already in use' };
     const A_MATCHING_EMAIL = 'aMatchingEmail@ukexportfinance.gov.uk';
-    const EXISTING_USER_WITH_SAME_EMAIL = produce(users.barclaysBankMaker1, (draftUser) => {
+    const EXISTING_USER_WITH_SAME_EMAIL = produce(users.Testbank1BankMaker1, (draftUser) => {
       draftUser.username = A_MATCHING_EMAIL;
       draftUser.email = A_MATCHING_EMAIL;
     });

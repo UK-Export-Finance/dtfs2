@@ -15,7 +15,7 @@ const { STATUS } = require('../../../src/constants/user');
 
 const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
 const MOCK_USER = {
-  ...users.barclaysBankMaker1,
+  ...users.Testbank1BankMaker1,
   username: temporaryUsernameAndEmail,
   email: temporaryUsernameAndEmail,
 };

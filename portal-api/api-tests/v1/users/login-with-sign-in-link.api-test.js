@@ -12,8 +12,8 @@ const databaseHelper = require('../../database-helper');
 const { createPartiallyLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
 const { sanitizeUser } = require('../../../src/v1/users/sanitizeUserData');
 
-const aMaker = users.barclaysBankMaker1;
-const anotherMaker = users.barclaysBankMaker2;
+const aMaker = users.Testbank1BankMaker1;
+const anotherMaker = users.Testbank1BankMaker2;
 
 describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
   const invalidUserId = '1';

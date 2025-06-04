@@ -14,14 +14,14 @@ jest.unmock('../../../src/external-api/api');
 const mockIndustrySectorCode = '1008';
 
 describe('/v1/industry-sectors', () => {
-  let aBarclaysMaker;
+  let aTestbank1Maker;
   let testUsers;
   let testUser;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     testUser = testUsers().one();
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    aTestbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
   });
 
   describe('GET /v1/industry-sectors', () => {
@@ -33,7 +33,7 @@ describe('/v1/industry-sectors', () => {
     });
 
     it('returns a list of industry-sectors', async () => {
-      const { status, body } = await as(aBarclaysMaker).get(industrySectorsUrl);
+      const { status, body } = await as(aTestbank1Maker).get(industrySectorsUrl);
 
       expect(status).toEqual(200);
 
@@ -64,13 +64,13 @@ describe('/v1/industry-sectors', () => {
     });
 
     it("returns 404 when industry sector doesn't exist", async () => {
-      const { status } = await as(aBarclaysMaker).get('/v1/industry-sectors/11');
+      const { status } = await as(aTestbank1Maker).get('/v1/industry-sectors/11');
 
       expect(status).toEqual(404);
     });
 
     it('returns 400 when industry sector code is invalid', async () => {
-      const { status } = await as(aBarclaysMaker).get('/v1/industry-sectors/ABC');
+      const { status } = await as(aTestbank1Maker).get('/v1/industry-sectors/ABC');
 
       expect(status).toEqual(400);
     });

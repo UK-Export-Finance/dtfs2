@@ -66,16 +66,16 @@ describe('/v1/deals/:id/bond', () => {
   };
 
   let testUsers;
-  let aBarclaysMaker;
-  let anHSBCMaker;
+  let aTestbank1Maker;
+  let anTestbank2Maker;
   let aSuperuser;
   let testUser;
 
   const createBond = async () => {
-    const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+    const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
     const dealId = deal.body._id;
 
-    const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+    const createBondResponse = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
     const { bondId } = createBondResponse.body;
     return {
       dealId,
@@ -86,8 +86,8 @@ describe('/v1/deals/:id/bond', () => {
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     testUser = testUsers().withRole(READ_ONLY).one();
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
-    anHSBCMaker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
+    aTestbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    anTestbank2Maker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
     aSuperuser = testUsers().superuser().one();
   });
 
@@ -97,74 +97,74 @@ describe('/v1/deals/:id/bond', () => {
   });
 
   describe('GET /v1/deals/:id/bond/:id', () => {
-    let aBarclaysBondUrl;
+    let aTestbank1BondUrl;
     let dealId;
     let bondId;
 
     beforeEach(async () => {
       const {
         body: { _id: createdDealId },
-      } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      } = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
       dealId = createdDealId;
 
       const {
         body: { bondId: createdBondId },
-      } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+      } = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
       bondId = createdBondId;
 
-      aBarclaysBondUrl = `/v1/deals/${dealId}/bond/${bondId}`;
+      aTestbank1BondUrl = `/v1/deals/${dealId}/bond/${bondId}`;
     });
 
     withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => get(aBarclaysBondUrl),
-      makeRequestWithAuthHeader: (authHeader) => get(aBarclaysBondUrl, { headers: { Authorization: authHeader } }),
+      makeRequestWithoutAuthHeader: () => get(aTestbank1BondUrl),
+      makeRequestWithAuthHeader: (authHeader) => get(aTestbank1BondUrl, { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [MAKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).withBankName('Bank 1').one(),
-      makeRequestAsUser: (user) => as(user).get(aBarclaysBondUrl),
+      makeRequestAsUser: (user) => as(user).get(aTestbank1BondUrl),
       successStatusCode: 200,
     });
 
     it('400s requests that do not with a valid bond id param', async () => {
-      const { status } = await as(aBarclaysMaker).get('/v1/deals/620a1aa095a618b12da38c7b/bond/123456');
+      const { status } = await as(aTestbank1Maker).get('/v1/deals/620a1aa095a618b12da38c7b/bond/123456');
 
       expect(status).toEqual(400);
     });
 
     it('400s requests that do not with a valid deal id param', async () => {
-      const { status } = await as(aBarclaysMaker).get('/v1/deals/13456/bond/620a1aa095a618b12da38c7b');
+      const { status } = await as(aTestbank1Maker).get('/v1/deals/13456/bond/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(400);
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const { status } = await as(anHSBCMaker).get(aBarclaysBondUrl);
+      const { status } = await as(anTestbank2Maker).get(aTestbank1BondUrl);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker).get('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b');
+      const { status } = await as(aTestbank1Maker).get('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
 
     it('404s requests for unknown bond', async () => {
-      const { status } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b`);
+      const { status } = await as(aTestbank1Maker).get(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b`);
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const { status } = await as(aSuperuser).get(aBarclaysBondUrl);
+      const { status } = await as(aSuperuser).get(aTestbank1BondUrl);
 
       expect(status).toEqual(200);
     });
 
     it('returns a bond with dealId, `Incomplete` status', async () => {
-      const { status, body } = await as(aBarclaysMaker).get(aBarclaysBondUrl);
+      const { status, body } = await as(aTestbank1Maker).get(aTestbank1BondUrl);
 
       expect(status).toEqual(200);
       expect(body.bond._id).toEqual(bondId);
@@ -180,16 +180,16 @@ describe('/v1/deals/:id/bond', () => {
           ...coverEndDate(),
         };
 
-        const createBondResponse = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/create`);
+        const createBondResponse = await as(aTestbank1Maker).put(bond).to(`/v1/deals/${dealId}/bond/create`);
 
         const { body: createBondBody } = createBondResponse;
         const { bondId: createdBondId } = createBondBody;
 
-        const updateBondResponse = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${createdBondId}`);
+        const updateBondResponse = await as(aTestbank1Maker).put(bond).to(`/v1/deals/${dealId}/bond/${createdBondId}`);
 
         expect(updateBondResponse.status).toEqual(200);
 
-        const getBondResponse = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/bond/${createdBondId}`);
+        const getBondResponse = await as(aTestbank1Maker).get(`/v1/deals/${dealId}/bond/${createdBondId}`);
 
         expect(getBondResponse.status).toEqual(200);
 
@@ -210,7 +210,7 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     it('400s requests that do not present with a valid id parameter', async () => {
-      const { status } = await as(aBarclaysMaker).put().to('/v1/deals/12345/bond/create');
+      const { status } = await as(aTestbank1Maker).put().to('/v1/deals/12345/bond/create');
 
       expect(status).toEqual(400);
     });
@@ -222,22 +222,22 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const postResult = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id;
 
-      const { status } = await as(anHSBCMaker).put().to(`/v1/deals/${dealId}/bond/create`);
+      const { status } = await as(anTestbank2Maker).put().to(`/v1/deals/${dealId}/bond/create`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown resources', async () => {
-      const { status } = await as(aBarclaysMaker).put().to('/v1/deals/620a1aa095a618b12da38c7b/bond/create');
+      const { status } = await as(aTestbank1Maker).put().to('/v1/deals/620a1aa095a618b12da38c7b/bond/create');
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const postResult = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id;
 
       const { status } = await as(aSuperuser).put({}).to(`/v1/deals/${dealId}/bond/create`);
@@ -246,7 +246,7 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     it('adds an empty bond to a deal', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+      const postResult = await as(aTestbank1Maker).post(newDeal).to('/v1/deals/');
       const dealId = postResult.body._id;
 
       const newBond = {
@@ -254,22 +254,22 @@ describe('/v1/deals/:id/bond', () => {
         dealId,
       };
 
-      await as(aBarclaysMaker).put(newBond).to(`/v1/deals/${dealId}/bond/create`);
+      await as(aTestbank1Maker).put(newBond).to(`/v1/deals/${dealId}/bond/create`);
 
-      const { status } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+      const { status } = await as(aTestbank1Maker).get(`/v1/deals/${dealId}`);
 
       expect(status).toEqual(200);
 
-      const getDeal = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+      const getDeal = await as(aTestbank1Maker).get(`/v1/deals/${dealId}`);
       expect(getDeal.body.deal.facilities.length).toEqual(1);
     });
   });
 
   describe('PUT /v1/deals/:id/bond/:bondId', () => {
-    let aBarclaysMaker1AuditRecord;
+    let aTestbank1Maker1AuditRecord;
 
     beforeAll(async () => {
-      aBarclaysMaker1AuditRecord = generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id);
+      aTestbank1Maker1AuditRecord = generateParsedMockPortalUserAuditDatabaseRecord(aTestbank1Maker._id);
     });
 
     it('401s requests that do not present a valid Authorization token', async () => {
@@ -285,34 +285,34 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const postResult = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id;
 
-      const { status } = await as(anHSBCMaker).put().to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b`);
+      const { status } = await as(anTestbank2Maker).put().to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker).put({}).to('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b');
+      const { status } = await as(aTestbank1Maker).put({}).to('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
 
     it('404s requests for unknown bond', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const postResult = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id;
 
-      const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b`);
+      const { status } = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b`);
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const postResult = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const postResult = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
       const dealId = postResult.body._id;
 
-      const { body } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+      const { body } = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
       const { bondId } = body;
 
       const { status } = await as(aSuperuser).put(allBondFields).to(`/v1/deals/${dealId}/bond/${bondId}`);
@@ -322,10 +322,10 @@ describe('/v1/deals/:id/bond', () => {
 
     describe('with all required fields in body', () => {
       it('updates an existing bond and adds currency, status, guaranteeFeePayableByBank and ukefExposure values', async () => {
-        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id;
 
-        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+        const createBondResponse = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
 
         const { body: createBondBody } = createBondResponse;
         const { bondId } = createBondBody;
@@ -335,11 +335,11 @@ describe('/v1/deals/:id/bond', () => {
           ...coverEndDate(),
         };
 
-        const { status } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status } = await as(aTestbank1Maker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
         expect(status).toEqual(200);
 
-        const { status: updatedDealStatus, body: updatedDealBody } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+        const { status: updatedDealStatus, body: updatedDealBody } = await as(aTestbank1Maker).get(`/v1/deals/${dealId}`);
 
         const updatedDeal = updatedDealBody.deal;
 
@@ -371,7 +371,7 @@ describe('/v1/deals/:id/bond', () => {
           'conversionRateDate-day': null,
           'conversionRateDate-month': null,
           'conversionRateDate-year': null,
-          auditRecord: aBarclaysMaker1AuditRecord,
+          auditRecord: aTestbank1Maker1AuditRecord,
         };
         expect(updatedBond).toEqual(expectedUpdatedBond);
       });
@@ -379,7 +379,7 @@ describe('/v1/deals/:id/bond', () => {
 
     describe('when a bond has req.body.facilityStage as `Issued`', () => {
       it('should remove `unissued` related values from the bond', async () => {
-        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id;
 
         const bondAsUnissued = {
@@ -388,12 +388,12 @@ describe('/v1/deals/:id/bond', () => {
           ukefGuaranteeInMonths: '12',
         };
 
-        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+        const createBondResponse = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
 
         const { body: createBondBody } = createBondResponse;
         const { bondId } = createBondBody;
 
-        const { status, body } = await as(aBarclaysMaker).put(bondAsUnissued).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status, body } = await as(aTestbank1Maker).put(bondAsUnissued).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(status).toEqual(200);
         expect(body.hasBeenIssued).toEqual(false);
 
@@ -405,12 +405,12 @@ describe('/v1/deals/:id/bond', () => {
           name: '1234',
         };
 
-        const { status: secondUpdateStatus, body: secondUpdateBody } = await as(aBarclaysMaker)
+        const { status: secondUpdateStatus, body: secondUpdateBody } = await as(aTestbank1Maker)
           .put(updatedBondAsIssued)
           .to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(secondUpdateStatus).toEqual(200);
         expect(secondUpdateBody.hasBeenIssued).toEqual(true);
-        const { status: updatedDealStatus, body: updatedDealBody } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+        const { status: updatedDealStatus, body: updatedDealBody } = await as(aTestbank1Maker).get(`/v1/deals/${dealId}`);
         expect(updatedDealStatus).toEqual(200);
 
         const updatedDeal = updatedDealBody.deal;
@@ -445,7 +445,7 @@ describe('/v1/deals/:id/bond', () => {
           'conversionRateDate-day': null,
           'conversionRateDate-month': null,
           'conversionRateDate-year': null,
-          auditRecord: aBarclaysMaker1AuditRecord,
+          auditRecord: aTestbank1Maker1AuditRecord,
         };
 
         expect(updatedBond).toEqual(expectedBond);
@@ -454,7 +454,7 @@ describe('/v1/deals/:id/bond', () => {
 
     describe('when a bond has req.body.facilityStage as `Unissued`', () => {
       it('should remove `issued` related values from the bond', async () => {
-        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id;
 
         const bondAsIssued = {
@@ -464,12 +464,12 @@ describe('/v1/deals/:id/bond', () => {
           facilityStage: 'Issued',
         };
 
-        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+        const createBondResponse = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
 
         const { body: createBondBody } = createBondResponse;
         const { bondId } = createBondBody;
 
-        const { status, body } = await as(aBarclaysMaker).put(bondAsIssued).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status, body } = await as(aTestbank1Maker).put(bondAsIssued).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(status).toEqual(200);
         expect(body.hasBeenIssued).toEqual(true);
 
@@ -480,13 +480,13 @@ describe('/v1/deals/:id/bond', () => {
           ukefGuaranteeInMonths: '12',
         };
 
-        const { status: secondUpdateStatus, body: secondUpdateBody } = await as(aBarclaysMaker)
+        const { status: secondUpdateStatus, body: secondUpdateBody } = await as(aTestbank1Maker)
           .put(updatedBondAsUnissued)
           .to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(secondUpdateStatus).toEqual(200);
         expect(secondUpdateBody.hasBeenIssued).toEqual(false);
 
-        const { status: updatedDealStatus, body: updatedDealBody } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+        const { status: updatedDealStatus, body: updatedDealBody } = await as(aTestbank1Maker).get(`/v1/deals/${dealId}`);
         expect(updatedDealStatus).toEqual(200);
 
         const updatedDeal = updatedDealBody.deal;
@@ -525,14 +525,14 @@ describe('/v1/deals/:id/bond', () => {
           'conversionRateDate-day': null,
           'conversionRateDate-month': null,
           'conversionRateDate-year': null,
-          auditRecord: aBarclaysMaker1AuditRecord,
+          auditRecord: aTestbank1Maker1AuditRecord,
         };
         expect(updatedBond).toEqual(expectedBond);
       });
     });
 
     it("should add the deal's supplyContractCurrency to the bond's currency", async () => {
-      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+      const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id;
 
       const bondBody = {
@@ -540,16 +540,16 @@ describe('/v1/deals/:id/bond', () => {
         currencySameAsSupplyContractCurrency: 'true',
       };
 
-      const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+      const createBondResponse = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
 
       const { body: createBondBody } = createBondResponse;
       const { bondId } = createBondBody;
 
-      const { status } = await as(aBarclaysMaker).put(bondBody).to(`/v1/deals/${dealId}/bond/${bondId}`);
+      const { status } = await as(aTestbank1Maker).put(bondBody).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
       expect(status).toEqual(200);
 
-      const { body: updatedDeal } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+      const { body: updatedDeal } = await as(aTestbank1Maker).get(`/v1/deals/${dealId}`);
 
       expect(status).toEqual(200);
 
@@ -578,13 +578,13 @@ describe('/v1/deals/:id/bond', () => {
         'conversionRateDate-day': null,
         'conversionRateDate-month': null,
         'conversionRateDate-year': null,
-        auditRecord: aBarclaysMaker1AuditRecord,
+        auditRecord: aTestbank1Maker1AuditRecord,
       });
     });
 
     describe('when a bond has req.body.currencySameAsSupplyContractCurrency changed from false to true', () => {
       it("should remove `currency is NOT the same` values from the bond and add the deal's supplyContractCurrency", async () => {
-        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id;
 
         const bondBody = {
@@ -598,12 +598,12 @@ describe('/v1/deals/:id/bond', () => {
           'conversionRateDate-year': format(nowDate, 'yyyy'),
         };
 
-        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+        const createBondResponse = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
 
         const { body: createBondBody } = createBondResponse;
         const { bondId } = createBondBody;
 
-        const { status } = await as(aBarclaysMaker).put(bondBody).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status } = await as(aTestbank1Maker).put(bondBody).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(status).toEqual(200);
 
         const bondWithSameCurrencyAsContract = {
@@ -611,10 +611,10 @@ describe('/v1/deals/:id/bond', () => {
           currencySameAsSupplyContractCurrency: 'true',
         };
 
-        const { status: secondUpdateStatus } = await as(aBarclaysMaker).put(bondWithSameCurrencyAsContract).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { status: secondUpdateStatus } = await as(aTestbank1Maker).put(bondWithSameCurrencyAsContract).to(`/v1/deals/${dealId}/bond/${bondId}`);
         expect(secondUpdateStatus).toEqual(200);
 
-        const { body: updatedDealBody } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+        const { body: updatedDealBody } = await as(aTestbank1Maker).get(`/v1/deals/${dealId}`);
         const updatedDeal = updatedDealBody.deal;
 
         expect(status).toEqual(200);
@@ -640,10 +640,10 @@ describe('/v1/deals/:id/bond', () => {
 
     describe("when req.body.feeType is changed to 'At maturity'", () => {
       it('should remove feeFrequency', async () => {
-        const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+        const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals/');
         const dealId = deal.body._id;
 
-        const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+        const createBondResponse = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
 
         const { body: createBondBody } = createBondResponse;
         const { bondId } = createBondBody;
@@ -653,24 +653,24 @@ describe('/v1/deals/:id/bond', () => {
           feeFrequency: 'Quarterly',
         };
 
-        await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        await as(aTestbank1Maker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
         const updatedBond = {
           ...bond,
           feeType: 'At maturity',
         };
 
-        const { body } = await as(aBarclaysMaker).put(updatedBond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+        const { body } = await as(aTestbank1Maker).put(updatedBond).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
         expect(body.feeFrequency).toEqual(undefined);
       });
     });
 
     it('should generate requestedCoverStartDate and coverDateConfirmed properties', async () => {
-      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+      const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id;
 
-      const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+      const createBondResponse = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
 
       const { body: createBondBody } = createBondResponse;
       const { bondId } = createBondBody;
@@ -681,7 +681,7 @@ describe('/v1/deals/:id/bond', () => {
         ...coverEndDate(),
       };
 
-      const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+      const { status, body } = await as(aTestbank1Maker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
       expect(status).toEqual(200);
       expect(body.coverDateConfirmed).toEqual(true);
@@ -692,17 +692,17 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     it('should generate updatedAt timestamp', async () => {
-      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+      const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id;
 
-      const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+      const createBondResponse = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
 
       const { body: createBondBody } = createBondResponse;
       const { bondId } = createBondBody;
 
       const bond = allBondFields;
 
-      const { status, body } = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
+      const { status, body } = await as(aTestbank1Maker).put(bond).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
       expect(status).toEqual(200);
       expect(body.updatedAt).toEqual(expect.any(Number));
@@ -710,20 +710,20 @@ describe('/v1/deals/:id/bond', () => {
 
     it("should update the associated deal's facilitiesUpdated timestamp", async () => {
       // create deal
-      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+      const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id;
 
       // create bond facility
-      const { body: createdBond } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+      const { body: createdBond } = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
       const { bondId } = createdBond;
 
       const bondUpdate = { test: true };
 
       // update bond facility
-      await as(aBarclaysMaker).put(bondUpdate).to(`/v1/deals/${dealId}/bond/${bondId}`);
+      await as(aTestbank1Maker).put(bondUpdate).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
       // get the deal, check facilities timestamp
-      const { body: dealAfterUpdate } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+      const { body: dealAfterUpdate } = await as(aTestbank1Maker).get(`/v1/deals/${dealId}`);
       expect(dealAfterUpdate.deal.facilitiesUpdated).toEqual(expect.any(Number));
     });
   });
@@ -751,50 +751,50 @@ describe('/v1/deals/:id/bond', () => {
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const { status } = await as(anHSBCMaker).remove(`/v1/deals/${dealId}/bond/12345678`);
+      const { status } = await as(anTestbank2Maker).remove(`/v1/deals/${dealId}/bond/12345678`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker).remove('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b');
+      const { status } = await as(aTestbank1Maker).remove('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
 
     it('404s requests for unknown bond', async () => {
-      const { status } = await as(aBarclaysMaker).remove(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b`);
+      const { status } = await as(aTestbank1Maker).remove(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b`);
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const { status } = await as(aBarclaysMaker).remove(`/v1/deals/${dealId}/bond/${bondId}`);
+      const { status } = await as(aTestbank1Maker).remove(`/v1/deals/${dealId}/bond/${bondId}`);
       expect(status).toEqual(200);
     });
 
     it('removes a bond from a deal', async () => {
-      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
       dealId = deal.body._id;
 
-      await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
-      await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
-      await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+      await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+      await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+      await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
 
-      const { body } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+      const { body } = await as(aTestbank1Maker).get(`/v1/deals/${dealId}`);
 
       const createdDeal = body.deal;
       expect(createdDeal.facilities.length).toEqual(3);
 
       const bondIdToDelete = createdDeal.facilities[0];
 
-      const { status } = await as(aBarclaysMaker).remove(`/v1/deals/${dealId}/bond/${bondIdToDelete}`);
+      const { status } = await as(aTestbank1Maker).remove(`/v1/deals/${dealId}/bond/${bondIdToDelete}`);
       expect(status).toEqual(200);
 
-      const getBondAfterDelete = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/bond/${bondIdToDelete}`);
+      const getBondAfterDelete = await as(aTestbank1Maker).get(`/v1/deals/${dealId}/bond/${bondIdToDelete}`);
       expect(getBondAfterDelete.status).toEqual(404);
 
-      const dealAfterDeletingBond = await as(aBarclaysMaker).get(`/v1/deals/${dealId}`);
+      const dealAfterDeletingBond = await as(aTestbank1Maker).get(`/v1/deals/${dealId}`);
 
       expect(dealAfterDeletingBond.body.deal.facilities.length).toEqual(2);
     });

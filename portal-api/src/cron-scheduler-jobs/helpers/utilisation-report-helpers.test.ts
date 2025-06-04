@@ -443,24 +443,24 @@ describe('utilisation-report-helpers', () => {
       // Arrange
       jest.mocked(externalApi.bankHolidays).getBankHolidayDatesForRegion.mockResolvedValue([]);
 
-      const validBarclaysEmail = 'valid-barclays-email@example.com';
-      const validBarclaysTeamName = 'Bank 1 Payment Officer Team';
-      const validBarclaysBank: BankResponse = {
+      const validTestbank1Email = 'valid-Testbank1-email@example.com';
+      const validTestbank1TeamName = 'Bank 1 Payment Officer Team';
+      const validTestbank1Bank: BankResponse = {
         ...aBank(),
         isVisibleInTfmUtilisationReports: true,
-        paymentOfficerTeam: { emails: [validBarclaysEmail], teamName: validBarclaysTeamName },
+        paymentOfficerTeam: { emails: [validTestbank1Email], teamName: validTestbank1TeamName },
       };
 
-      const validHsbcEmail = 'valid-bank-1-email@example.com';
-      const otherValidHsbcEmail = 'another-valid-hsbc-email@example.com';
-      const validHsbcTeamName = 'Bank 1 Payment Officer Team';
-      const validHsbcBank: BankResponse = {
+      const validTestbank2Email = 'valid-bank-1-email@example.com';
+      const otherValidTestbank2Email = 'another-valid-Testbank2-email@example.com';
+      const validTestbank2TeamName = 'Bank 1 Payment Officer Team';
+      const validTestbank2Bank: BankResponse = {
         ...aBank(),
         isVisibleInTfmUtilisationReports: true,
-        paymentOfficerTeam: { emails: [validHsbcEmail, otherValidHsbcEmail], teamName: validHsbcTeamName },
+        paymentOfficerTeam: { emails: [validTestbank2Email, otherValidTestbank2Email], teamName: validTestbank2TeamName },
       };
 
-      jest.mocked(api.getAllBanks).mockResolvedValue([validBarclaysBank, validHsbcBank]);
+      jest.mocked(api.getAllBanks).mockResolvedValue([validTestbank1Bank, validTestbank2Bank]);
 
       jest.mocked(api.getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
 
@@ -474,9 +474,9 @@ describe('utilisation-report-helpers', () => {
 
       // Assert
       expect(sendEmailCallback).toHaveBeenCalledTimes(3);
-      expect(sendEmailCallback).toHaveBeenCalledWith(validBarclaysEmail, validBarclaysTeamName, 'October 2023');
-      expect(sendEmailCallback).toHaveBeenCalledWith(validHsbcEmail, validHsbcTeamName, 'October 2023');
-      expect(sendEmailCallback).toHaveBeenCalledWith(otherValidHsbcEmail, validHsbcTeamName, 'October 2023');
+      expect(sendEmailCallback).toHaveBeenCalledWith(validTestbank1Email, validTestbank1TeamName, 'October 2023');
+      expect(sendEmailCallback).toHaveBeenCalledWith(validTestbank2Email, validTestbank2TeamName, 'October 2023');
+      expect(sendEmailCallback).toHaveBeenCalledWith(otherValidTestbank2Email, validTestbank2TeamName, 'October 2023');
     });
 
     it('does not send email if it is not the submission month for bank with quarterly reporting schedule', async () => {

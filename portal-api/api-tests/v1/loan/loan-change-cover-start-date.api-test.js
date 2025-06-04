@@ -25,8 +25,8 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
     },
   });
 
-  let aBarclaysMaker;
-  let anHSBCMaker;
+  let aTestbank1Maker;
+  let anTestbank2Maker;
   let aSuperuser;
 
   let dealId;
@@ -43,25 +43,25 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
   };
 
   const updateLoan = async (bssDealId, bssLoanId, body) => {
-    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}`);
+    const result = await as(aTestbank1Maker).put(body).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}`);
     return result.body;
   };
 
   const updateLoanCoverStartDate = async (bssDealId, bssLoanId, loan) => {
-    const response = await as(aBarclaysMaker).put(loan).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}/change-cover-start-date`);
+    const response = await as(aTestbank1Maker).put(loan).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}/change-cover-start-date`);
     return response;
   };
 
   const createDealAndLoan = async () => {
-    const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+    const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals/');
     dealId = deal.body._id;
 
-    const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+    const createLoanResponse = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
     const { loanId: _id } = createLoanResponse.body;
 
     loanId = _id;
 
-    const getCreatedLoan = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/loan/${loanId}`);
+    const getCreatedLoan = await as(aTestbank1Maker).get(`/v1/deals/${dealId}/loan/${loanId}`);
 
     const modifiedLoan = {
       ...getCreatedLoan.body.loan,
@@ -75,8 +75,8 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
 
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
-    anHSBCMaker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
+    aTestbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    anTestbank2Maker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
     aSuperuser = testUsers().superuser().one();
     const anAdmin = testUsers().withRole(ADMIN).one();
 
@@ -98,31 +98,31 @@ describe('/v1/deals/:id/loan/change-cover-start-date', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(anHSBCMaker).put({}).to(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b/change-cover-start-date`);
+      const { status } = await as(anTestbank2Maker).put({}).to(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(401);
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const deal = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const deal = await as(anTestbank2Maker).post(newDeal).to('/v1/deals');
       dealId = deal.body._id;
 
-      const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b/change-cover-start-date`);
+      const { status } = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aBarclaysMaker).put({}).to('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b/change-cover-start-date');
+      const { status } = await as(aTestbank1Maker).put({}).to('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b/change-cover-start-date');
 
       expect(status).toEqual(404);
     });
 
     it('404s requests for unknown loan', async () => {
-      const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
       dealId = deal.body._id;
 
-      const { status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b/change-cover-start-date`);
+      const { status } = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(404);
     });

@@ -12,16 +12,16 @@ const api = require('../../../src/v1/api');
 const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 
 describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facility submission details', () => {
-  let aBarclaysMaker;
-  let aBarclaysChecker;
+  let aTestbank1Maker;
+  let aTestbank1Checker;
   let aSuperuser;
   let updatedDeal;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Bank 1').all();
-    [aBarclaysMaker] = barclaysMakers;
-    aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Bank 1').one();
+    const Testbank1Makers = testUsers().withRole(MAKER).withBankName('Bank 1').all();
+    [aTestbank1Maker] = Testbank1Makers;
+    aTestbank1Checker = testUsers().withRole(CHECKER).withBankName('Bank 1').one();
     aSuperuser = testUsers().superuser().one();
   });
 
@@ -116,7 +116,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
         unsubmittedIssuedBondWithIssueFacilityDetails('4'),
       ];
 
-      const postResult = await as(aBarclaysMaker)
+      const postResult = await as(aTestbank1Maker)
         .post(JSON.parse(JSON.stringify(completedDeal)))
         .to('/v1/deals');
 
@@ -124,7 +124,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
 
       api.tfmDealSubmit = () => Promise.resolve();
 
-      const createdFacilities = await createFacilities(aBarclaysMaker, dealId, originalFacilities);
+      const createdFacilities = await createFacilities(aTestbank1Maker, dealId, originalFacilities);
       completedDeal.mockFacilities = createdFacilities;
 
       const statusUpdate = {
@@ -132,7 +132,7 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
         confirmSubmit: true,
       };
 
-      updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
+      updatedDeal = await as(aTestbank1Checker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
     });
 
     describe('any Unconditional loans that do NOT have issueFacilityDetailsSubmitted', () => {
@@ -158,10 +158,10 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
 
           expect(updatedLoan.issueFacilityDetailsSubmitted).toEqual(true);
           expect(typeof updatedLoan.submittedAsIssuedDate).toEqual('number');
-          expect(updatedLoan.submittedAsIssuedBy.username).toEqual(aBarclaysChecker.username);
-          expect(updatedLoan.submittedAsIssuedBy.email).toEqual(aBarclaysChecker.email);
-          expect(updatedLoan.submittedAsIssuedBy.firstname).toEqual(aBarclaysChecker.firstname);
-          expect(updatedLoan.submittedAsIssuedBy.lastname).toEqual(aBarclaysChecker.lastname);
+          expect(updatedLoan.submittedAsIssuedBy.username).toEqual(aTestbank1Checker.username);
+          expect(updatedLoan.submittedAsIssuedBy.email).toEqual(aTestbank1Checker.email);
+          expect(updatedLoan.submittedAsIssuedBy.firstname).toEqual(aTestbank1Checker.firstname);
+          expect(updatedLoan.submittedAsIssuedBy.lastname).toEqual(aTestbank1Checker.lastname);
           expect(updatedLoan.status).toEqual('Completed');
         });
       });
@@ -190,10 +190,10 @@ describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facil
 
           expect(updatedBond.issueFacilityDetailsSubmitted).toEqual(true);
           expect(typeof updatedBond.submittedAsIssuedDate).toEqual('number');
-          expect(updatedBond.submittedAsIssuedBy.username).toEqual(aBarclaysChecker.username);
-          expect(updatedBond.submittedAsIssuedBy.email).toEqual(aBarclaysChecker.email);
-          expect(updatedBond.submittedAsIssuedBy.firstname).toEqual(aBarclaysChecker.firstname);
-          expect(updatedBond.submittedAsIssuedBy.lastname).toEqual(aBarclaysChecker.lastname);
+          expect(updatedBond.submittedAsIssuedBy.username).toEqual(aTestbank1Checker.username);
+          expect(updatedBond.submittedAsIssuedBy.email).toEqual(aTestbank1Checker.email);
+          expect(updatedBond.submittedAsIssuedBy.firstname).toEqual(aTestbank1Checker.firstname);
+          expect(updatedBond.submittedAsIssuedBy.lastname).toEqual(aTestbank1Checker.lastname);
           expect(updatedBond.status).toEqual('Completed');
         });
       });

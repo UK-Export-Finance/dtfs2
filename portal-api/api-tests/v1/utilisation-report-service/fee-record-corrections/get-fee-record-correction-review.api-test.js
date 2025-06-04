@@ -21,10 +21,10 @@ describe('GET /v1/banks/:bankId/fee-record-correction-review/:correctionId/user/
   const getUrl = ({ bankId, correctionId, userId }) => `/v1/banks/${bankId}/fee-record-correction-review/${correctionId}/user/${userId}`;
 
   let testUsers;
-  let barclaysBank;
-  let hsbcBank;
-  let aBarclaysPaymentReportOfficer;
-  let aHsbcPaymentReportOfficer;
+  let Testbank1Bank;
+  let Testbank2Bank;
+  let aTestbank1PaymentReportOfficer;
+  let aTestbank2PaymentReportOfficer;
 
   const correctionId = 7;
   const facilityId = '12345678';
@@ -47,12 +47,12 @@ describe('GET /v1/banks/:bankId/fee-record-correction-review/:correctionId/user/
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
     testUsers = await testUserCache.initialise(app);
-    aBarclaysPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('Bank 1').one();
-    aHsbcPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('Bank 2').one();
-    barclaysBank = aBarclaysPaymentReportOfficer.bank;
-    hsbcBank = aHsbcPaymentReportOfficer.bank;
+    aTestbank1PaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('Bank 1').one();
+    aTestbank2PaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('Bank 2').one();
+    Testbank1Bank = aTestbank1PaymentReportOfficer.bank;
+    Testbank2Bank = aTestbank2PaymentReportOfficer.bank;
 
-    const utilisationReport = new UtilisationReportEntityMockBuilder().withBankId(barclaysBank.id).build();
+    const utilisationReport = new UtilisationReportEntityMockBuilder().withBankId(Testbank1Bank.id).build();
 
     const aFeeRecord = FeeRecordEntityMockBuilder.forReport(utilisationReport)
       .withFacilityId(facilityId)
@@ -70,7 +70,7 @@ describe('GET /v1/banks/:bankId/fee-record-correction-review/:correctionId/user/
 
     const transientFormDataEntity = new FeeRecordCorrectionTransientFormDataEntityMockBuilder()
       .withCorrectionId(correctionId)
-      .withUserId(aBarclaysPaymentReportOfficer._id)
+      .withUserId(aTestbank1PaymentReportOfficer._id)
       .withFormData(transientFormData)
       .build();
 
@@ -86,52 +86,54 @@ describe('GET /v1/banks/:bankId/fee-record-correction-review/:correctionId/user/
   });
 
   withClientAuthenticationTests({
-    makeRequestWithoutAuthHeader: () => get(getUrl({ bankId: barclaysBank.id, correctionId, userId: aBarclaysPaymentReportOfficer._id })),
+    makeRequestWithoutAuthHeader: () => get(getUrl({ bankId: Testbank1Bank.id, correctionId, userId: aTestbank1PaymentReportOfficer._id })),
     makeRequestWithAuthHeader: (authHeader) =>
-      get(getUrl({ bankId: barclaysBank.id, correctionId, userId: aBarclaysPaymentReportOfficer._id }), {
+      get(getUrl({ bankId: Testbank1Bank.id, correctionId, userId: aTestbank1PaymentReportOfficer._id }), {
         headers: { Authorization: authHeader },
       }),
   });
 
   withRoleAuthorisationTests({
     allowedRoles: [PAYMENT_REPORT_OFFICER],
-    getUserWithRole: (role) => testUsers().withRole(role).withBankName(barclaysBank.name).one(),
-    makeRequestAsUser: (user) => as(user).get(getUrl({ bankId: barclaysBank.id, correctionId, userId: aBarclaysPaymentReportOfficer._id })),
+    getUserWithRole: (role) => testUsers().withRole(role).withBankName(Testbank1Bank.name).one(),
+    makeRequestAsUser: (user) => as(user).get(getUrl({ bankId: Testbank1Bank.id, correctionId, userId: aTestbank1PaymentReportOfficer._id })),
     successStatusCode: HttpStatusCode.Ok,
   });
 
   it(`should return a '${HttpStatusCode.BadRequest}' status code if the bank id is invalid`, async () => {
-    const { status } = await as(aBarclaysPaymentReportOfficer).get(
-      getUrl({ bankId: 'invalid-bank-id', correctionId, userId: aBarclaysPaymentReportOfficer._id }),
+    const { status } = await as(aTestbank1PaymentReportOfficer).get(
+      getUrl({ bankId: 'invalid-bank-id', correctionId, userId: aTestbank1PaymentReportOfficer._id }),
     );
 
     expect(status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it(`should return a '${HttpStatusCode.BadRequest}' status code if the correction id is invalid`, async () => {
-    const { status } = await as(aBarclaysPaymentReportOfficer).get(
-      getUrl({ bankId: barclaysBank.id, correctionId: 'invalid-correction-id', userId: aBarclaysPaymentReportOfficer._id }),
+    const { status } = await as(aTestbank1PaymentReportOfficer).get(
+      getUrl({ bankId: Testbank1Bank.id, correctionId: 'invalid-correction-id', userId: aTestbank1PaymentReportOfficer._id }),
     );
 
     expect(status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it(`should return a '${HttpStatusCode.BadRequest}' status code if the user id is invalid`, async () => {
-    const { status } = await as(aBarclaysPaymentReportOfficer).get(getUrl({ bankId: barclaysBank.id, correctionId, userId: 'invalid-user-id' }));
+    const { status } = await as(aTestbank1PaymentReportOfficer).get(getUrl({ bankId: Testbank1Bank.id, correctionId, userId: 'invalid-user-id' }));
 
     expect(status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it(`should return a '${HttpStatusCode.Unauthorized}' status code if users bank id does not match the bank id`, async () => {
-    const { status } = await as(aBarclaysPaymentReportOfficer).get(getUrl({ bankId: hsbcBank.id, correctionId, userId: aBarclaysPaymentReportOfficer._id }));
+    const { status } = await as(aTestbank1PaymentReportOfficer).get(
+      getUrl({ bankId: Testbank2Bank.id, correctionId, userId: aTestbank1PaymentReportOfficer._id }),
+    );
 
     expect(status).toEqual(HttpStatusCode.Unauthorized);
   });
 
   it(`should return a '${HttpStatusCode.Ok}' status code and the fee record correction review information`, async () => {
-    const userId = aBarclaysPaymentReportOfficer._id;
+    const userId = aTestbank1PaymentReportOfficer._id;
 
-    const response = await as(aBarclaysPaymentReportOfficer).get(getUrl({ bankId: barclaysBank.id, correctionId, userId }));
+    const response = await as(aTestbank1PaymentReportOfficer).get(getUrl({ bankId: Testbank1Bank.id, correctionId, userId }));
 
     const expectedResponseBody = {
       correctionId,
