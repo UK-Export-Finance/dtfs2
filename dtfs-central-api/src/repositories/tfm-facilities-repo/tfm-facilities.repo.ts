@@ -195,7 +195,7 @@ export class TfmFacilitiesRepo {
       .toArray();
 
     const matchingPortalAmendments = facilitiesByIdWithPortalAmendments
-      .flatMap((facility) => facility.amendments || [])
+      .flatMap((facility) => facility.amendments ?? [])
       .filter((amendment) => amendment?.type === AMENDMENT_TYPES.PORTAL && (!statuses || statuses.includes(amendment.status))) as PortalFacilityAmendment[];
 
     return matchingPortalAmendments;
