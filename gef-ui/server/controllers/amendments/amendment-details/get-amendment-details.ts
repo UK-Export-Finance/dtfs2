@@ -1,4 +1,5 @@
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { fromUnixTime } from 'date-fns';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
@@ -44,7 +45,17 @@ export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: 
       return res.redirect('/not-found');
     }
 
-    return res.render('partials/amendments/amendment-details.njk', createAmendmentDetailsViewModel({ amendment, deal, facility, userRoles }));
+    let banner;
+
+    const effectiveDate = amendment.effectiveDate ? fromUnixTime(amendment.effectiveDate) : null;
+    const isEffectiveDateInFuture = effectiveDate && new Date(effectiveDate) > new Date();
+    const amendmentIsAcknowledged = amendment.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED;
+
+    if (isEffectiveDateInFuture && amendmentIsAcknowledged) {
+      banner = true;
+    }
+
+    return res.render('partials/amendments/amendment-details.njk', createAmendmentDetailsViewModel({ amendment, deal, facility, userRoles, banner }));
   } catch (error) {
     console.error('Error getting amendments details page %o', error);
     return res.render('partials/problem-with-service.njk');

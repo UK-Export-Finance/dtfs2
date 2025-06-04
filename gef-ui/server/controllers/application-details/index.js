@@ -1,6 +1,6 @@
 const startCase = require('lodash/startCase');
 const { DEAL_TYPE, timeZoneConfig, DEAL_STATUS, PORTAL_AMENDMENT_INPROGRESS_STATUSES, PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
-const { getTfmDeal, getAmendmentsOnDeal, getFacilities, getFacility } = require('../../services/api');
+const { getTfmDeal, getPortalAmendmentsOnDeal, getFacilities, getFacility } = require('../../services/api');
 const { canIssueUnissuedFacilities } = require('./canIssueUnissuedFacilities');
 const {
   mapSummaryList,
@@ -346,7 +346,7 @@ const applicationDetails = async (req, res, next) => {
       params.link += '/unissued-facilities';
     }
 
-    const amendmentsUnderwayOnDeal = await getAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
+    const amendmentsUnderwayOnDeal = await getPortalAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
 
     // array of facility ids that are currently being amended
     const amendmentsInProgress = amendmentsUnderwayOnDeal.map((amendment) => ({

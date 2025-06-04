@@ -64,7 +64,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
       .to('/v1/portal/gef/facilities');
 
     facilityId = createFacilityResponse.body._id;
-    referenceNumber = '0040012345-23';
+    referenceNumber = '0040012345-203';
 
     await submitDealToTfm({ dealId, dealSubmissionType: DEAL_SUBMISSION_TYPE.AIN, dealType: DEAL_TYPE.GEF });
   });

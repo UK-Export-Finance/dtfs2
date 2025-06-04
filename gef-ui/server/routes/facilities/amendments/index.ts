@@ -12,29 +12,30 @@ import { postFacilityValue } from '../../../controllers/amendments/facility-valu
 import { getCoverEndDate } from '../../../controllers/amendments/cover-end-date/get-cover-end-date';
 import { postCoverEndDate } from '../../../controllers/amendments/cover-end-date/post-cover-end-date';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
-import { getCancelPortalFacilityAmendment } from '../../../controllers/amendments/cancel-amendment/get-cancel-portal-facility-amendment.ts';
-import { postCancelPortalFacilityAmendment } from '../../../controllers/amendments/cancel-amendment/post-cancel-portal-facility-amendment.ts';
+import { getCancelPortalFacilityAmendment } from '../../../controllers/amendments/cancel-amendment/get-cancel-portal-facility-amendment';
+import { postCancelPortalFacilityAmendment } from '../../../controllers/amendments/cancel-amendment/post-cancel-portal-facility-amendment';
 import { getDoYouHaveAFacilityEndDate } from '../../../controllers/amendments/do-you-have-a-facility-end-date/get-do-you-have-a-facility-end-date';
 import { postDoYouHaveAFacilityEndDate } from '../../../controllers/amendments/do-you-have-a-facility-end-date/post-do-you-have-a-facility-end-date';
 import { getFacilityEndDate } from '../../../controllers/amendments/facility-end-date/get-facility-end-date';
 import { postFacilityEndDate } from '../../../controllers/amendments/facility-end-date/post-facility-end-date';
-import { getBankReviewDate } from '../../../controllers/amendments/bank-review-date/get-bank-review-date.ts';
-import { postBankReviewDate } from '../../../controllers/amendments/bank-review-date/post-bank-review-date.ts';
-import { getEligibility } from '../../../controllers/amendments/eligibility-criteria/get-eligibility.ts';
-import { postEligibility } from '../../../controllers/amendments/eligibility-criteria/post-eligibility.ts';
-import { getEffectiveDate } from '../../../controllers/amendments/effective-date/get-effective-date.ts';
-import { postEffectiveDate } from '../../../controllers/amendments/effective-date/post-effective-date.ts';
-import { getManualApprovalNeeded } from '../../../controllers/amendments/manual-approval-needed/get-manual-approval-needed.ts';
-import { getCheckYourAnswers } from '../../../controllers/amendments/check-your-answers/get-check-your-answers.ts';
-import { postCheckYourAnswers } from '../../../controllers/amendments/check-your-answers/post-check-your-answers.ts';
-import { getSubmittedForChecking } from '../../../controllers/amendments/submitted-for-checking/get-submitted-for-checking.ts';
-import { getApprovedByUkef } from '../../../controllers/amendments/approved-by-ukef/get-approved-by-ukef.ts';
-import { getAmendmentDetails } from '../../../controllers/amendments/amendment-details/get-amendment-details.ts';
-import { getSubmitAmendmentToUkef } from '../../../controllers/amendments/submit-amendment-to-ukef/get-submit-amendment-to-ukef.ts';
-import { postSubmitAmendmentToUkef } from '../../../controllers/amendments/submit-amendment-to-ukef/post-submit-amendment-to-ukef.ts';
-import { getReturnAmendmentToMaker } from '../../../controllers/amendments/return-amendment-to-maker/get-return-amendment-to-maker.ts';
-import { postReturnAmendmentToMaker } from '../../../controllers/amendments/return-amendment-to-maker/post-return-amendment-to-maker.ts';
-import { getReturnedToMaker } from '../../../controllers/amendments/returned-to-maker/get-returned-to-maker.ts';
+import { getBankReviewDate } from '../../../controllers/amendments/bank-review-date/get-bank-review-date';
+import { postBankReviewDate } from '../../../controllers/amendments/bank-review-date/post-bank-review-date';
+import { getEligibility } from '../../../controllers/amendments/eligibility-criteria/get-eligibility';
+import { postEligibility } from '../../../controllers/amendments/eligibility-criteria/post-eligibility';
+import { getEffectiveDate } from '../../../controllers/amendments/effective-date/get-effective-date';
+import { postEffectiveDate } from '../../../controllers/amendments/effective-date/post-effective-date';
+import { getManualApprovalNeeded } from '../../../controllers/amendments/manual-approval-needed/get-manual-approval-needed';
+import { getCheckYourAnswers } from '../../../controllers/amendments/check-your-answers/get-check-your-answers';
+import { postCheckYourAnswers } from '../../../controllers/amendments/check-your-answers/post-check-your-answers';
+import { getSubmittedForChecking } from '../../../controllers/amendments/submitted-for-checking/get-submitted-for-checking';
+import { getApprovedByUkef } from '../../../controllers/amendments/approved-by-ukef/get-approved-by-ukef';
+import { getAmendmentDetails } from '../../../controllers/amendments/amendment-details/get-amendment-details';
+import { getSubmitAmendmentToUkef } from '../../../controllers/amendments/submit-amendment-to-ukef/get-submit-amendment-to-ukef';
+import { postSubmitAmendmentToUkef } from '../../../controllers/amendments/submit-amendment-to-ukef/post-submit-amendment-to-ukef';
+import { getApplicationAmendments } from '../../../controllers/amendments/application-amendments/get-application-amendments';
+import { getReturnAmendmentToMaker } from '../../../controllers/amendments/return-amendment-to-maker/get-return-amendment-to-maker';
+import { postReturnAmendmentToMaker } from '../../../controllers/amendments/return-amendment-to-maker/post-return-amendment-to-maker';
+import { getReturnedToMaker } from '../../../controllers/amendments/returned-to-maker/get-returned-to-maker';
 
 const {
   WHAT_DO_YOU_NEED_TO_CHANGE,
@@ -52,6 +53,7 @@ const {
   APPROVED_BY_UKEF,
   AMENDMENT_DETAILS,
   SUBMIT_AMENDMENT_TO_UKEF,
+  ALL_TYPES_AMENDMENTS,
   RETURN_TO_MAKER,
   RETURNED_TO_MAKER,
 } = PORTAL_AMENDMENT_PAGES;
@@ -167,5 +169,10 @@ router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${AMENDMENT_DETAILS}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER, CHECKER] })])
   .get(getAmendmentDetails);
+
+router
+  .route(`/application-details/:dealId/${ALL_TYPES_AMENDMENTS}`)
+  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateRole({ role: [MAKER, CHECKER] })])
+  .get(getApplicationAmendments);
 
 export default router;

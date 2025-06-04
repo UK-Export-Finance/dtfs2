@@ -11,7 +11,16 @@
             attributes: {
                "data-cy": "application-preview-link"
             }
-         }, {
+         }, 
+         {
+            text: 'Amendments',
+            href: '/gef/application-details/' + dealId + '/all-types-amendments',
+            active: (activeSubNavigation == 'amendments'),
+            attributes: {
+               "data-cy": "application-amendments-link"
+            }
+         },
+         {
             text: 'Activity',
             href: '/gef/application-details/' + dealId + '/activities',
             active: (activeSubNavigation=='activities'),

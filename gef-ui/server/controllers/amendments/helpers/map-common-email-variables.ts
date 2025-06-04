@@ -1,6 +1,6 @@
 import { format, fromUnixTime } from 'date-fns';
 import { PortalFacilityAmendmentWithUkefId, DATE_FORMATS } from '@ukef/dtfs2-common';
-import { getCurrencySymbol } from '../facility-value/get-currency-symbol';
+import { getCurrencySymbol } from '../../../utils/get-currency-symbol';
 import { Deal } from '../../../types/deal';
 import { Facility } from '../../../types/facility';
 

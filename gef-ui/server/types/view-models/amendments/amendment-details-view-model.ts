@@ -9,6 +9,8 @@ export type AmendmentDetailsViewModel = {
   facilityId: string;
   amendmentId: string;
   previousPage: string;
+  effectiveDate: string;
+  banner?: boolean;
   amendmentSummaryListParams: {
     amendmentRows: SummaryListRow[];
     eligibilityRows: SummaryListRow[];

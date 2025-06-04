@@ -151,7 +151,7 @@ describe(`GET ${url}`, () => {
 function getWithSessionCookie(sessionCookie: string) {
   return get(
     url,
-    {},
+    { facilityId: null, amendmentId: null },
     {
       Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`],
     },

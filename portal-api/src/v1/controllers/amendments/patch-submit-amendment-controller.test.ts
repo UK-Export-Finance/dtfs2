@@ -31,7 +31,7 @@ describe('controllers - facility amendment', () => {
   });
 
   describe('PATCH - patchSubmitAmendment', () => {
-    const testReferenceNumber = `${facilityId}-01`;
+    const testReferenceNumber = `${facilityId}-001`;
 
     it('should call api.patchPortalFacilitySubmitAmendment with the correct parameters', async () => {
       // Arrange

@@ -69,7 +69,7 @@ context('Amendments - Approved by Ukef page', () => {
     approvedByUkef.approvedByUkefPanel().should('exist');
     approvedByUkef.approvedByUkefPanel().contains('Amendment approved by UKEF');
 
-    cy.assertText(approvedByUkef.amendmentReference(), `Amendment reference is ${mockFacility.ukefFacilityId}-01`);
+    cy.assertText(approvedByUkef.amendmentReference(), `Amendment reference is ${mockFacility.ukefFacilityId}-001`);
     cy.assertText(approvedByUkef.confirmationEmail(), "We've sent you a confirmation email.");
   });
 
