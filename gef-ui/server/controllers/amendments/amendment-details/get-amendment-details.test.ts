@@ -18,7 +18,6 @@ jest.mock('../../../services/api', () => ({
 
 const mockGetFacility = jest.fn();
 const mockGetApplication = jest.fn();
-const mockGetPortalAmendments = jest.fn();
 const mockGetAmendment = jest.fn();
 console.error = jest.fn();
 
@@ -169,29 +168,10 @@ describe('getAmendmentDetails', () => {
         });
       });
 
-      describe('when getAmendment fails', () => {
-        it('should redirect to problem-with service', async () => {
-          mockGetAmendment.mockRejectedValue({});
-
-          // Arrange
-          mockGetPortalAmendments.mockResolvedValue(null);
-          const { req, res } = getHttpMocks(user);
-
-          // Act
-          await getAmendmentDetails(req, res);
-
-          // Assert
-          expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
-          expect(res._getRedirectUrl()).toEqual('/not-found');
-          expect(console.error).toHaveBeenCalledTimes(1);
-          expect(console.error).toHaveBeenCalledWith('In progress amendment was not found for the deal %s', dealId);
-        });
-      });
-
       describe('when getPortalAmendmentsOnDeal fails', () => {
         it('should redirect to problem-with service', async () => {
           // Arrange
-          mockGetPortalAmendments.mockRejectedValue({});
+          mockGetAmendment.mockRejectedValue({});
           const { req, res } = getHttpMocks(user);
 
           // Act
@@ -205,6 +185,7 @@ describe('getAmendmentDetails', () => {
         });
       });
     });
+
     describe(`when the user is a ${user} and facilityId, amendmentId exist`, () => {
       describe('when a deal, facility and amendment are found', () => {
         it('should render the template with the correct variables', async () => {
@@ -227,6 +208,7 @@ describe('getAmendmentDetails', () => {
           expect(console.error).toHaveBeenCalledTimes(0);
         });
       });
+
       describe('when an amendment is not found', () => {
         it('should redirect to /not-found', async () => {
           // Arrange
@@ -242,25 +224,7 @@ describe('getAmendmentDetails', () => {
           expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
           expect(res._getRedirectUrl()).toEqual('/not-found');
           expect(console.error).toHaveBeenCalledTimes(1);
-          expect(console.error).toHaveBeenCalledWith('Amendment %s was not found for the facility %s', amendmentId, facilityId);
-        });
-      });
-      describe('when getAmendment fails', () => {
-        it('should redirect to problem-with service', async () => {
-          // Arrange
-          mockGetAmendment.mockRejectedValue({});
-          const { req, res } = getHttpMocks(user);
-          req.query.facilityId = facilityId;
-          req.query.amendmentId = amendmentId;
-
-          // Act
-          await getAmendmentDetails(req, res);
-
-          // Assert
-          expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
-          expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
-          expect(console.error).toHaveBeenCalledTimes(1);
-          expect(console.error).toHaveBeenCalledWith('Error getting amendments details page %o', {});
+          expect(console.error).toHaveBeenCalledWith('Amendment was not found for the amendment id %s and facility id %s', amendmentId, facilityId);
         });
       });
     });

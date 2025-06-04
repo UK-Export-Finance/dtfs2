@@ -679,7 +679,7 @@ describe('controllers/application-details', () => {
             amendmentsOnDealReturn = [{ ...aPortalFacilityAmendment({ status: portalAmendmentStatus }), facilityId: '1234' }];
           }
 
-          api.getAmendmentsOnDeal.mockResolvedValueOnce(amendmentsOnDealReturn);
+          api.getPortalAmendmentsOnDeal.mockResolvedValueOnce(amendmentsOnDealReturn);
 
           await applicationDetails(mockRequest, mockResponse);
 
@@ -698,7 +698,7 @@ describe('controllers/application-details', () => {
 
         getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
 
-        api.getAmendmentsOnDeal.mockResolvedValueOnce([
+        api.getPortalAmendmentsOnDeal.mockResolvedValueOnce([
           { ...aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL }), facilityId: '1234' },
         ]);
 
@@ -725,7 +725,9 @@ describe('controllers/application-details', () => {
         mockGetSubmittedDetailsResponse.isPortalAmendmentInProgress = true;
         mockGetSubmittedDetailsResponse.facilityIdWithAmendmentInProgress = 'other-id';
 
-        api.getAmendmentsOnDeal.mockResolvedValueOnce([{ ...aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED }), facilityId: '1234' }]);
+        api.getPortalAmendmentsOnDeal.mockResolvedValueOnce([
+          { ...aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED }), facilityId: '1234' },
+        ]);
 
         getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
 

@@ -136,7 +136,7 @@ describe('controller/ukef-cover-start-date', () => {
     api.updateApplication = updateApplicationSpy;
     api.getFacility.mockResolvedValue(mockFacilityResponse.items[0]);
     api.getTfmDeal.mockResolvedValue(MockTfmDealResponse);
-    api.getAmendmentsOnDeal.mockResolvedValue(mockGetAmendmentsOnDealResponse);
+    api.getPortalAmendmentsOnDeal.mockResolvedValue(mockGetAmendmentsOnDealResponse);
     getSubmittedAmendmentDetails.mockResolvedValue(amendmentDetails);
     mockRequest.flash = jest.fn().mockReturnValue([{ message: 'Facility is updated' }]);
   });
