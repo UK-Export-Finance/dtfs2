@@ -9,7 +9,7 @@ import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
 import { getFacilityValue, GetFacilityValueRequest } from './get-facility-value';
 import { FacilityValueViewModel } from '../../../types/view-models/amendments/facility-value-view-model';
-import { getCurrencySymbol } from './get-currency-symbol';
+import { getCurrencySymbol } from '../../../utils/get-currency-symbol';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper';

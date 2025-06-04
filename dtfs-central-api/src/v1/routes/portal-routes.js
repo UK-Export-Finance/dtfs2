@@ -48,6 +48,7 @@ const getAcknowledgedAmendmentsByFacilityIdController = require('../controllers/
 
 const getAllFacilityAmendmentController = require('../controllers/portal/facility/get-all-amendments.controller');
 const getFacilityAmendmentsForDealController = require('../controllers/portal/facility/get-amendments-on-deal.controller');
+const getPortalFacilityAmendmentsForDealController = require('../controllers/portal/facility/get-portal-amendments-on-deal.controller');
 
 const durableFunctionsController = require('../controllers/durable-functions/durable-functions.controller');
 const cronJobsController = require('../controllers/cron-jobs/cron-jobs.controller');
@@ -855,6 +856,46 @@ portalRouter
 
 /**
  * @openapi
+ * /deals/:dealId/all-types-amendments:
+ *   get:
+ *     summary: Get all type facility amendments on a given deal
+ *     tags: [Portal - Amendments]
+ *     description: Get all type facility amendments on a given deal
+ *     parameters:
+ *       - in: path
+ *         name: dealId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Deal ID to get amendments for
+ *       - in: query
+ *         name: statuses
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *           example: ['Draft']
+ *         required: false
+ *         description: The amendment statuses to filter on
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/definitions/PortalAmendment'
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal server error
+ */
+portalRouter
+  .route('/deals/:dealId/all-types-amendments')
+  .all(validation.mongoIdValidation('dealId'))
+  .get(getFacilityAmendmentsForDealController.getAmendmentsOnDeal);
+
+/**
+ * @openapi
  * /deals/:dealId/amendments:
  *   get:
  *     summary: Get all the Portal facility amendments on a given deal
@@ -889,7 +930,7 @@ portalRouter
 portalRouter
   .route('/deals/:dealId/amendments')
   .all(validation.mongoIdValidation('dealId'))
-  .get(getFacilityAmendmentsForDealController.getPortalAmendmentsOnDeal);
+  .get(getPortalFacilityAmendmentsForDealController.getPortalAmendmentsOnDeal);
 
 /**
  * @openapi
