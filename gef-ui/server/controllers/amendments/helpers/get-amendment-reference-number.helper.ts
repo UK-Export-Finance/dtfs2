@@ -1,14 +1,15 @@
-import { PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, FacilityAllTypeAmendmentWithUkefId, TFM_AMENDMENT_STATUS, createAmendmentReferenceNumber } from '@ukef/dtfs2-common';
 import api from '../../../services/api';
 /**
+ * Gets the amendment reference number for a given deal and facility.
  * @param dealId - the deal id
  * @param facilityId - the facility id
  * @param userToken - the user token
  * @returns the reference number
  */
-export const createReferenceNumber = async (dealId: string, facilityId: string, userToken: string): Promise<string> => {
+export const getAmendmentReferenceNumber = async (dealId: string, facilityId: string, userToken: string): Promise<string> => {
   try {
-    const statuses = [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED];
+    const statuses = [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, TFM_AMENDMENT_STATUS.COMPLETED];
     const amendmentsOnDeal = await api.getAmendmentsOnDeal({ dealId, statuses, userToken });
     const { details: facility } = await api.getFacility({ facilityId, userToken });
 
@@ -22,10 +23,11 @@ export const createReferenceNumber = async (dealId: string, facilityId: string, 
       throw new Error('Facility was not found');
     }
 
-    const nextAmendmentNumber = amendmentsOnDeal.length + 1;
-    const paddedNumber = nextAmendmentNumber.toString().padStart(2, '0');
-
-    const referenceNumber = `${facility.ukefFacilityId}-${paddedNumber}`;
+    const amendmentsOnFacility: FacilityAllTypeAmendmentWithUkefId[] = amendmentsOnDeal.filter(
+      (amendment: FacilityAllTypeAmendmentWithUkefId) => amendment.facilityId.toString() === facilityId,
+    );
+    const { ukefFacilityId } = facility;
+    const referenceNumber = createAmendmentReferenceNumber(amendmentsOnFacility, ukefFacilityId);
 
     return referenceNumber;
   } catch (error) {

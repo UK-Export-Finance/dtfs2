@@ -1,6 +1,6 @@
 const startCase = require('lodash/startCase');
 const { DEAL_TYPE, timeZoneConfig, DEAL_STATUS, PORTAL_AMENDMENT_INPROGRESS_STATUSES } = require('@ukef/dtfs2-common');
-const { getTfmDeal, getAmendmentsOnDeal, getFacilities, getFacility } = require('../../services/api');
+const { getTfmDeal, getPortalAmendmentsOnDeal, getFacilities, getFacility } = require('../../services/api');
 const { canIssueUnissuedFacilities } = require('./canIssueUnissuedFacilities');
 const {
   mapSummaryList,
@@ -347,10 +347,10 @@ const applicationDetails = async (req, res, next) => {
       params.link += '/unissued-facilities';
     }
 
-    const amendmentsUnderwayOnDeal = await getAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
+    const amendmentsInProgressOnDeal = await getPortalAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
 
     params.canIssuedFacilitiesBeAmended =
-      canUserAmendIssuedFacilities(application.submissionType, application.status, userRoles) && !amendmentsUnderwayOnDeal.length;
+      canUserAmendIssuedFacilities(application.submissionType, application.status, userRoles) && !amendmentsInProgressOnDeal.length;
 
     return res.render(`partials/${partial}.njk`, params);
   } catch (error) {
