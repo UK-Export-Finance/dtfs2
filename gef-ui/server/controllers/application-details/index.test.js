@@ -7,6 +7,7 @@ import {
   isPortalFacilityAmendmentsFeatureFlagEnabled,
   PORTAL_AMENDMENT_STATUS,
   ROLES,
+  ACBS_FACILITY_STAGE,
 } from '@ukef/dtfs2-common';
 import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { applicationDetails, postApplicationDetails } from '.';
@@ -24,6 +25,7 @@ jest.mock('../../services/api', () => ({
   getFacilities: jest.fn(),
   getUserDetails: jest.fn(),
   getPortalAmendmentsOnDeal: jest.fn(),
+  getTfmDeal: jest.fn(),
 }));
 
 jest.mock('../../utils/submitted-amendment-details', () => ({
@@ -49,6 +51,26 @@ describe('controllers/application-details', () => {
     isPortalAmendmentInProgress: false,
   };
 
+  const MockTfmDealResponse = () => {
+    return {
+      dealSnapshot: {},
+      tfm: {
+        facilityGuaranteeDates: { effectiveDate: '2024-08-01', guaranteeCommencementDate: '2024-08-01', guaranteeExpiryDate: '2025-06-01' },
+        feeRecord: null,
+        riskProfile: 'Flat',
+        ukefExposure: 800,
+        ukefExposureCalculationTimestamp: '1722528795105',
+        acbs: {
+          facilities: [
+            {
+              facilityStage: ACBS_FACILITY_STAGE.COMMITMENT,
+            },
+          ],
+        },
+      },
+    };
+  };
+
   beforeEach(() => {
     mockResponse = MOCKS.MockResponse();
     mockRequest = MOCKS.MockRequest();
@@ -62,6 +84,7 @@ describe('controllers/application-details', () => {
     api.getUserDetails.mockResolvedValue(mockUserResponse);
     api.getPortalAmendmentsOnDeal.mockResolvedValue(mockGetPortalAmendmentsOnDealResponse);
     getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
+    api.getTfmDeal.mockResolvedValue(MockTfmDealResponse);
     mockRequest.flash = mockSuccessfulFlashResponse();
   });
 
