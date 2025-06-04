@@ -34,11 +34,12 @@ context('Amendments - return to maker pages', () => {
         cy.login(BANK1_MAKER1);
         cy.saveSession();
         cy.visit(relative(`/gef/application-details/${dealId}`));
-        amendmentDetailsUrl = `/gef/application-details/${dealId}/amendment-details`;
 
         applicationPreview.makeAChangeButton(facilityId).click();
 
-        cy.getAmendmentIdFromUrl().then(() => {
+        cy.getAmendmentIdFromUrl().then((amendmentId) => {
+          amendmentDetailsUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/amendment-details`;
+
           cy.makerMakesPortalAmendmentRequest({
             facilityValueExists: true,
             changedFacilityValue: CHANGED_FACILITY_VALUE,
