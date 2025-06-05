@@ -223,7 +223,7 @@ describe('GEF drawn amount', () => {
       expect(response).toEqual(FACILITY_UTILISATION_PERCENTAGE.CONTINGENT);
     });
 
-    it(`should return ${FACILITY_UTILISATION_PERCENTAGE.DEFAULT} for anyother facility type`, () => {
+    it(`should return ${FACILITY_UTILISATION_PERCENTAGE.DEFAULT} for unknown facility type`, () => {
       // Arrange
       // @ts-ignore
       const type: GefFacilityType = 'invalid';
