@@ -31,11 +31,12 @@ context('Amendments - Submit Amendment to UKEF journey', () => {
         cy.login(BANK1_MAKER1);
         cy.saveSession();
         cy.visit(relative(`/gef/application-details/${dealId}`));
-        amendmentDetailsUrl = `/gef/application-details/${dealId}/amendment-details`;
 
         applicationPreview.makeAChangeButton(facilityId).click();
 
         cy.getAmendmentIdFromUrl().then((amendmentId) => {
+          amendmentDetailsUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/amendment-details`;
+
           confirmSubmissionToUkefUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/submit-amendment-to-ukef`;
           submittedUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}`;
 

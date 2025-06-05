@@ -98,7 +98,7 @@ context('Amendments - Application details - page tests', () => {
       applicationPreview.makeAChangeButton(unissuedContingentFacilityId).should('not.exist');
     });
 
-    it('should not show the make a change button for any facility after an amendment has been submitted to checker', () => {
+    it('should not show the make a change button for the facility with an amendment which has been submitted to checker', () => {
       cy.visit(relative(`/gef/application-details/${dealId}`));
       applicationPreview.makeAChangeButton(issuedCashFacilityId).click();
 
@@ -114,7 +114,7 @@ context('Amendments - Application details - page tests', () => {
 
       cy.visit(relative(`/gef/application-details/${dealId}`));
 
-      applicationPreview.makeAChangeButton(issuedContingentFacilityId).should('not.exist');
+      applicationPreview.makeAChangeButton(issuedContingentFacilityId).should('exist');
       applicationPreview.makeAChangeButton(issuedCashFacilityId).should('not.exist');
       applicationPreview.makeAChangeButton(unissuedCashFacilityId).should('not.exist');
       applicationPreview.makeAChangeButton(unissuedContingentFacilityId).should('not.exist');

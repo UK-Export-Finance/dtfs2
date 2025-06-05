@@ -39,11 +39,12 @@ context('Amendments - return amendment to maker with comments', () => {
         cy.login(BANK1_MAKER1);
         cy.saveSession();
         cy.visit(relative(dealUrl));
-        amendmentDetailsUrl = `/gef/application-details/${dealId}/amendment-details`;
 
         applicationPreview.makeAChangeButton(facilityId).click();
 
         cy.getAmendmentIdFromUrl().then((amendmentId) => {
+          amendmentDetailsUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/amendment-details`;
+
           returnToMakerUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/return-to-maker`;
           returnedToMakerUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/returned-to-maker`;
           cy.makerMakesPortalAmendmentRequest({

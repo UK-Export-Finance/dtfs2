@@ -36,7 +36,7 @@ export const loginAndSubmitPortalAmendmentRequestToUkef = ({
     const confirmSubmissionToUkefUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/submit-amendment-to-ukef`;
     const submittedUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}`;
     const approvedByUkefUrl = `${submittedUrl}/approved-by-ukef`;
-    const amendmentDetailsUrl = `/gef/application-details/${dealId}/amendment-details`;
+    const amendmentDetailsUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/amendment-details`;
 
     cy.makerAndCheckerSubmitPortalAmendmentRequest({
       facilityValueExists,

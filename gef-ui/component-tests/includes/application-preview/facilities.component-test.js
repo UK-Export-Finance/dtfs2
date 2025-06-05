@@ -1,4 +1,4 @@
-const { FACILITY_TYPE, FACILITY_STAGE, ROLES } = require('@ukef/dtfs2-common');
+const { FACILITY_TYPE, FACILITY_STAGE, ROLES, PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const pageRenderer = require('../../pageRenderer');
 
 const page = 'includes/application-preview/facilities.njk';
@@ -26,7 +26,26 @@ describe(page, () => {
     it('should not be rendered when showFacilityAmendmentButton is false', () => {
       wrapper = render({
         ...params,
-        canIssuedFacilitiesBeAmended: false,
+        facilities: {
+          data: [
+            {
+              ...issuedCashFacility,
+              canIssuedFacilitiesBeAmended: false,
+            },
+            {
+              ...unissuedCashFacility,
+              canIssuedFacilitiesBeAmended: false,
+            },
+            {
+              ...issuedContingentFacility,
+              canIssuedFacilitiesBeAmended: false,
+            },
+            {
+              ...unissuedContingentFacility,
+              canIssuedFacilitiesBeAmended: false,
+            },
+          ],
+        },
       });
 
       wrapper.expectElement(makeAChangeButtonSelector(issuedCashFacility.facilityId)).notToExist();
@@ -46,12 +65,22 @@ describe(page, () => {
 
     describe('when showFacilityAmendmentButton is true', () => {
       it('should render on the issued facilities with the correct link', () => {
-        const dealId = '123';
-
         wrapper = render({
           ...params,
-          canIssuedFacilitiesBeAmended: true,
-          dealId,
+          facilities: {
+            data: [
+              {
+                ...issuedCashFacility,
+                canIssuedFacilitiesBeAmended: true,
+              },
+              unissuedCashFacility,
+              {
+                ...issuedContingentFacility,
+                canIssuedFacilitiesBeAmended: true,
+              },
+              unissuedContingentFacility,
+            ],
+          },
         });
 
         const expectedButtonText = 'Make a change';
@@ -63,7 +92,20 @@ describe(page, () => {
       it('should not render on the unissued facilities', () => {
         wrapper = render({
           ...params,
-          canIssuedFacilitiesBeAmended: true,
+          facilities: {
+            data: [
+              {
+                ...issuedCashFacility,
+                canIssuedFacilitiesBeAmended: true,
+              },
+              unissuedCashFacility,
+              {
+                ...issuedContingentFacility,
+                canIssuedFacilitiesBeAmended: true,
+              },
+              unissuedContingentFacility,
+            ],
+          },
         });
 
         wrapper.expectElement(makeAChangeButtonSelector(unissuedCashFacility.facilityId)).notToExist();
@@ -73,13 +115,35 @@ describe(page, () => {
   });
 
   describe('Amendment details', () => {
-    issuedCashFacility.isFacilityWithAmendmentInProgress = true;
+    const facilityId = 'facility-id';
+    const amendmentId = 'amendment-id';
+    const { dealId } = params;
+
     const amendmentInProgress = `[data-cy="amendment-in-progress"]`;
-    const url = `/gef/application-details/${params.dealId}/amendment-details`;
+    const url = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/amendment-details`;
 
     it(`should be rendered when facility has an amendment in progress and the user is logged in as a maker`, () => {
       const urlText = 'See details';
-      wrapper = render(params);
+
+      wrapper = render({
+        ...params,
+        facilities: {
+          data: [
+            {
+              ...issuedCashFacility,
+              isFacilityWithAmendmentInProgress: {
+                amendmentId,
+                facilityId,
+                status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+              },
+              amendmentDetailsUrl: url,
+            },
+            unissuedCashFacility,
+            issuedContingentFacility,
+            unissuedContingentFacility,
+          ],
+        },
+      });
 
       wrapper.expectElement(amendmentInProgress).toExist();
       wrapper.expectLink(amendmentInProgress).toLinkTo(url, urlText);
@@ -89,7 +153,27 @@ describe(page, () => {
     it('should be rendered when facility has an amendment in progress and the user is logged in as a checker', () => {
       const userRoles = [ROLES.CHECKER];
       const urlText = 'Check amendment details before submitting to UKEF';
-      wrapper = render({ ...params, userRoles });
+
+      wrapper = render({
+        ...params,
+        facilities: {
+          data: [
+            {
+              ...issuedCashFacility,
+              isFacilityWithAmendmentInProgress: {
+                amendmentId,
+                facilityId,
+                status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+              },
+              amendmentDetailsUrl: url,
+            },
+            unissuedCashFacility,
+            issuedContingentFacility,
+            unissuedContingentFacility,
+          ],
+        },
+        userRoles,
+      });
 
       wrapper.expectElement(amendmentInProgress).toExist();
       wrapper.expectLink(amendmentInProgress).toLinkTo(url, urlText);
@@ -97,7 +181,7 @@ describe(page, () => {
     });
 
     it('should be rendered when facility does not have an amendment in progress', () => {
-      issuedCashFacility.isFacilityWithAmendmentInProgress = false;
+      issuedCashFacility.canIssuedFacilitiesBeAmended = false;
       wrapper = render({
         ...params,
       });

@@ -208,6 +208,29 @@ const MockFacilityResponseChangedIssued = {
   ],
 };
 
+const MockFacilityResponseIssued = {
+  status: CONSTANTS.DEAL_STATUS.COMPLETED,
+  items: [
+    {
+      details: {
+        type: CONSTANTS.FACILITY_TYPE.CASH,
+        name: 'UKEF123',
+        hasBeenIssued: true,
+        monthsOfCover: null,
+        coverStartDate: '2022-01-02T00:00:00.000+00:00',
+        shouldCoverStartOnSubmission: true,
+        coverEndDate: '2030-01-02T00:00:00.000+00:00',
+        currency: 'JPY',
+        value: 3000000,
+        ukefFacilityId: '12345',
+        canResubmitIssuedFacilities: true,
+      },
+      validation: { required: [] },
+      createdAt: 20,
+    },
+  ],
+};
+
 const MockFacilityResponseNotChangedIssued = {
   status: CONSTANTS.DEAL_STATUS.COMPLETED,
   items: [
@@ -393,5 +416,6 @@ module.exports = {
   MockFacilitiesResponse,
   MockFacilityResponseSpecialIssue,
   MockFacilityResponseChangedIssued,
+  MockFacilityResponseIssued,
   MockFacilityResponseNotChangedIssued,
 };

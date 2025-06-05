@@ -7,8 +7,10 @@ const applicationPreview = {
 
   comments: () => cy.get('[data-cy="latest-comment"]'),
 
-  amendmentDetailsHeader: () => cy.get('[data-cy="amendment-details-header"]'),
-  amendmentDetailsLink: () => cy.get('[data-cy="amendment-details"]'),
+  amendmentDetailsHeaderReadyForCheckers: () => cy.get('[data-cy="amendment-details-header-ready-for-checkers"]'),
+  amendmentDetailsHeaderFurtherMakersInput: () => cy.get('[data-cy="amendment-details-header-further-makers-input"]'),
+  amendmentDetailsReadyForCheckerLink: (index) => cy.get(`[data-cy="amendment-details-ready-for-checker-${index}"]`),
+  amendmentDetailsFurtherMakersInputLink: (index) => cy.get(`[data-cy="amendment-details-further-makers-input-${index}"]`),
 
   ukefReview: () => cy.get('[data-cy="ukef-review"]'),
   ukefReviewLink: () => cy.get('[data-cy="ukef-review-link"]'),

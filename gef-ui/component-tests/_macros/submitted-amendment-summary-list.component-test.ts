@@ -6,7 +6,7 @@ const render = componentRenderer(component);
 
 const changeAmendmentDataCy = 'amendment-details-link';
 const changeAmendmentHref = (params: { dealId: string; facilityId: string; amendmentId: string; amendmentRows: SummaryListRow[] }) =>
-  `/gef/application-details/${params.dealId}/amendment-details/?amendmentId=${params.amendmentId}&facilityId=${params.facilityId}`;
+  `/gef/application-details/${params.dealId}/facilities/${params.facilityId}/amendments/${params.amendmentId}/amendment-details`;
 
 describe(component, () => {
   const params = getParams();

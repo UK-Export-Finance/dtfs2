@@ -45,7 +45,7 @@ export const getSubmitAmendmentToUkef = async (req: GetSubmitAmendmentToUkefRequ
       dealId,
       facilityId,
       amendmentId,
-      previousPage: `/gef/application-details/${deal._id}/${PORTAL_AMENDMENT_PAGES.AMENDMENT_DETAILS}`,
+      previousPage: `/gef/application-details/${deal._id}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.AMENDMENT_DETAILS}`,
     };
 
     return res.render('partials/submit-to-ukef.njk', viewModel);

@@ -56,7 +56,7 @@ context('Amendments - Amendment details page', () => {
         cy.clearSessionCookies();
         cy.login(user);
         cy.visit(dealUrl);
-        applicationPreview.amendmentDetailsLink().click();
+        applicationPreview.amendmentDetailsReadyForCheckerLink(1).click();
       });
 
       it('should render the correct heading and back link', () => {
