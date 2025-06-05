@@ -19,9 +19,9 @@ const calculateFeeAmount = (drawnAmount, daysOfCover, dayBasis, interestPercenta
 
 const calculateGefFacilityFeeRecord = (facility) => {
   if (facility.hasBeenIssued) {
-    const { interestPercentage, dayCountBasis: dayBasis, value, coverPercentage, coverStartDate, coverEndDateTimestamp: coverEndDate } = facility;
+    const { interestPercentage, dayCountBasis: dayBasis, value, coverPercentage, coverStartDate, coverEndDateTimestamp: coverEndDate, type } = facility;
 
-    const drawnAmount = calculateDrawnAmount(value, coverPercentage);
+    const drawnAmount = calculateDrawnAmount(value, coverPercentage, type);
     const daysOfCover = calculateDaysOfCover(coverStartDate, coverEndDate);
     const feeRecord = calculateFeeAmount(drawnAmount, daysOfCover, dayBasis, interestPercentage);
 
