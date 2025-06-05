@@ -15,21 +15,21 @@ jest.mock('../../../src/drivers/fileshare', () => ({
 
 describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
   let testUsers;
-  let Testbank1Bank;
-  let Testbank2Bank;
-  let aTestbank1PaymentReportOfficer;
-  let aTestbank2PaymentReportOfficer;
+  let testBank1;
+  let testBank2;
+  let testbank1PaymentReportOfficer;
+  let testbank2PaymentReportOfficer;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aTestbank1PaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('Bank 1').one();
-    aTestbank2PaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('Bank 2').one();
-    Testbank1Bank = aTestbank1PaymentReportOfficer.bank;
-    Testbank2Bank = aTestbank2PaymentReportOfficer.bank;
+    testbank1PaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('Bank 1').one();
+    testbank2PaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('Bank 2').one();
+    testBank1 = testbank1PaymentReportOfficer.bank;
+    testBank2 = testbank2PaymentReportOfficer.bank;
     const getUtilisationSpy = jest.spyOn(api, 'getUtilisationReportById');
     getUtilisationSpy.mockImplementation(() => ({
       azureFileInfo: { filename: 'test-file.csv', mimetype: 'text/csv' },
-      bankId: Testbank1Bank.id,
+      bankId: testBank1.id,
     }));
   });
 
@@ -41,21 +41,21 @@ describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
     const getUrl = ({ bankId, reportId }) => `/v1/banks/${bankId}/utilisation-report-download/${reportId}`;
 
     withClientAuthenticationTests({
-      makeRequestWithoutAuthHeader: () => get(getUrl({ bankId: Testbank1Bank.id, reportId: '10' })),
-      makeRequestWithAuthHeader: (authHeader) => get(getUrl({ bankId: Testbank1Bank.id, reportId: '10' }), { headers: { Authorization: authHeader } }),
+      makeRequestWithoutAuthHeader: () => get(getUrl({ bankId: testBank1.id, reportId: '10' })),
+      makeRequestWithAuthHeader: (authHeader) => get(getUrl({ bankId: testBank1.id, reportId: '10' }), { headers: { Authorization: authHeader } }),
     });
 
     withRoleAuthorisationTests({
       allowedRoles: [PAYMENT_REPORT_OFFICER],
-      getUserWithRole: (role) => testUsers().withRole(role).withBankName(Testbank1Bank.name).one(),
-      makeRequestAsUser: (user) => as(user).get(getUrl({ bankId: Testbank1Bank.id, reportId: '10' })),
+      getUserWithRole: (role) => testUsers().withRole(role).withBankName(testBank1.name).one(),
+      makeRequestAsUser: (user) => as(user).get(getUrl({ bankId: testBank1.id, reportId: '10' })),
       successStatusCode: 200,
     });
 
     it("returns 400 if the 'bankId' path param is invalid", async () => {
       // Arrange
       const url = getUrl({ bankId: 'invalid-bank-id', reportId: '10' });
-      const { status } = await as(aTestbank2PaymentReportOfficer).get(url);
+      const { status } = await as(testbank2PaymentReportOfficer).get(url);
 
       // Assert
       expect(status).toEqual(400);
@@ -63,8 +63,8 @@ describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
 
     it("returns 400 if the report ID 'id' path param is invalid", async () => {
       // Arrange
-      const url = getUrl({ bankId: Testbank1Bank.id, reportId: 'invalid-sql-id' });
-      const { status } = await as(aTestbank2PaymentReportOfficer).get(url);
+      const url = getUrl({ bankId: testBank1.id, reportId: 'invalid-sql-id' });
+      const { status } = await as(testbank2PaymentReportOfficer).get(url);
 
       // Assert
       expect(status).toEqual(400);
@@ -72,7 +72,7 @@ describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
 
     it('returns 401 if trying to download of file from a different user organisation', async () => {
       // Arrange
-      const { status } = await as(aTestbank2PaymentReportOfficer).get(getUrl({ bankId: Testbank1Bank.id, reportId: '10' }));
+      const { status } = await as(testbank2PaymentReportOfficer).get(getUrl({ bankId: testBank1.id, reportId: '10' }));
 
       // Assert
       expect(status).toEqual(401);
@@ -80,7 +80,7 @@ describe('/v1/banks/:bankId/utilisation-report-download/:_id', () => {
 
     it('returns 500 if trying to download of file from a different user organisation with own bank id', async () => {
       // Arrange
-      const { status } = await as(aTestbank2PaymentReportOfficer).get(getUrl({ bankId: Testbank2Bank.id, reportId: '10' }));
+      const { status } = await as(testbank2PaymentReportOfficer).get(getUrl({ bankId: testBank2.id, reportId: '10' }));
 
       // Assert
       expect(status).toEqual(500);

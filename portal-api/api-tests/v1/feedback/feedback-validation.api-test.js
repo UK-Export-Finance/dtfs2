@@ -16,11 +16,11 @@ describe('/v1/deals/:id/bond', () => {
     emailAddress: 'test@testing.com',
   };
 
-  let aTestbank1Maker;
+  let testbank1Maker;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aTestbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    testbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
   });
 
   beforeEach(async () => {
@@ -28,7 +28,7 @@ describe('/v1/deals/:id/bond', () => {
   });
 
   const postFeedback = async (body) => {
-    const response = await as(aTestbank1Maker).post(body).to('/v1/feedback');
+    const response = await as(testbank1Maker).post(body).to('/v1/feedback');
     return response;
   };
 

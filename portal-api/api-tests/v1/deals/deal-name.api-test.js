@@ -30,15 +30,15 @@ const newDeal = aDeal({
 const updatedName = 'a new name';
 
 describe('/v1/deals/:id/additionalRefName', () => {
-  let aTestbank1Maker;
-  let anotherTestbank1Maker;
+  let testbank1Maker;
+  let testBank1Maker2;
   let testUser;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     testUser = testUsers().withRole(READ_ONLY).one();
-    const Testbank1Makers = testUsers().withRole(MAKER).withBankName('Bank 1').all();
-    [aTestbank1Maker, anotherTestbank1Maker] = Testbank1Makers;
+    const testbank1Makers = testUsers().withRole(MAKER).withBankName('Bank 1').all();
+    [testbank1Maker, testBank1Maker2] = testbank1Makers;
   });
 
   beforeEach(async () => {
@@ -60,42 +60,42 @@ describe('/v1/deals/:id/additionalRefName', () => {
     });
 
     it('401s requests if <user> != <resource>/maker', async () => {
-      const { body } = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
+      const { body } = await as(testbank1Maker).post(newDeal).to('/v1/deals');
 
-      const { status } = await as(anotherTestbank1Maker).put({ additionalRefName: updatedName }).to(`/v1/deals/${body._id}/additionalRefName`);
+      const { status } = await as(testBank1Maker2).put({ additionalRefName: updatedName }).to(`/v1/deals/${body._id}/additionalRefName`);
 
       expect(status).toEqual(401);
     });
 
     it('returns the updated additionalRefName', async () => {
-      const postResult = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
+      const postResult = await as(testbank1Maker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
-      const { status, text } = await as(aTestbank1Maker).put({ additionalRefName: updatedName }).to(`/v1/deals/${createdDeal._id}/additionalRefName`);
+      const { status, text } = await as(testbank1Maker).put({ additionalRefName: updatedName }).to(`/v1/deals/${createdDeal._id}/additionalRefName`);
 
       expect(status).toEqual(200);
       expect(text).toEqual(updatedName);
     });
 
     it('updates the deal', async () => {
-      const postResult = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
+      const postResult = await as(testbank1Maker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
-      await as(aTestbank1Maker).put({ additionalRefName: updatedName }).to(`/v1/deals/${createdDeal._id}/additionalRefName`);
+      await as(testbank1Maker).put({ additionalRefName: updatedName }).to(`/v1/deals/${createdDeal._id}/additionalRefName`);
 
-      const { status, body } = await as(aTestbank1Maker).get(`/v1/deals/${createdDeal._id}`);
+      const { status, body } = await as(testbank1Maker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
       expect(body.deal.additionalRefName).toEqual(updatedName);
     });
 
     it('updates the deals updatedAt field', async () => {
-      const postResult = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
+      const postResult = await as(testbank1Maker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
 
-      await as(aTestbank1Maker).put({ additionalRefName: updatedName }).to(`/v1/deals/${createdDeal._id}/additionalRefName`);
+      await as(testbank1Maker).put({ additionalRefName: updatedName }).to(`/v1/deals/${createdDeal._id}/additionalRefName`);
 
-      const { status, body } = await as(aTestbank1Maker).get(`/v1/deals/${createdDeal._id}`);
+      const { status, body } = await as(testbank1Maker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
       expect(body.deal.updatedAt).not.toEqual(newDeal.updatedAt);

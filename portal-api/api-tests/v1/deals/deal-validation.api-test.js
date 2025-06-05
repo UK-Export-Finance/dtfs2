@@ -6,11 +6,11 @@ const { MAKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('/v1/deals', () => {
-  let aTestbank1Maker;
+  let testbank1Maker;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aTestbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    testbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
   });
 
   beforeEach(async () => {
@@ -20,7 +20,7 @@ describe('/v1/deals', () => {
 
   describe('POST /v1/deals', () => {
     it('returns 400 with validation errors', async () => {
-      const { body, status } = await as(aTestbank1Maker).post({}).to('/v1/deals');
+      const { body, status } = await as(testbank1Maker).post({}).to('/v1/deals');
       expect(status).toEqual(400);
       expect(body.validationErrors.count).toEqual(2);
     });
@@ -33,7 +33,7 @@ describe('/v1/deals', () => {
             additionalRefName: 'test name',
           };
 
-          const { body } = await as(aTestbank1Maker).post(deal).to('/v1/deals');
+          const { body } = await as(testbank1Maker).post(deal).to('/v1/deals');
 
           expect(body.validationErrors.errorList.bankInternalRefName.text).toEqual('Enter the Bank deal ID');
         });
@@ -46,7 +46,7 @@ describe('/v1/deals', () => {
             additionalRefName: 'test name',
           };
 
-          const { body } = await as(aTestbank1Maker).post(deal).to('/v1/deals');
+          const { body } = await as(testbank1Maker).post(deal).to('/v1/deals');
 
           expect(body.validationErrors.errorList.bankInternalRefName.text).toEqual('Bank deal ID must be 30 characters or fewer');
         });
@@ -61,7 +61,7 @@ describe('/v1/deals', () => {
             additionalRefName: '',
           };
 
-          const { body } = await as(aTestbank1Maker).post(deal).to('/v1/deals');
+          const { body } = await as(testbank1Maker).post(deal).to('/v1/deals');
 
           expect(body.validationErrors.errorList.additionalRefName.text).toEqual('Enter the Bank deal name');
         });
@@ -74,7 +74,7 @@ describe('/v1/deals', () => {
             additionalRefName: 'a'.repeat(101),
           };
 
-          const { body } = await as(aTestbank1Maker).post(deal).to('/v1/deals');
+          const { body } = await as(testbank1Maker).post(deal).to('/v1/deals');
 
           expect(body.validationErrors.errorList.additionalRefName.text).toEqual('Bank deal name must be 100 characters or fewer');
         });

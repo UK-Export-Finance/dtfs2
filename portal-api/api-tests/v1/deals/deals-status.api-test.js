@@ -21,22 +21,22 @@ describe('/v1/deals/:id/status', () => {
   const dealStatusUrl = (dealId) => `/v1/deals/${dealId}/status`;
   const dealStatusUrlForUnknownDealId = dealStatusUrl('620a1aa095a618b12da38c7b');
 
-  let aTestbank1Maker;
-  let anTestbank2Maker;
-  let aTestbank1Checker;
-  let aTestbank1MakerChecker;
+  let testbank1Maker;
+  let testbank2Maker;
+  let testbank1Checker;
+  let testbank1MakerChecker;
   let aSuperuser;
   let testUsers;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    const Testbank1Makers = testUsers().withRole(MAKER).withBankName('Bank 1').all();
-    [aTestbank1Maker] = Testbank1Makers;
-    anTestbank2Maker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
-    aTestbank1Checker = testUsers().withRole(CHECKER).withBankName('Bank 1').one();
+    const testbank1Makers = testUsers().withRole(MAKER).withBankName('Bank 1').all();
+    [testbank1Maker] = testbank1Makers;
+    testbank2Maker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
+    testbank1Checker = testUsers().withRole(CHECKER).withBankName('Bank 1').one();
 
     const Testbank1MakerChecker = testUsers().withMultipleRoles(MAKER, CHECKER).withBankName('Bank 1').one();
-    aTestbank1MakerChecker = Testbank1MakerChecker;
+    testbank1MakerChecker = Testbank1MakerChecker;
     aSuperuser = testUsers().superuser().one();
   });
 
@@ -47,7 +47,7 @@ describe('/v1/deals/:id/status', () => {
     beforeAll(async () => {
       const {
         body: { _id: createdDealId },
-      } = await as(aTestbank1Maker).post(completedDeal).to('/v1/deals');
+      } = await as(testbank1Maker).post(completedDeal).to('/v1/deals');
       dealId = createdDealId;
       urlToGetDealStatus = dealStatusUrl(dealId);
     });
@@ -65,15 +65,15 @@ describe('/v1/deals/:id/status', () => {
     });
 
     it('404s requests for unknown ids', async () => {
-      const { status } = await as(aTestbank1Maker).get(dealStatusUrlForUnknownDealId);
+      const { status } = await as(testbank1Maker).get(dealStatusUrlForUnknownDealId);
 
       expect(status).toEqual(404);
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const { body } = await as(anTestbank2Maker).post(completedDeal).to('/v1/deals');
+      const { body } = await as(testbank2Maker).post(completedDeal).to('/v1/deals');
 
-      const { status } = await as(aTestbank1Maker).get(`/v1/deals/${body._id}/status`);
+      const { status } = await as(testbank1Maker).get(`/v1/deals/${body._id}/status`);
 
       expect(status).toEqual(401);
     });
@@ -85,7 +85,7 @@ describe('/v1/deals/:id/status', () => {
     });
 
     it('returns the requested resource', async () => {
-      const { status, text } = await as(aTestbank1Maker).get(urlToGetDealStatus);
+      const { status, text } = await as(testbank1Maker).get(urlToGetDealStatus);
 
       expect(status).toEqual(200);
       expect(text).toEqual("Ready for Checker's approval");
@@ -105,7 +105,7 @@ describe('/v1/deals/:id/status', () => {
 
       const {
         body: { _id: createdDealId },
-      } = await as(aTestbank1Maker).post(completedDeal).to('/v1/deals');
+      } = await as(testbank1Maker).post(completedDeal).to('/v1/deals');
       dealId = createdDealId;
       urlForDealStatus = dealStatusUrl(dealId);
       urlForDeal = `/v1/deals/${dealId}`;
@@ -130,14 +130,14 @@ describe('/v1/deals/:id/status', () => {
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const { body } = await as(anTestbank2Maker).post(completedDeal).to('/v1/deals');
+      const { body } = await as(testbank2Maker).post(completedDeal).to('/v1/deals');
 
       const statusUpdate = {
         comments: 'Flee!',
         status: 'Abandoned',
       };
 
-      const { status } = await as(aTestbank1Maker).put(statusUpdate).to(`/v1/deals/${body._id}/status`);
+      const { status } = await as(testbank1Maker).put(statusUpdate).to(`/v1/deals/${body._id}/status`);
 
       expect(status).toEqual(401);
     });
@@ -148,7 +148,7 @@ describe('/v1/deals/:id/status', () => {
         status: 'Abandoned',
       };
 
-      const { status, body } = await as(aTestbank1Maker).put(statusUpdate).to(urlForDealStatus);
+      const { status, body } = await as(testbank1Maker).put(statusUpdate).to(urlForDealStatus);
 
       expect(status).toEqual(200);
       expect(body.status).toEqual('Abandoned');
@@ -160,9 +160,9 @@ describe('/v1/deals/:id/status', () => {
         status: 'Abandoned',
       };
 
-      await as(aTestbank1Maker).put(statusUpdate).to(urlForDealStatus);
+      await as(testbank1Maker).put(statusUpdate).to(urlForDealStatus);
 
-      const { status, body } = await as(aTestbank1Maker).get(urlForDeal);
+      const { status, body } = await as(testbank1Maker).get(urlForDeal);
 
       expect(status).toEqual(200);
       expect(body.deal.status).toEqual('Abandoned');
@@ -174,17 +174,17 @@ describe('/v1/deals/:id/status', () => {
         status: 'Abandoned',
       };
 
-      await as(aTestbank1Maker).put(statusUpdate).to(urlForDealStatus);
+      await as(testbank1Maker).put(statusUpdate).to(urlForDealStatus);
 
-      const { status, body } = await as(aTestbank1Maker).get(urlForDeal);
+      const { status, body } = await as(testbank1Maker).get(urlForDeal);
 
       expect(status).toEqual(200);
       expect(body.deal.updatedAt).not.toEqual(completedDeal.updatedAt);
     });
 
     it('updates the deals.previousStatus field', async () => {
-      const postResult = await as(anTestbank2Maker).post(completedDeal).to('/v1/deals');
-      const { body: createdDealBody } = await as(anTestbank2Maker).get(`/v1/deals/${postResult.body._id}`);
+      const postResult = await as(testbank2Maker).post(completedDeal).to('/v1/deals');
+      const { body: createdDealBody } = await as(testbank2Maker).get(`/v1/deals/${postResult.body._id}`);
       const createdDeal = createdDealBody.deal;
 
       const statusUpdate = {
@@ -192,9 +192,9 @@ describe('/v1/deals/:id/status', () => {
         status: 'Abandoned',
       };
 
-      await as(anTestbank2Maker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      await as(testbank2Maker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
-      const { status, body } = await as(anTestbank2Maker).get(`/v1/deals/${createdDeal._id}`);
+      const { status, body } = await as(testbank2Maker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
       expect(body.deal.previousStatus).toEqual(createdDeal.status);
@@ -202,7 +202,7 @@ describe('/v1/deals/:id/status', () => {
     });
 
     it('does NOT update previousStatus if the `from` and `to` status matches', async () => {
-      await createFacilities(aTestbank1Maker, dealId, completedDeal.mockFacilities);
+      await createFacilities(testbank1Maker, dealId, completedDeal.mockFacilities);
 
       const statusUpdate = {
         comments: 'Flee!',
@@ -211,9 +211,9 @@ describe('/v1/deals/:id/status', () => {
 
       const expectedPreviousStatus = completedDeal.previousStatus;
 
-      await as(aTestbank1Maker).put(statusUpdate).to(urlForDealStatus);
+      await as(testbank1Maker).put(statusUpdate).to(urlForDealStatus);
 
-      const { body } = await as(aTestbank1Maker).get(urlForDeal);
+      const { body } = await as(testbank1Maker).get(urlForDeal);
 
       expect(body.deal.previousStatus).toEqual(expectedPreviousStatus);
       expect(body.deal.status).toEqual(completedDeal.status);
@@ -225,24 +225,24 @@ describe('/v1/deals/:id/status', () => {
         status: 'Abandoned',
       };
 
-      await as(aTestbank1Maker).put(statusUpdate).to(urlForDealStatus);
+      await as(testbank1Maker).put(statusUpdate).to(urlForDealStatus);
 
-      const { body } = await as(aTestbank1Maker).get(urlForDeal);
+      const { body } = await as(testbank1Maker).get(urlForDeal);
       expect(body.deal.comments[0]).toEqual({
         text: 'Flee!',
         timestamp: expect.any(Number),
         user: {
           _id: expect.any(String),
-          bank: aTestbank1Maker.bank,
-          roles: aTestbank1Maker.roles,
+          bank: testbank1Maker.bank,
+          roles: testbank1Maker.roles,
           lastLogin: expect.any(String),
-          username: aTestbank1Maker.username,
-          email: aTestbank1Maker.email,
-          firstname: aTestbank1Maker.firstname,
-          surname: aTestbank1Maker.surname,
+          username: testbank1Maker.username,
+          email: testbank1Maker.email,
+          firstname: testbank1Maker.firstname,
+          surname: testbank1Maker.surname,
           timezone: 'Europe/London',
           'user-status': STATUS.ACTIVE,
-          isTrusted: aTestbank1Maker.isTrusted,
+          isTrusted: testbank1Maker.isTrusted,
         },
       });
     });
@@ -253,10 +253,10 @@ describe('/v1/deals/:id/status', () => {
         status: 'Abandoned',
       };
 
-      await as(aTestbank1Maker).put(statusUpdate).to(urlForDealStatus);
+      await as(testbank1Maker).put(statusUpdate).to(urlForDealStatus);
 
-      const { body } = await as(aTestbank1Maker).get(urlForDeal);
-      expect(body.deal.auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(aTestbank1Maker._id));
+      const { body } = await as(testbank1Maker).get(urlForDeal);
+      expect(body.deal.auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(testbank1Maker._id));
     });
 
     it('adds the user to `editedBy` array', async () => {
@@ -265,30 +265,30 @@ describe('/v1/deals/:id/status', () => {
         status: 'Abandoned',
       };
 
-      await as(aTestbank1Maker).put(statusUpdate).to(urlForDealStatus);
+      await as(testbank1Maker).put(statusUpdate).to(urlForDealStatus);
 
-      const { body } = await as(aTestbank1Maker).get(urlForDeal);
+      const { body } = await as(testbank1Maker).get(urlForDeal);
       expect(body.deal.editedBy[body.deal.editedBy.length - 1]).toEqual({
         date: expect.any(Number),
-        username: aTestbank1Maker.username,
-        roles: aTestbank1Maker.roles,
-        bank: aTestbank1Maker.bank,
-        userId: aTestbank1Maker._id,
+        username: testbank1Maker.username,
+        roles: testbank1Maker.roles,
+        bank: testbank1Maker.bank,
+        userId: testbank1Maker._id,
       });
     });
 
     it('sends an email if the status has changed', async () => {
-      const postResult = await as(anTestbank2Maker).post(completedDeal).to('/v1/deals');
+      const postResult = await as(testbank2Maker).post(completedDeal).to('/v1/deals');
       const createdDealId = postResult.body._id;
 
-      await createFacilities(anTestbank2Maker, createdDealId, completedDeal.mockFacilities);
+      await createFacilities(testbank2Maker, createdDealId, completedDeal.mockFacilities);
 
       const statusUpdate = {
         status: 'Submitted',
         confirmSubmit: true,
       };
 
-      await as(anTestbank2Maker).put(statusUpdate).to(`/v1/deals/${createdDealId}/status`);
+      await as(testbank2Maker).put(statusUpdate).to(`/v1/deals/${createdDealId}/status`);
 
       expect(sendStatusUpdateEmails).toHaveBeenCalled();
     });
@@ -299,9 +299,9 @@ describe('/v1/deals/:id/status', () => {
         status: "Further Maker's input required",
       };
 
-      await as(aTestbank1Checker).put(statusUpdate).to(urlForDealStatus);
+      await as(testbank1Checker).put(statusUpdate).to(urlForDealStatus);
 
-      const { body } = await as(aTestbank1Maker).get(urlForDeal);
+      const { body } = await as(testbank1Maker).get(urlForDeal);
       expect(body.deal.editedBy.length).toEqual(0);
     });
 
@@ -311,9 +311,9 @@ describe('/v1/deals/:id/status', () => {
         status: 'Submitted',
       };
 
-      await as(aTestbank1Checker).put(statusUpdate).to(urlForDealStatus);
+      await as(testbank1Checker).put(statusUpdate).to(urlForDealStatus);
 
-      const { body } = await as(aTestbank1Maker).get(urlForDeal);
+      const { body } = await as(testbank1Maker).get(urlForDeal);
       expect(body.deal.editedBy.length).toEqual(0);
     });
 
@@ -322,7 +322,7 @@ describe('/v1/deals/:id/status', () => {
         status: 'Abandoned',
       };
 
-      const { body } = await as(aTestbank1Maker).put(statusUpdate).to(urlForDealStatus);
+      const { body } = await as(testbank1Maker).put(statusUpdate).to(urlForDealStatus);
 
       expect(body).toEqual({
         success: false,
@@ -342,13 +342,13 @@ describe('/v1/deals/:id/status', () => {
         status: 'Draft',
       };
 
-      const postResult = await as(anTestbank2Maker).post(draftDeal).to('/v1/deals');
+      const postResult = await as(testbank2Maker).post(draftDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const statusUpdate = {
         status: "Ready for Checker's approval",
       };
 
-      const { body } = await as(anTestbank2Maker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      const { body } = await as(testbank2Maker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
       expect(body).toEqual({
         success: false,
@@ -367,7 +367,7 @@ describe('/v1/deals/:id/status', () => {
         status: "Further Maker's input required",
       };
 
-      const { body } = await as(aTestbank1Checker).put(statusUpdate).to(urlForDealStatus);
+      const { body } = await as(testbank1Checker).put(statusUpdate).to(urlForDealStatus);
 
       expect(body).toEqual({
         success: false,
@@ -386,7 +386,7 @@ describe('/v1/deals/:id/status', () => {
         status: 'Submitted',
       };
 
-      const { body } = await as(aTestbank1Checker).put(statusUpdate).to(urlForDealStatus);
+      const { body } = await as(testbank1Checker).put(statusUpdate).to(urlForDealStatus);
 
       expect(body).toEqual({
         success: false,
@@ -405,17 +405,17 @@ describe('/v1/deals/:id/status', () => {
         ...completedDeal,
         details: {
           ...completedDeal.details,
-          maker: aTestbank1MakerChecker,
+          maker: testbank1MakerChecker,
         },
       };
 
-      const postResult = await as(aTestbank1MakerChecker).post(dealCreatedByMakerChecker).to('/v1/deals');
+      const postResult = await as(testbank1MakerChecker).post(dealCreatedByMakerChecker).to('/v1/deals');
       const createdDeal = postResult.body;
       const statusUpdate = {
         status: 'Submitted',
       };
 
-      const { status } = await as(aTestbank1MakerChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      const { status } = await as(testbank1MakerChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
       expect(status).toEqual(401);
     });
@@ -425,19 +425,19 @@ describe('/v1/deals/:id/status', () => {
         ...completedDeal,
         editedBy: [
           {
-            ...aTestbank1MakerChecker,
-            userId: aTestbank1MakerChecker._id,
+            ...testbank1MakerChecker,
+            userId: testbank1MakerChecker._id,
           },
         ],
       };
 
-      const postResult = await as(aTestbank1Maker).post(dealEditedByMakerChecker).to('/v1/deals');
+      const postResult = await as(testbank1Maker).post(dealEditedByMakerChecker).to('/v1/deals');
       const createdDeal = postResult.body;
       const statusUpdate = {
         status: 'Submitted',
       };
 
-      const { status } = await as(aTestbank1MakerChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+      const { status } = await as(testbank1MakerChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
       expect(status).toEqual(401);
     });

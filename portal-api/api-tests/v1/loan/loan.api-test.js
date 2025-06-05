@@ -44,16 +44,16 @@ describe('/v1/deals/:id/loan', () => {
   };
 
   let testUsers;
-  let aTestbank1Maker;
-  let anTestbank2Maker;
+  let testbank1Maker;
+  let testbank2Maker;
   let aSuperuser;
 
   const createLoan = async () => {
-    const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
+    const deal = await as(testbank1Maker).post(newDeal).to('/v1/deals');
 
     const dealId = deal.body._id;
 
-    const createLoanResponse = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+    const createLoanResponse = await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
 
     const { loanId } = createLoanResponse.body;
     return {
@@ -63,15 +63,15 @@ describe('/v1/deals/:id/loan', () => {
   };
 
   const updateLoan = async (dealId, loanId, loanBody) => {
-    const updatedLoan = await as(aTestbank1Maker).put(loanBody).to(`/v1/deals/${dealId}/loan/${loanId}`);
+    const updatedLoan = await as(testbank1Maker).put(loanBody).to(`/v1/deals/${dealId}/loan/${loanId}`);
     return updatedLoan;
   };
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
 
-    aTestbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
-    anTestbank2Maker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
+    testbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    testbank2Maker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
     aSuperuser = testUsers().superuser().one();
   });
 
@@ -105,31 +105,31 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('400s requests that do not present with a valid deal id parameter', async () => {
-      const { status } = await as(aTestbank1Maker).get('/v1/deals/1345/loan/620a1aa095a618b12da38c7b');
+      const { status } = await as(testbank1Maker).get('/v1/deals/1345/loan/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(400);
     });
 
     it('400s requests that do not present with a valid loan id parameter', async () => {
-      const { status } = await as(aTestbank1Maker).get('/v1/deals/620a1aa095a618b12da38c7b/loan/12345');
+      const { status } = await as(testbank1Maker).get('/v1/deals/620a1aa095a618b12da38c7b/loan/12345');
 
       expect(status).toEqual(400);
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const { status } = await as(anTestbank2Maker).get(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b`);
+      const { status } = await as(testbank2Maker).get(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aTestbank1Maker).get('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
+      const { status } = await as(testbank1Maker).get('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
 
     it('404s requests for unknown loan', async () => {
-      const { status } = await as(aTestbank1Maker).get(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b`);
+      const { status } = await as(testbank1Maker).get(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b`);
 
       expect(status).toEqual(404);
     });
@@ -184,7 +184,7 @@ describe('/v1/deals/:id/loan', () => {
 
   describe('PUT /v1/deals/:id/loan/:id', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
+      const deal = await as(testbank1Maker).post(newDeal).to('/v1/deals');
       const dealId = deal.body._id;
       const { status } = await as().put({}).to(`/v1/deals/${dealId}/loan/12345678`);
 
@@ -192,7 +192,7 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
+      const deal = await as(testbank1Maker).post(newDeal).to('/v1/deals');
       const dealId = deal.body._id;
       const { status } = await as(testUsers).put({}).to(`/v1/deals/${dealId}/loan/12345678`);
 
@@ -200,41 +200,41 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
+      const deal = await as(testbank1Maker).post(newDeal).to('/v1/deals');
       const dealId = deal.body._id;
-      const { status } = await as(anTestbank2Maker).put({}).to(`/v1/deals/${dealId}/loan/12345678`);
+      const { status } = await as(testbank2Maker).put({}).to(`/v1/deals/${dealId}/loan/12345678`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aTestbank1Maker).put({}).to('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
+      const { status } = await as(testbank1Maker).put({}).to('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
 
     it('404s requests for unknown loan', async () => {
-      const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
+      const deal = await as(testbank1Maker).post(newDeal).to('/v1/deals');
       const dealId = deal.body._id;
 
-      const { status } = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b`);
+      const { status } = await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b`);
 
       expect(status).toEqual(404);
     });
 
     it('400s requests if deal id is invalid', async () => {
-      await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
+      await as(testbank1Maker).post(newDeal).to('/v1/deals');
 
-      const { status } = await as(aTestbank1Maker).put({}).to('/v1/deals/12345/loan/create');
+      const { status } = await as(testbank1Maker).put({}).to('/v1/deals/12345/loan/create');
 
       expect(status).toEqual(400);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
+      const deal = await as(testbank1Maker).post(newDeal).to('/v1/deals');
       const dealId = deal.body._id;
 
-      const createLoanResponse = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+      const createLoanResponse = await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
       const { loanId } = createLoanResponse.body;
 
       const conditionalLoan = {
@@ -502,20 +502,20 @@ describe('/v1/deals/:id/loan', () => {
 
     it("should update the associated deal's facilitiesUpdated timestamp", async () => {
       // create deal
-      const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals/');
+      const deal = await as(testbank1Maker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id;
 
       // create loan facility
-      const { body: createdLoan } = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+      const { body: createdLoan } = await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
       const { loanId } = createdLoan;
 
       const loanUpdate = { test: true };
 
       // update loan facility
-      await as(aTestbank1Maker).put(loanUpdate).to(`/v1/deals/${dealId}/loan/${loanId}`);
+      await as(testbank1Maker).put(loanUpdate).to(`/v1/deals/${dealId}/loan/${loanId}`);
 
       // get the deal, check facilities timestamp
-      const { body: dealAfterUpdate } = await as(aTestbank1Maker).get(`/v1/deals/${dealId}`);
+      const { body: dealAfterUpdate } = await as(testbank1Maker).get(`/v1/deals/${dealId}`);
       expect(dealAfterUpdate.deal.facilitiesUpdated).toEqual(expect.any(Number));
     });
   });
@@ -534,22 +534,22 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
+      const deal = await as(testbank1Maker).post(newDeal).to('/v1/deals');
       const dealId = deal.body._id;
 
-      const { status } = await as(anTestbank2Maker).put().to(`/v1/deals/${dealId}/loan/create`);
+      const { status } = await as(testbank2Maker).put().to(`/v1/deals/${dealId}/loan/create`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown resources', async () => {
-      const { status } = await as(aTestbank1Maker).put().to('/v1/deals/620a1aa095a618b12da38c7b/loan/create');
+      const { status } = await as(testbank1Maker).put().to('/v1/deals/620a1aa095a618b12da38c7b/loan/create');
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
+      const deal = await as(testbank1Maker).post(newDeal).to('/v1/deals');
       const dealId = deal.body._id;
 
       const { status } = await as(aSuperuser).put({}).to(`/v1/deals/${dealId}/loan/create`);
@@ -558,12 +558,12 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('adds an empty loan to a deal, with facility createdDate, type', async () => {
-      const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals/');
+      const deal = await as(testbank1Maker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id;
 
-      await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+      await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
 
-      const { status, body } = await as(aTestbank1Maker).get(`/v1/deals/${dealId}`);
+      const { status, body } = await as(testbank1Maker).get(`/v1/deals/${dealId}`);
 
       expect(status).toEqual(200);
       expect(body.deal.loanTransactions.items.length).toEqual(1);
@@ -573,7 +573,7 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('adds an empty loan to a deal', async () => {
-      const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals/');
+      const deal = await as(testbank1Maker).post(newDeal).to('/v1/deals/');
       const dealId = deal.body._id;
 
       const newLoan = {
@@ -581,9 +581,9 @@ describe('/v1/deals/:id/loan', () => {
         dealId,
       };
 
-      await as(aTestbank1Maker).put(newLoan).to(`/v1/deals/${dealId}/loan/create`);
+      await as(testbank1Maker).put(newLoan).to(`/v1/deals/${dealId}/loan/create`);
 
-      const { status, body } = await as(aTestbank1Maker).get(`/v1/deals/${dealId}`);
+      const { status, body } = await as(testbank1Maker).get(`/v1/deals/${dealId}`);
 
       expect(status).toEqual(200);
       expect(body.deal.facilities.length).toEqual(1);
@@ -613,47 +613,47 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const { status } = await as(anTestbank2Maker).remove(`/v1/deals/${dealId}/loan/12345678`);
+      const { status } = await as(testbank2Maker).remove(`/v1/deals/${dealId}/loan/12345678`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aTestbank1Maker).remove('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
+      const { status } = await as(testbank1Maker).remove('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
 
     it('404s requests for unknown loan', async () => {
-      const { status } = await as(aTestbank1Maker).remove(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b`);
+      const { status } = await as(testbank1Maker).remove(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b`);
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const { status } = await as(aTestbank1Maker).remove(`/v1/deals/${dealId}/loan/${loanId}`);
+      const { status } = await as(testbank1Maker).remove(`/v1/deals/${dealId}/loan/${loanId}`);
       expect(status).toEqual(200);
     });
 
     it('removes a loan from a deal', async () => {
-      const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
+      const deal = await as(testbank1Maker).post(newDeal).to('/v1/deals');
       dealId = deal.body._id;
 
-      await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
-      await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
-      await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+      await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+      await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+      await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
 
-      const { body } = await as(aTestbank1Maker).get(`/v1/deals/${dealId}`);
+      const { body } = await as(testbank1Maker).get(`/v1/deals/${dealId}`);
 
       const createdDeal = body.deal;
       expect(createdDeal.loanTransactions.items.length).toEqual(3);
 
       const loanIdToDelete = createdDeal.loanTransactions.items[1]._id;
 
-      const { status } = await as(aTestbank1Maker).remove(`/v1/deals/${dealId}/loan/${loanIdToDelete}`);
+      const { status } = await as(testbank1Maker).remove(`/v1/deals/${dealId}/loan/${loanIdToDelete}`);
       expect(status).toEqual(200);
 
-      const { body: updatedDealBody } = await as(aTestbank1Maker).get(`/v1/deals/${dealId}`);
+      const { body: updatedDealBody } = await as(testbank1Maker).get(`/v1/deals/${dealId}`);
 
       const updatedLoans = updatedDealBody.deal.loanTransactions.items;
       expect(updatedLoans.length).toEqual(2);

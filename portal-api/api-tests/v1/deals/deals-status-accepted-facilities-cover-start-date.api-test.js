@@ -10,8 +10,8 @@ const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover start dates', () => {
-  let aTestbank1Maker;
-  let aTestbank1Checker;
+  let testbank1Maker;
+  let testbank1Checker;
   let aSuperuser;
 
   const isUnsubmittedIssuedFacility = (facility) => {
@@ -30,9 +30,9 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
     await databaseHelper.wipe([DB_COLLECTIONS.DEALS]);
     await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
     const testUsers = await testUserCache.initialise(app);
-    const Testbank1Makers = testUsers().withRole(MAKER).withBankName('Bank 1').all();
-    [aTestbank1Maker] = Testbank1Makers;
-    aTestbank1Checker = testUsers().withRole(CHECKER).withBankName('Bank 1').one();
+    const testbank1Makers = testUsers().withRole(MAKER).withBankName('Bank 1').all();
+    [testbank1Maker] = testbank1Makers;
+    testbank1Checker = testUsers().withRole(CHECKER).withBankName('Bank 1').one();
     aSuperuser = testUsers().superuser().one();
   });
 
@@ -46,7 +46,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
       minDeal.details.manualInclusionNoticeSubmissionDate = new Date().valueOf();
       minDeal.status = 'Accepted by UKEF (without conditions)';
 
-      const postResult = await as(aTestbank1Maker)
+      const postResult = await as(testbank1Maker)
         .post(JSON.parse(JSON.stringify(minDeal)))
         .to('/v1/deals');
 
@@ -63,7 +63,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         }
       });
 
-      const createdFacilities = await createFacilities(aTestbank1Maker, dealId, completedDeal.mockFacilities);
+      const createdFacilities = await createFacilities(testbank1Maker, dealId, completedDeal.mockFacilities);
 
       completedDeal.mockFacilities = createdFacilities;
 
@@ -72,7 +72,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         comments: 'test',
       };
 
-      updatedDeal = await as(aTestbank1Checker).put(statusUpdate).to(`/v1/deals/${submittedMinDeal._id}/status`);
+      updatedDeal = await as(testbank1Checker).put(statusUpdate).to(`/v1/deals/${submittedMinDeal._id}/status`);
     });
 
     describe('any issued bonds that have details provided, not yet submitted and no requestedCoverStartDate', () => {
@@ -130,7 +130,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
       minDeal.details.manualInclusionNoticeSubmissionDate = new Date().valueOf();
       minDeal.status = 'Accepted by UKEF (with conditions)';
 
-      const postResult = await as(aTestbank1Maker)
+      const postResult = await as(testbank1Maker)
         .post(JSON.parse(JSON.stringify(minDeal)))
         .to('/v1/deals');
 
@@ -147,7 +147,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         }
       });
 
-      const createdFacilities = await createFacilities(aTestbank1Maker, dealId, completedDeal.mockFacilities);
+      const createdFacilities = await createFacilities(testbank1Maker, dealId, completedDeal.mockFacilities);
       completedDeal.mockFacilities = createdFacilities;
 
       const statusUpdate = {
@@ -156,7 +156,7 @@ describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover st
         confirmSubmit: true,
       };
 
-      updatedDeal = await as(aTestbank1Checker).put(statusUpdate).to(`/v1/deals/${submittedMinDeal._id}/status`);
+      updatedDeal = await as(testbank1Checker).put(statusUpdate).to(`/v1/deals/${submittedMinDeal._id}/status`);
     });
 
     describe('any issued bonds that have details provided, not yet submitted and no requestedCoverStartDate', () => {

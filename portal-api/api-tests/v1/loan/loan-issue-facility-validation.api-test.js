@@ -29,37 +29,37 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
     },
   });
 
-  let aTestbank1Maker;
+  let testbank1Maker;
   let deal;
   let dealId;
   let loanId;
 
   const updateDeal = async (bssDealId, body) => {
-    const result = await as(aTestbank1Maker).put(body).to(`/v1/deals/${bssDealId}`);
+    const result = await as(testbank1Maker).put(body).to(`/v1/deals/${bssDealId}`);
     return result.body;
   };
 
   const updateLoan = async (bssDealId, bssLoanId, body) => {
-    const result = await as(aTestbank1Maker).put(body).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}`);
+    const result = await as(testbank1Maker).put(body).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}`);
     return result.body;
   };
 
   const updateLoanIssuance = async (bssDealId, bssLoanId, loan) => {
-    const response = await as(aTestbank1Maker).put(loan).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}/issue-facility`);
+    const response = await as(testbank1Maker).put(loan).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}/issue-facility`);
     return response.body;
   };
 
   const createDealAndLoan = async () => {
-    const dealResponse = await as(aTestbank1Maker).post(newDeal).to('/v1/deals/');
+    const dealResponse = await as(testbank1Maker).post(newDeal).to('/v1/deals/');
     deal = dealResponse.body;
     dealId = deal._id;
 
-    const createLoanResponse = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+    const createLoanResponse = await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
     const { loanId: _id } = createLoanResponse.body;
 
     loanId = _id;
 
-    const getCreatedLoan = await as(aTestbank1Maker).get(`/v1/deals/${dealId}/loan/${loanId}`);
+    const getCreatedLoan = await as(testbank1Maker).get(`/v1/deals/${dealId}/loan/${loanId}`);
 
     const modifiedLoan = {
       ...getCreatedLoan.body.loan,
@@ -74,7 +74,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aTestbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    testbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
   });
 
   beforeEach(async () => {
@@ -86,7 +86,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
     it('returns 400 with validation errors', async () => {
       await createDealAndLoan();
 
-      const { body, status } = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/${loanId}/issue-facility`);
+      const { body, status } = await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/${loanId}/issue-facility`);
       expect(status).toEqual(400);
       expect(body.validationErrors.count).toEqual(4);
       expect(body.validationErrors.errorList.issuedDate).toBeDefined();
@@ -456,7 +456,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
               'requestedCoverStartDate-year': format(todayPlus3Months1Day, 'yyyy'),
             };
 
-            await as(aTestbank1Maker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
+            await as(testbank1Maker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate).toBeUndefined();
@@ -568,7 +568,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
               'requestedCoverStartDate-year': format(todayPlus3Months1Day, 'yyyy'),
             };
 
-            await as(aTestbank1Maker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
+            await as(testbank1Maker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate).toBeUndefined();
@@ -640,7 +640,7 @@ describe('/v1/deals/:id/loan/:loanId/issue-facility', () => {
               requestedCoverStartDate: null,
             };
 
-            await as(aTestbank1Maker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
+            await as(testbank1Maker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
 
             const { validationErrors } = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(validationErrors.errorList.requestedCoverStartDate).toBeUndefined();

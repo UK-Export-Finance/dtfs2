@@ -25,8 +25,8 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
     },
   });
 
-  let aTestbank1Maker;
-  let anTestbank2Maker;
+  let testbank1Maker;
+  let testbank2Maker;
   let aSuperuser;
   let dealId;
   let bondId;
@@ -42,25 +42,25 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
   };
 
   const updateBond = async (bssDealId, bssBondId, body) => {
-    const result = await as(aTestbank1Maker).put(body).to(`/v1/deals/${bssDealId}/bond/${bssBondId}`);
+    const result = await as(testbank1Maker).put(body).to(`/v1/deals/${bssDealId}/bond/${bssBondId}`);
     return result.body;
   };
 
   const updateBondCoverStartDate = async (bssDealId, bssBondId, bond) => {
-    const response = await as(aTestbank1Maker).put(bond).to(`/v1/deals/${bssDealId}/bond/${bssBondId}/change-cover-start-date`);
+    const response = await as(testbank1Maker).put(bond).to(`/v1/deals/${bssDealId}/bond/${bssBondId}/change-cover-start-date`);
     return response;
   };
 
   const createDealAndBond = async () => {
-    const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals/');
+    const deal = await as(testbank1Maker).post(newDeal).to('/v1/deals/');
     dealId = deal.body._id;
 
-    const createBondResponse = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+    const createBondResponse = await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
     const { bondId: _id } = createBondResponse.body;
 
     bondId = _id;
 
-    const getCreatedBond = await as(aTestbank1Maker).get(`/v1/deals/${dealId}/bond/${bondId}`);
+    const getCreatedBond = await as(testbank1Maker).get(`/v1/deals/${dealId}/bond/${bondId}`);
 
     const modifiedBond = {
       ...getCreatedBond.body.bond,
@@ -74,8 +74,8 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
 
-    aTestbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
-    anTestbank2Maker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
+    testbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    testbank2Maker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
     aSuperuser = testUsers().superuser().one();
     const anAdmin = testUsers().withRole(ADMIN).one();
 
@@ -97,31 +97,31 @@ describe('/v1/deals/:id/bond/change-cover-start-date', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(anTestbank2Maker).put({}).to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
+      const { status } = await as(testbank2Maker).put({}).to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(401);
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const deal = await as(anTestbank2Maker).post(newDeal).to('/v1/deals');
+      const deal = await as(testbank2Maker).post(newDeal).to('/v1/deals');
       dealId = deal.body._id;
 
-      const { status } = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
+      const { status } = await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(aTestbank1Maker).put({}).to('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b/change-cover-start-date');
+      const { status } = await as(testbank1Maker).put({}).to('/v1/deals/620a1aa095a618b12da38c7b/bond/620a1aa095a618b12da38c7b/change-cover-start-date');
 
       expect(status).toEqual(404);
     });
 
     it('404s requests for unknown bond', async () => {
-      const deal = await as(aTestbank1Maker).post(newDeal).to('/v1/deals');
+      const deal = await as(testbank1Maker).post(newDeal).to('/v1/deals');
       dealId = deal.body._id;
 
-      const { status } = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
+      const { status } = await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/620a1aa095a618b12da38c7b/change-cover-start-date`);
 
       expect(status).toEqual(404);
     });

@@ -20,7 +20,7 @@ const { withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests } = requir
 
 const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
 const MOCK_USER = {
-  ...users.Testbank1BankMaker1,
+  ...users.testBank1Maker1,
   username: temporaryUsernameAndEmail,
   email: temporaryUsernameAndEmail,
 };

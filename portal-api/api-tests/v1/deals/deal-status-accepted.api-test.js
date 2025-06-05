@@ -9,17 +9,17 @@ const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('PUT /v1/deals/:id/status - to `Accepted by UKEF`', () => {
-  let aTestbank1Maker;
-  let aTestbank1Checker;
+  let testbank1Maker;
+  let testbank1Checker;
   let aSuperuser;
 
   beforeAll(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.DEALS]);
     await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
     const testUsers = await testUserCache.initialise(app);
-    const Testbank1Makers = testUsers().withRole(MAKER).withBankName('Bank 1').all();
-    [aTestbank1Maker] = Testbank1Makers;
-    aTestbank1Checker = testUsers().withRole(CHECKER).withBankName('Bank 1').one();
+    const testbank1Makers = testUsers().withRole(MAKER).withBankName('Bank 1').all();
+    [testbank1Maker] = testbank1Makers;
+    testbank1Checker = testUsers().withRole(CHECKER).withBankName('Bank 1').one();
     aSuperuser = testUsers().superuser().one();
   });
 
@@ -32,7 +32,7 @@ describe('PUT /v1/deals/:id/status - to `Accepted by UKEF`', () => {
       minDeal.details.manualInclusionNoticeSubmissionDate = new Date().valueOf();
       minDeal.status = 'Acknowledged';
 
-      const postResult = await as(aTestbank1Maker)
+      const postResult = await as(testbank1Maker)
         .post(JSON.parse(JSON.stringify(minDeal)))
         .to('/v1/deals');
 
@@ -42,7 +42,7 @@ describe('PUT /v1/deals/:id/status - to `Accepted by UKEF`', () => {
         status: 'Accepted by UKEF (without conditions)',
       };
 
-      updatedDeal = await as(aTestbank1Checker).put(statusUpdate).to(`/v1/deals/${submittedMinDeal._id}/status`);
+      updatedDeal = await as(testbank1Checker).put(statusUpdate).to(`/v1/deals/${submittedMinDeal._id}/status`);
     });
 
     it('adds an approval date', async () => {
@@ -64,7 +64,7 @@ describe('PUT /v1/deals/:id/status - to `Accepted by UKEF`', () => {
       minDeal.details.manualInclusionNoticeSubmissionDate = new Date().valueOf();
       minDeal.status = 'Acknowledged';
 
-      const postResult = await as(aTestbank1Maker)
+      const postResult = await as(testbank1Maker)
         .post(JSON.parse(JSON.stringify(minDeal)))
         .to('/v1/deals');
 
@@ -74,7 +74,7 @@ describe('PUT /v1/deals/:id/status - to `Accepted by UKEF`', () => {
         status: 'Accepted by UKEF (with conditions)',
       };
 
-      updatedDeal = await as(aTestbank1Checker).put(statusUpdate).to(`/v1/deals/${submittedMinDeal._id}/status`);
+      updatedDeal = await as(testbank1Checker).put(statusUpdate).to(`/v1/deals/${submittedMinDeal._id}/status`);
     });
 
     it('adds an approval date', async () => {

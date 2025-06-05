@@ -24,35 +24,35 @@ describe('/v1/deals/:id/loan', () => {
     },
   });
 
-  let aTestbank1Maker;
+  let testbank1Maker;
   let deal;
   let dealId;
   let loanId;
 
   const updateLoanInDeal = async (theDealId, loan) => {
-    const response = await as(aTestbank1Maker).put(loan).to(`/v1/deals/${theDealId}/loan/${loanId}`);
+    const response = await as(testbank1Maker).put(loan).to(`/v1/deals/${theDealId}/loan/${loanId}`);
     return response.body;
   };
 
   const updateDeal = async (dealBody) => {
-    const response = await as(aTestbank1Maker).put(dealBody).to(`/v1/deals/${dealId}`);
+    const response = await as(testbank1Maker).put(dealBody).to(`/v1/deals/${dealId}`);
     return response.body;
   };
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aTestbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    testbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
   });
 
   beforeEach(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.DEALS]);
     await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
 
-    const dealResponse = await as(aTestbank1Maker).post(newDeal).to('/v1/deals/');
+    const dealResponse = await as(testbank1Maker).post(newDeal).to('/v1/deals/');
     deal = dealResponse.body;
     dealId = deal._id;
 
-    const loanResponse = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+    const loanResponse = await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
     const { loanId: _id } = loanResponse.body;
     loanId = _id;
 
@@ -61,7 +61,7 @@ describe('/v1/deals/:id/loan', () => {
 
   describe('GET /v1/deals/:id/loan/:id', () => {
     it('returns a loan with validationErrors for all required fields', async () => {
-      const { body } = await as(aTestbank1Maker).get(`/v1/deals/${dealId}/loan/${loanId}`);
+      const { body } = await as(testbank1Maker).get(`/v1/deals/${dealId}/loan/${loanId}`);
 
       expect(body.validationErrors.count).toEqual(7);
       expect(body.validationErrors.errorList.facilityStage).toBeDefined();
@@ -76,7 +76,7 @@ describe('/v1/deals/:id/loan', () => {
     const nowDate = new Date();
 
     it('returns 400 with validation errors', async () => {
-      const { body, status } = await as(aTestbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/${loanId}`);
+      const { body, status } = await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/${loanId}`);
       expect(status).toEqual(400);
       expect(body.validationErrors.count).toEqual(7);
       expect(body.validationErrors.errorList.facilityStage).toBeDefined();
@@ -295,7 +295,7 @@ describe('/v1/deals/:id/loan', () => {
             },
           };
 
-          await as(aTestbank1Maker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
+          await as(testbank1Maker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
 
           const requestedCoverStartDate = add(nowDate, { months: 3, days: 1 });
 

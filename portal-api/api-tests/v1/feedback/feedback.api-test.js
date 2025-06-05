@@ -17,8 +17,8 @@ const { as, get, remove } = require('../../api')(app);
 
 describe('/v1/feedback', () => {
   let anAdmin;
-  let aTestbank1Maker;
-  let aTestbank1Checker;
+  let testbank1Maker;
+  let testbank1Checker;
   let testUsers;
   let testUser;
 
@@ -46,8 +46,8 @@ describe('/v1/feedback', () => {
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
     testUser = testUsers().withRole(READ_ONLY).one();
-    aTestbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
-    aTestbank1Checker = testUsers().withRole(CHECKER).withBankName('Bank 1').one();
+    testbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    testbank1Checker = testUsers().withRole(CHECKER).withBankName('Bank 1').one();
     anAdmin = testUsers().withRole(ADMIN).one();
   });
 
@@ -56,7 +56,7 @@ describe('/v1/feedback', () => {
   });
 
   const postFeedback = async () => {
-    const response = await as(aTestbank1Maker).post(getFeedbackToSubmit(aTestbank1Maker)).to('/v1/feedback');
+    const response = await as(testbank1Maker).post(getFeedbackToSubmit(testbank1Maker)).to('/v1/feedback');
     return response;
   };
 
@@ -72,18 +72,18 @@ describe('/v1/feedback', () => {
     });
 
     it('accepts requests from a user with role=maker', async () => {
-      const { status } = await as(aTestbank1Maker).post(getFeedbackToSubmit(aTestbank1Maker)).to('/v1/feedback');
+      const { status } = await as(testbank1Maker).post(getFeedbackToSubmit(testbank1Maker)).to('/v1/feedback');
 
       expect(status).toEqual(200);
     });
 
     it('accepts requests from a user with role=checker', async () => {
-      const { status } = await as(aTestbank1Checker).post(getFeedbackToSubmit(aTestbank1Checker)).to('/v1/feedback');
+      const { status } = await as(testbank1Checker).post(getFeedbackToSubmit(testbank1Checker)).to('/v1/feedback');
       expect(status).toEqual(200);
     });
 
     it('does not create a feedback when there are validation errors', async () => {
-      await as(aTestbank1Maker).post({}).to('/v1/feedback');
+      await as(testbank1Maker).post({}).to('/v1/feedback');
       const { status, body } = await as(anAdmin).get('/v1/feedback');
       expect(status).toEqual(200);
       expect(body).toEqual([]);
@@ -92,7 +92,7 @@ describe('/v1/feedback', () => {
     describe('when all required fields provided', () => {
       describe('when a user is logged in', () => {
         it('creates a new feedback, adding `created` field and auditRecord', async () => {
-          const { status, body: createdFeedback } = await as(aTestbank1Maker).post(getFeedbackToSubmit(aTestbank1Maker)).to('/v1/feedback');
+          const { status, body: createdFeedback } = await as(testbank1Maker).post(getFeedbackToSubmit(testbank1Maker)).to('/v1/feedback');
 
           expect(status).toEqual(200);
           expect(createdFeedback._id).toBeDefined();
@@ -104,10 +104,10 @@ describe('/v1/feedback', () => {
             _id: expect.any(String),
             created: expect.any(Number),
             submittedBy: {
-              username: aTestbank1Maker.username,
-              email: aTestbank1Maker.email,
+              username: testbank1Maker.username,
+              email: testbank1Maker.email,
             },
-            auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aTestbank1Maker._id),
+            auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(testbank1Maker._id),
           });
         });
       });
@@ -203,10 +203,10 @@ describe('/v1/feedback', () => {
         _id: expect.any(String),
         created: expect.any(Number),
         submittedBy: {
-          username: aTestbank1Maker.username,
-          email: aTestbank1Maker.email,
+          username: testbank1Maker.username,
+          email: testbank1Maker.email,
         },
-        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aTestbank1Maker._id),
+        auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(testbank1Maker._id),
       });
     });
   });
