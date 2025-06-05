@@ -16,9 +16,10 @@ users.forEach((user) => {
       const facility = MOCK_ISSUED_FACILITY.details;
       const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().build();
       const userRoles = [user];
+      const banner = true;
 
       // Act
-      const result = createAmendmentDetailsViewModel({ amendment, facility, deal, userRoles });
+      const result = createAmendmentDetailsViewModel({ amendment, facility, deal, userRoles, banner });
 
       // Assert
       const expected = {
@@ -29,6 +30,8 @@ users.forEach((user) => {
         dealId: deal._id,
         facilityId: facility._id,
         amendmentId: amendment.amendmentId,
+        effectiveDate: '',
+        banner,
         previousPage: `/gef/application-details/${deal._id}`,
         amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
       };

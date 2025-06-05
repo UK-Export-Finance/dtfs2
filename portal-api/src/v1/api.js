@@ -704,6 +704,32 @@ const getPortalFacilityAmendment = async (facilityId, amendmentId) => {
 };
 
 /**
+ * Gets all type facility amendments on the deal filtered by status
+ * @param {string} dealId - id of the facility to amend
+ * @param {(import('@ukef/dtfs2-common').PortalAmendmentStatus | import('@ukef/dtfs2-common').TfmAmendmentStatus)[] | undefined} statuses - an optional array of statuses to filter the amendments by
+ * @returns {Promise<(import('@ukef/dtfs2-common').FacilityAmendmentWithUkefId[])>} - the amendments on the deal with a matching status
+ */
+const getFacilityAmendmentsOnDeal = async (dealId, statuses) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/deals/${dealId}/all-types-amendments`,
+      params: { statuses },
+      headers: headers.central,
+    });
+
+    if (!response?.data) {
+      throw new Error('Invalid response received');
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error('Error getting facility amendments on deal with id %s %o', dealId, error);
+    throw error;
+  }
+};
+
+/**
  * Gets portal facility amendments on the deal filtered by status
  * @param {string} dealId - id of the facility to amend
  * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus[] | undefined} statuses - an optional array of statuses to filter the amendments by
@@ -967,6 +993,27 @@ const getTfmTeam = async (teamId) => {
   }
 };
 
+/**
+ * Retrieves the TFM deal from `tfm-deals` collection.
+ *
+ * @async
+ * @function getTfmDeal
+ * @param {string} dealId - Mongo identifier of the TFM deal to retrieve.
+ * @returns {Promise<Object>} The Axios response object if successful, or an error object with status and data if failed.
+ */
+const getTfmDeal = async (dealId) => {
+  try {
+    return await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}`,
+      headers: headers.central,
+    });
+  } catch (error) {
+    console.error('Unable to get the TFM deal with ID %s %o', dealId, error);
+    return { status: error?.code || axios.HttpStatusCode.InternalServerError, data: 'Unable to get the TFM deal' };
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -994,6 +1041,7 @@ module.exports = {
   saveFeeRecordCorrection,
   getFeeRecordCorrectionTransientFormData,
   getAllPortalFacilityAmendments,
+  getFacilityAmendmentsOnDeal,
   getPortalFacilityAmendment,
   getAcknowledgedAmendmentsByFacilityId,
   getPortalFacilityAmendmentsOnDeal,
@@ -1006,4 +1054,5 @@ module.exports = {
   deletePortalFacilityAmendment,
   getCompletedFeeRecordCorrections,
   getTfmTeam,
+  getTfmDeal,
 };

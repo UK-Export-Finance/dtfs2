@@ -5,9 +5,11 @@ import {
   MOCK_COMPANY_REGISTRATION_NUMBERS,
   PORTAL_AMENDMENT_STATUS,
   PORTAL_AMENDMENT_INPROGRESS_STATUSES,
+  ALL_AMENDMENT_INPROGRESS_STATUSES,
+  TFM_AMENDMENT_STATUS,
 } from '@ukef/dtfs2-common';
 import Axios from '../axios';
-import api from '../api';
+import api, { getTfmDeal } from '../api';
 import CONSTANTS from '../../constants';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../test-helpers/mock-amendment';
 
@@ -553,7 +555,7 @@ describe('getAmendmentsOnDeal()', () => {
     Axios.get.mockResolvedValueOnce({ data: [mockAmendment] });
 
     // Act
-    const response = await api.getAmendmentsOnDeal({ dealId: validMongoId, userToken, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES });
+    const response = await api.getAmendmentsOnDeal({ dealId: validMongoId, userToken, statuses: ALL_AMENDMENT_INPROGRESS_STATUSES });
 
     // Assert
     expect(response).toEqual([mockAmendment]);
@@ -564,17 +566,198 @@ describe('getAmendmentsOnDeal()', () => {
     Axios.get.mockRejectedValueOnce(new AxiosError());
 
     // Act
-    const returned = api.getAmendmentsOnDeal({ dealId: validMongoId, statuses: [PORTAL_AMENDMENT_STATUS.DRAFT], userToken });
+    const returned = api.getAmendmentsOnDeal({ dealId: validMongoId, statuses: [TFM_AMENDMENT_STATUS.NOT_STARTED], userToken });
 
     // Assert
     await expect(returned).rejects.toThrow(AxiosError);
   });
 
-  it.each(invalidMongoIdTestCases)('should throw an error when given an invalid facility Id', async (invalidMongoId) => {
+  it.each(invalidMongoIdTestCases)('should throw an error when given an invalid deal Id', async (invalidMongoId) => {
     // Act
     const returned = api.getAmendmentsOnDeal({ dealId: invalidMongoId, userToken });
 
     // Assert
     await expect(returned).rejects.toThrow(InvalidDealIdError);
+  });
+});
+
+describe('getPortalAmendmentsOnDeal()', () => {
+  it(`should return the found amendments`, async () => {
+    // Arrange
+    const mockAmendment = { ...new PortalFacilityAmendmentWithUkefIdMockBuilder().build(), status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL };
+    Axios.get.mockResolvedValueOnce({ data: [mockAmendment] });
+
+    // Act
+    const response = await api.getPortalAmendmentsOnDeal({ dealId: validMongoId, userToken, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES });
+
+    // Assert
+    expect(response).toEqual([mockAmendment]);
+  });
+
+  it('should throw an error if there is an api error', async () => {
+    // Arrange
+    Axios.get.mockRejectedValueOnce(new AxiosError());
+
+    // Act
+    const returned = api.getPortalAmendmentsOnDeal({ dealId: validMongoId, statuses: [PORTAL_AMENDMENT_STATUS.DRAFT], userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow(AxiosError);
+  });
+
+  it.each(invalidMongoIdTestCases)('should throw an error when given an invalid deal Id', async (invalidMongoId) => {
+    // Act
+    const returned = api.getPortalAmendmentsOnDeal({ dealId: invalidMongoId, userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow(InvalidDealIdError);
+  });
+});
+describe('getTfmDeal', () => {
+  const invalidDealIds = ['', undefined, null, '123', 123, 'abc', '!@£', '123123123ABC', {}, []];
+  const dealId = '61a7710b2ae62b0013dae687';
+
+  describe('MongoID validation', () => {
+    it.each(invalidDealIds)('should throw an error if an invalid Mongo deal ID `%s` is supplied', async (invalidDealId) => {
+      // Arrange
+
+      // Act
+      const response = await getTfmDeal({ dealId: invalidDealId, userToken });
+
+      // Assert
+      expect(console.error).toHaveBeenCalledTimes(2);
+      expect(console.error).toHaveBeenCalledWith('Invalid deal ID %s', invalidDealId);
+      expect(console.error).toHaveBeenCalledWith('Unable to get TFM deal %s %o', invalidDealId, new Error('Invalid deal ID'));
+      expect(response).toBeFalsy();
+    });
+  });
+
+  describe('API call', () => {
+    it('should return TFM deal when a valid Mongo deal ID is supplied', async () => {
+      // Arrange
+      const deal = {
+        _id: dealId,
+        dealSnapshot: {
+          dealId,
+        },
+        tfm: {},
+      };
+
+      const mockResponse = {
+        data: {
+          deal,
+        },
+      };
+
+      Axios.get.mockResolvedValueOnce(mockResponse);
+
+      // Act
+      const response = await getTfmDeal({ dealId, userToken });
+
+      // Assert
+      expect(console.error).not.toHaveBeenCalled();
+      expect(Axios.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
+        headers: { Authorization: userToken },
+      });
+      expect(response).toBe(mockResponse.data);
+    });
+
+    it('should return false when an empty response is received', async () => {
+      // Arrange
+      const mockError = new Error('Invalid TFM deal response received');
+      const mockResponse = {};
+
+      Axios.get.mockResolvedValueOnce(mockResponse);
+
+      // Act
+      const response = await getTfmDeal({ dealId, userToken });
+
+      // Assert
+      expect(Axios.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
+        headers: { Authorization: userToken },
+      });
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get TFM deal %s %o', dealId, mockError);
+      expect(response).toBeFalsy();
+    });
+
+    it('should return false when an undefined response is received', async () => {
+      // Arrange
+      const mockError = new Error('Invalid TFM deal response received');
+      const mockResponse = undefined;
+
+      Axios.get.mockResolvedValueOnce(mockResponse);
+
+      // Act
+      const response = await getTfmDeal({ dealId, userToken });
+
+      // Assert
+      expect(Axios.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
+        headers: { Authorization: userToken },
+      });
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get TFM deal %s %o', dealId, mockError);
+      expect(response).toBeFalsy();
+    });
+
+    it('should return false when a null response is received', async () => {
+      // Arrange
+      const mockError = new Error('Invalid TFM deal response received');
+      const mockResponse = null;
+
+      Axios.get.mockResolvedValueOnce(mockResponse);
+
+      // Act
+      const response = await getTfmDeal({ dealId, userToken });
+
+      // Assert
+      expect(Axios.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
+        headers: { Authorization: userToken },
+      });
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get TFM deal %s %o', dealId, mockError);
+      expect(response).toBeFalsy();
+    });
+
+    it('should return false when an empty data response is received', async () => {
+      // Arrange
+      const mockError = new Error('Invalid TFM deal response received');
+      const mockResponse = {
+        data: undefined,
+      };
+
+      Axios.get.mockResolvedValueOnce(mockResponse);
+
+      // Act
+      const response = await getTfmDeal({ dealId, userToken });
+
+      // Assert
+      expect(Axios.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
+        headers: { Authorization: userToken },
+      });
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get TFM deal %s %o', dealId, mockError);
+      expect(response).toBeFalsy();
+    });
+  });
+
+  describe('Exception handling', () => {
+    it('should catch an error if an exception is thrown', async () => {
+      // Arrange
+      const mockError = new Error('Test error');
+
+      Axios.get.mockRejectedValueOnce(mockError);
+
+      // Act
+      const response = await getTfmDeal({ dealId, userToken });
+
+      // Assert
+      expect(Axios.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
+        headers: { Authorization: userToken },
+      });
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get TFM deal %s %o', dealId, mockError);
+      expect(response).toBeFalsy();
+    });
   });
 });

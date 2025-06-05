@@ -7,7 +7,7 @@ import {
   aPortalSessionUser,
   PORTAL_AMENDMENT_STATUS,
 } from '@ukef/dtfs2-common';
-import { getCurrencySymbol } from '../facility-value/get-currency-symbol';
+import { getCurrencySymbol } from '../../../utils/get-currency-symbol';
 import { Deal } from '../../../types/deal';
 import mapSubmittedToUkefEmailVariables from './map-submitted-to-ukef-email-variables';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';

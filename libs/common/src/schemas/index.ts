@@ -5,4 +5,5 @@ export * from './deal-cancellation';
 export * from './tfm';
 export * from './unix-timestamp.schema';
 export * from './portal-amendment.schema';
+export * from './tfm-amendment.schema';
 export * from './currency.schema';
