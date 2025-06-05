@@ -1,5 +1,27 @@
 # Changelog
 
+## [2.9.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.8.0...v2.9.0) (2025-06-05)
+
+
+### Features
+
+* **DTFS2-7513:** add return and returned to maker pages and amendment update ([#4305](https://github.com/UK-Export-Finance/dtfs2/issues/4305)) ([f03b7fc](https://github.com/UK-Export-Finance/dtfs2/commit/f03b7fc12e4d27a8394a03574664c00ca06c7577))
+* **DTFS2-7750:** submission email maker checker pim ([#4304](https://github.com/UK-Export-Finance/dtfs2/issues/4304)) ([0fbb69d](https://github.com/UK-Export-Finance/dtfs2/commit/0fbb69d0c16103c36314ab762bfd499bac69df34))
+* **DTFS2-7755:** add all type amendments and amendments tab ([#4316](https://github.com/UK-Export-Finance/dtfs2/issues/4316)) ([41273ac](https://github.com/UK-Export-Finance/dtfs2/commit/41273acd28d37fce16214eaecd3ee9c9ecac2867))
+* **DTFS2-7799:** display latest amendment values on application details page ([#4318](https://github.com/UK-Export-Finance/dtfs2/issues/4318)) ([71fb4b7](https://github.com/UK-Export-Finance/dtfs2/commit/71fb4b7a2c421211bf49b8c06027212a74e0a924))
+* **DTFS2-7870:** set intial utilisation for GEF facility types ([#4336](https://github.com/UK-Export-Finance/dtfs2/issues/4336)) ([cb6736c](https://github.com/UK-Export-Finance/dtfs2/commit/cb6736c8052ac2a4a981dde92334467ea971f67d))
+* **DTFS2-7939:** get pim email address ([#4306](https://github.com/UK-Export-Finance/dtfs2/issues/4306)) ([733c1f2](https://github.com/UK-Export-Finance/dtfs2/commit/733c1f276f7e0f82793191541954010c88682915))
+
+
+### Bug Fixes
+
+* **DTFS2-6425:** inclusion date received should be blank ([#4301](https://github.com/UK-Export-Finance/dtfs2/issues/4301)) ([bb0ce5c](https://github.com/UK-Export-Finance/dtfs2/commit/bb0ce5caa26d33cedeaedb34cab61eb61d3ce9b5))
+* **DTFS2-7852:** fix checker can call getCheckersApprovalAmendmentDeal when feature flag is enabled ([#4308](https://github.com/UK-Export-Finance/dtfs2/issues/4308)) ([7d19df3](https://github.com/UK-Export-Finance/dtfs2/commit/7d19df39f5516f376b74a69ac864b92631eb7eef))
+* **DTFS2-7953:** acbs tfm reconciliation check ([#4327](https://github.com/UK-Export-Finance/dtfs2/issues/4327)) ([921b340](https://github.com/UK-Export-Finance/dtfs2/commit/921b340124cfb5f727615e90ba1fbdb97aef4687))
+* **DTFS2-7969:** updated cookie to 0.7.0 for csurf ([#4324](https://github.com/UK-Export-Finance/dtfs2/issues/4324)) ([0a1b395](https://github.com/UK-Export-Finance/dtfs2/commit/0a1b3955df2bbb6b7241ee019677931d5778ab9c))
+* **DTFS2:** fix date e2e tests ([#4312](https://github.com/UK-Export-Finance/dtfs2/issues/4312)) ([7d5057f](https://github.com/UK-Export-Finance/dtfs2/commit/7d5057f930f2d7beca3a670a5cd3e12f33a5a0c3))
+* **FN-3923:** added hyperlink check for a cell value ([#4310](https://github.com/UK-Export-Finance/dtfs2/issues/4310)) ([46ad121](https://github.com/UK-Export-Finance/dtfs2/commit/46ad12111f728f9b5cce650d61b1c283b04fbf17))
+
 ## [2.8.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.7.0...v2.8.0) (2025-04-14)
 
 
