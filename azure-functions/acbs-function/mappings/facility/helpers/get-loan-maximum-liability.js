@@ -1,5 +1,6 @@
 const CONSTANTS = require('../../../constants');
 const { to2Decimals } = require('../../../helpers/currency');
+const getGefFacilityPercentage = require('./get-gef-facility-fixed-percentage');
 
 /**
  * `GEF` = 10% of amount
@@ -11,10 +12,11 @@ const { to2Decimals } = require('../../../helpers/currency');
  */
 const getLoanMaximumLiability = (amount, facility, dealType) => {
   let ukefExposure;
+  const { type } = facility;
 
   // GEF
   if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {
-    ukefExposure = amount * 0.1;
+    ukefExposure = amount * getGefFacilityPercentage(type);
   } else {
     let { disbursementAmount, coveredPercentage } = facility.facilitySnapshot;
     const { coverPercentage } = facility.facilitySnapshot;
