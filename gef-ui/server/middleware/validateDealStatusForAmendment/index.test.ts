@@ -55,8 +55,16 @@ describe('validateDealStatusForAmendment', () => {
       // Assert
       expect(next).toHaveBeenCalled();
     });
+  });
 
-    it(`should call next when status is ${DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS}`, async () => {
+  describe('when the deal status is NOT acceptable', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+
+      jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
+    });
+
+    it(`should NOT call next and should call redirect when status is ${DEAL_STATUS.UKEF_APPROVED_WITHOUT_CONDITIONS}`, async () => {
       // Arrange
       const application = {
         ...mockDeal,
@@ -71,10 +79,11 @@ describe('validateDealStatusForAmendment', () => {
       await validateDealStatusForAmendment(req, res, next);
 
       // Assert
-      expect(next).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledTimes(0);
+      expect(res._getRedirectUrl()).toEqual('/not-found');
     });
 
-    it(`should call next when status is ${DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS}`, async () => {
+    it(`should NOT call next and should call redirect when status is ${DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS}`, async () => {
       // Arrange
       const application = {
         ...mockDeal,
@@ -89,15 +98,8 @@ describe('validateDealStatusForAmendment', () => {
       await validateDealStatusForAmendment(req, res, next);
 
       // Assert
-      expect(next).toHaveBeenCalled();
-    });
-  });
-
-  describe('when the deal status is NOT acceptable', () => {
-    beforeEach(() => {
-      jest.resetAllMocks();
-
-      jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
+      expect(next).toHaveBeenCalledTimes(0);
+      expect(res._getRedirectUrl()).toEqual('/not-found');
     });
 
     it(`should NOT call next and should call redirect when status is ${DEAL_STATUS.SUBMITTED_TO_UKEF}`, async () => {
