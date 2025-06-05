@@ -1,0 +1,46 @@
+{% import '../../_macros/amendments/submitted-amendment-summary-list.njk' as submittedAmendmentSummaryList %}
+
+{% extends "index.njk" %}
+
+{% block pageTitle %}
+  Amendments
+{% endblock %}
+
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+
+{{ govukPhaseBanner({
+  tag: {
+    text: "Beta"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+
+{% block content %}
+
+  {% include "includes/application-preview/summary.njk" %}
+  {% include "includes/application-preview/application-sub-navigation.njk" %}
+
+  <h1 class="govuk-heading-xl" data-cy="tab-heading">Amendments</h1>
+
+  {% if applicationAmendmentsOnDeal.length %}
+    {% for amendment in applicationAmendmentsOnDeal %}
+
+      {{ submittedAmendmentSummaryList.render({
+        referenceNumber: amendment.referenceNumber,
+        amendmentRows: amendment.amendmentRows,
+        type: amendment.type,
+        dealId: dealId,
+        facilityId: amendment.facilityId,
+        amendmentId: amendment.amendmentId,
+        effectiveDate: amendment.effectiveDate,
+        hasFutureEffectiveDate: amendment.hasFutureEffectiveDate
+      }) }}
+    {% endfor %}
+  {% else %}
+    <span class="govuk-body">
+      <p data-cy='no-amendments'>There are no amendments to display.<br>
+      Any amendments that have been acknowledged will be shown here.</p>
+    </span>
+  {% endif %}
+
+{% endblock %}

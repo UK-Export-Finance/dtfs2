@@ -1,6 +1,6 @@
 import { format, fromUnixTime } from 'date-fns';
 import { DATE_FORMATS } from '@ukef/dtfs2-common';
-import { getCurrencySymbol } from '../facility-value/get-currency-symbol';
+import { getCurrencySymbol } from '../../../utils/get-currency-symbol';
 import { mapCommonEmailVariables } from './map-common-email-variables';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';

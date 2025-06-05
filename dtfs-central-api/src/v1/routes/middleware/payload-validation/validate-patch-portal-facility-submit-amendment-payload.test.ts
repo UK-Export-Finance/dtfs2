@@ -6,8 +6,7 @@ import { aPortalUser } from '../../../../../test-helpers';
 import { validatePatchPortalFacilitySubmitAmendmentPayload } from './validate-patch-portal-facility-submit-amendment-payload';
 
 const validAuditDetails = generatePortalAuditDetails(aPortalUser()._id);
-const facilityId = '6597dffeb5ef5ff4267e5044';
-const referenceNumber = `${facilityId}-01`;
+const referenceNumber = '0040012345-001';
 const portalAmendmentVariables = portalAmendmentToUkefEmailVariables();
 
 describe('validatePatchPortalFacilitySubmitAmendmentPayload', () => {

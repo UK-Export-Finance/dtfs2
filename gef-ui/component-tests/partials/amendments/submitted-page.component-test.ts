@@ -34,7 +34,7 @@ describe(page, () => {
     const params = {
       approvedByUkef: true,
       effectiveDate: '1 January 2023',
-      referenceNumber: '0041550077-01',
+      referenceNumber: '0041550077-001',
     };
 
     it('should render the confirmation panel', () => {
