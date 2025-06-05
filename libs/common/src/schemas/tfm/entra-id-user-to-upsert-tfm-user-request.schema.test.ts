@@ -39,7 +39,7 @@ describe('ENTRA_ID_USER_TO_TFM_UPSERT_REQUEST_SCHEMA', () => {
   });
 
   describe('when no email is provided', () => {
-    const request = { ...anEntraIdUser(), email: undefined };
+    const request = { ...anEntraIdUser(), verified_primary_email: undefined };
     itShouldThrowAnError(request);
   });
 });
