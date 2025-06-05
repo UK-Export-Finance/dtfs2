@@ -84,7 +84,7 @@ describe('createValidationMiddleware', () => {
       runValidator(req, res, next);
 
       // Assert
-      expect(console.error).toHaveBeenCalledWith('Payload validation error occurred:', expectedFormattedMessages);
+      expect(console.error).toHaveBeenCalledWith('An error has occurred during Payload validation %o', expectedFormattedMessages);
     });
   });
 

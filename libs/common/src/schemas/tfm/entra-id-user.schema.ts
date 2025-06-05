@@ -1,5 +1,6 @@
 import z from 'zod';
 import { TfmTeamSchema } from './tfm-team.schema';
+import { ENTRA_ID_EMAIL_SCHEMA } from './entra-id.schema';
 
 /**
  * Used during the SSO login process to upsert a user
@@ -11,7 +12,7 @@ import { TfmTeamSchema } from './tfm-team.schema';
  */
 export const ENTRA_ID_USER_SCHEMA = z.object({
   oid: z.string(),
-  verified_primary_email: z.array(z.string().email()),
+  verified_primary_email: z.array(ENTRA_ID_EMAIL_SCHEMA),
   given_name: z.string(),
   family_name: z.string(),
   roles: z.array(TfmTeamSchema),
