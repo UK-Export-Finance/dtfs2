@@ -62,7 +62,7 @@ describe('EntraIdConfig', () => {
     });
 
     it('should configure the scopes', () => {
-      expect(config.scopes).toStrictEqual([`api://${mockEntraIdClientId}/authentication`, 'user.read']);
+      expect(config.scopes).toStrictEqual([`api://${mockEntraIdClientId}/SSO`, 'user.read']);
     });
 
     it('should configure the redirectUri', () => {
