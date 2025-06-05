@@ -23,7 +23,8 @@ describe(page, () => {
   const amendmentDetailsHeaderCheckersApproval = `[data-cy="amendment-details-header-ready-for-checkers"]`;
   const amendmentDetailsHeaderFurtherMakersInput = `[data-cy="amendment-details-header-further-makers-input"]`;
 
-  const amendmentDetails = (index) => `[data-cy="amendment-details-${index}"]`;
+  const amendmentDetailsReadyForChecker = (index) => `[data-cy="amendment-details-ready-for-checker-${index}"]`;
+  const amendmentDetailsFurtherMakersInput = (index) => `[data-cy="amendment-details-further-makers-input-${index}"]`;
   const amendmentDetailsUrl = (id) => `/gef/application-details/${id}/facilities/${id}/amendments/${id}/${AMENDMENT_DETAILS}`;
   const amendmentDetailsText = (id) => `Facility (${id}) amendment details`;
 
@@ -37,8 +38,8 @@ describe(page, () => {
 
         wrapper.expectElement(amendmentDetailsHeaderCheckersApproval).toExist();
         wrapper.expectText(amendmentDetailsHeaderCheckersApproval).toRead(PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL);
-        wrapper.expectElement(amendmentDetails(1)).toExist();
-        wrapper.expectText(amendmentDetails(1)).toRead(amendmentDetailsText(1));
+        wrapper.expectElement(amendmentDetailsReadyForChecker(1)).toExist();
+        wrapper.expectText(amendmentDetailsReadyForChecker(1)).toRead(amendmentDetailsText(1));
       });
 
       it(`should NOT render the further makers input approval heading`, () => {
@@ -62,11 +63,11 @@ describe(page, () => {
         wrapper.expectElement(amendmentDetailsHeaderCheckersApproval).toExist();
         wrapper.expectText(amendmentDetailsHeaderCheckersApproval).toRead(PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL);
 
-        wrapper.expectElement(amendmentDetails(1)).toExist();
-        wrapper.expectText(amendmentDetails(1)).toRead(amendmentDetailsText(1));
+        wrapper.expectElement(amendmentDetailsReadyForChecker(1)).toExist();
+        wrapper.expectText(amendmentDetailsReadyForChecker(1)).toRead(amendmentDetailsText(1));
 
-        wrapper.expectElement(amendmentDetails(2)).toExist();
-        wrapper.expectText(amendmentDetails(2)).toRead(amendmentDetailsText(2));
+        wrapper.expectElement(amendmentDetailsReadyForChecker(2)).toExist();
+        wrapper.expectText(amendmentDetailsReadyForChecker(2)).toRead(amendmentDetailsText(2));
       });
     });
 
@@ -79,8 +80,8 @@ describe(page, () => {
 
         wrapper.expectElement(amendmentDetailsHeaderFurtherMakersInput).toExist();
         wrapper.expectText(amendmentDetailsHeaderFurtherMakersInput).toRead(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED);
-        wrapper.expectElement(amendmentDetails(1)).toExist();
-        wrapper.expectText(amendmentDetails(1)).toRead(amendmentDetailsText(1));
+        wrapper.expectElement(amendmentDetailsFurtherMakersInput(1)).toExist();
+        wrapper.expectText(amendmentDetailsFurtherMakersInput(1)).toRead(amendmentDetailsText(1));
       });
 
       it(`should NOT render the ready for ready for checkers approval heading`, () => {
@@ -104,11 +105,11 @@ describe(page, () => {
         wrapper.expectElement(amendmentDetailsHeaderFurtherMakersInput).toExist();
         wrapper.expectText(amendmentDetailsHeaderFurtherMakersInput).toRead(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED);
 
-        wrapper.expectElement(amendmentDetails(1)).toExist();
-        wrapper.expectText(amendmentDetails(1)).toRead(amendmentDetailsText(1));
+        wrapper.expectElement(amendmentDetailsFurtherMakersInput(1)).toExist();
+        wrapper.expectText(amendmentDetailsFurtherMakersInput(1)).toRead(amendmentDetailsText(1));
 
-        wrapper.expectElement(amendmentDetails(2)).toExist();
-        wrapper.expectText(amendmentDetails(2)).toRead(amendmentDetailsText(2));
+        wrapper.expectElement(amendmentDetailsFurtherMakersInput(2)).toExist();
+        wrapper.expectText(amendmentDetailsFurtherMakersInput(2)).toRead(amendmentDetailsText(2));
       });
     });
 
@@ -126,9 +127,9 @@ describe(page, () => {
         wrapper.expectElement(amendmentDetailsHeaderFurtherMakersInput).toExist();
         wrapper.expectText(amendmentDetailsHeaderFurtherMakersInput).toRead(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED);
 
-        wrapper.expectElement(amendmentDetails(1)).toExist();
-        wrapper.expectText(amendmentDetails(1)).toContain(amendmentDetailsText(1));
-        wrapper.expectText(amendmentDetails(1)).toContain(amendmentDetailsText(2));
+        wrapper.expectElement(amendmentDetailsReadyForChecker(1)).toExist();
+        wrapper.expectText(amendmentDetailsReadyForChecker(1)).toContain(amendmentDetailsText(1));
+        wrapper.expectText(amendmentDetailsFurtherMakersInput(1)).toContain(amendmentDetailsText(2));
       });
     });
 
