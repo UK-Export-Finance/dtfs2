@@ -1,6 +1,7 @@
 const CONSTANTS = require('../../../constants');
 const { to2Decimals } = require('../../../helpers/currency');
 const getGefFacilityPercentage = require('./get-gef-facility-fixed-percentage');
+
 /**
  * `GEF` = 10% of amount
  * `Loan` (EWCS) = Disbursement amount * (UKEF cover percentage / 100)
