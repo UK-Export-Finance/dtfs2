@@ -71,6 +71,69 @@ export class TfmFacilitiesRepo {
   }
 
   /**
+   * Finds all type amendments across all facilities for a deal for a given status or set of statuses
+   * @param dealId - The deal id
+   * @param statuses - An array of amendment statuses to filter on
+   * @returns The matching amendments
+   */
+  public static async findAllTypeAmendmentsByDealIdAndStatus({
+    dealId,
+    statuses,
+  }: {
+    dealId: string | ObjectId;
+    statuses?: (PortalAmendmentStatus | TfmAmendmentStatus)[];
+  }): Promise<(PortalFacilityAmendment | TfmFacilityAmendment)[]> {
+    const collection = await this.getCollection();
+
+    /* Find facilities on the deal that have amendments with a reference number and amendment id */
+    const facilitiesOnDealWithAmendments = await collection
+      .find(
+        {
+          'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) },
+          amendments: {
+            $elemMatch: {
+              amendmentId: { $exists: true, $ne: null },
+              referenceNumber: { $exists: true, $ne: null },
+            },
+          },
+        },
+        { projection: { amendments: 1, 'facilitySnapshot.name': 1, 'facilitySnapshot.ukefFacilityId': 1, 'facilitySnapshot.currency': 1 } },
+      )
+      .toArray();
+
+    /* If facilities with amendments containing both referenceNumber and amendmentId are found,
+       flatten all amendments, enrich them with facility details, filter by the provided statuses (if any),
+       and sort the results by the most recently updated amendment. */
+    if (facilitiesOnDealWithAmendments?.length) {
+      const matchingAmendments = facilitiesOnDealWithAmendments.flatMap((facility) =>
+        (facility.amendments || []).map((amendment) => {
+          const { type: facilityType, ukefFacilityId, currency } = facility.facilitySnapshot;
+          return {
+            ...amendment,
+            facilityType,
+            ukefFacilityId,
+            currency: currency.id,
+          };
+        }),
+      );
+
+      const filteredAndSortingAmendments = matchingAmendments
+        .filter((amendment) => {
+          const hasAmendmentId = Boolean(amendment.amendmentId);
+          const hasAmendmentReference = Boolean(amendment.referenceNumber);
+          const hasCorrectAmendmentStatus = !statuses || statuses.includes(amendment.status);
+
+          return hasAmendmentId && hasAmendmentReference && hasCorrectAmendmentStatus;
+        })
+        .sort((a, b) => b.updatedAt - a.updatedAt);
+
+      return filteredAndSortingAmendments;
+    }
+
+    return [];
+  }
+
+  /**
    * Finds the portal amendments across all facilities for a deal for a given status or set of statuses
    * @param dealId - The deal id
    * @param statuses - An array of portal amendment statuses to filter on

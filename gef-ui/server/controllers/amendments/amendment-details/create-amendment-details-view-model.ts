@@ -1,4 +1,5 @@
-import { PortalFacilityAmendmentWithUkefId, ROLES } from '@ukef/dtfs2-common';
+import { PortalFacilityAmendmentWithUkefId, ROLES, DATE_FORMATS } from '@ukef/dtfs2-common';
+import { format, fromUnixTime } from 'date-fns';
 import { AmendmentDetailsViewModel } from '../../../types/view-models/amendments/amendment-details-view-model';
 import { Deal } from '../../../types/deal';
 import { Facility } from '../../../types/facility';
@@ -19,11 +20,13 @@ export const createAmendmentDetailsViewModel = ({
   deal,
   facility,
   userRoles,
+  banner,
 }: {
   amendment: PortalFacilityAmendmentWithUkefId;
   deal: Deal;
   facility: Facility;
   userRoles: string[];
+  banner?: boolean;
 }): AmendmentDetailsViewModel => ({
   userRoles,
   exporterName: deal.exporter.companyName,
@@ -32,6 +35,8 @@ export const createAmendmentDetailsViewModel = ({
   dealId: deal._id,
   facilityId: facility._id,
   amendmentId: amendment.amendmentId,
+  effectiveDate: amendment.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY) : '',
+  banner,
   previousPage: `/gef/application-details/${deal._id}`,
   amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
 });
