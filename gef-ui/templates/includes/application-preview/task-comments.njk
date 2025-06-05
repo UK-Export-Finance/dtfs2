@@ -11,7 +11,7 @@
           <ul class="govuk-list govuk-list--bullet">
           {% for amendment in readyForCheckerAmendmentDetailsUrlAndText %}
               <li>
-                <a href="{{ amendment.amendmentDetailsUrl }}" class="govuk-link" data-cy="amendment-details-{{ loop.index }}">{{ amendment.text }}</a>
+                <a href="{{ amendment.amendmentDetailsUrl }}" class="govuk-link" data-cy="amendment-details-ready-for-checker-{{ loop.index }}">{{ amendment.text }}</a>
               </li>
           {% endfor %}
           </ul>
@@ -21,7 +21,7 @@
           <ul class="govuk-list govuk-list--bullet">
             {% for amendment in furtherMakersInputAmendmentDetailsUrlAndText %}
               <li>
-                <a href="{{ amendment.amendmentDetailsUrl }}" class="govuk-link" data-cy="amendment-details-{{ loop.index }}">{{ amendment.text }}</a>
+                <a href="{{ amendment.amendmentDetailsUrl }}" class="govuk-link" data-cy="amendment-details-further-makers-input-{{ loop.index }}">{{ amendment.text }}</a>
               </li>
             {% endfor %}
           </ul>
