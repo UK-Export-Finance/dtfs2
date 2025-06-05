@@ -14,5 +14,5 @@ export const AMENDMENT_MANAGER_DECISIONS = {
 export const AMENDMENT_QUERY_STATUSES = {
   IN_PROGRESS: 'in-progress',
   COMPLETED: 'completed',
-  ACKNOWLEDGEDORCOMPLETED: 'acknowledged-or-completed',
+  APPROVED: 'approved',
 } as const;

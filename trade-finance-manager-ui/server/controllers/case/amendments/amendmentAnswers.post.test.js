@@ -9,13 +9,13 @@ import { aTfmSessionUser } from '../../../../test-helpers/test-data/tfm-session-
 jest.mock('../../../api', () => ({
   getAmendmentById: jest.fn(),
   getFacility: jest.fn(),
-  getAcknowledgedCompletedAmendments: jest.fn(),
+  getApprovedAmendments: jest.fn(),
   updateAmendment: jest.fn(),
 }));
 
 const getAmendmentByIdMock = jest.fn();
 const getFacilityMock = jest.fn();
-const getAcknowledgedCompletedAmendmentsMock = jest.fn();
+const getApprovedAmendmentsMock = jest.fn();
 const updateAmendmentMock = jest.fn();
 
 const dealId = 'dealId';
@@ -63,14 +63,14 @@ describe('postAmendmentAnswers', () => {
     jest.spyOn(console, 'error');
     jest.spyOn(api, 'getAmendmentById').mockImplementation(getAmendmentByIdMock);
     jest.spyOn(api, 'getFacility').mockImplementation(getFacilityMock);
-    jest.spyOn(api, 'getAcknowledgedCompletedAmendments').mockImplementation(getAcknowledgedCompletedAmendmentsMock);
+    jest.spyOn(api, 'getApprovedAmendments').mockImplementation(getApprovedAmendmentsMock);
     jest.spyOn(api, 'updateAmendment').mockImplementation(updateAmendmentMock);
 
-    getAmendmentByIdMock.mockResolvedValue({ status: 200, data: amendment });
+    getAmendmentByIdMock.mockResolvedValue({ status: HttpStatusCode.Ok, data: amendment });
     getFacilityMock.mockResolvedValue(mockFacility);
-    getAcknowledgedCompletedAmendmentsMock.mockResolvedValue({ status: 200, response: { data: [amendment] } });
+    getApprovedAmendmentsMock.mockResolvedValue({ status: HttpStatusCode.Ok, response: { data: [amendment] } });
 
-    updateAmendmentMock.mockResolvedValue({ status: 200, data: amendment });
+    updateAmendmentMock.mockResolvedValue({ status: HttpStatusCode.Ok, data: amendment });
   });
 
   describe('when an amendment has all types of amendments', () => {

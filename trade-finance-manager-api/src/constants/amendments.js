@@ -7,13 +7,6 @@ const UNDERWRITER_MANAGER_DECISIONS = {
   AWAITING_DECISION: 'Awaiting decision',
 };
 
-const AMENDMENT_QUERY_STATUSES = {
-  IN_PROGRESS: 'in-progress',
-  COMPLETED: 'completed',
-  ACKNOWLEDGEDORCOMPLETED: 'acknowledged-or-completed',
-};
-
 module.exports = {
   UNDERWRITER_MANAGER_DECISIONS,
-  AMENDMENT_QUERY_STATUSES,
 };

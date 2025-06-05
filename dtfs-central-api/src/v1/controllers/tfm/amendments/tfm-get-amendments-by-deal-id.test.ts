@@ -1,10 +1,9 @@
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
-import { AMENDMENT_QUERIES, PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { AMENDMENT_QUERIES, PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS, AMENDMENT_QUERY_STATUSES } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 import { aCompletedTfmFacilityAmendment, aTfmFacilityAmendment } from '../../../../../test-helpers';
 import { getAmendmentsByDealId } from './tfm-get-amendments.controller';
-import { AMENDMENT_QUERY_STATUSES } from '../../../../constants';
 
 const mockFindTfmAmendmentsByDealIdAndStatus = jest.fn();
 const mockFindLatestCompletedAmendmentByDealId = jest.fn();
@@ -61,10 +60,10 @@ describe('getAmendmentsByDealId', () => {
     });
   });
 
-  it(`should call findAllTypeAmendmentsByDealIdAndStatus when status is ${AMENDMENT_QUERY_STATUSES.ACKNOWLEDGEDORCOMPLETED}`, async () => {
+  it(`should call findAllTypeAmendmentsByDealIdAndStatus when status is ${AMENDMENT_QUERY_STATUSES.APPROVED}`, async () => {
     const statuses = [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, TFM_AMENDMENT_STATUS.COMPLETED];
     const { req, res } = httpMocks.createMocks({
-      params: { dealId, status: AMENDMENT_QUERY_STATUSES.ACKNOWLEDGEDORCOMPLETED },
+      params: { dealId, status: AMENDMENT_QUERY_STATUSES.APPROVED },
     });
 
     await getAmendmentsByDealId(req, res);

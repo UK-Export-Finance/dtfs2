@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { HttpStatusCode } = require('axios');
 const { HEADERS, InvalidDealIdError } = require('@ukef/dtfs2-common');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
@@ -442,24 +443,33 @@ const findFacilitiesByDealId = async (dealId) => {
   }
 };
 
-const getAcknowledgedCompletedAmendments = async (dealId) => {
+/**
+ * @param {string} dealId - The deal ID
+ * @returns {Promise<import('@ukef/dtfs2-common').FacilityAllTypeAmendmentWithUkefId[]>}
+ */
+const getApprovedAmendments = async (dealId) => {
   const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
+
   if (isValid) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/amendments/acknowledged-or-completed`,
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/amendments/approved`,
         headers: headers.central,
       });
 
-      return { status: 200, data: response.data };
+      if (!response?.data) {
+        throw new Error('Invalid response received');
+      }
+
+      return { status: HttpStatusCode.Ok, data: response.data };
     } catch (error) {
-      console.error('Unable to get the acknowledged or completed amendments %o', error);
-      return { status: error?.response?.status || 500, data: 'Failed to get  the acknowledged or completed amendments' };
+      console.error('Unable to get the approved amendments %o', error);
+      return { status: error?.response?.status || HttpStatusCode.InternalServerError, data: 'Failed to get the approved amendments' };
     }
   } else {
     console.error('Invalid deal Id %s', dealId);
-    return { status: 400, data: 'Invalid deal Id provided' };
+    return { status: HttpStatusCode.BadRequest, data: 'Invalid deal Id provided' };
   }
 };
 
@@ -1906,5 +1916,5 @@ module.exports = {
   deleteFeeRecordCorrectionTransientFormData,
   createFeeRecordCorrection,
   getRecordCorrectionLogDetailsById,
-  getAcknowledgedCompletedAmendments,
+  getApprovedAmendments,
 };

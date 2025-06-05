@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { AMENDMENT_QUERIES } = require('@ukef/dtfs2-common');
+const { AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES } = require('@ukef/dtfs2-common');
 const isGefFacility = require('../rest-mappings/helpers/isGefFacility');
 const api = require('../api');
 const acbs = require('./acbs.controller');
@@ -128,10 +128,10 @@ const getAmendmentByFacilityId = async (req, res) => {
   const { facilityId, amendmentIdOrStatus, type } = req.params;
   let amendment;
   switch (amendmentIdOrStatus) {
-    case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS:
+    case AMENDMENT_QUERY_STATUSES.IN_PROGRESS:
       amendment = (await api.getAmendmentInProgress(facilityId)).data;
       break;
-    case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED:
+    case AMENDMENT_QUERY_STATUSES.COMPLETED:
       if (type === AMENDMENT_QUERIES.LATEST_COVER_END_DATE) {
         amendment = await api.getLatestCompletedAmendmentDate(facilityId);
       } else if (type === AMENDMENT_QUERIES.LATEST_VALUE) {
@@ -159,18 +159,18 @@ const getAmendmentsByDealId = async (req, res) => {
   const { dealId, status, type } = req.params;
   let amendment;
   switch (status) {
-    case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS:
+    case AMENDMENT_QUERY_STATUSES.IN_PROGRESS:
       amendment = await api.getAmendmentInProgressByDealId(dealId);
       break;
-    case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.COMPLETED:
+    case AMENDMENT_QUERY_STATUSES.COMPLETED:
       if (type === AMENDMENT_QUERIES.LATEST) {
         amendment = await api.getLatestCompletedAmendmentByDealId(dealId);
       } else {
         amendment = await api.getCompletedAmendmentByDealId(dealId);
       }
       break;
-    case CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.ACKNOWLEDGEDORCOMPLETED:
-      amendment = await api.getAcknowledgedCompletedAmendments(dealId);
+    case AMENDMENT_QUERY_STATUSES.APPROVED:
+      amendment = await api.getApprovedAmendments(dealId);
       break;
     default:
       if (!status && !type) {
@@ -186,7 +186,7 @@ const getAmendmentsByDealId = async (req, res) => {
 const getAllAmendments = async (req, res) => {
   const { status } = req.params;
   let amendment;
-  if (status === CONSTANTS.AMENDMENTS.AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
+  if (status === AMENDMENT_QUERY_STATUSES.IN_PROGRESS) {
     amendment = await api.getAllAmendmentsInProgress();
   }
   if (amendment) {

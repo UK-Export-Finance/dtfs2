@@ -54,11 +54,12 @@ const postAmendmentAnswers = async (req, res) => {
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
   const { dealId, requireUkefApproval } = amendment;
   const facility = await api.getFacility(facilityId, userToken);
-
-  const { response } = await api.getAcknowledgedCompletedAmendments(dealId, userToken);
-  const amendmentsOnDeal = response.data;
+  const { ukefFacilityId } = facility.facilitySnapshot;
+  const {
+    response: { data: amendmentsOnDeal },
+  } = await api.getApprovedAmendments(dealId, userToken);
   const amendmentsOnFacility = amendmentsOnDeal.filter((amendmentOnDeal) => amendmentOnDeal.facilityId.toString() === facilityId);
-  const referenceNumber = createAmendmentReferenceNumber(amendmentsOnFacility, facility.facilitySnapshot.ukefFacilityId);
+  const referenceNumber = createAmendmentReferenceNumber(amendmentsOnFacility, ukefFacilityId);
 
   try {
     const payload = {
