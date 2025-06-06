@@ -33,6 +33,7 @@ const getFeeDates = require('./get-fee-dates');
 const getFeeAmount = require('./get-fee-amount');
 const getCreditRatingCode = require('./get-credit-rating-code');
 const getLoanAmountDifference = require('./get-loan-amount-difference');
+const getGefFacilityPercentage = require('./get-gef-facility-fixed-percentage');
 
 module.exports = {
   isIssued,
@@ -70,4 +71,5 @@ module.exports = {
   getFeeAmount,
   getCreditRatingCode,
   getLoanAmountDifference,
+  getGefFacilityPercentage,
 };
