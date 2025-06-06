@@ -19,11 +19,11 @@ console.info = jest.fn();
 const originalProcessEnv = { ...process.env };
 
 describe('sendReportDueEmailsJob', () => {
-  const validTestbank1Email = 'valid-Testbank1-email@example.com';
+  const validTestbank1Email = 'valid-testbank1-email@example.com';
   const validtestBank1 = produce(aBank(), (draftBank) => {
     draftBank.paymentOfficerTeam.emails = [validTestbank1Email];
   });
-  const validTestbank2Email1 = 'valid-Testbank2-email@example.com';
+  const validTestbank2Email1 = 'valid-testbank2-email@example.com';
   const quarterlyReportingSchedule = [
     { startMonth: 11, endMonth: 1 },
     { startMonth: 2, endMonth: 4 },

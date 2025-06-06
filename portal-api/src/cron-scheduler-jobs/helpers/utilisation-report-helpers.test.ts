@@ -443,7 +443,7 @@ describe('utilisation-report-helpers', () => {
       // Arrange
       jest.mocked(externalApi.bankHolidays).getBankHolidayDatesForRegion.mockResolvedValue([]);
 
-      const validTestbank1Email = 'valid-Testbank1-email@example.com';
+      const validTestbank1Email = 'valid-testbank1-email@example.com';
       const validTestbank1TeamName = 'Bank 1 Payment Officer Team';
       const validtestBank1: BankResponse = {
         ...aBank(),
@@ -452,7 +452,7 @@ describe('utilisation-report-helpers', () => {
       };
 
       const validTestbank2Email1 = 'valid-bank-1-email@example.com';
-      const validTestbank2Email12 = 'another-valid-Testbank2-email@example.com';
+      const validTestbank2Email12 = 'another-valid-testbank2-email@example.com';
       const validTestbank2TeamName = 'Bank 1 Payment Officer Team';
       const validtestBank2: BankResponse = {
         ...aBank(),
