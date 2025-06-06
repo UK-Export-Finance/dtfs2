@@ -1,6 +1,6 @@
 import z from 'zod';
+import { ENTRA_ID_EMAIL_SCHEMA } from './entra-id-email.schema';
 import { TfmTeamSchema } from './tfm-team.schema';
-import { ENTRA_ID_EMAIL_SCHEMA } from './entra-id.schema';
 
 /**
  * Used during the SSO login process to upsert a user
