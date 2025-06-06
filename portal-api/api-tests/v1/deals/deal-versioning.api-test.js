@@ -126,13 +126,13 @@ const generateVersion0Facility = (dealId, makerId) => ({
 });
 
 describe('GEF deal versioning', () => {
-  let aMaker;
+  let maker1;
   let anAdmin;
   let testUsers;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole(MAKER).one();
+    maker1 = testUsers().withRole(MAKER).one();
     anAdmin = testUsers().withRole(ADMIN).one();
   });
 
@@ -158,18 +158,18 @@ describe('GEF deal versioning', () => {
 
     describe(`POST ${gefApplicationsUrl}`, () => {
       it('returns the expected version 0 application upon creation', async () => {
-        const { body } = await as(aMaker).post(generateVersion0ApplicationToSubmit()).to(gefApplicationsUrl);
+        const { body } = await as(maker1).post(generateVersion0ApplicationToSubmit()).to(gefApplicationsUrl);
 
-        expect(body).toEqual(expectMongoId(generateVersion0ApplicationResponse(aMaker._id)));
+        expect(body).toEqual(expectMongoId(generateVersion0ApplicationResponse(maker1._id)));
       });
     });
 
     describe(`POST ${gefFacilitiesUrl}`, () => {
       it('returns the expected version 0 facility', async () => {
-        const { body: dealBody } = await as(aMaker).post(generateVersion0ApplicationToSubmit()).to(gefApplicationsUrl);
-        const { body } = await as(aMaker).post({ dealId: dealBody._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(gefFacilitiesUrl);
+        const { body: dealBody } = await as(maker1).post(generateVersion0ApplicationToSubmit()).to(gefApplicationsUrl);
+        const { body } = await as(maker1).post({ dealId: dealBody._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(gefFacilitiesUrl);
 
-        expect(body).toEqual(generateVersion0Facility(dealBody._id, aMaker._id));
+        expect(body).toEqual(generateVersion0Facility(dealBody._id, maker1._id));
       });
     });
   });

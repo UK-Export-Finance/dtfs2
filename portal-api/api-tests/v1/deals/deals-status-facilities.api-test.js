@@ -15,8 +15,8 @@ const { getNowAsEpoch } = require('../../../src/v1/helpers/date');
 
 describe('/v1/deals/:id/status - facilities', () => {
   describe('PUT /v1/deals/:id/status', () => {
-    let aBarclaysMaker;
-    let aBarclaysChecker;
+    let testbank1Maker;
+    let testbank1Checker;
     let aSuperuser;
     const originalFacilities = completedDeal.mockFacilities;
 
@@ -35,9 +35,9 @@ describe('/v1/deals/:id/status - facilities', () => {
 
     beforeAll(async () => {
       const testUsers = await testUserCache.initialise(app);
-      const barclaysMakers = testUsers().withRole(MAKER).withBankName('Bank 1').all();
-      [aBarclaysMaker] = barclaysMakers;
-      aBarclaysChecker = testUsers().withRole(CHECKER).withBankName('Bank 1').one();
+      const testbank1Makers = testUsers().withRole(MAKER).withBankName('Bank 1').all();
+      [testbank1Maker] = testbank1Makers;
+      testbank1Checker = testUsers().withRole(CHECKER).withBankName('Bank 1').one();
 
       aSuperuser = testUsers().superuser().one();
     });
@@ -59,7 +59,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
-        const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
+        const postResult = await as(testbank1Maker).post(submittedDeal).to('/v1/deals');
 
         createdDeal = postResult.body;
         dealId = createdDeal._id;
@@ -70,8 +70,8 @@ describe('/v1/deals/:id/status - facilities', () => {
         };
 
         const promises = await Promise.all([
-          await createFacilities(aBarclaysMaker, dealId, originalFacilities),
-          await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`),
+          await createFacilities(testbank1Maker, dealId, originalFacilities),
+          await as(testbank1Checker).put(statusUpdate).to(`/v1/deals/${dealId}/status`),
         ]);
 
         const [facilities, deal] = promises;
@@ -122,7 +122,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           ainDeal = completedDeal;
           ainDeal.submissionType = 'Automatic Inclusion Notice';
 
-          const postResult = await as(aBarclaysMaker)
+          const postResult = await as(testbank1Maker)
             .post(JSON.parse(JSON.stringify(completedDeal)))
             .to('/v1/deals');
 
@@ -235,7 +235,7 @@ describe('/v1/deals/:id/status - facilities', () => {
 
           const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
-          const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
+          const postResult = await as(testbank1Maker).post(submittedDeal).to('/v1/deals');
 
           createdDeal = postResult.body;
           dealId = createdDeal._id;
@@ -247,7 +247,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             }
           });
 
-          createdFacilities = await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
+          createdFacilities = await createFacilities(testbank1Maker, dealId, completedDeal.mockFacilities);
 
           completedDeal.mockFacilities = createdFacilities;
 
@@ -256,7 +256,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             comments: 'Nope',
           };
 
-          updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
+          updatedDeal = await as(testbank1Checker).put(statusUpdate).to(`/v1/deals/${dealId}/status`);
         });
 
         describe('any issued bonds that have details provided, but not yet been submitted', () => {
@@ -313,7 +313,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       beforeEach(async () => {
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
-        const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
+        const postResult = await as(testbank1Maker).post(submittedDeal).to('/v1/deals');
 
         createdDeal = postResult.body;
 
@@ -326,7 +326,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           }
         });
 
-        const createdFacilities = await createFacilities(aBarclaysMaker, dealId, completedDeal.mockFacilities);
+        const createdFacilities = await createFacilities(testbank1Maker, dealId, completedDeal.mockFacilities);
 
         completedDeal.mockFacilities = createdFacilities;
 
@@ -335,7 +335,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           comments: 'Nope',
         };
 
-        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+        updatedDeal = await as(testbank1Checker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
       });
 
       const isIssuedFacilityWithFacilityStageChange = (facility) => {
@@ -526,17 +526,17 @@ describe('/v1/deals/:id/status - facilities', () => {
 
         const deal = JSON.parse(JSON.stringify(dealInDraftStatus));
 
-        const postResult = await as(aBarclaysMaker).post(deal).to('/v1/deals');
+        const postResult = await as(testbank1Maker).post(deal).to('/v1/deals');
 
         createdDeal = postResult.body;
 
         dealId = createdDeal._id;
 
-        const createdFacilities = await createFacilities(aBarclaysMaker, dealId, newFacilities);
+        const createdFacilities = await createFacilities(testbank1Maker, dealId, newFacilities);
 
         completedDeal.mockFacilities = createdFacilities;
 
-        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+        updatedDeal = await as(testbank1Checker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
       });
 
       describe('when a deal contains bonds with an `Issued` facility stage and requestedCoverStartDate and coverDateConfirmed properties exist', () => {
@@ -588,7 +588,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             'requestedCoverStartDate-year': expect.any(Number),
             _id: expect.any(String),
             dealId,
-            auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysChecker._id),
+            auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(testbank1Checker._id),
           });
 
           expect(body.deal.bondTransactions.items[2]).toEqual({
@@ -603,7 +603,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             'requestedCoverStartDate-year': expect.any(Number),
             _id: expect.any(String),
             dealId,
-            auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysChecker._id),
+            auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(testbank1Checker._id),
           });
         });
       });
@@ -627,7 +627,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             'requestedCoverStartDate-year': expect.any(Number),
             _id: expect.any(String),
             dealId,
-            auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysChecker._id),
+            auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(testbank1Checker._id),
           });
 
           expect(body.deal.loanTransactions.items[2]).toEqual({
@@ -642,7 +642,7 @@ describe('/v1/deals/:id/status - facilities', () => {
             'requestedCoverStartDate-year': expect.any(Number),
             _id: expect.any(String),
             dealId,
-            auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysChecker._id),
+            auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(testbank1Checker._id),
           });
         });
       });
@@ -657,7 +657,7 @@ describe('/v1/deals/:id/status - facilities', () => {
       beforeEach(async () => {
         const submittedDeal = JSON.parse(JSON.stringify(completedDeal));
 
-        const postResult = await as(aBarclaysMaker).post(submittedDeal).to('/v1/deals');
+        const postResult = await as(testbank1Maker).post(submittedDeal).to('/v1/deals');
 
         createdDeal = postResult.body;
 
@@ -672,7 +672,7 @@ describe('/v1/deals/:id/status - facilities', () => {
           }
         });
 
-        const createdFacilities = await createFacilities(aBarclaysMaker, dealId, originalFacilities);
+        const createdFacilities = await createFacilities(testbank1Maker, dealId, originalFacilities);
 
         completedDeal.mockFacilities = createdFacilities;
 
@@ -681,9 +681,9 @@ describe('/v1/deals/:id/status - facilities', () => {
           confirmSubmit: true,
         };
 
-        updatedDeal = await as(aBarclaysChecker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
+        updatedDeal = await as(testbank1Checker).put(statusUpdate).to(`/v1/deals/${createdDeal._id}/status`);
 
-        expectedFacilitiesSubmittedBy = aBarclaysChecker;
+        expectedFacilitiesSubmittedBy = testbank1Checker;
       });
 
       const isUnsubmittedFacilityWithIssueFacilityDetailsProvided = (facility) => {

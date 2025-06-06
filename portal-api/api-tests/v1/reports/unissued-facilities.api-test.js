@@ -18,13 +18,13 @@ const gefFacilityUrl = '/v1/gef/facilities';
 
 describe('GET /v1/reports/unissued-facilities', () => {
   const unissuedFacilitiesReportUrl = '/v1/reports/unissued-facilities';
-  let aMaker;
+  let maker1;
   let mockApplication;
   let testUsers;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole(MAKER).one();
+    maker1 = testUsers().withRole(MAKER).one();
   });
 
   beforeEach(async () => {
@@ -32,12 +32,12 @@ describe('GET /v1/reports/unissued-facilities', () => {
     await databaseHelper.wipe([dealsCollectionName]);
 
     // create a GEF deal
-    mockApplication = await as(aMaker)
-      .post({ ...mockApplications[0], bank: { id: aMaker.bank.id } })
+    mockApplication = await as(maker1)
+      .post({ ...mockApplications[0], bank: { id: maker1.bank.id } })
       .to(gefDealUrl);
 
     // add facilities to this deal
-    await as(aMaker)
+    await as(maker1)
       .post({
         dealId: mockApplication.body._id,
         type: FACILITY_TYPE.CASH,
@@ -61,19 +61,19 @@ describe('GET /v1/reports/unissued-facilities', () => {
   it('retrieves the unissued facilities based on AIN deals', async () => {
     const updated = { submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN };
     // update the submissionType to AIN
-    const { status: submissionTypeStatus } = await as(aMaker).put(updated).to(`${gefDealUrl}/${mockApplication.body._id}`);
+    const { status: submissionTypeStatus } = await as(maker1).put(updated).to(`${gefDealUrl}/${mockApplication.body._id}`);
     // ensure that the update is successful
     expect(submissionTypeStatus).toEqual(200);
 
     // update the `status` to 'Submitted'
-    const putResponse = await as(aMaker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${gefDealUrl}/status/${mockApplication.body._id}`);
+    const putResponse = await as(maker1).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${gefDealUrl}/status/${mockApplication.body._id}`);
     // ensure that the update was successful
     expect(putResponse.status).toEqual(200);
     // ensure that the submission date has a string format - usually EPOCH
     expect(putResponse.body.submissionDate).toEqual(expect.any(String));
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(unissuedFacilitiesReportUrl);
+    const { status: reportsStatus, body: reportsBody } = await as(maker1).get(unissuedFacilitiesReportUrl);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([
@@ -99,19 +99,19 @@ describe('GET /v1/reports/unissued-facilities', () => {
       manualInclusionNoticeSubmissionDate: '1639180800000',
     };
     // update the submissionType to MIN
-    const { status: submissionTypeStatus } = await as(aMaker).put(updated).to(`${gefDealUrl}/${mockApplication.body._id}`);
+    const { status: submissionTypeStatus } = await as(maker1).put(updated).to(`${gefDealUrl}/${mockApplication.body._id}`);
     // ensure that the update is successful
     expect(submissionTypeStatus).toEqual(200);
 
     // update the `status` to 'Submitted'
-    const putResponse = await as(aMaker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${gefDealUrl}/status/${mockApplication.body._id}`);
+    const putResponse = await as(maker1).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${gefDealUrl}/status/${mockApplication.body._id}`);
     // ensure that the update was successful
     expect(putResponse.status).toEqual(200);
     // ensure that the submission date has a string format - usually EPOCH
     expect(putResponse.body.submissionDate).toEqual(expect.any(String));
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(unissuedFacilitiesReportUrl);
+    const { status: reportsStatus, body: reportsBody } = await as(maker1).get(unissuedFacilitiesReportUrl);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([
@@ -137,19 +137,19 @@ describe('GET /v1/reports/unissued-facilities', () => {
       manualInclusionNoticeSubmissionDate: '',
     };
     // update the submissionType to MIN
-    const { status: submissionTypeStatus } = await as(aMaker).put(updated).to(`${gefDealUrl}/${mockApplication.body._id}`);
+    const { status: submissionTypeStatus } = await as(maker1).put(updated).to(`${gefDealUrl}/${mockApplication.body._id}`);
     // ensure that the update is successful
     expect(submissionTypeStatus).toEqual(200);
 
     // update the `status` to 'Submitted'
-    const putResponse = await as(aMaker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${gefDealUrl}/status/${mockApplication.body._id}`);
+    const putResponse = await as(maker1).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${gefDealUrl}/status/${mockApplication.body._id}`);
     // ensure that the update was successful
     expect(putResponse.status).toEqual(200);
     // ensure that the submission date has a string format - usually EPOCH
     expect(putResponse.body.submissionDate).toEqual(expect.any(String));
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(unissuedFacilitiesReportUrl);
+    const { status: reportsStatus, body: reportsBody } = await as(maker1).get(unissuedFacilitiesReportUrl);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -158,19 +158,19 @@ describe('GET /v1/reports/unissued-facilities', () => {
   it('retrieves an empty array if submission type is MIA', async () => {
     const updated = { submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA };
     // update the submissionType to MIA
-    const { status: submissionTypeStatus } = await as(aMaker).put(updated).to(`${gefDealUrl}/${mockApplication.body._id}`);
+    const { status: submissionTypeStatus } = await as(maker1).put(updated).to(`${gefDealUrl}/${mockApplication.body._id}`);
     // ensure that the update is successful
     expect(submissionTypeStatus).toEqual(200);
 
     // update the `status` to 'Submitted'
-    const putResponse = await as(aMaker).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${gefDealUrl}/status/${mockApplication.body._id}`);
+    const putResponse = await as(maker1).put({ status: CONSTANTS.DEAL.DEAL_STATUS.SUBMITTED_TO_UKEF }).to(`${gefDealUrl}/status/${mockApplication.body._id}`);
     // ensure that the update was successful
     expect(putResponse.status).toEqual(200);
     // ensure that the submission date has a string format - usually EPOCH
     expect(putResponse.body.submissionDate).toEqual(expect.any(String));
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(unissuedFacilitiesReportUrl);
+    const { status: reportsStatus, body: reportsBody } = await as(maker1).get(unissuedFacilitiesReportUrl);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -178,7 +178,7 @@ describe('GET /v1/reports/unissued-facilities', () => {
 
   it('retrieves an empty array if the deal has NOT been submitted to UKEF', async () => {
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(unissuedFacilitiesReportUrl);
+    const { status: reportsStatus, body: reportsBody } = await as(maker1).get(unissuedFacilitiesReportUrl);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -187,12 +187,12 @@ describe('GET /v1/reports/unissued-facilities', () => {
   it('retrieves an empty array if the deal has NOT been submitted to UKEF but `submissionType` is AIN', async () => {
     const updated = { submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA };
     // update the submissionType to AIN
-    const { status: submissionTypeStatus } = await as(aMaker).put(updated).to(`${gefDealUrl}/${mockApplication.body._id}`);
+    const { status: submissionTypeStatus } = await as(maker1).put(updated).to(`${gefDealUrl}/${mockApplication.body._id}`);
     // ensure that the update is successful
     expect(submissionTypeStatus).toEqual(200);
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(unissuedFacilitiesReportUrl);
+    const { status: reportsStatus, body: reportsBody } = await as(maker1).get(unissuedFacilitiesReportUrl);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -201,12 +201,12 @@ describe('GET /v1/reports/unissued-facilities', () => {
   it('retrieves an empty array if the deal has NOT been submitted to UKEF but `submissionType` is MIA', async () => {
     const updated = { submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIA };
     // update the submissionType to AIN
-    const { status: submissionTypeStatus } = await as(aMaker).put(updated).to(`${gefDealUrl}/${mockApplication.body._id}`);
+    const { status: submissionTypeStatus } = await as(maker1).put(updated).to(`${gefDealUrl}/${mockApplication.body._id}`);
     // ensure that the update is successful
     expect(submissionTypeStatus).toEqual(200);
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(unissuedFacilitiesReportUrl);
+    const { status: reportsStatus, body: reportsBody } = await as(maker1).get(unissuedFacilitiesReportUrl);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);
@@ -215,12 +215,12 @@ describe('GET /v1/reports/unissued-facilities', () => {
   it('retrieves an empty array if the deal has NOT been submitted to UKEF but `submissionType` is MIN', async () => {
     const updated = { submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.MIN };
     // update the submissionType to AIN
-    const { status: submissionTypeStatus } = await as(aMaker).put(updated).to(`${gefDealUrl}/${mockApplication.body._id}`);
+    const { status: submissionTypeStatus } = await as(maker1).put(updated).to(`${gefDealUrl}/${mockApplication.body._id}`);
     // ensure that the update is successful
     expect(submissionTypeStatus).toEqual(200);
 
     // perform a GET request to retrieve the unissued facilities for reports
-    const { status: reportsStatus, body: reportsBody } = await as(aMaker).get(unissuedFacilitiesReportUrl);
+    const { status: reportsStatus, body: reportsBody } = await as(maker1).get(unissuedFacilitiesReportUrl);
     expect(reportsStatus).toEqual(200);
     // ensure that the body has the following format:
     expect(reportsBody).toEqual([]);

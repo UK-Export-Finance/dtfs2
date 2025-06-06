@@ -62,33 +62,33 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
     name: '1234',
   };
 
-  let aBarclaysMaker;
-  let anHSBCMaker;
+  let testbank1Maker;
+  let testbank2Maker;
   let aSuperuser;
   let dealId;
   let bondId;
 
   const createBond = async () => {
-    const deal = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+    const deal = await as(testbank1Maker).post(newDeal).to('/v1/deals');
     dealId = deal.body._id;
 
-    const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+    const createBondResponse = await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
     bondId = createBondResponse.body.bondId;
 
-    const { status, body } = await as(aBarclaysMaker).put(allBondFields).to(`/v1/deals/${dealId}/bond/${bondId}`);
+    const { status, body } = await as(testbank1Maker).put(allBondFields).to(`/v1/deals/${dealId}/bond/${bondId}`);
     expect(body.hasBeenIssued).toEqual(false);
     expect(status).toEqual(200);
   };
 
   const putIssueFacility = async (issueDealId, issueBondId, body) => {
-    const response = await as(aBarclaysMaker).put(body).to(`/v1/deals/${issueDealId}/bond/${issueBondId}/issue-facility`);
+    const response = await as(testbank1Maker).put(body).to(`/v1/deals/${issueDealId}/bond/${issueBondId}/issue-facility`);
     return response;
   };
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
-    anHSBCMaker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
+    testbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    testbank2Maker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
     aSuperuser = testUsers().superuser().one();
   });
 
@@ -100,7 +100,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
 
   describe('PUT /v1/deals/:id/bond/:id/issue-facility', () => {
     it('should return 401 when user cannot access the deal', async () => {
-      const { status } = await as(anHSBCMaker).put({}).to(`/v1/deals/${dealId}/bond/${bondId}/issue-facility`);
+      const { status } = await as(testbank2Maker).put({}).to(`/v1/deals/${dealId}/bond/${bondId}/issue-facility`);
       expect(status).toEqual(401);
     });
 
@@ -137,7 +137,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
     });
 
     it('should remove bond status when issueFacilityDetailsStarted already exists in the bond', async () => {
-      const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+      const createBondResponse = await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
       bondId = createBondResponse.body.bondId;
 
       const bondWithIssueFacilityDetailsStarted = {
@@ -146,7 +146,7 @@ describe('/v1/deals/:id/bond/:id/issue-facility', () => {
         issueFacilityDetailsSubmitted: false,
       };
 
-      await as(aBarclaysMaker).put(bondWithIssueFacilityDetailsStarted).to(`/v1/deals/${dealId}/bond/${bondId}`);
+      await as(testbank1Maker).put(bondWithIssueFacilityDetailsStarted).to(`/v1/deals/${dealId}/bond/${bondId}`);
 
       const { body } = await putIssueFacility(dealId, bondId, issueFacilityBody);
 

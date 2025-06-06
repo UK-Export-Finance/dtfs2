@@ -14,7 +14,7 @@ const { MAKER } = require('../../../src/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('deal comments controller', () => {
-  let aBarclaysMaker;
+  let testbank1Maker;
   let dealId;
   let user;
 
@@ -22,15 +22,15 @@ describe('deal comments controller', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    const barclaysMakers = testUsers().withRole(MAKER).withBankName('Bank 1').all();
-    [aBarclaysMaker] = barclaysMakers;
+    const testbank1Makers = testUsers().withRole(MAKER).withBankName('Bank 1').all();
+    [testbank1Maker] = testbank1Makers;
   });
 
   beforeEach(async () => {
-    const { body } = await as(aBarclaysMaker).post(completedDeal).to('/v1/deals');
+    const { body } = await as(testbank1Maker).post(completedDeal).to('/v1/deals');
     dealId = body._id;
     user = {
-      username: aBarclaysMaker.username,
+      username: testbank1Maker.username,
     };
   });
 
@@ -40,7 +40,7 @@ describe('deal comments controller', () => {
   });
 
   it('should update a comment', async () => {
-    const auditDetails = generatePortalAuditDetails(aBarclaysMaker._id);
+    const auditDetails = generatePortalAuditDetails(testbank1Maker._id);
     const expectedAuditRecord = generateParsedMockAuditDatabaseRecord(auditDetails);
     const addedComment = await dealCommentsController.addComment(dealId, myComment, user, auditDetails);
 

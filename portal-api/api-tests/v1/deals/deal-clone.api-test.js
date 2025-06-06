@@ -42,15 +42,15 @@ dealToClone.ukefDecision = [
 ];
 
 describe('/v1/deals/:id/clone', () => {
-  let anHSBCMaker;
-  let aBarclaysMaker;
+  let testbank2Maker;
+  let testbank1Maker;
   let testUser;
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
     testUser = testUsers().withRole(READ_ONLY).one();
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
-    anHSBCMaker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
+    testbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    testbank2Maker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
   });
 
   beforeEach(async () => {
@@ -75,11 +75,11 @@ describe('/v1/deals/:id/clone', () => {
       let createdFacilities;
 
       beforeEach(async () => {
-        const { body: createdDeal } = await as(anHSBCMaker).post(dealToClone).to('/v1/deals');
+        const { body: createdDeal } = await as(testbank2Maker).post(dealToClone).to('/v1/deals');
         const originalDealId = createdDeal._id;
-        createdFacilities = await createFacilities(anHSBCMaker, originalDealId, completedDeal.mockFacilities);
+        createdFacilities = await createFacilities(testbank2Maker, originalDealId, completedDeal.mockFacilities);
 
-        const { body: dealAfterCreation } = await as(anHSBCMaker).get(`/v1/deals/${originalDealId}`);
+        const { body: dealAfterCreation } = await as(testbank2Maker).get(`/v1/deals/${originalDealId}`);
         originalDeal = dealAfterCreation.deal;
       });
 
@@ -90,23 +90,23 @@ describe('/v1/deals/:id/clone', () => {
           cloneTransactions: 'true',
         };
 
-        const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        const { body } = await as(testbank1Maker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
-        const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
+        const { body: cloned } = await as(testbank1Maker).get(`/v1/deals/${body._id}`);
 
         expect(cloned.deal.bankInternalRefName).toEqual(clonePostBody.bankInternalRefName);
         expect(cloned.deal.additionalRefName).toEqual(clonePostBody.additionalRefName);
         expect(cloned.deal.updatedAt).toBeDefined();
         expect(cloned.deal.submissionType).toBeUndefined();
 
-        expect(cloned.deal.maker.username).toEqual(aBarclaysMaker.username);
-        expect(cloned.deal.maker.roles).toEqual(aBarclaysMaker.roles);
-        expect(cloned.deal.maker.bank).toEqual(aBarclaysMaker.bank);
-        expect(cloned.deal.maker.firstname).toEqual(aBarclaysMaker.firstname);
-        expect(cloned.deal.maker.surname).toEqual(aBarclaysMaker.surname);
-        expect(cloned.deal.maker._id).toEqual(aBarclaysMaker._id);
+        expect(cloned.deal.maker.username).toEqual(testbank1Maker.username);
+        expect(cloned.deal.maker.roles).toEqual(testbank1Maker.roles);
+        expect(cloned.deal.maker.bank).toEqual(testbank1Maker.bank);
+        expect(cloned.deal.maker.firstname).toEqual(testbank1Maker.firstname);
+        expect(cloned.deal.maker.surname).toEqual(testbank1Maker.surname);
+        expect(cloned.deal.maker._id).toEqual(testbank1Maker._id);
 
-        expect(cloned.deal.bank).toEqual(aBarclaysMaker.bank);
+        expect(cloned.deal.bank).toEqual(testbank1Maker.bank);
         expect(cloned.deal.status).toEqual('Draft');
         expect(cloned.deal.previousStatus).toBeUndefined();
         expect(cloned.deal.editedBy).toEqual([]);
@@ -122,14 +122,14 @@ describe('/v1/deals/:id/clone', () => {
           cloneTransactions: 'true',
         };
 
-        const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        const { body } = await as(testbank1Maker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
         expect(body._id).toEqual(body._id);
 
-        const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
+        const { body: cloned } = await as(testbank1Maker).get(`/v1/deals/${body._id}`);
 
-        expect(originalDeal.auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(anHSBCMaker._id));
-        expect(cloned.deal.auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(aBarclaysMaker._id));
+        expect(originalDeal.auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(testbank2Maker._id));
+        expect(cloned.deal.auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(testbank1Maker._id));
       });
 
       it('should clone eligibility', async () => {
@@ -139,9 +139,9 @@ describe('/v1/deals/:id/clone', () => {
           cloneTransactions: 'false',
         };
 
-        const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        const { body } = await as(testbank1Maker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
-        const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
+        const { body: cloned } = await as(testbank1Maker).get(`/v1/deals/${body._id}`);
 
         await createDealEligibility(originalDeal.eligibility);
 
@@ -170,12 +170,12 @@ describe('/v1/deals/:id/clone', () => {
           cloneTransactions: 'false',
         };
 
-        const createDeal = await as(anHSBCMaker).post(dealToCloneWithEligibilityAgentDetails).to('/v1/deals');
+        const createDeal = await as(testbank2Maker).post(dealToCloneWithEligibilityAgentDetails).to('/v1/deals');
         const { _id: dealId } = createDeal.body;
 
-        const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${dealId}/clone`);
+        const { body } = await as(testbank1Maker).post(clonePostBody).to(`/v1/deals/${dealId}/clone`);
 
-        const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
+        const { body: cloned } = await as(testbank1Maker).get(`/v1/deals/${body._id}`);
 
         const { eligibility } = cloned.deal;
 
@@ -195,9 +195,9 @@ describe('/v1/deals/:id/clone', () => {
           cloneTransactions: 'true',
         };
 
-        const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        const { body } = await as(testbank1Maker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
-        const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
+        const { body: cloned } = await as(testbank1Maker).get(`/v1/deals/${body._id}`);
 
         expect(cloned.deal.submissionDetails).toEqual(originalDeal.submissionDetails);
       });
@@ -209,9 +209,9 @@ describe('/v1/deals/:id/clone', () => {
           cloneTransactions: 'true',
         };
 
-        const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        const { body } = await as(testbank1Maker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
-        const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
+        const { body: cloned } = await as(testbank1Maker).get(`/v1/deals/${body._id}`);
 
         expect(cloned.deal.summary.totalValue).toEqual(originalDeal.summary.totalValue);
       });
@@ -227,11 +227,11 @@ describe('/v1/deals/:id/clone', () => {
           const minDeal = originalDeal;
           minDeal.submissionType = 'Manual Inclusion Notice';
 
-          const { body: minDealBody } = await as(anHSBCMaker).put(minDeal).to(`/v1/deals/${minDeal._id}`);
+          const { body: minDealBody } = await as(testbank2Maker).put(minDeal).to(`/v1/deals/${minDeal._id}`);
 
-          const { body } = await as(aBarclaysMaker).post(clonePostBody).to(`/v1/deals/${minDealBody._id}/clone`);
+          const { body } = await as(testbank1Maker).post(clonePostBody).to(`/v1/deals/${minDealBody._id}/clone`);
 
-          const { body: cloned } = await as(aBarclaysMaker).get(`/v1/deals/${body._id}`);
+          const { body: cloned } = await as(testbank1Maker).get(`/v1/deals/${body._id}`);
           expect(cloned.deal.submissionType).toBeUndefined();
         });
       });
@@ -243,10 +243,10 @@ describe('/v1/deals/:id/clone', () => {
           cloneTransactions: 'true',
         };
 
-        const clonedDealResponse = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        const clonedDealResponse = await as(testbank2Maker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
         const clonedDealId = clonedDealResponse.body._id;
 
-        const getDealResponse = await as(anHSBCMaker).get(`/v1/deals/${clonedDealId}`);
+        const getDealResponse = await as(testbank2Maker).get(`/v1/deals/${clonedDealId}`);
         const clonedDeal = getDealResponse.body.deal;
 
         const firstOriginalBond = createdFacilities.find((f) => f.type === 'Bond');
@@ -298,10 +298,10 @@ describe('/v1/deals/:id/clone', () => {
           cloneTransactions: 'true',
         };
 
-        const clonedDealResponse = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        const clonedDealResponse = await as(testbank2Maker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
         const clonedDealId = clonedDealResponse.body._id;
 
-        const getDealResponse = await as(anHSBCMaker).get(`/v1/deals/${clonedDealId}`);
+        const getDealResponse = await as(testbank2Maker).get(`/v1/deals/${clonedDealId}`);
         const clonedDeal = getDealResponse.body.deal;
 
         const firstOriginalLoan = createdFacilities.find((f) => f.type === 'Loan');
@@ -353,7 +353,7 @@ describe('/v1/deals/:id/clone', () => {
           loanTransactions: { items: [] },
         };
 
-        const { body } = await as(anHSBCMaker).post(dealWithEmptyBondsAndLoans).to('/v1/deals');
+        const { body } = await as(testbank2Maker).post(dealWithEmptyBondsAndLoans).to('/v1/deals');
         originalDeal = body;
 
         const clonePostBody = {
@@ -362,9 +362,9 @@ describe('/v1/deals/:id/clone', () => {
           cloneTransactions: 'true',
         };
 
-        const { body: responseBody } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+        const { body: responseBody } = await as(testbank2Maker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
-        const { body: cloned } = await as(anHSBCMaker).get(`/v1/deals/${responseBody._id}`);
+        const { body: cloned } = await as(testbank2Maker).get(`/v1/deals/${responseBody._id}`);
 
         expect(cloned.deal.facilities).toEqual([]);
         expect(cloned.deal.bondTransactions).toEqual({
@@ -382,9 +382,9 @@ describe('/v1/deals/:id/clone', () => {
             additionalRefName: 'new-bank-deal-name',
             cloneTransactions: 'false',
           };
-          const { body: responseBody } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+          const { body: responseBody } = await as(testbank2Maker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
-          const { body: cloned } = await as(anHSBCMaker).get(`/v1/deals/${responseBody._id}`);
+          const { body: cloned } = await as(testbank2Maker).get(`/v1/deals/${responseBody._id}`);
 
           expect(cloned.deal.facilities).toEqual([]);
           expect(cloned.deal.bondTransactions).toEqual({
@@ -403,7 +403,7 @@ describe('/v1/deals/:id/clone', () => {
             additionalRefName: '',
             cloneTransactions: '',
           };
-          const { body } = await as(anHSBCMaker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
+          const { body } = await as(testbank2Maker).post(clonePostBody).to(`/v1/deals/${originalDeal._id}/clone`);
 
           expect(body.validationErrors.count).toEqual(3);
           expect(body.validationErrors.errorList.bankInternalRefName).toBeDefined();

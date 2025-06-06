@@ -10,12 +10,12 @@ module.exports = {
     roles: [],
     isTrusted: false,
   },
-  barclaysBankMaker1: {
-    username: 'barclaysBankMaker1@ukexportfinance.gov.uk',
+  testBank1Maker1: {
+    username: 'testBank1Maker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Two',
-    email: 'barclaysBankMaker1@ukexportfinance.gov.uk',
+    email: 'testBank1Maker1@ukexportfinance.gov.uk',
     roles: [MAKER],
     bank: {
       id: '9',
@@ -24,12 +24,12 @@ module.exports = {
     },
     isTrusted: false,
   },
-  barclaysBankMaker2: {
-    username: 'barclaysBankMaker2@ukexportfinance.gov.uk',
+  testBank1Maker2: {
+    username: 'testBank1Maker2@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Two',
-    email: 'barclaysBankMaker2@ukexportfinance.gov.uk',
+    email: 'testBank1Maker2@ukexportfinance.gov.uk',
     roles: [MAKER],
     bank: {
       id: '9',
@@ -38,12 +38,12 @@ module.exports = {
     },
     isTrusted: false,
   },
-  barclaysBankChecker1: {
-    username: 'barclaysBankChecker1@ukexportfinance.gov.uk',
+  testBank1Checker1: {
+    username: 'testBank1Checker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Three',
-    email: 'barclaysBankChecker1@ukexportfinance.gov.uk',
+    email: 'testBank1Checker1@ukexportfinance.gov.uk',
     roles: [CHECKER],
     bank: {
       id: '9',
@@ -52,12 +52,12 @@ module.exports = {
     },
     isTrusted: false,
   },
-  barclaysBankMakerChecker1: {
-    username: 'barclaysBankMakerChecker1@ukexportfinance.gov.uk',
+  testBank1MakerChecker1: {
+    username: 'testBank1MakerChecker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Four',
-    email: 'barclaysBankMakerChecker1@ukexportfinance.gov.uk',
+    email: 'testBank1MakerChecker1@ukexportfinance.gov.uk',
     roles: [MAKER, CHECKER],
     bank: {
       id: '9',
@@ -66,12 +66,12 @@ module.exports = {
     },
     isTrusted: false,
   },
-  barclaysBankReader1: {
-    username: 'barclaysBankReader1@ukexportfinance.gov.uk',
+  testBank1Reader1: {
+    username: 'testBank1Reader1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Five',
-    email: 'barclaysBankReader1@ukexportfinance.gov.uk',
+    email: 'testBank1Reader1@ukexportfinance.gov.uk',
     roles: ['reader'],
     bank: {
       id: '9',
@@ -80,12 +80,12 @@ module.exports = {
     },
     isTrusted: false,
   },
-  hsbcBankMaker1: {
-    username: 'hsbcBankMaker1@ukexportfinance.gov.uk',
+  testBank2Maker1: {
+    username: 'testBank2Maker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Six',
-    email: 'hsbcBankMaker1@ukexportfinance.gov.uk',
+    email: 'testBank2Maker1@ukexportfinance.gov.uk',
     roles: [MAKER],
     bank: {
       id: '961',
@@ -93,12 +93,12 @@ module.exports = {
     },
     isTrusted: false,
   },
-  hsbcBankChecker1: {
-    username: 'hsbcBankChecker1@ukexportfinance.gov.uk',
+  testBank2Checker1: {
+    username: 'testBank2Checker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Seven',
-    email: 'hsbcBankChecker1@ukexportfinance.gov.uk',
+    email: 'testBank2Checker1@ukexportfinance.gov.uk',
     roles: [CHECKER],
     bank: {
       id: '961',
@@ -106,12 +106,12 @@ module.exports = {
     },
     isTrusted: false,
   },
-  hsbcBankMakerChecker1: {
-    username: 'hsbcBankMakerChecker1@ukexportfinance.gov.uk',
+  testBank2MakerChecker1: {
+    username: 'testBank2MakerChecker1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Eight',
-    email: 'hsbcBankMakerChecker1@ukexportfinance.gov.uk',
+    email: 'testBank2MakerChecker1@ukexportfinance.gov.uk',
     roles: [MAKER, CHECKER],
     bank: {
       id: '961',
@@ -119,12 +119,12 @@ module.exports = {
     },
     isTrusted: false,
   },
-  hsbcBankReader1: {
-    username: 'hsbcBankReader1@ukexportfinance.gov.uk',
+  testBank2Reader1: {
+    username: 'testBank2Reader1@ukexportfinance.gov.uk',
     password: '1!aB5678',
     firstname: 'Miss',
     surname: 'Nine',
-    email: 'hsbcBankReader1@ukexportfinance.gov.uk',
+    email: 'testBank2Reader1@ukexportfinance.gov.uk',
     roles: ['reader'],
     bank: {
       id: '961',

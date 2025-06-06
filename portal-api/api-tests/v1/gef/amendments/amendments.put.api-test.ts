@@ -45,7 +45,7 @@ const validPayload: { dealId: string; amendment: PortalFacilityAmendmentUserValu
 
 describe('/v1/gef/facilities/:facilityId/amendments', () => {
   let testUsers: Awaited<ReturnType<typeof testUserCache.initialise>>;
-  let aMaker: TestUser;
+  let maker1: TestUser;
 
   describe('PUT /v1/gef/facilities/:facilityId/amendments', () => {
     beforeEach(() => {
@@ -54,7 +54,7 @@ describe('/v1/gef/facilities/:facilityId/amendments', () => {
 
     beforeAll(async () => {
       testUsers = await testUserCache.initialise(app);
-      aMaker = testUsers().withRole(MAKER).one() as TestUser;
+      maker1 = testUsers().withRole(MAKER).one() as TestUser;
     });
 
     afterAll(() => {
@@ -72,7 +72,7 @@ describe('/v1/gef/facilities/:facilityId/amendments', () => {
         const url = putAmendmentUrl({ facilityId: validFacilityId });
 
         // Act
-        const response = await as(aMaker).put(validPayload).to(url);
+        const response = await as(maker1).put(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -108,7 +108,7 @@ describe('/v1/gef/facilities/:facilityId/amendments', () => {
         const url = putAmendmentUrl({ facilityId: invalidId });
 
         // Act
-        const response = await as(aMaker).put(validPayload).to(url);
+        const response = await as(maker1).put(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -121,7 +121,7 @@ describe('/v1/gef/facilities/:facilityId/amendments', () => {
         const invalidPayload = { dealId, amendment: { changeCoverEndDate: 'yes' } };
 
         // Act
-        const response = await as(aMaker).put(invalidPayload).to(url);
+        const response = await as(maker1).put(invalidPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -143,9 +143,9 @@ describe('/v1/gef/facilities/:facilityId/amendments', () => {
           status: PORTAL_AMENDMENT_STATUS.DRAFT,
           eligibilityCriteria: { version: 1, criteria: [] },
           createdBy: {
-            username: aMaker.username,
-            name: aMaker.firstname,
-            email: aMaker.email,
+            username: maker1.username,
+            name: maker1.firstname,
+            email: maker1.email,
           },
         };
 
@@ -153,7 +153,7 @@ describe('/v1/gef/facilities/:facilityId/amendments', () => {
         const url = putAmendmentUrl({ facilityId });
 
         // Act
-        const response = await as(aMaker).put(validPayload).to(url);
+        const response = await as(maker1).put(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.Ok);

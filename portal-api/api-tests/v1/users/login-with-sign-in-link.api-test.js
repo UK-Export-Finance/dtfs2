@@ -12,8 +12,8 @@ const databaseHelper = require('../../database-helper');
 const { createPartiallyLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
 const { sanitizeUser } = require('../../../src/v1/users/sanitizeUserData');
 
-const aMaker = users.barclaysBankMaker1;
-const anotherMaker = users.barclaysBankMaker2;
+const maker1 = users.testBank1Maker1;
+const maker2 = users.testBank1Maker2;
 
 describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
   const invalidUserId = '1';
@@ -31,7 +31,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
 
   let userToCreateOtherUsers;
 
-  const userToCreateAsPartiallyLoggedIn = aMaker;
+  const userToCreateAsPartiallyLoggedIn = maker1;
 
   let partiallyLoggedInUser;
   let partiallyLoggedInUserId;
@@ -196,7 +196,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
   });
 
   describe('when the userId does not match the logged in user', () => {
-    const anotherUserToCreateAsPartiallyLoggedIn = anotherMaker;
+    const anotherUserToCreateAsPartiallyLoggedIn = maker2;
 
     let anotherPartiallyLoggedInUser;
     let anotherPartiallyLoggedInUserToken;

@@ -27,13 +27,13 @@ const baseUrl = '/v1/gef/mandatory-criteria-versioned';
 console.error = jest.fn();
 
 describe(baseUrl, () => {
-  let aMaker;
+  let maker1;
   let anAdmin;
   let testUsers;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole(MAKER).one();
+    maker1 = testUsers().withRole(MAKER).one();
     anAdmin = testUsers().withRole(ADMIN).one();
   });
 
@@ -79,7 +79,7 @@ describe(baseUrl, () => {
       await as(anAdmin).post(allMandatoryCriteria[1]).to(baseUrl);
       await as(anAdmin).post(allMandatoryCriteria[2]).to(baseUrl);
 
-      const { body } = await as(aMaker).get(latestMandatoryCriteriaVersionedUrl);
+      const { body } = await as(maker1).get(latestMandatoryCriteriaVersionedUrl);
 
       expect(body).toEqual(
         expect.objectContaining({
@@ -151,7 +151,7 @@ describe(baseUrl, () => {
 
     it('should reject requests that present a valid authorization token but do not have an "admin" role', async () => {
       // Act
-      const { status } = await as(aMaker).post(newMandatoryCriteria).to(baseUrl);
+      const { status } = await as(maker1).post(newMandatoryCriteria).to(baseUrl);
 
       // Assert
       expect(status).toEqual(HttpStatusCode.Unauthorized);

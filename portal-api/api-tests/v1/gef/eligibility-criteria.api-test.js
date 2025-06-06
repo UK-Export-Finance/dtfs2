@@ -22,13 +22,13 @@ const mockEligibilityCriteria = require('../../fixtures/gef/eligibilityCriteria'
 const baseUrl = '/v1/gef/eligibility-criteria';
 
 describe(baseUrl, () => {
-  let aMaker;
+  let maker1;
   let anAdmin;
   let testUsers;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole(MAKER).one();
+    maker1 = testUsers().withRole(MAKER).one();
     anAdmin = testUsers().withRole(ADMIN).one();
   });
 
@@ -79,7 +79,7 @@ describe(baseUrl, () => {
       await as(anAdmin).post(mockEligibilityCriteria[1]).to(baseUrl);
       await as(anAdmin).post(mockEligibilityCriteria[2]).to(baseUrl);
 
-      const { body } = await as(aMaker).get(latestEligibilityCriteriaUrl);
+      const { body } = await as(maker1).get(latestEligibilityCriteriaUrl);
 
       expect(body).toEqual(
         expect.objectContaining({
@@ -111,7 +111,7 @@ describe(baseUrl, () => {
     });
 
     it('returns a 404 if there are no records', async () => {
-      const { status } = await as(aMaker).get(`${baseUrl}/doesnotexist`);
+      const { status } = await as(maker1).get(`${baseUrl}/doesnotexist`);
       expect(status).toEqual(404);
     });
 

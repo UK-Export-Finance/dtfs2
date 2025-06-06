@@ -32,7 +32,7 @@ const statuses = PORTAL_AMENDMENT_INPROGRESS_STATUSES;
 
 describe('/v1/gef/facilities/amendments', () => {
   let testUsers: Awaited<ReturnType<typeof testUserCache.initialise>>;
-  let aMaker: TestUser;
+  let maker1: TestUser;
 
   describe('GET /v1/gef/facilities/amendments', () => {
     beforeEach(() => {
@@ -41,7 +41,7 @@ describe('/v1/gef/facilities/amendments', () => {
 
     beforeAll(async () => {
       testUsers = await testUserCache.initialise(app);
-      aMaker = testUsers().withRole(MAKER).one() as TestUser;
+      maker1 = testUsers().withRole(MAKER).one() as TestUser;
     });
 
     afterAll(() => {
@@ -59,7 +59,7 @@ describe('/v1/gef/facilities/amendments', () => {
         const url = getAllAmendmentsUrl({ statuses });
 
         // Act
-        const response = await as(aMaker).get(url);
+        const response = await as(maker1).get(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -104,9 +104,9 @@ describe('/v1/gef/facilities/amendments', () => {
           status: PORTAL_AMENDMENT_STATUS.DRAFT,
           eligibilityCriteria: { version: 1, criteria: [] },
           createdBy: {
-            username: aMaker.username,
-            name: aMaker.firstname,
-            email: aMaker.email,
+            username: maker1.username,
+            name: maker1.firstname,
+            email: maker1.email,
           },
         };
 
@@ -114,7 +114,7 @@ describe('/v1/gef/facilities/amendments', () => {
         const url = getAllAmendmentsUrl({});
 
         // Act
-        const response = await as(aMaker).get(url);
+        const response = await as(maker1).get(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.Ok);

@@ -16,11 +16,11 @@ const baseUrl = '/v1/gef';
 describe('GET /v1/gef/address/:postcode', () => {
   const aPostcodeAddressUrl = `${baseUrl}/address/${POSTCODE.VALID}`;
   let testUsers;
-  let aMaker;
+  let maker1;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole(MAKER).one();
+    maker1 = testUsers().withRole(MAKER).one();
   });
 
   withClientAuthenticationTests({
@@ -36,7 +36,7 @@ describe('GET /v1/gef/address/:postcode', () => {
   });
 
   it('Returns a list of addresses', async () => {
-    const { status, body } = await as(aMaker).get(`${baseUrl}/address/${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`);
+    const { status, body } = await as(maker1).get(`${baseUrl}/address/${ADDRESSES.EXAMPLES.POSTCODE_WITHOUT_SPACE}`);
     expect(status).toEqual(HttpStatusCode.Ok);
     expect(body[0]).toEqual({
       organisationName: expect.any(String),
@@ -50,7 +50,7 @@ describe('GET /v1/gef/address/:postcode', () => {
   });
 
   it('Returns a not found address if the postcode was not found', async () => {
-    const { status, body } = await as(aMaker).get(`${baseUrl}/address/${ADDRESSES.EXAMPLES.POSTCODE_UNPROCESSABLE}`);
+    const { status, body } = await as(maker1).get(`${baseUrl}/address/${ADDRESSES.EXAMPLES.POSTCODE_UNPROCESSABLE}`);
     expect(status).toEqual(HttpStatusCode.UnprocessableEntity);
     expect(body).toEqual([
       {
@@ -63,7 +63,7 @@ describe('GET /v1/gef/address/:postcode', () => {
   });
 
   it('Returns an invalid postcode error, if the postcode specified is invalid', async () => {
-    const { status, body } = await as(aMaker).get(`${baseUrl}/address/A1`);
+    const { status, body } = await as(maker1).get(`${baseUrl}/address/A1`);
     expect(status).toEqual(HttpStatusCode.BadRequest);
     expect(body).toEqual([
       {
@@ -76,7 +76,7 @@ describe('GET /v1/gef/address/:postcode', () => {
   });
 
   it('returns a 422 response if backend returns 500', async () => {
-    const { status, body } = await as(aMaker).get(`${baseUrl}/address/${ADDRESSES.EXAMPLES.POSTCODE_UNPROCESSABLE}`);
+    const { status, body } = await as(maker1).get(`${baseUrl}/address/${ADDRESSES.EXAMPLES.POSTCODE_UNPROCESSABLE}`);
 
     expect(status).toEqual(HttpStatusCode.UnprocessableEntity);
     expect(body).toEqual([

@@ -13,15 +13,15 @@ jest.unmock('../../../src/external-api/api');
 
 describe.each([{ baseUrl: '/v1' }, { baseUrl: '/v1/gef' }])('GET $baseUrl/companies/:registrationNumber', ({ baseUrl }) => {
   let testUsers;
-  let aMaker;
+  let maker1;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole(MAKER).one();
+    maker1 = testUsers().withRole(MAKER).one();
   });
 
   it(`returns a ${HttpStatusCode.Ok} response with the company when it is found`, async () => {
-    const { status, body } = await as(aMaker).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID}`);
+    const { status, body } = await as(maker1).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID}`);
     expect(status).toEqual(HttpStatusCode.Ok);
     expect(body.companiesHouseRegistrationNumber).toEqual(expect.any(String));
     expect(body.companyName).toEqual(expect.any(String));
@@ -42,17 +42,17 @@ describe.each([{ baseUrl: '/v1' }, { baseUrl: '/v1/gef' }])('GET $baseUrl/compan
   });
 
   it(`returns a ${HttpStatusCode.BadRequest} response if an invalid company registration number is provided`, async () => {
-    const { status } = await as(aMaker).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT}`);
+    const { status } = await as(maker1).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.INVALID_TOO_SHORT}`);
     expect(status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it(`returns a ${HttpStatusCode.NotFound} response when the company is not found`, async () => {
-    const { status } = await as(aMaker).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_NONEXISTENT}`);
+    const { status } = await as(maker1).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_NONEXISTENT}`);
     expect(status).toEqual(HttpStatusCode.NotFound);
   });
 
   it(`returns a ${HttpStatusCode.UnprocessableEntity} response when the company is an overseas company`, async () => {
-    const { status } = await as(aMaker).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_OVERSEAS}`);
+    const { status } = await as(maker1).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID_OVERSEAS}`);
     expect(status).toEqual(HttpStatusCode.UnprocessableEntity);
   });
 

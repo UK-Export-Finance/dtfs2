@@ -37,15 +37,15 @@ const newDeal = aDeal({
 });
 
 describe('/v1/deals', () => {
-  let anHSBCMaker;
-  let aBarclaysMaker;
+  let testbank2Maker;
+  let testbank1Maker;
   let aSuperuser;
   let testUsers;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
-    anHSBCMaker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
+    testbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    testbank2Maker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
     aSuperuser = testUsers().superuser().one();
   });
 
@@ -76,7 +76,7 @@ describe('/v1/deals', () => {
     beforeEach(async () => {
       const {
         body: { _id: dealId },
-      } = await as(aBarclaysMaker).post(newDeal).to('/v1/deals');
+      } = await as(testbank1Maker).post(newDeal).to('/v1/deals');
       aDealUrl = `/v1/deals/${dealId}`;
     });
 
@@ -93,19 +93,19 @@ describe('/v1/deals', () => {
     });
 
     it('400s requests that do not have a valid deal id', async () => {
-      const { status } = await as(anHSBCMaker).get('/v1/deals/12345');
+      const { status } = await as(testbank2Maker).get('/v1/deals/12345');
 
       expect(status).toEqual(400);
     });
 
     it('404s requests for unknown ids', async () => {
-      const { status } = await as(aBarclaysMaker).get('/v1/deals/620a1aa095a618b12da38c7b');
+      const { status } = await as(testbank1Maker).get('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const { status } = await as(anHSBCMaker).get(aDealUrl);
+      const { status } = await as(testbank2Maker).get(aDealUrl);
 
       expect(status).toEqual(401);
     });
@@ -117,36 +117,36 @@ describe('/v1/deals', () => {
     });
 
     it('returns the requested resource', async () => {
-      const { status, body } = await as(aBarclaysMaker).get(aDealUrl);
+      const { status, body } = await as(testbank1Maker).get(aDealUrl);
       expect(status).toEqual(200);
-      expect(body.deal).toEqual(expectAddedFields({ baseDeal: newDeal, auditDetails: generatePortalAuditDetails(aBarclaysMaker._id) }));
+      expect(body.deal).toEqual(expectAddedFields({ baseDeal: newDeal, auditDetails: generatePortalAuditDetails(testbank1Maker._id) }));
     });
 
     it('calculates deal.submissionDetails.status = Incomplete if there are validation failures', async () => {
-      const postResult = await as(anHSBCMaker).post(dealWithAboutIncomplete).to('/v1/deals');
+      const postResult = await as(testbank2Maker).post(dealWithAboutIncomplete).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${newId}`);
+      const { status, body } = await as(testbank2Maker).get(`/v1/deals/${newId}`);
 
       expect(status).toEqual(200);
       expect(body.deal.submissionDetails.status).toEqual('Incomplete');
     });
 
     it('calculates deal.submissionDetails.status = Completed if there are no validation failures', async () => {
-      const postResult = await as(anHSBCMaker).post(dealWithAboutComplete).to('/v1/deals');
+      const postResult = await as(testbank2Maker).post(dealWithAboutComplete).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${newId}`);
+      const { status, body } = await as(testbank2Maker).get(`/v1/deals/${newId}`);
 
       expect(status).toEqual(200);
       expect(body.deal.submissionDetails.status).toEqual('Completed');
     });
 
     it('returns a deal with calculated summary/totals object', async () => {
-      const postResult = await as(anHSBCMaker).post(dealWithAboutComplete).to('/v1/deals');
+      const postResult = await as(testbank2Maker).post(dealWithAboutComplete).to('/v1/deals');
       const newId = postResult.body._id;
 
-      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${newId}`);
+      const { status, body } = await as(testbank2Maker).get(`/v1/deals/${newId}`);
 
       expect(status).toEqual(200);
       expect(body.deal.summary).toEqual(calculateDealSummary(body.deal));
@@ -167,20 +167,20 @@ describe('/v1/deals', () => {
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
 
       const updatedDeal = {
         ...body,
         additionalRefName: 'change this field',
       };
 
-      const { status } = await as(aBarclaysMaker).put(updatedDeal).to(`/v1/deals/${body._id}`);
+      const { status } = await as(testbank1Maker).put(updatedDeal).to(`/v1/deals/${body._id}`);
 
       expect(status).toEqual(401);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const postResult = await as(testbank2Maker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const updatedDeal = {
         ...createdDeal,
@@ -196,8 +196,8 @@ describe('/v1/deals', () => {
     });
 
     it('returns the updated deal', async () => {
-      const { body: dealPost } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const { body: dealAfterCreation } = await as(anHSBCMaker).get(`/v1/deals/${dealPost._id}`);
+      const { body: dealPost } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
+      const { body: dealAfterCreation } = await as(testbank2Maker).get(`/v1/deals/${dealPost._id}`);
 
       const createdDeal = dealAfterCreation.deal;
       const updatedDeal = {
@@ -208,18 +208,18 @@ describe('/v1/deals', () => {
         },
       };
 
-      const { status, body } = await as(anHSBCMaker).put(updatedDeal).to(`/v1/deals/${createdDeal._id}`);
+      const { status, body } = await as(testbank2Maker).put(updatedDeal).to(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
 
       expect(body).toMatchObject(
-        expectAddedFieldsWithEditedBy({ baseDeal: updatedDeal, user: anHSBCMaker, auditDetails: generatePortalAuditDetails(anHSBCMaker._id) }),
+        expectAddedFieldsWithEditedBy({ baseDeal: updatedDeal, user: testbank2Maker, auditDetails: generatePortalAuditDetails(testbank2Maker._id) }),
       );
     });
 
     it('handles partial updates', async () => {
-      const { body: dealPost } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const { body: dealAfterCreation } = await as(anHSBCMaker).get(`/v1/deals/${dealPost._id}`);
+      const { body: dealPost } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
+      const { body: dealAfterCreation } = await as(testbank2Maker).get(`/v1/deals/${dealPost._id}`);
 
       const createdDeal = dealAfterCreation.deal;
 
@@ -237,20 +237,24 @@ describe('/v1/deals', () => {
         },
       };
 
-      const { status: putStatus } = await as(anHSBCMaker).put(partialUpdate).to(`/v1/deals/${createdDeal._id}`);
+      const { status: putStatus } = await as(testbank2Maker).put(partialUpdate).to(`/v1/deals/${createdDeal._id}`);
       expect(putStatus).toEqual(200);
 
-      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+      const { status, body } = await as(testbank2Maker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
       expect(body.deal).toMatchObject(
-        expectAddedFieldsWithEditedBy({ baseDeal: expectedDataIncludingUpdate, user: anHSBCMaker, auditDetails: generatePortalAuditDetails(anHSBCMaker._id) }),
+        expectAddedFieldsWithEditedBy({
+          baseDeal: expectedDataIncludingUpdate,
+          user: testbank2Maker,
+          auditDetails: generatePortalAuditDetails(testbank2Maker._id),
+        }),
       );
     });
 
     it('updates the deal', async () => {
-      const { body: dealPost } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const { body: dealAfterCreation } = await as(anHSBCMaker).get(`/v1/deals/${dealPost._id}`);
+      const { body: dealPost } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
+      const { body: dealAfterCreation } = await as(testbank2Maker).get(`/v1/deals/${dealPost._id}`);
 
       const createdDeal = dealAfterCreation.deal;
 
@@ -261,18 +265,18 @@ describe('/v1/deals', () => {
           additionalRefName: 'change this field',
         },
       };
-      await as(anHSBCMaker).put(updatedDeal).to(`/v1/deals/${createdDeal._id}`);
+      await as(testbank2Maker).put(updatedDeal).to(`/v1/deals/${createdDeal._id}`);
 
-      const { status, body } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+      const { status, body } = await as(testbank2Maker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(status).toEqual(200);
       expect(body.deal).toMatchObject(
-        expectAddedFieldsWithEditedBy({ baseDeal: updatedDeal, user: anHSBCMaker, auditDetails: generatePortalAuditDetails(anHSBCMaker._id) }),
+        expectAddedFieldsWithEditedBy({ baseDeal: updatedDeal, user: testbank2Maker, auditDetails: generatePortalAuditDetails(testbank2Maker._id) }),
       );
     });
 
     it('adds updates and retains `editedBy` array with req.user data', async () => {
-      const postResult = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const postResult = await as(testbank2Maker).post(newDeal).to('/v1/deals');
       const createdDeal = postResult.body;
       const firstUpdate = {
         ...createdDeal,
@@ -282,9 +286,9 @@ describe('/v1/deals', () => {
         },
       };
 
-      await as(anHSBCMaker).put(firstUpdate).to(`/v1/deals/${createdDeal._id}`);
+      await as(testbank2Maker).put(firstUpdate).to(`/v1/deals/${createdDeal._id}`);
 
-      const dealAfterFirstUpdate = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+      const dealAfterFirstUpdate = await as(testbank2Maker).get(`/v1/deals/${createdDeal._id}`);
 
       const secondUpdate = {
         ...dealAfterFirstUpdate.body.deal,
@@ -294,25 +298,25 @@ describe('/v1/deals', () => {
         },
       };
 
-      await as(anHSBCMaker).put(secondUpdate).to(`/v1/deals/${createdDeal._id}`);
+      await as(testbank2Maker).put(secondUpdate).to(`/v1/deals/${createdDeal._id}`);
 
-      const dealAfterSecondUpdate = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+      const dealAfterSecondUpdate = await as(testbank2Maker).get(`/v1/deals/${createdDeal._id}`);
       expect(dealAfterSecondUpdate.status).toEqual(200);
       expect(dealAfterSecondUpdate.body.deal.editedBy.length).toEqual(2);
       expect(dealAfterSecondUpdate.body.deal.editedBy[0]).toEqual(
         expectAddedFieldsWithEditedBy({
           baseDeal: secondUpdate,
-          user: anHSBCMaker,
+          user: testbank2Maker,
           numberOfUpdates: 1,
-          auditDetails: generatePortalAuditDetails(anHSBCMaker._id),
+          auditDetails: generatePortalAuditDetails(testbank2Maker._id),
         }).editedBy[0],
       );
       expect(dealAfterSecondUpdate.body.deal.editedBy[1]).toEqual(
         expectAddedFieldsWithEditedBy({
           baseDeal: secondUpdate,
-          user: anHSBCMaker,
+          user: testbank2Maker,
           numberOfUpdates: 2,
-          auditDetails: generatePortalAuditDetails(anHSBCMaker._id),
+          auditDetails: generatePortalAuditDetails(testbank2Maker._id),
         }).editedBy[1],
       );
     });
@@ -332,21 +336,21 @@ describe('/v1/deals', () => {
     });
 
     it('returns the created deal', async () => {
-      const { body: createdDeal, status } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body: createdDeal, status } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
 
-      const expectedCreateDeal = expectAddedFields({ baseDeal: newDeal, auditDetails: generatePortalAuditDetails(anHSBCMaker._id) });
+      const expectedCreateDeal = expectAddedFields({ baseDeal: newDeal, auditDetails: generatePortalAuditDetails(testbank2Maker._id) });
 
       expect(status).toEqual(200);
 
-      const { body: dealAfterCreation } = await as(anHSBCMaker).get(`/v1/deals/${createdDeal._id}`);
+      const { body: dealAfterCreation } = await as(testbank2Maker).get(`/v1/deals/${createdDeal._id}`);
 
       expect(dealAfterCreation.deal).toEqual(expectedCreateDeal);
     });
 
     it('creates unique deal IDs', async () => {
-      const deal1 = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const deal2 = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
-      const deal3 = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const deal1 = await as(testbank2Maker).post(newDeal).to('/v1/deals');
+      const deal2 = await as(testbank2Maker).post(newDeal).to('/v1/deals');
+      const deal3 = await as(testbank2Maker).post(newDeal).to('/v1/deals');
 
       expect(deal1.body._id).toEqual(deal1.body._id);
       expect(deal1.body._id).not.toEqual(deal2.body._id);
@@ -360,7 +364,7 @@ describe('/v1/deals', () => {
           additionalRefName: '',
         };
 
-        const { body: dealPost, status } = await as(anHSBCMaker).post(postBody).to('/v1/deals');
+        const { body: dealPost, status } = await as(testbank2Maker).post(postBody).to('/v1/deals');
 
         expect(status).toEqual(400);
 
@@ -379,28 +383,28 @@ describe('/v1/deals', () => {
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      await as(testbank2Maker).post(newDeal).to('/v1/deals');
       const { status } = await as(testUsers).remove('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests from users if <user>.bank != <resource>.bank', async () => {
-      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
 
-      const { status } = await as(aBarclaysMaker).remove(`/v1/deals/${body._id}`);
+      const { status } = await as(testbank1Maker).remove(`/v1/deals/${body._id}`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests to delete unknown ids', async () => {
-      const { status } = await as(anHSBCMaker).remove('/v1/deals/620a1aa095a618b12da38c7b');
+      const { status } = await as(testbank2Maker).remove('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(aSuperuser).remove(`/v1/deals/${body._id}`);
 
@@ -408,11 +412,11 @@ describe('/v1/deals', () => {
     });
 
     it('deletes the deal', async () => {
-      const { body } = await as(anHSBCMaker).post(newDeal).to('/v1/deals');
+      const { body } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
 
-      await as(anHSBCMaker).remove(`/v1/deals/${body._id}`);
+      await as(testbank2Maker).remove(`/v1/deals/${body._id}`);
 
-      const { status } = await as(anHSBCMaker).get(`/v1/deals/${body._id}`);
+      const { status } = await as(testbank2Maker).get(`/v1/deals/${body._id}`);
 
       expect(status).toEqual(404);
     });
