@@ -45,6 +45,7 @@ jest.mock('../../../services/api', () => ({
 }));
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
+const mockFacilityDetails = MOCK_ISSUED_FACILITY.details;
 
 const mockUser = aPortalSessionUser();
 
@@ -201,7 +202,43 @@ describe('postReturnAmendmentToMaker', () => {
       };
 
       expect(updateApplicationMock).toHaveBeenCalledTimes(1);
-      expect(updateApplicationMock).toHaveBeenCalledWith({ dealId, application: expectedApplication, userToken: req.session.userToken });
+      expect(updateApplicationMock).toHaveBeenCalledWith({
+        dealId,
+        application: expectedApplication,
+        userToken: req.session.userToken,
+      });
+    });
+
+    it('should call updateAmendmentStatus with the correct variables once', async () => {
+      // Arrange
+      const { req, res } = getHttpMocks(mockComment);
+
+      // Act
+      await postReturnAmendmentToMaker(req, res);
+
+      // Assert
+      expect(updateAmendmentStatusMock).toHaveBeenCalledTimes(1);
+      expect(updateAmendmentStatusMock).toHaveBeenLastCalledWith({
+        facilityId,
+        amendmentId,
+        newStatus: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
+        userToken: req.session.userToken,
+        makersEmail: mockDeal.maker.email,
+        checkersEmail: mockUser.email,
+        emailVariables: {
+          ukefDealId: mockDeal.ukefDealId,
+          bankInternalRefName: String(mockDeal.bankInternalRefName),
+          exporterName: mockDeal.exporter.companyName,
+          ukefFacilityId: mockFacilityDetails.ukefFacilityId,
+          dateEffectiveFrom: '-',
+          newCoverEndDate: '-',
+          newFacilityEndDate: '-',
+          newFacilityValue: '-',
+          makersName: `${mockDeal.maker.firstname} ${mockDeal.maker.surname}`,
+          checkersName: `${mockUser.firstname} ${mockUser.surname}`,
+          checkersEmail: mockUser.email,
+        },
+      });
     });
   });
 

@@ -12,13 +12,14 @@ const PatchPortalFacilityAmendmentStatusSchema = z.object({
     ukefFacilityId: z.string(),
     makersName: z.string(),
     checkersName: z.string(),
-    dateSubmittedByMaker: z.string(),
+    dateSubmittedByMaker: z.string().optional(),
     dateEffectiveFrom: z.string(),
     newCoverEndDate: z.string(),
     newFacilityEndDate: z.string(),
     newFacilityValue: z.string(),
-    portalUrl: z.string(),
-    makersEmail: z.string(),
+    portalUrl: z.string().optional(),
+    makersEmail: z.string().optional(),
+    checkersEmail: z.string().optional(),
   }),
 });
 
