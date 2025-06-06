@@ -118,7 +118,7 @@ describe(`GET ${url}`, () => {
 
     it('should redirect to deal summary page when facility cannot be amended', async () => {
       // Arrange
-      mockGetApplication.mockResolvedValue(MOCK_UNISSUED_FACILITY);
+      mockGetFacility.mockResolvedValue(MOCK_UNISSUED_FACILITY);
 
       // Act
       const response = await getWithSessionCookie(sessionCookie);
