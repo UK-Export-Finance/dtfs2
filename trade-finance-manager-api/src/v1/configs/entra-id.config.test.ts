@@ -47,8 +47,8 @@ describe('EntraIdConfig', () => {
       config = new EntraIdConfig();
     });
 
-    it('should configure the msalAppConfig', () => {
-      expect(config.msalAppConfig).toStrictEqual({
+    it('should configure the msalConfig', () => {
+      expect(config.msalConfig).toStrictEqual({
         auth: {
           clientId: mockEntraIdClientId,
           authority: `${mockEntraIdCloudInstance}/${mockEntraIdTenantId}`,
@@ -62,7 +62,7 @@ describe('EntraIdConfig', () => {
     });
 
     it('should configure the scopes', () => {
-      expect(config.scopes).toStrictEqual([`api://${mockEntraIdClientId}/authentication`, 'user.read']);
+      expect(config.scopes).toStrictEqual([`api://${mockEntraIdClientId}/SSO`, 'user.read']);
     });
 
     it('should configure the redirectUri', () => {

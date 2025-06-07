@@ -7,7 +7,7 @@ const authRouter = express.Router();
 const passport = require('passport');
 
 const { swaggerSpec, swaggerUiOptions } = require('./swagger');
-const { validateSsoFeatureFlagIsOff, validateSsoFeatureFlagIsOn } = require('./middleware/validate-sso-feature-flag');
+const { validateSsoFeatureFlagFalse, validateSsoFeatureFlagTrue } = require('./middleware/validate-sso-feature-flag');
 const feedbackController = require('./controllers/feedback-controller');
 const amendmentController = require('./controllers/amendment.controller');
 const facilityController = require('./controllers/facility.controller');
@@ -27,7 +27,7 @@ const { ssoOpenRouter } = require('./sso/routes');
 
 openRouter.use(checkApiKey);
 
-openRouter.use('/sso', validateSsoFeatureFlagIsOn, ssoOpenRouter);
+openRouter.use('/sso', validateSsoFeatureFlagTrue, ssoOpenRouter);
 
 authRouter.use(passport.authenticate('jwt', { session: false }));
 
@@ -73,14 +73,14 @@ authRouter.use('/', tasksRouter);
  */
 openRouter.route('/feedback').post(feedbackController.create);
 
-openRouter.route('/user').post(validateSsoFeatureFlagIsOff, users.createTfmUser);
-authRouter.route('/users').post(validateSsoFeatureFlagIsOff, users.createTfmUser);
+openRouter.route('/user').post(validateSsoFeatureFlagFalse, users.createTfmUser);
+authRouter.route('/users').post(validateSsoFeatureFlagFalse, users.createTfmUser);
 
 authRouter
   .route('/users/:user')
   .get(validation.userIdEscapingSanitization, handleExpressValidatorResult, users.findTfmUser)
-  .put(validateSsoFeatureFlagIsOff, validation.userIdValidation, handleExpressValidatorResult, users.updateTfmUserById)
-  .delete(validateSsoFeatureFlagIsOff, validation.userIdValidation, handleExpressValidatorResult, users.removeTfmUserById);
+  .put(validateSsoFeatureFlagFalse, validation.userIdValidation, handleExpressValidatorResult, users.updateTfmUserById)
+  .delete(validateSsoFeatureFlagFalse, validation.userIdValidation, handleExpressValidatorResult, users.removeTfmUserById);
 
 authRouter.route('/facilities').get(facilityController.getFacilities);
 

@@ -1,4 +1,5 @@
 import z from 'zod';
+import { ENTRA_ID_EMAIL_SCHEMA } from './entra-id-email.schema';
 import { TfmTeamSchema } from './tfm-team.schema';
 
 /**
@@ -11,7 +12,7 @@ import { TfmTeamSchema } from './tfm-team.schema';
  */
 export const ENTRA_ID_USER_SCHEMA = z.object({
   oid: z.string(),
-  email: z.string(),
+  verified_primary_email: z.array(ENTRA_ID_EMAIL_SCHEMA),
   given_name: z.string(),
   family_name: z.string(),
   roles: z.array(TfmTeamSchema),

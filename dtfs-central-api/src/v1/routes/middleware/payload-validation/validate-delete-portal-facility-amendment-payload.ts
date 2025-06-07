@@ -1,5 +1,5 @@
 import z from 'zod';
-import { createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
+import { validateSchema } from '@ukef/dtfs2-common';
 import { AuditDetailsSchema } from './schemas';
 
 const DeletePortalFacilityAmendmentSchema = z.object({
@@ -8,4 +8,4 @@ const DeletePortalFacilityAmendmentSchema = z.object({
 
 export type DeletePortalFacilityAmendmentPayload = z.infer<typeof DeletePortalFacilityAmendmentSchema>;
 
-export const validateDeletePortalFacilityAmendmentPayload = createValidationMiddlewareForSchema(DeletePortalFacilityAmendmentSchema);
+export const validateDeletePortalFacilityAmendmentPayload = validateSchema(DeletePortalFacilityAmendmentSchema);

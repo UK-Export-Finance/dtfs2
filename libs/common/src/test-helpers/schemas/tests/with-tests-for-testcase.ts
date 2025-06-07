@@ -9,6 +9,7 @@ import {
   withObjectIdSchemaTests,
   withObjectIdStringSchemaTests,
   withObjectIdOrObjectIdStringSchemaTests,
+  withEntraIdEmailSchemaTests,
 } from '../custom-types-tests';
 import { withStringTests, withNumberTests, withBooleanTests, withArrayTests } from '../primitive-types-tests';
 import {
@@ -68,6 +69,15 @@ export const withTestsForTestcase = <Schema extends ZodSchema>(props: WithTestsF
 
     case 'TfmTeamSchema':
       withTfmTeamSchemaTests({
+        schema,
+        options,
+        getTestObjectWithUpdatedParameter,
+        getUpdatedParameterFromParsedTestObject,
+      });
+      break;
+
+    case 'ENTRA_ID_EMAIL_SCHEMA':
+      withEntraIdEmailSchemaTests({
         schema,
         options,
         getTestObjectWithUpdatedParameter,

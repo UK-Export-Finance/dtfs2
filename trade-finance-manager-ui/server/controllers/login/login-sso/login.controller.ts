@@ -23,7 +23,7 @@ export class LoginController {
   public static getLogin = async (req: Request, res: Response) => {
     try {
       // TODO: This validation is legacy code, and can be improved
-      if (req.session.user) {
+      if (req.session?.user) {
         // User is already logged in.
         return res.redirect('/home');
       }
@@ -34,7 +34,7 @@ export class LoginController {
 
       return res.redirect(authCodeUrl);
     } catch (error) {
-      console.error('Unable to log in user %o', error);
+      console.error('Unable to login TFM user %o', error);
       return res.render('_partials/problem-with-service.njk');
     }
   };
@@ -48,7 +48,10 @@ export class LoginController {
    * @returns - A promise that resolves when the operation is complete.
    */
   public static postSsoRedirect(req: CustomExpressRequest<{ reqBody: EntraIdAuthCodeRedirectResponseBody }>, res: Response) {
-    if (!isVerifiedPayload({ payload: req.body, template: ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA })) {
+    const { body: payload } = req;
+
+    if (!isVerifiedPayload({ payload, template: ENTRA_ID_AUTH_CODE_REDIRECT_RESPONSE_BODY_SCHEMA })) {
+      console.error('Invalid payload from SSO redirect');
       throw new InvalidPayloadError('Invalid payload from SSO redirect');
     }
 
@@ -106,7 +109,8 @@ export class LoginController {
    * @param res - The HTTP response object.
    */
   public static getLogout = (req: Request, res: Response) => {
-    console.info('User has been logged out from TFM');
+    console.info('Logging out TFM user');
+
     req.session.destroy(() => {
       res.render('user-logged-out.njk');
     });

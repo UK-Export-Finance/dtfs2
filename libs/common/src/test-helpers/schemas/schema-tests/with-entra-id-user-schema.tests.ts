@@ -30,10 +30,14 @@ export const withEntraIdUserSchemaTests = <Schema extends ZodSchema>({
           },
         },
         {
-          parameterPath: 'email',
-          type: 'string',
+          parameterPath: 'verified_primary_email',
+          type: 'Array',
           options: {
-            overrideGetTestObjectWithUpdatedField: (newValue: unknown) => getTestObjectWithUpdatedParameter({ ...aValidEntraIdUser(), email: newValue }),
+            arrayTypeTestCase: {
+              type: 'ENTRA_ID_EMAIL_SCHEMA',
+            },
+            overrideGetTestObjectWithUpdatedField: (newValue: unknown) =>
+              getTestObjectWithUpdatedParameter({ ...aValidEntraIdUser(), verified_primary_email: newValue }),
           },
         },
         {

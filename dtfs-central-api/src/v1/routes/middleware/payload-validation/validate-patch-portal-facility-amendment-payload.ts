@@ -1,5 +1,5 @@
 import z from 'zod';
-import { createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
+import { validateSchema } from '@ukef/dtfs2-common';
 import { PORTAL_FACILITY_AMENDMENT_USER_VALUES } from '@ukef/dtfs2-common/schemas';
 import { AuditDetailsSchema } from './schemas';
 
@@ -10,4 +10,4 @@ const PatchPortalFacilityAmendmentSchema = z.object({
 
 export type PatchPortalFacilityAmendmentPayload = z.infer<typeof PatchPortalFacilityAmendmentSchema>;
 
-export const validatePatchPortalFacilityAmendmentPayload = createValidationMiddlewareForSchema(PatchPortalFacilityAmendmentSchema);
+export const validatePatchPortalFacilityAmendmentPayload = validateSchema(PatchPortalFacilityAmendmentSchema);

@@ -5,7 +5,7 @@ export class EntraIdConfigMockBuilder extends BaseMockBuilder<EntraIdConfig> {
   constructor() {
     super({
       defaultInstance: {
-        msalAppConfig: {
+        msalConfig: {
           auth: {
             clientId: 'a-client-id',
           },
