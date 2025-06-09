@@ -33,37 +33,37 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
     },
   });
 
-  let aBarclaysMaker;
+  let testbank1Maker;
   let deal;
   let dealId;
   let bondId;
 
   const updateDeal = async (bssDealId, body) => {
-    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${bssDealId}`);
+    const result = await as(testbank1Maker).put(body).to(`/v1/deals/${bssDealId}`);
     return result.body;
   };
 
   const updateBond = async (bssDealId, bssBondId, body) => {
-    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${bssDealId}/bond/${bssBondId}`);
+    const result = await as(testbank1Maker).put(body).to(`/v1/deals/${bssDealId}/bond/${bssBondId}`);
     return result.body;
   };
 
   const updateBondCoverStartDate = async (theDealId, bssBondId, bond) => {
-    const response = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${theDealId}/bond/${bssBondId}/change-cover-start-date`);
+    const response = await as(testbank1Maker).put(bond).to(`/v1/deals/${theDealId}/bond/${bssBondId}/change-cover-start-date`);
     return response.body;
   };
 
   const createDealAndBond = async () => {
-    const dealResponse = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+    const dealResponse = await as(testbank1Maker).post(newDeal).to('/v1/deals/');
     deal = dealResponse.body;
     dealId = deal._id;
 
-    const createBondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+    const createBondResponse = await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
     const { bondId: _id } = createBondResponse.body;
 
     bondId = _id;
 
-    const getCreatedBond = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/bond/${bondId}`);
+    const getCreatedBond = await as(testbank1Maker).get(`/v1/deals/${dealId}/bond/${bondId}`);
 
     const modifiedBond = {
       ...getCreatedBond.body.bond,
@@ -78,7 +78,7 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    testbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
   });
 
   beforeEach(async () => {
@@ -290,7 +290,7 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
               'requestedCoverStartDate-year': format(todayPlus3Months1Day, 'yyyy'),
             };
 
-            await as(aBarclaysMaker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
+            await as(testbank1Maker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
 
             const response = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(response.validationErrors).toBeUndefined();
@@ -389,7 +389,7 @@ describe('/v1/deals/:id/bond/:bondId/change-cover-start-date', () => {
               'requestedCoverStartDate-year': format(todayPlus3Months1Day, 'yyyy'),
             };
 
-            await as(aBarclaysMaker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
+            await as(testbank1Maker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
 
             const response = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(response.validationErrors).toBeUndefined();

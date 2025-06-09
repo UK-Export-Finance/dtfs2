@@ -6,7 +6,7 @@ const render = pageRenderer(page);
 describe(page, () => {
   let wrapper;
   const reportPeriod = 'June 2023';
-  const paymentOfficerEmails = ['tradefinance1@barclays.com', 'tradefinance2@barclays.com'];
+  const paymentOfficerEmails = ['tradefinance1@testbank1.com', 'tradefinance2@testbank1.com'];
 
   beforeEach(() => {
     wrapper = render({ reportPeriod, paymentOfficerEmails });
