@@ -28,37 +28,37 @@ describe('/v1/deals/:id/loan/:loanId', () => {
     },
   });
 
-  let aBarclaysMaker;
+  let testbank1Maker;
   let deal;
   let dealId;
   let loanId;
 
   const updateDeal = async (bssDealId, body) => {
-    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${bssDealId}`);
+    const result = await as(testbank1Maker).put(body).to(`/v1/deals/${bssDealId}`);
     return result.body;
   };
 
   const updateLoan = async (bssDealId, bssLoanId, body) => {
-    const result = await as(aBarclaysMaker).put(body).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}`);
+    const result = await as(testbank1Maker).put(body).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}`);
     return result.body;
   };
 
   const updateLoanCoverStartDate = async (bssDealId, bssLoanId, loan) => {
-    const response = await as(aBarclaysMaker).put(loan).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}/change-cover-start-date`);
+    const response = await as(testbank1Maker).put(loan).to(`/v1/deals/${bssDealId}/loan/${bssLoanId}/change-cover-start-date`);
     return response.body;
   };
 
   const createDealAndLoan = async () => {
-    const dealResponse = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+    const dealResponse = await as(testbank1Maker).post(newDeal).to('/v1/deals/');
     deal = dealResponse.body;
     dealId = deal._id;
 
-    const createLoanResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/loan/create`);
+    const createLoanResponse = await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/loan/create`);
     const { loanId: _id } = createLoanResponse.body;
 
     loanId = _id;
 
-    const getCreatedLoan = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/loan/${loanId}`);
+    const getCreatedLoan = await as(testbank1Maker).get(`/v1/deals/${dealId}/loan/${loanId}`);
 
     const modifiedLoan = {
       ...getCreatedLoan.body.loan,
@@ -73,7 +73,7 @@ describe('/v1/deals/:id/loan/:loanId', () => {
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    testbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
   });
 
   beforeEach(async () => {
@@ -290,7 +290,7 @@ describe('/v1/deals/:id/loan/:loanId', () => {
               'requestedCoverStartDate-year': format(todayPlus3Months, 'yyyy'),
             };
 
-            await as(aBarclaysMaker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
+            await as(testbank1Maker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
 
             const response = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(response.validationErrors).toBeUndefined();
@@ -390,7 +390,7 @@ describe('/v1/deals/:id/loan/:loanId', () => {
               'requestedCoverStartDate-year': format(todayPlus3Months, 'yyyy'),
             };
 
-            await as(aBarclaysMaker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
+            await as(testbank1Maker).put(dealWithEligibilityCriteria15False).to(`/v1/deals/${dealId}`);
 
             const response = await updateRequestedCoverStartDate(requestedCoverStartDateFields);
             expect(response.validationErrors).toBeUndefined();

@@ -12,7 +12,7 @@ const getGefFacilityPercentage = require('./get-gef-facility-fixed-percentage');
  */
 const getLoanMaximumLiability = (amount, facility, dealType) => {
   let ukefExposure;
-  const { type } = facility;
+  const { type } = facility.facilitySnapshot;
 
   // GEF
   if (dealType === CONSTANTS.PRODUCT.TYPE.GEF) {

@@ -356,8 +356,8 @@ context('about-supply-contract', () => {
     cy.get('[data-cy="criteriaMet-true"]').click();
     cy.clickSubmitButton();
 
-    cy.keyboardInput(cy.get('[data-cy="bankInternalRefName"]'), 'TestBank1903');
-    cy.keyboardInput(cy.get('[data-cy="additionalRefName"]'), 'TestBank1903');
+    cy.keyboardInput(cy.get('[data-cy="bankInternalRefName"]'), 'testbank1903');
+    cy.keyboardInput(cy.get('[data-cy="additionalRefName"]'), 'testbank1903');
     cy.clickSubmitButton();
 
     // Click on "View Details" under the "About the Supplier" contract
