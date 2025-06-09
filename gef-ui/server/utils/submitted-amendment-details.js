@@ -10,11 +10,11 @@ import api from '../services/api';
  * returns the amendment for the given deal, indicating whether the amendment is submitted for review, is underway and has not been either cancelled or scheduled for cancellation.
  * @param {Object} application - the application
  * @param {string} userToken - the user authentication token
- * @returns {Object} An object with the amendment details on the deal
+ * @returns {Promise<(import('@ukef/dtfs2-common').SubmittedAmendmentDetails) | Null>} An object with the amendment details on the deal
  */
 export const getSubmittedAmendmentDetails = async (application, userToken) => {
   try {
-    const amendments = await api.getAmendmentsOnDeal({ dealId: application._id, statuses: PORTAL_AMENDMENT_SUBMITTED_STATUSES, userToken });
+    const amendments = await api.getPortalAmendmentsOnDeal({ dealId: application._id, statuses: PORTAL_AMENDMENT_SUBMITTED_STATUSES, userToken });
 
     const activeDeal = !DEAL_STATUS_SCHEDULED_OR_CANCELLED.includes(application.status);
 
@@ -40,7 +40,6 @@ export const getSubmittedAmendmentDetails = async (application, userToken) => {
     };
   } catch (error) {
     console.error('Error fetching submitted amendment details %o', error);
+    return null;
   }
-
-  return {};
 };

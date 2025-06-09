@@ -25,13 +25,15 @@ jest.mock('../../server/middleware/csrf', () => ({
 console.error = jest.fn();
 const mockGetFacility = jest.fn();
 const mockGetApplication = jest.fn();
-const mockGetAmendmentsOnDeal = jest.fn();
+const mockGetPortalAmendmentsOnDeal = jest.fn();
+const mockGetAmendment = jest.fn();
 
 const dealId = '6597dffeb5ef5ff4267e5044';
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, submissionCount: 0, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
 
-const mockAmendmentsOnDeal = [new PortalFacilityAmendmentWithUkefIdMockBuilder().build(), new PortalFacilityAmendmentWithUkefIdMockBuilder().build()];
+const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().build();
+const mockAmendmentsOnDeal = [amendment, amendment];
 
 const url = `/application-details/${dealId}/${PORTAL_AMENDMENT_PAGES.AMENDMENT_DETAILS}`;
 
@@ -45,11 +47,13 @@ describe(`GET ${url}`, () => {
     ({ sessionCookie } = await storage.saveUserSession([ROLES.MAKER]));
     jest.spyOn(api, 'getFacility').mockImplementation(mockGetFacility);
     jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
-    jest.spyOn(api, 'getAmendmentsOnDeal').mockImplementation(mockGetAmendmentsOnDeal);
+    jest.spyOn(api, 'getAmendment').mockImplementation(mockGetAmendment);
+    jest.spyOn(api, 'getPortalAmendmentsOnDeal').mockImplementation(mockGetPortalAmendmentsOnDeal);
 
     mockGetFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
     mockGetApplication.mockResolvedValue(mockDeal);
-    mockGetAmendmentsOnDeal.mockResolvedValue(mockAmendmentsOnDeal);
+    mockGetAmendment.mockResolvedValue(amendment);
+    mockGetPortalAmendmentsOnDeal.mockResolvedValue(mockAmendmentsOnDeal);
   });
 
   afterAll(async () => {
@@ -134,7 +138,7 @@ describe(`GET ${url}`, () => {
 
     it('should redirect to /not-found when amendments on deal not found', async () => {
       // Arrange
-      mockGetAmendmentsOnDeal.mockResolvedValue(undefined);
+      mockGetPortalAmendmentsOnDeal.mockResolvedValue(undefined);
 
       // Act
       const response = await getWithSessionCookie(sessionCookie);
@@ -149,7 +153,7 @@ describe(`GET ${url}`, () => {
 function getWithSessionCookie(sessionCookie: string) {
   return get(
     url,
-    {},
+    { facilityId: null, amendmentId: null },
     {
       Cookie: [`dtfs-session=${encodeURIComponent(sessionCookie)}`],
     },
