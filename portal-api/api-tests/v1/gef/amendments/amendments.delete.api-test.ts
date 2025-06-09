@@ -31,7 +31,7 @@ const invalidId = 'invalid-id';
 
 describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
   let testUsers: Awaited<ReturnType<typeof testUserCache.initialise>>;
-  let aMaker: TestUser;
+  let maker1: TestUser;
 
   describe('DELETE /v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
     beforeEach(() => {
@@ -40,7 +40,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
 
     beforeAll(async () => {
       testUsers = await testUserCache.initialise(app);
-      aMaker = testUsers().withRole(MAKER).one() as TestUser;
+      maker1 = testUsers().withRole(MAKER).one() as TestUser;
     });
 
     afterAll(() => {
@@ -58,7 +58,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const url = deleteAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(aMaker).remove(url);
+        const response = await as(maker1).remove(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -75,7 +75,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const url = deleteAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(aMaker).remove(url);
+        const response = await as(maker1).remove(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -109,7 +109,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const url = deleteAmendmentUrl({ facilityId: invalidId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(aMaker).remove(url);
+        const response = await as(maker1).remove(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -120,7 +120,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const url = deleteAmendmentUrl({ facilityId: validFacilityId, amendmentId: invalidId });
 
         // Act
-        const response = await as(aMaker).remove(url);
+        const response = await as(maker1).remove(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -131,7 +131,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const url = deleteAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(aMaker).remove(url);
+        const response = await as(maker1).remove(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.Ok);
