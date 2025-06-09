@@ -235,4 +235,25 @@ describe('mapReturnToMakerEmailVariables', () => {
       expect(result).toEqual(expected);
     });
   });
+
+  describe('when deal, facility, amendment and user are null', () => {
+    it('should throw an error', () => {
+      // Arrange
+      const deal = null;
+      const facility = null;
+      const amendment = null;
+      const user = null;
+      const expectedError = new Error('Deal, Facility, Amendment or User is null');
+
+      // Act & Assert
+      expect(() =>
+        mapReturnToMakerEmailVariables({
+          deal,
+          facility,
+          amendment,
+          user,
+        }),
+      ).toThrow(expectedError);
+    });
+  });
 });

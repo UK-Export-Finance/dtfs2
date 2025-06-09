@@ -21,11 +21,16 @@ const mapReturnToMakerEmailVariables = ({
   amendment,
   user,
 }: {
-  deal: Deal;
-  facility: Facility;
-  amendment: PortalFacilityAmendmentWithUkefId;
-  user: PortalSessionUser;
+  deal: Deal | null;
+  facility: Facility | null;
+  amendment: PortalFacilityAmendmentWithUkefId | null;
+  user: PortalSessionUser | null;
 }) => {
+  // Check if any of the required parameters are null
+  if (!deal || !facility || !amendment || !user) {
+    throw new Error('Deal, Facility, Amendment or User is null');
+  }
+
   const commonVariables = mapCommonEmailVariables({ deal, facility, amendment });
 
   const makersName = `${String(deal.maker.firstname)} ${String(deal.maker.surname)}`;
