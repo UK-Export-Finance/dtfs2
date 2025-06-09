@@ -444,8 +444,9 @@ const findFacilitiesByDealId = async (dealId) => {
 };
 
 /**
+ * Gets all amendments for all facilities in a deal
  * @param {string} dealId - The deal ID
- * @returns {Promise<import('@ukef/dtfs2-common').FacilityAllTypeAmendmentWithUkefId[]>}
+ * @returns {Promise<{ status: number, data: import('@ukef/dtfs2-common').FacilityAllTypeAmendmentWithUkefId[] }>}
  */
 const getApprovedAmendments = async (dealId) => {
   const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);

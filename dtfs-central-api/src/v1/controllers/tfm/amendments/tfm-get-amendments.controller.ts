@@ -164,6 +164,7 @@ export const getAmendmentsByDealId = async (req: Request, res: Response) => {
         break;
       case AMENDMENT_QUERY_STATUSES.APPROVED: {
         const statuses = [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, TFM_AMENDMENT_STATUS.COMPLETED];
+
         amendment = await TfmFacilitiesRepo.findAllTypeAmendmentsByDealIdAndStatus({
           dealId,
           statuses,

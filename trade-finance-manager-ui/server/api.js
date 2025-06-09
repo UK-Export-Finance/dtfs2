@@ -639,9 +639,10 @@ const getCompletedAmendment = async (facilityId, token) => {
 };
 
 /**
+ * Gets all amendments for all facilities in a deal
  * @param {string} dealId - The deal ID
  * @param {string} token - The user token
- * @returns {Promise<import('@ukef/dtfs2-common').FacilityAllTypeAmendmentWithUkefId[]>}
+ * @returns {Promise<{ status: number, response: import('@ukef/dtfs2-common').FacilityAllTypeAmendmentWithUkefId[] }>}
  */
 const getApprovedAmendments = async (dealId, token) => {
   try {
