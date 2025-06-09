@@ -46,7 +46,7 @@ const validPayload = {
 
 describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/submit-amendment', () => {
   let testUsers: Awaited<ReturnType<typeof testUserCache.initialise>>;
-  let aChecker: TestUser;
+  let checker1: TestUser;
 
   describe('PATCH /v1/gef/facilities/:facilityId/amendments/:amendmentId/submit-amendment', () => {
     beforeEach(() => {
@@ -55,7 +55,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/submit-amendmen
 
     beforeAll(async () => {
       testUsers = await testUserCache.initialise(app);
-      aChecker = testUsers().withRole(CHECKER).one() as TestUser;
+      checker1 = testUsers().withRole(CHECKER).one() as TestUser;
     });
 
     afterAll(() => {
@@ -73,7 +73,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/submit-amendmen
         const url = patchSubmitAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(aChecker).patch(validPayload).to(url);
+        const response = await as(checker1).patch(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -90,7 +90,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/submit-amendmen
         const url = patchSubmitAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(aChecker).patch(validPayload).to(url);
+        const response = await as(checker1).patch(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -127,7 +127,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/submit-amendmen
         const url = patchSubmitAmendmentUrl({ facilityId: invalidId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(aChecker).patch(validPayload).to(url);
+        const response = await as(checker1).patch(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -140,7 +140,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/submit-amendmen
         const invalidPayload = { newStatus: PORTAL_AMENDMENT_STATUS.DRAFT };
 
         // Act
-        const response = await as(aChecker).patch(invalidPayload).to(url);
+        const response = await as(checker1).patch(invalidPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -163,9 +163,9 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/submit-amendmen
           referenceNumber,
           eligibilityCriteria: { version: 1, criteria: [] },
           createdBy: {
-            username: aChecker.username,
-            name: aChecker.firstname,
-            email: aChecker.email,
+            username: checker1.username,
+            name: checker1.firstname,
+            email: checker1.email,
           },
         };
 
@@ -173,7 +173,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/submit-amendmen
         const url = patchSubmitAmendmentUrl({ facilityId: newFacilityId, amendmentId: newAmendmentId });
 
         // Act
-        const response = await as(aChecker).patch(validPayload).to(url);
+        const response = await as(checker1).patch(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.Ok);

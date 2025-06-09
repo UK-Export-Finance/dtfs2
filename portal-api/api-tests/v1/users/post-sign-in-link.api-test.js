@@ -24,8 +24,8 @@ const { SIGN_IN_TOKEN_HEX_EXAMPLES, SIGN_IN_TOKEN_SALT_EXAMPLES } = require('../
 
 const originalSignInLinkDurationMinutes = SIGN_IN_LINK.DURATION_MINUTES;
 
-const aMaker = users.barclaysBankMaker1;
-const anotherMaker = users.barclaysBankMaker2;
+const maker1 = users.testBank1Maker1;
+const maker2 = users.testBank1Maker2;
 
 describe('POST /users/me/sign-in-link', () => {
   const url = '/v1/users/me/sign-in-link';
@@ -41,11 +41,11 @@ describe('POST /users/me/sign-in-link', () => {
   const signInToken = '0a1b2c3d4e5f67890a1b2c3d4e5f6789';
   const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
   const userToCreateAsPartiallyLoggedIn = {
-    ...aMaker,
+    ...maker1,
     username: temporaryUsernameAndEmail,
     email: temporaryUsernameAndEmail,
   };
-  const userToCreateFullyLoggedIn = { ...anotherMaker };
+  const userToCreateFullyLoggedIn = { ...maker2 };
 
   let userToCreateOtherUsers;
   let partiallyLoggedInUser;

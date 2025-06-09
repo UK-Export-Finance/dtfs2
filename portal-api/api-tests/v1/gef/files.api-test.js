@@ -34,23 +34,23 @@ jest.mock('../../../src/drivers/fileshare', () => ({
 
 describe(baseUrl, () => {
   const testBankName = 'Bank 1';
-  let aMaker;
+  let maker1;
   let invalidMaker;
   let mockDeal;
   let testUsers;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole(MAKER).withBankName(testBankName).one();
+    maker1 = testUsers().withRole(MAKER).withBankName(testBankName).one();
     invalidMaker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
 
     await databaseHelper.wipe([applicationCollectionName]);
 
-    mockDeal = await as(aMaker)
+    mockDeal = await as(maker1)
       .post({
         dealType: 'GEF',
-        maker: aMaker,
-        bank: { id: aMaker.bank.id },
+        maker: maker1,
+        bank: { id: maker1.bank.id },
         bankInternalRefName: 'Bank 1',
         additionalRefName: 'Team 1',
         exporter: {},
@@ -92,24 +92,24 @@ describe(baseUrl, () => {
     });
 
     it('rejects requests that are missing a parentId', async () => {
-      const { status } = await as(aMaker).post({}).to(baseUrl);
+      const { status } = await as(maker1).post({}).to(baseUrl);
       expect(status).toEqual(400);
     });
 
     it('rejects requests that have an invalid parentId', async () => {
-      const { status } = await as(aMaker).post({ parentId: 'bad-url' }).to(baseUrl);
+      const { status } = await as(maker1).post({ parentId: 'bad-url' }).to(baseUrl);
       expect(status).toEqual(400);
     });
 
     it('rejects requests that are missing files', async () => {
-      const { status } = await as(aMaker)
+      const { status } = await as(maker1)
         .post({ parentId: String(ObjectId()) })
         .to(baseUrl);
       expect(status).toEqual(400);
     });
 
     it('rejects requests where application does not exist', async () => {
-      const { status } = await as(aMaker)
+      const { status } = await as(maker1)
         .postMultipartForm({ parentId: String(ObjectId()) }, validFiles)
         .to(baseUrl);
       expect(status).toEqual(422);
@@ -133,7 +133,7 @@ describe(baseUrl, () => {
         },
       ];
 
-      const { body, status } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, invalidFiles).to(baseUrl);
+      const { body, status } = await as(maker1).postMultipartForm({ parentId: mockDeal.body._id }, invalidFiles).to(baseUrl);
 
       expect(status).toEqual(400);
       expect(body).toEqual(
@@ -142,7 +142,7 @@ describe(baseUrl, () => {
     });
 
     it('successfully posts a single file', async () => {
-      const { status, body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
+      const { status, body } = await as(maker1).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
       expect(status).toEqual(201);
       expect(body).toEqual(
@@ -153,7 +153,7 @@ describe(baseUrl, () => {
     it('posts 500 if there is an error', async () => {
       uploadFile.mockRejectedValueOnce('mock error');
 
-      const { status } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
+      const { status } = await as(maker1).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
       expect(status).toEqual(500);
     });
@@ -163,7 +163,7 @@ describe(baseUrl, () => {
     let oneFileUrl;
 
     beforeEach(async () => {
-      const { body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
+      const { body } = await as(maker1).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
       const createdId = body[0]._id;
       oneFileUrl = `${baseUrl}/${createdId}`;
     });
@@ -181,7 +181,7 @@ describe(baseUrl, () => {
     });
 
     it('returns 404 if files is not found', async () => {
-      const { status } = await as(aMaker).get(`${baseUrl}/${String(ObjectId())}`);
+      const { status } = await as(maker1).get(`${baseUrl}/${String(ObjectId())}`);
       expect(status).toEqual(404);
     });
 
@@ -192,7 +192,7 @@ describe(baseUrl, () => {
     });
 
     it('returns file information when available', async () => {
-      const { status } = await as(aMaker).get(oneFileUrl);
+      const { status } = await as(maker1).get(oneFileUrl);
 
       expect(status).toEqual(200);
     });
@@ -203,7 +203,7 @@ describe(baseUrl, () => {
     let fileToDeleteId;
 
     beforeEach(async () => {
-      const { body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
+      const { body } = await as(maker1).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
       fileToDeleteId = body[0]._id;
       oneFileUrl = `${baseUrl}/${fileToDeleteId}`;
     });
@@ -221,7 +221,7 @@ describe(baseUrl, () => {
     });
 
     withDeleteOneTests({
-      makeRequest: () => as(aMaker).remove(oneFileUrl),
+      makeRequest: () => as(maker1).remove(oneFileUrl),
       collectionName: MONGO_DB_COLLECTIONS.FILES,
       auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentId: () => new ObjectId(fileToDeleteId),
@@ -229,12 +229,12 @@ describe(baseUrl, () => {
     });
 
     it('returns 404 if files is not found', async () => {
-      const { status } = await as(aMaker).remove(`${baseUrl}/${String(ObjectId())}`);
+      const { status } = await as(maker1).remove(`${baseUrl}/${String(ObjectId())}`);
       expect(status).toEqual(404);
     });
 
     it('rejects requests that do not have access to deal', async () => {
-      const { body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
+      const { body } = await as(maker1).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
       const { status } = await as(invalidMaker).remove(`${baseUrl}/${body[0]._id}`);
 
@@ -242,9 +242,9 @@ describe(baseUrl, () => {
     });
 
     it('deletes the file', async () => {
-      const { body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
+      const { body } = await as(maker1).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
-      const { status } = await as(aMaker).remove(`${baseUrl}/${body[0]._id}`);
+      const { status } = await as(maker1).remove(`${baseUrl}/${body[0]._id}`);
 
       expect(status).toEqual(200);
     });
@@ -252,9 +252,9 @@ describe(baseUrl, () => {
     it('returns 500 if there is an api error', async () => {
       deleteFile.mockRejectedValueOnce(new Error('mock error'));
 
-      const { body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
+      const { body } = await as(maker1).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
-      const { status } = await as(aMaker).remove(`${baseUrl}/${body[0]._id}`);
+      const { status } = await as(maker1).remove(`${baseUrl}/${body[0]._id}`);
 
       expect(status).toEqual(500);
     });
@@ -264,7 +264,7 @@ describe(baseUrl, () => {
     let oneFileDownloadUrl;
 
     beforeEach(async () => {
-      const { body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
+      const { body } = await as(maker1).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
       const createdId = body[0]._id;
       oneFileDownloadUrl = `${baseUrl}/${createdId}/download`;
     });
@@ -282,7 +282,7 @@ describe(baseUrl, () => {
     });
 
     it('returns 404 if files is not found', async () => {
-      const { status } = await as(aMaker).get(`${baseUrl}/${String(ObjectId())}/download`);
+      const { status } = await as(maker1).get(`${baseUrl}/${String(ObjectId())}/download`);
       expect(status).toEqual(404);
     });
 
@@ -296,9 +296,9 @@ describe(baseUrl, () => {
       const TestData = Buffer.from('This is sample Test Data');
       readFile.mockResolvedValueOnce(TestData);
 
-      const { body } = await as(aMaker).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
+      const { body } = await as(maker1).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
-      const { status } = await as(aMaker).get(`${baseUrl}/${body[0]._id}/download`);
+      const { status } = await as(maker1).get(`${baseUrl}/${body[0]._id}/download`);
 
       expect(status).toEqual(200);
     });
@@ -306,7 +306,7 @@ describe(baseUrl, () => {
     it('posts 500 if there is an error', async () => {
       readFile.mockRejectedValueOnce(new Error('mock error'));
 
-      const { status } = await as(aMaker).get(oneFileDownloadUrl);
+      const { status } = await as(maker1).get(oneFileDownloadUrl);
 
       expect(status).toEqual(500);
     });
