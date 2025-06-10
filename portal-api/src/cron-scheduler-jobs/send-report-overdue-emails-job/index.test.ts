@@ -19,19 +19,19 @@ console.info = jest.fn();
 const originalProcessEnv = { ...process.env };
 
 describe('sendReportOverdueEmailsJob', () => {
-  const validBarclaysEmail = 'valid-barclays-email@example.com';
-  const validBarclaysBank = produce(aBank(), (draftBank) => {
-    draftBank.paymentOfficerTeam.emails = [validBarclaysEmail];
+  const validTestbank1Email = 'valid-testbank1-email@example.com';
+  const validtestBank1 = produce(aBank(), (draftBank) => {
+    draftBank.paymentOfficerTeam.emails = [validTestbank1Email];
   });
-  const validHsbcEmail = 'valid-hsbc-email@example.com';
+  const validTestbank2Email1 = 'valid-testbank2-email@example.com';
   const quarterlyReportingSchedule = [
     { startMonth: 11, endMonth: 1 },
     { startMonth: 2, endMonth: 4 },
     { startMonth: 5, endMonth: 7 },
     { startMonth: 8, endMonth: 10 },
   ];
-  const validHsbcBank = produce(aBank(), (draftBank) => {
-    draftBank.paymentOfficerTeam.emails = [validHsbcEmail];
+  const validtestBank2 = produce(aBank(), (draftBank) => {
+    draftBank.paymentOfficerTeam.emails = [validTestbank2Email1];
     draftBank.utilisationReportPeriodSchedule = quarterlyReportingSchedule;
   });
 
@@ -50,7 +50,7 @@ describe('sendReportOverdueEmailsJob', () => {
     jest.useFakeTimers().setSystemTime(today);
 
     jest.mocked(externalApi.bankHolidays.getBankHolidayDatesForRegion).mockResolvedValue([]);
-    jest.mocked(api.getAllBanks).mockResolvedValue([validBarclaysBank, validHsbcBank]);
+    jest.mocked(api.getAllBanks).mockResolvedValue([validtestBank1, validtestBank2]);
 
     // Act
     await sendReportOverdueEmailsJob.task('manual');
@@ -68,7 +68,7 @@ describe('sendReportOverdueEmailsJob', () => {
     jest.useFakeTimers().setSystemTime(chaserDate);
 
     jest.mocked(externalApi.bankHolidays.getBankHolidayDatesForRegion).mockResolvedValue([]);
-    jest.mocked(api.getAllBanks).mockResolvedValue([validBarclaysBank, validHsbcBank]);
+    jest.mocked(api.getAllBanks).mockResolvedValue([validtestBank1, validtestBank2]);
     jest.mocked(api.getUtilisationReports).mockResolvedValue([aNotReceivedUtilisationReportResponse()]);
 
     // Act
@@ -81,13 +81,13 @@ describe('sendReportOverdueEmailsJob', () => {
     const expectedReportDueDate = '14 November 2023';
 
     expect(sendEmail).toHaveBeenCalledTimes(2);
-    expect(sendEmail).toHaveBeenCalledWith(expectedEmailTemplate, validBarclaysEmail, {
-      recipient: validBarclaysBank.paymentOfficerTeam.teamName,
+    expect(sendEmail).toHaveBeenCalledWith(expectedEmailTemplate, validTestbank1Email, {
+      recipient: validtestBank1.paymentOfficerTeam.teamName,
       reportPeriod: expectedMonthlyReportPeriod,
       reportDueDate: expectedReportDueDate,
     });
-    expect(sendEmail).toHaveBeenCalledWith(expectedEmailTemplate, validHsbcEmail, {
-      recipient: validHsbcBank.paymentOfficerTeam.teamName,
+    expect(sendEmail).toHaveBeenCalledWith(expectedEmailTemplate, validTestbank2Email1, {
+      recipient: validtestBank2.paymentOfficerTeam.teamName,
       reportPeriod: expectedQuarterlyReportPeriod,
       reportDueDate: expectedReportDueDate,
     });

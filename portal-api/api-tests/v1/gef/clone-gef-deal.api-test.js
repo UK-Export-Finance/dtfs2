@@ -21,17 +21,17 @@ const { MAKER, CHECKER, ADMIN } = require('../../../src/v1/roles/roles');
 const [gefEligibilityCriteria] = require('../../fixtures/gef/eligibilityCriteria');
 
 describe(baseUrl, () => {
-  let aMaker;
-  let anotherMaker;
-  let aChecker;
+  let maker1;
+  let maker2;
+  let checker1;
   let anAdmin;
   const tfmDealSubmitSpy = jest.fn(() => Promise.resolve());
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aChecker = testUsers().withRole(CHECKER).one();
-    aMaker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
-    anotherMaker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
+    checker1 = testUsers().withRole(CHECKER).one();
+    maker1 = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    maker2 = testUsers().withRole(MAKER).withBankName('Bank 2').one();
     anAdmin = testUsers().withRole(ADMIN).one();
 
     /**
@@ -53,11 +53,11 @@ describe(baseUrl, () => {
 
   describe(`POST ${baseUrl}/clone`, () => {
     it('rejects requests that do not present a valid Authorization token', async () => {
-      const mockDeal = await as(aMaker)
+      const mockDeal = await as(maker1)
         .post({
           dealType: 'GEF',
-          maker: aMaker,
-          bank: { id: aMaker.bank.id },
+          maker: maker1,
+          bank: { id: maker1.bank.id },
           bankInternalRefName: 'Bank 1',
           additionalRefName: 'Team 1',
           exporter: {},
@@ -76,11 +76,11 @@ describe(baseUrl, () => {
     });
 
     it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-      const mockDeal = await as(aMaker)
+      const mockDeal = await as(maker1)
         .post({
           dealType: 'GEF',
-          maker: aMaker,
-          bank: { id: aMaker.bank.id },
+          maker: maker1,
+          bank: { id: maker1.bank.id },
           bankInternalRefName: 'Bank 1',
           additionalRefName: 'Team 1',
           exporter: {},
@@ -93,17 +93,17 @@ describe(baseUrl, () => {
         .to(baseUrl);
 
       mockApplication.dealId = mockDeal.body._id;
-      mockApplication.bank = { id: aMaker.bank.id };
-      const { status } = await as(aMaker).post(mockApplication).to(`${baseUrl}/clone`);
+      mockApplication.bank = { id: maker1.bank.id };
+      const { status } = await as(maker1).post(mockApplication).to(`${baseUrl}/clone`);
       expect(status).toEqual(200);
     });
 
     it('successfully clones a GEF deal and returns a new application ID', async () => {
-      const mockDeal = await as(aMaker)
+      const mockDeal = await as(maker1)
         .post({
           dealType: 'GEF',
-          maker: aMaker,
-          bank: { id: aMaker.bank.id },
+          maker: maker1,
+          bank: { id: maker1.bank.id },
           bankInternalRefName: 'Bank 1',
           additionalRefName: 'Team 1',
           exporter: {},
@@ -116,18 +116,18 @@ describe(baseUrl, () => {
         .to(baseUrl);
 
       mockApplication.dealId = mockDeal.body._id;
-      mockApplication.bank = { id: aMaker.bank.id };
+      mockApplication.bank = { id: maker1.bank.id };
 
-      const { body } = await as(aMaker).post(mockApplication).to(`${baseUrl}/clone`);
+      const { body } = await as(maker1).post(mockApplication).to(`${baseUrl}/clone`);
       expect(body).toEqual({ dealId: expect.any(String) });
     });
 
     it('successfully clones a GEF deal and updates the auditRecord', async () => {
-      const mockDeal = await as(aMaker)
+      const mockDeal = await as(maker1)
         .post({
           dealType: 'GEF',
-          maker: aMaker,
-          bank: { id: aMaker.bank.id },
+          maker: maker1,
+          bank: { id: maker1.bank.id },
           bankInternalRefName: 'Bank 1',
           additionalRefName: 'Team 1',
           exporter: {},
@@ -140,27 +140,27 @@ describe(baseUrl, () => {
         .to(baseUrl);
 
       mockApplication.dealId = mockDeal.body._id;
-      mockApplication.bank = { id: aMaker.bank.id };
+      mockApplication.bank = { id: maker1.bank.id };
 
       const {
         status,
         body: { dealId },
-      } = await as(aMaker).post(mockApplication).to(`${baseUrl}/clone`);
+      } = await as(maker1).post(mockApplication).to(`${baseUrl}/clone`);
       expect(status).toEqual(200);
 
       const {
         body: { auditRecord },
-      } = await as(aMaker).get(`${baseUrl}/${dealId}`);
+      } = await as(maker1).get(`${baseUrl}/${dealId}`);
 
-      expect(auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(aMaker._id));
+      expect(auditRecord).toEqual(generateParsedMockPortalUserAuditDatabaseRecord(maker1._id));
     });
 
     it('returns a `404` status if the maker belongs to a different bank', async () => {
-      const mockDeal = await as(aMaker)
+      const mockDeal = await as(maker1)
         .post({
           dealType: 'GEF',
-          maker: aMaker,
-          bank: { id: aMaker.bank.id },
+          maker: maker1,
+          bank: { id: maker1.bank.id },
           bankInternalRefName: 'Bank 1',
           additionalRefName: 'Team 1',
           exporter: {},
@@ -173,18 +173,18 @@ describe(baseUrl, () => {
         .to(baseUrl);
 
       mockApplication.dealId = mockDeal.body._id;
-      mockApplication.bank = { id: anotherMaker.bank.id };
+      mockApplication.bank = { id: maker2.bank.id };
 
-      const { status } = await as(anotherMaker).post(mockApplication).to(`${baseUrl}/clone`);
+      const { status } = await as(maker2).post(mockApplication).to(`${baseUrl}/clone`);
       expect(status).toEqual(404);
     });
 
     it('returns a `401` status if the user role is `Checker`', async () => {
-      const mockDeal = await as(aChecker)
+      const mockDeal = await as(checker1)
         .post({
           dealType: 'GEF',
-          maker: aMaker,
-          bank: { id: aMaker.bank.id },
+          maker: maker1,
+          bank: { id: maker1.bank.id },
           bankInternalRefName: 'Bank 1',
           additionalRefName: 'Team 1',
           exporter: {},
@@ -198,16 +198,16 @@ describe(baseUrl, () => {
 
       mockApplication.dealId = mockDeal.body._id;
 
-      const { status } = await as(aChecker).post(mockApplication).to(`${baseUrl}/clone`);
+      const { status } = await as(checker1).post(mockApplication).to(`${baseUrl}/clone`);
       expect(status).toEqual(401);
     });
 
     it('returns an error message when Bank Internal Ref Name is null', async () => {
-      const mockDeal = await as(aMaker)
+      const mockDeal = await as(maker1)
         .post({
           dealType: 'GEF',
-          maker: aMaker,
-          bank: { id: aMaker.bank.id },
+          maker: maker1,
+          bank: { id: maker1.bank.id },
           bankInternalRefName: 'Bank 1',
           additionalRefName: 'Team 1',
           exporter: {},
@@ -224,7 +224,7 @@ describe(baseUrl, () => {
         ...mockApplications[0],
         bankInternalRefName: null,
       };
-      const { body, status } = await as(aMaker).post(payload).to(`${baseUrl}/clone`);
+      const { body, status } = await as(maker1).post(payload).to(`${baseUrl}/clone`);
       expect(body).toEqual([
         {
           status: 422,
@@ -241,7 +241,7 @@ describe(baseUrl, () => {
         ...mockApplications[0],
         bankInternalRefName: '',
       };
-      const { body, status } = await as(aMaker).post(payload).to(`${baseUrl}/clone`);
+      const { body, status } = await as(maker1).post(payload).to(`${baseUrl}/clone`);
       expect(body).toEqual([
         {
           status: 422,
