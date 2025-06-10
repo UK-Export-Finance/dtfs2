@@ -10,8 +10,3 @@ export const AMENDMENT_MANAGER_DECISIONS = {
   APPROVED_WITHOUT_CONDITIONS: 'Approved without conditions',
   DECLINED: 'Declined',
 } as const;
-
-export const AMENDMENT_QUERY_STATUSES = {
-  IN_PROGRESS: 'in-progress',
-  COMPLETED: 'completed',
-} as const;
