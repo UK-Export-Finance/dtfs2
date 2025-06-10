@@ -44,7 +44,7 @@ const validPayload = {
 
 describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/status', () => {
   let testUsers: Awaited<ReturnType<typeof testUserCache.initialise>>;
-  let aMaker: TestUser;
+  let maker1: TestUser;
 
   describe('PATCH /v1/gef/facilities/:facilityId/amendments/:amendmentId/status', () => {
     beforeEach(() => {
@@ -53,7 +53,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/status', () => 
 
     beforeAll(async () => {
       testUsers = await testUserCache.initialise(app);
-      aMaker = testUsers().withRole(MAKER).one() as TestUser;
+      maker1 = testUsers().withRole(MAKER).one() as TestUser;
     });
 
     afterAll(() => {
@@ -71,7 +71,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/status', () => 
         const url = patchAmendmentStatusUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(aMaker).patch(validPayload).to(url);
+        const response = await as(maker1).patch(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -88,7 +88,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/status', () => 
         const url = patchAmendmentStatusUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(aMaker).patch(validPayload).to(url);
+        const response = await as(maker1).patch(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -125,7 +125,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/status', () => 
         const url = patchAmendmentStatusUrl({ facilityId: invalidId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(aMaker).patch(validPayload).to(url);
+        const response = await as(maker1).patch(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -138,7 +138,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/status', () => 
         const invalidPayload = { newStatus: PORTAL_AMENDMENT_STATUS.DRAFT };
 
         // Act
-        const response = await as(aMaker).patch(invalidPayload).to(url);
+        const response = await as(maker1).patch(invalidPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -160,9 +160,9 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/status', () => 
           status: PORTAL_AMENDMENT_STATUS.DRAFT,
           eligibilityCriteria: { version: 1, criteria: [] },
           createdBy: {
-            username: aMaker.username,
-            name: aMaker.firstname,
-            email: aMaker.email,
+            username: maker1.username,
+            name: maker1.firstname,
+            email: maker1.email,
           },
         };
 
@@ -170,7 +170,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/status', () => 
         const url = patchAmendmentStatusUrl({ facilityId, amendmentId });
 
         // Act
-        const response = await as(aMaker).patch(validPayload).to(url);
+        const response = await as(maker1).patch(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.Ok);

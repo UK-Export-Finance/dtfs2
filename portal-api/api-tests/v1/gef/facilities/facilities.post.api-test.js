@@ -24,14 +24,14 @@ jest.mock('@ukef/dtfs2-common', () => ({
 }));
 
 describe(baseUrl, () => {
-  let aMaker;
+  let maker1;
   let mockApplication;
   let newFacility;
   let testUsers;
 
   beforeAll(async () => {
     testUsers = await testUserCache.initialise(app);
-    aMaker = testUsers().withRole(MAKER).one();
+    maker1 = testUsers().withRole(MAKER).one();
   });
 
   beforeEach(async () => {
@@ -46,8 +46,8 @@ describe(baseUrl, () => {
     describe.each([0, 1])('with GEF_DEAL_VERSION = %s', (dealVersion) => {
       beforeEach(async () => {
         jest.mocked(getCurrentGefDealVersion).mockReturnValue(dealVersion);
-        mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
-        newFacility = generateANewFacility({ dealId: mockApplication.body._id, makerId: aMaker._id, dealVersion });
+        mockApplication = await as(maker1).post(mockApplications[0]).to(applicationBaseUrl);
+        newFacility = generateANewFacility({ dealId: mockApplication.body._id, makerId: maker1._id, dealVersion });
       });
 
       afterEach(() => {
@@ -60,29 +60,29 @@ describe(baseUrl, () => {
       });
 
       it('accepts requests that present a valid Authorization token with "maker" role', async () => {
-        const { status } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+        const { status } = await as(maker1).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
         expect(status).toEqual(201);
       });
 
       it('returns a new facility upon creation', async () => {
-        const { body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+        const { body } = await as(maker1).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
         expect(body).toEqual(newFacility);
       });
 
       it('returns a 400 if the dealId is invalid', async () => {
-        const { body, status } = await as(aMaker).post({ dealId: 'test', type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+        const { body, status } = await as(maker1).post({ dealId: 'test', type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
         expect(status).toEqual(400);
         expect(body).toEqual({ status: 400, message: 'Invalid deal ID: test' });
       });
 
       it('returns a 404 if the dealId is valid but does not exist', async () => {
-        const { body, status } = await as(aMaker).post({ dealId: 'abcdef123456abcdef123456', type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+        const { body, status } = await as(maker1).post({ dealId: 'abcdef123456abcdef123456', type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
         expect(status).toEqual(404);
         expect(body).toEqual({ status: 404, message: 'Deal not found: abcdef123456abcdef123456' });
       });
 
       it('returns an mandatory error when an application ID is missing', async () => {
-        const { status, body } = await as(aMaker).post({ type: 'TEST' }).to(baseUrl);
+        const { status, body } = await as(maker1).post({ type: 'TEST' }).to(baseUrl);
         expect(status).toEqual(422);
         expect(body).toEqual([
           {
@@ -94,7 +94,7 @@ describe(baseUrl, () => {
       });
 
       it('returns an mandatory error when facility type is missing', async () => {
-        const { status, body } = await as(aMaker).post({ dealId: mockApplication.body._id }).to(baseUrl);
+        const { status, body } = await as(maker1).post({ dealId: mockApplication.body._id }).to(baseUrl);
         expect(status).toEqual(422);
         expect(body).toEqual([
           {
@@ -106,7 +106,7 @@ describe(baseUrl, () => {
       });
 
       it('returns an enum error when putting the wrong type', async () => {
-        const { status, body } = await as(aMaker).post({ dealId: mockApplication.body._id, type: 'TEST' }).to(baseUrl);
+        const { status, body } = await as(maker1).post({ dealId: mockApplication.body._id, type: 'TEST' }).to(baseUrl);
         expect(status).toEqual(422);
         expect(body).toEqual([
           {
@@ -119,12 +119,12 @@ describe(baseUrl, () => {
       });
 
       it(`overall status shows as "${CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED}" if all status is marked as "${CONSTANTS.DEAL.DEAL_STATUS.NOT_STARTED}"`, async () => {
-        await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-        await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
-        await as(aMaker).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+        await as(maker1).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+        await as(maker1).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
+        await as(maker1).post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false }).to(baseUrl);
 
         const mockQuery = { dealId: mockApplication.body._id };
-        const { body, status } = await as(aMaker).get(baseUrl, mockQuery);
+        const { body, status } = await as(maker1).get(baseUrl, mockQuery);
 
         expect(status).toEqual(200);
         expect(body.status).toEqual(CONSTANTS.DEAL.DEAL_STATUS.IN_PROGRESS);
@@ -135,7 +135,7 @@ describe(baseUrl, () => {
     describe(`with GEF_DEAL_VERSION = 0`, () => {
       beforeEach(async () => {
         jest.mocked(getCurrentGefDealVersion).mockReturnValue(0);
-        mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
+        mockApplication = await as(maker1).post(mockApplications[0]).to(applicationBaseUrl);
       });
 
       afterEach(() => {
@@ -143,7 +143,7 @@ describe(baseUrl, () => {
       });
 
       it('returns 400 when payload contains isUsingFacilityEndDate', async () => {
-        const { status, body } = await as(aMaker)
+        const { status, body } = await as(maker1)
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, isUsingFacilityEndDate: true })
           .to(baseUrl);
 
@@ -152,7 +152,7 @@ describe(baseUrl, () => {
       });
 
       it('returns 400 when payload contains bankReviewDate', async () => {
-        const { status, body } = await as(aMaker)
+        const { status, body } = await as(maker1)
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, bankReviewDate: new Date().toISOString() })
           .to(baseUrl);
 
@@ -161,7 +161,7 @@ describe(baseUrl, () => {
       });
 
       it('returns 400 when payload contains facilityEndDate', async () => {
-        const { status, body } = await as(aMaker)
+        const { status, body } = await as(maker1)
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, facilityEndDate: new Date().toISOString() })
           .to(baseUrl);
 
@@ -173,7 +173,7 @@ describe(baseUrl, () => {
     describe(`with GEF_DEAL_VERSION = 1`, () => {
       beforeEach(async () => {
         jest.mocked(getCurrentGefDealVersion).mockReturnValue(1);
-        mockApplication = await as(aMaker).post(mockApplications[0]).to(applicationBaseUrl);
+        mockApplication = await as(maker1).post(mockApplications[0]).to(applicationBaseUrl);
       });
 
       afterEach(() => {
@@ -181,7 +181,7 @@ describe(baseUrl, () => {
       });
 
       it('returns 201 when payload is valid & contains isUsingFacilityEndDate', async () => {
-        const { status } = await as(aMaker)
+        const { status } = await as(maker1)
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, isUsingFacilityEndDate: true })
           .to(baseUrl);
 
@@ -189,7 +189,7 @@ describe(baseUrl, () => {
       });
 
       it('returns 201 when payload is valid & contains bankReviewDate', async () => {
-        const { status } = await as(aMaker)
+        const { status } = await as(maker1)
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, bankReviewDate: new Date().toISOString() })
           .to(baseUrl);
 
@@ -197,7 +197,7 @@ describe(baseUrl, () => {
       });
 
       it('returns 201 when payload is valid & contains facilityEndDate', async () => {
-        const { status } = await as(aMaker)
+        const { status } = await as(maker1)
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, facilityEndDate: new Date().toISOString() })
           .to(baseUrl);
 
@@ -205,7 +205,7 @@ describe(baseUrl, () => {
       });
 
       it('returns 400 when isUsingFacilityEndDate is not a boolean', async () => {
-        const { status, body } = await as(aMaker)
+        const { status, body } = await as(maker1)
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, isUsingFacilityEndDate: 'true' })
           .to(baseUrl);
 
@@ -214,7 +214,7 @@ describe(baseUrl, () => {
       });
 
       it('returns 400 when bankReviewDate is not a string', async () => {
-        const { status, body } = await as(aMaker)
+        const { status, body } = await as(maker1)
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, bankReviewDate: 1720521372395 })
           .to(baseUrl);
 
@@ -223,7 +223,7 @@ describe(baseUrl, () => {
       });
 
       it('returns 400 when bankReviewDate is not a valid ISO-8601 string', async () => {
-        const { status, body } = await as(aMaker)
+        const { status, body } = await as(maker1)
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, bankReviewDate: '2024/07/09T10 - 37/15.200Z' })
           .to(baseUrl);
 
@@ -232,7 +232,7 @@ describe(baseUrl, () => {
       });
 
       it('returns 400 when facilityEndDate is not a string', async () => {
-        const { status, body } = await as(aMaker)
+        const { status, body } = await as(maker1)
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, facilityEndDate: 1720521372395 })
           .to(baseUrl);
 
@@ -241,7 +241,7 @@ describe(baseUrl, () => {
       });
 
       it('returns 400 when facilityEndDate is not a valid ISO-8601 string', async () => {
-        const { status, body } = await as(aMaker)
+        const { status, body } = await as(maker1)
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, facilityEndDate: '2024/07/09T10 - 37/15.200Z' })
           .to(baseUrl);
 
@@ -253,7 +253,7 @@ describe(baseUrl, () => {
         const bankReviewDate = new Date().toISOString();
         const facilityEndDate = new Date().toISOString();
 
-        const { status, body } = await as(aMaker)
+        const { status, body } = await as(maker1)
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, facilityEndDate, bankReviewDate })
           .to(baseUrl);
 
@@ -264,7 +264,7 @@ describe(baseUrl, () => {
       it('returns 400 when payload contains facilityEndDate & isUsingFacilityEndDate = false', async () => {
         const facilityEndDate = new Date().toISOString();
 
-        const { status, body } = await as(aMaker)
+        const { status, body } = await as(maker1)
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, facilityEndDate, isUsingFacilityEndDate: false })
           .to(baseUrl);
 
@@ -275,7 +275,7 @@ describe(baseUrl, () => {
       it('returns 400 when payload contains bankReviewDate & isUsingFacilityEndDate = true', async () => {
         const bankReviewDate = new Date().toISOString();
 
-        const { status, body } = await as(aMaker)
+        const { status, body } = await as(maker1)
           .post({ dealId: mockApplication.body._id, type: FACILITY_TYPE.CASH, hasBeenIssued: false, bankReviewDate, isUsingFacilityEndDate: true })
           .to(baseUrl);
 
