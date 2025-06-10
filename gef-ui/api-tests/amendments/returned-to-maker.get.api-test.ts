@@ -9,6 +9,7 @@ import api from '../../server/services/api';
 import * as storage from '../test-helpers/storage/storage';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
+import { MOCK_AIN_APPLICATION } from '../../server/utils/mocks/mock-applications';
 
 const originalEnv = { ...process.env };
 
@@ -20,6 +21,7 @@ jest.mock('../../server/middleware/csrf', () => ({
 }));
 
 const mockGetAmendment = jest.fn();
+const mockGetApplication = jest.fn();
 
 const dealId = '6597dffeb5ef5ff4267e5044';
 const facilityId = '6597dffeb5ef5ff4267e5045';
@@ -36,6 +38,7 @@ describe(`GET ${url}`, () => {
 
     ({ sessionCookie } = await storage.saveUserSession([ROLES.CHECKER]));
     jest.spyOn(api, 'getAmendment').mockImplementation(mockGetAmendment);
+    jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
 
     mockGetAmendment.mockResolvedValue(
       new PortalFacilityAmendmentWithUkefIdMockBuilder()
@@ -45,6 +48,8 @@ describe(`GET ${url}`, () => {
         .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
         .build(),
     );
+
+    mockGetApplication.mockResolvedValue(MOCK_AIN_APPLICATION);
   });
 
   afterAll(async () => {
