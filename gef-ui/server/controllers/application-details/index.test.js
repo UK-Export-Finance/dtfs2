@@ -411,7 +411,7 @@ describe('controllers/application-details', () => {
         jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(true);
 
         api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
-        mockApplicationResponse.status = DEAL_STATUS.CANCELLED;
+        mockApplicationResponse.status = DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
         mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
@@ -424,6 +424,30 @@ describe('controllers/application-details', () => {
               data: expect.arrayContaining([
                 expect.objectContaining({
                   canIssuedFacilitiesBeAmended: false,
+                }),
+              ]),
+            }),
+          }),
+        );
+      });
+
+      it(`renders 'application-preview' without canIssuedFacilitiesBeAmended when the deal status is ${DEAL_STATUS.CANCELLED}`, async () => {
+        jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(true);
+
+        api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
+        mockApplicationResponse.status = DEAL_STATUS.CANCELLED;
+        mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.not.objectContaining({
+                  canIssuedFacilitiesBeAmended: expect.any(Boolean),
                 }),
               ]),
             }),
