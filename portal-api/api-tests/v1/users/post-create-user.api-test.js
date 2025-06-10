@@ -18,7 +18,7 @@ const { withValidateUsernameAndEmailMatchTests } = require('./with-validate-user
 const { withValidatePasswordWhenCreatingUserTests } = require('./with-validate-password.api-tests');
 const { withValidateEmailIsCorrectFormatTests } = require('./with-validate-email-is-correct-format.api-tests');
 
-const MOCK_USER = users.barclaysBankMaker1;
+const MOCK_USER = users.testBank1Maker1;
 
 const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: "You cannot combine 'Read-only' with any of the other roles" };
 
