@@ -29,7 +29,7 @@ export const postAbandonPortalFacilityAmendment = async (req: PostAbandonPortalF
 
     return res.render('partials/amendments/submitted-page.njk', viewModel);
   } catch (error) {
-    console.error('Error posting abandon amendments page %o', error);
+    console.error('Error posting to facility amendment abandonment page %o', error);
     return res.render('partials/problem-with-service.njk');
   }
 };

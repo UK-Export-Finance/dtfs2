@@ -40,17 +40,21 @@ export const getAbandonPortalFacilityAmendment = async (req: GetAbandonPortalFac
       return res.redirect('/not-found');
     }
 
-    if (!(PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES as string[]).includes(amendment.status)) {
+    const amendmentAssignedToMaker = PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES.map(String).includes(amendment.status);
+
+    if (!amendmentAssignedToMaker) {
       console.error('Amendment %s is not assigned to Maker', amendmentId);
       return res.redirect(`/gef/application-details/${dealId}`);
     }
 
     const previousPage = req.headers.referer ?? `/gef/application-details/${dealId}`;
     const applicationDetailsUrl = `/gef/application-details/${dealId}`;
+    const exporterName = deal.exporter.companyName;
+    const facilityType = facility.type;
 
     const viewModel: AbandonAmendmentViewModel = {
-      exporterName: deal.exporter.companyName,
-      facilityType: facility.type,
+      exporterName,
+      facilityType,
       previousPage,
       applicationDetailsUrl,
     };

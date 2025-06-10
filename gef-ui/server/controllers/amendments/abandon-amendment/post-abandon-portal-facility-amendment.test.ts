@@ -87,6 +87,6 @@ describe('postAbandonPortalFacilityAmendment', () => {
     expect(deleteAmendmentMock).toHaveBeenCalledTimes(1);
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error posting abandon amendments page %o', mockError);
+    expect(console.error).toHaveBeenCalledWith('Error posting to facility amendment abandonment page %o', mockError);
   });
 });
