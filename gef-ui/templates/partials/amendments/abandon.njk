@@ -1,0 +1,58 @@
+{% extends "index.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle -%}
+  Confirm that you want to abandon
+{%- endblock %}
+
+{% set headingHtml %}
+
+{% endset %}
+
+{% block content %}
+  {{ govukBackLink({
+      text: "Back",
+      href: previousPage,
+      attributes: {
+        'data-cy': 'back-link'
+      }
+    })
+  }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-1" data-cy="page-heading">
+        <span class="govuk-caption-l" data-cy="heading-caption">
+          {{ exporterName }}, {{ facilityType }} facility
+        </span>
+        Confirm that you want to abandon
+      </h1>
+      <p>This action cannot be undone</p>
+      <form method="POST" autocomplete="off">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="previousPage" value="{{ previousPage }}">
+
+        <div
+          class="govuk-button-group govuk-!-margin-top-4"
+        >
+          {{ govukButton({
+            text: "Yes, abandon",
+            attributes: { "data-cy": "yes-abandon-button" }
+            })
+          }}
+          {{ govukButton({
+            text: "No, keep",
+            classes: "govuk-button--secondary",
+            href: applicationDetailsUrl,
+            attributes: {
+              "data-cy": "no-keep-button"
+            }
+            })
+          }}
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

@@ -17,4 +17,5 @@ export const PORTAL_AMENDMENT_PAGES = {
   ALL_TYPES_AMENDMENTS: 'all-types-amendments',
   RETURN_TO_MAKER: 'return-to-maker',
   RETURNED_TO_MAKER: 'returned-to-maker',
+  ABANDON: 'abandon',
 } as const;

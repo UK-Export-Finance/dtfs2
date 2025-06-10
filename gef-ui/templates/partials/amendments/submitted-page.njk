@@ -3,10 +3,11 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% import './_macros/what-happens-next-submitted-checker.njk' as whatHappensNextChecker %}
 {% import './_macros/what-happens-next-approved-by-ukef.njk' as whatHappensNextApprovedByUkef %}
-{% import './_macros/what-happens-next-returned-to-maker.njk' as whatHappensNextReturnedToMaker %}
+{% import './_macros/what-happens-next-anything.njk' as whatHappensNextAnything %}
 {% import './_macros/submitted-to-checker-panel.njk' as submittedToCheckerPanel %}
 {% import './_macros/approved-by-ukef-panel.njk' as approvedByUkefPanel %}
 {% import './_macros/returned-to-maker-panel.njk' as returnedToMakerPanel %}
+{% import './_macros/abandoned-panel.njk' as abandonedPanel %}
 
 {% block pageTitle -%}
   {% if submittedToChecker %}
@@ -35,6 +36,10 @@
       {% if returnedToMaker %}
         {{ returnedToMakerPanel.render() }}
       {% endif %}
+
+      {% if abandoned %}
+        {{ abandonedPanel.render() }}
+      {% endif %}
   
       <div class="govuk-!-margin-top-4">
         <h2 class="govuk-!-margin-bottom-0" data-cy="heading">
@@ -46,13 +51,17 @@
         {% endif %}
 
         {% if returnedToMaker %}
-          {{ whatHappensNextReturnedToMaker.render() }}
+          {{ whatHappensNextAnything.render() }}
         {% endif %}
 
         {% if approvedByUkef %}
           {{ whatHappensNextApprovedByUkef.render({
             effectiveDate: effectiveDate
           }) }}
+        {% endif %}
+
+        {% if abandoned %}
+          {{ whatHappensNextAnything.render() }}
         {% endif %}
 
         <p><a class="govuk-link govuk-!-margin-0" href="/dashboard/deals" data-cy="return-link">Return to all applications and notices</a></p>

@@ -1,4 +1,4 @@
-import { FACILITY_TYPE, ROLES } from '@ukef/dtfs2-common';
+import { FACILITY_TYPE, PORTAL_AMENDMENT_STATUS, ROLES } from '@ukef/dtfs2-common';
 import pageRenderer from '../../pageRenderer';
 import { AmendmentDetailsViewModel } from '../../../server/types/view-models/amendments/amendment-details-view-model';
 
@@ -21,6 +21,7 @@ users.forEach((user) => {
       const submitAmendment = user.includes(ROLES.CHECKER);
       const effectiveDate = '25/07/2025';
       const banner = true;
+      const amendmentStatus = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
 
       const params: AmendmentDetailsViewModel = {
         userRoles,
@@ -30,6 +31,7 @@ users.forEach((user) => {
         dealId,
         facilityId,
         amendmentId,
+        amendmentStatus,
         previousPage,
         effectiveDate,
         banner,

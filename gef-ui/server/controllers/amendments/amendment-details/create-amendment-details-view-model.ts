@@ -37,6 +37,7 @@ export const createAmendmentDetailsViewModel = ({
   amendmentId: amendment.amendmentId,
   effectiveDate: amendment.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY) : '',
   banner,
+  amendmentStatus: amendment.status,
   previousPage: `/gef/application-details/${deal._id}`,
   amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
 });
