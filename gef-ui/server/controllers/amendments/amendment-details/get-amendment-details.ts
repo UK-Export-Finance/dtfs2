@@ -29,12 +29,12 @@ export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: 
 
     /**
      * gets amendments in progress
-     * will only return 1 as only 1 amendment can be in progress at a time
+     * will only return one as only one amendment can be in progress at a time per facility.
      */
     const amendment = await api.getAmendment({ amendmentId, facilityId, userToken });
 
     if (!amendment) {
-      console.error('Amendment was not found for the amendment id %s and facility id %s', amendmentId, facilityId);
+      console.error('Amendment was not found for the provided amendment id %s and facility id %s', amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 

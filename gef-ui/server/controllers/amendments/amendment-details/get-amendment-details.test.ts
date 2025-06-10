@@ -130,7 +130,7 @@ describe('getAmendmentDetails', () => {
           expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
           expect(res._getRedirectUrl()).toEqual('/not-found');
           expect(console.error).toHaveBeenCalledTimes(1);
-          expect(console.error).toHaveBeenCalledWith('Amendment was not found for the amendment id %s and facility id %s', amendmentId, facilityId);
+          expect(console.error).toHaveBeenCalledWith('Amendment was not found for the provided amendment id %s and facility id %s', amendmentId, facilityId);
         });
       });
 
@@ -224,7 +224,7 @@ describe('getAmendmentDetails', () => {
           expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
           expect(res._getRedirectUrl()).toEqual('/not-found');
           expect(console.error).toHaveBeenCalledTimes(1);
-          expect(console.error).toHaveBeenCalledWith('Amendment was not found for the amendment id %s and facility id %s', amendmentId, facilityId);
+          expect(console.error).toHaveBeenCalledWith('Amendment was not found for the provided amendment id %s and facility id %s', amendmentId, facilityId);
         });
       });
     });

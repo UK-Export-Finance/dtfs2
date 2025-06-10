@@ -40,6 +40,8 @@ describe('addAmendmentParamsToFacility', () => {
         const result = addAmendmentParamsToFacility({
           ...params,
           userRoles: MOCK_MAKER.roles,
+          hasReadyForCheckerAmendments: false,
+          hasFurtherMakersInputAmendments: false,
           readyForCheckerAmendmentDetailsUrlAndText: [],
           furtherMakersInputAmendmentDetailsUrlAndText: [],
         });
@@ -55,6 +57,8 @@ describe('addAmendmentParamsToFacility', () => {
             isFacilityWithAmendmentInProgress: amendmentReadyForChecker,
             amendmentDetailsUrl,
           },
+          hasReadyForCheckerAmendments: true,
+          hasFurtherMakersInputAmendments: false,
           readyForCheckerAmendmentDetailsUrlAndText: [toAdd],
           furtherMakersInputAmendmentDetailsUrlAndText: [],
         };
@@ -68,6 +72,8 @@ describe('addAmendmentParamsToFacility', () => {
         const result = addAmendmentParamsToFacility({
           ...params,
           userRoles: MOCK_CHECKER.roles,
+          hasReadyForCheckerAmendments: false,
+          hasFurtherMakersInputAmendments: false,
           readyForCheckerAmendmentDetailsUrlAndText: [],
           furtherMakersInputAmendmentDetailsUrlAndText: [],
         });
@@ -83,6 +89,8 @@ describe('addAmendmentParamsToFacility', () => {
             isFacilityWithAmendmentInProgress: amendmentReadyForChecker,
             amendmentDetailsUrl,
           },
+          hasReadyForCheckerAmendments: true,
+          hasFurtherMakersInputAmendments: false,
           readyForCheckerAmendmentDetailsUrlAndText: [toAdd],
           furtherMakersInputAmendmentDetailsUrlAndText: [],
         };
@@ -104,6 +112,8 @@ describe('addAmendmentParamsToFacility', () => {
         const result = addAmendmentParamsToFacility({
           ...params,
           userRoles: MOCK_MAKER.roles,
+          hasReadyForCheckerAmendments: false,
+          hasFurtherMakersInputAmendments: false,
           readyForCheckerAmendmentDetailsUrlAndText: [],
           furtherMakersInputAmendmentDetailsUrlAndText: [],
         });
@@ -119,6 +129,8 @@ describe('addAmendmentParamsToFacility', () => {
             isFacilityWithAmendmentInProgress: amendmentFurtherMakersInput,
             amendmentDetailsUrl,
           },
+          hasReadyForCheckerAmendments: false,
+          hasFurtherMakersInputAmendments: true,
           readyForCheckerAmendmentDetailsUrlAndText: [],
           furtherMakersInputAmendmentDetailsUrlAndText: [toAdd],
         };
@@ -132,6 +144,8 @@ describe('addAmendmentParamsToFacility', () => {
         const result = addAmendmentParamsToFacility({
           ...params,
           userRoles: MOCK_CHECKER.roles,
+          hasReadyForCheckerAmendments: false,
+          hasFurtherMakersInputAmendments: false,
           readyForCheckerAmendmentDetailsUrlAndText: [],
           furtherMakersInputAmendmentDetailsUrlAndText: [],
         });
@@ -142,6 +156,8 @@ describe('addAmendmentParamsToFacility', () => {
             isFacilityWithAmendmentInProgress: amendmentFurtherMakersInput,
             amendmentDetailsUrl,
           },
+          hasReadyForCheckerAmendments: false,
+          hasFurtherMakersInputAmendments: false,
           readyForCheckerAmendmentDetailsUrlAndText: [],
           furtherMakersInputAmendmentDetailsUrlAndText: [],
         };

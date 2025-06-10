@@ -101,7 +101,7 @@ describe('PortalFacilityAmendmentService', () => {
       await expect(returned).rejects.toThrow(new AmendmentNotFoundError(amendmentId, facilityId));
     });
 
-    it('should call PortalFacilityAmendmentService.validateNoOtherAmendmentsUnderWayOnFacility', async () => {
+    it('should call PortalFacilityAmendmentService.validateNoOtherAmendmentsInProgressOnFacility', async () => {
       // Arrange
       const existingAmendment = aPortalFacilityAmendment();
       mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce(existingAmendment);

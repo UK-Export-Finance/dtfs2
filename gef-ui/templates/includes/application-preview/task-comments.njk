@@ -4,9 +4,9 @@
   <header data-cy="application-preview-page">
     {% set bannerHtml %}
 
-    {% if readyForCheckerAmendmentDetailsUrlAndText.length or furtherMakersInputAmendmentDetailsUrlAndText.length %}
+    {% if hasReadyForCheckerAmendments or hasFurtherMakersInputAmendments %}
       <div class="govuk-!-margin-bottom-6">
-        {% if readyForCheckerAmendmentDetailsUrlAndText.length %}
+        {% if hasReadyForCheckerAmendments %}
           <h3 data-cy="amendment-details-header-ready-for-checkers">{{ readyForCheckerAmendmentStatusHeading }}</h3>
           <ul class="govuk-list govuk-list--bullet">
           {% for amendment in readyForCheckerAmendmentDetailsUrlAndText %}
@@ -16,7 +16,7 @@
           {% endfor %}
           </ul>
         {% endif %}
-        {% if furtherMakersInputAmendmentDetailsUrlAndText.length %}
+        {% if hasFurtherMakersInputAmendments %}
           <h3 data-cy="amendment-details-header-further-makers-input">{{ furtherMakersInputAmendmentStatusHeading }}</h3>
           <ul class="govuk-list govuk-list--bullet">
             {% for amendment in furtherMakersInputAmendmentDetailsUrlAndText %}

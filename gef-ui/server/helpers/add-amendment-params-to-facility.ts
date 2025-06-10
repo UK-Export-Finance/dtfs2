@@ -6,7 +6,7 @@ import { MAKER } from '../constants/roles';
 const { AMENDMENT_DETAILS } = PORTAL_AMENDMENT_PAGES;
 
 /**
- * adds amendment related parameters to a facility object
+ * Adds amendment related parameters to a facility object
  * generates the amendment details URL
  * Text and URL for amendment details for amendments with different statuses
  * returns a new facility object with the additional parameters
@@ -26,8 +26,6 @@ export const addAmendmentParamsToFacility = ({
   readyForCheckerAmendmentDetailsUrlAndText,
   furtherMakersInputAmendmentDetailsUrlAndText,
 }: AddAmendmentToFacilityParams): FacilityWithAmendmentFields => {
-  let amendmentDetailsUrl = '';
-
   /**
    * if amendment is in progress
    * generate the amendment details URL
@@ -35,7 +33,7 @@ export const addAmendmentParamsToFacility = ({
    * adds the text and url to relevant array based on the status of the amendment
    * eg. if the status is READY_FOR_CHECKERS_APPROVAL, add to readyForCheckerAmendmentDetailsUrlAndText
    */
-  amendmentDetailsUrl = `/gef/application-details/${dealId}/facilities/${facility.facilityId}/amendments/${isFacilityWithAmendmentInProgress.amendmentId}/${AMENDMENT_DETAILS}`;
+  const amendmentDetailsUrl = `/gef/application-details/${dealId}/facilities/${facility.facilityId}/amendments/${isFacilityWithAmendmentInProgress.amendmentId}/${AMENDMENT_DETAILS}`;
 
   const toAdd = {
     text: `Facility (${facility.ukefFacilityId}) amendment details`,
@@ -59,9 +57,14 @@ export const addAmendmentParamsToFacility = ({
     amendmentDetailsUrl,
   };
 
+  const hasReadyForCheckerAmendments = readyForCheckerAmendmentDetailsUrlAndText.length > 0;
+  const hasFurtherMakersInputAmendments = furtherMakersInputAmendmentDetailsUrlAndText.length > 0;
+
   return {
     mappedFacility: facilityToReturn,
     readyForCheckerAmendmentDetailsUrlAndText,
     furtherMakersInputAmendmentDetailsUrlAndText,
+    hasReadyForCheckerAmendments,
+    hasFurtherMakersInputAmendments,
   };
 };

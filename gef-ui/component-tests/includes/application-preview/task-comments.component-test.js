@@ -11,6 +11,8 @@ const params = {
   displayComments: true,
   dealId: '123',
   userRoles: [ROLES.MAKER],
+  hasReadyForCheckerAmendments: false,
+  hasFurtherMakersInputAmendments: false,
   readyForCheckerAmendmentDetailsUrlAndText: [],
   furtherMakersInputAmendmentDetailsUrlAndText: [],
   readyForCheckerAmendmentStatusHeading: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
@@ -33,6 +35,7 @@ describe(page, () => {
       it(`should render the ready for checkers approval heading and facility when there is only 1 amendment`, () => {
         wrapper = render({
           ...params,
+          hasReadyForCheckerAmendments: true,
           readyForCheckerAmendmentDetailsUrlAndText: [{ text: amendmentDetailsText(1), amendmentDetailsUrl: amendmentDetailsUrl(1) }],
         });
 
@@ -54,6 +57,7 @@ describe(page, () => {
       it(`should render the ready for checkers approval heading and facility with multiple amendments`, () => {
         wrapper = render({
           ...params,
+          hasReadyForCheckerAmendments: true,
           readyForCheckerAmendmentDetailsUrlAndText: [
             { text: amendmentDetailsText(1), amendmentDetailsUrl: amendmentDetailsUrl(1) },
             { text: amendmentDetailsText(2), amendmentDetailsUrl: amendmentDetailsUrl(2) },
@@ -75,6 +79,7 @@ describe(page, () => {
       it(`should render the further makers input heading and facility when there is only 1 amendment`, () => {
         wrapper = render({
           ...params,
+          hasFurtherMakersInputAmendments: true,
           furtherMakersInputAmendmentDetailsUrlAndText: [{ text: amendmentDetailsText(1), amendmentDetailsUrl: amendmentDetailsUrl(1) }],
         });
 
@@ -96,6 +101,7 @@ describe(page, () => {
       it(`should render the further makers input heading and facility with multiple amendments`, () => {
         wrapper = render({
           ...params,
+          hasFurtherMakersInputAmendments: true,
           furtherMakersInputAmendmentDetailsUrlAndText: [
             { text: amendmentDetailsText(1), amendmentDetailsUrl: amendmentDetailsUrl(1) },
             { text: amendmentDetailsText(2), amendmentDetailsUrl: amendmentDetailsUrl(2) },
@@ -117,6 +123,8 @@ describe(page, () => {
       it(`should render the ready for checkers approval heading further makers input heading and amendments`, () => {
         wrapper = render({
           ...params,
+          hasReadyForCheckerAmendments: true,
+          hasFurtherMakersInputAmendments: true,
           readyForCheckerAmendmentDetailsUrlAndText: [{ text: amendmentDetailsText(1), amendmentDetailsUrl: amendmentDetailsUrl(1) }],
           furtherMakersInputAmendmentDetailsUrlAndText: [{ text: amendmentDetailsText(2), amendmentDetailsUrl: amendmentDetailsUrl(2) }],
         });

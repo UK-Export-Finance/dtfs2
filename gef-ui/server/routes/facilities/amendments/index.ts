@@ -168,7 +168,16 @@ router
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${AMENDMENT_DETAILS}`)
-  .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateDealStatusForAmendment, validateRole({ role: [MAKER, CHECKER] })])
+  .all([
+    validatePortalFacilityAmendmentsEnabled,
+    validateMongoId('dealId'),
+    validateMongoId('facilityId'),
+    validateMongoId('amendmentId'),
+    validateToken,
+    validateBank,
+    validateDealStatusForAmendment,
+    validateRole({ role: [MAKER, CHECKER] }),
+  ])
   .get(getAmendmentDetails);
 
 router

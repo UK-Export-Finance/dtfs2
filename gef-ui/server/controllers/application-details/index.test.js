@@ -383,7 +383,7 @@ describe('controllers/application-details', () => {
         );
       });
 
-      it(`renders 'application-preview' with canIssuedFacilitiesBeAmended=true when the deal status is ${DEAL_STATUS.UKEF_ACKNOWLEDGED}, the submission type is valid and there are no amendments underway on the deal`, async () => {
+      it(`renders 'application-preview' with canIssuedFacilitiesBeAmended=true when the deal status is ${DEAL_STATUS.UKEF_ACKNOWLEDGED}, the submission type is valid and there are no amendments in progress on the facility`, async () => {
         api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseIssued);
         jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(true);
 
@@ -508,7 +508,7 @@ describe('controllers/application-details', () => {
         );
       });
 
-      it(`renders 'application-preview' with canIssuedFacilitiesBeAmended=false when there is an amendment already underway on the deal`, async () => {
+      it(`renders 'application-preview' with canIssuedFacilitiesBeAmended=false when there is an amendment already in progress on the facility`, async () => {
         api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
         jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(true);
 

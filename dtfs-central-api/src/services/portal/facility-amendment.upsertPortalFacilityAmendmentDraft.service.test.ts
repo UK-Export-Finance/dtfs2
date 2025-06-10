@@ -128,7 +128,7 @@ describe('PortalFacilityAmendmentService', () => {
       expect(mockFindLatestEligibilityCriteria).toHaveBeenCalledWith(facility.type);
     });
 
-    it('should call validateNoOtherAmendmentsUnderWayOnFacility with the facilityId', async () => {
+    it('should call validateNoOtherAmendmentsInProgressOnFacility with the facilityId', async () => {
       // Act
       await PortalFacilityAmendmentService.upsertPortalFacilityAmendmentDraft({
         dealId,
@@ -142,7 +142,7 @@ describe('PortalFacilityAmendmentService', () => {
       expect(mockValidateNoOtherAmendmentInProgressOnFacility).toHaveBeenCalledWith({ facilityId });
     });
 
-    it(`should throw an error if validateNoOtherAmendmentsUnderWayOnDeal throws an error`, async () => {
+    it(`should throw an error if validateNoOtherAmendmentsInProgressOnFacility throws an error`, async () => {
       // Arrange
       const mockError = new PortalFacilityAmendmentConflictError(dealId);
       mockValidateNoOtherAmendmentInProgressOnFacility.mockRejectedValue(mockError);

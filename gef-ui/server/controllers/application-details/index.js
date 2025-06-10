@@ -24,9 +24,8 @@ const getUserAuthorisationLevelsToApplication = require('../../utils/user-author
 const { FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_SUBMISSION_TYPE, STAGE } = require('../../constants');
 const Application = require('../../models/application');
 const { MAKER } = require('../../constants/roles');
-const { canUserAmendIssuedFacilities } = require('../../utils/facility-amendments.helper');
 const { getSubmittedAmendmentDetails } = require('../../utils/submitted-amendment-details');
-const { addAmendmentParamsToFacility } = require('../../helpers/add-amendment-params-to-facility');
+const { mapFacilityApplicationDetails } = require('../../helpers/map-facility-application-details');
 
 let userSession;
 let apiToken;
@@ -346,70 +345,46 @@ const applicationDetails = async (req, res, next) => {
       params.link += '/unissued-facilities';
     }
 
-    const amendmentsUnderwayOnDeal = await getPortalAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
+    const amendmentsInProgressOnDeal = await getPortalAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
 
     // array of facility ids that are currently being amended
-    const amendmentsInProgress = amendmentsUnderwayOnDeal.map((amendment) => ({
-      amendmentId: amendment.amendmentId,
-      facilityId: amendment.facilityId,
-      status: amendment.status,
-    }));
+    const amendmentsInProgress = amendmentsInProgressOnDeal.map((amendment) => {
+      const { amendmentId, facilityId: amendmentFacilityId, status } = amendment;
 
+      return {
+        amendmentId,
+        facilityId: amendmentFacilityId,
+        status,
+      };
+    });
+
+    /**
+     * sets headings for portal amendment task comment sections
+     * sets empty array for the list of amendments to populate
+     * sets flag for if these lists and headings should be rendered
+     */
     params.readyForCheckerAmendmentStatusHeading = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
     params.readyForCheckerAmendmentDetailsUrlAndText = [];
 
     params.furtherMakersInputAmendmentStatusHeading = PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
     params.furtherMakersInputAmendmentDetailsUrlAndText = [];
 
-    /**
-     * Flag facilities that are issued and have an amendment in progress
-     * maps through facilities
-     * checks if facility is issued, checks if facility does not have an amendment in progress and checks if user can amend issued facilities
-     * if all 3 are true, set canIssuedFacilitiesBeAmended to true
-     */
-    const facilitiesWithAmendmentFlag = params.facilities.data.map((eachFacility) => {
-      const facilityToMap = eachFacility;
+    params.hasReadyForCheckerAmendments = false;
+    params.hasFurtherMakersInputAmendments = false;
 
-      const isFacilityIssued = eachFacility.stage === STAGE.ISSUED;
-
-      const userCanAmendIssuedFacilities = canUserAmendIssuedFacilities(application.submissionType, application.status, userRoles);
-
-      const isFacilityWithAmendmentInProgress = amendmentsInProgress.find(
-        (item) => item.facilityId === eachFacility.facilityId && PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(item.status),
-      );
-
-      const canIssuedFacilitiesBeAmended = isFacilityIssued && userCanAmendIssuedFacilities && !isFacilityWithAmendmentInProgress;
-
-      facilityToMap.canIssuedFacilitiesBeAmended = canIssuedFacilitiesBeAmended;
-
-      if (isFacilityWithAmendmentInProgress) {
-        const { mappedFacility, readyForCheckerAmendmentDetailsUrlAndText, furtherMakersInputAmendmentDetailsUrlAndText } = addAmendmentParamsToFacility({
-          facility: facilityToMap,
-          dealId,
-          userRoles,
-          isFacilityWithAmendmentInProgress,
-          readyForCheckerAmendmentDetailsUrlAndText: params.readyForCheckerAmendmentDetailsUrlAndText,
-          furtherMakersInputAmendmentDetailsUrlAndText: params.furtherMakersInputAmendmentDetailsUrlAndText,
-        });
-
-        if (readyForCheckerAmendmentDetailsUrlAndText.length) {
-          params.readyForCheckerAmendmentDetailsUrlAndText = readyForCheckerAmendmentDetailsUrlAndText;
-        }
-
-        if (furtherMakersInputAmendmentDetailsUrlAndText.length) {
-          params.furtherMakersInputAmendmentDetailsUrlAndText = furtherMakersInputAmendmentDetailsUrlAndText;
-        }
-
-        return mappedFacility;
-      }
-
-      return facilityToMap;
-    });
+    // maps facilities and sets params
+    const { mappedFacilities, facilityParams } = mapFacilityApplicationDetails(application, params.facilities.data, amendmentsInProgress, params, userRoles);
 
     // redeclare params.facilities.data to include the new flag
-    params.facilities.data = facilitiesWithAmendmentFlag;
+    params.facilities.data = mappedFacilities;
 
-    return res.render(`partials/${partial}.njk`, params);
+    // update params to include new facility params
+    const updatedParams = {
+      ...params,
+      ...facilityParams,
+    };
+
+    return res.render(`partials/${partial}.njk`, updatedParams);
   } catch (error) {
     console.error('Unable to build GEF application details %o', error);
     return next(error);

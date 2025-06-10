@@ -35,6 +35,8 @@ export type Facility = {
   isUsingFacilityEndDate?: boolean | null;
   facilityEndDate?: IsoDateTimeStamp | null;
   bankReviewDate?: IsoDateTimeStamp | null;
+  stage?: string;
+  canIssuedFacilitiesBeAmended?: boolean;
 };
 
 export interface FacilityParams extends Facility {

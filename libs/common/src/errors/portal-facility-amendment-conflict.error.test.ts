@@ -10,7 +10,7 @@ describe('PortalFacilityAmendmentConflictError', () => {
     const exception = new PortalFacilityAmendmentConflictError(facilityId);
 
     // Assert
-    expect(exception.message).toEqual(`There is already a portal facility amendment under way on the facility ${facilityId}`);
+    expect(exception.message).toEqual(`There is already a portal facility amendment in progress for the given facility ${facilityId}`);
   });
 
   it('has the default message if no dealId is provided', () => {
@@ -18,7 +18,7 @@ describe('PortalFacilityAmendmentConflictError', () => {
     const exception = new PortalFacilityAmendmentConflictError();
 
     // Assert
-    expect(exception.message).toEqual('There is already a portal facility amendment under way on the facility');
+    expect(exception.message).toEqual('There is already a portal facility amendment in progress for the given facility');
   });
 
   it('has status 409', () => {

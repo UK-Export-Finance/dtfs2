@@ -146,7 +146,7 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
       });
     });
 
-    it(`should return ${HttpStatusCode.Conflict} when there is an existing amendment under way on the facility`, async () => {
+    it(`should return ${HttpStatusCode.Conflict} when there is an existing amendment in progress on the facility`, async () => {
       // Arrange
       const facility = aTfmFacility({ amendments: [], dealId });
       // create facility
@@ -170,7 +170,7 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
       expect(status).toEqual(HttpStatusCode.Conflict);
       expect(body).toEqual({
         status: HttpStatusCode.Conflict,
-        message: `There is already a portal facility amendment under way on the facility ${amendment.facilityId.toString()}`,
+        message: `There is already a portal facility amendment in progress for the given facility ${amendment.facilityId.toString()}`,
       });
     });
 
