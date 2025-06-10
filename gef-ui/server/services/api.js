@@ -593,7 +593,7 @@ const emptyEmailVariables = {
  * @param {string} param.userToken
  * @param {string} param.makersEmail
  * @param {string} param.checkersEmail
- * @param {import('@ukef/dtfs2-common').PortalAmendmentSubmittedToCheckerEmailVariables} param.emailVariables
+ * @param {import('@ukef/dtfs2-common').PortalAmendmentSubmittedToCheckerEmailVariables | import('@ukef/dtfs2-common').PortalAmendmentReturnToMakerEmailVariables } param.emailVariables
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}
  */
 const updateAmendmentStatus = async ({
