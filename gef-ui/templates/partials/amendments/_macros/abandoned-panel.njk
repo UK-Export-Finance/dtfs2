@@ -1,0 +1,12 @@
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% macro render() %}
+  {{ govukPanel({
+    attributes: {
+      'data-cy': 'abandoned-panel',
+      'tabIndex': 0
+    },
+    titleText: "Amendment has been abandoned",
+    text: "We've sent you a confirmation email."
+  }) }}
+{% endmacro %}

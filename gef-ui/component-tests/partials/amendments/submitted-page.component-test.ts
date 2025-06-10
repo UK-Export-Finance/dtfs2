@@ -21,6 +21,7 @@ describe(page, () => {
 
       wrapper.expectElement('[data-cy="approved-by-ukef-confirmation-panel"]').notToExist();
       wrapper.expectElement('[data-cy="returned-to-maker-confirmation-panel"]').notToExist();
+      wrapper.expectElement('[data-cy="abandoned-panel"]').notToExist();
     });
 
     it(`should render the return link`, () => {
@@ -50,6 +51,7 @@ describe(page, () => {
 
       wrapper.expectElement('[data-cy="submitted-for-checking-confirmation-panel"]').notToExist();
       wrapper.expectElement('[data-cy="returned-to-maker-confirmation-panel"]').notToExist();
+      wrapper.expectElement('[data-cy="abandoned-panel"]').notToExist();
     });
 
     it('should render a what happens next section', () => {
@@ -84,6 +86,39 @@ describe(page, () => {
 
       wrapper.expectElement('[data-cy="submitted-for-checking-confirmation-panel"]').notToExist();
       wrapper.expectElement('[data-cy="approved-by-ukef-confirmation-panel"]').notToExist();
+      wrapper.expectElement('[data-cy="abandoned-panel"]').notToExist();
+    });
+
+    it('should render the "what happens next" text', () => {
+      const wrapper = render(params);
+
+      wrapper.expectText('[data-cy="what-happens-next-text"]').toRead("You don't need to do anything");
+    });
+
+    it(`should render the return link`, () => {
+      const wrapper = render(params);
+
+      wrapper.expectLink('[data-cy="return-link"]').toLinkTo('/dashboard/deals', 'Return to all applications and notices');
+    });
+  });
+
+  describe('abandoned is true', () => {
+    const params = {
+      abandoned: true,
+    };
+
+    it('should render the confirmation panel', () => {
+      const wrapper = render(params);
+
+      wrapper.expectText('[data-cy="abandoned-panel"]').toContain('Amendment has been abandoned');
+    });
+
+    it('should NOT render confirmation panels for other statuses', () => {
+      const wrapper = render(params);
+
+      wrapper.expectElement('[data-cy="submitted-for-checking-confirmation-panel"]').notToExist();
+      wrapper.expectElement('[data-cy="approved-by-ukef-confirmation-panel"]').notToExist();
+      wrapper.expectElement('[data-cy="returned-to-maker-confirmation-panel"]').notToExist();
     });
 
     it('should render the "what happens next" text', () => {

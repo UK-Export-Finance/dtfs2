@@ -32,6 +32,7 @@ users.forEach((user) => {
         amendmentId: amendment.amendmentId,
         effectiveDate: '',
         banner,
+        amendmentStatus: amendment.status,
         previousPage: `/gef/application-details/${deal._id}`,
         amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
       };
