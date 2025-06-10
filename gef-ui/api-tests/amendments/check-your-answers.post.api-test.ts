@@ -1,7 +1,7 @@
 import { Headers } from 'node-mocks-http';
 import { NextFunction, Request, Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { AnyObject, PORTAL_AMENDMENT_STATUS, ROLES, aPortalSessionUser } from '@ukef/dtfs2-common';
+import { AnyObject, DEAL_STATUS, PORTAL_AMENDMENT_STATUS, ROLES, aPortalSessionUser } from '@ukef/dtfs2-common';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
 import { createApi } from '../create-api';
@@ -35,6 +35,11 @@ const mockUser = aPortalSessionUser();
 
 const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.CHECK_YOUR_ANSWERS}`;
 
+const deal = {
+  ...MOCK_BASIC_DEAL,
+  status: DEAL_STATUS.UKEF_ACKNOWLEDGED,
+};
+
 describe(`POST ${url}`, () => {
   let sessionCookie: string;
 
@@ -59,7 +64,7 @@ describe(`POST ${url}`, () => {
     mockUpdateAmendmentStatus.mockResolvedValue(amendment);
     getAmendmentMock.mockResolvedValue(amendment);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
-    getApplicationMock.mockResolvedValue(MOCK_BASIC_DEAL);
+    getApplicationMock.mockResolvedValue(deal);
     getUserDetailsMock.mockResolvedValue(mockUser);
   });
 
