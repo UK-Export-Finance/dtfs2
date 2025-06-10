@@ -42,35 +42,35 @@ describe('/v1/deals/:id/bond', () => {
     dayCountBasis: '365',
   };
 
-  let aBarclaysMaker;
+  let testbank1Maker;
   let deal;
   let dealId;
   let bondId;
 
   const updateBondInDeal = async (theDealId, bond) => {
-    const response = await as(aBarclaysMaker).put(bond).to(`/v1/deals/${theDealId}/bond/${bondId}`);
+    const response = await as(testbank1Maker).put(bond).to(`/v1/deals/${theDealId}/bond/${bondId}`);
     return response.body;
   };
 
   const updateDeal = async (dealBody) => {
-    const response = await as(aBarclaysMaker).put(dealBody).to(`/v1/deals/${dealId}`);
+    const response = await as(testbank1Maker).put(dealBody).to(`/v1/deals/${dealId}`);
     return response.body;
   };
 
   beforeAll(async () => {
     const testUsers = await testUserCache.initialise(app);
-    aBarclaysMaker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
+    testbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
   });
 
   beforeEach(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.DEALS]);
     await databaseHelper.wipe([DB_COLLECTIONS.FACILITIES]);
 
-    const dealResponse = await as(aBarclaysMaker).post(newDeal).to('/v1/deals/');
+    const dealResponse = await as(testbank1Maker).post(newDeal).to('/v1/deals/');
     deal = dealResponse.body;
     dealId = deal._id;
 
-    const bondResponse = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/create`);
+    const bondResponse = await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/create`);
     const { bondId: _id } = bondResponse.body;
     bondId = _id;
 
@@ -79,7 +79,7 @@ describe('/v1/deals/:id/bond', () => {
 
   describe('GET /v1/deals/:id/bond/:id', () => {
     it('returns a bond with validationErrors for all required fields', async () => {
-      const { body } = await as(aBarclaysMaker).get(`/v1/deals/${dealId}/bond/${bondId}`);
+      const { body } = await as(testbank1Maker).get(`/v1/deals/${dealId}/bond/${bondId}`);
 
       expect(body.validationErrors.count).toEqual(8);
     });
@@ -89,7 +89,7 @@ describe('/v1/deals/:id/bond', () => {
     const nowDate = new Date();
 
     it('returns 400 with validation errors', async () => {
-      const { body, status } = await as(aBarclaysMaker).put({}).to(`/v1/deals/${dealId}/bond/${bondId}`);
+      const { body, status } = await as(testbank1Maker).put({}).to(`/v1/deals/${dealId}/bond/${bondId}`);
       expect(status).toEqual(400);
       expect(body.validationErrors.count).toEqual(8);
     });

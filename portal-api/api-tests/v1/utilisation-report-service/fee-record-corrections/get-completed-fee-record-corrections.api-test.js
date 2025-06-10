@@ -20,8 +20,8 @@ describe('GET /v1/banks/:bankId/utilisation-reports/completed-corrections', () =
   const getUrl = ({ bankId }) => `/v1/banks/${bankId}/utilisation-reports/completed-corrections`;
 
   let testUsers;
-  let aBarclaysPaymentReportOfficer;
-  let barclaysBank;
+  let testbank1PaymentReportOfficer;
+  let testBank1;
 
   const exporter = 'An exporter';
   const correctionId = 7;
@@ -35,10 +35,10 @@ describe('GET /v1/banks/:bankId/utilisation-reports/completed-corrections', () =
     await SqlDbHelper.deleteAllEntries('UtilisationReport');
 
     testUsers = await testUserCache.initialise(app);
-    aBarclaysPaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('Bank 1').one();
-    barclaysBank = aBarclaysPaymentReportOfficer.bank;
+    testbank1PaymentReportOfficer = testUsers().withRole(PAYMENT_REPORT_OFFICER).withBankName('Bank 1').one();
+    testBank1 = testbank1PaymentReportOfficer.bank;
 
-    const aUtilisationReport = new UtilisationReportEntityMockBuilder().withBankId(barclaysBank.id).build();
+    const aUtilisationReport = new UtilisationReportEntityMockBuilder().withBankId(testBank1.id).build();
 
     const aFeeRecord = FeeRecordEntityMockBuilder.forReport(aUtilisationReport)
       .withExporter(exporter)
@@ -65,19 +65,19 @@ describe('GET /v1/banks/:bankId/utilisation-reports/completed-corrections', () =
   });
 
   withClientAuthenticationTests({
-    makeRequestWithoutAuthHeader: () => get(getUrl({ bankId: barclaysBank.id })),
-    makeRequestWithAuthHeader: (authHeader) => get(getUrl({ bankId: barclaysBank.id }), { headers: { Authorization: authHeader } }),
+    makeRequestWithoutAuthHeader: () => get(getUrl({ bankId: testBank1.id })),
+    makeRequestWithAuthHeader: (authHeader) => get(getUrl({ bankId: testBank1.id }), { headers: { Authorization: authHeader } }),
   });
 
   withRoleAuthorisationTests({
     allowedRoles: [PAYMENT_REPORT_OFFICER],
-    getUserWithRole: (role) => testUsers().withRole(role).withBankName(barclaysBank.name).one(),
-    makeRequestAsUser: (user) => as(user).get(getUrl({ bankId: barclaysBank.id })),
+    getUserWithRole: (role) => testUsers().withRole(role).withBankName(testBank1.name).one(),
+    makeRequestAsUser: (user) => as(user).get(getUrl({ bankId: testBank1.id })),
     successStatusCode: HttpStatusCode.Ok,
   });
 
   it(`should return a '${HttpStatusCode.Ok}' status code and the completed fee record corrections`, async () => {
-    const response = await as(aBarclaysPaymentReportOfficer).get(getUrl({ bankId: barclaysBank.id }));
+    const response = await as(testbank1PaymentReportOfficer).get(getUrl({ bankId: testBank1.id }));
 
     expect(response.status).toEqual(HttpStatusCode.Ok);
 
@@ -97,13 +97,13 @@ describe('GET /v1/banks/:bankId/utilisation-reports/completed-corrections', () =
   });
 
   it(`should respond with a ${HttpStatusCode.BadRequest} to requests that do not have a valid bank id`, async () => {
-    const { status } = await as(aBarclaysPaymentReportOfficer).get(getUrl({ bankId: 'invalid-bank-id' }));
+    const { status } = await as(testbank1PaymentReportOfficer).get(getUrl({ bankId: 'invalid-bank-id' }));
 
     expect(status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it(`should respond with a ${HttpStatusCode.Unauthorized} if user's bank does not match request bank`, async () => {
-    const { status } = await as(aBarclaysPaymentReportOfficer).get(getUrl({ bankId: barclaysBank.id - 1 }));
+    const { status } = await as(testbank1PaymentReportOfficer).get(getUrl({ bankId: testBank1.id - 1 }));
 
     expect(status).toEqual(HttpStatusCode.Unauthorized);
   });
