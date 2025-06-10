@@ -31,10 +31,10 @@ const mapReturnToMakerEmailVariables = ({
     throw new Error('Deal, Facility, Amendment or User is null');
   }
 
+  const { maker } = deal;
   const commonVariables = mapCommonEmailVariables({ deal, facility, amendment });
-
-  const makersName = `${String(deal.maker.firstname)} ${String(deal.maker.surname)}`;
-  const makersEmail = String(deal.maker.email);
+  const makersName = `${String(maker.firstname)} ${String(maker.surname)}`;
+  const makersEmail = String(maker.email);
 
   const checkersName = `${user.firstname} ${user.surname}`;
   const checkersEmail = user.email;
