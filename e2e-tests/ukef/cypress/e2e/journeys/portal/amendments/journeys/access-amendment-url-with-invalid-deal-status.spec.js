@@ -34,22 +34,24 @@ context('Amendments - access amendment url when deal status is "Cancelled"', () 
 
         applicationPreview.makeAChangeButton(facilityId).click();
 
-        amendmentDetailsUrl = `/gef/application-details/${dealId}/amendment-details`;
+        cy.getAmendmentIdFromUrl().then((amendmentId) => {
+          amendmentDetailsUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/amendment-details`;
 
-        cy.makerMakesPortalAmendmentRequest({
-          facilityValueExists: true,
-          changedFacilityValue: CHANGED_FACILITY_VALUE,
+          cy.makerMakesPortalAmendmentRequest({
+            facilityValueExists: true,
+            changedFacilityValue: CHANGED_FACILITY_VALUE,
+          });
+          cy.clickSubmitButton();
+
+          cy.visit(TFM_URL);
+
+          cy.tfmLogin(PIM_USER_1);
+
+          const tfmDealPage = `${TFM_URL}/case/${dealId}/deal`;
+          cy.visit(tfmDealPage);
+
+          cy.submitDealCancellation({ dealId });
         });
-        cy.clickSubmitButton();
-
-        cy.visit(TFM_URL);
-
-        cy.tfmLogin(PIM_USER_1);
-
-        const tfmDealPage = `${TFM_URL}/case/${dealId}/deal`;
-        cy.visit(tfmDealPage);
-
-        cy.submitDealCancellation({ dealId });
       });
     });
   });

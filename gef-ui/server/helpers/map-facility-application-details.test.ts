@@ -39,14 +39,38 @@ describe('mapFacilityApplicationDetails', () => {
 
   const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED, submissionCount: 1 };
 
+  describe('when the deal is cancelled', () => {
+    it('should not populate params and should not populate canIssuedFacilitiesBeAmended', () => {
+      // Arrange
+      const amendmentsInProgress: AmendmentInProgressParams[] = [];
+
+      const cancelledDeal = {
+        ...mockDeal,
+        status: DEAL_STATUS.CANCELLED,
+      };
+
+      // Act
+      const response = mapFacilityApplicationDetails(cancelledDeal, [facility], amendmentsInProgress, params, MOCK_MAKER.roles as Role[]);
+
+      const expected = {
+        mappedFacilities: [facility],
+        facilityParams: params,
+      };
+
+      expect(response).toEqual(expected);
+    });
+  });
+
   describe('when there are no amendments in progress', () => {
     describe('when a facility is issued', () => {
       it('should return mapped facilities with canIssuedFacilitiesBeAmended set to true', () => {
         // Arrange
         const amendmentsInProgress: AmendmentInProgressParams[] = [];
 
+        // Act
         const response = mapFacilityApplicationDetails(mockDeal, [facility], amendmentsInProgress, params, MOCK_MAKER.roles as Role[]);
 
+        // Assert
         const expected = {
           mappedFacilities: [
             {
@@ -70,8 +94,10 @@ describe('mapFacilityApplicationDetails', () => {
         };
         const amendmentsInProgress: AmendmentInProgressParams[] = [];
 
+        // Act
         const response = mapFacilityApplicationDetails(mockDeal, [unissuedFacility], amendmentsInProgress, params, MOCK_MAKER.roles as Role[]);
 
+        // Assert
         const expected = {
           mappedFacilities: [
             {
@@ -92,8 +118,10 @@ describe('mapFacilityApplicationDetails', () => {
       // Arrange
       const amendmentsInProgress: AmendmentInProgressParams[] = [amendmentReadyForChecker, amendmentFurtherMakersInput];
 
+      // Act
       const response = mapFacilityApplicationDetails(mockDeal, [facility, facilityTwo], amendmentsInProgress, params, MOCK_MAKER.roles as Role[]);
 
+      // Assert
       const {
         mappedFacility: mappedFacility1,
         furtherMakersInputAmendmentDetailsUrlAndText,

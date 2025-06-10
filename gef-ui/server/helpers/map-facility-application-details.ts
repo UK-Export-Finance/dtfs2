@@ -1,4 +1,4 @@
-import { Role, PORTAL_AMENDMENT_INPROGRESS_STATUSES } from '@ukef/dtfs2-common';
+import { Role, PORTAL_AMENDMENT_INPROGRESS_STATUSES, DEAL_STATUS } from '@ukef/dtfs2-common';
 import { STAGE } from '../constants';
 import { addAmendmentParamsToFacility } from './add-amendment-params-to-facility';
 import { canUserAmendIssuedFacilities } from '../utils/facility-amendments.helper';
@@ -43,6 +43,12 @@ export const mapFacilityApplicationDetails = (
 
   const mappedFacilities = facilities.map((eachFacility: FacilityParams) => {
     const facilityToMap = eachFacility;
+
+    const dealIsCancelled = application.status === DEAL_STATUS.CANCELLED;
+
+    if (dealIsCancelled) {
+      return facilityToMap;
+    }
 
     const isFacilityIssued = eachFacility.stage === STAGE.ISSUED;
 
