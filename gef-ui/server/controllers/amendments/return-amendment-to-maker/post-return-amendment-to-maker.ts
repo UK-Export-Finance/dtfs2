@@ -6,6 +6,7 @@ import { ReturnAmendmentToMakerViewModel } from '../../../types/view-models/amen
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { validationErrorHandler } from '../../../utils/helpers';
 import { getAmendmentsUrl } from '../helpers/navigation.helper';
+import mapReturnToMakerEmailVariables from '../helpers/map-return-to-maker-email-variables';
 import { addCheckerCommentsToApplication } from '../../../helpers/add-checker-comments-to-application';
 
 export type PostReturnToMakerRequest = CustomExpressRequest<{
@@ -75,11 +76,16 @@ export const postReturnAmendmentToMaker = async (req: PostReturnToMakerRequest, 
 
     await addCheckerCommentsToApplication(dealId, userToken, user._id, comment);
 
+    const { makersEmail, checkersEmail, emailVariables } = mapReturnToMakerEmailVariables({ deal, facility, amendment, user });
+
     await api.updateAmendmentStatus({
       facilityId,
       amendmentId,
       newStatus: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
       userToken,
+      makersEmail,
+      checkersEmail,
+      emailVariables,
     });
 
     const url = getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.RETURNED_TO_MAKER });

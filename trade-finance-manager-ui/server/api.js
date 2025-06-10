@@ -1,5 +1,6 @@
 const { HANDLE_SSO_REDIRECT_FORM_RESPONSE_SCHEMA } = require('@ukef/dtfs2-common/schemas');
 const axios = require('axios');
+const { HttpStatusCode } = require('axios');
 const { HEADERS } = require('@ukef/dtfs2-common');
 const { isValidMongoId, isValidPartyUrn, isValidGroupId, isValidTaskId, isValidBankId } = require('./helpers/validateIds');
 const { assertValidIsoMonth, assertValidIsoYear } = require('./helpers/date');
@@ -634,6 +635,38 @@ const getCompletedAmendment = async (facilityId, token) => {
   } catch (error) {
     console.error('Unable to get the completed amendment %o', error);
     return { status: error?.response?.status || 500, data: 'Failed to get completed amendment' };
+  }
+};
+
+/**
+ * Gets all amendments for all facilities in a deal
+ * @param {string} dealId - The deal ID
+ * @param {string} token - The user token
+ * @returns {Promise<{ status: number, response: import('@ukef/dtfs2-common').FacilityAllTypeAmendmentWithUkefId[] }>}
+ */
+const getApprovedAmendments = async (dealId, token) => {
+  try {
+    const isValidDealId = isValidMongoId(dealId);
+
+    if (!isValidDealId) {
+      console.error('getApprovedAmendments: Invalid deal id provided %s', dealId);
+      return { status: HttpStatusCode.BadRequest, data: 'Invalid deal id' };
+    }
+
+    const response = await axios({
+      method: 'get',
+      url: `${TFM_API_URL}/v1/deals/${dealId}/amendments/approved`,
+      headers: generateHeadersWithToken(token),
+    });
+
+    if (!response?.data) {
+      throw new Error('Invalid response received');
+    }
+
+    return { status: HttpStatusCode.Ok, response: response.data };
+  } catch (error) {
+    console.error('Unable to get approved amendments %o', error);
+    return { status: error?.response?.status || HttpStatusCode.InternalServerError, data: 'Failed to get completed amendment' };
   }
 };
 
@@ -1556,4 +1589,5 @@ module.exports = {
   getFeeRecordCorrectionTransientFormData,
   deleteFeeRecordCorrectionTransientFormData,
   getRecordCorrectionLogDetailsById,
+  getApprovedAmendments,
 };

@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { HttpStatusCode } = require('axios');
 const { HEADERS, InvalidDealIdError } = require('@ukef/dtfs2-common');
 const { hasValidUri } = require('./helpers/hasValidUri.helper');
 const { isValidMongoId, isValidPartyUrn, isValidNumericId, isValidCurrencyCode, sanitizeUsername, isValidTeamId } = require('./validation/validateIds');
@@ -439,6 +440,37 @@ const findFacilitiesByDealId = async (dealId) => {
   } catch (error) {
     console.error('findFacilitiesByDealId: Failed to find facilities by deal id %o', error);
     return { status: error?.code || 500, data: 'Failed to find facilities by deal id' };
+  }
+};
+
+/**
+ * Gets all amendments for all facilities in a deal
+ * @param {string} dealId - The deal ID
+ * @returns {Promise<{ status: number, data: import('@ukef/dtfs2-common').FacilityAllTypeAmendmentWithUkefId[] }>}
+ */
+const getApprovedAmendments = async (dealId) => {
+  const isValid = isValidMongoId(dealId) && hasValidUri(DTFS_CENTRAL_API_URL);
+
+  if (isValid) {
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `${DTFS_CENTRAL_API_URL}/v1/tfm/deals/${dealId}/amendments/approved`,
+        headers: headers.central,
+      });
+
+      if (!response?.data) {
+        throw new Error('Invalid response received');
+      }
+
+      return { status: HttpStatusCode.Ok, data: response.data };
+    } catch (error) {
+      console.error('Unable to get the approved amendments %o', error);
+      return { status: error?.response?.status || HttpStatusCode.InternalServerError, data: 'Failed to get the approved amendments' };
+    }
+  } else {
+    console.error('Invalid deal Id %s', dealId);
+    return { status: HttpStatusCode.BadRequest, data: 'Invalid deal Id provided' };
   }
 };
 
@@ -1885,4 +1917,5 @@ module.exports = {
   deleteFeeRecordCorrectionTransientFormData,
   createFeeRecordCorrection,
   getRecordCorrectionLogDetailsById,
+  getApprovedAmendments,
 };
