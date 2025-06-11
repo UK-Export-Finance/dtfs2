@@ -10,8 +10,9 @@ export const submitToUkefMultipleAmendmentsOnFacility = ({ dealId, facilityId, n
     applicationPreview.makeAChangeButton(facilityId).click();
     cy.getAmendmentIdFromUrl().then((amendmentId) => {
       const submittedUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/approved-by-ukef`;
-      const amendmentDetailsUrl = `/gef/application-details/${dealId}/amendment-details`;
+      const amendmentDetailsUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/amendment-details`;
       const confirmSubmissionToUkefUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/submit-amendment-to-ukef`;
+
       const CHANGED_FACILITY_VALUE = '20000';
 
       cy.makerAndCheckerSubmitPortalAmendmentRequest({
