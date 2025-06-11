@@ -3,8 +3,7 @@ const api = require('./gef/api');
 const { mongoDbClient } = require('../drivers/db-client');
 
 const cleanEligibilityCriteria = async (token) => {
-  console.info('cleaning GEF tables');
-  console.info('cleaning GEF eligibility-criteria');
+  console.info('GEF ECs');
   for (const data of await api.listEligibilityCriteria(token)) {
     await api.deleteEligibilityCriteria(data, token);
   }
@@ -14,15 +13,14 @@ const cleanEligibilityCriteria = async (token) => {
  * Deletes all entries in the eligibilityCriteriaAmendments collection
  */
 const cleanEligibilityCriteriaAmendments = async () => {
-  console.info('cleaning GEF tables');
-  console.info('cleaning GEF eligibilityCriteriaAmendments');
+  console.info('GEF amendment ECs');
 
   const eligibilityCriteriaAmendmentsCollection = await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA_AMENDMENTS);
   await eligibilityCriteriaAmendmentsCollection.deleteMany({});
 };
 
 const cleanMandatoryCriteriaVersioned = async (token) => {
-  console.info('cleaning GEF mandatory-criteria-versioned');
+  console.info('GEF MCs');
 
   for (const mandatoryCriteria of await api.listMandatoryCriteriaVersioned(token)) {
     await api.deleteMandatoryCriteriaVersioned(mandatoryCriteria, token);
@@ -30,12 +28,12 @@ const cleanMandatoryCriteriaVersioned = async (token) => {
 };
 
 const cleanDurableFunctions = async (token) => {
-  console.info('cleaning durable-functions-log');
+  console.info('Durable logs');
   await api.deleteDurableFunctions(token);
 };
 
 const deleteCronJobs = async (token) => {
-  console.info('cleaning cron-job-logs');
+  console.info('CRON logs');
   await api.deleteCronJobs(token);
 };
 
