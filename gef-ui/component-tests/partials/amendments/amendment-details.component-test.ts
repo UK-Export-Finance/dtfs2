@@ -21,7 +21,8 @@ users.forEach((user) => {
       const submitAmendment = user.includes(ROLES.CHECKER);
       const effectiveDate = '25/07/2025';
       const banner = true;
-      const amendmentStatus = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
+      const amendmentStatus = PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
+      const canAbandonFacilityAmendment = user.includes(ROLES.MAKER) && amendmentStatus === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
 
       const params: AmendmentDetailsViewModel = {
         userRoles,
@@ -31,7 +32,7 @@ users.forEach((user) => {
         dealId,
         facilityId,
         amendmentId,
-        amendmentStatus,
+        canAbandonFacilityAmendment,
         previousPage,
         effectiveDate,
         banner,
@@ -102,8 +103,11 @@ users.forEach((user) => {
         const wrapper = render(params);
 
         if (user === ROLES.MAKER) {
-          wrapper.expectElement('[data-cy="submit-button"]').notToExist();
           wrapper.expectElement('[data-cy="return-button"]').notToExist();
+          wrapper.expectElement('[data-cy="submit-button"]').toExist();
+          wrapper.expectText('[data-cy="submit-button"]').toRead('Submit to be checked at your bank');
+          wrapper.expectElement('[data-cy="abandon-button"]').toExist();
+          wrapper.expectText('[data-cy="abandon-button"]').toRead('Abandon the amendment');
         }
 
         if (user === ROLES.CHECKER) {
