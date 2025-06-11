@@ -1,5 +1,5 @@
 import z from 'zod';
-import { createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
+import { validateSchema } from '@ukef/dtfs2-common';
 import { PORTAL_FACILITY_AMENDMENT_USER_VALUES } from '@ukef/dtfs2-common/schemas';
 import { AuditDetailsSchema, MongoObjectIdSchema } from './schemas';
 
@@ -11,4 +11,4 @@ const PutPortalFacilityAmendmentSchema = z.object({
 
 export type PutPortalFacilityAmendmentPayload = z.infer<typeof PutPortalFacilityAmendmentSchema>;
 
-export const validatePutPortalFacilityAmendmentPayload = createValidationMiddlewareForSchema(PutPortalFacilityAmendmentSchema);
+export const validatePutPortalFacilityAmendmentPayload = validateSchema(PutPortalFacilityAmendmentSchema);

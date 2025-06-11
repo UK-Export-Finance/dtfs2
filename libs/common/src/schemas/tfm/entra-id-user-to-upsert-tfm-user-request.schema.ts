@@ -10,8 +10,8 @@ import { UPSERT_TFM_USER_REQUEST_SCHEMA } from './upsert-tfm-user-request.schema
  */
 export const ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA = ENTRA_ID_USER_SCHEMA.transform((entraIdUser) => ({
   azureOid: entraIdUser.oid,
-  email: entraIdUser.email,
-  username: entraIdUser.email,
+  email: entraIdUser.verified_primary_email[0],
+  username: entraIdUser.verified_primary_email[0],
   teams: entraIdUser.roles,
   timezone: timezoneConfig.DEFAULT,
   firstName: entraIdUser.given_name,

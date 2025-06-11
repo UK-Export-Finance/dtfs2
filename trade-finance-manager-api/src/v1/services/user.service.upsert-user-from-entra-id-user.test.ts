@@ -14,7 +14,7 @@ jest.mock('../repo/user.repo.ts', () => ({
 
 describe('user service', () => {
   describe('upsertTfmUserFromEntraIdUser', () => {
-    let entraIdUser: EntraIdUser;
+    let idTokenClaims: EntraIdUser;
     let auditDetails: AuditDetails;
     let transformedUser: UpsertTfmUserRequest;
     let existingUser: TfmUser;
@@ -29,10 +29,10 @@ describe('user service', () => {
 
     beforeEach(() => {
       jest.resetAllMocks();
-      entraIdUser = anEntraIdUser();
+      idTokenClaims = anEntraIdUser();
       auditDetails = generateSystemAuditDetails();
       userService = new UserService();
-      transformedUser = userService.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
+      transformedUser = userService.transformEntraIdUserToUpsertTfmUserRequest(idTokenClaims);
       userId = new ObjectId();
       existingUser = { ...transformedUser, _id: userId, status: USER_STATUS.ACTIVE };
     });
@@ -48,7 +48,7 @@ describe('user service', () => {
       });
 
       it('should create a new user in the database', async () => {
-        await userService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
+        await userService.upsertTfmUserFromEntraIdUser({ idTokenClaims, auditDetails });
 
         expect(createUserSpy).toHaveBeenCalledWith({
           user: transformedUser,
@@ -65,7 +65,7 @@ describe('user service', () => {
       });
 
       it('should update the user in the database', async () => {
-        await userService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
+        await userService.upsertTfmUserFromEntraIdUser({ idTokenClaims, auditDetails });
 
         expect(updateUserByIdSpy).toHaveBeenCalledWith({
           userId,

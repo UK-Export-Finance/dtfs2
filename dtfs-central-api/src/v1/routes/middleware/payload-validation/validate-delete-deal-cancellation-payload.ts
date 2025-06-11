@@ -1,5 +1,5 @@
 import z from 'zod';
-import { AuditDetails, createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
+import { AuditDetails, validateSchema } from '@ukef/dtfs2-common';
 import { AuditDetailsSchema } from './schemas';
 
 const DeleteDealCancellationSchema: z.ZodType<{ auditDetails: AuditDetails }> = z.object({
@@ -8,4 +8,4 @@ const DeleteDealCancellationSchema: z.ZodType<{ auditDetails: AuditDetails }> = 
 
 export type DeleteDealCancellationPayload = z.infer<typeof DeleteDealCancellationSchema>;
 
-export const validateDeleteDealCancellationPayload = createValidationMiddlewareForSchema(DeleteDealCancellationSchema);
+export const validateDeleteDealCancellationPayload = validateSchema(DeleteDealCancellationSchema);

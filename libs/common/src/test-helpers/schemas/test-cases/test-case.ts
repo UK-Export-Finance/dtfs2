@@ -7,6 +7,7 @@ export type TestCase =
   | TestCaseWithType<'boolean'>
   | TestCaseWithType<'Array', WithArrayTestsOptions>
   | TestCaseWithType<'TfmTeamSchema'>
+  | TestCaseWithType<'ENTRA_ID_EMAIL_SCHEMA'>
   | TestCaseWithType<'UNIX_TIMESTAMP_MILLISECONDS_SCHEMA'>
   | TestCaseWithType<'UNIX_TIMESTAMP_SECONDS_SCHEMA'>
   | TestCaseWithType<'UNIX_TIMESTAMP_SCHEMA'>
