@@ -23,7 +23,7 @@
         "@ukef/dtfs2-common": "1.0.0",
         "axios": "1.8.2",
         "big.js": "^6.2.2",
-        "bson": "^6.10.4",
+        "bson": "^6.10.3",
         "chance": "^1.1.13",
         "date-fns": "^2.30.0",
         "dotenv": "^16.4.5",
@@ -38,7 +38,7 @@
         "reflect-metadata": "^0.2.2",
         "typeorm": "^0.3.22",
         "xml2js": "^0.5.0",
-        "zod": "^3.25.57"
+        "zod": "^3.25.17"
     },
     "devDependencies": {
         "@types/jsonwebtoken": "^9.0.9"
