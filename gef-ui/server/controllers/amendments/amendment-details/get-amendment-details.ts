@@ -1,4 +1,4 @@
-import { CustomExpressRequest, PORTAL_AMENDMENT_INPROGRESS_STATUSES } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { fromUnixTime } from 'date-fns';
 import { Response } from 'express';
 import * as api from '../../../services/api';
@@ -6,8 +6,7 @@ import { asLoggedInUserSession } from '../../../utils/express-session';
 import { createAmendmentDetailsViewModel } from './create-amendment-details-view-model';
 
 export type GetAmendmentDetailsRequest = CustomExpressRequest<{
-  params: { dealId: string };
-  query: { amendmentId?: string; facilityId?: string };
+  params: { dealId: string; facilityId: string; amendmentId: string };
 }>;
 
 /**
@@ -17,8 +16,7 @@ export type GetAmendmentDetailsRequest = CustomExpressRequest<{
  */
 export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: Response) => {
   try {
-    const { dealId } = req.params;
-    const { facilityId, amendmentId } = req.query;
+    const { dealId, amendmentId, facilityId } = req.params;
     const { userToken, user } = asLoggedInUserSession(req.session);
     const userRoles = user.roles;
 
@@ -29,30 +27,18 @@ export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: 
       return res.redirect('/not-found');
     }
 
-    let amendment;
-    /*
-      when facilityId and amendmentId exist, then we get Amendment details for this specific deal
-    */
-    if (facilityId && amendmentId) {
-      amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+    /**
+     * gets amendments in progress
+     * will only return one as only one amendment can be in progress at a time per facility.
+     */
+    const amendment = await api.getAmendment({ amendmentId, facilityId, userToken });
 
-      if (!amendment) {
-        console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
-        return res.redirect('/not-found');
-      }
-    } else {
-      /*
-       otherwise we get Amendment details for a portalAmendment in progress
-      */
-      const amendments = await api.getPortalAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
-      if (!amendments) {
-        console.error('In progress amendment was not found for the deal %s', dealId);
-        return res.redirect('/not-found');
-      }
-      [amendment] = amendments;
+    if (!amendment) {
+      console.error('Amendment was not found for the provided amendment id %s and facility id %s', amendmentId, facilityId);
+      return res.redirect('/not-found');
     }
 
-    const { details: facility } = await api.getFacility({ facilityId: amendment.facilityId, userToken });
+    const { details: facility } = await api.getFacility({ facilityId, userToken });
 
     if (!facility) {
       console.error('Facility %s was not found', amendment.facilityId);
@@ -60,13 +46,15 @@ export const getAmendmentDetails = async (req: GetAmendmentDetailsRequest, res: 
     }
 
     let banner;
-    const hasFacilityAndAmendmentId = facilityId && amendmentId;
+
     const effectiveDate = amendment.effectiveDate ? fromUnixTime(amendment.effectiveDate) : null;
     const isEffectiveDateInFuture = effectiveDate && new Date(effectiveDate) > new Date();
+    const amendmentIsAcknowledged = amendment.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED;
 
-    if (hasFacilityAndAmendmentId && isEffectiveDateInFuture) {
+    if (isEffectiveDateInFuture && amendmentIsAcknowledged) {
       banner = true;
     }
+
     return res.render('partials/amendments/amendment-details.njk', createAmendmentDetailsViewModel({ amendment, deal, facility, userRoles, banner }));
   } catch (error) {
     console.error('Error getting amendments details page %o', error);

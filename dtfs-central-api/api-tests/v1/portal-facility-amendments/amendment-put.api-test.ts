@@ -146,21 +146,31 @@ describe('PUT /v1/portal/facilities/:facilityId/amendments/', () => {
       });
     });
 
-    it(`should return ${HttpStatusCode.Conflict} when there is an existing amendment under way on the deal`, async () => {
+    it(`should return ${HttpStatusCode.Conflict} when there is an existing amendment in progress on the facility`, async () => {
       // Arrange
-      const facilityOnSameDealWithUnderwayAmendment = aTfmFacility({ amendments: [aReadyForApprovalPortalAmendment], dealId });
-      await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES).then((collection) => collection.insertOne(facilityOnSameDealWithUnderwayAmendment));
+      const facility = aTfmFacility({ amendments: [], dealId });
+      // create facility
+      const response = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES).then((collection) => collection.insertOne(facility));
+
+      const amendment = aReadyForApprovalPortalAmendment;
+      // set the facilityId on the amendment as created facility's
+      amendment.facilityId = response.insertedId;
+
+      // update the facility with the amendment
+      await db
+        .getCollection(MONGO_DB_COLLECTIONS.TFM_FACILITIES)
+        .then((collection) => collection.updateOne({ _id: amendment.facilityId }, { $push: { amendments: amendment } }));
 
       // Act
       const { body, status } = (await testApi
         .put({ dealId, amendment: aPortalFacilityAmendmentUserValues(), auditDetails: generatePortalAuditDetails(portalUserId) })
-        .to(generateUrl(facilityId))) as FacilityAmendmentResponse;
+        .to(generateUrl(amendment.facilityId.toString()))) as FacilityAmendmentResponse;
 
       // Assert
       expect(status).toEqual(HttpStatusCode.Conflict);
       expect(body).toEqual({
         status: HttpStatusCode.Conflict,
-        message: `There is already a portal facility amendment under way on deal ${dealId}`,
+        message: `There is already a portal facility amendment in progress for the given facility ${amendment.facilityId.toString()}`,
       });
     });
 

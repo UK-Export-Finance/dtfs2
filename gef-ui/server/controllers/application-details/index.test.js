@@ -17,7 +17,6 @@ import { NON_MAKER_ROLES } from '../../../test-helpers/common-role-lists';
 import MOCKS from '../mocks';
 import CONSTANTS from '../../constants';
 import { ALL_DEAL_STATUSES } from '../../../test-helpers/common-deal-status-lists';
-import { canUserAmendIssuedFacilities } from '../../utils/facility-amendments.helper';
 import { getSubmittedAmendmentDetails } from '../../utils/submitted-amendment-details';
 
 jest.mock('../../services/api', () => ({
@@ -86,6 +85,7 @@ describe('controllers/application-details', () => {
     getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
     api.getTfmDeal.mockResolvedValue(MockTfmDealResponse);
     mockRequest.flash = mockSuccessfulFlashResponse();
+    jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(true);
   });
 
   afterEach(() => {
@@ -215,12 +215,6 @@ describe('controllers/application-details', () => {
           // user in session
           user: mockRequest.session.user,
           userRoles: mockRequest.session.user.roles,
-
-          canIssuedFacilitiesBeAmended: canUserAmendIssuedFacilities(
-            mockApplicationResponse.submissionType,
-            mockApplicationResponse.status,
-            mockRequest.session.user.roles,
-          ),
         }),
       );
     });
@@ -389,8 +383,8 @@ describe('controllers/application-details', () => {
         );
       });
 
-      it(`renders 'application-preview' with canIssuedFacilitiesBeAmended=true when the deal status is ${DEAL_STATUS.UKEF_ACKNOWLEDGED}, the submission type is valid and there are no amendments underway on the deal`, async () => {
-        api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
+      it(`renders 'application-preview' with canIssuedFacilitiesBeAmended=true when the deal status is ${DEAL_STATUS.UKEF_ACKNOWLEDGED}, the submission type is valid and there are no amendments in progress on the facility`, async () => {
+        api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseIssued);
         jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(true);
 
         mockApplicationResponse.status = DEAL_STATUS.UKEF_ACKNOWLEDGED;
@@ -402,12 +396,42 @@ describe('controllers/application-details', () => {
         expect(mockResponse.render).toHaveBeenCalledWith(
           'partials/application-preview.njk',
           expect.objectContaining({
-            canIssuedFacilitiesBeAmended: true,
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.objectContaining({
+                  canIssuedFacilitiesBeAmended: true,
+                }),
+              ]),
+            }),
           }),
         );
       });
 
       it(`renders 'application-preview' with the canIssuedFacilitiesBeAmended=false when the deal status is not ${DEAL_STATUS.UKEF_ACKNOWLEDGED}`, async () => {
+        jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(true);
+
+        api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
+        mockApplicationResponse.status = DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS;
+        mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.objectContaining({
+                  canIssuedFacilitiesBeAmended: false,
+                }),
+              ]),
+            }),
+          }),
+        );
+      });
+
+      it(`renders 'application-preview' without canIssuedFacilitiesBeAmended when the deal status is ${DEAL_STATUS.CANCELLED}`, async () => {
         jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(true);
 
         api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
@@ -420,7 +444,13 @@ describe('controllers/application-details', () => {
         expect(mockResponse.render).toHaveBeenCalledWith(
           'partials/application-preview.njk',
           expect.objectContaining({
-            canIssuedFacilitiesBeAmended: false,
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.not.objectContaining({
+                  canIssuedFacilitiesBeAmended: expect.any(Boolean),
+                }),
+              ]),
+            }),
           }),
         );
       });
@@ -438,7 +468,13 @@ describe('controllers/application-details', () => {
         expect(mockResponse.render).toHaveBeenCalledWith(
           'partials/application-preview.njk',
           expect.objectContaining({
-            canIssuedFacilitiesBeAmended: false,
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.objectContaining({
+                  canIssuedFacilitiesBeAmended: false,
+                }),
+              ]),
+            }),
           }),
         );
       });
@@ -459,7 +495,13 @@ describe('controllers/application-details', () => {
         expect(mockResponse.render).toHaveBeenCalledWith(
           'partials/application-preview.njk',
           expect.objectContaining({
-            canIssuedFacilitiesBeAmended: false,
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.objectContaining({
+                  canIssuedFacilitiesBeAmended: false,
+                }),
+              ]),
+            }),
           }),
         );
       });
@@ -479,12 +521,18 @@ describe('controllers/application-details', () => {
         expect(mockResponse.render).toHaveBeenCalledWith(
           'partials/application-preview.njk',
           expect.objectContaining({
-            canIssuedFacilitiesBeAmended: false,
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.objectContaining({
+                  canIssuedFacilitiesBeAmended: false,
+                }),
+              ]),
+            }),
           }),
         );
       });
 
-      it(`renders 'application-preview' with canIssuedFacilitiesBeAmended=false when there is an amendment already underway on the deal`, async () => {
+      it(`renders 'application-preview' with canIssuedFacilitiesBeAmended=false when there is an amendment already in progress on the facility`, async () => {
         api.getFacilities.mockResolvedValue(MOCKS.MockFacilityResponseNotChangedIssued);
         jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(true);
 
@@ -499,7 +547,13 @@ describe('controllers/application-details', () => {
         expect(mockResponse.render).toHaveBeenCalledWith(
           'partials/application-preview.njk',
           expect.objectContaining({
-            canIssuedFacilitiesBeAmended: false,
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.objectContaining({
+                  canIssuedFacilitiesBeAmended: false,
+                }),
+              ]),
+            }),
           }),
         );
       });
@@ -541,65 +595,148 @@ describe('controllers/application-details', () => {
     });
 
     describe('template rendering from amendment.status', () => {
+      beforeEach(() => {
+        mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
+        mockApplicationResponse.status = CONSTANTS.DEAL_STATUS.UKEF_ACKNOWLEDGED;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(true);
+      });
+
       const portalAmendmentTestCases = [
         {
-          template: `application-details`,
+          template: `application-preview`,
           label: PORTAL_AMENDMENT_STATUS.DRAFT,
           isPortalAmendmentInProgress: false,
           portalAmendmentStatus: null,
-          expectObjectContaining: { portalAmendmentStatus: null, isPortalAmendmentInProgress: false },
+          expectObjectContaining: {
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.objectContaining({
+                  canIssuedFacilitiesBeAmended: true,
+                }),
+              ]),
+            }),
+          },
+          expectObjectNotContaining: {
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.not.objectContaining({
+                  isFacilityWithAmendmentInProgress: expect.any(Object),
+                  amendmentDetailsUrl: expect.any(String),
+                }),
+              ]),
+            }),
+          },
         },
         {
-          template: `application-details`,
+          template: `application-preview`,
           label: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
           isPortalAmendmentInProgress: true,
           portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
-          expectObjectContaining: { portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL, isPortalAmendmentInProgress: true },
+          expectObjectContaining: {
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.objectContaining({
+                  canIssuedFacilitiesBeAmended: false,
+                  isFacilityWithAmendmentInProgress: expect.any(Object),
+                  amendmentDetailsUrl: expect.any(String),
+                }),
+              ]),
+            }),
+          },
         },
         {
-          template: `application-details`,
+          template: `application-preview`,
           label: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
           isPortalAmendmentInProgress: true,
           portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
-          expectObjectContaining: { portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED, isPortalAmendmentInProgress: true },
+          expectObjectContaining: {
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.objectContaining({
+                  canIssuedFacilitiesBeAmended: false,
+                  isFacilityWithAmendmentInProgress: expect.any(Object),
+                  amendmentDetailsUrl: expect.any(String),
+                }),
+              ]),
+            }),
+          },
         },
         {
-          template: `application-details`,
+          template: `application-preview`,
           label: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
           isPortalAmendmentInProgress: false,
           portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
-          expectObjectContaining: { portalAmendmentStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, isPortalAmendmentInProgress: false },
+          expectObjectContaining: {
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.objectContaining({
+                  canIssuedFacilitiesBeAmended: true,
+                }),
+              ]),
+            }),
+          },
+          expectObjectNotContaining: {
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.not.objectContaining({
+                  isFacilityWithAmendmentInProgress: expect.any(Object),
+                  amendmentDetailsUrl: expect.any(String),
+                }),
+              ]),
+            }),
+          },
         },
       ];
 
       it.each(portalAmendmentTestCases)(
         'should render `$template` when portalAmendmentStatus is $label',
-        async ({ template, isPortalAmendmentInProgress, portalAmendmentStatus, expectObjectContaining }) => {
+        async ({ template, isPortalAmendmentInProgress, portalAmendmentStatus, expectObjectContaining, expectObjectNotContaining }) => {
           mockGetSubmittedDetailsResponse.portalAmendmentStatus = portalAmendmentStatus;
           mockGetSubmittedDetailsResponse.isPortalAmendmentInProgress = isPortalAmendmentInProgress;
           getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
 
+          let amendmentsOnDealReturn = [];
+
+          if (isPortalAmendmentInProgress) {
+            amendmentsOnDealReturn = [{ ...aPortalFacilityAmendment({ status: portalAmendmentStatus }), facilityId: '1234' }];
+          }
+
+          api.getPortalAmendmentsOnDeal.mockResolvedValueOnce(amendmentsOnDealReturn);
+
           await applicationDetails(mockRequest, mockResponse);
 
           expect(mockResponse.render).toHaveBeenCalledWith(`partials/${template}.njk`, expect.objectContaining(expectObjectContaining));
+
+          if (expectObjectNotContaining) {
+            expect(mockResponse.render).toHaveBeenCalledWith(`partials/${template}.njk`, expect.objectContaining(expectObjectNotContaining));
+          }
         },
       );
 
-      it('should render `application-details` with facilityIdWithAmendmentInProgress as true when amendment is in progress', async () => {
+      it('should render `application-preview` with facilityIdWithAmendmentInProgress as true when amendment is in progress', async () => {
         mockGetSubmittedDetailsResponse.portalAmendmentStatus = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
         mockGetSubmittedDetailsResponse.isPortalAmendmentInProgress = true;
         mockGetSubmittedDetailsResponse.facilityIdWithAmendmentInProgress = '1234';
+
         getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
+
+        api.getPortalAmendmentsOnDeal.mockResolvedValueOnce([
+          { ...aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL }), facilityId: '1234' },
+        ]);
 
         await applicationDetails(mockRequest, mockResponse);
 
         expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/application-details.njk',
+          'partials/application-preview.njk',
           expect.objectContaining({
             facilities: expect.objectContaining({
               data: expect.arrayContaining([
                 expect.objectContaining({
-                  isFacilityWithAmendmentInProgress: true,
+                  canIssuedFacilitiesBeAmended: false,
+                  isFacilityWithAmendmentInProgress: expect.any(Object),
+                  amendmentDetailsUrl: expect.any(String),
                 }),
               ]),
             }),
@@ -607,21 +744,26 @@ describe('controllers/application-details', () => {
         );
       });
 
-      it('should render `application-details` with facilityIdWithAmendmentInProgress as false when amendment is not in progress', async () => {
+      it('should render `application-preview` with facilityIdWithAmendmentInProgress as false when amendment is not in progress', async () => {
         mockGetSubmittedDetailsResponse.portalAmendmentStatus = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
         mockGetSubmittedDetailsResponse.isPortalAmendmentInProgress = true;
         mockGetSubmittedDetailsResponse.facilityIdWithAmendmentInProgress = 'other-id';
+
+        api.getPortalAmendmentsOnDeal.mockResolvedValueOnce([
+          { ...aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED }), facilityId: '1234' },
+        ]);
+
         getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
 
         await applicationDetails(mockRequest, mockResponse);
 
         expect(mockResponse.render).toHaveBeenCalledWith(
-          'partials/application-details.njk',
+          'partials/application-preview.njk',
           expect.objectContaining({
             facilities: expect.objectContaining({
               data: expect.arrayContaining([
                 expect.objectContaining({
-                  isFacilityWithAmendmentInProgress: false,
+                  canIssuedFacilitiesBeAmended: true,
                 }),
               ]),
             }),

@@ -89,7 +89,7 @@ describe('validateDealStatusForAmendment', () => {
         ...mockDeal,
         status: DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS,
       };
-      // Arrange
+
       mockGetApplication.mockResolvedValue(application);
 
       const { req, res } = getHttpMocks(mockUser);

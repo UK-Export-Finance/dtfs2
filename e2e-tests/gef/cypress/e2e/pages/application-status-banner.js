@@ -11,7 +11,6 @@ const statusBanner = {
   bannerBuyer: () => cy.get('[data-cy="buyer"]'),
   bannerDateSubmitted: () => cy.get('[data-cy="date-submitted"]'),
   bannerUkefDealId: () => cy.get('[data-cy="ukef-deal-id"]'),
-  bannerAmendmentStatus: () => cy.get('[data-cy="amendment-status"]'),
 };
 
 export default statusBanner;
