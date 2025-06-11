@@ -1,8 +1,6 @@
 import { CustomExpressRequest } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
-// import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
-// import { getAmendmentsUrl } from '../helpers/navigation.helper';
 import { AbandonedViewModel } from '../../../types/view-models/amendments/abandoned-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 
