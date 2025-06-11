@@ -26,7 +26,7 @@
       {% if isReturningAmendmentToMaker %}
         {{ govukBackLink({
           text: "Back",
-          href: "/gef/application-details/" + dealId + "/amendment-details",
+          href: "/gef/application-details/" + dealId + "/facilities/" + facilityId + "/amendments/" + amendmentId + "/amendment-details",
           classes: "govuk-!-margin-bottom-6",
           attributes: {"data-cy": "back-link"}
         }) }}

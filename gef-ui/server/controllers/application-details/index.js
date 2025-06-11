@@ -1,5 +1,5 @@
 const startCase = require('lodash/startCase');
-const { DEAL_TYPE, timeZoneConfig, DEAL_STATUS, PORTAL_AMENDMENT_INPROGRESS_STATUSES } = require('@ukef/dtfs2-common');
+const { DEAL_TYPE, timeZoneConfig, DEAL_STATUS, PORTAL_AMENDMENT_INPROGRESS_STATUSES, PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { getTfmDeal, getPortalAmendmentsOnDeal, getFacilities, getFacility } = require('../../services/api');
 const { canIssueUnissuedFacilities } = require('./canIssueUnissuedFacilities');
 const {
@@ -24,8 +24,8 @@ const getUserAuthorisationLevelsToApplication = require('../../utils/user-author
 const { FACILITY_TYPE, AUTHORISATION_LEVEL, DEAL_SUBMISSION_TYPE, STAGE } = require('../../constants');
 const Application = require('../../models/application');
 const { MAKER } = require('../../constants/roles');
-const { canUserAmendIssuedFacilities } = require('../../utils/facility-amendments.helper');
 const { getSubmittedAmendmentDetails } = require('../../utils/submitted-amendment-details');
+const { mapFacilityApplicationDetails } = require('../../helpers/map-facility-application-details');
 
 let userSession;
 let apiToken;
@@ -129,8 +129,6 @@ const buildBody = async (app, previewMode, user) => {
             // ukefFacilityId required for html facility summary table id
             ukefFacilityId: item.details.ukefFacilityId,
             stage: item.details?.facilityStage ?? (item.details.hasBeenIssued ? STAGE.ISSUED : STAGE.UNISSUED),
-            // isFacilityWithAmendmentInProgress required for html. A link see details will appear to the user for facility with amendment in progress
-            isFacilityWithAmendmentInProgress: item.details._id === app.facilityIdWithAmendmentInProgress,
           }))
           .sort((a, b) => b.createdAt - a.createdAt), // latest facility appears at top
       },
@@ -349,10 +347,44 @@ const applicationDetails = async (req, res, next) => {
 
     const amendmentsInProgressOnDeal = await getPortalAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
 
-    params.canIssuedFacilitiesBeAmended =
-      canUserAmendIssuedFacilities(application.submissionType, application.status, userRoles) && !amendmentsInProgressOnDeal.length;
+    // array of facility ids that are currently being amended
+    const amendmentsInProgress = amendmentsInProgressOnDeal.map((amendment) => {
+      const { amendmentId, facilityId: amendmentFacilityId, status } = amendment;
 
-    return res.render(`partials/${partial}.njk`, params);
+      return {
+        amendmentId,
+        facilityId: amendmentFacilityId,
+        status,
+      };
+    });
+
+    /**
+     * sets headings for portal amendment task comment sections
+     * sets empty array for the list of amendments to populate
+     * sets flag for if these lists and headings should be rendered
+     */
+    params.readyForCheckerAmendmentStatusHeading = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
+    params.readyForCheckerAmendmentDetailsUrlAndText = [];
+
+    params.furtherMakersInputAmendmentStatusHeading = PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
+    params.furtherMakersInputAmendmentDetailsUrlAndText = [];
+
+    params.hasReadyForCheckerAmendments = false;
+    params.hasFurtherMakersInputAmendments = false;
+
+    // maps facilities and sets params
+    const { mappedFacilities, facilityParams } = mapFacilityApplicationDetails(application, params.facilities.data, amendmentsInProgress, params, userRoles);
+
+    // redeclare params.facilities.data to include the new flag
+    params.facilities.data = mappedFacilities;
+
+    // update params to include new facility params
+    const updatedParams = {
+      ...params,
+      ...facilityParams,
+    };
+
+    return res.render(`partials/${partial}.njk`, updatedParams);
   } catch (error) {
     console.error('Unable to build GEF application details %o', error);
     return next(error);

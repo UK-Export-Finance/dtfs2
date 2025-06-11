@@ -25,17 +25,17 @@ jest.mock('../../server/middleware/csrf', () => ({
 console.error = jest.fn();
 const mockGetFacility = jest.fn();
 const mockGetApplication = jest.fn();
-const mockGetPortalAmendmentsOnDeal = jest.fn();
 const mockGetAmendment = jest.fn();
 
 const dealId = '6597dffeb5ef5ff4267e5044';
+const facilityId = '6597dffeb5ef5ff4267e5045';
+const amendmentId = '6597dffeb5ef5ff4267e5045';
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, submissionCount: 0, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
 
-const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().build();
-const mockAmendmentsOnDeal = [amendment, amendment];
+const mockAmendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().build();
 
-const url = `/application-details/${dealId}/${PORTAL_AMENDMENT_PAGES.AMENDMENT_DETAILS}`;
+const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.AMENDMENT_DETAILS}`;
 
 describe(`GET ${url}`, () => {
   let sessionCookie: string;
@@ -48,12 +48,10 @@ describe(`GET ${url}`, () => {
     jest.spyOn(api, 'getFacility').mockImplementation(mockGetFacility);
     jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
     jest.spyOn(api, 'getAmendment').mockImplementation(mockGetAmendment);
-    jest.spyOn(api, 'getPortalAmendmentsOnDeal').mockImplementation(mockGetPortalAmendmentsOnDeal);
 
     mockGetFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
     mockGetApplication.mockResolvedValue(mockDeal);
-    mockGetAmendment.mockResolvedValue(amendment);
-    mockGetPortalAmendmentsOnDeal.mockResolvedValue(mockAmendmentsOnDeal);
+    mockGetAmendment.mockResolvedValue(mockAmendment);
   });
 
   afterAll(async () => {
@@ -138,7 +136,7 @@ describe(`GET ${url}`, () => {
 
     it('should redirect to /not-found when amendments on deal not found', async () => {
       // Arrange
-      mockGetPortalAmendmentsOnDeal.mockResolvedValue(undefined);
+      mockGetAmendment.mockResolvedValue(undefined);
 
       // Act
       const response = await getWithSessionCookie(sessionCookie);
