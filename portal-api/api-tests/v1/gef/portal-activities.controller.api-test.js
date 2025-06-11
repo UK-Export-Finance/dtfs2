@@ -33,7 +33,7 @@ describe('submissionPortalActivity()', () => {
     await databaseHelper.wipe([collectionName]);
     await databaseHelper.wipe([applicationCollectionName]);
 
-    // adds user to db incase empty
+    // adds user to db if empty
     const testUsers = await testUserCache.initialise(app);
 
     testUsers().withRole(MAKER).one();

@@ -1,3 +1,4 @@
+const { isSalesforceCustomerCreationEnabled } = require('@ukef/dtfs2-common');
 const { getPartyDbInfo, getOrCreatePartyDbInfo } = require('../api.js');
 
 const api = require('./deal.party-db');
@@ -66,6 +67,7 @@ jest.mock('../api.js', () => ({
 
 jest.mock('@ukef/dtfs2-common', () => ({
   ...jest.requireActual('@ukef/dtfs2-common'),
+  isSalesforceCustomerCreationEnabled: jest.fn(),
 }));
 
 beforeEach(() => {
@@ -80,6 +82,7 @@ describe('getPartyUrn', () => {
 
   it('should call getPartyDbInfo and return urn', async () => {
     getPartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
+    isSalesforceCustomerCreationEnabled.mockReturnValue(false);
 
     const companyData = { companyRegNo: '12345678' };
 
@@ -93,6 +96,7 @@ describe('getPartyUrn', () => {
 
   it('should not call getOrCreatePartyDbInfo', async () => {
     getPartyDbInfo.mockResolvedValue([{ partyUrn: 'TEST_URN' }]);
+    isSalesforceCustomerCreationEnabled.mockReturnValue(false);
 
     const companyData = { companyRegNo: '12345678' };
 
@@ -103,6 +107,7 @@ describe('getPartyUrn', () => {
 
   it('should return an empty string if getPartyDbInfo returns false', async () => {
     getPartyDbInfo.mockResolvedValue(false);
+    isSalesforceCustomerCreationEnabled.mockReturnValue(false);
 
     const companyData = { companyRegNo: '12345678' };
 

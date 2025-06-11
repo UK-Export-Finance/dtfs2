@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 import { UserRepo } from '../repo/user.repo';
 
 export type UpsertTfmUserFromEntraIdUserParams = {
-  entraIdUser: EntraIdUser;
+  idTokenClaims: EntraIdUser;
   auditDetails: AuditDetails;
 };
 
@@ -30,11 +30,11 @@ export class UserService {
   /**
    * Used as part of the SSO process
    * Transforms the user data received from Entra ID to a request that can be upserted into the database
-   * @param entraIdUser
+   * @param idTokenClaims
    * @returns The upsert user request
    */
-  public transformEntraIdUserToUpsertTfmUserRequest(entraIdUser: EntraIdUser): UpsertTfmUserRequest {
-    return ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA.parse(entraIdUser);
+  public transformEntraIdUserToUpsertTfmUserRequest(idTokenClaims: EntraIdUser): UpsertTfmUserRequest {
+    return ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA.parse(idTokenClaims);
   }
 
   /**
@@ -52,14 +52,17 @@ export class UserService {
    * it was decided to implement the logic in the service layer for clarity
    *
    * @param upsertTfmUserFromEntraIdUserParams
-   * @param upsertTfmUserFromEntraIdUserParams.entraIdUser
+   * @param upsertTfmUserFromEntraIdUserParams.idTokenClaims
    * @param upsertTfmUserFromEntraIdUserParams.auditDetails
    * @returns The upserted user
    * @throws MultipleUsersFoundError if multiple users are found
    */
-  public async upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails }: UpsertTfmUserFromEntraIdUserParams): Promise<UpsertTfmUserFromEntraIdUserResponse> {
-    const upsertTfmUserRequest = this.transformEntraIdUserToUpsertTfmUserRequest(entraIdUser);
-    const findResult = await UserRepo.findUserByEmailAddress(entraIdUser.email);
+  public async upsertTfmUserFromEntraIdUser({
+    idTokenClaims,
+    auditDetails,
+  }: UpsertTfmUserFromEntraIdUserParams): Promise<UpsertTfmUserFromEntraIdUserResponse> {
+    const upsertTfmUserRequest = this.transformEntraIdUserToUpsertTfmUserRequest(idTokenClaims);
+    const findResult = await UserRepo.findUserByEmailAddress(idTokenClaims.verified_primary_email[0]);
 
     const upsertedUser = findResult
       ? await UserRepo.updateUserById({ userId: findResult._id, userUpdate: upsertTfmUserRequest, auditDetails })

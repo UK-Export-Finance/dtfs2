@@ -163,7 +163,7 @@ describe('SsoController', () => {
 
           // Assert
           expect(upsertTfmUserFromEntraIdUserMock).toHaveBeenCalledWith({
-            entraIdUser: handleRedirectResponse.entraIdUser,
+            idTokenClaims: handleRedirectResponse.idTokenClaims,
             auditDetails: req.body.auditDetails,
           });
         });

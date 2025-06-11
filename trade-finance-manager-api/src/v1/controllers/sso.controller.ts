@@ -25,17 +25,27 @@ export class SsoController {
   }
 
   /**
-   * Used as part of the SSO process
+   * Handles the request to retrieve the authorization code URL.
    *
-   * Creates the URL to redirect the user to Entra to login
+   * This method interacts with the `entraIdService` to generate an authorization
+   * code URL based on the provided `successRedirect` parameter in the request body.
+   * If successful, it responds with the generated URL. In case of an error, it
+   * handles both API-specific errors and general server errors, returning appropriate
+   * HTTP status codes and error messages.
    *
-   * The redirect URI is retrieved from Entra later in the process, following a successful login, to allow
-   * the user to be redirected to the original page they were visiting.
+   * @param req - The API request object containing the `successRedirect` in the body.
+   * @param res - The API response object used to send the response or error.
+   *
+   * @throws {ApiError} If an API-specific error occurs, it responds with the error's
+   * status, message, and code.
+   * @throws {Error} For general errors, it responds with a 500 Internal Server Error
+   * and a generic error message.
    */
   public async getAuthCodeUrl(req: GetAuthCodeUrlApiRequest, res: GetAuthCodeUrlApiResponse) {
     try {
       const { successRedirect } = req.body;
       const getAuthCodeUrlResponse = await this.entraIdService.getAuthCodeUrl({ successRedirect });
+
       res.json(getAuthCodeUrlResponse);
     } catch (error) {
       const errorMessage = 'Failed to get auth code url';
@@ -58,11 +68,25 @@ export class SsoController {
   }
 
   /**
-   * Used as part of the SSO process
+   * Handles the SSO redirect form submission by validating the payload, processing the authentication response,
+   * and issuing a JWT for the authenticated user.
    *
-   * This endpoint handles the TFM-API side of the SSO process following the automatic redirect from the Entra Id service.
-   * It takes the response from the Entra Id service and processes it to create or update a user in the TFM-API database.
-   * It then issues a JWT token for the user and returns it to the client.
+   * @param req - The API request object containing the SSO redirect form data.
+   * @param res - The API response object used to send the response back to the client.
+   *
+   * @throws {InvalidPayloadError} If the `authCodeResponse` payload fails validation.
+   * @throws {ApiError} If an API-specific error occurs during processing.
+   * @throws {Error} For any other unexpected errors.
+   *
+   * The method performs the following steps:
+   * 1. Validates the `auditDetails` and ensures the user type is 'system'.
+   * 2. Validates the `authCodeResponse` payload against the expected schema.
+   * 3. Processes the SSO redirect using the `entraIdService` to retrieve user claims and a success redirect URL.
+   * 4. Upserts the user in the database using the `userService` based on the ID token claims.
+   * 5. Issues a JWT for the authenticated user and saves login information.
+   * 6. Sends a response containing the user details, token, expiration time, and success redirect URL.
+   *
+   * If an error occurs, it logs the error and sends an appropriate error response to the client.
    */
   public async handleSsoRedirectForm(req: HandleSsoRedirectFormApiRequest, res: HandleSsoRedirectFormApiResponse) {
     try {
@@ -79,13 +103,12 @@ export class SsoController {
         throw new InvalidPayloadError('Invalid payload from SSO redirect');
       }
 
-      const { entraIdUser, successRedirect } = await this.entraIdService.handleRedirect({
+      const { idTokenClaims, successRedirect } = await this.entraIdService.handleRedirect({
         authCodeResponse,
         originalAuthCodeUrlRequest,
       });
 
-      const user = await this.userService.upsertTfmUserFromEntraIdUser({ entraIdUser, auditDetails });
-
+      const user = await this.userService.upsertTfmUserFromEntraIdUser({ idTokenClaims, auditDetails });
       const { sessionIdentifier, token, expires } = utils.issueJWT(user);
 
       await this.userService.saveUserLoginInformation({ userId: user._id, sessionIdentifier, auditDetails });

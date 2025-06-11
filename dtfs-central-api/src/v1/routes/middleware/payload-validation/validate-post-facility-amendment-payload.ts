@@ -1,5 +1,5 @@
 import z from 'zod';
-import { createValidationMiddlewareForSchema } from '@ukef/dtfs2-common';
+import { validateSchema } from '@ukef/dtfs2-common';
 import { AuditDetailsSchema } from './schemas';
 
 const PostFacilityAmendmentSchema = z.object({
@@ -8,4 +8,4 @@ const PostFacilityAmendmentSchema = z.object({
 
 export type PostFacilityAmendmentPayload = z.infer<typeof PostFacilityAmendmentSchema>;
 
-export const validatePostFacilityAmendmentPayload = createValidationMiddlewareForSchema(PostFacilityAmendmentSchema);
+export const validatePostFacilityAmendmentPayload = validateSchema(PostFacilityAmendmentSchema);
