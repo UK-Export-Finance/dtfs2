@@ -1,25 +1,25 @@
 import { isTfmSsoFeatureFlagEnabled } from '@ukef/dtfs2-common';
-
 import { HttpStatusCode } from 'axios';
 import { RequestHandler } from 'express';
 
 /**
- * @private
- * Validates that the TFM SSO feature flag is in the correct state to access the endpoint
- * Used internally by validateSsoFeatureFlagIsOn and validateSsoFeatureFlagIsOff
+ * Middleware to validate the state of the TFM SSO feature flag before allowing access to an endpoint.
+ *
+ * @param {Object} options - Configuration options for the middleware.
+ * @param {boolean} options.desiredState - The desired state of the TFM SSO feature flag (true for enabled, false for disabled).
+ * @returns {RequestHandler} A middleware function that checks the feature flag state and either proceeds to the next middleware or returns a 400 Bad Request response.
  */
-const createValidateSsoFeatureFlagMiddleware =
-  ({ desiredFeatureFlagState }: { desiredFeatureFlagState: boolean }): RequestHandler =>
+const validateSsoFeatureFlag =
+  ({ desiredState }: { desiredState: boolean }): RequestHandler =>
   (req, res, next) => {
     const isFeatureFlagEnabled = isTfmSsoFeatureFlagEnabled();
+    const isDesiredStateTrue = desiredState === isFeatureFlagEnabled;
 
-    const isDesiredStateMatchingFeatureFlagState = desiredFeatureFlagState === isFeatureFlagEnabled;
-
-    if (!isDesiredStateMatchingFeatureFlagState) {
+    if (!isDesiredStateTrue) {
       console.error(
-        'Tfm SSO feature flag is in incorrect state to access this endpoint, current feature flag state is %s, desired state is %s',
+        'TFM SSO feature flag is in incorrect state to access this endpoint, current feature flag state is %s whereas the desired state is %s',
         isFeatureFlagEnabled,
-        desiredFeatureFlagState,
+        desiredState,
       );
 
       return res.status(HttpStatusCode.BadRequest).send();
@@ -29,13 +29,17 @@ const createValidateSsoFeatureFlagMiddleware =
   };
 
 /**
- * Validates that the TFM SSO feature flag is off
- * Used to restrict access to endpoints that should not be accessed when the feature flag is on
+ * Middleware to validate that the SSO (Single Sign-On) feature flag is set to `false`.
+ * This ensures that the desired state of the SSO feature is disabled.
+ *
+ * @constant
  */
-export const validateSsoFeatureFlagIsOff = createValidateSsoFeatureFlagMiddleware({ desiredFeatureFlagState: false });
+export const validateSsoFeatureFlagFalse = validateSsoFeatureFlag({ desiredState: false });
 
 /**
- * Validates that the TFM SSO feature flag is on
- * Used to restrict access to endpoints that should not be accessed when the feature flag is off
+ * Middleware to validate that the Single Sign-On (SSO) feature flag is enabled.
+ * This function ensures that the desired state of the SSO feature flag is set to `true`.
+ *
+ * @constant
  */
-export const validateSsoFeatureFlagIsOn = createValidateSsoFeatureFlagMiddleware({ desiredFeatureFlagState: true });
+export const validateSsoFeatureFlagTrue = validateSsoFeatureFlag({ desiredState: true });
