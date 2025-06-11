@@ -1,4 +1,4 @@
-import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
+import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_AMENDMENT_STATUS, ROLES } from '@ukef/dtfs2-common';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { createAmendmentDetailsViewModel } from './create-amendment-details-view-model';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
@@ -17,6 +17,7 @@ users.forEach((user) => {
       const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().build();
       const userRoles = [user];
       const banner = true;
+      const canAbandonFacilityAmendment = userRoles.includes(ROLES.MAKER) && amendment.status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
 
       // Act
       const result = createAmendmentDetailsViewModel({ amendment, facility, deal, userRoles, banner });
@@ -32,7 +33,7 @@ users.forEach((user) => {
         amendmentId: amendment.amendmentId,
         effectiveDate: '',
         banner,
-        amendmentStatus: amendment.status,
+        canAbandonFacilityAmendment,
         previousPage: `/gef/application-details/${deal._id}`,
         amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
       };
