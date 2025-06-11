@@ -8,7 +8,7 @@ import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 
 const mockUpdatePortalFacilityAmendmentByAmendmentId = jest.fn();
 const mockFindOneAmendmentByFacilityIdAndAmendmentId = jest.fn();
-const mockValidateNoOtherAmendmentInProgressOnDeal = jest.fn();
+const mockValidateNoOtherAmendmentInProgressOnFacility = jest.fn();
 const mockValidateAmendmentIsComplete = jest.fn();
 
 const amendmentId = new ObjectId().toString();
@@ -28,7 +28,9 @@ describe('PortalFacilityAmendmentService', () => {
     jest.spyOn(TfmFacilitiesRepo, 'updatePortalFacilityAmendmentByAmendmentId').mockImplementation(mockUpdatePortalFacilityAmendmentByAmendmentId);
     jest.spyOn(TfmFacilitiesRepo, 'findOneAmendmentByFacilityIdAndAmendmentId').mockImplementation(mockFindOneAmendmentByFacilityIdAndAmendmentId);
 
-    jest.spyOn(PortalFacilityAmendmentService, 'validateNoOtherAmendmentInProgressOnDeal').mockImplementation(mockValidateNoOtherAmendmentInProgressOnDeal);
+    jest
+      .spyOn(PortalFacilityAmendmentService, 'validateNoOtherAmendmentInProgressOnFacility')
+      .mockImplementation(mockValidateNoOtherAmendmentInProgressOnFacility);
     jest.spyOn(PortalFacilityAmendmentService, 'validateAmendmentIsComplete').mockImplementation(mockValidateAmendmentIsComplete);
 
     mockUpdatePortalFacilityAmendmentByAmendmentId.mockResolvedValue({});
@@ -99,7 +101,7 @@ describe('PortalFacilityAmendmentService', () => {
       await expect(returned).rejects.toThrow(new AmendmentNotFoundError(amendmentId, facilityId));
     });
 
-    it('should call PortalFacilityAmendmentService.validateNoOtherAmendmentsUnderWayOnDeal', async () => {
+    it('should call PortalFacilityAmendmentService.validateNoOtherAmendmentsInProgressOnFacility', async () => {
       // Arrange
       const existingAmendment = aPortalFacilityAmendment();
       mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValueOnce(existingAmendment);
@@ -112,9 +114,9 @@ describe('PortalFacilityAmendmentService', () => {
       });
 
       // Assert
-      expect(mockValidateNoOtherAmendmentInProgressOnDeal).toHaveBeenCalledTimes(1);
-      expect(mockValidateNoOtherAmendmentInProgressOnDeal).toHaveBeenCalledWith({
-        dealId: existingAmendment.dealId.toString(),
+      expect(mockValidateNoOtherAmendmentInProgressOnFacility).toHaveBeenCalledTimes(1);
+      expect(mockValidateNoOtherAmendmentInProgressOnFacility).toHaveBeenCalledWith({
+        facilityId,
         amendmentId,
       });
     });

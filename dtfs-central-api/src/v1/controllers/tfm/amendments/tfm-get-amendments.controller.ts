@@ -1,9 +1,17 @@
 import { ObjectId, Document } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
-import { Currency, TFM_AMENDMENT_STATUS, AMENDMENT_QUERIES, ApiError, API_ERROR_CODE, FacilityAmendment } from '@ukef/dtfs2-common';
+import {
+  Currency,
+  TFM_AMENDMENT_STATUS,
+  AMENDMENT_QUERIES,
+  ApiError,
+  API_ERROR_CODE,
+  FacilityAmendment,
+  PORTAL_AMENDMENT_STATUS,
+  AMENDMENT_QUERY_STATUSES,
+} from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
-import { AMENDMENT_QUERY_STATUSES } from '../../../../constants';
 
 type CompletedFacilityEndDate =
   | {
@@ -154,6 +162,15 @@ export const getAmendmentsByDealId = async (req: Request, res: Response) => {
           amendment = await TfmFacilitiesRepo.findTfmAmendmentsByDealIdAndStatus(dealId, TFM_AMENDMENT_STATUS.COMPLETED);
         }
         break;
+      case AMENDMENT_QUERY_STATUSES.APPROVED: {
+        const statuses = [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, TFM_AMENDMENT_STATUS.COMPLETED];
+
+        amendment = await TfmFacilitiesRepo.findAllTypeAmendmentsByDealIdAndStatus({
+          dealId,
+          statuses,
+        });
+        break;
+      }
       default:
         amendment = await TfmFacilitiesRepo.findAmendmentsByDealId(dealId);
     }

@@ -37,6 +37,7 @@ const PutFacilityAmendmentSchema = z.object({
       firstTaskEmailSent: z.boolean(),
       effectiveDate: z.number(),
       automaticApprovalEmail: z.boolean(),
+      referenceNumber: z.string().optional(),
       ukefDecision: z
         .object({
           coverEndDate: z.string(),

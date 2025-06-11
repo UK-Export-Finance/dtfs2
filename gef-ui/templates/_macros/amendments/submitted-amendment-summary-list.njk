@@ -23,6 +23,6 @@
   }) }}
 
   {% if params.type === 'PORTAL' %}
-    <a href="/gef/application-details/{{ params.dealId }}/amendment-details/?amendmentId={{ params.amendmentId }}&facilityId={{ params.facilityId }}" class="govuk-link" data-cy="amendment-details-link">See further details</a>
+    <a href="/gef/application-details/{{ params.dealId }}/facilities/{{ params.facilityId }}/amendments/{{ params.amendmentId }}/amendment-details" class="govuk-link" data-cy="amendment-details-link">See further details</a>
   {% endif %}
 {% endmacro %}

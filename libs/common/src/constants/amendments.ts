@@ -1,3 +1,6 @@
+import { DEAL_STATUS } from './portal';
+import type { PortalAmendmentStatus } from '../types/amendment-status';
+
 export const TFM_AMENDMENT_STATUS = {
   /**
    * Amendment is created but no values have been provided
@@ -33,12 +36,12 @@ export const PORTAL_AMENDMENT_STATUS = {
   ACKNOWLEDGED: 'Acknowledged',
 } as const;
 
-export const PORTAL_AMENDMENT_INPROGRESS_STATUSES = [
+export const PORTAL_AMENDMENT_INPROGRESS_STATUSES: PortalAmendmentStatus[] = [
   PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
   PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
 ];
 
-export const PORTAL_AMENDMENT_SUBMITTED_STATUSES = [
+export const PORTAL_AMENDMENT_SUBMITTED_STATUSES: PortalAmendmentStatus[] = [
   PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
   PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
   PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
@@ -57,9 +60,20 @@ export const AMENDMENT_QUERIES = {
   LATEST: 'latest',
 } as const;
 
+export const AMENDMENT_QUERY_STATUSES = {
+  IN_PROGRESS: 'in-progress',
+  COMPLETED: 'completed',
+  APPROVED: 'approved',
+};
+
 export const CHECKERS_AMENDMENTS_DEAL_ID = 'checkersAmendmentDealId';
 
 export const AMENDMENT_TYPES = {
   PORTAL: 'PORTAL',
   TFM: 'TFM',
 } as const;
+
+/**
+ * The statuses for which amendment pages can be accessed
+ */
+export const AMENDMENT_ACCEPTABLE_DEAL_STATUSES = [DEAL_STATUS.UKEF_ACKNOWLEDGED] as string[];

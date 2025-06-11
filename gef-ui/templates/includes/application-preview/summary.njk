@@ -15,12 +15,6 @@
   </div>
 {% endif %}
 
-{% if isPortalAmendmentInProgress %}
-  {% set portalAmendmentStatusTagClass = 'govuk-tag--yellow' %}
-{% else %}
-  {% set portalAmendmentStatusTagClass = 'govuk-tag--blue' %}
-{% endif %}
-
 {% include "includes/application-details/applicationReferenceAndActions.njk" %}
 
 <div class="application-banner preview-banner" data-cy="application-banner">
@@ -122,24 +116,5 @@
 
   {% if submissionCount > 0 %}
     {% include "includes/application-preview/deal-submission-details.njk" %}
-  {% endif %}
-
-  {% if portalAmendmentStatus %}
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <div class="govuk-grid-column-one-third" data-cy="amendment-status-heading">
-          <p>
-            <strong>Amendment Status</strong>
-          </p>
-        </div>
-        <div class="govuk-grid-column-two-thirds">
-          <p>
-            {{ govukTag({ text: portalAmendmentStatus | dashIfEmpty, attributes: { 'data-cy': 'amendment-status' },
-              classes: portalAmendmentStatusTagClass}) }}
-          </p>
-        </div>
-      </div>
-      <div class="govuk-grid-column-one-half"></div>
-    </div>
   {% endif %}
 </div>

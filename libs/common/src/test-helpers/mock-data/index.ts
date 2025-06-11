@@ -24,3 +24,4 @@ export * from './record-correction-values';
 export * from './record-correction-log-details.mock';
 export * from './portal-amendment-to-checker-email-variables';
 export * from './portal-amendment-to-ukef-email-variables';
+export * from './portal-amendment-return-to-maker-email-variables';
