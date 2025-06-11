@@ -5,9 +5,9 @@ import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef
 import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
 import { PIM_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
 
-const { BANK1_MAKER1 } = MOCK_USERS;
+const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
-context('Amendments - Checker - application preview page when deal status is "Cancelled" and amendment is "Ready for checkers approval"', () => {
+context('Amendments - Application details - application preview page when deal status is "Cancelled" and no amendments are in progress', () => {
   let applicationDetailsUrl;
   let dealId;
   let facilityId;
@@ -45,13 +45,35 @@ context('Amendments - Checker - application preview page when deal status is "Ca
     cy.clearSessionCookies();
   });
 
-  beforeEach(() => {
-    cy.clearSessionCookies();
-    cy.login(BANK1_MAKER1);
-    cy.visit(applicationDetailsUrl);
+  describe('Maker', () => {
+    beforeEach(() => {
+      cy.clearSessionCookies();
+      cy.login(BANK1_MAKER1);
+      cy.visit(applicationDetailsUrl);
+    });
+
+    it('should not display the make a change button', () => {
+      applicationPreview.makeAChangeButton(facilityId).should('not.exist');
+    });
+
+    it('should NOT display the amendments abandoned deal cancelled banner', () => {
+      applicationPreview.amendmentsAbandonedDealCancelledBanner().should('not.exist');
+    });
   });
 
-  it('should not display the make a change button', () => {
-    applicationPreview.makeAChangeButton(facilityId).should('not.exist');
+  describe('Checker', () => {
+    beforeEach(() => {
+      cy.clearSessionCookies();
+      cy.login(BANK1_CHECKER1);
+      cy.visit(applicationDetailsUrl);
+    });
+
+    it('should not display the make a change button', () => {
+      applicationPreview.makeAChangeButton(facilityId).should('not.exist');
+    });
+
+    it('should NOT display the amendments abandoned deal cancelled banner', () => {
+      applicationPreview.amendmentsAbandonedDealCancelledBanner().should('not.exist');
+    });
   });
 });
