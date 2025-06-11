@@ -40,9 +40,10 @@ export const mapFacilityApplicationDetails = (
   userRoles: Role[],
 ): FacilityAndParams => {
   const facilityParams = facilityRelevantParams;
+  const { submissionType, status } = application;
 
-  const mappedFacilities = facilities.map((eachFacility: FacilityParams) => {
-    const facilityToMap = eachFacility;
+  const mappedFacilities = facilities.map((facility: FacilityParams) => {
+    const facilityToMap = facility;
 
     const dealIsCancelled = application.status === DEAL_STATUS.CANCELLED;
 
@@ -50,12 +51,12 @@ export const mapFacilityApplicationDetails = (
       return facilityToMap;
     }
 
-    const isFacilityIssued = eachFacility.stage === STAGE.ISSUED;
+    const isFacilityIssued = facility.stage === STAGE.ISSUED;
 
-    const userCanAmendIssuedFacilities = canUserAmendIssuedFacilities(application.submissionType, application.status, userRoles);
+    const userCanAmendIssuedFacilities = canUserAmendIssuedFacilities(submissionType, status, userRoles);
 
     const isFacilityWithAmendmentInProgress = amendmentsInProgress.find(
-      (item: AmendmentInProgressParams) => item.facilityId === eachFacility.facilityId && PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(item.status),
+      (item: AmendmentInProgressParams) => item.facilityId === facility.facilityId && PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(item.status),
     );
 
     const canIssuedFacilitiesBeAmended = isFacilityIssued && userCanAmendIssuedFacilities && !isFacilityWithAmendmentInProgress;
