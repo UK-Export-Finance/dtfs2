@@ -16,12 +16,12 @@ export const withEntraIdEmailSchemaTests = <Schema extends ZodSchema>({
       getUpdatedParameterFromParsedTestObject,
     });
 
-    it('should fail parsing if the parameter is not a null', () => {
+    it('should fail parsing if the parameter is null', () => {
       const { success } = schema.safeParse(getTestObjectWithUpdatedParameter(null));
       expect(success).toBe(false);
     });
 
-    it('should fail parsing if the parameter is not a undefined', () => {
+    it('should fail parsing if the parameter is undefined', () => {
       const { success } = schema.safeParse(getTestObjectWithUpdatedParameter(undefined));
       expect(success).toBe(false);
     });
