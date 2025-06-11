@@ -38,7 +38,7 @@ context('Amendments - Maker Abandon An Amendment Page', () => {
 
         cy.getAmendmentIdFromUrl().then((amendmentId) => {
           amendmentUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}`;
-          amendmentDetailsUrl = `/gef/application-details/${dealId}/amendment-details`;
+          amendmentDetailsUrl = `${amendmentUrl}/amendment-details`;
           const confirmReturnToMakerUrl = `${amendmentUrl}/return-to-maker`;
           const submittedUrl = `${amendmentUrl}/returned-to-maker`;
 

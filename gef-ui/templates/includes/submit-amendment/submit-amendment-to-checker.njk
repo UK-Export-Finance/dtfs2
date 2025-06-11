@@ -2,12 +2,12 @@
 
 {% set message = "Submit to UKEF or return to maker for changes" %}
 {% set amendmentUrl = "/gef/application-details/" + dealId + "/facilities/" + facilityId + "/amendments/" + amendmentId %}
-{% set submitToUkefUrl = amendmentUrl + "/submit-amendment-to-ukef" %}
+{% set submitToCheckerUrl = amendmentUrl + "/amendment-details" %}
 {% set abandonUrl = amendmentUrl + "/abandon" %}
 
 {{ govukButton({
     text: "Submit to be checked at your bank",
-    href: submitToUkefUrl,
+    href: submitToCheckerUrl,
     attributes: {
       'data-cy': 'submit-button'
     }

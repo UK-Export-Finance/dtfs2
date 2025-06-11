@@ -11,7 +11,7 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
 const CHANGED_FACILITY_VALUE = '20000';
 
-context('Amendments - Maker Abandon An Amendment', () => {
+context('Amendments - Maker abandons an amendment', () => {
   let dealId;
   let facilityId;
   let amendmentUrl;
@@ -39,7 +39,7 @@ context('Amendments - Maker Abandon An Amendment', () => {
           amendmentUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}`;
           const confirmReturnToMakerUrl = `${amendmentUrl}/return-to-maker`;
           const submittedUrl = `${amendmentUrl}/returned-to-maker`;
-          amendmentDetailsUrl = `/gef/application-details/${dealId}/amendment-details`;
+          amendmentDetailsUrl = `${amendmentUrl}/amendment-details`;
 
           cy.makerSubmitAmendmentForReviewAndCheckerReturnsToMaker({
             facilityValueExists: true,
@@ -61,22 +61,17 @@ context('Amendments - Maker Abandon An Amendment', () => {
   beforeEach(() => {
     cy.clearSessionCookies();
     cy.login(BANK1_MAKER1);
-  });
-
-  it('should not abandon the amendment', () => {
     cy.visit(relative(amendmentDetailsUrl));
     amendmentPage.abandon().click();
     cy.url().should('eq', relative(`${amendmentUrl}/abandon`));
+  });
 
+  it('should not abandon the amendment', () => {
     abandon.noKeepButton().click();
     cy.url().should('eq', relative(`/gef/application-details/${dealId}`));
   });
 
   it('should abandon the amendment', () => {
-    cy.visit(relative(amendmentDetailsUrl));
-    amendmentPage.abandon().click();
-    cy.url().should('eq', relative(`${amendmentUrl}/abandon`));
-
     abandon.yesAbandonButton().click();
     cy.get('[data-cy="abandoned-panel"]').should('exist');
     cy.get('[data-cy="abandoned-panel"]').contains('Amendment has been abandoned');
