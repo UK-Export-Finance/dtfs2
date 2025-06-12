@@ -13,7 +13,8 @@ import { DEAL_TYPE } from '../constants';
  */
 export const hasBeenSubmittedToTfm = (deal: Deal): boolean => {
   // Ascertain submission count by deal type
-  const submissionCount = deal.dealType === DEAL_TYPE.GEF ? deal.submissionCount : deal.details.submissionCount;
+  const isGef = deal.dealType === DEAL_TYPE.GEF;
+  const submissionCount = isGef ? deal.submissionCount : deal.details.submissionCount;
 
   /**
    * If the deal submission count is 0 (with maker or checker).

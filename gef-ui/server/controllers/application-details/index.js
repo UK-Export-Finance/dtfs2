@@ -88,7 +88,7 @@ const buildBody = async (app, previewMode, user) => {
     const canResubmitIssueFacilities = canResubmitIssuedFacilities(app);
     const hasUkefDecisionAccepted = app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false;
     const dealCancelledStatus = [DEAL_STATUS.CANCELLED, DEAL_STATUS.PENDING_CANCELLATION];
-    let tfmDeal = null;
+    let tfmDeal;
 
     if (hasBeenSubmittedToTfm(app)) {
       tfmDeal = await getTfmDeal({ dealId: app._id, userToken: apiToken });
