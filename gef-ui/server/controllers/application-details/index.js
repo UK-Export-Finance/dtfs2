@@ -370,6 +370,18 @@ const applicationDetails = async (req, res, next) => {
     });
 
     /**
+     * if amendments are in progress and the application is cancelled,
+     * set the cancelledDealWithAmendments flag to true
+     * so that amendments abandoned banner is displayed on the application details page
+     */
+    const areAmendmentsInProgress = Boolean(amendmentsInProgress?.length);
+    const isDealCancelled = application.status === DEAL_STATUS.CANCELLED;
+
+    if (areAmendmentsInProgress && isDealCancelled) {
+      params.cancelledDealWithAmendments = true;
+    }
+
+    /**
      * sets headings for portal amendment task comment sections
      * sets empty array for the list of amendments to populate
      * sets flag for if these lists and headings should be rendered

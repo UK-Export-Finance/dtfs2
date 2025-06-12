@@ -47,6 +47,10 @@ export const mapFacilityApplicationDetails = (
 
     const dealIsCancelled = application.status === DEAL_STATUS.CANCELLED;
 
+    /**
+     * If the deal is cancelled,
+     * we do not want to map any further details for facilities.
+     */
     if (dealIsCancelled) {
       return facilityToMap;
     }
