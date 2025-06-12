@@ -46,7 +46,7 @@ context('Amendments - Amendment details page', () => {
 
   users.forEach((user) => {
     const userName = user.roles;
-    describe(`Amendment details page - login as a ${userName}`, () => {
+    describe(`Amendment details page - Ready for checkers approval - login as a ${userName}`, () => {
       after(() => {
         cy.clearCookies();
         cy.clearSessionCookies();

@@ -5,7 +5,11 @@
 {% import '../print-button.njk' as printButton %}
 
 {% block pageTitle -%}
-  Amendment details
+  {% if canSubmitFacilityAmendment %}
+    Check your answers before submitting the amendment request
+  {% else %}
+    Amendment details
+  {% endif %}
 {%- endblock %}
 
 {% block content -%}
@@ -26,7 +30,11 @@
             <span class="govuk-caption-l" data-cy="heading-caption">
               {{ exporterName }}, {{ facilityType }} facility
             </span>
-            Amendment details
+            {% if canSubmitFacilityAmendment %}
+              Check your answers before submitting the amendment request
+            {% else %}
+              Amendment details
+            {% endif %}
           </h1>
 
           {% if banner %}
@@ -52,7 +60,7 @@
         {% include "../../includes/submit/submit-to-ukef.njk" %}
       {% endif %}
 
-      {% if canAbandonFacilityAmendment %}
+      {% if canSubmitFacilityAmendment %}
         {% include "../../includes/submit-amendment/submit-amendment-to-checker.njk" %}
       {% endif %}
     </form>

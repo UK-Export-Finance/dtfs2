@@ -17,7 +17,7 @@ users.forEach((user) => {
       const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().build();
       const userRoles = [user];
       const banner = true;
-      const canAbandonFacilityAmendment = userRoles.includes(ROLES.MAKER) && amendment.status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
+      const canSubmitFacilityAmendment = userRoles.includes(ROLES.MAKER) && amendment.status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
 
       // Act
       const result = createAmendmentDetailsViewModel({ amendment, facility, deal, userRoles, banner });
@@ -33,7 +33,7 @@ users.forEach((user) => {
         amendmentId: amendment.amendmentId,
         effectiveDate: '',
         banner,
-        canAbandonFacilityAmendment,
+        canSubmitFacilityAmendment,
         previousPage: `/gef/application-details/${deal._id}`,
         amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
       };

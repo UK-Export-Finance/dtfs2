@@ -22,7 +22,7 @@ users.forEach((user) => {
       const effectiveDate = '25/07/2025';
       const banner = true;
       const amendmentStatus = PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
-      const canAbandonFacilityAmendment = user.includes(ROLES.MAKER) && amendmentStatus === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
+      const canSubmitFacilityAmendment = user.includes(ROLES.MAKER) && amendmentStatus === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
 
       const params: AmendmentDetailsViewModel = {
         userRoles,
@@ -32,7 +32,7 @@ users.forEach((user) => {
         dealId,
         facilityId,
         amendmentId,
-        canAbandonFacilityAmendment,
+        canSubmitFacilityAmendment,
         previousPage,
         effectiveDate,
         banner,
