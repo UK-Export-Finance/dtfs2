@@ -14,7 +14,6 @@ const params = {
   furtherMakersInputAmendmentDetailsUrlAndText: [],
   readyForCheckerAmendmentStatusHeading: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
   furtherMakersInputAmendmentStatusHeading: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
-  cancelledDealWithAmendments: false,
 };
 
 describe(page, () => {
@@ -22,11 +21,43 @@ describe(page, () => {
 
   const amendmentsAbandonedDealCancelledBanner = `[data-cy="amendments-abandoned-deal-cancelled-banner"]`;
 
+  describe('cancelledDealWithAmendments does not exist', () => {
+    it(`should NOT render the banner`, () => {
+      wrapper = render({
+        ...params,
+      });
+
+      wrapper.expectElement(amendmentsAbandonedDealCancelledBanner).notToExist();
+    });
+  });
+
   describe('cancelledDealWithAmendments as false', () => {
     it(`should NOT render the banner`, () => {
       wrapper = render({
         ...params,
         cancelledDealWithAmendments: false,
+      });
+
+      wrapper.expectElement(amendmentsAbandonedDealCancelledBanner).notToExist();
+    });
+  });
+
+  describe('cancelledDealWithAmendments as false', () => {
+    it(`should NOT render the banner`, () => {
+      wrapper = render({
+        ...params,
+        cancelledDealWithAmendments: undefined,
+      });
+
+      wrapper.expectElement(amendmentsAbandonedDealCancelledBanner).notToExist();
+    });
+  });
+
+  describe('cancelledDealWithAmendments as null', () => {
+    it(`should NOT render the banner`, () => {
+      wrapper = render({
+        ...params,
+        cancelledDealWithAmendments: null,
       });
 
       wrapper.expectElement(amendmentsAbandonedDealCancelledBanner).notToExist();

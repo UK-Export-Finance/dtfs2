@@ -363,7 +363,10 @@ const applicationDetails = async (req, res, next) => {
      * set the cancelledDealWithAmendments flag to true
      * so that amendments abandoned banner is displayed on the application details page
      */
-    if (amendmentsInProgress.length > 0 && application.status === DEAL_STATUS.CANCELLED) {
+    const areAmendmentsInProgress = Boolean(amendmentsInProgress?.length);
+    const isDealCancelled = application.status === DEAL_STATUS.CANCELLED;
+
+    if (areAmendmentsInProgress && isDealCancelled) {
       params.cancelledDealWithAmendments = true;
     }
 
