@@ -1,4 +1,4 @@
-import { PortalFacilityAmendmentWithUkefId, ROLES, DATE_FORMATS } from '@ukef/dtfs2-common';
+import { PortalFacilityAmendmentWithUkefId, ROLES, DATE_FORMATS, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { format, fromUnixTime } from 'date-fns';
 import { AmendmentDetailsViewModel } from '../../../types/view-models/amendments/amendment-details-view-model';
 import { Deal } from '../../../types/deal';
@@ -37,6 +37,7 @@ export const createAmendmentDetailsViewModel = ({
   amendmentId: amendment.amendmentId,
   effectiveDate: amendment.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY) : '',
   banner,
+  canAbandonFacilityAmendment: userRoles.includes('maker') && amendment.status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
   previousPage: `/gef/application-details/${deal._id}`,
   amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
 });

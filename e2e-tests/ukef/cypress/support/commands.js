@@ -13,6 +13,8 @@ import { makerSubmitPortalAmendmentForReview } from './gef/makerSubmitPortalAmen
 import { loginAndSubmitPortalAmendmentRequestToUkef } from './gef/loginAndSubmitPortalAmendmentRequestToUkef';
 import { makerMakesPortalAmendmentRequest } from './gef/makerMakesPortalAmendmentRequest';
 import { makerAndCheckerSubmitPortalAmendmentRequest } from './gef/makerAndCheckerSubmitPortalAmendmentRequest';
+import { makerSubmitAmendmentForReviewAndCheckerReturnsToMaker } from './gef/makerSubmitAmendmentForReviewAndCheckerReturnsToMaker';
+import { checkerReturnsAmendmentToMaker } from './gef/checkerReturnsAmendmentToMaker';
 import { checkerSubmitsPortalAmendmentRequest } from './gef/checkerSubmitsPortalAmendmentRequest';
 import { submitToUkefMultipleAmendmentsOnFacility } from './gef/submitToUkefMultipleAmendmentsOnFacility';
 import { assertPrintDialogue } from './utils/assertPrintDialogue';
@@ -61,7 +63,9 @@ Cypress.Commands.add('getAmendmentIdFromUrl', getAmendmentIdFromUrl);
 Cypress.Commands.add('makerSubmitPortalAmendmentForReview', makerSubmitPortalAmendmentForReview);
 Cypress.Commands.add('makerMakesPortalAmendmentRequest', makerMakesPortalAmendmentRequest);
 Cypress.Commands.add('makerAndCheckerSubmitPortalAmendmentRequest', makerAndCheckerSubmitPortalAmendmentRequest);
+Cypress.Commands.add('makerSubmitAmendmentForReviewAndCheckerReturnsToMaker', makerSubmitAmendmentForReviewAndCheckerReturnsToMaker);
 Cypress.Commands.add('checkerSubmitsPortalAmendmentRequest', checkerSubmitsPortalAmendmentRequest);
+Cypress.Commands.add('checkerReturnsAmendmentToMaker', checkerReturnsAmendmentToMaker);
 Cypress.Commands.add('submitToUkefMultipleAmendmentsOnFacility', submitToUkefMultipleAmendmentsOnFacility);
 Cypress.Commands.add('loginAndSubmitPortalAmendmentRequestToUkef', loginAndSubmitPortalAmendmentRequestToUkef);
 
