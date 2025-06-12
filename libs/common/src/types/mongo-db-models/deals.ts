@@ -13,6 +13,7 @@ export interface BssEwcsDeal extends BaseDeal {
   dealType: typeof DEAL_TYPE.BSS_EWCS;
   details: {
     ukefDealId: string;
+    submissionCount: number;
   };
 }
 
@@ -22,6 +23,7 @@ export interface GefDeal extends BaseDeal {
   eligibility: AnyObject;
   exporter: AnyObject;
   portalActivities: PortalActivity[];
+  submissionCount: number;
 }
 
 /**
