@@ -2,9 +2,9 @@ import { Role, PORTAL_AMENDMENT_INPROGRESS_STATUSES, DEAL_STATUS } from '@ukef/d
 import { STAGE } from '../constants';
 import { addAmendmentParamsToFacility } from './add-amendment-params-to-facility';
 import { canUserAmendIssuedFacilities } from '../utils/facility-amendments.helper';
-import { Deal } from '../types/deal';
 import { Facility, FacilityParams } from '../types/facility';
 import { AmendmentDetailsUrlAndText, AmendmentInProgressParams } from '../types/portal-amendments';
+import { Deal } from '../types/deal';
 
 export type AmendmentDetailsFacilityParams = {
   readyForCheckerAmendmentDetailsUrlAndText: AmendmentDetailsUrlAndText[];
