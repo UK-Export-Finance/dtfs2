@@ -34,8 +34,10 @@ import { getSubmitAmendmentToUkef } from '../../../controllers/amendments/submit
 import { postSubmitAmendmentToUkef } from '../../../controllers/amendments/submit-amendment-to-ukef/post-submit-amendment-to-ukef';
 import { getApplicationAmendments } from '../../../controllers/amendments/application-amendments/get-application-amendments';
 import { getReturnAmendmentToMaker } from '../../../controllers/amendments/return-amendment-to-maker/get-return-amendment-to-maker';
-import { postReturnAmendmentToMaker } from '../../../controllers/amendments/return-amendment-to-maker/post-return-amendment-to-maker';
 import { getReturnedToMaker } from '../../../controllers/amendments/returned-to-maker/get-returned-to-maker';
+import { postReturnAmendmentToMaker } from '../../../controllers/amendments/return-amendment-to-maker/post-return-amendment-to-maker';
+import { getAbandonPortalFacilityAmendment } from '../../../controllers/amendments/abandon-amendment/get-abandon-portal-facility-amendment';
+import { postAbandonPortalFacilityAmendment } from '../../../controllers/amendments/abandon-amendment/post-abandon-portal-facility-amendment';
 
 const {
   WHAT_DO_YOU_NEED_TO_CHANGE,
@@ -56,6 +58,7 @@ const {
   ALL_TYPES_AMENDMENTS,
   RETURN_TO_MAKER,
   RETURNED_TO_MAKER,
+  ABANDON,
 } = PORTAL_AMENDMENT_PAGES;
 
 const router = express.Router();
@@ -165,6 +168,20 @@ router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${APPROVED_BY_UKEF}`)
   .all([validatePortalFacilityAmendmentsEnabled, validateToken, validateBank, validateDealStatusForAmendment, validateRole({ role: [CHECKER] })])
   .get(getApprovedByUkef);
+
+router
+  .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${ABANDON}`)
+  .all([
+    validatePortalFacilityAmendmentsEnabled,
+    validateToken,
+    validateBank,
+    validateMongoId('dealId'),
+    validateMongoId('facilityId'),
+    validateMongoId('amendmentId'),
+    validateRole({ role: [MAKER] }),
+  ])
+  .get(getAbandonPortalFacilityAmendment)
+  .post(postAbandonPortalFacilityAmendment);
 
 router
   .route(`/application-details/:dealId/facilities/:facilityId/amendments/:amendmentId/${AMENDMENT_DETAILS}`)

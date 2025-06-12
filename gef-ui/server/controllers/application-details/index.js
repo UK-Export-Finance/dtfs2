@@ -1,5 +1,12 @@
 const startCase = require('lodash/startCase');
-const { DEAL_TYPE, timeZoneConfig, DEAL_STATUS, PORTAL_AMENDMENT_INPROGRESS_STATUSES, PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const {
+  DEAL_TYPE,
+  timeZoneConfig,
+  DEAL_STATUS,
+  PORTAL_AMENDMENT_INPROGRESS_STATUSES,
+  PORTAL_AMENDMENT_STATUS,
+  hasBeenSubmittedToTfm,
+} = require('@ukef/dtfs2-common');
 const { getTfmDeal, getPortalAmendmentsOnDeal, getFacilities, getFacility } = require('../../services/api');
 const { canIssueUnissuedFacilities } = require('./canIssueUnissuedFacilities');
 const {
@@ -81,7 +88,11 @@ const buildBody = async (app, previewMode, user) => {
     const canResubmitIssueFacilities = canResubmitIssuedFacilities(app);
     const hasUkefDecisionAccepted = app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false;
     const dealCancelledStatus = [DEAL_STATUS.CANCELLED, DEAL_STATUS.PENDING_CANCELLATION];
-    const tfmDeal = await getTfmDeal({ dealId: app._id, userToken: apiToken });
+    let tfmDeal;
+
+    if (hasBeenSubmittedToTfm(app)) {
+      tfmDeal = await getTfmDeal({ dealId: app._id, userToken: apiToken });
+    }
 
     const mapSummaryParams = {
       app,

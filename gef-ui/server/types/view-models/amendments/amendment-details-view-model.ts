@@ -8,6 +8,7 @@ export type AmendmentDetailsViewModel = {
   dealId: string;
   facilityId: string;
   amendmentId: string;
+  canAbandonFacilityAmendment: boolean;
   previousPage: string;
   effectiveDate: string;
   banner?: boolean;
