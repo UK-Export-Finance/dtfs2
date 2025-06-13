@@ -87,12 +87,10 @@ const getAllFacilitiesByDealId = async (dealId) => {
 };
 exports.getAllFacilitiesByDealId = getAllFacilitiesByDealId;
 
-exports.isPortalFacilityAmendmentsFeatureFlagEnabled = isPortalFacilityAmendmentsFeatureFlagEnabled;
-
 exports.getFacilitiesByDealId = async (req, res) => {
   try {
     let facilities;
-    const isPortalAmendmentsEnabled = exports.isPortalFacilityAmendmentsFeatureFlagEnabled();
+    const isPortalAmendmentsEnabled = isPortalFacilityAmendmentsFeatureFlagEnabled();
 
     if (req.query && req.query.dealId) {
       try {

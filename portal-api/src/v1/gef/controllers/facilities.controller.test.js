@@ -77,7 +77,7 @@ describe('getFacilitiesByDealId', () => {
     jest.resetAllMocks();
   });
 
-  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled or not specified', () => {
     beforeEach(() => {
       jest.spyOn(controller, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(false);
     });
