@@ -261,5 +261,26 @@ describe('canIssueUnissuedFacilities', () => {
       // Assert
       expect(response).toBe(false);
     });
+
+    it('should return false if deal has not yet been submitted to the TFM', () => {
+      // Arrange
+      const tfmDeal = null;
+      const portalDeal = mockPortalDeal;
+      const unissuedFacilitiesPresent = true;
+      const canResubmitIssueFacilities = [];
+      const hasUkefDecisionAccepted = false;
+
+      // Act
+      const response = canIssueUnissuedFacilities({
+        portalDeal,
+        tfmDeal,
+        unissuedFacilitiesPresent,
+        canResubmitIssueFacilities,
+        hasUkefDecisionAccepted,
+      });
+
+      // Assert
+      expect(response).toBe(false);
+    });
   });
 });

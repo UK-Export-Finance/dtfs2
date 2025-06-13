@@ -32,3 +32,4 @@ export * from './strip-html';
 export * from './is-gov-notify-mocked';
 export * from './create-amendment-reference-number';
 export * from './map-facility-fields-to-amendment-fields';
+export * from './has-been-submitted-to-tfm';

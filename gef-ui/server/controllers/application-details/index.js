@@ -1,5 +1,12 @@
 const startCase = require('lodash/startCase');
-const { DEAL_TYPE, timeZoneConfig, DEAL_STATUS, PORTAL_AMENDMENT_INPROGRESS_STATUSES, PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const {
+  DEAL_TYPE,
+  timeZoneConfig,
+  DEAL_STATUS,
+  PORTAL_AMENDMENT_INPROGRESS_STATUSES,
+  PORTAL_AMENDMENT_STATUS,
+  hasBeenSubmittedToTfm,
+} = require('@ukef/dtfs2-common');
 const { getTfmDeal, getPortalAmendmentsOnDeal, getFacilities, getFacility } = require('../../services/api');
 const { canIssueUnissuedFacilities } = require('./canIssueUnissuedFacilities');
 const {
@@ -81,7 +88,11 @@ const buildBody = async (app, previewMode, user) => {
     const canResubmitIssueFacilities = canResubmitIssuedFacilities(app);
     const hasUkefDecisionAccepted = app.ukefDecisionAccepted ? app.ukefDecisionAccepted : false;
     const dealCancelledStatus = [DEAL_STATUS.CANCELLED, DEAL_STATUS.PENDING_CANCELLATION];
-    const tfmDeal = await getTfmDeal({ dealId: app._id, userToken: apiToken });
+    let tfmDeal;
+
+    if (hasBeenSubmittedToTfm(app)) {
+      tfmDeal = await getTfmDeal({ dealId: app._id, userToken: apiToken });
+    }
 
     const mapSummaryParams = {
       app,
@@ -357,6 +368,18 @@ const applicationDetails = async (req, res, next) => {
         status,
       };
     });
+
+    /**
+     * if amendments are in progress and the application is cancelled,
+     * set the cancelledDealWithAmendments flag to true
+     * so that amendments abandoned banner is displayed on the application details page
+     */
+    const areAmendmentsInProgress = Boolean(amendmentsInProgress?.length);
+    const isDealCancelled = application.status === DEAL_STATUS.CANCELLED;
+
+    if (areAmendmentsInProgress && isDealCancelled) {
+      params.cancelledDealWithAmendments = true;
+    }
 
     /**
      * sets headings for portal amendment task comment sections
