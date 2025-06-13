@@ -744,6 +744,54 @@ describe('controllers/application-details', () => {
         );
       });
 
+      it('should render `application-preview` with cancelledDealWithAmendments as true when amendment is in progress and deal is cancelled', async () => {
+        mockGetSubmittedDetailsResponse.portalAmendmentStatus = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
+        mockGetSubmittedDetailsResponse.isPortalAmendmentInProgress = true;
+        mockGetSubmittedDetailsResponse.facilityIdWithAmendmentInProgress = '1234';
+
+        getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
+
+        mockApplicationResponse.status = DEAL_STATUS.CANCELLED;
+        mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        api.getPortalAmendmentsOnDeal.mockResolvedValueOnce([
+          { ...aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL }), facilityId: '1234' },
+        ]);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
+            cancelledDealWithAmendments: true,
+          }),
+        );
+      });
+
+      it('should render `application-preview` with cancelledDealWithAmendments as false when amendment is not in progress and deal is cancelled', async () => {
+        mockGetSubmittedDetailsResponse.portalAmendmentStatus = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
+        mockGetSubmittedDetailsResponse.isPortalAmendmentInProgress = true;
+        mockGetSubmittedDetailsResponse.facilityIdWithAmendmentInProgress = '1234';
+
+        getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
+
+        api.getPortalAmendmentsOnDeal.mockResolvedValueOnce([]);
+
+        mockApplicationResponse.status = DEAL_STATUS.CANCELLED;
+        mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.not.objectContaining({
+            cancelledDealWithAmendments: expect.any(Boolean),
+          }),
+        );
+      });
+
       it('should render `application-preview` with facilityIdWithAmendmentInProgress as false when amendment is not in progress', async () => {
         mockGetSubmittedDetailsResponse.portalAmendmentStatus = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
         mockGetSubmittedDetailsResponse.isPortalAmendmentInProgress = true;
@@ -754,6 +802,10 @@ describe('controllers/application-details', () => {
         ]);
 
         getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
+
+        mockApplicationResponse.status = DEAL_STATUS.UKEF_ACKNOWLEDGED;
+        mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
         await applicationDetails(mockRequest, mockResponse);
 

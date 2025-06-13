@@ -49,6 +49,10 @@
     {% if userRoles.includes("checker") %}
       {% include "../../includes/submit/submit-to-ukef.njk" %}
     {% endif %}
+
+    {% if canAbandonFacilityAmendment %}
+      {% include "../../includes/submit-amendment/submit-amendment-to-checker.njk" %}
+    {% endif %}
   </div>
 
 {%- endblock %}

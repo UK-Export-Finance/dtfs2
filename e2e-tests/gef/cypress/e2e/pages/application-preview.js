@@ -12,6 +12,8 @@ const applicationPreview = {
   amendmentDetailsReadyForCheckerLink: (index) => cy.get(`[data-cy="amendment-details-ready-for-checker-${index}"]`),
   amendmentDetailsFurtherMakersInputLink: (index) => cy.get(`[data-cy="amendment-details-further-makers-input-${index}"]`),
 
+  amendmentsAbandonedDealCancelledBanner: () => cy.get('[data-cy="amendments-abandoned-deal-cancelled-banner"]'),
+
   ukefReview: () => cy.get('[data-cy="ukef-review"]'),
   ukefReviewLink: () => cy.get('[data-cy="ukef-review-link"]'),
   ukefReviewHeading: () => cy.get('[data-cy="ukef-review-decision-heading"]'),

@@ -1,0 +1,23 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set message = "Submit to UKEF or return to maker for changes" %}
+{% set amendmentUrl = "/gef/application-details/" + dealId + "/facilities/" + facilityId + "/amendments/" + amendmentId %}
+{% set submitToCheckerUrl = amendmentUrl + "/amendment-details" %}
+{% set abandonUrl = amendmentUrl + "/abandon" %}
+
+{{ govukButton({
+    text: "Submit to be checked at your bank",
+    href: submitToCheckerUrl,
+    attributes: {
+      'data-cy': 'submit-button'
+    }
+}) }}
+
+{{ govukButton({
+  text: "Abandon the amendment",
+  classes: "govuk-button--secondary",
+  href: abandonUrl,
+  attributes: {
+    'data-cy': 'abandon-button'
+  }
+}) }}
