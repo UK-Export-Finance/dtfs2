@@ -1,4 +1,4 @@
-import { FACILITY_TYPE, PORTAL_AMENDMENT_STATUS, ROLES } from '@ukef/dtfs2-common';
+import { FACILITY_TYPE, ROLES } from '@ukef/dtfs2-common';
 import pageRenderer from '../../pageRenderer';
 import { AmendmentDetailsViewModel } from '../../../server/types/view-models/amendments/amendment-details-view-model';
 
@@ -21,8 +21,7 @@ users.forEach((user) => {
       const submitAmendment = user.includes(ROLES.CHECKER);
       const effectiveDate = '25/07/2025';
       const banner = true;
-      const amendmentStatus = PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
-      const canSubmitFacilityAmendment = user.includes(ROLES.MAKER) && amendmentStatus === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
+      const canSubmitFacilityAmendment = false;
 
       const params: AmendmentDetailsViewModel = {
         userRoles,
@@ -104,10 +103,8 @@ users.forEach((user) => {
 
         if (user === ROLES.MAKER) {
           wrapper.expectElement('[data-cy="return-button"]').notToExist();
-          wrapper.expectElement('[data-cy="submit-button"]').toExist();
-          wrapper.expectText('[data-cy="submit-button"]').toRead('Submit to be checked at your bank');
-          wrapper.expectElement('[data-cy="abandon-button"]').toExist();
-          wrapper.expectText('[data-cy="abandon-button"]').toRead('Abandon the amendment');
+          wrapper.expectElement('[data-cy="submit-button"]').notToExist();
+          wrapper.expectElement('[data-cy="abandon-button"]').notToExist();
         }
 
         if (user === ROLES.CHECKER) {
