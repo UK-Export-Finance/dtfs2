@@ -37,7 +37,7 @@ export const createAmendmentDetailsViewModel = ({
   amendmentId: amendment.amendmentId,
   effectiveDate: amendment.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY) : '',
   banner,
-  canAbandonFacilityAmendment: userRoles.includes('maker') && amendment.status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
+  canSubmitFacilityAmendment: userRoles.includes('maker') && amendment.status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
   previousPage: `/gef/application-details/${deal._id}`,
   amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
 });
