@@ -8,6 +8,7 @@ const {
   InvalidDealIdError,
   parseDealVersion,
   mapFacilityFieldsToAmendmentFields,
+  isPortalFacilityAmendmentsFeatureFlagEnabled,
 } = require('@ukef/dtfs2-common');
 const { generateAuditDatabaseRecordFromAuditDetails, generatePortalAuditDetails, deleteOne, deleteMany } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
@@ -85,10 +86,12 @@ const getAllFacilitiesByDealId = async (dealId) => {
   return matchingFacilities;
 };
 exports.getAllFacilitiesByDealId = getAllFacilitiesByDealId;
-
+exports.isPortalFacilityAmendmentsFeatureFlagEnabled = isPortalFacilityAmendmentsFeatureFlagEnabled;
 exports.getFacilitiesByDealId = async (req, res) => {
   try {
     let facilities;
+
+    const isPortalAmendmentsEnabled = exports.isPortalFacilityAmendmentsFeatureFlagEnabled();
 
     if (req.query && req.query.dealId) {
       try {
@@ -119,18 +122,20 @@ exports.getFacilitiesByDealId = async (req, res) => {
          * update the facility with the amended values.
          */
         const { _id } = facility;
-        const amendments = await api.getAcknowledgedAmendmentsByFacilityId(_id);
+        if (isPortalAmendmentsEnabled) {
+          const amendments = await api.getAcknowledgedAmendmentsByFacilityId(_id);
 
-        if (amendments?.length) {
-          // sets the coverEndDate and value to the amended values if present
-          const { coverEndDate: amendedCoverEndDate, value: amendedValue } = mapFacilityFieldsToAmendmentFields(amendments);
+          if (amendments?.length) {
+            // sets the coverEndDate and value to the amended values if present
+            const { coverEndDate: amendedCoverEndDate, value: amendedValue } = mapFacilityFieldsToAmendmentFields(amendments);
 
-          if (amendedValue) {
-            facility.value = amendedValue;
-          }
+            if (amendedValue) {
+              facility.value = amendedValue;
+            }
 
-          if (amendedCoverEndDate) {
-            facility.coverEndDate = new Date(amendedCoverEndDate);
+            if (amendedCoverEndDate) {
+              facility.coverEndDate = new Date(amendedCoverEndDate);
+            }
           }
         }
 
