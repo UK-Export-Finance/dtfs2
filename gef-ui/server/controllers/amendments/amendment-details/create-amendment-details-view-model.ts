@@ -27,17 +27,21 @@ export const createAmendmentDetailsViewModel = ({
   facility: Facility;
   userRoles: string[];
   banner?: boolean;
-}): AmendmentDetailsViewModel => ({
-  userRoles,
-  exporterName: deal.exporter.companyName,
-  facilityType: facility.type,
-  submitAmendment: userRoles.includes(ROLES.CHECKER),
-  dealId: deal._id,
-  facilityId: facility._id,
-  amendmentId: amendment.amendmentId,
-  effectiveDate: amendment.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY) : '',
-  banner,
-  canSubmitFacilityAmendment: userRoles.includes('maker') && amendment.status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
-  previousPage: `/gef/application-details/${deal._id}`,
-  amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
-});
+}): AmendmentDetailsViewModel => {
+  const canSubmitFacilityAmendmentToChecker = userRoles.includes(ROLES.MAKER) && amendment.status === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
+
+  return {
+    userRoles,
+    exporterName: deal.exporter.companyName,
+    facilityType: facility.type,
+    submitAmendment: userRoles.includes(ROLES.CHECKER),
+    dealId: deal._id,
+    facilityId: facility._id,
+    amendmentId: amendment.amendmentId,
+    effectiveDate: amendment.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY) : '',
+    banner,
+    canSubmitFacilityAmendmentToChecker,
+    previousPage: `/gef/application-details/${deal._id}`,
+    amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
+  };
+};

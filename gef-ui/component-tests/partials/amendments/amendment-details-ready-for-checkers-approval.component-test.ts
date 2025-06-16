@@ -21,7 +21,7 @@ users.forEach((user) => {
       const submitAmendment = user.includes(ROLES.CHECKER);
       const effectiveDate = '25/07/2025';
       const banner = true;
-      const canSubmitFacilityAmendment = false;
+      const canSubmitFacilityAmendmentToChecker = false;
 
       const params: AmendmentDetailsViewModel = {
         userRoles,
@@ -31,7 +31,7 @@ users.forEach((user) => {
         dealId,
         facilityId,
         amendmentId,
-        canSubmitFacilityAmendment,
+        canSubmitFacilityAmendmentToChecker,
         previousPage,
         effectiveDate,
         banner,
