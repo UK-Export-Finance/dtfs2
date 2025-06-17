@@ -190,14 +190,14 @@ module.exports = {
      */
     const deleteAllFromSqlDb = async () =>
       await Promise.all([
-        await SqlDbDataSource.createQueryBuilder().delete().from(PaymentEntity, {}),
-        await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordEntity, {}),
-        await SqlDbDataSource.createQueryBuilder().delete().from(UtilisationReportEntity, {}),
-        await SqlDbDataSource.createQueryBuilder().delete().from(AzureFileInfoEntity, {}),
-        await SqlDbDataSource.createQueryBuilder().delete().from(PaymentMatchingToleranceEntity, {}),
-        await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordCorrectionRequestTransientFormDataEntity, {}),
-        await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordCorrectionTransientFormDataEntity, {}),
-        await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordCorrectionEntity, {}),
+        await SqlDbDataSource.createQueryBuilder().delete().from(PaymentEntity).execute(),
+        await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordEntity).execute(),
+        await SqlDbDataSource.createQueryBuilder().delete().from(UtilisationReportEntity).execute(),
+        await SqlDbDataSource.createQueryBuilder().delete().from(AzureFileInfoEntity).execute(),
+        await SqlDbDataSource.createQueryBuilder().delete().from(PaymentMatchingToleranceEntity).execute(),
+        await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordCorrectionRequestTransientFormDataEntity).execute(),
+        await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordCorrectionTransientFormDataEntity).execute(),
+        await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordCorrectionEntity).execute(),
       ]);
 
     const getAllBanks = async () => {
