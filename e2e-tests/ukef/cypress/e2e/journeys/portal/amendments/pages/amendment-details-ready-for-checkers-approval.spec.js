@@ -15,7 +15,7 @@ const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
 const CHANGED_FACILITY_VALUE = '10000';
 
-context('Amendments - Amendment details page', () => {
+context('Amendments - Ready for checkers approval - Amendment details page', () => {
   let dealId;
   let facilityId;
   let dealUrl;
@@ -46,7 +46,7 @@ context('Amendments - Amendment details page', () => {
 
   users.forEach((user) => {
     const userName = user.roles;
-    describe(`Amendment details page - login as a ${userName}`, () => {
+    describe(`Amendment details page - Ready for checkers approval - Login as a ${userName}`, () => {
       after(() => {
         cy.clearCookies();
         cy.clearSessionCookies();
@@ -161,17 +161,15 @@ context('Amendments - Amendment details page', () => {
       });
 
       if (user === BANK1_MAKER1) {
-        it('should display submit the deal action buttons', () => {
-          applicationPreview.submitHeading().should('not.exist');
-          applicationPreview.returnButton().should('not.exist');
+        it('should not display submit the deal action buttons', () => {
+          amendmentPage.returnButton().should('not.exist');
           submitButton().should('not.exist');
         });
       }
 
       if (user === BANK1_CHECKER1) {
         it('should display submit the deal action buttons', () => {
-          cy.assertText(applicationPreview.submitHeading(), 'Submit or return');
-          applicationPreview.returnButton().should('exist');
+          amendmentPage.returnButton().should('exist');
           submitButton().should('exist');
         });
       }

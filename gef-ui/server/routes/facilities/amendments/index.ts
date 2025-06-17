@@ -195,7 +195,8 @@ router
     validateDealStatusForAmendment,
     validateRole({ role: [MAKER, CHECKER] }),
   ])
-  .get(getAmendmentDetails);
+  .get(getAmendmentDetails)
+  .post(postCheckYourAnswers);
 
 router
   .route(`/application-details/:dealId/${ALL_TYPES_AMENDMENTS}`)
