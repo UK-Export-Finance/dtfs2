@@ -5,7 +5,11 @@
 {% import '../print-button.njk' as printButton %}
 
 {% block pageTitle -%}
-  Amendment details
+  {% if canSubmitFacilityAmendmentToChecker %}
+    Check your answers before submitting the amendment request
+  {% else %}
+    Amendment details
+  {% endif %}
 {%- endblock %}
 
 {% block content -%}
@@ -18,41 +22,53 @@
   }) }}
 
   <div class="govuk-grid-row govuk-!-margin-bottom-3">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-three-quarters">
-        <h1 class="govuk-heading-xl govuk-!-margin-bottom-6 govuk-!-margin-top-1" data-cy="page-heading">
-          <span class="govuk-caption-l" data-cy="heading-caption">
-            {{ exporterName }}, {{ facilityType }} facility
-          </span>
-          Amendment details
-        </h1>
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+      <div class="govuk-grid-row">
+        {% if canSubmitFacilityAmendmentToChecker %}
+          <h1 class="govuk-heading-xl govuk-!-margin-bottom-6 govuk-!-margin-top-1" data-cy="page-heading">
+            <span class="govuk-caption-l" data-cy="heading-caption">
+              {{ exporterName }}, {{ facilityType }} facility
+            </span>
+              Check your answers before submitting the amendment request
+          </h1>
+        {% else %}
+          <div class="govuk-grid-column-three-quarters">
+            <h1 class="govuk-heading-xl govuk-!-margin-bottom-6 govuk-!-margin-top-1" data-cy="page-heading">
+              <span class="govuk-caption-l" data-cy="heading-caption">
+                {{ exporterName }}, {{ facilityType }} facility
+              </span>
+                Amendment details
+            </h1>
 
-        {% if banner %}
-            {{ mojBanner({
-            type: 'information',
-            text: "This amendment is effective on " + effectiveDate,
-            iconFallbackText: 'information',
-            attributes: {
-              'data-cy': 'facility-information-banner'
-            }
-          }) }}
+            {% if banner %}
+                {{ mojBanner({
+                type: 'information',
+                text: "This amendment is effective on " + effectiveDate,
+                iconFallbackText: 'information',
+                attributes: {
+                  'data-cy': 'facility-information-banner'
+                }
+              }) }}
+            {% endif %}
+          </div>
+
+          <div class="govuk-grid-column-one-quarter">
+            {% include "../print-button.njk" %}
+          </div>
         {% endif %}
       </div>
 
-      <div class="govuk-grid-column-one-quarter">
-        {% include "../print-button.njk" %}
-      </div>
-    </div>
+      {{ amendmentSummaryList.render(amendmentSummaryListParams) }}
 
-    {{ amendmentSummaryList.render(amendmentSummaryListParams) }}
+      {% if userRoles.includes("checker") %}
+        {% include "../../includes/submit/submit-to-ukef.njk" %}
+      {% endif %}
 
-    {% if userRoles.includes("checker") %}
-      {% include "../../includes/submit/submit-to-ukef.njk" %}
-    {% endif %}
-
-    {% if canAbandonFacilityAmendment %}
-      {% include "../../includes/submit-amendment/submit-amendment-to-checker.njk" %}
-    {% endif %}
+      {% if canSubmitFacilityAmendmentToChecker %}
+        {% include "../../includes/submit-amendment/submit-amendment-to-checker.njk" %}
+      {% endif %}
+    </form>
   </div>
 
 {%- endblock %}

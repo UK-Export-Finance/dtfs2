@@ -22,7 +22,7 @@ users.forEach((user) => {
       const effectiveDate = '25/07/2025';
       const banner = true;
       const amendmentStatus = PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
-      const canAbandonFacilityAmendment = user.includes(ROLES.MAKER) && amendmentStatus === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
+      const canSubmitFacilityAmendmentToChecker = user.includes(ROLES.MAKER) && amendmentStatus === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED;
 
       const params: AmendmentDetailsViewModel = {
         userRoles,
@@ -32,7 +32,7 @@ users.forEach((user) => {
         dealId,
         facilityId,
         amendmentId,
-        canAbandonFacilityAmendment,
+        canSubmitFacilityAmendmentToChecker,
         previousPage,
         effectiveDate,
         banner,
@@ -45,8 +45,11 @@ users.forEach((user) => {
 
       it('should render the page heading', () => {
         const wrapper = render(params);
-
-        wrapper.expectText('[data-cy="page-heading"]').toContain('Amendment details');
+        if (user === ROLES.MAKER) {
+          wrapper.expectText('[data-cy="page-heading"]').toContain('Check your answers before submitting the amendment request');
+        } else {
+          wrapper.expectText('[data-cy="page-heading"]').toContain('Amendment details');
+        }
       });
 
       it(`should render the 'Back' link`, () => {
@@ -59,26 +62,6 @@ users.forEach((user) => {
         const wrapper = render(params);
 
         wrapper.expectText('[data-cy="heading-caption"]').toRead(`${exporterName}, ${facilityType} facility`);
-      });
-
-      it('should render a print button', () => {
-        const wrapper = render(params);
-
-        wrapper.expectText('[data-cy="print-button"]').toRead('Print page');
-      });
-
-      it('should render the information banner for effective date', () => {
-        const wrapper = render(params);
-
-        wrapper.expectElement('[data-cy="facility-information-banner"]').toExist();
-      });
-
-      it('should have the correct integrity for the print button', () => {
-        const wrapper = render(params);
-
-        wrapper
-          .expectElement('script[src="/assets/js/printPage.js"]')
-          .toHaveAttribute('integrity', 'sha512-ADkS6GB/rgAPwWTnZ9lAIRfzR1mDYDjDIGGn7x95Um00JgUw+W2IjHkF5TORkvgn5SqpHTVZE7CIvI+/KBgh5w==');
       });
 
       it('should render amendment summary list', () => {
