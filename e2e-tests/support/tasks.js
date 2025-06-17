@@ -145,7 +145,7 @@ module.exports = {
      * Deletes and inserts payment matching tolerances for each currency to the SQL database
      */
     const reinsertZeroThresholdPaymentMatchingTolerances = async () => {
-      await SqlDbDataSource.manager.delete(PaymentMatchingToleranceEntity, {});
+      await SqlDbDataSource.createQueryBuilder().delete().from(PaymentMatchingToleranceEntity).execute();
       return await SqlDbDataSource.manager.save(PaymentMatchingToleranceEntity, ZERO_THRESHOLD_PAYMENT_MATCHING_TOLERANCES);
     };
 
@@ -166,38 +166,38 @@ module.exports = {
     /**
      * Deletes all the rows from the payment table
      */
-    const removeAllPaymentsFromDb = async () => await SqlDbDataSource.manager.delete(PaymentEntity, {});
+    const removeAllPaymentsFromDb = async () => await SqlDbDataSource.createQueryBuilder().delete().from(PaymentEntity).execute();
 
     /**
      * Deletes all the rows from the fee record table
      */
-    const removeAllFeeRecordsFromDb = async () => await SqlDbDataSource.manager.delete(FeeRecordEntity, {});
+    const removeAllFeeRecordsFromDb = async () => await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordEntity).execute();
 
     /**
      * Deletes all rows from the fee record correction request transient form data table
      */
     const removeAllFeeRecordCorrectionRequestTransientFormDataFromDb = async () =>
-      await SqlDbDataSource.manager.delete(FeeRecordCorrectionRequestTransientFormDataEntity, {});
+      await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordCorrectionRequestTransientFormDataEntity).execute();
 
     /**
      * Deletes all rows from the fee record request transient form data table
      */
     const removeAllFeeRecordCorrectionTransientFormDataFromDb = async () =>
-      await SqlDbDataSource.manager.delete(FeeRecordCorrectionTransientFormDataEntity, {});
+      await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordCorrectionTransientFormDataEntity).execute();
 
     /**
      * Deletes all data from the SQL database
      */
     const deleteAllFromSqlDb = async () =>
       await Promise.all([
-        await SqlDbDataSource.manager.delete(PaymentEntity, {}),
-        await SqlDbDataSource.manager.delete(FeeRecordEntity, {}),
-        await SqlDbDataSource.manager.delete(UtilisationReportEntity, {}),
-        await SqlDbDataSource.manager.delete(AzureFileInfoEntity, {}),
-        await SqlDbDataSource.manager.delete(PaymentMatchingToleranceEntity, {}),
-        await SqlDbDataSource.manager.delete(FeeRecordCorrectionRequestTransientFormDataEntity, {}),
-        await SqlDbDataSource.manager.delete(FeeRecordCorrectionTransientFormDataEntity, {}),
-        await SqlDbDataSource.manager.delete(FeeRecordCorrectionEntity, {}),
+        await SqlDbDataSource.createQueryBuilder().delete().from(PaymentEntity, {}),
+        await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordEntity, {}),
+        await SqlDbDataSource.createQueryBuilder().delete().from(UtilisationReportEntity, {}),
+        await SqlDbDataSource.createQueryBuilder().delete().from(AzureFileInfoEntity, {}),
+        await SqlDbDataSource.createQueryBuilder().delete().from(PaymentMatchingToleranceEntity, {}),
+        await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordCorrectionRequestTransientFormDataEntity, {}),
+        await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordCorrectionTransientFormDataEntity, {}),
+        await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordCorrectionEntity, {}),
       ]);
 
     const getAllBanks = async () => {
