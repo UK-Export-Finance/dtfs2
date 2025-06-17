@@ -106,7 +106,7 @@ module.exports = {
     /**
      * Deletes all the rows from the utilisation report table
      */
-    const removeAllUtilisationReportsFromDb = async () => await SqlDbDataSource.manager.getRepository(UtilisationReportEntity).delete({});
+    const removeAllUtilisationReportsFromDb = async () => await SqlDbDataSource.createQueryBuilder().from(UtilisationReportEntity).delete().execute();
 
     /**
      * Inserts fee records to the SQL database
@@ -139,7 +139,8 @@ module.exports = {
     /**
      * Deletes all the rows from the payment matching tolerance table
      */
-    const removeAllPaymentMatchingTolerancesFromDb = async () => await SqlDbDataSource.manager.getRepository(PaymentMatchingToleranceEntity).delete({});
+    const removeAllPaymentMatchingTolerancesFromDb = async () =>
+      await SqlDbDataSource.createQueryBuilder().from(PaymentMatchingToleranceEntity).delete().execute();
 
     /**
      * Deletes and inserts payment matching tolerances for each currency to the SQL database
