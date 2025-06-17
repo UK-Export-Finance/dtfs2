@@ -79,6 +79,6 @@ context('Amendments - Maker Abandon An Amendment Page', () => {
 
   it('should redirect to the amendment details page when clicking the back link', () => {
     abandon.backLink().click();
-    amendmentPage.pageHeading().contains('Amendment details');
+    amendmentPage.pageHeading().contains('Check your answers before submitting the amendment request');
   });
 });
