@@ -1,11 +1,11 @@
-import { CustomExpressRequest, PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES, TEAM_IDS } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES, PORTAL_AMENDMENT_STATUS, TEAM_IDS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { WhatNeedsToChangeViewModel } from '../../../types/view-models/amendments/what-needs-to-change-view-model.ts';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 
 import { userCanAmendFacility } from '../../../utils/facility-amendments.helper.ts';
-import { getAmendmentsUrl } from '../helpers/navigation.helper.ts';
+import { getAmendmentsUrl, getPreviousPage } from '../helpers/navigation.helper.ts';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
 
 export type GetWhatNeedsToChangeRequest = CustomExpressRequest<{
@@ -60,11 +60,12 @@ export const getWhatNeedsToChange = async (req: GetWhatNeedsToChangeRequest, res
       facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: changeQuery
-        ? getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CHECK_YOUR_ANSWERS })
+        ? getPreviousPage(PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE, amendment, changeQuery)
         : `/gef/application-details/${dealId}`,
       amendmentFormEmail,
       changeCoverEndDate,
       changeFacilityValue,
+      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
     };
 
     return res.render('partials/amendments/what-needs-to-change.njk', viewModel);

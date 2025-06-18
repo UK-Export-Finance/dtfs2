@@ -42,6 +42,6 @@ export const createAmendmentDetailsViewModel = ({
     banner,
     canSubmitFacilityAmendmentToChecker,
     previousPage: `/gef/application-details/${deal._id}`,
-    amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, false),
+    amendmentSummaryListParams: mapAmendmentToAmendmentSummaryListParams(amendment, facility, canSubmitFacilityAmendmentToChecker),
   };
 };

@@ -4,7 +4,15 @@ const getFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
 
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import {
+  aPortalSessionUser,
+  DEAL_STATUS,
+  DEAL_SUBMISSION_TYPE,
+  PORTAL_LOGIN_STATUS,
+  ROLES,
+  PortalFacilityAmendmentWithUkefId,
+  PORTAL_AMENDMENT_STATUS,
+} from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
@@ -50,6 +58,7 @@ describe('getFacilityEndDate', () => {
     jest.spyOn(console, 'error');
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withStatus(PORTAL_AMENDMENT_STATUS.DRAFT)
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
@@ -90,6 +99,7 @@ describe('getFacilityEndDate', () => {
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage,
+      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
       facilityEndDate: undefined,
     };
 
@@ -104,6 +114,7 @@ describe('getFacilityEndDate', () => {
     const facilityEndDate = new Date();
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withStatus(PORTAL_AMENDMENT_STATUS.DRAFT)
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
@@ -123,6 +134,7 @@ describe('getFacilityEndDate', () => {
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment),
+      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
       facilityEndDate: {
         day: format(facilityEndDate, 'd'),
         month: format(facilityEndDate, 'M'),

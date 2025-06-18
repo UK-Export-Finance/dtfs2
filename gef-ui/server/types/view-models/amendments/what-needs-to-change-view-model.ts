@@ -9,5 +9,6 @@ export type WhatNeedsToChangeViewModel = {
   previousPage: string;
   cancelUrl: string;
   amendmentFormEmail: string;
+  canMakerCancelAmendment: boolean;
   errors?: ViewModelErrors | null;
 };

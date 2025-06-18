@@ -16,6 +16,7 @@ import {
   DEAL_STATUS,
   PortalFacilityAmendmentWithUkefId,
   DayMonthYearInput,
+  PORTAL_AMENDMENT_STATUS,
 } from '@ukef/dtfs2-common';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
@@ -85,6 +86,7 @@ describe('postFacilityEndDate', () => {
     jest.spyOn(facilityEndDateValidation, 'validateAndParseFacilityEndDate');
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withStatus(PORTAL_AMENDMENT_STATUS.DRAFT)
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
@@ -194,6 +196,7 @@ describe('postFacilityEndDate', () => {
         ).errors,
       ),
       facilityEndDate: facilityEndDateDayMonthYear,
+      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);

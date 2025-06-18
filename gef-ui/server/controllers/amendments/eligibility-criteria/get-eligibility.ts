@@ -1,4 +1,4 @@
-import { CustomExpressRequest, PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
@@ -55,6 +55,7 @@ export const getEligibility = async (req: GetEligibilityRequest, res: Response) 
       facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.ELIGIBILITY, amendment, changeQuery),
+      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
       criteria,
     };
 

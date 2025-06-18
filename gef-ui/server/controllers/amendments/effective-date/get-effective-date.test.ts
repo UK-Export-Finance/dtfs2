@@ -4,7 +4,15 @@ const getFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
 
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import {
+  aPortalSessionUser,
+  DEAL_STATUS,
+  DEAL_SUBMISSION_TYPE,
+  PORTAL_LOGIN_STATUS,
+  ROLES,
+  PortalFacilityAmendmentWithUkefId,
+  PORTAL_AMENDMENT_STATUS,
+} from '@ukef/dtfs2-common';
 import { format, getUnixTime } from 'date-fns';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
@@ -49,7 +57,12 @@ describe('getEffectiveDate', () => {
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
     jest.spyOn(console, 'error');
 
-    amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().withDealId(dealId).withFacilityId(facilityId).withAmendmentId(amendmentId).build();
+    amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withStatus(PORTAL_AMENDMENT_STATUS.DRAFT)
+      .withDealId(dealId)
+      .withFacilityId(facilityId)
+      .withAmendmentId(amendmentId)
+      .build();
 
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
@@ -84,6 +97,7 @@ describe('getEffectiveDate', () => {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
+      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
       previousPage,
       effectiveDate: undefined,
     };
@@ -123,6 +137,7 @@ describe('getEffectiveDate', () => {
         month: format(effectiveDate, 'M'),
         year: format(effectiveDate, 'yyyy'),
       },
+      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);

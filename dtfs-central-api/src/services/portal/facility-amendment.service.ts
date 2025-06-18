@@ -172,7 +172,7 @@ export class PortalFacilityAmendmentService {
       facilityId: facilityMongoId,
       update: amendmentUpdate,
       auditDetails,
-      allowedStatuses: [PORTAL_AMENDMENT_STATUS.DRAFT],
+      allowedStatuses: [PORTAL_AMENDMENT_STATUS.DRAFT, PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED],
     });
   }
 

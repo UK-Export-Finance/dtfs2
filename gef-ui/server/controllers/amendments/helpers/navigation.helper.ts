@@ -14,6 +14,7 @@ const {
   CHECK_YOUR_ANSWERS,
   MANUAL_APPROVAL_NEEDED,
   SUBMITTED_FOR_CHECKING,
+  AMENDMENT_DETAILS,
 } = PORTAL_AMENDMENT_PAGES;
 
 const startPages = [WHAT_DO_YOU_NEED_TO_CHANGE] as const;
@@ -91,14 +92,19 @@ export const getPreviousPage = (currentPage: PortalAmendmentPage, amendment: Por
 
   const currentPageIndex = journey.indexOf(currentPage);
 
+  const { dealId, facilityId, amendmentId } = amendment;
+  if (change && amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT) {
+    return getAmendmentsUrl({ dealId, facilityId, amendmentId, page: CHECK_YOUR_ANSWERS });
+  }
+  if (change && amendment.status !== PORTAL_AMENDMENT_STATUS.DRAFT) {
+    return getAmendmentsUrl({ dealId, facilityId, amendmentId, page: AMENDMENT_DETAILS });
+  }
+
   if (currentPageIndex === 0 || currentPageIndex === -1) {
     throw new Error(`Cannot get previous page for ${currentPage}`);
   }
 
-  const { dealId, facilityId, amendmentId } = amendment;
-  const page = change ? CHECK_YOUR_ANSWERS : journey[currentPageIndex - 1];
-
-  return getAmendmentsUrl({ dealId, facilityId, amendmentId, page });
+  return getAmendmentsUrl({ dealId, facilityId, amendmentId, page: journey[currentPageIndex - 1] });
 };
 
 /**
@@ -112,12 +118,17 @@ export const getNextPage = (currentPage: PortalAmendmentPage, amendment: PortalF
 
   const currentPageIndex = journey.indexOf(currentPage);
 
+  const { dealId, facilityId, amendmentId } = amendment;
+  if (change && amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT) {
+    return getAmendmentsUrl({ dealId, facilityId, amendmentId, page: CHECK_YOUR_ANSWERS });
+  }
+  if (change && amendment.status !== PORTAL_AMENDMENT_STATUS.DRAFT) {
+    return getAmendmentsUrl({ dealId, facilityId, amendmentId, page: AMENDMENT_DETAILS });
+  }
+
   if (currentPageIndex >= journey.length - 1 || currentPageIndex === -1) {
     throw new Error(`Cannot get next page for ${currentPage}`);
   }
 
-  const { dealId, facilityId, amendmentId } = amendment;
-  const page = change ? CHECK_YOUR_ANSWERS : journey[currentPageIndex + 1];
-
-  return getAmendmentsUrl({ dealId, facilityId, amendmentId, page });
+  return getAmendmentsUrl({ dealId, facilityId, amendmentId, page: journey[currentPageIndex + 1] });
 };
