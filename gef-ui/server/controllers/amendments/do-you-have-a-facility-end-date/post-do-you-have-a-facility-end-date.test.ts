@@ -2,6 +2,7 @@
 /* eslint-disable import/first */
 const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
+const getAmendmentMock = jest.fn();
 const updateAmendmentMock = jest.fn();
 
 import * as dtfsCommon from '@ukef/dtfs2-common';
@@ -30,6 +31,7 @@ import { ValidationError } from '../../../types/validation-error';
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
   getFacility: getFacilityMock,
+  getAmendment: getAmendmentMock,
   updateAmendment: updateAmendmentMock,
 }));
 
@@ -70,7 +72,6 @@ describe('postDoYouHaveAFacilityEndDate', () => {
     jest.spyOn(console, 'error');
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
-      .withStatus(PORTAL_AMENDMENT_STATUS.DRAFT)
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
@@ -79,6 +80,7 @@ describe('postDoYouHaveAFacilityEndDate', () => {
 
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
+    getAmendmentMock.mockResolvedValue(amendment);
     updateAmendmentMock.mockResolvedValue(amendment);
   });
 
