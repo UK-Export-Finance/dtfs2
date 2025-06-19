@@ -15,7 +15,7 @@ describe(page, () => {
     wrapper.expectText('[data-cy="you-have-been-logged-out-heading"]').toRead('You have been logged out of Trade Finance Manager');
   });
 
-  it('should render primary navigation button', () => {
+  it('should render the primary navigation button', () => {
     wrapper.expectElement('[data-cy="govuk-sso-login-button"]').toExist();
   });
 
