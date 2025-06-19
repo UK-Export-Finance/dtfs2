@@ -1,4 +1,4 @@
-const { CURRENCY, TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { CURRENCY, TFM_AMENDMENT_STATUS, PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const amendmentHelpers = require('./amendment.helpers');
 
 describe('amendmentChangeValueExportCurrency()', () => {
@@ -52,7 +52,8 @@ describe('calculateNewFacilityValue()', () => {
     amendment.value = 25000;
 
     const result = amendmentHelpers.calculateNewFacilityValue(null, amendment);
-    const expected = amendment.value;
+
+    const expected = String(amendment.value);
     expect(result).toEqual(expected);
   });
 
@@ -62,7 +63,8 @@ describe('calculateNewFacilityValue()', () => {
     const exchangeRate = 7.1;
 
     const result = amendmentHelpers.calculateNewFacilityValue(exchangeRate, amendment);
-    const expected = amendment.value * exchangeRate;
+
+    const expected = String(amendment.value * exchangeRate);
     expect(result).toEqual(expected);
   });
 
@@ -81,50 +83,6 @@ describe('calculateNewFacilityValue()', () => {
     const exchangeRate = null;
 
     const result = amendmentHelpers.calculateNewFacilityValue(exchangeRate, amendment);
-    expect(result).toBeNull();
-  });
-});
-
-describe('calculateUkefExposure()', () => {
-  it('should return the cover percentage without rounding when not needed', () => {
-    const facilityValueInGBP = '5000';
-    const coverPercentage = 80;
-
-    const result = amendmentHelpers.calculateUkefExposure(facilityValueInGBP, coverPercentage);
-    const expected = 5000 * (80 / 100);
-    expect(result).toEqual(expected);
-  });
-
-  it('should return a rounded number when more than 2 decimal places', () => {
-    const facilityValueInGBP = '5165.2';
-    const coverPercentage = 33;
-
-    const result = amendmentHelpers.calculateUkefExposure(facilityValueInGBP, coverPercentage);
-    const expected = 1704.52;
-    expect(result).toEqual(expected);
-  });
-
-  it('should return null if no facility value', () => {
-    const facilityValueInGBP = null;
-    const coverPercentage = 33;
-
-    const result = amendmentHelpers.calculateUkefExposure(facilityValueInGBP, coverPercentage);
-    expect(result).toBeNull();
-  });
-
-  it('should return null if no cover percentage', () => {
-    const facilityValueInGBP = '5165.2';
-    const coverPercentage = null;
-
-    const result = amendmentHelpers.calculateUkefExposure(facilityValueInGBP, coverPercentage);
-    expect(result).toBeNull();
-  });
-
-  it('should return null if no cover percentage and facility value', () => {
-    const facilityValueInGBP = null;
-    const coverPercentage = null;
-
-    const result = amendmentHelpers.calculateUkefExposure(facilityValueInGBP, coverPercentage);
     expect(result).toBeNull();
   });
 });
@@ -295,6 +253,31 @@ describe('findLatestCompletedAmendment()', () => {
     expect(result.bankReviewDate).toEqual(new Date('2025-05-05'));
     expect(result.isUsingFacilityEndDate).toEqual(false);
     expect(result.facilityEndDate).toBeUndefined();
+  });
+
+  it('should return a portal amendment if it is the latest amendment', () => {
+    // Arrange
+    const latestAmendmentTfmObject = {
+      ...anAmendmentTfmObject(),
+      value: 3000,
+      coverEndDate: new Date('2023-12-12').getTime(),
+      bankReviewDate: undefined,
+      facilityEndDate: undefined,
+      isUsingFacilityEndDate: undefined,
+    };
+    const anotherAmendmentTfmObject = { ...anAmendmentTfmObject(), value: 1000, coverEndDate: null };
+    const amendments = [
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS), tfm: anotherAmendmentTfmObject },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: anotherAmendmentTfmObject },
+      { ...anAmendmentWithStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED), tfm: latestAmendmentTfmObject },
+    ];
+
+    // Act
+    const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
+
+    // Assert
+
+    expect(result).toEqual(latestAmendmentTfmObject);
   });
 
   function* timestampGenerator() {

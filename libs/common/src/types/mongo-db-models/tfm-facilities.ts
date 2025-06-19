@@ -23,14 +23,14 @@ type SubmittedByUser = {
  */
 export type FacilityAmendmentTfmObject = {
   value?: {
-    value: number;
-    currency: Currency;
+    value?: number;
+    currency?: Currency;
   };
   amendmentExposurePeriodInMonths?: number | null;
   exposure?: {
-    exposure: number | string;
-    timestamp: UnixTimestamp | null;
-    ukefExposureValue: number;
+    exposure?: number | string;
+    timestamp?: UnixTimestamp | null;
+    ukefExposureValue?: number;
   };
   coverEndDate?: UnixTimestamp;
   facilityEndDate?: Date;
@@ -137,6 +137,7 @@ export interface PortalFacilityAmendment extends BaseAmendment {
     version: number;
     criteria: AmendmentsEligibilityCriterionWithAnswer[];
   };
+  tfm?: FacilityAmendmentTfmObject;
 }
 
 /**
@@ -144,6 +145,13 @@ export interface PortalFacilityAmendment extends BaseAmendment {
  * "amendments" property
  */
 export type FacilityAmendment = TfmFacilityAmendment | PortalFacilityAmendment;
+
+export type TfmFacilityObject = {
+  exchangeRate?: number;
+  facilityValueInGBP?: number;
+  ukefExposure?: number;
+  ukefExposureCalculationTimestamp?: string;
+};
 
 /**
  * Type of the mongo db "tfm-facilities" collection
@@ -155,6 +163,6 @@ export type TfmFacility = {
   _id: ObjectId;
   facilitySnapshot: Facility;
   amendments?: FacilityAmendment[];
-  tfm: object;
+  tfm: TfmFacilityObject;
   auditRecord?: AuditDatabaseRecord;
 };

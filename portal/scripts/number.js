@@ -5,14 +5,6 @@ export const isNumeric = (value) => {
   return false;
 };
 
-export const decimalsCount = (numb) => {
-  const decimals = numb.toString().split('.')[1];
-  if (decimals) {
-    return decimals.length;
-  }
-  return 0;
-};
-
 export const roundNumber = (value, digits) => {
   let modifiedValue = value;
   let d = digits;

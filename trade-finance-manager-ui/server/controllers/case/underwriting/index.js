@@ -1,6 +1,6 @@
 const { format, fromUnixTime } = require('date-fns');
 const { isEmpty } = require('lodash');
-const { FLASH_TYPES } = require('@ukef/dtfs2-common');
+const { FLASH_TYPES, formattedNumber } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 
 const leadUnderwriter = require('./lead-underwriter');
@@ -8,7 +8,6 @@ const pricingAndRisk = require('./pricing-and-risk');
 const underwriterManagersDecision = require('./underwriter-managers-decision');
 const { getAmendmentLeadUnderwriter } = require('../amendments');
 const { userCanEditManagersDecision, userCanEditBankDecision, ukefDecisionRejected } = require('../../helpers');
-const { formattedNumber } = require('../../../helpers/number');
 const { UNDERWRITER_MANAGER_DECISIONS_TAGS } = require('../../../constants/decisions.constant');
 const { BANK_DECISIONS_TAGS } = require('../../../constants/amendments');
 const CONSTANTS = require('../../../constants');

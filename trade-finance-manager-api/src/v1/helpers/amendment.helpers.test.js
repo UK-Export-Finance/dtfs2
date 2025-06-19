@@ -1,11 +1,9 @@
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { CURRENCY, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { CURRENCY, FACILITY_TYPE, formattedNumber, calculateNewFacilityValue } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const {
   sendManualDecisionAmendmentEmail,
   sendFirstTaskEmail,
-  calculateNewFacilityValue,
-  calculateUkefExposure,
   calculateAmendmentExposure,
   calculateAmendmentDateTenor,
   addLatestAmendmentCoverEndDate,
@@ -15,7 +13,6 @@ const {
 } = require('./amendment.helpers');
 const CONSTANTS = require('../../constants');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
-const { formattedNumber } = require('../../utils/number');
 const amendmentVariables = require('../__mocks__/amendmentVariables');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
 const MOCK_NOTIFY_EMAIL_BAD_RESPONSE = require('../__mocks__/mock-notify-email-bad-response');
@@ -616,90 +613,6 @@ describe('sendFirstTaskEmail()', () => {
 
     const error = new Error(`Invalid imperative arguments provided for ${amendmentVariables.noTaskVariables._id}, unable to send first task email from TFM.`);
     expect(console.error).toHaveBeenCalledWith('Error sending first amendment task email %o', error);
-  });
-});
-
-describe('calculateNewFacilityValue()', () => {
-  const amendment = { currency: CURRENCY.GBP };
-
-  it('should return the same number since in GBP', () => {
-    amendment.value = 25000;
-
-    const result = calculateNewFacilityValue(null, amendment);
-    const expected = amendment.value;
-    expect(result).toEqual(expected);
-  });
-
-  it('should return a number if different currency', () => {
-    amendment.value = 25000;
-    amendment.currency = CURRENCY.JPY;
-    const exchangeRate = 7.1;
-
-    const result = calculateNewFacilityValue(exchangeRate, amendment);
-    const expected = amendment.value * exchangeRate;
-    expect(result).toEqual(expected);
-  });
-
-  it('should return null if no facility value or currency in amendment', () => {
-    amendment.value = null;
-    amendment.currency = null;
-    const exchangeRate = 7.1;
-
-    const result = calculateNewFacilityValue(exchangeRate, amendment);
-    expect(result).toBeNull();
-  });
-
-  it('should return null if no exchange rate if currency not GBP', () => {
-    amendment.value = 25000;
-    amendment.currency = CURRENCY.JPY;
-    const exchangeRate = null;
-
-    const result = calculateNewFacilityValue(exchangeRate, amendment);
-    expect(result).toBeNull();
-  });
-});
-
-describe('calculateUkefExposure()', () => {
-  it('should return the cover percentage without rounding when not needed', () => {
-    const facilityValueInGBP = '5000';
-    const coverPercentage = 80;
-
-    const result = calculateUkefExposure(facilityValueInGBP, coverPercentage);
-    const expected = 5000 * (80 / 100);
-    expect(result).toEqual(expected);
-  });
-
-  it('should return a rounded number when more than 2 decimal places', () => {
-    const facilityValueInGBP = '5165.2';
-    const coverPercentage = 33;
-
-    const result = calculateUkefExposure(facilityValueInGBP, coverPercentage);
-    const expected = 1704.52;
-    expect(result).toEqual(expected);
-  });
-
-  it('should return null if no facility value', () => {
-    const facilityValueInGBP = null;
-    const coverPercentage = 33;
-
-    const result = calculateUkefExposure(facilityValueInGBP, coverPercentage);
-    expect(result).toBeNull();
-  });
-
-  it('should return null if no cover percentage', () => {
-    const facilityValueInGBP = '5165.2';
-    const coverPercentage = null;
-
-    const result = calculateUkefExposure(facilityValueInGBP, coverPercentage);
-    expect(result).toBeNull();
-  });
-
-  it('should return null if no cover percentage and facility value', () => {
-    const facilityValueInGBP = null;
-    const coverPercentage = null;
-
-    const result = calculateUkefExposure(facilityValueInGBP, coverPercentage);
-    expect(result).toBeNull();
   });
 });
 

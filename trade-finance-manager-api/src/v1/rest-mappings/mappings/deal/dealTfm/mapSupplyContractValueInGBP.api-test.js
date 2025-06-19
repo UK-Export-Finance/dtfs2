@@ -1,6 +1,5 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
+const { CURRENCY, formattedNumber } = require('@ukef/dtfs2-common');
 const mapSupplyContractValueInGBP = require('./mapSupplyContractValueInGBP');
-const { formattedNumber } = require('../../../../../utils/number');
 
 describe('mapSupplyContractValueInGBP', () => {
   it('should return formatted number as string', () => {

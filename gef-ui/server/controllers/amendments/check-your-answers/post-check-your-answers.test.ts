@@ -3,8 +3,10 @@
 const updateAmendmentStatusMock = jest.fn();
 const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
+const getTfmFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
 const getUserDetailsMock = jest.fn();
+const updateAmendmentMock = jest.fn();
 
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
@@ -20,13 +22,18 @@ import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { Deal } from '../../../types/deal';
 import { getCurrencySymbol } from '../../../utils/get-currency-symbol';
+import { TFM_FACILITY } from '../../../utils/mocks/mock-tfm-facility';
+import { mockFacility } from '../../../utils/mocks/mock-facility';
+import { addExposureValuesToAmendment } from '../helpers/add-exposure-values-to-amendment';
 
 jest.mock('../../../services/api', () => ({
   updateAmendmentStatus: updateAmendmentStatusMock,
   getApplication: getApplicationMock,
   getFacility: getFacilityMock,
+  getTfmFacility: getTfmFacilityMock,
   getAmendment: getAmendmentMock,
   getUserDetails: getUserDetailsMock,
+  updateAmendment: updateAmendmentMock,
 }));
 
 dotenv.config();
@@ -85,6 +92,8 @@ describe('postCheckYourAnswers', () => {
     .withEffectiveDate(effectiveDateWithoutMs)
     .build();
 
+  const facility = mockFacility(facilityId, mockDeal._id);
+
   beforeEach(() => {
     jest.resetAllMocks();
 
@@ -92,14 +101,32 @@ describe('postCheckYourAnswers', () => {
     jest.spyOn(console, 'error');
 
     getApplicationMock.mockResolvedValue(mockDeal);
-    getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
+    getFacilityMock.mockResolvedValue(facility);
+    getTfmFacilityMock.mockResolvedValue(TFM_FACILITY);
     getAmendmentMock.mockResolvedValue(amendment);
     getUserDetailsMock.mockResolvedValue(mockChecker);
 
     updateAmendmentStatusMock.mockResolvedValue(amendment);
+    updateAmendmentMock.mockResolvedValue(amendment);
   });
 
   describe('when an amendment has all types of amendments', () => {
+    it('should call updateAmendment', async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+
+      // Act
+      await postCheckYourAnswers(req, res);
+
+      const { tfmUpdate } = await addExposureValuesToAmendment(amendment, facility.details, facilityId, userToken);
+
+      const update = { tfm: tfmUpdate };
+
+      // Assert
+      expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
+      expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update, userToken });
+    });
+
     it('should call updateAmendmentStatus', async () => {
       // Arrange
       const { req, res } = getHttpMocks();
@@ -120,7 +147,73 @@ describe('postCheckYourAnswers', () => {
           exporterName: mockDeal.exporter.companyName,
           bankInternalRefName: mockDeal.bankInternalRefName!,
           ukefDealId: mockDeal.ukefDealId,
-          ukefFacilityId: mockFacilityDetails.ukefFacilityId,
+          ukefFacilityId: facility.details.ukefFacilityId,
+          dateEffectiveFrom: format(fromUnixTime(effectiveDateWithoutMs), DATE_FORMATS.DD_MMMM_YYYY),
+          newCoverEndDate: format(new Date(coverEndDate), DATE_FORMATS.DD_MMMM_YYYY),
+          newFacilityEndDate: format(new Date(facilityEndDate), DATE_FORMATS.DD_MMMM_YYYY),
+          newFacilityValue: `${getCurrencySymbol(mockFacilityDetails?.currency!.id)}${facilityValue}`,
+          makersName: `${mockUser.firstname} ${mockUser.surname}`,
+          checkersName: `${mockChecker.firstname} ${mockChecker.surname}`,
+          dateSubmittedByMaker: format(new Date(), DATE_FORMATS.DD_MMMM_YYYY),
+          portalUrl: `${PORTAL_UI_URL}/login`,
+          makersEmail: mockUser.email,
+        },
+      });
+    });
+
+    it('should redirect to the next page', async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+
+      // Act
+      await postCheckYourAnswers(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+      expect(res._getRedirectUrl()).toEqual(getNextPage(PORTAL_AMENDMENT_PAGES.CHECK_YOUR_ANSWERS, amendment));
+    });
+  });
+
+  describe('when an amendment does not have a facility value', () => {
+    it('should NOT call updateAmendment', async () => {
+      const amendmentWithoutFacilityValue = {
+        ...amendment,
+        changeFacilityValue: false,
+        value: null,
+      };
+      getAmendmentMock.mockResolvedValue(amendmentWithoutFacilityValue);
+
+      // Arrange
+      const { req, res } = getHttpMocks();
+
+      // Act
+      await postCheckYourAnswers(req, res);
+
+      // Assert
+      expect(updateAmendmentMock).toHaveBeenCalledTimes(0);
+    });
+
+    it('should call updateAmendmentStatus', async () => {
+      // Arrange
+      const { req, res } = getHttpMocks();
+
+      // Act
+      await postCheckYourAnswers(req, res);
+
+      // Assert
+      expect(updateAmendmentStatusMock).toHaveBeenCalledTimes(1);
+      expect(updateAmendmentStatusMock).toHaveBeenCalledWith({
+        facilityId,
+        amendmentId,
+        newStatus: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+        userToken,
+        makersEmail: mockUser.email,
+        checkersEmail: mockChecker.email,
+        emailVariables: {
+          exporterName: mockDeal.exporter.companyName,
+          bankInternalRefName: mockDeal.bankInternalRefName!,
+          ukefDealId: mockDeal.ukefDealId,
+          ukefFacilityId: facility.details.ukefFacilityId,
           dateEffectiveFrom: format(fromUnixTime(effectiveDateWithoutMs), DATE_FORMATS.DD_MMMM_YYYY),
           newCoverEndDate: format(new Date(coverEndDate), DATE_FORMATS.DD_MMMM_YYYY),
           newFacilityEndDate: format(new Date(facilityEndDate), DATE_FORMATS.DD_MMMM_YYYY),
@@ -280,5 +373,20 @@ describe('postCheckYourAnswers', () => {
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('Error posting amendments check your answers page %o', mockError);
+  });
+
+  it('should render problem with service if getTfmFacility throws an error', async () => {
+    // Arrange
+    const mockError = new Error('an error');
+    getTfmFacilityMock.mockRejectedValue(mockError);
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await postCheckYourAnswers(req, res);
+
+    // Assert
+    expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Error getting TFM facility: %o', mockError);
   });
 });

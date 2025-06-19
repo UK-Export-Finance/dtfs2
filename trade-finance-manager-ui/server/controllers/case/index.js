@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const { MONGO_DB_COLLECTIONS, TFM_AMENDMENT_STATUS, FLASH_TYPES } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, TFM_AMENDMENT_STATUS, FLASH_TYPES, formattedNumber } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const {
   getTask,
@@ -9,7 +9,6 @@ const {
   canDealBeCancelled,
   isDealCancellationInDraft,
 } = require('../helpers');
-const { formattedNumber } = require('../../helpers/number');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
 const { filterTasks } = require('../helpers/tasks.helper');

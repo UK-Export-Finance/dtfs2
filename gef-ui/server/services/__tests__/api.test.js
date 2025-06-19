@@ -8,8 +8,8 @@ import {
   ALL_AMENDMENT_INPROGRESS_STATUSES,
   TFM_AMENDMENT_STATUS,
 } from '@ukef/dtfs2-common';
-import Axios from '../axios';
-import api, { getTfmDeal } from '../api';
+import { portalApi } from '../axios';
+import api, { getTfmDeal, getTfmFacility } from '../api';
 import CONSTANTS from '../../constants';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../test-helpers/mock-amendment';
 
@@ -26,19 +26,19 @@ const userToken = 'test-token';
 
 describe('validateToken()', () => {
   it('returns `true` if token is valid', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ status: HttpStatusCode.Ok }));
+    portalApi.get.mockReturnValue(Promise.resolve({ status: HttpStatusCode.Ok }));
     const response = await api.validateToken(userToken);
     expect(response).toBeTruthy();
   });
 
   it('returns `false` if token is not valid', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ status: HttpStatusCode.BadRequest }));
+    portalApi.get.mockReturnValue(Promise.resolve({ status: HttpStatusCode.BadRequest }));
     const response = await api.validateToken(userToken);
     expect(response).toBeFalsy();
   });
 
   it('returns `false` if there is an issue with the api', async () => {
-    Axios.get.mockReturnValue(Promise.reject());
+    portalApi.get.mockReturnValue(Promise.reject());
     const response = await api.validateToken(userToken);
     expect(response).toBeFalsy();
   });
@@ -46,13 +46,13 @@ describe('validateToken()', () => {
 
 describe('getMandatoryCriteria()', () => {
   it('returns the correct response', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+    portalApi.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.getMandatoryCriteria({ userToken });
     expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
-    Axios.get.mockReturnValue(Promise.reject());
+    portalApi.get.mockReturnValue(Promise.reject());
     const response = api.getMandatoryCriteria({ userToken });
     await expect(response).rejects.toThrowError();
   });
@@ -60,13 +60,13 @@ describe('getMandatoryCriteria()', () => {
 
 describe('createApplication()', () => {
   it('returns the correct response', async () => {
-    Axios.post.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+    portalApi.post.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.createApplication({ payload: {}, userToken });
     expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
-    Axios.post.mockReturnValue(Promise.reject());
+    portalApi.post.mockReturnValue(Promise.reject());
     const response = api.createApplication({ payload: {}, userToken });
     await expect(response).rejects.toThrowError();
   });
@@ -74,13 +74,13 @@ describe('createApplication()', () => {
 
 describe('cloneApplication()', () => {
   it('returns the correct response', async () => {
-    Axios.post.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+    portalApi.post.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.cloneApplication({ payload: {}, userToken });
     expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
-    Axios.post.mockReturnValue(Promise.reject());
+    portalApi.post.mockReturnValue(Promise.reject());
     const response = api.cloneApplication({ payload: {}, userToken });
     await expect(response).rejects.toThrowError();
   });
@@ -88,13 +88,13 @@ describe('cloneApplication()', () => {
 
 describe('getApplication()', () => {
   it('returns the correct response', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+    portalApi.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.getApplication({ dealId: validMongoId, userToken });
     expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
-    Axios.get.mockReturnValue(Promise.reject());
+    portalApi.get.mockReturnValue(Promise.reject());
     await expect(api.getApplication({ dealId: validMongoId, userToken })).rejects.toThrowError();
   });
 
@@ -106,13 +106,13 @@ describe('getApplication()', () => {
 
 describe('updateApplication()', () => {
   it('returns the correct response', async () => {
-    Axios.put.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+    portalApi.put.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.updateApplication({ dealId: validMongoId, application: {}, userToken });
     expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
-    Axios.put.mockReturnValue(Promise.reject());
+    portalApi.put.mockReturnValue(Promise.reject());
     await expect(api.updateApplication({ dealId: validMongoId, application: {}, userToken })).rejects.toThrowError();
   });
 
@@ -124,13 +124,13 @@ describe('updateApplication()', () => {
 
 describe('updateSupportingInformation()', () => {
   it('returns the correct response', async () => {
-    Axios.put.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+    portalApi.put.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.updateSupportingInformation({ dealId: validMongoId, application: {}, userToken });
     expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
-    Axios.put.mockReturnValue(Promise.reject());
+    portalApi.put.mockReturnValue(Promise.reject());
     await expect(api.updateSupportingInformation({ dealId: validMongoId, userToken })).rejects.toThrowError();
   });
 
@@ -142,7 +142,7 @@ describe('updateSupportingInformation()', () => {
 
 describe('setApplicationStatus()', () => {
   it('returns the correct response', async () => {
-    Axios.put.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+    portalApi.put.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.setApplicationStatus({
       dealId: validMongoId,
       status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL,
@@ -152,7 +152,7 @@ describe('setApplicationStatus()', () => {
   });
 
   it('throws an error if there is an api error', async () => {
-    Axios.put.mockReturnValue(Promise.reject());
+    portalApi.put.mockReturnValue(Promise.reject());
     await expect(api.setApplicationStatus({ dealId: validMongoId, status: CONSTANTS.DEAL_STATUS.READY_FOR_APPROVAL, userToken })).rejects.toThrowError();
   });
 
@@ -168,32 +168,32 @@ describe('setApplicationStatus()', () => {
 
 describe('getFacilities()', () => {
   it('returns an empty Array if no application Id is passed', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+    portalApi.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.getFacilities({ userToken });
     expect(response).toEqual([]);
   });
 
   it('returns the correct response', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+    portalApi.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.getFacilities({ dealId: validMongoId, userToken });
     expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
-    Axios.get.mockReturnValue(Promise.reject());
+    portalApi.get.mockReturnValue(Promise.reject());
     await expect(api.getFacilities({ dealId: validMongoId, userToken })).rejects.toThrowError();
   });
 });
 
 describe('getFacility()', () => {
   it('returns the correct response', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+    portalApi.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.getFacility({ facilityId: validMongoId, userToken });
     expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
-    Axios.get.mockReturnValue(Promise.reject());
+    portalApi.get.mockReturnValue(Promise.reject());
     await expect(api.getFacility({ facilityId: validMongoId, userToken })).rejects.toThrowError();
   });
 
@@ -205,26 +205,26 @@ describe('getFacility()', () => {
 
 describe('createFacility()', () => {
   it('returns the correct response', async () => {
-    Axios.post.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+    portalApi.post.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.createFacility({ payload: {}, userToken });
     expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
-    Axios.post.mockReturnValue(Promise.reject());
+    portalApi.post.mockReturnValue(Promise.reject());
     await expect(api.createFacility({ payload: {}, userToken })).rejects.toThrowError();
   });
 });
 
 describe('updateFacility()', () => {
   it('returns the correct response', async () => {
-    Axios.put.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+    portalApi.put.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.updateFacility({ facilityId: validMongoId, payload: {}, userToken });
     expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
-    Axios.put.mockReturnValue(Promise.reject());
+    portalApi.put.mockReturnValue(Promise.reject());
     await expect(api.updateFacility({ facilityId: validMongoId, payload: {}, userToken })).rejects.toThrowError();
   });
 
@@ -236,13 +236,13 @@ describe('updateFacility()', () => {
 
 describe('deleteFacility()', () => {
   it('returns the correct response', async () => {
-    Axios.delete.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+    portalApi.delete.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.deleteFacility({ facilityId: validMongoId, userToken });
     expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
-    Axios.delete.mockReturnValue(Promise.reject());
+    portalApi.delete.mockReturnValue(Promise.reject());
     await expect(api.deleteFacility({ facilityId: validMongoId, userToken })).rejects.toThrowError();
   });
 
@@ -283,7 +283,7 @@ describe('getCompanyByRegistrationNumber()', () => {
   ];
 
   it('returns the company if it is returned by the request to Portal API', async () => {
-    Axios.get.mockResolvedValueOnce({ status: HttpStatusCode.Ok, data: portalApiGetCompanyResponse });
+    portalApi.get.mockResolvedValueOnce({ status: HttpStatusCode.Ok, data: portalApiGetCompanyResponse });
 
     const response = await api.getCompanyByRegistrationNumber({ registrationNumber, userToken });
 
@@ -331,7 +331,7 @@ describe('getCompanyByRegistrationNumber()', () => {
     axiosError.response = {
       status,
     };
-    Axios.get.mockRejectedValueOnce(axiosError);
+    portalApi.get.mockRejectedValueOnce(axiosError);
 
     const response = await api.getCompanyByRegistrationNumber({ registrationNumber, userToken });
 
@@ -346,14 +346,14 @@ describe('getCompanyByRegistrationNumber()', () => {
     axiosError.response = {
       status: HttpStatusCode.InternalServerError,
     };
-    Axios.get.mockRejectedValueOnce(axiosError);
+    portalApi.get.mockRejectedValueOnce(axiosError);
 
     await expect(api.getCompanyByRegistrationNumber({ registrationNumber, userToken })).rejects.toEqual(axiosError);
   });
 
   it('rethrows the error if making the request to Portal API throws an unhandled error', async () => {
     const error = new Error();
-    Axios.get.mockRejectedValueOnce(error);
+    portalApi.get.mockRejectedValueOnce(error);
 
     await expect(api.getCompanyByRegistrationNumber({ registrationNumber, userToken })).rejects.toEqual(error);
   });
@@ -363,13 +363,13 @@ describe('getAddressesByPostcode()', () => {
   const postcode = 'EE1 1EE';
 
   it('returns the correct response', async () => {
-    Axios.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
+    portalApi.get.mockReturnValue(Promise.resolve({ data: { status: HttpStatusCode.Ok } }));
     const response = await api.getAddressesByPostcode({ postcode, userToken });
     expect(response).toEqual({ status: HttpStatusCode.Ok });
   });
 
   it('throws an error if there is an api error', async () => {
-    Axios.get.mockReturnValue(Promise.reject());
+    portalApi.get.mockReturnValue(Promise.reject());
     await expect(api.getAddressesByPostcode({ postcode, userToken })).rejects.toThrowError();
   });
 
@@ -387,7 +387,7 @@ describe('getAmendment()', () => {
       facilityEndDate: facilityEndDate.toISOString(),
     };
 
-    Axios.get.mockReturnValue(Promise.resolve({ data: mockAmendment }));
+    portalApi.get.mockReturnValue(Promise.resolve({ data: mockAmendment }));
 
     // Act
     const response = await api.getAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken });
@@ -402,14 +402,14 @@ describe('getAmendment()', () => {
       ...new PortalFacilityAmendmentWithUkefIdMockBuilder().withIsUsingFacilityEndDate(true).build(),
       facilityEndDate: 'Invalid',
     };
-    Axios.get.mockReturnValue(Promise.resolve({ data: mockAmendment }));
+    portalApi.get.mockReturnValue(Promise.resolve({ data: mockAmendment }));
 
     // Act + Assert
     await expect(api.getAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken })).rejects.toThrow();
   });
 
   it('should throw an error if there is an api error', async () => {
-    Axios.get.mockReturnValue(Promise.reject(new AxiosError()));
+    portalApi.get.mockReturnValue(Promise.reject(new AxiosError()));
     await expect(api.getAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken })).rejects.toThrow(AxiosError);
   });
 
@@ -426,7 +426,7 @@ describe('upsertAmendment()', () => {
   it(`should return the response body when the amendment can be upserted`, async () => {
     // Arrange
     const mockAmendment = { facilityId: validMongoId, amendmentId: validMongoId, dealId: validMongoId, changeCoverEndDate: true };
-    Axios.put.mockReturnValue(Promise.resolve({ data: mockAmendment }));
+    portalApi.put.mockReturnValue(Promise.resolve({ data: mockAmendment }));
 
     // Act
     const response = await api.upsertAmendment({ facilityId: validMongoId, dealId: validMongoId, amendment: {}, userToken });
@@ -437,7 +437,7 @@ describe('upsertAmendment()', () => {
 
   it('should throw an error if there is an api error', async () => {
     // Arrange
-    Axios.put.mockReturnValue(Promise.reject(new AxiosError()));
+    portalApi.put.mockReturnValue(Promise.reject(new AxiosError()));
 
     // Act
     const returned = api.upsertAmendment({ facilityId: validMongoId, dealId: validMongoId, amendment: {}, userToken });
@@ -467,7 +467,7 @@ describe('updateAmendment()', () => {
   it(`should return the response body when the amendment can be updated`, async () => {
     // Arrange
     const mockAmendment = { facilityId: validMongoId, amendmentId: validMongoId, dealId: validMongoId, changeCoverEndDate: true };
-    Axios.patch.mockReturnValue(Promise.resolve({ data: mockAmendment }));
+    portalApi.patch.mockReturnValue(Promise.resolve({ data: mockAmendment }));
 
     // Act
     const response = await api.updateAmendment({ facilityId: validMongoId, amendmentId: validMongoId, update: {}, userToken });
@@ -478,7 +478,7 @@ describe('updateAmendment()', () => {
 
   it('should throw an error if there is an api error', async () => {
     // Arrange
-    Axios.patch.mockReturnValue(Promise.reject(new AxiosError()));
+    portalApi.patch.mockReturnValue(Promise.reject(new AxiosError()));
 
     // Act
     const returned = api.updateAmendment({ facilityId: validMongoId, amendmentId: validMongoId, update: {}, userToken });
@@ -507,19 +507,19 @@ describe('updateAmendment()', () => {
 describe('deleteAmendment()', () => {
   it(`should return the correct response`, async () => {
     // Arrange
-    Axios.delete.mockReturnValue(Promise.resolve(undefined));
+    portalApi.delete.mockReturnValue(Promise.resolve(undefined));
 
     // Act
     await api.deleteAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken });
 
     // Assert
-    expect(Axios.delete).toHaveBeenCalledTimes(1);
+    expect(portalApi.delete).toHaveBeenCalledTimes(1);
     await expect(api.deleteAmendment({ facilityId: validMongoId, amendmentId: validMongoId, userToken })).resolves.toBeUndefined();
   });
 
   it('should throw an error if there is an api error', async () => {
     // Arrange
-    Axios.delete.mockReturnValue(Promise.reject(new AxiosError('API Error')));
+    portalApi.delete.mockReturnValue(Promise.reject(new AxiosError('API Error')));
 
     // Act + Assert
     try {
@@ -528,7 +528,7 @@ describe('deleteAmendment()', () => {
       expect(error).toBeInstanceOf(AxiosError);
       expect(error.message).toBe('API Error');
     }
-    expect(Axios.delete).toHaveBeenCalledTimes(1);
+    expect(portalApi.delete).toHaveBeenCalledTimes(1);
   });
 
   it.each(invalidMongoIdTestCases)('should throw an error when given an invalid amendment Id', async (invalidMongoId) => {
@@ -552,7 +552,7 @@ describe('getAmendmentsOnDeal()', () => {
   it(`should return the found amendments`, async () => {
     // Arrange
     const mockAmendment = { ...new PortalFacilityAmendmentWithUkefIdMockBuilder().build(), status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL };
-    Axios.get.mockResolvedValueOnce({ data: [mockAmendment] });
+    portalApi.get.mockResolvedValueOnce({ data: [mockAmendment] });
 
     // Act
     const response = await api.getAmendmentsOnDeal({ dealId: validMongoId, userToken, statuses: ALL_AMENDMENT_INPROGRESS_STATUSES });
@@ -563,7 +563,7 @@ describe('getAmendmentsOnDeal()', () => {
 
   it('should throw an error if there is an api error', async () => {
     // Arrange
-    Axios.get.mockRejectedValueOnce(new AxiosError());
+    portalApi.get.mockRejectedValueOnce(new AxiosError());
 
     // Act
     const returned = api.getAmendmentsOnDeal({ dealId: validMongoId, statuses: [TFM_AMENDMENT_STATUS.NOT_STARTED], userToken });
@@ -585,7 +585,7 @@ describe('getPortalAmendmentsOnDeal()', () => {
   it(`should return the found amendments`, async () => {
     // Arrange
     const mockAmendment = { ...new PortalFacilityAmendmentWithUkefIdMockBuilder().build(), status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL };
-    Axios.get.mockResolvedValueOnce({ data: [mockAmendment] });
+    portalApi.get.mockResolvedValueOnce({ data: [mockAmendment] });
 
     // Act
     const response = await api.getPortalAmendmentsOnDeal({ dealId: validMongoId, userToken, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES });
@@ -596,7 +596,7 @@ describe('getPortalAmendmentsOnDeal()', () => {
 
   it('should throw an error if there is an api error', async () => {
     // Arrange
-    Axios.get.mockRejectedValueOnce(new AxiosError());
+    portalApi.get.mockRejectedValueOnce(new AxiosError());
 
     // Act
     const returned = api.getPortalAmendmentsOnDeal({ dealId: validMongoId, statuses: [PORTAL_AMENDMENT_STATUS.DRAFT], userToken });
@@ -649,14 +649,14 @@ describe('getTfmDeal', () => {
         },
       };
 
-      Axios.get.mockResolvedValueOnce(mockResponse);
+      portalApi.get.mockResolvedValueOnce(mockResponse);
 
       // Act
       const response = await getTfmDeal({ dealId, userToken });
 
       // Assert
       expect(console.error).not.toHaveBeenCalled();
-      expect(Axios.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
+      expect(portalApi.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
         headers: { Authorization: userToken },
       });
       expect(response).toBe(mockResponse.data);
@@ -667,13 +667,13 @@ describe('getTfmDeal', () => {
       const mockError = new Error('Invalid TFM deal response received');
       const mockResponse = {};
 
-      Axios.get.mockResolvedValueOnce(mockResponse);
+      portalApi.get.mockResolvedValueOnce(mockResponse);
 
       // Act
       const response = await getTfmDeal({ dealId, userToken });
 
       // Assert
-      expect(Axios.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
+      expect(portalApi.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
         headers: { Authorization: userToken },
       });
       expect(console.error).toHaveBeenCalledTimes(1);
@@ -686,13 +686,13 @@ describe('getTfmDeal', () => {
       const mockError = new Error('Invalid TFM deal response received');
       const mockResponse = undefined;
 
-      Axios.get.mockResolvedValueOnce(mockResponse);
+      portalApi.get.mockResolvedValueOnce(mockResponse);
 
       // Act
       const response = await getTfmDeal({ dealId, userToken });
 
       // Assert
-      expect(Axios.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
+      expect(portalApi.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
         headers: { Authorization: userToken },
       });
       expect(console.error).toHaveBeenCalledTimes(1);
@@ -705,13 +705,13 @@ describe('getTfmDeal', () => {
       const mockError = new Error('Invalid TFM deal response received');
       const mockResponse = null;
 
-      Axios.get.mockResolvedValueOnce(mockResponse);
+      portalApi.get.mockResolvedValueOnce(mockResponse);
 
       // Act
       const response = await getTfmDeal({ dealId, userToken });
 
       // Assert
-      expect(Axios.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
+      expect(portalApi.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
         headers: { Authorization: userToken },
       });
       expect(console.error).toHaveBeenCalledTimes(1);
@@ -726,13 +726,13 @@ describe('getTfmDeal', () => {
         data: undefined,
       };
 
-      Axios.get.mockResolvedValueOnce(mockResponse);
+      portalApi.get.mockResolvedValueOnce(mockResponse);
 
       // Act
       const response = await getTfmDeal({ dealId, userToken });
 
       // Assert
-      expect(Axios.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
+      expect(portalApi.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
         headers: { Authorization: userToken },
       });
       expect(console.error).toHaveBeenCalledTimes(1);
@@ -746,17 +746,163 @@ describe('getTfmDeal', () => {
       // Arrange
       const mockError = new Error('Test error');
 
-      Axios.get.mockRejectedValueOnce(mockError);
+      portalApi.get.mockRejectedValueOnce(mockError);
 
       // Act
       const response = await getTfmDeal({ dealId, userToken });
 
       // Assert
-      expect(Axios.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
+      expect(portalApi.get).toHaveBeenCalledWith(`/tfm/deal/${dealId}`, {
         headers: { Authorization: userToken },
       });
       expect(console.error).toHaveBeenCalledTimes(1);
       expect(console.error).toHaveBeenCalledWith('Unable to get TFM deal %s %o', dealId, mockError);
+      expect(response).toBeFalsy();
+    });
+  });
+});
+describe('getTfmFacility', () => {
+  const invalidFacilityIds = ['', undefined, null, '123', 123, 'abc', '!@£', '123123123ABC', {}, []];
+  const facilityId = '61a7710b2ae62b0013dae687';
+  const mockError = new Error('Invalid TFM facility response received');
+
+  describe('MongoID validation', () => {
+    it.each(invalidFacilityIds)('should throw an error if an invalid Mongo facility ID `%s` is supplied', async (invalidFacilityId) => {
+      // Arrange
+
+      // Act
+      const response = await getTfmFacility({ facilityId: invalidFacilityId, userToken });
+
+      // Assert
+      expect(console.error).toHaveBeenCalledTimes(2);
+      expect(console.error).toHaveBeenCalledWith('Invalid facility ID %s', invalidFacilityId);
+      expect(console.error).toHaveBeenCalledWith('Unable to get TFM facility %s %o', invalidFacilityId, new Error('Invalid facility ID'));
+      expect(response).toBeFalsy();
+    });
+  });
+
+  describe('API call', () => {
+    it('should return TFM deal when a valid Mongo deal ID is supplied', async () => {
+      // Arrange
+      const facility = {
+        _id: facilityId,
+        facilitySnapshot: {
+          facilityId,
+        },
+        tfm: {},
+      };
+
+      const mockResponse = {
+        data: {
+          facility,
+        },
+      };
+
+      portalApi.get.mockResolvedValueOnce(mockResponse);
+
+      // Act
+      const response = await getTfmFacility({ facilityId, userToken });
+
+      // Assert
+      expect(console.error).not.toHaveBeenCalled();
+      expect(portalApi.get).toHaveBeenCalledWith(`/tfm/facility/${facilityId}`, {
+        headers: { Authorization: userToken },
+      });
+      expect(response).toBe(mockResponse.data);
+    });
+
+    it('should return false when an empty response is received', async () => {
+      // Arrange
+      const mockResponse = {};
+
+      portalApi.get.mockResolvedValueOnce(mockResponse);
+
+      // Act
+      const response = await getTfmFacility({ facilityId, userToken });
+
+      // Assert
+      expect(portalApi.get).toHaveBeenCalledWith(`/tfm/facility/${facilityId}`, {
+        headers: { Authorization: userToken },
+      });
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get TFM facility %s %o', facilityId, mockError);
+      expect(response).toBeFalsy();
+    });
+
+    it('should return false when an undefined response is received', async () => {
+      // Arrange
+      const mockResponse = undefined;
+
+      portalApi.get.mockResolvedValueOnce(mockResponse);
+
+      // Act
+      const response = await getTfmFacility({ facilityId, userToken });
+
+      // Assert
+      expect(portalApi.get).toHaveBeenCalledWith(`/tfm/facility/${facilityId}`, {
+        headers: { Authorization: userToken },
+      });
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get TFM facility %s %o', facilityId, mockError);
+      expect(response).toBeFalsy();
+    });
+
+    it('should return false when a null response is received', async () => {
+      // Arrange
+      const mockResponse = null;
+
+      portalApi.get.mockResolvedValueOnce(mockResponse);
+
+      // Act
+      const response = await getTfmFacility({ facilityId, userToken });
+
+      // Assert
+      expect(portalApi.get).toHaveBeenCalledWith(`/tfm/facility/${facilityId}`, {
+        headers: { Authorization: userToken },
+      });
+
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get TFM facility %s %o', facilityId, mockError);
+      expect(response).toBeFalsy();
+    });
+
+    it('should return false when an empty data response is received', async () => {
+      // Arrange
+      const mockResponse = {
+        data: undefined,
+      };
+
+      portalApi.get.mockResolvedValueOnce(mockResponse);
+
+      // Act
+      const response = await getTfmFacility({ facilityId, userToken });
+
+      // Assert
+      expect(portalApi.get).toHaveBeenCalledWith(`/tfm/facility/${facilityId}`, {
+        headers: { Authorization: userToken },
+      });
+
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get TFM facility %s %o', facilityId, mockError);
+      expect(response).toBeFalsy();
+    });
+  });
+
+  describe('Exception handling', () => {
+    it('should catch an error if an exception is thrown', async () => {
+      // Arrange
+      portalApi.get.mockRejectedValueOnce(mockError);
+
+      // Act
+      const response = await getTfmFacility({ facilityId, userToken });
+
+      // Assert
+      expect(portalApi.get).toHaveBeenCalledWith(`/tfm/facility/${facilityId}`, {
+        headers: { Authorization: userToken },
+      });
+
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get TFM facility %s %o', facilityId, mockError);
       expect(response).toBeFalsy();
     });
   });

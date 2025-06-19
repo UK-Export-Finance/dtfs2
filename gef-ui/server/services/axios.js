@@ -2,10 +2,10 @@ const { default: axios } = require('axios');
 const { TIMEOUT, HEADERS } = require('@ukef/dtfs2-common');
 require('dotenv').config();
 
-const { PORTAL_API_URL, PORTAL_API_KEY } = process.env;
+const { PORTAL_API_URL, PORTAL_API_KEY, EXTERNAL_API_KEY, EXTERNAL_API_URL } = process.env;
 const VERSION = 'v1';
 
-module.exports = axios.create({
+const portalApi = axios.create({
   baseURL: `${PORTAL_API_URL}/${VERSION}`,
   headers: {
     Accept: 'application/json',
@@ -14,3 +14,18 @@ module.exports = axios.create({
   },
   timeout: TIMEOUT.LONG,
 });
+
+const externalApi = axios.create({
+  baseURL: `${EXTERNAL_API_URL}`,
+  headers: {
+    Accept: 'application/json',
+    [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+    'x-api-key': EXTERNAL_API_KEY,
+  },
+  timeout: TIMEOUT.LONG,
+});
+
+module.exports = {
+  portalApi,
+  externalApi,
+};
