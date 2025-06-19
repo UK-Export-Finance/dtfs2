@@ -109,10 +109,17 @@ export class LoginController {
    * @param res - The HTTP response object.
    */
   public static getLogout = (req: Request, res: Response) => {
-    console.info('Logging out TFM user');
+    if (!req.session?.user) {
+      console.info('Re-directing user to TFM SSO login');
+      return res.redirect('/');
+    }
+
+    console.info('Logging out TFM user %s', req.session.user._id);
 
     req.session.destroy(() => {
       res.render('user-logged-out.njk');
     });
+
+    return false;
   };
 }

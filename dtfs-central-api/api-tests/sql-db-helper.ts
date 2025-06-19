@@ -24,28 +24,28 @@ type SqlTableName =
 const deleteAllEntries = async (tableName: SqlTableName): Promise<void> => {
   switch (tableName) {
     case 'UtilisationReport':
-      await SqlDbDataSource.manager.delete(UtilisationReportEntity, {});
+      await SqlDbDataSource.createQueryBuilder().delete().from(UtilisationReportEntity).execute();
       return;
     case 'FeeRecord':
-      await SqlDbDataSource.manager.delete(FeeRecordEntity, {});
+      await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordEntity).execute();
       return;
     case 'AzureFileInfo':
-      await SqlDbDataSource.manager.delete(AzureFileInfoEntity, {});
+      await SqlDbDataSource.createQueryBuilder().delete().from(AzureFileInfoEntity).execute();
       return;
     case 'Payment':
-      await SqlDbDataSource.manager.delete(PaymentEntity, {});
+      await SqlDbDataSource.createQueryBuilder().delete().from(PaymentEntity).execute();
       return;
     case 'PaymentMatchingTolerance':
-      await SqlDbDataSource.manager.delete(PaymentMatchingToleranceEntity, {});
+      await SqlDbDataSource.createQueryBuilder().delete().from(PaymentMatchingToleranceEntity).execute();
       return;
     case 'FeeRecordCorrection':
-      await SqlDbDataSource.manager.delete(FeeRecordCorrectionEntity, {});
+      await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordCorrectionEntity).execute();
       return;
     case 'FeeRecordCorrectionTransientFormData':
-      await SqlDbDataSource.manager.delete(FeeRecordCorrectionTransientFormDataEntity, {});
+      await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordCorrectionTransientFormDataEntity).execute();
       return;
     case 'FeeRecordCorrectionRequestTransientFormData':
-      await SqlDbDataSource.manager.delete(FeeRecordCorrectionRequestTransientFormDataEntity, {});
+      await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordCorrectionRequestTransientFormDataEntity).execute();
       return;
     default:
       throw new Error(`Cannot delete all entries from table: no entity found for table name '${tableName}'`);

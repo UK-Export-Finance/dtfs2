@@ -1,4 +1,5 @@
 {% extends "index.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block pageTitle -%}
   You have been logged out
@@ -9,10 +10,19 @@
   <section class="govuk-!-margin-top-9">
     <div class="govuk-grid-row" data-cy="you-have-been-logged-out">
       <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-xl" data-cy="you-have-been-logged-out-heading">You have been logged out</h1>
-        <p class="govuk-body" data-cy="you-have-been-logged-out-message">
-        You have been logged out of Trade Finance Manager.
-        </p>
+        <h1 class="govuk-heading-xl" data-cy="you-have-been-logged-out-heading">You have been logged out of Trade Finance Manager</h1>
+
+        {{
+          govukButton({
+            text: "Return to sign in",
+            classes: "govuk-button--primary",
+            href: "/",
+            attributes: {
+              "data-cy": "govuk-sso-login-button"
+            }
+          })
+        }}
+        
       </div>
     </div>
   </section>
