@@ -167,6 +167,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/submit-amendmen
             name: checker1.firstname,
             email: checker1.email,
           },
+          tfm: {},
         };
 
         jest.mocked(patchPortalFacilitySubmitAmendmentMock).mockResolvedValue(amendment);

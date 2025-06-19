@@ -146,11 +146,22 @@ export interface PortalFacilityAmendment extends BaseAmendment {
  */
 export type FacilityAmendment = TfmFacilityAmendment | PortalFacilityAmendment;
 
+export type FacilityGuaranteeDates = {
+  guaranteeCommencementDate?: string;
+  guaranteeExpiryDate?: string;
+  effectiveDate?: string;
+};
+
 export type TfmFacilityObject = {
   exchangeRate?: number;
   facilityValueInGBP?: number;
   ukefExposure?: number;
   ukefExposureCalculationTimestamp?: string;
+  hasBeenIssuedAndAcknowledged?: boolean;
+  feeRecord?: number;
+  exposurePeriodInMonths?: number;
+  facilityGuaranteeDates?: FacilityGuaranteeDates;
+  riskProfile?: string;
 };
 
 /**

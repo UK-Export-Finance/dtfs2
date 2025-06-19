@@ -147,7 +147,7 @@ context('Amendments - Facility value - page tests', () => {
     });
   });
 
-  it.only('should navigate to cancel page when cancel is clicked', () => {
+  it('should navigate to cancel page when cancel is clicked', () => {
     facilityValue.cancelLink().click();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`));
