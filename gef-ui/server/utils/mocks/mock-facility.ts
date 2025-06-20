@@ -1,11 +1,10 @@
-import { GEF_FACILITY_TYPE } from '@ukef/dtfs2-common';
-import { TFM_FACILITY } from './mock-tfm-facility';
+import { GEF_FACILITY_TYPE, MOCK_TFM_FACILITY } from '@ukef/dtfs2-common';
 import { DEAL_STATUS } from '../../constants';
 
 export const mockFacility = (facilityId: string, dealId: string) => ({
   status: DEAL_STATUS.COMPLETED,
   details: {
-    ...TFM_FACILITY.facilitySnapshot,
+    ...MOCK_TFM_FACILITY.facilitySnapshot,
     _id: facilityId,
     dealId,
     specialIssuePermission: null,

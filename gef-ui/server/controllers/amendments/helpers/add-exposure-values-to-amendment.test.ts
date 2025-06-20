@@ -1,7 +1,6 @@
-import { createAmendmentFacilityExposure, formattedNumber } from '@ukef/dtfs2-common';
+import { createAmendmentFacilityExposure, formattedNumber, MOCK_TFM_FACILITY } from '@ukef/dtfs2-common';
 import { addExposureValuesToAmendment } from './add-exposure-values-to-amendment';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
-import { TFM_FACILITY } from '../../../utils/mocks/mock-tfm-facility';
 import { mockFacility } from '../../../utils/mocks/mock-facility';
 import api from '../../../services/api';
 
@@ -30,7 +29,7 @@ describe('addExposureValuesToAmendment', () => {
     jest.spyOn(api, 'getTfmFacility').mockImplementation(getTfmFacilityMock);
     jest.spyOn(console, 'error');
 
-    getTfmFacilityMock.mockResolvedValue(TFM_FACILITY);
+    getTfmFacilityMock.mockResolvedValue(MOCK_TFM_FACILITY);
   });
 
   describe('when coverPercentage is undefined', () => {
@@ -212,9 +211,9 @@ describe('addExposureValuesToAmendment', () => {
 
   describe('when all values are valid', () => {
     const tfmFacility = {
-      ...TFM_FACILITY,
+      ...MOCK_TFM_FACILITY,
       tfm: {
-        ...TFM_FACILITY.tfm,
+        ...MOCK_TFM_FACILITY.tfm,
         exchangeRate: 0.5,
       },
     };
@@ -251,9 +250,9 @@ describe('addExposureValuesToAmendment', () => {
 
   describe('when exchange rate is missing', () => {
     const tfmFacility = {
-      ...TFM_FACILITY,
+      ...MOCK_TFM_FACILITY,
       tfm: {
-        ...TFM_FACILITY.tfm,
+        ...MOCK_TFM_FACILITY.tfm,
         exchangeRate: undefined,
       },
     };

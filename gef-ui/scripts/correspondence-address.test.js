@@ -1,7 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
 describe('correspondence-address.js', () => {
   const classNameToHideElement = 'govuk-visually-hidden';
 

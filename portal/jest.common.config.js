@@ -1,5 +1,5 @@
 module.exports = {
-  preset: 'ts-jest/presets/js-with-babel',
+  preset: 'ts-jest',
   transform: {
     '^.+\\.js$': 'babel-jest',
     '^.+\\.ts$': 'ts-jest',

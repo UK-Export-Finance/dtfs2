@@ -1,9 +1,10 @@
+import { ObjectId } from 'mongodb';
 import { MOCK_FACILITY } from '.';
-import { generateObjectIdId } from '../../utils';
+import { TfmFacility } from '../../types';
 import { getEpochMs } from '../../helpers';
 
-export const MOCK_TFM_FACILITY = {
-  _id: generateObjectIdId(),
+export const MOCK_TFM_FACILITY: TfmFacility = {
+  _id: new ObjectId(),
   facilitySnapshot: {
     ...MOCK_FACILITY,
   },

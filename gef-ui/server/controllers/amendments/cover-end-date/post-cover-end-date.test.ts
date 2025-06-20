@@ -20,6 +20,7 @@ import {
   getEpochMs,
   formatDatesForTenor,
   applyStandardValidationAndParseDateInput,
+  MOCK_TFM_FACILITY,
 } from '@ukef/dtfs2-common';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
@@ -31,7 +32,6 @@ import { ValidationError } from '../../../types/validation-error';
 import { postCoverEndDate, PostCoverEndDateRequest } from './post-cover-end-date';
 import { validateAndParseCoverEndDate } from './validation';
 import { CoverEndDateViewModel } from '../../../types/view-models/amendments/cover-end-date-view-model';
-import { TFM_FACILITY } from '../../../utils/mocks/mock-tfm-facility';
 
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
@@ -104,7 +104,7 @@ describe('postCoverEndDate', () => {
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getAmendmentMock.mockResolvedValue(amendment);
     updateAmendmentMock.mockResolvedValue(amendment);
-    getTfmFacilityMock.mockResolvedValue(TFM_FACILITY);
+    getTfmFacilityMock.mockResolvedValue(MOCK_TFM_FACILITY);
     getExposurePeriodMock.mockResolvedValue(exposurePeriod);
   });
 
@@ -141,7 +141,7 @@ describe('postCoverEndDate', () => {
 
     // Assert
     const coverEndDate = getEpochMs(parsedCoverEndDate);
-    const { facilityType, coverEndDateFormatted, coverStartDateFormatted } = formatDatesForTenor(TFM_FACILITY.facilitySnapshot, coverEndDate);
+    const { facilityType, coverEndDateFormatted, coverStartDateFormatted } = formatDatesForTenor(MOCK_TFM_FACILITY.facilitySnapshot, coverEndDate);
 
     expect(getExposurePeriodMock).toHaveBeenCalledTimes(1);
     expect(getExposurePeriodMock).toHaveBeenCalledWith(coverStartDateFormatted, coverEndDateFormatted, facilityType);

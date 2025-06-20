@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import maskedInputs from './masked-inputs';
 
 describe('maskedInputs', () => {
