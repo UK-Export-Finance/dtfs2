@@ -636,9 +636,13 @@ const updateAmendmentStatus = async ({
  * @param {string} param.facilityId
  * @param {string} param.amendmentId
  * @param {string} param.userToken
+ * @param {string} param.makersEmail
+ * @param {string} param.checkersEmail
+ * @param {import('@ukef/dtfs2-common').PortalAmendmentAbandonEmailVariables } param.emailVariables
+ 
  * @returns {Promise<void>}
  */
-const deleteAmendment = async ({ facilityId, amendmentId, userToken }) => {
+const deleteAmendment = async ({ facilityId, amendmentId, userToken, makersEmail = '', checkersEmail = '', emailVariables = emptyEmailVariables }) => {
   if (!isValidMongoId(facilityId)) {
     console.error('Invalid facility ID %s', facilityId);
     throw new InvalidFacilityIdError(facilityId);
@@ -650,7 +654,13 @@ const deleteAmendment = async ({ facilityId, amendmentId, userToken }) => {
   }
 
   try {
-    return Axios.delete(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, { ...config(userToken) });
+    const payload = {
+      makersEmail,
+      checkersEmail,
+      emailVariables,
+    };
+
+    return Axios.delete(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, payload, { ...config(userToken) });
   } catch (error) {
     console.error('Failed to delete the amendment with id %s on facility with id %s %o', amendmentId, facilityId, error);
     throw error;
