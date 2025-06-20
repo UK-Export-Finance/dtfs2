@@ -11,7 +11,7 @@ import amendmentPage from '../../../../../../../gef/cypress/e2e/pages/amendments
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('Amendments - Check your answers change journey', () => {
+context('Amendments - amendment details page - change amendments journey', () => {
   let dealId;
   let facilityId;
   let amendmentUrl;

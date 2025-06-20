@@ -22,6 +22,15 @@ const endPages = [EFFECTIVE_DATE, CHECK_YOUR_ANSWERS] as const;
 const coverEndDatePages = [COVER_END_DATE, DO_YOU_HAVE_A_FACILITY_END_DATE] as const;
 
 /**
+ * @param status - the portal amendment status
+ * @returns the page to be displayed based on the amendment status
+ */
+export const getAmendmentPageByStatus = (status: string): PortalAmendmentPage => {
+  const page = status === PORTAL_AMENDMENT_STATUS.DRAFT ? CHECK_YOUR_ANSWERS : AMENDMENT_DETAILS;
+  return page;
+};
+
+/**
  * @param dealId - the deal ID
  * @param facilityId - the facility ID
  * @param amendmentId - the amendment ID
@@ -43,6 +52,8 @@ export const getAmendmentsUrl = ({
 };
 
 /**
+ * If the amendment status is DRAFT, the amendment details page should be "Check Your Answers".
+ * For all other statuses, the amendment details page  should be "Amendment Details".
  * @param amendment - the amendment
  * @returns the pages that should be displayed for this amendment if the user is changing the cover end date
  */
@@ -93,11 +104,15 @@ export const getPreviousPage = (currentPage: PortalAmendmentPage, amendment: Por
   const currentPageIndex = journey.indexOf(currentPage);
 
   const { dealId, facilityId, amendmentId } = amendment;
-  if (change && amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT) {
-    return getAmendmentsUrl({ dealId, facilityId, amendmentId, page: CHECK_YOUR_ANSWERS });
-  }
-  if (change && amendment.status !== PORTAL_AMENDMENT_STATUS.DRAFT) {
-    return getAmendmentsUrl({ dealId, facilityId, amendmentId, page: AMENDMENT_DETAILS });
+
+  /*
+   * If the `change` flag is set to `true`, it returns as previous page the page corresponding to the amendment's current status,
+   * allowing users to review or change their amendment. If `change` is `false` or omitted, it returns the previous
+   * page in the journey sequence.
+   */
+  if (change) {
+    const page = getAmendmentPageByStatus(amendment.status);
+    return getAmendmentsUrl({ dealId, facilityId, amendmentId, page });
   }
 
   if (currentPageIndex === 0 || currentPageIndex === -1) {
@@ -119,11 +134,15 @@ export const getNextPage = (currentPage: PortalAmendmentPage, amendment: PortalF
   const currentPageIndex = journey.indexOf(currentPage);
 
   const { dealId, facilityId, amendmentId } = amendment;
-  if (change && amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT) {
-    return getAmendmentsUrl({ dealId, facilityId, amendmentId, page: CHECK_YOUR_ANSWERS });
-  }
-  if (change && amendment.status !== PORTAL_AMENDMENT_STATUS.DRAFT) {
-    return getAmendmentsUrl({ dealId, facilityId, amendmentId, page: AMENDMENT_DETAILS });
+
+  /*
+   * If the `change` flag is set to `true`, it returns as next page the page corresponding to the amendment's current status,
+   * allowing users to review or change their amendment. If `change` is `false` or omitted, it returns the next
+   * page in the journey sequence.
+   */
+  if (change) {
+    const page = getAmendmentPageByStatus(amendment.status);
+    return getAmendmentsUrl({ dealId, facilityId, amendmentId, page });
   }
 
   if (currentPageIndex >= journey.length - 1 || currentPageIndex === -1) {
