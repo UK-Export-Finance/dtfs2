@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import { industryClassElement, appendSelectOption, getIndustryClassesFromSectorCode, changeIndustryClasses } from './change-industry-classes';
 
 describe('changeIndustryClasses', () => {

@@ -81,12 +81,12 @@ exports.tfmDeal = async (req, res) => {
 };
 
 /**
- * Handles the request to retrieve a TFM deal by its ID.
+ * Handles the request to retrieve a TFM facility by its ID.
  *
- * The endpoint check whether the provided `dealId` is not falsy.
- * If valid then retiereves the TFM deals from `tfm-deals` collection using
- * provided `dealId` parameter.
- * Returns the deal information if successful, or an appropriate error response otherwise.
+ * The endpoint check whether the provided `facilityId` is not falsy.
+ * If valid then retiereves the TFM facility from `tfm-facilities` collection using
+ * provided `facilityId` parameter.
+ * Returns the tfm facility information if successful, or an appropriate error response otherwise.
  *
  * @async
  * @function tfmDeal

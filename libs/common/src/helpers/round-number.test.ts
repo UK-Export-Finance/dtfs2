@@ -19,6 +19,12 @@ describe('roundNumber', () => {
 
       expect(result).toEqual(123456790);
     });
+
+    it('should round a number up when no second argument is passed', () => {
+      const result = roundNumber(123456789.996, 0);
+
+      expect(result).toEqual(123456790);
+    });
   });
 
   describe('round down', () => {
@@ -38,6 +44,26 @@ describe('roundNumber', () => {
       const result = roundNumber(123456.001);
 
       expect(result).toEqual(123456);
+    });
+
+    it('should round a number down when no second argument is passed', () => {
+      const result = roundNumber(123456.001, 0);
+
+      expect(result).toEqual(123456);
+    });
+  });
+
+  describe('when 0 is passed', () => {
+    it('should return 0 when 0 is passed', () => {
+      const result = roundNumber(0, 1);
+
+      expect(result).toEqual(0);
+    });
+
+    it('should return 0 when no second argument is passed', () => {
+      const result = roundNumber(0);
+
+      expect(result).toEqual(0);
     });
   });
 });

@@ -695,11 +695,11 @@ const getTfmDeal = async ({ dealId, userToken }) => {
  *
  * @async
  * @function getTfmDeal
- * @param {Object} params - The parameters for retrieving the deal.
- * @param {string} params.facilityId - The MongoDB ID of the deal to retrieve.
+ * @param {Object} params - The parameters for retrieving the facility.
+ * @param {string} params.facilityId - The facility ID of the tfm facility to retrieve.
  * @param {string} params.userToken - The user authentication token.
- * @returns {Promise<(import('@ukef/dtfs2-common').TfmFacility)>} The portalApi response containing the TFM deal data.
- * @throws {Error} If the deal ID is invalid or the request fails.
+ * @returns {Promise<(import('@ukef/dtfs2-common').TfmFacility)>} The portalApi response containing the TFM facility data.
+ * @throws {Error} If the facility ID is invalid or the request fails.
  */
 const getTfmFacility = async ({ facilityId, userToken }) => {
   try {

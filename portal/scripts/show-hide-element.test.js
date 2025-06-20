@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import { getElement, showHideElement, changeScreenVisibilityOfElement } from './show-hide-element';
 
 describe('changeIndustryClasses', () => {

@@ -276,7 +276,6 @@ describe('findLatestCompletedAmendment()', () => {
     const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
 
     // Assert
-
     expect(result).toEqual(latestAmendmentTfmObject);
   });
 

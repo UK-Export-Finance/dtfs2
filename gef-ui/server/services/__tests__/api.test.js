@@ -768,8 +768,6 @@ describe('getTfmFacility', () => {
 
   describe('MongoID validation', () => {
     it.each(invalidFacilityIds)('should throw an error if an invalid Mongo facility ID `%s` is supplied', async (invalidFacilityId) => {
-      // Arrange
-
       // Act
       const response = await getTfmFacility({ facilityId: invalidFacilityId, userToken });
 
@@ -782,7 +780,7 @@ describe('getTfmFacility', () => {
   });
 
   describe('API call', () => {
-    it('should return TFM deal when a valid Mongo deal ID is supplied', async () => {
+    it('should return TFM deal when a valid Mongo facility ID is supplied', async () => {
       // Arrange
       const facility = {
         _id: facilityId,

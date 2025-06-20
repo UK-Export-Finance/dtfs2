@@ -26,3 +26,4 @@ export * from './portal-amendment-to-checker-email-variables';
 export * from './portal-amendment-to-ukef-email-variables';
 export * from './portal-amendment-return-to-maker-email-variables';
 export * from './facility';
+export * from './tfm-facility';

@@ -12,12 +12,6 @@ const userToken = 'userToken';
 
 const { details: facility } = mockFacility(facilityId, dealId);
 
-// const exposure = {
-//   exposure: 12345,
-//   timestamp: getEpochMs(),
-//   ukefExposureValue: 12345,
-// };
-
 const getTfmFacilityMock = jest.fn();
 console.error = jest.fn();
 
