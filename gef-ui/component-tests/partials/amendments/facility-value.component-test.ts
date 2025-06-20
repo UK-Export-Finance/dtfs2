@@ -13,6 +13,7 @@ describe(page, () => {
   const exporterName = 'exporterName';
   const currencySymbol = '£';
   const facilityType = FACILITY_TYPE.CASH;
+  const canMakerCancelAmendment = true;
 
   const params: FacilityValueViewModel = {
     previousPage,
@@ -21,6 +22,7 @@ describe(page, () => {
     exporterName,
     currencySymbol,
     facilityType,
+    canMakerCancelAmendment,
   };
 
   it('should render the page heading', () => {

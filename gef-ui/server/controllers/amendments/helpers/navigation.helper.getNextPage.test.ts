@@ -14,6 +14,7 @@ const {
   ELIGIBILITY,
   EFFECTIVE_DATE,
   CHECK_YOUR_ANSWERS,
+  AMENDMENT_DETAILS,
   MANUAL_APPROVAL_NEEDED,
   SUBMITTED_FOR_CHECKING,
   CANCEL,
@@ -29,10 +30,19 @@ describe('getNextPage', () => {
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(true).build(),
       },
       {
-        description: 'when changing the cover end date',
+        description: 'when changing the cover end date and the change query is true',
         expectedNextPage: CHECK_YOUR_ANSWERS,
         change: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(true).build(),
+      },
+      {
+        description: `when changing the cover end date, portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED} and the change query is true`,
+        expectedNextPage: AMENDMENT_DETAILS,
+        change: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
+          .withChangeCoverEndDate(true)
+          .build(),
       },
       {
         description: 'when changing the facility value but not the cover end date',
@@ -40,10 +50,20 @@ describe('getNextPage', () => {
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(false).withChangeFacilityValue(true).build(),
       },
       {
-        description: 'when changing the facility value but not the cover end date',
+        description: 'when changing the facility value but not the cover end date and the change query is true',
         expectedNextPage: CHECK_YOUR_ANSWERS,
         change: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(false).withChangeFacilityValue(true).build(),
+      },
+      {
+        description: `when changing the facility value, portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED} and the change query is true`,
+        expectedNextPage: AMENDMENT_DETAILS,
+        change: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
+          .withChangeCoverEndDate(false)
+          .withChangeFacilityValue(true)
+          .build(),
       },
     ],
   });
@@ -52,15 +72,24 @@ describe('getNextPage', () => {
     currentPage: COVER_END_DATE,
     successTestCases: [
       {
-        description: '',
+        description: 'when changing the cover end date',
         expectedNextPage: DO_YOU_HAVE_A_FACILITY_END_DATE,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(true).build(),
       },
       {
-        description: '',
+        description: 'when changing the cover end date and change query is true',
         expectedNextPage: CHECK_YOUR_ANSWERS,
         change: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(true).build(),
+      },
+      {
+        description: `when changing the cover end date, portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED} and the change query is true`,
+        expectedNextPage: AMENDMENT_DETAILS,
+        change: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
+          .withChangeCoverEndDate(true)
+          .build(),
       },
     ],
     errorTestCases: [
@@ -116,6 +145,17 @@ describe('getNextPage', () => {
           .build(),
       },
       {
+        description: `when changing the facility value, portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED} and the change query is true`,
+        expectedNextPage: AMENDMENT_DETAILS,
+        change: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
+          .withChangeCoverEndDate(true)
+          .withIsUsingFacilityEndDate(true)
+          .withChangeFacilityValue(true)
+          .build(),
+      },
+      {
         description: 'when not changing the facility value',
         expectedNextPage: ELIGIBILITY,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
@@ -129,6 +169,17 @@ describe('getNextPage', () => {
         expectedNextPage: CHECK_YOUR_ANSWERS,
         change: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withChangeCoverEndDate(true)
+          .withIsUsingFacilityEndDate(true)
+          .withChangeFacilityValue(false)
+          .build(),
+      },
+      {
+        description: `when not changing the facility value, portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED} and the change query is true`,
+        expectedNextPage: AMENDMENT_DETAILS,
+        change: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
           .withChangeCoverEndDate(true)
           .withIsUsingFacilityEndDate(true)
           .withChangeFacilityValue(false)
@@ -170,6 +221,17 @@ describe('getNextPage', () => {
           .build(),
       },
       {
+        description: `when changing the facility value, portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED} and the change query is true`,
+        expectedNextPage: AMENDMENT_DETAILS,
+        change: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
+          .withChangeCoverEndDate(true)
+          .withIsUsingFacilityEndDate(false)
+          .withChangeFacilityValue(true)
+          .build(),
+      },
+      {
         description: 'when not changing the facility value',
         expectedNextPage: ELIGIBILITY,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
@@ -183,6 +245,17 @@ describe('getNextPage', () => {
         expectedNextPage: CHECK_YOUR_ANSWERS,
         change: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withChangeCoverEndDate(true)
+          .withIsUsingFacilityEndDate(false)
+          .withChangeFacilityValue(false)
+          .build(),
+      },
+      {
+        description: `when changing the facility value, portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED} and the change query is true`,
+        expectedNextPage: AMENDMENT_DETAILS,
+        change: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
           .withChangeCoverEndDate(true)
           .withIsUsingFacilityEndDate(false)
           .withChangeFacilityValue(false)
@@ -205,15 +278,24 @@ describe('getNextPage', () => {
     currentPage: FACILITY_VALUE,
     successTestCases: [
       {
-        description: '',
+        description: 'when changing the facility value',
         expectedNextPage: ELIGIBILITY,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeFacilityValue(true).build(),
       },
       {
-        description: '',
+        description: 'when changing the facility value',
         expectedNextPage: CHECK_YOUR_ANSWERS,
         change: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeFacilityValue(true).build(),
+      },
+      {
+        description: `when changing the facility value, portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED} and the change query is true`,
+        expectedNextPage: AMENDMENT_DETAILS,
+        change: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
+          .withChangeFacilityValue(true)
+          .build(),
       },
     ],
     errorTestCases: [
@@ -243,6 +325,19 @@ describe('getNextPage', () => {
         expectedNextPage: CHECK_YOUR_ANSWERS,
         change: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withCriteria([
+            { id: 1, text: 'Criterion 1', answer: true },
+            { id: 2, text: 'Criterion 2', answer: true },
+            { id: 3, text: 'Criterion 3', answer: true },
+          ])
+          .build(),
+      },
+      {
+        description: `when all eligibility criteria answers are "true", portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED} and the change query is true`,
+        expectedNextPage: AMENDMENT_DETAILS,
+        change: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
           .withCriteria([
             { id: 1, text: 'Criterion 1', answer: true },
             { id: 2, text: 'Criterion 2', answer: true },

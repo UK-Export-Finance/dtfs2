@@ -7,5 +7,6 @@ export type FacilityEndDateViewModel = {
   previousPage: string;
   cancelUrl: string;
   errors?: ViewModelErrors | null;
+  canMakerCancelAmendment: boolean;
   facilityEndDate?: DayMonthYearInput | null;
 };

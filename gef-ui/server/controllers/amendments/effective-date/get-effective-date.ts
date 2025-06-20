@@ -1,4 +1,4 @@
-import { CustomExpressRequest, DayMonthYearInput, PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, DayMonthYearInput, PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { fromUnixTime } from 'date-fns';
 import * as api from '../../../services/api.js';
@@ -59,6 +59,7 @@ export const getEffectiveDate = async (req: GetEffectiveDateRequest, res: Respon
       facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, amendment, changeQuery),
+      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
       effectiveDate,
     };
 

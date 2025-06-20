@@ -10,12 +10,14 @@ describe(page, () => {
   const cancelUrl = 'cancelUrl';
   const exporterName = 'exporterName';
   const facilityType = FACILITY_TYPE.CASH;
+  const canMakerCancelAmendment = true;
 
   const params: DoYouHaveAFacilityEndDateViewModel = {
     previousPage,
     cancelUrl,
     exporterName,
     facilityType,
+    canMakerCancelAmendment,
   };
 
   it('should render the page heading', () => {

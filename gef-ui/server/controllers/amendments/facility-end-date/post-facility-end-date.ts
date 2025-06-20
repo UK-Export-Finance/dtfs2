@@ -1,4 +1,4 @@
-import { CustomExpressRequest, DayMonthYearInput } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, DayMonthYearInput, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { FacilityEndDateViewModel } from '../../../types/view-models/amendments/facility-end-date-view-model';
@@ -62,6 +62,7 @@ export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: 
         previousPage,
         facilityEndDate: facilityEndDateDayMonthYear,
         errors: validationErrorHandler(validationErrorsOrValue.errors),
+        canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
       };
 
       return res.render('partials/amendments/facility-end-date.njk', viewModel);

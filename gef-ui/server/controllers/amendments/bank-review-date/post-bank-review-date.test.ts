@@ -16,6 +16,7 @@ import {
   DEAL_STATUS,
   PortalFacilityAmendmentWithUkefId,
   DayMonthYearInput,
+  PORTAL_AMENDMENT_STATUS,
 } from '@ukef/dtfs2-common';
 import { getCoverStartDateOrToday } from '../../../utils/get-cover-start-date-or-today.ts';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
@@ -85,6 +86,7 @@ describe('postBankReviewDate', () => {
     jest.spyOn(bankReviewDateValidation, 'validateAndParseBankReviewDate');
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withStatus(PORTAL_AMENDMENT_STATUS.DRAFT)
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
@@ -194,6 +196,7 @@ describe('postBankReviewDate', () => {
         ).errors,
       ),
       bankReviewDate: bankReviewDateDayMonthYear,
+      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);

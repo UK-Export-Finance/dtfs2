@@ -7,5 +7,6 @@ export type EffectiveDateViewModel = {
   previousPage: string;
   cancelUrl: string;
   errors?: ViewModelErrors | null;
+  canMakerCancelAmendment: boolean;
   effectiveDate?: DayMonthYearInput;
 };

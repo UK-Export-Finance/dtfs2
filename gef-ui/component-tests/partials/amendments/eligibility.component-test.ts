@@ -16,6 +16,7 @@ describe(page, () => {
   ];
   const exporterName = 'exporterName';
   const facilityType = FACILITY_TYPE.CASH;
+  const canMakerCancelAmendment = true;
 
   const params: EligibilityViewModel = {
     previousPage,
@@ -23,6 +24,7 @@ describe(page, () => {
     criteria,
     exporterName,
     facilityType,
+    canMakerCancelAmendment,
   };
 
   it('should render the page heading', () => {

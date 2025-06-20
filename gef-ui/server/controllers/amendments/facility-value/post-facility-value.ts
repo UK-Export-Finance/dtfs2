@@ -1,4 +1,4 @@
-import { CURRENCY, CustomExpressRequest, getMonetaryValueAsNumber } from '@ukef/dtfs2-common';
+import { CURRENCY, CustomExpressRequest, getMonetaryValueAsNumber, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { FacilityValueViewModel } from '../../../types/view-models/amendments/facility-value-view-model';
@@ -58,6 +58,7 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
         previousPage,
         currencySymbol,
         errors: validationErrorHandler(validationErrorOrValue.errors),
+        canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
       };
 
       return res.render('partials/amendments/facility-value.njk', viewModel);

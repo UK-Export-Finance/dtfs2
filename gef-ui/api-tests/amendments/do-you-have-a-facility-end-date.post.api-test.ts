@@ -24,6 +24,7 @@ jest.mock('../../server/middleware/csrf', () => ({
 const mockGetFacility = jest.fn();
 const mockGetApplication = jest.fn();
 const mockUpdateAmendment = jest.fn();
+const mockGetAmendment = jest.fn();
 
 const aMockError = () => new Error();
 
@@ -45,18 +46,20 @@ describe(`POST ${url}`, () => {
     ({ sessionCookie } = await storage.saveUserSession([ROLES.MAKER]));
     jest.spyOn(api, 'getFacility').mockImplementation(mockGetFacility);
     jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
+    jest.spyOn(api, 'getAmendment').mockImplementation(mockGetAmendment);
     jest.spyOn(api, 'updateAmendment').mockImplementation(mockUpdateAmendment);
+
+    const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withDealId(dealId)
+      .withFacilityId(facilityId)
+      .withAmendmentId(amendmentId)
+      .withChangeCoverEndDate(true)
+      .build();
 
     mockGetFacility.mockResolvedValue(MOCK_ISSUED_FACILITY);
     mockGetApplication.mockResolvedValue(mockDeal);
-    mockUpdateAmendment.mockResolvedValue(
-      new PortalFacilityAmendmentWithUkefIdMockBuilder()
-        .withDealId(dealId)
-        .withFacilityId(facilityId)
-        .withAmendmentId(amendmentId)
-        .withChangeCoverEndDate(true)
-        .build(),
-    );
+    mockGetAmendment.mockResolvedValue(amendment);
+    mockUpdateAmendment.mockResolvedValue(amendment);
   });
 
   afterAll(async () => {

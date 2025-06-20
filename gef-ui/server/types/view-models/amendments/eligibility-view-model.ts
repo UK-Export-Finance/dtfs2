@@ -7,5 +7,6 @@ export type EligibilityViewModel = {
   previousPage: string;
   cancelUrl: string;
   criteria?: AmendmentsEligibilityCriterionWithAnswer[];
+  canMakerCancelAmendment: boolean;
   errors?: ViewModelErrors | null;
 };

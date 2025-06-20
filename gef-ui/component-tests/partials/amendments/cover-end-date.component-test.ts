@@ -11,6 +11,7 @@ describe(page, () => {
   const previousPage = 'previousPage';
   const cancelUrl = 'cancelUrl';
   const facilityType = FACILITY_TYPE.CASH;
+  const canMakerCancelAmendment = true;
 
   const params: CoverEndDateViewModel = {
     coverEndDate,
@@ -18,6 +19,7 @@ describe(page, () => {
     previousPage,
     cancelUrl,
     facilityType,
+    canMakerCancelAmendment,
   };
 
   it('should render the page heading', () => {
