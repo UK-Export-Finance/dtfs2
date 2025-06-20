@@ -1,4 +1,4 @@
-const { decimalsCount } = require('../../helpers/number');
+const { decimalsCount } = require('@ukef/dtfs2-common');
 
 /**
  * formats facility value based on type

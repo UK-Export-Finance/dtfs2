@@ -73,4 +73,9 @@ export type Facility = {
   status?: FacilityStatus; // BSS/EWCS facilities only
   previousStatus?: string; // BSS/EWCS facilities only
   facilityStage?: string;
+  ukefFacilityType?: string;
+  requestedCoverStartDate?: string;
+  'requestedCoverStartDate-year'?: number;
+  'requestedCoverStartDate-month'?: number;
+  'requestedCoverStartDate-day'?: number;
 } & FacilityEndDateProperties;

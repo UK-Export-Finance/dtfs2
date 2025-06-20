@@ -1,14 +1,8 @@
+const { decimalsCount } = require('@ukef/dtfs2-common');
+
 const isNumeric = (value) => typeof value === 'number' && value === Number(value) && Number.isFinite(value);
 
 const isInteger = (value) => Number.isInteger(value);
-
-const decimalsCount = (numb) => {
-  const decimals = numb.toString().split('.')[1];
-  if (decimals) {
-    return decimals.length;
-  }
-  return 0;
-};
 
 const stripDecimals = (numb) => {
   const withoutDecimals = numb.toString().split('.')[0];
@@ -47,7 +41,6 @@ const formattedNumber = (numb, minimumFractionDigits = 2) => numb.toLocaleString
 module.exports = {
   isNumeric,
   isInteger,
-  decimalsCount,
   stripDecimals,
   roundNumber,
   sanitizeCurrency,

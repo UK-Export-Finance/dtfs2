@@ -1,8 +1,7 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
-const { TFM_AMENDMENT_STATUS, createAmendmentReferenceNumber } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS, createAmendmentReferenceNumber, formattedNumber } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const api = require('../../../api');
-const { formattedNumber } = require('../../../helpers/number');
 
 const getAmendmentAnswers = async (req, res) => {
   const { facilityId, amendmentId } = req.params;

@@ -1,10 +1,9 @@
 const { format, fromUnixTime } = require('date-fns');
-const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS, formattedNumber } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 
 const { userCanEditManagersDecision } = require('../../helpers');
 const { amendmentUnderwriterManagerDecisionValidation } = require('./validation/amendmentUnderwriterManagerDecision.validate');
-const { formattedNumber } = require('../../../helpers/number');
 
 /**
  * @param {Object} req

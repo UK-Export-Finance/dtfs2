@@ -1,5 +1,4 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
-const { formattedNumber } = require('../../../../utils/number');
+const { CURRENCY, formattedNumber } = require('@ukef/dtfs2-common');
 const { calculateNewFacilityValue, findLatestCompletedAmendment } = require('../../helpers/amendment.helpers');
 
 const mapFacilityValue = (currencyId, value, facility) => {
