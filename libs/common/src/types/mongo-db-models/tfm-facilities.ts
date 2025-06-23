@@ -171,7 +171,7 @@ export type TfmFacilityObject = {
  * to as and when new properties are discovered
  */
 export type TfmFacility = {
-  _id: ObjectId;
+  _id: ObjectId | string;
   facilitySnapshot: Facility;
   amendments?: FacilityAmendment[];
   tfm: TfmFacilityObject;

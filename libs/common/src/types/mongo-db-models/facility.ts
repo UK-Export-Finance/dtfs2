@@ -32,8 +32,8 @@ type FacilityEndDateProperties =
  * to as and when new properties are discovered
  */
 export type Facility = {
-  _id: ObjectId;
-  dealId: ObjectId;
+  _id: ObjectId | string;
+  dealId: ObjectId | string;
   type: FacilityType;
   hasBeenIssued: boolean;
   name: string;

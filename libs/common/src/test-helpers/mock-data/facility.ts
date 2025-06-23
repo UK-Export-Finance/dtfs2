@@ -1,11 +1,10 @@
-import { ObjectId } from 'mongodb';
 import { getEpochMs } from '../../helpers';
 import { CURRENCY } from '../../constants/currency';
 import { GEF_FACILITY_TYPE } from '../../constants';
 
 export const MOCK_FACILITY = {
-  _id: new ObjectId(),
-  dealId: new ObjectId(),
+  _id: '507f1f77bcf86cd799439011',
+  dealId: '507f1f77bcf86cd799439012',
   coverEndDate: new Date(2022, 1, 1).toISOString(),
   issueDate: new Date(2022, 1, 1).toISOString(),
   monthsOfCover: 5,

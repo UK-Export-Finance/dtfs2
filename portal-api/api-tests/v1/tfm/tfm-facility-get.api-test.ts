@@ -27,6 +27,11 @@ const invalidId = 'invalid-id';
 
 const url = (facilityId: string) => `/v1/tfm/facility/${facilityId}`;
 
+const mockFacility = {
+  ...MOCK_TFM_FACILITY,
+  id: new ObjectId(),
+};
+
 describe('/v1/tfm/facility/:facilityId', () => {
   let testUsers: Awaited<ReturnType<typeof testUserCache.initialise>>;
   let maker1: TestUser;
@@ -34,7 +39,7 @@ describe('/v1/tfm/facility/:facilityId', () => {
   describe('GET /v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
     beforeEach(() => {
       jest.resetAllMocks();
-      getTfmFacilityMock.mockResolvedValue({ data: MOCK_TFM_FACILITY });
+      getTfmFacilityMock.mockResolvedValue({ data: mockFacility });
     });
 
     beforeAll(async () => {
