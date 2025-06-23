@@ -1,5 +1,4 @@
 import { In } from 'typeorm';
-// import { remove } from 'lodash';
 import { FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordPaymentJoinTableEntity, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments } from '../../../../../mapping/keying-sheet-mapping';
@@ -39,9 +38,16 @@ const getZeroAmountKeyingSheetFeePayment = ({ paymentCurrency }: FeeRecordEntity
 });
 
 /**
- * Gets the keying sheet for the report with id matching the supplied report id
- * @param reportId - The report id
- * @returns The keying sheet
+ * Retrieves the keying sheet rows for a given report ID, including fee records and their associated payments.
+ *
+ * This function:
+ * - Fetches join table entries linking fee records and payments for the specified report.
+ * - Maps each fee record to a keying sheet row, aggregating payment information where applicable.
+ * - Ensures that fee records with zero payment amounts are also included in the result.
+ *
+ * @param reportId - The unique identifier of the report for which to retrieve keying sheet data.
+ * @param allReportFeeRecords - An array of all fee record entities associated with the report.
+ * @returns A promise that resolves to an array of `KeyingSheetRow` objects representing the keying sheet for the report.
  */
 export const getKeyingSheetForReportId = async (reportId: number, allReportFeeRecords: FeeRecordEntity[]): Promise<KeyingSheet> => {
   const joinTableEntities = await getKeyingSheetFeeRecordPaymentJoinTableEntries(reportId);
