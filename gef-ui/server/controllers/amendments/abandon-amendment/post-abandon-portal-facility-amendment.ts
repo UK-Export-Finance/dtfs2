@@ -31,7 +31,7 @@ export const postAbandonPortalFacilityAmendment = async (req: PostAbandonPortalF
     const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
 
     if (!amendment) {
-      console.error('Amendment %s not found for the facility %s', amendmentId, facilityId);
+      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
     }
 

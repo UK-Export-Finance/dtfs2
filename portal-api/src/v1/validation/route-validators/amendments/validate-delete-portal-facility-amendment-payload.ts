@@ -20,4 +20,4 @@ const DeletePortalFacilityAmendmentSchema = z.object({
 
 export type DeletePortalFacilityAmendmentPayload = z.infer<typeof DeletePortalFacilityAmendmentSchema>;
 
-export const validateDeletePortalFacilityAmendmentSchemaPayload = validateSchema(DeletePortalFacilityAmendmentSchema);
+export const validateDeletePortalFacilityAmendmentPayload = validateSchema(DeletePortalFacilityAmendmentSchema);

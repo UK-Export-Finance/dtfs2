@@ -18,7 +18,25 @@ export const postCancelPortalFacilityAmendment = async (req: PostCancelPortalFac
     const { dealId, facilityId, amendmentId } = req.params;
     const { userToken } = asLoggedInUserSession(req.session);
 
-    await api.deleteAmendment({ facilityId, amendmentId, userToken });
+    await api.deleteAmendment({
+      facilityId,
+      amendmentId,
+      userToken,
+      makersEmail: '',
+      checkersEmail: '',
+      emailVariables: {
+        exporterName: '',
+        bankInternalRefName: '',
+        ukefDealId: '',
+        ukefFacilityId: '',
+        makersName: '',
+        checkersName: '',
+        dateEffectiveFrom: '',
+        newCoverEndDate: '',
+        newFacilityEndDate: '',
+        newFacilityValue: '',
+      },
+    });
 
     return res.redirect(`/gef/application-details/${dealId}`);
   } catch (error) {

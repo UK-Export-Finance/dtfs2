@@ -43,23 +43,42 @@ describe('postCancelPortalFacilityAmendment', () => {
     deleteAmendmentMock.mockResolvedValue(undefined);
   });
 
-  it('should call deleteAmendment with the correct facilityId, amendmentId, and userToken', async () => {
+  it('should call deleteAmendment with the correct facilityId, amendmentId, userToken and email variables', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
+    const emptyEmailVariables = {
+      exporterName: '',
+      bankInternalRefName: '',
+      ukefDealId: '',
+      ukefFacilityId: '',
+      makersName: '',
+      checkersName: '',
+      dateEffectiveFrom: '',
+      newCoverEndDate: '',
+      newFacilityEndDate: '',
+      newFacilityValue: '',
+    };
 
     // Act
     await postCancelPortalFacilityAmendment(req, res);
 
     // Assert
     expect(deleteAmendmentMock).toHaveBeenCalledTimes(1);
-    expect(deleteAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, userToken });
+    expect(deleteAmendmentMock).toHaveBeenCalledWith({
+      facilityId,
+      amendmentId,
+      userToken,
+      makersEmail: '',
+      checkersEmail: '',
+      emailVariables: emptyEmailVariables,
+    });
   });
 
   it('should redirect to details page after amendment has been deleted', async () => {
     // Arrange
     const { req, res } = getHttpMocks();
 
-    // Act
+    // Act,
     await postCancelPortalFacilityAmendment(req, res);
 
     // Assert

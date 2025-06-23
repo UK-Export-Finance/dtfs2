@@ -566,26 +566,6 @@ const updateSubmitAmendment = async ({ facilityId, amendmentId, referenceNumber,
 };
 
 /**
- * variables for email variables set to empty strings
- * if emailVariables is not provided, then this is the default object
- */
-const emptyEmailVariables = {
-  exporterName: '',
-  bankInternalRefName: '',
-  ukefDealId: '',
-  ukefFacilityId: '',
-  makersName: '',
-  checkersName: '',
-  dateSubmittedByMaker: '',
-  dateEffectiveFrom: '',
-  newCoverEndDate: '',
-  newFacilityEndDate: '',
-  newFacilityValue: '',
-  portalUrl: '',
-  makersEmail: '',
-};
-
-/**
  * @param {import('@ukef/dtfs2-common').AmendmentUpdateStatus} param
  * @param {string} param.facilityId
  * @param {string} param.amendmentId
@@ -596,15 +576,7 @@ const emptyEmailVariables = {
  * @param {import('@ukef/dtfs2-common').PortalAmendmentSubmittedToCheckerEmailVariables | import('@ukef/dtfs2-common').PortalAmendmentReturnToMakerEmailVariables } param.emailVariables
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}
  */
-const updateAmendmentStatus = async ({
-  facilityId,
-  amendmentId,
-  newStatus,
-  userToken,
-  makersEmail = '',
-  checkersEmail = '',
-  emailVariables = emptyEmailVariables,
-}) => {
+const updateAmendmentStatus = async ({ facilityId, amendmentId, newStatus, userToken, makersEmail, checkersEmail, emailVariables }) => {
   if (!isValidMongoId(facilityId)) {
     console.error('Invalid facility ID %s', facilityId);
     throw new InvalidFacilityIdError(facilityId);
@@ -642,7 +614,7 @@ const updateAmendmentStatus = async ({
  
  * @returns {Promise<void>}
  */
-const deleteAmendment = async ({ facilityId, amendmentId, userToken, makersEmail = '', checkersEmail = '', emailVariables = emptyEmailVariables }) => {
+const deleteAmendment = async ({ facilityId, amendmentId, userToken, makersEmail, checkersEmail, emailVariables }) => {
   if (!isValidMongoId(facilityId)) {
     console.error('Invalid facility ID %s', facilityId);
     throw new InvalidFacilityIdError(facilityId);
