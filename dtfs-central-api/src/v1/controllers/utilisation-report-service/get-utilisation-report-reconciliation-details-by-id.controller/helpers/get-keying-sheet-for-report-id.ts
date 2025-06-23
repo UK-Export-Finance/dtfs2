@@ -1,5 +1,5 @@
 import { In } from 'typeorm';
-import { remove } from 'lodash';
+// import { remove } from 'lodash';
 import { FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordPaymentJoinTableEntity, FeeRecordStatus } from '@ukef/dtfs2-common';
 import { SqlDbDataSource } from '@ukef/dtfs2-common/sql-db-connection';
 import { mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments } from '../../../../../mapping/keying-sheet-mapping';
@@ -45,9 +45,7 @@ const getZeroAmountKeyingSheetFeePayment = ({ paymentCurrency }: FeeRecordEntity
  */
 export const getKeyingSheetForReportId = async (reportId: number, allReportFeeRecords: FeeRecordEntity[]): Promise<KeyingSheet> => {
   const joinTableEntities = await getKeyingSheetFeeRecordPaymentJoinTableEntries(reportId);
-  const keyingSheetFeeRecordsWithZeroFeePayment = allReportFeeRecords.filter(({ status }) =>
-    STATUSES_OF_FEE_RECORDS_TO_DISPLAY_ON_KEYING_SHEET.includes(status),
-  );
+  let keyingSheetFeeRecordsWithZeroFeePayment = allReportFeeRecords.filter(({ status }) => STATUSES_OF_FEE_RECORDS_TO_DISPLAY_ON_KEYING_SHEET.includes(status));
 
   const feeRecordIdToKeyingSheetRowMap = joinTableEntities.reduce(
     (map, { feeRecord, payment, paymentAmountUsedForFeeRecord }) => {
@@ -56,7 +54,8 @@ export const getKeyingSheetForReportId = async (reportId: number, allReportFeeRe
       }
 
       const feeRecordId = feeRecord.id;
-      remove(keyingSheetFeeRecordsWithZeroFeePayment, ({ id }) => id === feeRecordId);
+
+      keyingSheetFeeRecordsWithZeroFeePayment = keyingSheetFeeRecordsWithZeroFeePayment.filter(({ id }) => id !== feeRecordId);
 
       const feePayment: KeyingSheetFeePayment = {
         currency: payment.currency,

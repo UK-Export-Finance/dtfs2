@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "@azure/msal-node": "^2.16.2",
-    "@types/lodash": "^4.17.17",
+    "@types/lodash": "^4.17.18",
     "axios": "1.8.2",
     "big.js": "^6.2.2",
     "date-fns": "^3.3.1",
@@ -64,7 +64,7 @@
     "node-mocks-http": "^1.17.2",
     "qs": "^6.14.0",
     "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.24",
+    "typeorm": "^0.3.25",
     "zod": "^3.25.67"
   },
   "devDependencies": {
