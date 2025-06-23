@@ -1,5 +1,5 @@
 import { format, fromUnixTime } from 'date-fns';
-import { Facility } from '../types';
+import { Facility, FacilityWithStringDealId } from '../types';
 import { dealTypeCoverStartDate } from './deal-type-cover-start-date';
 import { convertUnixTimestampWithoutMilliseconds } from './date';
 
@@ -12,7 +12,7 @@ import { convertUnixTimestampWithoutMilliseconds } from './date';
  * @param coverEndDate
  * @returns object with formatted dates and facility type or empty object if no value can be calculated
  */
-export const formatDatesForTenor = (facilitySnapshot: Facility, coverEndDate?: number) => {
+export const formatDatesForTenor = (facilitySnapshot: Facility | FacilityWithStringDealId, coverEndDate?: number) => {
   const validConditions =
     (facilitySnapshot?.ukefFacilityType || facilitySnapshot?.type) &&
     (facilitySnapshot?.coverStartDate || facilitySnapshot?.requestedCoverStartDate) &&

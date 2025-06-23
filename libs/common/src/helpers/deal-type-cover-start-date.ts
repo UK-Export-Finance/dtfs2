@@ -1,4 +1,4 @@
-import { Facility } from '../types';
+import { Facility, FacilityWithStringDealId } from '../types';
 
 /**
  * calculates the cover start date for a facility based on deal type
@@ -8,7 +8,7 @@ import { Facility } from '../types';
  * @param facilitySnapshot
  * @returns cover start date
  */
-export const dealTypeCoverStartDate = (facilitySnapshot: Facility): Date | string | undefined => {
+export const dealTypeCoverStartDate = (facilitySnapshot: Facility | FacilityWithStringDealId): Date | string | undefined => {
   const { coverStartDate } = facilitySnapshot;
 
   // if exists - GEF
