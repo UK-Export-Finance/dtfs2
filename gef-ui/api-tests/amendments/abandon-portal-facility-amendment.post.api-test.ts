@@ -1,12 +1,15 @@
 import { Headers } from 'node-mocks-http';
 import { NextFunction, Request, Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { ROLES, API_ERROR_CODE } from '@ukef/dtfs2-common';
+import { ROLES, API_ERROR_CODE, PORTAL_AMENDMENT_STATUS, DEAL_STATUS, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
 import { createApi } from '../create-api';
 import api from '../../server/services/api';
 import * as storage from '../test-helpers/storage/storage';
+import { MOCK_BASIC_DEAL } from '../../server/utils/mocks/mock-applications';
+import { MOCK_ISSUED_FACILITY } from '../../server/utils/mocks/mock-facilities';
+import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
 
 const originalEnv = { ...process.env };
@@ -18,12 +21,16 @@ jest.mock('../../server/middleware/csrf', () => ({
   csrfToken: () => (_req: Request, _res: Response, next: NextFunction) => next(),
 }));
 
-const mockDeleteAmendment = jest.fn();
+const deleteAmendmentMock = jest.fn();
+const getApplicationMock = jest.fn();
+const getFacilityMock = jest.fn();
+const getAmendmentMock = jest.fn();
 
 const dealId = '6597dffeb5ef5ff4267e5044';
 const facilityId = '6597dffeb5ef5ff4267e5045';
 const amendmentId = '6597dffeb5ef5ff4267e5046';
 
+const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 const validUrl = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.ABANDON}`;
 
 describe(`POST ${validUrl}`, () => {
@@ -34,8 +41,22 @@ describe(`POST ${validUrl}`, () => {
     jest.resetAllMocks();
 
     ({ sessionCookie } = await storage.saveUserSession([ROLES.MAKER]));
-    jest.spyOn(api, 'deleteAmendment').mockImplementation(mockDeleteAmendment);
+    jest.spyOn(api, 'getApplication').mockImplementation(getApplicationMock);
+    jest.spyOn(api, 'getFacility').mockImplementation(getFacilityMock);
+    jest.spyOn(api, 'getAmendment').mockImplementation(getAmendmentMock);
+    jest.spyOn(api, 'deleteAmendment').mockImplementation(deleteAmendmentMock);
     jest.spyOn(console, 'error');
+
+    const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withDealId(dealId)
+      .withFacilityId(facilityId)
+      .withAmendmentId(amendmentId)
+      .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
+      .build();
+
+    getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
+    getApplicationMock.mockResolvedValue(mockDeal);
+    getAmendmentMock.mockResolvedValue(amendment);
   });
 
   afterAll(async () => {
@@ -124,20 +145,59 @@ describe(`POST ${validUrl}`, () => {
       const response = await postWithSessionCookie(sessionCookie, validUrl);
 
       // Assert
-      expect(mockDeleteAmendment).toHaveBeenCalledTimes(1);
+      expect(deleteAmendmentMock).toHaveBeenCalledTimes(1);
       expect(response.status).toEqual(HttpStatusCode.Ok);
       expect(response.text).toContain('Amendment has been abandoned');
     });
 
-    it('should render problem with service if deleteAmendment throws an error', async () => {
+    it('should render problem with service if getApplication throws an error', async () => {
       // Arrange
-      mockDeleteAmendment.mockRejectedValue(new Error('test error'));
+      getApplicationMock.mockRejectedValue(new Error('test error'));
 
       // Act
       const response = await postWithSessionCookie(sessionCookie, validUrl);
 
       // Assert
-      expect(mockDeleteAmendment).toHaveBeenCalledTimes(1);
+      expect(getApplicationMock).toHaveBeenCalledTimes(1);
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain('Problem with the service');
+    });
+
+    it('should render problem with service if getFacility throws an error', async () => {
+      // Arrange
+      getFacilityMock.mockRejectedValue(new Error('test error'));
+
+      // Act
+      const response = await postWithSessionCookie(sessionCookie, validUrl);
+
+      // Assert
+      expect(getFacilityMock).toHaveBeenCalledTimes(1);
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain('Problem with the service');
+    });
+
+    it('should render problem with service if getAmendment throws an error', async () => {
+      // Arrange
+      getAmendmentMock.mockRejectedValue(new Error('test error'));
+
+      // Act
+      const response = await postWithSessionCookie(sessionCookie, validUrl);
+
+      // Assert
+      expect(getAmendmentMock).toHaveBeenCalledTimes(1);
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain('Problem with the service');
+    });
+
+    it('should render problem with service if deleteAmendment throws an error', async () => {
+      // Arrange
+      deleteAmendmentMock.mockRejectedValue(new Error('test error'));
+
+      // Act
+      const response = await postWithSessionCookie(sessionCookie, validUrl);
+
+      // Assert
+      expect(deleteAmendmentMock).toHaveBeenCalledTimes(1);
       expect(response.status).toEqual(HttpStatusCode.Ok);
       expect(response.text).toContain('Problem with the service');
     });
