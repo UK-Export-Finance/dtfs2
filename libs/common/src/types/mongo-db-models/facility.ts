@@ -32,8 +32,8 @@ type FacilityEndDateProperties =
  * to as and when new properties are discovered
  */
 export type Facility = {
-  _id: ObjectId | string;
-  dealId: ObjectId | string;
+  _id: ObjectId;
+  dealId: ObjectId;
   type: FacilityType;
   hasBeenIssued: boolean;
   name: string;
@@ -79,3 +79,8 @@ export type Facility = {
   'requestedCoverStartDate-month'?: number;
   'requestedCoverStartDate-day'?: number;
 } & FacilityEndDateProperties;
+
+export type FacilityWithStringDealId = Omit<Facility, 'dealId' | '_id'> & {
+  _id: ObjectId | string;
+  dealId: ObjectId | string;
+};

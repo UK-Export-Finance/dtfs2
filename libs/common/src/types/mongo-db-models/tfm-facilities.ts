@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import { UnixTimestamp, UnixTimestampSeconds } from '../date';
 import { PortalAmendmentStatus, TfmAmendmentStatus } from '../amendment-status';
 import { Currency } from '../currency';
-import { Facility } from './facility';
+import { Facility, FacilityWithStringDealId } from './facility';
 import { AnyObject } from '../any-object';
 import { AuditDatabaseRecord } from '../audit-database-record';
 import { AMENDMENT_TYPES } from '../../constants';
@@ -171,9 +171,14 @@ export type TfmFacilityObject = {
  * to as and when new properties are discovered
  */
 export type TfmFacility = {
-  _id: ObjectId | string;
+  _id: ObjectId;
   facilitySnapshot: Facility;
   amendments?: FacilityAmendment[];
   tfm: TfmFacilityObject;
   auditRecord?: AuditDatabaseRecord;
+};
+
+export type TfmFacilityWithStringId = Omit<TfmFacility, '_id' | 'facilitySnapshot'> & {
+  _id: ObjectId | string;
+  facilitySnapshot: FacilityWithStringDealId;
 };
