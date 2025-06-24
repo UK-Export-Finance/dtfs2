@@ -54,18 +54,19 @@ export const getWhatNeedsToChange = async (req: GetWhatNeedsToChangeRequest, res
     const teamId = TEAM_IDS.PIM;
     const pim = await api.getTfmTeam({ teamId, userToken });
     const { email: amendmentFormEmail } = pim;
-
+    const previousPage = changeQuery
+      ? getPreviousPage(PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE, amendment, changeQuery)
+      : `/gef/application-details/${dealId}`;
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const viewModel: WhatNeedsToChangeViewModel = {
       exporterName: deal.exporter.companyName,
       facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      previousPage: changeQuery
-        ? getPreviousPage(PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE, amendment, changeQuery)
-        : `/gef/application-details/${dealId}`,
+      previousPage,
       amendmentFormEmail,
       changeCoverEndDate,
       changeFacilityValue,
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
     };
 
     return res.render('partials/amendments/what-needs-to-change.njk', viewModel);

@@ -53,6 +53,7 @@ export const postEffectiveDate = async (req: PostEffectiveDateRequest, res: Resp
     }
 
     const validationErrorsOrValue = validateAndParseEffectiveDate(effectiveDateDayMonthYear, getCoverStartDateOrToday(facility));
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
 
     if ('errors' in validationErrorsOrValue) {
       const viewModel: EffectiveDateViewModel = {
@@ -62,7 +63,7 @@ export const postEffectiveDate = async (req: PostEffectiveDateRequest, res: Resp
         previousPage,
         effectiveDate: effectiveDateDayMonthYear,
         errors: validationErrorHandler(validationErrorsOrValue.errors),
-        canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+        canMakerCancelAmendment,
       };
 
       return res.render('partials/amendments/effective-date.njk', viewModel);

@@ -57,6 +57,7 @@ export const getFacilityValue = async (req: GetFacilityValueRequest, res: Respon
 
     const facilityValue = amendment.value ? String(amendment.value) : '';
     const changeQuery = req.query?.change === 'true';
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
 
     const viewModel: FacilityValueViewModel = {
       facilityValue,
@@ -64,7 +65,7 @@ export const getFacilityValue = async (req: GetFacilityValueRequest, res: Respon
       facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment, changeQuery),
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
       currencySymbol,
     };
 

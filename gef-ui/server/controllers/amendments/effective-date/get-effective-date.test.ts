@@ -92,12 +92,13 @@ describe('getEffectiveDate', () => {
     await getEffectiveDate(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const previousPage = getPreviousPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, amendment);
     const expectedRenderData: EffectiveDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
       previousPage,
       effectiveDate: undefined,
     };
@@ -127,6 +128,7 @@ describe('getEffectiveDate', () => {
     await getEffectiveDate(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const expectedRenderData: EffectiveDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
@@ -137,7 +139,7 @@ describe('getEffectiveDate', () => {
         month: format(effectiveDate, 'M'),
         year: format(effectiveDate, 'yyyy'),
       },
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);

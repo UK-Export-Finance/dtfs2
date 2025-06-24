@@ -53,6 +53,7 @@ export const postEligibility = async (req: PostEligibilityRequest, res: Response
     const parsedResponse = parseEligibilityResponse(req.body, criteria);
 
     const errorsOrValidCriteria = validateEligibilityResponse(parsedResponse);
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
 
     if ('errors' in errorsOrValidCriteria) {
       const viewModel: EligibilityViewModel = {
@@ -62,7 +63,7 @@ export const postEligibility = async (req: PostEligibilityRequest, res: Response
         previousPage,
         criteria: parsedResponse,
         errors: validationErrorHandler(errorsOrValidCriteria.errors),
-        canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+        canMakerCancelAmendment,
       };
 
       return res.render('partials/amendments/eligibility.njk', viewModel);

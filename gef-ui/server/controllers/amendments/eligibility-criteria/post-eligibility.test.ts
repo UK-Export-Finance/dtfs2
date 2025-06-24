@@ -259,7 +259,7 @@ describe('postEligibility', () => {
 
       // Assert
       const parsedResponse = parseEligibilityResponse(responseWithMissingAnswers, criteria);
-
+      const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
       const expectedRenderData: EligibilityViewModel = {
         exporterName: mockDeal.exporter.companyName,
         facilityType: MOCK_ISSUED_FACILITY.details.type,
@@ -267,7 +267,7 @@ describe('postEligibility', () => {
         previousPage,
         errors: validationErrorHandler((validateEligibilityResponse(parsedResponse) as { errors: ValidationError[] }).errors),
         criteria: parsedResponse,
-        canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+        canMakerCancelAmendment,
       };
 
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);

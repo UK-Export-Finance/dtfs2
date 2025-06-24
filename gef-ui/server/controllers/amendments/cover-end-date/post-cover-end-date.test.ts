@@ -161,6 +161,7 @@ describe('postCoverEndDate', () => {
     await postCoverEndDate(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const expectedRenderData: CoverEndDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
@@ -174,7 +175,7 @@ describe('postCoverEndDate', () => {
         ).errors,
       ),
       coverEndDate: coverEndDateDayMonthYear,
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);

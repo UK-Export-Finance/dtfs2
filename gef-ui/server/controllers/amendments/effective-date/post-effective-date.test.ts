@@ -163,6 +163,7 @@ describe('postEffectiveDate', () => {
     await postEffectiveDate(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const expectedRenderData: EffectiveDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
@@ -176,7 +177,7 @@ describe('postEffectiveDate', () => {
         ).errors,
       ),
       effectiveDate: effectiveDateDayMonthYear,
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);

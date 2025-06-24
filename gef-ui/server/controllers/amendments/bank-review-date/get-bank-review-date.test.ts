@@ -131,6 +131,7 @@ describe('getBankReviewDate', () => {
     await getBankReviewDate(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const expectedRenderData: BankReviewDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
@@ -141,7 +142,7 @@ describe('getBankReviewDate', () => {
         month: format(bankReviewDate, 'M'),
         year: format(bankReviewDate, 'yyyy'),
       },
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);

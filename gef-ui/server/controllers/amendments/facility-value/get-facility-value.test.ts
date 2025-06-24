@@ -93,6 +93,7 @@ describe('getFacilityValue', () => {
     await getFacilityValue(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const previousPage = getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment);
     const expectedRenderData: FacilityValueViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
@@ -100,7 +101,7 @@ describe('getFacilityValue', () => {
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage,
       currencySymbol: getCurrencySymbol(MOCK_ISSUED_FACILITY.details.currency!.id),
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
       facilityValue: '',
     };
 
@@ -127,13 +128,14 @@ describe('getFacilityValue', () => {
     await getFacilityValue(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const expectedRenderData: FacilityValueViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_VALUE, amendment),
       currencySymbol: getCurrencySymbol(MOCK_ISSUED_FACILITY.details.currency!.id),
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
       facilityValue: String(existingFacilityValue),
     };
 

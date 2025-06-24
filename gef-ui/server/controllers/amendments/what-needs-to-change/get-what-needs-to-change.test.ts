@@ -99,13 +99,14 @@ describe('getWhatNeedsToChange', () => {
     await getWhatNeedsToChange(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const previousPage = `/gef/application-details/${dealId}`;
     const expectedRenderData: WhatNeedsToChangeViewModel = {
       exporterName: companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
       amendmentFormEmail: MOCK_PIM_TEAM.email,
     };
 
@@ -133,13 +134,14 @@ describe('getWhatNeedsToChange', () => {
     await getWhatNeedsToChange(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendmentWithChangeValues.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const expectedRenderData: WhatNeedsToChangeViewModel = {
       exporterName: companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage: `/gef/application-details/${dealId}`,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       amendmentFormEmail: MOCK_PIM_TEAM.email,
-      canMakerCancelAmendment: amendmentWithChangeValues.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
       changeFacilityValue: true,
       changeCoverEndDate: false,
     };

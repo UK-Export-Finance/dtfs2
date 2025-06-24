@@ -49,7 +49,7 @@ export const postWhatNeedsToChange = async (req: PostWhatNeedsToChangeRequest, r
     const { email: amendmentFormEmail } = pim;
 
     const validationError = validateWhatNeedsToChange({ changeCoverEndDate, changeFacilityValue });
-
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     if (validationError) {
       const viewModel: WhatNeedsToChangeViewModel = {
         exporterName: deal.exporter.companyName,
@@ -60,7 +60,7 @@ export const postWhatNeedsToChange = async (req: PostWhatNeedsToChangeRequest, r
         changeCoverEndDate,
         changeFacilityValue,
         errors: validationErrorHandler(validationError),
-        canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+        canMakerCancelAmendment,
       };
 
       return res.render('partials/amendments/what-needs-to-change.njk', viewModel);

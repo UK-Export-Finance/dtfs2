@@ -53,13 +53,14 @@ export const getEffectiveDate = async (req: GetEffectiveDateRequest, res: Respon
       ? convertDateToDayMonthYearInput(fromUnixTime(amendment.effectiveDate))
       : undefined;
     const changeQuery = req.query?.change === 'true';
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
 
     const viewModel: EffectiveDateViewModel = {
       exporterName: deal.exporter.companyName,
       facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, amendment, changeQuery),
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
       effectiveDate,
     };
 

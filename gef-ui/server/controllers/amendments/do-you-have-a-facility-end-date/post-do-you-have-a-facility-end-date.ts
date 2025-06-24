@@ -40,6 +40,7 @@ export const postDoYouHaveAFacilityEndDate = async (req: PostDoYouHaveAFacilityE
     }
 
     const errorsOrValue = validateIsUsingFacilityEndDate(isUsingFacilityEndDate);
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
 
     if ('errors' in errorsOrValue) {
       const viewModel: DoYouHaveAFacilityEndDateViewModel = {
@@ -49,7 +50,7 @@ export const postDoYouHaveAFacilityEndDate = async (req: PostDoYouHaveAFacilityE
         previousPage,
         errors: validationErrorHandler(errorsOrValue.errors),
         isUsingFacilityEndDate,
-        canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+        canMakerCancelAmendment,
       };
 
       return res.render('partials/amendments/do-you-have-a-facility-end-date.njk', viewModel);

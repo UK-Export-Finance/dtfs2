@@ -180,6 +180,7 @@ describe('postBankReviewDate', () => {
     await postBankReviewDate(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const expectedRenderData: BankReviewDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
@@ -196,7 +197,7 @@ describe('postBankReviewDate', () => {
         ).errors,
       ),
       bankReviewDate: bankReviewDateDayMonthYear,
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);

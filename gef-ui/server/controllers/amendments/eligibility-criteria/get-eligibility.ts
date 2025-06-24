@@ -49,13 +49,14 @@ export const getEligibility = async (req: GetEligibilityRequest, res: Response) 
 
     const { criteria } = amendment.eligibilityCriteria;
     const changeQuery = req.query?.change === 'true';
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
 
     const viewModel: EligibilityViewModel = {
       exporterName: deal.exporter.companyName,
       facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.ELIGIBILITY, amendment, changeQuery),
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
       criteria,
     };
 

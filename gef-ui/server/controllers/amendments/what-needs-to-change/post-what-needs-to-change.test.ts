@@ -169,7 +169,7 @@ describe('postWhatNeedsToChange', () => {
 
     // Assert
     const expectedErrors = validationErrorHandler(validateWhatNeedsToChange({ changeCoverEndDate, changeFacilityValue }) as ValidationError);
-
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const expectedRenderData: WhatNeedsToChangeViewModel = {
       exporterName: companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
@@ -178,7 +178,7 @@ describe('postWhatNeedsToChange', () => {
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       changeCoverEndDate,
       changeFacilityValue,
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
       errors: expectedErrors,
     };
 

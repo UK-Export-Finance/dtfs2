@@ -22,12 +22,13 @@ const endPages = [EFFECTIVE_DATE, CHECK_YOUR_ANSWERS] as const;
 const coverEndDatePages = [COVER_END_DATE, DO_YOU_HAVE_A_FACILITY_END_DATE] as const;
 
 /**
- * @param status - the portal amendment status
- * @returns the page to be displayed based on the amendment status
+ * Returns the appropriate amendment page based on the provided amendment status.
+ *
+ * @param status - The current status of the amendment.
+ * @returns The corresponding `PortalAmendmentPage` for the given status.
  */
 export const getAmendmentPageByStatus = (status: string): PortalAmendmentPage => {
-  const page = status === PORTAL_AMENDMENT_STATUS.DRAFT ? CHECK_YOUR_ANSWERS : AMENDMENT_DETAILS;
-  return page;
+  return status === PORTAL_AMENDMENT_STATUS.DRAFT ? CHECK_YOUR_ANSWERS : AMENDMENT_DETAILS;
 };
 
 /**
@@ -118,8 +119,8 @@ export const getPreviousPage = (currentPage: PortalAmendmentPage, amendment: Por
   if (currentPageIndex === 0 || currentPageIndex === -1) {
     throw new Error(`Cannot get previous page for ${currentPage}`);
   }
-
-  return getAmendmentsUrl({ dealId, facilityId, amendmentId, page: journey[currentPageIndex - 1] });
+  const page = journey[currentPageIndex - 1];
+  return getAmendmentsUrl({ dealId, facilityId, amendmentId, page });
 };
 
 /**
@@ -149,5 +150,6 @@ export const getNextPage = (currentPage: PortalAmendmentPage, amendment: PortalF
     throw new Error(`Cannot get next page for ${currentPage}`);
   }
 
-  return getAmendmentsUrl({ dealId, facilityId, amendmentId, page: journey[currentPageIndex + 1] });
+  const page = journey[currentPageIndex + 1];
+  return getAmendmentsUrl({ dealId, facilityId, amendmentId, page });
 };

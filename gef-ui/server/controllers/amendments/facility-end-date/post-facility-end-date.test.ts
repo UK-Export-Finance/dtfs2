@@ -180,6 +180,7 @@ describe('postFacilityEndDate', () => {
     await postFacilityEndDate(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const expectedRenderData: FacilityEndDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
@@ -196,7 +197,7 @@ describe('postFacilityEndDate', () => {
         ).errors,
       ),
       facilityEndDate: facilityEndDateDayMonthYear,
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);

@@ -53,6 +53,7 @@ export const postCoverEndDate = async (req: PostCoverEndDateRequest, res: Respon
     }
 
     const validationErrorsOrValue = validateAndParseCoverEndDate(coverEndDateDayMonthYear, getCoverStartDateOrToday(facility));
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
 
     if ('errors' in validationErrorsOrValue) {
       const viewModel: CoverEndDateViewModel = {
@@ -62,7 +63,7 @@ export const postCoverEndDate = async (req: PostCoverEndDateRequest, res: Respon
         previousPage,
         coverEndDate: coverEndDateDayMonthYear,
         errors: validationErrorHandler(validationErrorsOrValue.errors),
-        canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+        canMakerCancelAmendment,
       };
 
       return res.render('partials/amendments/cover-end-date.njk', viewModel);

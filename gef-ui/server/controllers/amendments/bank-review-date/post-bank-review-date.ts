@@ -53,6 +53,7 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
     }
 
     const validationErrorsOrValue = validateAndParseBankReviewDate(bankReviewDateDayMonthYear, getCoverStartDateOrToday(facility));
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
 
     if ('errors' in validationErrorsOrValue) {
       const viewModel: BankReviewDateViewModel = {
@@ -62,7 +63,7 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
         previousPage,
         bankReviewDate: bankReviewDateDayMonthYear,
         errors: validationErrorHandler(validationErrorsOrValue.errors),
-        canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+        canMakerCancelAmendment,
       };
 
       return res.render('partials/amendments/bank-review-date.njk', viewModel);

@@ -93,13 +93,14 @@ describe('getFacilityEndDate', () => {
     await getFacilityEndDate(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const previousPage = getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment);
     const expectedRenderData: FacilityEndDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage,
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
       facilityEndDate: undefined,
     };
 

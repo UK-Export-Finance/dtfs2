@@ -70,6 +70,7 @@ const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN,
 
 describe('postFacilityValue', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
+  let canMakerCancelAmendment: boolean;
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -90,6 +91,8 @@ describe('postFacilityValue', () => {
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getAmendmentMock.mockResolvedValue(amendment);
     updateAmendmentMock.mockResolvedValue(amendment);
+
+    canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
   });
 
   it('should call getApplication with the correct dealId and userToken', async () => {
@@ -157,7 +160,7 @@ describe('postFacilityValue', () => {
       currencySymbol: getCurrencySymbol(MOCK_ISSUED_FACILITY.details.currency!.id),
       errors: validationErrorHandler((validateFacilityValue(facilityValueNumerical) as { errors: ValidationError[] }).errors),
       facilityValue,
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
@@ -183,7 +186,7 @@ describe('postFacilityValue', () => {
       currencySymbol: getCurrencySymbol(MOCK_ISSUED_FACILITY.details.currency!.id),
       errors: validationErrorHandler((validateFacilityValue(facilityValueNumerical) as { errors: ValidationError[] }).errors),
       facilityValue,
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
@@ -209,7 +212,7 @@ describe('postFacilityValue', () => {
       currencySymbol: getCurrencySymbol(MOCK_ISSUED_FACILITY.details.currency!.id),
       errors: validationErrorHandler((validateFacilityValue(facilityValueNumerical) as { errors: ValidationError[] }).errors),
       facilityValue,
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
@@ -235,7 +238,7 @@ describe('postFacilityValue', () => {
       currencySymbol: getCurrencySymbol(MOCK_ISSUED_FACILITY.details.currency!.id),
       errors: validationErrorHandler((validateFacilityValue(facilityValueNumerical) as { errors: ValidationError[] }).errors),
       facilityValue,
-      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+      canMakerCancelAmendment,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);

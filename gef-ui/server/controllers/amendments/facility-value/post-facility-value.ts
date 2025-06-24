@@ -46,6 +46,7 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
 
     const facilityValueNumerical = getMonetaryValueAsNumber(facilityValue);
     const validationErrorOrValue = validateFacilityValue(facilityValueNumerical);
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
 
     if ('errors' in validationErrorOrValue) {
       const currencySymbol = getCurrencySymbol(facility.currency?.id ?? CURRENCY.GBP);
@@ -58,7 +59,7 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
         previousPage,
         currencySymbol,
         errors: validationErrorHandler(validationErrorOrValue.errors),
-        canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
+        canMakerCancelAmendment,
       };
 
       return res.render('partials/amendments/facility-value.njk', viewModel);
