@@ -53,7 +53,8 @@ const getAmendCoverEndDate = async (req, res) => {
   let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
 
   if (latestAmendmentCoverEndDate?.coverEndDate) {
-    currentCoverEndDate = format(fromUnixTime(latestAmendmentCoverEndDate.coverEndDate), 'dd MMMM yyyy');
+    const formattedCoverEndDate = convertUnixTimestampWithoutMilliseconds(latestAmendmentCoverEndDate.coverEndDate);
+    currentCoverEndDate = format(fromUnixTime(formattedCoverEndDate), 'dd MMMM yyyy');
   }
 
   return res.render('case/amendments/amendment-cover-end-date.njk', {
@@ -79,7 +80,8 @@ const postAmendCoverEndDate = async (req, res) => {
   let currentCoverEndDate = format(new Date(facility.facilitySnapshot.dates.coverEndDate), 'dd MMMM yyyy');
 
   if (latestAmendmentCoverEndDate?.coverEndDate) {
-    currentCoverEndDate = format(fromUnixTime(latestAmendmentCoverEndDate.coverEndDate), 'dd MMMM yyyy');
+    const formattedCoverEndDate = convertUnixTimestampWithoutMilliseconds(latestAmendmentCoverEndDate.coverEndDate);
+    currentCoverEndDate = format(fromUnixTime(formattedCoverEndDate), 'dd MMMM yyyy');
   }
 
   const { coverEndDate, errorsObject, coverEndDateErrors } = coverEndDateValidation(req.body, currentCoverEndDate);
