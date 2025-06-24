@@ -1,4 +1,4 @@
-import { timezone } from '../timezone';
+import { timezone } from '../../helpers';
 import { ENTRA_ID_USER_SCHEMA } from './entra-id-user.schema';
 import { UPSERT_TFM_USER_REQUEST_SCHEMA } from './upsert-tfm-user-request.schema';
 
