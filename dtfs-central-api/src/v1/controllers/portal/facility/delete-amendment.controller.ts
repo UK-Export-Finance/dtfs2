@@ -41,9 +41,9 @@ export const deletePortalAmendment = async (req: DeletePortalAmendmentRequest, r
     const amendmentStatus = amendment.status;
     if (amendmentStatus === PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED) {
       // sends email to maker with the details of the amendment
-      await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_RETURN_TO_MAKER_MAKER_EMAIL, makersEmail, emailVariables);
+      await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_ABANDON_MAKER_EMAIL, makersEmail, emailVariables);
       // sends email to checker with the details of the amendment
-      await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_RETURN_TO_MAKER_CHECKER_EMAIL, checkersEmail, emailVariables);
+      await externalApi.sendEmail(EMAIL_TEMPLATE_IDS.PORTAL_AMENDMENT_ABANDON_CHECKER_EMAIL, checkersEmail, emailVariables);
     }
 
     return res.sendStatus(HttpStatusCode.NoContent);
