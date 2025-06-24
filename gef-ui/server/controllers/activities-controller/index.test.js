@@ -1,5 +1,5 @@
 import { fromUnixTime, format } from 'date-fns';
-import { timeZoneConfig, DATE_FORMATS, MAPPED_FACILITY_TYPE, PORTAL_ACTIVITY_TYPE, PORTAL_ACTIVITY_LABEL, UKEF } from '@ukef/dtfs2-common';
+import { timezone, DATE_FORMATS, MAPPED_FACILITY_TYPE, PORTAL_ACTIVITY_TYPE, PORTAL_ACTIVITY_LABEL, UKEF } from '@ukef/dtfs2-common';
 import { mapPortalActivities, getPortalActivities } from '.';
 import api from '../../services/api';
 import mocks from '../mocks';
@@ -213,7 +213,7 @@ describe('getPortalActivities', () => {
       createdBy: `${mockApplicationResponse.maker.firstname} ${mockApplicationResponse.maker.surname}`,
       companyName: mockApplicationResponse.exporter.companyName,
       dateCreated: mockApplicationResponse.createdAt,
-      timezone: mockApplicationResponse.maker.timezone || timeZoneConfig.DEFAULT,
+      timezone: mockApplicationResponse.maker.timezone || timezone,
       submissionDate: mockApplicationResponse.submissionDate,
       manualInclusionNoticeSubmissionDate: mockApplicationResponse.manualInclusionNoticeSubmissionDate,
     });

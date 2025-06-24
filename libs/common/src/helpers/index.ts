@@ -42,3 +42,4 @@ export * from './round-number';
 export * from './formatted-number';
 export * from './deal-type-cover-start-date';
 export * from './round-value';
+export * from './timezone';

@@ -1,5 +1,5 @@
 const { fromUnixTime, format } = require('date-fns');
-const { timeZoneConfig, DATE_FORMATS } = require('@ukef/dtfs2-common');
+const { timezone, DATE_FORMATS } = require('@ukef/dtfs2-common');
 const { getApplication, getUserDetails } = require('../../services/api');
 
 // maps portalActivities array to create array in correct format for mojTimeline
@@ -71,7 +71,7 @@ const getPortalActivities = async (req, res) => {
     createdBy,
     companyName: deal.exporter.companyName,
     dateCreated: deal.createdAt,
-    timezone: deal.maker.timezone || timeZoneConfig.DEFAULT,
+    timezone: deal.maker.timezone || timezone,
     submissionDate: deal.submissionDate,
     manualInclusionNoticeSubmissionDate: deal?.manualInclusionNoticeSubmissionDate,
   });
