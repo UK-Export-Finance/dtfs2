@@ -21,12 +21,12 @@ const facilityEndDate = new Date();
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
 const mockFacilityDetails = MOCK_ISSUED_FACILITY.details;
-const makersName = `${String(mockDeal.maker.firstname)} ${String(mockDeal.maker.surname)}`;
+const makersName = `${mockUser.firstname} ${mockUser.surname}`;
 const checkersName = `${mockUser.firstname} ${mockUser.surname}`;
 const checkersEmail = String(mockUser.email);
 
 const genericFields = {
-  makersEmail: mockDeal.maker.email,
+  makersEmail: mockUser.email,
   checkersEmail: mockUser.email,
   emailVariables: {
     ukefDealId: mockDeal.ukefDealId,
@@ -63,6 +63,7 @@ describe('mapAbandonEmailVariables', () => {
         facility: mockFacilityDetails,
         amendment: amendmentAllAmendments,
         user: mockUser,
+        checker: mockUser,
       });
 
       // Assert
@@ -104,6 +105,7 @@ describe('mapAbandonEmailVariables', () => {
         facility: mockFacilityDetails,
         amendment: amendmentNoDates,
         user: mockUser,
+        checker: mockUser,
       });
 
       // Assert
@@ -146,6 +148,7 @@ describe('mapAbandonEmailVariables', () => {
         facility: mockFacilityDetails,
         amendment: amendmentDatesNoValue,
         user: mockUser,
+        checker: mockUser,
       });
 
       // Assert
@@ -184,6 +187,7 @@ describe('mapAbandonEmailVariables', () => {
         facility: mockFacilityDetails,
         amendment: amendmentDateNoValue,
         user: mockUser,
+        checker: mockUser,
       });
 
       // Assert
@@ -218,6 +222,7 @@ describe('mapAbandonEmailVariables', () => {
         facility: mockFacilityDetails,
         amendment: amendmentDateNoValue,
         user: mockUser,
+        checker: mockUser,
       });
 
       // Assert
@@ -252,6 +257,7 @@ describe('mapAbandonEmailVariables', () => {
           facility,
           amendment,
           user,
+          checker: mockUser,
         }),
       ).toThrow(expectedError);
     });

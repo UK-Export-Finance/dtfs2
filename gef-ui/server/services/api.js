@@ -632,7 +632,7 @@ const deleteAmendment = async ({ facilityId, amendmentId, userToken, makersEmail
       emailVariables,
     };
 
-    return Axios.delete(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, payload, { ...config(userToken) });
+    return Axios.delete(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, { ...config(userToken), data: { ...payload } });
   } catch (error) {
     console.error('Failed to delete the amendment with id %s on facility with id %s %o', amendmentId, facilityId, error);
     throw error;

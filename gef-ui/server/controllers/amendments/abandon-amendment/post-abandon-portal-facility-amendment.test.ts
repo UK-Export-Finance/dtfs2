@@ -21,6 +21,7 @@ import { getCurrencySymbol } from '../../../utils/get-currency-symbol';
 const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
+const getUserDetailsMock = jest.fn();
 const deleteAmendmentMock = jest.fn();
 
 const dealId = '6597dffeb5ef5ff4267e5044';
@@ -64,6 +65,7 @@ describe('postAbandonPortalFacilityAmendment', () => {
     jest.spyOn(api, 'getApplication').mockImplementation(getApplicationMock);
     jest.spyOn(api, 'getFacility').mockImplementation(getFacilityMock);
     jest.spyOn(api, 'getAmendment').mockImplementation(getAmendmentMock);
+    jest.spyOn(api, 'getUserDetails').mockImplementation(getUserDetailsMock);
     jest.spyOn(api, 'deleteAmendment').mockImplementation(deleteAmendmentMock);
     jest.spyOn(console, 'error');
 
@@ -84,6 +86,7 @@ describe('postAbandonPortalFacilityAmendment', () => {
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getAmendmentMock.mockResolvedValue(amendment);
+    getUserDetailsMock.mockResolvedValue(mockUser);
     deleteAmendmentMock.mockResolvedValue(undefined);
   });
 
@@ -100,7 +103,7 @@ describe('postAbandonPortalFacilityAmendment', () => {
       facilityId,
       amendmentId,
       userToken,
-      makersEmail: mockDeal.maker.email,
+      makersEmail: mockUser.email,
       checkersEmail: mockUser.email,
       emailVariables: {
         ukefDealId: mockDeal.ukefDealId,
@@ -111,7 +114,7 @@ describe('postAbandonPortalFacilityAmendment', () => {
         newCoverEndDate: format(new Date(coverEndDate), DATE_FORMATS.DD_MMMM_YYYY),
         newFacilityEndDate: format(new Date(facilityEndDate), DATE_FORMATS.DD_MMMM_YYYY),
         newFacilityValue: `${getCurrencySymbol(mockFacilityDetails?.currency!.id)}${facilityValue}`,
-        makersName: `${mockDeal.maker.firstname} ${mockDeal.maker.surname}`,
+        makersName: `${mockUser.firstname} ${mockUser.surname}`,
         checkersName: `${mockUser.firstname} ${mockUser.surname}`,
         checkersEmail: mockUser.email,
       },

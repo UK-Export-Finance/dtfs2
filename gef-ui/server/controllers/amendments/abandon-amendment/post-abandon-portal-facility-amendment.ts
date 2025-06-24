@@ -35,7 +35,9 @@ export const postAbandonPortalFacilityAmendment = async (req: PostAbandonPortalF
       return res.redirect('/not-found');
     }
 
-    const { makersEmail, checkersEmail, emailVariables } = mapAbandonAmendmentEmailVariables({ deal, facility, amendment, user });
+    const checker = await api.getUserDetails({ userId: deal.checkerId, userToken });
+
+    const { makersEmail, checkersEmail, emailVariables } = mapAbandonAmendmentEmailVariables({ deal, facility, amendment, user, checker });
 
     await api.deleteAmendment({ facilityId, amendmentId, userToken, makersEmail, checkersEmail, emailVariables });
 
