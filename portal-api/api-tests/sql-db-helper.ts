@@ -19,19 +19,19 @@ type SqlTableName = 'UtilisationReport' | 'FeeRecord' | 'FeeRecordCorrection' | 
 const deleteAllEntries = async (tableName: SqlTableName): Promise<void> => {
   switch (tableName) {
     case 'UtilisationReport':
-      await SqlDbDataSource.manager.delete(UtilisationReportEntity, {});
+      await SqlDbDataSource.createQueryBuilder().delete().from(UtilisationReportEntity).execute();
       return;
     case 'FeeRecord':
-      await SqlDbDataSource.manager.delete(FeeRecordEntity, {});
+      await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordEntity).execute();
       return;
     case 'FeeRecordCorrection':
-      await SqlDbDataSource.manager.delete(FeeRecordCorrectionEntity, {});
+      await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordCorrectionEntity).execute();
       return;
     case 'AzureFileInfo':
-      await SqlDbDataSource.manager.delete(AzureFileInfoEntity, {});
+      await SqlDbDataSource.createQueryBuilder().delete().from(AzureFileInfoEntity).execute();
       return;
     case 'FeeRecordCorrectionTransientFormData':
-      await SqlDbDataSource.manager.delete(FeeRecordCorrectionTransientFormDataEntity, {});
+      await SqlDbDataSource.createQueryBuilder().delete().from(FeeRecordCorrectionTransientFormDataEntity).execute();
       return;
     default:
       throw new Error(`Cannot delete all entries from table: no entity found for table name '${tableName}'`);
