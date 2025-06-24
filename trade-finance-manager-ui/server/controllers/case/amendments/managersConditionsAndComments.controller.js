@@ -1,6 +1,6 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
 const sanitizeHtml = require('sanitize-html');
-const { TFM_AMENDMENT_STATUS, formattedNumber } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS, formattedNumber, convertUnixTimestampWithoutMilliseconds } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 
 const { userCanEditManagersDecision, ukefDecisionRejected, validateUkefDecision } = require('../../helpers');
@@ -22,7 +22,10 @@ const getManagersConditionsAndComments = async (req, res) => {
 
     if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
       amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
-      amendment.coverEndDate = format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy');
+
+      const formattedCoverEndDate = convertUnixTimestampWithoutMilliseconds(amendment.coverEndDate);
+
+      amendment.coverEndDate = format(fromUnixTime(formattedCoverEndDate), 'dd MMMM yyyy');
     }
 
     if (amendment?.changeFacilityValue && amendment?.value) {
@@ -57,7 +60,9 @@ const postManagersConditionsAndComments = async (req, res) => {
 
   if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
     amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
-    amendment.coverEndDate = format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy');
+
+    const formattedCoverEndDate = convertUnixTimestampWithoutMilliseconds(amendment.coverEndDate);
+    amendment.coverEndDate = format(fromUnixTime(formattedCoverEndDate), 'dd MMMM yyyy');
   }
 
   if (amendment?.changeFacilityValue && amendment?.value) {
@@ -123,7 +128,9 @@ const getManagersConditionsAndCommentsSummary = async (req, res) => {
 
     if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
       amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
-      amendment.coverEndDate = format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy');
+
+      const formattedCoverEndDate = convertUnixTimestampWithoutMilliseconds(amendment.coverEndDate);
+      amendment.coverEndDate = format(fromUnixTime(formattedCoverEndDate), 'dd MMMM yyyy');
     }
 
     if (amendment?.changeFacilityValue && amendment?.value) {

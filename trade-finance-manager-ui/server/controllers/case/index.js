@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const { MONGO_DB_COLLECTIONS, TFM_AMENDMENT_STATUS, FLASH_TYPES, formattedNumber } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, TFM_AMENDMENT_STATUS, FLASH_TYPES, formattedNumber, convertUnixTimestampWithoutMilliseconds } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const {
   getTask,
@@ -277,7 +277,11 @@ const formatAmendmentDetails = (allAmendments) => {
       // deep clone the object
       const item = { ...value };
       item.requestDate = value?.requestDate ? format(fromUnixTime(item.requestDate), 'dd MMMM yyyy') : null;
-      item.coverEndDate = value?.coverEndDate ? format(fromUnixTime(item.coverEndDate), 'dd MMMM yyyy') : null;
+
+      const formattedCoverEndDate = value?.coverEndDate ? convertUnixTimestampWithoutMilliseconds(value.coverEndDate) : null;
+
+      item.coverEndDate = formattedCoverEndDate ? format(fromUnixTime(formattedCoverEndDate), 'dd MMMM yyyy') : null;
+
       item.value = value?.value ? `${value.currency} ${formattedNumber(value.value)}` : null;
       item.requireUkefApproval = value?.requireUkefApproval ? 'Yes' : 'No';
       // if bankDecision submitted, then adds decision, else adds awaiting decision (locally)

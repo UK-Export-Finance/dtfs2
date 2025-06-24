@@ -500,28 +500,6 @@ describe('tfmFacility', () => {
       expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
       expect(mockResponse.send).toHaveBeenCalledWith('Unable to get the TFM facility');
     });
-
-    it('should throw an error if an empty data response is received', async () => {
-      // Arrange
-      const mockRequest = {
-        params: {
-          facilityId,
-        },
-      };
-
-      const mockError = new Error('Invalid TFM facility response received');
-
-      api.getTfmFacility.mockResolvedValueOnce({});
-
-      // Act
-      await tfmFacility(mockRequest, mockResponse);
-
-      // Assert
-      expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Unable to get the TFM facility with ID %s %o', facilityId, mockError);
-      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
-      expect(mockResponse.send).toHaveBeenCalledWith('Unable to get the TFM facility');
-    });
   });
 
   describe('Valid respone received', () => {

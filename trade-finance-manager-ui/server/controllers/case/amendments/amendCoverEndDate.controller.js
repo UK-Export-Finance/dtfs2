@@ -1,5 +1,5 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
-const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS, convertUnixTimestampWithoutMilliseconds } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const api = require('../../../api');
 const { coverEndDateValidation } = require('./validation/amendCoverEndDateDate.validate');
@@ -38,10 +38,13 @@ const getAmendCoverEndDate = async (req, res) => {
   let coverEndDateDay = '';
   let coverEndDateMonth = '';
   let coverEndDateYear = '';
+
   if (amendment.coverEndDate) {
-    coverEndDateDay = format(fromUnixTime(coverEndDate), 'dd');
-    coverEndDateMonth = format(fromUnixTime(coverEndDate), 'M');
-    coverEndDateYear = format(fromUnixTime(coverEndDate), 'yyyy');
+    const formattedCoverEndDate = convertUnixTimestampWithoutMilliseconds(coverEndDate);
+
+    coverEndDateDay = format(fromUnixTime(formattedCoverEndDate), 'dd');
+    coverEndDateMonth = format(fromUnixTime(formattedCoverEndDate), 'M');
+    coverEndDateYear = format(fromUnixTime(formattedCoverEndDate), 'yyyy');
   }
 
   const facility = await api.getFacility(facilityId, userToken);

@@ -1,5 +1,5 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
-const { TFM_AMENDMENT_STATUS, createAmendmentReferenceNumber, formattedNumber } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS, createAmendmentReferenceNumber, formattedNumber, convertUnixTimestampWithoutMilliseconds } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const api = require('../../../api');
 
@@ -17,7 +17,10 @@ const getAmendmentAnswers = async (req, res) => {
 
   const isEditable = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
   const requestDate = format(fromUnixTime(amendment.requestDate), 'dd MMM yyyy');
-  const coverEndDate = amendment?.coverEndDate ? format(fromUnixTime(amendment.coverEndDate), 'dd MMM yyyy') : '';
+
+  const formattedCoverEndDate = amendment?.coverEndDate ? convertUnixTimestampWithoutMilliseconds(amendment.coverEndDate) : null;
+
+  const coverEndDate = formattedCoverEndDate ? format(fromUnixTime(formattedCoverEndDate), 'dd MMM yyyy') : '';
   const isUsingFacilityEndDate = amendment?.isUsingFacilityEndDate;
   const facilityEndDate = amendment?.facilityEndDate && amendment?.isUsingFacilityEndDate ? format(new Date(amendment.facilityEndDate), 'dd MMM yyyy') : '';
   const bankReviewDate =
