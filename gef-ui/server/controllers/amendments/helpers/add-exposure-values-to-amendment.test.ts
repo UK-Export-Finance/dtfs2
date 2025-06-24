@@ -176,7 +176,7 @@ describe('addExposureValuesToAmendment', () => {
       await addExposureValuesToAmendment(amendment, facility, facilityId, userToken);
 
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Error getting TFM facility: %o', mockError);
+      expect(console.error).toHaveBeenCalledWith('Error getting TFM facility %o', mockError);
     });
   });
 

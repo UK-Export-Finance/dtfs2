@@ -394,6 +394,6 @@ describe('postCheckYourAnswers', () => {
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Error getting TFM facility: %o', mockError);
+    expect(console.error).toHaveBeenCalledWith('Error getting TFM facility %o', mockError);
   });
 });

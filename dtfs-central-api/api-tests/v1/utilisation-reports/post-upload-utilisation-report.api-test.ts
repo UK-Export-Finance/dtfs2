@@ -88,7 +88,7 @@ describe(`POST ${getUrl()}`, () => {
     await SqlDbHelper.deleteAll();
   });
 
-  it.only('responds with a 404 (Not Found) when the report with the specified id does not exist', async () => {
+  it('responds with a 404 (Not Found) when the report with the specified id does not exist', async () => {
     // Arrange
     const payload: PostUploadUtilisationReportRequestBody = { ...aValidPayload(), reportId: 999 };
 
