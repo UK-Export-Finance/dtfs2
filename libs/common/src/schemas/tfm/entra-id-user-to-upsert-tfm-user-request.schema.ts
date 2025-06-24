@@ -1,4 +1,4 @@
-import { timezoneConfig } from '../timezone';
+import { timezone } from '../../helpers';
 import { ENTRA_ID_USER_SCHEMA } from './entra-id-user.schema';
 import { UPSERT_TFM_USER_REQUEST_SCHEMA } from './upsert-tfm-user-request.schema';
 
@@ -13,7 +13,7 @@ export const ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA = ENTRA_ID_USER_SCH
   email: entraIdUser.verified_primary_email[0],
   username: entraIdUser.verified_primary_email[0],
   teams: entraIdUser.roles,
-  timezone: timezoneConfig.DEFAULT,
+  timezone,
   firstName: entraIdUser.given_name,
   lastName: entraIdUser.family_name,
   lastLogin: Date.now(),

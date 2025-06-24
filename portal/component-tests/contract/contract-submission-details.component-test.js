@@ -1,6 +1,6 @@
 const {
   ROLES: { MAKER },
-  timezoneConfig,
+  timezone,
 } = require('@ukef/dtfs2-common');
 
 const pageRenderer = require('../pageRenderer');
@@ -21,7 +21,7 @@ describe(page, () => {
     wrapper = render({
       deal,
       user: {
-        timezone: timezoneConfig.DEFAULT,
+        timezone,
         roles: [MAKER],
       },
       editable: true,
@@ -94,7 +94,7 @@ describe(page, () => {
             mandatoryCriteria: [],
           },
           user: {
-            timezone: timezoneConfig.DEFAULT,
+            timezone,
             roles: [MAKER],
           },
           editable: true,

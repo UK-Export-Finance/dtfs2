@@ -1,4 +1,4 @@
-import { timezoneConfig } from '@ukef/dtfs2-common';
+import { timezone } from '@ukef/dtfs2-common';
 import { filterLocaliseTimestamp } from './filter-localiseTimestamp';
 
 describe('nunjuck filters - dashIfEmpty', () => {
@@ -9,21 +9,21 @@ describe('nunjuck filters - dashIfEmpty', () => {
     const mockValue = mockDate.valueOf();
 
     it('should return the day of the month if given format `dd` and timezone `Europe/London`', () => {
-      const result = filterLocaliseTimestamp(mockValue, 'dd', timezoneConfig.DEFAULT);
+      const result = filterLocaliseTimestamp(mockValue, 'dd', timezone);
 
       const expected = '07';
       expect(result).toEqual(expected);
     });
 
     it('should return the month if given the format `MM` and timezone `Europe/London`', () => {
-      const result = filterLocaliseTimestamp(mockValue, 'MM', timezoneConfig.DEFAULT);
+      const result = filterLocaliseTimestamp(mockValue, 'MM', timezone);
 
       const expected = '02';
       expect(result).toEqual(expected);
     });
 
     it('should return the year if given the format `yyyy` and timezone `Europe/London`', () => {
-      const result = filterLocaliseTimestamp(mockValue, 'yyyy', timezoneConfig.DEFAULT);
+      const result = filterLocaliseTimestamp(mockValue, 'yyyy', timezone);
 
       const expected = '2024';
       expect(result).toEqual(expected);
@@ -44,21 +44,21 @@ describe('nunjuck filters - dashIfEmpty', () => {
     const mockValue = mockDate.valueOf().toString();
 
     it('should return the day of the month if given format `dd` and timezone `Europe/London`', () => {
-      const result = filterLocaliseTimestamp(mockValue, 'dd', timezoneConfig.DEFAULT);
+      const result = filterLocaliseTimestamp(mockValue, 'dd', timezone);
 
       const expected = '07';
       expect(result).toEqual(expected);
     });
 
     it('should return the month if given the format `MM` and timezone `Europe/London`', () => {
-      const result = filterLocaliseTimestamp(mockValue, 'MM', timezoneConfig.DEFAULT);
+      const result = filterLocaliseTimestamp(mockValue, 'MM', timezone);
 
       const expected = '02';
       expect(result).toEqual(expected);
     });
 
     it('should return the year if given the format `yyyy` and timezone `Europe/London`', () => {
-      const result = filterLocaliseTimestamp(mockValue, 'yyyy', timezoneConfig.DEFAULT);
+      const result = filterLocaliseTimestamp(mockValue, 'yyyy', timezone);
 
       const expected = '2024';
       expect(result).toEqual(expected);
@@ -76,21 +76,21 @@ describe('nunjuck filters - dashIfEmpty', () => {
     const mockValue = '';
 
     it('should return an empty string if given format `dd` and timezone `Europe/London`', () => {
-      const result = filterLocaliseTimestamp(mockValue, 'dd', timezoneConfig.DEFAULT);
+      const result = filterLocaliseTimestamp(mockValue, 'dd', timezone);
 
       const expected = '';
       expect(result).toEqual(expected);
     });
 
     it('should return an empty string if given the format `MM` and timezone `Europe/London`', () => {
-      const result = filterLocaliseTimestamp(mockValue, 'MM', timezoneConfig.DEFAULT);
+      const result = filterLocaliseTimestamp(mockValue, 'MM', timezone);
 
       const expected = '';
       expect(result).toEqual(expected);
     });
 
     it('should return an empty string if given the format `yyyy` and timezone `Europe/London`', () => {
-      const result = filterLocaliseTimestamp(mockValue, 'yyyy', timezoneConfig.DEFAULT);
+      const result = filterLocaliseTimestamp(mockValue, 'yyyy', timezone);
 
       const expected = '';
       expect(result).toEqual(expected);
@@ -108,21 +108,21 @@ describe('nunjuck filters - dashIfEmpty', () => {
     const mockValue = 'test';
 
     it('should return `Invalid date` if given format `dd` and timezone `Europe/London`', () => {
-      const result = filterLocaliseTimestamp(mockValue, 'dd', timezoneConfig.DEFAULT);
+      const result = filterLocaliseTimestamp(mockValue, 'dd', timezone);
 
       const expected = 'Invalid date';
       expect(result).toEqual(expected);
     });
 
     it('should return `Invalid date` if given the format `MM` and timezone `Europe/London`', () => {
-      const result = filterLocaliseTimestamp(mockValue, 'MM', timezoneConfig.DEFAULT);
+      const result = filterLocaliseTimestamp(mockValue, 'MM', timezone);
 
       const expected = 'Invalid date';
       expect(result).toEqual(expected);
     });
 
     it('should return `Invalid date` if given the format `yyyy` and timezone `Europe/London`', () => {
-      const result = filterLocaliseTimestamp(mockValue, 'yyyy', timezoneConfig.DEFAULT);
+      const result = filterLocaliseTimestamp(mockValue, 'yyyy', timezone);
 
       const expected = 'Invalid date';
       expect(result).toEqual(expected);
