@@ -1,7 +1,7 @@
 const startCase = require('lodash/startCase');
 const {
   DEAL_TYPE,
-  timeZoneConfig,
+  timezone,
   DEAL_STATUS,
   PORTAL_AMENDMENT_INPROGRESS_STATUSES,
   PORTAL_AMENDMENT_STATUS,
@@ -45,7 +45,7 @@ function buildHeader(app) {
     companyName: app.exporter?.companyName,
     applicationStatus: app.status,
     dateCreated: app.createdAt,
-    timezone: app.maker.timezone || timeZoneConfig.DEFAULT,
+    timezone: app.maker.timezone || timezone,
     createdBy: `${app.maker.firstname} ${app.maker.surname}`,
     comments: app.comments,
     applicationType: app.submissionType,

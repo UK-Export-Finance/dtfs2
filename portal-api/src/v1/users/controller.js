@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError, TIMEZONE } = require('@ukef/dtfs2-common');
 const { PORTAL_USER } = require('@ukef/dtfs2-common/schemas');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const { ObjectId } = require('mongodb');
@@ -144,7 +144,7 @@ exports.findByEmail = async (email) => {
 exports.create = async (user, userService, auditDetails, callback) => {
   const insert = {
     'user-status': USER.STATUS.ACTIVE,
-    timezone: USER.TIMEZONE.DEFAULT,
+    timezone: TIMEZONE.DEFAULT,
     ...user,
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
