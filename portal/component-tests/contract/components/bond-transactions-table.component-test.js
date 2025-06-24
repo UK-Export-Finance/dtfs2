@@ -1,4 +1,4 @@
-const { CURRENCY, ROLES, FACILITY_STATUS, DEAL_STATUS, timezoneConfig } = require('@ukef/dtfs2-common');
+const { CURRENCY, ROLES, FACILITY_STATUS, DEAL_STATUS, timezone } = require('@ukef/dtfs2-common');
 const { getNowAsEpoch } = require('../../../server/helpers');
 
 const { NON_MAKER_OR_CHECKER_ROLES } = require('../../../test-helpers/common-role-lists');
@@ -96,7 +96,7 @@ describe(component, () => {
   });
 
   describe('when user is checker', () => {
-    const user = { roles: [CHECKER], timezone: timezoneConfig.DEFAULT };
+    const user = { roles: [CHECKER], timezone };
 
     commonTests(user);
 
@@ -137,7 +137,7 @@ describe(component, () => {
   });
 
   describe.each(NON_MAKER_OR_CHECKER_ROLES)('when user is %s', (nonMakerOrCheckerRole) => {
-    const user = { roles: [nonMakerOrCheckerRole], timezone: timezoneConfig.DEFAULT };
+    const user = { roles: [nonMakerOrCheckerRole], timezone };
 
     commonTests(user);
 

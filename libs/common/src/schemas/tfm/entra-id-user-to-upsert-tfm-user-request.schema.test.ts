@@ -1,7 +1,7 @@
 import { afterAll } from '@jest/globals';
 import { anEntraIdUser } from '../../test-helpers';
 import { EntraIdUser } from '../../types';
-import { timezoneConfig } from '../timezone';
+import { timezone } from '../timezone';
 import { ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA } from './entra-id-user-to-upsert-tfm-user-request.schema';
 
 describe('ENTRA_ID_USER_TO_TFM_UPSERT_REQUEST_SCHEMA', () => {
@@ -52,7 +52,7 @@ function itShouldReturnAValidUpsertTfmUserRequest(request: EntraIdUser) {
       email: request.verified_primary_email[0],
       username: request.verified_primary_email[0],
       teams: request.roles,
-      timezone: timezoneConfig.DEFAULT,
+      timezone,
       firstName: request.given_name,
       lastName: request.family_name,
     });

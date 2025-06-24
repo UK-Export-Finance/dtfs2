@@ -1,26 +1,19 @@
-import { z } from 'zod';
 import dotenv from 'dotenv';
+import { TIMEZONE } from '../constants/timezone';
 
 dotenv.config();
 
 const { TZ } = process.env;
 
 /**
- * {@link https://www.iana.org/time-zones}
- * There is no default for unset values in this config, as this would allow for inconsistency in microservices.
+ * The `timezone` constant determines the application's timezone configuration.
+ * It uses the value of the `TZ` environment variable if available; otherwise, it falls back to `TIMEZONE.DEFAULT`.
+ *
+ * @remarks
+ * This is useful for ensuring consistent timezone handling across different environments.
+ *
+ * @example
+ * // If TZ is set to 'Europe/London', timezone will be 'Europe/London'
+ * // Otherwise, it will use the default timezone specified in TIMEZONE.DEFAULT
  */
-const timezoneConfigSchema = z
-  .object({
-    TZ: z.string().default('Europe/London'),
-  })
-  .transform((parsedEnvVars) => {
-    return {
-      DEFAULT: parsedEnvVars.TZ,
-    };
-  });
-
-const data = {
-  TZ,
-};
-
-export const timezoneConfig = timezoneConfigSchema.parse(data);
+export const timezone = TZ || TIMEZONE.DEFAULT;
