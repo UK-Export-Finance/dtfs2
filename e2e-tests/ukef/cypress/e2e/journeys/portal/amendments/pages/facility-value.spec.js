@@ -7,7 +7,7 @@ import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/am
 import facilityValue from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
-const invalidNumberError = 'Enter the new facility value in number format';
+const invalidNumberError = 'Enter a new facility value';
 
 context('Amendments - Facility value - page tests', () => {
   /**
