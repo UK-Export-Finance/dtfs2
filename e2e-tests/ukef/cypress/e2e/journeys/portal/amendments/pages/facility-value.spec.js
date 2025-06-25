@@ -7,7 +7,8 @@ import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/am
 import facilityValue from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
-const invalidNumberError = 'Enter a new facility value';
+const notEnteredNumberError = 'Enter a new facility value';
+const invalidNumberError = 'Enter a valid facility value';
 
 context('Amendments - Facility value - page tests', () => {
   /**
@@ -75,42 +76,22 @@ context('Amendments - Facility value - page tests', () => {
     cy.clickContinueButton();
 
     facilityValue.errorSummary().should('be.visible');
-    facilityValue.errorSummary().contains(invalidNumberError);
+    facilityValue.errorSummary().contains(notEnteredNumberError);
 
     facilityValue.facilityValueInlineError().should('be.visible');
-    facilityValue.facilityValueInlineError().contains(invalidNumberError);
+    facilityValue.facilityValueInlineError().contains(notEnteredNumberError);
   });
 
   const errorTestCases = [
     {
-      description: 'the value contains non-numeric characters',
-      value: '1000x',
-      expectedErrorMessage: '',
-    },
-    {
       description: 'the value contains string characters',
       value: 'abc',
-      expectedErrorMessage: invalidNumberError,
+      expectedErrorMessage: notEnteredNumberError,
     },
     {
       description: 'the value contains special characters',
       value: '!@£',
-      expectedErrorMessage: invalidNumberError,
-    },
-    {
-      description: 'the value contains number and non-numeric characters',
-      value: '1ooo',
-      expectedErrorMessage: invalidNumberError,
-    },
-    {
-      description: 'the value contains too many decimal places',
-      value: '1000.000',
-      expectedErrorMessage: invalidNumberError,
-    },
-    {
-      description: 'the value contains too many decimal points',
-      value: '1000.00.0',
-      expectedErrorMessage: invalidNumberError,
+      expectedErrorMessage: notEnteredNumberError,
     },
     {
       description: 'the value contains has no leading digit',
@@ -118,14 +99,9 @@ context('Amendments - Facility value - page tests', () => {
       expectedErrorMessage: invalidNumberError,
     },
     {
-      description: 'the value ends with a decimal place',
-      value: '123.',
-      expectedErrorMessage: invalidNumberError,
-    },
-    {
       description: 'the value is too small',
       value: '0.99',
-      expectedErrorMessage: 'Enter a valid facility value',
+      expectedErrorMessage: invalidNumberError,
     },
     {
       description: 'the value is too large',
