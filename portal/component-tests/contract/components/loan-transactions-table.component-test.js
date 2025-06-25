@@ -1,4 +1,4 @@
-const { CURRENCY, ROLES, timezoneConfig } = require('@ukef/dtfs2-common');
+const { CURRENCY, ROLES, timezone } = require('@ukef/dtfs2-common');
 const { UNCONDITIONAL } = require('../../../server/constants/facility-stage');
 const { getNowAsEpoch } = require('../../../server/helpers');
 const { NON_MAKER_ROLES } = require('../../../test-helpers/common-role-lists');
@@ -55,7 +55,7 @@ describe(component, () => {
   dealWithLoansThatCanChangeCoverDate.loanTransactions.items[1].issueFacilityDetailsSubmitted = true;
 
   describe('as a maker', () => {
-    const user = { roles: [MAKER], timezone: timezoneConfig.DEFAULT };
+    const user = { roles: [MAKER], timezone };
 
     commonTests(user);
 
@@ -131,7 +131,7 @@ describe(component, () => {
   });
 
   describe.each(NON_MAKER_ROLES)('when viewed with the role %s', (nonMakerRole) => {
-    const user = { roles: [nonMakerRole], timezone: timezoneConfig.DEFAULT };
+    const user = { roles: [nonMakerRole], timezone };
 
     commonTests(user);
 

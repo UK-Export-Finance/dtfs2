@@ -1,5 +1,5 @@
 const { formatInTimeZone } = require('date-fns-tz');
-const { timezoneConfig } = require('@ukef/dtfs2-common');
+const { timezone } = require('@ukef/dtfs2-common');
 const {
   DATE: { FULL_DATE, FULL_DATE_AND_TIME },
 } = require('../../../server/constants');
@@ -43,7 +43,7 @@ describe(component, () => {
     let wrapper;
 
     beforeAll(() => {
-      const user = { timezone: timezoneConfig.DEFAULT };
+      const user = { timezone };
       wrapper = render({ deal, user });
     });
 
@@ -61,15 +61,15 @@ describe(component, () => {
       wrapper.expectText('[data-cy="checker"]').toRead(`${deal.details.checker.firstname} ${deal.details.checker.surname}`));
 
     it('displays deal.details.submissionDate', () =>
-      wrapper.expectText('[data-cy="submissionDate"]').toRead(formatInTimeZone(new Date(deal.details.submissionDate), timezoneConfig.DEFAULT, FULL_DATE)));
+      wrapper.expectText('[data-cy="submissionDate"]').toRead(formatInTimeZone(new Date(deal.details.submissionDate), timezone, FULL_DATE)));
 
     it('displays deal.updatedAt', () =>
-      wrapper.expectText('[data-cy="updatedAt"]').toRead(formatInTimeZone(new Date(deal.updatedAt), timezoneConfig.DEFAULT, FULL_DATE_AND_TIME)));
+      wrapper.expectText('[data-cy="updatedAt"]').toRead(formatInTimeZone(new Date(deal.updatedAt), timezone, FULL_DATE_AND_TIME)));
   });
 
   describe('when deal has manualInclusionApplicationSubmissionDate', () => {
     let wrapper;
-    const user = { timezone: timezoneConfig.DEFAULT };
+    const user = { timezone };
 
     beforeAll(() => {
       wrapper = render({ deal: dealWithManualInclusionApplicationSubmissionDate, user });
@@ -78,9 +78,7 @@ describe(component, () => {
     it('displays MIA submission date table header', () => wrapper.expectText('[data-cy="submissionDateHeader"]').toRead('MIA Submission date'));
 
     it('displays deal.details.manualInclusionApplicationSubmissionDate', () =>
-      wrapper
-        .expectText('[data-cy="submissionDate"]')
-        .toRead(formatInTimeZone(new Date(manualInclusionApplicationSubmissionDate), timezoneConfig.DEFAULT, FULL_DATE)));
+      wrapper.expectText('[data-cy="submissionDate"]').toRead(formatInTimeZone(new Date(manualInclusionApplicationSubmissionDate), timezone, FULL_DATE)));
   });
 
   describe('renders - for any blank fields', () => {
@@ -100,7 +98,7 @@ describe(component, () => {
     };
 
     beforeAll(() => {
-      const user = { timezone: timezoneConfig.DEFAULT };
+      const user = { timezone };
       wrapper = render({ mockDeal, user });
     });
 
