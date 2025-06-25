@@ -20,4 +20,10 @@ List any additional fixes or improvements.
   ```
 </details>
 
-## Screenshot :camera_flash:
+## Screenshot(s) :camera_flash:
+
+<details>
+  <summary>Show/hide</summary>
+
+  Add screenshots here.
+</details>
