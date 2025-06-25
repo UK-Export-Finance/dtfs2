@@ -14,6 +14,7 @@ import {
   ROLES,
   PortalFacilityAmendmentWithUkefId,
   PORTAL_AMENDMENT_STATUS,
+  AmendmentNotFoundError,
 } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
@@ -34,6 +35,8 @@ jest.mock('../../../services/api', () => ({
   getAmendment: getAmendmentMock,
   updateAmendment: updateAmendmentMock,
 }));
+
+console.error = jest.fn();
 
 const dealId = 'dealId';
 const facilityId = 'facilityId';
@@ -305,5 +308,17 @@ describe('postDoYouHaveAFacilityEndDate', () => {
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('Error posting amendments do you have a facility end date page %o', mockError);
+  });
+
+  it('should render problem with service if updateAmendment returns null', async () => {
+    updateAmendmentMock.mockResolvedValueOnce(null);
+    const { req, res } = getHttpMocks('true');
+
+    // Act
+    await postDoYouHaveAFacilityEndDate(req, res);
+
+    // Assert
+    expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
+    expect(console.error).toHaveBeenCalledWith('Error posting amendments do you have a facility end date page %o', expect.any(AmendmentNotFoundError));
   });
 });

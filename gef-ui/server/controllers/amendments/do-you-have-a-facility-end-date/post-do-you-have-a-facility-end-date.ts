@@ -1,4 +1,4 @@
-import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS, AmendmentNotFoundError } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { DoYouHaveAFacilityEndDateViewModel } from '../../../types/view-models/amendments/do-you-have-a-facility-end-date-view-model';
@@ -59,6 +59,11 @@ export const postDoYouHaveAFacilityEndDate = async (req: PostDoYouHaveAFacilityE
     const update = { isUsingFacilityEndDate: errorsOrValue.value };
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
+
+    if (!updatedAmendment) {
+      console.error('Failed to update amendment %s for facility %s', amendmentId, facilityId);
+      throw new AmendmentNotFoundError(amendmentId, facilityId);
+    }
 
     return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE, updatedAmendment));
   } catch (error) {
