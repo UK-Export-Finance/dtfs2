@@ -1,7 +1,8 @@
 import { ObjectId } from 'mongodb';
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { TestApiError, AnyObject, portalAmendmentDeleteEmailVariables, PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES } from '@ukef/dtfs2-common';
+import { TestApiError, AnyObject, portalAmendmentDeleteEmailVariables, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
 import { deletePortalAmendment, DeletePortalAmendmentRequest } from './delete-amendment.controller';
@@ -14,7 +15,7 @@ const amendmentId = new ObjectId().toString();
 const mockDeletePortalFacilityAmendment = jest.fn();
 const mockfindOneAmendmentByFacilityIdAndAmendmentId = jest.fn();
 
-const mockAmendment = { facilityId, type: AMENDMENT_TYPES.PORTAL, status: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED };
+const mockAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED });
 console.error = jest.fn();
 const sendEmailSpy = jest.fn();
 

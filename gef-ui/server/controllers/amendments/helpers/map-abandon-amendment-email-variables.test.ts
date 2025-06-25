@@ -241,14 +241,15 @@ describe('mapAbandonEmailVariables', () => {
     });
   });
 
-  describe('when deal, facility, amendment and user are null', () => {
+  describe('when deal, facility, amendment user and checker are null', () => {
     it('should throw an error', () => {
       // Arrange
       const deal = null;
       const facility = null;
       const amendment = null;
       const user = null;
-      const expectedError = new Error('Deal, Facility, Amendment or User is null');
+      const checker = null;
+      const expectedError = new Error('Deal, Facility, Amendment, User or Checker are null');
 
       // Act & Assert
       expect(() =>
@@ -257,7 +258,7 @@ describe('mapAbandonEmailVariables', () => {
           facility,
           amendment,
           user,
-          checker: mockUser,
+          checker,
         }),
       ).toThrow(expectedError);
     });

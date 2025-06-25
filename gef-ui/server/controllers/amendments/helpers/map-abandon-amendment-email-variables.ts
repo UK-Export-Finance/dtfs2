@@ -29,8 +29,8 @@ const mapAbandonEmailVariables = ({
   checker: PortalSessionUser | null;
 }) => {
   // Check if any of the required parameters are null
-  if (!deal || !facility || !amendment || !user) {
-    throw new Error('Deal, Facility, Amendment or User is null');
+  if (!deal || !facility || !amendment || !user || !checker) {
+    throw new Error('Deal, Facility, Amendment, User or Checker are null');
   }
 
   const commonVariables = mapCommonEmailVariables({ deal, facility, amendment });

@@ -35,6 +35,8 @@ const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN,
 const validUrl = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.ABANDON}`;
 const mockUser = aPortalSessionUser();
 
+const errorMessage = 'Problem with the service';
+
 describe(`POST ${validUrl}`, () => {
   let sessionCookie: string;
 
@@ -164,7 +166,7 @@ describe(`POST ${validUrl}`, () => {
       // Assert
       expect(getApplicationMock).toHaveBeenCalledTimes(1);
       expect(response.status).toEqual(HttpStatusCode.Ok);
-      expect(response.text).toContain('Problem with the service');
+      expect(response.text).toContain(errorMessage);
     });
 
     it('should render problem with service if getFacility throws an error', async () => {
@@ -177,7 +179,7 @@ describe(`POST ${validUrl}`, () => {
       // Assert
       expect(getFacilityMock).toHaveBeenCalledTimes(1);
       expect(response.status).toEqual(HttpStatusCode.Ok);
-      expect(response.text).toContain('Problem with the service');
+      expect(response.text).toContain(errorMessage);
     });
 
     it('should render problem with service if getAmendment throws an error', async () => {
@@ -190,7 +192,7 @@ describe(`POST ${validUrl}`, () => {
       // Assert
       expect(getAmendmentMock).toHaveBeenCalledTimes(1);
       expect(response.status).toEqual(HttpStatusCode.Ok);
-      expect(response.text).toContain('Problem with the service');
+      expect(response.text).toContain(errorMessage);
     });
 
     it('should render problem with service if deleteAmendment throws an error', async () => {
@@ -203,7 +205,7 @@ describe(`POST ${validUrl}`, () => {
       // Assert
       expect(deleteAmendmentMock).toHaveBeenCalledTimes(1);
       expect(response.status).toEqual(HttpStatusCode.Ok);
-      expect(response.text).toContain('Problem with the service');
+      expect(response.text).toContain(errorMessage);
     });
   });
 });
