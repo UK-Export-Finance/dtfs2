@@ -1,7 +1,7 @@
 import { Headers } from 'node-mocks-http';
 import { NextFunction, Request, Response } from 'express';
 import { HttpStatusCode } from 'axios';
-import { ROLES, API_ERROR_CODE, PORTAL_AMENDMENT_STATUS, DEAL_STATUS, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+import { ROLES, API_ERROR_CODE, PORTAL_AMENDMENT_STATUS, DEAL_STATUS, DEAL_SUBMISSION_TYPE, aPortalSessionUser } from '@ukef/dtfs2-common';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
 import { createApi } from '../create-api';
@@ -25,6 +25,7 @@ const deleteAmendmentMock = jest.fn();
 const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
+const getUserDetailsMock = jest.fn();
 
 const dealId = '6597dffeb5ef5ff4267e5044';
 const facilityId = '6597dffeb5ef5ff4267e5045';
@@ -32,6 +33,7 @@ const amendmentId = '6597dffeb5ef5ff4267e5046';
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 const validUrl = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.ABANDON}`;
+const mockUser = aPortalSessionUser();
 
 describe(`POST ${validUrl}`, () => {
   let sessionCookie: string;
@@ -44,6 +46,7 @@ describe(`POST ${validUrl}`, () => {
     jest.spyOn(api, 'getApplication').mockImplementation(getApplicationMock);
     jest.spyOn(api, 'getFacility').mockImplementation(getFacilityMock);
     jest.spyOn(api, 'getAmendment').mockImplementation(getAmendmentMock);
+    jest.spyOn(api, 'getUserDetails').mockImplementation(getUserDetailsMock);
     jest.spyOn(api, 'deleteAmendment').mockImplementation(deleteAmendmentMock);
     jest.spyOn(console, 'error');
 
@@ -57,6 +60,7 @@ describe(`POST ${validUrl}`, () => {
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getApplicationMock.mockResolvedValue(mockDeal);
     getAmendmentMock.mockResolvedValue(amendment);
+    getUserDetailsMock.mockResolvedValue(mockUser);
   });
 
   afterAll(async () => {
