@@ -10,7 +10,7 @@ List all changes made to the codebase.
 
 List any additional fixes or improvements.
 
-## Request / response example :eyes:
+## Request / response :eyes:
 
 <details>
   <summary>Show/hide</summary>
