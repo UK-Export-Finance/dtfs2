@@ -1,6 +1,4 @@
-# Pull Request
-
-## Introduction :pencil2:
+# Introduction :pencil2:
 
 Include a summary of the changes and related feature(s) or issue(s).
 
@@ -12,4 +10,20 @@ List all changes made to the codebase.
 
 List any additional fixes or improvements.
 
-## Screenshot :camera_flash:
+## Request / response :eyes:
+
+<details>
+  <summary>Show/hide</summary>
+
+  ```json
+   
+  ```
+</details>
+
+## Screenshot(s) :camera_flash:
+
+<details>
+  <summary>Show/hide</summary>
+
+  Add screenshots here.
+</details>
