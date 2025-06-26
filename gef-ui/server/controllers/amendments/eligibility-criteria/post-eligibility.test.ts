@@ -260,6 +260,7 @@ describe('postEligibility', () => {
       // Assert
       const parsedResponse = parseEligibilityResponse(responseWithMissingAnswers, criteria);
       const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
+
       const expectedRenderData: EligibilityViewModel = {
         exporterName: mockDeal.exporter.companyName,
         facilityType: MOCK_ISSUED_FACILITY.details.type,

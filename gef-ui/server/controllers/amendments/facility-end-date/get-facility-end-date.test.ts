@@ -95,6 +95,7 @@ describe('getFacilityEndDate', () => {
     // Assert
     const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const previousPage = getPreviousPage(PORTAL_AMENDMENT_PAGES.FACILITY_END_DATE, amendment);
+
     const expectedRenderData: FacilityEndDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,

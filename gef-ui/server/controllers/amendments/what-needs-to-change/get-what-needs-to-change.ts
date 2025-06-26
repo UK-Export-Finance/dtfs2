@@ -58,6 +58,7 @@ export const getWhatNeedsToChange = async (req: GetWhatNeedsToChangeRequest, res
       ? getPreviousPage(PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE, amendment, changeQuery)
       : `/gef/application-details/${dealId}`;
     const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
+
     const viewModel: WhatNeedsToChangeViewModel = {
       exporterName: deal.exporter.companyName,
       facilityType: facility.type,

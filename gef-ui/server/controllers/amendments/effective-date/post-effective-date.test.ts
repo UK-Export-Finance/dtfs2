@@ -164,6 +164,7 @@ describe('postEffectiveDate', () => {
 
     // Assert
     const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
+
     const expectedRenderData: EffectiveDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,

@@ -162,6 +162,7 @@ describe('postDoYouHaveAFacilityEndDate', () => {
 
     // Assert
     const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
+
     const expectedRenderData: DoYouHaveAFacilityEndDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,

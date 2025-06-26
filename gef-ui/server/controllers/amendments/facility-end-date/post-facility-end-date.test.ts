@@ -181,21 +181,23 @@ describe('postFacilityEndDate', () => {
 
     // Assert
     const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
+    const errors = validationErrorHandler(
+      (
+        facilityEndDateValidation.validateAndParseFacilityEndDate(
+          facilityEndDateDayMonthYear,
+          new Date(MOCK_ISSUED_FACILITY.details.coverStartDate as dtfsCommon.IsoDateTimeStamp),
+        ) as {
+          errors: ValidationError[];
+        }
+      ).errors,
+    );
+
     const expectedRenderData: FacilityEndDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage,
-      errors: validationErrorHandler(
-        (
-          facilityEndDateValidation.validateAndParseFacilityEndDate(
-            facilityEndDateDayMonthYear,
-            new Date(MOCK_ISSUED_FACILITY.details.coverStartDate as dtfsCommon.IsoDateTimeStamp),
-          ) as {
-            errors: ValidationError[];
-          }
-        ).errors,
-      ),
+      errors,
       facilityEndDate: facilityEndDateDayMonthYear,
       canMakerCancelAmendment,
     };

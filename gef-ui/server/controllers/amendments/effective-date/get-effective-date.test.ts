@@ -94,6 +94,7 @@ describe('getEffectiveDate', () => {
     // Assert
     const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const previousPage = getPreviousPage(PORTAL_AMENDMENT_PAGES.EFFECTIVE_DATE, amendment);
+
     const expectedRenderData: EffectiveDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,

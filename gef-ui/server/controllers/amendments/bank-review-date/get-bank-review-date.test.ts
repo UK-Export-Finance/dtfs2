@@ -95,6 +95,7 @@ describe('getBankReviewDate', () => {
 
     // Assert
     const previousPage = getPreviousPage(PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE, amendment);
+
     const expectedRenderData: BankReviewDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
@@ -132,6 +133,7 @@ describe('getBankReviewDate', () => {
 
     // Assert
     const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
+
     const expectedRenderData: BankReviewDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,

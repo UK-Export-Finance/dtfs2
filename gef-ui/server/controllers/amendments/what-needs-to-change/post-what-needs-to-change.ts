@@ -50,6 +50,7 @@ export const postWhatNeedsToChange = async (req: PostWhatNeedsToChangeRequest, r
 
     const validationError = validateWhatNeedsToChange({ changeCoverEndDate, changeFacilityValue });
     const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
+
     if (validationError) {
       const viewModel: WhatNeedsToChangeViewModel = {
         exporterName: deal.exporter.companyName,
