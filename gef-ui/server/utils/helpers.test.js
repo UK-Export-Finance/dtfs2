@@ -1010,7 +1010,9 @@ describe('mapSummaryList()', () => {
             ],
           },
           key: { text: 'Amendment status' },
-          value: { html: `<strong class="govuk-tag govuk-tag--blue">${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}</strong>` },
+          value: {
+            html: `<strong class="govuk-tag govuk-tag--blue" data-cy="amendment-status-${mockedData._id}">${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}</strong>`,
+          },
         },
       ];
 

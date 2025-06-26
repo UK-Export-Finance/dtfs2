@@ -838,6 +838,8 @@ describe('controllers/application-details', () => {
         mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
+        const facilityId = MOCKS.MockFacilityResponse().items[0].details._id;
+
         await applicationDetails(mockRequest, mockResponse);
 
         expect(mockResponse.render).toHaveBeenCalledWith(
@@ -850,7 +852,7 @@ describe('controllers/application-details', () => {
                     expect.objectContaining({
                       key: expect.objectContaining({ text: 'Amendment status' }),
                       value: {
-                        html: `<strong class="govuk-tag govuk-tag--green">${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}</strong>`,
+                        html: `<strong class="govuk-tag govuk-tag--green" data-cy="amendment-status-${facilityId}">${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}</strong>`,
                       },
                     }),
                   ]),
@@ -876,6 +878,8 @@ describe('controllers/application-details', () => {
         mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
         api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
 
+        const facilityId = MOCKS.MockFacilityResponse().items[0].details._id;
+
         await applicationDetails(mockRequest, mockResponse);
 
         expect(mockResponse.render).toHaveBeenCalledWith(
@@ -888,7 +892,7 @@ describe('controllers/application-details', () => {
                     expect.objectContaining({
                       key: expect.objectContaining({ text: 'Amendment status' }),
                       value: {
-                        html: `<strong class="govuk-tag govuk-tag--blue">${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}</strong>`,
+                        html: `<strong class="govuk-tag govuk-tag--blue" data-cy="amendment-status-${facilityId}">${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}</strong>`,
                       },
                     }),
                   ]),
