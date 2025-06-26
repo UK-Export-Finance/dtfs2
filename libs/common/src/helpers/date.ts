@@ -67,3 +67,5 @@ export const getEpochMs = (date: Date = now()): number => new Date(date).valueOf
  * @returns {string} The formatted date string in the format 'd MMMM yyyy'.
  */
 export const getLongDateFormat = (date: Date = now()): string => format(date, 'd MMMM yyyy');
+
+export const convertUnixTimestampWithoutMilliseconds = (unixTimestamp: number): number => Number(String(unixTimestamp).substring(0, 10));

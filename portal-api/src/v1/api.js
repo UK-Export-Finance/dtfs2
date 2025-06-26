@@ -1014,6 +1014,27 @@ const getTfmDeal = async (dealId) => {
   }
 };
 
+/**
+ * Retrieves the TFM facility from `tfm-facilities` collection.
+ *
+ * @async
+ * @function getTfmDeal
+ * @param {string} facilityId - Mongo identifier of the TFM facility to retrieve.
+ * @returns {Promise<Object>} The Axios response object if successful, or an error object with status and data if failed.
+ */
+const getTfmFacility = async (facilityId) => {
+  try {
+    return await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/tfm/facilities/${facilityId}`,
+      headers: headers.central,
+    });
+  } catch (error) {
+    console.error('Unable to get the TFM facility with ID %s %o', facilityId, error);
+    return { status: error?.code || axios.HttpStatusCode.InternalServerError, data: 'Unable to get the TFM facility' };
+  }
+};
+
 module.exports = {
   findOneDeal,
   createDeal,
@@ -1055,4 +1076,5 @@ module.exports = {
   getCompletedFeeRecordCorrections,
   getTfmTeam,
   getTfmDeal,
+  getTfmFacility,
 };

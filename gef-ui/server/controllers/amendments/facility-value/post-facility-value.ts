@@ -63,7 +63,17 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
       return res.render('partials/amendments/facility-value.njk', viewModel);
     }
 
-    const update = { value: validationErrorOrValue.value };
+    const currencyUpdate = facility.currency?.id ?? CURRENCY.GBP;
+
+    const tfmUpdate = {
+      ...amendment.tfm,
+      value: {
+        value: validationErrorOrValue.value,
+        currency: currencyUpdate,
+      },
+    };
+
+    const update = { value: validationErrorOrValue.value, currency: currencyUpdate, tfm: tfmUpdate };
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 

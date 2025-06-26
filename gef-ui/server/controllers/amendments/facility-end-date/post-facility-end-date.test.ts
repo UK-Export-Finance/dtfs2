@@ -210,8 +210,14 @@ describe('postFacilityEndDate', () => {
     await postFacilityEndDate(req, res);
 
     // Assert
+    const tfmUpdate = {
+      ...amendment.tfm,
+      facilityEndDate: today,
+      isUsingFacilityEndDate: true,
+    };
+
     expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
-    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { facilityEndDate: today }, userToken });
+    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { facilityEndDate: today, tfm: tfmUpdate }, userToken });
   });
 
   it('should not call console.error if the facilityEndDate is valid', async () => {

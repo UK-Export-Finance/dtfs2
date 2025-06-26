@@ -1,4 +1,4 @@
-import { CustomExpressRequest, DayMonthYearInput } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, DayMonthYearInput, formatDatesForTenor } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { CoverEndDateViewModel } from '../../../types/view-models/amendments/cover-end-date-view-model';
@@ -67,7 +67,24 @@ export const postCoverEndDate = async (req: PostCoverEndDateRequest, res: Respon
       return res.redirect('/not-found');
     }
 
-    const update = { coverEndDate: validationErrorsOrValue.value };
+    const tfmFacility = await api.getTfmFacility({ facilityId, userToken });
+
+    if (!tfmFacility) {
+      console.error('Tfm facility was not found for the facility %s', facilityId);
+      return res.redirect('/not-found');
+    }
+
+    const { facilityType, coverEndDateFormatted, coverStartDateFormatted } = formatDatesForTenor(tfmFacility.facilitySnapshot, validationErrorsOrValue.value);
+
+    const updatedTenor = await api.getFacilityExposurePeriod(coverStartDateFormatted, coverEndDateFormatted, facilityType);
+
+    const tfmUpdate = {
+      ...amendment.tfm,
+      coverEndDate: validationErrorsOrValue.value,
+      amendmentExposurePeriodInMonths: updatedTenor.exposurePeriodInMonths ?? null,
+    };
+
+    const update = { coverEndDate: validationErrorsOrValue.value, tfm: tfmUpdate };
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
     /*

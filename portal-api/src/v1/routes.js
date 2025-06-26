@@ -394,4 +394,8 @@ authRouter
   .route('/tfm/deal/:dealId')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), mongoIdValidation('dealId'), handleExpressValidatorResult, tfm.tfmDeal);
 
+authRouter
+  .route('/tfm/facility/:facilityId')
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), mongoIdValidation('facilityId'), handleExpressValidatorResult, tfm.tfmFacility);
+
 module.exports = { openRouter, authRouter };

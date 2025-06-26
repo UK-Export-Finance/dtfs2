@@ -1,5 +1,5 @@
+const { formattedNumber } = require('@ukef/dtfs2-common');
 const mapFirstDrawdownAmountInExportCurrency = require('./mapFirstDrawdownAmountInExportCurrency');
-const { formattedNumber } = require('../../../../utils/number');
 const { stripCommas } = require('../../../../utils/string');
 
 describe('mapFirstDrawdownAmountInExportCurrency', () => {
