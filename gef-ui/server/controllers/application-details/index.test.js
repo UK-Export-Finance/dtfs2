@@ -822,6 +822,117 @@ describe('controllers/application-details', () => {
           }),
         );
       });
+
+      it('should render `application-preview` with amendment status row and a status tag when amendment is acknowledged', async () => {
+        mockGetSubmittedDetailsResponse.portalAmendmentStatus = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
+        mockGetSubmittedDetailsResponse.isPortalAmendmentInProgress = true;
+        mockGetSubmittedDetailsResponse.facilityIdWithAmendmentInProgress = 'other-id';
+
+        api.getPortalAmendmentsOnDeal.mockResolvedValueOnce([
+          { ...aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED }), facilityId: '1234' },
+        ]);
+
+        getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
+
+        mockApplicationResponse.status = DEAL_STATUS.UKEF_ACKNOWLEDGED;
+        mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.objectContaining({
+                  rows: expect.arrayContaining([
+                    expect.objectContaining({
+                      key: expect.objectContaining({ text: 'Amendment status' }),
+                      value: {
+                        html: `<strong class="govuk-tag govuk-tag--green">${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}</strong>`,
+                      },
+                    }),
+                  ]),
+                }),
+              ]),
+            }),
+          }),
+        );
+      });
+
+      it('should render `application-preview` with amendment status row and a status tag when amendment is in progress', async () => {
+        mockGetSubmittedDetailsResponse.portalAmendmentStatus = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
+        mockGetSubmittedDetailsResponse.isPortalAmendmentInProgress = true;
+        mockGetSubmittedDetailsResponse.facilityIdWithAmendmentInProgress = 'other-id';
+
+        api.getPortalAmendmentsOnDeal.mockResolvedValueOnce([
+          { ...aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL }), facilityId: '1234' },
+        ]);
+
+        getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
+
+        mockApplicationResponse.status = DEAL_STATUS.UKEF_ACKNOWLEDGED;
+        mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.objectContaining({
+                  rows: expect.arrayContaining([
+                    expect.objectContaining({
+                      key: expect.objectContaining({ text: 'Amendment status' }),
+                      value: {
+                        html: `<strong class="govuk-tag govuk-tag--blue">${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}</strong>`,
+                      },
+                    }),
+                  ]),
+                }),
+              ]),
+            }),
+          }),
+        );
+      });
+
+      it('should render `application-preview` without the amendment status row and a status tag when amendment is not in progress', async () => {
+        mockGetSubmittedDetailsResponse.isPortalAmendmentInProgress = false;
+        mockGetSubmittedDetailsResponse.facilityIdWithAmendmentInProgress = null;
+
+        api.getPortalAmendmentsOnDeal.mockResolvedValueOnce([]);
+
+        getSubmittedAmendmentDetails.mockResolvedValue(mockGetSubmittedDetailsResponse);
+
+        mockApplicationResponse.status = DEAL_STATUS.UKEF_ACKNOWLEDGED;
+        mockApplicationResponse.submissionType = DEAL_SUBMISSION_TYPE.AIN;
+        api.getApplication.mockResolvedValueOnce(mockApplicationResponse);
+
+        await applicationDetails(mockRequest, mockResponse);
+
+        expect(mockResponse.render).toHaveBeenCalledWith(
+          'partials/application-preview.njk',
+          expect.objectContaining({
+            facilities: expect.objectContaining({
+              data: expect.arrayContaining([
+                expect.objectContaining({
+                  rows: expect.arrayContaining([
+                    expect.not.objectContaining({
+                      key: expect.objectContaining({ text: expect.any(String) }),
+                      value: {
+                        html: expect.any(String),
+                      },
+                    }),
+                  ]),
+                }),
+              ]),
+            }),
+          }),
+        );
+      });
     });
 
     describe('params', () => {
