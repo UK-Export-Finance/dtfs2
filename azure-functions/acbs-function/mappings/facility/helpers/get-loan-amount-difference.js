@@ -9,7 +9,7 @@ const { FACILITY } = CONSTANTS;
  * Due to APIM API restriction a new amended UKEF exposure amount cannot
  * be send in a payload, instead difference between the amount is expected.
  *
- * `GEF` =  70% for `Contingent` and 85% for `Cash` facilities, unless specified otherwise from an enviornment variable.
+ * `GEF` =  70% for `Contingent` and 85% for `Cash` facilities, unless specified otherwise from an environment variable.
  * `Bond` facility type will return the full difference.
  * @param {number} ukefExposure UKEF Exposure
  * @param {string} type Facility Type
