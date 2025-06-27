@@ -2,10 +2,20 @@
 /* eslint-disable import/first */
 const getApplicationMock = jest.fn();
 const getFacilityMock = jest.fn();
+const getAmendmentMock = jest.fn();
 const updateAmendmentMock = jest.fn();
 
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import {
+  aPortalSessionUser,
+  DEAL_STATUS,
+  DEAL_SUBMISSION_TYPE,
+  PORTAL_LOGIN_STATUS,
+  ROLES,
+  PortalFacilityAmendmentWithUkefId,
+  PORTAL_AMENDMENT_STATUS,
+  AmendmentNotFoundError,
+} from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
@@ -22,8 +32,11 @@ import { ValidationError } from '../../../types/validation-error';
 jest.mock('../../../services/api', () => ({
   getApplication: getApplicationMock,
   getFacility: getFacilityMock,
+  getAmendment: getAmendmentMock,
   updateAmendment: updateAmendmentMock,
 }));
+
+console.error = jest.fn();
 
 const dealId = 'dealId';
 const facilityId = 'facilityId';
@@ -70,6 +83,7 @@ describe('postDoYouHaveAFacilityEndDate', () => {
 
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
+    getAmendmentMock.mockResolvedValue(amendment);
     updateAmendmentMock.mockResolvedValue(amendment);
   });
 
@@ -147,6 +161,8 @@ describe('postDoYouHaveAFacilityEndDate', () => {
     await postDoYouHaveAFacilityEndDate(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
+
     const expectedRenderData: DoYouHaveAFacilityEndDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
@@ -154,6 +170,7 @@ describe('postDoYouHaveAFacilityEndDate', () => {
       previousPage,
       errors: validationErrorHandler((validateIsUsingFacilityEndDate(isUsingFacilityEndDate) as { errors: ValidationError[] }).errors),
       isUsingFacilityEndDate,
+      canMakerCancelAmendment,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
@@ -292,5 +309,17 @@ describe('postDoYouHaveAFacilityEndDate', () => {
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('Error posting amendments do you have a facility end date page %o', mockError);
+  });
+
+  it('should render problem with service if updateAmendment returns null', async () => {
+    updateAmendmentMock.mockResolvedValueOnce(null);
+    const { req, res } = getHttpMocks('true');
+
+    // Act
+    await postDoYouHaveAFacilityEndDate(req, res);
+
+    // Assert
+    expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
+    expect(console.error).toHaveBeenCalledWith('Error posting amendments do you have a facility end date page %o', expect.any(AmendmentNotFoundError));
   });
 });

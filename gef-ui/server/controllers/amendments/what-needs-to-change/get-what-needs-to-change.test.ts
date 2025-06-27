@@ -7,7 +7,15 @@ const getTfmTeamMock = jest.fn();
 
 import { createMocks } from 'node-mocks-http';
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, PortalFacilityAmendmentWithUkefId, ROLES } from '@ukef/dtfs2-common';
+import {
+  aPortalSessionUser,
+  DEAL_STATUS,
+  DEAL_SUBMISSION_TYPE,
+  PORTAL_LOGIN_STATUS,
+  PortalFacilityAmendmentWithUkefId,
+  ROLES,
+  PORTAL_AMENDMENT_STATUS,
+} from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { MOCK_PIM_TEAM } from '../../../utils/mocks/mock-tfm-teams.ts';
@@ -54,7 +62,12 @@ describe('getWhatNeedsToChange', () => {
     jest.resetAllMocks();
     jest.spyOn(dtfsCommon, 'isPortalFacilityAmendmentsFeatureFlagEnabled').mockReturnValue(true);
 
-    amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder().withDealId(dealId).withFacilityId(facilityId).withAmendmentId(amendmentId).build();
+    amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withStatus(PORTAL_AMENDMENT_STATUS.DRAFT)
+      .withDealId(dealId)
+      .withFacilityId(facilityId)
+      .withAmendmentId(amendmentId)
+      .build();
 
     getApplicationMock.mockResolvedValue(mockDeal);
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
@@ -86,12 +99,15 @@ describe('getWhatNeedsToChange', () => {
     await getWhatNeedsToChange(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const previousPage = `/gef/application-details/${dealId}`;
+
     const expectedRenderData: WhatNeedsToChangeViewModel = {
       exporterName: companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
+      canMakerCancelAmendment,
       amendmentFormEmail: MOCK_PIM_TEAM.email,
     };
 
@@ -105,6 +121,7 @@ describe('getWhatNeedsToChange', () => {
     // Arrange
     const { req, res } = getHttpMocks();
     const amendmentWithChangeValues = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withStatus(PORTAL_AMENDMENT_STATUS.DRAFT)
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
@@ -118,12 +135,14 @@ describe('getWhatNeedsToChange', () => {
     await getWhatNeedsToChange(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendmentWithChangeValues.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const expectedRenderData: WhatNeedsToChangeViewModel = {
       exporterName: companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       previousPage: `/gef/application-details/${dealId}`,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       amendmentFormEmail: MOCK_PIM_TEAM.email,
+      canMakerCancelAmendment,
       changeFacilityValue: true,
       changeCoverEndDate: false,
     };

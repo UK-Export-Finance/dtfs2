@@ -12,6 +12,7 @@ describe(page, () => {
   const effectiveDate = { day: '14', month: '2', year: '2024' };
   const exporterName = 'exporterName';
   const facilityType = FACILITY_TYPE.CASH;
+  const canMakerCancelAmendment = true;
 
   const params: EffectiveDateViewModel = {
     previousPage,
@@ -19,6 +20,7 @@ describe(page, () => {
     effectiveDate,
     exporterName,
     facilityType,
+    canMakerCancelAmendment,
   };
 
   it('should render the page heading', () => {

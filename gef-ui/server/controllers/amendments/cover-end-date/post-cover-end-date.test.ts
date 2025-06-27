@@ -16,6 +16,7 @@ import {
   PortalFacilityAmendmentWithUkefId,
   DayMonthYearInput,
   getEpochMs,
+  PORTAL_AMENDMENT_STATUS,
 } from '@ukef/dtfs2-common';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
@@ -82,6 +83,7 @@ describe('postCoverEndDate', () => {
     jest.spyOn(console, 'error');
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withStatus(PORTAL_AMENDMENT_STATUS.DRAFT)
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
@@ -159,6 +161,7 @@ describe('postCoverEndDate', () => {
     await postCoverEndDate(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
     const expectedRenderData: CoverEndDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
@@ -172,6 +175,7 @@ describe('postCoverEndDate', () => {
         ).errors,
       ),
       coverEndDate: coverEndDateDayMonthYear,
+      canMakerCancelAmendment,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);

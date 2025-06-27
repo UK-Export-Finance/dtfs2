@@ -5,7 +5,15 @@ const getFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
 
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import {
+  aPortalSessionUser,
+  DEAL_STATUS,
+  DEAL_SUBMISSION_TYPE,
+  PORTAL_LOGIN_STATUS,
+  ROLES,
+  PortalFacilityAmendmentWithUkefId,
+  PORTAL_AMENDMENT_STATUS,
+} from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
@@ -51,6 +59,7 @@ describe('getBankReviewDate', () => {
     jest.spyOn(console, 'error');
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withStatus(PORTAL_AMENDMENT_STATUS.DRAFT)
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
@@ -86,11 +95,13 @@ describe('getBankReviewDate', () => {
 
     // Assert
     const previousPage = getPreviousPage(PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE, amendment);
+
     const expectedRenderData: BankReviewDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage,
+      canMakerCancelAmendment: amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT,
       bankReviewDate: undefined,
     };
 
@@ -105,6 +116,7 @@ describe('getBankReviewDate', () => {
     const bankReviewDate = new Date();
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withStatus(PORTAL_AMENDMENT_STATUS.DRAFT)
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
@@ -120,6 +132,8 @@ describe('getBankReviewDate', () => {
     await getBankReviewDate(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
+
     const expectedRenderData: BankReviewDateViewModel = {
       exporterName: MOCK_BASIC_DEAL.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
@@ -130,6 +144,7 @@ describe('getBankReviewDate', () => {
         month: format(bankReviewDate, 'M'),
         year: format(bankReviewDate, 'yyyy'),
       },
+      canMakerCancelAmendment,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);

@@ -52,7 +52,7 @@
     "express-rate-limit": "^6.11.2",
     "express-session": "^1.18.1",
     "form-data": "4.0.0",
-    "govuk-frontend": "^5.10.2",
+    "govuk-frontend": "^5.11.0",
     "http-errors": "^2.0.0",
     "imask": "^6.6.3",
     "joi": "^17.13.3",

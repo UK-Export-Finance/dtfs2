@@ -16,6 +16,7 @@ import {
   DEAL_STATUS,
   PortalFacilityAmendmentWithUkefId,
   DayMonthYearInput,
+  PORTAL_AMENDMENT_STATUS,
 } from '@ukef/dtfs2-common';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
@@ -85,6 +86,7 @@ describe('postFacilityEndDate', () => {
     jest.spyOn(facilityEndDateValidation, 'validateAndParseFacilityEndDate');
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withStatus(PORTAL_AMENDMENT_STATUS.DRAFT)
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
@@ -178,22 +180,26 @@ describe('postFacilityEndDate', () => {
     await postFacilityEndDate(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
+    const errors = validationErrorHandler(
+      (
+        facilityEndDateValidation.validateAndParseFacilityEndDate(
+          facilityEndDateDayMonthYear,
+          new Date(MOCK_ISSUED_FACILITY.details.coverStartDate as dtfsCommon.IsoDateTimeStamp),
+        ) as {
+          errors: ValidationError[];
+        }
+      ).errors,
+    );
+
     const expectedRenderData: FacilityEndDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
       facilityType: MOCK_ISSUED_FACILITY.details.type,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
       previousPage,
-      errors: validationErrorHandler(
-        (
-          facilityEndDateValidation.validateAndParseFacilityEndDate(
-            facilityEndDateDayMonthYear,
-            new Date(MOCK_ISSUED_FACILITY.details.coverStartDate as dtfsCommon.IsoDateTimeStamp),
-          ) as {
-            errors: ValidationError[];
-          }
-        ).errors,
-      ),
+      errors,
       facilityEndDate: facilityEndDateDayMonthYear,
+      canMakerCancelAmendment,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);

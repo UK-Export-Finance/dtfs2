@@ -1,4 +1,4 @@
-import { PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { getPreviousPage } from './navigation.helper';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
@@ -14,6 +14,7 @@ const {
   ELIGIBILITY,
   EFFECTIVE_DATE,
   CHECK_YOUR_ANSWERS,
+  AMENDMENT_DETAILS,
   MANUAL_APPROVAL_NEEDED,
   CANCEL,
 } = PORTAL_AMENDMENT_PAGES;
@@ -42,6 +43,15 @@ describe('getPreviousPage', () => {
         expectedPreviousPage: CHECK_YOUR_ANSWERS,
         check: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(true).build(),
+      },
+      {
+        description: '',
+        expectedPreviousPage: AMENDMENT_DETAILS,
+        check: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
+          .withChangeCoverEndDate(true)
+          .build(),
       },
     ],
     errorTestCases: [
@@ -83,6 +93,16 @@ describe('getPreviousPage', () => {
         check: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(true).withIsUsingFacilityEndDate(true).build(),
       },
+      {
+        description: '',
+        expectedPreviousPage: AMENDMENT_DETAILS,
+        check: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
+          .withChangeCoverEndDate(true)
+          .withIsUsingFacilityEndDate(true)
+          .build(),
+      },
     ],
     errorTestCases: [
       {
@@ -103,6 +123,22 @@ describe('getPreviousPage', () => {
         description: '',
         expectedPreviousPage: DO_YOU_HAVE_A_FACILITY_END_DATE,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(true).withIsUsingFacilityEndDate(false).build(),
+      },
+      {
+        description: '',
+        expectedPreviousPage: CHECK_YOUR_ANSWERS,
+        check: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeCoverEndDate(true).withIsUsingFacilityEndDate(false).build(),
+      },
+      {
+        description: '',
+        expectedPreviousPage: AMENDMENT_DETAILS,
+        check: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
+          .withChangeCoverEndDate(true)
+          .withIsUsingFacilityEndDate(false)
+          .build(),
       },
     ],
     errorTestCases: [
@@ -140,6 +176,17 @@ describe('getPreviousPage', () => {
           .build(),
       },
       {
+        description: `when amendment is changing the cover end date and amendment is using facility end date and portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}`,
+        expectedPreviousPage: AMENDMENT_DETAILS,
+        check: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
+          .withChangeFacilityValue(true)
+          .withChangeCoverEndDate(true)
+          .withIsUsingFacilityEndDate(true)
+          .build(),
+      },
+      {
         description: `when amendment changing the cover end date & amendment is not using facility end date`,
         expectedPreviousPage: BANK_REVIEW_DATE,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
@@ -159,6 +206,17 @@ describe('getPreviousPage', () => {
           .build(),
       },
       {
+        description: `when amendment changing the cover end date & amendment is not using facility end date and portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}`,
+        expectedPreviousPage: AMENDMENT_DETAILS,
+        check: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
+          .withChangeFacilityValue(true)
+          .withChangeCoverEndDate(true)
+          .withIsUsingFacilityEndDate(false)
+          .build(),
+      },
+      {
         description: `when amendment is not changing the cover end date`,
         expectedPreviousPage: WHAT_DO_YOU_NEED_TO_CHANGE,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeFacilityValue(true).withChangeCoverEndDate(false).build(),
@@ -168,6 +226,16 @@ describe('getPreviousPage', () => {
         expectedPreviousPage: CHECK_YOUR_ANSWERS,
         check: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeFacilityValue(true).withChangeCoverEndDate(false).build(),
+      },
+      {
+        description: `when amendment is not changing the cover end date and portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}`,
+        expectedPreviousPage: AMENDMENT_DETAILS,
+        check: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
+          .withChangeFacilityValue(true)
+          .withChangeCoverEndDate(false)
+          .build(),
       },
     ],
     errorTestCases: [
@@ -193,6 +261,15 @@ describe('getPreviousPage', () => {
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeFacilityValue(true).build(),
       },
       {
+        description: `when amendment is changing facility value and portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}`,
+        expectedPreviousPage: AMENDMENT_DETAILS,
+        check: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
+          .withChangeFacilityValue(true)
+          .build(),
+      },
+      {
         description: `when amendment is not changing facility value, is changing the cover end date and is using facility end date`,
         expectedPreviousPage: FACILITY_END_DATE,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
@@ -206,6 +283,17 @@ describe('getPreviousPage', () => {
         expectedPreviousPage: CHECK_YOUR_ANSWERS,
         check: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withChangeFacilityValue(false)
+          .withChangeCoverEndDate(true)
+          .withIsUsingFacilityEndDate(true)
+          .build(),
+      },
+      {
+        description: `when amendment is not changing facility value, is changing the cover end date and is using facility end date and portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}`,
+        expectedPreviousPage: AMENDMENT_DETAILS,
+        check: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
           .withChangeFacilityValue(false)
           .withChangeCoverEndDate(true)
           .withIsUsingFacilityEndDate(true)
@@ -231,6 +319,17 @@ describe('getPreviousPage', () => {
           .build(),
       },
       {
+        description: `when amendment is not changing facility value, is changing the cover end date and is not using facility end date and portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}`,
+        expectedPreviousPage: AMENDMENT_DETAILS,
+        check: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
+          .withChangeFacilityValue(false)
+          .withChangeCoverEndDate(true)
+          .withIsUsingFacilityEndDate(false)
+          .build(),
+      },
+      {
         description: `when amendment is not changing facility value or changing the cover end date`,
         expectedPreviousPage: WHAT_DO_YOU_NEED_TO_CHANGE,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeFacilityValue(false).withChangeCoverEndDate(false).build(),
@@ -240,6 +339,16 @@ describe('getPreviousPage', () => {
         expectedPreviousPage: CHECK_YOUR_ANSWERS,
         check: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withChangeFacilityValue(false).withChangeCoverEndDate(false).build(),
+      },
+      {
+        description: `when amendment is not changing facility value or changing the cover end date and portal amendment status is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}`,
+        expectedPreviousPage: AMENDMENT_DETAILS,
+        check: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder()
+          .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
+          .withChangeFacilityValue(false)
+          .withChangeCoverEndDate(false)
+          .build(),
       },
     ],
   });
@@ -286,6 +395,12 @@ describe('getPreviousPage', () => {
         expectedPreviousPage: CHECK_YOUR_ANSWERS,
         check: true,
         amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().build(),
+      },
+      {
+        description: '',
+        expectedPreviousPage: AMENDMENT_DETAILS,
+        check: true,
+        amendment: new PortalFacilityAmendmentWithUkefIdMockBuilder().withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED).build(),
       },
     ],
   });

@@ -12,6 +12,7 @@ describe(page, () => {
   const exporterName = 'exporterName';
   const amendmentFormEmail = 'amendmentFormEmail';
   const facilityType = FACILITY_TYPE.CASH;
+  const canMakerCancelAmendment = true;
 
   const params: WhatNeedsToChangeViewModel = {
     previousPage,
@@ -19,6 +20,7 @@ describe(page, () => {
     amendmentFormEmail,
     exporterName,
     facilityType,
+    canMakerCancelAmendment,
   };
 
   it('should render the page heading', () => {
