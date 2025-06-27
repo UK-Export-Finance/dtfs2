@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
 import { ROLES, CURRENCY, DEAL_STATUS, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import {
   userToken,
   isObject,
@@ -298,8 +299,8 @@ describe('mapSummaryList()', () => {
       app: MOCK_AIN_APPLICATION,
       user: MOCK_REQUEST,
     };
-    expect(mapSummaryList(null, null, mapSummaryParams, null)).toEqual([]);
-    expect(mapSummaryList(undefined, undefined, mapSummaryParams, undefined)).toEqual([]);
+    expect(mapSummaryList(null, null, mapSummaryParams, {}, null)).toEqual([]);
+    expect(mapSummaryList(undefined, undefined, mapSummaryParams, {}, undefined)).toEqual([]);
   });
 
   it('returns an array populated by the correct properties', () => {
@@ -311,7 +312,7 @@ describe('mapSummaryList()', () => {
       user: MOCK_REQUEST,
     };
 
-    expect(mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)).toEqual([
+    expect(mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})).toEqual([
       {
         actions: {
           items: [
@@ -341,7 +342,7 @@ describe('mapSummaryList()', () => {
       user: MOCK_REQUEST,
     };
 
-    const { items } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].actions;
+    const { items } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})[0].actions;
     expect(items.length).toEqual(1);
   });
 
@@ -355,10 +356,10 @@ describe('mapSummaryList()', () => {
       user: MOCK_REQUEST,
     };
 
-    const item = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].actions.items[0];
+    const item = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})[0].actions.items[0];
     expect(item).toEqual(expect.objectContaining({ href: '/test', text: 'Change' }));
     mockedData.details.id = null;
-    const item2 = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].actions.items[0];
+    const item2 = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})[0].actions.items[0];
     expect(item2.text).toEqual('Add');
   });
 
@@ -373,7 +374,7 @@ describe('mapSummaryList()', () => {
 
     mockedData.details.id = null;
     mockedData.validation.required = ['id'];
-    const { html } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
+    const { html } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})[0].value;
     expect(html).toMatch('required');
   });
 
@@ -387,7 +388,7 @@ describe('mapSummaryList()', () => {
     };
 
     mockedData.details.id = null;
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})[0].value;
     expect(text).toMatch('—');
   });
 
@@ -406,7 +407,7 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems.slice(1);
     mockedDisplayItems[0].label = 'Address';
     mockedDisplayItems[0].id = 'address';
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})[0].value;
     expect(text).toMatch('—');
   });
 
@@ -426,7 +427,7 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].label = 'Address';
     mockedDisplayItems[0].id = 'address';
 
-    const { html } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
+    const { html } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})[0].value;
     expect(html).toEqual('<ul class="is-unstyled"><li>Test Road</li></ul>');
   });
 
@@ -446,7 +447,7 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].label = 'Provided on';
     mockedDisplayItems[0].id = 'details';
 
-    const other = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
+    const other = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})[0].value;
     expect(other.html).toEqual('<ul class="is-unstyled"><li>Other - Other text</li></ul>');
   });
 
@@ -470,7 +471,7 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].isIndustry = true;
     mockedDisplayItems[0].id = 'selectedIndustry';
 
-    const { html } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
+    const { html } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})[0].value;
     expect(html).toEqual('Arts, entertainment and recreation<br>Artistic creation');
   });
 
@@ -486,7 +487,7 @@ describe('mapSummaryList()', () => {
     mockedData.details.id = '123';
     mockedDisplayItems[0].id = 'abc';
 
-    const response = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0];
+    const response = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})[0];
     expect(response).toEqual(null);
   });
 
@@ -505,7 +506,7 @@ describe('mapSummaryList()', () => {
     mockedData.details.price = 200;
     mockedData.details.currency = { id: CURRENCY.GBP };
 
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})[0].value;
     expect(text).toEqual('200 GBP');
   });
 
@@ -523,7 +524,7 @@ describe('mapSummaryList()', () => {
 
     mockedData.details.price = 200;
 
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})[0].value;
     expect(text).toEqual('£200');
   });
 
@@ -541,7 +542,7 @@ describe('mapSummaryList()', () => {
 
     mockedData.details.percentage = 15;
 
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})[0].value;
     expect(text).toEqual('15%');
   });
 
@@ -560,7 +561,7 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].method = (value) => reverseFunction(value);
 
     mockedData.details.reverse = 'com';
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})[0].value;
     expect(text).toEqual('moc');
   });
 
@@ -581,7 +582,7 @@ describe('mapSummaryList()', () => {
     };
 
     mockedData.details.coverStartDate = '2021-12-20T00:00:00.000+00:00';
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})[0].value;
     expect(text).toEqual('20 December 2021');
   });
 
@@ -605,7 +606,7 @@ describe('mapSummaryList()', () => {
     mockedDisplayItems[0].issueDate = null;
 
     mockedData.details.coverStartDate = '2021-12-20T00:00:00.000+00:00';
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})[0].value;
     expect(text).toEqual('Date you submit the notice');
   });
 
@@ -632,7 +633,7 @@ describe('mapSummaryList()', () => {
     mockedData.details.shouldCoverStartOnSubmission = true;
     mockedData.details.issueDate = '2021-12-25T00:00:00.000+00:00';
 
-    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams)[0].value;
+    const { text } = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, {})[0].value;
     expect(text).toEqual('25 December 2021');
   });
 
@@ -648,7 +649,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const actionItems = mapSummaryList(MOCK_ISSUED_FACILITY, [mockDisplayItems.value], mapSummaryParams, true)[0].actions.items;
+      const actionItems = mapSummaryList(MOCK_ISSUED_FACILITY, [mockDisplayItems.value], mapSummaryParams, {}, true)[0].actions.items;
       // should have class govuk-!-display-none so cannot change
       expect(actionItems).toEqual([
         {
@@ -665,7 +666,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, [mockDisplayItems.hasBeenIssued], mapSummaryParams, true)[0].actions.items[0];
+      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, [mockDisplayItems.hasBeenIssued], mapSummaryParams, {}, true)[0].actions.items[0];
 
       expect(text).toEqual('Change');
       expect(href).toContain('/change-to-unissued');
@@ -694,7 +695,7 @@ describe('mapSummaryList()', () => {
         },
       };
 
-      const { text } = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, true)[0].actions.items[0];
+      const { text } = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, {}, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
     });
@@ -722,7 +723,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const actionItems = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, true)[0].actions.items;
+      const actionItems = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, {}, true)[0].actions.items;
       // should be allowed to change so should display change
       expect(actionItems).toEqual([
         {
@@ -757,7 +758,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, true)[0].actions.items;
+      const result = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, {}, true)[0].actions.items;
       const response = [
         {
           attributes: {
@@ -776,7 +777,7 @@ describe('mapSummaryList()', () => {
       user: MOCK_REQUEST,
     };
 
-    const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, [mockDisplayItems.hasBeenIssued], mapSummaryParams, true)[0].actions.items[0];
+    const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, [mockDisplayItems.hasBeenIssued], mapSummaryParams, {}, true)[0].actions.items[0];
     // should be allowed to change so should display change
     expect(text).toEqual('Change');
   });
@@ -800,7 +801,7 @@ describe('mapSummaryList()', () => {
           user: MOCK_REQUEST,
         };
 
-        const result = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, true)[0].actions.items;
+        const result = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, {}, true)[0].actions.items;
         // should have class display-none as unable to change on checker
         expect(result).toEqual([
           {
@@ -821,7 +822,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, [mockDisplayItems.hasBeenIssued], mapSummaryParams, true)[0].actions.items[0];
+      const { text, href } = mapSummaryList(MOCK_ISSUED_FACILITY, [mockDisplayItems.hasBeenIssued], mapSummaryParams, {}, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
       expect(href).toContain('/change-to-unissued');
@@ -845,7 +846,7 @@ describe('mapSummaryList()', () => {
           user: MOCK_REQUEST,
         };
 
-        const { text } = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, true)[0].actions.items[0];
+        const { text } = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, {}, true)[0].actions.items[0];
         // should be allowed to change so should display change
         expect(text).toEqual('Change');
       },
@@ -857,7 +858,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, [mockDisplayItems.hasBeenIssued], mapSummaryParams, true)[0].actions.items[0];
+      const { text } = mapSummaryList(MOCK_UNISSUED_FACILITY, [mockDisplayItems.hasBeenIssued], mapSummaryParams, {}, true)[0].actions.items[0];
       // should be allowed to change so should display change
       expect(text).toEqual('Change');
     });
@@ -880,7 +881,7 @@ describe('mapSummaryList()', () => {
           user: MOCK_REQUEST,
         };
 
-        const actionItems = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, true)[0].actions.items;
+        const actionItems = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, {}, true)[0].actions.items;
         expect(actionItems).toEqual([
           {
             attributes: {
@@ -898,7 +899,7 @@ describe('mapSummaryList()', () => {
         user: MOCK_REQUEST,
       };
 
-      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, [mockDisplayItems.hasBeenIssued], mapSummaryParams, true)[0].actions.items;
+      const result = mapSummaryList(MOCK_ISSUED_FACILITY_UNCHANGED, [mockDisplayItems.hasBeenIssued], mapSummaryParams, {}, true)[0].actions.items;
       expect(result).toEqual([
         {
           attributes: {
@@ -927,7 +928,7 @@ describe('mapSummaryList()', () => {
           },
         };
 
-        const result = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, true)[0].actions.items;
+        const result = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, {}, true)[0].actions.items;
         expect(result).toEqual([
           {
             attributes: {
@@ -957,7 +958,7 @@ describe('mapSummaryList()', () => {
           user: MOCK_REQUEST,
         };
 
-        const result = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, true)[0].actions.items;
+        const result = mapSummaryList(facility, [mockDisplayItems[id]], mapSummaryParams, {}, true)[0].actions.items;
         expect(result).toEqual([
           {
             attributes: {
@@ -968,6 +969,65 @@ describe('mapSummaryList()', () => {
         ]);
       },
     );
+  });
+
+  describe('when latestAmendments is populated', () => {
+    const mockedData = MockedData();
+    const mockedDisplayItems = [
+      {
+        label: 'Amendment status',
+        id: 'latestAmendmentStatus',
+        isHidden: false,
+      },
+    ];
+
+    const latestAmendments = {
+      [mockedData.facilityId]: {
+        ...aPortalFacilityAmendment(),
+        facilityId: mockedData.facilityId,
+        status: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
+      },
+    };
+
+    it('returns an array populated by the correct properties when itemsToShow contains latestAmendmentStatus', () => {
+      const mapSummaryParams = {
+        app: MOCK_AIN_APPLICATION,
+        user: MOCK_REQUEST,
+      };
+
+      const result = mapSummaryList(mockedData, mockedDisplayItems, mapSummaryParams, latestAmendments, true);
+
+      const expected = [
+        {
+          actions: {
+            items: [
+              {
+                classes: 'govuk-!-display-none',
+                attributes: {
+                  'data-cy': 'latestAmendmentStatus-action',
+                },
+              },
+            ],
+          },
+          key: { text: 'Amendment status' },
+          value: {
+            html: `<strong class="govuk-tag govuk-tag--blue" data-cy="amendment-status-${mockedData._id}">${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}</strong>`,
+          },
+        },
+      ];
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  it('returns an empty array if itemsToShow is empty', () => {
+    const mapSummaryParams = {
+      app: MOCK_AIN_APPLICATION,
+      user: MOCK_REQUEST,
+    };
+
+    const result = mapSummaryList(MOCK_UNISSUED_FACILITY, [], mapSummaryParams, {}, true);
+    expect(result).toEqual([]);
   });
 });
 

@@ -56,11 +56,11 @@ const eligibilityCriteriaItems = (coverUrl) => [
   },
 ];
 
-const facilityItems = (
-  facilityUrl,
-  { type, hasBeenIssued, shouldCoverStartOnSubmission, ukefFacilityId, feeType, issueDate, isUsingFacilityEndDate, facilityStage },
-  dealVersion,
-) => {
+const facilityItems = (facilityUrl, details, latestAmendments, dealVersion) => {
+  const { _id, type, hasBeenIssued, shouldCoverStartOnSubmission, ukefFacilityId, feeType, issueDate, isUsingFacilityEndDate, facilityStage } = details;
+
+  const latestAmendment = latestAmendments[_id?.toString()];
+
   const AT_MATURITY = 'At maturity';
   return [
     {
@@ -72,6 +72,11 @@ const facilityItems = (
       label: 'UKEF facility ID',
       id: 'ukefFacilityId',
       isHidden: !ukefFacilityId,
+    },
+    {
+      label: 'Amendment status',
+      id: 'latestAmendmentStatus',
+      isHidden: !latestAmendment,
     },
     {
       label: 'Stage',
