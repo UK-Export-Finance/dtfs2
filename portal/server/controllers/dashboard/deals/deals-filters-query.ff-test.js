@@ -1,6 +1,6 @@
-import { PORTAL_AMENDMENT_STATUS, ROLES, CHECKERS_AMENDMENTS_DEAL_ID } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, ROLES, CHECKERS_AMENDMENTS_DEAL_ID, DEAL_STATUS } from '@ukef/dtfs2-common';
 import { dashboardDealsFiltersQuery } from './deals-filters-query';
-import { STATUS } from '../../../constants';
+import { STATUS, FIELD_NAMES } from '../../../constants';
 import getCheckersApprovalAmendmentDealIds from '../../../helpers/getCheckersApprovalAmendmentDealIds';
 
 jest.mock('../../../helpers/getCheckersApprovalAmendmentDealIds');
@@ -19,20 +19,24 @@ describe('controllers/dashboard/deals - filters query', () => {
       // Arrange
       const mockFilters = [];
       const mockDealIds = ['deal1', 'deal2'];
-      const expected = {
-        AND: [
-          { 'bank.id': mockUser.bank.id },
-          {
-            OR: [{ status: STATUS.DEAL.READY_FOR_APPROVAL }, { [CHECKERS_AMENDMENTS_DEAL_ID]: mockDealIds }],
-          },
-        ],
-      };
 
       mockUser.roles = [CHECKER];
       getCheckersApprovalAmendmentDealIds.mockResolvedValue(mockDealIds);
 
       // Act
       const result = await dashboardDealsFiltersQuery(mockFilters, mockUser);
+
+      const expected = {
+        AND: [
+          { 'bank.id': mockUser.bank.id },
+          {
+            OR: [
+              { status: STATUS.DEAL.READY_FOR_APPROVAL },
+              { AND: [{ [CHECKERS_AMENDMENTS_DEAL_ID]: mockDealIds }, { [FIELD_NAMES.DEAL.STATUS]: DEAL_STATUS.UKEF_ACKNOWLEDGED }] },
+            ],
+          },
+        ],
+      };
 
       // Assert
       expect(result).toEqual(expected);
