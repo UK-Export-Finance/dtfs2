@@ -1,4 +1,4 @@
-import { CustomExpressRequest, PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_ASSIGNED_TO_MAKER_STATUSES, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { BankReviewDateViewModel } from '../../../types/view-models/amendments/bank-review-date-view-model';
@@ -64,12 +64,14 @@ export const getBankReviewDate = async (req: GetBankReviewDateRequest, res: Resp
 
     const bankReviewDate = amendment.bankReviewDate && convertDateToDayMonthYearInput(amendment.bankReviewDate);
     const changeQuery = req.query?.change === 'true';
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
 
     const viewModel: BankReviewDateViewModel = {
       exporterName: deal.exporter.companyName,
       facilityType: facility.type,
       cancelUrl: getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.CANCEL }),
       previousPage: getPreviousPage(PORTAL_AMENDMENT_PAGES.BANK_REVIEW_DATE, amendment, changeQuery),
+      canMakerCancelAmendment,
       bankReviewDate,
     };
 
