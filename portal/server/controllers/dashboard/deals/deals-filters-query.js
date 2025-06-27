@@ -1,4 +1,4 @@
-const { CHECKERS_AMENDMENTS_DEAL_ID, isPortalFacilityAmendmentsFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { CHECKERS_AMENDMENTS_DEAL_ID, isPortalFacilityAmendmentsFeatureFlagEnabled, DEAL_STATUS } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../constants');
 const CONTENT_STRINGS = require('../../../content-strings');
 const { getUserRoles, isSuperUser, getCheckersApprovalAmendmentDealIds } = require('../../../helpers');
@@ -36,7 +36,17 @@ const dashboardDealsFiltersQuery = async (filters, user, userToken) => {
       const checkersApprovalAmendmentDealIds = await getCheckersApprovalAmendmentDealIds(userToken);
 
       if (checkersApprovalAmendmentDealIds?.length) {
-        orQuery.OR.push({ [CHECKERS_AMENDMENTS_DEAL_ID]: checkersApprovalAmendmentDealIds });
+        /**
+         * add and query to the orQuery
+         * If there are amendments ready for checkers approval,
+         * AND if the deal status is UKEF_ACKNOWLEDGED,
+         * hence cancelled or pending cancellation deals will not show for checker when there are amendments ready for approval.
+         */
+        const andQuery = {
+          AND: [{ [CHECKERS_AMENDMENTS_DEAL_ID]: checkersApprovalAmendmentDealIds }, { [CONSTANTS.FIELD_NAMES.DEAL.STATUS]: DEAL_STATUS.UKEF_ACKNOWLEDGED }],
+        };
+
+        orQuery.OR.push(andQuery);
       }
     }
 
