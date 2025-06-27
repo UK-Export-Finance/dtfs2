@@ -1,4 +1,4 @@
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, InvalidAmendmentStatusError, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
@@ -17,6 +17,18 @@ export const postCancelPortalFacilityAmendment = async (req: PostCancelPortalFac
   try {
     const { dealId, facilityId, amendmentId } = req.params;
     const { userToken } = asLoggedInUserSession(req.session);
+
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
+      return res.redirect('/not-found');
+    }
+
+    if (amendment.status !== PORTAL_AMENDMENT_STATUS.DRAFT) {
+      console.error(`Amendment %s on facility %s is not ${PORTAL_AMENDMENT_STATUS.DRAFT}`, amendmentId, facilityId);
+      throw new InvalidAmendmentStatusError(amendment.status);
+    }
 
     await api.deleteAmendment({
       facilityId,
