@@ -1,4 +1,4 @@
-import { CustomExpressRequest, TEAM_IDS } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, TEAM_IDS, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { WhatNeedsToChangeViewModel } from '../../../types/view-models/amendments/what-needs-to-change-view-model.ts';
@@ -49,6 +49,7 @@ export const postWhatNeedsToChange = async (req: PostWhatNeedsToChangeRequest, r
     const { email: amendmentFormEmail } = pim;
 
     const validationError = validateWhatNeedsToChange({ changeCoverEndDate, changeFacilityValue });
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
 
     if (validationError) {
       const viewModel: WhatNeedsToChangeViewModel = {
@@ -60,6 +61,7 @@ export const postWhatNeedsToChange = async (req: PostWhatNeedsToChangeRequest, r
         changeCoverEndDate,
         changeFacilityValue,
         errors: validationErrorHandler(validationError),
+        canMakerCancelAmendment,
       };
 
       return res.render('partials/amendments/what-needs-to-change.njk', viewModel);

@@ -1,4 +1,4 @@
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import { isEqual } from 'lodash';
 import * as api from '../../../services/api';
@@ -53,6 +53,7 @@ export const postEligibility = async (req: PostEligibilityRequest, res: Response
     const parsedResponse = parseEligibilityResponse(req.body, criteria);
 
     const errorsOrValidCriteria = validateEligibilityResponse(parsedResponse);
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
 
     if ('errors' in errorsOrValidCriteria) {
       const viewModel: EligibilityViewModel = {
@@ -62,6 +63,7 @@ export const postEligibility = async (req: PostEligibilityRequest, res: Response
         previousPage,
         criteria: parsedResponse,
         errors: validationErrorHandler(errorsOrValidCriteria.errors),
+        canMakerCancelAmendment,
       };
 
       return res.render('partials/amendments/eligibility.njk', viewModel);

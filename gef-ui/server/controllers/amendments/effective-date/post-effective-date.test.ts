@@ -16,6 +16,7 @@ import {
   DEAL_STATUS,
   PortalFacilityAmendmentWithUkefId,
   DayMonthYearInput,
+  PORTAL_AMENDMENT_STATUS,
 } from '@ukef/dtfs2-common';
 import { getCoverStartDateOrToday } from '../../../utils/get-cover-start-date-or-today.ts';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications.js';
@@ -84,6 +85,7 @@ describe('postEffectiveDate', () => {
     jest.spyOn(console, 'error');
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withStatus(PORTAL_AMENDMENT_STATUS.DRAFT)
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
@@ -161,6 +163,8 @@ describe('postEffectiveDate', () => {
     await postEffectiveDate(req, res);
 
     // Assert
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
+
     const expectedRenderData: EffectiveDateViewModel = {
       exporterName: mockDeal.exporter.companyName,
       cancelUrl: `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cancel`,
@@ -174,6 +178,7 @@ describe('postEffectiveDate', () => {
         ).errors,
       ),
       effectiveDate: effectiveDateDayMonthYear,
+      canMakerCancelAmendment,
     };
 
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);

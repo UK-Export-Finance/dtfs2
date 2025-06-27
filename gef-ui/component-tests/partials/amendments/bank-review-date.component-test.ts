@@ -12,6 +12,7 @@ describe(page, () => {
   const bankReviewDate = { day: '14', month: '2', year: '2024' };
   const exporterName = 'exporterName';
   const facilityType = FACILITY_TYPE.CASH;
+  const canMakerCancelAmendment = true;
 
   const params: BankReviewDateViewModel = {
     previousPage,
@@ -19,6 +20,7 @@ describe(page, () => {
     bankReviewDate,
     exporterName,
     facilityType,
+    canMakerCancelAmendment,
   };
 
   it('should render the page heading', () => {

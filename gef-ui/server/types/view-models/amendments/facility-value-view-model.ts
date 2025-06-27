@@ -8,5 +8,6 @@ export type FacilityValueViewModel = {
   facilityType: FacilityType;
   previousPage: string;
   cancelUrl: string;
+  canMakerCancelAmendment: boolean;
   errors?: ViewModelErrors | null;
 };

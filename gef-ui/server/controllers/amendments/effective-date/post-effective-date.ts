@@ -1,4 +1,4 @@
-import { CustomExpressRequest, DayMonthYearInput } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, DayMonthYearInput, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { EffectiveDateViewModel } from '../../../types/view-models/amendments/effective-date-view-model';
@@ -45,7 +45,15 @@ export const postEffectiveDate = async (req: PostEffectiveDateRequest, res: Resp
       return res.redirect('/not-found');
     }
 
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
+      return res.redirect('/not-found');
+    }
+
     const validationErrorsOrValue = validateAndParseEffectiveDate(effectiveDateDayMonthYear, getCoverStartDateOrToday(facility));
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
 
     if ('errors' in validationErrorsOrValue) {
       const viewModel: EffectiveDateViewModel = {
@@ -55,16 +63,10 @@ export const postEffectiveDate = async (req: PostEffectiveDateRequest, res: Resp
         previousPage,
         effectiveDate: effectiveDateDayMonthYear,
         errors: validationErrorHandler(validationErrorsOrValue.errors),
+        canMakerCancelAmendment,
       };
 
       return res.render('partials/amendments/effective-date.njk', viewModel);
-    }
-
-    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
-
-    if (!amendment) {
-      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
-      return res.redirect('/not-found');
     }
 
     const update = { effectiveDate: validationErrorsOrValue.value };

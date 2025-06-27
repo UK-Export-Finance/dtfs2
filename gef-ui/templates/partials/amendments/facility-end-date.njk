@@ -99,8 +99,10 @@
               "data-cy": "continue-button"
             }
           }) }}
-
-          <a href="{{ cancelUrl }}"  data-cy="cancel-link" class="govuk-link">Cancel</a>
+          
+          {% if canMakerCancelAmendment %}
+            <a href="{{ cancelUrl }}"  data-cy="cancel-link" class="govuk-link">Cancel</a>
+          {% endif %}
         </div>
       </form>
     </div>

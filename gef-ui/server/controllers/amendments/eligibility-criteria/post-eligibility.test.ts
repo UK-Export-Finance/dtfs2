@@ -6,7 +6,15 @@ const getFacilityMock = jest.fn();
 const updateAmendmentMock = jest.fn();
 
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import {
+  aPortalSessionUser,
+  DEAL_STATUS,
+  DEAL_SUBMISSION_TYPE,
+  PORTAL_LOGIN_STATUS,
+  ROLES,
+  PortalFacilityAmendmentWithUkefId,
+  PORTAL_AMENDMENT_STATUS,
+} from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
 import { validateEligibilityResponse } from './validation.ts';
@@ -86,6 +94,7 @@ describe('postEligibility', () => {
     jest.spyOn(console, 'error');
 
     amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
+      .withStatus(PORTAL_AMENDMENT_STATUS.DRAFT)
       .withDealId(dealId)
       .withFacilityId(facilityId)
       .withAmendmentId(amendmentId)
@@ -250,6 +259,7 @@ describe('postEligibility', () => {
 
       // Assert
       const parsedResponse = parseEligibilityResponse(responseWithMissingAnswers, criteria);
+      const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
 
       const expectedRenderData: EligibilityViewModel = {
         exporterName: mockDeal.exporter.companyName,
@@ -258,6 +268,7 @@ describe('postEligibility', () => {
         previousPage,
         errors: validationErrorHandler((validateEligibilityResponse(parsedResponse) as { errors: ValidationError[] }).errors),
         criteria: parsedResponse,
+        canMakerCancelAmendment,
       };
 
       expect(res._getStatusCode()).toEqual(HttpStatusCode.Ok);
