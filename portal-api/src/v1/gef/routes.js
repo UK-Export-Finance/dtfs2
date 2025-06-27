@@ -33,6 +33,7 @@ const {
 const {
   validatePatchPortalFacilityAmendmentStatusPayload,
 } = require('../validation/route-validators/amendments/validate-patch-portal-facility-amendment-status-payload');
+const { validateDeletePortalFacilityAmendmentPayload } = require('../validation/route-validators/amendments/validate-delete-portal-facility-amendment-payload');
 
 const router = express.Router();
 
@@ -139,7 +140,7 @@ router
   .all(validatePortalFacilityAmendmentsEnabled, mongoIdValidation('facilityId'), mongoIdValidation('amendmentId'), handleExpressValidatorResult)
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }), getAmendment)
   .patch(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), validatePatchPortalFacilityAmendmentPayload, patchAmendment)
-  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), deleteAmendment);
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), validateDeletePortalFacilityAmendmentPayload, deleteAmendment);
 
 router
   .route('/facilities/:facilityId/amendments/:amendmentId/status')

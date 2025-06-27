@@ -3,12 +3,14 @@ import { Response } from 'express';
 import { ApiError, CustomExpressRequest } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import api from '../../api';
+import { DeletePortalFacilityAmendmentPayload } from '../../validation/route-validators/amendments/validate-delete-portal-facility-amendment-payload';
 
 export type DeleteAmendmentRequest = CustomExpressRequest<{
   params: {
     facilityId: string;
     amendmentId: string;
   };
+  reqBody: DeletePortalFacilityAmendmentPayload;
 }>;
 
 /**
@@ -18,11 +20,12 @@ export type DeleteAmendmentRequest = CustomExpressRequest<{
  */
 export const deleteAmendment = async (req: DeleteAmendmentRequest, res: Response) => {
   const { facilityId, amendmentId } = req.params;
+  const { makersEmail, checkersEmail, emailVariables } = req.body;
 
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
   try {
-    await api.deletePortalFacilityAmendment(facilityId, amendmentId, auditDetails);
+    await api.deletePortalFacilityAmendment(facilityId, amendmentId, auditDetails, makersEmail, checkersEmail, emailVariables);
 
     return res.status(HttpStatusCode.Ok).send();
   } catch (error) {

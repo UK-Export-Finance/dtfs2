@@ -1,7 +1,15 @@
 import { Response } from 'supertest';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { AnyObject, API_ERROR_CODE, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE, MONGO_DB_COLLECTIONS } from '@ukef/dtfs2-common';
+import {
+  AnyObject,
+  API_ERROR_CODE,
+  DEAL_SUBMISSION_TYPE,
+  DEAL_TYPE,
+  FACILITY_TYPE,
+  MONGO_DB_COLLECTIONS,
+  portalAmendmentDeleteEmailVariables,
+} from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import wipeDB from '../../wipeDB';
 import { testApi } from '../../test-api';
@@ -92,7 +100,7 @@ describe('DELETE /v1/portal/facilities/:facilityId/amendments/:amendmentId', () 
       const anInvalidFacilityId = 'InvalidId';
 
       const { body, status } = (await testApi
-        .remove({ auditDetails: generatePortalAuditDetails(portalUserId) })
+        .remove({ auditDetails: generatePortalAuditDetails(portalUserId), ...portalAmendmentDeleteEmailVariables() })
         .to(generateUrl(anInvalidFacilityId, amendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
@@ -107,7 +115,7 @@ describe('DELETE /v1/portal/facilities/:facilityId/amendments/:amendmentId', () 
       const anInvalidAmendmentId = 'InvalidId';
 
       const { body, status } = (await testApi
-        .remove({ auditDetails: generatePortalAuditDetails(portalUserId) })
+        .remove({ auditDetails: generatePortalAuditDetails(portalUserId), ...portalAmendmentDeleteEmailVariables() })
         .to(generateUrl(facilityId, anInvalidAmendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
@@ -122,13 +130,13 @@ describe('DELETE /v1/portal/facilities/:facilityId/amendments/:amendmentId', () 
       const aValidButNonExistentFacilityId = new ObjectId().toString();
 
       const { body, status } = (await testApi
-        .remove({ auditDetails: generatePortalAuditDetails(portalUserId) })
+        .remove({ auditDetails: generatePortalAuditDetails(portalUserId), ...portalAmendmentDeleteEmailVariables() })
         .to(generateUrl(aValidButNonExistentFacilityId, amendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.NotFound);
       expect(body).toEqual({
         status: HttpStatusCode.NotFound,
-        message: `Amendment not found: ${amendmentId} on facility: ${aValidButNonExistentFacilityId}`,
+        message: `Facility not found: ${aValidButNonExistentFacilityId}`,
       });
     });
 
@@ -136,7 +144,7 @@ describe('DELETE /v1/portal/facilities/:facilityId/amendments/:amendmentId', () 
       const aValidButNonExistentAmendmentId = new ObjectId().toString();
 
       const { body, status } = (await testApi
-        .remove({ auditDetails: generatePortalAuditDetails(portalUserId) })
+        .remove({ auditDetails: generatePortalAuditDetails(portalUserId), ...portalAmendmentDeleteEmailVariables() })
         .to(generateUrl(facilityId, aValidButNonExistentAmendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.NotFound);
@@ -148,7 +156,7 @@ describe('DELETE /v1/portal/facilities/:facilityId/amendments/:amendmentId', () 
 
     it(`should return ${HttpStatusCode.NoContent} when the payload is valid & the amendment exists`, async () => {
       const { status } = (await testApi
-        .remove({ auditDetails: generatePortalAuditDetails(portalUserId) })
+        .remove({ auditDetails: generatePortalAuditDetails(portalUserId), ...portalAmendmentDeleteEmailVariables() })
         .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.NoContent);
@@ -157,7 +165,7 @@ describe('DELETE /v1/portal/facilities/:facilityId/amendments/:amendmentId', () 
     it('should delete the amendment', async () => {
       // Act
       const { status } = (await testApi
-        .remove({ auditDetails: generatePortalAuditDetails(portalUserId) })
+        .remove({ auditDetails: generatePortalAuditDetails(portalUserId), ...portalAmendmentDeleteEmailVariables() })
         .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;
       expect(status).toEqual(HttpStatusCode.NoContent);
       // Assert

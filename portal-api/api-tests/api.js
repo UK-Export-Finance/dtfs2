@@ -78,6 +78,10 @@ module.exports = (app) => ({
       get: async (url, query = {}) => request(app).get(url).set(headers).query(query),
 
       remove: async (url) => request(app).delete(url).set(headers).send(),
+
+      removeTo: (data) => ({
+        to: async (url) => request(app).delete(url).set(headers).send(data),
+      }),
     };
   },
   get: (url, { headers, query } = {}) => {

@@ -12,6 +12,20 @@ export type FacilityAllTypeAmendmentWithUkefId = PortalFacilityAmendmentWithUkef
 
 export type FacilityAmendmentWithUkefId = Prettify<FacilityAmendment & { ukefFacilityId: string | null }>;
 
+export type PortalAmendmentAbandonEmailVariables = {
+  exporterName: string;
+  bankInternalRefName: string;
+  ukefDealId: string;
+  ukefFacilityId: string;
+  makersName: string;
+  checkersName: string;
+  checkersEmail?: string;
+  dateEffectiveFrom: string;
+  newCoverEndDate: string;
+  newFacilityEndDate: string;
+  newFacilityValue: string;
+};
+
 export type PortalAmendmentReturnToMakerEmailVariables = {
   exporterName: string;
   bankInternalRefName: string;

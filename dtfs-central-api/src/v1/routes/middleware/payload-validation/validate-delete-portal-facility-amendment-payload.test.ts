@@ -1,6 +1,6 @@
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { AUDIT_USER_TYPES } from '@ukef/dtfs2-common';
+import { AUDIT_USER_TYPES, portalAmendmentDeleteEmailVariables } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
 import { validateDeletePortalFacilityAmendmentPayload } from './validate-delete-portal-facility-amendment-payload';
@@ -8,6 +8,7 @@ import { validateDeletePortalFacilityAmendmentPayload } from './validate-delete-
 const next = jest.fn();
 console.error = jest.fn();
 const validAuditDetails = generatePortalAuditDetails(aPortalUser()._id);
+const portalAmendmentVariables = portalAmendmentDeleteEmailVariables();
 
 describe('validateDeletePortalFacilityAmendmentPayload', () => {
   const invalidPayloads = [
@@ -40,6 +41,39 @@ describe('validateDeletePortalFacilityAmendmentPayload', () => {
         },
       },
     },
+    {
+      description: 'string field is undefined',
+      payload: {
+        auditDetails: validAuditDetails,
+        ...portalAmendmentVariables,
+        emailVariables: {
+          ...portalAmendmentVariables.emailVariables,
+          exporterName: undefined,
+        },
+      },
+    },
+    {
+      description: 'string field is number',
+      payload: {
+        auditDetails: validAuditDetails,
+        ...portalAmendmentVariables,
+        emailVariables: {
+          ...portalAmendmentVariables.emailVariables,
+          ukefDealId: 12345,
+        },
+      },
+    },
+    {
+      description: 'string field is date',
+      payload: {
+        auditDetails: validAuditDetails,
+        ...portalAmendmentVariables,
+        emailVariables: {
+          ...portalAmendmentVariables.emailVariables,
+          newFacilityEndDate: new Date(),
+        },
+      },
+    },
   ];
 
   it.each(invalidPayloads)(`should return ${HttpStatusCode.BadRequest} when $description`, ({ payload }) => {
@@ -60,6 +94,7 @@ describe('validateDeletePortalFacilityAmendmentPayload', () => {
       description: 'the payload is valid',
       payload: {
         auditDetails: validAuditDetails,
+        ...portalAmendmentVariables,
       },
     },
   ];

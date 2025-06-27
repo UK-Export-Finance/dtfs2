@@ -3,6 +3,7 @@ import { Response } from 'express';
 import * as api from '../../../services/api';
 import { AbandonedViewModel } from '../../../types/view-models/amendments/abandoned-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
+import mapAbandonAmendmentEmailVariables from '../helpers/map-abandon-amendment-email-variables';
 
 export type PostAbandonPortalFacilityAmendmentRequest = CustomExpressRequest<{
   params: { dealId: string; facilityId: string; amendmentId: string };
@@ -16,10 +17,29 @@ export type PostAbandonPortalFacilityAmendmentRequest = CustomExpressRequest<{
  */
 export const postAbandonPortalFacilityAmendment = async (req: PostAbandonPortalFacilityAmendmentRequest, res: Response) => {
   try {
-    const { facilityId, amendmentId } = req.params;
-    const { userToken } = asLoggedInUserSession(req.session);
+    const { dealId, facilityId, amendmentId } = req.params;
+    const { userToken, user } = asLoggedInUserSession(req.session);
 
-    await api.deleteAmendment({ facilityId, amendmentId, userToken });
+    const deal = await api.getApplication({ dealId, userToken });
+    const { details: facility } = await api.getFacility({ facilityId, userToken });
+
+    if (!deal || !facility) {
+      console.error('Deal %s or Facility %s was not found', dealId, facilityId);
+      return res.redirect('/not-found');
+    }
+
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
+      return res.redirect('/not-found');
+    }
+
+    const checker = await api.getUserDetails({ userId: deal.checkerId, userToken });
+
+    const { makersEmail, checkersEmail, emailVariables } = mapAbandonAmendmentEmailVariables({ deal, facility, amendment, user, checker });
+
+    await api.deleteAmendment({ facilityId, amendmentId, userToken, makersEmail, checkersEmail, emailVariables });
 
     const viewModel: AbandonedViewModel = {
       abandoned: true,
