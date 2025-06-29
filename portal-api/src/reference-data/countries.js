@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const referenceProxyUrl = process.env.REFERENCE_DATA_PROXY_URL;
+const referenceProxyUrl = process.env.EXTERNAL_API_URL;
 
 const getCountries = async () => {
   const response = await axios({

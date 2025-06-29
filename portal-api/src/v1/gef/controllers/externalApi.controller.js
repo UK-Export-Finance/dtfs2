@@ -4,7 +4,7 @@ require('dotenv').config();
 const { ERROR } = require('../enums');
 const mapCompaniesHouseData = require('../mappings/map-companies-house-data');
 
-const referenceProxyUrl = process.env.REFERENCE_DATA_PROXY_URL;
+const referenceProxyUrl = process.env.EXTERNAL_API_URL;
 
 const findSicCodes = async (companySicCodes) => {
   const response = await axios({

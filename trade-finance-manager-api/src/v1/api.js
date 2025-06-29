@@ -5,7 +5,7 @@ const CONSTANTS = require('../constants');
 require('dotenv').config();
 
 const centralApiUrl = process.env.DTFS_CENTRAL_API;
-const refDataUrl = process.env.REFERENCE_DATA_PROXY_URL;
+const refDataUrl = process.env.EXTERNAL_API_URL;
 const azureAcbsFunctionUrl = process.env.AZURE_ACBS_FUNCTION_URL;
 const azureNumberGeneratorUrl = process.env.AZURE_NUMBER_GENERATOR_FUNCTION_URL;
 const { DURABLE_FUNCTIONS } = CONSTANTS;

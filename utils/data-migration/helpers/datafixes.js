@@ -2,22 +2,16 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 const axios = require('axios');
-const { getUnixTime } = require('date-fns');
+const { getUnixTime, format } = require('date-fns');
 const { ObjectId } = require('mongodb');
 const CONSTANTS = require('../constant');
-const {
-  getCollection,
-  portalDealUpdate,
-  tfmDealUpdate,
-  tfmFacilityUpdate,
-  portalFacilityUpdate,
-} = require('./database');
-const { actionsheet, workflow, sleep } = require('./io');
+const { getCollection, portalDealUpdate, tfmDealUpdate, tfmFacilityUpdate, portalFacilityUpdate } = require('./database');
+const { actionsheet, workflow } = require('./io');
 const { epochInSeconds, getEpoch } = require('./date');
 const getFacilityPremiumSchedule = require('../../../trade-finance-manager-api/src/v1/controllers/get-facility-premium-schedule');
 const mapWorkflowStatus = require('./amendment');
 
-const { TFM_API } = process.env;
+const { TFM_API_URL } = process.env;
 let allDeals = {};
 let allFacilities = {};
 
@@ -40,7 +34,7 @@ const createAmendment = async (facilityId) => {
   try {
     const response = await axios({
       method: 'POST',
-      url: `${TFM_API}/v1/facility/${facilityId}/amendment`,
+      url: `${TFM_API_URL}/v1/facility/${facilityId}/amendment`,
       headers: { 'Content-Type': 'application/json' },
       data: { facilityId },
     });
@@ -60,11 +54,10 @@ const updateAmendment = async (facilityId, amendmentId, data) => {
   try {
     const response = await axios({
       method: 'PUT',
-      url: `${TFM_API}/v1/facility/${facilityId}/amendment/${amendmentId}`,
+      url: `${TFM_API_URL}/v1/facility/${facilityId}/amendment/${amendmentId}`,
       headers: { 'Content-Type': 'application/json' },
       data,
-    })
-      .catch((e) => new Error(e));
+    }).catch((e) => new Error(e));
 
     if (response.data) {
       return Promise.resolve(response.data);
@@ -108,11 +101,13 @@ const formatString = (string) => {
  * @param {Object} deal Deal Object
  * @returns {Integer} UKEF Deal ID
  */
-const dealId = (deal) => {
+const dealId = (deal, portal = false) => {
+  if (portal) {
+    return deal.dealType === CONSTANTS.DEAL.DEAL_TYPE.GEF ? deal.ukefDealId : deal.details.ukefDealId;
+  }
+
   if (deal && deal.dealSnapshot) {
-    return deal.dealSnapshot.dealType === CONSTANTS.DEAL.DEAL_TYPE.GEF
-      ? deal.dealSnapshot.ukefDealId
-      : deal.dealSnapshot.details.ukefDealId;
+    return deal.dealSnapshot.dealType === CONSTANTS.DEAL.DEAL_TYPE.GEF ? deal.dealSnapshot.ukefDealId : deal.dealSnapshot.details.ukefDealId;
   }
   return null;
 };
@@ -123,9 +118,7 @@ const dealId = (deal) => {
  * @returns {Integer} UKEF Deal ID
  */
 const getUkefDealIdFromObjectId = (_id) => {
-  const id = allDeals
-    .filter((d) => d._id.toString() === _id.toString())
-    .map((d) => d.dealSnapshot.ukefDealId ?? d.dealSnapshot.details.ukefDealId);
+  const id = allDeals.filter((d) => d._id.toString() === _id.toString()).map((d) => d.dealSnapshot.ukefDealId ?? d.dealSnapshot.details.ukefDealId);
   return id[0];
 };
 
@@ -161,13 +154,53 @@ const banking = async () => {
   Object.values(allDeals).forEach((deal, index) => {
     if (deal.bank) {
       const { bank } = deal;
-      const partyUrn = banks.filter((b) => b.id === bank.id).map((b) => b.partyUrn).toString();
+      const partyUrn = banks
+        .filter((b) => b.id === bank.id)
+        .map((b) => b.partyUrn)
+        .toString();
       allDeals[index].bank = {
         ...bank,
         partyUrn,
       };
     }
   });
+};
+
+const portalActionSheet = async () => {
+  try {
+    const searches = [
+      ['ukefDealId', 'Deal Number', 1],
+      ['updatedAt', 'Anticipated Issue', 6],
+    ];
+
+    await actionsheet(searches).then((data) => {
+      allDeals.forEach((deal, index) => {
+        data
+          .filter(({ ukefDealId }) => ukefDealId === dealId(deal, true))
+          .map((updates) => {
+            // Iterate over Action sheet updates
+            Object.entries(updates).map((update) => {
+              const path = update[0];
+              const value = update[1];
+
+              switch (path) {
+                case 'ukefDealId':
+                  allDeals[index].details.ukefDealId = value;
+                  break;
+                case 'updatedAt':
+                  allDeals[index].updatedAt = getUnixTime(new Date(value).setHours(0, 0, 0, 0));
+                  allDeals[index].facilitiesUpdated = getUnixTime(new Date(value).setHours(0, 0, 0, 0));
+                  break;
+                default:
+                  break;
+              }
+            });
+          });
+      });
+    });
+  } catch (e) {
+    console.error('Error parsing action sheets for portal deal', { e });
+  }
 };
 
 // ******************** TFM DEALS *************************
@@ -182,7 +215,7 @@ const supportingInformations = async () => {
     if (deal.dealSnapshot) {
       // Add exporter credit rating to the deal
       information
-        .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal) && DEAL['BANK SECURITY'].toString().trim() !== '')
+        .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal) && DEAL['BANK SECURITY']?.toString()?.trim() !== '')
         .map(({ DEAL }) => {
           const { supportingInformation } = allDeals[index].dealSnapshot;
 
@@ -201,9 +234,9 @@ const supportingInformations = async () => {
               validationErrors: {
                 count: 0,
                 errorList: {
-                  exporterQuestionnaire: {}
-                }
-              }
+                  exporterQuestionnaire: {},
+                },
+              },
             };
           }
 
@@ -222,9 +255,7 @@ const supportingInformations = async () => {
  */
 const ukefDecision = async () => {
   const comments = await workflow(CONSTANTS.WORKFLOW.FILES.COMMENTS);
-  const acceptableSubmissions = [
-    CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
-  ];
+  const acceptableSubmissions = [CONSTANTS.DEAL.SUBMISSION_TYPE.MIN];
 
   Object.values(allDeals).forEach((deal, index) => {
     // MIN only deals
@@ -238,27 +269,21 @@ const ukefDecision = async () => {
     let decision;
     let withConditions = false;
     let withoutConditions = false;
-    const decisionComment = [
-      'Deal Final Approval',
-    ];
-    const internalComment = [
-      'AR - Final Approval',
-      'Tier 1 Approval'
-    ];
+    const decisionComment = ['Deal Final Approval'];
+    const internalComment = ['AR - Final Approval', 'Tier 1 Approval'];
 
     // Concatenate decision comments
     comments
-      .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal)
-      && DEAL.COMMENT_TEXT
-      && decisionComment.includes(DEAL.TASK_NAME))
+      .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal) && DEAL.COMMENT_TEXT && decisionComment.includes(DEAL.TASK_NAME))
       .forEach(({ DEAL }) => {
         decisionComments = decisionComments.concat(decisionComments, ' ', formatString(DEAL.COMMENT_TEXT));
         withConditions = DEAL.COMMENT_TEXT.toString().indexOf('Approved with Conditions') !== -1;
 
         if (!withConditions) {
-          withoutConditions = DEAL.COMMENT_TEXT.toString().indexOf('Approved without any other conditions') !== -1
-          || DEAL.COMMENT_TEXT.toString().indexOf('approved without special conditions') !== -1
-          || DEAL.COMMENT_TEXT.toString().indexOf('Approved') !== -1;
+          withoutConditions =
+            DEAL.COMMENT_TEXT.toString().indexOf('Approved without any other conditions') !== -1 ||
+            DEAL.COMMENT_TEXT.toString().indexOf('approved without special conditions') !== -1 ||
+            DEAL.COMMENT_TEXT.toString().indexOf('Approved') !== -1;
         }
 
         if ((withConditions || withoutConditions) && DEAL.COMMENT_BY) {
@@ -268,17 +293,16 @@ const ukefDecision = async () => {
 
     // Concatenate internal comments
     comments
-      .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal)
-    && DEAL.COMMENT_TEXT
-    && internalComment.includes(DEAL.TASK_NAME))
+      .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal) && DEAL.COMMENT_TEXT && internalComment.includes(DEAL.TASK_NAME))
       .forEach(({ DEAL }) => {
         internalComments = internalComments.concat(internalComments, ' ', formatString(DEAL.COMMENT_TEXT));
       });
 
     comments
-      .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal)
-      && DEAL.COMMENT_TEXT
-      && (decisionComment.includes(DEAL.TASK_NAME) || internalComment.includes(DEAL.TASK_NAME)))
+      .filter(
+        ({ DEAL }) =>
+          DEAL['UKEF DEAL ID'] === dealId(deal) && DEAL.COMMENT_TEXT && (decisionComment.includes(DEAL.TASK_NAME) || internalComment.includes(DEAL.TASK_NAME)),
+      )
       .forEach(({ DEAL }) => {
         decision = withConditions
           ? CONSTANTS.DEAL.UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS
@@ -292,7 +316,7 @@ const ukefDecision = async () => {
               decisionComment,
               decision,
               timestamp,
-            }
+            },
           ];
         }
 
@@ -303,7 +327,6 @@ const ukefDecision = async () => {
             internalComments,
             timestamp,
             userFullName,
-
           };
         }
 
@@ -416,10 +439,7 @@ const creditRating = async () => {
  */
 const ACBS = async (facility = false) => {
   if (!facility) {
-    const acceptableSubmissions = [
-      CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
-      CONSTANTS.DEAL.SUBMISSION_TYPE.MIN
-    ];
+    const acceptableSubmissions = [CONSTANTS.DEAL.SUBMISSION_TYPE.AIN, CONSTANTS.DEAL.SUBMISSION_TYPE.MIN];
     Object.values(allDeals).forEach((d, i) => {
       if (!d.tfm.acbs && acceptableSubmissions.includes(d.dealSnapshot.submissionType)) {
         // Construct `facilities` array
@@ -443,7 +463,7 @@ const ACBS = async (facility = false) => {
             investor: {},
             guarantee: {},
             facilities,
-          }
+          },
         };
 
         // Add `acbs` object to `deal.tfm`
@@ -457,7 +477,7 @@ const ACBS = async (facility = false) => {
   } else {
     Object.values(allFacilities).forEach((f, i) => {
       if (!f.tfm.acbs) {
-      // Construct `acbs` object
+        // Construct `acbs` object
         const acbs = {
           facilityStage: f.facilitySnapshot.hasBeenIssued ? '07' : '06',
           facilityMaster: {},
@@ -491,7 +511,7 @@ const agentCommissionRate = async () => {
 
   Object.values(allDeals).forEach((deal, index) => {
     if (deal.dealSnapshot.details && deal.tfm.parties) {
-    // Add agent commission rate
+      // Add agent commission rate
       commission
         .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal))
         .map(({ DEAL }) => {
@@ -539,7 +559,7 @@ const comment = async () => {
                 firstName: author[0],
                 lastName: author[1] || '',
               },
-              label: 'Comment added'
+              label: 'Comment added',
             });
           }
 
@@ -550,7 +570,7 @@ const comment = async () => {
       facilities
         .filter(({ DEAL }) => DEAL['UKEF DEAL ID'] === dealId(deal))
         .map(({ DEAL }) => {
-          if (DEAL.FACILITY.COMMENT_TEXT) {
+          if (DEAL?.FACILITY?.COMMENT_TEXT) {
             const { _id } = deal.dealSnapshot.maker;
             const author = DEAL.FACILITY.COMMENT_BY.split(' ');
 
@@ -563,7 +583,7 @@ const comment = async () => {
                 firstName: author[0],
                 lastName: author[1] || '',
               },
-              label: 'Comment added'
+              label: 'Comment added',
             });
           }
 
@@ -593,10 +613,7 @@ const comment = async () => {
 const premiumSchedule = async () => {
   const premiumSchedules = await workflow(CONSTANTS.WORKFLOW.FILES.INCOME_EXPOSURE);
   const facilities = Object.values(allFacilities);
-  const acceptableFacilities = [
-    CONSTANTS.FACILITY.FACILITY_TYPE.BOND,
-    CONSTANTS.FACILITY.FACILITY_TYPE.LOAN
-  ];
+  const acceptableFacilities = [CONSTANTS.FACILITY.FACILITY_TYPE.BOND, CONSTANTS.FACILITY.FACILITY_TYPE.LOAN];
   let index = 0;
 
   for (const facility of facilities) {
@@ -605,10 +622,12 @@ const premiumSchedule = async () => {
       let period = 1;
       // Add pre-calculated PS to the facility
       premiumSchedules
-        .filter(({ DEAL }) =>
-          DEAL.FACILITY['UKEF FACILITY ID'] === facility.facilitySnapshot.ukefFacilityId
-        && DEAL.FACILITY.PREM_SCH
-        && DEAL.FACILITY.PREM_SCH['CURRENT INDICATOR'] === 'Y')
+        .filter(
+          ({ DEAL }) =>
+            DEAL.FACILITY['UKEF FACILITY ID'] === facility.facilitySnapshot.ukefFacilityId &&
+            DEAL.FACILITY.PREM_SCH &&
+            DEAL.FACILITY.PREM_SCH['CURRENT INDICATOR'] === 'Y',
+        )
         .map(({ DEAL }) => {
           premiums.push({
             id: period,
@@ -631,21 +650,16 @@ const premiumSchedule = async () => {
         });
 
       /**
-         * Facility has been issued in Portal V2 but has not been updated
-         * in Workflow (PS will not exists).
-         * If above is true then PS should be manually calculated by invoking
-         * PS API with desired payload.
-         *
-         * This is only applicable to facilities which are wither `Bond` or `Loan`.
-         */
+       * Facility has been issued in Portal V2 but has not been updated
+       * in Workflow (PS will not exists).
+       * If above is true then PS should be manually calculated by invoking
+       * PS API with desired payload.
+       *
+       * This is only applicable to facilities which are wither `Bond` or `Loan`.
+       */
       if (facility.facilitySnapshot.hasBeenIssued && !premiums.length && acceptableFacilities.includes(facility.facilitySnapshot.type)) {
         const { exposurePeriodInMonths, facilityGuaranteeDates } = facility.tfm;
-        const facilityPremiumSchedule = await getFacilityPremiumSchedule(
-          facility,
-          exposurePeriodInMonths,
-          facilityGuaranteeDates,
-          true
-        );
+        const facilityPremiumSchedule = await getFacilityPremiumSchedule(facility, exposurePeriodInMonths, facilityGuaranteeDates, true);
         premiums = facilityPremiumSchedule;
       }
 
@@ -656,9 +670,9 @@ const premiumSchedule = async () => {
 };
 
 /**
-* Facility data fix
-* facility.facilitySnapshot.dayCountBasis
-*/
+ * Facility data fix
+ * facility.facilitySnapshot.dayCountBasis
+ */
 const dayBasis = async () => {
   const facilities = await workflow(CONSTANTS.WORKFLOW.FILES.FACILITY);
 
@@ -677,9 +691,9 @@ const dayBasis = async () => {
 };
 
 /**
-* Facility data fix
-* facility.facilitySnapshot.feeType
-*/
+ * Facility data fix
+ * facility.facilitySnapshot.feeType
+ */
 const feeType = async () => {
   const facilities = await workflow(CONSTANTS.WORKFLOW.FILES.FACILITY);
 
@@ -714,9 +728,9 @@ const feeType = async () => {
 };
 
 /**
-* Facility data fix
-* facility.facilitySnapshot.feeFrequency
-*/
+ * Facility data fix
+ * facility.facilitySnapshot.feeFrequency
+ */
 const feeFrequency = async () => {
   const facilities = await workflow(CONSTANTS.WORKFLOW.FILES.FACILITY);
 
@@ -771,9 +785,9 @@ const amendment = async () => {
      * 1. UKEF Facility ID
      * 2. Completed
      */
-    const amends = amendments
-      .filter(({ DEAL }) => DEAL.FACILITY['UKEF FACILITY ID'] === facility.facilitySnapshot.ukefFacilityId
-      && DEAL.FACILITY.STATE === 'COMPLETE');
+    const amends = amendments.filter(
+      ({ DEAL }) => DEAL.FACILITY['UKEF FACILITY ID'] === facility.facilitySnapshot.ukefFacilityId && DEAL.FACILITY.STATE === 'COMPLETE',
+    );
 
     // Chronological sort
     amends.sort((a, b) => new Date(a.DEAL.FACILITY.DATE_CREATED).valueOf() - new Date(b.DEAL.FACILITY.DATE_CREATED).valueOf());
@@ -842,9 +856,10 @@ const amendment = async () => {
       }
 
       if (changeCoverEndDate) {
-        const currentCoverEndDate = lastAmendment && lastAmendment.DEAL.FACILITY.EXPIRY_DATE
-          ? getUnixTime(new Date(lastAmendment.DEAL.FACILITY.EXPIRY_DATE).setHours(0, 0, 0, 0))
-          : getUnixTime(new Date(ORIG_EXPIRY_DATE).setHours(0, 0, 0, 0));
+        const currentCoverEndDate =
+          lastAmendment && lastAmendment.DEAL.FACILITY.EXPIRY_DATE
+            ? getUnixTime(new Date(lastAmendment.DEAL.FACILITY.EXPIRY_DATE).setHours(0, 0, 0, 0))
+            : getUnixTime(new Date(ORIG_EXPIRY_DATE).setHours(0, 0, 0, 0));
         payload = {
           ...payload,
           currentCoverEndDate,
@@ -871,7 +886,7 @@ const amendment = async () => {
               name: PIM_COMMENT_BY,
               email: '',
               username: PIM_COMMENT_BY,
-            }
+            },
           },
           bankDecision: {
             decision: CONSTANTS.AMENDMENT.AMENDMENT_BANK_DECISION.PROCEED,
@@ -886,8 +901,8 @@ const amendment = async () => {
               name: PIM_COMMENT_BY,
               email: '',
               username: PIM_COMMENT_BY,
-            }
-          }
+            },
+          },
         };
       } else {
         // Automatic amendment
@@ -904,226 +919,11 @@ const amendment = async () => {
   }
 };
 
-// ******************** Deal Update *************************
-
-/**
- * Update portal deal
- * @param {String} id Object ID
- * @param {Object} deal Updated deal object
- * @returns {Promise} `Resolve` upon success otherwise `Reject`
- */
-const portalUpdate = async (id, deal) => portalDealUpdate(id, deal)
-  .then((r) => Promise.resolve(r))
-  .catch((e) => Promise.reject(new Error('Error updating portal deal: ', { e })));
-
-/**
- * Data fix main function, invokes various data fixes.
- * @param {Object} deals All fetched deals object
- * @returns {Object} Data fixed deals
- */
-const datafixes = async (deals) => {
-  const { dealType } = deals[0];
-
-  console.info('\x1b[33m%s\x1b[0m', `➕ 2. Applying ${dealType} deals data fixes`, '\n');
-
-  if (deals && deals.length > 0) {
-    /**
-     * Save deals to global variable for independent data fixes
-     * functions.
-     */
-    allDeals = deals;
-    let updated = 0;
-
-    // Deal - Data fixes
-    await banking();
-
-    // `BSS/EWCS` only
-    if (dealType === CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS) {
-      eligibilityCriteria();
-    }
-
-    // Update portal
-    const updates = allDeals.map(async (deal) => {
-      await portalUpdate(deal._id, deal)
-        .then((r) => {
-          if (r) {
-            updated += 1;
-            console.info('\x1b[33m%s\x1b[0m', `${updated}/${allDeals.length} data-fixed.`, '\n');
-
-            return Promise.resolve(true);
-          }
-
-          return Promise.reject();
-        })
-        .catch((e) => Promise.reject(e));
-    });
-
-    return Promise.all(updates)
-      .then(() => {
-        if (updated === allDeals.length) {
-          console.info('\x1b[33m%s\x1b[0m', `✅ All ${allDeals.length} deals have been data-fixed.`, '\n');
-
-          return Promise.resolve(allDeals);
-        }
-
-        console.error('\n\x1b[31m%s\x1b[0m', `🚩 ${updated}/${allDeals.length} have been data-fixed.\n`);
-        return Promise.reject();
-      })
-      .catch((e) => Promise.reject(e));
-  }
-
-  return Promise.reject(new Error('Empty data set for data fixes'));
-};
-
-/**
- * Data fix `BSS/EWCS` TFM deals
- * @param {Array} deals TFM deals object in an array
- * @returns {Array} deals Data fixed TFM deals object in an array
- */
-const datafixesTfmDeal = async (deals) => {
-  console.info('\x1b[33m%s\x1b[0m', `➕ 4. Data-fixing ${CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS} TFM deals.`, '\n');
-
-  try {
-    if (deals && deals.length > 0) {
-    /**
-     * Save deals to global variable for independent data fixes
-     * functions.
-     */
-      allDeals = deals;
-
-      let updated = 0;
-
-      // TFM Deal - Data fixes
-      await creditRating();
-      await partyUrn();
-      await agentCommissionRate();
-      await comment();
-      await ACBS();
-      await ukefDecision();
-      await supportingInformations();
-
-      const updates = allDeals.map(async (deal) => {
-        // Ensure `_id` are kept as ObjectId
-        const objectIdDeal = {
-          ...deal,
-          dealSnapshot: {
-            ...deal.dealSnapshot,
-            _id: ObjectId(deal.dealSnapshot._id),
-          }
-        };
-
-        objectIdDeal.dealSnapshot.facilities.map((f, i) => {
-          objectIdDeal.dealSnapshot.facilities[i]._id = ObjectId(f._id);
-          objectIdDeal.dealSnapshot.facilities[i].dealId = ObjectId(f.dealId);
-        });
-
-        await tfmDealUpdate(objectIdDeal)
-          .then((r) => {
-            if (r) {
-              updated += 1;
-              console.info('\x1b[33m%s\x1b[0m', `${updated}/${allDeals.length} deals TFM data-fixed.`, '\n');
-
-              return Promise.resolve(true);
-            }
-
-            return Promise.reject();
-          })
-          .catch((e) => Promise.reject(e));
-      });
-
-      return Promise.all(updates)
-        .then(() => {
-          if (updated === allDeals.length) {
-            console.info('\x1b[33m%s\x1b[0m', `✅ All ${allDeals.length} deals have been data-fixed.`, '\n');
-
-            return Promise.resolve(allDeals);
-          }
-          console.error('\n\x1b[31m%s\x1b[0m', `🚩 ${updated}/${allDeals.length} deals have been TFM data-fixed.\n`);
-          return Promise.reject();
-        })
-        .catch((e) => Promise.reject(e));
-    }
-
-    return Promise.reject(new Error('Empty data set for data fixes'));
-  } catch (e) {
-    console.error('Error data-fixing TFM deal: ', { e });
-    return Promise.reject(e);
-  }
-};
-
-/**
- * Data fix `BSS/EWCS` TFM facilities
- * @param {Array} deals Array of TFM deals objects
- * @returns {Array} TFM facilities data fixed, returned in as array of objects.
- */
-const datafixesTfmFacilities = async (deals) => {
-  console.info('\x1b[33m%s\x1b[0m', `➕ 5. Data-fixing ${CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS} TFM facilities.`, '\n');
-
-  try {
-    if (deals && deals.length > 0) {
-      /**
-       * Save deals and facilities to global variable
-       * for independent data fixes functions.
-       */
-
-      allDeals = deals;
-      allFacilities = await getTfmFacilities();
-      let updated = 0;
-
-      if (allFacilities && allFacilities.length > 0) {
-      // TFM Facilities - Data fixes
-        await partyUrn(true);
-        await premiumSchedule();
-        await dayBasis();
-        await feeType();
-        await feeFrequency();
-        await ACBS(true);
-        await amendment();
-
-        // Update TFM Facilities
-        const updates = allFacilities.map(async (facility) => {
-          await tfmFacilityUpdate(facility)
-            .then((r) => {
-              if (r) {
-                updated += 1;
-                console.info('\x1b[33m%s\x1b[0m', `${updated}/${allFacilities.length} facilities TFM data-fixed.`, '\n');
-
-                return Promise.resolve(true);
-              }
-
-              return Promise.reject();
-            })
-            .catch((e) => Promise.reject(e));
-        });
-
-        return Promise.all(updates)
-          .then(() => {
-            if (updated === allFacilities.length) {
-              console.info('\x1b[33m%s\x1b[0m', `✅ All ${allFacilities.length} facilities have been data-fixed.`, '\n');
-
-              return Promise.resolve(allDeals);
-            }
-            console.error('\n\x1b[31m%s\x1b[0m', `🚩 ${updated}/${allFacilities.length} facilities have been TFM data-fixed.\n`);
-            return Promise.reject();
-          })
-          .catch((e) => Promise.reject(e));
-      }
-
-      return Promise.reject(new Error('TFM Facilities void data set'));
-    }
-
-    return Promise.reject(new Error('TFM deals void data set'));
-  } catch (e) {
-    console.error('Error data-fixing TFM facilities: ', { e });
-    return Promise.reject(e);
-  }
-};
-
 // ******************** ACTION SHEETS *************************
 /**
  * Updates `GEF` TFM deal from action sheet
  */
-const actionSheetDeal = async () => {
+const actionSheetDealGef = async () => {
   try {
     const searches = [
       ['ukefDealId', 'Deal Number', 1],
@@ -1132,36 +932,88 @@ const actionSheetDeal = async () => {
       ['parties.exporter', 'Exporter UR Number', 1],
     ];
 
-    actionsheet(searches)
-      .then((data) => {
-        allDeals
-          .forEach((deal, index) => {
-            data
-              .filter(({ ukefDealId }) => ukefDealId === dealId(deal))
-              .map((updates) => {
-                // Iterate over Action sheet updates
-                Object.entries(updates)
-                  .map((update) => {
-                    const path = update[0];
-                    const value = update[1];
+    actionsheet(searches).then((data) => {
+      allDeals.forEach((deal, index) => {
+        data
+          .filter(({ ukefDealId }) => ukefDealId === dealId(deal))
+          .map((updates) => {
+            // Iterate over Action sheet updates
+            Object.entries(updates).map((update) => {
+              const path = update[0];
+              const value = update[1];
 
-                    switch (path) {
-                      case 'exporterCreditRating':
-                        allDeals[index].tfm.exporterCreditRating = value;
-                        break;
-                      case 'lossGivenDefault':
-                        allDeals[index].tfm.lossGivenDefault = value;
-                        break;
-                      case 'parties.exporter':
-                        allDeals[index].tfm.parties.exporter.partyUrn = value;
-                        break;
-                      default:
-                        break;
-                    }
-                  });
-              });
+              switch (path) {
+                case 'exporterCreditRating':
+                  allDeals[index].tfm.exporterCreditRating = value;
+                  break;
+                case 'lossGivenDefault':
+                  allDeals[index].tfm.lossGivenDefault = value;
+                  break;
+                case 'parties.exporter':
+                  allDeals[index].tfm.parties.exporter.partyUrn = value;
+                  break;
+                default:
+                  break;
+              }
+            });
           });
       });
+    });
+  } catch (e) {
+    console.error('Error parsing action sheets for deal', { e });
+  }
+};
+
+/**
+ * Updates `BSS/EWCS` TFM deal from action sheet
+ */
+const actionSheetDeal = async () => {
+  try {
+    const searches = [
+      ['ukefDealId', 'Deal Number', 1],
+      ['exporterCreditRating', 'Credit Rating Code', 3],
+      ['lossGivenDefault', 'Loss Given Default', 3],
+      ['parties.exporter', 'Exporter UR Number', 1],
+      ['parties.exporter', 'Guarantor', 2],
+      ['updatedAt', 'Anticipated Issue', 6],
+    ];
+
+    actionsheet(searches).then((data) => {
+      allDeals.forEach((deal, index) => {
+        data
+          .filter(({ ukefDealId }) => ukefDealId === dealId(deal))
+          .map((updates) => {
+            // Iterate over Action sheet updates
+            Object.entries(updates).map((update) => {
+              const path = update[0];
+              const value = update[1];
+
+              switch (path) {
+                case 'ukefDealId':
+                  allDeals[index].dealSnapshot.details.ukefDealId = value;
+                  break;
+                case 'exporterCreditRating':
+                  allDeals[index].tfm.exporterCreditRating = value;
+                  break;
+                case 'lossGivenDefault':
+                  allDeals[index].tfm.lossGivenDefault = value;
+                  break;
+                case 'parties.exporter':
+                  allDeals[index].tfm.parties.exporter.partyUrn = value;
+                  break;
+                case 'updatedAt':
+                  allDeals[index].dealSnapshot.updatedAt = getUnixTime(new Date(value).setHours(0, 0, 0, 0));
+                  allDeals[index].dealSnapshot.facilitiesUpdated = getUnixTime(new Date(value).setHours(0, 0, 0, 0));
+                  allDeals[index].tfm.lastUpdated = getUnixTime(new Date(value).setHours(0, 0, 0, 0));
+                  allDeals[index].tfm.dateReceived = format(value, 'dd-MM-yyyy');
+                  break;
+                default:
+                  break;
+              }
+            });
+          });
+      });
+    });
   } catch (e) {
     console.error('Error parsing action sheets for deal', { e });
   }
@@ -1173,9 +1025,10 @@ const actionSheetDeal = async () => {
  * @param {Object} deal Updated deal object
  * @returns {Promise} `Resolve` upon success otherwise `Reject`
  */
-const portalUpdateFacility = async (id, facility) => portalFacilityUpdate(id, facility)
-  .then((r) => Promise.resolve(r))
-  .catch((e) => Promise.reject(new Error('Error updating portal facility: ', { e })));
+const portalUpdateFacility = async (id, facility) =>
+  portalFacilityUpdate(id, facility)
+    .then((r) => Promise.resolve(r))
+    .catch((e) => Promise.reject(new Error('Error updating portal facility: ', { e })));
 
 /**
  * Updates `BSS/EWCS` TFM facilities from action sheet
@@ -1187,38 +1040,39 @@ const actionSheetFacility = async () => {
       ['coverEndDate', 'Guarantee Expiry', 6],
       ['coverStartDate', 'Anticipated Issue', 2],
       ['coverPercentage', 'Banks Fees', 4],
+      ['bondIssuerPartyUrn', 'Bond Giver', 2],
     ];
 
-    await actionsheet(searches)
-      .then((data) => {
-        allFacilities
-          .forEach((facility, index) => {
-            data
-              .filter(({ ukefFacilityId }) => ukefFacilityId === facility.facilitySnapshot.ukefFacilityId)
-              .map((updates) => {
-                // Iterate over Action sheet updates
-                Object.entries(updates)
-                  .map((update) => {
-                    const path = update[0];
-                    const value = update[1];
+    await actionsheet(searches).then((data) => {
+      allFacilities.forEach((facility, index) => {
+        data
+          .filter(({ ukefFacilityId }) => ukefFacilityId === facility.facilitySnapshot.ukefFacilityId)
+          .map((updates) => {
+            // Iterate over Action sheet updates
+            Object.entries(updates).map((update) => {
+              const path = update[0];
+              const value = update[1];
 
-                    switch (path) {
-                      case 'coverEndDate':
-                        allFacilities[index].facilitySnapshot.coverEndDate = value;
-                        break;
-                      case 'coverStartDate':
-                        allFacilities[index].facilitySnapshot.coverStartDate = value;
-                        break;
-                      case 'coverPercentage':
-                        allFacilities[index].facilitySnapshot.coverPercentage = value;
-                        break;
-                      default:
-                        break;
-                    }
-                  });
-              });
+              switch (path) {
+                case 'coverEndDate':
+                  allFacilities[index].facilitySnapshot.coverEndDate = value;
+                  break;
+                case 'coverStartDate':
+                  allFacilities[index].facilitySnapshot.coverStartDate = value;
+                  break;
+                case 'coverPercentage':
+                  allFacilities[index].facilitySnapshot.coverPercentage = value;
+                  break;
+                case 'bondIssuerPartyUrn':
+                  allFacilities[index].tfm.bondIssuerPartyUrn = value;
+                  break;
+                default:
+                  break;
+              }
+            });
           });
       });
+    });
   } catch (e) {
     console.error('Error parsing action sheets for deal', { e });
   }
@@ -1234,40 +1088,37 @@ const actionSheetFacilityPortal = async () => {
       ['coverPercentage', 'Banks Fees', 4],
     ];
 
-    await actionsheet(searches)
-      .then((data) => {
-        allFacilities
-          .forEach((facility, index) => {
-            data
-              .filter(({ ukefFacilityId }) => ukefFacilityId === facility.ukefFacilityId)
-              .map((updates) => {
-                // Iterate over Action sheet updates
-                Object.entries(updates)
-                  .map((update) => {
-                    const path = update[0];
-                    const value = update[1];
-                    switch (path) {
-                      case 'coverEndDate':
-                        // antipated issue if null
-                        if (value !== 'Anticipated Issue') {
-                          allFacilities[index].coverEndDate = value;
-                        }
-                        break;
-                      case 'coverStartDate':
-                        if (value !== 'Anticipated Issue') {
-                          allFacilities[index].coverStartDate = value;
-                        }
-                        break;
-                      case 'coverPercentage':
-                        allFacilities[index].coverPercentage = value;
-                        break;
-                      default:
-                        break;
-                    }
-                  });
-              });
+    await actionsheet(searches).then((data) => {
+      allFacilities.forEach((facility, index) => {
+        data
+          .filter(({ ukefFacilityId }) => ukefFacilityId === facility.ukefFacilityId)
+          .map((updates) => {
+            // Iterate over Action sheet updates
+            Object.entries(updates).map((update) => {
+              const path = update[0];
+              const value = update[1];
+              switch (path) {
+                case 'coverEndDate':
+                  // antipated issue if null
+                  if (value !== 'Anticipated Issue') {
+                    allFacilities[index].coverEndDate = value;
+                  }
+                  break;
+                case 'coverStartDate':
+                  if (value !== 'Anticipated Issue') {
+                    allFacilities[index].coverStartDate = value;
+                  }
+                  break;
+                case 'coverPercentage':
+                  allFacilities[index].coverPercentage = value;
+                  break;
+                default:
+                  break;
+              }
+            });
           });
       });
+    });
   } catch (e) {
     console.error('Error parsing action sheets for facility', { e });
   }
@@ -1337,15 +1188,15 @@ const datafixTfmDealGef = async (deals) => {
 
   try {
     if (deals && deals.length > 0) {
-    /**
-     * Save deals to global variable for independent data fixes
-     * functions.
-     */
+      /**
+       * Save deals to global variable for independent data fixes
+       * functions.
+       */
       allDeals = deals;
       let updated = 0;
 
       // TFM Deal - Action sheet data fixes
-      await actionSheetDeal();
+      await actionSheetDealGef();
       await ACBS();
 
       const updates = allDeals.map(async (deal) => {
@@ -1403,7 +1254,7 @@ const datafixesTfmFacilitiesGef = async (deals) => {
       let updated = 0;
 
       if (allFacilities && allFacilities.length > 0) {
-      // TFM Facilities - Data fixes
+        // TFM Facilities - Data fixes
         await actionSheetFacility();
         await ACBS(true);
 
@@ -1446,11 +1297,231 @@ const datafixesTfmFacilitiesGef = async (deals) => {
   }
 };
 
+// ******************** Deal Update *************************
+
+/**
+ * Update portal deal
+ * @param {String} id Object ID
+ * @param {Object} deal Updated deal object
+ * @returns {Promise} `Resolve` upon success otherwise `Reject`
+ */
+const portalUpdate = async (id, deal) =>
+  portalDealUpdate(id, deal)
+    .then((r) => Promise.resolve(r))
+    .catch((e) => Promise.reject(new Error('Error updating portal deal: ', { e })));
+
+/**
+ * Data fix main function, invokes various data fixes.
+ * @param {Object} deals All fetched deals object
+ * @returns {Object} Data fixed deals
+ */
+const datafixes = async (deals) => {
+  const { dealType } = deals[0];
+
+  console.info('\x1b[33m%s\x1b[0m', `➕ 2. Applying ${dealType} deals data fixes`, '\n');
+
+  if (deals && deals.length > 0) {
+    /**
+     * Save deals to global variable for independent data fixes
+     * functions.
+     */
+    allDeals = deals;
+    let updated = 0;
+
+    // Deal - Data fixes
+    await banking();
+
+    // `BSS/EWCS` only
+    if (dealType === CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS) {
+      eligibilityCriteria();
+    }
+
+    await portalActionSheet();
+
+    // Update portal
+    const updates = allDeals.map(async (deal) => {
+      await portalUpdate(deal._id, deal)
+        .then((r) => {
+          if (r) {
+            updated += 1;
+            console.info('\x1b[33m%s\x1b[0m', `${updated}/${allDeals.length} data-fixed.`, '\n');
+
+            return Promise.resolve(true);
+          }
+
+          return Promise.reject();
+        })
+        .catch((e) => Promise.reject(e));
+    });
+
+    return Promise.all(updates)
+      .then(() => {
+        if (updated === allDeals.length) {
+          console.info('\x1b[33m%s\x1b[0m', `✅ All ${allDeals.length} deals have been data-fixed.`, '\n');
+
+          return Promise.resolve(allDeals);
+        }
+
+        console.error('\n\x1b[31m%s\x1b[0m', `🚩 ${updated}/${allDeals.length} have been data-fixed.\n`);
+        return Promise.reject();
+      })
+      .catch((e) => Promise.reject(e));
+  }
+
+  return Promise.reject(new Error('Empty data set for data fixes'));
+};
+
+/**
+ * Data fix `BSS/EWCS` TFM deals
+ * @param {Array} deals TFM deals object in an array
+ * @returns {Array} deals Data fixed TFM deals object in an array
+ */
+const datafixesTfmDeal = async (deals) => {
+  console.info('\x1b[33m%s\x1b[0m', `➕ 4. Data-fixing ${CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS} TFM deals.`, '\n');
+
+  try {
+    if (deals && deals.length > 0) {
+      /**
+       * Save deals to global variable for independent data fixes
+       * functions.
+       */
+      allDeals = deals;
+
+      let updated = 0;
+
+      // TFM Deal - Data fixes
+      await actionSheetDeal();
+      await creditRating();
+      await partyUrn();
+      await agentCommissionRate();
+      await comment();
+      await ACBS();
+      await ukefDecision();
+      await supportingInformations();
+
+      const updates = allDeals.map(async (deal) => {
+        // Ensure `_id` are kept as ObjectId
+        const objectIdDeal = {
+          ...deal,
+          dealSnapshot: {
+            ...deal.dealSnapshot,
+            _id: ObjectId(deal.dealSnapshot._id),
+          },
+        };
+
+        objectIdDeal.dealSnapshot.facilities.map((f, i) => {
+          objectIdDeal.dealSnapshot.facilities[i]._id = ObjectId(f._id);
+          objectIdDeal.dealSnapshot.facilities[i].dealId = ObjectId(f.dealId);
+        });
+
+        await tfmDealUpdate(objectIdDeal)
+          .then((r) => {
+            if (r) {
+              updated += 1;
+              console.info('\x1b[33m%s\x1b[0m', `${updated}/${allDeals.length} deals TFM data-fixed.`, '\n');
+
+              return Promise.resolve(true);
+            }
+
+            return Promise.reject();
+          })
+          .catch((e) => Promise.reject(e));
+      });
+
+      return Promise.all(updates)
+        .then(() => {
+          if (updated === allDeals.length) {
+            console.info('\x1b[33m%s\x1b[0m', `✅ All ${allDeals.length} deals have been data-fixed.`, '\n');
+
+            return Promise.resolve(allDeals);
+          }
+          console.error('\n\x1b[31m%s\x1b[0m', `🚩 ${updated}/${allDeals.length} deals have been TFM data-fixed.\n`);
+          return Promise.reject();
+        })
+        .catch((e) => Promise.reject(e));
+    }
+
+    return Promise.reject(new Error('Empty data set for data fixes'));
+  } catch (e) {
+    console.error('Error data-fixing TFM deal: ', { e });
+    return Promise.reject(e);
+  }
+};
+
+/**
+ * Data fix `BSS/EWCS` TFM facilities
+ * @param {Array} deals Array of TFM deals objects
+ * @returns {Array} TFM facilities data fixed, returned in as array of objects.
+ */
+const datafixesTfmFacilities = async (deals) => {
+  console.info('\x1b[33m%s\x1b[0m', `➕ 5. Data-fixing ${CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS} TFM facilities.`, '\n');
+
+  try {
+    if (deals && deals.length > 0) {
+      /**
+       * Save deals and facilities to global variable
+       * for independent data fixes functions.
+       */
+
+      allDeals = deals;
+      allFacilities = await getTfmFacilities();
+      let updated = 0;
+
+      if (allFacilities && allFacilities.length > 0) {
+        // TFM Facilities - Data fixes
+        await actionSheetFacility();
+        await partyUrn(true);
+        await premiumSchedule();
+        await dayBasis();
+        await feeType();
+        await feeFrequency();
+        await ACBS(true);
+        await amendment();
+
+        // Update TFM Facilities
+        const updates = allFacilities.map(async (facility) => {
+          await tfmFacilityUpdate(facility)
+            .then((r) => {
+              if (r) {
+                updated += 1;
+                console.info('\x1b[33m%s\x1b[0m', `${updated}/${allFacilities.length} facilities TFM data-fixed.`, '\n');
+
+                return Promise.resolve(true);
+              }
+
+              return Promise.reject();
+            })
+            .catch((e) => Promise.reject(e));
+        });
+
+        return Promise.all(updates)
+          .then(() => {
+            if (updated === allFacilities.length) {
+              console.info('\x1b[33m%s\x1b[0m', `✅ All ${allFacilities.length} facilities have been data-fixed.`, '\n');
+
+              return Promise.resolve(allDeals);
+            }
+            console.error('\n\x1b[31m%s\x1b[0m', `🚩 ${updated}/${allFacilities.length} facilities have been TFM data-fixed.\n`);
+            return Promise.reject();
+          })
+          .catch((e) => Promise.reject(e));
+      }
+
+      return Promise.reject(new Error('TFM Facilities void data set'));
+    }
+
+    return Promise.reject(new Error('TFM deals void data set'));
+  } catch (e) {
+    console.error('Error data-fixing TFM facilities: ', { e });
+    return Promise.reject(e);
+  }
+};
+
 module.exports = {
   datafixes,
   datafixesTfmDeal,
   datafixesTfmFacilities,
   datafixTfmDealGef,
   datafixesTfmFacilitiesGef,
-  datafixesFacilities
+  datafixesFacilities,
 };

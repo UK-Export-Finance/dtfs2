@@ -16,7 +16,7 @@ const { datafixes, datafixTfmDealGef, datafixesTfmFacilitiesGef } = require('../
 const { sleep } = require('../helpers/io');
 
 const version = '0.0.1';
-const { TFM_API } = process.env;
+const { TFM_API_URL } = process.env;
 const allTfmDeals = [];
 
 // ******************** DEALS *************************
@@ -100,7 +100,7 @@ const tfm = async (data) => {
   for (const deal of data) {
     await axios({
       method: 'put',
-      url: `${TFM_API}/v1/deals/submit`,
+      url: `${TFM_API_URL}/v1/deals/submit`,
       headers: {
         'Content-Type': 'application/json',
       },

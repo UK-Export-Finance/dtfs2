@@ -2,6 +2,7 @@
  * I/O helper functions
  */
 const fs = require('fs');
+const paths = require('path');
 const { open, get } = require('./actionsheets');
 
 /**
@@ -53,11 +54,11 @@ const workflow = async (type) => {
     return Promise.reject(new Error('Please specify file type'));
   }
 
-  const path = './json';
+  const path = 'json';
   const file = getFilename(type);
 
   try {
-    const uri = `${path}/${file}`;
+    const uri = paths.resolve(__dirname, `${path}/${file}`);
     const data = fs.readFileSync(uri, 'utf8');
 
     if (data) {

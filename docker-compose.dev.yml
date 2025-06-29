@@ -26,7 +26,7 @@ services:
       - ./dtfs-central-api/src:/app/src:ro
     environment:
       - PORT=5005
-      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - EXTERNAL_API_URL=http://reference-data-proxy:5002
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - TZ=Europe/London
@@ -47,7 +47,7 @@ services:
     environment:
       - PORT=5003
       - TRADE_FINANCE_MANAGER_API_URL=http://trade-finance-manager-api:5004
-      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - EXTERNAL_API_URL=http://reference-data-proxy:5002
       - UKEF_TFM_API_SYSTEM_KEY=${UKEF_TFM_API_SYSTEM_KEY}
       - ESTORE_URL=${ESTORE_URL}
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
@@ -71,7 +71,7 @@ services:
       - ./trade-finance-manager-api/src:/app/src:ro
     environment:
       - PORT=5004
-      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - EXTERNAL_API_URL=http://reference-data-proxy:5002
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
@@ -104,7 +104,7 @@ services:
       - DEAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
-      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - EXTERNAL_API_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
       - REDIS_HOSTNAME=redis
       - TZ=Europe/London
@@ -141,7 +141,7 @@ services:
       - GOV_NOTIFY_API_KEY
       - GOV_NOTIFY_EMAIL_RECIPIENT
       - DTFS_PORTAL_SCHEDULER=true
-      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - EXTERNAL_API_URL=http://reference-data-proxy:5002
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - TFM_API=http://trade-finance-manager-api:5004
       - V1_FILE_SHARE_SAS=${V1_FILE_SHARE_SAS}
@@ -192,7 +192,7 @@ services:
       - GOV_NOTIFY_API_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
       - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
-      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - EXTERNAL_API_URL=http://reference-data-proxy:5002
       - TZ=Europe/London
     entrypoint: npx nodemon src/index.ts -L --max-old-space-size=300
 
@@ -214,7 +214,7 @@ services:
       - DEAL_API_URL=http://portal-api:5001
       - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
       - COMPANIES_HOUSE_API_KEY
-      - REFERENCE_DATA_PROXY_URL=http://reference-data-proxy:5002
+      - EXTERNAL_API_URL=http://reference-data-proxy:5002
       - SESSION_SECRET
       - REDIS_HOSTNAME=redis
       - AZURE_PORTAL_STORAGE_ACCOUNT

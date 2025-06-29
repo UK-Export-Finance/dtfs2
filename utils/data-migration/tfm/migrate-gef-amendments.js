@@ -12,13 +12,13 @@ const CONSTANTS = require('../constant');
 const { open } = require('../helpers/actionsheets');
 
 const version = '0.0.1';
-const TFM_API = 'http://localhost:5004';
+const TFM_API_URL = 'http://localhost:5004';
 
 const createFacilityAmendment = async (facilityId) => {
   try {
     const response = await axios({
       method: 'post',
-      url: `${TFM_API}/v1/facility/${facilityId}/amendment`,
+      url: `${TFM_API_URL}/v1/facility/${facilityId}/amendment`,
       headers: { 'Content-Type': 'application/json' },
       data: { facilityId },
     });
@@ -34,7 +34,7 @@ const updateAmendment = async (facilityId, amendmentId, data) => {
   try {
     const response = await axios({
       method: 'put',
-      url: `${TFM_API}/v1/facility/${facilityId}/amendment/${amendmentId}`,
+      url: `${TFM_API_URL}/v1/facility/${facilityId}/amendment/${amendmentId}`,
       headers: { 'Content-Type': 'application/json' },
       data,
     });

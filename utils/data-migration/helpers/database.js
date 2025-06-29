@@ -3,7 +3,7 @@
  * Database connection helper functions
  */
 
-require('dotenv').config({ path: '../../../.env' });
+require('dotenv').config({ path: '../../.env' });
 const { ObjectId } = require('mongodb');
 const { MongoClient } = require('mongodb');
 const { updateDeal } = require('../../../trade-finance-manager-api/src/v1/api');

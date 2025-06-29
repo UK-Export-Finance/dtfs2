@@ -5,7 +5,7 @@ import axios from 'axios';
 
 dotenv.config();
 
-const referenceProxyUrl = process.env.REFERENCE_DATA_PROXY_URL;
+const referenceProxyUrl = process.env.EXTERNAL_API_URL;
 const notifyKey: any = '0';
 const notifyClient = new NotifyClient(notifyKey);
 
