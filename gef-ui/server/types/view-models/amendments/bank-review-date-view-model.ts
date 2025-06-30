@@ -7,5 +7,6 @@ export type BankReviewDateViewModel = {
   previousPage: string;
   cancelUrl: string;
   errors?: ViewModelErrors | null;
+  canMakerCancelAmendment: boolean;
   bankReviewDate?: DayMonthYearInput | null;
 };

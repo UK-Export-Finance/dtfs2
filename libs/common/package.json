@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "@azure/msal-node": "^2.16.2",
-    "@types/lodash": "^4.17.18",
+    "@types/lodash": "^4.17.19",
     "axios": "1.8.2",
     "big.js": "^6.2.2",
     "date-fns": "^3.3.1",

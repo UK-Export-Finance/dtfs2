@@ -7,5 +7,6 @@ export type CoverEndDateViewModel = {
   facilityType: FacilityType;
   previousPage: string;
   cancelUrl: string;
+  canMakerCancelAmendment: boolean;
   errors?: ViewModelErrors | null;
 };

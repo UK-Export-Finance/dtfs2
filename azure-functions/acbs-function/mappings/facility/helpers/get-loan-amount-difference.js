@@ -1,4 +1,5 @@
 const CONSTANTS = require('../../../constants');
+const getGefFacilityPercentage = require('./get-gef-facility-fixed-percentage');
 
 const { FACILITY } = CONSTANTS;
 
@@ -8,7 +9,7 @@ const { FACILITY } = CONSTANTS;
  * Due to APIM API restriction a new amended UKEF exposure amount cannot
  * be send in a payload, instead difference between the amount is expected.
  *
- * `GEF` facilities type will return 10% of the difference.
+ * `GEF` =  70% for `Contingent` and 85% for `Cash` facilities, unless specified otherwise from an environment variable.
  * `Bond` facility type will return the full difference.
  * @param {number} ukefExposure UKEF Exposure
  * @param {string} type Facility Type
@@ -20,12 +21,12 @@ const getLoanAmountDifference = (ukefExposure, type, facilityMasterRecord) => {
     const { maximumLiability } = facilityMasterRecord;
     const difference = ukefExposure - maximumLiability;
 
-    // GEF Facility - 10% of difference
+    // GEF facilities
     if (type === FACILITY.FACILITY_TYPE.CASH || type === FACILITY.FACILITY_TYPE.CONTINGENT) {
-      return difference * 0.1;
+      return difference * getGefFacilityPercentage(type);
     }
 
-    // Bond Facility - Full amount
+    // Bond and loan Facilities - Full amount
     return difference;
   }
 
