@@ -5,16 +5,16 @@ import { PortalFacilityAmendment } from '../types';
  * @param amendments Array of amendments
  * @returns Map of facilityId to latest amendment
  */
-export function getLatestAmendmentsByFacility(amendments: PortalFacilityAmendment[]): Record<string, PortalFacilityAmendment> {
-  const latest: Record<string, PortalFacilityAmendment> = {};
+export const getLatestAmendmentsByFacility = (amendments: PortalFacilityAmendment[]): Record<string, PortalFacilityAmendment> => {
+  return amendments.reduce<Record<string, PortalFacilityAmendment>>((latest, amendment) => {
+    const amendmentFacilityId = amendment.facilityId.toString();
 
-  for (const amendment of amendments) {
-    const current = latest[amendment.facilityId.toString()];
+    const current = latest[amendmentFacilityId];
 
     if (!current || amendment.updatedAt > current.updatedAt) {
-      latest[amendment.facilityId.toString()] = amendment;
+      return { ...latest, [amendmentFacilityId]: amendment };
     }
-  }
 
-  return latest;
-}
+    return latest;
+  }, {});
+};

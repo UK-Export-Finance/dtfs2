@@ -56,10 +56,19 @@ const eligibilityCriteriaItems = (coverUrl) => [
   },
 ];
 
+/**
+ * Generates an array of facility items to display on the facility summary lists on the application details page.
+ * @param {String} facilityUrl url for the facility
+ * @param {Facility} details facility details
+ * @param {Record<string, PortalFacilityAmendment>} latestAmendments - object with the latest amendment for each facility.
+ * @param {Number} dealVersion
+ * @returns {Array} Array of facility items with label, id, href, method, suffix, and isHidden properties.
+ */
 const facilityItems = (facilityUrl, details, latestAmendments, dealVersion) => {
   const { _id, type, hasBeenIssued, shouldCoverStartOnSubmission, ukefFacilityId, feeType, issueDate, isUsingFacilityEndDate, facilityStage } = details;
 
-  const latestAmendment = latestAmendments[_id?.toString()];
+  const stringMongoId = _id?.toString();
+  const latestAmendment = latestAmendments[stringMongoId];
 
   const AT_MATURITY = 'At maturity';
   return [

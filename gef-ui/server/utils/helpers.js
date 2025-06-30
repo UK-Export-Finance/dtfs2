@@ -1,4 +1,4 @@
-const { FACILITY_PROVIDED_DETAILS, DEAL_STATUS, amendmentStatusTagColour } = require('@ukef/dtfs2-common');
+const { FACILITY_PROVIDED_DETAILS, DEAL_STATUS, getAmendmentStatusTagColour } = require('@ukef/dtfs2-common');
 const httpError = require('http-errors');
 const lodashIsEmpty = require('lodash/isEmpty');
 const commaNumber = require('comma-number');
@@ -355,6 +355,16 @@ const summaryItemsConditions = (summaryItemsObj) => {
   return summaryItems.length ? summaryItems : generateActionsArrayForItem({ id: item.id });
 };
 
+/**
+ * Maps the summary list for facility summary lists on the application details page.
+ * Generates key, values and actions for each row in the summary list.
+ * @param {Object} data - facility data
+ * @param {Array} itemsToShow rows to show in the summary list
+ * @param {Object} mapSummaryParams - summary list parameters
+ * @param {Record<string, PortalFacilityAmendment>} latestAmendments - object with the latest amendment for each facility.
+ * @param {Boolean} preview if application is in preview mode - defaults to false
+ * @returns {Array} Mapped summary list for the facility - Array of objects with key, value and actions.
+ */
 const mapSummaryList = (data, itemsToShow, mapSummaryParams, latestAmendments, preview = false) => {
   const { app, user, hasChangedFacilities } = mapSummaryParams;
 
@@ -383,7 +393,7 @@ const mapSummaryList = (data, itemsToShow, mapSummaryParams, latestAmendments, p
      * returns html with the tag and colour
      */
     if (options?.isLatestAmendmentStatus) {
-      const colour = amendmentStatusTagColour(options.isLatestAmendmentStatus);
+      const colour = getAmendmentStatusTagColour(options.isLatestAmendmentStatus);
 
       return {
         html: `<strong class="govuk-tag govuk-tag--${colour}" data-cy="amendment-status-${details._id}">${options.isLatestAmendmentStatus}</strong>`,
@@ -430,9 +440,12 @@ const mapSummaryList = (data, itemsToShow, mapSummaryParams, latestAmendments, p
   return itemsToShow.map((item) => {
     const { label, prefix, suffix, method, isCurrency, isIndustry, isDetails, isHidden, shouldCoverStartOnSubmission, issueDate } = item;
 
-    // if the latestAmendments object contains an amendment for the current facility,
-    // set the latestAmendmentStatus to the status of that amendment
-    if (latestAmendments?.[details._id]) {
+    /**
+     * if the latestAmendments object contains an amendment for the current facility,
+     * set the latestAmendmentStatus to the status of that amendment
+     * */
+    const facilityMongoId = details._id;
+    if (latestAmendments?.[facilityMongoId]) {
       details.latestAmendmentStatus = latestAmendments[details._id].status;
     }
 

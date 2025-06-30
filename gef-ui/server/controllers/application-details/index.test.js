@@ -823,7 +823,7 @@ describe('controllers/application-details', () => {
         );
       });
 
-      it('should render `application-preview` with amendment status row and a status tag when amendment is acknowledged', async () => {
+      it(`should render 'application-preview' with amendment status row and a status tag when amendment is ${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}`, async () => {
         mockGetSubmittedDetailsResponse.portalAmendmentStatus = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
         mockGetSubmittedDetailsResponse.isPortalAmendmentInProgress = true;
         mockGetSubmittedDetailsResponse.facilityIdWithAmendmentInProgress = 'other-id';
@@ -863,7 +863,7 @@ describe('controllers/application-details', () => {
         );
       });
 
-      it('should render `application-preview` with amendment status row and a status tag when amendment is in progress', async () => {
+      it(`should render 'application-preview' with amendment status row and a status tag when amendment is ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}`, async () => {
         mockGetSubmittedDetailsResponse.portalAmendmentStatus = PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL;
         mockGetSubmittedDetailsResponse.isPortalAmendmentInProgress = true;
         mockGetSubmittedDetailsResponse.facilityIdWithAmendmentInProgress = 'other-id';

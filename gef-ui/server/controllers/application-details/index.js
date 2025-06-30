@@ -73,6 +73,7 @@ function buildHeader(app) {
  * @async
  * @function buildBody
  * @param {Object} app - The application object containing all deal and facility data.
+ * @param {Record<string, PortalFacilityAmendment>} latestAmendments - object with the latest amendment for each facility.
  * @param {boolean} previewMode - Indicates if the application is in preview mode.
  * @param {Object} user - The user object representing the current user.
  * @returns {Promise<Object>} The constructed application body object with all relevant details for rendering.
@@ -211,6 +212,7 @@ const buildActions = (app) => {
  * @async
  * @function
  * @param {Object} app - The application data object.
+ * @param {Record<string, PortalFacilityAmendment>} latestAmendments - object with the latest amendment for each facility.
  * @param {boolean} previewMode - Flag indicating if the view is in preview mode.
  * @param {Object} user - The user object requesting the view.
  * @returns {Promise<Object>} The combined view object containing header, body, and actions.
@@ -376,10 +378,10 @@ const applicationDetails = async (req, res, next) => {
       params.link += '/unissued-facilities';
     }
 
-    const amendmentsInProgressOnDeal = amendmentsOnDeal.filter((amendment) => PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(amendment.status));
+    const dealAmendmentsInProgress = amendmentsOnDeal.filter((amendment) => PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(amendment.status));
 
     // array of facility ids that are currently being amended
-    const amendmentsInProgress = amendmentsInProgressOnDeal.map((amendment) => {
+    const amendmentsInProgress = dealAmendmentsInProgress.map((amendment) => {
       const { amendmentId, facilityId: amendmentFacilityId, status } = amendment;
 
       return {

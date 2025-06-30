@@ -1,20 +1,20 @@
-import { PORTAL_AMENDMENT_STATUS } from '../constants';
+import { PORTAL_AMENDMENT_STATUS, STATUS_TAG_COLOURS } from '../constants';
 import { PortalAmendmentStatus } from '../types';
 
 /**
- * returns the colour of the amendment status tag based on amendment status
+ * Returns the facility amendment status tag colour with regards to its status.
  * @param status amendment status
  * @returns string representing the colour of the tag
  */
-export const amendmentStatusTagColour = (status: PortalAmendmentStatus) => {
+export const getAmendmentStatusTagColour = (status: PortalAmendmentStatus) => {
   switch (status) {
     case PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL:
-      return 'blue';
+      return STATUS_TAG_COLOURS.BLUE;
     case PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED:
-      return 'blue';
+      return STATUS_TAG_COLOURS.BLUE;
     case PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED:
-      return 'green';
+      return STATUS_TAG_COLOURS.GREEN;
     default:
-      return 'grey';
+      return STATUS_TAG_COLOURS.GREY;
   }
 };
