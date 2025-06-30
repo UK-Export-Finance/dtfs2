@@ -11,7 +11,7 @@ const { getLatestEligibilityCriteria } = require('./eligibilityCriteria.controll
 const { escapeOperators } = require('../helpers/escapeOperators');
 const api = require('../api');
 const computeSkipPosition = require('../helpers/computeSkipPosition');
-const { addLatestAmendmentUpdatedAtToDeals } = require('../helpers/add-latest-amendment-updatedAt-to-deals');
+const { getDealUpdatedAt } = require('../helpers/get-deal-updatedAt');
 
 /**
  * Find a deal (BSS, EWCS only)
@@ -266,7 +266,7 @@ exports.getQueryAllDeals = async (req, res) => {
       results.deals.map(async (deal) => {
         const amendments = await api.getFacilityAmendmentsOnDeal(deal._id, [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED]);
 
-        return addLatestAmendmentUpdatedAtToDeals(deal, amendments);
+        return getDealUpdatedAt(deal, amendments);
       }),
     );
     results.deals = dealsWithLatestAmendment;
