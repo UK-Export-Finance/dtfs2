@@ -75,7 +75,7 @@ context('Amendments - Dashboard - Dashboard page when amendment is in-progress b
       cy.login(BANK1_CHECKER1);
     });
 
-    it('shouldnot  show the dashboard deals link for the deal', () => {
+    it('should not show the dashboard deals link for the deal', () => {
       dashboardDeals.row.link(dealId).should('not.exist');
     });
   });

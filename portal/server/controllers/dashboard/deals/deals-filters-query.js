@@ -37,10 +37,12 @@ const dashboardDealsFiltersQuery = async (filters, user, userToken) => {
 
       if (checkersApprovalAmendmentDealIds?.length) {
         /**
-         * add and query to the orQuery
-         * If there are amendments ready for checkers approval,
-         * AND if the deal status is UKEF_ACKNOWLEDGED,
-         * hence cancelled or pending cancellation deals will not show for checker when there are amendments ready for approval.
+         * Add an `and` query to the `orQuery`
+         * If any amendment status is `READY_FOR_CHECKERS_APPROVAL`,
+         * AND the deal status is `UKEF_ACKNOWLEDGED`, then it will show on the dashboard for checker.
+         * The deals with following deal statues will not appear to the checker:
+         * - `CANCELLED`
+         * - `PENDING_CANCELLATION`
          */
         const andQuery = {
           AND: [{ [CHECKERS_AMENDMENTS_DEAL_ID]: checkersApprovalAmendmentDealIds }, { [CONSTANTS.FIELD_NAMES.DEAL.STATUS]: DEAL_STATUS.UKEF_ACKNOWLEDGED }],
