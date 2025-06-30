@@ -14,6 +14,7 @@ export const makerSubmitPortalAmendmentForReview = ({
   facilityEndDateExists = false,
   changedFacilityValue,
   changedCoverEndDate,
+  effectiveDate = new Date(),
 }) => {
   cy.makerMakesPortalAmendmentRequest({
     coverEndDateExists,
@@ -21,6 +22,7 @@ export const makerSubmitPortalAmendmentForReview = ({
     facilityEndDateExists,
     changedFacilityValue,
     changedCoverEndDate,
+    effectiveDate,
   });
 
   cy.clickSubmitButton();

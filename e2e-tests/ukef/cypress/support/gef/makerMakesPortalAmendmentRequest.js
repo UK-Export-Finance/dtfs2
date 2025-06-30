@@ -17,6 +17,7 @@ export const makerMakesPortalAmendmentRequest = ({
   facilityEndDateExists = false,
   changedFacilityValue,
   changedCoverEndDate,
+  effectiveDate = new Date(),
 }) => {
   if (coverEndDateExists) {
     whatDoYouNeedToChange.coverEndDateCheckbox().click();
@@ -55,6 +56,6 @@ export const makerMakesPortalAmendmentRequest = ({
   eligibility.allTrueRadioButtons().click({ multiple: true });
   cy.clickContinueButton();
 
-  cy.completeDateFormFields({ idPrefix: 'effective-date' });
+  cy.completeDateFormFields({ idPrefix: 'effective-date', date: effectiveDate });
   cy.clickContinueButton();
 };

@@ -20,6 +20,7 @@ export const makerAndCheckerSubmitPortalAmendmentRequest = ({
   amendmentDetailsUrl,
   confirmSubmissionToUkefUrl,
   submittedUrl,
+  effectiveDate = new Date(),
 }) => {
   // submits maker part of journey
   cy.makerSubmitPortalAmendmentForReview({
@@ -28,6 +29,7 @@ export const makerAndCheckerSubmitPortalAmendmentRequest = ({
     facilityEndDateExists,
     changedFacilityValue,
     changedCoverEndDate,
+    effectiveDate,
   });
 
   // submits checker part of journey
