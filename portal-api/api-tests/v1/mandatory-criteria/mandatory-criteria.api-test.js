@@ -163,12 +163,12 @@ describe('/v1/mandatory-criteria', () => {
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-      makeRequestAsUser: (user) => as(user).remove(newMandatoryCriteriaUrl),
+      makeRequestAsUser: (user) => as(user).remove().to(newMandatoryCriteriaUrl),
       successStatusCode: 200,
     });
 
     withDeleteOneTests({
-      makeRequest: () => as(anAdmin).remove(newMandatoryCriteriaUrl),
+      makeRequest: () => as(anAdmin).remove().to(newMandatoryCriteriaUrl),
       collectionName: MONGO_DB_COLLECTIONS.MANDATORY_CRITERIA,
       auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentId: () => mandatoryCriteriaToDeleteId,

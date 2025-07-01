@@ -216,12 +216,12 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [MAKER],
       getUserWithRole: (role) => testUsers().withBankName(testBankName).withRole(role).one(),
-      makeRequestAsUser: (user) => as(user).remove(oneFileUrl),
+      makeRequestAsUser: (user) => as(user).remove().to(oneFileUrl),
       successStatusCode: 200,
     });
 
     withDeleteOneTests({
-      makeRequest: () => as(maker1).remove(oneFileUrl),
+      makeRequest: () => as(maker1).remove().to(oneFileUrl),
       collectionName: MONGO_DB_COLLECTIONS.FILES,
       auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentId: () => new ObjectId(fileToDeleteId),

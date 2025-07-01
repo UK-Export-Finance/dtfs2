@@ -377,14 +377,14 @@ describe('/v1/deals', () => {
 
   describe('DELETE /v1/deals/:id', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().remove('/v1/deals/620a1aa095a618b12da38c7b');
+      const { status } = await as().remove().to('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
       await as(testbank2Maker).post(newDeal).to('/v1/deals');
-      const { status } = await as(testUsers).remove('/v1/deals/620a1aa095a618b12da38c7b');
+      const { status } = await as(testUsers).remove().to('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(401);
     });
@@ -398,7 +398,7 @@ describe('/v1/deals', () => {
     });
 
     it('404s requests to delete unknown ids', async () => {
-      const { status } = await as(testbank2Maker).remove('/v1/deals/620a1aa095a618b12da38c7b');
+      const { status } = await as(testbank2Maker).remove().to('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
