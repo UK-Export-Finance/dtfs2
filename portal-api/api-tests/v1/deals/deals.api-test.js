@@ -392,7 +392,7 @@ describe('/v1/deals', () => {
     it('401s requests from users if <user>.bank != <resource>.bank', async () => {
       const { body } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
 
-      const { status } = await as(testbank1Maker).remove(`/v1/deals/${body._id}`);
+      const { status } = await as(testbank1Maker).remove().to(`/v1/deals/${body._id}`);
 
       expect(status).toEqual(401);
     });
@@ -406,7 +406,7 @@ describe('/v1/deals', () => {
     it('accepts requests if <user>.bank.id == *', async () => {
       const { body } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
 
-      const { status } = await as(aSuperuser).remove(`/v1/deals/${body._id}`);
+      const { status } = await as(aSuperuser).remove().to(`/v1/deals/${body._id}`);
 
       expect(status).toEqual(200);
     });
@@ -414,7 +414,7 @@ describe('/v1/deals', () => {
     it('deletes the deal', async () => {
       const { body } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
 
-      await as(testbank2Maker).remove(`/v1/deals/${body._id}`);
+      await as(testbank2Maker).remove().to(`/v1/deals/${body._id}`);
 
       const { status } = await as(testbank2Maker).get(`/v1/deals/${body._id}`);
 

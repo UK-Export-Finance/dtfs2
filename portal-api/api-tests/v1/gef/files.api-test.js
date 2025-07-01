@@ -229,14 +229,16 @@ describe(baseUrl, () => {
     });
 
     it('returns 404 if files is not found', async () => {
-      const { status } = await as(maker1).remove(`${baseUrl}/${String(ObjectId())}`);
+      const { status } = await as(maker1)
+        .remove()
+        .to(`${baseUrl}/${String(ObjectId())}`);
       expect(status).toEqual(404);
     });
 
     it('rejects requests that do not have access to deal', async () => {
       const { body } = await as(maker1).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
-      const { status } = await as(invalidMaker).remove(`${baseUrl}/${body[0]._id}`);
+      const { status } = await as(invalidMaker).remove().to(`${baseUrl}/${body[0]._id}`);
 
       expect(status).toEqual(401);
     });
@@ -244,7 +246,7 @@ describe(baseUrl, () => {
     it('deletes the file', async () => {
       const { body } = await as(maker1).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
-      const { status } = await as(maker1).remove(`${baseUrl}/${body[0]._id}`);
+      const { status } = await as(maker1).remove().to(`${baseUrl}/${body[0]._id}`);
 
       expect(status).toEqual(200);
     });
@@ -254,7 +256,7 @@ describe(baseUrl, () => {
 
       const { body } = await as(maker1).postMultipartForm({ parentId: mockDeal.body._id }, validFiles).to(baseUrl);
 
-      const { status } = await as(maker1).remove(`${baseUrl}/${body[0]._id}`);
+      const { status } = await as(maker1).remove().to(`${baseUrl}/${body[0]._id}`);
 
       expect(status).toEqual(500);
     });
