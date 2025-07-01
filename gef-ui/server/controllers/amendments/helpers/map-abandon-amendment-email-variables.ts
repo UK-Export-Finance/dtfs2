@@ -22,24 +22,20 @@ const mapAbandonEmailVariables = ({
   user,
   checker,
 }: {
-  deal: Deal | null;
-  facility: Facility | null;
-  amendment: PortalFacilityAmendmentWithUkefId | null;
-  user: PortalSessionUser | null;
-  checker: PortalSessionUser | null;
+  deal: Deal;
+  facility: Facility;
+  amendment: PortalFacilityAmendmentWithUkefId;
+  user: PortalSessionUser;
+  checker: PortalSessionUser;
 }) => {
-  // Check if any of the required parameters are null
-  if (!deal || !facility || !amendment || !user || !checker) {
-    throw new Error('Deal, Facility, Amendment, User or Checker are null');
-  }
-
   const commonVariables = mapCommonEmailVariables({ deal, facility, amendment });
 
   const checkersName = `${checker?.firstname} ${checker?.surname}`;
-  const checkersEmail = checker?.email || '';
+  const checkersEmail = checker?.email;
 
-  const makersName = `${user.firstname} ${user.surname}`;
-  const makersEmail = user.email;
+  const { firstname, surname, email } = user;
+  const makersName = `${firstname} ${surname}`;
+  const makersEmail = email;
 
   return {
     makersEmail,
