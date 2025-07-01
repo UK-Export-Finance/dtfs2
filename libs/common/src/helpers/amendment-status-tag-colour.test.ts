@@ -30,8 +30,8 @@ describe('getAmendmentStatusTagColour', () => {
     const status = 'UNKNOWN_STATUS';
 
     // Simulating an unknown status
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    const result = getAmendmentStatusTagColour(status as any);
+    // @ts-ignore
+    const result = getAmendmentStatusTagColour(status);
     expect(result).toBe('grey');
   });
 });
