@@ -103,4 +103,40 @@ context('Monthly utilisation report upload with invalid currencies', () => {
       message: 'The currency does not match the other records for this facility. Enter the correct currency.',
     });
   });
+
+  it('should display the correct error message when no valid currencies are found', () => {
+    utilisationReportUpload.utilisationReportFileInput().attachFile('invalid-utilisation-report-February_2023_monthly-empty-currencies.xlsx');
+    cy.clickContinueButton();
+
+    utilisationReportUpload.checkReportTitle().should('exist');
+    utilisationReportUpload.validationErrorTable().should('exist');
+    utilisationReportUpload.validationErrorTableRows().should('have.length', 3);
+
+    cy.assertValidationErrorTableRowContains({
+      tableRowIndex: 1,
+      exporter: 'Cerca Magnetics Ltd',
+      row: '3',
+      column: 'D',
+      entry: '',
+      message: 'Base currency must have an entry',
+    });
+
+    cy.assertValidationErrorTableRowContains({
+      tableRowIndex: 2,
+      exporter: 'Cerca Magnetics Ltd',
+      row: '3',
+      column: 'I',
+      entry: '',
+      message: 'Fees paid to UKEF currency must have an entry',
+    });
+
+    cy.assertValidationErrorTableRowContains({
+      tableRowIndex: 3,
+      exporter: 'Cerca Magnetics Ltd',
+      row: '3',
+      column: 'J',
+      entry: '',
+      message: 'Payment currency must have an entry when a payment exchange rate is supplied',
+    });
+  });
 });

@@ -23,3 +23,5 @@ export const getFormattedCurrencyAndAmount = (currencyAndAmount: CurrencyAndAmou
 export const isCurrencyValid = (currency?: string): currency is Currency => {
   return isNonEmptyString(currency) && Object.values(CURRENCY).includes(currency as Currency);
 };
+
+export const formatCurrencyUpperCase = (currency: string): Currency => currency.toUpperCase() as Currency;

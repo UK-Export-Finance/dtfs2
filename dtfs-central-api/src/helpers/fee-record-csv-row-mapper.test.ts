@@ -12,6 +12,8 @@ import {
 import { feeRecordCsvRowToSqlEntity } from './fee-record-csv-row-mapper';
 import { aUtilisationReportRawCsvData } from '../../test-helpers';
 
+const { GBP } = CURRENCY;
+
 describe('fee-record-helpers', () => {
   describe('feeRecordCsvRowToSqlEntity', () => {
     const mockDate = new Date('2024-01');
@@ -68,10 +70,10 @@ describe('fee-record-helpers', () => {
       // Act
       const rawCsvData = {
         ...aUtilisationReportRawCsvData(),
-        'base currency': 'gbp',
-        'accrual currency': 'gbp',
-        'fees paid to ukef currency': 'gbp',
-        'payment currency': 'gbp',
+        'base currency': GBP.toLowerCase(),
+        'accrual currency': GBP.toLowerCase(),
+        'fees paid to ukef currency': GBP.toLowerCase(),
+        'payment currency': GBP.toLowerCase(),
       };
 
       const feeRecordEntity = feeRecordCsvRowToSqlEntity({
@@ -87,14 +89,14 @@ describe('fee-record-helpers', () => {
         expect.objectContaining<Partial<FeeRecordEntity>>({
           facilityId: rawCsvData['ukef facility id'],
           exporter: rawCsvData.exporter,
-          baseCurrency: rawCsvData['base currency'].toUpperCase() as Currency,
+          baseCurrency: GBP,
           facilityUtilisation: Number(rawCsvData['facility utilisation']),
           totalFeesAccruedForThePeriod: Number(rawCsvData['total fees accrued for the period']),
-          totalFeesAccruedForThePeriodCurrency: rawCsvData['accrual currency'].toUpperCase() as Currency,
+          totalFeesAccruedForThePeriodCurrency: GBP,
           totalFeesAccruedForThePeriodExchangeRate: Number(rawCsvData['accrual exchange rate']),
           feesPaidToUkefForThePeriod: Number(rawCsvData['fees paid to ukef for the period']),
-          feesPaidToUkefForThePeriodCurrency: rawCsvData['fees paid to ukef currency'].toUpperCase() as Currency,
-          paymentCurrency: rawCsvData['payment currency'].toUpperCase() as Currency,
+          feesPaidToUkefForThePeriodCurrency: GBP,
+          paymentCurrency: GBP,
           paymentExchangeRate: Number(rawCsvData['payment exchange rate']),
           lastUpdatedByIsSystemUser: false,
           lastUpdatedByPortalUserId: requestSource.userId,
