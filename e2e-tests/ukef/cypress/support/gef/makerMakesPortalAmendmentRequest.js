@@ -1,3 +1,4 @@
+import { now } from '@ukef/dtfs2-common';
 import whatDoYouNeedToChange from '../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 import doYouHaveAFacilityEndDate from '../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
 import eligibility from '../../../../gef/cypress/e2e/pages/amendments/eligibility';
@@ -17,7 +18,7 @@ export const makerMakesPortalAmendmentRequest = ({
   facilityEndDateExists = false,
   changedFacilityValue,
   changedCoverEndDate,
-  effectiveDate = new Date(),
+  effectiveDate = now(),
 }) => {
   if (coverEndDateExists) {
     whatDoYouNeedToChange.coverEndDateCheckbox().click();
