@@ -22,17 +22,17 @@ describe('generateMonthlyFeesPaidCurrencyError', () => {
     expect(monthlyFeesPaidToUkefCurrencyError).toEqual(expectedError);
   });
 
-  it('returns an error when the value is not a valid ISO 4217 currency code', () => {
+  it('returns an error when the value is not a currency code', () => {
     const invalidBaseCurrency = {
-      value: 'GBPA',
+      value: 'INR',
       column: 'A',
       row: 1,
     };
     const expectedError = {
-      errorMessage: 'Fees paid to UKEF currency must be in the ISO 4217 currency code format',
+      errorMessage: 'The report can only include the following currencies: GBP, EUR, USD, JPY',
       column: 'A',
       row: 1,
-      value: 'GBPA',
+      value: 'INR',
       exporter: testExporterName,
     };
 
@@ -41,15 +41,15 @@ describe('generateMonthlyFeesPaidCurrencyError', () => {
     expect(monthlyFeesPaidToUkefCurrencyError).toEqual(expectedError);
   });
 
-  it('returns null if the value is a valid currency', () => {
+  it.each(Object.values(CURRENCY))('should return null if the value is "%s"', (currency) => {
     const validBaseCurrency = {
-      value: CURRENCY.GBP,
+      value: currency,
       column: 'A',
       row: 1,
     };
 
-    const monthlyFeesPaidToUkefCurrencyError = generateFeesPaidForThePeriodCurrencyError(validBaseCurrency, testExporterName);
+    const baseCurrencyError = generateFeesPaidForThePeriodCurrencyError(validBaseCurrency, testExporterName);
 
-    expect(monthlyFeesPaidToUkefCurrencyError).toBeNull();
+    expect(baseCurrencyError).toBeNull();
   });
 });

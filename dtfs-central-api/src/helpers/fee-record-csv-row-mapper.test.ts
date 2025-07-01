@@ -64,6 +64,46 @@ describe('fee-record-helpers', () => {
       );
     });
 
+    it('returns an SQL entity with currencies in upper case when provided as lowercase', () => {
+      // Act
+      const rawCsvData = {
+        ...aUtilisationReportRawCsvData(),
+        'base currency': 'gbp',
+        'accrual currency': 'gbp',
+        'fees paid to ukef currency': 'gbp',
+        'payment currency': 'gbp',
+      };
+
+      const feeRecordEntity = feeRecordCsvRowToSqlEntity({
+        // @ts-ignore - The test data is not typed correctly
+        dataEntry: rawCsvData,
+        requestSource,
+        report,
+      });
+
+      // Assert
+      expect(feeRecordEntity instanceof FeeRecordEntity).toEqual(true);
+      expect(feeRecordEntity).toEqual(
+        expect.objectContaining<Partial<FeeRecordEntity>>({
+          facilityId: rawCsvData['ukef facility id'],
+          exporter: rawCsvData.exporter,
+          baseCurrency: rawCsvData['base currency'].toUpperCase() as Currency,
+          facilityUtilisation: Number(rawCsvData['facility utilisation']),
+          totalFeesAccruedForThePeriod: Number(rawCsvData['total fees accrued for the period']),
+          totalFeesAccruedForThePeriodCurrency: rawCsvData['accrual currency'].toUpperCase() as Currency,
+          totalFeesAccruedForThePeriodExchangeRate: Number(rawCsvData['accrual exchange rate']),
+          feesPaidToUkefForThePeriod: Number(rawCsvData['fees paid to ukef for the period']),
+          feesPaidToUkefForThePeriodCurrency: rawCsvData['fees paid to ukef currency'].toUpperCase() as Currency,
+          paymentCurrency: rawCsvData['payment currency'].toUpperCase() as Currency,
+          paymentExchangeRate: Number(rawCsvData['payment exchange rate']),
+          lastUpdatedByIsSystemUser: false,
+          lastUpdatedByPortalUserId: requestSource.userId,
+          lastUpdatedByTfmUserId: null,
+          report,
+        }),
+      );
+    });
+
     const emptyValues: ('' | undefined | null)[] = [null, undefined, ''];
 
     it.each(emptyValues)('sets payment currency to fees paid to ukef currency when not provided: %s', (paymentCurrency?: '' | null) => {

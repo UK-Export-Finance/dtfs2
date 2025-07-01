@@ -6,6 +6,7 @@ import {
   FeeRecordStatus,
   UtilisationReportRawCsvData,
   FEE_RECORD_STATUS,
+  Currency,
 } from '@ukef/dtfs2-common';
 
 type FeeRecordCsvRowToSqlEntityParams = {
@@ -34,15 +35,18 @@ export const feeRecordCsvRowToSqlEntity = ({ dataEntry, requestSource, report }:
   return FeeRecordEntity.create({
     facilityId: dataEntry[UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID],
     exporter: dataEntry[UTILISATION_REPORT_HEADERS.EXPORTER],
-    baseCurrency: dataEntry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY],
+    baseCurrency: dataEntry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY]?.toUpperCase() as Currency,
     facilityUtilisation: Number(dataEntry[UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION]),
     totalFeesAccruedForThePeriod: Number(dataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED]),
     totalFeesAccruedForThePeriodCurrency:
-      dataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY] || dataEntry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY],
+      (dataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.toUpperCase() as Currency) ||
+      (dataEntry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY]?.toUpperCase() as Currency),
     totalFeesAccruedForThePeriodExchangeRate: asNumberOrDefault(dataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE], 1),
     feesPaidToUkefForThePeriod,
-    feesPaidToUkefForThePeriodCurrency: dataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY],
-    paymentCurrency: dataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY] || dataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY],
+    feesPaidToUkefForThePeriodCurrency: dataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY]?.toUpperCase() as Currency,
+    paymentCurrency:
+      (dataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.toUpperCase() as Currency) ||
+      (dataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY]?.toUpperCase() as Currency),
     paymentExchangeRate: asNumberOrDefault(dataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE], 1),
     status,
     report,
