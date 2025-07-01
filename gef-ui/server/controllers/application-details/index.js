@@ -6,6 +6,7 @@ const {
   PORTAL_AMENDMENT_INPROGRESS_STATUSES,
   PORTAL_AMENDMENT_STATUS,
   hasBeenSubmittedToTfm,
+  getLatestAmendmentsByFacility,
 } = require('@ukef/dtfs2-common');
 const { getTfmDeal, getPortalAmendmentsOnDeal, getFacilities, getFacility } = require('../../services/api');
 const { canIssueUnissuedFacilities } = require('./canIssueUnissuedFacilities');
@@ -72,11 +73,12 @@ function buildHeader(app) {
  * @async
  * @function buildBody
  * @param {Object} app - The application object containing all deal and facility data.
+ * @param {Record<string, PortalFacilityAmendment>} latestAmendments - object with the latest amendment for each facility.
  * @param {boolean} previewMode - Indicates if the application is in preview mode.
  * @param {Object} user - The user object representing the current user.
  * @returns {Promise<Object>} The constructed application body object with all relevant details for rendering.
  */
-const buildBody = async (app, previewMode, user) => {
+const buildBody = async (app, latestAmendments, previewMode, user) => {
   try {
     const exporterUrl = `/gef/application-details/${app._id}`;
     const facilityUrl = `/gef/application-details/${app._id}/facilities`;
@@ -132,7 +134,13 @@ const buildBody = async (app, previewMode, user) => {
         data: app.facilities.items
           .map((item) => ({
             heading: startCase(FACILITY_TYPE[item.details.type.toUpperCase()].toLowerCase()),
-            rows: mapSummaryList(item, facilityItems(`${facilityUrl}/${item.details._id}`, item.details, app.version), mapSummaryParams, previewMode),
+            rows: mapSummaryList(
+              item,
+              facilityItems(`${facilityUrl}/${item.details._id}`, item.details, latestAmendments, app.version),
+              mapSummaryParams,
+              latestAmendments,
+              previewMode,
+            ),
             createdAt: item.details.createdAt,
             facilityId: item.details._id,
             // facilityName added for aria-label for accessibility
@@ -204,14 +212,15 @@ const buildActions = (app) => {
  * @async
  * @function
  * @param {Object} app - The application data object.
+ * @param {Record<string, PortalFacilityAmendment>} latestAmendments - object with the latest amendment for each facility.
  * @param {boolean} previewMode - Flag indicating if the view is in preview mode.
  * @param {Object} user - The user object requesting the view.
  * @returns {Promise<Object>} The combined view object containing header, body, and actions.
  */
-const buildView = async (app, previewMode, user) => {
+const buildView = async (app, latestAmendments, previewMode, user) => {
   try {
     const header = buildHeader(app);
-    const body = await buildBody(app, previewMode, user);
+    const body = await buildBody(app, latestAmendments, previewMode, user);
     const actions = buildActions(app);
 
     return { ...header, ...body, ...actions };
@@ -303,6 +312,19 @@ const applicationDetails = async (req, res, next) => {
     const previewMode = !userAuthorisationLevels.includes(AUTHORISATION_LEVEL.EDIT);
     const userRoles = user.roles;
     const amendmentDetails = await getSubmittedAmendmentDetails(application, userToken);
+
+    /**
+     * finds all amendments on the deal that are in progress or acknowledged
+     * and then returns the latest amendment for each facility
+     */
+    const amendmentStatusesToFind = [
+      PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+      PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
+      PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+    ];
+    const amendmentsOnDeal = await getPortalAmendmentsOnDeal({ dealId, statuses: amendmentStatusesToFind, userToken });
+    const latestAmendments = getLatestAmendmentsByFacility(amendmentsOnDeal);
+
     const applicationData = {
       ...application,
       ...amendmentDetails,
@@ -325,7 +347,7 @@ const applicationDetails = async (req, res, next) => {
     }
 
     const partial = stateToPartial(application.status, url);
-    const view = await buildView(applicationData, previewMode, user);
+    const view = await buildView(applicationData, latestAmendments, previewMode, user);
 
     const params = {
       user,
@@ -356,10 +378,10 @@ const applicationDetails = async (req, res, next) => {
       params.link += '/unissued-facilities';
     }
 
-    const amendmentsInProgressOnDeal = await getPortalAmendmentsOnDeal({ dealId, statuses: PORTAL_AMENDMENT_INPROGRESS_STATUSES, userToken });
+    const dealAmendmentsInProgress = amendmentsOnDeal.filter((amendment) => PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(amendment.status));
 
     // array of facility ids that are currently being amended
-    const amendmentsInProgress = amendmentsInProgressOnDeal.map((amendment) => {
+    const amendmentsInProgress = dealAmendmentsInProgress.map((amendment) => {
       const { amendmentId, facilityId: amendmentFacilityId, status } = amendment;
 
       return {

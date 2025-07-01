@@ -1,4 +1,4 @@
-const { CHECKERS_AMENDMENTS_DEAL_ID, isPortalFacilityAmendmentsFeatureFlagEnabled } = require('@ukef/dtfs2-common');
+const { CHECKERS_AMENDMENTS_DEAL_ID, isPortalFacilityAmendmentsFeatureFlagEnabled, DEAL_STATUS } = require('@ukef/dtfs2-common');
 const CONSTANTS = require('../../../constants');
 const CONTENT_STRINGS = require('../../../content-strings');
 const { getUserRoles, isSuperUser, getCheckersApprovalAmendmentDealIds } = require('../../../helpers');
@@ -36,7 +36,19 @@ const dashboardDealsFiltersQuery = async (filters, user, userToken) => {
       const checkersApprovalAmendmentDealIds = await getCheckersApprovalAmendmentDealIds(userToken);
 
       if (checkersApprovalAmendmentDealIds?.length) {
-        orQuery.OR.push({ [CHECKERS_AMENDMENTS_DEAL_ID]: checkersApprovalAmendmentDealIds });
+        /**
+         * Add an `and` query to the `orQuery`
+         * If any amendment status is `READY_FOR_CHECKERS_APPROVAL`,
+         * AND the deal status is `UKEF_ACKNOWLEDGED`, then it will show on the dashboard for checker.
+         * The deals with following deal statues will not appear to the checker:
+         * - `CANCELLED`
+         * - `PENDING_CANCELLATION`
+         */
+        const andQuery = {
+          AND: [{ [CHECKERS_AMENDMENTS_DEAL_ID]: checkersApprovalAmendmentDealIds }, { [CONSTANTS.FIELD_NAMES.DEAL.STATUS]: DEAL_STATUS.UKEF_ACKNOWLEDGED }],
+        };
+
+        orQuery.OR.push(andQuery);
       }
     }
 
