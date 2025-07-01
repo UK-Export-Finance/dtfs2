@@ -77,6 +77,7 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
     }
 
     const { facility, deal } = amendment;
+    const { dealIdentifier } = deal;
     const { facilitySnapshot } = facility;
 
     if (facilityIdentifier.includes(DEAL.UKEF_ID.PENDING) || facilityIdentifier.includes(DEAL.UKEF_ID.TEST)) {
@@ -181,6 +182,17 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
         facilityGuaranteeRecord: facilityGuaranteeRecord.result,
       };
     }
+
+    // 5. SOF: Deal Master Record (DMR)
+    const dealMasterRecord = yield context.df.callSubOrchestrator('acbs-amend-deal-master-record', {
+      dealIdentifier,
+      amendments,
+    });
+
+    response = {
+      ...response,
+      dealMasterRecord: dealMasterRecord.result,
+    };
 
     return response;
   } catch (error) {
