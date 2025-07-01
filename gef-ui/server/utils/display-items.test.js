@@ -12,7 +12,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE };
 
       // Act
-      const result = facilityItems('testUrl', facility, undefined);
+      const result = facilityItems('testUrl', facility, {}, undefined);
 
       // Assert
       expect(result.find((item) => item.id === 'isUsingFacilityEndDate').isHidden).toEqual(true);
@@ -27,7 +27,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE };
 
       // Act
-      const result = facilityItems('testUrl', facility, 0);
+      const result = facilityItems('testUrl', facility, {}, 0);
 
       // Assert
       expect(result.find((item) => item.id === 'isUsingFacilityEndDate').isHidden).toEqual(true);
@@ -42,7 +42,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: null };
 
       // Act
-      const result = facilityItems('testUrl', facility, 1);
+      const result = facilityItems('testUrl', facility, {}, 1);
 
       // Assert
       expect(result.find((item) => item.id === 'isUsingFacilityEndDate').isHidden).toEqual(false);
@@ -53,7 +53,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: null };
 
       // Act
-      const result = facilityItems('testUrl', facility, 1);
+      const result = facilityItems('testUrl', facility, {}, 1);
 
       // Assert
       expect(result.find((item) => item.id === 'facilityEndDate').isHidden).toEqual(true);
@@ -65,7 +65,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: true };
 
       // Act
-      const result = facilityItems('testUrl', facility, 1);
+      const result = facilityItems('testUrl', facility, {}, 1);
 
       // Assert
       expect(result.find((item) => item.id === 'isUsingFacilityEndDate').isHidden).toEqual(false);
@@ -77,7 +77,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: true };
 
       // Act
-      const result = facilityItems('testUrl', facility, 1);
+      const result = facilityItems('testUrl', facility, {}, 1);
 
       // Assert
       expect(result.find((item) => item.id === 'bankReviewDate').isHidden).toEqual(true);
@@ -88,7 +88,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: false };
 
       // Act
-      const result = facilityItems('testUrl', facility, 1);
+      const result = facilityItems('testUrl', facility, {}, 1);
 
       // Assert
       expect(result.find((item) => item.id === 'isUsingFacilityEndDate').isHidden).toEqual(false);
@@ -100,7 +100,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: false };
 
       // Act
-      const result = facilityItems('testUrl', facility, 1);
+      const result = facilityItems('testUrl', facility, {}, 1);
 
       // Assert
       expect(result.find((item) => item.id === 'facilityEndDate').isHidden).toEqual(true);
@@ -113,7 +113,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, facilityEndDate: testFacilityEndDate };
 
       // Act
-      const result = facilityItems('testUrl', facility, 1);
+      const result = facilityItems('testUrl', facility, {}, 1);
 
       // Assert
       expect(result.find((item) => item.id === 'facilityEndDate').method(testFacilityEndDate)).toEqual(expectedFormat);
@@ -126,7 +126,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, bankReviewDate: testBankReviewDate };
 
       // Act
-      const result = facilityItems('testUrl', facility, 1);
+      const result = facilityItems('testUrl', facility, {}, 1);
 
       // Assert
       expect(result.find((item) => item.id === 'bankReviewDate').method(testBankReviewDate)).toEqual(expectedFormat);
@@ -137,7 +137,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: true };
 
       // Act
-      const result = facilityItems('testUrl', facility, 1);
+      const result = facilityItems('testUrl', facility, {}, 1);
 
       // Assert
       expect(result.find((item) => item.id === 'isUsingFacilityEndDate').href).toEqual('testUrl/about-facility?status=change');
@@ -148,7 +148,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: true, facilityEndDate: '2026-08-04T00:00:00.000Z' };
 
       // Act
-      const result = facilityItems('testUrl', facility, 1);
+      const result = facilityItems('testUrl', facility, {}, 1);
 
       // Assert
       expect(result.find((item) => item.id === 'facilityEndDate').href).toEqual('testUrl/facility-end-date?status=change');
@@ -159,7 +159,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, isUsingFacilityEndDate: false, bankReviewDate: '2026-08-04T00:00:00.000Z' };
 
       // Act
-      const result = facilityItems('testUrl', facility, 1);
+      const result = facilityItems('testUrl', facility, {}, 1);
 
       // Assert
       expect(result.find((item) => item.id === 'bankReviewDate').href).toEqual('testUrl/bank-review-date?status=change');
@@ -173,7 +173,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, facilityStage };
 
       // Act
-      const result = facilityItems('testUrl', facility, 1);
+      const result = facilityItems('testUrl', facility, {}, 1);
 
       // Assert
       expect(result.find((item) => item.label === 'Stage').method(facility.hasBeenIssued)).toEqual(facilityStage);
@@ -186,7 +186,7 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, hasBeenIssued: 'true' };
 
       // Act
-      const result = facilityItems('testUrl', facility, 1);
+      const result = facilityItems('testUrl', facility, {}, 1);
 
       // Assert
       expect(result.find((item) => item.label === 'Stage').method(facility.hasBeenIssued)).toEqual(STAGE.ISSUED);
@@ -197,10 +197,85 @@ describe('facilityItems', () => {
       const facility = { ...MOCK_FACILITY_ONE, hasBeenIssued: 'false' };
 
       // Act
-      const result = facilityItems('testUrl', facility, 1);
+      const result = facilityItems('testUrl', facility, {}, 1);
 
       // Assert
       expect(result.find((item) => item.label === 'Stage').method(facility.hasBeenIssued)).toEqual(STAGE.UNISSUED);
+    });
+  });
+
+  describe('when latestAmendments is an empty object', () => {
+    it('should return an object with isHidden as true', () => {
+      // Arrange
+      const facility = { ...MOCK_FACILITY_ONE, latestAmendments: {} };
+
+      // Act
+      const result = facilityItems('testUrl', facility, {}, 1);
+
+      const amendmentStatusResult = result.find((item) => item.label === 'Amendment status');
+
+      const expected = {
+        label: 'Amendment status',
+        id: 'latestAmendmentStatus',
+        isHidden: true,
+      };
+
+      // Assert
+      expect(amendmentStatusResult).toEqual(expected);
+    });
+  });
+
+  describe('when latestAmendments is populated for a different facility', () => {
+    it('should return an object with isHidden as true', () => {
+      // Arrange
+      const facility = { ...MOCK_FACILITY_ONE, latestAmendments: {} };
+      const latestAmendments = {
+        'some-other-facility-id': {
+          status: 'amended',
+          date: '2023-10-01T00:00:00.000Z',
+        },
+      };
+
+      // Act
+      const result = facilityItems('testUrl', facility, latestAmendments, 1);
+
+      const amendmentStatusResult = result.find((item) => item.label === 'Amendment status');
+
+      const expected = {
+        label: 'Amendment status',
+        id: 'latestAmendmentStatus',
+        isHidden: true,
+      };
+
+      // Assert
+      expect(amendmentStatusResult).toEqual(expected);
+    });
+  });
+
+  describe('when latestAmendments is populated for the current facility', () => {
+    it('should return an object with isHidden as false', () => {
+      // Arrange
+      const facility = { ...MOCK_FACILITY_ONE, latestAmendments: {} };
+      const latestAmendments = {
+        [facility._id]: {
+          status: 'amended',
+          date: '2023-10-01T00:00:00.000Z',
+        },
+      };
+
+      // Act
+      const result = facilityItems('testUrl', facility, latestAmendments, 1);
+
+      const amendmentStatusResult = result.find((item) => item.label === 'Amendment status');
+
+      const expected = {
+        label: 'Amendment status',
+        id: 'latestAmendmentStatus',
+        isHidden: false,
+      };
+
+      // Assert
+      expect(amendmentStatusResult).toEqual(expected);
     });
   });
 });
