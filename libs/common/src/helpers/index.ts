@@ -34,3 +34,5 @@ export * from './create-amendment-reference-number';
 export * from './map-facility-fields-to-amendment-fields';
 export * from './has-been-submitted-to-tfm';
 export * from './timezone';
+export * from './amendment-status-tag-colour';
+export * from './get-latest-amendment-by-facility';

@@ -87,6 +87,8 @@ const applicationPreview = {
     feeFrequencyValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="feeFrequency-action"]'),
     dayCountBasisAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="dayCountBasis-action"]'),
     dayCountBasisValue: () => cyGetFacilitySummaryListValue(tableNum, '[data-cy="dayCountBasis-action"]'),
+    amendmentStatusAction: () => cyGetFacilitySummaryListChild(tableNum, '[data-cy="latestAmendmentStatus-action"]'),
+    amendmentStatusValue: (id) => cy.get(`[data-cy="amendment-status-${id}"]`),
   }),
 
   supportingInfoListRowAction: (tableNum, rowNum) =>

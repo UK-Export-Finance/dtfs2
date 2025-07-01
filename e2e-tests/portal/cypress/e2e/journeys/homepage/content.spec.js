@@ -30,6 +30,7 @@ context('Portal homepage', () => {
     login.banks().contains('Shawbrook Bank');
     login.banks().contains('ICICI');
     login.banks().contains('ABC Bank');
+    login.banks().contains('LDF Operations (trading as White Oak)');
   });
 
   it('Ensure product text is visible on the portal login page', () => {

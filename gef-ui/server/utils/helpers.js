@@ -1,4 +1,4 @@
-const { FACILITY_PROVIDED_DETAILS, DEAL_STATUS } = require('@ukef/dtfs2-common');
+const { FACILITY_PROVIDED_DETAILS, DEAL_STATUS, getAmendmentStatusTagColour } = require('@ukef/dtfs2-common');
 const httpError = require('http-errors');
 const lodashIsEmpty = require('lodash/isEmpty');
 const commaNumber = require('comma-number');
@@ -294,15 +294,21 @@ const summaryItemsConditions = (summaryItemsObj) => {
   const acceptableRole = [MAKER];
   const { id, href, shouldCoverStartOnSubmission } = item;
   const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
+
   const isCoverStartOnSubmission = id === 'coverStartDate' && shouldCoverStartOnSubmission;
+
   // should display `change` action when facility has been changed to issued
   const shouldDisplayChangeLinkIfIssued = calculateShouldDisplayChangeLinkOnceIssued(id);
+
   // should display `change` action when facility is not yet issued
   const shouldDisplayChangeLinkIfUnissued = id === 'hasBeenIssued';
+
   // Issued facility change link (post confirmation)
   const issuedHref = `/gef/application-details/${app._id}/${data.details._id}/confirm-cover-start-date`;
+
   // personalised href for facility to change to issued (once submitted to UKEF)
   let unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change`;
+
   if (id === 'facilityEndDate') {
     // personalised href to change facility end date (once submitted to UKEF)
     unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/facility-end-date/change`;
@@ -310,8 +316,10 @@ const summaryItemsConditions = (summaryItemsObj) => {
     // personalised href to change bank review date (once submitted to UKEF)
     unissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/bank-review-date/change`;
   }
+
   // personalised href for facility to change to unissued from issued (once submitted to UKEF and changed to issued)
   const issuedToUnissuedHref = `/gef/application-details/${app._id}/unissued-facilities/${data.details._id}/change-to-unissued`;
+
   // array of facilities which have been changed to issued
   const facilitiesChanged = canResubmitIssuedFacilities(app);
 
@@ -343,10 +351,21 @@ const summaryItemsConditions = (summaryItemsObj) => {
     // maps and shows relevant change/add links for application preview
     summaryItems = previewItemConditions(params);
   }
+
   return summaryItems.length ? summaryItems : generateActionsArrayForItem({ id: item.id });
 };
 
-const mapSummaryList = (data, itemsToShow, mapSummaryParams, preview = false) => {
+/**
+ * Maps the summary list for facility summary lists on the application details page.
+ * Generates key, values and actions for each row in the summary list.
+ * @param {Object} data - facility data
+ * @param {Array} itemsToShow rows to show in the summary list
+ * @param {Object} mapSummaryParams - summary list parameters
+ * @param {Record<string, PortalFacilityAmendment>} latestAmendments - object with the latest amendment for each facility.
+ * @param {Boolean} preview if application is in preview mode - defaults to false
+ * @returns {Array} Mapped summary list for the facility - Array of objects with key, value and actions.
+ */
+const mapSummaryList = (data, itemsToShow, mapSummaryParams, latestAmendments, preview = false) => {
   const { app, user, hasChangedFacilities } = mapSummaryParams;
 
   if (!data || lodashIsEmpty(data)) {
@@ -366,6 +385,19 @@ const mapSummaryList = (data, itemsToShow, mapSummaryParams, preview = false) =>
         return { text: format(new Date(options.issueDate), 'dd MMMM yyyy') };
       }
       return { text: 'Date you submit the notice' };
+    }
+
+    /**
+     * if latestAmendmentStatus is set,
+     * then it will be used to display the amendment status tag in the facility summary list
+     * returns html with the tag and colour
+     */
+    if (options?.isLatestAmendmentStatus) {
+      const colour = getAmendmentStatusTagColour(options.isLatestAmendmentStatus);
+
+      return {
+        html: `<strong class="govuk-tag govuk-tag--${colour}" data-cy="amendment-status-${details._id}">${options.isLatestAmendmentStatus}</strong>`,
+      };
     }
 
     if (val === null || isEmpty(val)) {
@@ -408,15 +440,29 @@ const mapSummaryList = (data, itemsToShow, mapSummaryParams, preview = false) =>
   return itemsToShow.map((item) => {
     const { label, prefix, suffix, method, isCurrency, isIndustry, isDetails, isHidden, shouldCoverStartOnSubmission, issueDate } = item;
 
+    /**
+     * if the latestAmendments object contains an amendment for the current facility,
+     * set the latestAmendmentStatus to the status of that amendment
+     * */
+    const facilityMongoId = details._id;
+    if (latestAmendments?.[facilityMongoId]) {
+      details.latestAmendmentStatus = latestAmendments[details._id].status;
+    }
+
     // If value is a number, convert to String as 0 can also become falsey
     const value = typeof details[item.id] === 'number' || typeof details[item.id] === 'boolean' ? details[item.id].toString() : details[item.id];
+
     const { currency, detailsOther } = details;
+
     const isRequired = validation?.required?.includes(item.id);
 
     // Don't show row if value is undefined
     if (value === undefined || isHidden) {
       return null;
     }
+
+    // if item.id is 'latestAmendmentStatus', set isLatestAmendmentStatus to the latestAmendmentStatus from details
+    const isLatestAmendmentStatus = item.id === 'latestAmendmentStatus' ? details.latestAmendmentStatus : null;
 
     const summaryItemsObj = {
       preview,
@@ -442,6 +488,7 @@ const mapSummaryList = (data, itemsToShow, mapSummaryParams, preview = false) =>
         isDetails,
         shouldCoverStartOnSubmission,
         issueDate,
+        isLatestAmendmentStatus,
       }),
       actions: {
         items: summaryItems,
