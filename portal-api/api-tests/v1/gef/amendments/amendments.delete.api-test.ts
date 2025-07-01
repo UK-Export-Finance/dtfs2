@@ -62,7 +62,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const url = deleteAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(maker1).removeTo(validPayload).to(url);
+        const response = await as(maker1).remove(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -79,7 +79,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const url = deleteAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(maker1).removeTo(validPayload).to(url);
+        const response = await as(maker1).remove(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -106,7 +106,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         getUserWithRole: (role: Role) => testUsers().withRole(role).one() as TestUser,
         makeRequestAsUser: (user: TestUser) =>
           as(user)
-            .removeTo(validPayload)
+            .remove(validPayload)
             .to(deleteAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId })),
         successStatusCode: HttpStatusCode.Ok,
       });
@@ -116,7 +116,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const url = deleteAmendmentUrl({ facilityId: invalidId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(maker1).removeTo(validPayload).to(url);
+        const response = await as(maker1).remove(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -127,7 +127,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const url = deleteAmendmentUrl({ facilityId: validFacilityId, amendmentId: invalidId });
 
         // Act
-        const response = await as(maker1).removeTo(validPayload).to(url);
+        const response = await as(maker1).remove(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -138,7 +138,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const url = deleteAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(maker1).removeTo(validPayload).to(url);
+        const response = await as(maker1).remove(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.Ok);
