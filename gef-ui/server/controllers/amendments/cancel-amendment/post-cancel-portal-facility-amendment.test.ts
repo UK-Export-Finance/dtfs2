@@ -142,7 +142,7 @@ describe('postCancelPortalFacilityAmendment', () => {
     expect(getAmendmentMock).toHaveBeenCalledTimes(1);
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(2);
-    expect(console.error).toHaveBeenCalledWith(`Amendment %s on facility %s is not ${PORTAL_AMENDMENT_STATUS.DRAFT}`, amendmentId, facilityId);
+    expect(console.error).toHaveBeenCalledWith(`Amendment %s on facility %s is not %s`, amendmentId, facilityId, PORTAL_AMENDMENT_STATUS.DRAFT);
     expect(console.error).toHaveBeenCalledWith(
       'Error posting cancel amendments page %o',
       new InvalidAmendmentStatusError(PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL),

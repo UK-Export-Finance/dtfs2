@@ -26,7 +26,7 @@ export const postCancelPortalFacilityAmendment = async (req: PostCancelPortalFac
     }
 
     if (amendment.status !== PORTAL_AMENDMENT_STATUS.DRAFT) {
-      console.error(`Amendment %s on facility %s is not ${PORTAL_AMENDMENT_STATUS.DRAFT}`, amendmentId, facilityId);
+      console.error(`Amendment %s on facility %s is not %s`, amendmentId, facilityId, PORTAL_AMENDMENT_STATUS.DRAFT);
       throw new InvalidAmendmentStatusError(amendment.status);
     }
 
