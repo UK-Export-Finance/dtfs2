@@ -73,7 +73,7 @@ context('Amendments - Dashboard Deals table - last updated', () => {
 
     it('should render deals table with the updatedAt the date the amendment has been approved', () => {
       dashboardDeals.row.updated(dealId).should('exist');
-      dashboardDeals.row.updated(dealId).should('have.text', today.dd_MMM_yyyy);
+      dashboardDeals.row.updated(dealId).should('have.text', today.d_MMM_yyyy);
     });
   });
 
@@ -112,9 +112,9 @@ context('Amendments - Dashboard Deals table - last updated', () => {
       dashboardDeals.visit();
     });
 
-    it('should render deals table with the updatedAt the date the deal has been updated', () => {
+    it('should render deals table with the updatedAt the date the amendment has been approved', () => {
       dashboardDeals.row.updated(dealId).should('exist');
-      dashboardDeals.row.updated(dealId).should('have.text', today.dd_MMM_yyyy);
+      dashboardDeals.row.updated(dealId).should('have.text', today.d_MMM_yyyy);
     });
   });
 });
