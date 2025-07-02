@@ -193,18 +193,18 @@ describe(baseUrl, () => {
 
     it('should reject requests that do not present a valid Authorization token', async () => {
       const item = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
-      const { status } = await as().remove(`${baseUrl}/${item.body._id}`);
+      const { status } = await as().remove().to(`${baseUrl}/${item.body._id}`);
       expect(status).toEqual(401);
     });
 
     it('should accept requests that present a valid authorization token with "admin" role', async () => {
       const item = await as(anAdmin).post(newMandatoryCriteria).to(baseUrl);
-      const { status } = await as(anAdmin).remove(`${baseUrl}/${item.body._id}`);
+      const { status } = await as(anAdmin).remove().to(`${baseUrl}/${item.body._id}`);
       expect(status).toEqual(200);
     });
 
     withDeleteOneTests({
-      makeRequest: () => as(anAdmin).remove(`${baseUrl}/${criteriaToDeleteId}`),
+      makeRequest: () => as(anAdmin).remove().to(`${baseUrl}/${criteriaToDeleteId}`),
       collectionName: MONGO_DB_COLLECTIONS.GEF_MANDATORY_CRITERIA_VERSIONED,
       auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentId: () => criteriaToDeleteId,

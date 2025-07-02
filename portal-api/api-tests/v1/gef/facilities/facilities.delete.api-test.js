@@ -50,12 +50,15 @@ describe(baseUrl, () => {
       allowedRoles: [MAKER],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-      makeRequestAsUser: (user) => as(user).remove(`${baseUrl}/${facilityToDeleteId}`),
+      makeRequestAsUser: (user) => as(user).remove().to(`${baseUrl}/${facilityToDeleteId}`),
       successStatusCode: 200,
     });
 
     withDeleteOneTests({
-      makeRequest: () => as(maker1).remove(`${baseUrl}/${String(facilityToDeleteId)}`),
+      makeRequest: () =>
+        as(maker1)
+          .remove()
+          .to(`${baseUrl}/${String(facilityToDeleteId)}`),
       collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
       auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentId: () => facilityToDeleteId,
@@ -82,12 +85,12 @@ describe(baseUrl, () => {
       allowedRoles: [MAKER],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-      makeRequestAsUser: (user) => as(user).remove(`${baseUrl}?dealId=${mockApplication.body._id}`),
+      makeRequestAsUser: (user) => as(user).remove().to(`${baseUrl}?dealId=${mockApplication.body._id}`),
       successStatusCode: 200,
     });
 
     withDeleteManyTests({
-      makeRequest: () => as(maker1).remove(`${baseUrl}?dealId=${mockApplication.body._id}`),
+      makeRequest: () => as(maker1).remove().to(`${baseUrl}?dealId=${mockApplication.body._id}`),
       collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
       auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentIds: () => facilitiesToDeleteIds,
@@ -98,8 +101,8 @@ describe(baseUrl, () => {
     // As this endpoint is called when deleting by deal id, there is a chance that there are
     // no facilities to delete, but we can just handle this as a success
     it('returns 200 if there are no facilities to delete', async () => {
-      const { status: firstStatus } = await as(maker1).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
-      const { status: secondStatus } = await as(maker1).remove(`${baseUrl}?dealId=${mockApplication.body._id}`);
+      const { status: firstStatus } = await as(maker1).remove().to(`${baseUrl}?dealId=${mockApplication.body._id}`);
+      const { status: secondStatus } = await as(maker1).remove().to(`${baseUrl}?dealId=${mockApplication.body._id}`);
       expect(firstStatus).toEqual(200);
       expect(secondStatus).toEqual(200);
     });

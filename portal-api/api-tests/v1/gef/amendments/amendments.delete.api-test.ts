@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { Role, AnyObject } from '@ukef/dtfs2-common';
+import { Role, AnyObject, portalAmendmentDeleteEmailVariables } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import app from '../../../../src/createApp';
 import testUserCache from '../../../api-test-users';
@@ -28,6 +28,10 @@ const validFacilityId = new ObjectId().toString();
 const validAmendmentId = new ObjectId().toString();
 
 const invalidId = 'invalid-id';
+
+const validPayload = {
+  ...portalAmendmentDeleteEmailVariables(),
+};
 
 describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
   let testUsers: Awaited<ReturnType<typeof testUserCache.initialise>>;
@@ -58,7 +62,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const url = deleteAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(maker1).remove(url);
+        const response = await as(maker1).remove(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -75,7 +79,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const url = deleteAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(maker1).remove(url);
+        const response = await as(maker1).remove(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.NotFound);
@@ -100,7 +104,10 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
       withRoleAuthorisationTests({
         allowedRoles: [MAKER],
         getUserWithRole: (role: Role) => testUsers().withRole(role).one() as TestUser,
-        makeRequestAsUser: (user: TestUser) => as(user).remove(deleteAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId })),
+        makeRequestAsUser: (user: TestUser) =>
+          as(user)
+            .remove(validPayload)
+            .to(deleteAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId })),
         successStatusCode: HttpStatusCode.Ok,
       });
 
@@ -109,7 +116,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const url = deleteAmendmentUrl({ facilityId: invalidId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(maker1).remove(url);
+        const response = await as(maker1).remove(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -120,7 +127,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const url = deleteAmendmentUrl({ facilityId: validFacilityId, amendmentId: invalidId });
 
         // Act
-        const response = await as(maker1).remove(url);
+        const response = await as(maker1).remove(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.BadRequest);
@@ -131,7 +138,7 @@ describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId', () => {
         const url = deleteAmendmentUrl({ facilityId: validFacilityId, amendmentId: validAmendmentId });
 
         // Act
-        const response = await as(maker1).remove(url);
+        const response = await as(maker1).remove(validPayload).to(url);
 
         // Assert
         expect(response.status).toEqual(HttpStatusCode.Ok);

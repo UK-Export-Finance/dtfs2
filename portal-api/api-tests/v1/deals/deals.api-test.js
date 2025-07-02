@@ -377,14 +377,14 @@ describe('/v1/deals', () => {
 
   describe('DELETE /v1/deals/:id', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().remove('/v1/deals/620a1aa095a618b12da38c7b');
+      const { status } = await as().remove().to('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
       await as(testbank2Maker).post(newDeal).to('/v1/deals');
-      const { status } = await as(testUsers).remove('/v1/deals/620a1aa095a618b12da38c7b');
+      const { status } = await as(testUsers).remove().to('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(401);
     });
@@ -392,13 +392,13 @@ describe('/v1/deals', () => {
     it('401s requests from users if <user>.bank != <resource>.bank', async () => {
       const { body } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
 
-      const { status } = await as(testbank1Maker).remove(`/v1/deals/${body._id}`);
+      const { status } = await as(testbank1Maker).remove().to(`/v1/deals/${body._id}`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests to delete unknown ids', async () => {
-      const { status } = await as(testbank2Maker).remove('/v1/deals/620a1aa095a618b12da38c7b');
+      const { status } = await as(testbank2Maker).remove().to('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
@@ -406,7 +406,7 @@ describe('/v1/deals', () => {
     it('accepts requests if <user>.bank.id == *', async () => {
       const { body } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
 
-      const { status } = await as(aSuperuser).remove(`/v1/deals/${body._id}`);
+      const { status } = await as(aSuperuser).remove().to(`/v1/deals/${body._id}`);
 
       expect(status).toEqual(200);
     });
@@ -414,7 +414,7 @@ describe('/v1/deals', () => {
     it('deletes the deal', async () => {
       const { body } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
 
-      await as(testbank2Maker).remove(`/v1/deals/${body._id}`);
+      await as(testbank2Maker).remove().to(`/v1/deals/${body._id}`);
 
       const { status } = await as(testbank2Maker).get(`/v1/deals/${body._id}`);
 

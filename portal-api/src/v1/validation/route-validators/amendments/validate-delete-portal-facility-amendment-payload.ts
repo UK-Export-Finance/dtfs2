@@ -1,9 +1,7 @@
-import z from 'zod';
 import { validateSchema } from '@ukef/dtfs2-common';
-import { AuditDetailsSchema } from './schemas';
+import z from 'zod';
 
 const DeletePortalFacilityAmendmentSchema = z.object({
-  auditDetails: AuditDetailsSchema,
   makersEmail: z.string(),
   checkersEmail: z.string(),
   emailVariables: z.object({

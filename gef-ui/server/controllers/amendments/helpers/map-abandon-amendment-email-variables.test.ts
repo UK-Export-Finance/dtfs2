@@ -2,7 +2,7 @@ import { format, fromUnixTime } from 'date-fns';
 import { DATE_FORMATS, DEAL_SUBMISSION_TYPE, DEAL_STATUS, aPortalSessionUser, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { getCurrencySymbol } from '../../../utils/get-currency-symbol';
 import { Deal } from '../../../types/deal';
-import mapReturnToMakerEmailVariables from './map-return-to-maker-email-variables';
+import mapAbandonEmailVariables from './map-abandon-amendment-email-variables';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment.ts';
@@ -21,12 +21,12 @@ const facilityEndDate = new Date();
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
 const mockFacilityDetails = MOCK_ISSUED_FACILITY.details;
-const makersName = `${String(mockDeal.maker.firstname)} ${String(mockDeal.maker.surname)}`;
+const makersName = `${mockUser.firstname} ${mockUser.surname}`;
 const checkersName = `${mockUser.firstname} ${mockUser.surname}`;
 const checkersEmail = String(mockUser.email);
 
 const genericFields = {
-  makersEmail: mockDeal.maker.email,
+  makersEmail: mockUser.email,
   checkersEmail: mockUser.email,
   emailVariables: {
     ukefDealId: mockDeal.ukefDealId,
@@ -39,7 +39,7 @@ const genericFields = {
   },
 };
 
-describe('mapReturnToMakerEmailVariables', () => {
+describe('mapAbandonEmailVariables', () => {
   describe('when an amendment has all types of amendments', () => {
     it('should return formatted values', () => {
       // Arrange
@@ -58,11 +58,12 @@ describe('mapReturnToMakerEmailVariables', () => {
         .build();
 
       // Act
-      const result = mapReturnToMakerEmailVariables({
+      const result = mapAbandonEmailVariables({
         deal: mockDeal,
         facility: mockFacilityDetails,
         amendment: amendmentAllAmendments,
         user: mockUser,
+        checker: mockUser,
       });
 
       // Assert
@@ -99,11 +100,12 @@ describe('mapReturnToMakerEmailVariables', () => {
         .build();
 
       // Act
-      const result = mapReturnToMakerEmailVariables({
+      const result = mapAbandonEmailVariables({
         deal: mockDeal,
         facility: mockFacilityDetails,
         amendment: amendmentNoDates,
         user: mockUser,
+        checker: mockUser,
       });
 
       // Assert
@@ -141,11 +143,12 @@ describe('mapReturnToMakerEmailVariables', () => {
         .build();
 
       // Act
-      const result = mapReturnToMakerEmailVariables({
+      const result = mapAbandonEmailVariables({
         deal: mockDeal,
         facility: mockFacilityDetails,
         amendment: amendmentDatesNoValue,
         user: mockUser,
+        checker: mockUser,
       });
 
       // Assert
@@ -179,11 +182,12 @@ describe('mapReturnToMakerEmailVariables', () => {
         .build();
 
       // Act
-      const result = mapReturnToMakerEmailVariables({
+      const result = mapAbandonEmailVariables({
         deal: mockDeal,
         facility: mockFacilityDetails,
         amendment: amendmentDateNoValue,
         user: mockUser,
+        checker: mockUser,
       });
 
       // Assert
@@ -209,15 +213,16 @@ describe('mapReturnToMakerEmailVariables', () => {
         .withDealId(dealId)
         .withFacilityId(facilityId)
         .withAmendmentId(amendmentId)
-        .withStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED)
+        .withStatus(PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED)
         .build();
 
       // Act
-      const result = mapReturnToMakerEmailVariables({
+      const result = mapAbandonEmailVariables({
         deal: mockDeal,
         facility: mockFacilityDetails,
         amendment: amendmentDateNoValue,
         user: mockUser,
+        checker: mockUser,
       });
 
       // Assert
