@@ -1,5 +1,4 @@
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { isPortalFacilityAmendmentsFeatureFlagEnabled, PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const DEFAULTS = require('../defaults');
 const { mongoDbClient: db } = require('../../drivers/db-client');
 const { isValidMongoId } = require('../validation/validateIds');
@@ -11,7 +10,6 @@ const { getLatestEligibilityCriteria } = require('./eligibilityCriteria.controll
 const { escapeOperators } = require('../helpers/escapeOperators');
 const api = require('../api');
 const computeSkipPosition = require('../helpers/computeSkipPosition');
-const { getDealUpdatedAt } = require('../helpers/get-deal-updatedAt');
 
 /**
  * Find a deal (BSS, EWCS only)
@@ -251,27 +249,10 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
   };
 };
 
-exports.isPortalFacilityAmendmentsFeatureFlagEnabled = isPortalFacilityAmendmentsFeatureFlagEnabled;
-
 exports.getQueryAllDeals = async (req, res) => {
   const { start, pagesize, filters, sort } = req.body;
 
-  const isPortalAmendmentsEnabled = exports.isPortalFacilityAmendmentsFeatureFlagEnabled();
-
   const results = await queryAllDeals(filters, sort, start, pagesize);
 
-  if (results.deals.length && isPortalAmendmentsEnabled) {
-    // For each deal, fetch its amendments and find the latest updatedAt
-    const dealsWithLatestAmendment = await Promise.all(
-      results.deals.map(async (deal) => {
-        const amendments = await api.getFacilityAmendmentsOnDeal(deal._id, [PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED]);
-
-        return getDealUpdatedAt(deal, amendments);
-      }),
-    );
-    results.deals = dealsWithLatestAmendment;
-    // Sort again by updatedAt descending
-    results.deals.sort((a, b) => b.updatedAt - a.updatedAt);
-  }
   return res.status(200).send(results);
 };
