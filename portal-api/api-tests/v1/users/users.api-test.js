@@ -46,7 +46,7 @@ describe('a user', () => {
     });
 
     withDeleteOneTests({
-      makeRequest: () => as(aNonAdmin).remove(`/v1/users/${userToDeleteId}`),
+      makeRequest: () => as(aNonAdmin).remove().to(`/v1/users/${userToDeleteId}`),
       collectionName: MONGO_DB_COLLECTIONS.USERS,
       auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentId: () => userToDeleteId,
@@ -58,7 +58,7 @@ describe('a user', () => {
       const response = await createUser(MOCK_USER);
       const createdUser = response.body.user;
 
-      await as(aNonAdmin).remove(`/v1/users/${createdUser._id}/disable`);
+      await as(aNonAdmin).remove().to(`/v1/users/${createdUser._id}/disable`);
 
       const { status, body } = await as(aNonAdmin).get(`/v1/users/${createdUser._id}`);
 
@@ -91,7 +91,7 @@ describe('a user', () => {
     it('a disabled user cannot log in', async () => {
       const response = await createUser(MOCK_USER);
       const createdUser = response.body.user;
-      await as(aNonAdmin).remove(`/v1/users/${createdUser._id}/disable`);
+      await as(aNonAdmin).remove().to(`/v1/users/${createdUser._id}/disable`);
 
       const { username, password } = MOCK_USER;
       const { status, body } = await as().post({ username, password }).to('/v1/login');
@@ -192,7 +192,7 @@ describe('a user', () => {
     it('a disabled user cannot log in', async () => {
       const response = await createUser(MOCK_USER);
       const createdUser = response.body.user;
-      await as(aNonAdmin).remove(`/v1/users/${createdUser._id}/disable`);
+      await as(aNonAdmin).remove().to(`/v1/users/${createdUser._id}/disable`);
 
       const { username, password } = MOCK_USER;
       const { status, body } = await as().post({ username, password }).to('/v1/login');
