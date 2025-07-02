@@ -7,6 +7,7 @@ import app from '../../server/createApp';
 import { createApi } from '../create-api';
 import api from '../../server/services/api';
 import * as storage from '../test-helpers/storage/storage';
+import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../test-helpers/mock-amendment';
 import { PORTAL_AMENDMENT_PAGES } from '../../server/constants/amendments';
 import { MOCK_AIN_APPLICATION } from '../../server/utils/mocks/mock-applications';
 
@@ -21,6 +22,7 @@ jest.mock('../../server/middleware/csrf', () => ({
 
 const mockDeleteAmendment = jest.fn();
 const mockGetApplication = jest.fn();
+const mockGetAmendment = jest.fn();
 
 const dealId = '6597dffeb5ef5ff4267e5044';
 const facilityId = '6597dffeb5ef5ff4267e5045';
@@ -38,8 +40,12 @@ describe(`POST ${validUrl}`, () => {
     ({ sessionCookie } = await storage.saveUserSession([ROLES.MAKER]));
     jest.spyOn(api, 'deleteAmendment').mockImplementation(mockDeleteAmendment);
     jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
+    jest.spyOn(api, 'getAmendment').mockImplementation(mockGetAmendment);
 
     mockGetApplication.mockResolvedValue(MOCK_AIN_APPLICATION);
+    mockGetAmendment.mockResolvedValue(
+      new PortalFacilityAmendmentWithUkefIdMockBuilder().withDealId(dealId).withFacilityId(facilityId).withAmendmentId(amendmentId).build(),
+    );
 
     jest.spyOn(console, 'error');
   });
@@ -146,6 +152,19 @@ describe(`POST ${validUrl}`, () => {
       expect(mockDeleteAmendment).toHaveBeenCalledTimes(1);
       expect(response.status).toEqual(HttpStatusCode.Found);
       expect(response.headers.location).toEqual(`/gef/application-details/${dealId}`);
+    });
+
+    it('should render problem with service if getAmendment throws an error', async () => {
+      // Arrange
+      mockGetAmendment.mockRejectedValue(new Error('test error'));
+
+      // Act
+      const response = await postWithSessionCookie(sessionCookie, validUrl);
+
+      // Assert
+      expect(mockGetAmendment).toHaveBeenCalledTimes(1);
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      expect(response.text).toContain('Problem with the service');
     });
 
     it('should render problem with service if deleteAmendment throws an error', async () => {
