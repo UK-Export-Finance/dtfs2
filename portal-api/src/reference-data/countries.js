@@ -33,6 +33,8 @@ const getCountry = async (code) => {
     return err?.response?.data;
   });
 
+  console.log('============>', `${referenceProxyUrl}/countries/${code}`, { response });
+
   return response.data;
 };
 

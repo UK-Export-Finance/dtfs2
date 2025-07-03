@@ -690,6 +690,7 @@ const getCurrencyExchangeRate = async (source, target, date) => {
       url: `${refDataUrl}/currency-exchange-rate/${source}/${target}/${date}`,
       headers: {
         'Content-Type': 'application/json',
+        'x-api-key': String(process.env.EXTERNAL_API_KEY),
       },
     });
     return response.data;

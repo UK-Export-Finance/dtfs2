@@ -1,6 +1,6 @@
 version: "3"
 services:
-  dtfs-submissions-data:
+  dtfs-mongo:
     image: mongo:5.0.5
     restart: always
     environment:
@@ -8,7 +8,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=r00t
     volumes:
-      - ./dtfs-submissions-data-volume-dtfs-submissions:/data/db
+      - ./dtfs-mongo-volume-dtfs-submissions:/data/db
     deploy:
       resources:
         limits:
@@ -22,7 +22,7 @@ services:
     image: dtfs/dtfs-central-api
     restart: always
     depends_on:
-      - dtfs-submissions-data
+      - dtfs-mongo
       - reference-data-proxy
     ports:
       - "5005:5005"
@@ -37,7 +37,7 @@ services:
       - PORT=5005
       - EXTERNAL_API_URL=http://reference-data-proxy:5002
       - MONGO_INITDB_DATABASE=dtfs-submissions
-      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
+      - MONGODB_URI=mongodb://root:r00t@dtfs-mongo:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://localhost:5005
       - TZ=Europe/London
     entrypoint: npx nodemon src/index.js -L
@@ -84,7 +84,7 @@ services:
       - PORT=5004
       - EXTERNAL_API_URL=http://reference-data-proxy:5002
       - MONGO_INITDB_DATABASE=dtfs-submissions
-      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
+      - MONGODB_URI=mongodb://root:r00t@dtfs-mongo:27017/?authMechanism=DEFAULT
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - AZURE_NUMBER_GENERATOR_FUNCTION_URL=http://number-generator-function
       - AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
@@ -152,7 +152,7 @@ services:
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
       - MONGO_INITDB_DATABASE=dtfs-submissions
-      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
+      - MONGODB_URI=mongodb://root:r00t@dtfs-mongo:27017/?authMechanism=DEFAULT
       - AZURE_WORKFLOW_STORAGE_ACCOUNT
       - AZURE_WORKFLOW_STORAGE_ACCESS_KEY
       - AZURE_WORKFLOW_FILESHARE_NAME
@@ -166,6 +166,7 @@ services:
       - GOV_NOTIFY_EMAIL_RECIPIENT
       - DTFS_PORTAL_SCHEDULER=true
       - EXTERNAL_API_URL=http://reference-data-proxy:5002
+      - EXTERNAL_API_KEY
       - DTFS_CENTRAL_API=http://dtfs-central-api:5005
       - TFM_API=http://trade-finance-manager-api:5004
       - V1_FILE_SHARE_SAS=${V1_FILE_SHARE_SAS}
@@ -180,7 +181,7 @@ services:
     image: dtfs/reference-data-proxy
     restart: always
     depends_on:
-      - dtfs-submissions-data
+      - dtfs-mongo
     ports:
       - "5002:5002"
     volumes:
@@ -191,36 +192,33 @@ services:
           cpus: "0.1"
           memory: 400M
     environment:
-      - PORT=5002
-      - COMPANIES_HOUSE_API_URL=https://api.companieshouse.gov.uk
-      - COMPANIES_HOUSE_API_KEY
-      - ORDNANCE_SURVEY_API_URL=https://api.os.co.uk
-      - ORDNANCE_SURVEY_API_KEY
-      - MULESOFT_API_KEY
-      - MULESOFT_API_SECRET
-      - MULESOFT_API_NUMBER_GENERATOR_URL
-      - MULESOFT_API_PARTY_DB_KEY
-      - MULESOFT_API_PARTY_DB_SECRET
-      - MULESOFT_API_PARTY_DB_URL
-      - MULESOFT_API_ACBS_DEAL_URL
-      - MULESOFT_API_ACBS_FACILITY_URL
-      - MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL
-      - MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY
-      - MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET
-      - MULESOFT_API_EXPOSURE_PERIOD_URL
-      - MULESOFT_API_UKEF_MDM_EA_URL
-      - MULESOFT_API_UKEF_MDM_EA_KEY
-      - MULESOFT_API_UKEF_MDM_EA_SECRET
-      - MULESOFT_API_UKEF_ESTORE_EA_URL
-      - MULESOFT_API_UKEF_ESTORE_EA_KEY
-      - MULESOFT_API_UKEF_ESTORE_EA_SECRET
-      - AZURE_ACBS_FUNCTION_URL=http://host.docker.internal:7071
-      - AZURE_NUMBER_GENERATOR_FUNCTION_URL=http://number-generator-function
-      - GOV_NOTIFY_API_KEY
-      - MONGO_INITDB_DATABASE=dtfs-submissions
-      - MONGODB_URI=mongodb://root:r00t@dtfs-submissions-data:27017/?authMechanism=DEFAULT
-      - EXTERNAL_API_URL=http://reference-data-proxy:5002
-      - TZ=Europe/London
+        - TZ
+        - PORT=5002
+        - PORTAL_API_KEY
+        - TFM_API_KEY
+        - DTFS_CENTRAL_API_KEY
+        - EXTERNAL_API_KEY
+        - CORS_ORIGIN
+        - APIM_TFS_URL
+        - APIM_TFS_KEY
+        - APIM_TFS_VALUE
+        - APIM_MDM_URL
+        - APIM_MDM_KEY
+        - APIM_MDM_VALUE
+        - APIM_ESTORE_URL
+        - APIM_ESTORE_KEY
+        - APIM_ESTORE_VALUE
+        - AZURE_ACBS_FUNCTION_URL=http://acbs
+        - GOV_NOTIFY_API_KEY
+        - MOCK_E2E_GOV_NOTIFY_API_KEY
+        - EXTERNAL_API_URL=http://reference-data-proxy:5002
+        - NODE_ENV
+        - RATE_LIMIT_THRESHOLD
+        - ESTORE_CRON_MANAGER_SCHEDULE
+        - FF_SALESFORCE_CUSTOMER_CREATION_ENABLED
+        - MONGO_INITDB_DATABASE=dtfs-submissions
+        - MONGODB_URI=mongodb://root:r00t@localhost:27017/?authMechanism=DEFAULT
+      
     entrypoint: npx nodemon src/index.ts -L --max-old-space-size=350
 
   gef-ui:

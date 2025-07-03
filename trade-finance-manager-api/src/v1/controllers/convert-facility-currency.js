@@ -16,6 +16,8 @@ const convertFacilityCurrency = async (facility, dealSubmissionDate) => {
   if (currencyCode && currencyCode !== 'GBP') {
     const currencyExchange = await api.getCurrencyExchangeRate(currencyCode, 'GBP', historicDate);
 
+    console.log('===========>', { currencyExchange });
+
     const {
       midPrice: exchangeRate,
       historicExchangeRate,

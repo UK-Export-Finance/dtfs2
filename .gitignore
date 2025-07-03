@@ -10,6 +10,7 @@ pipeline.log
 dist
 node_modules
 dtfs-submissions-data-volume*
+dtfs-mongo-volume-dtfs-submissions*
 **/cypress/videos
 **/cypress/screenshots
 **/actionsheets/*
