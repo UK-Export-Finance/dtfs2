@@ -7,7 +7,7 @@ import { Facility } from '../../../types/facility';
 dotenv.config();
 
 /**
- * Maps email variables for a GovNotify email when an amendment is returned to the maker.
+ * Maps email variables for a GovNotify email when maker abandon the amendment.
  * Consumes deal, facility, amendment and user data and maps to relevant email variables.
  * @param deal
  * @param facility
@@ -15,26 +15,27 @@ dotenv.config();
  * @param user
  * @returns mapped email variables
  */
-const mapReturnToMakerEmailVariables = ({
+const mapAbandonEmailVariables = ({
   deal,
   facility,
   amendment,
   user,
+  checker,
 }: {
   deal: Deal;
   facility: Facility;
   amendment: PortalFacilityAmendmentWithUkefId;
   user: PortalSessionUser;
+  checker: PortalSessionUser;
 }) => {
-  const { maker } = deal;
-
   const commonVariables = mapCommonEmailVariables({ deal, facility, amendment });
-  const makersName = `${String(maker.firstname)} ${String(maker.surname)}`;
-  const makersEmail = String(maker.email);
+
+  const checkersName = `${checker?.firstname} ${checker?.surname}`;
+  const checkersEmail = checker?.email;
 
   const { firstname, surname, email } = user;
-  const checkersName = `${firstname} ${surname}`;
-  const checkersEmail = email;
+  const makersName = `${firstname} ${surname}`;
+  const makersEmail = email;
 
   return {
     makersEmail,
@@ -48,4 +49,4 @@ const mapReturnToMakerEmailVariables = ({
   };
 };
 
-export default mapReturnToMakerEmailVariables;
+export default mapAbandonEmailVariables;

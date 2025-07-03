@@ -162,12 +162,12 @@ describe(baseUrl, () => {
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      makeRequestAsUser: (user) => as(user).remove(eligibilityCriteria1Url),
+      makeRequestAsUser: (user) => as(user).remove().to(eligibilityCriteria1Url),
       successStatusCode: 200,
     });
 
     withDeleteOneTests({
-      makeRequest: () => as(anAdmin).remove(eligibilityCriteria1Url),
+      makeRequest: () => as(anAdmin).remove().to(eligibilityCriteria1Url),
       collectionName: MONGO_DB_COLLECTIONS.ELIGIBILITY_CRITERIA,
       auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentId: () => eligibilityCriteriaToDeleteId,

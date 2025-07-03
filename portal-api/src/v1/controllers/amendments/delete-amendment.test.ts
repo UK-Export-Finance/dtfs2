@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { aPortalSessionUser, TestApiError } from '@ukef/dtfs2-common';
+import { aPortalSessionUser, TestApiError, portalAmendmentDeleteEmailVariables } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import api from '../../api';
 import { deleteAmendment, DeleteAmendmentRequest } from './delete-amendment.controller';
@@ -14,6 +14,7 @@ const facilityId = new ObjectId().toString();
 const amendmentId = new ObjectId().toString();
 
 const user = aPortalSessionUser();
+const portalAmendmentVariables = portalAmendmentDeleteEmailVariables();
 
 describe('controllers - facility amendment', () => {
   beforeEach(() => {
@@ -25,6 +26,7 @@ describe('controllers - facility amendment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<DeleteAmendmentRequest>({
         params: { facilityId, amendmentId },
+        body: { ...portalAmendmentVariables },
         user,
       });
 
@@ -33,13 +35,21 @@ describe('controllers - facility amendment', () => {
 
       // Assert
       expect(api.deletePortalFacilityAmendment).toHaveBeenCalledTimes(1);
-      expect(api.deletePortalFacilityAmendment).toHaveBeenCalledWith(facilityId, amendmentId, generatePortalAuditDetails(user._id));
+      expect(api.deletePortalFacilityAmendment).toHaveBeenCalledWith(
+        facilityId,
+        amendmentId,
+        generatePortalAuditDetails(user._id),
+        portalAmendmentVariables.makersEmail,
+        portalAmendmentVariables.checkersEmail,
+        portalAmendmentVariables.emailVariables,
+      );
     });
 
     it(`should return a ${HttpStatusCode.Ok} status code if the api request is successful`, async () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<DeleteAmendmentRequest>({
         params: { facilityId, amendmentId },
+        body: { ...portalAmendmentVariables },
         user,
       });
 
@@ -59,6 +69,7 @@ describe('controllers - facility amendment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<DeleteAmendmentRequest>({
         params: { facilityId, amendmentId },
+        body: { ...portalAmendmentVariables },
         user,
       });
 
@@ -77,6 +88,7 @@ describe('controllers - facility amendment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<DeleteAmendmentRequest>({
         params: { facilityId, amendmentId },
+        body: { ...portalAmendmentVariables },
         user,
       });
 

@@ -1,32 +1,44 @@
 import { ObjectId } from 'mongodb';
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { TestApiError } from '@ukef/dtfs2-common';
+import { TestApiError, AnyObject, portalAmendmentDeleteEmailVariables, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
 import { deletePortalAmendment, DeletePortalAmendmentRequest } from './delete-amendment.controller';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
+import externalApi from '../../../../external-api/api';
 
 const facilityId = new ObjectId().toString();
 const amendmentId = new ObjectId().toString();
 
 const mockDeletePortalFacilityAmendment = jest.fn();
-console.error = jest.fn();
+const mockfindOneAmendmentByFacilityIdAndAmendmentId = jest.fn();
 
-const generateHttpMocks = ({ auditDetails }: { auditDetails: unknown }) =>
-  createMocks<DeletePortalAmendmentRequest>({ params: { facilityId, amendmentId }, body: { auditDetails } });
+const mockAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED });
+console.error = jest.fn();
+const sendEmailSpy = jest.fn();
+
+const generateHttpMocks = ({ auditDetails, emailVariables }: { auditDetails: unknown; emailVariables: AnyObject }) =>
+  createMocks<DeletePortalAmendmentRequest>({ params: { facilityId, amendmentId }, body: { auditDetails, ...emailVariables } });
+
+const mockPortalAmendmentDeleteEmailVariables = portalAmendmentDeleteEmailVariables();
 
 describe('deletePortalAmendment', () => {
   beforeEach(() => {
     jest.resetAllMocks();
 
+    jest.spyOn(TfmFacilitiesRepo, 'findOneAmendmentByFacilityIdAndAmendmentId').mockImplementation(mockfindOneAmendmentByFacilityIdAndAmendmentId);
     jest.spyOn(TfmFacilitiesRepo, 'deletePortalFacilityAmendment').mockImplementation(mockDeletePortalFacilityAmendment);
+
+    mockfindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValue(mockAmendment);
+    externalApi.sendEmail = sendEmailSpy;
   });
 
   it('should call TfmFacilitiesRepo.deletePortalFacilityAmendment with the correct params', async () => {
     // Arrange
     const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
-    const { req, res } = generateHttpMocks({ auditDetails });
+    const { req, res } = generateHttpMocks({ auditDetails, emailVariables: mockPortalAmendmentDeleteEmailVariables });
 
     // Act
     await deletePortalAmendment(req, res);
@@ -43,7 +55,7 @@ describe('deletePortalAmendment', () => {
   it(`should return ${HttpStatusCode.NoContent}`, async () => {
     // Arrange
     const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
-    const { req, res } = generateHttpMocks({ auditDetails });
+    const { req, res } = generateHttpMocks({ auditDetails, emailVariables: mockPortalAmendmentDeleteEmailVariables });
 
     // Act
     await deletePortalAmendment(req, res);
@@ -59,7 +71,7 @@ describe('deletePortalAmendment', () => {
     mockDeletePortalFacilityAmendment.mockRejectedValue(new TestApiError({ status, message }));
 
     const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
-    const { req, res } = generateHttpMocks({ auditDetails });
+    const { req, res } = generateHttpMocks({ auditDetails, emailVariables: mockPortalAmendmentDeleteEmailVariables });
 
     // Act
     await deletePortalAmendment(req, res);
@@ -78,7 +90,7 @@ describe('deletePortalAmendment', () => {
     mockDeletePortalFacilityAmendment.mockRejectedValue(new Error(message));
 
     const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
-    const { req, res } = generateHttpMocks({ auditDetails });
+    const { req, res } = generateHttpMocks({ auditDetails, emailVariables: mockPortalAmendmentDeleteEmailVariables });
 
     // Act
     await deletePortalAmendment(req, res);
