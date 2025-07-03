@@ -34,7 +34,7 @@ describe('generateTotalFeesAccruedCurrencyError', () => {
     expect(paymentCurrencyError).toEqual(expectedError);
   });
 
-  it('returns an error when the value is not a valid currency code', () => {
+  it('should return an error when the value is not a valid currency code', () => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,

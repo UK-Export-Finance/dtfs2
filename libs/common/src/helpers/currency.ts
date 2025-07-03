@@ -24,4 +24,9 @@ export const isCurrencyValid = (currency?: string): currency is Currency => {
   return isNonEmptyString(currency) && Object.values(CURRENCY).includes(currency as Currency);
 };
 
+/**
+ * Formats a currency string to upper case.
+ * @param currency - currency code to format
+ * @returns currency code in upper case
+ */
 export const formatCurrencyUpperCase = (currency: string): Currency => currency.toUpperCase() as Currency;

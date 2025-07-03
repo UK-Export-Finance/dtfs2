@@ -22,7 +22,7 @@ describe('generateMonthlyFeesPaidCurrencyError', () => {
     expect(monthlyFeesPaidToUkefCurrencyError).toEqual(expectedError);
   });
 
-  it('returns an error when the value is not a currency code', () => {
+  it('should return an error when the value is not a currency code', () => {
     const invalidBaseCurrency = {
       value: 'INR',
       column: 'A',

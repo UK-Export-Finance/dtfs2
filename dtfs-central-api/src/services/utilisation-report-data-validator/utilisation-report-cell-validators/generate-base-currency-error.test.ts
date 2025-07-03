@@ -22,7 +22,7 @@ describe('generateBaseCurrencyError', () => {
     expect(baseCurrencyError).toEqual(expectedError);
   });
 
-  it('returns an error when the value is not a valid currency', () => {
+  it('should return an error when the value is not a valid currency', () => {
     const invalidBaseCurrency = {
       value: 'INR',
       column: 'B',
