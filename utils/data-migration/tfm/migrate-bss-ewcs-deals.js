@@ -12,7 +12,7 @@
 const axios = require('axios');
 const CONSTANTS = require('../constant');
 const { getCollection, disconnect } = require('../helpers/database');
-const { datafixes, datafixesTfmDeal, datafixesTfmFacilities } = require('../helpers/datafixes');
+const { datafixes, datafixesTfmDeal, datafixesTfmFacilities, datafixesFacilities } = require('../helpers/datafixes');
 const { sleep } = require('../helpers/io');
 
 const version = '0.0.1';
@@ -63,6 +63,43 @@ const deals = async () => {
       return Promise.reject(new Error('Empty data set'));
     })
     .catch((e) => Promise.reject(new Error(`Deals fetch failed ${e}`)));
+};
+
+/**
+  * Return all the portal facilities, without (default) or with filter specified.
+  * @param {Object} filter Mongo filter
+  * @returns {Object} Collection object
+  */
+const getFacilities = (filter = null) => getCollection(CONSTANTS.DATABASE.TABLES.FACILITIES, filter);
+
+/**
+  * Extracts deals from `facilities` collection with following filters
+  * 1. type: Cash
+  * 2. or type: Contingent
+  * @returns {Promise} Response on success, Reject upon a failure.
+  */
+const facilities = async () => {
+  console.info('\x1b[33m%s\x1b[0m', `➕ 1. Fetching all ${CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS} facilities`, '\n');
+
+  /**
+    * OR condition
+    * 1. Cash facility
+    * 2. or contingent facility
+    */
+  const filter = {
+    $or: [{ type: CONSTANTS.FACILITY.FACILITY_TYPE.BOND }, { type: CONSTANTS.FACILITY.FACILITY_TYPE.LOAN }],
+  };
+
+  return getFacilities(filter)
+    .then((data) => {
+      if (data && data.length > 0) {
+        console.info('\x1b[33m%s\x1b[0m', `✅ ${data.length} facilities fetched.`, '\n');
+        return Promise.resolve(data);
+      }
+
+      return Promise.reject(new Error('Empty data set'));
+    })
+    .catch((e) => Promise.reject(new Error(`portal facilities fetch failed ${e}`)));
 };
 
 // ******************** TFM *************************
@@ -145,6 +182,9 @@ const tfm = async (data) => {
  */
 const migrate = () => {
   console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating ${CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS} TFM migration v${version}.`, '\n\n');
+
+  // facilities()
+  //   .then((f) => datafixesFacilities(f, CONSTANTS.DEAL.DEAL_TYPE.BSS_EWCS));
 
   deals()
     .then((d) => datafixes(d))

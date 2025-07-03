@@ -103,11 +103,11 @@ const formatString = (string) => {
  */
 const dealId = (deal, portal = false) => {
   if (portal) {
-    return deal.dealType === CONSTANTS.DEAL.DEAL_TYPE.GEF ? deal.ukefDealId : deal.details.ukefDealId;
+    return deal.dealType === CONSTANTS.DEAL.DEAL_TYPE.GEF ? deal.ukefDealId : deal?.details?.ukefDealId;
   }
 
   if (deal && deal.dealSnapshot) {
-    return deal.dealSnapshot.dealType === CONSTANTS.DEAL.DEAL_TYPE.GEF ? deal.dealSnapshot.ukefDealId : deal.dealSnapshot.details.ukefDealId;
+    return deal.dealSnapshot.dealType === CONSTANTS.DEAL.DEAL_TYPE.GEF ? deal?.dealSnapshot?.ukefDealId : deal?.dealSnapshot?.details.ukefDealId;
   }
   return null;
 };
@@ -166,6 +166,16 @@ const banking = async () => {
   });
 };
 
+const coverStartDate = () => {
+  allFacilities.forEach((facility, index) => {
+    const { requestedCoverStartDate } = facility;
+
+    if (requestedCoverStartDate.toString().length !== 13) {
+      allFacilities[index].requestedCoverStartDate = requestedCoverStartDate * 1000;
+    }
+  });
+};
+
 const portalActionSheet = async () => {
   try {
     const searches = [
@@ -190,6 +200,7 @@ const portalActionSheet = async () => {
                 case 'updatedAt':
                   allDeals[index].updatedAt = getUnixTime(new Date(value).setHours(0, 0, 0, 0));
                   allDeals[index].facilitiesUpdated = getUnixTime(new Date(value).setHours(0, 0, 0, 0));
+                  allDeals[index].details.submissionDate = getUnixTime(new Date(value).setHours(0, 0, 0, 0)) * 1000;
                   break;
                 default:
                   break;
@@ -919,6 +930,8 @@ const amendment = async () => {
   }
 };
 
+// ******************** Deal Update *************************
+
 // ******************** ACTION SHEETS *************************
 /**
  * Updates `GEF` TFM deal from action sheet
@@ -1143,7 +1156,11 @@ const datafixesFacilities = async (facilities, type) => {
     let updated = 0;
 
     // updates allFacilitiesArray
-    await actionSheetFacilityPortal();
+    if (type === CONSTANTS.DEAL.DEAL_TYPE.GEF) {
+      await actionSheetFacilityPortal();
+    } else {
+      coverStartDate();
+    }
 
     // Update portal
     const updates = allFacilities.map(async (facility) => {

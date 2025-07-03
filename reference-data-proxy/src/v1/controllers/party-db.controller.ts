@@ -25,6 +25,6 @@ export const lookup = async (req: Request, res: Response) => {
     return res.status(status).send(data);
   } catch (error) {
     console.error('Unable to call lookup %o', error);
-    return res.status(500);
+    return res.status(500).send({ status: 500, message: 'An unknown error occurred' });
   }
 };

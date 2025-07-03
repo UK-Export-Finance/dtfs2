@@ -61,7 +61,7 @@ const migrate = () => {
   console.info('\n\x1b[33m%s\x1b[0m', `🚀 Initiating ${CONSTANTS.DEAL.DEAL_TYPE.GEF} portal facility migration v${version}.`, '\n\n');
 
   facilities()
-    .then((f) => datafixesFacilities(f, 'GEF'))
+    .then((f) => datafixesFacilities(f, CONSTANTS.DEAL.DEAL_TYPE.GEF))
     .then(() => disconnect())
     .then(() => process.exit(1))
     .catch((error) => {

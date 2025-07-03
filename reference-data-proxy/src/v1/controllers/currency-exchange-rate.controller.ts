@@ -2,9 +2,11 @@ import { Request, Response } from 'express';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 dotenv.config();
-const username: any = process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY;
-const password: any = process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET;
-const exchangeRateURL: any = process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_URL;
+
+const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
+const headers = {
+  [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
+};
 
 export const getExchangeRate = async (req: Request, res: Response) => {
   try {
@@ -21,8 +23,11 @@ export const getExchangeRate = async (req: Request, res: Response) => {
 
     const response = await axios({
       method: 'get',
-      url: `${exchangeRateURL}?source=${actualSource}&target=${actualTarget}&exchangeRateDate=${date}`,
-      auth: { username, password },
+      url: `${APIM_MDM_URL}currencies/exchange?source=${actualSource}&target=${actualTarget}&exchangeRateDate=${date}`,
+      headers: {
+        'Content-Type': 'application/json',
+        ...headers,
+      },
     }).catch((error: any) => {
       console.error('Error calling Exchange rate API, ', error?.response?.data, error?.response?.status);
       return { data: error?.response?.data, status: error?.response?.status };

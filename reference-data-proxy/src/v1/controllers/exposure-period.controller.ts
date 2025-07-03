@@ -4,6 +4,11 @@ import * as dotenv from 'dotenv';
 import { FACILITY_TYPE, PRODUCT_GROUP } from '../../constants';
 dotenv.config();
 
+const { APIM_MDM_VALUE, APIM_MDM_KEY, APIM_MDM_URL } = process.env;
+const headers = {
+  [String(APIM_MDM_KEY)]: APIM_MDM_VALUE,
+};
+
 const mapProductGroup = (facilityType: any) => {
   if (facilityType === FACILITY_TYPE.BOND) {
     return PRODUCT_GROUP.BOND;
@@ -34,15 +39,15 @@ export const getExposurePeriod = async (req: Request, res: Response) => {
   const productGroup = mapProductGroup(facilityType);
 
   console.info('Calling Exposure Period API');
-  const username: any = process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_KEY;
-  const password: any = process.env.MULESOFT_API_CURRENCY_EXCHANGE_RATE_SECRET;
-  const exposurePeriodURL: any = process.env.MULESOFT_API_EXPOSURE_PERIOD_URL;
 
   try {
     const response = await axios({
       method: 'get',
-      url: `${exposurePeriodURL}?startdate=${startDate}&enddate=${endDate}&productgroup=${productGroup}`,
-      auth: { username, password },
+      url: `${APIM_MDM_URL}exposure-period?startdate=${startDate}&enddate=${endDate}&productgroup=${productGroup}`,
+      headers: {
+        'Content-Type': 'application/json',
+        ...headers,
+      },
     });
 
     if (!response) {

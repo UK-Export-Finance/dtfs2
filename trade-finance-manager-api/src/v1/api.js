@@ -685,6 +685,7 @@ const findTeamMembers = async (teamId) => {
 
 const getCurrencyExchangeRate = async (source, target, date) => {
   try {
+    console.log('============>', `${refDataUrl}/currency-exchange-rate/${source}/${target}/${date}`);
     const response = await axios({
       method: 'get',
       url: `${refDataUrl}/currency-exchange-rate/${source}/${target}/${date}`,
