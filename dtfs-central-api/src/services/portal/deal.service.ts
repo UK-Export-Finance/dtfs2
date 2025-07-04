@@ -1,8 +1,22 @@
-import { AuditDetails, ActivityAuthor, DEAL_TYPE, DealStatus, DealType, PORTAL_ACTIVITY_LABEL, UKEF, getLongDateFormat, now } from '@ukef/dtfs2-common';
+import {
+  AuditDetails,
+  ActivityAuthor,
+  DEAL_TYPE,
+  DealStatus,
+  DealType,
+  PORTAL_ACTIVITY_LABEL,
+  UKEF,
+  getLongDateFormat,
+  now,
+  Deal,
+  PortalSessionUser,
+} from '@ukef/dtfs2-common';
 import { getUnixTime } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import { updateBssEwcsDealStatus } from '../../v1/controllers/portal/deal/update-deal-status.controller';
 import { updateGefDealStatus } from '../../v1/controllers/portal/gef-deal/put-gef-deal.status.controller';
+import { updateGefDeal } from '../../v1/controllers/portal/gef-deal/update-deal.controller';
+import { updateBssEwcsDeal } from '../../v1/controllers/portal/deal/update-deal.controller';
 import { PortalActivityRepo } from '../../repositories/portal/portal-activity.repo';
 
 export class PortalDealService {
@@ -36,6 +50,54 @@ export class PortalDealService {
         dealId,
         newStatus,
         auditDetails,
+      });
+    } else {
+      throw new Error(`Invalid dealType ${dealType}`);
+    }
+  }
+
+  /**
+   * Updates the deal
+   * @param updateDealParams
+   * @param updateDealParams.dealId - the deal Id to update
+   * @param updateDealParams.dealUpdate - the deal update to apply
+   * @param updateDealParams.user - the user making the update
+   * @param updateDealParams.auditDetails - the users audit details
+   * @param updateDealParams.existingDeal - the existing deal to update
+   * @param updateDealParams.routePath - the route path for the deal
+   * @param updateDealParams.dealType - the deal type
+   */
+  public static async updateDeal({
+    dealId,
+    dealUpdate,
+    user,
+    auditDetails,
+    existingDeal,
+    routePath,
+    dealType,
+  }: {
+    dealId: string;
+    dealUpdate: object;
+    user?: ActivityAuthor | PortalSessionUser;
+    auditDetails: AuditDetails;
+    existingDeal?: Deal;
+    routePath?: string;
+    dealType: DealType;
+  }): Promise<void> {
+    if (dealType === DEAL_TYPE.GEF) {
+      await updateGefDeal({
+        dealId,
+        dealUpdate,
+        auditDetails,
+      });
+    } else if (dealType === DEAL_TYPE.BSS_EWCS && user && existingDeal && routePath) {
+      await updateBssEwcsDeal({
+        dealId,
+        dealUpdate,
+        user,
+        auditDetails,
+        existingDeal,
+        routePath,
       });
     } else {
       throw new Error(`Invalid dealType ${dealType}`);

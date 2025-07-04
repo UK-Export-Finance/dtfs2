@@ -5,7 +5,15 @@ const { findOneDeal } = require('./get-gef-deal.controller');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { isNumber } = require('../../../../helpers');
 
-const updateDeal = async ({ dealId, dealUpdate, auditDetails }) => {
+/**
+ * Updates a Gef deal in the database.
+ * @param {Object} params - The parameters for updating the deal.
+ * @param {string} params.dealId - The ID of the deal being updated.
+ * @param {Object} params.dealUpdate - The update to be made to the deal.
+ * @param {import("@ukef/dtfs2-common").AuditDetails} params.auditDetails - The audit details for the update.
+ * @returns {Promise<{ status: number, message: string }>} The updated deal object.
+ */
+const updateGefDeal = async ({ dealId, dealUpdate, auditDetails }) => {
   try {
     if (!ObjectId.isValid(dealId)) {
       return { status: 400, message: 'Invalid Deal Id' };
@@ -17,7 +25,7 @@ const updateDeal = async ({ dealId, dealUpdate, auditDetails }) => {
 
     const dealUpdateForDatabase = {
       ...originalDeal,
-      ...dealUpdate,
+      ...(dealUpdate || {}),
       updatedAt: Date.now(),
       auditRecord,
     };
@@ -34,7 +42,7 @@ const updateDeal = async ({ dealId, dealUpdate, auditDetails }) => {
     return { status: 500, message: error };
   }
 };
-exports.updateDeal = updateDeal;
+exports.updateGefDeal = updateGefDeal;
 
 exports.updateDealPut = async (req, res) => {
   const {
@@ -62,7 +70,7 @@ exports.updateDealPut = async (req, res) => {
   try {
     return await findOneDeal(dealId, async (existingDeal) => {
       if (existingDeal) {
-        const response = await updateDeal({ dealId, dealUpdate, auditDetails });
+        const response = await updateGefDeal({ dealId, dealUpdate, auditDetails });
         const status = isNumber(response?.status, 3);
         const code = status ? response.status : 200;
 
