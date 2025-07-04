@@ -39,7 +39,7 @@ describe('generatePaymentCurrencyError', () => {
     expect(paymentCurrencyError).toEqual(expectedError);
   });
 
-  it('returns an error when the value is not a valid ISO 4217 currency code', () => {
+  it('should return an error when the value is not a valid currency code', () => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,
@@ -52,7 +52,7 @@ describe('generatePaymentCurrencyError', () => {
         row: 1,
       },
       'payment currency': {
-        value: 'USDA',
+        value: 'INR',
         column: 'C',
         row: 1,
       },
@@ -63,10 +63,10 @@ describe('generatePaymentCurrencyError', () => {
       },
     };
     const expectedError = {
-      errorMessage: 'Payment currency must be in the ISO 4217 currency code format',
+      errorMessage: 'The report can only include the following currencies: GBP, EUR, USD, JPY',
       column: 'C',
       row: 1,
-      value: 'USDA',
+      value: 'INR',
       exporter: testExporterName,
     };
 
@@ -75,7 +75,7 @@ describe('generatePaymentCurrencyError', () => {
     expect(paymentCurrencyError).toEqual(expectedError);
   });
 
-  it('returns null if the value is a valid ISO 4217 currency code', () => {
+  it.each(Object.values(CURRENCY))('should return null if the value is "%s"', (currency) => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,
@@ -83,12 +83,12 @@ describe('generatePaymentCurrencyError', () => {
         row: 1,
       },
       'fees paid to ukef currency': {
-        value: CURRENCY.GBP,
+        value: currency,
         column: 'B',
         row: 1,
       },
       'payment currency': {
-        value: 'USD',
+        value: currency,
         column: 'C',
         row: 1,
       },
