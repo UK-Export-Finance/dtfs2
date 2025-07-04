@@ -224,6 +224,9 @@ describe('postSubmitAmendmentToUkef', () => {
     await postSubmitAmendmentToUkef(req, res);
 
     // Assert
+
+    const { user } = req.session;
+
     expect(updateSubmittedAmendmentMock).toHaveBeenCalledTimes(1);
     expect(updateSubmittedAmendmentMock).toHaveBeenCalledWith({
       facilityId,
@@ -250,6 +253,8 @@ describe('postSubmitAmendmentToUkef', () => {
         eligibilityCriteria: generateAmendmentMandatoryCriteria(submittedAmendment.eligibilityCriteria?.criteria),
         referenceNumber,
       },
+      bankId: user?.bank.id,
+      bankName: user?.bank.name,
     });
   });
 

@@ -37,11 +37,15 @@ const invalidId = 'invalid-id';
 
 const dealId = new ObjectId().toString();
 const referenceNumber = `${new ObjectId().toString()}-01`;
+const bankId = '1';
+const bankName = 'Bank Name';
 
 const validPayload = {
   newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
   referenceNumber,
   ...portalAmendmentToUkefEmailVariables(),
+  bankId,
+  bankName,
 };
 
 describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/submit-amendment', () => {

@@ -130,6 +130,8 @@ describe('validatePatchPortalFacilitySubmitAmendmentPayload', () => {
       referenceNumber,
       auditDetails: validAuditDetails,
       ...portalAmendmentVariables,
+      bankId: '1',
+      bankName: 'Test Bank',
     };
 
     const { req, res } = createMocks({ body: payload });

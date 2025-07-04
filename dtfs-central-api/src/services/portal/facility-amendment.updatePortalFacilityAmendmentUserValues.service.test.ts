@@ -5,10 +5,12 @@ import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { PortalFacilityAmendmentService } from './facility-amendment.service';
 import { aPortalUser } from '../../../test-helpers';
+import { TfmActivitiesRepo } from '../../repositories/tfm-deals-repo';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 
 const mockUpdatePortalFacilityAmendmentByAmendmentId = jest.fn();
 const mockFindOneAmendmentByFacilityIdAndAmendmentId = jest.fn();
+const mockAddTfmActivity = jest.fn();
 
 const amendmentId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
@@ -31,6 +33,7 @@ describe('PortalFacilityAmendmentService', () => {
 
     jest.spyOn(TfmFacilitiesRepo, 'updatePortalFacilityAmendmentByAmendmentId').mockImplementation(mockUpdatePortalFacilityAmendmentByAmendmentId);
     jest.spyOn(TfmFacilitiesRepo, 'findOneAmendmentByFacilityIdAndAmendmentId').mockImplementation(mockFindOneAmendmentByFacilityIdAndAmendmentId);
+    jest.spyOn(TfmActivitiesRepo, 'submitTfmActivity').mockImplementation(mockAddTfmActivity);
 
     mockUpdatePortalFacilityAmendmentByAmendmentId.mockResolvedValue({});
     mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValue(updatedAmendment);
@@ -79,6 +82,18 @@ describe('PortalFacilityAmendmentService', () => {
     // Assert
     expect(mockFindOneAmendmentByFacilityIdAndAmendmentId).toHaveBeenCalledTimes(1);
     expect(mockFindOneAmendmentByFacilityIdAndAmendmentId).toHaveBeenCalledWith(new ObjectId(facilityId), new ObjectId(amendmentId));
+  });
+
+  it('should not call TfmActivitiesRepo.submitTfmActivity', async () => {
+    // Act
+    await PortalFacilityAmendmentService.updatePortalFacilityAmendmentUserValues({
+      amendmentId,
+      facilityId,
+      update,
+      auditDetails,
+    });
+
+    expect(mockAddTfmActivity).toHaveBeenCalledTimes(0);
   });
 
   it('should return the result of TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId', async () => {
