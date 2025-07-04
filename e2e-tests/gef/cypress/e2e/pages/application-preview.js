@@ -13,6 +13,7 @@ const applicationPreview = {
   amendmentDetailsFurtherMakersInputLink: (index) => cy.get(`[data-cy="amendment-details-further-makers-input-${index}"]`),
 
   amendmentsAbandonedDealCancelledBanner: () => cy.get('[data-cy="amendments-abandoned-deal-cancelled-banner"]'),
+  amendmentsAbandonedDealPendingCancellationBanner: () => cy.get('[data-cy="amendments-abandoned-deal-pending-cancellation-banner"]'),
 
   ukefReview: () => cy.get('[data-cy="ukef-review"]'),
   ukefReviewLink: () => cy.get('[data-cy="ukef-review-link"]'),

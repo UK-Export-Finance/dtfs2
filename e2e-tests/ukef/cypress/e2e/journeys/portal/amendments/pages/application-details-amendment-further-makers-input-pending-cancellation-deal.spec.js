@@ -4,12 +4,13 @@ import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/ge
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
 import { PIM_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
+import { tomorrow } from '../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 const CHANGED_FACILITY_VALUE = 20000;
 
-context('Amendments - Application details - application preview page when deal status is "Cancelled" and amendment is "Further makers input"', () => {
+context('Amendments - Application details - application preview page when deal status is "Cancelled" and amendment is "Ready for checkers approval"', () => {
   let applicationDetailsUrl;
   let dealId;
   let facilityId;
@@ -50,6 +51,8 @@ context('Amendments - Application details - application preview page when deal s
           cy.clickSubmitButton();
         });
 
+        cy.clearSessionCookies();
+
         cy.visit(TFM_URL);
 
         cy.tfmLogin(PIM_USER_1);
@@ -57,7 +60,9 @@ context('Amendments - Application details - application preview page when deal s
         const tfmDealPage = `${TFM_URL}/case/${dealId}/deal`;
         cy.visit(tfmDealPage);
 
-        cy.submitDealCancellation({ dealId });
+        const effectiveDate = tomorrow.date;
+
+        cy.submitDealCancellation({ dealId, effectiveDate });
       });
     });
   });
@@ -87,16 +92,16 @@ context('Amendments - Application details - application preview page when deal s
       applicationPreview.amendmentInProgress().should('not.exist');
     });
 
-    it('should display the amendments abandoned deal cancelled banner', () => {
-      applicationPreview.amendmentsAbandonedDealCancelledBanner().should('exist');
+    it('should display the amendments abandoned deal pending cancellation banner', () => {
+      applicationPreview.amendmentsAbandonedDealPendingCancellationBanner().should('exist');
       cy.assertText(
-        applicationPreview.amendmentsAbandonedDealCancelledBanner(),
-        'Any amendments in progress have been abandoned by UKEF, as the deal is now cancelled.',
+        applicationPreview.amendmentsAbandonedDealPendingCancellationBanner(),
+        'Any amendments in progress have been abandoned by UKEF, as the deal is pending cancellation.',
       );
     });
 
-    it('should not display the amendments abandoned deal pending cancellation banner', () => {
-      applicationPreview.amendmentsAbandonedDealPendingCancellationBanner().should('not.exist');
+    it('should not display the amendments abandoned deal cancelled banner', () => {
+      applicationPreview.amendmentsAbandonedDealCancelledBanner().should('not.exist');
     });
   });
 
@@ -120,16 +125,16 @@ context('Amendments - Application details - application preview page when deal s
       applicationPreview.amendmentInProgress().should('not.exist');
     });
 
-    it('should display the amendments abandoned deal cancelled banner', () => {
-      applicationPreview.amendmentsAbandonedDealCancelledBanner().should('exist');
+    it('should display the amendments abandoned deal pending cancellation banner', () => {
+      applicationPreview.amendmentsAbandonedDealPendingCancellationBanner().should('exist');
       cy.assertText(
-        applicationPreview.amendmentsAbandonedDealCancelledBanner(),
-        'Any amendments in progress have been abandoned by UKEF, as the deal is now cancelled.',
+        applicationPreview.amendmentsAbandonedDealPendingCancellationBanner(),
+        'Any amendments in progress have been abandoned by UKEF, as the deal is pending cancellation.',
       );
     });
 
-    it('should not display the amendments abandoned deal pending cancellation banner', () => {
-      applicationPreview.amendmentsAbandonedDealPendingCancellationBanner().should('not.exist');
+    it('should not display the amendments abandoned deal cancelled banner', () => {
+      applicationPreview.amendmentsAbandonedDealCancelledBanner().should('not.exist');
     });
   });
 });
