@@ -6,3 +6,10 @@
     html: '<p data-cy="amendments-abandoned-deal-cancelled-banner">Any amendments in progress have been abandoned by UKEF, as the deal is now cancelled.</p>'
   }) }}
 {% endif %}
+
+{% if pendingCancellationDealWithAmendments %}
+  {{ mojBanner({
+    type: "information",
+    html: '<p data-cy="amendments-abandoned-deal-pending-cancellation-banner">Any amendments in progress have been abandoned by UKEF, as the deal is pending cancellation.</p>'
+  }) }}
+{% endif %}

@@ -398,9 +398,14 @@ const applicationDetails = async (req, res, next) => {
      */
     const areAmendmentsInProgress = Boolean(amendmentsInProgress?.length);
     const isDealCancelled = application.status === DEAL_STATUS.CANCELLED;
+    const isDealPendingCancellation = application.status === DEAL_STATUS.PENDING_CANCELLATION;
 
     if (areAmendmentsInProgress && isDealCancelled) {
       params.cancelledDealWithAmendments = true;
+    }
+
+    if (areAmendmentsInProgress && isDealPendingCancellation) {
+      params.pendingCancellationDealWithAmendments = true;
     }
 
     /**
