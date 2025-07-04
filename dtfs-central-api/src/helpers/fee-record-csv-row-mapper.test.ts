@@ -12,6 +12,8 @@ import {
 import { feeRecordCsvRowToSqlEntity } from './fee-record-csv-row-mapper';
 import { aUtilisationReportRawCsvData } from '../../test-helpers';
 
+const { GBP } = CURRENCY;
+
 describe('fee-record-helpers', () => {
   describe('feeRecordCsvRowToSqlEntity', () => {
     const mockDate = new Date('2024-01');
@@ -32,7 +34,7 @@ describe('fee-record-helpers', () => {
       jest.useRealTimers();
     });
 
-    it('returns an SQL entity with the correct data', () => {
+    it('should return an SQL entity with the correct data', () => {
       // Act
       const rawCsvData = aUtilisationReportRawCsvData();
       const feeRecordEntity = feeRecordCsvRowToSqlEntity({
@@ -64,9 +66,49 @@ describe('fee-record-helpers', () => {
       );
     });
 
+    it('should return an SQL entity with currencies in upper case when provided as lowercase', () => {
+      // Act
+      const rawCsvData = {
+        ...aUtilisationReportRawCsvData(),
+        'base currency': GBP.toLowerCase(),
+        'accrual currency': GBP.toLowerCase(),
+        'fees paid to ukef currency': GBP.toLowerCase(),
+        'payment currency': GBP.toLowerCase(),
+      };
+
+      const feeRecordEntity = feeRecordCsvRowToSqlEntity({
+        // @ts-ignore - The test data is not typed correctly
+        dataEntry: rawCsvData,
+        requestSource,
+        report,
+      });
+
+      // Assert
+      expect(feeRecordEntity instanceof FeeRecordEntity).toEqual(true);
+      expect(feeRecordEntity).toEqual(
+        expect.objectContaining<Partial<FeeRecordEntity>>({
+          facilityId: rawCsvData['ukef facility id'],
+          exporter: rawCsvData.exporter,
+          baseCurrency: GBP,
+          facilityUtilisation: Number(rawCsvData['facility utilisation']),
+          totalFeesAccruedForThePeriod: Number(rawCsvData['total fees accrued for the period']),
+          totalFeesAccruedForThePeriodCurrency: GBP,
+          totalFeesAccruedForThePeriodExchangeRate: Number(rawCsvData['accrual exchange rate']),
+          feesPaidToUkefForThePeriod: Number(rawCsvData['fees paid to ukef for the period']),
+          feesPaidToUkefForThePeriodCurrency: GBP,
+          paymentCurrency: GBP,
+          paymentExchangeRate: Number(rawCsvData['payment exchange rate']),
+          lastUpdatedByIsSystemUser: false,
+          lastUpdatedByPortalUserId: requestSource.userId,
+          lastUpdatedByTfmUserId: null,
+          report,
+        }),
+      );
+    });
+
     const emptyValues: ('' | undefined | null)[] = [null, undefined, ''];
 
-    it.each(emptyValues)('sets payment currency to fees paid to ukef currency when not provided: %s', (paymentCurrency?: '' | null) => {
+    it.each(emptyValues)('should set payment currency to fees paid to ukef currency when not provided: %s', (paymentCurrency?: '' | null) => {
       // Arrange
       const rawCsvData = aUtilisationReportRawCsvData();
       rawCsvData['fees paid to ukef currency'] = CURRENCY.GBP;
@@ -83,7 +125,7 @@ describe('fee-record-helpers', () => {
       expect(feeRecordEntity.paymentCurrency).toEqual(CURRENCY.GBP);
     });
 
-    it.each(emptyValues)('sets total fees accrued currency to the base currency when not provided: %s', (accrualCurrency?: '' | null) => {
+    it.each(emptyValues)('should set total fees accrued currency to the base currency when not provided: %s', (accrualCurrency?: '' | null) => {
       // Arrange
       const rawCsvData = aUtilisationReportRawCsvData();
       rawCsvData['base currency'] = CURRENCY.GBP;
@@ -100,7 +142,7 @@ describe('fee-record-helpers', () => {
       expect(feeRecordEntity.totalFeesAccruedForThePeriodCurrency).toEqual(CURRENCY.GBP);
     });
 
-    it('sets the entity status to TO_DO when fees paid to ukef for the period is non zero', () => {
+    it('should set the entity status to TO_DO when fees paid to ukef for the period is non zero', () => {
       // Act
       const feeRecordEntity = feeRecordCsvRowToSqlEntity({
         dataEntry: { ...aUtilisationReportRawCsvData(), 'fees paid to ukef for the period': '0.01' },
@@ -113,7 +155,7 @@ describe('fee-record-helpers', () => {
       expect(feeRecordEntity.status).toEqual<FeeRecordStatus>(FEE_RECORD_STATUS.TO_DO);
     });
 
-    it(`sets the entity status to ${FEE_RECORD_STATUS.MATCH} when fees paid to ukef for the period is zero`, () => {
+    it(`should set the entity status to ${FEE_RECORD_STATUS.MATCH} when fees paid to ukef for the period is zero`, () => {
       // Act
       const feeRecordEntity = feeRecordCsvRowToSqlEntity({
         dataEntry: { ...aUtilisationReportRawCsvData(), 'fees paid to ukef for the period': '0.00' },
@@ -126,7 +168,7 @@ describe('fee-record-helpers', () => {
       expect(feeRecordEntity.status).toEqual<FeeRecordStatus>(FEE_RECORD_STATUS.MATCH);
     });
 
-    it('converts the numeric string columns to numbers', () => {
+    it('should convert the numeric string columns to numbers', () => {
       // Arrange
       const facilityUtilisation = 100;
       const totalFeesAccruedForThePeriod = 213.4;
@@ -166,7 +208,7 @@ describe('fee-record-helpers', () => {
       ${'undefined'}     | ${undefined}
       ${'null'}          | ${null}
       ${'empty strings'} | ${''}
-    `('uses the default value of 1 when the exchange rate entries are $condition', ({ testValue }) => {
+    `('should use the default value of 1 when the exchange rate entries are $condition', ({ testValue }) => {
       // Arrange
       const feeRecordCsvRow: UtilisationReportRawCsvData = {
         ...aUtilisationReportRawCsvData(),
