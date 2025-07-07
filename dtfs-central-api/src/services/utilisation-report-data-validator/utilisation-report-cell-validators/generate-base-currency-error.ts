@@ -1,4 +1,4 @@
-import validator from 'validator';
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';
 
 /**
@@ -18,9 +18,9 @@ export const generateBaseCurrencyError: UtilisationReportCellValidationErrorGene
     };
   }
 
-  if (!validator.isISO4217(currencyCellData.value)) {
+  if (!(currencyCellData.value in CURRENCY)) {
     return {
-      errorMessage: 'Base currency must be in the ISO 4217 currency code format',
+      errorMessage: 'The report can only include the following currencies: GBP, EUR, USD, JPY',
       column: currencyCellData?.column,
       row: currencyCellData?.row,
       value: currencyCellData?.value,

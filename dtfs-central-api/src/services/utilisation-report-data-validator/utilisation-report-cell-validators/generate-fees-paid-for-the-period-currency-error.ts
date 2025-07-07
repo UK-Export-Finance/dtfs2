@@ -1,4 +1,4 @@
-import validator from 'validator';
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { UtilisationReportCellValidationErrorGenerator } from './types/validation-error-generator';
 
 /**
@@ -21,9 +21,9 @@ export const generateFeesPaidForThePeriodCurrencyError: UtilisationReportCellVal
     };
   }
 
-  if (!validator.isISO4217(feesPaidForThePeriodCurrencyCellData.value)) {
+  if (!(feesPaidForThePeriodCurrencyCellData.value in CURRENCY)) {
     return {
-      errorMessage: 'Fees paid to UKEF currency must be in the ISO 4217 currency code format',
+      errorMessage: 'The report can only include the following currencies: GBP, EUR, USD, JPY',
       column: feesPaidForThePeriodCurrencyCellData?.column,
       row: feesPaidForThePeriodCurrencyCellData?.row,
       value: feesPaidForThePeriodCurrencyCellData?.value,
