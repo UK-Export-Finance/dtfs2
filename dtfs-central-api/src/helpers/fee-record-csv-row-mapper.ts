@@ -6,6 +6,7 @@ import {
   FeeRecordStatus,
   UtilisationReportRawCsvData,
   FEE_RECORD_STATUS,
+  formatCurrencyUpperCase,
 } from '@ukef/dtfs2-common';
 
 type FeeRecordCsvRowToSqlEntityParams = {
@@ -31,18 +32,21 @@ export const feeRecordCsvRowToSqlEntity = ({ dataEntry, requestSource, report }:
   const feesPaidToUkefForThePeriod = Number(dataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD]);
   const status: FeeRecordStatus = feesPaidToUkefForThePeriod === 0 ? FEE_RECORD_STATUS.MATCH : FEE_RECORD_STATUS.TO_DO;
 
+  const paymentCurrency = dataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY] || dataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY];
+  const totalFeesAccruedForThePeriodCurrency =
+    dataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY] || dataEntry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY];
+
   return FeeRecordEntity.create({
     facilityId: dataEntry[UTILISATION_REPORT_HEADERS.UKEF_FACILITY_ID],
     exporter: dataEntry[UTILISATION_REPORT_HEADERS.EXPORTER],
-    baseCurrency: dataEntry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY],
+    baseCurrency: formatCurrencyUpperCase(dataEntry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY]),
     facilityUtilisation: Number(dataEntry[UTILISATION_REPORT_HEADERS.FACILITY_UTILISATION]),
     totalFeesAccruedForThePeriod: Number(dataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED]),
-    totalFeesAccruedForThePeriodCurrency:
-      dataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY] || dataEntry[UTILISATION_REPORT_HEADERS.BASE_CURRENCY],
+    totalFeesAccruedForThePeriodCurrency: formatCurrencyUpperCase(totalFeesAccruedForThePeriodCurrency),
     totalFeesAccruedForThePeriodExchangeRate: asNumberOrDefault(dataEntry[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_EXCHANGE_RATE], 1),
     feesPaidToUkefForThePeriod,
-    feesPaidToUkefForThePeriodCurrency: dataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY],
-    paymentCurrency: dataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY] || dataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY],
+    feesPaidToUkefForThePeriodCurrency: formatCurrencyUpperCase(dataEntry[UTILISATION_REPORT_HEADERS.FEES_PAID_IN_PERIOD_CURRENCY]),
+    paymentCurrency: formatCurrencyUpperCase(paymentCurrency),
     paymentExchangeRate: asNumberOrDefault(dataEntry[UTILISATION_REPORT_HEADERS.PAYMENT_EXCHANGE_RATE], 1),
     status,
     report,

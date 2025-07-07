@@ -22,17 +22,17 @@ describe('generateBaseCurrencyError', () => {
     expect(baseCurrencyError).toEqual(expectedError);
   });
 
-  it('returns an error when the value is not a valid ISO 4217 currency code', () => {
+  it('should return an error when the value is not a valid currency', () => {
     const invalidBaseCurrency = {
-      value: 'GBPA',
+      value: 'INR',
       column: 'B',
       row: 1,
     };
     const expectedError = {
-      errorMessage: 'Base currency must be in the ISO 4217 currency code format',
+      errorMessage: 'The report can only include the following currencies: GBP, EUR, USD, JPY',
       column: 'B',
       row: 1,
-      value: 'GBPA',
+      value: 'INR',
       exporter: testExporterName,
     };
 
@@ -41,9 +41,9 @@ describe('generateBaseCurrencyError', () => {
     expect(baseCurrencyError).toEqual(expectedError);
   });
 
-  it('returns null if the value is a valid currency', () => {
+  it.each(Object.values(CURRENCY))('should return null if the value is "%s"', (currency) => {
     const validBaseCurrency = {
-      value: CURRENCY.GBP,
+      value: currency,
       column: 'C',
       row: 1,
     };

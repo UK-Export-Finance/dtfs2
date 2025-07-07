@@ -1,7 +1,7 @@
 # Base image
 FROM mongo:4.2.0
 
-# Enviornment variable
+# Environment variable
 ARG MONGO_INITDB_DATABASE
 ARG MONGO_INITDB_ROOT_USERNAME
 ARG MONGO_INITDB_ROOT_PASSWORD

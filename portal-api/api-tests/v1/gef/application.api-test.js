@@ -781,12 +781,12 @@ describe(baseUrl, () => {
       allowedRoles: [MAKER],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       getUserWithoutAnyRoles: () => testUsers().withoutAnyRoles().one(),
-      makeRequestAsUser: (user) => as(user).remove(`${baseUrl}/${applicationToDeleteId}`),
+      makeRequestAsUser: (user) => as(user).remove().to(`${baseUrl}/${applicationToDeleteId}`),
       successStatusCode: 200,
     });
 
     withDeleteOneTests({
-      makeRequest: () => as(maker1).remove(`${baseUrl}/${applicationToDeleteId}`),
+      makeRequest: () => as(maker1).remove().to(`${baseUrl}/${applicationToDeleteId}`),
       collectionName: MONGO_DB_COLLECTIONS.DEALS,
       auditRecord: {
         ...generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),
@@ -796,7 +796,7 @@ describe(baseUrl, () => {
     });
 
     withDeleteManyTests({
-      makeRequest: () => as(maker1).remove(`${baseUrl}/${applicationToDeleteId}`),
+      makeRequest: () => as(maker1).remove().to(`${baseUrl}/${applicationToDeleteId}`),
       collectionName: MONGO_DB_COLLECTIONS.FACILITIES,
       auditRecord: {
         ...generateMockPortalUserAuditDatabaseRecord('abcdef123456abcdef123456'),

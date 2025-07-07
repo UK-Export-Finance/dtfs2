@@ -27,18 +27,20 @@ describe('DELETE /v1/banks/:bankId/fee-record-correction/:correctionId/transient
   withRoleAuthorisationTests({
     allowedRoles: [PAYMENT_REPORT_OFFICER],
     getUserWithRole: (role) => testUsers().withRole(role).one(),
-    makeRequestAsUser: (user) => as(user).remove(correctionFormDataUrl(matchingBankId, correctionId)),
+    makeRequestAsUser: (user) => as(user).remove().to(correctionFormDataUrl(matchingBankId, correctionId)),
     successStatusCode: HttpStatusCode.NoContent,
   });
 
   it(`should respond with a ${HttpStatusCode.BadRequest} to requests that do not have a valid bank id`, async () => {
-    const { status } = await as(aPaymentReportOfficer).remove(correctionFormDataUrl('invalid-bank-id', correctionId));
+    const { status } = await as(aPaymentReportOfficer).remove().to(correctionFormDataUrl('invalid-bank-id', correctionId));
 
     expect(status).toEqual(HttpStatusCode.BadRequest);
   });
 
   it(`should respond with a ${HttpStatusCode.Unauthorized} if user's bank does not match request bank`, async () => {
-    const { status } = await as(aPaymentReportOfficer).remove(correctionFormDataUrl(matchingBankId - 1, correctionId));
+    const { status } = await as(aPaymentReportOfficer)
+      .remove()
+      .to(correctionFormDataUrl(matchingBankId - 1, correctionId));
 
     expect(status).toEqual(HttpStatusCode.Unauthorized);
   });

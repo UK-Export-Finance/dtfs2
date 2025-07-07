@@ -112,7 +112,7 @@ describe('/v1/banks', () => {
     });
 
     withDeleteOneTests({
-      makeRequest: () => as(anAdmin).remove(`/v1/banks/${newBanks[0].id}`),
+      makeRequest: () => as(anAdmin).remove().to(`/v1/banks/${newBanks[0].id}`),
       collectionName: MONGO_DB_COLLECTIONS.BANKS,
       auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentId: () => bankToDeleteId,

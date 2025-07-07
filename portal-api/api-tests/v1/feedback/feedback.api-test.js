@@ -229,19 +229,19 @@ describe('/v1/feedback', () => {
     withRoleAuthorisationTests({
       allowedRoles: [ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
-      makeRequestAsUser: (user) => as(user).remove(aFeedbackUrl),
+      makeRequestAsUser: (user) => as(user).remove().to(aFeedbackUrl),
       successStatusCode: 200,
     });
 
     withDeleteOneTests({
-      makeRequest: () => as(anAdmin).remove(aFeedbackUrl),
+      makeRequest: () => as(anAdmin).remove().to(aFeedbackUrl),
       collectionName: MONGO_DB_COLLECTIONS.FEEDBACK,
       auditRecord: expectAnyPortalUserAuditDatabaseRecord(),
       getDeletedDocumentId: () => feedbackToDeleteId,
     });
 
     it('404s requests for unknown resources', async () => {
-      const { status } = await as(anAdmin).remove('/v1/feedback/620a1aa095a618b12da38c7b');
+      const { status } = await as(anAdmin).remove().to('/v1/feedback/620a1aa095a618b12da38c7b');
       expect(status).toEqual(404);
     });
   });

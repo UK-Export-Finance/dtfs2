@@ -601,37 +601,37 @@ describe('/v1/deals/:id/loan', () => {
     });
 
     it('401s requests that do not present a valid Authorization token', async () => {
-      const { status } = await as().remove(`/v1/deals/${dealId}/loan/12345678`);
+      const { status } = await as().remove().to(`/v1/deals/${dealId}/loan/12345678`);
 
       expect(status).toEqual(401);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
-      const { status } = await as(testUsers).remove(`/v1/deals/${dealId}/loan/12345678`);
+      const { status } = await as(testUsers).remove().to(`/v1/deals/${dealId}/loan/12345678`);
 
       expect(status).toEqual(401);
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
-      const { status } = await as(testbank2Maker).remove(`/v1/deals/${dealId}/loan/12345678`);
+      const { status } = await as(testbank2Maker).remove().to(`/v1/deals/${dealId}/loan/12345678`);
 
       expect(status).toEqual(401);
     });
 
     it('404s requests for unknown deal', async () => {
-      const { status } = await as(testbank1Maker).remove('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
+      const { status } = await as(testbank1Maker).remove().to('/v1/deals/620a1aa095a618b12da38c7b/loan/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
 
     it('404s requests for unknown loan', async () => {
-      const { status } = await as(testbank1Maker).remove(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b`);
+      const { status } = await as(testbank1Maker).remove().to(`/v1/deals/${dealId}/loan/620a1aa095a618b12da38c7b`);
 
       expect(status).toEqual(404);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
-      const { status } = await as(testbank1Maker).remove(`/v1/deals/${dealId}/loan/${loanId}`);
+      const { status } = await as(testbank1Maker).remove().to(`/v1/deals/${dealId}/loan/${loanId}`);
       expect(status).toEqual(200);
     });
 
@@ -650,7 +650,7 @@ describe('/v1/deals/:id/loan', () => {
 
       const loanIdToDelete = createdDeal.loanTransactions.items[1]._id;
 
-      const { status } = await as(testbank1Maker).remove(`/v1/deals/${dealId}/loan/${loanIdToDelete}`);
+      const { status } = await as(testbank1Maker).remove().to(`/v1/deals/${dealId}/loan/${loanIdToDelete}`);
       expect(status).toEqual(200);
 
       const { body: updatedDealBody } = await as(testbank1Maker).get(`/v1/deals/${dealId}`);

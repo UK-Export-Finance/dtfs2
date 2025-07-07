@@ -1,6 +1,6 @@
 import { CURRENCY } from '../constants';
 import { CurrencyAndAmount } from '../types';
-import { getFormattedCurrencyAndAmount, isCurrencyValid } from './currency';
+import { getFormattedCurrencyAndAmount, isCurrencyValid, formatCurrencyUpperCase } from './currency';
 
 describe('currency helpers', () => {
   describe('getFormattedCurrencyAndAmount', () => {
@@ -93,6 +93,30 @@ describe('currency helpers', () => {
 
       // Assert
       expect(result).toBe(false);
+    });
+  });
+
+  describe('formatCurrencyUpperCase', () => {
+    it('should convert currency to uppercase', () => {
+      // Arrange
+      const currency = CURRENCY.GBP.toLowerCase();
+
+      // Act
+      const formattedCurrency = formatCurrencyUpperCase(currency);
+
+      // Assert
+      expect(formattedCurrency).toBe(CURRENCY.GBP);
+    });
+
+    it('should return the same currency if already in uppercase', () => {
+      // Arrange
+      const currency = CURRENCY.USD;
+
+      // Act
+      const formattedCurrency = formatCurrencyUpperCase(currency);
+
+      // Assert
+      expect(formattedCurrency).toBe(currency);
     });
   });
 });

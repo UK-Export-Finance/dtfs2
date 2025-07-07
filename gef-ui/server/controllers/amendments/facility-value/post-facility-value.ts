@@ -1,4 +1,4 @@
-import { CURRENCY, CustomExpressRequest, getMonetaryValueAsNumber } from '@ukef/dtfs2-common';
+import { CURRENCY, CustomExpressRequest, getMonetaryValueAsNumber, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { FacilityValueViewModel } from '../../../types/view-models/amendments/facility-value-view-model';
@@ -46,6 +46,7 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
 
     const facilityValueNumerical = getMonetaryValueAsNumber(facilityValue);
     const validationErrorOrValue = validateFacilityValue(facilityValueNumerical);
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
 
     if ('errors' in validationErrorOrValue) {
       const currencySymbol = getCurrencySymbol(facility.currency?.id ?? CURRENCY.GBP);
@@ -58,6 +59,7 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
         previousPage,
         currencySymbol,
         errors: validationErrorHandler(validationErrorOrValue.errors),
+        canMakerCancelAmendment,
       };
 
       return res.render('partials/amendments/facility-value.njk', viewModel);

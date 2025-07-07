@@ -1,4 +1,4 @@
-import { CustomExpressRequest } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS, AmendmentNotFoundError } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import * as api from '../../../services/api';
 import { DoYouHaveAFacilityEndDateViewModel } from '../../../types/view-models/amendments/do-you-have-a-facility-end-date-view-model';
@@ -32,7 +32,15 @@ export const postDoYouHaveAFacilityEndDate = async (req: PostDoYouHaveAFacilityE
       return res.redirect('/not-found');
     }
 
+    const amendment = await api.getAmendment({ facilityId, amendmentId, userToken });
+
+    if (!amendment) {
+      console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
+      return res.redirect('/not-found');
+    }
+
     const errorsOrValue = validateIsUsingFacilityEndDate(isUsingFacilityEndDate);
+    const canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
 
     if ('errors' in errorsOrValue) {
       const viewModel: DoYouHaveAFacilityEndDateViewModel = {
@@ -42,6 +50,7 @@ export const postDoYouHaveAFacilityEndDate = async (req: PostDoYouHaveAFacilityE
         previousPage,
         errors: validationErrorHandler(errorsOrValue.errors),
         isUsingFacilityEndDate,
+        canMakerCancelAmendment,
       };
 
       return res.render('partials/amendments/do-you-have-a-facility-end-date.njk', viewModel);
@@ -49,9 +58,14 @@ export const postDoYouHaveAFacilityEndDate = async (req: PostDoYouHaveAFacilityE
 
     const update = { isUsingFacilityEndDate: errorsOrValue.value };
 
-    const amendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
+    const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
-    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE, amendment));
+    if (!updatedAmendment) {
+      console.error('Failed to update amendment %s for facility %s', amendmentId, facilityId);
+      throw new AmendmentNotFoundError(amendmentId, facilityId);
+    }
+
+    return res.redirect(getNextPage(PORTAL_AMENDMENT_PAGES.DO_YOU_HAVE_A_FACILITY_END_DATE, updatedAmendment));
   } catch (error) {
     console.error('Error posting amendments do you have a facility end date page %o', error);
     return res.render('partials/problem-with-service.njk');

@@ -953,9 +953,12 @@ const patchPortalFacilityAmendment = async ({ facilityId, amendmentId, update, a
  * @param {string} params.facilityId - id of the facility to amend.
  * @param {string} params.amendmentId - id of the amendment.
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - The audit details for the update.
+ * @param {string} params.makersEmail - The maker's email address to send the notification to
+ * @param {string} params.checkersEmail - The checker's email address to send the notification to
+ * @param {import('@ukef/dtfs2-common').PortalAmendmentAbandonEmailVariables} params.emailVariables - The email variables to send with the notification
  * @returns {Promise<void>}
  */
-const deletePortalFacilityAmendment = async (facilityId, amendmentId, auditDetails) => {
+const deletePortalFacilityAmendment = async (facilityId, amendmentId, auditDetails, makersEmail, checkersEmail, emailVariables) => {
   try {
     await axios({
       method: 'delete',
@@ -963,6 +966,9 @@ const deletePortalFacilityAmendment = async (facilityId, amendmentId, auditDetai
       headers: headers.central,
       data: {
         auditDetails,
+        makersEmail,
+        checkersEmail,
+        emailVariables,
       },
     });
   } catch (error) {
