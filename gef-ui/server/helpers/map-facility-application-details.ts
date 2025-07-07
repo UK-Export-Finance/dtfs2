@@ -45,7 +45,8 @@ export const mapFacilityApplicationDetails = (
   const mappedFacilities = facilities.map((facility: FacilityParams) => {
     const facilityToMap = facility;
 
-    const dealIsCancelled = application.status === DEAL_STATUS.CANCELLED || application.status === DEAL_STATUS.PENDING_CANCELLATION;
+    const cancelledDealStatuses: string[] = [DEAL_STATUS.CANCELLED, DEAL_STATUS.PENDING_CANCELLATION];
+    const dealIsCancelled = cancelledDealStatuses.includes(application.status);
 
     /**
      * If the deal is cancelled,
