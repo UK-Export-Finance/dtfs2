@@ -34,7 +34,7 @@ describe(component, () => {
       dealId: '123',
       facilityId: '234',
       amendmentId: '456',
-      type: 'PORTAL',
+      type: 'PORTAL facility',
       effectiveDate: '25/07/2025',
       hasFutureEffectiveDate: true,
       amendmentRows: [
