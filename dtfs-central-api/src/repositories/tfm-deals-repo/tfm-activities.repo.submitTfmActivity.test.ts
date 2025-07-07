@@ -90,7 +90,19 @@ describe('tfm-activities-repo', () => {
       );
     });
 
-    describe('updating the deal stage', () => {
+    it('should throw an error if findOneAndUpdate fails', async () => {
+      // Arrange
+      const error = new Error('Test error');
+
+      findOneAndUpdateMock.mockRejectedValueOnce(error);
+
+      getCollectionMock.mockResolvedValue({ findOneAndUpdate: findOneAndUpdateMock });
+
+      // Assert
+      await expect(TfmActivitiesRepo.submitTfmActivity({ dealId, auditDetails, activity: mockActivity })).rejects.toThrow(error);
+    });
+
+    describe('submitting a tfm activity', () => {
       it('should call findOneAndUpdate with the expected parameters', async () => {
         // Act
         await TfmActivitiesRepo.submitTfmActivity({ dealId, auditDetails, activity: mockActivity });

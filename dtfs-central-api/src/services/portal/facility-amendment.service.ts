@@ -142,8 +142,10 @@ export class PortalFacilityAmendmentService {
     }
 
     if (activity) {
+      const { dealId } = updatedAmendment;
+
       const { deal } = await TfmActivitiesRepo.submitTfmActivity({
-        dealId: updatedAmendment.dealId,
+        dealId,
         activity,
         auditDetails,
       });

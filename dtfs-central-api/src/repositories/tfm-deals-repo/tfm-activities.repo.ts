@@ -4,6 +4,10 @@ import { generateAuditDatabaseRecordFromAuditDetails } from '@ukef/dtfs2-common/
 import { mongoDbClient } from '../../drivers/db-client';
 
 export class TfmActivitiesRepo {
+  /**
+   * gets deal collection from the database
+   * @returns deal collection
+   */
   private static async getDealCollection(): Promise<Collection<WithoutId<TfmDeal>>> {
     return await mongoDbClient.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
   }
@@ -25,35 +29,40 @@ export class TfmActivitiesRepo {
     activity?: TfmActivity;
     auditDetails: AuditDetails;
   }): Promise<{ deal: TfmDeal | null }> {
-    if (!ObjectId.isValid(dealId)) {
-      throw new InvalidDealIdError(dealId.toString());
-    }
+    try {
+      if (!ObjectId.isValid(dealId)) {
+        throw new InvalidDealIdError(dealId.toString());
+      }
 
-    const dealCollection = await this.getDealCollection();
+      const dealCollection = await this.getDealCollection();
 
-    const update: UpdateFilter<WithoutId<TfmDeal>> = {
-      $set: {
-        auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
-      },
-    };
-
-    if (activity) {
-      update.$push = {
-        'tfm.activities': activity,
+      const update: UpdateFilter<WithoutId<TfmDeal>> = {
+        $set: {
+          auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
+        },
       };
+
+      if (activity) {
+        update.$push = {
+          'tfm.activities': activity,
+        };
+      }
+
+      const { value: deal } = await dealCollection.findOneAndUpdate(
+        {
+          _id: { $eq: new ObjectId(dealId) },
+        },
+        update,
+      );
+
+      if (!deal) {
+        throw new DealNotFoundError(dealId.toString());
+      }
+
+      return { deal };
+    } catch (error) {
+      console.error('Error submitting tfm activity %o', error);
+      throw error;
     }
-
-    const { value: deal } = await dealCollection.findOneAndUpdate(
-      {
-        _id: { $eq: new ObjectId(dealId) },
-      },
-      update,
-    );
-
-    if (!deal) {
-      throw new DealNotFoundError(dealId.toString());
-    }
-
-    return { deal };
   }
 }
