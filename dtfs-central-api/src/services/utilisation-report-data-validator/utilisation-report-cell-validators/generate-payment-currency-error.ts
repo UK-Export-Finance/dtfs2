@@ -1,5 +1,4 @@
-import validator from 'validator';
-import { UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
+import { CURRENCY, UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
 import { UtilisationReportRowValidationErrorGenerator } from './types/validation-error-generator';
 
 /**
@@ -25,9 +24,9 @@ export const generatePaymentCurrencyError: UtilisationReportRowValidationErrorGe
     };
   }
 
-  if (!validator.isISO4217(paymentCurrencyValue)) {
+  if (!(paymentCurrencyValue in CURRENCY)) {
     return {
-      errorMessage: 'Payment currency must be in the ISO 4217 currency code format',
+      errorMessage: 'The report can only include the following currencies: GBP, EUR, USD, JPY',
       column: csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.column,
       row: csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.row,
       value: csvDataRow[UTILISATION_REPORT_HEADERS.PAYMENT_CURRENCY]?.value,
