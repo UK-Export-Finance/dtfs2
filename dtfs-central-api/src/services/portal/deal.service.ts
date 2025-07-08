@@ -84,13 +84,18 @@ export class PortalDealService {
     routePath?: string;
     dealType: DealType;
   }): Promise<void> {
+    /* Ensure that the deal type is BSS_EWCS and perform additional checks for required parameters.
+     * user, existingDeal, and routePath could be undefined due to their typings.
+     */
+    const isBssEwcsUpdate = dealType === DEAL_TYPE.BSS_EWCS && user && existingDeal && routePath;
+
     if (dealType === DEAL_TYPE.GEF) {
       await updateGefDeal({
         dealId,
         dealUpdate,
         auditDetails,
       });
-    } else if (dealType === DEAL_TYPE.BSS_EWCS && user && existingDeal && routePath) {
+    } else if (isBssEwcsUpdate) {
       await updateBssEwcsDeal({
         dealId,
         dealUpdate,

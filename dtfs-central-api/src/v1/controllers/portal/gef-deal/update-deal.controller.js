@@ -1,4 +1,4 @@
-const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails, now } = require('@ukef/dtfs2-common/change-stream');
 const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { findOneDeal } = require('./get-gef-deal.controller');
@@ -26,7 +26,7 @@ const updateGefDeal = async ({ dealId, dealUpdate, auditDetails }) => {
     const dealUpdateForDatabase = {
       ...originalDeal,
       ...(dealUpdate || {}),
-      updatedAt: Date.now(),
+      updatedAt: now(),
       auditRecord,
     };
 
