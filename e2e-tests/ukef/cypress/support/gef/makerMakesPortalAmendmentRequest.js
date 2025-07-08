@@ -2,7 +2,7 @@ import whatDoYouNeedToChange from '../../../../gef/cypress/e2e/pages/amendments/
 import doYouHaveAFacilityEndDate from '../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
 import eligibility from '../../../../gef/cypress/e2e/pages/amendments/eligibility';
 import facilityValue from '../../../../gef/cypress/e2e/pages/amendments/facility-value';
-
+import { today } from '../../../../e2e-fixtures/dateConstants';
 /**
  * completes the maker makes portal amendment request journey up to check your answers
  * @param {Boolean} param.coverEndDateExists - if cover end date is changed
@@ -17,6 +17,7 @@ export const makerMakesPortalAmendmentRequest = ({
   facilityEndDateExists = false,
   changedFacilityValue,
   changedCoverEndDate,
+  effectiveDate = today.date,
 }) => {
   if (coverEndDateExists) {
     whatDoYouNeedToChange.coverEndDateCheckbox().click();
@@ -55,6 +56,6 @@ export const makerMakesPortalAmendmentRequest = ({
   eligibility.allTrueRadioButtons().click({ multiple: true });
   cy.clickContinueButton();
 
-  cy.completeDateFormFields({ idPrefix: 'effective-date' });
+  cy.completeDateFormFields({ idPrefix: 'effective-date', date: effectiveDate });
   cy.clickContinueButton();
 };

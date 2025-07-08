@@ -1,4 +1,5 @@
-import { PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, now } from '@ukef/dtfs2-common';
+import { add } from 'date-fns';
 import { addAmendmentParamsToFacility } from './add-amendment-params-to-facility';
 import { MOCK_ISSUED_FACILITY } from '../utils/mocks/mock-facilities';
 import { MOCK_CHECKER, MOCK_MAKER } from '../utils/mocks/mock-users';
@@ -11,12 +12,21 @@ describe('addAmendmentParamsToFacility', () => {
     amendmentId: 'amendment-1',
     facilityId: 'facility-1',
     status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+    effectiveDate: now(),
   };
 
   const amendmentFurtherMakersInput = {
     amendmentId: 'amendment-1',
     facilityId: 'facility-2',
     status: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
+    effectiveDate: now(),
+  };
+
+  const amendmentAcknowledged = {
+    amendmentId: 'amendment-1',
+    facilityId: 'facility-1',
+    status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+    effectiveDate: add(now(), { days: 1 }),
   };
 
   const facility = {
@@ -154,6 +164,41 @@ describe('addAmendmentParamsToFacility', () => {
           mappedFacility: {
             ...facility,
             isFacilityWithAmendmentInProgress: amendmentFurtherMakersInput,
+            amendmentDetailsUrl,
+          },
+          hasReadyForCheckerAmendments: false,
+          hasFurtherMakersInputAmendments: false,
+          readyForCheckerAmendmentDetailsUrlAndText: [],
+          furtherMakersInputAmendmentDetailsUrlAndText: [],
+        };
+
+        expect(result).toEqual(expected);
+      });
+    });
+  });
+
+  describe('when the amendment is acknowledged', () => {
+    const params = {
+      facility,
+      dealId: 'deal-1',
+      isFacilityWithEffectiveAmendment: amendmentAcknowledged,
+    };
+
+    describe('when the user is a maker', () => {
+      it('should return an object with correct variables', () => {
+        const result = addAmendmentParamsToFacility({
+          ...params,
+          userRoles: MOCK_MAKER.roles,
+          hasReadyForCheckerAmendments: false,
+          hasFurtherMakersInputAmendments: false,
+          readyForCheckerAmendmentDetailsUrlAndText: [],
+          furtherMakersInputAmendmentDetailsUrlAndText: [],
+        });
+
+        const expected = {
+          mappedFacility: {
+            ...facility,
+            isFacilityWithEffectiveAmendment: amendmentAcknowledged,
             amendmentDetailsUrl,
           },
           hasReadyForCheckerAmendments: false,

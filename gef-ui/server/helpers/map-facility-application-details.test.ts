@@ -1,10 +1,11 @@
-import { Role, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { Role, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_AMENDMENT_STATUS, now } from '@ukef/dtfs2-common';
+import { add } from 'date-fns';
 import { mapFacilityApplicationDetails } from './map-facility-application-details';
 import { addAmendmentParamsToFacility } from './add-amendment-params-to-facility';
 import { MOCK_ISSUED_FACILITY } from '../utils/mocks/mock-facilities';
 import { MOCK_MAKER } from '../utils/mocks/mock-users';
 import { MOCK_BASIC_DEAL } from '../utils/mocks/mock-applications';
-import { AmendmentInProgressParams } from '../types/portal-amendments';
+import { OnGoingAmendmentsParams } from '../types/portal-amendments';
 
 describe('mapFacilityApplicationDetails', () => {
   const facility = {
@@ -22,12 +23,14 @@ describe('mapFacilityApplicationDetails', () => {
     amendmentId: 'amendment-1',
     facilityId: facility.facilityId,
     status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+    effectiveDate: add(now(), { days: 1 }),
   };
 
   const amendmentFurtherMakersInput = {
     amendmentId: 'amendment-1',
     facilityId: facilityTwo.facilityId,
     status: PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED,
+    effectiveDate: now(),
   };
 
   const params = {
@@ -42,7 +45,7 @@ describe('mapFacilityApplicationDetails', () => {
   describe('when the deal is cancelled', () => {
     it('should not populate params and should not populate canIssuedFacilitiesBeAmended', () => {
       // Arrange
-      const amendmentsInProgress: AmendmentInProgressParams[] = [];
+      const onGoingAmendments: OnGoingAmendmentsParams[] = [];
 
       const cancelledDeal = {
         ...mockDeal,
@@ -50,7 +53,7 @@ describe('mapFacilityApplicationDetails', () => {
       };
 
       // Act
-      const response = mapFacilityApplicationDetails(cancelledDeal, [facility], amendmentsInProgress, params, MOCK_MAKER.roles as Role[]);
+      const response = mapFacilityApplicationDetails(cancelledDeal, [facility], onGoingAmendments, params, MOCK_MAKER.roles as Role[]);
 
       const expected = {
         mappedFacilities: [facility],
@@ -61,14 +64,14 @@ describe('mapFacilityApplicationDetails', () => {
     });
   });
 
-  describe('when there are no amendments in progress', () => {
+  describe('when there are no on going amendments', () => {
     describe('when a facility is issued', () => {
       it('should return mapped facilities with canIssuedFacilitiesBeAmended set to true', () => {
         // Arrange
-        const amendmentsInProgress: AmendmentInProgressParams[] = [];
+        const onGoingAmendments: OnGoingAmendmentsParams[] = [];
 
         // Act
-        const response = mapFacilityApplicationDetails(mockDeal, [facility], amendmentsInProgress, params, MOCK_MAKER.roles as Role[]);
+        const response = mapFacilityApplicationDetails(mockDeal, [facility], onGoingAmendments, params, MOCK_MAKER.roles as Role[]);
 
         // Assert
         const expected = {
@@ -92,10 +95,10 @@ describe('mapFacilityApplicationDetails', () => {
           ...facility,
           stage: 'Unissued',
         };
-        const amendmentsInProgress: AmendmentInProgressParams[] = [];
+        const onGoingAmendments: OnGoingAmendmentsParams[] = [];
 
         // Act
-        const response = mapFacilityApplicationDetails(mockDeal, [unissuedFacility], amendmentsInProgress, params, MOCK_MAKER.roles as Role[]);
+        const response = mapFacilityApplicationDetails(mockDeal, [unissuedFacility], onGoingAmendments, params, MOCK_MAKER.roles as Role[]);
 
         // Assert
         const expected = {
@@ -116,10 +119,10 @@ describe('mapFacilityApplicationDetails', () => {
   describe('when there are amendments in progress', () => {
     it('should return mapped facilities and params fully populated', () => {
       // Arrange
-      const amendmentsInProgress: AmendmentInProgressParams[] = [amendmentReadyForChecker, amendmentFurtherMakersInput];
+      const onGoingAmendments: OnGoingAmendmentsParams[] = [amendmentReadyForChecker, amendmentFurtherMakersInput];
 
       // Act
-      const response = mapFacilityApplicationDetails(mockDeal, [facility, facilityTwo], amendmentsInProgress, params, MOCK_MAKER.roles as Role[]);
+      const response = mapFacilityApplicationDetails(mockDeal, [facility, facilityTwo], onGoingAmendments, params, MOCK_MAKER.roles as Role[]);
 
       // Assert
       const {
@@ -130,7 +133,7 @@ describe('mapFacilityApplicationDetails', () => {
         facility,
         dealId: mockDeal._id,
         userRoles: MOCK_MAKER.roles,
-        isFacilityWithAmendmentInProgress: amendmentsInProgress[0],
+        isFacilityWithAmendmentInProgress: onGoingAmendments[0],
         readyForCheckerAmendmentDetailsUrlAndText: params.readyForCheckerAmendmentDetailsUrlAndText,
         furtherMakersInputAmendmentDetailsUrlAndText: params.furtherMakersInputAmendmentDetailsUrlAndText,
       });
@@ -143,7 +146,7 @@ describe('mapFacilityApplicationDetails', () => {
         facility: facilityTwo,
         dealId: mockDeal._id,
         userRoles: MOCK_MAKER.roles,
-        isFacilityWithAmendmentInProgress: amendmentsInProgress[1],
+        isFacilityWithAmendmentInProgress: onGoingAmendments[1],
         readyForCheckerAmendmentDetailsUrlAndText: params.readyForCheckerAmendmentDetailsUrlAndText,
         furtherMakersInputAmendmentDetailsUrlAndText: params.furtherMakersInputAmendmentDetailsUrlAndText,
       });

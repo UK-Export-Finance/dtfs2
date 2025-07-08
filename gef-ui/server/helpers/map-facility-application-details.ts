@@ -1,9 +1,9 @@
-import { Role, PORTAL_AMENDMENT_INPROGRESS_STATUSES, DEAL_STATUS } from '@ukef/dtfs2-common';
+import { Role, PORTAL_AMENDMENT_INPROGRESS_STATUSES, DEAL_STATUS, PORTAL_AMENDMENT_STATUS, now } from '@ukef/dtfs2-common';
 import { STAGE } from '../constants';
 import { addAmendmentParamsToFacility } from './add-amendment-params-to-facility';
 import { canUserAmendIssuedFacilities } from '../utils/facility-amendments.helper';
 import { Facility, FacilityParams } from '../types/facility';
-import { AmendmentDetailsUrlAndText, AmendmentInProgressParams } from '../types/portal-amendments';
+import { AmendmentDetailsUrlAndText, OnGoingAmendmentsParams } from '../types/portal-amendments';
 import { Deal } from '../types/deal';
 
 export type AmendmentDetailsFacilityParams = {
@@ -35,7 +35,7 @@ export type FacilityAndParams = {
 export const mapFacilityApplicationDetails = (
   application: Deal,
   facilities: FacilityParams[],
-  amendmentsInProgress: AmendmentInProgressParams[],
+  onGoingAmendments: OnGoingAmendmentsParams[],
   facilityRelevantParams: AmendmentDetailsFacilityParams,
   userRoles: Role[],
 ): FacilityAndParams => {
@@ -59,15 +59,21 @@ export const mapFacilityApplicationDetails = (
 
     const userCanAmendIssuedFacilities = canUserAmendIssuedFacilities(submissionType, status, userRoles);
 
-    const isFacilityWithAmendmentInProgress = amendmentsInProgress.find(
-      (item: AmendmentInProgressParams) => item.facilityId === facility.facilityId && PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(item.status),
+    const isFacilityWithAmendmentInProgress = onGoingAmendments.find(
+      (item: OnGoingAmendmentsParams) => item.facilityId === facility.facilityId && PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(item.status),
     );
 
-    const canIssuedFacilitiesBeAmended = isFacilityIssued && userCanAmendIssuedFacilities && !isFacilityWithAmendmentInProgress;
+    const isFacilityWithEffectiveAmendment = onGoingAmendments.find(
+      (item: OnGoingAmendmentsParams) =>
+        item.facilityId === facility.facilityId && item.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED && new Date(item.effectiveDate) > now(),
+    );
+
+    const canIssuedFacilitiesBeAmended =
+      isFacilityIssued && userCanAmendIssuedFacilities && !isFacilityWithAmendmentInProgress && !isFacilityWithEffectiveAmendment;
 
     facilityToMap.canIssuedFacilitiesBeAmended = canIssuedFacilitiesBeAmended;
 
-    if (isFacilityWithAmendmentInProgress) {
+    if (isFacilityWithAmendmentInProgress || isFacilityWithEffectiveAmendment) {
       const {
         mappedFacility,
         readyForCheckerAmendmentDetailsUrlAndText,
@@ -78,6 +84,7 @@ export const mapFacilityApplicationDetails = (
         facility: facilityToMap,
         dealId: application._id,
         userRoles,
+        isFacilityWithEffectiveAmendment,
         isFacilityWithAmendmentInProgress,
         readyForCheckerAmendmentDetailsUrlAndText: facilityParams.readyForCheckerAmendmentDetailsUrlAndText,
         furtherMakersInputAmendmentDetailsUrlAndText: facilityParams.furtherMakersInputAmendmentDetailsUrlAndText,

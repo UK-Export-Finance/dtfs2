@@ -135,6 +135,7 @@ describe(page, () => {
                 amendmentId,
                 facilityId,
                 status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+                effectiveDate: 1234,
               },
               amendmentDetailsUrl: url,
             },
@@ -164,6 +165,7 @@ describe(page, () => {
                 amendmentId,
                 facilityId,
                 status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
+                effectiveDate: 1234,
               },
               amendmentDetailsUrl: url,
             },
@@ -180,7 +182,37 @@ describe(page, () => {
       wrapper.expectText(amendmentInProgress).toRead(urlText);
     });
 
-    it('should be rendered when facility does not have an amendment in progress', () => {
+    it(`should be rendered when facility has an amendment effective in future and the user is logged in as a maker`, () => {
+      const urlText = 'See details';
+      const amendmentEffectiveFuture = `[data-cy="amendment-effective-future-banner-link"]`;
+
+      wrapper = render({
+        ...params,
+        facilities: {
+          data: [
+            {
+              ...issuedCashFacility,
+              isFacilityWithEffectiveAmendment: {
+                amendmentId,
+                facilityId,
+                status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+                effectiveDate: 1234,
+              },
+              amendmentDetailsUrl: url,
+            },
+            unissuedCashFacility,
+            issuedContingentFacility,
+            unissuedContingentFacility,
+          ],
+        },
+      });
+
+      wrapper.expectElement(amendmentEffectiveFuture).toExist();
+      wrapper.expectLink(amendmentEffectiveFuture).toLinkTo(url, urlText);
+      wrapper.expectText(amendmentEffectiveFuture).toRead(urlText);
+    });
+
+    it('should not be rendered when facility does not have an amendment in progress', () => {
       issuedCashFacility.canIssuedFacilitiesBeAmended = false;
       wrapper = render({
         ...params,
