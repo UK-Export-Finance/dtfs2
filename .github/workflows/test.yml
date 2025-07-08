@@ -1184,7 +1184,8 @@ jobs:
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/BSS-EWCS/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/gef/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/journeys/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/**/*.spec.js'
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/**/*.spec.js'
           ]
 
     concurrency:
