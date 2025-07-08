@@ -58,7 +58,7 @@ describe('addExposureValuesToAmendment', () => {
       await addExposureValuesToAmendment(amendment, facilityWithoutCoverPercentage, facilityId, userToken);
 
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Error with cover percentage');
+      expect(console.error).toHaveBeenCalledWith('Error with cover percentage or effective date');
     });
   });
 
@@ -91,7 +91,7 @@ describe('addExposureValuesToAmendment', () => {
       await addExposureValuesToAmendment(amendment, facilityWithCoverPercentageString, facilityId, userToken);
 
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Error with cover percentage');
+      expect(console.error).toHaveBeenCalledWith('Error with cover percentage or effective date');
     });
   });
 
@@ -121,7 +121,7 @@ describe('addExposureValuesToAmendment', () => {
       await addExposureValuesToAmendment(amendmentWithoutCoverPercentage, facility, facilityId, userToken);
 
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Error with effective date');
+      expect(console.error).toHaveBeenCalledWith('Error with cover percentage or effective date');
     });
   });
 
@@ -154,7 +154,7 @@ describe('addExposureValuesToAmendment', () => {
       await addExposureValuesToAmendment(amendmentWithCoverPercentageString, facility, facilityId, userToken);
 
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Error with effective date');
+      expect(console.error).toHaveBeenCalledWith('Error with cover percentage or effective date');
     });
   });
 
@@ -176,7 +176,7 @@ describe('addExposureValuesToAmendment', () => {
       await addExposureValuesToAmendment(amendment, facility, facilityId, userToken);
 
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Error getting TFM facility %o', mockError);
+      expect(console.error).toHaveBeenCalledWith('Error fetching TFM facility %s %o', facilityId, mockError);
     });
   });
 
@@ -205,7 +205,7 @@ describe('addExposureValuesToAmendment', () => {
       await addExposureValuesToAmendment(amendmentWithoutValue, facility, facilityId, userToken);
 
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Error creating exposure for the amendment');
+      expect(console.error).toHaveBeenCalledWith('Error generating exposure for the facility amendment %s', facilityId);
     });
   });
 
@@ -246,6 +246,12 @@ describe('addExposureValuesToAmendment', () => {
 
       expect(result).toEqual(expected);
     });
+
+    it('should not call console.error', async () => {
+      await addExposureValuesToAmendment(amendment, facility, facilityId, userToken);
+
+      expect(console.error).toHaveBeenCalledTimes(0);
+    });
   });
 
   describe('when exchange rate is missing', () => {
@@ -282,6 +288,12 @@ describe('addExposureValuesToAmendment', () => {
       };
 
       expect(result).toEqual(expected);
+    });
+
+    it('should not call console.error', async () => {
+      await addExposureValuesToAmendment(amendment, facility, facilityId, userToken);
+
+      expect(console.error).toHaveBeenCalledTimes(0);
     });
   });
 });

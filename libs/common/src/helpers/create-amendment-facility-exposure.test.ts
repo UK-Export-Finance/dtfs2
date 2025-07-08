@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { createAmendmentFacilityExposure } from './create-amendment-facility-exposure';
-import { calculateNewFacilityValue } from './amendments-calculate-new-facility-value';
+import { getGBPValue } from './amendments-get-gbp-value';
 import { calculateUkefExposure } from './calculate-ukef-exposure';
 import { formattedNumber } from './formatted-number';
 import { aPortalFacilityAmendment } from '../test-helpers/mock-data-backend';
@@ -17,7 +17,7 @@ describe('createAmendmentFacilityExposure()', () => {
   const exchangeRate = 0.5;
   const coverPercentageValue = 100;
 
-  describe('when calculateNewFacilityValue returns null', () => {
+  describe('when getGBPValue returns null', () => {
     it('should return an empty object', () => {
       // Arrange
       const amendmentNoValue = {
@@ -55,7 +55,7 @@ describe('createAmendmentFacilityExposure()', () => {
       const result = createAmendmentFacilityExposure(exchangeRate, coverPercentageValue, amendment, timestamp);
 
       // Assert
-      const valueInGBP = calculateNewFacilityValue(exchangeRate, amendment);
+      const valueInGBP = getGBPValue(exchangeRate, amendment);
       const ukefExposureValue = calculateUkefExposure(valueInGBP!, coverPercentageValue);
       const formattedUkefExposure = formattedNumber(ukefExposureValue!);
       const ukefExposureCalculationTimestampValue = new Date(timestamp * 1000).valueOf();

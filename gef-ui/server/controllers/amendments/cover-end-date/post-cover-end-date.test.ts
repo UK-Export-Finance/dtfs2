@@ -147,6 +147,8 @@ describe('postCoverEndDate', () => {
 
     expect(getExposurePeriodMock).toHaveBeenCalledTimes(1);
     expect(getExposurePeriodMock).toHaveBeenCalledWith(coverStartDateFormatted, coverEndDateFormatted, facilityType);
+
+    expect(console.error).toHaveBeenCalledTimes(0);
   });
 
   it('should call getAmendment with the correct amendmentId and userToken', async () => {
@@ -222,6 +224,8 @@ describe('postCoverEndDate', () => {
     // Assert
     expect(getTfmFacilityMock).toHaveBeenCalledTimes(1);
     expect(getTfmFacilityMock).toHaveBeenCalledWith({ facilityId, userToken });
+
+    expect(console.error).toHaveBeenCalledTimes(0);
   });
 
   it('should call updateAmendment if the coverEndDate is valid', async () => {
@@ -242,6 +246,8 @@ describe('postCoverEndDate', () => {
 
     expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
     expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { coverEndDate: coverEndDateEpoch, tfm: tfmUpdate }, userToken });
+
+    expect(console.error).toHaveBeenCalledTimes(0);
   });
 
   it('should call updateAmendment with amendmentExposurePeriodInMonths if the coverEndDate is valid but no exposurePeriod was returned', async () => {
@@ -327,8 +333,11 @@ describe('postCoverEndDate', () => {
     // Assert
     expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
+
     expect(console.error).toHaveBeenCalledTimes(1);
-    expect(console.error).toHaveBeenCalledWith('Tfm facility was not found for the facility %s', facilityId);
+    expect(console.error).toHaveBeenCalledWith('Facility was not found in TFM %s', facilityId);
+
+    expect(getExposurePeriodMock).toHaveBeenCalledTimes(0);
   });
 
   it('should redirect to "/not-found" if the amendment is not found', async () => {
@@ -419,5 +428,7 @@ describe('postCoverEndDate', () => {
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('Error posting amendments cover end date page %o', mockError);
+
+    expect(getExposurePeriodMock).toHaveBeenCalledTimes(0);
   });
 });

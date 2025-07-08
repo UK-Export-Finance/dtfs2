@@ -11,7 +11,7 @@ export const formattedNumber = (number: number, minimumFractionDigits = 2, maxim
     return number;
   }
 
-  const formatted = Number(number).toLocaleString('en', {
+  const formatted = Number(number).toLocaleString('en-GB', {
     minimumFractionDigits,
     maximumFractionDigits,
   });

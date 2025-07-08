@@ -1,5 +1,5 @@
-const { CURRENCY, formattedNumber } = require('@ukef/dtfs2-common');
-const { calculateNewFacilityValue, findLatestCompletedAmendment } = require('../../helpers/amendment.helpers');
+const { CURRENCY, formattedNumber, getGBPValue } = require('@ukef/dtfs2-common');
+const { findLatestCompletedAmendment } = require('../../helpers/amendment.helpers');
 
 const mapFacilityValue = (currencyId, value, facility) => {
   if (facility) {
@@ -11,7 +11,7 @@ const mapFacilityValue = (currencyId, value, facility) => {
       const { value: latestAmendmentValue } = findLatestCompletedAmendment(facility.amendments);
       // if latest completed amendment contains value
       if (latestAmendmentValue) {
-        const valueInGBP = calculateNewFacilityValue(exchangeRate, latestAmendmentValue);
+        const valueInGBP = getGBPValue(exchangeRate, latestAmendmentValue);
         return `${CURRENCY.GBP} ${formattedNumber(valueInGBP)}`;
       }
     }

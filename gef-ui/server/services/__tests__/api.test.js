@@ -774,7 +774,7 @@ describe('getTfmFacility', () => {
       // Assert
       expect(console.error).toHaveBeenCalledTimes(2);
       expect(console.error).toHaveBeenCalledWith('Invalid facility ID %s', invalidFacilityId);
-      expect(console.error).toHaveBeenCalledWith('Unable to get TFM facility %s %o', invalidFacilityId, new Error('Invalid facility ID'));
+      expect(console.error).toHaveBeenCalledWith('Unable to fetch TFM facility %s %o', invalidFacilityId, new Error('Invalid facility ID'));
       expect(response).toBeFalsy();
     });
   });
@@ -823,7 +823,7 @@ describe('getTfmFacility', () => {
         headers: { Authorization: userToken },
       });
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Unable to get TFM facility %s %o', facilityId, mockError);
+      expect(console.error).toHaveBeenCalledWith('Unable to fetch TFM facility %s %o', facilityId, mockError);
       expect(response).toBeFalsy();
     });
 
@@ -841,7 +841,7 @@ describe('getTfmFacility', () => {
         headers: { Authorization: userToken },
       });
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Unable to get TFM facility %s %o', facilityId, mockError);
+      expect(console.error).toHaveBeenCalledWith('Unable to fetch TFM facility %s %o', facilityId, mockError);
       expect(response).toBeFalsy();
     });
 
@@ -860,7 +860,7 @@ describe('getTfmFacility', () => {
       });
 
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Unable to get TFM facility %s %o', facilityId, mockError);
+      expect(console.error).toHaveBeenCalledWith('Unable to fetch TFM facility %s %o', facilityId, mockError);
       expect(response).toBeFalsy();
     });
 
@@ -881,7 +881,7 @@ describe('getTfmFacility', () => {
       });
 
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Unable to get TFM facility %s %o', facilityId, mockError);
+      expect(console.error).toHaveBeenCalledWith('Unable to fetch TFM facility %s %o', facilityId, mockError);
       expect(response).toBeFalsy();
     });
   });
@@ -900,7 +900,7 @@ describe('getTfmFacility', () => {
       });
 
       expect(console.error).toHaveBeenCalledTimes(1);
-      expect(console.error).toHaveBeenCalledWith('Unable to get TFM facility %s %o', facilityId, mockError);
+      expect(console.error).toHaveBeenCalledWith('Unable to fetch TFM facility %s %o', facilityId, mockError);
       expect(response).toBeFalsy();
     });
   });

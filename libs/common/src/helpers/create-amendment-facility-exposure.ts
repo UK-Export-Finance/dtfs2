@@ -1,4 +1,4 @@
-import { calculateNewFacilityValue } from './amendments-calculate-new-facility-value';
+import { getGBPValue } from './amendments-get-gbp-value';
 import { calculateUkefExposure } from './calculate-ukef-exposure';
 import { formattedNumber } from './formatted-number';
 import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } from '../types';
@@ -20,15 +20,15 @@ export const createAmendmentFacilityExposure = (
   amendment: PortalFacilityAmendmentWithUkefId | TfmFacilityAmendmentWithUkefId,
   ukefExposureTimestamp: number,
 ) => {
-  const valueInGBP = calculateNewFacilityValue(exchangeRate, amendment);
+  const valueInGBP = getGBPValue(exchangeRate, amendment);
 
-  if (valueInGBP === null) {
+  if (!valueInGBP) {
     return {};
   }
 
   const ukefExposureValue = calculateUkefExposure(valueInGBP, coverPercentageValue);
 
-  if (ukefExposureValue === null) {
+  if (!ukefExposureValue) {
     return {};
   }
 

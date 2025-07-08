@@ -6,8 +6,6 @@
  */
 export const decimalsCount = (number: number) => {
   const decimals = number.toString().split('.')[1];
-  if (decimals) {
-    return decimals.length;
-  }
-  return 0;
+
+  return decimals?.length ?? 0;
 };

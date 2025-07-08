@@ -7,10 +7,9 @@ import { roundNumber } from './round-number';
  * @param coverPercentage
  * @returns ukef exposure as a number or null if no value can be calculated
  */
-export const calculateUkefExposure = (facilityValueInGBP?: string, coverPercentage?: number) => {
+export const calculateUkefExposure = (facilityValueInGBP?: number, coverPercentage?: number) => {
   if (facilityValueInGBP && coverPercentage) {
-    // parse float as can have 2 decimal places in facility value
-    const calculation = parseFloat(facilityValueInGBP) * (coverPercentage / 100);
+    const calculation = facilityValueInGBP * (coverPercentage / 100);
 
     const totalDecimals = decimalsCount(calculation);
 

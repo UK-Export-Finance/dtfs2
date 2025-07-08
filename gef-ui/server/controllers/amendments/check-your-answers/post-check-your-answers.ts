@@ -44,13 +44,13 @@ export const postCheckYourAnswers = async (req: PostCheckYourAnswersRequest, res
     }
 
     if (amendment.changeFacilityValue) {
-      const { error, tfmUpdate } = await addExposureValuesToAmendment(amendment, facility, facilityId, userToken);
+      const { error, tfmUpdate: tfm } = await addExposureValuesToAmendment(amendment, facility, facilityId, userToken);
 
       if (error) {
         return res.render('partials/problem-with-service.njk');
       }
 
-      const update = { tfm: tfmUpdate };
+      const update = { tfm };
 
       await api.updateAmendment({ facilityId, amendmentId, update, userToken });
     }

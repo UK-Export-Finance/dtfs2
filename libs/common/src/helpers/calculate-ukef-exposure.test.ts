@@ -2,7 +2,7 @@ import { calculateUkefExposure } from './calculate-ukef-exposure';
 
 describe('calculateUkefExposure()', () => {
   it('should return the cover percentage without rounding when not needed', () => {
-    const facilityValueInGBP = '5000';
+    const facilityValueInGBP = 5000;
     const coverPercentage = 80;
 
     const result = calculateUkefExposure(facilityValueInGBP, coverPercentage);
@@ -11,7 +11,7 @@ describe('calculateUkefExposure()', () => {
   });
 
   it('should return a rounded number when more than 2 decimal places', () => {
-    const facilityValueInGBP = '5165.2';
+    const facilityValueInGBP = 5165.2;
     const coverPercentage = 33;
 
     const result = calculateUkefExposure(facilityValueInGBP, coverPercentage);
@@ -28,7 +28,7 @@ describe('calculateUkefExposure()', () => {
   });
 
   it('should return null if no cover percentage', () => {
-    const facilityValueInGBP = '5165.2';
+    const facilityValueInGBP = 5165.2;
     const coverPercentage = undefined;
 
     const result = calculateUkefExposure(facilityValueInGBP, coverPercentage);

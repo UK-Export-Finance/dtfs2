@@ -72,7 +72,7 @@ export const postCoverEndDate = async (req: PostCoverEndDateRequest, res: Respon
     const tfmFacility = await api.getTfmFacility({ facilityId, userToken });
 
     if (!tfmFacility) {
-      console.error('Tfm facility was not found for the facility %s', facilityId);
+      console.error('Facility was not found in TFM %s', facilityId);
       return res.redirect('/not-found');
     }
 

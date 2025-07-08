@@ -700,7 +700,7 @@ const getTfmFacility = async ({ facilityId, userToken }) => {
 
     return response.data;
   } catch (error) {
-    console.error('Unable to get TFM facility %s %o', facilityId, error);
+    console.error('Unable to fetch TFM facility %s %o', facilityId, error);
     return false;
   }
 };
@@ -717,8 +717,8 @@ const getFacilityExposurePeriod = async (startDate, endDate, type) => {
 
     return response.data;
   } catch (error) {
-    console.error('TFM-API - Failed api call to getFacilityExposurePeriod %o', error);
-    return { status: error?.code || 500, data: 'Failed to get facility exposure period' };
+    console.error('Unable to fetch TFM facility exposure period %o', error);
+    return { status: error?.code || HttpStatusCode.InternalServerError, data: 'Failed to get facility exposure period' };
   }
 };
 

@@ -19,7 +19,9 @@ export const postCreateDraftFacilityAmendment = async (req: PostCreateFacilityAm
     const { dealId, facilityId } = req.params;
     const { userToken } = asLoggedInUserSession(req.session);
 
-    const { amendmentId } = await api.upsertAmendment({ facilityId, dealId, amendment: { tfm: {} }, userToken });
+    const amendment = { tfm: {} };
+
+    const { amendmentId } = await api.upsertAmendment({ facilityId, dealId, amendment, userToken });
 
     return res.redirect(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.WHAT_DO_YOU_NEED_TO_CHANGE }));
   } catch (error) {

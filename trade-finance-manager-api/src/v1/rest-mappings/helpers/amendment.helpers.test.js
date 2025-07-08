@@ -45,48 +45,6 @@ describe('amendmentChangeValueExportCurrency()', () => {
   });
 });
 
-describe('calculateNewFacilityValue()', () => {
-  const amendment = { currency: CURRENCY.GBP };
-
-  it('should return the same number since in GBP', () => {
-    amendment.value = 25000;
-
-    const result = amendmentHelpers.calculateNewFacilityValue(null, amendment);
-
-    const expected = String(amendment.value);
-    expect(result).toEqual(expected);
-  });
-
-  it('should return a number if different currency', () => {
-    amendment.value = 25000;
-    amendment.currency = CURRENCY.JPY;
-    const exchangeRate = 7.1;
-
-    const result = amendmentHelpers.calculateNewFacilityValue(exchangeRate, amendment);
-
-    const expected = String(amendment.value * exchangeRate);
-    expect(result).toEqual(expected);
-  });
-
-  it('should return null if no facility value or currency in amendment', () => {
-    amendment.value = null;
-    amendment.currency = null;
-    const exchangeRate = 7.1;
-
-    const result = amendmentHelpers.calculateNewFacilityValue(exchangeRate, amendment);
-    expect(result).toBeNull();
-  });
-
-  it('should return null if no exchange rate if currency not GBP', () => {
-    amendment.value = 25000;
-    amendment.currency = CURRENCY.JPY;
-    const exchangeRate = null;
-
-    const result = amendmentHelpers.calculateNewFacilityValue(exchangeRate, amendment);
-    expect(result).toBeNull();
-  });
-});
-
 describe('calculateAmendmentTotalExposure()', () => {
   const mockAmendmentValueResponse = {
     value: 5000,

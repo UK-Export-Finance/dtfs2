@@ -11,7 +11,5 @@ export const roundValue = (valueInGBP: number) => {
   const totalDecimals = decimalsCount(valueInGBP);
 
   // rounds to 2 decimal palaces if decimals greater than 2
-  const newValue = totalDecimals > 2 ? roundNumber(valueInGBP, 2) : valueInGBP;
-
-  return newValue;
+  return totalDecimals > 2 ? roundNumber(valueInGBP, 2) : valueInGBP;
 };

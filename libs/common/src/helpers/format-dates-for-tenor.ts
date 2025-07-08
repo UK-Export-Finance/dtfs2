@@ -26,7 +26,7 @@ export const formatDatesForTenor = (facilitySnapshot: Facility | FacilityWithStr
     const coverStartDate = dealTypeCoverStartDate(facilitySnapshot);
 
     if (!coverStartDate) {
-      console.error('Cover start date is not defined for facility', facilitySnapshot._id);
+      console.error('Cover start date is not defined for facility %s', facilitySnapshot._id);
       return {};
     }
 

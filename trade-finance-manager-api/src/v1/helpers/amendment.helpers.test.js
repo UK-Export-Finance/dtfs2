@@ -1,5 +1,5 @@
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { CURRENCY, FACILITY_TYPE, formattedNumber, calculateNewFacilityValue } = require('@ukef/dtfs2-common');
+const { CURRENCY, FACILITY_TYPE, formattedNumber, getGBPValue } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const {
   sendManualDecisionAmendmentEmail,
@@ -701,7 +701,7 @@ describe('calculateAmendmentExposure', () => {
 
     const result = await calculateAmendmentExposure(mockAmendment.amendmentId, mockFacility._id, mockValueResponseJPY);
 
-    const valueInGBP = calculateNewFacilityValue(mockFacility.tfm.exchangeRate, mockValueResponseJPY);
+    const valueInGBP = getGBPValue(mockFacility.tfm.exchangeRate, mockValueResponseJPY);
 
     const exposureValue = valueInGBP * (mockFacility.facilitySnapshot.coverPercentage / 100);
 

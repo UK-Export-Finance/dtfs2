@@ -1,10 +1,10 @@
 import { ObjectId } from 'mongodb';
 import { CURRENCY } from '../constants';
-import { calculateNewFacilityValue } from './amendments-calculate-new-facility-value';
+import { getGBPValue } from './amendments-get-gbp-value';
 import { aPortalFacilityAmendment } from '../test-helpers/mock-data-backend';
 import { PortalFacilityAmendmentWithUkefId } from '../types';
 
-describe('calculateNewFacilityValue()', () => {
+describe('getGBPValue()', () => {
   const amendment = {
     ...aPortalFacilityAmendment(),
     amendmentId: new ObjectId().toString(),
@@ -18,8 +18,8 @@ describe('calculateNewFacilityValue()', () => {
     amendment.currency = CURRENCY.JPY;
     const exchangeRate = 7.1;
 
-    const result = calculateNewFacilityValue(exchangeRate, amendment);
-    const expected = String(amendment.value * exchangeRate);
+    const result = getGBPValue(exchangeRate, amendment);
+    const expected = amendment.value * exchangeRate;
     expect(result).toEqual(expected);
   });
 
@@ -29,7 +29,7 @@ describe('calculateNewFacilityValue()', () => {
     const exchangeRate = null;
 
     // @ts-ignore - testing if exchange rate doesn't exist - js files can call this function
-    const result = calculateNewFacilityValue(exchangeRate, amendment);
+    const result = getGBPValue(exchangeRate, amendment);
     expect(result).toBeNull();
   });
 });

@@ -1,4 +1,4 @@
-const { calculateUkefExposure, calculateNewFacilityValue, formattedNumber, TFM_AMENDMENT_STATUS, PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { calculateUkefExposure, getGBPValue, formattedNumber, TFM_AMENDMENT_STATUS, PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { orderBy, cloneDeep } = require('lodash');
 const isValidFacility = require('./isValidFacility.helper');
 
@@ -99,7 +99,7 @@ const calculateAmendmentTotalExposure = (facility) => {
       const coverPercentageValue = coverPercentage || coveredPercentage;
 
       if (latestAmendmentTFM?.value) {
-        const valueInGBP = calculateNewFacilityValue(exchangeRate, latestAmendmentTFM.value);
+        const valueInGBP = getGBPValue(exchangeRate, latestAmendmentTFM.value);
         const ukefExposureValue = calculateUkefExposure(valueInGBP, coverPercentageValue);
 
         // sets new exposure value based on amendment value
@@ -113,7 +113,6 @@ const calculateAmendmentTotalExposure = (facility) => {
 
 module.exports = {
   amendmentChangeValueExportCurrency,
-  calculateNewFacilityValue,
   calculateAmendmentTotalExposure,
   findLatestCompletedAmendment,
 };
