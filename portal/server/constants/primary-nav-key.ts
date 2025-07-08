@@ -1,5 +1,5 @@
 export const PRIMARY_NAV_KEY = {
-  HOME: 'home',
+  HOME: 'dashboard',
   PREVIOUS_REPORTS: 'previous_reports',
   REPORTS: 'reports',
   USERS: 'users',
