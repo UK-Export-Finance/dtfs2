@@ -381,11 +381,11 @@ const applicationDetails = async (req, res, next) => {
       params.link += '/unissued-facilities';
     }
 
-    const onGoingDealAmendments = amendmentsOnDeal.filter(
-      (amendment) =>
-        PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(amendment.status) ||
-        (amendment.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED && new Date(amendment.effectiveDate) < now()),
-    );
+    /* This array contains amendments that are either in progress or have an effective date in the future */
+    const onGoingDealAmendments = amendmentsOnDeal.filter((amendment) => {
+      const isEffectiveInFuture = amendment.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED && new Date(amendment.effectiveDate) > now();
+      return PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(amendment.status) || isEffectiveInFuture;
+    });
 
     // array of facility ids that are currently being amended
     const onGoingAmendments = onGoingDealAmendments.map((amendment) => {

@@ -63,10 +63,11 @@ export const mapFacilityApplicationDetails = (
       (item: OnGoingAmendmentsParams) => item.facilityId === facility.facilityId && PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(item.status),
     );
 
-    const isFacilityWithEffectiveAmendment = onGoingAmendments.find(
-      (item: OnGoingAmendmentsParams) =>
-        item.facilityId === facility.facilityId && item.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED && new Date(item.effectiveDate) > now(),
-    );
+    const isFacilityWithEffectiveAmendment = onGoingAmendments.find((item: OnGoingAmendmentsParams) => {
+      const amendmentAcknowledged = item.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED;
+      const amendmentEffectiveDateInFuture = new Date(item.effectiveDate) > now();
+      return item.facilityId === facility.facilityId && amendmentAcknowledged && amendmentEffectiveDateInFuture;
+    });
 
     const canIssuedFacilitiesBeAmended =
       isFacilityIssued && userCanAmendIssuedFacilities && !isFacilityWithAmendmentInProgress && !isFacilityWithEffectiveAmendment;
