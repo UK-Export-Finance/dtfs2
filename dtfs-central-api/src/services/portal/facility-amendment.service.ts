@@ -15,6 +15,7 @@ import {
   PORTAL_AMENDMENT_INPROGRESS_STATUSES,
   TfmActivity,
   ACTIVITY_TYPES,
+  now,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { cloneDeep } from 'lodash';
@@ -243,12 +244,11 @@ export class PortalFacilityAmendmentService {
     const facilityMongoId = new ObjectId(facilityId);
     const amendmentMongoId = new ObjectId(amendmentId);
 
-    const now = new Date();
-    now.setSeconds(0, 0);
+    const timestamp = now().setSeconds(0, 0);
 
     const activity: TfmActivity = {
       type: ACTIVITY_TYPES.ACTIVITY,
-      timestamp: getUnixTime(now),
+      timestamp: getUnixTime(timestamp),
       author: {
         firstName: bankName,
         lastName: bankId,

@@ -16,7 +16,6 @@ export class TfmActivitiesRepo {
    * Submits the deal cancellation and updates the respective deal stage
    * @param params
    * @param params.dealId - The deal id
-   * @param params.cancellation - The deal cancellation details to submit
    * @param params.activity - Object to add to the activities array
    * @param params.auditDetails - The users audit details
    */
