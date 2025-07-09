@@ -1,4 +1,3 @@
-import { cy } from 'date-fns/locale';
 import relative from '../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
@@ -11,7 +10,7 @@ const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 const CHANGED_FACILITY_VALUE = 20000;
 
-context('Amendments - Application details - application preview page when deal status is "Cancelled" and amendment is "Further makers input required"', () => {
+context('Amendments - Application details - application preview page when deal status is "Cancelled" and amendment is "Ready for checkers approval"', () => {
   let applicationDetailsUrl;
   let dealId;
   let facilityId;
