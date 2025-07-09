@@ -37,17 +37,19 @@ context('Amendments - Application details - application preview page when deal s
         applicationPreview.makeAChangeButton(facilityId).click();
 
         cy.getAmendmentIdFromUrl().then((amendmentId) => {
-          amendmentDetailsUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/amendment-details`;
-          cy.makerMakesPortalAmendmentRequest({
+          const amendmentUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}`;
+
+          amendmentDetailsUrl = `${amendmentUrl}/amendment-details`;
+          const confirmReturnToMakerUrl = `${amendmentUrl}/return-to-maker`;
+          const submittedUrl = `${amendmentUrl}/returned-to-maker`;
+
+          cy.makerSubmitAmendmentForReviewAndCheckerReturnsToMaker({
             facilityValueExists: true,
             changedFacilityValue: CHANGED_FACILITY_VALUE,
+            amendmentDetailsUrl,
+            confirmReturnToMakerUrl,
+            submittedUrl,
           });
-          cy.clickSubmitButton();
-
-          cy.login(BANK1_CHECKER1);
-          cy.visit(amendmentDetailsUrl);
-          cy.clickReturnToMakerButton();
-          cy.clickSubmitButton();
         });
 
         cy.visit(TFM_URL);
