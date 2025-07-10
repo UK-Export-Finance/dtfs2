@@ -39,6 +39,10 @@ const newDeal = aDeal({
 }) as AnyObject;
 
 const newStatus = 'a new status';
+const anAcknowledgedStatus = PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED;
+
+const bankId = '1';
+const bankName = 'Bank Name';
 
 describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit-amendment', () => {
   let dealId: string;
@@ -118,7 +122,14 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
       const anInvalidFacilityId = 'InvalidId';
 
       const { body, status } = (await testApi
-        .patch({ auditDetails: generatePortalAuditDetails(portalUserId), newStatus, referenceNumber, ...portalAmendmentToUkefEmailVariables() })
+        .patch({
+          auditDetails: generatePortalAuditDetails(portalUserId),
+          newStatus,
+          referenceNumber,
+          ...portalAmendmentToUkefEmailVariables(),
+          bankId,
+          bankName,
+        })
         .to(generateUrl(anInvalidFacilityId, amendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
@@ -133,7 +144,14 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
       const anInvalidAmendmentId = 'InvalidId';
 
       const { body, status } = (await testApi
-        .patch({ auditDetails: generatePortalAuditDetails(portalUserId), newStatus, referenceNumber, ...portalAmendmentToUkefEmailVariables() })
+        .patch({
+          auditDetails: generatePortalAuditDetails(portalUserId),
+          newStatus,
+          referenceNumber,
+          ...portalAmendmentToUkefEmailVariables(),
+          bankId,
+          bankName,
+        })
         .to(generateUrl(facilityId, anInvalidAmendmentId))) as ErrorResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
@@ -153,6 +171,8 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
           newStatus: anInvalidStatus,
           referenceNumber,
           ...portalAmendmentToUkefEmailVariables(),
+          bankId,
+          bankName,
         })
         .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;
 
@@ -165,9 +185,49 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
       });
     });
 
-    describe(`when newStatus is ${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}`, () => {
-      const anAcknowledgedStatus = PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED;
+    it(`should return ${HttpStatusCode.BadRequest} when the bankId is invalid`, async () => {
+      const { body, status } = (await testApi
+        .patch({
+          auditDetails: generatePortalAuditDetails(portalUserId),
+          newStatus: anAcknowledgedStatus,
+          referenceNumber,
+          ...portalAmendmentToUkefEmailVariables(),
+          bankId: 1,
+          bankName,
+        })
+        .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;
 
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+
+      expect(body).toEqual({
+        status: HttpStatusCode.BadRequest,
+        code: 'INVALID_PAYLOAD',
+        message: ['bankId: Expected string, received number (invalid_type)'],
+      });
+    });
+
+    it(`should return ${HttpStatusCode.BadRequest} when the bankName is invalid`, async () => {
+      const { body, status } = (await testApi
+        .patch({
+          auditDetails: generatePortalAuditDetails(portalUserId),
+          newStatus: anAcknowledgedStatus,
+          referenceNumber,
+          ...portalAmendmentToUkefEmailVariables(),
+          bankId,
+          bankName: undefined,
+        })
+        .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;
+
+      expect(status).toEqual(HttpStatusCode.BadRequest);
+
+      expect(body).toEqual({
+        status: HttpStatusCode.BadRequest,
+        code: 'INVALID_PAYLOAD',
+        message: ['bankName: Required (invalid_type)'],
+      });
+    });
+
+    describe(`when newStatus is ${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}`, () => {
       it(`should return ${HttpStatusCode.NotFound} when the facility does not exist`, async () => {
         const aValidButNonExistentFacilityId = new ObjectId().toString();
 
@@ -177,6 +237,8 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
             newStatus: anAcknowledgedStatus,
             referenceNumber,
             ...portalAmendmentToUkefEmailVariables(),
+            bankId,
+            bankName,
           })
           .to(generateUrl(aValidButNonExistentFacilityId, amendmentId))) as ErrorResponse;
 
@@ -196,6 +258,8 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
             newStatus: anAcknowledgedStatus,
             referenceNumber,
             ...portalAmendmentToUkefEmailVariables(),
+            bankId,
+            bankName,
           })
           .to(generateUrl(facilityId, aValidButNonExistentAmendmentId))) as ErrorResponse;
 
@@ -213,6 +277,8 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
             newStatus: anAcknowledgedStatus,
             referenceNumber,
             ...portalAmendmentToUkefEmailVariables(),
+            bankId,
+            bankName,
           })
           .to(generateUrl(facilityId, amendmentId));
 
