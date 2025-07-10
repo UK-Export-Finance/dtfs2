@@ -10,7 +10,7 @@ const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 const CHANGED_FACILITY_VALUE = 20000;
 
-context('Amendments - Application details - application preview page when deal status is "Cancelled" and amendment is "Ready for checkers approval"', () => {
+context(`Amendments - Application details - application preview page when deal status is "Cancelled" and amendment is "Further maker's input required"`, () => {
   let applicationDetailsUrl;
   let dealId;
   let facilityId;
