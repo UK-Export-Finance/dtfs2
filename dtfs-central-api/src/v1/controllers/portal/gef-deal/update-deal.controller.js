@@ -22,10 +22,11 @@ const updateGefDeal = async ({ dealId, dealUpdate, auditDetails }) => {
     const collection = await db.getCollection(MONGO_DB_COLLECTIONS.DEALS);
     const originalDeal = await findOneDeal(dealId);
     const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
+    const update = dealUpdate || {};
 
     const dealUpdateForDatabase = {
       ...originalDeal,
-      ...(dealUpdate || {}),
+      ...update,
       updatedAt: now(),
       auditRecord,
     };

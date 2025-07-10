@@ -105,6 +105,7 @@ export class PortalDealService {
         routePath,
       });
     } else {
+      console.error('Invalid dealType %s', dealType);
       throw new Error(`Invalid dealType ${dealType}`);
     }
   }

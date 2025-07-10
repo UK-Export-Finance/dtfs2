@@ -93,9 +93,10 @@ const updateBssEwcsDeal = async ({ dealId, dealUpdate, user, auditDetails, exist
     let originalDealEligibility;
 
     const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
+    const update = dealUpdate || {};
 
     const dealUpdateForDatabase = {
-      ...(dealUpdate || {}),
+      ...update,
       auditRecord,
       updatedAt: Date.now(),
     };
