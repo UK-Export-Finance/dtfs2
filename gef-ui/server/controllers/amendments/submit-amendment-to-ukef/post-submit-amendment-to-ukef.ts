@@ -20,6 +20,7 @@ export const postSubmitAmendmentToUkef = async (req: PostSubmitAmendmentToUkefRe
     const { dealId, facilityId, amendmentId } = req.params;
     const { confirmSubmitUkef } = req.body;
     const { userToken, user } = asLoggedInUserSession(req.session);
+    const { id: bankId, name: bankName } = user.bank;
 
     console.info('Portal Amendent %s is being submitted to TFM', amendmentId);
 
@@ -71,7 +72,19 @@ export const postSubmitAmendmentToUkef = async (req: PostSubmitAmendmentToUkefRe
 
     const status = PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED;
 
-    await api.updateSubmitAmendment({ facilityId, amendmentId, referenceNumber, status, userToken, makersEmail, checkersEmail, pimEmail, emailVariables });
+    await api.updateSubmitAmendment({
+      facilityId,
+      amendmentId,
+      referenceNumber,
+      status,
+      userToken,
+      makersEmail,
+      checkersEmail,
+      pimEmail,
+      emailVariables,
+      bankId,
+      bankName,
+    });
 
     return res.redirect(getAmendmentsUrl({ dealId, facilityId, amendmentId, page: PORTAL_AMENDMENT_PAGES.APPROVED_BY_UKEF }));
   } catch (error) {
