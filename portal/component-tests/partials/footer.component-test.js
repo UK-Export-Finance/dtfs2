@@ -21,7 +21,7 @@ describe(page, () => {
     });
 
     it('renders a feedback link', () => {
-      wrapper.expectLink('[data-cy="feedback-link"]').toLinkTo('/feedback', 'Feedback');
+      wrapper.expectLink('[data-cy="feedback-footer-link"]').toLinkTo('/feedback', 'Feedback');
     });
   });
 });
