@@ -371,6 +371,17 @@ const updateFacilityCovenant = async (facilityIdentifier, payload) => patch(`fac
  */
 const updateFacilityGuarantee = async (facilityIdentifier, payload) => patch(`facilities/${facilityIdentifier}/guarantees`, payload);
 
+/**
+ * Updates a deal with the specified identifier using the provided payload.
+ *
+ * @async
+ * @function
+ * @param {string} dealIdentifier - The unique identifier of the deal to update.
+ * @param {Object} payload - The data to update the deal with.
+ * @returns {Promise<Object>} The updated deal object returned from the API.
+ */
+const updateDeal = async (dealIdentifier, payload) => put(`deals/${dealIdentifier}`, payload);
+
 module.exports = {
   getFacility,
   getLoanId,
@@ -391,4 +402,5 @@ module.exports = {
   updateFacilityLoanAmount,
   updateFacilityCovenant,
   updateFacilityGuarantee,
+  updateDeal,
 };
