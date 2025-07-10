@@ -64,6 +64,28 @@ describe('mapFacilityApplicationDetails', () => {
     });
   });
 
+  describe('when the deal is pending cancellation', () => {
+    it('should not populate params and should not populate canIssuedFacilitiesBeAmended', () => {
+      // Arrange
+      const amendmentsInProgress: OnGoingAmendmentsParams[] = [];
+
+      const cancelledDeal = {
+        ...mockDeal,
+        status: DEAL_STATUS.PENDING_CANCELLATION,
+      };
+
+      // Act
+      const response = mapFacilityApplicationDetails(cancelledDeal, [facility], amendmentsInProgress, params, MOCK_MAKER.roles as Role[]);
+
+      const expected = {
+        mappedFacilities: [facility],
+        facilityParams: params,
+      };
+
+      expect(response).toEqual(expected);
+    });
+  });
+
   describe('when there are no on going amendments', () => {
     describe('when a facility is issued', () => {
       it('should return mapped facilities with canIssuedFacilitiesBeAmended set to true', () => {
