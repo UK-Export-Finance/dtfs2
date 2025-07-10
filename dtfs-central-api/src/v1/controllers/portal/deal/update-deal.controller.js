@@ -65,7 +65,7 @@ const updateDealEditedByPortal = async ({ dealId, user, auditDetails }) => {
 exports.updateDealEditedByPortal = updateDealEditedByPortal;
 
 /**
- * Updates a deal in the database.
+ * Updates a BssEwcs deal in the database.
  * @param {Object} params - The parameters for updating the deal.
  * @param {string} params.dealId - The ID of the deal being updated.
  * @param {Object} params.dealUpdate - The update to be made to the deal.
@@ -75,7 +75,7 @@ exports.updateDealEditedByPortal = updateDealEditedByPortal;
  * @param {string} params.routePath - The route path.
  * @returns {Promise<{ status: number, message: string }>} The updated deal object.
  */
-const updateDeal = async ({ dealId, dealUpdate, user, auditDetails, existingDeal, routePath }) => {
+const updateBssEwcsDeal = async ({ dealId, dealUpdate, user, auditDetails, existingDeal, routePath }) => {
   try {
     if (!ObjectId.isValid(dealId)) {
       return { status: 400, message: 'Invalid Deal Id' };
@@ -93,9 +93,10 @@ const updateDeal = async ({ dealId, dealUpdate, user, auditDetails, existingDeal
     let originalDealEligibility;
 
     const auditRecord = generateAuditDatabaseRecordFromAuditDetails(auditDetails);
+    const update = dealUpdate || {};
 
     const dealUpdateForDatabase = {
-      ...dealUpdate,
+      ...update,
       auditRecord,
       updatedAt: Date.now(),
     };
@@ -114,7 +115,7 @@ const updateDeal = async ({ dealId, dealUpdate, user, auditDetails, existingDeal
      * deal status will be updated to `Submitted` (`deal.status`), the submission count will be
      * incremented (`deal.details.submissionCount`) and facilities updated at (`deal.facilitiesUpdated`).
      *
-     * When multiple simultaneous calls are made to `updateDeal` function, a race condition is developed
+     * When multiple simultaneous calls are made to `updateBssEwcsDeal` function, a race condition is developed
      * where chances are increased per number of facilities associated with the deal.
      *
      * Below validation ensures only latest updates pertinent to the respective deal properties `details`
@@ -153,7 +154,7 @@ const updateDeal = async ({ dealId, dealUpdate, user, auditDetails, existingDeal
     return { status: 500, message: error };
   }
 };
-exports.updateDeal = updateDeal;
+exports.updateBssEwcsDeal = updateBssEwcsDeal;
 
 const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath, auditDetails) => {
   await findOneDeal(dealId, async (deal) => {
@@ -166,7 +167,7 @@ const addFacilityIdToDeal = async (dealId, newFacilityId, user, routePath, audit
     const updatedFacilities = [...facilities, newFacilityId.toHexString()];
     const dealUpdate = { ...deal, facilities: updatedFacilities };
 
-    const response = await updateDeal({ dealId, dealUpdate, user, auditDetails, existingDeal: null, routePath });
+    const response = await updateBssEwcsDeal({ dealId, dealUpdate, user, auditDetails, existingDeal: null, routePath });
     const status = isNumber(response?.status, 3);
 
     if (status) {
@@ -194,7 +195,7 @@ const removeFacilityIdFromDeal = async (dealId, facilityId, user, routePath, aud
         facilities: updatedFacilities,
       };
 
-      const response = await updateDeal({ dealId, dealUpdate, user, auditDetails, existingDeal: null, routePath });
+      const response = await updateBssEwcsDeal({ dealId, dealUpdate, user, auditDetails, existingDeal: null, routePath });
       const status = isNumber(response?.status, 3);
 
       if (status) {
@@ -242,7 +243,7 @@ exports.updateDealPut = async (req, res) => {
       if (!existingDeal) {
         return res.status(404).send({ status: 404, message: 'Deal not found' });
       }
-      const response = await updateDeal({ dealId, dealUpdate, user, auditDetails, existingDeal, routePath });
+      const response = await updateBssEwcsDeal({ dealId, dealUpdate, user, auditDetails, existingDeal, routePath });
       const status = isNumber(response?.status, 3);
       const code = status ? response.status : 200;
 

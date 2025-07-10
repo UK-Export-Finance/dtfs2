@@ -1,3 +1,4 @@
+import { now } from '@ukef/dtfs2-common';
 import relative from '../../e2e/relativeURL';
 
 /**
@@ -20,6 +21,7 @@ export const makerAndCheckerSubmitPortalAmendmentRequest = ({
   amendmentDetailsUrl,
   confirmSubmissionToUkefUrl,
   submittedUrl,
+  effectiveDate = now(),
 }) => {
   // submits maker part of journey
   cy.makerSubmitPortalAmendmentForReview({
@@ -28,6 +30,7 @@ export const makerAndCheckerSubmitPortalAmendmentRequest = ({
     facilityEndDateExists,
     changedFacilityValue,
     changedCoverEndDate,
+    effectiveDate,
   });
 
   // submits checker part of journey
