@@ -1,5 +1,5 @@
+const { formattedNumber } = require('@ukef/dtfs2-common');
 const { validationErrorHandler } = require('../../../../helpers/validationErrorHandler.helper');
-const { formattedNumber } = require('../../../../helpers/number');
 
 const amendFacilityValueValidation = (currentFacilityValue, newValue, currency) => {
   const newFacilityValue = Number(newValue);

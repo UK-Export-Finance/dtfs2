@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import { UnixTimestamp, UnixTimestampSeconds } from '../date';
 import { PortalAmendmentStatus, TfmAmendmentStatus } from '../amendment-status';
 import { Currency } from '../currency';
-import { Facility } from './facility';
+import { Facility, FacilityWithStringDealId } from './facility';
 import { AnyObject } from '../any-object';
 import { AuditDatabaseRecord } from '../audit-database-record';
 import { AMENDMENT_TYPES } from '../../constants';
@@ -23,14 +23,14 @@ type SubmittedByUser = {
  */
 export type FacilityAmendmentTfmObject = {
   value?: {
-    value: number;
-    currency: Currency;
+    value?: number;
+    currency?: Currency;
   };
   amendmentExposurePeriodInMonths?: number | null;
   exposure?: {
-    exposure: number | string;
-    timestamp: UnixTimestamp | null;
-    ukefExposureValue: number;
+    exposure?: number | string;
+    timestamp?: UnixTimestamp | null;
+    ukefExposureValue?: number;
   };
   coverEndDate?: UnixTimestamp;
   facilityEndDate?: Date;
@@ -137,6 +137,7 @@ export interface PortalFacilityAmendment extends BaseAmendment {
     version: number;
     criteria: AmendmentsEligibilityCriterionWithAnswer[];
   };
+  tfm?: FacilityAmendmentTfmObject;
 }
 
 /**
@@ -144,6 +145,24 @@ export interface PortalFacilityAmendment extends BaseAmendment {
  * "amendments" property
  */
 export type FacilityAmendment = TfmFacilityAmendment | PortalFacilityAmendment;
+
+export type FacilityGuaranteeDates = {
+  guaranteeCommencementDate?: string;
+  guaranteeExpiryDate?: string;
+  effectiveDate?: string;
+};
+
+export type TfmFacilityObject = {
+  exchangeRate?: number;
+  facilityValueInGBP?: number;
+  ukefExposure?: number;
+  ukefExposureCalculationTimestamp?: string;
+  hasBeenIssuedAndAcknowledged?: boolean;
+  feeRecord?: number;
+  exposurePeriodInMonths?: number;
+  facilityGuaranteeDates?: FacilityGuaranteeDates;
+  riskProfile?: string;
+};
 
 /**
  * Type of the mongo db "tfm-facilities" collection
@@ -155,6 +174,11 @@ export type TfmFacility = {
   _id: ObjectId;
   facilitySnapshot: Facility;
   amendments?: FacilityAmendment[];
-  tfm: object;
+  tfm: TfmFacilityObject;
   auditRecord?: AuditDatabaseRecord;
+};
+
+export type TfmFacilityWithStringId = Omit<TfmFacility, '_id' | 'facilitySnapshot'> & {
+  _id: ObjectId | string;
+  facilitySnapshot: FacilityWithStringDealId;
 };

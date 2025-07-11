@@ -1,10 +1,4 @@
-const decimalsCount = (numb) => {
-  const decimals = numb.toString().split('.')[1];
-  if (decimals) {
-    return decimals.length;
-  }
-  return 0;
-};
+const { decimalsCount } = require('@ukef/dtfs2-common');
 
 const sanitizeCurrency = (originalValue = '') => {
   const sanitizedValue = originalValue.replace(/,(\d{3})/g, '$1');

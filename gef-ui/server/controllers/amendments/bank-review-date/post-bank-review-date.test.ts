@@ -215,8 +215,13 @@ describe('postBankReviewDate', () => {
     await postBankReviewDate(req, res);
 
     // Assert
+
+    const tfmUpdate = {
+      bankReviewDate: today,
+    };
+
     expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
-    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { bankReviewDate: today }, userToken });
+    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { bankReviewDate: today, tfm: tfmUpdate }, userToken });
   });
 
   it('should not call console.error if the bankReviewDate is valid', async () => {

@@ -52,7 +52,7 @@ describe('postCreateDraftFacilityAmendment', () => {
 
     // Assert
     expect(upsertAmendmentMock).toHaveBeenCalledTimes(1);
-    expect(upsertAmendmentMock).toHaveBeenCalledWith({ facilityId, dealId, amendment: {}, userToken: req.session.userToken });
+    expect(upsertAmendmentMock).toHaveBeenCalledWith({ facilityId, dealId, amendment: { tfm: {} }, userToken: req.session.userToken });
   });
 
   it("should redirect to the 'what do you need to change' page ", async () => {
