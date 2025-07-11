@@ -55,7 +55,8 @@
       "prettier --write"
     ],
     "**/*.md": [
-      "prettier --write"
+      "prettier --write",
+      "npm run validate:md"
     ],
     "**/*.yml": [
       "npm run validate:yml"
