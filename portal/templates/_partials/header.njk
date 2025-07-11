@@ -1,3 +1,5 @@
+      <h1>-1{{ primaryNav }}</h1>
+
 {% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
 {% from "govuk/components/header/macro.njk" import govukHeader %}
 {% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
@@ -38,8 +40,6 @@
 
 <!-- Navigation items -->
 {% set navigation = [] %}
-
-<h1>{{ primaryNav }}</h1>
 
 {% set dashboard = {
     text: "Dashboard",
