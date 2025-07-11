@@ -25,16 +25,16 @@
 {% set isChecker = isUser and user
   .roles
   .includes("checker") %}
-{% set isReadOnly = isUser and user.roles.includes("read-only") %}
-{% set isPaymentReportOfficer = isUser and user.roles.includes("payment-report-officer") %}
-{% set isDealUsers = isMaker or isChecker or isReadyonly or isAdmin %}
-{% set isReportUsers = isMaker or isChecker or isAdmin %}
 {% set isAdmin = isUser and user
   .roles
   .includes("admin") %}
+{% set isReadOnly = isUser and user.roles.includes("read-only") %}
+{% set isPaymentReportOfficer = isUser and user.roles.includes("payment-report-officer") %}
+{% set isDealUser = isMaker or isChecker or isReadOnly or isAdmin %}
+{% set isReportUser = isMaker or isChecker or isAdmin %}
 
 <!-- Feature flags -->
-{% set isFixedFeeRecordCorrection = isUser and FF_FEE_RECORD_CORRECTION_ENABLED === "true" %}
+{% set isFixedFeeRecordCorrection = isUser and isPaymentReportOfficer and FF_FEE_RECORD_CORRECTION_ENABLED === "true" %}
 
 <!-- Navigation items -->
 {% set navigation = [] %}
@@ -44,16 +44,7 @@
     href: "/dashboard",
     active: primaryNav == "dashboard",
     attributes: {
-      "data-cy": "dashboard"
-    }
-  } %}
-
-{% set users = {
-    href: "/admin/users",
-    active: primaryNav == "users",
-    text: "Users",
-        attributes: {
-      "data-cy": "admin-header"
+      "data-cy": "dashboard-header"
     }
   } %}
 
@@ -62,7 +53,7 @@
     href: "/reports",
     active: primaryNav == "reports",
     attributes: {
-      "data-cy": "reports"
+      "data-cy": "reports-header"
     }
   } %}
 
@@ -71,23 +62,32 @@
     href: "/utilisation-report-upload",
     active: primaryNav == "utilisation_report_upload",
     attributes: {
-      "data-cy": "upload_report"
+      "data-cy": "upload-report-header"
     }
   } %}
 {% set previousGefReports = {
     text: "Previous GEF reports",
     href: "/previous-reports",
-    active: primaryNav == "previous_reports",
+    active: primaryNav == "previous-reports-header",
     attributes: {
-      "data-cy": "previous_reports"
+      "data-cy": "previous-reports-header"
     }
   } %}
 {% set recordCorrectionLog = {
     text: "Record correction log",
     href: "/utilisation-reports/correction-log",
-    active: primaryNav == "record_correction_log",
+    active: primaryNav == "record-correction-log-header",
     attributes: {
-      "data-cy": "record_correction_log"
+      "data-cy": "record-correction-log-header"
+    }
+  } %}
+
+{% set users = {
+    href: "/admin/users",
+    active: primaryNav == "users",
+    text: "Users",
+        attributes: {
+      "data-cy": "users-header"
     }
   } %}
 
@@ -96,7 +96,7 @@
     text: "Profile",
     active: primaryNav == "profile",
     attributes: {
-      "data-cy": "logout-header"
+      "data-cy": "profile-header"
     }
   } %}
 
@@ -110,12 +110,12 @@
   }%}
 
 <!-- 1. Deal users -->
-{% if isDealUsers %}
+{% if isDealUser %}
   {% set navigation = (navigation.push(dashboard), navigation) %}
 {% endif %}
 
 <!-- 2. Report users -->
-{% if isReportUsers %}
+{% if isReportUser %}
   {% set navigation = (navigation.push(report), navigation) %}
 {% endif %}
 
