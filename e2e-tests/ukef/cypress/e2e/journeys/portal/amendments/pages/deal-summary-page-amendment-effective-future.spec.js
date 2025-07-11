@@ -7,7 +7,7 @@ import { tomorrow } from '../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('Amendment effective in Future - Deal summary page', () => {
+context('Amendment effective in future - Deal summary page', () => {
   const CHANGED_FACILITY_VALUE = '10000';
   let dealId;
   let issuedCashFacilityId;
@@ -66,5 +66,9 @@ context('Amendment effective in Future - Deal summary page', () => {
   it('should display the banner with "See details" link in the facility section', () => {
     applicationPreview.amendmentEffectiveFutureLink().should('have.attr', 'href', amendmentDetailsUrl);
     cy.assertText(applicationPreview.amendmentEffectiveFutureLink(), 'See details');
+    cy.assertText(
+      applicationPreview.amendmentEffectiveFutureBanner(),
+      `There is an amendment on this facility effective on ${tomorrow.d_MMMM_yyyy}. See details`,
+    );
   });
 });

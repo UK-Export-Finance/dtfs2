@@ -101,6 +101,7 @@ const applicationPreview = {
 
   makeAChangeButton: (facilityId) => cy.get(`[data-cy="facility-${facilityId}-make-change-button"]`),
   amendmentInProgress: () => cy.get('[data-cy="amendment-in-progress"]'),
+  amendmentEffectiveFutureBanner: () => cy.get('[data-cy="amendment-effective-future-banner"]'),
   amendmentEffectiveFutureLink: () => cy.get('[data-cy="amendment-effective-future-banner-link"]'),
 };
 

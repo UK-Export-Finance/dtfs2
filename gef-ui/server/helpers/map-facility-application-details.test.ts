@@ -5,7 +5,7 @@ import { addAmendmentParamsToFacility } from './add-amendment-params-to-facility
 import { MOCK_ISSUED_FACILITY } from '../utils/mocks/mock-facilities';
 import { MOCK_MAKER } from '../utils/mocks/mock-users';
 import { MOCK_BASIC_DEAL } from '../utils/mocks/mock-applications';
-import { OnGoingAmendmentsParams } from '../types/portal-amendments';
+import { SubmittedAmendmentsParams } from '../types/portal-amendments';
 
 describe('mapFacilityApplicationDetails', () => {
   const facility = {
@@ -45,7 +45,7 @@ describe('mapFacilityApplicationDetails', () => {
   describe('when the deal is cancelled', () => {
     it('should not populate params and should not populate canIssuedFacilitiesBeAmended', () => {
       // Arrange
-      const onGoingAmendments: OnGoingAmendmentsParams[] = [];
+      const onGoingAmendments: SubmittedAmendmentsParams[] = [];
 
       const cancelledDeal = {
         ...mockDeal,
@@ -67,7 +67,7 @@ describe('mapFacilityApplicationDetails', () => {
   describe('when the deal is pending cancellation', () => {
     it('should not populate params and should not populate canIssuedFacilitiesBeAmended', () => {
       // Arrange
-      const amendmentsInProgress: OnGoingAmendmentsParams[] = [];
+      const amendmentsInProgress: SubmittedAmendmentsParams[] = [];
 
       const cancelledDeal = {
         ...mockDeal,
@@ -90,7 +90,7 @@ describe('mapFacilityApplicationDetails', () => {
     describe('when a facility is issued', () => {
       it('should return mapped facilities with canIssuedFacilitiesBeAmended set to true', () => {
         // Arrange
-        const onGoingAmendments: OnGoingAmendmentsParams[] = [];
+        const onGoingAmendments: SubmittedAmendmentsParams[] = [];
 
         // Act
         const response = mapFacilityApplicationDetails(mockDeal, [facility], onGoingAmendments, params, MOCK_MAKER.roles as Role[]);
@@ -117,7 +117,7 @@ describe('mapFacilityApplicationDetails', () => {
           ...facility,
           stage: 'Unissued',
         };
-        const onGoingAmendments: OnGoingAmendmentsParams[] = [];
+        const onGoingAmendments: SubmittedAmendmentsParams[] = [];
 
         // Act
         const response = mapFacilityApplicationDetails(mockDeal, [unissuedFacility], onGoingAmendments, params, MOCK_MAKER.roles as Role[]);
@@ -141,10 +141,10 @@ describe('mapFacilityApplicationDetails', () => {
   describe('when there are amendments in progress', () => {
     it('should return mapped facilities and params fully populated', () => {
       // Arrange
-      const onGoingAmendments: OnGoingAmendmentsParams[] = [amendmentReadyForChecker, amendmentFurtherMakersInput];
+      const submittedAmendments: SubmittedAmendmentsParams[] = [amendmentReadyForChecker, amendmentFurtherMakersInput];
 
       // Act
-      const response = mapFacilityApplicationDetails(mockDeal, [facility, facilityTwo], onGoingAmendments, params, MOCK_MAKER.roles as Role[]);
+      const response = mapFacilityApplicationDetails(mockDeal, [facility, facilityTwo], submittedAmendments, params, MOCK_MAKER.roles as Role[]);
 
       // Assert
       const {
@@ -155,7 +155,7 @@ describe('mapFacilityApplicationDetails', () => {
         facility,
         dealId: mockDeal._id,
         userRoles: MOCK_MAKER.roles,
-        isFacilityWithAmendmentInProgress: onGoingAmendments[0],
+        isFacilityWithAmendmentInProgress: submittedAmendments[0],
         readyForCheckerAmendmentDetailsUrlAndText: params.readyForCheckerAmendmentDetailsUrlAndText,
         furtherMakersInputAmendmentDetailsUrlAndText: params.furtherMakersInputAmendmentDetailsUrlAndText,
       });
@@ -168,7 +168,7 @@ describe('mapFacilityApplicationDetails', () => {
         facility: facilityTwo,
         dealId: mockDeal._id,
         userRoles: MOCK_MAKER.roles,
-        isFacilityWithAmendmentInProgress: onGoingAmendments[1],
+        isFacilityWithAmendmentInProgress: submittedAmendments[1],
         readyForCheckerAmendmentDetailsUrlAndText: params.readyForCheckerAmendmentDetailsUrlAndText,
         furtherMakersInputAmendmentDetailsUrlAndText: params.furtherMakersInputAmendmentDetailsUrlAndText,
       });
