@@ -2,6 +2,7 @@ import { PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { FacilityWithAmendmentFields, AddAmendmentToFacilityParams } from '../types/portal-amendments';
 import { PORTAL_AMENDMENT_PAGES } from '../constants/amendments';
 import { MAKER } from '../constants/roles';
+import { getAmendmentsUrl } from '../controllers/amendments/helpers/navigation.helper';
 
 const { AMENDMENT_DETAILS } = PORTAL_AMENDMENT_PAGES;
 
@@ -31,12 +32,15 @@ export const addAmendmentParamsToFacility = ({
   /**
    * if amendment is in progress or has an effective date in the future generate the amendment details URL
    */
-  let amendmentDetailsUrl = '';
 
+  let amendmentDetailsUrl = '';
+  const { facilityId } = facility;
   if (isFacilityWithEffectiveAmendment) {
-    amendmentDetailsUrl = `/gef/application-details/${dealId}/facilities/${facility.facilityId}/amendments/${isFacilityWithEffectiveAmendment?.amendmentId}/${AMENDMENT_DETAILS}`;
+    const { amendmentId } = isFacilityWithEffectiveAmendment;
+    amendmentDetailsUrl = getAmendmentsUrl({ dealId, facilityId, amendmentId, page: AMENDMENT_DETAILS });
   } else if (isFacilityWithAmendmentInProgress) {
-    amendmentDetailsUrl = `/gef/application-details/${dealId}/facilities/${facility.facilityId}/amendments/${isFacilityWithAmendmentInProgress?.amendmentId}/${AMENDMENT_DETAILS}`;
+    const { amendmentId } = isFacilityWithAmendmentInProgress;
+    amendmentDetailsUrl = getAmendmentsUrl({ dealId, facilityId, amendmentId, page: AMENDMENT_DETAILS });
   }
 
   /*
