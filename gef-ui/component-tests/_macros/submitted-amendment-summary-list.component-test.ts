@@ -34,7 +34,7 @@ describe(component, () => {
       dealId: '123',
       facilityId: '234',
       amendmentId: '456',
-      type: 'PORTAL facility',
+      isTypePortal: true,
       effectiveDate: '25/07/2025',
       hasFutureEffectiveDate: true,
       amendmentRows: [
@@ -51,7 +51,7 @@ describe(component, () => {
             text: 'Facility type',
           },
           value: {
-            text: 'Cash facility 1',
+            text: 'Cash facility',
           },
         },
       ],
