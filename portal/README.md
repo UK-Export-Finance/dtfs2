@@ -9,7 +9,7 @@ Ensure you have an `.env` file set up. You can use `.env.sample` as a starting p
 ## Running Locally 🏃‍♂️
 
 1. Run `npm run start`.
-2. Visit http://localhost:5000 in your web browser.
+2. Visit <http://localhost:5000> in your web browser.
 
 Alternatively, you can start all services from the root directory using `npm run start`.
 

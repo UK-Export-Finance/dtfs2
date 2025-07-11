@@ -121,29 +121,29 @@ Simple example of 2 groups with multiple tasks
 
 ### Functions for creating tasks
 
-| File | Function | Purpose
-| ------- | ------- | ------- |
-| /v1/controllers/deal.tasks.js | createDealTasks | Creates all tasks (with conditions depending on the deal). Calls API to update the deal.
-| /v1/helpers/create-tasks.js | createTasks | Generates an array of all tasks. Handles AIN/MIA specifics.
+| File                          | Function        | Purpose                                                                                  |
+| ----------------------------- | --------------- | ---------------------------------------------------------------------------------------- |
+| /v1/controllers/deal.tasks.js | createDealTasks | Creates all tasks (with conditions depending on the deal). Calls API to update the deal. |
+| /v1/helpers/create-tasks.js   | createTasks     | Generates an array of all tasks. Handles AIN/MIA specifics.                              |
 
 ### Main functions for updating tasks
 
-| File | Function | Purpose
-| ------- | ------- | ------- |
-| /v1/controllers/tasks.controller.js | updateTfmTask | Core function to update a single task and map over all other tasks to apply business logic.
-| /v1/controllers/tasks.controller.js | updateTask | Maps over all tasks and updates a single task from the provided params.
-| /v1/controllers/tasks.controller.js | updateAllTasks | Maps over all tasks applying business logic to each task as appropriate.
+| File                                | Function       | Purpose                                                                                     |
+| ----------------------------------- | -------------- | ------------------------------------------------------------------------------------------- |
+| /v1/controllers/tasks.controller.js | updateTfmTask  | Core function to update a single task and map over all other tasks to apply business logic. |
+| /v1/controllers/tasks.controller.js | updateTask     | Maps over all tasks and updates a single task from the provided params.                     |
+| /v1/controllers/tasks.controller.js | updateAllTasks | Maps over all tasks applying business logic to each task as appropriate.                    |
 
 ### Helper functions for updating tasks
 
-| File | Function | Purpose
-| ------- | ------- | ------- |
-| /v1/tasks/tasks-edit-logic.js | handleTaskEditFlagAndStatus | Updates a single task's `canEdit` and `status` properties depending on the shape of the provided task and other tasks. lots of business logic in here. This is called for each task from the main `updateTfmTask` function.
-| /v1/tasks/tasks-edit-logic.js | taskCanBeEditedWithoutPreviousTaskComplete | Special business rules to check if a task can be edited without previous tasks completed. This currently only applies to one group of tasks (Underwriting Group). Can be easily extended for other tasks/groups.
-| /v1/tasks/tasks-edit-logic.js | previousTaskIsComplete | From a provided task and group id - check if the previous task is completed. Handles things like if the task is not in the same group as the provided task.
-| /v1/tasks/map-task-history-object.js | mapTaskHistoryObject | adds a timestamp to some task fields, to be used in a single task's history array.
-| /v1/tasks/map-task-object.js | mapTaskObject | Maps received data into correct format for the DB. E.g, updates the status, changes the original status to be the `previousStatus`, adds timestamps.
-| /v1/tasks/assign-group-tasks-to-one-user.js | assignGroupTasksToOneUser | From a provided list of groups and userId - assign all tasks in the groups to the provided user. Calls the API to get full user name and update the deal.
+| File                                        | Function                                   | Purpose                                                                                                                                                                                                                     |
+| ------------------------------------------- | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| /v1/tasks/tasks-edit-logic.js               | handleTaskEditFlagAndStatus                | Updates a single task's `canEdit` and `status` properties depending on the shape of the provided task and other tasks. lots of business logic in here. This is called for each task from the main `updateTfmTask` function. |
+| /v1/tasks/tasks-edit-logic.js               | taskCanBeEditedWithoutPreviousTaskComplete | Special business rules to check if a task can be edited without previous tasks completed. This currently only applies to one group of tasks (Underwriting Group). Can be easily extended for other tasks/groups.            |
+| /v1/tasks/tasks-edit-logic.js               | previousTaskIsComplete                     | From a provided task and group id - check if the previous task is completed. Handles things like if the task is not in the same group as the provided task.                                                                 |
+| /v1/tasks/map-task-history-object.js        | mapTaskHistoryObject                       | adds a timestamp to some task fields, to be used in a single task's history array.                                                                                                                                          |
+| /v1/tasks/map-task-object.js                | mapTaskObject                              | Maps received data into correct format for the DB. E.g, updates the status, changes the original status to be the `previousStatus`, adds timestamps.                                                                        |
+| /v1/tasks/assign-group-tasks-to-one-user.js | assignGroupTasksToOneUser                  | From a provided list of groups and userId - assign all tasks in the groups to the provided user. Calls the API to get full user name and update the deal.                                                                   |
 
 There are also a series of smaller, more generic helper functions in `/src/v1/helpers/tasks.js` that are used in all the functions listed above:
 
@@ -161,32 +161,33 @@ There are also a series of smaller, more generic helper functions in `/src/v1/he
 
 ### Task email functions
 
-| File | Function | Purpose
-| ------- | ------- | ------- |
-| /v1/controllers/task-emails.js | sendUpdatedTaskEmail | Maps a given task with a Notify template id and sends the email.
-| /v1/helpers/generate-task-email-variables.js | generateTaskEmailVariables | Formats task title, generates a URL and grabs some deal data.
+| File                                         | Function                   | Purpose                                                          |
+| -------------------------------------------- | -------------------------- | ---------------------------------------------------------------- |
+| /v1/controllers/task-emails.js               | sendUpdatedTaskEmail       | Maps a given task with a Notify template id and sends the email. |
+| /v1/helpers/generate-task-email-variables.js | generateTaskEmailVariables | Formats task title, generates a URL and grabs some deal data.    |
 
 ### What happens in the code when a single task is updated
-When a TFM user updates a task (e.g changes the status, assigns the task to someone), the UI calls the TFM API via REST. The REST endpoint calls `updateTask`, then calling the business logic in  `updateTfmTask` function (with the single task that has changed with user input). This triggers a series of events for the all tasks.
 
-1) Get the deal and all tasks from DB.
-2) Finds the group that the task belongs to.
-3) Maps the user-inputted task input, into the Task schema structure, adding a few fields like `dateStarted`, `dateCompleted`, `statusFrom`.
-4) Checks if the task can be updated (i.e, previous task is complete).
-5) Updates the task in that group. Function now has an array of all the latest tasks (not saved to DB yet).
-6) Map over _all tasks_ (including the one task that has been updated) via `updateAllTasks`. This function:
+When a TFM user updates a task (e.g changes the status, assigns the task to someone), the UI calls the TFM API via REST. The REST endpoint calls `updateTask`, then calling the business logic in `updateTfmTask` function (with the single task that has changed with user input). This triggers a series of events for the all tasks.
+
+1. Get the deal and all tasks from DB.
+2. Finds the group that the task belongs to.
+3. Maps the user-inputted task input, into the Task schema structure, adding a few fields like `dateStarted`, `dateCompleted`, `statusFrom`.
+4. Checks if the task can be updated (i.e, previous task is complete).
+5. Updates the task in that group. Function now has an array of all the latest tasks (not saved to DB yet).
+6. Map over _all tasks_ (including the one task that has been updated) via `updateAllTasks`. This function:
 
 - Unlocks the next task if the previous task is completed and the next task is not already unlocked. Changes `task.status` and `task.canEdit`.
 - Makes sure that if a task is completed, mark `task.canEdit` as false.
 - The above logic happens via `handleTaskEditFlagAndStatus` function, which handles and applies the business rules and task property changes to an individual task. It also return a `sendEmail` flag if the task has been unlocked. This is the core, basic functionality for all tasks.
 - If the task that is being mapped over is the task that has been requested to update - update the tasks's history array with the status changed, who it's assigned to, and who updated it.
 - If the `handleTaskEditFlagAndStatus` function returned a `sendEmail` flag, add the task to an array of emails to send.
-  
-7) Unlock any tasks with special business rules (e.g when X task is completed, unlock multiple tasks in Y group). Currently the only logic for this is inside the `canUnlockUnderWritingGroupTasks` conditional.
-8) Loop over the array of emails to send (that was returned previously), make an API call for each task.
-9) For each task that has successfully sent email - add the task to a new array: `tasksToAddEmailSentFlag`.
-10) Map over all the tasks again and if the task matches a task in the `tasksToAddEmailSentFlag` array, update the task with a `emailSent` flag. This flag is a fail-safe to ensure that duplicate emails are not set.
-11) Finally, return all tasks.
+
+7. Unlock any tasks with special business rules (e.g when X task is completed, unlock multiple tasks in Y group). Currently the only logic for this is inside the `canUnlockUnderWritingGroupTasks` conditional.
+8. Loop over the array of emails to send (that was returned previously), make an API call for each task.
+9. For each task that has successfully sent email - add the task to a new array: `tasksToAddEmailSentFlag`.
+10. Map over all the tasks again and if the task matches a task in the `tasksToAddEmailSentFlag` array, update the task with a `emailSent` flag. This flag is a fail-safe to ensure that duplicate emails are not set.
+11. Finally, return all tasks.
 
 ## Future
 

@@ -11,7 +11,7 @@ Before running the GEF-UI locally, make sure you have an `.env` file. You can us
 To run the GEF-UI locally, follow these steps:
 
 1. Execute `npm run start`.
-2. Visit http://localhost in your web browser.
+2. Visit <http://localhost> in your web browser.
 
 Note that no port number is specified in the URL due to the reverse proxy.
 

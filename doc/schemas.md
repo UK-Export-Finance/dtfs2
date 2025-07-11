@@ -53,7 +53,7 @@ describe('EXAMPLE_SCHEMA', () => {
 
 However, sometimes you'll have created a new nested schema or type that doesn't have a test case yet. In this case, you'll need to create a new test file. These go in `\libs\common\src\test-helpers\schemas` (in the correct folder, as specified above).
 
-### To create your own primitive/custom type test:
+### To create your own primitive/custom type test
 
 - Create a new file in the correct folder (ie `with-string.tests.ts`)
 - Follow the existing pattern (see `with-string.tests.ts` for an example)
@@ -80,7 +80,7 @@ However, sometimes you'll have created a new nested schema or type that doesn't 
   }
   ```
 
-### To create your own reusable schema / transformation test:
+### To create your own reusable schema / transformation test
 
 n.b. transformation tests use a different test case type to allow access to a function to get the value of the transformed payload -- pay attention to types if working on a transformation test.
 

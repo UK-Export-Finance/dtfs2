@@ -15,9 +15,10 @@ List any additional fixes or improvements.
 <details>
   <summary>Show/hide</summary>
 
-  ```json
-   
-  ```
+```json
+
+```
+
 </details>
 
 ## Screenshot(s) :camera_flash:
@@ -25,5 +26,6 @@ List any additional fixes or improvements.
 <details>
   <summary>Show/hide</summary>
 
-  Add screenshots here.
+Add screenshots here.
+
 </details>
