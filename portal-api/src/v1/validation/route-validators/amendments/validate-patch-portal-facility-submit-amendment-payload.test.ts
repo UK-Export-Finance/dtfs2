@@ -8,6 +8,9 @@ const portalAmendmentVariables = portalAmendmentToUkefEmailVariables();
 
 const referenceNumber = `${new ObjectId().toString()}-001`;
 
+const bankId = '1';
+const bankName = 'Test Bank';
+
 describe('validatePatchPortalFacilitySubmitAmendmentPayload', () => {
   const invalidPayloads = [
     {
@@ -36,6 +39,8 @@ describe('validatePatchPortalFacilitySubmitAmendmentPayload', () => {
           ...portalAmendmentVariables.emailVariables,
           exporterName: undefined,
         },
+        bankId,
+        bankName,
       },
     },
     {
@@ -44,6 +49,8 @@ describe('validatePatchPortalFacilitySubmitAmendmentPayload', () => {
         newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
         referenceNumber: undefined,
       },
+      bankId,
+      bankName,
     },
     {
       description: 'string field is number',
@@ -53,6 +60,8 @@ describe('validatePatchPortalFacilitySubmitAmendmentPayload', () => {
           ...portalAmendmentVariables.emailVariables,
           ukefDealId: 12345,
         },
+        bankId,
+        bankName,
       },
     },
     {
@@ -63,6 +72,44 @@ describe('validatePatchPortalFacilitySubmitAmendmentPayload', () => {
           ...portalAmendmentVariables.emailVariables,
           newFacilityEndDate: new Date(),
         },
+        bankId,
+        bankName,
+      },
+    },
+    {
+      description: 'bankId string field is string',
+      payload: {
+        ...portalAmendmentVariables,
+        emailVariables: portalAmendmentVariables.emailVariables,
+        bankId: 1,
+        bankName,
+      },
+    },
+    {
+      description: 'bankId string field is undefined',
+      payload: {
+        ...portalAmendmentVariables,
+        emailVariables: portalAmendmentVariables.emailVariables,
+        bankId: undefined,
+        bankName,
+      },
+    },
+    {
+      description: 'bankId string field is string',
+      payload: {
+        ...portalAmendmentVariables,
+        emailVariables: portalAmendmentVariables.emailVariables,
+        bankId,
+        bankName: 1,
+      },
+    },
+    {
+      description: 'bankId string field is undefined',
+      payload: {
+        ...portalAmendmentVariables,
+        emailVariables: portalAmendmentVariables.emailVariables,
+        bankId,
+        bankName: undefined,
       },
     },
   ];
@@ -83,7 +130,7 @@ describe('validatePatchPortalFacilitySubmitAmendmentPayload', () => {
 
   it.each([PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED])('should call next when newStatus is "%s"', (newStatus) => {
     // Arrange
-    const { req, res } = createMocks({ body: { newStatus, referenceNumber, ...portalAmendmentVariables } });
+    const { req, res } = createMocks({ body: { newStatus, referenceNumber, ...portalAmendmentVariables, bankId, bankName } });
     const next = jest.fn();
 
     // Act

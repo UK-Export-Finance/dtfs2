@@ -5,11 +5,13 @@ import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { PortalFacilityAmendmentService } from './facility-amendment.service';
 import { aPortalUser } from '../../../test-helpers';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
+import { TfmActivitiesRepo } from '../../repositories/tfm-deals-repo';
 
 const mockUpdatePortalFacilityAmendmentByAmendmentId = jest.fn();
 const mockFindOneAmendmentByFacilityIdAndAmendmentId = jest.fn();
 const mockValidateNoOtherAmendmentInProgressOnFacility = jest.fn();
 const mockValidateAmendmentIsComplete = jest.fn();
+const mockAddTfmActivity = jest.fn();
 
 const amendmentId = new ObjectId().toString();
 const facilityId = new ObjectId().toString();
@@ -27,6 +29,7 @@ describe('PortalFacilityAmendmentService', () => {
 
     jest.spyOn(TfmFacilitiesRepo, 'updatePortalFacilityAmendmentByAmendmentId').mockImplementation(mockUpdatePortalFacilityAmendmentByAmendmentId);
     jest.spyOn(TfmFacilitiesRepo, 'findOneAmendmentByFacilityIdAndAmendmentId').mockImplementation(mockFindOneAmendmentByFacilityIdAndAmendmentId);
+    jest.spyOn(TfmActivitiesRepo, 'submitTfmActivity').mockImplementation(mockAddTfmActivity);
 
     jest
       .spyOn(PortalFacilityAmendmentService, 'validateNoOtherAmendmentInProgressOnFacility')
@@ -142,6 +145,17 @@ describe('PortalFacilityAmendmentService', () => {
         auditDetails,
         allowedStatuses: [PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL],
       });
+    });
+
+    it('should not call TfmActivitiesRepo.submitTfmActivity', async () => {
+      // Act
+      await PortalFacilityAmendmentService.returnPortalFacilityAmendmentToMaker({
+        amendmentId,
+        facilityId,
+        auditDetails,
+      });
+
+      expect(mockAddTfmActivity).toHaveBeenCalledTimes(0);
     });
 
     it('should return the result of TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId', async () => {

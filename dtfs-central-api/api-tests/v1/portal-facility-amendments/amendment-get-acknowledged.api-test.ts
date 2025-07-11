@@ -28,6 +28,9 @@ import { amendmentsEligibilityCriteria } from '../../../test-helpers/test-data/e
 
 const originalEnv = { ...process.env };
 
+const bankId = '1';
+const bankName = 'Bank Name';
+
 interface FacilityAmendmentResponse extends Response {
   body: PortalFacilityAmendment;
 }
@@ -129,7 +132,14 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/acknowledged', () => 
 
       // submit amendment to make it acknowledged
       await testApi
-        .patch({ auditDetails: generatePortalAuditDetails(portalUserId), newStatus, referenceNumber, ...portalAmendmentToUkefEmailVariables() })
+        .patch({
+          auditDetails: generatePortalAuditDetails(portalUserId),
+          newStatus,
+          referenceNumber,
+          ...portalAmendmentToUkefEmailVariables(),
+          bankId,
+          bankName,
+        })
         .to(generateSubmitAmendmentUrl(facilityId, amendmentId));
     });
 
