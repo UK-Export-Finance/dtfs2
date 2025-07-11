@@ -38,6 +38,8 @@ const configureNunjucks = (opts) => {
 
   const nunjucksEnvironment = nunjucks.configure(appViews, opts);
 
+  nunjucksEnvironment.addGlobal('govukRebrand', true);
+
   nunjucksEnvironment.addGlobal('CONTACT_US_SELF_SERVICE_PORTAL_URL', CONTACT_US_SELF_SERVICE_PORTAL_URL);
   nunjucksEnvironment.addGlobal('CONTACT_US_EMAIL_ADDRESS', CONTACT_US_EMAIL_ADDRESS);
   nunjucksEnvironment.addGlobal('IS_SSO_ENABLED', isTfmSsoFeatureFlagEnabled());

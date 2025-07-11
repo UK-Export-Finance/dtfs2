@@ -23,6 +23,8 @@ const configureNunjucks = (opts) => {
 
   const nunjucksEnvironment = nunjucks.configure(appViews, opts);
 
+  nunjucksEnvironment.addGlobal('govukRebrand', true);
+
   nunjucksEnvironment.addGlobal('CONTACT_US_EMAIL_ADDRESS', CONTACT_US_EMAIL_ADDRESS);
   nunjucksEnvironment.addGlobal('FF_FEE_RECORD_CORRECTION_ENABLED', FF_FEE_RECORD_CORRECTION_ENABLED);
 

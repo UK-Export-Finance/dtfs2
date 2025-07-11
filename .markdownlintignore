@@ -1,0 +1,8 @@
+# NPM
+.npm
+dist
+**/node_modules/*
+
+# CHANGELOGS
+CHANGELOG.md
+**/CHANGELOG.md

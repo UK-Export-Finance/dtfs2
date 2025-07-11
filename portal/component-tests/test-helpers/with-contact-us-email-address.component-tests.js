@@ -20,7 +20,7 @@ module.exports.withContactUsEmailAddressTests = ({ page }) => {
     });
 
     it('should render the respond timeframe text', () => {
-      wrapper.expectText('[data-cy="contact-us-timeframe"]').toRead('We aim to respond within 2 working days');
+      wrapper.expectText('[data-cy="contact-us-timeframe"]').toRead('Monday to Friday, 9am to 5pm (excluding public holidays)');
     });
   });
 };

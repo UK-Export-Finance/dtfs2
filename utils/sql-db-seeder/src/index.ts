@@ -15,11 +15,11 @@ import { seedPaymentMatchingTolerances } from './payment-matching-tolerance/paym
 const clearDatabase = async (dataSource: DataSource): Promise<void> => {
   console.info('⚡ Clearing MSSQL database');
 
-  await dataSource.manager.delete(PaymentEntity, {});
-  await dataSource.manager.delete(FeeRecordEntity, {});
-  await dataSource.manager.delete(UtilisationReportEntity, {});
-  await dataSource.manager.delete(AzureFileInfoEntity, {});
-  await dataSource.manager.delete(PaymentMatchingToleranceEntity, {});
+  await dataSource.createQueryBuilder().delete().from(PaymentEntity).execute();
+  await dataSource.createQueryBuilder().delete().from(FeeRecordEntity).execute();
+  await dataSource.createQueryBuilder().delete().from(UtilisationReportEntity).execute();
+  await dataSource.createQueryBuilder().delete().from(AzureFileInfoEntity).execute();
+  await dataSource.createQueryBuilder().delete().from(PaymentMatchingToleranceEntity).execute();
 
   console.info('✅ MSSQL database has been cleared successfully');
 };

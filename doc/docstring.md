@@ -101,7 +101,10 @@ for TypeScript. We will use TSDoc for all TypeScript files.
  * @returns Description of the return value.
  * @throws Description of the error.
  */
-function exampleFunction(paramName: string, optionalParamName?: number): boolean {
+function exampleFunction(
+  paramName: string,
+  optionalParamName?: number,
+): boolean {
   // function implementation
 }
 ```
@@ -115,7 +118,10 @@ function exampleFunction(paramName: string, optionalParamName?: number): boolean
  * @returns Description of the return value as a promise.
  * @throws Description of the error.
  */
-const exampleFunction = async (paramName: string, optionalParamName?: number): Promise<boolean> => {
+const exampleFunction = async (
+  paramName: string,
+  optionalParamName?: number,
+): Promise<boolean> => {
   // function implementation
 };
 ```

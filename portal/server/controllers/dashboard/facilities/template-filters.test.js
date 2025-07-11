@@ -3,7 +3,16 @@ import { typeFilters, facilitiesTemplateFilters, createdByYouFilter, stageFilter
 import { FIELD_NAMES } from '../../../constants';
 import { generateFiltersArray, submissionTypeFilters } from '../filters/generate-template-filters';
 
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isTfmDealCancellationFeatureFlagEnabled: jest.fn(() => false),
+}));
+
 describe('controllers/dashboard/facilities - template-filters', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
   describe('typeFilters', () => {
     it('should return generateFiltersArray with all possible `product` field inputs', () => {
       const mockSubmittedFilters = {};
