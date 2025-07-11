@@ -46,7 +46,7 @@ export const getAmendmentCreatedByRow = (amendment: FacilityAllTypeAmendmentWith
               text: 'Facility type',
             },
             value: {
-              text: amendment.facilityType.toString(),
+              text: `${amendment.facilityType} facility`,
             },
           },
         ]
