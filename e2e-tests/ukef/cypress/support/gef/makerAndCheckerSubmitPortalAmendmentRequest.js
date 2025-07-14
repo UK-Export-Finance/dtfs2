@@ -1,4 +1,5 @@
 import relative from '../../e2e/relativeURL';
+import { today } from '../../../../e2e-fixtures/dateConstants';
 
 /**
  * Submit a portal amendment to UKEF
@@ -15,6 +16,7 @@ export const makerAndCheckerSubmitPortalAmendmentRequest = ({
   coverEndDateExists = false,
   facilityValueExists = false,
   facilityEndDateExists = false,
+  effectiveDate = today.date,
   changedFacilityValue,
   changedCoverEndDate,
   amendmentDetailsUrl,
@@ -28,6 +30,7 @@ export const makerAndCheckerSubmitPortalAmendmentRequest = ({
     facilityEndDateExists,
     changedFacilityValue,
     changedCoverEndDate,
+    effectiveDate,
   });
 
   // submits checker part of journey

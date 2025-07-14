@@ -7,7 +7,10 @@ const {
   PORTAL_AMENDMENT_STATUS,
   hasBeenSubmittedToTfm,
   getLatestAmendmentsByFacility,
+  now,
+  DATE_FORMATS,
 } = require('@ukef/dtfs2-common');
+const { format, fromUnixTime } = require('date-fns');
 const { getTfmDeal, getPortalAmendmentsOnDeal, getFacilities, getFacility } = require('../../services/api');
 const { canIssueUnissuedFacilities } = require('./canIssueUnissuedFacilities');
 const {
@@ -378,33 +381,40 @@ const applicationDetails = async (req, res, next) => {
       params.link += '/unissued-facilities';
     }
 
-    const dealAmendmentsInProgress = amendmentsOnDeal.filter((amendment) => PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(amendment.status));
+    // This array contains amendments that are either in progress or have an effective date in the future
+    const submittedFacilityAmendmentsOnDeal = amendmentsOnDeal.filter((amendment) => {
+      const isAmendmentInProgress = PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(amendment.status);
+      const isAmendmentEffectiveInFuture = amendment.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED && new Date(amendment.effectiveDate * 1000) > now();
+      return isAmendmentInProgress || isAmendmentEffectiveInFuture;
+    });
 
     // array of facility ids that are currently being amended
-    const amendmentsInProgress = dealAmendmentsInProgress.map((amendment) => {
-      const { amendmentId, facilityId: amendmentFacilityId, status } = amendment;
+    const submittedAmendments = submittedFacilityAmendmentsOnDeal.map((amendment) => {
+      const { amendmentId, facilityId: amendmentFacilityId, status, effectiveDate } = amendment;
+      const formattedEffectiveDate = format(fromUnixTime(effectiveDate), DATE_FORMATS.D_MMMM_YYYY);
 
       return {
         amendmentId,
         facilityId: amendmentFacilityId,
         status,
+        effectiveDate: formattedEffectiveDate,
       };
     });
 
     /**
-     * if amendments are in progress and the application is cancelled,
+     * if submitted amendments and the application is cancelled,
      * set the cancelledDealWithAmendments flag to true
      * so that amendments abandoned banner is displayed on the application details page
      */
-    const areAmendmentsInProgress = Boolean(amendmentsInProgress?.length);
+    const areSubmittedAmendments = Boolean(submittedAmendments?.length);
     const isDealCancelled = application.status === DEAL_STATUS.CANCELLED;
     const isDealPendingCancellation = application.status === DEAL_STATUS.PENDING_CANCELLATION;
 
-    if (areAmendmentsInProgress && isDealCancelled) {
+    if (areSubmittedAmendments && isDealCancelled) {
       params.cancelledDealWithAmendments = true;
     }
 
-    if (areAmendmentsInProgress && isDealPendingCancellation) {
+    if (areSubmittedAmendments && isDealPendingCancellation) {
       params.pendingCancellationDealWithAmendments = true;
     }
 
@@ -423,7 +433,7 @@ const applicationDetails = async (req, res, next) => {
     params.hasFurtherMakersInputAmendments = false;
 
     // maps facilities and sets params
-    const { mappedFacilities, facilityParams } = mapFacilityApplicationDetails(application, params.facilities.data, amendmentsInProgress, params, userRoles);
+    const { mappedFacilities, facilityParams } = mapFacilityApplicationDetails(application, params.facilities.data, submittedAmendments, params, userRoles);
 
     // redeclare params.facilities.data to include the new flag
     params.facilities.data = mappedFacilities;
