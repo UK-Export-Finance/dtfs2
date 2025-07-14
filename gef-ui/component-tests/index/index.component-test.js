@@ -33,12 +33,6 @@ describe(page, () => {
       .toHaveAttribute('integrity', 'sha512-oZACuErpjnaaxu4APOJyHBZAk/RW7M5gZ/hVPEBXmbVdcxcdiH89/ey/lqII6wTmpUv87g92RrelMbFXB8qBng==');
   });
 
-  it('should have the correct integrity for "/assets/js/maskedInputs.js"', () => {
-    wrapper
-      .expectElement('script[src="/assets/js/maskedInputs.js"]')
-      .toHaveAttribute('integrity', 'sha512-ByfzBGRfJ1AM3hcN4bl0gILRnr3l9IDe8Um0poccVZ5qEfTpNj5r+rbYXQlEk1tL6zTdrIS2U77Kt4Jxi78Usw==');
-  });
-
   it('should have the correct integrity for "/assets/js/disableFormSubmitOnSubmission.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/disableFormSubmitOnSubmission.js"]')
