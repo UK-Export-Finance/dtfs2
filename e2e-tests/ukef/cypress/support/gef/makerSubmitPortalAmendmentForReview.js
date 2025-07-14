@@ -1,4 +1,4 @@
-import { now } from '@ukef/dtfs2-common';
+import { today } from '../../../../e2e-fixtures/dateConstants';
 import amendmentPage from '../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 
 /**
@@ -15,7 +15,7 @@ export const makerSubmitPortalAmendmentForReview = ({
   facilityEndDateExists = false,
   changedFacilityValue,
   changedCoverEndDate,
-  effectiveDate = now(),
+  effectiveDate = today.date,
 }) => {
   cy.makerMakesPortalAmendmentRequest({
     coverEndDateExists,

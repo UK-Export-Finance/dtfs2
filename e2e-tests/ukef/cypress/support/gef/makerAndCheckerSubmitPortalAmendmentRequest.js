@@ -1,5 +1,5 @@
-import { now } from '@ukef/dtfs2-common';
 import relative from '../../e2e/relativeURL';
+import { today } from '../../../../e2e-fixtures/dateConstants';
 
 /**
  * Submit a portal amendment to UKEF
@@ -16,12 +16,12 @@ export const makerAndCheckerSubmitPortalAmendmentRequest = ({
   coverEndDateExists = false,
   facilityValueExists = false,
   facilityEndDateExists = false,
+  effectiveDate = today.date,
   changedFacilityValue,
   changedCoverEndDate,
   amendmentDetailsUrl,
   confirmSubmissionToUkefUrl,
   submittedUrl,
-  effectiveDate = now(),
 }) => {
   // submits maker part of journey
   cy.makerSubmitPortalAmendmentForReview({

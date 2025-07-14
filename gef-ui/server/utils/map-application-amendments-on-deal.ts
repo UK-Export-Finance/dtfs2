@@ -1,11 +1,11 @@
-import { SummaryListRow, DATE_FORMATS, FacilityAllTypeAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { SummaryListRow, DATE_FORMATS, FacilityAllTypeAmendmentWithUkefId, AMENDMENT_TYPES } from '@ukef/dtfs2-common';
 import { format, fromUnixTime } from 'date-fns';
 import { getAmendmentCreatedByRow } from '../helpers/get-amendment-created-by-row';
 
 type MappedFacilityAmendmentWithUkefId = {
   referenceNumber: string;
   amendmentRows: SummaryListRow[];
-  type?: string;
+  isTypePortal?: boolean;
   facilityId?: string;
   amendmentId?: string;
   effectiveDate?: string;
@@ -26,12 +26,12 @@ export const mapApplicationAmendmentsOnDeal = (amendments: FacilityAllTypeAmendm
     const amendmentRows = getAmendmentCreatedByRow(amendment);
     const effectiveDate = amendment.effectiveDate ? format(fromUnixTime(amendment.effectiveDate), DATE_FORMATS.D_MMMM_YYYY) : '';
     const hasFutureEffectiveDate = new Date(fromUnixTime(amendment.effectiveDate ?? 0)) > today;
-    const type = `${amendment.type} facility`;
+    const isTypePortal = amendment.type === AMENDMENT_TYPES.PORTAL;
 
     return {
       referenceNumber,
       amendmentRows,
-      type,
+      isTypePortal,
       facilityId: amendment.facilityId.toString(),
       amendmentId: amendment.amendmentId.toString(),
       effectiveDate,

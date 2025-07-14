@@ -53,13 +53,16 @@
         </form>
       {% endif %}
     </header>
+    {% if item.isFacilityWithEffectiveAmendment %}
+        {% include "includes/application-preview/amendment-future-effective-banner.njk" %}
+    {% endif %}
     {% if item.isFacilityWithAmendmentInProgress %}
       <div class="govuk-inset-text govuk-!-margin-top-0">
         Amendment in progress:
-        {% if userRoles.includes('maker') %} 
+        {% if userRoles.includes('maker') %}
           <a href="{{ item.amendmentDetailsUrl }}" class="govuk-link" data-cy="amendment-in-progress">See details</a>
         {% endif %}
-        
+
         {% if userRoles.includes('checker') %}
           <a href="{{ item.amendmentDetailsUrl }}" class="govuk-link" data-cy="amendment-in-progress">Check amendment details before submitting to UKEF</a>
         {% endif %}
