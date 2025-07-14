@@ -3,7 +3,7 @@ const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-
 const { ObjectId } = require('mongodb');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 const { findOneDeal } = require('../deal/get-deal.controller');
-const { updateDeal } = require('../deal/update-deal.controller');
+const { updateBssEwcsDeal } = require('../deal/update-deal.controller');
 const { isNumber } = require('../../../../helpers');
 
 const createFacilities = async (facilities, dealId, auditDetails) => {
@@ -38,7 +38,7 @@ const createFacilities = async (facilities, dealId, auditDetails) => {
       facilities: idsArray,
     };
 
-    const response = await updateDeal({ dealId, dealUpdate, auditDetails });
+    const response = await updateBssEwcsDeal({ dealId, dealUpdate, auditDetails });
 
     const status = isNumber(response?.status, 3);
 
