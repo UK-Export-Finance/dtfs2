@@ -6,11 +6,11 @@ const pageBanner = {
   serviceName: () => cy.get('[data-cy="serviceName-header"]'),
   navigation: () => cy.get('[data-cy="navigation-header"]'),
   userName: () => cy.get('[data-cy="username-header"]'),
-  profile: () => cy.get('[data-cy="profile-header"]'),
+  profile: () => cy.get('[data-cy="header-profile-link"]'),
   betaBanner: () => cy.get('[data-cy="beta-banner"]'),
   betaBannerTag: () => cy.get('[data-cy="beta-banner"] strong'),
   betaBannerHref: () => cy.get('[data-cy="beta-feedback-link"]'),
-  logout: () => cy.get('[data-cy="logout-header"]'),
+  logout: () => cy.get('[data-cy="header-logout-link"]'),
 };
 
 module.exports = pageBanner;

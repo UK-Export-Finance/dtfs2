@@ -14,8 +14,8 @@ const page = {
   serviceNameLink: () => cy.get('[data-cy="serviceName-header"]'),
   navigation: () => cy.get('[data-cy="navigation-header"]'),
   userNameLink: () => cy.get('[data-cy="username-header"]'),
-  profileLink: () => cy.get('[data-cy="profile-header"]'),
-  logoutLink: () => cy.get('[data-cy="logout-header"]'),
+  profileLink: () => cy.get('[data-cy="header-profile-link"]'),
+  logoutLink: () => cy.get('[data-cy="header-logout-link"]'),
 
   betaBanner: () => cy.get('[data-cy="beta-banner"]'),
   betaBannerTag: () => cy.get('[data-cy="beta-banner"] strong'),
