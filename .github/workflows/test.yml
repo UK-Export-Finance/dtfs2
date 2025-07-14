@@ -47,6 +47,9 @@
 name: Quality Assurance - Tests
 run-name: ✅ Executing test QA on ${{ github.event.number }}
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     branches:
