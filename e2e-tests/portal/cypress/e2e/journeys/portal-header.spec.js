@@ -143,7 +143,7 @@ context('portal GovUK header', () => {
     });
   });
 
-  describe('signed-in maker user header', () => {
+  describe('signed-in checker user header', () => {
     before(() => {
       cy.login(BANK1_CHECKER1);
 
