@@ -146,13 +146,13 @@ describe(page, () => {
 
   function itRendersAReportsLink() {
     it('renders a reports link', () => {
-      wrapper.expectLink('[data-cy="header-reports-links"]').toLinkTo('/reports', 'Reports');
+      wrapper.expectLink('[data-cy="header-reports-link"]').toLinkTo('/reports', 'Reports');
     });
   }
 
   function itDoesNotRenderAReportsLink() {
     it('does not render a reports link', () => {
-      wrapper.expectLink('[data-cy="header-reports-links"]').notToExist();
+      wrapper.expectLink('[data-cy="header-reports-link"]').notToExist();
     });
   }
 

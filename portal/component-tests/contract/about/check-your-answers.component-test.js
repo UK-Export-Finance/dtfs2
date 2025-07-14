@@ -21,7 +21,7 @@ describe(component, () => {
     it('should have the correct integrity value', () => {
       wrapper
         .expectElement('script[src="/assets/js/printPage.js"]')
-        .toHaveAttribute('integrity', 'sha512-ADkS6GB/rgAPwWTnZ9lAIRfzR1mDYDjDIGGn7x95Um00JgUw+W2IjHkF5TORkvgn5SqpHTVZE7CIvI+/KBgh5w==');
+        .toHaveAttribute('integrity', 'sha512-ACOV1ZxdaFcvJFaLBxO/S9vxb6lx0vun8S4gYf82aSfr/OCjWt6yeEWTeaLYS2crz70vNnQEdoDEg9JojLHqU5A==');
     });
   });
 });

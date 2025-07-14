@@ -9,7 +9,7 @@ const page = {
 
   // Links
   dashboard: () => cy.get('[data-cy="header-dashboard-link"]'),
-  reports: () => cy.get('[data-cy="header-reports-links"]'),
+  reports: () => cy.get('[data-cy="header-reports-link"]'),
   uploadReport: () => cy.get('[data-cy="header-upload-report-link"]'),
   previousReport: () => cy.get('[data-cy="header-previous-reports-link"]'),
   recordCorrectionLog: () => cy.get('[data-cy="header-record-correction-log-link"]'),
