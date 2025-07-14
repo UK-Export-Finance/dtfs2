@@ -1,5 +1,5 @@
-const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails, now } = require('@ukef/dtfs2-common/change-stream');
-const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError } = require('@ukef/dtfs2-common');
+const { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { MONGO_DB_COLLECTIONS, InvalidAuditDetailsError, now } = require('@ukef/dtfs2-common');
 const { ObjectId } = require('mongodb');
 const { findOneDeal } = require('./get-gef-deal.controller');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
