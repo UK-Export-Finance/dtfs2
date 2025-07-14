@@ -63,6 +63,7 @@ interface BaseAmendment {
     email: string;
   };
   referenceNumber?: string | null;
+  requestDate?: number | null;
 }
 
 /**

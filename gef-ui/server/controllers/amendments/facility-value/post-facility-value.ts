@@ -75,7 +75,9 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
       },
     };
 
-    const update = { value: validationErrorOrValue.value, currency, tfm: tfmUpdate };
+    const currentValue = facility.value;
+
+    const update = { value: validationErrorOrValue.value, currentValue, currency, tfm: tfmUpdate };
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 

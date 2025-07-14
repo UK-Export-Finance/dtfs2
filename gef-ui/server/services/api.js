@@ -436,6 +436,28 @@ const getAmendmentsOnDeal = async ({ dealId, userToken, statuses }) => {
 
 /**
  * @param {Object} param
+ * @param {string} param.facilityId
+ * @param {string} param.userToken
+ * @returns {Promise<(import('@ukef/dtfs2-common').LatestAmendmentValueAndCoverEndDate)>}>}
+ */
+const getLatestAmendmentFacilityValueAndCoverEndDate = async ({ facilityId, userToken }) => {
+  if (!isValidMongoId(facilityId)) {
+    console.error('Invalid facility ID %s', facilityId);
+    throw new InvalidFacilityIdError(facilityId);
+  }
+
+  try {
+    const response = await portalApi.get(`/gef/facilities/${facilityId}/amendments/latest-value-and-cover-end-date`, { ...config(userToken) });
+
+    return response.data;
+  } catch (error) {
+    console.error('Failed to get amendments for facilities on deal with id %s: %o', facilityId, error);
+    throw error;
+  }
+};
+
+/**
+ * @param {Object} param
  * @param {string} param.dealId
  * @param {string} param.userToken
  * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus[] | undefined} param.statuses
@@ -534,9 +556,21 @@ const updateAmendment = async ({ facilityId, amendmentId, update, userToken }) =
  * @param {string} param.checkersEmail - The checker's email address to send the notification to
  * @param {string} param.pimEmail - The pim's email address to send the notification to
  * @param {import('@ukef/dtfs2-common').PortalAmendmentSubmittedToUkefEmailVariables} param.emailVariables
+ * @param {number} [param.requestDate] - The request date in Unix timestamp format (optional)
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}
  */
-const updateSubmitAmendment = async ({ facilityId, amendmentId, referenceNumber, status, userToken, makersEmail, checkersEmail, pimEmail, emailVariables }) => {
+const updateSubmitAmendment = async ({
+  facilityId,
+  amendmentId,
+  referenceNumber,
+  status,
+  userToken,
+  makersEmail,
+  checkersEmail,
+  pimEmail,
+  emailVariables,
+  requestDate,
+}) => {
   if (!isValidMongoId(facilityId)) {
     console.error('Invalid facility ID %s', facilityId);
     throw new InvalidFacilityIdError(facilityId);
@@ -554,6 +588,7 @@ const updateSubmitAmendment = async ({ facilityId, amendmentId, referenceNumber,
     checkersEmail,
     pimEmail,
     emailVariables,
+    requestDate,
   };
 
   try {
@@ -745,6 +780,7 @@ module.exports = {
   downloadFile,
   updateSupportingInformation,
   getAmendmentsOnDeal,
+  getLatestAmendmentFacilityValueAndCoverEndDate,
   getPortalAmendmentsOnDeal,
   getAmendment,
   upsertAmendment,

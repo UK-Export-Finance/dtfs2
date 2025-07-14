@@ -28,6 +28,7 @@ const PatchPortalFacilitySubmitAmendmentSchema = z.object({
     eligibilityCriteria: z.string(),
     referenceNumber: z.string(),
   }),
+  requestDate: z.number(),
 });
 
 export type PatchPortalFacilitySubmitAmendmentPayload = z.infer<typeof PatchPortalFacilitySubmitAmendmentSchema>;

@@ -7,10 +7,10 @@
   {% set allAmendments = params.allAmendments %}
 
   {% for amendment in allAmendments %}
-    {% if amendment.submittedByPim === true %}
+    {% if (amendment.submittedByPim === true) or (amendment.status === 'Acknowledged') %}
       <div class="govuk-grid-row govuk-!-margin-top-53 govuk-!-padding-top-6 amendment-details" data-cy="amendment--details-{{amendment.version}}">
         <div class="govuk-grid-column-full">
-          <h2 class="govuk-heading-l" data-cy="amendment--heading-version-{{amendment.version}}"> Amendment {{amendment.version}} </h2>
+          <h2 class="govuk-heading-l" data-cy="amendment--heading-version-{{amendment.version}}">{{amendment.name}} </h2>
 
           <dl class="govuk-grid-row ukef-list">
             <dt class="govuk-grid-column-one-quarter ukef-heading-xs">Date amendment is effective from</dt>

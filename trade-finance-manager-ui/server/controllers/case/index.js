@@ -278,6 +278,8 @@ const formatAmendmentDetails = (allAmendments) => {
       const item = { ...value };
       item.requestDate = value?.requestDate ? format(fromUnixTime(item.requestDate), 'dd MMMM yyyy') : null;
 
+      item.name = `Amendment ${value.referenceNumber}`;
+
       const formattedCoverEndDate = value?.coverEndDate ? convertUnixTimestampWithoutMilliseconds(value.coverEndDate) : null;
 
       item.coverEndDate = formattedCoverEndDate ? format(fromUnixTime(formattedCoverEndDate), 'dd MMMM yyyy') : null;
@@ -341,7 +343,7 @@ const getCaseFacility = async (req, res) => {
     }
 
     const allAmendments = formatAmendmentDetails(allAmendmentsByFacilityId);
-
+    console.log('allAmendments', allAmendmentsByFacilityId);
     const deal = await api.getDeal(dealId, userToken);
 
     /**

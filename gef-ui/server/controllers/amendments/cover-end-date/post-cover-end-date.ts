@@ -1,5 +1,6 @@
 import { CustomExpressRequest, DayMonthYearInput, PORTAL_AMENDMENT_STATUS, formatDatesForTenor } from '@ukef/dtfs2-common';
 import { Response } from 'express';
+import { getUnixTime } from 'date-fns';
 import * as api from '../../../services/api';
 import { CoverEndDateViewModel } from '../../../types/view-models/amendments/cover-end-date-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
@@ -86,7 +87,10 @@ export const postCoverEndDate = async (req: PostCoverEndDateRequest, res: Respon
       amendmentExposurePeriodInMonths: updatedTenor.exposurePeriodInMonths ?? null,
     };
 
-    const update = { coverEndDate: validationErrorsOrValue.value, tfm: tfmUpdate };
+    const coverEndDate = facility.coverEndDate ? new Date(facility.coverEndDate) : null;
+    const currentCoverEndDate = coverEndDate ? getUnixTime(coverEndDate) : null;
+
+    const update = { coverEndDate: validationErrorsOrValue.value, currentCoverEndDate, tfm: tfmUpdate };
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
     /*

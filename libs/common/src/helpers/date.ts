@@ -9,6 +9,8 @@ import { IsoDateTimeStamp, OneIndexedMonth, UnixTimestampSeconds } from '../type
  */
 export const now = (): Date => new Date();
 
+export const nowZeroSeconds = (): number => now().setSeconds(0, 0);
+
 /**
  * Returns the current date and time as a UTC ISO string.
  *
