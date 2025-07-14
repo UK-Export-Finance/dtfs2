@@ -33,6 +33,28 @@ export const PORTAL_FACILITY_AMENDMENT_USER_VALUES = z
       })
       .optional(),
     effectiveDate: z.number().nonnegative().optional(),
+    tfm: z
+      .object({
+        value: z
+          .object({
+            value: z.number(),
+            currency: CURRENCY_SCHEMA,
+          })
+          .optional(),
+        amendmentExposurePeriodInMonths: z.number().nullable().optional(),
+        exposure: z
+          .object({
+            exposure: z.union([z.number(), z.string()]),
+            timestamp: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().nullable()),
+            ukefExposureValue: z.number(),
+          })
+          .optional(),
+        coverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().optional()),
+        facilityEndDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.optional(),
+        bankReviewDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.optional(),
+        isUsingFacilityEndDate: z.boolean().optional(),
+      })
+      .optional(),
   })
   .strict();
 
@@ -68,6 +90,26 @@ export const PORTAL_FACILITY_AMENDMENT = PORTAL_FACILITY_AMENDMENT_USER_VALUES.m
       ),
     }),
     facilityType: z.string().optional(),
+    tfm: z.object({
+      value: z
+        .object({
+          value: z.number(),
+          currency: CURRENCY_SCHEMA,
+        })
+        .optional(),
+      amendmentExposurePeriodInMonths: z.number().nullable().optional(),
+      exposure: z
+        .object({
+          exposure: z.union([z.number(), z.string()]),
+          timestamp: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().nullable()),
+          ukefExposureValue: z.number(),
+        })
+        .optional(),
+      coverEndDate: z.preprocess((value) => (value instanceof Date ? getEpochMs(value) : value), z.number().int().nonnegative().optional()),
+      facilityEndDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.optional(),
+      bankReviewDate: ISO_DATE_TIME_STAMP_TO_DATE_SCHEMA.optional(),
+      isUsingFacilityEndDate: z.boolean().optional(),
+    }),
   }),
 );
 

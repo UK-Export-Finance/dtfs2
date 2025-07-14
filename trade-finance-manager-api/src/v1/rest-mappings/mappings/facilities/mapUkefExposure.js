@@ -1,5 +1,4 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
-const { formattedNumber } = require('../../../../utils/number');
+const { CURRENCY, formattedNumber } = require('@ukef/dtfs2-common');
 const { findLatestCompletedAmendment } = require('../../helpers/amendment.helpers');
 
 // maps ukef exposure on original value or latest amended value

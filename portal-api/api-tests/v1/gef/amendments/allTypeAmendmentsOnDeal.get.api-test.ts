@@ -91,6 +91,7 @@ describe('/v1/gef/deals/:dealId/all-types-amendments', () => {
           name: maker1.firstname,
           email: maker1.email,
         },
+        tfm: {},
       } as FacilityAllTypeAmendmentWithUkefId;
 
       jest.mocked(getFacilityAmendmentsOnDealMock).mockResolvedValue([amendment]);

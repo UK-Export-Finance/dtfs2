@@ -3,6 +3,8 @@ const getFacilityMock = jest.fn();
 const getApplicationMock = jest.fn();
 const getAmendmentMock = jest.fn();
 const updateAmendmentMock = jest.fn();
+const getExposurePeriodMock = jest.fn();
+const getTfmFacilityMock = jest.fn();
 
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
@@ -16,6 +18,9 @@ import {
   PortalFacilityAmendmentWithUkefId,
   DayMonthYearInput,
   getEpochMs,
+  formatDatesForTenor,
+  applyStandardValidationAndParseDateInput,
+  MOCK_TFM_FACILITY,
   PORTAL_AMENDMENT_STATUS,
 } from '@ukef/dtfs2-common';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
@@ -34,6 +39,8 @@ jest.mock('../../../services/api', () => ({
   getFacility: getFacilityMock,
   getAmendment: getAmendmentMock,
   updateAmendment: updateAmendmentMock,
+  getFacilityExposurePeriod: getExposurePeriodMock,
+  getTfmFacility: getTfmFacilityMock,
 }));
 
 console.error = jest.fn();
@@ -50,6 +57,8 @@ const mockUser = aPortalSessionUser();
 const userToken = 'userToken';
 
 const today = startOfDay(new Date());
+
+const validCoverEndDate = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
 
 const getHttpMocks = (coverEndDateDayMonthYear: DayMonthYearInput = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') }) =>
   httpMocks.createMocks<PostCoverEndDateRequest>({
@@ -73,6 +82,9 @@ const getHttpMocks = (coverEndDateDayMonthYear: DayMonthYearInput = { day: forma
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
 
+const exposurePeriod = { exposurePeriodInMonths: 12 };
+const { parsedDate: parsedCoverEndDate } = applyStandardValidationAndParseDateInput(validCoverEndDate, 'cover end date', '');
+
 describe('postCoverEndDate', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
 
@@ -94,6 +106,8 @@ describe('postCoverEndDate', () => {
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getAmendmentMock.mockResolvedValue(amendment);
     updateAmendmentMock.mockResolvedValue(amendment);
+    getTfmFacilityMock.mockResolvedValue(MOCK_TFM_FACILITY);
+    getExposurePeriodMock.mockResolvedValue(exposurePeriod);
   });
 
   it('should call getApplication with the correct dealId and userToken', async () => {
@@ -118,6 +132,23 @@ describe('postCoverEndDate', () => {
     // Assert
     expect(getFacilityMock).toHaveBeenCalledTimes(1);
     expect(getFacilityMock).toHaveBeenCalledWith({ facilityId, userToken: req.session.userToken });
+  });
+
+  it('should call getExposurePeriod with the correct coverStartDateFormatted, coverEndDateFormatted and facilityType', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks(validCoverEndDate);
+
+    // Act
+    await postCoverEndDate(req, res);
+
+    // Assert
+    const coverEndDate = getEpochMs(parsedCoverEndDate);
+    const { facilityType, coverEndDateFormatted, coverStartDateFormatted } = formatDatesForTenor(MOCK_TFM_FACILITY.facilitySnapshot, coverEndDate);
+
+    expect(getExposurePeriodMock).toHaveBeenCalledTimes(1);
+    expect(getExposurePeriodMock).toHaveBeenCalledWith(coverStartDateFormatted, coverEndDateFormatted, facilityType);
+
+    expect(console.error).toHaveBeenCalledTimes(0);
   });
 
   it('should call getAmendment with the correct amendmentId and userToken', async () => {
@@ -183,23 +214,66 @@ describe('postCoverEndDate', () => {
     expect(res._getRenderData()).toEqual(expectedRenderData);
   });
 
-  it('should call updateAmendment if the coverEndDate is valid', async () => {
+  it('should call getTfmFacility if the coverEndDate is valid', async () => {
     // Arrange
-    const coverEndDateDayMonthYear = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
-    const { req, res } = getHttpMocks(coverEndDateDayMonthYear);
+    const { req, res } = getHttpMocks(validCoverEndDate);
 
     // Act
     await postCoverEndDate(req, res);
 
     // Assert
+    expect(getTfmFacilityMock).toHaveBeenCalledTimes(1);
+    expect(getTfmFacilityMock).toHaveBeenCalledWith({ facilityId, userToken });
+
+    expect(console.error).toHaveBeenCalledTimes(0);
+  });
+
+  it('should call updateAmendment if the coverEndDate is valid', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks(validCoverEndDate);
+
+    // Act
+    await postCoverEndDate(req, res);
+
+    // Assert
+    const coverEndDateEpoch = getEpochMs(today);
+
+    const tfmUpdate = {
+      ...amendment.tfm,
+      coverEndDate: coverEndDateEpoch,
+      amendmentExposurePeriodInMonths: exposurePeriod.exposurePeriodInMonths,
+    };
+
     expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
-    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { coverEndDate: getEpochMs(today) }, userToken });
+    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { coverEndDate: coverEndDateEpoch, tfm: tfmUpdate }, userToken });
+
+    expect(console.error).toHaveBeenCalledTimes(0);
+  });
+
+  it('should call updateAmendment with amendmentExposurePeriodInMonths if the coverEndDate is valid but no exposurePeriod was returned', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks(validCoverEndDate);
+    getExposurePeriodMock.mockResolvedValue({});
+
+    // Act
+    await postCoverEndDate(req, res);
+
+    // Assert
+    const coverEndDateEpoch = getEpochMs(today);
+
+    const tfmUpdate = {
+      ...amendment.tfm,
+      coverEndDate: coverEndDateEpoch,
+      amendmentExposurePeriodInMonths: null,
+    };
+
+    expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
+    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { coverEndDate: coverEndDateEpoch, tfm: tfmUpdate }, userToken });
   });
 
   it('should not call console.error if the coverEndDate is valid', async () => {
     // Arrange
-    const coverEndDateDayMonthYear = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
-    const { req, res } = getHttpMocks(coverEndDateDayMonthYear);
+    const { req, res } = getHttpMocks(validCoverEndDate);
 
     // Act
     await postCoverEndDate(req, res);
@@ -210,8 +284,7 @@ describe('postCoverEndDate', () => {
 
   it('should redirect to the next page if coverEndDate is valid', async () => {
     // Arrange
-    const coverEndDateDayMonthYear = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
-    const { req, res } = getHttpMocks(coverEndDateDayMonthYear);
+    const { req, res } = getHttpMocks(validCoverEndDate);
 
     // Act
     await postCoverEndDate(req, res);
@@ -223,8 +296,7 @@ describe('postCoverEndDate', () => {
 
   it(`should redirect to the next page if coverEndDate is valid and the change query parameter is true`, async () => {
     // Arrange
-    const coverEndDateDayMonthYear = { day: format(today, 'd'), month: format(today, 'M'), year: format(today, 'yyyy') };
-    const { req, res } = getHttpMocks(coverEndDateDayMonthYear);
+    const { req, res } = getHttpMocks(validCoverEndDate);
     req.query = { change: 'true' };
 
     // Act
@@ -248,6 +320,24 @@ describe('postCoverEndDate', () => {
     expect(res._getRedirectUrl()).toEqual(`/not-found`);
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('Deal %s or Facility %s was not found', dealId, facilityId);
+  });
+
+  it('should redirect to "/not-found" if the tfmFacility is not found', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+    getTfmFacilityMock.mockResolvedValue(undefined);
+
+    // Act
+    await postCoverEndDate(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    expect(res._getRedirectUrl()).toEqual(`/not-found`);
+
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Facility was not found in TFM %s', facilityId);
+
+    expect(getExposurePeriodMock).toHaveBeenCalledTimes(0);
   });
 
   it('should redirect to "/not-found" if the amendment is not found', async () => {
@@ -323,5 +413,22 @@ describe('postCoverEndDate', () => {
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('Error posting amendments cover end date page %o', mockError);
+  });
+
+  it('should render problem with service if getTfmFacility throws an error', async () => {
+    // Arrange
+    const mockError = aMockError();
+    getTfmFacilityMock.mockRejectedValue(mockError);
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await postCoverEndDate(req, res);
+
+    // Assert
+    expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('Error posting amendments cover end date page %o', mockError);
+
+    expect(getExposurePeriodMock).toHaveBeenCalledTimes(0);
   });
 });
