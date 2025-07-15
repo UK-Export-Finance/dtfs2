@@ -785,7 +785,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: e2e-tests-portal-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+          name: e2e-tests-portal-${{ github.workflow }}-${{ github.workflow_ref }}
           path: ./e2e-tests/portal/cypress/screenshots/
           retention-days: 1
 
@@ -889,7 +889,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: e2e-tests-gef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+          name: e2e-tests-gef-${{ github.workflow }}-${{ github.workflow_ref }}
           path: ./e2e-tests/gef/cypress/screenshots/
           retention-days: 1
 
@@ -1013,7 +1013,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: e2e-tests-tfm-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+          name: e2e-tests-tfm-${{ github.workflow }}-${{ github.workflow_ref }}
           path: ./e2e-tests/tfm/cypress/screenshots/
           retention-days: 1
 
@@ -1102,7 +1102,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: e2e-tests-ukef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+          name: e2e-tests-ukef-${{ github.workflow }}-${{ github.workflow_ref }}
           path: ./e2e-tests/ukef/cypress/screenshots/
           retention-days: 1
 
@@ -1229,7 +1229,7 @@ jobs:
           ]
 
     concurrency:
-      group: e2e-tests-ukef-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+      group: e2e-tests-ukef-ff-${{ github.workflow }}-${{ github.workflow_ref }}
       cancel-in-progress: true
 
     steps:
@@ -1298,7 +1298,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: e2e-tests-ukef-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+          name: e2e-tests-ukef-ff-${{ github.workflow }}-${{ github.workflow_ref }}
           path: ./e2e-tests/${{ steps.project.outputs.directory }}/cypress/screenshots/
           retention-days: 1
 
