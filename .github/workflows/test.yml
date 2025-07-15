@@ -1229,7 +1229,7 @@ jobs:
           ]
 
     concurrency:
-      group: e2e-tests-ukef-ff-${{ github.workflow }}-${{ github.workflow_ref }}
+      group: e2e-tests-ukef-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
       cancel-in-progress: true
 
     steps:
