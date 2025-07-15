@@ -785,7 +785,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: e2e-tests-portal-${{ github.workflow }}-${{ github.workflow_ref }}
+          name: e2e-tests-portal
           path: ./e2e-tests/portal/cypress/screenshots/
           retention-days: 1
 
@@ -889,7 +889,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: e2e-tests-gef-${{ github.workflow }}-${{ github.workflow_ref }}
+          name: e2e-tests-gef
           path: ./e2e-tests/gef/cypress/screenshots/
           retention-days: 1
 
@@ -1013,7 +1013,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: e2e-tests-tfm-${{ github.workflow }}-${{ github.workflow_ref }}
+          name: e2e-tests-tfm
           path: ./e2e-tests/tfm/cypress/screenshots/
           retention-days: 1
 
@@ -1102,7 +1102,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: e2e-tests-ukef-${{ github.workflow }}-${{ github.workflow_ref }}
+          name: e2e-tests-ukef
           path: ./e2e-tests/ukef/cypress/screenshots/
           retention-days: 1
 
@@ -1298,7 +1298,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: e2e-tests-ukef-ff-${{ github.workflow }}-${{ github.workflow_ref }}
+          name: e2e-tests-ukef-ff
           path: ./e2e-tests/${{ steps.project.outputs.directory }}/cypress/screenshots/
           retention-days: 1
 
