@@ -14,21 +14,16 @@ context('contact', () => {
     });
 
     it('should ensure the portal headings are rendered', () => {
-      contact.heading().should('have.text', 'Contact us');
-      contact.emailHeading().should('have.text', 'Email');
+      cy.assertText(contact.heading(), 'Contact us');
+      cy.assertText(contact.emailHeading(), 'Email');
     });
 
     it('should ensure the contact us email address is valid', () => {
-      contact
-        .email()
-        .invoke('text')
-        .then((email) => {
-          expect(email.trim()).to.eq(emailAddress);
-        });
+      cy.assertText(contact.email(), emailAddress);
     });
 
     it('should ensure the contact us timeframe is valid', () => {
-      contact.timeframe().should('have.text', 'Monday to Friday, 9am to 5pm (excluding public holidays)');
+      cy.assertText(contact.timeframe(), 'Monday to Friday, 9am to 5pm (excluding public holidays)');
     });
   });
 });
