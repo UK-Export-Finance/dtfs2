@@ -693,6 +693,7 @@ jobs:
             'dashboard/dashboard-facilities/filters/*.spec.js',
             'dashboard/dashboard-facilities/sort/*.spec.js',
             'feedback/**/*.spec.js',
+            'contact/**/*.spec.js',
             'login/**/*.spec.js',
             'maker/check-deal-details/*.spec.js',
             'maker/clone-deal/*.spec.js',
@@ -781,11 +782,12 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
+        working-directory: ./e2e-tests/screenshots
         uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: e2e-tests-portal-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
-          path: ./e2e-tests/screenshots
+          path: ./
 
   # 5. E2E - GEF
   e2e-tests-gef:
@@ -883,11 +885,12 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
+        working-directory: ./e2e-tests/screenshots
         uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: e2e-tests-gef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
-          path: ./e2e-tests/screenshots
+          path: ./
 
   #6. E2E - TFM
   e2e-tests-tfm:
@@ -1005,11 +1008,12 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
+        working-directory: ./e2e-tests/screenshots
         uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: e2e-tests-tfm-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
-          path: ./e2e-tests/screenshots
+          path: ./
 
   #7. E2E - UKEF
   e2e-tests-ukef:
@@ -1092,11 +1096,12 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
+        working-directory: ./e2e-tests/screenshots
         uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: e2e-tests-ukef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
-          path: ./e2e-tests/screenshots
+          path: ./
 
   #8. E2E - FF
   e2e-tests-ff:
@@ -1287,11 +1292,12 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Screenshots
+        working-directory: ./e2e-tests/screenshots
         uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: e2e-tests-ukef-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
-          path: ./e2e-tests/screenshots
+          path: ./
 
   #9. Docker build
   build:
