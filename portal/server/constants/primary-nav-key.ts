@@ -1,8 +1,9 @@
 export const PRIMARY_NAV_KEY = {
-  HOME: 'home',
-  PREVIOUS_REPORTS: 'previous_reports',
+  DASHBOARD: 'dashboard',
   REPORTS: 'reports',
-  USERS: 'users',
   UTILISATION_REPORT_UPLOAD: 'utilisation_report_upload',
-  RECORD_CORRECTION_LOG: 'record_correction_log',
+  PREVIOUS_REPORTS: 'header-previous-reports-link',
+  RECORD_CORRECTION_LOG: 'header-record-correction-log-link',
+  USERS: 'users',
+  PROFILE: 'profile',
 } as const;

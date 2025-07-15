@@ -127,7 +127,7 @@ context('Password management screens', () => {
 
     it('should display the correct response timeframe text', () => {
       changePassword.contactUsEmailAddress().should('be.visible');
-      changePassword.contactUsTimeframeText().should('have.text', 'We aim to respond within 2 working days');
+      changePassword.contactUsTimeframeText().should('have.text', 'Monday to Friday, 9am to 5pm (excluding public holidays)');
     });
   });
 });

@@ -103,10 +103,10 @@ context('Login', () => {
     cy.login(BANK1_MAKER1);
 
     header
-      .home()
+      .header()
       .invoke('attr', 'href')
       .then((href) => {
-        expect(href).to.equal('https://www.gov.uk');
+        expect(href).to.equal('https://www.gov.uk/');
       });
   });
 
@@ -114,14 +114,6 @@ context('Login', () => {
     cy.login(BANK1_MAKER1);
 
     header.dashboard().click();
-
-    cy.url().should('eq', relative('/dashboard/deals/0'));
-  });
-
-  it('When a logged-in user clicks the service name link they go to the /dashboard page', () => {
-    cy.login(BANK1_MAKER1);
-
-    header.serviceName().click();
 
     cy.url().should('eq', relative('/dashboard/deals/0'));
   });

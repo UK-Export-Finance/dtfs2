@@ -30,6 +30,9 @@
 name: Release
 run-name: 🚀 Deploying to ${{ github.event.workflow_run.head_branch }}
 
+permissions:
+  contents: read
+
 on:
   workflow_run:
     workflows: ['QAT']

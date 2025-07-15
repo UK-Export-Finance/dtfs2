@@ -18,9 +18,9 @@ const { get } = require('./create-api').createApi(app);
 const allRoles = Object.values(ROLES);
 
 describe('footer routes', () => {
-  describe('GET /contact-us', () => {
+  describe('GET /contact', () => {
     withRoleValidationApiTests({
-      makeRequestWithHeaders: (headers) => get('/contact-us', {}, headers),
+      makeRequestWithHeaders: (headers) => get('/contact', {}, headers),
       whitelistedRoles: allRoles,
       successCode: 200,
     });

@@ -45,11 +45,35 @@
 
     {% include "includes/footer.njk" %}
 
-    <script src="/assets/js/main.js" type="module" integrity="sha512-ojIUnTEiAYeNOJBxTT3Lbj/daIeiKfXu/mEDs5nWVBAViFcM2H4NLLUSFe12xzjs976d4m6HTZbCh16gsHqEkQ==" crossorigin="anonymous"></script>
-    <script src="/assets/js/govukFrontend.js" type="module" integrity="sha512-J7M6h2SLRry/vn/9BNWTYOPXNSctUYsQLQQDNxmdDna+PYXKdujzcnepkbr3pgPOobUP878GIdOGsPjxfh8EFw==" crossorigin="anonymous"></script>
-    <script src="/assets/js/mojFrontend.js" type="module" integrity="sha512-eOl0TifTsZ/1GhH6FNfs6SoJhL0shOkKCDjvLnC9+Ewwp6n6uYwIXuiQqphBMSVenttWkRWfM2Fqs6zCvneIzw==" crossorigin="anonymous"></script>
-    <script src="/assets/js/maskedInputs.js" type="module" integrity="sha512-4XTH3IT3oQN/60lRAdBZWXMXq4/L1n5kUoGEftu+nY0Bba/7T0RDIZ62es6v+dCyNJ+uaYZTjWl3nPYv0rR6WA==" crossorigin="anonymous"></script>
-    <script src="/assets/js/disableFormSubmitOnSubmission.js" type="module" integrity="sha512-RwF5ml+CiOHtgzu/uJmiCoytVi+TMCZGAKWvD+meYlY8bxi+kxC2qMDDiAyi17CoSK5rzB9DO4lej7QRXz8sQQ==" crossorigin="anonymous"></script>
-  {% block scripts %}{% endblock %}
-</body>
+    <script
+      src="/assets/js/main.js"
+      type="module"
+      integrity="sha512-sgDaf16aYRaOGPX+BF/QQubUw+7zvDtM8okv0JO5nE7A//xKmGv8Sr2Hzi6lBjcPw2Hm1JcyAQMWsxmy1umv9w=="
+      crossorigin="anonymous"></script>
+
+    <script
+      src="/assets/js/govukFrontend.js"
+      type="module"
+      integrity="sha512-6rZdj3nzFgtzJnekoOCZUBJT6EbYN1n32ZFbAtNc/wrRVWWKJmGZ6LKvKLHZFgtfSfN5LOTh8OxTznYr+F0B8g=="
+      crossorigin="anonymous"></script>
+
+    <script
+      src="/assets/js/mojFrontend.js"
+      type="module"
+      integrity="sha512-oZACuErpjnaaxu4APOJyHBZAk/RW7M5gZ/hVPEBXmbVdcxcdiH89/ey/lqII6wTmpUv87g92RrelMbFXB8qBng=="
+      crossorigin="anonymous"></script>
+
+    <script
+      src="/assets/js/mojFilters.js"
+      type="module"
+      integrity="sha512-ByfzBGRfJ1AM3hcN4bl0gILRnr3l9IDe8Um0poccVZ5qEfTpNj5r+rbYXQlEk1tL6zTdrIS2U77Kt4Jxi78Usw=="
+      crossorigin="anonymous"></script>
+
+    <script
+      src="/assets/js/disableFormSubmitOnSubmission.js"
+      type="module"
+      integrity="sha512-mf1ibQA5lxNaMb/56mmj17voBUxRrxo3kx1vtkPz9+vGGookm+vqn8a/5l1fuu2exmAOaz1pLxxoMVZJAlYrFw=="
+      crossorigin="anonymous"></script>
+    {% block scripts %}{% endblock %}
+  </body>
 </html>
