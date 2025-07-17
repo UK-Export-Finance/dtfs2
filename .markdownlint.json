@@ -1,5 +1,9 @@
 {
     "default": true,
-    "MD013": true,
+    "MD013": {
+        "code_block_line_length": 100,
+        "heading_line_length": 80,
+        "line_length": 100
+    },
     "MD033": false
 }
