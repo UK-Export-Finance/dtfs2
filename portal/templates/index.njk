@@ -1,4 +1,5 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
 <!DOCTYPE html>
 <html lang="en" class="govuk-template govuk-template--rebranded">
   <head>
@@ -35,6 +36,15 @@
 
     <div class="govuk-width-container">
       <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content">
+        {% if backLink and backLink.href %}
+          {{ govukBackLink({
+            text: "Back",
+            href: backLink.href,
+            attributes: {
+              "data-cy": "back-link"
+            }
+          }) }}
+        {% endif %}
         {% block content %}{% endblock %}
       </main>
     </div>
