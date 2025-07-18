@@ -64,7 +64,7 @@
     "jquery": "3.6.4",
     "lodash": "^4.17.21",
     "morgan": "1.10.0",
-    "multer": "2.0.1",
+    "multer": "2.0.2",
     "node-fetch": "^2.7.0",
     "nodemon": "^3.1.10",
     "nunjucks": "3.2.4",
