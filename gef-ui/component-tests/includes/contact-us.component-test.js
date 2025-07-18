@@ -1,4 +1,4 @@
-const page = 'includes/contact-us.njk';
+const page = 'includes/contact.njk';
 const mockContactUsEmailAddress = 'test-contact-us@ukexportfinance.gov.uk';
 
 process.env.CONTACT_US_EMAIL_ADDRESS = mockContactUsEmailAddress;
