@@ -40,7 +40,7 @@
     "axios": "1.8.2",
     "bson": "^4.7.2",
     "comma-number": "^2.1.0",
-    "compression": "^1.8.0",
+    "compression": "^1.8.1",
     "cors": "2.8.5",
     "crypto": "^1.0.1",
     "date-fns": "^2.30.0",

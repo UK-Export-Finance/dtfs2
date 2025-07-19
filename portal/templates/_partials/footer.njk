@@ -1,46 +1,46 @@
 {% from "govuk/components/footer/macro.njk" import govukFooter %}
 
 {{ govukFooter({
-  meta: {
-    items: [
-    {
-      href: "/contact",
-      text: "Contact",
-      attributes: {
-        "data-cy": "footer-contact-link"
-      }
+    meta: {
+        items: [
+            {
+                href: "/contact",
+                text: "Contact",
+                attributes: {
+                    "data-cy": "footer-contact-link"
+                }
+            },
+            {
+                href: "/feedback",
+                text: "Feedback",
+                attributes: {
+                    "data-cy": "footer-feedback-link"
+                }
+            },
+            {
+                href: "/cookies",
+                text: "Cookies",
+                attributes: {
+                    "data-cy": "footer-cookies-link"
+                }
+            },
+            {
+                href: "/accessibility-statement",
+                text: "Accessibility statement",
+                attributes: {
+                    "data-cy": "footer-accessibility-statement-link"
+                }
+            },
+            {
+                href: "https://www.gov.uk/guidance/report-a-vulnerability-on-a-ukef-system",
+                text: "Report a vulnerability",
+                attributes: {
+                    "data-cy": "footer-report-vulnerability-link"
+                }
+            }
+        ]
     },
-    {
-      href: "/feedback",
-      text: "Feedback",
-      attributes: {
-        "data-cy": "footer-feedback-link"
-      }
-    },
-        {
-      href: "/cookies",
-      text: "Cookies",
-      attributes: {
-        "data-cy": "footer-cookies-link"
-      }
-    },
-    {
-      href: "/accessibility-statement",
-      text: "Accessibility statement",
-      attributes: {
-        "data-cy": "footer-accessibility-statement-link"
-      }
-    },
-     {
-      href: "https://www.gov.uk/guidance/report-a-vulnerability-on-a-ukef-system",
-      text: "Report a vulnerability",
-      attributes: {
-        "data-cy": "footer-report-vulnerability-link"
-      }
+    attributes: {
+        "data-cy": "footer"
     }
-    ]
-  },
-  attributes: {
-    "data-cy": "footer"
-  }
 }) }}

@@ -1,46 +1,40 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template ">
+<html lang="en" class="govuk-template govuk-template--rebranded">
   <head>
     <meta charset="utf-8"/>
     <title>
-      {% block pageTitle %}{% endblock %} - UK Export Finance</title>
+      {% block pageTitle %}{% endblock %} - UK Export Finance
+    </title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#0b0c0c"/>
-
+    <meta name="theme-color" content="#1d70b8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="/assets/rebrand/images/govuk-icon-mask.svg" type="image/x-icon"/>
+    <link rel="icon" sizes="48x48" href="/assets/rebrand/images/favicon.ico">
+    <link rel="icon" sizes="any" href="/assets/rebrand/images/favicon.svg" type="image/svg+xml">
+    <link rel="mask-icon" href="/assets/rebrand/images/govuk-icon-mask.svg" color="#1d70b8">
+    <link rel="apple-touch-icon" href="/assets/rebrand/images/govuk-icon-180.png">
+    <link rel="stylesheet" href="/assets/css/styles.css"/>
+    <meta property="og:image" content="/assets/rebrand/images/govuk-opengraph-image.png">
+    <link rel="manifest" href="/assets/rebrand/manifest.json">
 
-    <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="/assets/images/favicon.ico?v=2" type="image/x-icon"/>
-    <link rel="mask-icon" href="/assets/images/govuk-mask-icon.svg" color="#0b0c0c">
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/govuk-apple-touch-icon-180x180.png">
-    <link rel="apple-touch-icon" sizes="167x167" href="/assets/images/govuk-apple-touch-icon-167x167.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/assets/images/govuk-apple-touch-icon-152x152.png">
-    <link rel="apple-touch-icon" href="/assets/images/govuk-apple-touch-icon.png">
-    <link rel="stylesheet" href="/gef/assets/css/styles.css"/>
-    <meta property="og:image" content="/assets/images/govuk-opengraph-image.png">
+    {% block head %}{% endblock %}
   </head>
 
   <body class="govuk-template__body govuk-body">
 
-    <script src="/assets/js/jsEnabled.js" type="module" integrity="sha512-BZmKCksPLPXsFlYmd1MUEDLllt/d7vn1jLdU6FA1Y7hpzaOK7Aj9wwS3alwFEl+tlS5Md3CmwjI98F5Ggsg92Q==" crossorigin="anonymous"></script>
-
-    {% include "includes/skip-link.njk" %}
-
-    {% if user and user
-      .roles and user
-      .roles
-      .includes('admin') %}
-      {% include "includes/admin-header.njk" %}
-    {% endif %}
+    <script
+      src="/assets/js/jsEnabled.js"
+      type="module"
+      integrity="sha512-BZmKCksPLPXsFlYmd1MUEDLllt/d7vn1jLdU6FA1Y7hpzaOK7Aj9wwS3alwFEl+tlS5Md3CmwjI98F5Ggsg92Q==" crossorigin="anonymous">
+    </script>
 
     {% include "includes/header.njk" %}
     {% include "includes/beta-banner.njk" %}
-    {% include "includes/primary-navigation.njk" %}
-    <div class="govuk-width-container">
 
+    <div class="govuk-width-container">
       <main class="govuk-main-wrapper govuk-main-wrapper--auto-spacing" id="main-content">
         {% block content %}{% endblock %}
       </main>
-
     </div>
 
     {% include "includes/footer.njk" %}
@@ -49,31 +43,37 @@
       src="/assets/js/main.js"
       type="module"
       integrity="sha512-sgDaf16aYRaOGPX+BF/QQubUw+7zvDtM8okv0JO5nE7A//xKmGv8Sr2Hzi6lBjcPw2Hm1JcyAQMWsxmy1umv9w=="
-      crossorigin="anonymous"></script>
+      crossorigin="anonymous">
+    </script>
 
     <script
       src="/assets/js/govukFrontend.js"
       type="module"
       integrity="sha512-6rZdj3nzFgtzJnekoOCZUBJT6EbYN1n32ZFbAtNc/wrRVWWKJmGZ6LKvKLHZFgtfSfN5LOTh8OxTznYr+F0B8g=="
-      crossorigin="anonymous"></script>
+      crossorigin="anonymous">
+    </script>
 
     <script
       src="/assets/js/mojFrontend.js"
       type="module"
       integrity="sha512-oZACuErpjnaaxu4APOJyHBZAk/RW7M5gZ/hVPEBXmbVdcxcdiH89/ey/lqII6wTmpUv87g92RrelMbFXB8qBng=="
-      crossorigin="anonymous"></script>
+      crossorigin="anonymous">
+    </script>
 
     <script
       src="/assets/js/mojFilters.js"
       type="module"
       integrity="sha512-ByfzBGRfJ1AM3hcN4bl0gILRnr3l9IDe8Um0poccVZ5qEfTpNj5r+rbYXQlEk1tL6zTdrIS2U77Kt4Jxi78Usw=="
-      crossorigin="anonymous"></script>
+      crossorigin="anonymous">
+    </script>
 
     <script
       src="/assets/js/disableFormSubmitOnSubmission.js"
       type="module"
       integrity="sha512-mf1ibQA5lxNaMb/56mmj17voBUxRrxo3kx1vtkPz9+vGGookm+vqn8a/5l1fuu2exmAOaz1pLxxoMVZJAlYrFw=="
-      crossorigin="anonymous"></script>
+      crossorigin="anonymous">
+    </script>
+
     {% block scripts %}{% endblock %}
   </body>
 </html>

@@ -19,15 +19,9 @@
 
 <!-- Roles -->
 {% set isUser = user and user.roles.length > 0 %}
-{% set isMaker = isUser and user
-  .roles
-  .includes("maker") %}
-{% set isChecker = isUser and user
-  .roles
-  .includes("checker") %}
-{% set isAdmin = isUser and user
-  .roles
-  .includes("admin") %}
+{% set isMaker = isUser and user.roles.includes("maker") %}
+{% set isChecker = isUser and user.roles.includes("checker") %}
+{% set isAdmin = isUser and user.roles.includes("admin") %}
 {% set isReadOnly = isUser and user.roles.includes("read-only") %}
 {% set isPaymentReportOfficer = isUser and user.roles.includes("payment-report-officer") %}
 {% set isDealUser = isMaker or isChecker or isReadOnly or isAdmin %}
@@ -40,75 +34,75 @@
 {% set navigation = [] %}
 
 {% set dashboard = {
-    text: "Dashboard",
-    href: "/dashboard",
-    active: primaryNav == "dashboard",
-    attributes: {
-      "data-cy": "header-dashboard-link"
-    }
+  text: "Dashboard",
+  href: "/dashboard",
+  active: primaryNav == "dashboard",
+  attributes: {
+    "data-cy": "header-dashboard-link"
+  }
 } %}
 
 {% set report = {
-    text: "Reports",
-    href: "/reports",
-    active: primaryNav == "reports",
-    attributes: {
-      "data-cy": "header-reports-link"
-    }
+  text: "Reports",
+  href: "/reports",
+  active: primaryNav == "reports",
+  attributes: {
+    "data-cy": "header-reports-link"
+  }
 } %}
 
 {% set reportGefUtilisationAndFees = {
-    text: "Report GEF utilisation and fees",
-    href: "/utilisation-report-upload",
-    active: primaryNav == "utilisation_report_upload",
-    attributes: {
-      "data-cy": "header-upload-report-link"
-    }
+  text: "Report GEF utilisation and fees",
+  href: "/utilisation-report-upload",
+  active: primaryNav == "utilisation_report_upload",
+  attributes: {
+    "data-cy": "header-upload-report-link"
+  }
 } %}
 
 {% set previousGefReports = {
-    text: "Previous GEF reports",
-    href: "/previous-reports",
-    active: primaryNav == "header-previous-reports-link",
-    attributes: {
-      "data-cy": "header-previous-reports-link"
-    }
+  text: "Previous GEF reports",
+  href: "/previous-reports",
+  active: primaryNav == "header-previous-reports-link",
+  attributes: {
+    "data-cy": "header-previous-reports-link"
+  }
 } %}
 
 {% set recordCorrectionLog = {
-    text: "Record correction log",
-    href: "/utilisation-reports/correction-log",
-    active: primaryNav == "header-record-correction-log-link",
-    attributes: {
-      "data-cy": "header-record-correction-log-link"
-    }
+  text: "Record correction log",
+  href: "/utilisation-reports/correction-log",
+  active: primaryNav == "header-record-correction-log-link",
+  attributes: {
+    "data-cy": "header-record-correction-log-link"
+  }
 } %}
 
 {% set users = {
-    href: "/admin/users",
-    active: primaryNav == "users",
-    text: "Users",
-        attributes: {
-      "data-cy": "header-users-link"
-    }
+  href: "/admin/users",
+  active: primaryNav == "users",
+  text: "Users",
+  attributes: {
+    "data-cy": "header-users-link"
+  }
 } %}
 
 {% set profile = {
-    href: "/user/" + user._id,
-    text: "Profile",
-    active: primaryNav == "profile",
-    attributes: {
-      "data-cy": "header-profile-link"
-    }
+  href: "/user/" + user._id,
+  text: "Profile",
+  active: primaryNav == "profile",
+  attributes: {
+    "data-cy": "header-profile-link"
+  }
 } %}
 
 {% set logout = {
-    href: "/logout",
-    text: "Sign out",
-    active: false,
-    attributes: {
-      "data-cy": "header-logout-link"
-    }
+  href: "/logout",
+  text: "Sign out",
+  active: false,
+  attributes: {
+    "data-cy": "header-logout-link"
+  }
 } %}
 
 <!-- 1. Deal users -->
