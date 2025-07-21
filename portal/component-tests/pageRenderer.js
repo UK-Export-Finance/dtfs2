@@ -8,7 +8,7 @@ const configureNunjucks = require('../server/nunjucks-configuration');
  * loads the resulting HTML into Cheerio, and performs assertions.
  *
  * @param {string} pageLocation - The path to the Nunjucks template file to render.
- * @returns {function(Object): any} - A function that takes template parameters,
+ * @returns - A function that takes template parameters,
  *   renders the template, loads it into Cheerio, and returns the result of assertions.
  */
 const pageRenderer = (pageLocation) => (params) => {
