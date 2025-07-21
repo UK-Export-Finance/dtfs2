@@ -29,6 +29,7 @@
 
 <!-- Feature flags -->
 {% set isFixedFeeRecordCorrection = isUser and isPaymentReportOfficer and FF_FEE_RECORD_CORRECTION_ENABLED === "true" %}
+<h1>{{ isUser }}{{ isPaymentReportOfficer }}{{ FF_FEE_RECORD_CORRECTION_ENABLED }}</h1>
 
 <!-- Navigation items -->
 {% set navigation = [] %}
