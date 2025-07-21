@@ -12,7 +12,7 @@ const replaceWhiteSpaceWithDash = require('./filter-replaceWhiteSpaceWithDash');
 dotenv.config();
 
 const configureNunjucks = (opts) => {
-  const { CONTACT_US_EMAIL_ADDRESS } = process.env;
+  const { CONTACT_US_EMAIL_ADDRESS, FF_FEE_RECORD_CORRECTION_ENABLED } = process.env;
 
   const appViews = [
     path.resolve(__dirname, '../../../node_modules/govuk-frontend/dist'),
@@ -26,6 +26,7 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addGlobal('govukRebrand', true);
 
   nunjucksEnvironment.addGlobal('CONTACT_US_EMAIL_ADDRESS', CONTACT_US_EMAIL_ADDRESS);
+  nunjucksEnvironment.addGlobal('FF_FEE_RECORD_CORRECTION_ENABLED', FF_FEE_RECORD_CORRECTION_ENABLED);
 
   nunjucksEnvironment.addFilter('localiseTimestamp', filterLocaliseTimestamp);
   nunjucksEnvironment.addFilter('dashIfEmpty', dashIfEmpty);
