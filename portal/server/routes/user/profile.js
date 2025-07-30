@@ -1,6 +1,7 @@
 const express = require('express');
 const api = require('../../api');
 const { constructPayload, getApiData, requestParams, errorHref, generateErrorSummary } = require('../../helpers');
+const { PRIMARY_NAV_KEY } = require('../../constants');
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ router.get('/:_id', async (req, res) => {
   return res.render('user/profile.njk', {
     _id,
     user,
+    primaryNav: PRIMARY_NAV_KEY.PROFILE,
   });
 });
 
@@ -25,6 +27,7 @@ router.get('/:_id/change-password', async (req, res) => {
     _id,
     user: req.session.user,
     requireCurrentPassword: true,
+    primaryNav: PRIMARY_NAV_KEY.PROFILE,
   });
 });
 

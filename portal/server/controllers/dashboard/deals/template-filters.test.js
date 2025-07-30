@@ -4,7 +4,16 @@ import { FIELD_NAMES, PRODUCT } from '../../../constants';
 import CONTENT_STRINGS from '../../../content-strings';
 import { generateFiltersArray, submissionTypeFilters } from '../filters/generate-template-filters';
 
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isTfmDealCancellationFeatureFlagEnabled: jest.fn(() => false),
+}));
+
 describe('controllers/dashboard/deals - template-filters', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
   describe('dealTypeFilters', () => {
     it('should return generateFiltersArray with all possible `product` field inputs', () => {
       const mockSubmittedFilters = {};

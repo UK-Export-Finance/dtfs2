@@ -821,6 +821,8 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
  * @param {string} params.pimEmail - The pim's email address to send the notification to
  * @param {import('@ukef/dtfs2-common').PortalAmendmentSubmittedToUkefEmailVariables} params.emailVariables - The email variables to send with the notification
  * @param {number} params.requestDate - The date of the request
+ * @param {string} params.bankId - The bank id
+ * @param {string} params.bankName - The bank name
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>} - the updatedamendment
  */
 const patchPortalFacilitySubmitAmendment = async ({
@@ -834,6 +836,8 @@ const patchPortalFacilitySubmitAmendment = async ({
   pimEmail,
   emailVariables,
   requestDate,
+  bankId,
+  bankName,
 }) => {
   try {
     const response = await axios({
@@ -849,6 +853,8 @@ const patchPortalFacilitySubmitAmendment = async ({
         pimEmail,
         emailVariables,
         requestDate,
+        bankId,
+        bankName,
       },
     });
 

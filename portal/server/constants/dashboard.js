@@ -3,7 +3,7 @@ const { PRIMARY_NAV_KEY } = require('./primary-nav-key');
 
 const DASHBOARD = {
   PAGE_SIZE: 20,
-  PRIMARY_NAV: PRIMARY_NAV_KEY.HOME,
+  PRIMARY_NAV: PRIMARY_NAV_KEY.DASHBOARD,
   TABS: {
     DEALS: 'deals',
     FACILITIES: 'facilities',

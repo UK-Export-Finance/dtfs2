@@ -29,6 +29,8 @@ const PatchPortalFacilitySubmitAmendmentSchema = z.object({
     referenceNumber: z.string(),
   }),
   requestDate: z.number(),
+  bankId: z.string(),
+  bankName: z.string(),
 });
 
 export type PatchPortalFacilitySubmitAmendmentPayload = z.infer<typeof PatchPortalFacilitySubmitAmendmentSchema>;

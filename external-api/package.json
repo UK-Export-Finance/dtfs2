@@ -32,10 +32,10 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "@types/lodash": "^4.17.19",
+    "@types/lodash": "^4.17.20",
     "@ukef/dtfs2-common": "1.0.0",
     "axios": "1.8.2",
-    "compression": "^1.8.0",
+    "compression": "^1.8.1",
     "cors": "^2.8.5",
     "cron": "^3.5.0",
     "date-fns": "^2.30.0",

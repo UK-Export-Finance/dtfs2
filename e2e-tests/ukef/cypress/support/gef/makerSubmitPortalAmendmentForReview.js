@@ -1,3 +1,4 @@
+import { today } from '../../../../e2e-fixtures/dateConstants';
 import amendmentPage from '../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 
 /**
@@ -14,6 +15,7 @@ export const makerSubmitPortalAmendmentForReview = ({
   facilityEndDateExists = false,
   changedFacilityValue,
   changedCoverEndDate,
+  effectiveDate = today.date,
 }) => {
   cy.makerMakesPortalAmendmentRequest({
     coverEndDateExists,
@@ -21,6 +23,7 @@ export const makerSubmitPortalAmendmentForReview = ({
     facilityEndDateExists,
     changedFacilityValue,
     changedCoverEndDate,
+    effectiveDate,
   });
 
   cy.clickSubmitButton();

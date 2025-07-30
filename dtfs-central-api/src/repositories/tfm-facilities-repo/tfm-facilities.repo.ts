@@ -97,7 +97,7 @@ export class TfmFacilitiesRepo {
             },
           },
         },
-        { projection: { amendments: 1, 'facilitySnapshot.name': 1, 'facilitySnapshot.ukefFacilityId': 1, 'facilitySnapshot.currency': 1 } },
+        { projection: { amendments: 1, 'facilitySnapshot.type': 1, 'facilitySnapshot.ukefFacilityId': 1, 'facilitySnapshot.currency': 1 } },
       )
       .toArray();
 

@@ -25,6 +25,9 @@ const newStatus = PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED;
 const user = aPortalSessionUser();
 const portalAmendmentVariables = portalAmendmentToUkefEmailVariables();
 
+const bankId = '1';
+const bankName = 'Test Bank';
+
 describe('controllers - facility amendment', () => {
   beforeEach(() => {
     jest.resetAllMocks();
@@ -37,7 +40,7 @@ describe('controllers - facility amendment', () => {
       // Arrange
       const { req, res } = httpMocks.createMocks<PatchSubmitAmendmentRequest>({
         params: { facilityId, amendmentId },
-        body: { newStatus, referenceNumber: testReferenceNumber, ...portalAmendmentVariables },
+        body: { newStatus, referenceNumber: testReferenceNumber, ...portalAmendmentVariables, bankId, bankName },
         user,
       });
 
@@ -53,6 +56,8 @@ describe('controllers - facility amendment', () => {
         referenceNumber: testReferenceNumber,
         auditDetails: generatePortalAuditDetails(user._id),
         ...portalAmendmentVariables,
+        bankId,
+        bankName,
       });
     });
 

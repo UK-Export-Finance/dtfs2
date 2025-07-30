@@ -1,3 +1,4 @@
+import { getUnixTime } from 'date-fns';
 import {
   AMENDMENT_TYPES,
   FacilityAmendmentWithUkefId,
@@ -12,10 +13,14 @@ import {
   AmendmentNotFoundError,
   AmendmentIncompleteError,
   PORTAL_AMENDMENT_INPROGRESS_STATUSES,
+  TfmActivity,
+  ACTIVITY_TYPES,
+  now,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { cloneDeep } from 'lodash';
 import { findOneUser } from '../../v1/controllers/user/get-user.controller';
+import { TfmActivitiesRepo } from '../../repositories/tfm-deals-repo';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 import { EligibilityCriteriaAmendmentsRepo } from '../../repositories/portal/eligibility-criteria-amendments.repo';
 import { findOneFacility } from '../../v1/controllers/portal/facility/get-facility.controller';
@@ -114,12 +119,14 @@ export class PortalFacilityAmendmentService {
     facilityId,
     update,
     auditDetails,
+    activity,
     allowedStatuses,
   }: {
     amendmentId: ObjectId;
     facilityId: ObjectId;
     update: Partial<PortalFacilityAmendment>;
     auditDetails: PortalAuditDetails;
+    activity?: TfmActivity;
     allowedStatuses: PortalAmendmentStatus[];
   }): Promise<FacilityAmendmentWithUkefId> {
     await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({
@@ -134,6 +141,20 @@ export class PortalFacilityAmendmentService {
 
     if (updatedAmendment?.type !== AMENDMENT_TYPES.PORTAL) {
       throw new Error(`Could not find amendment to return`);
+    }
+
+    if (activity) {
+      const { dealId } = updatedAmendment;
+
+      const { deal } = await TfmActivitiesRepo.submitTfmActivity({
+        dealId,
+        activity,
+        auditDetails,
+      });
+
+      if (!deal) {
+        throw new Error(`Could not add activity to deal`);
+      }
     }
 
     return updatedAmendment;
@@ -196,6 +217,8 @@ export class PortalFacilityAmendmentService {
     referenceNumber,
     requestDate,
     auditDetails,
+    bankId,
+    bankName,
   }: {
     amendmentId: string;
     facilityId: string;
@@ -203,6 +226,8 @@ export class PortalFacilityAmendmentService {
     referenceNumber: string;
     requestDate: number;
     auditDetails: PortalAuditDetails;
+    bankId: string;
+    bankName: string;
   }): Promise<FacilityAmendmentWithUkefId> {
     await this.validateAmendmentIsComplete({ amendmentId, facilityId });
 
@@ -224,11 +249,26 @@ export class PortalFacilityAmendmentService {
     const facilityMongoId = new ObjectId(facilityId);
     const amendmentMongoId = new ObjectId(amendmentId);
 
+    const timestamp = now().setSeconds(0, 0);
+
+    const activity: TfmActivity = {
+      type: ACTIVITY_TYPES.ACTIVITY,
+      timestamp: getUnixTime(timestamp),
+      author: {
+        firstName: bankName,
+        lastName: bankId,
+        _id: '',
+      },
+      label: `Amendment ${referenceNumber} Approved`,
+      text: '',
+    };
+
     return await this.updatePortalFacilityAmendment({
       amendmentId: amendmentMongoId,
       facilityId: facilityMongoId,
       update: amendmentUpdate,
       auditDetails,
+      activity,
       allowedStatuses: [PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL],
     });
   }

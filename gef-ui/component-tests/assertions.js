@@ -71,6 +71,12 @@ const assertions = (wrapper, html) => ({
     notToExist: () => {
       expect(wrapper(selector).html()).toBeNull();
     },
+    toContain: (text) => {
+      expect(wrapper(selector).text().trim()).toContain(text);
+    },
+    toHaveHtmlContent: (value) => {
+      expect(wrapper(selector).html()?.trim()).toBe(value);
+    },
     hasClass: (value) => {
       expect(wrapper(selector).hasClass(value)).toEqual(true);
     },
@@ -79,6 +85,9 @@ const assertions = (wrapper, html) => ({
     },
     toHaveAttribute: (attribute, value) => {
       expect(wrapper(selector).attr(attribute)).toEqual(value);
+    },
+    notToHaveAttribute: (attribute) => {
+      expect(wrapper(selector).attr(attribute)).toBeUndefined();
     },
     lengthToEqual: (expectedLength) => {
       const expected = expectedLength + 1; // cheerio html() assertion automatically adds 1.
@@ -110,6 +119,14 @@ const assertions = (wrapper, html) => ({
   expectAriaLabel: (selector) => ({
     toEqual: (text) => {
       expect(wrapper(selector).attr('aria-label')).toEqual(text);
+    },
+  }),
+  expectPageTitle: () => ({
+    toRead: (text) => {
+      const titleText = wrapper('title').first().text();
+      const result = titleText.replace('- UK Export Finance', '').trim();
+
+      expect(result).toEqual(text);
     },
   }),
 });

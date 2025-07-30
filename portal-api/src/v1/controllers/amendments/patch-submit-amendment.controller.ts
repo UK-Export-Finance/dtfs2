@@ -20,7 +20,7 @@ export type PatchSubmitAmendmentRequest = CustomExpressRequest<{
  */
 export const patchSubmitAmendment = async (req: PatchSubmitAmendmentRequest, res: Response) => {
   const { facilityId, amendmentId } = req.params;
-  const { newStatus, referenceNumber, makersEmail, checkersEmail, pimEmail, emailVariables, requestDate } = req.body;
+  const { newStatus, referenceNumber, makersEmail, checkersEmail, pimEmail, emailVariables, bankName, bankId, requestDate } = req.body;
 
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
@@ -36,6 +36,8 @@ export const patchSubmitAmendment = async (req: PatchSubmitAmendmentRequest, res
       pimEmail,
       emailVariables,
       requestDate,
+      bankId,
+      bankName,
     });
 
     return res.status(HttpStatusCode.Ok).send(updatedAmendment);
