@@ -5,7 +5,7 @@ import relative from '../relativeURL';
 /**
  * completeManualInclusionSupportingInfoSections
  * completes the required uploads and sections to complete an MIA deal
- * @param {String} dealId - the deal id
+ * @param {string} dealId - the deal id
  */
 const completeManualInclusionSupportingInfoSections = (dealId) => {
   // upload manual inclusion document

@@ -4,7 +4,7 @@ const { isTrueSet } = require('../../utils/helpers');
 const { mapValidationError } = require('../../utils/map-validation-error');
 
 /**
- * @param {Object} params
+ * @param {object} params
  * @param {string} params.coverStartDateDay
  * @param {string} params.coverStartDateMonth,
  * @param {string} params.coverStartDateYear,

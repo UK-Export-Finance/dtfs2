@@ -43,7 +43,7 @@ const badRequest = {
 /**
  * Invokes TFS GET endpoint
  * @param {string} endpoint TFS endpoint
- * @returns {Promise<Object>} API response object
+ * @returns {Promise<object>} API response object
  */
 const get = async (endpoint) => {
   if (endpoint) {
@@ -67,8 +67,8 @@ const get = async (endpoint) => {
 /**
  * Invokes TFS POST endpoint
  * @param {string} endpoint TFS endpoint
- * @param {Object} payload Payload object
- * @returns {Promise<Object>} API response object
+ * @param {object} payload Payload object
+ * @returns {Promise<object>} API response object
  */
 const post = async (endpoint, payload) => {
   if (endpoint && payload) {
@@ -93,8 +93,8 @@ const post = async (endpoint, payload) => {
 /**
  * Invokes MDM POST endpoint
  * @param {string} endpoint MDM endpoint
- * @param {Object} payload Payload object
- * @returns {Promise<Object>} API response object
+ * @param {object} payload Payload object
+ * @returns {Promise<object>} API response object
  */
 const postMdm = async (endpoint, payload) => {
   if (endpoint && payload) {
@@ -119,9 +119,9 @@ const postMdm = async (endpoint, payload) => {
 /**
  * Invokes TFS PUT endpoint
  * @param {string} endpoint TFS endpoint
- * @param {Object} payload Payload object
+ * @param {object} payload Payload object
  * @param {string} etag Entity tag
- * @returns {Promise<Object>} API response object
+ * @returns {Promise<object>} API response object
  */
 const put = async (endpoint, payload, etag) => {
   if (endpoint && payload) {
@@ -155,9 +155,9 @@ const put = async (endpoint, payload, etag) => {
 /**
  * Invokes TFS PATCH endpoint
  * @param {string} endpoint TFS endpoint
- * @param {Object} payload Payload object
+ * @param {object} payload Payload object
  * @param {string} etag Entity tag
- * @returns {Promise<Object>} API response object
+ * @returns {Promise<object>} API response object
  */
 const patch = async (endpoint, payload, eTag) => {
   if (endpoint && payload) {
@@ -194,8 +194,8 @@ const patch = async (endpoint, payload, eTag) => {
 /**
  * Creates a facility covenant ID using the MDM API.
  *
- * @param {Object} payload - The payload containing the details for creating the facility covenant ID.
- * @returns {Promise<Object>} - The response from the MDM API.
+ * @param {object} payload - The payload containing the details for creating the facility covenant ID.
+ * @returns {Promise<object>} - The response from the MDM API.
  */
 const createFacilityCovenantId = async (payload) => postMdm('numbers', payload);
 
@@ -207,7 +207,7 @@ const createFacilityCovenantId = async (payload) => postMdm('numbers', payload);
  * Retrieves a facility by its identifier.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
- * @returns {Promise<Object>} - The response from the TFS API.
+ * @returns {Promise<object>} - The response from the TFS API.
  */
 const getFacility = async (facilityIdentifier) => get(`facilities/${facilityIdentifier}`);
 
@@ -215,7 +215,7 @@ const getFacility = async (facilityIdentifier) => get(`facilities/${facilityIden
  * Retrieves the loan ID for a given facility identifier.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
- * @returns {Promise<Object>} - The response from the TFS API.
+ * @returns {Promise<object>} - The response from the TFS API.
  */
 const getLoanId = async (facilityIdentifier) => get(`facilities/${facilityIdentifier}/loans`);
 
@@ -224,16 +224,16 @@ const getLoanId = async (facilityIdentifier) => get(`facilities/${facilityIdenti
 /**
  * Creates a party record in the TFS system.
  *
- * @param {Object} payload - The payload containing the details for creating the party.
- * @returns {Promise<Object>} - The response from the TFS API.
+ * @param {object} payload - The payload containing the details for creating the party.
+ * @returns {Promise<object>} - The response from the TFS API.
  */
 const createParty = async (payload) => post('parties', payload);
 
 /**
  * Creates a deal record in the TFS system.
  *
- * @param {Object} payload - The payload containing the details for creating the deal.
- * @returns {Promise<Object>} - The response from the TFS API.
+ * @param {object} payload - The payload containing the details for creating the deal.
+ * @returns {Promise<object>} - The response from the TFS API.
  */
 const createDeal = async (payload) => post('deals', payload);
 
@@ -241,8 +241,8 @@ const createDeal = async (payload) => post('deals', payload);
  * Creates a deal investor record in the TFS system.
  *
  * @param {string} dealIdentifier - The identifier of the deal.
- * @param {Object} payload - The payload containing the details for creating the deal investor.
- * @returns {Promise<Object>} - The response from the TFS API.
+ * @param {object} payload - The payload containing the details for creating the deal investor.
+ * @returns {Promise<object>} - The response from the TFS API.
  */
 const createDealInvestor = async (dealIdentifier, payload) => post(`deals/${dealIdentifier}/investors`, payload);
 
@@ -250,16 +250,16 @@ const createDealInvestor = async (dealIdentifier, payload) => post(`deals/${deal
  * Creates a deal guarantee record in the TFS system.
  *
  * @param {string} dealIdentifier - The identifier of the deal.
- * @param {Object} payload - The payload containing the details for creating the deal guarantee.
- * @returns {Promise<Object>} - The response from the TFS API.
+ * @param {object} payload - The payload containing the details for creating the deal guarantee.
+ * @returns {Promise<object>} - The response from the TFS API.
  */
 const createDealGuarantee = async (dealIdentifier, payload) => post(`deals/${dealIdentifier}/guarantees`, payload);
 
 /**
  * Creates a facility record in the TFS system.
  *
- * @param {Object} payload - The payload containing the details for creating the facility.
- * @returns {Promise<Object>} - The response from the TFS API.
+ * @param {object} payload - The payload containing the details for creating the facility.
+ * @returns {Promise<object>} - The response from the TFS API.
  */
 const createFacility = async (payload) => post('facilities', payload);
 
@@ -267,8 +267,8 @@ const createFacility = async (payload) => post('facilities', payload);
  * Creates a facility investor record in the TFS system.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
- * @param {Object} payload - The payload containing the details for creating the facility investor.
- * @returns {Promise<Object>} - The response from the TFS API.
+ * @param {object} payload - The payload containing the details for creating the facility investor.
+ * @returns {Promise<object>} - The response from the TFS API.
  */
 const createFacilityInvestor = async (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/investors`, payload);
 
@@ -276,8 +276,8 @@ const createFacilityInvestor = async (facilityIdentifier, payload) => post(`faci
  * Creates a facility covenant record in the TFS system.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
- * @param {Object} payload - The payload containing the details for creating the facility covenant.
- * @returns {Promise<Object>} - The response from the TFS API.
+ * @param {object} payload - The payload containing the details for creating the facility covenant.
+ * @returns {Promise<object>} - The response from the TFS API.
  */
 const createFacilityCovenant = async (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/covenants`, payload);
 
@@ -285,8 +285,8 @@ const createFacilityCovenant = async (facilityIdentifier, payload) => post(`faci
  * Creates a facility guarantee record in the TFS system.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
- * @param {Object} payload - The payload containing the details for creating the facility guarantee.
- * @returns {Promise<Object>} - The response from the TFS API.
+ * @param {object} payload - The payload containing the details for creating the facility guarantee.
+ * @returns {Promise<object>} - The response from the TFS API.
  */
 const createFacilityGuarantee = async (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/guarantees`, payload);
 
@@ -294,8 +294,8 @@ const createFacilityGuarantee = async (facilityIdentifier, payload) => post(`fac
  * Creates a code value transaction record for a facility in the TFS system.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
- * @param {Object} payload - The payload containing the details for creating the code value transaction.
- * @returns {Promise<Object>} - The response from the TFS API.
+ * @param {object} payload - The payload containing the details for creating the code value transaction.
+ * @returns {Promise<object>} - The response from the TFS API.
  */
 const createCodeValueTransaction = async (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/activation-transactions`, payload);
 
@@ -303,8 +303,8 @@ const createCodeValueTransaction = async (facilityIdentifier, payload) => post(`
  * Creates a facility loan record in the TFS system.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
- * @param {Object} payload - The payload containing the details for creating the facility loan.
- * @returns {Promise<Object>} - The response from the TFS API.
+ * @param {object} payload - The payload containing the details for creating the facility loan.
+ * @returns {Promise<object>} - The response from the TFS API.
  */
 const createFacilityLoan = async (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/loans`, payload);
 
@@ -312,8 +312,8 @@ const createFacilityLoan = async (facilityIdentifier, payload) => post(`faciliti
  * Creates a facility fee record in the TFS system.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
- * @param {Object} payload - The payload containing the details for creating the facility fee.
- * @returns {Promise<Object>} - The response from the TFS API.
+ * @param {object} payload - The payload containing the details for creating the facility fee.
+ * @returns {Promise<object>} - The response from the TFS API.
  */
 const createFacilityFee = async (facilityIdentifier, payload) => post(`facilities/${facilityIdentifier}/fixed-fees`, payload);
 
@@ -322,8 +322,8 @@ const createFacilityFee = async (facilityIdentifier, payload) => post(`facilitie
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
  * @param {string} loanId - The identifier of the loan.
- * @param {Object} payload - The payload containing the details for updating the loan amount.
- * @returns {Promise<Object>} - The response from the TFS API.
+ * @param {object} payload - The payload containing the details for updating the loan amount.
+ * @returns {Promise<object>} - The response from the TFS API.
  */
 const updateFacilityLoanAmount = async (facilityIdentifier, loanId, payload) =>
   post(`facilities/${facilityIdentifier}/loans/${loanId}/amendments/amount`, payload);
@@ -335,9 +335,9 @@ const updateFacilityLoanAmount = async (facilityIdentifier, loanId, payload) =>
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
  * @param {string} updateType - The type of update to be performed.
- * @param {Object} payload - The payload containing the details for updating the facility.
+ * @param {object} payload - The payload containing the details for updating the facility.
  * @param {string} etag - The etag of the facility record.
- * @returns {Promise<Object>} - The response from the TFS API.
+ * @returns {Promise<object>} - The response from the TFS API.
  */
 const updateFacility = async (facilityIdentifier, updateType, payload, etag) => put(`facilities/${facilityIdentifier}?op=${updateType}`, payload, etag);
 
@@ -348,8 +348,8 @@ const updateFacility = async (facilityIdentifier, updateType, payload, etag) => 
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
  * @param {string} loanId - The identifier of the loan.
- * @param {Object} payload - The payload containing the details for updating the facility loan.
- * @returns {Promise<Object>} - The response from the TFS API.
+ * @param {object} payload - The payload containing the details for updating the facility loan.
+ * @returns {Promise<object>} - The response from the TFS API.
  */
 const updateFacilityLoan = async (facilityIdentifier, loanId, payload) => patch(`facilities/${facilityIdentifier}/loans/${loanId}`, payload);
 
@@ -357,8 +357,8 @@ const updateFacilityLoan = async (facilityIdentifier, loanId, payload) => patch(
  * Updates a facility covenant record in the TFS system.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
- * @param {Object} payload - The payload containing the details for updating the facility covenant.
- * @returns {Promise<Object>} - The response from the TFS API.
+ * @param {object} payload - The payload containing the details for updating the facility covenant.
+ * @returns {Promise<object>} - The response from the TFS API.
  */
 const updateFacilityCovenant = async (facilityIdentifier, payload) => patch(`facilities/${facilityIdentifier}/covenants`, payload);
 
@@ -366,8 +366,8 @@ const updateFacilityCovenant = async (facilityIdentifier, payload) => patch(`fac
  * Updates a facility guarantee record in the TFS system.
  *
  * @param {string} facilityIdentifier - The identifier of the facility.
- * @param {Object} payload - The payload containing the details for updating the facility guarantee.
- * @returns {Promise<Object>} - The response from the TFS API.
+ * @param {object} payload - The payload containing the details for updating the facility guarantee.
+ * @returns {Promise<object>} - The response from the TFS API.
  */
 const updateFacilityGuarantee = async (facilityIdentifier, payload) => patch(`facilities/${facilityIdentifier}/guarantees`, payload);
 

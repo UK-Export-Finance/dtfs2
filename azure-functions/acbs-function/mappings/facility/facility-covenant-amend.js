@@ -4,10 +4,10 @@ const { formatDate } = require('../../helpers/date');
 /**
  * Maps an amendment object to a facility covenant record.
  *
- * @param {Object} amendment - The amendment object containing the details to be mapped.
+ * @param {object} amendment - The amendment object containing the details to be mapped.
  * @param {number} amendment.amount - The amount to be set in the targetAmount field.
  * @param {string} amendment.coverEndDate - The cover end date to be formatted and set in the expirationDate field.
- * @returns {Object} The mapped facility covenant record.
+ * @returns {object} The mapped facility covenant record.
  */
 const facilityCovenantAmend = (amendment) => {
   try {

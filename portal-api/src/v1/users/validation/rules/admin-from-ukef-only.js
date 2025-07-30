@@ -4,9 +4,9 @@ const { ADMIN } = require('../../../roles/roles');
 /**
  * Validates that the admin role can only be associated with a UKEF email address.
  *
- * @param {Object} user - The existing user data.
- * @param {Object} change - The candidate change data containing roles and email.
- * @returns {Array<Object>} An array of validation error messages, or an empty array if no errors.
+ * @param {object} user - The existing user data.
+ * @param {object} change - The candidate change data containing roles and email.
+ * @returns {Array<object>} An array of validation error messages, or an empty array if no errors.
  */
 const adminFromUkefOnly = (user, change) => {
   const { roles, email, updateEmail } = change;

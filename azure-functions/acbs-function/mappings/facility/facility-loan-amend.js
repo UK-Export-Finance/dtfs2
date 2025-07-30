@@ -7,10 +7,10 @@ const { FACILITY } = CONSTANTS;
 /**
  * Maps amendment details to a facility loan amendment record.
  *
- * @param {Object} amendment - The amendment details, possibly containing `amount` and `coverEndDate`.
- * @param {Object} facility - The facility object, expected to have a `facilitySnapshot` property.
- * @param {Object} facilityMasterRecord - The master record for the facility, used for calculating amount differences.
- * @returns {Object} The amended facility loan record with updated fields based on the amendment.
+ * @param {object} amendment - The amendment details, possibly containing `amount` and `coverEndDate`.
+ * @param {object} facility - The facility object, expected to have a `facilitySnapshot` property.
+ * @param {object} facilityMasterRecord - The master record for the facility, used for calculating amount differences.
+ * @returns {object} The amended facility loan record with updated fields based on the amendment.
  */
 const facilityLoanAmend = (amendment, facility, facilityMasterRecord) => {
   try {

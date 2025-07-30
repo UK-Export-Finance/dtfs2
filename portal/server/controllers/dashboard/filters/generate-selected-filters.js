@@ -31,7 +31,7 @@ const generateSelectedFiltersObject = (heading, fieldName, submittedFieldFilters
  * This will used in mojFilter component - selectedFilters.categories.
  *
  * @param {string} field name
- * @param {Object} submitted submissionType filters
+ * @param {object} submitted submissionType filters
  * @example ( ['Automatic Inclusion Notice', 'Manual Inclusion Notice'] )
  * @returns generateSelectedFiltersObject('Notice Type', 'submissionType', ['Automatic Inclusion Notice', 'Manual Inclusion Notice'])
  */

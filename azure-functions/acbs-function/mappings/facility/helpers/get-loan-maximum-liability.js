@@ -7,7 +7,7 @@ const getGefFacilityPercentage = require('./get-gef-facility-fixed-percentage');
  * `Loan` (EWCS) = Disbursement amount * (UKEF cover percentage / 100)
  * `Bond` (BSS) = Amount
  * @param {number} amount Facility UKEF exposure
- * @param {Object} facility Facility
+ * @param {object} facility Facility
  * @param {string} dealType Deal type
  */
 const getLoanMaximumLiability = (amount, facility, dealType) => {

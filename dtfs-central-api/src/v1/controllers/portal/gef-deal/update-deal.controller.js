@@ -7,9 +7,9 @@ const { isNumber } = require('../../../../helpers');
 
 /**
  * Updates a Gef deal in the database.
- * @param {Object} params - The parameters for updating the deal.
+ * @param {object} params - The parameters for updating the deal.
  * @param {string} params.dealId - The ID of the deal being updated.
- * @param {Object} params.dealUpdate - The update to be made to the deal.
+ * @param {object} params.dealUpdate - The update to be made to the deal.
  * @param {import("@ukef/dtfs2-common").AuditDetails} params.auditDetails - The audit details for the update.
  * @returns {Promise<{ status: number, message: string }>} The updated deal object.
  */

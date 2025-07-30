@@ -8,8 +8,8 @@ import relative from '../relativeURL';
  * completes a deal from the mock data loader and submits it to the checker
  * completes the automatic or manual cover forms based on provided dealType
  * submits it to the checker
- * @param {String} dealId - the deal id
- * @param {String} dealType - if the deal is AIN or MIA
+ * @param {string} dealId - the deal id
+ * @param {string} dealType - if the deal is AIN or MIA
  */
 const submitMockDataLoaderDealToChecker = (dealId, dealType = DEAL_SUBMISSION_TYPE.AIN) => {
   cy.login(BANK1_MAKER1);

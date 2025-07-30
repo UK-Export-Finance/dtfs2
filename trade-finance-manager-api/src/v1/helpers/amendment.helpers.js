@@ -46,7 +46,7 @@ const isApprovedWithoutConditions = (ukefDecision) => {
 /**
  * Ascertain whether the requested amendment
  * have been declined or not.
- * @param {Object} amendment Amendment object
+ * @param {object} amendment Amendment object
  * @returns {boolean} Whether both the amendments decision has been declined by the underwriter.
  */
 const amendmentDeclined = (amendment) => {
@@ -278,7 +278,7 @@ const sendManualBankDecisionEmail = async (amendmentVariables, auditDetails) => 
  * Evaluated whether facility amendment is eligible
  * for ACBS interaction based on myriads of conditions.
  * This function evaluated across all amendment types.
- * @param {Object} amendment Facility amendments object
+ * @param {object} amendment Facility amendments object
  */
 const canSendToAcbs = (amendment) => {
   // Ensure at least one of the attribute has been amended
@@ -321,15 +321,15 @@ const firstTaskEmailConfirmation = async (facilityId, amendmentId, auditDetails)
  * 3. Constructs the email variables and sends the email using the TFM email service.
  * 4. Updates the flag to indicate that the email has been sent if the email is successfully sent.
  *
- * @param {Object} deal - The deal object containing deal and amendment details.
- * @param {Object} deal.amendment - The amendment details.
- * @param {Object} deal.dealSnapshot - The snapshot of the deal details.
+ * @param {object} deal - The deal object containing deal and amendment details.
+ * @param {object} deal.amendment - The amendment details.
+ * @param {object} deal.dealSnapshot - The snapshot of the deal details.
  * @param {string} deal.facilityId - The ID of the facility.
  * @param {string} deal.amendmentId - The ID of the amendment.
- * @param {Object} deal.dealSnapshot.exporter - The exporter details.
+ * @param {object} deal.dealSnapshot.exporter - The exporter details.
  * @param {string} deal.dealSnapshot.exporter.companyName - The name of the exporter company.
  * @param {string} [deal.dealSnapshot.ukefDealId] - The UKEF deal ID for GEF deals.
- * @param {Object} [deal.dealSnapshot.details] - The details object for BSS deals.
+ * @param {object} [deal.dealSnapshot.details] - The details object for BSS deals.
  * @param {string} [deal.dealSnapshot.details.ukefDealId] - The UKEF deal ID for BSS deals.
  * @param {import("@ukef/dtfs2-common").AuditDetails}
  * @returns {Promise<void>} - A promise that resolves when the email has been sent and the flag has been updated.
@@ -573,8 +573,8 @@ const addLatestAmendmentFacilityEndDate = async (tfmObject, latestFacilityEndDat
 /**
  * Calculates UKEF Exposure for the defined facility
  * based on updated facility amount and original cover percentage.
- * @param {Object} payload Amendment payload
- * @returns {Object} Computed payload with `ukefExposure` property calculated.
+ * @param {object} payload Amendment payload
+ * @returns {object} Computed payload with `ukefExposure` property calculated.
  */
 const calculateAcbsUkefExposure = (payload) => {
   if (payload?.value && payload?.coveredPercentage) {
@@ -589,8 +589,8 @@ const calculateAcbsUkefExposure = (payload) => {
 
 /**
  * Converts non-ms epoch to ms epoch.
- * @param {Object} payload Amendment payload
- * @returns {Object} Computed payload with EPOCH sm compatible `coverEndDate`.
+ * @param {object} payload Amendment payload
+ * @returns {object} Computed payload with EPOCH sm compatible `coverEndDate`.
  */
 const formatCoverEndDate = (payload) => {
   if (payload?.coverEndDate) {

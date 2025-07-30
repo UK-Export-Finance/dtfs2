@@ -38,22 +38,22 @@ const getAmendmentTask = async (req, res) => {
  * If successful, it redirects to the tasks page of the deal. If an error occurs,
  * it logs the error and redirects to an error page.
  *
- * @param {Object} req - The request object.
- * @param {Object} req.params - The parameters from the request URL.
+ * @param {object} req - The request object.
+ * @param {object} req.params - The parameters from the request URL.
  * @param {string} req.params._id - The deal ID.
  * @param {string} req.params.facilityId - The facility ID.
  * @param {string} req.params.amendmentId - The amendment ID.
  * @param {string} req.params.groupId - The group ID.
  * @param {string} req.params.taskId - The task ID.
- * @param {Object} req.session - The session object.
- * @param {Object} req.session.user - The user object from the session.
+ * @param {object} req.session - The session object.
+ * @param {object} req.session.user - The user object from the session.
  * @param {string} req.session.userToken - The user token from the session.
- * @param {Object} req.headers - The headers from the request.
+ * @param {object} req.headers - The headers from the request.
  * @param {string} req.headers.origin - The origin URL from the headers.
- * @param {Object} req.body - The body of the request.
+ * @param {object} req.body - The body of the request.
  * @param {string} req.body.assignedTo - The user ID to whom the task is assigned.
  * @param {string} req.body.status - The status of the task.
- * @param {Object} res - The response object.
+ * @param {object} res - The response object.
  *
  * @returns {Promise<void>} - A promise that resolves when the task is complete.
  */
