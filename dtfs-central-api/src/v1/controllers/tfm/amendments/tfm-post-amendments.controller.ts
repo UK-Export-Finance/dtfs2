@@ -39,7 +39,7 @@ export const postTfmAmendment = async (req: PostTfmAmendmentRequest, res: PostTf
     const amendment: TfmFacilityAmendment = {
       amendmentId: new ObjectId(),
       facilityId: new ObjectId(facilityId),
-      dealId,
+      dealId: new ObjectId(dealId),
       createdAt: getUnixTime(new Date()),
       updatedAt: getUnixTime(new Date()),
       status: TFM_AMENDMENT_STATUS.NOT_STARTED,

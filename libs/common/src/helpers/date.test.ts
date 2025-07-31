@@ -1,5 +1,15 @@
 import { formatInTimeZone } from 'date-fns-tz';
-import { now, getNowAsUtcISOString, getMonthName, getISO8601, getUnixTimestampSeconds, addYear, getEpochMs, getLongDateFormat } from './date';
+import {
+  now,
+  getNowAsUtcISOString,
+  getMonthName,
+  getISO8601,
+  getUnixTimestampSeconds,
+  addYear,
+  getEpochMs,
+  getLongDateFormat,
+  convertUnixTimestampWithoutMilliseconds,
+} from './date';
 
 describe('date helpers', () => {
   describe('getNowAsUtcISOString', () => {
@@ -311,6 +321,30 @@ describe('date helpers', () => {
 
       // Assert
       expect(result).toContain(longDate);
+    });
+  });
+
+  describe('convertUnixTimestampWithoutMilliseconds', () => {
+    it('should convert a Unix timestamp to a date without milliseconds', () => {
+      // Arrange
+      const unixTimestamp = 1633036800; // Represents 2021-10-01T00:00:00Z
+
+      // Act
+      const result = convertUnixTimestampWithoutMilliseconds(unixTimestamp);
+
+      // Assert
+      expect(result).toBe(unixTimestamp);
+    });
+
+    it('should handle Unix timestamps with milliseconds', () => {
+      // Arrange
+      const unixTimestamp = 1633036800123; // Represents 2021-10-01T00:00:00.123Z
+
+      // Act
+      const result = convertUnixTimestampWithoutMilliseconds(unixTimestamp);
+
+      // Assert
+      expect(result).toBe(1633036800);
     });
   });
 });
