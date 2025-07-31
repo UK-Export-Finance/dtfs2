@@ -245,7 +245,7 @@ describe('GEF drawn amount', () => {
   });
 
   describe('calculateDaysOfCover', () => {
-    it('should return difference in cover start and end date in days for EPOCH start', () => {
+    it('should return 0 as the difference in days is only one day', () => {
       // Arrange
       const coverStartDate = '0';
       const coverEndDate = '1';
@@ -269,7 +269,7 @@ describe('GEF drawn amount', () => {
       expect(response).toBe(29);
     });
 
-    it('should return difference in cover start and end date in days for null dates', () => {
+    it('should return null when both cover start and end dates are null', () => {
       // Arrange
       const coverStartDate = null;
       const coverEndDate = null;
