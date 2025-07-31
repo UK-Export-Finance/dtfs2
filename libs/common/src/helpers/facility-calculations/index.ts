@@ -51,14 +51,22 @@ export const calculateDrawnAmount = (facilityValue: number, coverPercentage: num
   calculateInitialUtilisation(facilityValue, type) * (coverPercentage / 100);
 
 /**
- * Calculates the number of days between the cover start date and cover end date.
+ * Calculates the number of days of cover between two dates.
+ *
+ * Accepts dates as either Unix timestamp strings, Date objects, or null.
+ * Converts the input dates to milliseconds and computes the difference in days.
  *
  * @param coverStartDate - The start date of the cover, as a Unix timestamp string, Date object, or null.
  * @param coverEndDate - The end date of the cover, as a Unix timestamp string, Date object, or null.
  * @returns The number of days between the start and end dates.
  */
-export const calculateDaysOfCover = (coverStartDate: UnixTimestampString | Date | null, coverEndDate: UnixTimestampString | Date | null): number =>
-  differenceInDays(new Date(Number(coverEndDate)), new Date(Number(coverStartDate)));
+export const calculateDaysOfCover = (coverStartDate: UnixTimestampString | Date | null, coverEndDate: UnixTimestampString | Date | null): number => {
+  const startDate = coverStartDate?.toString()?.includes('T') ? new Date(String(coverStartDate)).valueOf() : Number(coverStartDate);
+
+  const endDate = coverEndDate?.toString()?.includes('T') ? new Date(String(coverEndDate)).valueOf() : Number(coverEndDate);
+
+  return differenceInDays(new Date(endDate), new Date(startDate));
+};
 
 /**
  * Calculates the fee amount for a facility based on the drawn amount, duration of cover, day count basis, and guarantee fee percentage.

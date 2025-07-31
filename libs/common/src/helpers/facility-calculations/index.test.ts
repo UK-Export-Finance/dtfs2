@@ -269,6 +269,42 @@ describe('GEF drawn amount', () => {
       expect(response).toBe(29);
     });
 
+    it('should return difference in cover start and end date in days when cover start date is in string format', () => {
+      // Arrange
+      const coverStartDate = '2025-01-01T00:00:00.000Z';
+      const coverEndDate = '1738195200000';
+
+      // Act
+      const response = calculateDaysOfCover(coverStartDate, coverEndDate);
+
+      // Assert
+      expect(response).toBe(29);
+    });
+
+    it('should return difference in cover start and end date in days when cover end date is in string format', () => {
+      // Arrange
+      const coverStartDate = '1735689600000';
+      const coverEndDate = '2025-01-30T00:00:00.000Z';
+
+      // Act
+      const response = calculateDaysOfCover(coverStartDate, coverEndDate);
+
+      // Assert
+      expect(response).toBe(29);
+    });
+
+    it('should return difference in cover start and end date in days when both dates string format', () => {
+      // Arrange
+      const coverStartDate = '2025-01-01T00:00:00.000Z';
+      const coverEndDate = '2025-01-30T00:00:00.000Z';
+
+      // Act
+      const response = calculateDaysOfCover(coverStartDate, coverEndDate);
+
+      // Assert
+      expect(response).toBe(29);
+    });
+
     it('should return null when both cover start and end dates are null', () => {
       // Arrange
       const coverStartDate = null;
