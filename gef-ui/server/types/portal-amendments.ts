@@ -4,14 +4,16 @@ import { FacilityParams } from './facility';
 
 export type PortalAmendmentPage = Prettify<ValuesOf<typeof PORTAL_AMENDMENT_PAGES>>;
 
-export type AmendmentInProgressParams = {
+export type SubmittedAmendmentsParams = {
   amendmentId: string;
   facilityId: string;
   status: PortalAmendmentStatus;
+  effectiveDate: Date;
 };
 
 export interface FacilityWithAmendment extends FacilityParams {
-  isFacilityWithAmendmentInProgress: AmendmentInProgressParams;
+  isFacilityWithEffectiveAmendment?: SubmittedAmendmentsParams;
+  isFacilityWithAmendmentInProgress?: SubmittedAmendmentsParams;
   amendmentDetailsUrl: string;
 }
 
@@ -24,7 +26,8 @@ export type AddAmendmentToFacilityParams = {
   facility: FacilityParams;
   dealId: string;
   userRoles: string[];
-  isFacilityWithAmendmentInProgress: AmendmentInProgressParams;
+  isFacilityWithEffectiveAmendment?: SubmittedAmendmentsParams;
+  isFacilityWithAmendmentInProgress?: SubmittedAmendmentsParams;
   readyForCheckerAmendmentDetailsUrlAndText: AmendmentDetailsUrlAndText[];
   furtherMakersInputAmendmentDetailsUrlAndText: AmendmentDetailsUrlAndText[];
   hasReadyForCheckerAmendments?: boolean;

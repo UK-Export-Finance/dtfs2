@@ -1,0 +1,13 @@
+{% from "moj/components/banner/macro.njk" import mojBanner %}
+
+{% set bannerHtml %}
+<p class="govuk-body" data-cy="amendment-effective-future-banner">There is an amendment on this facility effective on {{ item.isFacilityWithEffectiveAmendment.effectiveDate }}. <a href="{{ item.amendmentDetailsUrl }}" data-cy="amendment-effective-future-banner-link">See details </a>
+</p>
+{% endset %}
+
+{{ 
+    mojBanner({
+        type: 'information',
+        html: bannerHtml
+    }) 
+}}

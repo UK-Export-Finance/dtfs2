@@ -10,13 +10,13 @@
 name: Automated release
 run-name: Executing release on ${{ github.repository }} 🚀
 
-on:
-  push:
-    branches: [main]
-
 permissions:
   contents: write
   pull-requests: write
+
+on:
+  push:
+    branches: [main]
 
 jobs:
   # 1. Setup test infrastructure

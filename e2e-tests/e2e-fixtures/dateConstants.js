@@ -6,6 +6,7 @@ export const SHORT_MONTH_FORMAT = 'M';
 export const LONG_MONTH_FORMAT = 'MM';
 export const LONG_YEAR_FORMAT = 'yyyy';
 export const DD_MMM_YYYY_FORMAT = 'dd MMM yyyy';
+export const D_MMM_YYYY_FORMAT = 'd MMM yyyy';
 export const D_MMMM_YYYY_FORMAT = 'd MMMM yyyy';
 export const DD_MMMM_YYYY_FORMAT = 'dd MMMM yyyy';
 export const TIME_HOURS_FORMAT = 'h';
@@ -19,6 +20,7 @@ const getFormattedValues = (date) => ({
   monthLong: format(date, LONG_MONTH_FORMAT),
   year: format(date, LONG_YEAR_FORMAT),
   dd_MMM_yyyy: format(date, DD_MMM_YYYY_FORMAT),
+  d_MMM_yyyy: format(date, D_MMM_YYYY_FORMAT),
   d_MMMM_yyyy: format(date, D_MMMM_YYYY_FORMAT),
   dd_MMMM_yyyy: format(date, DD_MMMM_YYYY_FORMAT),
   unixSecondsString: getUnixTime(date).toString(),

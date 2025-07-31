@@ -9,6 +9,9 @@
 name: PR
 run-name: 🔎 pull request analysis on ${{ github.event.number }}
 
+permissions:
+  contents: read
+
 on:
   schedule:
     - cron: '00 00 * * *'

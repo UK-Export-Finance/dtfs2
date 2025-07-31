@@ -5,7 +5,7 @@ const { ObjectId } = require('mongodb');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
 const { findOneDeal } = require('./get-gef-deal.controller');
-const { updateDeal } = require('./update-deal.controller');
+const { updateGefDeal } = require('./update-deal.controller');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
 const { updateFacility } = require('../gef-facility/update-facility.controller');
 const { isNumber } = require('../../../../helpers');
@@ -199,7 +199,7 @@ const generateMINActivities = async (req, res) => {
 
       await updateChangedToIssued({ facilities, auditDetails });
 
-      const response = await updateDeal({ dealId, dealUpdate: update, auditDetails });
+      const response = await updateGefDeal({ dealId, dealUpdate: update, auditDetails });
       const status = isNumber(response?.status, 3);
       const code = status ? response.status : 200;
 

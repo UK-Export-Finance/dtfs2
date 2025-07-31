@@ -534,9 +534,23 @@ const updateAmendment = async ({ facilityId, amendmentId, update, userToken }) =
  * @param {string} param.checkersEmail - The checker's email address to send the notification to
  * @param {string} param.pimEmail - The pim's email address to send the notification to
  * @param {import('@ukef/dtfs2-common').PortalAmendmentSubmittedToUkefEmailVariables} param.emailVariables
+ * @param {string} param.bankId - The bank id
+ * @param {string} param.bankName - The bank name
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}
  */
-const updateSubmitAmendment = async ({ facilityId, amendmentId, referenceNumber, status, userToken, makersEmail, checkersEmail, pimEmail, emailVariables }) => {
+const updateSubmitAmendment = async ({
+  facilityId,
+  amendmentId,
+  referenceNumber,
+  status,
+  userToken,
+  makersEmail,
+  checkersEmail,
+  pimEmail,
+  emailVariables,
+  bankId,
+  bankName,
+}) => {
   if (!isValidMongoId(facilityId)) {
     console.error('Invalid facility ID %s', facilityId);
     throw new InvalidFacilityIdError(facilityId);
@@ -554,6 +568,8 @@ const updateSubmitAmendment = async ({ facilityId, amendmentId, referenceNumber,
     checkersEmail,
     pimEmail,
     emailVariables,
+    bankId,
+    bankName,
   };
 
   try {

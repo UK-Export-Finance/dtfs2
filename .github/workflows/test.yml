@@ -44,8 +44,11 @@
 # Since ACBS pertinent tests do not require `acbs` docker service initialisation
 # any build failure would be missed without this QAT job.
 
-name: QAT
-run-name: ✅ Quality assurance testing on ${{ github.event.number }}
+name: Quality Assurance - Tests
+run-name: ✅ Executing test QA on ${{ github.event.number }}
+
+permissions:
+  contents: read
 
 on:
   pull_request:
@@ -279,20 +282,21 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        services: [
-          'api-tests/v1/bank',
-          'api-tests/v1/cron-jobs',
-          'api-tests/v1/durable-functions',
-          'api-tests/v1/middleware',
-          'api-tests/v1/routes',
-          'api-tests/v1/user',
-          'api-tests/v1/deals',
-          'api-tests/v1/facilities',
-          'api-tests/v1/gef-deals',
-          'api-tests/v1/gef-facilities',
-          'api-tests/v1/portal-facility-amendments',
-          'api-tests/v1/tfm',
-          'api-tests/v1/utilisation-reports'
+        services:
+          [
+            'api-tests/v1/bank',
+            'api-tests/v1/cron-jobs',
+            'api-tests/v1/durable-functions',
+            'api-tests/v1/middleware',
+            'api-tests/v1/routes',
+            'api-tests/v1/user',
+            'api-tests/v1/deals',
+            'api-tests/v1/facilities',
+            'api-tests/v1/gef-deals',
+            'api-tests/v1/gef-facilities',
+            'api-tests/v1/portal-facility-amendments',
+            'api-tests/v1/tfm',
+            'api-tests/v1/utilisation-reports',
           ]
 
     concurrency:
@@ -376,27 +380,28 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        services: [
-          'api-tests/api',
-          'api-tests/drivers',
-          'api-tests/v1/bank-holidays',
-          'api-tests/v1/banks',
-          'api-tests/v1/bonds',
-          'api-tests/v1/companies',
-          'api-tests/v1/countries',
-          'api-tests/v1/currencies',
-          'api-tests/v1/deals',
-          'api-tests/v1/eligibility-criteria',
-          'api-tests/v1/feedback',
-          'api-tests/v1/gef',
-          'api-tests/v1/industry-sectors',
-          'api-tests/v1/loan',
-          'api-tests/v1/mandatory-criteria',
-          'api-tests/v1/middleware',
-          'api-tests/v1/reports',
-          'api-tests/v1/users',
-          'api-tests/v1/utilisation-report-service',
-          'api-tests/v1/validate',
+        services:
+          [
+            'api-tests/api',
+            'api-tests/drivers',
+            'api-tests/v1/bank-holidays',
+            'api-tests/v1/banks',
+            'api-tests/v1/bonds',
+            'api-tests/v1/companies',
+            'api-tests/v1/countries',
+            'api-tests/v1/currencies',
+            'api-tests/v1/deals',
+            'api-tests/v1/eligibility-criteria',
+            'api-tests/v1/feedback',
+            'api-tests/v1/gef',
+            'api-tests/v1/industry-sectors',
+            'api-tests/v1/loan',
+            'api-tests/v1/mandatory-criteria',
+            'api-tests/v1/middleware',
+            'api-tests/v1/reports',
+            'api-tests/v1/users',
+            'api-tests/v1/utilisation-report-service',
+            'api-tests/v1/validate',
           ]
 
     concurrency:
@@ -455,7 +460,7 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
           retries: ${{ vars.RETRY_LIMIT }}
-          
+
       - name: Stop
         working-directory: ./
         run: docker compose down
@@ -688,6 +693,7 @@ jobs:
             'dashboard/dashboard-facilities/filters/*.spec.js',
             'dashboard/dashboard-facilities/sort/*.spec.js',
             'feedback/**/*.spec.js',
+            'contact/**/*.spec.js',
             'login/**/*.spec.js',
             'maker/check-deal-details/*.spec.js',
             'maker/clone-deal/*.spec.js',
@@ -766,7 +772,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./portal --record false --spec './portal/cypress/e2e/journeys/${{ matrix.spec }}'
+          command: npx cypress run --config video=false --browser electron --project ./portal --record false --spec './portal/cypress/e2e/journeys/${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -774,6 +780,14 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-tests-portal-${{ github.run_attempt }}
+          path: ./e2e-tests/portal/cypress/screenshots/
+          retention-days: 1
 
   # 5. E2E - GEF
   e2e-tests-gef:
@@ -861,7 +875,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./gef --record false --spec './gef/cypress/e2e/${{ matrix.spec }}'
+          command: npx cypress run --config video=false --browser electron --project ./gef --record false --spec './gef/cypress/e2e/${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -869,6 +883,15 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Screenshots
+
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-tests-gef-${{ github.run_attempt }}
+          path: ./e2e-tests/gef/cypress/screenshots/
+          retention-days: 1
 
   #6. E2E - TFM
   e2e-tests-tfm:
@@ -976,7 +999,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./tfm --record false --spec './tfm/cypress/e2e/journeys/${{ matrix.spec }}'
+          command: npx cypress run --config video=false --browser electron --project ./tfm --record false --spec './tfm/cypress/e2e/journeys/${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -984,6 +1007,15 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Screenshots
+
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-tests-tfm-${{ github.run_attempt }}
+          path: ./e2e-tests/tfm/cypress/screenshots/
+          retention-days: 1
 
   #7. E2E - UKEF
   e2e-tests-ukef:
@@ -1057,13 +1089,22 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./ukef --record false --spec './ukef/cypress/e2e/journeys/${{ matrix.spec }}'
+          command: npx cypress run --config video=false --browser electron --project ./ukef --record false --spec './ukef/cypress/e2e/journeys/${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Screenshots
+
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-tests-ukef-${{ github.run_attempt }}
+          path: ./e2e-tests/ukef/cypress/screenshots/
+          retention-days: 1
 
   #8. E2E - FF
   e2e-tests-ff:
@@ -1184,7 +1225,7 @@ jobs:
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/BSS-EWCS/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/gef/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/journeys/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/**/*.spec.js'
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/**/*.spec.js',
           ]
 
     concurrency:
@@ -1244,7 +1285,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: npx cypress run --config video=false,screenshotOnRunFailure=false --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
+          command: npx cypress run --config video=false --browser electron --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
@@ -1252,6 +1293,14 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-tests-ukef-ff-${{ github.run_attempt }}
+          path: ./e2e-tests/${{ steps.project.outputs.directory }}/cypress/screenshots/
+          retention-days: 1
 
   #9. Docker build
   build:

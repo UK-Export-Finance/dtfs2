@@ -365,6 +365,7 @@ services:
       - CONTACT_US_EMAIL_ADDRESS
       - GEF_DEAL_VERSION
       - FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
+      - FF_FEE_RECORD_CORRECTION_ENABLED
 
   redis:
     image: 'redis:alpine'

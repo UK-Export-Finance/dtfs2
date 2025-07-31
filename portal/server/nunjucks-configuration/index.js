@@ -23,6 +23,8 @@ const configureNunjucks = (opts) => {
 
   const nunjucksEnvironment = nunjucks.configure(appViews, opts);
 
+  nunjucksEnvironment.addGlobal('govukRebrand', true);
+
   nunjucksEnvironment.addGlobal('CONTACT_US_EMAIL_ADDRESS', CONTACT_US_EMAIL_ADDRESS);
   nunjucksEnvironment.addGlobal('FF_FEE_RECORD_CORRECTION_ENABLED', FF_FEE_RECORD_CORRECTION_ENABLED);
 
@@ -31,8 +33,8 @@ const configureNunjucks = (opts) => {
   nunjucksEnvironment.addFilter('displayName', displayName);
   nunjucksEnvironment.addFilter('formatAsCurrency', formatAsCurrency);
   nunjucksEnvironment.addFilter('countriesWithEmptyInitialOption', countriesWithEmptyInitialOption);
-  nunjucksEnvironment.addFilter('replaceWhiteSpaceWithDash', replaceWhiteSpaceWithDash);
   nunjucksEnvironment.addFilter('replaceNewLinesWithBrTags', replaceNewLinesWithBrTags);
+  nunjucksEnvironment.addFilter('replaceWhiteSpaceWithDash', replaceWhiteSpaceWithDash);
   nunjucksEnvironment.addFilter('formatPageTitle', (title, hasErrors) => (hasErrors ? `Error - ${title}` : title));
 
   mojFilters = Object.assign(mojFilters);

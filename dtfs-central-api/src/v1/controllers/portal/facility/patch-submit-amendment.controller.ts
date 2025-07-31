@@ -1,8 +1,9 @@
-import { ApiError, AUDIT_USER_TYPES, CustomExpressRequest, InvalidPayloadError, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { ApiError, AUDIT_USER_TYPES, CustomExpressRequest, InvalidPayloadError, PORTAL_AMENDMENT_STATUS, DEAL_TYPE } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
+import { PortalDealService } from '../../../../services/portal/deal.service';
 import { PatchPortalFacilitySubmitAmendmentPayload } from '../../../routes/middleware/payload-validation/validate-patch-portal-facility-submit-amendment-payload';
 import EMAIL_TEMPLATE_IDS from '../../../../constants/email-template-ids';
 import externalApi from '../../../../external-api/api';
@@ -26,7 +27,7 @@ export type PatchSubmitAmendmentToUkefRequest = CustomExpressRequest<{
  */
 export const patchSubmitAmendment = async (req: PatchSubmitAmendmentToUkefRequest, res: Response) => {
   const { facilityId, amendmentId } = req.params;
-  const { auditDetails, newStatus, referenceNumber, makersEmail, checkersEmail, pimEmail, emailVariables } = req.body;
+  const { auditDetails, newStatus, referenceNumber, makersEmail, checkersEmail, pimEmail, emailVariables, bankName, bankId } = req.body;
 
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.PORTAL);
@@ -39,6 +40,18 @@ export const patchSubmitAmendment = async (req: PatchSubmitAmendmentToUkefReques
           newStatus,
           referenceNumber,
           auditDetails,
+          bankId,
+          bankName,
+        });
+
+        const dealId = updatedSubmitAmendment.dealId.toString();
+        const dealUpdate = {};
+
+        await PortalDealService.updateDeal({
+          dealId,
+          dealUpdate,
+          auditDetails,
+          dealType: DEAL_TYPE.GEF,
         });
 
         const emails = [makersEmail, checkersEmail, pimEmail];
