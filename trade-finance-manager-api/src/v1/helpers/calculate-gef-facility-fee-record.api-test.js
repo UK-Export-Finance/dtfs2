@@ -1,6 +1,6 @@
 const { differenceInDays } = require('date-fns');
 const { calculateDrawnAmount } = require('@ukef/dtfs2-common');
-const { calculateDaysOfCover, calculateFeeAmount, calculateGefFacilityFeeRecord } = require('./calculate-gef-facility-fee-record');
+const { calculateDaysOfCover, calculateFeeAmount, calculateGefFacilityFeeRecord } = require('@ukef/dtfs2-common');
 
 describe('calculate-gef-facility-fee-record', () => {
   // for drawn amount
