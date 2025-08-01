@@ -55,6 +55,11 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
   deal.submissionDetails[`${prefix}-address-postcode`] = company.registeredAddress.postalCode;
 
   deal.submissionDetails[`${prefix}-address-country`] = {
+    /**
+     * Parameter 1: Exporter country
+     * Parameter 2: Whether to return `GBR` or not,
+     * in this instance `GBR` will be returned if the condition is true.
+     */
     code: isCountryUk(company.registeredAddress.country, true),
   };
 

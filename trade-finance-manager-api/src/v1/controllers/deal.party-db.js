@@ -79,9 +79,9 @@ const identifyDealParties = (deal) => ({
  *
  * @async
  * @function addPartyUrns
- * @param {Object} deal - The deal object to update.
- * @param {Object} auditDetails - Details for auditing the update operation.
- * @returns {Promise<Object|boolean>} The updated deal object with new TFM party URNs, or false if the deal is not provided.
+ * @param {object} deal - The deal object to update.
+ * @param {object} auditDetails - Details for auditing the update operation.
+ * @returns {Promise<object|boolean>} The updated deal object with new TFM party URNs, or false if the deal is not provided.
  */
 const addPartyUrns = async (deal, auditDetails) => {
   if (!deal) {
