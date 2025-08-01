@@ -864,9 +864,10 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
  * @param {string} companyRegNo Party URN
  * @param {string} companyName Company name
  * @param {string} probabilityOfDefault Probability of default
+ * @param {boolean} isUkEntity Whether the party source country is UK or not
  * @returns {Promise<object>} Company information
  */
-const getOrCreatePartyDbInfo = async ({ companyRegNo, companyName, probabilityOfDefault }) => {
+const getOrCreatePartyDbInfo = async ({ companyRegNo, companyName, probabilityOfDefault, isUkEntity }) => {
   try {
     const response = await axios({
       method: 'post',
@@ -876,6 +877,7 @@ const getOrCreatePartyDbInfo = async ({ companyRegNo, companyName, probabilityOf
         companyRegNo,
         companyName,
         probabilityOfDefault,
+        isUkEntity,
       },
     });
 

@@ -53,16 +53,16 @@ export const lookup = async (req: Request, res: Response) => {
  *
  * @example
  * // Example usage:
- * const req = { body: { companyReg: '12345678', companyName: 'Test Corp', probabilityOfDefault: 14.1 } };
+ * const req = { body: { companyReg: '12345678', companyName: 'Test Corp', probabilityOfDefault: 14.1, isUkEntity: true } };
  * const res = { status: () => res, send: () => {} };
  * await getOrCreateParty(req, res);
  */
 export const getOrCreateParty = async (
-  req: CustomExpressRequest<{ reqBody: { companyRegNo: string; companyName: string; probabilityOfDefault: number } }>,
+  req: CustomExpressRequest<{ reqBody: { companyRegNo: string; companyName: string; probabilityOfDefault: number; isUkEntity: boolean } }>,
   res: Response,
 ) => {
   try {
-    const { companyRegNo: companyRegistrationNumber, companyName, probabilityOfDefault } = req.body;
+    const { companyRegNo: companyRegistrationNumber, companyName, probabilityOfDefault, isUkEntity } = req.body;
 
     if (!companyRegistrationNumber || !isValidCompanyRegistrationNumber(companyRegistrationNumber)) {
       console.error('Invalid company registration number provided %s', companyRegistrationNumber);
@@ -82,6 +82,7 @@ export const getOrCreateParty = async (
         companyRegistrationNumber,
         companyName,
         probabilityOfDefault,
+        isUkEntity,
       },
     });
     const { status, data } = response;

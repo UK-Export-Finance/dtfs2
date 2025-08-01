@@ -1,5 +1,13 @@
 const { mapBssEwcsFacility } = require('./map-bss-ewcs-facility');
 
+/**
+ * Maps a submitted BSS/EWCS deal object to a formatted deal structure.
+ *
+ * @param {object} deal - The deal object containing dealSnapshot and tfm data.
+ * @param {object} deal.dealSnapshot - Snapshot of the deal details.
+ * @param {object} deal.tfm - TFM (Trade Finance Manager) related data.
+ * @returns {object} The mapped deal object with formatted fields including exporter, buyer, indemnifier, facilities, and supporting information.
+ */
 const mapBssEwcsDeal = (deal) => {
   const { dealSnapshot, tfm } = deal;
 
@@ -25,6 +33,8 @@ const mapBssEwcsDeal = (deal) => {
   const bonds = bondTransactions.items;
   const loans = loanTransactions.items;
 
+  const { companyName } = exporter;
+
   const mapped = {
     _id,
     dealType,
@@ -36,9 +46,21 @@ const mapBssEwcsDeal = (deal) => {
     status,
     ukefDealId,
     maker,
+    smeType: submissionDetails['sme-type'],
     exporter: {
-      companyName: exporter.companyName,
+      companyName,
       companiesHouseRegistrationNumber: submissionDetails['supplier-companies-house-registration-number'],
+      registeredAddress: {
+        addressLine1: submissionDetails['supplier-address-line-1'],
+        addressLine2: submissionDetails['supplier-address-line-2'],
+        locality: submissionDetails['supplier-address-town'],
+        postalCode: submissionDetails['supplier-address-postcode'],
+        country: submissionDetails['supplier-address-country'].name,
+      },
+      selectedIndustry: {
+        name: submissionDetails['industry-sector'].name,
+        class: submissionDetails['industry-class'].name,
+      },
     },
     buyer: {
       name: submissionDetails['buyer-name'],
