@@ -11,9 +11,9 @@ const { createFeeRecordCorrectionRequestPage } = pages;
  * ticks boxes for reasons based on provided reasons
  * inputs additional info with provided string
  * @param {FeeRecordEntity} feeRecord - provided fee record
- * @param {String} reportId - report id
+ * @param {string} reportId - report id
  * @param {String[]} reasons - array of strings to select reason for fee record correction
- * @param {String} additionalInfoUserInput - string for additional user input
+ * @param {string} additionalInfoUserInput - string for additional user input
  */
 const completeFeeRecordCorrectionRequestForm = ({
   feeRecord,

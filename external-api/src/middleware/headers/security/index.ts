@@ -16,8 +16,8 @@ import { Request, Response, NextFunction } from 'express';
  * - CORP
  * - Permissions Policy
  * - Removes `X-Powered-By`
- * @param {Object} req Request object
- * @param {Object} res Response object
+ * @param {object} req Request object
+ * @param {object} res Response object
  * @param {NextFunction} next Callback function name
  */
 export const security = (req: Request, res: Response, next: NextFunction) => {

@@ -3,7 +3,7 @@ const CONSTANTS = require('../../../constants');
 /**
  * Return ACBS field code for facility day count basis.
  * Defaults to 365 or ACBS code `1`.
- * @param {Object} facility Facility object
+ * @param {object} facility Facility object
  * @returns {string} ACBS day basis code
  */
 

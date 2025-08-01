@@ -97,7 +97,7 @@ exports.findOne = async (req, res) => findOneMandatoryCriteria(req.params.versio
 
 /**
  * Finds the latest mandatory criteria.
- * @returns {Promise<Object>} - A promise that resolves to the latest mandatory criteria.
+ * @returns {Promise<object>} - A promise that resolves to the latest mandatory criteria.
  */
 const findLatestMandatoryCriteria = async () => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.MANDATORY_CRITERIA);

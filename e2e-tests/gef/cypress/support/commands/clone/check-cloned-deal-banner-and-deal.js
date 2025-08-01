@@ -6,8 +6,8 @@ import { submitButton } from '../../../e2e/partials';
 /**
  * checkClonedDealBannerAndDeal
  * checks the banner and the deal fields on a gef deal which has been cloned
- * @param {String} dealName - name of the gef cloned deal
- * @param {String} facilityId - id of the facility which is in progress
+ * @param {string} dealName - name of the gef cloned deal
+ * @param {string} facilityId - id of the facility which is in progress
  */
 const checkClonedDealBannerAndDeal = (dealName, facilityId) => {
   statusBanner.bannerStatus().contains('Draft');

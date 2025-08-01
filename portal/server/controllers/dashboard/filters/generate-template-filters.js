@@ -8,7 +8,7 @@ const { SUBMISSION_TYPE } = require('../../../constants');
  * @param {string} field the field name
  * @param {string} text the field text to display
  * @param {boolean | string} value the filter value
- * @param {Object} submittedFilters the submitted field object
+ * @param {object} submittedFilters the submitted field object
  * @example ( field: 'dealType', text: 'GEF deals', value: 'GEF', submittedFilters: { dealType: ['GEF', 'BSS/EWCS'] })
  * @returns { text: 'GEF deals', value: 'GEF', checked: true }
  */
@@ -39,7 +39,7 @@ const generateFilterObject = (field, text, value, submittedFilters) => {
  *
  * @param {string} field name
  * @param {Array} array of field values - all possible values for the field name
- * @param {Object} submitted filters
+ * @param {object} submitted filters
  * @example ( fieldName: 'dealType', fieldInputs: [ { text: 'GEF', value: 'GEF' }, { text: 'Issued', value: true } ], submittedFilters: { dealType: ['GEF'] })
  * @returns [ { text: 'GEF', value: 'GEF', checked: true }, { text: 'BSS/EWCS', value: 'BSS/EWCS', checked: false } ]
  */

@@ -12,10 +12,10 @@ const { getTfmTeam, getTfmDeal } = require('../api');
  *
  * @async
  * @function tfmTeam
- * @param {Object} req - Express request object
- * @param {Object} req.params - Route parameters
+ * @param {object} req - Express request object
+ * @param {object} req.params - Route parameters
  * @param {string} req.params.teamId - The ID of the TFM team to retrieve
- * @param {Object} res - Express response object
+ * @param {object} res - Express response object
  * @returns {Promise<void>} A response is sent directly via the `res` object.
  *
  * @throws Will return HTTP 400 if the teamId is invalid.
@@ -54,8 +54,8 @@ exports.tfmTeam = async (req, res) => {
  *
  * @async
  * @function tfmDeal
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
+ * @param {object} req - Express request object
+ * @param {object} res - Express response object
  * @returns {Promise<void>} An express response is returned using the `res` parameter.
  */
 exports.tfmDeal = async (req, res) => {

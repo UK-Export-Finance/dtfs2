@@ -14,11 +14,11 @@ const { CLAMAV_HOST, CLAMAV_PORT, CLAMAV_DEBUG_MODE_ENABLED, CLAMAV_SCANNING_ENA
  *
  * @async
  * @function virusScanUpload
- * @param {Object} req - The Express request object.
- * @param {Object} req.file - The uploaded file object.
+ * @param {object} req - The Express request object.
+ * @param {object} req.file - The uploaded file object.
  * @param {Buffer} req.file.buffer - The buffer containing the file data.
- * @param {Object} res - The Express response object.
- * @param {Object} res.locals - The local variables for the response.
+ * @param {object} res - The Express response object.
+ * @param {object} res.locals - The local variables for the response.
  * @param {Function} next - The next middleware function in the Express stack.
  *
  * @throws {Error} If an unexpected error occurs during the virus scan process.

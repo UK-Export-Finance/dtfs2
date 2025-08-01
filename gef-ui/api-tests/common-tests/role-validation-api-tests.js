@@ -21,11 +21,11 @@ const allRoles = Object.values(ROLES);
 /**
  * Runs role validation API tests.
  *
- * @param {Object} params - The parameters for the tests.
+ * @param {object} params - The parameters for the tests.
  * @param {(headers: import('node-mocks-http').Headers) => Promise<import('supertest').Response>} params.makeRequestWithHeaders - Function to make a request with headers.
  * @param {import('@ukef/dtfs2-common').Role[]} params.whitelistedRoles - List of roles that are allowed.
  * @param {number} params.successCode - The expected success status code for whitelisted roles.
- * @param {Object} [params.successHeaders] - Headers to validate in the success response.
+ * @param {object} [params.successHeaders] - Headers to validate in the success response.
  * @param {boolean} [params.disableHappyPath=false] - Flag to disable happy path tests.
  * @param {string} [params.redirectUrlForInvalidRoles='/'] - URL to redirect to for non-whitelisted roles.
  */

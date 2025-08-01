@@ -33,12 +33,12 @@ const mapPortalActivities = (portalActivities) =>
 /**
  * Retrieves portal activities for a specific deal and renders the application activity page.
  *
- * @param {Object} req - The request object.
- * @param {Object} req.params - The request parameters.
+ * @param {object} req - The request object.
+ * @param {object} req.params - The request parameters.
  * @param {string} req.params.dealId - The ID of the deal.
- * @param {Object} req.session - The session object.
+ * @param {object} req.session - The session object.
  * @param {string} req.session.userToken - The user token.
- * @param {Object} res - The response object.
+ * @param {object} res - The response object.
  * @returns {Promise<void>} - Renders the application activity page with the relevant data.
  */
 const getPortalActivities = async (req, res) => {

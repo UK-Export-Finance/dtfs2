@@ -10,7 +10,7 @@ const { overrideFacilitiesIfAmendmentsInProgress } = require('./overrideFaciliti
 /**
  * Builds a query parameters object for requests to the GET /deals or GET /facilities TFM API endpoints
  * based on the values provided
- * @param {Object} sortBy Value for the sortBy query parameter
+ * @param {object} sortBy Value for the sortBy query parameter
  * @param {string} page Value for the page query parameter
  * @param {string} searchString Value for the searchString query parameter
  * @returns {string} Query parameters object
@@ -65,7 +65,7 @@ const getPageNumber = (page) => {
  * Returns the default sort configuration for a given collection.
  *
  * @param {string} collectionName - The name of the MongoDB collection.
- * @returns {Object} The default sort configuration for the specified collection.
+ * @returns {object} The default sort configuration for the specified collection.
  * @throws {InvalidCollectionNameError} If the collection name is not recognized.
  */
 const getSortByDefault = (collectionName) => {
@@ -94,9 +94,9 @@ const generateSortByQuery = ({ collectionName, reqQuery }) => {
  * Retrieves deals or facilities items based on the specified collection name and query parameters.
  *
  * @param {string} collectionName - The name of the collection to retrieve items from ('deals' or 'facilities').
- * @param {Object} queryParams - The query parameters to filter the items.
+ * @param {object} queryParams - The query parameters to filter the items.
  * @param {string} userToken - The user authentication token.
- * @param {Object} amendments - Amendments to be considered when overriding deals or facilities.
+ * @param {object} amendments - Amendments to be considered when overriding deals or facilities.
  * @returns {Promise<{items: Array, pagination: Object}>} A promise that resolves to an object containing the items and pagination information.
  * @throws Will log an error message if unable to retrieve the items.
  */
@@ -155,9 +155,9 @@ const getSingularCollectionName = (collectionName) => {
 /**
  * Makes a request to TFM API to get either the deals or facilities and renders the relevant page with the returned data
  * @param {string} collectionName The name of the collection, either 'deals' or 'facilities'
- * @param {Object} req The request object
- * @param {Object} res The response object
- * @returns {Promise<Object>} The result from rendering the page
+ * @param {object} req The request object
+ * @param {object} res The response object
+ * @returns {Promise<object>} The result from rendering the page
  */
 const renderDealsOrFacilitiesPage = async (collectionName, req, res) => {
   try {
@@ -206,9 +206,9 @@ const renderDealsOrFacilitiesPage = async (collectionName, req, res) => {
 /**
  * Redirects to either GET /deals or GET /facilities with a query string constructed from the query
  * @param {string} collectionName The name of the collection, either 'deals' or 'facilities'
- * @param {Object} req The request object
- * @param {Object} res The response object
- * @returns {Object} The result from redirecting
+ * @param {object} req The request object
+ * @param {object} res The response object
+ * @returns {object} The result from redirecting
  */
 const queryDealsOrFacilities = (collectionName, req, res) => {
   const { search: newSearch, ascending, descending } = req.body;

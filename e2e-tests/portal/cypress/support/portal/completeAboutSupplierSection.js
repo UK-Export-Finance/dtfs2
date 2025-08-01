@@ -3,7 +3,7 @@ const { submissionDetails } = require('../../fixtures/deal');
 /**
  * Completes the 'About Supplier' section of the contract.
  *
- * @param {Object} options - Options for completing the section.
+ * @param {object} options - Options for completing the section.
  * @param {string} options.exporterCompanyName - Name of the exporter company (optional).
  *
  * If `exporterCompanyName` is provided, the function will:

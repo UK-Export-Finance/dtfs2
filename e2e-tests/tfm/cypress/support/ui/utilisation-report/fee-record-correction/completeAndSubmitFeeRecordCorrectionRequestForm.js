@@ -8,9 +8,9 @@ import { RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
  * inputs additional info with provided string
  * submits the feeRecordCorrection request
  * @param {FeeRecordEntity} feeRecord - provided fee record
- * @param {String} reportId - report id
+ * @param {string} reportId - report id
  * @param {String[]} reasons - array of strings to select reason for fee record correction
- * @param {String} additionalInfoUserInput - string for additional user input
+ * @param {string} additionalInfoUserInput - string for additional user input
  */
 const completeAndSubmitFeeRecordCorrectionRequestForm = ({
   feeRecord,
