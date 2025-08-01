@@ -1,6 +1,6 @@
-const page = require('./pages/header');
-const MOCK_USERS = require('../../../e2e-fixtures/portal-users.fixture');
-const relative = require('./relativeURL');
+const page = require('../../pages/header');
+const MOCK_USERS = require('../../../../../e2e-fixtures/portal-users.fixture');
+const relative = require('../../relativeURL');
 
 const { BANK1_MAKER1, ADMIN, BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
 
@@ -252,12 +252,9 @@ context('Check GEF GOVUK header displays correctly', () => {
     it('should display all the payment report officer service navigation links', () => {
       page.uploadReport().should('exist');
       page.previousReport().should('exist');
+      page.recordCorrectionLog().should('exist');
       page.profile().should('exist');
       page.logout().should('exist');
-    });
-
-    it('should not display the record correction log link in service navigation when fee record correction is disabled', () => {
-      page.recordCorrectionLog().should('not.exist');
     });
 
     it('should ensure the beta banner component exist', () => {

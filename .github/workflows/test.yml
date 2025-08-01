@@ -1129,6 +1129,7 @@ jobs:
         spec:
           [
             './portal/cypress/e2e/journeys/*.spec.js',
+            './portal/cypress/e2e/journeys/feature-flag-enabled/**/*.spec.js',
             './portal/cypress/e2e/journeys/homepage/**/*.spec.js',
             './portal/cypress/e2e/journeys/admin/**/*.spec.js',
             './portal/cypress/e2e/journeys/checker/**/*.spec.js',
@@ -1166,6 +1167,7 @@ jobs:
             './portal/cypress/e2e/journeys/payment-report-officer/previous-reports/**/*.spec.js',
             './portal/cypress/e2e/journeys/payment-report-officer/record-corrections/feature-flag-enabled/**/*.spec.js',
             './gef/cypress/e2e/*.spec.js',
+            './gef/cypress/e2e/feature-flag-enabled/**/*.spec.js',
             './gef/cypress/e2e/application/**/*.spec.js',
             './gef/cypress/e2e/checker/**/*.spec.js',
             './gef/cypress/e2e/clone/*.spec.js',
