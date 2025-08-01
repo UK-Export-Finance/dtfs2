@@ -36,3 +36,4 @@ export * from './has-been-submitted-to-tfm';
 export * from './timezone';
 export * from './amendment-status-tag-colour';
 export * from './get-latest-amendment-by-facility';
+export * from './is-country-uk';

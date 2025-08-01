@@ -1,17 +1,7 @@
 const express = require('express');
+const { isCountryUk } = require('@ukef/dtfs2-common');
 const { provide, DEAL, COUNTRIES } = require('../../api-data-provider');
 const companiesApi = require('../../../companies-api');
-
-// https://developer.companieshouse.gov.uk/api/docs/company/company_number/registered-office-address/registeredOfficeAddress-resource.html
-// England, Wales, Scotland, Northern Ireland, Great Britain, United Kingdom, Not specified
-const countriesThatWeConsiderGBR = ['England', 'Wales', 'Scotland', 'Northern Ireland', 'Great Britain', 'United Kingdom'];
-
-const getPortalCountryForCompaniesHouseCountry = (companiesHouseCountry) => {
-  if (countriesThatWeConsiderGBR.includes(companiesHouseCountry)) {
-    return 'GBR';
-  }
-  return '';
-};
 
 const router = express.Router();
 
@@ -65,7 +55,7 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
   deal.submissionDetails[`${prefix}-address-postcode`] = company.registeredAddress.postalCode;
 
   deal.submissionDetails[`${prefix}-address-country`] = {
-    code: getPortalCountryForCompaniesHouseCountry(company.registeredAddress.country),
+    code: isCountryUk(company.registeredAddress.country, true),
   };
 
   const industry = company.industries[0];
