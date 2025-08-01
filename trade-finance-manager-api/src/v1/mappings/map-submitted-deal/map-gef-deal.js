@@ -3,10 +3,10 @@ const { mapCashContingentFacility } = require('./map-cash-contingent-facility');
 /**
  * Maps a GEF deal object to a formatted deal structure.
  *
- * @param {Object} deal - The deal object to map.
- * @param {Object} deal.dealSnapshot - Snapshot of the deal details.
- * @param {Object} deal.tfm - TFM-related information for the deal.
- * @returns {Object} The mapped deal object with formatted properties.
+ * @param {object} deal - The deal object to map.
+ * @param {object} deal.dealSnapshot - Snapshot of the deal details.
+ * @param {object} deal.tfm - TFM-related information for the deal.
+ * @returns {object} The mapped deal object with formatted properties.
  */
 const mapGefDeal = (deal) => {
   const { dealSnapshot, tfm } = deal;

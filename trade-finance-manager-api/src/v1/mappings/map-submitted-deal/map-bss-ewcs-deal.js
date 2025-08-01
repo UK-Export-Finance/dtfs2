@@ -1,5 +1,13 @@
 const { mapBssEwcsFacility } = require('./map-bss-ewcs-facility');
 
+/**
+ * Maps a submitted BSS/EWCS deal object to a formatted deal structure.
+ *
+ * @param {object} deal - The deal object containing dealSnapshot and tfm data.
+ * @param {object} deal.dealSnapshot - Snapshot of the deal details.
+ * @param {object} deal.tfm - TFM (Trade Finance Manager) related data.
+ * @returns {object} The mapped deal object with formatted fields including exporter, buyer, indemnifier, facilities, and supporting information.
+ */
 const mapBssEwcsDeal = (deal) => {
   const { dealSnapshot, tfm } = deal;
 
