@@ -74,9 +74,6 @@ const mapCashContingentFacility = (facility) => {
   mapped.shouldCoverStartOnSubmission = facility.shouldCoverStartOnSubmission;
   mapped.facilityStage = mapFacilityStage(hasBeenIssued);
 
-  // these extra fields are only used in GEF facility fee record calculation
-  mapped.coverEndDateTimestamp = convertDateToTimestamp(coverEndDate);
-
   return mapped;
 };
 

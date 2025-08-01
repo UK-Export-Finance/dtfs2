@@ -1,10 +1,10 @@
+const { calculateGefFacilityFeeRecord } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const convertFacilityCurrency = require('./convert-facility-currency');
 const getFacilityExposurePeriod = require('./get-facility-exposure-period');
 const DEFAULTS = require('../defaults');
 const getGuaranteeDates = require('../helpers/get-guarantee-dates');
 const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
-const { calculateGefFacilityFeeRecord } = require('../helpers/calculate-gef-facility-fee-record');
 const CONSTANTS = require('../../constants');
 
 const updateFacilities = async (deal, auditDetails) => {
@@ -80,6 +80,7 @@ const updateFacilities = async (deal, auditDetails) => {
           // Fee record is only valid for GEF facilities
           if (submissionType !== CONSTANTS.DEALS.SUBMISSION_TYPE.MIA) {
             feeRecord = calculateGefFacilityFeeRecord(facility);
+
             facilityUpdate = {
               ...facilityUpdate,
               feeRecord,
