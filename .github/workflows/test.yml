@@ -681,7 +681,6 @@ jobs:
       matrix:
         spec:
           [
-            '*.spec.js',
             'homepage/**/*.spec.js',
             'admin/**/*.spec.js',
             'checker/**/*.spec.js',
@@ -804,7 +803,7 @@ jobs:
       matrix:
         spec:
           [
-            '*.spec.js',
+            'homepage/**/*.spec.js',
             'amendments/portal-amendments-disabled/**/*.spec.js',
             'application/**/*.spec.js',
             'checker/**/*.spec.js',
@@ -1128,7 +1127,6 @@ jobs:
       matrix:
         spec:
           [
-            './portal/cypress/e2e/journeys/*.spec.js',
             './portal/cypress/e2e/journeys/feature-flag-enabled/**/*.spec.js',
             './portal/cypress/e2e/journeys/homepage/**/*.spec.js',
             './portal/cypress/e2e/journeys/admin/**/*.spec.js',
@@ -1166,7 +1164,7 @@ jobs:
             './portal/cypress/e2e/journeys/payment-report-officer/utilisation-report-upload/**/*.spec.js',
             './portal/cypress/e2e/journeys/payment-report-officer/previous-reports/**/*.spec.js',
             './portal/cypress/e2e/journeys/payment-report-officer/record-corrections/feature-flag-enabled/**/*.spec.js',
-            './gef/cypress/e2e/*.spec.js',
+            './gef/cypress/e2e/homepage/**/*.spec.js',
             './gef/cypress/e2e/feature-flag-enabled/**/*.spec.js',
             './gef/cypress/e2e/application/**/*.spec.js',
             './gef/cypress/e2e/checker/**/*.spec.js',

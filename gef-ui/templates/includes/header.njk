@@ -120,7 +120,7 @@
   {% set navigation = (navigation.push(reportGefUtilisationAndFees, previousGefReports), navigation) %}
 {% endif %}
 
-<!-- 4. Fixed fee -->
+<!-- 4. PRO - Fixed fee -->
 {% if isFixedFeeRecordCorrection %}
   {% set navigation = (navigation.push(recordCorrectionLog), navigation) %}
 {% endif %}

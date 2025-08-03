@@ -1,6 +1,6 @@
-const page = require('./pages/header');
-const MOCK_USERS = require('../../../e2e-fixtures/portal-users.fixture');
-const relative = require('./relativeURL');
+const page = require('../pages/header');
+const MOCK_USERS = require('../../../../e2e-fixtures/portal-users.fixture');
+const relative = require('../relativeURL');
 
 const { BANK1_MAKER1, ADMIN, BANK1_PAYMENT_REPORT_OFFICER1 } = MOCK_USERS;
 
