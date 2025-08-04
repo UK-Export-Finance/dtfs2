@@ -1,8 +1,8 @@
-import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
-import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
-import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import activitiesPage from '../../../../../../../tfm/cypress/e2e/pages/activities/activitiesPage';
+import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
+import { BUSINESS_SUPPORT_USER_1, TFM_URL } from '../../../../../../../../e2e-fixtures';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
+import { anIssuedCashFacility } from '../../../../../../../../e2e-fixtures/mock-gef-facilities';
+import activitiesPage from '../../../../../../../../tfm/cypress/e2e/pages/activities/activitiesPage';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 

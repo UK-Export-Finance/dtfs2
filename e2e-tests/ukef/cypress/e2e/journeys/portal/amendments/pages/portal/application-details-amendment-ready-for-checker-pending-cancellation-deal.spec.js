@@ -1,20 +1,19 @@
-import relative from '../../../../relativeURL';
-import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
-import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
-import { PIM_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
-import { tomorrow } from '../../../../../../../e2e-fixtures/dateConstants';
+import relative from '../../../../../relativeURL';
+import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
+import { anIssuedCashFacility } from '../../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { applicationPreview } from '../../../../../../../../gef/cypress/e2e/pages';
+import { PIM_USER_1, TFM_URL } from '../../../../../../../../e2e-fixtures';
+import { tomorrow } from '../../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 const CHANGED_FACILITY_VALUE = 20000;
 
-context(`Amendments - Application details - application preview page when deal status is "Cancelled" and amendment is "Further maker's input required"`, () => {
+context('Amendments - Application details - application preview page when deal status is "Cancelled" and amendment is "Ready for checkers approval"', () => {
   let applicationDetailsUrl;
   let dealId;
   let facilityId;
-  let amendmentDetailsUrl;
 
   const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
 
@@ -37,21 +36,11 @@ context(`Amendments - Application details - application preview page when deal s
 
         applicationPreview.makeAChangeButton(facilityId).click();
 
-        cy.getAmendmentIdFromUrl().then((amendmentId) => {
-          const amendmentUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}`;
-
-          amendmentDetailsUrl = `${amendmentUrl}/amendment-details`;
-          const confirmReturnToMakerUrl = `${amendmentUrl}/return-to-maker`;
-          const submittedUrl = `${amendmentUrl}/returned-to-maker`;
-
-          cy.makerSubmitAmendmentForReviewAndCheckerReturnsToMaker({
-            facilityValueExists: true,
-            changedFacilityValue: CHANGED_FACILITY_VALUE,
-            amendmentDetailsUrl,
-            confirmReturnToMakerUrl,
-            submittedUrl,
-          });
+        cy.makerMakesPortalAmendmentRequest({
+          facilityValueExists: true,
+          changedFacilityValue: CHANGED_FACILITY_VALUE,
         });
+        cy.clickSubmitButton();
 
         cy.clearSessionCookies();
 

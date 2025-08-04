@@ -14,7 +14,7 @@ const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
 
 const CHANGED_FACILITY_VALUE = '20000';
 
-context('Amendments - TFM - - Latest cover end date on tfm amendment and latest facility value on portal amendment', () => {
+context('Amendments - TFM - Latest cover end date on tfm amendment and latest facility value on portal amendment', () => {
   let dealId;
   let facilityId;
   let applicationDetailsUrl;
