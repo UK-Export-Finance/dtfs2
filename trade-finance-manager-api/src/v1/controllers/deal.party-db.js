@@ -35,10 +35,11 @@ const getCompany = async (req, res) => {
  * @param {string} companyRegNo The company registration number
  * @param {string} companyName The company name
  * @param {string} probabilityOfDefault The probability of default
- * @param {boolean} isUkEntity Whether the party source country is UK or not
+ * @param {number} isUkEntity Whether the party source country is UK or not
+ * @param {number} code SIC industry sector code
  * @returns {Promise<string>} PartyURN or '' if there is an error
  */
-const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault, isUkEntity }) => {
+const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code }) => {
   if (!companyRegNo) {
     return '';
   }
@@ -50,7 +51,7 @@ const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault, is
       return '';
     }
 
-    partyDbInfo = await api.getOrCreatePartyDbInfo({ companyRegNo, companyName, probabilityOfDefault, isUkEntity });
+    partyDbInfo = await api.getOrCreatePartyDbInfo({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
   } else {
     partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
   }
@@ -89,7 +90,12 @@ const addPartyUrns = async (deal, auditDetails) => {
   }
 
   const { hasExporter, hasIndemnifier, hasAgent, hasBuyer } = identifyDealParties(deal);
-  const { companiesHouseRegistrationNumber: companyRegNo, companyName, probabilityOfDefault } = deal.exporter;
+  const {
+    companiesHouseRegistrationNumber: companyRegNo,
+    companyName,
+    probabilityOfDefault,
+    selectedIndustry: { code },
+  } = deal.exporter;
 
   const isUkEntity = isCountryUk(deal.exporter.registeredAddress.country);
 
@@ -98,7 +104,7 @@ const addPartyUrns = async (deal, auditDetails) => {
       ...deal.tfm,
       parties: {
         exporter: {
-          partyUrn: await getPartyUrn({ companyRegNo, companyName, probabilityOfDefault, isUkEntity }),
+          partyUrn: await getPartyUrn({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code }),
           partyUrnRequired: hasExporter,
         },
         buyer: {

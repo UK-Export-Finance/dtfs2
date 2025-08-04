@@ -60,6 +60,7 @@ const mapBssEwcsDeal = (deal) => {
       selectedIndustry: {
         name: submissionDetails['industry-sector'].name,
         class: submissionDetails['industry-class'].name,
+        code: submissionDetails['industry-class'].code,
       },
     },
     buyer: {

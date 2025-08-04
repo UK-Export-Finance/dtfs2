@@ -58,6 +58,7 @@ const mapGefDeal = (deal) => {
       selectedIndustry: {
         name: selectedIndustry.name,
         class: selectedIndustry.class.name,
+        code: selectedIndustry.class.code,
       },
     },
     maker,
