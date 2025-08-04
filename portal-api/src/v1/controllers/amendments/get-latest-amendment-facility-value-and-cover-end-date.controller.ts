@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { ApiError, CustomExpressRequest } from '@ukef/dtfs2-common';
 import api from '../../api';
 
-export type GetPortalFacilityAmendmentsOnDealRequest = CustomExpressRequest<{
+export type GetLatestAmendmentFacilityValueAndCoverEndDateRequest = CustomExpressRequest<{
   params: {
     facilityId: string;
   };
@@ -14,7 +14,7 @@ export type GetPortalFacilityAmendmentsOnDealRequest = CustomExpressRequest<{
  * @param req - The request object
  * @param res - The response object
  */
-export const getLatestAmendmentFacilityValueAndCoverEndDate = async (req: GetPortalFacilityAmendmentsOnDealRequest, res: Response) => {
+export const getLatestAmendmentFacilityValueAndCoverEndDate = async (req: GetLatestAmendmentFacilityValueAndCoverEndDateRequest, res: Response) => {
   const { facilityId } = req.params;
 
   try {
@@ -22,7 +22,7 @@ export const getLatestAmendmentFacilityValueAndCoverEndDate = async (req: GetPor
 
     return res.status(HttpStatusCode.Ok).send(valueAndCoverEndDate);
   } catch (error) {
-    const errorMessage = 'Failed to get the portal amendments for the given deal';
+    const errorMessage = 'Failed to get the latest facility amendment value and cover end date';
     console.error('%s %o', errorMessage, error);
 
     if (error instanceof ApiError) {

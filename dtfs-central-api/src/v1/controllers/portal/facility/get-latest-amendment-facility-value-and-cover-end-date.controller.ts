@@ -3,15 +3,17 @@ import { HttpStatusCode } from 'axios';
 import { Response } from 'express';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 
-type GetAcknowledgedAmendmentsByFacilityIdRequestParams = { facilityId: string };
-export type GetAcknowledgedAmendmentsByFacilityIdRequest = CustomExpressRequest<{ params: GetAcknowledgedAmendmentsByFacilityIdRequestParams }>;
+type GetLatestAmendmentValueAndCoverEndDateByFacilityIdRequestParams = { facilityId: string };
+export type GetLatestAmendmentValueAndCoverEndDateByFacilityIdRequest = CustomExpressRequest<{
+  params: GetLatestAmendmentValueAndCoverEndDateByFacilityIdRequestParams;
+}>;
 
 /**
- * get acknowledged amendments by facilityId
+ * get latest amendment value and cover end date by facilityId
  * @param req - request
  * @param res - response
  */
-export const getLatestAmendmentFacilityValueAndCoverEndDate = async (req: GetAcknowledgedAmendmentsByFacilityIdRequest, res: Response) => {
+export const getLatestAmendmentFacilityValueAndCoverEndDate = async (req: GetLatestAmendmentValueAndCoverEndDateByFacilityIdRequest, res: Response) => {
   const { facilityId } = req.params;
 
   try {
@@ -25,7 +27,7 @@ export const getLatestAmendmentFacilityValueAndCoverEndDate = async (req: GetAck
 
     return res.status(HttpStatusCode.Ok).send(values);
   } catch (error) {
-    console.error(`Error getting acknowledged amendments by facilityId %o`, error);
+    console.error(`Error getting latest value and cover end date amendments by facilityId %o`, error);
 
     if (error instanceof ApiError) {
       const { status, message, code } = error;
@@ -34,7 +36,7 @@ export const getLatestAmendmentFacilityValueAndCoverEndDate = async (req: GetAck
 
     return res.status(HttpStatusCode.InternalServerError).send({
       status: HttpStatusCode.InternalServerError,
-      message: 'Unknown error occurred when getting acknowledged amendments by facilityId',
+      message: 'Unknown error occurred when getting latest value and cover end date amendments by facilityId',
     });
   }
 };

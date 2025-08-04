@@ -1,6 +1,5 @@
 import { CustomExpressRequest, DayMonthYearInput, PORTAL_AMENDMENT_STATUS, formatDatesForTenor } from '@ukef/dtfs2-common';
 import { Response } from 'express';
-import { getUnixTime } from 'date-fns';
 import * as api from '../../../services/api';
 import { CoverEndDateViewModel } from '../../../types/view-models/amendments/cover-end-date-view-model';
 import { asLoggedInUserSession } from '../../../utils/express-session';
@@ -8,6 +7,7 @@ import { getNextPage, getAmendmentsUrl } from '../helpers/navigation.helper';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { validateAndParseCoverEndDate } from './validation';
 import { getCoverStartDateOrToday } from '../../../utils/get-cover-start-date-or-today';
+import { getCurrentFacilityValueAndCoverEndDate } from '../helpers/get-current-facility-value-and-cover-end-date';
 import { validationErrorHandler } from '../../../utils/helpers';
 
 export type PostCoverEndDateRequest = CustomExpressRequest<{
@@ -87,8 +87,8 @@ export const postCoverEndDate = async (req: PostCoverEndDateRequest, res: Respon
       amendmentExposurePeriodInMonths: updatedTenor.exposurePeriodInMonths ?? null,
     };
 
-    const coverEndDate = facility.coverEndDate ? new Date(facility.coverEndDate) : null;
-    const currentCoverEndDate = coverEndDate ? getUnixTime(coverEndDate) : null;
+    // gets the current cover end date (from previous amendment or facility) to add to the update object
+    const { currentCoverEndDate } = await getCurrentFacilityValueAndCoverEndDate(facilityId, facility, userToken);
 
     const update = { coverEndDate: validationErrorsOrValue.value, currentCoverEndDate, tfm: tfmUpdate };
 

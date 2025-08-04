@@ -343,7 +343,7 @@ const getCaseFacility = async (req, res) => {
     }
 
     const allAmendments = formatAmendmentDetails(allAmendmentsByFacilityId);
-    console.log('allAmendments', allAmendmentsByFacilityId);
+
     const deal = await api.getDeal(dealId, userToken);
 
     /**
