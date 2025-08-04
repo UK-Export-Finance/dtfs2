@@ -1,7 +1,7 @@
 /**
  * Validates that if the roles are present at least one is not null
- * @param {Object} user the existing user
- * @param {Object} change the changes to make
+ * @param {object} user the existing user
+ * @param {object} change the changes to make
  * @returns {Array} either an empty array or an array containing an error object
  */
 const selectAtLeastOneRole = (user, change) => {

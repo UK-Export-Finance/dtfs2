@@ -6,7 +6,7 @@ const CONSTANTS = require('../constants');
  * Extracts an array of facilities that have been marked as eligible for resubmission
  * with the "canResubmitIssuedFacilities" flag set to true.
  *
- * @param {Object} application - The application object containing facilities data.
+ * @param {object} application - The application object containing facilities data.
  * @returns {Object[]} An array of objects representing facilities that can be resubmitted,
  * each containing the facility's name and ID.
  */
@@ -146,7 +146,7 @@ const getUnissuedFacilitiesAsArray = (facilities, application) =>
  * This is a bespoke govUkTable mapping function which
  * returns an array of all the facilities specifically
  * for the cover-start-date.njk template.
- * @param {Object} facilities
+ * @param {object} facilities
  * @returns {Array}
  */
 const getIssuedFacilitiesAsArray = (facilities) => {
@@ -186,7 +186,7 @@ const coverDatesConfirmed = (facilities) => {
 /**
  * Determines if any facilities in the given application have been issued.
  *
- * @param {Object} application - The application object containing facility data.
+ * @param {object} application - The application object containing facility data.
  * @returns {boolean} Returns `true` if one or more facilities have been issued, otherwise `false`.
  */
 const isFacilityResubmissionAvailable = (application) => canResubmitIssuedFacilities(application).length > 0;
@@ -194,7 +194,7 @@ const isFacilityResubmissionAvailable = (application) => canResubmitIssuedFacili
 /**
  * Helper function ascertain whether the facility confirmation message should appear or not.
  * It takes into account recent issuance of a facility, submission type to be MIN.
- * @param {Object} application Application object with facilities
+ * @param {object} application Application object with facilities
  * @returns {boolean} Boolean value
  */
 const issuedFacilityConfirmation = (application) => {
@@ -215,7 +215,7 @@ const facilityTypeStringGenerator = (facilityType) => {
 /**
  * Determines if a facility amendment is currently in progress for a given application.
  *
- * @param {Object} application - The application object to check.
+ * @param {object} application - The application object to check.
  * @returns {boolean} Returns `true` if a facility amendment is in progress and has not been acknowledged; otherwise, `false`.
  */
 const isFacilityAmendmentInProgress = (application) => {

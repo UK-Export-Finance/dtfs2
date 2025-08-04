@@ -4,10 +4,10 @@ const { formatDate } = require('../../helpers/date');
 /**
  * Maps an amendment object to a facility guarantee record.
  *
- * @param {Object} amendment - The amendment object containing the changes.
+ * @param {object} amendment - The amendment object containing the changes.
  * @param {number} amendment.amount - The amended amount for the guarantee.
  * @param {string} amendment.coverEndDate - The amended cover end date for the guarantee.
- * @returns {Object} The amended facility guarantee record.
+ * @returns {object} The amended facility guarantee record.
  */
 const facilityGuaranteeAmend = (amendment) => {
   try {

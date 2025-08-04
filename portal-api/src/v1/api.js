@@ -60,11 +60,11 @@ const createDeal = async (deal, user, auditDetails) => {
 
 /**
  * Sends a request to DTFS Central to update a deal
- * @param {Object} params - The parameters for updating the deal.
+ * @param {object} params - The parameters for updating the deal.
  * @param {string} params.dealId - The ID of the deal being updated.
- * @param {Object} params.dealUpdate - The update to be made to the deal.
- * @param {Object} params.user - The user making the changes.
- * @param {Object} params.auditDetails - The audit details for the update.
+ * @param {object} params.dealUpdate - The update to be made to the deal.
+ * @param {object} params.user - The user making the changes.
+ * @param {object} params.auditDetails - The audit details for the update.
  * @returns {Promise<Object | false>} The updated deal object.
  */
 const updateDeal = async ({ dealId, dealUpdate, user, auditDetails }) => {
@@ -269,7 +269,7 @@ const deleteFacility = async (facilityId, user, auditDetails) => {
  * @function tfmDealSubmit
  * @param {string} dealId - The unique identifier of the deal to be submitted.
  * @param {string} dealType - The type of the deal being submitted.
- * @param {Object} checker - The checker object containing details of the user submitting the deal.
+ * @param {object} checker - The checker object containing details of the user submitting the deal.
  * @returns {Promise<Object|boolean>} The response data from the TFM API if successful, or `false` if an error occurs.
  */
 const tfmDealSubmit = async (dealId, dealType, checker) => {
@@ -334,8 +334,8 @@ const validateUtilisationReportData = async (reportData) => {
 /**
  * Saves a utilisation report to the database
  * @param {number} reportId - The report id
- * @param {Object} reportData - The report data
- * @param {Object} user - The user object
+ * @param {object} reportData - The report data
+ * @param {object} user - The user object
  * @param {import('@ukef/dtfs2-common').AzureFileInfo} fileInfo - The azure file info
  * @returns {Promise<import('./api-response-types').SaveUtilisationReportResponseBody>}
  */
@@ -361,7 +361,7 @@ const saveUtilisationReport = async (reportId, reportData, user, fileInfo) => {
 };
 
 /**
- * @typedef {Object} GetUtilisationReportsOptions
+ * @typedef {object} GetUtilisationReportsOptions
  * @property {import('../types/utilisation-reports').ReportPeriod} [reportPeriod] - a report period to filter reports by
  * @property {boolean} [excludeNotReceived] - whether or not to exclude reports which have not been uploaded
  */
@@ -467,7 +467,7 @@ const getAllBanks = async () => {
 /**
  * Call the central API to get the next report period for a bank
  * @param {string} bankId
- * @returns {Promise<Object>} response of API call or wrapped error response
+ * @returns {Promise<object>} response of API call or wrapped error response
  */
 const getNextReportPeriodByBankId = async (bankId) => {
   try {
@@ -773,7 +773,7 @@ const getPortalFacilityAmendmentsOnDeal = async (dealId, statuses) => {
 
 /**
  * Upserts a draft amendment for a portal facility in the database.
- * @param {Object} params
+ * @param {object} params
  * @param {string} params.dealId - id of the deal with the relevant facility.
  * @param {string} params.facilityId - id of the facility to amend.
  * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} params.amendment - the draft amendment to be upserted.
@@ -810,7 +810,7 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
 
 /**
  * Update portal facility amendment status.
- * @param {Object} params
+ * @param {object} params
  * @param {string} params.facilityId - the facility id
  * @param {string} params.amendmentId - the amendment id.
  * @param {(import('@ukef/dtfs2-common').PortalAmendmentStatus)} params.newStatus - the facility id
@@ -875,7 +875,7 @@ const patchPortalFacilitySubmitAmendment = async ({
 
 /**
  * Update portal facility amendment status.
- * @param {Object} params
+ * @param {object} params
  * @param {string} params.facilityId - the facility id
  * @param {string} params.amendmentId - the amendment id.
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - The audit details for the update.
@@ -936,7 +936,7 @@ const getFeeRecordCorrectionReview = async (correctionId, userId) => {
 
 /**
  * Updates a portal facility amendment with the provided details.
- * @param {Object} params
+ * @param {object} params
  * @param {string} params.facilityId - id of the facility to amend.
  * @param {string} params.amendmentId - id of the amendment.
  * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} params.update - the updates to amend the amendment with.
@@ -978,7 +978,7 @@ const patchPortalFacilityAmendment = async ({ facilityId, amendmentId, update, a
 
 /**
  * Delete a portal facility amendment with the provided details.
- * @param {Object} params
+ * @param {object} params
  * @param {string} params.facilityId - id of the facility to amend.
  * @param {string} params.amendmentId - id of the amendment.
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - The audit details for the update.
@@ -1034,7 +1034,7 @@ const getTfmTeam = async (teamId) => {
  * @async
  * @function getTfmDeal
  * @param {string} dealId - Mongo identifier of the TFM deal to retrieve.
- * @returns {Promise<Object>} The Axios response object if successful, or an error object with status and data if failed.
+ * @returns {Promise<object>} The Axios response object if successful, or an error object with status and data if failed.
  */
 const getTfmDeal = async (dealId) => {
   try {

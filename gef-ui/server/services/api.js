@@ -39,7 +39,7 @@ const getMandatoryCriteria = async ({ userToken }) => {
 /**
  * Fetches the details of a TFM team by its ID.
  *
- * @param {Object} params - The parameters for the request.
+ * @param {object} params - The parameters for the request.
  * @param {string} params.teamId - The ID of the team to fetch.
  * @param {string} params.userToken - The user authentication token.
  * @returns {Promise<import('@ukef/dtfs2-common'.Team)>} A promise that resolves to the team data.
@@ -74,7 +74,7 @@ const cloneApplication = async ({ payload, userToken }) => {
 };
 
 /**
- * @param {Object} param
+ * @param {object} param
  * @param {string} param.dealId
  * @param {string} param.userToken
  * @returns {Promise<import('../types/deal').Deal}>}
@@ -177,7 +177,7 @@ const createFacility = async ({ payload, userToken }) => {
 };
 
 /**
- * @param {Object} param
+ * @param {object} param
  * @param {string} param.facilityId
  * @param {string} param.userToken
  * @returns {Promise<{ details: import('../types/facility').Facility }>}
@@ -282,7 +282,7 @@ const getAddressesByPostcode = async ({ postcode, userToken }) => {
 };
 
 /**
- * @param {Object} param
+ * @param {object} param
  * @param {string} param.userId
  * @param {string} param.userToken
  * @returns {Promise<import('@ukef/dtfs2-common').PortalSessionUser>}
@@ -381,7 +381,7 @@ const downloadFile = async ({ fileId, userToken }) => {
 };
 
 /**
- * @param {Object} param
+ * @param {object} param
  * @param {string} param.facilityId
  * @param {string} param.amendmentId
  * @param {string} param.userToken
@@ -412,7 +412,7 @@ const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
 };
 
 /**
- * @param {Object} param
+ * @param {object} param
  * @param {string} param.dealId
  * @param {string} param.userToken
  * @param {(import('@ukef/dtfs2-common').PortalAmendmentStatus | import('@ukef/dtfs2-common').TfmAmendmentStatus)[] | undefined} param.statuses
@@ -435,7 +435,7 @@ const getAmendmentsOnDeal = async ({ dealId, userToken, statuses }) => {
 };
 
 /**
- * @param {Object} param
+ * @param {object} param
  * @param {string} param.facilityId
  * @param {string} param.userToken
  * @returns {Promise<(import('@ukef/dtfs2-common').LatestAmendmentValueAndCoverEndDate)>}>}
@@ -457,7 +457,7 @@ const getLatestAmendmentFacilityValueAndCoverEndDate = async ({ facilityId, user
 };
 
 /**
- * @param {Object} param
+ * @param {object} param
  * @param {string} param.dealId
  * @param {string} param.userToken
  * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus[] | undefined} param.statuses
@@ -480,7 +480,7 @@ const getPortalAmendmentsOnDeal = async ({ dealId, userToken, statuses }) => {
 };
 
 /**
- * @param {Object} param
+ * @param {object} param
  * @param {string} param.facilityId
  * @param {string} param.dealId
  * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} param.amendment
@@ -514,7 +514,7 @@ const upsertAmendment = async ({ facilityId, dealId, amendment, userToken }) => 
 };
 
 /**
- * @param {Object} param
+ * @param {object} param
  * @param {string} param.facilityId
  * @param {string} param.amendmentId
  * @param {import('@ukef/dtfs2-common').PortalFacilityAmendmentUserValues} param.update
@@ -546,7 +546,7 @@ const updateAmendment = async ({ facilityId, amendmentId, update, userToken }) =
 };
 
 /**
- * @param {Object} param
+ * @param {object} param
  * @param {string} param.facilityId
  * @param {string} param.amendmentId
  * @param {string} param.referenceNumber
@@ -645,7 +645,7 @@ const updateAmendmentStatus = async ({ facilityId, amendmentId, newStatus, userT
 };
 
 /**
- * @param {Object} param
+ * @param {object} param
  * @param {string} param.facilityId
  * @param {string} param.amendmentId
  * @param {string} param.userToken
@@ -685,10 +685,10 @@ const deleteAmendment = async ({ facilityId, amendmentId, userToken, makersEmail
  *
  * @async
  * @function getTfmDeal
- * @param {Object} params - The parameters for retrieving the deal.
+ * @param {object} params - The parameters for retrieving the deal.
  * @param {string} params.dealId - The MongoDB ID of the deal to retrieve.
  * @param {string} params.userToken - The user authentication token.
- * @returns {Promise<Object>} The portalApi response containing the TFM deal data.
+ * @returns {Promise<object>} The portal response containing the TFM deal data.
  * @throws {Error} If the deal ID is invalid or the request fails.
  */
 const getTfmDeal = async ({ dealId, userToken }) => {

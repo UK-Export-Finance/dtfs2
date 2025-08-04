@@ -98,7 +98,6 @@ describe('mappings - map submitted deal - mapCashContingentFacility', () => {
         ukefExposure,
         coverStartDate: mapCoverStartDate(mockFacility),
         coverEndDate,
-        coverEndDateTimestamp: convertDateToTimestamp(coverEndDate),
         bankReference: name,
         guaranteeFee,
         feeType: mapGefFacilityFeeType(feeType),

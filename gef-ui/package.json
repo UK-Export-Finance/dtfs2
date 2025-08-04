@@ -104,8 +104,8 @@
     "style-loader": "3.3.2",
     "supertest": "^6.3.4",
     "terser-webpack-plugin": "^5.3.14",
-    "ts-jest": "^29.4.0",
-    "webpack": "^5.100.2",
+    "ts-jest": "^29.4.1",
+    "webpack": "^5.101.0",
     "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.10.0"
   },

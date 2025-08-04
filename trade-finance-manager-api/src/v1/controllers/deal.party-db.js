@@ -6,7 +6,7 @@ const api = require('../api');
  * Gets company information from Party URN
  * @param {Express.Request} req
  * @param {Express.Response} res
- * @returns {Promise<Object>} Company information
+ * @returns {Promise<object>} Company information
  */
 const getCompany = async (req, res) => {
   try {

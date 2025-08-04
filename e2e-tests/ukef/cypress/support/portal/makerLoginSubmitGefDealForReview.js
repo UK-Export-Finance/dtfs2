@@ -7,7 +7,7 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 
 /**
  * Login as a maker and submit a gef deal for review
- * @param {Object} deal
+ * @param {object} deal
  */
 export const makerLoginSubmitGefDealForReview = (deal) => {
   cy.login(BANK1_MAKER1);

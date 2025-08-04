@@ -8,8 +8,8 @@ import relative from '../../../e2e/relativeURL';
 /**
  * cloneDeal
  * clones gef deal
- * @param {String} dealId - the deal id
- * @param {String} clonedDealName - name of the cloned deal
+ * @param {string} dealId - the deal id
+ * @param {string} clonedDealName - name of the cloned deal
  */
 const cloneDeal = (dealId, clonedDealName) => {
   cy.login(BANK1_MAKER1);

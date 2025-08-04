@@ -213,12 +213,12 @@ const createFacilityAmendment = async (req, res) => {
  * 3. Calls the API to update the facility amendment with the provided details.
  * 4. Sends a response back to the client indicating the success or failure of the operation.
  *
- * @param {Object} req - The request object containing the parameters and body.
- * @param {Object} req.params - The request parameters.
+ * @param {object} req - The request object containing the parameters and body.
+ * @param {object} req.params - The request parameters.
  * @param {string} req.params.facilityId - The ID of the facility to be amended.
  * @param {string} req.params.amendmentId - The ID of the amendment.
- * @param {Object} req.body - The request body containing the amendment details.
- * @param {Object} res - The response object used to send a response back to the client.
+ * @param {object} req.body - The request body containing the amendment details.
+ * @param {object} res - The response object used to send a response back to the client.
  * @returns {Promise<void>} - A promise that resolves when the facility amendment has been updated and the response has been sent.
  * @throws {Error} - Sends an error response if any error occurs during the update process.
  */

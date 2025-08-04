@@ -5,7 +5,7 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 
 /**
  * Login as a maker and submit a deal for review
- * @param {Object} deal
+ * @param {object} deal
  */
 export const makerSubmitDealForReview = (deal) => {
   cy.login(BANK1_MAKER1);

@@ -6,7 +6,7 @@ const { tfmLogin, submitDealAfterUkefIds } = require('./api');
  * then submits deal with UKEF IDs
  * @param {string} dealId
  * @param {string} dealType
- * @param {Object} checker
+ * @param {object} checker
  */
 const submitDealAfterUkefIdsCall = (dealId, dealType, checker) => {
   const { username, password } = T1_USER_1;

@@ -1,9 +1,9 @@
+const { calculateGefFacilityFeeRecord } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const CONSTANTS = require('../../constants');
 const getFacilityExposurePeriod = require('./get-facility-exposure-period');
 const getGuaranteeDates = require('../helpers/get-guarantee-dates');
 const getFacilityPremiumSchedule = require('./get-facility-premium-schedule');
-const { calculateGefFacilityFeeRecord } = require('../helpers/calculate-gef-facility-fee-record');
 const { sendIssuedFacilitiesReceivedEmail } = require('./send-issued-facilities-received-email');
 
 const updatedIssuedFacilities = async (deal, auditDetails) => {
@@ -81,6 +81,7 @@ const updatedIssuedFacilities = async (deal, auditDetails) => {
               facility.hasBeenIssuedAndAcknowledged = updatedPortalFacility.hasBeenIssuedAndAcknowledged;
 
               feeRecord = calculateGefFacilityFeeRecord(facility);
+
               facilityUpdate = {
                 feeRecord,
               };
