@@ -7,14 +7,14 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 
 /**
  * Log in and submit a portal amendment to UKEF
- * @param {Boolean} param.coverEndDateExists - if cover end date is changed
- * @param {Boolean} param.facilityValueExists - if facility value is changed
- * @param {Boolean} param.facilityEndDateExists - if facility end date is changed
- * @param {String} param.changedFacilityValue - the new value for the facility
- * @param {String} param.changedCoverEndDate - the new cover end date
- * @param {String} param.applicationDetailsUrl - the URL to the application details page
- * @param {String} param.facilityId - the ID of the facility
- * @param {String} param.dealId - the ID of the deal
+ * @param {boolean} param.coverEndDateExists - if cover end date is changed
+ * @param {boolean} param.facilityValueExists - if facility value is changed
+ * @param {boolean} param.facilityEndDateExists - if facility end date is changed
+ * @param {string} param.changedFacilityValue - the new value for the facility
+ * @param {string} param.changedCoverEndDate - the new cover end date
+ * @param {string} param.applicationDetailsUrl - the URL to the application details page
+ * @param {string} param.facilityId - the ID of the facility
+ * @param {string} param.dealId - the ID of the deal
  */
 export const loginAndSubmitPortalAmendmentRequestToUkef = ({
   coverEndDateExists = false,

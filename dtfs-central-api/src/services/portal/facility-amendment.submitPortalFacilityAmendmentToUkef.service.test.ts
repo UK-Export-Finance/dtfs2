@@ -1,15 +1,18 @@
-import { AMENDMENT_TYPES, AmendmentNotFoundError, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { ACTIVITY_TYPES, AMENDMENT_TYPES, AmendmentNotFoundError, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { getUnixTime } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { PortalFacilityAmendmentService } from './facility-amendment.service';
 import { aPortalUser } from '../../../test-helpers';
+import { TfmActivitiesRepo } from '../../repositories/tfm-deals-repo';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 
 const mockUpdatePortalFacilityAmendmentByAmendmentId = jest.fn();
 const mockFindOneAmendmentByFacilityIdAndAmendmentId = jest.fn();
 const mockValidateNoOtherAmendmentInProgressOnFacility = jest.fn();
 const mockValidateAmendmentIsComplete = jest.fn();
+const mockAddTfmActivity = jest.fn();
 console.error = jest.fn();
 
 const amendmentId = new ObjectId().toString();
@@ -18,6 +21,17 @@ const referenceNumber = `${facilityId}-001`;
 
 const updatedAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED, referenceNumber });
 const auditDetails = generatePortalAuditDetails(aPortalUser()._id);
+
+const mockTfm = {
+  tfm: {
+    submissionDetails: {
+      exporterPartyUrn: '12345',
+    },
+  },
+};
+
+const bankId = '1';
+const bankName = 'test bank';
 
 describe('PortalFacilityAmendmentService', () => {
   beforeAll(() => {
@@ -29,6 +43,7 @@ describe('PortalFacilityAmendmentService', () => {
 
     jest.spyOn(TfmFacilitiesRepo, 'updatePortalFacilityAmendmentByAmendmentId').mockImplementation(mockUpdatePortalFacilityAmendmentByAmendmentId);
     jest.spyOn(TfmFacilitiesRepo, 'findOneAmendmentByFacilityIdAndAmendmentId').mockImplementation(mockFindOneAmendmentByFacilityIdAndAmendmentId);
+    jest.spyOn(TfmActivitiesRepo, 'submitTfmActivity').mockImplementation(mockAddTfmActivity);
 
     jest
       .spyOn(PortalFacilityAmendmentService, 'validateNoOtherAmendmentInProgressOnFacility')
@@ -37,6 +52,7 @@ describe('PortalFacilityAmendmentService', () => {
 
     mockUpdatePortalFacilityAmendmentByAmendmentId.mockResolvedValue({});
     mockFindOneAmendmentByFacilityIdAndAmendmentId.mockResolvedValue(updatedAmendment);
+    mockAddTfmActivity.mockResolvedValue({ deal: mockTfm });
   });
 
   afterAll(() => {
@@ -52,6 +68,8 @@ describe('PortalFacilityAmendmentService', () => {
         newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
         referenceNumber,
         auditDetails,
+        bankId,
+        bankName,
       });
 
       // Assert
@@ -74,6 +92,8 @@ describe('PortalFacilityAmendmentService', () => {
         newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
         referenceNumber,
         auditDetails,
+        bankId,
+        bankName,
       });
 
       // Assert
@@ -93,6 +113,8 @@ describe('PortalFacilityAmendmentService', () => {
           newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
           referenceNumber,
           auditDetails,
+          bankId,
+          bankName,
         });
 
         // Assert
@@ -110,6 +132,8 @@ describe('PortalFacilityAmendmentService', () => {
           newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
           referenceNumber,
           auditDetails,
+          bankId,
+          bankName,
         });
 
         // Assert
@@ -130,6 +154,8 @@ describe('PortalFacilityAmendmentService', () => {
         newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
         referenceNumber,
         auditDetails,
+        bankId,
+        bankName,
       });
 
       // Assert
@@ -148,6 +174,8 @@ describe('PortalFacilityAmendmentService', () => {
         newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
         referenceNumber,
         auditDetails,
+        bankId,
+        bankName,
       });
 
       // Assert
@@ -155,6 +183,9 @@ describe('PortalFacilityAmendmentService', () => {
         status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
         referenceNumber,
       };
+
+      const now = new Date();
+      now.setSeconds(0, 0);
 
       expect(mockUpdatePortalFacilityAmendmentByAmendmentId).toHaveBeenCalledTimes(1);
       expect(mockUpdatePortalFacilityAmendmentByAmendmentId).toHaveBeenCalledWith({
@@ -166,6 +197,41 @@ describe('PortalFacilityAmendmentService', () => {
       });
     });
 
+    it('should call TfmActivitiesRepo.submitTfmActivity with the correct params', async () => {
+      // Act
+      await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToUkef({
+        amendmentId,
+        facilityId,
+        newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+        referenceNumber,
+        auditDetails,
+        bankId,
+        bankName,
+      });
+
+      const now = new Date();
+      now.setSeconds(0, 0);
+
+      const expectedActivity = {
+        type: ACTIVITY_TYPES.ACTIVITY,
+        timestamp: getUnixTime(now),
+        author: {
+          firstName: bankName,
+          lastName: bankId,
+          _id: '',
+        },
+        label: `Amendment ${referenceNumber} Approved`,
+        text: '',
+      };
+
+      expect(mockAddTfmActivity).toHaveBeenCalledTimes(1);
+      expect(mockAddTfmActivity).toHaveBeenCalledWith({
+        dealId: updatedAmendment.dealId,
+        auditDetails,
+        activity: expectedActivity,
+      });
+    });
+
     it('should return the result of TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId', async () => {
       // Act
       const expected = await PortalFacilityAmendmentService.submitPortalFacilityAmendmentToUkef({
@@ -174,6 +240,8 @@ describe('PortalFacilityAmendmentService', () => {
         newStatus: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
         referenceNumber,
         auditDetails,
+        bankId,
+        bankName,
       });
 
       // Assert

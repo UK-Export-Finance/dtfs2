@@ -7,7 +7,10 @@ const {
   PORTAL_AMENDMENT_STATUS,
   hasBeenSubmittedToTfm,
   getLatestAmendmentsByFacility,
+  now,
+  DATE_FORMATS,
 } = require('@ukef/dtfs2-common');
+const { format, fromUnixTime } = require('date-fns');
 const { getTfmDeal, getPortalAmendmentsOnDeal, getFacilities, getFacility } = require('../../services/api');
 const { canIssueUnissuedFacilities } = require('./canIssueUnissuedFacilities');
 const {
@@ -72,11 +75,11 @@ function buildHeader(app) {
  *
  * @async
  * @function buildBody
- * @param {Object} app - The application object containing all deal and facility data.
+ * @param {object} app - The application object containing all deal and facility data.
  * @param {Record<string, PortalFacilityAmendment>} latestAmendments - object with the latest amendment for each facility.
  * @param {boolean} previewMode - Indicates if the application is in preview mode.
- * @param {Object} user - The user object representing the current user.
- * @returns {Promise<Object>} The constructed application body object with all relevant details for rendering.
+ * @param {object} user - The user object representing the current user.
+ * @returns {Promise<object>} The constructed application body object with all relevant details for rendering.
  */
 const buildBody = async (app, latestAmendments, previewMode, user) => {
   try {
@@ -191,11 +194,11 @@ const buildBody = async (app, latestAmendments, previewMode, user) => {
 /**
  * Builds an object representing available actions for a given application.
  *
- * @param {Object} app - The application object.
+ * @param {object} app - The application object.
  * @param {boolean} app.canSubmit - Indicates if the application can be submitted.
  * @param {string[]} [app.userRoles] - Array of user roles associated with the application.
  * @param {string} app.status - Current status of the application.
- * @returns {Object} Actions object with boolean flags for each action.
+ * @returns {object} Actions object with boolean flags for each action.
  * @returns {boolean} return.submit - Whether the submit action is available.
  * @returns {boolean} return.abandon - Whether the abandon action is available.
  */
@@ -211,11 +214,11 @@ const buildActions = (app) => {
  *
  * @async
  * @function
- * @param {Object} app - The application data object.
+ * @param {object} app - The application data object.
  * @param {Record<string, PortalFacilityAmendment>} latestAmendments - object with the latest amendment for each facility.
  * @param {boolean} previewMode - Flag indicating if the view is in preview mode.
- * @param {Object} user - The user object requesting the view.
- * @returns {Promise<Object>} The combined view object containing header, body, and actions.
+ * @param {object} user - The user object requesting the view.
+ * @returns {Promise<object>} The combined view object containing header, body, and actions.
  */
 const buildView = async (app, latestAmendments, previewMode, user) => {
   try {
@@ -378,29 +381,41 @@ const applicationDetails = async (req, res, next) => {
       params.link += '/unissued-facilities';
     }
 
-    const dealAmendmentsInProgress = amendmentsOnDeal.filter((amendment) => PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(amendment.status));
+    // This array contains amendments that are either in progress or have an effective date in the future
+    const submittedFacilityAmendmentsOnDeal = amendmentsOnDeal.filter((amendment) => {
+      const isAmendmentInProgress = PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(amendment.status);
+      const isAmendmentEffectiveInFuture = amendment.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED && new Date(amendment.effectiveDate * 1000) > now();
+      return isAmendmentInProgress || isAmendmentEffectiveInFuture;
+    });
 
     // array of facility ids that are currently being amended
-    const amendmentsInProgress = dealAmendmentsInProgress.map((amendment) => {
-      const { amendmentId, facilityId: amendmentFacilityId, status } = amendment;
+    const submittedAmendments = submittedFacilityAmendmentsOnDeal.map((amendment) => {
+      const { amendmentId, facilityId: amendmentFacilityId, status, effectiveDate } = amendment;
+      const formattedEffectiveDate = format(fromUnixTime(effectiveDate), DATE_FORMATS.D_MMMM_YYYY);
 
       return {
         amendmentId,
         facilityId: amendmentFacilityId,
         status,
+        effectiveDate: formattedEffectiveDate,
       };
     });
 
     /**
-     * if amendments are in progress and the application is cancelled,
+     * if submitted amendments and the application is cancelled,
      * set the cancelledDealWithAmendments flag to true
      * so that amendments abandoned banner is displayed on the application details page
      */
-    const areAmendmentsInProgress = Boolean(amendmentsInProgress?.length);
+    const areSubmittedAmendments = Boolean(submittedAmendments?.length);
     const isDealCancelled = application.status === DEAL_STATUS.CANCELLED;
+    const isDealPendingCancellation = application.status === DEAL_STATUS.PENDING_CANCELLATION;
 
-    if (areAmendmentsInProgress && isDealCancelled) {
+    if (areSubmittedAmendments && isDealCancelled) {
       params.cancelledDealWithAmendments = true;
+    }
+
+    if (areSubmittedAmendments && isDealPendingCancellation) {
+      params.pendingCancellationDealWithAmendments = true;
     }
 
     /**
@@ -418,7 +433,7 @@ const applicationDetails = async (req, res, next) => {
     params.hasFurtherMakersInputAmendments = false;
 
     // maps facilities and sets params
-    const { mappedFacilities, facilityParams } = mapFacilityApplicationDetails(application, params.facilities.data, amendmentsInProgress, params, userRoles);
+    const { mappedFacilities, facilityParams } = mapFacilityApplicationDetails(application, params.facilities.data, submittedAmendments, params, userRoles);
 
     // redeclare params.facilities.data to include the new flag
     params.facilities.data = mappedFacilities;

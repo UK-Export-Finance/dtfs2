@@ -1,6 +1,14 @@
-import { calculateDrawnAmount, calculateFixedPercentage, calculateInitialUtilisation } from '.';
+import { ObjectId } from 'mongodb';
+import {
+  calculateDrawnAmount,
+  calculateFixedPercentage,
+  calculateInitialUtilisation,
+  calculateDaysOfCover,
+  calculateFeeAmount,
+  calculateGefFacilityFeeRecord,
+} from '.';
 import { GefFacilityType } from '../../types';
-import { GEF_FACILITY_TYPE, FACILITY_UTILISATION_PERCENTAGE } from '../../constants';
+import { GEF_FACILITY_TYPE, FACILITY_UTILISATION_PERCENTAGE, CURRENCY, FACILITY_TYPE } from '../../constants';
 
 describe('GEF drawn amount', () => {
   describe('calculateDrawnAmount', () => {
@@ -233,6 +241,213 @@ describe('GEF drawn amount', () => {
 
       // Assert
       expect(response).toEqual(FACILITY_UTILISATION_PERCENTAGE.DEFAULT);
+    });
+  });
+
+  describe('calculateDaysOfCover', () => {
+    it('should return 0 as the difference in days is only one day', () => {
+      // Arrange
+      const coverStartDate = '0';
+      const coverEndDate = '1';
+
+      // Act
+      const response = calculateDaysOfCover(coverStartDate, coverEndDate);
+
+      // Assert
+      expect(response).toBe(0);
+    });
+
+    it('should return difference in cover start and end date in days', () => {
+      // Arrange
+      const coverStartDate = '1735689600000';
+      const coverEndDate = '1738195200000';
+
+      // Act
+      const response = calculateDaysOfCover(coverStartDate, coverEndDate);
+
+      // Assert
+      expect(response).toBe(29);
+    });
+
+    it('should return difference in cover start and end date in days when cover start date is in string format', () => {
+      // Arrange
+      const coverStartDate = '2025-01-01T00:00:00.000Z';
+      const coverEndDate = '1738195200000';
+
+      // Act
+      const response = calculateDaysOfCover(coverStartDate, coverEndDate);
+
+      // Assert
+      expect(response).toBe(29);
+    });
+
+    it('should return difference in cover start and end date in days when cover end date is in string format', () => {
+      // Arrange
+      const coverStartDate = '1735689600000';
+      const coverEndDate = '2025-01-30T00:00:00.000Z';
+
+      // Act
+      const response = calculateDaysOfCover(coverStartDate, coverEndDate);
+
+      // Assert
+      expect(response).toBe(29);
+    });
+
+    it('should return difference in cover start and end date in days when both dates string format', () => {
+      // Arrange
+      const coverStartDate = '2025-01-01T00:00:00.000Z';
+      const coverEndDate = '2025-01-30T00:00:00.000Z';
+
+      // Act
+      const response = calculateDaysOfCover(coverStartDate, coverEndDate);
+
+      // Assert
+      expect(response).toBe(29);
+    });
+
+    it('should return null when both cover start and end dates are null', () => {
+      // Arrange
+      const coverStartDate = null;
+      const coverEndDate = null;
+
+      // Act
+      const response = calculateDaysOfCover(coverStartDate, coverEndDate);
+
+      // Assert
+      expect(response).toBe(0);
+    });
+  });
+
+  describe('calculateFeeAmount', () => {
+    it('should calculate fee amount for 30 days of cover', () => {
+      // Arrange
+      const drawnAmount = 100;
+      const daysOfCover = 30;
+      const dayCountBasis = 365;
+      const guaranteeFee = 1;
+
+      // Act
+      const response = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, guaranteeFee);
+
+      // Assert
+      expect(response).toBe(0.0821917808219178);
+    });
+
+    it('should calculate fee amount for 365 days cover', () => {
+      // Arrange
+      const drawnAmount = 1000000;
+      const daysOfCover = 365;
+      const dayCountBasis = 365;
+      const guaranteeFee = 4;
+
+      // Act
+      const response = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, guaranteeFee);
+
+      // Assert
+      expect(response).toBe(40000);
+    });
+
+    it('should calculate fee amount for 365 days cover with 0 drawn amount', () => {
+      // Arrange
+      const drawnAmount = 0;
+      const daysOfCover = 365;
+      const dayCountBasis = 365;
+      const guaranteeFee = 2.3;
+
+      // Act
+      const response = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, guaranteeFee);
+
+      // Assert
+      expect(response).toBe(0);
+    });
+  });
+
+  describe('calculateGefFacilityFeeRecord', () => {
+    const facility = {
+      _id: new ObjectId(),
+      dealId: new ObjectId(),
+      type: FACILITY_TYPE.CASH,
+      hasBeenIssued: true,
+      name: 'facilityName',
+      shouldCoverStartOnSubmission: true,
+      coverStartDate: '1636379303330',
+      coverEndDate: '1701388800000',
+      issueDate: null,
+      monthsOfCover: 12,
+      details: [],
+      detailsOther: '',
+      currency: {
+        id: CURRENCY.GBP,
+      },
+      value: 100000,
+      coverPercentage: 80,
+      interestPercentage: 5,
+      paymentType: 'cash',
+      createdAt: new Date().getTime(),
+      updatedAt: new Date().getTime(),
+      ukefExposure: 80000,
+      guaranteeFee: 10,
+      submittedAsIssuedDate: null,
+      ukefFacilityId: '12345678',
+      feeType: 'cash',
+      feeFrequency: 'Monthly',
+      dayCountBasis: 365,
+      coverDateConfirmed: null,
+      hasBeenIssuedAndAcknowledged: null,
+      canResubmitIssuedFacilities: null,
+      unissuedToIssuedByMaker: {},
+    };
+
+    it('should not calculate GEF facility fixed fee for an un-issued facility', () => {
+      // Arrange
+      const mockFacility = {
+        ...facility,
+        hasBeenIssued: false,
+      };
+
+      // Act
+      const response = calculateGefFacilityFeeRecord(mockFacility);
+
+      // Assert
+      expect(response).toBe(null);
+    });
+
+    it('should calculate GEF facility fixed fee with all valid properties', () => {
+      // Act
+      const response = calculateGefFacilityFeeRecord(facility);
+
+      // Assert
+      expect(response).toBe(14009.86301369863);
+    });
+
+    it('should calculate GEF facility fixed fee with only 1 day difference', () => {
+      // Arrange
+      const mockFacility = {
+        ...facility,
+        coverStartDate: '0',
+        coverEndDate: '1',
+      };
+
+      // Act
+      const response = calculateGefFacilityFeeRecord(mockFacility);
+
+      // Assert
+      expect(response).toBe(0);
+    });
+
+    it('should calculate GEF facility fixed fee with £1.00 as a facility value', () => {
+      // Arrange
+      const mockFacility = {
+        ...facility,
+        value: 1,
+        ukefExposure: 0.8,
+      };
+
+      // Act
+      const response = calculateGefFacilityFeeRecord(mockFacility);
+
+      // Assert
+      expect(response).toBe(0.1400986301369863);
     });
   });
 });

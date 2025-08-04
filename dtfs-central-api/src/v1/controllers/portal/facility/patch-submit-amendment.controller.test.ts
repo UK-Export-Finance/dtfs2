@@ -1,20 +1,24 @@
 import { createMocks } from 'node-mocks-http';
 import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, API_ERROR_CODE, TestApiError, portalAmendmentToUkefEmailVariables, AnyObject } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
+import { ObjectId } from 'mongodb';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
 import { PortalFacilityAmendmentService } from '../../../../services/portal/facility-amendment.service';
+import { PortalDealService } from '../../../../services/portal/deal.service';
 import { patchSubmitAmendment, PatchSubmitAmendmentToUkefRequest } from './patch-submit-amendment.controller';
 import externalApi from '../../../../external-api/api';
 import EMAIL_TEMPLATE_IDS from '../../../../constants/email-template-ids';
 
-const amendmentId = 'amendmentId';
-const facilityId = '6597dffeb5ef5ff4267e5044';
+const amendmentId = new ObjectId();
+const dealId = new ObjectId();
+const facilityId = new ObjectId();
 const testReferenceNumber = '0040012345-001';
 
-const mockUpdatedAmendment = { facilityId, type: AMENDMENT_TYPES.PORTAL, status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED };
+const mockUpdatedAmendment = { dealId, facilityId, type: AMENDMENT_TYPES.PORTAL, status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED };
 
 const mockSubmitPortalFacilityAmendmentToUkef = jest.fn();
+const mockUpdateDeal = jest.fn();
 let sendEmailSpy = jest.fn();
 
 jest.mock('../../../../external-api/api');
@@ -42,6 +46,7 @@ describe('patchSubmitAmendment', () => {
     jest.resetAllMocks();
 
     jest.spyOn(PortalFacilityAmendmentService, 'submitPortalFacilityAmendmentToUkef').mockImplementation(mockSubmitPortalFacilityAmendmentToUkef);
+    jest.spyOn(PortalDealService, 'updateDeal').mockImplementation(mockUpdateDeal);
     mockSubmitPortalFacilityAmendmentToUkef.mockResolvedValue(mockUpdatedAmendment);
 
     sendEmailSpy = jest.fn(() => Promise.resolve({}));
@@ -206,6 +211,24 @@ describe('patchSubmitAmendment', () => {
       // Arrange
       const message = 'Test error message';
       mockSubmitPortalFacilityAmendmentToUkef.mockRejectedValue(new Error(message));
+
+      const { req, res } = generateHttpMocks({ auditDetails, newStatus, referenceNumber: testReferenceNumber, emailVariables: mockEmailVariables });
+
+      // Act
+      await patchSubmitAmendment(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.InternalServerError);
+      expect(res._getData()).toEqual({
+        status: HttpStatusCode.InternalServerError,
+        message: 'Unknown error occurred when updating portal amendment status',
+      });
+    });
+
+    it(`should return ${HttpStatusCode.InternalServerError} if PortalDealService.updateDeal throws an unknown error`, async () => {
+      // Arrange
+      const message = 'Test error message';
+      mockUpdateDeal.mockRejectedValue(new Error(message));
 
       const { req, res } = generateHttpMocks({ auditDetails, newStatus, referenceNumber: testReferenceNumber, emailVariables: mockEmailVariables });
 

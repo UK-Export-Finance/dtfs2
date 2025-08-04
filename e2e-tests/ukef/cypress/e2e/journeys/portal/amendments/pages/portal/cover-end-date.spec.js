@@ -31,7 +31,7 @@ context('Amendments - Cover end date - page tests', () => {
    */
   let coverStartDate;
   /**
-   * @type {String}
+   * @type {string}
    */
   let amendmentUrl;
 

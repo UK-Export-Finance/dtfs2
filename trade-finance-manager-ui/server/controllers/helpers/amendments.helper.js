@@ -3,7 +3,7 @@ const { DECISIONS, DEAL } = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
 
 /**
- * @param {Object} deal
+ * @param {object} deal
  * @param {Array} userTeams
  * @returns {boolean}
  * function to show amendment button
@@ -38,7 +38,7 @@ const userCanEditBankDecision = (amendment, user) => {
 /**
  * Ascertain whether the requested amendment
  * have been declined or not.
- * @param {Object} amendment Amendment object
+ * @param {object} amendment Amendment object
  * @returns {boolean} Whether both the amendments decision has been declined by the underwriter.
  */
 const ukefDecisionRejected = (amendment) => {
@@ -57,7 +57,7 @@ const ukefDecisionRejected = (amendment) => {
 };
 
 /**
- * @param {Object} amendment
+ * @param {object} amendment
  * @param {string} decisionType
  * @returns {boolean}
  * checks if amendment has declined or approved with conditions and returns true if so
@@ -70,7 +70,7 @@ const validateUkefDecision = (ukefDecision, decisionType) => ukefDecision?.cover
 const nonAmendableDealStages = [TFM_DEAL_STAGE.CANCELLED];
 
 /**
- * @param {Object} getAmendmentsInProgress Params
+ * @param {object} getAmendmentsInProgress Params
  * @param {import('@ukef/dtfs2-common').TfmDeal} getAmendmentsInProgress Params.deal - the deal
  * @param {import('@ukef/dtfs2-common').TfmFacilityAmendment[]} getAmendmentsInProgress Params.amendments - the amendments
  * @returns {import('@ukef/dtfs2-common').TfmFacilityAmendment[]} - the amendments that are in progress

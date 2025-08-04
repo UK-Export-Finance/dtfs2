@@ -28,7 +28,8 @@ module.exports = {
   landingPage: require('./landingPage'),
   mandatoryCriteria: require('./mandatory-criteria'),
   nameApplication: require('./name-application'),
-  pageBanner: require('./page-banner'),
+  header: require('./header'),
+  footer: require('./footer'),
   providedFacility: require('./provided-facility'),
   returnToMaker: require('./return-to-maker'),
   securityDetails: require('./security-details'),
@@ -36,4 +37,5 @@ module.exports = {
   submitToUkef: require('./submit-to-ukef'),
   unissuedFacilitiesAboutFacility: require('./unissued-facilities-about-facility'),
   unissuedFacilities: require('./unissued-facilities'),
+  contact: require('./contact'),
 };

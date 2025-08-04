@@ -5,10 +5,10 @@ import api from '../api';
 /**
  * Maps team members to a specific format and filters out inactive users.
  *
- * @param {Object} req - The request object.
- * @param {Object} req.params - The request parameters.
+ * @param {object} req - The request object.
+ * @param {object} req.params - The request parameters.
  * @param {string} req.params.teamId - The ID of the team.
- * @param {Object} res - The response object.
+ * @param {object} res - The response object.
  *
  * @returns {Promise<void>} - A promise that resolves to void.
  *

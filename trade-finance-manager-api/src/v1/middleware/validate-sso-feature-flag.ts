@@ -5,7 +5,7 @@ import { RequestHandler } from 'express';
 /**
  * Middleware to validate the state of the TFM SSO feature flag before allowing access to an endpoint.
  *
- * @param {Object} options - Configuration options for the middleware.
+ * @param {object} options - Configuration options for the middleware.
  * @param {boolean} options.desiredState - The desired state of the TFM SSO feature flag (true for enabled, false for disabled).
  * @returns {RequestHandler} A middleware function that checks the feature flag state and either proceeds to the next middleware or returns a 400 Bad Request response.
  */

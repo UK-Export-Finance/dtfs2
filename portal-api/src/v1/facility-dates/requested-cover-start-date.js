@@ -18,8 +18,8 @@ exports.hasAllRequestedCoverStartDateValues = hasAllRequestedCoverStartDateValue
 /**
  * Returns facility object with added requestedCoverStartDate property, if the day
  * month, year are given. This is stored as a UTC timestamp
- * @param {Object} facility
- * @returns {Object}
+ * @param {object} facility
+ * @returns {object}
  *
  * This function has odd behaviour inherited from moment js
  *  - If the month is invalid set requestedCoverStartDate to NaN

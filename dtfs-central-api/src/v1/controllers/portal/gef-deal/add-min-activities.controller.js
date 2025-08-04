@@ -5,14 +5,14 @@ const { ObjectId } = require('mongodb');
 const { mongoDbClient: db } = require('../../../../drivers/db-client');
 
 const { findOneDeal } = require('./get-gef-deal.controller');
-const { updateDeal } = require('./update-deal.controller');
+const { updateGefDeal } = require('./update-deal.controller');
 const { findAllGefFacilitiesByDealId } = require('../gef-facility/get-facilities.controller');
 const { updateFacility } = require('../gef-facility/update-facility.controller');
 const { isNumber } = require('../../../../helpers');
 
 /**
  * canResubmitIssuedFacilities - changes flags to false
- * @param {Object} facilities
+ * @param {object} facilities
  */
 const updateChangedToIssued = async ({ facilities, auditDetails }) => {
   await Promise.all(
@@ -74,7 +74,7 @@ const portalActivityGenerator = (activityParams) => {
 /**
  * For facilities changed to issued
  * adds to front of portalActivity array in correct format
- * @param {Object} application
+ * @param {object} application
  * @param {Array} facilities
  * @returns {Promise<Array>} portalActivities
  */
@@ -117,7 +117,7 @@ const facilityChangePortalActivity = async (application, facilities) => {
 /**
  * Generates activity for MIN submission to UKEF
  * Adds to front of portalActivities array in correct format
- * @param {Object} application
+ * @param {object} application
  * @returns {Promise<Array>} portalActivities
  */
 const ukefSubmissionPortalActivity = async (application) => {
@@ -158,8 +158,8 @@ const ukefSubmissionPortalActivity = async (application) => {
  * Generates MIN Activity objects for submission and changed facilities
  * Removes flag for changedToIssued facility
  * Returns updated deal
- * @param {Object} req
- * @param {Object} res
+ * @param {object} req
+ * @param {object} res
  */
 const generateMINActivities = async (req, res) => {
   const {
@@ -199,7 +199,7 @@ const generateMINActivities = async (req, res) => {
 
       await updateChangedToIssued({ facilities, auditDetails });
 
-      const response = await updateDeal({ dealId, dealUpdate: update, auditDetails });
+      const response = await updateGefDeal({ dealId, dealUpdate: update, auditDetails });
       const status = isNumber(response?.status, 3);
       const code = status ? response.status : 200;
 

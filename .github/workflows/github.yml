@@ -7,6 +7,9 @@
 name: GitHub
 run-name: 🔬Pull request inspection on ${{ github.event.number }}
 
+permissions:
+  contents: read
+
 on:
   pull_request:
     branches:

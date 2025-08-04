@@ -87,6 +87,10 @@ context('Amendments - Application details - application preview page when deal s
         'Any amendments in progress have been abandoned by UKEF, as the deal is now cancelled.',
       );
     });
+
+    it('should not display the amendments abandoned deal pending cancellation banner', () => {
+      applicationPreview.amendmentsAbandonedDealPendingCancellationBanner().should('not.exist');
+    });
   });
 
   describe('Checker', () => {
@@ -115,6 +119,10 @@ context('Amendments - Application details - application preview page when deal s
         applicationPreview.amendmentsAbandonedDealCancelledBanner(),
         'Any amendments in progress have been abandoned by UKEF, as the deal is now cancelled.',
       );
+    });
+
+    it('should not display the amendments abandoned deal pending cancellation banner', () => {
+      applicationPreview.amendmentsAbandonedDealPendingCancellationBanner().should('not.exist');
     });
   });
 });

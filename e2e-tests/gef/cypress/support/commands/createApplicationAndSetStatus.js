@@ -5,11 +5,11 @@ import { BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
  * createApplicationAndSetStatus
  * creates an application with facilities and sets a new status
  * returns the updated deal
- * @param {Object} mockDeal
- * @param {Object} mockCashFacility
- * @param {Object} mockContingentFacility
+ * @param {object} mockDeal
+ * @param {object} mockCashFacility
+ * @param {object} mockContingentFacility
  * @param {string} dealStatus
- * @returns {Promise<Object>} updated deal
+ * @returns {Promise<object>} updated deal
  */
 
 let token;

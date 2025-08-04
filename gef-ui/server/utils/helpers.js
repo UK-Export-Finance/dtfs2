@@ -137,7 +137,7 @@ const returnToMakerNoFacilitiesChanged = (app, hasChangedFacilities) => {
   );
 };
 /**
- * @param {Object} params
+ * @param {object} params
  * @param {string} params.href - the URL to navigate to
  * @param {string} params.visuallyHiddenText - the visually hidden label to make it clear to a screen reader what the link is changing
  * @param {string | undefined} params.text - the text to display, component has class display-none if falsy
@@ -358,11 +358,11 @@ const summaryItemsConditions = (summaryItemsObj) => {
 /**
  * Maps the summary list for facility summary lists on the application details page.
  * Generates key, values and actions for each row in the summary list.
- * @param {Object} data - facility data
+ * @param {object} data - facility data
  * @param {Array} itemsToShow rows to show in the summary list
- * @param {Object} mapSummaryParams - summary list parameters
+ * @param {object} mapSummaryParams - summary list parameters
  * @param {Record<string, PortalFacilityAmendment>} latestAmendments - object with the latest amendment for each facility.
- * @param {Boolean} preview if application is in preview mode - defaults to false
+ * @param {boolean} preview if application is in preview mode - defaults to false
  * @returns {Array} Mapped summary list for the facility - Array of objects with key, value and actions.
  */
 const mapSummaryList = (data, itemsToShow, mapSummaryParams, latestAmendments, preview = false) => {
@@ -542,7 +542,7 @@ const commentsPresent = (app) => {
 /**
  * Determines whether task comments should be displayed based on the application's state and user permissions.
  *
- * @param {Object} app - The application object containing status, ukefDecision, and other relevant properties.
+ * @param {object} app - The application object containing status, ukefDecision, and other relevant properties.
  * @param {boolean} canIssueFacilities - Indicates if the user has permission to issue facilities.
  * @returns {boolean} True if task comments should be displayed, otherwise false.
  */
@@ -605,7 +605,7 @@ const getCurrentTimePlusMinutes = (minutesToAdd = 0) => new Date(new Date().getT
  * used to display supporting info change or add links
  * should be hidden if checker/MIA/AIN and returning to maker
  * logic done in nunjucks template so needs this function
- * @param {Object} application
+ * @param {object} application
  * @param {boolean} preview
  * @returns {boolean}
  */

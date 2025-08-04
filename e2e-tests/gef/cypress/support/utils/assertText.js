@@ -1,7 +1,7 @@
 /**
  * assertText
  * Check an element's text
- * @param {Object} selector: Cypress selector
+ * @param {object} selector: Cypress selector
  * @param {string} expected: Expected text
  */
 const assertText = (selector, expected) => {

@@ -209,8 +209,8 @@ const submitDealAfterUkefIds = (dealId, dealType, checker, token) =>
  *
  * @param {string} dealId - The unique Mongo deal ID of the deal to update.
  * @param {string} token - The authorization token for the API request.
- * @param {Object} body - The request payload containing updated deal data.
- * @returns {Cypress.Chainable<Object>} The Cypress chainable containing the response body.
+ * @param {object} body - The request payload containing updated deal data.
+ * @returns {Cypress.Chainable<object>} The Cypress chainable containing the response body.
  */
 const updateTfmDeal = (dealId, token, body) =>
   cy
