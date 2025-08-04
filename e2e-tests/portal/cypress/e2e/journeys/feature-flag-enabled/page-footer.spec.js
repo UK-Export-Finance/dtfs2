@@ -5,7 +5,7 @@ const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('portal GovUK footer', () => {
+context('Portal GovUK footer', () => {
   beforeEach(() => {
     login.visit();
   });

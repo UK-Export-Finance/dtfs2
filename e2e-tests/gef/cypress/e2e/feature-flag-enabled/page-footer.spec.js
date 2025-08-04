@@ -4,7 +4,7 @@ const MOCK_USERS = require('../../../../e2e-fixtures/portal-users.fixture');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('portal GovUK footer', () => {
+context('Portal GovUK footer', () => {
   beforeEach(() => {
     cy.saveSession();
 
