@@ -29,7 +29,7 @@ exports.findMandatoryCriteria = findMandatoryCriteria;
 
 /**
  * Retrieves a specific mandatory criteria version by its ID.
- * @param {String} id - The ID of the mandatory criteria to retrieve.
+ * @param {string} id - The ID of the mandatory criteria to retrieve.
  * @param {Function} callback - Callback function to process the retrieved mandatory criteria.
  * @throws {Error} - If the provided ID is invalid.
  */
@@ -49,8 +49,8 @@ const findOneMandatoryCriteria = async (id, callback) => {
 
 /**
  * Creates a new mandatory criteria version.
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
+ * @param {object} req - Express request object.
+ * @param {object} res - Express response object.
  * @returns {Promise<Express.Response>} - Returns the ID of the inserted mandatory criteria on success, or an error message on failure.
  */
 exports.create = async (req, res) => {
@@ -75,8 +75,8 @@ exports.create = async (req, res) => {
 
 /**
  * Retrieves all mandatory criteria and sends them in a response.
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
+ * @param {object} req - Express request object.
+ * @param {object} res - Express response object.
  */
 exports.findAll = (req, res) =>
   findMandatoryCriteria((mandatoryCriteria) =>
@@ -89,15 +89,15 @@ exports.findAll = (req, res) =>
 
 /**
  * Retrieves a specific mandatory criteria by ID and sends it in a response.
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
+ * @param {object} req - Express request object.
+ * @param {object} res - Express response object.
  */
 exports.findOne = (req, res) => findOneMandatoryCriteria(req.params.id, (mandatoryCriteria) => res.status(200).send(mandatoryCriteria));
 
 /**
  * Retrieves the latest mandatory criteria and sends it in a response.
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
+ * @param {object} req - Express request object.
+ * @param {object} res - Express response object.
  */
 exports.findLatest = async (req, res) => {
   const criteria = await api.findLatestGefMandatoryCriteria();
@@ -109,8 +109,8 @@ exports.findLatest = async (req, res) => {
 
 /**
  * Deletes a mandatory criteria version.
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
+ * @param {object} req - Express request object.
+ * @param {object} res - Express response object.
  * @returns {Promise<Express.Response>} - Returns the result of the deletion operation on success, or an error message on failure.
  * @throws {Error} - If the provided ID is invalid or the document cannot be deleted.
  */

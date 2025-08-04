@@ -5,7 +5,7 @@ const { BANK1_MAKER1 } = MOCK_USERS;
 /**
  * Fills out the deal details form with the provided information.
  *
- * @param {Object} params - The parameters for filling out the deal details.
+ * @param {object} params - The parameters for filling out the deal details.
  * @param {string} params.dealSubmissionType - The type of DealSubmissionType from ukef common.
  * @param {typeof FACILITY_STAGE.ISSUED | typeof FACILITY_STAGE.UNISSUED} - The stage of the facility.
  * @param {string} params.exporterCompanyName - The name of the exporter company.
@@ -37,7 +37,7 @@ const createBssEwcsDeal = () => {
 
 /**
  * Completes the additional fields for a BSS/EWCS deal.
- * @param {Object} params - The parameters for filling out the deal details.
+ * @param {object} params - The parameters for filling out the deal details.
  * @param {string} params.dealSubmissionType - The type of deal submission.
  * @param {typeof FACILITY_STAGE.ISSUED | typeof FACILITY_STAGE.UNISSUED} params.facilityStage - The stage of the facility.
  * @param {string} params.exporterCompanyName - The name of the exporter company.

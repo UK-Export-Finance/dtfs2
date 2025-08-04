@@ -65,7 +65,7 @@ const updateWithCurrentPasswordRules = [...updateWithoutCurrentPasswordRules, cu
  *
  * @param {Array<Function>} ruleset - An array of validation rule functions to apply.
  * @param {Object|null} existingUser - The existing user data, or null if creating a new user.
- * @param {Object} candidateChange - The candidate change data to validate.
+ * @param {object} candidateChange - The candidate change data to validate.
  * @returns {Promise<Array<string>>} A promise that resolves to an array of validation error messages.
  */
 const applyRules = async (ruleset, candidateChange, existingUser = null) => {
@@ -86,7 +86,7 @@ const applyRules = async (ruleset, candidateChange, existingUser = null) => {
 /**
  * Applies the creation rules to the candidate change.
  *
- * @param {Object} candidateChange - The candidate change data to validate.
+ * @param {object} candidateChange - The candidate change data to validate.
  * @returns {Promise<Array<string>>} A promise that resolves to an array of validation error messages.
  */
 const applyCreateRules = async (candidateChange) => await applyRules(createRules, candidateChange);
@@ -96,8 +96,8 @@ const applyCreateRules = async (candidateChange) => await applyRules(createRules
  *
  * Selects the appropriate set of rules based on whether the current password is provided.
  *
- * @param {Object} existingUser - The existing user data.
- * @param {Object} candidateChange - The candidate change data to validate.
+ * @param {object} existingUser - The existing user data.
+ * @param {object} candidateChange - The candidate change data to validate.
  * @returns {Promise<Array<string>>} A promise that resolves to an array of validation error messages.
  */
 const applyUpdateRules = async (existingUser, candidateChange) => {

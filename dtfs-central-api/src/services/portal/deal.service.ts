@@ -115,7 +115,7 @@ export class PortalDealService {
    * This function is executed for a future deal cancellation
    * effective date.
    *
-   * @param {Object} params - The parameters for adding the activity.
+   * @param {object} params - The parameters for adding the activity.
    * @param {ObjectId | string} params.dealId - The ID of the deal.
    * @param {DealType} params.dealType - The type of the deal.
    * @param {ActivityAuthor} params.author - The author of the activity.
@@ -158,7 +158,7 @@ export class PortalDealService {
    * This function is executed either for a present or a past deal cancellation
    * effective date.
    *
-   * @param {Object} params - The parameters for adding the activity.
+   * @param {object} params - The parameters for adding the activity.
    * @param {ObjectId | string} params.dealId - The ID of the deal.
    * @param {DealType} params.dealType - The type of the deal.
    * @param {ActivityAuthor} params.author - The author of the activity.

@@ -1,11 +1,11 @@
-const page = require('../pages/header');
-const relative = require('../relativeURL');
-const { dashboardDeals } = require('../pages');
-const MOCK_USERS = require('../../../../e2e-fixtures');
+const page = require('../../pages/header');
+const relative = require('../../relativeURL');
+const { dashboardDeals } = require('../../pages');
+const MOCK_USERS = require('../../../../../e2e-fixtures');
 
 const { BANK1_MAKER1, BANK1_CHECKER1, ADMIN, BANK1_PAYMENT_REPORT_OFFICER1, READ_ONLY } = MOCK_USERS;
 
-context('portal GovUK header', () => {
+context('Portal GovUK header', () => {
   beforeEach(() => {
     cy.saveSession();
 
@@ -386,9 +386,12 @@ context('portal GovUK header', () => {
     it('should display all the payment report officer service navigation links', () => {
       page.uploadReport().should('exist');
       page.previousReport().should('exist');
-      page.recordCorrectionLog().should('exist');
       page.profile().should('exist');
       page.logout().should('exist');
+    });
+
+    it('should not display the record correction log link in service navigation when fee record correction is disabled', () => {
+      page.recordCorrectionLog().should('not.exist');
     });
 
     it('should ensure the beta banner component exist', () => {

@@ -4,9 +4,9 @@ const { formatFilenameForSharepoint } = require('../../../utils');
 
 /**
  * Saves file to Azure in utilisation-reports ShareClient, returns the file storage info
- * @param {Object} file
+ * @param {object} file
  * @param {string} bankId - bank id as a string
- * @returns {Promise<Object>} - azure storage details with folder, file name, full path, url and mimetype.
+ * @returns {Promise<object>} - azure storage details with folder, file name, full path, url and mimetype.
  */
 export const saveUtilisationReportFileToAzure = async (file, bankId) => {
   try {

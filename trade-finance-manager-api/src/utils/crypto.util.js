@@ -53,7 +53,7 @@ function genPasswordResetToken(user) {
 }
 
 /**
- * @param {Object} user - The user object.  We need this to set the JWT `sub` payload property to the MongoDB user ID
+ * @param {object} user - The user object.  We need this to set the JWT `sub` payload property to the MongoDB user ID
  */
 function issueJWT(user) {
   const { _id } = user;

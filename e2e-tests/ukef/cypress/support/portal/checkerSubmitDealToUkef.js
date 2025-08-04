@@ -5,7 +5,7 @@ const { BANK1_CHECKER1 } = MOCK_USERS;
 
 /**
  * Login as a checker and submit a deal to ukef
- * @param {Object} deal
+ * @param {object} deal
  */
 export const checkerSubmitDealToUkef = (deal) => {
   cy.login(BANK1_CHECKER1);

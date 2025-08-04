@@ -75,11 +75,11 @@ function buildHeader(app) {
  *
  * @async
  * @function buildBody
- * @param {Object} app - The application object containing all deal and facility data.
+ * @param {object} app - The application object containing all deal and facility data.
  * @param {Record<string, PortalFacilityAmendment>} latestAmendments - object with the latest amendment for each facility.
  * @param {boolean} previewMode - Indicates if the application is in preview mode.
- * @param {Object} user - The user object representing the current user.
- * @returns {Promise<Object>} The constructed application body object with all relevant details for rendering.
+ * @param {object} user - The user object representing the current user.
+ * @returns {Promise<object>} The constructed application body object with all relevant details for rendering.
  */
 const buildBody = async (app, latestAmendments, previewMode, user) => {
   try {
@@ -194,11 +194,11 @@ const buildBody = async (app, latestAmendments, previewMode, user) => {
 /**
  * Builds an object representing available actions for a given application.
  *
- * @param {Object} app - The application object.
+ * @param {object} app - The application object.
  * @param {boolean} app.canSubmit - Indicates if the application can be submitted.
  * @param {string[]} [app.userRoles] - Array of user roles associated with the application.
  * @param {string} app.status - Current status of the application.
- * @returns {Object} Actions object with boolean flags for each action.
+ * @returns {object} Actions object with boolean flags for each action.
  * @returns {boolean} return.submit - Whether the submit action is available.
  * @returns {boolean} return.abandon - Whether the abandon action is available.
  */
@@ -214,11 +214,11 @@ const buildActions = (app) => {
  *
  * @async
  * @function
- * @param {Object} app - The application data object.
+ * @param {object} app - The application data object.
  * @param {Record<string, PortalFacilityAmendment>} latestAmendments - object with the latest amendment for each facility.
  * @param {boolean} previewMode - Flag indicating if the view is in preview mode.
- * @param {Object} user - The user object requesting the view.
- * @returns {Promise<Object>} The combined view object containing header, body, and actions.
+ * @param {object} user - The user object requesting the view.
+ * @returns {Promise<object>} The combined view object containing header, body, and actions.
  */
 const buildView = async (app, latestAmendments, previewMode, user) => {
   try {

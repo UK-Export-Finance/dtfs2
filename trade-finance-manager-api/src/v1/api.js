@@ -192,11 +192,11 @@ const findOneDeal = async (dealId) => {
 };
 
 /**
- * @param {Object} params
+ * @param {object} params
  * @param {string} params.dealId - deal to update
- * @param {Object} params.dealUpdate - update to make
+ * @param {object} params.dealUpdate - update to make
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
- * @typedef {Object} ErrorParam
+ * @typedef {object} ErrorParam
  * @property {string} message error message
  * @property {number} status HTTP status code
  * @param {(Error: ErrorParam) => any} params.onError
@@ -276,7 +276,7 @@ const submitDeal = async (dealType, dealId, auditDetails) => {
 
 /**
  * Updates the deal cancellation object on a TFM AIN or MIN deal
- * @param {Object} params
+ * @param {object} params
  * @param {string} params.dealId - deal cancellation to update
  * @param {Partial<import('@ukef/dtfs2-common').TfmDealCancellation>} params.dealCancellationUpdate - deal cancellation update to make
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
@@ -335,7 +335,7 @@ const getDealCancellation = async (dealId) => {
 
 /**
  * Deletes the deal cancellation object on a deal
- * @param {Object} params
+ * @param {object} params
  * @param {string} params.dealId - deal cancellation to update
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
  * @returns {Promise<void>} update result object
@@ -364,7 +364,7 @@ const deleteDealCancellation = async ({ dealId, auditDetails }) => {
 
 /**
  * Submits the deal cancellation
- * @param {Object} params
+ * @param {object} params
  * @param {string} params.dealId - id of deal to cancel
  * @param {import('@ukef/dtfs2-common').TfmDealCancellation} params.cancellation - the cancellation details to submit
  * @param {import('@ukef/dtfs2-common').AuditDetails} params.auditDetails - user making the request
@@ -864,7 +864,7 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
  * @param {string} companyRegNo Party URN
  * @param {string} companyName Company name
  * @param {string} probabilityOfDefault Probability of default
- * @returns {Promise<Object>} Company information
+ * @returns {Promise<object>} Company information
  */
 const getOrCreatePartyDbInfo = async ({ companyRegNo, companyName, probabilityOfDefault }) => {
   try {
@@ -889,7 +889,7 @@ const getOrCreatePartyDbInfo = async ({ companyRegNo, companyName, probabilityOf
 /**
  * Get company information from Party URN
  * @param {number} partyUrn Party URN
- * @returns {Promise<Object>} Company information
+ * @returns {Promise<object>} Company information
  */
 const getCompanyInfo = async (partyUrn) => {
   try {
@@ -1149,8 +1149,8 @@ const issueACBSfacility = async (facility, deal) => {
 /**
  * ACBS facility amendment
  * @param {string} ukefFacilityId UKEF Facility ID
- * @param {Object} amendments Facility object comprising of amendments
- * @returns {Promise<Object>} updated FMR upon success otherwise error
+ * @param {object} amendments Facility object comprising of amendments
+ * @returns {Promise<object>} updated FMR upon success otherwise error
  */
 const amendACBSfacility = async (amendments, facility, deal) => {
   if (amendments && facility.facilitySnapshot) {
@@ -1195,8 +1195,8 @@ const getFunctionsAPI = async (url = '') => {
  * An external API call, responsible for creating
  * eStore site, directories and documents (if applicable).
  * Upon any exception an empty object is returned.
- * @param {Object} data eStore API object
- * @returns {Promise<Object>} eStore API response object
+ * @param {object} data eStore API object
+ * @returns {Promise<object>} eStore API response object
  */
 const createEstoreSite = async (data) => {
   try {
@@ -1393,7 +1393,7 @@ const findBankById = async (bankId) => {
 };
 
 /**
- * @typedef {Object} GetBanksQuery
+ * @typedef {object} GetBanksQuery
  * @property {boolean | undefined} includeReportingYears - Whether or not to include the bank reporting years
  */
 

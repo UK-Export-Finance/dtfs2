@@ -13,9 +13,9 @@ const { ROLES, DEAL_SUBMISSION_TYPE, ACBS_FACILITY_STAGE } = require('@ukef/dtfs
  * - The deal submission type is AIN, or
  * - The deal submission type is MIN and has been approved by UKEF.
  *
- * @param {Object} params - The parameters object.
- * @param {Object} params.portalDeal - The portal deal object, containing user roles and submission type.
- * @param {Object} params.tfmDeal - The TFM deal object, containing ACBS facility information.
+ * @param {object} params - The parameters object.
+ * @param {object} params.portalDeal - The portal deal object, containing user roles and submission type.
+ * @param {object} params.tfmDeal - The TFM deal object, containing ACBS facility information.
  * @param {boolean} params.unissuedFacilitiesPresent - Indicates if there are unissued facilities.
  * @param {Array} params.canResubmitIssueFacilities - Array indicating if facilities can be resubmitted.
  * @param {boolean} params.hasUkefDecisionAccepted - Indicates if the UKEF decision has been accepted.

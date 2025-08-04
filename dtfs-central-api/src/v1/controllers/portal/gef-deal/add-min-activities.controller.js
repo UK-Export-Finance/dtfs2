@@ -12,7 +12,7 @@ const { isNumber } = require('../../../../helpers');
 
 /**
  * canResubmitIssuedFacilities - changes flags to false
- * @param {Object} facilities
+ * @param {object} facilities
  */
 const updateChangedToIssued = async ({ facilities, auditDetails }) => {
   await Promise.all(
@@ -74,7 +74,7 @@ const portalActivityGenerator = (activityParams) => {
 /**
  * For facilities changed to issued
  * adds to front of portalActivity array in correct format
- * @param {Object} application
+ * @param {object} application
  * @param {Array} facilities
  * @returns {Promise<Array>} portalActivities
  */
@@ -117,7 +117,7 @@ const facilityChangePortalActivity = async (application, facilities) => {
 /**
  * Generates activity for MIN submission to UKEF
  * Adds to front of portalActivities array in correct format
- * @param {Object} application
+ * @param {object} application
  * @returns {Promise<Array>} portalActivities
  */
 const ukefSubmissionPortalActivity = async (application) => {
@@ -158,8 +158,8 @@ const ukefSubmissionPortalActivity = async (application) => {
  * Generates MIN Activity objects for submission and changed facilities
  * Removes flag for changedToIssued facility
  * Returns updated deal
- * @param {Object} req
- * @param {Object} res
+ * @param {object} req
+ * @param {object} res
  */
 const generateMINActivities = async (req, res) => {
   const {

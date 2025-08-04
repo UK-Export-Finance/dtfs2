@@ -13,7 +13,7 @@ const checkType = (type) => {
 
 class Facility {
   /**
-   * @param {Object} req - The facility properties to create/update
+   * @param {object} req - The facility properties to create/update
    * @param {number | undefined} dealVersion
    * @throws {import('@ukef/dtfs2-common').ApiError} - if facility end date parameters are invalid
    * @throws {InvalidParameterError} - if `facilityEndDate` is defined & is not a ISO-8601 date string

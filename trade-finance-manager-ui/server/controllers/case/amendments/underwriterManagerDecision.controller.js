@@ -6,8 +6,8 @@ const { userCanEditManagersDecision } = require('../../helpers');
 const { amendmentUnderwriterManagerDecisionValidation } = require('./validation/amendmentUnderwriterManagerDecision.validate');
 
 /**
- * @param {Object} req
- * @param {Object} res
+ * @param {object} req
+ * @param {object} res
  * renders first page of amendment managers decision if can be edited by user
  */
 const getAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res) => {

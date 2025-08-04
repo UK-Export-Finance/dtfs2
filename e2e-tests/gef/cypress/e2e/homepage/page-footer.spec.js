@@ -1,13 +1,14 @@
 const page = require('../pages/footer');
 const relative = require('../relativeURL');
-const { login, dashboardDeals } = require('../pages');
-const MOCK_USERS = require('../../../../e2e-fixtures');
+const MOCK_USERS = require('../../../../e2e-fixtures/portal-users.fixture');
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('portal GovUK footer', () => {
+context('Portal GovUK footer', () => {
   beforeEach(() => {
-    login.visit();
+    cy.saveSession();
+
+    cy.visit(relative('/gef/mandatory-criteria'));
   });
 
   describe('signed-out user footer', () => {
@@ -35,8 +36,8 @@ context('portal GovUK footer', () => {
     before(() => {
       cy.login(BANK1_MAKER1);
 
-      dashboardDeals.visit();
-      cy.url().should('eq', relative('/dashboard/deals/0'));
+      cy.visit(relative('/gef/mandatory-criteria'));
+      cy.url().should('eq', relative('/gef/mandatory-criteria'));
     });
 
     it('should ensure the footer component exist', () => {

@@ -14,7 +14,7 @@ const amendmentChangeValueExportCurrency = (amendment) => {
 };
 
 /**
- * @typedef {Object} LatestCompletedAmendment
+ * @typedef {object} LatestCompletedAmendment
  * @property {{ currency: import('@ukef/dtfs2-common').Currency, value: number }} [value]
  * @property {import('@ukef/dtfs2-common').UnixTimestamp} [coverEndDate]
  * @property {number} [amendmentExposurePeriodInMonths]

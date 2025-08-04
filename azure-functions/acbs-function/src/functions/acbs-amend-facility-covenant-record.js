@@ -35,13 +35,13 @@ const mappings = require('../../mappings');
  * 2. Maps the amendments to the facility covenant record.
  * 3. Updates the facility covenant record in the ACBS system.
  *
- * @param {Object} context - The context object provided by Durable Functions.
- * @param {Object} context.df - The Durable Functions context.
- * @param {Object} context.df.input - The input payload containing the facility ID and amendments.
+ * @param {object} context - The context object provided by Durable Functions.
+ * @param {object} context.df - The Durable Functions context.
+ * @param {object} context.df.input - The input payload containing the facility ID and amendments.
  * @param {string} context.df.input.facilityIdentifier - The ID of the facility to be amended.
- * @param {Object} context.df.input.amendments - The amendments to be applied.
- * @param {Object} context.df.input.amendments.amendment - The specific amendment details.
- * @returns {Object} - The result of the facility covenant record amendment.
+ * @param {object} context.df.input.amendments - The amendments to be applied.
+ * @param {object} context.df.input.amendments.amendment - The specific amendment details.
+ * @returns {object} - The result of the facility covenant record amendment.
  * @throws {Error} - Throws an error if the input payload is invalid or if there is an error during the amendment process.
  */
 df.app.orchestration('acbs-amend-facility-covenant-record', function* amendFacilityCovenant(context) {

@@ -13,8 +13,8 @@ const { stripCommas, getMaximumLiability, filterTask } = require('../../data-mig
 // ******************** DEALS *************************
 /**
  * Return all the TFM deals with `MIA/MIN` filter.
- * @param {Object} filter Mongo filter
- * @returns {Object} Collection object
+ * @param {object} filter Mongo filter
+ * @returns {object} Collection object
  */
 const getTfmDeals = () =>
   getCollection(CONSTANTS.DATABASE.TABLES.TFM_DEAL, {
