@@ -2,7 +2,7 @@
 # *******************
 #
 # This GitHub Actions workflow automates the deployment process for web apps and Azure Functions to Azure.
-# It is triggered when on base default branch i.e. `main` at every day at midnight. The workflow runs after a successful QAT workflow
+# It is triggered when on base default branch i.e. `main` at every day at midnight. The workflow runs after a successful Quality Assurance - Tests workflow
 # completion and includes the following key steps:
 #
 # Key Stages:
@@ -12,7 +12,7 @@
 # 4. Function Deployment: Sequentially deploys a list of functions (e.g., `acbs-function`) to Azure.
 #
 # Key Points:
-# - The workflow runs only after a successful QAT workflow.
+# - The workflow runs only after a successful Quality Assurance - Tests workflow.
 # - The deployment environment is specified via environment variables (e.g., `dev`, `staging`, `prod`).
 # - Matrix strategies are used for iterative deployment across multiple web apps and functions.
 # - Temporary deployment slots are used to minimize downtime during deployments.
