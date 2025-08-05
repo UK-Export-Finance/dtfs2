@@ -6,16 +6,16 @@ describe('calculate-gef-facility-fee-record', () => {
   const mockType = FACILITY_TYPE.CASH;
 
   // Drawn amount
-  const mockFacilityValue = 150000;
-  const mockCoverPercentage = 20;
+  const mockFacilityValue = 80000;
+  const mockCoverPercentage = 80;
 
   // Days of cover
-  const mockCoverStartDate = '1636379303330';
-  const mockCoverEndDate = '1701388800000';
+  const mockCoverStartDate = '1744066800000';
+  const mockCoverEndDate = '1901833200000';
 
   // Fee amount
-  const mockInterestPercentage = 5;
-  const mockGuaranteeFee = 3.6;
+  const mockInterestPercentage = 7.2;
+  const mockGuaranteeFee = 6.91;
   const mockDayBasis = 365;
 
   describe('calculateDaysOfCover', () => {
@@ -46,6 +46,7 @@ describe('calculate-gef-facility-fee-record', () => {
   describe('calculateGefFacilityFeeRecord', () => {
     it('should return result of all calculations passed to calculateFeeAmount', () => {
       const mockFacility = {
+        type: FACILITY_TYPE.CASH,
         hasBeenIssued: true,
         interestPercentage: mockInterestPercentage,
         guaranteeFee: mockGuaranteeFee,
