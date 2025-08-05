@@ -1,18 +1,21 @@
 const { differenceInDays } = require('date-fns');
-const { calculateDrawnAmount } = require('@ukef/dtfs2-common');
-const { calculateDaysOfCover, calculateFeeAmount, calculateGefFacilityFeeRecord } = require('@ukef/dtfs2-common');
+const { calculateDaysOfCover, calculateFeeAmount, calculateGefFacilityFeeRecord, calculateDrawnAmount, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 
 describe('calculate-gef-facility-fee-record', () => {
-  // for drawn amount
-  const mockFacilityValue = 150000;
-  const mockCoverPercentage = 20;
+  // Facility
+  const mockType = FACILITY_TYPE.CASH;
 
-  // for days of cover
-  const mockCoverStartDate = '1636379303330';
-  const mockCoverEndDate = '1701388800000';
+  // Drawn amount
+  const mockFacilityValue = 80000;
+  const mockCoverPercentage = 80;
 
-  // for fee amount
-  const mockGuaranteeFee = 3.6;
+  // Days of cover
+  const mockCoverStartDate = '1744066800000';
+  const mockCoverEndDate = '1901833200000';
+
+  // Fee amount
+  const mockInterestPercentage = 7.2;
+  const mockGuaranteeFee = 6.91;
   const mockDayBasis = 365;
 
   describe('calculateDaysOfCover', () => {
@@ -32,9 +35,9 @@ describe('calculate-gef-facility-fee-record', () => {
 
       const daysOfCover = calculateDaysOfCover(mockCoverStartDate, mockCoverEndDate);
 
-      const result = calculateFeeAmount(drawnAmount, daysOfCover, mockDayBasis, mockGuaranteeFee);
+      const result = calculateFeeAmount(drawnAmount, daysOfCover, mockDayBasis, mockInterestPercentage);
 
-      const expected = (drawnAmount * daysOfCover * (mockGuaranteeFee / 100)) / mockDayBasis;
+      const expected = (drawnAmount * daysOfCover * (mockInterestPercentage / 100)) / mockDayBasis;
 
       expect(result).toEqual(expected);
     });
@@ -43,7 +46,9 @@ describe('calculate-gef-facility-fee-record', () => {
   describe('calculateGefFacilityFeeRecord', () => {
     it('should return result of all calculations passed to calculateFeeAmount', () => {
       const mockFacility = {
+        type: FACILITY_TYPE.CASH,
         hasBeenIssued: true,
+        interestPercentage: mockInterestPercentage,
         guaranteeFee: mockGuaranteeFee,
         dayCountBasis: mockDayBasis,
         value: mockFacilityValue,
@@ -54,9 +59,9 @@ describe('calculate-gef-facility-fee-record', () => {
 
       const result = calculateGefFacilityFeeRecord(mockFacility);
 
-      const drawnAmount = calculateDrawnAmount(mockFacilityValue, mockCoverPercentage, mockGuaranteeFee);
+      const drawnAmount = calculateDrawnAmount(mockFacilityValue, mockCoverPercentage, mockType);
       const daysOfCover = calculateDaysOfCover(mockCoverStartDate, mockCoverEndDate);
-      const expected = calculateFeeAmount(drawnAmount, daysOfCover, mockFacility.dayCountBasis, mockGuaranteeFee);
+      const expected = calculateFeeAmount(drawnAmount, daysOfCover, mockFacility.dayCountBasis, mockInterestPercentage);
 
       expect(result).toEqual(expected);
     });
