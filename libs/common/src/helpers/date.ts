@@ -9,6 +9,10 @@ import { IsoDateTimeStamp, OneIndexedMonth, UnixTimestampSeconds } from '../type
  */
 export const now = (): Date => new Date();
 
+/**
+ * Sets the seconds and milliseconds of the current date to zero.
+ * @returns The current date and time in EPOCH, with seconds and milliseconds set to zero.
+ */
 export const nowZeroSeconds = (): number => now().setSeconds(0, 0);
 
 /**

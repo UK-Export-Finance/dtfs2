@@ -1,6 +1,11 @@
 import { ObjectId, Document } from 'mongodb';
 import { TFM_AMENDMENT_STATUS, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 
+/**
+ * Generates the query to get the latest completed value amendment for a facility
+ * @param facilityId The ID of the facility
+ * @returns Query to get an array of documents representing the latest completed value amendment
+ */
 export const latestCompletedValueAmendment = (facilityId: string | ObjectId): Document[] => [
   { $match: { _id: { $eq: new ObjectId(facilityId) } } },
   { $unwind: '$amendments' },

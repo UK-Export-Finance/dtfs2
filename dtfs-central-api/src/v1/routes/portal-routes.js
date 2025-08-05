@@ -594,11 +594,11 @@ portalRouter
 
 /**
  * @openapi
- * /facilities/:facilityId/amendments/acknowledged:
+ * /facilities/:facilityId/amendments/latest-value-and-cover-end-date:
  *   get:
- *     summary: Get all acknowledged amendments for a facility
+ *     summary: Get the latest value and cover end date values for a facility from the latest amendment for either
  *     tags: [Portal - Amendments]
- *     description:  Get all acknowledged amendments for a facility
+ *     description:  Get the latest value and cover end date values for a facility from the latest amendment for either
  *     parameters:
  *       - in: path
  *         name: facilityId
@@ -612,7 +612,7 @@ portalRouter
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/definitions/PortalAmendment'
+ *                $ref: '#/definitions/LatestAmendmentValueAndCoverEndDate'
  *       400:
  *         description: Invalid facilityId
  *       500:
