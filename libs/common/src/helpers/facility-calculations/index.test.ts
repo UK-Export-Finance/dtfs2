@@ -324,10 +324,10 @@ describe('GEF drawn amount', () => {
       const drawnAmount = 100;
       const daysOfCover = 30;
       const dayCountBasis = 365;
-      const guaranteeFee = 1;
+      const interestPercentage = 1;
 
       // Act
-      const response = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, guaranteeFee);
+      const response = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, interestPercentage);
 
       // Assert
       expect(response).toBe(0.0821917808219178);
@@ -338,10 +338,10 @@ describe('GEF drawn amount', () => {
       const drawnAmount = 1000000;
       const daysOfCover = 365;
       const dayCountBasis = 365;
-      const guaranteeFee = 4;
+      const interestPercentage = 4;
 
       // Act
-      const response = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, guaranteeFee);
+      const response = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, interestPercentage);
 
       // Assert
       expect(response).toBe(40000);
@@ -352,10 +352,10 @@ describe('GEF drawn amount', () => {
       const drawnAmount = 0;
       const daysOfCover = 365;
       const dayCountBasis = 365;
-      const guaranteeFee = 2.3;
+      const interestPercentage = 2.3;
 
       // Act
-      const response = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, guaranteeFee);
+      const response = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, interestPercentage);
 
       // Assert
       expect(response).toBe(0);
@@ -417,7 +417,7 @@ describe('GEF drawn amount', () => {
       const response = calculateGefFacilityFeeRecord(facility);
 
       // Assert
-      expect(response).toBe(14009.86301369863);
+      expect(response).toBe(7004.931506849315);
     });
 
     it('should calculate GEF facility fixed fee with only 1 day difference', () => {
@@ -447,7 +447,7 @@ describe('GEF drawn amount', () => {
       const response = calculateGefFacilityFeeRecord(mockFacility);
 
       // Assert
-      expect(response).toBe(0.1400986301369863);
+      expect(response).toBe(0.07004931506849316);
     });
   });
 });
