@@ -63,22 +63,23 @@ const amendmentsPage = {
   amendmentAnswerFacilityValue: () => cy.get('[data-cy="amendment--facility-value-response"]'),
 
   amendmentDetails: {
-    row: (version) => {
-      cy.get(`[data-cy="amendment--details-${version}"]`).as('row');
+    row: (index) => {
+      cy.get(`[data-cy="amendment--details-${index}"]`).as('row');
       return {
-        heading: () => cy.get('@row').get(`[data-cy="amendment--heading-version-${version}"]`),
-        effectiveDate: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-effective-date"]`),
-        bankDecision: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-banks-decision"]`),
+        heading: () => cy.get('@row').get(`[data-cy="amendment--heading-${index}"]`),
+        effectiveDate: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-effective-date"]`),
+        requireApproval: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-require-approval"]`),
+        bankDecision: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-banks-decision"]`),
 
-        ukefDecisionCoverEndDate: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-cover-end-date-decision"]`),
-        currentCoverEndDate: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-current-cover-end-date"]`),
-        newCoverEndDate: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-new-cover-end-date"]`),
+        ukefDecisionCoverEndDate: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-cover-end-date-decision"]`),
+        currentCoverEndDate: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-current-cover-end-date"]`),
+        newCoverEndDate: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-new-cover-end-date"]`),
 
-        ukefDecisionFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-facility-value-decision"]`),
-        currentFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-current-facility-value"]`),
-        newFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-new-facility-value"]`),
+        ukefDecisionFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-facility-value-decision"]`),
+        currentFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-current-facility-value"]`),
+        newFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-new-facility-value"]`),
 
-        bankDecisionTag: () => cy.get('@row').get(`[data-cy="amendment--details-${version}-banks-decision"]`),
+        bankDecisionTag: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-banks-decision"]`),
       };
     },
   },
