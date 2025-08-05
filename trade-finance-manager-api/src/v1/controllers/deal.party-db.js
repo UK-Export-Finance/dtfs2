@@ -1,4 +1,4 @@
-const { isSalesforceCustomerCreationEnabled } = require('@ukef/dtfs2-common');
+const { isSalesforceCustomerCreationEnabled, isCountryUk } = require('@ukef/dtfs2-common');
 
 const api = require('../api');
 
@@ -35,9 +35,11 @@ const getCompany = async (req, res) => {
  * @param {string} companyRegNo The company registration number
  * @param {string} companyName The company name
  * @param {string} probabilityOfDefault The probability of default
+ * @param {boolean} isUkEntity Whether the party source country is UK or not
+ * @param {number} code SIC industry sector code
  * @returns {Promise<string>} PartyURN or '' if there is an error
  */
-const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault }) => {
+const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code }) => {
   if (!companyRegNo) {
     return '';
   }
@@ -49,7 +51,7 @@ const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault }) 
       return '';
     }
 
-    partyDbInfo = await api.getOrCreatePartyDbInfo({ companyRegNo, companyName, probabilityOfDefault });
+    partyDbInfo = await api.getOrCreatePartyDbInfo({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
   } else {
     partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
   }
@@ -73,22 +75,36 @@ const identifyDealParties = (deal) => ({
   hasAgent: Boolean(deal.eligibility && deal.eligibility.agentName),
 });
 
+/**
+ * Adds party URNs to a deal's TFM parties object and updates the deal in the database.
+ *
+ * @async
+ * @function addPartyUrns
+ * @param {object} deal - The deal object to update.
+ * @param {object} auditDetails - Details for auditing the update operation.
+ * @returns {Promise<object|boolean>} The updated deal object with new TFM party URNs, or false if the deal is not provided.
+ */
 const addPartyUrns = async (deal, auditDetails) => {
   if (!deal) {
     return false;
   }
 
   const { hasExporter, hasIndemnifier, hasAgent, hasBuyer } = identifyDealParties(deal);
-  const companyRegNo = deal.exporter.companiesHouseRegistrationNumber;
-  const { companyName } = deal.exporter;
-  const { probabilityOfDefault } = deal.exporter;
+  const {
+    companiesHouseRegistrationNumber: companyRegNo,
+    companyName,
+    probabilityOfDefault,
+    selectedIndustry: { code },
+  } = deal.exporter;
+
+  const isUkEntity = isCountryUk(deal.exporter.registeredAddress.country);
 
   const dealUpdate = {
     tfm: {
       ...deal.tfm,
       parties: {
         exporter: {
-          partyUrn: await getPartyUrn({ companyRegNo, companyName, probabilityOfDefault }),
+          partyUrn: await getPartyUrn({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code }),
           partyUrnRequired: hasExporter,
         },
         buyer: {

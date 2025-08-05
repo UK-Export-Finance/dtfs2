@@ -360,39 +360,47 @@ apiRoutes.get('/party-db/:partyDbCompanyRegistrationNumber', partyDb.lookup);
 
 /**
  * @openapi
- * /party-db/:partyDbCompanyRegistrationNumber:
+ * /party-db:
  *   post:
- *     summary: Get a UKEF party from Salesforce, or create it if it doesn't exist
+ *     summary: Get or create a UKEF party in Party DB
  *     tags: [APIM, Salesforce]
- *     description: We only consume the Companies House number and company name. Not all fields are in the response example.
- *     parameters:
- *       - in: path
- *         name: partyDbCompanyRegistrationNumber
- *         schema:
- *           type: string
- *           example: '12341234'
- *         required: true
- *         description: Companies House Registration Number for UKEF Party creation
+ *     description: Creates or retrieves a UKEF party (customer) in the Party DB. Validates company registration number and name, and uses industry sector code to map ACBS/UKEF industry IDs.
  *     requestBody:
  *       required: true
- *       description: Company fields
  *       content:
  *         application/json:
  *           schema:
  *             type: object
  *             properties:
+ *               companyRegNo:
+ *                 type: string
+ *                 description: Companies House registration number
+ *                 example: "12345678"
  *               companyName:
  *                 type: string
- *                 example: 'Some Name'
+ *                 description: Company name
+ *                 example: "Some Name Ltd"
+ *               probabilityOfDefault:
+ *                 type: number
+ *                 description: Probability of default
+ *                 example: 0.01
+ *               isUkEntity:
+ *                 type: boolean
+ *                 description: Is UK entity
+ *                 example: true
+ *               code:
+ *                 type: number
+ *                 description: Standard Industrial Classification (SIC) codes https://resources.companieshouse.gov.uk/sic/
+ *                 example: 1008
  *     responses:
  *       200:
- *         description: OK
+ *         description: Party created or retrieved successfully
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/PartyDB'
  *       400:
- *         description: Bad request. Invalid Companies House registration number
+ *         description: Bad request. Invalid company registration number or company name
  *       500:
  *         description: Error getting or creating the party
  */
