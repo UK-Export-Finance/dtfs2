@@ -1,4 +1,4 @@
-import { CustomExpressRequest, HEADERS, isValidCompanyRegistrationNumber } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, HEADERS, isValidCompanyRegistrationNumber, industrySector } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
@@ -70,12 +70,11 @@ export const getOrCreateParty = async (
 
     const industryData = await findACBSIndustrySector(code);
 
-    if (!industryData?.data) {
+    if (!Array.isArray(industryData.data) || !industryData?.data?.length) {
       throw new Error('Unable to get industry sector data');
     }
 
-    const ukefIndustryId = Number(industryData.data[0].acbsIndustryId);
-    const ukefSectorId = Number(industryData.data[0].acbsSectorId);
+    const { acbsIndustryId: ukefIndustryId, acbsSectorId: ukefSectorId } = industryData.data[0] as industrySector;
 
     const response: { status: number; data: unknown } = await axios({
       method: 'post',
@@ -90,7 +89,11 @@ export const getOrCreateParty = async (
         ukefSectorId,
       },
     });
+
+    console.log('===============>', { response });
+
     const { status, data } = response;
+
     return res.status(status).send(data);
   } catch (error) {
     console.error('Error calling Party DB API %o', error);
