@@ -1,17 +1,20 @@
 const { differenceInDays } = require('date-fns');
-const { calculateDrawnAmount } = require('@ukef/dtfs2-common');
-const { calculateDaysOfCover, calculateFeeAmount, calculateGefFacilityFeeRecord } = require('@ukef/dtfs2-common');
+const { calculateDaysOfCover, calculateFeeAmount, calculateGefFacilityFeeRecord, calculateDrawnAmount, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 
 describe('calculate-gef-facility-fee-record', () => {
-  // for drawn amount
+  // Facility
+  const mockType = FACILITY_TYPE.CASH;
+
+  // Drawn amount
   const mockFacilityValue = 150000;
   const mockCoverPercentage = 20;
 
-  // for days of cover
+  // Days of cover
   const mockCoverStartDate = '1636379303330';
   const mockCoverEndDate = '1701388800000';
 
-  // for fee amount
+  // Fee amount
+  const mockInterestPercentage = 5;
   const mockGuaranteeFee = 3.6;
   const mockDayBasis = 365;
 
@@ -32,9 +35,9 @@ describe('calculate-gef-facility-fee-record', () => {
 
       const daysOfCover = calculateDaysOfCover(mockCoverStartDate, mockCoverEndDate);
 
-      const result = calculateFeeAmount(drawnAmount, daysOfCover, mockDayBasis, mockGuaranteeFee);
+      const result = calculateFeeAmount(drawnAmount, daysOfCover, mockDayBasis, mockInterestPercentage);
 
-      const expected = (drawnAmount * daysOfCover * (mockGuaranteeFee / 100)) / mockDayBasis;
+      const expected = (drawnAmount * daysOfCover * (mockInterestPercentage / 100)) / mockDayBasis;
 
       expect(result).toEqual(expected);
     });
@@ -44,6 +47,7 @@ describe('calculate-gef-facility-fee-record', () => {
     it('should return result of all calculations passed to calculateFeeAmount', () => {
       const mockFacility = {
         hasBeenIssued: true,
+        interestPercentage: mockInterestPercentage,
         guaranteeFee: mockGuaranteeFee,
         dayCountBasis: mockDayBasis,
         value: mockFacilityValue,
@@ -54,9 +58,9 @@ describe('calculate-gef-facility-fee-record', () => {
 
       const result = calculateGefFacilityFeeRecord(mockFacility);
 
-      const drawnAmount = calculateDrawnAmount(mockFacilityValue, mockCoverPercentage, mockGuaranteeFee);
+      const drawnAmount = calculateDrawnAmount(mockFacilityValue, mockCoverPercentage, mockType);
       const daysOfCover = calculateDaysOfCover(mockCoverStartDate, mockCoverEndDate);
-      const expected = calculateFeeAmount(drawnAmount, daysOfCover, mockFacility.dayCountBasis, mockGuaranteeFee);
+      const expected = calculateFeeAmount(drawnAmount, daysOfCover, mockFacility.dayCountBasis, mockInterestPercentage);
 
       expect(result).toEqual(expected);
     });
