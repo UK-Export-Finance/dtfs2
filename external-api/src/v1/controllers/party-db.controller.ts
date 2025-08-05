@@ -68,8 +68,14 @@ export const getOrCreateParty = async (
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company name' });
     }
 
-    const industrySector = await findACBSIndustrySector(code);
-    // console.log('=============>', { industrySector });
+    const industryData = await findACBSIndustrySector(code);
+
+    if (!industryData?.data) {
+      throw new Error('Unable to get industry sector data');
+    }
+
+    const ukefIndustryId = Number(industryData.data[0].acbsIndustryId);
+    const ukefSectorId = Number(industryData.data[0].acbsSectorId);
 
     const response: { status: number; data: unknown } = await axios({
       method: 'post',
@@ -80,7 +86,8 @@ export const getOrCreateParty = async (
         companyName,
         probabilityOfDefault,
         isUkEntity,
-        industrySector,
+        ukefIndustryId,
+        ukefSectorId,
       },
     });
     const { status, data } = response;
