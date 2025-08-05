@@ -190,6 +190,7 @@ describe('PortalFacilityAmendmentService', () => {
       const expectedUpdate = {
         status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
         referenceNumber,
+        requestDate,
       };
 
       const now = new Date();

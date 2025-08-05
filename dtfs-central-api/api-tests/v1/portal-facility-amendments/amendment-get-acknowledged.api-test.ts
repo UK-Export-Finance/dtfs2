@@ -139,6 +139,7 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/acknowledged', () => 
           ...portalAmendmentToUkefEmailVariables(),
           bankId,
           bankName,
+          requestDate: 1673728000,
         })
         .to(generateSubmitAmendmentUrl(facilityId, amendmentId));
     });
