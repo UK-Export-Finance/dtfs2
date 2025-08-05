@@ -51,7 +51,7 @@ export const lookup = async (req: Request, res: Response) => {
  */
 export const getOrCreateParty = async (
   req: CustomExpressRequest<{
-    reqBody: { companyRegNo: string; companyName: string; probabilityOfDefault: number; isUkEntity: number; code: number };
+    reqBody: { companyRegNo: string; companyName: string; probabilityOfDefault: number; isUkEntity: boolean; code: number };
   }>,
   res: Response,
 ) => {
@@ -75,6 +75,8 @@ export const getOrCreateParty = async (
     }
 
     const { acbsIndustryId: ukefIndustryId, acbsSectorId: ukefSectorId } = industryData.data[0] as industrySector;
+    // Maps true to `1` and false to `0`
+    const ukEntity = Number(isUkEntity);
 
     const response: { status: number; data: unknown } = await axios({
       method: 'post',
@@ -84,13 +86,11 @@ export const getOrCreateParty = async (
         companyRegistrationNumber,
         companyName,
         probabilityOfDefault,
-        isUkEntity,
+        ukEntity,
         ukefIndustryId,
         ukefSectorId,
       },
     });
-
-    console.log('===============>', { response });
 
     const { status, data } = response;
 

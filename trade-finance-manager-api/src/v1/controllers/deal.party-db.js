@@ -35,7 +35,7 @@ const getCompany = async (req, res) => {
  * @param {string} companyRegNo The company registration number
  * @param {string} companyName The company name
  * @param {string} probabilityOfDefault The probability of default
- * @param {number} isUkEntity Whether the party source country is UK or not
+ * @param {boolean} isUkEntity Whether the party source country is UK or not
  * @param {number} code SIC industry sector code
  * @returns {Promise<string>} PartyURN or '' if there is an error
  */

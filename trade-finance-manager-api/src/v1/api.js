@@ -864,7 +864,7 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
  * @param {string} companyRegNo Party URN
  * @param {string} companyName Company name
  * @param {string} probabilityOfDefault Probability of default
- * @param {number} isUkEntity Whether the party source country is UK or not
+ * @param {boolean} isUkEntity Whether the party source country is UK or not
  * @param {number} code SIC industry sector code
  * @returns {Promise<object>} Company information
  */
