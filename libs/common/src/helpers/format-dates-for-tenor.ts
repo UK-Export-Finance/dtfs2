@@ -1,4 +1,5 @@
 import { format, fromUnixTime } from 'date-fns';
+import { DATE_FORMATS } from '../constants/date-formats';
 import { Facility, FacilityWithStringDealId } from '../types';
 import { dealTypeCoverStartDate } from './deal-type-cover-start-date';
 import { convertUnixTimestampWithoutMilliseconds } from './date';
@@ -31,9 +32,9 @@ export const formatDatesForTenor = (facilitySnapshot: Facility | FacilityWithStr
     }
 
     // formatting for external api call
-    const coverStartDateFormatted = format(new Date(coverStartDate), 'yyyy-MM-dd');
+    const coverStartDateFormatted = format(new Date(coverStartDate), DATE_FORMATS.YYYY_MM_DD);
 
-    const coverEndDateFormatted = format(fromUnixTime(formattedCoverEndDate), 'yyyy-MM-dd');
+    const coverEndDateFormatted = format(fromUnixTime(formattedCoverEndDate), DATE_FORMATS.YYYY_MM_DD);
 
     return {
       facilityType,
