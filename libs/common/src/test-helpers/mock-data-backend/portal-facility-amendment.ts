@@ -3,11 +3,11 @@ import { ObjectId } from 'mongodb';
 import { AMENDMENT_TYPES, CURRENCY, PORTAL_AMENDMENT_STATUS } from '../../constants';
 import { PortalAmendmentStatus, PortalFacilityAmendment } from '../../types';
 import { PortalFacilityAmendmentUserValues } from '../../types/portal/amendment';
-import { getEpochMs } from '../../helpers';
+import { nowZeroSeconds } from '../../helpers';
 
 export const aPortalFacilityAmendmentUserValues = (): PortalFacilityAmendmentUserValues => ({
   changeCoverEndDate: true,
-  coverEndDate: getEpochMs(),
+  coverEndDate: nowZeroSeconds(),
   isUsingFacilityEndDate: true,
   facilityEndDate: new Date(),
   bankReviewDate: null,

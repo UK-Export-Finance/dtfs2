@@ -664,7 +664,7 @@ const getAllPortalFacilityAmendments = async (statuses) => {
 
 /**
  * Gets portal facility amendments on the deal filtered by status
- * @param {string} dealId - id of the facility to amend
+ * @param {string} facilityId - id of the facility to amend
  * @returns {Promise<(import('@ukef/dtfs2-common').LatestAmendmentValueAndCoverEndDate)>} - the amendments on the deal with a matching status
  */
 const getLatestAmendmentFacilityValueAndCoverEndDate = async (facilityId) => {
@@ -677,7 +677,7 @@ const getLatestAmendmentFacilityValueAndCoverEndDate = async (facilityId) => {
 
     return response.data;
   } catch (error) {
-    console.error('Error getting portal facility amendments on deal with id %s: %o', facilityId, error);
+    console.error('Error getting portal facility amendments on facility with id %s: %o', facilityId, error);
     throw error;
   }
 };
