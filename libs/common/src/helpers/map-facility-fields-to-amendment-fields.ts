@@ -1,5 +1,5 @@
-import { fromUnixTime } from 'date-fns';
 import { FacilityAmendment } from '../types';
+import { isFutureEffectiveDate } from './amendment-future-effectiveDate';
 
 type UpdatedFields = {
   coverEndDate?: number | null;
@@ -16,12 +16,13 @@ export const mapFacilityFieldsToAmendmentFields = (amendments: FacilityAmendment
   const updatedFields: UpdatedFields = {};
 
   for (const amendment of amendments) {
-    const today = new Date();
-    const hasFutureEffectiveDate = new Date(fromUnixTime(amendment.effectiveDate ?? 0)) > today;
+    const hasFutureEffectiveDate = amendment.effectiveDate && isFutureEffectiveDate(amendment.effectiveDate);
+
     if (!hasFutureEffectiveDate) {
       if (!updatedFields.coverEndDate && amendment.coverEndDate) {
         updatedFields.coverEndDate = amendment.coverEndDate;
       }
+
       if (!updatedFields.value && amendment.value) {
         updatedFields.value = amendment.value;
       }

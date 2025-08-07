@@ -1,12 +1,12 @@
 import { add, sub, getUnixTime } from 'date-fns';
+import { now } from './date';
 import { mapFacilityFieldsToAmendmentFields } from './map-facility-fields-to-amendment-fields';
 import { aPortalFacilityAmendment } from '../test-helpers/mock-data-backend/portal-facility-amendment';
 import { PORTAL_AMENDMENT_STATUS } from '../constants';
 
 describe('map-facility-fields-to-amendment-fields helper', () => {
-  const today = new Date();
-  const tomorrow = add(today, { days: 1 });
-  const yesterday = sub(today, { days: 1 });
+  const tomorrow = add(now(), { days: 1 });
+  const yesterday = sub(now(), { days: 1 });
   const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED });
 
   const futureValueAmendment = {
