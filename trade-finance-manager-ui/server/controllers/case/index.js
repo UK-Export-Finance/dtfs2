@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const { MONGO_DB_COLLECTIONS, TFM_AMENDMENT_STATUS, FLASH_TYPES } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, FLASH_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const {
   getTask,
@@ -13,7 +13,7 @@ const { formattedNumber } = require('../../helpers/number');
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
 const { filterTasks } = require('../helpers/tasks.helper');
-const { getAmendmentsInProgress } = require('../helpers/amendments.helper');
+const { getAmendmentsInProgressSubmittedByPim, getAmendmentsInProgress } = require('../helpers/amendments.helper');
 const validatePartyURN = require('./parties/partyUrnValidation.validate');
 const { bondType, partyType, userCanEdit } = require('./parties/helpers');
 const { asUserSession } = require('../../helpers/express-session');
@@ -45,7 +45,7 @@ const getCaseDeal = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
+    const amendmentsInProgress = getAmendmentsInProgressSubmittedByPim({ amendments, deal });
     const hasAmendmentInProgress = amendmentsInProgress.length > 0;
 
     if (hasAmendmentInProgress) {
@@ -108,7 +108,7 @@ const getCaseTasks = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
+  const amendmentsInProgress = getAmendmentsInProgressSubmittedByPim({ amendments, deal });
   const hasAmendmentInProgress = amendmentsInProgress.length > 0;
 
   if (hasAmendmentInProgress) {
@@ -173,7 +173,7 @@ const filterCaseTasks = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
+  const amendmentsInProgress = getAmendmentsInProgressSubmittedByPim({ amendments, deal });
   const hasAmendmentInProgress = amendmentsInProgress.length > 0;
 
   if (hasAmendmentInProgress) {
@@ -349,13 +349,16 @@ const getCaseFacility = async (req, res) => {
       return res.render('_partials/problem-with-service.njk');
     }
 
-    const hasAmendmentInProgressButton = amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
-    const showContinueAmendmentButton = hasAmendmentInProgressButton && !amendment.submittedByPim && showAmendmentButton(deal, req.session.user.teams);
+    const amendmentsInProgressSubmittedByPim = getAmendmentsInProgressSubmittedByPim({ amendments, deal });
+    const hasAmendmentInProgressSubmittedByPim = amendmentsInProgressSubmittedByPim.length > 0;
 
-    const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
-    const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+    const { hasAmendmentInProgress, hasAmendmentInProgressButton, showContinueAmendmentButton } = getAmendmentsInProgress({
+      amendments,
+      deal,
+      teams: req.session.user.teams,
+    });
 
-    if (hasAmendmentInProgress) {
+    if (hasAmendmentInProgressSubmittedByPim) {
       deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
     }
 
@@ -369,15 +372,15 @@ const getCaseFacility = async (req, res) => {
       facilityId,
       facilityTfm: facility.tfm,
       user: req.session.user,
-      showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !amendment.amendmentId,
+      showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !hasAmendmentInProgress,
       showContinueAmendmentButton,
       amendmentId: amendment?.amendmentId,
       amendmentVersion: amendment?.version,
-      hasAmendmentInProgress,
+      hasAmendmentInProgress: hasAmendmentInProgressSubmittedByPim,
       hasAmendmentInProgressButton,
       allAmendments,
       amendments,
-      amendmentsInProgress,
+      amendmentsInProgress: amendmentsInProgressSubmittedByPim,
       showFacilityEndDate: facility.facilitySnapshot.isGef,
     });
   } catch (error) {
@@ -405,7 +408,7 @@ const getCaseDocuments = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
+    const amendmentsInProgress = getAmendmentsInProgressSubmittedByPim({ amendments, deal });
     const hasAmendmentInProgress = amendmentsInProgress.length > 0;
 
     if (hasAmendmentInProgress) {

@@ -1,4 +1,4 @@
-const { TEAM_IDS, TFM_AMENDMENT_STATUS, DEAL_STATUS, TFM_DEAL_STAGE } = require('@ukef/dtfs2-common');
+const { TEAM_IDS, TFM_AMENDMENT_STATUS, DEAL_STATUS, TFM_DEAL_STAGE, PORTAL_AMENDMENT_INPROGRESS_STATUSES } = require('@ukef/dtfs2-common');
 const { DECISIONS, DEAL } = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
 
@@ -70,12 +70,15 @@ const validateUkefDecision = (ukefDecision, decisionType) => ukefDecision?.cover
 const nonAmendableDealStages = [TFM_DEAL_STAGE.CANCELLED];
 
 /**
+ * Gets amendments that are in progress and submitted by PIM.
+ * These are amendments that require UKEF approval
+ * They have been submitted but not completed as they do not have a UKEF decision yet.
  * @param {object} getAmendmentsInProgress Params
  * @param {import('@ukef/dtfs2-common').TfmDeal} getAmendmentsInProgress Params.deal - the deal
  * @param {import('@ukef/dtfs2-common').TfmFacilityAmendment[]} getAmendmentsInProgress Params.amendments - the amendments
  * @returns {import('@ukef/dtfs2-common').TfmFacilityAmendment[]} - the amendments that are in progress
  */
-const getAmendmentsInProgress = ({ amendments, deal }) => {
+const getAmendmentsInProgressSubmittedByPim = ({ amendments, deal }) => {
   if (nonAmendableDealStages.includes(deal.tfm.stage)) {
     return [];
   }
@@ -87,6 +90,54 @@ const getAmendmentsInProgress = ({ amendments, deal }) => {
   return [];
 };
 
+/**
+ * Gets amendments that are in progress.
+ * Portal amendments which are ready for checkers or furthers makers input required
+ * TFM amendments which have not yet been submitted by PIM
+ * Returns the portal and tfm amendments that are in progress
+ * If they are in progress
+ * If the amendment in progress button should be shown
+ * If the continue amendment button should be shown
+ * @param {object} getAmendmentsInProgress Params
+ * @param {import('@ukef/dtfs2-common').TfmDeal} deal Params.deal - the deal
+ * @param {import('@ukef/dtfs2-common').TfmFacilityAmendment[] | import('@ukef/dtfs2-common').PortalFacilityAmendment[]} getAmendmentsInProgress Params.amendments - the amendments
+ * @param {import('@ukef/dtfs2-common').Team[]} teams - the teams of the user
+ * @returns {import('@ukef/dtfs2-common').GetTfmAmendmentInProgressResponse} - the amendments that are in progress
+ */
+const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
+  if (Array.isArray(amendments) && amendments.length) {
+    // TFM amendments that are in progress and not submitted by PIM
+    const inProgressTFMAmendments = amendments.filter(({ status, submittedByPim }) => status === TFM_AMENDMENT_STATUS.IN_PROGRESS && !submittedByPim);
+    // Portal amendments which are in progress
+    const inProgressPortalAmendments = amendments.filter(({ status }) => PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(status));
+
+    const amendmentsInProgress = [...inProgressTFMAmendments, ...inProgressPortalAmendments];
+    const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+
+    // If any TFM amendments which are in progress have been submitted by PIM
+    const hasAmendmentSubmittedByPim = inProgressTFMAmendments.some(({ submittedByPim }) => submittedByPim);
+
+    // If any TFM amendments have the status of in progress
+    const hasAmendmentInProgressButton = inProgressTFMAmendments.some(({ status }) => status === TFM_AMENDMENT_STATUS.IN_PROGRESS);
+    // Show continue amendment button if there is an in progress TFM amendment that has not been submitted by PIM and if the button can be shown
+    const showContinueAmendmentButton = hasAmendmentInProgressButton && !hasAmendmentSubmittedByPim && showAmendmentButton(deal, teams);
+
+    return {
+      amendmentsInProgress,
+      hasAmendmentInProgress,
+      hasAmendmentInProgressButton,
+      showContinueAmendmentButton,
+    };
+  }
+
+  return {
+    amendmentsInProgress: [],
+    hasAmendmentInProgress: false,
+    hasAmendmentInProgressButton: false,
+    showContinueAmendmentButton: false,
+  };
+};
+
 module.exports = {
   showAmendmentButton,
   userCanEditManagersDecision,
@@ -94,4 +145,5 @@ module.exports = {
   ukefDecisionRejected,
   validateUkefDecision,
   getAmendmentsInProgress,
+  getAmendmentsInProgressSubmittedByPim,
 };
