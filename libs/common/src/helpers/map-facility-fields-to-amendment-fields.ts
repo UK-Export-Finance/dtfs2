@@ -1,3 +1,4 @@
+import { fromUnixTime } from 'date-fns';
 import { FacilityAmendment } from '../types';
 
 type UpdatedFields = {
@@ -6,7 +7,7 @@ type UpdatedFields = {
 };
 
 /**
- * Finds the first amendment in the amendments array for coverEndDate and value
+ * Finds the first amendment in the amendments array for coverEndDate and value and check if the `effectiveDate` is not in the future.
  * if the updatedValue for either field is not already set, then it will be set to the amended value from the amendment
  * @param amendments - amendments array
  * @returns object with amended coverEndDate and value
@@ -15,16 +16,20 @@ export const mapFacilityFieldsToAmendmentFields = (amendments: FacilityAmendment
   const updatedFields: UpdatedFields = {};
 
   for (const amendment of amendments) {
-    if (!updatedFields.coverEndDate && amendment.coverEndDate) {
-      updatedFields.coverEndDate = amendment.coverEndDate;
-    }
-    if (!updatedFields.value && amendment.value) {
-      updatedFields.value = amendment.value;
-    }
+    const today = new Date();
+    const hasFutureEffectiveDate = new Date(fromUnixTime(amendment.effectiveDate ?? 0)) > today;
+    if (!hasFutureEffectiveDate) {
+      if (!updatedFields.coverEndDate && amendment.coverEndDate) {
+        updatedFields.coverEndDate = amendment.coverEndDate;
+      }
+      if (!updatedFields.value && amendment.value) {
+        updatedFields.value = amendment.value;
+      }
 
-    // If both fields are set, break the loop
-    if (updatedFields.coverEndDate && updatedFields.value) {
-      break;
+      // If both fields are set, break the loop
+      if (updatedFields.coverEndDate && updatedFields.value) {
+        break;
+      }
     }
   }
 
