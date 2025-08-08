@@ -372,7 +372,7 @@ const getCaseFacility = async (req, res) => {
       facilityId,
       facilityTfm: facility.tfm,
       user: req.session.user,
-      showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !hasAmendmentInProgress,
+      showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !hasAmendmentInProgress && !amendment.amendmentId,
       showContinueAmendmentButton,
       amendmentId: amendment?.amendmentId,
       amendmentVersion: amendment?.version,
