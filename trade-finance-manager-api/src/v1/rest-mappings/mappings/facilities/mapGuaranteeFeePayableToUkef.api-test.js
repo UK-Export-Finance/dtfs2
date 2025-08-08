@@ -1,5 +1,5 @@
+const { formattedNumber } = require('@ukef/dtfs2-common');
 const mapGuaranteeFeePayableToUkef = require('./mapGuaranteeFeePayableToUkef');
-const { formattedNumber } = require('../../../../utils/number');
 
 describe('mapGuaranteeFeePayableToUkef', () => {
   it('should return formatted number', () => {

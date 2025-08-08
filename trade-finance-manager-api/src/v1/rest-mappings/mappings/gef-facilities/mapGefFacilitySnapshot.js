@@ -1,4 +1,4 @@
-const { formattedNumber } = require('../../../../utils/number');
+const { formattedNumber } = require('@ukef/dtfs2-common');
 const mapFacilityValue = require('../facilities/mapFacilityValue');
 const mapFacilityProduct = require('../facilities/mapFacilityProduct');
 const mapGuaranteeFeePayableToUkef = require('../facilities/mapGuaranteeFeePayableToUkef');

@@ -1,4 +1,5 @@
-const { isSameDay, set, getUnixTime } = require('date-fns');
+const { isSameDay, set } = require('date-fns');
+const { getEpochMs } = require('@ukef/dtfs2-common');
 const { validationErrorHandler } = require('../../../../helpers/validationErrorHandler.helper');
 const amendmentYearValidation = require('./amendmentYearValidation.validate');
 
@@ -47,7 +48,7 @@ const coverEndDateValidation = (body, currentEndDate) => {
       month: coverEndMonth - 1,
       date: coverEndDay,
     });
-    coverEndDate = getUnixTime(coverEndFormatted);
+    coverEndDate = getEpochMs(coverEndFormatted);
   }
 
   const errorsObject = {

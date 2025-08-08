@@ -6,6 +6,8 @@ import {
   UnixTimestampSeconds,
   PortalAmendmentStatus,
   UnixTimestampMilliseconds,
+  Currency,
+  CURRENCY,
 } from '@ukef/dtfs2-common';
 import { getUnixTime } from 'date-fns';
 
@@ -19,6 +21,7 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
       amendmentId: '6777c4ca826649ec990c1adf',
       type: AMENDMENT_TYPES.PORTAL,
       status: PORTAL_AMENDMENT_STATUS.DRAFT,
+      currency: CURRENCY.GBP,
       createdAt: getUnixTime(new Date()),
       updatedAt: getUnixTime(new Date()),
       createdBy: {
@@ -37,6 +40,7 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
           },
         ],
       },
+      tfm: {},
     };
   }
 
@@ -112,6 +116,11 @@ export class PortalFacilityAmendmentWithUkefIdMockBuilder {
 
   public withEffectiveDate(effectiveDate: UnixTimestampSeconds) {
     this.amendment.effectiveDate = effectiveDate;
+    return this;
+  }
+
+  public withCurrency(currency: Currency) {
+    this.amendment.currency = currency;
     return this;
   }
 

@@ -1,10 +1,9 @@
 const { format, fromUnixTime } = require('date-fns');
-const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS, formattedNumber, convertUnixTimestampWithoutMilliseconds } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 
 const { userCanEditManagersDecision } = require('../../helpers');
 const { amendmentUnderwriterManagerDecisionValidation } = require('./validation/amendmentUnderwriterManagerDecision.validate');
-const { formattedNumber } = require('../../../helpers/number');
 
 /**
  * @param {object} req
@@ -25,7 +24,9 @@ const getAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res) 
 
   if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
     amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
-    amendment.coverEndDate = format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy');
+
+    const formattedCoverEndDate = convertUnixTimestampWithoutMilliseconds(amendment.coverEndDate);
+    amendment.coverEndDate = format(fromUnixTime(formattedCoverEndDate), 'dd MMMM yyyy');
   }
 
   return res.render('case/amendments/amendment-add-managers-decision-cover-end-date.njk', {
@@ -47,7 +48,9 @@ const postAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res)
     const isEditable = userCanEditManagersDecision(amendment, user) && amendment.status === TFM_AMENDMENT_STATUS.IN_PROGRESS;
     if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
       amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
-      amendment.coverEndDate = format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy');
+
+      const formattedCoverEndDate = convertUnixTimestampWithoutMilliseconds(amendment.coverEndDate);
+      amendment.coverEndDate = format(fromUnixTime(formattedCoverEndDate), 'dd MMMM yyyy');
     }
 
     return res.render('case/amendments/amendment-add-managers-decision-cover-end-date.njk', {

@@ -1,6 +1,5 @@
-const { CURRENCY } = require('@ukef/dtfs2-common');
-const { formattedNumber } = require('../../../../utils/number');
-const { calculateNewFacilityValue, calculateAmendmentTotalExposure, findLatestCompletedAmendment } = require('../../helpers/amendment.helpers');
+const { CURRENCY, formattedNumber, getGBPValue } = require('@ukef/dtfs2-common');
+const { calculateAmendmentTotalExposure, findLatestCompletedAmendment } = require('../../helpers/amendment.helpers');
 const isValidFacility = require('../../helpers/isValidFacility.helper');
 
 const mapTotals = (facilities) => {
@@ -19,7 +18,7 @@ const mapTotals = (facilities) => {
             const { value: latestAmendmentValue } = findLatestCompletedAmendment(facility.amendments);
 
             if (latestAmendmentValue) {
-              const valueInGBP = calculateNewFacilityValue(exchangeRate, latestAmendmentValue);
+              const valueInGBP = getGBPValue(exchangeRate, latestAmendmentValue);
               return Number(valueInGBP);
             }
           }

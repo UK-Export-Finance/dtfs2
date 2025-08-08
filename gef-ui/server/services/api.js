@@ -2,7 +2,7 @@ const FormData = require('form-data');
 const { isValidCompanyRegistrationNumber, InvalidFacilityIdError, InvalidDealIdError, TIMEOUT } = require('@ukef/dtfs2-common');
 const { PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID } = require('@ukef/dtfs2-common/schemas');
 const { HttpStatusCode } = require('axios');
-const Axios = require('./axios');
+const { portalApi, externalApi } = require('./axios');
 const { apiErrorHandler } = require('../utils/helpers');
 const { isValidMongoId, isValidUkPostcode } = require('../utils/validateIds');
 
@@ -10,7 +10,7 @@ const config = (userToken) => ({ headers: { Authorization: userToken } });
 
 const validateToken = async (userToken) => {
   try {
-    const { status } = await Axios.get('/validate', config(userToken));
+    const { status } = await portalApi.get('/validate', config(userToken));
     return status === HttpStatusCode.Ok;
   } catch (error) {
     return false;
@@ -19,7 +19,7 @@ const validateToken = async (userToken) => {
 
 const validateBank = async ({ dealId, bankId, userToken }) => {
   try {
-    const { data } = await Axios.get('/validate/bank', { ...config(userToken), data: { dealId, bankId } });
+    const { data } = await portalApi.get('/validate/bank', { ...config(userToken), data: { dealId, bankId } });
     return data;
   } catch (error) {
     console.error('Unable to validate the bank %o', error);
@@ -29,7 +29,7 @@ const validateBank = async ({ dealId, bankId, userToken }) => {
 
 const getMandatoryCriteria = async ({ userToken }) => {
   try {
-    const { data } = await Axios.get('/gef/mandatory-criteria-versioned/latest', config(userToken));
+    const { data } = await portalApi.get('/gef/mandatory-criteria-versioned/latest', config(userToken));
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -47,7 +47,7 @@ const getMandatoryCriteria = async ({ userToken }) => {
  */
 const getTfmTeam = async ({ teamId, userToken }) => {
   try {
-    const { data } = await Axios.get(`/tfm/team/${teamId}`, config(userToken));
+    const { data } = await portalApi.get(`/tfm/team/${teamId}`, config(userToken));
     return data;
   } catch (error) {
     console.error('Unable to get TFM team %s %o', teamId, error);
@@ -57,7 +57,7 @@ const getTfmTeam = async ({ teamId, userToken }) => {
 
 const createApplication = async ({ payload, userToken }) => {
   try {
-    const { data } = await Axios.post('/gef/application', payload, config(userToken));
+    const { data } = await portalApi.post('/gef/application', payload, config(userToken));
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -66,7 +66,7 @@ const createApplication = async ({ payload, userToken }) => {
 
 const cloneApplication = async ({ payload, userToken }) => {
   try {
-    const { data } = await Axios.post('/gef/application/clone', payload, config(userToken));
+    const { data } = await portalApi.post('/gef/application/clone', payload, config(userToken));
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -86,7 +86,7 @@ const getApplication = async ({ dealId, userToken }) => {
   }
 
   try {
-    const { data } = await Axios.get(`/gef/application/${dealId}`, config(userToken));
+    const { data } = await portalApi.get(`/gef/application/${dealId}`, config(userToken));
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -100,7 +100,7 @@ const updateApplication = async ({ dealId, application, userToken }) => {
   }
 
   try {
-    const { data } = await Axios.put(`/gef/application/${dealId}`, application, config(userToken));
+    const { data } = await portalApi.put(`/gef/application/${dealId}`, application, config(userToken));
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -114,7 +114,7 @@ const updateSupportingInformation = async ({ dealId, application, field, user, u
   }
 
   try {
-    const { data } = await Axios.put(`/gef/application/supporting-information/${dealId}`, { application, field, user }, config(userToken));
+    const { data } = await portalApi.put(`/gef/application/supporting-information/${dealId}`, { application, field, user }, config(userToken));
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -138,7 +138,7 @@ const setApplicationStatus = async ({ dealId, status, userToken }) => {
   }
 
   try {
-    const { data } = await Axios.put(
+    const { data } = await portalApi.put(
       `/gef/application/status/${dealId}`,
       {
         status,
@@ -160,7 +160,7 @@ const getFacilities = async ({ dealId, userToken }) => {
   }
 
   try {
-    const { data } = await Axios.get('/gef/facilities', { ...config(userToken), params: { dealId } });
+    const { data } = await portalApi.get('/gef/facilities', { ...config(userToken), params: { dealId } });
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -169,7 +169,7 @@ const getFacilities = async ({ dealId, userToken }) => {
 
 const createFacility = async ({ payload, userToken }) => {
   try {
-    const { data } = await Axios.post('/gef/facilities', payload, config(userToken));
+    const { data } = await portalApi.post('/gef/facilities', payload, config(userToken));
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -189,7 +189,7 @@ const getFacility = async ({ facilityId, userToken }) => {
   }
 
   try {
-    const { data } = await Axios.get(`/gef/facilities/${facilityId}`, config(userToken));
+    const { data } = await portalApi.get(`/gef/facilities/${facilityId}`, config(userToken));
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -203,7 +203,7 @@ const updateFacility = async ({ facilityId, payload, userToken }) => {
   }
 
   try {
-    const { data } = await Axios.put(`/gef/facilities/${facilityId}`, payload, config(userToken));
+    const { data } = await portalApi.put(`/gef/facilities/${facilityId}`, payload, config(userToken));
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -217,7 +217,7 @@ const deleteFacility = async ({ facilityId, userToken }) => {
   }
 
   try {
-    const { data } = await Axios.delete(`/gef/facilities/${facilityId}`, config(userToken));
+    const { data } = await portalApi.delete(`/gef/facilities/${facilityId}`, config(userToken));
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -240,7 +240,7 @@ const getCompanyByRegistrationNumber = async ({ registrationNumber, userToken })
       };
     }
 
-    const { data } = await Axios.get(`/gef/companies/${registrationNumber}`, config(userToken));
+    const { data } = await portalApi.get(`/gef/companies/${registrationNumber}`, config(userToken));
 
     return { company: data };
   } catch (error) {
@@ -274,7 +274,7 @@ const getAddressesByPostcode = async ({ postcode, userToken }) => {
   }
 
   try {
-    const { data } = await Axios.get(`/gef/address/${postcode}`, config(userToken));
+    const { data } = await portalApi.get(`/gef/address/${postcode}`, config(userToken));
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -298,7 +298,7 @@ const getUserDetails = async ({ userId, userToken }) => {
   }
 
   try {
-    const { data } = await Axios.get(`/users/${userId}`, config(userToken));
+    const { data } = await portalApi.get(`/users/${userId}`, config(userToken));
     return data;
   } catch (error) {
     return apiErrorHandler(error);
@@ -330,7 +330,7 @@ const uploadFile = async ({ files, id, userToken, maxSize: maxFileSize, document
 
   try {
     const baseConfig = config(userToken);
-    const { data } = await Axios.post('/gef/files/', formData, {
+    const { data } = await portalApi.post('/gef/files/', formData, {
       ...baseConfig,
       headers: {
         ...baseConfig.headers,
@@ -349,7 +349,7 @@ const uploadFile = async ({ files, id, userToken, maxSize: maxFileSize, document
 
 const deleteFile = async ({ fileId, userToken, documentPath }) => {
   try {
-    const { data } = await Axios.delete(`/gef/files/${fileId}`, {
+    const { data } = await portalApi.delete(`/gef/files/${fileId}`, {
       ...config(userToken),
       data: { documentPath },
     });
@@ -367,7 +367,7 @@ const downloadFile = async ({ fileId, userToken }) => {
   }
 
   try {
-    const { data } = await Axios({
+    const { data } = await portalApi({
       ...config(userToken),
       method: 'get',
       responseType: 'stream',
@@ -397,7 +397,7 @@ const getAmendment = async ({ facilityId, amendmentId, userToken }) => {
   }
 
   try {
-    const response = await Axios.get(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, config(userToken));
+    const response = await portalApi.get(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, config(userToken));
     const { success, error, data } = PORTAL_FACILITY_AMENDMENT_WITH_UKEF_ID.safeParse(response.data);
 
     if (success) {
@@ -425,7 +425,7 @@ const getAmendmentsOnDeal = async ({ dealId, userToken, statuses }) => {
   }
 
   try {
-    const response = await Axios.get(`/gef/deals/${dealId}/all-types-amendments`, { ...config(userToken), params: { statuses } });
+    const response = await portalApi.get(`/gef/deals/${dealId}/all-types-amendments`, { ...config(userToken), params: { statuses } });
 
     return response.data;
   } catch (error) {
@@ -448,7 +448,7 @@ const getPortalAmendmentsOnDeal = async ({ dealId, userToken, statuses }) => {
   }
 
   try {
-    const response = await Axios.get(`/gef/deals/${dealId}/amendments`, { ...config(userToken), params: { statuses } });
+    const response = await portalApi.get(`/gef/deals/${dealId}/amendments`, { ...config(userToken), params: { statuses } });
 
     return response.data;
   } catch (error) {
@@ -482,7 +482,7 @@ const upsertAmendment = async ({ facilityId, dealId, amendment, userToken }) => 
   };
 
   try {
-    const { data } = await Axios.put(`/gef/facilities/${facilityId}/amendments`, payload, { ...config(userToken) });
+    const { data } = await portalApi.put(`/gef/facilities/${facilityId}/amendments`, payload, { ...config(userToken) });
 
     return data;
   } catch (error) {
@@ -515,7 +515,7 @@ const updateAmendment = async ({ facilityId, amendmentId, update, userToken }) =
   };
 
   try {
-    const { data } = await Axios.patch(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, payload, { ...config(userToken) });
+    const { data } = await portalApi.patch(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, payload, { ...config(userToken) });
     return data;
   } catch (error) {
     console.error('Failed to update the amendment with id %s on facility with id %s with update: %o %o', amendmentId, facilityId, payload, error);
@@ -573,7 +573,7 @@ const updateSubmitAmendment = async ({
   };
 
   try {
-    const { data } = await Axios.patch(`/gef/facilities/${facilityId}/amendments/${amendmentId}/submit-amendment`, payload, { ...config(userToken) });
+    const { data } = await portalApi.patch(`/gef/facilities/${facilityId}/amendments/${amendmentId}/submit-amendment`, payload, { ...config(userToken) });
     return data;
   } catch (error) {
     console.error('Failed to update the amendment with id %s on facility id %s with update %o %o', amendmentId, facilityId, payload, error);
@@ -611,7 +611,7 @@ const updateAmendmentStatus = async ({ facilityId, amendmentId, newStatus, userT
   };
 
   try {
-    const { data } = await Axios.patch(`/gef/facilities/${facilityId}/amendments/${amendmentId}/status`, payload, { ...config(userToken) });
+    const { data } = await portalApi.patch(`/gef/facilities/${facilityId}/amendments/${amendmentId}/status`, payload, { ...config(userToken) });
     return data;
   } catch (error) {
     console.error('Failed to update the status of amendment with id %s on facility with id %s to status: %s %o', amendmentId, facilityId, newStatus, error);
@@ -648,7 +648,7 @@ const deleteAmendment = async ({ facilityId, amendmentId, userToken, makersEmail
       emailVariables,
     };
 
-    return Axios.delete(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, { ...config(userToken), data: { ...payload } });
+    return portalApi.delete(`/gef/facilities/${facilityId}/amendments/${amendmentId}`, { ...config(userToken), data: { ...payload } });
   } catch (error) {
     console.error('Failed to delete the amendment with id %s on facility with id %s %o', amendmentId, facilityId, error);
     throw error;
@@ -663,7 +663,7 @@ const deleteAmendment = async ({ facilityId, amendmentId, userToken, makersEmail
  * @param {object} params - The parameters for retrieving the deal.
  * @param {string} params.dealId - The MongoDB ID of the deal to retrieve.
  * @param {string} params.userToken - The user authentication token.
- * @returns {Promise<object>} The Axios response containing the TFM deal data.
+ * @returns {Promise<object>} The portal response containing the TFM deal data.
  * @throws {Error} If the deal ID is invalid or the request fails.
  */
 const getTfmDeal = async ({ dealId, userToken }) => {
@@ -673,7 +673,7 @@ const getTfmDeal = async ({ dealId, userToken }) => {
       throw new Error('Invalid deal ID');
     }
 
-    const response = await Axios.get(`/tfm/deal/${dealId}`, {
+    const response = await portalApi.get(`/tfm/deal/${dealId}`, {
       ...config(userToken),
     });
 
@@ -685,6 +685,56 @@ const getTfmDeal = async ({ dealId, userToken }) => {
   } catch (error) {
     console.error('Unable to get TFM deal %s %o', dealId, error);
     return false;
+  }
+};
+
+/**
+ * Retrieves a TFM deal by its ID from `tfm-deal` collection.
+ *
+ * @async
+ * @function getTfmDeal
+ * @param {Object} params - The parameters for retrieving the facility.
+ * @param {string} params.facilityId - The facility ID of the tfm facility to retrieve.
+ * @param {string} params.userToken - The user authentication token.
+ * @returns {Promise<(import('@ukef/dtfs2-common').TfmFacility)>} The portalApi response containing the TFM facility data.
+ * @throws {Error} If the facility ID is invalid or the request fails.
+ */
+const getTfmFacility = async ({ facilityId, userToken }) => {
+  try {
+    if (!isValidMongoId(facilityId)) {
+      console.error('Invalid facility ID %s', facilityId);
+      throw new Error('Invalid facility ID');
+    }
+
+    const response = await portalApi.get(`/tfm/facility/${facilityId}`, {
+      ...config(userToken),
+    });
+
+    if (!response?.data) {
+      throw new Error('Invalid TFM facility response received');
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to fetch TFM facility %s %o', facilityId, error);
+    return false;
+  }
+};
+
+/**
+ * @param {string | undefined} startDate
+ * @param {string | undefined} endDate
+ * @param {string | undefined} type
+ * @returns {Promise<(import('@ukef/dtfs2-common'.FacilityExposurePeriod))>} The portalApi response containing the facility exposure period data.
+ */
+const getFacilityExposurePeriod = async (startDate, endDate, type) => {
+  try {
+    const response = await externalApi.get(`/exposure-period/${startDate}/${endDate}/${type}`);
+
+    return response.data;
+  } catch (error) {
+    console.error('Unable to fetch TFM facility exposure period %o', error);
+    return { status: error?.code || HttpStatusCode.InternalServerError, data: 'Failed to get facility exposure period' };
   }
 };
 
@@ -719,4 +769,6 @@ module.exports = {
   updateAmendmentStatus,
   deleteAmendment,
   getTfmDeal,
+  getTfmFacility,
+  getFacilityExposurePeriod,
 };

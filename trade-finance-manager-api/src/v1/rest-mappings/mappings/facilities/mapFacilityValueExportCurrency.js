@@ -1,4 +1,4 @@
-const { formattedNumber } = require('../../../../utils/number');
+const { formattedNumber } = require('@ukef/dtfs2-common');
 const { amendmentChangeValueExportCurrency, findLatestCompletedAmendment } = require('../../helpers/amendment.helpers');
 
 // maps facility value (in original currency) and checks if amendment change on that value
