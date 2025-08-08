@@ -22,13 +22,13 @@ export const createAmendmentFacilityExposure = (
 ) => {
   const valueInGBP = getGBPValue(exchangeRate, amendment);
 
-  if (!valueInGBP) {
+  if (valueInGBP === null || valueInGBP === undefined) {
     return {};
   }
 
   const ukefExposureValue = calculateUkefExposure(valueInGBP, coverPercentageValue);
 
-  if (!ukefExposureValue) {
+  if (ukefExposureValue === null || ukefExposureValue === undefined) {
     return {};
   }
 

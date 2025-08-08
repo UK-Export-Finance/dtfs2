@@ -34,6 +34,9 @@ const {
   validatePatchPortalFacilityAmendmentStatusPayload,
 } = require('../validation/route-validators/amendments/validate-patch-portal-facility-amendment-status-payload');
 const { validateDeletePortalFacilityAmendmentPayload } = require('../validation/route-validators/amendments/validate-delete-portal-facility-amendment-payload');
+const {
+  getLatestAmendmentFacilityValueAndCoverEndDate,
+} = require('../controllers/amendments/get-latest-amendment-facility-value-and-cover-end-date.controller');
 
 const router = express.Router();
 
@@ -134,6 +137,15 @@ router.route('/companies/:registrationNumber').get(validateUserHasAtLeastOneAllo
 router
   .route('/address/:postcode') // Geospatial Addresses
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, ADMIN] }), externalApi.getAddressesByPostcode);
+
+router
+  .route('/facilities/:facilityId/amendments/latest-value-and-cover-end-date')
+  .get(
+    validatePortalFacilityAmendmentsEnabled,
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }),
+    mongoIdValidation('facilityId'),
+    getLatestAmendmentFacilityValueAndCoverEndDate,
+  );
 
 router
   .route('/facilities/:facilityId/amendments/:amendmentId')

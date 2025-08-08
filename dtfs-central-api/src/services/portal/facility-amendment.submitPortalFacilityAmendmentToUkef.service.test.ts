@@ -33,6 +33,8 @@ const mockTfm = {
 const bankId = '1';
 const bankName = 'test bank';
 
+const requestDate = getUnixTime(new Date());
+
 describe('PortalFacilityAmendmentService', () => {
   beforeAll(() => {
     jest.useFakeTimers();
@@ -70,6 +72,7 @@ describe('PortalFacilityAmendmentService', () => {
         auditDetails,
         bankId,
         bankName,
+        requestDate,
       });
 
       // Assert
@@ -94,6 +97,7 @@ describe('PortalFacilityAmendmentService', () => {
         auditDetails,
         bankId,
         bankName,
+        requestDate,
       });
 
       // Assert
@@ -115,6 +119,7 @@ describe('PortalFacilityAmendmentService', () => {
           auditDetails,
           bankId,
           bankName,
+          requestDate,
         });
 
         // Assert
@@ -134,6 +139,7 @@ describe('PortalFacilityAmendmentService', () => {
           auditDetails,
           bankId,
           bankName,
+          requestDate,
         });
 
         // Assert
@@ -156,6 +162,7 @@ describe('PortalFacilityAmendmentService', () => {
         auditDetails,
         bankId,
         bankName,
+        requestDate,
       });
 
       // Assert
@@ -176,12 +183,14 @@ describe('PortalFacilityAmendmentService', () => {
         auditDetails,
         bankId,
         bankName,
+        requestDate,
       });
 
       // Assert
       const expectedUpdate = {
         status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
         referenceNumber,
+        requestDate,
       };
 
       const now = new Date();
@@ -207,6 +216,7 @@ describe('PortalFacilityAmendmentService', () => {
         auditDetails,
         bankId,
         bankName,
+        requestDate,
       });
 
       const now = new Date();
@@ -242,6 +252,7 @@ describe('PortalFacilityAmendmentService', () => {
         auditDetails,
         bankId,
         bankName,
+        requestDate,
       });
 
       // Assert

@@ -1,5 +1,6 @@
-import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS, TEAM_IDS } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS, TEAM_IDS, nowZeroSeconds } from '@ukef/dtfs2-common';
 import { Response } from 'express';
+import { getUnixTime } from 'date-fns';
 import { validationErrorHandler } from '../../../utils/helpers';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import api from '../../../services/api';
@@ -72,6 +73,8 @@ export const postSubmitAmendmentToUkef = async (req: PostSubmitAmendmentToUkefRe
 
     const status = PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED;
 
+    const requestDate = getUnixTime(nowZeroSeconds());
+
     await api.updateSubmitAmendment({
       facilityId,
       amendmentId,
@@ -82,6 +85,7 @@ export const postSubmitAmendmentToUkef = async (req: PostSubmitAmendmentToUkefRe
       checkersEmail,
       pimEmail,
       emailVariables,
+      requestDate,
       bankId,
       bankName,
     });

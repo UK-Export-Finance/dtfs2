@@ -4,6 +4,7 @@ const getFacilityMock = jest.fn();
 const getApplicationMock = jest.fn();
 const getAmendmentMock = jest.fn();
 const updateAmendmentMock = jest.fn();
+const getLatestAmendmentFacilityValueAndCoverEndDateMock = jest.fn();
 
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
@@ -34,6 +35,7 @@ jest.mock('../../../services/api', () => ({
   getFacility: getFacilityMock,
   getAmendment: getAmendmentMock,
   updateAmendment: updateAmendmentMock,
+  getLatestAmendmentFacilityValueAndCoverEndDate: getLatestAmendmentFacilityValueAndCoverEndDateMock,
 }));
 
 console.error = jest.fn();
@@ -48,6 +50,11 @@ const previousPage = 'previousPage';
 
 const mockUser = aPortalSessionUser();
 const userToken = 'userToken';
+
+const currentValueAndCoverEndDate = {
+  coverEndDate: 1735689600,
+  value: 1000000,
+};
 
 const getHttpMocks = (facilityValue: string = '10000') =>
   httpMocks.createMocks<PostFacilityValueRequest>({
@@ -94,6 +101,7 @@ describe('postFacilityValue', () => {
     getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
     getAmendmentMock.mockResolvedValue(amendment);
     updateAmendmentMock.mockResolvedValue(amendment);
+    getLatestAmendmentFacilityValueAndCoverEndDateMock.mockResolvedValue(currentValueAndCoverEndDate);
 
     canMakerCancelAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.DRAFT;
   });
@@ -271,7 +279,7 @@ describe('postFacilityValue', () => {
     expect(updateAmendmentMock).toHaveBeenCalledWith({
       facilityId,
       amendmentId,
-      update: { value: Number(facilityValueNumerical), currency: currencyUpdate, tfm: tfmUpdate },
+      update: { value: Number(facilityValueNumerical), currentValue: currentValueAndCoverEndDate.value, currency: currencyUpdate, tfm: tfmUpdate },
       userToken,
     });
     expect(console.error).toHaveBeenCalledTimes(0);
@@ -304,7 +312,7 @@ describe('postFacilityValue', () => {
     expect(updateAmendmentMock).toHaveBeenCalledWith({
       facilityId,
       amendmentId,
-      update: { value: Number(facilityValueNumerical), currency: CURRENCY.GBP, tfm: tfmUpdate },
+      update: { value: Number(facilityValueNumerical), currentValue: currentValueAndCoverEndDate.value, currency: CURRENCY.GBP, tfm: tfmUpdate },
       userToken,
     });
     expect(console.error).toHaveBeenCalledTimes(0);
@@ -337,7 +345,7 @@ describe('postFacilityValue', () => {
     expect(updateAmendmentMock).toHaveBeenCalledWith({
       facilityId,
       amendmentId,
-      update: { value: Number(facilityValueNumerical), currency: CURRENCY.USD, tfm: tfmUpdate },
+      update: { value: Number(facilityValueNumerical), currentValue: currentValueAndCoverEndDate.value, currency: CURRENCY.USD, tfm: tfmUpdate },
       userToken,
     });
     expect(console.error).toHaveBeenCalledTimes(0);
@@ -371,7 +379,7 @@ describe('postFacilityValue', () => {
     expect(updateAmendmentMock).toHaveBeenCalledWith({
       facilityId,
       amendmentId,
-      update: { value: Number(facilityValueNumerical), currency: CURRENCY.GBP, tfm: tfmUpdate },
+      update: { value: Number(facilityValueNumerical), currentValue: currentValueAndCoverEndDate.value, currency: CURRENCY.GBP, tfm: tfmUpdate },
       userToken,
     });
     expect(console.error).toHaveBeenCalledTimes(0);
@@ -400,7 +408,7 @@ describe('postFacilityValue', () => {
     expect(updateAmendmentMock).toHaveBeenCalledWith({
       facilityId,
       amendmentId,
-      update: { value: Number(facilityValue), currency: currencyUpdate, tfm: tfmUpdate },
+      update: { value: Number(facilityValue), currentValue: currentValueAndCoverEndDate.value, currency: currencyUpdate, tfm: tfmUpdate },
       userToken,
     });
     expect(console.error).toHaveBeenCalledTimes(0);

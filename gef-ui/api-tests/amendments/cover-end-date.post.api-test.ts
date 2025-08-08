@@ -27,6 +27,7 @@ const mockGetApplication = jest.fn();
 const mockGetAmendment = jest.fn();
 const mockUpdateAmendment = jest.fn();
 const mockGetTfmFacility = jest.fn();
+const mockGetLatestAmendmentFacilityValueAndCoverEndDate = jest.fn();
 
 const dealId = '6597dffeb5ef5ff4267e5044';
 const facilityId = '6597dffeb5ef5ff4267e5045';
@@ -37,6 +38,11 @@ const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN,
 const todayPlusTwoYears = startOfDay(add(new Date(), { years: 2 }));
 
 const url = `/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/${PORTAL_AMENDMENT_PAGES.COVER_END_DATE}`;
+
+const getLatestAmendmentFacilityValueAndCoverEndDateResponse = {
+  coverEndDate: '2024-12-31T00:00:00.000Z',
+  value: '1000000',
+};
 
 describe(`POST ${url}`, () => {
   let sessionCookie: string;
@@ -52,6 +58,7 @@ describe(`POST ${url}`, () => {
     jest.spyOn(api, 'updateAmendment').mockImplementation(mockUpdateAmendment);
     jest.spyOn(api, 'getTfmFacility').mockImplementation(mockGetTfmFacility);
     jest.spyOn(console, 'error');
+    jest.spyOn(api, 'getLatestAmendmentFacilityValueAndCoverEndDate').mockImplementation(mockGetLatestAmendmentFacilityValueAndCoverEndDate);
 
     const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
       .withDealId(dealId)
@@ -64,6 +71,7 @@ describe(`POST ${url}`, () => {
     mockGetAmendment.mockResolvedValue(amendment);
     mockUpdateAmendment.mockResolvedValue(amendment);
     mockGetTfmFacility.mockResolvedValue(MOCK_TFM_FACILITY);
+    mockGetLatestAmendmentFacilityValueAndCoverEndDate.mockResolvedValue(getLatestAmendmentFacilityValueAndCoverEndDateResponse);
   });
 
   afterAll(async () => {

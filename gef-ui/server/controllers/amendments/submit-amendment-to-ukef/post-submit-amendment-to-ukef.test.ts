@@ -10,8 +10,9 @@ import {
   PORTAL_AMENDMENT_STATUS,
   DATE_FORMATS,
   generateAmendmentMandatoryCriteria,
+  nowZeroSeconds,
 } from '@ukef/dtfs2-common';
-import { format, fromUnixTime } from 'date-fns';
+import { format, fromUnixTime, getUnixTime } from 'date-fns';
 import api from '../../../services/api';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { getAmendmentsUrl } from '../helpers/navigation.helper';
@@ -41,6 +42,8 @@ const aMockError = () => new Error();
 
 const mockUser = aPortalSessionUser();
 const userToken = 'userToken';
+
+const requestDate = getUnixTime(nowZeroSeconds());
 
 const getHttpMocks = (confirmSubmitUkefParam: boolean = true) =>
   httpMocks.createMocks<PostSubmitAmendmentToUkefRequest>({
@@ -255,6 +258,7 @@ describe('postSubmitAmendmentToUkef', () => {
       },
       bankId: user?.bank.id,
       bankName: user?.bank.name,
+      requestDate,
     });
   });
 

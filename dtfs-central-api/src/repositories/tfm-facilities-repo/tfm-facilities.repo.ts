@@ -628,4 +628,32 @@ export class TfmFacilitiesRepo {
 
     return updateResult;
   }
+
+  /**
+   * Finds the latest value amendment by facility id
+   * @param facilityId - The facility id
+   * @returns The latest value amendment
+   */
+  public static async findLatestValueAmendmentByFacilityId(facilityId: string | ObjectId): Promise<FacilityAmendment | null> {
+    const collection = await this.getCollection();
+    const amendments = await collection
+      .aggregate(aggregatePipelines.latestCompletedValueAmendment(facilityId))
+      .map<FacilityAmendment>((doc) => doc.amendments as FacilityAmendment)
+      .toArray();
+    return amendments.at(0) ?? null;
+  }
+
+  /**
+   * Finds the latest cover end date amendment by facility id
+   * @param facilityId - The facility id
+   * @returns The latest cover end date amendment
+   */
+  public static async findLatestCoverEndDateAmendmentByFacilityId(facilityId: string | ObjectId): Promise<FacilityAmendment | null> {
+    const collection = await this.getCollection();
+    const amendments = await collection
+      .aggregate(aggregatePipelines.latestCompletedCoverEndDateAmendment(facilityId))
+      .map<FacilityAmendment>((doc) => doc.amendments as FacilityAmendment)
+      .toArray();
+    return amendments.at(0) ?? null;
+  }
 }

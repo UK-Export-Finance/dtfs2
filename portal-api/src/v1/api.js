@@ -663,6 +663,26 @@ const getAllPortalFacilityAmendments = async (statuses) => {
 };
 
 /**
+ * Gets portal facility amendments on the deal filtered by status
+ * @param {string} facilityId - id of the facility to amend
+ * @returns {Promise<(import('@ukef/dtfs2-common').LatestAmendmentValueAndCoverEndDate)>} - the amendments on the deal with a matching status
+ */
+const getLatestAmendmentFacilityValueAndCoverEndDate = async (facilityId) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${DTFS_CENTRAL_API_URL}/v1/portal/facilities/${facilityId}/amendments/latest-value-and-cover-end-date`,
+      headers: headers.central,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error getting portal facility amendments on facility with id %s: %o', facilityId, error);
+    throw error;
+  }
+};
+
+/**
  * Gets portal facility amendments by facility id with status 'acknowledged'
  * @param {string} facilityId - id of the facility to amend
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId[])>} - the amendments on facility with the status 'acknowledged'
@@ -800,6 +820,7 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
  * @param {string} params.checkersEmail - The checker's email address to send the notification to
  * @param {string} params.pimEmail - The pim's email address to send the notification to
  * @param {import('@ukef/dtfs2-common').PortalAmendmentSubmittedToUkefEmailVariables} params.emailVariables - The email variables to send with the notification
+ * @param {number} params.requestDate - The date of the request
  * @param {string} params.bankId - The bank id
  * @param {string} params.bankName - The bank name
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>} - the updatedamendment
@@ -814,6 +835,7 @@ const patchPortalFacilitySubmitAmendment = async ({
   checkersEmail,
   pimEmail,
   emailVariables,
+  requestDate,
   bankId,
   bankName,
 }) => {
@@ -830,6 +852,7 @@ const patchPortalFacilitySubmitAmendment = async ({
         checkersEmail,
         pimEmail,
         emailVariables,
+        requestDate,
         bankId,
         bankName,
       },
@@ -1076,6 +1099,7 @@ module.exports = {
   getAllPortalFacilityAmendments,
   getFacilityAmendmentsOnDeal,
   getPortalFacilityAmendment,
+  getLatestAmendmentFacilityValueAndCoverEndDate,
   getAcknowledgedAmendmentsByFacilityId,
   getPortalFacilityAmendmentsOnDeal,
   putPortalFacilityAmendment,

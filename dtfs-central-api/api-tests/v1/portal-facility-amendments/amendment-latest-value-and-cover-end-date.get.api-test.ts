@@ -2,14 +2,12 @@ import { Response } from 'supertest';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import {
-  AMENDMENT_TYPES,
   AnyObject,
   API_ERROR_CODE,
   DEAL_SUBMISSION_TYPE,
   DEAL_TYPE,
   FACILITY_TYPE,
   MONGO_DB_COLLECTIONS,
-  PortalFacilityAmendment,
   PORTAL_AMENDMENT_STATUS,
   portalAmendmentToUkefEmailVariables,
 } from '@ukef/dtfs2-common';
@@ -31,12 +29,16 @@ const originalEnv = { ...process.env };
 const bankId = '1';
 const bankName = 'Bank Name';
 
-interface FacilityAmendmentResponse extends Response {
-  body: PortalFacilityAmendment;
+type LatestAmendmentValueAndCoverEndDate = {
+  value: number | null;
+  coverEndDate: number | null;
+};
+interface LatestAmendmentValueAndCoverEndDateResponse extends Response {
+  body: LatestAmendmentValueAndCoverEndDate;
 }
 
 const generateUrl = (facilityId: string): string => {
-  return `/v1/portal/facilities/${facilityId}/amendments/acknowledged`;
+  return `/v1/portal/facilities/${facilityId}/amendments/latest-value-and-cover-end-date`;
 };
 
 const generateSubmitAmendmentUrl = (facilityId: string, amendmentId: string): string => {
@@ -48,7 +50,7 @@ const newDeal = aDeal({
   submissionType: DEAL_SUBMISSION_TYPE.AIN,
 }) as AnyObject;
 
-describe('GET /v1/portal/facilities/:facilityId/amendments/acknowledged', () => {
+describe('GET /v1/portal/facilities/:facilityId/amendments/latest-value-and-cover-end-date', () => {
   let dealId: string;
   let facilityId: string;
   let portalUserId: string;
@@ -87,7 +89,7 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/acknowledged', () => 
     });
 
     it(`should return ${HttpStatusCode.NotFound}`, async () => {
-      const { status } = (await testApi.get(generateUrl(facilityId))) as FacilityAmendmentResponse;
+      const { status } = (await testApi.get(generateUrl(facilityId))) as LatestAmendmentValueAndCoverEndDateResponse;
 
       expect(status).toEqual(HttpStatusCode.NotFound);
     });
@@ -98,21 +100,6 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/acknowledged', () => 
 
     beforeEach(async () => {
       const existingAmendment = await createPortalFacilityAmendment({
-        facilityId,
-        dealId,
-        userId: portalUserId,
-        amendment: {
-          ...aPortalFacilityAmendmentUserValues(),
-          eligibilityCriteria: {
-            criteria: [{ id: 1, text: 'item 1', answer: true }],
-            version: 1,
-          },
-        },
-        status: PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL,
-      });
-
-      // create second amendment with status which is not acknowledged
-      await createPortalFacilityAmendment({
         facilityId,
         dealId,
         userId: portalUserId,
@@ -151,7 +138,7 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/acknowledged', () => 
     it(`should return ${HttpStatusCode.BadRequest} when the facility id is invalid`, async () => {
       const anInvalidFacilityId = 'InvalidId';
 
-      const { status, body } = (await testApi.get(generateUrl(anInvalidFacilityId))) as FacilityAmendmentResponse;
+      const { status, body } = (await testApi.get(generateUrl(anInvalidFacilityId))) as LatestAmendmentValueAndCoverEndDateResponse;
 
       expect(status).toEqual(HttpStatusCode.BadRequest);
 
@@ -161,30 +148,25 @@ describe('GET /v1/portal/facilities/:facilityId/amendments/acknowledged', () => 
       });
     });
 
-    it(`should an empty array when the facility does not exist`, async () => {
+    it(`should coverEndDate and value as null when the facility does not exist`, async () => {
       const aValidButNonExistentFacilityId = new ObjectId().toString();
 
-      const { status, body } = (await testApi.get(generateUrl(aValidButNonExistentFacilityId))) as FacilityAmendmentResponse;
+      const { status, body } = (await testApi.get(generateUrl(aValidButNonExistentFacilityId))) as LatestAmendmentValueAndCoverEndDateResponse;
 
       expect(status).toEqual(HttpStatusCode.Ok);
-      expect(body).toEqual([]);
+      expect(body).toEqual({ coverEndDate: null, value: null });
     });
 
-    it(`should return one amendment only which has status ${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}`, async () => {
-      const { status, body } = (await testApi.get(generateUrl(facilityId))) as FacilityAmendmentResponse;
+    it('should return coverEndDate and value when the facility and amendment exists', async () => {
+      const { status, body } = (await testApi.get(generateUrl(facilityId))) as LatestAmendmentValueAndCoverEndDateResponse;
+
+      const expected = {
+        coverEndDate: aPortalFacilityAmendmentUserValues().coverEndDate,
+        value: aPortalFacilityAmendmentUserValues().value,
+      };
 
       expect(status).toEqual(HttpStatusCode.Ok);
-
-      expect(body).toHaveLength(1);
-
-      expect(body).toEqual([
-        expect.objectContaining({
-          amendmentId,
-          dealId,
-          facilityId,
-          type: AMENDMENT_TYPES.PORTAL,
-        } as AnyObject),
-      ]);
+      expect(body).toEqual(expected);
     });
   });
 });

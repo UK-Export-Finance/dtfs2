@@ -46,6 +46,7 @@ const validPayload = {
   ...portalAmendmentToUkefEmailVariables(),
   bankId,
   bankName,
+  requestDate: 1673728000,
 };
 
 describe('/v1/gef/facilities/:facilityId/amendments/:amendmentId/submit-amendment', () => {

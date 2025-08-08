@@ -28,6 +28,7 @@ const PatchPortalFacilitySubmitAmendmentSchema = z.object({
     eligibilityCriteria: z.string(),
     referenceNumber: z.string(),
   }),
+  requestDate: z.number(),
   bankId: z.string(),
   bankName: z.string(),
 });
