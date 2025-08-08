@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.9.1](https://github.com/UK-Export-Finance/dtfs2/compare/v2.9.0...v2.9.1) (2025-08-08)
+
+
+### Bug Fixes
+
+* **DTFS2-7880:** ignore amendments with future effective dates ([#4379](https://github.com/UK-Export-Finance/dtfs2/issues/4379)) ([5218c3f](https://github.com/UK-Export-Finance/dtfs2/commit/5218c3f108b487b92b7a2792dc953ce90e2ab88a))
+* **DTFS2-8016:** revert fixed fee formula to interest percentage ([#4377](https://github.com/UK-Export-Finance/dtfs2/issues/4377)) ([6f2118e](https://github.com/UK-Export-Finance/dtfs2/commit/6f2118e490e1c15fcc28effc9122d3904823de9b))
+* **DTFS2-8062:** feature flag cypress test cases for fixed fee record correction ([#4374](https://github.com/UK-Export-Finance/dtfs2/issues/4374)) ([62df2e7](https://github.com/UK-Export-Finance/dtfs2/commit/62df2e7939597ac5c1a33cd178679cc4a54aa528))
+
 ## [2.9.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.8.0...v2.9.0) (2025-08-01)
 
 
