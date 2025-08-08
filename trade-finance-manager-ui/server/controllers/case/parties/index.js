@@ -2,7 +2,7 @@ const { FLASH_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { userCanEdit, isEmptyString, partyType } = require('./helpers');
 const validatePartyURN = require('./partyUrnValidation.validate');
-const { getAmendmentsInProgress } = require('../../helpers/amendments.helper');
+const { getAmendmentsInProgressSubmittedByPim } = require('../../helpers/amendments.helper');
 const CONSTANTS = require('../../../constants');
 const { getDealSuccessBannerMessage } = require('../../helpers/get-success-banner-message.helper');
 
@@ -27,7 +27,7 @@ const getAllParties = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
+    const amendmentsInProgress = getAmendmentsInProgressSubmittedByPim({ amendments, deal });
     const hasAmendmentInProgress = amendmentsInProgress.length > 0;
 
     if (hasAmendmentInProgress) {

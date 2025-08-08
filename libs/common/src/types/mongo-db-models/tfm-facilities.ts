@@ -158,3 +158,10 @@ export type TfmFacility = {
   tfm: object;
   auditRecord?: AuditDatabaseRecord;
 };
+
+export type GetTfmAmendmentInProgressResponse = {
+  amendmentsInProgress: FacilityAmendment[] | TfmFacilityAmendment[];
+  hasAmendmentInProgress: boolean;
+  hasAmendmentInProgressButton: boolean;
+  showContinueAmendmentButton: boolean;
+};
