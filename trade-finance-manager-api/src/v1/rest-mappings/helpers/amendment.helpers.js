@@ -1,4 +1,11 @@
-const { calculateUkefExposure, getGBPValue, formattedNumber, TFM_AMENDMENT_STATUS, PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const {
+  calculateUkefExposure,
+  getGBPValue,
+  formattedNumber,
+  TFM_AMENDMENT_STATUS,
+  PORTAL_AMENDMENT_STATUS,
+  isFutureEffectiveDate,
+} = require('@ukef/dtfs2-common');
 const { orderBy, cloneDeep } = require('lodash');
 const isValidFacility = require('./isValidFacility.helper');
 
@@ -54,27 +61,29 @@ const findLatestCompletedAmendment = (amendments) => {
     }
     const existingUpdatedFields = cloneDeep(updatedFields);
 
-    if (!updatedFields.value) {
+    const hasFutureEffectiveDate = amendment.effectiveDate && isFutureEffectiveDate(amendment.effectiveDate);
+
+    if (!updatedFields.value && !hasFutureEffectiveDate) {
       existingUpdatedFields.value = amendment.tfm.value;
     }
 
-    if (!updatedFields.amendmentExposurePeriodInMonths) {
+    if (!updatedFields.amendmentExposurePeriodInMonths && !hasFutureEffectiveDate) {
       existingUpdatedFields.amendmentExposurePeriodInMonths = amendment.tfm.amendmentExposurePeriodInMonths;
     }
-    if (!updatedFields.exposure) {
+    if (!updatedFields.exposure && !hasFutureEffectiveDate) {
       existingUpdatedFields.exposure = amendment.tfm.exposure;
     }
 
-    if (updatedFields?.isUsingFacilityEndDate === null || updatedFields?.isUsingFacilityEndDate === undefined) {
+    if ((updatedFields?.isUsingFacilityEndDate === null || updatedFields?.isUsingFacilityEndDate === undefined) && !hasFutureEffectiveDate) {
       existingUpdatedFields.isUsingFacilityEndDate = amendment.tfm.isUsingFacilityEndDate;
       existingUpdatedFields.facilityEndDate = amendment.tfm.facilityEndDate;
       existingUpdatedFields.bankReviewDate = amendment.tfm.bankReviewDate;
     }
 
-    if (!amendmentTfmCoverEndDate) {
+    if (!amendmentTfmCoverEndDate && !hasFutureEffectiveDate) {
       amendmentTfmCoverEndDate = amendment.tfm.coverEndDate;
     }
-    if (!amendmentCoverEndDate) {
+    if (!amendmentCoverEndDate && !hasFutureEffectiveDate) {
       amendmentCoverEndDate = amendment.coverEndDate;
     }
 
