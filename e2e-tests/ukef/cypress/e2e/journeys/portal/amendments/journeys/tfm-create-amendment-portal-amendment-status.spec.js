@@ -56,7 +56,7 @@ context('Amendments - TFM - Amendments details page - Creating an amendment whil
     cy.saveSession();
   });
 
-  it(`should display the add amendment button when portal amendment is in ${PORTAL_AMENDMENT_STATUS.DRAFT}`, () => {
+  it(`should not display the add amendment button when portal amendment is in ${PORTAL_AMENDMENT_STATUS.DRAFT}`, () => {
     cy.visit(relative(applicationDetailsUrl));
 
     applicationPreview.makeAChangeButton(facilityId).click();
@@ -74,7 +74,7 @@ context('Amendments - TFM - Amendments details page - Creating an amendment whil
     cy.visit(facilityUrl);
     facilityPage.facilityTabAmendments().click();
 
-    amendmentsPage.addAmendmentButton().should('exist');
+    amendmentsPage.addAmendmentButton().should('not.exist');
   });
 
   it(`should not display the add amendment button when portal amendment is ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}`, () => {
