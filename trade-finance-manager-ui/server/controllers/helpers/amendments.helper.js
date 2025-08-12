@@ -73,12 +73,12 @@ const nonAmendableDealStages = [TFM_DEAL_STAGE.CANCELLED];
  * Gets amendments that are in progress and submitted by PIM.
  * These are amendments that require UKEF approval
  * They have been submitted but not completed as they do not have a UKEF decision yet.
- * @param {object} getAmendmentsInProgress Params
+ * @param {object} getAmendmentsInProgressSubmittedFromPim Params
  * @param {import('@ukef/dtfs2-common').TfmDeal} getAmendmentsInProgress Params.deal - the deal
  * @param {import('@ukef/dtfs2-common').TfmFacilityAmendment[]} getAmendmentsInProgress Params.amendments - the amendments
  * @returns {import('@ukef/dtfs2-common').TfmFacilityAmendment[]} - the amendments that are in progress
  */
-const getAmendmentsInProgressSubmittedByPim = ({ amendments, deal }) => {
+const getAmendmentsInProgressSubmittedFromPim = ({ amendments, deal }) => {
   if (nonAmendableDealStages.includes(deal.tfm.stage)) {
     return [];
   }
@@ -107,18 +107,18 @@ const getAmendmentsInProgressSubmittedByPim = ({ amendments, deal }) => {
 const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
   if (Array.isArray(amendments) && amendments.length) {
     // TFM amendments that are in progress and not submitted by PIM
-    const inProgressTFMAmendments = amendments.filter(({ status, submittedByPim }) => status === TFM_AMENDMENT_STATUS.IN_PROGRESS && !submittedByPim);
+    const unsubmittedTFMAmendments = amendments.filter(({ status, submittedByPim }) => status === TFM_AMENDMENT_STATUS.IN_PROGRESS && !submittedByPim);
     // Portal amendments which are in progress
     const inProgressPortalAmendments = amendments.filter(({ status }) => PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(status));
 
-    const amendmentsInProgress = [...inProgressTFMAmendments, ...inProgressPortalAmendments];
+    const amendmentsInProgress = [...unsubmittedTFMAmendments, ...inProgressPortalAmendments];
     const hasAmendmentInProgress = amendmentsInProgress.length > 0;
 
     // If any TFM amendments which are in progress have been submitted by PIM
-    const hasAmendmentSubmittedByPim = inProgressTFMAmendments.some(({ submittedByPim }) => submittedByPim);
+    const hasAmendmentSubmittedByPim = unsubmittedTFMAmendments.some(({ submittedByPim }) => submittedByPim);
 
     // If any TFM amendments have the status of in progress
-    const hasAmendmentInProgressButton = inProgressTFMAmendments.some(({ status }) => status === TFM_AMENDMENT_STATUS.IN_PROGRESS);
+    const hasAmendmentInProgressButton = unsubmittedTFMAmendments.some(({ status }) => status === TFM_AMENDMENT_STATUS.IN_PROGRESS);
     // Show continue amendment button if there is an in progress TFM amendment that has not been submitted by PIM and if the button can be shown
     const showContinueAmendmentButton = hasAmendmentInProgressButton && !hasAmendmentSubmittedByPim && showAmendmentButton(deal, teams);
 
@@ -145,5 +145,5 @@ module.exports = {
   ukefDecisionRejected,
   validateUkefDecision,
   getAmendmentsInProgress,
-  getAmendmentsInProgressSubmittedByPim,
+  getAmendmentsInProgressSubmittedFromPim,
 };
