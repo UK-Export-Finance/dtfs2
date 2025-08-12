@@ -79,7 +79,7 @@ jobs:
 
     steps:
       - name: Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Codacy
         uses: codacy/codacy-analysis-cli-action@master
@@ -96,7 +96,7 @@ jobs:
 
     steps:
       - name: Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Dependencies
         working-directory: ./
@@ -116,7 +116,7 @@ jobs:
 
     steps:
       - name: Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Fossa
         uses: fossas/fossa-action@main
