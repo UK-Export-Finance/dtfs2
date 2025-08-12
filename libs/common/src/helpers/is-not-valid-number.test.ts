@@ -1,6 +1,6 @@
-import { isNotValidNumber } from './number';
+import { isNotValidNumber } from './is-not-valid-number';
 
-describe('helpers/number', () => {
+describe('is-not-valid-number', () => {
   describe('isNotValidNumber', () => {
     it('should return true if value is null', () => {
       expect(isNotValidNumber(null)).toBe(true);

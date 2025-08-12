@@ -33,14 +33,21 @@ export const createAmendmentFacilityExposure = (
   }
 
   // sets new exposure value based on amendment value
-  const formattedUkefExposure = formattedNumber(ukefExposureValue);
+  const exposure = formattedNumber(ukefExposureValue);
 
   // converts from seconds unix timestamp to one with milliseconds
-  const ukefExposureCalculationTimestampValue = new Date(ukefExposureTimestamp * 1000).valueOf();
+  const timestampHasSecondsOnly = ukefExposureTimestamp.toString().length === 10;
+  let ukefExposureTimestampValue = ukefExposureTimestamp;
+
+  if (timestampHasSecondsOnly) {
+    ukefExposureTimestampValue *= 1000;
+  }
+
+  const timestamp = new Date(ukefExposureTimestampValue).valueOf();
 
   return {
-    exposure: formattedUkefExposure,
-    timestamp: ukefExposureCalculationTimestampValue,
+    exposure,
+    timestamp,
     ukefExposureValue,
   };
 };
