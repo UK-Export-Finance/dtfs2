@@ -262,8 +262,9 @@ export class PortalFacilityAmendmentService {
       label: `Amendment ${referenceNumber} Approved`,
       timestamp: getUnixTime(timestamp),
       author: {
-        _id: '123',
-        firstName: 'First name',
+        _id: '',
+        firstName: bankName,
+        lastName: bankId,
       },
       facilityId,
       amendmentId,
