@@ -61,7 +61,7 @@ const findLatestCompletedAmendment = (amendments) => {
     }
     const existingUpdatedFields = cloneDeep(updatedFields);
 
-    const hasFutureEffectiveDate = amendment.effectiveDate && isFutureEffectiveDate(amendment.effectiveDate);
+    const hasFutureEffectiveDate = amendment.effectiveDate && isFutureEffectiveDate(amendment?.effectiveDate);
 
     if (!updatedFields.value && !hasFutureEffectiveDate) {
       existingUpdatedFields.value = amendment.tfm.value;

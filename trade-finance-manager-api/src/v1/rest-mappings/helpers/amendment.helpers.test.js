@@ -263,7 +263,6 @@ describe('findLatestCompletedAmendment()', () => {
     const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
 
     // Assert
-
     const expected = { ...latestAmendmentTfmObject };
     delete expected.effectiveDate;
 
