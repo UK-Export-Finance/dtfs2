@@ -1,4 +1,4 @@
-const { TEAM_IDS, TFM_AMENDMENT_STATUS, DEAL_STATUS, TFM_DEAL_STAGE, PORTAL_AMENDMENT_INPROGRESS_STATUSES } = require('@ukef/dtfs2-common');
+const { TEAM_IDS, TFM_AMENDMENT_STATUS, DEAL_STATUS, TFM_DEAL_STAGE, PORTAL_AMENDMENT_STARTED_STATUSES } = require('@ukef/dtfs2-common');
 const { DECISIONS, DEAL } = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
 
@@ -109,7 +109,7 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
     // TFM amendments that are in progress and not submitted by PIM
     const unsubmittedTFMAmendments = amendments.filter(({ status, submittedByPim }) => status === TFM_AMENDMENT_STATUS.IN_PROGRESS && !submittedByPim);
     // Portal amendments which are in progress
-    const inProgressPortalAmendments = amendments.filter(({ status }) => PORTAL_AMENDMENT_INPROGRESS_STATUSES.includes(status));
+    const inProgressPortalAmendments = amendments.filter(({ status }) => PORTAL_AMENDMENT_STARTED_STATUSES.includes(status));
 
     const amendmentsInProgress = [...unsubmittedTFMAmendments, ...inProgressPortalAmendments];
     const hasAmendmentInProgress = amendmentsInProgress.length > 0;

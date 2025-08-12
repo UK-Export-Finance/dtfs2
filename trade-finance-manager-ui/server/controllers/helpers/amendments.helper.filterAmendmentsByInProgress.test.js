@@ -21,7 +21,7 @@ const completedAmendment = () => ({
   submittedByPim: true,
 });
 
-describe('getAmendmentsInProgressSubmittedByPim', () => {
+describe('getAmendmentsInProgressSubmittedFromPim', () => {
   it(`should return an empty array if the deal stage is ${TFM_DEAL_STAGE.CANCELLED}`, () => {
     // Arrange
     const amendments = [submittedInProgressAmendment()];
