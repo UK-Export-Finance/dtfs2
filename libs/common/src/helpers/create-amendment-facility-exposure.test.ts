@@ -47,9 +47,31 @@ describe('createAmendmentFacilityExposure()', () => {
   });
 
   describe('when both values are valid', () => {
-    it('should return the formatted exposure and timestamp', () => {
+    it('should return the formatted exposure and timestamp when the timestamp has milliseconds', () => {
       // Arrange
       const timestamp = Date.now();
+
+      // Act
+      const result = createAmendmentFacilityExposure(exchangeRate, coverPercentageValue, amendment, timestamp);
+
+      // Assert
+      const valueInGBP = getGBPValue(exchangeRate, amendment);
+      const ukefExposureValue = calculateUkefExposure(valueInGBP!, coverPercentageValue);
+      const formattedUkefExposure = formattedNumber(ukefExposureValue!);
+      const ukefExposureCalculationTimestampValue = new Date(timestamp).valueOf();
+
+      const expected = {
+        exposure: formattedUkefExposure,
+        timestamp: ukefExposureCalculationTimestampValue,
+        ukefExposureValue,
+      };
+
+      expect(result).toEqual(expected);
+    });
+
+    it('should return the formatted exposure and timestamp * 1000 when the timestamp has only seconds', () => {
+      // Arrange
+      const timestamp = Math.floor(Date.now() / 1000);
 
       // Act
       const result = createAmendmentFacilityExposure(exchangeRate, coverPercentageValue, amendment, timestamp);
