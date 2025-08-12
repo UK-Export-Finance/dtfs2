@@ -11,6 +11,8 @@ export type TfmActivity =
       author: ActivityAuthor;
       text: string;
       label: string;
+      facilityId?: string;
+      amendmentId?: string;
     }
   | {
       type: typeof CANCELLATION;

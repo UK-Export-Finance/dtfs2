@@ -22,6 +22,7 @@ export type PortalActivity = {
   facilityType?: string;
   ukefFacilityId?: string;
   facilityId?: string;
+  amendmentId?: string;
   activityText?: string;
   activityHTML?: string;
   maker?: string;
