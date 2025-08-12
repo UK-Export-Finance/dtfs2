@@ -1,12 +1,13 @@
 import { getFormattedMonetaryValue, CURRENCY } from '@ukef/dtfs2-common';
 import { format, differenceInMonths } from 'date-fns';
-import { D_MMMM_YYYY_FORMAT, twoYears, twoDays, today } from '../../../../../../../../e2e-fixtures/dateConstants';
+import { D_MMMM_YYYY_FORMAT, DD_MMM_YYYY_FORMAT, twoYears, twoDays, today } from '../../../../../../../../e2e-fixtures/dateConstants';
 import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { PIM_USER_1, TFM_URL } from '../../../../../../../../e2e-fixtures';
 import caseDealPage from '../../../../../../../../tfm/cypress/e2e/pages/caseDealPage';
 import facilityPage from '../../../../../../../../tfm/cypress/e2e/pages/facilityPage';
+import facilitiesPage from '../../../../../../../../tfm/cypress/e2e/pages/facilitiesPage';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -101,5 +102,19 @@ context('Amendments - TFM - TFM should display the latest TFM amendment values a
 
     facilityPage.facilityCoverEndDate().contains(coverEndDateFormatted);
     facilityPage.facilityTenor().contains(`${tenor} months`);
+  });
+
+  it('should display the updated value and updated cover end date on the All facilities page for the facility', () => {
+    const formattedValueWithCurrency = `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGE_FACILITY_VALUE_2, true)}`;
+    const coverEndDateFormatted = format(new Date(twoYears.date), DD_MMM_YYYY_FORMAT);
+
+    cy.visit(TFM_URL);
+
+    cy.tfmLogin(PIM_USER_1);
+
+    facilityPage.allFacilitiesLink().click();
+
+    cy.assertText(facilitiesPage.facilitiesTable.row(facilityId).value(), formattedValueWithCurrency);
+    cy.assertText(facilitiesPage.facilitiesTable.row(facilityId).coverEndDate(), coverEndDateFormatted);
   });
 });

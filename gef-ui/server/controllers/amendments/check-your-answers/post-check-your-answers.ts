@@ -47,6 +47,7 @@ export const postCheckYourAnswers = async (req: PostCheckYourAnswersRequest, res
       const { error, tfmUpdate: tfm } = await addExposureValuesToAmendment(amendment, facility, facilityId, userToken);
 
       if (error) {
+        console.error('Error adding exposure values to amendment %o', error);
         return res.render('partials/problem-with-service.njk');
       }
 

@@ -7,7 +7,7 @@ import { roundNumber } from './round-number';
  * @param coverPercentage
  * @returns ukef exposure as a number or null if no value can be calculated
  */
-export const calculateUkefExposure = (facilityValueInGBP?: number, coverPercentage?: number) => {
+export const calculateUkefExposure = (facilityValueInGBP?: number, coverPercentage?: number): number | null => {
   if (facilityValueInGBP && coverPercentage) {
     const calculation = facilityValueInGBP * (coverPercentage / 100);
 

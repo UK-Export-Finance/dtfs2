@@ -68,7 +68,7 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
 
     const currency = facility.currency?.id || CURRENCY.GBP;
 
-    const tfmUpdate = {
+    const tfm = {
       ...amendment.tfm,
       value: {
         value: validationErrorOrValue.value,
@@ -79,7 +79,7 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
     // gets the current value (from previous amendment or facility) to add to the update object
     const { currentValue } = await getCurrentFacilityValueAndCoverEndDate(facilityId, facility, userToken);
 
-    const update = { value: validationErrorOrValue.value, currentValue, currency, tfm: tfmUpdate };
+    const update = { value: validationErrorOrValue.value, currentValue, currency, tfm };
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
