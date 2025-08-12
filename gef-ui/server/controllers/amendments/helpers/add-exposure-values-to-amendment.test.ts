@@ -281,7 +281,7 @@ describe('addExposureValuesToAmendment', () => {
           ...amendment.tfm,
           exposure: {
             exposure: formattedNumber(amendment.value!),
-            timestamp: new Date(amendment.effectiveDate! * 1000).valueOf(),
+            timestamp: new Date(amendment.effectiveDate!).valueOf(),
             ukefExposureValue: amendment.value,
           },
         },

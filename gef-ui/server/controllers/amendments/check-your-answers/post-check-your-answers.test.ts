@@ -393,7 +393,9 @@ describe('postCheckYourAnswers', () => {
 
     // Assert
     expect(res._getRenderView()).toEqual('partials/problem-with-service.njk');
-    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledTimes(2);
+
     expect(console.error).toHaveBeenCalledWith('Error fetching TFM facility %s %o', facilityId, mockError);
+    expect(console.error).toHaveBeenCalledWith('Error adding exposure values to amendment');
   });
 });
