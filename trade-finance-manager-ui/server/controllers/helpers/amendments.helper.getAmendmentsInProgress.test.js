@@ -141,8 +141,8 @@ describe('getAmendmentsInProgress', () => {
     });
   });
 
-  describe('when there is one portal amendment that is not started', () => {
-    it('should return an empty array', () => {
+  describe('when there is one portal amendment that is in draft', () => {
+    it('should return the amendment in progress', () => {
       // Arrange
       const amendments = [notStartedPortalAmendment()];
 
@@ -151,8 +151,8 @@ describe('getAmendmentsInProgress', () => {
 
       // Assert
       const expected = {
-        amendmentsInProgress: [],
-        hasAmendmentInProgress: false,
+        amendmentsInProgress: [notStartedPortalAmendment()],
+        hasAmendmentInProgress: true,
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
       };
