@@ -45,4 +45,4 @@ export * from './round-value';
 export * from './timezone';
 export * from './amendment-status-tag-colour';
 export * from './get-latest-amendment-by-facility';
-export * from './number';
+export * from './is-not-valid-number';

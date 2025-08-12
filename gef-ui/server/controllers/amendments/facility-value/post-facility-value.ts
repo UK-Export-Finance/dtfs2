@@ -67,7 +67,7 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
 
     const currency = facility.currency?.id || CURRENCY.GBP;
 
-    const tfmUpdate = {
+    const tfm = {
       ...amendment.tfm,
       value: {
         value: validationErrorOrValue.value,
@@ -75,7 +75,7 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
       },
     };
 
-    const update = { value: validationErrorOrValue.value, currency, tfm: tfmUpdate };
+    const update = { value: validationErrorOrValue.value, currency, tfm };
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 
