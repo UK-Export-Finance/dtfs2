@@ -258,8 +258,7 @@ export class PortalFacilityAmendmentService {
 
     const timestamp = now().setSeconds(0, 0);
 
-    const portalActivity: PortalActivity = {
-      type: PORTAL_ACTIVITY_TYPE.ACTIVITY,
+    const sharedVariables = {
       label: `Amendment ${referenceNumber} Approved`,
       timestamp: getUnixTime(timestamp),
       author: {
@@ -271,18 +270,15 @@ export class PortalFacilityAmendmentService {
       amendmentId,
     };
 
+    const portalActivity: PortalActivity = {
+      ...sharedVariables,
+      type: PORTAL_ACTIVITY_TYPE.ACTIVITY,
+    };
+
     const tfmActivity: TfmActivity = {
+      ...sharedVariables,
       type: ACTIVITY_TYPES.ACTIVITY,
-      timestamp: getUnixTime(timestamp),
-      author: {
-        firstName: bankName,
-        lastName: bankId,
-        _id: '',
-      },
-      label: `Amendment ${referenceNumber} Approved`,
       text: '',
-      facilityId,
-      amendmentId,
     };
 
     return await this.updatePortalFacilityAmendment({
