@@ -99,6 +99,7 @@ describe('/v1/gef/deals/:dealId/amendments', () => {
           name: maker1.firstname,
           email: maker1.email,
         },
+        tfm: {},
       };
 
       jest.mocked(getPortalFacilityAmendmentsOnDealMock).mockResolvedValue([amendment]);

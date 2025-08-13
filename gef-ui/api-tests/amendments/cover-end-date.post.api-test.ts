@@ -2,7 +2,7 @@ import { Headers } from 'node-mocks-http';
 import { NextFunction, Request, Response } from 'express';
 import { add, format, startOfDay } from 'date-fns';
 import { HttpStatusCode } from 'axios';
-import { AnyObject, DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
+import { AnyObject, DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES, MOCK_TFM_FACILITY } from '@ukef/dtfs2-common';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
 import { createApi } from '../create-api';
@@ -26,6 +26,7 @@ const mockGetFacility = jest.fn();
 const mockGetApplication = jest.fn();
 const mockGetAmendment = jest.fn();
 const mockUpdateAmendment = jest.fn();
+const mockGetTfmFacility = jest.fn();
 
 const dealId = '6597dffeb5ef5ff4267e5044';
 const facilityId = '6597dffeb5ef5ff4267e5045';
@@ -49,6 +50,7 @@ describe(`POST ${url}`, () => {
     jest.spyOn(api, 'getApplication').mockImplementation(mockGetApplication);
     jest.spyOn(api, 'getAmendment').mockImplementation(mockGetAmendment);
     jest.spyOn(api, 'updateAmendment').mockImplementation(mockUpdateAmendment);
+    jest.spyOn(api, 'getTfmFacility').mockImplementation(mockGetTfmFacility);
     jest.spyOn(console, 'error');
 
     const amendment = new PortalFacilityAmendmentWithUkefIdMockBuilder()
@@ -61,6 +63,7 @@ describe(`POST ${url}`, () => {
     mockGetApplication.mockResolvedValue(mockDeal);
     mockGetAmendment.mockResolvedValue(amendment);
     mockUpdateAmendment.mockResolvedValue(amendment);
+    mockGetTfmFacility.mockResolvedValue(MOCK_TFM_FACILITY);
   });
 
   afterAll(async () => {
