@@ -21,7 +21,7 @@ describe(component, () => {
         hasBeenIssued: true,
         coverEndDateEpoch: 1712793600,
         currencyAndValue: 'GBP 1,234,567,890.1',
-        hasAmendmentInProgress: true,
+        hasAmendmentInProgressSubmittedFromPim: true,
       },
       {
         dealId: '456',
@@ -36,7 +36,7 @@ describe(component, () => {
         hasBeenIssued: true,
         coverEndDateEpoch: 1712793600,
         currencyAndValue: 'GBP 1,234,567,890.1',
-        hasAmendmentInProgress: true,
+        hasAmendmentInProgressSubmittedFromPim: true,
       },
     ],
     user: {
@@ -187,7 +187,7 @@ describe(component, () => {
         describe('when the facility does not have an amendment in progress', () => {
           const issuedFacilityWithoutAmendmentInProgress = {
             ...params.facilities[0],
-            hasAmendmentInProgress: false,
+            hasAmendmentInProgressSubmittedFromPim: false,
           };
 
           const paramsIssuedWithoutAmendmentInProgress = {
@@ -236,7 +236,7 @@ describe(component, () => {
           const unissuedFacilityWithoutAmendmentInProgress = {
             ...params.facilities[0],
             hasBeenIssued: false,
-            hasAmendmentInProgress: false,
+            hasAmendmentInProgressSubmittedFromPim: false,
           };
 
           const paramsUnissuedWithoutAmendmentInProgress = {

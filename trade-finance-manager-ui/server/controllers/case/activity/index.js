@@ -2,7 +2,7 @@ const { getUnixTime } = require('date-fns');
 const { ACTIVITY_TYPES, FLASH_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { generateValidationErrors } = require('../../../helpers/validation');
-const { getAmendmentsInProgress } = require('../../helpers/amendments.helper');
+const { getAmendmentsInProgressSubmittedFromPim } = require('../../helpers/amendments.helper');
 const CONSTANTS = require('../../../constants');
 const { mapActivities } = require('./helpers/map-activities');
 const { getDealSuccessBannerMessage } = require('../../helpers/get-success-banner-message.helper');
@@ -29,10 +29,10 @@ const getActivity = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
-  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+  const amendmentsInProgressSubmittedFromPim = getAmendmentsInProgressSubmittedFromPim({ amendments, deal });
+  const hasAmendmentInProgressSubmittedFromPim = amendmentsInProgressSubmittedFromPim.length > 0;
 
-  if (hasAmendmentInProgress) {
+  if (hasAmendmentInProgressSubmittedFromPim) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
@@ -56,8 +56,8 @@ const getActivity = async (req, res) => {
     user,
     selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
     activities,
-    hasAmendmentInProgress,
-    amendmentsInProgress,
+    hasAmendmentInProgressSubmittedFromPim,
+    amendmentsInProgressSubmittedFromPim,
   });
 };
 
@@ -79,10 +79,10 @@ const filterActivities = async (req, res) => {
     return res.redirect('/not-found');
   }
 
-  const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
-  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+  const amendmentsInProgressSubmittedFromPim = getAmendmentsInProgressSubmittedFromPim({ amendments, deal });
+  const hasAmendmentInProgressSubmittedFromPim = amendmentsInProgressSubmittedFromPim.length > 0;
 
-  if (hasAmendmentInProgress) {
+  if (hasAmendmentInProgressSubmittedFromPim) {
     deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
@@ -106,8 +106,8 @@ const filterActivities = async (req, res) => {
     user,
     selectedActivityFilter: filterType,
     activities,
-    hasAmendmentInProgress,
-    amendmentsInProgress,
+    hasAmendmentInProgressSubmittedFromPim,
+    amendmentsInProgressSubmittedFromPim,
   });
 };
 
