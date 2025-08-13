@@ -15,6 +15,7 @@ import {
   DEAL_STATUS,
   PortalFacilityAmendmentWithUkefId,
   PORTAL_AMENDMENT_STATUS,
+  CURRENCY,
 } from '@ukef/dtfs2-common';
 import { postFacilityValue, PostFacilityValueRequest } from './post-facility-value';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
@@ -67,6 +68,8 @@ const getHttpMocks = (facilityValue: string = '10000') =>
   });
 
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED };
+
+const currencyUpdate = MOCK_ISSUED_FACILITY.details?.currency?.id;
 
 describe('postFacilityValue', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
@@ -256,8 +259,121 @@ describe('postFacilityValue', () => {
     await postFacilityValue(req, res);
 
     // Assert
+    const tfmUpdate = {
+      ...amendment.tfm,
+      value: {
+        value: Number(facilityValueNumerical),
+        currency: currencyUpdate,
+      },
+    };
+
     expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
-    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { value: Number(facilityValueNumerical) }, userToken });
+    expect(updateAmendmentMock).toHaveBeenCalledWith({
+      facilityId,
+      amendmentId,
+      update: { value: Number(facilityValueNumerical), currency: currencyUpdate, tfm: tfmUpdate },
+      userToken,
+    });
+    expect(console.error).toHaveBeenCalledTimes(0);
+  });
+
+  it(`should call updateAmendment with ${CURRENCY.GBP} when currency is not provided`, async () => {
+    // Arrange
+    const facilityValue = '1,000';
+    const facilityValueNumerical = dtfsCommon.getMonetaryValueAsNumber(facilityValue);
+    const { req, res } = getHttpMocks(facilityValue);
+
+    const facilityNoCurrency = MOCK_ISSUED_FACILITY;
+    delete facilityNoCurrency.details.currency;
+
+    getFacilityMock.mockResolvedValue(facilityNoCurrency);
+
+    // Act
+    await postFacilityValue(req, res);
+
+    // Assert
+    const tfmUpdate = {
+      ...amendment.tfm,
+      value: {
+        value: Number(facilityValueNumerical),
+        currency: CURRENCY.GBP,
+      },
+    };
+
+    expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
+    expect(updateAmendmentMock).toHaveBeenCalledWith({
+      facilityId,
+      amendmentId,
+      update: { value: Number(facilityValueNumerical), currency: CURRENCY.GBP, tfm: tfmUpdate },
+      userToken,
+    });
+    expect(console.error).toHaveBeenCalledTimes(0);
+  });
+
+  it(`should call updateAmendment with ${CURRENCY.USD} when currency provided is ${CURRENCY.USD}`, async () => {
+    // Arrange
+    const facilityValue = '1,000';
+    const facilityValueNumerical = dtfsCommon.getMonetaryValueAsNumber(facilityValue);
+    const { req, res } = getHttpMocks(facilityValue);
+
+    const facilityUSD = MOCK_ISSUED_FACILITY;
+    facilityUSD.details.currency = { id: CURRENCY.USD };
+
+    getFacilityMock.mockResolvedValue(facilityUSD);
+
+    // Act
+    await postFacilityValue(req, res);
+
+    // Assert
+    const tfmUpdate = {
+      ...amendment.tfm,
+      value: {
+        value: Number(facilityValueNumerical),
+        currency: CURRENCY.USD,
+      },
+    };
+
+    expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
+    expect(updateAmendmentMock).toHaveBeenCalledWith({
+      facilityId,
+      amendmentId,
+      update: { value: Number(facilityValueNumerical), currency: CURRENCY.USD, tfm: tfmUpdate },
+      userToken,
+    });
+    expect(console.error).toHaveBeenCalledTimes(0);
+  });
+
+  it(`should call updateAmendment with ${CURRENCY.GBP} when currency provided is an empty string`, async () => {
+    // Arrange
+    const facilityValue = '1,000';
+    const facilityValueNumerical = dtfsCommon.getMonetaryValueAsNumber(facilityValue);
+    const { req, res } = getHttpMocks(facilityValue);
+
+    const facilityCurrencyEmptyString = MOCK_ISSUED_FACILITY;
+    // @ts-ignore - testing empty currency
+    facilityCurrencyEmptyString.details.currency = { id: '' };
+
+    getFacilityMock.mockResolvedValue(facilityCurrencyEmptyString);
+
+    // Act
+    await postFacilityValue(req, res);
+
+    // Assert
+    const tfmUpdate = {
+      ...amendment.tfm,
+      value: {
+        value: Number(facilityValueNumerical),
+        currency: CURRENCY.GBP,
+      },
+    };
+
+    expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
+    expect(updateAmendmentMock).toHaveBeenCalledWith({
+      facilityId,
+      amendmentId,
+      update: { value: Number(facilityValueNumerical), currency: CURRENCY.GBP, tfm: tfmUpdate },
+      userToken,
+    });
     expect(console.error).toHaveBeenCalledTimes(0);
   });
 
@@ -266,12 +382,27 @@ describe('postFacilityValue', () => {
     const facilityValue = '1000';
     const { req, res } = getHttpMocks(facilityValue);
 
+    getFacilityMock.mockResolvedValue(MOCK_ISSUED_FACILITY);
+
     // Act
     await postFacilityValue(req, res);
 
     // Assert
+    const tfmUpdate = {
+      ...amendment.tfm,
+      value: {
+        value: Number(facilityValue),
+        currency: currencyUpdate,
+      },
+    };
+
     expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
-    expect(updateAmendmentMock).toHaveBeenCalledWith({ facilityId, amendmentId, update: { value: Number(facilityValue) }, userToken });
+    expect(updateAmendmentMock).toHaveBeenCalledWith({
+      facilityId,
+      amendmentId,
+      update: { value: Number(facilityValue), currency: currencyUpdate, tfm: tfmUpdate },
+      userToken,
+    });
     expect(console.error).toHaveBeenCalledTimes(0);
   });
 

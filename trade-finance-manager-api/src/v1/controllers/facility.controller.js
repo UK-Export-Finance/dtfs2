@@ -1,5 +1,6 @@
-const { format, getUnixTime } = require('date-fns');
+const { format, getUnixTime, fromUnixTime } = require('date-fns');
 const commaNumber = require('comma-number');
+const { convertUnixTimestampWithoutMilliseconds } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const api = require('../api');
 const { findOneTfmDeal } = require('./deal.controller');
@@ -70,8 +71,9 @@ const getFacilities = async (req, res) => {
       }
 
       if (latestAmendmentCoverEndDate) {
-        // * 1000 to convert to ms epoch time format so can be correctly formatted by template
-        facilityCoverEndDate = format(new Date(latestAmendmentCoverEndDate * 1000), 'dd MMM yyyy');
+        const formattedCoverEndDate = convertUnixTimestampWithoutMilliseconds(latestAmendmentCoverEndDate);
+
+        facilityCoverEndDate = format(fromUnixTime(formattedCoverEndDate), 'dd MMM yyyy');
         facilityCoverEndDateEpoch = latestAmendmentCoverEndDate;
       }
 

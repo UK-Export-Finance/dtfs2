@@ -42,5 +42,6 @@ export * from './acbs-facility-stage';
 export * from './facility-utilisation-percentage';
 export * from './timezone';
 export * from './status-tag-colours';
+export * from './exchange-rate';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';

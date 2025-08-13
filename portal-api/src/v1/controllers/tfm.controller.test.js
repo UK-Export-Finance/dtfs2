@@ -1,6 +1,6 @@
 import { HttpStatusCode } from 'axios';
 import { ROLES, ALL_TEAM_IDS } from '@ukef/dtfs2-common';
-import { tfmDeal, tfmTeam } from './tfm.controller';
+import { tfmDeal, tfmTeam, tfmFacility } from './tfm.controller';
 import { mockRes } from '../../../api-tests/v1/mocks';
 import * as api from '../api';
 
@@ -20,7 +20,7 @@ const invalidTeamIds = [
   ROLES.READ_ONLY,
 ];
 
-const invalidDealIds = ['', null, undefined];
+const invalidIds = ['', null, undefined];
 
 jest.mock('../api');
 console.error = jest.fn();
@@ -193,7 +193,7 @@ describe('tfmDeal', () => {
   const dealId = '61a7710b2ae62b0013dae687';
 
   describe('Invalid TFM deal ID', () => {
-    it.each(invalidDealIds)(`should return ${HttpStatusCode.BadRequest} when an invalid deal ID '%s' is supplied`, async (invalidDealId) => {
+    it.each(invalidIds)(`should return ${HttpStatusCode.BadRequest} when an invalid deal ID '%s' is supplied`, async (invalidDealId) => {
       // Arrange
       const mockRequest = {
         params: {
@@ -381,6 +381,182 @@ describe('tfmDeal', () => {
       expect(console.error).toHaveBeenCalledWith('Unable to get the TFM deal with ID %s %o', dealId, mockError);
       expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
       expect(mockResponse.send).toHaveBeenCalledWith('Unable to get the TFM deal');
+    });
+  });
+});
+
+describe('tfmFacility', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  const facilityId = '61a7710b2ae62b0013dae687';
+
+  describe('Invalid TFM facility ID', () => {
+    it.each(invalidIds)(`should return ${HttpStatusCode.BadRequest} when an invalid deal ID '%s' is supplied`, async (invalidFacilityId) => {
+      // Arrange
+      const mockRequest = {
+        params: {
+          facilityId: invalidFacilityId,
+        },
+      };
+
+      // Act
+      await tfmFacility(mockRequest, mockResponse);
+
+      // Assert
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Invalid TFM facility ID %s provided', invalidFacilityId);
+      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
+      expect(mockResponse.send).toHaveBeenCalledWith('Invalid TFM facility ID provided');
+    });
+  });
+
+  describe('Invalid response received', () => {
+    it('should throw an error if an empty response is received', async () => {
+      // Arrange
+      const mockRequest = {
+        params: {
+          facilityId,
+        },
+      };
+
+      const mockError = new Error('Invalid TFM facility response received');
+
+      api.getTfmFacility.mockResolvedValueOnce('');
+
+      // Act
+      await tfmFacility(mockRequest, mockResponse);
+
+      // Assert
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get the TFM facility with ID %s %o', facilityId, mockError);
+      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
+      expect(mockResponse.send).toHaveBeenCalledWith('Unable to get the TFM facility');
+    });
+
+    it('should throw an error if an undefined response is received', async () => {
+      // Arrange
+      const mockRequest = {
+        params: {
+          facilityId,
+        },
+      };
+
+      const mockError = new Error('Invalid TFM facility response received');
+
+      api.getTfmFacility.mockResolvedValueOnce(undefined);
+
+      // Act
+      await tfmFacility(mockRequest, mockResponse);
+
+      // Assert
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get the TFM facility with ID %s %o', facilityId, mockError);
+      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
+      expect(mockResponse.send).toHaveBeenCalledWith('Unable to get the TFM facility');
+    });
+
+    it('should throw an error if a null response is received', async () => {
+      // Arrange
+      const mockRequest = {
+        params: {
+          facilityId,
+        },
+      };
+
+      const mockError = new Error('Invalid TFM facility response received');
+
+      api.getTfmFacility.mockResolvedValueOnce(null);
+
+      // Act
+      await tfmFacility(mockRequest, mockResponse);
+
+      // Assert
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get the TFM facility with ID %s %o', facilityId, mockError);
+      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
+      expect(mockResponse.send).toHaveBeenCalledWith('Unable to get the TFM facility');
+    });
+
+    it('should throw an error if an empty data response is received', async () => {
+      // Arrange
+      const mockRequest = {
+        params: {
+          facilityId,
+        },
+      };
+
+      const mockError = new Error('Invalid TFM facility response received');
+
+      api.getTfmFacility.mockResolvedValueOnce({});
+
+      // Act
+      await tfmFacility(mockRequest, mockResponse);
+
+      // Assert
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get the TFM facility with ID %s %o', facilityId, mockError);
+      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
+      expect(mockResponse.send).toHaveBeenCalledWith('Unable to get the TFM facility');
+    });
+  });
+
+  describe('Valid respone received', () => {
+    it('should return the deal data with a successful response', async () => {
+      // Arrange
+      const mockRequest = {
+        params: {
+          facilityId,
+        },
+      };
+
+      // TFM facility object
+      const facility = {
+        _id: facilityId,
+        facilitySnapshot: {
+          facilityId,
+        },
+        tfm: {},
+      };
+
+      api.getTfmFacility.mockResolvedValueOnce({
+        data: {
+          ...facility,
+        },
+      });
+
+      // Act
+      await tfmFacility(mockRequest, mockResponse);
+
+      // Assert
+      expect(console.error).not.toHaveBeenCalled();
+      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+      expect(mockResponse.send).toHaveBeenCalledWith(facility);
+    });
+  });
+
+  describe('An exception has occurred', () => {
+    it(`should throw an ${HttpStatusCode.InternalServerError} when an exception has occurred`, async () => {
+      // Arrange
+      const mockRequest = {
+        params: {
+          facilityId,
+        },
+      };
+
+      const mockError = new Error('Test error');
+
+      api.getTfmFacility.mockRejectedValue(mockError);
+
+      // Act
+      await tfmFacility(mockRequest, mockResponse);
+
+      // Assert
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith('Unable to get the TFM facility with ID %s %o', facilityId, mockError);
+      expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
+      expect(mockResponse.send).toHaveBeenCalledWith('Unable to get the TFM facility');
     });
   });
 });

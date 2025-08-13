@@ -1,5 +1,6 @@
+const { decimalsCount } = require('@ukef/dtfs2-common');
 const { hasValue } = require('../../../../utils/string');
-const { isNumeric, isInteger, decimalsCount } = require('../../../../utils/number');
+const { isNumeric, isInteger } = require('../../../../utils/number');
 const { orderNumber } = require('../../../../utils/error-list-order-number');
 
 const MAX_CHARACTERS = 12;

@@ -5,6 +5,7 @@ import { asLoggedInUserSession } from '../../../utils/express-session';
 import { getNextPage } from '../helpers/navigation.helper.ts';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments.ts';
 import mapSubmittedToCheckerEmailVariables from '../helpers/map-submitted-to-checker-email-variables.ts';
+import { addExposureValuesToAmendment } from '../helpers/add-exposure-values-to-amendment.ts';
 
 export type PostCheckYourAnswersRequest = CustomExpressRequest<{
   params: { facilityId: string; amendmentId: string; dealId: string };
@@ -40,6 +41,19 @@ export const postCheckYourAnswers = async (req: PostCheckYourAnswersRequest, res
     if (!amendment) {
       console.error('Amendment %s was not found for the facility %s', amendmentId, facilityId);
       return res.redirect('/not-found');
+    }
+
+    if (amendment.changeFacilityValue) {
+      const { error, tfmUpdate: tfm } = await addExposureValuesToAmendment(amendment, facility, facilityId, userToken);
+
+      if (error) {
+        console.error('Error adding exposure values to amendment');
+        return res.render('partials/problem-with-service.njk');
+      }
+
+      const update = { tfm };
+
+      await api.updateAmendment({ facilityId, amendmentId, update, userToken });
     }
 
     const {
