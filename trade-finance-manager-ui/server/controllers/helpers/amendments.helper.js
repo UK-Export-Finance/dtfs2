@@ -106,8 +106,8 @@ const getAmendmentsInProgressSubmittedFromPim = ({ amendments, deal }) => {
  */
 const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
   if (Array.isArray(amendments) && amendments.length) {
-    // TFM amendments that are in progress and not submitted by PIM
-    const unsubmittedTFMAmendments = amendments.filter(({ status, submittedByPim }) => status === TFM_AMENDMENT_STATUS.IN_PROGRESS && !submittedByPim);
+    // TFM amendments that are in progress and not submitted by PIM - submittedByPim means tfm amendment is submitted, hence aliased to submitted
+    const unsubmittedTFMAmendments = amendments.filter(({ status, submittedByPim: submitted }) => status === TFM_AMENDMENT_STATUS.IN_PROGRESS && !submitted);
     // Portal amendments which are in progress
     const inProgressPortalAmendments = amendments.filter(({ status }) => PORTAL_AMENDMENT_STARTED_STATUSES.includes(status));
 
