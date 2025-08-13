@@ -1,15 +1,20 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { industrySector } from '@ukef/dtfs2-common';
 import { findACBSIndustrySector } from '../../src/v1/controllers/industry-sectors.controller';
 
 describe('findACBSIndustrySector lookup', () => {
   it('should return status code from industry sector lookup', async () => {
-    const expected = [
+    const expected: Array<industrySector> = [
       {
-        ukefSectorName: 'Electricity, gas, steam and air conditioning supply',
+        id: 1,
+        ukefSectorId: '1001',
+        ukefSectorName: 'Agriculture, Forestry and Fishing',
         internalNo: null,
-        acbsSectorName: 'CIVIL: POWER',
-        acbsIndustryName: 'GAS',
+        ukefIndustryId: '01110',
+        ukefIndustryName: 'Growing of cereals (except rice), leguminous crops and oil seeds',
+        acbsSectorId: '30',
+        acbsSectorName: 'CIVIL: AGRICULTURE, HORTICULTURE & FISHERIES',
+        acbsIndustryId: '3001',
+        acbsIndustryName: 'AGRICULTURE, HORTICULTURE & FISHERIES',
         created: '2017-04-01T00:00:00.000Z',
         updated: '2017-06-28T11:01:29.040Z',
         effectiveFrom: '2017-04-01T00:00:00.000Z',
@@ -20,7 +25,7 @@ describe('findACBSIndustrySector lookup', () => {
 
     expect(status).toEqual(200);
 
-    const responseData = data[0];
+    const responseData = data[0] as industrySector;
 
     expect(responseData.ukefSectorName).toEqual(expected[0].ukefSectorName);
     expect(responseData.internalNo).toEqual(expected[0].internalNo);

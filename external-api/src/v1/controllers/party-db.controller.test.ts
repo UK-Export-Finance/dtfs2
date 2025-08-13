@@ -1,10 +1,9 @@
 import axios, { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
+import { PROBABILITY_OF_DEFAULT, HEADERS } from '@ukef/dtfs2-common';
 import { getOrCreateParty } from './party-db.controller';
 import { mockReq, mockRes } from '../../test-mocks';
-import { PROBABILITY_OF_DEFAULT } from '@ukef/dtfs2-common';
 import { findACBSIndustrySector } from './industry-sectors.controller';
-import { HEADERS } from '@ukef/dtfs2-common';
 
 dotenv.config();
 
@@ -188,7 +187,7 @@ describe('getOrCreateParty', () => {
         companyRegistrationNumber: mockBody.companyRegNo,
         companyName: mockBody.companyName,
         probabilityOfDefault: mockBody.probabilityOfDefault,
-        ukEntity: "Yes",
+        ukEntity: 'Yes',
         ukefIndustryId: mockIndustryResponse.acbsIndustryId,
         ukefSectorId: mockIndustryResponse.acbsSectorId,
       },

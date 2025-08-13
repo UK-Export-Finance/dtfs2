@@ -1,4 +1,4 @@
-import { isNumeric, decimalsCount, roundNumber } from './number';
+import { isNumeric, roundNumber } from './number';
 
 describe('number', () => {
   describe('isNumeric', () => {
@@ -8,18 +8,6 @@ describe('number', () => {
 
     it('should return false when NOT a number', () => {
       expect(isNumeric('12')).toEqual(false);
-    });
-  });
-
-  describe('decimalsCount', () => {
-    it('should return amount of decimals', () => {
-      expect(decimalsCount(12.1)).toEqual(1);
-      expect(decimalsCount(12.12345678)).toEqual(8);
-    });
-
-    it('should return 0 when no decimals', () => {
-      expect(decimalsCount(1)).toEqual(0);
-      expect(decimalsCount(1000)).toEqual(0);
     });
   });
 

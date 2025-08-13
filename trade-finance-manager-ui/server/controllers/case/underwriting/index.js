@@ -1,6 +1,6 @@
 const { format, fromUnixTime } = require('date-fns');
 const { isEmpty } = require('lodash');
-const { FLASH_TYPES } = require('@ukef/dtfs2-common');
+const { FLASH_TYPES, formattedNumber, convertUnixTimestampWithoutMilliseconds } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 
 const leadUnderwriter = require('./lead-underwriter');
@@ -8,11 +8,10 @@ const pricingAndRisk = require('./pricing-and-risk');
 const underwriterManagersDecision = require('./underwriter-managers-decision');
 const { getAmendmentLeadUnderwriter } = require('../amendments');
 const { userCanEditManagersDecision, userCanEditBankDecision, ukefDecisionRejected } = require('../../helpers');
-const { formattedNumber } = require('../../../helpers/number');
 const { UNDERWRITER_MANAGER_DECISIONS_TAGS } = require('../../../constants/decisions.constant');
 const { BANK_DECISIONS_TAGS } = require('../../../constants/amendments');
 const CONSTANTS = require('../../../constants');
-const { getAmendmentsInProgress } = require('../../helpers/amendments.helper');
+const { getAmendmentsInProgressSubmittedFromPim } = require('../../helpers/amendments.helper');
 const { getDealSuccessBannerMessage } = require('../../helpers/get-success-banner-message.helper');
 
 /**
@@ -53,10 +52,10 @@ const getUnderwriterPage = async (req, res) => {
   // filters the amendments submittedByPim and also which are not automatic
   amendments = amendments.filter(({ submittedByPim, requireUkefApproval }) => submittedByPim && requireUkefApproval);
 
-  const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
-  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+  const amendmentsInProgressSubmittedFromPim = getAmendmentsInProgressSubmittedFromPim({ amendments, deal });
+  const hasAmendmentInProgressSubmittedFromPim = amendmentsInProgressSubmittedFromPim.length > 0;
 
-  if (hasAmendmentInProgress) {
+  if (hasAmendmentInProgressSubmittedFromPim) {
     deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
@@ -89,7 +88,9 @@ const getUnderwriterPage = async (req, res) => {
 
       if (amendment?.changeCoverEndDate && amendment?.coverEndDate) {
         amendment.currentCoverEndDate = format(fromUnixTime(amendment.currentCoverEndDate), 'dd MMMM yyyy');
-        amendment.coverEndDate = format(fromUnixTime(amendment.coverEndDate), 'dd MMMM yyyy');
+
+        const formattedCoverEndDate = convertUnixTimestampWithoutMilliseconds(amendment.coverEndDate);
+        amendment.coverEndDate = format(fromUnixTime(formattedCoverEndDate), 'dd MMMM yyyy');
       }
 
       if (amendment?.changeFacilityValue && amendment?.value) {
@@ -136,8 +137,8 @@ const getUnderwriterPage = async (req, res) => {
     pricingAndRisk: dealPricingAndRisk,
     underwriterManagersDecision: dealUnderwriterManagersDecision,
     amendments: submittedAmendments,
-    amendmentsInProgress,
-    hasAmendmentInProgress,
+    amendmentsInProgressSubmittedFromPim,
+    hasAmendmentInProgressSubmittedFromPim,
   });
 };
 

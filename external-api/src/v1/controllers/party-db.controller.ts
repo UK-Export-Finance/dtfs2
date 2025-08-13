@@ -74,8 +74,8 @@ export const getOrCreateParty = async (
       throw new Error('Unable to get industry sector data');
     }
 
-    const { acbsIndustryId: ukefIndustryId, acbsSectorId: ukefSectorId } = industryData.data[0] as industrySector;
-    const ukEntity = isUkEntity ? "Yes" : "No";
+    const { acbsIndustryId: ukefIndustryId, acbsSectorId: ukefSectorId } = industryData.data[0];
+    const ukEntity = isUkEntity ? 'Yes' : 'No';
 
     const response: { status: number; data: unknown } = await axios({
       method: 'post',

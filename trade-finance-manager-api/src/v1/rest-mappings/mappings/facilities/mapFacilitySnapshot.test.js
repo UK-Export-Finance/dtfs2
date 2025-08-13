@@ -1,6 +1,5 @@
-const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
+const { BOND_TYPE, CURRENCY, formattedNumber } = require('@ukef/dtfs2-common');
 const mapFacilitySnapshot = require('./mapFacilitySnapshot');
-const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityProduct = require('./mapFacilityProduct');
 const mapFacilityValue = require('./mapFacilityValue');
 const mapBankFacilityReference = require('./mapBankFacilityReference');

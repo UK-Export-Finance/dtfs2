@@ -108,6 +108,7 @@ describe('/v1/gef/facilities/amendments', () => {
             name: maker1.firstname,
             email: maker1.email,
           },
+          tfm: {},
         };
 
         jest.mocked(getAllPortalFacilityAmendmentsMock).mockResolvedValue([amendment]);

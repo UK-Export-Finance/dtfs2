@@ -1,8 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-import { HEADERS, IndustrySectorInterface } from '@ukef/dtfs2-common';
+import { HEADERS, IndustrySectorInterface, industrySector } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
@@ -21,7 +17,7 @@ const headers = {
  * @param {number} industryId UKEF Industry ID
  * @returns ACBS compliant industry ID
  */
-export const findACBSIndustrySector = async (industryId: number): Promise<{data: string | Array<Object>; status: number}> => {
+export const findACBSIndustrySector = async (industryId: number): Promise<{ data: string | Array<industrySector>; status: number }> => {
   if (!isValidIndustryId(industryId.toString())) {
     console.error('Invalid industry id provided %s', industryId);
     return { data: 'Invalid industry ID', status: 400 };

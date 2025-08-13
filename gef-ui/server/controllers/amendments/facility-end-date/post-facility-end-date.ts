@@ -69,7 +69,13 @@ export const postFacilityEndDate = async (req: PostFacilityEndDateRequest, res: 
       return res.render('partials/amendments/facility-end-date.njk', viewModel);
     }
 
-    const update = { facilityEndDate: validationErrorsOrValue.value };
+    const tfmUpdate = {
+      ...amendment.tfm,
+      facilityEndDate: validationErrorsOrValue.value,
+      isUsingFacilityEndDate: true,
+    };
+
+    const update = { facilityEndDate: validationErrorsOrValue.value, tfm: tfmUpdate };
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 

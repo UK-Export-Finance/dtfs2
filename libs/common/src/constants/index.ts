@@ -44,5 +44,6 @@ export * from './timezone';
 export * from './status-tag-colours';
 export * from './country';
 export * from './parties';
+export * from './exchange-rate';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';

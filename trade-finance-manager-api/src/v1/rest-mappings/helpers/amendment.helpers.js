@@ -1,7 +1,5 @@
-const { CURRENCY, TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { calculateUkefExposure, getGBPValue, formattedNumber, TFM_AMENDMENT_STATUS, PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const { orderBy, cloneDeep } = require('lodash');
-const { formattedNumber } = require('../../../utils/number');
-const { decimalsCount, roundNumber } = require('../../helpers/number');
 const isValidFacility = require('./isValidFacility.helper');
 
 // returns the formatted amendment value and currency (without conversion)
@@ -10,54 +8,6 @@ const amendmentChangeValueExportCurrency = (amendment) => {
 
   if (currency && amendmentValue) {
     return `${currency} ${formattedNumber(amendmentValue)}`;
-  }
-
-  return null;
-};
-
-const roundValue = (valueInGBP) => {
-  const totalDecimals = decimalsCount(valueInGBP);
-
-  // rounds to 2 decimal places if decimals greater than 2
-  const newValue = totalDecimals > 2 ? roundNumber(valueInGBP, 2) : valueInGBP;
-
-  return newValue;
-};
-
-// calculates new facility value in GBP
-const calculateNewFacilityValue = (exchangeRate, amendment) => {
-  const { currency, value: amendmentValue } = amendment;
-  let newValue;
-
-  if (currency && amendmentValue) {
-    // if already in GBP, just take the value
-    if (currency === CURRENCY.GBP) {
-      newValue = amendmentValue;
-    } else {
-      // if no exchange rate return null
-      if (!exchangeRate) {
-        return null;
-      }
-      const valueInGBP = amendmentValue * exchangeRate;
-      newValue = roundValue(valueInGBP);
-    }
-
-    return newValue;
-  }
-
-  return null;
-};
-
-// calculates new ukef exposure from amendment value
-const calculateUkefExposure = (facilityValueInGBP, coverPercentage) => {
-  if (facilityValueInGBP && coverPercentage) {
-    // parse float as can have 2 decimal places in facility value
-    const calculation = parseFloat(facilityValueInGBP, 10) * (coverPercentage / 100);
-    const totalDecimals = decimalsCount(calculation);
-
-    const ukefExposure = totalDecimals > 2 ? roundNumber(calculation, 2) : calculation;
-
-    return ukefExposure;
   }
 
   return null;
@@ -83,7 +33,7 @@ const findLatestCompletedAmendment = (amendments) => {
   if (!amendments) {
     return {};
   }
-  const completedAmendments = amendments.filter(({ status }) => status === TFM_AMENDMENT_STATUS.COMPLETED);
+  const completedAmendments = amendments.filter(({ status }) => status === TFM_AMENDMENT_STATUS.COMPLETED || status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED);
   const sortedAmendments = orderBy(completedAmendments, ['updatedAt', 'version'], ['desc', 'asc']);
 
   /**
@@ -149,7 +99,7 @@ const calculateAmendmentTotalExposure = (facility) => {
       const coverPercentageValue = coverPercentage || coveredPercentage;
 
       if (latestAmendmentTFM?.value) {
-        const valueInGBP = calculateNewFacilityValue(exchangeRate, latestAmendmentTFM.value);
+        const valueInGBP = getGBPValue(exchangeRate, latestAmendmentTFM.value);
         const ukefExposureValue = calculateUkefExposure(valueInGBP, coverPercentageValue);
 
         // sets new exposure value based on amendment value
@@ -163,8 +113,6 @@ const calculateAmendmentTotalExposure = (facility) => {
 
 module.exports = {
   amendmentChangeValueExportCurrency,
-  calculateNewFacilityValue,
-  calculateUkefExposure,
   calculateAmendmentTotalExposure,
   findLatestCompletedAmendment,
 };

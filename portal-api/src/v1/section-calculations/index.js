@@ -1,5 +1,6 @@
+const { decimalsCount } = require('@ukef/dtfs2-common');
 const { hasValue } = require('../../utils/string');
-const { isNumeric, decimalsCount, roundNumber, formattedNumber } = require('../../utils/number');
+const { isNumeric, roundNumber, formattedNumber } = require('../../utils/number');
 
 exports.calculateGuaranteeFee = (riskMarginFee) => {
   if (hasValue(riskMarginFee)) {

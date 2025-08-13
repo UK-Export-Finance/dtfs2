@@ -1,7 +1,6 @@
-const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS, formattedNumber } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { amendFacilityValueValidation } = require('./validation/amendFacilityValue.validate');
-const { formattedNumber } = require('../../../helpers/number');
 
 const getAmendFacilityValue = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
