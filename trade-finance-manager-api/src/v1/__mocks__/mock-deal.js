@@ -1,7 +1,7 @@
 const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { MOCK_FACILITIES } = require('./mock-facilities');
 const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
-const { COMPANY_REGISTRATION_NUMBER, PROBABILITY_OF_DEFAULT } = require('../../../../../src/constants/deals');
+const { PROBABILITY_OF_DEFAULT } = require('../../constants/deals');
 
 const MOCK_DEAL = {
   _id: '64da2f74de0f97235921b09b',

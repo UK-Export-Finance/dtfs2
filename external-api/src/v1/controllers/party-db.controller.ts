@@ -59,12 +59,12 @@ export const getOrCreateParty = async (
     const { companyRegNo: companyRegistrationNumber, companyName, probabilityOfDefault, isUkEntity, code } = req.body;
 
     if (!companyRegistrationNumber || !isValidCompanyRegistrationNumber(companyRegistrationNumber)) {
-      console.error('Invalid company registration number provided %s', companyRegistrationNumber);
+      console.error('Invalid company registration number was provided %s', companyRegistrationNumber);
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
     }
 
     if (!companyName) {
-      console.error('No company name provided');
+      console.error('Invalid company name was provided %s', companyName);
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company name' });
     }
 

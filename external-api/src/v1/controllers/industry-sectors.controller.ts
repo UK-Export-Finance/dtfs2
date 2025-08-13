@@ -21,7 +21,7 @@ const headers = {
  * @param {number} industryId UKEF Industry ID
  * @returns ACBS compliant industry ID
  */
-export const findACBSIndustrySector = async (industryId: number) => {
+export const findACBSIndustrySector = async (industryId: number): Promise<{data: string | Array<Object>; status: number}> => {
   if (!isValidIndustryId(industryId.toString())) {
     console.error('Invalid industry id provided %s', industryId);
     return { data: 'Invalid industry ID', status: 400 };
@@ -35,6 +35,7 @@ export const findACBSIndustrySector = async (industryId: number) => {
     console.error('Error calling ACBS industry sector %o %s', error.response.data, error.response.status);
     return { data: 'Failed to find ACBS industry sector', status: error?.response?.status || 500 };
   });
+
   return response;
 };
 

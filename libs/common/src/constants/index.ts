@@ -43,5 +43,6 @@ export * from './facility-utilisation-percentage';
 export * from './timezone';
 export * from './status-tag-colours';
 export * from './country';
+export * from './parties';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';
