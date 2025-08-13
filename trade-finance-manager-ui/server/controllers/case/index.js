@@ -52,6 +52,12 @@ const getCaseDeal = async (req, res) => {
       deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
     }
 
+    const { inProgressPortalAmendments, hasInProgressPortalAmendments } = getAmendmentsInProgress({
+      amendments,
+      deal,
+      teams: req.session.user.teams,
+    });
+
     const { dealSnapshot } = deal;
 
     const dealCancellationIsEnabled = isDealCancellationEnabledForUser(dealSnapshot.submissionType, user);
@@ -84,6 +90,8 @@ const getCaseDeal = async (req, res) => {
       hasAmendmentInProgressSubmittedFromPim,
       showDealCancelButton,
       hasDraftCancellation,
+      inProgressPortalAmendments,
+      hasInProgressPortalAmendments,
     });
   } catch (error) {
     console.error('Unable to render deal %o', error);
@@ -352,11 +360,12 @@ const getCaseFacility = async (req, res) => {
     const amendmentsInProgressSubmittedFromPim = getAmendmentsInProgressSubmittedFromPim({ amendments, deal });
     const hasAmendmentInProgressSubmittedFromPim = amendmentsInProgressSubmittedFromPim.length > 0;
 
-    const { hasAmendmentInProgress, hasAmendmentInProgressButton, showContinueAmendmentButton } = getAmendmentsInProgress({
-      amendments,
-      deal,
-      teams: req.session.user.teams,
-    });
+    const { hasAmendmentInProgress, hasAmendmentInProgressButton, showContinueAmendmentButton, inProgressPortalAmendments, hasInProgressPortalAmendments } =
+      getAmendmentsInProgress({
+        amendments,
+        deal,
+        teams: req.session.user.teams,
+      });
 
     if (hasAmendmentInProgressSubmittedFromPim) {
       deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
@@ -382,6 +391,8 @@ const getCaseFacility = async (req, res) => {
       amendments,
       amendmentsInProgressSubmittedFromPim,
       showFacilityEndDate: facility.facilitySnapshot.isGef,
+      inProgressPortalAmendments,
+      hasInProgressPortalAmendments,
     });
   } catch (error) {
     console.error('Error getting case facility %o', error);
