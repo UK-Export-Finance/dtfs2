@@ -34,6 +34,22 @@ export const aPortalFacilityAmendment = ({
     criteria: [{ id: 1, text: 'item 1', answer: null }],
     version: 1,
   },
+  tfm: {
+    value: {
+      value: undefined,
+      currency: undefined,
+    },
+    exposure: {
+      exposure: undefined,
+      timestamp: undefined,
+      ukefExposureValue: undefined,
+    },
+    amendmentExposurePeriodInMonths: undefined,
+    coverEndDate: undefined,
+    facilityEndDate: undefined,
+    bankReviewDate: undefined,
+    isUsingFacilityEndDate: undefined,
+  },
 });
 
 export const aCompletedPortalFacilityAmendment = (): PortalFacilityAmendment => ({

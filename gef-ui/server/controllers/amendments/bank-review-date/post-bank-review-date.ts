@@ -69,7 +69,12 @@ export const postBankReviewDate = async (req: PostBankReviewDateRequest, res: Re
       return res.render('partials/amendments/bank-review-date.njk', viewModel);
     }
 
-    const update = { bankReviewDate: validationErrorsOrValue.value };
+    const tfmUpdate = {
+      ...amendment.tfm,
+      bankReviewDate: validationErrorsOrValue.value,
+    };
+
+    const update = { bankReviewDate: validationErrorsOrValue.value, tfm: tfmUpdate };
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
     /*

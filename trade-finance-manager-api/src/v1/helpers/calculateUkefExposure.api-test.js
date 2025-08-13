@@ -1,5 +1,5 @@
+const { roundNumber } = require('@ukef/dtfs2-common');
 const calculateUkefExposure = require('./calculateUkefExposure');
-const { roundNumber } = require('./number');
 
 describe('calculateUkefExposure', () => {
   const basicCalculation = (value, percentage) => value * (percentage / 100);

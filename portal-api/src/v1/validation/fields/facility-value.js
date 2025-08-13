@@ -1,5 +1,6 @@
+const { decimalsCount } = require('@ukef/dtfs2-common');
 const { hasValue } = require('../../../utils/string');
-const { stripDecimals, decimalsCount, sanitizeCurrency } = require('../../../utils/number');
+const { stripDecimals, sanitizeCurrency } = require('../../../utils/number');
 const { orderNumber } = require('../../../utils/error-list-order-number');
 
 const MIN_VALUE = 0.01;
