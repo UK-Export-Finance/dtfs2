@@ -9,6 +9,7 @@ jest.mock('../../services/api');
 
 const timestamp = 1733311320;
 const date = fromUnixTime(timestamp);
+const dealId = '123';
 
 const dealSubmissionActivity = [
   {
@@ -34,6 +35,7 @@ const dealSubmissionActivity = [
     html: '',
     facilityType: '',
     ukefFacilityId: '',
+    amendmentId: '',
     facilityId: '',
     maker: '',
     checker: '',
@@ -51,6 +53,29 @@ const facilityActivity = [
     facilityType: MAPPED_FACILITY_TYPE.CASH,
     ukefFacilityId: '12345',
     facilityId: '123456',
+    amendmentId: '',
+    maker: {
+      firstname: 'Joe',
+      surname: 'Bloggs',
+      id: '12345',
+    },
+    checker: {
+      firstname: 'Bob',
+      surname: 'Smith',
+      id: '4567',
+    },
+  },
+];
+
+const amendmentActivity = [
+  {
+    type: PORTAL_ACTIVITY_TYPE.ACTIVITY,
+    timestamp,
+    author: MOCK_AUTHOR,
+    text: '',
+    label: 'Amendment 12345-001 Approved',
+    facilityId: '123456',
+    amendmetId: '123456',
     maker: {
       firstname: 'Joe',
       surname: 'Bloggs',
@@ -65,9 +90,9 @@ const facilityActivity = [
 ];
 
 describe('mapPortalActivities', () => {
-  it('should return a mapped array of deal statues for portal activities and comments', () => {
+  it('should return a mapped array of deal statuses for portal activities and comments', () => {
     // Act
-    const result = mapPortalActivities(dealSubmissionActivity);
+    const result = mapPortalActivities(dealId, dealSubmissionActivity);
 
     // Assert
     const expected = [
@@ -83,6 +108,7 @@ describe('mapPortalActivities', () => {
         maker: undefined,
         checker: undefined,
         scheduledCancellation: true,
+        amendmentUrl: '',
       },
       {
         title: PORTAL_ACTIVITY_LABEL.AIN_SUBMISSION,
@@ -96,6 +122,7 @@ describe('mapPortalActivities', () => {
         maker: '',
         checker: '',
         scheduledCancellation: undefined,
+        amendmentUrl: '',
       },
     ];
 
@@ -104,7 +131,7 @@ describe('mapPortalActivities', () => {
 
   it('should return a mapped array of facility status for portal activities and comments', () => {
     // Act
-    const result = mapPortalActivities(facilityActivity);
+    const result = mapPortalActivities(dealId, facilityActivity);
 
     // Assert
     const expected = [
@@ -128,6 +155,40 @@ describe('mapPortalActivities', () => {
           id: '4567',
         },
         scheduledCancellation: undefined,
+        amendmentUrl: '',
+      },
+    ];
+
+    expect(result).toEqual(expected);
+  });
+
+  it('should return a mapped array of amendments for portal activities and comments', () => {
+    // Act
+    const result = mapPortalActivities(dealId, amendmentActivity);
+
+    // Assert
+    const expected = [
+      {
+        text: '',
+        title: 'Amendment 12345-001 Approved',
+        date: format(date, DATE_FORMATS.D_MMMM_YYYY),
+        time: format(date, DATE_FORMATS.H_MMAAA),
+        byline: `${MOCK_AUTHOR.firstName} ${MOCK_AUTHOR.lastName}`,
+        facilityType: undefined,
+        maker: {
+          firstname: 'Joe',
+          surname: 'Bloggs',
+          id: '12345',
+        },
+        checker: {
+          firstname: 'Bob',
+          surname: 'Smith',
+          id: '4567',
+        },
+        ukefFacilityId: undefined,
+        facilityId: '123456',
+        scheduledCancellation: undefined,
+        amendmentUrl: '',
       },
     ];
 
@@ -147,7 +208,7 @@ describe('mapPortalActivities', () => {
       const mockActivities = [mockActivity];
 
       // Act
-      const result = mapPortalActivities(mockActivities);
+      const result = mapPortalActivities(dealId, mockActivities);
 
       // Assert
       const expected = mockActivity.author.firstName;
@@ -196,7 +257,7 @@ describe('getPortalActivities', () => {
       userToken: mockRequest.session.userToken,
     });
 
-    const mappedPortalActivities = mapPortalActivities(mockApplicationResponse.portalActivities);
+    const mappedPortalActivities = mapPortalActivities(dealId, mockApplicationResponse.portalActivities);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/application-activity.njk', {
       activeSubNavigation: 'activities',
