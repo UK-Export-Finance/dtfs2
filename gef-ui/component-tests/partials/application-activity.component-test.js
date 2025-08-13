@@ -10,6 +10,8 @@ const timestamp = 0;
 const toDate = fromUnixTime(new Date(timestamp));
 const date = format(toDate, DATE_FORMATS.D_MMMM_YYYY);
 const time = format(toDate, DATE_FORMATS.H_MMAAA);
+const amendmentTitle = 'Amendment 12345-001 Approved';
+const amendmentUrl = '/gef/application-details/123/facilities/111/amendments/123/amendment-details';
 
 describe(page, () => {
   let wrapper;
@@ -47,6 +49,25 @@ describe(page, () => {
       date,
       time,
     },
+    {
+      text: '',
+      timestamp,
+      date,
+      time,
+      byline: 'Bob Smith',
+      facilityId: '111',
+      ukefFacilityId: undefined,
+      facilityType: undefined,
+      maker: {
+        firstname: 'Maker first',
+        surname: 'Maker last',
+      },
+      checker: {
+        firstname: 'Checker first',
+        surname: 'Checker last',
+      },
+      amendmentUrl,
+    },
   ];
 
   const mockActivityFacility = {
@@ -63,6 +84,11 @@ describe(page, () => {
     ...portalActivities[1],
     title: PORTAL_ACTIVITY_LABEL.DEAL_CANCELLATION_SCHEDULED,
     scheduledCancellation: true,
+  };
+
+  const mockActivityAmendment = {
+    ...portalActivities[2],
+    title: amendmentTitle,
   };
 
   beforeEach(() => {
@@ -246,6 +272,30 @@ describe(page, () => {
 
       // This is repeated twice due to two deal activities
       wrapper.expectText(selector).toRead(`${DEAL_STATUS.PENDING_CANCELLATION}  ${DEAL_STATUS.CANCELLED}`);
+    });
+  });
+
+  describe(`when the title is 'Amendment 12345-001 Approved'`, () => {
+    beforeAll(() => {
+      params.portalActivities = [mockActivityAmendment];
+    });
+
+    it('should render an `activity` title', () => {
+      wrapper.expectText(`[data-cy="activity-${mockActivityAmendment.title}-title"]`).toRead(mockActivityAmendment.title);
+    });
+
+    it('should render an activity byline', () => {
+      wrapper.expectText(`[data-cy="activity-${mockActivityAmendment.title}-byline"]`).toRead(`by ${mockActivityAmendment.byline}`);
+    });
+
+    it('should render an activity date', () => {
+      wrapper.expectText(`[data-cy="activity-${mockActivityAmendment.title}-date"]`).toRead(`${mockActivityAmendment.date} ${mockActivityAmendment.time}`);
+    });
+
+    it('should render an amendment link', () => {
+      const selector = `[data-cy="amendment-link"]`;
+
+      wrapper.expectLink(selector).toLinkTo(amendmentUrl, 'Amendment Summary');
     });
   });
 });

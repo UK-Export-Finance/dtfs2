@@ -3,14 +3,18 @@ const { timezone, DATE_FORMATS } = require('@ukef/dtfs2-common');
 const { getApplication, getUserDetails } = require('../../services/api');
 
 // maps portalActivities array to create array in correct format for mojTimeline
-const mapPortalActivities = (portalActivities) =>
-  portalActivities.map(({ label, text, timestamp, author, facilityType, ukefFacilityId, facilityId, maker, checker, scheduledCancellation }) => {
+const mapPortalActivities = (dealId, portalActivities) =>
+  portalActivities.map(({ label, text, timestamp, author, facilityType, ukefFacilityId, facilityId, amendmentId, maker, checker, scheduledCancellation }) => {
     let byline = author.firstName;
+    let amendmentUrl = '';
 
     if (author.lastName) {
       byline += ` ${author.lastName}`;
     }
 
+    if (amendmentId) {
+      amendmentUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/amendment-details`;
+    }
     const date = fromUnixTime(new Date(timestamp));
 
     const mappedActivity = {
@@ -22,6 +26,7 @@ const mapPortalActivities = (portalActivities) =>
       facilityType,
       ukefFacilityId,
       facilityId,
+      amendmentUrl,
       maker,
       checker,
       scheduledCancellation,
@@ -48,7 +53,7 @@ const getPortalActivities = async (req, res) => {
 
   const deal = await getApplication({ dealId, userToken });
   const checker = await getUserDetails({ userId: deal.checkerId, userToken });
-  const portalActivities = mapPortalActivities(deal.portalActivities);
+  const portalActivities = mapPortalActivities(deal._id, deal.portalActivities);
   const checkedBy = `${checker.firstname} ${checker.surname}`;
   const createdBy = `${deal.maker.firstname} ${deal.maker.surname}`;
 

@@ -16,10 +16,13 @@ import {
   TfmActivity,
   ACTIVITY_TYPES,
   now,
+  PortalActivity,
+  PORTAL_ACTIVITY_TYPE,
 } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { cloneDeep } from 'lodash';
 import { findOneUser } from '../../v1/controllers/user/get-user.controller';
+import { PortalActivityRepo } from '../../repositories/portal/portal-activity.repo';
 import { TfmActivitiesRepo } from '../../repositories/tfm-deals-repo';
 import { TfmFacilitiesRepo } from '../../repositories/tfm-facilities-repo';
 import { EligibilityCriteriaAmendmentsRepo } from '../../repositories/portal/eligibility-criteria-amendments.repo';
@@ -119,14 +122,16 @@ export class PortalFacilityAmendmentService {
     facilityId,
     update,
     auditDetails,
-    activity,
+    tfmActivity,
+    portalActivity,
     allowedStatuses,
   }: {
     amendmentId: ObjectId;
     facilityId: ObjectId;
     update: Partial<PortalFacilityAmendment>;
     auditDetails: PortalAuditDetails;
-    activity?: TfmActivity;
+    tfmActivity?: TfmActivity;
+    portalActivity?: PortalActivity;
     allowedStatuses: PortalAmendmentStatus[];
   }): Promise<FacilityAmendmentWithUkefId> {
     await TfmFacilitiesRepo.updatePortalFacilityAmendmentByAmendmentId({
@@ -143,17 +148,23 @@ export class PortalFacilityAmendmentService {
       throw new Error(`Could not find amendment to return`);
     }
 
-    if (activity) {
+    if (portalActivity) {
+      const { dealId } = updatedAmendment;
+
+      await PortalActivityRepo.addPortalActivity(dealId, portalActivity, auditDetails);
+    }
+
+    if (tfmActivity) {
       const { dealId } = updatedAmendment;
 
       const { deal } = await TfmActivitiesRepo.submitTfmActivity({
         dealId,
-        activity,
+        activity: tfmActivity,
         auditDetails,
       });
 
       if (!deal) {
-        throw new Error(`Could not add activity to deal`);
+        throw new Error(`Could not add tfm activity to deal`);
       }
     }
 
@@ -251,15 +262,26 @@ export class PortalFacilityAmendmentService {
 
     const timestamp = now().setSeconds(0, 0);
 
-    const activity: TfmActivity = {
-      type: ACTIVITY_TYPES.ACTIVITY,
+    const sharedVariables = {
+      label: `Amendment ${referenceNumber} Approved`,
       timestamp: getUnixTime(timestamp),
       author: {
+        _id: '',
         firstName: bankName,
         lastName: bankId,
-        _id: '',
       },
-      label: `Amendment ${referenceNumber} Approved`,
+      facilityId,
+      amendmentId,
+    };
+
+    const portalActivity: PortalActivity = {
+      ...sharedVariables,
+      type: PORTAL_ACTIVITY_TYPE.ACTIVITY,
+    };
+
+    const tfmActivity: TfmActivity = {
+      ...sharedVariables,
+      type: ACTIVITY_TYPES.ACTIVITY,
       text: '',
     };
 
@@ -268,7 +290,8 @@ export class PortalFacilityAmendmentService {
       facilityId: facilityMongoId,
       update: amendmentUpdate,
       auditDetails,
-      activity,
+      tfmActivity,
+      portalActivity,
       allowedStatuses: [PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL],
     });
   }
