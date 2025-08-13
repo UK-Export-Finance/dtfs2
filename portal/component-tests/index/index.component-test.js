@@ -15,6 +15,28 @@ describe(page, () => {
     wrapper.expectElement('#main-content').toExist();
   });
 
+  it('should ensure the mask icon link is correct', () => {
+    wrapper.expectElement('link[rel="mask-icon"]').toHaveAttribute('href', '/assets/rebrand/images/govuk-icon-mask.svg');
+  });
+
+  it('should ensure the mask icon colour is correct', () => {
+    wrapper.expectElement('link[rel="mask-icon"]').toHaveAttribute('color', '#1d70b8');
+  });
+
+  it('should ensure the manifest link is correct', () => {
+    wrapper.expectElement('link[rel="manifest"]').toHaveAttribute('href', '/assets/rebrand/manifest.json');
+  });
+
+  it('should ensure the stylesheet link is correct', () => {
+    wrapper.expectElement('link[rel="stylesheet"]').toHaveAttribute('href', '/assets/css/styles.css');
+  });
+
+  it('should have the correct integrity for "/assets/js/jsEnabled.js"', () => {
+    wrapper
+      .expectElement('script[src="/assets/js/jsEnabled.js"]')
+      .toHaveAttribute('integrity', 'sha512-BZmKCksPLPXsFlYmd1MUEDLllt/d7vn1jLdU6FA1Y7hpzaOK7Aj9wwS3alwFEl+tlS5Md3CmwjI98F5Ggsg92Q==');
+  });
+
   it('should have the correct integrity for "/assets/js/main.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/main.js"]')

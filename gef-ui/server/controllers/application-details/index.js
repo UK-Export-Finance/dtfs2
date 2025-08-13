@@ -126,6 +126,7 @@ const buildBody = async (app, latestAmendments, previewMode, user) => {
             correspondenceAddressLink: !app.exporter.correspondenceAddress,
           }),
           mapSummaryParams,
+          latestAmendments,
           previewMode,
         ),
       },
