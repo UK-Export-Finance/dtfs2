@@ -80,6 +80,7 @@ describe('controllers - facility amendment', () => {
           name: user.firstname,
           email: user.email,
         },
+        tfm: {},
       };
 
       jest.mocked(api.patchPortalFacilitySubmitAmendment).mockResolvedValue(mockPortalAmendmentResponse);

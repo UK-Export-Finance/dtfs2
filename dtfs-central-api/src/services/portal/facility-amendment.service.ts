@@ -99,6 +99,7 @@ export class PortalFacilityAmendmentService {
         name: `${user.firstname} ${user.surname}`,
         email: user.email,
       },
+      tfm: {},
     };
 
     await TfmFacilitiesRepo.upsertPortalFacilityAmendmentDraft(amendmentToInsert, auditDetails);

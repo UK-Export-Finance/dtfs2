@@ -190,6 +190,7 @@ describe('PortalFacilityAmendmentService', () => {
           name: `${aPortalUser().firstname} ${aPortalUser().surname}`,
           email: aPortalUser().email,
         },
+        tfm: {},
       };
 
       expect(mockUpsertPortalFacilityAmendmentDraft).toHaveBeenCalledTimes(1);
@@ -227,6 +228,7 @@ describe('PortalFacilityAmendmentService', () => {
           name: `${aPortalUser().firstname} ${aPortalUser().surname}`,
           email: aPortalUser().email,
         },
+        tfm: {},
       };
 
       expect(response).toEqual(expectedAmendment);

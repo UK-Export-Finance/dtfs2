@@ -46,3 +46,4 @@ export * from './http-status-codes';
 export * from './status-tag-colours';
 export * from './mandatory-criteria';
 export * from './submitted-amendment-details';
+export * from './facility-exposure-period';

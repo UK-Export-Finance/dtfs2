@@ -1,6 +1,5 @@
-const { TFM_FACILITY_STAGE } = require('@ukef/dtfs2-common');
+const { TFM_FACILITY_STAGE, formattedNumber } = require('@ukef/dtfs2-common');
 const mapGefFacilitySnapshot = require('./mapGefFacilitySnapshot');
-const { formattedNumber } = require('../../../../utils/number');
 const mapFacilityValue = require('../facilities/mapFacilityValue');
 const mapFacilityProduct = require('../facilities/mapFacilityProduct');
 const mapGuaranteeFeePayableToUkef = require('../facilities/mapGuaranteeFeePayableToUkef');
