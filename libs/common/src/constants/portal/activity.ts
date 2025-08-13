@@ -8,6 +8,7 @@ export const PORTAL_ACTIVITY_LABEL = {
 } as const;
 
 export const PORTAL_ACTIVITY_TYPE = {
+  ACTIVITY: 'ACTIVITY',
   FACILITY_STAGE: 'FACILITY_STAGE',
   NOTICE: 'NOTICE',
 } as const;

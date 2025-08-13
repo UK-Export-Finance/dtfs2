@@ -46,6 +46,11 @@
         <p class="moj-timeline__date">
           <time data-cy="activity-{{ activity.title }}-date">{{ activity.date }} {{ activity.time }}</time>
         </p>
+        {% if activity.amendmentUrl %}
+          <p class="govuk-!-margin-bottom-0">
+            <a href="{{activity.amendmentUrl}}" class="govuk-link" data-cy="amendment-link">Amendment Summary</a>
+          </p>
+        {% endif %}
 
         {{ activityHtml.render({
           title: activity.title,
