@@ -75,8 +75,7 @@ export const getOrCreateParty = async (
     }
 
     const { acbsIndustryId: ukefIndustryId, acbsSectorId: ukefSectorId } = industryData.data[0] as industrySector;
-    // Maps true to `1` and false to `0`
-    const ukEntity = Number(isUkEntity);
+    const ukEntity = isUkEntity ? "Yes" : "No";
 
     const response: { status: number; data: unknown } = await axios({
       method: 'post',

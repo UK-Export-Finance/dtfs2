@@ -1,6 +1,7 @@
 const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { MOCK_FACILITIES } = require('./mock-facilities');
 const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
+const { COMPANY_REGISTRATION_NUMBER, PROBABILITY_OF_DEFAULT } = require('../../../../../src/constants/deals');
 
 const MOCK_DEAL = {
   _id: '64da2f74de0f97235921b09b',
@@ -246,6 +247,16 @@ const MOCK_DEAL = {
   },
   exporter: {
     companyName: 'test',
+    companiesHouseRegistrationNumber: '12312312',
+    probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+    selectedIndustry: {
+      code: '1011',
+      name: 'Real estate activities',
+      class: {
+        code: '68310',
+        name: 'Real estate agencies',
+      },
+    },
   },
 };
 
