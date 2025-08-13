@@ -18,11 +18,11 @@ describe('controllers - facilities', () => {
   const mockFacilities = [
     {
       facilityId: '0',
-      hasAmendmentInProgress: false,
+      hasAmendmentInProgressSubmittedFromPim: false,
     },
     {
       facilityId: '1',
-      hasAmendmentInProgress: false,
+      hasAmendmentInProgressSubmittedFromPim: false,
     },
   ];
   const mockApiGetFacilitiesResponse = {
@@ -63,7 +63,7 @@ describe('controllers - facilities', () => {
           const mockReq = structuredClone(mockReqTemplate);
 
           itShouldMakeRequestsForFacilitiesDataWithDefaultArguments(mockReq);
-          itShouldRenderFacilitiesTemplateWithDefaultArguments({ mockReq, hasAmendmentInProgress: false });
+          itShouldRenderFacilitiesTemplateWithDefaultArguments({ mockReq, hasAmendmentInProgressSubmittedFromPim: false });
         });
 
         describe('when the pageNumber is less than 0', () => {
@@ -83,7 +83,7 @@ describe('controllers - facilities', () => {
           mockReq.params.pageNumber = 'hello world';
 
           itShouldMakeRequestsForFacilitiesDataWithDefaultArguments(mockReq);
-          itShouldRenderFacilitiesTemplateWithDefaultArguments({ mockReq, hasAmendmentInProgress: false });
+          itShouldRenderFacilitiesTemplateWithDefaultArguments({ mockReq, hasAmendmentInProgressSubmittedFromPim: false });
         });
 
         describe('when the sortfield and sortorder are specified in the request', () => {
@@ -178,7 +178,7 @@ describe('controllers - facilities', () => {
           const mockReq = structuredClone(mockReqTemplate);
 
           itShouldMakeRequestsForFacilitiesDataWithDefaultArguments(mockReq);
-          itShouldRenderFacilitiesTemplateWithDefaultArguments({ mockReq, hasAmendmentInProgress: true });
+          itShouldRenderFacilitiesTemplateWithDefaultArguments({ mockReq, hasAmendmentInProgressSubmittedFromPim: true });
         });
       });
 
@@ -464,7 +464,7 @@ describe('controllers - facilities', () => {
     });
   }
 
-  function itShouldRenderFacilitiesTemplateWithDefaultArguments({ mockReq, hasAmendmentInProgress }) {
+  function itShouldRenderFacilitiesTemplateWithDefaultArguments({ mockReq, hasAmendmentInProgressSubmittedFromPim }) {
     it('should render the facilities template with the facilities data and the default arguments', async () => {
       await renderDealsOrFacilitiesPage(MONGO_DB_COLLECTIONS.FACILITIES, mockReq, mockRes);
       expect(mockRes.render).toHaveBeenCalledWith('facilities/facilities.njk', {
@@ -472,11 +472,11 @@ describe('controllers - facilities', () => {
         facilities: [
           {
             facilityId: '0',
-            hasAmendmentInProgress,
+            hasAmendmentInProgressSubmittedFromPim,
           },
           {
             facilityId: '1',
-            hasAmendmentInProgress: false,
+            hasAmendmentInProgressSubmittedFromPim: false,
           },
         ],
         activePrimaryNavigation: 'all facilities',

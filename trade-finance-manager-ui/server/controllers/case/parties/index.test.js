@@ -92,8 +92,8 @@ describe('PartyURN: controllers - case - parties', () => {
             successMessage: mockSuccessBannerMessage,
             dealId: req.params._id,
             user: session.user,
-            hasAmendmentInProgress: false,
-            amendmentsInProgress: [],
+            hasAmendmentInProgressSubmittedFromPim: false,
+            amendmentsInProgressSubmittedFromPim: [],
           });
         });
       });

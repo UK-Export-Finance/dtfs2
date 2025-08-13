@@ -11,7 +11,7 @@ const { userCanEditManagersDecision, userCanEditBankDecision, ukefDecisionReject
 const { UNDERWRITER_MANAGER_DECISIONS_TAGS } = require('../../../constants/decisions.constant');
 const { BANK_DECISIONS_TAGS } = require('../../../constants/amendments');
 const CONSTANTS = require('../../../constants');
-const { getAmendmentsInProgress } = require('../../helpers/amendments.helper');
+const { getAmendmentsInProgressSubmittedFromPim } = require('../../helpers/amendments.helper');
 const { getDealSuccessBannerMessage } = require('../../helpers/get-success-banner-message.helper');
 
 /**
@@ -52,10 +52,10 @@ const getUnderwriterPage = async (req, res) => {
   // filters the amendments submittedByPim and also which are not automatic
   amendments = amendments.filter(({ submittedByPim, requireUkefApproval }) => submittedByPim && requireUkefApproval);
 
-  const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
-  const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+  const amendmentsInProgressSubmittedFromPim = getAmendmentsInProgressSubmittedFromPim({ amendments, deal });
+  const hasAmendmentInProgressSubmittedFromPim = amendmentsInProgressSubmittedFromPim.length > 0;
 
-  if (hasAmendmentInProgress) {
+  if (hasAmendmentInProgressSubmittedFromPim) {
     deal.tfm.stage = CONSTANTS.DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
   }
 
@@ -137,8 +137,8 @@ const getUnderwriterPage = async (req, res) => {
     pricingAndRisk: dealPricingAndRisk,
     underwriterManagersDecision: dealUnderwriterManagersDecision,
     amendments: submittedAmendments,
-    amendmentsInProgress,
-    hasAmendmentInProgress,
+    amendmentsInProgressSubmittedFromPim,
+    hasAmendmentInProgressSubmittedFromPim,
   });
 };
 

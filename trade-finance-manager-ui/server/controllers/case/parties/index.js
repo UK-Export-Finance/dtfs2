@@ -2,7 +2,7 @@ const { FLASH_TYPES } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { userCanEdit, isEmptyString, partyType } = require('./helpers');
 const validatePartyURN = require('./partyUrnValidation.validate');
-const { getAmendmentsInProgress } = require('../../helpers/amendments.helper');
+const { getAmendmentsInProgressSubmittedFromPim } = require('../../helpers/amendments.helper');
 const CONSTANTS = require('../../../constants');
 const { getDealSuccessBannerMessage } = require('../../helpers/get-success-banner-message.helper');
 
@@ -27,10 +27,10 @@ const getAllParties = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    const amendmentsInProgress = getAmendmentsInProgress({ amendments, deal });
-    const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+    const amendmentsInProgressSubmittedFromPim = getAmendmentsInProgressSubmittedFromPim({ amendments, deal });
+    const hasAmendmentInProgressSubmittedFromPim = amendmentsInProgressSubmittedFromPim.length > 0;
 
-    if (hasAmendmentInProgress) {
+    if (hasAmendmentInProgressSubmittedFromPim) {
       deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
     }
 
@@ -56,8 +56,8 @@ const getAllParties = async (req, res) => {
       activeSubNavigation: 'parties',
       dealId,
       user,
-      hasAmendmentInProgress,
-      amendmentsInProgress,
+      hasAmendmentInProgressSubmittedFromPim,
+      amendmentsInProgressSubmittedFromPim,
     });
   } catch (error) {
     console.error('Error rendering all parties page %o', error);

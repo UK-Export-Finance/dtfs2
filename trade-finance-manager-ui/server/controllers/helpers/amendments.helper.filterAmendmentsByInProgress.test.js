@@ -1,5 +1,5 @@
 const { TFM_DEAL_STAGE, TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
-const { getAmendmentsInProgress } = require('./amendments.helper');
+const { getAmendmentsInProgressSubmittedFromPim } = require('./amendments.helper');
 
 const notStartedAmendment = () => ({
   status: TFM_AMENDMENT_STATUS.NOT_STARTED,
@@ -21,7 +21,7 @@ const completedAmendment = () => ({
   submittedByPim: true,
 });
 
-describe('getAmendmentsInProgress', () => {
+describe('getAmendmentsInProgressSubmittedFromPim', () => {
   it(`should return an empty array if the deal stage is ${TFM_DEAL_STAGE.CANCELLED}`, () => {
     // Arrange
     const amendments = [submittedInProgressAmendment()];
@@ -32,7 +32,7 @@ describe('getAmendmentsInProgress', () => {
     };
 
     // Act
-    const result = getAmendmentsInProgress({ amendments, deal });
+    const result = getAmendmentsInProgressSubmittedFromPim({ amendments, deal });
 
     // Assert
     expect(result).toEqual([]);
@@ -48,7 +48,7 @@ describe('getAmendmentsInProgress', () => {
     };
 
     // Act
-    const result = getAmendmentsInProgress({ amendments, deal });
+    const result = getAmendmentsInProgressSubmittedFromPim({ amendments, deal });
 
     // Assert
     expect(result).toEqual([]);
@@ -64,7 +64,7 @@ describe('getAmendmentsInProgress', () => {
     };
 
     // Act
-    const result = getAmendmentsInProgress({ amendments, deal });
+    const result = getAmendmentsInProgressSubmittedFromPim({ amendments, deal });
 
     // Assert
     expect(result).toEqual([]);
@@ -80,7 +80,7 @@ describe('getAmendmentsInProgress', () => {
     };
 
     // Act
-    const result = getAmendmentsInProgress({ amendments, deal });
+    const result = getAmendmentsInProgressSubmittedFromPim({ amendments, deal });
 
     // Assert
     expect(result).toEqual([submittedInProgressAmendment()]);

@@ -182,3 +182,10 @@ export type TfmFacilityWithStringId = Omit<TfmFacility, '_id' | 'facilitySnapsho
   _id: ObjectId | string;
   facilitySnapshot: FacilityWithStringDealId;
 };
+
+export type GetTfmAmendmentInProgressResponse = {
+  amendmentsInProgress: FacilityAmendment[] | TfmFacilityAmendment[];
+  hasAmendmentInProgress: boolean;
+  hasAmendmentInProgressButton: boolean;
+  showContinueAmendmentButton: boolean;
+};
