@@ -5,11 +5,11 @@ describe('overrideFacilitiesIfAmendmentsInProgress', () => {
   const facilities = [
     {
       facilityId: '0',
-      hasAmendmentInProgress: false,
+      hasAmendmentInProgressSubmittedFromPim: false,
     },
     {
       facilityId: '1',
-      hasAmendmentInProgress: false,
+      hasAmendmentInProgressSubmittedFromPim: false,
     },
   ];
 
@@ -36,13 +36,13 @@ describe('overrideFacilitiesIfAmendmentsInProgress', () => {
   ];
 
   describe('when there is an in-progress amendment corresponding to one of the facilities', () => {
-    it('should set the `hasAmendmentInProgress` property of the relevant facility to `true`', () => {
+    it('should set the `hasAmendmentInProgressSubmittedFromPim` property of the relevant facility to `true`', () => {
       const result = overrideFacilitiesIfAmendmentsInProgress(facilities, amendmentsOneCorresponding);
 
       expect(result).toEqual([
         {
           facilityId: '0',
-          hasAmendmentInProgress: true,
+          hasAmendmentInProgressSubmittedFromPim: true,
         },
         facilities[1],
       ]);

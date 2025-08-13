@@ -104,9 +104,9 @@ describe('controllers - case', () => {
           user: session.user,
           hasDraftCancellation: false,
           showDealCancelButton: false,
-          hasAmendmentInProgress: true,
+          hasAmendmentInProgressSubmittedFromPim: true,
           amendments: mockAmendments,
-          amendmentsInProgress: mockAmendments,
+          amendmentsInProgressSubmittedFromPim: mockAmendments,
           successMessage: mockSuccessBannerMessage,
         });
       });
@@ -298,8 +298,8 @@ describe('controllers - case', () => {
           user: session.user,
           selectedTaskFilter: 'all',
           amendments: [],
-          hasAmendmentInProgress: false,
-          amendmentsInProgress: [],
+          hasAmendmentInProgressSubmittedFromPim: false,
+          amendmentsInProgressSubmittedFromPim: [],
         });
       });
     });
@@ -379,8 +379,8 @@ describe('controllers - case', () => {
           user: session.user,
           selectedTaskFilter: req.body.filterType,
           amendments: [],
-          hasAmendmentInProgress: false,
-          amendmentsInProgress: [],
+          hasAmendmentInProgressSubmittedFromPim: false,
+          amendmentsInProgressSubmittedFromPim: [],
         });
       });
     });
@@ -854,10 +854,10 @@ describe('controllers - case', () => {
           showContinueAmendmentButton: false,
           amendmentId: '626bae8c43c01e02076352e1',
           amendmentVersion: 1,
-          hasAmendmentInProgress: true,
+          hasAmendmentInProgressSubmittedFromPim: true,
           hasAmendmentInProgressButton: false,
           allAmendments: expect.any(Array),
-          amendmentsInProgress: expect.any(Array),
+          amendmentsInProgressSubmittedFromPim: expect.any(Array),
           amendments: expect.any(Array),
           showFacilityEndDate: false,
         });
@@ -970,8 +970,8 @@ describe('controllers - case', () => {
           successMessage: mockSuccessBannerMessage,
           dealId: req.params._id,
           user: session.user,
-          amendmentsInProgress: [],
-          hasAmendmentInProgress: false,
+          amendmentsInProgressSubmittedFromPim: [],
+          hasAmendmentInProgressSubmittedFromPim: false,
         });
       });
     });

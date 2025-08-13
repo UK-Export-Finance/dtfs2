@@ -85,8 +85,8 @@ describe('activity controller', () => {
           user: session.user,
           selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.ALL,
           activities,
-          amendmentsInProgress: [],
-          hasAmendmentInProgress: false,
+          amendmentsInProgressSubmittedFromPim: [],
+          hasAmendmentInProgressSubmittedFromPim: false,
         });
       });
     });
@@ -203,8 +203,8 @@ describe('activity controller', () => {
           user: session.user,
           selectedActivityFilter: CONSTANTS.ACTIVITIES.ACTIVITY_FILTERS.COMMENT,
           activities,
-          amendmentsInProgress: [],
-          hasAmendmentInProgress: false,
+          amendmentsInProgressSubmittedFromPim: [],
+          hasAmendmentInProgressSubmittedFromPim: false,
         });
       });
     });
