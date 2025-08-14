@@ -1,9 +1,8 @@
 const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { MOCK_FACILITIES } = require('./mock-facilities');
 const { MOCK_PORTAL_USERS } = require('./mock-portal-users');
-const { PROBABILITY_OF_DEFAULT } = require('../../constants/deals');
 
-const MOCK_DEAL = {
+const MOCK_BSS_EWCS_DEAL = {
   _id: '64da2f74de0f97235921b09b',
   dealType: 'BSS/EWCS',
   submissionType: 'Automatic Inclusion Notice',
@@ -247,17 +246,112 @@ const MOCK_DEAL = {
   },
   exporter: {
     companyName: 'test',
-    companiesHouseRegistrationNumber: '12312312',
-    probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
-    selectedIndustry: {
-      code: '1011',
-      name: 'Real estate activities',
-      class: {
-        code: '68310',
-        name: 'Real estate agencies',
-      },
-    },
   },
 };
 
-module.exports = MOCK_DEAL;
+const MOCK_GEF_MAPPED_DEAL = {
+  _id: '689daca8b4985367fb71dc7a',
+  dealType: 'GEF',
+  mandatoryVersionId: 4,
+  supportingInformation: { status: 'Not started' },
+  bankInternalRefName: 'ABC2',
+  additionalRefName: null,
+  submissionCount: 1,
+  submissionType: 'Automatic Inclusion Notice',
+  submissionDate: '1755163961964',
+  manualInclusionNoticeSubmissionDate: undefined,
+  status: 'Acknowledged',
+  ukefDealId: '0020022024',
+  eligibility: {
+    _id: '688b4de8e20217de37b60d9f',
+    createdAt: 1701701238684,
+    criteria: [],
+    isInDraft: false,
+    product: 'GEF',
+    status: 'Completed',
+    updatedAt: 1755164187153,
+    version: 2.1,
+  },
+  smeType: 'Micro',
+  bank: {
+    emails: ['maker1@ukexportfinance.gov.uk', 'checker1@ukexportfinance.gov.uk'],
+  },
+  exporter: {
+    companyName: 'TEST LTD',
+    companiesHouseRegistrationNumber: 'SC467044',
+    probabilityOfDefault: 1,
+    registeredAddress: {
+      addressLine1: 'Long Lane',
+      addressLine2: 'Broughty Ferry',
+      country: 'Scotland',
+      locality: 'Dundee',
+      postalCode: 'DD5 1HH',
+    },
+    selectedIndustry: { name: 'Construction', class: 'Scaffold erection', code: '43991' },
+  },
+  maker: {
+    _id: '624159a1bc3de8001d09be54',
+    bank: {
+      companiesHouseNo: 'UKEF0001',
+      emails: [],
+      id: '9',
+      mga: [],
+      name: 'UKEF test bank (Delegated)',
+      partyUrn: '00300302',
+    },
+    disabled: null,
+    email: 'maker1@ukexportfinance.gov.uk',
+    firstname: 'Maker',
+    isTrusted: null,
+    roles: ['maker'],
+    surname: '1',
+    timezone: 'Europe/London',
+    'user-status': 'active',
+    username: 'maker1@ukexportfinance.gov.uk',
+  },
+  facilities: [
+    {
+      _id: '689dace9b4985367fb71dc7b',
+      ukefFacilityId: '0020022025',
+      type: 'Cash',
+      currencyCode: 'GBP',
+      value: 1000,
+      coverPercentage: 80,
+      hasBeenIssued: false,
+      ukefGuaranteeInMonths: 10,
+      ukefExposure: 800,
+      coverStartDate: null,
+      coverEndDate: null,
+      bankReference: 'ABC',
+      guaranteeFee: 0.9,
+      feeType: 'At maturity',
+      feeFrequency: null,
+      dayCountBasis: 365,
+      hasBeenIssuedAndAcknowledged: null,
+      tfm: undefined,
+      isUsingFacilityEndDate: false,
+      facilityEndDate: null,
+      bankReviewDate: '2026-08-13T23:00:00.000Z',
+      interestPercentage: 1,
+      shouldCoverStartOnSubmission: null,
+      facilityStage: 'Commitment',
+    },
+  ],
+  tfm: {
+    activities: [],
+    dateReceived: '14-08-2025',
+    dateReceivedTimestamp: 1755164187,
+    exporterCreditRating: 'Acceptable (B+)',
+    lastUpdated: 1755164187469,
+    lossGivenDefault: 50,
+    parties: {},
+    probabilityOfDefault: 1,
+    product: 'GEF',
+    stage: 'Confirmed',
+  },
+};
+
+module.exports = {
+  MOCK_BSS_EWCS_DEAL,
+  MOCK_GEF_MAPPED_DEAL,
+};

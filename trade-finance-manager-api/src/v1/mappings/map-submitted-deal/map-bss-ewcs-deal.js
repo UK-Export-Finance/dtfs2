@@ -50,6 +50,7 @@ const mapBssEwcsDeal = (deal) => {
     exporter: {
       companyName,
       companiesHouseRegistrationNumber: submissionDetails['supplier-companies-house-registration-number'],
+      probabilityOfDefault: Number(tfm.probabilityOfDefault),
       registeredAddress: {
         addressLine1: submissionDetails['supplier-address-line-1'],
         addressLine2: submissionDetails['supplier-address-line-2'],

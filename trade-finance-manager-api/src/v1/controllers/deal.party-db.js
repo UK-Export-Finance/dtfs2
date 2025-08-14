@@ -40,14 +40,16 @@ const getCompany = async (req, res) => {
  * @returns {Promise<string>} PartyURN or '' if there is an error
  */
 const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code }) => {
+  let partyDbInfo = null;
+
   if (!companyRegNo) {
+    console.error('An invalid company house registration number has been supplied');
     return '';
   }
 
-  let partyDbInfo = null;
   if (isSalesforceCustomerCreationEnabled()) {
     if (!companyName) {
-      console.error('No company name provided');
+      console.error('An invalid company name has been supplied');
       return '';
     }
 
@@ -55,15 +57,18 @@ const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault, is
   } else {
     partyDbInfo = await api.getPartyDbInfo({ companyRegNo });
   }
+
   if (!partyDbInfo) {
     console.error('No partyDbInfo returned');
     return '';
   }
 
   const partyUrn = partyDbInfo?.[0]?.partyUrn;
+
   if (partyUrn) {
     return partyUrn;
   }
+
   console.error('No PartyURN in response');
   return '';
 };
@@ -85,11 +90,12 @@ const identifyDealParties = (deal) => ({
  * @returns {Promise<object|boolean>} The updated deal object with new TFM party URNs, or false if the deal is not provided.
  */
 const addPartyUrns = async (deal, auditDetails) => {
-  if (!deal) {
+  if (!deal?.exporter) {
+    console.error('Adding party URN, invalid deal supplied');
     return false;
   }
 
-  const { hasExporter, hasIndemnifier, hasAgent, hasBuyer } = identifyDealParties(deal);
+  const { hasExporter, hasBuyer, hasIndemnifier, hasAgent } = identifyDealParties(deal);
   const {
     companiesHouseRegistrationNumber: companyRegNo,
     companyName,
@@ -135,4 +141,5 @@ module.exports = {
   getCompany,
   addPartyUrns,
   getPartyUrn,
+  identifyDealParties,
 };

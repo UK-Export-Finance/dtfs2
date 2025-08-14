@@ -868,7 +868,7 @@ const getPartyDbInfo = async ({ companyRegNo }) => {
  * @param {number} code SIC industry sector code
  * @returns {Promise<object>} Company information
  */
-const getOrCreatePartyDbInfo = async ({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, industryId, code }) => {
+const getOrCreatePartyDbInfo = async ({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code }) => {
   try {
     const response = await axios({
       method: 'post',
@@ -879,7 +879,6 @@ const getOrCreatePartyDbInfo = async ({ companyRegNo, companyName, probabilityOf
         companyName,
         probabilityOfDefault,
         isUkEntity,
-        industryId,
         code,
       },
     });
