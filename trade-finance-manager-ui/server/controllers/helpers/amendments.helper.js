@@ -1,4 +1,14 @@
-const { TEAM_IDS, TFM_AMENDMENT_STATUS, DEAL_STATUS, TFM_DEAL_STAGE, PORTAL_AMENDMENT_STARTED_STATUSES } = require('@ukef/dtfs2-common');
+const { format, fromUnixTime } = require('date-fns');
+const {
+  TEAM_IDS,
+  TFM_AMENDMENT_STATUS,
+  DEAL_STATUS,
+  TFM_DEAL_STAGE,
+  PORTAL_AMENDMENT_STARTED_STATUSES,
+  isFutureEffectiveDate,
+  PORTAL_AMENDMENT_STATUS,
+  DATE_FORMATS,
+} = require('@ukef/dtfs2-common');
 const { DECISIONS, DEAL } = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
 
@@ -111,7 +121,26 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
     // Portal amendments which are in progress
     const inProgressPortalAmendments = amendments.filter(({ status }) => PORTAL_AMENDMENT_STARTED_STATUSES.includes(status));
 
+    const futureEffectiveDatePortalAmendments = amendments.filter(
+      ({ status, effectiveDate }) => status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED && isFutureEffectiveDate(effectiveDate),
+    );
+
     const hasInProgressPortalAmendments = inProgressPortalAmendments.length > 0;
+    const hasFutureEffectiveDatePortalAmendments = futureEffectiveDatePortalAmendments.length > 0;
+
+    let formattedFutureEffectiveDatePortalAmendments = [];
+
+    if (hasFutureEffectiveDatePortalAmendments) {
+      formattedFutureEffectiveDatePortalAmendments = futureEffectiveDatePortalAmendments.map(
+        ({ ukefFacilityId, effectiveDate, facilityId, referenceNumber, dealId }) => ({
+          facilityId,
+          ukefFacilityId,
+          effectiveDate: format(fromUnixTime(effectiveDate), DATE_FORMATS.DD_MMMM_YYYY),
+          referenceNumber,
+          href: `/case/${dealId}/facility/${facilityId}#amendments`,
+        }),
+      );
+    }
 
     const amendmentsInProgress = [...unsubmittedTFMAmendments, ...inProgressPortalAmendments];
     const hasAmendmentInProgress = amendmentsInProgress.length > 0;
@@ -131,6 +160,8 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
       hasInProgressPortalAmendments,
       hasAmendmentInProgressButton,
       showContinueAmendmentButton,
+      hasFutureEffectiveDatePortalAmendments,
+      formattedFutureEffectiveDatePortalAmendments,
     };
   }
 

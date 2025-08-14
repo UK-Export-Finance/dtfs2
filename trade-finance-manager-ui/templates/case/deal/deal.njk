@@ -3,6 +3,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% import '../amendments/_macros/amendment-in-progress-bar.njk' as amendmentInProgressBar %}
 {% import '../amendments/_macros/portal-amendment-in-progress-deal-bar.njk' as portalAmendmentInProgressDealBar %}
+{% import '../amendments/_macros/amendment-future-effective-date-deal-bar.njk' as amendmentFutureEffectiveDateDealBar %}
 {% import './_macros/eligibility-criteria-answers.njk' as eligibilityCriteriaAnswers %}
 {% import './_macros/facilities-table.njk' as facilitiesTable %}
 
@@ -24,6 +25,12 @@
     inProgressPortalAmendments: inProgressPortalAmendments
   } %}
   {{ portalAmendmentInProgressDealBar.render(portalAmendmentDealBarParams) }}
+
+  {% set portalAmendmentFutureEffectiveDateBarParams = {
+    hasFutureEffectiveDatePortalAmendments: hasFutureEffectiveDatePortalAmendments,
+    formattedFutureEffectiveDatePortalAmendments: formattedFutureEffectiveDatePortalAmendments
+  } %}
+  {{ amendmentFutureEffectiveDateDealBar.render(portalAmendmentFutureEffectiveDateBarParams) }}
 
 
   <div class="govuk-grid-row">

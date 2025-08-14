@@ -5,6 +5,8 @@
 {% import './_macros/amendment-details.njk' as amendmentDetails %}
 {% import '../amendments/_macros/amendment-in-progress-bar.njk' as amendmentInProgressBar %}
 {% import '../amendments/_macros/portal-amendment-in-progress-bar.njk' as portalAmendmentInProgressBar %}
+{% import '../amendments/_macros/amendment-future-effective-date-facility-bar.njk' as amendmentFutureEffectiveDateFacilityBar %}
+
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
 
 {% block pageTitle -%}
@@ -59,6 +61,11 @@
     inProgressPortalAmendments: inProgressPortalAmendments
   } %}
   {{ portalAmendmentInProgressBar.render(portalAmendmentBarParams) }}
+
+  {% set amendmentFutureEffectiveDateFacilityBarParams = {
+    futureEffectiveDatePortalAmendment: futureEffectiveDatePortalAmendment
+  } %}
+  {{ amendmentFutureEffectiveDateFacilityBar.render(amendmentFutureEffectiveDateFacilityBarParams) }}
 
   <hgroup>
     <h1 class="ukef-heading-grey">Facility {{ facility.ukefFacilityId }}</h1>
