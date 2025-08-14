@@ -1,4 +1,4 @@
-import { CustomExpressRequest, HEADERS, isValidCompanyRegistrationNumber, industrySector } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, HEADERS, isValidCompanyRegistrationNumber } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
