@@ -259,6 +259,7 @@ describe('PortalFacilityAmendmentService', () => {
         auditDetails,
         bankId,
         bankName,
+        requestDate,
       });
 
       const now = new Date();
