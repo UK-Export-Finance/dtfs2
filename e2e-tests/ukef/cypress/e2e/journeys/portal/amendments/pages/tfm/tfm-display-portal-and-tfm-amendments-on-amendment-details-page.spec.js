@@ -23,6 +23,8 @@ context('Amendments - TFM - Amendments details page - TFM should display portal 
   let facilityUrl;
   let ukefFacilityId;
   let tfmDealPage;
+  let amendmentId1;
+  let amendmentId2;
 
   before(() => {
     cy.insertOneGefDeal(MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1).then((insertedDeal) => {
@@ -51,6 +53,8 @@ context('Amendments - TFM - Amendments details page - TFM should display portal 
           applicationDetailsUrl,
           facilityId,
           dealId,
+        }).then((amendmentId) => {
+          amendmentId1 = amendmentId;
         });
 
         cy.visit(TFM_URL);
@@ -68,6 +72,8 @@ context('Amendments - TFM - Amendments details page - TFM should display portal 
           applicationDetailsUrl,
           facilityId,
           dealId,
+        }).then((amendmentId) => {
+          amendmentId2 = amendmentId;
         });
       });
     });
@@ -103,6 +109,56 @@ context('Amendments - TFM - Amendments details page - TFM should display portal 
     cy.assertText(amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue(), UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
   });
 
+  it('should display an eligibility criteria table and rows for the portal amendment', () => {
+    amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTable().should('exist');
+
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaIdColumn(amendmentId1, 1), '1');
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTextColumn(amendmentId1, 1), 'The Facility is not an Affected Facility');
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTagColumn(amendmentId1, 1), 'TRUE');
+
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaIdColumn(amendmentId1, 2), '2');
+    cy.assertText(
+      amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTextColumn(amendmentId1, 2),
+      'Neither the Exporter, nor its UK Parent Obligor is an Affected Person',
+    );
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTagColumn(amendmentId1, 2), 'TRUE');
+
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaIdColumn(amendmentId1, 3), '3');
+    cy.assertText(
+      amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTextColumn(amendmentId1, 3),
+      'The Cover Period of the Facility is within the Facility Maximum Cover Period',
+    );
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTagColumn(amendmentId1, 3), 'TRUE');
+
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaIdColumn(amendmentId1, 4), '4');
+    cy.assertText(
+      amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTextColumn(amendmentId1, 4),
+      'The Covered Facility Limit (converted for this purpose into the Master Guarantee Base Currency) of the Facility is not more than the lesser of (i) the Available Master Guarantee Limit; and the Available Obligor(s) Limit',
+    );
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTagColumn(amendmentId1, 4), 'TRUE');
+
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaIdColumn(amendmentId1, 5), '5');
+    cy.assertText(
+      amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTextColumn(amendmentId1, 5),
+      'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate any issue raised during its Bank Due Diligence internally to any Relevant Person for approval as part of its usual Bank Due Diligence',
+    );
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTagColumn(amendmentId1, 5), 'TRUE');
+
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaIdColumn(amendmentId1, 6), '6');
+    cy.assertText(
+      amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTextColumn(amendmentId1, 6),
+      'The Bank is the sole and legal beneficial owner of, and has good title to, the Facility and any Utilisation thereunder',
+    );
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTagColumn(amendmentId1, 6), 'TRUE');
+
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaIdColumn(amendmentId1, 7), '7');
+    cy.assertText(
+      amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTextColumn(amendmentId1, 7),
+      "The Bank's right, title and interest in and to the Facility and any Utilisation thereunder (including any indebtedness, obligation of liability of each Obligor) is free and clear of any Security or Quasi-Security (other than Permitted Security)",
+    );
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTagColumn(amendmentId1, 7), 'TRUE');
+  });
+
   it('should display a row for the second TFM amendment', () => {
     cy.assertText(amendmentsPage.amendmentDetails.row(2).heading(), `Amendment ${ukefFacilityId}-002`);
     cy.assertText(amendmentsPage.amendmentDetails.row(2).effectiveDate(), today.dd_MMMM_yyyy);
@@ -117,7 +173,11 @@ context('Amendments - TFM - Amendments details page - TFM should display portal 
     cy.assertText(amendmentsPage.amendmentDetails.row(2).ukefDecisionFacilityValue(), UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
   });
 
-  it('should display a row for the third TFM amendment', () => {
+  it('should not display a eligibility criteria for the TFM table', () => {
+    amendmentsPage.amendmentDetails.row(2).eligibilityCriteriaTable().should('not.exist');
+  });
+
+  it('should display a row for the portal TFM amendment', () => {
     cy.assertText(amendmentsPage.amendmentDetails.row(3).heading(), `Amendment ${ukefFacilityId}-003`);
     cy.assertText(amendmentsPage.amendmentDetails.row(3).effectiveDate(), today.dd_MMMM_yyyy);
     cy.assertText(amendmentsPage.amendmentDetails.row(3).requireApproval(), 'No');
@@ -129,5 +189,55 @@ context('Amendments - TFM - Amendments details page - TFM should display portal 
     cy.assertText(amendmentsPage.amendmentDetails.row(3).currentFacilityValue(), `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE_1, 2)}`);
     cy.assertText(amendmentsPage.amendmentDetails.row(3).newFacilityValue(), `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE_2, 2)}`);
     cy.assertText(amendmentsPage.amendmentDetails.row(3).ukefDecisionFacilityValue(), UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
+  });
+
+  it('should display an eligibility criteria table and rows for the portal amendment', () => {
+    amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTable().should('exist');
+
+    cy.assertText(amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaIdColumn(amendmentId2, 1), '1');
+    cy.assertText(amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaTextColumn(amendmentId2, 1), 'The Facility is not an Affected Facility');
+    cy.assertText(amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaTagColumn(amendmentId2, 1), 'TRUE');
+
+    cy.assertText(amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaIdColumn(amendmentId2, 2), '2');
+    cy.assertText(
+      amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaTextColumn(amendmentId2, 2),
+      'Neither the Exporter, nor its UK Parent Obligor is an Affected Person',
+    );
+    cy.assertText(amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaTagColumn(amendmentId2, 2), 'TRUE');
+
+    cy.assertText(amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaIdColumn(amendmentId2, 3), '3');
+    cy.assertText(
+      amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaTextColumn(amendmentId2, 3),
+      'The Cover Period of the Facility is within the Facility Maximum Cover Period',
+    );
+    cy.assertText(amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaTagColumn(amendmentId2, 3), 'TRUE');
+
+    cy.assertText(amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaIdColumn(amendmentId2, 4), '4');
+    cy.assertText(
+      amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaTextColumn(amendmentId2, 4),
+      'The Covered Facility Limit (converted for this purpose into the Master Guarantee Base Currency) of the Facility is not more than the lesser of (i) the Available Master Guarantee Limit; and the Available Obligor(s) Limit',
+    );
+    cy.assertText(amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaTagColumn(amendmentId2, 4), 'TRUE');
+
+    cy.assertText(amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaIdColumn(amendmentId2, 5), '5');
+    cy.assertText(
+      amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaTextColumn(amendmentId2, 5),
+      'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate any issue raised during its Bank Due Diligence internally to any Relevant Person for approval as part of its usual Bank Due Diligence',
+    );
+    cy.assertText(amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaTagColumn(amendmentId2, 5), 'TRUE');
+
+    cy.assertText(amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaIdColumn(amendmentId2, 6), '6');
+    cy.assertText(
+      amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaTextColumn(amendmentId2, 6),
+      'The Bank is the sole and legal beneficial owner of, and has good title to, the Facility and any Utilisation thereunder',
+    );
+    cy.assertText(amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaTagColumn(amendmentId2, 6), 'TRUE');
+
+    cy.assertText(amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaIdColumn(amendmentId2, 7), '7');
+    cy.assertText(
+      amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaTextColumn(amendmentId2, 7),
+      "The Bank's right, title and interest in and to the Facility and any Utilisation thereunder (including any indebtedness, obligation of liability of each Obligor) is free and clear of any Security or Quasi-Security (other than Permitted Security)",
+    );
+    cy.assertText(amendmentsPage.amendmentDetails.row(3).eligibilityCriteriaTagColumn(amendmentId2, 7), 'TRUE');
   });
 });

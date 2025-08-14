@@ -80,6 +80,14 @@ const amendmentsPage = {
         newFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-new-facility-value"]`),
 
         bankDecisionTag: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-banks-decision"]`),
+
+        eligibilityCriteriaTable: () => cy.get(`[data-cy="amendment-${index}-eligibility-criteria"]`),
+
+        eligibilityCriteriaIdColumn: (amendmentId, criterionId) => cy.get(`[data-cy="amendment-${amendmentId}-eligibility-table-criterion-${criterionId}-id"]`),
+        eligibilityCriteriaTextColumn: (amendmentId, criterionId) =>
+          cy.get(`[data-cy="amendment-${amendmentId}-eligibility-table-criterion-${criterionId}-text"]`),
+        eligibilityCriteriaTagColumn: (amendmentId, criterionId) =>
+          cy.get(`[data-cy="amendment-${amendmentId}-eligibility-table-criterion-${criterionId}-tag"]`),
       };
     },
   },

@@ -31,7 +31,10 @@ export const aPortalFacilityAmendment = ({
   status,
   referenceNumber: referenceNumber || null,
   eligibilityCriteria: {
-    criteria: [{ id: 1, text: 'item 1', answer: null }],
+    criteria: [
+      { id: 1, text: 'item 1', answer: true },
+      { id: 2, text: 'item 2', answer: true },
+    ],
     version: 1,
   },
   tfm: {

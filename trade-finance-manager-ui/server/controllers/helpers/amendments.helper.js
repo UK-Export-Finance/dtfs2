@@ -1,4 +1,4 @@
-const { TEAM_IDS, TFM_AMENDMENT_STATUS, DEAL_STATUS, TFM_DEAL_STAGE, PORTAL_AMENDMENT_STARTED_STATUSES } = require('@ukef/dtfs2-common');
+const { TEAM_IDS, TFM_AMENDMENT_STATUS, DEAL_STATUS, TFM_DEAL_STAGE, PORTAL_AMENDMENT_STARTED_STATUSES, AMENDMENT_TYPES } = require('@ukef/dtfs2-common');
 const { DECISIONS, DEAL } = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
 
@@ -138,6 +138,64 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
   };
 };
 
+/**
+ * Maps all amendments for a facility
+ * Generates the eligibility rows for portal amendments which populates the eligibility table on the facility amendment tab
+ * Generates a isPortalAmendment flag if amendment is portal amendment or not
+ * Returns the mapped amendments with isPortalAmendment flag and eligibilityRows if portal amendment
+ * @param {import('@ukef/dtfs2-common').PortalFacilityAmendment[] | import('@ukef/dtfs2-common').TfmFacilityAmendment[]} amendments
+ * @returns {import('@ukef/dtfs2-common').AmendmentWithEligibilityRows[]} - the mapped portal amendments
+ */
+const generatePortalAmendmentEligibilityRows = (amendments) => {
+  const mappedAmendments = amendments.map((amendment) => {
+    let isPortalAmendment = false;
+
+    if (amendment.type === AMENDMENT_TYPES.PORTAL) {
+      isPortalAmendment = true;
+    }
+
+    // if not portal amendment, return amendment and flag
+    if (!isPortalAmendment) {
+      return {
+        ...amendment,
+        isPortalAmendment,
+      };
+    }
+
+    /**
+     * maps through eligibility criteria for each amendment
+     * creates a row for each criterion
+     * with number of criteria
+     * A green tag for true or red if false
+     * The eligibility text for each criterion
+     */
+    const eligibilityRows = amendment.eligibilityCriteria.criteria.map((criterion) => {
+      const { id, text, answer } = criterion;
+
+      const eligibilityId = `<span data-cy="amendment-${amendment.amendmentId}-eligibility-table-criterion-${id}-id">${id}</span>`;
+      const eligibilityText = `<span data-cy="amendment-${amendment.amendmentId}-eligibility-table-criterion-${id}-text">${text}</span>`;
+
+      // set tag colour to green if true and red if not
+      const tagColour = answer === true ? 'green' : 'red';
+      const tagText = String(answer).toUpperCase();
+
+      // html for tag including text and colour
+      const tagHtml = `<span class="govuk-tag govuk-tag--${tagColour}" data-cy="amendment-${amendment.amendmentId}-eligibility-table-criterion-${id}-tag"><strong>${tagText}</strong></span>`;
+
+      // return the generated row for each amendment's eligibility criteria
+      return [{ html: eligibilityId }, { html: tagHtml }, { html: eligibilityText }];
+    });
+
+    return {
+      ...amendment,
+      isPortalAmendment,
+      eligibilityRows,
+    };
+  });
+
+  return mappedAmendments;
+};
+
 module.exports = {
   showAmendmentButton,
   userCanEditManagersDecision,
@@ -146,4 +204,5 @@ module.exports = {
   validateUkefDecision,
   getAmendmentsInProgress,
   getAmendmentsInProgressSubmittedFromPim,
+  generatePortalAmendmentEligibilityRows,
 };
