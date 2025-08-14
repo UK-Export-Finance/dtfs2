@@ -16,7 +16,7 @@ const mockFacility2 = {
 const CHANGED_FACILITY_VALUE = '20000';
 const CHANGE_FACILITY_VALUE_2 = '30000';
 
-context('Amendments - TFM - TFM should display single value and single cover end date amendments', () => {
+context('Amendments - TFM - TFM should display no banners when there are no portal amendments with future effective dates', () => {
   let dealId;
   let facilityId1;
   let facilityId2;
