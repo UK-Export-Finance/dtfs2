@@ -4,7 +4,7 @@
   {% set hasInProgressPortalAmendments = params.hasInProgressPortalAmendments %}
   {% set inProgressPortalAmendments = params.inProgressPortalAmendments %}
 
-  {% if hasInProgressPortalAmendments === true and inProgressPortalAmendments.length > 0 %}
+  {% if hasInProgressPortalAmendments === true %}
     {% set bannerHtml %}
       <p class="govuk-body" data-cy="portal-amendment--in-progress-bar">There is an amendment in progress for this facility</p>
     {% endset %}
