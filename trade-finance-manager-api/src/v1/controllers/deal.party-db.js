@@ -53,6 +53,16 @@ const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault, is
       return '';
     }
 
+    if (!probabilityOfDefault) {
+      console.error('An invalid probability of default has been supplied');
+      return '';
+    }
+
+    if (!code) {
+      console.error('An invalid industry code has been supplied');
+      return '';
+    }
+
     partyDbInfo = await api.getOrCreatePartyDbInfo({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
   } else {
     partyDbInfo = await api.getPartyDbInfo({ companyRegNo });

@@ -68,8 +68,18 @@ export const getOrCreateParty = async (
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company name' });
     }
 
+    if (!code) {
+      console.error('Invalid industry code was provided %s', code);
+      return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid industry code' });
+    }
+
     const industryData = await findACBSIndustrySector(code);
 
+    /**
+     * We are throwing `500` instead of `400` to trigger an alert,
+     * as SIC code should never be incorrect as they are fetched
+     * from CH API call.
+     */
     if (!Array.isArray(industryData.data) || !industryData?.data?.length) {
       throw new Error('Unable to get industry sector data');
     }

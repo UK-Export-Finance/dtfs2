@@ -20,7 +20,7 @@ const headers = {
 export const findACBSIndustrySector = async (industryId: number): Promise<{ data: string | Array<industrySector>; status: number }> => {
   if (!isValidIndustryId(industryId.toString())) {
     console.error('Invalid industry id provided %s', industryId);
-    return { data: 'Invalid industry ID', status: 400 };
+    return { data: 'Invalid industry ID', status: HttpStatusCode.BadRequest };
   }
 
   const response = await axios({

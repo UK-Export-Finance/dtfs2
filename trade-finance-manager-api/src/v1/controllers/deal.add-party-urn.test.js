@@ -139,6 +139,104 @@ describe('addPartyUrns', () => {
     expect(response.tfm.parties.exporter.partyUrn).toBe('');
   });
 
+  it('should return empty party URN and not invoke the API call when an empty PoD is supplied', async () => {
+    // Arrange
+    const deal = {
+      ...MOCK_GEF_MAPPED_DEAL,
+      exporter: {
+        ...MOCK_GEF_MAPPED_DEAL.exporter,
+        probabilityOfDefault: '',
+      },
+    };
+    const mockReturn = {
+      ...MOCK_GEF_MAPPED_DEAL,
+      tfm: {
+        ...MOCK_GEF_MAPPED_DEAL.tfm,
+        parties: {
+          exporter: {
+            partyUrn: '',
+            partyUrnRequired: true,
+          },
+          buyer: {
+            partyUrn: '',
+            partyUrnRequired: false,
+          },
+          indemnifier: {
+            partyUrn: '',
+            partyUrnRequired: false,
+          },
+          agent: {
+            partyUrn: '',
+            partyUrnRequired: false,
+          },
+        },
+      },
+    };
+
+    jest.mocked(updateDeal).mockResolvedValue(mockReturn);
+
+    // Act
+    const response = await addPartyUrns(deal, auditDetails);
+
+    // Assert
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(0);
+    expect(updateDeal).toHaveBeenCalledTimes(1);
+
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('An invalid probability of default has been supplied');
+
+    expect(response.tfm.parties.exporter.partyUrn).toBe('');
+  });
+
+  it('should return empty party URN and not invoke the API call when an empty industry code is supplied', async () => {
+    // Arrange
+    const deal = {
+      ...MOCK_GEF_MAPPED_DEAL,
+      exporter: {
+        ...MOCK_GEF_MAPPED_DEAL.exporter,
+        selectedIndustry: {},
+      },
+    };
+    const mockReturn = {
+      ...MOCK_GEF_MAPPED_DEAL,
+      tfm: {
+        ...MOCK_GEF_MAPPED_DEAL.tfm,
+        parties: {
+          exporter: {
+            partyUrn: '',
+            partyUrnRequired: true,
+          },
+          buyer: {
+            partyUrn: '',
+            partyUrnRequired: false,
+          },
+          indemnifier: {
+            partyUrn: '',
+            partyUrnRequired: false,
+          },
+          agent: {
+            partyUrn: '',
+            partyUrnRequired: false,
+          },
+        },
+      },
+    };
+
+    jest.mocked(updateDeal).mockResolvedValue(mockReturn);
+
+    // Act
+    const response = await addPartyUrns(deal, auditDetails);
+
+    // Assert
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(0);
+    expect(updateDeal).toHaveBeenCalledTimes(1);
+
+    expect(console.error).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledWith('An invalid industry code has been supplied');
+
+    expect(response.tfm.parties.exporter.partyUrn).toBe('');
+  });
+
   it('should return empty party URN when an invalid companies house number is supplied', async () => {
     // Arrange
     const isUkEntity = true;

@@ -1,6 +1,6 @@
 import axios, { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
-import { CustomExpressRequest, PROBABILITY_OF_DEFAULT, HEADERS, SalesForceParty } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, MOCK_COMPANY_REGISTRATION_NUMBERS, PROBABILITY_OF_DEFAULT, HEADERS, SalesForceParty } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { getOrCreateParty } from './party-db.controller';
@@ -32,7 +32,7 @@ const mockIndustryResponse = {
 };
 
 const mockBody = {
-  companyRegNo: '12312312',
+  companyRegNo: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
   companyName: 'test',
   probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
   isUkEntity: true,
@@ -40,7 +40,15 @@ const mockBody = {
 };
 
 const mockMdmResponse = [
-  { companyRegNo: '12312312', isLegacyRecord: false, name: 'string', partyUrn: '00327339', sfId: '001S900000Ym3', subtype: null, type: null },
+  {
+    companyRegNo: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID,
+    isLegacyRecord: false,
+    name: 'string',
+    partyUrn: '00327339',
+    sfId: '001S900000Ym3',
+    subtype: null,
+    type: null,
+  },
 ];
 
 let mockRequest: CustomExpressRequest<{ reqBody: SalesForceParty }>;
