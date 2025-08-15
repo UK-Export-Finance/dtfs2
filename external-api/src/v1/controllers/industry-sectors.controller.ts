@@ -35,22 +35,48 @@ export const findACBSIndustrySector = async (industryId: number): Promise<{ data
   return response;
 };
 
-const sortIndustrySectors = (industrySectors: IndustrySectorInterface[]) => {
+/**
+ * Sorts an array of industry sectors alphabetically by their `name` property,
+ * and also sorts each sector's `classes` array alphabetically by `name`.
+ *
+ * @param industrySectors - The array of industry sector objects to sort.
+ * @returns A new array of industry sector objects sorted by name, with each sector's `classes` also sorted by name.
+ */
+const sortIndustrySectors = (industrySectors: IndustrySectorInterface[]): Array<IndustrySectorInterface> => {
   const industrySectorsSorted = sortArrayAlphabetically(industrySectors, 'name') as IndustrySectorInterface[];
 
   industrySectorsSorted.map((sector: IndustrySectorInterface) => ({
     ...sector,
     classes: sortArrayAlphabetically(sector.classes, 'name'),
   }));
+
+  return industrySectorsSorted;
 };
 
+/**
+ * Finds and returns an industry sector object from the `INDUSTRY_SECTORS` array that matches the provided code.
+ *
+ * @param findCode - The code to search for within the industry sectors.
+ * @returns The industry sector object with the matching code, or `undefined` if not found.
+ */
 const findOneIndustrySector = (findCode: any) => INDUSTRY_SECTORS.find(({ code }: any) => code === findCode);
 
-export const findAll = (req: Request, res: Response) =>
-  res.status(HttpStatusCode.Ok).send({
-    count: INDUSTRY_SECTORS.length,
-    industrySectors: sortIndustrySectors(INDUSTRY_SECTORS),
+/**
+ * Handles the request to retrieve all industry sectors.
+ * Sorts the industry sectors and returns them along with their count.
+ *
+ * @param req - Express request object.
+ * @param res - Express response object.
+ * @returns A response with the count and sorted list of industry sectors.
+ */
+export const findAll = (req: Request, res: Response) => {
+  const industrySectors = sortIndustrySectors(INDUSTRY_SECTORS);
+
+  return res.status(HttpStatusCode.Ok).send({
+    count: industrySectors.length,
+    industrySectors,
   });
+};
 
 /**
  * Fetches the industry sector from code
@@ -65,6 +91,13 @@ export const findOne = (req: Request, res: Response) => {
   return res.status(status).send(sector);
 };
 
+/**
+ * Handles the request to retrieve an ACBS industry sector by its code.
+ *
+ * @param req - Express request object containing the industry sector code in `req.params.code`.
+ * @param res - Express response object used to send the retrieved industry sector data.
+ * @returns Sends the first matching industry sector data with the corresponding HTTP status.
+ */
 export const getACBSIndustrySector = async (req: Request, res: Response) => {
   const { code } = req.params;
 
