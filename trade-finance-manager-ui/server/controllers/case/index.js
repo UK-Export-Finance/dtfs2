@@ -294,11 +294,11 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
           if (ukefDecisionRejected(amendment)) {
             // sets bank decision to not applicable locally
             item.banksDecision = AMENDMENTS.AMENDMENT_BANK_DECISION.NOT_APPLICABLE;
-
-            const date = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'dd MMMM yyyy');
-            const time = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'h:mm aaa');
-            item.ukefDecision.submittedAt = `${date} at ${time}`;
           }
+
+          const date = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'dd MMMM yyyy');
+          const time = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'h:mm aaa');
+          item.ukefDecision.submittedAt = `${date} at ${time}`;
         }
 
         item.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
