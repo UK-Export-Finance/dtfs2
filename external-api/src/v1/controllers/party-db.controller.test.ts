@@ -1,8 +1,9 @@
 import axios, { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
-import { PROBABILITY_OF_DEFAULT, HEADERS } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PROBABILITY_OF_DEFAULT, HEADERS, SalesForceParty } from '@ukef/dtfs2-common';
+import { Response } from 'express';
+import httpMocks, { MockResponse } from 'node-mocks-http';
 import { getOrCreateParty } from './party-db.controller';
-import { mockReq, mockRes } from '../../test-mocks';
 import { findACBSIndustrySector } from './industry-sectors.controller';
 
 dotenv.config();
@@ -42,11 +43,11 @@ const mockMdmResponse = [
   { companyRegNo: '12312312', isLegacyRecord: false, name: 'string', partyUrn: '00327339', sfId: '001S900000Ym3', subtype: null, type: null },
 ];
 
-let mockRequest = mockReq();
-let mockResponse = mockRes();
+let mockRequest: CustomExpressRequest<{ reqBody: SalesForceParty }>;
+let mockResponse: MockResponse<Response>;
 
 jest.mock('./industry-sectors.controller', () => ({
-  ...jest.requireActual('./industry-sectors.controller'),
+  ...jest.requireActual<object>('./industry-sectors.controller'),
   findACBSIndustrySector: jest.fn(),
 }));
 
@@ -54,8 +55,7 @@ jest.mock('axios');
 
 describe('getOrCreateParty', () => {
   beforeEach(() => {
-    mockRequest = mockReq();
-    mockResponse = mockRes();
+    ({ req: mockRequest, res: mockResponse } = httpMocks.createMocks({ body: mockBody }));
 
     console.info = jest.fn();
     console.error = jest.fn();
@@ -79,8 +79,8 @@ describe('getOrCreateParty', () => {
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('Invalid company registration number was provided %s', '');
 
-    expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
-    expect(mockResponse.send).toHaveBeenCalledWith({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
+    expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+    expect(mockResponse._getData()).toEqual({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
   });
 
   it(`should return ${HttpStatusCode.BadRequest} when an invalid company name is provided`, async () => {
@@ -97,8 +97,8 @@ describe('getOrCreateParty', () => {
     expect(console.error).toHaveBeenCalledTimes(1);
     expect(console.error).toHaveBeenCalledWith('Invalid company name was provided %s', '');
 
-    expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
-    expect(mockResponse.send).toHaveBeenCalledWith({ status: HttpStatusCode.BadRequest, data: 'Invalid company name' });
+    expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.BadRequest);
+    expect(mockResponse._getData()).toEqual({ status: HttpStatusCode.BadRequest, data: 'Invalid company name' });
   });
 
   it(`should return ${HttpStatusCode.InternalServerError} when an error is thrown`, async () => {
@@ -121,8 +121,8 @@ describe('getOrCreateParty', () => {
     expect(findACBSIndustrySector).toHaveBeenCalledTimes(1);
     expect(findACBSIndustrySector).toHaveBeenCalledWith(mockRequest.body.code);
 
-    expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
-    expect(mockResponse.send).toHaveBeenCalledWith({ status: HttpStatusCode.InternalServerError, message: 'An unknown error occurred' });
+    expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+    expect(mockResponse._getData()).toEqual({ status: HttpStatusCode.InternalServerError, message: 'An unknown error occurred' });
   });
 
   it(`should return ${HttpStatusCode.InternalServerError} when UKEF industry code is not found`, async () => {
@@ -149,8 +149,8 @@ describe('getOrCreateParty', () => {
     expect(findACBSIndustrySector).toHaveBeenCalledTimes(1);
     expect(findACBSIndustrySector).toHaveBeenCalledWith(mockRequest.body.code);
 
-    expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
-    expect(mockResponse.send).toHaveBeenCalledWith({ status: HttpStatusCode.InternalServerError, message: 'An unknown error occurred' });
+    expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.InternalServerError);
+    expect(mockResponse._getData()).toEqual({ status: HttpStatusCode.InternalServerError, message: 'An unknown error occurred' });
   });
 
   it(`should return ${HttpStatusCode.Ok} when the payload is valid`, async () => {
@@ -193,7 +193,7 @@ describe('getOrCreateParty', () => {
       },
     });
 
-    expect(mockResponse.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
-    expect(mockResponse.send).toHaveBeenCalledWith(mockMdmResponse);
+    expect(mockResponse._getStatusCode()).toBe(HttpStatusCode.Ok);
+    expect(mockResponse._getData()).toEqual(mockMdmResponse);
   });
 });
