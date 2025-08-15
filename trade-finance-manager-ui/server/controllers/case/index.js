@@ -1,5 +1,5 @@
 const { format, fromUnixTime } = require('date-fns');
-const { MONGO_DB_COLLECTIONS, FLASH_TYPES, formattedNumber, convertUnixTimestampWithoutMilliseconds } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, FLASH_TYPES, formattedNumber, convertUnixTimestampWithoutMilliseconds, PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const {
   getTask,
@@ -274,7 +274,7 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
   const allCompletedAmendments = [];
   if (allAmendments.length) {
     Object.values(allAmendments).forEach((amendment) => {
-      if (amendment.submittedByPim === true || amendment.status === 'Acknowledged') {
+      if (amendment.submittedByPim === true || amendment.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED) {
         // deep clone the object
         const item = { ...amendment };
         item.requestDate = amendment?.requestDate ? format(fromUnixTime(item.requestDate), 'dd MMMM yyyy') : null;
@@ -294,13 +294,11 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
           if (ukefDecisionRejected(amendment)) {
             // sets bank decision to not applicable locally
             item.banksDecision = AMENDMENTS.AMENDMENT_BANK_DECISION.NOT_APPLICABLE;
-          }
-        }
 
-        if (amendment?.ukefDecision?.submitted) {
-          const date = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'dd MMMM yyyy');
-          const time = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'h:mm aaa');
-          item.ukefDecision.submittedAt = `${date} at ${time}`;
+            const date = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'dd MMMM yyyy');
+            const time = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'h:mm aaa');
+            item.ukefDecision.submittedAt = `${date} at ${time}`;
+          }
         }
 
         item.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;

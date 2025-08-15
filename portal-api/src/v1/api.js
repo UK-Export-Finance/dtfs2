@@ -663,9 +663,9 @@ const getAllPortalFacilityAmendments = async (statuses) => {
 };
 
 /**
- * Gets portal facility amendments on the deal filtered by status
+ * Gets the latest value and cover end date from the latest amendment of either
  * @param {string} facilityId - id of the facility to amend
- * @returns {Promise<(import('@ukef/dtfs2-common').LatestAmendmentValueAndCoverEndDate)>} - the amendments on the deal with a matching status
+ * @returns {Promise<(import('@ukef/dtfs2-common').LatestAmendmentValueAndCoverEndDate)>} - the latest cover end date and facility value
  */
 const getLatestAmendmentFacilityValueAndCoverEndDate = async (facilityId) => {
   try {
@@ -677,7 +677,7 @@ const getLatestAmendmentFacilityValueAndCoverEndDate = async (facilityId) => {
 
     return response.data;
   } catch (error) {
-    console.error('Error getting portal facility amendments on facility with id %s: %o', facilityId, error);
+    console.error('Error getting latest value and cover end date for the facility %s: %o', facilityId, error);
     throw error;
   }
 };
@@ -820,7 +820,7 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
  * @param {string} params.checkersEmail - The checker's email address to send the notification to
  * @param {string} params.pimEmail - The pim's email address to send the notification to
  * @param {import('@ukef/dtfs2-common').PortalAmendmentSubmittedToUkefEmailVariables} params.emailVariables - The email variables to send with the notification
- * @param {number} params.requestDate - The date of the request
+ * @param {number} params.requestDate - The date the bank requested the amendment - the date it was submitted to UKEF.
  * @param {string} params.bankId - The bank id
  * @param {string} params.bankName - The bank name
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>} - the updatedamendment
