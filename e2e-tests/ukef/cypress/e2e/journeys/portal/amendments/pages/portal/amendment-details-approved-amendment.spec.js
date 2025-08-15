@@ -106,7 +106,7 @@ context('Amendments - Approved amendments - Amendment details page', () => {
       amendmentSummaryList.amendmentSummaryListTable().facilityValueChangeLink().should('not.exist');
     });
 
-    it('should NOT render facility end date row or bank review date rows', () => {
+    it('should not render facility end date row or bank review date rows', () => {
       applicationAmendments.amendmentDetailsLink().click();
       amendmentSummaryList.amendmentSummaryListTable().facilityEndDateKey().should('not.exist');
       amendmentSummaryList.amendmentSummaryListTable().facilityEndDateValue().should('not.exist');
