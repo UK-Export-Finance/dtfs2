@@ -13,22 +13,30 @@ describe('generatePortalAmendmentEligibilityRows', () => {
 
       const expectedEligibility = [
         [
-          { html: `<span data-cy="eligibility-table-criterion-${criteria[0].id}-id">${criteria[0].id}</span>` },
           {
-            html: `<span class="govuk-tag govuk-tag--green" data-cy="eligibility-table-criterion-${criteria[0].id}-tag"><strong>${String(
-              criteria[0].answer,
-            ).toUpperCase()}</strong></span>`,
+            html: `<span data-cy="amendment-${anAcknowledgedPortalAmendment.amendmentId}-eligibility-table-criterion-${criteria[0].id}-id">${criteria[0].id}</span>`,
           },
-          { html: `<span data-cy="eligibility-table-criterion-${criteria[0].id}-text">${criteria[0].text}</span>` },
+          {
+            html: `<span class="govuk-tag govuk-tag--green" data-cy="amendment-${anAcknowledgedPortalAmendment.amendmentId}-eligibility-table-criterion-${
+              criteria[0].id
+            }-tag"><strong>${String(criteria[0].answer).toUpperCase()}</strong></span>`,
+          },
+          {
+            html: `<span data-cy="amendment-${anAcknowledgedPortalAmendment.amendmentId}-eligibility-table-criterion-${criteria[0].id}-text">${criteria[0].text}</span>`,
+          },
         ],
         [
-          { html: `<span data-cy="eligibility-table-criterion-${criteria[1].id}-id">${criteria[1].id}</span>` },
           {
-            html: `<span class="govuk-tag govuk-tag--green" data-cy="eligibility-table-criterion-${criteria[1].id}-tag"><strong>${String(
-              criteria[1].answer,
-            ).toUpperCase()}</strong></span>`,
+            html: `<span data-cy="amendment-${anAcknowledgedPortalAmendment.amendmentId}-eligibility-table-criterion-${criteria[1].id}-id">${criteria[1].id}</span>`,
           },
-          { html: `<span data-cy="eligibility-table-criterion-${criteria[1].id}-text">${criteria[1].text}</span>` },
+          {
+            html: `<span class="govuk-tag govuk-tag--green" data-cy="amendment-${anAcknowledgedPortalAmendment.amendmentId}-eligibility-table-criterion-${
+              criteria[1].id
+            }-tag"><strong>${String(criteria[1].answer).toUpperCase()}</strong></span>`,
+          },
+          {
+            html: `<span data-cy="amendment-${anAcknowledgedPortalAmendment.amendmentId}-eligibility-table-criterion-${criteria[1].id}-text">${criteria[1].text}</span>`,
+          },
         ],
       ];
 
