@@ -69,7 +69,7 @@ const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault, is
   }
 
   if (!partyDbInfo) {
-    console.error('No partyDbInfo returned');
+    console.error('Invalid APIM customer response has been received');
     return '';
   }
 
@@ -79,7 +79,7 @@ const getPartyUrn = async ({ companyRegNo, companyName, probabilityOfDefault, is
     return partyUrn;
   }
 
-  console.error('No PartyURN in response');
+  console.error('Invalid party URN has been received');
   return '';
 };
 
