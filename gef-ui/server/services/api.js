@@ -451,7 +451,7 @@ const getLatestAmendmentFacilityValueAndCoverEndDate = async ({ facilityId, user
 
     return response.data;
   } catch (error) {
-    console.error('Failed to get amendments on facility with id %s: %o', facilityId, error);
+    console.error('Failed to get latest value and cover end date for the facility %s: %o', facilityId, error);
     throw error;
   }
 };
