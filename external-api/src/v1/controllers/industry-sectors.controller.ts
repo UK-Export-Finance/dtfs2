@@ -1,4 +1,4 @@
-import { HEADERS, IndustrySectorInterface, UnionCountryCurrencyIndustryInterface, industrySector } from '@ukef/dtfs2-common';
+import { HEADERS, IndustrySectorInterface, industrySector } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
@@ -36,7 +36,7 @@ export const findACBSIndustrySector = async (industryId: number): Promise<{ data
 };
 
 const sortIndustrySectors = (industrySectors: IndustrySectorInterface[]) => {
-  const industrySectorsSorted = sortArrayAlphabetically(industrySectors, 'name');
+  const industrySectorsSorted = sortArrayAlphabetically(industrySectors, 'name') as IndustrySectorInterface[];
 
   industrySectorsSorted.map((sector: IndustrySectorInterface) => ({
     ...sector,
