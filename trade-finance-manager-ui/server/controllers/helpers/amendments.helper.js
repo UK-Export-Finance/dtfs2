@@ -140,13 +140,17 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
 
 /**
  * Maps all amendments for a facility
+ * Reverses array so displayed in reverse order (most recent first)
  * Generates the eligibility rows for portal amendments which populates the eligibility table on the facility amendment tab
  * Generates a isPortalAmendment flag if amendment is portal amendment or not
  * Returns the mapped amendments with isPortalAmendment flag and eligibilityRows if portal amendment
  * @param {import('@ukef/dtfs2-common').PortalFacilityAmendment[] | import('@ukef/dtfs2-common').TfmFacilityAmendment[]} amendments
  * @returns {import('@ukef/dtfs2-common').AmendmentWithEligibilityRows[]} - the mapped portal amendments
  */
-const generatePortalAmendmentEligibilityRows = (amendments) => {
+const generatePortalAmendmentEligibilityRows = (amendmentsArray) => {
+  // reverses array so most recent first
+  const amendments = amendmentsArray.reverse();
+
   const mappedAmendments = amendments.map((amendment) => {
     let isPortalAmendment = false;
 

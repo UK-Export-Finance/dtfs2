@@ -80,30 +80,30 @@ context('Amendments - TFM - Amendments details page - TFM should display portal 
   });
 
   it('should display a row for the first portal amendment', () => {
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).heading(), `Amendment ${ukefFacilityId}-001`);
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).effectiveDate(), today.dd_MMMM_yyyy);
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).requireApproval(), 'No');
-
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).currentCoverEndDate(), format(new Date(mockFacility.coverEndDate), DD_MMMM_YYYY_FORMAT));
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).newCoverEndDate(), twoYears.dd_MMMM_yyyy);
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate(), UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
-
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).currentFacilityValue(), `${CURRENCY.GBP} ${getFormattedMonetaryValue(mockFacility.value, 2)}`);
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).newFacilityValue(), `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, 2)}`);
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue(), UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
-  });
-
-  it('should display a row for the second portal amendment', () => {
-    cy.assertText(amendmentsPage.amendmentDetails.row(2).heading(), `Amendment ${ukefFacilityId}-002`);
+    cy.assertText(amendmentsPage.amendmentDetails.row(2).heading(), `Amendment ${ukefFacilityId}-001`);
     cy.assertText(amendmentsPage.amendmentDetails.row(2).effectiveDate(), today.dd_MMMM_yyyy);
     cy.assertText(amendmentsPage.amendmentDetails.row(2).requireApproval(), 'No');
 
-    cy.assertText(amendmentsPage.amendmentDetails.row(2).currentCoverEndDate(), twoYears.dd_MMMM_yyyy);
-    cy.assertText(amendmentsPage.amendmentDetails.row(2).newCoverEndDate(), threeYears.dd_MMMM_yyyy);
+    cy.assertText(amendmentsPage.amendmentDetails.row(2).currentCoverEndDate(), format(new Date(mockFacility.coverEndDate), DD_MMMM_YYYY_FORMAT));
+    cy.assertText(amendmentsPage.amendmentDetails.row(2).newCoverEndDate(), twoYears.dd_MMMM_yyyy);
     cy.assertText(amendmentsPage.amendmentDetails.row(2).ukefDecisionCoverEndDate(), UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
 
-    cy.assertText(amendmentsPage.amendmentDetails.row(2).currentFacilityValue(), `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, 2)}`);
-    cy.assertText(amendmentsPage.amendmentDetails.row(2).newFacilityValue(), `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE_2, 2)}`);
+    cy.assertText(amendmentsPage.amendmentDetails.row(2).currentFacilityValue(), `${CURRENCY.GBP} ${getFormattedMonetaryValue(mockFacility.value, 2)}`);
+    cy.assertText(amendmentsPage.amendmentDetails.row(2).newFacilityValue(), `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, 2)}`);
     cy.assertText(amendmentsPage.amendmentDetails.row(2).ukefDecisionFacilityValue(), UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
+  });
+
+  it('should display a row for the second portal amendment', () => {
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).heading(), `Amendment ${ukefFacilityId}-002`);
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).effectiveDate(), today.dd_MMMM_yyyy);
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).requireApproval(), 'No');
+
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).currentCoverEndDate(), twoYears.dd_MMMM_yyyy);
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).newCoverEndDate(), threeYears.dd_MMMM_yyyy);
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).ukefDecisionCoverEndDate(), UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
+
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).currentFacilityValue(), `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, 2)}`);
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).newFacilityValue(), `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE_2, 2)}`);
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue(), UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
   });
 });
