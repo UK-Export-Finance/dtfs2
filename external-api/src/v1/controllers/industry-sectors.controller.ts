@@ -1,6 +1,6 @@
-import { HEADERS, IndustrySectorInterface, industrySector } from '@ukef/dtfs2-common';
+import { HEADERS, IndustrySectorInterface, UnionCountryCurrencyIndustryInterface, industrySector } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
-import axios from 'axios';
+import axios, { AxiosError, HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
 import { INDUSTRY_SECTORS } from '../../external-api';
 import { isValidIndustryId, sortArrayAlphabetically } from '../../helpers';
@@ -27,32 +27,42 @@ export const findACBSIndustrySector = async (industryId: number): Promise<{ data
     method: 'GET',
     url: `${APIM_MDM_URL}sector-industries?ukefIndustryId=${industryId}`,
     headers,
-  }).catch((error: any) => {
-    console.error('Error calling ACBS industry sector %o %s', error.response.data, error.response.status);
-    return { data: 'Failed to find ACBS industry sector', status: error?.response?.status || 500 };
+  }).catch((error: AxiosError) => {
+    console.error('Error calling ACBS industry sector %o %s', error?.response?.data, error?.response?.status);
+    return { data: 'Failed to find ACBS industry sector', status: error?.response?.status || HttpStatusCode.InternalServerError };
   });
 
   return response;
 };
 
-const sortIndustrySectors = (industrySectors: IndustrySectorInterface[]) =>
-  sortArrayAlphabetically(industrySectors, 'name').map((sector: any) => ({
+const sortIndustrySectors = (industrySectors: IndustrySectorInterface[]) => {
+  const industrySectorsSorted = sortArrayAlphabetically(industrySectors, 'name');
+
+  industrySectorsSorted.map((sector: IndustrySectorInterface) => ({
     ...sector,
     classes: sortArrayAlphabetically(sector.classes, 'name'),
   }));
+};
 
 const findOneIndustrySector = (findCode: any) => INDUSTRY_SECTORS.find(({ code }: any) => code === findCode);
 
 export const findAll = (req: Request, res: Response) =>
-  res.status(200).send({
+  res.status(HttpStatusCode.Ok).send({
     count: INDUSTRY_SECTORS.length,
     industrySectors: sortIndustrySectors(INDUSTRY_SECTORS),
   });
 
+/**
+ * Fetches the industry sector from code
+ * @param req Express request
+ * @param res Express Response
+ * @returns Industry sector information
+ */
 export const findOne = (req: Request, res: Response) => {
-  const industrySector = findOneIndustrySector(req.params.code);
-  const status = industrySector ? 200 : 404;
-  res.status(status).send(industrySector);
+  const sector = findOneIndustrySector(req.params.code);
+  const status = sector ? HttpStatusCode.Ok : HttpStatusCode.NotFound;
+
+  return res.status(status).send(sector);
 };
 
 export const getACBSIndustrySector = async (req: Request, res: Response) => {
