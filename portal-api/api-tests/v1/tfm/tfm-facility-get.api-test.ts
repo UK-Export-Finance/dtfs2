@@ -4,7 +4,7 @@ import { HttpStatusCode } from 'axios';
 import app from '../../../src/createApp';
 import testUserCache from '../../api-test-users';
 
-import { MAKER } from '../../../src/v1/roles/roles';
+import { CHECKER, MAKER } from '../../../src/v1/roles/roles';
 import createApi from '../../api';
 import { TestUser } from '../../types/test-user';
 import { withRoleAuthorisationTests } from '../../common-tests/role-authorisation-tests';
@@ -58,7 +58,7 @@ describe('/v1/tfm/facility/:facilityId', () => {
     });
 
     withRoleAuthorisationTests({
-      allowedRoles: [MAKER],
+      allowedRoles: [MAKER, CHECKER],
       getUserWithRole: (role: Role) => testUsers().withRole(role).one() as TestUser,
       makeRequestAsUser: (user: TestUser) => as(user).get(url(validFacilityId)),
       successStatusCode: HttpStatusCode.Ok,
