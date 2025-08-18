@@ -1,4 +1,5 @@
 const { CURRENCY, TFM_AMENDMENT_STATUS, PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { add } = require('date-fns');
 const amendmentHelpers = require('./amendment.helpers');
 
 describe('amendmentChangeValueExportCurrency()', () => {
@@ -235,6 +236,37 @@ describe('findLatestCompletedAmendment()', () => {
 
     // Assert
     expect(result).toEqual(latestAmendmentTfmObject);
+  });
+
+  it('should return the original values if effective date is in the future', () => {
+    // Arrange
+    const tomorrow = add(new Date(), { days: 1 });
+
+    const latestAmendmentTfmObject = {
+      ...anAmendmentTfmObject(),
+      value: 3000,
+      coverEndDate: new Date('2023-12-12').getTime(),
+      bankReviewDate: undefined,
+      facilityEndDate: undefined,
+      isUsingFacilityEndDate: undefined,
+      effectiveDate: tomorrow.getTime(),
+    };
+
+    const anotherAmendmentTfmObject = { ...anAmendmentTfmObject(), value: 1000, coverEndDate: null };
+    const amendments = [
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS), tfm: anotherAmendmentTfmObject },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: anotherAmendmentTfmObject },
+      { ...anAmendmentWithStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED), tfm: latestAmendmentTfmObject },
+    ];
+
+    // Act
+    const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
+
+    // Assert
+    const expected = { ...latestAmendmentTfmObject };
+    delete expected.effectiveDate;
+
+    expect(result).toEqual(expected);
   });
 
   function* timestampGenerator() {

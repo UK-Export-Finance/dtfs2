@@ -392,10 +392,15 @@ authRouter.route('/tfm/team/:teamId').get(validateUserHasAtLeastOneAllowedRole({
 
 authRouter
   .route('/tfm/deal/:dealId')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), mongoIdValidation('dealId'), handleExpressValidatorResult, tfm.tfmDeal);
+  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }), mongoIdValidation('dealId'), handleExpressValidatorResult, tfm.tfmDeal);
 
 authRouter
   .route('/tfm/facility/:facilityId')
-  .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), mongoIdValidation('facilityId'), handleExpressValidatorResult, tfm.tfmFacility);
+  .get(
+    validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }),
+    mongoIdValidation('facilityId'),
+    handleExpressValidatorResult,
+    tfm.tfmFacility,
+  );
 
 module.exports = { openRouter, authRouter };
