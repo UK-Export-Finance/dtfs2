@@ -1,0 +1,18 @@
+ {% from "moj/components/banner/macro.njk" import mojBanner %}
+
+ {% macro render(params) %}
+  {% set hasInProgressPortalAmendments = params.hasInProgressPortalAmendments %}
+
+  {% if hasInProgressPortalAmendments === true %}
+    {% set bannerHtml %}
+      <p class="govuk-body" data-cy="portal-amendment--in-progress-bar">There is an amendment in progress for this facility</p>
+    {% endset %}
+
+    {{ mojBanner({
+      type: 'information',
+      classes: 'govuk-!-margin-bottom-0 govuk-!-margin-top-6',
+      html: bannerHtml
+    }) }}
+  {% endif %}
+
+{% endmacro %}
