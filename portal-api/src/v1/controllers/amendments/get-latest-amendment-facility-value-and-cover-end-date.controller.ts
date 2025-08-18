@@ -10,7 +10,7 @@ export type GetLatestAmendmentFacilityValueAndCoverEndDateRequest = CustomExpres
 }>;
 
 /**
- * Get the portal facility amendment
+ * Get the latest amendment facility value and cover end date
  * @param req - The request object
  * @param res - The response object
  */
