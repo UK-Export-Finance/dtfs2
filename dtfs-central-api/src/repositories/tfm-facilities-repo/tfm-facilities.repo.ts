@@ -640,6 +640,7 @@ export class TfmFacilitiesRepo {
       .aggregate(aggregatePipelines.latestCompletedValueAmendment(facilityId))
       .map<FacilityAmendment>((doc) => doc.amendments as FacilityAmendment)
       .toArray();
+
     return amendments.at(0) ?? null;
   }
 
@@ -654,6 +655,7 @@ export class TfmFacilitiesRepo {
       .aggregate(aggregatePipelines.latestCompletedCoverEndDateAmendment(facilityId))
       .map<FacilityAmendment>((doc) => doc.amendments as FacilityAmendment)
       .toArray();
+
     return amendments.at(0) ?? null;
   }
 }

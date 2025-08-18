@@ -20,6 +20,15 @@ export const getLatestAmendmentFacilityValueAndCoverEndDate = async (req: GetLat
     const valueAmendment = await TfmFacilitiesRepo.findLatestValueAmendmentByFacilityId(facilityId);
     const coverEndDateAmendment = await TfmFacilitiesRepo.findLatestCoverEndDateAmendmentByFacilityId(facilityId);
 
+    if (!valueAmendment && !coverEndDateAmendment) {
+      const values = {
+        value: null,
+        coverEndDate: null,
+      };
+
+      return res.status(HttpStatusCode.Ok).send(values);
+    }
+
     const values = {
       value: valueAmendment?.value || null,
       coverEndDate: coverEndDateAmendment?.coverEndDate || null,
@@ -27,7 +36,7 @@ export const getLatestAmendmentFacilityValueAndCoverEndDate = async (req: GetLat
 
     return res.status(HttpStatusCode.Ok).send(values);
   } catch (error) {
-    console.error(`Error getting latest value and cover end date amendments by facilityId %o`, error);
+    console.error('Error getting latest value and cover end date amendments by facilityId %o', error);
 
     if (error instanceof ApiError) {
       const { status, message, code } = error;

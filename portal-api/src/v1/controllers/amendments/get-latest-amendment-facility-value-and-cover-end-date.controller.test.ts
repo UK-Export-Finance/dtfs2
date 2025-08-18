@@ -53,6 +53,26 @@ describe('controllers - facility amendments', () => {
       expect(res._getData()).toEqual(latestValues);
     });
 
+    it(`should respond with ${HttpStatusCode.NotFound} when no response is received from api.getLatestAmendmentFacilityValueAndCoverEndDate`, async () => {
+      // Arrange
+      // @ts-ignore
+      jest.mocked(api.getLatestAmendmentFacilityValueAndCoverEndDate).mockResolvedValue(null);
+
+      const { req, res } = httpMocks.createMocks<GetLatestAmendmentFacilityValueAndCoverEndDateRequest>({
+        params: { facilityId },
+      });
+
+      // Act
+      await getLatestAmendmentFacilityValueAndCoverEndDate(req, res);
+
+      // Assert
+      expect(res._getStatusCode()).toEqual(HttpStatusCode.NotFound);
+      expect(res._getData()).toEqual({
+        message: 'Latest amendment value and cover end date not found',
+        status: HttpStatusCode.NotFound,
+      });
+    });
+
     it('should return an error when there is an API error', async () => {
       const testErrorStatus = HttpStatusCode.ExpectationFailed;
       const testApiErrorMessage = 'test api error message';
