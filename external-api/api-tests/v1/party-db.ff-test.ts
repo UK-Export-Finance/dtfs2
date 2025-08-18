@@ -52,13 +52,13 @@ describe('party-db.controller feature flag', () => {
   });
 
   describe('GET /party-db', () => {
-    it(`returns a ${HttpStatusCode.Ok} response with a valid companies house number`, async () => {
+    it(`should returns a ${HttpStatusCode.Ok} response with a valid companies house number`, async () => {
       const { status } = await get(`/party-db/${VALID}`);
 
       expect(status).toEqual(HttpStatusCode.Ok);
     });
 
-    it(`returns a ${HttpStatusCode.Ok} response with a valid companies house number with letters`, async () => {
+    it(`should returns a ${HttpStatusCode.Ok} response with a valid companies house number with letters`, async () => {
       const { status } = await get(`/party-db/${VALID_WITH_LETTERS}`);
 
       expect(status).toEqual(HttpStatusCode.Ok);
@@ -99,7 +99,7 @@ describe('party-db.controller feature flag', () => {
       { companyRegNo: VALID, companyName: 'Some name', probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE, isUkEntity: false, code: 111111111 },
     ];
 
-    it(`returns a ${HttpStatusCode.Ok} response with a valid body`, async () => {
+    it(`should returns a ${HttpStatusCode.Ok} response with a valid body`, async () => {
       // Arrange
       jest.mocked(findACBSIndustrySector).mockResolvedValueOnce({
         data: [mockIndustryResponse],
@@ -121,7 +121,7 @@ describe('party-db.controller feature flag', () => {
       expect(status).toEqual(HttpStatusCode.Ok);
     });
 
-    it.each(invalidPayloads)(`returns a ${HttpStatusCode.BadRequest} if an invalid payload is supplied %s`, async (payload) => {
+    it.each(invalidPayloads)(`should returns a ${HttpStatusCode.BadRequest} if an invalid payload is supplied %s`, async (payload) => {
       // Act
       const { status } = await post(payload).to(`/party-db/`);
 
@@ -129,7 +129,7 @@ describe('party-db.controller feature flag', () => {
       expect(status).toEqual(HttpStatusCode.BadRequest);
     });
 
-    it.each(invalidIndustryCodes)(`returns a ${HttpStatusCode.BadRequest} if an invalid industry code is supplied %s`, async (payload) => {
+    it.each(invalidIndustryCodes)(`should returns a ${HttpStatusCode.BadRequest} if an invalid industry code is supplied %s`, async (payload) => {
       // Act
       const { status } = await post(payload).to(`/party-db/`);
 

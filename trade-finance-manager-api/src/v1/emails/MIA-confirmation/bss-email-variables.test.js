@@ -15,7 +15,6 @@ describe('generate MIA confirmation email variables - BSS', () => {
         facilities: mockFacilities,
       },
       tfm: {
-        parties: { exporter: {} },
         probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
       },
     });
