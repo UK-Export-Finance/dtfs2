@@ -2,10 +2,17 @@
 
  {% macro render(params) %}
   {% set futureEffectiveDatePortalAmendment = params.futureEffectiveDatePortalAmendment %}
+  {% set isOnAmendmentTab = params.isOnAmendmentTab %}
+
+  {% if isOnAmendmentTab %}
+    {% set dataCy = "amendment--future-effective-date-amendment-bar" %}
+  {% else %}
+    {% set dataCy = "amendment--future-effective-date-facility-bar" %}
+  {% endif %}
 
   {% if futureEffectiveDatePortalAmendment %}
     {% set bannerHtml %}
-      <p class="govuk-body" data-cy="amendment--future-effective-date-facility-bar">
+      <p class="govuk-body" data-cy="{{ dataCy }}">
         Amendment {{ futureEffectiveDatePortalAmendment.referenceNumber }} is effective on {{ futureEffectiveDatePortalAmendment.effectiveDate }}.
       </p>
     {% endset %}
