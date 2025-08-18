@@ -28,6 +28,11 @@ export const createAmendmentFacilityExposure = (
 
   const ukefExposureValue = calculateUkefExposure(valueInGBP, coverPercentageValue);
 
+  /**
+   * checks that ukefExposureValue is not null or undefined
+   * allows for 0 to be a valid value
+   * otherwise returns an empty object for 0 which is unexpected behaviour
+   */
   if (ukefExposureValue === null || ukefExposureValue === undefined) {
     return {};
   }
