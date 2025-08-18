@@ -88,7 +88,7 @@ context('Amendments - TFM - TFM should display banners when there are portal ame
     cy.visit(tfmDealPage);
   });
 
-  it('should 2 display the future effective date banners on the deal', () => {
+  it('should display the future effective date banners twice on the deal', () => {
     cy.assertText(
       amendmentsPage.amendmentFutureEffectiveDateDealBar(ukefFacilityId1),
       `There is an amendment (${ukefFacilityId1}-001) on Facility ID ${ukefFacilityId1} effective on ${tomorrow.dd_MMMM_yyyy}. See amendment details`,
