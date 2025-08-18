@@ -1,3 +1,4 @@
+const { PROBABILITY_OF_DEFAULT } = require('@ukef/dtfs2-common');
 const mapSubmittedDeal = require('.');
 const mapBssEwcsDeal = require('./map-bss-ewcs-deal');
 const { mapBssEwcsFacility } = require('./map-bss-ewcs-facility');
@@ -10,7 +11,12 @@ const MOCK_GEF_DEAL = require('../../__mocks__/mock-gef-deal');
 describe('mappings - map submitted deal - mapSubmittedDeal', () => {
   describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS}`, () => {
     it('should return mapBssEwcsDeal', async () => {
-      const mockDeal = { dealSnapshot: MOCK_BSS_EWCS_DEAL };
+      const mockDeal = {
+        dealSnapshot: MOCK_BSS_EWCS_DEAL,
+        tfm: {
+          probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+        },
+      };
 
       const result = await mapSubmittedDeal(mockDeal);
 

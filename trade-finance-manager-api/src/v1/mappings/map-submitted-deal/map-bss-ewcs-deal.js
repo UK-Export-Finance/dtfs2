@@ -46,11 +46,11 @@ const mapBssEwcsDeal = (deal) => {
     status,
     ukefDealId,
     maker,
-    smeType: submissionDetails['sme-type'],
     exporter: {
       companyName,
       companiesHouseRegistrationNumber: submissionDetails['supplier-companies-house-registration-number'],
       probabilityOfDefault: Number(tfm.probabilityOfDefault),
+      smeType: submissionDetails['sme-type'],
       registeredAddress: {
         addressLine1: submissionDetails['supplier-address-line-1'],
         addressLine2: submissionDetails['supplier-address-line-2'],

@@ -46,7 +46,6 @@ const mapGefDeal = (deal) => {
     status,
     ukefDealId,
     eligibility,
-    smeType,
     bank: {
       emails: dealSnapshot.bank.emails,
     },
@@ -55,6 +54,7 @@ const mapGefDeal = (deal) => {
       companiesHouseRegistrationNumber,
       probabilityOfDefault: Number(probabilityOfDefault),
       registeredAddress,
+      smeType,
       selectedIndustry: {
         name: selectedIndustry.name,
         class: selectedIndustry.class.name,

@@ -7,7 +7,7 @@ const DEFAULTS = require('../../defaults');
 
 describe('deal submit - add TFM data - deal pricing and risk', () => {
   it('should return default lossGivenDefault', async () => {
-    const deal = await mapSubmittedDeal({ dealSnapshot: MOCK_DEAL_MIN });
+    const deal = await mapSubmittedDeal({ dealSnapshot: MOCK_DEAL_MIN, tfm: {} });
     const result = dealPricingAndRisk(deal);
 
     expect(result.lossGivenDefault).toEqual(DEFAULTS.LOSS_GIVEN_DEFAULT);
@@ -15,7 +15,7 @@ describe('deal submit - add TFM data - deal pricing and risk', () => {
 
   describe('when submissionType is AIN', () => {
     it('should default exporterCreditRating', async () => {
-      const deal = await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_EWCS_DEAL });
+      const deal = await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_EWCS_DEAL, tfm: {} });
       const result = dealPricingAndRisk(deal);
 
       expect(result.exporterCreditRating).toEqual(DEFAULTS.CREDIT_RATING.AIN);
@@ -24,7 +24,7 @@ describe('deal submit - add TFM data - deal pricing and risk', () => {
 
   describe('when dealType is GEF', () => {
     it("should use probabilityOfDefault from the deal's exporter", async () => {
-      const deal = await mapSubmittedDeal({ dealSnapshot: MOCK_GEF_DEAL });
+      const deal = await mapSubmittedDeal({ dealSnapshot: MOCK_GEF_DEAL, tfm: {} });
       const result = dealPricingAndRisk(deal);
 
       expect(result.probabilityOfDefault).toEqual(MOCK_GEF_DEAL.exporter.probabilityOfDefault);
@@ -33,7 +33,7 @@ describe('deal submit - add TFM data - deal pricing and risk', () => {
 
   describe('when dealType is BSS/EWCS', () => {
     it('should default probabilityOfDefault', async () => {
-      const deal = await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_EWCS_DEAL });
+      const deal = await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_EWCS_DEAL, tfm: {} });
       const result = dealPricingAndRisk(deal);
 
       expect(result.probabilityOfDefault).toEqual(DEFAULTS.PROBABILITY_OF_DEFAULT);
