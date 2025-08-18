@@ -4,7 +4,7 @@ const { mapBssEwcsFacility } = require('./map-bss-ewcs-facility');
 const mapGefDeal = require('./map-gef-deal');
 
 const CONSTANTS = require('../../../constants');
-const MOCK_BSS_EWCS_DEAL = require('../../__mocks__/mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../__mocks__/mock-deal');
 const MOCK_GEF_DEAL = require('../../__mocks__/mock-gef-deal');
 
 describe('mappings - map submitted deal - mapSubmittedDeal', () => {

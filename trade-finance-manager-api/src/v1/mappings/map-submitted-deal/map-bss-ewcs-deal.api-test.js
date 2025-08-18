@@ -1,12 +1,15 @@
+const { PROBABILITY_OF_DEFAULT } = require('@ukef/dtfs2-common');
 const mapBssEwcsDeal = require('./map-bss-ewcs-deal');
 const { mapBssEwcsFacility } = require('./map-bss-ewcs-facility');
-const MOCK_BSS_EWCS_DEAL = require('../../__mocks__/mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../__mocks__/mock-deal');
 
 describe('mappings - map submitted deal - mapBssEwcsDeal', () => {
   it('should return mapped deal', () => {
     const mockDeal = {
       dealSnapshot: MOCK_BSS_EWCS_DEAL,
-      tfm: {},
+      tfm: {
+        probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+      },
     };
 
     const result = mapBssEwcsDeal(mockDeal);
