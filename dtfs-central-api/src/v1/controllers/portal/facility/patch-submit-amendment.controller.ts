@@ -27,7 +27,7 @@ export type PatchSubmitAmendmentToUkefRequest = CustomExpressRequest<{
  */
 export const patchSubmitAmendment = async (req: PatchSubmitAmendmentToUkefRequest, res: Response) => {
   const { facilityId, amendmentId } = req.params;
-  const { auditDetails, newStatus, referenceNumber, makersEmail, checkersEmail, pimEmail, emailVariables, bankName, bankId } = req.body;
+  const { auditDetails, newStatus, referenceNumber, makersEmail, checkersEmail, pimEmail, emailVariables, bankName, bankId, requestDate } = req.body;
 
   try {
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.PORTAL);
@@ -39,6 +39,7 @@ export const patchSubmitAmendment = async (req: PatchSubmitAmendmentToUkefReques
           amendmentId,
           newStatus,
           referenceNumber,
+          requestDate,
           auditDetails,
           bankId,
           bankName,

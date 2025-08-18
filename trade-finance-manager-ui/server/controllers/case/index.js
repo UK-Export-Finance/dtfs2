@@ -1,5 +1,12 @@
 const { format, fromUnixTime } = require('date-fns');
-const { MONGO_DB_COLLECTIONS, FLASH_TYPES, formattedNumber, convertUnixTimestampWithoutMilliseconds } = require('@ukef/dtfs2-common');
+const {
+  MONGO_DB_COLLECTIONS,
+  FLASH_TYPES,
+  formattedNumber,
+  convertUnixTimestampWithoutMilliseconds,
+  PORTAL_AMENDMENT_STATUS,
+  DATE_FORMATS,
+} = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const {
   getTask,
@@ -278,58 +285,64 @@ const putCaseTask = async (req, res) => {
   return res.redirect(`/case/${dealId}/tasks`);
 };
 
-const formatAmendmentDetails = (allAmendments) => {
+const formatCompletedAmendmentDetails = (allAmendments) => {
   const allCompletedAmendments = [];
   if (allAmendments.length) {
-    Object.values(allAmendments).forEach((value) => {
-      // deep clone the object
-      const item = { ...value };
-      item.requestDate = value?.requestDate ? format(fromUnixTime(item.requestDate), 'dd MMMM yyyy') : null;
+    Object.values(allAmendments).forEach((amendment) => {
+      if (amendment.submittedByPim === true || amendment.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED) {
+        // deep clone the object
+        const item = { ...amendment };
+        item.requestDate = amendment?.requestDate ? format(fromUnixTime(item.requestDate), DATE_FORMATS.DD_MMMM_YYYY) : null;
 
-      const formattedCoverEndDate = value?.coverEndDate ? convertUnixTimestampWithoutMilliseconds(value.coverEndDate) : null;
+        item.name = `Amendment ${amendment.referenceNumber}`;
 
-      item.coverEndDate = formattedCoverEndDate ? format(fromUnixTime(formattedCoverEndDate), 'dd MMMM yyyy') : null;
+        const formattedCoverEndDate = amendment?.coverEndDate ? convertUnixTimestampWithoutMilliseconds(amendment.coverEndDate) : null;
 
-      item.value = value?.value ? `${value.currency} ${formattedNumber(value.value)}` : null;
-      item.requireUkefApproval = value?.requireUkefApproval ? 'Yes' : 'No';
-      // if bankDecision submitted, then adds decision, else adds awaiting decision (locally)
-      item.banksDecision = value?.bankDecision?.submitted ? value?.bankDecision?.decision : AMENDMENTS.AMENDMENT_BANK_DECISION.AWAITING_DECISION;
-      // checks if coverEndDate/facility value or both on an amendment request are declined
-      if (value?.ukefDecision?.submitted) {
-        if (ukefDecisionRejected(value)) {
-          // sets bank decision to not applicable locally
-          item.banksDecision = AMENDMENTS.AMENDMENT_BANK_DECISION.NOT_APPLICABLE;
+        item.coverEndDate = formattedCoverEndDate ? format(fromUnixTime(formattedCoverEndDate), DATE_FORMATS.DD_MMMM_YYYY) : null;
+
+        item.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
+        item.requireUkefApproval = amendment?.requireUkefApproval ? 'Yes' : 'No';
+        // if bankDecision submitted, then adds decision, else adds awaiting decision (locally)
+        item.banksDecision = amendment?.bankDecision?.submitted ? amendment?.bankDecision?.decision : AMENDMENTS.AMENDMENT_BANK_DECISION.AWAITING_DECISION;
+        // checks if coverEndDate/facility value or both on an amendment request are declined
+        if (amendment?.ukefDecision?.submitted) {
+          if (ukefDecisionRejected(amendment)) {
+            // sets bank decision to not applicable locally
+            item.banksDecision = AMENDMENTS.AMENDMENT_BANK_DECISION.NOT_APPLICABLE;
+          }
+
+          const date = format(fromUnixTime(amendment.ukefDecision.submittedAt), DATE_FORMATS.DD_MMMM_YYYY);
+          const time = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'h:mm aaa');
+          item.ukefDecision.submittedAt = `${date} at ${time}`;
         }
+
+        item.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
+        item.bankDecisionTags = AMENDMENTS.BANK_DECISIONS_TAGS;
+
+        if (amendment?.requireUkefApproval) {
+          item.ukefDecisionValue = amendment?.ukefDecision?.submitted ? amendment?.ukefDecision?.value : UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
+
+          item.ukefDecisionCoverEndDate = amendment?.ukefDecision?.submitted ? amendment?.ukefDecision?.coverEndDate : UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
+
+          item.effectiveDate = amendment?.bankDecision?.effectiveDate ? format(fromUnixTime(item.bankDecision.effectiveDate), DATE_FORMATS.DD_MMMM_YYYY) : null;
+        } else {
+          item.ukefDecisionValue = UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL;
+
+          item.ukefDecisionCoverEndDate = UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL;
+
+          item.effectiveDate = amendment?.effectiveDate ? format(fromUnixTime(item.effectiveDate), DATE_FORMATS.DD_MMMM_YYYY) : null;
+        }
+
+        if (amendment?.changeCoverEndDate && amendment?.currentCoverEndDate) {
+          item.currentCoverEndDate = format(fromUnixTime(amendment?.currentCoverEndDate), DATE_FORMATS.DD_MMMM_YYYY);
+        }
+
+        if (amendment?.changeFacilityValue && amendment?.currentValue) {
+          item.currentValue = `${amendment.currency} ${formattedNumber(amendment.currentValue)}`;
+        }
+
+        allCompletedAmendments.push(item);
       }
-
-      if (value?.ukefDecision?.submitted) {
-        const date = format(fromUnixTime(value.ukefDecision.submittedAt), 'dd MMMM yyyy');
-        const time = format(fromUnixTime(value.ukefDecision.submittedAt), 'h:mm aaa');
-        item.ukefDecision.submittedAt = `${date} at ${time}`;
-      }
-
-      item.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
-      item.bankDecisionTags = AMENDMENTS.BANK_DECISIONS_TAGS;
-
-      if (value?.requireUkefApproval) {
-        item.ukefDecisionValue = value?.ukefDecision?.submitted ? value?.ukefDecision?.value : UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
-        item.ukefDecisionCoverEndDate = value?.ukefDecision?.submitted ? value?.ukefDecision?.coverEndDate : UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
-        item.effectiveDate = value?.bankDecision?.effectiveDate ? format(fromUnixTime(item.bankDecision.effectiveDate), 'dd MMMM yyyy') : null;
-      } else {
-        item.ukefDecisionValue = UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL;
-        item.ukefDecisionCoverEndDate = UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL;
-        item.effectiveDate = value?.effectiveDate ? format(fromUnixTime(item.effectiveDate), 'dd MMMM yyyy') : null;
-      }
-
-      if (value?.changeCoverEndDate && value?.currentCoverEndDate) {
-        item.currentCoverEndDate = format(fromUnixTime(value?.currentCoverEndDate), 'dd MMMM yyyy');
-      }
-
-      if (value?.changeFacilityValue && value?.currentValue) {
-        item.currentValue = `${value.currency} ${formattedNumber(value.currentValue)}`;
-      }
-
-      allCompletedAmendments.push(item);
     });
   }
   return allCompletedAmendments;
@@ -349,7 +362,7 @@ const getCaseFacility = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    const allAmendments = formatAmendmentDetails(allAmendmentsByFacilityId);
+    const allAmendments = formatCompletedAmendmentDetails(allAmendmentsByFacilityId);
 
     const deal = await api.getDeal(dealId, userToken);
 

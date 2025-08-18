@@ -132,6 +132,7 @@ describe('validatePatchPortalFacilitySubmitAmendmentPayload', () => {
       ...portalAmendmentVariables,
       bankId: '1',
       bankName: 'Test Bank',
+      requestDate: 1673728000,
     };
 
     const { req, res } = createMocks({ body: payload });
