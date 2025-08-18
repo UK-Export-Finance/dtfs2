@@ -339,6 +339,7 @@ const getCaseFacility = async (req, res) => {
   try {
     const { _id: dealId, facilityId } = req.params;
     const { userToken } = req.session;
+    const { teams } = req.session.user;
     const facility = await api.getFacility(facilityId, userToken);
     const { data: amendment } = await api.getAmendmentInProgress(facilityId, userToken);
     const { data: amendments } = await api.getAmendmentsByDealId(dealId, userToken);
@@ -367,7 +368,7 @@ const getCaseFacility = async (req, res) => {
       getAmendmentsInProgress({
         amendments,
         deal,
-        teams: req.session.user.teams,
+        teams,
       });
 
     if (hasAmendmentInProgressSubmittedFromPim) {

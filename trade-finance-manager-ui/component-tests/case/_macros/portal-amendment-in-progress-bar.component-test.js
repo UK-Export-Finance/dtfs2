@@ -10,7 +10,6 @@ describe(component, () => {
     it('should render the banner', () => {
       const params = {
         hasInProgressPortalAmendments: true,
-        inProgressPortalAmendments: [{ status: 'Draft' }],
       };
 
       wrapper = render(params);
@@ -23,7 +22,6 @@ describe(component, () => {
     it('should not render the banner', () => {
       const params = {
         hasInProgressPortalAmendments: false,
-        inProgressPortalAmendments: [],
       };
 
       wrapper = render(params);

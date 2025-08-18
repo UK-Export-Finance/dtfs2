@@ -919,6 +919,55 @@ describe('controllers - case', () => {
           hasInProgressPortalAmendments: true,
         });
       });
+
+      it('should render facility template with data when multiple portal amendments are present', async () => {
+        const mockPortalAmendment = [
+          {
+            ukefFacilityId: '1234',
+            facilityId: '12345',
+            status: PORTAL_AMENDMENT_STATUS.DRAFT,
+          },
+          {
+            ukefFacilityId: '1233',
+            facilityId: '12346',
+            status: PORTAL_AMENDMENT_STATUS.DRAFT,
+          },
+        ];
+
+        api.getAmendmentsByDealId = () => Promise.resolve({ status: 200, data: mockPortalAmendment });
+
+        const req = {
+          params: {
+            facilityId: mockFacility._id,
+          },
+          session,
+        };
+
+        await caseController.getCaseFacility(req, res);
+        expect(res.render).toHaveBeenCalledWith('case/facility/facility.njk', {
+          deal: mockDeal.dealSnapshot,
+          tfm: mockDeal.tfm,
+          dealId: mockDeal.dealSnapshot._id,
+          facility: mockFacility.facilitySnapshot,
+          facilityTfm: mockFacility.tfm,
+          activePrimaryNavigation: 'manage work',
+          activeSubNavigation: MONGO_DB_COLLECTIONS.FACILITIES,
+          facilityId: req.params.facilityId,
+          user: session.user,
+          showAmendmentButton: false,
+          showContinueAmendmentButton: false,
+          amendmentId: '626bae8c43c01e02076352e1',
+          amendmentVersion: 1,
+          hasAmendmentInProgressSubmittedFromPim: false,
+          hasAmendmentInProgressButton: false,
+          allAmendments: expect.any(Array),
+          amendmentsInProgressSubmittedFromPim: [],
+          amendments: expect.any(Array),
+          showFacilityEndDate: false,
+          inProgressPortalAmendments: expect.any(Array),
+          hasInProgressPortalAmendments: true,
+        });
+      });
     });
 
     describe('when facility does not exists', () => {
