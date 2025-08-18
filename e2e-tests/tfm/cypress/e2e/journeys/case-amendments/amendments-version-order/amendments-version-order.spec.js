@@ -8,6 +8,7 @@ import pages from '../../../pages';
 
 context('Amendments underwriting - amendments should be in correct order of versions (including when withdrawn)', () => {
   let dealId;
+  let ukefFacilityId;
   const dealFacilities = [];
 
   before(() => {
@@ -18,6 +19,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
 
       cy.createFacilities(dealId, [mockFacilities[0]], BANK1_MAKER1).then((createdFacilities) => {
         dealFacilities.push(...createdFacilities);
+        ukefFacilityId = createdFacilities[0].ukefFacilityId;
       });
 
       cy.submitDeal(dealId, dealType, PIM_USER_1);
@@ -137,7 +139,7 @@ context('Amendments underwriting - amendments should be in correct order of vers
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
     facilityPage.facilityTabAmendments().click();
 
-    amendmentsPage.amendmentDetails.row(1).heading().contains('Amendment 1');
+    amendmentsPage.amendmentDetails.row(1).heading().contains(`Amendment ${ukefFacilityId}-001`);
     amendmentsPage.amendmentDetails.row(1).bankDecisionTag().contains('Proceed');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().contains('123');
   });
@@ -236,11 +238,11 @@ context('Amendments underwriting - amendments should be in correct order of vers
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
     facilityPage.facilityTabAmendments().click();
 
-    amendmentsPage.amendmentDetails.row(1).heading().contains('Amendment 1');
+    amendmentsPage.amendmentDetails.row(1).heading().contains(`Amendment ${ukefFacilityId}-001`);
     amendmentsPage.amendmentDetails.row(1).bankDecisionTag().contains('Proceed');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().contains('123');
 
-    amendmentsPage.amendmentDetails.row(2).heading().contains('Amendment 2');
+    amendmentsPage.amendmentDetails.row(2).heading().contains(`Amendment ${ukefFacilityId}-002`);
     amendmentsPage.amendmentDetails.row(2).bankDecisionTag().contains('Withdrawn');
     amendmentsPage.amendmentDetails.row(2).newFacilityValue().contains('1,234');
   });
@@ -346,15 +348,15 @@ context('Amendments underwriting - amendments should be in correct order of vers
     cy.visit(relative(`/case/${dealId}/facility/${facilityId}`));
     facilityPage.facilityTabAmendments().click();
 
-    amendmentsPage.amendmentDetails.row(1).heading().contains('Amendment 1');
+    amendmentsPage.amendmentDetails.row(1).heading().contains(`Amendment ${ukefFacilityId}-001`);
     amendmentsPage.amendmentDetails.row(1).bankDecisionTag().contains('Proceed');
     amendmentsPage.amendmentDetails.row(1).newFacilityValue().contains('123');
 
-    amendmentsPage.amendmentDetails.row(2).heading().contains('Amendment 2');
+    amendmentsPage.amendmentDetails.row(2).heading().contains(`Amendment ${ukefFacilityId}-002`);
     amendmentsPage.amendmentDetails.row(2).bankDecisionTag().contains('Withdrawn');
     amendmentsPage.amendmentDetails.row(2).newFacilityValue().contains('1,234');
 
-    amendmentsPage.amendmentDetails.row(3).heading().contains('Amendment 3');
+    amendmentsPage.amendmentDetails.row(3).heading().contains(`Amendment ${ukefFacilityId}-003`);
     amendmentsPage.amendmentDetails.row(3).bankDecisionTag().contains('Proceed');
     amendmentsPage.amendmentDetails.row(3).newFacilityValue().contains('12,345');
   });

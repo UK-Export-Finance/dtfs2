@@ -613,6 +613,46 @@ describe('getPortalAmendmentsOnDeal()', () => {
     await expect(returned).rejects.toThrow(InvalidDealIdError);
   });
 });
+
+describe('getLatestAmendmentFacilityValueAndCoverEndDate()', () => {
+  const invalidFacilityIds = ['', undefined, null, '123', 123, 'abc', '!@£', '123123123ABC', {}, []];
+  const facilityId = '61a7710b2ae62b0013dae687';
+
+  it(`should return the found value and cover end date`, async () => {
+    // Arrange
+    const mockAmendment = { ...new PortalFacilityAmendmentWithUkefIdMockBuilder().build(), status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED };
+    portalApi.get.mockResolvedValueOnce({ data: { value: mockAmendment.value, coverEndDate: mockAmendment.coverEndDate } });
+
+    // Act
+    const response = await api.getLatestAmendmentFacilityValueAndCoverEndDate({ facilityId, userToken });
+
+    // Assert
+    expect(response).toEqual({
+      value: mockAmendment.value,
+      coverEndDate: mockAmendment.coverEndDate,
+    });
+  });
+
+  it('should throw an error if there is an api error', async () => {
+    // Arrange
+    portalApi.get.mockRejectedValueOnce(new AxiosError());
+
+    // Act
+    const returned = api.getLatestAmendmentFacilityValueAndCoverEndDate({ facilityId, userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow(AxiosError);
+  });
+
+  it.each(invalidFacilityIds)('should throw an error when given an invalid facility Id', async (invalidFacilityId) => {
+    // Act
+    const returned = api.getLatestAmendmentFacilityValueAndCoverEndDate({ facilityId: invalidFacilityId, userToken });
+
+    // Assert
+    await expect(returned).rejects.toThrow(InvalidFacilityIdError);
+  });
+});
+
 describe('getTfmDeal', () => {
   const invalidDealIds = ['', undefined, null, '123', 123, 'abc', '!@£', '123123123ABC', {}, []];
   const dealId = '61a7710b2ae62b0013dae687';

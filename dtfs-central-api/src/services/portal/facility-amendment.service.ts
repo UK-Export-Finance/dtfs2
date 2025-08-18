@@ -217,6 +217,7 @@ export class PortalFacilityAmendmentService {
    * @param params.facilityId - The facility id
    * @param params.newStatus - The new status to set for the amendment.
    * @param params.referenceNumber - The reference number
+   * @param params.requestDate - The date the bank requested the amendment - the date it was submitted to UKEF.
    * @param params.auditDetails - The audit details for the update operation.
    * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>} A promise that resolves when the update operation is complete.
    */
@@ -225,6 +226,7 @@ export class PortalFacilityAmendmentService {
     facilityId,
     newStatus,
     referenceNumber,
+    requestDate,
     auditDetails,
     bankId,
     bankName,
@@ -233,6 +235,7 @@ export class PortalFacilityAmendmentService {
     facilityId: string;
     newStatus: PortalAmendmentStatus;
     referenceNumber: string;
+    requestDate: number;
     auditDetails: PortalAuditDetails;
     bankId: string;
     bankName: string;
@@ -242,6 +245,7 @@ export class PortalFacilityAmendmentService {
     const amendmentUpdate: Partial<PortalFacilityAmendment> = {
       status: newStatus,
       referenceNumber,
+      requestDate,
     };
 
     const existingAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);

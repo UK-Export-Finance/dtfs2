@@ -9,6 +9,8 @@ import { PortalAmendmentStatus, TfmAmendmentStatus } from '@ukef/dtfs2-common';
 export const getAmendmentUrl = ({ facilityId, amendmentId }: { facilityId: string; amendmentId: string }) =>
   `/v1/gef/facilities/${facilityId}/amendments/${amendmentId}`;
 
+export const getLatestAmendmentValueAndCoverEndDateUrl = (facilityId: string) => `/v1/gef/facilities/${facilityId}/amendments/latest-value-and-cover-end-date`;
+
 /**
  * Constructs the URL to update the amendment.
  * @param {string} facilityId

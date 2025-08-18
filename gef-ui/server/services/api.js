@@ -436,6 +436,32 @@ const getAmendmentsOnDeal = async ({ dealId, userToken, statuses }) => {
 
 /**
  * @param {object} param
+ * @param {string} param.facilityId
+ * @param {string} param.userToken
+ * @returns {Promise<(import('@ukef/dtfs2-common').LatestAmendmentValueAndCoverEndDate)>}>}
+ */
+const getLatestAmendmentFacilityValueAndCoverEndDate = async ({ facilityId, userToken }) => {
+  if (!isValidMongoId(facilityId)) {
+    console.error('Invalid facility ID %s', facilityId);
+    throw new InvalidFacilityIdError(facilityId);
+  }
+
+  try {
+    const response = await portalApi.get(`/gef/facilities/${facilityId}/amendments/latest-value-and-cover-end-date`, { ...config(userToken) });
+
+    if (!response?.data) {
+      throw new Error('Invalid latest facility value and cover end date response received');
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error('Failed to get latest value and cover end date for the facility %s: %o', facilityId, error);
+    throw error;
+  }
+};
+
+/**
+ * @param {object} param
  * @param {string} param.dealId
  * @param {string} param.userToken
  * @param {import('@ukef/dtfs2-common').PortalAmendmentStatus[] | undefined} param.statuses
@@ -534,6 +560,7 @@ const updateAmendment = async ({ facilityId, amendmentId, update, userToken }) =
  * @param {string} param.checkersEmail - The checker's email address to send the notification to
  * @param {string} param.pimEmail - The pim's email address to send the notification to
  * @param {import('@ukef/dtfs2-common').PortalAmendmentSubmittedToUkefEmailVariables} param.emailVariables
+ * @param {number} param.requestDate - The request date in Unix timestamp format (optional)
  * @param {string} param.bankId - The bank id
  * @param {string} param.bankName - The bank name
  * @returns {Promise<(import('@ukef/dtfs2-common').PortalFacilityAmendmentWithUkefId)>}
@@ -548,6 +575,7 @@ const updateSubmitAmendment = async ({
   checkersEmail,
   pimEmail,
   emailVariables,
+  requestDate,
   bankId,
   bankName,
 }) => {
@@ -568,6 +596,7 @@ const updateSubmitAmendment = async ({
     checkersEmail,
     pimEmail,
     emailVariables,
+    requestDate,
     bankId,
     bankName,
   };
@@ -761,6 +790,7 @@ module.exports = {
   downloadFile,
   updateSupportingInformation,
   getAmendmentsOnDeal,
+  getLatestAmendmentFacilityValueAndCoverEndDate,
   getPortalAmendmentsOnDeal,
   getAmendment,
   upsertAmendment,
