@@ -45,6 +45,7 @@ const deleteFacilityAmendmentController = require('../controllers/portal/facilit
 const patchAmendmentStatusController = require('../controllers/portal/facility/patch-amendment-status.controller');
 const patchSubmitAmendmentController = require('../controllers/portal/facility/patch-submit-amendment.controller');
 const getAcknowledgedAmendmentsByFacilityIdController = require('../controllers/portal/facility/get-acknowledged-amendments-by-facility-id.controller');
+const getLatestAmendmentFacilityValueAndCoverEndDateController = require('../controllers/portal/facility/get-latest-amendment-facility-value-and-cover-end-date.controller');
 
 const getAllFacilityAmendmentController = require('../controllers/portal/facility/get-all-amendments.controller');
 const getFacilityAmendmentsForDealController = require('../controllers/portal/facility/get-amendments-on-deal.controller');
@@ -590,6 +591,37 @@ portalRouter
   .route('/facilities/:facilityId/amendments/acknowledged')
   .all(validatePortalFacilityAmendmentsEnabled, validation.mongoIdValidation('facilityId'))
   .get(getAcknowledgedAmendmentsByFacilityIdController.getAcknowledgedAmendmentsByFacilityId);
+
+/**
+ * @openapi
+ * /facilities/:facilityId/amendments/latest-value-and-cover-end-date:
+ *   get:
+ *     summary: Get the latest value and cover end date values for a facility from the latest amendment for either
+ *     tags: [Portal - Amendments]
+ *     description:  Get the latest value and cover end date values for a facility from the latest amendment for either
+ *     parameters:
+ *       - in: path
+ *         name: facilityId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Facility ID amendment exists on
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/definitions/LatestAmendmentValueAndCoverEndDate'
+ *       400:
+ *         description: Invalid facilityId
+ *       500:
+ *        description: Internal server error
+ */
+portalRouter
+  .route('/facilities/:facilityId/amendments/latest-value-and-cover-end-date')
+  .all(validatePortalFacilityAmendmentsEnabled, validation.mongoIdValidation('facilityId'))
+  .get(getLatestAmendmentFacilityValueAndCoverEndDateController.getLatestAmendmentFacilityValueAndCoverEndDate);
 
 /**
  * @openapi

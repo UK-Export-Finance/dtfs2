@@ -5,6 +5,7 @@ import { FacilityValueViewModel } from '../../../types/view-models/amendments/fa
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { getCurrencySymbol } from '../../../utils/get-currency-symbol';
 import { getAmendmentsUrl, getNextPage } from '../helpers/navigation.helper';
+import { getCurrentFacilityValueAndCoverEndDate } from '../helpers/get-current-facility-value-and-cover-end-date';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';
 import { validateFacilityValue } from './validation';
 import { validationErrorHandler } from '../../../utils/helpers';
@@ -75,7 +76,10 @@ export const postFacilityValue = async (req: PostFacilityValueRequest, res: Resp
       },
     };
 
-    const update = { value: validationErrorOrValue.value, currency, tfm };
+    // gets the current value (from previous amendment or facility) to add to the update object
+    const { currentValue } = await getCurrentFacilityValueAndCoverEndDate(facilityId, facility, userToken);
+
+    const update = { value: validationErrorOrValue.value, currentValue, currency, tfm };
 
     const updatedAmendment = await api.updateAmendment({ facilityId, amendmentId, update, userToken });
 

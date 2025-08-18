@@ -83,3 +83,8 @@ export type PortalAmendmentSubmittedToUkefEmailVariables = {
   eligibilityCriteria: string;
   referenceNumber: string;
 };
+
+export type LatestAmendmentValueAndCoverEndDate = {
+  value: string | null;
+  coverEndDate: string | null;
+};
