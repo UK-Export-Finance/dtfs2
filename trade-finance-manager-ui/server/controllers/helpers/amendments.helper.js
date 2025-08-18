@@ -144,7 +144,7 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
  * Generates the eligibility rows for portal amendments which populates the eligibility table on the facility amendment tab
  * Generates a isPortalAmendment flag if amendment is portal amendment or not
  * Returns the mapped amendments with isPortalAmendment flag and eligibilityRows if portal amendment
- * @param {import('@ukef/dtfs2-common').PortalFacilityAmendment[] | import('@ukef/dtfs2-common').TfmFacilityAmendment[]} amendments
+ * @param {import('@ukef/dtfs2-common').PortalFacilityAmendment[] | import('@ukef/dtfs2-common').TfmFacilityAmendment[]} amendmentsArray
  * @returns {import('@ukef/dtfs2-common').AmendmentWithEligibilityRows[]} - the mapped portal amendments
  */
 const generatePortalAmendmentEligibilityRows = (amendmentsArray) => {
