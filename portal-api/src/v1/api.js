@@ -675,6 +675,10 @@ const getLatestAmendmentFacilityValueAndCoverEndDate = async (facilityId) => {
       headers: headers.central,
     });
 
+    if (!response?.data) {
+      throw new Error('Invalid latest facility value and cover end date response received');
+    }
+
     return response.data;
   } catch (error) {
     console.error('Error getting latest value and cover end date for the facility %s: %o', facilityId, error);

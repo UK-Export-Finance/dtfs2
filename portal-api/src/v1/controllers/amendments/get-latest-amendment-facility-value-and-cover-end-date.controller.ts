@@ -20,6 +20,13 @@ export const getLatestAmendmentFacilityValueAndCoverEndDate = async (req: GetLat
   try {
     const valueAndCoverEndDate = await api.getLatestAmendmentFacilityValueAndCoverEndDate(facilityId);
 
+    if (!valueAndCoverEndDate) {
+      return res.status(HttpStatusCode.NotFound).send({
+        status: HttpStatusCode.NotFound,
+        message: 'Latest amendment value and cover end date not found',
+      });
+    }
+
     return res.status(HttpStatusCode.Ok).send(valueAndCoverEndDate);
   } catch (error) {
     const errorMessage = 'Failed to get the latest facility amendment value and cover end date';

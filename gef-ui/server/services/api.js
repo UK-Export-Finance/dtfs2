@@ -449,6 +449,10 @@ const getLatestAmendmentFacilityValueAndCoverEndDate = async ({ facilityId, user
   try {
     const response = await portalApi.get(`/gef/facilities/${facilityId}/amendments/latest-value-and-cover-end-date`, { ...config(userToken) });
 
+    if (!response?.data) {
+      throw new Error('Invalid latest facility value and cover end date response received');
+    }
+
     return response.data;
   } catch (error) {
     console.error('Failed to get latest value and cover end date for the facility %s: %o', facilityId, error);

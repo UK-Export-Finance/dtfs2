@@ -1,5 +1,12 @@
 const { format, fromUnixTime } = require('date-fns');
-const { MONGO_DB_COLLECTIONS, FLASH_TYPES, formattedNumber, convertUnixTimestampWithoutMilliseconds, PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const {
+  MONGO_DB_COLLECTIONS,
+  FLASH_TYPES,
+  formattedNumber,
+  convertUnixTimestampWithoutMilliseconds,
+  PORTAL_AMENDMENT_STATUS,
+  DATE_FORMATS,
+} = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const {
   getTask,
@@ -277,13 +284,13 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
       if (amendment.submittedByPim === true || amendment.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED) {
         // deep clone the object
         const item = { ...amendment };
-        item.requestDate = amendment?.requestDate ? format(fromUnixTime(item.requestDate), 'dd MMMM yyyy') : null;
+        item.requestDate = amendment?.requestDate ? format(fromUnixTime(item.requestDate), DATE_FORMATS.DD_MMMM_YYYY) : null;
 
         item.name = `Amendment ${amendment.referenceNumber}`;
 
         const formattedCoverEndDate = amendment?.coverEndDate ? convertUnixTimestampWithoutMilliseconds(amendment.coverEndDate) : null;
 
-        item.coverEndDate = formattedCoverEndDate ? format(fromUnixTime(formattedCoverEndDate), 'dd MMMM yyyy') : null;
+        item.coverEndDate = formattedCoverEndDate ? format(fromUnixTime(formattedCoverEndDate), DATE_FORMATS.DD_MMMM_YYYY) : null;
 
         item.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
         item.requireUkefApproval = amendment?.requireUkefApproval ? 'Yes' : 'No';
@@ -296,7 +303,7 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
             item.banksDecision = AMENDMENTS.AMENDMENT_BANK_DECISION.NOT_APPLICABLE;
           }
 
-          const date = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'dd MMMM yyyy');
+          const date = format(fromUnixTime(amendment.ukefDecision.submittedAt), DATE_FORMATS.DD_MMMM_YYYY);
           const time = format(fromUnixTime(amendment.ukefDecision.submittedAt), 'h:mm aaa');
           item.ukefDecision.submittedAt = `${date} at ${time}`;
         }
@@ -306,16 +313,20 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
 
         if (amendment?.requireUkefApproval) {
           item.ukefDecisionValue = amendment?.ukefDecision?.submitted ? amendment?.ukefDecision?.value : UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
+
           item.ukefDecisionCoverEndDate = amendment?.ukefDecision?.submitted ? amendment?.ukefDecision?.coverEndDate : UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
-          item.effectiveDate = amendment?.bankDecision?.effectiveDate ? format(fromUnixTime(item.bankDecision.effectiveDate), 'dd MMMM yyyy') : null;
+
+          item.effectiveDate = amendment?.bankDecision?.effectiveDate ? format(fromUnixTime(item.bankDecision.effectiveDate), DATE_FORMATS.DD_MMMM_YYYY) : null;
         } else {
           item.ukefDecisionValue = UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL;
+
           item.ukefDecisionCoverEndDate = UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL;
-          item.effectiveDate = amendment?.effectiveDate ? format(fromUnixTime(item.effectiveDate), 'dd MMMM yyyy') : null;
+
+          item.effectiveDate = amendment?.effectiveDate ? format(fromUnixTime(item.effectiveDate), DATE_FORMATS.DD_MMMM_YYYY) : null;
         }
 
         if (amendment?.changeCoverEndDate && amendment?.currentCoverEndDate) {
-          item.currentCoverEndDate = format(fromUnixTime(amendment?.currentCoverEndDate), 'dd MMMM yyyy');
+          item.currentCoverEndDate = format(fromUnixTime(amendment?.currentCoverEndDate), DATE_FORMATS.DD_MMMM_YYYY);
         }
 
         if (amendment?.changeFacilityValue && amendment?.currentValue) {

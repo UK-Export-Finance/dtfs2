@@ -25,6 +25,7 @@ export const loginAndSubmitPortalAmendmentRequestToUkef = ({
   applicationDetailsUrl,
   facilityId,
   dealId,
+  effectiveDate,
 }) => {
   cy.login(BANK1_MAKER1);
   cy.saveSession();
@@ -47,6 +48,7 @@ export const loginAndSubmitPortalAmendmentRequestToUkef = ({
       amendmentDetailsUrl,
       submittedUrl: approvedByUkefUrl,
       confirmSubmissionToUkefUrl,
+      effectiveDate,
     });
 
     return cy.wrap(amendmentId);
