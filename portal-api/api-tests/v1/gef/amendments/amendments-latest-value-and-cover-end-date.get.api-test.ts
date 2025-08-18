@@ -63,8 +63,14 @@ describe('/v1/gef/facilities/:facilityId/amendments/latest-value-and-cover-end-d
     });
 
     describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is enabled', () => {
+      const latest = {
+        value: '100000',
+        coverEndDate: '167368000000',
+      };
+
       beforeEach(() => {
         process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
+        jest.mocked(getLatestAmendmentFacilityValueAndCoverEndDateMock).mockResolvedValue(latest);
       });
 
       afterAll(() => {
@@ -95,13 +101,22 @@ describe('/v1/gef/facilities/:facilityId/amendments/latest-value-and-cover-end-d
         expect(response.status).toEqual(HttpStatusCode.BadRequest);
       });
 
-      it(`should return a ${HttpStatusCode.Ok} response and the amendment for an authenticated user`, async () => {
-        const latest = {
-          value: '100000',
-          coverEndDate: '167368000000',
-        };
+      it(`should return a ${HttpStatusCode.NotFound} response when the latest value and cover end date does not return anything`, async () => {
+        // @ts-ignore - mocking no values being returned
+        jest.mocked(getLatestAmendmentFacilityValueAndCoverEndDateMock).mockResolvedValue(null);
 
+        const url = getLatestAmendmentValueAndCoverEndDateUrl(validFacilityId);
+
+        // Act
+        const response = await as(maker1).get(url);
+
+        // Assert
+        expect(response.status).toEqual(HttpStatusCode.NotFound);
+      });
+
+      it(`should return a ${HttpStatusCode.Ok} response and the amendment for an authenticated user`, async () => {
         jest.mocked(getLatestAmendmentFacilityValueAndCoverEndDateMock).mockResolvedValue(latest);
+
         const url = getLatestAmendmentValueAndCoverEndDateUrl(validFacilityId);
 
         // Act

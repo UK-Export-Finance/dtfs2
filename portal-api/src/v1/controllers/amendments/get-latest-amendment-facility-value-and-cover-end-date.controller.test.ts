@@ -55,7 +55,7 @@ describe('controllers - facility amendments', () => {
 
     it(`should respond with ${HttpStatusCode.NotFound} when no response is received from api.getLatestAmendmentFacilityValueAndCoverEndDate`, async () => {
       // Arrange
-      // @ts-ignore
+      // @ts-ignore - mocking no values being returned
       jest.mocked(api.getLatestAmendmentFacilityValueAndCoverEndDate).mockResolvedValue(null);
 
       const { req, res } = httpMocks.createMocks<GetLatestAmendmentFacilityValueAndCoverEndDateRequest>({
