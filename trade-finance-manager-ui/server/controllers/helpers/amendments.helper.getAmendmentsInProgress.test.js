@@ -75,6 +75,8 @@ describe('getAmendmentsInProgress', () => {
         hasAmendmentInProgress: false,
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
+        inProgressPortalAmendments: [],
+        hasInProgressPortalAmendments: false,
       };
 
       expect(result).toEqual(expected);
@@ -95,6 +97,8 @@ describe('getAmendmentsInProgress', () => {
         hasAmendmentInProgress: true,
         hasAmendmentInProgressButton: true,
         showContinueAmendmentButton: true,
+        inProgressPortalAmendments: [],
+        hasInProgressPortalAmendments: false,
       };
 
       expect(result).toEqual(expected);
@@ -115,6 +119,8 @@ describe('getAmendmentsInProgress', () => {
         hasAmendmentInProgress: false,
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
+        inProgressPortalAmendments: [],
+        hasInProgressPortalAmendments: false,
       };
 
       expect(result).toEqual(expected);
@@ -135,6 +141,8 @@ describe('getAmendmentsInProgress', () => {
         hasAmendmentInProgress: false,
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
+        inProgressPortalAmendments: [],
+        hasInProgressPortalAmendments: false,
       };
 
       expect(result).toEqual(expected);
@@ -155,6 +163,8 @@ describe('getAmendmentsInProgress', () => {
         hasAmendmentInProgress: true,
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
+        inProgressPortalAmendments: [notStartedPortalAmendment()],
+        hasInProgressPortalAmendments: true,
       };
 
       expect(result).toEqual(expected);
@@ -175,6 +185,8 @@ describe('getAmendmentsInProgress', () => {
         hasAmendmentInProgress: true,
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
+        inProgressPortalAmendments: [inProgressPortalAmendment()],
+        hasInProgressPortalAmendments: true,
       };
 
       expect(result).toEqual(expected);
@@ -195,6 +207,8 @@ describe('getAmendmentsInProgress', () => {
         hasAmendmentInProgress: true,
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
+        inProgressPortalAmendments: [returnedToMakerPortalAmendment()],
+        hasInProgressPortalAmendments: true,
       };
 
       expect(result).toEqual(expected);
@@ -215,6 +229,8 @@ describe('getAmendmentsInProgress', () => {
         hasAmendmentInProgress: false,
         hasAmendmentInProgressButton: false,
         showContinueAmendmentButton: false,
+        inProgressPortalAmendments: [],
+        hasInProgressPortalAmendments: false,
       };
 
       expect(result).toEqual(expected);

@@ -1,4 +1,4 @@
-import { ACTIVITY_TYPES, AMENDMENT_TYPES, AmendmentNotFoundError, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { ACTIVITY_TYPES, AMENDMENT_TYPES, AmendmentNotFoundError, PORTAL_AMENDMENT_STATUS, now } from '@ukef/dtfs2-common';
 import { getUnixTime } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
@@ -35,6 +35,8 @@ const mockTfm = {
 
 const bankId = '1';
 const bankName = 'test bank';
+
+const requestDate = getUnixTime(now());
 
 describe('PortalFacilityAmendmentService', () => {
   beforeAll(() => {
@@ -75,6 +77,7 @@ describe('PortalFacilityAmendmentService', () => {
         auditDetails,
         bankId,
         bankName,
+        requestDate,
       });
 
       // Assert
@@ -99,6 +102,7 @@ describe('PortalFacilityAmendmentService', () => {
         auditDetails,
         bankId,
         bankName,
+        requestDate,
       });
 
       // Assert
@@ -120,6 +124,7 @@ describe('PortalFacilityAmendmentService', () => {
           auditDetails,
           bankId,
           bankName,
+          requestDate,
         });
 
         // Assert
@@ -139,6 +144,7 @@ describe('PortalFacilityAmendmentService', () => {
           auditDetails,
           bankId,
           bankName,
+          requestDate,
         });
 
         // Assert
@@ -161,6 +167,7 @@ describe('PortalFacilityAmendmentService', () => {
         auditDetails,
         bankId,
         bankName,
+        requestDate,
       });
 
       // Assert
@@ -181,16 +188,18 @@ describe('PortalFacilityAmendmentService', () => {
         auditDetails,
         bankId,
         bankName,
+        requestDate,
       });
 
       // Assert
       const expectedUpdate = {
         status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
         referenceNumber,
+        requestDate,
       };
 
-      const now = new Date();
-      now.setSeconds(0, 0);
+      const today = now();
+      today.setSeconds(0, 0);
 
       expect(mockUpdatePortalFacilityAmendmentByAmendmentId).toHaveBeenCalledTimes(1);
       expect(mockUpdatePortalFacilityAmendmentByAmendmentId).toHaveBeenCalledWith({
@@ -212,14 +221,15 @@ describe('PortalFacilityAmendmentService', () => {
         auditDetails,
         bankId,
         bankName,
+        requestDate,
       });
 
-      const now = new Date();
-      now.setSeconds(0, 0);
+      const today = new Date();
+      today.setSeconds(0, 0);
 
       const expectedActivity = {
         type: ACTIVITY_TYPES.ACTIVITY,
-        timestamp: getUnixTime(now),
+        timestamp: getUnixTime(today),
         author: {
           firstName: bankName,
           lastName: bankId,
@@ -249,14 +259,15 @@ describe('PortalFacilityAmendmentService', () => {
         auditDetails,
         bankId,
         bankName,
+        requestDate,
       });
 
-      const now = new Date();
-      now.setSeconds(0, 0);
+      const today = new Date();
+      today.setSeconds(0, 0);
 
       const expectedActivity = {
         type: ACTIVITY_TYPES.ACTIVITY,
-        timestamp: getUnixTime(now),
+        timestamp: getUnixTime(today),
         author: {
           firstName: bankName,
           lastName: bankId,
@@ -281,6 +292,7 @@ describe('PortalFacilityAmendmentService', () => {
         auditDetails,
         bankId,
         bankName,
+        requestDate,
       });
 
       // Assert

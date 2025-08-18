@@ -1,6 +1,7 @@
 import { Response } from 'supertest';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
+import { getUnixTime } from 'date-fns';
 import {
   AnyObject,
   API_ERROR_CODE,
@@ -10,6 +11,7 @@ import {
   MONGO_DB_COLLECTIONS,
   PORTAL_AMENDMENT_STATUS,
   portalAmendmentToUkefEmailVariables,
+  nowZeroSeconds,
 } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
@@ -43,6 +45,8 @@ const anAcknowledgedStatus = PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED;
 
 const bankId = '1';
 const bankName = 'Bank Name';
+
+const requestDate = getUnixTime(nowZeroSeconds());
 
 describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit-amendment', () => {
   let dealId: string;
@@ -129,6 +133,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
           ...portalAmendmentToUkefEmailVariables(),
           bankId,
           bankName,
+          requestDate,
         })
         .to(generateUrl(anInvalidFacilityId, amendmentId))) as ErrorResponse;
 
@@ -151,6 +156,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
           ...portalAmendmentToUkefEmailVariables(),
           bankId,
           bankName,
+          requestDate,
         })
         .to(generateUrl(facilityId, anInvalidAmendmentId))) as ErrorResponse;
 
@@ -173,6 +179,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
           ...portalAmendmentToUkefEmailVariables(),
           bankId,
           bankName,
+          requestDate,
         })
         .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;
 
@@ -194,6 +201,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
           ...portalAmendmentToUkefEmailVariables(),
           bankId: 1,
           bankName,
+          requestDate,
         })
         .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;
 
@@ -215,6 +223,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
           ...portalAmendmentToUkefEmailVariables(),
           bankId,
           bankName: undefined,
+          requestDate,
         })
         .to(generateUrl(facilityId, amendmentId))) as ErrorResponse;
 
@@ -239,6 +248,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
             ...portalAmendmentToUkefEmailVariables(),
             bankId,
             bankName,
+            requestDate,
           })
           .to(generateUrl(aValidButNonExistentFacilityId, amendmentId))) as ErrorResponse;
 
@@ -260,6 +270,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
             ...portalAmendmentToUkefEmailVariables(),
             bankId,
             bankName,
+            requestDate,
           })
           .to(generateUrl(facilityId, aValidButNonExistentAmendmentId))) as ErrorResponse;
 
@@ -279,6 +290,7 @@ describe('PATCH /v1/portal/facilities/:facilityId/amendments/:amendmentId/submit
             ...portalAmendmentToUkefEmailVariables(),
             bankId,
             bankName,
+            requestDate,
           })
           .to(generateUrl(facilityId, amendmentId));
 
