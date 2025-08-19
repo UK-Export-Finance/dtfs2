@@ -38,6 +38,45 @@ describe('generatePortalAmendmentEligibilityRows', () => {
             html: `<span data-cy="amendment-${anAcknowledgedPortalAmendment.amendmentId}-eligibility-table-criterion-${criteria[1].id}-text">${criteria[1].text}</span>`,
           },
         ],
+        [
+          {
+            html: `<span data-cy="amendment-${anAcknowledgedPortalAmendment.amendmentId}-eligibility-table-criterion-${criteria[2].id}-id">${criteria[2].id}</span>`,
+          },
+          {
+            html: `<span class="govuk-tag govuk-tag--${STATUS_TAG_COLOURS.RED}" data-cy="amendment-${
+              anAcknowledgedPortalAmendment.amendmentId
+            }-eligibility-table-criterion-${criteria[2].id}-tag"><strong>${String(criteria[2].answer).toUpperCase()}</strong></span>`,
+          },
+          {
+            html: `<span data-cy="amendment-${anAcknowledgedPortalAmendment.amendmentId}-eligibility-table-criterion-${criteria[2].id}-text">${criteria[2].text}</span>`,
+          },
+        ],
+        [
+          {
+            html: `<span data-cy="amendment-${anAcknowledgedPortalAmendment.amendmentId}-eligibility-table-criterion-${criteria[3].id}-id">${criteria[3].id}</span>`,
+          },
+          {
+            html: `<span class="govuk-tag govuk-tag--${STATUS_TAG_COLOURS.GREEN}" data-cy="amendment-${
+              anAcknowledgedPortalAmendment.amendmentId
+            }-eligibility-table-criterion-${criteria[3].id}-tag"><strong>${String(criteria[3].answer).toUpperCase()}</strong></span>`,
+          },
+          {
+            html: `<span data-cy="amendment-${anAcknowledgedPortalAmendment.amendmentId}-eligibility-table-criterion-${criteria[3].id}-text">${criteria[3].text}</span>`,
+          },
+        ],
+        [
+          {
+            html: `<span data-cy="amendment-${anAcknowledgedPortalAmendment.amendmentId}-eligibility-table-criterion-${criteria[4].id}-id">${criteria[4].id}</span>`,
+          },
+          {
+            html: `<span class="govuk-tag govuk-tag--${STATUS_TAG_COLOURS.GREEN}" data-cy="amendment-${
+              anAcknowledgedPortalAmendment.amendmentId
+            }-eligibility-table-criterion-${criteria[4].id}-tag"><strong>${String(criteria[4].answer).toUpperCase()}</strong></span>`,
+          },
+          {
+            html: `<span data-cy="amendment-${anAcknowledgedPortalAmendment.amendmentId}-eligibility-table-criterion-${criteria[4].id}-text">${criteria[4].text}</span>`,
+          },
+        ],
       ];
 
       const expected = {
