@@ -12,14 +12,14 @@ const { createDealTasks } = require('../../../src/v1/controllers/deal.tasks');
 const generateDateReceived = require('../../../src/v1/controllers/deal-add-tfm-data/dateReceived');
 const { mockFindOneDeal, mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const CONSTANTS = require('../../../src/constants');
-const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
-const MOCK_DEAL_MIN = require('../../../src/v1/__mocks__/mock-deal-MIN');
-const MOCK_DEAL_MIA = require('../../../src/v1/__mocks__/mock-deal-MIA-not-submitted');
-const MOCK_DEAL_NO_PARTY_DB = require('../../../src/v1/__mocks__/mock-deal-no-party-db');
-const MOCK_DEAL_NO_COMPANIES_HOUSE = require('../../../src/v1/__mocks__/mock-deal-no-companies-house');
+const { MOCK_BSS_EWCS_DEAL } = require('../../../src/v1/__mocks__/mock-deal');
+const MOCK_BSS_EWCS_DEAL_MIN = require('../../../src/v1/__mocks__/mock-deal-MIN');
+const MOCK_BSS_EWCS_DEAL_MIA = require('../../../src/v1/__mocks__/mock-deal-MIA-not-submitted');
+const MOCK_BSS_EWCS_DEAL_NO_PARTY_DB = require('../../../src/v1/__mocks__/mock-deal-no-party-db');
+const MOCK_BSS_EWCS_DEAL_NO_COMPANIES_HOUSE = require('../../../src/v1/__mocks__/mock-deal-no-companies-house');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-currency-exchange-rate');
-const MOCK_DEAL_AIN_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted');
-const MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted-non-gbp-contract-value');
+const MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted');
+const MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted-non-gbp-contract-value');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
 
 const MOCK_GEF_DEAL_AIN = require('../../../src/v1/__mocks__/mock-gef-deal');
@@ -91,7 +91,7 @@ describe('/v1/deals', () => {
     });
 
     it('should add TFM deal data', async () => {
-      const { body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED));
+      const { body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
 
       const mappedDeal = await mapSubmittedDeal(body);
       const tfmDataObject = await addTfmDealData(mappedDeal, generatePortalAuditDetails(mockChecker._id));
@@ -109,9 +109,9 @@ describe('/v1/deals', () => {
     });
 
     it('returns the requested resource if no companies house no given', async () => {
-      const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_NO_COMPANIES_HOUSE));
+      const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_NO_COMPANIES_HOUSE));
       // Remove bonds & loans as they are returned mutated so will not match
-      const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_DEAL_NO_COMPANIES_HOUSE;
+      const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_BSS_EWCS_DEAL_NO_COMPANIES_HOUSE;
 
       const tfmDeal = {
         dealSnapshot: mockDealWithoutFacilities,
@@ -130,9 +130,9 @@ describe('/v1/deals', () => {
     });
 
     it('returns the requested resource without partyUrn if not matched', async () => {
-      const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_NO_PARTY_DB));
+      const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_NO_PARTY_DB));
       // Remove bonds & loans as they are returned mutated so will not match
-      const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_DEAL_NO_PARTY_DB;
+      const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_BSS_EWCS_DEAL_NO_PARTY_DB;
 
       const tfmDeal = {
         dealSnapshot: mockDealWithoutFacilities,
@@ -151,10 +151,10 @@ describe('/v1/deals', () => {
     });
 
     it('returns the requested resource with partyUrn if matched', async () => {
-      const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL));
+      const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
       // Remove bonds & loans as they are returned mutated so will not match
-      const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_DEAL;
+      const { bondTransactions: _bondTransaction, loanTransactions: _loanTransaction, ...mockDealWithoutFacilities } = MOCK_BSS_EWCS_DEAL;
 
       const tfmDeal = {
         dealSnapshot: mockDealWithoutFacilities,
@@ -174,10 +174,10 @@ describe('/v1/deals', () => {
 
     describe('currency NOT GBP', () => {
       it('should convert supplyContractValue to GBP', async () => {
-        const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE));
+        const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE));
         expect(status).toEqual(200);
 
-        const { supplyContractValue } = MOCK_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE.submissionDetails;
+        const { supplyContractValue } = MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE.submissionDetails;
 
         const strippedContractValue = Number(supplyContractValue.replace(/,/g, ''));
 
@@ -221,7 +221,7 @@ describe('/v1/deals', () => {
     });
 
     it('adds dateReceived to deal.tfm', async () => {
-      const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_AIN_SUBMITTED));
+      const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED));
 
       expect(status).toEqual(200);
 
@@ -254,10 +254,10 @@ describe('/v1/deals', () => {
     describe('portal status updates', () => {
       describe('when AIN BSS deal is submitted', () => {
         it('should call externalApis.updatePortalDealStatus with correct status', async () => {
-          await submitDeal(createSubmitBody(MOCK_DEAL));
+          await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
           expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith({
-            dealId: MOCK_DEAL._id,
+            dealId: MOCK_BSS_EWCS_DEAL._id,
             status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
             auditDetails,
           });
@@ -266,10 +266,10 @@ describe('/v1/deals', () => {
 
       describe('when MIN BSS deal is submitted', () => {
         it('should call externalApis.updatePortalDealStatus with correct status', async () => {
-          await submitDeal(createSubmitBody(MOCK_DEAL_MIN));
+          await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_MIN));
 
           expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith({
-            dealId: MOCK_DEAL_MIN._id,
+            dealId: MOCK_BSS_EWCS_DEAL_MIN._id,
             status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.UKEF_ACKNOWLEDGED,
             auditDetails,
           });
@@ -278,10 +278,10 @@ describe('/v1/deals', () => {
 
       describe('when MIA BSS deal is submitted', () => {
         it('should call externalApis.updatePortalDealStatus with correct status', async () => {
-          await submitDeal(createSubmitBody(MOCK_DEAL_MIA));
+          await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL_MIA));
 
           expect(updatePortalBssDealStatusSpy).toHaveBeenCalledWith({
-            dealId: MOCK_DEAL_MIA._id,
+            dealId: MOCK_BSS_EWCS_DEAL_MIA._id,
             status: CONSTANTS.DEALS.PORTAL_DEAL_STATUS.IN_PROGRESS_BY_UKEF,
             auditDetails,
           });

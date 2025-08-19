@@ -1,8 +1,8 @@
 const mapDeal = require('../../../src/v1/mappings/map-deal');
 const mapEligibilityCriteriaContentStrings = require('../../../src/v1/mappings/map-eligibility-criteria-content-strings');
-const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../../src/v1/__mocks__/mock-deal');
 
-const { eligibility, facilities, bondTransactions, loanTransactions } = MOCK_DEAL;
+const { eligibility, facilities, bondTransactions, loanTransactions } = MOCK_BSS_EWCS_DEAL;
 
 describe('mappings - map-deal', () => {
   const mockBonds = bondTransactions.items.map(({ _id }) => ({ _id }));
@@ -11,7 +11,7 @@ describe('mappings - map-deal', () => {
   const allFacilities = bondTransactions.items.concat(loanTransactions.items);
 
   const mockDeal = {
-    dealType: MOCK_DEAL.dealType,
+    dealType: MOCK_BSS_EWCS_DEAL.dealType,
     eligibility,
     facilities,
     bondTransactions: {

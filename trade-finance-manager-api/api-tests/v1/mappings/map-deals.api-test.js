@@ -1,7 +1,7 @@
 const externalApis = require('../../../src/v1/api');
 const mapDeals = require('../../../src/v1/mappings/map-deals');
 
-const MOCK_BSS_DEAL = require('../../../src/v1/__mocks__/mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
 
 describe('mappings - map-deals', () => {
@@ -11,7 +11,7 @@ describe('mappings - map-deals', () => {
   }));
 
   const mockFindOneFacilityResponse = {
-    facilitySnapshot: MOCK_BSS_DEAL.bondTransactions.items[0],
+    facilitySnapshot: MOCK_BSS_EWCS_DEAL.bondTransactions.items[0],
     tfm: {},
   };
 
@@ -65,11 +65,11 @@ describe('mappings - map-deals', () => {
   });
 
   describe('BSS/EWCS deals', () => {
-    const mockBonds = MOCK_BSS_DEAL.bondTransactions.items.map(({ _id }) => ({ _id }));
-    const mockLoans = MOCK_BSS_DEAL.loanTransactions.items.map(({ _id }) => ({ _id }));
+    const mockBonds = MOCK_BSS_EWCS_DEAL.bondTransactions.items.map(({ _id }) => ({ _id }));
+    const mockLoans = MOCK_BSS_EWCS_DEAL.loanTransactions.items.map(({ _id }) => ({ _id }));
 
     const mockDeal = {
-      dealSnapshot: MOCK_BSS_DEAL,
+      dealSnapshot: MOCK_BSS_EWCS_DEAL,
     };
 
     const mockDeals = [mockDeal, mockDeal];

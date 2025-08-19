@@ -1,6 +1,6 @@
 const { dealHasAllUkefIds, dealHasAllValidUkefIds } = require('./dealHasAllUkefIds');
 const MOCK_DEAL_NO_UKEF_ID = require('../__mocks__/mock-deal-no-ukef-id');
-const MOCK_DEAL = require('../__mocks__/mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../__mocks__/mock-deal');
 const MOCK_DEAL_GEF = require('../__mocks__/mock-gef-deal');
 const api = require('../api');
 const { mockFindOneDeal } = require('../__mocks__/common-api-mocks');
@@ -36,14 +36,14 @@ describe('dealHasAllUkefIds()', () => {
   });
 
   it('Should return TRUE when a deal and facilities have UKEF IDs', async () => {
-    const mockDeal = MOCK_DEAL;
+    const mockDeal = MOCK_BSS_EWCS_DEAL;
 
     const result = await dealHasAllUkefIds(mockDeal._id);
     expect(result.status).toEqual(true);
   });
 
   it('Should return TRUE when a deal and facilities have UKEF IDs - BSS/EWCS', async () => {
-    const mockDeal = MOCK_DEAL;
+    const mockDeal = MOCK_BSS_EWCS_DEAL;
 
     const result = await dealHasAllUkefIds(mockDeal._id);
     expect(result.status).toEqual(true);
@@ -123,7 +123,7 @@ describe('dealHasAllValidUkefIds function', () => {
 
   // Tests that the function returns false if  DEAL_TYPE is not GEF and ukefDealId is missing
   it('should test missing ukef deal id', async () => {
-    const result = await dealHasAllValidUkefIds(MOCK_DEAL._id);
+    const result = await dealHasAllValidUkefIds(MOCK_BSS_EWCS_DEAL._id);
 
     expect(result.status).toEqual(true);
   });
