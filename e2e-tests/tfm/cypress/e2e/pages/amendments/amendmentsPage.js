@@ -2,6 +2,9 @@ const amendmentsPage = {
   amendmentInProgressBar: () => cy.get('[data-cy="amendment--in-progress-bar"]'),
   amendmentInProgressBarLink: () => cy.get('[data-cy="amendment--in-progress-bar-link"]'),
 
+  portalAmendmentInProgressBar: () => cy.get('[data-cy="portal-amendment--in-progress-bar"]'),
+  portalAmendmentInProgressDealBar: () => cy.get('[data-cy="portal-amendment--in-progress-deal-bar"]'),
+
   amendmentRequestHeading: () => cy.get('[data-cy="amendment--request-heading"]'),
   amendmentRequestHint: () => cy.get('[data-cy="amendments--request-hint"]'),
   amendmentRequestDayInput: () => cy.get('[data-cy="amendment--request-date-day"]'),

@@ -119,6 +119,8 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
     // Portal amendments which are in progress
     const inProgressPortalAmendments = amendments.filter(({ status }) => PORTAL_AMENDMENT_STARTED_STATUSES.includes(status));
 
+    const hasInProgressPortalAmendments = inProgressPortalAmendments.length > 0;
+
     const amendmentsInProgress = [...unsubmittedTFMAmendments, ...inProgressPortalAmendments];
     const hasAmendmentInProgress = amendmentsInProgress.length > 0;
 
@@ -133,6 +135,8 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
     return {
       amendmentsInProgress,
       hasAmendmentInProgress,
+      inProgressPortalAmendments,
+      hasInProgressPortalAmendments,
       hasAmendmentInProgressButton,
       showContinueAmendmentButton,
     };
