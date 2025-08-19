@@ -1,5 +1,5 @@
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { isCountryUk } = require('@ukef/dtfs2-common');
+const { isSalesforceCustomerCreationEnabled, isCountryUk } = require('@ukef/dtfs2-common');
 const { addPartyUrns, identifyDealParties } = require('./deal.party-db');
 const { MOCK_GEF_MAPPED_DEAL } = require('../__mocks__/mock-deal');
 const { getOrCreatePartyDbInfo, updateDeal } = require('../api');
@@ -9,6 +9,11 @@ jest.mock('../../../src/v1/api', () => ({
   ...jest.requireActual('../../../src/v1/api'),
   getOrCreatePartyDbInfo: jest.fn(),
   updateDeal: jest.fn(),
+}));
+
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isSalesforceCustomerCreationEnabled: jest.fn(),
 }));
 
 const {
@@ -46,6 +51,8 @@ describe('addPartyUrns', () => {
 
   beforeEach(() => {
     console.error = jest.fn();
+
+    jest.mocked(isSalesforceCustomerCreationEnabled).mockResolvedValue(true);
   });
 
   afterEach(() => {
