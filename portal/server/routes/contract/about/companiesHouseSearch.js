@@ -1,17 +1,7 @@
 const express = require('express');
+const { isCountryUk, UNITED_KINGDOM } = require('@ukef/dtfs2-common');
 const { provide, DEAL, COUNTRIES } = require('../../api-data-provider');
 const companiesApi = require('../../../companies-api');
-
-// https://developer.companieshouse.gov.uk/api/docs/company/company_number/registered-office-address/registeredOfficeAddress-resource.html
-// England, Wales, Scotland, Northern Ireland, Great Britain, United Kingdom, Not specified
-const countriesThatWeConsiderGBR = ['England', 'Wales', 'Scotland', 'Northern Ireland', 'Great Britain', 'United Kingdom'];
-
-const getPortalCountryForCompaniesHouseCountry = (companiesHouseCountry) => {
-  if (countriesThatWeConsiderGBR.includes(companiesHouseCountry)) {
-    return 'GBR';
-  }
-  return '';
-};
 
 const router = express.Router();
 
@@ -55,6 +45,8 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
     return res.redirect(`/contract/${deal._id}/about/supplier`);
   }
 
+  const country = company.registeredAddress.country ?? UNITED_KINGDOM;
+
   // munge data back into form data
   deal.submissionDetails = req.body;
 
@@ -65,7 +57,12 @@ router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', prov
   deal.submissionDetails[`${prefix}-address-postcode`] = company.registeredAddress.postalCode;
 
   deal.submissionDetails[`${prefix}-address-country`] = {
-    code: getPortalCountryForCompaniesHouseCountry(company.registeredAddress.country),
+    /**
+     * Parameter 1: Exporter country
+     * Parameter 2: Whether to return `GBR` or not,
+     * in this instance `GBR` will be returned if the condition is true.
+     */
+    code: isCountryUk(country, true),
   };
 
   const industry = company.industries[0];

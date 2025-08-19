@@ -5,7 +5,7 @@ export interface CountryInterface {
   /**
    * The unique identifier for the country.
    */
-  id: number;
+  id?: number;
 
   /**
    * The name of the country.

@@ -1,6 +1,6 @@
 const addFirstTaskEmailSentFlag = require('./add-first-task-email-sent-flag');
 const { createTasksAIN } = require('../../helpers/create-tasks');
-const MOCK_DEAL_AIN = require('../../__mocks__/mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../__mocks__/mock-deal');
 
 describe('deal submit - add TFM data - first task email sent flag', () => {
   it('should add emailSent=true to the first task', () => {
@@ -13,7 +13,7 @@ describe('deal submit - add TFM data - first task email sent flag', () => {
     const mockTasks = createTasksAIN();
 
     const mockDeal = {
-      dealSnapshot: MOCK_DEAL_AIN,
+      dealSnapshot: MOCK_BSS_EWCS_DEAL,
       tfm: {
         tasks: mockTasks,
       },

@@ -1,3 +1,4 @@
+const { UNITED_KINGDOM } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
 
@@ -51,6 +52,13 @@ const validateCompaniesHouse = async (req, res) => {
      */
 
     companiesHouseDetails.selectedIndustry = companiesHouseDetails.industries?.length === 1 ? companiesHouseDetails.industries[0] : null;
+
+    if (!companiesHouseDetails?.registeredAddress?.country) {
+      companiesHouseDetails.registeredAddress = {
+        ...companiesHouseDetails.registeredAddress,
+        country: UNITED_KINGDOM,
+      };
+    }
 
     const applicationExporterUpdate = {
       exporter: {

@@ -5,7 +5,7 @@ const acbsController = require('../../../src/v1/controllers/acbs.controller');
 const calculateUkefExposure = require('../../../src/v1/helpers/calculateUkefExposure');
 const { submitDeal, createSubmitBody } = require('../../helpers/submitDeal');
 
-const MOCK_DEAL_BSS = require('../../../src/v1/__mocks__/mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../src/v1/__mocks__/mock-deal-facilities-USD-currency');
 const MOCK_DEAL_ISSUED_FACILITIES = require('../../../src/v1/__mocks__/mock-deal-issued-facilities');
 const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-currency-exchange-rate');
@@ -103,27 +103,27 @@ describe('/v1/deals', () => {
 
       describe('all bonds that are in GBP', () => {
         it('adds original ukefExposure and ukefExposureCalculationTimestamp as deal submission date', async () => {
-          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_BSS));
+          const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
           expect(status).toEqual(200);
 
           const bond = body.facilities.find(({ type }) => type === FACILITY_TYPE.BOND);
 
           expect(bond.tfm.ukefExposure).toEqual(Number(bond.tfm.ukefExposure));
-          expect(bond.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL_BSS.details.submissionDate);
+          expect(bond.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_BSS_EWCS_DEAL.details.submissionDate);
         });
       });
 
       describe('all loans that are in GBP', () => {
         it('adds original ukefExposure and ukefExposureCalculationTimestamp as deal submission date', async () => {
-          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_BSS));
+          const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
           expect(status).toEqual(200);
 
           const loan = body.facilities.find(({ type }) => type === FACILITY_TYPE.LOAN);
 
           expect(loan.tfm.ukefExposure).toEqual(Number(loan.tfm.ukefExposure));
-          expect(loan.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_DEAL_BSS.details.submissionDate);
+          expect(loan.tfm.ukefExposureCalculationTimestamp).toEqual(MOCK_BSS_EWCS_DEAL.details.submissionDate);
         });
       });
 
@@ -140,7 +140,7 @@ describe('/v1/deals', () => {
         });
 
         it('does not get the exposure period info for unissued facility', async () => {
-          const { status } = await submitDeal(createSubmitBody(MOCK_DEAL_BSS));
+          const { status } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
           expect(status).toEqual(200);
 
@@ -150,7 +150,7 @@ describe('/v1/deals', () => {
 
       describe('riskProfile (BSS/EWCS facilities)', () => {
         it('defaults all facilities riskProfile to `Flat`', async () => {
-          const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_BSS));
+          const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
           expect(status).toEqual(200);
 
@@ -189,7 +189,7 @@ describe('/v1/deals', () => {
 
         it('does NOT call premium schedule for an unissued facility', async () => {
           const mockDeal = {
-            ...MOCK_DEAL_BSS,
+            ...MOCK_BSS_EWCS_DEAL,
             submissionCount: 0,
           };
 
@@ -246,7 +246,7 @@ describe('/v1/deals', () => {
 
         describe('when facility/dealType is BSS', () => {
           it('does NOT add fee record to any unissued facilities', async () => {
-            const { status, body } = await submitDeal(createSubmitBody(MOCK_DEAL_BSS));
+            const { status, body } = await submitDeal(createSubmitBody(MOCK_BSS_EWCS_DEAL));
 
             expect(status).toEqual(200);
 

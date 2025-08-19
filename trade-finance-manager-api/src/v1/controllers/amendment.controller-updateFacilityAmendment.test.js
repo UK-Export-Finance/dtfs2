@@ -26,7 +26,7 @@ const {
   TASKS_UPDATE_MOCK_REQUEST,
 } = require('../__mocks__/mock-amendment-tasks-assign-by-team');
 const { MOCK_FACILITIES } = require('../__mocks__/mock-facilities');
-const MOCK_DEAL = require('../__mocks__/mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../__mocks__/mock-deal');
 
 const { underwriter, underwriterManager } = MOCK_USERS_FOR_TASKS;
 
@@ -46,7 +46,7 @@ const facility = {
   tfm: {},
 };
 const deal = {
-  dealSnapshot: MOCK_DEAL,
+  dealSnapshot: MOCK_BSS_EWCS_DEAL,
 };
 
 beforeEach(() => {
