@@ -19,7 +19,7 @@ const {
 const mapAssignToSelectOptions = require('../../helpers/map-assign-to-select-options');
 const CONSTANTS = require('../../constants');
 const { filterTasks } = require('../helpers/tasks.helper');
-const { getAmendmentsInProgressSubmittedFromPim, getAmendmentsInProgress } = require('../helpers/amendments.helper');
+const { getAmendmentsInProgressSubmittedFromPim, getAmendmentsInProgress, generatePortalAmendmentEligibilityRows } = require('../helpers/amendments.helper');
 const validatePartyURN = require('./parties/partyUrnValidation.validate');
 const { bondType, partyType, userCanEdit } = require('./parties/helpers');
 const { asUserSession } = require('../../helpers/express-session');
@@ -365,7 +365,7 @@ const getCaseFacility = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    const allAmendments = formatCompletedAmendmentDetails(allAmendmentsByFacilityId);
+    const allAmendmentsFormatted = formatCompletedAmendmentDetails(allAmendmentsByFacilityId);
 
     const deal = await api.getDeal(dealId, userToken);
 
@@ -411,6 +411,8 @@ const getCaseFacility = async (req, res) => {
     if (hasAmendmentInProgressSubmittedFromPim) {
       deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
     }
+
+    const allAmendments = generatePortalAmendmentEligibilityRows(allAmendmentsFormatted);
 
     return res.render('case/facility/facility.njk', {
       deal: deal.dealSnapshot,

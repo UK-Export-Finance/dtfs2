@@ -33,7 +33,7 @@ export const loginAndSubmitPortalAmendmentRequestToUkef = ({
   cy.visit(relative(applicationDetailsUrl));
   applicationPreview.makeAChangeButton(facilityId).click();
 
-  cy.getAmendmentIdFromUrl().then((amendmentId) => {
+  return cy.getAmendmentIdFromUrl().then((amendmentId) => {
     const confirmSubmissionToUkefUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/submit-amendment-to-ukef`;
     const submittedUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}`;
     const approvedByUkefUrl = `${submittedUrl}/approved-by-ukef`;
@@ -50,5 +50,7 @@ export const loginAndSubmitPortalAmendmentRequestToUkef = ({
       confirmSubmissionToUkefUrl,
       effectiveDate,
     });
+
+    return cy.wrap(amendmentId);
   });
 };

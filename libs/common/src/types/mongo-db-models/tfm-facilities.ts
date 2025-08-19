@@ -190,3 +190,15 @@ export type GetTfmAmendmentInProgressResponse = {
   hasAmendmentInProgressButton: boolean;
   showContinueAmendmentButton: boolean;
 };
+
+export type AmendmentEligibilityRows = {
+  text?: string;
+  html?: string;
+};
+
+type AmendmentMappingFields = {
+  isPortalAmendment: boolean;
+  eligibilityRows: AmendmentEligibilityRows[];
+};
+
+export type AmendmentWithEligibilityRows = (TfmFacilityAmendment & AmendmentMappingFields) | (PortalFacilityAmendment & AmendmentMappingFields);
