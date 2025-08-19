@@ -6,7 +6,7 @@ const render = componentRenderer(component);
 describe(component, () => {
   let wrapper;
 
-  describe('when a future effective date amendment exists and isOnAmendmentTab is not passed', () => {
+  describe('when a future effective date amendment exists and isOnAmendmentTab is undefined', () => {
     it('should render the facility banner', () => {
       const params = {
         futureEffectiveDatePortalAmendment: {
