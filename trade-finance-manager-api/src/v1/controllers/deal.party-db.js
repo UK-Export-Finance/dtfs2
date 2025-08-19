@@ -1,4 +1,4 @@
-const { isSalesforceCustomerCreationEnabled, isCountryUk } = require('@ukef/dtfs2-common');
+const { isSalesforceCustomerCreationEnabled, isCountryUk, UNITED_KINGDOM } = require('@ukef/dtfs2-common');
 
 const api = require('../api');
 
@@ -114,7 +114,8 @@ const addPartyUrns = async (deal, auditDetails) => {
     registeredAddress,
   } = deal.exporter;
 
-  const isUkEntity = isCountryUk(registeredAddress.country);
+  const country = registeredAddress?.country ?? UNITED_KINGDOM;
+  const isUkEntity = isCountryUk(country);
 
   const dealUpdate = {
     tfm: {
