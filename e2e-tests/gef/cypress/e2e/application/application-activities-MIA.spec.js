@@ -35,9 +35,10 @@ context('Submit AIN deal and check portalActivities', () => {
 
   describe('create and submit an MIA', () => {
     before(() => {
-      cy.login(BANK1_MAKER1);
-      cy.visit(relative(`/gef/application-details/${dealId}`));
       cy.saveSession();
+      cy.login(BANK1_MAKER1);
+
+      cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
     it('create an MIA as a Maker and submit it to the Checker', () => {
@@ -72,8 +73,9 @@ context('Submit AIN deal and check portalActivities', () => {
 
   describe('submits to UKEF', () => {
     beforeEach(() => {
-      cy.saveSession();
+      cy.clearSessionCookies();
       cy.login(BANK1_CHECKER1);
+      cy.saveSession();
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
@@ -86,8 +88,9 @@ context('Submit AIN deal and check portalActivities', () => {
 
   describe('check "activity" Page', () => {
     beforeEach(() => {
-      cy.saveSession();
+      cy.clearSessionCookies();
       cy.login(BANK1_MAKER1);
+      cy.saveSession();
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
 
