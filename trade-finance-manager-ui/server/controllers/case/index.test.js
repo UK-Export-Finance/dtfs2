@@ -972,6 +972,8 @@ describe('controllers - case', () => {
           showFacilityEndDate: false,
           inProgressPortalAmendments: expect.any(Array),
           hasInProgressPortalAmendments: true,
+          hasFutureEffectiveDatePortalAmendments: false,
+          formattedFutureEffectiveDatePortalAmendments: undefined,
         });
       });
     });
