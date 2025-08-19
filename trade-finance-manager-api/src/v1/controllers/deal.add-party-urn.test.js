@@ -18,6 +18,27 @@ const {
   selectedIndustry: { code },
 } = MOCK_GEF_MAPPED_DEAL.exporter;
 
+const partyUrn = '00328682';
+
+const parties = {
+  exporter: {
+    partyUrn: '',
+    partyUrnRequired: true,
+  },
+  buyer: {
+    partyUrn: '',
+    partyUrnRequired: false,
+  },
+  indemnifier: {
+    partyUrn: '',
+    partyUrnRequired: false,
+  },
+  agent: {
+    partyUrn: '',
+    partyUrnRequired: false,
+  },
+};
+
 describe('addPartyUrns', () => {
   const auditDetails = generatePortalAuditDetails(MOCK_PORTAL_USERS[0]._id);
 
@@ -54,24 +75,7 @@ describe('addPartyUrns', () => {
       ...MOCK_GEF_MAPPED_DEAL,
       tfm: {
         ...MOCK_GEF_MAPPED_DEAL.tfm,
-        parties: {
-          exporter: {
-            partyUrn: '',
-            partyUrnRequired: true,
-          },
-          buyer: {
-            partyUrn: '',
-            partyUrnRequired: false,
-          },
-          indemnifier: {
-            partyUrn: '',
-            partyUrnRequired: false,
-          },
-          agent: {
-            partyUrn: '',
-            partyUrnRequired: false,
-          },
-        },
+        parties,
       },
     };
 
@@ -103,24 +107,7 @@ describe('addPartyUrns', () => {
       ...MOCK_GEF_MAPPED_DEAL,
       tfm: {
         ...MOCK_GEF_MAPPED_DEAL.tfm,
-        parties: {
-          exporter: {
-            partyUrn: '',
-            partyUrnRequired: true,
-          },
-          buyer: {
-            partyUrn: '',
-            partyUrnRequired: false,
-          },
-          indemnifier: {
-            partyUrn: '',
-            partyUrnRequired: false,
-          },
-          agent: {
-            partyUrn: '',
-            partyUrnRequired: false,
-          },
-        },
+        parties,
       },
     };
 
@@ -152,24 +139,7 @@ describe('addPartyUrns', () => {
       ...MOCK_GEF_MAPPED_DEAL,
       tfm: {
         ...MOCK_GEF_MAPPED_DEAL.tfm,
-        parties: {
-          exporter: {
-            partyUrn: '',
-            partyUrnRequired: true,
-          },
-          buyer: {
-            partyUrn: '',
-            partyUrnRequired: false,
-          },
-          indemnifier: {
-            partyUrn: '',
-            partyUrnRequired: false,
-          },
-          agent: {
-            partyUrn: '',
-            partyUrnRequired: false,
-          },
-        },
+        parties,
       },
     };
 
@@ -201,24 +171,7 @@ describe('addPartyUrns', () => {
       ...MOCK_GEF_MAPPED_DEAL,
       tfm: {
         ...MOCK_GEF_MAPPED_DEAL.tfm,
-        parties: {
-          exporter: {
-            partyUrn: '',
-            partyUrnRequired: true,
-          },
-          buyer: {
-            partyUrn: '',
-            partyUrnRequired: false,
-          },
-          indemnifier: {
-            partyUrn: '',
-            partyUrnRequired: false,
-          },
-          agent: {
-            partyUrn: '',
-            partyUrnRequired: false,
-          },
-        },
+        parties,
       },
     };
 
@@ -251,24 +204,7 @@ describe('addPartyUrns', () => {
       ...MOCK_GEF_MAPPED_DEAL,
       tfm: {
         ...MOCK_GEF_MAPPED_DEAL.tfm,
-        parties: {
-          exporter: {
-            partyUrn: '',
-            partyUrnRequired: true,
-          },
-          buyer: {
-            partyUrn: '',
-            partyUrnRequired: false,
-          },
-          indemnifier: {
-            partyUrn: '',
-            partyUrnRequired: false,
-          },
-          agent: {
-            partyUrn: '',
-            partyUrnRequired: false,
-          },
-        },
+        parties,
       },
     };
 
@@ -346,8 +282,6 @@ describe('addPartyUrns', () => {
   it('should return party urn when a complete exporter payload is supplied', async () => {
     // Arrange
 
-    const partyUrn = '00328682';
-
     const deal = {
       ...MOCK_GEF_MAPPED_DEAL,
       exporter: {
@@ -356,6 +290,82 @@ describe('addPartyUrns', () => {
     };
 
     const isUkEntity = isCountryUk(deal.exporter.registeredAddress.country);
+
+    const { hasExporter, hasBuyer, hasIndemnifier, hasAgent } = identifyDealParties(deal);
+
+    const mockReturn = {
+      ...MOCK_GEF_MAPPED_DEAL,
+      tfm: {
+        ...MOCK_GEF_MAPPED_DEAL.tfm,
+        parties: {
+          exporter: {
+            partyUrn,
+            partyUrnRequired: hasExporter,
+          },
+          buyer: {
+            partyUrn: '',
+            partyUrnRequired: hasBuyer,
+          },
+          indemnifier: {
+            partyUrn: '',
+            partyUrnRequired: hasIndemnifier,
+          },
+          agent: {
+            partyUrn: '',
+            partyUrnRequired: hasAgent,
+          },
+        },
+      },
+    };
+
+    jest.mocked(getOrCreatePartyDbInfo).mockResolvedValueOnce([
+      {
+        partyUrn,
+        name: 'Test Ltd',
+        sfId: '001S900000zcI',
+        companyRegNo: 'SC467044',
+        type: null,
+        subtype: null,
+        isLegacyRecord: false,
+      },
+    ]);
+    jest.mocked(updateDeal).mockResolvedValue(mockReturn);
+
+    // Act
+    const response = await addPartyUrns(deal, auditDetails);
+
+    // Assert
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledTimes(1);
+    expect(updateDeal).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledTimes(0);
+
+    expect(getOrCreatePartyDbInfo).toHaveBeenCalledWith({ companyRegNo, companyName, probabilityOfDefault, isUkEntity, code });
+
+    expect(response.tfm.parties.exporter.partyUrn).toBe('00328682');
+
+    expect(response.tfm.parties.exporter.partyUrnRequired).toBe(true);
+    expect(response.tfm.parties.buyer.partyUrnRequired).toBe(false);
+    expect(response.tfm.parties.indemnifier.partyUrnRequired).toBe(false);
+    expect(response.tfm.parties.agent.partyUrnRequired).toBe(false);
+  });
+
+  it('should return party urn when a complete exporter payload is supplied and default country to United Kingdom, when no country is returned from CH API.', async () => {
+    // Arrange
+    const deal = {
+      ...MOCK_GEF_MAPPED_DEAL,
+      exporter: {
+        ...MOCK_GEF_MAPPED_DEAL.exporter,
+        registeredAddress: {
+          addressLine1: 'Long Lane',
+          addressLine2: 'Broughty Ferry',
+          locality: 'Dundee',
+          postalCode: 'DD5 1HH',
+        },
+      },
+    };
+
+    // This will be true as the country will be defaulted to UK
+    const isUkEntity = true;
 
     const { hasExporter, hasBuyer, hasIndemnifier, hasAgent } = identifyDealParties(deal);
 
