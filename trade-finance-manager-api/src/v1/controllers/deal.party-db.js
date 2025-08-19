@@ -111,9 +111,10 @@ const addPartyUrns = async (deal, auditDetails) => {
     companyName,
     probabilityOfDefault,
     selectedIndustry: { code },
+    registeredAddress,
   } = deal.exporter;
 
-  const isUkEntity = isCountryUk(deal.exporter.registeredAddress.country);
+  const isUkEntity = isCountryUk(registeredAddress.country);
 
   const dealUpdate = {
     tfm: {

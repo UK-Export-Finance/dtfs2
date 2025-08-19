@@ -13,4 +13,6 @@ export const GREAT_BRITIAN = [
   'uk',
 ];
 
+export const UNITED_KINGDOM = 'United Kingdom';
+
 export const GB_ISO3166_CODE = 'GBR';
