@@ -196,9 +196,9 @@ export type AmendmentEligibilityRows = {
   html?: string;
 };
 
-export type AmendmentWithEligibilityRows =
-  | TfmFacilityAmendment
-  | (PortalFacilityAmendment & {
-      isPortalAmendment: boolean;
-      eligibilityRows: AmendmentEligibilityRows[];
-    });
+type AmendmentMappingFields = {
+  isPortalAmendment: boolean;
+  eligibilityRows: AmendmentEligibilityRows[];
+};
+
+export type AmendmentWithEligibilityRows = (TfmFacilityAmendment & AmendmentMappingFields) | (PortalFacilityAmendment & AmendmentMappingFields);

@@ -191,53 +191,11 @@ context('Amendments - TFM - Amendments details page - TFM should display portal 
     cy.assertText(amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue(), UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
   });
 
-  it('should display an eligibility criteria table and rows for the portal amendment', () => {
-    amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTable().should('exist');
+  it('should display an eligibility criteria table and rows for the third portal amendment', () => {
+    cy.checkAmendmentDetailsEligibilityTable(amendmentId2, 1);
+  });
 
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaIdColumn(amendmentId2, 1), '1');
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTextColumn(amendmentId2, 1), 'The Facility is not an Affected Facility');
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTagColumn(amendmentId2, 1), 'TRUE');
-
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaIdColumn(amendmentId2, 2), '2');
-    cy.assertText(
-      amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTextColumn(amendmentId2, 2),
-      'Neither the Exporter, nor its UK Parent Obligor is an Affected Person',
-    );
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTagColumn(amendmentId2, 2), 'TRUE');
-
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaIdColumn(amendmentId2, 3), '3');
-    cy.assertText(
-      amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTextColumn(amendmentId2, 3),
-      'The Cover Period of the Facility is within the Facility Maximum Cover Period',
-    );
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTagColumn(amendmentId2, 3), 'TRUE');
-
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaIdColumn(amendmentId2, 4), '4');
-    cy.assertText(
-      amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTextColumn(amendmentId2, 4),
-      'The Covered Facility Limit (converted for this purpose into the Master Guarantee Base Currency) of the Facility is not more than the lesser of (i) the Available Master Guarantee Limit; and the Available Obligor(s) Limit',
-    );
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTagColumn(amendmentId2, 4), 'TRUE');
-
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaIdColumn(amendmentId2, 5), '5');
-    cy.assertText(
-      amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTextColumn(amendmentId2, 5),
-      'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate any issue raised during its Bank Due Diligence internally to any Relevant Person for approval as part of its usual Bank Due Diligence',
-    );
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTagColumn(amendmentId2, 5), 'TRUE');
-
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaIdColumn(amendmentId2, 6), '6');
-    cy.assertText(
-      amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTextColumn(amendmentId2, 6),
-      'The Bank is the sole and legal beneficial owner of, and has good title to, the Facility and any Utilisation thereunder',
-    );
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTagColumn(amendmentId2, 6), 'TRUE');
-
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaIdColumn(amendmentId2, 7), '7');
-    cy.assertText(
-      amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTextColumn(amendmentId2, 7),
-      "The Bank's right, title and interest in and to the Facility and any Utilisation thereunder (including any indebtedness, obligation of liability of each Obligor) is free and clear of any Security or Quasi-Security (other than Permitted Security)",
-    );
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).eligibilityCriteriaTagColumn(amendmentId2, 7), 'TRUE');
+  it('should display an eligibility criteria table and rows for the first portal amendment', () => {
+    cy.checkAmendmentDetailsEligibilityTable(amendmentId1, 3);
   });
 });

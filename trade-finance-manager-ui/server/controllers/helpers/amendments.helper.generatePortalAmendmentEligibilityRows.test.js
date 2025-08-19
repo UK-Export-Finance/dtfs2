@@ -1,4 +1,4 @@
-import { TFM_AMENDMENT_STATUS, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { TFM_AMENDMENT_STATUS, PORTAL_AMENDMENT_STATUS, STATUS_TAG_COLOURS } from '@ukef/dtfs2-common';
 import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { generatePortalAmendmentEligibilityRows } from './amendments.helper';
 
@@ -30,9 +30,9 @@ describe('generatePortalAmendmentEligibilityRows', () => {
             html: `<span data-cy="amendment-${anAcknowledgedPortalAmendment.amendmentId}-eligibility-table-criterion-${criteria[1].id}-id">${criteria[1].id}</span>`,
           },
           {
-            html: `<span class="govuk-tag govuk-tag--green" data-cy="amendment-${anAcknowledgedPortalAmendment.amendmentId}-eligibility-table-criterion-${
-              criteria[1].id
-            }-tag"><strong>${String(criteria[1].answer).toUpperCase()}</strong></span>`,
+            html: `<span class="govuk-tag govuk-tag--${STATUS_TAG_COLOURS.GREEN}" data-cy="amendment-${
+              anAcknowledgedPortalAmendment.amendmentId
+            }-eligibility-table-criterion-${criteria[1].id}-tag"><strong>${String(criteria[1].answer).toUpperCase()}</strong></span>`,
           },
           {
             html: `<span data-cy="amendment-${anAcknowledgedPortalAmendment.amendmentId}-eligibility-table-criterion-${criteria[1].id}-text">${criteria[1].text}</span>`,

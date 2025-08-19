@@ -353,7 +353,7 @@ const getCaseFacility = async (req, res) => {
       return res.redirect('/not-found');
     }
 
-    const allAmendments = formatCompletedAmendmentDetails(allAmendmentsByFacilityId);
+    const allAmendmentsFormatted = formatCompletedAmendmentDetails(allAmendmentsByFacilityId);
 
     const deal = await api.getDeal(dealId, userToken);
 
@@ -378,7 +378,7 @@ const getCaseFacility = async (req, res) => {
       deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
     }
 
-    const allAmendmentsWithEligibility = generatePortalAmendmentEligibilityRows(allAmendments);
+    const allAmendments = generatePortalAmendmentEligibilityRows(allAmendmentsFormatted);
 
     return res.render('case/facility/facility.njk', {
       deal: deal.dealSnapshot,
@@ -396,7 +396,7 @@ const getCaseFacility = async (req, res) => {
       amendmentVersion: amendment?.version,
       hasAmendmentInProgressSubmittedFromPim,
       hasAmendmentInProgressButton,
-      allAmendments: allAmendmentsWithEligibility,
+      allAmendments,
       amendments,
       amendmentsInProgressSubmittedFromPim,
       showFacilityEndDate: facility.facilitySnapshot.isGef,

@@ -1,4 +1,12 @@
-const { TEAM_IDS, TFM_AMENDMENT_STATUS, DEAL_STATUS, TFM_DEAL_STAGE, PORTAL_AMENDMENT_STARTED_STATUSES, AMENDMENT_TYPES } = require('@ukef/dtfs2-common');
+const {
+  TEAM_IDS,
+  TFM_AMENDMENT_STATUS,
+  DEAL_STATUS,
+  TFM_DEAL_STAGE,
+  PORTAL_AMENDMENT_STARTED_STATUSES,
+  AMENDMENT_TYPES,
+  STATUS_TAG_COLOURS,
+} = require('@ukef/dtfs2-common');
 const { DECISIONS, DEAL } = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
 
@@ -180,7 +188,7 @@ const generatePortalAmendmentEligibilityRows = (amendmentsArray) => {
       const eligibilityText = `<span data-cy="amendment-${amendment.amendmentId}-eligibility-table-criterion-${id}-text">${text}</span>`;
 
       // set tag colour to green if true and red if not
-      const tagColour = answer === true ? 'green' : 'red';
+      const tagColour = answer === true ? STATUS_TAG_COLOURS.GREEN : STATUS_TAG_COLOURS.RED;
       const tagText = String(answer).toUpperCase();
 
       // html for tag including text and colour

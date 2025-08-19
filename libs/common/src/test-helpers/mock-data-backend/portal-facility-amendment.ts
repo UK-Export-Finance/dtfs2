@@ -34,6 +34,17 @@ export const aPortalFacilityAmendment = ({
     criteria: [
       { id: 1, text: 'item 1', answer: true },
       { id: 2, text: 'item 2', answer: true },
+      {
+        id: 3,
+        text: 'The Covered Facility Limit (converted for this purpose into the Master Guarantee Base Currency) of the Facility is not more than the lesser of (i) the Available Master Guarantee Limit; and the Available Obligor(s) Limit',
+        answer: false,
+      },
+      {
+        id: 4,
+        text: 'The Bank has completed its Bank Due Diligence to its satisfaction in accordance with its policies and procedures without having to escalate any issue raised during its Bank Due Diligence internally to any Relevant Person for approval as part of its usual Bank Due Diligence',
+        answer: true,
+      },
+      { id: 5, text: 'The Bank is the sole and legal beneficial owner of, and has good title to, the Facility and any Utilisation thereunder', answer: true },
     ],
     version: 1,
   },
