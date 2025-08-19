@@ -2,6 +2,7 @@ import 'cypress-file-upload';
 import './click-events';
 import { submitDealCancellation } from './trade-finance-manager-ui/submit-deal-cancellation';
 import { submitTfmAmendment } from './trade-finance-manager-ui/submit-tfm-amendment';
+import { checkAmendmentDetailsEligibilityTable } from './trade-finance-manager-ui/check-amendment-details-eligibility-table';
 import { makerLoginSubmitGefDealForReview } from './portal/makerLoginSubmitGefDealForReview';
 import { checkerLoginSubmitGefDealToUkef } from './portal/checkerLoginSubmitGefDealToUkef';
 import { makerSubmitDealForReview } from './portal/makerSubmitDealForReview';
@@ -72,6 +73,8 @@ Cypress.Commands.add('loginAndSubmitPortalAmendmentRequestToUkef', loginAndSubmi
 
 Cypress.Commands.add('submitDealCancellation', submitDealCancellation);
 Cypress.Commands.add('submitTfmAmendment', submitTfmAmendment);
+
+Cypress.Commands.add('checkAmendmentDetailsEligibilityTable', checkAmendmentDetailsEligibilityTable);
 
 Cypress.Commands.add('forceVisit', (url) => {
   cy.window().then((win) => win.open(url, '_self'));
