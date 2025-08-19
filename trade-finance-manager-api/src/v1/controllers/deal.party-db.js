@@ -114,6 +114,10 @@ const addPartyUrns = async (deal, auditDetails) => {
     registeredAddress,
   } = deal.exporter;
 
+  /**
+   * Existing or old application do not always have `country` property
+   * as CH API does not always return country property.
+   */
   const country = registeredAddress?.country ?? UNITED_KINGDOM;
   const isUkEntity = isCountryUk(country);
 
