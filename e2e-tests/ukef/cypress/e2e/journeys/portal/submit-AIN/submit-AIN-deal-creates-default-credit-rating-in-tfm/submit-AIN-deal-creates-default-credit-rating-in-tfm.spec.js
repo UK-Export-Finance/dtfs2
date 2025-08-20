@@ -41,8 +41,6 @@ context('Portal to TFM deal submission', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
-    cy.login(BANK1_MAKER1);
-
     portalPages.contract.visit(deal);
 
     portalPages.contract.proceedToReview().click();
