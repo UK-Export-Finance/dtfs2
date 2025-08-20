@@ -26,18 +26,13 @@ context('BSS/EWCS AIN deal - When TFM submits a pending deal cancellation - Port
   });
 
   beforeEach(() => {
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
-    cy.getCookies().should('be.empty');
-
+    cy.clearSessionCookies();
     cy.login(BANK1_MAKER1);
+    cy.saveSession();
   });
 
   after(() => {
-    cy.clearCookies();
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
-    cy.getCookies().should('be.empty');
+    cy.clearSessionCookies();
   });
 
   describe('effective date in the future', () => {

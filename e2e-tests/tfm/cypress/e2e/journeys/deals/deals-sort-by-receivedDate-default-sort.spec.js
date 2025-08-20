@@ -7,7 +7,7 @@ import { ALIAS_KEY } from '../../../fixtures/constants';
 import { aliasSelector } from '../../../../../support/alias-selector';
 
 context('User can view and sort deals', () => {
-  let ALL_SUBMITTED_DEALS = [];
+  const ALL_SUBMITTED_DEALS = [];
   let ALL_FACILITIES = [];
   let dealMostRecent;
   let dealNotRecent;
@@ -33,20 +33,32 @@ context('User can view and sort deals', () => {
 
     cy.insertManyDeals(MOCK_DEALS, BANK1_MAKER1).then((insertedDeals) => {
       insertedDeals.forEach((deal) => {
+        /**
+         * wait to submit deals at different times
+         * otherwise sometimes, both deals have the same submission time
+         * and the test fails as the first deal is displayed as most recent
+         */
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(1000);
         const { _id: dealId, mockFacilities } = deal;
 
         cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((facilities) => {
           ALL_FACILITIES = [...ALL_FACILITIES, ...facilities];
         });
-      });
 
-      cy.submitManyDeals(insertedDeals, T1_USER_1);
-      cy.get(aliasSelector(ALIAS_KEY.SUBMIT_MANY_DEALS)).then((submittedDeals) => {
-        ALL_SUBMITTED_DEALS = submittedDeals;
+        cy.submitManyDeals([deal], T1_USER_1);
 
-        dealMostRecent = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.details.submissionDate === DEAL_MOST_RECENT.details.submissionDate);
+        cy.get(aliasSelector(ALIAS_KEY.SUBMIT_MANY_DEALS)).then((submittedDeals) => {
+          ALL_SUBMITTED_DEALS.push(submittedDeals[0]);
 
-        dealNotRecent = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.details.submissionDate === DEAL_NOT_RECENT.details.submissionDate);
+          dealMostRecent = ALL_SUBMITTED_DEALS.find(
+            (submittedDeal) => submittedDeal.dealSnapshot.details.submissionDate === DEAL_MOST_RECENT.details.submissionDate,
+          );
+
+          dealNotRecent = ALL_SUBMITTED_DEALS.find(
+            (submittedDeal) => submittedDeal.dealSnapshot.details.submissionDate === DEAL_NOT_RECENT.details.submissionDate,
+          );
+        });
       });
     });
   });
