@@ -28,24 +28,19 @@ context('Portal to TFM deal submission', () => {
   });
 
   beforeEach(() => {
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
-    cy.getCookies().should('be.empty');
+    cy.clearSessionCookies();
+    cy.login(BANK1_MAKER1);
+    cy.saveSession();
   });
 
   after(() => {
-    cy.clearCookies();
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
-    cy.getCookies().should('be.empty');
+    cy.clearSessionCookies();
   });
 
   it('Portal deal is submitted to UKEF, user views deal in TFM. Facilities display GBP and non-GBP values and maximum ukef exposure in GBP', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
-    cy.login(BANK1_MAKER1);
-
     portalPages.contract.visit(deal);
 
     portalPages.contract.proceedToReview().click();

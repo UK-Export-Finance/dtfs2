@@ -46,6 +46,7 @@ context('GEF AIN deal - When TFM submits a pending deal cancellation - Portal st
   beforeEach(() => {
     cy.clearSessionCookies();
     cy.login(BANK1_MAKER1);
+    cy.saveSession();
 
     cy.visit(relative(`/gef/application-details/${dealId}`));
 

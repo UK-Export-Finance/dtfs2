@@ -28,24 +28,19 @@ context('Portal to TFM deal submission', () => {
   });
 
   beforeEach(() => {
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
-    cy.getCookies().should('be.empty');
+    cy.clearSessionCookies();
+    cy.login(BANK1_MAKER1);
+    cy.saveSession();
   });
 
   after(() => {
-    cy.clearCookies();
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
-    cy.getCookies().should('be.empty');
+    cy.clearSessionCookies();
   });
 
   it('Portal AIN deal is submitted to UKEF, tasks are added to the deal in TFM.', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
-    cy.login(BANK1_MAKER1);
-
     portalPages.contract.visit(deal);
 
     portalPages.contract.proceedToReview().click();
