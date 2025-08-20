@@ -29,7 +29,7 @@ context('Return to Maker', () => {
     cy.login(BANK1_CHECKER1);
     cy.saveSession();
 
-    // Visit the page AFTER login
+    // Visit the page after login
     cy.visit(relative(`/gef/application-details/${dealIds[2]}/return-to-maker`));
   });
 
