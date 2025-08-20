@@ -1,11 +1,24 @@
 import { fromUnixTime, format } from 'date-fns';
-import { timezone, DATE_FORMATS, MAPPED_FACILITY_TYPE, PORTAL_ACTIVITY_TYPE, PORTAL_ACTIVITY_LABEL, UKEF } from '@ukef/dtfs2-common';
+import {
+  timezone,
+  DATE_FORMATS,
+  MAPPED_FACILITY_TYPE,
+  PORTAL_ACTIVITY_TYPE,
+  PORTAL_ACTIVITY_LABEL,
+  UKEF,
+  isPortalFacilityAmendmentsFeatureFlagEnabled,
+} from '@ukef/dtfs2-common';
 import { mapPortalActivities, getPortalActivities } from '.';
 import api from '../../services/api';
 import mocks from '../mocks';
 import MOCK_AUTHOR from '../../utils/mocks/mock-author';
 
 jest.mock('../../services/api');
+
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isPortalFacilityAmendmentsFeatureFlagEnabled: jest.fn(),
+}));
 
 const timestamp = 1733311320;
 const date = fromUnixTime(timestamp);
@@ -223,6 +236,7 @@ describe('getPortalActivities', () => {
   let mockApplicationResponse;
   let mockFacilityResponse;
   let mockUserResponse;
+  let isFeatureFlagEnabledMock;
 
   beforeEach(() => {
     mockResponse = mocks.MockResponse();
@@ -230,10 +244,13 @@ describe('getPortalActivities', () => {
     mockApplicationResponse = mocks.MockApplicationResponseSubmitted();
     mockFacilityResponse = mocks.MockFacilityResponse();
     mockUserResponse = mocks.MockUserResponseChecker();
+    isFeatureFlagEnabledMock = true;
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getFacilities.mockResolvedValue(mockFacilityResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);
+
+    jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(isFeatureFlagEnabledMock);
   });
 
   afterEach(() => {
@@ -260,6 +277,7 @@ describe('getPortalActivities', () => {
     const mappedPortalActivities = mapPortalActivities(dealId, mockApplicationResponse.portalActivities);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/application-activity.njk', {
+      isFeatureFlagEnabled: isFeatureFlagEnabledMock,
       activeSubNavigation: 'activities',
       dealId: '1234567890abcdf123456789',
       previousStatus: mockApplicationResponse.previousStatus,

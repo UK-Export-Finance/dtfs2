@@ -1,4 +1,12 @@
-import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import {
+  aPortalSessionUser,
+  DEAL_STATUS,
+  DEAL_SUBMISSION_TYPE,
+  PORTAL_LOGIN_STATUS,
+  ROLES,
+  PortalFacilityAmendmentWithUkefId,
+  isPortalFacilityAmendmentsFeatureFlagEnabled,
+} from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
 import { getApplicationAmendments, GetApplicationAmendmentsRequest } from './get-application-amendments';
@@ -8,6 +16,12 @@ import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-h
 
 import { Deal } from '../../../types/deal';
 import api from '../../../services/api';
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isPortalFacilityAmendmentsFeatureFlagEnabled: jest.fn(),
+}));
 
 jest.mock('../../../services/api', () => ({
   getApplication: jest.fn(),
@@ -41,6 +55,7 @@ const getHttpMocks = (user: string) =>
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
 const users = [ROLES.MAKER, ROLES.CHECKER];
 const mockUser = aPortalSessionUser();
+const isFeatureFlagEnabledMock = true;
 
 describe('getAmendmentDetails', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
@@ -64,6 +79,8 @@ describe('getAmendmentDetails', () => {
     mockUserResponse.mockResolvedValue(mockUser);
     mockGetApplication.mockResolvedValue(mockDeal);
     mockGetAmendments.mockResolvedValue([amendment]);
+
+    jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(isFeatureFlagEnabledMock);
   });
 
   afterAll(() => {
