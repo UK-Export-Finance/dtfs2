@@ -27,24 +27,19 @@ context('Portal to TFM deal submission', () => {
   });
 
   beforeEach(() => {
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
-    cy.getCookies().should('be.empty');
+    cy.clearSessionCookies();
+    cy.login(BANK1_MAKER1);
+    cy.saveSession();
   });
 
   after(() => {
-    cy.clearCookies();
-    cy.clearCookie('dtfs-session');
-    cy.clearCookie('_csrf');
-    cy.getCookies().should('be.empty');
+    cy.clearSessionCookies();
   });
 
   it('Portal MIN deal is submitted to UKEF, `Not set` credit rating displays in TFM facilities', () => {
     //---------------------------------------------------------------
     // portal maker submits deal for review
     //---------------------------------------------------------------
-    cy.login(BANK1_MAKER1);
-
     portalPages.contract.visit(deal);
 
     portalPages.contract.proceedToReview().click();

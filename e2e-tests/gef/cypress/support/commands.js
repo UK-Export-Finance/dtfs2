@@ -1,8 +1,10 @@
 import * as api from './commands/api';
 import { createApplicationAndSetStatus } from './commands/createApplicationAndSetStatus';
+import { clearSessionCookies } from './utils/clearSessionCookies';
 
 import './commands/click-events';
 
+Cypress.Commands.add('clearSessionCookies', clearSessionCookies);
 Cypress.Commands.add('saveSession', require('./utils/saveSession'));
 
 Cypress.Commands.add('keyboardInput', require('./utils/keyboardInput'));
