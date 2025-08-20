@@ -7,6 +7,8 @@ const amendmentsPage = {
 
   amendmentFutureEffectiveDateFacilityBar: () => cy.get('[data-cy="amendment--future-effective-date-facility-bar"]'),
 
+  amendmentFutureEffectiveDateAmendmentBar: () => cy.get('[data-cy="amendment--future-effective-date-amendment-bar"]'),
+
   amendmentFutureEffectiveDateDealBar: (ukefFacilityId) => cy.get(`[data-cy="amendment--future-effective-date-deal-bar-${ukefFacilityId}"]`),
   amendmentFutureEffectiveDateDealLink: (ukefFacilityId) => cy.get(`[data-cy="amendment--future-effective-date-deal-link-${ukefFacilityId}"]`),
 

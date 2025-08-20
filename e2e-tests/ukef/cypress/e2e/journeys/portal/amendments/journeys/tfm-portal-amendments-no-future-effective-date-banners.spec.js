@@ -3,6 +3,7 @@ import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/ge
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { PIM_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
 import amendmentsPage from '../../../../../../../tfm/cypress/e2e/pages/amendments/amendmentsPage';
+import facilityPage from '../../../../../../../tfm/cypress/e2e/pages/facilityPage';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -99,5 +100,15 @@ context('Amendments - TFM - TFM should display no banners when there are no port
 
     cy.visit(tfmFacilityPage2);
     amendmentsPage.amendmentFutureEffectiveDateFacilityBar().should('not.exist');
+  });
+
+  it('should not display the future effective date banner on the amendment tab', () => {
+    cy.visit(tfmFacilityPage1);
+    facilityPage.facilityTabAmendments().click();
+    amendmentsPage.amendmentFutureEffectiveDateAmendmentBar().should('not.exist');
+
+    cy.visit(tfmFacilityPage2);
+    facilityPage.facilityTabAmendments().click();
+    amendmentsPage.amendmentFutureEffectiveDateAmendmentBar().should('not.exist');
   });
 });
