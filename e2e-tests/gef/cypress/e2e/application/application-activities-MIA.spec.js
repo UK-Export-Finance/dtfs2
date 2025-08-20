@@ -18,7 +18,7 @@ let dealId;
 
 context('Submit AIN deal and check portalActivities', () => {
   before(() => {
-    cy.loadData();
+    // cy.loadData();
     cy.apiLogin(BANK1_CHECKER1)
       .then((token) => token)
       .then((token) => {
@@ -35,8 +35,8 @@ context('Submit AIN deal and check portalActivities', () => {
 
   describe('create and submit an MIA', () => {
     before(() => {
-      cy.saveSession();
       cy.login(BANK1_MAKER1);
+      cy.saveSession();
 
       cy.visit(relative(`/gef/application-details/${dealId}`));
     });
