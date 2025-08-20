@@ -1,6 +1,6 @@
 const { findOneTfmDeal, findOnePortalDeal } = require('../../../src/v1/controllers/deal.controller');
 const mapDeal = require('../../../src/v1/mappings/map-deal');
-const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../../src/v1/__mocks__/mock-deal');
 const { mockFindOneDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
 const api = require('../../../src/v1/api');
 
@@ -18,9 +18,9 @@ describe('deal controller', () => {
     });
 
     it('should return a deal with mapped dealSnapshot', async () => {
-      const deal = await findOneTfmDeal(MOCK_DEAL._id);
+      const deal = await findOneTfmDeal(MOCK_BSS_EWCS_DEAL._id);
 
-      const mappedSnapshot = await mapDeal(MOCK_DEAL);
+      const mappedSnapshot = await mapDeal(MOCK_BSS_EWCS_DEAL);
 
       expect(deal).toMatchObject({
         dealSnapshot: mappedSnapshot,
@@ -35,8 +35,8 @@ describe('deal controller', () => {
     });
 
     it('should fetch a portal deal', async () => {
-      const deal = await findOnePortalDeal(MOCK_DEAL._id);
-      expect(deal).toEqual(MOCK_DEAL);
+      const deal = await findOnePortalDeal(MOCK_BSS_EWCS_DEAL._id);
+      expect(deal).toEqual(MOCK_BSS_EWCS_DEAL);
     });
   });
 });

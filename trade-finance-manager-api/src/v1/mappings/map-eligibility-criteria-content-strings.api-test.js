@@ -1,7 +1,7 @@
 const mapEligibilityCriteriaContentStrings = require('./map-eligibility-criteria-content-strings');
 const CONSTANTS = require('../../constants');
 const CONTENT_STRINGS = require('../content-strings');
-const MOCK_BSS_DEAL = require('../__mocks__/mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../__mocks__/mock-deal');
 const MOCK_GEF_DEAL = require('../__mocks__/mock-gef-deal');
 
 describe('mapEligibilityCriteriaContentStrings', () => {
@@ -10,7 +10,7 @@ describe('mapEligibilityCriteriaContentStrings', () => {
 
   describe(`when dealType is ${dealTypeBSS}`, () => {
     it(`should map eligibility.criteria to ${dealTypeBSS} content strings`, () => {
-      const mockEligibility = MOCK_BSS_DEAL.eligibility;
+      const mockEligibility = MOCK_BSS_EWCS_DEAL.eligibility;
 
       const result = mapEligibilityCriteriaContentStrings(mockEligibility, dealTypeBSS);
 

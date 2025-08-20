@@ -1,3 +1,5 @@
+const { UNITED_KINGDOM } = require('@ukef/dtfs2-common');
+
 const mapGefSubmissionDetails = (dealSnapshot) => {
   const { exporter } = dealSnapshot;
 
@@ -8,7 +10,7 @@ const mapGefSubmissionDetails = (dealSnapshot) => {
     supplierAddressLine3: exporter.registeredAddress.addressLine3,
     supplierAddressTown: exporter.registeredAddress.locality,
     supplierAddressPostcode: exporter.registeredAddress.postalCode,
-    supplierCountry: exporter.registeredAddress.country,
+    supplierCountry: exporter.registeredAddress.country ?? UNITED_KINGDOM,
     industrySector: exporter.selectedIndustry.name,
     industryClass: exporter.selectedIndustry.class.name,
     supplierCompaniesHouseRegistrationNumber: exporter.companiesHouseRegistrationNumber,
