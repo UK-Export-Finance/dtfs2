@@ -45,5 +45,6 @@ export * from './status-tag-colours';
 export * from './country';
 export * from './parties';
 export * from './exchange-rate';
+export * from './number-generator';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';

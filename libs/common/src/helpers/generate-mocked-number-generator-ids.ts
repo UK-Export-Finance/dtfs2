@@ -1,5 +1,6 @@
 import { nowZeroSeconds } from './date';
 import { NumberGeneratorObject } from '../types';
+import { USER, NUMBER_TYPE } from '../constants';
 
 /**
  * Generates mocked number generator object
@@ -9,26 +10,25 @@ import { NumberGeneratorObject } from '../types';
  * @returns An array of mocked number generator objects.
  */
 export const generateMockedNumberGeneratorIds = (): NumberGeneratorObject[] => {
-  // length of id
-  const length = 10;
+  // prefix for ids
+  const prefix = '003';
+  // number of digits to randomise
+  const randomDigitsLength = 7;
 
-  const min = 10 ** (length - 1);
-  const max = 10 ** length - 1;
+  const min = 10 ** (randomDigitsLength - 1);
+  const max = 10 ** randomDigitsLength - 1;
 
   // generate random id and masked id in number form
-  const id = Math.floor(Math.random() * (max - min + 1)) + min;
-  const maskedIdNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-
-  // converts maskedId to string
-  const maskedId = `${maskedIdNumber}`;
+  const id = Number(prefix + (Math.floor(Math.random() * (max - min + 1)) + min));
+  const maskedId = String(prefix + (Math.floor(Math.random() * (max - min + 1)) + min));
 
   const mockObject = {
     id,
     maskedId,
-    type: 1,
-    createdBy: 'Portal v2/TFM',
+    type: NUMBER_TYPE.DEAL,
+    createdBy: USER.DTFS,
     createdDatetime: new Date(nowZeroSeconds()).toISOString(),
-    requestingSystem: 'Portal v2/TFM',
+    requestingSystem: USER.DTFS,
   };
 
   return [mockObject];

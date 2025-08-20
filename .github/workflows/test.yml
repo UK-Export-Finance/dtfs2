@@ -1048,7 +1048,7 @@ jobs:
 
   #7.1. E2E - UKEF
   e2e-tests-ukef:
-    name: E2E UKEF NUMGEN NOT MOCKED 👷
+    name: E2E UKEF 👷
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
@@ -1131,8 +1131,8 @@ jobs:
           retention-days: 1
 
 #7.2. E2E - UKEF
-  e2e-tests-ukef-mocked-numgen:
-    name: E2E UKEF NUMGEN MOCKED 👷
+  e2e-tests-ukef-mocked-calls:
+    name: E2E UKEF - MOCKED 👷
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
@@ -1153,7 +1153,7 @@ jobs:
           ]
 
     concurrency:
-      group: e2e-tests-ukef-mocked-numgen-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+      group: e2e-tests-ukef-mocked-calls-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
       cancel-in-progress: true
 
     steps:
@@ -1219,7 +1219,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: e2e-tests-ukef-mocked-numgen-${{ github.run_attempt }}
+          name: e2e-tests-ukef-mocked-calls-${{ github.run_attempt }}
           path: ./e2e-tests/ukef/cypress/screenshots/
           retention-days: 1
 
@@ -1341,7 +1341,10 @@ jobs:
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/BSS-EWCS/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/gef/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/journeys/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/amendment-details/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/general/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/application-details/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/status/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/**/*.spec.js'
           ]
 

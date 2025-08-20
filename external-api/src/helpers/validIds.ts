@@ -6,8 +6,8 @@
  * @param eStoreData - An object containing the `dealIdentifier` and `facilityIdentifiers` properties.
  * @returns `true` if the `dealIdentifier` and `facilityIdentifiers` are present and do not contain temporary IDs, `false` otherwise.
  */
+import { UKEF_ID } from '@ukef/dtfs2-common';
 import { Estore } from '../interfaces/eStore.interface';
-import { UKEF_ID } from '../constants';
 import { validUkefId } from './validUkefId';
 
 export const areValidUkefIds = (eStoreData: Estore): boolean => {

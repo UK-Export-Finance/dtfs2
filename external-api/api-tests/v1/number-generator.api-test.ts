@@ -12,10 +12,9 @@
 import dotenv from 'dotenv';
 import axios, { HttpStatusCode } from 'axios';
 import { createRequest, createResponse } from 'node-mocks-http';
-import { nowZeroSeconds } from '@ukef/dtfs2-common';
+import { nowZeroSeconds, USER, NUMBER_TYPE, ENTITY_TYPE, UKEF_ID } from '@ukef/dtfs2-common';
 import { getNumber } from '../../src/v1/controllers/number-generator.controller';
 import { InvalidEntityTypeError } from '../../src/v1/errors';
-import { ENTITY_TYPE, UKEF_ID, USER } from '../../src/constants';
 
 dotenv.config();
 
@@ -32,7 +31,7 @@ const mockSuccessfulResponse = {
     {
       id: 12345678,
       maskedId: UKEF_ID.TEST,
-      type: 1,
+      type: NUMBER_TYPE.DEAL,
       createdBy: USER.DTFS,
       createdDatetime: '2024-01-01T00:00:00.000Z',
       requestingSystem: USER.DTFS,

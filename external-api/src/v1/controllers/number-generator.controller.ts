@@ -4,10 +4,17 @@
 import * as dotenv from 'dotenv';
 import axios, { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
-import { HEADERS, isNumberGeneratorMocked, generateMockedNumberGeneratorIds, NumberGeneratorResponse } from '@ukef/dtfs2-common';
+import {
+  HEADERS,
+  isNumberGeneratorMocked,
+  generateMockedNumberGeneratorIds,
+  NumberGeneratorResponse,
+  ENTITY_TYPE,
+  NUMBER_TYPE,
+  USER,
+} from '@ukef/dtfs2-common';
 import { NumberGeneratorErrorResponse } from '../../interfaces';
 import { InvalidEntityTypeError } from '../errors';
-import { ENTITY_TYPE, NUMBER_TYPE, USER } from '../../constants';
 
 dotenv.config();
 
@@ -62,7 +69,7 @@ export const getNumber = async (req: Request, res: Response): Promise<Response<N
      * and return them with correct mocked status and data
      */
     if (isNumberGeneratorMocked()) {
-      console.info('Mocking Number Generator API call');
+      console.info('⚠️ Mocking Number Generator API call ⚠️');
       const data = generateMockedNumberGeneratorIds();
 
       const { maskedId: ukefId } = data[0];
