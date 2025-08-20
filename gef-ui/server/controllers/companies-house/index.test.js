@@ -1,4 +1,4 @@
-import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
+import { MOCK_COMPANY_REGISTRATION_NUMBERS, UNITED_KINGDOM } from '@ukef/dtfs2-common';
 import { when } from 'jest-when';
 import { HttpStatusCode } from 'axios';
 import api from '../../services/api';
@@ -147,6 +147,9 @@ describe('controllers/about-exporter', () => {
           smeType: '',
           industries: ['some industry'],
           selectedIndustry: 'some industry',
+          registeredAddress: {
+            country: UNITED_KINGDOM,
+          },
         },
       };
 
@@ -175,6 +178,104 @@ describe('controllers/about-exporter', () => {
           probabilityOfDefault: '',
           smeType: '',
           selectedIndustry: null,
+          registeredAddress: {
+            country: UNITED_KINGDOM,
+          },
+        },
+      };
+
+      expect(updateApplicationSpy).toHaveBeenCalledWith({
+        dealId: mockRequest.params.dealId,
+        application: expectedUpdateObj,
+        userToken,
+      });
+    });
+
+    it('updates the application with the correct details when the company data does not contains any country', async () => {
+      // Arrange
+      when(getCompanyByRegistrationNumberMock)
+        .calledWith({ registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID, userToken })
+        .mockResolvedValue({
+          company: {
+            registeredAddress: {
+              addressLine1: '1 Horse Guards Road',
+              locality: 'London',
+              postalCode: 'SW1A 2HA',
+              region: 'London',
+            },
+          },
+        });
+
+      mockRequest.body.regNumber = MOCK_COMPANY_REGISTRATION_NUMBERS.VALID;
+
+      // Act
+      await validateCompaniesHouse(mockRequest, mockResponse);
+
+      // Assert
+      const expectedUpdateObj = {
+        editorId: '12345',
+        exporter: {
+          someExporterField: 'someExporterValue',
+          correspondenceAddress: null,
+          isFinanceIncreasing: null,
+          probabilityOfDefault: '',
+          smeType: '',
+          selectedIndustry: null,
+          registeredAddress: {
+            addressLine1: '1 Horse Guards Road',
+            locality: 'London',
+            postalCode: 'SW1A 2HA',
+            region: 'London',
+            country: UNITED_KINGDOM,
+          },
+        },
+      };
+
+      expect(updateApplicationSpy).toHaveBeenCalledWith({
+        dealId: mockRequest.params.dealId,
+        application: expectedUpdateObj,
+        userToken,
+      });
+    });
+
+    it('updates the application with the correct details when the company data does contains a country', async () => {
+      // Arrange
+      when(getCompanyByRegistrationNumberMock)
+        .calledWith({ registrationNumber: MOCK_COMPANY_REGISTRATION_NUMBERS.VALID, userToken })
+        .mockResolvedValue({
+          company: {
+            registeredAddress: {
+              addressLine1: '1 Horse Guards Road',
+              locality: 'London',
+              postalCode: 'SW1A 2HA',
+              region: 'London',
+              country: 'England',
+            },
+          },
+        });
+
+      mockRequest.body.regNumber = MOCK_COMPANY_REGISTRATION_NUMBERS.VALID;
+
+      // Act
+      await validateCompaniesHouse(mockRequest, mockResponse);
+
+      // Assert
+      const expectedUpdateObj = {
+        editorId: '12345',
+        exporter: {
+          someExporterField: 'someExporterValue',
+          correspondenceAddress: null,
+          isFinanceIncreasing: null,
+          probabilityOfDefault: '',
+          smeType: '',
+          selectedIndustry: null,
+          registeredAddress: {
+            addressLine1: '1 Horse Guards Road',
+            locality: 'London',
+            postalCode: 'SW1A 2HA',
+            region: 'London',
+            country: 'England',
+          },
         },
       };
 

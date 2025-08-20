@@ -1,7 +1,8 @@
-import { CustomExpressRequest, HEADERS, isValidCompanyRegistrationNumber } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, HEADERS, isValidCompanyRegistrationNumber, SalesForceParty } from '@ukef/dtfs2-common';
+import { Request, Response } from 'express';
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
-import { Request, Response } from 'express';
+import { findACBSIndustrySector } from './industry-sectors.controller';
 
 dotenv.config();
 
@@ -38,41 +39,53 @@ export const lookup = async (req: Request, res: Response) => {
 };
 
 /**
- * Gets a customer in Salesforce, and creates it if it does not exist by sending a request to APIM,
- * based on the provided company registration number and company name.
- * This function validates the company registration number and sends an HTTP POST request to the MDM API
- * to get or create the party. If validation fails or an error occurs, it returns the appropriate HTTP status and error message.
+ * Handles the creation or retrieval of a party (customer) in the Party DB.
  *
- * @param {CustomExpressRequest<{ reqBody: { companyName: string } }>} req - The Express request object, which contains:
- *   - `req.body` - The company name (`companyName`), companies house number (`companyReg`) and probability of default (`probabilityOfDefault`).
- * @param {Response} res - The Express response object used to send the HTTP response.
+ * Validates the provided company registration number and company name.
+ * If valid, sends a POST request to the Party DB API to create or retrieve the party.
+ * Responds with the API response or appropriate error messages.
  *
- * @returns {Promise<Response>} A promise that resolves to an HTTP response. The response contains:
- *   - On success: The status and data returned from the MDM API.
- *   - On failure: A relevant error message with the corresponding status code if there's an issue with the MDM request.
- *
- * @example
- * // Example usage:
- * const req = { body: { companyReg: '12345678', companyName: 'Test Corp', probabilityOfDefault: 14.1 } };
- * const res = { status: () => res, send: () => {} };
- * await getOrCreateParty(req, res);
+ * @param req - Express request object containing the party details in the body.
+ * @param res - Express response object used to send the response.
+ * @returns Sends an HTTP response with the result of the Party DB API call or an error message.
  */
 export const getOrCreateParty = async (
-  req: CustomExpressRequest<{ reqBody: { companyRegNo: string; companyName: string; probabilityOfDefault: number } }>,
+  req: CustomExpressRequest<{
+    reqBody: SalesForceParty;
+  }>,
   res: Response,
 ) => {
   try {
-    const { companyRegNo: companyRegistrationNumber, companyName, probabilityOfDefault } = req.body;
+    const { companyRegNo: companyRegistrationNumber, companyName, probabilityOfDefault, isUkEntity, code } = req.body;
 
     if (!companyRegistrationNumber || !isValidCompanyRegistrationNumber(companyRegistrationNumber)) {
-      console.error('Invalid company registration number provided %s', companyRegistrationNumber);
+      console.error('Invalid company registration number was provided %s', companyRegistrationNumber);
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company registration number' });
     }
 
     if (!companyName) {
-      console.error('No company name provided');
+      console.error('Invalid company name was provided %s', companyName);
       return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid company name' });
     }
+
+    if (!code) {
+      console.error('Invalid industry code was provided %s', code);
+      return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, data: 'Invalid industry code' });
+    }
+
+    const industryData = await findACBSIndustrySector(code);
+
+    /**
+     * We are throwing `500` instead of `400` to trigger an alert,
+     * as SIC code should never be incorrect as they are fetched
+     * from CH API call.
+     */
+    if (!Array.isArray(industryData.data) || !industryData?.data?.length) {
+      throw new Error('Unable to get industry sector data');
+    }
+
+    const { acbsIndustryId: ukefIndustryId, acbsSectorId: ukefSectorId } = industryData.data[0];
+    const ukEntity = isUkEntity ? 'Yes' : 'No';
 
     const response: { status: number; data: unknown } = await axios({
       method: 'post',
@@ -82,9 +95,14 @@ export const getOrCreateParty = async (
         companyRegistrationNumber,
         companyName,
         probabilityOfDefault,
+        ukEntity,
+        ukefIndustryId,
+        ukefSectorId,
       },
     });
+
     const { status, data } = response;
+
     return res.status(status).send(data);
   } catch (error) {
     console.error('Error calling Party DB API %o', error);

@@ -1,0 +1,3 @@
+export const PROBABILITY_OF_DEFAULT = {
+  DEFAULT_VALUE: 14.1,
+};

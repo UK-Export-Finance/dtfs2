@@ -5,7 +5,7 @@ const app = require('../../../src/createApp');
 const { createApi } = require('../../api');
 const { initialiseTestUsers } = require('../../api-test-users');
 const api = require('../../../src/v1/api');
-const MOCK_DEAL = require('../../../src/v1/__mocks__/mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../../src/v1/__mocks__/mock-deal');
 const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
 const { mockUpdateDeal, mockFindOneDeal, mockFindUserById } = require('../../../src/v1/__mocks__/common-api-mocks');
 
@@ -42,8 +42,8 @@ describe('PUT /deals/:dealId/underwriting/lead-underwriter', () => {
   });
 
   it('should return updated leadUnderwriter', async () => {
-    mockUpdateDeal(MOCK_DEAL);
-    mockFindOneDeal(MOCK_DEAL);
+    mockUpdateDeal(MOCK_BSS_EWCS_DEAL);
+    mockFindOneDeal(MOCK_BSS_EWCS_DEAL);
     mockFindUserById();
 
     const { status, body } = await as(tokenUser).put(VALID_LEAD_UNDERWRITER_UPDATE).to(VALID_URL_TO_UPDATE_LEAD_UNDERWRITER);
@@ -55,8 +55,8 @@ describe('PUT /deals/:dealId/underwriting/lead-underwriter', () => {
   });
 
   it('should return a 400 if deal id is invalid', async () => {
-    mockUpdateDeal(MOCK_DEAL);
-    mockFindOneDeal(MOCK_DEAL);
+    mockUpdateDeal(MOCK_BSS_EWCS_DEAL);
+    mockFindOneDeal(MOCK_BSS_EWCS_DEAL);
     mockFindUserById();
 
     const { status, body } = await as(tokenUser).put(VALID_LEAD_UNDERWRITER_UPDATE).to(`/v1/deals/${INVALID_DEAL_ID}/underwriting/lead-underwriter`);

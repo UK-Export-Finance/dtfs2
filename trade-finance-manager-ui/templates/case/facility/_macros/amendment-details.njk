@@ -2,6 +2,7 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 {% import '../../amendments/_macros/amendment-ukef-decision-summary.njk' as summaryDetails %}
+{% import './amendment-eligibility-criteria.njk' as eligibilityCriteria %}
 
 {% macro render(params) %}
   {% set allAmendments = params.allAmendments %}
@@ -129,6 +130,13 @@
 
         {% if amendment.ukefDecision.submitted %}
           {{ summaryDetails.render(amendment) }}
+        {% endif %}
+
+        {% if amendment.isPortalAmendment %}
+          {{ eligibilityCriteria.render({
+            rows: amendment.eligibilityRows,
+            index: loop.index
+          }) }}
         {% endif %}
 
       </div>

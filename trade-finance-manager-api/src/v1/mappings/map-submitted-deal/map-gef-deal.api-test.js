@@ -39,11 +39,12 @@ describe('mappings - map submitted deal - mapGefDeal', () => {
         companiesHouseRegistrationNumber: dealSnapshot.exporter.companiesHouseRegistrationNumber,
         probabilityOfDefault: Number(dealSnapshot.exporter.probabilityOfDefault),
         registeredAddress: dealSnapshot.exporter.registeredAddress,
+        smeType: dealSnapshot.exporter.smeType,
         selectedIndustry: {
           name: dealSnapshot.exporter.selectedIndustry.name,
           class: dealSnapshot.exporter.selectedIndustry.class.name,
+          code: dealSnapshot.exporter.selectedIndustry.class.code,
         },
-        smeType: dealSnapshot.exporter.smeType,
       },
       maker: dealSnapshot.maker,
       supportingInformation: dealSnapshot.supportingInformation,
