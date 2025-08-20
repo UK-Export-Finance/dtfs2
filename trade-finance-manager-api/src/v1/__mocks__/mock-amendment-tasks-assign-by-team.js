@@ -3,7 +3,7 @@ const { ObjectId } = require('mongodb');
 const { getUnixTime } = require('date-fns');
 const { TEAMS } = require('../../constants');
 const MOCK_USERS = require('./mock-users');
-const MOCK_DEAL = require('./mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('./mock-deal');
 
 const underwriter = MOCK_USERS.find((user) => user.teams.includes(TEAMS.UNDERWRITERS.id));
 const underwriterManager = MOCK_USERS.find((user) => user.teams.includes(TEAMS.UNDERWRITER_MANAGERS.id));
@@ -397,7 +397,7 @@ const TASKS_UNASSIGNED_FOR_UNDERWRITER = [
 
 const TASKS_UPDATE_MOCK_REQUEST = {
   params: {
-    _id: MOCK_DEAL._id,
+    _id: MOCK_BSS_EWCS_DEAL._id,
     facilityId: new ObjectId('6745bd3719238444fa59f308'),
     amendmentId: new ObjectId('6745bd3719238444fa59f307'),
     groupId: '1',
