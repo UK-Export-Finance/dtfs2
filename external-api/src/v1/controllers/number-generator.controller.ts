@@ -4,8 +4,8 @@
 import * as dotenv from 'dotenv';
 import axios, { HttpStatusCode } from 'axios';
 import { Request, Response } from 'express';
-import { HEADERS } from '@ukef/dtfs2-common';
-import { NumberGeneratorResponse, NumberGeneratorErrorResponse } from '../../interfaces';
+import { HEADERS, isNumberGeneratorMocked, generateMockedNumberGeneratorIds, NumberGeneratorResponse } from '@ukef/dtfs2-common';
+import { NumberGeneratorErrorResponse } from '../../interfaces';
 import { InvalidEntityTypeError } from '../errors';
 import { ENTITY_TYPE, NUMBER_TYPE, USER } from '../../constants';
 
@@ -55,6 +55,25 @@ export const getNumber = async (req: Request, res: Response): Promise<Response<N
     };
 
     console.info('⚡️ Invoking number generator for deal %s', dealId);
+
+    /**
+     * if number generator is mocked
+     * generate random mocked number generator IDs
+     * and return them with correct mocked status and data
+     */
+    if (isNumberGeneratorMocked()) {
+      console.info('Mocking Number Generator API call');
+      const data = generateMockedNumberGeneratorIds();
+
+      const { maskedId: ukefId } = data[0];
+
+      console.info('✅ UKEF ID received %d for deal %s', ukefId, dealId);
+
+      return res.status(HttpStatusCode.Ok).send({
+        status: HttpStatusCode.Created,
+        data,
+      });
+    }
 
     const response: NumberGeneratorResponse = await axios.post(endpoint, [payload], headers);
 
