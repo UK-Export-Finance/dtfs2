@@ -1,14 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { industrySector } from '@ukef/dtfs2-common';
+import { HttpStatusCode } from 'axios';
 import { findACBSIndustrySector } from '../../src/v1/controllers/industry-sectors.controller';
 
-describe('findACBSIndustrySector lookup', () => {
-  it('should return status code from industry sector lookup', async () => {
-    const expected = [
+describe('findACBSIndustrySector', () => {
+  const invalidIndustryCodeTestCases = [0, 1, 12, 123, 1234, 0o001];
+
+  it(`should return ${HttpStatusCode.Ok} status code from industry sector lookup with a valid industry ID`, async () => {
+    // Arrange
+    const expected: Array<industrySector> = [
       {
+        id: 321,
+        ukefSectorId: '1004',
         ukefSectorName: 'Electricity, gas, steam and air conditioning supply',
         internalNo: null,
+        ukefIndustryId: '35220',
+        ukefIndustryName: 'Distribution of gaseous fuels through mains',
+        acbsSectorId: '3',
         acbsSectorName: 'CIVIL: POWER',
+        acbsIndustryId: '0302',
         acbsIndustryName: 'GAS',
         created: '2017-04-01T00:00:00.000Z',
         updated: '2017-06-28T11:01:29.040Z',
@@ -16,11 +25,14 @@ describe('findACBSIndustrySector lookup', () => {
         effectiveTo: '9999-12-31T00:00:00.000Z',
       },
     ];
+
+    // Act
     const { status, data } = await findACBSIndustrySector(35220);
 
-    expect(status).toEqual(200);
+    // Assert
+    const responseData = data[0] as industrySector;
 
-    const responseData = data[0];
+    expect(status).toEqual(HttpStatusCode.Ok);
 
     expect(responseData.ukefSectorName).toEqual(expected[0].ukefSectorName);
     expect(responseData.internalNo).toEqual(expected[0].internalNo);
@@ -33,14 +45,12 @@ describe('findACBSIndustrySector lookup', () => {
     expect(responseData.effectiveTo).toBeDefined();
   });
 
-  const invalidIndustryCodeTestCases = [1, 12, 123, 1234];
+  it.each(invalidIndustryCodeTestCases)(`should return a ${HttpStatusCode.BadRequest} if %s industry code is provided`, async (industryId) => {
+    // Act
+    const { status, data } = await findACBSIndustrySector(industryId);
 
-  describe('when industry id is invalid', () => {
-    test.each(invalidIndustryCodeTestCases)('returns a 400 if you provide invalid industry code (5 digit)  %s', async (industryId) => {
-      const { status, data } = await findACBSIndustrySector(industryId);
-
-      expect(status).toEqual(400);
-      expect(data).toEqual('Invalid industry ID');
-    });
+    // Arrange
+    expect(status).toEqual(HttpStatusCode.BadRequest);
+    expect(data).toEqual('Invalid industry ID');
   });
 });

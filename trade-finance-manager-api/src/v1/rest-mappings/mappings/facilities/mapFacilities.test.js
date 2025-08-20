@@ -2,7 +2,7 @@ const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const mapFacilities = require('./mapFacilities');
 const mapFacilitySnapshot = require('./mapFacilitySnapshot');
 const mapFacilityTfm = require('./mapFacilityTfm');
-const MOCK_DEAL = require('../../../__mocks__/mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../../__mocks__/mock-deal');
 
 describe('mapFacilities', () => {
   const mockTfmFacility = {
@@ -10,7 +10,7 @@ describe('mapFacilities', () => {
     ukefExposureCalculationTimestamp: '1606900616651',
   };
 
-  const mockDealSnapshot = MOCK_DEAL;
+  const mockDealSnapshot = MOCK_BSS_EWCS_DEAL;
 
   const MOCK_DEAL_TFM = {
     exporterCreditRating: 'Good (BB-)',

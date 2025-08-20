@@ -1,16 +1,26 @@
+const { PROBABILITY_OF_DEFAULT } = require('@ukef/dtfs2-common');
 const { generateMiaConfirmationEmailVars, commonEmailVars } = require('./generate-email-variables');
 const mapSubmittedDeal = require('../../mappings/map-submitted-deal');
 const bssEmailVariables = require('./bss-email-variables');
 const CONSTANTS = require('../../../constants');
-const MOCK_BSS_DEAL = require('../../__mocks__/mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../__mocks__/mock-deal');
 const MOCK_GEF_DEAL = require('../../__mocks__/mock-gef-deal');
 
 describe('generate AIN/MIN confirmation email variables', () => {
   const mockFacilityLists = {};
 
+  const deal = {
+    dealSnapshot: {
+      ...MOCK_BSS_EWCS_DEAL,
+    },
+    tfm: {
+      probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+    },
+  };
+
   describe('commonEmailVars', () => {
     it('should return object of email variables used in both BSS and GEF', async () => {
-      const mockDeal = await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL });
+      const mockDeal = await mapSubmittedDeal(deal);
 
       const result = commonEmailVars(mockDeal);
 
@@ -27,7 +37,7 @@ describe('generate AIN/MIN confirmation email variables', () => {
 
   describe(`when dealType is ${CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS}`, () => {
     it('should return result of both commonEmailVars and bssEmailVariables functions', async () => {
-      const mockDeal = await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL });
+      const mockDeal = await mapSubmittedDeal(deal);
 
       const result = generateMiaConfirmationEmailVars(mockDeal, mockFacilityLists);
 
@@ -51,7 +61,7 @@ describe('generate AIN/MIN confirmation email variables', () => {
   });
 
   it('should return empty object when dealType is invalid', async () => {
-    const mockDeal = await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL });
+    const mockDeal = await mapSubmittedDeal(deal);
     mockDeal.dealType = 'INVALID';
 
     const result = generateMiaConfirmationEmailVars(mockDeal);

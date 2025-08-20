@@ -36,6 +36,7 @@ const getCaseDeal = async (req, res) => {
   try {
     const dealId = req.params._id;
     const { userToken } = req.session;
+    const { teams } = req.session.user;
 
     const { user } = asUserSession(req.session);
 
@@ -62,7 +63,7 @@ const getCaseDeal = async (req, res) => {
       getAmendmentsInProgress({
         amendments,
         deal,
-        teams: req.session.user.teams,
+        teams,
       });
 
     const { dealSnapshot } = deal;

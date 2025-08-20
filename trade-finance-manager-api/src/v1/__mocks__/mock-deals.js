@@ -1,4 +1,4 @@
-const MOCK_DEAL = require('./mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('./mock-deal');
 const MOCK_DEAL_NO_UKEF_ID = require('./mock-deal-no-ukef-id');
 const MOCK_DEAL_NO_PARTY_DB = require('./mock-deal-no-party-db');
 const MOCK_DEAL_NO_COMPANIES_HOUSE = require('./mock-deal-no-companies-house');
@@ -21,7 +21,7 @@ const MOCK_GEF_DEAL_SECOND_SUBMIT_MIA = require('./mock-gef-deal-second-submit-M
 const MOCK_GEF_DEAL_MIN = require('./mock-gef-deal-MIN');
 
 const ALL_MOCK_DEALS = [
-  MOCK_DEAL,
+  MOCK_BSS_EWCS_DEAL,
   MOCK_DEAL_NO_UKEF_ID,
   MOCK_DEAL_NO_PARTY_DB,
   MOCK_DEAL_NO_COMPANIES_HOUSE,

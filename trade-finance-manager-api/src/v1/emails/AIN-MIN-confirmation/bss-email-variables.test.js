@@ -1,7 +1,8 @@
+const { PROBABILITY_OF_DEFAULT } = require('@ukef/dtfs2-common');
 const bssEmailVariables = require('./bss-email-variables');
 const mapSubmittedDeal = require('../../mappings/map-submitted-deal');
 const CONSTANTS = require('../../../constants');
-const MOCK_BSS_DEAL = require('../../__mocks__/mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../__mocks__/mock-deal');
 
 describe('generate AIN/MIN confirmation email variables - BSS', () => {
   let mockFacilityLists = {
@@ -9,8 +10,17 @@ describe('generate AIN/MIN confirmation email variables - BSS', () => {
     unissued: 'test',
   };
 
+  const deal = {
+    dealSnapshot: {
+      ...MOCK_BSS_EWCS_DEAL,
+    },
+    tfm: {
+      probabilityOfDefault: PROBABILITY_OF_DEFAULT.DEFAULT_VALUE,
+    },
+  };
+
   it('should return object', async () => {
-    const mockSubmittedDeal = await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL });
+    const mockSubmittedDeal = await mapSubmittedDeal(deal);
 
     const result = bssEmailVariables(mockSubmittedDeal, mockFacilityLists);
 
@@ -34,7 +44,7 @@ describe('generate AIN/MIN confirmation email variables - BSS', () => {
   describe('when deal is MIN', () => {
     it('should return correct isAin/isMin properties', async () => {
       const mockSubmittedDeal = {
-        ...(await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL })),
+        ...(await mapSubmittedDeal(deal)),
         submissionType: CONSTANTS.DEALS.SUBMISSION_TYPE.MIN,
       };
 
@@ -52,7 +62,7 @@ describe('generate AIN/MIN confirmation email variables - BSS', () => {
         unissued: '',
       };
 
-      const mockSubmittedDeal = await mapSubmittedDeal({ dealSnapshot: MOCK_BSS_DEAL });
+      const mockSubmittedDeal = await mapSubmittedDeal(deal);
 
       const result = bssEmailVariables(mockSubmittedDeal, mockFacilityLists);
 

@@ -5,7 +5,7 @@ const generateDateReceived = require('./dateReceived');
 const addDealProduct = require('./dealProduct');
 const addDealPricingAndRisk = require('./dealPricingAndRisk');
 const addDealStage = require('./dealStage');
-const MOCK_DEAL_AIN = require('../../__mocks__/mock-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../__mocks__/mock-deal');
 const { mockUpdateDeal } = require('../../__mocks__/common-api-mocks');
 const api = require('../../api');
 const { MOCK_PORTAL_USERS } = require('../../__mocks__/mock-portal-users');
@@ -28,7 +28,7 @@ describe('deal submit - add TFM data', () => {
 
   it('returns an object with results from multiple functions', async () => {
     const mockDeal = mapSubmittedDeal({
-      dealSnapshot: MOCK_DEAL_AIN,
+      dealSnapshot: MOCK_BSS_EWCS_DEAL,
       tfm: {},
     });
 
