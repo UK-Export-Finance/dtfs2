@@ -33,6 +33,11 @@ context('User can view and sort deals', () => {
 
     cy.insertManyDeals(MOCK_DEALS, BANK1_MAKER1).then((insertedDeals) => {
       insertedDeals.forEach((deal) => {
+        /**
+         * wait to submit deals at different times
+         * otherwise sometimes, both deals have the same submission time
+         * and the test fails as the first deal is displayed as most recent
+         */
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1000);
         const { _id: dealId, mockFacilities } = deal;
