@@ -236,7 +236,7 @@ describe('getPortalActivities', () => {
   let mockApplicationResponse;
   let mockFacilityResponse;
   let mockUserResponse;
-  let isFeatureFlagEnabledMock;
+  let isPortalAmendmentsFeatureFlagEnabledMock;
 
   beforeEach(() => {
     mockResponse = mocks.MockResponse();
@@ -244,13 +244,13 @@ describe('getPortalActivities', () => {
     mockApplicationResponse = mocks.MockApplicationResponseSubmitted();
     mockFacilityResponse = mocks.MockFacilityResponse();
     mockUserResponse = mocks.MockUserResponseChecker();
-    isFeatureFlagEnabledMock = true;
+    isPortalAmendmentsFeatureFlagEnabledMock = true;
 
     api.getApplication.mockResolvedValue(mockApplicationResponse);
     api.getFacilities.mockResolvedValue(mockFacilityResponse);
     api.getUserDetails.mockResolvedValue(mockUserResponse);
 
-    jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(isFeatureFlagEnabledMock);
+    jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValueOnce(isPortalAmendmentsFeatureFlagEnabledMock);
   });
 
   afterEach(() => {
@@ -277,7 +277,7 @@ describe('getPortalActivities', () => {
     const mappedPortalActivities = mapPortalActivities(dealId, mockApplicationResponse.portalActivities);
 
     expect(mockResponse.render).toHaveBeenCalledWith('partials/application-activity.njk', {
-      isFeatureFlagEnabled: isFeatureFlagEnabledMock,
+      isPortalAmendmentsFeatureFlagEnabled: isPortalAmendmentsFeatureFlagEnabledMock,
       activeSubNavigation: 'activities',
       dealId: '1234567890abcdf123456789',
       previousStatus: mockApplicationResponse.previousStatus,

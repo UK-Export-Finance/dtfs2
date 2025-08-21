@@ -6,12 +6,13 @@ const render = pageRenderer(page);
 const dealId = '6597dffeb5ef5ff4267e5044';
 
 describe(page, () => {
-  describe('Application Sub Navigation when isFeatureFlagEnabled is false', () => {
+  describe('Application Sub Navigation when isPortalAmendmentsFeatureFlagEnabled is false', () => {
     const params = {
       activeSubNavigation: '/',
       dealId,
-      isFeatureFlagEnabled: false,
+      isPortalAmendmentsFeatureFlagEnabled: false,
     };
+
     it('should render the sub navigation with active the Application/Notice tab', () => {
       const wrapper = render(params);
 
@@ -31,12 +32,13 @@ describe(page, () => {
     });
   });
 
-  describe('Application Sub Navigation when isFeatureFlagEnabled is true', () => {
+  describe('Application Sub Navigation when isPortalAmendmentsFeatureFlagEnabled is true', () => {
     const params = {
       activeSubNavigation: '/',
       dealId,
-      isFeatureFlagEnabled: true,
+      isPortalAmendmentsFeatureFlagEnabled: true,
     };
+
     it('should render the sub navigation with active the Application/Notice tab', () => {
       const wrapper = render(params);
 

@@ -55,9 +55,9 @@ export const getApplicationAmendments = async (req: GetApplicationAmendmentsRequ
 
     const lastSubmittedPortalAmendmentDetails = await getSubmittedAmendmentDetails(deal, userToken);
 
-    const isFeatureFlagEnabled = isPortalFacilityAmendmentsFeatureFlagEnabled();
+    const isPortalAmendmentsFeatureFlagEnabled = isPortalFacilityAmendmentsFeatureFlagEnabled();
     const viewModel = {
-      isFeatureFlagEnabled,
+      isPortalAmendmentsFeatureFlagEnabled,
       activeSubNavigation: 'amendments',
       dealId,
       bankInternalRefName: deal.bankInternalRefName,

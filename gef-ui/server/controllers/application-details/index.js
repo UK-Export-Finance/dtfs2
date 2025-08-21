@@ -43,7 +43,7 @@ let userSession;
 let apiToken;
 
 function buildHeader(app) {
-  const isFeatureFlagEnabled = isPortalFacilityAmendmentsFeatureFlagEnabled();
+  const isPortalAmendmentsFeatureFlagEnabled = isPortalFacilityAmendmentsFeatureFlagEnabled();
 
   const main = {
     ukefDealId: app.ukefDealId,
@@ -57,7 +57,7 @@ function buildHeader(app) {
     comments: app.comments,
     applicationType: app.submissionType,
     submissionCount: app.submissionCount,
-    isFeatureFlagEnabled,
+    isPortalAmendmentsFeatureFlagEnabled,
     activeSubNavigation: '/',
     portalAmendmentStatus: app.portalAmendmentStatus,
     isPortalAmendmentInProgress: app.isPortalAmendmentInProgress,

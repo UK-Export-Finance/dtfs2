@@ -33,7 +33,7 @@
    }
 %}
 
-{% if isFeatureFlagEnabled %}
+{% if isPortalAmendmentsFeatureFlagEnabled %}
    {% set items = [applicationNotice, amendments, activity] %}
 {% else %}
    {% set items = [applicationNotice, activity] %}

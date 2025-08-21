@@ -56,14 +56,14 @@ const getPortalActivities = async (req, res) => {
   const portalActivities = mapPortalActivities(deal._id, deal.portalActivities);
   const checkedBy = `${checker.firstname} ${checker.surname}`;
   const createdBy = `${deal.maker.firstname} ${deal.maker.surname}`;
-  const isFeatureFlagEnabled = isPortalFacilityAmendmentsFeatureFlagEnabled();
+  const isPortalAmendmentsFeatureFlagEnabled = isPortalFacilityAmendmentsFeatureFlagEnabled();
 
   /*
   As activities does not have access to parameters in application-details
   each has to be obtained and rendered to populate the application banner
   */
   return res.render('partials/application-activity.njk', {
-    isFeatureFlagEnabled,
+    isPortalAmendmentsFeatureFlagEnabled,
     activeSubNavigation: 'activities',
     dealId,
     previousStatus: deal.previousStatus,
