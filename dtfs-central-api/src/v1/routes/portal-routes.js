@@ -88,14 +88,14 @@ portalRouter.use((req, res, next) => {
  *               auditDetails:
  *                 type: object
  *                 $ref: '#/definitions/PortalAuditDetails'
- *           example:
- *             bankInternalRefName: 'a1'
- *             additionalRefName: 'test'
- *             bank: { id: '9' }
- *             maker: { _id: '123abc' }
- *             details:
- *               ukefDealId: '20010739'
- *               submissionCount: 1
+ *         example:
+ *           bankInternalRefName: 'a1'
+ *           additionalRefName: 'test'
+ *           bank: { id: '9' }
+ *           maker: { _id: '123abc' }
+ *           details:
+ *           ukefDealId: '20010739'
+ *           submissionCount: 1
  *     responses:
  *       200:
  *         description: OK
@@ -152,12 +152,6 @@ portalRouter.route('/deals').post(createDealController.createDealPost);
  *                       example: 123456abc
  *       404:
  *         description: Not found
- */
-portalRouter.route('/deals/:id').get(getDealController.findOneDealGet);
-
-/**
- * @openapi
- * /portal/deals/:id:
  *   put:
  *     summary: Update a Portal BSS deal
  *     tags: [Portal - BSS]
@@ -201,15 +195,9 @@ portalRouter.route('/deals/:id').get(getDealController.findOneDealGet);
  *                       example: true
  *       404:
  *         description: Not found
- */
-portalRouter.route('/deals/:id').put(updateDealController.updateDealPut);
-
-/**
- * @openapi
- * /portal/deals/:id:
  *   delete:
  *     summary: Delete a Portal BSS deal
- *     tags: [TFM]
+ *     tags: [Portal - BSS]
  *     description: Delete a Portal BSS deal by ID
  *     parameters:
  *       - in: path
@@ -227,7 +215,7 @@ portalRouter.route('/deals/:id').put(updateDealController.updateDealPut);
  *               acknowledged: true
  *               deletedCount: 1
  */
-portalRouter.route('/deals/:id').delete(deleteDealController.deleteDeal);
+portalRouter.route('/deals/:id').get(getDealController.findOneDealGet).put(updateDealController.updateDealPut).delete(deleteDealController.deleteDeal);
 
 /**
  * @openapi
@@ -387,6 +375,47 @@ portalRouter.route('/facilities').get(getFacilitiesController.findAllGet);
  */
 portalRouter.route('/facilities').post(createFacilityController.createFacilityPost);
 
+/**
+ * @openapi
+ * /portal/multiple-facilities:
+ *   post:
+ *     summary: Create BSS/EWCS facilities in Portal facilities collection (e2e tests only)
+ *     tags: [Portal - BSS]
+ *     description: Create BSS/EWCS facilities in Portal facilities collection
+ *     requestBody:
+ *       description: Fields required to create facilities.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               facilities:
+ *                 type: array
+ *               dealId:
+ *                 type: string
+ *               user:
+ *                 type: object
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
+ *           example:
+ *             facilities: [{ aNewField: true }]
+ *             dealId: '123abc'
+ *             user: { _id: '123456abc' }
+ *             auditDetails: { userType: 'portal', id: 'abcdef123456abcdef123456' }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               _id: '123456abc'
+ *       400:
+ *         description: Invalid Deal Id
+ *       404:
+ *         description: Deal not found
+ */
 portalRouter.route('/multiple-facilities').post(createMultipleFacilitiesController.createMultipleFacilitiesPost);
 
 /**
@@ -443,12 +472,6 @@ portalRouter.route('/facilities/amendments').get(getAllFacilityAmendmentControll
  *               $ref: '#/definitions/FacilityBSS'
  *       404:
  *         description: Not found
- */
-portalRouter.route('/facilities/:id').get(getFacilityController.findOneFacilityGet);
-
-/**
- * @openapi
- * /portal/facilities/:id:
  *   put:
  *     summary: Update a Portal BSS/EWCS facility
  *     tags: [Portal - BSS]
@@ -488,15 +511,9 @@ portalRouter.route('/facilities/:id').get(getFacilityController.findOneFacilityG
  *                       example: true
  *       404:
  *         description: Not found
- */
-portalRouter.route('/facilities/:id').put(updateFacilityController.updateFacilityPut);
-
-/**
- * @openapi
- * /portal/facilities/:id:
  *   delete:
  *     summary: Delete a Portal BSS/EWCS facility
- *     tags: [TFM]
+ *     tags: [Portal - BSS]
  *     description: Delete a Portal BSS/EWCS facility by ID. Also updates the facilities array in the associated deal.
  *     parameters:
  *       - in: path
@@ -516,7 +533,11 @@ portalRouter.route('/facilities/:id').put(updateFacilityController.updateFacilit
  *       404:
  *         description: Not found
  */
-portalRouter.route('/facilities/:id').delete(deleteFacilityController.deleteFacility);
+portalRouter
+  .route('/facilities/:id')
+  .get(getFacilityController.findOneFacilityGet)
+  .put(updateFacilityController.updateFacilityPut)
+  .delete(deleteFacilityController.deleteFacility);
 
 /**
  * @openapi
@@ -757,6 +778,12 @@ portalRouter
  *               newStatus:
  *                  type: string
  *                  enum: ["Ready for checker's approval"]
+ *               makersEmail:
+ *                 type: string
+ *               checkersEmail:
+ *                 type: string
+ *               emailVariables:
+ *                type: object
  *     responses:
  *       200:
  *         description: OK
@@ -815,6 +842,12 @@ portalRouter
  *                  enum: ["Acknowledged"]
  *               referenceNumber:
  *                  type: string
+ *               makersEmail:
+ *                 type: string
+ *               checkersEmail:
+ *                 type: string
+ *               emailVariables:
+ *                type: object
  *     responses:
  *       200:
  *         description: OK
@@ -971,6 +1004,18 @@ portalRouter
  *     summary: Create a GEF deal in Portal deals collection
  *     tags: [Portal - GEF]
  *     description: Create a deal in Portal deals collection
+ *     requestBody:
+ *       description: Fields required to create a deal.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               deal:
+ *                 type: object
+ *           example:
+ *             deal: { _id: '123456abc' }
  *     responses:
  *       200:
  *         description: OK
@@ -1004,12 +1049,6 @@ portalRouter.route('/gef/deals').post(createGefDealController.createDealPost);
  *               $ref: '#/definitions/DealGEF'
  *       404:
  *         description: Not found
- */
-portalRouter.route('/gef/deals/:id').get(getGefDealController.findOneDealGet);
-
-/**
- * @openapi
- * /portal/gef/deals/:id:
  *   put:
  *     summary: Update a Portal GEF deal
  *     tags: [Portal - GEF]
@@ -1027,9 +1066,15 @@ portalRouter.route('/gef/deals/:id').get(getGefDealController.findOneDealGet);
  *         application/json:
  *           schema:
  *             type: object
+ *            properties:
+ *              dealUpdate:
+ *               type: object
+ *             auditDetails:
+ *               type: object
+ *               $ref: '#/definitions/PortalAuditDetails'
  *             example:
- *               user: { _id: '123456abc' }
  *               dealUpdate: { aNewField: true }
+ *               auditDetails: { userType: 'portal', id: 'abcdef123456abcdef123456' }
  *     responses:
  *       200:
  *         description: OK
@@ -1045,7 +1090,7 @@ portalRouter.route('/gef/deals/:id').get(getGefDealController.findOneDealGet);
  *       404:
  *         description: Not found
  */
-portalRouter.route('/gef/deals/:id').put(updateGefDealController.updateDealPut);
+portalRouter.route('/gef/deals/:id').get(getGefDealController.findOneDealGet).put(updateGefDealController.updateDealPut);
 
 /**
  * @openapi
@@ -1061,6 +1106,16 @@ portalRouter.route('/gef/deals/:id').put(updateGefDealController.updateDealPut);
  *           type: string
  *         required: true
  *         description: Deal ID to find deal and facilities and portalActivities to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *            properties:
+ *             auditDetails:
+ *               type: object
+ *               $ref: '#/definitions/PortalAuditDetails'
  *     responses:
  *       200:
  *         description: OK
@@ -1093,6 +1148,12 @@ portalRouter.route('/gef/deals/activity/:id').put(gefActivityController.generate
  *         application/json:
  *           schema:
  *             type: object
+ *            properties:
+ *             status:
+ *              type: string
+ *             auditDetails:
+ *               type: object
+ *               $ref: '#/definitions/PortalAuditDetails'
  *             example:
  *               status: UKEF_ACKNOWLEDGED
  *     responses:
@@ -1182,6 +1243,8 @@ portalRouter.route('/gef/deals/:id/comment').post(addCommentToGefDeal.addUnderwr
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/FacilitiesGEF'
+ *       404:
+ *         description: Invalid Deal Id
  */
 portalRouter.route('/gef/deals/:id/facilities').get(getGefFacilitiesController.findAllGet);
 
@@ -1291,7 +1354,36 @@ portalRouter.route('/durable-functions').delete(durableFunctionsController.delet
  */
 portalRouter.route('/cron-jobs').delete(cronJobsController.deleteAllEstoreLogs);
 
+/**
+ * @openapi
+ * /gef/mandatory-criteria/latest:
+ *   get:
+ *     summary: Get latest gef mandatory criteria
+ *     tags: [Portal - GEF]
+ *     description: Get latest gef mandatory criteria
+ *     responses:
+ *       200:
+ *         description: OK
+ *       404:
+ *         description: No mandatory criteria found
+ */
 portalRouter.route('/gef/mandatory-criteria/latest').get(mandatoryCriteria.getLatestGefMandatoryCriteria);
+
+/**
+ * @openapi
+ * /gef/mandatory-criteria/version/:version:
+ *   get:
+ *     summary: Get gef mandatory criteria by version
+ *     tags: [Portal - GEF]
+ *     description: Get gef mandatory criteria by version
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Invalid Version
+ *       404:
+ *         description: No mandatory criteria found
+ */
 portalRouter.route('/gef/mandatory-criteria/version/:version').get(mandatoryCriteria.getGefMandatoryCriteriaByVersion);
 
 module.exports = portalRouter;
