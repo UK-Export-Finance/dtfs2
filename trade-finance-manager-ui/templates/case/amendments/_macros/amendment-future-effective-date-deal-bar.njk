@@ -1,0 +1,23 @@
+ {% from "moj/components/banner/macro.njk" import mojBanner %}
+
+ {% macro render(params) %}
+  {% set hasFutureEffectiveDatePortalAmendments = params.hasFutureEffectiveDatePortalAmendments %}
+  {% set formattedFutureEffectiveDatePortalAmendments = params.formattedFutureEffectiveDatePortalAmendments %}
+
+  {% if hasFutureEffectiveDatePortalAmendments %}
+    {% for futureEffectiveDatePortalAmendment in formattedFutureEffectiveDatePortalAmendments %}
+      {% set bannerHtml %}
+        <p class="govuk-body" data-cy="amendment--future-effective-date-deal-bar-{{ futureEffectiveDatePortalAmendment.ukefFacilityId }}">
+          There is an amendment ({{ futureEffectiveDatePortalAmendment.referenceNumber }}) on Facility ID {{ futureEffectiveDatePortalAmendment.ukefFacilityId }} effective on {{ futureEffectiveDatePortalAmendment.effectiveDate }}. <a href="{{ futureEffectiveDatePortalAmendment.href }}" data-cy="amendment--future-effective-date-deal-link-{{ futureEffectiveDatePortalAmendment.ukefFacilityId }}">See amendment details </a>
+        </p>
+      {% endset %}
+
+      {{ mojBanner({
+        type: 'information',
+        classes: 'govuk-!-margin-bottom-0 govuk-!-margin-top-6',
+        html: bannerHtml
+      }) }}
+    {% endfor %}
+  {% endif %}
+
+{% endmacro %}
