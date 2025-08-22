@@ -924,7 +924,7 @@ portalRouter
  * /deals/:dealId/all-types-amendments:
  *   get:
  *     summary: Get all type facility amendments on a given deal
- *     tags: [Portal - Amendments]
+ *     tags: [Portal - Amendments, TFM - Amendments]
  *     description: Get all type facility amendments on a given deal
  *     parameters:
  *       - in: path
