@@ -84,7 +84,7 @@ export const getOrCreateParty = async (
       throw new Error('Unable to get industry sector data');
     }
 
-    const { acbsIndustryId: ukefIndustryId, acbsSectorId: ukefSectorId } = industryData.data[0];
+    const { acbsIndustryName: ukefIndustryName, acbsSectorName: ukefSectorName } = industryData.data[0];
     const ukEntity = isUkEntity ? 'Yes' : 'No';
 
     const response: { status: number; data: unknown } = await axios({
@@ -96,8 +96,8 @@ export const getOrCreateParty = async (
         companyName,
         probabilityOfDefault,
         ukEntity,
-        ukefIndustryId,
-        ukefSectorId,
+        ukefIndustryName,
+        ukefSectorName,
       },
     });
 
