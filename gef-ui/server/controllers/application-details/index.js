@@ -9,6 +9,7 @@ const {
   getLatestAmendmentsByFacility,
   now,
   DATE_FORMATS,
+  isPortalFacilityAmendmentsFeatureFlagEnabled,
 } = require('@ukef/dtfs2-common');
 const { format, fromUnixTime } = require('date-fns');
 const { getTfmDeal, getPortalAmendmentsOnDeal, getFacilities, getFacility } = require('../../services/api');
@@ -42,6 +43,8 @@ let userSession;
 let apiToken;
 
 function buildHeader(app) {
+  const isPortalAmendmentsFeatureFlagEnabled = isPortalFacilityAmendmentsFeatureFlagEnabled();
+
   const main = {
     ukefDealId: app.ukefDealId,
     submissionDate: app.submissionDate,
@@ -54,6 +57,7 @@ function buildHeader(app) {
     comments: app.comments,
     applicationType: app.submissionType,
     submissionCount: app.submissionCount,
+    isPortalAmendmentsFeatureFlagEnabled,
     activeSubNavigation: '/',
     portalAmendmentStatus: app.portalAmendmentStatus,
     isPortalAmendmentInProgress: app.isPortalAmendmentInProgress,
