@@ -1,5 +1,5 @@
+import { UKEF_ID } from '@ukef/dtfs2-common';
 import { areValidUkefIds } from './validIds';
-import { UKEF_ID } from '../constants';
 
 const eStoreData = {
   dealId: '6597dffeb5ef5ff4267e5044',

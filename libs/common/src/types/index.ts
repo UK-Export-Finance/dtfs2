@@ -48,3 +48,4 @@ export * from './mandatory-criteria';
 export * from './submitted-amendment-details';
 export * from './mdm-response';
 export * from './facility-exposure-period';
+export * from './number-generator';

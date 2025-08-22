@@ -10,10 +10,10 @@
 
 import axios from 'axios';
 import * as dotenv from 'dotenv';
-import { HEADERS } from '@ukef/dtfs2-common';
+import { HEADERS, ENTITY_TYPE } from '@ukef/dtfs2-common';
 import { Request, Response } from 'express';
 import { Amendment } from '../../interfaces';
-import { ENTITY_TYPE, UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
+import { UNDERWRITER_MANAGER_DECISIONS } from '../../constants';
 import { validUkefId } from '../../helpers';
 
 dotenv.config();

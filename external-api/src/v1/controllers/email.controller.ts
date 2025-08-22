@@ -38,7 +38,7 @@ export const emailNotification = async (req: Request, res: Response) => {
    * (in E2E tests to stop spamming of GovNotify API)
    */
   if (isGovNotifyMocked()) {
-    console.info('Mocking APIM MDM GovNotify API call');
+    console.info('⚠️ Mocking APIM MDM GovNotify API call ⚠️');
     return res.status(HttpStatusCode.Ok).send({});
   }
 
