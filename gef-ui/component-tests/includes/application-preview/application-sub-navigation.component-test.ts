@@ -6,27 +6,56 @@ const render = pageRenderer(page);
 const dealId = '6597dffeb5ef5ff4267e5044';
 
 describe(page, () => {
-  const params = {
-    activeSubNavigation: '/',
-    dealId,
-  };
+  describe('Application Sub Navigation when isPortalAmendmentsFeatureFlagEnabled is false', () => {
+    const params = {
+      activeSubNavigation: '/',
+      dealId,
+      isPortalAmendmentsFeatureFlagEnabled: false,
+    };
 
-  it('should render the sub navigation with active the Application/Notice tab', () => {
-    const wrapper = render(params);
+    it('should render the sub navigation with active the Application/Notice tab', () => {
+      const wrapper = render(params);
 
-    wrapper.expectElement('[data-cy="application-preview-link"]').toExist();
+      wrapper.expectElement('[data-cy="application-preview-link"]').toExist();
+    });
+
+    it('should not render the sub navigation with the Amendments tab', () => {
+      const wrapper = render(params);
+
+      wrapper.expectElement('[data-cy="application-amendments-link"]').notToExist();
+    });
+
+    it('should render the sub navigation with active the Activities tab', () => {
+      const wrapper = render(params);
+
+      wrapper.expectElement('[data-cy="application-activities-link"]').toExist();
+    });
   });
 
-  it('should render the sub navigation with active the Amendments tab', () => {
-    params.activeSubNavigation = 'amendments';
-    const wrapper = render(params);
+  describe('Application Sub Navigation when isPortalAmendmentsFeatureFlagEnabled is true', () => {
+    const params = {
+      activeSubNavigation: '/',
+      dealId,
+      isPortalAmendmentsFeatureFlagEnabled: true,
+    };
 
-    wrapper.expectElement('[data-cy="application-amendments-link"]').toExist();
-  });
+    it('should render the sub navigation with active the Application/Notice tab', () => {
+      const wrapper = render(params);
 
-  it('should render the sub navigation with active the Activities tab', () => {
-    const wrapper = render(params);
+      wrapper.expectElement('[data-cy="application-preview-link"]').toExist();
+    });
 
-    wrapper.expectElement('[data-cy="application-activities-link"]').toExist();
+    it('should render the sub navigation with active the Amendments tab', () => {
+      params.activeSubNavigation = 'amendments';
+      const wrapper = render(params);
+
+      wrapper.expectElement('[data-cy="application-amendments-link"]').toExist();
+    });
+
+    it('should render the sub navigation with active the Activities tab', () => {
+      const wrapper = render(params);
+
+      wrapper.expectElement('[data-cy="application-activities-link"]').toExist();
+    });
   });
 });

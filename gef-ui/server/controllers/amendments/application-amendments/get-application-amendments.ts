@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PORTAL_AMENDMENT_STATUS, TFM_AMENDMENT_STATUS, isPortalFacilityAmendmentsFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import api from '../../../services/api';
 import { asLoggedInUserSession } from '../../../utils/express-session';
 import { getSubmittedAmendmentDetails } from '../../../utils/submitted-amendment-details';
@@ -55,7 +55,9 @@ export const getApplicationAmendments = async (req: GetApplicationAmendmentsRequ
 
     const lastSubmittedPortalAmendmentDetails = await getSubmittedAmendmentDetails(deal, userToken);
 
+    const isPortalAmendmentsFeatureFlagEnabled = isPortalFacilityAmendmentsFeatureFlagEnabled();
     const viewModel = {
+      isPortalAmendmentsFeatureFlagEnabled,
       activeSubNavigation: 'amendments',
       dealId,
       bankInternalRefName: deal.bankInternalRefName,
