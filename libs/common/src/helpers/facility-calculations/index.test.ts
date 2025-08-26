@@ -401,7 +401,7 @@ describe('GEF drawn amount', () => {
       expect(response).toBe(29);
     });
 
-    it('should return null when both cover start and end dates are null', () => {
+    it('should return 0 when both cover start and end dates are null', () => {
       // Arrange
       const coverStartDate = null;
       const coverEndDate = null;
