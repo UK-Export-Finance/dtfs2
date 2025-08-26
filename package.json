@@ -66,9 +66,6 @@
     ]
   },
   "dependencies": {
-    "@azure/msal-node": "^2.16.3",
-    "axios": "1.8.2",
-    "express": "^4.21.2",
     "release-please": "^17.1.2"
   },
   "devDependencies": {
@@ -98,6 +95,10 @@
   "overrides": {
     "csurf": {
       "cookie": "0.7.0"
-    }
+    },
+    "axios": "1.8.2",
+    "express": "^4.21.2",
+    "ts-node": "^10.9.2",
+    "@azure/msal-node": "^2.16.3"
   }
 }
