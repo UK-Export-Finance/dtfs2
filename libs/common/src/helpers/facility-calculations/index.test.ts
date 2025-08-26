@@ -245,61 +245,157 @@ describe('GEF drawn amount', () => {
   });
 
   describe('calculateDaysOfCover', () => {
-    it('should return 0 as the difference in days is only one day', () => {
+    it('should return 0 for a cash facility, when there is no difference in days', () => {
       // Arrange
       const coverStartDate = '0';
-      const coverEndDate = '1';
+      const coverEndDate = '0';
+      const type: GefFacilityType = GEF_FACILITY_TYPE.CASH;
 
       // Act
-      const response = calculateDaysOfCover(coverStartDate, coverEndDate);
+      const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
       expect(response).toBe(0);
     });
 
-    it('should return difference in cover start and end date in days', () => {
+    it('should return 1 for a contingent facility, when there is no difference in days', () => {
+      // Arrange
+      const coverStartDate = '0';
+      const coverEndDate = '0';
+      const type: GefFacilityType = GEF_FACILITY_TYPE.CONTINGENT;
+
+      // Act
+      const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
+
+      // Assert
+      expect(response).toBe(1);
+    });
+
+    it('should return 0 as the difference in days is only one day for a cash facility', () => {
+      // Arrange
+      const coverStartDate = '0';
+      const coverEndDate = '1';
+      const type: GefFacilityType = GEF_FACILITY_TYPE.CASH;
+
+      // Act
+      const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
+
+      // Assert
+      expect(response).toBe(0);
+    });
+
+    it('should return 1 as the difference in days is only one day for a contingent facility', () => {
+      // Arrange
+      const coverStartDate = '0';
+      const coverEndDate = '1';
+      const type: GefFacilityType = GEF_FACILITY_TYPE.CONTINGENT;
+
+      // Act
+      const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
+
+      // Assert
+      expect(response).toBe(1);
+    });
+
+    it('should return difference in cover start and end date in days for a cash facility', () => {
       // Arrange
       const coverStartDate = '1735689600000';
       const coverEndDate = '1738195200000';
+      const type: GefFacilityType = GEF_FACILITY_TYPE.CASH;
 
       // Act
-      const response = calculateDaysOfCover(coverStartDate, coverEndDate);
+      const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
       expect(response).toBe(29);
     });
 
-    it('should return difference in cover start and end date in days when cover start date is in string format', () => {
+    it('should return difference in cover start and end date in days for a contingent facility', () => {
+      // Arrange
+      const coverStartDate = '1735689600000';
+      const coverEndDate = '1738195200000';
+      const type: GefFacilityType = GEF_FACILITY_TYPE.CONTINGENT;
+
+      // Act
+      const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
+
+      // Assert
+      expect(response).toBe(30);
+    });
+
+    it('should return difference in cover start and end date in days when cover start date is in string format for a cash facility', () => {
       // Arrange
       const coverStartDate = '2025-01-01T00:00:00.000Z';
       const coverEndDate = '1738195200000';
+      const type: GefFacilityType = GEF_FACILITY_TYPE.CASH;
 
       // Act
-      const response = calculateDaysOfCover(coverStartDate, coverEndDate);
+      const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
       expect(response).toBe(29);
     });
 
-    it('should return difference in cover start and end date in days when cover end date is in string format', () => {
+    it('should return difference in cover start and end date in days when cover start date is in string format for a contingent facility', () => {
+      // Arrange
+      const coverStartDate = '2025-01-01T00:00:00.000Z';
+      const coverEndDate = '1738195200000';
+      const type: GefFacilityType = GEF_FACILITY_TYPE.CONTINGENT;
+
+      // Act
+      const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
+
+      // Assert
+      expect(response).toBe(30);
+    });
+
+    it('should return difference in cover start and end date in days when cover end date is in string format for a cash facility', () => {
       // Arrange
       const coverStartDate = '1735689600000';
       const coverEndDate = '2025-01-30T00:00:00.000Z';
+      const type: GefFacilityType = GEF_FACILITY_TYPE.CASH;
 
       // Act
-      const response = calculateDaysOfCover(coverStartDate, coverEndDate);
+      const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
       expect(response).toBe(29);
     });
 
-    it('should return difference in cover start and end date in days when both dates string format', () => {
+    it('should return difference in cover start and end date in days when cover end date is in string format for a contingent facility', () => {
+      // Arrange
+      const coverStartDate = '1735689600000';
+      const coverEndDate = '2025-01-30T00:00:00.000Z';
+      const type: GefFacilityType = GEF_FACILITY_TYPE.CONTINGENT;
+
+      // Act
+      const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
+
+      // Assert
+      expect(response).toBe(30);
+    });
+
+    it('should return difference in cover start and end date in days when both dates string format for a contingent facility', () => {
       // Arrange
       const coverStartDate = '2025-01-01T00:00:00.000Z';
       const coverEndDate = '2025-01-30T00:00:00.000Z';
+      const type: GefFacilityType = GEF_FACILITY_TYPE.CONTINGENT;
 
       // Act
-      const response = calculateDaysOfCover(coverStartDate, coverEndDate);
+      const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
+
+      // Assert
+      expect(response).toBe(30);
+    });
+
+    it('should return difference in cover start and end date in days when both dates string format for a cash facility', () => {
+      // Arrange
+      const coverStartDate = '2025-01-01T00:00:00.000Z';
+      const coverEndDate = '2025-01-30T00:00:00.000Z';
+      const type: GefFacilityType = GEF_FACILITY_TYPE.CASH;
+
+      // Act
+      const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
       expect(response).toBe(29);
@@ -309,9 +405,10 @@ describe('GEF drawn amount', () => {
       // Arrange
       const coverStartDate = null;
       const coverEndDate = null;
+      const type: GefFacilityType = GEF_FACILITY_TYPE.CASH;
 
       // Act
-      const response = calculateDaysOfCover(coverStartDate, coverEndDate);
+      const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
       expect(response).toBe(0);
