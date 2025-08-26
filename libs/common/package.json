@@ -47,7 +47,7 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
-    "@azure/msal-node": "^2.16.2",
+    "@azure/msal-node": "^3.7.2",
     "@types/lodash": "^4.17.20",
     "axios": "1.8.2",
     "big.js": "^6.2.2",
@@ -64,7 +64,7 @@
     "node-mocks-http": "^1.17.2",
     "qs": "^6.14.0",
     "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.25",
+    "typeorm": "^0.3.26",
     "zod": "^3.25.76"
   },
   "devDependencies": {
