@@ -55,17 +55,23 @@ export const calculateDrawnAmount = (facilityValue: number, coverPercentage: num
  *
  * Accepts dates as either Unix timestamp strings, Date objects, or null.
  * Converts the input dates to milliseconds and computes the difference in days.
+ * If the facility type is `Contingent` then an additional day is added to the difference.
  *
  * @param coverStartDate - The start date of the cover, as a Unix timestamp string, Date object, or null.
  * @param coverEndDate - The end date of the cover, as a Unix timestamp string, Date object, or null.
+ * @param type - The type of the facility.
  * @returns The number of days between the start and end dates.
  */
-export const calculateDaysOfCover = (coverStartDate: UnixTimestampString | Date | null, coverEndDate: UnixTimestampString | Date | null): number => {
+export const calculateDaysOfCover = (
+  type: FacilityType,
+  coverStartDate: UnixTimestampString | Date | null,
+  coverEndDate: UnixTimestampString | Date | null,
+): number => {
   const startDate = coverStartDate?.toString()?.includes('T') ? new Date(String(coverStartDate)).valueOf() : Number(coverStartDate);
-
   const endDate = coverEndDate?.toString()?.includes('T') ? new Date(String(coverEndDate)).valueOf() : Number(coverEndDate);
+  const difference = differenceInDays(new Date(endDate), new Date(startDate));
 
-  return differenceInDays(new Date(endDate), new Date(startDate));
+  return type === CONTINGENT ? difference + 1 : difference;
 };
 
 /**
@@ -95,7 +101,7 @@ export const calculateGefFacilityFeeRecord = (facility: Facility) => {
     const { interestPercentage, dayCountBasis, value, coverPercentage, coverStartDate, coverEndDate, type } = facility;
 
     const drawnAmount = calculateDrawnAmount(value, coverPercentage, type);
-    const daysOfCover = calculateDaysOfCover(coverStartDate, coverEndDate);
+    const daysOfCover = calculateDaysOfCover(type, coverStartDate, coverEndDate);
     const feeRecord = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, interestPercentage);
 
     return feeRecord;
