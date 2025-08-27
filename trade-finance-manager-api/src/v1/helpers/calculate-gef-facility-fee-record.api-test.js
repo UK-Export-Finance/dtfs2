@@ -20,9 +20,9 @@ describe('calculate-gef-facility-fee-record', () => {
 
   describe('calculateDaysOfCover', () => {
     it('should return the amount of days between start and end cover dates for a cash facility', () => {
-      const result = calculateDaysOfCover(mockCoverStartDate, mockCoverEndDate);
+      const result = calculateDaysOfCover(FACILITY_TYPE.CASH, mockCoverStartDate, mockCoverEndDate);
 
-      const expected = differenceInDays(FACILITY_TYPE.CASH, new Date(Number(mockCoverEndDate)), new Date(Number(mockCoverStartDate)));
+      const expected = differenceInDays(new Date(Number(mockCoverEndDate)), new Date(Number(mockCoverStartDate)));
 
       expect(result).toEqual(expected);
       expect(typeof result).toEqual('number');
@@ -33,7 +33,7 @@ describe('calculate-gef-facility-fee-record', () => {
     it('should return correct calculation', () => {
       const drawnAmount = calculateDrawnAmount(mockFacilityValue, mockCoverPercentage);
 
-      const daysOfCover = calculateDaysOfCover(mockCoverStartDate, mockCoverEndDate);
+      const daysOfCover = calculateDaysOfCover(FACILITY_TYPE.CASH, mockCoverStartDate, mockCoverEndDate);
 
       const result = calculateFeeAmount(drawnAmount, daysOfCover, mockDayBasis, mockInterestPercentage);
 
