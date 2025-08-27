@@ -415,6 +415,8 @@ portalRouter.route('/facilities').post(createFacilityController.createFacilityPo
  *         description: Invalid Deal Id
  *       404:
  *         description: Deal not found
+ *       500:
+ *         description: Internal server error
  */
 portalRouter.route('/multiple-facilities').post(createMultipleFacilitiesController.createMultipleFacilitiesPost);
 
