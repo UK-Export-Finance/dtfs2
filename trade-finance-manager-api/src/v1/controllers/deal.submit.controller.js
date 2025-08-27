@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { findOneTfmDeal, findOnePortalDeal, findOneGefDeal } = require('./deal.controller');
@@ -48,156 +49,162 @@ const getPortalDeal = async (dealId, dealType) => {
  * Azure function
  */
 const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) => {
-  const deal = await getPortalDeal(dealId, dealType);
+  try {
+    const deal = await getPortalDeal(dealId, dealType);
 
-  if (!deal) {
-    console.error('Unable to find deal %s upon submission to TFM', dealId);
-    return false;
-  }
+    if (!deal) {
+      console.error('Unable to find deal %s upon submission to TFM', dealId);
+      return false;
+    }
 
-  const submittedDeal = await api.submitDeal(dealType, dealId, auditDetails);
-  const mappedDeal = mapSubmittedDeal(submittedDeal);
+    const submittedDeal = await api.submitDeal(dealType, dealId, auditDetails);
 
-  const { submissionCount } = mappedDeal;
-  const firstDealSubmission = submissionCount === 1;
-  const dealHasBeenResubmit = submissionCount > 1;
+    const mappedDeal = mapSubmittedDeal(submittedDeal);
 
-  if (firstDealSubmission) {
-    const acceptableTaskSubmissionTypes = [CONSTANTS.DEALS.SUBMISSION_TYPE.AIN, CONSTANTS.DEALS.SUBMISSION_TYPE.MIA];
-    // Updates portal deal status
-    await updatePortalDealStatus(mappedDeal, auditDetails);
+    const { submissionCount } = mappedDeal;
+    const firstDealSubmission = submissionCount === 1;
+    const dealHasBeenResubmit = submissionCount > 1;
 
-    /**
-     * Below action is performed to retrieve the latest portal application status.
-     * Which at the time of first fetch would have been changed to `Acknowledged`
-     * if AIN/MIN from `Submitted`.
-     *
-     * Not fetching the latest portal deal status would cause TFM deal status to be
-     * an `Application` rather than `Confirmed`.
-     */
-
-    const updatedPortalDeal = await getPortalDeal(dealId, dealType);
-    const { status } = updatedPortalDeal;
-    const updatedMappedDeal = {
-      ...mappedDeal,
-      status,
-    };
-
-    // TFM properties (deal.tfm)
-    const dealWithTfmData = await addTfmDealData(updatedMappedDeal, auditDetails);
-    const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData, auditDetails);
-    const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn, auditDetails);
-
-    // Facilities
-    const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions, auditDetails);
-
-    // Estore
-    let dealUpdate = await createEstoreSite(updatedDealWithUpdatedFacilities);
-
-    // TFM tasks
-    if (acceptableTaskSubmissionTypes.includes(updatedMappedDeal.submissionType)) {
-      dealUpdate = await createDealTasks(dealUpdate, auditDetails);
-      const { firstTaskEmail } = await sendDealSubmitEmails(dealUpdate);
+    if (firstDealSubmission) {
+      const acceptableTaskSubmissionTypes = [CONSTANTS.DEALS.SUBMISSION_TYPE.AIN, CONSTANTS.DEALS.SUBMISSION_TYPE.MIA];
+      // Updates portal deal status
+      await updatePortalDealStatus(mappedDeal, auditDetails);
 
       /**
-       * Add an emailSent flag to the first task.
-       * This prevents multiple emails from being sent.
+       * Below action is performed to retrieve the latest portal application status.
+       * Which at the time of first fetch would have been changed to `Acknowledged`
+       * if AIN/MIN from `Submitted`.
+       *
+       * Not fetching the latest portal deal status would cause TFM deal status to be
+       * an `Application` rather than `Confirmed`.
        */
-      dealUpdate.tfm.tasks = addFirstTaskEmailSentFlag(firstTaskEmail, dealUpdate.tfm.tasks);
-    }
 
-    // Update the deal with all the above modifications
-    const tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
+      const updatedPortalDeal = await getPortalDeal(dealId, dealType);
+      const { status } = updatedPortalDeal;
+      const updatedMappedDeal = {
+        ...mappedDeal,
+        status,
+      };
 
-    // Submit to ACBS
-    const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
+      // TFM properties (deal.tfm)
+      const dealWithTfmData = await addTfmDealData(updatedMappedDeal, auditDetails);
+      const updatedDealWithPartyUrn = await addPartyUrns(dealWithTfmData, auditDetails);
+      const updatedDealWithDealCurrencyConversions = await convertDealCurrencies(updatedDealWithPartyUrn, auditDetails);
 
-    if (canSubmitDealToACBS) {
-      await createACBS(dealId);
-    }
+      // Facilities
+      const updatedDealWithUpdatedFacilities = await updateFacilities(updatedDealWithDealCurrencyConversions, auditDetails);
 
-    return tfmDeal;
-  }
+      // Estore
+      let dealUpdate = await createEstoreSite(updatedDealWithUpdatedFacilities);
 
-  if (dealHasBeenResubmit) {
-    let tfmDeal = await findOneTfmDeal(dealId);
-    /**
-     * checks if can update to MIN
-     * if it can, changes mappedDeal to show MIN to allow gef fee record to be calculated
-     * isUpdatingToMIN then also used to update deal to MIN
-     */
-    const isUpdatingToMIN = shouldUpdateDealFromMIAtoMIN(mappedDeal, tfmDeal.tfm);
+      // TFM tasks
+      if (acceptableTaskSubmissionTypes.includes(updatedMappedDeal.submissionType)) {
+        dealUpdate = await createDealTasks(dealUpdate, auditDetails);
+        const { firstTaskEmail } = await sendDealSubmitEmails(dealUpdate);
 
-    if (isUpdatingToMIN) {
-      mappedDeal.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
-      console.info('TFM deal %s submission type has been updated to %s', dealId, mappedDeal.submissionType);
-    }
-
-    // Update portal deal status
-    await updatePortalDealStatus(mappedDeal, auditDetails);
-
-    /**
-     * Below action is performed to retrieve the latest portal application status.
-     * Which should be changed to `Acknowledged` from `In Progress by UKEF` since
-     * the application has been converted to MIN from MIA.
-     *
-     * Not fetching the latest portal deal status would cause TFM deal status to be
-     * an `Application` rather than `Confirmed`.
-     */
-
-    const updatedPortalDeal = await getPortalDeal(dealId, dealType);
-    const { status } = updatedPortalDeal;
-    mappedDeal.status = status;
-
-    // Update issued facilities
-    const dealUpdate = await updatedIssuedFacilities(mappedDeal, auditDetails);
-
-    if (isUpdatingToMIN) {
-      const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, dealType, checker, auditDetails);
-
-      /**
-       * This is the one and only time that TFM updates a snapshot.
-       * Without this, it would involve additional API calls going around in circles.
-       */
-      const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate, auditDetails);
-
-      dealUpdate.submissionType = dealSnapshot.submissionType;
-
-      if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
-        dealUpdate.manualInclusionNoticeSubmissionDate = dealSnapshot.manualInclusionNoticeSubmissionDate;
-        dealUpdate.checkerMIN = dealSnapshot.checkerMIN;
-      } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
-        dealUpdate.manualInclusionNoticeSubmissionDate = dealSnapshot.details.manualInclusionNoticeSubmissionDate;
-        dealUpdate.checkerMIN = dealSnapshot.details.checkerMIN;
+        /**
+         * Add an emailSent flag to the first task.
+         * This prevents multiple emails from being sent.
+         */
+        dealUpdate.tfm.tasks = addFirstTaskEmailSentFlag(firstTaskEmail, dealUpdate.tfm.tasks);
       }
 
-      await sendAinMinAcknowledgement(dealUpdate);
+      // Update the deal with all the above modifications
+      const tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
 
-      // TFM deal stage should be updated to `Confirmed`
-      const updatedDealStage = dealStage(mappedDeal.status, mappedDeal.submissionType);
-      dealUpdate.tfm.stage = updatedDealStage;
+      // Submit to ACBS
+      const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
 
-      console.info('TFM deal %s stage has been updated to %s', dealId, updatedDealStage);
+      if (canSubmitDealToACBS) {
+        await createACBS(dealId);
+      }
+
+      return tfmDeal;
     }
 
-    tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
+    if (dealHasBeenResubmit) {
+      let tfmDeal = await findOneTfmDeal(dealId);
+      /**
+       * checks if can update to MIN
+       * if it can, changes mappedDeal to show MIN to allow gef fee record to be calculated
+       * isUpdatingToMIN then also used to update deal to MIN
+       */
+      const isUpdatingToMIN = shouldUpdateDealFromMIAtoMIN(mappedDeal, tfmDeal.tfm);
 
-    const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
+      if (isUpdatingToMIN) {
+        mappedDeal.submissionType = CONSTANTS.DEALS.SUBMISSION_TYPE.MIN;
+        console.info('TFM deal %s submission type has been updated to %s', dealId, mappedDeal.submissionType);
+      }
 
-    if (canSubmitDealToACBS) {
-      await createACBS(dealId);
+      // Update portal deal status
+      await updatePortalDealStatus(mappedDeal, auditDetails);
+
+      /**
+       * Below action is performed to retrieve the latest portal application status.
+       * Which should be changed to `Acknowledged` from `In Progress by UKEF` since
+       * the application has been converted to MIN from MIA.
+       *
+       * Not fetching the latest portal deal status would cause TFM deal status to be
+       * an `Application` rather than `Confirmed`.
+       */
+
+      const updatedPortalDeal = await getPortalDeal(dealId, dealType);
+      const { status } = updatedPortalDeal;
+      mappedDeal.status = status;
+
+      // Update issued facilities
+      const dealUpdate = await updatedIssuedFacilities(mappedDeal, auditDetails);
+
+      if (isUpdatingToMIN) {
+        const portalMINUpdate = await updatePortalDealFromMIAtoMIN(dealId, dealType, checker, auditDetails);
+
+        /**
+         * This is the one and only time that TFM updates a snapshot.
+         * Without this, it would involve additional API calls going around in circles.
+         */
+        const { dealSnapshot } = await api.updateDealSnapshot(dealId, portalMINUpdate, auditDetails);
+
+        dealUpdate.submissionType = dealSnapshot.submissionType;
+
+        if (dealType === CONSTANTS.DEALS.DEAL_TYPE.GEF) {
+          dealUpdate.manualInclusionNoticeSubmissionDate = dealSnapshot.manualInclusionNoticeSubmissionDate;
+          dealUpdate.checkerMIN = dealSnapshot.checkerMIN;
+        } else if (dealType === CONSTANTS.DEALS.DEAL_TYPE.BSS_EWCS) {
+          dealUpdate.manualInclusionNoticeSubmissionDate = dealSnapshot.details.manualInclusionNoticeSubmissionDate;
+          dealUpdate.checkerMIN = dealSnapshot.details.checkerMIN;
+        }
+
+        await sendAinMinAcknowledgement(dealUpdate);
+
+        // TFM deal stage should be updated to `Confirmed`
+        const updatedDealStage = dealStage(mappedDeal.status, mappedDeal.submissionType);
+        dealUpdate.tfm.stage = updatedDealStage;
+
+        console.info('TFM deal %s stage has been updated to %s', dealId, updatedDealStage);
+      }
+
+      tfmDeal = await api.updateDeal({ dealId, dealUpdate, auditDetails });
+
+      const canSubmitDealToACBS = await canSubmitToACBS(tfmDeal);
+
+      if (canSubmitDealToACBS) {
+        await createACBS(dealId);
+      }
+
+      const canIssueFacilityInACBS = await canSubmitToACBS(tfmDeal, false);
+
+      if (canIssueFacilityInACBS) {
+        await issueAcbsFacilities(dealUpdate);
+      }
+
+      return tfmDeal;
     }
 
-    const canIssueFacilityInACBS = await canSubmitToACBS(tfmDeal, false);
-
-    if (canIssueFacilityInACBS) {
-      await issueAcbsFacilities(dealUpdate);
-    }
-
-    return tfmDeal;
+    return api.updateDeal({ dealId, dealUpdate: submittedDeal, auditDetails });
+  } catch (error) {
+    console.error('Error submitting deal to TFM %o', error);
+    return { status: error?.code || HttpStatusCode.InternalServerError, data: 'Error submitting deal to TFM' };
   }
-
-  return api.updateDeal({ dealId, dealUpdate: submittedDeal, auditDetails });
 };
 
 exports.submitDealAfterUkefIds = submitDealAfterUkefIds;
