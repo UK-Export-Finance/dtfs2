@@ -150,6 +150,8 @@ portalRouter.route('/deals').post(createDealController.createDealPost);
  *                   properties:
  *                     _id:
  *                       example: 123456abc
+ *       400:
+ *         description: Invalid Deal Id
  *       404:
  *         description: Not found
  *   put:
@@ -195,6 +197,8 @@ portalRouter.route('/deals').post(createDealController.createDealPost);
  *                       example: true
  *       404:
  *         description: Not found
+ *       500:
+ *         description: Internal server error
  *   delete:
  *     summary: Delete a Portal BSS deal
  *     tags: [Portal - BSS]
@@ -214,6 +218,12 @@ portalRouter.route('/deals').post(createDealController.createDealPost);
  *             example:
  *               acknowledged: true
  *               deletedCount: 1
+ *       400:
+ *        description: Invalid Deal Id
+ *       404:
+ *         description: Deal Not found
+ *       500:
+ *         description: Internal server error
  */
 portalRouter.route('/deals/:id').get(getDealController.findOneDealGet).put(updateDealController.updateDealPut).delete(deleteDealController.deleteDeal);
 
@@ -255,8 +265,12 @@ portalRouter.route('/deals/:id').get(getDealController.findOneDealGet).put(updat
  *                           example: Submitted
  *                         status:
  *                           example: Acknowledged
+ *       400:
+ *         description: Invalid Deal Id
  *       404:
  *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
 portalRouter.route('/deals/:id/status').put(updateDealStatusController.updateDealStatusPut);
 
@@ -304,8 +318,12 @@ portalRouter.route('/deals/:id/status').put(updateDealStatusController.updateDea
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/DealBSS'
+ *       400:
+ *         description: Invalid Deal Id
  *       404:
  *         description: Deal not found
+ *       500:
+ *         description: Internal server error
  */
 portalRouter.route('/deals/:id/comment').post(addDealCommentController.addDealCommentPost);
 
@@ -372,6 +390,10 @@ portalRouter.route('/facilities').get(getFacilitiesController.findAllGet);
  *                   dealId:
  *                     order: '2'
  *                     text: 'Enter the Associated deal id'
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
 portalRouter.route('/facilities').post(createFacilityController.createFacilityPost);
 
@@ -444,6 +466,8 @@ portalRouter.route('/multiple-facilities').post(createMultipleFacilitiesControll
  *           application/json:
  *             schema:
  *                $ref: '#/definitions/PortalAmendment'
+ *       204:
+ *         description: No content
  *       404:
  *         description: Not found
  *       500:
@@ -474,6 +498,8 @@ portalRouter.route('/facilities/amendments').get(getAllFacilityAmendmentControll
  *               $ref: '#/definitions/FacilityBSS'
  *       404:
  *         description: Not found
+ *       500:
+ *         description: Internal server error
  *   put:
  *     summary: Update a Portal BSS/EWCS facility
  *     tags: [Portal - BSS]
@@ -513,6 +539,8 @@ portalRouter.route('/facilities/amendments').get(getAllFacilityAmendmentControll
  *                       example: true
  *       404:
  *         description: Not found
+ *       500:
+ *        description: Internal server error
  *   delete:
  *     summary: Delete a Portal BSS/EWCS facility
  *     tags: [Portal - BSS]
@@ -534,6 +562,8 @@ portalRouter.route('/facilities/amendments').get(getAllFacilityAmendmentControll
  *               deletedCount: 1
  *       404:
  *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
 portalRouter
   .route('/facilities/:id')
@@ -581,6 +611,8 @@ portalRouter
  *                       example: Draft
  *       404:
  *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
 portalRouter.route('/facilities/:id/status').put(updateFacilityStatusController.updateFacilityStatusPut);
 
@@ -675,6 +707,8 @@ portalRouter
  *                $ref: '#/definitions/PortalAmendment'
  *       404:
  *         description: Not found
+ *       500:
+ *         description: Internal server error
  *   patch:
  *     summary: Update a Portal GEF facility amendment
  *     tags: [Portal - Amendments]
@@ -715,6 +749,8 @@ portalRouter
  *               $ref: '#/definitions/PortalAmendment'
  *       404:
  *         description: Not found
+ *       500:
+ *         description: Internal server error
  *   delete:
  *     summary: Delete a Portal GEF facility amendment
  *     tags: [Portal - Amendments]
@@ -798,6 +834,8 @@ portalRouter
  *         description: Not found
  *       409:
  *         description: Conflict - amendment cannot currently be updated to the given status
+ *       500:
+ *         description: Internal server error
  */
 portalRouter
   .route('/facilities/:facilityId/amendments/:amendmentId/status')
@@ -862,6 +900,8 @@ portalRouter
  *         description: Not found
  *       409:
  *         description: Conflict - amendment cannot currently be updated
+ *       500:
+ *         description: Internal server error
  */
 portalRouter
   .route('/facilities/:facilityId/amendments/:amendmentId/submit-amendment')
@@ -915,6 +955,8 @@ portalRouter
  *         description: Not found
  *       409:
  *         description: Conflict
+ *       500:
+ *         description: Internal server error
  */
 portalRouter
   .route('/facilities/:facilityId/amendments')
@@ -993,6 +1035,8 @@ portalRouter
  *                $ref: '#/definitions/PortalAmendment'
  *       404:
  *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
 portalRouter
   .route('/deals/:dealId/amendments')
@@ -1025,6 +1069,8 @@ portalRouter
  *           application/json:
  *             example:
  *               _id: '123456abc'
+ *       400:
+ *         description: Invalid deal type
  */
 portalRouter.route('/gef/deals').post(createGefDealController.createDealPost);
 
@@ -1091,6 +1137,8 @@ portalRouter.route('/gef/deals').post(createGefDealController.createDealPost);
  *                       example: true
  *       404:
  *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
 portalRouter.route('/gef/deals/:id').get(getGefDealController.findOneDealGet).put(updateGefDealController.updateDealPut);
 
@@ -1125,8 +1173,10 @@ portalRouter.route('/gef/deals/:id').get(getGefDealController.findOneDealGet).pu
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/DealGEF'
- *       404:
- *         description: Not found
+ *       400:
+ *         description: Invalid Deal Id
+ *       500:
+ *         description: Internal server error
  */
 portalRouter.route('/gef/deals/activity/:id').put(gefActivityController.generateMINActivities);
 
@@ -1172,8 +1222,10 @@ portalRouter.route('/gef/deals/activity/:id').put(gefActivityController.generate
  *                       example: Submitted
  *                     status:
  *                       example: Acknowledged
- *       404:
- *         description: Not found
+ *       400:
+ *         description: Invalid Deal Id
+ *       500:
+ *         description: Internal server error
  */
 portalRouter.route('/gef/deals/:id/status').put(putGefDealStatusController.updateDealStatusPut);
 
@@ -1219,6 +1271,8 @@ portalRouter.route('/gef/deals/:id/status').put(putGefDealStatusController.updat
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/DealGEF'
+ *       400:
+ *         description: Invalid Deal Id
  *       404:
  *         description: Deal not found
  */
@@ -1245,7 +1299,7 @@ portalRouter.route('/gef/deals/:id/comment').post(addCommentToGefDeal.addUnderwr
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/FacilitiesGEF'
- *       404:
+ *       400:
  *         description: Invalid Deal Id
  */
 portalRouter.route('/gef/deals/:id/facilities').get(getGefFacilitiesController.findAllGet);
@@ -1264,6 +1318,8 @@ portalRouter.route('/gef/deals/:id/facilities').get(getGefFacilitiesController.f
  *           application/json:
  *             example:
  *               _id: '123456abc'
+ *       400:
+ *         description: Invalid facility payload
  *       404:
  *         description: Deal not found
  */
@@ -1321,6 +1377,8 @@ portalRouter.route('/gef/facilities').get(getGefFacilitiesController.findAllFaci
  *                       example: true
  *       404:
  *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
 portalRouter.route('/gef/facilities/:id').put(updateGefFacilityController.updateFacilityPut);
 
@@ -1336,6 +1394,8 @@ portalRouter.route('/gef/facilities/:id').put(updateGefFacilityController.update
  *         description: OK
  *       210:
  *         description: FAILURE
+ *       500:
+ *         description: Internal server error
  *
  */
 portalRouter.route('/durable-functions').delete(durableFunctionsController.deleteAllDurableFunctions);
@@ -1366,6 +1426,8 @@ portalRouter.route('/cron-jobs').delete(cronJobsController.deleteAllEstoreLogs);
  *     responses:
  *       200:
  *         description: OK
+ *       400:
+ *         description: Invalid Version
  *       404:
  *         description: No mandatory criteria found
  */
