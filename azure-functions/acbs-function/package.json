@@ -20,10 +20,10 @@
   "main": "src/functions/*.js",
   "scripts": {
     "api-test": "jest --coverage --verbose --runInBand --config=api-test.jest.config.js ",
-    "lint": "eslint --color **/*.{ts,js} --ignore-path ../../.eslintignore",
-    "lint:fix": "eslint --fix --color **/*.{ts,js}",
-    "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.{ts,js} --ignore-path ../../.prettierignore",
-    "prettier:fix": "prettier --write **/*.{ts,js} --ignore-path ../../.prettierignore",
+    "lint": "eslint --color **/*.js --ignore-path ../../.eslintignore",
+    "lint:fix": "eslint --fix --color **/*.js",
+    "prettier": "prettier --no-error-on-unmatched-pattern --check **/*.js --ignore-path ../../.prettierignore",
+    "prettier:fix": "prettier --write **/*.js --ignore-path ../../.prettierignore",
     "unit-test": "jest --coverage --verbose --config=unit.jest.config.js",
     "unit-test-dev": "jest --verbose --config=unit.jest.config.js",
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
@@ -32,7 +32,7 @@
     "axios": "1.8.2",
     "date-fns": "^2.30.0",
     "dotenv": "^16.4.5",
-    "durable-functions": "^3.1.0"
+    "durable-functions": "^3.2.0"
   },
   "devDependencies": {
     "babel-jest": "29.5.0",
