@@ -536,7 +536,7 @@ tfmRouter
  *                 updated
  *                 createdAmendment
  *               }
- *       409:
+ *       404:
  *         description: Not found
  *       409:
  *          description: Conflict - The current facility already has an amendment in progress

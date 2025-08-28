@@ -219,13 +219,19 @@ portalRouter.route('/deals').post(createDealController.createDealPost);
  *               acknowledged: true
  *               deletedCount: 1
  *       400:
- *        description: Invalid Deal Id
+ *         description: Invalid Deal Id
+ *       401:
+ *         description: Unauthorised insertion
  *       404:
  *         description: Deal Not found
  *       500:
  *         description: Internal server error
  */
-portalRouter.route('/deals/:id').get(getDealController.findOneDealGet).put(updateDealController.updateDealPut).delete(deleteDealController.deleteDeal);
+portalRouter
+  .route('/deals/:id')
+  .get(getDealController.findOneDealGet)
+  .put(updateDealController.updateDealPut)
+  .delete(validation.isProductionValidation(), deleteDealController.deleteDeal);
 
 /**
  * @openapi
@@ -1410,11 +1416,13 @@ portalRouter.route('/durable-functions').delete(durableFunctionsController.delet
  *     responses:
  *       200:
  *         description: OK
+ *       401:
+ *         description: Unauthorised insertion
  *       500:
  *         description: Fail
  *
  */
-portalRouter.route('/cron-jobs').delete(cronJobsController.deleteAllEstoreLogs);
+portalRouter.route('/cron-jobs').delete(validation.isProductionValidation(), cronJobsController.deleteAllEstoreLogs);
 
 /**
  * @openapi
