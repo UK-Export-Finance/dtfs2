@@ -44,9 +44,15 @@ const getPortalDeal = async (dealId, dealType) => {
 };
 
 /**
- * Following function is only triggered once
- * the number has been granted by the number generator
- * Azure function
+ * Submits a deal to TFM after UKEF IDs have been assigned, handling both first submissions and resubmissions.
+ * Updates deal status, facilities, tasks, and sends relevant notifications. Also manages ACBS integration.
+ *
+ * @async
+ * @param {string} dealId - The unique identifier of the deal to submit.
+ * @param {string} dealType - The type of the deal (e.g., GEF, BSS_EWCS).
+ * @param {object} checker - The checker user object, used for MIN updates.
+ * @param {object} auditDetails - Audit information for tracking changes.
+ * @returns {Promise<object|boolean>} The updated TFM deal object, false if deal not found, or an error object on failure.
  */
 const submitDealAfterUkefIds = async (dealId, dealType, checker, auditDetails) => {
   try {
@@ -255,20 +261,20 @@ const submitDealAfterUkefIdsPUT = async (req, res) => {
     const { dealId, dealType, checker } = req.body;
 
     if (!ObjectId.isValid(checker?._id)) {
-      return res.status(400).send({ status: 400, message: 'Invalid checker _id' });
+      return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid checker _id' });
     }
 
     const deal = await submitDealAfterUkefIds(dealId, dealType, checker, generatePortalAuditDetails(checker._id));
 
     if (!deal) {
       console.error('Deal does not exist in TFM %s', dealId);
-      return res.status(404).send();
+      return res.status(HttpStatusCode.NotFound).send();
     }
 
-    return res.status(200).send(deal);
+    return res.status(HttpStatusCode.Ok).send(deal);
   } catch (error) {
     console.error('❌ Unable to submit deal with IDs to TFM %o', error);
-    return res.status(500).send();
+    return res.status(HttpStatusCode.InternalServerError).send();
   }
 };
 
@@ -286,12 +292,12 @@ const submitDealPUT = async (req, res) => {
 
     if (!dealId) {
       console.error('Invalid deal id provided %s', dealId);
-      return res.status(400).send();
+      return res.status(HttpStatusCode.BadRequest).send();
     }
 
     if (!ObjectId.isValid(checker?._id)) {
       console.error('Invalid checker id provided %s', checker?._id);
-      return res.status(400).send();
+      return res.status(HttpStatusCode.BadRequest).send();
     }
 
     const auditDetails = generatePortalAuditDetails(checker._id);
@@ -307,13 +313,13 @@ const submitDealPUT = async (req, res) => {
 
     if (!deal) {
       console.error('Deal does not exist in TFM %s', dealId);
-      return res.status(404).send();
+      return res.status(HttpStatusCode.NotFound).send();
     }
 
-    return res.status(200).send(deal);
+    return res.status(HttpStatusCode.Ok).send(deal);
   } catch (error) {
     console.error('❌ Unable to update deal in TFM %o', error);
-    return res.status(500).send();
+    return res.status(HttpStatusCode.InternalServerError).send();
   }
 };
 
