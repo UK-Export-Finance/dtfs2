@@ -188,11 +188,11 @@ services:
       - ENTRA_ID_CLIENT_SECRET
       - ENTRA_ID_REDIRECT_URL
 
-  portal:
+  portal-ui:
     build:
       context: .
-      dockerfile: ./portal/Dockerfile
-    image: dtfs/portal
+      dockerfile: ./portal-ui/Dockerfile
+    image: dtfs/portal-ui
     restart: always
     depends_on:
       - redis
@@ -202,9 +202,9 @@ services:
       - '5000:5000' # http
       - '9226:9226' # debug
     volumes:
-      - ./portal/server:/app/portal/server:ro
-      - ./portal/public:/app/portal/public:ro
-      - ./portal/templates:/app/portal/templates:ro
+      - ./portal-ui/server:/app/portal-ui/server:ro
+      - ./portal-ui/public:/app/portal-ui/public:ro
+      - ./portal-ui/templates:/app/portal-ui/templates:ro
       - ./libs:/app/libs:ro
     environment:
       - TZ
@@ -381,12 +381,12 @@ services:
     build: ./reverse-proxy
     image: 'dtfs/reverse-proxy'
     depends_on:
-      - portal
+      - portal-ui
       - gef-ui
     ports:
       - '80:80'
     environment:
-      - PORTAL_UI=portal:5000
+      - PORTAL_UI=portal-ui:5000
       - GEF_UI=gef-ui:5006
     deploy:
       resources:
