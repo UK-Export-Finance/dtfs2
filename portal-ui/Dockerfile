@@ -9,7 +9,7 @@ ENV GITHUB_SHA=$GITHUB_SHA
 WORKDIR /app
 
 COPY libs libs
-COPY portal portal
+COPY portal-ui portal-ui
 
 COPY package*.json .
 RUN npm ci
