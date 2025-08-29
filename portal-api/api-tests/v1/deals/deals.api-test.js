@@ -1,3 +1,4 @@
+const { isProduction } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
@@ -12,6 +13,11 @@ const dealWithAboutIncomplete = require('../../fixtures/deal-with-incomplete-abo
 const calculateDealSummary = require('../../../src/v1/deal-summary');
 const app = require('../../../src/createApp');
 const { as, get } = require('../../api')(app);
+
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isProduction: jest.fn(),
+}));
 
 const newDeal = aDeal({
   additionalRefName: 'mock name',
@@ -39,6 +45,7 @@ const newDeal = aDeal({
 describe('/v1/deals', () => {
   let testbank2Maker;
   let testbank1Maker;
+  let testAdmin;
   let aSuperuser;
   let testUsers;
 
@@ -46,6 +53,7 @@ describe('/v1/deals', () => {
     testUsers = await testUserCache.initialise(app);
     testbank1Maker = testUsers().withRole(MAKER).withBankName('Bank 1').one();
     testbank2Maker = testUsers().withRole(MAKER).withBankName('Bank 2').one();
+    testAdmin = testUsers().withRole(ADMIN).one();
     aSuperuser = testUsers().superuser().one();
   });
 
@@ -376,20 +384,23 @@ describe('/v1/deals', () => {
   });
 
   describe('DELETE /v1/deals/:id', () => {
-    it('401s requests that do not present a valid Authorization token', async () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+    it('should return 401 request that do not present a valid Authorization token', async () => {
       const { status } = await as().remove().to('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(401);
     });
 
-    it('401s requests that do not come from a user with role=maker', async () => {
+    it('should return 401 request that do not come from a user with role=admin', async () => {
       await as(testbank2Maker).post(newDeal).to('/v1/deals');
-      const { status } = await as(testUsers).remove().to('/v1/deals/620a1aa095a618b12da38c7b');
+      const { status } = await as(testbank1Maker).remove().to('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(401);
     });
 
-    it('401s requests from users if <user>.bank != <resource>.bank', async () => {
+    it('should return 401 request from users if <user>.bank != <resource>.bank', async () => {
       const { body } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(testbank1Maker).remove().to(`/v1/deals/${body._id}`);
@@ -397,24 +408,36 @@ describe('/v1/deals', () => {
       expect(status).toEqual(401);
     });
 
-    it('404s requests to delete unknown ids', async () => {
-      const { status } = await as(testbank2Maker).remove().to('/v1/deals/620a1aa095a618b12da38c7b');
+    it('should return 401 request if isProductionValidation blocks in production', async () => {
+      isProduction.mockReturnValue(true);
+      const { body } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
+
+      const { status } = await as(testAdmin).remove().to(`/v1/deals/${body._id}`);
+
+      expect(status).toEqual(401);
+    });
+
+    it('should return 404 request to delete unknown ids', async () => {
+      isProduction.mockReturnValue(false);
+      const { status } = await as(testAdmin).remove().to('/v1/deals/620a1aa095a618b12da38c7b');
 
       expect(status).toEqual(404);
     });
 
-    it('accepts requests if <user>.bank.id == *', async () => {
+    it('should accept request if <user>.role == ADMIN', async () => {
+      isProduction.mockReturnValue(false);
       const { body } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
 
-      const { status } = await as(aSuperuser).remove().to(`/v1/deals/${body._id}`);
+      const { status } = await as(testAdmin).remove().to(`/v1/deals/${body._id}`);
 
       expect(status).toEqual(200);
     });
 
-    it('deletes the deal', async () => {
+    it('should delete the deal', async () => {
+      isProduction.mockReturnValue(false);
       const { body } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
 
-      await as(testbank2Maker).remove().to(`/v1/deals/${body._id}`);
+      await as(testAdmin).remove().to(`/v1/deals/${body._id}`);
 
       const { status } = await as(testbank2Maker).get(`/v1/deals/${body._id}`);
 

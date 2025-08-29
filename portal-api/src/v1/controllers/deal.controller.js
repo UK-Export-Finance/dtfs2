@@ -174,12 +174,8 @@ exports.delete = async (req, res) => {
   await findOneDeal(dealId, async (deal) => {
     if (!deal) res.status(404).send();
 
-    if (!userHasAccessTo(req.user, deal)) {
-      res.status(401).send();
-    } else {
-      const response = await api.deleteDeal(dealId, generatePortalAuditDetails(req.user._id));
-      res.status(response.status).send(response.body);
-    }
+    const response = await api.deleteDeal(dealId, generatePortalAuditDetails(req.user._id));
+    res.status(response.status).send(response.body);
   });
 };
 
