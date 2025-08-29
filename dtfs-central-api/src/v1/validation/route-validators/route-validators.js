@@ -1,7 +1,7 @@
 const { param } = require('express-validator');
 const { ObjectId } = require('mongodb');
 const { HttpStatusCode } = require('axios');
-const { isValidIsoMonth, isValidIsoYear, API_ERROR_CODE } = require('@ukef/dtfs2-common');
+const { isValidIsoMonth, isValidIsoYear, API_ERROR_CODE, isProduction } = require('@ukef/dtfs2-common');
 
 const bankIdValidation = param('bankId').isString().matches(/^\d+$/).withMessage('The bank id provided should be a string of numbers');
 
@@ -62,3 +62,10 @@ exports.isoMonthValidation = (fields) => [
 const yearValidation = (paramName) => param(paramName).custom(isValidIsoYear).withMessage(`Invalid '${paramName}' path param provided`);
 
 exports.yearValidation = yearValidation;
+
+exports.isProductionValidation = () => (req, res, next) => {
+  if (isProduction()) {
+    return res.status(HttpStatusCode.Unauthorized).send({ status: HttpStatusCode.Unauthorized, message: 'Unauthorised insertion' });
+  }
+  return next();
+};

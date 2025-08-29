@@ -1,7 +1,7 @@
 const { param } = require('express-validator');
 const { ObjectId } = require('mongodb');
 const { HttpStatusCode } = require('axios');
-const { API_ERROR_CODE } = require('@ukef/dtfs2-common');
+const { API_ERROR_CODE, isProduction } = require('@ukef/dtfs2-common');
 
 const bankIdValidation = param('bankId')
   .exists()
@@ -35,8 +35,16 @@ const mongoIdValidation = (paramName) => (req, res, next) => {
  */
 const sqlIdValidation = (paramName) => param(paramName).isInt({ min: 0 }).withMessage(`Invalid '${paramName}' path param provided`);
 
+const isProductionValidation = () => (req, res, next) => {
+  if (isProduction()) {
+    return res.status(HttpStatusCode.Unauthorized).send({ status: HttpStatusCode.Unauthorized, message: 'Unauthorised insertion' });
+  }
+  return next();
+};
+
 module.exports = {
   bankIdValidation,
   mongoIdValidation,
   sqlIdValidation,
+  isProductionValidation,
 };
