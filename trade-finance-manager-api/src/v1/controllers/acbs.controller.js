@@ -129,6 +129,12 @@ const createACBS = async (dealId) => {
  */
 const updateDealAcbs = async (taskOutput) => {
   const { facilities } = taskOutput;
+
+  if (!facilities) {
+    console.error('No facilities found in output %o', taskOutput);
+    await Promise.reject();
+  }
+
   /**
    * 1. Add `acbs` object to tfm-deal
    * 2. Add ACBS records to the TFM activities
