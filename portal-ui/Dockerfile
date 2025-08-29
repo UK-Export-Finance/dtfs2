@@ -16,4 +16,4 @@ RUN npm ci
 RUN npm cache clean --force
 
 # Execute Script
-CMD ["npx", "ts-node", "portal/server/index.ts"]
+CMD ["npx", "ts-node", "portal-ui/server/index.ts"]

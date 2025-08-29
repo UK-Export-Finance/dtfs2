@@ -542,7 +542,7 @@ jobs:
       matrix:
         services:
           [
-            './portal',
+            './portal-ui',
             './gef-ui',
             './trade-finance-manager-ui',
             './portal-api',
@@ -615,7 +615,7 @@ jobs:
       matrix:
         services:
           [
-            './portal',
+            './portal-ui',
             './gef-ui',
             './trade-finance-manager-ui',
             './portal-api',
