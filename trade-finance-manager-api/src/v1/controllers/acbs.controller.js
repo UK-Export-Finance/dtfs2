@@ -125,15 +125,15 @@ const createACBS = async (dealId) => {
  * @param {Array} taskOutput.facilities - The list of facilities associated with the deal.
  * @param {string} taskOutput.facilities[].facilityId - The unique identifier for the facility.
  * @param {object} taskOutput.facilities[].acbsFacility - The ACBS information for the facility.
- * @returns {Promise<void>} A promise that resolves when the ACBS information has been updated.
+ * @returns {Promise<void|boolean>} A promise that resolves when the ACBS information has been updated or false otherwise.
  */
 const updateDealAcbs = async (taskOutput) => {
-  const { facilities } = taskOutput;
-
-  if (!facilities) {
+  if (!taskOutput.facilities) {
     console.error('No facilities found in the durable functions output %o', taskOutput);
-    await Promise.reject();
+    return false;
   }
+
+  const { facilities } = taskOutput;
 
   /**
    * 1. Add `acbs` object to tfm-deal
@@ -149,7 +149,7 @@ const updateDealAcbs = async (taskOutput) => {
       return tfmController.updateFacilityAcbs(facilityIdentifier, acbsFacility);
     });
 
-  await Promise.all(facilitiesUpdates);
+  return await Promise.all(facilitiesUpdates);
 };
 
 /**
