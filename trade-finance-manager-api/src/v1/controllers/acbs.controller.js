@@ -131,7 +131,7 @@ const updateDealAcbs = async (taskOutput) => {
   const { facilities } = taskOutput;
 
   if (!facilities) {
-    console.error('No facilities found in output %o', taskOutput);
+    console.error('No facilities found in the durable functions output %o', taskOutput);
     await Promise.reject();
   }
 
