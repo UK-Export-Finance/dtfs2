@@ -9,11 +9,11 @@ ENV GITHUB_SHA=$GITHUB_SHA
 WORKDIR /app
 
 COPY libs libs
-COPY portal portal
+COPY portal-ui portal-ui
 
 COPY package*.json .
 RUN npm ci
 RUN npm cache clean --force
 
 # Execute Script
-CMD ["npx", "ts-node", "portal/server/index.ts"]
+CMD ["npx", "ts-node", "portal-ui/server/index.ts"]

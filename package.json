@@ -20,7 +20,7 @@
     "external-api",
     "gef-ui",
     "libs/*",
-    "portal",
+    "portal-ui",
     "portal-api",
     "trade-finance-manager-api",
     "trade-finance-manager-ui",

@@ -47,7 +47,7 @@ on:
       - 'docker*.yml'
       - '.github/**'
       - 'gef-ui/**'
-      - 'portal/**'
+      - 'portal-ui/**'
       - 'portal-api/**'
       - 'trade-finance-manager-ui/**'
       - 'trade-finance-manager-api/**'
