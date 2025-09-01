@@ -72,6 +72,7 @@ on:
       - 'utils/**'
       - 'libs/**'
       - 'README.md'
+      - 'reverse-proxy/**'
 
   push:
     branches:
@@ -173,6 +174,7 @@ env:
   DEAL_CANCELLATION_SCHEDULE: ${{ vars.DEAL_CANCELLATION_SCHEDULE }}
   RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE: ${{ vars.RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE }}
   UKEF_GEF_REPORTING_EMAIL_RECIPIENT: ${{ secrets.UKEF_GEF_REPORTING_EMAIL_RECIPIENT }}
+  MAINTENANCE_ACTIVE: ${{ vars.MAINTENANCE_ACTIVE }}
 
 jobs:
   # 1. Setup test infrastructure

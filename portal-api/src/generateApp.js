@@ -1,4 +1,4 @@
-const { MAX_REQUEST_SIZE } = require('@ukef/dtfs2-common');
+const { maintenance, MAX_REQUEST_SIZE } = require('@ukef/dtfs2-common');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
@@ -25,6 +25,12 @@ const generateApp = () => {
   loginCompleteAuth(passport, userService);
 
   const app = express();
+
+  /**
+   * Scheduled maintenance middleware.
+   * Should always be the first middleware.
+   */
+  app.use(maintenance);
 
   app.use(seo);
   app.use(security);

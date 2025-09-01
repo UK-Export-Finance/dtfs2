@@ -57,6 +57,7 @@ on:
       - 'e2e-tests/**'
       - 'utils/**'
       - 'libs/**'
+      - 'reverse-proxy/**'
 
 env:
   environment: dev

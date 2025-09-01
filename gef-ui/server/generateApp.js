@@ -9,6 +9,7 @@ const RedisStore = require('connect-redis')(session);
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
+const { maintenance } = require('@ukef/dtfs2-common');
 const routes = require('./routes');
 const supportingInformationUploadRoutes = require('./routes/supporting-information-upload');
 const healthcheck = require('./healthcheck');
@@ -33,6 +34,12 @@ const generateApp = () => {
     sameSite: 'strict',
     maxAge: 604800000, // 7 days
   };
+
+  /**
+   * Scheduled maintenance middleware.
+   * Should always be the first middleware.
+   */
+  app.use(maintenance);
 
   app.use(seo);
   app.use(security);
