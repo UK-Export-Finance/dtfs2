@@ -82,20 +82,20 @@ portalRouter.use((req, res, next) => {
  *                 type: object
  *               deal:
  *                 type: object
- *                 properties:
- *                   details:
- *                     type: object
+ *                   properties:
+ *                     details:
+ *                       type: object
  *               auditDetails:
  *                 type: object
  *                 $ref: '#/definitions/PortalAuditDetails'
- *         example:
- *           bankInternalRefName: 'a1'
- *           additionalRefName: 'test'
- *           bank: { id: '9' }
- *           maker: { _id: '123abc' }
- *           details:
- *           ukefDealId: '20010739'
- *           submissionCount: 1
+ *           example:
+ *             bankInternalRefName: 'a1'
+ *             additionalRefName: 'test'
+ *             bank: { id: '9' }
+ *             maker: { _id: '123abc' }
+ *             details:
+ *             ukefDealId: '20010739'
+ *             submissionCount: 1
  *     responses:
  *       200:
  *         description: OK
@@ -179,10 +179,10 @@ portalRouter.route('/deals').post(createDealController.createDealPost);
  *               auditDetails:
  *                 type: object
  *                 $ref: '#/definitions/PortalAuditDetails'
- *             example:
- *               user: { _id: '123456abc' }
- *               dealUpdate: { aNewField: true }
- *               auditDetails: { userType: 'portal', id: 'abcdef123456abcdef123456' }
+ *           example:
+ *             user: { _id: '123456abc' }
+ *             dealUpdate: { aNewField: true }
+ *             auditDetails: { userType: 'portal', id: 'abcdef123456abcdef123456' }
  *     responses:
  *       200:
  *         description: OK
