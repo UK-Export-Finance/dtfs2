@@ -88,14 +88,14 @@ portalRouter.use((req, res, next) => {
  *               auditDetails:
  *                 type: object
  *                 $ref: '#/definitions/PortalAuditDetails'
- *         example:
- *           bankInternalRefName: 'a1'
- *           additionalRefName: 'test'
- *           bank: { id: '9' }
- *           maker: { _id: '123abc' }
- *           details:
- *           ukefDealId: '20010739'
- *           submissionCount: 1
+ *           example:
+ *             bankInternalRefName: 'a1'
+ *             additionalRefName: 'test'
+ *             bank: { id: '9' }
+ *             maker: { _id: '123abc' }
+ *             details:
+ *             ukefDealId: '20010739'
+ *             submissionCount: 1
  *     responses:
  *       200:
  *         description: OK
@@ -179,10 +179,10 @@ portalRouter.route('/deals').post(createDealController.createDealPost);
  *               auditDetails:
  *                 type: object
  *                 $ref: '#/definitions/PortalAuditDetails'
- *             example:
- *               user: { _id: '123456abc' }
- *               dealUpdate: { aNewField: true }
- *               auditDetails: { userType: 'portal', id: 'abcdef123456abcdef123456' }
+ *           example:
+ *             user: { _id: '123456abc' }
+ *             dealUpdate: { aNewField: true }
+ *             auditDetails: { userType: 'portal', id: 'abcdef123456abcdef123456' }
  *     responses:
  *       200:
  *         description: OK
@@ -219,13 +219,19 @@ portalRouter.route('/deals').post(createDealController.createDealPost);
  *               acknowledged: true
  *               deletedCount: 1
  *       400:
- *        description: Invalid Deal Id
+ *         description: Invalid Deal Id
+ *       401:
+ *         description: Unauthorised insertion
  *       404:
  *         description: Deal Not found
  *       500:
  *         description: Internal server error
  */
-portalRouter.route('/deals/:id').get(getDealController.findOneDealGet).put(updateDealController.updateDealPut).delete(deleteDealController.deleteDeal);
+portalRouter
+  .route('/deals/:id')
+  .get(getDealController.findOneDealGet)
+  .put(updateDealController.updateDealPut)
+  .delete(validation.isProductionValidation(), deleteDealController.deleteDeal);
 
 /**
  * @openapi
@@ -1114,15 +1120,15 @@ portalRouter.route('/gef/deals').post(createGefDealController.createDealPost);
  *         application/json:
  *           schema:
  *             type: object
- *            properties:
- *              dealUpdate:
- *               type: object
- *             auditDetails:
- *               type: object
- *               $ref: '#/definitions/PortalAuditDetails'
- *             example:
- *               dealUpdate: { aNewField: true }
- *               auditDetails: { userType: 'portal', id: 'abcdef123456abcdef123456' }
+ *             properties:
+ *               dealUpdate:
+ *                 type: object
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
+ *           example:
+ *             dealUpdate: { aNewField: true }
+ *             auditDetails: { userType: 'portal', id: 'abcdef123456abcdef123456' }
  *     responses:
  *       200:
  *         description: OK
@@ -1162,10 +1168,10 @@ portalRouter.route('/gef/deals/:id').get(getGefDealController.findOneDealGet).pu
  *         application/json:
  *           schema:
  *             type: object
- *            properties:
- *             auditDetails:
- *               type: object
- *               $ref: '#/definitions/PortalAuditDetails'
+ *             properties:
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
  *     responses:
  *       200:
  *         description: OK
@@ -1200,14 +1206,14 @@ portalRouter.route('/gef/deals/activity/:id').put(gefActivityController.generate
  *         application/json:
  *           schema:
  *             type: object
- *            properties:
- *             status:
- *              type: string
- *             auditDetails:
- *               type: object
- *               $ref: '#/definitions/PortalAuditDetails'
- *             example:
- *               status: UKEF_ACKNOWLEDGED
+ *             properties:
+ *               status:
+ *                 type: string
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
+ *           example:
+ *             status: UKEF_ACKNOWLEDGED
  *     responses:
  *       200:
  *         description: OK
@@ -1410,11 +1416,13 @@ portalRouter.route('/durable-functions').delete(durableFunctionsController.delet
  *     responses:
  *       200:
  *         description: OK
+ *       401:
+ *         description: Unauthorised insertion
  *       500:
  *         description: Fail
  *
  */
-portalRouter.route('/cron-jobs').delete(cronJobsController.deleteAllEstoreLogs);
+portalRouter.route('/cron-jobs').delete(validation.isProductionValidation(), cronJobsController.deleteAllEstoreLogs);
 
 /**
  * @openapi
