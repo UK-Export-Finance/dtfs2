@@ -595,12 +595,12 @@ portalRouter
  *       required: true
  *       content:
  *         application/json:
- *             properties:
- *               status:
- *                 type: string
- *               auditDetails:
- *                 type: object
- *                 $ref: '#/definitions/portalAuditDetails'
+ *           properties:
+ *             status:
+ *               type: string
+ *             auditDetails:
+ *               type: object
+ *               $ref: '#/definitions/portalAuditDetails'
  *     responses:
  *       200:
  *         description: OK
