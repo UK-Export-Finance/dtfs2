@@ -35,10 +35,15 @@ const mongoIdValidation = (paramName) => (req, res, next) => {
  */
 const sqlIdValidation = (paramName) => param(paramName).isInt({ min: 0 }).withMessage(`Invalid '${paramName}' path param provided`);
 
+/**
+ * Middleware to block requests if the environment is production.
+ * @returns {import('express').RequestHandler} Express middleware that blocks requests in production.
+ */
 const isProductionValidation = () => (req, res, next) => {
   if (isProduction()) {
     return res.status(HttpStatusCode.Unauthorized).send({ status: HttpStatusCode.Unauthorized, message: 'Unauthorised insertion' });
   }
+
   return next();
 };
 

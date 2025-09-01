@@ -1,4 +1,5 @@
 const { isProduction } = require('@ukef/dtfs2-common');
+const { HttpStatusCode } = require('axios');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
@@ -74,7 +75,7 @@ describe('/v1/deals', () => {
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withRole(role).one(),
       makeRequestAsUser: (user) => as(user).get(dealsUrl),
-      successStatusCode: 200,
+      successStatusCode: HttpStatusCode.Ok,
     });
   });
 
@@ -97,36 +98,36 @@ describe('/v1/deals', () => {
       allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN],
       getUserWithRole: (role) => testUsers().withBankName('Bank 1').withRole(role).one(),
       makeRequestAsUser: (user) => as(user).get(aDealUrl),
-      successStatusCode: 200,
+      successStatusCode: HttpStatusCode.Ok,
     });
 
     it('400s requests that do not have a valid deal id', async () => {
       const { status } = await as(testbank2Maker).get('/v1/deals/12345');
 
-      expect(status).toEqual(400);
+      expect(status).toEqual(HttpStatusCode.BadRequest);
     });
 
     it('404s requests for unknown ids', async () => {
       const { status } = await as(testbank1Maker).get('/v1/deals/620a1aa095a618b12da38c7b');
 
-      expect(status).toEqual(404);
+      expect(status).toEqual(HttpStatusCode.NotFound);
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
       const { status } = await as(testbank2Maker).get(aDealUrl);
 
-      expect(status).toEqual(401);
+      expect(status).toEqual(HttpStatusCode.Unauthorized);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
       const { status } = await as(aSuperuser).get(aDealUrl);
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
     });
 
     it('returns the requested resource', async () => {
       const { status, body } = await as(testbank1Maker).get(aDealUrl);
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
       expect(body.deal).toEqual(expectAddedFields({ baseDeal: newDeal, auditDetails: generatePortalAuditDetails(testbank1Maker._id) }));
     });
 
@@ -136,7 +137,7 @@ describe('/v1/deals', () => {
 
       const { status, body } = await as(testbank2Maker).get(`/v1/deals/${newId}`);
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
       expect(body.deal.submissionDetails.status).toEqual('Incomplete');
     });
 
@@ -146,7 +147,7 @@ describe('/v1/deals', () => {
 
       const { status, body } = await as(testbank2Maker).get(`/v1/deals/${newId}`);
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
       expect(body.deal.submissionDetails.status).toEqual('Completed');
     });
 
@@ -156,7 +157,7 @@ describe('/v1/deals', () => {
 
       const { status, body } = await as(testbank2Maker).get(`/v1/deals/${newId}`);
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
       expect(body.deal.summary).toEqual(calculateDealSummary(body.deal));
     });
   });
@@ -165,13 +166,13 @@ describe('/v1/deals', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
       const { status } = await as().put(newDeal).to('/v1/deals/620a1aa095a618b12da38c7b');
 
-      expect(status).toEqual(401);
+      expect(status).toEqual(HttpStatusCode.Unauthorized);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
       const { status } = await as(testUsers).put(newDeal).to('/v1/deals/620a1aa095a618b12da38c7b');
 
-      expect(status).toEqual(401);
+      expect(status).toEqual(HttpStatusCode.Unauthorized);
     });
 
     it('401s requests if <user>.bank != <resource>/bank', async () => {
@@ -184,7 +185,7 @@ describe('/v1/deals', () => {
 
       const { status } = await as(testbank1Maker).put(updatedDeal).to(`/v1/deals/${body._id}`);
 
-      expect(status).toEqual(401);
+      expect(status).toEqual(HttpStatusCode.Unauthorized);
     });
 
     it('accepts requests if <user>.bank.id == *', async () => {
@@ -200,7 +201,7 @@ describe('/v1/deals', () => {
 
       const { status } = await as(aSuperuser).put(updatedDeal).to(`/v1/deals/${createdDeal._id}`);
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
     });
 
     it('returns the updated deal', async () => {
@@ -218,7 +219,7 @@ describe('/v1/deals', () => {
 
       const { status, body } = await as(testbank2Maker).put(updatedDeal).to(`/v1/deals/${createdDeal._id}`);
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
 
       expect(body).toMatchObject(
         expectAddedFieldsWithEditedBy({ baseDeal: updatedDeal, user: testbank2Maker, auditDetails: generatePortalAuditDetails(testbank2Maker._id) }),
@@ -246,11 +247,11 @@ describe('/v1/deals', () => {
       };
 
       const { status: putStatus } = await as(testbank2Maker).put(partialUpdate).to(`/v1/deals/${createdDeal._id}`);
-      expect(putStatus).toEqual(200);
+      expect(putStatus).toEqual(HttpStatusCode.Ok);
 
       const { status, body } = await as(testbank2Maker).get(`/v1/deals/${createdDeal._id}`);
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
       expect(body.deal).toMatchObject(
         expectAddedFieldsWithEditedBy({
           baseDeal: expectedDataIncludingUpdate,
@@ -277,7 +278,7 @@ describe('/v1/deals', () => {
 
       const { status, body } = await as(testbank2Maker).get(`/v1/deals/${createdDeal._id}`);
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
       expect(body.deal).toMatchObject(
         expectAddedFieldsWithEditedBy({ baseDeal: updatedDeal, user: testbank2Maker, auditDetails: generatePortalAuditDetails(testbank2Maker._id) }),
       );
@@ -309,7 +310,7 @@ describe('/v1/deals', () => {
       await as(testbank2Maker).put(secondUpdate).to(`/v1/deals/${createdDeal._id}`);
 
       const dealAfterSecondUpdate = await as(testbank2Maker).get(`/v1/deals/${createdDeal._id}`);
-      expect(dealAfterSecondUpdate.status).toEqual(200);
+      expect(dealAfterSecondUpdate.status).toEqual(HttpStatusCode.Ok);
       expect(dealAfterSecondUpdate.body.deal.editedBy.length).toEqual(2);
       expect(dealAfterSecondUpdate.body.deal.editedBy[0]).toEqual(
         expectAddedFieldsWithEditedBy({
@@ -334,13 +335,13 @@ describe('/v1/deals', () => {
     it('401s requests that do not present a valid Authorization token', async () => {
       const { status } = await as().post(newDeal).to('/v1/deals');
 
-      expect(status).toEqual(401);
+      expect(status).toEqual(HttpStatusCode.Unauthorized);
     });
 
     it('401s requests that do not come from a user with role=maker', async () => {
       const { status } = await as(testUsers).post(newDeal).to('/v1/deals');
 
-      expect(status).toEqual(401);
+      expect(status).toEqual(HttpStatusCode.Unauthorized);
     });
 
     it('returns the created deal', async () => {
@@ -348,7 +349,7 @@ describe('/v1/deals', () => {
 
       const expectedCreateDeal = expectAddedFields({ baseDeal: newDeal, auditDetails: generatePortalAuditDetails(testbank2Maker._id) });
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
 
       const { body: dealAfterCreation } = await as(testbank2Maker).get(`/v1/deals/${createdDeal._id}`);
 
@@ -374,7 +375,7 @@ describe('/v1/deals', () => {
 
         const { body: dealPost, status } = await as(testbank2Maker).post(postBody).to('/v1/deals');
 
-        expect(status).toEqual(400);
+        expect(status).toEqual(HttpStatusCode.BadRequest);
 
         expect(dealPost.validationErrors.count).toEqual(2);
         expect(dealPost.validationErrors.errorList.bankInternalRefName).toBeDefined();
@@ -390,14 +391,14 @@ describe('/v1/deals', () => {
     it('should return 401 request that do not present a valid Authorization token', async () => {
       const { status } = await as().remove().to('/v1/deals/620a1aa095a618b12da38c7b');
 
-      expect(status).toEqual(401);
+      expect(status).toEqual(HttpStatusCode.Unauthorized);
     });
 
     it('should return 401 request that do not come from a user with role=admin', async () => {
       await as(testbank2Maker).post(newDeal).to('/v1/deals');
       const { status } = await as(testbank1Maker).remove().to('/v1/deals/620a1aa095a618b12da38c7b');
 
-      expect(status).toEqual(401);
+      expect(status).toEqual(HttpStatusCode.Unauthorized);
     });
 
     it('should return 401 request from users if <user>.bank != <resource>.bank', async () => {
@@ -405,23 +406,23 @@ describe('/v1/deals', () => {
 
       const { status } = await as(testbank1Maker).remove().to(`/v1/deals/${body._id}`);
 
-      expect(status).toEqual(401);
+      expect(status).toEqual(HttpStatusCode.Unauthorized);
     });
 
-    it('should return 401 request if isProductionValidation blocks in production', async () => {
+    it('should return 401 request if isProduction return true', async () => {
       isProduction.mockReturnValue(true);
       const { body } = await as(testbank2Maker).post(newDeal).to('/v1/deals');
 
       const { status } = await as(testAdmin).remove().to(`/v1/deals/${body._id}`);
 
-      expect(status).toEqual(401);
+      expect(status).toEqual(HttpStatusCode.Unauthorized);
     });
 
     it('should return 404 request to delete unknown ids', async () => {
       isProduction.mockReturnValue(false);
       const { status } = await as(testAdmin).remove().to('/v1/deals/620a1aa095a618b12da38c7b');
 
-      expect(status).toEqual(404);
+      expect(status).toEqual(HttpStatusCode.NotFound);
     });
 
     it('should accept request if <user>.role == ADMIN', async () => {
@@ -430,7 +431,7 @@ describe('/v1/deals', () => {
 
       const { status } = await as(testAdmin).remove().to(`/v1/deals/${body._id}`);
 
-      expect(status).toEqual(200);
+      expect(status).toEqual(HttpStatusCode.Ok);
     });
 
     it('should delete the deal', async () => {
@@ -441,7 +442,7 @@ describe('/v1/deals', () => {
 
       const { status } = await as(testbank2Maker).get(`/v1/deals/${body._id}`);
 
-      expect(status).toEqual(404);
+      expect(status).toEqual(HttpStatusCode.NotFound);
     });
   });
 });

@@ -63,9 +63,14 @@ const yearValidation = (paramName) => param(paramName).custom(isValidIsoYear).wi
 
 exports.yearValidation = yearValidation;
 
+/**
+ * Middleware to block requests if the environment is production.
+ * @returns {import('express').RequestHandler} Express middleware that blocks requests in production.
+ */
 exports.isProductionValidation = () => (req, res, next) => {
   if (isProduction()) {
     return res.status(HttpStatusCode.Unauthorized).send({ status: HttpStatusCode.Unauthorized, message: 'Unauthorised insertion' });
   }
+
   return next();
 };

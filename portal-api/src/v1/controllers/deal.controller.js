@@ -175,6 +175,7 @@ exports.delete = async (req, res) => {
     if (!deal) res.status(404).send();
 
     const response = await api.deleteDeal(dealId, generatePortalAuditDetails(req.user._id));
+
     res.status(response.status).send(response.body);
   });
 };
