@@ -82,9 +82,9 @@ portalRouter.use((req, res, next) => {
  *                 type: object
  *               deal:
  *                 type: object
- *                   properties:
- *                     details:
- *                       type: object
+ *                 properties:
+ *                   details:
+ *                     type: object
  *               auditDetails:
  *                 type: object
  *                 $ref: '#/definitions/PortalAuditDetails'
@@ -595,8 +595,6 @@ portalRouter
  *       required: true
  *       content:
  *         application/json:
- *           schema:
- *             type: object
  *             properties:
  *               status:
  *                 type: string
@@ -1122,15 +1120,15 @@ portalRouter.route('/gef/deals').post(createGefDealController.createDealPost);
  *         application/json:
  *           schema:
  *             type: object
- *            properties:
- *              dealUpdate:
- *               type: object
- *             auditDetails:
- *               type: object
- *               $ref: '#/definitions/PortalAuditDetails'
- *             example:
- *               dealUpdate: { aNewField: true }
- *               auditDetails: { userType: 'portal', id: 'abcdef123456abcdef123456' }
+ *             properties:
+ *               dealUpdate:
+ *                 type: object
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
+ *           example:
+ *             dealUpdate: { aNewField: true }
+ *             auditDetails: { userType: 'portal', id: 'abcdef123456abcdef123456' }
  *     responses:
  *       200:
  *         description: OK
@@ -1170,10 +1168,10 @@ portalRouter.route('/gef/deals/:id').get(getGefDealController.findOneDealGet).pu
  *         application/json:
  *           schema:
  *             type: object
- *            properties:
- *             auditDetails:
- *               type: object
- *               $ref: '#/definitions/PortalAuditDetails'
+ *             properties:
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
  *     responses:
  *       200:
  *         description: OK
@@ -1208,14 +1206,14 @@ portalRouter.route('/gef/deals/activity/:id').put(gefActivityController.generate
  *         application/json:
  *           schema:
  *             type: object
- *            properties:
- *             status:
- *              type: string
- *             auditDetails:
- *               type: object
- *               $ref: '#/definitions/PortalAuditDetails'
- *             example:
- *               status: UKEF_ACKNOWLEDGED
+ *             properties:
+ *               status:
+ *                 type: string
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/PortalAuditDetails'
+ *           example:
+ *             status: UKEF_ACKNOWLEDGED
  *     responses:
  *       200:
  *         description: OK
