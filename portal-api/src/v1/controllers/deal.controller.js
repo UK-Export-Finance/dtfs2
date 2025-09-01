@@ -176,7 +176,7 @@ exports.delete = async (req, res) => {
   try {
     return findOneDeal(dealId, async (deal) => {
       if (!deal) {
-        return res.status(404).send();
+        return res.status(HttpStatusCode.NotFound).send();
       }
 
       const response = await api.deleteDeal(dealId, generatePortalAuditDetails(req.user._id));
