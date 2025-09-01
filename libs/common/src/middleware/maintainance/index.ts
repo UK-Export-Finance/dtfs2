@@ -27,7 +27,7 @@ export const maintenance = (req: Request, res: Response, next: NextFunction) => 
       .set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
       .set('X-UKEF-Maintenance-Active', String(isActive))
       .status(HttpStatusCode.ServiceUnavailable)
-      .send({ message: `Service is under schedule maintenance, please try again after ${MAX_AGE} seconds.` });
+      .send({ message: `The service is currently under maintenance. Please try again after ${MAX_AGE} seconds.` });
   }
 
   return next();
