@@ -72,6 +72,7 @@ on:
       - 'utils/**'
       - 'libs/**'
       - 'README.md'
+      - 'reverse-proxy/**'
 
   push:
     branches:
