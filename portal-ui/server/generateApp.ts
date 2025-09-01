@@ -8,7 +8,7 @@ import csrf from 'csurf';
 import flash from 'connect-flash';
 import connectRedis from 'connect-redis';
 import { isHttpError } from 'http-errors';
-import { InvalidEnvironmentVariableError } from '@ukef/dtfs2-common';
+import { InvalidEnvironmentVariableError, maintenance } from '@ukef/dtfs2-common';
 import routes from './routes';
 import healthcheck from './healthcheck';
 import configureNunjucks from './nunjucks-configuration';
@@ -36,6 +36,12 @@ export const generateApp = () => {
     sameSite: 'strict',
     maxAge: 604800000, // 7 days
   };
+
+  /**
+   * Scheduled maintenance middleware.
+   * Should always be the first middleware.
+   */
+  app.use(maintenance);
 
   app.use(seo);
   app.use(security);
