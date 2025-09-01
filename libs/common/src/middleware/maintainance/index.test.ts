@@ -13,7 +13,7 @@ describe('middleware/maintenance', () => {
     jest.resetAllMocks();
   });
 
-  it.each(falsyModeValues)('should call next when the maintenance mode is not active, with environment valute set as `%s`', (value) => {
+  it.each(falsyModeValues)('should call next when the maintenance mode is not active, with environment value set as `%s`', (value) => {
     // Arrange
     process.env.MAINTENANCE_ACTIVE = value;
 
@@ -26,7 +26,7 @@ describe('middleware/maintenance', () => {
   });
 
   it.each(truthyModeValues)(
-    `should return ${HttpStatusCode.ServiceUnavailable} when the maintenance mode is active, with environment valute set as '%s'`,
+    `should return ${HttpStatusCode.ServiceUnavailable} when the maintenance mode is active, with environment value set as '%s'`,
     (value) => {
       // Arrange
       process.env.MAINTENANCE_ACTIVE = value;
