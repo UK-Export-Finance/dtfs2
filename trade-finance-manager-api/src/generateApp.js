@@ -4,6 +4,7 @@ const compression = require('compression');
 const swaggerUi = require('swagger-ui-express');
 const mongoSanitise = require('express-mongo-sanitize');
 const { initialiseCronJobScheduler } = require('@ukef/dtfs2-common');
+const { maintenance } = require('@ukef/dtfs2-common');
 const { validateSsoFeatureFlagFalse } = require('./v1/middleware/validate-sso-feature-flag');
 const healthcheck = require('./healthcheck');
 const { authRouter, openRouter } = require('./v1/routes');
@@ -21,6 +22,12 @@ configurePassport(passport);
 
 const generateApp = () => {
   const app = express();
+
+  /**
+   * Scheduled maintenance middleware.
+   * Should always be the first middleware.
+   */
+  app.use(maintenance);
 
   app.use(createRateLimit());
   app.use(seo);
