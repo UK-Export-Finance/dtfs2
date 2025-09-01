@@ -1,4 +1,6 @@
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
+const { HttpStatusCode } = require('axios');
+const { ApiError } = require('@ukef/dtfs2-common');
 const DEFAULTS = require('../defaults');
 const { mongoDbClient: db } = require('../../drivers/db-client');
 const { isValidMongoId } = require('../validation/validateIds');
@@ -171,13 +173,29 @@ exports.update = async (req, res) => {
 exports.delete = async (req, res) => {
   const dealId = req.params.id;
 
-  await findOneDeal(dealId, async (deal) => {
-    if (!deal) res.status(404).send();
+  try {
+    return findOneDeal(dealId, async (deal) => {
+      if (!deal) {
+        return res.status(404).send();
+      }
 
-    const response = await api.deleteDeal(dealId, generatePortalAuditDetails(req.user._id));
+      const response = await api.deleteDeal(dealId, generatePortalAuditDetails(req.user._id));
 
-    res.status(response.status).send(response.body);
-  });
+      return res.status(response.status).send(response.body);
+    });
+  } catch (error) {
+    if (error instanceof ApiError) {
+      const { status, message, code } = error;
+      return res.status(status).send({ status, message, code });
+    }
+
+    console.error(`Error deleting deal with id %s: %o`, dealId, error);
+
+    return res.status(HttpStatusCode.InternalServerError).send({
+      status: HttpStatusCode.InternalServerError,
+      message: 'Unknown error occurred when deleting deal',
+    });
+  }
 };
 
 /**
