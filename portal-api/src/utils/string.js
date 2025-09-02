@@ -50,10 +50,13 @@ Additional aspects:
  * @returns {boolean}
  */
 const isValidEmail = (email) => {
-  if (email) {
-    const validation = joi.string().email().required().validate(email);
+  if (email && typeof email === 'string') {
+    const emailLower = email.toLowerCase();
+    const validation = joi.string().email().required().validate(emailLower);
 
-    return !validation.error;
+    if (!validation.error && emailLower.endsWith('ukexportfinance.gov.uk')) {
+      return true;
+    }
   }
 
   return false;
