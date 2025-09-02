@@ -232,7 +232,7 @@ describe('utilisation-report-helpers', () => {
       // Arrange
       const paymentOfficerTeam = {
         teamName: 'A Real Payment Officer Team',
-        emails: ['email@example.com'],
+        emails: ['email@ukexportfinance.gov.uk'],
       };
       const bankName = 'Some Bank Name';
 
@@ -243,7 +243,7 @@ describe('utilisation-report-helpers', () => {
       expect(result).toEqual(paymentOfficerTeam.teamName);
     });
 
-    it.each([{ paymentOfficerTeam: undefined }, { paymentOfficerTeam: { emails: ['email@example.com'] } }])(
+    it.each([{ paymentOfficerTeam: undefined }, { paymentOfficerTeam: { emails: ['email@ukexportfinance.gov.uk'] } }])(
       'returns the default team name when paymentOfficerTeam is $paymentOfficerTeam',
       ({ paymentOfficerTeam }) => {
         // Arrange
@@ -375,7 +375,7 @@ describe('utilisation-report-helpers', () => {
       // Arrange
       jest.mocked(externalApi.bankHolidays).getBankHolidayDatesForRegion.mockResolvedValue([]);
 
-      const validEmail = 'valid-email@example.com';
+      const validEmail = 'valid-email@ukexportfinance.gov.uk';
       const bank = aBank();
       bank.isVisibleInTfmUtilisationReports = true;
       // @ts-expect-error we are explicitly test the case where the payment officer team object is not in the expected format
@@ -403,7 +403,7 @@ describe('utilisation-report-helpers', () => {
       // Arrange
       jest.mocked(externalApi.bankHolidays).getBankHolidayDatesForRegion.mockResolvedValue([]);
 
-      const bankOneEmail = 'bank-one-email@example.com';
+      const bankOneEmail = 'bank-one-email@ukexportfinance.gov.uk';
       const bankOneTeamName = 'Bank One Payment Officer Team';
       const bankOne: BankResponse = {
         ...aBank(),
@@ -411,7 +411,7 @@ describe('utilisation-report-helpers', () => {
         paymentOfficerTeam: { emails: [bankOneEmail], teamName: bankOneTeamName },
       };
 
-      const bankTwoEmail = 'bank-two-email@example.com';
+      const bankTwoEmail = 'bank-two-email@ukexportfinance.gov.uk';
       const bankTwoTeamName = 'Bank Two Payment Officer Team';
       const bankTwo: BankResponse = {
         ...aBank(),
@@ -443,7 +443,7 @@ describe('utilisation-report-helpers', () => {
       // Arrange
       jest.mocked(externalApi.bankHolidays).getBankHolidayDatesForRegion.mockResolvedValue([]);
 
-      const validTestbank1Email = 'valid-testbank1-email@example.com';
+      const validTestbank1Email = 'valid-testbank1-email@ukexportfinance.gov.uk';
       const validTestbank1TeamName = 'Bank 1 Payment Officer Team';
       const validtestBank1: BankResponse = {
         ...aBank(),
@@ -451,8 +451,8 @@ describe('utilisation-report-helpers', () => {
         paymentOfficerTeam: { emails: [validTestbank1Email], teamName: validTestbank1TeamName },
       };
 
-      const validTestbank2Email1 = 'valid-bank-1-email@example.com';
-      const validTestbank2Email12 = 'another-valid-testbank2-email@example.com';
+      const validTestbank2Email1 = 'valid-bank-1-email@ukexportfinance.gov.uk';
+      const validTestbank2Email12 = 'another-valid-testbank2-email@ukexportfinance.gov.uk';
       const validTestbank2TeamName = 'Bank 1 Payment Officer Team';
       const validtestBank2: BankResponse = {
         ...aBank(),

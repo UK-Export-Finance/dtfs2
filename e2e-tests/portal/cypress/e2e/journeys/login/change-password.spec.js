@@ -156,7 +156,7 @@ context('Admin user creates a new user; the new user sets their password and the
 
     it('should NOT allow users to log in using the old credentials', () => {
       cy.enterUsernameAndPassword(userToCreate);
-      landingPage.emailError('Enter an email address in the correct format, for example, name@example.com');
+      landingPage.emailError('Enter an email address in the correct format, for example, name@ukexportfinance.gov.uk');
     });
 
     it('should NOT allow users to re-use an old password', () => {
