@@ -22,12 +22,19 @@ export const maintenance = (req: Request, res: Response, next: NextFunction) => 
   if (isActive) {
     console.info('⚙️ System under scheduled maintenance for request %s.', req.path);
 
-    return res
+    res
       .set('Retry-After', MAX_AGE)
       .set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
       .set('X-UKEF-Maintenance-Active', String(isActive))
-      .status(HttpStatusCode.ServiceUnavailable)
-      .send({ message: `The service is currently under maintenance. Please try again after ${MAX_AGE} seconds.` });
+      .status(HttpStatusCode.ServiceUnavailable);
+
+    if (req.accepts('html')) {
+      return res.render('maintenance.njk', {
+        message: 'You will able to use the service from.',
+      });
+    }
+
+    return res.send({ message: `The service is currently under maintenance. Please try again after ${MAX_AGE} seconds.` });
   }
 
   return next();

@@ -40,12 +40,6 @@ export const generateApp = () => {
   app.use(seo);
   app.use(security);
 
-  /**
-   * Scheduled maintenance middleware.
-   * Should always be the middleware after `seo` and `security`
-   */
-  app.use(maintenance);
-
   if (!process.env.SESSION_SECRET) {
     console.error('Portal UI server - SESSION_SECRET missing');
     throw new InvalidEnvironmentVariableError('Missing session secret value.');
@@ -122,6 +116,12 @@ export const generateApp = () => {
   );
 
   app.use('/assets', express.static('node_modules/govuk-frontend/dist/govuk/assets'), express.static(path.join(__dirname, '..', 'public')));
+
+  /**
+   * Scheduled maintenance middleware.
+   * Should always be after `seo`, `security` and `assets` middlewares for UI.
+   */
+  app.use(maintenance);
 
   app.use(createRateLimit());
 

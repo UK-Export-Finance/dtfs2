@@ -38,12 +38,6 @@ const generateApp = () => {
   app.use(seo);
   app.use(security);
 
-  /**
-   * Scheduled maintenance middleware.
-   * Should always be the middleware after `seo` and `security`
-   */
-  app.use(maintenance);
-
   app.use(compression());
 
   if (!process.env.SESSION_SECRET) {
@@ -114,6 +108,12 @@ const generateApp = () => {
   );
 
   app.use('/assets', express.static(path.join(__dirname, '..', 'public')));
+
+  /**
+   * Scheduled maintenance middleware.
+   * Should always be after `seo`, `security` and `assets` middlewares for UI.
+   */
+  app.use(maintenance);
 
   app.use(createRateLimit());
 

@@ -22,7 +22,7 @@ export const generateApp = () => {
 
   /**
    * Scheduled maintenance middleware.
-   * Should always be the middleware after `seo` and `security`
+   * Should always be after `seo` and `security` middlewares.
    */
   app.use(maintenance);
 
