@@ -6,9 +6,9 @@ import { MAINTENANCE } from '../../constants';
 /**
  * Express middleware to handle scheduled maintenance mode.
  *
- * If maintenance is active, responds with HTTP 503 Service Unavailable,
- * sets appropriate headers (`Retry-After`, `Cache-Control`, `X-UKEF-Maintenance-Active`),
- * and returns a message indicating the service is under maintenance.
+ * If maintenance is active, responds with a 503 Service Unavailable status,
+ * sets appropriate headers, and renders a maintenance page for HTML requests.
+ * For non-HTML requests, returns a JSON message indicating maintenance status.
  * Otherwise, passes control to the next middleware.
  *
  * @param req - Express request object
@@ -28,6 +28,7 @@ export const maintenance = (req: Request, res: Response, next: NextFunction) => 
       .set('X-UKEF-Maintenance-Active', String(isActive))
       .status(HttpStatusCode.ServiceUnavailable);
 
+    // TODO: DTFS2-7939: Set service resume timestamp
     if (req.accepts('html')) {
       return res.render('maintenance.njk', {
         message: 'You will able to use the service from.',
