@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios';
+import { Response } from '@ukef/dtfs2-common';
 import { api } from '../../api';
 import { app } from '../../../src/createApp';
-import { Response } from '../../types/response';
 
 const { get } = api(app);
 const url = '/countries';

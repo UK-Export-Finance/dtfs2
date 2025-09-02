@@ -1,7 +1,6 @@
 import { HttpStatusCode } from 'axios';
-import { DEAL_TYPE, DEAL_STATUS } from '@ukef/dtfs2-common';
+import { Response, DEAL_TYPE, DEAL_STATUS } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
-import { Response } from '../../types/response';
 
 const url = '/v1/portal/gef/deals';
 const deal = {

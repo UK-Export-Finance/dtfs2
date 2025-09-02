@@ -44,7 +44,6 @@ const generateApp = () => {
    */
   app.use(maintenance);
 
-  app.use(createRateLimit());
   app.use(compression());
 
   if (!process.env.SESSION_SECRET) {
@@ -115,6 +114,8 @@ const generateApp = () => {
   );
 
   app.use('/assets', express.static(path.join(__dirname, '..', 'public')));
+
+  app.use(createRateLimit());
 
   app.use(healthcheck);
 

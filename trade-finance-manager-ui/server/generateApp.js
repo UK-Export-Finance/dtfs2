@@ -46,7 +46,6 @@ const generateApp = () => {
    */
   app.use(maintenance);
 
-  app.use(createRateLimit());
   app.use(flash());
 
   configureNunjucks({
@@ -77,6 +76,8 @@ const generateApp = () => {
   );
 
   app.use('/assets', express.static('node_modules/govuk-frontend/dist/govuk/assets'), express.static(path.join(__dirname, '..', 'public')));
+
+  app.use(createRateLimit());
 
   // We add a conditional check here as there are no auth routes for the non sso journey, and
   // we cannot call app.use with './', undefined.

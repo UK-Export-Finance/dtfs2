@@ -1,6 +1,6 @@
 import { HttpStatusCode } from 'axios';
+import { Response } from '@ukef/dtfs2-common';
 import { createApi } from '../../api';
-import { Response } from '../../types/response';
 import { TestUser } from '../../types/test-user';
 import app from '../../../src/createApp';
 import { initialiseTestUsers } from '../../api-test-users';

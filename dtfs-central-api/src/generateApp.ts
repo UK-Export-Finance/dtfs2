@@ -27,13 +27,13 @@ export const generateApp = (): Express => {
    */
   app.use(maintenance);
 
-  app.use(createRateLimit());
   app.use(healthcheck);
   app.use(checkApiKey);
   // added limit for larger payloads
   app.use(express.json({ limit: MAX_REQUEST_SIZE }));
   app.use(compression());
   app.use(removeCsrfToken);
+  app.use(createRateLimit());
   // MongoDB sanitisation
   app.use(
     mongoSanitise({

@@ -12,3 +12,4 @@ export * from './mock-builders';
 export * from './fee-record-correction-review-information';
 export * from './record-correction-form-values';
 export * from './record-correction-transient-form-data';
+export * from './types';
