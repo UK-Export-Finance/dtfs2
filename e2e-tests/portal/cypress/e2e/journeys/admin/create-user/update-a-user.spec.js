@@ -7,8 +7,8 @@ const relative = require('../../../relativeURL');
 
 context('Admin user updates an existing user', () => {
   const userToUpdate = {
-    username: 'email@example.com',
-    email: 'email@example.com',
+    username: 'email@ukexportfinance.gov.uk',
+    email: 'email@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'first',
     surname: 'last',

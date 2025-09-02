@@ -7,8 +7,8 @@ const { ADMIN: AN_ADMIN, USER_WITH_INJECTION } = require('../../../../../../e2e-
 
 context('Admin user creates a new user', () => {
   const validUser = {
-    username: 'an.address@some.com',
-    email: 'an.address@some.com',
+    username: 'an.address@ukexportfinance.gov.uk',
+    email: 'an.address@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'bob',
     surname: 'builder',
@@ -17,8 +17,8 @@ context('Admin user creates a new user', () => {
   };
 
   const userWithInvalidPassword = {
-    username: 'email@example.com',
-    email: 'email@example.com',
+    username: 'email@ukexportfinance.gov.uk',
+    email: 'email@ukexportfinance.gov.uk',
     password: 'aaa',
     firstname: 'alfred',
     surname: 'd. great',
