@@ -9,6 +9,7 @@ const { EXTERNAL_API_KEY } = process.env;
 
 const headers = {
   'x-api-key': asString(EXTERNAL_API_KEY, 'EXTERNAL_API_KEY'),
+  accept: 'application/json',
 };
 
 export const api = (app: Express) => ({

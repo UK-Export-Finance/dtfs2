@@ -8,6 +8,7 @@ const { PORTAL_API_KEY } = process.env;
 const authHeaders = (token) => ({
   'x-api-key': PORTAL_API_KEY,
   Authorization: token,
+  accept: 'application/json',
 });
 
 const postMultipartForm = (app, { url, data, files, headers }) => {

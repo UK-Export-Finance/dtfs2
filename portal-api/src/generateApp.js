@@ -26,14 +26,15 @@ const generateApp = () => {
 
   const app = express();
 
+  app.use(seo);
+  app.use(security);
+
   /**
    * Scheduled maintenance middleware.
-   * Should always be the first middleware.
+   * Should always be after `seo` and `security` middlewares.
    */
   app.use(maintenance);
 
-  app.use(seo);
-  app.use(security);
   app.use(createRateLimit());
   app.use(healthcheck);
   app.use(passport.initialize());

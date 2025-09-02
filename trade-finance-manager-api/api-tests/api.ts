@@ -17,8 +17,9 @@ const { TFM_API_KEY } = process.env;
  */
 const getHeaders = (token?: string): IncomingHttpHeaders => {
   const headers: IncomingHttpHeaders = {
-    'content-type': 'application/json',
     'x-api-key': TFM_API_KEY,
+    'content-type': 'application/json',
+    accept: 'application/json',
   };
   if (token) {
     headers.Authorization = token;
