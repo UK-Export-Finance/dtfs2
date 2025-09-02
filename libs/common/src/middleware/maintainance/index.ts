@@ -31,7 +31,7 @@ export const maintenance = (req: Request, res: Response, next: NextFunction) => 
     // TODO: DTFS2-7939: Set service resume timestamp
     if (req.accepts('html')) {
       return res.render('maintenance.njk', {
-        message: 'You will able to use the service from.',
+        message: 'You will be able to use the service from.',
       });
     }
 

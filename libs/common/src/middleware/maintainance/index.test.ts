@@ -104,7 +104,7 @@ describe('middleware/maintenance', () => {
 
         expect(res._getRenderView()).toBe('maintenance.njk');
         expect(res._getRenderData()).toEqual({
-          message: 'You will able to use the service from.',
+          message: 'You will be able to use the service from.',
         });
       },
     );
