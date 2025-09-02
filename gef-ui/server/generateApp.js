@@ -35,14 +35,16 @@ const generateApp = () => {
     maxAge: 604800000, // 7 days
   };
 
+  app.use(seo);
+  app.use(security);
+
   /**
    * Scheduled maintenance middleware.
-   * Should always be the first middleware.
+   * Should always be the middleware after `seo` and `security`
    */
   app.use(maintenance);
 
-  app.use(seo);
-  app.use(security);
+  app.use(createRateLimit());
   app.use(compression());
 
   if (!process.env.SESSION_SECRET) {
@@ -113,8 +115,6 @@ const generateApp = () => {
   );
 
   app.use('/assets', express.static(path.join(__dirname, '..', 'public')));
-
-  app.use(createRateLimit());
 
   app.use(healthcheck);
 

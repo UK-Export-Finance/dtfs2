@@ -23,15 +23,16 @@ configurePassport(passport);
 const generateApp = () => {
   const app = express();
 
+  app.use(seo);
+  app.use(security);
+
   /**
    * Scheduled maintenance middleware.
-   * Should always be the first middleware.
+   * Should always be the middleware after `seo` and `security`
    */
   app.use(maintenance);
 
   app.use(createRateLimit());
-  app.use(seo);
-  app.use(security);
   app.use(express.json());
   app.use(compression());
   app.use(removeCsrfToken);

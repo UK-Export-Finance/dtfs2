@@ -16,23 +16,24 @@ const { BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, UTILISATION_REPORTS_ROU
 export const generateApp = (): Express => {
   const app = express();
 
-  /**
-   * Scheduled maintenance middleware.
-   * Should always be the first middleware.
-   */
-  app.use(maintenance);
-
   app.use(`/v1/${SWAGGER_ROUTE}`, swaggerRoutes);
 
   app.use(seo);
   app.use(security);
+
+  /**
+   * Scheduled maintenance middleware.
+   * Should always be the middleware after `seo` and `security`
+   */
+  app.use(maintenance);
+
+  app.use(createRateLimit());
   app.use(healthcheck);
   app.use(checkApiKey);
   // added limit for larger payloads
   app.use(express.json({ limit: MAX_REQUEST_SIZE }));
   app.use(compression());
   app.use(removeCsrfToken);
-  app.use(createRateLimit());
   // MongoDB sanitisation
   app.use(
     mongoSanitise({

@@ -37,14 +37,14 @@ export const generateApp = () => {
     maxAge: 604800000, // 7 days
   };
 
-  /**
-   * Scheduled maintenance middleware.
-   * Should always be the first middleware.
-   */
-  app.use(maintenance);
-
   app.use(seo);
   app.use(security);
+
+  /**
+   * Scheduled maintenance middleware.
+   * Should always be the middleware after `seo` and `security`
+   */
+  app.use(maintenance);
 
   if (!process.env.SESSION_SECRET) {
     console.error('Portal UI server - SESSION_SECRET missing');
@@ -91,6 +91,7 @@ export const generateApp = () => {
 
   app.use(session(sessionOptions));
 
+  app.use(createRateLimit());
   app.use(flash());
 
   configureNunjucks({
@@ -122,8 +123,6 @@ export const generateApp = () => {
   );
 
   app.use('/assets', express.static('node_modules/govuk-frontend/dist/govuk/assets'), express.static(path.join(__dirname, '..', 'public')));
-
-  app.use(createRateLimit());
 
   app.use(healthcheck);
 

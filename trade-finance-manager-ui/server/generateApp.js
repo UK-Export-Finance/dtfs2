@@ -37,15 +37,16 @@ const generateApp = () => {
     maxAge: 604800000, // 7 days
   };
 
+  app.use(seo);
+  app.use(security);
+
   /**
    * Scheduled maintenance middleware.
    * Should always be the first middleware.
    */
   app.use(maintenance);
 
-  app.use(seo);
-  app.use(security);
-
+  app.use(createRateLimit());
   app.use(flash());
 
   configureNunjucks({
@@ -76,8 +77,6 @@ const generateApp = () => {
   );
 
   app.use('/assets', express.static('node_modules/govuk-frontend/dist/govuk/assets'), express.static(path.join(__dirname, '..', 'public')));
-
-  app.use(createRateLimit());
 
   // We add a conditional check here as there are no auth routes for the non sso journey, and
   // we cannot call app.use with './', undefined.
