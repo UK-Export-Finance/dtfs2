@@ -1,4 +1,4 @@
-import { nowZeroSeconds } from './date';
+import { getNowAsUtcISOString } from './date';
 import { NumberGeneratorObject } from '../types';
 import { USER, NUMBER_TYPE } from '../constants';
 
@@ -12,22 +12,21 @@ import { USER, NUMBER_TYPE } from '../constants';
 export const generateMockedNumberGeneratorIds = (): NumberGeneratorObject[] => {
   // prefix for ids
   const prefix = '003';
-  // number of digits to randomise
-  const randomDigitsLength = 7;
 
-  const min = 10 ** (randomDigitsLength - 1);
-  const max = 10 ** randomDigitsLength - 1;
+  // randomly generates a 7-digit number between 1000000 and 9999999
+  const number = Math.floor(1000000 + Math.random() * 9000000);
 
-  // generate random id and masked id in number form
-  const id = Number(prefix + (Math.floor(Math.random() * (max - min + 1)) + min));
-  const maskedId = String(prefix + (Math.floor(Math.random() * (max - min + 1)) + min));
+  // generate id and masked id in number form from randomly generated number
+  const id = Number(prefix + number);
+  const maskedId = String(prefix + number);
+  const zeroTimeStamp = true;
 
   const mockObject = {
     id,
     maskedId,
     type: NUMBER_TYPE.DEAL,
     createdBy: USER.DTFS,
-    createdDatetime: new Date(nowZeroSeconds()).toISOString(),
+    createdDatetime: getNowAsUtcISOString(zeroTimeStamp),
     requestingSystem: USER.DTFS,
   };
 

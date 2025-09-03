@@ -17,11 +17,18 @@ export const nowZeroSeconds = (): number => now().setSeconds(0, 0);
 
 /**
  * Returns the current date and time as a UTC ISO string.
- *
+ * @param zeroTimeStamp - whether to zero the timestamp - defaults to false
  * @returns {IsoDateTimeStamp} The current date and time in UTC formatted as an ISO string.
  */
-export const getNowAsUtcISOString = (): IsoDateTimeStamp =>
-  `${formatInTimeZone(new Date(), '+00:00', 'yyyy-MM-dd')}T${formatInTimeZone(new Date(), '+00:00', 'HH:mm:ss.SSS xxxxxx')}`;
+export const getNowAsUtcISOString = (zeroTimeStamp = false): IsoDateTimeStamp => {
+  let date: Date | number = new Date();
+
+  if (zeroTimeStamp) {
+    date = nowZeroSeconds();
+  }
+
+  return `${formatInTimeZone(date, '+00:00', 'yyyy-MM-dd')}T${formatInTimeZone(date, '+00:00', 'HH:mm:ss.SSS xxxxxx')}`;
+};
 
 /**
  * Returns the long month name associated with the given month number

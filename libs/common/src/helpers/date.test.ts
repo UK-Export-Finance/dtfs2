@@ -28,6 +28,18 @@ describe('date helpers', () => {
 
       expect(result).toEqual(expected);
     });
+
+    it('should return a zeroed timestamp if zeroTimeStamp is true', () => {
+      const result = getNowAsUtcISOString(true);
+
+      const expected = `${formatInTimeZone(new Date().setSeconds(0, 0), '+00:00', 'yyyy-MM-dd')}T${formatInTimeZone(
+        new Date().setSeconds(0, 0),
+        '+00:00',
+        'HH:mm:ss.SSS xxxxxx',
+      )}`;
+
+      expect(result).toEqual(expected);
+    });
   });
 
   describe('getMonthName', () => {

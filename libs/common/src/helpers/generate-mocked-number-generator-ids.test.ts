@@ -1,9 +1,9 @@
 import { generateMockedNumberGeneratorIds } from './generate-mocked-number-generator-ids';
-import { nowZeroSeconds } from './date';
+import { getNowAsUtcISOString } from './date';
 
 const type = 1;
 const createdBy = 'Portal v2/TFM';
-const createdDatetime = new Date(nowZeroSeconds()).toISOString();
+const createdDatetime = getNowAsUtcISOString(true);
 const requestingSystem = 'Portal v2/TFM';
 
 describe('generate-mocked-number-generator-ids', () => {
@@ -15,6 +15,7 @@ describe('generate-mocked-number-generator-ids', () => {
       // Assert
       expect(typeof result[0]!.id).toBe('number');
       expect(typeof result[0]!.maskedId).toBe('string');
+      expect(result[0]!.maskedId.startsWith('003')).toBe(true);
       expect(result[0]!.type).toBe(type);
       expect(result[0]!.createdBy).toBe(createdBy);
       expect(result[0]!.createdDatetime).toBe(createdDatetime);

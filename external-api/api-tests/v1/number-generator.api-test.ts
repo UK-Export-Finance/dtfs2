@@ -12,7 +12,7 @@
 import dotenv from 'dotenv';
 import axios, { HttpStatusCode } from 'axios';
 import { createRequest, createResponse } from 'node-mocks-http';
-import { nowZeroSeconds, USER, NUMBER_TYPE, ENTITY_TYPE, UKEF_ID } from '@ukef/dtfs2-common';
+import { getNowAsUtcISOString, USER, NUMBER_TYPE, ENTITY_TYPE, UKEF_ID } from '@ukef/dtfs2-common';
 import { getNumber } from '../../src/v1/controllers/number-generator.controller';
 import { InvalidEntityTypeError } from '../../src/v1/errors';
 
@@ -49,8 +49,8 @@ const mockSuccessfulResponse = {
 describe('getNumber', () => {
   beforeEach(() => {
     process.env = { ...originalProcessEnv };
-    process.env.NUMBER_GENERATOR = 'abc';
-    process.env.MOCK_E2E_NUMBER_GENERATOR = 'def';
+    process.env.NUMBER_GENERATOR = 'MOCK_E2E_NUMBER_GENERATOR';
+    process.env.MOCK_E2E_NUMBER_GENERATOR = '';
   });
 
   afterAll(() => {
@@ -58,26 +58,26 @@ describe('getNumber', () => {
   });
 
   it('should retrieve a number from the number generator API when valid entityType and dealId are provided', async () => {
-    process.env.NUMBER_GENERATOR = 'abc';
-    process.env.MOCK_E2E_NUMBER_GENERATOR = 'def';
+    process.env.NUMBER_GENERATOR = 'MOCK_E2E_NUMBER_GENERATOR';
+    process.env.MOCK_E2E_NUMBER_GENERATOR = '';
 
-    const request = createRequest({ body });
-    const response = createResponse();
-    const result = await getNumber(request, response);
+    const MockRequest = createRequest({ body });
+    const MockResponse = createResponse();
+    const result = await getNumber(MockRequest, MockResponse);
 
     expect(result).not.toBeNull();
     expect(result.statusCode).toEqual(200);
   });
 
   it('should generate a number for a deal with valid entityType and dealId', async () => {
-    process.env.NUMBER_GENERATOR = 'abc';
-    process.env.MOCK_E2E_NUMBER_GENERATOR = 'def';
+    process.env.NUMBER_GENERATOR = 'MOCK_E2E_NUMBER_GENERATOR';
+    process.env.MOCK_E2E_NUMBER_GENERATOR = '';
 
     // Mock request and response objects
-    const request: any = {
+    const MockRequest: any = {
       body,
     };
-    const response: any = {
+    const MockResponse: any = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
     };
@@ -86,11 +86,11 @@ describe('getNumber', () => {
     axios.post = jest.fn().mockResolvedValue(mockSuccessfulResponse);
 
     // Call the get function
-    await getNumber(request, response);
+    await getNumber(MockRequest, MockResponse);
 
     // Assertions
-    expect(response.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
-    expect(response.send).toHaveBeenCalledWith({
+    expect(MockResponse.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+    expect(MockResponse.send).toHaveBeenCalledWith({
       status: 200,
       data: [
         {
@@ -107,29 +107,29 @@ describe('getNumber', () => {
 
   describe('when NUMBER_GENERATOR is set to MOCK_E2E_NUMBER_GENERATOR', () => {
     beforeEach(() => {
-      process.env.NUMBER_GENERATOR = 'abc';
-      process.env.MOCK_E2E_NUMBER_GENERATOR = 'abc';
+      process.env.NUMBER_GENERATOR = 'MOCK_E2E_NUMBER_GENERATOR';
+      process.env.MOCK_E2E_NUMBER_GENERATOR = 'MOCK_E2E_NUMBER_GENERATOR';
     });
 
     it('should return mocked response', async () => {
-      process.env.NUMBER_GENERATOR = 'abc';
-      process.env.MOCK_E2E_NUMBER_GENERATOR = 'abc';
+      process.env.NUMBER_GENERATOR = 'MOCK_E2E_NUMBER_GENERATOR';
+      process.env.MOCK_E2E_NUMBER_GENERATOR = 'MOCK_E2E_NUMBER_GENERATOR';
 
       // Mock request and response objects
-      const request: any = {
+      const MockRequest: any = {
         body,
       };
-      const response: any = {
+      const MockResponse: any = {
         status: jest.fn().mockReturnThis(),
         send: jest.fn(),
       };
 
       // Call the get function
-      await getNumber(request, response);
+      await getNumber(MockRequest, MockResponse);
 
-      expect(response.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+      expect(MockResponse.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
 
-      expect(response.send).toHaveBeenCalledWith({
+      expect(MockResponse.send).toHaveBeenCalledWith({
         status: HttpStatusCode.Created,
         data: [
           {
@@ -137,7 +137,7 @@ describe('getNumber', () => {
             maskedId: expect.any(String),
             type: 1,
             createdBy: USER.DTFS,
-            createdDatetime: new Date(nowZeroSeconds()).toISOString(),
+            createdDatetime: getNowAsUtcISOString(true),
             requestingSystem: USER.DTFS,
           },
         ],
@@ -150,10 +150,10 @@ describe('getNumber', () => {
       process.env.MOCK_E2E_NUMBER_GENERATOR = undefined;
 
       // Mock request and response objects
-      const request: any = {
+      const MockRequest: any = {
         body,
       };
-      const response: any = {
+      const MockResponse: any = {
         status: jest.fn().mockReturnThis(),
         send: jest.fn(),
       };
@@ -162,11 +162,11 @@ describe('getNumber', () => {
       axios.post = jest.fn().mockResolvedValue(mockSuccessfulResponse);
 
       // Call the get function
-      await getNumber(request, response);
+      await getNumber(MockRequest, MockResponse);
 
       // Assertions
-      expect(response.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
-      expect(response.send).toHaveBeenCalledWith({
+      expect(MockResponse.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+      expect(MockResponse.send).toHaveBeenCalledWith({
         status: 200,
         data: [
           {
@@ -187,10 +187,10 @@ describe('getNumber', () => {
       process.env.MOCK_E2E_NUMBER_GENERATOR = '';
 
       // Mock request and response objects
-      const request: any = {
+      const MockRequest: any = {
         body,
       };
-      const response: any = {
+      const MockResponse: any = {
         status: jest.fn().mockReturnThis(),
         send: jest.fn(),
       };
@@ -199,11 +199,11 @@ describe('getNumber', () => {
       axios.post = jest.fn().mockResolvedValue(mockSuccessfulResponse);
 
       // Call the get function
-      await getNumber(request, response);
+      await getNumber(MockRequest, MockResponse);
 
       // Assertions
-      expect(response.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
-      expect(response.send).toHaveBeenCalledWith({
+      expect(MockResponse.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+      expect(MockResponse.send).toHaveBeenCalledWith({
         status: 200,
         data: [
           {
@@ -220,41 +220,41 @@ describe('getNumber', () => {
   });
 
   it('should throw an error when entityType is not valid', async () => {
-    process.env.NUMBER_GENERATOR = 'abc';
-    process.env.MOCK_E2E_NUMBER_GENERATOR = 'def';
+    process.env.NUMBER_GENERATOR = 'MOCK_E2E_NUMBER_GENERATOR';
+    process.env.MOCK_E2E_NUMBER_GENERATOR = '';
 
     // Mock request and response objects
-    const request: any = {
+    const MockRequest: any = {
       body: {
         entityType: 'invalid',
         dealId: '12345',
       },
     };
-    const response: any = {
+    const MockResponse: any = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
     };
 
     // Call the get function
-    await getNumber(request, response);
+    await getNumber(MockRequest, MockResponse);
 
     // Assertions
-    expect(response.status).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
-    expect(response.send).toHaveBeenCalledWith({
+    expect(MockResponse.status).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
+    expect(MockResponse.send).toHaveBeenCalledWith({
       status: HttpStatusCode.BadRequest,
       error: new InvalidEntityTypeError('invalid'),
     });
   });
 
   it('should throw an error when number generator response is void', async () => {
-    process.env.NUMBER_GENERATOR = 'abc';
-    process.env.MOCK_E2E_NUMBER_GENERATOR = 'def';
+    process.env.NUMBER_GENERATOR = 'MOCK_E2E_NUMBER_GENERATOR';
+    process.env.MOCK_E2E_NUMBER_GENERATOR = '';
 
     // Mock request and response objects
-    const request: any = {
+    const MockRequest: any = {
       body,
     };
-    const response: any = {
+    const MockResponse: any = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
     };
@@ -266,11 +266,11 @@ describe('getNumber', () => {
     });
 
     // Call the get function
-    await getNumber(request, response);
+    await getNumber(MockRequest, MockResponse);
 
     // Assertions
-    expect(response.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
-    expect(response.send).toHaveBeenCalledWith({
+    expect(MockResponse.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
+    expect(MockResponse.send).toHaveBeenCalledWith({
       status: HttpStatusCode.InternalServerError,
       error: {
         cause: 'Invalid number generator response received for deal 1234',

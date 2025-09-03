@@ -67,4 +67,34 @@ describe('is-number-generator-mocked', () => {
       expect(result).toEqual(false);
     });
   });
+
+  describe('when both MOCK_E2E_NUMBER_GENERATOR and NUMBER_GENERATOR are undefined', () => {
+    beforeEach(() => {
+      process.env = { ...originalProcessEnv };
+    });
+
+    it('should return false', () => {
+      process.env.MOCK_E2E_NUMBER_GENERATOR = undefined;
+      process.env.NUMBER_GENERATOR = undefined;
+
+      const result = isNumberGeneratorMocked();
+
+      expect(result).toEqual(false);
+    });
+  });
+
+  describe('when both MOCK_E2E_NUMBER_GENERATOR and NUMBER_GENERATOR are empty strings', () => {
+    beforeEach(() => {
+      process.env = { ...originalProcessEnv };
+    });
+
+    it('should return false', () => {
+      process.env.MOCK_E2E_NUMBER_GENERATOR = '';
+      process.env.NUMBER_GENERATOR = '';
+
+      const result = isNumberGeneratorMocked();
+
+      expect(result).toEqual(false);
+    });
+  });
 });
