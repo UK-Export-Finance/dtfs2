@@ -1,4 +1,5 @@
 const joi = require('joi');
+const { isUkefEmail } = require('@ukef/dtfs2-common');
 
 const isEmptyString = (str) => {
   if (!str || ((typeof str === 'string' || str instanceof String) && !str.trim().length)) {
@@ -54,7 +55,7 @@ const isValidEmail = (email) => {
     const emailLower = email.toLowerCase();
     const validation = joi.string().email().required().validate(emailLower);
 
-    if (!validation.error && emailLower.endsWith('ukexportfinance.gov.uk')) {
+    if (!validation.error && isUkefEmail(emailLower)) {
       return true;
     }
   }

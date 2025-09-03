@@ -19,7 +19,13 @@ const selectAtLeastOneBank = (user, change) => {
     ];
   }
 
-  const cantHaveAllBank = change.bank?.name === CONSTANT.ALL && !(change.roles?.includes(ADMIN) || change.roles?.includes(READ_ONLY));
+  const eligibleRoles = [ADMIN, READ_ONLY];
+
+  const isBankAll = change.bank?.name === CONSTANT.ALL;
+  const isRoleEligible = change.roles?.includes(eligibleRoles);
+
+  const cantHaveAllBank = isBankAll && !isRoleEligible;
+
   if (cantHaveAllBank) {
     return [
       {
