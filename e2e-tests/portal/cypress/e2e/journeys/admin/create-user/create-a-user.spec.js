@@ -6,13 +6,23 @@ const {
 const { ADMIN: AN_ADMIN, USER_WITH_INJECTION } = require('../../../../../../e2e-fixtures/portal-users.fixture');
 
 context('Admin user creates a new user', () => {
+  const nonUkefUser = {
+    username: 'an.address@example.com',
+    email: 'an.address@example.com',
+    password: 'AbC!2345',
+    firstname: 'alfred',
+    surname: 'builder',
+    bank: '9',
+    roles: [ADMIN],
+  };
+
   const validUser = {
     username: 'an.address@ukexportfinance.gov.uk',
     email: 'an.address@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'bob',
     surname: 'builder',
-    bank: 'Bank 1',
+    bank: '9',
     roles: [MAKER],
   };
 
@@ -22,7 +32,7 @@ context('Admin user creates a new user', () => {
     password: 'aaa',
     firstname: 'alfred',
     surname: 'd. great',
-    bank: 'Bank 2',
+    bank: '961',
     roles: [MAKER],
   };
 
@@ -166,12 +176,12 @@ context('Admin user creates a new user', () => {
 
     it('should receive error when the email address is from a non-UKEF domain', () => {
       // Fill in all the fields
-      cy.keyboardInput(createUser.firstname(), validUser.firstname);
-      cy.keyboardInput(createUser.surname(), validUser.surname);
+      cy.keyboardInput(createUser.firstname(), nonUkefUser.firstname);
+      cy.keyboardInput(createUser.surname(), nonUkefUser.surname);
       createUser.isTrustedFalse().click();
       createUser.role(ADMIN).click();
-      cy.keyboardInput(createUser.username(), validUser.username);
-      createUser.bank().select(validUser.bank);
+      cy.keyboardInput(createUser.username(), nonUkefUser.username);
+      createUser.bank().select(nonUkefUser.bank);
 
       // Create user
       createUser.createUser().click();

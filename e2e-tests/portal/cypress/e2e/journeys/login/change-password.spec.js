@@ -12,7 +12,7 @@ context('Admin user creates a new user; the new user sets their password and the
     password: 'AbC!2345',
     firstname: 'first',
     surname: 'last',
-    bank: 'all',
+    bank: '9',
     roles: ['maker'],
   };
 
@@ -156,7 +156,7 @@ context('Admin user creates a new user; the new user sets their password and the
 
     it('should NOT allow users to log in using the old credentials', () => {
       cy.enterUsernameAndPassword(userToCreate);
-      landingPage.emailError('Enter an email address in the correct format, for example, name@ukexportfinance.gov.uk');
+      landingPage.emailError('Enter an email address in the correct format, for example, name@example.com');
     });
 
     it('should NOT allow users to re-use an old password', () => {
