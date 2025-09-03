@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const flash = require('connect-flash');
 const { HttpStatusCode } = require('axios');
+const { maintenance } = require('@ukef/dtfs2-common');
 const routes = require('./routes');
 const { unauthenticatedLoginRoutes } = require('./routes/login');
 const feedbackRoutes = require('./routes/feedback');
@@ -69,6 +70,12 @@ const generateApp = () => {
   );
 
   app.use('/assets', express.static('node_modules/govuk-frontend/dist/govuk/assets'), express.static(path.join(__dirname, '..', 'public')));
+
+  /**
+   * Scheduled maintenance middleware.
+   * Should always be after `seo`, `security` and `assets` middlewares for UI.
+   */
+  app.use(maintenance);
 
   app.use(createRateLimit());
 

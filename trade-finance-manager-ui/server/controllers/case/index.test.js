@@ -117,6 +117,8 @@ describe('controllers - case', () => {
           successMessage: mockSuccessBannerMessage,
           inProgressPortalAmendments: [],
           hasInProgressPortalAmendments: false,
+          hasFutureEffectiveDatePortalAmendments: false,
+          formattedFutureEffectiveDatePortalAmendments: [],
         });
       });
 
@@ -873,6 +875,8 @@ describe('controllers - case', () => {
           showFacilityEndDate: false,
           inProgressPortalAmendments: [],
           hasInProgressPortalAmendments: false,
+          hasFutureEffectiveDatePortalAmendments: false,
+          futureEffectiveDatePortalAmendment: undefined,
         });
       });
 
@@ -917,6 +921,8 @@ describe('controllers - case', () => {
           showFacilityEndDate: false,
           inProgressPortalAmendments: expect.any(Array),
           hasInProgressPortalAmendments: true,
+          hasFutureEffectiveDatePortalAmendments: false,
+          futureEffectiveDatePortalAmendment: undefined,
         });
       });
 
@@ -966,6 +972,8 @@ describe('controllers - case', () => {
           showFacilityEndDate: false,
           inProgressPortalAmendments: expect.any(Array),
           hasInProgressPortalAmendments: true,
+          hasFutureEffectiveDatePortalAmendments: false,
+          formattedFutureEffectiveDatePortalAmendments: undefined,
         });
       });
     });

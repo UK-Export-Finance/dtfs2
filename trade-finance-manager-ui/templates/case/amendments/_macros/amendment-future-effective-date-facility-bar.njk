@@ -1,0 +1,20 @@
+ {% from "moj/components/banner/macro.njk" import mojBanner %}
+
+ {% macro render(params) %}
+  {% set futureEffectiveDatePortalAmendment = params.futureEffectiveDatePortalAmendment %}
+
+  {% if futureEffectiveDatePortalAmendment %}
+    {% set bannerHtml %}
+      <p class="govuk-body" data-cy="amendment--future-effective-date-facility-bar">
+        Amendment {{ futureEffectiveDatePortalAmendment.referenceNumber }} is effective on {{ futureEffectiveDatePortalAmendment.effectiveDate }}.
+      </p>
+    {% endset %}
+
+    {{ mojBanner({
+      type: 'information',
+      classes: 'govuk-!-margin-bottom-0 govuk-!-margin-top-6',
+      html: bannerHtml
+    }) }}
+  {% endif %}
+
+{% endmacro %}

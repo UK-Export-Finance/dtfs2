@@ -193,7 +193,7 @@ npm run api-test "**/*/deals-party-db.api-test.js"
 
 ### UI Tests :rocket:
 
-From the respective folder (./portal, ./gef-ui, ./trade-finance-manager-ui):
+From the respective folder (./portal-ui, ./gef-ui, ./trade-finance-manager-ui):
 
 #### Run a UI Test Suite :heavy_check_mark:
 
@@ -209,7 +209,7 @@ npm run unit-test /path/to/file.test.js
 
 ## Building CSS and JS :wrench:
 
-The `gef-ui`, `portal` and `trade-finance-manager-ui` folders/services all have
+The `gef-ui`, `portal-ui` and `trade-finance-manager-ui` folders/services all have
 a `public` folder which contains compiled/minified CSS and JS that is used in
 the running application.
 

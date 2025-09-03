@@ -5,7 +5,7 @@ const { param } = require('express-validator');
 
 const { validateUserHasAtLeastOneAllowedRole } = require('./roles/validate-user-has-at-least-one-allowed-role');
 const { validateUserAndBankIdMatch } = require('./validation/validate-user-and-bank-id-match');
-const { bankIdValidation, sqlIdValidation, mongoIdValidation } = require('./validation/route-validators/route-validators');
+const { bankIdValidation, sqlIdValidation, mongoIdValidation, isProductionValidation } = require('./validation/route-validators/route-validators');
 const { handleExpressValidatorResult } = require('./validation/route-validators/express-validator-result-handler');
 const { MAKER, CHECKER, READ_ONLY, ADMIN, PAYMENT_REPORT_OFFICER } = require('./roles/roles');
 
@@ -168,7 +168,7 @@ authRouter
   .route('/deals/:id')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealsController.findOne)
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealsController.update)
-  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealsController.delete);
+  .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), isProductionValidation(), dealsController.delete);
 
 authRouter.route('/deals/:id/clone').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealClone.clone);
 authRouter.route('/deals/:id/eligibility-criteria').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealEligibilityCriteria.update);

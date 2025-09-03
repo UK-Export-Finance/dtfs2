@@ -61,6 +61,7 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - MAINTENANCE_ACTIVE
       - PORT=5005
       - CORS_ORIGIN
       - EXTERNAL_API_URL=http://external-api:5002
@@ -111,6 +112,7 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - MAINTENANCE_ACTIVE
       - PORT=5003
       - PORTAL_API_KEY
       - TFM_API_KEY
@@ -155,6 +157,7 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - MAINTENANCE_ACTIVE
       - PORT=5004
       - CORS_ORIGIN
       - EXTERNAL_API_URL=http://external-api:5002
@@ -188,11 +191,11 @@ services:
       - ENTRA_ID_CLIENT_SECRET
       - ENTRA_ID_REDIRECT_URL
 
-  portal:
+  portal-ui:
     build:
       context: .
-      dockerfile: ./portal/Dockerfile
-    image: dtfs/portal
+      dockerfile: ./portal-ui/Dockerfile
+    image: dtfs/portal-ui
     restart: always
     depends_on:
       - redis
@@ -202,12 +205,13 @@ services:
       - '5000:5000' # http
       - '9226:9226' # debug
     volumes:
-      - ./portal/server:/app/portal/server:ro
-      - ./portal/public:/app/portal/public:ro
-      - ./portal/templates:/app/portal/templates:ro
+      - ./portal-ui/server:/app/portal-ui/server:ro
+      - ./portal-ui/public:/app/portal-ui/public:ro
+      - ./portal-ui/templates:/app/portal-ui/templates:ro
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - MAINTENANCE_ACTIVE
       - PORTAL_API_URL=http://portal-api:5001
       - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_UI_URL
@@ -246,6 +250,7 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - MAINTENANCE_ACTIVE
       - PORT=5001
       - CORS_ORIGIN
       - JWT_SIGNING_KEY
@@ -303,6 +308,7 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - MAINTENANCE_ACTIVE
       - PORT=5002
       - PORTAL_API_KEY
       - TFM_API_KEY
@@ -351,6 +357,7 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - MAINTENANCE_ACTIVE
       - PORTAL_API_URL=http://portal-api:5001
       - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_UI_URL
@@ -383,12 +390,12 @@ services:
     build: ./reverse-proxy
     image: 'dtfs/reverse-proxy'
     depends_on:
-      - portal
+      - portal-ui
       - gef-ui
     ports:
       - '80:80'
     environment:
-      - PORTAL_UI=portal:5000
+      - PORTAL_UI=portal-ui:5000
       - GEF_UI=gef-ui:5006
     deploy:
       resources:
@@ -408,6 +415,7 @@ services:
       - '7071:80'
     environment:
       - TZ
+      - MAINTENANCE_ACTIVE
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
       - FUNCTIONS_WORKER_RUNTIME=node
       - WEBSITE_HOSTNAME=acbs:7071

@@ -9,6 +9,7 @@ const RedisStore = require('connect-redis')(session);
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
+const { maintenance } = require('@ukef/dtfs2-common');
 const routes = require('./routes');
 const supportingInformationUploadRoutes = require('./routes/supporting-information-upload');
 const healthcheck = require('./healthcheck');
@@ -36,6 +37,7 @@ const generateApp = () => {
 
   app.use(seo);
   app.use(security);
+
   app.use(compression());
 
   if (!process.env.SESSION_SECRET) {
@@ -106,6 +108,12 @@ const generateApp = () => {
   );
 
   app.use('/assets', express.static(path.join(__dirname, '..', 'public')));
+
+  /**
+   * Scheduled maintenance middleware.
+   * Should always be after `seo`, `security` and `assets` middlewares for UI.
+   */
+  app.use(maintenance);
 
   app.use(createRateLimit());
 

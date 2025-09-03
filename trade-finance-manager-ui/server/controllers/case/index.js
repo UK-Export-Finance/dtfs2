@@ -36,6 +36,7 @@ const getCaseDeal = async (req, res) => {
   try {
     const dealId = req.params._id;
     const { userToken } = req.session;
+    const { teams } = req.session.user;
 
     const { user } = asUserSession(req.session);
 
@@ -58,11 +59,12 @@ const getCaseDeal = async (req, res) => {
       deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
     }
 
-    const { inProgressPortalAmendments, hasInProgressPortalAmendments } = getAmendmentsInProgress({
-      amendments,
-      deal,
-      teams: req.session.user.teams,
-    });
+    const { inProgressPortalAmendments, hasInProgressPortalAmendments, hasFutureEffectiveDatePortalAmendments, formattedFutureEffectiveDatePortalAmendments } =
+      getAmendmentsInProgress({
+        amendments,
+        deal,
+        teams,
+      });
 
     const { dealSnapshot } = deal;
 
@@ -98,6 +100,8 @@ const getCaseDeal = async (req, res) => {
       hasDraftCancellation,
       inProgressPortalAmendments,
       hasInProgressPortalAmendments,
+      hasFutureEffectiveDatePortalAmendments,
+      formattedFutureEffectiveDatePortalAmendments,
     });
   } catch (error) {
     console.error('Unable to render deal %o', error);
@@ -377,12 +381,33 @@ const getCaseFacility = async (req, res) => {
     const amendmentsInProgressSubmittedFromPim = getAmendmentsInProgressSubmittedFromPim({ amendments, deal });
     const hasAmendmentInProgressSubmittedFromPim = amendmentsInProgressSubmittedFromPim.length > 0;
 
-    const { hasAmendmentInProgress, hasAmendmentInProgressButton, showContinueAmendmentButton, inProgressPortalAmendments, hasInProgressPortalAmendments } =
-      getAmendmentsInProgress({
-        amendments,
-        deal,
-        teams,
-      });
+    const {
+      hasAmendmentInProgress,
+      hasAmendmentInProgressButton,
+      showContinueAmendmentButton,
+      inProgressPortalAmendments,
+      hasInProgressPortalAmendments,
+      hasFutureEffectiveDatePortalAmendments,
+      formattedFutureEffectiveDatePortalAmendments,
+    } = getAmendmentsInProgress({
+      amendments,
+      deal,
+      teams,
+    });
+
+    let futureEffectiveDatePortalAmendment;
+
+    /**
+     * if has future effective date portal amendments
+     * find the future effective date amendment for current facility
+     * if found, will set futureEffectiveDatePortalAmendment to amendment
+     * else will return undefined
+     */
+    if (hasFutureEffectiveDatePortalAmendments) {
+      futureEffectiveDatePortalAmendment = formattedFutureEffectiveDatePortalAmendments.find(
+        ({ facilityId: amendmentFacilityId }) => amendmentFacilityId === facilityId,
+      );
+    }
 
     if (hasAmendmentInProgressSubmittedFromPim) {
       deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
@@ -400,7 +425,8 @@ const getCaseFacility = async (req, res) => {
       facilityId,
       facilityTfm: facility.tfm,
       user: req.session.user,
-      showAmendmentButton: showAmendmentButton(deal, req.session.user.teams) && !hasAmendmentInProgress && !amendment.amendmentId,
+      showAmendmentButton:
+        showAmendmentButton(deal, req.session.user.teams) && !hasAmendmentInProgress && !amendment.amendmentId && !futureEffectiveDatePortalAmendment,
       showContinueAmendmentButton,
       amendmentId: amendment?.amendmentId,
       amendmentVersion: amendment?.version,
@@ -412,6 +438,8 @@ const getCaseFacility = async (req, res) => {
       showFacilityEndDate: facility.facilitySnapshot.isGef,
       inProgressPortalAmendments,
       hasInProgressPortalAmendments,
+      hasFutureEffectiveDatePortalAmendments,
+      futureEffectiveDatePortalAmendment,
     });
   } catch (error) {
     console.error('Error getting case facility %o', error);
