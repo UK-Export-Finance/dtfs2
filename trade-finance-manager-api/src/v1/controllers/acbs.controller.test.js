@@ -556,4 +556,21 @@ describe('updateDealAcbs', () => {
     // Facilities
     expect(updateFacilityAcbs).toHaveBeenCalledTimes(0);
   });
+
+  it('should return promise reject when no facilities object exist in the output', async () => {
+    // Arrange
+    const emptyFacilitiesResult = cloneDeep(MOCK_ACBS_DEAL_LINK.acbsTaskResult);
+    emptyFacilitiesResult.output = {
+      deal: {},
+    };
+
+    const { output } = emptyFacilitiesResult;
+
+    // Act
+    await updateDealAcbs(output);
+
+    // Assert
+    expect(updateAcbs).toHaveBeenCalledTimes(0);
+    expect(updateFacilityAcbs).toHaveBeenCalledTimes(0);
+  });
 });

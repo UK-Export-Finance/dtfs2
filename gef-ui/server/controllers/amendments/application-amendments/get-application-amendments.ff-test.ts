@@ -1,4 +1,13 @@
-import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import {
+  aPortalSessionUser,
+  DEAL_STATUS,
+  DEAL_SUBMISSION_TYPE,
+  PORTAL_LOGIN_STATUS,
+  ROLES,
+  PortalFacilityAmendmentWithUkefId,
+  isPortalFacilityAmendmentsFeatureFlagEnabled,
+} from '@ukef/dtfs2-common';
+
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
 import { getApplicationAmendments, GetApplicationAmendmentsRequest } from './get-application-amendments';
@@ -17,6 +26,11 @@ jest.mock('../../../services/api', () => ({
 
 jest.mock('../../../utils/submitted-amendment-details', () => ({
   getSubmittedAmendmentDetails: jest.fn(),
+}));
+
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual<typeof import('@ukef/dtfs2-common')>('@ukef/dtfs2-common'),
+  isPortalFacilityAmendmentsFeatureFlagEnabled: jest.fn(),
 }));
 
 const mockGetApplication = jest.fn();
@@ -41,6 +55,7 @@ const getHttpMocks = (user: string) =>
 const mockDeal = { ...MOCK_BASIC_DEAL, submissionType: DEAL_SUBMISSION_TYPE.AIN, status: DEAL_STATUS.UKEF_ACKNOWLEDGED } as unknown as Deal;
 const users = [ROLES.MAKER, ROLES.CHECKER];
 const mockUser = aPortalSessionUser();
+const isPortalAmendmentsFeatureFlagEnabledMock = true;
 
 describe('getAmendmentDetails', () => {
   let amendment: PortalFacilityAmendmentWithUkefId;
@@ -64,6 +79,8 @@ describe('getAmendmentDetails', () => {
     mockUserResponse.mockResolvedValue(mockUser);
     mockGetApplication.mockResolvedValue(mockDeal);
     mockGetAmendments.mockResolvedValue([amendment]);
+
+    mockIsPortalFacilityAmendmentsFeatureFlagEnabled(isPortalAmendmentsFeatureFlagEnabledMock);
   });
 
   afterAll(() => {
@@ -135,4 +152,8 @@ describe('getAmendmentDetails', () => {
       });
     });
   });
+
+  function mockIsPortalFacilityAmendmentsFeatureFlagEnabled(value: boolean) {
+    jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(value);
+  }
 });

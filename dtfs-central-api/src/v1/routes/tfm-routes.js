@@ -68,8 +68,12 @@ tfmRouter.use((req, res, next) => {
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/TFMDealBSS'
+ *       400:
+ *         description: Invalid deal type
  *       404:
  *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
 tfmRouter.route('/deals/submit').put(tfmSubmitDealController.submitDealPut);
 
@@ -102,14 +106,10 @@ tfmRouter.route('/deals/submit').put(tfmSubmitDealController.submitDealPut);
  *                       properties:
  *                         facilities:
  *                           example: [ { _id: '123abc', type: 'Cash' }, { _id: '456abc', type: 'Contingent' } ]
+ *       400:
+ *         description: Invalid Deal Id
  *       404:
  *         description: Not found
- */
-tfmRouter.route('/deals/:id').get(tfmGetDealController.findOneDealGet);
-
-/**
- * @openapi
- * /tfm/deals/:id:
  *   put:
  *     summary: Update a TFM deal
  *     tags: [TFM]
@@ -148,14 +148,10 @@ tfmRouter.route('/deals/:id').get(tfmGetDealController.findOneDealGet);
  *                           example: 50
  *                         exporterCreditRating:
  *                           example: Good (BB-)
+ *       400:
+ *         description: Invalid Deal Id
  *       404:
  *         description: Not found
- */
-tfmRouter.route('/deals/:id').put(tfmUpdateDealController.updateDealPut);
-
-/**
- * @openapi
- * /tfm/deals/:id:
  *   delete:
  *     summary: Delete a TFM deal
  *     tags: [TFM]
@@ -175,8 +171,12 @@ tfmRouter.route('/deals/:id').put(tfmUpdateDealController.updateDealPut);
  *             example:
  *               acknowledged: true
  *               deletedCount: 1
+ *       400:
+ *         description: Invalid Deal Id
+ *       500:
+ *         description: Internal server error
  */
-tfmRouter.route('/deals/:id').delete(tfmDeleteDealController.deleteDeal);
+tfmRouter.route('/deals/:id').get(tfmGetDealController.findOneDealGet).put(tfmUpdateDealController.updateDealPut).delete(tfmDeleteDealController.deleteDeal);
 
 /**
  * @openapi
@@ -213,8 +213,12 @@ tfmRouter.route('/deals/:id').delete(tfmDeleteDealController.deleteDeal);
  *                       properties:
  *                         aNewField:
  *                           example: true
+ *       400:
+ *         description: Invalid Deal Id
  *       404:
  *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
 tfmRouter.route('/deals/:id/snapshot').put(tfmUpdateDealController.updateDealSnapshotPut);
 
@@ -388,8 +392,8 @@ tfmRouter.route('/facilities').get(tfmGetFacilitiesController.getAllFacilities);
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/TFMFacilityGEF'
- *       404:
- *         description: Not found
+ *       500:
+ *         description: Internal server error
  *   put:
  *     summary: Update a TFM facility
  *     tags: [TFM]
@@ -426,6 +430,8 @@ tfmRouter.route('/facilities').get(tfmGetFacilitiesController.getAllFacilities);
  *                           example: true
  *       404:
  *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
 tfmRouter
   .route('/facilities/:id')
@@ -435,23 +441,11 @@ tfmRouter
 
 /**
  * @openapi
- * /tfm/facilities/:facilityId/amendments:
+ * /tfm/amendments:
  *   get:
- *     summary: Finds full amendment object for facility-id
- *     tags: [TFM, Amendments]
- *     description: Finds full amendment object for facility-id
- *     requestBody:
- *       description: Fields required to update a facility
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               facilityUpdate:
- *                 type: string
- *             example:
- *               facilityUpdate: { aNewField: true }
+ *     summary: Finds amendments in progress
+ *     tags: [TFM - Amendments]
+ *     description: Finds amendments in progress
  *     responses:
  *       200:
  *         description: OK
@@ -461,13 +455,43 @@ tfmRouter
  *                {
  *                 status: 'In progress'
  *               }
- *       404:
- *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
 tfmRouter.route('/amendments').get(tfmGetAmendmentController.getAllAmendmentsInProgress);
+
+/**
+ * @openapi
+ * /tfm/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?:
+ *   get:
+ *     summary: Finds amendments on a facility by ID
+ *     tags: [TFM - Amendments]
+ *     description: Finds amendments on a facility by ID
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Invalid amendment Id
+ *       500:
+ *         description: Internal server error
+ */
 tfmRouter
   .route('/facilities/:facilityId/amendments/:amendmentIdOrStatus?/:type?')
   .get(validation.mongoIdValidation('facilityId'), handleExpressValidatorResult, tfmGetAmendmentController.getAmendmentsByFacilityId);
+
+/**
+ * @openapi
+ * /tfm/deals/:dealId/amendments/:status?/:type?:
+ *   get:
+ *     summary: Finds amendments on a deal by ID
+ *     tags: [TFM - Amendments]
+ *     description: Finds amendments on a deal by ID
+ *     responses:
+ *       200:
+ *         description: OK
+ *       500:
+ *         description: Internal server error
+ */
 tfmRouter
   .route('/deals/:dealId/amendments/:status?/:type?')
   .get(validation.mongoIdValidation('dealId'), handleExpressValidatorResult, tfmGetAmendmentController.getAmendmentsByDealId);
@@ -477,7 +501,7 @@ tfmRouter
  * /tfm/facilities/:facilityId/amendments:
  *   post:
  *     summary: Creates new amendment object and changes status
- *     tags: [TFM, Amendments]
+ *     tags: [TFM - Amendments]
  *     description: Adds new amendment object in amendments array
  *     requestBody:
  *       description: Fields required to create amendment
@@ -514,6 +538,10 @@ tfmRouter
  *               }
  *       404:
  *         description: Not found
+ *       409:
+ *          description: Conflict - The current facility already has an amendment in progress
+ *       500:
+ *         description: Internal server error
  */
 tfmRouter
   .route('/facilities/:facilityId/amendments')
@@ -527,9 +555,36 @@ tfmRouter
 /**
  * @openapi
  * /tfm/facilities/amendments/:id:
- *
+ *   put:
+ *     summary: Update a TFM facility
+ *     tags: [TFM - Amendments]
+ *     description: Update a TFM amendment
+ *     requestBody:
+ *       description: Fields required to update an amendment
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               payload:
+ *                 type: object
+ *               auditDetails:
+ *                 type: object
+ *                 $ref: '#/definitions/systemPortalOrTfmAuditDetails'
+ *             example:
+ *               payload: { aNewField: true }
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             example:
+ *               _id: '123456abc'
  *       404:
  *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
 tfmRouter
   .route('/facilities/:facilityId/amendments/:amendmentId')
@@ -573,8 +628,8 @@ tfmRouter
  *     responses:
  *       200:
  *         description: OK
- *       404:
- *         description: Not found
+ *       400:
+ *         description: Bad request
  *       500:
  *         description: Internal server error
  *   get:
@@ -591,6 +646,8 @@ tfmRouter
  *     responses:
  *       200:
  *         description: OK
+ *       400:
+ *         description: Bad request
  *       404:
  *         description: Not found
  *       500:
@@ -682,12 +739,6 @@ tfmRouter
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/TFMTeams'
- */
-tfmRouter.route('/teams').get(tfmTeamsController.listTfmTeam);
-
-/**
- * @openapi
- * /tfm/teams:
  *   post:
  *     summary: Create a team in tfm-teams collection
  *     tags: [TFM]
@@ -711,8 +762,12 @@ tfmRouter.route('/teams').get(tfmTeamsController.listTfmTeam);
  *           application/json:
  *             example:
  *               _id: '123456abc'
+ *       400:
+ *         description: Invalid TFM team payload
+ *       500:
+ *         description: Internal server error
  */
-tfmRouter.route('/teams').post(tfmTeamsController.createTfmTeam);
+tfmRouter.route('/teams').get(tfmTeamsController.listTfmTeam).post(tfmTeamsController.createTfmTeam);
 
 /**
  * @openapi
@@ -737,12 +792,6 @@ tfmRouter.route('/teams').post(tfmTeamsController.createTfmTeam);
  *               $ref: '#/definitions/TFMTeam'
  *       404:
  *         description: Not found
- */
-tfmRouter.route('/teams/:id').get(tfmTeamsController.findOneTfmTeam);
-
-/**
- * @openapi
- * /tfm/teams/:id:
  *   delete:
  *     summary: Delete a team
  *     tags: [TFM]
@@ -762,8 +811,12 @@ tfmRouter.route('/teams/:id').get(tfmTeamsController.findOneTfmTeam);
  *             example:
  *               acknowledged: true
  *               deletedCount: 1
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
-tfmRouter.route('/teams/:id').delete(tfmTeamsController.deleteTfmTeam);
+tfmRouter.route('/teams/:id').get(tfmTeamsController.findOneTfmTeam).delete(tfmTeamsController.deleteTfmTeam);
 
 /**
  * @openapi
@@ -779,12 +832,6 @@ tfmRouter.route('/teams/:id').delete(tfmTeamsController.deleteTfmTeam);
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/TFMUsers'
- */
-tfmRouter.route('/users').get(tfmUsersController.listTfmUser);
-
-/**
- * @openapi
- * /tfm/users:
  *   post:
  *     deprecated: true
  *     summary: Create a user in tfm-users collection
@@ -809,8 +856,12 @@ tfmRouter.route('/users').get(tfmUsersController.listTfmUser);
  *           application/json:
  *             example:
  *               _id: '123456abc'
+ *       400:
+ *         description: Invalid TFM user payload
+ *       500:
+ *         description: Internal server error
  */
-tfmRouter.route('/users').post(tfmUsersController.createTfmUser);
+tfmRouter.route('/users').get(tfmUsersController.listTfmUser).post(tfmUsersController.createTfmUser);
 
 /**
  * @openapi
@@ -835,12 +886,6 @@ tfmRouter.route('/users').post(tfmUsersController.createTfmUser);
  *               $ref: '#/definitions/TFMUser'
  *       404:
  *         description: Not found
- */
-tfmRouter.route('/users/:username').get(tfmUsersController.findOneTfmUser);
-
-/**
- * @openapi
- * /tfm/users/:username:
  *   delete:
  *     summary: Delete a user
  *     tags: [TFM]
@@ -860,8 +905,14 @@ tfmRouter.route('/users/:username').get(tfmUsersController.findOneTfmUser);
  *             example:
  *               acknowledged: true
  *               deletedCount: 1
+ *       400:
+ *         description: Invalid username
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
  */
-tfmRouter.route('/users/:username').delete(tfmUsersController.deleteTfmUser);
+tfmRouter.route('/users/:username').get(tfmUsersController.findOneTfmUser).delete(tfmUsersController.deleteTfmUser);
 
 /**
  * @openapi
@@ -884,6 +935,8 @@ tfmRouter.route('/users/:username').delete(tfmUsersController.deleteTfmUser);
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/TFMUser'
+ *       400:
+ *         description: Invalid user Id
  *       404:
  *         description: Not found
  */
@@ -910,6 +963,8 @@ tfmRouter.route('/users/id/:userId').get(tfmUsersController.findOneTfmUserById);
  *           application/json:
  *             schema:
  *               $ref: '#/definitions/TFMUsers'
+ *       400:
+ *         description: Invalid teamId
  */
 tfmRouter.route('/users/team/:teamId').get(tfmUsersController.findTfmTeamUser);
 

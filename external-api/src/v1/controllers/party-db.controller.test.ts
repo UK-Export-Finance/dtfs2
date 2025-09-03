@@ -196,8 +196,8 @@ describe('getOrCreateParty', () => {
         companyName: mockBody.companyName,
         probabilityOfDefault: mockBody.probabilityOfDefault,
         ukEntity: 'Yes',
-        ukefIndustryId: mockIndustryResponse.acbsIndustryId,
-        ukefSectorId: mockIndustryResponse.acbsSectorId,
+        ukefIndustryName: mockIndustryResponse.acbsIndustryName,
+        ukefSectorName: mockIndustryResponse.acbsSectorName,
       },
     });
 

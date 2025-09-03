@@ -1,3 +1,4 @@
+const { PROBABILITY_OF_DEFAULT } = require('@ukef/dtfs2-common');
 const { mapBssEwcsFacility } = require('./map-bss-ewcs-facility');
 
 /**
@@ -35,6 +36,8 @@ const mapBssEwcsDeal = (deal) => {
 
   const { companyName } = exporter;
 
+  const probabilityOfDefault = tfm?.probabilityOfDefault ?? PROBABILITY_OF_DEFAULT.DEFAULT_VALUE;
+
   const mapped = {
     _id,
     dealType,
@@ -49,7 +52,7 @@ const mapBssEwcsDeal = (deal) => {
     exporter: {
       companyName,
       companiesHouseRegistrationNumber: submissionDetails['supplier-companies-house-registration-number'],
-      probabilityOfDefault: Number(tfm.probabilityOfDefault),
+      probabilityOfDefault,
       smeType: submissionDetails['sme-type'],
       registeredAddress: {
         addressLine1: submissionDetails['supplier-address-line-1'],

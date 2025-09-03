@@ -1,7 +1,7 @@
 import express, { Express } from 'express';
 import compression from 'compression';
 import mongoSanitise from 'express-mongo-sanitize';
-import { MAX_REQUEST_SIZE } from '@ukef/dtfs2-common';
+import { MAX_REQUEST_SIZE, maintenance } from '@ukef/dtfs2-common';
 import { seo, security, checkApiKey, createRateLimit } from './v1/routes/middleware';
 
 import { ROUTES } from './constants';
@@ -20,6 +20,13 @@ export const generateApp = (): Express => {
 
   app.use(seo);
   app.use(security);
+
+  /**
+   * Scheduled maintenance middleware.
+   * Should always be after `seo` and `security` middlewares.
+   */
+  app.use(maintenance);
+
   app.use(healthcheck);
   app.use(checkApiKey);
   // added limit for larger payloads

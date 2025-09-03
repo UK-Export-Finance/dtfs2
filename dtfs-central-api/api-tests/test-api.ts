@@ -10,6 +10,7 @@ const { DTFS_CENTRAL_API_KEY } = process.env;
 const headers = {
   'x-api-key': DTFS_CENTRAL_API_KEY,
   'content-type': 'application/json',
+  accept: 'application/json',
 };
 
 class TestApi {

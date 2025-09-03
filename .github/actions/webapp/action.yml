@@ -66,23 +66,12 @@ runs:
         username: ${{ env.ACR_USER }}
         password: ${{ inputs.acr }}
 
-    # Step 6: Set Dockerfile path based on WebApp name.
-    - name: Dockerfile 🐳
-      if: ${{ 'portal-ui' == inputs.webapp }}
-      run: echo "DOCKERFILE=portal/Dockerfile" >> $GITHUB_ENV
-      shell: bash
-
-    - name: Dockerfile 🐳
-      if: ${{ 'portal-ui' != inputs.webapp }}
-      run: echo "DOCKERFILE=${{ inputs.webapp }}/Dockerfile" >> $GITHUB_ENV
-      shell: bash
-
-    # Step 7: Build and push Docker images.
+    # Step 6: Build and push Docker images.
     - name: Artefacts 🗃️
       working-directory: .
       run: |
         # Build images
-        docker build -f ./${{ env.DOCKERFILE }} . \
+        docker build -f ./${{ inputs.webapp }}/Dockerfile . \
         -t ${{ env.ACR }}/${{ inputs.webapp }}:${{ github.sha }} \
         -t ${{ env.ACR }}/${{ inputs.webapp }}:latest \
         --build-arg GITHUB_SHA=${{ github.sha }}
@@ -91,7 +80,7 @@ runs:
         docker push ${{ env.ACR }}/${{ inputs.webapp }}:latest
       shell: bash
 
-    # Step 8: Create and swap deployment slot.
+    # Step 7: Create and swap deployment slot.
     - name: Slot 🔀
       uses: azure/cli@v2.1.0
       with:
@@ -110,7 +99,7 @@ runs:
           --name ${{ env.WEBAPP }} \
           --action swap
 
-    # Step 9: Cleanup temporary slot.
+    # Step 8: Cleanup temporary slot.
     - name: Cleanup 🧹
       if: always()
       uses: azure/cli@v2.1.0

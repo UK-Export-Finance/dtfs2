@@ -57,7 +57,7 @@ portal/gef-ui READMEs.
 
 ## User login process 🔓
 
-User login process can be found in the [Portal](../portal/README.md)
+User login process can be found in the [Portal](../portal-ui/README.md)
 microservice.
 
 ## Moving Forward - Aligning GEF and BSS 🚀
