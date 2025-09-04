@@ -3,6 +3,7 @@ import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/ge
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { PIM_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
 import amendmentsPage from '../../../../../../../tfm/cypress/e2e/pages/amendments/amendmentsPage';
+import facilityPage from '../../../../../../../tfm/cypress/e2e/pages/facilityPage';
 import { tomorrow } from '../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
@@ -120,5 +121,15 @@ context('Amendments - TFM - TFM should display banners when there are portal ame
 
     cy.visit(tfmFacilityPage2);
     cy.assertText(amendmentsPage.amendmentFutureEffectiveDateFacilityBar(), `Amendment ${ukefFacilityId2}-001 is effective on ${tomorrow.dd_MMMM_yyyy}.`);
+  });
+
+  it('should display the future effective date banner on the amendment tab', () => {
+    cy.visit(tfmFacilityPage1);
+    facilityPage.facilityTabAmendments().click();
+    cy.assertText(amendmentsPage.amendmentFutureEffectiveDateAmendmentBar(), `Amendment ${ukefFacilityId1}-001 is effective on ${tomorrow.dd_MMMM_yyyy}.`);
+
+    cy.visit(tfmFacilityPage2);
+    facilityPage.facilityTabAmendments().click();
+    cy.assertText(amendmentsPage.amendmentFutureEffectiveDateAmendmentBar(), `Amendment ${ukefFacilityId2}-001 is effective on ${tomorrow.dd_MMMM_yyyy}.`);
   });
 });
