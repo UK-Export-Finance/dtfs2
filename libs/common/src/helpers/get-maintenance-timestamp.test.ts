@@ -16,6 +16,12 @@ const validEpochs = [
 ];
 
 describe('getMaintenanceTimestamp', () => {
+  const originalEnv = { ...process.env };
+
+  afterAll(() => {
+    process.env = originalEnv;
+  });
+
   it.each(validEpochs)('should give epoch as string when environment variable is set to $epoch', ({ epoch, value }) => {
     // Arrange
     process.env.MAINTENANCE_TIMESTAMP = String(epoch);
