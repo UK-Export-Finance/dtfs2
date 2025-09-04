@@ -43,9 +43,12 @@
       amendmentVersion: amendmentVersion,
       showContinueAmendmentButton: showContinueAmendmentButton
     } %}
+
     {% set amendmentDetailsComponentData = {
-      allAmendments: allAmendments
+      allAmendments: allAmendments,
+      futureEffectiveDatePortalAmendment: futureEffectiveDatePortalAmendment
     } %}
+    
     {{ addAmendment.render(addAmendmentComponentData) }}
     {{ amendmentDetails.render(amendmentDetailsComponentData) }}
   {% endset %}
