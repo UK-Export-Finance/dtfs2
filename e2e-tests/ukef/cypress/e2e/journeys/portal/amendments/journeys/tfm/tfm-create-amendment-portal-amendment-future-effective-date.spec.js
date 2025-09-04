@@ -1,9 +1,10 @@
-import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
-import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { PIM_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
-import amendmentsPage from '../../../../../../../tfm/cypress/e2e/pages/amendments/amendmentsPage';
-import facilityPage from '../../../../../../../tfm/cypress/e2e/pages/facilityPage';
+import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
+import { anIssuedCashFacility } from '../../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { PIM_USER_1, TFM_URL } from '../../../../../../../../e2e-fixtures';
+import amendmentsPage from '../../../../../../../../tfm/cypress/e2e/pages/amendments/amendmentsPage';
+import { tomorrow, today } from '../../../../../../../../e2e-fixtures/dateConstants';
+import facilityPage from '../../../../../../../../tfm/cypress/e2e/pages/facilityPage';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -17,12 +18,10 @@ const mockFacility2 = {
 const CHANGED_FACILITY_VALUE = '20000';
 const CHANGE_FACILITY_VALUE_2 = '30000';
 
-context('Amendments - TFM - TFM should display no banners when there are no portal amendments with future effective dates', () => {
+context('Amendments - TFM - Creating a TFM amendment with a future effective date', () => {
   let dealId;
   let facilityId1;
   let facilityId2;
-  let ukefFacilityId1;
-  let ukefFacilityId2;
   let applicationDetailsUrl;
   let tfmDealPage;
   let tfmFacilityPage1;
@@ -37,12 +36,10 @@ context('Amendments - TFM - TFM should display no banners when there are no port
 
       cy.createGefFacilities(dealId, [mockFacility], BANK1_MAKER1).then((createdFacility) => {
         facilityId1 = createdFacility.details._id;
-        ukefFacilityId1 = createdFacility.details.ukefFacilityId;
       });
 
       cy.createGefFacilities(dealId, [mockFacility2], BANK1_MAKER1).then((createdFacility) => {
         facilityId2 = createdFacility.details._id;
-        ukefFacilityId2 = createdFacility.details.ukefFacilityId;
 
         tfmDealPage = `${TFM_URL}/case/${dealId}/deal`;
         tfmFacilityPage1 = `${TFM_URL}/case/${dealId}/facility/${facilityId1}`;
@@ -59,6 +56,7 @@ context('Amendments - TFM - TFM should display no banners when there are no port
           applicationDetailsUrl,
           facilityId: facilityId1,
           dealId,
+          effectiveDate: today.date,
         });
 
         cy.loginAndSubmitPortalAmendmentRequestToUkef({
@@ -67,6 +65,7 @@ context('Amendments - TFM - TFM should display no banners when there are no port
           applicationDetailsUrl,
           facilityId: facilityId2,
           dealId,
+          effectiveDate: tomorrow.date,
         });
       });
     });
@@ -86,29 +85,19 @@ context('Amendments - TFM - TFM should display no banners when there are no port
     cy.visit(tfmDealPage);
   });
 
-  it('should not display the future effective date banner on the deal', () => {
-    amendmentsPage.amendmentFutureEffectiveDateDealBar(ukefFacilityId1).should('not.exist');
-    amendmentsPage.amendmentFutureEffectiveDateDealLink(ukefFacilityId1).should('not.exist');
+  it.only('should display the create an amendment button for a portal amendment without a future effective date', () => {
+    cy.visit(tfmFacilityPage1);
 
-    amendmentsPage.amendmentFutureEffectiveDateDealBar(ukefFacilityId2).should('not.exist');
-    amendmentsPage.amendmentFutureEffectiveDateDealLink(ukefFacilityId2).should('not.exist');
+    facilityPage.facilityTabAmendments().click();
+
+    amendmentsPage.addAmendmentButton().should('exist');
   });
 
-  it('should not display the future effective date banner on the facility', () => {
-    cy.visit(tfmFacilityPage1);
-    amendmentsPage.amendmentFutureEffectiveDateFacilityBar().should('not.exist');
-
+  it('should not display the create an amendment button for a portal amendment with a future effective date', () => {
     cy.visit(tfmFacilityPage2);
-    amendmentsPage.amendmentFutureEffectiveDateFacilityBar().should('not.exist');
-  });
 
-  it('should not display the future effective date banner on the amendment tab', () => {
-    cy.visit(tfmFacilityPage1);
     facilityPage.facilityTabAmendments().click();
-    amendmentsPage.amendmentFutureEffectiveDateAmendmentBar().should('not.exist');
 
-    cy.visit(tfmFacilityPage2);
-    facilityPage.facilityTabAmendments().click();
-    amendmentsPage.amendmentFutureEffectiveDateAmendmentBar().should('not.exist');
+    amendmentsPage.addAmendmentButton().should('not.exist');
   });
 });

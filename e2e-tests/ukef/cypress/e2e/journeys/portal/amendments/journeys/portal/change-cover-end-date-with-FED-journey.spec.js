@@ -1,25 +1,24 @@
-import { CURRENCY } from '@ukef/dtfs2-common';
-import relative from '../../../../relativeURL';
-import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
-import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
-import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
-import doYouHaveAFacilityEndDate from '../../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
-import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
-import facilityValue from '../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
-import amendmentPage from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
-import submittedForChecking from '../../../../../../../gef/cypress/e2e/pages/amendments/submitted-for-checking';
-import amendmentSummaryList from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-summary-list';
-import { today } from '../../../../../../../e2e-fixtures/dateConstants';
+import relative from '../../../../../relativeURL';
+import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
+import { anIssuedCashFacility } from '../../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { applicationPreview } from '../../../../../../../../gef/cypress/e2e/pages';
+import whatDoYouNeedToChange from '../../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
+import doYouHaveAFacilityEndDate from '../../../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
+import eligibility from '../../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
+import amendmentSummaryList from '../../../../../../../../gef/cypress/e2e/pages/amendments/amendment-summary-list';
+import submittedForChecking from '../../../../../../../../gef/cypress/e2e/pages/amendments/submitted-for-checking';
+import amendmentPage from '../../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
+import { today } from '../../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('Amendments - Change both cover end date and facility value - full journey', () => {
+context('Amendments - Change cover end date with facility end date - full journey', () => {
   /**
    * @type {string}
    */
   let dealId;
+
   /**
    * @type {string}
    */
@@ -73,7 +72,6 @@ context('Amendments - Change both cover end date and facility value - full journ
   it('should navigate through the journey correctly', () => {
     cy.visit(relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
     whatDoYouNeedToChange.coverEndDateCheckbox().click();
-    whatDoYouNeedToChange.facilityValueCheckbox().click();
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/cover-end-date`));
@@ -88,10 +86,6 @@ context('Amendments - Change both cover end date and facility value - full journ
     cy.completeDateFormFields({ idPrefix: 'facility-end-date' });
     cy.clickContinueButton();
 
-    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/facility-value`));
-    cy.keyboardInput(facilityValue.facilityValue(), '10000');
-    cy.clickContinueButton();
-
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/eligibility`));
     eligibility.allTrueRadioButtons().click({ multiple: true });
     cy.clickContinueButton();
@@ -101,14 +95,14 @@ context('Amendments - Change both cover end date and facility value - full journ
     cy.clickContinueButton();
 
     cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/check-your-answers`));
+
     amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsValue().contains('Cover end date');
     amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsValue().contains('Facility end date');
-    amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsValue().contains('Facility value');
+    amendmentSummaryList.amendmentSummaryListTable().amendmentOptionsValue().should('not.contain', 'Facility value');
 
     amendmentSummaryList.amendmentSummaryListTable().coverEndDateValue().contains(today.d_MMMM_yyyy);
     amendmentSummaryList.amendmentSummaryListTable().facilityEndDateValue().contains(today.d_MMMM_yyyy);
     amendmentSummaryList.amendmentSummaryListTable().bankReviewDateChangeLink().should('not.exist');
-    amendmentSummaryList.amendmentSummaryListTable().facilityValueValue().contains(`${CURRENCY.GBP} 10,000`);
 
     amendmentSummaryList
       .eligibilityCriteriaSummaryListTable()

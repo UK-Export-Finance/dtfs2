@@ -1,13 +1,13 @@
 import { PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
-import relative from '../../../../relativeURL';
-import { PIM_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
-import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
-import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import facilityPage from '../../../../../../../tfm/cypress/e2e/pages/facilityPage';
-import amendmentsPage from '../../../../../../../tfm/cypress/e2e/pages/amendments/amendmentsPage';
-import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
-import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
+import relative from '../../../../../relativeURL';
+import { PIM_USER_1, TFM_URL } from '../../../../../../../../e2e-fixtures';
+import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
+import { anIssuedCashFacility } from '../../../../../../../../e2e-fixtures/mock-gef-facilities';
+import facilityPage from '../../../../../../../../tfm/cypress/e2e/pages/facilityPage';
+import amendmentsPage from '../../../../../../../../tfm/cypress/e2e/pages/amendments/amendmentsPage';
+import { applicationPreview } from '../../../../../../../../gef/cypress/e2e/pages';
+import whatDoYouNeedToChange from '../../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 

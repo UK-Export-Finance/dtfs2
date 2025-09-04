@@ -1,15 +1,15 @@
-import relative from '../../../../relativeURL';
-import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
-import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
-import whatDoYouNeedToChange from '../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
-import doYouHaveAFacilityEndDate from '../../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
-import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
-import amendmentPage from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
-import submittedForChecking from '../../../../../../../gef/cypress/e2e/pages/amendments/submitted-for-checking';
-import amendmentSummaryList from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-summary-list';
-import { today } from '../../../../../../../e2e-fixtures/dateConstants';
+import relative from '../../../../../relativeURL';
+import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
+import { anIssuedCashFacility } from '../../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { applicationPreview } from '../../../../../../../../gef/cypress/e2e/pages';
+import whatDoYouNeedToChange from '../../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
+import doYouHaveAFacilityEndDate from '../../../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
+import eligibility from '../../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
+import amendmentPage from '../../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
+import submittedForChecking from '../../../../../../../../gef/cypress/e2e/pages/amendments/submitted-for-checking';
+import amendmentSummaryList from '../../../../../../../../gef/cypress/e2e/pages/amendments/amendment-summary-list';
+import { today } from '../../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 

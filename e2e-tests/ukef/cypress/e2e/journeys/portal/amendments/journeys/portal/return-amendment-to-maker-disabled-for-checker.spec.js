@@ -1,20 +1,21 @@
-import relative from '../../../../relativeURL';
-import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
-import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
-import { PIM_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
+import { PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import relative from '../../../../../relativeURL';
+import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
+import { anIssuedCashFacility } from '../../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { applicationPreview } from '../../../../../../../../gef/cypress/e2e/pages';
+import dashboardDeals from '../../../../../../../../portal/cypress/e2e/pages/dashboardDeals';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
-const CHANGED_FACILITY_VALUE = 20000;
+const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
+const CHANGED_FACILITY_VALUE = '20000';
 
-context('Amendments - access amendment url when deal status is "Cancelled"', () => {
-  let amendmentDetailsUrl;
+context('Amendments - return amendment to maker with comments', () => {
   let dealId;
   let facilityId;
-
-  const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
+  let dealUrl;
+  let amendmentDetailsUrl;
 
   before(() => {
     cy.insertOneGefDeal(MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1).then((insertedDeal) => {
@@ -24,33 +25,25 @@ context('Amendments - access amendment url when deal status is "Cancelled"', () 
 
       cy.createGefFacilities(dealId, [mockFacility], BANK1_MAKER1).then((createdFacility) => {
         facilityId = createdFacility.details._id;
+        dealUrl = `/gef/application-details/${dealId}`;
+
         cy.makerLoginSubmitGefDealForReview(insertedDeal);
         cy.checkerLoginSubmitGefDealToUkef(insertedDeal);
 
         cy.clearSessionCookies();
         cy.login(BANK1_MAKER1);
         cy.saveSession();
-        cy.visit(relative(`/gef/application-details/${dealId}`));
+        cy.visit(relative(dealUrl));
 
         applicationPreview.makeAChangeButton(facilityId).click();
 
         cy.getAmendmentIdFromUrl().then((amendmentId) => {
           amendmentDetailsUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/amendment-details`;
-
           cy.makerMakesPortalAmendmentRequest({
             facilityValueExists: true,
             changedFacilityValue: CHANGED_FACILITY_VALUE,
           });
           cy.clickSubmitButton();
-
-          cy.visit(TFM_URL);
-
-          cy.tfmLogin(PIM_USER_1);
-
-          const tfmDealPage = `${TFM_URL}/case/${dealId}/deal`;
-          cy.visit(tfmDealPage);
-
-          cy.submitDealCancellation({ dealId });
         });
       });
     });
@@ -64,11 +57,13 @@ context('Amendments - access amendment url when deal status is "Cancelled"', () 
   beforeEach(() => {
     cy.clearSessionCookies();
     cy.login(BANK1_CHECKER1);
+    cy.visit(relative(amendmentDetailsUrl));
+    cy.clickReturnToMakerButton();
+    cy.clickSubmitButton();
+    cy.visit(`/dashboard/deals/0`);
   });
 
-  it('should navigate /not-found when going to the amendment details url', () => {
-    cy.visit(relative(amendmentDetailsUrl));
-
-    cy.url().should('eq', relative('/not-found'));
+  it(`should not display the application amendment with status ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}`, () => {
+    dashboardDeals.row.exporter(dealId).should('not.exist');
   });
 });

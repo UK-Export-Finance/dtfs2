@@ -1,10 +1,10 @@
-import relative from '../../../../relativeURL';
-import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
-import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
-import amendmentPage from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
-import abandon from '../../../../../../../gef/cypress/e2e/pages/amendments/abandon';
+import relative from '../../../../../relativeURL';
+import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
+import { anIssuedCashFacility } from '../../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { applicationPreview } from '../../../../../../../../gef/cypress/e2e/pages';
+import amendmentPage from '../../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
+import abandon from '../../../../../../../../gef/cypress/e2e/pages/amendments/abandon';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 

@@ -1,36 +1,27 @@
-import relative from '../../../../relativeURL';
-import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
-import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { MOCK_JOURNEYS_WITH_BRD, MOCK_JOURNEYS_WITH_FED } from '../../../../../fixtures/check-your-answers-change-journey';
-import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
+import relative from '../../../../../relativeURL';
+import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
+import { twoDays } from '../../../../../../../../e2e-fixtures/dateConstants';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
+import { anIssuedCashFacility } from '../../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { MOCK_JOURNEYS_WITH_BRD, MOCK_JOURNEYS_WITH_FED } from '../../../../../../fixtures/check-your-answers-change-journey';
+import { applicationPreview } from '../../../../../../../../gef/cypress/e2e/pages';
 
-import eligibility from '../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
-import amendmentPage from '../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
+import eligibility from '../../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
+import amendmentPage from '../../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
-context('Amendments - Check your answers change journey', () => {
-  /**
-   * @type {string}
-   */
+context('Amendments - amendment details page - change amendments journey', () => {
   let dealId;
-  /**
-   * @type {string}
-   */
   let facilityId;
-  /**
-   * @type {string}
-   */
   let amendmentUrl;
-  /**
-   * @type {Date}
-   */
+  let amendmentDetailsUrl;
+
   const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
   const CHANGED_FACILITY_VALUE = '10000';
 
   /**
-   * This test suite covers the "Check your answers" change journey for amendments.
+   * This test suite covers the "amendment details" change journey for amendments.
    */
   const setupTest = (testCases, facilityEndDateExists) => {
     before(() => {
@@ -53,11 +44,19 @@ context('Amendments - Check your answers change journey', () => {
 
           cy.getAmendmentIdFromUrl().then((amendmentId) => {
             amendmentUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}`;
-            cy.makerMakesPortalAmendmentRequest({
+            const confirmReturnToMakerUrl = `${amendmentUrl}/return-to-maker`;
+            const submittedUrl = `${amendmentUrl}/returned-to-maker`;
+            amendmentDetailsUrl = `${amendmentUrl}/amendment-details`;
+
+            cy.makerSubmitAmendmentForReviewAndCheckerReturnsToMaker({
+              coverEndDateExists: true,
               facilityEndDateExists,
               facilityValueExists: true,
               changedFacilityValue: CHANGED_FACILITY_VALUE,
-              coverEndDateExists: true,
+              changedCoverEndDate: twoDays.date,
+              amendmentDetailsUrl,
+              confirmReturnToMakerUrl,
+              submittedUrl,
             });
           });
         });
@@ -75,36 +74,40 @@ context('Amendments - Check your answers change journey', () => {
     });
 
     testCases.forEach(({ description, page, nextPage, element, nextElement, checkYourAnswersChangeElement, fragment, nextPageHeading, change }) => {
-      it(`should navigate back to "Check your answers" page when no changes are made on the ${description} page`, () => {
-        cy.visit(relative(`${amendmentUrl}/check-your-answers`));
+      it(`should navigate back to "Amendment details" page when no changes are made on the ${description} page`, () => {
+        cy.visit(relative(`${amendmentUrl}/amendment-details`));
 
         checkYourAnswersChangeElement().click();
 
         cy.url().should('eq', relative(`${amendmentUrl}/${page}/?change=true#${fragment}`));
 
+        element.cancelLink().should('not.exist');
+
         cy.clickContinueButton();
 
-        cy.url().should('eq', relative(`${amendmentUrl}/check-your-answers#${fragment}`));
+        cy.url().should('eq', relative(`${amendmentUrl}/amendment-details#${fragment}`));
 
         amendmentPage.pageHeading().contains('Check your answers before submitting the amendment request');
       });
 
-      it(`should navigate back to "Check your answers" page when the Back link is clicked on the ${description} page`, () => {
-        cy.visit(relative(`${amendmentUrl}/check-your-answers`));
+      it(`should navigate back to "Amendment details" page when the Back link is clicked on the ${description} page`, () => {
+        cy.visit(relative(`${amendmentUrl}/amendment-details`));
 
         checkYourAnswersChangeElement().click();
 
         cy.url().should('eq', relative(`${amendmentUrl}/${page}/?change=true#${fragment}`));
 
+        element.cancelLink().should('not.exist');
+
         element.backLink().click();
 
-        cy.url().should('eq', relative(`${amendmentUrl}/check-your-answers`));
+        cy.url().should('eq', relative(`${amendmentUrl}/amendment-details`));
 
         amendmentPage.pageHeading().contains('Check your answers before submitting the amendment request');
       });
 
       it(`should navigate through the amendment journey when changes are made on the ${description} page`, () => {
-        cy.visit(relative(`${amendmentUrl}/check-your-answers`));
+        cy.visit(relative(`${amendmentUrl}/amendment-details`));
 
         checkYourAnswersChangeElement().click();
 

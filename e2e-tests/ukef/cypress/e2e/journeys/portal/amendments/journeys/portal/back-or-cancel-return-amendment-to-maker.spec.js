@@ -1,23 +1,19 @@
-import relative from '../../../../relativeURL';
-import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
-import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
-import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { applicationPreview } from '../../../../../../../gef/cypress/e2e/pages';
-import applicationDetails from '../../../../../../../gef/cypress/e2e/pages/application-details';
+import relative from '../../../../../relativeURL';
+import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
+import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
+import { anIssuedCashFacility } from '../../../../../../../../e2e-fixtures/mock-gef-facilities';
+import { applicationPreview } from '../../../../../../../../gef/cypress/e2e/pages';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
 const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
 const CHANGED_FACILITY_VALUE = '20000';
 
-const comment = 'Test comment';
-
-context('Amendments - return amendment to maker without comments', () => {
+context('Amendments - click back or cancel on return to maker page', () => {
   let dealId;
   let facilityId;
   let dealUrl;
   let amendmentDetailsUrl;
-  let returnedToMakerUrl;
 
   before(() => {
     cy.insertOneGefDeal(MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1).then((insertedDeal) => {
@@ -41,15 +37,13 @@ context('Amendments - return amendment to maker without comments', () => {
 
         cy.getAmendmentIdFromUrl().then((amendmentId) => {
           amendmentDetailsUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/amendment-details`;
-
-          returnedToMakerUrl = `/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/returned-to-maker`;
-
-          cy.makerMakesPortalAmendmentRequest({
-            facilityValueExists: true,
-            changedFacilityValue: CHANGED_FACILITY_VALUE,
-          });
-          cy.clickSubmitButton();
         });
+
+        cy.makerMakesPortalAmendmentRequest({
+          facilityValueExists: true,
+          changedFacilityValue: CHANGED_FACILITY_VALUE,
+        });
+        cy.clickSubmitButton();
       });
     });
   });
@@ -64,15 +58,17 @@ context('Amendments - return amendment to maker without comments', () => {
     cy.login(BANK1_CHECKER1);
     cy.visit(amendmentDetailsUrl);
     cy.clickReturnToMakerButton();
-    cy.clickSubmitButton();
-
-    cy.url().should('eq', relative(returnedToMakerUrl));
   });
 
-  it('should NOT display the comment on application preview page', () => {
-    cy.login(BANK1_MAKER1);
-    cy.visit(relative(dealUrl));
+  it('should redirect to the amendment details page when pressing the back button', () => {
+    cy.clickBackLink();
 
-    applicationDetails.comments().should('not.contain', comment);
+    cy.url().should('eq', relative(amendmentDetailsUrl));
+  });
+
+  it('should redirect to the application preview page when pressing the cancel button', () => {
+    cy.clickCancelLink();
+
+    cy.url().should('eq', relative(dealUrl));
   });
 });
