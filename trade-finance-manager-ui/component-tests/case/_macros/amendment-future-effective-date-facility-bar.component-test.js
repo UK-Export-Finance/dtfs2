@@ -19,7 +19,7 @@ describe(component, () => {
       wrapper = render(params);
 
       wrapper
-        .expectText('[data-cy="amendment--future-effective-date-facility-bar"]')
+        .expectText('[data-cy="amendment-future-effective-date-facility-bar"]')
         .toRead(
           `Amendment ${params.futureEffectiveDatePortalAmendment.referenceNumber} is effective on ${params.futureEffectiveDatePortalAmendment.effectiveDate}.`,
         );
@@ -36,7 +36,7 @@ describe(component, () => {
 
       wrapper = render(params);
 
-      wrapper.expectText(`[data-cy="amendment--future-effective-date-amendment-bar"]`).notToExist();
+      wrapper.expectText(`[data-cy="amendment-future-effective-date-amendment-bar"]`).notToExist();
     });
   });
 
@@ -54,7 +54,7 @@ describe(component, () => {
       wrapper = render(params);
 
       wrapper
-        .expectText('[data-cy="amendment--future-effective-date-amendment-bar"]')
+        .expectText('[data-cy="amendment-future-effective-date-amendment-bar"]')
         .toRead(
           `Amendment ${params.futureEffectiveDatePortalAmendment.referenceNumber} is effective on ${params.futureEffectiveDatePortalAmendment.effectiveDate}.`,
         );
@@ -72,7 +72,7 @@ describe(component, () => {
 
       wrapper = render(params);
 
-      wrapper.expectText(`[data-cy="amendment--future-effective-date-facility-bar"]`).notToExist();
+      wrapper.expectText(`[data-cy="amendment-future-effective-date-facility-bar"]`).notToExist();
     });
   });
 
@@ -84,7 +84,7 @@ describe(component, () => {
 
       wrapper = render(params);
 
-      wrapper.expectText('[data-cy="amendment--future-effective-date-facility-bar"]').notToExist();
+      wrapper.expectText('[data-cy="amendment-future-effective-date-facility-bar"]').notToExist();
     });
   });
 });

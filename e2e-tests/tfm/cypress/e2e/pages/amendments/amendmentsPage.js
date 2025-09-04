@@ -5,9 +5,9 @@ const amendmentsPage = {
   portalAmendmentInProgressBar: () => cy.get('[data-cy="portal-amendment--in-progress-bar"]'),
   portalAmendmentInProgressDealBar: () => cy.get('[data-cy="portal-amendment--in-progress-deal-bar"]'),
 
-  amendmentFutureEffectiveDateFacilityBar: () => cy.get('[data-cy="amendment--future-effective-date-facility-bar"]'),
+  amendmentFutureEffectiveDateFacilityBar: () => cy.get('[data-cy="amendment-future-effective-date-facility-bar"]'),
 
-  amendmentFutureEffectiveDateAmendmentBar: () => cy.get('[data-cy="amendment--future-effective-date-amendment-bar"]'),
+  amendmentFutureEffectiveDateAmendmentBar: () => cy.get('[data-cy="amendment-future-effective-date-amendment-bar"]'),
 
   amendmentFutureEffectiveDateDealBar: (ukefFacilityId) => cy.get(`[data-cy="amendment--future-effective-date-deal-bar-${ukefFacilityId}"]`),
   amendmentFutureEffectiveDateDealLink: (ukefFacilityId) => cy.get(`[data-cy="amendment--future-effective-date-deal-link-${ukefFacilityId}"]`),
