@@ -10,6 +10,7 @@ import {
   getLongDateFormat,
   convertUnixTimestampWithoutMilliseconds,
   getLongTimeDateFormat,
+  nowZeroSeconds,
 } from './date';
 
 describe('date helpers', () => {
@@ -26,6 +27,22 @@ describe('date helpers', () => {
       const result = getNowAsUtcISOString();
 
       const expected = `${formatInTimeZone(new Date(), '+00:00', 'yyyy-MM-dd')}T${formatInTimeZone(new Date(), '+00:00', 'HH:mm:ss.SSS xxxxxx')}`;
+
+      expect(result).toEqual(expected);
+    });
+
+    it('should return a zeroed timestamp if zeroTimeStamp is true', () => {
+      // Arrange
+      const zeroTimeStamp = true;
+
+      // Act
+      const result = getNowAsUtcISOString(zeroTimeStamp);
+
+      // Assert
+      const formattedDate = nowZeroSeconds();
+      const timeStringPart1 = formatInTimeZone(formattedDate, '+00:00', 'yyyy-MM-dd');
+      const timeStringPart2 = formatInTimeZone(formattedDate, '+00:00', 'HH:mm:ss.SSS xxxxxx');
+      const expected = `${timeStringPart1}T${timeStringPart2}`;
 
       expect(result).toEqual(expected);
     });

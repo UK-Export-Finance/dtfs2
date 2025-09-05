@@ -10,9 +10,8 @@
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import { Request, Response } from 'express';
-import { HEADERS } from '@ukef/dtfs2-common';
+import { HEADERS, UKEF_ID } from '@ukef/dtfs2-common';
 import { PremiumSchedule } from '../../interfaces';
-import { UKEF_ID } from '../../constants';
 import { validUkefId, objectIsEmpty } from '../../helpers';
 
 dotenv.config();

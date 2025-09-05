@@ -9,12 +9,16 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable import/no-extraneous-dependencies */
-
+import dotenv from 'dotenv';
 import axios, { HttpStatusCode } from 'axios';
 import { createRequest, createResponse } from 'node-mocks-http';
+import { getNowAsUtcISOString, USER, NUMBER_TYPE, ENTITY_TYPE, UKEF_ID } from '@ukef/dtfs2-common';
 import { getNumber } from '../../src/v1/controllers/number-generator.controller';
 import { InvalidEntityTypeError } from '../../src/v1/errors';
-import { ENTITY_TYPE, UKEF_ID, USER } from '../../src/constants';
+
+dotenv.config();
+
+const originalProcessEnv = { ...process.env };
 
 const body = {
   entityType: ENTITY_TYPE.DEAL,
@@ -27,7 +31,7 @@ const mockSuccessfulResponse = {
     {
       id: 12345678,
       maskedId: UKEF_ID.TEST,
-      type: 1,
+      type: NUMBER_TYPE.DEAL,
       createdBy: USER.DTFS,
       createdDatetime: '2024-01-01T00:00:00.000Z',
       requestingSystem: USER.DTFS,
@@ -43,21 +47,34 @@ const mockSuccessfulResponse = {
  * The code snippet includes test cases that validate the behavior of the `get` function in different scenarios.
  */
 describe('getNumber', () => {
+  beforeEach(() => {
+    process.env = { ...originalProcessEnv };
+    process.env.MOCK_E2E_NUMBER_GENERATOR = undefined;
+  });
+
+  afterAll(() => {
+    process.env = { ...originalProcessEnv };
+  });
+
   it('should retrieve a number from the number generator API when valid entityType and dealId are provided', async () => {
-    const request = createRequest({ body });
-    const response = createResponse();
-    const result = await getNumber(request, response);
+    process.env.MOCK_E2E_NUMBER_GENERATOR = undefined;
+
+    const MockRequest = createRequest({ body });
+    const MockResponse = createResponse();
+    const result = await getNumber(MockRequest, MockResponse);
 
     expect(result).not.toBeNull();
     expect(result.statusCode).toEqual(200);
   });
 
   it('should generate a number for a deal with valid entityType and dealId', async () => {
+    process.env.MOCK_E2E_NUMBER_GENERATOR = undefined;
+
     // Mock request and response objects
-    const request: any = {
+    const MockRequest: any = {
       body,
     };
-    const response: any = {
+    const MockResponse: any = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
     };
@@ -66,11 +83,11 @@ describe('getNumber', () => {
     axios.post = jest.fn().mockResolvedValue(mockSuccessfulResponse);
 
     // Call the get function
-    await getNumber(request, response);
+    await getNumber(MockRequest, MockResponse);
 
     // Assertions
-    expect(response.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
-    expect(response.send).toHaveBeenCalledWith({
+    expect(MockResponse.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+    expect(MockResponse.send).toHaveBeenCalledWith({
       status: 200,
       data: [
         {
@@ -85,36 +102,189 @@ describe('getNumber', () => {
     });
   });
 
+  describe('when MOCK_E2E_NUMBER_GENERATOR is "true"', () => {
+    beforeEach(() => {
+      process.env.MOCK_E2E_NUMBER_GENERATOR = 'true';
+    });
+
+    it('should return mocked response', async () => {
+      process.env.MOCK_E2E_NUMBER_GENERATOR = 'true';
+
+      // Mock request and response objects
+      const MockRequest: any = {
+        body,
+      };
+      const MockResponse: any = {
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn(),
+      };
+
+      // Call the get function
+      await getNumber(MockRequest, MockResponse);
+
+      expect(MockResponse.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+
+      expect(MockResponse.send).toHaveBeenCalledWith({
+        status: HttpStatusCode.Created,
+        data: [
+          {
+            id: expect.any(Number),
+            maskedId: expect.any(String),
+            type: 1,
+            createdBy: USER.DTFS,
+            createdDatetime: getNowAsUtcISOString(true),
+            requestingSystem: USER.DTFS,
+          },
+        ],
+      });
+    });
+  });
+
+  describe('when MOCK_E2E_NUMBER_GENERATOR is undefined', () => {
+    it(`should return ${HttpStatusCode.Created} response`, async () => {
+      process.env.MOCK_E2E_NUMBER_GENERATOR = undefined;
+
+      // Mock request and response objects
+      const MockRequest: any = {
+        body,
+      };
+      const MockResponse: any = {
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn(),
+      };
+
+      // Mock axios.post method
+      axios.post = jest.fn().mockResolvedValue(mockSuccessfulResponse);
+
+      // Call the get function
+      await getNumber(MockRequest, MockResponse);
+
+      // Assertions
+      expect(MockResponse.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+      expect(MockResponse.send).toHaveBeenCalledWith({
+        status: 200,
+        data: [
+          {
+            id: 12345678,
+            maskedId: UKEF_ID.TEST,
+            type: 1,
+            createdBy: USER.DTFS,
+            createdDatetime: '2024-01-01T00:00:00.000Z',
+            requestingSystem: USER.DTFS,
+          },
+        ],
+      });
+    });
+  });
+
+  describe('when MOCK_E2E_GOV_NOTIFY_API_KEY is an empty string', () => {
+    it(`should return ${HttpStatusCode.Created} response`, async () => {
+      process.env.MOCK_E2E_NUMBER_GENERATOR = '';
+
+      // Mock request and response objects
+      const MockRequest: any = {
+        body,
+      };
+      const MockResponse: any = {
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn(),
+      };
+
+      // Mock axios.post method
+      axios.post = jest.fn().mockResolvedValue(mockSuccessfulResponse);
+
+      // Call the get function
+      await getNumber(MockRequest, MockResponse);
+
+      // Assertions
+      expect(MockResponse.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+      expect(MockResponse.send).toHaveBeenCalledWith({
+        status: 200,
+        data: [
+          {
+            id: 12345678,
+            maskedId: UKEF_ID.TEST,
+            type: 1,
+            createdBy: USER.DTFS,
+            createdDatetime: '2024-01-01T00:00:00.000Z',
+            requestingSystem: USER.DTFS,
+          },
+        ],
+      });
+    });
+  });
+
+  describe("when MOCK_E2E_GOV_NOTIFY_API_KEY doesn't exist", () => {
+    it(`should return ${HttpStatusCode.Created} response`, async () => {
+      delete process.env.MOCK_E2E_NUMBER_GENERATOR;
+
+      // Mock request and response objects
+      const MockRequest: any = {
+        body,
+      };
+      const MockResponse: any = {
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn(),
+      };
+
+      // Mock axios.post method
+      axios.post = jest.fn().mockResolvedValue(mockSuccessfulResponse);
+
+      // Call the get function
+      await getNumber(MockRequest, MockResponse);
+
+      // Assertions
+      expect(MockResponse.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+      expect(MockResponse.send).toHaveBeenCalledWith({
+        status: 200,
+        data: [
+          {
+            id: 12345678,
+            maskedId: UKEF_ID.TEST,
+            type: 1,
+            createdBy: USER.DTFS,
+            createdDatetime: '2024-01-01T00:00:00.000Z',
+            requestingSystem: USER.DTFS,
+          },
+        ],
+      });
+    });
+  });
+
   it('should throw an error when entityType is not valid', async () => {
+    process.env.MOCK_E2E_NUMBER_GENERATOR = undefined;
+
     // Mock request and response objects
-    const request: any = {
+    const MockRequest: any = {
       body: {
         entityType: 'invalid',
         dealId: '12345',
       },
     };
-    const response: any = {
+    const MockResponse: any = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
     };
 
     // Call the get function
-    await getNumber(request, response);
+    await getNumber(MockRequest, MockResponse);
 
     // Assertions
-    expect(response.status).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
-    expect(response.send).toHaveBeenCalledWith({
+    expect(MockResponse.status).toHaveBeenCalledWith(HttpStatusCode.BadRequest);
+    expect(MockResponse.send).toHaveBeenCalledWith({
       status: HttpStatusCode.BadRequest,
       error: new InvalidEntityTypeError('invalid'),
     });
   });
 
   it('should throw an error when number generator response is void', async () => {
+    process.env.MOCK_E2E_NUMBER_GENERATOR = undefined;
+
     // Mock request and response objects
-    const request: any = {
+    const MockRequest: any = {
       body,
     };
-    const response: any = {
+    const MockResponse: any = {
       status: jest.fn().mockReturnThis(),
       send: jest.fn(),
     };
@@ -126,11 +296,11 @@ describe('getNumber', () => {
     });
 
     // Call the get function
-    await getNumber(request, response);
+    await getNumber(MockRequest, MockResponse);
 
     // Assertions
-    expect(response.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
-    expect(response.send).toHaveBeenCalledWith({
+    expect(MockResponse.status).toHaveBeenCalledWith(HttpStatusCode.InternalServerError);
+    expect(MockResponse.send).toHaveBeenCalledWith({
       status: HttpStatusCode.InternalServerError,
       error: {
         cause: 'Invalid number generator response received for deal 1234',
