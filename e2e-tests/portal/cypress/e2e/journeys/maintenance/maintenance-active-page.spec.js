@@ -14,6 +14,7 @@ context('Maintenance', () => {
   describe('service unavailable page', () => {
     it('should ensure service unavailable heading exist ', () => {
       page.heading().should('exist');
+      page.heading().contains('Sorry, the service is unavailable');
     });
 
     it('should ensure service unavailable message exist ', () => {
