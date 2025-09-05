@@ -39,6 +39,7 @@ const security = (req, res, next) => {
     'Permissions-Policy',
     'fullscreen=(self),microphone=(),camera=(),payment=(),geolocation=(),display-capture=(),battery=(),autoplay=(),gyroscope=(),accelerometer=(),web-share=(),usb=(),gamepad=(),magnetometer=(),midi=(),picture-in-picture=(),xr-spatial-tracking=()',
   );
+  res.setHeader('X-Request-Origin', 'ui');
 
   res.removeHeader('X-Powered-By');
   next();

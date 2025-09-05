@@ -41,6 +41,7 @@ export const security = (req: Request, res: Response, next: NextFunction) => {
     'Permissions-Policy',
     'fullscreen=(self),microphone=(),camera=(),payment=(),geolocation=(),display-capture=(),battery=(),autoplay=(),gyroscope=(),accelerometer=(),web-share=(),usb=(),gamepad=(),magnetometer=(),midi=(),picture-in-picture=(),xr-spatial-tracking=()',
   );
+  res.setHeader('X-Request-Origin', 'api');
 
   res.removeHeader('X-Powered-By');
   next();

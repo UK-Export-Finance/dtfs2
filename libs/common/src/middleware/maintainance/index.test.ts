@@ -17,6 +17,8 @@ describe('middleware/maintenance', () => {
 
     beforeEach(() => {
       jest.resetAllMocks();
+
+      res.setHeader('X-Request-Origin', 'api');
     });
 
     it.each(falsyModeValues)('should call next when the maintenance mode is not active, with environment value set as `%s`', (value) => {
@@ -53,7 +55,7 @@ describe('middleware/maintenance', () => {
 
         expect(nextSpy).not.toHaveBeenCalled();
 
-        expect(res._getHeaders()).toEqual({
+        expect(res._getHeaders()).toMatchObject({
           'retry-after': '3600',
           'cache-control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
           'x-ukef-maintenance-active': 'true',
@@ -78,6 +80,8 @@ describe('middleware/maintenance', () => {
 
     beforeEach(() => {
       jest.resetAllMocks();
+
+      res.setHeader('X-Request-Origin', 'ui');
     });
 
     it.each(falsyModeValues)('should call next when the maintenance mode is not active, with environment value set as `%s`', (value) => {
@@ -114,7 +118,7 @@ describe('middleware/maintenance', () => {
 
         expect(nextSpy).not.toHaveBeenCalled();
 
-        expect(res._getHeaders()).toEqual({
+        expect(res._getHeaders()).toMatchObject({
           'retry-after': '3600',
           'cache-control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
           'x-ukef-maintenance-active': 'true',
