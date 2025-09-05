@@ -175,8 +175,6 @@ env:
   DEAL_CANCELLATION_SCHEDULE: ${{ vars.DEAL_CANCELLATION_SCHEDULE }}
   RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE: ${{ vars.RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE }}
   UKEF_GEF_REPORTING_EMAIL_RECIPIENT: ${{ secrets.UKEF_GEF_REPORTING_EMAIL_RECIPIENT }}
-  MAINTENANCE_ACTIVE: ${{ vars.MAINTENANCE_ACTIVE }}
-  MAINTENANCE_TIMESTAMP: ${{ vars.MAINTENANCE_TIMESTAMP }}
 
 jobs:
   # 1. Setup test infrastructure
@@ -1047,10 +1045,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        spec:
-          [
-            'portal/MIA-underwriter/**/*.spec.js',
-          ]
+        spec: ['portal/MIA-underwriter/**/*.spec.js']
 
     concurrency:
       group: e2e-tests-ukef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
@@ -1118,7 +1113,7 @@ jobs:
           path: ./e2e-tests/ukef/cypress/screenshots/
           retention-days: 1
 
-#7.2. E2E - UKEF - Mocked
+  #7.2. E2E - UKEF - Mocked
   e2e-tests-ukef-mocked-calls:
     name: E2E UKEF - MOCKED 👷
     needs: [setup]
@@ -1332,7 +1327,7 @@ jobs:
             './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/general/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/application-details/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/status/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/**/*.spec.js'
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/**/*.spec.js',
           ]
 
     concurrency:
@@ -1411,7 +1406,87 @@ jobs:
           path: ./e2e-tests/${{ steps.project.outputs.directory }}/cypress/screenshots/
           retention-days: 1
 
-  #9. Docker build
+  #9. E2E - Maintenance
+  e2e-tests-maintenance:
+    name: E2E maintenance 👷
+    needs: [setup]
+    env:
+      MAINTENANCE_ACTIVE: 'true'
+      MAINTENANCE_TIMESTAMP: ${{ vars.MAINTENANCE_TIMESTAMP }}
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        spec:
+          [
+            './portal/cypress/e2e/journeys/maintenance/**/*.spec.js',
+            './gef/cypress/e2e/maintenance/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/maintenance/**/*.spec.js',
+          ]
+
+    concurrency:
+      group: e2e-tests-maintenance-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Repository
+        uses: actions/checkout@v5
+
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+      - name: Dependencies
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Docker
+        uses: ./.github/actions/rerun
+        with:
+          command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
+          env: |
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+
+      - name: Project
+        id: project
+        run: |
+          directory=$(echo ${{ matrix.spec }} | cut -d / -f2)
+          echo "::set-output name=directory::$directory"
+
+      - name: Execute
+        uses: ./.github/actions/rerun
+        with:
+          command: npx cypress run --config video=false --browser electron --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
+          working-directory: ./e2e-tests
+          env: |
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            TZ=${{ vars.TIMEZONE }}
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Screenshots
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-tests-ukef-ff-${{ github.run_attempt }}
+          path: ./e2e-tests/${{ steps.project.outputs.directory }}/cypress/screenshots/
+          retention-days: 1
+
+  #10. Docker build
   build:
     name: Build 🛠️
     needs: [setup]

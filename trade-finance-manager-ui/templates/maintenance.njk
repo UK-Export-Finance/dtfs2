@@ -7,11 +7,11 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading" data-cy="service-unavailable">Sorry, the service is unavailable</h1>
-      <p class="govuk-body">
+      <h1 class="govuk-heading" data-cy="service-unavailable-heading">Sorry, the service is unavailable</h1>
+      <p class="govuk-body" data-cy="service-unavailable-message">
         {{ message }}
       </p>
-      <p class="govuk-body">
+      <p class="govuk-body" data-cy="service-unavailable-contact">
         If you have any urgent enquiries, please contact the helpdesk at <a class="govuk-link" href="mailto:{{ CONTACT_US_EMAIL_ADDRESS }}" data-cy="contact-us-email">{{ CONTACT_US_EMAIL_ADDRESS }}</a>.
       </p>
     </div>
