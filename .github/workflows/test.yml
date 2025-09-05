@@ -175,8 +175,6 @@ env:
   DEAL_CANCELLATION_SCHEDULE: ${{ vars.DEAL_CANCELLATION_SCHEDULE }}
   RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE: ${{ vars.RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE }}
   UKEF_GEF_REPORTING_EMAIL_RECIPIENT: ${{ secrets.UKEF_GEF_REPORTING_EMAIL_RECIPIENT }}
-  MAINTENANCE_ACTIVE: ${{ vars.MAINTENANCE_ACTIVE }}
-  MAINTENANCE_TIMESTAMP: ${{ vars.MAINTENANCE_TIMESTAMP }}
 
 jobs:
   # 1. Setup test infrastructure
@@ -1047,10 +1045,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        spec:
-          [
-            'portal/MIA-underwriter/**/*.spec.js',
-          ]
+        spec: ['portal/MIA-underwriter/**/*.spec.js']
 
     concurrency:
       group: e2e-tests-ukef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
@@ -1118,7 +1113,7 @@ jobs:
           path: ./e2e-tests/ukef/cypress/screenshots/
           retention-days: 1
 
-#7.2. E2E - UKEF - Mocked
+  #7.2. E2E - UKEF - Mocked
   e2e-tests-ukef-mocked-calls:
     name: E2E UKEF - MOCKED 👷
     needs: [setup]
@@ -1332,7 +1327,7 @@ jobs:
             './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/general/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/application-details/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/status/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/**/*.spec.js'
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/**/*.spec.js',
           ]
 
     concurrency:
@@ -1415,6 +1410,9 @@ jobs:
   e2e-tests-maintenance:
     name: E2E maintenance 👷
     needs: [setup]
+    env:
+      MAINTENANCE_ACTIVE: 'true'
+      MAINTENANCE_TIMESTAMP: ${{ vars.MAINTENANCE_TIMESTAMP }}
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -1463,22 +1461,6 @@ jobs:
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
 
-      - name: Initialise
-        uses: ./.github/actions/rerun
-        with:
-          command: sleep 100s && npm run load
-          working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: SQL
-        working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-        run: npm run db:migrate
-
       - name: Project
         id: project
         run: |
@@ -1491,9 +1473,6 @@ jobs:
           command: npx cypress run --config video=false --browser electron --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
-            MAINTENANCE_ACTIVE: 'true'
-            MAINTENANCE_TIMESTAMP: '253402300799000'
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             TZ=${{ vars.TIMEZONE }}
