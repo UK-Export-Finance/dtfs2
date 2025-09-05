@@ -7,7 +7,10 @@ const USER_WITH_INJECTION = {
   password: 'TestPassword123!',
   firstname: 'test',
   surname: 'injection',
-  bank: '9', // Bank 1
+  bank: {
+    id: '9',
+    name: 'Bank 1',
+  },
   roles: [PORTAL_USER_ROLES.MAKER],
 };
 

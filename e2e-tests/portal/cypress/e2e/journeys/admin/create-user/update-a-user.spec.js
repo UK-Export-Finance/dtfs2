@@ -12,7 +12,10 @@ context('Admin user updates an existing user', () => {
     password: 'AbC!2345',
     firstname: 'first',
     surname: 'last',
-    bank: 'Bank 1',
+    bank: {
+      id: '9',
+      name: 'Bank 1',
+    },
     roles: [MAKER],
   };
 
@@ -48,7 +51,7 @@ context('Admin user updates an existing user', () => {
       createUser.role(role).click();
     });
 
-    createUser.bank().select(userToUpdate.bank);
+    createUser.bank().select(userToUpdate.bank.id);
 
     // Create user
     createUser.createUser().click();
@@ -177,7 +180,7 @@ context('Admin user updates an existing user', () => {
       createUser.role(role).click();
     });
 
-    createUser.bank().select(ukefEmailUser.bank);
+    createUser.bank().select(ukefEmailUser.bank.id);
 
     // Create user
     createUser.createUser().click();

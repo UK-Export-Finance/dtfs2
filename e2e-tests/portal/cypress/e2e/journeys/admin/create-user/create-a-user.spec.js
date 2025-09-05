@@ -7,12 +7,15 @@ const { ADMIN: AN_ADMIN, USER_WITH_INJECTION } = require('../../../../../../e2e-
 
 context('Admin user creates a new user', () => {
   const ukefUser = {
-    username: 'an.address@ukexportfinance.gov.uk',
-    email: 'an.address@ukexportfinance.gov.uk',
+    username: 'an.address2@ukexportfinance.gov.uk',
+    email: 'an.address2@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'bob',
     surname: 'builder',
-    bank: '9',
+    bank: {
+      id: '9',
+      name: 'Bank 1',
+    },
     roles: [MAKER],
   };
 
@@ -22,7 +25,10 @@ context('Admin user creates a new user', () => {
     password: 'AbC!2345',
     firstname: 'bob',
     surname: 'builder',
-    bank: '9',
+    bank: {
+      id: '9',
+      name: 'Bank 1',
+    },
     roles: [MAKER],
   };
 
@@ -32,7 +38,10 @@ context('Admin user creates a new user', () => {
     password: 'aaa',
     firstname: 'alfred',
     surname: 'd. great',
-    bank: '961',
+    bank: {
+      id: '961',
+      name: 'Bank 2',
+    },
     roles: [MAKER],
   };
 
@@ -98,7 +107,7 @@ context('Admin user creates a new user', () => {
       cy.keyboardInput(createUser.firstname(), userWithInvalidPassword.firstname);
       cy.keyboardInput(createUser.surname(), userWithInvalidPassword.surname);
 
-      createUser.bank().select(userWithInvalidPassword.bank);
+      createUser.bank().select(userWithInvalidPassword.bank.id);
 
       createUser.createUser().click();
 
@@ -124,7 +133,7 @@ context('Admin user creates a new user', () => {
       cy.keyboardInput(createUser.firstname(), USER_WITH_INJECTION.firstname);
       cy.keyboardInput(createUser.surname(), USER_WITH_INJECTION.surname);
 
-      createUser.bank().select(USER_WITH_INJECTION.bank);
+      createUser.bank().select(USER_WITH_INJECTION.bank.id);
 
       createUser.createUser().click();
 
@@ -181,7 +190,7 @@ context('Admin user creates a new user', () => {
       createUser.isTrustedFalse().click();
       createUser.role(ADMIN).click();
       cy.keyboardInput(createUser.username(), validUser.username);
-      createUser.bank().select(validUser.bank);
+      createUser.bank().select(validUser.bank.id);
 
       // Create user
       createUser.createUser().click();
@@ -204,7 +213,7 @@ context('Admin user creates a new user', () => {
       cy.keyboardInput(createUser.firstname(), validUser.firstname);
       cy.keyboardInput(createUser.surname(), validUser.surname);
 
-      createUser.bank().select(validUser.bank);
+      createUser.bank().select(validUser.bank.id);
 
       createUser.createUser().click();
 
@@ -240,7 +249,7 @@ context('Admin user creates a new user', () => {
       cy.keyboardInput(createUser.firstname(), validUser.firstname);
       cy.keyboardInput(createUser.surname(), validUser.surname);
 
-      createUser.bank().select(validUser.bank);
+      createUser.bank().select(validUser.bank.id);
 
       createUser.isTrustedTrue().click();
 
@@ -259,7 +268,7 @@ context('Admin user creates a new user', () => {
       cy.keyboardInput(createUser.firstname(), ukefUser.firstname);
       cy.keyboardInput(createUser.surname(), ukefUser.surname);
 
-      createUser.bank().select(ukefUser.bank);
+      createUser.bank().select(ukefUser.bank.id);
 
       createUser.role(READ_ONLY).click();
       createUser.createUser().click();
@@ -276,7 +285,7 @@ context('Admin user creates a new user', () => {
       createUser.isTrustedFalse().click();
       createUser.role(ADMIN).click();
       cy.keyboardInput(createUser.username(), ukefEmailUser.username);
-      createUser.bank().select(ukefEmailUser.bank);
+      createUser.bank().select(ukefEmailUser.bank.id);
 
       // Create user
       createUser.createUser().click();
@@ -294,7 +303,7 @@ context('Admin user creates a new user', () => {
       createUser.isTrustedFalse().click();
       createUser.role(PAYMENT_REPORT_OFFICER).click();
       cy.keyboardInput(createUser.username(), validUser.username);
-      createUser.bank().select(validUser.bank);
+      createUser.bank().select(validUser.bank.id);
 
       // Create user
       createUser.createUser().click();

@@ -12,7 +12,10 @@ context('Admin user creates a new user; the new user sets their password and the
     password: 'AbC!2345',
     firstname: 'first',
     surname: 'last',
-    bank: '9',
+    bank: {
+      id: '9',
+      name: 'Bank 1',
+    },
     roles: ['maker'],
   };
 
@@ -38,7 +41,7 @@ context('Admin user creates a new user; the new user sets their password and the
       cy.keyboardInput(createUser.username(), userToCreate.username);
       cy.keyboardInput(createUser.firstname(), userToCreate.firstname);
       cy.keyboardInput(createUser.surname(), userToCreate.surname);
-      createUser.bank().select(userToCreate.bank);
+      createUser.bank().select(userToCreate.bank.id);
 
       // Create user
       createUser.createUser().click();
