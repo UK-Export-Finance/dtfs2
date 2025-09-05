@@ -1,11 +1,11 @@
-const adminReadOnlyFromUkefOnly = require('./admin-read-only-from-ukef-only');
-const { MAKER, PAYMENT_REPORT_OFFICER, ADMIN, READ_ONLY } = require('../../../roles/roles');
+const adminFromUkefOnly = require('./admin-from-ukef-only');
+const { MAKER, PAYMENT_REPORT_OFFICER, ADMIN } = require('../../../roles/roles');
 
 const error = [
   {
     roles: {
       order: '1',
-      text: 'Admin and read-only roles can only be associated with a UKEF email address',
+      text: 'The admin role can only be associated with a UKEF email address',
     },
   },
 ];
@@ -29,7 +29,7 @@ const existingUser = {
   isTrusted: true,
 };
 
-describe('adminReadOnlyFromUkefOnly', () => {
+describe('adminFromUkefOnly', () => {
   describe('without any role', () => {
     describe('Existing user', () => {
       it('should not throw an error with a non UKEF email address', () => {
@@ -41,7 +41,7 @@ describe('adminReadOnlyFromUkefOnly', () => {
         };
 
         // Act
-        const response = adminReadOnlyFromUkefOnly(existingUser, mockUser);
+        const response = adminFromUkefOnly(existingUser, mockUser);
 
         // Assert
         expect(response).toStrictEqual(noError);
@@ -56,7 +56,7 @@ describe('adminReadOnlyFromUkefOnly', () => {
         };
 
         // Act
-        const response = adminReadOnlyFromUkefOnly(existingUser, mockUser);
+        const response = adminFromUkefOnly(existingUser, mockUser);
 
         // Assert
         expect(response).toStrictEqual(noError);
@@ -76,7 +76,7 @@ describe('adminReadOnlyFromUkefOnly', () => {
         };
 
         // Act
-        const response = adminReadOnlyFromUkefOnly(null, mockUser);
+        const response = adminFromUkefOnly(null, mockUser);
 
         // Assert
         expect(response).toStrictEqual(error);
@@ -90,7 +90,7 @@ describe('adminReadOnlyFromUkefOnly', () => {
         };
 
         // Act
-        const response = adminReadOnlyFromUkefOnly(null, mockUser);
+        const response = adminFromUkefOnly(null, mockUser);
 
         // Assert
         expect(response).toStrictEqual(noError);
@@ -106,7 +106,7 @@ describe('adminReadOnlyFromUkefOnly', () => {
         };
 
         // Act
-        const response = adminReadOnlyFromUkefOnly(existingUser, mockUser);
+        const response = adminFromUkefOnly(existingUser, mockUser);
 
         // Assert
         expect(response).toStrictEqual(error);
@@ -120,7 +120,7 @@ describe('adminReadOnlyFromUkefOnly', () => {
         };
 
         // Act
-        const response = adminReadOnlyFromUkefOnly(existingUser, mockUser);
+        const response = adminFromUkefOnly(existingUser, mockUser);
 
         // Assert
         expect(response).toStrictEqual(noError);
@@ -128,71 +128,7 @@ describe('adminReadOnlyFromUkefOnly', () => {
     });
   });
 
-  describe('with a read-only role', () => {
-    const mockRoles = [MAKER, PAYMENT_REPORT_OFFICER, READ_ONLY];
-
-    describe('New user', () => {
-      it('should throw an error with a non UKEF email address', () => {
-        // Arrange
-        const mockUser = {
-          roles: mockRoles,
-          email: 'maker1@example.com',
-        };
-
-        // Act
-        const response = adminReadOnlyFromUkefOnly(null, mockUser);
-
-        // Assert
-        expect(response).toStrictEqual(error);
-      });
-
-      it('should not throw an error with a UKEF email address', () => {
-        // Arrange
-        const mockUser = {
-          roles: mockRoles,
-          email: 'maker1@ukexportfinance.gov.uk',
-        };
-
-        // Act
-        const response = adminReadOnlyFromUkefOnly(null, mockUser);
-
-        // Assert
-        expect(response).toStrictEqual(noError);
-      });
-    });
-
-    describe('Existing user', () => {
-      it('should throw an error with a non UKEF email address', () => {
-        // Arrange
-        const mockUser = {
-          roles: mockRoles,
-          updateEmail: 'maker1@example.com',
-        };
-
-        // Act
-        const response = adminReadOnlyFromUkefOnly(existingUser, mockUser);
-
-        // Assert
-        expect(response).toStrictEqual(error);
-      });
-
-      it('should not throw an error with a UKEF email address', () => {
-        // Arrange
-        const mockUser = {
-          roles: mockRoles,
-          updateEmail: 'maker1@ukexportfinance.gov.uk',
-        };
-
-        // Act
-        const response = adminReadOnlyFromUkefOnly(existingUser, mockUser);
-
-        // Assert
-        expect(response).toStrictEqual(noError);
-      });
-    });
-  });
-
-  describe('without an admin or read-only role', () => {
+  describe('without an admin role', () => {
     const mockRoles = [MAKER, PAYMENT_REPORT_OFFICER];
     const invalidRoles = [undefined, null, [], {}, ''];
 
@@ -205,7 +141,7 @@ describe('adminReadOnlyFromUkefOnly', () => {
         };
 
         // Act
-        const response = adminReadOnlyFromUkefOnly(null, mockUser);
+        const response = adminFromUkefOnly(null, mockUser);
 
         // Assert
         expect(response).toStrictEqual(noError);
@@ -219,7 +155,7 @@ describe('adminReadOnlyFromUkefOnly', () => {
         };
 
         // Act
-        const response = adminReadOnlyFromUkefOnly(null, mockUser);
+        const response = adminFromUkefOnly(null, mockUser);
 
         // Assert
         expect(response).toStrictEqual(noError);
@@ -233,7 +169,7 @@ describe('adminReadOnlyFromUkefOnly', () => {
         };
 
         // Act
-        const response = adminReadOnlyFromUkefOnly(null, mockUser);
+        const response = adminFromUkefOnly(null, mockUser);
 
         // Assert
         expect(response).toStrictEqual(noError);
@@ -249,7 +185,7 @@ describe('adminReadOnlyFromUkefOnly', () => {
         };
 
         // Act
-        const response = adminReadOnlyFromUkefOnly(existingUser, mockUser);
+        const response = adminFromUkefOnly(existingUser, mockUser);
 
         // Assert
         expect(response).toStrictEqual(noError);
@@ -263,7 +199,7 @@ describe('adminReadOnlyFromUkefOnly', () => {
         };
 
         // Act
-        const response = adminReadOnlyFromUkefOnly(existingUser, mockUser);
+        const response = adminFromUkefOnly(existingUser, mockUser);
 
         // Assert
         expect(response).toStrictEqual(noError);
@@ -277,7 +213,7 @@ describe('adminReadOnlyFromUkefOnly', () => {
         };
 
         // Act
-        const response = adminReadOnlyFromUkefOnly(existingUser, mockUser);
+        const response = adminFromUkefOnly(existingUser, mockUser);
 
         // Assert
         expect(response).toStrictEqual(noError);

@@ -196,7 +196,7 @@ context('Admin user creates a new user', () => {
       createUser.createUser().click();
 
       // Assert role input error
-      createUser.rolesError().should('contain', 'Admin and read-only roles can only be associated with a UKEF email address');
+      createUser.rolesError().should('contain', 'The admin role can only be associated with a UKEF email address');
 
       // Assert URL
       cy.url().should('eq', relative('/admin/users/create'));

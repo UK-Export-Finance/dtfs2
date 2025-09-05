@@ -142,7 +142,7 @@ context('Admin user updates an existing user', () => {
     editUser.save().click();
 
     // Assert role input error
-    createUser.rolesError().should('contain', 'Admin and read-only roles can only be associated with a UKEF email address');
+    createUser.rolesError().should('contain', 'The admin role can only be associated with a UKEF email address');
 
     // Go back and validate the role
     createUser.cancel().click();
@@ -159,7 +159,7 @@ context('Admin user updates an existing user', () => {
     editUser.save().click();
 
     // Assert role input error
-    createUser.rolesError().should('contain', 'Admin and read-only roles can only be associated with a UKEF email address');
+    createUser.rolesError().should('contain', 'The admin role can only be associated with a UKEF email address');
 
     // Go back and validate the role
     createUser.cancel().click();

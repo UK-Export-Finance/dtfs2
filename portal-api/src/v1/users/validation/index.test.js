@@ -17,7 +17,8 @@ const firstNameMustNotBeEmpty = require('./rules/firstName-must-not-be-empty');
 const surnameMustNotBeEmpty = require('./rules/surname-must-not-be-empty');
 const selectAtLeastOneRole = require('./rules/select-at-least-one-role');
 const selectAtLeastOneBank = require('./rules/select-at-least-one-bank');
-const adminReadOnlyFromUkefOnly = require('./rules/admin-read-only-from-ukef-only');
+const adminFromUkefOnly = require('./rules/admin-from-ukef-only');
+const readOnlyFromUkefOnly = require('./rules/read-only-from-ukef-only');
 
 jest.mock('./rules/passwordAtLeast8Characters');
 jest.mock('./rules/passwordAtLeastOneNumber');
@@ -35,7 +36,8 @@ jest.mock('./rules/firstName-must-not-be-empty');
 jest.mock('./rules/surname-must-not-be-empty');
 jest.mock('./rules/select-at-least-one-role');
 jest.mock('./rules/select-at-least-one-bank');
-jest.mock('./rules/admin-read-only-from-ukef-only');
+jest.mock('./rules/admin-from-ukef-only');
+jest.mock('./rules/read-only-from-ukef-only');
 
 const mockUser = {
   password: 'ValidPassword1!',
@@ -68,7 +70,8 @@ describe('Validation Rules', () => {
     surnameMustNotBeEmpty.mockResolvedValue([]);
     selectAtLeastOneRole.mockResolvedValue([]);
     selectAtLeastOneBank.mockResolvedValue([]);
-    adminReadOnlyFromUkefOnly.mockResolvedValue([]);
+    adminFromUkefOnly.mockResolvedValue([]);
+    readOnlyFromUkefOnly.mockResolvedValue([]);
     currentPasswordMustMatch.mockResolvedValue([]);
   });
 
@@ -95,7 +98,8 @@ describe('Validation Rules', () => {
       expect(surnameMustNotBeEmpty).toHaveBeenCalledWith(null, candidateChange);
       expect(selectAtLeastOneRole).toHaveBeenCalledWith(null, candidateChange);
       expect(selectAtLeastOneBank).toHaveBeenCalledWith(null, candidateChange);
-      expect(adminReadOnlyFromUkefOnly).toHaveBeenCalledWith(null, candidateChange);
+      expect(adminFromUkefOnly).toHaveBeenCalledWith(null, candidateChange);
+      expect(readOnlyFromUkefOnly).toHaveBeenCalledWith(null, candidateChange);
     });
 
     it('should return an error', async () => {
@@ -118,14 +122,14 @@ describe('Validation Rules', () => {
       };
 
       usernameAndEmailMustMatch.mockResolvedValue(['Email must be unique']);
-      adminReadOnlyFromUkefOnly.mockResolvedValue(['Admin and read-only roles can only be associated with a UKEF email address']);
+      adminFromUkefOnly.mockResolvedValue(['The admin role can only be associated with a UKEF email address']);
 
       // Act
       const errors = await applyCreateRules(nonUkefCandidateChange);
 
       // Assert
       expect(errors).toHaveLength(2);
-      expect(errors).toEqual(['Email must be unique', 'Admin and read-only roles can only be associated with a UKEF email address']);
+      expect(errors).toEqual(['Email must be unique', 'The admin role can only be associated with a UKEF email address']);
     });
   });
 
@@ -162,7 +166,8 @@ describe('Validation Rules', () => {
       expect(usernameAndEmailMustMatch).toHaveBeenCalledWith(existingUser, candidateChange);
       expect(emailMustBeValidEmailAddress).toHaveBeenCalledWith(existingUser, candidateChange);
       expect(emailMustBeUnique).toHaveBeenCalledWith(existingUser, candidateChange);
-      expect(adminReadOnlyFromUkefOnly).toHaveBeenCalledWith(existingUser, candidateChange);
+      expect(adminFromUkefOnly).toHaveBeenCalledWith(existingUser, candidateChange);
+      expect(readOnlyFromUkefOnly).toHaveBeenCalledWith(existingUser, candidateChange);
     });
 
     it('should apply all update with current password rules', async () => {
@@ -192,7 +197,8 @@ describe('Validation Rules', () => {
       expect(usernameAndEmailMustMatch).toHaveBeenCalledWith(existingUser, candidateChange);
       expect(emailMustBeValidEmailAddress).toHaveBeenCalledWith(existingUser, candidateChange);
       expect(emailMustBeUnique).toHaveBeenCalledWith(existingUser, candidateChange);
-      expect(adminReadOnlyFromUkefOnly).toHaveBeenCalledWith(existingUser, candidateChange);
+      expect(adminFromUkefOnly).toHaveBeenCalledWith(existingUser, candidateChange);
+      expect(readOnlyFromUkefOnly).toHaveBeenCalledWith(existingUser, candidateChange);
       expect(currentPasswordMustMatch).toHaveBeenCalledWith(existingUser, candidateChange);
     });
 
