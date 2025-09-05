@@ -1415,10 +1415,6 @@ jobs:
   e2e-tests-maintenance:
     name: E2E maintenance 👷
     needs: [setup]
-    env:
-      # Various feature flags
-      MAINTENANCE_ACTIVE: 'true'
-      MAINTENANCE_TIMESTAMP: '253402300799000'
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -1495,6 +1491,8 @@ jobs:
           command: npx cypress run --config video=false --browser electron --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
           working-directory: ./e2e-tests
           env: |
+            MAINTENANCE_ACTIVE: 'true'
+            MAINTENANCE_TIMESTAMP: '253402300799000'
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
