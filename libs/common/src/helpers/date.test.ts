@@ -10,6 +10,7 @@ import {
   getLongDateFormat,
   convertUnixTimestampWithoutMilliseconds,
   getLongTimeDateFormat,
+  nowZeroSeconds,
 } from './date';
 
 describe('date helpers', () => {
@@ -38,7 +39,7 @@ describe('date helpers', () => {
       const result = getNowAsUtcISOString(zeroTimeStamp);
 
       // Assert
-      const formattedDate = new Date().setSeconds(0, 0);
+      const formattedDate = nowZeroSeconds();
       const timeStringPart1 = formatInTimeZone(formattedDate, '+00:00', 'yyyy-MM-dd');
       const timeStringPart2 = formatInTimeZone(formattedDate, '+00:00', 'HH:mm:ss.SSS xxxxxx');
       const expected = `${timeStringPart1}T${timeStringPart2}`;

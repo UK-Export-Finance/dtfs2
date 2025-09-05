@@ -9,12 +9,8 @@ dotenv.config();
  * @returns true if MOCK_E2E_NUMBER_GENERATOR is set to 'true', false otherwise
  */
 export const isNumberGeneratorMocked = (): boolean => {
-  const mockNumberGeneratorKey: string | undefined = process.env.MOCK_E2E_NUMBER_GENERATOR;
+  const { MOCK_E2E_NUMBER_GENERATOR } = process.env;
+  const mockNumberGeneratorKey: boolean = stringToBoolean(MOCK_E2E_NUMBER_GENERATOR);
 
-  // if either key is missing, return false
-  if (!mockNumberGeneratorKey) {
-    return false;
-  }
-
-  return stringToBoolean(mockNumberGeneratorKey);
+  return mockNumberGeneratorKey;
 };
