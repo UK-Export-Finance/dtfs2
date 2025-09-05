@@ -111,6 +111,7 @@ env:
   AZURE_UTILISATION_REPORTS_FILESHARE_NAME: ${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}
   GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY}}
   MOCK_E2E_GOV_NOTIFY_API_KEY: ${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+  MOCK_E2E_NUMBER_GENERATOR: ${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
   GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
   JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
   JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
@@ -333,6 +334,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -357,6 +359,7 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Stop
@@ -438,6 +441,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -447,6 +451,7 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
@@ -462,6 +467,7 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Stop
@@ -522,6 +528,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Coverage
         uses: codecov/codecov-action@v5
@@ -588,6 +595,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Coverage
         uses: codecov/codecov-action@v5
@@ -661,6 +669,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Coverage
         uses: codecov/codecov-action@v5
@@ -754,6 +763,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -780,6 +790,7 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
 
@@ -857,6 +868,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -883,6 +895,7 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
 
@@ -981,6 +994,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1007,6 +1021,7 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
 
@@ -1019,7 +1034,7 @@ jobs:
           path: ./e2e-tests/tfm/cypress/screenshots/
           retention-days: 1
 
-  #7. E2E - UKEF
+  #7.1. E2E - UKEF
   e2e-tests-ukef:
     name: E2E UKEF 👷
     needs: [setup]
@@ -1035,11 +1050,6 @@ jobs:
         spec:
           [
             'portal/MIA-underwriter/**/*.spec.js',
-            'portal/submit-AIN/**/*.spec.js',
-            'portal/submit-MIA/**/*.spec.js',
-            'portal/submit-MIN/**/*.spec.js',
-            'portal/submit-deal/**/*.spec.js',
-            'utilisation-reports/**/*.spec.js',
           ]
 
     concurrency:
@@ -1105,6 +1115,97 @@ jobs:
         if: failure()
         with:
           name: e2e-tests-ukef-${{ github.run_attempt }}
+          path: ./e2e-tests/ukef/cypress/screenshots/
+          retention-days: 1
+
+#7.2. E2E - UKEF - Mocked
+  e2e-tests-ukef-mocked-calls:
+    name: E2E UKEF - MOCKED 👷
+    needs: [setup]
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        spec:
+          [
+            'portal/submit-AIN/**/*.spec.js',
+            'portal/submit-MIA/**/*.spec.js',
+            'portal/submit-MIN/**/*.spec.js',
+            'portal/submit-deal/**/*.spec.js',
+            'utilisation-reports/**/*.spec.js',
+          ]
+
+    concurrency:
+      group: e2e-tests-ukef-mocked-calls-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Repository
+        uses: actions/checkout@v5
+
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+      - name: Dependencies
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Docker
+        uses: ./.github/actions/rerun
+        with:
+          command: docker compose up --build -d
+          retries: ${{ vars.RETRY_LIMIT }}
+          env: |
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+
+      - name: Initialise
+        uses: ./.github/actions/rerun
+        with:
+          command: sleep 100s && npm run load
+          working-directory: ./utils
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: SQL
+        working-directory: ./libs/common
+        env:
+          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+        run: npm run db:migrate
+
+      - name: Execute
+        uses: ./.github/actions/rerun
+        with:
+          command: npx cypress run --config video=false --browser electron --project ./ukef --record false --spec './ukef/cypress/e2e/journeys/${{ matrix.spec }}'
+          working-directory: ./e2e-tests
+          env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            TZ=${{ vars.TIMEZONE }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: Screenshots
+
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-tests-ukef-mocked-calls-${{ github.run_attempt }}
           path: ./e2e-tests/ukef/cypress/screenshots/
           retention-days: 1
 
@@ -1225,9 +1326,13 @@ jobs:
             './tfm/cypress/e2e/journeys/utilisation-reports/fee-record-correction/feature-flag-enabled/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/BSS-EWCS/**/*.spec.js',
             './ukef/cypress/e2e/journeys/portal/deal-cancellation/gef/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/journeys/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/journeys/tfm/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/amendment-details/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/general/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/application-details/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/status/**/*.spec.js',
+            './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/**/*.spec.js'
           ]
 
     concurrency:
@@ -1261,6 +1366,7 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -1293,6 +1399,7 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
 
