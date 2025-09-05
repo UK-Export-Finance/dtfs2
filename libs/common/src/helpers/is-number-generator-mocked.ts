@@ -1,20 +1,20 @@
 import * as dotenv from 'dotenv';
+import { stringToBoolean } from './string-to-boolean';
 
 dotenv.config();
 
 /**
  * checks if number generator key is mocked
- * if numberGeneratorKey is mocked, it will have the same value as MOCK_E2E_NUMBER_GENERATOR
- * @returns true if numberGeneratorKey is the same as MOCK_E2E_NUMBER_GENERATOR
+ * if numberGeneratorKey is mocked, MOCK_E2E_NUMBER_GENERATOR env var will be set to 'true'
+ * @returns true if MOCK_E2E_NUMBER_GENERATOR is set to 'true', false otherwise
  */
 export const isNumberGeneratorMocked = (): boolean => {
-  const numberGeneratorKey: string | undefined = process.env.NUMBER_GENERATOR;
   const mockNumberGeneratorKey: string | undefined = process.env.MOCK_E2E_NUMBER_GENERATOR;
 
   // if either key is missing, return false
-  if (!numberGeneratorKey || !mockNumberGeneratorKey) {
+  if (!mockNumberGeneratorKey) {
     return false;
   }
 
-  return numberGeneratorKey === mockNumberGeneratorKey;
+  return stringToBoolean(mockNumberGeneratorKey);
 };

@@ -18,3 +18,5 @@ export const UKEF_ID = {
 export const USER = {
   DTFS: 'Portal v2/TFM',
 };
+
+export const ID_PREFIX = '003';

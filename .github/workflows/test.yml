@@ -111,7 +111,6 @@ env:
   AZURE_UTILISATION_REPORTS_FILESHARE_NAME: ${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}
   GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY}}
   MOCK_E2E_GOV_NOTIFY_API_KEY: ${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-  NUMBER_GENERATOR: ${{ vars.NUMBER_GENERATOR }}
   MOCK_E2E_NUMBER_GENERATOR: ${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
   GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
   JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
@@ -335,7 +334,6 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            NUMBER_GENERATOR=${{ vars.NUMBER_GENERATOR }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
@@ -361,7 +359,6 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            NUMBER_GENERATOR=${{ vars.NUMBER_GENERATOR }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
           retries: ${{ vars.RETRY_LIMIT }}
 
@@ -444,7 +441,6 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            NUMBER_GENERATOR=${{ vars.NUMBER_GENERATOR }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
@@ -455,7 +451,6 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            NUMBER_GENERATOR=${{ vars.NUMBER_GENERATOR }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
           retries: ${{ vars.RETRY_LIMIT }}
 
@@ -472,7 +467,6 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            NUMBER_GENERATOR=${{ vars.NUMBER_GENERATOR }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
           retries: ${{ vars.RETRY_LIMIT }}
 
@@ -534,7 +528,6 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            NUMBER_GENERATOR=${{ vars.NUMBER_GENERATOR }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Coverage
@@ -602,7 +595,6 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            NUMBER_GENERATOR=${{ vars.NUMBER_GENERATOR }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Coverage
@@ -677,7 +669,6 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            NUMBER_GENERATOR=${{ vars.NUMBER_GENERATOR }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Coverage
@@ -772,7 +763,6 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            NUMBER_GENERATOR=${{ vars.NUMBER_GENERATOR }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
@@ -800,7 +790,6 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            NUMBER_GENERATOR=${{ vars.NUMBER_GENERATOR }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
@@ -879,7 +868,6 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            NUMBER_GENERATOR=${{ vars.NUMBER_GENERATOR }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
@@ -907,7 +895,6 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            NUMBER_GENERATOR=${{ vars.NUMBER_GENERATOR }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
@@ -1007,7 +994,6 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            NUMBER_GENERATOR=${{ vars.NUMBER_GENERATOR }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
@@ -1035,7 +1021,6 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            NUMBER_GENERATOR=${{ vars.NUMBER_GENERATOR }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}
@@ -1133,7 +1118,7 @@ jobs:
           path: ./e2e-tests/ukef/cypress/screenshots/
           retention-days: 1
 
-#7.2. E2E - UKEF
+#7.2. E2E - UKEF - Mocked
   e2e-tests-ukef-mocked-calls:
     name: E2E UKEF - MOCKED 👷
     needs: [setup]
@@ -1185,7 +1170,6 @@ jobs:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
-            NUMBER_GENERATOR=${{ vars.NUMBER_GENERATOR }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
@@ -1213,7 +1197,6 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             TZ=${{ vars.TIMEZONE }}
-            NUMBER_GENERATOR=${{ vars.NUMBER_GENERATOR }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
           retries: ${{ vars.RETRY_LIMIT }}
 
@@ -1383,7 +1366,6 @@ jobs:
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            NUMBER_GENERATOR=${{ vars.NUMBER_GENERATOR }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
@@ -1417,7 +1399,6 @@ jobs:
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            NUMBER_GENERATOR=${{ vars.NUMBER_GENERATOR }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
             TZ=${{ vars.TIMEZONE }}
           retries: ${{ vars.RETRY_LIMIT }}

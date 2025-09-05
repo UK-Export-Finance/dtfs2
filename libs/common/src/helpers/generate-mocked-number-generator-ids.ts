@@ -1,6 +1,6 @@
 import { getNowAsUtcISOString } from './date';
 import { NumberGeneratorObject } from '../types';
-import { USER, NUMBER_TYPE } from '../constants';
+import { USER, NUMBER_TYPE, ID_PREFIX } from '../constants';
 
 /**
  * Generates mocked number generator object
@@ -10,15 +10,12 @@ import { USER, NUMBER_TYPE } from '../constants';
  * @returns An array of mocked number generator objects.
  */
 export const generateMockedNumberGeneratorIds = (): NumberGeneratorObject[] => {
-  // prefix for ids
-  const prefix = '003';
-
   // randomly generates a 7-digit number between 1000000 and 9999999
   const number = Math.floor(1000000 + Math.random() * 9000000);
 
   // generate id and masked id in number form from randomly generated number
-  const id = Number(prefix + number);
-  const maskedId = String(prefix + number);
+  const id = Number(ID_PREFIX + number);
+  const maskedId = String(ID_PREFIX + number);
   const zeroTimeStamp = true;
 
   const mockObject = {

@@ -31,13 +31,17 @@ describe('date helpers', () => {
     });
 
     it('should return a zeroed timestamp if zeroTimeStamp is true', () => {
-      const result = getNowAsUtcISOString(true);
+      // Arrange
+      const zeroTimeStamp = true;
 
-      const expected = `${formatInTimeZone(new Date().setSeconds(0, 0), '+00:00', 'yyyy-MM-dd')}T${formatInTimeZone(
-        new Date().setSeconds(0, 0),
-        '+00:00',
-        'HH:mm:ss.SSS xxxxxx',
-      )}`;
+      // Act
+      const result = getNowAsUtcISOString(zeroTimeStamp);
+
+      // Assert
+      const formattedDate = new Date().setSeconds(0, 0);
+      const timeStringPart1 = formatInTimeZone(formattedDate, '+00:00', 'yyyy-MM-dd');
+      const timeStringPart2 = formatInTimeZone(formattedDate, '+00:00', 'HH:mm:ss.SSS xxxxxx');
+      const expected = `${timeStringPart1}T${timeStringPart2}`;
 
       expect(result).toEqual(expected);
     });

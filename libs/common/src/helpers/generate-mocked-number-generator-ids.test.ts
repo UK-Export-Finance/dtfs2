@@ -1,10 +1,11 @@
 import { generateMockedNumberGeneratorIds } from './generate-mocked-number-generator-ids';
 import { getNowAsUtcISOString } from './date';
+import { USER, NUMBER_TYPE, ID_PREFIX } from '../constants';
 
-const type = 1;
-const createdBy = 'Portal v2/TFM';
+const type = NUMBER_TYPE.DEAL;
+const createdBy = USER.DTFS;
 const createdDatetime = getNowAsUtcISOString(true);
-const requestingSystem = 'Portal v2/TFM';
+const requestingSystem = USER.DTFS;
 
 describe('generate-mocked-number-generator-ids', () => {
   describe('when generating a single mocked number generator ID', () => {
@@ -15,7 +16,7 @@ describe('generate-mocked-number-generator-ids', () => {
       // Assert
       expect(typeof result[0]!.id).toBe('number');
       expect(typeof result[0]!.maskedId).toBe('string');
-      expect(result[0]!.maskedId.startsWith('003')).toBe(true);
+      expect(result[0]!.maskedId.startsWith(ID_PREFIX)).toBe(true);
       expect(result[0]!.type).toBe(type);
       expect(result[0]!.createdBy).toBe(createdBy);
       expect(result[0]!.createdDatetime).toBe(createdDatetime);

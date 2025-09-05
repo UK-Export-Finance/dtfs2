@@ -49,8 +49,7 @@ const mockSuccessfulResponse = {
 describe('getNumber', () => {
   beforeEach(() => {
     process.env = { ...originalProcessEnv };
-    process.env.NUMBER_GENERATOR = 'MOCK_E2E_NUMBER_GENERATOR';
-    process.env.MOCK_E2E_NUMBER_GENERATOR = '';
+    process.env.MOCK_E2E_NUMBER_GENERATOR = undefined;
   });
 
   afterAll(() => {
@@ -58,8 +57,7 @@ describe('getNumber', () => {
   });
 
   it('should retrieve a number from the number generator API when valid entityType and dealId are provided', async () => {
-    process.env.NUMBER_GENERATOR = 'MOCK_E2E_NUMBER_GENERATOR';
-    process.env.MOCK_E2E_NUMBER_GENERATOR = '';
+    process.env.MOCK_E2E_NUMBER_GENERATOR = undefined;
 
     const MockRequest = createRequest({ body });
     const MockResponse = createResponse();
@@ -70,8 +68,7 @@ describe('getNumber', () => {
   });
 
   it('should generate a number for a deal with valid entityType and dealId', async () => {
-    process.env.NUMBER_GENERATOR = 'MOCK_E2E_NUMBER_GENERATOR';
-    process.env.MOCK_E2E_NUMBER_GENERATOR = '';
+    process.env.MOCK_E2E_NUMBER_GENERATOR = undefined;
 
     // Mock request and response objects
     const MockRequest: any = {
@@ -105,15 +102,13 @@ describe('getNumber', () => {
     });
   });
 
-  describe('when NUMBER_GENERATOR is set to MOCK_E2E_NUMBER_GENERATOR', () => {
+  describe('when MOCK_E2E_NUMBER_GENERATOR is "true"', () => {
     beforeEach(() => {
-      process.env.NUMBER_GENERATOR = 'MOCK_E2E_NUMBER_GENERATOR';
-      process.env.MOCK_E2E_NUMBER_GENERATOR = 'MOCK_E2E_NUMBER_GENERATOR';
+      process.env.MOCK_E2E_NUMBER_GENERATOR = 'true';
     });
 
     it('should return mocked response', async () => {
-      process.env.NUMBER_GENERATOR = 'MOCK_E2E_NUMBER_GENERATOR';
-      process.env.MOCK_E2E_NUMBER_GENERATOR = 'MOCK_E2E_NUMBER_GENERATOR';
+      process.env.MOCK_E2E_NUMBER_GENERATOR = 'true';
 
       // Mock request and response objects
       const MockRequest: any = {
@@ -219,9 +214,45 @@ describe('getNumber', () => {
     });
   });
 
+  describe("when MOCK_E2E_GOV_NOTIFY_API_KEY doesn't exist", () => {
+    it(`should return ${HttpStatusCode.Created} response`, async () => {
+      delete process.env.MOCK_E2E_NUMBER_GENERATOR;
+
+      // Mock request and response objects
+      const MockRequest: any = {
+        body,
+      };
+      const MockResponse: any = {
+        status: jest.fn().mockReturnThis(),
+        send: jest.fn(),
+      };
+
+      // Mock axios.post method
+      axios.post = jest.fn().mockResolvedValue(mockSuccessfulResponse);
+
+      // Call the get function
+      await getNumber(MockRequest, MockResponse);
+
+      // Assertions
+      expect(MockResponse.status).toHaveBeenCalledWith(HttpStatusCode.Ok);
+      expect(MockResponse.send).toHaveBeenCalledWith({
+        status: 200,
+        data: [
+          {
+            id: 12345678,
+            maskedId: UKEF_ID.TEST,
+            type: 1,
+            createdBy: USER.DTFS,
+            createdDatetime: '2024-01-01T00:00:00.000Z',
+            requestingSystem: USER.DTFS,
+          },
+        ],
+      });
+    });
+  });
+
   it('should throw an error when entityType is not valid', async () => {
-    process.env.NUMBER_GENERATOR = 'MOCK_E2E_NUMBER_GENERATOR';
-    process.env.MOCK_E2E_NUMBER_GENERATOR = '';
+    process.env.MOCK_E2E_NUMBER_GENERATOR = undefined;
 
     // Mock request and response objects
     const MockRequest: any = {
@@ -247,8 +278,7 @@ describe('getNumber', () => {
   });
 
   it('should throw an error when number generator response is void', async () => {
-    process.env.NUMBER_GENERATOR = 'MOCK_E2E_NUMBER_GENERATOR';
-    process.env.MOCK_E2E_NUMBER_GENERATOR = '';
+    process.env.MOCK_E2E_NUMBER_GENERATOR = undefined;
 
     // Mock request and response objects
     const MockRequest: any = {
