@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpStatusCode } from 'axios';
-import { isMaintenanceActive } from '../../helpers/is-maintenance-active';
+import { isMaintenanceActive, getMaintenanceTimestamp } from '../../helpers';
 import { MAINTENANCE } from '../../constants';
 
 /**
@@ -20,7 +20,8 @@ export const maintenance = (req: Request, res: Response, next: NextFunction) => 
   const isActive = isMaintenanceActive();
 
   if (isActive) {
-    console.info('⚙️ System under scheduled maintenance for request %s.', req.path);
+    const maintenanceUntil = getMaintenanceTimestamp();
+    console.info('⚙️ System under scheduled maintenance for request %s until %s.', req.path, maintenanceUntil);
 
     res
       .set('Retry-After', MAX_AGE)
@@ -28,10 +29,9 @@ export const maintenance = (req: Request, res: Response, next: NextFunction) => 
       .set('X-UKEF-Maintenance-Active', String(isActive))
       .status(HttpStatusCode.ServiceUnavailable);
 
-    // TODO: DTFS2-7939: Set service resume timestamp
     if (req.accepts('html')) {
       return res.render('maintenance.njk', {
-        message: 'You will be able to use the service from.',
+        message: `You will be able to use the service from ${maintenanceUntil}.`,
       });
     }
 

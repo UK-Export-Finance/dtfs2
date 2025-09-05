@@ -62,6 +62,7 @@ services:
     environment:
       - TZ
       - MAINTENANCE_ACTIVE
+      - MAINTENANCE_TIMESTAMP
       - PORT=5005
       - CORS_ORIGIN
       - EXTERNAL_API_URL=http://external-api:5002
@@ -113,6 +114,7 @@ services:
     environment:
       - TZ
       - MAINTENANCE_ACTIVE
+      - MAINTENANCE_TIMESTAMP
       - PORT=5003
       - PORTAL_API_KEY
       - TFM_API_KEY
@@ -212,6 +214,7 @@ services:
     environment:
       - TZ
       - MAINTENANCE_ACTIVE
+      - MAINTENANCE_TIMESTAMP
       - PORTAL_API_URL=http://portal-api:5001
       - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_UI_URL
@@ -251,6 +254,7 @@ services:
     environment:
       - TZ
       - MAINTENANCE_ACTIVE
+      - MAINTENANCE_TIMESTAMP
       - PORT=5001
       - CORS_ORIGIN
       - JWT_SIGNING_KEY
@@ -309,6 +313,7 @@ services:
     environment:
       - TZ
       - MAINTENANCE_ACTIVE
+      - MAINTENANCE_TIMESTAMP
       - PORT=5002
       - PORTAL_API_KEY
       - TFM_API_KEY
@@ -356,6 +361,7 @@ services:
     environment:
       - TZ
       - MAINTENANCE_ACTIVE
+      - MAINTENANCE_TIMESTAMP
       - PORTAL_API_URL=http://portal-api:5001
       - EXTERNAL_API_URL=http://external-api:5002
       - PORTAL_UI_URL
@@ -414,6 +420,7 @@ services:
     environment:
       - TZ
       - MAINTENANCE_ACTIVE
+      - MAINTENANCE_TIMESTAMP
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
       - FUNCTIONS_WORKER_RUNTIME=node
       - WEBSITE_HOSTNAME=acbs:7071
