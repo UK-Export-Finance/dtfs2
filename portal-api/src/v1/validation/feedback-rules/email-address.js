@@ -6,7 +6,7 @@ module.exports = (feedback, errorList) => {
 
   if (hasValue(feedback.emailAddress) && !isValidEmail(feedback.emailAddress)) {
     newErrorList.emailAddress = {
-      text: 'Enter an email address in the correct format, like name@ukexportfinance.gov.uk',
+      text: 'Enter an email address in the correct format, for example, name@ukexportfinance.gov.uk',
       order: orderNumber(newErrorList),
     };
   }

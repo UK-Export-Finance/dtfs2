@@ -1,5 +1,4 @@
 const joi = require('joi');
-const { isUkefEmail } = require('@ukef/dtfs2-common');
 
 const isEmptyString = (str) => {
   if (!str || ((typeof str === 'string' || str instanceof String) && !str.trim().length)) {
@@ -51,13 +50,10 @@ Additional aspects:
  * @returns {boolean}
  */
 const isValidEmail = (email) => {
-  if (email && typeof email === 'string') {
-    const emailLower = email.toLowerCase();
-    const validation = joi.string().email().required().validate(emailLower);
+  if (email) {
+    const validation = joi.string().email().required().validate(email);
 
-    if (!validation.error && isUkefEmail(emailLower)) {
-      return true;
-    }
+    return !validation.error;
   }
 
   return false;

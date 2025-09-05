@@ -31,7 +31,7 @@ describe('/v1/feedback', () => {
     clearlyExplained: 'Good',
     satisfied: 'Very satisfied',
     howCanWeImprove: 'Devs are doing a great job already',
-    emailAddress: 'test@ukexportfinance.gov.uk',
+    emailAddress: 'test@testing.com',
   };
 
   const getFeedbackToSubmit = (user) => ({

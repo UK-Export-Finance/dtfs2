@@ -1,14 +1,14 @@
 const { header, users, createUser, editUser } = require('../../../pages');
 const { ADMIN: AN_ADMIN } = require('../../../../../../e2e-fixtures');
 const {
-  USER_ROLES: { ADMIN, MAKER, CHECKER },
+  USER_ROLES: { ADMIN, READ_ONLY, MAKER, CHECKER },
 } = require('../../../../fixtures/constants');
 const relative = require('../../../relativeURL');
 
 context('Admin user updates an existing user', () => {
   const userToUpdate = {
-    username: 'email@ukexportfinance.gov.uk',
-    email: 'email@ukexportfinance.gov.uk',
+    username: 'email@example.com',
+    email: 'email@example.com',
     password: 'AbC!2345',
     firstname: 'first',
     surname: 'last',
@@ -139,7 +139,24 @@ context('Admin user updates an existing user', () => {
     editUser.save().click();
 
     // Assert role input error
-    createUser.rolesError().should('contain', 'The admin role can only be associated with a UKEF email address');
+    createUser.rolesError().should('contain', 'Admin and read-only roles can only be associated with a UKEF email address');
+
+    // Go back and validate the role
+    createUser.cancel().click();
+    cy.url().should('eq', relative('/admin/users/'));
+    cy.assertText(users.row(userToUpdate).roles(), MAKER);
+  });
+
+  it('changing role to read-only on non-ukef user should display an error', () => {
+    // Go to edit page
+    openPageToEdit(userToUpdate);
+
+    // New role as an `Read-only`
+    editUser.role(READ_ONLY).click();
+    editUser.save().click();
+
+    // Assert role input error
+    createUser.rolesError().should('contain', 'Admin and read-only roles can only be associated with a UKEF email address');
 
     // Go back and validate the role
     createUser.cancel().click();

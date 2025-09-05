@@ -6,8 +6,8 @@ const { ADMIN } = MOCK_USERS;
 
 context('Admin user updates an existing user', () => {
   const userToUpdate = {
-    username: 'email@ukexportfinance.gov.uk',
-    email: 'email@ukexportfinance.gov.uk',
+    username: 'email@example.com',
+    email: 'email@example.com',
     password: 'AbC!2345',
     firstname: 'first',
     surname: 'last',

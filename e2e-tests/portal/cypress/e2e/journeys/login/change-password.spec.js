@@ -7,8 +7,8 @@ const { ADMIN } = MOCK_USERS;
 
 context('Admin user creates a new user; the new user sets their password and then updates their password.', () => {
   const userToCreate = {
-    username: 'email@ukexportfinance.gov.uk',
-    email: 'email@ukexportfinance.gov.uk',
+    username: 'email@example.com',
+    email: 'email@example.com',
     password: 'AbC!2345',
     firstname: 'first',
     surname: 'last',

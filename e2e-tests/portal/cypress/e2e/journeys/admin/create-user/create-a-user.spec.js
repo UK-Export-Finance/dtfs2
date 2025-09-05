@@ -6,17 +6,7 @@ const {
 const { ADMIN: AN_ADMIN, USER_WITH_INJECTION } = require('../../../../../../e2e-fixtures/portal-users.fixture');
 
 context('Admin user creates a new user', () => {
-  const nonUkefUser = {
-    username: 'an.address@example.com',
-    email: 'an.address@example.com',
-    password: 'AbC!2345',
-    firstname: 'alfred',
-    surname: 'builder',
-    bank: '9',
-    roles: [ADMIN],
-  };
-
-  const validUser = {
+  const ukefUser = {
     username: 'an.address@ukexportfinance.gov.uk',
     email: 'an.address@ukexportfinance.gov.uk',
     password: 'AbC!2345',
@@ -26,9 +16,19 @@ context('Admin user creates a new user', () => {
     roles: [MAKER],
   };
 
+  const validUser = {
+    username: 'an.address@example.com',
+    email: 'an.address@example.com',
+    password: 'AbC!2345',
+    firstname: 'bob',
+    surname: 'builder',
+    bank: '9',
+    roles: [MAKER],
+  };
+
   const userWithInvalidPassword = {
-    username: 'email@ukexportfinance.gov.uk',
-    email: 'email@ukexportfinance.gov.uk',
+    username: 'email@example.com',
+    email: 'email@example.com',
     password: 'aaa',
     firstname: 'alfred',
     surname: 'd. great',
@@ -176,18 +176,18 @@ context('Admin user creates a new user', () => {
 
     it('should receive error when the email address is from a non-UKEF domain', () => {
       // Fill in all the fields
-      cy.keyboardInput(createUser.firstname(), nonUkefUser.firstname);
-      cy.keyboardInput(createUser.surname(), nonUkefUser.surname);
+      cy.keyboardInput(createUser.firstname(), validUser.firstname);
+      cy.keyboardInput(createUser.surname(), validUser.surname);
       createUser.isTrustedFalse().click();
       createUser.role(ADMIN).click();
-      cy.keyboardInput(createUser.username(), nonUkefUser.username);
-      createUser.bank().select(nonUkefUser.bank);
+      cy.keyboardInput(createUser.username(), validUser.username);
+      createUser.bank().select(validUser.bank);
 
       // Create user
       createUser.createUser().click();
 
       // Assert role input error
-      createUser.rolesError().should('contain', 'The admin role can only be associated with a UKEF email address');
+      createUser.rolesError().should('contain', 'Admin and read-only roles can only be associated with a UKEF email address');
 
       // Assert URL
       cy.url().should('eq', relative('/admin/users/create'));
@@ -255,18 +255,18 @@ context('Admin user creates a new user', () => {
     });
 
     it('should create a read-only user', () => {
-      cy.keyboardInput(createUser.username(), validUser.username);
-      cy.keyboardInput(createUser.firstname(), validUser.firstname);
-      cy.keyboardInput(createUser.surname(), validUser.surname);
+      cy.keyboardInput(createUser.username(), ukefUser.username);
+      cy.keyboardInput(createUser.firstname(), ukefUser.firstname);
+      cy.keyboardInput(createUser.surname(), ukefUser.surname);
 
-      createUser.bank().select(validUser.bank);
+      createUser.bank().select(ukefUser.bank);
 
       createUser.role(READ_ONLY).click();
       createUser.createUser().click();
 
       cy.url().should('eq', relative('/admin/users/'));
 
-      cy.assertText(users.row(validUser).roles(), READ_ONLY);
+      cy.assertText(users.row(ukefUser).roles(), READ_ONLY);
     });
 
     it('should create a new admin user with a UKEF email address.', () => {

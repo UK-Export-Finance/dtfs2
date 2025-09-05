@@ -38,19 +38,19 @@ describe('utils string', () => {
 describe('isValidEmail function', () => {
   // Tests that a valid email returns true
   it('should test valid email', () => {
-    const email = 'test@ukexportfinance.gov.uk';
+    const email = 'test@example.com';
     expect(isValidEmail(email)).toEqual(true);
   });
 
   // Tests that a valid email with uppercase letters returns true
   it('should test valid email uppercase', () => {
-    const email = 'Test@Ukexportfinance.gov.uk';
+    const email = 'Test@Example.com';
     expect(isValidEmail(email)).toEqual(true);
   });
 
   // Tests that a valid email with numbers returns true
   it('should test valid email numbers', () => {
-    const email = 'test123@ukexportfinance.gov.uk';
+    const email = 'test123@example.com';
     expect(isValidEmail(email)).toEqual(true);
   });
 
@@ -69,12 +69,6 @@ describe('isValidEmail function', () => {
   // Tests that an invalid email returns false
   it('should test invalid email', () => {
     const email = 'example.com';
-    expect(isValidEmail(email)).toEqual(false);
-  });
-
-  // Tests that an invalid email returns false
-  it('should test email not ending with @ukexportfinance.gov.uk', () => {
-    const email = 'test@example.com';
     expect(isValidEmail(email)).toEqual(false);
   });
 
