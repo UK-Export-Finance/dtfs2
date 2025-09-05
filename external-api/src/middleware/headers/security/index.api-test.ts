@@ -83,10 +83,10 @@ describe('middleware/security', () => {
         'Permissions-Policy',
         'fullscreen=(self),microphone=(),camera=(),payment=(),geolocation=(),display-capture=(),battery=(),autoplay=(),gyroscope=(),accelerometer=(),web-share=(),usb=(),gamepad=(),magnetometer=(),midi=(),picture-in-picture=(),xr-spatial-tracking=()',
       );
+    });
 
-      it('should set `X-Request-Origin` header', () => {
-        expect(setHeaderSpy).toHaveBeenCalledWith('X-Request-Origin', 'api');
-      });
+    it('should set `X-Request-Origin` header', () => {
+      expect(setHeaderSpy).toHaveBeenCalledWith('X-Request-Origin', 'api');
     });
 
     it('should remove `X-Powered-By` header', () => {
