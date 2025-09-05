@@ -166,7 +166,7 @@ describe('/v1/deals/:id/bond', () => {
             return body.validationErrors;
           };
 
-          const expectedText = 'Enter an email address in the correct format, like name@example.com';
+          const expectedText = 'Enter an email address in the correct format, for example, name@ukexportfinance.gov.uk';
 
           let validationErrors = await postInvalidEmail('hello');
           expect(validationErrors.errorList.emailAddress.text).toEqual(expectedText);

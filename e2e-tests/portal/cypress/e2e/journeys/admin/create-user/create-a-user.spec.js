@@ -6,13 +6,29 @@ const {
 const { ADMIN: AN_ADMIN, USER_WITH_INJECTION } = require('../../../../../../e2e-fixtures/portal-users.fixture');
 
 context('Admin user creates a new user', () => {
-  const validUser = {
-    username: 'an.address@some.com',
-    email: 'an.address@some.com',
+  const ukefUser = {
+    username: 'an.address2@ukexportfinance.gov.uk',
+    email: 'an.address2@ukexportfinance.gov.uk',
     password: 'AbC!2345',
     firstname: 'bob',
     surname: 'builder',
-    bank: 'Bank 1',
+    bank: {
+      id: '9',
+      name: 'Bank 1',
+    },
+    roles: [MAKER],
+  };
+
+  const validUser = {
+    username: 'an.address@example.com',
+    email: 'an.address@example.com',
+    password: 'AbC!2345',
+    firstname: 'bob',
+    surname: 'builder',
+    bank: {
+      id: '9',
+      name: 'Bank 1',
+    },
     roles: [MAKER],
   };
 
@@ -22,7 +38,10 @@ context('Admin user creates a new user', () => {
     password: 'aaa',
     firstname: 'alfred',
     surname: 'd. great',
-    bank: 'Bank 2',
+    bank: {
+      id: '961',
+      name: 'Bank 2',
+    },
     roles: [MAKER],
   };
 
@@ -88,7 +107,7 @@ context('Admin user creates a new user', () => {
       cy.keyboardInput(createUser.firstname(), userWithInvalidPassword.firstname);
       cy.keyboardInput(createUser.surname(), userWithInvalidPassword.surname);
 
-      createUser.bank().select(userWithInvalidPassword.bank);
+      createUser.bank().select(userWithInvalidPassword.bank.id);
 
       createUser.createUser().click();
 
@@ -114,7 +133,7 @@ context('Admin user creates a new user', () => {
       cy.keyboardInput(createUser.firstname(), USER_WITH_INJECTION.firstname);
       cy.keyboardInput(createUser.surname(), USER_WITH_INJECTION.surname);
 
-      createUser.bank().select(USER_WITH_INJECTION.bank);
+      createUser.bank().select(USER_WITH_INJECTION.bank.id);
 
       createUser.createUser().click();
 
@@ -171,7 +190,7 @@ context('Admin user creates a new user', () => {
       createUser.isTrustedFalse().click();
       createUser.role(ADMIN).click();
       cy.keyboardInput(createUser.username(), validUser.username);
-      createUser.bank().select(validUser.bank);
+      createUser.bank().select(validUser.bank.id);
 
       // Create user
       createUser.createUser().click();
@@ -194,7 +213,7 @@ context('Admin user creates a new user', () => {
       cy.keyboardInput(createUser.firstname(), validUser.firstname);
       cy.keyboardInput(createUser.surname(), validUser.surname);
 
-      createUser.bank().select(validUser.bank);
+      createUser.bank().select(validUser.bank.id);
 
       createUser.createUser().click();
 
@@ -230,7 +249,7 @@ context('Admin user creates a new user', () => {
       cy.keyboardInput(createUser.firstname(), validUser.firstname);
       cy.keyboardInput(createUser.surname(), validUser.surname);
 
-      createUser.bank().select(validUser.bank);
+      createUser.bank().select(validUser.bank.id);
 
       createUser.isTrustedTrue().click();
 
@@ -245,18 +264,18 @@ context('Admin user creates a new user', () => {
     });
 
     it('should create a read-only user', () => {
-      cy.keyboardInput(createUser.username(), validUser.username);
-      cy.keyboardInput(createUser.firstname(), validUser.firstname);
-      cy.keyboardInput(createUser.surname(), validUser.surname);
+      cy.keyboardInput(createUser.username(), ukefUser.username);
+      cy.keyboardInput(createUser.firstname(), ukefUser.firstname);
+      cy.keyboardInput(createUser.surname(), ukefUser.surname);
 
-      createUser.bank().select(validUser.bank);
+      createUser.bank().select(ukefUser.bank.id);
 
       createUser.role(READ_ONLY).click();
       createUser.createUser().click();
 
       cy.url().should('eq', relative('/admin/users/'));
 
-      cy.assertText(users.row(validUser).roles(), READ_ONLY);
+      cy.assertText(users.row(ukefUser).roles(), READ_ONLY);
     });
 
     it('should create a new admin user with a UKEF email address.', () => {
@@ -266,7 +285,7 @@ context('Admin user creates a new user', () => {
       createUser.isTrustedFalse().click();
       createUser.role(ADMIN).click();
       cy.keyboardInput(createUser.username(), ukefEmailUser.username);
-      createUser.bank().select(ukefEmailUser.bank);
+      createUser.bank().select(ukefEmailUser.bank.id);
 
       // Create user
       createUser.createUser().click();
@@ -284,7 +303,7 @@ context('Admin user creates a new user', () => {
       createUser.isTrustedFalse().click();
       createUser.role(PAYMENT_REPORT_OFFICER).click();
       cy.keyboardInput(createUser.username(), validUser.username);
-      createUser.bank().select(validUser.bank);
+      createUser.bank().select(validUser.bank.id);
 
       // Create user
       createUser.createUser().click();

@@ -1,4 +1,4 @@
-const { ADMIN } = require('../../../roles/roles');
+const { ADMIN, READ_ONLY } = require('../../../roles/roles');
 
 const CONSTANT = require('../../../../constants');
 /**
@@ -19,13 +19,20 @@ const selectAtLeastOneBank = (user, change) => {
     ];
   }
 
-  const cantHaveAllBank = change.bank === CONSTANT.ALL && !change.roles?.includes(ADMIN);
-  if (cantHaveAllBank) {
+  const eligibleRoles = [ADMIN, READ_ONLY];
+
+  const isBankAll = change.bank?.name === CONSTANT.ALL;
+  const isEligible = (role) => eligibleRoles.includes(role);
+  const isRoleEligible = change.roles?.some(isEligible);
+
+  const cannotHaveAllBank = isBankAll && !isRoleEligible;
+
+  if (cannotHaveAllBank) {
     return [
       {
         bank: {
           order: '4',
-          text: 'Only admins can have "All" as the bank',
+          text: 'Only admin and read-only users can have "All" as the bank',
         },
       },
     ];

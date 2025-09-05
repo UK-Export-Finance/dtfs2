@@ -1,7 +1,7 @@
 const { header, users, createUser, editUser } = require('../../../pages');
 const { ADMIN: AN_ADMIN } = require('../../../../../../e2e-fixtures');
 const {
-  USER_ROLES: { ADMIN, MAKER, CHECKER },
+  USER_ROLES: { ADMIN, READ_ONLY, MAKER, CHECKER },
 } = require('../../../../fixtures/constants');
 const relative = require('../../../relativeURL');
 
@@ -12,7 +12,10 @@ context('Admin user updates an existing user', () => {
     password: 'AbC!2345',
     firstname: 'first',
     surname: 'last',
-    bank: 'Bank 1',
+    bank: {
+      id: '9',
+      name: 'Bank 1',
+    },
     roles: [MAKER],
   };
 
@@ -48,7 +51,7 @@ context('Admin user updates an existing user', () => {
       createUser.role(role).click();
     });
 
-    createUser.bank().select(userToUpdate.bank);
+    createUser.bank().select(userToUpdate.bank.id);
 
     // Create user
     createUser.createUser().click();
@@ -147,6 +150,23 @@ context('Admin user updates an existing user', () => {
     cy.assertText(users.row(userToUpdate).roles(), MAKER);
   });
 
+  it('changing role to read-only on non-ukef user should display an error', () => {
+    // Go to edit page
+    openPageToEdit(userToUpdate);
+
+    // New role as an `Read-only`
+    editUser.role(READ_ONLY).click();
+    editUser.save().click();
+
+    // Assert role input error
+    createUser.rolesError().should('contain', 'The admin role can only be associated with a UKEF email address');
+
+    // Go back and validate the role
+    createUser.cancel().click();
+    cy.url().should('eq', relative('/admin/users/'));
+    cy.assertText(users.row(userToUpdate).roles(), MAKER);
+  });
+
   it('changing role to admin on a ukef user should update their role', () => {
     // Create user
     users.addUser().click();
@@ -160,7 +180,7 @@ context('Admin user updates an existing user', () => {
       createUser.role(role).click();
     });
 
-    createUser.bank().select(ukefEmailUser.bank);
+    createUser.bank().select(ukefEmailUser.bank.id);
 
     // Create user
     createUser.createUser().click();

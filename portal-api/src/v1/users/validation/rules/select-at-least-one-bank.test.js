@@ -14,15 +14,16 @@ describe('selectAtLeastOneBank', () => {
     {
       bank: {
         order: '4',
-        text: 'Only admins can have "All" as the bank',
+        text: 'Only admin and read-only users can have "All" as the bank',
       },
     },
   ];
 
   const inputs = [
     { user: 'user var is not used in this validation case', change: { bank: null, roles: ['maker'] }, expected: selectAtLeastOneBankError },
-    { user: 'NA', change: { bank: 'all', roles: ['admin'] }, expected: [] },
-    { user: 'NA', change: { bank: 'all', roles: ['checker'] }, expected: allBankError },
+    { user: 'NA', change: { bank: null, roles: ['admin'] }, expected: selectAtLeastOneBankError },
+    { user: 'NA', change: { bank: { name: 'all' }, roles: ['admin'] }, expected: [] },
+    { user: 'NA', change: { bank: { name: 'all' }, roles: ['checker'] }, expected: allBankError },
   ];
 
   describe('selectAtLeastOneBank validation', () => {
