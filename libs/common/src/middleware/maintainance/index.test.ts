@@ -13,9 +13,12 @@ describe('middleware/maintenance', () => {
       },
     });
     const nextSpy = jest.fn();
+    console.info = jest.fn();
 
     beforeEach(() => {
       jest.resetAllMocks();
+
+      res.setHeader('X-Request-Origin', 'api');
     });
 
     it.each(falsyModeValues)('should call next when the maintenance mode is not active, with environment value set as `%s`', (value) => {
@@ -26,6 +29,8 @@ describe('middleware/maintenance', () => {
       maintenance(req, res, nextSpy);
 
       // Assert
+      expect(console.info).toHaveBeenCalledTimes(0);
+
       expect(nextSpy).toHaveBeenCalledTimes(1);
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
     });
@@ -35,14 +40,22 @@ describe('middleware/maintenance', () => {
       (value) => {
         // Arrange
         process.env.MAINTENANCE_ACTIVE = value;
+        process.env.MAINTENANCE_TIMESTAMP = '0';
 
         // Act
         maintenance(req, res, nextSpy);
 
         // Assert
+        expect(console.info).toHaveBeenCalledWith(
+          '⚙️ System under scheduled maintenance for request %s until %s.',
+          req.path,
+          '01:00am on Thursday 01 January 1970',
+        );
+        expect(console.info).toHaveBeenCalledTimes(1);
+
         expect(nextSpy).not.toHaveBeenCalled();
 
-        expect(res._getHeaders()).toEqual({
+        expect(res._getHeaders()).toMatchObject({
           'retry-after': '3600',
           'cache-control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
           'x-ukef-maintenance-active': 'true',
@@ -67,6 +80,8 @@ describe('middleware/maintenance', () => {
 
     beforeEach(() => {
       jest.resetAllMocks();
+
+      res.setHeader('X-Request-Origin', 'ui');
     });
 
     it.each(falsyModeValues)('should call next when the maintenance mode is not active, with environment value set as `%s`', (value) => {
@@ -77,6 +92,8 @@ describe('middleware/maintenance', () => {
       maintenance(req, res, nextSpy);
 
       // Assert
+      expect(console.info).toHaveBeenCalledTimes(0);
+
       expect(nextSpy).toHaveBeenCalledTimes(1);
       expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
     });
@@ -86,14 +103,22 @@ describe('middleware/maintenance', () => {
       (value) => {
         // Arrange
         process.env.MAINTENANCE_ACTIVE = value;
+        process.env.MAINTENANCE_TIMESTAMP = '0';
 
         // Act
         maintenance(req, res, nextSpy);
 
         // Assert
+        expect(console.info).toHaveBeenCalledWith(
+          '⚙️ System under scheduled maintenance for request %s until %s.',
+          req.path,
+          '01:00am on Thursday 01 January 1970',
+        );
+        expect(console.info).toHaveBeenCalledTimes(1);
+
         expect(nextSpy).not.toHaveBeenCalled();
 
-        expect(res._getHeaders()).toEqual({
+        expect(res._getHeaders()).toMatchObject({
           'retry-after': '3600',
           'cache-control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
           'x-ukef-maintenance-active': 'true',
@@ -104,7 +129,7 @@ describe('middleware/maintenance', () => {
 
         expect(res._getRenderView()).toBe('maintenance.njk');
         expect(res._getRenderData()).toEqual({
-          message: 'You will be able to use the service from.',
+          message: 'You will be able to use the service from 01:00am on Thursday 01 January 1970.',
         });
       },
     );

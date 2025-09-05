@@ -17,11 +17,18 @@ export const nowZeroSeconds = (): number => now().setSeconds(0, 0);
 
 /**
  * Returns the current date and time as a UTC ISO string.
- *
+ * @param zeroTimeStamp - whether to zero the timestamp - defaults to false
  * @returns {IsoDateTimeStamp} The current date and time in UTC formatted as an ISO string.
  */
-export const getNowAsUtcISOString = (): IsoDateTimeStamp =>
-  `${formatInTimeZone(new Date(), '+00:00', 'yyyy-MM-dd')}T${formatInTimeZone(new Date(), '+00:00', 'HH:mm:ss.SSS xxxxxx')}`;
+export const getNowAsUtcISOString = (zeroTimeStamp = false): IsoDateTimeStamp => {
+  let date: Date | number = new Date();
+
+  if (zeroTimeStamp) {
+    date = nowZeroSeconds();
+  }
+
+  return `${formatInTimeZone(date, '+00:00', 'yyyy-MM-dd')}T${formatInTimeZone(date, '+00:00', 'HH:mm:ss.SSS xxxxxx')}`;
+};
 
 /**
  * Returns the long month name associated with the given month number
@@ -74,4 +81,18 @@ export const getEpochMs = (date: Date = now()): number => new Date(date).valueOf
  */
 export const getLongDateFormat = (date: Date = now()): string => format(date, 'd MMMM yyyy');
 
+/**
+ * Converts a Unix timestamp to a 10-digit format by removing milliseconds.
+ *
+ * @param unixTimestamp - The Unix timestamp to convert, which may include milliseconds.
+ * @returns The Unix timestamp without milliseconds (10-digit format).
+ */
 export const convertUnixTimestampWithoutMilliseconds = (unixTimestamp: number): number => Number(String(unixTimestamp).substring(0, 10));
+
+/**
+ * Returns a formatted date string in the format "hh:mm a on cccc dd MMMM YYYY" for a given epoch time in milliseconds.
+ *
+ * @param epoch - The epoch time in milliseconds to format. Defaults to the current epoch time if not provided.
+ * @returns The formatted date string.
+ */
+export const getLongTimeDateFormat = (epoch: number = getEpochMs()): string => format(epoch, "hh:mmaaa 'on' cccc dd MMMM yyyy");

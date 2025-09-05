@@ -1,15 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpStatusCode } from 'axios';
-import { isMaintenanceActive } from '../../helpers/is-maintenance-active';
+import { isMaintenanceActive, getMaintenanceTimestamp } from '../../helpers';
 import { MAINTENANCE } from '../../constants';
 
 /**
  * Express middleware to handle scheduled maintenance mode.
  *
- * If maintenance is active, responds with a 503 Service Unavailable status,
- * sets appropriate headers, and renders a maintenance page for HTML requests.
- * For non-HTML requests, returns a JSON message indicating maintenance status.
- * Otherwise, passes control to the next middleware.
+ * If maintenance mode is active, responds with a 503 Service Unavailable status,
+ * appropriate headers, and a maintenance message. For UI-originated HTML requests,
+ * renders a maintenance template; otherwise, returns a JSON message.
+ * If maintenance mode is not active, passes control to the next middleware.
  *
  * @param req - Express request object
  * @param res - Express response object
@@ -20,7 +20,8 @@ export const maintenance = (req: Request, res: Response, next: NextFunction) => 
   const isActive = isMaintenanceActive();
 
   if (isActive) {
-    console.info('⚙️ System under scheduled maintenance for request %s.', req.path);
+    const maintenanceUntil = getMaintenanceTimestamp();
+    console.info('⚙️ System under scheduled maintenance for request %s until %s.', req.path, maintenanceUntil);
 
     res
       .set('Retry-After', MAX_AGE)
@@ -28,10 +29,17 @@ export const maintenance = (req: Request, res: Response, next: NextFunction) => 
       .set('X-UKEF-Maintenance-Active', String(isActive))
       .status(HttpStatusCode.ServiceUnavailable);
 
-    // TODO: DTFS2-7939: Set service resume timestamp
-    if (req.accepts('html')) {
+    const isBrowser = req.accepts('html');
+    const isUi = res.getHeader('X-Request-Origin') === 'ui';
+
+    /**
+     * Only render the template, if the response is being sent
+     * from a UI container and request from a HTML compliant client
+     */
+
+    if (isBrowser && isUi) {
       return res.render('maintenance.njk', {
-        message: 'You will be able to use the service from.',
+        message: `You will be able to use the service from ${maintenanceUntil}.`,
       });
     }
 

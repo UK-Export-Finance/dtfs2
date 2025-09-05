@@ -85,6 +85,10 @@ describe('middleware/security', () => {
       );
     });
 
+    it('should set `X-Request-Origin` header', () => {
+      expect(setHeaderSpy).toHaveBeenCalledWith('X-Request-Origin', 'api');
+    });
+
     it('should remove `X-Powered-By` header', () => {
       expect(removeHeaderSpy).toHaveBeenCalledWith('X-Powered-By');
     });
