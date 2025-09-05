@@ -1426,7 +1426,7 @@ jobs:
           [
             './portal/cypress/e2e/journeys/maintenance/**/*.spec.js',
             './gef/cypress/e2e/maintenance/**/*.spec.js',
-            './tm/cypress/e2e/journeys/maintenance/**/*.spec.js',
+            './tfm/cypress/e2e/journeys/maintenance/**/*.spec.js',
           ]
 
     concurrency:
