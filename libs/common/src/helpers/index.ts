@@ -50,3 +50,5 @@ export * from './amendment-future-effectiveDate';
 export * from './is-not-valid-number';
 export * from './is-number-generator-mocked';
 export * from './generate-mocked-number-generator-ids';
+export * from './is-maintenance-active';
+export * from './get-maintenance-timestamp';

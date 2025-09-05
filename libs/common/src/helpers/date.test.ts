@@ -9,6 +9,7 @@ import {
   getEpochMs,
   getLongDateFormat,
   convertUnixTimestampWithoutMilliseconds,
+  getLongTimeDateFormat,
 } from './date';
 
 describe('date helpers', () => {
@@ -357,6 +358,38 @@ describe('date helpers', () => {
 
       // Assert
       expect(result).toBe(1633036800);
+    });
+  });
+
+  describe('getLongTimeDateFormat', () => {
+    it('should give long date format with timestamp for provided epoch as 0', () => {
+      // Arrange
+      const epoch = 0;
+
+      // Act
+      const result = getLongTimeDateFormat(epoch);
+
+      // Assert
+      expect(result).toEqual('01:00am on Thursday 01 January 1970');
+    });
+
+    it('should give long date format with timestamp for provided epoch with ms', () => {
+      // Arrange
+      const epoch = 1756996452406;
+
+      // Act
+      const result = getLongTimeDateFormat(epoch);
+
+      // Assert
+      expect(result).toEqual('03:34pm on Thursday 04 September 2025');
+    });
+
+    it('should give long date format with timestamp with no supplied argument', () => {
+      // Act
+      const result = getLongTimeDateFormat();
+
+      // Assert
+      expect(result).toContain(' on ');
     });
   });
 });

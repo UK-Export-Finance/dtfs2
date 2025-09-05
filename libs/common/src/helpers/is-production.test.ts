@@ -2,6 +2,12 @@ import { isProduction } from './is-production';
 import { ENVIRONMENTS } from '../constants';
 
 describe('isProduction function', () => {
+  const originalEnv = { ...process.env };
+
+  afterAll(() => {
+    process.env = originalEnv;
+  });
+
   it('should return false if the environment is staging', () => {
     // Arrange
     process.env.NODE_ENV = ENVIRONMENTS.STAGING;
