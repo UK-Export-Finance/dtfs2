@@ -1,5 +1,42 @@
 # Changelog
 
+## [2.10.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.9.0...v2.10.0) (2025-09-08)
+
+
+### Features
+
+* **DTFS-7788:** add portal activity ([#4383](https://github.com/UK-Export-Finance/dtfs2/issues/4383)) ([694787f](https://github.com/UK-Export-Finance/dtfs2/commit/694787fcd46047c83fb1736cec8c0eddca0201ea))
+* **DTFS2-7754:** display portal amendment values on tfm and add tfm object for portal amendments ([#4348](https://github.com/UK-Export-Finance/dtfs2/issues/4348)) ([1f386fb](https://github.com/UK-Export-Finance/dtfs2/commit/1f386fb84b960206f9a1213c080be3af60a92704))
+* **DTFS2-7762:** added submitted portal amendments to TFM amendment list ([#4376](https://github.com/UK-Export-Finance/dtfs2/issues/4376)) ([3d22fdc](https://github.com/UK-Export-Finance/dtfs2/commit/3d22fdcb78f882bffe64d8e13b9722d5eb49dd5d))
+* **DTFS2-7812:** missing probability of default for BSS/EWCS deals ([#4401](https://github.com/UK-Export-Finance/dtfs2/issues/4401)) ([f4b3480](https://github.com/UK-Export-Finance/dtfs2/commit/f4b34806117518e1a9bbe4f6bf791120c9629f92))
+* **DTFS2-7882:** hide tfm add amendment button if portal amendment in-progress ([#4380](https://github.com/UK-Export-Finance/dtfs2/issues/4380)) ([c811a0a](https://github.com/UK-Export-Finance/dtfs2/commit/c811a0a97711db04aa76056508a98af7c5bb5615))
+* **DTFS2-7884-7924:** e2e tests ([#4388](https://github.com/UK-Export-Finance/dtfs2/issues/4388)) ([d86d729](https://github.com/UK-Export-Finance/dtfs2/commit/d86d72945e12137347891f121df3cb59dbe559d4))
+* **DTFS2-7923:** future effective date portal amendment TFM banner ([#4387](https://github.com/UK-Export-Finance/dtfs2/issues/4387)) ([ebff23b](https://github.com/UK-Export-Finance/dtfs2/commit/ebff23b93fe2d352dd1248e188a7ff3339a9d919))
+* **DTFS2-7930:** updated TFM deal summary page if effective date has passed ([#4381](https://github.com/UK-Export-Finance/dtfs2/issues/4381)) ([8fb3c5c](https://github.com/UK-Export-Finance/dtfs2/commit/8fb3c5ce2a2bc3aff3c407b19bfa54ed8159593a))
+* **DTFS2-7934:** add TFM banner when portal amendment is in progress ([#4386](https://github.com/UK-Export-Finance/dtfs2/issues/4386)) ([1ff2594](https://github.com/UK-Export-Finance/dtfs2/commit/1ff2594e0cc496159d93104d46e45cc251bc0bc5))
+* **DTFS2-7939:** acbs functions log output validation ([#4403](https://github.com/UK-Export-Finance/dtfs2/issues/4403)) ([80f5172](https://github.com/UK-Export-Finance/dtfs2/commit/80f517200a00476166c7b4e243b2ba30d4f3a9da))
+* **DTFS2-7939:** add api tests for API microservices ([#4408](https://github.com/UK-Export-Finance/dtfs2/issues/4408)) ([208dab9](https://github.com/UK-Export-Finance/dtfs2/commit/208dab950c49063d79514e294369eb44295557f2))
+* **DTFS2-7939:** service unavailable page - UI containers ([#4410](https://github.com/UK-Export-Finance/dtfs2/issues/4410)) ([7085123](https://github.com/UK-Export-Finance/dtfs2/commit/7085123bf04ec31a8d37f4efa74707eb09f36935))
+* **DTFS2-7939:** service unavailable page for a schedule maintenance ([#4406](https://github.com/UK-Export-Finance/dtfs2/issues/4406)) ([463583c](https://github.com/UK-Export-Finance/dtfs2/commit/463583c93ee51c7d4819e30a5c6bc6888743e717))
+* **DTFS2-7939:** service unavailable pages render ([#4411](https://github.com/UK-Export-Finance/dtfs2/issues/4411)) ([a1eab31](https://github.com/UK-Export-Finance/dtfs2/commit/a1eab319ef2eaf128977294c12c8a0dc5a2be73d))
+* **DTFS2-7939:** service unavialable page - E2E tests ([#4412](https://github.com/UK-Export-Finance/dtfs2/issues/4412)) ([5fe90a2](https://github.com/UK-Export-Finance/dtfs2/commit/5fe90a29e9406c305e8b0f363ff74bc2bb9fad51))
+* **DTFS2-8024:** added future effective date banner to tfm amendment… ([#4392](https://github.com/UK-Export-Finance/dtfs2/issues/4392)) ([ead13ab](https://github.com/UK-Export-Finance/dtfs2/commit/ead13abaea56bac94823187886f8eb15f18883c5))
+* **DTFS2-8059:** added is uk entity property to exporter party creation in salesforce ([#4373](https://github.com/UK-Export-Finance/dtfs2/issues/4373)) ([4c3932a](https://github.com/UK-Export-Finance/dtfs2/commit/4c3932a3e8a540d92a8c5c9339f92912d244e4d8))
+* **DTFS2-8060:** gef-ui broken CSS link ([#4384](https://github.com/UK-Export-Finance/dtfs2/issues/4384)) ([7f840d7](https://github.com/UK-Export-Finance/dtfs2/commit/7f840d70d3664de3728e3341f17c274b20ee8888))
+* **DTFS2-8066:** added eligibility criteria table to TFM amendment details tab ([#4389](https://github.com/UK-Export-Finance/dtfs2/issues/4389)) ([c3bb56a](https://github.com/UK-Export-Finance/dtfs2/commit/c3bb56a3105e74ffbe55e202d0e8b99692b84029))
+* **DTFS2-8069:** updated property names ([#4398](https://github.com/UK-Export-Finance/dtfs2/issues/4398)) ([b81a908](https://github.com/UK-Export-Finance/dtfs2/commit/b81a90890386b58a3449681db658ce713d3b1c2b))
+* **DTFS2-8078:** add an additional day for contingent facility ([#4400](https://github.com/UK-Export-Finance/dtfs2/issues/4400)) ([9c82421](https://github.com/UK-Export-Finance/dtfs2/commit/9c824215daea92c8df8431e6df651cf979927398))
+* **DTFS2-8080:** reverted country code to SCG ([#4404](https://github.com/UK-Export-Finance/dtfs2/issues/4404)) ([7b10173](https://github.com/UK-Export-Finance/dtfs2/commit/7b10173210a81fd184d2ff4607ddfe7635223fbc))
+
+
+### Bug Fixes
+
+* **DTFS-8076:** fix amendments tab visible with feature flag enabled ([#4394](https://github.com/UK-Export-Finance/dtfs2/issues/4394)) ([239931c](https://github.com/UK-Export-Finance/dtfs2/commit/239931cfd653ddc99adcff53d4b277757ff3cece))
+* **DTFS2-7880:** ignore amendments with future effective dates ([#4379](https://github.com/UK-Export-Finance/dtfs2/issues/4379)) ([5218c3f](https://github.com/UK-Export-Finance/dtfs2/commit/5218c3f108b487b92b7a2792dc953ce90e2ab88a))
+* **DTFS2-8016:** revert fixed fee formula to interest percentage ([#4377](https://github.com/UK-Export-Finance/dtfs2/issues/4377)) ([6f2118e](https://github.com/UK-Export-Finance/dtfs2/commit/6f2118e490e1c15fcc28effc9122d3904823de9b))
+* **DTFS2-8062:** feature flag cypress test cases for fixed fee record correction ([#4374](https://github.com/UK-Export-Finance/dtfs2/issues/4374)) ([62df2e7](https://github.com/UK-Export-Finance/dtfs2/commit/62df2e7939597ac5c1a33cd178679cc4a54aa528))
+* **DTFS2-8073:** fix checker unauthorised error on portal amendment deal ([#4390](https://github.com/UK-Export-Finance/dtfs2/issues/4390)) ([c606eb5](https://github.com/UK-Export-Finance/dtfs2/commit/c606eb505f16471041f37d1142399458fabac8c3))
+
 ## [2.9.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.8.0...v2.9.0) (2025-08-01)
 
 ### Features
