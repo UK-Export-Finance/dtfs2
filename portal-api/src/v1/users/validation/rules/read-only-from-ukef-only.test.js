@@ -74,7 +74,7 @@ describe('readOnlyFromUkefOnly', () => {
         // Arrange
         const mockUser = {
           roles: mockRoles,
-          email: 'maker17777777777@example.com',
+          email: 'maker17@example.com',
           bank: {
             name: CONSTANT.ALL,
           },

@@ -1,5 +1,6 @@
 const { header, users, createUser, changePassword, landingPage } = require('../../pages');
 const relative = require('../../relativeURL');
+const { UKEF_BANK_1 } = require('../../../../../e2e-fixtures/banks.fixture');
 
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
@@ -12,10 +13,7 @@ context('Admin user creates a new user; the new user sets their password and the
     password: 'AbC!2345',
     firstname: 'first',
     surname: 'last',
-    bank: {
-      id: '9',
-      name: 'Bank 1',
-    },
+    bank: UKEF_BANK_1,
     roles: ['maker'],
   };
 
