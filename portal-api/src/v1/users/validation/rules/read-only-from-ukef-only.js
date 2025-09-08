@@ -1,7 +1,5 @@
-const { isUkefEmail } = require('@ukef/dtfs2-common');
+const { isUkefEmail, BANKS } = require('@ukef/dtfs2-common');
 const { READ_ONLY } = require('../../../roles/roles');
-
-const CONSTANT = require('../../../../constants');
 
 /**
  * Validates that the `read-only` role for `all` bank can only be associated with a UKEF email address.
@@ -27,7 +25,7 @@ const readOnlyFromUkefOnly = (user, change) => {
   }
 
   const readOnly = roles.includes(READ_ONLY);
-  const allBanks = change?.bank?.name === CONSTANT.ALL;
+  const allBanks = change?.bank?.name === BANKS.ALL;
 
   // Read-only role validation
   if (!readOnly) {

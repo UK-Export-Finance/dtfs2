@@ -1,7 +1,6 @@
+const { BANKS } = require('@ukef/dtfs2-common');
 const readOnlyFromUkefOnly = require('./read-only-from-ukef-only');
 const { MAKER, PAYMENT_REPORT_OFFICER, READ_ONLY } = require('../../../roles/roles');
-
-const CONSTANT = require('../../../../constants');
 
 const error = [
   {
@@ -76,7 +75,7 @@ describe('readOnlyFromUkefOnly', () => {
           roles: mockRoles,
           email: 'maker17@example.com',
           bank: {
-            name: CONSTANT.ALL,
+            name: BANKS.ALL,
           },
         };
 
@@ -111,7 +110,7 @@ describe('readOnlyFromUkefOnly', () => {
           roles: mockRoles,
           email: 'maker1@ukexportfinance.gov.uk',
           bank: {
-            name: CONSTANT.ALL,
+            name: BANKS.ALL,
           },
         };
 
@@ -130,7 +129,7 @@ describe('readOnlyFromUkefOnly', () => {
           roles: mockRoles,
           updateEmail: 'maker1@example.com',
           bank: {
-            name: CONSTANT.ALL,
+            name: BANKS.ALL,
           },
         };
 
@@ -165,7 +164,7 @@ describe('readOnlyFromUkefOnly', () => {
           roles: mockRoles,
           updateEmail: 'maker1@ukexportfinance.gov.uk',
           bank: {
-            name: CONSTANT.ALL,
+            name: BANKS.ALL,
           },
         };
 

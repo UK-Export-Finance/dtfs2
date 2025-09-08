@@ -1,8 +1,8 @@
+const {
+  ROLES: { ADMIN, READ_ONLY, MAKER, CHECKER },
+} = require('@ukef/dtfs2-common');
 const { header, users, createUser, editUser } = require('../../../pages');
 const { ADMIN: AN_ADMIN } = require('../../../../../../e2e-fixtures');
-const {
-  USER_ROLES: { ADMIN, READ_ONLY, MAKER, CHECKER },
-} = require('../../../../fixtures/constants');
 const { BANK1_MAKER1 } = require('../../../../../../e2e-fixtures/portal-users.fixture');
 const { UKEF_BANK_1 } = require('../../../../../../e2e-fixtures/banks.fixture');
 const relative = require('../../../relativeURL');

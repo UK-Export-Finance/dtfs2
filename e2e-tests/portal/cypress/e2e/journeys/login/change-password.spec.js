@@ -1,3 +1,6 @@
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 const { header, users, createUser, changePassword, landingPage } = require('../../pages');
 const relative = require('../../relativeURL');
 const { UKEF_BANK_1 } = require('../../../../../e2e-fixtures/banks.fixture');
@@ -14,7 +17,7 @@ context('Admin user creates a new user; the new user sets their password and the
     firstname: 'first',
     surname: 'last',
     bank: UKEF_BANK_1,
-    roles: ['maker'],
+    roles: [MAKER],
   };
 
   before(() => {

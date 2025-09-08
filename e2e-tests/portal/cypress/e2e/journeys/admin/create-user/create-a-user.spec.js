@@ -1,8 +1,9 @@
+const {
+  ROLES: { ADMIN, READ_ONLY, MAKER, CHECKER, PAYMENT_REPORT_OFFICER },
+  BANKS,
+} = require('@ukef/dtfs2-common');
 const { header, users, createUser, changePassword } = require('../../../pages');
 const relative = require('../../../relativeURL');
-const {
-  USER_ROLES: { ADMIN, MAKER, READ_ONLY, CHECKER, PAYMENT_REPORT_OFFICER },
-} = require('../../../../fixtures/constants');
 const { ADMIN: AN_ADMIN, USER_WITH_INJECTION, BANK1_MAKER1 } = require('../../../../../../e2e-fixtures/portal-users.fixture');
 const { UKEF_BANK_1, UKEF_BANK_2 } = require('../../../../../../e2e-fixtures/banks.fixture');
 
@@ -189,7 +190,7 @@ context('Admin user creates a new user', () => {
       createUser.isTrustedFalse().click();
       createUser.role(READ_ONLY).click();
       cy.keyboardInput(createUser.username(), validUser.username);
-      createUser.bank().select('all');
+      createUser.bank().select(BANKS.ALL);
 
       // Create user
       createUser.createUser().click();
