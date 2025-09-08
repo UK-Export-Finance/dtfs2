@@ -1,6 +1,10 @@
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 const { header, users, createUser, editUser } = require('../../../pages');
 const relative = require('../../../relativeURL');
 const MOCK_USERS = require('../../../../../../e2e-fixtures');
+const { UKEF_BANK_1 } = require('../../../../../../e2e-fixtures/banks.fixture');
 
 const { ADMIN } = MOCK_USERS;
 
@@ -11,11 +15,8 @@ context('Admin user updates an existing user', () => {
     password: 'AbC!2345',
     firstname: 'first',
     surname: 'last',
-    bank: {
-      id: '9',
-      name: 'Bank 1',
-    },
-    roles: ['maker'],
+    bank: UKEF_BANK_1,
+    roles: [MAKER],
   };
 
   beforeEach(() => {

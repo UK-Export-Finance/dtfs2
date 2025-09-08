@@ -1,6 +1,8 @@
 const readOnlyFromUkefOnly = require('./read-only-from-ukef-only');
 const { MAKER, PAYMENT_REPORT_OFFICER, READ_ONLY } = require('../../../roles/roles');
 
+const CONSTANT = require('../../../../constants');
+
 const error = [
   {
     roles: {
@@ -74,7 +76,7 @@ describe('readOnlyFromUkefOnly', () => {
           roles: mockRoles,
           email: 'maker17777777777@example.com',
           bank: {
-            name: 'all',
+            name: CONSTANT.ALL,
           },
         };
 
@@ -109,7 +111,7 @@ describe('readOnlyFromUkefOnly', () => {
           roles: mockRoles,
           email: 'maker1@ukexportfinance.gov.uk',
           bank: {
-            name: 'all',
+            name: CONSTANT.ALL,
           },
         };
 
@@ -128,7 +130,7 @@ describe('readOnlyFromUkefOnly', () => {
           roles: mockRoles,
           updateEmail: 'maker1@example.com',
           bank: {
-            name: 'all',
+            name: CONSTANT.ALL,
           },
         };
 
@@ -163,7 +165,7 @@ describe('readOnlyFromUkefOnly', () => {
           roles: mockRoles,
           updateEmail: 'maker1@ukexportfinance.gov.uk',
           bank: {
-            name: 'all',
+            name: CONSTANT.ALL,
           },
         };
 

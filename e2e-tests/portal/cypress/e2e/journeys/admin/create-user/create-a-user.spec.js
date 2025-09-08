@@ -163,7 +163,7 @@ context('Admin user creates a new user', () => {
     });
     // TODO: ADD lighthouse checks DTFS2-4994
 
-    it('should receive error when the email address is from a non-UKEF domain', () => {
+    it('should receive error when user is admin and the email address is from a non-UKEF domain', () => {
       // Fill in all the fields
       cy.keyboardInput(createUser.firstname(), validUser.firstname);
       cy.keyboardInput(createUser.surname(), validUser.surname);
@@ -177,6 +177,25 @@ context('Admin user creates a new user', () => {
 
       // Assert role input error
       createUser.rolesError().should('contain', 'The admin role can only be associated with a UKEF email address');
+
+      // Assert URL
+      cy.url().should('eq', relative('/admin/users/create'));
+    });
+
+    it('should receive error when a non ukef user is read-only with all banks', () => {
+      // Fill in all the fields
+      cy.keyboardInput(createUser.firstname(), validUser.firstname);
+      cy.keyboardInput(createUser.surname(), validUser.surname);
+      createUser.isTrustedFalse().click();
+      createUser.role(READ_ONLY).click();
+      cy.keyboardInput(createUser.username(), validUser.username);
+      createUser.bank().select('all');
+
+      // Create user
+      createUser.createUser().click();
+
+      // Assert role input error
+      createUser.rolesError().should('contain', 'The read-only role for all bank can only be associated with a UKEF email address');
 
       // Assert URL
       cy.url().should('eq', relative('/admin/users/create'));
