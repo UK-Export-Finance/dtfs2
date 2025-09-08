@@ -1,9 +1,12 @@
 import { Request, Response } from 'express';
 
-export const mockReq = () =>
-  ({
+export const mockReq = () => {
+  const req = {
     headers: {},
-  }) as Request;
+  } as Request;
+
+  return req;
+};
 
 export const mockRes = () => {
   const res = {} as Response;
