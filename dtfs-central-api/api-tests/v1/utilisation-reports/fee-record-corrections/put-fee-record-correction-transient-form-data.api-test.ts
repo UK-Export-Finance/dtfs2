@@ -16,9 +16,9 @@ import { testApi } from '../../../test-api';
 import { SqlDbHelper } from '../../../sql-db-helper';
 import wipeDB from '../../../wipeDB';
 import { aBank, aFacility, aTfmFacility } from '../../../../test-helpers';
-import { PutFeeRecordCorrectionTransientFormDataPayload } from '../../../../src/v1/routes/middleware/payload-validation';
+import { PutFeeRecordCorrectionTransientFormDataPayload } from '../../../../server/v1/routes/middleware/payload-validation';
 import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
-import { mongoDbClient } from '../../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../../server/drivers/db-client';
 import { CustomErrorResponse } from '../../../helpers/custom-error-response';
 
 console.error = jest.fn();

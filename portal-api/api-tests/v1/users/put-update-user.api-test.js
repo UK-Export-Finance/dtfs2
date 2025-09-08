@@ -4,15 +4,15 @@ const { produce } = require('immer');
 const databaseHelper = require('../../database-helper');
 const testUserCache = require('../../api-test-users');
 
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const { as } = require('../../api')(app);
 
 const users = require('./test-data');
-const { READ_ONLY, MAKER, CHECKER } = require('../../../src/v1/roles/roles');
+const { READ_ONLY, MAKER, CHECKER } = require('../../../server/v1/roles/roles');
 const { NON_READ_ONLY_ROLES } = require('../../../test-helpers/common-role-lists');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
-const { ADMIN } = require('../../../src/v1/roles/roles');
-const { STATUS } = require('../../../src/constants/user');
+const { ADMIN } = require('../../../server/v1/roles/roles');
+const { STATUS } = require('../../../server/constants/user');
 const { withValidateUsernameAndEmailMatchTests } = require('./with-validate-username-and-email-match.api-tests');
 const { withValidateEmailIsCorrectFormatTests } = require('./with-validate-email-is-correct-format.api-tests');
 const { withValidateEmailIsUniqueTests } = require('./with-validate-email-is-unique.api-tests');

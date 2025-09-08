@@ -1,7 +1,7 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const { testApi } = require('../../test-api');
-const { DEALS } = require('../../../src/constants');
+const { DEALS } = require('../../../server/constants');
 
 const newDeal = {
   dealType: DEALS.DEAL_TYPE.GEF,

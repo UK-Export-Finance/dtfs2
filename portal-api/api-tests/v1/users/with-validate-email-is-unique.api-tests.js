@@ -3,7 +3,7 @@ const { produce } = require('immer');
 const users = require('./test-data');
 const databaseHelper = require('../../database-helper');
 
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const { as } = require('../../api')(app);
 
 const withValidateEmailIsUniqueTests = ({ payload, makeRequest, getAdminUser }) => {

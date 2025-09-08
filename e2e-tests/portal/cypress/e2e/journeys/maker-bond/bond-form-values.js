@@ -1,5 +1,5 @@
 const { BOND_TYPE } = require('@ukef/dtfs2-common');
-const { roundNumber } = require('../../../../../../portal-api/src/utils/number');
+const { roundNumber } = require('../../../../../../portal-api/server/utils/number');
 const { oneMonth, today } = require('../../../../../e2e-fixtures/dateConstants');
 
 const DETAILS = {

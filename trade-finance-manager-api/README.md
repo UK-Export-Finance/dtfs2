@@ -74,7 +74,7 @@ When a deal is sent to TFM, the following steps are taken:
    start.'
 
 All of this starts from the deal submission controller:
-`/src/v1/controllers/deal.submit.controller.js`.
+`/server/v1/controllers/deal.submit.controller.js`.
 
 ## Documentation :book:
 

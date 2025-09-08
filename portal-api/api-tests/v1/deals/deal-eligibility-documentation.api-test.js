@@ -1,10 +1,10 @@
 const databaseHelper = require('../../database-helper');
 const aDeal = require('./deal-builder');
 
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../server/v1/roles/roles');
 const testUserCache = require('../../api-test-users');
 const eligibilityCriteriaCache = require('../../api-test-eligibilityCriteria');
 

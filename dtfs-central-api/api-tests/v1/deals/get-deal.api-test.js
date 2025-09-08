@@ -4,7 +4,7 @@ const aDeal = require('../deal-builder');
 
 const { testApi } = require('../../test-api');
 const { expectAddedFields } = require('./expectAddedFields');
-const { DEALS } = require('../../../src/constants');
+const { DEALS } = require('../../../server/constants');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../helpers/create-deal');
 const { createFacility } = require('../../helpers/create-facility');

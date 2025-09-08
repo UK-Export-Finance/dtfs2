@@ -1,10 +1,10 @@
-const acbsController = require('../../../src/v1/controllers/acbs.controller');
+const acbsController = require('../../../server/v1/controllers/acbs.controller');
 const { clearACBSLog } = require('../../helpers/clear-acbs-log');
-const api = require('../../../src/v1/api');
-const MOCK_DEAL_ACBS = require('../../../src/v1/__mocks__/mock-deal-acbs');
-const CONSTANTS = require('../../../src/constants');
+const api = require('../../../server/v1/api');
+const MOCK_DEAL_ACBS = require('../../../server/v1/__mocks__/mock-deal-acbs');
+const CONSTANTS = require('../../../server/constants');
 
-jest.mock('../../../src/v1/controllers/deal.controller', () => ({
+jest.mock('../../../server/v1/controllers/deal.controller', () => ({
   findOneTfmDeal: jest.fn((dealId) => (dealId === MOCK_DEAL_ACBS._id ? Promise.resolve(MOCK_DEAL_ACBS) : Promise.resolve(false))),
 }));
 

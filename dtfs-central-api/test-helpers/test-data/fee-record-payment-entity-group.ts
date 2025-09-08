@@ -1,5 +1,5 @@
 import { FeeRecordStatus, Currency, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, RECONCILIATION_IN_PROGRESS } from '@ukef/dtfs2-common';
-import { FeeRecordPaymentEntityGroup } from '../../src/types/fee-record-payment-entity-group';
+import { FeeRecordPaymentEntityGroup } from '../../server/types/fee-record-payment-entity-group';
 
 export const aFeeRecordPaymentEntityGroupForASingleFeeRecord = (
   id: number,

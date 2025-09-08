@@ -78,7 +78,7 @@ export const swaggerDefinition = {
 
 export const swaggerSpec = swaggerJsdoc({
   swaggerDefinition,
-  apis: ['./src/v1/helpers/swagger-definitions/*.ts', './src/v1/routes/external-apis.route.ts'],
+  apis: ['./server/v1/helpers/swagger-definitions/*.ts', './server/v1/routes/external-apis.route.ts'],
 });
 
 export const swaggerUiOptions = {};

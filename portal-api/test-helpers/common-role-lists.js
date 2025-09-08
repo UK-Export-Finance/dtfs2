@@ -1,4 +1,4 @@
-const ROLES = require('../src/v1/roles/roles');
+const ROLES = require('../server/v1/roles/roles');
 
 const ALL_ROLES = Object.values(ROLES);
 

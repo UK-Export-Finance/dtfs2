@@ -3,12 +3,12 @@ import { AnyObject, MAX_CHARACTER_COUNT, TEAM_IDS, TestApiError, TfmDealCancella
 import { ObjectId, UpdateResult } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { createApi } from '../../api';
-import app from '../../../src/createApp';
+import app from '../../../server/createApp';
 import { initialiseTestUsers } from '../../api-test-users';
 import { TestUser } from '../../types/test-user';
 import { withTeamAuthorisationTests } from '../../common-tests/with-team-authorisation.api-tests';
-import { PostSubmitDealCancellationPayload } from '../../../src/v1/middleware/validate-post-submit-deal-cancellation-payload';
-import { CANCEL_DEAL_FUTURE_DATE, CANCEL_DEAL_PAST_DATE } from '../../../src/constants/email-template-ids';
+import { PostSubmitDealCancellationPayload } from '../../../server/v1/middleware/validate-post-submit-deal-cancellation-payload';
+import { CANCEL_DEAL_FUTURE_DATE, CANCEL_DEAL_PAST_DATE } from '../../../server/constants/email-template-ids';
 
 const updateDealCancellationMock = jest.fn() as jest.Mock<Promise<UpdateResult>>;
 const sendEmailMock = jest.fn() as jest.Mock<Promise<void>>;
@@ -17,8 +17,8 @@ const findFacilitiesByDealIdMock = jest.fn() as jest.Mock<Promise<TfmFacility[]>
 
 const mockPimEmailAddress = 'pim@example.com';
 
-jest.mock('../../../src/v1/api', () => ({
-  ...jest.requireActual<AnyObject>('../../../src/v1/api'),
+jest.mock('../../../server/v1/api', () => ({
+  ...jest.requireActual<AnyObject>('../../../server/v1/api'),
   updateDealCancellation: () => updateDealCancellationMock(),
   sendEmail: (templateId: string, sendToEmailAddress: string, emailVariables: object) => sendEmailMock(templateId, sendToEmailAddress, emailVariables),
   findOneTeam: () => ({ email: mockPimEmailAddress }),

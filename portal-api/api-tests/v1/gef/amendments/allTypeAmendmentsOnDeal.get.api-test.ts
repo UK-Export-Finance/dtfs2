@@ -8,10 +8,10 @@ import {
   FacilityAllTypeAmendmentWithUkefId,
 } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
-import app from '../../../../src/createApp';
+import app from '../../../../server/createApp';
 import testUserCache from '../../../api-test-users';
 
-import ROLES, { MAKER } from '../../../../src/v1/roles/roles';
+import ROLES, { MAKER } from '../../../../server/v1/roles/roles';
 import { getAmendmentsOnDealUrl } from './amendment-urls';
 import createApi from '../../../api';
 import { TestUser } from '../../../types/test-user';
@@ -22,8 +22,8 @@ const { as, get } = createApi(app);
 
 const getFacilityAmendmentsOnDealMock = jest.fn() as jest.Mock<Promise<FacilityAllTypeAmendmentWithUkefId[]>>;
 
-jest.mock('../../../../src/v1/api', () => ({
-  ...jest.requireActual<AnyObject>('../../../../src/v1/api'),
+jest.mock('../../../../server/v1/api', () => ({
+  ...jest.requireActual<AnyObject>('../../../../server/v1/api'),
   getFacilityAmendmentsOnDeal: () => getFacilityAmendmentsOnDealMock(),
 }));
 

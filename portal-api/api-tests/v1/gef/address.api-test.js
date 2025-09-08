@@ -1,7 +1,7 @@
 const { HttpStatusCode } = require('axios');
 const { ADDRESSES } = require('@ukef/dtfs2-common');
-const app = require('../../../src/createApp');
-const { MAKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const app = require('../../../server/createApp');
+const { MAKER, READ_ONLY, ADMIN } = require('../../../server/v1/roles/roles');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
@@ -9,7 +9,7 @@ const { POSTCODE } = require('../../fixtures/postcode');
 
 const { as, get } = require('../../api')(app);
 
-jest.unmock('../../../src/external-api/api');
+jest.unmock('../../../server/external-api/api');
 
 const baseUrl = '/v1/gef';
 

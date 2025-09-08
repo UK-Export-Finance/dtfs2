@@ -1,7 +1,7 @@
 const { CURRENCY, TFM_AMENDMENT_STATUS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
-const amendmentController = require('../../../src/v1/controllers/amendment.controller');
-const externalApis = require('../../../src/v1/api');
-const MOCK_GEF_AIN_DEAL = require('../../../src/v1/__mocks__/mock-TFM-deal-AIN-submitted');
+const amendmentController = require('../../../server/v1/controllers/amendment.controller');
+const externalApis = require('../../../server/v1/api');
+const MOCK_GEF_AIN_DEAL = require('../../../server/v1/__mocks__/mock-TFM-deal-AIN-submitted');
 
 describe('update amendment-tfm on amendment completion', () => {
   const unixTime = 1658403289;

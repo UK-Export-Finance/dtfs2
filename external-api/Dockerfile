@@ -16,4 +16,4 @@ RUN npm ci
 RUN npm cache clean --force
 
 # Execute Script
-CMD ["npx", "ts-node", "external-api/src/index.ts"]
+CMD ["npx", "ts-node", "external-api/server/index.ts"]

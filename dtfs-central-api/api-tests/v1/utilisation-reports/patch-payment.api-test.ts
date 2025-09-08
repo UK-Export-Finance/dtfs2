@@ -18,7 +18,7 @@ import {
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
-import { PatchPaymentPayload } from '../../../src/v1/routes/middleware/payload-validation';
+import { PatchPaymentPayload } from '../../../server/v1/routes/middleware/payload-validation';
 import { aTfmSessionUser } from '../../../test-helpers';
 
 console.error = jest.fn();

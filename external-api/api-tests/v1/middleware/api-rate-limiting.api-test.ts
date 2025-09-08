@@ -13,7 +13,7 @@
 import * as dotenv from 'dotenv';
 import axios from 'axios';
 import { ENTITY_TYPE, UKEF_ID, USER } from '@ukef/dtfs2-common';
-import { generateApp } from '../../../src/generateApp';
+import { generateApp } from '../../../server/generateApp';
 import { api } from '../../api';
 
 dotenv.config();

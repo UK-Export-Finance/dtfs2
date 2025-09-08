@@ -5,7 +5,7 @@ const { withDeleteOneTests } = require('@ukef/dtfs2-common/change-stream/test-he
 const { generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 
 const { testApi } = require('../../test-api');
-const { DEALS } = require('../../../src/constants');
+const { DEALS } = require('../../../server/constants');
 const aDeal = require('../deal-builder');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');

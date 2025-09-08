@@ -12,7 +12,7 @@ import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-c
 import { testApi } from '../../../test-api';
 import { SqlDbHelper } from '../../../sql-db-helper';
 import { aTfmSessionUser } from '../../../../test-helpers';
-import { PutFeeRecordCorrectionRequestTransientFormDataPayload } from '../../../../src/v1/routes/middleware/payload-validation';
+import { PutFeeRecordCorrectionRequestTransientFormDataPayload } from '../../../../server/v1/routes/middleware/payload-validation';
 import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
 
 console.error = jest.fn();

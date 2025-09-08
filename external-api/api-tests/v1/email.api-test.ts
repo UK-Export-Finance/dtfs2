@@ -3,8 +3,8 @@
 import dotenv from 'dotenv';
 import axios, { HttpStatusCode } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { sendEmail } from '../../src/v1/controllers/email.controller';
-import { app } from '../../src/createApp';
+import { sendEmail } from '../../server/v1/controllers/email.controller';
+import { app } from '../../server/createApp';
 import { api } from '../api';
 
 dotenv.config();

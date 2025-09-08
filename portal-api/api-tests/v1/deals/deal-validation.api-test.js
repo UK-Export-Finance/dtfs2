@@ -1,8 +1,8 @@
 const databaseHelper = require('../../database-helper');
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
-const { MAKER } = require('../../../src/v1/roles/roles');
+const { MAKER } = require('../../../server/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('/v1/deals', () => {

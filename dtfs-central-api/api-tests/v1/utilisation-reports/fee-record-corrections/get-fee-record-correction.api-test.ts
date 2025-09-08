@@ -12,10 +12,10 @@ import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-c
 import { testApi } from '../../../test-api';
 import { SqlDbHelper } from '../../../sql-db-helper';
 import { aBank } from '../../../../test-helpers';
-import { mongoDbClient } from '../../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../../server/drivers/db-client';
 import { wipe } from '../../../wipeDB';
 import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
-import { mapFeeRecordEntityToReportedFees } from '../../../../src/mapping/fee-record-mapper';
+import { mapFeeRecordEntityToReportedFees } from '../../../../server/mapping/fee-record-mapper';
 
 console.error = jest.fn();
 

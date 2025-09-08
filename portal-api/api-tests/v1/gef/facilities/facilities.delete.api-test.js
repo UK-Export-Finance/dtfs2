@@ -3,11 +3,11 @@ const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { withDeleteManyTests, withDeleteOneTests, expectAnyPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../../database-helper');
 
-const app = require('../../../../src/createApp');
+const app = require('../../../../server/createApp');
 const testUserCache = require('../../../api-test-users');
 const { withClientAuthenticationTests } = require('../../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../../common-tests/role-authorisation-tests');
-const { MAKER } = require('../../../../src/v1/roles/roles');
+const { MAKER } = require('../../../../server/v1/roles/roles');
 
 const { as, remove } = require('../../../api')(app);
 

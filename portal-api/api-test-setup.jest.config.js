@@ -1,6 +1,6 @@
-const { mongoDbClient: db } = require('./src/drivers/db-client');
+const { mongoDbClient: db } = require('./server/drivers/db-client');
 
-const mockFiles = ['./src/external-api/api'];
+const mockFiles = ['./server/external-api/api'];
 
 mockFiles.forEach((mockFile) => {
   jest.mock(mockFile);

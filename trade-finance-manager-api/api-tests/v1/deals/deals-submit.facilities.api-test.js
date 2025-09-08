@@ -1,18 +1,18 @@
 const { FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { calculateGefFacilityFeeRecord } = require('@ukef/dtfs2-common');
-const api = require('../../../src/v1/api');
-const acbsController = require('../../../src/v1/controllers/acbs.controller');
-const calculateUkefExposure = require('../../../src/v1/helpers/calculateUkefExposure');
+const api = require('../../../server/v1/api');
+const acbsController = require('../../../server/v1/controllers/acbs.controller');
+const calculateUkefExposure = require('../../../server/v1/helpers/calculateUkefExposure');
 const { submitDeal, createSubmitBody } = require('../../helpers/submitDeal');
 
-const { MOCK_BSS_EWCS_DEAL } = require('../../../src/v1/__mocks__/mock-deal');
-const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../src/v1/__mocks__/mock-deal-facilities-USD-currency');
-const MOCK_DEAL_ISSUED_FACILITIES = require('../../../src/v1/__mocks__/mock-deal-issued-facilities');
-const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-currency-exchange-rate');
-const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
-const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
-const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
-const { mockFindOneDeal, mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
+const { MOCK_BSS_EWCS_DEAL } = require('../../../server/v1/__mocks__/mock-deal');
+const MOCK_DEAL_FACILITIES_USD_CURRENCY = require('../../../server/v1/__mocks__/mock-deal-facilities-USD-currency');
+const MOCK_DEAL_ISSUED_FACILITIES = require('../../../server/v1/__mocks__/mock-deal-issued-facilities');
+const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../server/v1/__mocks__/mock-currency-exchange-rate');
+const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../server/v1/__mocks__/mock-notify-email-response');
+const MOCK_GEF_DEAL = require('../../../server/v1/__mocks__/mock-gef-deal');
+const MOCK_GEF_DEAL_MIA = require('../../../server/v1/__mocks__/mock-gef-deal-MIA');
+const { mockFindOneDeal, mockUpdateDeal } = require('../../../server/v1/__mocks__/common-api-mocks');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
@@ -22,7 +22,7 @@ const findOneTeamSpy = jest.fn(() => Promise.resolve({ email: [] }));
 const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
 api.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
 
-jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
+jest.mock('../../../server/v1/controllers/acbs.controller', () => ({
   issueAcbsFacilities: jest.fn(),
   createACBS: jest.fn(),
 }));

@@ -183,16 +183,12 @@ initialised:
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 
 SqlDbDataSource.initialize()
-  .then(() =>
-    console.info('✅ Successfully initialised connection to SQL database'),
-  )
-  .catch((error) =>
-    console.error('❌ Failed to initialise connection to SQL database:', error),
-  );
+  .then(() => console.info('✅ Successfully initialised connection to SQL database'))
+  .catch((error) => console.error('❌ Failed to initialise connection to SQL database:', error));
 ```
 
 e.g. in the [dtfs-central-api](../dtfs-central-api) project this has been added
-to [generateApp.js](../dtfs-central-api/src/generateApp.js).
+to [generateApp.js](../dtfs-central-api/server/generateApp.js).
 
 The package will then need to be given access to the following environment
 variables:

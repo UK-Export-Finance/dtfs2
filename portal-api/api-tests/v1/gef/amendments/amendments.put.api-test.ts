@@ -8,10 +8,10 @@ import {
   Role,
 } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
-import app from '../../../../src/createApp';
+import app from '../../../../server/createApp';
 import testUserCache from '../../../api-test-users';
 
-import { MAKER } from '../../../../src/v1/roles/roles';
+import { MAKER } from '../../../../server/v1/roles/roles';
 import createApi from '../../../api';
 import { TestUser } from '../../../types/test-user';
 import { withRoleAuthorisationTests } from '../../../common-tests/role-authorisation-tests';
@@ -22,8 +22,8 @@ const { as, put } = createApi(app);
 
 const putPortalFacilityAmendmentMock = jest.fn() as jest.Mock<Promise<PortalFacilityAmendmentWithUkefId>>;
 
-jest.mock('../../../../src/v1/api', () => ({
-  ...jest.requireActual<AnyObject>('../../../../src/v1/api'),
+jest.mock('../../../../server/v1/api', () => ({
+  ...jest.requireActual<AnyObject>('../../../../server/v1/api'),
   putPortalFacilityAmendment: () => putPortalFacilityAmendmentMock(),
 }));
 

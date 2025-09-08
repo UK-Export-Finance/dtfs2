@@ -16,7 +16,7 @@ import {
 import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
-import { mongoDbClient } from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../server/drivers/db-client';
 import { wipe } from '../../wipeDB';
 import { aPortalUser, aTfmSessionUser } from '../../../test-helpers';
 

@@ -1,15 +1,15 @@
 const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
-const app = require('../../../src/createApp');
-const { MAKER } = require('../../../src/v1/roles/roles');
+const app = require('../../../server/createApp');
+const { MAKER } = require('../../../server/v1/roles/roles');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { POSTCODE } = require('../../fixtures/postcode');
-const { companies } = require('../../../src/external-api/api');
+const { companies } = require('../../../server/external-api/api');
 const { as, get } = require('../../api')(app);
 
-jest.unmock('../../../src/external-api/api');
+jest.unmock('../../../server/external-api/api');
 
 describe.each([{ baseUrl: '/v1' }, { baseUrl: '/v1/gef' }])('GET $baseUrl/companies/:registrationNumber', ({ baseUrl }) => {
   let testUsers;

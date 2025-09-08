@@ -1,20 +1,20 @@
 const { CURRENCY, REPORT_NOT_RECEIVED } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 
-const api = require('../../../src/v1/api');
-const app = require('../../../src/createApp');
+const api = require('../../../server/v1/api');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const { as, postMultipartForm } = require('../../api')(app);
-const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
-const { uploadFile } = require('../../../src/drivers/fileshare');
+const { PAYMENT_REPORT_OFFICER } = require('../../../server/v1/roles/roles');
+const { uploadFile } = require('../../../server/drivers/fileshare');
 
 const { MOCK_FILE_INFO } = require('../../../test-helpers/mock-azure-file-info');
 
-jest.mock('../../../src/drivers/fileshare', () => ({
+jest.mock('../../../server/drivers/fileshare', () => ({
   getConfig: jest.fn(() => ({ EXPORT_FOLDER: 'mock-folder' })),
   uploadFile: jest.fn(),
 }));
@@ -76,13 +76,13 @@ describe('/v1/utilisation-reports', () => {
 
   const saveUtilisationReportSpy = jest.spyOn(api, 'saveUtilisationReport');
   /**
-   * @type {import('../../../src/v1/api-response-types').SaveUtilisationReportResponseBody}
+   * @type {import('../../../server/v1/api-response-types').SaveUtilisationReportResponseBody}
    */
   const saveUtilisationReportResponseBody = { dateUploaded: new Date() };
 
   const getUtilisationReportsSpy = jest.spyOn(api, 'getUtilisationReports');
   /**
-   * @type {import('../../../src/v1/api-response-types').UtilisationReportResponseBody[]}
+   * @type {import('../../../server/v1/api-response-types').UtilisationReportResponseBody[]}
    */
   const getUtilisationReportsResponseBody = [
     {

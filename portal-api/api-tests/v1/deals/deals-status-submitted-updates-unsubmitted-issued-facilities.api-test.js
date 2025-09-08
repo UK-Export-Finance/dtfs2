@@ -2,14 +2,14 @@ const { BOND_TYPE } = require('@ukef/dtfs2-common');
 const { sub, add, format } = require('date-fns');
 const { CURRENCY } = require('@ukef/dtfs2-common');
 
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed-issued-and-unissued-facilities');
 
 const { as } = require('../../api')(app);
 const createFacilities = require('../../createFacilities');
-const api = require('../../../src/v1/api');
-const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
+const api = require('../../../server/v1/api');
+const { MAKER, CHECKER } = require('../../../server/v1/roles/roles');
 
 describe('PUT /v1/deals/:id/status - to `Submitted` - issued/unconditional facility submission details', () => {
   let testbank1Maker;

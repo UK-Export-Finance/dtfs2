@@ -1,11 +1,11 @@
 const { REPORT_NOT_RECEIVED, UtilisationReportEntityMockBuilder } = require('@ukef/dtfs2-common');
 const { SqlDbHelper } = require('../../sql-db-helper.ts');
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const { as, get } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
+const { PAYMENT_REPORT_OFFICER } = require('../../../server/v1/roles/roles');
 
 describe('GET /v1/banks/:bankId/due-report-periods', () => {
   const dueReportPeriodsUrl = (bankId) => `/v1/banks/${bankId}/due-report-periods`;

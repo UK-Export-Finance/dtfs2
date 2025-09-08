@@ -11,8 +11,8 @@ import {
 import axios from 'axios';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
-import { GetUtilisationReportResponse } from '../../../src/types/utilisation-reports';
-import { mongoDbClient } from '../../../src/drivers/db-client';
+import { GetUtilisationReportResponse } from '../../../server/types/utilisation-reports';
+import { mongoDbClient } from '../../../server/drivers/db-client';
 import { wipe } from '../../wipeDB';
 import { aPortalUser } from '../../../test-helpers';
 import { CustomErrorResponse } from '../../helpers/custom-error-response';

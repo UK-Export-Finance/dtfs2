@@ -2,33 +2,33 @@ const { AUDIT_USER_TYPES, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const { set } = require('date-fns');
 const { cloneDeep } = require('lodash');
 const { calculateGefFacilityFeeRecord } = require('@ukef/dtfs2-common');
-const api = require('../../../src/v1/api');
-const acbsController = require('../../../src/v1/controllers/acbs.controller');
-const getGuaranteeDates = require('../../../src/v1/helpers/get-guarantee-dates');
-const canSubmitToACBS = require('../../../src/v1/helpers/can-submit-to-acbs');
-const { generateIssuedFacilitiesListString } = require('../../../src/v1/controllers/send-issued-facilities-received-email');
-const CONSTANTS = require('../../../src/constants');
+const api = require('../../../server/v1/api');
+const acbsController = require('../../../server/v1/controllers/acbs.controller');
+const getGuaranteeDates = require('../../../server/v1/helpers/get-guarantee-dates');
+const canSubmitToACBS = require('../../../server/v1/helpers/can-submit-to-acbs');
+const { generateIssuedFacilitiesListString } = require('../../../server/v1/controllers/send-issued-facilities-received-email');
+const CONSTANTS = require('../../../server/constants');
 
-const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-AIN-second-submit-facilities-unissued-to-issued');
-const MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-MIA-second-submit-facilities-unissued-to-issued');
-const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-MIN-second-submit-facilities-unissued-to-issued');
-const MOCK_MIA_SECOND_SUBMIT = require('../../../src/v1/__mocks__/mock-deal-MIA-second-submit');
-const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
-const MOCK_PREMIUM_SCHEDULE_RESPONSE = require('../../../src/v1/__mocks__/mock-premium-schedule-response');
-const { MOCK_FACILITIES } = require('../../../src/v1/__mocks__/mock-facilities');
-const MOCK_GEF_DEAL = require('../../../src/v1/__mocks__/mock-gef-deal');
-const MOCK_GEF_DEAL_SECOND_SUBMIT_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-second-submit-MIA');
-const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
-const MOCK_GEF_DEAL_MIN = require('../../../src/v1/__mocks__/mock-gef-deal-MIN');
+const MOCK_DEAL_AIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../server/v1/__mocks__/mock-deal-AIN-second-submit-facilities-unissued-to-issued');
+const MOCK_DEAL_MIA_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../server/v1/__mocks__/mock-deal-MIA-second-submit-facilities-unissued-to-issued');
+const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../server/v1/__mocks__/mock-deal-MIN-second-submit-facilities-unissued-to-issued');
+const MOCK_MIA_SECOND_SUBMIT = require('../../../server/v1/__mocks__/mock-deal-MIA-second-submit');
+const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../server/v1/__mocks__/mock-notify-email-response');
+const MOCK_PREMIUM_SCHEDULE_RESPONSE = require('../../../server/v1/__mocks__/mock-premium-schedule-response');
+const { MOCK_FACILITIES } = require('../../../server/v1/__mocks__/mock-facilities');
+const MOCK_GEF_DEAL = require('../../../server/v1/__mocks__/mock-gef-deal');
+const MOCK_GEF_DEAL_SECOND_SUBMIT_MIA = require('../../../server/v1/__mocks__/mock-gef-deal-second-submit-MIA');
+const MOCK_GEF_DEAL_MIA = require('../../../server/v1/__mocks__/mock-gef-deal-MIA');
+const MOCK_GEF_DEAL_MIN = require('../../../server/v1/__mocks__/mock-gef-deal-MIN');
 const { submitDeal, createSubmitBody } = require('../../helpers/submitDeal');
-const { mockFindOneDeal, mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
+const { mockFindOneDeal, mockUpdateDeal } = require('../../../server/v1/__mocks__/common-api-mocks');
 
-jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
+jest.mock('../../../server/v1/controllers/acbs.controller', () => ({
   issueAcbsFacilities: jest.fn(),
   createACBS: jest.fn(),
 }));
 
-jest.mock('../../../src/v1/helpers/can-submit-to-acbs');
+jest.mock('../../../server/v1/helpers/can-submit-to-acbs');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 

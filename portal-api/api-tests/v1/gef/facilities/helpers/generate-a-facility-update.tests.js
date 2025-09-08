@@ -1,5 +1,5 @@
 const { CURRENCY } = require('@ukef/dtfs2-common');
-const { FACILITY_PAYMENT_TYPE } = require('../../../../../src/v1/gef/enums');
+const { FACILITY_PAYMENT_TYPE } = require('../../../../../server/v1/gef/enums');
 
 const generateACompleteFacilityUpdate = ({ dealVersion }) => {
   const completeUpdate = {

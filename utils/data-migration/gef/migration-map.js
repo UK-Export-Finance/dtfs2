@@ -1,5 +1,5 @@
 const { FACILITY_PROVIDED_DETAILS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
-const V2_CONSTANTS = require('../../../portal-api/src/constants');
+const V2_CONSTANTS = require('../../../portal-api/server/constants');
 
 const DEAL_STATUS = {
   draft: V2_CONSTANTS.DEAL.DEAL_STATUS.DRAFT,

@@ -57,7 +57,7 @@ services:
       - '5005:5005' # http
       - '9223:9223' # debug
     volumes:
-      - ./dtfs-central-api/src:/app/dtfs-central-api/src:ro
+      - ./dtfs-central-api/server:/app/dtfs-central-api/server:ro
       - ./libs:/app/libs:ro
     environment:
       - TZ
@@ -155,7 +155,7 @@ services:
       - '5004:5004' # http
       - '9225:9225' # debug
     volumes:
-      - ./trade-finance-manager-api/src:/app/trade-finance-manager-api/src:ro
+      - ./trade-finance-manager-api/server:/app/trade-finance-manager-api/server:ro
       - ./libs:/app/libs:ro
     environment:
       - TZ
@@ -249,7 +249,7 @@ services:
       - '5001:5001' # http
       - '9227:9227' # debug
     volumes:
-      - ./portal-api/src:/app/portal-api/src:ro
+      - ./portal-api/server:/app/portal-api/server:ro
       - ./libs:/app/libs:ro
     environment:
       - TZ
@@ -308,7 +308,7 @@ services:
       - '5002:5002' # http
       - '9228:9228' # debug
     volumes:
-      - ./external-api/src:/app/external-api/src:ro
+      - ./external-api/server:/app/external-api/server:ro
       - ./libs:/app/libs:ro
     environment:
       - TZ
@@ -340,7 +340,7 @@ services:
       - RATE_LIMIT_THRESHOLD
       - ESTORE_CRON_MANAGER_SCHEDULE
       - FF_SALESFORCE_CUSTOMER_CREATION_ENABLED
-    entrypoint: npx ts-node external-api/src/index.ts
+    entrypoint: npx ts-node external-api/server/index.ts
 
   gef-ui:
     build:

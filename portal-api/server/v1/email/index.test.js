@@ -2,7 +2,7 @@ const { HttpStatusCode } = require('axios');
 
 const mockExternalApiEmail = jest.fn(() => Promise.resolve({}));
 
-jest.mock('../../../src/external-api/api', () => ({
+jest.mock('../../../server/external-api/api', () => ({
   sendEmail: mockExternalApiEmail,
 }));
 

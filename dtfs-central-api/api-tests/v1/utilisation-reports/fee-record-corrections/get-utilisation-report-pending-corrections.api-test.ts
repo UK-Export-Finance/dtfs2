@@ -15,8 +15,8 @@ import { SqlDbHelper } from '../../../sql-db-helper';
 import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
 import { wipe } from '../../../wipeDB';
 import { aBank, aMonthlyBankReportPeriodSchedule, aPortalUser } from '../../../../test-helpers';
-import { mongoDbClient } from '../../../../src/drivers/db-client';
-import { PendingCorrectionsResponseBody } from '../../../../src/v1/controllers/utilisation-report-service/fee-record-correction/get-utilisation-report-pending-corrections.controller';
+import { mongoDbClient } from '../../../../server/drivers/db-client';
+import { PendingCorrectionsResponseBody } from '../../../../server/v1/controllers/utilisation-report-service/fee-record-correction/get-utilisation-report-pending-corrections.controller';
 
 console.error = jest.fn();
 

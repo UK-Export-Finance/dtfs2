@@ -5,9 +5,9 @@
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
 import { MOCK_COMPANY_REGISTRATION_NUMBERS, PROBABILITY_OF_DEFAULT } from '@ukef/dtfs2-common';
-import { app } from '../../src/createApp';
+import { app } from '../../server/createApp';
 import { api } from '../api';
-import { findACBSIndustrySector } from '../../src/v1/controllers/industry-sectors.controller';
+import { findACBSIndustrySector } from '../../server/v1/controllers/industry-sectors.controller';
 
 let axiosMock: MockAdapter;
 
@@ -32,8 +32,8 @@ const mockIndustryResponse = {
   effectiveTo: '9999-12-31T00:00:00.000Z',
 };
 
-jest.mock('../../src/v1/controllers/industry-sectors.controller', () => ({
-  ...jest.requireActual<object>('../../src/v1/controllers/industry-sectors.controller'),
+jest.mock('../../server/v1/controllers/industry-sectors.controller', () => ({
+  ...jest.requireActual<object>('../../server/v1/controllers/industry-sectors.controller'),
   findACBSIndustrySector: jest.fn(),
 }));
 

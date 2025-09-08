@@ -1,8 +1,8 @@
 /* eslint-disable consistent-return */
 const { ObjectId } = require('bson');
 const MIGRATION_MAP = require('./migration-map');
-const V2_CONSTANTS = require('../../../portal-api/src/constants');
-const { exporterStatus } = require('../../../portal-api/src/v1/gef/controllers/validation/exporter');
+const V2_CONSTANTS = require('../../../portal-api/server/constants');
+const { exporterStatus } = require('../../../portal-api/server/v1/gef/controllers/validation/exporter');
 const { getUserByEmail } = require('../helpers/users');
 const { getBankByName } = require('../helpers/banks');
 const { convertDateToTimestamp } = require('./helpers');

@@ -1,10 +1,10 @@
 import { HttpStatusCode } from 'axios';
 import { Response } from '@ukef/dtfs2-common';
 import api from '../../api';
-import app from '../../../src/createApp';
+import app from '../../../server/createApp';
 import testUserCache from '../../api-test-users';
 import { TestUser } from '../../types/test-user';
-import { MAKER } from '../../../src/v1/roles/roles';
+import { MAKER } from '../../../server/v1/roles/roles';
 
 const { as } = api(app);
 const url = '/v1/mandatory-criteria';

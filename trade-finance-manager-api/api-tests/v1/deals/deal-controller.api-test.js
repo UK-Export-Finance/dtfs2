@@ -1,8 +1,8 @@
-const { findOneTfmDeal, findOnePortalDeal } = require('../../../src/v1/controllers/deal.controller');
-const mapDeal = require('../../../src/v1/mappings/map-deal');
-const { MOCK_BSS_EWCS_DEAL } = require('../../../src/v1/__mocks__/mock-deal');
-const { mockFindOneDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
-const api = require('../../../src/v1/api');
+const { findOneTfmDeal, findOnePortalDeal } = require('../../../server/v1/controllers/deal.controller');
+const mapDeal = require('../../../server/v1/mappings/map-deal');
+const { MOCK_BSS_EWCS_DEAL } = require('../../../server/v1/__mocks__/mock-deal');
+const { mockFindOneDeal } = require('../../../server/v1/__mocks__/common-api-mocks');
+const api = require('../../../server/v1/api');
 
 describe('deal controller', () => {
   beforeEach(() => {

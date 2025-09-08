@@ -5,7 +5,7 @@ import wipeDB from '../../wipeDB';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { aBank, getSqlIdGenerator } from '../../../test-helpers';
-import { mongoDbClient } from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../server/drivers/db-client';
 
 const BASE_URL = '/v1/bank';
 

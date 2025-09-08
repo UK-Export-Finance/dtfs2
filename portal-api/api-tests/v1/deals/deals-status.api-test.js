@@ -3,19 +3,19 @@ const databaseHelper = require('../../database-helper');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
-const sendStatusUpdateEmails = require('../../../src/v1/controllers/deal-status/send-status-update-emails');
+const sendStatusUpdateEmails = require('../../../server/v1/controllers/deal-status/send-status-update-emails');
 const createFacilities = require('../../createFacilities');
-const api = require('../../../src/v1/api');
-const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const api = require('../../../server/v1/api');
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../server/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
-const { STATUS } = require('../../../src/constants/user');
+const { STATUS } = require('../../../server/constants/user');
 
 const { as, get, put } = require('../../api')(app);
 
-jest.mock('../../../src/v1/controllers/deal-status/send-status-update-emails');
+jest.mock('../../../server/v1/controllers/deal-status/send-status-update-emails');
 
 describe('/v1/deals/:id/status', () => {
   const dealStatusUrl = (dealId) => `/v1/deals/${dealId}/status`;

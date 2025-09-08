@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 export const mockReq = () =>
   ({
     headers: {},
-  } as Request);
+  }) as Request;
 
 export const mockRes = () => {
   const res = {} as Response;

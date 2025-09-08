@@ -5,8 +5,8 @@ const { MOCK_GEF_MAPPED_DEAL } = require('../__mocks__/mock-deal');
 const { getOrCreatePartyDbInfo, updateDeal } = require('../api');
 const { MOCK_PORTAL_USERS } = require('../__mocks__/mock-portal-users');
 
-jest.mock('../../../src/v1/api', () => ({
-  ...jest.requireActual('../../../src/v1/api'),
+jest.mock('../../../server/v1/api', () => ({
+  ...jest.requireActual('../../../server/v1/api'),
   getOrCreatePartyDbInfo: jest.fn(),
   updateDeal: jest.fn(),
 }));
