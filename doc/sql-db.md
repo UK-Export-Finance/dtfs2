@@ -184,7 +184,7 @@ const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 
 SqlDbDataSource.initialize()
   .then(() => console.info('✅ Successfully initialised connection to SQL database'))
-  .catch((error) => console.error('❌ Failed to initialise connection to SQL database:', error));
+  .catch((error) => console.error('❌ Failed to initialise connection to SQL database %o', error));
 ```
 
 e.g. in the [dtfs-central-api](../dtfs-central-api) project this has been added
