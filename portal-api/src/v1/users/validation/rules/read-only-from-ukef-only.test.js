@@ -5,7 +5,7 @@ const error = [
   {
     roles: {
       order: '1',
-      text: 'The read-only role with all Bank can only be associated with a UKEF email address',
+      text: 'The read-only role for all bank can only be associated with a UKEF email address',
     },
   },
 ];

@@ -14,7 +14,7 @@ describe('selectAtLeastOneBank', () => {
     {
       bank: {
         order: '4',
-        text: 'Only admin and read-only users can have "All" as the bank',
+        text: 'Only the admin and read-only user can be allocated to "All" bank',
       },
     },
   ];
