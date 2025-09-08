@@ -3,6 +3,8 @@ const { ADMIN: AN_ADMIN } = require('../../../../../../e2e-fixtures');
 const {
   USER_ROLES: { ADMIN, READ_ONLY, MAKER, CHECKER },
 } = require('../../../../fixtures/constants');
+const { BANK1_MAKER1 } = require('../../../../../../e2e-fixtures/portal-users.fixture');
+const { UKEF_BANK_1 } = require('../../../../../../e2e-fixtures/banks.fixture');
 const relative = require('../../../relativeURL');
 
 context('Admin user updates an existing user', () => {
@@ -12,17 +14,12 @@ context('Admin user updates an existing user', () => {
     password: 'AbC!2345',
     firstname: 'first',
     surname: 'last',
-    bank: {
-      id: '9',
-      name: 'Bank 1',
-    },
+    bank: UKEF_BANK_1,
     roles: [MAKER],
   };
 
   const ukefEmailUser = {
-    ...userToUpdate,
-    username: 'admin1@ukexportfinance.gov.uk',
-    email: 'admin1@ukexportfinance.gov.uk',
+    ...BANK1_MAKER1,
     roles: [ADMIN],
   };
 
@@ -150,7 +147,7 @@ context('Admin user updates an existing user', () => {
     cy.assertText(users.row(userToUpdate).roles(), MAKER);
   });
 
-  it('changing role to read-only on non-ukef user should display an error', () => {
+  it('changing role to read-only on non-ukef user should update their role', () => {
     // Go to edit page
     openPageToEdit(userToUpdate);
 
@@ -158,13 +155,9 @@ context('Admin user updates an existing user', () => {
     editUser.role(READ_ONLY).click();
     editUser.save().click();
 
-    // Assert role input error
-    createUser.rolesError().should('contain', 'The admin role can only be associated with a UKEF email address');
-
-    // Go back and validate the role
-    createUser.cancel().click();
-    cy.url().should('eq', relative('/admin/users/'));
-    cy.assertText(users.row(userToUpdate).roles(), MAKER);
+    // validate the role
+    cy.url().should('eq', relative('/admin/users'));
+    cy.assertText(users.row(userToUpdate).roles(), READ_ONLY);
   });
 
   it('changing role to admin on a ukef user should update their role', () => {
