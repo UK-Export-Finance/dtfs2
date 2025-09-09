@@ -1,4 +1,4 @@
-import { extractPathParameterPlaceholders } from '@ukef/dtfs2-common';
+import { extractPathParameterPlaceholders } from '@ukef/dtfs2-common/test-helpers';
 
 type UrlPathParameters = Record<string, number | string>;
 

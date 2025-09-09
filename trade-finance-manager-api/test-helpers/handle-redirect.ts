@@ -1,4 +1,4 @@
-import { anEntraIdUser } from '@ukef/dtfs2-common';
+import { anEntraIdUser } from '@ukef/dtfs2-common/test-helpers';
 import { HandleRedirectResponse } from '../server/v1/services/entra-id.service';
 
 export const aHandleRedirectResponse = (): HandleRedirectResponse => {

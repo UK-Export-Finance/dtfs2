@@ -1,4 +1,4 @@
-import { anEntraIdUser } from '@ukef/dtfs2-common';
+import { anEntraIdUser } from '@ukef/dtfs2-common/test-helpers';
 import { ENTRA_ID_USER_TO_UPSERT_TFM_USER_REQUEST_SCHEMA } from '@ukef/dtfs2-common/schemas';
 import { UserService } from './user.service';
 
