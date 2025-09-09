@@ -1,52 +1,87 @@
+# .dockerignore for DTFS2 monorepo
+
+# Node
 node_modules
 dist
 .npm
+
+# Docker
 Dockerfile
 docker-compose*.yml
-**/.env*/*
+
+# Typescript
+**/*.tsbuildinfo
+
+# Environment
 .eslintignore
 .cspell.json
 commitlint.config.js
-jest.config.ts
 renovate.json
 .dockerignore
 .editorconfig
 .prettierrc.json
 .eslintrc.json
+
+# Git
 .git
 .gitattributes
 .github
 .gitignore
 .husky
+
+# Editor
 .prettierignore
 .whitesource
-README.md
-CHANGELOG.md
-LICENSE
-README.md
-.config
-secrets/**
-jwt_key
-**/*logs*/*
-**/*.log/*
+.vscode/*
 .DS_Store
 Library/
+Thumbs.db
+ehthumbs.db
+.idea/
+
+# Documentation
+**/*.md
+**/docs/
+LICENSE
+.config
+
+# Secrets
+**/.env*/*
+**/.env*
+secrets/**
+jwt_key
+
+# Logs
+**/*log/
+**/*.log
 coverage
+
+# Jest
+jest.config.*
+
+# Cypress
 **/cypress/videos
 **/cypress/screenshots
-.vscode/*
-.vscode/settings.json
-.vscode/tasks.json
-.vscode/launch.json
-.vscode/extensions.json
+
+# Reports
 reporting/tfm/report/*
 **/generated_reports
 **/temp/*
+
+# Utility
 utils/**/actionsheets/*
-utils/**/json/*
 utils/**/amendments/*
 utils/**/exports/*
 **/bss-ewcs/dump/*
 **/bss-ewcs/data/*
 **/gef/dump/*
 **/gef/data/*
+**/json/*
+**/report/*
+
+# Test
+**/*.test*
+**/*test/
+**/test-helpers/
+jest-html-reporters-*.html
+test-results/

@@ -34,13 +34,14 @@ COPY --chown=node:node ./libs/common/tsconfig.json ./libs/common/tsconfig.json
 COPY --chown=node:node ./libs/common/src ./libs/common/src
 
 # Microservice codebase
+COPY --chown=node:node ./${MICROSERVICE}/package.json ./${MICROSERVICE}/package.json
 COPY --chown=node:node ./${MICROSERVICE}/tsconfig.json ./${MICROSERVICE}/tsconfig.json
 COPY --chown=node:node ./${MICROSERVICE}/server ./${MICROSERVICE}/server
 
 # Lean NPM - Only install `dependencies`
 # `devDependencies` will still be resolved inside `package-lock.json`,
 # however they will not be installed inside `node_modules` directory.
-RUN npm ci
+RUN npm ci --omit=dev --ignore-scripts
 
 ###################
 # 2. PRODUCTION
@@ -70,8 +71,10 @@ COPY --chown=node:node --from=build /app/libs/common/tsconfig.json ./libs/common
 COPY --chown=node:node --from=build /app/libs/common/node_modules ./libs/common/node_modules
 COPY --chown=node:node --from=build /app/libs/common/src ./libs/common/src
 
-COPY --chown=node:node --from=build /app/${MICROSERVICE}/tsconfig.json .
-COPY --chown=node:node --from=build /app/${MICROSERVICE}/server ./server
+COPY --chown=node:node --from=build /app/${MICROSERVICE}/package.json ./${MICROSERVICE}/package.json
+COPY --chown=node:node --from=build /app/${MICROSERVICE}/tsconfig.json ./${MICROSERVICE}/tsconfig.json
+COPY --chown=node:node --from=build /app/${MICROSERVICE}/node_modules ./${MICROSERVICE}/node_modules
+COPY --chown=node:node --from=build /app/${MICROSERVICE}/server ./${MICROSERVICE}/server
 
 # Expose listening port
 EXPOSE ${PORT}
