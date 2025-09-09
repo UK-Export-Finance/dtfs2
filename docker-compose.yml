@@ -57,7 +57,7 @@ services:
       - '5005:5005' # http
       - '9223:9223' # debug
     volumes:
-      - ./dtfs-central-api/server:/app/dtfs-central-api/server:ro
+      - ./dtfs-central-api/src:/app/dtfs-central-api/src:ro
       - ./libs:/app/libs:ro
     environment:
       - TZ
@@ -155,7 +155,7 @@ services:
       - '5004:5004' # http
       - '9225:9225' # debug
     volumes:
-      - ./trade-finance-manager-api/server:/app/trade-finance-manager-api/server:ro
+      - ./trade-finance-manager-api/src:/app/trade-finance-manager-api/src:ro
       - ./libs:/app/libs:ro
     environment:
       - TZ

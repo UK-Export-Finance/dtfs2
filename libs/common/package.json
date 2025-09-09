@@ -23,6 +23,7 @@
     "./mongo-db-client": "./src/mongo-db-client/index.ts",
     "./change-stream": "./src/change-stream/index.ts",
     "./change-stream/test-helpers": "./src/change-stream/test-helpers/index.ts",
+    "./test-helpers": "./src/test-helpers/index.ts",
     "./payload-verification": "./src/helpers/payload-verification/index.ts",
     "./schemas": "./src/schemas/index.ts",
     "./test-cases-backend": "./src/test-helpers/test-cases-backend/index.ts",

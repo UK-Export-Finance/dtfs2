@@ -90,7 +90,7 @@ CMD wget \
 || exit 1
 
 # Execute Script
-CMD ["npm", "run", "start", "-w", ${MICROSERVICE}]
+CMD ["npm", "run", "start", "-w", "${MICROSERVICE}"]
 
 # Non-root user
 USER node
