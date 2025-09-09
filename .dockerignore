@@ -82,6 +82,6 @@ utils/**/exports/*
 # Test
 **/*.test*
 **/*test/
-**/test-helpers/
+# **/test-helpers/
 jest-html-reporters-*.html
 test-results/
