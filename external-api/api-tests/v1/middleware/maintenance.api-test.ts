@@ -1,5 +1,5 @@
 import { HttpStatusCode } from 'axios';
-import { Response } from '@ukef/dtfs2-common';
+import { Response } from '@ukef/dtfs2-common/test-helpers';
 import { api } from '../../api';
 import { app } from '../../../server/createApp';
 
