@@ -255,7 +255,7 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
+          command: npm run api-test --workspace=${{ matrix.services }}
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
