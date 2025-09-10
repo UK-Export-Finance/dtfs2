@@ -1,9 +1,5 @@
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
-import {
-  CURRENCY,
-  FEE_RECORD_STATUS,
-  RECONCILIATION_IN_PROGRESS,
-} from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
+import { CURRENCY, FEE_RECORD_STATUS, RECONCILIATION_IN_PROGRESS } from '@ukef/dtfs2-common';
 import { errorSummary } from '../../../partials';
 import pages from '../../../pages';
 import USERS from '../../../../fixtures/users';

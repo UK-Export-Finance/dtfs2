@@ -1,4 +1,4 @@
-import { aPortalSessionUser } from "@ukef/dtfs2-common/test-helpers";
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 
 /* eslint-disable import/first */
 const getFacilityMock = jest.fn();

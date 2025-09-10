@@ -1,13 +1,6 @@
-import { UtilisationReportEntityMockBuilder, MOCK_AZURE_FILE_INFO } from "@ukef/dtfs2-common/test-helpers";
+import { UtilisationReportEntityMockBuilder, MOCK_AZURE_FILE_INFO } from '@ukef/dtfs2-common/test-helpers';
 import { ObjectId } from 'mongodb';
-import {
-  REQUEST_PLATFORM_TYPE,
-  AzureFileInfoEntity,
-  PortalUser,
-  ReportPeriod,
-  REPORT_NOT_RECEIVED,
-  PENDING_RECONCILIATION,
-} from '@ukef/dtfs2-common';
+import { REQUEST_PLATFORM_TYPE, AzureFileInfoEntity, PortalUser, ReportPeriod, REPORT_NOT_RECEIVED, PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
 import { mapUtilisationReportEntityToGetUtilisationReportResponse } from './mapUtilisationReport';
 import { getUserById } from '../repositories/users-repo';
 import { GetUtilisationReportResponse } from '../types/utilisation-reports';

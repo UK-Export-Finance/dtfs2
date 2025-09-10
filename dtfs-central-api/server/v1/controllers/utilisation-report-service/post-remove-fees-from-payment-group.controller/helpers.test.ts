@@ -1,11 +1,7 @@
-import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { ObjectId } from 'mongodb';
 import { EntityManager } from 'typeorm';
-import {
-  RECONCILIATION_IN_PROGRESS,
-  REQUEST_PLATFORM_TYPE,
-  TfmSessionUser
-} from '@ukef/dtfs2-common';
+import { RECONCILIATION_IN_PROGRESS, REQUEST_PLATFORM_TYPE, TfmSessionUser } from '@ukef/dtfs2-common';
 import { removeFeesFromPaymentGroup } from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { aTfmSessionUser } from '../../../../../test-helpers';

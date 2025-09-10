@@ -1,4 +1,4 @@
-import { anEmptyRecordCorrectionTransientFormData } from "@ukef/dtfs2-common/test-helpers";
+import { anEmptyRecordCorrectionTransientFormData } from '@ukef/dtfs2-common/test-helpers';
 import {
   CURRENCY,
   CurrencyAndAmount,

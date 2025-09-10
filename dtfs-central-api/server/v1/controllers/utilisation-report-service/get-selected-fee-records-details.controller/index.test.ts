@@ -1,10 +1,6 @@
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import httpMocks from 'node-mocks-http';
-import {
-  CURRENCY,
-  PENDING_RECONCILIATION,
-  SelectedFeeRecordsDetails
-} from '@ukef/dtfs2-common';
+import { CURRENCY, PENDING_RECONCILIATION, SelectedFeeRecordsDetails } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { UtilisationReportRepo } from '../../../../repositories/utilisation-reports-repo';
 import { GetSelectedFeeRecordDetailsRequest, getSelectedFeeRecordDetails } from '.';

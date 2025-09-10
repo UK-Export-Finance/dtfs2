@@ -1,4 +1,4 @@
-import { recordCorrectionLogDetailsMock } from "@ukef/dtfs2-common/test-helpers";
+import { recordCorrectionLogDetailsMock } from '@ukef/dtfs2-common/test-helpers';
 import { getFormattedReportPeriodWithLongMonth, UTILISATION_REPORT_STATUS_TAG_COLOURS } from '@ukef/dtfs2-common';
 import { PRIMARY_NAVIGATION_KEYS } from '../../../../server/constants';
 import { RecordCorrectionLogDetailsViewModel } from '../../../../server/types/view-models';

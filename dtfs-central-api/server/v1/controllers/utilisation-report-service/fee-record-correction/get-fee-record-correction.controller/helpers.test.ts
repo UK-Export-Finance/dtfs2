@@ -1,8 +1,5 @@
-import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
-import {
-  CURRENCY,
-  RECORD_CORRECTION_REASON
-} from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
+import { CURRENCY, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { mapFeeRecordCorrectionEntityToResponse } from './helpers';
 import { mapFeeRecordEntityToReportedFees } from '../../../../../mapping/fee-record-mapper';
 import { GetFeeRecordCorrectionResponseBody } from '.';

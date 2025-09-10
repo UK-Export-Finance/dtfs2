@@ -1,10 +1,5 @@
-import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, convertMillisecondsToSeconds } from "@ukef/dtfs2-common/test-helpers";
-import {
-  TFM_AMENDMENT_STATUS,
-  CURRENCY,
-  FEE_RECORD_STATUS,
-  PENDING_RECONCILIATION
-} from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, convertMillisecondsToSeconds } from '@ukef/dtfs2-common/test-helpers';
+import { TFM_AMENDMENT_STATUS, CURRENCY, FEE_RECORD_STATUS, PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
 import pages from '../../../pages';
 import USERS from '../../../../fixtures/users';
 import relative from '../../../relativeURL';

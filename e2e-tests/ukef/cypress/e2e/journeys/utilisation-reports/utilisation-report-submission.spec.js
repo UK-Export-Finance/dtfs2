@@ -1,4 +1,4 @@
-import { UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { REPORT_NOT_RECEIVED, getPreviousReportPeriodForBankScheduleByMonth, toIsoMonthStamp } from '@ukef/dtfs2-common';
 
 import relative from '../../relativeURL';

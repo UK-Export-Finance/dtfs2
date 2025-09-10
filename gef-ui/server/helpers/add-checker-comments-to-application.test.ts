@@ -1,4 +1,4 @@
-import { aPortalSessionUser } from "@ukef/dtfs2-common/test-helpers";
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 
 // TODO: DTFS2-7724 - remove this eslint-disable
 /* eslint-disable import/first */

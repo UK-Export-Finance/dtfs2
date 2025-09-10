@@ -1,10 +1,5 @@
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
-import {
-  CURRENCY,
-  Currency,
-  FEE_RECORD_STATUS,
-  FeeRecordEntity
-} from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
+import { CURRENCY, Currency, FEE_RECORD_STATUS, FeeRecordEntity } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
 import { FeeRecordRepo } from '../../../repositories/fee-record-repo';
 import { validateFeeRecordsAllHaveSamePaymentCurrency, validateFeeRecordsFormCompleteGroup } from './fee-record-validator';

@@ -1,4 +1,4 @@
-import { aPortalSessionUser, aPortalSessionBank } from "@ukef/dtfs2-common/test-helpers";
+import { aPortalSessionUser, aPortalSessionBank } from '@ukef/dtfs2-common/test-helpers';
 import httpMocks, { MockResponse, Session } from 'node-mocks-http';
 import { Request, Response } from 'express';
 import { getFormattedReportPeriodWithLongMonth, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';

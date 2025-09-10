@@ -1,4 +1,4 @@
-import { UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { getNextReportPeriodForBankSchedule } from '@ukef/dtfs2-common';
 import { UtilisationReportRepo } from '../../../../../../repositories/utilisation-reports-repo';
 import { aBank } from '../../../../../../../test-helpers';

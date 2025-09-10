@@ -1,10 +1,5 @@
-import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
-import {
-  FEE_RECORD_STATUS,
-  RECORD_CORRECTION_REASON,
-  PENDING_RECONCILIATION,
-  MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT,
-} from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
+import { FEE_RECORD_STATUS, RECORD_CORRECTION_REASON, PENDING_RECONCILIATION, MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT } from '@ukef/dtfs2-common';
 import pages from '../../../../pages';
 import USERS from '../../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';

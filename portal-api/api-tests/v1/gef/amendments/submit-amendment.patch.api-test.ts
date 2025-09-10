@@ -1,12 +1,6 @@
-import { portalAmendmentToUkefEmailVariables } from "@ukef/dtfs2-common/test-helpers";
+import { portalAmendmentToUkefEmailVariables } from '@ukef/dtfs2-common/test-helpers';
 import { ObjectId } from 'mongodb';
-import {
-  PORTAL_AMENDMENT_STATUS,
-  AMENDMENT_TYPES,
-  AnyObject,
-  PortalFacilityAmendmentWithUkefId,
-  Role
-} from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, AnyObject, PortalFacilityAmendmentWithUkefId, Role } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import app from '../../../../server/createApp';
 import testUserCache from '../../../api-test-users';

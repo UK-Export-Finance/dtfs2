@@ -1,13 +1,8 @@
-import { TestApiError, aPortalSessionUser } from "@ukef/dtfs2-common/test-helpers";
+import { TestApiError, aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import { ObjectId } from 'mongodb';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import {
-  PORTAL_AMENDMENT_STATUS,
-  AMENDMENT_TYPES,
-  FacilityAmendmentWithUkefId,
-  TFM_AMENDMENT_STATUS,
-} from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, FacilityAmendmentWithUkefId, TFM_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import api from '../../api';
 import { getFacilityAmendmentsOnDeal, GetFacilityAmendmentsOnDealRequest } from './get-amendments-on-deal.controller';
 

@@ -1,11 +1,5 @@
-import { FeeRecordEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
-import {
-  CURRENCY,
-  FEE_RECORD_STATUS,
-  FeeRecordEntity,
-  PendingCorrection,
-  RECORD_CORRECTION_REASON,
-} from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
+import { CURRENCY, FEE_RECORD_STATUS, FeeRecordEntity, PendingCorrection, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { mapFeeRecordsToPendingCorrections, mapFeeRecordToPendingCorrectionsArray } from './map-fee-records-to-pending-corrections';
 
 describe('map-fee-records-to-pending-corrections', () => {

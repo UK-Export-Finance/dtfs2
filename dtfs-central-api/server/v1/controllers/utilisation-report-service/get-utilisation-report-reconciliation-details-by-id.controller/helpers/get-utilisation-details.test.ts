@@ -1,4 +1,4 @@
-import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { CURRENCY, FeeRecordUtilisation } from '@ukef/dtfs2-common';
 import { when } from 'jest-when';
 import { getUtilisationDetails } from './get-utilisation-details';

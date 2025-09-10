@@ -1,11 +1,7 @@
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { EntityManager } from 'typeorm';
 import { when } from 'jest-when';
-import {
-  CURRENCY,
-  FeeRecordEntity,
-  PENDING_RECONCILIATION
-} from '@ukef/dtfs2-common';
+import { CURRENCY, FeeRecordEntity, PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
 import { feeRecordsMatchAttachedPayments } from './fee-records-match-attached-payments';
 import { feeRecordsAndPaymentsMatch } from '../../../../../helpers';
 

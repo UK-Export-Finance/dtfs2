@@ -1,4 +1,4 @@
-import { portalAmendmentToCheckerEmailVariables } from "@ukef/dtfs2-common/test-helpers";
+import { portalAmendmentToCheckerEmailVariables } from '@ukef/dtfs2-common/test-helpers';
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';

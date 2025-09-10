@@ -1,4 +1,4 @@
-import { MOCK_FACILITY } from "@ukef/dtfs2-common/test-helpers";
+import { MOCK_FACILITY } from '@ukef/dtfs2-common/test-helpers';
 import { GEF_FACILITY_TYPE } from '@ukef/dtfs2-common';
 import { DEAL_STATUS } from '../../constants';
 

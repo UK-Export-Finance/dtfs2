@@ -1,4 +1,4 @@
-import { PaymentEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { PaymentEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { Currency, CURRENCY } from '@ukef/dtfs2-common';
 import { mapPaymentEntityToPayment } from './payment-mapper';
 

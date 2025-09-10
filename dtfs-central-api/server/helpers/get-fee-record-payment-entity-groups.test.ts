@@ -1,9 +1,5 @@
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
-import {
-  CURRENCY,
-  RECONCILIATION_IN_PROGRESS,
-  UtilisationReportEntity
-} from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
+import { CURRENCY, RECONCILIATION_IN_PROGRESS, UtilisationReportEntity } from '@ukef/dtfs2-common';
 import { getFeeRecordPaymentEntityGroups, getPaymentIdKeyFromPaymentEntities } from './get-fee-record-payment-entity-groups';
 
 describe('getPaymentIdKeyFromPaymentEntities', () => {

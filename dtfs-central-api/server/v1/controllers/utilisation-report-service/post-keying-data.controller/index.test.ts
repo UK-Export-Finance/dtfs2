@@ -1,14 +1,9 @@
-import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, TestApiError } from "@ukef/dtfs2-common/test-helpers";
+import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, TestApiError } from '@ukef/dtfs2-common/test-helpers';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
 import { EntityManager } from 'typeorm';
-import {
-  FEE_RECORD_STATUS,
-  REQUEST_PLATFORM_TYPE,
-  UtilisationReportEntity,
-  RECONCILIATION_IN_PROGRESS,
-} from '@ukef/dtfs2-common';
+import { FEE_RECORD_STATUS, REQUEST_PLATFORM_TYPE, UtilisationReportEntity, RECONCILIATION_IN_PROGRESS } from '@ukef/dtfs2-common';
 import { UTILISATION_REPORT_EVENT_TYPE } from '../../../../services/state-machines/utilisation-report/event/utilisation-report.event-type';
 import { postKeyingData, PostKeyingDataRequest } from '.';
 import { FeeRecordRepo } from '../../../../repositories/fee-record-repo';

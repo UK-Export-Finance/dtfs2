@@ -1,13 +1,6 @@
-import { UtilisationReportEntityMockBuilder, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { UtilisationReportEntityMockBuilder, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { EntityManager } from 'typeorm';
-import {
-  CURRENCY,
-  DbRequestSource,
-  UtilisationReportEntity,
-  PaymentEntity,
-  REQUEST_PLATFORM_TYPE,
-  RECONCILIATION_IN_PROGRESS,
-} from '@ukef/dtfs2-common';
+import { CURRENCY, DbRequestSource, UtilisationReportEntity, PaymentEntity, REQUEST_PLATFORM_TYPE, RECONCILIATION_IN_PROGRESS } from '@ukef/dtfs2-common';
 import { handleUtilisationReportAddFeesToAnExistingPaymentGroupEvent } from './add-fees-to-an-existing-payment-group.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';
 import { feeRecordsMatchAttachedPayments } from '../helpers';

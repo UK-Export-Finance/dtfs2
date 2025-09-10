@@ -1,13 +1,5 @@
-import { aPortalSessionUser } from "@ukef/dtfs2-common/test-helpers";
-import {
-  Bank,
-  Deal,
-  DEAL_STATUS,
-  DealNotFoundError,
-  InvalidDealIdError,
-  InvalidParameterError,
-  PORTAL_ACTIVITY_TYPE,
-} from '@ukef/dtfs2-common';
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
+import { Bank, Deal, DEAL_STATUS, DealNotFoundError, InvalidDealIdError, InvalidParameterError, PORTAL_ACTIVITY_TYPE } from '@ukef/dtfs2-common';
 import { Collection, ObjectId } from 'mongodb';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { cloneDealToLatestVersion } from './clone-deal.service';

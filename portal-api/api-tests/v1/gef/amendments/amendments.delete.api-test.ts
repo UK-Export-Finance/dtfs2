@@ -1,4 +1,4 @@
-import { portalAmendmentDeleteEmailVariables } from "@ukef/dtfs2-common/test-helpers";
+import { portalAmendmentDeleteEmailVariables } from '@ukef/dtfs2-common/test-helpers';
 import { ObjectId } from 'mongodb';
 import { Role, AnyObject } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';

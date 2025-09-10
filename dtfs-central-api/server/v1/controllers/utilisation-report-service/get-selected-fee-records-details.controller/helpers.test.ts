@@ -1,4 +1,4 @@
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import {
   CurrencyAndAmount,
   CURRENCY,
@@ -6,7 +6,7 @@ import {
   FeeRecordEntity,
   PENDING_RECONCILIATION,
   RECONCILIATION_IN_PROGRESS,
-  SelectedFeeRecordsPaymentDetails
+  SelectedFeeRecordsPaymentDetails,
 } from '@ukef/dtfs2-common';
 import difference from 'lodash/difference';
 import { getBankNameById } from '../../../../repositories/banks-repo';

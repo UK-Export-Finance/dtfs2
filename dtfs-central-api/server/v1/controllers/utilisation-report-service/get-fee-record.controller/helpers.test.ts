@@ -1,4 +1,4 @@
-import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { mapFeeRecordEntityToResponse } from './helpers';
 import { getBankNameById } from '../../../../repositories/banks-repo';
 import { aReportPeriod } from '../../../../../test-helpers';

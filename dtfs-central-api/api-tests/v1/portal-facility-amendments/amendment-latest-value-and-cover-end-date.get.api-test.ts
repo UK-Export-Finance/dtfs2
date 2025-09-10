@@ -1,16 +1,8 @@
-import { portalAmendmentToUkefEmailVariables } from "@ukef/dtfs2-common/test-helpers";
+import { portalAmendmentToUkefEmailVariables } from '@ukef/dtfs2-common/test-helpers';
 import { Response } from 'supertest';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import {
-  AnyObject,
-  API_ERROR_CODE,
-  DEAL_SUBMISSION_TYPE,
-  DEAL_TYPE,
-  FACILITY_TYPE,
-  MONGO_DB_COLLECTIONS,
-  PORTAL_AMENDMENT_STATUS
-} from '@ukef/dtfs2-common';
+import { AnyObject, API_ERROR_CODE, DEAL_SUBMISSION_TYPE, DEAL_TYPE, FACILITY_TYPE, MONGO_DB_COLLECTIONS, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 

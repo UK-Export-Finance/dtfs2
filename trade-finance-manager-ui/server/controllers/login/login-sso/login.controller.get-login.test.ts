@@ -1,4 +1,4 @@
-import { anAuthorisationUrlRequest } from "@ukef/dtfs2-common/test-helpers";
+import { anAuthorisationUrlRequest } from '@ukef/dtfs2-common/test-helpers';
 import httpMocks from 'node-mocks-http';
 import { resetAllWhenMocks, when } from 'jest-when';
 import { Request, Response } from 'express';

@@ -1,12 +1,7 @@
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { ObjectId } from 'mongodb';
 import { EntityManager } from 'typeorm';
-import {
-  CURRENCY,
-  RECONCILIATION_IN_PROGRESS,
-  REQUEST_PLATFORM_TYPE,
-  TfmSessionUser
-} from '@ukef/dtfs2-common';
+import { CURRENCY, RECONCILIATION_IN_PROGRESS, REQUEST_PLATFORM_TYPE, TfmSessionUser } from '@ukef/dtfs2-common';
 import { addFeesToAnExistingPaymentGroup } from './helpers';
 import { UtilisationReportStateMachine } from '../../../../services/state-machines/utilisation-report/utilisation-report.state-machine';
 import { aTfmSessionUser } from '../../../../../test-helpers/test-data/tfm-session-user';

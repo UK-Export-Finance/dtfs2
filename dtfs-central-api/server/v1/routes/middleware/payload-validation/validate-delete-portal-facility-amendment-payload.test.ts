@@ -1,4 +1,4 @@
-import { portalAmendmentDeleteEmailVariables } from "@ukef/dtfs2-common/test-helpers";
+import { portalAmendmentDeleteEmailVariables } from '@ukef/dtfs2-common/test-helpers';
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { AUDIT_USER_TYPES } from '@ukef/dtfs2-common';

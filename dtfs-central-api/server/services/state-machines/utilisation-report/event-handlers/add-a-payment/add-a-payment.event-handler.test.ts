@@ -1,4 +1,4 @@
-import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { EntityManager } from 'typeorm';
 import {
   Currency,
@@ -9,7 +9,7 @@ import {
   PaymentEntity,
   RECONCILIATION_IN_PROGRESS,
   REQUEST_PLATFORM_TYPE,
-  UtilisationReportEntity
+  UtilisationReportEntity,
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportAddAPaymentEvent } from './add-a-payment.event-handler';
 import { NewPaymentDetails } from '../../../../../types/utilisation-reports';

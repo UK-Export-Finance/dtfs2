@@ -1,4 +1,4 @@
-import { UtilisationReportEntityMockBuilder, MOCK_AZURE_FILE_INFO } from "@ukef/dtfs2-common/test-helpers";
+import { UtilisationReportEntityMockBuilder, MOCK_AZURE_FILE_INFO } from '@ukef/dtfs2-common/test-helpers';
 import { EntityManager } from 'typeorm';
 import {
   REQUEST_PLATFORM_TYPE,

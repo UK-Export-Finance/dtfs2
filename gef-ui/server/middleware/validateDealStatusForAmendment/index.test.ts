@@ -1,4 +1,4 @@
-import { aPortalSessionUser } from "@ukef/dtfs2-common/test-helpers";
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import { PORTAL_LOGIN_STATUS, DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
 import { createMocks } from 'node-mocks-http';
 import { Request, NextFunction } from 'express';

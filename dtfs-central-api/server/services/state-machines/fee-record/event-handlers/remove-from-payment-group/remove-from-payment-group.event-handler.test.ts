@@ -1,13 +1,6 @@
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { EntityManager } from 'typeorm';
-import {
-  CURRENCY,
-  FEE_RECORD_STATUS,
-  FeeRecordEntity,
-  REQUEST_PLATFORM_TYPE,
-  RECONCILIATION_IN_PROGRESS,
-  FeeRecordCorrectionEntity,
-} from '@ukef/dtfs2-common';
+import { CURRENCY, FEE_RECORD_STATUS, FeeRecordEntity, REQUEST_PLATFORM_TYPE, RECONCILIATION_IN_PROGRESS, FeeRecordCorrectionEntity } from '@ukef/dtfs2-common';
 import { handleFeeRecordRemoveFromPaymentGroupEvent } from './remove-from-payment-group.event-handler';
 import { aDbRequestSource } from '../../../../../../test-helpers';
 

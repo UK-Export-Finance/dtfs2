@@ -1,12 +1,8 @@
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { when } from 'jest-when';
-import {
-  CURRENCY,
-  PaymentEntity,
-  RECONCILIATION_IN_PROGRESS
-} from '@ukef/dtfs2-common';
+import { CURRENCY, PaymentEntity, RECONCILIATION_IN_PROGRESS } from '@ukef/dtfs2-common';
 import { getPaymentDetailsById, GetPaymentDetailsResponseBody } from '.';
 import { mapToPaymentDetails } from './helpers';
 import { PaymentRepo } from '../../../../repositories/payment-repo';

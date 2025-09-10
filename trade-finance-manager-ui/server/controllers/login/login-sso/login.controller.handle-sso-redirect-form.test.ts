@@ -1,4 +1,4 @@
-import { anAuthorisationCodeRequest, anEntraIdAuthCodeRedirectResponseBody } from "@ukef/dtfs2-common/test-helpers";
+import { anAuthorisationCodeRequest, anEntraIdAuthCodeRedirectResponseBody } from '@ukef/dtfs2-common/test-helpers';
 import httpMocks, { MockRequest, MockResponse } from 'node-mocks-http';
 import {
   AuditDetails,

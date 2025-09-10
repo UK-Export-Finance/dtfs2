@@ -1,4 +1,4 @@
-import { aPortalSessionUser } from "@ukef/dtfs2-common/test-helpers";
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import { Bank, Deal, DEAL_STATUS, getCurrentGefDealVersion, PORTAL_ACTIVITY_TYPE } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';

@@ -1,11 +1,6 @@
-import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { difference } from 'lodash';
-import {
-  Currency,
-  CURRENCY,
-  FEE_RECORD_STATUS,
-  KeyingSheetRowStatus
-} from '@ukef/dtfs2-common';
+import { Currency, CURRENCY, FEE_RECORD_STATUS, KeyingSheetRowStatus } from '@ukef/dtfs2-common';
 import { mapFeeRecordEntityToKeyingSheetRowWithoutFeePayments, mapPaymentEntityToKeyingSheetFeePayment } from './keying-sheet-mapping';
 
 describe('keying sheet mapping', () => {

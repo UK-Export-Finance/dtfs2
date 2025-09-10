@@ -1,4 +1,4 @@
-import { MOCK_TFM_FACILITY } from "@ukef/dtfs2-common/test-helpers";
+import { MOCK_TFM_FACILITY } from '@ukef/dtfs2-common/test-helpers';
 import { createAmendmentFacilityExposure, formattedNumber } from '@ukef/dtfs2-common';
 import { addExposureValuesToAmendment } from './add-exposure-values-to-amendment';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';

@@ -1,10 +1,5 @@
-import { FeeRecordEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
-import {
-  CURRENCY,
-  FeeRecordCorrectionEntity,
-  mapReasonToDisplayValue,
-  RECORD_CORRECTION_REASON,
-} from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
+import { CURRENCY, FeeRecordCorrectionEntity, mapReasonToDisplayValue, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { mapCompletedFeeRecordCorrectionsToResponse } from './map-completed-corrections-to-response';
 
 console.error = jest.fn();

@@ -1,4 +1,4 @@
-import { anEmptyRecordCorrectionTransientFormData } from "@ukef/dtfs2-common/test-helpers";
+import { anEmptyRecordCorrectionTransientFormData } from '@ukef/dtfs2-common/test-helpers';
 import { CURRENCY, getFormattedMonetaryValue, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
 import { getFormattedFormDataValueForCorrectionReason } from './format-form-data-value-for-reason';

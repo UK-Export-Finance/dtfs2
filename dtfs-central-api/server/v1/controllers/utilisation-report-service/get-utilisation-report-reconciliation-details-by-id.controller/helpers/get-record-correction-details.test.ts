@@ -1,9 +1,5 @@
-import { FeeRecordEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
-import {
-  mapReasonsToDisplayValues,
-  FEE_RECORD_STATUS,
-  RECORD_CORRECTION_REASON,
-} from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
+import { mapReasonsToDisplayValues, FEE_RECORD_STATUS, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { format } from 'date-fns';
 import { getRecordCorrectionDetails } from './get-record-correction-details';
 import { getFormattedOldAndCorrectValues } from '../../helpers/get-formatted-old-and-correct-values';

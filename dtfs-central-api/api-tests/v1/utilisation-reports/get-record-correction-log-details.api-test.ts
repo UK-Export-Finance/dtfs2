@@ -1,13 +1,7 @@
-import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { Response } from 'supertest';
 import { format } from 'date-fns';
-import {
-  Bank,
-  RECONCILIATION_IN_PROGRESS,
-  ReportPeriod,
-  GetRecordCorrectionLogDetailsResponseBody,
-  DATE_FORMATS,
-} from '@ukef/dtfs2-common';
+import { Bank, RECONCILIATION_IN_PROGRESS, ReportPeriod, GetRecordCorrectionLogDetailsResponseBody, DATE_FORMATS } from '@ukef/dtfs2-common';
 import { HttpStatusCode, getUri } from 'axios';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';

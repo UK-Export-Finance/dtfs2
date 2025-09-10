@@ -1,10 +1,5 @@
-import { anEmptyRecordCorrectionTransientFormData } from "@ukef/dtfs2-common/test-helpers";
-import {
-  CURRENCY,
-  getFormattedMonetaryValue,
-  RECORD_CORRECTION_REASON,
-  RecordCorrectionReason,
-} from '@ukef/dtfs2-common';
+import { anEmptyRecordCorrectionTransientFormData } from '@ukef/dtfs2-common/test-helpers';
+import { CURRENCY, getFormattedMonetaryValue, RECORD_CORRECTION_REASON, RecordCorrectionReason } from '@ukef/dtfs2-common';
 import { mapFormDataToFormattedValues } from './map-form-data-values';
 
 console.error = jest.fn();
