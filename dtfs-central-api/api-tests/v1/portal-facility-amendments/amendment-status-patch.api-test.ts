@@ -1,3 +1,4 @@
+import { portalAmendmentToCheckerEmailVariables } from "@ukef/dtfs2-common/test-helpers";
 import { Response } from 'supertest';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
@@ -8,8 +9,7 @@ import {
   DEAL_TYPE,
   FACILITY_TYPE,
   MONGO_DB_COLLECTIONS,
-  PORTAL_AMENDMENT_STATUS,
-  portalAmendmentToCheckerEmailVariables,
+  PORTAL_AMENDMENT_STATUS
 } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';

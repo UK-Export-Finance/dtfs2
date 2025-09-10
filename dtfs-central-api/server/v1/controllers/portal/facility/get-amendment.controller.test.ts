@@ -1,7 +1,8 @@
+import { TestApiError } from "@ukef/dtfs2-common/test-helpers";
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { AMENDMENT_TYPES, FacilityAmendmentWithUkefId, TestApiError } from '@ukef/dtfs2-common';
+import { AMENDMENT_TYPES, FacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
 import { getAmendment, GetAmendmentRequest } from './get-amendment.controller';
 

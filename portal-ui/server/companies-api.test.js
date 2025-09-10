@@ -1,5 +1,6 @@
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from "@ukef/dtfs2-common/test-helpers";
 import axios, { AxiosError, HttpStatusCode } from 'axios';
-import { HEADERS, MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
+import { HEADERS } from '@ukef/dtfs2-common';
 
 const { when } = require('jest-when');
 const { getCompanyByRegistrationNumber } = require('./companies-api');

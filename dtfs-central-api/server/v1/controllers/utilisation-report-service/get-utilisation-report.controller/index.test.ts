@@ -1,13 +1,12 @@
+import { UtilisationReportEntityMockBuilder, MOCK_AZURE_FILE_INFO } from "@ukef/dtfs2-common/test-helpers";
 import httpMocks from 'node-mocks-http';
 import { ObjectId } from 'mongodb';
 import {
   AzureFileInfoEntity,
-  MOCK_AZURE_FILE_INFO,
   PortalUser,
   UTILISATION_REPORT_STATUS,
   UploadedByUserDetails,
   UtilisationReportEntity,
-  UtilisationReportEntityMockBuilder,
   REQUEST_PLATFORM_TYPE,
   PENDING_RECONCILIATION,
   REPORT_NOT_RECEIVED,

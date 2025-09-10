@@ -1,4 +1,4 @@
-import { anAuthorisationUrlRequest } from '@ukef/dtfs2-common';
+import { anAuthorisationUrlRequest } from "@ukef/dtfs2-common/test-helpers";
 import { PartiallyLoggedInUserSessionData } from '../../server/types/express-session';
 
 /**

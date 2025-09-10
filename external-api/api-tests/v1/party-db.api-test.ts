@@ -1,3 +1,5 @@
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from "@ukef/dtfs2-common/test-helpers";
+
 /* eslint-disable @typescript-eslint/unbound-method */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -12,7 +14,6 @@
 
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
-import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 

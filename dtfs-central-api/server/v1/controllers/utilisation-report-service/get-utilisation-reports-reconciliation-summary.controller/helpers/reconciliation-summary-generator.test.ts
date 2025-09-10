@@ -1,9 +1,8 @@
+import { UtilisationReportEntityMockBuilder, FeeRecordEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
 import {
   UtilisationReportEntity,
-  UtilisationReportEntityMockBuilder,
   Bank,
   FeeRecordEntity,
-  FeeRecordEntityMockBuilder,
   ReportPeriod,
   IsoMonthStamp,
   PENDING_RECONCILIATION,

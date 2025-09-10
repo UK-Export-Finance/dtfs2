@@ -1,8 +1,8 @@
+import { aPortalSessionUser } from "@ukef/dtfs2-common/test-helpers";
+
 /* eslint-disable import/first */
 const updateFacilityMock = jest.fn();
 const updateApplicationMock = jest.fn();
-
-import { aPortalSessionUser } from '@ukef/dtfs2-common';
 import { Facility } from '../../types/facility';
 import { updateBankReviewDateIfChanged } from './post-bank-review-date';
 import { LoggedInUserSession } from '../../utils/express-session';

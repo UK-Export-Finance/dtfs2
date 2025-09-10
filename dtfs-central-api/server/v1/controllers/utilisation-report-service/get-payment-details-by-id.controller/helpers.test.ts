@@ -1,13 +1,11 @@
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
 import {
   Currency,
   CurrencyAndAmount,
   CURRENCY,
-  FeeRecordEntityMockBuilder,
   PaymentEntity,
-  PaymentEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
-  ReportPeriod,
-  UtilisationReportEntityMockBuilder,
+  ReportPeriod
 } from '@ukef/dtfs2-common';
 import { mapToPaymentDetails } from './helpers';
 import { getBankNameById } from '../../../../repositories/banks-repo';

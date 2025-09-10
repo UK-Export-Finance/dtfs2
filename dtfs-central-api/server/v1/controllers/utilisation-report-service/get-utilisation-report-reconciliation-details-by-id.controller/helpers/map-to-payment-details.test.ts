@@ -1,12 +1,10 @@
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
 import { when } from 'jest-when';
 import {
   CURRENCY,
   FEE_RECORD_STATUS,
-  FeeRecordEntityMockBuilder,
-  PaymentEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
-  UtilisationReportEntity,
-  UtilisationReportEntityMockBuilder,
+  UtilisationReportEntity
 } from '@ukef/dtfs2-common';
 import { aFeeRecordPaymentEntityGroupForASingleFeeRecord } from '../../../../../../test-helpers';
 import { PaymentDetails } from '../../../../../types/utilisation-reports';

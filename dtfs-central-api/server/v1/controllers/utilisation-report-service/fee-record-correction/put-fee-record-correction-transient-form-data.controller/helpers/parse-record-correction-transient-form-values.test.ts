@@ -1,4 +1,5 @@
-import { anEmptyRecordCorrectionTransientFormData, CURRENCY } from '@ukef/dtfs2-common';
+import { anEmptyRecordCorrectionTransientFormData } from "@ukef/dtfs2-common/test-helpers";
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { parseValidatedRecordCorrectionTransientFormValues } from './parse-record-correction-transient-form-values';
 
 describe('parse-record-correction-transient-form-values', () => {

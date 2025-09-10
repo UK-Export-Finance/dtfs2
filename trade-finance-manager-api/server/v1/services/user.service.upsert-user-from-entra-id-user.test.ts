@@ -1,4 +1,5 @@
-import { USER_STATUS, AuditDetails, anEntraIdUser, EntraIdUser, TfmUser, UpsertTfmUserRequest } from '@ukef/dtfs2-common';
+import { anEntraIdUser } from "@ukef/dtfs2-common/test-helpers";
+import { USER_STATUS, AuditDetails, EntraIdUser, TfmUser, UpsertTfmUserRequest } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { ObjectId } from 'mongodb';
 import { UserService } from './user.service';

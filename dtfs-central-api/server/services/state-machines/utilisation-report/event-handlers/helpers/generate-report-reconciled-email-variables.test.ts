@@ -1,4 +1,5 @@
-import { PENDING_RECONCILIATION, UtilisationReportEntityMockBuilder, formatDateForEmail, getFormattedReportPeriodWithShortMonth } from '@ukef/dtfs2-common';
+import { UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { PENDING_RECONCILIATION, formatDateForEmail, getFormattedReportPeriodWithShortMonth } from '@ukef/dtfs2-common';
 import { generateReportReconciledEmailVariables } from './generate-report-reconciled-email-variables';
 import { getBankById } from '../../../../../repositories/banks-repo';
 import { aBank } from '../../../../../../test-helpers';

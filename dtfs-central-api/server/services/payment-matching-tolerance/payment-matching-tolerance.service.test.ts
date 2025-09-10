@@ -1,4 +1,5 @@
-import { CURRENCY, PaymentMatchingToleranceEntityMockBuilder } from '@ukef/dtfs2-common';
+import { PaymentMatchingToleranceEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { PaymentMatchingToleranceRepo } from '../../repositories/payment-matching-tolerance-repo';
 import { PaymentMatchingToleranceService } from './payment-matching-tolerance.service';
 import { NotFoundError } from '../../errors';

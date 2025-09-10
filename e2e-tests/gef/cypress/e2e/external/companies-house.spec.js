@@ -1,4 +1,4 @@
-import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from "@ukef/dtfs2-common/test-helpers";
 import relative from '../relativeURL';
 import { backLink, cancelLink, continueButton, errorSummary, form, headingCaption, mainHeading } from '../partials';
 import companiesHouse from '../pages/companies-house';

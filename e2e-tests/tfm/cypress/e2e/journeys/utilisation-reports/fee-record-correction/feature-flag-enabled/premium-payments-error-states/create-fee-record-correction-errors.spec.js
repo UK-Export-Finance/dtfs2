@@ -1,10 +1,8 @@
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
 import {
   CURRENCY,
   FEE_RECORD_STATUS,
-  FeeRecordEntityMockBuilder,
-  PaymentEntityMockBuilder,
-  PENDING_RECONCILIATION,
-  UtilisationReportEntityMockBuilder,
+  PENDING_RECONCILIATION
 } from '@ukef/dtfs2-common';
 import pages from '../../../../../pages';
 import USERS from '../../../../../../fixtures/users';

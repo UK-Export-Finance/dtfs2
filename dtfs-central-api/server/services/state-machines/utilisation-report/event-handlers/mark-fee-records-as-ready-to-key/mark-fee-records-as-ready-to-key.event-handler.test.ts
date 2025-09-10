@@ -1,13 +1,12 @@
+import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
 import { EntityManager } from 'typeorm';
 import {
   DbRequestSource,
   FEE_RECORD_STATUS,
-  FeeRecordEntityMockBuilder,
   RECONCILIATION_COMPLETED,
   RECONCILIATION_IN_PROGRESS,
   REQUEST_PLATFORM_TYPE,
-  UtilisationReportEntity,
-  UtilisationReportEntityMockBuilder,
+  UtilisationReportEntity
 } from '@ukef/dtfs2-common';
 import { handleUtilisationReportMarkFeeRecordsAsReadyToKeyEvent } from './mark-fee-records-as-ready-to-key.event-handler';
 import { FeeRecordStateMachine } from '../../../fee-record/fee-record.state-machine';

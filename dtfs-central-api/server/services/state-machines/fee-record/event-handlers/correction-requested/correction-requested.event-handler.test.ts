@@ -1,10 +1,10 @@
+import { FeeRecordEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
 import { EntityManager } from 'typeorm';
 import {
   DbRequestSource,
   FEE_RECORD_STATUS,
   FeeRecordCorrectionEntity,
   FeeRecordEntity,
-  FeeRecordEntityMockBuilder,
   RECORD_CORRECTION_REASON,
   REQUEST_PLATFORM_TYPE,
 } from '@ukef/dtfs2-common';

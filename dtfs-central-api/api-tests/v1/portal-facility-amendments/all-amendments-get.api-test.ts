@@ -1,6 +1,7 @@
+import { TestApiError } from "@ukef/dtfs2-common/test-helpers";
 import { Response } from 'supertest';
 import { HttpStatusCode } from 'axios';
-import { MONGO_DB_COLLECTIONS, PORTAL_AMENDMENT_STATUS, PortalAmendmentStatus, PortalFacilityAmendment, TfmFacility, TestApiError } from '@ukef/dtfs2-common';
+import { MONGO_DB_COLLECTIONS, PORTAL_AMENDMENT_STATUS, PortalAmendmentStatus, PortalFacilityAmendment, TfmFacility } from '@ukef/dtfs2-common';
 import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { ObjectId } from 'mongodb';
 import wipeDB from '../../wipeDB';

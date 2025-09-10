@@ -1,10 +1,10 @@
+import { aPortalSessionUser } from "@ukef/dtfs2-common/test-helpers";
 import { format, fromUnixTime } from 'date-fns';
 import {
   generateAmendmentMandatoryCriteria,
   DATE_FORMATS,
   DEAL_SUBMISSION_TYPE,
   DEAL_STATUS,
-  aPortalSessionUser,
   PORTAL_AMENDMENT_STATUS,
 } from '@ukef/dtfs2-common';
 import { getCurrencySymbol } from '../../../utils/get-currency-symbol';

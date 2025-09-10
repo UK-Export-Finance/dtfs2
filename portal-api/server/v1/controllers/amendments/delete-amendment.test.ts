@@ -1,7 +1,7 @@
+import { aPortalSessionUser, TestApiError, portalAmendmentDeleteEmailVariables } from "@ukef/dtfs2-common/test-helpers";
 import { ObjectId } from 'mongodb';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { aPortalSessionUser, TestApiError, portalAmendmentDeleteEmailVariables } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import api from '../../api';
 import { deleteAmendment, DeleteAmendmentRequest } from './delete-amendment.controller';

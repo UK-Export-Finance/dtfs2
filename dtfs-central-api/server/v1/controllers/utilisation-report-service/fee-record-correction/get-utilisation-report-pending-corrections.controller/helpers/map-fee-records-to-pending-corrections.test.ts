@@ -1,9 +1,8 @@
+import { FeeRecordEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
 import {
   CURRENCY,
   FEE_RECORD_STATUS,
-  FeeRecordCorrectionEntityMockBuilder,
   FeeRecordEntity,
-  FeeRecordEntityMockBuilder,
   PendingCorrection,
   RECORD_CORRECTION_REASON,
 } from '@ukef/dtfs2-common';

@@ -1,3 +1,4 @@
+import { mockRecordCorrectionDetails } from "@ukef/dtfs2-common/test-helpers";
 import httpMocks from 'node-mocks-http';
 import { SessionData } from 'express-session';
 import {
@@ -5,7 +6,6 @@ import {
   FEE_RECORD_STATUS,
   FeeRecordUtilisation,
   isFeeRecordCorrectionFeatureFlagEnabled,
-  mockRecordCorrectionDetails,
   UTILISATION_REPORT_STATUS_TAG_COLOURS,
 } from '@ukef/dtfs2-common';
 import api from '../../../api';

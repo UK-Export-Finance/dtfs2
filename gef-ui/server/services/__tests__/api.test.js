@@ -1,8 +1,8 @@
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from "@ukef/dtfs2-common/test-helpers";
 import { AxiosError, HttpStatusCode } from 'axios';
 import {
   InvalidDealIdError,
   InvalidFacilityIdError,
-  MOCK_COMPANY_REGISTRATION_NUMBERS,
   PORTAL_AMENDMENT_STATUS,
   PORTAL_AMENDMENT_INPROGRESS_STATUSES,
   ALL_AMENDMENT_INPROGRESS_STATUSES,

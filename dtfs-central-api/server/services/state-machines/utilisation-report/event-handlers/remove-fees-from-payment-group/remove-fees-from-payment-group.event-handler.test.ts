@@ -1,8 +1,7 @@
+import { UtilisationReportEntityMockBuilder, FeeRecordEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
 import { EntityManager } from 'typeorm';
 import {
-  UtilisationReportEntityMockBuilder,
   DbRequestSource,
-  FeeRecordEntityMockBuilder,
   UtilisationReportEntity,
   REQUEST_PLATFORM_TYPE,
   RECONCILIATION_IN_PROGRESS,

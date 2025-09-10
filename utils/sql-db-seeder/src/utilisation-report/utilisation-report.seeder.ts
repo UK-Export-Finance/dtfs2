@@ -1,7 +1,7 @@
+import { MOCK_AZURE_FILE_INFO } from "@ukef/dtfs2-common/test-helpers";
 import { faker } from '@faker-js/faker';
 import {
   AzureFileInfoEntity,
-  MOCK_AZURE_FILE_INFO,
   ReportPeriod,
   REQUEST_PLATFORM_TYPE,
   UtilisationReportEntity,

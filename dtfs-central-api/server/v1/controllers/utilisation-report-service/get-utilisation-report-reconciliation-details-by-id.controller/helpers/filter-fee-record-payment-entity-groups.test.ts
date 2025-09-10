@@ -1,8 +1,6 @@
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
 import {
   CURRENCY,
-  FeeRecordEntityMockBuilder,
-  PaymentEntityMockBuilder,
-  UtilisationReportEntityMockBuilder,
   ValidatedPaymentDetailsFilters,
 } from '@ukef/dtfs2-common';
 import { getSqlIdGenerator } from '../../../../../../test-helpers';

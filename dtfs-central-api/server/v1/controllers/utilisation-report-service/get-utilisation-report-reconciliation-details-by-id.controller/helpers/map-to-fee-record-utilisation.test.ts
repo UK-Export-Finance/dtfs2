@@ -1,4 +1,5 @@
-import { CURRENCY, FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { CURRENCY } from '@ukef/dtfs2-common';
 import { aReportPeriod, aTfmFacility } from '../../../../../../test-helpers';
 import { calculateExposure, mapToFeeRecordUtilisation } from './map-to-fee-record-utilisation';
 import * as helpers from '../../../../../helpers';

@@ -1,7 +1,8 @@
+import { portalAmendmentToUkefEmailVariables } from "@ukef/dtfs2-common/test-helpers";
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
-import { PORTAL_AMENDMENT_STATUS, portalAmendmentToUkefEmailVariables } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { validatePatchPortalFacilitySubmitAmendmentPayload } from './validate-patch-portal-facility-submit-amendment-payload';
 
 const portalAmendmentVariables = portalAmendmentToUkefEmailVariables();

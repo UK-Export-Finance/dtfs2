@@ -1,11 +1,10 @@
+import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
 import { EntityManager } from 'typeorm';
 import {
   FEE_RECORD_STATUS,
   FeeRecordEntity,
-  FeeRecordEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
-  REQUEST_PLATFORM_TYPE,
-  UtilisationReportEntityMockBuilder,
+  REQUEST_PLATFORM_TYPE
 } from '@ukef/dtfs2-common';
 import { handleFeeRecordOtherFeeRecordAddedToPaymentGroupEvent } from './other-fee-added-to-payment-group.event-handler';
 import { aDbRequestSource } from '../../../../../../test-helpers/test-data/db-request-source';

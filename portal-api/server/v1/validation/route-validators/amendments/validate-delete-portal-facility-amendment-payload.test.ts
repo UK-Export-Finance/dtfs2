@@ -1,6 +1,6 @@
+import { portalAmendmentDeleteEmailVariables } from "@ukef/dtfs2-common/test-helpers";
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { portalAmendmentDeleteEmailVariables } from '@ukef/dtfs2-common';
 import { validateDeletePortalFacilityAmendmentPayload } from './validate-delete-portal-facility-amendment-payload';
 
 const portalAmendmentVariables = portalAmendmentDeleteEmailVariables();

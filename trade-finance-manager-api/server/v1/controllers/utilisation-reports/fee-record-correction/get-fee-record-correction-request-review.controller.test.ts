@@ -1,6 +1,6 @@
+import { feeRecordCorrectionRequestReviewResponseBodyMock } from "@ukef/dtfs2-common/test-helpers";
 import httpMocks from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
-import { feeRecordCorrectionRequestReviewResponseBodyMock } from '@ukef/dtfs2-common';
 import { getFeeRecordCorrectionRequestReview, GetFeeRecordCorrectionRequestReviewRequest } from './get-fee-record-correction-request-review.controller';
 import api from '../../../api';
 import { FeeRecordCorrectionRequestReviewResponseBody } from '../../../api-response-types';

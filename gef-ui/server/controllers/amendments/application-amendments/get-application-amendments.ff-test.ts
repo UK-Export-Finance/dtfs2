@@ -1,5 +1,5 @@
+import { aPortalSessionUser } from "@ukef/dtfs2-common/test-helpers";
 import {
-  aPortalSessionUser,
   DEAL_STATUS,
   DEAL_SUBMISSION_TYPE,
   PORTAL_LOGIN_STATUS,

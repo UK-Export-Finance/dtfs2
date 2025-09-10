@@ -1,4 +1,4 @@
-import { aGetAuthCodeUrlResponse } from '@ukef/dtfs2-common';
+import { aGetAuthCodeUrlResponse } from "@ukef/dtfs2-common/test-helpers";
 import { LoginService } from './login.service';
 import * as api from '../api';
 

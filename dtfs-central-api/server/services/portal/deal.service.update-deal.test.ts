@@ -1,4 +1,5 @@
-import { AnyObject, Deal, DEAL_STATUS, DEAL_TYPE, aPortalSessionUser } from '@ukef/dtfs2-common';
+import { aPortalSessionUser } from "@ukef/dtfs2-common/test-helpers";
+import { AnyObject, Deal, DEAL_STATUS, DEAL_TYPE } from '@ukef/dtfs2-common';
 import { generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { PortalDealService } from './deal.service';
 

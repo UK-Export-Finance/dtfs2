@@ -1,13 +1,11 @@
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
 import { Response } from 'supertest';
 import { HttpStatusCode, getUri } from 'axios';
 import {
   Bank,
   Currency,
-  FeeRecordEntityMockBuilder,
-  PaymentEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
   ReportPeriod,
-  UtilisationReportEntityMockBuilder,
   CURRENCY,
 } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';

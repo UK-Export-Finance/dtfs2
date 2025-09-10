@@ -1,5 +1,6 @@
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
 import { difference } from 'lodash';
-import { CURRENCY, FEE_RECORD_STATUS, FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { CURRENCY, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import { mapToFeeRecordsToKey } from './helpers';
 
 describe('get-fee-records-to-key.controller helpers', () => {

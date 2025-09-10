@@ -1,7 +1,8 @@
+import { recordCorrectionLogDetailsMock } from "@ukef/dtfs2-common/test-helpers";
 import httpMocks from 'node-mocks-http';
 import { AxiosResponse, HttpStatusCode, AxiosError } from 'axios';
 import { Request } from 'express';
-import { recordCorrectionLogDetailsMock, GetRecordCorrectionLogDetailsResponseBody } from '@ukef/dtfs2-common';
+import { GetRecordCorrectionLogDetailsResponseBody } from '@ukef/dtfs2-common';
 import { getRecordCorrectionLogDetailsById } from './get-record-correction-log-details-by-id.controller';
 import api from '../../../api';
 

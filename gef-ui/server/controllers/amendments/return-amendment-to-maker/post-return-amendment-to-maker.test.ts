@@ -1,3 +1,5 @@
+import { aPortalSessionUser } from "@ukef/dtfs2-common/test-helpers";
+
 // TODO: DTFS2-7724 - remove this eslint-disable
 /* eslint-disable import/first */
 const updateAmendmentStatusMock = jest.fn();
@@ -8,7 +10,6 @@ const getUserDetailsMock = jest.fn();
 const updateApplicationMock = jest.fn();
 
 import {
-  aPortalSessionUser,
   PORTAL_LOGIN_STATUS,
   ROLES,
   DEAL_STATUS,

@@ -1,4 +1,5 @@
-import { aPortalSessionUser, PORTAL_LOGIN_STATUS, ROLES, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { aPortalSessionUser } from "@ukef/dtfs2-common/test-helpers";
+import { PORTAL_LOGIN_STATUS, ROLES, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import api from '../../../services/api';

@@ -1,6 +1,7 @@
+import { TestApiError } from "@ukef/dtfs2-common/test-helpers";
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { PORTAL_AMENDMENT_STATUS, PortalAmendmentStatus, TestApiError } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, PortalAmendmentStatus } from '@ukef/dtfs2-common';
 import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { GetPortalAmendmentsOnDealRequest, getPortalAmendmentsOnDeal } from './get-portal-amendments-on-deal.controller';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';

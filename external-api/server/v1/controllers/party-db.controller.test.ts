@@ -1,6 +1,7 @@
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from "@ukef/dtfs2-common/test-helpers";
 import axios, { HttpStatusCode } from 'axios';
 import * as dotenv from 'dotenv';
-import { CustomExpressRequest, MOCK_COMPANY_REGISTRATION_NUMBERS, PROBABILITY_OF_DEFAULT, HEADERS, SalesForceParty } from '@ukef/dtfs2-common';
+import { CustomExpressRequest, PROBABILITY_OF_DEFAULT, HEADERS, SalesForceParty } from '@ukef/dtfs2-common';
 import { Response } from 'express';
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { getOrCreateParty } from './party-db.controller';

@@ -1,7 +1,7 @@
+import { aUpsertTfmUserRequest } from "@ukef/dtfs2-common/test-helpers";
 import {
   AuditDatabaseRecord,
   AuditDetails,
-  aUpsertTfmUserRequest,
   DocumentNotUpdatedError,
   MONGO_DB_COLLECTIONS,
   TfmUser,

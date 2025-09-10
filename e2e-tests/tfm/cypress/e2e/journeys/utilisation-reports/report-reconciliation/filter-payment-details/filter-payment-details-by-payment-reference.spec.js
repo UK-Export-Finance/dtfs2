@@ -1,10 +1,8 @@
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
 import {
   CURRENCY,
-  FeeRecordEntityMockBuilder,
   MIN_PAYMENT_REFERENCE_FILTER_CHARACTER_COUNT,
-  PaymentEntityMockBuilder,
-  RECONCILIATION_IN_PROGRESS,
-  UtilisationReportEntityMockBuilder,
+  RECONCILIATION_IN_PROGRESS
 } from '@ukef/dtfs2-common';
 import pages from '../../../../pages';
 import { NODE_TASKS } from '../../../../../../../e2e-fixtures';

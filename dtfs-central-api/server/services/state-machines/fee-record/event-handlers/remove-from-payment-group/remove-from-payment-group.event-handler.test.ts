@@ -1,12 +1,10 @@
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
 import { EntityManager } from 'typeorm';
 import {
   CURRENCY,
   FEE_RECORD_STATUS,
   FeeRecordEntity,
-  FeeRecordEntityMockBuilder,
-  PaymentEntityMockBuilder,
   REQUEST_PLATFORM_TYPE,
-  UtilisationReportEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
   FeeRecordCorrectionEntity,
 } from '@ukef/dtfs2-common';

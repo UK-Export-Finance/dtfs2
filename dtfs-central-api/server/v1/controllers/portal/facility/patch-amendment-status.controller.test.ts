@@ -1,12 +1,10 @@
+import { TestApiError, portalAmendmentToCheckerEmailVariables, portalAmendmentReturnToMakerEmailVariables } from "@ukef/dtfs2-common/test-helpers";
 import { createMocks } from 'node-mocks-http';
 import {
   PORTAL_AMENDMENT_STATUS,
   AMENDMENT_TYPES,
   API_ERROR_CODE,
-  TestApiError,
-  AnyObject,
-  portalAmendmentToCheckerEmailVariables,
-  portalAmendmentReturnToMakerEmailVariables,
+  AnyObject
 } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';

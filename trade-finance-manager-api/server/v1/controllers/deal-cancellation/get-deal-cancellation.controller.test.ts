@@ -1,7 +1,8 @@
+import { TestApiError } from "@ukef/dtfs2-common/test-helpers";
 import { ObjectId } from 'mongodb';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { TFM_DEAL_CANCELLATION_STATUS, TestApiError, TfmDealCancellationWithStatus } from '@ukef/dtfs2-common';
+import { TFM_DEAL_CANCELLATION_STATUS, TfmDealCancellationWithStatus } from '@ukef/dtfs2-common';
 import api from '../../api';
 import { getDealCancellation, GetDealCancellationRequest } from './get-deal-cancellation.controller';
 

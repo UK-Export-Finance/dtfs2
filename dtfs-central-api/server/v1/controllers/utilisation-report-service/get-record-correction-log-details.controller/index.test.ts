@@ -1,6 +1,7 @@
+import { FeeRecordCorrectionEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { FeeRecordCorrectionEntityMockBuilder, GetRecordCorrectionLogDetailsResponseBody } from '@ukef/dtfs2-common';
+import { GetRecordCorrectionLogDetailsResponseBody } from '@ukef/dtfs2-common';
 import { getRecordCorrectionLogDetails } from '.';
 import { FeeRecordCorrectionRepo } from '../../../../repositories/fee-record-correction-repo';
 import { getRecordCorrectionFields } from '../helpers/get-record-correction-fields';

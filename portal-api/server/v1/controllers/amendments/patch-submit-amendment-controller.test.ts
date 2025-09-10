@@ -1,13 +1,11 @@
+import { aPortalSessionUser, TestApiError, portalAmendmentToUkefEmailVariables } from "@ukef/dtfs2-common/test-helpers";
 import { ObjectId } from 'mongodb';
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import {
   PORTAL_AMENDMENT_STATUS,
   AMENDMENT_TYPES,
-  aPortalSessionUser,
-  PortalFacilityAmendmentWithUkefId,
-  TestApiError,
-  portalAmendmentToUkefEmailVariables,
+  PortalFacilityAmendmentWithUkefId
 } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import api from '../../api';

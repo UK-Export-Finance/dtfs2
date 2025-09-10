@@ -1,8 +1,8 @@
+import { UtilisationReportEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
 import {
   getCurrentReportPeriodForBankSchedule,
   Bank,
   ReportPeriod,
-  UtilisationReportEntityMockBuilder,
   REQUEST_PLATFORM_TYPE,
   REPORT_NOT_RECEIVED,
 } from '@ukef/dtfs2-common';

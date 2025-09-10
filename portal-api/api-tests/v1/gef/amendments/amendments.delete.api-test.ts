@@ -1,5 +1,6 @@
+import { portalAmendmentDeleteEmailVariables } from "@ukef/dtfs2-common/test-helpers";
 import { ObjectId } from 'mongodb';
-import { Role, AnyObject, portalAmendmentDeleteEmailVariables } from '@ukef/dtfs2-common';
+import { Role, AnyObject } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import app from '../../../../server/createApp';
 import testUserCache from '../../../api-test-users';

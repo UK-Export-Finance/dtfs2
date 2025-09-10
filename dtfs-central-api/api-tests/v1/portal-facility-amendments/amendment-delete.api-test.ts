@@ -1,3 +1,4 @@
+import { portalAmendmentDeleteEmailVariables } from "@ukef/dtfs2-common/test-helpers";
 import { Response } from 'supertest';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
@@ -7,8 +8,7 @@ import {
   DEAL_SUBMISSION_TYPE,
   DEAL_TYPE,
   FACILITY_TYPE,
-  MONGO_DB_COLLECTIONS,
-  portalAmendmentDeleteEmailVariables,
+  MONGO_DB_COLLECTIONS
 } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import wipeDB from '../../wipeDB';

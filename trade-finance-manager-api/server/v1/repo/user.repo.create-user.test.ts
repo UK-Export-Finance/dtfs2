@@ -1,3 +1,4 @@
+import { aCreateTfmUserRequest } from "@ukef/dtfs2-common/test-helpers";
 import {
   AuditDatabaseRecord,
   AuditDetails,
@@ -5,7 +6,6 @@ import {
   MONGO_DB_COLLECTIONS,
   TfmUser,
   CreateTfmUserRequest,
-  aCreateTfmUserRequest,
   USER_STATUS,
 } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, generateSystemAuditDetails } from '@ukef/dtfs2-common/change-stream';

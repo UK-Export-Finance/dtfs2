@@ -1,4 +1,5 @@
-import { CURRENCY, generateUtilisationReportMockCSVData, mockFacilityUtilisationValue, UtilisationReportFacilityData } from '@ukef/dtfs2-common';
+import { generateUtilisationReportMockCSVData, mockFacilityUtilisationValue } from "@ukef/dtfs2-common/test-helpers";
+import { CURRENCY, UtilisationReportFacilityData } from '@ukef/dtfs2-common';
 import { generateFacilityUtilisationErrors } from '.';
 import { generateErrorsForMismatchedFacilityValues } from '../generate-errors-for-mismatched-facility-values';
 

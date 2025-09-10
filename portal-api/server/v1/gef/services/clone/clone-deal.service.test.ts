@@ -1,5 +1,5 @@
+import { aPortalSessionUser } from "@ukef/dtfs2-common/test-helpers";
 import {
-  aPortalSessionUser,
   Bank,
   Deal,
   DEAL_STATUS,

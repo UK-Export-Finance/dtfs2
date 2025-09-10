@@ -1,10 +1,12 @@
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from "@ukef/dtfs2-common/test-helpers";
+
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
-import { MOCK_COMPANY_REGISTRATION_NUMBERS, PROBABILITY_OF_DEFAULT } from '@ukef/dtfs2-common';
+import { PROBABILITY_OF_DEFAULT } from '@ukef/dtfs2-common';
 import { app } from '../../server/createApp';
 import { api } from '../api';
 import { findACBSIndustrySector } from '../../server/v1/controllers/industry-sectors.controller';

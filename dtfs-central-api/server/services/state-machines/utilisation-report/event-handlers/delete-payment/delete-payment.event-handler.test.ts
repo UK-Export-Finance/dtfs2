@@ -1,14 +1,11 @@
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder } from "@ukef/dtfs2-common/test-helpers";
 import { EntityManager } from 'typeorm';
 import {
   CURRENCY,
-  FeeRecordCorrectionEntityMockBuilder,
   FeeRecordEntity,
-  FeeRecordEntityMockBuilder,
   PaymentEntity,
-  PaymentEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
-  UtilisationReportEntity,
-  UtilisationReportEntityMockBuilder,
+  UtilisationReportEntity
 } from '@ukef/dtfs2-common';
 import { when } from 'jest-when';
 import { handleUtilisationReportDeletePaymentEvent } from './delete-payment.event-handler';

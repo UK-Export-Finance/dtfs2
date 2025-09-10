@@ -1,9 +1,11 @@
+import { aPortalSessionUser } from "@ukef/dtfs2-common/test-helpers";
+
 /* eslint-disable import/first */
 const getFacilityMock = jest.fn();
 const getApplicationMock = jest.fn();
 
 import httpMocks from 'node-mocks-http';
-import { aPortalSessionUser, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
+import { PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { getBankReviewDate, GetBankReviewDateRequest } from './get-bank-review-date';
 
 jest.mock('../../services/api', () => ({

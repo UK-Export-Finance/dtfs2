@@ -1,4 +1,5 @@
-import { MOCK_COMPANY_REGISTRATION_NUMBERS, UNITED_KINGDOM } from '@ukef/dtfs2-common';
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from "@ukef/dtfs2-common/test-helpers";
+import { UNITED_KINGDOM } from '@ukef/dtfs2-common';
 import { when } from 'jest-when';
 import { HttpStatusCode } from 'axios';
 import api from '../../services/api';

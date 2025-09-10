@@ -1,6 +1,7 @@
+import { portalAmendmentDeleteEmailVariables } from "@ukef/dtfs2-common/test-helpers";
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { AUDIT_USER_TYPES, portalAmendmentDeleteEmailVariables } from '@ukef/dtfs2-common';
+import { AUDIT_USER_TYPES } from '@ukef/dtfs2-common';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { aPortalUser } from '../../../../../test-helpers';
 import { validateDeletePortalFacilityAmendmentPayload } from './validate-delete-portal-facility-amendment-payload';

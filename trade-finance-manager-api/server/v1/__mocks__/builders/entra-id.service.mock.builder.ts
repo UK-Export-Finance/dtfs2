@@ -1,4 +1,4 @@
-import { aGetAuthCodeUrlResponse, BaseMockBuilder } from '@ukef/dtfs2-common';
+import { aGetAuthCodeUrlResponse, BaseMockBuilder } from "@ukef/dtfs2-common/test-helpers";
 import { EntraIdService } from '../../services/entra-id.service';
 import { aHandleRedirectResponse } from '../../../../test-helpers';
 

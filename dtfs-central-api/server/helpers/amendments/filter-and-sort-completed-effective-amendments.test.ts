@@ -1,4 +1,5 @@
-import { TFM_AMENDMENT_STATUS, convertMillisecondsToSeconds, TfmFacilityAmendment } from '@ukef/dtfs2-common';
+import { convertMillisecondsToSeconds } from "@ukef/dtfs2-common/test-helpers";
+import { TFM_AMENDMENT_STATUS, TfmFacilityAmendment } from '@ukef/dtfs2-common';
 import { addDays, subDays } from 'date-fns';
 import { aCompletedTfmFacilityAmendment, aTfmFacilityAmendment } from '../../../test-helpers';
 import { filterAndSortCompletedEffectiveAmendments } from './filter-and-sort-completed-effective-amendments';
