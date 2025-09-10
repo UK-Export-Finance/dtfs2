@@ -2,7 +2,6 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import {
-  aPortalSessionUser,
   PORTAL_LOGIN_STATUS,
   DEAL_SUBMISSION_TYPE,
   DEAL_STATUS,
@@ -12,6 +11,7 @@ import {
   generateAmendmentMandatoryCriteria,
   nowZeroSeconds,
 } from '@ukef/dtfs2-common';
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import { format, fromUnixTime, getUnixTime } from 'date-fns';
 import api from '../../../services/api';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';

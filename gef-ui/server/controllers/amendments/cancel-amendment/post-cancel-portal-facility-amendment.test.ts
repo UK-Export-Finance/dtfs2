@@ -1,13 +1,8 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import {
-  aPortalSessionUser,
-  PORTAL_LOGIN_STATUS,
-  PORTAL_AMENDMENT_STATUS,
-  PortalFacilityAmendmentWithUkefId,
-  InvalidAmendmentStatusError,
-} from '@ukef/dtfs2-common';
+import { PORTAL_LOGIN_STATUS, PORTAL_AMENDMENT_STATUS, PortalFacilityAmendmentWithUkefId, InvalidAmendmentStatusError } from '@ukef/dtfs2-common';
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import api from '../../../services/api';
 import { PortalFacilityAmendmentWithUkefIdMockBuilder } from '../../../../test-helpers/mock-amendment';
 import { postCancelPortalFacilityAmendment, PostCancelPortalFacilityAmendmentRequest } from './post-cancel-portal-facility-amendment';

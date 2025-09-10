@@ -1,4 +1,4 @@
-import { MOCK_COMPANY_REGISTRATION_NUMBERS } from "@ukef/dtfs2-common/test-helpers";
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common/test-helpers';
 import axios, { AxiosError, HttpStatusCode } from 'axios';
 import { HEADERS } from '@ukef/dtfs2-common';
 

@@ -1,9 +1,9 @@
+const commonSettings = require('./jest.common.config');
+
 module.exports = {
-  preset: 'ts-jest/presets/js-with-babel',
-  collectCoverageFrom: ['server/routes/**/*.{js,ts}', 'server/controllers/**/*.{js,ts}', 'server/services/**/*.{js,ts}', 'server/utils/**/*.{js,ts}'],
+  ...commonSettings,
+  collectCoverageFrom: ['server/controllers/**/*.{js,ts}', 'server/routes/**/*.{js,ts}', 'server/helpers/**/*.{js,ts}', 'scripts/**/*.{js,ts}'],
   coverageReporters: ['text', 'text-summary'],
   testMatch: ['**/*.test.{js,ts}', '**/*.component-test.{js,ts}'],
-  moduleNameMapper: {
-    '^.+\\.(css|less|scss)$': 'babel-jest',
-  },
+  testEnvironment: 'jsdom',
 };

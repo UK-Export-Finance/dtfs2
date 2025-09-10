@@ -5,7 +5,8 @@ const getFacilityMock = jest.fn();
 const getAmendmentMock = jest.fn();
 
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
 import { getCheckYourAnswers, GetCheckYourAnswersRequest } from './get-check-your-answers';

@@ -10,7 +10,6 @@ import { HttpStatusCode } from 'axios';
 import { format, startOfDay } from 'date-fns';
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import {
-  aPortalSessionUser,
   PORTAL_LOGIN_STATUS,
   DEAL_SUBMISSION_TYPE,
   DEAL_STATUS,
@@ -18,6 +17,7 @@ import {
   DayMonthYearInput,
   PORTAL_AMENDMENT_STATUS,
 } from '@ukef/dtfs2-common';
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import { getCoverStartDateOrToday } from '../../../utils/get-cover-start-date-or-today.ts';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
