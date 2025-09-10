@@ -1,4 +1,4 @@
-import { BaseMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { BaseMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { EntraIdUser, UpsertTfmUserRequest } from '@ukef/dtfs2-common';
 import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import { UpsertTfmUserFromEntraIdUserResponse, UserService } from '../../services/user.service';

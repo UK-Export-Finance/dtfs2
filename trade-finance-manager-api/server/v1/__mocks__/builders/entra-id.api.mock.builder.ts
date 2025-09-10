@@ -1,4 +1,4 @@
-import { BaseMockBuilder } from "@ukef/dtfs2-common/test-helpers";
+import { BaseMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { EntraIdApi } from '../../third-party-apis/entra-id.api';
 
 export class EntraIdApiMockBuilder extends BaseMockBuilder<EntraIdApi> {

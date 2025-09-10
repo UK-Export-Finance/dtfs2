@@ -1,4 +1,4 @@
-import { TestApiError, aGetAuthCodeUrlResponse, aGetAuthCodeUrlRequest } from "@ukef/dtfs2-common/test-helpers";
+import { TestApiError, aGetAuthCodeUrlResponse, aGetAuthCodeUrlRequest } from '@ukef/dtfs2-common/test-helpers';
 import { GetAuthCodeUrlApiRequest, GetAuthCodeUrlApiResponse } from '@ukef/dtfs2-common';
 import { resetAllWhenMocks } from 'jest-when';
 import httpMocks from 'node-mocks-http';
