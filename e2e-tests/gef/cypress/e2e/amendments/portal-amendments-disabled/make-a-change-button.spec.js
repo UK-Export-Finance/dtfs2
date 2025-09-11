@@ -9,11 +9,18 @@ let issuedContingentFacilityId;
 let unissuedCashFacilityId;
 let unissuedContingentFacilityId;
 
+const facilitiesToCreate = [
+  { isCashFacility: true, isIssued: true },
+  { isCashFacility: true, isIssued: false },
+  { isCashFacility: false, isIssued: true },
+  { isCashFacility: false, isIssued: false },
+];
+
 context('Amendments - Make a change button - FF_PORTAL_FACILITY_AMENDMENTS_ENABLED feature flag disabled', () => {
   before(() => {
-    cy.loadData();
+    // cy.loadData();
 
-    cy.createFullApplication({}).then((ids) => {
+    cy.createFullApplication({ facilitiesToCreate }).then((ids) => {
       const { dealId: id, facilityIds } = ids;
       dealId = id;
 
