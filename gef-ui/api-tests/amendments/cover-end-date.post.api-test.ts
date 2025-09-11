@@ -18,6 +18,8 @@ const originalEnv = { ...process.env };
 
 const { post } = createApi(app);
 
+console.error = jest.fn();
+
 jest.mock('csurf', () => () => (_req: Request, _res: Response, next: NextFunction) => next());
 jest.mock('../../server/middleware/csrf', () => ({
   csrfToken: () => (_req: Request, _res: Response, next: NextFunction) => next(),
