@@ -1,4 +1,4 @@
-const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common');
+const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common/test-helpers');
 const { HttpStatusCode } = require('axios');
 const app = require('../../../server/createApp');
 const { MAKER } = require('../../../server/v1/roles/roles');
