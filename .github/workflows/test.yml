@@ -477,6 +477,13 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
+        env:
+          PORTAL_API_URL: ${{ vars.PORTAL_API_URL_LOCALHOST }}
+          TFM_API_URL: ${{ vars.TFM_API_URL_LOCALHOST }}
+          EXTERNAL_API_URL: ${{ vars.EXTERNAL_API_URL_LOCALHOST }}
+          DTFS_CENTRAL_API_URL: ${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
+          PORTAL_UI_URL: ${{ vars.PORTAL_UI_URL_LOCALHOST }}
+          TFM_UI_URL: ${{ vars.TFM_UI_URL_LOCALHOST }}
         uses: ./.github/actions/rerun
         with:
           command: npm run api-test ${{ matrix.services }} --workspace=portal-api
@@ -485,12 +492,6 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-            PORTAL_API_URL=${{ vars.PORTAL_API_URL_LOCALHOST }}
-            TFM_API_URL=${{ vars.TFM_API_URL_LOCALHOST }}
-            EXTERNAL_API_URL=${{ vars.EXTERNAL_API_URL_LOCALHOST }}
-            DTFS_CENTRAL_API_URL=${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
-            PORTAL_UI_URL=${{ vars.PORTAL_UI_URL_LOCALHOST }}
-            TFM_UI_URL=${{ vars.TFM_UI_URL_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Stop
