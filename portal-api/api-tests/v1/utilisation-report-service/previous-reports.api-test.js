@@ -1,4 +1,5 @@
-const { UtilisationReportEntityMockBuilder, REPORT_NOT_RECEIVED, PENDING_RECONCILIATION, RECONCILIATION_COMPLETED } = require('@ukef/dtfs2-common');
+const { REPORT_NOT_RECEIVED, PENDING_RECONCILIATION, RECONCILIATION_COMPLETED } = require('@ukef/dtfs2-common');
+const { UtilisationReportEntityMockBuilder } = require('@ukef/dtfs2-common/test-helpers');
 const { SqlDbHelper } = require('../../sql-db-helper.ts');
 const app = require('../../../server/createApp');
 const { as, get } = require('../../api')(app);
