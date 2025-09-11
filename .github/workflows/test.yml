@@ -235,6 +235,9 @@ jobs:
         with:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
+          env: |
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -259,12 +262,14 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
             PORTAL_API_URL=${{ vars.PORTAL_API_URL_LOCALHOST }}
-            PORTAL_UI_URL=${{ vars.PORTAL_UI_URL_LOCALHOST }}
-            EXTERNAL_API_URL=${{ vars.EXTERNAL_API_URL_LOCALHOST }}
             TFM_API_URL=${{ vars.TFM_API_URL_LOCALHOST }}
-            TFM_UI_URL=${{ vars.TFM_UI_URL_LOCALHOST }}
+            EXTERNAL_API_URL=${{ vars.EXTERNAL_API_URL_LOCALHOST }}
             DTFS_CENTRAL_API_URL=${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
+            PORTAL_UI_URL=${{ vars.PORTAL_UI_URL_LOCALHOST }}
+            TFM_UI_URL=${{ vars.TFM_UI_URL_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Stop
@@ -338,16 +343,8 @@ jobs:
           command: docker compose up --build -d
           retries: ${{ vars.RETRY_LIMIT }}
           env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-            PORTAL_API_URL=${{ vars.PORTAL_API_URL_LOCALHOST }}
-            PORTAL_UI_URL=${{ vars.PORTAL_UI_URL_LOCALHOST }}
-            EXTERNAL_API_URL=${{ vars.EXTERNAL_API_URL_LOCALHOST }}
-            TFM_API_URL=${{ vars.TFM_API_URL_LOCALHOST }}
-            TFM_UI_URL=${{ vars.TFM_UI_URL_LOCALHOST }}
-            DTFS_CENTRAL_API_URL=${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
 
       - name: Initialise
         uses: ./.github/actions/rerun
@@ -356,9 +353,7 @@ jobs:
           working-directory: ./utils
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
@@ -377,11 +372,11 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
             PORTAL_API_URL=${{ vars.PORTAL_API_URL_LOCALHOST }}
-            PORTAL_UI_URL=${{ vars.PORTAL_UI_URL_LOCALHOST }}
-            EXTERNAL_API_URL=${{ vars.EXTERNAL_API_URL_LOCALHOST }}
             TFM_API_URL=${{ vars.TFM_API_URL_LOCALHOST }}
-            TFM_UI_URL=${{ vars.TFM_UI_URL_LOCALHOST }}
+            EXTERNAL_API_URL=${{ vars.EXTERNAL_API_URL_LOCALHOST }}
             DTFS_CENTRAL_API_URL=${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
+            PORTAL_UI_URL=${{ vars.PORTAL_UI_URL_LOCALHOST }}
+            TFM_UI_URL=${{ vars.TFM_UI_URL_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Stop
@@ -473,7 +468,6 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
@@ -492,11 +486,11 @@ jobs:
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
             PORTAL_API_URL=${{ vars.PORTAL_API_URL_LOCALHOST }}
-            PORTAL_UI_URL=${{ vars.PORTAL_UI_URL_LOCALHOST }}
-            EXTERNAL_API_URL=${{ vars.EXTERNAL_API_URL_LOCALHOST }}
             TFM_API_URL=${{ vars.TFM_API_URL_LOCALHOST }}
-            TFM_UI_URL=${{ vars.TFM_UI_URL_LOCALHOST }}
+            EXTERNAL_API_URL=${{ vars.EXTERNAL_API_URL_LOCALHOST }}
             DTFS_CENTRAL_API_URL=${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
+            PORTAL_UI_URL=${{ vars.PORTAL_UI_URL_LOCALHOST }}
+            TFM_UI_URL=${{ vars.TFM_UI_URL_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Stop
@@ -555,14 +549,16 @@ jobs:
           command: npm run api-test
           working-directory: ./azure-functions/${{ matrix.functions }}
           env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
             PORTAL_API_URL=${{ vars.PORTAL_API_URL_LOCALHOST }}
-            PORTAL_UI_URL=${{ vars.PORTAL_UI_URL_LOCALHOST }}
-            EXTERNAL_API_URL=${{ vars.EXTERNAL_API_URL_LOCALHOST }}
             TFM_API_URL=${{ vars.TFM_API_URL_LOCALHOST }}
-            TFM_UI_URL=${{ vars.TFM_UI_URL_LOCALHOST }}
+            EXTERNAL_API_URL=${{ vars.EXTERNAL_API_URL_LOCALHOST }}
             DTFS_CENTRAL_API_URL=${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
+            PORTAL_UI_URL=${{ vars.PORTAL_UI_URL_LOCALHOST }}
+            TFM_UI_URL=${{ vars.TFM_UI_URL_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Coverage
