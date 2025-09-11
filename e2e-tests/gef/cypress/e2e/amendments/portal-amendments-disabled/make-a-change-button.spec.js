@@ -13,7 +13,7 @@ context('Amendments - Make a change button - FF_PORTAL_FACILITY_AMENDMENTS_ENABL
   before(() => {
     cy.loadData();
 
-    cy.createFullApplication().then((ids) => {
+    cy.createFullApplication({}).then((ids) => {
       const { dealId: id, facilityIds } = ids;
       dealId = id;
 
