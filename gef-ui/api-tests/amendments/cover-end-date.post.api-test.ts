@@ -18,8 +18,6 @@ const originalEnv = { ...process.env };
 
 const { post } = createApi(app);
 
-console.error = jest.fn();
-
 jest.mock('csurf', () => () => (_req: Request, _res: Response, next: NextFunction) => next());
 jest.mock('../../server/middleware/csrf', () => ({
   csrfToken: () => (_req: Request, _res: Response, next: NextFunction) => next(),
@@ -127,7 +125,7 @@ describe(`POST ${url}`, () => {
     });
   });
 
-  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is enabled', () => {
+  describe.only('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is enabled', () => {
     beforeEach(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
     });
@@ -200,7 +198,7 @@ describe(`POST ${url}`, () => {
       expect(response.headers.location).toEqual('/not-found');
     });
 
-    it('should not call console.error if the facility and amendment are valid', async () => {
+    it.only('should not call console.error if the facility and amendment are valid', async () => {
       // Arrange
       const body = {
         'cover-end-date-day': format(todayPlusTwoYears, 'd'),

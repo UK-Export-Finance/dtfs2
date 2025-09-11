@@ -758,6 +758,7 @@ const getTfmFacility = async ({ facilityId, userToken }) => {
  */
 const getFacilityExposurePeriod = async (startDate, endDate, type) => {
   try {
+    console.log('===========>', `/exposure-period/${startDate}/${endDate}/${type}`);
     const response = await externalApi.get(`/exposure-period/${startDate}/${endDate}/${type}`);
 
     return response.data;
