@@ -125,7 +125,7 @@ describe(`POST ${url}`, () => {
     });
   });
 
-  describe.only('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is enabled', () => {
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is enabled', () => {
     beforeEach(() => {
       process.env.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED = 'true';
     });
@@ -198,7 +198,7 @@ describe(`POST ${url}`, () => {
       expect(response.headers.location).toEqual('/not-found');
     });
 
-    it.only('should not call console.error if the facility and amendment are valid', async () => {
+    it('should not call console.error if the facility and amendment are valid', async () => {
       // Arrange
       const body = {
         'cover-end-date-day': format(todayPlusTwoYears, 'd'),

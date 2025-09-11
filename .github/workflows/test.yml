@@ -259,6 +259,12 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            PORTAL_API_URL=${{ vars.PORTAL_API_URL_LOCALHOST }}
+            PORTAL_UI_URL=${{ vars.PORTAL_UI_URL_LOCALHOST }}
+            EXTERNAL_API_URL=${{ vars.EXTERNAL_API_URL_LOCALHOST }}
+            TFM_API_URL=${{ vars.TFM_API_URL_LOCALHOST }}
+            TFM_UI_URL=${{ vars.TFM_UI_URL_LOCALHOST }}
+            DTFS_CENTRAL_API_URL=${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Stop
@@ -360,6 +366,12 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+            PORTAL_API_URL=${{ vars.PORTAL_API_URL_LOCALHOST }}
+            PORTAL_UI_URL=${{ vars.PORTAL_UI_URL_LOCALHOST }}
+            EXTERNAL_API_URL=${{ vars.EXTERNAL_API_URL_LOCALHOST }}
+            TFM_API_URL=${{ vars.TFM_API_URL_LOCALHOST }}
+            TFM_UI_URL=${{ vars.TFM_UI_URL_LOCALHOST }}
+            DTFS_CENTRAL_API_URL=${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Stop
@@ -379,7 +391,7 @@ jobs:
     needs: [setup]
     environment:
       name: ${{ needs.setup.outputs.environment }}
-    runs-on: [self-hosted, linux, deployment]
+    runs-on: ubuntu-latest
 
     strategy:
       # Do not cancel in-progress jobs upon failure
@@ -469,6 +481,12 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+            PORTAL_API_URL=${{ vars.PORTAL_API_URL_LOCALHOST }}
+            PORTAL_UI_URL=${{ vars.PORTAL_UI_URL_LOCALHOST }}
+            EXTERNAL_API_URL=${{ vars.EXTERNAL_API_URL_LOCALHOST }}
+            TFM_API_URL=${{ vars.TFM_API_URL_LOCALHOST }}
+            TFM_UI_URL=${{ vars.TFM_UI_URL_LOCALHOST }}
+            DTFS_CENTRAL_API_URL=${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Stop
@@ -526,10 +544,16 @@ jobs:
         with:
           command: npm run api-test
           working-directory: ./azure-functions/${{ matrix.functions }}
-          retries: ${{ vars.RETRY_LIMIT }}
           env: |
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+            PORTAL_API_URL=${{ vars.PORTAL_API_URL_LOCALHOST }}
+            PORTAL_UI_URL=${{ vars.PORTAL_UI_URL_LOCALHOST }}
+            EXTERNAL_API_URL=${{ vars.EXTERNAL_API_URL_LOCALHOST }}
+            TFM_API_URL=${{ vars.TFM_API_URL_LOCALHOST }}
+            TFM_UI_URL=${{ vars.TFM_UI_URL_LOCALHOST }}
+            DTFS_CENTRAL_API_URL=${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Coverage
         uses: codecov/codecov-action@v5
