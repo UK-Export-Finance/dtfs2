@@ -1,3 +1,4 @@
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { In } from 'typeorm';
@@ -5,20 +6,17 @@ import { difference } from 'lodash';
 import {
   FEE_RECORD_STATUS,
   FeeRecordEntity,
-  FeeRecordEntityMockBuilder,
   FeeRecordStatus,
   PaymentEntity,
-  PaymentEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
   UTILISATION_REPORT_STATUS,
   UtilisationReportEntity,
-  UtilisationReportEntityMockBuilder,
   CURRENCY,
 } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
-import { PatchPaymentPayload } from '../../../src/v1/routes/middleware/payload-validation';
+import { PatchPaymentPayload } from '../../../server/v1/routes/middleware/payload-validation';
 import { aTfmSessionUser } from '../../../test-helpers';
 
 console.error = jest.fn();

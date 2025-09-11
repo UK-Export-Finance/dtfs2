@@ -1,6 +1,6 @@
 import { CURRENCY } from '@ukef/dtfs2-common';
 
-import { FACILITY_PAYMENT_TYPE } from '../../../src/v1/gef/enums';
+import { FACILITY_PAYMENT_TYPE } from '../../../server/v1/gef/enums';
 
 export const facilityUpdate = {
   hasBeenIssued: true,

@@ -1,8 +1,5 @@
 const {
-  UtilisationReportEntityMockBuilder,
   PENDING_RECONCILIATION,
-  FeeRecordCorrectionEntityMockBuilder,
-  FeeRecordEntityMockBuilder,
   FEE_RECORD_STATUS,
   REPORT_NOT_RECEIVED,
   getFormattedReportPeriodWithLongMonth,
@@ -10,6 +7,7 @@ const {
   RECORD_CORRECTION_REASON,
   CURRENCY,
 } = require('@ukef/dtfs2-common');
+const { UtilisationReportEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder, FeeRecordEntityMockBuilder } = require('@ukef/dtfs2-common/test-helpers');
 const { addMonths, format } = require('date-fns');
 const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../../e2e-fixtures');
 const relativeURL = require('../../../../relativeURL');

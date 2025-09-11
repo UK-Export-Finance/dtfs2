@@ -1,13 +1,6 @@
 const { eachMonthOfInterval, getYear, getMonth, subMonths, addMonths } = require('date-fns');
-const {
-  UtilisationReportEntityMockBuilder,
-  AzureFileInfoEntity,
-  MOCK_AZURE_FILE_INFO,
-  REQUEST_PLATFORM_TYPE,
-  PENDING_RECONCILIATION,
-  REPORT_NOT_RECEIVED,
-  FACILITY_TYPE,
-} = require('@ukef/dtfs2-common');
+const { AzureFileInfoEntity, REQUEST_PLATFORM_TYPE, PENDING_RECONCILIATION, REPORT_NOT_RECEIVED, FACILITY_TYPE } = require('@ukef/dtfs2-common');
+const { UtilisationReportEntityMockBuilder, MOCK_AZURE_FILE_INFO } = require('@ukef/dtfs2-common/test-helpers');
 const { BANK1_PAYMENT_REPORT_OFFICER1, BANK2_PAYMENT_REPORT_OFFICER1 } = require('../../../e2e-fixtures');
 
 const bankId = BANK1_PAYMENT_REPORT_OFFICER1.bank.id;

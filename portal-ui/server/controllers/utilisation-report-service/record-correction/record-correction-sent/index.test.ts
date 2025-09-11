@@ -1,6 +1,7 @@
+import { aPortalSessionUser, aPortalSessionBank } from '@ukef/dtfs2-common/test-helpers';
 import httpMocks, { MockResponse, Session } from 'node-mocks-http';
 import { Request, Response } from 'express';
-import { aPortalSessionBank, aPortalSessionUser, getFormattedReportPeriodWithLongMonth, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
+import { getFormattedReportPeriodWithLongMonth, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import { getRecordCorrectionSent } from '..';
 import { RecordCorrectionSentViewModel } from '../../../../types/view-models/record-correction/record-correction-sent';

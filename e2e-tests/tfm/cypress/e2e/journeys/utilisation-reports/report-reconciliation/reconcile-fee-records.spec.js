@@ -1,10 +1,8 @@
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import {
   CURRENCY,
-  FeeRecordEntityMockBuilder,
-  PaymentEntityMockBuilder,
   REPORT_NOT_RECEIVED,
   RECONCILIATION_IN_PROGRESS,
-  UtilisationReportEntityMockBuilder,
   toIsoMonthStamp,
   getPreviousReportPeriodForBankScheduleByMonth,
   FEE_RECORD_STATUS,

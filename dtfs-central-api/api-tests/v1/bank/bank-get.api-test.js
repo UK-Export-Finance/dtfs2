@@ -1,7 +1,7 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const { MOCK_BANKS } = require('../../mocks/banks');
-const { withoutMongoId } = require('../../../src/helpers/mongodb');
+const { withoutMongoId } = require('../../../server/helpers/mongodb');
 const { testApi } = require('../../test-api');
 
 describe('/v1/bank/:id', () => {

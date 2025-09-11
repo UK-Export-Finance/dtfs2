@@ -1,21 +1,20 @@
+import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { HttpStatusCode } from 'axios';
 import {
   Bank,
   FEE_RECORD_STATUS,
   FeeRecordEntity,
-  FeeRecordEntityMockBuilder,
   RECONCILIATION_COMPLETED,
   RECONCILIATION_IN_PROGRESS,
   TfmSessionUser,
   UtilisationReportEntity,
-  UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { aBank, aTfmSessionUser } from '../../../test-helpers';
 import { wipe } from '../../wipeDB';
-import { mongoDbClient } from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../server/drivers/db-client';
 
 console.error = jest.fn();
 

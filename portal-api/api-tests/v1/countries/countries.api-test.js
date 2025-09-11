@@ -2,13 +2,13 @@
  * @jest-environment node
  */
 
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 
 const { as, get } = require('../../api')(app);
 
-jest.unmock('../../../src/external-api/api');
+jest.unmock('../../../server/external-api/api');
 
 describe('/v1/countries', () => {
   let testUsers;

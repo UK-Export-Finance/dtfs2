@@ -10,26 +10,26 @@ const {
 } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../server/v1/roles/roles');
 
 const { as, get, remove } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');
 
-const { exporterStatus } = require('../../../src/v1/gef/controllers/validation/exporter');
+const { exporterStatus } = require('../../../server/v1/gef/controllers/validation/exporter');
 
-const CONSTANTS = require('../../../src/constants');
+const CONSTANTS = require('../../../server/constants');
 
 const mockApplications = require('../../fixtures/gef/application');
 const mockEligibilityCriteria = require('../../fixtures/gef/eligibilityCriteria');
 const mockFacilities = require('../../fixtures/gef/facilities');
-const externalApi = require('../../../src/external-api/api');
+const externalApi = require('../../../server/external-api/api');
 
-const api = require('../../../src/v1/api');
-const { STATUS } = require('../../../src/constants/user');
+const api = require('../../../server/v1/api');
+const { STATUS } = require('../../../server/constants/user');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const mockSuccessfulResponse = {
@@ -48,7 +48,7 @@ const mockSuccessfulResponse = {
   },
 };
 
-jest.mock('../../../src/external-api/api', () => ({
+jest.mock('../../../server/external-api/api', () => ({
   sendEmail: jest.fn(() => Promise.resolve({})),
   number: {
     getNumber: jest.fn(() => Promise.resolve(mockSuccessfulResponse)),

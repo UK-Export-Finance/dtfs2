@@ -4,14 +4,14 @@ const { MONGO_DB_COLLECTIONS, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-commo
 const databaseHelper = require('../../database-helper');
 const testUserCache = require('../../api-test-users');
 
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const { as } = require('../../api')(app);
 
 const users = require('./test-data');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
-const { ADMIN } = require('../../../src/v1/roles/roles');
-const { STATUS } = require('../../../src/constants/user');
+const { ADMIN } = require('../../../server/v1/roles/roles');
+const { STATUS } = require('../../../server/constants/user');
 
 const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
 const MOCK_USER = {

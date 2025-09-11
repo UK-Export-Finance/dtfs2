@@ -1,4 +1,5 @@
-const { UtilisationReportEntityMockBuilder, FeeRecordEntityMockBuilder, PENDING_RECONCILIATION, RECONCILIATION_IN_PROGRESS } = require('@ukef/dtfs2-common');
+const { PENDING_RECONCILIATION, RECONCILIATION_IN_PROGRESS } = require('@ukef/dtfs2-common');
+const { UtilisationReportEntityMockBuilder, FeeRecordEntityMockBuilder } = require('@ukef/dtfs2-common/test-helpers');
 const { componentRenderer } = require('../../componentRenderer');
 const { getFindReportSummaryItemViewModel } = require('../../../server/controllers/utilisation-reports/helpers/find-reports-by-year-helper');
 const { MOCK_TFM_SESSION_USER } = require('../../../server/test-mocks/mock-tfm-session-user');

@@ -6,17 +6,17 @@ const {
   updateChangedToIssued,
   checkCoverDateConfirmed,
   addSubmissionDateToIssuedFacilities,
-} = require('../../../src/v1/gef/controllers/application-submit');
-const { update: updateFacility, getAllFacilitiesByDealId } = require('../../../src/v1/gef/controllers/facilities.controller');
-const convertToTimestamp = require('../../../src/v1/helpers/convertToTimestamp');
+} = require('../../../server/v1/gef/controllers/application-submit');
+const { update: updateFacility, getAllFacilitiesByDealId } = require('../../../server/v1/gef/controllers/facilities.controller');
+const convertToTimestamp = require('../../../server/v1/helpers/convertToTimestamp');
 const mockApplications = require('../../fixtures/gef/application');
 const databaseHelper = require('../../database-helper');
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
-const CONSTANTS = require('../../../src/constants');
+const CONSTANTS = require('../../../server/constants');
 const mockFacilities = require('../../fixtures/gef/facilities');
-const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER } = require('../../../server/v1/roles/roles');
 
 const baseUrl = '/v1/gef/facilities';
 const applicationBaseUrl = '/v1/gef/application';

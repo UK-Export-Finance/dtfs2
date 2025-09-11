@@ -1,12 +1,6 @@
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { startOfMonth, subMonths } from 'date-fns';
-import {
-  FeeRecordEntityMockBuilder,
-  PaymentEntityMockBuilder,
-  PENDING_RECONCILIATION,
-  UtilisationReportEntityMockBuilder,
-  CURRENCY,
-  FEE_RECORD_STATUS,
-} from '@ukef/dtfs2-common';
+import { PENDING_RECONCILIATION, CURRENCY, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import pages from '../../../pages';
 import USERS from '../../../../fixtures/users';
 import { NODE_TASKS } from '../../../../../../e2e-fixtures';

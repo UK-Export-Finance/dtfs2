@@ -1,19 +1,18 @@
 const { HttpStatusCode } = require('axios');
+const { RECORD_CORRECTION_REASON, CURRENCY } = require('@ukef/dtfs2-common');
 const {
   UtilisationReportEntityMockBuilder,
   FeeRecordCorrectionEntityMockBuilder,
   FeeRecordEntityMockBuilder,
   FeeRecordCorrectionTransientFormDataEntityMockBuilder,
-  RECORD_CORRECTION_REASON,
-  CURRENCY,
-} = require('@ukef/dtfs2-common');
+} = require('@ukef/dtfs2-common/test-helpers');
 const { SqlDbHelper } = require('../../../sql-db-helper.ts');
-const app = require('../../../../src/createApp.js');
+const app = require('../../../../server/createApp.js');
 const { as, get } = require('../../../api.js')(app);
 const testUserCache = require('../../../api-test-users.js');
 const { withClientAuthenticationTests } = require('../../../common-tests/client-authentication-tests.js');
 const { withRoleAuthorisationTests } = require('../../../common-tests/role-authorisation-tests.js');
-const { PAYMENT_REPORT_OFFICER } = require('../../../../src/v1/roles/roles.js');
+const { PAYMENT_REPORT_OFFICER } = require('../../../../server/v1/roles/roles.js');
 
 console.error = jest.fn();
 

@@ -1,4 +1,4 @@
-import { GetCompletedFeeRecordCorrectionsResponseBody } from '../../src/v1/api-response-types';
+import { GetCompletedFeeRecordCorrectionsResponseBody } from '../../server/v1/api-response-types';
 
 export const aGetCompletedFeeRecordCorrectionsResponseBody = (): GetCompletedFeeRecordCorrectionsResponseBody => [
   {

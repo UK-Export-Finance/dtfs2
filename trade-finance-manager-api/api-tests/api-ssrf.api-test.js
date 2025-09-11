@@ -4,10 +4,10 @@ const { ObjectId } = require('mongodb');
 const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const axios = require('axios');
 const MockAdapter = require('axios-mock-adapter');
-const { MOCK_TFM_SESSION_USER } = require('../src/v1/__mocks__/mock-tfm-session-user');
-const { MOCK_PORTAL_USERS } = require('../src/v1/__mocks__/mock-portal-users');
+const { MOCK_TFM_SESSION_USER } = require('../server/v1/__mocks__/mock-tfm-session-user');
+const { MOCK_PORTAL_USERS } = require('../server/v1/__mocks__/mock-portal-users');
 
-const api = jest.requireActual('../src/v1/api');
+const api = jest.requireActual('../server/v1/api');
 
 const mockAxios = new MockAdapter(axios);
 

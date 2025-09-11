@@ -1,13 +1,13 @@
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 const { testApi } = require('./api-tests/test-api');
-const { mongoDbClient: db } = require('./src/drivers/db-client');
+const { mongoDbClient: db } = require('./server/drivers/db-client');
 
 jest.mock('node-cron', () => ({
   schedule: jest.fn(),
   validate: jest.fn(),
 }));
 
-jest.mock('./src/services/changeStream/setupChangeStream', () => ({
+jest.mock('./server/services/changeStream/setupChangeStream', () => ({
   setupChangeStream: jest.fn(),
 }));
 

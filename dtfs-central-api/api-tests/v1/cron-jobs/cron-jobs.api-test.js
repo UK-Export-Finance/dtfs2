@@ -1,7 +1,7 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generateMockPortalUserAuditDatabaseRecord, withDeleteManyTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { generatePortalAuditDetails, generateSystemAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream');
-const { mongoDbClient } = require('../../../src/drivers/db-client');
+const { mongoDbClient } = require('../../../server/drivers/db-client');
 const { testApi } = require('../../test-api');
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');

@@ -1,4 +1,4 @@
-const V2_CONSTANTS = require('../../../portal-api/src/constants');
+const V2_CONSTANTS = require('../../../portal-api/server/constants');
 const MIGRATION_MAP = require('./migration-map');
 
 const INVALID_STATUSES = [

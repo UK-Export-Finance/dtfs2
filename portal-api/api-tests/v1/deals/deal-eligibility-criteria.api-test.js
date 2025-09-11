@@ -1,7 +1,7 @@
 const databaseHelper = require('../../database-helper');
 const aDeal = require('./deal-builder');
 
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 
 const { as } = require('../../api')(app);
@@ -15,7 +15,7 @@ const {
   criteria11ExtraInfo,
   criteria11ExtraInfoEmpty,
 } = require('./mocks');
-const { MAKER, READ_ONLY } = require('../../../src/v1/roles/roles');
+const { MAKER, READ_ONLY } = require('../../../server/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const newDeal = aDeal({ additionalRefName: 'Original Value' });

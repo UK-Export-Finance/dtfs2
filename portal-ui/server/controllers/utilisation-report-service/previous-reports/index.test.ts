@@ -1,5 +1,6 @@
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import httpMocks from 'node-mocks-http';
-import { PORTAL_LOGIN_STATUS, aPortalSessionUser, UTILISATION_REPORT_STATUS_TAG_COLOURS } from '@ukef/dtfs2-common';
+import { PORTAL_LOGIN_STATUS, UTILISATION_REPORT_STATUS_TAG_COLOURS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { getPreviousReports } from '.';
 import { PRIMARY_NAV_KEY } from '../../../constants';

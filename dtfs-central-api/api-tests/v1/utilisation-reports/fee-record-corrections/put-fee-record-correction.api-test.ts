@@ -1,18 +1,20 @@
+import {
+  FeeRecordEntityMockBuilder,
+  UtilisationReportEntityMockBuilder,
+  anEmptyRecordCorrectionTransientFormData,
+  FeeRecordCorrectionTransientFormDataEntityMockBuilder,
+  FeeRecordCorrectionEntityMockBuilder,
+} from '@ukef/dtfs2-common/test-helpers';
 import { HttpStatusCode } from 'axios';
 import { Response } from 'supertest';
 import {
-  anEmptyRecordCorrectionTransientFormData,
   FEE_RECORD_STATUS,
   FeeRecordCorrectionEntity,
-  FeeRecordCorrectionEntityMockBuilder,
   FeeRecordCorrectionTransientFormDataEntity,
-  FeeRecordCorrectionTransientFormDataEntityMockBuilder,
   FeeRecordEntity,
-  FeeRecordEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
   RECORD_CORRECTION_REASON,
   ReportPeriod,
-  UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { ObjectId } from 'mongodb';
@@ -21,7 +23,7 @@ import { SqlDbHelper } from '../../../sql-db-helper';
 import wipeDB from '../../../wipeDB';
 import { aBank } from '../../../../test-helpers';
 import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
-import { mongoDbClient } from '../../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../../server/drivers/db-client';
 import { CustomErrorResponse } from '../../../helpers/custom-error-response';
 
 console.error = jest.fn();

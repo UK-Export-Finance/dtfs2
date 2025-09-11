@@ -1,7 +1,7 @@
+import { UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import {
   REPORT_NOT_RECEIVED,
   PENDING_RECONCILIATION,
-  UtilisationReportEntityMockBuilder,
   getOneIndexedMonth,
   getPreviousReportPeriodForBankScheduleByMonth,
   toIsoMonthStamp,

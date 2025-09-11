@@ -2,10 +2,10 @@ const { format, sub, add } = require('date-fns');
 const { CURRENCY, MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
-const { MAKER, ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, ADMIN } = require('../../../server/v1/roles/roles');
 const mockEligibilityCriteria = require('../../fixtures/eligibilityCriteria');
 
 describe('/v1/deals/:id/bond/change-cover-start-date', () => {

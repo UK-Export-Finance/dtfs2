@@ -16,4 +16,4 @@ RUN npm ci
 RUN npm cache clean --force
 
 # Execute Script
-CMD ["npx", "ts-node", "trade-finance-manager-api/src/index.ts"]
+CMD ["npx", "ts-node", "trade-finance-manager-api/server/index.ts"]

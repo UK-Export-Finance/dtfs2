@@ -1,11 +1,5 @@
-import {
-  CURRENCY,
-  FeeRecordEntityMockBuilder,
-  PaymentEntityMockBuilder,
-  RECONCILIATION_IN_PROGRESS,
-  UtilisationReportEntityMockBuilder,
-  FEE_RECORD_STATUS,
-} from '@ukef/dtfs2-common';
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
+import { CURRENCY, RECONCILIATION_IN_PROGRESS, FEE_RECORD_STATUS } from '@ukef/dtfs2-common';
 import pages from '../../../pages';
 import { NODE_TASKS } from '../../../../../../e2e-fixtures';
 import USERS from '../../../../fixtures/users';

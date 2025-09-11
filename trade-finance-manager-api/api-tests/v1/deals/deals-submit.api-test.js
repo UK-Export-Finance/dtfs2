@@ -1,31 +1,31 @@
-jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
+jest.mock('../../../server/v1/controllers/acbs.controller', () => ({
   issueAcbsFacilities: jest.fn(),
 }));
 
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const api = require('../../../src/v1/api');
-const acbsController = require('../../../src/v1/controllers/acbs.controller');
+const api = require('../../../server/v1/api');
+const acbsController = require('../../../server/v1/controllers/acbs.controller');
 const { submitDeal, createSubmitBody } = require('../../helpers/submitDeal');
-const mapSubmittedDeal = require('../../../src/v1/mappings/map-submitted-deal');
-const addTfmDealData = require('../../../src/v1/controllers/deal-add-tfm-data');
-const { createDealTasks } = require('../../../src/v1/controllers/deal.tasks');
-const generateDateReceived = require('../../../src/v1/controllers/deal-add-tfm-data/dateReceived');
-const { mockFindOneDeal, mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
-const CONSTANTS = require('../../../src/constants');
-const { MOCK_BSS_EWCS_DEAL } = require('../../../src/v1/__mocks__/mock-deal');
-const MOCK_BSS_EWCS_DEAL_MIN = require('../../../src/v1/__mocks__/mock-deal-MIN');
-const MOCK_BSS_EWCS_DEAL_MIA = require('../../../src/v1/__mocks__/mock-deal-MIA-not-submitted');
-const MOCK_BSS_EWCS_DEAL_NO_PARTY_DB = require('../../../src/v1/__mocks__/mock-deal-no-party-db');
-const MOCK_BSS_EWCS_DEAL_NO_COMPANIES_HOUSE = require('../../../src/v1/__mocks__/mock-deal-no-companies-house');
-const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../src/v1/__mocks__/mock-currency-exchange-rate');
-const MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted');
-const MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted-non-gbp-contract-value');
-const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
+const mapSubmittedDeal = require('../../../server/v1/mappings/map-submitted-deal');
+const addTfmDealData = require('../../../server/v1/controllers/deal-add-tfm-data');
+const { createDealTasks } = require('../../../server/v1/controllers/deal.tasks');
+const generateDateReceived = require('../../../server/v1/controllers/deal-add-tfm-data/dateReceived');
+const { mockFindOneDeal, mockUpdateDeal } = require('../../../server/v1/__mocks__/common-api-mocks');
+const CONSTANTS = require('../../../server/constants');
+const { MOCK_BSS_EWCS_DEAL } = require('../../../server/v1/__mocks__/mock-deal');
+const MOCK_BSS_EWCS_DEAL_MIN = require('../../../server/v1/__mocks__/mock-deal-MIN');
+const MOCK_BSS_EWCS_DEAL_MIA = require('../../../server/v1/__mocks__/mock-deal-MIA-not-submitted');
+const MOCK_BSS_EWCS_DEAL_NO_PARTY_DB = require('../../../server/v1/__mocks__/mock-deal-no-party-db');
+const MOCK_BSS_EWCS_DEAL_NO_COMPANIES_HOUSE = require('../../../server/v1/__mocks__/mock-deal-no-companies-house');
+const MOCK_CURRENCY_EXCHANGE_RATE = require('../../../server/v1/__mocks__/mock-currency-exchange-rate');
+const MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED = require('../../../server/v1/__mocks__/mock-deal-AIN-submitted');
+const MOCK_BSS_EWCS_DEAL_AIN_SUBMITTED_NON_GBP_CONTRACT_VALUE = require('../../../server/v1/__mocks__/mock-deal-AIN-submitted-non-gbp-contract-value');
+const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../server/v1/__mocks__/mock-notify-email-response');
 
-const MOCK_GEF_DEAL_AIN = require('../../../src/v1/__mocks__/mock-gef-deal');
-const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
-const MOCK_GEF_DEAL_MIN = require('../../../src/v1/__mocks__/mock-gef-deal-MIN');
-const { MOCK_PORTAL_USERS } = require('../../../src/v1/__mocks__/mock-portal-users');
+const MOCK_GEF_DEAL_AIN = require('../../../server/v1/__mocks__/mock-gef-deal');
+const MOCK_GEF_DEAL_MIA = require('../../../server/v1/__mocks__/mock-gef-deal-MIA');
+const MOCK_GEF_DEAL_MIN = require('../../../server/v1/__mocks__/mock-gef-deal-MIN');
+const { MOCK_PORTAL_USERS } = require('../../../server/v1/__mocks__/mock-portal-users');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 
@@ -39,7 +39,7 @@ const updateGefFacilitySpy = jest.fn(() => Promise.resolve({}));
 const getGefMandatoryCriteriaByVersion = jest.fn(() => Promise.resolve([]));
 api.getGefMandatoryCriteriaByVersion = getGefMandatoryCriteriaByVersion;
 
-jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
+jest.mock('../../../server/v1/controllers/acbs.controller', () => ({
   issueAcbsFacilities: jest.fn(),
   createACBS: jest.fn(),
 }));

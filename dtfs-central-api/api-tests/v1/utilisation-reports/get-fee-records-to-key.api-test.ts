@@ -1,24 +1,15 @@
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { Response } from 'supertest';
 import { HttpStatusCode } from 'axios';
-import {
-  Bank,
-  Currency,
-  FEE_RECORD_STATUS,
-  FeeRecordEntityMockBuilder,
-  PaymentEntityMockBuilder,
-  RECONCILIATION_IN_PROGRESS,
-  ReportPeriod,
-  UtilisationReportEntityMockBuilder,
-  CURRENCY,
-} from '@ukef/dtfs2-common';
+import { Bank, Currency, FEE_RECORD_STATUS, RECONCILIATION_IN_PROGRESS, ReportPeriod, CURRENCY } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
-import { mongoDbClient } from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../server/drivers/db-client';
 import { wipe } from '../../wipeDB';
 import { aBank } from '../../../test-helpers';
-import { FeeRecordToKey } from '../../../src/types/fee-records';
-import { GetFeeRecordsToKeyResponseBody } from '../../../src/v1/controllers/utilisation-report-service/get-fee-records-to-key.controller';
+import { FeeRecordToKey } from '../../../server/types/fee-records';
+import { GetFeeRecordsToKeyResponseBody } from '../../../server/v1/controllers/utilisation-report-service/get-fee-records-to-key.controller';
 
 interface CustomResponse extends Response {
   body: GetFeeRecordsToKeyResponseBody;

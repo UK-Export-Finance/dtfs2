@@ -21,7 +21,7 @@ import { aPortalUser } from '../../mocks/test-users/portal-user';
 import { createPortalUser } from '../../helpers/create-portal-user';
 import { createPortalFacilityAmendment } from '../../helpers/create-portal-facility-amendment';
 import { amendmentsEligibilityCriteria } from '../../../test-helpers/test-data/eligibility-criteria-amendments';
-import { mongoDbClient as db } from '../../../src/drivers/db-client';
+import { mongoDbClient as db } from '../../../server/drivers/db-client';
 import { aTfmFacility, aTfmFacilityAmendment } from '../../../test-helpers';
 
 const originalEnv = { ...process.env };

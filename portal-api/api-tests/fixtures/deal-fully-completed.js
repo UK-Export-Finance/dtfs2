@@ -1,6 +1,6 @@
 const { format, add, sub } = require('date-fns');
 const { BOND_TYPE, CURRENCY, FACILITY_TYPE } = require('@ukef/dtfs2-common');
-const CONSTANTS = require('../../src/constants');
+const CONSTANTS = require('../../server/constants');
 
 const nowDate = new Date();
 const nowPlusOneMonth = add(nowDate, { months: 1 });
