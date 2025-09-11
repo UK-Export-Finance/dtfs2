@@ -21,6 +21,7 @@ renovate.json
 .editorconfig
 .prettierrc.json
 .eslintrc.json
+.eslintrc.js
 
 # Git
 .git
@@ -57,7 +58,7 @@ jwt_key
 coverage
 
 # Jest
-jest.config.*
+*.jest.*.config.*
 
 # Cypress
 **/cypress/videos
@@ -86,3 +87,4 @@ utils/**/exports/*
 **/test-helpers/
 jest-html-reporters-*.html
 test-results/
+__mock*__
