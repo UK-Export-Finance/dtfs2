@@ -258,6 +258,9 @@ jobs:
           command: npm run api-test --workspace=${{ matrix.services }}
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Stop
@@ -356,6 +359,7 @@ jobs:
           command: npm run api-test ${{ matrix.services }} --workspace=dtfs-central-api
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
           retries: ${{ vars.RETRY_LIMIT }}
@@ -464,6 +468,7 @@ jobs:
           command: npm run api-test ${{ matrix.services }} --workspace=portal-api
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
           retries: ${{ vars.RETRY_LIMIT }}
