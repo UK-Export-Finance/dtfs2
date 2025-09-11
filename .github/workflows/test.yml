@@ -135,9 +135,12 @@ env:
   EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
   CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
-  PORTAL_API_URL: ${{ secrets.PORTAL_API_URL }}
-  DTFS_CENTRAL_API_URL: ${{ secrets.DTFS_CENTRAL_API_URL }}
-  TFM_API_URL: ${{ secrets.TFM_API_URL }}
+  PORTAL_API_URL: ${{ vars.PORTAL_API_URL_LOCALHOST }}
+  TFM_API_URL: ${{ vars.TFM_API_URL_LOCALHOST }}
+  EXTERNAL_API_URL: ${{ vars.EXTERNAL_API_URL_LOCALHOST }}
+  DTFS_CENTRAL_API_URL: ${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
+  PORTAL_UI_URL: ${{ vars.PORTAL_UI_URL_LOCALHOST }}
+  TFM_UI_URL: ${{ vars.TFM_UI_URL_LOCALHOST }}
   RATE_LIMIT_THRESHOLD: ${{ vars.RATE_LIMIT_THRESHOLD }}
   UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: ${{ vars.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}
   UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: ${{ vars.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}
@@ -264,12 +267,6 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-            PORTAL_API_URL=${{ vars.PORTAL_API_URL_LOCALHOST }}
-            TFM_API_URL=${{ vars.TFM_API_URL_LOCALHOST }}
-            EXTERNAL_API_URL=${{ vars.EXTERNAL_API_URL_LOCALHOST }}
-            DTFS_CENTRAL_API_URL=${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
-            PORTAL_UI_URL=${{ vars.PORTAL_UI_URL_LOCALHOST }}
-            TFM_UI_URL=${{ vars.TFM_UI_URL_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Stop
@@ -371,12 +368,6 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-            PORTAL_API_URL=${{ vars.PORTAL_API_URL_LOCALHOST }}
-            TFM_API_URL=${{ vars.TFM_API_URL_LOCALHOST }}
-            EXTERNAL_API_URL=${{ vars.EXTERNAL_API_URL_LOCALHOST }}
-            DTFS_CENTRAL_API_URL=${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
-            PORTAL_UI_URL=${{ vars.PORTAL_UI_URL_LOCALHOST }}
-            TFM_UI_URL=${{ vars.TFM_UI_URL_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Stop
@@ -477,13 +468,6 @@ jobs:
         run: npm run db:migrate
 
       - name: Execute
-        env:
-          PORTAL_API_URL: ${{ vars.PORTAL_API_URL_LOCALHOST }}
-          TFM_API_URL: ${{ vars.TFM_API_URL_LOCALHOST }}
-          EXTERNAL_API_URL: ${{ vars.EXTERNAL_API_URL_LOCALHOST }}
-          DTFS_CENTRAL_API_URL: ${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
-          PORTAL_UI_URL: ${{ vars.PORTAL_UI_URL_LOCALHOST }}
-          TFM_UI_URL: ${{ vars.TFM_UI_URL_LOCALHOST }}
         uses: ./.github/actions/rerun
         with:
           command: npm run api-test ${{ matrix.services }} --workspace=portal-api
@@ -554,12 +538,6 @@ jobs:
             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-            PORTAL_API_URL=${{ vars.PORTAL_API_URL_LOCALHOST }}
-            TFM_API_URL=${{ vars.TFM_API_URL_LOCALHOST }}
-            EXTERNAL_API_URL=${{ vars.EXTERNAL_API_URL_LOCALHOST }}
-            DTFS_CENTRAL_API_URL=${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
-            PORTAL_UI_URL=${{ vars.PORTAL_UI_URL_LOCALHOST }}
-            TFM_UI_URL=${{ vars.TFM_UI_URL_LOCALHOST }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Coverage
