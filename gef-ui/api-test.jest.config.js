@@ -9,5 +9,4 @@ module.exports = {
     '^.+\\.(css|less|scss)$': 'babel-jest',
   },
   testTimeout: 80000,
-  setupFilesAfterEnv: ['./api-test-setup.jest.config.js'],
 };
