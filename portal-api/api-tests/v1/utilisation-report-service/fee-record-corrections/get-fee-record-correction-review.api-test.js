@@ -1,12 +1,11 @@
 const { HttpStatusCode } = require('axios');
+const { RECORD_CORRECTION_REASON, CURRENCY } = require('@ukef/dtfs2-common');
 const {
   UtilisationReportEntityMockBuilder,
   FeeRecordCorrectionEntityMockBuilder,
   FeeRecordEntityMockBuilder,
   FeeRecordCorrectionTransientFormDataEntityMockBuilder,
-  RECORD_CORRECTION_REASON,
-  CURRENCY,
-} = require('@ukef/dtfs2-common');
+} = require('@ukef/dtfs2-common/test-helpers');
 const { SqlDbHelper } = require('../../../sql-db-helper.ts');
 const app = require('../../../../server/createApp.js');
 const { as, get } = require('../../../api.js')(app);

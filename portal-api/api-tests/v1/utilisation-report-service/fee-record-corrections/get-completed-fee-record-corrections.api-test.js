@@ -1,11 +1,6 @@
 const { HttpStatusCode } = require('axios');
-const {
-  UtilisationReportEntityMockBuilder,
-  FeeRecordCorrectionEntityMockBuilder,
-  FeeRecordEntityMockBuilder,
-  RECORD_CORRECTION_REASON,
-  FEE_RECORD_STATUS,
-} = require('@ukef/dtfs2-common');
+const { RECORD_CORRECTION_REASON, FEE_RECORD_STATUS } = require('@ukef/dtfs2-common');
+const { UtilisationReportEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder, FeeRecordEntityMockBuilder } = require('@ukef/dtfs2-common/test-helpers');
 const { SqlDbHelper } = require('../../../sql-db-helper.ts');
 const app = require('../../../../server/createApp.js');
 const { as, get } = require('../../../api.js')(app);
