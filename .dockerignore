@@ -53,8 +53,7 @@ secrets/**
 jwt_key
 
 # Logs
-**/*log/
-**/*.log
+**/*.log*
 coverage
 
 # Jest
