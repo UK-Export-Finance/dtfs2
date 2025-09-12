@@ -1,6 +1,10 @@
 import * as api from './commands/api';
 import { createApplicationAndSetStatus } from './commands/createApplicationAndSetStatus';
 import { clearSessionCookies } from './utils/clearSessionCookies';
+import { createFullApplication } from './commands/createFullApplication';
+import { createFacility } from './commands/create-facility';
+import { completeAboutExporterSection } from './commands/completeAboutExporterSection';
+import { createApplicationFirstSteps } from './commands/createApplicationFirstSteps';
 
 import './commands/click-events';
 
@@ -21,10 +25,10 @@ Cypress.Commands.add('getUserByUsername', require('./commands/portal/getUserByUs
 Cypress.Commands.add('resetPortalUserStatusAndNumberOfSignInLinks', require('./commands/portal/resetPortalUserStatusAndNumberOfSignInLinks'));
 Cypress.Commands.add('enterUsernameAndPassword', require('./commands/portal/enterUsernameAndPassword'));
 Cypress.Commands.add('getDealIdFromUrl', require('./commands/portal/getDealIdFromUrl'));
+Cypress.Commands.add('getFacilityIdFromUrl', require('./commands/portal/getFacilityIdFromUrl'));
 
 Cypress.Commands.add('uploadFile', require('./commands/uploadFile'));
 Cypress.Commands.add('insertElement', require('./commands/insertElement'));
-Cypress.Commands.add('submitDealAfterUkefIds', require('./commands/submitDealAfterUkefIds'));
 Cypress.Commands.add('getApplicationById', require('./commands/getApplicationById'));
 Cypress.Commands.add('loadData', require('./commands/loadData'));
 Cypress.Commands.add('automaticEligibilityCriteria', require('./commands/automaticEligibilityCriteria'));
@@ -54,3 +58,8 @@ Cypress.Commands.add('addUnderwriterCommentToTfm', api.addUnderwriterCommentToTf
 Cypress.Commands.add('putTfmDeal', require('./commands/update-tfm-deal'));
 Cypress.Commands.add('insertVersion0Deal', require('./commands/insertVersion0Deal'));
 Cypress.Commands.add('insertVersion0Facility', require('./commands/insertVersion0Facility'));
+
+Cypress.Commands.add('createFullApplication', createFullApplication);
+Cypress.Commands.add('createFacility', createFacility);
+Cypress.Commands.add('completeAboutExporterSection', completeAboutExporterSection);
+Cypress.Commands.add('createApplicationFirstSteps', createApplicationFirstSteps);
