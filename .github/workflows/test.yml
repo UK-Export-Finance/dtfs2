@@ -1510,7 +1510,7 @@ jobs:
         webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'dtfs-central-api', 'external-api', 'trade-finance-manager-api']
 
     concurrency:
-      group: docker-build-${{ github.workflow }}-${{ github.workflow_ref }}
+      group: docker-build-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}-${{ matrix.webapp }}
       cancel-in-progress: true
 
     steps:
