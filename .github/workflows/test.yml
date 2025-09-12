@@ -1533,9 +1533,8 @@ jobs:
           command: npm ci
           retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Build
+      - name: Function
         run: docker build -f ./azure-functions/${{ matrix.functions }}/Dockerfile .
 
-      - name: Build
-        run: docker build -f ./${{ matrix.webapp }}/Dockerfile . \
-          --build-arg GITHUB_SHA=${{ github.sha }}
+      - name: WebApp
+        run: docker build -f ./${{ matrix.webapp }}/Dockerfile . --build-arg GITHUB_SHA=${{ github.sha }}
