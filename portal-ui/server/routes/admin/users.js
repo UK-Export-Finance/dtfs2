@@ -171,7 +171,6 @@ router.post('/users/reset-password/:_id', async (req, res) => {
   const { success } = await api.resetPassword(user.username);
 
   if (success) {
-    // Re-direct upon error(s)
     return res.render('admin/submitted-page.njk', {
       primaryNav: PRIMARY_NAV_KEY.USERS,
       _id,
