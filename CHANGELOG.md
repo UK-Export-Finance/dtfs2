@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.11.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.10.0...v2.11.0) (2025-09-12)
+
+
+### Features
+
+* **DTFS2-6423:** multi stage docker build - dtfs-central-api ([#4414](https://github.com/UK-Export-Finance/dtfs2/issues/4414)) ([9601ac7](https://github.com/UK-Export-Finance/dtfs2/commit/9601ac71417e0f461ada1bfc978d6ee01a05ddd1))
+* **DTFS2-6423:** multi stage docker build ([#4421](https://github.com/UK-Export-Finance/dtfs2/issues/4421)) ([02cee40](https://github.com/UK-Export-Finance/dtfs2/commit/02cee4026a6a5c1a00867973323f9f34d3aa25e3))
+* **DTFS2-6423:** updated .dockerignore ([#4417](https://github.com/UK-Export-Finance/dtfs2/issues/4417)) ([790647b](https://github.com/UK-Export-Finance/dtfs2/commit/790647b144c88777c9cbc8e177513779737e3860))
+
 ## [2.10.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.9.0...v2.10.0) (2025-09-08)
 
 
