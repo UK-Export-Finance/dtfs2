@@ -20,7 +20,7 @@ const facilitiesToCreate = [
 
 context('Amendments - Make a change button - FF_PORTAL_FACILITY_AMENDMENTS_ENABLED feature flag enabled', () => {
   before(() => {
-    // cy.loadData();
+    cy.loadData();
 
     cy.createFullApplication({ facilitiesToCreate }).then((ids) => {
       const { dealId: id, facilityIds } = ids;
