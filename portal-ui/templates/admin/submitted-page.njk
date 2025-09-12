@@ -1,0 +1,31 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% extends "index.njk" %}
+{% import '../_macros/submitted-reset-password-request.njk' as submittedResetPasswordRequest %}
+
+{% block pageTitle -%}
+  Reset password confirmation sent
+{%- endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        {{ submittedResetPasswordRequest.render() }}
+        <div class="govuk-!-margin-top-4" data-cy="reset-link-sent-text">
+          <p>{{user.username}} will receive email instructions to reset their password shortly.</p>
+
+          {{ govukButton({
+              text: "Back to dashboard",
+              classes: "govuk-button--secondary",
+              href: "/dashboard/deals",
+              attributes: {
+                'data-cy': 'back-to-dashboard-button'
+              }
+            })
+          }}
+
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

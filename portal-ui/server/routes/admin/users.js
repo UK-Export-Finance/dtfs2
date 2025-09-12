@@ -149,42 +149,41 @@ router.get('/users/enable/:_id', async (req, res) => {
   });
 });
 
-// Admin - Change user password
-router.get('/users/change-password/:_id', async (req, res) => {
+// Admin - Reset user password
+router.get('/users/reset-password/:_id', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
   const user = await getApiData(api.user(_id, userToken), res);
 
-  return res.render('admin/user-change-password.njk', {
-    primaryNav: PRIMARY_NAV_KEY.USERS,
+  return res.render('admin/user-reset-password.njk', {
     _id,
     user,
   });
 });
 
-// Admin - Change user password
-router.post('/users/change-password/:_id', async (req, res) => {
-  const payloadProperties = ['password', 'passwordConfirm'];
-  const payload = constructPayload(req.body, payloadProperties);
+// Admin - Reset user password
+router.post('/users/reset-password/:_id', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
   // Get user information
   const user = await getApiData(api.user(_id, userToken), res);
-  // Update user password
-  const { status, data } = await api.updateUser(_id, payload, userToken);
 
-  // Successful
-  if (status === 200) {
-    return res.redirect(`/admin/users/edit/${_id}`);
+  const { success } = await api.resetPassword(user.username);
+
+  if (success) {
+    // Re-direct upon error(s)
+    return res.render('admin/submitted-page.njk', {
+      primaryNav: PRIMARY_NAV_KEY.USERS,
+      _id,
+      user,
+    });
   }
 
-  const formattedValidationErrors = generateErrorSummary(data.errors, errorHref);
-  // Re-direct upon error(s)
-  return res.render('admin/user-change-password.njk', {
+  return res.render('admin/user-reset-password.njk', {
     primaryNav: PRIMARY_NAV_KEY.USERS,
     _id,
     user,
-    validationErrors: formattedValidationErrors,
+    error: 'There was a problem resetting the password, please try again.',
   });
 });
 
