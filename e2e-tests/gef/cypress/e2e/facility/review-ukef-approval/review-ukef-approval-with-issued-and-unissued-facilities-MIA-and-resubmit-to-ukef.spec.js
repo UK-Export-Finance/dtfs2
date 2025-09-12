@@ -1,10 +1,9 @@
 import { PORTAL_ACTIVITY_LABEL } from '@ukef/dtfs2-common';
 import relative from '../../relativeURL';
 import CONSTANTS from '../../../fixtures/constants';
-import { threeDaysAgo, addDays, twoMonths, threeMonths } from '../../../../../e2e-fixtures/dateConstants';
-import { MOCK_APPLICATION_MIA, MOCK_APPLICATION_MIA_SUBMITTED_TO_UKEF, UKEF_DECISION, underwriterManagersDecision } from '../../../fixtures/mocks/mock-deals';
-import { BANK1_MAKER1, BANK1_CHECKER1, BANK1_CHECKER1_WITH_MOCK_ID } from '../../../../../e2e-fixtures/portal-users.fixture';
-import { anIssuedCashFacilityWithCoverDateConfirmed, multipleMockGefFacilities } from '../../../../../e2e-fixtures/mock-gef-facilities';
+import { threeDaysAgo, addDays, twoMonths, threeMonths, oneYear } from '../../../../../e2e-fixtures/dateConstants';
+import { UKEF_DECISION, underwriterManagersDecision } from '../../../fixtures/mocks/mock-deals';
+import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import { acbsReconciliation } from '../../../../../e2e-fixtures/acbs';
 import { toTitleCase } from '../../../fixtures/helpers';
 import { continueButton, errorSummary, submitButton } from '../../partials';
@@ -17,49 +16,42 @@ import coverStartDate from '../../pages/cover-start-date';
 import applicationDetails from '../../pages/application-details';
 import applicationActivities from '../../pages/application-activities';
 
-const { unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover } = multipleMockGefFacilities({
-  facilityEndDateEnabled: true,
-});
-const issuedCashFacilityWithCoverDateConfirmed = anIssuedCashFacilityWithCoverDateConfirmed({ facilityEndDateEnabled: true });
-
 let dealId;
 let token;
 let facilityTwoId;
 
-const unissuedFacilitiesArray = [unissuedCashFacility, unissuedContingentFacility, unissuedCashFacilityWith20MonthsOfCover];
+const issuedFacilities = [{ isCashFacility: true, isIssued: true, isUsingFacilityEndDate: true, facilityEndDate: oneYear.date, name: 'Facility 2' }];
 
-const issuedFacilities = [issuedCashFacilityWithCoverDateConfirmed];
+const unissuedFacilitiesArray = [
+  { isCashFacility: true, isIssued: false, isUsingFacilityEndDate: true, facilityEndDate: oneYear.date, name: 'Facility 1' },
+  { isCashFacility: false, isIssued: false, isUsingFacilityEndDate: true, facilityEndDate: oneYear.date, name: 'Facility 3' },
+  { isCashFacility: true, isIssued: false, monthsOfCover: '20', isUsingFacilityEndDate: true, facilityEndDate: oneYear.date, name: 'Facility 4' },
+];
+
+const facilitiesToCreate = [unissuedFacilitiesArray[0], issuedFacilities[0], unissuedFacilitiesArray[1], unissuedFacilitiesArray[2]];
+
+const facilities = [];
 
 context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued facility', () => {
   before(() => {
-    cy.apiLogin(BANK1_MAKER1)
-      .then((t) => {
-        token = t;
-      })
-      .then(() => {
-        // creates application and inserts facilities and changes status
-        cy.apiCreateApplication(BANK1_MAKER1, token).then(({ body }) => {
-          dealId = body._id;
-          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA_SUBMITTED_TO_UKEF);
-          cy.submitDealAfterUkefIds(dealId, 'GEF', BANK1_CHECKER1_WITH_MOCK_ID);
-          cy.apiUpdateApplication(dealId, token, MOCK_APPLICATION_MIA).then(() => {
-            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-              unissuedCashFacility._id = facility.body.details._id;
-              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacility);
-            });
-            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) => {
-              facilityTwoId = facility.body.details._id;
-              cy.apiUpdateFacility(facility.body.details._id, token, issuedCashFacilityWithCoverDateConfirmed);
-            });
-            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CONTINGENT, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, unissuedContingentFacility),
-            );
-            cy.apiCreateFacility(dealId, CONSTANTS.FACILITY_TYPE.CASH, token).then((facility) =>
-              cy.apiUpdateFacility(facility.body.details._id, token, unissuedCashFacilityWith20MonthsOfCover),
-            );
-            cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS);
-            cy.addCommentObjToDeal(dealId, CONSTANTS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION, UKEF_DECISION);
-          });
+    cy.loadData();
+
+    // creates full application from UI and then uses api to change status and add comments
+    cy.createFullApplication({ facilitiesToCreate, automaticEligibility: false }).then((ids) => {
+      const { dealId: id, facilityIds } = ids;
+      dealId = id;
+
+      facilityTwoId = facilityIds[1];
+
+      cy.clearSessionCookies();
+      cy.apiLogin(BANK1_MAKER1)
+        .then((t) => {
+          token = t;
+        })
+        .then(() => {
+          cy.apiSetApplicationStatus(dealId, token, CONSTANTS.DEAL_STATUS.UKEF_APPROVED_WITH_CONDITIONS);
+          cy.addCommentObjToDeal(dealId, CONSTANTS.DEAL_COMMENT_TYPE_PORTAL.UKEF_DECISION, UKEF_DECISION);
+
           cy.addUnderwriterCommentToTfm(dealId, underwriterManagersDecision);
 
           // Add ACBS object to TFM
@@ -68,8 +60,13 @@ context('Review UKEF decision MIA -> confirm coverStartDate and issue unissued f
               ...acbsReconciliation,
             },
           });
+
+          // gets all the facilities for the deal and adds facilities to facilities array
+          cy.apiFetchAllFacilities(dealId, token).then((res) => {
+            res.body.items.forEach((eachFacility) => facilities.push(eachFacility.details));
+          });
         });
-      });
+    });
   });
 
   describe('Review UKEF decision', () => {
@@ -516,19 +513,15 @@ context('Check activity feed', () => {
       applicationActivities.activityTimeline().contains(`${PORTAL_ACTIVITY_LABEL.MIN_SUBMISSION} by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
 
       // first facility issued activity
+      applicationActivities.facilityActivityChangedBy(facilities[0].ukefFacilityId).contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
       applicationActivities
-        .facilityActivityChangedBy(unissuedFacilitiesArray[0].ukefFacilityId)
-        .contains(`Changed by ${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname}`);
-      applicationActivities
-        .facilityActivityCheckedBy(unissuedFacilitiesArray[0].ukefFacilityId)
+        .facilityActivityCheckedBy(facilities[0].ukefFacilityId)
         .contains(`Checked by ${BANK1_CHECKER1.firstname} ${BANK1_CHECKER1.surname}`);
-      applicationActivities.previousStatusTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Unissued');
-      applicationActivities.newStatusTag(unissuedFacilitiesArray[0].ukefFacilityId).contains('Issued');
-      applicationActivities
-        .facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId)
-        .contains(`${unissuedFacilitiesArray[0].type} facility ${unissuedFacilitiesArray[0].ukefFacilityId}`);
-      applicationActivities.facilityActivityLink(unissuedFacilitiesArray[0].ukefFacilityId).click();
-      cy.url().should('eq', relative(`/gef/application-details/${dealId}#${unissuedFacilitiesArray[0]._id}`));
+      applicationActivities.previousStatusTag(facilities[0].ukefFacilityId).contains('Unissued');
+      applicationActivities.newStatusTag(facilities[0].ukefFacilityId).contains('Issued');
+      applicationActivities.facilityActivityLink(facilities[0].ukefFacilityId).contains(`${facilities[0].type} facility ${facilities[0].ukefFacilityId}`);
+      applicationActivities.facilityActivityLink(facilities[0].ukefFacilityId).click();
+      cy.url().should('eq', relative(`/gef/application-details/${dealId}#${facilities[0]._id}`));
 
       applicationActivities.subNavigationBarActivities().click();
     });
@@ -537,27 +530,27 @@ context('Check activity feed', () => {
       applicationActivities.subNavigationBarActivities().click();
 
       // already issued facility should not appear in the activity list
-      applicationActivities.facilityActivityChangedBy(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityCheckedBy(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
-      applicationActivities.previousStatusTag(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
-      applicationActivities.newStatusTag(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityLink(issuedCashFacilityWithCoverDateConfirmed.ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityChangedBy(facilities[1].ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityCheckedBy(facilities[1].ukefFacilityId).should('not.exist');
+      applicationActivities.previousStatusTag(facilities[1].ukefFacilityId).should('not.exist');
+      applicationActivities.newStatusTag(facilities[1].ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityLink(facilities[1].ukefFacilityId).should('not.exist');
 
       // 2nd facility unissued so should not show up
-      applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[1].ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[1].ukefFacilityId).should('not.exist');
-      applicationActivities.previousStatusTag(unissuedFacilitiesArray[1].ukefFacilityId).should('not.exist');
-      applicationActivities.newStatusTag(unissuedFacilitiesArray[1].ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityLink(unissuedFacilitiesArray[1].ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityChangedBy(facilities[2].ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityCheckedBy(facilities[2].ukefFacilityId).should('not.exist');
+      applicationActivities.previousStatusTag(facilities[2].ukefFacilityId).should('not.exist');
+      applicationActivities.newStatusTag(facilities[2].ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityLink(facilities[2].ukefFacilityId).should('not.exist');
 
       applicationActivities.subNavigationBarActivities().click();
 
       // 3rd facility unissued so should not show up
-      applicationActivities.facilityActivityChangedBy(unissuedFacilitiesArray[2].ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityCheckedBy(unissuedFacilitiesArray[2].ukefFacilityId).should('not.exist');
-      applicationActivities.previousStatusTag(unissuedFacilitiesArray[2].ukefFacilityId).should('not.exist');
-      applicationActivities.newStatusTag(unissuedFacilitiesArray[2].ukefFacilityId).should('not.exist');
-      applicationActivities.facilityActivityLink(unissuedFacilitiesArray[2].ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityChangedBy(facilities[3].ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityCheckedBy(facilities[3].ukefFacilityId).should('not.exist');
+      applicationActivities.previousStatusTag(facilities[3].ukefFacilityId).should('not.exist');
+      applicationActivities.newStatusTag(facilities[3].ukefFacilityId).should('not.exist');
+      applicationActivities.facilityActivityLink(facilities[3].ukefFacilityId).should('not.exist');
     });
   });
 });

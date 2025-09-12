@@ -187,23 +187,6 @@ const addCommentObjToDeal = (dealId, commentType, comment) =>
     })
     .then((res) => res);
 
-// TODO: DTFS2-7112 this endpoint is obsolete and should be removed
-const submitDealAfterUkefIds = (dealId, dealType, checker, token) =>
-  cy
-    .request({
-      url: `${tfmApiUrl()}/v1/deals/submitDealAfterUkefIds`,
-      method: 'PUT',
-      body: { dealId, dealType, checker },
-      headers: {
-        ...headers,
-        Authorization: token,
-      },
-    })
-    .then((resp) => {
-      expect(resp.status).to.equal(200);
-      return resp.body;
-    });
-
 /**
  * Updates a TFM deal by sending a PUT request to the TFM API.
  *
@@ -280,7 +263,6 @@ export {
   createFacility,
   updateFacility,
   addCommentObjToDeal,
-  submitDealAfterUkefIds,
   tfmLogin,
   submitDealToTfm,
   addUnderwriterCommentToTfm,
