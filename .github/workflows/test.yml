@@ -1507,6 +1507,7 @@ jobs:
       # Single dimension matrix
       matrix:
         functions: ['acbs-function']
+        webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'dtfs-central-api', 'external-api', 'trade-finance-manager-api']
 
     concurrency:
       group: docker-build-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
@@ -1534,3 +1535,7 @@ jobs:
 
       - name: Build
         run: docker build -f ./azure-functions/${{ matrix.functions }}/Dockerfile .
+
+      - name: Build
+        run: docker build -f ./${{ matrix.webapp }}/Dockerfile . \
+          --build-arg GITHUB_SHA=${{ github.sha }}
