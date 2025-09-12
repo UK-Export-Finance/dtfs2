@@ -153,37 +153,49 @@ router.get('/users/enable/:_id', async (req, res) => {
 router.get('/users/reset-password/:_id', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  const user = await getApiData(api.user(_id, userToken), res);
+  try {
+    // Get user information
+    const user = await getApiData(api.user(_id, userToken), res);
 
-  return res.render('admin/user-reset-password.njk', {
-    _id,
-    user,
-  });
+    return res.render('admin/user-reset-password.njk', {
+      _id,
+      user,
+    });
+  } catch (error) {
+    console.error('Error fetching user data for password reset %o', error);
+    return res.render('_partials/problem-with-service.njk');
+  }
 });
 
 // Admin - Reset user password
 router.post('/users/reset-password/:_id', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
-  // Get user information
-  const user = await getApiData(api.user(_id, userToken), res);
+  try {
+    // Get user information
+    const user = await getApiData(api.user(_id, userToken), res);
 
-  const { success } = await api.resetPassword(user.username);
+    // Reset user password
+    const { success } = await api.resetPassword(user.username);
 
-  if (success) {
-    return res.render('admin/submitted-page.njk', {
-      primaryNav: PRIMARY_NAV_KEY.USERS,
+    if (success) {
+      return res.render('admin/submitted-page.njk', {
+        _id,
+        user,
+      });
+    }
+
+    const errorMessage = 'There was a problem resetting the password, please try again.';
+
+    return res.render('admin/user-reset-password.njk', {
       _id,
       user,
+      errorMessage,
     });
+  } catch (error) {
+    console.error('Error sending reset password link %o', error);
+    return res.render('_partials/problem-with-service.njk');
   }
-
-  return res.render('admin/user-reset-password.njk', {
-    primaryNav: PRIMARY_NAV_KEY.USERS,
-    _id,
-    user,
-    error: 'There was a problem resetting the password, please try again.',
-  });
 });
 
 module.exports = router;
