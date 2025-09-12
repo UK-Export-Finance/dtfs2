@@ -2,10 +2,10 @@ const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/chang
 const databaseHelper = require('../../database-helper');
 const { setUpApiTestUser } = require('../../api-test-users');
 
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const { as } = require('../../api')(app);
 
-const { resetPassword, getUserByPasswordToken } = require('../../../src/v1/users/reset-password.controller');
+const { resetPassword, getUserByPasswordToken } = require('../../../server/v1/users/reset-password.controller');
 
 const users = require('./test-data');
 
@@ -16,16 +16,16 @@ const MOCK_USER = {
   email: temporaryUsernameAndEmail,
 };
 
-const utils = require('../../../src/crypto/utils');
+const utils = require('../../../server/crypto/utils');
 
-jest.mock('../../../src/v1/email');
-const sendEmail = require('../../../src/v1/email');
-const { UserService } = require('../../../src/v1/users/user.service');
+jest.mock('../../../server/v1/email');
+const sendEmail = require('../../../server/v1/email');
+const { UserService } = require('../../../server/v1/users/user.service');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests } = require('./with-validate-password.api-tests');
 
-jest.mock('../../../src/v1/users/login.controller', () => ({
-  ...jest.requireActual('../../../src/v1/users/login.controller'),
+jest.mock('../../../server/v1/users/login.controller', () => ({
+  ...jest.requireActual('../../../server/v1/users/login.controller'),
   sendSignInLinkEmail: jest.fn(() => Promise.resolve({ status: 201 })),
 }));
 

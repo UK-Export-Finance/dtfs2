@@ -1,21 +1,13 @@
+import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { Response } from 'supertest';
 import { format } from 'date-fns';
-import {
-  Bank,
-  FeeRecordEntityMockBuilder,
-  RECONCILIATION_IN_PROGRESS,
-  FeeRecordCorrectionEntityMockBuilder,
-  UtilisationReportEntityMockBuilder,
-  ReportPeriod,
-  GetRecordCorrectionLogDetailsResponseBody,
-  DATE_FORMATS,
-} from '@ukef/dtfs2-common';
+import { Bank, RECONCILIATION_IN_PROGRESS, ReportPeriod, GetRecordCorrectionLogDetailsResponseBody, DATE_FORMATS } from '@ukef/dtfs2-common';
 import { HttpStatusCode, getUri } from 'axios';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { wipe } from '../../wipeDB';
-import { mongoDbClient } from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../server/drivers/db-client';
 import { aBank } from '../../../test-helpers';
 
 const BASE_URL = '/v1/utilisation-reports/record-correction-log-details/:correctionId';

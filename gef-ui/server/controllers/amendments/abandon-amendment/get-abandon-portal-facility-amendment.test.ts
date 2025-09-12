@@ -1,5 +1,6 @@
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { aPortalSessionUser, DEAL_STATUS, PORTAL_LOGIN_STATUS, DEAL_SUBMISSION_TYPE, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { DEAL_STATUS, PORTAL_LOGIN_STATUS, DEAL_SUBMISSION_TYPE, ROLES, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import { createMocks } from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import { PORTAL_AMENDMENT_PAGES } from '../../../constants/amendments';

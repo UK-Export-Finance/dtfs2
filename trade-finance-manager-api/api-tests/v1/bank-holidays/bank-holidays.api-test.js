@@ -1,4 +1,4 @@
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const { initialiseTestUsers } = require('../../api-test-users');
 const { createApi } = require('../../api');
 

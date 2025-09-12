@@ -1,5 +1,5 @@
 import { REPORT_NOT_RECEIVED, RECONCILIATION_COMPLETED } from '@ukef/dtfs2-common';
-import { UtilisationReportResponseBody } from '../../src/v1/api-response-types';
+import { UtilisationReportResponseBody } from '../../server/v1/api-response-types';
 
 export const aUtilisationReportResponse = (): UtilisationReportResponseBody => ({
   id: 12,

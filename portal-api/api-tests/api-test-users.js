@@ -1,11 +1,11 @@
 const api = require('./api');
-const { mongoDbClient: db } = require('../src/drivers/db-client');
-const { genPassword } = require('../src/crypto/utils');
+const { mongoDbClient: db } = require('../server/drivers/db-client');
+const { genPassword } = require('../server/crypto/utils');
 const databaseHelper = require('./database-helper');
-const { MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_REPORT_OFFICER } = require('../src/v1/roles/roles');
+const { MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_REPORT_OFFICER } = require('../server/v1/roles/roles');
 const { DB_COLLECTIONS } = require('./fixtures/constants');
 const { createLoggedInUserSession } = require('../test-helpers/api-test-helpers/database/user-repository');
-const { STATUS } = require('../src/constants/user');
+const { STATUS } = require('../server/constants/user');
 
 const banks = {
   bank1: {

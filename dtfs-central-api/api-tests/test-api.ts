@@ -1,7 +1,7 @@
 import request, { Response } from 'supertest';
 import dotenv from 'dotenv';
 import { Express } from 'express';
-import { createApp } from '../src/createApp';
+import { createApp } from '../server/createApp';
 
 dotenv.config();
 

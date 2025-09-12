@@ -1,22 +1,24 @@
+import {
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  UtilisationReportEntityMockBuilder,
+  withSqlIdPathParameterValidationTests,
+} from '@ukef/dtfs2-common/test-helpers';
 import { HttpStatusCode } from 'axios';
 import {
   FEE_RECORD_STATUS,
   FeeRecordEntity,
-  FeeRecordEntityMockBuilder,
   FeeRecordPaymentJoinTableEntity,
   FeeRecordStatus,
-  PaymentEntityMockBuilder,
   PENDING_RECONCILIATION,
   RECONCILIATION_IN_PROGRESS,
   UtilisationReportEntity,
-  UtilisationReportEntityMockBuilder,
   UtilisationReportStatus,
-  withSqlIdPathParameterValidationTests,
 } from '@ukef/dtfs2-common';
 import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
-import { mongoDbClient } from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../server/drivers/db-client';
 import { wipe } from '../../wipeDB';
 import { aPortalUser, aTfmSessionUser } from '../../../test-helpers';
 

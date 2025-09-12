@@ -1,5 +1,5 @@
 import { MongoDbCollectionName } from '@ukef/dtfs2-common';
-import { mongoDbClient } from '../src/drivers/db-client';
+import { mongoDbClient } from '../server/drivers/db-client';
 
 /**
  * Drops collections

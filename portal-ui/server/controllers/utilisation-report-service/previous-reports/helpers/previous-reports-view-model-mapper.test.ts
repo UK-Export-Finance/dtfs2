@@ -1,10 +1,10 @@
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import {
   PENDING_RECONCILIATION,
   RECONCILIATION_COMPLETED,
   RECONCILIATION_IN_PROGRESS,
   REPORT_NOT_RECEIVED,
   UtilisationReportStatus,
-  aPortalSessionUser,
   UTILISATION_REPORT_STATUS_TAG_COLOURS,
 } from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';

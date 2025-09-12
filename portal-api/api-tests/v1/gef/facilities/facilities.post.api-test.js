@@ -1,11 +1,11 @@
 const { getCurrentGefDealVersion, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../../database-helper');
-const CONSTANTS = require('../../../../src/constants');
-const { ERROR } = require('../../../../src/v1/gef/enums');
+const CONSTANTS = require('../../../../server/constants');
+const { ERROR } = require('../../../../server/v1/gef/enums');
 
-const app = require('../../../../src/createApp');
+const app = require('../../../../server/createApp');
 const testUserCache = require('../../../api-test-users');
-const { MAKER } = require('../../../../src/v1/roles/roles');
+const { MAKER } = require('../../../../server/v1/roles/roles');
 
 const { as } = require('../../../api')(app);
 

@@ -1,22 +1,14 @@
+import { FeeRecordEntityMockBuilder, PaymentEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { Response } from 'supertest';
 import { HttpStatusCode, getUri } from 'axios';
-import {
-  Bank,
-  Currency,
-  FeeRecordEntityMockBuilder,
-  PaymentEntityMockBuilder,
-  RECONCILIATION_IN_PROGRESS,
-  ReportPeriod,
-  UtilisationReportEntityMockBuilder,
-  CURRENCY,
-} from '@ukef/dtfs2-common';
+import { Bank, Currency, RECONCILIATION_IN_PROGRESS, ReportPeriod, CURRENCY } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
-import { mongoDbClient } from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../server/drivers/db-client';
 import { wipe } from '../../wipeDB';
 import { aBank } from '../../../test-helpers';
-import { GetPaymentDetailsResponseBody } from '../../../src/v1/controllers/utilisation-report-service/get-payment-details-by-id.controller';
+import { GetPaymentDetailsResponseBody } from '../../../server/v1/controllers/utilisation-report-service/get-payment-details-by-id.controller';
 
 interface CustomResponse extends Response {
   body: GetPaymentDetailsResponseBody;

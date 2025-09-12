@@ -2,9 +2,9 @@ const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream
 const { FACILITY_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
-const getObjectPropertyValueFromStringPath = require('../../../../src/utils/getObjectPropertyValueFromStringPath');
+const getObjectPropertyValueFromStringPath = require('../../../../server/utils/getObjectPropertyValueFromStringPath');
 const setObjectPropertyValueFromStringPath = require('../../../helpers/set-object-property-value-from-string-path');
-const { DEALS } = require('../../../../src/constants');
+const { DEALS } = require('../../../../server/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 
 describe('/v1/tfm/facilities', () => {

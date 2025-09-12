@@ -1,4 +1,4 @@
-jest.mock('../../../src/v1/email');
+jest.mock('../../../server/v1/email');
 
 jest.mock('node:crypto', () => ({
   ...jest.requireActual('node:crypto'),
@@ -11,14 +11,14 @@ const { pbkdf2Sync, randomBytes } = require('node:crypto');
 const { AxiosError } = require('axios');
 const databaseHelper = require('../../database-helper');
 const { setUpApiTestUser } = require('../../api-test-users');
-const sendEmail = require('../../../src/v1/email');
+const sendEmail = require('../../../server/v1/email');
 
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const { as, post } = require('../../api')(app);
 const users = require('./test-data');
 const { withPartial2FaOnlyAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { SIGN_IN_LINK, USER, EMAIL_TEMPLATE_IDS } = require('../../../src/constants');
-const { PORTAL_UI_URL } = require('../../../src/config/sign-in-link.config');
+const { SIGN_IN_LINK, USER, EMAIL_TEMPLATE_IDS } = require('../../../server/constants');
+const { PORTAL_UI_URL } = require('../../../server/config/sign-in-link.config');
 const { createPartiallyLoggedInUserSession, createLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
 const { SIGN_IN_TOKEN_HEX_EXAMPLES, SIGN_IN_TOKEN_SALT_EXAMPLES } = require('../../fixtures/sign-in-token-constants');
 

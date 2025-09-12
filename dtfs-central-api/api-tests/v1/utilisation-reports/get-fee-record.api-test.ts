@@ -1,11 +1,12 @@
+import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { Response } from 'supertest';
 import { HttpStatusCode, getUri } from 'axios';
-import { Bank, FeeRecordEntityMockBuilder, RECONCILIATION_IN_PROGRESS, ReportPeriod, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { Bank, RECONCILIATION_IN_PROGRESS, ReportPeriod } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
-import { GetFeeRecordResponseBody } from '../../../src/v1/controllers/utilisation-report-service/get-fee-record.controller';
-import { mongoDbClient } from '../../../src/drivers/db-client';
+import { GetFeeRecordResponseBody } from '../../../server/v1/controllers/utilisation-report-service/get-fee-record.controller';
+import { mongoDbClient } from '../../../server/drivers/db-client';
 import { wipe } from '../../wipeDB';
 import { aBank } from '../../../test-helpers';
 

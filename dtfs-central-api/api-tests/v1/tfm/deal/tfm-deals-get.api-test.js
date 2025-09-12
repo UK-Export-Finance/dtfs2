@@ -2,7 +2,7 @@ const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
-const { DEALS } = require('../../../../src/constants');
+const { DEALS } = require('../../../../server/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../../helpers/create-deal');
 

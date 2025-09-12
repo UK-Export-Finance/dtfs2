@@ -1,4 +1,4 @@
-import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common';
+import { MOCK_COMPANY_REGISTRATION_NUMBERS } from '@ukef/dtfs2-common/test-helpers';
 import applicationDetails from '../pages/application-details';
 import dashboardPage from '../pages/dashboard-page';
 import companiesHouse from '../pages/companies-house';

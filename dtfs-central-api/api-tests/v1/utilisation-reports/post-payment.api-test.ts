@@ -1,22 +1,16 @@
-import { HttpStatusCode } from 'axios';
 import {
-  CURRENCY,
-  Currency,
-  FEE_RECORD_STATUS,
-  FeeRecordEntity,
   FeeRecordEntityMockBuilder,
-  FeeRecordStatus,
-  PENDING_RECONCILIATION,
-  PaymentEntity,
   PaymentEntityMockBuilder,
-  PaymentMatchingToleranceEntityMockBuilder,
   UtilisationReportEntityMockBuilder,
-} from '@ukef/dtfs2-common';
+  PaymentMatchingToleranceEntityMockBuilder,
+} from '@ukef/dtfs2-common/test-helpers';
+import { HttpStatusCode } from 'axios';
+import { CURRENCY, Currency, FEE_RECORD_STATUS, FeeRecordEntity, FeeRecordStatus, PENDING_RECONCILIATION, PaymentEntity } from '@ukef/dtfs2-common';
 import { aTfmUser } from '@ukef/dtfs2-common/mock-data-backend';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
-import { mongoDbClient } from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../server/drivers/db-client';
 import { wipe } from '../../wipeDB';
 import { aPortalUser, aTfmSessionUser } from '../../../test-helpers';
 

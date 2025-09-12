@@ -1,4 +1,4 @@
-const V2_CONSTANTS = require('../../../portal-api/src/constants');
+const V2_CONSTANTS = require('../../../portal-api/server/constants');
 const { hasValue, isNumber, hasBooleanValue, hasObjectValues } = require('../helpers/field-checks');
 const log = require('../helpers/logs');
 

@@ -2,14 +2,14 @@
  * @jest-environment node
  */
 
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 
 const { as, get } = require('../../api')(app);
-const { MAKER } = require('../../../src/v1/roles/roles');
+const { MAKER } = require('../../../server/v1/roles/roles');
 
-jest.unmock('../../../src/external-api/api');
+jest.unmock('../../../server/external-api/api');
 
 const mockIndustrySectorCode = '1008';
 

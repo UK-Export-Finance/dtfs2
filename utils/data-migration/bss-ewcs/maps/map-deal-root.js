@@ -3,7 +3,7 @@ const mapSubmissionType = require('./map-submission-type');
 const { getBankByName } = require('../../helpers/banks');
 const { convertV1Date } = require('../helpers/date-helpers');
 const { getBssUserByEmail } = require('../../helpers/users');
-const CONSTANTS = require('../../../../portal-api/src/constants');
+const CONSTANTS = require('../../../../portal-api/server/constants');
 
 const mapDealRoot = (portalDealId, v1Deal, banks) => {
   let hasError = false;

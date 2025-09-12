@@ -11,7 +11,7 @@ import {
 } from '@ukef/dtfs2-common';
 import { difference } from 'lodash';
 import { testApi } from '../../test-api';
-import { mongoDbClient } from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../server/drivers/db-client';
 import { aFacility, aTfmFacility } from '../../../test-helpers';
 
 interface SuccessResponse extends Response {

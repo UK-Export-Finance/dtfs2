@@ -1,12 +1,12 @@
 const { HttpStatusCode } = require('axios');
 const { CURRENCY, getCurrentGefDealVersion, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../../database-helper');
-const CONSTANTS = require('../../../../src/constants');
-const { FACILITY_PAYMENT_TYPE, ERROR } = require('../../../../src/v1/gef/enums');
+const CONSTANTS = require('../../../../server/constants');
+const { FACILITY_PAYMENT_TYPE, ERROR } = require('../../../../server/v1/gef/enums');
 
-const app = require('../../../../src/createApp');
+const app = require('../../../../server/createApp');
 const testUserCache = require('../../../api-test-users');
-const { MAKER } = require('../../../../src/v1/roles/roles');
+const { MAKER } = require('../../../../server/v1/roles/roles');
 
 const { as } = require('../../../api')(app);
 
@@ -15,7 +15,7 @@ const baseUrl = '/v1/gef/facilities';
 const applicationBaseUrl = '/v1/gef/application';
 const mockApplications = require('../../../fixtures/gef/application');
 
-const { calculateUkefExposure, calculateGuaranteeFee } = require('../../../../src/v1/gef/calculations/facility-calculations');
+const { calculateUkefExposure, calculateGuaranteeFee } = require('../../../../server/v1/gef/calculations/facility-calculations');
 const { DB_COLLECTIONS } = require('../../../fixtures/constants');
 const { generateANewFacility } = require('./helpers/generate-a-new-facility.tests');
 const { generateACompleteFacilityUpdate } = require('./helpers/generate-a-facility-update.tests');

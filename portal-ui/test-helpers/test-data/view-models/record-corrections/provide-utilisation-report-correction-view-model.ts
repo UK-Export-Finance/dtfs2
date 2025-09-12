@@ -1,4 +1,5 @@
-import { aPortalSessionUser, CURRENCY, mapCurrenciesToRadioItems, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
+import { CURRENCY, mapCurrenciesToRadioItems, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
 import { ProvideUtilisationReportCorrectionViewModel } from '../../../../server/types/view-models/record-correction/provide-utilisation-report-correction';
 import { PRIMARY_NAV_KEY } from '../../../../server/constants';
 

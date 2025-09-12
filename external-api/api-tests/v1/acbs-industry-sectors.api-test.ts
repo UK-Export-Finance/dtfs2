@@ -1,6 +1,6 @@
 import { industrySector } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
-import { findACBSIndustrySector } from '../../src/v1/controllers/industry-sectors.controller';
+import { findACBSIndustrySector } from '../../server/v1/controllers/industry-sectors.controller';
 
 describe('findACBSIndustrySector', () => {
   const invalidIndustryCodeTestCases = [0, 1, 12, 123, 1234, 0o001];

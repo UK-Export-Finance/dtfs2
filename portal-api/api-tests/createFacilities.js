@@ -1,4 +1,4 @@
-const app = require('../src/createApp');
+const app = require('../server/createApp');
 const { as } = require('./api')(app);
 
 const createFacilities = async (user, dealId, facilities) => {

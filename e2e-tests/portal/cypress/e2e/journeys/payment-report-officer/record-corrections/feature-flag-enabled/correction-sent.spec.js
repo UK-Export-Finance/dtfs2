@@ -1,12 +1,5 @@
-import {
-  UtilisationReportEntityMockBuilder,
-  FeeRecordCorrectionEntityMockBuilder,
-  PENDING_RECONCILIATION,
-  FeeRecordEntityMockBuilder,
-  FEE_RECORD_STATUS,
-  RECORD_CORRECTION_REASON,
-  getFormattedReportPeriodWithLongMonth,
-} from '@ukef/dtfs2-common';
+import { UtilisationReportEntityMockBuilder, FeeRecordEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
+import { PENDING_RECONCILIATION, FEE_RECORD_STATUS, RECORD_CORRECTION_REASON, getFormattedReportPeriodWithLongMonth } from '@ukef/dtfs2-common';
 import { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } from '../../../../../../../e2e-fixtures';
 import relative from '../../../../relativeURL';
 import { provideCorrection, pendingCorrections, correctionSent } from '../../../../pages';

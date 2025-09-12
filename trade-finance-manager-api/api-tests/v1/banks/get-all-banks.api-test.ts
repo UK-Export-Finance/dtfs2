@@ -1,6 +1,6 @@
 import { Response } from 'supertest';
 import { Bank } from '@ukef/dtfs2-common';
-import app from '../../../src/createApp';
+import app from '../../../server/createApp';
 import { initialiseTestUsers } from '../../api-test-users';
 import { createApi } from '../../api';
 

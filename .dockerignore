@@ -1,0 +1,90 @@
+# .dockerignore for DTFS2 monorepo
+
+# Node
+node_modules
+dist
+.npm
+
+# Docker
+Dockerfile
+docker-compose*.yml
+
+# Typescript
+**/*.tsbuildinfo
+
+# Environment
+.eslintignore
+.cspell.json
+commitlint.config.js
+renovate.json
+.dockerignore
+.editorconfig
+.prettierrc.json
+.eslintrc.json
+.eslintrc.js
+
+# Git
+.git
+.gitattributes
+.github
+.gitignore
+.husky
+
+# Editor
+.prettierignore
+.whitesource
+.vscode/*
+.DS_Store
+Library/
+Thumbs.db
+ehthumbs.db
+.idea/
+
+# Documentation
+**/*.md
+**/docs/
+LICENSE
+.config
+
+# Secrets
+**/.env*/*
+**/.env*
+secrets/**
+jwt_key
+
+# Logs
+**/*log/
+**/*.log
+coverage
+
+# Jest
+*.jest.*.config.*
+
+# Cypress
+**/cypress/videos
+**/cypress/screenshots
+
+# Reports
+reporting/tfm/report/*
+**/generated_reports
+**/temp/*
+
+# Utility
+utils/**/actionsheets/*
+utils/**/amendments/*
+utils/**/exports/*
+**/bss-ewcs/dump/*
+**/bss-ewcs/data/*
+**/gef/dump/*
+**/gef/data/*
+**/json/*
+**/report/*
+
+# Test
+**/*.test*
+**/*test/
+**/*tests/
+**/test-helpers/
+jest-html-reporters-*.html
+test-results/
+__mock*__

@@ -1,24 +1,23 @@
+import { UtilisationReportEntityMockBuilder, MOCK_AZURE_FILE_INFO } from '@ukef/dtfs2-common/test-helpers';
 import { HttpStatusCode } from 'axios';
 import { WithoutId } from 'mongodb';
 import {
   AzureFileInfoEntity,
   FeeRecordEntity,
-  MOCK_AZURE_FILE_INFO,
   MONGO_DB_COLLECTIONS,
   PENDING_RECONCILIATION,
   REPORT_NOT_RECEIVED,
   TfmFacility,
   UtilisationReportEntity,
-  UtilisationReportEntityMockBuilder,
   UtilisationReportRawCsvData,
   UtilisationReportStatus,
 } from '@ukef/dtfs2-common';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
-import { mongoDbClient } from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../server/drivers/db-client';
 import { wipe } from '../../wipeDB';
 import { aUtilisationReportRawCsvData, aPortalUser, aFacility, aBank, aTfmFacility } from '../../../test-helpers';
-import { PostUploadUtilisationReportRequestBody } from '../../../src/v1/controllers/utilisation-report-service/post-upload-utilisation-report.controller';
+import { PostUploadUtilisationReportRequestBody } from '../../../server/v1/controllers/utilisation-report-service/post-upload-utilisation-report.controller';
 
 console.error = jest.fn();
 

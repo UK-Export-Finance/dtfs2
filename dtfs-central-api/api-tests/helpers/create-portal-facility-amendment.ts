@@ -1,7 +1,8 @@
 import { Response } from 'supertest';
 import * as z from 'zod';
 import { PORTAL_FACILITY_AMENDMENT_USER_VALUES } from '@ukef/dtfs2-common/schemas';
-import { PORTAL_AMENDMENT_STATUS, PortalFacilityAmendmentWithUkefId, portalAmendmentToCheckerEmailVariables } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, PortalFacilityAmendmentWithUkefId } from '@ukef/dtfs2-common';
+import { portalAmendmentToCheckerEmailVariables } from '@ukef/dtfs2-common/test-helpers';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { testApi } from '../test-api';
 

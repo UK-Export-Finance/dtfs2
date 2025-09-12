@@ -1,7 +1,7 @@
 {
    "extends": "./tsconfig.json",
    "include": [
-       "src",
+       "server",
        "api-tests",
        "./*.jest.config.js/",
        ".eslintrc.js",

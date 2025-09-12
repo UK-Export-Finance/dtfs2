@@ -1,4 +1,5 @@
-import { REPORT_NOT_RECEIVED, UtilisationReportEntityMockBuilder, getPreviousReportPeriodForBankScheduleByMonth, toIsoMonthStamp } from '@ukef/dtfs2-common';
+import { UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
+import { REPORT_NOT_RECEIVED, getPreviousReportPeriodForBankScheduleByMonth, toIsoMonthStamp } from '@ukef/dtfs2-common';
 
 import relative from '../../relativeURL';
 import { NODE_TASKS, PDC_RECONCILE, TFM_URL } from '../../../../../e2e-fixtures';

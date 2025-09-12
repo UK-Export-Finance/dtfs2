@@ -1,13 +1,13 @@
 const { when } = require('jest-when');
 const { USER_STATUS } = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const { createApi } = require('../../api');
 const { initialiseTestUsers } = require('../../api-test-users');
-const api = require('../../../src/v1/api');
+const api = require('../../../server/v1/api');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
-const { TEAMS } = require('../../../src/constants');
-const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
+const { TEAMS } = require('../../../server/constants');
+const MOCK_USERS = require('../../../server/v1/__mocks__/mock-users');
 
 const { as, get } = createApi(app);
 

@@ -1,4 +1,5 @@
-import { mockRecordCorrectionDetails, FeeRecordCorrectionSummary } from '@ukef/dtfs2-common';
+import { mockRecordCorrectionDetails } from '@ukef/dtfs2-common/test-helpers';
+import { FeeRecordCorrectionSummary } from '@ukef/dtfs2-common';
 import { mapToRecordCorrectionTableRowViewModel, mapToRecordCorrectionViewModel } from './record-correction-helpers';
 import { mapToRecordCorrectionStatus } from './map-record-correction-status';
 

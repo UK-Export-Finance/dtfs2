@@ -10,7 +10,7 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable import/no-extraneous-dependencies */
 
-import { app } from '../../src/createApp';
+import { app } from '../../server/createApp';
 import { api } from '../api';
 
 const { get } = api(app);
