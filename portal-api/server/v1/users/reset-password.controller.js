@@ -4,7 +4,9 @@ const { createPasswordToken } = require('./controller');
 const { EMAIL_TEMPLATE_IDS } = require('../../constants');
 
 const sendResetEmail = async (emailAddress, resetToken) => {
+  const { PORTAL_UI_URL } = process.env;
   await sendEmail(EMAIL_TEMPLATE_IDS.PASSWORD_RESET, emailAddress, {
+    domain: PORTAL_UI_URL,
     resetToken,
   });
 };
