@@ -1,9 +1,6 @@
+import { anEmptyRecordCorrectionTransientFormData, FeeRecordCorrectionTransientFormDataEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { HttpStatusCode } from 'axios';
-import {
-  anEmptyRecordCorrectionTransientFormData,
-  FeeRecordCorrectionTransientFormDataEntityMockBuilder,
-  RecordCorrectionTransientFormData,
-} from '@ukef/dtfs2-common';
+import { RecordCorrectionTransientFormData } from '@ukef/dtfs2-common';
 import { withSqlAndMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../../test-api';
 import { SqlDbHelper } from '../../../sql-db-helper';

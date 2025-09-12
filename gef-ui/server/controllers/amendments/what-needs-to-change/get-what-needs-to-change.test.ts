@@ -7,15 +7,8 @@ const getTfmTeamMock = jest.fn();
 
 import { createMocks } from 'node-mocks-http';
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import {
-  aPortalSessionUser,
-  DEAL_STATUS,
-  DEAL_SUBMISSION_TYPE,
-  PORTAL_LOGIN_STATUS,
-  PortalFacilityAmendmentWithUkefId,
-  ROLES,
-  PORTAL_AMENDMENT_STATUS,
-} from '@ukef/dtfs2-common';
+import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_LOGIN_STATUS, PortalFacilityAmendmentWithUkefId, ROLES, PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import { HttpStatusCode } from 'axios';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';
 import { MOCK_PIM_TEAM } from '../../../utils/mocks/mock-tfm-teams.ts';

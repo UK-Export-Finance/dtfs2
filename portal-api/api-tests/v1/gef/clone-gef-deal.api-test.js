@@ -1,11 +1,11 @@
 const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
 const mockApplications = require('../../fixtures/gef/application');
-const api = require('../../../src/v1/api');
-const CONSTANTS = require('../../../src/constants');
+const api = require('../../../server/v1/api');
+const CONSTANTS = require('../../../server/constants');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const baseUrl = '/v1/gef/application';
@@ -17,7 +17,7 @@ const mockApplication = {
   bankInternalRefName: 'Updated Ref Name - Unit Test',
   submissionType: CONSTANTS.DEAL.SUBMISSION_TYPE.AIN,
 };
-const { MAKER, CHECKER, ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, ADMIN } = require('../../../server/v1/roles/roles');
 const [gefEligibilityCriteria] = require('../../fixtures/gef/eligibilityCriteria');
 
 describe(baseUrl, () => {

@@ -1,12 +1,12 @@
 const databaseHelper = require('../../database-helper');
 
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed-issued-and-unissued-facilities');
 
 const { as } = require('../../api')(app);
 const createFacilities = require('../../createFacilities');
-const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER } = require('../../../server/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('PUT /v1/deals/:id/status - from `Accepted by UKEF` - facility cover start dates', () => {

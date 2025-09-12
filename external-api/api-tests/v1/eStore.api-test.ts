@@ -1,10 +1,10 @@
 import MockAdapter from 'axios-mock-adapter';
 import axios, { HttpStatusCode } from 'axios';
 import { UKEF_ID } from '@ukef/dtfs2-common';
-import { app } from '../../src/createApp';
+import { app } from '../../server/createApp';
 import { api } from '../api';
-import { ESTORE_CRON_STATUS, ESTORE_SITE_STATUS } from '../../src/constants';
-import { Estore, EstoreAxiosResponse } from '../../src/interfaces';
+import { ESTORE_CRON_STATUS, ESTORE_SITE_STATUS } from '../../server/constants';
+import { Estore, EstoreAxiosResponse } from '../../server/interfaces';
 
 const { post } = api(app);
 
@@ -36,7 +36,7 @@ const mockFindOne = jest.fn();
 const mockUpdateOne = jest.fn();
 
 // Mock MongoDB calls
-jest.mock('../../src/database/mongo-client', () => ({
+jest.mock('../../server/database/mongo-client', () => ({
   getCollection: jest.fn(() => ({
     insertOne: mockInsertOne.mockResolvedValue({ insertedId: '6597dffeb5ef5ff4267e5043' }),
     findOne: mockFindOne,

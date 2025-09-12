@@ -1,22 +1,20 @@
+import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { HttpStatusCode } from 'axios';
 import {
   CURRENCY,
   FEE_RECORD_STATUS,
-  FeeRecordCorrectionEntityMockBuilder,
-  FeeRecordEntityMockBuilder,
   getNextReportPeriodForBankSchedule,
   RECONCILIATION_IN_PROGRESS,
   RECORD_CORRECTION_REASON,
   REPORT_NOT_RECEIVED,
-  UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { testApi } from '../../../test-api';
 import { SqlDbHelper } from '../../../sql-db-helper';
 import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
 import { wipe } from '../../../wipeDB';
 import { aBank, aMonthlyBankReportPeriodSchedule, aPortalUser } from '../../../../test-helpers';
-import { mongoDbClient } from '../../../../src/drivers/db-client';
-import { PendingCorrectionsResponseBody } from '../../../../src/v1/controllers/utilisation-report-service/fee-record-correction/get-utilisation-report-pending-corrections.controller';
+import { mongoDbClient } from '../../../../server/drivers/db-client';
+import { PendingCorrectionsResponseBody } from '../../../../server/v1/controllers/utilisation-report-service/fee-record-correction/get-utilisation-report-pending-corrections.controller';
 
 console.error = jest.fn();
 

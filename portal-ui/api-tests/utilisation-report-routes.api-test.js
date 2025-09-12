@@ -16,7 +16,8 @@ jest.mock('../server/api', () => ({
   }),
 }));
 
-const { ROLES, aRecordCorrectionFormValues } = require('@ukef/dtfs2-common');
+const { ROLES } = require('@ukef/dtfs2-common');
+const { aRecordCorrectionFormValues } = require('@ukef/dtfs2-common/test-helpers');
 const { HttpStatusCode } = require('axios');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');

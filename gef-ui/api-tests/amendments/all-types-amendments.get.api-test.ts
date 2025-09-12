@@ -1,6 +1,7 @@
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import { Headers } from 'node-mocks-http';
 import { NextFunction, Request, Response } from 'express';
-import { aPortalSessionUser, DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
+import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';

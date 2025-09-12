@@ -1,6 +1,7 @@
+import { aPortalSessionUser, aPortalSessionBank } from '@ukef/dtfs2-common/test-helpers';
 import httpMocks, { MockResponse } from 'node-mocks-http';
 import { Request, Response } from 'express';
-import { aPortalSessionBank, aPortalSessionUser, PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
+import { PORTAL_LOGIN_STATUS } from '@ukef/dtfs2-common';
 import { PRIMARY_NAV_KEY } from '../../../../constants';
 import api from '../../../../api';
 import { getRecordCorrectionLog } from '.';

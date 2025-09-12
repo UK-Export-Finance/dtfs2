@@ -1,16 +1,16 @@
 const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
-const app = require('../../../src/createApp');
-const { mongoDbClient: db } = require('../../../src/drivers/db-client');
-const { Hasher } = require('../../../src/crypto/hasher');
-const { Pbkdf2Sha512HashStrategy } = require('../../../src/crypto/pbkdf2-sha512-hash-strategy');
-const { CryptographicallyStrongGenerator } = require('../../../src/crypto/cryptographically-strong-generator');
+const app = require('../../../server/createApp');
+const { mongoDbClient: db } = require('../../../server/drivers/db-client');
+const { Hasher } = require('../../../server/crypto/hasher');
+const { Pbkdf2Sha512HashStrategy } = require('../../../server/crypto/pbkdf2-sha512-hash-strategy');
+const { CryptographicallyStrongGenerator } = require('../../../server/crypto/cryptographically-strong-generator');
 const { as } = require('../../api')(app);
-const { SIGN_IN_LINK, USER, HTTP_ERROR_CAUSES } = require('../../../src/constants');
+const { SIGN_IN_LINK, USER, HTTP_ERROR_CAUSES } = require('../../../server/constants');
 const users = require('./test-data');
 const { setUpApiTestUser } = require('../../api-test-users');
 const databaseHelper = require('../../database-helper');
 const { createPartiallyLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
-const { sanitizeUser } = require('../../../src/v1/users/sanitizeUserData');
+const { sanitizeUser } = require('../../../server/v1/users/sanitizeUserData');
 
 const maker1 = users.testBank1Maker1;
 const maker2 = users.testBank1Maker2;

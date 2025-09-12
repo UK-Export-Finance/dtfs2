@@ -3,7 +3,7 @@ const { generatePortalAuditDetails, generateTfmAuditDetails } = require('@ukef/d
 const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
-const { DEALS } = require('../../../../src/constants');
+const { DEALS } = require('../../../../server/constants');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 

@@ -189,7 +189,7 @@ Simple example of 2 groups with multiple tasks
   the provided user. Calls the API to get full user name and update the deal.
 
 There are also a series of smaller, more generic helper functions in
-`/src/v1/helpers/tasks.js` that are used in all the functions listed above:
+`/server/v1/helpers/tasks.js` that are used in all the functions listed above:
 
 - `getFirstTask`
 - `getTaskInGroupById`

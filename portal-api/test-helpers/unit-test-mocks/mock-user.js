@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 const { produce } = require('immer');
-const { STATUS } = require('../../src/constants/user');
-const { MAKER } = require('../../src/v1/roles/roles');
+const { STATUS } = require('../../server/constants/user');
+const { MAKER } = require('../../server/v1/roles/roles');
 
 const BASE_TEST_USER = {
   _id: '075bcd157dcb851180e02a7c',

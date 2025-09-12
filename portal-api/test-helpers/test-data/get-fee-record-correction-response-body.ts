@@ -1,5 +1,5 @@
 import { CURRENCY, RECORD_CORRECTION_REASON } from '@ukef/dtfs2-common';
-import { GetFeeRecordCorrectionResponseBody } from '../../src/v1/api-response-types';
+import { GetFeeRecordCorrectionResponseBody } from '../../server/v1/api-response-types';
 
 export const aGetFeeRecordCorrectionResponseBody = (): GetFeeRecordCorrectionResponseBody => ({
   id: 7,

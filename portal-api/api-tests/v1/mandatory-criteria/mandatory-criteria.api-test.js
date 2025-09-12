@@ -10,14 +10,14 @@ const databaseHelper = require('../../database-helper');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { malformedPayloadTests, withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
 
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 
 const { as, get, post, remove } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
 const allMandatoryCriteria = require('../../fixtures/mandatoryCriteria');
-const { ADMIN } = require('../../../src/v1/roles/roles');
+const { ADMIN } = require('../../../server/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const newHTMLMandatoryCriteria = allMandatoryCriteria[1];

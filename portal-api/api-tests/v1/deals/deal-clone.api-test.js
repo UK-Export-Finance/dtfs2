@@ -1,12 +1,12 @@
 const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { createDealEligibility } = require('../../../src/v1/controllers/deal.controller');
-const { MAKER, READ_ONLY } = require('../../../src/v1/roles/roles');
+const { createDealEligibility } = require('../../../server/v1/controllers/deal.controller');
+const { MAKER, READ_ONLY } = require('../../../server/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const databaseHelper = require('../../database-helper');
 const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
 const createFacilities = require('../../createFacilities');
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const { as } = require('../../api')(app);
 
 const dealToClone = completedDeal;

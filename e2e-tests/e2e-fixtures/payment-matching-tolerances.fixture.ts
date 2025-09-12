@@ -1,4 +1,5 @@
-import { CURRENCY, PaymentMatchingToleranceEntityMockBuilder } from '@ukef/dtfs2-common';
+import { CURRENCY } from '@ukef/dtfs2-common';
+import { PaymentMatchingToleranceEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 
 const toleranceIdGenerator = (function* idGenerator(): Generator<number, number, unknown> {
   let id = 0;

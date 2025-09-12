@@ -1,23 +1,25 @@
+import {
+  FeeRecordEntityMockBuilder,
+  PaymentEntityMockBuilder,
+  UtilisationReportEntityMockBuilder,
+  PaymentMatchingToleranceEntityMockBuilder,
+} from '@ukef/dtfs2-common/test-helpers';
 import { Response } from 'supertest';
 import {
   Bank,
   CURRENCY,
   Currency,
   FEE_RECORD_STATUS,
-  FeeRecordEntityMockBuilder,
-  PaymentEntityMockBuilder,
-  PaymentMatchingToleranceEntityMockBuilder,
   RECONCILIATION_IN_PROGRESS,
   SelectedFeeRecordDetails,
   SelectedFeeRecordsDetails,
   UtilisationReportEntity,
-  UtilisationReportEntityMockBuilder,
 } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { wipe } from '../../wipeDB';
-import { mongoDbClient } from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../server/drivers/db-client';
 import { aBank, aReportPeriod } from '../../../test-helpers';
 
 console.error = jest.fn();

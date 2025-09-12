@@ -2,14 +2,14 @@ const { ObjectId } = require('mongodb');
 const { withDeleteOneTests, expectAnyPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const { as, get, remove, postMultipartForm } = require('../../api')(app);
-const { uploadFile, deleteFile, readFile } = require('../../../src/drivers/fileshare');
-const CONSTANTS = require('../../../src/constants');
+const { uploadFile, deleteFile, readFile } = require('../../../server/drivers/fileshare');
+const CONSTANTS = require('../../../server/constants');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../server/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const baseUrl = '/v1/gef/files';
@@ -24,7 +24,7 @@ const validFiles = [
   },
 ];
 
-jest.mock('../../../src/drivers/fileshare', () => ({
+jest.mock('../../../server/drivers/fileshare', () => ({
   getConfig: jest.fn(() => ({ EXPORT_FOLDER: 'mock-folder' })),
   getDirectory: jest.fn(),
   uploadFile: jest.fn(() => ({})),

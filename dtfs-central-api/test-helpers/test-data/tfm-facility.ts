@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import { FacilityAmendment, TfmFacility } from '@ukef/dtfs2-common';
 import { generateMockPortalUserAuditDatabaseRecord } from '@ukef/dtfs2-common/change-stream/test-helpers';
 import { aFacility } from './facility';
-import { KeyingSheetCalculationFacilityValues } from '../../src/types/tfm/tfm-facility';
+import { KeyingSheetCalculationFacilityValues } from '../../server/types/tfm/tfm-facility';
 
 export const aTfmFacility = ({
   amendments = [],

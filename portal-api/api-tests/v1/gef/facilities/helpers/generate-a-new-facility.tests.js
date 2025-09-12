@@ -1,5 +1,5 @@
 const { generateParsedMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { DEAL } = require('../../../../../src/constants');
+const { DEAL } = require('../../../../../server/constants');
 
 const generateANewFacility = ({ dealId, makerId, dealVersion }) => {
   const facility = {

@@ -1,15 +1,15 @@
 import { AnyObject, TFM_DEAL_CANCELLATION_STATUS, TEAM_IDS, TfmDealCancellationWithStatus } from '@ukef/dtfs2-common';
 import { ObjectId } from 'mongodb';
 import { createApi } from '../../api';
-import app from '../../../src/createApp';
+import app from '../../../server/createApp';
 import { initialiseTestUsers } from '../../api-test-users';
 import { TestUser } from '../../types/test-user';
 import { getTfmDealCancellationUrl } from './get-cancellation-url';
 
 const getDealCancellationMock = jest.fn() as jest.Mock<Promise<TfmDealCancellationWithStatus>>;
 
-jest.mock('../../../src/v1/api', () => ({
-  ...jest.requireActual<AnyObject>('../../../src/v1/api'),
+jest.mock('../../../server/v1/api', () => ({
+  ...jest.requireActual<AnyObject>('../../../server/v1/api'),
   getDealCancellation: () => getDealCancellationMock(),
 }));
 

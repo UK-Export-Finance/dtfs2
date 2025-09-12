@@ -3,14 +3,14 @@ const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/ch
 
 const databaseHelper = require('../../database-helper');
 
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
 
 const { as } = require('../../api')(app);
 
-const dealCommentsController = require('../../../src/v1/controllers/deal-comments.controller');
-const { MAKER } = require('../../../src/v1/roles/roles');
+const dealCommentsController = require('../../../server/v1/controllers/deal-comments.controller');
+const { MAKER } = require('../../../server/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('deal comments controller', () => {

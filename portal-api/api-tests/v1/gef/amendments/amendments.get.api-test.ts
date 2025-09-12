@@ -1,10 +1,10 @@
 import { ObjectId } from 'mongodb';
 import { PORTAL_AMENDMENT_STATUS, AMENDMENT_TYPES, AnyObject, PortalFacilityAmendmentWithUkefId, Role } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
-import app from '../../../../src/createApp';
+import app from '../../../../server/createApp';
 import testUserCache from '../../../api-test-users';
 
-import { CHECKER, MAKER } from '../../../../src/v1/roles/roles';
+import { CHECKER, MAKER } from '../../../../server/v1/roles/roles';
 import { getAmendmentUrl } from './amendment-urls';
 import createApi from '../../../api';
 import { TestUser } from '../../../types/test-user';
@@ -15,8 +15,8 @@ const { as, get } = createApi(app);
 
 const getPortalFacilityAmendmentMock = jest.fn() as jest.Mock<Promise<PortalFacilityAmendmentWithUkefId>>;
 
-jest.mock('../../../../src/v1/api', () => ({
-  ...jest.requireActual<AnyObject>('../../../../src/v1/api'),
+jest.mock('../../../../server/v1/api', () => ({
+  ...jest.requireActual<AnyObject>('../../../../server/v1/api'),
   getPortalFacilityAmendment: () => getPortalFacilityAmendmentMock(),
 }));
 

@@ -3,13 +3,13 @@ const { MONGO_DB_COLLECTIONS, FACILITY_TYPE, CURRENCY } = require('@ukef/dtfs2-c
 const { withDeleteOneTests, generateMockTfmUserAuditDatabaseRecord, withDeleteManyTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { generateTfmAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { testApi } = require('../../../test-api');
-const { DEALS } = require('../../../../src/constants');
+const { DEALS } = require('../../../../server/constants');
 const aDeal = require('../../deal-builder');
 const { withValidateAuditDetailsTests } = require('../../../helpers/with-validate-audit-details.api-tests');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 const { MOCK_PORTAL_USER } = require('../../../mocks/test-users/mock-portal-user');
 const { createDeal } = require('../../../helpers/create-deal');
-const { mongoDbClient } = require('../../../../src/drivers/db-client');
+const { mongoDbClient } = require('../../../../server/drivers/db-client');
 const { createFacility } = require('../../../helpers/create-facility');
 
 const newDeal = aDeal({

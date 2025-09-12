@@ -1,17 +1,17 @@
 const { sub } = require('date-fns');
 const databaseHelper = require('../../database-helper');
 
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const completedDeal = require('../../fixtures/deal-fully-completed');
 const createFacilities = require('../../createFacilities');
-const api = require('../../../src/v1/api');
-const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
+const api = require('../../../server/v1/api');
+const { MAKER, CHECKER } = require('../../../server/v1/roles/roles');
 
 const { as } = require('../../api')(app);
 
-const CONSTANTS = require('../../../src/constants');
-const { STATUS } = require('../../../src/constants/user');
+const CONSTANTS = require('../../../server/constants');
+const { STATUS } = require('../../../server/constants/user');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 describe('PUT /v1/deals/:id/status - status changes to `Submitted`', () => {

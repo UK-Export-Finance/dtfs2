@@ -135,9 +135,12 @@ env:
   EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
   NODE_ENV: ${{ secrets.NODE_ENV }}
   CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
-  PORTAL_API_URL: ${{ secrets.PORTAL_API_URL }}
-  DTFS_CENTRAL_API_URL: ${{ secrets.DTFS_CENTRAL_API_URL }}
-  TFM_API_URL: ${{ secrets.TFM_API_URL }}
+  PORTAL_API_URL: ${{ vars.PORTAL_API_URL_LOCALHOST }}
+  TFM_API_URL: ${{ vars.TFM_API_URL_LOCALHOST }}
+  EXTERNAL_API_URL: ${{ vars.EXTERNAL_API_URL_LOCALHOST }}
+  DTFS_CENTRAL_API_URL: ${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
+  PORTAL_UI_URL: ${{ vars.PORTAL_UI_URL_LOCALHOST }}
+  TFM_UI_URL: ${{ vars.TFM_UI_URL_LOCALHOST }}
   RATE_LIMIT_THRESHOLD: ${{ vars.RATE_LIMIT_THRESHOLD }}
   UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: ${{ vars.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}
   UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: ${{ vars.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}
@@ -255,9 +258,10 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: docker compose exec -T ${{ matrix.services }} npm run api-test --workspace=${{ matrix.services }}
+          command: npm run api-test --workspace=${{ matrix.services }}
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Stop
@@ -353,9 +357,10 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: docker compose exec -T dtfs-central-api npm run api-test ${{ matrix.services }} --workspace=dtfs-central-api
+          command: npm run api-test ${{ matrix.services }} --workspace=dtfs-central-api
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
           retries: ${{ vars.RETRY_LIMIT }}
@@ -449,7 +454,6 @@ jobs:
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
           retries: ${{ vars.RETRY_LIMIT }}
 
       - name: SQL
@@ -461,9 +465,10 @@ jobs:
       - name: Execute
         uses: ./.github/actions/rerun
         with:
-          command: docker compose exec -T portal-api npm run api-test ${{ matrix.services }} --workspace=portal-api
+          command: npm run api-test ${{ matrix.services }} --workspace=portal-api
           env: |
             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
           retries: ${{ vars.RETRY_LIMIT }}
@@ -523,10 +528,12 @@ jobs:
         with:
           command: npm run api-test
           working-directory: ./azure-functions/${{ matrix.functions }}
-          retries: ${{ vars.RETRY_LIMIT }}
           env: |
+            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+          retries: ${{ vars.RETRY_LIMIT }}
 
       - name: Coverage
         uses: codecov/codecov-action@v5
@@ -1500,9 +1507,10 @@ jobs:
       # Single dimension matrix
       matrix:
         functions: ['acbs-function']
+        webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'dtfs-central-api', 'external-api', 'trade-finance-manager-api']
 
     concurrency:
-      group: docker-build-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
+      group: docker-build-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}-${{ matrix.webapp }}
       cancel-in-progress: true
 
     steps:
@@ -1525,5 +1533,8 @@ jobs:
           command: npm ci
           retries: ${{ vars.RETRY_LIMIT }}
 
-      - name: Build
+      - name: Function
         run: docker build -f ./azure-functions/${{ matrix.functions }}/Dockerfile .
+
+      - name: WebApp
+        run: docker build -f ./${{ matrix.webapp }}/Dockerfile . --build-arg GITHUB_SHA=${{ github.sha }}

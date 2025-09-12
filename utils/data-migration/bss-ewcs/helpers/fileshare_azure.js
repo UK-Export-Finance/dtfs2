@@ -1,4 +1,4 @@
-const fileshareAzure = require('../../../../portal-api/src/drivers/fileshare');
+const fileshareAzure = require('../../../../portal-api/server/drivers/fileshare');
 
 module.exports = {
   ...fileshareAzure,

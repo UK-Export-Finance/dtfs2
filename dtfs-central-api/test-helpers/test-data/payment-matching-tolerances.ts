@@ -1,4 +1,5 @@
-import { CURRENCY, PaymentMatchingToleranceEntityMockBuilder } from '@ukef/dtfs2-common';
+import { CURRENCY } from '@ukef/dtfs2-common';
+import { PaymentMatchingToleranceEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { getSqlIdGenerator } from '../get-sql-id-generator';
 
 // TODO FN-3389 Make name shorter

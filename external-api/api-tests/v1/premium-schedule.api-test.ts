@@ -12,9 +12,9 @@
 
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import { app } from '../../src/createApp';
+import { app } from '../../server/createApp';
 import { api } from '../api';
-import premiumScheduleController from '../../src/v1/controllers/premium-schedule.controller';
+import premiumScheduleController from '../../server/v1/controllers/premium-schedule.controller';
 import { mockResponsePremiumSchedule } from '../test-mocks/premium-schedule';
 
 const { getWithRequestBody } = api(app);

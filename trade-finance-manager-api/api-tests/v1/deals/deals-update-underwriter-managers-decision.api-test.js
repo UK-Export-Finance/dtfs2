@@ -1,17 +1,17 @@
 const { AUDIT_USER_TYPES } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { when } = require('jest-when');
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const { createApi } = require('../../api');
 const { initialiseTestUsers } = require('../../api-test-users');
-const api = require('../../../src/v1/api');
-const { mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
-const { DEAL_TYPE, SUBMISSION_TYPE, DEAL_STAGE_TFM, PORTAL_DEAL_STATUS, DEAL_COMMENT_TYPE_PORTAL } = require('../../../src/constants/deals');
-const { TEAMS } = require('../../../src/constants');
-const MOCK_DEAL_AIN_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-AIN-submitted');
-const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-MIN-second-submit-facilities-unissued-to-issued');
-const MOCK_GEF_DEAL_MIA = require('../../../src/v1/__mocks__/mock-gef-deal-MIA');
-const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = require('../../../src/v1/__mocks__/mock-deal-MIA-second-submit-facilities-unissued-to-issued');
+const api = require('../../../server/v1/api');
+const { mockUpdateDeal } = require('../../../server/v1/__mocks__/common-api-mocks');
+const { DEAL_TYPE, SUBMISSION_TYPE, DEAL_STAGE_TFM, PORTAL_DEAL_STATUS, DEAL_COMMENT_TYPE_PORTAL } = require('../../../server/constants/deals');
+const { TEAMS } = require('../../../server/constants');
+const MOCK_DEAL_AIN_SUBMITTED = require('../../../server/v1/__mocks__/mock-deal-AIN-submitted');
+const MOCK_DEAL_MIN_SECOND_SUBMIT_FACILITIES_UNISSUED_TO_ISSUED = require('../../../server/v1/__mocks__/mock-deal-MIN-second-submit-facilities-unissued-to-issued');
+const MOCK_GEF_DEAL_MIA = require('../../../server/v1/__mocks__/mock-gef-deal-MIA');
+const MOCK_DEAL_MIA_SUBMITTED_FACILITIES_UNISSUED_TO_ISSUED = require('../../../server/v1/__mocks__/mock-deal-MIA-second-submit-facilities-unissued-to-issued');
 
 const { as } = createApi(app);
 

@@ -1,13 +1,13 @@
 const { when } = require('jest-when');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const { createApi } = require('../../api');
 const { initialiseTestUsers } = require('../../api-test-users');
-const api = require('../../../src/v1/api');
-const { MOCK_BSS_EWCS_DEAL } = require('../../../src/v1/__mocks__/mock-deal');
-const MOCK_USERS = require('../../../src/v1/__mocks__/mock-users');
-const { mockUpdateDeal, mockFindOneDeal, mockFindUserById } = require('../../../src/v1/__mocks__/common-api-mocks');
+const api = require('../../../server/v1/api');
+const { MOCK_BSS_EWCS_DEAL } = require('../../../server/v1/__mocks__/mock-deal');
+const MOCK_USERS = require('../../../server/v1/__mocks__/mock-users');
+const { mockUpdateDeal, mockFindOneDeal, mockFindUserById } = require('../../../server/v1/__mocks__/common-api-mocks');
 
 const { as, put } = createApi(app);
 

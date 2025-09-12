@@ -1,5 +1,5 @@
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const { createApi } = require('../../api');
 
 const { post } = createApi(app);

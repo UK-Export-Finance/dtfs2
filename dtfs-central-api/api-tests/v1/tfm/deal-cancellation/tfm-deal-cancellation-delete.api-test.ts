@@ -6,7 +6,7 @@ import { generateTfmAuditDetails } from '@ukef/dtfs2-common/change-stream';
 import { withMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import wipeDB from '../../../wipeDB';
 import { testApi } from '../../../test-api';
-import { DEALS } from '../../../../src/constants';
+import { DEALS } from '../../../../server/constants';
 import aDeal from '../../deal-builder';
 import { createDeal, submitDealToTfm } from '../../../helpers/create-deal';
 import { aPortalUser } from '../../../../test-helpers';

@@ -1,5 +1,5 @@
 import { PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
-import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../src/types/utilisation-reports';
+import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../server/types/utilisation-reports';
 import { MOCK_BANKS } from '../banks';
 
 const MOCK_UTILISATION_REPORT_RECONCILIATION_SUMMARY_ITEM: UtilisationReportReconciliationSummaryItem = {

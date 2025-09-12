@@ -1,4 +1,4 @@
-import { aPortalSessionUser } from '@ukef/dtfs2-common';
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import { PendingCorrectionsViewModel } from '../../../../server/types/view-models/record-correction/pending-corrections';
 import { PRIMARY_NAV_KEY } from '../../../../server/constants';
 

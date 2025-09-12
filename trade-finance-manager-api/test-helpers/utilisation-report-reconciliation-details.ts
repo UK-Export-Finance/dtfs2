@@ -1,5 +1,5 @@
 import { PENDING_RECONCILIATION } from '@ukef/dtfs2-common';
-import { UtilisationReportReconciliationDetailsResponseBody } from '../src/v1/api-response-types';
+import { UtilisationReportReconciliationDetailsResponseBody } from '../server/v1/api-response-types';
 
 export const aUtilisationReportReconciliationDetailsResponse = (): UtilisationReportReconciliationDetailsResponseBody => ({
   reportId: 1,

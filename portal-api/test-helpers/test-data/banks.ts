@@ -1,4 +1,4 @@
-import { BankResponse } from '../../src/v1/api-response-types';
+import { BankResponse } from '../../server/v1/api-response-types';
 import { aMonthlyBankReportPeriodSchedule } from './bank-report-period-schedule';
 
 export const aBank = (): BankResponse => ({

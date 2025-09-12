@@ -1,10 +1,11 @@
+import { MOCK_TFM_FACILITY } from '@ukef/dtfs2-common/test-helpers';
 import { ObjectId } from 'mongodb';
-import { AnyObject, Role, MOCK_TFM_FACILITY } from '@ukef/dtfs2-common';
+import { AnyObject, Role } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
-import app from '../../../src/createApp';
+import app from '../../../server/createApp';
 import testUserCache from '../../api-test-users';
 
-import { CHECKER, MAKER } from '../../../src/v1/roles/roles';
+import { CHECKER, MAKER } from '../../../server/v1/roles/roles';
 import createApi from '../../api';
 import { TestUser } from '../../types/test-user';
 import { withRoleAuthorisationTests } from '../../common-tests/role-authorisation-tests';
@@ -14,8 +15,8 @@ const { as, get } = createApi(app);
 
 const getTfmFacilityMock = jest.fn() as jest.Mock<Promise<AnyObject>>;
 
-jest.mock('../../../src/v1/api', () => ({
-  ...jest.requireActual<AnyObject>('../../../src/v1/api'),
+jest.mock('../../../server/v1/api', () => ({
+  ...jest.requireActual<AnyObject>('../../../server/v1/api'),
   getTfmFacility: () => getTfmFacilityMock(),
 }));
 

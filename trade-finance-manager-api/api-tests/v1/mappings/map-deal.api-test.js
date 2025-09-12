@@ -1,6 +1,6 @@
-const mapDeal = require('../../../src/v1/mappings/map-deal');
-const mapEligibilityCriteriaContentStrings = require('../../../src/v1/mappings/map-eligibility-criteria-content-strings');
-const { MOCK_BSS_EWCS_DEAL } = require('../../../src/v1/__mocks__/mock-deal');
+const mapDeal = require('../../../server/v1/mappings/map-deal');
+const mapEligibilityCriteriaContentStrings = require('../../../server/v1/mappings/map-eligibility-criteria-content-strings');
+const { MOCK_BSS_EWCS_DEAL } = require('../../../server/v1/__mocks__/mock-deal');
 
 const { eligibility, facilities, bondTransactions, loanTransactions } = MOCK_BSS_EWCS_DEAL;
 

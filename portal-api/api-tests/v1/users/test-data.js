@@ -1,4 +1,4 @@
-const { MAKER, CHECKER } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER } = require('../../../server/v1/roles/roles');
 
 module.exports = {
   noBankNoRole: {

@@ -9,13 +9,13 @@ const {
   portalActivityGenerator,
   getUserInfo,
   updateChangedToIssued,
-} = require('../../../src/v1/controllers/portal/gef-deal/add-min-activities.controller');
+} = require('../../../server/v1/controllers/portal/gef-deal/add-min-activities.controller');
 
-const { mongoDbClient: db } = require('../../../src/drivers/db-client');
+const { mongoDbClient: db } = require('../../../server/drivers/db-client');
 
 const { APPLICATION } = require('../../mocks/gef/gef-applications');
 const { mockFacilities } = require('../../mocks/gef/gef-facilities');
-const { DEALS } = require('../../../src/constants');
+const { DEALS } = require('../../../server/constants');
 
 const MOCK_APPLICATION = APPLICATION[0];
 const MOCK_APPLICATION_FACILITIES = APPLICATION[1];

@@ -1,14 +1,14 @@
 const { ObjectId } = require('mongodb');
 const { withDeleteOneTests, expectAnyPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const databaseHelper = require('../../database-helper');
 
 const { as, get, post, put, remove } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
-const bankController = require('../../../src/v1/controllers/banks.controller');
-const { ADMIN } = require('../../../src/v1/roles/roles');
+const bankController = require('../../../server/v1/controllers/banks.controller');
+const { ADMIN } = require('../../../server/v1/roles/roles');
 
 const aBank = require('./bank-builder');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');

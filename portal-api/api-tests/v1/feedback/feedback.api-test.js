@@ -8,11 +8,11 @@ const {
   expectAnyPortalUserAuditDatabaseRecord,
 } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, ADMIN, READ_ONLY } = require('../../../server/v1/roles/roles');
 const { as, get, remove } = require('../../api')(app);
 
 describe('/v1/feedback', () => {

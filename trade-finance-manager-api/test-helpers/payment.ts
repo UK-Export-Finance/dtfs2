@@ -1,5 +1,5 @@
 import { CURRENCY } from '@ukef/dtfs2-common';
-import { Payment } from '../src/v1/api-response-types';
+import { Payment } from '../server/v1/api-response-types';
 
 export const aPayment = (): Payment => ({
   id: 1,
