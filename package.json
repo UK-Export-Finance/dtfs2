@@ -51,18 +51,18 @@
   "lint-staged": {
     "**/package.json": "sort-package-json",
     "**/*.{js,ts}": [
-      "eslint --fix",
-      "prettier --write"
+      "npx eslint --fix",
+      "npx prettier --write"
     ],
     "**/*.md": [
-      "prettier --write",
+      "npx prettier --write",
       "npx markdownlint-cli --config .markdownlint.json"
     ],
     "**/*.yml": [
       "npx yaml-lint --ignore=**/node_modules --ignore=dtfs-mongo-volume-dtfs-submissions"
     ],
     "**/*": [
-      "cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color"
+      "npx cspell lint --gitignore --no-must-find-files --unique --no-progress --show-suggestions --color"
     ]
   },
   "dependencies": {

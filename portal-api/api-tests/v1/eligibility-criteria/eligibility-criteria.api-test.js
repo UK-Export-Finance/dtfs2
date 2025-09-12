@@ -7,7 +7,7 @@ const {
 } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const databaseHelper = require('../../database-helper');
 
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
@@ -16,7 +16,7 @@ const { as, get, remove, put, post } = require('../../api')(app);
 const { expectMongoId, expectMongoIds } = require('../../expectMongoIds');
 
 const allEligibilityCriteria = require('../../fixtures/eligibilityCriteria');
-const { ADMIN } = require('../../../src/v1/roles/roles');
+const { ADMIN } = require('../../../server/v1/roles/roles');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 
 const newEligibilityCriteria = allEligibilityCriteria[0];

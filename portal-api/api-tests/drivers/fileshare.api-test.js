@@ -1,6 +1,6 @@
 jest.unmock('@azure/storage-file-share');
 
-const fileshare = require('../../src/drivers/fileshare');
+const fileshare = require('../../server/drivers/fileshare');
 
 const someXML = '<?xml version="1.0" encoding="UTF-8"?><Deal/>';
 const someXML2 = '<?xml version="1.0" encoding="UTF-8"?>XML2<Deal/>';

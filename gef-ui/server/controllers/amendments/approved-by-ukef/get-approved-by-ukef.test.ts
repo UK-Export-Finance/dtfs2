@@ -3,7 +3,8 @@ const getAmendmentMock = jest.fn();
 
 import { format, fromUnixTime } from 'date-fns';
 import * as dtfsCommon from '@ukef/dtfs2-common';
-import { aPortalSessionUser, PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId, PORTAL_AMENDMENT_STATUS, DATE_FORMATS } from '@ukef/dtfs2-common';
+import { PORTAL_LOGIN_STATUS, ROLES, PortalFacilityAmendmentWithUkefId, PORTAL_AMENDMENT_STATUS, DATE_FORMATS } from '@ukef/dtfs2-common';
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import { HttpStatusCode } from 'axios';
 import { createMocks } from 'node-mocks-http';
 import { getApprovedByUkef, GetApprovedByUkefRequest } from './get-approved-by-ukef.ts';

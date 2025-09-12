@@ -1,6 +1,6 @@
+import { FeeRecordEntityMockBuilder, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { Response } from 'supertest';
 import {
-  FeeRecordEntityMockBuilder,
   MONGO_DB_COLLECTIONS,
   PENDING_RECONCILIATION,
   PortalUser,
@@ -8,7 +8,6 @@ import {
   RECONCILIATION_IN_PROGRESS,
   REPORT_NOT_RECEIVED,
   UtilisationReportEntity,
-  UtilisationReportEntityMockBuilder,
   getCurrentReportPeriodForBankSchedule,
   getSubmissionMonthForReportPeriod,
 } from '@ukef/dtfs2-common';
@@ -16,10 +15,10 @@ import { wipe } from '../../wipeDB';
 import { MOCK_BANKS } from '../../mocks/banks';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
-import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../src/types/utilisation-reports';
-import { withoutMongoId } from '../../../src/helpers/mongodb';
+import { UtilisationReportReconciliationSummary, UtilisationReportReconciliationSummaryItem } from '../../../server/types/utilisation-reports';
+import { withoutMongoId } from '../../../server/helpers/mongodb';
 import { aPortalUser } from '../../../test-helpers';
-import { mongoDbClient } from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../server/drivers/db-client';
 import { CustomErrorResponse } from '../../helpers/custom-error-response';
 
 console.error = jest.fn();

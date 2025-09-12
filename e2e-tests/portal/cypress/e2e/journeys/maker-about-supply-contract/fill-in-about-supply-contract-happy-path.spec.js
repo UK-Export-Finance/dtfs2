@@ -1,4 +1,4 @@
-const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common');
+const { MOCK_COMPANY_REGISTRATION_NUMBERS } = require('@ukef/dtfs2-common/test-helpers');
 const { contract, contractAboutSupplier, contractAboutPreview, defaults } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');

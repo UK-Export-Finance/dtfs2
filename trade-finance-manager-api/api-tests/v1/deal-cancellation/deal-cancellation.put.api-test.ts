@@ -1,7 +1,7 @@
 import { AnyObject, MAX_CHARACTER_COUNT, TEAM_IDS, TfmDealCancellation } from '@ukef/dtfs2-common';
 import { ObjectId, UpdateResult } from 'mongodb';
 import { createApi } from '../../api';
-import app from '../../../src/createApp';
+import app from '../../../server/createApp';
 import { initialiseTestUsers } from '../../api-test-users';
 import { TestUser } from '../../types/test-user';
 import { withTeamAuthorisationTests } from '../../common-tests/with-team-authorisation.api-tests';
@@ -9,8 +9,8 @@ import { getTfmDealCancellationUrl } from './get-cancellation-url';
 
 const updateDealCancellationMock = jest.fn() as jest.Mock<Promise<UpdateResult>>;
 
-jest.mock('../../../src/v1/api', () => ({
-  ...jest.requireActual<AnyObject>('../../../src/v1/api'),
+jest.mock('../../../server/v1/api', () => ({
+  ...jest.requireActual<AnyObject>('../../../server/v1/api'),
   updateDealCancellation: () => updateDealCancellationMock(),
 }));
 

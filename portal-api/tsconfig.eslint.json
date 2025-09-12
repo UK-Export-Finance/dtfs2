@@ -1,7 +1,7 @@
 {
     "extends": "./tsconfig.json",
     "include": [
-        "src",
+        "server",
         "api-tests",
         "__mocks__",
         "test-helpers",

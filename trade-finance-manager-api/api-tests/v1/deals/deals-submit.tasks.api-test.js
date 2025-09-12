@@ -1,27 +1,27 @@
-jest.mock('../../../src/v1/controllers/acbs.controller', () => ({
+jest.mock('../../../server/v1/controllers/acbs.controller', () => ({
   issueAcbsFacilities: jest.fn(),
 }));
 
-jest.mock('../../../src/v1/controllers/deal.controller', () => ({
-  ...jest.requireActual('../../../src/v1/controllers/deal.controller'),
+jest.mock('../../../server/v1/controllers/deal.controller', () => ({
+  ...jest.requireActual('../../../server/v1/controllers/deal.controller'),
 }));
 
 const { format } = require('date-fns');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const api = require('../../../src/v1/api');
-const acbsController = require('../../../src/v1/controllers/acbs.controller');
-const CONSTANTS = require('../../../src/constants');
-const { createDealTasks } = require('../../../src/v1/controllers/deal.tasks');
-const { generateTaskEmailVariables } = require('../../../src/v1/helpers/generate-task-email-variables');
+const api = require('../../../server/v1/api');
+const acbsController = require('../../../server/v1/controllers/acbs.controller');
+const CONSTANTS = require('../../../server/constants');
+const { createDealTasks } = require('../../../server/v1/controllers/deal.tasks');
+const { generateTaskEmailVariables } = require('../../../server/v1/helpers/generate-task-email-variables');
 const { submitDeal, createSubmitBody } = require('../../helpers/submitDeal');
-const { mockFindOneDeal, mockUpdateDeal } = require('../../../src/v1/__mocks__/common-api-mocks');
-const MOCK_DEAL_AIN_NO_COMPANIES_HOUSE = require('../../../src/v1/__mocks__/mock-deal-no-companies-house');
-const MOCK_DEAL_MIN = require('../../../src/v1/__mocks__/mock-deal-MIN');
-const MOCK_DEAL_MIA_SUBMITTED = require('../../../src/v1/__mocks__/mock-deal-MIA-submitted');
+const { mockFindOneDeal, mockUpdateDeal } = require('../../../server/v1/__mocks__/common-api-mocks');
+const MOCK_DEAL_AIN_NO_COMPANIES_HOUSE = require('../../../server/v1/__mocks__/mock-deal-no-companies-house');
+const MOCK_DEAL_MIN = require('../../../server/v1/__mocks__/mock-deal-MIN');
+const MOCK_DEAL_MIA_SUBMITTED = require('../../../server/v1/__mocks__/mock-deal-MIA-submitted');
 
-const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../src/v1/__mocks__/mock-notify-email-response');
-const MOCK_TEAMS = require('../../../src/v1/__mocks__/mock-teams');
-const { MOCK_PORTAL_USERS } = require('../../../src/v1/__mocks__/mock-portal-users');
+const MOCK_NOTIFY_EMAIL_RESPONSE = require('../../../server/v1/__mocks__/mock-notify-email-response');
+const MOCK_TEAMS = require('../../../server/v1/__mocks__/mock-teams');
+const { MOCK_PORTAL_USERS } = require('../../../server/v1/__mocks__/mock-portal-users');
 
 const sendEmailApiSpy = jest.fn(() => Promise.resolve(MOCK_NOTIFY_EMAIL_RESPONSE));
 

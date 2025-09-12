@@ -1,12 +1,12 @@
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const { as, get } = require('../../api')(app);
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
-const { getNextReportPeriodByBankId } = require('../../../src/v1/api');
+const { PAYMENT_REPORT_OFFICER } = require('../../../server/v1/roles/roles');
+const { getNextReportPeriodByBankId } = require('../../../server/v1/api');
 
-jest.mock('../../../src/v1/api');
+jest.mock('../../../server/v1/api');
 
 describe('GET /v1/banks/:bankId/next-report-period', () => {
   const nextReportPeriodUrl = (bankId) => `/v1/banks/${bankId}/next-report-period`;

@@ -3,8 +3,8 @@
 The **portal-api** is a crucial component of the Portal UIs, serving both
 BSS and GEF.
 
-- BSS endpoints are located in `/src/v1`.
-- GEF endpoints are found in `/src/v1/gef`.
+- BSS endpoints are located in `/server/v1`.
+- GEF endpoints are found in `/server/v1/gef`.
 
 Additionally, it's responsible for sending deals to TFM (Trade Finance
 Manager) by making a call to a TFM endpoint upon deal submission.

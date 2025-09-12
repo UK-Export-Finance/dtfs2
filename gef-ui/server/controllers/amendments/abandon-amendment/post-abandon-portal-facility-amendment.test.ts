@@ -3,7 +3,6 @@ import { HttpStatusCode } from 'axios';
 import { format, fromUnixTime } from 'date-fns';
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import {
-  aPortalSessionUser,
   PORTAL_LOGIN_STATUS,
   DEAL_STATUS,
   DEAL_SUBMISSION_TYPE,
@@ -11,6 +10,7 @@ import {
   PortalFacilityAmendmentWithUkefId,
   DATE_FORMATS,
 } from '@ukef/dtfs2-common';
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import api from '../../../services/api';
 import { postAbandonPortalFacilityAmendment, PostAbandonPortalFacilityAmendmentRequest } from './post-abandon-portal-facility-amendment';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';

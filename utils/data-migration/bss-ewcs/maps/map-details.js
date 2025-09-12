@@ -2,7 +2,7 @@ const { getBssUserByEmail } = require('../../helpers/users');
 const { convertV1Date } = require('../helpers/date-helpers');
 const formatUkefId = require('../helpers/formatUkefId');
 const log = require('../../helpers/logs');
-const CONSTANTS = require('../../../../portal-api/src/constants');
+const CONSTANTS = require('../../../../portal-api/server/constants');
 
 const mapDetails = (portalDealId, v1Deal, v2SubmissionType) => {
   let hasError = false;

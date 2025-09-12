@@ -8,7 +8,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
-import { app } from '../../src/createApp';
+import { app } from '../../server/createApp';
 import { api } from '../api';
 
 const { get } = api(app);

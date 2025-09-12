@@ -1,9 +1,9 @@
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 
 const { get } = require('../../api')(app);
 
-jest.mock('../../../src/external-api/api', () => ({
+jest.mock('../../../server/external-api/api', () => ({
   bankHolidays: {
     getBankHolidays: () => ({ status: 200 }),
   },

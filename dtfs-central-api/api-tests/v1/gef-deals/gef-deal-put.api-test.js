@@ -5,7 +5,7 @@ const { ObjectId } = require('mongodb');
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 const wipeDB = require('../../wipeDB');
 const { testApi } = require('../../test-api');
-const { DEALS } = require('../../../src/constants');
+const { DEALS } = require('../../../server/constants');
 const { MOCK_PORTAL_USER } = require('../../mocks/test-users/mock-portal-user');
 
 describe('/v1/portal/gef/deals/:id', () => {

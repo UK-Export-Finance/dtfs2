@@ -1,8 +1,8 @@
 import { HttpStatusCode } from 'axios';
-import { Response } from '@ukef/dtfs2-common';
+import { Response } from '@ukef/dtfs2-common/test-helpers';
 import { createApi } from '../../api';
 import { TestUser } from '../../types/test-user';
-import app from '../../../src/createApp';
+import app from '../../../server/createApp';
 import { initialiseTestUsers } from '../../api-test-users';
 
 const { as } = createApi(app);

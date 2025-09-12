@@ -1,5 +1,5 @@
 import { initialiseTestUsers } from '../../api-test-users';
-import app from '../../../src/createApp';
+import app from '../../../server/createApp';
 import { createApi } from '../../api';
 
 const { as, get } = createApi(app);

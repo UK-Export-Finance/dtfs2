@@ -1,3 +1,4 @@
+import { portalAmendmentToUkefEmailVariables } from '@ukef/dtfs2-common/test-helpers';
 import { Response } from 'supertest';
 import { ObjectId } from 'mongodb';
 import { HttpStatusCode } from 'axios';
@@ -11,7 +12,6 @@ import {
   MONGO_DB_COLLECTIONS,
   PortalFacilityAmendment,
   PORTAL_AMENDMENT_STATUS,
-  portalAmendmentToUkefEmailVariables,
 } from '@ukef/dtfs2-common';
 import { aPortalFacilityAmendmentUserValues } from '@ukef/dtfs2-common/mock-data-backend';
 import { generatePortalAuditDetails } from '@ukef/dtfs2-common/change-stream';
@@ -23,7 +23,7 @@ import aDeal from '../deal-builder';
 import { aPortalUser } from '../../mocks/test-users/portal-user';
 import { createPortalUser } from '../../helpers/create-portal-user';
 import { createPortalFacilityAmendment } from '../../helpers/create-portal-facility-amendment';
-import { mongoDbClient as db } from '../../../src/drivers/db-client';
+import { mongoDbClient as db } from '../../../server/drivers/db-client';
 import { amendmentsEligibilityCriteria } from '../../../test-helpers/test-data/eligibility-criteria-amendments';
 
 const originalEnv = { ...process.env };

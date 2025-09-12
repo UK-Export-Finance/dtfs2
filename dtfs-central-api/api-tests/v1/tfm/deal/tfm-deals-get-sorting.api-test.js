@@ -2,7 +2,7 @@ const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../../wipeDB');
 const { testApi } = require('../../../test-api');
 const { newDeal, createAndSubmitDeals, updateDealsTfm } = require('./tfm-deals-get.api-test');
-const getObjectPropertyValueFromStringPath = require('../../../../src/utils/getObjectPropertyValueFromStringPath');
+const getObjectPropertyValueFromStringPath = require('../../../../server/utils/getObjectPropertyValueFromStringPath');
 const setObjectPropertyValueFromStringPath = require('../../../helpers/set-object-property-value-from-string-path');
 const { MOCK_TFM_USER } = require('../../../mocks/test-users/mock-tfm-user');
 

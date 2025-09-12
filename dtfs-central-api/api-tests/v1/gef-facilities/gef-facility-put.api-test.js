@@ -3,7 +3,7 @@ const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream
 const { generateParsedMockAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { MONGO_DB_COLLECTIONS, FACILITY_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
-const { FACILITIES } = require('../../../src/constants');
+const { FACILITIES } = require('../../../server/constants');
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 
 const { testApi } = require('../../test-api');

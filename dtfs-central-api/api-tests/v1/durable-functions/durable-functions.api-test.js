@@ -3,7 +3,7 @@ const { generateSystemAuditDatabaseRecord, generateSystemAuditDetails } = requir
 const { generateMockSystemAuditDatabaseRecord, withDeleteManyTests } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { testApi } = require('../../test-api');
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
-const { mongoDbClient } = require('../../../src/drivers/db-client');
+const { mongoDbClient } = require('../../../server/drivers/db-client');
 
 describe('DELETE /v1/portal/durable-functions', () => {
   let logsToDeleteIds;

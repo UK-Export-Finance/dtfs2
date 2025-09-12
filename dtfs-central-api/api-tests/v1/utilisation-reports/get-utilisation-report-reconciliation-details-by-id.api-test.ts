@@ -1,11 +1,12 @@
+import { UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { Response } from 'supertest';
-import { Bank, IsoDateTimeStamp, PortalUser, RECONCILIATION_IN_PROGRESS, UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common';
+import { Bank, IsoDateTimeStamp, PortalUser, RECONCILIATION_IN_PROGRESS } from '@ukef/dtfs2-common';
 import { withSqlIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { wipe } from '../../wipeDB';
-import { mongoDbClient } from '../../../src/drivers/db-client';
-import { UtilisationReportReconciliationDetails } from '../../../src/types/utilisation-reports';
+import { mongoDbClient } from '../../../server/drivers/db-client';
+import { UtilisationReportReconciliationDetails } from '../../../server/types/utilisation-reports';
 import { aBank, aPortalUser } from '../../../test-helpers';
 
 console.error = jest.fn();

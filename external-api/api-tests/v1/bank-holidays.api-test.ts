@@ -5,10 +5,10 @@
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { getYear, addYears } from 'date-fns';
-import { app } from '../../src/createApp';
+import { app } from '../../server/createApp';
 import { api } from '../api';
 import { mockResponseBankHolidays } from '../test-mocks/bank-holidays';
-import { BankHolidaysEvent } from '../../src/interfaces';
+import { BankHolidaysEvent } from '../../server/interfaces';
 
 const { get } = api(app);
 

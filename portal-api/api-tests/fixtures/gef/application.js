@@ -1,4 +1,4 @@
-const CONSTANTS = require('../../../src/constants');
+const CONSTANTS = require('../../../server/constants');
 
 const APPLICATION = [
   {

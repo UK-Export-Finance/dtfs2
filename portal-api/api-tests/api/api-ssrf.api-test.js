@@ -2,10 +2,10 @@ const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream
 const MockAdapter = require('axios-mock-adapter');
 const axios = require('axios');
 const deal = require('../fixtures/deal-fully-completed');
-const api = require('../../src/v1/api');
-const { ADMIN } = require('../../src/v1/roles/roles');
+const api = require('../../server/v1/api');
+const { ADMIN } = require('../../server/v1/roles/roles');
 const testUserCache = require('../api-test-users');
-const app = require('../../src/createApp');
+const app = require('../../server/createApp');
 
 require('dotenv').config();
 

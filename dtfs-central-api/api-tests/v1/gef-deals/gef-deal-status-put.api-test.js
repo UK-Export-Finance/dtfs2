@@ -5,7 +5,7 @@ const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
 const { withValidateAuditDetailsTests } = require('../../helpers/with-validate-audit-details.api-tests');
 const wipeDB = require('../../wipeDB');
 const { testApi } = require('../../test-api');
-const { DEALS } = require('../../../src/constants');
+const { DEALS } = require('../../../server/constants');
 
 describe('/v1/portal/gef/deals/:id/status', () => {
   describe('PUT /v1/portal/gef/deals/:id/status', () => {

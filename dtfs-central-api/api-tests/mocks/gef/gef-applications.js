@@ -1,4 +1,4 @@
-const { DEALS } = require('../../../src/constants');
+const { DEALS } = require('../../../server/constants');
 
 const baseApplication = {
   dealType: DEALS.DEAL_TYPE.GEF,

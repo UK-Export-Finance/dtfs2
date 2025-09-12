@@ -7,11 +7,11 @@ const {
 } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { HttpStatusCode } = require('axios');
 const databaseHelper = require('../../database-helper');
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../src/v1/roles/roles');
+const { MAKER, CHECKER, READ_ONLY, ADMIN } = require('../../../server/v1/roles/roles');
 
 const { as, get } = require('../../api')(app);
 const { expectMongoId } = require('../../expectMongoIds');

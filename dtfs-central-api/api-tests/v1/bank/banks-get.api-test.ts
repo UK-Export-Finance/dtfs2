@@ -1,11 +1,12 @@
+import { UtilisationReportEntityMockBuilder } from '@ukef/dtfs2-common/test-helpers';
 import { ObjectId } from 'mongodb';
 import axios from 'axios';
-import { Bank, PENDING_RECONCILIATION, REPORT_NOT_RECEIVED, UtilisationReportEntityMockBuilder, UtilisationReportStatus } from '@ukef/dtfs2-common';
+import { Bank, PENDING_RECONCILIATION, REPORT_NOT_RECEIVED, UtilisationReportStatus } from '@ukef/dtfs2-common';
 import wipeDB from '../../wipeDB';
 import { testApi } from '../../test-api';
 import { SqlDbHelper } from '../../sql-db-helper';
 import { aBank, getSqlIdGenerator } from '../../../test-helpers';
-import { mongoDbClient } from '../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../server/drivers/db-client';
 
 const BASE_URL = '/v1/bank';
 

@@ -1,7 +1,7 @@
 const { MONGO_DB_COLLECTIONS, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 const wipeDB = require('../../wipeDB');
 const { testApi } = require('../../test-api');
-const { DEALS } = require('../../../src/constants');
+const { DEALS } = require('../../../server/constants');
 const { MOCK_DEAL } = require('../mocks/mock-data');
 
 const newDeal = {

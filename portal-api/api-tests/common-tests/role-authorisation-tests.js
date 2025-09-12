@@ -1,5 +1,5 @@
 const { HttpStatusCode } = require('axios');
-const ROLES = require('../../src/v1/roles/roles');
+const ROLES = require('../../server/v1/roles/roles');
 
 const expectNotAuthorisedResponse = ({ status, body }) => {
   expect(status).toEqual(HttpStatusCode.Unauthorized);

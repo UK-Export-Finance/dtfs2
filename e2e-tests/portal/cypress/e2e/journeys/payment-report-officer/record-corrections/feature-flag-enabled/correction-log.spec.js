@@ -1,11 +1,5 @@
-const {
-  UtilisationReportEntityMockBuilder,
-  PENDING_RECONCILIATION,
-  FeeRecordCorrectionEntityMockBuilder,
-  FeeRecordEntityMockBuilder,
-  FEE_RECORD_STATUS,
-  RECORD_CORRECTION_REASON,
-} = require('@ukef/dtfs2-common');
+const { PENDING_RECONCILIATION, FEE_RECORD_STATUS, RECORD_CORRECTION_REASON } = require('@ukef/dtfs2-common');
+const { UtilisationReportEntityMockBuilder, FeeRecordCorrectionEntityMockBuilder, FeeRecordEntityMockBuilder } = require('@ukef/dtfs2-common/test-helpers');
 const { NODE_TASKS, BANK1_PAYMENT_REPORT_OFFICER1 } = require('../../../../../../../e2e-fixtures');
 const relativeURL = require('../../../../relativeURL');
 const { correctionLog } = require('../../../../pages');

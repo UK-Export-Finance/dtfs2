@@ -3,13 +3,13 @@ const { sub, format, add } = require('date-fns');
 const { CURRENCY } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const aDeal = require('../deals/deal-builder');
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const testUserCache = require('../../api-test-users');
 const { as } = require('../../api')(app);
-const { MAKER } = require('../../../src/v1/roles/roles');
-const { dateValidationText } = require('../../../src/v1/validation/fields/date');
+const { MAKER } = require('../../../server/v1/roles/roles');
+const { dateValidationText } = require('../../../server/v1/validation/fields/date');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
-const { DATE_FORMATS } = require('../../../src/constants');
+const { DATE_FORMATS } = require('../../../server/constants');
 
 describe('/v1/deals/:id/bond', () => {
   const newDeal = aDeal({

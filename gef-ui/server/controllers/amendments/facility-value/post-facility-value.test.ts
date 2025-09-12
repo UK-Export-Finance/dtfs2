@@ -10,7 +10,6 @@ import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
 import * as dtfsCommon from '@ukef/dtfs2-common';
 import {
-  aPortalSessionUser,
   PORTAL_LOGIN_STATUS,
   DEAL_SUBMISSION_TYPE,
   DEAL_STATUS,
@@ -18,6 +17,7 @@ import {
   PORTAL_AMENDMENT_STATUS,
   CURRENCY,
 } from '@ukef/dtfs2-common';
+import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import { postFacilityValue, PostFacilityValueRequest } from './post-facility-value';
 import { MOCK_BASIC_DEAL } from '../../../utils/mocks/mock-applications';
 import { MOCK_ISSUED_FACILITY } from '../../../utils/mocks/mock-facilities';

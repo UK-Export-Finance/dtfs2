@@ -1,4 +1,4 @@
-const removeCsrfToken = require('../../../src/v1/middleware/remove-csrf-token');
+const removeCsrfToken = require('../../../server/v1/middleware/remove-csrf-token');
 const { mockReq, mockReqWithCsrf, mockRes, mockNext } = require('../mocks');
 
 describe('routes/middleware/remove-csrf-token', () => {

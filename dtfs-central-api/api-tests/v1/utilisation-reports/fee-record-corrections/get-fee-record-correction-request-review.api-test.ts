@@ -1,19 +1,15 @@
-import { HttpStatusCode } from 'axios';
 import {
-  Bank,
-  FEE_RECORD_STATUS,
-  FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder,
   FeeRecordEntityMockBuilder,
-  RECONCILIATION_IN_PROGRESS,
-  RECORD_CORRECTION_REASON,
-  RecordCorrectionRequestTransientFormData,
   UtilisationReportEntityMockBuilder,
-} from '@ukef/dtfs2-common';
+  FeeRecordCorrectionRequestTransientFormDataEntityMockBuilder,
+} from '@ukef/dtfs2-common/test-helpers';
+import { HttpStatusCode } from 'axios';
+import { Bank, FEE_RECORD_STATUS, RECONCILIATION_IN_PROGRESS, RECORD_CORRECTION_REASON, RecordCorrectionRequestTransientFormData } from '@ukef/dtfs2-common';
 import { withSqlAndMongoIdPathParameterValidationTests } from '@ukef/dtfs2-common/test-cases-backend';
 import { testApi } from '../../../test-api';
 import { SqlDbHelper } from '../../../sql-db-helper';
 import { aBank } from '../../../../test-helpers';
-import { mongoDbClient } from '../../../../src/drivers/db-client';
+import { mongoDbClient } from '../../../../server/drivers/db-client';
 import { wipe } from '../../../wipeDB';
 import { replaceUrlParameterPlaceholders } from '../../../../test-helpers/replace-url-parameter-placeholders';
 

@@ -1,5 +1,5 @@
 const { addAuditRecordToExpectedResponse } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const CONSTANTS = require('../../../src/constants');
+const CONSTANTS = require('../../../server/constants');
 const { expectMongoId } = require('../../expectMongoIds');
 
 const addBaseFields = (baseDeal) => {

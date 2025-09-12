@@ -1,5 +1,5 @@
 const k2Map = require('../helpers/k2-mapping');
-const CONSTANTS = require('../../../../portal-api/src/constants');
+const CONSTANTS = require('../../../../portal-api/server/constants');
 
 const findPortalValue = (v1Value, v1FieldName, v2FieldType, v2FieldName, logError) => {
   const v2Value = k2Map.findPortalValue(v2FieldType, v2FieldName, v1Value);

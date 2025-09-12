@@ -1,14 +1,14 @@
 const testUserCache = require('../../api-test-users');
-const app = require('../../../src/createApp');
+const app = require('../../../server/createApp');
 const { as, get } = require('../../api')(app);
 const databaseHelper = require('../../database-helper');
 const { DB_COLLECTIONS } = require('../../fixtures/constants');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withRoleAuthorisationTests } = require('../../common-tests/role-authorisation-tests');
-const { PAYMENT_REPORT_OFFICER } = require('../../../src/v1/roles/roles');
-const api = require('../../../src/v1/api');
+const { PAYMENT_REPORT_OFFICER } = require('../../../server/v1/roles/roles');
+const api = require('../../../server/v1/api');
 
-jest.mock('../../../src/drivers/fileshare', () => ({
+jest.mock('../../../server/drivers/fileshare', () => ({
   getConfig: jest.fn(() => ({ EXPORT_FOLDER: 'mock-folder' })),
   readFile: jest.fn().mockResolvedValue(Buffer.of(1, 2, 3)),
 }));
