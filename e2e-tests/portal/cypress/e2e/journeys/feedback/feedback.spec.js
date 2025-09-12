@@ -49,7 +49,7 @@ context('User submit feedback on portal', () => {
     feedbackPage.easyToUseErrorMessage().contains('Select a rating for how easy the service is to use');
     feedbackPage.clearlyExplainedErrorMessage().contains('Select a rating for how clearly explained the information you need to provide is');
     feedbackPage.satisfiedErrorMessage().contains('Select a rating for how satisfied you are with the service');
-    feedbackPage.emailAddressErrorMessage().contains('Enter an email address in the correct format, like name@example.com');
+    feedbackPage.emailAddressErrorMessage().contains('Enter an email address in the correct format, for example, name@ukexportfinance.gov.uk');
 
     errorSummary().contains('Enter your role');
     errorSummary().contains('Enter which organisation you work for');
@@ -57,7 +57,7 @@ context('User submit feedback on portal', () => {
     errorSummary().contains('Select a rating for how easy the service is to use');
     errorSummary().contains('Select a rating for how clearly explained the information you need to provide is');
     errorSummary().contains('Select a rating for how satisfied you are with the service');
-    errorSummary().contains('Enter an email address in the correct format, like name@example.com');
+    errorSummary().contains('Enter an email address in the correct format, for example, name@ukexportfinance.gov.uk');
   });
 
   it('feedback should submit without errors and with correct thank you page', () => {

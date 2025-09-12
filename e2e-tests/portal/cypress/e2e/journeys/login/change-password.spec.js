@@ -1,5 +1,9 @@
+const {
+  ROLES: { MAKER },
+} = require('@ukef/dtfs2-common');
 const { header, users, createUser, changePassword, landingPage } = require('../../pages');
 const relative = require('../../relativeURL');
+const { UKEF_BANK_1 } = require('../../../../../e2e-fixtures/banks.fixture');
 
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 
@@ -12,8 +16,8 @@ context('Admin user creates a new user; the new user sets their password and the
     password: 'AbC!2345',
     firstname: 'first',
     surname: 'last',
-    bank: 'all',
-    roles: ['maker'],
+    bank: UKEF_BANK_1,
+    roles: [MAKER],
   };
 
   before(() => {
@@ -38,7 +42,7 @@ context('Admin user creates a new user; the new user sets their password and the
       cy.keyboardInput(createUser.username(), userToCreate.username);
       cy.keyboardInput(createUser.firstname(), userToCreate.firstname);
       cy.keyboardInput(createUser.surname(), userToCreate.surname);
-      createUser.bank().select(userToCreate.bank);
+      createUser.bank().select(userToCreate.bank.id);
 
       // Create user
       createUser.createUser().click();

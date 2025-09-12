@@ -1,6 +1,8 @@
-const { ADMIN } = require('../../../roles/roles');
+const {
+  ROLES: { ADMIN, READ_ONLY },
+  BANKS,
+} = require('@ukef/dtfs2-common');
 
-const CONSTANT = require('../../../../constants');
 /**
  * Validates that if the bank is present it is not empty
  * @param {object} user the existing user
@@ -19,13 +21,20 @@ const selectAtLeastOneBank = (user, change) => {
     ];
   }
 
-  const cantHaveAllBank = change.bank === CONSTANT.ALL && !change.roles?.includes(ADMIN);
-  if (cantHaveAllBank) {
+  const eligibleRoles = [ADMIN, READ_ONLY];
+
+  const isBankAll = change.bank?.name === BANKS.ALL;
+  const isEligible = (role) => eligibleRoles.includes(role);
+  const isRoleEligible = change.roles?.some(isEligible);
+
+  const cannotHaveAllBank = isBankAll && !isRoleEligible;
+
+  if (cannotHaveAllBank) {
     return [
       {
         bank: {
           order: '4',
-          text: 'Only admins can have "All" as the bank',
+          text: 'Only the admin and read-only user can be allocated to "All" bank',
         },
       },
     ];

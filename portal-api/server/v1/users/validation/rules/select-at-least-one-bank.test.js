@@ -1,3 +1,7 @@
+const {
+  ROLES: { MAKER, CHECKER, ADMIN },
+  BANKS,
+} = require('@ukef/dtfs2-common');
 const selectAtLeastOneBank = require('./select-at-least-one-bank');
 
 describe('selectAtLeastOneBank', () => {
@@ -14,15 +18,16 @@ describe('selectAtLeastOneBank', () => {
     {
       bank: {
         order: '4',
-        text: 'Only admins can have "All" as the bank',
+        text: 'Only the admin and read-only user can be allocated to "All" bank',
       },
     },
   ];
 
   const inputs = [
-    { user: 'user var is not used in this validation case', change: { bank: null, roles: ['maker'] }, expected: selectAtLeastOneBankError },
-    { user: 'NA', change: { bank: 'all', roles: ['admin'] }, expected: [] },
-    { user: 'NA', change: { bank: 'all', roles: ['checker'] }, expected: allBankError },
+    { user: 'user var is not used in this validation case', change: { bank: null, roles: [MAKER] }, expected: selectAtLeastOneBankError },
+    { user: 'NA', change: { bank: null, roles: [ADMIN] }, expected: selectAtLeastOneBankError },
+    { user: 'NA', change: { bank: { name: BANKS.ALL }, roles: [ADMIN] }, expected: [] },
+    { user: 'NA', change: { bank: { name: BANKS.ALL }, roles: [CHECKER] }, expected: allBankError },
   ];
 
   describe('selectAtLeastOneBank validation', () => {
