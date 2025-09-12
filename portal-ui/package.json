@@ -35,7 +35,7 @@
   "dependencies": {
     "@ministryofjustice/frontend": "3.0.2",
     "@ukef/dtfs2-common": "1.0.0",
-    "axios": "1.8.2",
+    "axios": "1.12.0",
     "cheerio": "1.0.0-rc.12",
     "clamscan": "^2.4.0",
     "connect-flash": "0.1.1",
