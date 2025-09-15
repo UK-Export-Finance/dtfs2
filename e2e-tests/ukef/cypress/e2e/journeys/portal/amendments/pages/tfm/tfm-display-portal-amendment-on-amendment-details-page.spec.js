@@ -15,6 +15,8 @@ const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
 const CHANGED_FACILITY_VALUE = '20000';
 const CHANGED_FACILITY_VALUE_2 = '30000';
 
+const submittedByString = `${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname} - ${BANK1_MAKER1.bank.name}`;
+
 context('Amendments - TFM - Amendments details page - TFM should display portal amendments on the amendment details page', () => {
   let dealId;
   let facilityId;
@@ -81,7 +83,7 @@ context('Amendments - TFM - Amendments details page - TFM should display portal 
 
   it('should display a row for the first portal amendment', () => {
     cy.assertText(amendmentsPage.amendmentDetails.row(2).heading(), `Amendment ${ukefFacilityId}-001`);
-    cy.assertText(amendmentsPage.amendmentDetails.row(2).effectiveDate(), today.dd_MMMM_yyyy);
+    cy.assertText(amendmentsPage.amendmentDetails.row(2).submittedBy(), submittedByString);
     cy.assertText(amendmentsPage.amendmentDetails.row(2).requireApproval(), 'No');
 
     cy.assertText(amendmentsPage.amendmentDetails.row(2).currentCoverEndDate(), format(new Date(mockFacility.coverEndDate), DD_MMMM_YYYY_FORMAT));
@@ -91,11 +93,13 @@ context('Amendments - TFM - Amendments details page - TFM should display portal 
     cy.assertText(amendmentsPage.amendmentDetails.row(2).currentFacilityValue(), `${CURRENCY.GBP} ${getFormattedMonetaryValue(mockFacility.value, 2)}`);
     cy.assertText(amendmentsPage.amendmentDetails.row(2).newFacilityValue(), `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, 2)}`);
     cy.assertText(amendmentsPage.amendmentDetails.row(2).ukefDecisionFacilityValue(), UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
+
+    cy.assertText(amendmentsPage.amendmentDetails.row(2).effectiveDateTable(), today.dd_MMMM_yyyy);
   });
 
   it('should display a row for the second portal amendment', () => {
     cy.assertText(amendmentsPage.amendmentDetails.row(1).heading(), `Amendment ${ukefFacilityId}-002`);
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).effectiveDate(), today.dd_MMMM_yyyy);
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).submittedBy(), submittedByString);
     cy.assertText(amendmentsPage.amendmentDetails.row(1).requireApproval(), 'No');
 
     cy.assertText(amendmentsPage.amendmentDetails.row(1).currentCoverEndDate(), twoYears.dd_MMMM_yyyy);
@@ -105,5 +109,7 @@ context('Amendments - TFM - Amendments details page - TFM should display portal 
     cy.assertText(amendmentsPage.amendmentDetails.row(1).currentFacilityValue(), `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, 2)}`);
     cy.assertText(amendmentsPage.amendmentDetails.row(1).newFacilityValue(), `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE_2, 2)}`);
     cy.assertText(amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue(), UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
+
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).effectiveDateTable(), today.dd_MMMM_yyyy);
   });
 });

@@ -16,6 +16,8 @@ const CHANGED_FACILITY_VALUE = '20000';
 const CHANGED_FACILITY_VALUE_1 = '30000';
 const CHANGED_FACILITY_VALUE_2 = '40000';
 
+const submittedByString = `${BANK1_MAKER1.firstname} ${BANK1_MAKER1.surname} - ${BANK1_MAKER1.bank.name}`;
+
 context('Amendments - TFM - Amendments details page - TFM should display portal and TFM amendments on the amendment details page', () => {
   let dealId;
   let facilityId;
@@ -97,7 +99,7 @@ context('Amendments - TFM - Amendments details page - TFM should display portal 
 
   it('should display a row for the first portal amendment', () => {
     cy.assertText(amendmentsPage.amendmentDetails.row(3).heading(), `Amendment ${ukefFacilityId}-001`);
-    cy.assertText(amendmentsPage.amendmentDetails.row(3).effectiveDate(), today.dd_MMMM_yyyy);
+    cy.assertText(amendmentsPage.amendmentDetails.row(3).submittedBy(), submittedByString);
     cy.assertText(amendmentsPage.amendmentDetails.row(3).requireApproval(), 'No');
 
     cy.assertText(amendmentsPage.amendmentDetails.row(3).currentCoverEndDate(), format(new Date(mockFacility.coverEndDate), DD_MMMM_YYYY_FORMAT));
@@ -107,6 +109,11 @@ context('Amendments - TFM - Amendments details page - TFM should display portal 
     cy.assertText(amendmentsPage.amendmentDetails.row(3).currentFacilityValue(), `${CURRENCY.GBP} ${getFormattedMonetaryValue(mockFacility.value, 2)}`);
     cy.assertText(amendmentsPage.amendmentDetails.row(3).newFacilityValue(), `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, 2)}`);
     cy.assertText(amendmentsPage.amendmentDetails.row(3).ukefDecisionFacilityValue(), UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
+  });
+
+  it('should display effective date in the table only for the first portal amendment', () => {
+    amendmentsPage.amendmentDetails.row(3).effectiveDate().should('not.exist');
+    cy.assertText(amendmentsPage.amendmentDetails.row(3).effectiveDateTable(), today.dd_MMMM_yyyy);
   });
 
   it('should display an eligibility criteria table and rows for the portal amendment', () => {
@@ -173,13 +180,18 @@ context('Amendments - TFM - Amendments details page - TFM should display portal 
     cy.assertText(amendmentsPage.amendmentDetails.row(2).ukefDecisionFacilityValue(), UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
   });
 
+  it('should not display effective date table row and should not display a submittedBy heading for the TFM amendment', () => {
+    amendmentsPage.amendmentDetails.row(2).effectiveDateTable().should('not.exist');
+    amendmentsPage.amendmentDetails.row(2).submittedBy().should('not.exist');
+  });
+
   it('should not display a eligibility criteria for the TFM table', () => {
     amendmentsPage.amendmentDetails.row(2).eligibilityCriteriaTable().should('not.exist');
   });
 
-  it('should display a row for the portal TFM amendment', () => {
+  it('should display a row for the portal amendment', () => {
     cy.assertText(amendmentsPage.amendmentDetails.row(1).heading(), `Amendment ${ukefFacilityId}-003`);
-    cy.assertText(amendmentsPage.amendmentDetails.row(1).effectiveDate(), today.dd_MMMM_yyyy);
+    cy.assertText(amendmentsPage.amendmentDetails.row(3).submittedBy(), submittedByString);
     cy.assertText(amendmentsPage.amendmentDetails.row(1).requireApproval(), 'No');
 
     cy.assertText(amendmentsPage.amendmentDetails.row(1).currentCoverEndDate(), threeYears.dd_MMMM_yyyy);
@@ -189,6 +201,11 @@ context('Amendments - TFM - Amendments details page - TFM should display portal 
     cy.assertText(amendmentsPage.amendmentDetails.row(1).currentFacilityValue(), `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE_1, 2)}`);
     cy.assertText(amendmentsPage.amendmentDetails.row(1).newFacilityValue(), `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE_2, 2)}`);
     cy.assertText(amendmentsPage.amendmentDetails.row(1).ukefDecisionFacilityValue(), UNDERWRITER_MANAGER_DECISIONS.AUTOMATIC_APPROVAL);
+  });
+
+  it('should display effective date in the table only for the last portal amendment', () => {
+    amendmentsPage.amendmentDetails.row(1).effectiveDate().should('not.exist');
+    cy.assertText(amendmentsPage.amendmentDetails.row(1).effectiveDateTable(), today.dd_MMMM_yyyy);
   });
 
   it('should display an eligibility criteria table and rows for the third portal amendment', () => {
