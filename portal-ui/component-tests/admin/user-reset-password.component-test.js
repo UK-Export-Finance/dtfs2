@@ -21,7 +21,7 @@ describe(page, () => {
   it('should render the page heading', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="page-heading"]').toContain(`Are you sure you want to reset the password for ${user.username}?`);
+    wrapper.expectText('[data-cy="page-heading"]').toRead(`Are you sure you want to reset the password for ${user.username}?`);
   });
 
   it('should render the `Reset password` button', () => {

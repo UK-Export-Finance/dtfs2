@@ -21,13 +21,13 @@ describe(page, () => {
   it('should render the confirmation panel', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="submitted-reset-password-request-panel"]').toContain('Password reset request sent');
+    wrapper.expectText('[data-cy="submitted-reset-password-request-panel"]').toRead('Password reset request sent');
   });
 
   it('should render the text section', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="reset-link-sent-text"]').toContain(`${user.username} will receive email instructions to reset their password shortly.`);
+    wrapper.expectText('[data-cy="reset-link-sent-text"]').toRead(`${user.username} will receive an email instructions to reset their password shortly.`);
   });
 
   it('should render the `Back to dashboard` button', () => {

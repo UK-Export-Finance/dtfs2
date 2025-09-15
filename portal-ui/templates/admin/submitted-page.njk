@@ -11,8 +11,8 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         {{ submittedResetPasswordRequest.render() }}
-        <div class="govuk-!-margin-top-4" data-cy="reset-link-sent-text">
-          <p>{{user.username}} will receive email instructions to reset their password shortly.</p>
+        <div class="govuk-!-margin-top-4">
+          <p data-cy="reset-link-sent-text">{{user.username}} will receive an email instructions to reset their password shortly.</p>
 
           {{ govukButton({
               text: "Back to dashboard",
