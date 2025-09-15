@@ -67,6 +67,7 @@ describe('password reset', () => {
   it('should send an email for existing email', async () => {
     await resetPassword(MOCK_USER.email, userService, generateNoUserLoggedInAuditDetails());
     expect(sendEmail).toHaveBeenCalledWith(RESET_PASSWORD_EMAIL_TEMPLATE_ID, MOCK_USER.email, {
+      domain: expect.any(String),
       resetToken: expect.any(String),
     });
   });
@@ -75,6 +76,7 @@ describe('password reset', () => {
     const upperCaseEmail = MOCK_USER.email.toUpperCase();
     await resetPassword(upperCaseEmail, userService, generateNoUserLoggedInAuditDetails());
     expect(sendEmail).toHaveBeenCalledWith(RESET_PASSWORD_EMAIL_TEMPLATE_ID, upperCaseEmail, {
+      domain: expect.any(String),
       resetToken: expect.any(String),
     });
   });
@@ -125,6 +127,7 @@ describe('password reset', () => {
         expect(status).toEqual(200);
         expect(body).toMatchObject({});
         expect(sendEmail).toHaveBeenCalledWith(RESET_PASSWORD_EMAIL_TEMPLATE_ID, MOCK_USER.email, {
+          domain: expect.any(String),
           resetToken: expect.any(String),
         });
       });
