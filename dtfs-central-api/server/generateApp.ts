@@ -16,9 +16,12 @@ const { BANK_ROUTE, PORTAL_ROUTE, TFM_ROUTE, USER_ROUTE, UTILISATION_REPORTS_ROU
 export const generateApp = (): Express => {
   const app = express();
 
+  app.use(seo);
+
+  // Non-authenticated routes
+  app.use(healthcheck);
   app.use(`/v1/${SWAGGER_ROUTE}`, swaggerRoutes);
 
-  app.use(seo);
   app.use(security);
 
   /**
@@ -27,7 +30,6 @@ export const generateApp = (): Express => {
    */
   app.use(maintenance);
 
-  app.use(healthcheck);
   app.use(checkApiKey);
   // added limit for larger payloads
   app.use(express.json({ limit: MAX_REQUEST_SIZE }));
