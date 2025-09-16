@@ -1,2 +1,7 @@
+###################
+# 1. BUILD
+###################
 FROM nginx:1.29.1
-COPY default.conf.template /etc/nginx/templates/
+
+# Root
+COPY --chown=node:node default.conf.template /etc/nginx/templates/
