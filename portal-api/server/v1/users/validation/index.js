@@ -25,6 +25,7 @@ const surnameMustNotBeEmpty = require('./rules/surname-must-not-be-empty');
 const selectAtLeastOneRole = require('./rules/select-at-least-one-role');
 const selectAtLeastOneBank = require('./rules/select-at-least-one-bank');
 const adminFromUkefOnly = require('./rules/admin-from-ukef-only');
+const readOnlyFromUkefOnly = require('./rules/read-only-from-ukef-only');
 
 const createRules = [
   passwordAtLeast8Characters,
@@ -41,6 +42,7 @@ const createRules = [
   selectAtLeastOneRole,
   selectAtLeastOneBank,
   adminFromUkefOnly,
+  readOnlyFromUkefOnly,
 ];
 
 const updateWithoutCurrentPasswordRules = [
@@ -56,6 +58,7 @@ const updateWithoutCurrentPasswordRules = [
   emailMustBeValidEmailAddress,
   emailMustBeUnique,
   adminFromUkefOnly,
+  readOnlyFromUkefOnly,
 ];
 
 const updateWithCurrentPasswordRules = [...updateWithoutCurrentPasswordRules, currentPasswordMustMatch];

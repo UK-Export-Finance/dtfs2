@@ -1,8 +1,9 @@
+const {
+  ROLES: { ADMIN, READ_ONLY, MAKER, CHECKER },
+} = require('@ukef/dtfs2-common');
 const { header, users, createUser, editUser } = require('../../../pages');
 const { ADMIN: AN_ADMIN } = require('../../../../../../e2e-fixtures');
-const {
-  USER_ROLES: { ADMIN, MAKER, CHECKER },
-} = require('../../../../fixtures/constants');
+const { UKEF_BANK_1 } = require('../../../../../../e2e-fixtures/banks.fixture');
 const relative = require('../../../relativeURL');
 
 context('Admin user updates an existing user', () => {
@@ -12,7 +13,7 @@ context('Admin user updates an existing user', () => {
     password: 'AbC!2345',
     firstname: 'first',
     surname: 'last',
-    bank: 'Bank 1',
+    bank: UKEF_BANK_1,
     roles: [MAKER],
   };
 
@@ -48,7 +49,7 @@ context('Admin user updates an existing user', () => {
       createUser.role(role).click();
     });
 
-    createUser.bank().select(userToUpdate.bank);
+    createUser.bank().select(userToUpdate.bank.id);
 
     // Create user
     createUser.createUser().click();
@@ -147,6 +148,19 @@ context('Admin user updates an existing user', () => {
     cy.assertText(users.row(userToUpdate).roles(), MAKER);
   });
 
+  it('changing role to read-only on non-ukef user should update their role', () => {
+    // Go to edit page
+    openPageToEdit(userToUpdate);
+
+    // New role as an `Read-only`
+    editUser.role(READ_ONLY).click();
+    editUser.save().click();
+
+    // validate the role
+    cy.url().should('eq', relative('/admin/users'));
+    cy.assertText(users.row(userToUpdate).roles(), READ_ONLY);
+  });
+
   it('changing role to admin on a ukef user should update their role', () => {
     // Create user
     users.addUser().click();
@@ -160,7 +174,7 @@ context('Admin user updates an existing user', () => {
       createUser.role(role).click();
     });
 
-    createUser.bank().select(ukefEmailUser.bank);
+    createUser.bank().select(ukefEmailUser.bank.id);
 
     // Create user
     createUser.createUser().click();

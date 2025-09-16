@@ -1,18 +1,20 @@
+const {
+  ROLES: { ADMIN, READ_ONLY, MAKER, CHECKER, PAYMENT_REPORT_OFFICER },
+  BANKS,
+} = require('@ukef/dtfs2-common');
 const { header, users, createUser, changePassword } = require('../../../pages');
 const relative = require('../../../relativeURL');
-const {
-  USER_ROLES: { ADMIN, MAKER, READ_ONLY, CHECKER, PAYMENT_REPORT_OFFICER },
-} = require('../../../../fixtures/constants');
 const { ADMIN: AN_ADMIN, USER_WITH_INJECTION } = require('../../../../../../e2e-fixtures/portal-users.fixture');
+const { UKEF_BANK_1, UKEF_BANK_2 } = require('../../../../../../e2e-fixtures/banks.fixture');
 
 context('Admin user creates a new user', () => {
   const validUser = {
-    username: 'an.address@some.com',
-    email: 'an.address@some.com',
+    username: 'an.address@example.com',
+    email: 'an.address@example.com',
     password: 'AbC!2345',
     firstname: 'bob',
     surname: 'builder',
-    bank: 'Bank 1',
+    bank: UKEF_BANK_1,
     roles: [MAKER],
   };
 
@@ -22,14 +24,14 @@ context('Admin user creates a new user', () => {
     password: 'aaa',
     firstname: 'alfred',
     surname: 'd. great',
-    bank: 'Bank 2',
+    bank: UKEF_BANK_2,
     roles: [MAKER],
   };
 
   const ukefEmailUser = {
     ...validUser,
-    username: 'adminukefuser@ukexportfinance.gov.uk',
-    email: 'adminukefuser@ukexportfinance.gov.uk',
+    username: 'ukefuser@ukexportfinance.gov.uk',
+    email: 'ukefuser@ukexportfinance.gov.uk',
   };
 
   beforeEach(() => {
@@ -88,7 +90,7 @@ context('Admin user creates a new user', () => {
       cy.keyboardInput(createUser.firstname(), userWithInvalidPassword.firstname);
       cy.keyboardInput(createUser.surname(), userWithInvalidPassword.surname);
 
-      createUser.bank().select(userWithInvalidPassword.bank);
+      createUser.bank().select(userWithInvalidPassword.bank.id);
 
       createUser.createUser().click();
 
@@ -114,7 +116,7 @@ context('Admin user creates a new user', () => {
       cy.keyboardInput(createUser.firstname(), USER_WITH_INJECTION.firstname);
       cy.keyboardInput(createUser.surname(), USER_WITH_INJECTION.surname);
 
-      createUser.bank().select(USER_WITH_INJECTION.bank);
+      createUser.bank().select(USER_WITH_INJECTION.bank.id);
 
       createUser.createUser().click();
 
@@ -164,20 +166,39 @@ context('Admin user creates a new user', () => {
     });
     // TODO: ADD lighthouse checks DTFS2-4994
 
-    it('should receive error when the email address is from a non-UKEF domain', () => {
+    it('should receive error when user is admin and the email address is from a non-UKEF domain', () => {
       // Fill in all the fields
       cy.keyboardInput(createUser.firstname(), validUser.firstname);
       cy.keyboardInput(createUser.surname(), validUser.surname);
       createUser.isTrustedFalse().click();
       createUser.role(ADMIN).click();
       cy.keyboardInput(createUser.username(), validUser.username);
-      createUser.bank().select(validUser.bank);
+      createUser.bank().select(validUser.bank.id);
 
       // Create user
       createUser.createUser().click();
 
       // Assert role input error
       createUser.rolesError().should('contain', 'The admin role can only be associated with a UKEF email address');
+
+      // Assert URL
+      cy.url().should('eq', relative('/admin/users/create'));
+    });
+
+    it('should receive error when a non ukef user is read-only with all banks', () => {
+      // Fill in all the fields
+      cy.keyboardInput(createUser.firstname(), validUser.firstname);
+      cy.keyboardInput(createUser.surname(), validUser.surname);
+      createUser.isTrustedFalse().click();
+      createUser.role(READ_ONLY).click();
+      cy.keyboardInput(createUser.username(), validUser.username);
+      createUser.bank().select(BANKS.ALL);
+
+      // Create user
+      createUser.createUser().click();
+
+      // Assert role input error
+      createUser.rolesError().should('contain', 'The read-only role for all bank can only be associated with a UKEF email address');
 
       // Assert URL
       cy.url().should('eq', relative('/admin/users/create'));
@@ -194,7 +215,7 @@ context('Admin user creates a new user', () => {
       cy.keyboardInput(createUser.firstname(), validUser.firstname);
       cy.keyboardInput(createUser.surname(), validUser.surname);
 
-      createUser.bank().select(validUser.bank);
+      createUser.bank().select(validUser.bank.id);
 
       createUser.createUser().click();
 
@@ -230,7 +251,7 @@ context('Admin user creates a new user', () => {
       cy.keyboardInput(createUser.firstname(), validUser.firstname);
       cy.keyboardInput(createUser.surname(), validUser.surname);
 
-      createUser.bank().select(validUser.bank);
+      createUser.bank().select(validUser.bank.id);
 
       createUser.isTrustedTrue().click();
 
@@ -245,18 +266,18 @@ context('Admin user creates a new user', () => {
     });
 
     it('should create a read-only user', () => {
-      cy.keyboardInput(createUser.username(), validUser.username);
-      cy.keyboardInput(createUser.firstname(), validUser.firstname);
-      cy.keyboardInput(createUser.surname(), validUser.surname);
+      cy.keyboardInput(createUser.username(), ukefEmailUser.username);
+      cy.keyboardInput(createUser.firstname(), ukefEmailUser.firstname);
+      cy.keyboardInput(createUser.surname(), ukefEmailUser.surname);
 
-      createUser.bank().select(validUser.bank);
+      createUser.bank().select(ukefEmailUser.bank.id);
 
       createUser.role(READ_ONLY).click();
       createUser.createUser().click();
 
       cy.url().should('eq', relative('/admin/users/'));
 
-      cy.assertText(users.row(validUser).roles(), READ_ONLY);
+      cy.assertText(users.row(ukefEmailUser).roles(), READ_ONLY);
     });
 
     it('should create a new admin user with a UKEF email address.', () => {
@@ -266,7 +287,7 @@ context('Admin user creates a new user', () => {
       createUser.isTrustedFalse().click();
       createUser.role(ADMIN).click();
       cy.keyboardInput(createUser.username(), ukefEmailUser.username);
-      createUser.bank().select(ukefEmailUser.bank);
+      createUser.bank().select(ukefEmailUser.bank.id);
 
       // Create user
       createUser.createUser().click();
@@ -284,7 +305,7 @@ context('Admin user creates a new user', () => {
       createUser.isTrustedFalse().click();
       createUser.role(PAYMENT_REPORT_OFFICER).click();
       cy.keyboardInput(createUser.username(), validUser.username);
-      createUser.bank().select(validUser.bank);
+      createUser.bank().select(validUser.bank.id);
 
       // Create user
       createUser.createUser().click();

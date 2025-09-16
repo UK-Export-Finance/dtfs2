@@ -5,7 +5,7 @@ describe('emailMustBeValidEmailAddress', () => {
     {
       email: {
         order: '1',
-        text: 'Enter an email address in the correct format, for example, name@example.com',
+        text: 'Enter an email address in the correct format, for example, name@ukexportfinance.gov.uk',
       },
     },
   ];

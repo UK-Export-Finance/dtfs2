@@ -64,7 +64,7 @@ router.post('/users/create', async (req, res) => {
   if (bank === 'all') {
     user.bank = {
       id: ALL_BANKS_ID,
-      name: 'All',
+      name: 'all',
       hasGefAccessOnly: false,
     };
   } else {
