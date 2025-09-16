@@ -4,7 +4,7 @@ const {
 } = require('@ukef/dtfs2-common');
 const { header, users, createUser, changePassword } = require('../../../pages');
 const relative = require('../../../relativeURL');
-const { ADMIN: AN_ADMIN, USER_WITH_INJECTION, BANK1_MAKER1 } = require('../../../../../../e2e-fixtures/portal-users.fixture');
+const { ADMIN: AN_ADMIN, USER_WITH_INJECTION } = require('../../../../../../e2e-fixtures/portal-users.fixture');
 const { UKEF_BANK_1, UKEF_BANK_2 } = require('../../../../../../e2e-fixtures/banks.fixture');
 
 context('Admin user creates a new user', () => {
@@ -29,7 +29,9 @@ context('Admin user creates a new user', () => {
   };
 
   const ukefEmailUser = {
-    ...BANK1_MAKER1,
+    ...validUser,
+    username: 'ukefuser@ukexportfinance.gov.uk',
+    email: 'ukefuser@ukexportfinance.gov.uk',
   };
 
   beforeEach(() => {

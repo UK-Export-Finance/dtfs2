@@ -3,7 +3,6 @@ const {
 } = require('@ukef/dtfs2-common');
 const { header, users, createUser, editUser } = require('../../../pages');
 const { ADMIN: AN_ADMIN } = require('../../../../../../e2e-fixtures');
-const { BANK1_MAKER1 } = require('../../../../../../e2e-fixtures/portal-users.fixture');
 const { UKEF_BANK_1 } = require('../../../../../../e2e-fixtures/banks.fixture');
 const relative = require('../../../relativeURL');
 
@@ -19,7 +18,9 @@ context('Admin user updates an existing user', () => {
   };
 
   const ukefEmailUser = {
-    ...BANK1_MAKER1,
+    ...userToUpdate,
+    username: 'admin1@ukexportfinance.gov.uk',
+    email: 'admin1@ukexportfinance.gov.uk',
     roles: [ADMIN],
   };
 
