@@ -10,7 +10,7 @@ ARG AzureFunctionsJobHost__Logging__Console__IsEnabled=true
 ARG FUNCTIONS_WORKER_RUNTIME=node
 ARG AzureWebJobsFeatureFlags=EnableWorkerIndexing
 
-FROM ${MICROSERVICE}mcr.microsoft.com/azure-functions/node:4-node22 AS build
+FROM mcr.microsoft.com/azure-functions/node:4-node22 AS build
 
 # Variables
 ARG PORT
@@ -57,7 +57,7 @@ RUN npm ci --omit=dev --ignore-scripts --workspace=${MICROSERVICE}
 # 2. PRODUCTION
 ###################
 
-FROM ${MICROSERVICE}mcr.microsoft.com/azure-functions/node:4-node22 AS production
+FROM mcr.microsoft.com/azure-functions/node:4-node22 AS production
 
 # Variables
 ARG PORT
