@@ -78,6 +78,7 @@ const amendmentsPage = {
       return {
         heading: () => cy.get('@row').get(`[data-cy="amendment--heading-${index}"]`),
         effectiveDate: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-effective-date"]`),
+        submittedBy: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-submitted-by"]`),
         requireApproval: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-require-approval"]`),
         bankDecision: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-banks-decision"]`),
 
@@ -90,6 +91,8 @@ const amendmentsPage = {
         newFacilityValue: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-new-facility-value"]`),
 
         bankDecisionTag: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-banks-decision"]`),
+
+        effectiveDateTable: () => cy.get(`[data-cy="amendment--details-${index}-table-effective-date"]`),
 
         eligibilityCriteriaTable: () => cy.get(`[data-cy="amendment-${index}-eligibility-criteria"]`),
 

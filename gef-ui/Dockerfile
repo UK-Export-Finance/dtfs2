@@ -4,6 +4,7 @@
 ARG PORT
 ARG NODE_ENV
 ARG GITHUB_SHA
+ARG ROOT=/app
 ARG MICROSERVICE=gef-ui
 
 ###################
@@ -16,13 +17,15 @@ FROM node:24.1.0-alpine3.20 AS build
 ARG PORT
 ARG NODE_ENV
 ARG GITHUB_SHA
+ARG ROOT
 ARG MICROSERVICE
 ENV PORT=$PORT
 ENV NODE_ENV=$NODE_ENV
 ENV GITHUB_SHA=$GITHUB_SHA
+ENV ROOT=$ROOT
 ENV MICROSERVICE=$MICROSERVICE
 
-WORKDIR /app
+WORKDIR ${ROOT}
 
 # Root
 COPY --chown=node:node ./package.json .
@@ -45,7 +48,7 @@ COPY --chown=node:node ./${MICROSERVICE}/templates ./${MICROSERVICE}/templates
 # Lean NPM - Only install `dependencies`
 # `devDependencies` will still be resolved inside `package-lock.json`,
 # however they will not be installed inside `node_modules` directory.
-RUN npm ci --omit=dev --ignore-scripts
+RUN npm ci --omit=dev --ignore-scripts --workspace=${MICROSERVICE}
 
 ###################
 # 2. PRODUCTION
@@ -57,32 +60,34 @@ FROM node:24.1.0-alpine3.20 AS production
 ARG PORT
 ARG NODE_ENV
 ARG GITHUB_SHA
+ARG ROOT
 ARG MICROSERVICE
 ENV PORT=$PORT
 ENV NODE_ENV=$NODE_ENV
 ENV GITHUB_SHA=$GITHUB_SHA
+ENV ROOT=$ROOT
 ENV MICROSERVICE=$MICROSERVICE
 
-WORKDIR /app
+WORKDIR ${ROOT}
 
 # Copy from `build` to `prod`
-COPY --chown=node:node --from=build /app/package.json .
-COPY --chown=node:node --from=build /app/package-lock.json .
-COPY --chown=node:node --from=build /app/node_modules ./node_modules
+COPY --chown=node:node --from=build ${ROOT}/package.json .
+COPY --chown=node:node --from=build ${ROOT}/package-lock.json .
+COPY --chown=node:node --from=build ${ROOT}/node_modules ./node_modules
 
-COPY --chown=node:node --from=build /app/libs/common/package.json ./libs/common/package.json
-COPY --chown=node:node --from=build /app/libs/common/tsconfig.json ./libs/common/tsconfig.json
-COPY --chown=node:node --from=build /app/libs/common/node_modules ./libs/common/node_modules
-COPY --chown=node:node --from=build /app/libs/common/src ./libs/common/src
+COPY --chown=node:node --from=build ${ROOT}/libs/common/package.json ./libs/common/package.json
+COPY --chown=node:node --from=build ${ROOT}/libs/common/tsconfig.json ./libs/common/tsconfig.json
+COPY --chown=node:node --from=build ${ROOT}/libs/common/node_modules ./libs/common/node_modules
+COPY --chown=node:node --from=build ${ROOT}/libs/common/src ./libs/common/src
 
-COPY --chown=node:node --from=build /app/${MICROSERVICE}/package.json ./${MICROSERVICE}/package.json
-COPY --chown=node:node --from=build /app/${MICROSERVICE}/tsconfig.json ./${MICROSERVICE}/tsconfig.json
-COPY --chown=node:node --from=build /app/${MICROSERVICE}/node_modules ./${MICROSERVICE}/node_modules
-COPY --chown=node:node --from=build /app/${MICROSERVICE}/public ./${MICROSERVICE}/public
-COPY --chown=node:node --from=build /app/${MICROSERVICE}/scripts ./${MICROSERVICE}/scripts
-COPY --chown=node:node --from=build /app/${MICROSERVICE}/server ./${MICROSERVICE}/server
-COPY --chown=node:node --from=build /app/${MICROSERVICE}/styles ./${MICROSERVICE}/styles
-COPY --chown=node:node --from=build /app/${MICROSERVICE}/templates ./${MICROSERVICE}/templates
+COPY --chown=node:node --from=build ${ROOT}/${MICROSERVICE}/package.json ./${MICROSERVICE}/package.json
+COPY --chown=node:node --from=build ${ROOT}/${MICROSERVICE}/tsconfig.json ./${MICROSERVICE}/tsconfig.json
+COPY --chown=node:node --from=build ${ROOT}/${MICROSERVICE}/node_modules ./${MICROSERVICE}/node_modules
+COPY --chown=node:node --from=build ${ROOT}/${MICROSERVICE}/public ./${MICROSERVICE}/public
+COPY --chown=node:node --from=build ${ROOT}/${MICROSERVICE}/scripts ./${MICROSERVICE}/scripts
+COPY --chown=node:node --from=build ${ROOT}/${MICROSERVICE}/server ./${MICROSERVICE}/server
+COPY --chown=node:node --from=build ${ROOT}/${MICROSERVICE}/styles ./${MICROSERVICE}/styles
+COPY --chown=node:node --from=build ${ROOT}/${MICROSERVICE}/templates ./${MICROSERVICE}/templates
 
 # Expose listening port
 EXPOSE ${PORT}
