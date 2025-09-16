@@ -1,0 +1,15 @@
+{% macro render(params) %}
+    {% set text1 = params.text1 %}
+    {% set text2 = params.text2 %}
+    {% set href = params.href %}
+    {% set hrefText = params.hrefText %}
+
+    <p class="govuk-body">
+        {{text1}}
+    </p>
+    <p class="govuk-body">
+        {{text2}}
+    </p>
+    <a class="govuk-link" href="{{ href }}" data-cy="error-message-link">{{ hrefText }}</a>
+
+{% endmacro %}
