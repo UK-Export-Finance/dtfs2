@@ -139,6 +139,7 @@ export interface PortalFacilityAmendment extends BaseAmendment {
     criteria: AmendmentsEligibilityCriterionWithAnswer[];
   };
   tfm?: FacilityAmendmentTfmObject;
+  bankName?: string;
 }
 
 /**

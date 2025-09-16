@@ -246,6 +246,7 @@ export class PortalFacilityAmendmentService {
       status: newStatus,
       referenceNumber,
       requestDate,
+      bankName,
     };
 
     const existingAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);

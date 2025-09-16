@@ -196,6 +196,7 @@ describe('PortalFacilityAmendmentService', () => {
         status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
         referenceNumber,
         requestDate,
+        bankName,
       };
 
       const today = now();

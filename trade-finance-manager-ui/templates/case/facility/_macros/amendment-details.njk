@@ -25,8 +25,15 @@
         {% endif %}
 
         <dl class="govuk-grid-row ukef-list">
-          <dt class="govuk-grid-column-one-quarter ukef-heading-xs">Date amendment is effective from</dt>
-          <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="amendment--details-{{loop.index}}-effective-date">{{ amendment.effectiveDate | dashIfEmpty}}</dd>
+          {% if not amendment.isPortalAmendment %}
+            <dt class="govuk-grid-column-one-quarter ukef-heading-xs">Date amendment is effective from</dt>
+            <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="amendment--details-{{loop.index}}-effective-date">{{ amendment.effectiveDate | dashIfEmpty}}</dd>
+          {% endif %}
+
+          {% if amendment.isPortalAmendment %}
+            <dt class="govuk-grid-column-one-quarter ukef-heading-xs">Submitted by</dt>
+            <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="amendment--details-{{loop.index}}-submitted-by">{{ amendment.createdBy.name | dashIfEmpty}} - {{ amendment.bankName | dashIfEmpty}}</dd>
+          {% endif %}
 
           <dt class="govuk-grid-column-one-quarter ukef-heading-xs">Bank requested change</dt>
           <dd class="govuk-grid-column-three-quarters govuk-body-s" data-cy="amendment--details-{{loop.index}}-request-date">{{ amendment.requestDate | dashIfEmpty}}</dd>
@@ -106,6 +113,20 @@
 
           {% set rows = (rows.push(defaultFacilityValue), rows) %}
         {% endif %}
+
+        {% if amendment.isPortalAmendment %}
+          {% set defaultEffectiveDate =
+            [
+              { text: 'Date amendment is effective from' },
+              { text: amendment.effectiveDate, attributes: { "data-cy": "amendment--details-"+loop.index+"-table-effective-date" } },
+              { text: null },
+              { text: null }
+            ]
+          %}
+
+          {% set rows = (rows.push(defaultEffectiveDate), rows) %}
+        {% endif %}
+        
 
 
         {% set head =
