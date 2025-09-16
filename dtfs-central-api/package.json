@@ -75,7 +75,7 @@
     "jest-when": "^3.7.0",
     "node-mocks-http": "^1.17.2",
     "supertest": "6.3.3",
-    "ts-jest": "^29.4.1"
+    "ts-jest": "^29.4.2"
   },
   "engines": {
     "node": ">=24.1.0",

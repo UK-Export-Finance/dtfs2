@@ -83,7 +83,7 @@
     "jest-when": "^3.7.0",
     "node-mocks-http": "^1.17.2",
     "supertest": "^6.3.4",
-    "ts-jest": "^29.4.1",
+    "ts-jest": "^29.4.2",
     "typescript": "^5.9.2"
   },
   "engines": {

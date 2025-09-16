@@ -1,16 +1,17 @@
-# Base image
+###################
+# 1. BUILD
+###################
 FROM mongo:4.2.0
 
-# Environment variable
+# Variables
 ARG MONGO_INITDB_DATABASE
 ARG MONGO_INITDB_ROOT_USERNAME
 ARG MONGO_INITDB_ROOT_PASSWORD
-
 ENV MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
 ENV MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
 ENV MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
 
-# Mongo Key
+# Keys
 RUN openssl rand -base64 756 > /mongo-keyfile
 RUN chmod 400 /mongo-keyfile
 RUN chown 999:999 /mongo-keyfile
