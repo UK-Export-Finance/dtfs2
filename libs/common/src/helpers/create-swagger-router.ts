@@ -4,6 +4,16 @@ import swaggerDocs, { Options } from 'swagger-jsdoc';
 import { HEADERS, SWAGGER } from '../constants';
 import { swaggerDefinition } from '../interfaces';
 
+/**
+ * Creates an Express router that serves Swagger API documentation.
+ *
+ * - Serves the OpenAPI JSON documentation at `/v1/api-docs/api.json`.
+ * - Serves the Swagger UI at `/v1/api-docs` with custom configurations.
+ *
+ * @param definition - The Swagger/OpenAPI definition object.
+ * @param apis - An array of file paths containing API documentation annotations.
+ * @returns An Express router configured to serve Swagger documentation.
+ */
 export const swaggerRouter = (definition: swaggerDefinition, apis: Array<string>) => {
   const router = express.Router();
 
