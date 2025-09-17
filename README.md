@@ -434,4 +434,44 @@ Cookie Names:
 - Session: `__Host-dtfs-session`
 - CSRF: `_csrf`
 
+## 📚 Swagger
+
+This project uses **Swagger (OpenAPI) version 3.0** to provide standardised API documentation across all microservices.
+Each microservice exposes both a **Swagger UI interface** for interactive exploration and a **JSON specification** for machine-readable API definitions.
+
+---
+
+## ⚙️ Swagger Setup
+
+- **OpenAPI 3.0 specification**: Ensures consistency, rich metadata, request/response schemas, and endpoint documentation.
+- **Express + Swagger tools**: Each microservice uses `swagger-jsdoc` to generate the OpenAPI specification and `swagger-ui-express` to serve it via HTTP.
+- **Customizable UI settings**: Swagger UI includes features such as filtering endpoints, displaying request durations, and persisting authorization data.
+- **Separate routes for JSON and UI**:
+  - `/v1/api-docs/` → Swagger UI (interactive)
+  - `/v1/api-docs/api.json` → OpenAPI JSON (machine-readable and download)
+
+---
+
+## 🛠 Microservices Swagger Endpoints
+
+### 1️⃣ Portal API
+
+- **UI**: [http://localhost:5001/v1/api-docs/](http://localhost:5001/v1/api-docs/)
+- **JSON**: [http://localhost:5001/v1/api-docs/api.json](http://localhost:5001/v1/api-docs/api.json)
+
+### 2️⃣ TFM API
+
+- **UI**: [http://localhost:5004/v1/api-docs/](http://localhost:5004/v1/api-docs/)
+- **JSON**: [http://localhost:5004/v1/api-docs/api.json](http://localhost:5004/v1/api-docs/api.json)
+
+### 3️⃣ External API
+
+- **UI**: [http://localhost:5002/v1/api-docs/](http://localhost:5002/v1/api-docs/)
+- **JSON**: [http://localhost:5002/v1/api-docs/api.json](http://localhost:5002/v1/api-docs/api.json)
+
+### 4️⃣ Central API
+
+- **UI**: [http://localhost:5005/v1/api-docs/](http://localhost:5005/v1/api-docs/)
+- **JSON**: [http://localhost:5005/v1/api-docs/api.json](http://localhost:5005/v1/api-docs/api.json)
+
 ---
