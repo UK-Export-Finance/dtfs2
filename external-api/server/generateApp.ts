@@ -4,7 +4,7 @@ import express from 'express';
 import compression from 'compression';
 import mongoSanitise from 'express-mongo-sanitize';
 import { maintenance, SWAGGER } from '@ukef/dtfs2-common';
-import { apiRoutes, swaggerRoutes, healthcheck } from './v1/routes';
+import { apiRoutes, swaggerRouter, healthcheck } from './v1/routes';
 import { seo } from './middleware/headers/seo';
 import { security } from './middleware/headers/security';
 import { checkApiKey } from './middleware/check-api-key';
@@ -21,7 +21,7 @@ export const generateApp = () => {
 
   // Non-authenticated routes
   app.use(healthcheck);
-  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRoutes.default);
+  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter.default);
 
   app.use(security);
 
