@@ -1,7 +1,8 @@
 import path from 'path';
-import { swaggerRouter, SERVICES } from '@ukef/dtfs2-common';
+import { swaggerDefinition, SERVICES } from '@ukef/dtfs2-common';
+import { swaggerRouter } from '@ukef/dtfs2-common/swagger';
 
-const definition = {
+const definition: swaggerDefinition = {
   info: {
     title: SERVICES.EXTERNAL_API,
     version: '1.0.0',

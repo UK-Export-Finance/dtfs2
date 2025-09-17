@@ -21,6 +21,8 @@ export const swaggerRouter = (definition: swaggerDefinition, apis: Array<string>
     explorer: true, // Show the “Explore” box to load a different URL
     swaggerOptions: {
       filter: true, // Add a search/filter input for endpoints
+      persistAuthorization: true, // Keep auth data on page refresh
+      displayRequestDuration: true, // Show API response times
     },
     customSiteTitle: definition.info.title, // Change the browser tab title
   };
