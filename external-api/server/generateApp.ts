@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import compression from 'compression';
 import mongoSanitise from 'express-mongo-sanitize';
-import { maintenance } from '@ukef/dtfs2-common';
+import { maintenance, SWAGGER } from '@ukef/dtfs2-common';
 import { apiRoutes, swaggerRoutes, healthcheck } from './v1/routes';
 import { seo } from './middleware/headers/seo';
 import { security } from './middleware/headers/security';
@@ -18,6 +18,11 @@ export const generateApp = () => {
   const app = express();
 
   app.use(seo);
+
+  // Non-authenticated routes
+  app.use(healthcheck);
+  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRoutes.default);
+
   app.use(security);
 
   /**
@@ -27,7 +32,6 @@ export const generateApp = () => {
   app.use(maintenance);
 
   app.use(createRateLimit());
-  app.use(healthcheck);
   app.use(express.json());
   app.use(compression());
   app.use(checkApiKey);
@@ -45,9 +49,6 @@ export const generateApp = () => {
       allowedHeaders: ['Content-Type', 'x-api-key'],
     }),
   );
-
-  // API documentation route
-  app.use('/api-docs', swaggerRoutes);
 
   // all other API routes
   app.use(apiRoutes);

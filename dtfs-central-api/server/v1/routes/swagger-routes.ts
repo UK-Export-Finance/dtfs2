@@ -36,6 +36,11 @@ const definition = {
   ],
 };
 
-const apis = [path.join(__dirname, '..', '/swagger-definitions/**/*.js'), path.join(__dirname, '/**/*.js')];
+const apis = [
+  path.join(__dirname, '..', '/swagger-definitions/**/*.js'),
+  path.join(__dirname, '..', '/swagger-definitions/**/*.ts'),
+  path.join(__dirname, '/**/*.js'),
+  path.join(__dirname, '/**/*.ts'),
+];
 
 export default swaggerRouter(definition, apis);

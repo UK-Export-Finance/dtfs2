@@ -1,4 +1,3 @@
-export * from './swagger';
 export * from './array';
 export * from './object';
 export * from './inputValidations';
