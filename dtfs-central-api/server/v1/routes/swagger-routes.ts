@@ -1,5 +1,5 @@
 import path from 'path';
-import { swaggerDefinition, SERVICES } from '@ukef/dtfs2-common';
+import { swaggerDefinition, SWAGGER, SERVICES } from '@ukef/dtfs2-common';
 import { swaggerRouter } from '@ukef/dtfs2-common/swagger';
 
 const definition: swaggerDefinition = {
@@ -38,8 +38,8 @@ const definition: swaggerDefinition = {
 };
 
 const apis = [
-  path.join(__dirname, '..', '/swagger-definitions/**/*.js'),
-  path.join(__dirname, '..', '/swagger-definitions/**/*.ts'),
+  path.join(__dirname, '..', SWAGGER.DEFINITIONS.PATHS.JS),
+  path.join(__dirname, '..', SWAGGER.DEFINITIONS.PATHS.TS),
   path.join(__dirname, '/**/*.js'),
   path.join(__dirname, '/**/*.ts'),
 ];

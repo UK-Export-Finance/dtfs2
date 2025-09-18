@@ -14,7 +14,7 @@
  *           properties:
  *             title:
  *               type: string
- *               example: 'New Year's Day'
+ *               example: "New Year's Day"
  *             date:
  *               type: string
  *               example: '2022-01-03'
