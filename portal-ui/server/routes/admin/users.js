@@ -176,25 +176,27 @@ router.post('/users/reset-password/:_id', async (req, res) => {
     const user = await getApiData(api.user(_id, userToken), res);
 
     // Reset user password
-    const { success } = await api.resetPassword(user.username);
+    await api.resetPassword(user.username);
 
-    if (success) {
-      return res.render('admin/submitted-page.njk', {
-        _id,
-        user,
-      });
-    }
-
-    const errorMessage = 'There was a problem resetting the password, please try again.';
-
-    return res.render('admin/user-reset-password.njk', {
+    return res.render('admin/submitted-page.njk', {
       _id,
       user,
-      errorMessage,
     });
   } catch (error) {
     console.error('Error sending reset password link %o', error);
-    return res.render('_partials/problem-with-service.njk');
+
+    const errorObject = {
+      reset: {
+        line1: 'Try again later',
+        line2: 'The password reset request has not been sent',
+        hrefText: 'Back to password reset',
+        href: '/dashboard/deals',
+      },
+    };
+
+    return res.render('_partials/problem-with-service.njk', {
+      error: errorObject,
+    });
   }
 });
 
