@@ -1,14 +1,14 @@
 {% macro render(params) %}
-    {% set text1 = params.text1 %}
-    {% set text2 = params.text2 %}
+    {% set line1 = params.line1 %}
+    {% set line2 = params.line2 %}
     {% set href = params.href %}
     {% set hrefText = params.hrefText %}
 
-    <p class="govuk-body" data-cy="error-message-text1">
-        {{text1}}
+    <p class="govuk-body" data-cy="error-message-line1">
+        {{line1}}
     </p>
-    <p class="govuk-body"  data-cy="error-message-text2">
-        {{text2}}
+    <p class="govuk-body"  data-cy="error-message-line2">
+        {{line2}}
     </p>
     <a class="govuk-link" href="{{ href }}" data-cy="error-message-link">{{ hrefText }}</a>
 

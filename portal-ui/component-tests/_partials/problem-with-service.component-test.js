@@ -9,8 +9,8 @@ let wrapper;
 const params = {
   error: {
     reset: {
-      text1: 'Try again later',
-      text2: 'The password reset request has not been sent',
+      line1: 'Try again later',
+      line2: 'The password reset request has not been sent',
       hrefText: 'Back to password reset',
       href: '/dashboard/deals',
     },
@@ -27,13 +27,13 @@ describe(page, () => {
   it('should render the error text1 section if exists', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="error-message-text1"]').toRead('Try again later');
+    wrapper.expectText('[data-cy="error-message-line1"]').toRead('Try again later');
   });
 
   it('should render the error text2 section if exists', () => {
     wrapper = render(params);
 
-    wrapper.expectText('[data-cy="error-message-text2"]').toRead('The password reset request has not been sent');
+    wrapper.expectText('[data-cy="error-message-line2"]').toRead('The password reset request has not been sent');
   });
 
   it('should render the error hrefText section if exists', () => {

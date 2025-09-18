@@ -183,19 +183,19 @@ router.post('/users/reset-password/:_id', async (req, res) => {
       user,
     });
   } catch (error) {
-    const reset = {
-      text1: 'Try again later',
-      text2: 'The password reset request has not been sent',
-      hrefText: 'Back to password reset',
-      href: '/dashboard/deals',
-    };
-
     console.error('Error sending reset password link %o', error);
 
-    return res.render('_partials/problem-with-service.njk', {
-      error: {
-        reset,
+    const errorObject = {
+      reset: {
+        line1: 'Try again later',
+        line2: 'The password reset request has not been sent',
+        hrefText: 'Back to password reset',
+        href: '/dashboard/deals',
       },
+    };
+
+    return res.render('_partials/problem-with-service.njk', {
+      error: errorObject,
     });
   }
 });
