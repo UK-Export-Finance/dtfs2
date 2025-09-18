@@ -1,4 +1,5 @@
-import { CURRENCY, UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
+import validator from 'validator';
+import { UTILISATION_REPORT_HEADERS } from '@ukef/dtfs2-common';
 import { UtilisationReportRowValidationErrorGenerator } from './types/validation-error-generator';
 
 /**
@@ -24,9 +25,9 @@ export const generateTotalFeesAccruedCurrencyError: UtilisationReportRowValidati
     };
   }
 
-  if (!(totalFeesAccruedCurrencyValue in CURRENCY)) {
+  if (!validator.isISO4217(totalFeesAccruedCurrencyValue)) {
     return {
-      errorMessage: 'The report can only include the following currencies: GBP, EUR, USD, JPY',
+      errorMessage: 'Accrual currency must be in the ISO 4217 currency code format',
       column: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.column,
       row: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.row,
       value: csvDataRow[UTILISATION_REPORT_HEADERS.TOTAL_FEES_ACCRUED_CURRENCY]?.value,
