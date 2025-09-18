@@ -846,7 +846,7 @@ authRouter
  *      403:
  *        description: Can't issue facility
  *      404:
- *        description: The loan with the specified ID was not found
+ *        description: The loan with the specified loanId was not found
  */
 authRouter
   .route('/deals/:id/loan/:loanId/issue-facility')
@@ -880,7 +880,7 @@ authRouter
  * 401:
  *   description: Unauthorized
  * 404:
- *   description: The loan with the specified ID was not found
+ *   description: The loan with the specified loanId was not found
  */
 authRouter
   .route('/deals/:id/loan/:loanId/change-cover-start-date')
@@ -913,7 +913,7 @@ authRouter
  *      401:
  *          description: Unauthorized
  *      404:
- *          description: The bond with the specified ID was not found
+ *          description: The bond with the specified bondId was not found
  */
 authRouter.route('/deals/:id/bond/create').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bonds.create);
 
@@ -976,7 +976,7 @@ authRouter.route('/deals/:id/bond/create').put(validateUserHasAtLeastOneAllowedR
  *        401:
  *          description: Unauthorized
  *        404:
- *          description: The bond with the specified ID was not found
+ *          description: The bond with the specified bondId was not found
  *  delete:
  *    summary: Delete bond by ID
  *    tags: [Bonds]
@@ -1000,7 +1000,7 @@ authRouter.route('/deals/:id/bond/create').put(validateUserHasAtLeastOneAllowedR
  *      401:
  *        description: Unauthorized
  *      404:
- *        description: The bond with the specified ID was not found
+ *        description: The bond with the specified bondId was not found
  */
 authRouter
   .route('/deals/:id/bond/:bondId')
@@ -1043,7 +1043,7 @@ authRouter
  *      403:
  *        description: Can't issue facility
  *      404:
- *        description: The bond with the specified ID was not found
+ *        description: The bond with the specified bondId was not found
  */
 authRouter
   .route('/deals/:id/bond/:bondId/issue-facility')
@@ -1082,7 +1082,7 @@ authRouter
  *   401:
  *     description: Unauthorized
  *   404:
- *     description: The bond with the specified ID was not found
+ *     description: The bond with the specified bondId was not found
  */
 authRouter
   .route('/deals/:id/bond/:bondId/change-cover-start-date')
@@ -1114,9 +1114,9 @@ authRouter
  *          description: The dealId for the deal to create the facilities for.
  *          schema:
  *            type: string
- *   responses:
- *     200:
- *       description: Facilities created successfully
+ *    responses:
+ *      200:
+ *        description: Facilities created successfully
  */
 authRouter.route('/deals/:id/multiple-facilities').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), facilitiesController.createMultiple);
 
