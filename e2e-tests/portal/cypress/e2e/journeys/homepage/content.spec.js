@@ -31,6 +31,7 @@ context('Portal homepage', () => {
     login.banks().contains('ICICI');
     login.banks().contains('ABC Bank');
     login.banks().contains('LDF Operations (trading as White Oak)');
+    login.banks().contains('KBC Bank');
   });
 
   it('Ensure product text is visible on the portal login page', () => {
