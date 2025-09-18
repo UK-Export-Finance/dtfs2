@@ -4,18 +4,16 @@ import { swaggerRouter } from '@ukef/dtfs2-common/swagger';
 
 const definition: swaggerDefinition = {
   info: {
-    title: SERVICES.PORTAL_API,
+    title: SERVICES.TFM_UI,
     version: '1.0.0',
-    description: 'Portal API microservice exposes API for portal-ui and gef-ui microservices.',
+    description: 'TFM UI microservice endpoints for TFM UI operations',
   },
   tags: [],
 };
 
 const apis = [
-  path.join(__dirname, '..', '..', SWAGGER.DEFINITIONS.PATHS.JS),
-  path.join(__dirname, '..', '..', SWAGGER.DEFINITIONS.PATHS.TS),
-  path.join(__dirname, '..', '/**/routes.js'),
-  path.join(__dirname, '..', '/**/routes.ts'),
+  path.join(__dirname, '..', SWAGGER.DEFINITIONS.PATHS.JS),
+  path.join(__dirname, '..', SWAGGER.DEFINITIONS.PATHS.TS),
   path.join(__dirname, '/**/*.js'),
   path.join(__dirname, '/**/*.ts'),
 ];

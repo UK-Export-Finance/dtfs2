@@ -19,5 +19,5 @@ export const SERVICES = {
   CENTRAL_API: 'DTFS Central API',
   PORTAL_UI: 'DTFS Portal UI',
   GEF_UI: 'DTFS GEF UI',
-  TFM_UI: 'DTFS Trade finance UI',
+  TFM_UI: 'DTFS Trade finance manager UI',
 };
