@@ -49,20 +49,188 @@ const partial2faTokenPassportStrategy = 'login-in-progress';
 // Open router requires no authentication
 const openRouter = express.Router();
 
-// Login route
+/**
+ * @openapi
+ * /login
+ *   post:
+ *     summary: Login
+ *     tags: [Auth]
+ *     description: Login with email and password to receive a JWT token.
+ *    parameters:
+ *      - in: body
+ *        name: username
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: password
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: Successful login
+ *      401:
+ *        description: Invalid credentials or disabled account
+ *      403:
+ *        description: Account blocked
+ *
+ */
 openRouter.route('/login').post(checkApiKey, users.login);
 
-// 1. Request password reset
+/**
+ * @openapi
+ * /users/reset-password
+ *   post:
+ *     summary: Request password reset
+ *     tags: [Users]
+ *     description: Send a password reset email to the user.
+ *    parameters:
+ *      - in: body
+ *        name: email
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: Password reset email sent
+ */
 openRouter.route('/users/reset-password').post(checkApiKey, users.resetPassword);
 
-// 2. Password reset post request
+/**
+ * @openapi
+ * /users/reset-password/:resetPwdToken
+ *   post:
+ *    summary: Reset password using token
+ *    tags: [Users]
+ *    description: Reset the user's password using the provided reset token.
+ *   parameters:
+ *    - in: path
+ *      name: resetPwdToken
+ *      required: true
+ *      schema:
+ *        type: string
+ *    - in: body
+ *      name: currentPassword
+ *      schema:
+ *       type: string
+ *   - in: body
+ *      name: password
+ *      schema:
+ *       type: string
+ *    - in: body
+ *      name: passwordConfirm
+ *      schema:
+ *        type: string
+ *  responses:
+ *    200:
+ *      description: Password reset successful
+ *    400:
+ *      description: Empty password or invalid link
+ */
 openRouter.route('/users/reset-password/:resetPwdToken').post(checkApiKey, users.resetPasswordWithToken);
 
-// API Key Routes
+/**
+ * @openapi
+ * /feedback
+ *   post:
+ *     summary: Submit feedback
+ *     tags: [Feedback]
+ *     description: Submit feedback about the service
+ *     parameters:
+ *      - in: body
+ *        name: role
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: organisation
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: reasonForVisiting
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: reasonForVisitingOther
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: easyToUse
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: clearlyExplained
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: satisfied
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: howCanWeImprove
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: emailAddress
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: submittedBy
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: Feedback submitted successfully
+ *      400:
+ *        description: Invalid feedback data
+ *      500:
+ *        description: Internal server error
+ */
 openRouter.route('/feedback').post(checkApiKey, feedback.create);
-// This endpoint is only used by mock-data-loader, for setting up an initial user
+
+/**
+ * @openapi
+ * /user
+ *  post:
+ *    summary: Create user for mock data loader
+ *    tags: [Users]
+ *    description: Create a new user. This route is intended for use by the mock data loader only.
+ *    parameters:
+ *      - in: body
+ *        name: userToCreate
+ *        schema:
+ *          type: object
+ *    responses:
+ *      201:
+ *        description: User created successfully
+ *      400:
+ *        description: Invalid user data
+ */
 openRouter.route('/user').post(checkApiKey, users.create);
 
+/**
+ * @openapi
+ * /users/:userId/sign-in-link/:signInToken/login
+ *  post:
+ *    summary: Login with sign in link
+ *    description: Login a user using a sign in link
+ *    tags: [Auth]
+ *    parameters:
+ *      - in: path
+ *        name: userId
+ *        required: true
+ *        schema:
+ *          type: string
+ *      - in: path
+ *        name: signInToken
+ *        required: true
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: Login successful
+ *      404:
+ *        description: Not found
+ *      403:
+ *        description: Forbidden
+ */
 openRouter
   .route('/users/:userId/sign-in-link/:signInToken/login')
   .post(
@@ -77,6 +245,21 @@ openRouter
     users.loginWithSignInLink,
   );
 
+/**
+ * @openapi
+ * /users/me/sign-in-link
+ *   post:
+ *     summary: Create and email a sign-in link to the user
+ *     tags: [Users]
+ *     description: Create and email a sign-in link to the user associated with the provided email address.
+ *     responses:
+ *       201:
+ *         description: Sign-in link created and emailed successfully
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ */
 openRouter.route('/users/me/sign-in-link').post(passport.authenticate(partial2faTokenPassportStrategy, { session: false }), users.createAndEmailSignInLink);
 
 // Auth router requires authentication
@@ -92,86 +275,1027 @@ authRouter.use(passport.authenticate('login-complete', { session: false }));
  */
 
 // BSS/EWCS
+/**
+ * @openapi
+ * /mandatory-criteria
+ *   post:
+ *      summary: Create a new Mandatory Criteria
+ *      tags: [Mandatory Criteria]
+ *      description: Create a new Mandatory Criteria. This route is restricted to users with the ADMIN role.
+ *      parameters:
+ *        - in: body
+ *          name: body
+ *          schema:
+ *            type: object
+ *      responses:
+ *        201:
+ *          description: Mandatory Criteria created successfully
+ *        400:
+ *          description: Invalid request body
+ *        401:
+ *          description: Unauthorized - insertion not allowed in production
+ */
 authRouter.route('/mandatory-criteria').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteria.create);
 
 // GEF
+/**
+ * @openapi
+ * /gef/mandatory-criteria-versioned
+ *   post:
+ *     summary: Create a new GEF Mandatory Criteria Versioned
+ *     tags: [GEF Mandatory Criteria]
+ *     parameters:
+ *        - in: body
+ *          name: body
+ *          schema:
+ *            type: object
+ *      responses:
+ *        201:
+ *          description: Mandatory Criteria created successfully
+ *        400:
+ *          description: Invalid request body
+ *        401:
+ *          description: Unauthorized - insertion not allowed in production
+ */
 authRouter.route('/gef/mandatory-criteria-versioned').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteriaVersioned.create);
 
 // Enable XSS
 authRouter.use(cleanXss);
 
 // Mandatory Criteria Routes
+/**
+ * @openapi
+ * /mandatory-criteria
+ *   get:
+ *     summary: Retrieve all Mandatory Criteria
+ *     tags: [Mandatory Criteria]
+ *     description: Retrieve a list of all Mandatory Criteria.
+ *     responses:
+ *       200:
+ *         description: A list of Mandatory Criteria
+ */
 authRouter.route('/mandatory-criteria').get(mandatoryCriteria.findAll);
 
+/**
+ * @openapi
+ * /mandatory-criteria/latest
+ *   get:
+ *     summary: Retrieve the latest Mandatory Criteria
+ *     tags: [Mandatory Criteria]
+ *     description: Retrieve the most recent version of the Mandatory Criteria.
+ *     responses:
+ *       200:
+ *         description: The latest Mandatory Criteria
+ */
 authRouter.route('/mandatory-criteria/latest').get(mandatoryCriteria.findLatest);
 
+/**
+ * @openapi
+ * /mandatory-criteria/:version
+ *   get:
+ *      summary: Retrieve a Mandatory Criteria by version
+ *      tags: [Mandatory Criteria]
+ *      description: Retrieve a specific version of the Mandatory Criteria by its version number.
+ *      parameters:
+ *        - in: path
+ *          name: version
+ *          required: true
+ *          description: The version number of the Mandatory Criteria to retrieve.
+ *          schema:
+ *            type: string
+ *      responses:
+ *       200:
+ *         description: The Mandatory Criteria with the specified version
+ *       404:
+ *         description: The Mandatory Criteria with the specified version was not found
+ *   delete:
+ *     summary: Delete a Mandatory Criteria by version
+ *     tags: [Mandatory Criteria]
+ *     description: Delete a specific version of the Mandatory Criteria by its version number. This route is restricted to users with the ADMIN role.
+ *     parameters:
+ *       - in: path
+ *         name: version
+ *         required: true
+ *         description: The version number of the Mandatory Criteria to delete.
+ *         schema:
+ *           type: string
+ *       responses:
+ *         200:
+ *           description: The Mandatory Criteria with the specified version was deleted successfully.
+ *         400:
+ *           description: Invalid version number
+ *         404:
+ *           description: The Mandatory Criteria with the specified version was not found.
+ */
 authRouter
   .route('/mandatory-criteria/:version')
   .get(mandatoryCriteria.findOne)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteria.delete);
 
+/**
+ * @openapi
+ * /users
+ *   get:
+ *     summary: List all users
+ *     tags: [Users]
+ *     description: Retrieve a list of all users.
+ *     responses:
+ *       200:
+ *         description: A list of users
+ *   post:
+ *     summary: Create a new user
+ *     tags: [Users]
+ *     description: Create a new user.
+ *     parameters:
+ *       - in: body
+ *         name: userToCreate
+ *         schema:
+ *           type: object
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: Invalid user data
+ */
 authRouter.route('/users').get(users.list).post(users.create);
+/**
+ * @openapi
+ * /users/:_id
+ *   get:
+ *     summary: Get user by ID
+ *     tags: [Users]
+ *     description: Retrieve a user by their userId
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         required: true
+ *         description: The userId of the user to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: The user with the specified userId
+ *       404:
+ *         description: The user with the specified userId was not found
+ *   put:
+ *     summary: Update user by ID
+ *     tags: [Users]
+ *     description: Update a user's information by their userId.
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         required: true
+ *         description: The userId of the user to update.
+ *         schema:
+ *           type: string
+ *       - in: body
+ *         name: userToUpdate
+ *         schema:
+ *           type: object
+ *         responses:
+ *           200:
+ *             description: The user was updated successfully
+ *           404:
+ *             description: The user with the specified userId was not found
+ *           400:
+ *             description: Invalid user data
+ *           403:
+ *             description: Forbidden
+ *           500:
+ *             description: Internal server error
+ *     delete:
+ *       summary: Delete user by userId
+ *       tags: [Users]
+ *       description: Delete a user by their userId.
+ *      parameters:
+ *        - in: path
+ *          name: _id
+ *         required: true
+ *        description: The userId of the user to delete.
+ *        schema:
+ *         type: string
+ *      responses:
+ *        200:
+ *          description: The user was deleted successfully
+ *        404:
+ *          description: The user with the specified ID was not found
+ *        400:
+ *          description: Invalid user ID
+ *        500:
+ *          description: Internal server error
+ */
 authRouter.route('/users/:_id').get(users.findById).put(users.updateById).delete(users.remove);
+
+/**
+ * @openapi
+ * /users/:_id/disable
+ *   delete:
+ *     summary: Disable user by userId
+ *     tags: [Users]
+ *     description: Disable a user by their userId.
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         required: true
+ *         description: The userId of the user to disable.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: The user was disabled successfully
+ */
 authRouter.route('/users/:_id/disable').delete(users.disable);
 
 authRouter.use('/gef', gef);
 
+/**
+ * @openapi
+ * /deals
+ *   post:
+ *     summary: Create a new deal
+ *     tags: [Deals]
+ *     description: Create a new deal. This route is restricted to users with the MAKER role.
+ *     parameters:
+ *       - in: body
+ *         name: dealToCreate
+ *         schema:
+ *           type: object
+ *    responses:
+ *      200:
+ *        description: The deal was created successfully
+ *      400:
+ *        description: Bad request
+ */
 authRouter.route('/deals').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealsController.create);
+
+/**
+ * @openapi
+ * /deals:
+ *   get:
+ *     summary: Get all deals
+ *     tags: [Deals]
+ *     description: Get a list of all deals.
+ *     responses:
+ *       200:
+ *         description: A list of deals
+ */
 authRouter.route('/deals').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealsController.getQueryAllDeals);
 
+/**
+ * @openapi
+ * /deals/:id/status
+ *   get:
+ *      summary: Get deal status by ID
+ *      tags: [Deal Status]
+ *      description: Retrieve the status of a specific deal by its ID.
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          description: The dealId of the deal to retrieve the status for.
+ *          schema:
+ *            type: string
+ *      responses:
+ *        200:
+ *          description: The status of the deal with the specified dealId
+ *        404:
+ *          description: The deal with the specified dealId was not found
+ *        401:
+ *          description: Unauthorized
+ *        500:
+ *          description: Internal server error
+ *   put:
+ *      summary: Update deal status by ID
+ *      tags: [Deal Status]
+ *      description: Update the status of a specific deal by its ID. This route is restricted to users with the MAKER or CHECKER role.
+ *      parameters:
+ *        - in: path
+ *            name: id
+ *            required: true
+ *            description: The dealId of the deal to update the status for.
+ *            schema:
+ *              type: string
+ *        - in: body
+ *            name: body
+ *            required: true
+ *            description: The body including the new status.
+ *            schema:
+ *              type: object
+ *              properties:
+ *                status:
+ *                  type: string
+ *                  enum: [PENDING, APPROVED, REJECTED]
+ *      responses:
+ *        200:
+ *          description: The deal status was updated successfully
+ *        401:
+ *          description: Unauthorized
+ *        404:
+ *          description: The deal with the specified dealId was not found
+ *        500:
+ *          description: Internal server error
+ */
 authRouter
   .route('/deals/:id/status')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealStatus.findOne)
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }), dealStatus.update);
 
+/**
+ * @openapi
+ * /deals/:id/submission-details
+ *    get:
+ *      summary: Get deal submission details by ID
+ *      tags: [Deal Submission Details]
+ *      description: Retrieve the submission details of a specific deal by its ID.
+ *      parameters:
+ *       - in: path
+ *          name: id
+ *          required: true
+ *          description: The dealId of the deal to retrieve the submission details for.
+ *          schema:
+ *            type: string
+ *      responses:
+ *        200:
+ *          description: The submission details of the deal with the specified dealId
+ *        404:
+ *          description: The deal with the specified dealId was not found
+ *        401:
+ *          description: Unauthorized
+ *        500:
+ *          description: Internal server error
+ *   put:
+ *     summary: Update deal submission details by ID
+ *     tags: [Deal Submission Details]
+ *    description: Update the submission details of a specific deal by its ID. This route is restricted to users with the MAKER role.
+ *    parameters:
+ *     - in: path
+ *       name: id
+ *      required: true
+ *     description: The dealId of the deal to update the submission details for.
+ *    schema:
+ *     type: string
+ *    - in: body
+ *    name: submissionDetails
+ *    required: true
+ *   description: The body including the new submission details.
+ *   schema:
+ *    type: object
+ *   responses:
+ *     200:
+ *       description: The submission details were updated successfully
+ *     401:
+ *       description: Unauthorized
+ *     404:
+ *       description: The deal with the specified dealId was not found
+ *     500:
+ *       description: Internal server error
+ */
 authRouter
   .route('/deals/:id/submission-details')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealSubmissionDetails.findOne)
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealSubmissionDetails.update);
 
+/**
+ * @openapi
+ * /deals/:id/additionalRefName
+ *    put:
+ *      summary: Update deal additionalRefName by ID
+ *      tags: [Deal Name]
+ *      description: Update the additionalRefName of a specific deal by its ID. This route is restricted to users with the MAKER role.
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          description: The dealId of the deal to update the additionalRefName for.
+ *          schema:
+ *            type: string
+ *        - in: body
+ *          name: additionalRefName
+ *          description: The new additionalRefName for the deal.
+ *          schema:
+ *            type: string
+ *      responses:
+ *        200:
+ *          description: The additionalRefName was updated successfully
+ *        401:
+ *          description: Unauthorized
+ *        404:
+ *          description: The deal with the specified ID was not found
+ *        500:
+ *          description: Internal server error
+ */
 authRouter.route('/deals/:id/additionalRefName').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealName.update);
+
+/**
+ * @openapi
+ * /deals/:id/loan/create
+ *  put:
+ *    summary: Create a new loan for a specific deal
+ *    tags: [Loans]
+ *    description: Create a new loan for a deal by dealId. This route is restricted to users with the MAKER role.
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: The dealId for the deal to create the loan for.
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        description: The body including the loan details.
+ *        schema:
+ *          type: object
+ *          properties:
+ *            amount:
+ *              type: number
+ *            term:
+ *              type: number
+ *            interestRate:
+ *              type: number
+ *      responses:
+ *        200:
+ *          description: The loan was created successfully
+ *        400:
+ *          description: Invalid id provided
+ *        401:
+ *          description: Unauthorized
+ *        404:
+ *          description: The deal with the specified dealId was not found
+ */
 authRouter.route('/deals/:id/loan/create').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loans.create);
 
+/**
+ * @openapi
+ * /deals/:id/loan/:loanId
+ *   get:
+ *     summary: Get loan by ID
+ *     tags: [Loans]
+ *     description: Retrieve a specific loan by its ID for a given deal.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The dealId of the deal to retrieve the loan for.
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: loanId
+ *         required: true
+ *         description: The loanId of the loan to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: The loan was retrieved successfully
+ *       400:
+ *         description: Invalid id or loanId provided
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: The loan with the specified ID was not found
+ *  put:
+ *    summary: Update loan by ID
+ *    tags: [Loans]
+ *    description: Update a specific loan by its ID for a given deal. This route is restricted to users with the MAKER role.
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *      description: The dealId of the deal to update the loan for.
+ *      schema:
+ *        type: string
+ *      - in: path
+ *        name: loanId
+ *        required: true
+ *        description: The loanId of the loan to update.
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: update
+ *        description: The body including the loan details.
+ *        schema:
+ *          type: object
+ *      responses:
+ *        200:
+ *          description: The loan was updated successfully
+ *        400:
+ *          description: Invalid id or loanId provided
+ *        401:
+ *          description: Unauthorized
+ *        404:
+ *          description: The loan with the specified ID was not found
+ *  delete:
+ *    summary: Delete loan by ID
+ *    tags: [Loans]
+ *    description: Delete a specific loan by its ID for a given deal. This route is restricted to users with the MAKER role.
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: The dealId of the deal to delete the loan for.
+ *        schema:
+ *          type: string
+ *      - in: path
+ *        name: loanId
+ *        required: true
+ *        description: The loanId of the loan to delete.
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: The loan was deleted successfully
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: The loan with the specified ID was not found
+ */
 authRouter
   .route('/deals/:id/loan/:loanId')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, ADMIN] }), loans.getLoan)
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loans.updateLoan)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loans.deleteLoan);
 
+/**
+ * @openapi
+ * /deals/:id/loan/:loanId/issue-facility
+ *  put:
+ *    summary: Issue loan facility
+ *    tags: [Loans]
+ *    description: Issue a loan facility for a specific loan within a deal. This route is restricted to users with the MAKER role.
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: The dealId of the deal containing the loan.
+ *        schema:
+ *          type: string
+ *      - in: path
+ *        name: loanId
+ *        required: true
+ *        description: The loanId of the loan to issue the facility for.
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: The loan facility was issued successfully
+ *      400:
+ *        description: Invalid id or loanId provided
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Can't issue facility
+ *      404:
+ *        description: The loan with the specified ID was not found
+ */
 authRouter
   .route('/deals/:id/loan/:loanId/issue-facility')
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loanIssueFacility.updateLoanIssueFacility);
+
+/**
+ * @openapi
+ * /deals/:id/loan/:loanId/change-cover-start-date
+ *  put:
+ *   summary: Change loan cover start date
+ *  tags: [Loans]
+ *  description: Change the cover start date for a loan. This route is restricted to users with the MAKER role.
+ *  parameters:
+ *   - in: path
+ *   name: id
+ *   required: true
+ *  description: The dealId of the deal containing the loan.
+ *  schema:
+ *   type: string
+ *  - in: path
+ * name: loanId
+ *  required: true
+ * description: The loanId of the loan to change the cover start date for.
+ * schema:
+ *  type: string
+ * responses:
+ * 200:
+ *   description: The loan cover start date was changed successfully
+ * 400:
+ *   description: Invalid id or loanId provided
+ * 401:
+ *   description: Unauthorized
+ * 404:
+ *   description: The loan with the specified ID was not found
+ */
 authRouter
   .route('/deals/:id/loan/:loanId/change-cover-start-date')
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), loanChangeCoverStartDate.updateLoanCoverStartDate);
+
+/**
+ * @openapi
+ * /deals/:id/bond/create
+ *  put:
+ *    summary: Create a new bond for a specific deal
+ *    tags: [Bonds]
+ *    description: Create a new bond for a deal by dealId. This route is restricted to users with the MAKER role.
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: The dealId for the deal to create the bond for.
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        schema:
+ *          type: object
+ *      responses:
+ *        200:
+ *          description: The bond was created successfully
+ *       400:
+ *          description: Invalid id provided
+ *      401:
+ *          description: Unauthorized
+ *      404:
+ *          description: The bond with the specified ID was not found
+ */
 authRouter.route('/deals/:id/bond/create').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bonds.create);
 
+/**
+ * @openapi
+ * /deals/:id/bond/:bondId
+ *   get:
+ *     summary: Get bond by ID
+ *     tags: [Bonds]
+ *     description: Retrieve a specific bond by its ID for a given deal.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The dealId of the deal to retrieve the bond for.
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: bondId
+ *         required: true
+ *         description: The bondId of the bond to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *      200:
+ *        description: The bond was retrieved successfully
+ *      400:
+ *        description: Invalid id or bondId provided
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: The bond with the specified ID was not found
+ *   put:
+ *     summary: Update bond by ID
+ *     tags: [Bonds]
+ *     description: Update a specific bond by its ID for a given deal. This route is restricted to users with the MAKER role.
+ *     parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: The dealId of the deal to update the bond for.
+ *        schema:
+ *         type: string
+ *      - in: path
+ *        name: bondId
+ *        required: true
+ *        description: The bondId of the bond to update.
+ *        schema:
+ *         type: string
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        schema:
+ *          type: object
+ *      responses:
+ *        200:
+ *          description: The bond was updated successfully
+ *        400:
+ *          description: Invalid id or bondId provided
+ *        401:
+ *          description: Unauthorized
+ *        404:
+ *          description: The bond with the specified ID was not found
+ *  delete:
+ *    summary: Delete bond by ID
+ *    tags: [Bonds]
+ *    description: Delete a specific bond by its ID for a given deal. This route is restricted to users with the MAKER role.
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: The dealId of the deal to delete the bond for.
+ *        schema:
+ *          type: string
+ *      - in: path
+ *        name: bondId
+ *        required: true
+ *        description: The bondId of the bond to delete.
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: The bond was deleted successfully
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: The bond with the specified ID was not found
+ */
 authRouter
   .route('/deals/:id/bond/:bondId')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, READ_ONLY, ADMIN] }), bonds.getBond)
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bonds.updateBond)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bonds.deleteBond);
 
+/**
+ * @openapi
+ * /deals/:id/bond/:bondId/issue-facility
+ *  put:
+ *    summary: Issue bond facility
+ *    tags: [Bonds]
+ *    description: Issue a bond facility. This route is restricted to users with the MAKER role.
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: The dealId of the deal containing the bond.
+ *        schema:
+ *          type: string
+ *      - in: path
+ *        name: bondId
+ *        required: true
+ *        description: The bondId of the bond to issue the facility for.
+ *        schema:
+ *          type: string
+ *    - in: body
+ *        name: body
+ *        required: true
+ *        schema:
+ *          type: object
+ *    responses:
+ *      200:
+ *        description: The bond facility was issued successfully
+ *      400:
+ *        description: Invalid id or bondId provided
+ *      401:
+ *        description: Unauthorized
+ *      403:
+ *        description: Can't issue facility
+ *      404:
+ *        description: The bond with the specified ID was not found
+ */
 authRouter
   .route('/deals/:id/bond/:bondId/issue-facility')
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bondIssueFacility.updateBondIssueFacility);
+
+/**
+ * @openapi
+ * /deals/:id/bond/:bondId/change-cover-start-date
+ *  put:
+ *    summary: Change bond cover start date
+ *    tags: [Bonds]
+ *    description: Change the cover start date for a bond. This route is restricted to users with the MAKER role.
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      required: true
+ *      description: The dealId of the deal containing the bond.
+ *      schema:
+ *        type: string
+ *    - in: path
+ *      name: bondId
+ *      required: true
+ *      description: The bondId of the bond to change the cover start date for.
+ *      schema:
+ *        type: string
+ *    - in: body
+ *      name: body
+ *      required: true
+ *      schema:
+ *        type: object
+ * responses:
+ *   200:
+ *     description: The bond cover start date was changed successfully
+ *   400:
+ *     description: Invalid id or bondId provided
+ *   401:
+ *     description: Unauthorized
+ *   404:
+ *     description: The bond with the specified ID was not found
+ */
 authRouter
   .route('/deals/:id/bond/:bondId/change-cover-start-date')
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), bondChangeCoverStartDate.updateBondCoverStartDate);
+
+/**
+ * @openapi
+ * /deals/:id/multiple-facilities
+ *   post:
+ *     summary: Create multiple facilities for a specific deal
+ *     tags: [Facilities]
+ *     description: Create multiple facilities for a deal by dealId. This route is restricted to users with the MAKER role.
+ *     parameters:
+ *       - in: path
+ *          name: id
+ *          required: true
+ *          description: The dealId for the deal to create the facilities for.
+ *          schema:
+ *            type: string
+ *      - in: body
+ *          name: facilities
+ *          required: true
+ *          description: The body including the facilities details.
+ *          schema:
+ *            type: object
+ *      - in: body
+ *          name: dealId
+ *          required: true
+ *          description: The dealId for the deal to create the facilities for.
+ *          schema:
+ *            type: string
+ *   responses:
+ *     200:
+ *       description: Facilities created successfully
+ */
 authRouter.route('/deals/:id/multiple-facilities').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), facilitiesController.createMultiple);
 
+/**
+ * @openapi
+ * /facilities
+ *   get:
+ *     summary: Get all facilities
+ *     tags: [Facilities]
+ *     description: Get a list of all facilities.
+ *     responses:
+ *       200:
+ *         description: A list of facilities
+ */
 authRouter
   .route('/facilities')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), facilitiesController.getQueryAllFacilities);
 
+/**
+ * @openapi
+ * /deals/:id
+ *   get:
+ *     summary: Get deal by ID
+ *     tags: [Deals]
+ *     description: Retrieve a specific deal by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the deal to retrieve.
+ *         schema:
+ *           type: string
+ *    responses:
+ *      200:
+ *        description: The deal was retrieved successfully
+ *      400:
+ *        description: Invalid ID provided
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: The deal with the specified ID was not found
+ *  put:
+ *    summary: Update deal by ID
+ *    tags: [Deals]
+ *    description: Update a specific deal by its ID. This route is restricted to users with the MAKER role.
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: The ID of the deal to update.
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: dealToUpdate
+ *        schema:
+ *          type: object
+ *    responses:
+ *      200:
+ *        description: The deal was updated successfully
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: The deal with the specified ID was not found
+ *      500:
+ *        description: Internal server error
+ *  delete:
+ *    summary: Delete deal by ID
+ *    tags: [Deals]
+ *    description: Delete a specific deal by its ID. This route is restricted to users with the ADMIN role.
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *       required: true
+ *       description: The ID of the deal to delete.
+ *       schema:
+ *         type: string
+ *   responses:
+ *    200:
+ *     description: The deal was deleted successfully
+ *    401:
+ *      description: Unauthorized
+ *    404:
+ *      description: The deal with the specified ID was not found
+ */
 authRouter
   .route('/deals/:id')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealsController.findOne)
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealsController.update)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), isProductionValidation(), dealsController.delete);
 
+/**
+ * @openapi
+ * /deals/:id/clone
+ *   post:
+ *     summary: Clone deal by ID
+ *     tags: [Deals]
+ *     description: Clone a specific deal by its ID. This route is restricted to users with the MAKER role.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the deal to clone.
+ *         schema:
+ *           type: string
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         description: The deal data to clone.
+ *         schema:
+ *           type: object
+ *     responses:
+ *       200:
+ *         description: The deal was cloned successfully
+ *       400:
+ *         description: Invalid ID provided
+ *       404:
+ *         description: The deal with the specified ID was not found
+ */
 authRouter.route('/deals/:id/clone').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealClone.clone);
+
+/**
+ * @openapi
+ * /deals/:id/eligibility-criteria
+ *   put:
+ *     summary: Update deal eligibility criteria by ID
+ *     tags: [Deal Eligibility Criteria]
+ *     description: Update the eligibility criteria of a specific deal by its ID. This route is restricted to users with the MAKER role.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The unique ID of the deal to update the eligibility criteria for.
+ *         schema:
+ *           type: string
+ *       - in: body
+ *         name: eligibilityCriteria
+ *         required: true
+ *        description: The body including the new eligibility criteria.
+ *        schema:
+ *         type: object
+ *      responses:
+ *        200:
+ *          description: The eligibility criteria were updated successfully
+ *        401:
+ *          description: Unauthorized
+ *        404:
+ *          description: The deal with the specified ID was not found
+ */
 authRouter.route('/deals/:id/eligibility-criteria').put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), dealEligibilityCriteria.update);
+
+/**
+ * @openapi
+ * /deals/:id/eligibility-documentation
+ *   put:
+ *     summary: Update deal eligibility documentation by ID
+ *     tags: [Deal Eligibility Documentation]
+ *     description: Update the eligibility documentation of a specific deal by its ID. This route is restricted to users with the MAKER role.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The unique ID of the deal to update the eligibility documentation for.
+ *         schema:
+ *           type: string
+ *       - in: formData
+ *         name: files
+ *         required: true
+ *         description: The files to upload for the eligibility documentation.
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *             format: binary
+ *    responses:
+ *      200:
+ *        description: The eligibility documentation was updated successfully
+ *      400:
+ *        description: Bad request
+ */
 authRouter.route('/deals/:id/eligibility-documentation').put(
   validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }),
   (req, res, next) => {
@@ -186,44 +1310,429 @@ authRouter.route('/deals/:id/eligibility-documentation').put(
   dealEligibilityDocumentation.update,
 );
 
+/**
+ * @openapi
+ * /deals/:id/eligibility-documentation/:fieldname/:filename
+ *   get:
+ *     summary: Download deal eligibility documentation file by fieldname and filename
+ *     tags: [Deal Eligibility Documentation]
+ *     description: Download a specific eligibility documentation file for a deal by its fieldname and filename.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The dealId to download the eligibility documentation file for.
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: fieldname
+ *         required: true
+ *         description: The fieldname of the eligibility documentation file to download.
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: filename
+ *         required: true
+ *         description: The filename of the eligibility documentation file to download.
+ *         schema:
+ *           type: string
+ *    responses:
+ *     200:
+ *       description: The eligibility documentation file was downloaded successfully
+ *     400:
+ *       description: Bad request
+ *     401:
+ *       description: Unauthorized
+ *     404:
+ *       description: The deal with the specified ID was not found
+ */
 authRouter
   .route('/deals/:id/eligibility-documentation/:fieldname/:filename')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), dealEligibilityDocumentation.downloadFile);
 
+/**
+ * @openapi
+ * /banks
+ *   get:
+ *     summary: Get all banks
+ *     tags: [Banks]
+ *     description: Get a list of all banks.
+ *     responses:
+ *       200:
+ *        description: A list of banks
+ *   post:
+ *     summary: Create a new bank
+ *     tags: [Banks]
+ *     description: Create a new bank.
+ *     parameters:
+ *      - in: body
+ *       name: bank
+ *        required: true
+ *        schema:
+ *          type: object
+ *     responses:
+ *       200:
+ *         description: The bank was created successfully
+ *      400:
+ *        description: Bad request
+ */
 authRouter
   .route('/banks')
   .get(banks.findAll)
   .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), banks.create);
 
+/**
+ * @openapi
+ * /banks/:id
+ *   get:
+ *     summary: Get bank by ID
+ *     tags: [Banks]
+ *     description: Retrieve a specific bank by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the bank to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: The bank was retrieved successfully
+ *  put:
+ *    summary: Update bank by ID
+ *    tags: [Banks]
+ *   description: Update a specific bank by its ID. This route is restricted to users with the ADMIN role.
+ *   parameters:
+ *    - in: path
+ *     name: id
+ *     required: true
+ *     description: The ID of the bank to update.
+ *     schema:
+ *       type: string
+ *   - in: body
+ *     name: body
+ *     required: true
+ *     description: The updated bank object.
+ *     schema:
+ *       type: object
+ *   responses:
+ *    200:
+ *       description: The bank was updated successfully
+ *    400:
+ *       description: Bad request
+ * delete:
+ *   summary: Delete bank by ID
+ *   tags: [Banks]
+ *   description: Delete a specific bank by its ID. This route is restricted to users with the ADMIN role.
+ *   parameters:
+ *    - in: path
+ *      name: id
+ *      required: true
+ *      description: The ID of the bank to delete.
+ *      schema:
+ *        type: string
+ *   responses:
+ *     200:
+ *       description: The bank was deleted successfully
+ *     400:
+ *       description: Bad request
+ *     404:
+ *       description: The bank with the specified ID was not found
+ *    500:
+ *      description: Internal server error
+ */
 authRouter
   .route('/banks/:id')
   .get(banks.findOne)
   .put(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), banks.update)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), banks.delete);
 
+/**
+ * @openapi
+ * /currencies
+ *   get:
+ *     summary: Get all currencies
+ *     tags: [Currencies]
+ *     description: Get a list of all currencies.
+ *     responses:
+ *       200:
+ *         description: A list of currencies
+ */
 authRouter.route('/currencies').get(currencies.findAll);
+
+/**
+ * @openapi
+ * /currencies/:id
+ *   get:
+ *     summary: Get currency by ID
+ *     tags: [Currencies]
+ *     description: Retrieve a specific currency by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the currency to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: The currency was retrieved successfully
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: The currency with the specified ID was not found
+ *       500:
+ *         description: Internal server error
+ */
 authRouter.route('/currencies/:id').get(currencies.findOne);
 
+/**
+ * @openapi
+ * /countries
+ *   get:
+ *     summary: Get all countries
+ *     tags: [Countries]
+ *     description: Get a list of all countries.
+ *     responses:
+ *       200:
+ *         description: A list of countries
+ *       400:
+ *         description: No countries found
+ *       500:
+ *         description: Internal server error
+ */
 authRouter.route('/countries').get(countries.findAll);
+
+/**
+ * @openapi
+ * /countries/:code
+ *   get:
+ *     summary: Get country by code
+ *     tags: [Countries]
+ *     description: Retrieve a specific country by its code.
+ *     parameters:
+ *       - in: path
+ *         name: code
+ *         required: true
+ *         description: The code of the country to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: The country was retrieved successfully
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: The country with the specified code was not found
+ *       500:
+ *         description: Internal server error
+ */
 authRouter.route('/countries/:code').get(countries.findOne);
 
+/**
+ * @openapi
+ * /feedback
+ *   get:
+ *    summary: Get all feedback
+ *   tags: [Feedback]
+ *   description: Get a list of all feedback. This route is restricted to users with the ADMIN role.
+ *  responses:
+ *    200:
+ *      description: A list of feedback`
+ */
 authRouter.route('/feedback').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), feedback.findAll);
 
+/**
+ * @openapi
+ * /feedback/:id
+ *   get:
+ *     summary: Get feedback by ID
+ *     tags: [Feedback]
+ *     description: Retrieve a specific feedback by its ID. This route is restricted to users with the ADMIN role.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the feedback to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: The feedback was retrieved successfully
+ *       404:
+ *         description: The feedback with the specified ID was not found
+ *  delete:
+ *    summary: Delete feedback by ID
+ *    tags: [Feedback]
+ *    description: Delete a specific feedback by its ID. This route is restricted to users with the ADMIN role.
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: The ID of the feedback to delete.
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: The feedback was deleted successfully
+ *      404:
+ *        description: The feedback with the specified ID was not found
+ *      500:
+ *        description: Internal server error
+ */
 authRouter
   .route('/feedback/:id')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), feedback.findOne)
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), feedback.delete);
 
+/**
+ * @openapi
+ * /industry-sectors
+ *   get:
+ *     summary: Get all industry sectors
+ *     tags: [Industry Sectors]
+ *     description: Get a list of all industry sectors.
+ *     responses:
+ *       200:
+ *         description: A list of industry sectors
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: No industry sectors found
+ *       500:
+ *         description: Internal server error
+ */
 authRouter.route('/industry-sectors').get(industrySectors.findAll);
+
+/**
+ * @openapi
+ * /industry-sectors/:code
+ *   get:
+ *     summary: Get industry sector by code
+ *     tags: [Industry Sectors]
+ *     description: Retrieve a specific industry sector by its code.
+ *    parameters:
+ *      - in: path
+ *        name: code
+ *        required: true
+ *        description: The code of the industry sector to retrieve.
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: The industry sector was retrieved successfully
+ *      404:
+ *        description: The industry sector with the specified code was not found
+ *      500:
+ *        description: Internal server error
+ */
 authRouter.route('/industry-sectors/:code').get(industrySectors.findOne);
 
+/**
+ * @openapi
+ * /eligibility-criteria
+ *  get:
+ *    summary: Get all eligibility criteria
+ *    tags: [Eligibility Criteria]
+ *    description: Get a list of all eligibility criteria
+ *    responses:
+ *      200:
+ *        description: A list of eligibility criteria
+ *  post:
+ *    summary: Create new eligibility criteria
+ *    tags: [Eligibility Criteria]
+ *    description: Create new eligibility criteria. This route is restricted to users with the ADMIN role.
+ *    parameters:
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        description: The eligibility criteria to create.
+ *        schema:
+ *          type: object
+ *    responses:
+ *      200:
+ *        description: The eligibility criteria were created successfully
+ *      400:
+ *        description: Bad request
+ */
 authRouter
   .route('/eligibility-criteria')
   .get(eligibilityCriteria.findAll)
   .post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), eligibilityCriteria.create);
 
+/**
+ * @openapi
+ * /eligibility-criteria/latest
+ *  get:
+ *    summary: Get the latest eligibility criteria
+ *    tags: [Eligibility Criteria]
+ *    description: Get the latest eligibility criteria
+ *    responses:
+ *      200:
+ *        description: The latest eligibility criteria
+ */
 authRouter.route('/eligibility-criteria/latest').get(eligibilityCriteria.findLatestGET);
 
+/**
+ * @openapi
+ * /eligibility-criteria/:version
+ *   get:
+ *     summary: Get eligibility criteria by version
+ *     tags: [Eligibility Criteria]
+ *     description: Retrieve a specific eligibility criteria by its version.
+ *     parameters:
+ *       - in: path
+ *         name: version
+ *         required: true
+ *         description: The version of the eligibility criteria to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *      200:
+ *         description: The eligibility criteria was retrieved successfully
+ *  put:
+ *    summary: Update eligibility criteria by version
+ *    tags: [Eligibility Criteria]
+ *    description: Update a specific eligibility criteria by its version. This route is restricted to users with the ADMIN role.
+ *    parameters:
+ *      - in: path
+ *        name: version
+ *        required: true
+ *        description: The version of the eligibility criteria to update.
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        description: The updated eligibility criteria object.
+ *        schema:
+ *          type: object
+ *   responses:
+ *      200:
+ *       description: The eligibility criteria were updated successfully
+ *     400:
+ *       description: Bad request
+ *  delete:
+ *    summary: Delete eligibility criteria by version
+ *    tags: [Eligibility Criteria]
+ *    description: Delete a specific eligibility criteria by its version. This route is restricted to users with the ADMIN role.
+ *    parameters:
+ *      - in: path
+ *        name: version
+ *        required: true
+ *        description: The version of the eligibility criteria to delete.
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: The eligibility criteria were deleted successfully
+ *      400:
+ *        description: Bad request
+ *      404:
+ *        description: The eligibility criteria with the specified version was not found
+ *      500:
+ *        description: Internal server error
+ */
 authRouter
   .route('/eligibility-criteria/:version')
   .get(eligibilityCriteria.findOne)
@@ -231,25 +1740,105 @@ authRouter
   .delete(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), eligibilityCriteria.delete);
 
 // Portal reports
+/**
+ * @openapi
+ * /reports/unissued-facilities
+ *  get:
+ *    summary: Get reports unissued facilities
+ *    tags: [Reports]
+ *    description: Get a report of all unissued facilities
+ *    responses:
+ *     200:
+ *       description: A report of unissued facilities
+ */
 authRouter
   .route('/reports/unissued-facilities')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), unissuedFacilitiesReport.findUnissuedFacilitiesReports);
 
+/**
+ * @openapi
+ * /reports/review-ukef-decision
+ *  get:
+ *    summary: Get ukefDecision reports for deals approved with or without conditions
+ *    tags: [Reports]
+ *    description: Get a report of all deals that have been approved with or without conditions
+ *   responses:
+ *    200:
+ *     description: A report of ukefDecision deals
+ */
 authRouter
   .route('/reports/review-ukef-decision')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER, READ_ONLY, ADMIN] }), ukefDecisionReport.reviewUkefDecisionReports);
 
 // token-validator
+/**
+ * @openapi
+ * /validate
+ *  get:
+ *    summary: Validate JWT token
+ *    tags: [Auth]
+ *    description: Validate a JWT token to confirm authentication.
+ *    responses:
+ *      200:
+ *        description: Token is valid
+ */
 authRouter.get('/validate', (_req, res) => res.status(HttpStatusCode.Ok).send());
 
+/**
+ * @openapi
+ * /validate-partial-2fa-token
+ *  get:
+ *    summary: Validate partial 2FA token
+ *    tags: [Auth]
+ *    description: Validate a partial 2FA token to confirm authentication.
+ *    responses:
+ *      200:
+ *        description: Token is valid
+ */
 openRouter.get('/validate-partial-2fa-token', passport.authenticate(partial2faTokenPassportStrategy, { session: false }), (_req, res) =>
   res.status(HttpStatusCode.Ok).send(),
 );
 
 // bank-validator
+/**
+ * @openapi
+ * /validate/bank
+ *  get:
+ *    summary: Validate bank
+ *    tags: [Auth]
+ *    description: Validate a bank against the deal
+ *   responses:
+ *     200:
+ *       description: Bank is valid
+ *     400:
+ *       description: Bad request
+ *     404:
+ *       description: Bank not found
+ */
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
 
 // utilisation report service
+/**
+ * @openapi
+ * /utilisation-reports
+ *  post:
+ *    summary: Upload utilisation report
+ *    tags: [Utilisation Reports]
+ *    description: Upload a utilisation report. This route is restricted to users with the PAYMENT_REPORT_OFFICER role.
+ *    parameters:
+ *      - in: formData
+ *        name: file
+ *        required: true
+ *        description: The utilisation report file to upload.
+ *        schema:
+ *          type: string
+ *          format: binary
+ *    responses:
+ *      200:
+ *        description: The utilisation report was uploaded successfully
+ *      400:
+ *        description: Bad request
+ */
 authRouter.route('/utilisation-reports').post(
   validateUserHasAtLeastOneAllowedRole({ allowedRoles: [PAYMENT_REPORT_OFFICER] }),
   (req, res, next) => {
@@ -264,6 +1853,32 @@ authRouter.route('/utilisation-reports').post(
   utilisationReportControllers.uploadReportAndSendNotification,
 );
 
+/**
+ * @openapi
+ * /banks/:bankId/utilisation-reports
+ *  get:
+ *    summary: Get previous utilisation reports by bank ID
+ *    tags: [Utilisation Reports]
+ *    description: Get a list of previous utilisation reports for a specific bank by bank ID. This route is restricted to users with the PAYMENT_REPORT_OFFICER role.
+ *   parameters:
+ *     - in: path
+ *       name: bankId
+ *       required: true
+ *       description: The ID of the bank to retrieve utilisation reports for.
+ *       schema:
+ *         type: string
+ *   responses:
+ *    200:
+ *      description: A list of previous utilisation reports for the specified bank.
+ *    400:
+ *     description: Bad request
+ *   401:
+ *     description: Unauthorized
+ *  404:
+ *    description: Not found
+ *  500:
+ *   description: Internal server error
+ */
 authRouter
   .route('/banks/:bankId/utilisation-reports')
   .get(
@@ -274,6 +1889,38 @@ authRouter
     utilisationReportControllers.getPreviousReportsByBankId,
   );
 
+/**
+ * @openapi
+ * /banks/:bankId/utilisation-reports/report-data-validation
+ *  post:
+ *    summary: Validate utilisation report data
+ *    tags: [Utilisation Reports]
+ *    description: Validate the data of an uploaded utilisation report for a specific bank by bank ID. This route is restricted to users with the PAYMENT_REPORT_OFFICER role.
+ *    parameters:
+ *      - in: path
+ *        name: bankId
+ *        required: true
+ *        description: The ID of the bank to validate the utilisation report data for.
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: reportData
+ *        required: true
+ *        description: The report data to validate.
+ *        schema:
+ *          type: object
+ *    responses:
+ *      200:
+ *        description: The utilisation report data was validated successfully
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal server error
+ */
 authRouter
   .route('/banks/:bankId/utilisation-reports/report-data-validation')
   .post(
@@ -284,6 +1931,32 @@ authRouter
     utilisationReportControllers.validateUtilisationReportData,
   );
 
+/**
+ * @openapi
+ * /banks/:bankId/utilisation-reports/pending-corrections
+ *  get:
+ *    summary: Get utilisation reports with pending corrections by bank ID
+ *    tags: [Utilisation Reports]
+ *    description: Get a list of utilisation reports with pending corrections for a specific bank by bank ID. This route is restricted to users with the PAYMENT_REPORT_OFFICER role.
+ *    parameters:
+ *      - in: path
+ *        name: bankId
+ *        required: true
+ *        description: The ID of the bank to retrieve utilisation reports with pending corrections for.
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: A list of utilisation reports with pending corrections for the specified bank.
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal server error
+ */
 authRouter
   .route('/banks/:bankId/utilisation-reports/pending-corrections')
   .get(
@@ -294,6 +1967,32 @@ authRouter
     utilisationReportControllers.getUtilisationReportPendingCorrectionsByBankId,
   );
 
+/**
+ * @openapi
+ * /banks/:bankId/utilisation-reports/last-uploaded
+ *  get:
+ *    summary: Get the last uploaded utilisation report by bank ID
+ *    tags: [Utilisation Reports]
+ *    description: Get the most recent utilisation report uploaded for a specific bank by bank ID. This route is restricted to users with the PAYMENT_REPORT_OFFICER role.
+ *    parameters:
+ *      - in: path
+ *        name: bankId
+ *        required: true
+ *        description: The ID of the bank to retrieve the last uploaded utilisation report for.
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: The most recent utilisation report for the specified bank.
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal server error
+ */
 authRouter
   .route('/banks/:bankId/utilisation-reports/last-uploaded')
   .get(
@@ -304,6 +2003,32 @@ authRouter
     utilisationReportControllers.getLastUploadedReportByBankId,
   );
 
+/**
+ * @openapi
+ * /banks/:bankId/due-report-periods
+ *  get:
+ *    summary: Get due report periods by bank ID
+ *    tags: [Utilisation Reports]
+ *    description: Get a list of due report periods for a specific bank by bank ID. This route is restricted to users with the PAYMENT_REPORT_OFFICER role.
+ *    parameters:
+ *      - in: path
+ *        name: bankId
+ *        required: true
+ *        description: The ID of the bank to retrieve due report periods for.
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: A list of due report periods for the specified bank.
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal server error
+ */
 authRouter
   .route('/banks/:bankId/due-report-periods')
   .get(
@@ -314,6 +2039,32 @@ authRouter
     utilisationReportControllers.getDueReportPeriodsByBankId,
   );
 
+/**
+ * @openapi
+ * /banks/:bankId/next-report-period
+ *  get:
+ *    summary: Get the next report period by bank ID
+ *    tags: [Utilisation Reports]
+ *    description: Get the next report period for a specific bank by bank ID. This route is restricted to users with the PAYMENT_REPORT_OFFICER role.
+ *    parameters:
+ *      - in: path
+ *        name: bankId
+ *        required: true
+ *        description: The ID of the bank to retrieve the next report period for.
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: The next report period for the specified bank.
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal server error
+ */
 authRouter
   .route('/banks/:bankId/next-report-period')
   .get(
@@ -324,6 +2075,38 @@ authRouter
     utilisationReportControllers.getNextReportPeriodByBankId,
   );
 
+/**
+ * @openapi
+ * /banks/:bankId/utilisation-report-download/:id
+ *  get:
+ *    summary: Download utilisation report by ID
+ *    tags: [Utilisation Reports]
+ *    description: Download a specific utilisation report by its ID for a specific bank by bank ID. This route is restricted to users with the PAYMENT_REPORT_OFFICER role.
+ *    parameters:
+ *      - in: path
+ *       name: bankId
+ *        required: true
+ *       description: The ID of the bank to download the utilisation report for.
+ *      schema:
+ *       type: string
+ *     - in: path
+ *       name: id
+ *       required: true
+ *       description: The ID of the utilisation report to download.
+ *       schema:
+ *         type: string
+ *   responses:
+ *      200:
+ *        description: The utilisation report was downloaded successfully
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal server error
+ */
 authRouter
   .route('/banks/:bankId/utilisation-report-download/:id')
   .get(
@@ -335,12 +2118,108 @@ authRouter
     utilisationReportControllers.getReportDownload,
   );
 
+/**
+ * @openapi
+ * /bank-holidays
+ *  get:
+ *    summary: Get bank holidays
+ *    tags: [Bank Holidays]
+ *    description: Get a list of bank holidays.
+ *    responses:
+ *      200:
+ *        description: A list of bank holidays
+ *      500:
+ *        description: Internal server error
+ */
 authRouter.route('/bank-holidays').get(getBankHolidays);
 
+/**
+ * @openapi
+ * /companies/:registrationNumber
+ *  get:
+ *    summary: Get company by registration number
+ *    tags: [Companies]
+ *    description: Retrieve a specific company by its registration number. This route is restricted to users with the MAKER role.
+ *   parameters:
+ *     - in: path
+ *       name: registrationNumber
+ *       required: true
+ *       description: The registration number of the company to retrieve.
+ *       schema:
+ *         type: string
+ *   responses:
+ *     200:
+ *       description: The company was retrieved successfully
+ *     400:
+ *       description: Bad request
+ *     404:
+ *       description: The company with the specified registration number was not found
+ *     500:
+ *       description: Internal server error
+ */
 authRouter
   .route('/companies/:registrationNumber')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), companies.getCompanyByRegistrationNumber);
 
+/**
+ * /banks/:bankId/fee-record-correction/:correctionId
+ *  get:
+ *    summary: Get fee record correction by ID
+ *    tags: [Utilisation Reports]
+ *    description: Retrieve a specific fee record correction by its ID for a specific bank by bank ID. This route is restricted to users with the PAYMENT_REPORT_OFFICER role.
+ *   parameters:
+ *     - in: path
+ *       name: bankId
+ *       required: true
+ *       description: The ID of the bank to retrieve the fee record correction for.
+ *       schema:
+ *         type: string
+ *     - in: path
+ *       name: correctionId
+ *       required: true
+ *       description: The ID of the fee record correction to retrieve.
+ *       schema:
+ *         type: string
+ *   responses:
+ *     200:
+ *       description: The fee record correction was retrieved successfully
+ *     400:
+ *       description: Bad request
+ *     401:
+ *       description: Unauthorized
+ *     404:
+ *       description: Not found
+ *     500:
+ *       description: Internal server error
+ *  put:
+ *    summary: Submits fee record correction by ID
+ *    tags: [Utilisation Reports]
+ *    description: Submit a specific fee record correction by its ID for a specific bank by bank ID. This route is restricted to users with the PAYMENT_REPORT_OFFICER role.
+ *    parameters:
+ *      - in: path
+ *        name: bankId
+ *        required: true
+ *        description: The ID of the bank to submit the fee record correction for.
+ *        schema:
+ *          type: string
+ *      - in: path
+ *        name: correctionId
+ *        required: true
+ *        description: The ID of the fee record correction to submit.
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: The fee record correction was submitted successfully
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal server error
+ */
 authRouter
   .route('/banks/:bankId/fee-record-correction/:correctionId')
   .all(
@@ -353,6 +2232,100 @@ authRouter
   .get(utilisationReportControllers.getFeeRecordCorrection)
   .put(utilisationReportControllers.saveFeeRecordCorrection);
 
+/**
+ * @openapi
+ * /banks/:bankId/fee-record-correction/:correctionId/transient-form-data
+ *   get:
+ *     summary: Get fee record correction transient form data
+ *     tags: [Utilisation Reports]
+ *     description: Get transient form data for a specific fee record correction by its ID for a specific bank by bank ID. This route is restricted to users with the PAYMENT_REPORT_OFFICER role.
+ *     parameters:
+ *      - in: path
+ *        name: bankId
+ *        required: true
+ *        description: The ID of the bank to get the fee record correction transient form data for.
+ *        schema:
+ *          type: string
+ *      - in: path
+ *        name: correctionId
+ *        required: true
+ *        description: The ID of the fee record correction to get the transient form data for.
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: The transient form data was retrieved successfully
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal server error
+ * put:
+ *    summary: Update fee record correction transient form data
+ *    tags: [Utilisation Reports]
+ *    description: Update transient form data for a specific fee record correction by its ID for a specific bank by bank ID. This route is restricted to users with the PAYMENT_REPORT_OFFICER role.
+ *    parameters:
+ *      - in: path
+ *        name: bankId
+ *        required: true
+ *        description: The ID of the bank to update the fee record correction transient form data for.
+ *        schema:
+ *          type: string
+ *      - in: path
+ *        name: correctionId
+ *        required: true
+ *        description: The ID of the fee record correction to update the transient form data for.
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: formData
+ *        required: true
+ *        description: The transient form data to update.
+ *        schema:
+ *          type: object
+ *    responses:
+ *      200:
+ *        description: The transient form data was updated successfully
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal server error
+ * delete:
+ *    summary: Delete fee record correction transient form data
+ *    tags: [Utilisation Reports]
+ *    description: Delete transient form data for a specific fee record correction by its ID for a specific bank by bank ID. This route is restricted to users with the PAYMENT_REPORT_OFFICER role.
+ *    parameters:
+ *      - in: path
+ *        name: bankId
+ *        required: true
+ *        description: The ID of the bank to delete the fee record correction transient form data for.
+ *        schema:
+ *          type: string
+ *      - in: path
+ *        name: correctionId
+ *        required: true
+ *        description: The ID of the fee record correction to delete the transient form data for.
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: The transient form data was deleted successfully
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal server error
+ */
 authRouter
   .route('/banks/:bankId/fee-record-correction/:correctionId/transient-form-data')
   .all(
@@ -366,6 +2339,44 @@ authRouter
   .put(utilisationReportControllers.putFeeRecordCorrectionTransientFormData)
   .delete(utilisationReportControllers.deleteFeeRecordCorrectionTransientFormData);
 
+/**
+ * @openapi
+ * /banks/:bankId/fee-record-correction-review/:correctionId/user/:userId
+ *  get:
+ *    summary: Get fee record correction review by ID
+ *    tags: [Utilisation Reports]
+ *    description: Retrieve a specific fee record correction review by its ID and user ID for a specific bank by bank ID. This route is restricted to users with the PAYMENT_REPORT_OFFICER role.
+ *    parameters:
+ *      - in: path
+ *        name: bankId
+ *        required: true
+ *        description: The ID of the bank to retrieve the fee record correction review for.
+ *        schema:
+ *          type: string
+ *      - in: path
+ *        name: correctionId
+ *        required: true
+ *        description: The ID of the fee record correction review to retrieve.
+ *        schema:
+ *          type: string
+ *      - in: path
+ *        name: userId
+ *        required: true
+ *        description: The ID of the user to retrieve the fee record correction review for.
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: The fee record correction review was retrieved successfully
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal server error
+ */
 authRouter
   .route('/banks/:bankId/fee-record-correction-review/:correctionId/user/:userId')
   .get(
@@ -378,6 +2389,32 @@ authRouter
     utilisationReportControllers.getFeeRecordCorrectionReview,
   );
 
+/**
+ * @openapi
+ * /banks/:bankId/utilisation-reports/completed-corrections
+ *  get:
+ *    summary: Get utilisation reports with completed corrections by bank ID
+ *    tags: [Utilisation Reports]
+ *    description: Get a list of utilisation reports with completed corrections for a specific bank by bank ID. This route is restricted to users with the PAYMENT_REPORT_OFFICER role.
+ *    parameters:
+ *      - in: path
+ *        name: bankId
+ *        required: true
+ *        description: The ID of the bank to retrieve utilisation reports with completed corrections for.
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: A list of utilisation reports with completed corrections for the specified bank.
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal server error
+ */
 authRouter
   .route('/banks/:bankId/utilisation-reports/completed-corrections')
   .get(
@@ -388,12 +2425,78 @@ authRouter
     utilisationReportControllers.getCompletedFeeRecordCorrections,
   );
 
+/**
+ * @openapi
+ * /tfm/team/:teamId
+ *  get:
+ *    summary: Get TFM team by team ID
+ *    tags: [TFM]
+ *    description: Retrieve a specific TFM team by its team ID.
+ *    parameters:
+ *      - in: path
+ *        name: teamId
+ *        required: true
+ *        description: The ID of the TFM team to retrieve.
+ *        schema:
+ *          type: string
+ *   responses:
+ *      200:
+ *        description: The TFM team was retrieved successfully.
+ *      400:
+ *        description: Bad request
+ *      500:
+ *        description: Internal server error
+ */
 authRouter.route('/tfm/team/:teamId').get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }), handleExpressValidatorResult, tfm.tfmTeam);
 
+/**
+ * @openapi
+ * /tfm/deal/:dealId
+ *  get:
+ *    summary: Get TFM deal by deal ID
+ *    tags: [TFM]
+ *    description: Retrieve a specific TFM deal by its deal ID.
+ *    parameters:
+ *      - in: path
+ *        name: dealId
+ *        required: true
+ *        description: The ID of the TFM deal to retrieve.
+ *        schema:
+ *          type: string
+ *   responses:
+ *      200:
+ *        description: The TFM deal was retrieved successfully.
+ *      400:
+ *        description: Bad request
+ *      500:
+ *        description: Internal server error
+ */
 authRouter
   .route('/tfm/deal/:dealId')
   .get(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER, CHECKER] }), mongoIdValidation('dealId'), handleExpressValidatorResult, tfm.tfmDeal);
 
+/**
+ * @openapi
+ * /tfm/facility/:facilityId
+ *  get:
+ *    summary: Get TFM facility by facility ID
+ *    tags: [TFM]
+ *    description: Retrieve a specific TFM facility by its facility ID.
+ *    parameters:
+ *      - in: path
+ *        name: facilityId
+ *        required: true
+ *        description: The ID of the TFM facility to retrieve.
+ *        schema:
+ *          type: string
+ *   responses:
+ *      200:
+ *        description: The TFM facility was retrieved successfully.
+ *      400:
+ *        description: Bad request
+ *      500:
+ *        description: Internal server error
+ */
 authRouter
   .route('/tfm/facility/:facilityId')
   .get(
