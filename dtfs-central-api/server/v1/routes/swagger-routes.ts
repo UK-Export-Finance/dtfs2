@@ -1,12 +1,13 @@
-const swaggerJsdoc = require('swagger-jsdoc');
-const path = require('path');
+import path from 'path';
+import { swaggerDefinition, SERVICES } from '@ukef/dtfs2-common';
+import { swaggerRouter } from '@ukef/dtfs2-common/swagger';
 
-const swaggerDefinition = {
-  openapi: '3.0.0',
+const definition: swaggerDefinition = {
   info: {
-    title: 'Central API',
+    title: SERVICES.CENTRAL_API,
     version: '1.0.0',
-    description: 'API to handle submissions, getting and updating data from one API to another API. (Portal > Central > TFM and vice versa) ',
+    description:
+      'Central API handles all I/O operations from other API microservices. All DB and Files storage API calls should be written in central API microservice.',
   },
   tags: [
     {
@@ -36,16 +37,11 @@ const swaggerDefinition = {
   ],
 };
 
-const swaggerSpec = swaggerJsdoc({
-  definition: swaggerDefinition,
-  apis: [path.join(__dirname, 'swagger-definitions/**/*.js'), path.join(__dirname, 'routes/*.js')],
-});
+const apis = [
+  path.join(__dirname, '..', '/swagger-definitions/**/*.js'),
+  path.join(__dirname, '..', '/swagger-definitions/**/*.ts'),
+  path.join(__dirname, '/**/*.js'),
+  path.join(__dirname, '/**/*.ts'),
+];
 
-const swaggerUiOptions = {
-  // explorer: true,
-};
-
-module.exports = {
-  swaggerSpec,
-  swaggerUiOptions,
-};
+export default swaggerRouter(definition, apis);

@@ -76,13 +76,6 @@ When a deal is sent to TFM, the following steps are taken:
 All of this starts from the deal submission controller:
 `/server/v1/controllers/deal.submit.controller.js`.
 
-## Documentation :book:
-
-This README serves as a primary source for understanding the TFM API's
-functionality. The API offers two endpoints: deal submission and get user.
-
-Swagger documentation can be found at the following URL: `/v1/api-docs`.
-
 ## Snapshots and Data Structure :file_folder:
 
 When a deal is sent to TFM, its structure initially looks like this (a

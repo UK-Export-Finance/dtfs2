@@ -29,7 +29,7 @@ context('Monthly utilisation report upload with invalid currencies', () => {
 
     utilisationReportUpload.checkReportTitle().should('exist');
     utilisationReportUpload.validationErrorTable().should('exist');
-    utilisationReportUpload.validationErrorTableRows().should('have.length', 8);
+    utilisationReportUpload.validationErrorTableRows().should('have.length', 10);
 
     cy.assertValidationErrorTableRowContains({
       tableRowIndex: 1,
@@ -53,13 +53,22 @@ context('Monthly utilisation report upload with invalid currencies', () => {
       tableRowIndex: 3,
       exporter: 'Rainbo Supplies and Services Ltd',
       row: '2',
+      column: 'L',
+      entry: 'INRA',
+      message: 'Accrual currency must be in the ISO 4217 currency code format',
+    });
+
+    cy.assertValidationErrorTableRowContains({
+      tableRowIndex: 4,
+      exporter: 'Rainbo Supplies and Services Ltd',
+      row: '2',
       column: 'J',
       entry: 'jpy',
       message: 'The report can only include the following currencies: GBP, EUR, USD, JPY',
     });
 
     cy.assertValidationErrorTableRowContains({
-      tableRowIndex: 4,
+      tableRowIndex: 5,
       exporter: 'Cerca Magnetics Ltd',
       row: '3',
       column: 'D',
@@ -68,7 +77,7 @@ context('Monthly utilisation report upload with invalid currencies', () => {
     });
 
     cy.assertValidationErrorTableRowContains({
-      tableRowIndex: 5,
+      tableRowIndex: 6,
       exporter: 'Cerca Magnetics Ltd',
       row: '3',
       column: 'I',
@@ -77,7 +86,16 @@ context('Monthly utilisation report upload with invalid currencies', () => {
     });
 
     cy.assertValidationErrorTableRowContains({
-      tableRowIndex: 6,
+      tableRowIndex: 7,
+      exporter: 'Cerca Magnetics Ltd',
+      row: '3',
+      column: 'L',
+      entry: 'A',
+      message: 'Accrual currency must be in the ISO 4217 currency code format',
+    });
+
+    cy.assertValidationErrorTableRowContains({
+      tableRowIndex: 8,
       exporter: 'Cerca Magnetics Ltd',
       row: '3',
       column: 'J',
@@ -86,7 +104,7 @@ context('Monthly utilisation report upload with invalid currencies', () => {
     });
 
     cy.assertValidationErrorTableRowContains({
-      tableRowIndex: 7,
+      tableRowIndex: 9,
       exporter: 'Rainbo Supplies and Services Ltd',
       row: '2',
       column: 'D',
@@ -95,7 +113,7 @@ context('Monthly utilisation report upload with invalid currencies', () => {
     });
 
     cy.assertValidationErrorTableRowContains({
-      tableRowIndex: 8,
+      tableRowIndex: 10,
       exporter: 'Cerca Magnetics Ltd',
       row: '3',
       column: 'D',
