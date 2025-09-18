@@ -4,10 +4,10 @@
     {% set href = params.href %}
     {% set hrefText = params.hrefText %}
 
-    <p class="govuk-body">
+    <p class="govuk-body" data-cy="error-message-text1">
         {{text1}}
     </p>
-    <p class="govuk-body">
+    <p class="govuk-body"  data-cy="error-message-text2">
         {{text2}}
     </p>
     <a class="govuk-link" href="{{ href }}" data-cy="error-message-link">{{ hrefText }}</a>
