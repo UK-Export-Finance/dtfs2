@@ -1538,3 +1538,45 @@ jobs:
 
       - name: WebApp
         run: docker build -f ./${{ matrix.webapp }}/Dockerfile . --build-arg GITHUB_SHA=${{ github.sha }}
+
+  #11. Webpack build
+  webpack:
+    name: Webpack 🛠️
+    needs: [setup]
+    environment:
+      name: ${{ needs.setup.outputs.environment }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Do not cancel in-progress jobs upon failure
+      fail-fast: false
+      # Single dimension matrix
+      matrix:
+        webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui']
+
+    concurrency:
+      group: webpack-build-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.webapp }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Repository
+        uses: actions/checkout@v5
+
+      - name: Timezone
+        uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+      - name: Dependencies
+        uses: ./.github/actions/rerun
+        with:
+          command: npm ci
+          retries: ${{ vars.RETRY_LIMIT }}
+
+      - name: WebApp
+        run: npm run build -w=${{ matrix.webapp }}
