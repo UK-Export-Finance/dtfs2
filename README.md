@@ -474,4 +474,19 @@ Each microservice exposes both a **Swagger UI interface** for interactive explor
 - **UI**: [http://localhost:5005/v1/api-docs/](http://localhost:5005/v1/api-docs/)
 - **JSON**: [http://localhost:5005/v1/api-docs/api.json](http://localhost:5005/v1/api-docs/api.json)
 
+### 5️⃣ Portal UI
+
+- **UI**: [http://localhost:5000/v1/api-docs/](http://localhost:5000/v1/api-docs/)
+- **JSON**: [http://localhost:5000/v1/api-docs/api.json](http://localhost:5000/v1/api-docs/api.json)
+
+### 6️⃣ GEF UI
+
+- **UI**: [http://localhost:5006/v1/api-docs/](http://localhost:5006/v1/api-docs/)
+- **JSON**: [http://localhost:5006/v1/api-docs/api.json](http://localhost:5006/v1/api-docs/api.json)
+
+### 7️⃣ TFM UI
+
+- **UI**: [http://localhost:5003/v1/api-docs/](http://localhost:5003/v1/api-docs/)
+- **JSON**: [http://localhost:5003/v1/api-docs/api.json](http://localhost:5003/v1/api-docs/api.json)
+
 ---

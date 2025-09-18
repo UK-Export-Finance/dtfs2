@@ -8,8 +8,9 @@ import csrf from 'csurf';
 import flash from 'connect-flash';
 import connectRedis from 'connect-redis';
 import { isHttpError } from 'http-errors';
-import { InvalidEnvironmentVariableError, maintenance } from '@ukef/dtfs2-common';
+import { InvalidEnvironmentVariableError, maintenance, SWAGGER } from '@ukef/dtfs2-common';
 import routes from './routes';
+import swaggerRouter from './routes/swagger.route';
 import healthcheck from './healthcheck';
 import configureNunjucks from './nunjucks-configuration';
 import { csrfToken, copyCsrfTokenFromQueryToBody, seo, security, createRateLimit } from './routes/middleware';
@@ -38,6 +39,11 @@ export const generateApp = () => {
   };
 
   app.use(seo);
+
+  // Non-authenticated routes
+  app.use(healthcheck);
+  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter);
+
   app.use(security);
 
   if (!process.env.SESSION_SECRET) {
@@ -124,8 +130,6 @@ export const generateApp = () => {
   app.use(maintenance);
 
   app.use(createRateLimit());
-
-  app.use(healthcheck);
 
   app.use('/', routes);
 

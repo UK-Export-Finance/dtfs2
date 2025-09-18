@@ -9,8 +9,9 @@ const RedisStore = require('connect-redis')(session);
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
-const { maintenance } = require('@ukef/dtfs2-common');
+const { SWAGGER, maintenance } = require('@ukef/dtfs2-common');
 const routes = require('./routes');
+const swaggerRouter = require('./routes/swagger.route');
 const supportingInformationUploadRoutes = require('./routes/supporting-information-upload');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
@@ -36,6 +37,11 @@ const generateApp = () => {
   };
 
   app.use(seo);
+
+  // Non-authenticated routes
+  app.use(healthcheck);
+  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter.default);
+
   app.use(security);
 
   app.use(compression());
@@ -116,8 +122,6 @@ const generateApp = () => {
   app.use(maintenance);
 
   app.use(createRateLimit());
-
-  app.use(healthcheck);
 
   app.use('/', routes);
 
