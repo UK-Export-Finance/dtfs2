@@ -132,6 +132,6 @@
  *           probabilityOfDefault:
  *             type: integer
  *             example: 14
- *  ACBSAmendFacilityRequestBody:
- *  ACBSAmendFacilityResponseBody:
+ *   ACBSAmendFacilityRequestBody:
+ *   ACBSAmendFacilityResponseBody:
  */

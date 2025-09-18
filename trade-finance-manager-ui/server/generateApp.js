@@ -7,8 +7,9 @@ const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const flash = require('connect-flash');
 const { HttpStatusCode } = require('axios');
-const { maintenance } = require('@ukef/dtfs2-common');
+const { maintenance, SWAGGER } = require('@ukef/dtfs2-common');
 const routes = require('./routes');
+const swaggerRouter = require('./routes/swagger.route');
 const { unauthenticatedLoginRoutes } = require('./routes/login');
 const feedbackRoutes = require('./routes/feedback');
 const configureNunjucks = require('./nunjucks-configuration');
@@ -38,6 +39,11 @@ const generateApp = () => {
   };
 
   app.use(seo);
+
+  // Non-authenticated routes
+  app.use(healthcheck);
+  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter.default);
+
   app.use(security);
 
   app.use(flash());
@@ -99,7 +105,6 @@ const generateApp = () => {
   app.use(csrfToken());
   app.use(sanitizeXss());
 
-  app.use(healthcheck);
   app.use('/', routes);
 
   app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));

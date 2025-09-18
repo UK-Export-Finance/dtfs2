@@ -1,4 +1,5 @@
-const { maintenance, MAX_REQUEST_SIZE } = require('@ukef/dtfs2-common');
+const { CORS_ORIGIN } = process.env;
+const { maintenance, MAX_REQUEST_SIZE, SWAGGER } = require('@ukef/dtfs2-common');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
@@ -6,16 +7,16 @@ const passport = require('passport');
 const compression = require('compression');
 const mongoSanitise = require('express-mongo-sanitize');
 const healthcheck = require('./healthcheck');
-
-dotenv.config();
-const { CORS_ORIGIN } = process.env;
 const { loginInProgressAuth, loginCompleteAuth } = require('./v1/users/passport');
 const { UserService } = require('./v1/users/user.service');
 const { authRouter, openRouter } = require('./v1/routes');
+const swaggerRouter = require('./v1/routes/swagger.route');
 const seo = require('./v1/middleware/headers/seo');
 const security = require('./v1/middleware/headers/security');
 const removeCsrfToken = require('./v1/middleware/remove-csrf-token');
 const createRateLimit = require('./v1/middleware/rateLimit');
+
+dotenv.config();
 
 const userService = new UserService();
 
@@ -27,6 +28,11 @@ const generateApp = () => {
   const app = express();
 
   app.use(seo);
+
+  // Non-authenticated routes
+  app.use(healthcheck);
+  app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter.default);
+
   app.use(security);
 
   /**
@@ -36,7 +42,6 @@ const generateApp = () => {
   app.use(maintenance);
 
   app.use(createRateLimit());
-  app.use(healthcheck);
   app.use(passport.initialize());
   app.use(express.json({ limit: MAX_REQUEST_SIZE }));
   app.use(compression());

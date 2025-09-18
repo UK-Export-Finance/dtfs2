@@ -48,5 +48,7 @@ export * from './exchange-rate';
 export * from './number-generator';
 export * from './maintenance';
 export * from './banks';
+export * from './services';
+export * from './swagger';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';

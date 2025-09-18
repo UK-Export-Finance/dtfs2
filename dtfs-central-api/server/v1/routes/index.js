@@ -3,7 +3,8 @@ const portalRoutes = require('./portal-routes');
 const tfmRoutes = require('./tfm-routes');
 const userRoutes = require('./user-routes');
 const utilisationReportsRoutes = require('./utilisation-reports-routes');
-const swaggerRoutes = require('./swagger-routes');
+// Since import from TS file
+const swaggerRoutes = require('./swagger-routes.ts').default;
 
 module.exports = {
   bankRoutes,

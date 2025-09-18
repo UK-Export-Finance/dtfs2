@@ -1,12 +1,10 @@
 const express = require('express');
-const swaggerUi = require('swagger-ui-express');
 
 const openRouter = express.Router();
 const authRouter = express.Router();
 
 const passport = require('passport');
 
-const { swaggerSpec, swaggerUiOptions } = require('./swagger');
 const { validateSsoFeatureFlagFalse, validateSsoFeatureFlagTrue } = require('./middleware/validate-sso-feature-flag');
 const feedbackController = require('./controllers/feedback-controller');
 const amendmentController = require('./controllers/amendment.controller');
@@ -30,8 +28,6 @@ openRouter.use(checkApiKey);
 openRouter.use('/sso', validateSsoFeatureFlagTrue, ssoOpenRouter);
 
 authRouter.use(passport.authenticate('jwt', { session: false }));
-
-authRouter.route('/api-docs').get(swaggerUi.setup(swaggerSpec, swaggerUiOptions));
 
 openRouter.use('/', dealsOpenRouter);
 authRouter.use('/', dealsAuthRouter);

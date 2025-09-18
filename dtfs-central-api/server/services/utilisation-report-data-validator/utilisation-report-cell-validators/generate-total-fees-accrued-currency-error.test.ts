@@ -34,7 +34,7 @@ describe('generateTotalFeesAccruedCurrencyError', () => {
     expect(paymentCurrencyError).toEqual(expectedError);
   });
 
-  it('should return an error when the value is not a valid currency code', () => {
+  it('should return an error when the value is not a valid ISO 4217 code', () => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,
@@ -42,7 +42,7 @@ describe('generateTotalFeesAccruedCurrencyError', () => {
         row: 1,
       },
       'accrual currency': {
-        value: 'INR',
+        value: 'INRA',
         column: 'B',
         row: 1,
       },
@@ -53,10 +53,10 @@ describe('generateTotalFeesAccruedCurrencyError', () => {
       },
     };
     const expectedError = {
-      errorMessage: 'The report can only include the following currencies: GBP, EUR, USD, JPY',
+      errorMessage: 'Accrual currency must be in the ISO 4217 currency code format',
       column: 'B',
       row: 1,
-      value: 'INR',
+      value: 'INRA',
       exporter: testExporterName,
     };
 
@@ -65,7 +65,9 @@ describe('generateTotalFeesAccruedCurrencyError', () => {
     expect(paymentCurrencyError).toEqual(expectedError);
   });
 
-  it.each(Object.values(CURRENCY))('should return null if the value is "%s"', (currency) => {
+  const currencyValues = [...Object.values(CURRENCY), 'INR', 'AUD', 'CAD', 'CHF', 'CNY', 'SEK', 'NZD', 'MXN', 'SGD', 'HKD', 'NOK', 'KRW', 'TRY', 'RUB'];
+
+  it.each(Object.values(currencyValues))('should return null if the value is "%s"', (currency) => {
     const csvDataRow = {
       exporter: {
         value: testExporterName,

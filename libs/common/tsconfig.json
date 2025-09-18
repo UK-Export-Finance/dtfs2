@@ -22,7 +22,7 @@
     /* Language and Environment */
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": ["dom", "es2022"],
+    "lib": ["dom", "esnext"],
     "target": "ES2018",
 
     /* Completeness */
