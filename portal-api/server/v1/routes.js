@@ -1401,36 +1401,36 @@ authRouter
  *  put:
  *    summary: Update bank by ID
  *    tags: [Banks]
- *   description: Update a specific bank by its ID. This route is restricted to users with the ADMIN role.
- *   parameters:
- *    - in: path
- *     name: id
- *     required: true
- *     description: The ID of the bank to update.
- *     schema:
- *       type: string
- *   - in: body
- *     name: body
- *     required: true
- *     description: The updated bank object.
- *     schema:
- *       type: object
- *   responses:
- *    200:
- *       description: The bank was updated successfully
- *    400:
- *       description: Bad request
+ *    description: Update a specific bank by its ID. This route is restricted to users with the ADMIN role.
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: The ID of the bank to update.
+ *        schema:
+ *          type: string
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        description: The updated bank object.
+ *        schema:
+ *          type: object
+ *    responses:
+ *      200:
+ *        description: The bank was updated successfully
+ *      400:
+ *        description: Bad request
  * delete:
- *   summary: Delete bank by ID
- *   tags: [Banks]
- *   description: Delete a specific bank by its ID. This route is restricted to users with the ADMIN role.
- *   parameters:
- *    - in: path
- *      name: id
- *      required: true
- *      description: The ID of the bank to delete.
- *      schema:
- *        type: string
+ *    summary: Delete bank by ID
+ *    tags: [Banks]
+ *    description: Delete a specific bank by its ID. This route is restricted to users with the ADMIN role.
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: The ID of the bank to delete.
+ *        schema:
+ *          type: string
  *   responses:
  *     200:
  *       description: The bank was deleted successfully
@@ -1611,12 +1611,12 @@ authRouter.route('/industry-sectors').get(industrySectors.findAll);
  *     summary: Get industry sector by code
  *     tags: [Industry Sectors]
  *     description: Retrieve a specific industry sector by its code.
- *    parameters:
- *      - in: path
- *        name: code
- *        required: true
- *        description: The code of the industry sector to retrieve.
- *        schema:
+ *     parameters:
+ *       - in: path
+ *         name: code
+ *         required: true
+ *         description: The code of the industry sector to retrieve.
+ *         schema:
  *          type: string
  *    responses:
  *      200:
@@ -1762,9 +1762,9 @@ authRouter
  *    summary: Get ukefDecision reports for deals approved with or without conditions
  *    tags: [Reports]
  *    description: Get a report of all deals that have been approved with or without conditions
- *   responses:
- *    200:
- *     description: A report of ukefDecision deals
+ *    responses:
+ *      200:
+ *        description: A report of ukefDecision deals
  */
 authRouter
   .route('/reports/review-ukef-decision')
@@ -1807,13 +1807,13 @@ openRouter.get('/validate-partial-2fa-token', passport.authenticate(partial2faTo
  *    summary: Validate bank
  *    tags: [Auth]
  *    description: Validate a bank against the deal
- *   responses:
- *     200:
- *       description: Bank is valid
- *     400:
- *       description: Bad request
- *     404:
- *       description: Bank not found
+ *    responses:
+ *      200:
+ *        description: Bank is valid
+ *      400:
+ *        description: Bad request
+ *      404:
+ *        description: Bank not found
  */
 authRouter.get('/validate/bank', (req, res) => banks.validateBank(req, res));
 
@@ -1860,24 +1860,24 @@ authRouter.route('/utilisation-reports').post(
  *    summary: Get previous utilisation reports by bank ID
  *    tags: [Utilisation Reports]
  *    description: Get a list of previous utilisation reports for a specific bank by bank ID. This route is restricted to users with the PAYMENT_REPORT_OFFICER role.
- *   parameters:
- *     - in: path
- *       name: bankId
- *       required: true
- *       description: The ID of the bank to retrieve utilisation reports for.
- *       schema:
- *         type: string
- *   responses:
- *    200:
- *      description: A list of previous utilisation reports for the specified bank.
- *    400:
- *     description: Bad request
- *   401:
- *     description: Unauthorized
- *  404:
- *    description: Not found
- *  500:
- *   description: Internal server error
+ *    parameters:
+ *      - in: path
+ *        name: bankId
+ *        required: true
+ *        description: The ID of the bank to retrieve utilisation reports for.
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: A list of previous utilisation reports for the specified bank.
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal server error
  */
 authRouter
   .route('/banks/:bankId/utilisation-reports')
@@ -2095,17 +2095,17 @@ authRouter
  *       description: The ID of the utilisation report to download.
  *       schema:
  *         type: string
- *   responses:
- *      200:
- *        description: The utilisation report was downloaded successfully
- *      400:
- *        description: Bad request
- *      401:
- *        description: Unauthorized
- *      404:
- *        description: Not found
- *      500:
- *        description: Internal server error
+ *    responses:
+ *       200:
+ *         description: The utilisation report was downloaded successfully
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal server error
  */
 authRouter
   .route('/banks/:bankId/utilisation-report-download/:id')
@@ -2140,22 +2140,22 @@ authRouter.route('/bank-holidays').get(getBankHolidays);
  *    summary: Get company by registration number
  *    tags: [Companies]
  *    description: Retrieve a specific company by its registration number. This route is restricted to users with the MAKER role.
- *   parameters:
- *     - in: path
- *       name: registrationNumber
- *       required: true
- *       description: The registration number of the company to retrieve.
- *       schema:
- *         type: string
- *   responses:
- *     200:
- *       description: The company was retrieved successfully
- *     400:
- *       description: Bad request
- *     404:
- *       description: The company with the specified registration number was not found
- *     500:
- *       description: Internal server error
+ *    parameters:
+ *      - in: path
+ *        name: registrationNumber
+ *        required: true
+ *        description: The registration number of the company to retrieve.
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: The company was retrieved successfully
+ *      400:
+ *        description: Bad request
+ *      404:
+ *        description: The company with the specified registration number was not found
+ *      500:
+ *        description: Internal server error
  */
 authRouter
   .route('/companies/:registrationNumber')
@@ -2167,30 +2167,30 @@ authRouter
  *    summary: Get fee record correction by ID
  *    tags: [Utilisation Reports]
  *    description: Retrieve a specific fee record correction by its ID for a specific bank by bank ID. This route is restricted to users with the PAYMENT_REPORT_OFFICER role.
- *   parameters:
- *     - in: path
- *       name: bankId
- *       required: true
- *       description: The ID of the bank to retrieve the fee record correction for.
- *       schema:
- *         type: string
- *     - in: path
- *       name: correctionId
- *       required: true
- *       description: The ID of the fee record correction to retrieve.
- *       schema:
- *         type: string
- *   responses:
- *     200:
- *       description: The fee record correction was retrieved successfully
- *     400:
- *       description: Bad request
- *     401:
- *       description: Unauthorized
- *     404:
- *       description: Not found
- *     500:
- *       description: Internal server error
+ *    parameters:
+ *      - in: path
+ *        name: bankId
+ *        required: true
+ *        description: The ID of the bank to retrieve the fee record correction for.
+ *        schema:
+ *          type: string
+ *      - in: path
+ *        name: correctionId
+ *        required: true
+ *        description: The ID of the fee record correction to retrieve.
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: The fee record correction was retrieved successfully
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal server error
  *  put:
  *    summary: Submits fee record correction by ID
  *    tags: [Utilisation Reports]
@@ -2463,7 +2463,7 @@ authRouter.route('/tfm/team/:teamId').get(validateUserHasAtLeastOneAllowedRole({
  *        description: The ID of the TFM deal to retrieve.
  *        schema:
  *          type: string
- *   responses:
+ *    responses:
  *      200:
  *        description: The TFM deal was retrieved successfully.
  *      400:
