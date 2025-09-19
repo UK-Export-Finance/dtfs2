@@ -37,6 +37,7 @@ describe('controllers/utilisation-report-service/utilisation-report-download', (
 
       // Assert
       expect(console.error).toHaveBeenCalledWith(
+        '%s %o',
         expect.any(String),
         expect.objectContaining({
           message: expect.stringContaining('Failed to get filename'),
@@ -59,6 +60,7 @@ describe('controllers/utilisation-report-service/utilisation-report-download', (
 
       // Assert
       expect(console.error).toHaveBeenCalledWith(
+        '%s %o',
         expect.any(String),
         expect.objectContaining({
           message: expect.stringContaining('Failed to get mimetype'),
@@ -110,7 +112,7 @@ describe('controllers/utilisation-report-service/utilisation-report-download', (
       await getReportDownload(req, res);
 
       // Assert
-      expect(console.error).toHaveBeenCalledWith(expect.any(String), azureError);
+      expect(console.error).toHaveBeenCalledWith('%s %o', expect.any(String), azureError);
 
       expect(res._getStatusCode()).toEqual(500);
     });
