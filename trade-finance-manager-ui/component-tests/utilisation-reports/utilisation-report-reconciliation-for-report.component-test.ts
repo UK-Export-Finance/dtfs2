@@ -51,6 +51,22 @@ describe(page, () => {
 
   const getWrapper = (viewModel: UtilisationReportReconciliationForReportViewModel = params) => render(viewModel);
 
+  it('should have the correct integrity for "/assets/js/enableSelectAllTableCheckbox.js"', () => {
+    const wrapper = getWrapper();
+
+    wrapper
+      .expectElement('script[src="/assets/js/enableSelectAllTableCheckbox.js"]')
+      .toHaveAttribute('integrity', 'sha512-TIBIAXrIjjb/BgkLCMNJ3r2PgSoHWDmVWm5Ekefb1dLPI88KDbC+VxWl286sKbQNAdxzkG1y13Ks7tpg3rIC2A==');
+  });
+
+  it('should have the correct integrity for "/assets/js/mojFilterHide.js"', () => {
+    const wrapper = getWrapper();
+
+    wrapper
+      .expectElement('script[src="/assets/js/mojFilterHide.js"]')
+      .toHaveAttribute('integrity', 'sha512-JqMzZELzDQpgLMAB3966ecgcgxruf/JIJDMoBG7rIj+L9e+Ux+CyQ4FEGLIiVA2D8qbjbHKELyrdlpneaL+BfA==');
+  });
+
   it('should not add error prefix to page title when there are no errors', () => {
     const wrapper = getWrapper();
 
