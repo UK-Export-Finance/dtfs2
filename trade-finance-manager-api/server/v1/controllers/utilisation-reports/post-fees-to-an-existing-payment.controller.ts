@@ -28,7 +28,7 @@ export const postFeesToAnExistingPayment = async (req: PostFeesToAnExistingPayme
   } catch (error) {
     const errorMessage = 'Failed to add fees to an existing payment';
     const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     return res.status(errorStatus).send(errorMessage);
   }
 };

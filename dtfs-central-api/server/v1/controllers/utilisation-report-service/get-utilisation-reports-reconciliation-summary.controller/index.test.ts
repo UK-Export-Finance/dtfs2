@@ -50,7 +50,7 @@ describe('getReconciliationSummary', () => {
       // Assert
       const expectedErrorMessage = 'Failed to get utilisation reports reconciliation summary';
 
-      expect(console.error).toHaveBeenCalledWith(expectedErrorMessage, error);
+      expect(console.error).toHaveBeenCalledWith('%s %o', expectedErrorMessage, error);
 
       expect(res.statusCode).toEqual(500);
       expect(res._getData()).toEqual(expectedErrorMessage);

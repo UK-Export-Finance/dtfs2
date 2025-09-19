@@ -27,7 +27,7 @@ export const getUtilisationReportPendingCorrectionsByBankId = async (req: GetUti
     const errorMessage = 'Failed to get pending corrections';
     const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
 
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     return res.status(errorStatus).send(errorMessage);
   }
 };

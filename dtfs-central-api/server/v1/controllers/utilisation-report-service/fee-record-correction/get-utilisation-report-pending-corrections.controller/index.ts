@@ -61,7 +61,7 @@ export const getUtilisationReportPendingCorrectionsByBankId = async (
     return res.status(HttpStatusCode.Ok).send(responseBody);
   } catch (error) {
     const errorMessage = 'Failed to get pending corrections';
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }

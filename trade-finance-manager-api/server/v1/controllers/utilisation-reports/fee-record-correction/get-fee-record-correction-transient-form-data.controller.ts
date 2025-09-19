@@ -26,7 +26,7 @@ export const getFeeRecordCorrectionTransientFormData = async (req: GetFeeRecordC
   } catch (error) {
     const errorMessage = 'Failed to get fee record correction transient form data';
     const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     return res.status(errorStatus).send(errorMessage);
   }
 };

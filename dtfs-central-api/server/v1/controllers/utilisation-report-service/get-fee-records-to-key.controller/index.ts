@@ -56,7 +56,7 @@ export const getFeeRecordsToKey = async (req: Request, res: GetFeeRecordsToKeyRe
     });
   } catch (error) {
     const errorMessage = 'Failed to generate keying data';
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }

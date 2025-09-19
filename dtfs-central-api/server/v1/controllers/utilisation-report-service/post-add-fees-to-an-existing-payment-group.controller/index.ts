@@ -60,7 +60,7 @@ export const postAddFeesToAnExistingPaymentGroup = async (req: PostAddFeesToAnEx
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {
     const errorMessage = `Failed to add fees to an existing payment group`;
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }

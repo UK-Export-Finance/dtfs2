@@ -63,7 +63,7 @@ export const postKeyingData = async (req: PostKeyingDataRequest, res: Response) 
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {
     const errorMessage = 'Failed to generate keying data';
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }

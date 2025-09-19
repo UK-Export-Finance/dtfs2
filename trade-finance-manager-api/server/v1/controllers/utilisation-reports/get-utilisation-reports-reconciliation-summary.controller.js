@@ -12,7 +12,7 @@ const getUtilisationReportsReconciliationSummary = async (req, res) => {
     res.status(200).send(summary);
   } catch (error) {
     const errorMessage = 'Failed to get utilisation reports reconciliation summary';
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     res.status(error.response?.status ?? 500).send(errorMessage);
   }
 };

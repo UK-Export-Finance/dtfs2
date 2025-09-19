@@ -23,7 +23,7 @@ export const getUtilisationReportById = async (req: GetUtilisationReportByIdRequ
     return res.status(200).send(mappedUtilisationReport);
   } catch (error) {
     const errorMessage = `Failed to get utilisation report with id '${id}'`;
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     return res.status(500).send(errorMessage);
   }
 };

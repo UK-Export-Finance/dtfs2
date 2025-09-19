@@ -15,7 +15,7 @@ export const getFeeRecord = async (req: Request, res: GetFeeRecordResponse) => {
   } catch (error) {
     const errorMessage = 'Failed to get fee record';
     const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     return res.status(errorStatus).send(errorMessage);
   }
 };

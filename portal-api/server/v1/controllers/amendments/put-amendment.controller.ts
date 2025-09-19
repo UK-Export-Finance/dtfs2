@@ -34,7 +34,7 @@ export const putAmendment = async (req: PutAmendmentRequest, res: Response) => {
     return res.status(HttpStatusCode.Ok).send(amendmentResponse);
   } catch (error) {
     const errorMessage = 'Failed to update the amendment';
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
 
     if (error instanceof ApiError) {
       return res.status(error.status).send({

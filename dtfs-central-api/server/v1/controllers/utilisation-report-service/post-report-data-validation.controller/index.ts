@@ -22,7 +22,7 @@ export const postReportDataValidation = async (req: PostReportDataValidationRequ
     return res.status(HttpStatusCode.Ok).send({ csvValidationErrors });
   } catch (error) {
     const errorMessage = 'Failed to validate report data';
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }

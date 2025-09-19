@@ -26,7 +26,7 @@ export const validateUtilisationReportData = async (req: ValidateUtilisationRepo
   } catch (error) {
     const errorMessage = 'Failed to validate utilisation report data';
 
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
 
     const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
 

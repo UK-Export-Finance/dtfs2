@@ -20,7 +20,7 @@ export const putKeyingDataMarkAsToDo = async (req: PutKeyingDataMarkAsToDoReques
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {
     const errorMessage = 'Failed to mark keying data as to do';
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
     return res.status(errorStatus).send(errorMessage);
   }

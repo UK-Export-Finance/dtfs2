@@ -60,7 +60,7 @@ describe('SsoController', () => {
 
     await ssoController.getAuthCodeUrl(req, res).catch(() => {});
 
-    expect(console.error).toHaveBeenCalledWith('Failed to get auth code url', error);
+    expect(console.error).toHaveBeenCalledWith('%s %o', 'Failed to get auth code url', error);
   });
 
   it('should return an error response on api error', async () => {

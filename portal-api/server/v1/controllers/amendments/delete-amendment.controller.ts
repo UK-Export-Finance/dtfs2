@@ -30,7 +30,7 @@ export const deleteAmendment = async (req: DeleteAmendmentRequest, res: Response
     return res.status(HttpStatusCode.Ok).send();
   } catch (error) {
     const errorMessage = 'Failed to delete the amendment';
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
 
     if (error instanceof ApiError) {
       return res.status(error.status).send({

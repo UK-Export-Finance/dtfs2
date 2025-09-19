@@ -39,7 +39,7 @@ export const getBanks = async (req: GetBanksRequest, res: Response<GetBanksRespo
     return res.status(HttpStatusCode.Ok).send(banksWithReportingYears);
   } catch (error) {
     const errorMessage = 'Failed to get all banks';
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send({
         status: error.status,

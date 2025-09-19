@@ -41,7 +41,7 @@ export const getFeeRecord = async (req: Request, res: GetFeeRecordResponse) => {
     return res.status(HttpStatusCode.Ok).send(feeRecord);
   } catch (error) {
     const errorMessage = `Failed to get fee record`;
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }
