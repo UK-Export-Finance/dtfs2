@@ -18,6 +18,11 @@ export type PostFeesToAnExistingPaymentRequest = CustomExpressRequest<{
   params: PostFeesToAnExistingPaymentRequestParams;
 }>;
 
+/**
+ * Adds the supplied fee records to an existing payment
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 export const postFeesToAnExistingPayment = async (req: PostFeesToAnExistingPaymentRequest, res: Response) => {
   try {
     const { reportId } = req.params;
