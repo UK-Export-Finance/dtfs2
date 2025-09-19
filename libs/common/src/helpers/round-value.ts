@@ -1,4 +1,4 @@
-import { decimalsCount } from './decimals-count';
+import { decimalsCount } from './ui/decimals-count';
 import { roundNumber } from './round-number';
 
 /**
