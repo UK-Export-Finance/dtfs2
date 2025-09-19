@@ -51,7 +51,7 @@ export const getUtilisationReportDownload = async (req: Request, res: Response) 
     return readStream.pipe(res);
   } catch (error) {
     const errorMessage = `Failed to get utilisation report for download with id '${id}'`;
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     return res.status((error as AxiosError).response?.status ?? 500).send({ message: errorMessage });
   }
 };

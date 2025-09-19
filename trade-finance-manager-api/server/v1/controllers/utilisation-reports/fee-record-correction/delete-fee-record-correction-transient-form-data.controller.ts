@@ -31,7 +31,7 @@ export const deleteFeeRecordCorrectionTransientFormData = async (req: DeleteFeeR
   } catch (error) {
     const errorMessage = 'Failed to delete fee record correction transient form data';
     const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     return res.status(errorStatus).send(errorMessage);
   }
 };

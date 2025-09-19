@@ -12,7 +12,7 @@ export const getUtilisationReportSummariesByBankAndYear = async (req: Request<{ 
     res.status(200).send(summary);
   } catch (error) {
     const errorMessage = `Failed to get previous utilisation reports by bank id ${bankId} and year ${year}`;
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     const statusCode = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
     res.status(statusCode).send(errorMessage);
   }

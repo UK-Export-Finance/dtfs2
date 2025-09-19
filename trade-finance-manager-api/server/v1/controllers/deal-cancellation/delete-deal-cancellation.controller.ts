@@ -27,7 +27,7 @@ export const deleteDealCancellation = async (req: DeleteDealCancellationRequest,
     return res.sendStatus(HttpStatusCode.NoContent);
   } catch (error) {
     const errorMessage = 'Failed to delete deal cancellation';
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
 
     if (error instanceof ApiError) {
       return res.status(error.status).send({

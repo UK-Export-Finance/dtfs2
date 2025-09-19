@@ -49,7 +49,7 @@ export class SsoController {
       res.json(getAuthCodeUrlResponse);
     } catch (error) {
       const errorMessage = 'Failed to get auth code url';
-      console.error(errorMessage, error);
+      console.error('%s %o', errorMessage, error);
 
       if (error instanceof ApiError) {
         res.status(error.status).send({
@@ -124,7 +124,7 @@ export class SsoController {
     } catch (error) {
       const errorMessage = 'Failed to handle redirect form';
 
-      console.error(errorMessage, error);
+      console.error('%s %o', errorMessage, error);
 
       if (error instanceof ApiError) {
         res.status(error.status).send({

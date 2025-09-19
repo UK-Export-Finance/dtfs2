@@ -78,7 +78,7 @@ export const getSelectedFeeRecordDetails = async (req: GetSelectedFeeRecordDetai
     return res.status(HttpStatusCode.Ok).send(selectedFeeRecordsDetails);
   } catch (error) {
     const errorMessage = `Failed to get selected fee records details for report with id '${reportId}'`;
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }

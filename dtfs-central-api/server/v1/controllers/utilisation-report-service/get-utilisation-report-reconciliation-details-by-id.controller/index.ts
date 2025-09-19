@@ -42,7 +42,7 @@ export const getUtilisationReportReconciliationDetailsById = async (req: GetUtil
     return res.status(HttpStatusCode.Ok).send(utilisationReportReconciliationDetails);
   } catch (error) {
     const errorMessage = `Failed to get utilisation report reconciliation for report with id '${reportId}'`;
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }
