@@ -30,6 +30,14 @@ describe(page, () => {
 
   const getDatalistSelectorForBankId = (bankId: string) => `datalist#datalist--bankId-${bankId}`;
 
+  it('should have the correct integrity for "/assets/js/enableFindReportsByYearDropdown.js"', () => {
+    const wrapper = getWrapper();
+
+    wrapper
+      .expectElement('script[src="/assets/js/enableFindReportsByYearDropdown.js"]')
+      .toHaveAttribute('integrity', 'sha512-NdD6AcmPBZvusKZKDsMyblPUlK1adYBBTpoEXLqRphQpzbxmQbrhC9IVWXSwNqQLDH2wer/iW7mif4nbh7o6pA==');
+  });
+
   it('should add error prefix to page title when there are errors', () => {
     const wrapper = getWrapper({ errorSummary: [{ text: 'an error', href: 'error-href' }] });
 

@@ -18,25 +18,25 @@ describe(page, () => {
   it('should have the correct integrity for "/assets/js/main.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/main.js"]')
-      .toHaveAttribute('integrity', 'sha512-BLhltBWOGogiNck88Bgk9ZP60WzkF0M4UDKNXASvMQ0XBcLRtMCqs77xMkkL+crGcCqpKtuOkkeuTvpTQFuzIA==');
+      .toHaveAttribute('integrity', 'sha512-545n5sADavrx6J7M+35OK8aO8vYy53k94cTSHazqdHnCvUGnAv0hSchAhJ5sr5BAliS3Z+y3MOVMRZg7XYpKIw==');
   });
 
   it('should have the correct integrity for "/assets/js/govukFrontend.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/govukFrontend.js"]')
-      .toHaveAttribute('integrity', 'sha512-Vk2b9tAD+b3UW0QRRQYYlVt7TYXoL25A8HrougokdITdzQLR6oWerqvbggafTBDYOtpO64j3n8zKjujsJkY91Q==');
+      .toHaveAttribute('integrity', 'sha512-XjslPGHm8dTK4kPoc3TLgL4y34O+UtQ6yPECbnQSC/s7caahsMliumsRzHyaQMvcY77V6JdajknG+kPo2u/zTQ==');
   });
 
   it('should have the correct integrity for "/assets/js/mojFrontend.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/mojFrontend.js"]')
-      .toHaveAttribute('integrity', 'sha512-Qk6Yl7rQlrEMujbcG1eTJ+aqZvUDj8FP4Xexy9FeU1SrY302u2vD7fqq3rq7BGvwhOcTdAlUKi1zmEOqHgU+1w==');
+      .toHaveAttribute('integrity', 'sha512-w4sOebhAk04XQ0LvXEq1iKg/iAmoDI8AmVhVQdQ3hlnKl7jxZF6feZnPIR1pMK26iy4LIwwS48DZIH2L63q8rw==');
   });
 
   it('should have the correct integrity for "/assets/js/disableFormSubmitOnSubmission.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/disableFormSubmitOnSubmission.js"]')
-      .toHaveAttribute('integrity', 'sha512-tCINlYTcYERel2bdysTMl5KaemDdEyog5JSS3hYQqHS6ZIyT4ATLu4oTPerbZ+vAOn4AAzDEsRBSQVacGhoieQ==');
+      .toHaveAttribute('integrity', 'sha512-j01KJMmYleOKhRiLGNqRqMEOqCPUj5GytCJGU0cQxxFLHmrTSPjTPoxIvyZ16gPQG2cUUSPOzeiDGfKMYms+WA==');
   });
 
   it('should have the correct integrity for "/assets/js/ssoRedirectAutoSubmit.js"', () => {
