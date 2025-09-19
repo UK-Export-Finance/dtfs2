@@ -1,0 +1,15 @@
+{% macro render(params) %}
+    {% set line1 = params.line1 %}
+    {% set line2 = params.line2 %}
+    {% set href = params.href %}
+    {% set hrefText = params.hrefText %}
+
+    <p class="govuk-body" data-cy="error-message-line1">
+        {{line1}}
+    </p>
+    <p class="govuk-body"  data-cy="error-message-line2">
+        {{line2}}
+    </p>
+    <a class="govuk-link" href="{{ href }}" data-cy="error-message-link">{{ hrefText }}</a>
+
+{% endmacro %}
