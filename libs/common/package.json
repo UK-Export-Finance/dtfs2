@@ -89,7 +89,7 @@
     "jest": "^29.7.0",
     "jest-when": "^3.7.0",
     "supertest": "^7.0.0",
-    "ts-jest": "^29.4.2"
+    "ts-jest": "^29.4.3"
   },
   "engines": {
     "node": ">=24.1.0",
