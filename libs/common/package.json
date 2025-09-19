@@ -28,7 +28,8 @@
     "./payload-verification": "./src/helpers/payload-verification/index.ts",
     "./schemas": "./src/schemas/index.ts",
     "./test-cases-backend": "./src/test-helpers/test-cases-backend/index.ts",
-    "./mock-data-backend": "./src/test-helpers/mock-data-backend/index.ts"
+    "./mock-data-backend": "./src/test-helpers/mock-data-backend/index.ts",
+    "./ui-helpers": "./src/helpers/ui/index.ts"
   },
   "main": "src/index.ts",
   "scripts": {
@@ -88,7 +89,7 @@
     "jest": "^29.7.0",
     "jest-when": "^3.7.0",
     "supertest": "^7.0.0",
-    "ts-jest": "^29.4.2"
+    "ts-jest": "^29.4.3"
   },
   "engines": {
     "node": ">=24.1.0",

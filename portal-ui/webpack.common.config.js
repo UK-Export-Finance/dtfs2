@@ -28,6 +28,7 @@ module.exports = {
     minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
   },
   resolve: {
+    extensions: ['.ts', '.js'],
     // resolves paths in library files that we don't control, pointing them to the root hoisted dependencies
     alias: {
       'node_modules/govuk-frontend': path.resolve(__dirname, '../node_modules/govuk-frontend'),
@@ -41,6 +42,16 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
+        },
+      },
+      {
+        test: /\.ts$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true,
+          },
         },
       },
       {
