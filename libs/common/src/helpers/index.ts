@@ -1,3 +1,4 @@
+export * from './ui';
 export * from './string';
 export * from './validation';
 export * from './date';
@@ -37,7 +38,6 @@ export * from './create-amendment-facility-exposure';
 export * from './format-dates-for-tenor';
 export * from './amendments-get-gbp-value';
 export * from './calculate-ukef-exposure';
-export * from './decimals-count';
 export * from './round-number';
 export * from './formatted-number';
 export * from './deal-type-cover-start-date';
