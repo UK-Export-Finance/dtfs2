@@ -16,6 +16,11 @@ export type GetUtilisationReportReconciliationDetailsByIdRequest = CustomExpress
 
 type ResponseBody = UtilisationReportReconciliationDetailsResponseBody | string;
 
+/**
+ * Fetches utilisation report reconciliation details by id.
+ * @param {import('express').Request<{ reportId: string }>} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 export const getUtilisationReportReconciliationDetailsById = async (req: GetUtilisationReportReconciliationDetailsByIdRequest, res: Response<ResponseBody>) => {
   const { reportId } = req.params;
 

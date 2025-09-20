@@ -11,6 +11,11 @@ type FileMetadata = {
   mimetype: string;
 };
 
+/**
+ * Fetches file metadata for utilisation report with specified id.
+ * @param {import('express').Request<{ id: string }>} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 const getUtilisationReportFileMetadata = async (id: string): Promise<FileMetadata> => {
   const { azureFileInfo } = await api.getUtilisationReportById(id);
 
@@ -30,6 +35,11 @@ const getUtilisationReportFileMetadata = async (id: string): Promise<FileMetadat
   return { folder, filename, mimetype };
 };
 
+/**
+ * Fetches the downloaded utilisation report with specified id.
+ * @param {import('express').Request<{ id: string }>} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 export const getUtilisationReportDownload = async (req: Request, res: Response) => {
   const { id } = req.params;
 

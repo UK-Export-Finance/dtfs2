@@ -9,6 +9,11 @@ const { findLatestCompletedAmendment } = require('../rest-mappings/helpers/amend
 const REGEX = require('../../constants/regex');
 const formatFacilityValue = require('../rest-mappings/helpers/formatFacilityValue.helper');
 
+/**
+ * Fetch tfm facility by id
+ * @param {import('express').Request<{ facilityId: string }>} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 const getFacility = async (req, res) => {
   try {
     const { facilityId } = req.params;
@@ -29,6 +34,11 @@ const getFacility = async (req, res) => {
   }
 };
 
+/**
+ * Fetches all TFM facilities
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 const getFacilities = async (req, res) => {
   try {
     const queryParams = req.query;
@@ -93,15 +103,22 @@ const getFacilities = async (req, res) => {
   }
 };
 
+/**
+ * Update tfm facility by facility id
+ * @param {import('express').Request<{ facilityId: string }>} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 const updateFacility = async (req, res) => {
   const { facilityId } = req.params;
   const facilityUpdate = req.body;
+
   try {
     const updatedFacility = await api.updateFacility({
       facilityId,
       tfmUpdate: facilityUpdate,
       auditDetails: generateTfmAuditDetails(req.user._id),
     });
+
     return res.status(200).send({
       updateFacility: updatedFacility.tfm,
     });

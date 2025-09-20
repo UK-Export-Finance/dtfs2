@@ -9,6 +9,11 @@ type DeletePaymentRequest = CustomExpressRequest<{
   };
 }>;
 
+/**
+ * Deletes the payment with the specified id
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 export const deletePayment = async (req: DeletePaymentRequest, res: Response) => {
   const { reportId, paymentId } = req.params;
   const { user } = req.body;

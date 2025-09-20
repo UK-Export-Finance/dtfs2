@@ -2,6 +2,11 @@ import { HttpStatusCode, isAxiosError } from 'axios';
 import { Request, Response } from 'express';
 import api from '../../api';
 
+/**
+ * Fetches utilisation report with the fee to key
+ * @param {import('express').Request<{ reportId: string }>} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 export const getFeeRecordsToKey = async (req: Request, res: Response) => {
   const { reportId } = req.params;
 

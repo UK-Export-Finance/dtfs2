@@ -10,6 +10,11 @@ type PutKeyingDataMarkAsToDoRequest = CustomExpressRequest<{
   };
 }>;
 
+/**
+ * Updates mark keying data as to do
+ * @param {import('express').Request<{ reportId: string }>} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 export const putKeyingDataMarkAsToDo = async (req: PutKeyingDataMarkAsToDoRequest, res: Response) => {
   const { reportId } = req.params;
   const { feeRecordIds, user } = req.body;

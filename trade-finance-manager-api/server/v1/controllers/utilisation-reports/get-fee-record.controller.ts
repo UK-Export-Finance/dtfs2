@@ -5,6 +5,11 @@ import api from '../../api';
 
 type GetFeeRecordResponse = Response<FeeRecordResponseBody | string>;
 
+/**
+ * Fetches the fee record
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 export const getFeeRecord = async (req: Request, res: GetFeeRecordResponse) => {
   const { reportId, feeRecordId } = req.params;
 

@@ -10,6 +10,11 @@ const CONSTANTS = require('../../constants');
 
 require('dotenv').config();
 
+/**
+ * Generates feedback
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 exports.create = async (req, res) => {
   const validationErrors = validateFeedback(req.body);
 
