@@ -21,6 +21,11 @@ export type PostPaymentRequest = CustomExpressRequest<{
   params: PostPaymentRequestParams;
 }>;
 
+/**
+ * Adds a payment to the supplied fee records
+ * @param {import('express').Request<{ reportId: string }>} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 export const postPayment = async (req: PostPaymentRequest, res: Response) => {
   try {
     const { reportId } = req.params;

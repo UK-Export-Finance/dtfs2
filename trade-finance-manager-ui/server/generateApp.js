@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const flash = require('connect-flash');
 const { HttpStatusCode } = require('axios');
-const { maintenance, SWAGGER } = require('@ukef/dtfs2-common');
+const { isHttps, configure, maintenance, SWAGGER } = require('@ukef/dtfs2-common');
 const routes = require('./routes');
 const swaggerRouter = require('./routes/swagger.route');
 const { unauthenticatedLoginRoutes } = require('./routes/login');
@@ -22,12 +22,11 @@ const { sanitizeXss } = require('./middleware/xss-sanitizer');
 const createRateLimit = require('./middleware/rateLimit/index');
 
 const generateApp = () => {
+  const https = isHttps();
   const app = express();
-  const https = Boolean(process.env.HTTPS || 0);
 
-  if (https) {
-    app.set('trust proxy', 1);
-  }
+  // Global application configuration
+  configure(app);
 
   const sessionConfiguration = sessionOptions();
   const cookie = {

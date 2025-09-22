@@ -124,6 +124,11 @@ const getAmendmentById = async (req, res) => {
   return res.status(422).send({ data: 'Unable to get the amendment by Id' });
 };
 
+/**
+ * Get amendment by facility ID, amendment ID, type or status
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 const getAmendmentByFacilityId = async (req, res) => {
   const { facilityId, amendmentIdOrStatus, type } = req.params;
   let amendment;
@@ -183,6 +188,11 @@ const getAmendmentsByDealId = async (req, res) => {
   return res.status(422).send({ data: 'Unable to get the amendments by deal Id' });
 };
 
+/**
+ * Get all amendments by status
+ * @param {import('express').Request<{ status: string }>} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 const getAllAmendments = async (req, res) => {
   const { status } = req.params;
   let amendment;
@@ -195,6 +205,11 @@ const getAllAmendments = async (req, res) => {
   return res.status(422).send({ data: 'Unable to fetch amendments' });
 };
 
+/**
+ * Creates new amendment object and changes status
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 const createFacilityAmendment = async (req, res) => {
   const { facilityId } = req.body;
   const { amendmentId } = await api.createFacilityAmendment(facilityId, generateTfmAuditDetails(req.user._id));

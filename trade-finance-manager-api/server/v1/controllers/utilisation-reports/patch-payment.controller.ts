@@ -12,6 +12,11 @@ export type PatchPaymentRequest = CustomExpressRequest<{
   };
 }>;
 
+/**
+ * Updates the payment with the supplied edit payment form values
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 export const patchPayment = async (req: PatchPaymentRequest, res: Response) => {
   const { reportId, paymentId } = req.params;
   const { paymentAmount, datePaymentReceived, paymentReference, user } = req.body;

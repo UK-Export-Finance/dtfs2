@@ -10,6 +10,11 @@ type PutKeyingDataMarkAsDoneRequest = CustomExpressRequest<{
   };
 }>;
 
+/**
+ * Updates mark keying data as done
+ * @param {import('express').Request<{ reportId: string }>} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 export const putKeyingDataMarkAsDone = async (req: PutKeyingDataMarkAsDoneRequest, res: Response) => {
   const { reportId } = req.params;
   const { feeRecordIds, user } = req.body;
