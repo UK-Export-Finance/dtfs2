@@ -12,6 +12,11 @@ type GetPaymentDetailsByIdRequest = CustomExpressRequest<{
 
 type GetPaymentDetailsByIdResponse = Response<PaymentDetailsResponseBody | string>;
 
+/**
+ * Fetches the payment details with the attached fee records
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 export const getPaymentDetailsById = async (req: GetPaymentDetailsByIdRequest, res: GetPaymentDetailsByIdResponse) => {
   const { reportId, paymentId } = req.params;
   const { includeFeeRecords } = req.query;

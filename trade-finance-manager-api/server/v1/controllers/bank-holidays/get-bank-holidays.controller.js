@@ -1,5 +1,12 @@
 const api = require('../../api');
 
+/**
+ * Get UK bank holidays from the external API.
+ *
+ * @param req - The request object containing the parameters, body, and user information.
+ * @param res - The response object.
+ * @returns Bank holidays in the response body.
+ */
 const getBankHolidays = async (req, res) => {
   try {
     const bankHolidays = await api.getBankHolidays();

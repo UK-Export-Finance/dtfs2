@@ -61,6 +61,11 @@ module.exports.createTfmUser = (req, res, next) => {
   });
 };
 
+/**
+ * Get tfm user
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 module.exports.findTfmUser = (req, res, next) => {
   if (ObjectId.isValid(req.params.user)) {
     findOne(req.params.user, (error, user) => {
