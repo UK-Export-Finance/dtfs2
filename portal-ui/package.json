@@ -35,7 +35,6 @@
   "dependencies": {
     "@ministryofjustice/frontend": "3.0.2",
     "@types/connect-flash": "^0.0.39",
-    "@types/connect-redis": "^0.0.22",
     "@types/cookie-parser": "^1.4.9",
     "@types/csurf": "^1.11.5",
     "@types/express-session": "^1.18.2",
@@ -46,7 +45,6 @@
     "cheerio": "1.0.0-rc.12",
     "clamscan": "^2.4.0",
     "connect-flash": "0.1.1",
-    "connect-redis": "5.2.0",
     "cookie-parser": "^1.4.7",
     "core-js": "^3.45.1",
     "csurf": "^1.11.0",
@@ -73,7 +71,6 @@
     "nodemon": "^3.1.10",
     "nunjucks": "3.2.4",
     "path": "0.12.7",
-    "redis": "^3.1.2",
     "supertest": "^6.3.4",
     "ts-jest": "^29.4.4",
     "ts-loader": "^9.5.4",
