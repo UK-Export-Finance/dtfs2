@@ -8,7 +8,7 @@ import csrf from 'csurf';
 import flash from 'connect-flash';
 import connectRedis from 'connect-redis';
 import { isHttpError } from 'http-errors';
-import { InvalidEnvironmentVariableError, maintenance, SWAGGER } from '@ukef/dtfs2-common';
+import { InvalidEnvironmentVariableError, isHttps, configure, maintenance, SWAGGER } from '@ukef/dtfs2-common';
 import routes from './routes';
 import swaggerRouter from './routes/swagger.route';
 import healthcheck from './healthcheck';
@@ -22,13 +22,13 @@ const REDIS_DEFAULT_PORT = '6379';
 const RedisStore = connectRedis(session);
 
 export const generateApp = () => {
+  const https = isHttps();
   const app = express();
-  const https = Boolean(process.env.HTTPS || 0);
-  const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
 
-  if (https) {
-    app.set('trust proxy', 1);
-  }
+  // Global application configuration
+  configure(app);
+
+  const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
 
   const cookie: session.CookieOptions & csrf.CookieOptions = {
     path: '/',

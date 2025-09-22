@@ -9,7 +9,7 @@ const RedisStore = require('connect-redis')(session);
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
-const { SWAGGER, maintenance } = require('@ukef/dtfs2-common');
+const { isHttps, configure, SWAGGER, maintenance } = require('@ukef/dtfs2-common');
 const routes = require('./routes');
 const swaggerRouter = require('./routes/swagger.route');
 const supportingInformationUploadRoutes = require('./routes/supporting-information-upload');
@@ -20,13 +20,13 @@ const { csrfToken, copyCsrfTokenFromQueryToBody, security, seo, createRateLimit 
 dotenv.config();
 
 const generateApp = () => {
+  const https = isHttps();
   const app = express();
-  const https = Boolean(process.env.HTTPS || 0);
-  const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
 
-  if (https) {
-    app.set('trust proxy', 1);
-  }
+  // Global application configuration
+  configure(app);
+
+  const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
 
   const cookie = {
     path: '/',
@@ -85,7 +85,6 @@ const generateApp = () => {
 
   sessionOptions.store = sessionStore;
 
-  app.set('trustproxy', true);
   app.use(session(sessionOptions));
   app.use(cookieParser());
   app.use(express.json());
