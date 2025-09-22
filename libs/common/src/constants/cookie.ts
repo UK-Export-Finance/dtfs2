@@ -16,6 +16,7 @@ export const COOKIE = {
   },
   HTTP_ONLY: true,
   SAME_SITE: COOKIE_SAME_SITE,
+  PREFIX: '__Host',
   PATH: '/',
   MAX_AGE: 604800000, // 7 days
 };
