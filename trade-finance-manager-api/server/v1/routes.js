@@ -663,7 +663,7 @@ authRouter
  *         description: Failed to mark keying data as done
  */
 authRouter
-  .route('/utilisation-reports/:reportId/keying-data/mark-as-to-do')
+  .route('/utilisation-reports/:reportId/keying-data/mark-as-done')
   .put(validation.sqlIdValidation('reportId'), handleExpressValidatorResult, utilisationReportsController.putKeyingDataMarkAsDone);
 
 /**
