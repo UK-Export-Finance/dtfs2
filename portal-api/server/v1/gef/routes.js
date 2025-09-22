@@ -46,19 +46,18 @@ const router = express.Router();
  * /application:
  *  get:
  *    summary: Get all applications
- *    tags: [Applications]
+ *    tags: [Portal - GEF]
  *    responses:
  *      200:
  *        description: List of applications
- * post:
+ *  post:
  *    summary: Create a new application
- *    tags: [Applications]
- *    parameters:
- *      - in: body
- *        name: body
- *        description: The application to create.
- *        schema:
- *          type: object
+ *    tags: [Portal - GEF]
+ *    requestBody:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
  *    responses:
  *      201:
  *        description: Application created successfully
@@ -79,22 +78,21 @@ router
  * /application/clone:
  *  post:
  *    summary: Clone an existing application
- *    tags: [Applications]
- *    parameters:
- *      - in: body
- *        name: body
- *        description: The application to clone.
- *        schema:
- *          type: object
+ *    tags: [Portal - GEF]
+ *    requestBody:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
  *    responses:
  *      201:
  *        description: Application cloned successfully
  *      400:
- *       description: Invalid Id
+ *        description: Invalid Id
  *      404:
- *       description: Application to clone not found
+ *        description: Application to clone not found
  *      500:
- *       description: Internal Server Error
+ *        description: Internal Server Error
  */
 router.route('/application/clone').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [MAKER] }), cloneApplication.clone);
 
@@ -103,7 +101,7 @@ router.route('/application/clone').post(validateUserHasAtLeastOneAllowedRole({ a
  * /application/:id:
  *  get:
  *    summary: Get application by ID
- *    tags: [Applications]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: path
  *        name: id
@@ -120,7 +118,7 @@ router.route('/application/clone').post(validateUserHasAtLeastOneAllowedRole({ a
  *        description: No Content
  *  put:
  *    summary: Update application by ID
- *    tags: [Applications]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: path
  *        name: id
@@ -128,11 +126,11 @@ router.route('/application/clone').post(validateUserHasAtLeastOneAllowedRole({ a
  *        description: The ID of the application to update
  *        schema:
  *          type: string
- *      - in: body
- *        name: body
- *        description: The application data to update.
- *        schema:
- *          type: object
+ *    requestBody:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
  *    responses:
  *      200:
  *        description: Application updated successfully
@@ -144,9 +142,9 @@ router.route('/application/clone').post(validateUserHasAtLeastOneAllowedRole({ a
  *        description: Validation Errors
  *      500:
  *        description: Internal Server Error
- * delete:
+ *  delete:
  *    summary: Delete application by ID
- *    tags: [Applications]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: path
  *        name: id
@@ -175,7 +173,7 @@ router
  * /application/supporting-information/:id:
  *  put:
  *    summary: Update supporting information for an application
- *    tags: [Applications]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: path
  *        name: id
@@ -183,11 +181,11 @@ router
  *        description: The ID of the application to update supporting information for
  *        schema:
  *          type: string
- *      - in: body
- *        name: body
- *        description: The supporting information data to update.
- *        schema:
- *          type: object
+ *    requestBody:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
  *    responses:
  *      200:
  *        description: Supporting information updated successfully
@@ -207,7 +205,7 @@ router
  * /application/status/:id:
  *  get:
  *    summary: Get application status by ID
- *    tags: [Applications]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: path
  *        name: id
@@ -222,9 +220,9 @@ router
  *        description: No Content
  *      400:
  *        description: Invalid Id
- * put:
+ *  put:
  *    summary: Change application status by ID
- *    tags: [Applications]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: path
  *        name: id
@@ -232,22 +230,22 @@ router
  *        description: The ID of the application to change the status for
  *        schema:
  *          type: string
- *      - in: body
- *        name: status
- *        description: The new status for the application.
- *        schema:
- *          type: string
- *      responses:
- *        200:
- *          description: Application status changed successfully
- *        400:
- *          description: Invalid Id
- *        404:
- *          description: Application to change status not found
- *        422:
- *          description: Validation Errors
- *        500:
- *          description: Internal Server Error
+ *    requestBody:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *    responses:
+ *      200:
+ *        description: Application status changed successfully
+ *      400:
+ *        description: Invalid Id
+ *      404:
+ *        description: Application to change status not found
+ *      422:
+ *        description: Validation Errors
+ *      500:
+ *        description: Internal Server Error
  */
 router
   .route('/application/status/:id')
@@ -260,7 +258,7 @@ router
  * /facilities:
  *  get:
  *    summary: Get all facilities for a deal
- *    tags: [Facilities]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: query
  *        name: dealId
@@ -279,13 +277,12 @@ router
  *        description: Internal Server Error
  *  post:
  *    summary: Create a new facility
- *    tags: [Facilities]
- *    parameters:
- *      - in: body
- *        name: facility
- *        description: The facility to create.
- *        schema:
- *          type: object
+ *    tags: [Portal - GEF]
+ *    requestBody:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
  *    responses:
  *      201:
  *        description: Facility created successfully
@@ -295,7 +292,7 @@ router
  *        description: Internal Server Error
  *  delete:
  *    summary: Delete all facilities for a deal
- *    tags: [Facilities]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: query
  *        name: dealId
@@ -303,13 +300,13 @@ router
  *        description: The ID of the deal to delete facilities for
  *        schema:
  *          type: string
- *   responses:
- *     200:
- *       description: Facilities deleted successfully
- *     400:
- *       description: Invalid Id
- *     500:
- *       description: Internal Server Error
+ *    responses:
+ *      200:
+ *        description: Facilities deleted successfully
+ *      400:
+ *        description: Invalid Id
+ *      500:
+ *        description: Internal Server Error
  */
 router
   .route('/facilities')
@@ -322,16 +319,16 @@ router
  * /facilities/amendments:
  *  get:
  *    summary: Get all facility amendments
- *    tags: [Facility Amendments]
- *   responses:
- *     200:
- *       description: List of facility amendments
- *     400:
- *       description: Invalid request
- *     404:
- *       description: No facility amendments found
- *     500:
- *       description: Internal Server Error
+ *    tags: [Portal - Amendments]
+ *    responses:
+ *      200:
+ *        description: List of facility amendments
+ *      400:
+ *        description: Invalid request
+ *      404:
+ *        description: No facility amendments found
+ *      500:
+ *        description: Internal Server Error
  */
 router
   .route('/facilities/amendments')
@@ -343,7 +340,7 @@ router
  * /facilities/:id:
  *  get:
  *    summary: Get facility by ID
- *    tags: [Facilities]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: path
  *        name: id
@@ -364,7 +361,7 @@ router
  *        description: Internal Server Error
  *  put:
  *    summary: Update facility by ID
- *    tags: [Facilities]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: path
  *        name: id
@@ -372,28 +369,27 @@ router
  *        description: The ID of the facility to update
  *        schema:
  *          type: string
- *      - in: body
- *        name: body
- *        required: true
- *        description: The facility data to update
- *        schema:
- *          type: object
- *      responses:
- *        200:
- *          description: Facility updated successfully
- *        204:
- *          description: No Content
- *        400:
- *          description: Invalid Id
- *        404:
- *          description: Facility to update not found
- *        422:
- *          description: Validation Errors
- *        500:
- *          description: Internal Server Error
+ *    requestBody:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *    responses:
+ *      200:
+ *        description: Facility updated successfully
+ *      204:
+ *        description: No Content
+ *      400:
+ *        description: Invalid Id
+ *      404:
+ *        description: Facility to update not found
+ *      422:
+ *        description: Validation Errors
+ *      500:
+ *        description: Internal Server Error
  *  delete:
  *    summary: Delete facility by ID
- *    tags: [Facilities]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: path
  *        name: id
@@ -423,19 +419,18 @@ router
  * /eligibility-criteria:
  *  get:
  *    summary: Get all eligibility criteria
- *    tags: [Eligibility Criteria]
+ *    tags: [Portal - GEF]
  *    responses:
  *      200:
  *        description: List of eligibility criteria
  *  post:
  *    summary: Create a new eligibility criteria
  *    tags: [Eligibility Criteria]
- *    parameters:
- *      - in: body
- *        name: body
- *        description: The eligibility criteria to create.
- *        schema:
- *          type: object
+ *    requestBody:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
  *    responses:
  *      201:
  *        description: Eligibility criteria created successfully
@@ -454,7 +449,7 @@ router
  * /eligibility-criteria/latest:
  *  get:
  *    summary: Get the latest eligibility criteria
- *    tags: [Eligibility Criteria]
+ *    tags: [Portal - GEF]
  *    responses:
  *      200:
  *        description: The latest eligibility criteria document.
@@ -468,7 +463,7 @@ router
  * /eligibility-criteria/:version:
  *  get:
  *    summary: Get eligibility criteria by version
- *    tags: [Eligibility Criteria]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: path
  *        name: version
@@ -484,8 +479,8 @@ router
  *      404:
  *        description: Eligibility criteria for the specified version not found
  *  delete:
- *   summary: Delete eligibility criteria by version
- *    tags: [Eligibility Criteria]
+ *    summary: Delete eligibility criteria by version
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: path
  *        name: version
@@ -498,10 +493,10 @@ router
  *        description: Eligibility criteria deleted successfully
  *      400:
  *        description: Invalid version
- *    404:
- *      description: Eligibility criteria for the specified version not found
- *    500:
- *      description: Internal Server Error
+ *      404:
+ *        description: Eligibility criteria for the specified version not found
+ *      500:
+ *        description: Internal Server Error
  */
 router
   .route('/eligibility-criteria/:version')
@@ -514,7 +509,7 @@ router
  * /mandatory-criteria-versioned:
  *  get:
  *    summary: Get all mandatory criteria versioned
- *    tags: [Mandatory Criteria Versioned]
+ *    tags: [Portal - GEF]
  *    responses:
  *      200:
  *        description: List of mandatory criteria versioned
@@ -528,7 +523,7 @@ router
  * /mandatory-criteria-versioned/latest:
  *  get:
  *    summary: Get the latest mandatory criteria versioned
- *    tags: [Mandatory Criteria Versioned]
+ *    tags: [Portal - GEF]
  *    responses:
  *      200:
  *        description: The latest mandatory criteria versioned document.
@@ -548,7 +543,7 @@ router
  * /mandatory-criteria-versioned/:id:
  *  get:
  *    summary: Get mandatory criteria versioned by ID
- *    tags: [Mandatory Criteria Versioned]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: path
  *        name: id
@@ -563,7 +558,7 @@ router
  *        description: Mandatory criteria versioned not found
  *  delete:
  *    summary: Delete mandatory criteria versioned by ID
- *    tags: [Mandatory Criteria Versioned]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: path
  *        name: id
@@ -592,17 +587,16 @@ router
  * /files:
  *  post:
  *    summary: Upload a file
- *    tags: [Files]
- *    parameters:
- *      - in: body
- *        name: file
- *        description: The file to upload.
- *        schema:
- *          type: object
- *          properties:
- *            file:
- *              type: string
- *              format: binary
+ *    tags: [Portal - GEF]
+ *    requestBody:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                file:
+ *                  type: string
+ *                  format: binary
  *    responses:
  *      201:
  *        description: File uploaded successfully
@@ -628,7 +622,7 @@ router.route('/files').post(
  * /files/:id:
  *  get:
  *    summary: Get file by ID
- *    tags: [Files]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: path
  *        name: id
@@ -639,11 +633,11 @@ router.route('/files').post(
  *    responses:
  *      200:
  *        description: File retrieved successfully
- *     404:
+ *      404:
  *        description: File not found
- * delete:
+ *  delete:
  *    summary: Delete file by ID
- *    tags: [Files]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: path
  *        name: id
@@ -673,15 +667,15 @@ router
  * /files/:id/download:
  *  get:
  *    summary: Download file by ID
- *    tags: [Files]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: path
  *        name: id
  *        required: true
  *        description: The ID of the file to download
- *       schema:
- *         type: string
- *   responses:
+ *        schema:
+ *          type: string
+ *    responses:
  *      200:
  *        description: File downloaded successfully
  *      400:
@@ -698,7 +692,7 @@ router.route('/files/:id/download').get(validateUserHasAtLeastOneAllowedRole({ a
  * /companies/:registrationNumber:
  *  get:
  *    summary: Get company by registration number
- *    tags: [Companies]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: path
  *        name: registrationNumber
@@ -721,7 +715,7 @@ router.route('/companies/:registrationNumber').get(validateUserHasAtLeastOneAllo
  * /address/:postcode:
  *  get:
  *    summary: Get addresses by postcode
- *    tags: [Geospatial Addresses]
+ *    tags: [Portal - GEF]
  *    parameters:
  *      - in: path
  *        name: postcode
@@ -750,7 +744,7 @@ router
  * /facilities/:facilityId/amendments/latest-value-and-cover-end-date:
  *  get:
  *    summary: Get the latest amendment's facility value and cover end date for a specific facility
- *    tags: [Facility Amendments]
+ *    tags: [Portal - Amendments]
  *    parameters:
  *      - in: path
  *        name: facilityId
@@ -782,7 +776,7 @@ router
  * /facilities/:facilityId/amendments/:amendmentId:
  *  get:
  *    summary: Get a specific amendment by ID for a specific facility
- *    tags: [Facility Amendments]
+ *    tags: [Portal - Amendments]
  *    parameters:
  *      - in: path
  *        name: facilityId
@@ -805,7 +799,7 @@ router
  *        description: Facility or amendment not found
  *  patch:
  *    summary: Update a specific amendment by ID for a specific facility
- *    tags: [Facility Amendments]
+ *    tags: [Portal - Amendments]
  *    parameters:
  *      - in: path
  *        name: facilityId
@@ -819,11 +813,11 @@ router
  *        description: The ID of the amendment to update
  *        schema:
  *          type: string
- *      - in: body
- *        name: body
- *        description: The amendment data to update.
- *        schema:
- *          type: object
+ *    requestBody:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
  *    responses:
  *      200:
  *        description: Amendment updated successfully
@@ -837,7 +831,7 @@ router
  *        description: Internal Server Error
  *  delete:
  *    summary: Delete a specific amendment by ID for a specific facility
- *    tags: [Facility Amendments]
+ *    tags: [Portal - Amendments]
  *    parameters:
  *      - in: path
  *        name: facilityId
@@ -871,9 +865,9 @@ router
 /**
  * @openapi
  * /facilities/:facilityId/amendments/:amendmentId/status:
- * patch:
+ *  patch:
  *    summary: Update the status of a specific amendment by ID for a specific facility
- *    tags: [Facility Amendments]
+ *    tags: [Portal - Amendments]
  *    parameters:
  *      - in: path
  *        name: facilityId
@@ -887,11 +881,11 @@ router
  *        description: The ID of the amendment to update the status for
  *        schema:
  *          type: string
- *      - in: body
- *        name: body
- *        description: The status update data and email variables
- *        schema:
- *          type: object
+ *    requestBody:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
  *    responses:
  *      200:
  *        description: Amendment status updated successfully
@@ -919,7 +913,7 @@ router
  * /facilities/:facilityId/amendments/:amendmentId/submit-amendment:
  *  patch:
  *    summary: Submit a specific amendment by ID for a specific facility
- *    tags: [Facility Amendments]
+ *    tags: [Portal - Amendments]
  *    parameters:
  *      - in: path
  *        name: facilityId
@@ -933,11 +927,11 @@ router
  *        description: The ID of the amendment to submit
  *        schema:
  *          type: string
- *      - in: body
- *        name: body
- *        description: The submission data and update variables
- *        schema:
- *          type: object
+ *    requestBody:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
  *    responses:
  *      200:
  *        description: Amendment submitted successfully
@@ -965,7 +959,7 @@ router
  * /facilities/:facilityId/amendments:
  *  put:
  *    summary: Upserts draft amendment into the database
- *    tags: [Facility Amendments]
+ *    tags: [Portal - Amendments]
  *    parameters:
  *      - in: path
  *        name: facilityId
@@ -973,20 +967,20 @@ router
  *        description: The ID of the facility to upsert the amendment for
  *        schema:
  *          type: string
- *      - in: body
- *        name: body
- *        description: The amendment data
- *        schema:
- *          type: object
- *   responses:
- *     200:
- *       description: Amendment created successfully
- *     400:
- *       description: Invalid Facility Id
- *     404:
- *       description: Facility not found
- *     500:
- *       description: Internal Server Error
+ *    requestBody:
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *    responses:
+ *      200:
+ *        description: Amendment created successfully
+ *      400:
+ *        description: Invalid Facility Id
+ *      404:
+ *        description: Facility not found
+ *      500:
+ *        description: Internal Server Error
  */
 router
   .route('/facilities/:facilityId/amendments')
@@ -1004,7 +998,7 @@ router
  * /deals/:dealId/all-types-amendments:
  *  get:
  *    summary: Get all amendments for a deal
- *    tags: [Facility Amendments]
+ *    tags: [Portal - Amendments]
  *    parameters:
  *      - in: path
  *        name: dealId
@@ -1027,7 +1021,7 @@ router.route('/deals/:dealId/all-types-amendments').all(mongoIdValidation('dealI
  * /deals/:dealId/amendments:
  *  get:
  *    summary: Get all portal amendments for a deal
- *    tags: [Facility Amendments]
+ *    tags: [Portal - Amendments]
  *    parameters:
  *      - in: path
  *        name: dealId
