@@ -15,6 +15,11 @@ export type GetSelectedFeeRecordsDetailsRequest = CustomExpressRequest<{
   };
 }>;
 
+/**
+ * Fetches selected fee records details
+ * @param {import('express').Request<{ id: string }>} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 export const getSelectedFeeRecordsDetails = async (req: GetSelectedFeeRecordsDetailsRequest, res: Response) => {
   try {
     const { id } = req.params;

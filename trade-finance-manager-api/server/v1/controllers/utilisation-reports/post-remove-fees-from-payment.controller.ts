@@ -18,6 +18,11 @@ export type PostRemoveFeesFromPaymentRequest = CustomExpressRequest<{
   params: PostRemoveFeesFromPaymentRequestParams;
 }>;
 
+/**
+ * Removes the supplied fee records from a supplied payment
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
+ */
 export const postRemoveFeesFromPayment = async (req: PostRemoveFeesFromPaymentRequest, res: Response) => {
   try {
     const { reportId, paymentId } = req.params;

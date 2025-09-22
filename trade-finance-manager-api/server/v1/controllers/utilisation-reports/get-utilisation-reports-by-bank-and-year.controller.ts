@@ -4,6 +4,8 @@ import api from '../../api';
 
 /**
  * Fetches a list of utilisation reports reconciliation progress for specified year and bank.
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
  */
 export const getUtilisationReportSummariesByBankAndYear = async (req: Request<{ bankId: string; year: string }>, res: Response) => {
   const { bankId, year } = req.params;
