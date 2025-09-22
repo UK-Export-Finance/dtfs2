@@ -1,10 +1,10 @@
 const crypto = require('crypto');
 const session = require('express-session');
 const redis = require('redis');
-
 const RedisStore = require('connect-redis')(session);
+const { isHttps } = require('@ukef/dtfs2-common');
 
-const https = Boolean(process.env.HTTPS || 0);
+const https = isHttps();
 const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
 
 const sessionConfig = () => {

@@ -50,5 +50,6 @@ export * from './maintenance';
 export * from './banks';
 export * from './services';
 export * from './swagger';
+export * from './cookie';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';
