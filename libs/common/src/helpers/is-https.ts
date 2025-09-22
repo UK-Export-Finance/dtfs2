@@ -9,7 +9,7 @@ dotenv.config();
  * Checks the `HTTPS` environment variable and returns `true` if it is set,
  * otherwise returns `false`.
  *
- * @returns {boolean} `true` if HTTPS is enabled, `false` otherwise.
+ * @returns `true` if HTTPS is enabled, `false` otherwise.
  */
 export const isHttps = (): boolean => {
   const { HTTPS } = process.env;
