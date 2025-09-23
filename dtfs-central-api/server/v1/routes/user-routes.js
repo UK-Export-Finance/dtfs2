@@ -61,6 +61,34 @@ userRouter.route('/').post(createUserController.createUserPost);
  */
 userRouter.route('/:id').get(getUserController.findOneUserGet);
 
+/**
+ * @openapi
+ * /user:
+ *   get:
+ *     summary: Get all users
+ *     tags: [User]
+ *     description: Get all users
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 allOf:
+ *                   - $ref: '#/definitions/User'
+ *                   - type: object
+ *                     properties:
+ *                      _id:
+ *                        example: 123456abc
+ *                 count:
+ *                   type: integer
+ *                   example: 2
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ */
 userRouter.route('/').get(getUserController.list);
 
 module.exports = userRouter;
