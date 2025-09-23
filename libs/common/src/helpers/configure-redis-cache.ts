@@ -3,7 +3,6 @@ import redis from 'redis';
 import connectRedis from 'connect-redis';
 import session from 'express-session';
 import { REDIS } from '../constants';
-import { InvalidEnvironmentVariableError } from '../errors';
 
 dotenv.config();
 
@@ -24,17 +23,10 @@ dotenv.config();
 export const redisStore = (): connectRedis.RedisStore => {
   const { REDIS_PORT, REDIS_HOSTNAME, REDIS_KEY } = process.env;
 
-  let options;
+  let options = {};
   const port = parseInt(REDIS_PORT || REDIS.PORT, 10);
 
-  if (!REDIS_HOSTNAME) {
-    console.error('Invalid environment variable `REDIS_HOSTNAME` value supplied %s', REDIS_HOSTNAME);
-    throw new InvalidEnvironmentVariableError('Invalid environment variable `REDIS_HOSTNAME`');
-  }
-
-  const Store: connectRedis.RedisStore = connectRedis(session);
-
-  if (REDIS_KEY) {
+  if (REDIS_KEY && REDIS_HOSTNAME) {
     options = {
       auth_pass: REDIS_KEY,
       tls: { servername: REDIS_HOSTNAME },
@@ -42,7 +34,6 @@ export const redisStore = (): connectRedis.RedisStore => {
   }
 
   const client = redis.createClient(port, REDIS_HOSTNAME, options);
-  const sessionStore = new Store({ client });
 
   client.on('error', (error) => {
     console.error('❌ Unable to initiate redis://%s %o', REDIS_HOSTNAME, error);
@@ -51,6 +42,9 @@ export const redisStore = (): connectRedis.RedisStore => {
   client.on('connect', () => {
     console.info('✅ Redis has been initialised at redis://%s', REDIS_HOSTNAME);
   });
+
+  const Store: connectRedis.RedisStore = connectRedis(session);
+  const sessionStore = new Store({ client });
 
   return sessionStore;
 };

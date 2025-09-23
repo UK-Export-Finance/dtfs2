@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import csrf from 'csurf';
 import flash from 'connect-flash';
 import { isHttpError } from 'http-errors';
-import { isHttps, configure, maintenance, expressSession, SWAGGER } from '@ukef/dtfs2-common';
+import { isHttps, configure, expressSession, maintenance, SWAGGER } from '@ukef/dtfs2-common';
 import routes from './routes';
 import swaggerRouter from './routes/swagger.route';
 import healthcheck from './healthcheck';
@@ -37,7 +37,8 @@ export const generateApp = () => {
   app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter);
 
   app.use(security);
-  app.use(expressSession);
+  app.use(expressSession());
+
   app.use(flash());
 
   configureNunjucks({
