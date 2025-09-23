@@ -1,4 +1,5 @@
-const { decimalsCount, roundNumber } = require('@ukef/dtfs2-common');
+const { roundNumber } = require('@ukef/dtfs2-common');
+const { decimalsCount } = require('@ukef/dtfs2-common/frontend');
 const { getNowAsEpochMillisecondString } = require('../../utils/date');
 
 const calculateUkefExposure = (facilityValueInGBP, coverPercentage) => {
