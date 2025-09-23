@@ -105,7 +105,7 @@ export const postFeeRecordCorrection = async (req: PostFeeRecordCorrectionReques
     return res.status(HttpStatusCode.Ok).send(recipientEmailAddresses);
   } catch (error) {
     const errorMessage = 'Failed to create record correction';
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }

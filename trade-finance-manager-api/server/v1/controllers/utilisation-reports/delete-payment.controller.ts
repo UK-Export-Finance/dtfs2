@@ -23,7 +23,7 @@ export const deletePayment = async (req: DeletePaymentRequest, res: Response) =>
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {
     const errorMessage = 'Failed to delete payment';
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     const statusCode = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
     return res.status(statusCode).send(errorMessage);
   }
