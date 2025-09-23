@@ -6,9 +6,6 @@ jest.mock('dotenv', () => ({ config: jest.fn() }));
 jest.mock('connect-redis');
 jest.mock('express-session', () => jest.fn());
 
-console.info = jest.fn();
-console.error = jest.fn();
-
 describe('redisStore', () => {
   const onMock: jest.Mock = jest.fn();
   const createClientMock: jest.Mock = jest.fn().mockReturnValue({

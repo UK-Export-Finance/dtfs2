@@ -41,6 +41,7 @@ export const expressSession = (): RequestHandler => {
     maxAge: COOKIE.MAX_AGE,
   };
 
+  // Express session configuration
   const options: session.SessionOptions = {
     name,
     cookie,
