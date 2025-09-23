@@ -35,7 +35,7 @@ export const redisStore = (): connectRedis.RedisStore => {
 
   const client = redis.createClient(port, REDIS_HOSTNAME, options);
 
-  client.on('error', (error) => {
+  client.on('error', (error: unknown) => {
     console.error('❌ Unable to initiate redis://%s %o', REDIS_HOSTNAME, error);
   });
 
