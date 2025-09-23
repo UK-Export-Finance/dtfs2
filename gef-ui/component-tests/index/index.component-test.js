@@ -40,13 +40,13 @@ describe(page, () => {
   it('should have the correct integrity for "/assets/js/main.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/main.js"]')
-      .toHaveAttribute('integrity', 'sha512-XP3XIBhSllKsbn+fbIKTR+4qhsqtT31XFLd2RijeherTEnzYtMqsab6R0WkWyRRm49rKl81LdeKA8CqfVRGeCQ==');
+      .toHaveAttribute('integrity', 'sha512-Iwm3XauAflNW4AYmD2uqGEYHnqy4Id+3wd4ntbWyiPZtqlB5o2qzkrslmiGHWa+bJ06vum4zZCXYJsJa01htPw==');
   });
 
   it('should have the correct integrity for "/assets/js/govukFrontend.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/govukFrontend.js"]')
-      .toHaveAttribute('integrity', 'sha512-2hKXaTLCc68oh6/HO5vFnfpiV/R6PGeTyYO/LO0LPWWL8X4TYCye4B1+myeskdcntXTmsuNuUmGbO3lbZ7OFIg==');
+      .toHaveAttribute('integrity', 'sha512-UofnlhHMJq/Q8tca7eodg92jL0vUDmvTxZhGf1Rha/EetEqd7OZXlo1yunqGKj56LNxGifTt+/CMZWcyoSQcKQ==');
   });
 
   it('should have the correct integrity for "/assets/js/mojFrontend.js"', () => {
