@@ -57,7 +57,8 @@ const getReportDownload = async (req, res) => {
     return readStream.pipe(res);
   } catch (error) {
     const errorMessage = `Failed to get utilisation report for download with id '${id}'`;
-    console.error(errorMessage, error);
+
+    console.error('%s %o', errorMessage, error);
     return res.status(error.response?.status ?? 500).send({ message: errorMessage });
   }
 };

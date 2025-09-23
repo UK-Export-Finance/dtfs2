@@ -32,7 +32,7 @@ export const getSelectedFeeRecordsDetails = async (req: GetSelectedFeeRecordsDet
     res.status(200).send(selectedFeeRecordsDetails);
   } catch (error) {
     const errorMessage = 'Failed to get selected fee records details';
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     const statusCode = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
     res.status(statusCode).send(errorMessage);
   }

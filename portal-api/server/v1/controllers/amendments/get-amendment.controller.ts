@@ -24,7 +24,7 @@ export const getAmendment = async (req: GetAmendmentRequest, res: Response) => {
     return res.status(HttpStatusCode.Ok).send(amendment);
   } catch (error) {
     const errorMessage = 'Failed to get the amendment';
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
 
     if (error instanceof ApiError) {
       return res.status(error.status).send({

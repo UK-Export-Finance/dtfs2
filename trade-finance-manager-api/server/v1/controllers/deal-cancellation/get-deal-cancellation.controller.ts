@@ -23,7 +23,7 @@ export const getDealCancellation = async (req: GetDealCancellationRequest, res: 
     return res.status(HttpStatusCode.Ok).send(dealCancellation);
   } catch (error) {
     const errorMessage = 'Failed to get deal cancellation';
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
 
     if (error instanceof ApiError) {
       return res.status(error.status).send({

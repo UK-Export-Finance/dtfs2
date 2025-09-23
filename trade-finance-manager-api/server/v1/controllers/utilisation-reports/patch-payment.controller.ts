@@ -27,7 +27,7 @@ export const patchPayment = async (req: PatchPaymentRequest, res: Response) => {
   } catch (error) {
     const errorMessage = 'Failed to edit payment';
     const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     return res.status(errorStatus).send(errorMessage);
   }
 };

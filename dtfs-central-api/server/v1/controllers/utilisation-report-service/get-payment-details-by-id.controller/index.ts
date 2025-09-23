@@ -46,7 +46,7 @@ export const getPaymentDetailsById = async (req: GetPaymentDetailsByIdRequest, r
     return res.status(HttpStatusCode.Ok).send(paymentDetails);
   } catch (error) {
     const errorMessage = `Failed to get payment details`;
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     if (error instanceof ApiError) {
       return res.status(error.status).send(`${errorMessage}: ${error.message}`);
     }
