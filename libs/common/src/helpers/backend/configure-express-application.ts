@@ -1,5 +1,5 @@
 import { Express } from 'express';
-import { isHttps } from './is-https';
+import { isHttps } from '../is-https';
 
 /**
  * Configures global settings for an Express application.

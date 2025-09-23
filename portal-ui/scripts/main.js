@@ -1,4 +1,4 @@
-import { decimalsCount } from '@ukef/dtfs2-common/ui-helpers';
+import { decimalsCount } from '@ukef/dtfs2-common/frontend';
 import { changeScreenVisibilityOfElement, showHideElement } from './show-hide-element';
 import { changeIndustryClasses } from './change-industry-classes';
 import { isNumeric, roundNumber } from './number';

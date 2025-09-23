@@ -1,5 +1,5 @@
 import session from 'express-session';
-import { COOKIE } from '../constants';
+import { COOKIE } from '../../constants';
 import { expressSession } from './configure-express-session';
 import { redisStore } from './configure-redis-cache';
 

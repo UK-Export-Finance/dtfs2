@@ -29,7 +29,8 @@
     "./schemas": "./src/schemas/index.ts",
     "./test-cases-backend": "./src/test-helpers/test-cases-backend/index.ts",
     "./mock-data-backend": "./src/test-helpers/mock-data-backend/index.ts",
-    "./ui-helpers": "./src/helpers/ui/index.ts"
+    "./frontend": "./src/helpers/frontend/index.ts",
+    "./backend": "./src/helpers/backend/index.ts"
   },
   "main": "src/index.ts",
   "scripts": {
@@ -53,6 +54,7 @@
     "@azure/msal-node": "^3.7.4",
     "@types/big.js": "^6.2.2",
     "@types/connect-redis": "^0.0.22",
+    "@types/express-session": "^1.18.2",
     "@types/lodash": "^4.17.20",
     "@types/node-cron": "^3.0.11",
     "@types/swagger-jsdoc": "^6.0.4",

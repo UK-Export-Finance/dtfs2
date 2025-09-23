@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import redis from 'redis';
 import connectRedis from 'connect-redis';
 import session from 'express-session';
-import { REDIS } from '../constants';
+import { REDIS } from '../../constants';
 
 dotenv.config();
 
