@@ -1,4 +1,4 @@
-const { decimalsCount } = require('@ukef/dtfs2-common');
+const { decimalsCount } = require('@ukef/dtfs2-common/frontend');
 const { hasValue } = require('../../../utils/string');
 const { isNumeric } = require('../../../utils/number');
 const { orderNumber } = require('../../../utils/error-list-order-number');
