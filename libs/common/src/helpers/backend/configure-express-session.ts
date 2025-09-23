@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import dotenv from 'dotenv';
 import session from 'express-session';
 import { isHttps } from '../is-https';
-// import { redisStore } from './configure-redis-cache';
+import { redisStore } from './configure-redis-cache';
 import { COOKIE } from '../../constants';
 import { InvalidEnvironmentVariableError } from '../../errors';
 
@@ -46,7 +46,7 @@ export const expressSession = (): RequestHandler => {
     name,
     cookie,
     secret: SESSION_SECRET,
-    store: undefined,
+    store: redisStore(),
     resave: false,
     saveUninitialized: true,
   };
