@@ -32,6 +32,14 @@ const updateCoverStartDate = async ({ facilityId, coverStartDate, shouldCoverSta
   return false;
 };
 
+/**
+ * Processes the cover start date for a facility within a deal.
+ * @async
+ * @function processCoverStartDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the application details page or an error page if an exception occurs.
+ */
 const processCoverStartDate = async (req, res) => {
   const { dealId, facilityId } = req.params;
   const { user, userToken } = req.session;

@@ -2,6 +2,15 @@ const { FACILITY_TYPE } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 const api = require('../../services/api');
 
+/**
+ * Renders the facility currency selection page or an error page if the facility cannot be retrieved.
+ *
+ * @async
+ * @function facilityCurrency
+ * @param {Object} req - The Express request object.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<void>} Renders the facility currency view or an error page.
+ */
 const facilityCurrency = async (req, res) => {
   const {
     params,
@@ -30,6 +39,15 @@ const facilityCurrency = async (req, res) => {
   }
 };
 
+/**
+ * Handles the update of a facility's currency and redirects based on user actions.
+ *
+ * @async
+ * @function updateFacilityCurrency
+ * @param {Object} req - The Express request object.
+ * @param {Object} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the appropriate page based on the operation outcome.
+ */
 const updateFacilityCurrency = async (req, res) => {
   const { params, body, query, session } = req;
   const { dealId, facilityId } = params;

@@ -146,7 +146,7 @@ export const postFacilityEndDateFromUnissuedFacilitiesPage = async (req: PostFac
   });
 
 /**
- * Controller for post bank review date from application details page
+ * Controller for post facility end date from application details page
  */
 export const postFacilityEndDateFromApplicationDetailsPage = async (req: PostFacilityEndDateRequest, res: Response) =>
   postFacilityEndDate({
