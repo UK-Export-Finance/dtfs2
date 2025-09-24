@@ -1,4 +1,4 @@
-const { decimalsCount } = require('@ukef/dtfs2-common/ui-helpers');
+const { decimalsCount } = require('@ukef/dtfs2-common/frontend');
 
 const sanitizeCurrency = (originalValue = '') => {
   const sanitizedValue = originalValue.replace(/,(\d{3})/g, '$1');

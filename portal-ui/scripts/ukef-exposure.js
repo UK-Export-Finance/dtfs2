@@ -1,4 +1,4 @@
-import { decimalsCount } from '@ukef/dtfs2-common/ui-helpers';
+import { decimalsCount } from '@ukef/dtfs2-common/frontend';
 import { isNumeric, roundNumber } from './number';
 /*
       calculate UKEF Exposure from Facility Value and Covered Percentage

@@ -1,3 +1,5 @@
+import { COOKIE_SAME_SITE } from '../types';
+
 /**
  * Constants for configuring cookie options.
  *
@@ -8,9 +10,13 @@
  * @property MAX_AGE - Maximum age of the cookie in milliseconds (e.g., 7 days).
  */
 export const COOKIE = {
-  PREFIX: '__Host',
+  NAME: {
+    SECURE: '__Host-dtfs-session',
+    UNSECURE: 'dtfs-session',
+  },
   HTTP_ONLY: true,
-  SAME_SITE: 'strict',
+  SAME_SITE: COOKIE_SAME_SITE,
+  PREFIX: '__Host',
   PATH: '/',
   MAX_AGE: 604800000, // 7 days
 };

@@ -1,4 +1,4 @@
-const { decimalsCount } = require('@ukef/dtfs2-common');
+const { decimalsCount } = require('@ukef/dtfs2-common/frontend');
 const { roundNumber } = require('../../../utils/number');
 
 const calculateUkefExposure = (requestedUpdate, existingFacility) => {
