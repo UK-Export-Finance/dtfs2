@@ -1,7 +1,7 @@
+import { MOCK_DEAL_AIN } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import { header, primaryNavigation, submitButton } from '../../partials';
-import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { BANK1_MAKER1, ADMIN, T1_USER_1 } from '../../../../../e2e-fixtures';
 
 context('User can login', () => {

@@ -1,8 +1,8 @@
 const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { BANK1_MAKER1 } = require('@ukef/dtfs2-common/test-helpers');
 const portalApi = require('./api');
 const api = require('./gef/api');
 const MOCKS = require('./gef');
-const { BANK1_MAKER1 } = require('./portal-users');
 const { mongoDbClient } = require('../drivers/db-client');
 
 const insertMocks = async (token) => {

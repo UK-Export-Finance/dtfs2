@@ -5,18 +5,6 @@ const UKEF_TEST_BANK_1 = MOCK_BANKS.find((bank) => bank.name === 'Bank 1');
 const UKEF_TEST_BANK_2 = MOCK_BANKS.find((bank) => bank.name === 'Bank 2');
 const UKEF_GEF_ONLY_BANK = MOCK_BANKS.find((bank) => bank.name === 'GEF Only Bank');
 
-export const BANK1_MAKER1 = {
-  username: 'maker1@ukexportfinance.gov.uk',
-  password: 'AbC!2345',
-  firstname: 'First',
-  surname: 'Last',
-  email: 'maker1@ukexportfinance.gov.uk',
-  timezone: 'Europe/London',
-  roles: [ROLES.MAKER],
-  bank: UKEF_TEST_BANK_1,
-  isTrusted: true,
-};
-
 export const BANK1_MAKER2 = {
   username: 'maker2@ukexportfinance.gov.uk',
   password: 'AbC!2345',

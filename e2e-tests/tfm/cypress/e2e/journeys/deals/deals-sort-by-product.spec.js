@@ -1,7 +1,6 @@
+import { MOCK_DEAL_AIN, createMockDeal } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
 import pages from '../../pages';
-import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
-import createMockDeal from '../../../fixtures/create-mock-deal';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
 import { FACILITY_TYPE, ALIAS_KEY } from '../../../fixtures/constants';
 import { aliasSelector } from '../../../../../support/alias-selector';

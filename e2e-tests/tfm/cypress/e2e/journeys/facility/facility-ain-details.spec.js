@@ -1,5 +1,5 @@
+import { MOCK_DEAL_AIN } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
-import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { T1_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 
 const { today } = require('../../../../../e2e-fixtures/dateConstants');

@@ -1,8 +1,8 @@
+import { MOCK_DEAL_AIN } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../relativeURL';
 import { errorSummary } from '../../../partials';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
-import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { oneMonth, today, yearWithZeroLetter } from '../../../../../../e2e-fixtures/dateConstants';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../../e2e-fixtures';
 

@@ -1,9 +1,9 @@
 import { ACTIVITY_TYPES } from '@ukef/dtfs2-common';
+import { MOCK_DEAL_AIN } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../relativeURL';
 import { errorSummary } from '../../../partials';
 import activitiesPage from '../../../pages/activities/activitiesPage';
 import activityCommentBoxPage from '../../../pages/activities/activityCommentBoxPage';
-import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import { today } from '../../../../../../e2e-fixtures/dateConstants';
 
