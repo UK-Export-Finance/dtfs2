@@ -54,6 +54,7 @@ router.post(
   },
   uploadSupportingDocument,
 );
+
 router.post(
   '/application-details/:dealId/supporting-information/document/:documentType/delete',
   [validateUploadCsrfToken, validateToken, validateBank, validateRole({ role: [MAKER] })],

@@ -4,6 +4,15 @@ const { updateApplication } = require('../../../services/api');
 
 const MAX_INPUT_LENGTH = 400;
 
+/**
+ * Renders the security details for a specific application.
+ *
+ * @async
+ * @function getSecurityDetails
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>} Renders the security details template or sends an error status.
+ */
 const getSecurityDetails = async (req, res) => {
   const {
     params: { dealId },
@@ -34,6 +43,15 @@ const getSecurityDetails = async (req, res) => {
   }
 };
 
+/**
+ * Handles POST request to update security details for a given application.
+ *
+ * @async
+ * @function postSecurityDetails
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>} Renders a view with errors or redirects on success.
+ */
 const postSecurityDetails = async (req, res) => {
   const {
     body: { exporterSecurity = '', facilitySecurity = '' },

@@ -34,36 +34,23 @@ router.get('/application-details/:dealId/unissued-facilities', [validateToken, v
   applicationDetails(req, res),
 );
 
-// get change unissued facility from facility list
-router.get('/application-details/:dealId/unissued-facilities/:facilityId/about', [validateToken, validateBank, validateRole({ role: [MAKER] })], (req, res) =>
-  changeUnissuedFacility(req, res),
-);
-// post change unissued facility to issued from facility list
-router.post('/application-details/:dealId/unissued-facilities/:facilityId/about', [validateToken, validateBank, validateRole({ role: [MAKER] })], (req, res) =>
-  postChangeUnissuedFacility(req, res),
-);
+router
+  .route('/application-details/:dealId/unissued-facilities/:facilityId/about')
+  .all([validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(changeUnissuedFacility)
+  .post(postChangeUnissuedFacility);
 
-// get change unissued facility from application preview
-router.get('/application-details/:dealId/unissued-facilities/:facilityId/change', [validateToken, validateBank, validateRole({ role: [MAKER] })], (req, res) =>
-  changeUnissuedFacilityPreview(req, res),
-);
-// post change unissued facilities to issued from application preview
-router.post('/application-details/:dealId/unissued-facilities/:facilityId/change', [validateToken, validateBank, validateRole({ role: [MAKER] })], (req, res) =>
-  postChangeUnissuedFacilityPreview(req, res),
-);
+router
+  .route('/application-details/:dealId/unissued-facilities/:facilityId/change')
+  .all([validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(changeUnissuedFacilityPreview)
+  .post(postChangeUnissuedFacilityPreview);
 
-// get change issued facility to unissued from application preview
-router.get(
-  '/application-details/:dealId/unissued-facilities/:facilityId/change-to-unissued',
-  [validateToken, validateBank, validateRole({ role: [MAKER] })],
-  (req, res) => changeIssuedToUnissuedFacility(req, res),
-);
-// post change issued facility to unissued from application preview
-router.post(
-  '/application-details/:dealId/unissued-facilities/:facilityId/change-to-unissued',
-  [validateToken, validateBank, validateRole({ role: [MAKER] })],
-  (req, res) => postChangeIssuedToUnissuedFacility(req, res),
-);
+router
+  .route('/application-details/:dealId/unissued-facilities/:facilityId/change-to-unissued')
+  .all([validateToken, validateBank, validateRole({ role: [MAKER] })])
+  .get(changeIssuedToUnissuedFacility)
+  .post(postChangeIssuedToUnissuedFacility);
 
 router
   .route('/application-details/:dealId/unissued-facilities/:facilityId/facility-end-date')

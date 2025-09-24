@@ -1,6 +1,15 @@
 const stream = require('stream');
 const { downloadFile } = require('../../services/api');
 
+/**
+ * Handles file download requests.
+ *
+ * @async
+ * @function generateDownload
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>} Sends the file stream or an error response.
+ */
 const generateDownload = async (req, res) => {
   const {
     params: { fileId },
