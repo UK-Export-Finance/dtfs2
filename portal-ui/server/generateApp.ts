@@ -2,34 +2,21 @@ import path from 'path';
 import express, { ErrorRequestHandler } from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
-import csrf from 'csurf';
 import flash from 'connect-flash';
-import { isHttpError } from 'http-errors';
-import { isHttps, maintenance, SWAGGER } from '@ukef/dtfs2-common';
+import { create as createCsrf, verify as verifyCsrf, maintenance, SWAGGER } from '@ukef/dtfs2-common';
 import { configure, expressSession } from '@ukef/dtfs2-common/backend';
 import routes from './routes';
 import swaggerRouter from './routes/swagger.route';
 import healthcheck from './healthcheck';
 import configureNunjucks from './nunjucks-configuration';
-import { csrfToken, copyCsrfTokenFromQueryToBody, seo, security, createRateLimit } from './routes/middleware';
+import { seo, security, createRateLimit } from './routes/middleware';
 import { asLoggedInUserSession, withUnknownLoginStatusUserSession } from './helpers/express-session';
 
-const MAX_CSRF_COOKIE_AGE = 43200; // 12 hours
-
 export const generateApp = () => {
-  const https = isHttps();
   const app = express();
 
   // Global application configuration
   configure(app);
-
-  const cookie: csrf.CookieOptions = {
-    path: '/',
-    httpOnly: true,
-    secure: https,
-    sameSite: 'strict',
-    maxAge: 604800000, // 7 days
-  };
 
   app.use(seo);
 
@@ -39,6 +26,10 @@ export const generateApp = () => {
 
   app.use(security);
   app.use(expressSession());
+
+  // CSRF
+  app.use(createCsrf);
+  app.use(verifyCsrf);
 
   app.use(flash());
 
@@ -52,17 +43,6 @@ export const generateApp = () => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
-
-  app.use(copyCsrfTokenFromQueryToBody());
-  app.use(
-    csrf({
-      cookie: {
-        ...cookie,
-        maxAge: MAX_CSRF_COOKIE_AGE,
-      },
-    }),
-  );
-  app.use(csrfToken());
 
   app.use(
     morgan('dev', {
@@ -89,14 +69,7 @@ export const generateApp = () => {
   });
 
   const errorHandler: ErrorRequestHandler = (error: unknown, _req, res, next) => {
-    if (isHttpError(error) && error.code === 'EBADCSRFTOKEN') {
-      console.error("The user's CSRF token is incorrect, redirecting the user to /.");
-      // handle CSRF token errors here
-      res.status(error.statusCode || 500);
-      res.redirect('/');
-    } else {
-      next(error);
-    }
+    next(error);
   };
   app.use(errorHandler);
 
