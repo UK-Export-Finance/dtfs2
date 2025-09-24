@@ -58,10 +58,12 @@ export const verify = (
   }
 
   const serverHash = crypto.createHmac(CSRF.TOKEN.ALGORITHM, secret).update(timestamp).digest('hex');
-  const clientBuffer = Buffer.from(clientHash, 'hex');
-  const serverBuffer = Buffer.from(serverHash, 'hex');
+  const clientBuffer = Buffer.from(clientHash, 'hex') as unknown as Uint8Array;
+  const serverBuffer = Buffer.from(serverHash, 'hex') as unknown as Uint8Array;
 
-  const valid = clientHash.length === serverHash.length && crypto.timingSafeEqual(clientBuffer, serverBuffer);
+  const equalLength = clientHash.length === serverHash.length;
+  const equalBuffer = crypto.timingSafeEqual(clientBuffer, serverBuffer);
+  const valid = equalLength && equalBuffer;
 
   if (!valid) {
     console.error('Invalid CSRF token has been supplied, unauthorised request');

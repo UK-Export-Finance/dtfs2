@@ -97,7 +97,7 @@
     "jest-when": "^3.7.0",
     "node-mocks-http": "^1.17.2",
     "rimraf": "^5.0.10",
-    "sass": "^1.93.1",
+    "sass": "^1.93.2",
     "sass-loader": "13.2.2",
     "style-loader": "3.3.2",
     "terser-webpack-plugin": "^5.3.14",
