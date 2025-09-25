@@ -1,5 +1,5 @@
 import path from 'path';
-import express, { ErrorRequestHandler } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import flash from 'connect-flash';
@@ -66,10 +66,12 @@ export const generateApp = () => {
     return res.render('page-not-found.njk', { user });
   });
 
-  const errorHandler: ErrorRequestHandler = (error: unknown, _req, res, next) => {
+  app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
     next(error);
-  };
-  app.use(errorHandler);
+
+    console.error('❌ An error has occurred for request %s %s', req.url, error);
+    return res.render('_partials/problem-with-service.njk');
+  });
 
   return app;
 };

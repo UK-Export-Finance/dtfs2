@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import { HttpStatusCode } from 'axios';
 import { Request, Response, NextFunction } from 'express';
 import { getEpochMs } from '../../helpers/date';
 import { CSRF } from '../../constants';
@@ -20,8 +19,7 @@ import { CSRF } from '../../constants';
  */
 export const create = (req: Request, res: Response, next: NextFunction): void | Response => {
   if (!req?.session) {
-    console.error('❌ Session has not been initialised for request %s', req.url);
-    return res.sendStatus(HttpStatusCode.Unauthorized);
+    throw new Error('Session has not been initialised.');
   }
 
   if (!req.session?.csrf) {

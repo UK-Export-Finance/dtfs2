@@ -1,4 +1,3 @@
-import { HttpStatusCode } from 'axios';
 import crypto from 'crypto';
 import { Response, NextFunction } from 'express';
 import { getEpochMs } from '../../helpers/date';
@@ -27,8 +26,7 @@ export const verify = (
   next: NextFunction,
 ): void | Response => {
   if (!req?.session) {
-    console.error('❌ Session has not been initialised for request %s', req.url);
-    return res.sendStatus(HttpStatusCode.Unauthorized);
+    throw new Error('Session has not been initialised.');
   }
 
   if (CSRF.VERIFY.SAFE.HTTP_METHODS.includes(req.method)) {
@@ -54,8 +52,7 @@ export const verify = (
 
   // CSRF token or secret is void
   if (!token || !secret) {
-    console.error('❌ Invalid token or secret');
-    return res.sendStatus(HttpStatusCode.Unauthorized);
+    throw new Error('Invalid token or secret.');
   }
 
   const [clientHash, timestamp] = token.split(':');
@@ -63,7 +60,7 @@ export const verify = (
 
   // If an invalid CSRF token has been received
   if (!clientHash || !timestamp || Number.isNaN(past)) {
-    return res.sendStatus(HttpStatusCode.Unauthorized);
+    return res.render('_partials/problem-with-service.njk');
   }
 
   const now = getEpochMs();
@@ -76,8 +73,7 @@ export const verify = (
    * then mark the token as stale and send an unauthorised response.
    */
   if (age > CSRF.TOKEN.MAX_AGE) {
-    console.error('❌ CSRF token is either invalid or has expired for the request %s', req.url);
-    return res.sendStatus(HttpStatusCode.Unauthorized);
+    throw new Error('CSRF token is either invalid or has expired.');
   }
 
   const serverHash = crypto.createHmac(CSRF.TOKEN.ALGORITHM, secret).update(timestamp).digest('hex');
@@ -89,8 +85,7 @@ export const verify = (
   const valid = equalLength && equalBuffer;
 
   if (!valid) {
-    console.error('Invalid CSRF token has been supplied, unauthorised request');
-    return res.sendStatus(HttpStatusCode.Unauthorized);
+    throw new Error('Invalid CSRF token has been supplied.');
   }
 
   return next();
