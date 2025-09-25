@@ -17,6 +17,31 @@ const { validateRole } = require('../../middleware');
 
 const router = express.Router();
 
+/**
+ * @openapi
+ * /contract/:_id/about/financial:
+ *   get:
+ *     summary: Get about financial page
+ *     tags: [Portal]
+ *     description: Get about financial page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/about/financial', [validateRole({ role: [MAKER] }), provide([CURRENCIES])], async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
@@ -58,6 +83,31 @@ const filterFinancialSubmissionDetailsPayload = (body) => {
   return payload;
 };
 
+/**
+ * @openapi
+ * /contract/:_id/about/financial:
+ *   post:
+ *     summary: Post about financial page
+ *     tags: [Portal]
+ *     description: Post about financial page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/about/financial', provide([DEAL]), async (req, res) => {
   const { userToken } = requestParams(req);
   const submissionDetailsPayload = filterFinancialSubmissionDetailsPayload(req.body);
@@ -68,6 +118,31 @@ router.post('/contract/:_id/about/financial', provide([DEAL]), async (req, res) 
   return res.redirect(redirectUrl);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/about/financial/save-go-back:
+ *   post:
+ *     summary: Post about financial page - save and go back
+ *     tags: [Portal]
+ *     description: Post about financial page - save and go back
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/about/financial/save-go-back', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const deal = req.apiData[DEAL];

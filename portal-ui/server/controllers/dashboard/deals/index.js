@@ -60,6 +60,15 @@ const getDataAndTemplateVariables = async (userToken, user, sessionFilters, curr
 };
 exports.getDataAndTemplateVariables = getDataAndTemplateVariables;
 
+/**
+ * Renders the dashboard deals page
+ *
+ * @async
+ * @function allDeals
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>} Renders the dashboard deals page with the appropriate data and template variables.
+ */
 exports.allDeals = async (req, res) => {
   const { userToken } = requestParams(req);
   const { user } = req.session;
@@ -93,12 +102,30 @@ exports.allDeals = async (req, res) => {
   });
 };
 
+/**
+ * Remove session filter and redirect to dashboard deals page sorted by updatedAt.
+ *
+ * @async
+ * @function removeSingleAllDealsFilter
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>} Redirects to dashboard deals page sorted by updatedAt.
+ */
 exports.removeSingleAllDealsFilter = async (req, res) => {
   removeSessionFilter(req);
 
   return res.redirect('/dashboard/deals/0');
 };
 
+/**
+ * Remove all deals filters and redirect to dashboard deals page sorted by updatedAt.
+ *
+ * @async
+ * @function removeAllDealsFilters
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>} Redirects to dashboard deals page sorted by updatedAt.
+ */
 exports.removeAllDealsFilters = (req, res) => {
   req.session.dashboardFilters = CONSTANTS.DASHBOARD.DEFAULT_FILTERS;
 

@@ -5,6 +5,37 @@ const companiesApi = require('../../../companies-api');
 
 const router = express.Router();
 
+/**
+ * @openapi
+ * /contract/:_id/about/supplier/companies-house-search/:prefix:
+ *   post:
+ *     summary: Post about supplier page companies house search
+ *     tags: [Portal]
+ *     description: Post about supplier page companies house search
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/about/supplier/companies-house-search/:prefix', provide([DEAL, COUNTRIES]), async (req, res) => {
   const {
     session: { userToken },

@@ -4,6 +4,18 @@ const { LANDING_PAGES } = require('../../constants');
 
 const router = express.Router();
 
+/**
+ * @openapi
+ * /:
+ *   get:
+ *     summary: Get default page
+ *     tags: [Portal]
+ *     description: Get default page
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *
+ */
 router.get('/', (req, res) => {
   const { user } = req.session;
 
