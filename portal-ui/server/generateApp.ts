@@ -69,7 +69,7 @@ export const generateApp = () => {
   app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
     next(error);
 
-    console.error('❌ An error has occurred for request %s %s', req.url, error);
+    console.error('❌ An error has occurred for request %s %o', req.url, error);
     return res.render('_partials/problem-with-service.njk');
   });
 
