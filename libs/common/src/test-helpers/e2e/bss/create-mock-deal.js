@@ -3,7 +3,7 @@ const { MOCK_DEAL_AIN } = require('./mock-AIN-deal');
 
 /**
  * creates a mock deal based on the MOCK_DEAL_AIN for e2e tests
- * @param {import('../../types').DealOverrides} overrides deal overrides
+ * @param {import('../../../types').AnyObject} overrides deal overrides
  * @returns created mock deal
  */
 exports.createMockDeal = (overrides) => {
