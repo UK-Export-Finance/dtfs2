@@ -1,5 +1,5 @@
 {
   "extends": "./tsconfig.json",
   "include": ["src", "unit.jest.config.js", ".eslintrc.js"],
-  "exclude": ["src/test-helpers/e2e/**", "src/test-helpers/types/e2e.ts"]
+  "exclude": ["src/test-helpers/e2e/**/*.{js,ts}", "src/test-helpers/types/e2e.ts"]
 }
