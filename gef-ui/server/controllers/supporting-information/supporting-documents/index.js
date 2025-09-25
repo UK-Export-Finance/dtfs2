@@ -245,6 +245,16 @@ const postSupportingDocuments = async (req, res, next) => {
   }
 };
 
+/**
+ * Handles the upload of a supporting document for a specific deal and document type.
+ *
+ * @async
+ * @function uploadSupportingDocument
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ * @returns {Promise<void>} Sends a response with the upload result or error.
+ */
 const uploadSupportingDocument = async (req, res, next) => {
   const {
     file,
@@ -283,6 +293,16 @@ const uploadSupportingDocument = async (req, res, next) => {
   }
 };
 
+/**
+ * Deletes a supporting document from a deal.
+ *
+ * @async
+ * @function deleteSupportingDocument
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {import('express').NextFunction} next - Express next middleware function.
+ * @returns {Promise<void>} Sends a 200 response with a success message if deletion is successful, or a 400 response if the file to delete is missing.
+ */
 const deleteSupportingDocument = async (req, res, next) => {
   const {
     body: { delete: fileToDelete },

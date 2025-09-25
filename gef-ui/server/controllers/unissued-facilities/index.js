@@ -58,8 +58,15 @@ const renderChangeFacilityPartial = async ({ params, query, hasComeFromApplicati
   };
 };
 
-// when changing unissued facility from unissued facility list
-// renders about-facility change page for unissued facilities
+/**
+ * Handles the request to change an unissued facility.
+ *
+ * @async
+ * @function changeUnissuedFacility
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>} Renders the appropriate view based on the operation result.
+ */
 const changeUnissuedFacility = async (req, res) => {
   const {
     params,
