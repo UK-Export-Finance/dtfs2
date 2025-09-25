@@ -1,8 +1,6 @@
-import { MOCK_DEAL_AIN } from '@ukef/dtfs2-common/test-helpers';
+import { MOCK_DEAL_AIN, today } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
 import { T1_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
-
-const { today } = require('../../../../../e2e-fixtures/dateConstants');
 
 context('Facility page - Automatic Inclusion Notice', () => {
   let ainDealId;

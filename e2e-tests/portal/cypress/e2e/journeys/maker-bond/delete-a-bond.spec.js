@@ -1,9 +1,9 @@
+const { today } = require('@ukef/dtfs2-common/test-helpers');
 const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const pages = require('../../pages');
 const partials = require('../../partials');
 const relative = require('../../relativeURL');
 const { ADMIN, BANK1_MAKER1 } = require('../../../../../e2e-fixtures');
-const { today } = require('../../../../../e2e-fixtures/dateConstants');
 
 const now = today.unixMilliseconds;
 

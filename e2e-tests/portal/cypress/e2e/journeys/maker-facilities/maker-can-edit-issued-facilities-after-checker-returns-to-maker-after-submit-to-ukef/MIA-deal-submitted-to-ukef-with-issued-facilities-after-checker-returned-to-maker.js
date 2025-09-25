@@ -1,6 +1,6 @@
+const { sevenDays, twoMonths, oneMonth } = require('@ukef/dtfs2-common/test-helpers');
 const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
-const { sevenDays, twoMonths, oneMonth } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const now = new Date();
 const nowPlusWeek = sevenDays.unixMillisecondsString;

@@ -1,5 +1,5 @@
+const { sevenDaysAgo, yesterday, oneMonth } = require('@ukef/dtfs2-common/test-helpers');
 const dealReadyToSubmitForReview = require('./dealReadyToSubmit');
-const { sevenDaysAgo, yesterday, oneMonth } = require('../../../../../../e2e-fixtures/dateConstants');
 
 module.exports = () => {
   const dealSubmissionDate = yesterday.unixMillisecondsString; // TODO: Standardise this coding style

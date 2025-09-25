@@ -1,9 +1,8 @@
-import { MOCK_DEAL_AIN } from '@ukef/dtfs2-common/test-helpers';
+import { MOCK_DEAL_AIN, oneMonth } from '@ukef/dtfs2-common/test-helpers';
 import { ALL_CURRENCIES, FACILITY_STAGE, TFM_FACILITY_STAGE } from '@ukef/dtfs2-common';
 import relative from '../../relativeURL';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
-import { oneMonth } from '../../../../../e2e-fixtures/dateConstants';
 import { caseSummary } from '../../partials';
 import pages from '../../pages';
 import CONSTANTS from '../../../fixtures/constants';

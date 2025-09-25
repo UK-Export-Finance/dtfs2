@@ -1,9 +1,8 @@
-import { MOCK_DEAL_AIN } from '@ukef/dtfs2-common/test-helpers';
+import { MOCK_DEAL_AIN, today, threeMonthsOneDay, yesterday } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../e2e-fixtures';
 import caseDealPage from '../../pages/caseDealPage';
 import { backLink, errorSummary } from '../../partials';
-import { today, threeMonthsOneDay, yesterday } from '../../../../../e2e-fixtures/dateConstants';
 import checkDetailsPage from '../../pages/deal-cancellation/check-details';
 import reasonForCancellingPage from '../../pages/deal-cancellation/reason-for-cancelling';
 

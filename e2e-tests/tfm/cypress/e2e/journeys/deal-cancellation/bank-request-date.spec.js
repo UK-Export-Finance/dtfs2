@@ -1,10 +1,9 @@
-import { MOCK_DEAL_AIN } from '@ukef/dtfs2-common/test-helpers';
+import { MOCK_DEAL_AIN, today, twelveMonthsOneDayAgo, twelveMonthsOneDay } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1 } from '../../../../../e2e-fixtures';
 import caseDealPage from '../../pages/caseDealPage';
 import { backLink, cancelLink, continueButton, errorSummary } from '../../partials';
 import bankRequestDatePage from '../../pages/deal-cancellation/bank-request-date';
-import { today, twelveMonthsOneDayAgo, twelveMonthsOneDay } from '../../../../../e2e-fixtures/dateConstants';
 
 context('Deal cancellation - bank request date', () => {
   let dealId;

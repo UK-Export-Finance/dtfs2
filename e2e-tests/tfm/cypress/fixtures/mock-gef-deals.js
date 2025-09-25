@@ -1,5 +1,5 @@
 import Chance from 'chance';
-import todayUnix from '../../../e2e-fixtures/dateConstants';
+import todayUnix from '@ukef/dtfs2-common/test-helpers';
 
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE } from './constants';
 import { BANK1_CHECKER1, BANK1_MAKER1 } from '../../../e2e-fixtures/portal-users.fixture';

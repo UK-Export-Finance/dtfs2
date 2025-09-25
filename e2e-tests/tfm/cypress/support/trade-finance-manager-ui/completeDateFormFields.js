@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { today, LONG_DAY_FORMAT, LONG_MONTH_FORMAT, LONG_YEAR_FORMAT } from '../../../../e2e-fixtures/dateConstants';
+import { today, LONG_DAY_FORMAT, LONG_MONTH_FORMAT, LONG_YEAR_FORMAT } from '@ukef/dtfs2-common/test-helpers';
 
 /**
  * completeDateFormFields

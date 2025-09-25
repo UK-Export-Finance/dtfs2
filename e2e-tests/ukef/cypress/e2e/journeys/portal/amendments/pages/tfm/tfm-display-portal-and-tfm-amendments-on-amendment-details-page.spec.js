@@ -1,7 +1,7 @@
 import { getFormattedMonetaryValue, CURRENCY } from '@ukef/dtfs2-common';
+import { twoYears, threeYears, today, DD_MMMM_YYYY_FORMAT, oneMonth } from '@ukef/dtfs2-common/test-helpers';
 import { format } from 'date-fns';
 import { UNDERWRITER_MANAGER_DECISIONS, PIM_USER_1, TFM_URL } from '../../../../../../../../e2e-fixtures';
-import { twoYears, threeYears, today, DD_MMMM_YYYY_FORMAT, oneMonth } from '../../../../../../../../e2e-fixtures/dateConstants';
 import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../../e2e-fixtures/mock-gef-facilities';

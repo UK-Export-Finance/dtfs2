@@ -1,3 +1,4 @@
+import { today } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../relativeURL';
 import { headingCaption, mainHeading, submitButton } from '../partials';
 import applicationDetails from '../pages/application-details';
@@ -6,7 +7,6 @@ import facilities from '../pages/facilities';
 import statusBanner from '../pages/application-status-banner';
 import { BANK1_MAKER1, ADMIN, READ_ONLY_ALL_BANKS } from '../../../../e2e-fixtures/portal-users.fixture';
 import CONSTANTS from '../../fixtures/constants';
-import { today } from '../../../../e2e-fixtures/dateConstants';
 
 let dealWithEmptyExporter;
 let dealWithEmptyExporterName;

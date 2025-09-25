@@ -1,4 +1,5 @@
 import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+import { today } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../relativeURL';
 import applicationActivities from '../pages/application-activities';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
@@ -11,7 +12,6 @@ import applicationSubmission from '../pages/application-submission';
 import submitToUkef from '../pages/submit-to-ukef';
 import statusBanner from '../pages/application-status-banner';
 import { toTitleCase } from '../../fixtures/helpers';
-import { today } from '../../../../e2e-fixtures/dateConstants';
 
 let deal;
 let dealId;

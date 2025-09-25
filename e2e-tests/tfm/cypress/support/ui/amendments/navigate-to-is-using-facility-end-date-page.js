@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
-import { today } from '../../../../../e2e-fixtures/dateConstants';
+
+import { today } from '@ukef/dtfs2-common/test-helpers';
 
 const amendmentsPage = require('../../../e2e/pages/amendments/amendmentsPage');
 const facilityPage = require('../../../e2e/pages/facilityPage');

@@ -1,6 +1,6 @@
+const { oneMonth, today } = require('@ukef/dtfs2-common/test-helpers');
 const { BOND_TYPE } = require('@ukef/dtfs2-common');
 const { roundNumber } = require('../../../../../../portal-api/server/utils/number');
-const { oneMonth, today } = require('../../../../../e2e-fixtures/dateConstants');
 
 const DETAILS = {
   bondIssuer: 'mock issuer',

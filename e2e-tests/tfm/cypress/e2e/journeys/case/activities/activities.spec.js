@@ -1,11 +1,10 @@
 import { ACTIVITY_TYPES } from '@ukef/dtfs2-common';
-import { MOCK_DEAL_AIN } from '@ukef/dtfs2-common/test-helpers';
+import { MOCK_DEAL_AIN, today } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../relativeURL';
 import { errorSummary } from '../../../partials';
 import activitiesPage from '../../../pages/activities/activitiesPage';
 import activityCommentBoxPage from '../../../pages/activities/activityCommentBoxPage';
 import { BUSINESS_SUPPORT_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
-import { today } from '../../../../../../e2e-fixtures/dateConstants';
 
 context('Users can create and submit comments', () => {
   let dealId;

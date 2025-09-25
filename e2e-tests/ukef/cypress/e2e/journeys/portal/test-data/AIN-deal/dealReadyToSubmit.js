@@ -1,5 +1,5 @@
+const { today, oneMonth } = require('@ukef/dtfs2-common/test-helpers');
 const dealThatJustNeedsDates = require('./dealThatJustNeedsDates.json');
-const { today, oneMonth } = require('../../../../../../../e2e-fixtures/dateConstants');
 
 module.exports = () => {
   const now = new Date();

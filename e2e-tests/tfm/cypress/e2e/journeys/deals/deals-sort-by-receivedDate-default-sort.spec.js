@@ -1,7 +1,6 @@
-import { createMockDeal } from '@ukef/dtfs2-common/test-helpers';
+import { createMockDeal, twoDaysAgo, yesterday } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
 import pages from '../../pages';
-import { twoDaysAgo, yesterday } from '../../../../../e2e-fixtures/dateConstants';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
 import { ALIAS_KEY } from '../../../fixtures/constants';
 import { aliasSelector } from '../../../../../support/alias-selector';

@@ -1,3 +1,4 @@
+import { today } from '@ukef/dtfs2-common/test-helpers';
 import { CURRENCY } from '@ukef/dtfs2-common';
 import relative from '../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
@@ -10,7 +11,6 @@ import eligibility from '../../../../../../../../gef/cypress/e2e/pages/amendment
 import amendmentSummaryList from '../../../../../../../../gef/cypress/e2e/pages/amendments/amendment-summary-list';
 import submittedForChecking from '../../../../../../../../gef/cypress/e2e/pages/amendments/submitted-for-checking';
 import amendmentPage from '../../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
-import { today } from '../../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
