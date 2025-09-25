@@ -1,15 +1,24 @@
-const { MOCK_DEAL_AIN } = require('./mock-AIN-deal');
+import { AnyObject } from '../../../types';
+import { MOCK_DEAL_AIN } from './mock-AIN-deal';
+
+type DealOverrides = {
+  details?: { submissionDate?: string; [key: string]: unknown };
+  mockFacilities?: AnyObject[];
+  bank?: AnyObject;
+  submissionDetails?: AnyObject;
+  [key: string]: unknown;
+};
 
 /**
  * creates a mock deal based on the MOCK_DEAL_AIN for e2e tests
- * @param {import('../../../types').AnyObject} overrides deal overrides
- * @returns {import('../../../types').AnyObject} created mock deal
+ * @param overrides deal overrides
+ * @returns created mock deal
  */
-exports.createMockDeal = (overrides) => {
+export const createMockDeal = (overrides: DealOverrides) => {
   let submissionDate = new Date().valueOf().toString();
   let facilities = [{ ...MOCK_DEAL_AIN.mockFacilities[0] }];
 
-  if (overrides.mockFacilities) {
+  if (Array.isArray(overrides.mockFacilities)) {
     facilities = overrides.mockFacilities;
   }
 
