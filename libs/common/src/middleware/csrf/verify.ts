@@ -10,6 +10,11 @@ export const verify = (
   res: Response,
   next: NextFunction,
 ): void | Response => {
+  if (!req?.session) {
+    console.error('❌ Session has not been initialised for request %s', req.url);
+    return res.sendStatus(HttpStatusCode.Unauthorized);
+  }
+
   if (CSRF.VERIFY.SAFE.HTTP_METHODS.includes(req.method)) {
     return next();
   }

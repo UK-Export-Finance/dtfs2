@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { HttpStatusCode } from 'axios';
 import { Request, Response, NextFunction } from 'express';
 import { getEpochMs } from '../../helpers/date';
 import { CSRF } from '../../constants';
@@ -17,9 +18,10 @@ import { CSRF } from '../../constants';
  *
  * @throws If the session is not initialized on the request object.
  */
-export const create = (req: Request, res: Response, next: NextFunction): void => {
+export const create = (req: Request, res: Response, next: NextFunction): void | Response => {
   if (!req?.session) {
-    throw new Error('❌ Session has not been initialised');
+    console.error('❌ Session has not been initialised for request %s', req.url);
+    return res.sendStatus(HttpStatusCode.Unauthorized);
   }
 
   if (!req.session?.csrf) {
@@ -28,9 +30,9 @@ export const create = (req: Request, res: Response, next: NextFunction): void =>
 
   const now = getEpochMs().toString();
   const hash = crypto.createHmac(CSRF.TOKEN.ALGORITHM, req.session.csrf).update(now).digest('hex');
-
   const token = `${hash}:${now}`;
 
   res.locals.csrfToken = token;
-  next();
+
+  return next();
 };

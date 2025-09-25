@@ -26,10 +26,7 @@ export const generateApp = () => {
 
   app.use(security);
   app.use(expressSession());
-
-  // CSRF
   app.use(createCsrf);
-  app.use(verifyCsrf);
 
   app.use(flash());
 
@@ -58,6 +55,7 @@ export const generateApp = () => {
    */
   app.use(maintenance);
   app.use(createRateLimit());
+  app.use(verifyCsrf);
   app.use('/', routes);
 
   app.get('*', (req, res) => {

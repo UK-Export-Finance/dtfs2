@@ -10,7 +10,7 @@ export const CSRF = {
     /**
      * Number of bytes
      */
-    BYTES: 123,
+    BYTES: 128,
   },
   TOKEN: {
     /**
