@@ -1,20 +1,11 @@
-import { AnyObject } from '../../../types';
 import { MOCK_DEAL_AIN } from './mock-AIN-deal';
-
-type DealOverrides = {
-  details?: { submissionDate?: string; [key: string]: unknown };
-  mockFacilities?: AnyObject[];
-  bank?: AnyObject;
-  submissionDetails?: AnyObject;
-  [key: string]: unknown;
-};
 
 /**
  * creates a mock deal based on the MOCK_DEAL_AIN for e2e tests
- * @param overrides deal overrides
+ * @param {import('../../types').DealOverrides} overrides deal overrides
  * @returns created mock deal
  */
-export const createMockDeal = (overrides: DealOverrides) => {
+export const createMockDeal = (overrides) => {
   let submissionDate = new Date().valueOf().toString();
   let facilities = [{ ...MOCK_DEAL_AIN.mockFacilities[0] }];
 
