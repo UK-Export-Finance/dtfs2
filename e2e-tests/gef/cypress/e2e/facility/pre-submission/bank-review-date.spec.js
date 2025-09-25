@@ -1,8 +1,8 @@
+import { today, twoYears, tomorrow, yesterday, sixYearsOneDay } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
 import { backLink, headingCaption, continueButton, saveAndReturnButton, errorSummary } from '../../partials';
 import bankReviewDate from '../../pages/bank-review-date';
 import aboutFacility from '../../pages/about-facility';
-import { today, twoYears, tomorrow, yesterday, sixYearsOneDay } from '../../../../../e2e-fixtures/dateConstants';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 
 const applications = [];

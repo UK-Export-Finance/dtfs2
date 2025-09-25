@@ -1,8 +1,7 @@
+import { MOCK_DEAL_AIN, threeMonths, threeYears, tomorrow, today, oneMonth } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../relativeURL';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
-import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { threeMonths, threeYears, tomorrow, today, oneMonth } from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, UNDERWRITER_MANAGER_1, UNDERWRITER_MANAGER_DECISIONS, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import pages from '../../../pages';
 

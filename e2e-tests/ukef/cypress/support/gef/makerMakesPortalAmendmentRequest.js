@@ -1,8 +1,8 @@
+import { today } from '@ukef/dtfs2-common/test-helpers';
 import whatDoYouNeedToChange from '../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 import doYouHaveAFacilityEndDate from '../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
 import eligibility from '../../../../gef/cypress/e2e/pages/amendments/eligibility';
 import facilityValue from '../../../../gef/cypress/e2e/pages/amendments/facility-value';
-import { today } from '../../../../e2e-fixtures/dateConstants';
 /**
  * completes the maker makes portal amendment request journey up to check your answers
  * @param {boolean} param.coverEndDateExists - if cover end date is changed

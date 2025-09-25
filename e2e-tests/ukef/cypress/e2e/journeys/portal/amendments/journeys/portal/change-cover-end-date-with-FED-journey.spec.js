@@ -1,7 +1,7 @@
-import relative from '../../../../../relativeURL';
-import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
+import { BANK1_MAKER1, today } from '@ukef/dtfs2-common/test-helpers';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../../e2e-fixtures/mock-gef-facilities';
+import relative from '../../../../../relativeURL';
 import { applicationPreview } from '../../../../../../../../gef/cypress/e2e/pages';
 import whatDoYouNeedToChange from '../../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 import doYouHaveAFacilityEndDate from '../../../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
@@ -9,9 +9,6 @@ import eligibility from '../../../../../../../../gef/cypress/e2e/pages/amendment
 import amendmentSummaryList from '../../../../../../../../gef/cypress/e2e/pages/amendments/amendment-summary-list';
 import submittedForChecking from '../../../../../../../../gef/cypress/e2e/pages/amendments/submitted-for-checking';
 import amendmentPage from '../../../../../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
-import { today } from '../../../../../../../../e2e-fixtures/dateConstants';
-
-const { BANK1_MAKER1 } = MOCK_USERS;
 
 context('Amendments - Change cover end date with facility end date - full journey', () => {
   /**

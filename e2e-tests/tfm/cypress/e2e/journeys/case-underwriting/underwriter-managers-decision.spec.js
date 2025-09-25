@@ -1,8 +1,8 @@
+import { MOCK_DEAL_AIN } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
 import { caseSubNavigation, caseSummary, errorSummaryItems } from '../../partials';
 import pages from '../../pages';
 import MOCK_DEAL_MIA from '../../../fixtures/deal-MIA';
-import MOCK_DEAL from '../../../fixtures/deal-AIN';
 import { T1_USER_1, UNDERWRITER_MANAGER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 
 context("Case Underwriting - Underwriter Manager's decision - Form and Validation", () => {
@@ -248,7 +248,7 @@ context("Case Underwriting - Underwriter Manager's decision AIN", () => {
   const dealFacilities = [];
 
   before(() => {
-    cy.insertOneDeal(MOCK_DEAL, BANK1_MAKER1).then((insertedDeal) => {
+    cy.insertOneDeal(MOCK_DEAL_AIN, BANK1_MAKER1).then((insertedDeal) => {
       dealId = insertedDeal._id;
 
       const { dealType, mockFacilities } = MOCK_DEAL_MIA;

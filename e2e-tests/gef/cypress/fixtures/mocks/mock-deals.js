@@ -1,7 +1,7 @@
+import { threeDaysAgo, today } from '@ukef/dtfs2-common/test-helpers';
 import Chance from 'chance';
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, DEAL_TYPE } from '../constants';
 import { BANK1_CHECKER1, BANK1_MAKER1 } from '../../../../e2e-fixtures/portal-users.fixture';
-import { threeDaysAgo, today } from '../../../../e2e-fixtures/dateConstants';
 
 const chance = new Chance();
 

@@ -1,5 +1,5 @@
+import { today } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../e2e/relativeURL';
-import { today } from '../../../../e2e-fixtures/dateConstants';
 
 /**
  * Submit a portal amendment to UKEF

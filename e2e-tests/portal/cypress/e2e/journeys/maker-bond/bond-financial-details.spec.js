@@ -1,3 +1,4 @@
+const { yearWithZeroLetter } = require('@ukef/dtfs2-common/test-helpers');
 const pages = require('../../pages');
 const partials = require('../../partials');
 const fillBondForm = require('./fill-bond-forms');
@@ -6,7 +7,6 @@ const BOND_FORM_VALUES = require('./bond-form-values');
 const relative = require('../../relativeURL');
 const { calculateExpectedGuaranteeFee, calculateExpectedUkefExposure } = require('../../../support/portal/sectionCalculations');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const { yearWithZeroLetter } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 
