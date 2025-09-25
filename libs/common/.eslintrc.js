@@ -74,7 +74,7 @@ module.exports = {
     browser: true,
   },
   root: true,
-  ignorePatterns: ['**/node_modules/**'],
+  ignorePatterns: ['**/node_modules/**', 'src/test-helpers/e2e/**', 'src/test-helpers/types/e2e.ts'],
   rules: baseRules,
   settings: {
     'import/resolver': {
