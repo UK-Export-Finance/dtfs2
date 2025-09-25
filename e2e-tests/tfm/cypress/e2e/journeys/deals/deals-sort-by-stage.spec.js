@@ -1,4 +1,5 @@
-import { MOCK_DEAL_AIN, createMockDeal } from '@ukef/dtfs2-common/test-helpers';
+import { MOCK_DEAL_AIN } from '@ukef/dtfs2-common/test-helpers';
+import createMockDeal from '../../../fixtures/create-mock-deal';
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';

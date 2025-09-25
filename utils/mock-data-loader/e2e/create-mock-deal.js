@@ -1,10 +1,9 @@
-// @ts-nocheck disabled as used in e2e tests
-const { MOCK_DEAL_AIN } = require('./mock-AIN-deal');
+const { MOCK_DEAL_AIN } = require('@ukef/dtfs2-common/test-helpers');
 
 /**
  * creates a mock deal based on the MOCK_DEAL_AIN for e2e tests
- * @param {import('../../../types').AnyObject} overrides deal overrides
- * @returns created mock deal
+ * @param {object} overrides deal overrides
+ * @returns {object} created mock deal
  */
 exports.createMockDeal = (overrides) => {
   let submissionDate = new Date().valueOf().toString();

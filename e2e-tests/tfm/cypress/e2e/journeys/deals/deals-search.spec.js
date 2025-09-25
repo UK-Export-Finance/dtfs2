@@ -1,4 +1,5 @@
-import { MOCK_DEAL_AIN, createMockDeal, yesterday } from '@ukef/dtfs2-common/test-helpers';
+import { MOCK_DEAL_AIN, yesterday } from '@ukef/dtfs2-common/test-helpers';
+import createMockDeal from '../../../fixtures/create-mock-deal';
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import { primaryNavigation } from '../../partials';
