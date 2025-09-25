@@ -24,7 +24,7 @@ describe(page, () => {
   it('should have the correct integrity for "/assets/js/govukFrontend.js"', () => {
     wrapper
       .expectElement('script[src="/assets/js/govukFrontend.js"]')
-      .toHaveAttribute('integrity', 'sha512-XjslPGHm8dTK4kPoc3TLgL4y34O+UtQ6yPECbnQSC/s7caahsMliumsRzHyaQMvcY77V6JdajknG+kPo2u/zTQ==');
+      .toHaveAttribute('integrity', 'sha512-FuuuQVS/0e5ef08V1jgkT97sMp7KS10N7j8NbslD37oB9fEkJJaYNFg9IcrDdPQMjh05MkS11ReVOHXxAoLItg==');
   });
 
   it('should have the correct integrity for "/assets/js/mojFrontend.js"', () => {

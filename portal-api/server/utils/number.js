@@ -1,4 +1,4 @@
-const { decimalsCount } = require('@ukef/dtfs2-common');
+const { decimalsCount } = require('@ukef/dtfs2-common/frontend');
 
 const isNumeric = (value) => typeof value === 'number' && value === Number(value) && Number.isFinite(value);
 

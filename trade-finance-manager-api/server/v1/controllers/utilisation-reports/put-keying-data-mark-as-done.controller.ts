@@ -25,7 +25,7 @@ export const putKeyingDataMarkAsDone = async (req: PutKeyingDataMarkAsDoneReques
     return res.sendStatus(HttpStatusCode.Ok);
   } catch (error) {
     const errorMessage = 'Failed to mark keying data as done';
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     const errorStatus = (isAxiosError(error) && error.response?.status) || HttpStatusCode.InternalServerError;
     return res.status(errorStatus).send(errorMessage);
   }

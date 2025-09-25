@@ -1,14 +1,12 @@
 import path from 'path';
 import express, { ErrorRequestHandler } from 'express';
 import morgan from 'morgan';
-import session from 'express-session';
-import redis from 'redis';
 import cookieParser from 'cookie-parser';
 import csrf from 'csurf';
 import flash from 'connect-flash';
-import connectRedis from 'connect-redis';
 import { isHttpError } from 'http-errors';
-import { InvalidEnvironmentVariableError, maintenance, SWAGGER } from '@ukef/dtfs2-common';
+import { isHttps, maintenance, SWAGGER } from '@ukef/dtfs2-common';
+import { configure, expressSession } from '@ukef/dtfs2-common/backend';
 import routes from './routes';
 import swaggerRouter from './routes/swagger.route';
 import healthcheck from './healthcheck';
@@ -17,20 +15,15 @@ import { csrfToken, copyCsrfTokenFromQueryToBody, seo, security, createRateLimit
 import { asLoggedInUserSession, withUnknownLoginStatusUserSession } from './helpers/express-session';
 
 const MAX_CSRF_COOKIE_AGE = 43200; // 12 hours
-const REDIS_DEFAULT_PORT = '6379';
-
-const RedisStore = connectRedis(session);
 
 export const generateApp = () => {
+  const https = isHttps();
   const app = express();
-  const https = Boolean(process.env.HTTPS || 0);
-  const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
 
-  if (https) {
-    app.set('trust proxy', 1);
-  }
+  // Global application configuration
+  configure(app);
 
-  const cookie: session.CookieOptions & csrf.CookieOptions = {
+  const cookie: csrf.CookieOptions = {
     path: '/',
     httpOnly: true,
     secure: https,
@@ -45,51 +38,7 @@ export const generateApp = () => {
   app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter);
 
   app.use(security);
-
-  if (!process.env.SESSION_SECRET) {
-    console.error('Portal UI server - SESSION_SECRET missing');
-    throw new InvalidEnvironmentVariableError('Missing session secret value.');
-  }
-
-  const sessionOptions: session.SessionOptions = {
-    name: secureCookieName,
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie,
-    store: undefined,
-  };
-
-  console.info('Connecting to redis server: redis://%s ', process.env.REDIS_HOSTNAME);
-
-  let redisOptions = {};
-
-  if (process.env.REDIS_KEY) {
-    redisOptions = {
-      auth_pass: process.env.REDIS_KEY,
-      tls: { servername: process.env.REDIS_HOSTNAME },
-    };
-  }
-
-  const redisClient = redis.createClient(parseInt(process.env.REDIS_PORT || REDIS_DEFAULT_PORT, 10), process.env.REDIS_HOSTNAME, redisOptions);
-
-  redisClient.on('error', (error) => {
-    console.error('Unable to connect to Redis %s %o', process.env.REDIS_HOSTNAME, error);
-  });
-
-  redisClient.on('ready', () => {
-    console.info('REDIS ready');
-  });
-
-  redisClient.on('connect', () => {
-    console.info('REDIS connected');
-  });
-
-  const sessionStore = new RedisStore({ client: redisClient });
-
-  sessionOptions.store = sessionStore;
-
-  app.use(session(sessionOptions));
+  app.use(expressSession());
 
   app.use(flash());
 
@@ -128,9 +77,7 @@ export const generateApp = () => {
    * Should always be after `seo`, `security` and `assets` middlewares for UI.
    */
   app.use(maintenance);
-
   app.use(createRateLimit());
-
   app.use('/', routes);
 
   app.get('*', (req, res) => {

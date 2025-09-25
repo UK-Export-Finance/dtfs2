@@ -2,14 +2,12 @@ const path = require('path');
 const express = require('express');
 const compression = require('compression');
 const morgan = require('morgan');
-const session = require('express-session');
-const redis = require('redis');
 const flash = require('connect-flash');
-const RedisStore = require('connect-redis')(session);
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const { SWAGGER, maintenance } = require('@ukef/dtfs2-common');
+const { configure, expressSession } = require('@ukef/dtfs2-common/backend');
 const routes = require('./routes');
 const swaggerRouter = require('./routes/swagger.route');
 const supportingInformationUploadRoutes = require('./routes/supporting-information-upload');
@@ -21,20 +19,9 @@ dotenv.config();
 
 const generateApp = () => {
   const app = express();
-  const https = Boolean(process.env.HTTPS || 0);
-  const secureCookieName = https ? '__Host-dtfs-session' : 'dtfs-session';
 
-  if (https) {
-    app.set('trust proxy', 1);
-  }
-
-  const cookie = {
-    path: '/',
-    httpOnly: true,
-    secure: https,
-    sameSite: 'strict',
-    maxAge: 604800000, // 7 days
-  };
+  // Global application configuration
+  configure(app);
 
   app.use(seo);
 
@@ -43,50 +30,9 @@ const generateApp = () => {
   app.use(`/v1/${SWAGGER.ENDPOINTS.UI}`, swaggerRouter.default);
 
   app.use(security);
+  app.use(expressSession());
 
   app.use(compression());
-
-  if (!process.env.SESSION_SECRET) {
-    console.error('GEF UI server - SESSION_SECRET missing');
-  }
-
-  const sessionOptions = {
-    name: secureCookieName,
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie,
-  };
-
-  let redisOptions = {};
-
-  if (process.env.REDIS_KEY) {
-    redisOptions = {
-      auth_pass: process.env.REDIS_KEY,
-      tls: { servername: process.env.REDIS_HOSTNAME },
-    };
-  }
-
-  const redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOSTNAME, redisOptions);
-
-  redisClient.on('error', (error) => {
-    console.error('Unable to connect to Redis %s %o', process.env.REDIS_HOSTNAME, error);
-  });
-
-  redisClient.on('ready', () => {
-    console.info('REDIS ready');
-  });
-
-  redisClient.on('connect', () => {
-    console.info('REDIS connected');
-  });
-
-  const sessionStore = new RedisStore({ client: redisClient });
-
-  sessionOptions.store = sessionStore;
-
-  app.set('trustproxy', true);
-  app.use(session(sessionOptions));
   app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));

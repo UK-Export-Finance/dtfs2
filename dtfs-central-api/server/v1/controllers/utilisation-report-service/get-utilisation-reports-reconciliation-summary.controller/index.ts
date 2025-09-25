@@ -18,7 +18,7 @@ export const getUtilisationReportsReconciliationSummary = async (
     res.status(200).send(reconciliationSummary);
   } catch (error) {
     const errorMessage = 'Failed to get utilisation reports reconciliation summary';
-    console.error(errorMessage, error);
+    console.error('%s %o', errorMessage, error);
     res.status(500).send(errorMessage);
   }
 };
