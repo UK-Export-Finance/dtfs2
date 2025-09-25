@@ -1,11 +1,11 @@
-import { MOCK_DEAL_AIN } from './mock-AIN-deal';
+const { MOCK_DEAL_AIN } = require('./mock-AIN-deal');
 
 /**
  * creates a mock deal based on the MOCK_DEAL_AIN for e2e tests
  * @param {import('../../types').DealOverrides} overrides deal overrides
  * @returns created mock deal
  */
-export const createMockDeal = (overrides) => {
+exports.createMockDeal = (overrides) => {
   let submissionDate = new Date().valueOf().toString();
   let facilities = [{ ...MOCK_DEAL_AIN.mockFacilities[0] }];
 
