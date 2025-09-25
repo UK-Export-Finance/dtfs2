@@ -19,9 +19,9 @@ export const CSRF = {
     ALGORITHM: 'SHA512',
     /**
      * CSRF token validity in microseconds
-     * 30 minutes (30 * 60 * 1000)
+     * 60 minutes (60 * 60 * 1000)
      */
-    MAX_AGE: 1800000,
+    MAX_AGE: 3600000,
   },
   VERIFY: {
     SAFE: {

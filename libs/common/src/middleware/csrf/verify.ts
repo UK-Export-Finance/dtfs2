@@ -5,6 +5,22 @@ import { getEpochMs } from '../../helpers/date';
 import { CustomExpressRequest } from '../../types';
 import { CSRF } from '../../constants';
 
+/**
+ * Middleware to verify CSRF tokens for an incoming requests.
+ *
+ * This function checks if the request session is initialised, validates the HTTP method,
+ * and ensures the CSRF token is present and valid. For file uploads, it moves the CSRF token
+ * from the query to the body if necessary. It then verifies the token's age and integrity
+ * using a timing-safe comparison.
+ *
+ * If the token is missing, expired, or invalid, the middleware responds with an Unauthorized status.
+ * Otherwise, it calls the next middleware in the stack.
+ *
+ * @param req - The custom Express request object, containing session, query, and body.
+ * @param res - The Express response object.
+ * @param next - The next middleware function.
+ * @returns void or a Response with Unauthorized status if verification fails.
+ */
 export const verify = (
   req: CustomExpressRequest<{ query: { _csrf: string }; reqBody: { _csrf: string } }>,
   res: Response,
@@ -22,7 +38,7 @@ export const verify = (
   const isCsrfQuery = req.query?._csrf && !req.body?._csrf;
 
   /**
-   * Mover CSRF token from query to body for file upload
+   * Move CSRF token from query to body for file upload
    */
   if (isCsrfQuery) {
     req.body = {
@@ -38,6 +54,7 @@ export const verify = (
 
   // CSRF token or secret is void
   if (!token || !secret) {
+    console.error('❌ Invalid token or secret');
     return res.sendStatus(HttpStatusCode.Unauthorized);
   }
 
@@ -55,10 +72,11 @@ export const verify = (
   /**
    * Token age validation.
    *
-   * If the token was generated over 30 minutes ago
+   * If the token was generated over 60 minutes ago
    * then mark the token as stale and send an unauthorised response.
    */
   if (age > CSRF.TOKEN.MAX_AGE) {
+    console.error('❌ CSRF token is either invalid or has expired for the request %s', req.url);
     return res.sendStatus(HttpStatusCode.Unauthorized);
   }
 
