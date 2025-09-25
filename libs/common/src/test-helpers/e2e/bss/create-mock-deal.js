@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable */
 const { MOCK_DEAL_AIN } = require('./mock-AIN-deal');
 
