@@ -1,6 +1,6 @@
-import { MOCK_DEAL_AIN } from './mock-AIN-deal';
+const { MOCK_DEAL_AIN } = require('./mock-AIN-deal');
 
-export const createMockDeal = (overrides) => {
+exports.createMockDeal = (overrides) => {
   let submissionDate = new Date().valueOf().toString();
   let facilities = [{ ...MOCK_DEAL_AIN.mockFacilities[0] }];
 
