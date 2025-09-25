@@ -1,3 +1,4 @@
+import { twoDaysAgo, twoMonths } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
@@ -7,7 +8,6 @@ import whatDoYouNeedToChange from '../../../../../../../../../gef/cypress/e2e/pa
 import facilityValue from '../../../../../../../../../gef/cypress/e2e/pages/amendments/facility-value';
 import eligibility from '../../../../../../../../../gef/cypress/e2e/pages/amendments/eligibility';
 import effectiveDate from '../../../../../../../../../gef/cypress/e2e/pages/amendments/effective-date';
-import { twoDaysAgo, twoMonths } from '../../../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 

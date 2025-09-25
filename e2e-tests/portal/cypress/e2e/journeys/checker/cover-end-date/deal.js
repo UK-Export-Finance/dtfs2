@@ -1,8 +1,8 @@
+const { today, tomorrow } = require('@ukef/dtfs2-common/test-helpers');
 const { BOND_TYPE } = require('@ukef/dtfs2-common');
 const mockDeal = require('../../../../fixtures/deal');
 const CONSTANTS = require('../../../../fixtures/constants');
 const { CURRENCY, FEE_FREQUENCY, FEE_TYPE, DAY_COUNT_BASIS } = require('../../../../../../e2e-fixtures/constants.fixture');
-const { today, tomorrow } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const deal = {
   ...mockDeal,

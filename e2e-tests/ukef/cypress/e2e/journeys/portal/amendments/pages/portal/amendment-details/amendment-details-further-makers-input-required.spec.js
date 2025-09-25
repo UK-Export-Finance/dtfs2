@@ -1,5 +1,5 @@
+import { today } from '@ukef/dtfs2-common/test-helpers';
 import { CURRENCY, getFormattedMonetaryValue } from '@ukef/dtfs2-common';
-import { today } from '../../../../../../../../../e2e-fixtures/dateConstants';
 import relative from '../../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';

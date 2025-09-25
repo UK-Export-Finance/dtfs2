@@ -1,5 +1,5 @@
+const { today } = require('@ukef/dtfs2-common/test-helpers');
 const dealThatJustNeedsDates = require('./dealThatJustNeedsDates.json');
-const { today } = require('../../../../../../../e2e-fixtures/dateConstants');
 
 export const generateAinDealUnissuedFacilitiesWithDates = () => {
   const nowDay = today.dayLong;

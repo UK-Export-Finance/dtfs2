@@ -1,6 +1,6 @@
+import { MOCK_DEAL_AIN } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../relativeURL';
 import pages from '../../../pages';
-import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../e2e-fixtures';
 import { MOCK_APPLICATION_AIN, MOCK_APPLICATION_MIN } from '../../../../fixtures/mock-gef-deals';
 

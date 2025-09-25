@@ -1,8 +1,8 @@
 import format from 'date-fns/format';
+import { MOCK_DEAL_AIN } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../relativeURL';
 import pages from '../../../pages';
 import { caseSubNavigation, caseSummary } from '../../../partials';
-import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { ADMIN, BANK1_MAKER1, T1_USER_1 } from '../../../../../../e2e-fixtures';
 
 context('User can view a case deal', () => {

@@ -1,8 +1,8 @@
+import { threeDaysAgo, nightyOneDays, twoMonths } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../relativeURL';
 import CONSTANTS from '../../../../fixtures/constants';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
-import { threeDaysAgo, nightyOneDays, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
 import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 import { acbsReconciliation } from '../../../../../../e2e-fixtures/acbs';
 import { continueButton, submitButton } from '../../../partials';

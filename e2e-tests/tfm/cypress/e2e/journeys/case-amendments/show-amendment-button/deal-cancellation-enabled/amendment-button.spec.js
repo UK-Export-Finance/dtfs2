@@ -1,7 +1,7 @@
+import { MOCK_DEAL_AIN } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../../relativeURL';
 import facilityPage from '../../../../pages/facilityPage';
 import amendmentsPage from '../../../../pages/amendments/amendmentsPage';
-import MOCK_DEAL_AIN from '../../../../../fixtures/deal-AIN';
 import { T1_USER_1, PIM_USER_1, BANK1_MAKER1 } from '../../../../../../../e2e-fixtures';
 
 context('Amendments page - deal cancellation feature flag enabled', () => {

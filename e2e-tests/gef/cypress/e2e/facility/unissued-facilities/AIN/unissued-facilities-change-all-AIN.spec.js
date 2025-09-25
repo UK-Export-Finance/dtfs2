@@ -1,5 +1,3 @@
-import relative from '../../../relativeURL';
-import CONSTANTS from '../../../../fixtures/constants';
 import {
   fourDaysAgo,
   threeDaysAgo,
@@ -11,7 +9,9 @@ import {
   twoMonths,
   twentyEightDays,
   threeDays,
-} from '../../../../../../e2e-fixtures/dateConstants';
+} from '@ukef/dtfs2-common/test-helpers';
+import relative from '../../../relativeURL';
+import CONSTANTS from '../../../../fixtures/constants';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';

@@ -1,4 +1,4 @@
-import { today } from '../../../../e2e-fixtures/dateConstants';
+import { today } from '@ukef/dtfs2-common/test-helpers';
 import amendmentPage from '../../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 
 /**

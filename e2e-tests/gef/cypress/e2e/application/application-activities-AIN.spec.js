@@ -1,4 +1,5 @@
 import { DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
+import { today } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../relativeURL';
 import { mainHeading } from '../partials';
 import applicationActivities from '../pages/application-activities';
@@ -7,7 +8,6 @@ import applicationDetails from '../pages/application-details';
 import statusBanner from '../pages/application-status-banner';
 import submitToUkef from '../pages/submit-to-ukef';
 import { toTitleCase } from '../../fixtures/helpers';
-import { today } from '../../../../e2e-fixtures/dateConstants';
 
 let deal;
 let dealId;

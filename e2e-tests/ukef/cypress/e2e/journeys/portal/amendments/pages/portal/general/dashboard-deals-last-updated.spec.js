@@ -1,4 +1,4 @@
-import { today, tomorrow } from '../../../../../../../../../e2e-fixtures/dateConstants';
+import { today, tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';

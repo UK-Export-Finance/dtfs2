@@ -1,7 +1,7 @@
+import { threeDaysAgo, threeMonthsOneDay, today } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../relativeURL';
 import { errorSummary } from '../../../partials';
 import CONSTANTS from '../../../../fixtures/constants';
-import { threeDaysAgo, threeMonthsOneDay, today } from '../../../../../../e2e-fixtures/dateConstants';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1 } from '../../../../../../e2e-fixtures/portal-users.fixture';
 import { multipleMockGefFacilities } from '../../../../../../e2e-fixtures/mock-gef-facilities';

@@ -1,4 +1,4 @@
-import { tomorrow, oneYear } from '../../../../e2e-fixtures/dateConstants';
+import { tomorrow, oneYear } from '@ukef/dtfs2-common/test-helpers';
 
 const { bondDetails } = require('../../e2e/pages');
 /**

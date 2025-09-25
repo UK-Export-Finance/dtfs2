@@ -1,3 +1,4 @@
+import { yesterday, today } from '@ukef/dtfs2-common/test-helpers';
 import { DEAL_STATUS, PORTAL_ACTIVITY_LABEL, UKEF } from '@ukef/dtfs2-common';
 import relative from '../../../../relativeURL';
 import applicationActivities from '../../../../../../../gef/cypress/e2e/pages/application-activities';
@@ -5,7 +6,6 @@ import statusBanner from '../../../../../../../gef/cypress/e2e/pages/application
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { yesterday, today } from '../../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
 
 const { BANK1_MAKER1 } = MOCK_USERS;

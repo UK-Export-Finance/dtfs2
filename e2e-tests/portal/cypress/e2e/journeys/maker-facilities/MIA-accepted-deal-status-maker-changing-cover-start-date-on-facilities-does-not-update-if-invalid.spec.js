@@ -1,8 +1,8 @@
+const { sevenDaysAgo } = require('@ukef/dtfs2-common/test-helpers');
 const pages = require('../../pages');
 const relative = require('../../relativeURL');
 const MIADealWithAcceptedStatusIssuedFacilitiesCoverStartDateInPast = require('./fixtures/MIA-deal-with-accepted-status-issued-facilities-cover-start-date-in-past');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-const { sevenDaysAgo } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 

@@ -1,11 +1,10 @@
+const { oneYear } = require('@ukef/dtfs2-common/test-helpers');
 const { format, addMonths } = require('date-fns');
-
 const pages = require('../../pages');
 const relative = require('../../relativeURL');
 const AINDeal = require('./fixtures/AIN-deal-submitted-3-months-more');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
 const { LONG_FORM_DATE_FORMAT } = require('../../../fixtures/constants');
-const { oneYear } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { ADMIN, BANK1_MAKER1 } = MOCK_USERS;
 

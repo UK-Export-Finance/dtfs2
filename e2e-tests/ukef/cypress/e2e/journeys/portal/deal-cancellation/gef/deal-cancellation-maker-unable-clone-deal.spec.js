@@ -1,10 +1,10 @@
+import { yesterday, tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE } from '@ukef/dtfs2-common';
 import relative from '../../../../relativeURL';
 import gefPages from '../../../../../../../gef/cypress/e2e/pages';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT, MOCK_APPLICATION_MIN_DRAFT } from '../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { yesterday, tomorrow } from '../../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, TFM_URL } from '../../../../../../../e2e-fixtures';
 
 const { BANK1_MAKER1 } = MOCK_USERS;

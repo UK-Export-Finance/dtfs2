@@ -1,3 +1,4 @@
+import { tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import coverEndDate from '../../../gef/cypress/e2e/pages/amendments/cover-end-date';
 import facilityEndDate from '../../../gef/cypress/e2e/pages/amendments/facility-end-date';
 import bankReviewDate from '../../../gef/cypress/e2e/pages/amendments/bank-review-date';
@@ -9,7 +10,6 @@ import eligibility from '../../../gef/cypress/e2e/pages/amendments/eligibility';
 import amendmentPage from '../../../gef/cypress/e2e/pages/amendments/amendment-shared';
 import amendmentSummaryList from '../../../gef/cypress/e2e/pages/amendments/amendment-summary-list';
 import manualApprovalNeeded from '../../../gef/cypress/e2e/pages/amendments/manual-approval-needed';
-import { tomorrow } from '../../../e2e-fixtures/dateConstants';
 
 const ELIGIBILITY_CRITERIA_COUNT = 7;
 const NEW_FACILITY_VALUE = '20000';
