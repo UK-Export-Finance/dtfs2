@@ -1,4 +1,3 @@
-// ...existing code...
 import { today } from '@ukef/dtfs2-common/test-helpers';
 import statusBanner from '../../../e2e/pages/application-status-banner';
 import applicationDetails from '../../../e2e/pages/application-details';
