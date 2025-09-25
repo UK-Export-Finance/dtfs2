@@ -1,5 +1,4 @@
-// @ts-nocheck
-/* eslint-disable */
+// @ts-nocheck disabled as used in e2e tests
 const { MOCK_DEAL_AIN } = require('./mock-AIN-deal');
 
 /**
