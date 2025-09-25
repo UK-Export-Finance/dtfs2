@@ -2,8 +2,8 @@ const { MOCK_DEAL_AIN } = require('./mock-AIN-deal');
 
 /**
  * creates a mock deal based on the MOCK_DEAL_AIN for e2e tests
- * @param {object} overrides deal overrides
- * @returns created mock deal
+ * @param {import('../../../types').AnyObject} overrides deal overrides
+ * @returns {import('../../../types').AnyObject} created mock deal
  */
 exports.createMockDeal = (overrides) => {
   let submissionDate = new Date().valueOf().toString();
