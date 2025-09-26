@@ -21,6 +21,24 @@ const getOptionsForRenderingEditUser = async (req, res) => {
   };
 };
 
+/**
+ * @openapi
+ * /users:
+ *   get:
+ *     summary: Renders the admin users page
+ *     tags: [Portal]
+ *     description: Renders the admin users page
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/users', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
@@ -37,7 +55,24 @@ router.get('/users', async (req, res) => {
   });
 });
 
-// Admin - user create
+/**
+ * @openapi
+ * /users/create:
+ *   get:
+ *     summary: Renders the admin users create page
+ *     tags: [Portal]
+ *     description: Renders the admin users create page
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/users/create', async (req, res) => {
   const { userToken } = requestParams(req);
 
@@ -51,7 +86,26 @@ router.get('/users/create', async (req, res) => {
   });
 });
 
-// Admin - user create
+/**
+ * @openapi
+ * /users/create:
+ *   post:
+ *     summary: Admin creates a new user
+ *     tags: [Portal]
+ *     description: Admin creates a new user
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       301:
+ *         description: Resource moved permanently
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/users/create', async (req, res) => {
   const { bank } = req.body;
 
@@ -89,14 +143,62 @@ router.post('/users/create', async (req, res) => {
   });
 });
 
-// Admin - user edit
+/**
+ * @openapi
+ * /users/edit/:_id:
+ *   get:
+ *     summary: Get admin updates an existing user page
+ *     tags: [Portal]
+ *     description: Get admin updates an existing user page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the user ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/users/edit/:_id', async (req, res) => {
   const options = await getOptionsForRenderingEditUser(req, res);
 
   return res.render('admin/user-edit.njk', options);
 });
 
-// Admin - user edit
+/**
+ * @openapi
+ * /users/edit/:_id:
+ *   post:
+ *     summary: Admin updates an existing user
+ *     tags: [Portal]
+ *     description: Admin updates an existing user
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the user ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/users/edit/:_id', async (req, res) => {
   const payloadProperties = ['firstname', 'surname', 'user-status', 'roles', 'isTrusted'];
   const payload = constructPayload(req.body, payloadProperties);
@@ -126,6 +228,31 @@ router.post('/users/edit/:_id', async (req, res) => {
   });
 });
 
+/**
+ * @openapi
+ * /users/disable/:_id:
+ *   get:
+ *     summary: Get disable user account confirmation page
+ *     tags: [Portal]
+ *     description: Get disable user account confirmation page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the user ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/users/disable/:_id', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
@@ -137,6 +264,31 @@ router.get('/users/disable/:_id', async (req, res) => {
   });
 });
 
+/**
+ * @openapi
+ * /users/enable/:_id:
+ *   get:
+ *     summary: Get enable user account confirmation page
+ *     tags: [Portal]
+ *     description: Get disable user account confirmation page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the user ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/users/enable/:_id', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
@@ -149,7 +301,31 @@ router.get('/users/enable/:_id', async (req, res) => {
   });
 });
 
-// Admin - Reset user password
+/**
+ * @openapi
+ * /users/reset-password/:_id:
+ *   get:
+ *     summary: Get user reset password confirmation page
+ *     tags: [Portal]
+ *     description: Get user reset password confirmation page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the user ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/users/reset-password/:_id', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
@@ -167,7 +343,31 @@ router.get('/users/reset-password/:_id', async (req, res) => {
   }
 });
 
-// Admin - Reset user password
+/**
+ * @openapi
+ * /users/reset-password/:_id:
+ *   post:
+ *     summary: Post user reset password
+ *     tags: [Portal]
+ *     description: Post user reset password
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the user ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/users/reset-password/:_id', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 

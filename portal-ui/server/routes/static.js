@@ -16,6 +16,18 @@ const IsoExpiryDate = getISO8601(oneYearInFutureDate);
  * @param {Express.Response} Express response
  * @returns {Express.Response.send} security.txt file
  */
+
+/**
+ * @openapi
+ * /.well-known/security.txt:
+ *   get:
+ *     summary: GET request for the security page.
+ *     tags: [Portal]
+ *     description: GET request for the security page.
+ *     responses:
+ *       200:
+ *         description: OK
+ */
 router.get('/.well-known/security.txt', (req, res) => {
   res.type('text/plain');
 
@@ -33,15 +45,15 @@ router.get('/.well-known/security.txt', (req, res) => {
 });
 
 /**
- * get
- *  Handles the GET request for the thank you page.
- *
- * This controller sets the response type to plain text and writes a thank you message
- * with a placeholder for the date, name, and description.
- *
- * @param {Express.Request} Express request
- * @param {Express.Response} Express response
- * @returns {Express.Response.render} thanks.txt file
+ * @openapi
+ * /thanks.txt:
+ *   get:
+ *     summary: GET request for the thank you page.
+ *     tags: [Portal]
+ *     description: GET request for the thank you page.
+ *     responses:
+ *       200:
+ *         description: OK
  */
 router.get('/thanks.txt', (req, res) => {
   res.type('text/plain');

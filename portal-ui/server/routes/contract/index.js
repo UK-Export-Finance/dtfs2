@@ -31,6 +31,31 @@ const router = express.Router();
 
 router.use('/contract/*', validateToken);
 
+/**
+ * @openapi
+ * /contract/:_id:
+ *   get:
+ *     summary: Get the contract view page
+ *     tags: [Portal]
+ *     description: Get the contract view page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) => {
   const { deal } = req.apiData;
   const { user } = req.session;
@@ -86,6 +111,24 @@ router.get('/contract/:_id', [provide([DEAL]), validateBank], async (req, res) =
   });
 });
 
+/**
+ * @openapi
+ * /contract/:_id/comments:
+ *   get:
+ *     summary: Get the contract view comments page
+ *     tags: [Portal]
+ *     description: Get the contract view comments page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ */
 router.get('/contract/:_id/comments', [provide([DEAL]), validateBank], async (req, res) => {
   const { deal } = req.apiData;
 
@@ -95,6 +138,24 @@ router.get('/contract/:_id/comments', [provide([DEAL]), validateBank], async (re
   });
 });
 
+/**
+ * @openapi
+ * /contract/:_id/submission-details:
+ *   get:
+ *     summary: Get the contract submission details page
+ *     tags: [Portal]
+ *     description: Get the contract submission details page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ */
 router.get('/contract/:_id/submission-details', [provide([DEAL]), validateBank], async (req, res) => {
   const { deal } = req.apiData;
   const { user } = req.session;
@@ -106,6 +167,26 @@ router.get('/contract/:_id/submission-details', [provide([DEAL]), validateBank],
   });
 });
 
+/**
+ * @openapi
+ * /contract/:_id/delete:
+ *   get:
+ *     summary: Get the contract delete page
+ *     tags: [Portal]
+ *     description: Get the contract delete page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ */
 router.get('/contract/:_id/delete', [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank], async (req, res) => {
   const { deal } = req.apiData;
   return res.render('contract/contract-delete.njk', {
@@ -114,6 +195,36 @@ router.get('/contract/:_id/delete', [validateRole({ role: [MAKER] }), provide([D
   });
 });
 
+/**
+ * @openapi
+ * /contract/:_id/delete:
+ *   post:
+ *     summary: Post abandon contract
+ *     tags: [Portal]
+ *     description: Get the contract view page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       500:
+ *         description: Internal server error
+ */
 router.post('/contract/:_id/delete', [validateRole({ role: [MAKER] }), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { comments } = req.body;
@@ -153,7 +264,26 @@ router.post('/contract/:_id/delete', [validateRole({ role: [MAKER] }), validateB
   return res.redirect('/dashboard');
 });
 
-// Submit to the checker
+/**
+ * @openapi
+ * /contract/:_id/ready-for-review:
+ *   get:
+ *     summary: Get the contract ready for review page
+ *     tags: [Portal]
+ *     description: Get the contract ready for review page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ */
 router.get('/contract/:_id/ready-for-review', [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank], async (req, res) => {
   const { deal } = req.apiData;
 
@@ -163,7 +293,36 @@ router.get('/contract/:_id/ready-for-review', [validateRole({ role: [MAKER] }), 
   });
 });
 
-// Submit to the checker
+/**
+ * @openapi
+ * /contract/:_id/ready-for-review:
+ *   post:
+ *     summary: Post contract submitted for review
+ *     tags: [Portal]
+ *     description: Post contract submitted for review
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       500:
+ *         description: Internal server error
+ */
 router.post('/contract/:_id/ready-for-review', [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { comments } = req.body;
@@ -203,6 +362,26 @@ router.post('/contract/:_id/ready-for-review', [validateRole({ role: [MAKER] }),
   return res.redirect('/dashboard');
 });
 
+/**
+ * @openapi
+ * /contract/:_id/edit-name:
+ *   get:
+ *     summary: Get the contract edit name page
+ *     tags: [Portal]
+ *     description: Get the contract edit name page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ */
 router.get('/contract/:_id/edit-name', [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank], async (req, res) => {
   const { deal } = req.apiData;
 
@@ -212,6 +391,36 @@ router.get('/contract/:_id/edit-name', [validateRole({ role: [MAKER] }), provide
   });
 });
 
+/**
+ * @openapi
+ * /contract/:_id/edit-name:
+ *   post:
+ *     summary: Post contract edit name
+ *     tags: [Portal]
+ *     description: Post contract edit name
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       500:
+ *         description: Internal server error
+ */
 router.post('/contract/:_id/edit-name', [validateRole({ role: [MAKER] }), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { additionalRefName } = req.body;
@@ -239,6 +448,26 @@ router.post('/contract/:_id/edit-name', [validateRole({ role: [MAKER] }), valida
   return res.redirect(`/contract/${_id}`);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/return-to-maker:
+ *   get:
+ *     summary: Get the contract return to maker page
+ *     tags: [Portal]
+ *     description: Get the contract return to maker page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ */
 router.get('/contract/:_id/return-to-maker', [validateRole({ role: [CHECKER] }), validateBank], async (req, res) => {
   const { _id } = req.params;
 
@@ -248,6 +477,36 @@ router.get('/contract/:_id/return-to-maker', [validateRole({ role: [CHECKER] }),
   });
 });
 
+/**
+ * @openapi
+ * /contract/:_id/return-to-maker:
+ *   post:
+ *     summary: Post return to maker
+ *     tags: [Portal]
+ *     description: Post return to maker
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       500:
+ *         description: Internal server error
+ */
 router.post('/contract/:_id/return-to-maker', [validateRole({ role: [CHECKER] }), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { comments } = req.body;
@@ -287,7 +546,26 @@ router.post('/contract/:_id/return-to-maker', [validateRole({ role: [CHECKER] })
   return res.redirect('/dashboard');
 });
 
-// Submit to TFM
+/**
+ * @openapi
+ * /contract/:_id/confirm-submission:
+ *   get:
+ *     summary: Get the confirm submission page
+ *     tags: [Portal]
+ *     description: Get the confirm submission page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ */
 router.get('/contract/:_id/confirm-submission', [validateRole({ role: [CHECKER] }), validateBank], async (req, res) => {
   const { _id } = req.params;
 
@@ -297,7 +575,36 @@ router.get('/contract/:_id/confirm-submission', [validateRole({ role: [CHECKER] 
   });
 });
 
-// Submit to TFM
+/**
+ * @openapi
+ * /contract/:_id/confirm-submission:
+ *   post:
+ *     summary: Post confirm submission
+ *     tags: [Portal]
+ *     description: Post confirm submission
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       500:
+ *         description: Internal server error
+ */
 router.post('/contract/:_id/confirm-submission', [validateRole({ role: [CHECKER] }), provide([DEAL]), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { confirmSubmit } = req.body;
@@ -347,6 +654,26 @@ router.post('/contract/:_id/confirm-submission', [validateRole({ role: [CHECKER]
   return res.redirect('/dashboard');
 });
 
+/**
+ * @openapi
+ * /contract/:_id/clone:
+ *   get:
+ *     summary: Get the contract clone page
+ *     tags: [Portal]
+ *     description: Get the contract clone page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ */
 router.get('/contract/:_id/clone', [validateRole({ role: [MAKER] }), provide([DEAL]), validateBank], async (req, res) => {
   const { deal } = req.apiData;
 
@@ -359,6 +686,36 @@ router.get('/contract/:_id/clone', [validateRole({ role: [MAKER] }), provide([DE
   });
 });
 
+/**
+ * @openapi
+ * /contract/:_id/clone:
+ *   post:
+ *     summary: Post contract clone
+ *     tags: [Portal]
+ *     description: Post contract clone
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       500:
+ *         description: Internal server error
+ */
 router.post('/contract/:_id/clone', [validateRole({ role: [MAKER] }), validateBank], async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
@@ -385,6 +742,26 @@ router.post('/contract/:_id/clone', [validateRole({ role: [MAKER] }), validateBa
   return res.redirect('/dashboard');
 });
 
+/**
+ * @openapi
+ * /contract/:_id/clone/before-you-start:
+ *   get:
+ *     summary: Get the before you start page
+ *     tags: [Portal]
+ *     description: Get the before you start page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ */
 router.get('/contract/:_id/clone/before-you-start', [validateRole({ role: [MAKER] }), provide([MANDATORY_CRITERIA]), validateBank], async (req, res) => {
   const { mandatoryCriteria } = req.apiData;
   return res.render('before-you-start/before-you-start.njk', {
@@ -393,6 +770,36 @@ router.get('/contract/:_id/clone/before-you-start', [validateRole({ role: [MAKER
   });
 });
 
+/**
+ * @openapi
+ * /contract/:_id/clone/before-you-start:
+ *   post:
+ *     summary: Post before you start
+ *     tags: [Portal]
+ *     description: Post before you start
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       500:
+ *         description: Internal server error
+ */
 router.post('/contract/:_id/clone/before-you-start', [validateRole({ role: [MAKER] }), validateBank], async (req, res) => {
   const { _id } = requestParams(req);
   const { criteriaMet } = req.body;

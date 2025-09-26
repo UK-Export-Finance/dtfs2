@@ -16,6 +16,31 @@ const { validateRole } = require('../../middleware');
 
 const router = express.Router();
 
+/**
+ * @openapi
+ * /contract/:_id/about/buyer:
+ *   get:
+ *     summary: Get about buyer page
+ *     tags: [Portal]
+ *     description: Get about buyer page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/about/buyer', [validateRole({ role: [MAKER] }), provide([DEAL, COUNTRIES])], async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
@@ -43,6 +68,7 @@ router.get('/contract/:_id/about/buyer', [validateRole({ role: [MAKER] }), provi
     taskListItems: aboutTaskList(completedForms),
   });
 });
+
 const buyerSubmissionDetailsProperties = [
   'buyer-name',
   'buyer-address-country',
@@ -54,6 +80,27 @@ const buyerSubmissionDetailsProperties = [
   'destinationOfGoodsAndServices',
 ];
 
+/**
+ * @openapi
+ * /contract/:_id/about/buyer:
+ *   post:
+ *     summary: Post about buyer page
+ *     tags: [Portal]
+ *     description: Post about buyer page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/about/buyer', async (req, res) => {
   const { _id, userToken } = requestParams(req);
 
@@ -65,6 +112,27 @@ router.post('/contract/:_id/about/buyer', async (req, res) => {
   return res.redirect(redirectUrl);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/about/buyer:
+ *   post:
+ *     summary: Post about buyer page - save and go back
+ *     tags: [Portal]
+ *     description: Post about buyer page - save and go back
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/about/buyer/save-go-back', provide([DEAL]), async (req, res) => {
   const deal = req.apiData[DEAL];
   const { _id, userToken } = requestParams(req);

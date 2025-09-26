@@ -5,6 +5,25 @@ const { PRIMARY_NAV_KEY } = require('../../constants');
 
 const router = express.Router();
 
+/**
+ * @openapi
+ * /:_id:
+ *   get:
+ *     summary: Get profile page
+ *     tags: [Portal]
+ *     description: Get profile page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the user ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *
+ */
 router.get('/:_id', async (req, res) => {
   const { userToken } = requestParams(req);
 
@@ -19,7 +38,29 @@ router.get('/:_id', async (req, res) => {
   });
 });
 
-// When user is logged in and would like to change the password
+/**
+ * @openapi
+ * /:_id/change-password:
+ *   get:
+ *     summary: Get change password page
+ *     tags: [Portal]
+ *     description: Get change password page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the user ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *
+ */
 router.get('/:_id/change-password', async (req, res) => {
   const { _id } = requestParams(req);
 
@@ -31,7 +72,29 @@ router.get('/:_id/change-password', async (req, res) => {
   });
 });
 
-// When user is logged in and would like to change the password
+/**
+ * @openapi
+ * /:_id/change-password:
+ *   post:
+ *     summary: Post change password
+ *     tags: [Portal]
+ *     description: Post change password
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the user ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *
+ */
 router.post('/:_id/change-password', async (req, res) => {
   // Ensure that the user is logged in
   if (req?.session?.user) {
