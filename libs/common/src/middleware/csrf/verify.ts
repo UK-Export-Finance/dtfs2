@@ -21,8 +21,8 @@ import { CSRF } from '../../constants';
  * @returns void or a Response with Unauthorized status if verification fails.
  */
 export const verify = (
-  req: CustomExpressRequest<{ query: { _csrf: string }; reqBody: { _csrf: string } }>,
-  res: Response,
+  req: CustomExpressRequest<{ query: { _csrf?: string }; reqBody: { _csrf: string } }>,
+  _res: Response,
   next: NextFunction,
 ): void | Response => {
   if (!req?.session) {
@@ -41,18 +41,23 @@ export const verify = (
   if (isCsrfQuery) {
     req.body = {
       ...req.body,
-      _csrf: req.query._csrf,
+      _csrf: req.query._csrf as string,
     };
   }
 
-  // Client token
-  const token = req.body._csrf;
   // Server secret
   const secret = req.session.csrf;
 
   // CSRF token or secret is void
-  if (!token || !secret) {
-    throw new Error('Invalid token or secret.');
+  if (!secret) {
+    throw new Error('Invalid CSRF secret.');
+  }
+
+  // Client token
+  const token = req.body._csrf;
+
+  if (!token) {
+    throw new Error('Invalid CSRF token.');
   }
 
   const [clientHash, timestamp] = token.split(':');
@@ -60,7 +65,7 @@ export const verify = (
 
   // If an invalid CSRF token has been received
   if (!clientHash || !timestamp || Number.isNaN(past)) {
-    return res.render('_partials/problem-with-service.njk');
+    throw new Error('Invalid token has been received.');
   }
 
   const now = getEpochMs();
