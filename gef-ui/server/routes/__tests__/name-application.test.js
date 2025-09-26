@@ -1,14 +1,17 @@
 import { validateToken, validateBank } from '../../middleware';
 
-const getSpy = jest.fn();
-const postSpy = jest.fn();
+const routeSpy = jest.fn();
+const allSpy = jest.fn().mockReturnThis();
+const getSpy = jest.fn().mockReturnThis();
+const postSpy = jest.fn().mockReturnThis();
 jest.doMock('express', () => ({
-  Router() {
-    return {
+  Router: () => ({
+    route: routeSpy.mockReturnValue({
+      all: allSpy,
       get: getSpy,
       post: postSpy,
-    };
-  },
+    }),
+  }),
 }));
 
 describe('Routes', () => {
@@ -22,9 +25,11 @@ describe('Routes', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith('/name-application', [validateToken, expect.any(Function)], expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/name-application', [validateToken, expect.any(Function)], expect.any(Function));
-    expect(getSpy).toHaveBeenCalledWith('/applications/:dealId/name', [validateToken, validateBank, expect.any(Function)], expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith('/applications/:dealId/name', [validateToken, validateBank, expect.any(Function)], expect.any(Function));
+    expect(routeSpy).toHaveBeenCalledWith('/name-application');
+    expect(routeSpy).toHaveBeenCalledWith('/applications/:dealId/name');
+    expect(allSpy).toHaveBeenCalledWith([validateToken, expect.any(Function)]);
+    expect(allSpy).toHaveBeenCalledWith([validateToken, validateBank, expect.any(Function)]);
+    expect(getSpy).toHaveBeenCalledWith(expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith(expect.any(Function));
   });
 });
