@@ -1,6 +1,6 @@
 import { getFormattedMonetaryValue, CURRENCY } from '@ukef/dtfs2-common';
 import { format, differenceInMonths } from 'date-fns';
-import { D_MMMM_YYYY_FORMAT, DD_MMM_YYYY_FORMAT, twoYears, twoDays, today } from '../../../../../../../../e2e-fixtures/dateConstants';
+import { D_MMMM_YYYY_FORMAT, DD_MMM_YYYY_FORMAT, twoYears, twoDays, today } from '@ukef/dtfs2-common/test-helpers';
 import MOCK_USERS from '../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../../e2e-fixtures/mock-gef-facilities';

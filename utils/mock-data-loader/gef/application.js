@@ -1,5 +1,5 @@
+const { BANK1_MAKER1 } = require('@ukef/dtfs2-common/test-helpers');
 const { EXPORTER_COMPLETED, EXPORTER_NO_INDUSTRIES } = require('./exporter');
-const { BANK1_MAKER1 } = require('../portal-users');
 
 const APPLICATION = [
   {

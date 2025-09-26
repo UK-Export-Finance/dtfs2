@@ -28,3 +28,5 @@ export * from './portal-amendment-return-to-maker-email-variables';
 export * from './facility';
 export * from './tfm-facility';
 export * from './portal-amendment-delete-email-variables';
+export * from './users';
+export * from './banks';

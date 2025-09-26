@@ -1,10 +1,9 @@
+import { MOCK_DEAL_AIN, threeMonths, yearWithZeroLetter } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../relativeURL';
 import { errorSummary } from '../../../partials';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
-import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
-import { threeMonths, yearWithZeroLetter } from '../../../../../../e2e-fixtures/dateConstants';
 
 context('Amendments - Request date', () => {
   let dealId;

@@ -1,6 +1,6 @@
+const { yesterday, oneMonth, today } = require('@ukef/dtfs2-common/test-helpers');
 const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
-const { yesterday, oneMonth, today } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const deal = {
   submissionType: 'Automatic Inclusion Notice',

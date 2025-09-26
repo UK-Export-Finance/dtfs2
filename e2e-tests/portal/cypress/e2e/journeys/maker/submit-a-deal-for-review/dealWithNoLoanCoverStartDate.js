@@ -1,5 +1,5 @@
+const { oneMonth } = require('@ukef/dtfs2-common/test-helpers');
 const dealReadyToSubmitForReview = require('./dealReadyToSubmitForReview');
-const { oneMonth } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const dealWithNoCoverStartDate = { ...dealReadyToSubmitForReview };
 

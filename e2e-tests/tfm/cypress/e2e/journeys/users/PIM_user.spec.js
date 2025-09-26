@@ -1,8 +1,7 @@
+import { MOCK_DEAL_AIN } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
-import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import partials from '../../partials';
 import pages from '../../pages';
-
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../e2e-fixtures';
 
 context('PIM User', () => {

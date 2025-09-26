@@ -12,7 +12,7 @@ export const DD_MMMM_YYYY_FORMAT = 'dd MMMM yyyy';
 export const TIME_HOURS_FORMAT = 'h';
 export const TIME_AM_PM_FORMAT = 'aaa';
 
-const getFormattedValues = (date) => ({
+const getFormattedValues = (date: Date) => ({
   date,
   day: format(date, SHORT_DAY_FORMAT),
   dayLong: format(date, LONG_DAY_FORMAT),
@@ -62,7 +62,7 @@ export const twelveMonthsOneDayAgo = getFormattedValues(sub(todayDate, { months:
 export const oneYearAgo = getFormattedValues(sub(todayDate, { years: 1 }));
 export const twoYearsAgo = getFormattedValues(sub(todayDate, { years: 2 }));
 
-export const addDays = (days) => getFormattedValues(add(todayDate, { days }));
+export const addDays = (days: number) => getFormattedValues(add(todayDate, { days }));
 
 // Dates calculated from other values
 /**

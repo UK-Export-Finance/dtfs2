@@ -1,6 +1,6 @@
 const { CURRENCY } = require('@ukef/dtfs2-common');
+const { tomorrow } = require('@ukef/dtfs2-common/test-helpers');
 const CONSTANTS = require('../gef/cypress/fixtures/constants');
-const { tomorrow } = require('./dateConstants');
 
 /**
  * Gets facility end date properties if enabled on default deal version

@@ -1,4 +1,4 @@
-const { today, oneMonth } = require('../../../../../e2e-fixtures/dateConstants');
+const { today, oneMonth } = require('@ukef/dtfs2-common/test-helpers');
 
 const GUARANTEE_DETAILS = {
   // 'Conditional' facility stage specifics

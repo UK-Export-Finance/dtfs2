@@ -1,10 +1,9 @@
+import { MOCK_DEAL_AIN, today } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../relativeURL';
 import partials from '../../../partials';
 import pages from '../../../pages';
-import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
 import * as MOCK_USERS from '../../../../../../e2e-fixtures';
 import { BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
-import { today } from '../../../../../../e2e-fixtures/dateConstants';
 
 const TOTAL_DEFAULT_AIN_TASKS = 2;
 

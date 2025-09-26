@@ -1,3 +1,4 @@
+import { threeDaysAgo, threeDaysAgoPlusThreeMonths, threeMonths, threeMonthsOneDay, today, twoMonths } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../relativeURL';
 import CONSTANTS from '../../../../fixtures/constants';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../fixtures/mocks/mock-deals';
@@ -10,7 +11,6 @@ import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../../e2e-fixtures/por
 import { acbsReconciliation } from '../../../../../../e2e-fixtures/acbs';
 import statusBanner from '../../../pages/application-status-banner';
 import facilities from '../../../pages/facilities';
-import { threeDaysAgo, threeDaysAgoPlusThreeMonths, threeMonths, threeMonthsOneDay, today, twoMonths } from '../../../../../../e2e-fixtures/dateConstants';
 
 let dealId;
 let token;

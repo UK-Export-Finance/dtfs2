@@ -1,8 +1,8 @@
+import { today, yesterday } from '@ukef/dtfs2-common/test-helpers';
 import { TFM_DEAL_STAGE, TFM_FACILITY_STAGE } from '@ukef/dtfs2-common';
 import relative from '../../../relativeURL';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../e2e-fixtures';
 import caseDealPage from '../../../pages/caseDealPage';
-import { today, yesterday } from '../../../../../../e2e-fixtures/dateConstants';
 import dealsPage from '../../../pages/dealsPage';
 import facilitiesPage from '../../../pages/facilitiesPage';
 import { caseSubNavigation, successBanner } from '../../../partials';

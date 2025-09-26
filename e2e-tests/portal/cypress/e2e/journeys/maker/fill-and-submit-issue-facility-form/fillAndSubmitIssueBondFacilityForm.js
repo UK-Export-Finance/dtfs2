@@ -1,5 +1,5 @@
+const { oneMonth, today, twoDays } = require('@ukef/dtfs2-common/test-helpers');
 const pages = require('../../../pages');
-const { oneMonth, today, twoDays } = require('../../../../../../e2e-fixtures/dateConstants');
 
 export const ISSUED_BOND_DATE_VALUE = today.date;
 export const COVER_START_DATE_VALUE = twoDays.date;

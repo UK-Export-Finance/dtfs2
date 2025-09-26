@@ -1,9 +1,9 @@
+import { tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../../../e2e-fixtures/mock-gef-facilities';
 import { applicationPreview } from '../../../../../../../../../gef/cypress/e2e/pages';
-import { tomorrow } from '../../../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 

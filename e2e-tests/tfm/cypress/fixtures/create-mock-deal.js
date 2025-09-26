@@ -1,10 +1,15 @@
-import MOCK_DEAL_AIN from './deal-AIN';
+import { MOCK_DEAL_AIN } from '@ukef/dtfs2-common/test-helpers';
 
+/**
+ * creates a mock deal based on the MOCK_DEAL_AIN for e2e tests
+ * @param {object} overrides deal overrides
+ * @returns {object} created mock deal
+ */
 const createMockDeal = (overrides) => {
   let submissionDate = new Date().valueOf().toString();
   let facilities = [{ ...MOCK_DEAL_AIN.mockFacilities[0] }];
 
-  if (overrides.mockFacilities) {
+  if (Array.isArray(overrides.mockFacilities)) {
     facilities = overrides.mockFacilities;
   }
 

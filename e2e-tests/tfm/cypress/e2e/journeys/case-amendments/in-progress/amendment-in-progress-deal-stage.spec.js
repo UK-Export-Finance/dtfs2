@@ -1,8 +1,7 @@
+import { MOCK_DEAL_AIN, tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../relativeURL';
 import facilityPage from '../../../pages/facilityPage';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
-import MOCK_DEAL_AIN from '../../../../fixtures/deal-AIN';
-import { tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
 import { PIM_USER_1, BANK1_MAKER1, ADMIN } from '../../../../../../e2e-fixtures';
 import pages from '../../../pages';
 import { caseSubNavigation, caseSummary } from '../../../partials';

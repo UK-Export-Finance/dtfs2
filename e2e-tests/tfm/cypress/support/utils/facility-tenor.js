@@ -1,5 +1,5 @@
 import { add } from 'date-fns';
-import { oneMonth, twoYearsAgo } from '../../../../e2e-fixtures/dateConstants';
+import { oneMonth, twoYearsAgo } from '@ukef/dtfs2-common/test-helpers';
 
 /**
  * Function to calculate facility tenor for a BSS facility with a commencement date
