@@ -7,8 +7,47 @@ const router = express.Router();
 
 const errorHref = (id) => `#${id}`;
 
+/**
+ * @openapi
+ * /feedback:
+ *   get:
+ *     summary: Renders feedback form page.
+ *     tags: [Portal]
+ *     description: Renders feedback form page.
+ *     responses:
+ *       200:
+ *         description: OK
+ */
 router.get('/feedback', (req, res) => res.render('feedback/feedback-form.njk'));
 
+/**
+ * @openapi
+ * /feedback:
+ *   post:
+ *     summary: Create feedback
+ *     tags: [Portal]
+ *     description: Create feedback
+ *     parameters:
+ *       - in: path
+ *         name: dealId, facilityId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and facility ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: OK
+ *       301:
+ *         description: Resource moved permanently
+ *       500:
+ *         description: Internal server error
+ */
 router.post('/feedback', async (req, res) => {
   const userDetails = {
     username: null,
@@ -51,6 +90,17 @@ router.post('/feedback', async (req, res) => {
   });
 });
 
+/**
+ * @openapi
+ * /thank-you-feedback:
+ *   get:
+ *     summary: Renders thank you feedback page.
+ *     tags: [Portal]
+ *     description: Renders thank you feedback page.
+ *     responses:
+ *       200:
+ *         description: OK
+ */
 router.get('/thank-you-feedback', (req, res) => res.render('feedback/feedback-thankyou.njk'));
 
 module.exports = router;

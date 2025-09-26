@@ -61,6 +61,15 @@ const getDataAndTemplateVariables = async (userToken, user, sessionFilters, curr
 };
 exports.getDataAndTemplateVariables = getDataAndTemplateVariables;
 
+/**
+ * Renders the dashboard facilities page
+ *
+ * @async
+ * @function allFacilities
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>} Renders the dashboard facilities page with the appropriate data and template variables.
+ */
 exports.allFacilities = async (req, res) => {
   const { userToken } = requestParams(req);
   const { user } = req.session;
@@ -94,6 +103,15 @@ exports.allFacilities = async (req, res) => {
   });
 };
 
+/**
+ * Remove session filter and redirect to dashboard deals page sorted by updatedAt.
+ *
+ * @async
+ * @function removeSingleAllFacilitiesFilter
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>} Redirects to dashboard deals page sorted by updatedAt.
+ */
 exports.removeSingleAllFacilitiesFilter = async (req, res) => {
   removeSessionFilter(req);
 

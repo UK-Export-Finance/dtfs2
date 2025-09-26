@@ -14,6 +14,31 @@ const { validateRole } = require('../../middleware');
 
 const router = express.Router();
 
+/**
+ * @openapi
+ * /contract/:_id/about/check-your-answers:
+ *   get:
+ *     summary: Get about check your answers page
+ *     tags: [Portal]
+ *     description: Get about check your answers page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/about/check-your-answers', validateRole({ role: [MAKER] }), async (req, res) => {
   const { _id, userToken } = requestParams(req);
 

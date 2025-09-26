@@ -42,6 +42,33 @@ const router = express.Router();
 
 const eligibilityErrorHref = (id) => `#criterion-group-${id}`;
 
+/**
+ * @openapi
+ * /contract/:_id/eligibility/criteria:
+ *   get:
+ *     summary: Get eligibility criteria page
+ *     tags: [Portal]
+ *     description: Get eligibility criteria page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/eligibility/criteria', [validateRole({ role: [MAKER] }), provide([DEAL, COUNTRIES])], async (req, res) => {
   const { deal, countries } = req.apiData;
 
@@ -68,6 +95,29 @@ router.get('/contract/:_id/eligibility/criteria', [validateRole({ role: [MAKER] 
   });
 });
 
+/**
+ * @openapi
+ * /contract/:_id/eligibility/criteria:
+ *   get:
+ *     summary: Post eligibility criteria page
+ *     tags: [Portal]
+ *     description: Post eligibility criteria page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { body } = req;
@@ -85,6 +135,29 @@ router.post('/contract/:_id/eligibility/criteria', async (req, res) => {
   return res.redirect(`/contract/${_id}/eligibility/supporting-documentation`);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/eligibility/criteria/save-go-back:
+ *   get:
+ *     summary: Post eligibility criteria page - save and go back
+ *     tags: [Portal]
+ *     description: Post eligibility criteria page - save and go back
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/eligibility/criteria/save-go-back', provide([DEAL]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { deal } = req.apiData;
@@ -99,6 +172,33 @@ router.post('/contract/:_id/eligibility/criteria/save-go-back', provide([DEAL]),
   return res.redirect(redirectUrl);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/eligibility/supporting-documentation:
+ *   get:
+ *     summary: Get eligibility supporting documentation page
+ *     tags: [Portal]
+ *     description: Get eligibility supporting documentation page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/eligibility/supporting-documentation', [validateRole({ role: [MAKER] }), provide([DEAL])], async (req, res) => {
   const { deal } = req.apiData;
 
@@ -163,6 +263,29 @@ const renderSupportingDocumentationPageWithUploadErrors = (uploadError, deal, re
   });
 };
 
+/**
+ * @openapi
+ * /contract/:_id/eligibility/supporting-documentation:
+ *   post:
+ *     summary: Post eligibility criteria
+ *     tags: [Portal]
+ *     description: Post eligibility criteria
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post(
   '/contract/:_id/eligibility/supporting-documentation',
   provide([DEAL]),
@@ -230,6 +353,29 @@ router.post(
   },
 );
 
+/**
+ * @openapi
+ * /contract/:_id/eligibility/supporting-documentation/save-go-back:
+ *   post:
+ *     summary: Post eligibility criteria - save and go back
+ *     tags: [Portal]
+ *     description: Post eligibility criteria - save and go back
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post(
   '/contract/:_id/eligibility/supporting-documentation/save-go-back',
   provide([DEAL]),
@@ -294,6 +440,29 @@ router.post(
   },
 );
 
+/**
+ * @openapi
+ * /contract/:_id/eligibility-documentation/:fieldname/:filename:
+ *   get:
+ *     summary: Get eligibility criteria file
+ *     tags: [Portal]
+ *     description: Get eligibility criteria file
+ *     parameters:
+ *       - in: path
+ *         name: _id, fieldname, filename
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID, fieldname and filename
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/eligibility-documentation/:fieldname/:filename', async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const { fieldname, filename } = req.params;
@@ -307,6 +476,33 @@ router.get('/contract/:_id/eligibility-documentation/:fieldname/:filename', asyn
   fileData.pipe(readStream).pipe(res);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/eligibility/check-your-answers:
+ *   get:
+ *     summary: Get eligibility criteria check your answers page
+ *     tags: [Portal]
+ *     description: Get eligibility criteria check your answers page
+ *     parameters:
+ *       - in: path
+ *         name: _id, fieldname, filename
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID, fieldname and filename
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/eligibility/check-your-answers', [validateRole({ role: [MAKER] }), provide([DEAL])], async (req, res) => {
   const { deal } = req.apiData;
 
