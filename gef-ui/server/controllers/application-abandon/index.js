@@ -7,6 +7,15 @@ const applicationIsAbandonable = (application) =>
 
 const dashboardUrl = '/dashboard';
 
+/**
+ * Controller to render the application abandon confirmation page
+ * @async
+ * @function confirmAbandonApplication
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @param {import('express').NextFunction} next - The Express next middleware function.
+ * @returns {Promise<void>} Renders the application abandon page or redirects to dashboard.
+ */
 const confirmAbandonApplication = async (req, res, next) => {
   const { params, session } = req;
   const { dealId } = params;
@@ -27,6 +36,15 @@ const confirmAbandonApplication = async (req, res, next) => {
   return res.render('application-abandon.njk', { application });
 };
 
+/**
+ * Controller to handle abandoning an application
+ * @async
+ * @function abandonApplication
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @param {import('express').NextFunction} next - The Express next middleware function.
+ * @returns {Promise<void>}
+ */
 const abandonApplication = async (req, res, next) => {
   const { params, session } = req;
   const { dealId } = params;

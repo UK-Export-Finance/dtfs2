@@ -3,6 +3,15 @@ const { getIssuedFacilitiesAsArray } = require('../../utils/facility-helpers');
 const { applicationDetails } = require('../application-details');
 const api = require('../../services/api');
 
+/**
+ * Handles the acceptance of a UKEF decision for a given deal.
+ *
+ * @async
+ * @function acceptUkefDecision
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>} Redirects or renders a view based on the outcome.
+ */
 const acceptUkefDecision = async (req, res) => {
   const { dealId } = req.params;
   const { decision } = req.body;

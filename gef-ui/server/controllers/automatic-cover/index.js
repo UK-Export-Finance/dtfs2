@@ -9,6 +9,14 @@ const updateSubmissionType = async ({ dealId, coverType, userToken }) => {
   await api.updateApplication({ dealId, application: { submissionType: coverType }, userToken });
 };
 
+/**
+ * Controller to render the automatic cover page
+ * @async
+ * @function automaticCover
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the automatic cover page or an error page.
+ */
 const automaticCover = async (req, res) => {
   const { params } = req;
   const { dealId } = params;
@@ -28,6 +36,15 @@ const automaticCover = async (req, res) => {
   }
 };
 
+/**
+ * Controller to handle validating and saving automatic cover answers
+ * @async
+ * @function validateAutomaticCover
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @param {import('express').NextFunction} next - The Express next middleware function.
+ * @returns {Promise<void>}
+ */
 const validateAutomaticCover = async (req, res, next) => {
   try {
     const { body, params, query, session } = req;

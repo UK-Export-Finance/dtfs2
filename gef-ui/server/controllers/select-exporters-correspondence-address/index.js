@@ -2,6 +2,15 @@ const { selectDropdownAddresses, validationErrorHandler, isEmpty } = require('..
 
 const api = require('../../services/api');
 
+/**
+ * Controller to get the selection of an exporter's correspondence address.
+ *
+ * @async
+ * @function selectExportersCorrespondenceAddress
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>} Renders a view based on the result of the operation.
+ */
 const selectExportersCorrespondenceAddress = async (req, res) => {
   const { params, session } = req;
   const { dealId } = params;
@@ -19,6 +28,14 @@ const selectExportersCorrespondenceAddress = async (req, res) => {
   }
 };
 
+/**
+ * Post the selected exporter correspondence address from the request body.
+ *
+ * @function validateSelectExportersCorrespondenceAddress
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {void}
+ */
 const validateSelectExportersCorrespondenceAddress = (req, res) => {
   const { params, body, session } = req;
   const { postcode, addresses } = session;

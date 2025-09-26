@@ -6,6 +6,14 @@ const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 const { validateAboutFacility } = require('./validation');
 const { getNextPage } = require('./get-next-page-helper');
 
+/**
+ * Controller to render the About Facility page.
+ * @async
+ * @function aboutFacility
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the about-facility page or an error page.
+ */
 const aboutFacility = async (req, res) => {
   const {
     params,
@@ -78,6 +86,14 @@ const calculateDateFromYearMonthDate = (year, month, date) => {
     : null;
 };
 
+/**
+ * Validates and updates the About Facility form submission.
+ * @async
+ * @function validateAndUpdateAboutFacility
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>} Renders the about-facility page with errors, or redirects on success.
+ */
 const validateAndUpdateAboutFacility = async (req, res) => {
   const {
     body: {

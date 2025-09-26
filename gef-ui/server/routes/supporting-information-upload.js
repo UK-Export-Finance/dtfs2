@@ -33,6 +33,32 @@ const validateUploadCsrfToken = (req, res, next) => {
 
 const uploadSingle = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE }, fileFilter: multerFilter }).single('documents');
 
+/**
+ * @openapi
+ * /application-details/:dealId/supporting-information/document/:documentType/upload:
+ *   post:
+ *     summary: Handles the upload of a supporting document for a specific deal and document type.
+ *     tags: [Portal - Gef]
+ *     description: Handles the upload of a supporting document for a specific deal and document type.
+ *     parameters:
+ *       - in: path
+ *         name: dealId, documentType
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and documentType
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ */
 router.post(
   '/application-details/:dealId/supporting-information/document/:documentType/upload',
   [validateUploadCsrfToken, validateToken, validateBank, validateRole({ role: [MAKER] })],
@@ -54,6 +80,44 @@ router.post(
   },
   uploadSupportingDocument,
 );
+
+/**
+ * @openapi
+ * /application-details/:dealId/supporting-information/document/:documentType/upload:
+ *   delete:
+ *     summary: Deletes a supporting document from a deal.
+ *     tags: [Portal - Gef]
+ *     description: Deletes a supporting document from a deal.
+ *     parameters:
+ *       - in: path
+ *         name: dealId, documentType
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and documentType
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               delete:
+ *                 type: string
+ *           example:
+ *             delete: 'mock-file.pdf'
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ */
 router.post(
   '/application-details/:dealId/supporting-information/document/:documentType/delete',
   [validateUploadCsrfToken, validateToken, validateBank, validateRole({ role: [MAKER] })],

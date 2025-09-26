@@ -4,6 +4,14 @@ const { FACILITY_TYPE } = require('../../constants');
 const { isTrueSet, validationErrorHandler } = require('../../utils/helpers');
 const { getPreviousPage } = require('./get-previous-page-helper');
 
+/**
+ * Get the provided facility page for a facility within a deal.
+ * @async
+ * @function providedFacility
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the provided facility page or an error page if an exception occurs.
+ */
 const providedFacility = async (req, res) => {
   const {
     params,
@@ -41,6 +49,14 @@ const providedFacility = async (req, res) => {
   }
 };
 
+/**
+ * Updates the provided facility details for a facility within a deal.
+ * @async
+ * @function validateProvidedFacility
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the appropriate page based on validation or an error page if an exception occurs.
+ */
 const validateProvidedFacility = async (req, res) => {
   const { params, body, query, session } = req;
   const { dealId, facilityId } = params;

@@ -2,6 +2,15 @@ const { UNITED_KINGDOM } = require('@ukef/dtfs2-common');
 const api = require('../../services/api');
 const { validationErrorHandler } = require('../../utils/helpers');
 
+/**
+ * Controller to render the Companies House page.
+ *
+ * @async
+ * @function companiesHouse
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders a view based on the result of the API call.
+ */
 const companiesHouse = async (req, res) => {
   const { params, query, session } = req;
   const { dealId } = params;
@@ -23,6 +32,15 @@ const companiesHouse = async (req, res) => {
   }
 };
 
+/**
+ * Validates companies house page input and updates the application with the retrieved company details.
+ *
+ * @async
+ * @function validateCompaniesHouse
+ * @param {import('express').Request} req - Express request object containing params, body, query, and session.
+ * @param {import('express').Response} res - Express response object used to render views or redirect.
+ * @returns {Promise<void>} Renders a view or redirects the user based on validation outcome.
+ */
 const validateCompaniesHouse = async (req, res) => {
   try {
     const { params, body, query, session } = req;

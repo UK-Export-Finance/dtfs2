@@ -3,6 +3,15 @@ const { validationErrorHandler, isTrueSet } = require('../../utils/helpers');
 const { DEFAULT_COUNTRY } = require('../../constants');
 const constructPayload = require('../../utils/constructPayload');
 
+/**
+ * Controller to render the Exporter's Correspondence Address page.
+ *
+ * @async
+ * @function enterExportersCorrespondenceAddress
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>} Renders the correspondence address form or an error page.
+ */
 const enterExportersCorrespondenceAddress = async (req, res) => {
   const { params, session, query } = req;
   const { dealId } = params;
@@ -49,6 +58,15 @@ const enterExportersCorrespondenceAddress = async (req, res) => {
   }
 };
 
+/**
+ * Controller to validate and save the Exporter's Correspondence Address.
+ *
+ * @async
+ * @function validateEnterExportersCorrespondenceAddress
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>}
+ */
 const validateEnterExportersCorrespondenceAddress = async (req, res) => {
   delete req.body._csrf;
 

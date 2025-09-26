@@ -16,6 +16,12 @@ export type PostSubmitAmendmentToUkefRequest = CustomExpressRequest<{
     confirmSubmitUkef: boolean;
   };
 }>;
+
+/**
+ * Controller to post the Amendment to UKEF
+ * @param req - the request object
+ * @param res - the response object
+ */
 export const postSubmitAmendmentToUkef = async (req: PostSubmitAmendmentToUkefRequest, res: Response) => {
   try {
     const { dealId, facilityId, amendmentId } = req.params;

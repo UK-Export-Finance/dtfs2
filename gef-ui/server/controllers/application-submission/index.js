@@ -6,6 +6,14 @@ const CONSTANTS = require('../../constants');
 
 const maxCommentLength = 400;
 
+/**
+ * Controller to render the application details comments page.
+ * @async
+ * @function getApplicationSubmission
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the application details comments page.
+ */
 const getApplicationSubmission = async (req, res) => {
   const { params, session } = req;
   const { dealId } = params;
@@ -23,6 +31,15 @@ const getApplicationSubmission = async (req, res) => {
   });
 };
 
+/**
+ * Controller to handle the submission of an application.
+ * @async
+ * @function postApplicationSubmission
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @param {import('express').NextFunction} next - The Express next middleware function.
+ * @returns {Promise<void>} Renders the application details submitted page or handles errors.
+ */
 const postApplicationSubmission = async (req, res, next) => {
   delete req.body?._csrf;
   const { params, session, body } = req;

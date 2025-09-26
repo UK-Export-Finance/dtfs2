@@ -1,6 +1,15 @@
 const { validationErrorHandler, isTrueSet, isEmpty } = require('../../utils/helpers');
 const api = require('../../services/api');
 
+/**
+ * Handles the creation of a cloned GEF deal application.
+ * @async
+ * @function cloneDealCreateApplication
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @param {Function} next - Express next middleware function.
+ * @returns {Promise<void>}
+ */
 exports.cloneDealCreateApplication = async (req, res, next) => {
   const { body, session } = req;
   const { userToken } = req.session;
@@ -73,6 +82,15 @@ exports.cloneDealValidateMandatoryCriteria = async (req, res) => {
   }
 };
 
+/**
+ * Renders the name application for a cloned GEF deal.
+ *
+ * @async
+ * @function cloneDealNameApplication
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>}
+ */
 exports.cloneDealNameApplication = async (req, res) => {
   const { params } = req;
   const dealId = params?.dealId;

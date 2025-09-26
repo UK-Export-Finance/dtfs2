@@ -3,6 +3,15 @@ const { facilityTypeStringGenerator } = require('../../utils/facility-helpers');
 const { FACILITY_TYPE } = require('../../constants');
 const api = require('../../services/api');
 
+/**
+ * Renders the appropriate template with facility information for a given deal.
+ *
+ * @async
+ * @function facilities
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the appropriate template based on the request and facility data.
+ */
 const facilities = async (req, res) => {
   const {
     params,
@@ -40,6 +49,15 @@ const facilities = async (req, res) => {
   }
 };
 
+/**
+ * Handles the creation or update of a facility for a given deal.
+ *
+ * @async
+ * @function createFacility
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders a view or redirects based on the operation outcome.
+ */
 const createFacility = async (req, res) => {
   const { body, params, query, session } = req;
   const { dealId, facilityId } = params;

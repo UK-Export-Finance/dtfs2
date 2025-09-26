@@ -1,6 +1,15 @@
 const api = require('../../services/api');
 const { validationErrorHandler, isTrueSet, isEmpty } = require('../../utils/helpers');
 
+/**
+ * Controller to render the exporter's address page.
+ *
+ * @async
+ * @function exportersAddress
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>} Renders the exporters address form or an error page.
+ */
 const exportersAddress = async (req, res) => {
   try {
     const { params } = req;
@@ -21,6 +30,15 @@ const exportersAddress = async (req, res) => {
   }
 };
 
+/**
+ * Validates the exporters address form submission.
+ *
+ * @async
+ * @function validateExportersAddress
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>} Renders a view or redirects based on validation and lookup results.
+ */
 const validateExportersAddress = async (req, res) => {
   try {
     const { params, body } = req;

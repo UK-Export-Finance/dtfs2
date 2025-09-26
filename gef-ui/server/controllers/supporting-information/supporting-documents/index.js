@@ -104,6 +104,16 @@ const handleError = (error, req, res, next) => {
   return next(error);
 };
 
+/**
+ * Handles the retrieval and rendering of supporting documents for a given application and document type.
+ *
+ * @async
+ * @function getSupportingDocuments
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @param {import('express').NextFunction} next - Express next middleware function for error handling.
+ * @returns {Promise<void>} Renders the upload-supporting-documents template or passes errors to the error handler.
+ */
 const getSupportingDocuments = async (req, res, next) => {
   const {
     session: { user, userToken },
@@ -140,6 +150,16 @@ const getSupportingDocuments = async (req, res, next) => {
   }
 };
 
+/**
+ * Handles POST requests for uploading, validating, and deleting supporting documents for a specific application.
+ *
+ * @async
+ * @function postSupportingDocuments
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @param {import('express').NextFunction} next - Express next middleware function for error handling.
+ * @returns {Promise<void>} Renders the upload page with errors or redirects to the next document step.
+ */
 const postSupportingDocuments = async (req, res, next) => {
   delete req.body?._csrf;
   const {
@@ -225,6 +245,16 @@ const postSupportingDocuments = async (req, res, next) => {
   }
 };
 
+/**
+ * Handles the upload of a supporting document for a specific deal and document type.
+ *
+ * @async
+ * @function uploadSupportingDocument
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express next middleware function.
+ * @returns {Promise<void>} Sends a response with the upload result or error.
+ */
 const uploadSupportingDocument = async (req, res, next) => {
   const {
     file,
@@ -263,6 +293,16 @@ const uploadSupportingDocument = async (req, res, next) => {
   }
 };
 
+/**
+ * Deletes a supporting document from a deal.
+ *
+ * @async
+ * @function deleteSupportingDocument
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {import('express').NextFunction} next - Express next middleware function.
+ * @returns {Promise<void>} Sends a 200 response with a success message if deletion is successful, or a 400 response if the file to delete is missing.
+ */
 const deleteSupportingDocument = async (req, res, next) => {
   const {
     body: { delete: fileToDelete },
