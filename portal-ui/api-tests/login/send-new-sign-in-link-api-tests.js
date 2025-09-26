@@ -48,7 +48,7 @@ const withSendNewSignInLinkApiTests = (endpoint) => {
       let sessionCookie;
       beforeEach(async () => {
         resetAllWhenMocks();
-        jest.resetAllMocks();
+        jest.clearAllMocks();
         api.login.mockImplementation(mockLogin(partialAuthToken));
         sessionCookie = await post({ email, password }).to('/login').then(extractSessionCookie);
         when(api.validatePartialAuthToken).calledWith(partialAuthToken).mockResolvedValueOnce();
