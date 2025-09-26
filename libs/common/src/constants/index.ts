@@ -52,5 +52,6 @@ export * from './services';
 export * from './swagger';
 export * from './cookie';
 export * from './redis';
+export * from './csrf';
 
 export * as PAYLOAD_VERIFICATION from './payload-verification';

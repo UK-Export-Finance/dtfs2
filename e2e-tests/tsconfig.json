@@ -101,6 +101,6 @@
   "ts-node": {
     "files": true
   },
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", "../libs/common/**/*.ts"],
   "exclude": ["./node_modules/*", "node_modules"]
 }
