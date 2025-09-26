@@ -26,8 +26,8 @@ describe('Routes', () => {
 
   it('Sets up all routes', () => {
     expect(routeSpy).toHaveBeenCalledWith('/application-details/:dealId');
-    expect(allSpy).toHaveBeenCalledWith([validateToken, validateBank, expect.any(Function)]);
-    expect(getSpy).toHaveBeenCalledWith(expect.any(Function));
-    expect(postSpy).toHaveBeenCalledWith(expect.any(Function));
+    expect(allSpy).toHaveBeenCalledWith([validateToken, validateBank]);
+    expect(getSpy).toHaveBeenCalledWith([expect.any(Function)], expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith([expect.any(Function)], expect.any(Function));
   });
 });
