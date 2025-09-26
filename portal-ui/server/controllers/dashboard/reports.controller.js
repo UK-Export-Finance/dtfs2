@@ -3,6 +3,15 @@ const api = require('../../api');
 const CONSTANTS = require('../../constants');
 const { isChecker } = require('../../helpers/isChecker.helper');
 
+/**
+ * Renders the reports dashboard with summary counts for facilities and UKEF decisions.
+ *
+ * @async
+ * @function getPortalReports
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>}
+ */
 exports.getPortalReports = async (req, res) => {
   const { userToken } = req.session;
 
@@ -43,6 +52,15 @@ exports.getUnissuedFacilitiesReport = async (req, res) => {
   });
 };
 
+/**
+ * GET unconditional decision report
+ *
+ * @async
+ * @function getUnconditionalDecisionReport
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>}
+ */
 exports.getUnconditionalDecisionReport = async (req, res) => {
   const { userToken } = req.session;
   const deals =
@@ -58,6 +76,15 @@ exports.getUnconditionalDecisionReport = async (req, res) => {
   });
 };
 
+/**
+ * GET conditional decision report
+ *
+ * @async
+ * @function getConditionalDecisionReport
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>}
+ */
 exports.getConditionalDecisionReport = async (req, res) => {
   const { userToken } = req.session;
   const deals =
@@ -73,6 +100,15 @@ exports.getConditionalDecisionReport = async (req, res) => {
   });
 };
 
+/**
+ * Download the report if facilities exist
+ *
+ * @async
+ * @function downloadUnissuedFacilitiesReport
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>}
+ */
 exports.downloadUnissuedFacilitiesReport = async (req, res) => {
   const { userToken } = req.session;
   const facilities = (await api.getUnissuedFacilitiesReport(userToken)) || [];
@@ -124,6 +160,15 @@ exports.downloadUnissuedFacilitiesReport = async (req, res) => {
   return downloadCsv(res, 'unissued_facilities_report', columns, mappedFacilities);
 };
 
+/**
+ * Download ukef decision report
+ *
+ * @async
+ * @function downloadUnissuedFacilitiesReport
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>}
+ */
 const downloadUkefDecisionReport = async (userToken, ukefDecision) => {
   const deals = await api.getUkefDecisionReport(userToken, ukefDecision);
 
@@ -163,6 +208,15 @@ const downloadUkefDecisionReport = async (userToken, ukefDecision) => {
   return { deals, columns };
 };
 
+/**
+ * Download unconditional ukef decision report
+ *
+ * @async
+ * @function downloadUnconditionalDecisionReport
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>}
+ */
 exports.downloadUnconditionalDecisionReport = async (req, res) => {
   const { userToken } = req.session;
   const { deals, columns } =
@@ -172,6 +226,15 @@ exports.downloadUnconditionalDecisionReport = async (req, res) => {
   return downloadCsv(res, 'unconditional_decisions_report', columns, deals);
 };
 
+/**
+ * Download conditional ukef decision report
+ *
+ * @async
+ * @function downloadConditionalDecisionReport
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>}
+ */
 exports.downloadConditionalDecisionReport = async (req, res) => {
   const { userToken } = req.session;
   const { deals, columns } =

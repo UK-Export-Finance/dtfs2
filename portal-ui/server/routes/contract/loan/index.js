@@ -56,12 +56,62 @@ const handleNameField = (loanBody) => {
   return modifiedLoan;
 };
 
+/**
+ * @openapi
+ * /contract/:_id/loan/create:
+ *   get:
+ *     summary: Create a new loan and redirect to guarantee details page
+ *     tags: [Portal]
+ *     description: Create a new loan and redirect to guarantee details page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/loan/create', async (req, res) => {
   const { dealId, loanId } = await api.createLoan(req.params._id, req.session.userToken);
 
   return res.redirect(`/contract/${dealId}/loan/${loanId}/guarantee-details`);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/loan/:loanId/guarantee-details:
+ *   get:
+ *     summary: Get guarantee details page
+ *     tags: [Portal]
+ *     description: Get guarantee details page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/loan/:loanId/guarantee-details', [validateRole({ role: [MAKER] }), provide([LOAN, DEAL])], async (req, res) => {
   const { dealId, loan, validationErrors } = req.apiData.loan;
 
@@ -108,6 +158,29 @@ const filterLoanGuaranteeDetailsPayload = (body) => {
   return payload;
 };
 
+/**
+ * @openapi
+ * /contract/:_id/loan/:loanId/guarantee-details:
+ *   post:
+ *     summary: Post guarantee details
+ *     tags: [Portal]
+ *     description: Post guarantee details
+ *     parameters:
+ *       - in: path
+ *         name: _id, loanId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and loan ID
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
@@ -120,6 +193,29 @@ router.post('/contract/:_id/loan/:loanId/guarantee-details', async (req, res) =>
   return res.redirect(redirectUrl);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/loan/:loanId/guarantee-details/save-go-back:
+ *   post:
+ *     summary: Post guarantee details - save and go back
+ *     tags: [Portal]
+ *     description: Post guarantee details - save and go back
+ *     parameters:
+ *       - in: path
+ *         name: _id, loanId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and loan ID
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/loan/:loanId/guarantee-details/save-go-back', provide([LOAN]), async (req, res) => {
   const loanBody = constructPayload(req.body, loanGuaranteeDetailsPayloadProperties, true);
   const modifiedBody = handleNameField(loanBody);
@@ -127,6 +223,33 @@ router.post('/contract/:_id/loan/:loanId/guarantee-details/save-go-back', provid
   return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/loan/:loanId/financial-details:
+ *   get:
+ *     summary: Get financial details page
+ *     tags: [Portal]
+ *     description: Get financial details page
+ *     parameters:
+ *       - in: path
+ *         name: _id, loanId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and loan ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/loan/:loanId/financial-details', [validateRole({ role: [MAKER] }), provide([LOAN, DEAL, CURRENCIES])], async (req, res) => {
   const { dealId, loan, validationErrors } = req.apiData.loan;
   const { currencies } = req.apiData;
@@ -173,6 +296,29 @@ const filterLoanFinancialDetailsPayload = (body) => {
   return sanitizedPayload;
 };
 
+/**
+ * @openapi
+ * /contract/:_id/loan/:loanId/financial-details:
+ *   post:
+ *     summary: Post financial details
+ *     tags: [Portal]
+ *     description: Post financial details
+ *     parameters:
+ *       - in: path
+ *         name: _id, loanId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and loan ID
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
@@ -184,11 +330,61 @@ router.post('/contract/:_id/loan/:loanId/financial-details', async (req, res) =>
   return res.redirect(redirectUrl);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/loan/:loanId/financial-details/save-go-back:
+ *   post:
+ *     summary: Post financial details - save and go back
+ *     tags: [Portal]
+ *     description: Post financial details - save and go back
+ *     parameters:
+ *       - in: path
+ *         name: _id, loanId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and loan ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/loan/:loanId/financial-details/save-go-back', provide([LOAN]), async (req, res) => {
   const sanitizedPayload = constructPayload(req.body, loanFinancialDetailsPayloadProperties, true);
   return saveFacilityAndGoBackToDeal(req, res, sanitizedPayload);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/loan/:loanId/dates-repayments:
+ *   get:
+ *     summary: Get loan dates repayments page
+ *     tags: [Portal]
+ *     description: Get loan dates repayments page
+ *     parameters:
+ *       - in: path
+ *         name: _id, loanId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and loan ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/loan/:loanId/dates-repayments', [validateRole({ role: [MAKER] }), provide([LOAN, DEAL])], async (req, res) => {
   const { dealId, loan, validationErrors } = req.apiData.loan;
 
@@ -209,6 +405,29 @@ router.get('/contract/:_id/loan/:loanId/dates-repayments', [validateRole({ role:
 
 const loanRepaymentDatesPayloadProperties = ['premiumFrequency', 'premiumType', 'inAdvancePremiumFrequency', 'inArrearPremiumFrequency', 'dayCountBasis'];
 
+/**
+ * @openapi
+ * /contract/:_id/loan/:loanId/dates-repayments:
+ *   post:
+ *     summary: Post loan dates repayments
+ *     tags: [Portal]
+ *     description: Post loan dates repayments
+ *     parameters:
+ *       - in: path
+ *         name: _id, loanId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and loan ID
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
@@ -221,6 +440,29 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments', async (req, res) => 
   return res.redirect(redirectUrl);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/loan/:loanId/dates-repayments/save-go-back:
+ *   post:
+ *     summary: Post loan dates repayments - save and go back
+ *     tags: [Portal]
+ *     description: Post loan dates repayments - save and go back
+ *     parameters:
+ *       - in: path
+ *         name: _id, loanId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and loan ID
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/loan/:loanId/dates-repayments/save-go-back', provide([LOAN]), async (req, res) => {
   const loanBody = constructPayload(req.body, loanRepaymentDatesPayloadProperties, true);
   const modifiedBody = premiumFrequencyField(loanBody);
@@ -228,6 +470,33 @@ router.post('/contract/:_id/loan/:loanId/dates-repayments/save-go-back', provide
   return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/loan/:loanId/check-your-answers:
+ *   get:
+ *     summary: Get loan check your answers page
+ *     tags: [Portal]
+ *     description: Get loan check your answers page
+ *     parameters:
+ *       - in: path
+ *         name: _id, loanId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and loan ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/loan/:loanId/check-your-answers', [validateRole({ role: [MAKER] }), provide([LOAN])], async (req, res) => {
   const { loanId, userToken } = requestParams(req);
   const { dealId, loan, validationErrors } = req.apiData.loan;
@@ -264,6 +533,33 @@ router.get('/contract/:_id/loan/:loanId/check-your-answers', [validateRole({ rol
   });
 });
 
+/**
+ * @openapi
+ * /contract/:_id/loan/:loanId/issue-facility:
+ *   get:
+ *     summary: Get loan issue facility page
+ *     tags: [Portal]
+ *     description: Get loan issue facility page
+ *     parameters:
+ *       - in: path
+ *         name: _id, loanId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and loan ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/loan/:loanId/issue-facility', [validateRole({ role: [MAKER] }), provide([LOAN, DEAL])], async (req, res) => {
   const { _id: dealId } = requestParams(req);
   const { loan } = req.apiData.loan;
@@ -280,6 +576,29 @@ router.get('/contract/:_id/loan/:loanId/issue-facility', [validateRole({ role: [
   });
 });
 
+/**
+ * @openapi
+ * /contract/:_id/loan/:loanId/issue-facility:
+ *   post:
+ *     summary: Post loan issue facility
+ *     tags: [Portal]
+ *     description: Post loan issue facility
+ *     parameters:
+ *       - in: path
+ *         name: _id, loanId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and loan ID
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/loan/:loanId/issue-facility', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
   const { user } = req.session;
@@ -324,6 +643,29 @@ router.post('/contract/:_id/loan/:loanId/issue-facility', async (req, res) => {
   return res.redirect(`/contract/${dealId}`);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/loan/:loanId/confirm-requested-cover-start-date:
+ *   get:
+ *     summary: Get confirm requested cover start date page
+ *     tags: [Portal]
+ *     description: Get confirm requested cover start date page
+ *     parameters:
+ *       - in: path
+ *         name: _id, loanId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and loan ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', provide([LOAN]), async (req, res) => {
   const { _id: dealId } = requestParams(req);
   const { loan } = req.apiData.loan;
@@ -341,6 +683,30 @@ router.get('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pro
   });
 });
 
+/**
+ * @openapi
+ * /contract/:_id/loan/:loanId/confirm-requested-cover-start-date:
+ *   get:
+ *     summary: Post confirm requested cover start date
+ *     tags: [Portal]
+ *     description: Post confirm requested cover start date
+ *     parameters:
+ *       - in: path
+ *         name: _id, loanId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and loan ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       301: Resource moved permanently
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', provide([LOAN]), async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 
@@ -444,6 +810,33 @@ router.post('/contract/:_id/loan/:loanId/confirm-requested-cover-start-date', pr
   return res.redirect(redirectUrl);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/loan/:loanId/delete:
+ *   get:
+ *     summary: Get loan delete page
+ *     tags: [Portal]
+ *     description: Get loan delete page
+ *     parameters:
+ *       - in: path
+ *         name: _id, loanId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and loan ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get(
   '/contract/:_id/loan/:loanId/delete',
   [validateRole({ role: [MAKER] }, (req) => `/contract/${req.params._id}`), provide([DEAL, LOAN])],
@@ -464,6 +857,29 @@ router.get(
   },
 );
 
+/**
+ * @openapi
+ * /contract/:_id/loan/:loanId/delete:
+ *   post:
+ *     summary: Delete a loan
+ *     tags: [Portal]
+ *     description: Delete a loan
+ *     parameters:
+ *       - in: path
+ *         name: _id, loanId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and loan ID
+ *     responses:
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/loan/:loanId/delete', async (req, res) => {
   const { _id: dealId, loanId, userToken } = requestParams(req);
 

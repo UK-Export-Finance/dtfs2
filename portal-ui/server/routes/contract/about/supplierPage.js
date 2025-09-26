@@ -16,6 +16,31 @@ const { validateRole } = require('../../middleware');
 
 const router = express.Router();
 
+/**
+ * @openapi
+ * /contract/:_id/about/supplier:
+ *   get:
+ *     summary: Get about supplier page
+ *     tags: [Portal]
+ *     description: Get about supplier page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/about/supplier', [validateRole({ role: [MAKER] }), provide([DEAL, INDUSTRY_SECTORS, COUNTRIES])], async (req, res) => {
   const { industrySectors, countries } = req.apiData;
   let { deal } = req.apiData;
@@ -125,6 +150,31 @@ const supplierSubmissionDetailsFields = [
   'indemnifier-correspondence-address-postcode',
 ];
 
+/**
+ * @openapi
+ * /contract/:_id/about/supplier:
+ *   post:
+ *     summary: Post about supplier page
+ *     tags: [Portal]
+ *     description: Post about supplier page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/about/supplier', provide([INDUSTRY_SECTORS]), async (req, res) => {
   const { industrySectors } = req.apiData;
   const { _id, userToken } = requestParams(req);
@@ -177,6 +227,31 @@ router.post('/contract/:_id/about/supplier', provide([INDUSTRY_SECTORS]), async 
   return res.redirect(redirectUrl);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/about/supplier/save-go-back:
+ *   post:
+ *     summary: Post about supplier page - save and go back
+ *     tags: [Portal]
+ *     description: Post about supplier page - save and go back
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/about/supplier/save-go-back', provide([DEAL, INDUSTRY_SECTORS]), async (req, res) => {
   const { _id, userToken } = requestParams(req);
   const deal = req.apiData[DEAL];

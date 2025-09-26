@@ -40,12 +40,64 @@ const bondCanBeAccessed = (deal) => {
   return !validStatus.includes(status);
 };
 
+/**
+ * @openapi
+ * /contract/:_id/bond/create:
+ *   get:
+ *     summary: Create a new bond for a deal and redirect to bond details page
+ *     tags: [Portal]
+ *     description: Create a new bond for a deal and redirect to bond details page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       301:
+ *         description: Resource moved permanently
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/bond/create', async (req, res) => {
   const { dealId, bondId } = await api.createBond(req.params._id, req.session.userToken);
 
   return res.redirect(`/contract/${dealId}/bond/${bondId}/details`);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/bond/:bondId/details:
+ *   get:
+ *     summary: Get bond details page
+ *     tags: [Portal]
+ *     description: Get bond details page
+ *     parameters:
+ *       - in: path
+ *         name: _id, bondId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and bond ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/bond/:bondId/details', [validateRole({ role: [MAKER] }), provide([DEAL])], async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
@@ -99,6 +151,29 @@ const filterBondDetailsPayload = (body) => {
   return payload;
 };
 
+/**
+ * @openapi
+ * /contract/:_id/bond/:bondId/details:
+ *   post:
+ *     summary: Post bond details
+ *     tags: [Portal]
+ *     description: Post bond details
+ *     parameters:
+ *       - in: path
+ *         name: _id, bondId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and bond ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
@@ -110,12 +185,62 @@ router.post('/contract/:_id/bond/:bondId/details', async (req, res) => {
   return res.redirect(redirectUrl);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/bond/:bondId/details/save-go-back:
+ *   post:
+ *     summary: Post bond details - save and go back to deal
+ *     tags: [Portal]
+ *     description: Post bond details - save and go back to deal
+ *     parameters:
+ *       - in: path
+ *         name: _id, bondId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and bond ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/bond/:bondId/details/save-go-back', provide([BOND]), async (req, res) => {
   const bondPayload = constructPayload(req.body, bondDetailsPayloadProperties, true);
   const filteredBondPayload = filterBondDetailsPayload(bondPayload);
   return saveFacilityAndGoBackToDeal(req, res, filteredBondPayload);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/bond/:bondId/financial-details:
+ *   get:
+ *     summary: Get bond financial details page
+ *     tags: [Portal]
+ *     description: Get bond financial details page
+ *     parameters:
+ *       - in: path
+ *         name: _id, bondId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and bond ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/bond/:bondId/financial-details', [validateRole({ role: [MAKER] }), provide([CURRENCIES, DEAL])], async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
@@ -167,6 +292,29 @@ const filterBondFinancialDetailsPayload = (body) => {
   return sanitizedPayload;
 };
 
+/**
+ * @openapi
+ * /contract/:_id/bond/:bondId/financial-details:
+ *   post:
+ *     summary: Post bond financial details page
+ *     tags: [Portal]
+ *     description: Post bond financial details page
+ *     parameters:
+ *       - in: path
+ *         name: _id, bondId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and bond ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
   const bondPayload = filterBondFinancialDetailsPayload(req.body);
@@ -177,11 +325,61 @@ router.post('/contract/:_id/bond/:bondId/financial-details', async (req, res) =>
   return res.redirect(redirectUrl);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/bond/:bondId/financial-details/save-go-back:
+ *   post:
+ *     summary: Post bond financial details page - save and go back to deal
+ *     tags: [Portal]
+ *     description: Post bond financial details page - save and go back to deal
+ *     parameters:
+ *       - in: path
+ *         name: _id, bondId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and bond ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/bond/:bondId/financial-details/save-go-back', provide([BOND]), async (req, res) => {
   const sanitizedPayload = filterBondFinancialDetailsPayload(req.body);
   return saveFacilityAndGoBackToDeal(req, res, sanitizedPayload);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/bond/:bondId/fee-details:
+ *   get:
+ *     summary: Get bond fee details page
+ *     tags: [Portal]
+ *     description: Get bond fee details page
+ *     parameters:
+ *       - in: path
+ *         name: _id, bondId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and bond ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/bond/:bondId/fee-details', [validateRole({ role: [MAKER] }), provide([DEAL])], async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
@@ -206,6 +404,29 @@ router.get('/contract/:_id/bond/:bondId/fee-details', [validateRole({ role: [MAK
 
 const bondFeeDetailsPayloadProperties = ['feeFrequency', 'feeType', 'inAdvanceFeeFrequency', 'inArrearFeeFrequency', 'dayCountBasis'];
 
+/**
+ * @openapi
+ * /contract/:_id/bond/:bondId/fee-details:
+ *   post:
+ *     summary: Post bond fee details page
+ *     tags: [Portal]
+ *     description: Post bond fee details page
+ *     parameters:
+ *       - in: path
+ *         name: _id, bondId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and bond ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
   const sanitizedBody = constructPayload(req.body, bondFeeDetailsPayloadProperties, true);
@@ -217,12 +438,62 @@ router.post('/contract/:_id/bond/:bondId/fee-details', async (req, res) => {
   return res.redirect(redirectUrl);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/bond/:bondId/fee-details/save-go-back:
+ *   post:
+ *     summary: Post bond fee details page - save and go back to deal
+ *     tags: [Portal]
+ *     description: Post bond fee details page - save and go back to deal
+ *     parameters:
+ *       - in: path
+ *         name: _id, bondId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and bond ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/bond/:bondId/fee-details/save-go-back', provide([BOND]), async (req, res) => {
   const sanitizedBody = constructPayload(req.body, bondFeeDetailsPayloadProperties, true);
   const modifiedBody = feeFrequencyField(sanitizedBody);
   return saveFacilityAndGoBackToDeal(req, res, modifiedBody);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/bond/:bondId/check-your-answers:
+ *   get:
+ *     summary: Get bond check your answers page
+ *     tags: [Portal]
+ *     description: Get bond check your answers page
+ *     parameters:
+ *       - in: path
+ *         name: _id, bondId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and bond ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/bond/:bondId/check-your-answers', validateRole({ role: [MAKER] }), async (req, res) => {
   const { _id, bondId, userToken } = requestParams(req);
 
@@ -266,6 +537,33 @@ router.get('/contract/:_id/bond/:bondId/check-your-answers', validateRole({ role
   });
 });
 
+/**
+ * @openapi
+ * /contract/:_id/bond/:bondId/issue-facility:
+ *   get:
+ *     summary: Get bond issue facility page
+ *     tags: [Portal]
+ *     description: Get bond issue facility page
+ *     parameters:
+ *       - in: path
+ *         name: _id, bondId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and bond ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/bond/:bondId/issue-facility', [validateRole({ role: [MAKER] }), provide([BOND, DEAL])], async (req, res) => {
   const { _id: dealId } = requestParams(req);
   const { bond } = req.apiData.bond;
@@ -282,6 +580,29 @@ router.get('/contract/:_id/bond/:bondId/issue-facility', [validateRole({ role: [
   });
 });
 
+/**
+ * @openapi
+ * /contract/:_id/bond/:bondId/issue-facility:
+ *   post:
+ *     summary: Post bond issue facility page
+ *     tags: [Portal]
+ *     description: Post bond issue facility page
+ *     parameters:
+ *       - in: path
+ *         name: _id, bondId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and bond ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/bond/:bondId/issue-facility', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
   const { user } = req.session;
@@ -325,6 +646,29 @@ router.post('/contract/:_id/bond/:bondId/issue-facility', async (req, res) => {
   return res.redirect(`/contract/${dealId}`);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/bond/:bondId/confirm-requested-cover-start-date:
+ *   get:
+ *     summary: Get confirm bond requested cover start date page
+ *     tags: [Portal]
+ *     description: Get confirm bond requested cover start date page
+ *     parameters:
+ *       - in: path
+ *         name: _id, bondId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and bond ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
@@ -345,6 +689,29 @@ router.get('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', asy
   });
 });
 
+/**
+ * @openapi
+ * /contract/:_id/bond/:bondId/confirm-requested-cover-start-date:
+ *   post:
+ *     summary: Post confirm bond requested cover start date
+ *     tags: [Portal]
+ *     description: Post confirm bond requested cover start date
+ *     parameters:
+ *       - in: path
+ *         name: _id, bondId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and bond ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 
@@ -451,6 +818,33 @@ router.post('/contract/:_id/bond/:bondId/confirm-requested-cover-start-date', as
   return res.redirect(redirectUrl);
 });
 
+/**
+ * @openapi
+ * /contract/:_id/bond/:bondId/delete:
+ *   get:
+ *     summary: Get bond delete page
+ *     tags: [Portal]
+ *     description: Get bond delete page
+ *     parameters:
+ *       - in: path
+ *         name: _id, bondId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and bond ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorised insertion
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.get(
   '/contract/:_id/bond/:bondId/delete',
   [validateRole({ role: [MAKER] }, (req) => `/contract/${req.params._id}`), provide([DEAL, BOND])],
@@ -471,6 +865,29 @@ router.get(
   },
 );
 
+/**
+ * @openapi
+ * /contract/:_id/bond/:bondId/delete:
+ *   post:
+ *     summary: Delete a bond
+ *     tags: [Portal]
+ *     description: Delete a bond
+ *     parameters:
+ *       - in: path
+ *         name: _id, bondId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and bond ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ *
+ */
 router.post('/contract/:_id/bond/:bondId/delete', async (req, res) => {
   const { _id: dealId, bondId, userToken } = requestParams(req);
 

@@ -834,6 +834,15 @@ const createFeedback = async (formData, token) => {
   return response.data;
 };
 
+/**
+ * GET unissued facilities report
+ *
+ * @async
+ * @function getUnissuedFacilitiesReport
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @returns {Promise<void>}
+ */
 const getUnissuedFacilitiesReport = async (token) => {
   try {
     const response = await axios({
