@@ -8,6 +8,7 @@ jest.mock('../../server/api', () => ({
   loginWithSignInLink: jest.fn(),
   validateToken: () => true,
 }));
+
 const { AxiosError } = require('axios');
 const { when } = require('jest-when');
 const { ROLES, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
@@ -17,13 +18,14 @@ const app = require('../../server/createApp');
 const { post } = require('../create-api').createApi(app);
 
 const allRoles = Object.values(ROLES);
+
 describe('POST /login', () => {
   const anEmail = 'an email';
   const aPassword = 'a password';
   const token = 'a token';
 
-  beforeEach(() => {
-    jest.resetAllMocks();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   const loginWith = ({ email, password }) => post({ email, password }).to('/login');
