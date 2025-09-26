@@ -1,2 +1,4 @@
-var DTFS_PORTAL;document.body.className+=" js-enabled".concat("noModule"in HTMLScriptElement.prototype?" govuk-frontend-supported":""),(DTFS_PORTAL=void 0===DTFS_PORTAL?{}:DTFS_PORTAL).jsEnabled={};
-//# sourceMappingURL=jsEnabled.js.map
+let DTFS_PORTAL;
+(document.body.className += ' js-enabled'.concat('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '')),
+  ((DTFS_PORTAL = void 0 === DTFS_PORTAL ? {} : DTFS_PORTAL).jsEnabled = {});
+// # sourceMappingURL=jsEnabled.js.map
