@@ -1,3 +1,4 @@
+import { sixYearsOneDay, threeMonthsOneDay, today } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../../relativeURL';
 import { errorSummary } from '../../../partials';
 import facilityPage from '../../../pages/facilityPage';
@@ -5,7 +6,6 @@ import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../../e2
 import { MOCK_APPLICATION_AIN } from '../../../../fixtures/mock-gef-deals';
 import { DEAL_TYPE } from '../../../../../../gef/cypress/fixtures/constants';
 import amendmentsPage from '../../../pages/amendments/amendmentsPage';
-import { sixYearsOneDay, threeMonthsOneDay, today } from '../../../../../../e2e-fixtures/dateConstants';
 import { anIssuedCashFacility } from '../../../../../../e2e-fixtures/mock-gef-facilities';
 
 context('Amendments - GEF deal add bank review date', () => {

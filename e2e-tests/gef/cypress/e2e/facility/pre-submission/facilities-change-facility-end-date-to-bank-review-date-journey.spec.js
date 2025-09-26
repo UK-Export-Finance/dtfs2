@@ -1,8 +1,8 @@
+import { oneYear, tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
 import aboutFacility from '../../pages/about-facility';
 import bankReviewDate from '../../pages/bank-review-date';
 import facilityEndDate from '../../pages/facility-end-date';
-import { oneYear, tomorrow } from '../../../../../e2e-fixtures/dateConstants';
 import { BANK1_MAKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 
 const applications = [];

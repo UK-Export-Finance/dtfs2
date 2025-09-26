@@ -1,7 +1,7 @@
 import { PORTAL_ACTIVITY_LABEL } from '@ukef/dtfs2-common';
+import { tomorrow, threeDaysAgo, addDays, oneYear } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
 import CONSTANTS from '../../../fixtures/constants';
-import { tomorrow, threeDaysAgo, addDays, oneYear } from '../../../../../e2e-fixtures/dateConstants';
 import { UKEF_DECISION, underwriterManagersDecision } from '../../../fixtures/mocks/mock-deals';
 import { BANK1_MAKER1, BANK1_CHECKER1 } from '../../../../../e2e-fixtures/portal-users.fixture';
 import { acbsReconciliation } from '../../../../../e2e-fixtures/acbs';

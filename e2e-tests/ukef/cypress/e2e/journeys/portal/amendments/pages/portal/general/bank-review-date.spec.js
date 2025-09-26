@@ -1,3 +1,4 @@
+import { sixYearsOneDay } from '@ukef/dtfs2-common/test-helpers';
 import { now } from '@ukef/dtfs2-common';
 import { sub } from 'date-fns';
 import relative from '../../../../../../relativeURL';
@@ -8,7 +9,6 @@ import { applicationPreview } from '../../../../../../../../../gef/cypress/e2e/p
 import whatDoYouNeedToChange from '../../../../../../../../../gef/cypress/e2e/pages/amendments/what-do-you-need-to-change';
 import doYouHaveAFacilityEndDate from '../../../../../../../../../gef/cypress/e2e/pages/amendments/do-you-have-a-facility-end-date';
 import bankReviewDate from '../../../../../../../../../gef/cypress/e2e/pages/amendments/bank-review-date';
-import { sixYearsOneDay } from '../../../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 

@@ -1,6 +1,6 @@
+const { oneMonth, today } = require('@ukef/dtfs2-common/test-helpers');
 const { BOND_TYPE, CURRENCY } = require('@ukef/dtfs2-common');
 const { mandatoryCriteria } = require('../../../../../../e2e-fixtures');
-const { oneMonth, today } = require('../../../../../../e2e-fixtures/dateConstants');
 
 const now = today.unixMilliseconds;
 

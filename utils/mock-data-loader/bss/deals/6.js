@@ -1,7 +1,7 @@
 const { CURRENCY, ROLES } = require('@ukef/dtfs2-common');
+const { BANK1_MAKER1 } = require('@ukef/dtfs2-common/test-helpers');
 const { nowTimestamp } = require('../dates');
 const MANDATORY_CRITERIA = require('../mandatoryCriteria');
-const { BANK1_MAKER1 } = require('../../portal-users');
 
 // de-structure and create a new array, so `sort` doesn't impact 'MANDATORY_CRITERIA'
 let mandatoryCriteria = [...MANDATORY_CRITERIA].sort((a, b) => (a.version > b.version ? 1 : -1));

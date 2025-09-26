@@ -1,11 +1,10 @@
-const { BOND_TYPE, ALL_CURRENCIES, CURRENCIES, CURRENCY } = require('@ukef/dtfs2-common');
-const CONSTANTS = require('./constants');
-const { BANK1_MAKER1 } = require('../../../e2e-fixtures');
-const { twoYearsAgo, oneMonth, today } = require('../../../e2e-fixtures/dateConstants');
+import { today, oneMonth, twoYearsAgo } from '../date-constants';
+import { DEAL_TYPE, DEAL_SUBMISSION_TYPE, FACILITY_TYPE, BOND_TYPE, ALL_CURRENCIES, CURRENCIES, CURRENCY } from '../../../constants';
+import { BANK1_MAKER1 } from '../../mock-data';
 
-const MOCK_DEAL = {
-  dealType: CONSTANTS.DEAL_TYPE.BSS_EWCS,
-  submissionType: CONSTANTS.DEAL_SUBMISSION_TYPE.AIN,
+export const MOCK_DEAL_AIN = {
+  dealType: DEAL_TYPE.BSS_EWCS,
+  submissionType: DEAL_SUBMISSION_TYPE.AIN,
   bankInternalRefName: 'Mock supply contract ID',
   additionalRefName: 'Mock supply contract name',
   status: 'Submitted',
@@ -179,7 +178,7 @@ const MOCK_DEAL = {
   },
   mockFacilities: [
     {
-      type: CONSTANTS.FACILITY_TYPE.BOND,
+      type: FACILITY_TYPE.BOND,
       bondIssuer: 'Issuer',
       bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
       facilityStage: 'Issued',
@@ -209,7 +208,7 @@ const MOCK_DEAL = {
       updatedAt: Date.now(),
     },
     {
-      type: CONSTANTS.FACILITY_TYPE.LOAN,
+      type: FACILITY_TYPE.LOAN,
       createdDate: 1610369832226,
       facilityStage: 'Conditional',
       hasBeenIssued: false,
@@ -245,7 +244,7 @@ const MOCK_DEAL = {
       },
     },
     {
-      type: CONSTANTS.FACILITY_TYPE.LOAN,
+      type: FACILITY_TYPE.LOAN,
       bondIssuer: 'Issuer',
       bondType: BOND_TYPE.ADVANCE_PAYMENT_GUARANTEE,
       facilityStage: 'Issued',
@@ -263,7 +262,7 @@ const MOCK_DEAL = {
       feeType: 'At maturity',
       dayCountBasis: '365',
       currency: {
-        text: CURRENCIES[1].text,
+        text: CURRENCIES[1]!.text,
         id: ALL_CURRENCIES.AUD,
       },
       'coverEndDate-day': oneMonth.dayLong,
@@ -276,5 +275,3 @@ const MOCK_DEAL = {
     },
   ],
 };
-
-module.exports = MOCK_DEAL;

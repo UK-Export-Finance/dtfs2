@@ -1,3 +1,4 @@
+import { tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import applicationDetails from '../../e2e/pages/application-details';
 import facilities from '../../e2e/pages/facilities';
 import aboutFacility from '../../e2e/pages/about-facility';
@@ -5,8 +6,6 @@ import providedFacility from '../../e2e/pages/provided-facility';
 import facilityCurrency from '../../e2e/pages/facility-currency';
 import facilityValue from '../../e2e/pages/facility-value';
 import facilityGuarantee from '../../e2e/pages/facility-guarantee';
-
-import { tomorrow } from '../../../../e2e-fixtures/dateConstants';
 
 /**
  * Creates a facility from the UI with the specified parameters

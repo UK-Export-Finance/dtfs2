@@ -1,5 +1,5 @@
+import { thirtyFiveDaysAgo, today, twentyFiveDaysAgo } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
-import { thirtyFiveDaysAgo, today, twentyFiveDaysAgo } from '../../../../../e2e-fixtures/dateConstants';
 
 const { GEF_DEAL_DRAFT } = require('./mocks');
 const MOCK_USERS = require('../../../../../e2e-fixtures');

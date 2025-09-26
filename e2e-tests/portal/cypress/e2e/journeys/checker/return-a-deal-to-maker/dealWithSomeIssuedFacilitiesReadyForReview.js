@@ -1,5 +1,5 @@
+import { oneMonth, tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import { BOND_TYPE, CURRENCY } from '@ukef/dtfs2-common';
-import { oneMonth, tomorrow } from '../../../../../../e2e-fixtures/dateConstants';
 
 const date = new Date();
 

@@ -1,9 +1,8 @@
+const { thirtyFiveDaysAgo } = require('@ukef/dtfs2-common/test-helpers');
 const { CURRENCY } = require('@ukef/dtfs2-common');
 const { contractAboutBuyer, contractAboutFinancial, contractAboutPreview } = require('../../pages');
 const partials = require('../../partials');
 const MOCK_USERS = require('../../../../../e2e-fixtures');
-
-const { thirtyFiveDaysAgo } = require('../../../../../e2e-fixtures/dateConstants');
 
 const { BANK1_MAKER1, ADMIN } = MOCK_USERS;
 

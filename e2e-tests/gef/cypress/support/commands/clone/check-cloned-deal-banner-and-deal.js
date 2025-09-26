@@ -1,6 +1,6 @@
+import { today } from '@ukef/dtfs2-common/test-helpers';
 import statusBanner from '../../../e2e/pages/application-status-banner';
 import applicationDetails from '../../../e2e/pages/application-details';
-import { today } from '../../../../../e2e-fixtures/dateConstants';
 import { submitButton } from '../../../e2e/partials';
 
 /**

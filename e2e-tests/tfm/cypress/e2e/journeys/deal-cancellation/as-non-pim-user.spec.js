@@ -1,8 +1,7 @@
+import { MOCK_DEAL_AIN, yesterday } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
-import MOCK_DEAL_AIN from '../../../fixtures/deal-AIN';
 import { ADMIN, BANK1_MAKER1, PIM_USER_1, T1_USER_1 } from '../../../../../e2e-fixtures';
 import caseDealPage from '../../pages/caseDealPage';
-import { yesterday } from '../../../../../e2e-fixtures/dateConstants';
 
 context('Deal cancellation - logged in as non-PIM user', () => {
   let dealId;

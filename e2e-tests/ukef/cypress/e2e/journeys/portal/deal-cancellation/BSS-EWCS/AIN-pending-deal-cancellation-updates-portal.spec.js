@@ -1,9 +1,9 @@
+import { tomorrow } from '@ukef/dtfs2-common/test-helpers';
 import { DEAL_STATUS } from '@ukef/dtfs2-common';
 import portalPages from '../../../../../../../portal/cypress/e2e/pages';
 import MOCK_USERS from '../../../../../../../e2e-fixtures/portal-users.fixture';
 import generateAinReadyToSubmit from '../../test-data/AIN-deal/dealReadyToSubmit';
 import { TFM_URL, PIM_USER_1 } from '../../../../../../../e2e-fixtures';
-import { tomorrow } from '../../../../../../../e2e-fixtures/dateConstants';
 
 const { BANK1_MAKER1, BANK1_CHECKER1 } = MOCK_USERS;
 
