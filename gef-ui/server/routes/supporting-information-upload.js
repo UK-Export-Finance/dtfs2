@@ -11,25 +11,6 @@ const { MAKER } = require('../constants/roles');
 // So we instead make a separate uploadCsrf token and check it here.
 const router = express.Router();
 
-/**
- * Checks that the session uploadCsrf token matches the query uploadCsrf token
- * If the token is valid move to the next middleware
- * If it is invalid return an error response
- * @param {object} req
- * @param {object} res
- * @param {Function} next
- */
-const validateUploadCsrfToken = (req, res, next) => {
-  if (isCsrfTokenValid(req.query.uploadCsrf, req.session.uploadCsrf)) {
-    return next();
-  }
-  // The MOJ multi-file-upload component expects a 200 response when the request is not valid
-  // It will only display the error messages when the response is 200.
-  return res.status(200).send({
-    error: { message: 'File upload session expired. Please refresh your browser to upload or delete the files.' },
-  });
-};
-
 const uploadSingle = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE }, fileFilter: multerFilter }).single('documents');
 
 /**
@@ -60,7 +41,7 @@ const uploadSingle = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE }, f
  */
 router.post(
   '/application-details/:dealId/supporting-information/document/:documentType/upload',
-  [validateUploadCsrfToken, validateToken, validateBank, validateRole({ role: [MAKER] })],
+  [validateToken, validateBank, validateRole({ role: [MAKER] })],
   (req, res, next) => {
     uploadSingle(req, res, (error) => {
       if (!error) {
@@ -119,7 +100,7 @@ router.post(
  */
 router.post(
   '/application-details/:dealId/supporting-information/document/:documentType/delete',
-  [validateUploadCsrfToken, validateToken, validateBank, validateRole({ role: [MAKER] })],
+  [validateToken, validateBank, validateRole({ role: [MAKER] })],
   deleteSupportingDocument,
 );
 
