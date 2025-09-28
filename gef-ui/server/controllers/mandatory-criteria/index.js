@@ -1,6 +1,14 @@
 const { validationErrorHandler, isTrueSet, isEmpty } = require('../../utils/helpers');
 const api = require('../../services/api');
 
+/**
+ * Controller to render mandatory criteria page
+ * @async
+ * @function getMandatoryCriteria
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the mandatory criteria page or an error page.
+ */
 const getMandatoryCriteria = async (req, res) => {
   try {
     const { userToken } = req.session;
@@ -14,6 +22,15 @@ const getMandatoryCriteria = async (req, res) => {
   }
 };
 
+/**
+ * Controller to handle validating and saving mandatory criteria answers
+ * @async
+ * @function validateMandatoryCriteria
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @param {import('express').NextFunction} next - The Express next middleware function.
+ * @returns {Promise<void>}
+ */
 const validateMandatoryCriteria = async (req, res) => {
   const { userToken } = req.session;
   const { mandatoryCriteria } = req.body;

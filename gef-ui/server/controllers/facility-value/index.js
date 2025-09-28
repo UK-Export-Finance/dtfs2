@@ -5,6 +5,14 @@ const { validateFacilityValue } = require('./facility-value');
 
 const api = require('../../services/api');
 
+/**
+ * Get the facility value page
+ * @async
+ * @function facilityValue
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the facility value page or an error page if an exception occurs.
+ */
 const facilityValue = async (req, res) => {
   const { params, query, session } = req;
   const { dealId, facilityId } = params;
@@ -36,6 +44,14 @@ const facilityValue = async (req, res) => {
   }
 };
 
+/**
+ * Updates the facility value for a facility within a deal.
+ * @async
+ * @function updateFacilityValue
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the application details page or an error page if an exception occurs.
+ */
 const updateFacilityValue = async (req, res) => {
   const { params, body, query, session } = req;
   const { user, userToken } = session;

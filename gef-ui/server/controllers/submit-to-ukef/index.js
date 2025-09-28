@@ -5,6 +5,15 @@ const { issuedFacilityConfirmation } = require('../../utils/facility-helpers');
 const api = require('../../services/api');
 const Application = require('../../models/application');
 
+/**
+ * Renders the submit to ukef page for a given deal.
+ *
+ * @async
+ * @function submitToUkef
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>} Renders the appropriate Nunjucks template based on success or error.
+ */
 const submitToUkef = async (req, res) => {
   const { params } = req;
   const { dealId } = params;
@@ -18,6 +27,15 @@ const submitToUkef = async (req, res) => {
   }
 };
 
+/**
+ * Handles the submission of a GEF application to UKEF.
+ *
+ * @async
+ * @function createSubmissionToUkef
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>} Renders a confirmation, error, or problem view based on the submission outcome.
+ */
 const createSubmissionToUkef = async (req, res) => {
   const { params, body } = req;
   const { user, userToken } = req.session;

@@ -2,6 +2,16 @@ const { validationErrorHandler } = require('../../utils/helpers');
 const api = require('../../services/api');
 const constructPayload = require('../../utils/constructPayload');
 
+/**
+ * Controller for handling the name application view.
+ *
+ * @async
+ * @function nameApplication
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @param {import('express').NextFunction} next - Express next middleware function.
+ * @returns {Promise<void>} Renders the view or passes error to next middleware.
+ */
 const nameApplication = async (req, res, next) => {
   const { userToken } = req.session;
   const { params } = req;
@@ -20,6 +30,16 @@ const nameApplication = async (req, res, next) => {
   return res.render('partials/name-application.njk', viewProps);
 };
 
+/**
+ * Creates a new application
+ *
+ * @async
+ * @function createApplication
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @param {import('express').NextFunction} next - Express next middleware function.
+ * @returns {Promise<void>} Renders the view with errors or redirects on success.
+ */
 const createApplication = async (req, res, next) => {
   const { body, session } = req;
   const { userToken } = session;
@@ -53,6 +73,16 @@ const createApplication = async (req, res, next) => {
   }
 };
 
+/**
+ * Updates the application references for a given deal.
+ *
+ * @async
+ * @function updateApplicationReferences
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @param {import('express').NextFunction} next - Express next middleware function, called on error.
+ * @returns {Promise<void>}
+ */
 const updateApplicationReferences = async (req, res, next) => {
   const { body, params } = req;
   const { dealId } = params;

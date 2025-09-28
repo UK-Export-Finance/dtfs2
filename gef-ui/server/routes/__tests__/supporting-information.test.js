@@ -7,15 +7,18 @@ jest.mock('multer', () => () => ({
   single: jest.fn(),
 }));
 
-const getSpy = jest.fn();
-const postSpy = jest.fn();
+const routeSpy = jest.fn();
+const allSpy = jest.fn().mockReturnThis();
+const getSpy = jest.fn().mockReturnThis();
+const postSpy = jest.fn().mockReturnThis();
 jest.doMock('express', () => ({
-  Router() {
-    return {
+  Router: () => ({
+    route: routeSpy.mockReturnValue({
+      all: allSpy,
       get: getSpy,
       post: postSpy,
-    };
-  },
+    }),
+  }),
 }));
 
 describe('Routes', () => {
@@ -29,15 +32,9 @@ describe('Routes', () => {
   });
 
   it('Sets up all routes', () => {
-    expect(getSpy).toHaveBeenCalledWith(
-      '/application-details/:dealId/supporting-information/document/:documentType',
-      [validateToken, validateBank, expect.any(Function)],
-      expect.any(Function),
-    );
-    expect(postSpy).toHaveBeenCalledWith(
-      '/application-details/:dealId/supporting-information/document/:documentType',
-      [validateToken, validateBank, expect.any(Function), multer().array('documents', 2)],
-      expect.any(Function),
-    );
+    expect(routeSpy).toHaveBeenCalledWith('/application-details/:dealId/supporting-information/document/:documentType');
+    expect(allSpy).toHaveBeenCalledWith([validateToken, validateBank, expect.any(Function)]);
+    expect(getSpy).toHaveBeenCalledWith(expect.any(Function));
+    expect(postSpy).toHaveBeenCalledWith(multer().array('documents', 2), expect.any(Function));
   });
 });

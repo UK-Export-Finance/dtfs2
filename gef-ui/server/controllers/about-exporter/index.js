@@ -12,6 +12,14 @@ const mappedIndustries = (industries, selectedIndustry) => {
   }));
 };
 
+/**
+ * Controller to render the about exporter page.
+ * @async
+ * @function aboutExporter
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the about-exporter page or an error page.
+ */
 const aboutExporter = async (req, res) => {
   const { params, query } = req;
   const { userToken } = req.session;
@@ -38,6 +46,14 @@ const aboutExporter = async (req, res) => {
   }
 };
 
+/**
+ * Validates and updates the about exporter form.
+ * @async
+ * @function validateAboutExporter
+ * @param {import('express').Request} req - Express request object.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>} Renders the about-exporter page with errors, or redirects on success.
+ */
 const validateAboutExporter = async (req, res) => {
   const { body, params, query, session } = req;
   const { dealId } = params;

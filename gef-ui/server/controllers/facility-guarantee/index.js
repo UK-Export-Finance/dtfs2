@@ -4,6 +4,14 @@ const validateFacilityGuarantee = require('./facility-guarantee');
 const api = require('../../services/api');
 const { FACILITY_PAYMENT_TYPE } = require('../../constants');
 
+/**
+ * Get the facility guarantee page for a facility within a deal.
+ * @async
+ * @function facilityGuarantee
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the facility guarantee page or an error page if an exception occurs.
+ */
 const facilityGuarantee = async (req, res) => {
   const { params, query, session } = req;
   const { dealId, facilityId } = params;
@@ -36,6 +44,14 @@ const facilityGuarantee = async (req, res) => {
   }
 };
 
+/**
+ * Updates the facility guarantee details for a facility within a deal.
+ * @async
+ * @function updateFacilityGuarantee
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the application details page or an error page if an exception occurs.
+ */
 const updateFacilityGuarantee = async (req, res) => {
   const { params, body, query, session } = req;
   const { dealId, facilityId } = params;
