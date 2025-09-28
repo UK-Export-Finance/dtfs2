@@ -18,9 +18,10 @@ const originalEnv = { ...process.env };
 
 const { get } = createApi(app);
 
-jest.mock('csurf', () => () => (_req: Request, _res: Response, next: NextFunction) => next());
-jest.mock('../../server/middleware/csrf', () => ({
-  csrfToken: () => (_req: Request, _res: Response, next: NextFunction) => next(),
+
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  verify: jest.fn((req, res, next) => next()),
 }));
 
 jest.mock('../../server/utils/submitted-amendment-details', () => ({

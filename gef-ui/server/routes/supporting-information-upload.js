@@ -4,7 +4,6 @@ const { multerFilter, formatBytes } = require('../utils/multer-filter.utils');
 const { uploadSupportingDocument, deleteSupportingDocument } = require('../controllers/supporting-information/supporting-documents');
 const { validateRole, validateToken, validateBank } = require('../middleware');
 const { FILE_UPLOAD } = require('../constants/file-upload');
-const { isCsrfTokenValid } = require('../utils/csrf-token-checker');
 const { MAKER } = require('../constants/roles');
 
 // The following routes cannot use the same csrf checks as the rest of the routes

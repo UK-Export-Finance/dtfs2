@@ -5,7 +5,6 @@ const morgan = require('morgan');
 const flash = require('connect-flash');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
-const csrf = require('csurf');
 const { SWAGGER, maintenance } = require('@ukef/dtfs2-common');
 const { configure, expressSession } = require('@ukef/dtfs2-common/backend');
 const routes = require('./routes');
@@ -13,7 +12,7 @@ const swaggerRouter = require('./routes/swagger.route');
 const supportingInformationUploadRoutes = require('./routes/supporting-information-upload');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
-const { csrfToken, copyCsrfTokenFromQueryToBody, security, seo, createRateLimit } = require('./middleware');
+const { security, seo, createRateLimit } = require('./middleware');
 
 dotenv.config();
 
@@ -41,9 +40,6 @@ const generateApp = () => {
   // They implement their own separate csrf check
   app.use('/', supportingInformationUploadRoutes);
 
-  app.use(copyCsrfTokenFromQueryToBody());
-  app.use(csrf());
-  app.use(csrfToken());
   app.use(flash());
 
   configureNunjucks({
