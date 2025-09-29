@@ -65,7 +65,7 @@ export const generateApp = () => {
     // If so, the user property can be accessed on the session & passed into the template
     const userIsFullyLoggedIn = 'loginStatus' in req.session && withUnknownLoginStatusUserSession(req.session).loginStatus === 'Valid 2FA';
     const user = userIsFullyLoggedIn ? asLoggedInUserSession(req.session).user : undefined;
-    return res.status(HttpStatusCode.NotFound).render('page-not-found.njk', { user });
+    return res.status(HttpStatusCode.Ok).render('page-not-found.njk', { user });
   });
   app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
     next();
