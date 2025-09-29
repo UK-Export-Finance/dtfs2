@@ -1,5 +1,5 @@
 import { isTfmSsoFeatureFlagEnabled } from '@ukef/dtfs2-common';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { LoginController } from '../controllers/login/login-sso/login.controller';
 
 /**

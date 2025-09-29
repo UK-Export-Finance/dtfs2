@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const path = require('path');
 const express = require('express');
 const compression = require('compression');
@@ -67,13 +68,13 @@ const generateApp = () => {
   app.use(verifyCsrf);
   app.use('/', routes);
 
-  app.use((req, res) => res.status(404).render('partials/page-not-found.njk', { user: req.session.user }));
-
+  // Global middlewares
+  app.use((req, res) => res.status(HttpStatusCode.NotFound).render('partials/page-not-found.njk', { user: req.session.user }));
   app.use((error, req, res, next) => {
-    next(error);
+    next();
 
     console.error('❌ An error has occurred for request %s %o', req.url, error);
-    return res.render('_partials/problem-with-service.njk');
+    return res.status(HttpStatusCode.BadRequest).render('partials/problem-with-service.njk', {});
   });
 
   return app;

@@ -1,5 +1,6 @@
 import { Headers } from 'node-mocks-http';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import * as libs from '@ukef/dtfs2-common';
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
@@ -17,10 +18,9 @@ const originalEnv = { ...process.env };
 
 const { get } = createApi(app);
 
-
 jest.mock('@ukef/dtfs2-common', () => ({
-  ...jest.requireActual('@ukef/dtfs2-common'),
-  verify: jest.fn((req, res, next) => next()),
+  ...jest.requireActual<typeof libs>('@ukef/dtfs2-common'),
+  verify: jest.fn((req: Request, res: Response, next: NextFunction): void => next()),
 }));
 
 console.error = jest.fn();

@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { isValidMongoId } from '../../helpers/validateIds';
 
 export const validateMongoId = (req: Request, res: Response, next: NextFunction) => {
