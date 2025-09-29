@@ -10,7 +10,6 @@ const { SWAGGER, create: createCsrf, verify: verifyCsrf, maintenance } = require
 const { configure, expressSession } = require('@ukef/dtfs2-common/backend');
 const routes = require('./routes');
 const swaggerRouter = require('./routes/swagger.route');
-const supportingInformationUploadRoutes = require('./routes/supporting-information-upload');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
 const { security, seo, createRateLimit } = require('./middleware');
@@ -37,10 +36,6 @@ const generateApp = () => {
   app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-
-  // These routes cannot use the csrf check below so must come before it
-  // They implement their own separate csrf check
-  app.use('/', supportingInformationUploadRoutes);
 
   app.use(flash());
 

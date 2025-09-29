@@ -6,9 +6,6 @@ const { validateRole, validateToken, validateBank } = require('../middleware');
 const { FILE_UPLOAD } = require('../constants/file-upload');
 const { MAKER } = require('../constants/roles');
 
-// The following routes cannot use the same csrf checks as the rest of the routes
-// as the Ministry of Justice multi-file-upload component does not allow passing tokens to the request body.
-// So we instead make a separate uploadCsrf token and check it here.
 const router = express.Router();
 
 const uploadSingle = multer({ limits: { fileSize: FILE_UPLOAD.MAX_FILE_SIZE }, fileFilter: multerFilter }).single('documents');
