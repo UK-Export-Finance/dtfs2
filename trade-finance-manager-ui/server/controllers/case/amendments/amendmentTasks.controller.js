@@ -2,6 +2,14 @@ const api = require('../../../api');
 const { getTask } = require('../../helpers');
 const mapAssignToSelectOptions = require('../../../helpers/map-assign-to-select-options');
 
+/**
+ * Controller to get amendment task page
+ * @async
+ * @function getAmendmentTask
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders amendment task page
+ */
 const getAmendmentTask = async (req, res) => {
   try {
     const { _id: dealId, facilityId, amendmentId, groupId, taskId } = req.params;

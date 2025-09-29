@@ -3,6 +3,14 @@ const { TFM_AMENDMENT_STATUS, createAmendmentReferenceNumber, formattedNumber, c
 const { HttpStatusCode } = require('axios');
 const api = require('../../../api');
 
+/**
+ * Controller to get the amendment answers page
+ * @async
+ * @function getAmendmentAnswers
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the amendment answers page
+ */
 const getAmendmentAnswers = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
@@ -49,6 +57,14 @@ const getAmendmentAnswers = async (req, res) => {
   });
 };
 
+/**
+ * Controller to post amendments answers
+ * @async
+ * @function postAmendmentAnswers
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the next page
+ */
 const postAmendmentAnswers = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;

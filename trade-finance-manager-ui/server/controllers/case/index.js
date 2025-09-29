@@ -32,6 +32,14 @@ const {
   DECISIONS: { UNDERWRITER_MANAGER_DECISIONS, UNDERWRITER_MANAGER_DECISIONS_TAGS },
 } = CONSTANTS;
 
+/**
+ * Controller to render the deal page.
+ * @async
+ * @function getCaseDeal
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the deal page.
+ */
 const getCaseDeal = async (req, res) => {
   try {
     const dealId = req.params._id;
@@ -109,6 +117,14 @@ const getCaseDeal = async (req, res) => {
   }
 };
 
+/**
+ * Controller to render the deal tasks
+ * @async
+ * @function getCaseTasks
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the deal tasks
+ */
 const getCaseTasks = async (req, res) => {
   const dealId = req.params._id;
   const { userToken } = req.session;
@@ -165,6 +181,14 @@ const getCaseTasks = async (req, res) => {
   });
 };
 
+/**
+ * Controller to filter the deal tasks
+ * @async
+ * @function getCaseTasks
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the filtered deal tasks
+ */
 const filterCaseTasks = async (req, res) => {
   const dealId = req.params._id;
   const { userToken } = req.session;
@@ -221,6 +245,14 @@ const filterCaseTasks = async (req, res) => {
   });
 };
 
+/**
+ * Controller to get a deal task
+ * @async
+ * @function getCaseTask
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders a deal task
+ */
 const getCaseTask = async (req, res) => {
   const dealId = req.params._id;
   const { groupId, taskId } = req.params;
@@ -258,6 +290,14 @@ const getCaseTask = async (req, res) => {
   });
 };
 
+/**
+ * Controller to post a deal task
+ * @async
+ * @function putCaseTask
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders a deal task
+ */
 const putCaseTask = async (req, res) => {
   const dealId = req.params._id;
 
@@ -352,6 +392,14 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
   return allCompletedAmendments;
 };
 
+/**
+ * Controller to get the facility page
+ * @async
+ * @function getCaseFacility
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the facility page
+ */
 const getCaseFacility = async (req, res) => {
   try {
     const { _id: dealId, facilityId } = req.params;
@@ -447,6 +495,14 @@ const getCaseFacility = async (req, res) => {
   }
 };
 
+/**
+ * Controller to create a facility amendment
+ * @async
+ * @function postFacilityAmendment
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>}
+ */
 const postFacilityAmendment = async (req, res) => {
   const { _id: dealId, facilityId } = req.params;
   const { userToken } = req.session;

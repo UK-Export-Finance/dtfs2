@@ -11,6 +11,14 @@ const getNextPage = (apiResponseStatus, changeFacilityValue, baseUrl) => {
   return changeFacilityValue ? `${baseUrl}/facility-value` : `${baseUrl}/check-answers`;
 };
 
+/**
+ * Controller to get the amendment facility end date page
+ * @async
+ * @function getAmendmentFacilityEndDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the amendment facility end date page
+ */
 const getAmendmentFacilityEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
@@ -56,6 +64,14 @@ const getAmendmentFacilityEndDate = async (req, res) => {
   });
 };
 
+/**
+ * Controller to post facility end date
+ * @async
+ * @function postAmendmentFacilityEndDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the next page
+ */
 const postAmendmentFacilityEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;

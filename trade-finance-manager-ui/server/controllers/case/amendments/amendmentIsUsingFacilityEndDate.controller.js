@@ -11,6 +11,14 @@ const getNextPage = (status, changeFacilityValue, isUsingFacilityEndDate, baseUr
   return isUsingFacilityEndDate ? `${baseUrl}/facility-end-date` : `${baseUrl}/bank-review-date`;
 };
 
+/**
+ * Controller to get is using facility end date page
+ * @async
+ * @function getAmendmentIsUsingFacilityEndDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders is using facility end date page
+ */
 const getAmendmentIsUsingFacilityEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
@@ -50,6 +58,14 @@ const getBooleanFromIsUsingFacilityEndDate = (isUsingFacilityEndDate) => {
   }
 };
 
+/**
+ * Controller to post if is using facility end date
+ * @async
+ * @function postAmendmentIsUsingFacilityEndDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the next page
+ */
 const postAmendmentIsUsingFacilityEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;

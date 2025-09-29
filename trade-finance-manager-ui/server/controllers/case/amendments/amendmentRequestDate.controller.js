@@ -3,7 +3,14 @@ const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { amendmentRequestDateValidation } = require('./validation/amendmentRequestDate.validate');
 
-// when add an amendment button clicked, renders amendment request date page
+/**
+ * Controller to get the amendment request date page when add an amendment button clicked
+ * @async
+ * @function getAmendmentRequestDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders amendment request date page
+ */
 const getAmendmentRequestDate = async (req, res) => {
   try {
     const { facilityId, amendmentId } = req.params;
@@ -41,8 +48,13 @@ const getAmendmentRequestDate = async (req, res) => {
 };
 
 /**
- * posts amendment request date when continue button clicked
+ * Controller to post amendment request date when continue button clicked
  * includes request date, user, creation timestamp and changes status
+ * @async
+ * @function postAmendmentRequestDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to request date page
  */
 const postAmendmentRequestDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
