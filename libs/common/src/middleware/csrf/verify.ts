@@ -93,5 +93,10 @@ export const verify = (
     throw new Error('Invalid CSRF token has been supplied.');
   }
 
+  /**
+   * If valid, invalid CSRF secret for renewal
+   */
+  req.session.csrf = undefined;
+
   return next();
 };
