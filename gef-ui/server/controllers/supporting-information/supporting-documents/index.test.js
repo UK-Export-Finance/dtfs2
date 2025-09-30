@@ -82,7 +82,6 @@ describe('controllers/supporting-documents', () => {
             filename: 'mock-file.pdf',
           },
         ],
-        uploadCsrf: expect.any(String),
       });
     });
   });

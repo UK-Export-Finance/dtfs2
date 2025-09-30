@@ -1,3 +1,4 @@
+import * as libs from '@ukef/dtfs2-common';
 import { DEAL_STATUS, DEAL_SUBMISSION_TYPE, isPortalFacilityAmendmentsFeatureFlagEnabled, ROLES } from '@ukef/dtfs2-common';
 import { canUserAmendIssuedFacilities } from './facility-amendments.helper';
 
@@ -7,7 +8,7 @@ const { MAKER, CHECKER, ADMIN } = ROLES;
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('@ukef/dtfs2-common', () => ({
-  ...jest.requireActual('@ukef/dtfs2-common'),
+  ...jest.requireActual<typeof libs>('@ukef/dtfs2-common'),
   isPortalFacilityAmendmentsFeatureFlagEnabled: jest.fn(),
 }));
 

@@ -1,7 +1,6 @@
-const crypto = require('crypto');
 const sanitizeHtml = require('sanitize-html');
 const Application = require('../../../models/application');
-const { validationErrorHandler, getCurrentTimePlusMinutes } = require('../../../utils/helpers');
+const { validationErrorHandler } = require('../../../utils/helpers');
 const validateFile = require('../../../utils/validateFile');
 const { uploadAndSaveToDeal, removeFileFromDeal } = require('../../../utils/fileUtils');
 const { docType } = require('./docType');
@@ -121,13 +120,6 @@ const getSupportingDocuments = async (req, res, next) => {
   } = req;
   let application;
 
-  const uploadCsrf = {
-    token: crypto.randomBytes(32).toString('hex'),
-    expiry: getCurrentTimePlusMinutes(15),
-  };
-
-  req.session.uploadCsrf = uploadCsrf;
-
   try {
     application = await getApplication(dealId, user, userToken);
     const { fieldName, title } = mapDocTypeParameterToProps(documentType);
@@ -142,7 +134,6 @@ const getSupportingDocuments = async (req, res, next) => {
       user,
       dealId,
       files,
-      uploadCsrf: uploadCsrf.token,
     });
   } catch (error) {
     console.error('GEF UI - Error getting Supporting Documents %o', error);

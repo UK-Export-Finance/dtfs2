@@ -1,7 +1,8 @@
 import { aPortalSessionUser } from '@ukef/dtfs2-common/test-helpers';
 import { Headers } from 'node-mocks-http';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { HttpStatusCode } from 'axios';
+import * as libs from '@ukef/dtfs2-common';
 import { AnyObject, DEAL_STATUS, PORTAL_AMENDMENT_STATUS, ROLES } from '@ukef/dtfs2-common';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
 import app from '../../server/createApp';
@@ -17,9 +18,9 @@ const originalEnv = { ...process.env };
 
 const { post } = createApi(app);
 
-jest.mock('csurf', () => () => (_req: Request, _res: Response, next: NextFunction) => next());
-jest.mock('../../server/middleware/csrf', () => ({
-  csrfToken: () => (_req: Request, _res: Response, next: NextFunction) => next(),
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual<typeof libs>('@ukef/dtfs2-common'),
+  verify: jest.fn((req: Request, res: Response, next: NextFunction): void => next()),
 }));
 
 const mockUpdateAmendmentStatus = jest.fn();
@@ -46,7 +47,7 @@ describe(`POST ${url}`, () => {
 
   beforeEach(async () => {
     await storage.flush();
-    jest.resetAllMocks();
+    jest.clearAllMocks();
 
     ({ sessionCookie } = await storage.saveUserSession([ROLES.MAKER]));
     jest.spyOn(api, 'updateAmendmentStatus').mockImplementation(mockUpdateAmendmentStatus);

@@ -3,14 +3,9 @@ jest.mock('../../server/services/api', () => ({
   validateToken: () => true,
   validateBank: () => ({ isValid: true }),
 }));
-jest.mock('../../server/middleware/csrf', () => ({
-  ...jest.requireActual('../../server/middleware/csrf'),
-  csrfToken: () => (req, res, next) => next(),
-}));
-
-jest.mock('../../server/utils/csrf-token-checker.js', () => ({
-  ...jest.requireActual('../../server/utils/csrf-token-checker.js'),
-  isCsrfTokenValid: () => true,
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  verify: jest.fn((req, res, next) => next()),
 }));
 
 const { ROLES } = require('../../server/constants');
