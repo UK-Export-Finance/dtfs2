@@ -17,7 +17,9 @@ if (typeof MOJFrontend.MultiFileUpload !== 'undefined') {
 
       document.querySelector('.moj-multi-file-upload__list').append(errorRow);
     } else {
-      document.querySelectorAll('.moj-multi-file-upload__error-row').forEach((file) => file.remove());
+      for (const file of document.querySelectorAll('.moj-multi-file-upload__error-row')) {
+        file.remove();
+      }
     }
   };
 
@@ -26,8 +28,8 @@ if (typeof MOJFrontend.MultiFileUpload !== 'undefined') {
 
   new MOJFrontend.MultiFileUpload({
     container,
-    uploadUrl: `${window.location.href}/upload?_csrf=${csrf}`,
-    deleteUrl: `${window.location.href}/delete?_csrf=${csrf}`,
+    uploadUrl: `${globalThis.location.href}/upload?_csrf=${csrf}`,
+    deleteUrl: `${globalThis.location.href}/delete?_csrf=${csrf}`,
     fileDeleteHook,
   });
 }

@@ -43,7 +43,9 @@ describe(`POST ${url}`, () => {
 
   beforeEach(async () => {
     await storage.flush();
-    jest.clearAllMocks();
+    jest.resetAllMocks();
+
+    jest.spyOn(libs, 'verify').mockImplementation((req: Request, res: Response, next: NextFunction): void => next());
 
     ({ sessionCookie } = await storage.saveUserSession([ROLES.MAKER]));
     jest.spyOn(api, 'getFacility').mockImplementation(mockGetFacility);
