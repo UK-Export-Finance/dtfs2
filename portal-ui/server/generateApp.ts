@@ -68,11 +68,10 @@ export const generateApp = () => {
     return res.status(HttpStatusCode.Ok).render('page-not-found.njk', { user });
   });
   app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
-    const code = res.statusCode || HttpStatusCode.BadRequest;
     next();
 
     console.error('❌ An error has occurred for request %s %o', req.url, error);
-    return res.status(code).render('_partials/problem-with-service.njk');
+    return res.status(HttpStatusCode.BadRequest).render('_partials/problem-with-service.njk');
   });
 
   return app;
