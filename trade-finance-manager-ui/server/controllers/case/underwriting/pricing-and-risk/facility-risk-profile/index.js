@@ -2,6 +2,14 @@ const api = require('../../../../../api');
 const validateSubmittedValues = require('./validateSubmittedValues');
 const { userCanEditGeneral } = require('../helpers');
 
+/**
+ * Controller to get underwriting facility risk profile page
+ * @async
+ * @function getUnderWritingFacilityRiskProfileEdit
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders underwriting facility risk profile page
+ */
 const getUnderWritingFacilityRiskProfileEdit = async (req, res) => {
   const { _id: dealId, facilityId } = req.params;
   const { userToken } = req.session;
@@ -22,6 +30,14 @@ const getUnderWritingFacilityRiskProfileEdit = async (req, res) => {
   });
 };
 
+/**
+ * Controller to post underwriting facility risk profile
+ * @async
+ * @function postUnderWritingFacilityRiskProfileEdit
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the next page
+ */
 const postUnderWritingFacilityRiskProfileEdit = async (req, res) => {
   const { _id: dealId, facilityId } = req.params;
   const { userToken } = req.session;

@@ -36,6 +36,14 @@ const getLeadUnderwriter = async (deal, user, token) => {
   };
 };
 
+/**
+ * Controller to get assign lead underwriter page
+ * @async
+ * @function getAssignLeadUnderwriter
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders assign lead underwriter page
+ */
 const getAssignLeadUnderwriter = async (req, res) => {
   const dealId = req.params._id;
   const { user, userToken } = req.session;
@@ -74,6 +82,14 @@ const getAssignLeadUnderwriter = async (req, res) => {
   });
 };
 
+/**
+ * Controller to post lead underwriter
+ * @async
+ * @function postAssignLeadUnderwriter
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the next page
+ */
 const postAssignLeadUnderwriter = async (req, res) => {
   const { user, userToken } = req.session;
 

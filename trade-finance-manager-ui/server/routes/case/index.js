@@ -1774,48 +1774,624 @@ router.route('/:_id/parties/indemnifier/summary/:urn').get(partiesController.get
  */
 router.route('/:_id/parties/bond-issuer').get(partiesController.getPartyDetails).post(caseController.confirmTfmFacility);
 
+/**
+ * @openapi
+ * /:_id/parties/bond-issuer/summary:
+ *   get:
+ *     summary: Get bond specific urn summary page
+ *     tags: [TFM]
+ *     description: Get bond specific urn summary page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ *   post:
+ *     summary: Post bond party URNs to the TFM
+ *     tags: [TFM]
+ *     description: Post bond party URNs to the TFM
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource permanently moved
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
 router.route('/:_id/parties/bond-issuer/summary').get(partiesController.getBondUrnDetails).post(caseController.postTfmFacility);
 
+/**
+ * @openapi
+ * /:_id/parties/bond-beneficiary:
+ *   get:
+ *     summary: Get party specific URN edit page
+ *     tags: [TFM]
+ *     description: Get party specific URN edit page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ *   post:
+ *     summary: Post party URNs to bond summary page for confirmation
+ *     tags: [TFM]
+ *     description: Post party URNs to bond summary page for confirmation
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource permanently moved
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
 router.route('/:_id/parties/bond-beneficiary').get(partiesController.getPartyDetails).post(caseController.confirmTfmFacility);
 
+/**
+ * @openapi
+ * /:_id/parties/bond-beneficiary/summary:
+ *   get:
+ *     summary: Get bond specific urn summary page
+ *     tags: [TFM]
+ *     description: Get bond specific urn summary page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ *   post:
+ *     summary: Post bond party URNs to the TFM
+ *     tags: [TFM]
+ *     description: Post bond party URNs to the TFM
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource permanently moved
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
 router.route('/:_id/parties/bond-beneficiary/summary').get(partiesController.getBondUrnDetails).post(caseController.postTfmFacility);
 
+/**
+ * @openapi
+ * /:_id/activity:
+ *   get:
+ *     summary: Get the activity page
+ *     tags: [TFM]
+ *     description: Get the activity page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ *   post:
+ *     summary: Apply filters on the activity page
+ *     tags: [TFM]
+ *     description: Apply filters on the activity page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
 router.route('/:_id/activity').get(activityController.getActivity).post(activityController.filterActivities);
 
+/**
+ * @openapi
+ * /:_id/activity/post-comment:
+ *   get:
+ *     summary: Get bond specific urn summary page
+ *     tags: [TFM]
+ *     description: Get bond specific urn summary page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ *   post:
+ *     summary: Post activity comment
+ *     tags: [TFM]
+ *     description: Post activity comment
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource permanently moved
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
 router.route('/:_id/activity/post-comment').get(activityController.getCommentBox).post(activityController.postComment);
 
+/**
+ * @openapi
+ * /:_id/underwriting:
+ *   get:
+ *     summary: Get underwriting page
+ *     tags: [TFM]
+ *     description: Get underwriting page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ */
 router.route('/:_id/underwriting').get(underwritingController.getUnderwriterPage);
 
+/**
+ * @openapi
+ * /:_id/underwriting/pricing-and-risk/edit:
+ *   get:
+ *     summary: Get pricing and risk edit page
+ *     tags: [TFM]
+ *     description: Get pricing and risk edit page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ *   post:
+ *     summary: Post underwriting and risk
+ *     tags: [TFM]
+ *     description: Post underwriting and risk
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource permanently moved
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
 router
   .route('/:_id/underwriting/pricing-and-risk/edit')
   .get(underwritingController.getUnderWritingPricingAndRiskEdit)
   .post(underwritingController.postUnderWritingPricingAndRisk);
 
+/**
+ * @openapi
+ * /:_id/underwriting/pricing-and-risk/loss-given-default:
+ *   get:
+ *     summary: Get underwriting loss given default page
+ *     tags: [TFM]
+ *     description: Get underwriting loss given default page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ *   post:
+ *     summary: Post underwriting loss given default
+ *     tags: [TFM]
+ *     description: Post underwriting loss given default
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource permanently moved
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
 router
   .route('/:_id/underwriting/pricing-and-risk/loss-given-default')
   .get(underwritingController.getUnderWritingLossGivenDefault)
   .post(underwritingController.postUnderWritingLossGivenDefault);
 
+/**
+ * @openapi
+ * /:_id/underwriting/pricing-and-risk/probability-of-default:
+ *   get:
+ *     summary: Get underwriting probability of default page
+ *     tags: [TFM]
+ *     description: Get underwriting probability of default page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ *   post:
+ *     summary: Post underwriting probability of default
+ *     tags: [TFM]
+ *     description: Post underwriting probability of default
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource permanently moved
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
 router
   .route('/:_id/underwriting/pricing-and-risk/probability-of-default')
   .get(underwritingController.getUnderWritingProbabilityOfDefault)
   .post(underwritingController.postUnderWritingProbabilityOfDefault);
 
+/**
+ * @openapi
+ * /:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile:
+ *   get:
+ *     summary: Get underwriting facility risk profile page
+ *     tags: [TFM]
+ *     description: Get underwriting facility risk profile page
+ *     parameters:
+ *       - in: path
+ *         name: _id, facilityId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and facility ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ *   post:
+ *     summary: Post underwriting probability of default
+ *     tags: [TFM]
+ *     description: Post underwriting probability of default
+ *     parameters:
+ *       - in: path
+ *         name: _id, facilityId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID and facility ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource permanently moved
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
 router
   .route('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile')
   .get(underwritingController.getUnderWritingFacilityRiskProfileEdit)
   .post(underwritingController.postUnderWritingFacilityRiskProfileEdit);
 
+/**
+ * @openapi
+ * /:_id/underwriting/lead-underwriter/assign:
+ *   get:
+ *     summary: Get assign lead underwriter page
+ *     tags: [TFM]
+ *     description: Get assign lead underwriter page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ *   post:
+ *     summary: Post lead underwriter
+ *     tags: [TFM]
+ *     description: Post lead underwriter
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource permanently moved
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
 router
   .route('/:_id/underwriting/lead-underwriter/assign')
   .get(underwritingController.getAssignLeadUnderwriter)
   .post(underwritingController.postAssignLeadUnderwriter);
 
+/**
+ * @openapi
+ * /:_id/underwriting/managers-decision/edit:
+ *   get:
+ *     summary: Get underwriter managers decision edit page
+ *     tags: [TFM]
+ *     description: Get underwriter managers decision edit page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ *   post:
+ *     summary: Post underwriter managers decision page
+ *     tags: [TFM]
+ *     description: Post underwriter managers decision page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource permanently moved
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
 router
   .route('/:_id/underwriting/managers-decision/edit')
   .get(underwritingController.getUnderwriterManagersDecisionEdit)
   .post(underwritingController.postUnderwriterManagersDecision);
 
+/**
+ * @openapi
+ * /:_id/documents:
+ *   get:
+ *     summary: Get case documents page
+ *     tags: [TFM]
+ *     description: Get case documents page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ */
 router.route('/:_id/documents').get(caseController.getCaseDocuments);
 
 router.use('/', cancellationRouter);

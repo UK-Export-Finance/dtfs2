@@ -511,6 +511,14 @@ const postFacilityAmendment = async (req, res) => {
   return res.redirect(`/case/${dealId}/facility/${facilityId}/amendment/${amendmentId}/request-date`);
 };
 
+/**
+ * Controller to get case documents page
+ * @async
+ * @function getCaseDocuments
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders case documents page
+ */
 const getCaseDocuments = async (req, res) => {
   try {
     const dealId = req.params._id;
