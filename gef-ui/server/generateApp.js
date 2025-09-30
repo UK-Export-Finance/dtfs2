@@ -66,10 +66,12 @@ const generateApp = () => {
   // Global middlewares
   app.use((req, res) => res.status(HttpStatusCode.NotFound).render('partials/page-not-found.njk', { user: req.session.user }));
   app.use((error, req, res, next) => {
+    const code = res.statusCode || HttpStatusCode.BadRequest;
+
     next();
 
     console.error('❌ An error has occurred for request %s %o', req.url, error);
-    return res.status(HttpStatusCode.BadRequest).render('partials/problem-with-service.njk', {});
+    return res.status(code).render('partials/problem-with-service.njk', {});
   });
 
   return app;
