@@ -40,7 +40,7 @@ describe(`GET ${url}`, () => {
 
   beforeEach(async () => {
     await storage.flush();
-    jest.resetAllMocks();
+    jest.clearAllMocks();
 
     ({ sessionCookie } = await storage.saveUserSession([ROLES.CHECKER]));
 

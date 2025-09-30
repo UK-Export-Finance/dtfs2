@@ -35,7 +35,7 @@ describe(`POST ${url}`, () => {
 
   beforeEach(async () => {
     await storage.flush();
-    jest.resetAllMocks();
+    jest.clearAllMocks();
 
     ({ sessionCookie } = await storage.saveUserSession([ROLES.MAKER]));
     jest.spyOn(api, 'upsertAmendment').mockImplementation(mockUpsertFacility);
