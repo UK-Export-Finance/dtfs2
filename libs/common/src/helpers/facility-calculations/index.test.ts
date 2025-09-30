@@ -421,10 +421,10 @@ describe('GEF drawn amount', () => {
       const drawnAmount = 100;
       const daysOfCover = 30;
       const dayCountBasis = 365;
-      const interestPercentage = 1;
+      const guaranteeFee = 1;
 
       // Act
-      const response = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, interestPercentage);
+      const response = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, guaranteeFee);
 
       // Assert
       expect(response).toBe(0.0821917808219178);
@@ -435,10 +435,10 @@ describe('GEF drawn amount', () => {
       const drawnAmount = 1000000;
       const daysOfCover = 365;
       const dayCountBasis = 365;
-      const interestPercentage = 4;
+      const guaranteeFee = 4;
 
       // Act
-      const response = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, interestPercentage);
+      const response = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, guaranteeFee);
 
       // Assert
       expect(response).toBe(40000);
@@ -449,10 +449,10 @@ describe('GEF drawn amount', () => {
       const drawnAmount = 0;
       const daysOfCover = 365;
       const dayCountBasis = 365;
-      const interestPercentage = 2.3;
+      const guaranteeFee = 2.3;
 
       // Act
-      const response = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, interestPercentage);
+      const response = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, guaranteeFee);
 
       // Assert
       expect(response).toBe(0);
@@ -478,12 +478,12 @@ describe('GEF drawn amount', () => {
       },
       value: 100000,
       coverPercentage: 80,
-      interestPercentage: 5,
+      guaranteeFee: 4.5,
       paymentType: 'cash',
       createdAt: new Date().getTime(),
       updatedAt: new Date().getTime(),
       ukefExposure: 80000,
-      guaranteeFee: 10,
+      interestPercentage: 9,
       submittedAsIssuedDate: null,
       ukefFacilityId: '12345678',
       feeType: 'cash',
@@ -514,7 +514,7 @@ describe('GEF drawn amount', () => {
       const response = calculateGefFacilityFeeRecord(facility);
 
       // Assert
-      expect(response).toBe(7004.931506849315);
+      expect(response).toBe(6304.438356164384);
     });
 
     it('should calculate GEF facility fixed fee with only 1 day difference', () => {
@@ -544,7 +544,7 @@ describe('GEF drawn amount', () => {
       const response = calculateGefFacilityFeeRecord(mockFacility);
 
       // Assert
-      expect(response).toBe(0.07004931506849316);
+      expect(response).toBe(0.06304438356164384);
     });
   });
 });

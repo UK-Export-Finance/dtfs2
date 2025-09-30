@@ -61,7 +61,7 @@ describe('calculate-gef-facility-fee-record', () => {
 
       const drawnAmount = calculateDrawnAmount(mockFacilityValue, mockCoverPercentage, mockType);
       const daysOfCover = calculateDaysOfCover(FACILITY_TYPE.CASH, mockCoverStartDate, mockCoverEndDate);
-      const expected = calculateFeeAmount(drawnAmount, daysOfCover, mockFacility.dayCountBasis, mockInterestPercentage);
+      const expected = calculateFeeAmount(drawnAmount, daysOfCover, mockFacility.dayCountBasis, mockGuaranteeFee);
 
       expect(result).toEqual(expected);
     });
