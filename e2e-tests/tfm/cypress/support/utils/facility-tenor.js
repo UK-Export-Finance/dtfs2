@@ -1,4 +1,4 @@
-import { add } from 'date-fns';
+import { add, differenceInMonths } from 'date-fns';
 import { oneMonth, twoYearsAgo } from '@ukef/dtfs2-common/test-helpers';
 
 /**
@@ -14,15 +14,11 @@ import { oneMonth, twoYearsAgo } from '@ukef/dtfs2-common/test-helpers';
  * But in some cases for BSS facilities we add one to the difference.
  *
  * Specifically in the case of these tests, the tenor is 25 months except for:
- * - if expiry and commencement dates are the same date of month then you add one
  * - if commencement is end of month and expiry is also end of month you add one
  */
 export const calculateTestFacilityTenorValue = () => {
-  let facilityTenor = '25 months';
-
-  if (twoYearsAgo.date.getDate() === oneMonth.date.getDate()) {
-    facilityTenor = '26 months';
-  }
+  const difference = differenceInMonths(oneMonth.date, twoYearsAgo.date).toString();
+  let facilityTenor = `${difference} months`;
 
   const isCommencementDateEndOfMonth = add(twoYearsAgo.date, { days: 1 }).getDate() === 1;
   const isExpiryDateEndOFMonth = add(oneMonth.date, { days: 1 }).getDate() === 1;
