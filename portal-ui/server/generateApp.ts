@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import flash from 'connect-flash';
 import { create as createCsrf, verify as verifyCsrf, maintenance, SWAGGER } from '@ukef/dtfs2-common';
 import { configure, expressSession } from '@ukef/dtfs2-common/backend';
+import { HttpStatusCode } from 'axios';
 import routes from './routes';
 import swaggerRouter from './routes/swagger.route';
 import healthcheck from './healthcheck';
@@ -58,19 +59,19 @@ export const generateApp = () => {
   app.use(verifyCsrf);
   app.use('/', routes);
 
+  // Global middlewares
   app.get('*', (req, res) => {
     // This checks the session cookie for a login status & if it's `Valid 2FA`.
     // If so, the user property can be accessed on the session & passed into the template
     const userIsFullyLoggedIn = 'loginStatus' in req.session && withUnknownLoginStatusUserSession(req.session).loginStatus === 'Valid 2FA';
     const user = userIsFullyLoggedIn ? asLoggedInUserSession(req.session).user : undefined;
-    return res.render('page-not-found.njk', { user });
+    return res.status(HttpStatusCode.Ok).render('page-not-found.njk', { user });
   });
-
   app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
-    next(error);
+    next();
 
     console.error('❌ An error has occurred for request %s %o', req.url, error);
-    return res.render('_partials/problem-with-service.njk');
+    return res.status(HttpStatusCode.BadRequest).render('_partials/problem-with-service.njk');
   });
 
   return app;

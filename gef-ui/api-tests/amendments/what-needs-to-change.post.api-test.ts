@@ -1,5 +1,6 @@
 import { Headers } from 'node-mocks-http';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import * as libs from '@ukef/dtfs2-common';
 import { AnyObject, DEAL_STATUS, DEAL_SUBMISSION_TYPE, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
@@ -17,9 +18,9 @@ const originalEnv = { ...process.env };
 
 const { post } = createApi(app);
 
-jest.mock('csurf', () => () => (_req: Request, _res: Response, next: NextFunction) => next());
-jest.mock('../../server/middleware/csrf', () => ({
-  csrfToken: () => (_req: Request, _res: Response, next: NextFunction) => next(),
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual<typeof libs>('@ukef/dtfs2-common'),
+  verify: jest.fn((req: Request, res: Response, next: NextFunction): void => next()),
 }));
 
 const mockGetFacility = jest.fn();
@@ -43,6 +44,8 @@ describe(`POST ${url}`, () => {
   beforeEach(async () => {
     await storage.flush();
     jest.resetAllMocks();
+
+    jest.spyOn(libs, 'verify').mockImplementation((req: Request, res: Response, next: NextFunction): void => next());
 
     ({ sessionCookie } = await storage.saveUserSession([ROLES.MAKER]));
     jest.spyOn(api, 'getFacility').mockImplementation(mockGetFacility);

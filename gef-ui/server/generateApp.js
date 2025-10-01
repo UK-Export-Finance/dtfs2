@@ -1,3 +1,4 @@
+const { HttpStatusCode } = require('axios');
 const path = require('path');
 const express = require('express');
 const compression = require('compression');
@@ -5,15 +6,13 @@ const morgan = require('morgan');
 const flash = require('connect-flash');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
-const csrf = require('csurf');
-const { SWAGGER, maintenance } = require('@ukef/dtfs2-common');
+const { SWAGGER, create: createCsrf, verify: verifyCsrf, maintenance } = require('@ukef/dtfs2-common');
 const { configure, expressSession } = require('@ukef/dtfs2-common/backend');
 const routes = require('./routes');
 const swaggerRouter = require('./routes/swagger.route');
-const supportingInformationUploadRoutes = require('./routes/supporting-information-upload');
 const healthcheck = require('./healthcheck');
 const configureNunjucks = require('./nunjucks-configuration');
-const { csrfToken, copyCsrfTokenFromQueryToBody, security, seo, createRateLimit } = require('./middleware');
+const { security, seo, createRateLimit } = require('./middleware');
 
 dotenv.config();
 
@@ -31,19 +30,13 @@ const generateApp = () => {
 
   app.use(security);
   app.use(expressSession());
+  app.use(createCsrf);
 
   app.use(compression());
   app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  // These routes cannot use the csrf check below so must come before it
-  // They implement their own separate csrf check
-  app.use('/', supportingInformationUploadRoutes);
-
-  app.use(copyCsrfTokenFromQueryToBody());
-  app.use(csrf());
-  app.use(csrfToken());
   app.use(flash());
 
   configureNunjucks({
@@ -66,23 +59,19 @@ const generateApp = () => {
    * Should always be after `seo`, `security` and `assets` middlewares for UI.
    */
   app.use(maintenance);
-
   app.use(createRateLimit());
-
+  app.use(verifyCsrf);
   app.use('/', routes);
 
-  // eslint-disable-next-line no-unused-vars
+  // Global middlewares
+  app.use((req, res) => res.status(HttpStatusCode.NotFound).render('partials/page-not-found.njk', { user: req.session.user }));
   app.use((error, req, res, next) => {
-    if (error.code === 'EBADCSRFTOKEN') {
-      // handle CSRF token errors here
-      res.status(error.statusCode || 500);
-      res.redirect('/');
-    } else {
-      res.render('partials/problem-with-service.njk', { user: req.session.user, error });
-    }
+    next();
+
+    console.error('❌ An error has occurred for request %s %o', req.url, error);
+    return res.status(HttpStatusCode.BadRequest).render('partials/problem-with-service.njk', {});
   });
 
-  app.use((req, res) => res.status(404).render('partials/page-not-found.njk', { user: req.session.user }));
   return app;
 };
 

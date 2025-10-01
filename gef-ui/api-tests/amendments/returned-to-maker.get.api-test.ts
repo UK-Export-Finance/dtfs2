@@ -1,5 +1,6 @@
 import { Headers } from 'node-mocks-http';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import * as libs from '@ukef/dtfs2-common';
 import { PORTAL_AMENDMENT_STATUS, ROLES } from '@ukef/dtfs2-common';
 import { HttpStatusCode } from 'axios';
 import { withRoleValidationApiTests } from '../common-tests/role-validation-api-tests';
@@ -15,9 +16,9 @@ const originalEnv = { ...process.env };
 
 const { get } = createApi(app);
 
-jest.mock('csurf', () => () => (_req: Request, _res: Response, next: NextFunction) => next());
-jest.mock('../../server/middleware/csrf', () => ({
-  csrfToken: () => (_req: Request, _res: Response, next: NextFunction) => next(),
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual<typeof libs>('@ukef/dtfs2-common'),
+  verify: jest.fn((req: Request, res: Response, next: NextFunction): void => next()),
 }));
 
 const mockGetAmendment = jest.fn();
@@ -34,7 +35,7 @@ describe(`GET ${url}`, () => {
 
   beforeEach(async () => {
     await storage.flush();
-    jest.resetAllMocks();
+    jest.clearAllMocks();
 
     ({ sessionCookie } = await storage.saveUserSession([ROLES.CHECKER]));
     jest.spyOn(api, 'getAmendment').mockImplementation(mockGetAmendment);

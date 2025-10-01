@@ -30,6 +30,7 @@ const confirmCoverStartDate = require('./facilities/confirm-cover-start-date');
 const portalActivities = require('./application-activities');
 const cloneGefDeal = require('./clone-gef-deal');
 const unissuedFacilities = require('./unissued-facilities');
+const supportingInformationUploadRoutes = require('./supporting-information-upload');
 const { default: bankReviewDate } = require('./facilities/bank-review-date');
 const { default: facilityEndDate } = require('./facilities/facility-end-date');
 const { default: amendments } = require('./facilities/amendments/index');
@@ -71,5 +72,6 @@ router.use(confirmCoverStartDate);
 router.use(coverStartDate);
 router.use(portalActivities);
 router.use(unissuedFacilities);
+router.use(supportingInformationUploadRoutes);
 
 module.exports = router;
