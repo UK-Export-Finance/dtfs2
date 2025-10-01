@@ -236,17 +236,17 @@ context('Bond beneficiary URN - User can add, edit, confirm and submit URN to th
       });
 
       it('ensure user cannot manually visit the party URN page', () => {
-        cy.visit(`/case/${dealId}/parties/${party}`);
+        cy.visit(`/case/${dealId}/parties/${party}`, { failOnStatusCode: false });
         cy.url().should('eq', relative('/not-found'));
       });
 
       it('ensure user cannot confirm party URN', () => {
-        cy.visit(`/case/${dealId}/parties/${party}/summary}`);
+        cy.visit(`/case/${dealId}/parties/${party}/summary}`, { failOnStatusCode: false });
         pages.partiesPage.partyUrnSummaryTable().should('not.exist');
       });
 
       it('ensure user cannot manually visit the party URN summary page', () => {
-        cy.visit(`/case/${dealId}/parties/${party}/summary`);
+        cy.visit(`/case/${dealId}/parties/${party}/summary`, { failOnStatusCode: false });
         cy.url().should('eq', relative('/not-found'));
       });
     });

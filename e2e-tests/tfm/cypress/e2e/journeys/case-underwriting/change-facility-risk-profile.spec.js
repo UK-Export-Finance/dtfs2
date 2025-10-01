@@ -48,7 +48,7 @@ context('Case Underwriting - Pricing and risk - Facility Risk Profile', () => {
       facilityRow.changeRiskProfileLink().should('not.exist');
 
       // user cannot manually navigate to the page
-      cy.visit(relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${dealFacilities[0]._id}/risk-profile`));
+      cy.visit(relative(`/case/${dealId}/underwriting/pricing-and-risk/facility/${dealFacilities[0]._id}/risk-profile`), { failOnStatusCode: false });
       cy.url().should('eq', relative('/not-found'));
     });
   });
