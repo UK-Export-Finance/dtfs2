@@ -67,7 +67,7 @@ context('Amendments - access amendment url when deal status is "Cancelled"', () 
   });
 
   it('should navigate /not-found when going to the amendment details url', () => {
-    cy.visit(relative(amendmentDetailsUrl));
+    cy.visit(relative(amendmentDetailsUrl), { failOnStatusCode: false });
 
     cy.url().should('eq', relative('/not-found'));
   });
