@@ -13,17 +13,252 @@ export const cancellationRouter = Router();
 
 cancellationRouter.use(validateDealCancellationEnabled, validateUserTeam([TEAM_IDS.PIM]));
 
-cancellationRouter.get('/:_id/cancellation/reason', getReasonForCancelling);
-cancellationRouter.post('/:_id/cancellation/reason', postReasonForCancelling);
+/**
+ * @openapi
+ * /:_id/cancellation/reason:
+ *   get:
+ *     summary: Get the reason for cancelling page
+ *     tags: [TFM]
+ *     description: Get the reason for cancelling page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ *   post:
+ *     summary: Post to update the reason for cancelling
+ *     tags: [TFM]
+ *     description: Post to update the reason for cancelling
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource permanently moved
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
+cancellationRouter.route('/:_id/cancellation/reason').get(getReasonForCancelling).post(postReasonForCancelling);
 
-cancellationRouter.get('/:_id/cancellation/bank-request-date', getBankRequestDate);
-cancellationRouter.post('/:_id/cancellation/bank-request-date', postBankRequestDate);
+/**
+ * @openapi
+ * /:_id/cancellation/bank-request-date:
+ *   get:
+ *     summary: Get the bank request date page
+ *     tags: [TFM]
+ *     description: Get the bank request date page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ *   post:
+ *     summary: Post to update the bank request date
+ *     tags: [TFM]
+ *     description: Post to update the bank request date
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource permanently moved
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
+cancellationRouter.route('/:_id/cancellation/bank-request-date').get(getBankRequestDate).post(postBankRequestDate);
 
-cancellationRouter.get('/:_id/cancellation/effective-from-date', getEffectiveFromDate);
-cancellationRouter.post('/:_id/cancellation/effective-from-date', postEffectiveFromDate);
+/**
+ * @openapi
+ * /:_id/cancellation/effective-from-date:
+ *   get:
+ *     summary: Get the effective from date page
+ *     tags: [TFM]
+ *     description: Get the effective from date page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ *   post:
+ *     summary: Post to update the effective from date
+ *     tags: [TFM]
+ *     description: Post to update the effective from date
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource permanently moved
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
+cancellationRouter.route('/:_id/cancellation/effective-from-date').get(getEffectiveFromDate).post(postEffectiveFromDate);
 
-cancellationRouter.get('/:_id/cancellation/cancel', getCancelCancellation);
-cancellationRouter.post('/:_id/cancellation/cancel', postCancelCancellation);
+/**
+ * @openapi
+ * /:_id/cancellation/cancel:
+ *   get:
+ *     summary: Get the cancel cancellation page
+ *     tags: [TFM]
+ *     description: Get the cancel cancellation page
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ *   post:
+ *     summary: Post to cancel the cancellation request
+ *     tags: [TFM]
+ *     description: Post to cancel the cancellation request
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource permanently moved
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
+cancellationRouter.route('/:_id/cancellation/cancel').get(getCancelCancellation).post(postCancelCancellation);
 
-cancellationRouter.get('/:_id/cancellation/check-details', getDealCancellationDetails);
-cancellationRouter.post('/:_id/cancellation/check-details', postDealCancellationDetails);
+/**
+ * @openapi
+ * /:_id/cancellation/check-details:
+ *   get:
+ *     summary: Get deal cancellation details
+ *     tags: [TFM]
+ *     description: Get deal cancellation details
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Internal server error
+ *   post:
+ *     summary: Post the deal cancellation
+ *     tags: [TFM]
+ *     description: Post the deal cancellation
+ *     parameters:
+ *       - in: path
+ *         name: _id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: the deal ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       301:
+ *         description: Resource permanently moved
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Internal server error
+ */
+cancellationRouter.route('/:_id/cancellation/check-details').get(getDealCancellationDetails).post(postDealCancellationDetails);
