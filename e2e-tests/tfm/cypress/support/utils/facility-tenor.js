@@ -18,9 +18,9 @@ import { oneMonth, twoYearsAgo } from '@ukef/dtfs2-common/test-helpers';
  * - if commencement is end of month and expiry is also end of month you add one
  * - if commencement is end of month and the commencement month has less than 31 days then you do not add one`
  */
-export const calculateTestFacilityTenorValue = (date) => {
-  const commencementDate = twoYearsAgo(date).date;
-  const expiryDate = oneMonth(date).date;
+export const calculateTestFacilityTenorValue = () => {
+  const commencementDate = twoYearsAgo.date;
+  const expiryDate = oneMonth.date;
 
   let facilityTenor = '25 months';
 

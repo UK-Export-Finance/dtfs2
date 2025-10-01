@@ -2,7 +2,7 @@ import { today, oneMonth, twoYearsAgo } from '../date-constants';
 import { DEAL_TYPE, DEAL_SUBMISSION_TYPE, FACILITY_TYPE, BOND_TYPE, ALL_CURRENCIES, CURRENCIES, CURRENCY } from '../../../constants';
 import { BANK1_MAKER1 } from '../../mock-data';
 
-export const MOCK_DEAL_AIN = (date: string) => ({
+export const MOCK_DEAL_AIN = {
   dealType: DEAL_TYPE.BSS_EWCS,
   submissionType: DEAL_SUBMISSION_TYPE.AIN,
   bankInternalRefName: 'Mock supply contract ID',
@@ -199,11 +199,11 @@ export const MOCK_DEAL_AIN = (date: string) => ({
         text: 'GBP - UK Sterling',
         id: CURRENCY.GBP,
       },
-      'coverEndDate-day': oneMonth(date).dayLong,
-      'coverEndDate-month': oneMonth(date).monthLong,
-      'coverEndDate-year': oneMonth(date).year,
-      issuedDate: twoYearsAgo(date).unixMillisecondsString,
-      requestedCoverStartDate: twoYearsAgo(date).unixMillisecondsString,
+      'coverEndDate-day': oneMonth.dayLong,
+      'coverEndDate-month': oneMonth.monthLong,
+      'coverEndDate-year': oneMonth.year,
+      issuedDate: twoYearsAgo.unixMillisecondsString,
+      requestedCoverStartDate: twoYearsAgo.unixMillisecondsString,
       name: 'Test-123',
       updatedAt: Date.now(),
     },
@@ -265,13 +265,13 @@ export const MOCK_DEAL_AIN = (date: string) => ({
         text: CURRENCIES[1]!.text,
         id: ALL_CURRENCIES.AUD,
       },
-      'coverEndDate-day': oneMonth(date).dayLong,
-      'coverEndDate-month': oneMonth(date).monthLong,
-      'coverEndDate-year': oneMonth(date).year,
-      issuedDate: twoYearsAgo(date).unixMillisecondsString,
-      requestedCoverStartDate: twoYearsAgo(date).unixMillisecondsString,
+      'coverEndDate-day': oneMonth.dayLong,
+      'coverEndDate-month': oneMonth.monthLong,
+      'coverEndDate-year': oneMonth.year,
+      issuedDate: twoYearsAgo.unixMillisecondsString,
+      requestedCoverStartDate: twoYearsAgo.unixMillisecondsString,
       name: 'Test-123',
       updatedAt: Date.now(),
     },
   ],
-});
+};
