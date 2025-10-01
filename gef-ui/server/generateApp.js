@@ -1,4 +1,3 @@
-const { HttpStatusCode } = require('axios');
 const path = require('path');
 const express = require('express');
 const compression = require('compression');
@@ -6,7 +5,7 @@ const morgan = require('morgan');
 const flash = require('connect-flash');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
-const { SWAGGER, create: createCsrf, verify: verifyCsrf, maintenance } = require('@ukef/dtfs2-common');
+const { SWAGGER, create: createCsrf, verify: verifyCsrf, maintenance, notFound, errors } = require('@ukef/dtfs2-common');
 const { configure, expressSession } = require('@ukef/dtfs2-common/backend');
 const routes = require('./routes');
 const swaggerRouter = require('./routes/swagger.route');
@@ -63,14 +62,14 @@ const generateApp = () => {
   app.use(verifyCsrf);
   app.use('/', routes);
 
-  // Global middlewares
-  app.use((req, res) => res.status(HttpStatusCode.NotFound).render('partials/page-not-found.njk', { user: req.session.user }));
-  app.use((error, req, res, next) => {
-    next();
-
-    console.error('❌ An error has occurred for request %s %o', req.url, error);
-    return res.status(HttpStatusCode.BadRequest).render('partials/problem-with-service.njk', {});
-  });
+  /**
+   * Global middlewares for edge cases
+   * and gracefully handling exceptions.
+   */
+  // Handles all invalid URLs
+  app.use(notFound('partials/page-not-found.njk'));
+  // Handles all errors and exceptions
+  app.use(errors('partials/problem-with-service.njk'));
 
   return app;
 };

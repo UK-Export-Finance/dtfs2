@@ -1,9 +1,9 @@
 import path from 'path';
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import flash from 'connect-flash';
-import { create as createCsrf, verify as verifyCsrf, maintenance, SWAGGER } from '@ukef/dtfs2-common';
+import { SWAGGER, create as createCsrf, verify as verifyCsrf, maintenance, notFound, errors } from '@ukef/dtfs2-common';
 import { configure, expressSession } from '@ukef/dtfs2-common/backend';
 import { HttpStatusCode } from 'axios';
 import routes from './routes';
@@ -59,7 +59,6 @@ export const generateApp = () => {
   app.use(verifyCsrf);
   app.use('/', routes);
 
-  // Global middlewares
   app.get('*', (req, res) => {
     // This checks the session cookie for a login status & if it's `Valid 2FA`.
     // If so, the user property can be accessed on the session & passed into the template
@@ -67,12 +66,15 @@ export const generateApp = () => {
     const user = userIsFullyLoggedIn ? asLoggedInUserSession(req.session).user : undefined;
     return res.status(HttpStatusCode.Ok).render('page-not-found.njk', { user });
   });
-  app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
-    next();
 
-    console.error('❌ An error has occurred for request %s %o', req.url, error);
-    return res.status(HttpStatusCode.BadRequest).render('_partials/problem-with-service.njk');
-  });
+  /**
+   * Global middlewares for edge cases
+   * and gracefully handling exceptions.
+   */
+  // Handles all invalid URLs
+  app.use(notFound('page-not-found.njk'));
+  // Handles all errors and exceptions
+  app.use(errors('_partials/problem-with-service.njk'));
 
   return app;
 };
