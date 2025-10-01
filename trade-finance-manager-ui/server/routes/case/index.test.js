@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { expect, jest } from '@jest/globals';
 import { TEAM_IDS } from '@ukef/dtfs2-common';
-import { get, post } from '../../test-mocks/router-mock';
+import { route } from '../../test-mocks/router-mock';
 import caseController from '../../controllers/case';
 import partiesController from '../../controllers/case/parties';
 import underwritingController from '../../controllers/case/underwriting';
@@ -25,239 +25,196 @@ describe('routes - case', () => {
   it('should setup routes with controllers', () => {
     require('./index'); // eslint-disable-line global-require
 
-    // GET routes
-    expect(get).toHaveBeenCalledTimes(47);
+    expect(route).toHaveBeenCalledTimes(47);
 
-    expect(get).toHaveBeenCalledWith('/:_id/deal', caseController.getCaseDeal);
+    expect(route).toHaveBeenCalledWith('/:_id/deal');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(caseController.getCaseDeal);
 
-    expect(get).toHaveBeenCalledWith('/:_id/tasks', caseController.getCaseTasks);
+    expect(route).toHaveBeenCalledWith('/:_id/tasks');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(caseController.getCaseTasks);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(caseController.filterCaseTasks);
 
-    expect(get).toHaveBeenCalledWith('/:_id/tasks/:groupId/:taskId', caseController.getCaseTask);
+    expect(route).toHaveBeenCalledWith('/:_id/tasks/:groupId/:taskId');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(caseController.getCaseTask);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(caseController.putCaseTask);
 
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId', caseController.getCaseFacility);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(caseController.getCaseFacility);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(caseController.postFacilityAmendment);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties', partiesController.getAllParties);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-date');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getAmendmentRequestDate);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postAmendmentRequestDate);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/exporter', partiesController.getPartyDetails);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-approval');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getAmendmentRequestApproval);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postAmendmentRequestApproval);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/buyer', partiesController.getPartyDetails);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-options');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getAmendmentOptions);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postAmendmentOptions);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/agent', partiesController.getPartyDetails);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getAmendmentEffectiveDate);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postAmendmentEffectiveDate);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/indemnifier', partiesController.getPartyDetails);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getAssignAmendmentLeadUnderwriter);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postAssignAmendmentLeadUnderwriter);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/exporter/summary/:urn', partiesController.getPartyUrnDetails);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value');
+    expect(route.mock.results[0].value.all).toHaveBeenCalledWith(validateUserTeam([TEAM_IDS.PIM]));
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getAmendFacilityValue);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postAmendFacilityValue);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/buyer/summary/:urn', partiesController.getPartyUrnDetails);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getAmendmentAddUnderwriterManagersFacilityValue);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postAmendmentAddUnderwriterManagersFacilityValue);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/agent/summary/:urn', partiesController.getPartyUrnDetails);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date');
+    expect(route.mock.results[0].value.all).toHaveBeenCalledWith(validateUserTeam([TEAM_IDS.PIM]));
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getAmendCoverEndDate);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postAmendCoverEndDate);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/indemnifier/summary/:urn', partiesController.getPartyUrnDetails);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/is-using-facility-end-date');
+    expect(route.mock.results[0].value.all).toHaveBeenCalledWith(validateUserTeam([TEAM_IDS.PIM]));
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getAmendmentIsUsingFacilityEndDate);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postAmendmentIsUsingFacilityEndDate);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/bond-issuer', partiesController.getPartyDetails);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date');
+    expect(route.mock.results[0].value.all).toHaveBeenCalledWith(validateUserTeam([TEAM_IDS.PIM]));
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getAmendmentFacilityEndDate);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postAmendmentFacilityEndDate);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/bond-issuer/summary', partiesController.getBondUrnDetails);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/bank-review-date');
+    expect(route.mock.results[0].value.all).toHaveBeenCalledWith(validateUserTeam([TEAM_IDS.PIM]));
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getAmendmentBankReviewDate);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postAmendmentBankReviewDate);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/bond-beneficiary', partiesController.getPartyDetails);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date/managers-decision');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getAmendmentAddUnderwriterManagersDecisionCoverEndDate);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postAmendmentAddUnderwriterManagersDecisionCoverEndDate);
 
-    expect(get).toHaveBeenCalledWith('/:_id/parties/bond-beneficiary/summary', partiesController.getBondUrnDetails);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/check-answers');
+    expect(route.mock.results[0].value.all).toHaveBeenCalledWith(validateUserTeam([TEAM_IDS.PIM]));
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getAmendmentAnswers);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postAmendmentAnswers);
 
-    expect(get).toHaveBeenCalledWith('/:_id/documents', caseController.getCaseDocuments);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/managers-conditions');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getManagersConditionsAndComments);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postManagersConditionsAndComments);
 
-    expect(get).toHaveBeenCalledWith('/:_id/underwriting', underwritingController.getUnderwriterPage);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/managers-conditions/summary');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getManagersConditionsAndCommentsSummary);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postManagersConditionsAndCommentsSummary);
 
-    expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/edit', underwritingController.getUnderWritingPricingAndRiskEdit);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getAmendmentBankDecisionChoice);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postAmendmentBankDecisionChoice);
 
-    expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/loss-given-default', underwritingController.getUnderWritingLossGivenDefault);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/received-date');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getAmendmentBankDecisionReceivedDate);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postAmendmentBankDecisionReceivedDate);
 
-    expect(get).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/probability-of-default', underwritingController.getUnderWritingProbabilityOfDefault);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/effective-date');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getAmendmentBankDecisionEffectiveDate);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postAmendmentBankDecisionEffectiveDate);
 
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile',
-      underwritingController.getUnderWritingFacilityRiskProfileEdit,
-    );
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getAmendmentBankDecisionAnswers);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postAmendmentBankDecisionAnswers);
 
-    expect(get).toHaveBeenCalledWith('/:_id/underwriting/lead-underwriter/assign', underwritingController.getAssignLeadUnderwriter);
+    expect(route).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/task/:taskId/group/:groupId');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(amendmentsController.getAmendmentTask);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(amendmentsController.postAmendmentTask);
 
-    expect(get).toHaveBeenCalledWith('/:_id/underwriting/managers-decision/edit', underwritingController.getUnderwriterManagersDecisionEdit);
+    expect(route).toHaveBeenCalledWith('/:_id/parties');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(partiesController.getAllParties);
 
-    expect(get).toHaveBeenCalledWith('/:_id/activity', activityController.getActivity);
+    expect(route).toHaveBeenCalledWith('/:_id/parties/exporter');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(partiesController.getPartyDetails);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(partiesController.confirmPartyUrn);
 
-    expect(get).toHaveBeenCalledWith('/:_id/activity/post-comment', activityController.getCommentBox);
+    expect(route).toHaveBeenCalledWith('/:_id/parties/exporter/summary/:urn');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(partiesController.getPartyUrnDetails);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(partiesController.postPartyDetails);
 
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-date', amendmentsController.getAmendmentRequestDate);
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-approval', amendmentsController.getAmendmentRequestApproval);
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-options', amendmentsController.getAmendmentOptions);
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date',
-      amendmentsController.getAmendmentEffectiveDate,
-    );
+    expect(route).toHaveBeenCalledWith('/:_id/parties/buyer');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(partiesController.getPartyDetails);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(partiesController.confirmPartyUrn);
 
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date',
-      validateUserTeam([TEAM_IDS.PIM]),
-      amendmentsController.getAmendCoverEndDate,
-    );
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/is-using-facility-end-date',
-      validateUserTeam([TEAM_IDS.PIM]),
-      amendmentsController.getAmendmentIsUsingFacilityEndDate,
-    );
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date',
-      validateUserTeam([TEAM_IDS.PIM]),
-      amendmentsController.getAmendmentFacilityEndDate,
-    );
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/bank-review-date',
-      validateUserTeam([TEAM_IDS.PIM]),
-      amendmentsController.getAmendmentBankReviewDate,
-    );
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/facility-value',
-      validateUserTeam([TEAM_IDS.PIM]),
-      amendmentsController.getAmendFacilityValue,
-    );
+    expect(route).toHaveBeenCalledWith('/:_id/parties/buyer/summary/:urn');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(partiesController.getPartyUrnDetails);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(partiesController.postPartyDetails);
 
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter',
-      amendmentsController.getAssignAmendmentLeadUnderwriter,
-    );
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date/managers-decision',
-      amendmentsController.getAmendmentAddUnderwriterManagersDecisionCoverEndDate,
-    );
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision',
-      amendmentsController.getAmendmentAddUnderwriterManagersFacilityValue,
-    );
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', amendmentsController.getAmendmentBankDecisionChoice);
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/received-date',
-      amendmentsController.getAmendmentBankDecisionReceivedDate,
-    );
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/effective-date',
-      amendmentsController.getAmendmentBankDecisionEffectiveDate,
-    );
-    expect(get).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers',
-      amendmentsController.getAmendmentBankDecisionAnswers,
-    );
-    expect(get).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/task/:taskId/group/:groupId', amendmentsController.getAmendmentTask);
+    expect(route).toHaveBeenCalledWith('/:_id/parties/agent');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(partiesController.getPartyDetails);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(partiesController.confirmPartyUrn);
 
-    // POST routes
-    expect(post).toHaveBeenCalledTimes(43);
+    expect(route).toHaveBeenCalledWith('/:_id/parties/agent/summary/:urn');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(partiesController.getPartyUrnDetails);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(partiesController.postPartyDetails);
 
-    expect(post).toHaveBeenCalledWith('/:_id/tasks', caseController.filterCaseTasks);
+    expect(route).toHaveBeenCalledWith('/:_id/parties/indemnifier');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(partiesController.getPartyDetails);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(partiesController.confirmPartyUrn);
 
-    expect(post).toHaveBeenCalledWith('/:_id/tasks/:groupId/:taskId', caseController.putCaseTask);
+    expect(route).toHaveBeenCalledWith('/:_id/parties/indemnifier/summary/:urn');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(partiesController.getPartyUrnDetails);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(partiesController.postPartyDetails);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/exporter', partiesController.confirmPartyUrn);
+    expect(route).toHaveBeenCalledWith('/:_id/parties/bond-issuer');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(partiesController.getPartyDetails);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(caseController.confirmTfmFacility);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/buyer', partiesController.confirmPartyUrn);
+    expect(route).toHaveBeenCalledWith('/:_id/parties/bond-issuer/summary');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(partiesController.getBondUrnDetails);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(caseController.postTfmFacility);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/agent', partiesController.confirmPartyUrn);
+    expect(route).toHaveBeenCalledWith('/:_id/parties/bond-beneficiary');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(partiesController.getPartyDetails);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(caseController.confirmTfmFacility);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/indemnifier', partiesController.confirmPartyUrn);
+    expect(route).toHaveBeenCalledWith('/:_id/parties/bond-beneficiary/summary');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(partiesController.getBondUrnDetails);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(caseController.postTfmFacility);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/exporter/summary/:urn', partiesController.postPartyDetails);
+    expect(route).toHaveBeenCalledWith('/:_id/activity');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(activityController.getActivity);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(activityController.filterActivities);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/buyer/summary/:urn', partiesController.postPartyDetails);
+    expect(route).toHaveBeenCalledWith('/:_id/activity/post-comment');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(activityController.getCommentBox);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(activityController.postComment);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/agent/summary/:urn', partiesController.postPartyDetails);
+    expect(route).toHaveBeenCalledWith('/:_id/underwriting');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(underwritingController.getUnderwriterPage);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/indemnifier/summary/:urn', partiesController.postPartyDetails);
+    expect(route).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/edit');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(underwritingController.getUnderWritingPricingAndRiskEdit);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(underwritingController.postUnderWritingPricingAndRisk);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/bond-issuer', caseController.confirmTfmFacility);
+    expect(route).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/loss-given-default');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(underwritingController.getUnderWritingLossGivenDefault);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(underwritingController.postUnderWritingLossGivenDefault);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/bond-issuer/summary', caseController.postTfmFacility);
+    expect(route).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/probability-of-default');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(underwritingController.getUnderWritingProbabilityOfDefault);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(underwritingController.postUnderWritingProbabilityOfDefault);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/bond-beneficiary', caseController.confirmTfmFacility);
+    expect(route).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(underwritingController.getUnderWritingFacilityRiskProfileEdit);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(underwritingController.postUnderWritingFacilityRiskProfileEdit);
 
-    expect(post).toHaveBeenCalledWith('/:_id/parties/bond-beneficiary/summary', caseController.postTfmFacility);
+    expect(route).toHaveBeenCalledWith('/:_id/underwriting/lead-underwriter/assign');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(underwritingController.getAssignLeadUnderwriter);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(underwritingController.postAssignLeadUnderwriter);
 
-    expect(post).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/edit', underwritingController.postUnderWritingPricingAndRisk);
+    expect(route).toHaveBeenCalledWith('/:_id/underwriting/managers-decision/edit');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(underwritingController.getUnderwriterManagersDecisionEdit);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(underwritingController.postUnderwriterManagersDecision);
 
-    expect(post).toHaveBeenCalledWith('/:_id/underwriting/pricing-and-risk/loss-given-default', underwritingController.postUnderWritingLossGivenDefault);
-
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/underwriting/pricing-and-risk/probability-of-default',
-      underwritingController.postUnderWritingProbabilityOfDefault,
-    );
-
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/underwriting/pricing-and-risk/facility/:facilityId/risk-profile',
-      underwritingController.postUnderWritingFacilityRiskProfileEdit,
-    );
-
-    expect(post).toHaveBeenCalledWith('/:_id/underwriting/lead-underwriter/assign', underwritingController.postAssignLeadUnderwriter);
-
-    expect(post).toHaveBeenCalledWith('/:_id/underwriting/managers-decision/edit', underwritingController.postUnderwriterManagersDecision);
-
-    expect(post).toHaveBeenCalledWith('/:_id/activity', activityController.filterActivities);
-
-    expect(post).toHaveBeenCalledWith('/:_id/activity/post-comment', activityController.postComment);
-
-    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-date', amendmentsController.postAmendmentRequestDate);
-    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/request-approval', amendmentsController.postAmendmentRequestApproval);
-    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/amendment-options', amendmentsController.postAmendmentOptions);
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/amendment-effective-date',
-      amendmentsController.postAmendmentEffectiveDate,
-    );
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/lead-underwriter',
-      amendmentsController.postAssignAmendmentLeadUnderwriter,
-    );
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date/managers-decision',
-      amendmentsController.postAmendmentAddUnderwriterManagersDecisionCoverEndDate,
-    );
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/facility-value/managers-decision',
-      amendmentsController.postAmendmentAddUnderwriterManagersFacilityValue,
-    );
-
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/cover-end-date',
-      validateUserTeam([TEAM_IDS.PIM]),
-      amendmentsController.postAmendCoverEndDate,
-    );
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/is-using-facility-end-date',
-      validateUserTeam([TEAM_IDS.PIM]),
-      amendmentsController.postAmendmentIsUsingFacilityEndDate,
-    );
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/facility-end-date',
-      validateUserTeam([TEAM_IDS.PIM]),
-      amendmentsController.postAmendmentFacilityEndDate,
-    );
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/bank-review-date',
-      validateUserTeam([TEAM_IDS.PIM]),
-      amendmentsController.postAmendmentBankReviewDate,
-    );
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/facility-value',
-      validateUserTeam([TEAM_IDS.PIM]),
-      amendmentsController.postAmendFacilityValue,
-    );
-
-    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision', amendmentsController.postAmendmentBankDecisionChoice);
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/received-date',
-      amendmentsController.postAmendmentBankDecisionReceivedDate,
-    );
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/effective-date',
-      amendmentsController.postAmendmentBankDecisionEffectiveDate,
-    );
-    expect(post).toHaveBeenCalledWith(
-      '/:_id/facility/:facilityId/amendment/:amendmentId/banks-decision/check-answers',
-      amendmentsController.postAmendmentBankDecisionAnswers,
-    );
-    expect(post).toHaveBeenCalledWith('/:_id/facility/:facilityId/amendment/:amendmentId/task/:taskId/group/:groupId', amendmentsController.postAmendmentTask);
+    expect(route).toHaveBeenCalledWith('/:_id/documents');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(caseController.getCaseDocuments);
   });
 });
