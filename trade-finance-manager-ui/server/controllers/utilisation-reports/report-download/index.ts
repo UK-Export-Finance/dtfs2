@@ -2,6 +2,14 @@ import { Request, Response } from 'express';
 import api from '../../../api';
 import { asUserSession } from '../../../helpers/express-session';
 
+/**
+ * Controller to download utilisation reports
+ * @async
+ * @function getReportDownload
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>}
+ */
 export const getReportDownload = async (req: Request, res: Response) => {
   try {
     const { userToken } = asUserSession(req.session);

@@ -21,6 +21,14 @@ type AddToAnExistingPaymentRequest = CustomExpressRequest<{
   reqBody: PremiumPaymentsTableCheckboxSelectionsRequestBody;
 }>;
 
+/**
+ * Controller to add to an existing payment
+ * @async
+ * @function addToAnExistingPayment
+ * @param req - The Express request object.
+ * @param res - The Express response object.
+ * @returns
+ */
 export const addToAnExistingPayment = async (req: AddToAnExistingPaymentRequest, res: Response) => {
   try {
     const { user, userToken } = asUserSession(req.session);

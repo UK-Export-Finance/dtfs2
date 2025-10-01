@@ -14,6 +14,14 @@ export type RemoveFeesFromPaymentRequest = CustomExpressRequest<{
   };
 }>;
 
+/**
+ * Controller to remove fees from payment
+ * @async
+ * @function postRemoveFeesFromPayment
+ * @param req - The Express request object.
+ * @param  res - The Express response object.
+ * @returns
+ */
 export const postRemoveFeesFromPayment = async (req: RemoveFeesFromPaymentRequest, res: Response) => {
   try {
     const { user, userToken } = asUserSession(req.session);

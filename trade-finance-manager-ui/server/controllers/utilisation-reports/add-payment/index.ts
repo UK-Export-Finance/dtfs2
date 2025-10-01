@@ -33,6 +33,14 @@ const mapToRecordedPaymentDetailsViewModel = (payment: SelectedFeeRecordsPayment
   };
 };
 
+/**
+ * Controller to add payment
+ * @async
+ * @function addPayment
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>}
+ */
 export const addPayment = async (req: AddPaymentRequest, res: Response) => {
   try {
     const { user, userToken } = asUserSession(req.session);
