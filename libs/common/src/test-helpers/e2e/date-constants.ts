@@ -39,7 +39,7 @@ export const twoDays = getFormattedValues(add(todayDate, { days: 2 }));
 export const threeDays = getFormattedValues(add(todayDate, { days: 3 }));
 export const sevenDays = getFormattedValues(add(todayDate, { days: 7 }));
 export const twentyEightDays = getFormattedValues(add(todayDate, { days: 28 }));
-export const oneMonth = getFormattedValues(add(todayDate, { months: 1 }));
+export const oneMonth = (date: string) => getFormattedValues(add(new Date(date), { months: 1 }));
 export const twoMonths = getFormattedValues(add(todayDate, { months: 2 }));
 export const threeMonths = getFormattedValues(add(todayDate, { months: 3 }));
 export const threeMonthsOneDay = getFormattedValues(add(todayDate, { months: 3, days: 1 }));
@@ -60,7 +60,7 @@ export const twentyFiveDaysAgo = getFormattedValues(sub(todayDate, { days: 25 })
 export const thirtyFiveDaysAgo = getFormattedValues(sub(todayDate, { days: 35 }));
 export const twelveMonthsOneDayAgo = getFormattedValues(sub(todayDate, { months: 12, days: 1 }));
 export const oneYearAgo = getFormattedValues(sub(todayDate, { years: 1 }));
-export const twoYearsAgo = getFormattedValues(sub(todayDate, { years: 2 }));
+export const twoYearsAgo = (date: string) => getFormattedValues(sub(new Date(date), { years: 2 }));
 
 export const addDays = (days: number) => getFormattedValues(add(todayDate, { days }));
 
