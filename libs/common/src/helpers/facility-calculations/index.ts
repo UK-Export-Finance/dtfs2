@@ -69,7 +69,12 @@ export const calculateDaysOfCover = (
 ): number => {
   const startDate = coverStartDate?.toString()?.includes('T') ? new Date(String(coverStartDate)).valueOf() : Number(coverStartDate);
   const endDate = coverEndDate?.toString()?.includes('T') ? new Date(String(coverEndDate)).valueOf() : Number(coverEndDate);
-  const difference = differenceInDays(new Date(endDate), new Date(startDate));
+  /**
+   * We add an additional day for inclusive
+   * subtraction, otherwise differenceInDays will
+   * return number of days in between two days.
+   */
+  const difference = differenceInDays(new Date(endDate), new Date(startDate)) + 1;
 
   return type === CONTINGENT ? difference + 1 : difference;
 };
