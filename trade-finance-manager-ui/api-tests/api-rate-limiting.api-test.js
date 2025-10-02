@@ -1,4 +1,4 @@
-const { createApi } = require('@ukef/dtfs2-common/test-helpers');
+const { createApi } = require('@ukef/dtfs2-common/api-test');
 require('dotenv').config();
 const { generateApp } = require('../server/generateApp');
 

@@ -2,7 +2,7 @@ import { HttpStatusCode } from 'axios';
 import { Request, Response, NextFunction } from 'express';
 import { verify, AnyObject } from '@ukef/dtfs2-common';
 import * as libs from '@ukef/dtfs2-common';
-import { createApi } from '@ukef/dtfs2-common/test-helpers';
+import { createApi } from '@ukef/dtfs2-common/api-test';
 import app from '../server/createApp';
 
 const { post } = createApi(app);

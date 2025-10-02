@@ -11,7 +11,7 @@ jest.mock('../../server/api', () => ({
 
 const { when } = require('jest-when');
 const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
-const { createApi } = require('@ukef/dtfs2-common/test-helpers');
+const { createApi } = require('@ukef/dtfs2-common/api-test');
 const app = require('../../server/createApp');
 const api = require('../../server/api');
 const { HTTP_ERROR_CAUSES } = require('../../server/constants');

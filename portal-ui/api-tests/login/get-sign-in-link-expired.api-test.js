@@ -1,4 +1,4 @@
-const { createApi } = require('@ukef/dtfs2-common/test-helpers');
+const { createApi } = require('@ukef/dtfs2-common/api-test');
 const app = require('../../server/createApp');
 const { withPartial2faAuthValidationApiTests } = require('../common-tests/partial-2fa-auth-validation-api-tests');
 

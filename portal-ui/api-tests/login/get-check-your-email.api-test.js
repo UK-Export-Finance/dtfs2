@@ -10,7 +10,7 @@ jest.mock('../../server/api', () => ({
   validateToken: () => false,
   validatePartialAuthToken: jest.fn(),
 }));
-const { createApi } = require('@ukef/dtfs2-common/test-helpers');
+const { createApi } = require('@ukef/dtfs2-common/api-test');
 const app = require('../../server/createApp');
 
 const { get } = createApi(app);

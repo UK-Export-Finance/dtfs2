@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { createApi } = require('@ukef/dtfs2-common/test-helpers');
+const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { generateApp } = require('../server/generateApp');
 
 describe('api rate limiting', () => {
