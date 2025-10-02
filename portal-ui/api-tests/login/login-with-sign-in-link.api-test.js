@@ -11,10 +11,12 @@ jest.mock('../../server/api', () => ({
 
 const { when } = require('jest-when');
 const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
+const { createApi } = require('@ukef/dtfs2-common/test-helpers');
 const app = require('../../server/createApp');
-const { get } = require('../create-api').createApi(app);
 const api = require('../../server/api');
 const { HTTP_ERROR_CAUSES } = require('../../server/constants');
+
+const { get } = createApi(app);
 
 describe('GET /login/sign-in-link?t={signInToken}&u={userId}', () => {
   const validSignInToken = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';

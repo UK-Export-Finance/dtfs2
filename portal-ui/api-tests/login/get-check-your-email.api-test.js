@@ -10,8 +10,11 @@ jest.mock('../../server/api', () => ({
   validateToken: () => false,
   validatePartialAuthToken: jest.fn(),
 }));
+const { createApi } = require('@ukef/dtfs2-common/test-helpers');
 const app = require('../../server/createApp');
-const { get } = require('../create-api').createApi(app);
+
+const { get } = createApi(app);
+
 const { withPartial2faAuthValidationApiTests } = require('../common-tests/partial-2fa-auth-validation-api-tests');
 
 describe('GET /login/check-your-email', () => {

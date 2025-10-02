@@ -1,9 +1,11 @@
 const { when } = require('jest-when');
+const { createApi } = require('@ukef/dtfs2-common/test-helpers');
 const { login, validatePartialAuthToken } = require('../../server/api');
 const app = require('../../server/createApp');
 const extractSessionCookie = require('../helpers/extractSessionCookie');
 const mockLogin = require('../helpers/login');
-const { post } = require('../create-api').createApi(app);
+
+const { post } = createApi(app);
 
 const email = 'mock email';
 const password = 'mock password';

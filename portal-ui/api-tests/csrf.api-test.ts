@@ -2,8 +2,8 @@ import { HttpStatusCode } from 'axios';
 import { Request, Response, NextFunction } from 'express';
 import { verify, AnyObject } from '@ukef/dtfs2-common';
 import * as libs from '@ukef/dtfs2-common';
+import { createApi } from '@ukef/dtfs2-common/test-helpers';
 import app from '../server/createApp';
-import { createApi } from './create-api';
 
 const { post } = createApi(app);
 const url = '/login';

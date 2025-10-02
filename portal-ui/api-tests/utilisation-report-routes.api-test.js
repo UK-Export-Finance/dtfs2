@@ -18,10 +18,12 @@ jest.mock('../server/api', () => ({
 const { ROLES } = require('@ukef/dtfs2-common');
 const { aRecordCorrectionFormValues } = require('@ukef/dtfs2-common/test-helpers');
 const { HttpStatusCode } = require('axios');
+const { createApi } = require('@ukef/dtfs2-common/test-helpers');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
-const { get, post } = require('./create-api').createApi(app);
 const MOCK_BANKS = require('../test-helpers/mock-banks');
+
+const { get, post } = createApi(app);
 
 describe('utilisation-report routes', () => {
   describe('GET /banks/:bankId/utilisation-report-download/:_id', () => {

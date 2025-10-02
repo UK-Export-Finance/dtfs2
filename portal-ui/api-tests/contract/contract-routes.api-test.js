@@ -9,6 +9,7 @@ jest.mock('../../server/api', () => ({
   validateToken: () => true,
 }));
 
+const { createApi } = require('@ukef/dtfs2-common/test-helpers');
 const { ROLES } = require('@ukef/dtfs2-common');
 const mockProvide = require('../helpers/mockProvide');
 
@@ -17,7 +18,8 @@ jest.mock('../../server/routes/middleware/validateBank', () => (req, res, next) 
 
 const { withRoleValidationApiTests } = require('../common-tests/role-validation-api-tests');
 const app = require('../../server/createApp');
-const { get, post } = require('../create-api').createApi(app);
+
+const { get, post } = createApi(app);
 
 const { MAKER, CHECKER } = ROLES;
 
