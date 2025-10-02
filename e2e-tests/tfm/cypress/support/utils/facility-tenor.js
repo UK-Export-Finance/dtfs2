@@ -1,4 +1,4 @@
-import { add, differenceInMonths } from 'date-fns';
+import { add, getDaysInMonth } from 'date-fns';
 import { oneMonth, twoYearsAgo } from '@ukef/dtfs2-common/test-helpers';
 
 /**
@@ -14,17 +14,34 @@ import { oneMonth, twoYearsAgo } from '@ukef/dtfs2-common/test-helpers';
  * But in some cases for BSS facilities we add one to the difference.
  *
  * Specifically in the case of these tests, the tenor is 25 months except for:
+ * - if expiry and commencement dates are the same date of month then you add one
  * - if commencement is end of month and expiry is also end of month you add one
+ * - if commencement is end of month and the commencement month has less than 31 days then you do not add one`
  */
 export const calculateTestFacilityTenorValue = () => {
-  const difference = differenceInMonths(oneMonth.date, twoYearsAgo.date).toString();
-  let facilityTenor = `${difference} months`;
+  const commencementDate = twoYearsAgo.date;
+  const expiryDate = oneMonth.date;
 
-  const isCommencementDateEndOfMonth = add(twoYearsAgo.date, { days: 1 }).getDate() === 1;
-  const isExpiryDateEndOFMonth = add(oneMonth.date, { days: 1 }).getDate() === 1;
+  let facilityTenor = '25 months';
+
+  if (commencementDate.getDate() === expiryDate.getDate()) {
+    facilityTenor = '26 months';
+  }
+
+  const isCommencementDateEndOfMonth = add(commencementDate, { days: 1 }).getDate() === 1;
+  const isExpiryDateEndOFMonth = add(expiryDate, { days: 1 }).getDate() === 1;
+
+  // gets number of days in commencement month
+  const getDaysInMonthCommencement = getDaysInMonth(commencementDate);
+  // checks if commencement month has less than 31 days
+  const lessThan31DaysInCommencementMonth = getDaysInMonthCommencement < 31;
 
   if (isCommencementDateEndOfMonth && isExpiryDateEndOFMonth) {
     facilityTenor = '26 months';
+  }
+
+  if (isCommencementDateEndOfMonth && lessThan31DaysInCommencementMonth) {
+    facilityTenor = '25 months';
   }
 
   return facilityTenor;
