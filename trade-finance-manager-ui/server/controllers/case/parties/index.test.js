@@ -795,7 +795,7 @@ describe('PartyURN: controllers - case - parties', () => {
         it('should redirect to not-found route', async () => {
           const req = {
             body: {
-              csrf: '12345',
+              _csrf: '12345',
             },
             params: {
               _id: '1',
@@ -813,7 +813,7 @@ describe('PartyURN: controllers - case - parties', () => {
         it('should redirect to not-found route', async () => {
           const req = {
             body: {
-              csrf: '12345',
+              _csrf: '12345',
             },
             params: {
               _id: '1',
@@ -975,7 +975,7 @@ describe('PartyURN: controllers - case - parties', () => {
         it('should redirect to not-found route', async () => {
           const req = {
             body: {
-              csrf: '12345',
+              _csrf: '12345',
             },
             params: {
               _id: '1',
@@ -993,7 +993,7 @@ describe('PartyURN: controllers - case - parties', () => {
         it('should redirect to not-found route', async () => {
           const req = {
             body: {
-              csrf: '12345',
+              _csrf: '12345',
             },
             params: {
               _id: '1',
@@ -1164,7 +1164,7 @@ describe('PartyURN: controllers - case - parties', () => {
         it('should redirect to not-found route', async () => {
           const req = {
             body: {
-              csrf: '12345',
+              _csrf: '12345',
             },
             params: {
               _id: '1',
@@ -1182,7 +1182,7 @@ describe('PartyURN: controllers - case - parties', () => {
         it('should redirect to not-found route', async () => {
           const req = {
             body: {
-              csrf: '12345',
+              _csrf: '12345',
             },
             params: {
               _id: '1',
@@ -1344,7 +1344,7 @@ describe('PartyURN: controllers - case - parties', () => {
         it('should redirect to not-found route', async () => {
           const req = {
             body: {
-              csrf: '12345',
+              _csrf: '12345',
             },
             params: {
               _id: '1',
@@ -1362,7 +1362,7 @@ describe('PartyURN: controllers - case - parties', () => {
         it('should redirect to not-found route', async () => {
           const req = {
             body: {
-              csrf: '12345',
+              _csrf: '12345',
             },
             params: {
               _id: '1',
@@ -1387,7 +1387,7 @@ describe('PartyURN: controllers - case - parties', () => {
         it('should redirect to not-found route', async () => {
           const req = {
             body: {
-              csrf: '12345',
+              _csrf: '12345',
             },
             params: {
               _id: '1',
@@ -1411,7 +1411,7 @@ describe('PartyURN: controllers - case - parties', () => {
         it('should redirect to not-found route', async () => {
           const req = {
             body: {
-              csrf: '12345',
+              _csrf: '12345',
             },
             params: {
               _id: '1',
@@ -1444,7 +1444,7 @@ describe('PartyURN: controllers - case - parties', () => {
             urn: '1234',
           },
           body: {
-            csrf: '12345',
+            _csrf: '12345',
           },
           session,
           url: `/case/1/parties/${party}`,
@@ -1496,7 +1496,7 @@ describe('PartyURN: controllers - case - parties', () => {
         it('should redirect to not-found route', async () => {
           const req = {
             body: {
-              csrf: '12345',
+              _csrf: '12345',
             },
             params: {
               _id: '1',
@@ -1520,7 +1520,7 @@ describe('PartyURN: controllers - case - parties', () => {
         it('should redirect to not-found route', async () => {
           const req = {
             body: {
-              csrf: '12345',
+              _csrf: '12345',
             },
             params: {
               _id: '1',
@@ -1553,7 +1553,7 @@ describe('PartyURN: controllers - case - parties', () => {
             urn: '1234',
           },
           body: {
-            csrf: '12345',
+            _csrf: '12345',
           },
           session,
           url: `/case/1/parties/${party}`,
@@ -1605,7 +1605,7 @@ describe('PartyURN: controllers - case - parties', () => {
         it('should redirect to not-found route', async () => {
           const req = {
             body: {
-              csrf: '12345',
+              _csrf: '12345',
             },
             params: {
               _id: '1',
@@ -1629,7 +1629,7 @@ describe('PartyURN: controllers - case - parties', () => {
         it('should redirect to not-found route', async () => {
           const req = {
             body: {
-              csrf: '12345',
+              _csrf: '12345',
             },
             params: {
               _id: '1',
@@ -1662,7 +1662,7 @@ describe('PartyURN: controllers - case - parties', () => {
             urn: '1234',
           },
           body: {
-            csrf: '12345',
+            _csrf: '12345',
           },
           session,
           url: `/case/1/parties/${party}`,
@@ -1725,7 +1725,7 @@ describe('PartyURN: controllers - case - parties', () => {
         it('should redirect to not-found route', async () => {
           const req = {
             body: {
-              csrf: '12345',
+              _csrf: '12345',
             },
             params: {
               _id: '1',
@@ -1749,7 +1749,7 @@ describe('PartyURN: controllers - case - parties', () => {
         it('should redirect to not-found route', async () => {
           const req = {
             body: {
-              csrf: '12345',
+              _csrf: '12345',
             },
             params: {
               _id: '1',
@@ -1782,7 +1782,7 @@ describe('PartyURN: controllers - case - parties', () => {
             urn: '1234',
           },
           body: {
-            csrf: '12345',
+            _csrf: '12345',
           },
           session,
           url: `/case/1/parties/${party}`,
