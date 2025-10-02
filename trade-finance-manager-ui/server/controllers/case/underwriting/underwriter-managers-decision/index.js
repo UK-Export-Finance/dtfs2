@@ -16,6 +16,14 @@ const getUnderwriterManagersDecision = (deal, user) => {
   };
 };
 
+/**
+ * Controller to get underwriter managers decision edit page
+ * @async
+ * @function getUnderwriterManagersDecisionEdit
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders underwriter managers decision edit page
+ */
 const getUnderwriterManagersDecisionEdit = async (req, res) => {
   const dealId = req.params._id;
   const { userToken } = req.session;
@@ -43,6 +51,14 @@ const getUnderwriterManagersDecisionEdit = async (req, res) => {
   });
 };
 
+/**
+ * Controller to post underwriter managers decision page
+ * @async
+ * @function postUnderwriterManagersDecision
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the next page
+ */
 const postUnderwriterManagersDecision = async (req, res) => {
   const dealId = req.params._id;
   const { user, userToken } = req.session;

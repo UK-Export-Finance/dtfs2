@@ -3,6 +3,14 @@ const api = require('../../../../../api');
 const { userIsInTeam } = require('../../../../../helpers/user');
 const { probabilityOfDefaultValidation } = require('../../../../helpers');
 
+/**
+ * Controller to get underwriting probability of default page
+ * @async
+ * @function getUnderWritingProbabilityOfDefault
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders underwriting probability of default page
+ */
 const getUnderWritingProbabilityOfDefault = async (req, res) => {
   const dealId = req.params._id;
   const { userToken, user } = req.session;
@@ -24,6 +32,14 @@ const getUnderWritingProbabilityOfDefault = async (req, res) => {
   });
 };
 
+/**
+ * Controller to post underwriting probability of default
+ * @async
+ * @function postUnderWritingProbabilityOfDefault
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the next page
+ */
 const postUnderWritingProbabilityOfDefault = async (req, res) => {
   const dealId = req.params._id;
   const { user, userToken } = req.session;

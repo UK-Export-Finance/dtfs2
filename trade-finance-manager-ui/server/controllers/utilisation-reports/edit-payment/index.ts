@@ -26,6 +26,14 @@ type GetEditPaymentRequest = CustomExpressRequest<{
 
 const template = 'utilisation-reports/edit-payment.njk';
 
+/**
+ * Controller to get edit payment page
+ * @async
+ * @function getEditPayment
+ * @param req - The Express request object.
+ * @param  res - The Express response object.
+ * @returns
+ */
 export const getEditPayment = async (req: GetEditPaymentRequest, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
   const { reportId, paymentId } = req.params;

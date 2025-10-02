@@ -32,6 +32,14 @@ type GetConfirmDeletePaymentRequest = CustomExpressRequest<{
   };
 }>;
 
+/**
+ * Controller to get confirm delete payment page
+ * @async
+ * @function getConfirmDeletePayment
+ * @param req - The Express request object.
+ * @param  res - The Express response object.
+ * @returns
+ */
 export const getConfirmDeletePayment = async (req: GetConfirmDeletePaymentRequest, res: Response) => {
   const { reportId, paymentId } = req.params;
   const { userToken, user } = asUserSession(req.session);
@@ -60,6 +68,14 @@ type PostConfirmDeletePaymentRequest = CustomExpressRequest<{
   };
 }>;
 
+/**
+ * Controller to confirm delete payment
+ * @async
+ * @function postConfirmDeletePayment
+ * @param req - The Express request object.
+ * @param  res - The Express response object.
+ * @returns
+ */
 export const postConfirmDeletePayment = async (req: PostConfirmDeletePaymentRequest, res: Response) => {
   const { user, userToken } = asUserSession(req.session);
   const { reportId, paymentId } = req.params;

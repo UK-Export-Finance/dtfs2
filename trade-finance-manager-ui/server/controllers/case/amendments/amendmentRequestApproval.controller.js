@@ -3,6 +3,14 @@ const api = require('../../../api');
 const { requestApprovalValidation } = require('./validation/amendmentRequestApproval.validate');
 const { SUBMISSION_TYPE } = require('../../../constants/amendments');
 
+/**
+ * Controller to get the amendment request approval page
+ * @async
+ * @function getAmendmentRequestApproval
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders amendment request approval page
+ */
 const getAmendmentRequestApproval = async (req, res) => {
   try {
     const { facilityId, amendmentId } = req.params;
@@ -29,6 +37,14 @@ const getAmendmentRequestApproval = async (req, res) => {
   }
 };
 
+/**
+ * Controller to post amendment request approval
+ * @async
+ * @function postAmendmentRequestApproval
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to amendment options page
+ */
 const postAmendmentRequestApproval = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;

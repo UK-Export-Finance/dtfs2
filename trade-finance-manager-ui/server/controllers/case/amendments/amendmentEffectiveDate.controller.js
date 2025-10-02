@@ -3,6 +3,14 @@ const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { effectiveDateValidation } = require('./validation/amendmentEffectiveDate.validate');
 
+/**
+ * Controller to get the amendment effective page
+ * @async
+ * @function getAmendmentEffectiveDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the amendment effective page
+ */
 const getAmendmentEffectiveDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
@@ -35,6 +43,14 @@ const getAmendmentEffectiveDate = async (req, res) => {
   });
 };
 
+/**
+ * Controller to post amendment effective date
+ * @async
+ * @function postAmendmentEffectiveDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to next page
+ */
 const postAmendmentEffectiveDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;

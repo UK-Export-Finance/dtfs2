@@ -2,6 +2,14 @@ const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { amendmentOptionsValidation } = require('./validation/amendmentOptions.validate');
 
+/**
+ * Controller to get the amendment options page
+ * @async
+ * @function getAmendmentOptions
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the amendment options page
+ */
 const getAmendmentOptions = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
@@ -28,6 +36,14 @@ const getAmendmentOptions = async (req, res) => {
   });
 };
 
+/**
+ * Controller to post amendment options
+ * @async
+ * @function postAmendmentOptions
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to next page
+ */
 const postAmendmentOptions = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;

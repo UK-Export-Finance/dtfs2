@@ -31,6 +31,14 @@ const getFeeRecordsToKeyViewModel = (feeRecords: FeeRecordToKey[]): FeeRecordToK
   }));
 };
 
+/**
+ * Controller to check keying data
+ * @async
+ * @function postCheckKeyingData
+ * @param req - The Express request object.
+ * @param  res - The Express response object.
+ * @returns
+ */
 export const postCheckKeyingData = async (req: Request, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
   const { reportId } = req.params;

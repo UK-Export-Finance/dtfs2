@@ -19,9 +19,31 @@ function populateTeamCheckingRouter() {
 
   const teamCombinations = getTeamCombinations();
 
+  /**
+   * @openapi
+   * /:
+   *   get:
+   *     summary: Get team checking page
+   *     tags: [TFM]
+   *     description: Get team checking page
+   *     responses:
+   *       200:
+   *         description: Ok
+   */
   teamCheckingRoutes.get('/', (req: Request, res: Response) => renderTeamsChecker(req, res, { teamCombinations }));
 
   teamCombinations.forEach((teamCombination) => {
+    /**
+     * @openapi
+     * /${teamCombination.url}:
+     *   get:
+     *     summary: Get team checking page
+     *     tags: [TFM]
+     *     description: Get team checking page
+     *     responses:
+     *       200:
+     *         description: Ok
+     */
     teamCheckingRoutes.get(`/${teamCombination.url}`, (req: Request, res: Response) =>
       renderTeamsChecker(req, res, { teamCombinations, currentPageTeamRestrictions: teamCombination }),
     );

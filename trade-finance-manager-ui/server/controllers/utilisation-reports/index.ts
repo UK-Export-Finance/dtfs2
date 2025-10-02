@@ -6,6 +6,14 @@ import { asUserSession } from '../../helpers/express-session';
 import { PRIMARY_NAVIGATION_KEYS } from '../../constants';
 import { UtilisationReportsViewModel } from '../../types/view-models';
 
+/**
+ * Controller to get utilisation reports page
+ * @async
+ * @function getUtilisationReports
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders utilisation reports page
+ */
 export const getUtilisationReports = async (req: Request, res: Response) => {
   const { userToken, user } = asUserSession(req.session);
 

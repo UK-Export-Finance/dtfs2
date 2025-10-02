@@ -15,6 +15,14 @@ const getUnderWritingPricingAndRisk = (deal, user) => ({
   user,
 });
 
+/**
+ * Controller to get pricing and risk edit page
+ * @async
+ * @function getUnderWritingPricingAndRiskEdit
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the pricing and risk edit page
+ */
 const getUnderWritingPricingAndRiskEdit = async (req, res) => {
   const dealId = req.params._id;
   const { userToken } = req.session;
@@ -38,6 +46,14 @@ const getUnderWritingPricingAndRiskEdit = async (req, res) => {
   });
 };
 
+/**
+ * Controller to post underwriting and risk
+ * @async
+ * @function postUnderWritingPricingAndRisk
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the next page
+ */
 const postUnderWritingPricingAndRisk = async (req, res) => {
   const dealId = req.params._id;
   const { user, userToken } = req.session;

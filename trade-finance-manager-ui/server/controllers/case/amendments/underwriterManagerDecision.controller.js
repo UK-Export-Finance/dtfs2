@@ -6,9 +6,12 @@ const { userCanEditManagersDecision } = require('../../helpers');
 const { amendmentUnderwriterManagerDecisionValidation } = require('./validation/amendmentUnderwriterManagerDecision.validate');
 
 /**
- * @param {object} req
- * @param {object} res
- * renders first page of amendment managers decision if can be edited by user
+ * Controller to get the first page of amendment managers decision
+ * @async
+ * @function getAmendmentAddUnderwriterManagersDecisionCoverEndDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the first page of amendment managers decision if can be edited by user
  */
 const getAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
@@ -36,6 +39,14 @@ const getAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res) 
   });
 };
 
+/**
+ * Controller to post cover end date underwriter managers decision
+ * @async
+ * @function postAmendmentAddUnderwriterManagersDecisionCoverEndDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the next page
+ */
 const postAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
   const { underwriterManagerDecisionCoverEndDate: decision } = req.body;
@@ -80,6 +91,14 @@ const postAmendmentAddUnderwriterManagersDecisionCoverEndDate = async (req, res)
   }
 };
 
+/**
+ * Controller to get the amendment add managers decision facility value page
+ * @async
+ * @function getAmendmentAddUnderwriterManagersFacilityValue
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the amendment add managers decision facility value page
+ */
 const getAmendmentAddUnderwriterManagersFacilityValue = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
   const { userToken } = req.session;
@@ -104,6 +123,14 @@ const getAmendmentAddUnderwriterManagersFacilityValue = async (req, res) => {
   });
 };
 
+/**
+ * Controller to post managers decision facility value
+ * @async
+ * @function postAmendmentAddUnderwriterManagersFacilityValue
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to underwriting page
+ */
 const postAmendmentAddUnderwriterManagersFacilityValue = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
   const { underwriterManagerDecisionFacilityValue: decision } = req.body;
