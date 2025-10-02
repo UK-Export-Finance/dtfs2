@@ -9,7 +9,7 @@
 # 1. Setup: Configures environment variables for the product, environment, and timezone.
 # 2. SQL Database Migration: Deploys any new SQL migrations to the environment's SQL database.
 # 3. WebApp Deployment: Sequentially deploys a list of web apps defined in the matrix (`portal-ui`, `gef-ui`, etc.) to Azure.
-# 4. Function Deployment: Sequentially deploys a list of functions (e.g., `acbs-function`) to Azure.
+# 4. Function Deployment: Sequentially deploys a list of functions (e.g., `acbs`) to Azure.
 #
 # Key Points:
 # - The workflow runs only after a successful Quality Assurance - Tests workflow.
@@ -134,7 +134,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        functions: ['acbs-function']
+        functions: ['acbs']
 
     concurrency:
       group: deployment-functions-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
