@@ -43,6 +43,7 @@
     <div class="govuk-grid-column-three-quarters">
       <form method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="previousPage" value="{{ previousPage }}">
 
         {{ govukDateInput({
             id: "coverEndDate",
