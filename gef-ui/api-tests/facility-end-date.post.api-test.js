@@ -5,12 +5,14 @@ jest.mock('@ukef/dtfs2-common', () => ({
 
 const { HttpStatusCode } = require('axios');
 const { when, resetAllWhenMocks } = require('jest-when');
+const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { MAKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
-const { post } = require('./create-api').createApi(app);
 const api = require('../server/services/api');
 const storage = require('./test-helpers/storage/storage');
+
+const { post } = createApi(app);
 
 api.getFacility = jest.fn();
 api.updateFacility = jest.fn();

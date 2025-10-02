@@ -1,7 +1,9 @@
+const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { MAKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
-const { post } = require('./create-api').createApi(app);
+
+const { post } = createApi(app);
 
 const dealId = '123';
 const documentType = 'manual-inclusion-questionnaire';
