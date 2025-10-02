@@ -12,10 +12,12 @@ jest.mock('../../server/api', () => ({
 const { AxiosError } = require('axios');
 const { when } = require('jest-when');
 const { ROLES, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
+const { createApi } = require('@ukef/dtfs2-common/api-test');
 const api = require('../../server/api');
 const { withRoleValidationApiTests } = require('../common-tests/role-validation-api-tests');
 const app = require('../../server/createApp');
-const { post } = require('../create-api').createApi(app);
+
+const { post } = createApi(app);
 
 const allRoles = Object.values(ROLES);
 

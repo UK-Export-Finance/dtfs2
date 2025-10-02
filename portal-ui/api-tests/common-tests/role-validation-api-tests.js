@@ -1,11 +1,13 @@
 const { ROLES } = require('@ukef/dtfs2-common');
+const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { login, loginWithSignInLink } = require('../../server/api');
 const app = require('../../server/createApp');
 const { SIGN_IN_TOKEN_LINK_TOKEN } = require('../fixtures/sign-in-token-constants');
 const extractSessionCookie = require('../helpers/extractSessionCookie');
 const mockLogin = require('../helpers/login');
 const loginWithSignInLinkAsRole = require('../helpers/loginWithSignInLinkAsRole');
-const { post, get } = require('../create-api').createApi(app);
+
+const { get, post } = createApi(app);
 
 const allRoles = Object.values(ROLES);
 const email = 'mock email';

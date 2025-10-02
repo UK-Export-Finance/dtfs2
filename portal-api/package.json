@@ -81,7 +81,7 @@
     "prettier": "^2.8.8",
     "supertest": "6.3.3",
     "ts-jest": "^29.4.4",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=24.1.0",

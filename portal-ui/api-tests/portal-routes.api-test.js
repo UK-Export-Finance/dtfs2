@@ -12,9 +12,11 @@ jest.mock('../server/api', () => ({
 const {
   ROLES: { MAKER, CHECKER },
 } = require('@ukef/dtfs2-common');
+const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
-const { get } = require('./create-api').createApi(app);
+
+const { get } = createApi(app);
 
 describe('portal routes', () => {
   describe('GET /reports', () => {

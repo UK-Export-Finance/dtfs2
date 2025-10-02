@@ -16,6 +16,7 @@ jest.mock('../server/helpers/getApiData', () => () => []);
 const {
   ROLES: { ADMIN },
 } = require('@ukef/dtfs2-common');
+const { createApi } = require('@ukef/dtfs2-common/api-test');
 const app = require('../server/createApp');
 const mockLogin = require('./helpers/login');
 const extractSessionCookie = require('./helpers/extractSessionCookie');
@@ -23,7 +24,6 @@ const { login, updateUser, loginWithSignInLink } = require('../server/api');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const loginWithSignInLinkAsRole = require('./helpers/loginWithSignInLinkAsRole');
 const { SIGN_IN_TOKEN_LINK_TOKEN } = require('./fixtures/sign-in-token-constants');
-const { get, post } = require('./create-api').createApi(app);
 
 const email = 'mock email';
 const password = 'mock password';
@@ -31,6 +31,8 @@ const _id = '64f736071f0fd6ecf617db8a';
 const token = SIGN_IN_TOKEN_LINK_TOKEN.EXAMPLE_ONE;
 const userId = '61e567d7db41bd65b00bd47a';
 let sessionCookie;
+
+const { get, post } = createApi(app);
 
 describe('user routes', () => {
   beforeEach(async () => {
