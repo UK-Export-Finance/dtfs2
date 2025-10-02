@@ -1,7 +1,9 @@
+const { createApi } = require('@ukef/dtfs2-common/api-test');
 const { MAKER, CHECKER } = require('../server/constants/roles');
 const { withRoleValidationApiTests } = require('./common-tests/role-validation-api-tests');
 const app = require('../server/createApp');
-const { get } = require('./create-api').createApi(app);
+
+const { get } = createApi(app);
 
 const fileId = '321';
 
