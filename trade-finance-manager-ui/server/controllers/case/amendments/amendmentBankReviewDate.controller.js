@@ -11,6 +11,14 @@ const getNextPage = (apiResponseStatus, changeFacilityValue, baseUrl) => {
   return changeFacilityValue ? `${baseUrl}/facility-value` : `${baseUrl}/check-answers`;
 };
 
+/**
+ * Controller to get the amendment bank review date page
+ * @async
+ * @function getAmendmentBankReviewDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the amendment bank review date page
+ */
 const getAmendmentBankReviewDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
@@ -56,6 +64,14 @@ const getAmendmentBankReviewDate = async (req, res) => {
   });
 };
 
+/**
+ * Controller to post bank review date
+ * @async
+ * @function postAmendmentBankReviewDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the next page
+ */
 const postAmendmentBankReviewDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;

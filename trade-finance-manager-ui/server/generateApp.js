@@ -32,7 +32,6 @@ const generateApp = () => {
   app.use(security);
   app.use(expressSession());
   app.use(createCsrf);
-
   app.use(flash());
 
   configureNunjucks({
@@ -43,9 +42,7 @@ const generateApp = () => {
   });
 
   app.use(cookieParser());
-
   app.use(compression());
-
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 

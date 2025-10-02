@@ -11,6 +11,14 @@ const { DEAL } = CONSTANTS;
 
 const MAX_COMMENT_LENGTH = 1000;
 
+/**
+ * Controller to get the activity page
+ * @async
+ * @function getActivity
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the activity page
+ */
 const getActivity = async (req, res) => {
   const dealId = req.params._id;
 
@@ -61,6 +69,14 @@ const getActivity = async (req, res) => {
   });
 };
 
+/**
+ * Controller to apply filters on the activity page
+ * @async
+ * @function filterActivities
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the activity page
+ */
 const filterActivities = async (req, res) => {
   const dealId = req.params._id;
 
@@ -111,6 +127,14 @@ const filterActivities = async (req, res) => {
   });
 };
 
+/**
+ * Controller to get activity comment page
+ * @async
+ * @function getCommentBox
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the activity comment page
+ */
 const getCommentBox = async (req, res) => {
   const dealId = req.params._id;
   const { user, userToken } = req.session;
@@ -127,6 +151,14 @@ const getCommentBox = async (req, res) => {
   });
 };
 
+/**
+ * Controller to post activity comment
+ * @async
+ * @function postComment
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the next page
+ */
 const postComment = async (req, res) => {
   const { params, session, body } = req;
   const dealId = params._id;

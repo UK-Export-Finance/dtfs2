@@ -7,6 +7,14 @@ const { userCanEditManagersDecision, ukefDecisionRejected, validateUkefDecision 
 const { UNDERWRITER_MANAGER_DECISIONS_TAGS, UNDERWRITER_MANAGER_DECISIONS } = require('../../../constants/decisions.constant');
 const { amendmentManagersDecisionConditionsValidation } = require('./validation/amendmentUnderwriterManagersDecisionConditions.validate');
 
+/**
+ * Controller to get managers conditions and comments page
+ * @async
+ * @function getManagersConditionsAndComments
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders managers conditions and comments page
+ */
 const getManagersConditionsAndComments = async (req, res) => {
   try {
     const { amendmentId, facilityId } = req.params;
@@ -47,6 +55,14 @@ const getManagersConditionsAndComments = async (req, res) => {
   }
 };
 
+/**
+ * Controller to post managers conditions and comments
+ * @async
+ * @function postManagersConditionsAndComments
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the next page
+ */
 const postManagersConditionsAndComments = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
   const { user, userToken } = req.session;
@@ -113,6 +129,14 @@ const postManagersConditionsAndComments = async (req, res) => {
   }
 };
 
+/**
+ * Controller to get managers conditions and comments summary page
+ * @async
+ * @function getManagersConditionsAndCommentsSummary
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the managers conditions and comments summary page
+ */
 const getManagersConditionsAndCommentsSummary = async (req, res) => {
   try {
     const { amendmentId, facilityId } = req.params;
@@ -153,6 +177,14 @@ const getManagersConditionsAndCommentsSummary = async (req, res) => {
   }
 };
 
+/**
+ * Controller to post managers conditions and comments summary
+ * @async
+ * @function postManagersConditionsAndCommentsSummary
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the next page
+ */
 const postManagersConditionsAndCommentsSummary = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
   const { userToken } = req.session;

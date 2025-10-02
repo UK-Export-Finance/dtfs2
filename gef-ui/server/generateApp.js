@@ -30,12 +30,10 @@ const generateApp = () => {
   app.use(security);
   app.use(expressSession());
   app.use(createCsrf);
-
   app.use(compression());
   app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-
   app.use(flash());
 
   configureNunjucks({

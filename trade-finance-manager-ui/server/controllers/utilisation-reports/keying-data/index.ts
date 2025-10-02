@@ -5,6 +5,14 @@ import { asUserSession } from '../../../helpers/express-session';
 import { getFeeRecordIdsForKeyingSheetRowsWithStatusFromObjectKeys } from './keying-sheet-checkbox-id-helpers';
 import { KeyingSheetCheckboxId } from '../../../types/keying-sheet-checkbox-id';
 
+/**
+ * Controller to post keying data
+ * @async
+ * @function postKeyingData
+ * @param req - The Express request object.
+ * @param  res - The Express response object.
+ * @returns
+ */
 export const postKeyingData = async (req: Request, res: Response) => {
   const { user, userToken } = asUserSession(req.session);
   const { reportId } = req.params;
@@ -23,6 +31,14 @@ export type PostKeyingDataMarkAsRequest = CustomExpressRequest<{
   reqBody: Record<KeyingSheetCheckboxId, 'on'>;
 }>;
 
+/**
+ * Controller to post keying data mark as done
+ * @async
+ * @function postKeyingDataMarkAsDone
+ * @param req - The Express request object.
+ * @param  res - The Express response object.
+ * @returns
+ */
 export const postKeyingDataMarkAsDone = async (req: PostKeyingDataMarkAsRequest, res: Response) => {
   const { user, userToken } = asUserSession(req.session);
   const { reportId } = req.params;

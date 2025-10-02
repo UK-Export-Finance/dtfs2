@@ -2,6 +2,14 @@ const { TEAM_IDS } = require('@ukef/dtfs2-common');
 const api = require('../../../../../api');
 const { userIsInTeam } = require('../../../../../helpers/user');
 
+/**
+ * Controller to get underwriting loss given default page
+ * @async
+ * @function getUnderWritingLossGivenDefault
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders underwriting loss given default page
+ */
 const getUnderWritingLossGivenDefault = async (req, res) => {
   const dealId = req.params._id;
   const { userToken } = req.session;
@@ -24,6 +32,14 @@ const getUnderWritingLossGivenDefault = async (req, res) => {
   });
 };
 
+/**
+ * Controller to post underwriting loss given default
+ * @async
+ * @function postUnderWritingLossGivenDefault
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the next page
+ */
 const postUnderWritingLossGivenDefault = async (req, res) => {
   const dealId = req.params._id;
   const { user, userToken } = req.session;

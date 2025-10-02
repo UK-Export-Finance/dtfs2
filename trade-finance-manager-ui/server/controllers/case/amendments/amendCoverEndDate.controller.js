@@ -23,6 +23,14 @@ const getNextPageUrl = ({ changeFacilityValue, showFacilityEndDatePage, baseUrl 
   return `${baseUrl}/check-answers`;
 };
 
+/**
+ * Controller to get the amendment cover end date page
+ * @async
+ * @function getAmendCoverEndDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the amendment cover end date page
+ */
 const getAmendCoverEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;
@@ -69,6 +77,14 @@ const getAmendCoverEndDate = async (req, res) => {
   });
 };
 
+/**
+ * Controller to post amendment cover end date
+ * @async
+ * @function postAmendCoverEndDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the next page
+ */
 const postAmendCoverEndDate = async (req, res) => {
   const { facilityId, amendmentId } = req.params;
   const { userToken } = req.session;

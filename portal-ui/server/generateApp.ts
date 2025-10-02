@@ -28,7 +28,6 @@ export const generateApp = () => {
   app.use(security);
   app.use(expressSession());
   app.use(createCsrf);
-
   app.use(flash());
 
   configureNunjucks({

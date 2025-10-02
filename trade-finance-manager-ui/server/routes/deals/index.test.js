@@ -1,4 +1,4 @@
-import { get, post } from '../../test-mocks/router-mock';
+import { route } from '../../test-mocks/router-mock';
 
 const { getDeals, queryDeals } = require('../../controllers/deals');
 
@@ -12,12 +12,14 @@ describe('routes - deals', () => {
   });
 
   it('should setup routes with controllers', () => {
-    expect(get).toHaveBeenCalledTimes(2);
-    expect(post).toHaveBeenCalledTimes(2);
+    expect(route).toHaveBeenCalledTimes(2);
 
-    expect(get).toHaveBeenCalledWith('/', expect.any(Function));
-    expect(get).toHaveBeenCalledWith('/:pageNumber', getDeals);
-    expect(post).toHaveBeenCalledWith('/', queryDeals);
-    expect(post).toHaveBeenCalledWith('/:pageNumber', queryDeals);
+    expect(route).toHaveBeenCalledWith('/');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(expect.any(Function));
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(queryDeals);
+
+    expect(route).toHaveBeenCalledWith('/:pageNumber');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(getDeals);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(queryDeals);
   });
 });

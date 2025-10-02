@@ -1,4 +1,4 @@
-import { get, post } from '../../test-mocks/router-mock';
+import { route } from '../../test-mocks/router-mock';
 
 const { getFacilities, queryFacilities } = require('../../controllers/facilities');
 
@@ -12,12 +12,14 @@ describe('routes - facilities', () => {
   });
 
   it('should setup routes with controllers', () => {
-    expect(get).toHaveBeenCalledTimes(2);
-    expect(post).toHaveBeenCalledTimes(2);
+    expect(route).toHaveBeenCalledTimes(2);
 
-    expect(get).toHaveBeenCalledWith('/', expect.any(Function));
-    expect(get).toHaveBeenCalledWith('/:pageNumber', getFacilities);
-    expect(post).toHaveBeenCalledWith('/', queryFacilities);
-    expect(post).toHaveBeenCalledWith('/:pageNumber', queryFacilities);
+    expect(route).toHaveBeenCalledWith('/');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(expect.any(Function));
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(queryFacilities);
+
+    expect(route).toHaveBeenCalledWith('/:pageNumber');
+    expect(route.mock.results[0].value.get).toHaveBeenCalledWith(getFacilities);
+    expect(route.mock.results[0].value.post).toHaveBeenCalledWith(queryFacilities);
   });
 });

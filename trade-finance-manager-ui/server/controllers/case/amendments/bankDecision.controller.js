@@ -8,7 +8,14 @@ const { userCanEditBankDecision } = require('../../helpers');
 const { amendmentBankDecisionValidation } = require('./validation/amendmentBanksDecisionChoice.validate');
 const { amendmentBankDecisionDateValidation } = require('./validation/amendmentBankDecisionDate.validate');
 
-// renders first page of amendment managers decision if can be edited by user
+/**
+ * Controller to get the first page of amendment banks decision
+ * @async
+ * @function getAmendmentBankDecisionChoice
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the first page of amendment banks decision
+ */
 const getAmendmentBankDecisionChoice = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
   const { userToken } = req.session;
@@ -73,7 +80,14 @@ const postAmendmentBankDecisionChoice = async (req, res) => {
   }
 };
 
-// get request for date bank decision was received page
+/**
+ * Controller to get the date bank decision was received page
+ * @async
+ * @function getAmendmentBankDecisionReceivedDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the date bank decision was received page
+ */
 const getAmendmentBankDecisionReceivedDate = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
   const { userToken } = req.session;
@@ -101,7 +115,14 @@ const getAmendmentBankDecisionReceivedDate = async (req, res) => {
   });
 };
 
-// posts date that decision was received or renders template with errors and redirects to next page
+/**
+ * Controller to post date that decision was received
+ * @async
+ * @function postAmendmentBankDecisionReceivedDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the next page
+ */
 const postAmendmentBankDecisionReceivedDate = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
   const { body } = req;
@@ -159,7 +180,14 @@ const postAmendmentBankDecisionReceivedDate = async (req, res) => {
   }
 };
 
-// gets template for effective date for banks decision
+/**
+ * Controller to get effective date for banks decision page
+ * @async
+ * @function getAmendmentBankDecisionEffectiveDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the effective date for banks decision page
+ */
 const getAmendmentBankDecisionEffectiveDate = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
   const { userToken } = req.session;
@@ -187,7 +215,14 @@ const getAmendmentBankDecisionEffectiveDate = async (req, res) => {
   });
 };
 
-// posts effective date of bank decision and redirects to next page or renders template with errors
+/**
+ * Controller to post the effective date of bank decision
+ * @async
+ * @function postAmendmentBankDecisionEffectiveDate
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the next page
+ */
 const postAmendmentBankDecisionEffectiveDate = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
   const { body } = req;
@@ -239,7 +274,14 @@ const postAmendmentBankDecisionEffectiveDate = async (req, res) => {
   }
 };
 
-// gets check your answers page for bank decision
+/**
+ * Controller to get check your answers page for bank decision
+ * @async
+ * @function getAmendmentBankDecisionAnswers
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Renders the check your answers page for bank decision
+ */
 const getAmendmentBankDecisionAnswers = async (req, res) => {
   const { amendmentId, facilityId } = req.params;
   const { userToken } = req.session;
@@ -266,7 +308,14 @@ const getAmendmentBankDecisionAnswers = async (req, res) => {
   });
 };
 
-// posts bank decision and completes process by changing status to complete and redirects to underwriting page
+/**
+ * Controller to post bank decision answers
+ * @async
+ * @function postAmendmentBankDecisionAnswers
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @returns {Promise<void>} Redirects to the next page
+ */
 const postAmendmentBankDecisionAnswers = async (req, res) => {
   const { _id: dealId, amendmentId, facilityId } = req.params;
   const { userToken } = req.session;
