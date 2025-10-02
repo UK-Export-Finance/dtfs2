@@ -6,7 +6,7 @@
 # Runs tests for API endpoints in parallel:
 # portal-api, gef-ui, trade-finance-manager-ui, portal, dtfs-central-api, external-api
 # DOF-specific API tests:
-# acbs-function
+# acbs
 # Generates code coverage reports for API tests.
 #
 # 3. Unit Tests:
@@ -38,7 +38,7 @@
 # Codecov integration tracks code coverage across different test types.
 #
 # 9. Docker build
-# Verified docker build step for `acbs-functions` microservice.
+# Verified docker build step for `acbs` microservice.
 # All other microservice builds are not tested due to docker compose
 # execution prior to test suits initiation.
 # Since ACBS pertinent tests do not require `acbs` docker service initialisation
@@ -94,7 +94,7 @@ on:
       - 'dtfs-central-api/**'
       - 'trade-finance-manager-api/**'
       - 'external-api/**'
-      - 'azure-functions/acbs-function/**'
+      - 'azure-functions/acbs/**'
 
 env:
   environment: dev
@@ -497,7 +497,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        functions: ['acbs-function']
+        functions: ['acbs']
 
     concurrency:
       group: dof-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
@@ -565,7 +565,7 @@ jobs:
             './external-api',
             './trade-finance-manager-api',
             './libs/common',
-            './azure-functions/acbs-function',
+            './azure-functions/acbs',
           ]
 
     concurrency:
@@ -639,7 +639,7 @@ jobs:
             './external-api',
             './trade-finance-manager-api',
             './libs/common',
-            './azure-functions/acbs-function',
+            './azure-functions/acbs',
           ]
 
     concurrency:
@@ -1506,7 +1506,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        functions: ['acbs-function']
+        functions: ['acbs']
         webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'dtfs-central-api', 'external-api', 'trade-finance-manager-api']
 
     concurrency:

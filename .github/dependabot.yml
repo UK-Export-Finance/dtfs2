@@ -18,7 +18,7 @@ updates:
       - '/gef-ui'
       - '/portal'
       - '/trade-finance-manager-ui'
-      - '/azure-functions/acbs-function'
+      - '/azure-functions/acbs'
       - '/dtfs-central-api'
     schedule:
       interval: 'monthly'
@@ -39,7 +39,7 @@ updates:
       - '/gef-ui'
       - '/portal'
       - '/trade-finance-manager-ui'
-      - '/azure-functions/acbs-function'
+      - '/azure-functions/acbs'
       - '/dtfs-central-api'
       - '/reverse-proxy'
     schedule:

@@ -5,7 +5,7 @@ ARG PORT
 ARG NODE_ENV
 ARG GITHUB_SHA
 ARG ROOT=/home/site/wwwroot
-ARG MICROSERVICE=azure-functions/acbs-function
+ARG MICROSERVICE=azure-functions/acbs
 ARG AzureFunctionsJobHost__Logging__Console__IsEnabled=true
 ARG FUNCTIONS_WORKER_RUNTIME=node
 ARG AzureWebJobsFeatureFlags=EnableWorkerIndexing

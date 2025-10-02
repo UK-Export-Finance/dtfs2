@@ -411,7 +411,7 @@ services:
   acbs:
     build:
       context: .
-      dockerfile: ./azure-functions/acbs-function/Dockerfile
+      dockerfile: ./azure-functions/acbs/Dockerfile
     image: dtfs/acbs
     profiles:
       - acbs
