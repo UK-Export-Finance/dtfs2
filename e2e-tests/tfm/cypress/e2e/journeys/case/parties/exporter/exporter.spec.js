@@ -185,17 +185,17 @@ context('Exporter Party URN - User can add, edit, confirm and submit URN to the 
     });
 
     it('ensure user cannot manually visit the party URN page', () => {
-      cy.visit(`/case/${dealId}/parties/${party}`);
+      cy.visit(`/case/${dealId}/parties/${party}`, { failOnStatusCode: false });
       cy.url().should('eq', relative('/not-found'));
     });
 
     it('ensure user cannot confirm party URN', () => {
-      cy.visit(`/case/${dealId}/parties/${party}/summary/${mockUrn}`);
+      cy.visit(`/case/${dealId}/parties/${party}/summary/${mockUrn}`, { failOnStatusCode: false });
       pages.partiesPage.partyUrnSummaryTable().should('not.exist');
     });
 
     it('ensure user cannot manually visit the party URN summary page', () => {
-      cy.visit(`/case/${dealId}/parties/${party}/summary/${mockUrn}`);
+      cy.visit(`/case/${dealId}/parties/${party}/summary/${mockUrn}`, { failOnStatusCode: false });
       cy.url().should('eq', relative('/not-found'));
     });
   });

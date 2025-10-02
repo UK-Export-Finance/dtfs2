@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
 const flash = require('connect-flash');
 const { HttpStatusCode } = require('axios');
-const { isHttps, maintenance, SWAGGER } = require('@ukef/dtfs2-common');
+const { SWAGGER, isHttps, maintenance, notFound, errors } = require('@ukef/dtfs2-common');
 const { expressSession, configure } = require('@ukef/dtfs2-common/backend');
 const routes = require('./routes');
 const swaggerRouter = require('./routes/swagger.route');
@@ -98,8 +98,6 @@ const generateApp = () => {
 
   app.use('/', routes);
 
-  app.get('*', (req, res) => res.render('page-not-found.njk', { user: req.session.user }));
-
   /**
    * Error handler configuration
    * Currently, this only handles CSRF token errors, and
@@ -119,6 +117,15 @@ const generateApp = () => {
       res.render('_partials/problem-with-service.njk');
     }
   });
+
+  /**
+   * Global middlewares for edge cases
+   * and gracefully handling exceptions.
+   */
+  // Handles all invalid URLs
+  app.use(notFound('page-not-found.njk'));
+  // Handles all errors and exceptions
+  app.use(errors('_partials/problem-with-service.njk'));
 
   return app;
 };

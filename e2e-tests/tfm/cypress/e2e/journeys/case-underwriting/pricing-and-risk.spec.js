@@ -183,7 +183,7 @@ context('Case Underwriting - Pricing and risk', () => {
     });
 
     it('cannot manually navigate to the edit page', () => {
-      cy.visit(`/case/${dealId}/underwriting/pricing-and-risk/edit`);
+      cy.visit(`/case/${dealId}/underwriting/pricing-and-risk/edit`, { failOnStatusCode: false });
       cy.url().should('eq', relative('/not-found'));
     });
   });

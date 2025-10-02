@@ -63,7 +63,7 @@ context('Case Underwriting - Assign lead underwriter (MIA only)', () => {
 
   it('a user that is NOT in UNDERWRITER_MANAGERS or UNDERWRITERS team cannot manually navigate to assign-lead-underwriter page', () => {
     cy.login(T1_USER_1);
-    cy.visit(relative(`/case/${dealId}/underwriting/lead-underwriter/assign`));
+    cy.visit(relative(`/case/${dealId}/underwriting/lead-underwriter/assign`), { failOnStatusCode: false });
     cy.url().should('eq', relative('/not-found'));
   });
 

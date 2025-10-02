@@ -245,7 +245,7 @@ describe('GEF drawn amount', () => {
   });
 
   describe('calculateDaysOfCover', () => {
-    it('should return 0 for a cash facility, when there is no difference in days', () => {
+    it('should return 1 for a cash facility, when there is no difference in days', () => {
       // Arrange
       const coverStartDate = '0';
       const coverEndDate = '0';
@@ -255,10 +255,10 @@ describe('GEF drawn amount', () => {
       const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
-      expect(response).toBe(0);
+      expect(response).toBe(1);
     });
 
-    it('should return 1 for a contingent facility, when there is no difference in days', () => {
+    it('should return 2 for a contingent facility, when there is no difference in days', () => {
       // Arrange
       const coverStartDate = '0';
       const coverEndDate = '0';
@@ -268,10 +268,10 @@ describe('GEF drawn amount', () => {
       const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
-      expect(response).toBe(1);
+      expect(response).toBe(2);
     });
 
-    it('should return 0 as the difference in days is only one day for a cash facility', () => {
+    it('should return 1 as the difference in days is only one day for a cash facility', () => {
       // Arrange
       const coverStartDate = '0';
       const coverEndDate = '1';
@@ -281,10 +281,10 @@ describe('GEF drawn amount', () => {
       const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
-      expect(response).toBe(0);
+      expect(response).toBe(1);
     });
 
-    it('should return 1 as the difference in days is only one day for a contingent facility', () => {
+    it('should return 2 as the difference in days is only one day for a contingent facility', () => {
       // Arrange
       const coverStartDate = '0';
       const coverEndDate = '1';
@@ -294,7 +294,7 @@ describe('GEF drawn amount', () => {
       const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
-      expect(response).toBe(1);
+      expect(response).toBe(2);
     });
 
     it('should return difference in cover start and end date in days for a cash facility', () => {
@@ -307,7 +307,7 @@ describe('GEF drawn amount', () => {
       const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
-      expect(response).toBe(29);
+      expect(response).toBe(30);
     });
 
     it('should return difference in cover start and end date in days for a contingent facility', () => {
@@ -320,7 +320,7 @@ describe('GEF drawn amount', () => {
       const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
-      expect(response).toBe(30);
+      expect(response).toBe(31);
     });
 
     it('should return difference in cover start and end date in days when cover start date is in string format for a cash facility', () => {
@@ -333,7 +333,7 @@ describe('GEF drawn amount', () => {
       const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
-      expect(response).toBe(29);
+      expect(response).toBe(30);
     });
 
     it('should return difference in cover start and end date in days when cover start date is in string format for a contingent facility', () => {
@@ -346,7 +346,7 @@ describe('GEF drawn amount', () => {
       const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
-      expect(response).toBe(30);
+      expect(response).toBe(31);
     });
 
     it('should return difference in cover start and end date in days when cover end date is in string format for a cash facility', () => {
@@ -359,7 +359,7 @@ describe('GEF drawn amount', () => {
       const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
-      expect(response).toBe(29);
+      expect(response).toBe(30);
     });
 
     it('should return difference in cover start and end date in days when cover end date is in string format for a contingent facility', () => {
@@ -372,7 +372,7 @@ describe('GEF drawn amount', () => {
       const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
-      expect(response).toBe(30);
+      expect(response).toBe(31);
     });
 
     it('should return difference in cover start and end date in days when both dates string format for a contingent facility', () => {
@@ -385,7 +385,7 @@ describe('GEF drawn amount', () => {
       const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
-      expect(response).toBe(30);
+      expect(response).toBe(31);
     });
 
     it('should return difference in cover start and end date in days when both dates string format for a cash facility', () => {
@@ -398,7 +398,7 @@ describe('GEF drawn amount', () => {
       const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
-      expect(response).toBe(29);
+      expect(response).toBe(30);
     });
 
     it('should return 0 when both cover start and end dates are null', () => {
@@ -411,7 +411,7 @@ describe('GEF drawn amount', () => {
       const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
 
       // Assert
-      expect(response).toBe(0);
+      expect(response).toBe(1);
     });
   });
 
@@ -514,7 +514,7 @@ describe('GEF drawn amount', () => {
       const response = calculateGefFacilityFeeRecord(facility);
 
       // Assert
-      expect(response).toBe(6304.438356164384);
+      expect(response).toBe(6312.821917808219);
     });
 
     it('should calculate GEF facility fixed fee with only 1 day difference', () => {
@@ -529,7 +529,7 @@ describe('GEF drawn amount', () => {
       const response = calculateGefFacilityFeeRecord(mockFacility);
 
       // Assert
-      expect(response).toBe(0);
+      expect(response).toBe(8.383561643835616);
     });
 
     it('should calculate GEF facility fixed fee with £1.00 as a facility value', () => {
@@ -544,7 +544,7 @@ describe('GEF drawn amount', () => {
       const response = calculateGefFacilityFeeRecord(mockFacility);
 
       // Assert
-      expect(response).toBe(0.06304438356164384);
+      expect(response).toBe(0.0631282191780822);
     });
   });
 });

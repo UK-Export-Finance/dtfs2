@@ -33,7 +33,7 @@ context('Case Underwriting - Pricing and risk - Loss Given Default', () => {
     it('a user that is not in the `underwriting support` team cannot view the loss given default page', () => {
       // non-underwriting support user goes to the `Pricing and risk` page
       cy.login(T1_USER_1);
-      cy.visit(relative(`/case/${dealId}/underwriting/pricing-and-risk/loss-given-default`));
+      cy.visit(relative(`/case/${dealId}/underwriting/pricing-and-risk/loss-given-default`), { failOnStatusCode: false });
 
       cy.url().should('eq', relative('/not-found'));
     });
