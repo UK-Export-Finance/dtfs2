@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-import { differenceInDays } from 'date-fns';
 
 import { GEF_FACILITY_TYPE, FACILITY_UTILISATION_PERCENTAGE } from '../../constants';
 import { UnixTimestampString, Facility, FacilityType } from '../../types';
@@ -69,12 +68,13 @@ export const calculateDaysOfCover = (
 ): number => {
   const startDate = coverStartDate?.toString()?.includes('T') ? new Date(String(coverStartDate)).valueOf() : Number(coverStartDate);
   const endDate = coverEndDate?.toString()?.includes('T') ? new Date(String(coverEndDate)).valueOf() : Number(coverEndDate);
+
   /**
-   * We add an additional day for inclusive
-   * subtraction, otherwise differenceInDays will
-   * return number of days in between two days.
+   * Get EPOCH difference by diving with `86,400,000 ms`.
+   * Above is derived from 1000 ms * 60 seconds * 60 minutes * 24 hours
    */
-  const difference = differenceInDays(new Date(endDate), new Date(startDate)) + 1;
+  const differenceMs = endDate - startDate;
+  const difference = differenceMs >= 86400000 ? Math.round(differenceMs / 86400000) : differenceMs;
 
   return type === CONTINGENT ? difference + 1 : difference;
 };
