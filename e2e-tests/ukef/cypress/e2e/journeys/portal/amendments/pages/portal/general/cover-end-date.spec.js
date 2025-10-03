@@ -95,6 +95,27 @@ context('Amendments - Cover end date - page tests', () => {
     coverEndDate.coverEndDateInlineError().contains('Enter the cover end date');
   });
 
+  it('should navigate to previous page when back link is clicked', () => {
+    cy.visit(relative(amendmentUrl));
+
+    coverEndDate.backLink().click();
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
+  });
+
+  it('should navigate to previous page when an error occurs and back link is clicked', () => {
+    cy.visit(relative(amendmentUrl));
+    cy.clickContinueButton();
+
+    coverEndDate.errorSummary().should('be.visible');
+    coverEndDate.errorSummary().contains('Enter the cover end date');
+
+    coverEndDate.coverEndDateInlineError().should('be.visible');
+    coverEndDate.coverEndDateInlineError().contains('Enter the cover end date');
+
+    coverEndDate.backLink().click();
+    cy.url().should('eq', relative(`/gef/application-details/${dealId}/facilities/${facilityId}/amendments/${amendmentId}/what-do-you-need-to-change`));
+  });
+
   it('should render an error if cover end date is invalid', () => {
     cy.visit(relative(amendmentUrl));
 
