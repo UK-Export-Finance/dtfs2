@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 
 import { GEF_FACILITY_TYPE, FACILITY_UTILISATION_PERCENTAGE } from '../../constants';
 import { UnixTimestampString, Facility, FacilityType } from '../../types';
+import { differenceInDays } from '../index';
 
 dotenv.config();
 
@@ -68,13 +69,7 @@ export const calculateDaysOfCover = (
 ): number => {
   const startDate = coverStartDate?.toString()?.includes('T') ? new Date(String(coverStartDate)).valueOf() : Number(coverStartDate);
   const endDate = coverEndDate?.toString()?.includes('T') ? new Date(String(coverEndDate)).valueOf() : Number(coverEndDate);
-
-  /**
-   * Get EPOCH difference by diving with `86,400,000 ms`.
-   * Above is derived from 1000 ms * 60 seconds * 60 minutes * 24 hours
-   */
-  const differenceMs = endDate - startDate;
-  const difference = differenceMs >= 86400000 ? Math.round(differenceMs / 86400000) : differenceMs;
+  const difference = differenceInDays(startDate, endDate);
 
   return type === CONTINGENT ? difference + 1 : difference;
 };
