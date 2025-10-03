@@ -1,5 +1,5 @@
 {
-  "name": "acbs-function",
+  "name": "acbs",
   "version": "1.0.0",
   "private": true,
   "description": "ACBS DOF",
@@ -29,6 +29,7 @@
     "unit-test-ff": "jest --coverage --verbose --config=unit.ff.jest.config.js --passWithNoTests"
   },
   "dependencies": {
+    "@types/lodash": "^4.17.20",
     "axios": "1.12.0",
     "date-fns": "^2.30.0",
     "dotenv": "^16.4.5",

@@ -1,5 +1,5 @@
 import { format, fromUnixTime } from 'date-fns';
-import { DATE_FORMATS } from '../constants/date-formats';
+import { DATE_FORMATS } from '../constants/date';
 import { Facility, FacilityWithStringDealId } from '../types';
 import { dealTypeCoverStartDate } from './deal-type-cover-start-date';
 import { convertUnixTimestampWithoutMilliseconds } from './date';

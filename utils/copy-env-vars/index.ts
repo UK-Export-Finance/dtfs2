@@ -10,7 +10,7 @@ const folders = [
   'trade-finance-manager-api',
   'trade-finance-manager-ui',
   'utils',
-  path.join('azure-functions', 'acbs-function'),
+  path.join('azure-functions', 'acbs'),
   path.join('libs', 'common'),
 ];
 
