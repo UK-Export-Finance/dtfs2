@@ -1,5 +1,45 @@
 # Changelog
 
+## [2.11.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.10.0...v2.11.0) (2025-10-03)
+
+
+### Features
+
+* **DTFS-8132:** csrf middlewares for trade-finance-manager-ui ([#4457](https://github.com/UK-Export-Finance/dtfs2/issues/4457)) ([8b48680](https://github.com/UK-Export-Finance/dtfs2/commit/8b4868042086acdbc4ce7f901162ad38d188d43f))
+* **DTFS2-6423:** docker multi stage build - portal-ui ([#4424](https://github.com/UK-Export-Finance/dtfs2/issues/4424)) ([bba897d](https://github.com/UK-Export-Finance/dtfs2/commit/bba897d08ca38a491e2d1bfd076fa493893e3677))
+* **DTFS2-6423:** docker multi-stage build - acbs ([#4425](https://github.com/UK-Export-Finance/dtfs2/issues/4425)) ([0ab1647](https://github.com/UK-Export-Finance/dtfs2/commit/0ab1647a35ac68627f867494ef27b1d18777d4e8))
+* **DTFS2-6423:** multi stage docker build - dtfs-central-api ([#4414](https://github.com/UK-Export-Finance/dtfs2/issues/4414)) ([9601ac7](https://github.com/UK-Export-Finance/dtfs2/commit/9601ac71417e0f461ada1bfc978d6ee01a05ddd1))
+* **DTFS2-6423:** multi stage docker build ([#4421](https://github.com/UK-Export-Finance/dtfs2/issues/4421)) ([02cee40](https://github.com/UK-Export-Finance/dtfs2/commit/02cee4026a6a5c1a00867973323f9f34d3aa25e3))
+* **DTFS2-6423:** refactored dockerfile ([#4427](https://github.com/UK-Export-Finance/dtfs2/issues/4427)) ([d65bf82](https://github.com/UK-Export-Finance/dtfs2/commit/d65bf821eedd2e5ad57a9c65d702664abbe04439))
+* **DTFS2-6423:** updated .dockerignore ([#4417](https://github.com/UK-Export-Finance/dtfs2/issues/4417)) ([790647b](https://github.com/UK-Export-Finance/dtfs2/commit/790647b144c88777c9cbc8e177513779737e3860))
+* **DTFS2-6727:** admin sends reset password link to the user ([#4423](https://github.com/UK-Export-Finance/dtfs2/issues/4423)) ([7cccf95](https://github.com/UK-Export-Finance/dtfs2/commit/7cccf9547dfd98d6d5019e65a55194654c3b82d9))
+* **DTFS2-7457:** rename to acbs directory ([#4462](https://github.com/UK-Export-Finance/dtfs2/issues/4462)) ([7711735](https://github.com/UK-Export-Finance/dtfs2/commit/77117355e548f0c928294634c16641f9103b81c4))
+* **DTFS2-7912:** update logo tfm ([#4456](https://github.com/UK-Export-Finance/dtfs2/issues/4456)) ([a1517eb](https://github.com/UK-Export-Finance/dtfs2/commit/a1517ebd6a5e5c8c969a18f56c183b8d7e074a02))
+* **DTFS2-8078:** fixed date in difference formula to JS native ([#4464](https://github.com/UK-Export-Finance/dtfs2/issues/4464)) ([bb27733](https://github.com/UK-Export-Finance/dtfs2/commit/bb27733109708e6f1d81e55fafaf5dfd8a7aacfc))
+* **DTFS2-8079:** add KBC bank ([#4432](https://github.com/UK-Export-Finance/dtfs2/issues/4432)) ([a859f74](https://github.com/UK-Export-Finance/dtfs2/commit/a859f744b188b5aee47290bf3f20f450e230d78d))
+* **DTFS2-8115:** add swagger endpoints to UI microservices ([#4436](https://github.com/UK-Export-Finance/dtfs2/issues/4436)) ([dd44521](https://github.com/UK-Export-Finance/dtfs2/commit/dd4452197679376d6b26d92f94bf455f953980f4))
+* **DTFS2-8115:** add swagger helper to dtfs-central-api ([#4430](https://github.com/UK-Export-Finance/dtfs2/issues/4430)) ([4332ee2](https://github.com/UK-Export-Finance/dtfs2/commit/4332ee262708a781ff39ee112e32813d5900102e))
+* **DTFS2-8116:** add swagger documentation tfm api ([#4439](https://github.com/UK-Export-Finance/dtfs2/issues/4439)) ([30551f3](https://github.com/UK-Export-Finance/dtfs2/commit/30551f3a9d1bfbd126189e24c038bcf474a149cc))
+* **DTFS2-8122:** centralised application configuration ([#4440](https://github.com/UK-Export-Finance/dtfs2/issues/4440)) ([b6e4b28](https://github.com/UK-Export-Finance/dtfs2/commit/b6e4b2877dfabe23f2276ec0b2ac44f1fe09b0e2))
+* **DTFS2-8122:** implement centralised CSRF middleware - portal-ui ([#4444](https://github.com/UK-Export-Finance/dtfs2/issues/4444)) ([65593c4](https://github.com/UK-Export-Finance/dtfs2/commit/65593c4faf576305632b04c7dc1879fc4a12bd1c))
+* **DTFS2-8122:** refactor express session middleware - portal-ui ([#4442](https://github.com/UK-Export-Finance/dtfs2/issues/4442)) ([2104d70](https://github.com/UK-Export-Finance/dtfs2/commit/2104d700b51bea2dc0d72909defef9dbdd69cc83))
+* **DTFS2-8131:** csurf removal from gef-ui ([#4451](https://github.com/UK-Export-Finance/dtfs2/issues/4451)) ([22d7cb6](https://github.com/UK-Export-Finance/dtfs2/commit/22d7cb6d8c562e498c9af2a901242ff97172d39e))
+* **DTFS2-8132:** centralise api test helper for portal-ui ([#4460](https://github.com/UK-Export-Finance/dtfs2/issues/4460)) ([4360afc](https://github.com/UK-Export-Finance/dtfs2/commit/4360afcf7ddb723acc38ce3145f234602f370912))
+* **DTFS2-8144:** global middlewares for exceptional handling ([#4455](https://github.com/UK-Export-Finance/dtfs2/issues/4455)) ([d4a48c6](https://github.com/UK-Export-Finance/dtfs2/commit/d4a48c6b855aaa9df1e285f40b37f474dfc51023))
+
+
+### Bug Fixes
+
+* **DTFS2-6707:** add allBankError validation on user creation ([#4409](https://github.com/UK-Export-Finance/dtfs2/issues/4409)) ([fdceefe](https://github.com/UK-Export-Finance/dtfs2/commit/fdceefef1d8a70b7788ff82495b13aeb4bfa7aec))
+* **DTFS2-6727:** add problem with service page ([#4431](https://github.com/UK-Export-Finance/dtfs2/issues/4431)) ([22af68d](https://github.com/UK-Export-Finance/dtfs2/commit/22af68dce622f190a5d5c8cc2813fa937eedff57))
+* **DTFS2-7883:** fix new cover end date back link ([#4463](https://github.com/UK-Export-Finance/dtfs2/issues/4463)) ([7874beb](https://github.com/UK-Export-Finance/dtfs2/commit/7874beb3a773d74abb63997e8fd2ea41f98e476a))
+* **DTFS2-8016:** reverted to guaranteeFee for fixed fee calculation ([#4453](https://github.com/UK-Export-Finance/dtfs2/issues/4453)) ([c508e83](https://github.com/UK-Export-Finance/dtfs2/commit/c508e83cda70bd2e3c76cd2016b99668a5fa193e))
+* **DTFS2-8119:** portal amendements - add submittedBy and effectiveDate to tfm amendment details ([#4426](https://github.com/UK-Export-Finance/dtfs2/issues/4426)) ([30ac03e](https://github.com/UK-Export-Finance/dtfs2/commit/30ac03ecaae39ac2845121188f80b4ecd3941240))
+* **DTFS2-8126:** portal-ui build script failure ([#4437](https://github.com/UK-Export-Finance/dtfs2/issues/4437)) ([86d22d1](https://github.com/UK-Export-Finance/dtfs2/commit/86d22d1a9d6abd7baf733ae79738e1f3cbb95bb7))
+* **DTFS2-8132:** centralise api test helper for gef-ui ([#4461](https://github.com/UK-Export-Finance/dtfs2/issues/4461)) ([6c93c1a](https://github.com/UK-Export-Finance/dtfs2/commit/6c93c1a1a2be3230de6b00c71cac0ad18b711242))
+* **DTFS2-8145:** added fix for failing tenor e2e test ([#4454](https://github.com/UK-Export-Finance/dtfs2/issues/4454)) ([b2d2a25](https://github.com/UK-Export-Finance/dtfs2/commit/b2d2a25c68464cc19d6cfadf824281dbffa15191))
+* **DTFS2-8145:** fix failing tenor e2e test ([#4458](https://github.com/UK-Export-Finance/dtfs2/issues/4458)) ([849cbb4](https://github.com/UK-Export-Finance/dtfs2/commit/849cbb4969d5ddf58e9f14743526c90d006caea2))
+
 ## [2.10.0](https://github.com/UK-Export-Finance/dtfs2/compare/v2.9.0...v2.10.0) (2025-09-08)
 
 
