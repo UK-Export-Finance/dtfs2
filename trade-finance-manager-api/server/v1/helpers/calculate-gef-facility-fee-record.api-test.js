@@ -22,7 +22,6 @@ describe('calculate-gef-facility-fee-record', () => {
     it('should return the amount of days between start and end cover dates for a cash facility', () => {
       const result = calculateDaysOfCover(FACILITY_TYPE.CASH, mockCoverStartDate, mockCoverEndDate);
 
-      // Adding an additional day for inclusive subtraction
       const expected = differenceInDays(new Date(Number(mockCoverStartDate)), new Date(Number(mockCoverEndDate)));
 
       expect(result).toEqual(expected);
@@ -32,7 +31,7 @@ describe('calculate-gef-facility-fee-record', () => {
     it('should return the amount of days between start and end cover dates for a contingent facility', () => {
       const result = calculateDaysOfCover(FACILITY_TYPE.CONTINGENT, mockCoverStartDate, mockCoverEndDate);
 
-      // Adding an additional day for inclusive subtraction
+      // Adding an additional day for contingent facility
       const expected = differenceInDays(new Date(Number(mockCoverStartDate)), new Date(Number(mockCoverEndDate))) + 1;
 
       expect(result).toEqual(expected);
