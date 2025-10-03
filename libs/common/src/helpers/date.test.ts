@@ -11,6 +11,7 @@ import {
   convertUnixTimestampWithoutMilliseconds,
   getLongTimeDateFormat,
   nowZeroSeconds,
+  differenceInDays,
 } from './date';
 
 describe('date helpers', () => {
@@ -395,6 +396,129 @@ describe('date helpers', () => {
 
       // Assert
       expect(result).toContain(' on ');
+    });
+  });
+
+  describe('differenceInDays', () => {
+    it('should return 0 when start and end EPOCH both are 0', () => {
+      // Arrange
+      const startEpochMs = 0;
+      const endEpochMs = 0;
+
+      // Act
+      const result = differenceInDays(startEpochMs, endEpochMs);
+
+      // Assert
+      expect(result).toBe(0);
+    });
+
+    it('should return 1 when start and end EPOCH are different', () => {
+      // Arrange
+      const startEpochMs = 0;
+      const endEpochMs = 1;
+
+      // Act
+      const result = differenceInDays(startEpochMs, endEpochMs);
+
+      // Assert
+      expect(result).toBe(1);
+    });
+
+    it('should return 0 when start and end EPOCH both are 1', () => {
+      // Arrange
+      const startEpochMs = 1;
+      const endEpochMs = 1;
+
+      // Act
+      const result = differenceInDays(startEpochMs, endEpochMs);
+
+      // Assert
+      expect(result).toBe(0);
+    });
+
+    it('should return 0 when start and end EPOCH both are different', () => {
+      // Arrange
+      const startEpochMs = 1000;
+      const endEpochMs = 3250;
+
+      // Act
+      const result = differenceInDays(startEpochMs, endEpochMs);
+
+      // Assert
+      expect(result).toBe(2250);
+    });
+
+    it('should return 0 when start and end EPOCH both are different', () => {
+      // Arrange
+      const startEpochMs = 86400000;
+      const endEpochMs = 86400000;
+
+      // Act
+      const result = differenceInDays(startEpochMs, endEpochMs);
+
+      // Assert
+      expect(result).toBe(0);
+    });
+
+    it('should return 1 day when start and end EPOCH both are different', () => {
+      // Arrange
+      const days = 2;
+      const startEpochMs = 86400000;
+      const endEpochMs = 86400000 * days;
+
+      // Act
+      const result = differenceInDays(startEpochMs, endEpochMs);
+
+      // Assert
+      expect(result).toBe(1);
+    });
+
+    it('should return 61 days when start and end EPOCH both are 2 months apart', () => {
+      // Arrange
+      const startEpochMs = 1759273200000; // 01/10/2025
+      const endEpochMs = 1764547200000; // 01/12/2025
+
+      // Act
+      const result = differenceInDays(startEpochMs, endEpochMs);
+
+      // Assert
+      expect(result).toBe(61);
+    });
+
+    it('should return 364 days when start and end EPOCH both are 12 months apart', () => {
+      // Arrange
+      const startEpochMs = 1735689600000; // 01/01/2025
+      const endEpochMs = 1767139200000; // 31/12/2025
+
+      // Act
+      const result = differenceInDays(startEpochMs, endEpochMs);
+
+      // Assert
+      expect(result).toBe(364);
+    });
+
+    it('should return 1,068 days when start and end EPOCH both are nearly 3 years apart', () => {
+      // Arrange
+      const startEpochMs = 1759359600000; // 02/10/2025
+      const endEpochMs = 1851634800000; // 04/09/2028
+
+      // Act
+      const result = differenceInDays(startEpochMs, endEpochMs);
+
+      // Assert
+      expect(result).toBe(1068);
+    });
+
+    it('should return 2,932,896 days when start and end EPOCH both are 244,408 years apart', () => {
+      // Arrange
+      const startEpochMs = 0; // 01/01/1970
+      const endEpochMs = 253402214400000; // 31/12/9999
+
+      // Act
+      const result = differenceInDays(startEpochMs, endEpochMs);
+
+      // Assert
+      expect(result).toBe(2932896);
     });
   });
 });
