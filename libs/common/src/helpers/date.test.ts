@@ -399,7 +399,7 @@ describe('date helpers', () => {
     });
   });
 
-  describe.only('differenceInDays', () => {
+  describe('differenceInDays', () => {
     it('should return 0 when start and end EPOCH both are 0', () => {
       // Arrange
       const startEpochMs = 0;
