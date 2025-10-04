@@ -117,3 +117,11 @@ export const differenceInDays = (startEpoch: number, endEpoch: number): number =
   // Only divide if EPOCH in microseconds is greater than or equal to 24 hours
   return differenceMs >= EPOCH.MS.ONE_DAY ? Math.round(differenceMs / EPOCH.MS.ONE_DAY) : differenceMs;
 };
+
+/**
+ * Converts a Unix epoch time in seconds to milliseconds.
+ *
+ * @param epoch - The Unix epoch time in seconds.
+ * @returns The corresponding time in milliseconds.
+ */
+export const epochToEpochMs = (epoch: number): number => epoch * 1000;

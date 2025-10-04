@@ -1,5 +1,5 @@
 const CONSTANTS = require('../../constants');
-const { formatDate, now } = require('../../helpers/date');
+const { formatDate } = require('../../helpers/date');
 const helpers = require('./helpers');
 
 const { FACILITY } = CONSTANTS;
@@ -19,7 +19,7 @@ const facilityLoanAmend = (amendment, facility, facilityMasterRecord) => {
     const { facilitySnapshot } = facility;
 
     if (amendment && facilitySnapshot) {
-      const { amount, coverEndDate } = amendment;
+      const { amount, coverEndDate, effectiveDate } = amendment;
       const { type, feeType } = facilitySnapshot;
 
       // 1. UKEF Exposure
@@ -28,7 +28,7 @@ const facilityLoanAmend = (amendment, facility, facilityMasterRecord) => {
         if (type !== FACILITY.FACILITY_TYPE.LOAN) {
           record = {
             ...record,
-            effectiveDate: now(),
+            effectiveDate: formatDate(effectiveDate),
             amountAmendment: helpers.getLoanAmountDifference(amount, type, facilityMasterRecord),
           };
         }

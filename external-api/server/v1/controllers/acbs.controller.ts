@@ -258,6 +258,7 @@ export const amendAcbsFacilityPost = async (req: Request, res: Response) => {
       facilityIdentifier: id,
       amount: amendments.ukefExposure,
       coverEndDate: amendments.coverEndDate,
+      effectiveDate: amendments.effectiveDate,
       facility,
       deal,
     };

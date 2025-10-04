@@ -10,7 +10,7 @@ const api = require('../api');
 const { mongoDbClient: db } = require('../../drivers/db-client');
 const tfmController = require('./tfm.controller');
 const CONSTANTS = require('../../constants');
-const { formatCoverEndDate } = require('../helpers/amendment.helpers');
+const { formatAmendmentDates } = require('../helpers/amendment.helpers');
 const { getIsoStringWithOffset } = require('../../utils/date');
 const isUnissuedInACBS = require('../helpers/is-facility-unissued-acbs');
 const { findOneTfmDeal } = require('./deal.controller');
@@ -310,10 +310,7 @@ const issueAcbsFacilities = async (deal) => {
 const amendAcbsFacility = (amendments, facility, deal) => {
   let payload = amendments;
 
-  // TO-DO : EPOCH Convergence
-  if (amendments.coverEndDate) {
-    payload = formatCoverEndDate(amendments);
-  }
+  payload = formatAmendmentDates(amendments);
 
   api
     .amendACBSfacility(payload, facility, deal)

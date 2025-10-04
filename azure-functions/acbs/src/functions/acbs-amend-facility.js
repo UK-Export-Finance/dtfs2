@@ -60,19 +60,21 @@ df.app.orchestration('acbs-amend-facility', function* amendFacility(context) {
       throw new Error('Invalid amendment payload');
     }
 
-    const { facilityIdentifier, amount, coverEndDate } = amendment;
+    const { facilityIdentifier, amount, coverEndDate, effectiveDate } = amendment;
 
     // UKEF Facility ID exists in the payload
     const hasFacilityId = Boolean(facilityIdentifier);
     // At least one of the amendment exists in the payload
     const hasAmendment = Boolean(amount) || Boolean(coverEndDate);
+    // Amendment effective date
+    const hasEffectiveDate = Boolean(effectiveDate);
     // Facility object existence check
     const hasFacility = amendment.facility;
     // Deal properties existence check
     const hasDeal = amendment.deal && amendment.deal.dealSnapshot;
 
     // Payload verification
-    if (!hasFacilityId || !hasAmendment || !hasFacility || !hasDeal) {
+    if (!hasFacilityId || !hasAmendment || !hasFacility || !hasDeal || !hasEffectiveDate) {
       throw new Error('Invalid argument set provided');
     }
 
