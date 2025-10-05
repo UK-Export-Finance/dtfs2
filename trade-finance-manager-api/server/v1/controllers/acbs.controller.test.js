@@ -5,7 +5,15 @@ const CONSTANTS = require('../../constants');
 const MOCK_DEAL_ACBS = require('../__mocks__/mock-deal-acbs');
 const { MOCK_ACBS_TASK_LINK, MOCK_ACBS_DEAL_LINK, MOCK_ACBS_FACILITY_LINK } = require('../__mocks__/mock-durable-tasks');
 
-const { createACBS, issueAcbsFacilities, addToACBSLog, updateIssuedFacilityAcbs, updateAmendedFacilityAcbs, updateDealAcbs } = require('./acbs.controller');
+const {
+  createACBS,
+  issueAcbsFacilities,
+  addToACBSLog,
+  updateIssuedFacilityAcbs,
+  updateAmendedFacilityAcbs,
+  updateDealAcbs,
+  amendAcbsFacility,
+} = require('./acbs.controller');
 const { mongoDbClient: db } = require('../../drivers/db-client');
 const { findOneTfmDeal } = require('./deal.controller');
 const { updateFacilityAcbs, updateAcbs } = require('./tfm.controller');
@@ -23,6 +31,10 @@ getCollectionMock.mockResolvedValue({ insertOne: insertOneMock });
 const createAcbsApiMock = jest.fn().mockResolvedValue(123);
 const createACBSMock = jest.spyOn(api, 'createACBS');
 createACBSMock.mockResolvedValue(createAcbsApiMock);
+
+const amendACBSfacilityApiMock = jest.fn().mockReturnValue({});
+const amendACBSfacilityMock = jest.spyOn(api, 'amendACBSfacility');
+amendACBSfacilityMock.mockResolvedValue(amendACBSfacilityApiMock);
 
 /**
  * Mock `deal.controller` imperative functions to
@@ -572,5 +584,29 @@ describe('updateDealAcbs', () => {
     // Assert
     expect(updateAcbs).toHaveBeenCalledTimes(0);
     expect(updateFacilityAcbs).toHaveBeenCalledTimes(0);
+  });
+
+  describe('amendAcbsFacility', () => {
+    it('should call amendACBSfacility with formatted dates', () => {
+      // Arrange
+      const mockFacility = {};
+      const mockDeal = {};
+      const mockAmendment = {
+        effectiveDate: 1760546450,
+        coverEndDate: 1759509731,
+      };
+
+      const mockFormattedAmendment = {
+        effectiveDate: 1760546450000,
+        coverEndDate: 1759509731000,
+      };
+
+      // Act
+      amendAcbsFacility(mockAmendment, mockFacility, mockDeal);
+
+      // Assert
+      expect(api.amendACBSfacility).toHaveBeenCalledTimes(1);
+      expect(api.amendACBSfacility).toHaveBeenCalledWith(mockFormattedAmendment, mockFacility, mockDeal);
+    });
   });
 });
