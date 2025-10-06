@@ -78,7 +78,7 @@ ENV AzureFunctionsJobHost__Logging__Console__IsEnabled=$AzureFunctionsJobHost__L
 ENV FUNCTIONS_WORKER_RUNTIME=$FUNCTIONS_WORKER_RUNTIME
 ENV AzureWebJobsFeatureFlags=$AzureWebJobsFeatureFlags
 
-WORKDIR ${AzureWebJobsScriptRoot}
+WORKDIR ${ROOT}
 
 # Copy from `build` to `prod`
 COPY --chown=node:node --from=build ${ROOT}/package.json .
