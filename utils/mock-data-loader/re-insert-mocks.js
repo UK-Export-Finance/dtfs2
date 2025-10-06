@@ -15,7 +15,12 @@ const isTfmSsoEnabled = isTfmSsoFeatureFlagEnabled();
 const isAuditLogEnabled = isChangeStreamEnabled();
 
 const init = async () => {
+  let e2e = false;
   console.info('\n\r⚡ Mock data loader\n\r');
+
+  if (process.argv.includes('--e2e')) {
+    e2e = true;
+  }
 
   try {
     // Portal
@@ -34,8 +39,8 @@ const init = async () => {
 
     // Insert mocks
     console.info('\n\r💾 Insertion\n\r');
-    await insertMocks(portalToken);
-    await insertMocksGef(portalToken);
+    await insertMocks(portalToken, e2e, process.argv);
+    await insertMocksGef(portalToken, e2e);
 
     if (isAuditLogEnabled) {
       await setupDeletionAuditLogsCollection();

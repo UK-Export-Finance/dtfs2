@@ -34,13 +34,13 @@ export const deleteDeal = async (req: CustomExpressRequest<{ reqBody: { auditDet
     return res.status(500).send({ status: 500, error });
   }
 
-  const deal = await findOneDeal(id);
-
-  if (!deal) {
-    return res.status(404).send({ status: 404, message: 'Deal not found' });
-  }
-
   try {
+    const deal = await findOneDeal(id);
+
+    if (!deal) {
+      return res.status(404).send({ status: 404, message: 'Deal not found' });
+    }
+
     const deleteResult = await deleteOne({
       documentId: new ObjectId(id),
       collectionName: MONGO_DB_COLLECTIONS.TFM_DEALS,

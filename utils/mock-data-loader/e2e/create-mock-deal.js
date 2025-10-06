@@ -5,7 +5,7 @@ const { MOCK_DEAL_AIN } = require('@ukef/dtfs2-common/test-helpers');
  * @param {object} overrides deal overrides
  * @returns {object} created mock deal
  */
-exports.createMockDeal = (overrides) => {
+exports.createMockDeal = (overrides, ukefDealId) => {
   let submissionDate = new Date().valueOf().toString();
   let facilities = [{ ...MOCK_DEAL_AIN.mockFacilities[0] }];
 
@@ -18,21 +18,25 @@ exports.createMockDeal = (overrides) => {
   }
 
   return {
-    ...MOCK_DEAL_AIN,
-    ...overrides,
-    bank: {
-      ...MOCK_DEAL_AIN.bank,
-      ...(overrides.bank ? overrides.bank : {}),
+    deal: {
+      ...MOCK_DEAL_AIN,
+      ...overrides,
+      bank: {
+        ...MOCK_DEAL_AIN.bank,
+        ...(overrides.bank ? overrides.bank : {}),
+      },
+      details: {
+        ...MOCK_DEAL_AIN.details,
+        ...overrides.details,
+        submissionDate,
+        ...(ukefDealId ? { ukefDealId: String(ukefDealId) } : {}),
+      },
+      submissionDetails: {
+        ...MOCK_DEAL_AIN.submissionDetails,
+        ...overrides.submissionDetails,
+      },
+      mockFacilities: facilities,
     },
-    details: {
-      ...MOCK_DEAL_AIN.details,
-      ...overrides.details,
-      submissionDate,
-    },
-    submissionDetails: {
-      ...MOCK_DEAL_AIN.submissionDetails,
-      ...overrides.submissionDetails,
-    },
-    mockFacilities: facilities,
+    facilities,
   };
 };

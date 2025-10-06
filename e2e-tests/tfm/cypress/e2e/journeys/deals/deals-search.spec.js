@@ -1,5 +1,4 @@
-import { MOCK_DEAL_AIN, yesterday } from '@ukef/dtfs2-common/test-helpers';
-import createMockDeal from '../../../fixtures/create-mock-deal';
+import { DEAL_WITH_TEST_BUYER_NAME_VARS, DEAL_WITH_TEST_SUPPLIER_NAME_VARS, DEAL_WITH_TEST_MIN_SUBMISSION_TYPE_VARS } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import { primaryNavigation } from '../../partials';
@@ -13,78 +12,28 @@ const { format } = require('date-fns');
 
 context('User can view and filter multiple deals', () => {
   let ALL_SUBMITTED_DEALS = [];
-  let ALL_FACILITIES = [];
+  const ALL_FACILITIES = [];
 
   // one GEF deal
   const MOCK_GEF_DEAL_AIN = MOCK_APPLICATION_AIN;
 
-  // multiple BSS/EWCS deals
-  const DEAL_WITH_TEST_SUPPLIER_NAME = createMockDeal({
-    status: 'Submitted',
-    submissionDetails: { 'supplier-name': 'MY-SUPPLIER' },
-  });
-
-  const DEAL_WITH_TEST_MIN_SUBMISSION_TYPE = createMockDeal({
-    submissionType: 'Manual Inclusion Notice',
-    status: 'Submitted',
-  });
-
-  const DEAL_WITH_TEST_BUYER_NAME = createMockDeal({
-    status: 'Submitted',
-    submissionDetails: { 'buyer-name': 'MY-BUYER' },
-  });
-
-  const DEAL_WITH_TEST_MIA_SUBMISSION_TYPE = createMockDeal({
-    status: 'Submitted',
-    submissionType: 'Manual Inclusion Application',
-    testId: 'DEAL_WITH_TEST_MIA_SUBMISSION_TYPE',
-  });
-
-  const DEAL_WITH_ONLY_1_FACILITY_BOND = createMockDeal({
-    testId: 'DEAL_WITH_ONLY_1_FACILITY_BOND',
-    mockFacilities: [MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === FACILITY_TYPE.BOND)],
-  });
-
-  const DEAL_WITH_ONLY_1_FACILITY_LOAN = createMockDeal({
-    testId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
-    mockFacilities: [MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === FACILITY_TYPE.LOAN)],
-  });
-
-  // NOTE: searching by date queries multiple fields.
-  // Therefore we need to set all of these fields to yesterday.
-  const DEAL_COMPLETED_YESTERDAY = createMockDeal({
-    testId: 'DEAL_COMPLETED_YESTERDAY',
-    eligibility: {
-      lastUpdated: yesterday.unixMillisecondsString,
-    },
-    facilitiesUpdated: yesterday.unixMillisecondsString,
-  });
-
-  const MOCK_BSS_DEALS = [
-    DEAL_WITH_TEST_SUPPLIER_NAME,
-    DEAL_WITH_TEST_MIN_SUBMISSION_TYPE,
-    DEAL_WITH_TEST_BUYER_NAME,
-    DEAL_WITH_TEST_MIA_SUBMISSION_TYPE,
-    DEAL_WITH_ONLY_1_FACILITY_BOND,
-    DEAL_WITH_ONLY_1_FACILITY_LOAN,
-    DEAL_COMPLETED_YESTERDAY,
-  ];
-
   before(() => {
     cy.deleteTfmDeals();
 
-    cy.insertManyDeals(MOCK_BSS_DEALS, BANK1_MAKER1).then((insertedDeals) => {
-      insertedDeals.forEach((deal) => {
-        const { _id: dealId, mockFacilities } = deal;
+    cy.loadData('deal-search');
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((facilities) => {
-          ALL_FACILITIES = [...ALL_FACILITIES, ...facilities];
-        });
-      });
+    cy.listAllDeals(BANK1_MAKER1).then((deals) => {
+      cy.submitManyDeals(deals, T1_USER_1);
 
-      cy.submitManyDeals(insertedDeals, T1_USER_1);
       cy.get(aliasSelector(ALIAS_KEY.SUBMIT_MANY_DEALS)).then((submittedDeals) => {
         ALL_SUBMITTED_DEALS = submittedDeals;
+
+        submittedDeals.forEach((deal) => {
+          const { dealSnapshot } = deal;
+          if (dealSnapshot.facilities && dealSnapshot.facilities.length) {
+            ALL_FACILITIES.push(...dealSnapshot.facilities);
+          }
+        });
       });
     });
 
@@ -186,7 +135,7 @@ context('User can view and filter multiple deals', () => {
   });
 
   it('search/filter by supplier name', () => {
-    const searchString = DEAL_WITH_TEST_SUPPLIER_NAME.submissionDetails['supplier-name'];
+    const searchString = DEAL_WITH_TEST_SUPPLIER_NAME_VARS.submissionDetails['supplier-name'];
 
     cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
@@ -197,7 +146,7 @@ context('User can view and filter multiple deals', () => {
   });
 
   it('search/filter by submission type', () => {
-    const searchString = DEAL_WITH_TEST_MIN_SUBMISSION_TYPE.submissionType;
+    const searchString = DEAL_WITH_TEST_MIN_SUBMISSION_TYPE_VARS.submissionType;
 
     cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
@@ -208,7 +157,7 @@ context('User can view and filter multiple deals', () => {
   });
 
   it('search/filter by buyer name', () => {
-    const searchString = DEAL_WITH_TEST_BUYER_NAME.submissionDetails['buyer-name'];
+    const searchString = DEAL_WITH_TEST_BUYER_NAME_VARS.submissionDetails['buyer-name'];
 
     cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();
@@ -321,7 +270,7 @@ context('User can view and filter multiple deals', () => {
   });
 
   it('after a search has been performed, clicking `All deals` nav item returns all deals ', () => {
-    const searchString = DEAL_WITH_TEST_BUYER_NAME.submissionDetails['buyer-name'];
+    const searchString = DEAL_WITH_TEST_BUYER_NAME_VARS.submissionDetails['buyer-name'];
 
     cy.keyboardInput(pages.dealsPage.searchFormInput(), searchString);
     cy.clickSubmitButton();

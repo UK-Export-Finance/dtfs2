@@ -1,5 +1,4 @@
-import { twoDaysAgo, yesterday } from '@ukef/dtfs2-common/test-helpers';
-import createMockDeal from '../../../fixtures/create-mock-deal';
+import { DEAL_MOST_RECENT_VARS, DEAL_NOT_RECENT_VARS } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
@@ -8,56 +7,39 @@ import { aliasSelector } from '../../../../../support/alias-selector';
 
 context('User can view and sort deals', () => {
   const ALL_SUBMITTED_DEALS = [];
-  let ALL_FACILITIES = [];
+  const ALL_FACILITIES = [];
   let dealMostRecent;
   let dealNotRecent;
-
-  const DEAL_NOT_RECENT = createMockDeal({
-    details: {
-      ukefDealId: 1,
-      submissionDate: twoDaysAgo.unixMillisecondsString,
-    },
-  });
-
-  const DEAL_MOST_RECENT = createMockDeal({
-    details: {
-      ukefDealId: 2,
-      submissionDate: yesterday.unixMillisecondsString,
-    },
-  });
-
-  const MOCK_DEALS = [DEAL_NOT_RECENT, DEAL_MOST_RECENT];
 
   before(() => {
     cy.deleteTfmDeals();
 
-    cy.insertManyDeals(MOCK_DEALS, BANK1_MAKER1).then((insertedDeals) => {
-      insertedDeals.forEach((deal) => {
-        /**
-         * wait to submit deals at different times
-         * otherwise sometimes, both deals have the same submission time
-         * and the test fails as the first deal is displayed as most recent
-         */
+    cy.loadData('deals-sort-by-received-date');
+
+    cy.listAllDeals(BANK1_MAKER1).then((deals) => {
+      // reverse array to ensure most recent deal is first
+      deals.reverse();
+
+      deals.forEach((deal) => {
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.wait(1000);
-        const { _id: dealId, mockFacilities } = deal;
-
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((facilities) => {
-          ALL_FACILITIES = [...ALL_FACILITIES, ...facilities];
-        });
 
         cy.submitManyDeals([deal], T1_USER_1);
 
         cy.get(aliasSelector(ALIAS_KEY.SUBMIT_MANY_DEALS)).then((submittedDeals) => {
           ALL_SUBMITTED_DEALS.push(submittedDeals[0]);
 
-          dealMostRecent = ALL_SUBMITTED_DEALS.find(
-            (submittedDeal) => submittedDeal.dealSnapshot.details.submissionDate === DEAL_MOST_RECENT.details.submissionDate,
-          );
+          if (!dealMostRecent) {
+            dealMostRecent = ALL_SUBMITTED_DEALS.find(
+              (submittedDeal) => submittedDeal.dealSnapshot.details.submissionDate === DEAL_MOST_RECENT_VARS.details.submissionDate,
+            );
+          }
 
-          dealNotRecent = ALL_SUBMITTED_DEALS.find(
-            (submittedDeal) => submittedDeal.dealSnapshot.details.submissionDate === DEAL_NOT_RECENT.details.submissionDate,
-          );
+          if (!dealNotRecent) {
+            dealNotRecent = ALL_SUBMITTED_DEALS.find(
+              (submittedDeal) => submittedDeal.dealSnapshot.details.submissionDate === DEAL_NOT_RECENT_VARS.details.submissionDate,
+            );
+          }
         });
       });
     });

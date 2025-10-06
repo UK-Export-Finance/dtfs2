@@ -30,7 +30,7 @@ const createAndLogInAsInitialUser = async () => {
   try {
     return await api.loginViaPortal(mockDataLoaderUser);
   } catch (error) {
-    console.error('❌ Login failed for initial user %o, recreating.', error);
+    console.error('❌ Login failed for initial user %o, recreating.');
     await api.createInitialUser(mockDataLoaderUser);
     return api.loginViaPortal(mockDataLoaderUser);
   }
@@ -57,7 +57,7 @@ const createAndLogInAsInitialTfmUser = async () => {
 
     return token;
   } catch (error) {
-    console.error('❌ Login failed for initial user %o, recreating.', error);
+    console.error('❌ Login failed for initial user %o, recreating.');
     await api.createInitialTfmUser(mockDataLoaderTFMUser);
     return api.loginTfmUser(mockDataLoaderTFMUser);
   }

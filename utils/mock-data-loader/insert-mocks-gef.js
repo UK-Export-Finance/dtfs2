@@ -5,7 +5,7 @@ const api = require('./gef/api');
 const MOCKS = require('./gef');
 const { mongoDbClient } = require('../drivers/db-client');
 
-const insertMocks = async (token) => {
+const insertMocks = async (token, e2e) => {
   console.info('GEF MCs');
   for (const item of MOCKS.MANDATORY_CRITERIA_VERSIONED) {
     await api.createMandatoryCriteriaVersioned(item, token);
@@ -31,28 +31,30 @@ const insertMocks = async (token) => {
 
   const makerToken = await portalApi.loginViaPortal(BANK1_MAKER1);
 
-  for (const deal of MOCKS.APPLICATION) {
-    deal.userId = makerUserId;
-    const application = await api.createApplication(deal, makerToken);
+  if (!e2e) {
+    for (const deal of MOCKS.APPLICATION) {
+      deal.userId = makerUserId;
+      const application = await api.createApplication(deal, makerToken);
 
-    const applicationUpdate = {
-      submissionType: deal.submissionType,
-    };
+      const applicationUpdate = {
+        submissionType: deal.submissionType,
+      };
 
-    applicationUpdate.eligibility = latestEligibilityCriteria;
+      applicationUpdate.eligibility = latestEligibilityCriteria;
 
-    await api.updateApplication(application._id, applicationUpdate, makerToken);
-  }
+      await api.updateApplication(application._id, applicationUpdate, makerToken);
+    }
 
-  const gefDeals = await api.listDeals(token);
+    const gefDeals = await api.listDeals(token);
 
-  console.info('GEF facilities');
-  for (const [index, item] of MOCKS.FACILITIES.entries()) {
-    for (const subitem of item) {
-      subitem.dealId = gefDeals[index]._id;
-      const facility = await api.createFacilities(subitem, makerToken);
-      delete subitem.dealId;
-      await api.updateFacilities(facility.details, subitem, makerToken);
+    console.info('GEF facilities');
+    for (const [index, item] of MOCKS.FACILITIES.entries()) {
+      for (const subitem of item) {
+        subitem.dealId = gefDeals[index]._id;
+        const facility = await api.createFacilities(subitem, makerToken);
+        delete subitem.dealId;
+        await api.updateFacilities(facility.details, subitem, makerToken);
+      }
     }
   }
 };

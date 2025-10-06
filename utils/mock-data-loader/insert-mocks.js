@@ -3,8 +3,9 @@ const centralApi = require('./centralApi');
 const MOCK_PORTAL_USERS = require('./portal-users');
 const MOCK_BANKS = require('./banks');
 const MOCKS = require('./bss');
+const { testDeals } = require('./e2e/test-deals');
 
-const insertMocks = async (mockDataLoaderToken) => {
+const insertMocks = async (mockDataLoaderToken, e2e, params) => {
   console.info('Users');
   for (const user of Object.values(MOCK_PORTAL_USERS)) {
     await api.createUser(user, mockDataLoaderToken);
@@ -28,26 +29,48 @@ const insertMocks = async (mockDataLoaderToken) => {
   const maker = MOCK_PORTAL_USERS.BANK1_MAKER3;
   const makerToken = await api.loginViaPortal(maker);
 
+  let insertDeals = MOCKS.DEALS;
+  let insertFacilities = MOCKS.FACILITIES;
+  if (e2e) {
+    const { deals, facilities } = testDeals(params);
+    insertDeals = deals.BSS;
+    insertFacilities = facilities.BSS;
+  }
+
   console.info('BSS deals');
   const insertedDeals = [];
-  for (const deal of MOCKS.DEALS) {
+  for (const deal of insertDeals) {
     const { _id } = await api.createDeal(deal, makerToken);
     const { deal: createdDeal } = await api.getDeal(_id, makerToken);
 
     insertedDeals.push(createdDeal);
+
+    if (e2e) {
+      console.info('BSS facilities');
+      for (const facility of deal.mockFacilities) {
+        const facilityToInsert = {
+          ...facility,
+          dealId: createdDeal._id,
+        };
+
+        await centralApi.createFacility(facilityToInsert, facilityToInsert.dealId, makerToken);
+      }
+    }
   }
 
-  console.info('BSS facilities');
-  MOCKS.FACILITIES.forEach(async (facility) => {
-    const associatedDeal = insertedDeals.find((deal) => deal.mockId === facility.mockDealId);
+  if (!e2e) {
+    console.info('BSS facilities');
+    insertFacilities.forEach(async (facility) => {
+      const associatedDeal = insertedDeals.find((deal) => deal.mockId === facility.mockDealId);
 
-    const facilityToInsert = {
-      ...facility,
-      dealId: associatedDeal._id,
-    };
+      const facilityToInsert = {
+        ...facility,
+        dealId: associatedDeal._id,
+      };
 
-    await centralApi.createFacility(facilityToInsert, facilityToInsert.dealId, makerToken);
-  });
+      await centralApi.createFacility(facilityToInsert, facilityToInsert.dealId, makerToken);
+    });
+  }
 };
 
 module.exports = insertMocks;
