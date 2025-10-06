@@ -10,6 +10,7 @@ const {
   addLatestAmendmentValue,
   internalAmendmentEmail,
   addLatestAmendmentFacilityEndDate,
+  formatAmendmentDates,
 } = require('./amendment.helpers');
 const CONSTANTS = require('../../constants');
 const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
@@ -1007,6 +1008,58 @@ describe('internalAmendmentEmail()', () => {
 
     expect(sendEmailApiSpy).toHaveBeenCalledWith(CONSTANTS.EMAIL_TEMPLATE_IDS.INTERNAL_AMENDMENT_NOTIFICATION, process.env.UKEF_INTERNAL_NOTIFICATION, {
       ukefFacilityId: '1234567890',
+    });
+  });
+});
+
+describe('formatAmendmentDates', () => {
+  it('should convert effective date to EPOCH in MS', () => {
+    // Arrange
+    const mockPayload = {
+      effectiveDate: 1,
+    };
+
+    // Act
+    const response = formatAmendmentDates(mockPayload);
+
+    // Assert
+    expect(response).not.toHaveProperty('coverEndDate');
+    expect(response).toEqual({
+      effectiveDate: 1000,
+    });
+  });
+
+  it('should convert effective and cover end date to EPOCH in MS', () => {
+    // Arrange
+    const mockPayload = {
+      effectiveDate: 1,
+      coverEndDate: 2,
+    };
+
+    // Act
+    const response = formatAmendmentDates(mockPayload);
+
+    // Assert
+    expect(response).toEqual({
+      effectiveDate: 1000,
+      coverEndDate: 2000,
+    });
+  });
+
+  it('should convert realistic effective and cover end date to EPOCH in MS', () => {
+    // Arrange
+    const mockPayload = {
+      effectiveDate: 1760546450,
+      coverEndDate: 1759509638,
+    };
+
+    // Act
+    const response = formatAmendmentDates(mockPayload);
+
+    // Assert
+    expect(response).toEqual({
+      effectiveDate: 1760546450000,
+      coverEndDate: 1759509638000,
     });
   });
 });

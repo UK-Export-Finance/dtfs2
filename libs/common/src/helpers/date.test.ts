@@ -12,6 +12,7 @@ import {
   getLongTimeDateFormat,
   nowZeroSeconds,
   differenceInDays,
+  epochToEpochMs,
 } from './date';
 
 describe('date helpers', () => {
@@ -520,5 +521,26 @@ describe('date helpers', () => {
       // Assert
       expect(result).toBe(2932896);
     });
+  });
+
+  describe('epochToEpochMs', () => {
+    const epochs = [
+      { seconds: 0, milliseconds: 0 },
+      { seconds: 1, milliseconds: 1000 },
+      { seconds: 1000, milliseconds: 1000000 },
+      { seconds: -1000, milliseconds: -1000000 },
+      { seconds: 622249200, milliseconds: 622249200000 },
+    ];
+
+    it.each(epochs)(
+      'should covert given EPOCH in seconds %i to EPOCH in milliseconds %i',
+      ({ seconds, milliseconds }: { seconds: number; milliseconds: number }) => {
+        // Act
+        const result = epochToEpochMs(seconds);
+
+        // Assert
+        expect(result).toBe(milliseconds);
+      },
+    );
   });
 });

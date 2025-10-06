@@ -1,4 +1,4 @@
-const { TFM_AMENDMENT_STATUS, formatDatesForTenor, createAmendmentFacilityExposure } = require('@ukef/dtfs2-common');
+const { TFM_AMENDMENT_STATUS, formatDatesForTenor, createAmendmentFacilityExposure, epochToEpochMs } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const sendTfmEmail = require('../services/send-tfm-email');
 const { UNDERWRITER_MANAGER_DECISIONS } = require('../../constants/amendments');
@@ -529,17 +529,17 @@ const calculateAcbsUkefExposure = (payload) => {
  * @param {object} payload Amendment payload
  * @returns {object} Computed payload with EPOCH sm compatible `coverEndDate`.
  */
-const formatCoverEndDate = (payload) => {
-  if (payload?.coverEndDate) {
-    // TODO: DTFS2-7047 convert EPOCH to millisecond compatible epoch.
-    const epoch = payload.coverEndDate.toString().length > 10 ? payload.coverEndDate : payload.coverEndDate * 1000;
+const formatAmendmentDates = (payload) => {
+  const formatted = {
+    ...payload,
+    effectiveDate: epochToEpochMs(payload.effectiveDate),
+  };
 
-    return {
-      ...payload,
-      coverEndDate: epoch,
-    };
+  if (formatted?.coverEndDate) {
+    formatted.coverEndDate = epochToEpochMs(formatted.coverEndDate);
   }
-  return payload;
+
+  return formatted;
 };
 
 module.exports = {
@@ -550,7 +550,7 @@ module.exports = {
   sendFirstTaskEmail,
   internalAmendmentEmail,
   canSendToAcbs,
-  formatCoverEndDate,
+  formatAmendmentDates,
   addLatestAmendmentValue,
   addLatestAmendmentCoverEndDate,
   addLatestAmendmentFacilityEndDate,
