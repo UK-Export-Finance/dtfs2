@@ -14,7 +14,6 @@ module.exports = (deals) => {
           return persistedDeals;
         }
         return null;
-        // });
       }),
     );
   });
