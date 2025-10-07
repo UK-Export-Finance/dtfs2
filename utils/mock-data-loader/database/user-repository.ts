@@ -1,9 +1,35 @@
 import crypto from 'crypto';
 import jsonwebtoken from 'jsonwebtoken';
-import { PORTAL_LOGIN_STATUS, PortalUser } from '@ukef/dtfs2-common';
+import { PORTAL_LOGIN_STATUS, TIMEZONE, USER_STATUS, PortalUser, generatePasswordHash } from '@ukef/dtfs2-common';
 import { mongoDbClient } from '../../drivers/db-client';
 
 const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY ?? '', 'base64').toString('ascii');
+
+export const createMockDataUser = async (user: PortalUser & { password: string }): Promise<boolean> => {
+  try {
+    const userCollection = await mongoDbClient.getCollection('users');
+    const { password } = user;
+
+    const { salt, hash } = generatePasswordHash(password);
+
+    const insert = {
+      ...user,
+      salt,
+      hash,
+      'user-status': USER_STATUS.ACTIVE,
+      timezone: TIMEZONE.DEFAULT,
+    };
+
+    await userCollection.insertOne(insert);
+
+    console.info('\n\r✅ Successfully created the primary mock loader user.\n\r');
+
+    return true;
+  } catch (error) {
+    throw new Error(`Failed to create mock data user ${user.username} ${String(error)}`);
+    return false;
+  }
+};
 
 /**
  * Generates a valid JSON Web Token (JWT) for a user with two-factor authentication (2FA).

@@ -1,6 +1,6 @@
+const { generatePasswordHash } = require('@ukef/dtfs2-common');
 const api = require('./api');
 const { mongoDbClient: db } = require('../server/drivers/db-client');
-const { genPassword } = require('../server/crypto/utils');
 const databaseHelper = require('./database-helper');
 const { MAKER, CHECKER, ADMIN, READ_ONLY, PAYMENT_REPORT_OFFICER } = require('../server/v1/roles/roles');
 const { DB_COLLECTIONS } = require('./fixtures/constants');
@@ -260,7 +260,7 @@ const loginTestUser = async (as, user) =>
   createLoggedInUserSession(user);
 
 const setUpApiTestUser = async (as) => {
-  const { salt, hash } = genPassword(apiTestUser.password);
+  const { salt, hash } = generatePasswordHash(apiTestUser.password);
 
   const userToCreate = {
     'user-status': STATUS.ACTIVE,

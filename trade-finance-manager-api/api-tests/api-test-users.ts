@@ -1,11 +1,11 @@
 import { WithoutId } from 'mongodb';
 import { cloneDeep } from 'lodash';
-import { USER_STATUS, MONGO_DB_COLLECTIONS, TeamId, TfmUser } from '@ukef/dtfs2-common';
+import { USER_STATUS, MONGO_DB_COLLECTIONS, TeamId, TfmUser, generatePasswordHash } from '@ukef/dtfs2-common';
 import { createApi } from './api';
 import MOCK_USERS from '../server/v1/__mocks__/mock-users';
 import { TestUser } from './types/test-user';
 import { wipeCollection } from './database-helper';
-import { genPassword } from '../server/utils/crypto.util';
+
 import { mongoDbClient } from '../server/drivers/db-client';
 import { TestAs, TestRequestWithoutHeaders } from './types/test-api';
 
@@ -63,7 +63,7 @@ const apiTestUser: MockUserWithoutTokenOrId = {
  * @param user - user to insert
  */
 const createInitialTestUser = async (user: MockUserWithoutTokenOrId) => {
-  const saltHash = genPassword(user.password);
+  const saltHash = generatePasswordHash(user.password);
 
   const userToInsert: WithoutId<TfmUser> = {
     username: user.username,

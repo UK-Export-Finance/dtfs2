@@ -3,8 +3,7 @@ const {
   generatePortalAuditDetails,
   generateNoUserLoggedInAuditDetails,
 } = require('@ukef/dtfs2-common/change-stream');
-const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
-const utils = require('../../crypto/utils');
+const { PORTAL_LOGIN_STATUS, generatePasswordHash } = require('@ukef/dtfs2-common');
 const { login } = require('./login.controller');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
 const { create, update, remove, list, findOne, disable } = require('./controller');
@@ -83,7 +82,7 @@ module.exports.create = async (req, res, next) => {
   let hash = '';
 
   if (password) {
-    const saltHash = utils.genPassword(password);
+    const saltHash = generatePasswordHash(password);
     ({ salt, hash } = saltHash);
   }
 

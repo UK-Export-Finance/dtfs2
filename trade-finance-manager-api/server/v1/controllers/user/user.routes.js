@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
+const { generatePasswordHash } = require('@ukef/dtfs2-common');
 const { generateTfmAuditDetails, generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const utils = require('../../../utils/crypto.util');
 const { userIsDisabled, usernameOrPasswordIncorrect, userIsBlocked } = require('../../../constants/login-results.constant');
 const { create, update, removeTfmUserById, findOne, findByUsername } = require('./user.controller');
 
@@ -44,7 +44,7 @@ module.exports.createTfmUser = (req, res, next) => {
   }
 
   const { password } = userToCreate;
-  const saltHash = utils.genPassword(password);
+  const saltHash = generatePasswordHash(password);
 
   const { salt, hash } = saltHash;
 

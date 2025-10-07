@@ -1,11 +1,10 @@
 const { ObjectId } = require('mongodb');
 const { generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
-const { PAYLOAD_VERIFICATION, DocumentNotDeletedError } = require('@ukef/dtfs2-common');
+const { PAYLOAD_VERIFICATION, DocumentNotDeletedError, generatePasswordHash } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const { USER_STATUS } = require('@ukef/dtfs2-common');
 const { mongoDbClient: db } = require('../../../drivers/db-client');
 const { mapUserData } = require('./helpers/mapUserData.helper');
-const utils = require('../../../utils/crypto.util');
 
 const businessRules = { loginFailureCount: 5 };
 
@@ -91,7 +90,7 @@ exports.update = async (_id, update, auditDetails, callback) => {
       delete userUpdate.currentPassword;
 
       // create new salt/hash for the new password
-      const { salt, hash } = utils.genPassword(newPassword);
+      const { salt, hash } = generatePasswordHash(newPassword);
       // queue update of salt+hash, ie store the encrypted password
       userUpdate.salt = salt;
       userUpdate.hash = hash;
