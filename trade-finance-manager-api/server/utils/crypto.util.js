@@ -30,22 +30,6 @@ function validPassword(password, hash, salt) {
   return crypto.timingSafeEqual(hashAsBuffer, hashVerify);
 }
 
-/**
- *
- * @param {string} password - The password string that the user inputs to the password field in the register form
- *
- * This function takes a plain text password and creates a salt and hash out of it.  Instead of storing the plaintext
- * password in the database, the salt and hash are stored for security
- *
- */
-function genPassword(password) {
-  const salt = crypto.randomBytes(32).toString('hex');
-
-  const genHash = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('hex');
-
-  return { salt, hash: genHash };
-}
-
 function genPasswordResetToken(user) {
   const hash = crypto.pbkdf2Sync(user.email, user.salt, 10000, 64, 'sha512').toString('hex');
 
@@ -80,6 +64,5 @@ function issueJWT(user) {
 }
 
 module.exports.validPassword = validPassword;
-module.exports.genPassword = genPassword;
 module.exports.issueJWT = issueJWT;
 module.exports.genPasswordResetToken = genPasswordResetToken;

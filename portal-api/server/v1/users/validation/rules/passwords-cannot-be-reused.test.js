@@ -1,4 +1,4 @@
-const utils = require('../../../../crypto/utils');
+const { generatePasswordHash } = require('@ukef/dtfs2-common');
 
 const passwordsCannotBeReused = require('./passwordsCannotBeReUsed');
 
@@ -13,7 +13,7 @@ describe('passwords cannot be reused', () => {
       password: 'AAAA',
     };
 
-    const { salt, hash } = utils.genPassword(change.password);
+    const { salt, hash } = generatePasswordHash(change.password);
     const blockedUser = {
       ...user,
       blockedPasswordList: [
