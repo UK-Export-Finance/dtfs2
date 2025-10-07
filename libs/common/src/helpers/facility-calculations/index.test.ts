@@ -413,6 +413,19 @@ describe('GEF drawn amount', () => {
       // Assert
       expect(response).toBe(0);
     });
+
+    it('should return 1 when both cover start and end dates are null for contingent', () => {
+      // Arrange
+      const coverStartDate = null;
+      const coverEndDate = null;
+      const type: GefFacilityType = GEF_FACILITY_TYPE.CONTINGENT;
+
+      // Act
+      const response = calculateDaysOfCover(type, coverStartDate, coverEndDate);
+
+      // Assert
+      expect(response).toBe(1);
+    });
   });
 
   describe('calculateFeeAmount', () => {

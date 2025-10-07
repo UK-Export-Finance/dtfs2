@@ -1,6 +1,7 @@
 import { formatInTimeZone } from 'date-fns-tz';
 import { format, getUnixTime } from 'date-fns';
 import { IsoDateTimeStamp, OneIndexedMonth, UnixTimestampSeconds } from '../types/date';
+import { EPOCH } from '../constants';
 
 /**
  * Returns the current date and time.
@@ -96,3 +97,23 @@ export const convertUnixTimestampWithoutMilliseconds = (unixTimestamp: number): 
  * @returns The formatted date string.
  */
 export const getLongTimeDateFormat = (epoch: number = getEpochMs()): string => format(epoch, "hh:mmaaa 'on' cccc dd MMMM yyyy");
+
+/**
+ * Calculates the difference in days between two epoch timestamps in ms.
+ *
+ * If the difference in milliseconds is greater than or equal to one day,
+ * returns the rounded number of days. Otherwise, returns the raw millisecond difference.
+ *
+ * @param startEpoch - The start time in epoch milliseconds.
+ * @param endEpoch - The end time in epoch milliseconds.
+ * @returns The number of days between the two epochs (rounded), or the millisecond difference if less than one day.
+ */
+export const differenceInDays = (startEpoch: number, endEpoch: number): number => {
+  /**
+   * Get EPOCH difference by diving with `86,400,000 ms`.
+   * Above is derived from 1000 ms * 60 seconds * 60 minutes * 24 hours
+   */
+  const differenceMs = endEpoch - startEpoch;
+  // Only divide if EPOCH in microseconds is greater than or equal to 24 hours
+  return differenceMs >= EPOCH.MS.ONE_DAY ? Math.round(differenceMs / EPOCH.MS.ONE_DAY) : differenceMs;
+};

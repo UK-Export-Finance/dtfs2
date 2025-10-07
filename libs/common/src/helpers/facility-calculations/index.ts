@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
-import { differenceInDays } from 'date-fns';
 
 import { GEF_FACILITY_TYPE, FACILITY_UTILISATION_PERCENTAGE } from '../../constants';
 import { UnixTimestampString, Facility, FacilityType } from '../../types';
+import { differenceInDays } from '../index';
 
 dotenv.config();
 
@@ -69,7 +69,7 @@ export const calculateDaysOfCover = (
 ): number => {
   const startDate = coverStartDate?.toString()?.includes('T') ? new Date(String(coverStartDate)).valueOf() : Number(coverStartDate);
   const endDate = coverEndDate?.toString()?.includes('T') ? new Date(String(coverEndDate)).valueOf() : Number(coverEndDate);
-  const difference = differenceInDays(new Date(endDate), new Date(startDate));
+  const difference = differenceInDays(startDate, endDate);
 
   return type === CONTINGENT ? difference + 1 : difference;
 };
