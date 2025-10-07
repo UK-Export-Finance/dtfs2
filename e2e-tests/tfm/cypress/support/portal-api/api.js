@@ -190,3 +190,18 @@ module.exports.updateGefFacilities = (facilityId, facility, token) =>
       expect(resp.status).to.equal(200);
       return resp.body;
     });
+
+module.exports.listAllDeals = (token) =>
+  cy
+    .request({
+      url: `${api()}/v1/deals`,
+      method: 'GET',
+      headers: {
+        [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
+        Authorization: token,
+      },
+    })
+    .then((resp) => {
+      expect(resp.status).to.equal(200);
+      return resp.body.deals;
+    });

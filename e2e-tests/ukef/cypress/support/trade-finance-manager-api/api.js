@@ -15,24 +15,10 @@ const headers = (token) => ({
   Authorization: token,
 });
 
-module.exports.submitDeal = (dealId, dealType, token) =>
+module.exports.submitDeal = (dealId, dealType, token, checker) =>
   cy
     .request({
       url: `${api()}/v1/deals/submit`,
-      method: 'PUT',
-      body: { dealId, dealType },
-      headers: headers(token),
-    })
-    .then((resp) => {
-      expect(resp.status).to.equal(200);
-      return resp.body;
-    });
-
-// TODO: DTFS2-7112 this endpoint is obsolete and should be removed
-module.exports.submitDealAfterUkefIds = (dealId, dealType, checker, token) =>
-  cy
-    .request({
-      url: `${api()}/v1/deals/submitDealAfterUkefIds`,
       method: 'PUT',
       body: { dealId, dealType, checker },
       headers: headers(token),

@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import { ObjectId } from 'mongodb';
+import { HttpStatusCode } from 'axios';
 import {
   CustomExpressRequest,
   AuditDetails,
@@ -18,7 +19,7 @@ export const deleteDeal = async (req: CustomExpressRequest<{ reqBody: { auditDet
   const { auditDetails } = req.body;
 
   if (!ObjectId.isValid(id)) {
-    return res.status(400).send({ status: 400, message: 'Invalid Deal Id' });
+    return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid Deal Id' });
   }
 
   try {
@@ -31,16 +32,16 @@ export const deleteDeal = async (req: CustomExpressRequest<{ reqBody: { auditDet
         code: error.code,
       });
     }
-    return res.status(500).send({ status: 500, error });
-  }
-
-  const deal = await findOneDeal(id);
-
-  if (!deal) {
-    return res.status(404).send({ status: 404, message: 'Deal not found' });
+    return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, error });
   }
 
   try {
+    const deal = await findOneDeal(id);
+
+    if (!deal) {
+      return res.status(HttpStatusCode.NotFound).send({ status: HttpStatusCode.NotFound, message: 'Deal not found' });
+    }
+
     const deleteResult = await deleteOne({
       documentId: new ObjectId(id),
       collectionName: MONGO_DB_COLLECTIONS.TFM_DEALS,
@@ -50,16 +51,16 @@ export const deleteDeal = async (req: CustomExpressRequest<{ reqBody: { auditDet
 
     await TfmFacilitiesRepo.deleteManyByDealId(deal._id, auditDetails);
 
-    return res.status(200).send(deleteResult);
+    return res.status(HttpStatusCode.Ok).send(deleteResult);
   } catch (error) {
     if (error instanceof DocumentNotDeletedError) {
-      return res.status(404).send({ status: 404, message: 'Deal not found' });
+      return res.status(HttpStatusCode.NotFound).send({ status: HttpStatusCode.NotFound, message: 'Deal not found' });
     }
 
     if (error instanceof DocumentNotFoundError) {
-      return res.status(200).send({ acknowledged: true, deletedCount: 1 });
+      return res.status(HttpStatusCode.Ok).send({ acknowledged: true, deletedCount: 1 });
     }
     console.error('Error deleting deal %o', error);
-    return res.status(500).send({ status: 500, error });
+    return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, error });
   }
 };

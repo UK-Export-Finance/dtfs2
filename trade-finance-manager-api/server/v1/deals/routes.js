@@ -76,8 +76,6 @@ dealsOpenRouter.route('/deals/submit').put(dealSubmit.submitDealPUT);
 
 const dealsAuthRouter = express.Router();
 
-dealsAuthRouter.route('/deals/submitDealAfterUkefIds').put(dealSubmit.submitDealAfterUkefIdsPUT);
-
 dealsAuthRouter.route('/deals').get(dealController.getDeals);
 dealsAuthRouter
   .route('/deals/:dealId')

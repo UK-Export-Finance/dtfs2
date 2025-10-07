@@ -1,56 +1,42 @@
-import { MOCK_DEAL_AIN } from '@ukef/dtfs2-common/test-helpers';
-import createMockDeal from '../../../fixtures/create-mock-deal';
+import {
+  DEAL_WITH_ONLY_1_FACILITY_LOAN_VARS,
+  DEAL_WITH_1_LOAN_AND_BOND_FACILITIES_VARS,
+  DEAL_WITH_ONLY_1_FACILITY_BOND_VARS,
+} from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
-import { FACILITY_TYPE, ALIAS_KEY } from '../../../fixtures/constants';
+import { ALIAS_KEY } from '../../../fixtures/constants';
 import { aliasSelector } from '../../../../../support/alias-selector';
 
 context('User can view and sort deals by product', () => {
   let ALL_SUBMITTED_DEALS = [];
-  let ALL_FACILITIES = [];
+  const ALL_FACILITIES = [];
   let dealWith1FacilityBond;
   let dealWith1FacilityLoan;
   let dealWith1LoanAndBondFacilities;
 
-  const DEAL_WITH_ONLY_1_FACILITY_BOND = createMockDeal({
-    testId: 'DEAL_WITH_ONLY_1_FACILITY_BOND',
-    mockFacilities: [MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === FACILITY_TYPE.BOND)],
-  });
-
-  const DEAL_WITH_ONLY_1_FACILITY_LOAN = createMockDeal({
-    testId: 'DEAL_WITH_ONLY_1_FACILITY_LOAN',
-    mockFacilities: [MOCK_DEAL_AIN.mockFacilities.find((f) => f.type === FACILITY_TYPE.LOAN)],
-  });
-
-  const DEAL_WITH_1_LOAN_AND_BOND_FACILITIES = createMockDeal({
-    testId: 'DEAL_WITH_1_LOAN_AND_BOND_FACILITIES',
-    mockFacilities: MOCK_DEAL_AIN.mockFacilities,
-  });
-
-  const MOCK_DEALS = [DEAL_WITH_ONLY_1_FACILITY_BOND, DEAL_WITH_ONLY_1_FACILITY_LOAN, DEAL_WITH_1_LOAN_AND_BOND_FACILITIES];
-
   before(() => {
     cy.deleteTfmDeals();
 
-    cy.insertManyDeals(MOCK_DEALS, BANK1_MAKER1).then((insertedDeals) => {
-      insertedDeals.forEach((deal) => {
-        const { _id: dealId, mockFacilities } = deal;
+    cy.loadData('deals-sort-by-product');
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((facilities) => {
-          ALL_FACILITIES = [...ALL_FACILITIES, ...facilities];
-        });
-      });
+    cy.listAllDeals(BANK1_MAKER1).then((deals) => {
+      cy.submitManyDeals(deals, T1_USER_1);
 
-      cy.submitManyDeals(insertedDeals, T1_USER_1);
       cy.get(aliasSelector(ALIAS_KEY.SUBMIT_MANY_DEALS)).then((submittedDeals) => {
         ALL_SUBMITTED_DEALS = submittedDeals;
 
-        dealWith1FacilityBond = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.testId === DEAL_WITH_ONLY_1_FACILITY_BOND.testId);
+        dealWith1FacilityBond = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.testId === DEAL_WITH_ONLY_1_FACILITY_BOND_VARS.testId);
+        dealWith1FacilityLoan = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.testId === DEAL_WITH_ONLY_1_FACILITY_LOAN_VARS.testId);
+        dealWith1LoanAndBondFacilities = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.testId === DEAL_WITH_1_LOAN_AND_BOND_FACILITIES_VARS.testId);
 
-        dealWith1FacilityLoan = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.testId === DEAL_WITH_ONLY_1_FACILITY_LOAN.testId);
-
-        dealWith1LoanAndBondFacilities = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.testId === DEAL_WITH_1_LOAN_AND_BOND_FACILITIES.testId);
+        submittedDeals.forEach((deal) => {
+          const { dealSnapshot } = deal;
+          if (dealSnapshot.facilities && dealSnapshot.facilities.length) {
+            ALL_FACILITIES.push(...dealSnapshot.facilities);
+          }
+        });
       });
     });
   });

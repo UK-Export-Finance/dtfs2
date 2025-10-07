@@ -1,5 +1,3 @@
-import { twoDaysAgo, yesterday } from '@ukef/dtfs2-common/test-helpers';
-import createMockDeal from '../../../fixtures/create-mock-deal';
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
@@ -9,35 +7,20 @@ import { aliasSelector } from '../../../../../support/alias-selector';
 context('User can view and sort deals by ukefDealId', () => {
   let ALL_SUBMITTED_DEALS = [];
   let ALL_SUBMITTED_DEALS_SORTED_IN_ASCENDING_ORDER = [];
-  let ALL_FACILITIES = [];
+  const ALL_FACILITIES = [];
   let dealAscending1;
   let dealAscending2;
   let dealDescending1;
   let dealDescending2;
 
-  const DEAL_1 = createMockDeal({
-    submissionDate: twoDaysAgo.unixMillisecondsString,
-  });
-
-  const DEAL_2 = createMockDeal({
-    submissionDate: yesterday.unixMillisecondsString,
-  });
-
-  const MOCK_DEALS = [DEAL_1, DEAL_2];
-
   before(() => {
     cy.deleteTfmDeals();
 
-    cy.insertManyDeals(MOCK_DEALS, BANK1_MAKER1).then((insertedDeals) => {
-      insertedDeals.forEach((deal) => {
-        const { _id: dealId, mockFacilities } = deal;
+    cy.loadData('deals-sort-by-ukef-id');
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((facilities) => {
-          ALL_FACILITIES = [...ALL_FACILITIES, ...facilities];
-        });
-      });
+    cy.listAllDeals(BANK1_MAKER1).then((deals) => {
+      cy.submitManyDeals(deals, T1_USER_1);
 
-      cy.submitManyDeals(insertedDeals, T1_USER_1);
       cy.get(aliasSelector(ALIAS_KEY.SUBMIT_MANY_DEALS)).then((submittedDeals) => {
         ALL_SUBMITTED_DEALS = submittedDeals;
 

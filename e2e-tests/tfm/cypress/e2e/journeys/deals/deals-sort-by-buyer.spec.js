@@ -1,4 +1,4 @@
-import createMockDeal from '../../../fixtures/create-mock-deal';
+import { DEAL_BUYER_A_VARS, DEAL_BUYER_B_VARS } from '@ukef/dtfs2-common/test-helpers';
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
@@ -7,45 +7,30 @@ import { aliasSelector } from '../../../../../support/alias-selector';
 
 context('User can view and sort deals by buyer', () => {
   let ALL_SUBMITTED_DEALS = [];
-  let ALL_FACILITIES = [];
+  const ALL_FACILITIES = [];
   let dealBuyerA;
   let dealBuyerB;
-
-  const DEAL_BUYER_A = createMockDeal({
-    testId: 'DEAL_BUYER_A',
-    submissionDetails: {
-      'buyer-name': 'BUYER A',
-    },
-  });
-
-  const DEAL_BUYER_B = createMockDeal({
-    testId: 'DEAL_BUYER_B',
-    submissionDetails: {
-      'buyer-name': 'BUYER B',
-    },
-  });
-
-  const MOCK_DEALS = [DEAL_BUYER_A, DEAL_BUYER_B];
 
   before(() => {
     cy.deleteTfmDeals();
 
-    cy.insertManyDeals(MOCK_DEALS, BANK1_MAKER1).then((insertedDeals) => {
-      insertedDeals.forEach((deal) => {
-        const { _id: dealId, mockFacilities } = deal;
+    cy.loadData('deals-sort-by-buyer');
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((facilities) => {
-          ALL_FACILITIES = [...ALL_FACILITIES, ...facilities];
-        });
-      });
+    cy.listAllDeals(BANK1_MAKER1).then((deals) => {
+      cy.submitManyDeals(deals, T1_USER_1);
 
-      cy.submitManyDeals(insertedDeals, T1_USER_1);
       cy.get(aliasSelector(ALIAS_KEY.SUBMIT_MANY_DEALS)).then((submittedDeals) => {
         ALL_SUBMITTED_DEALS = submittedDeals;
 
-        dealBuyerA = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.testId === DEAL_BUYER_A.testId);
+        dealBuyerA = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.testId === DEAL_BUYER_A_VARS.testId);
+        dealBuyerB = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.testId === DEAL_BUYER_B_VARS.testId);
 
-        dealBuyerB = ALL_SUBMITTED_DEALS.find((deal) => deal.dealSnapshot.testId === DEAL_BUYER_B.testId);
+        submittedDeals.forEach((deal) => {
+          const { dealSnapshot } = deal;
+          if (dealSnapshot.facilities && dealSnapshot.facilities.length) {
+            ALL_FACILITIES.push(...dealSnapshot.facilities);
+          }
+        });
       });
     });
   });
