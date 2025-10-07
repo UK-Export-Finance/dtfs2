@@ -1,6 +1,6 @@
 services:
   clamav:
-    image: docker-clamav:1.1.2-alpine
+    image: clamav/clamav:stable
     restart: always
     ports:
       - '3310:3310'
