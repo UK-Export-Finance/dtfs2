@@ -149,10 +149,6 @@ exports.create = async (user, userService, auditDetails, callback) => {
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
 
-  delete insert?.autoCreatePassword;
-  delete insert?.password;
-  delete insert?.passwordConfirm;
-
   if (!isVerifiedPayload({ payload: insert, template: PORTAL_USER.CREATE })) {
     return callback('Invalid user payload', user);
   }

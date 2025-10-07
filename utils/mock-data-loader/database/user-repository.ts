@@ -16,7 +16,7 @@ const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY ?? '', 'base64').toStri
  * @returns A promise that resolves to `true` if the user was successfully created.
  * @throws Throws an error if the user creation fails.
  */
-export const createMockDataUser = async (user: PortalUser & { password: string }): Promise<boolean> => {
+export const createMockUser = async (user: PortalUser & { password: string }): Promise<boolean> => {
   try {
     const userCollection = await mongoDbClient.getCollection('users');
     const { password } = user;
@@ -34,6 +34,43 @@ export const createMockDataUser = async (user: PortalUser & { password: string }
     await userCollection.insertOne(insert);
 
     console.info('\n\r✅ Successfully created the primary mock loader user.\n\r');
+
+    return true;
+  } catch (error) {
+    throw new Error(`Failed to create mock data user ${user.username} ${String(error)}`);
+    return false;
+  }
+};
+
+/**
+ * Creates a mock user in the database for testing or development purposes.
+ *
+ * This function takes a `PortalUser` object with an additional `password` property,
+ * generates a password hash and salt, and inserts the user into the 'users' collection
+ * with default status and timezone values.
+ *
+ * @param user - The user object to be inserted, including a plaintext password.
+ * @returns A promise that resolves to `true` if the user was successfully created.
+ * @throws Throws an error if the user creation fails.
+ */
+export const createMockDataUser = async (user: PortalUser & { password: string }): Promise<boolean> => {
+  try {
+    const userCollection = await mongoDbClient.getCollection('users');
+    const { password } = user;
+
+    const { salt, hash } = generatePasswordHash(password);
+
+    const insert = {
+      ...user,
+      salt,
+      hash,
+      'user-status': USER_STATUS.ACTIVE,
+      timezone: TIMEZONE.DEFAULT,
+    };
+
+    await userCollection.insertOne(insert);
+
+    console.info('\n\r✅ Successfully created user %s.\n\r', user.email);
 
     return true;
   } catch (error) {

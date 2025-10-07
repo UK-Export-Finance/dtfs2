@@ -32,7 +32,8 @@ function validPassword(password, hash, salt) {
 }
 
 function genPasswordResetToken(user) {
-  const hash = crypto.pbkdf2Sync(user.email, user.salt, 10000, 64, 'sha512').toString('hex');
+  const salt = user?.salt || '';
+  const hash = crypto.pbkdf2Sync(user.email, salt, 10000, 64, 'sha512').toString('hex');
 
   return {
     hash,

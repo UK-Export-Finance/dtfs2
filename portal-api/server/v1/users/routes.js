@@ -3,7 +3,7 @@ const {
   generatePortalAuditDetails,
   generateNoUserLoggedInAuditDetails,
 } = require('@ukef/dtfs2-common/change-stream');
-const { PORTAL_LOGIN_STATUS, generatePasswordHash } = require('@ukef/dtfs2-common');
+const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const { login } = require('./login.controller');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
 const { create, update, remove, list, findOne, disable } = require('./controller');
@@ -63,8 +63,8 @@ const combineErrors = (listOfErrors) =>
   }, {});
 
 module.exports.create = async (req, res, next) => {
-  const userToCreate = req.body;
-  const errors = await applyCreateRules(userToCreate);
+  const newUser = req.body;
+  const errors = await applyCreateRules(newUser);
 
   if (errors.length) {
     return res.status(400).json({
@@ -75,26 +75,6 @@ module.exports.create = async (req, res, next) => {
       },
     });
   }
-
-  const { password } = userToCreate;
-
-  let salt = '';
-  let hash = '';
-
-  if (password) {
-    const saltHash = generatePasswordHash(password);
-    ({ salt, hash } = saltHash);
-  }
-
-  userToCreate.password = '';
-  userToCreate.passwordConfirm = '';
-
-  const newUser = {
-    ...userToCreate,
-    salt,
-    hash,
-  };
-
   // This is called on the open and auth router ('v1/user' and 'v1/users') endpoints so req.user may be undefined
   const auditDetails = req.user?._id ? generatePortalAuditDetails(req.user._id) : generateNoUserLoggedInAuditDetails();
 
