@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
-import { differenceInDays } from 'date-fns';
 
 import { GEF_FACILITY_TYPE, FACILITY_UTILISATION_PERCENTAGE } from '../../constants';
 import { UnixTimestampString, Facility, FacilityType } from '../../types';
+import { differenceInDays } from '../index';
 
 dotenv.config();
 
@@ -69,22 +69,22 @@ export const calculateDaysOfCover = (
 ): number => {
   const startDate = coverStartDate?.toString()?.includes('T') ? new Date(String(coverStartDate)).valueOf() : Number(coverStartDate);
   const endDate = coverEndDate?.toString()?.includes('T') ? new Date(String(coverEndDate)).valueOf() : Number(coverEndDate);
-  const difference = differenceInDays(new Date(endDate), new Date(startDate));
+  const difference = differenceInDays(startDate, endDate);
 
   return type === CONTINGENT ? difference + 1 : difference;
 };
 
 /**
- * Calculates the fee amount for a facility based on the drawn amount, duration of cover, day count basis, and interest percentage percentage.
+ * Calculates the fee amount for a facility based on the drawn amount, duration of cover, day count basis, and guarantee fee percentage.
  *
  * @param drawnAmount - The amount that has been drawn from the facility.
  * @param daysOfCover - The number of days the cover is provided for.
  * @param dayCountBasis - The basis for day count calculation (e.g., 360 or 365).
- * @param interestPercentage - The interest percentage percentage to be applied.
+ * @param guaranteeFee - The guarantee fee percentage to be applied.
  * @returns The calculated fee amount.
  */
-export const calculateFeeAmount = (drawnAmount: number, daysOfCover: number, dayCountBasis: number, interestPercentage: number): number =>
-  (drawnAmount * daysOfCover * (interestPercentage / 100)) / dayCountBasis;
+export const calculateFeeAmount = (drawnAmount: number, daysOfCover: number, dayCountBasis: number, guaranteeFee: number): number =>
+  (drawnAmount * daysOfCover * (guaranteeFee / 100)) / dayCountBasis;
 
 /**
  * Calculates the GEF facility fee record for a given facility.
@@ -98,11 +98,11 @@ export const calculateFeeAmount = (drawnAmount: number, daysOfCover: number, day
  */
 export const calculateGefFacilityFeeRecord = (facility: Facility) => {
   if (facility.hasBeenIssued) {
-    const { interestPercentage, dayCountBasis, value, coverPercentage, coverStartDate, coverEndDate, type } = facility;
+    const { guaranteeFee, dayCountBasis, value, coverPercentage, coverStartDate, coverEndDate, type } = facility;
 
     const drawnAmount = calculateDrawnAmount(value, coverPercentage, type);
     const daysOfCover = calculateDaysOfCover(type, coverStartDate, coverEndDate);
-    const feeRecord = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, interestPercentage);
+    const feeRecord = calculateFeeAmount(drawnAmount, daysOfCover, dayCountBasis, guaranteeFee);
 
     return feeRecord;
   }

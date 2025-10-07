@@ -1,4 +1,4 @@
-const { differenceInDays } = require('date-fns');
+const { differenceInDays } = require('@ukef/dtfs2-common');
 const { calculateDaysOfCover, calculateFeeAmount, calculateGefFacilityFeeRecord, calculateDrawnAmount, FACILITY_TYPE } = require('@ukef/dtfs2-common');
 
 describe('calculate-gef-facility-fee-record', () => {
@@ -22,7 +22,17 @@ describe('calculate-gef-facility-fee-record', () => {
     it('should return the amount of days between start and end cover dates for a cash facility', () => {
       const result = calculateDaysOfCover(FACILITY_TYPE.CASH, mockCoverStartDate, mockCoverEndDate);
 
-      const expected = differenceInDays(new Date(Number(mockCoverEndDate)), new Date(Number(mockCoverStartDate)));
+      const expected = differenceInDays(new Date(Number(mockCoverStartDate)), new Date(Number(mockCoverEndDate)));
+
+      expect(result).toEqual(expected);
+      expect(typeof result).toEqual('number');
+    });
+
+    it('should return the amount of days between start and end cover dates for a contingent facility', () => {
+      const result = calculateDaysOfCover(FACILITY_TYPE.CONTINGENT, mockCoverStartDate, mockCoverEndDate);
+
+      // Adding an additional day for contingent facility
+      const expected = differenceInDays(new Date(Number(mockCoverStartDate)), new Date(Number(mockCoverEndDate))) + 1;
 
       expect(result).toEqual(expected);
       expect(typeof result).toEqual('number');
@@ -61,7 +71,7 @@ describe('calculate-gef-facility-fee-record', () => {
 
       const drawnAmount = calculateDrawnAmount(mockFacilityValue, mockCoverPercentage, mockType);
       const daysOfCover = calculateDaysOfCover(FACILITY_TYPE.CASH, mockCoverStartDate, mockCoverEndDate);
-      const expected = calculateFeeAmount(drawnAmount, daysOfCover, mockFacility.dayCountBasis, mockInterestPercentage);
+      const expected = calculateFeeAmount(drawnAmount, daysOfCover, mockFacility.dayCountBasis, mockGuaranteeFee);
 
       expect(result).toEqual(expected);
     });
