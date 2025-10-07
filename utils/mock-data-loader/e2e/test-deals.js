@@ -6,6 +6,13 @@ const { dealsSortByReceivedDate } = require('./deals-sort-by-received-date');
 const { dealsSortByStage } = require('./deals-sort-by-stage');
 const { dealsSortByUkefId } = require('./deals-sort-by-ukef-id');
 
+/**
+ * checks if params contain keywords to run specific deal tests
+ * these deals are inserted for certain TFM e2e tests
+ * returns BSS and GEF deals and facilities
+ * @param {String[]} params - the passed params in the script call eg --e2e --deal-search
+ * @returns {object} object with BSS and GEF deals and facilities
+ */
 exports.testDeals = (params) => {
   if (params.includes('deal-search')) {
     return dealsSearchDeals();
