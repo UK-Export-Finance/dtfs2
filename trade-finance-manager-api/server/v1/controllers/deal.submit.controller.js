@@ -249,38 +249,6 @@ const submitDealBeforeUkefIds = async (dealId, dealType, checker, auditDetails) 
 exports.submitDealBeforeUkefIds = submitDealBeforeUkefIds;
 
 /**
- * Handles a PUT request to submit a deal after validating the deal ID, deal type, and checker.
- * Calls the `submitDealAfterUkefIds` function to process the deal submission and returns the updated deal if successful.
- * @param {object} req - The request object containing the request body with `dealId`, `dealType`, and `checker` properties.
- * @param {object} res - The response object representing the response object with `status` and `send` methods.
- * @returns {Promise<Response>} A promise that resolves with the updated deal or rejects with an error.
- */
-// TODO: DTFS2-7112 this endpoint is obsolete and should be removed
-const submitDealAfterUkefIdsPUT = async (req, res) => {
-  try {
-    const { dealId, dealType, checker } = req.body;
-
-    if (!ObjectId.isValid(checker?._id)) {
-      return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid checker _id' });
-    }
-
-    const deal = await submitDealAfterUkefIds(dealId, dealType, checker, generatePortalAuditDetails(checker._id));
-
-    if (!deal) {
-      console.error('Deal does not exist in TFM %s', dealId);
-      return res.status(HttpStatusCode.NotFound).send();
-    }
-
-    return res.status(HttpStatusCode.Ok).send(deal);
-  } catch (error) {
-    console.error('❌ Unable to submit deal with IDs to TFM %o', error);
-    return res.status(HttpStatusCode.InternalServerError).send();
-  }
-};
-
-exports.submitDealAfterUkefIdsPUT = submitDealAfterUkefIdsPUT;
-
-/**
  * Handles the submission of a deal to TFM (Trade Finance Manager).
  * @param {object} req - The request object.
  * @param {object} res - The response object.
