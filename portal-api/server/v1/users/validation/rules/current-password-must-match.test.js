@@ -1,9 +1,9 @@
+const { generatePasswordHash } = require('@ukef/dtfs2-common');
 const currentPasswordMustMatch = require('./currentPasswordMustMatch');
-const utils = require('../../../../crypto/utils');
 
 const password = 'AbC!2345';
 
-const user = utils.genPassword(password);
+const user = generatePasswordHash(password);
 
 const errorResult = [
   {

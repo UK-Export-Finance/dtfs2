@@ -1,4 +1,4 @@
-const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError, TIMEZONE } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, DocumentNotDeletedError, TIMEZONE, generatePasswordHash } = require('@ukef/dtfs2-common');
 const { PORTAL_USER } = require('@ukef/dtfs2-common/schemas');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const { ObjectId } = require('mongodb');
@@ -213,7 +213,7 @@ exports.update = async (_id, update, auditDetails, callback) => {
       delete userSetUpdate.currentPassword;
 
       // create new salt/hash for the new password
-      const { salt, hash } = utils.genPassword(newPassword);
+      const { salt, hash } = generatePasswordHash(newPassword);
       // queue update of salt+hash, ie store the encrypted password
       userSetUpdate.salt = salt;
       userSetUpdate.hash = hash;

@@ -3,6 +3,7 @@ jest.mock('./sanitizeUserData');
 jest.mock('../email');
 jest.mock('@ukef/dtfs2-common/payload-verification');
 jest.mock('../../crypto/utils');
+
 const { ObjectId } = require('mongodb');
 const { when, resetAllWhenMocks } = require('jest-when');
 const { generateNoUserLoggedInAuditDetails, generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
@@ -132,7 +133,6 @@ describe('user controller', () => {
           findOne: jest.fn().mockImplementation(async (id, findOneCallback) => await findOneCallback(null, TEST_DATABASE_USER)),
           findOneAndUpdate: jest.fn().mockResolvedValue(TEST_DATABASE_USER),
         });
-      utils.genPassword.mockReturnValue({ salt: '01', hash: '02' });
     }
   });
 

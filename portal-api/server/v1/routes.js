@@ -175,30 +175,6 @@ openRouter.route('/feedback').post(checkApiKey, feedback.create);
 
 /**
  * @openapi
- * /user:
- *    post:
- *      summary: Create user for mock data loader
- *      tags: [Portal]
- *      description: Create a new user. This route is intended for use by the mock data loader only.
- *      parameters:
- *      requestBody:
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                userToCreate:
- *                  type: object
- *      responses:
- *        201:
- *          description: User created successfully
- *        400:
- *          description: Invalid user data
- */
-openRouter.route('/user').post(checkApiKey, users.create);
-
-/**
- * @openapi
  * /users/:userId/sign-in-link/:signInToken/login:
  *    post:
  *      summary: Login with sign in link

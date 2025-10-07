@@ -11,7 +11,6 @@ const mockDataLoaderUser = {
   roles: [ROLES.MAKER, ROLES.ADMIN],
   email: 're-insert-mocks-data-loader@ukexportfinance.gov.uk',
   bank: { id: '*' },
-  timezone: 'Europe/London',
   isTrusted: false,
 };
 
@@ -30,8 +29,8 @@ const createAndLogInAsInitialUser = async () => {
   try {
     return await api.loginViaPortal(mockDataLoaderUser);
   } catch (error) {
-    console.error('❌ Login failed for initial user %o, recreating.', error);
-    await api.createInitialUser(mockDataLoaderUser);
+    console.error('❌ Login failed for initial user, creating initial user');
+    await api.createMockLoaderUser(mockDataLoaderUser);
     return api.loginViaPortal(mockDataLoaderUser);
   }
 };

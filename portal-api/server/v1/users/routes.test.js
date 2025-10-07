@@ -19,11 +19,11 @@ jest.mock('./validation', () => ({
 
 const { ObjectId } = require('mongodb');
 const { when } = require('jest-when');
+const { generatePasswordHash } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { generateMockPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { getUserByPasswordToken } = require('./reset-password.controller');
 const { resetPasswordWithToken, loginWithSignInLink, updateById } = require('./routes');
-const utils = require('../../crypto/utils');
 const { ADMIN } = require('../roles/roles');
 const { USER } = require('../../constants');
 
@@ -38,7 +38,7 @@ describe('users routes', () => {
     const resetPwdToken = 'token';
     const oldPassword = 'Old-password1';
     const newPassword = 'New-password1';
-    const { salt: currentSalt, hash: currentHash } = utils.genPassword(oldPassword);
+    const { salt: currentSalt, hash: currentHash } = generatePasswordHash(oldPassword);
 
     const req = {
       params: { resetPwdToken },

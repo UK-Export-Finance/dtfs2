@@ -3,13 +3,13 @@ const { HEADERS } = require('@ukef/dtfs2-common');
 require('dotenv').config();
 
 const { gef } = require('./gef/api');
-const { createLoggedInUserSession } = require('./database/user-repository');
+const { createMockDataUser, createLoggedInUserSession } = require('./database/user-repository');
 const FailedToCreateUserError = require('./errors/failed-to-create-user.error');
 const ApiError = require('./errors/api.error');
 const FailedToDeleteBankError = require('./errors/failed-to-delete-bank.error');
 const FailedToGetBanksError = require('./errors/get-banks.error');
 
-const { PORTAL_API_URL, PORTAL_API_KEY, TFM_API_URL, TFM_API_KEY } = process.env;
+const { PORTAL_API_URL, TFM_API_URL, TFM_API_KEY } = process.env;
 
 const createBank = async (bank, token) => {
   const response = await axios({
@@ -163,20 +163,14 @@ const createUser = async (user, token) => {
   return response.data;
 };
 
-const createInitialUser = async (user) => {
-  const response = await axios({
-    method: 'post',
-    headers: {
-      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
-      'x-api-key': PORTAL_API_KEY,
-      Accepts: 'application/json',
-    },
-    url: `${PORTAL_API_URL}/v1/user`,
-    data: user,
-  });
-
-  return response.data;
-};
+/**
+ * Creates a mock loader user by delegating to the createMockDataUser function.
+ *
+ * @async
+ * @param {Object} user - The user object to create mock data for.
+ * @returns {Promise<Object>} A promise that resolves to the created mock user data.
+ */
+const createMockLoaderUser = async (user) => createMockDataUser(user);
 
 const createInitialTfmUser = async (user) => {
   await axios({
@@ -510,7 +504,7 @@ module.exports = {
   createMandatoryCriteria,
   createEligibilityCriteria,
   createUser,
-  createInitialUser,
+  createMockLoaderUser,
   deleteBank,
   deleteCurrency,
   deleteCountry,
