@@ -18,9 +18,11 @@ const findOneDeal = async (_id, callback) => {
 
     if (deal) {
       if (deal?.dealSnapshot?.dealType === DEALS.DEAL_TYPE.GEF) {
+        const { dealSnapshot } = deal;
+
         returnDeal = {
           ...deal,
-          dealSnapshot: deal.dealSnapshot,
+          dealSnapshot,
         };
       } else {
         if (deal?.dealSnapshot?.facilities?.length) {

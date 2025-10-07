@@ -80,4 +80,5 @@ Cypress.Commands.add('forceVisit', (url) => {
   cy.window().then((win) => win.open(url, '_self'));
 });
 
+Cypress.Commands.add('submitDeal', require('./trade-finance-manager-api/submitDeal'));
 Cypress.Commands.add('submitManyDeals', require('./trade-finance-manager-api/submitManyDeals'));

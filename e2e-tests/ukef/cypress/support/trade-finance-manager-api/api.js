@@ -15,12 +15,12 @@ const headers = (token) => ({
   Authorization: token,
 });
 
-module.exports.submitDeal = (dealId, dealType, token) =>
+module.exports.submitDeal = (dealId, dealType, token, checker) =>
   cy
     .request({
       url: `${api()}/v1/deals/submit`,
       method: 'PUT',
-      body: { dealId, dealType },
+      body: { dealId, dealType, checker },
       headers: headers(token),
     })
     .then((resp) => {
