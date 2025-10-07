@@ -21,8 +21,6 @@ describe('password', () => {
   });
 
   it('should crypto functions when generating salt and hash', () => {
-    // Arrange
-
     // Act
     generatePasswordHash(mockPassword);
 
@@ -35,8 +33,6 @@ describe('password', () => {
   });
 
   it("should generate password's salt and hash when supplied with a string password", () => {
-    // Arrange
-
     // Act
     const result = generatePasswordHash(mockPassword);
 
