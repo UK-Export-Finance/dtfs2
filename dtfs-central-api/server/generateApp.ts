@@ -1,7 +1,7 @@
 import express, { Express } from 'express';
 import compression from 'compression';
 import mongoSanitise from 'express-mongo-sanitize';
-import { MAX_REQUEST_SIZE, maintenance } from '@ukef/dtfs2-common';
+import { MAX_REQUEST_SIZE, xss, maintenance } from '@ukef/dtfs2-common';
 import { seo, security, checkApiKey, createRateLimit } from './v1/routes/middleware';
 
 import { ROUTES } from './constants';
@@ -23,6 +23,7 @@ export const generateApp = (): Express => {
   app.use(`/v1/${SWAGGER_ROUTE}`, swaggerRoutes);
 
   app.use(security);
+  app.use(xss);
 
   /**
    * Scheduled maintenance middleware.

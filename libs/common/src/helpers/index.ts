@@ -53,3 +53,4 @@ export * from './is-maintenance-active';
 export * from './get-maintenance-timestamp';
 export * from './is-https';
 export * from './crypto';
+export * from './xss';
