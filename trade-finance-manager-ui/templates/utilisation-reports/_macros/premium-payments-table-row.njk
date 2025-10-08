@@ -53,7 +53,7 @@
         data-cy="premium-payments-table-row--feeRecordId-{{ feeRecord.id }} premium-payments-table-row--exporter-{{ feeRecord.exporter }}"
         aria-hidden={{ not isFirstFeeRecordInGroup }}>
       <td class="govuk-visually-hidden" data-cy="hidden-record-details">
-        {{ (hiddenRecordDetailsListHtml | safe) if isFirstFeeRecordInGroup }}
+        {{ (hiddenRecordDetailsListHtml) if isFirstFeeRecordInGroup }}
       </td>
       <th aria-hidden="true"
           scope="row"
@@ -83,7 +83,7 @@
       </td>
       <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}"
           data-cy="payments-received">
-        {{ (paymentsReceivedHtml | safe) }}
+        {{ (paymentsReceivedHtml) }}
       </td>
       <td class="govuk-table__cell govuk-table__cell--numeric{{ " no-border" if not isLastFeeRecordInGroup }}"
           data-sort-value="{{ totalPaymentsReceived.dataSortValue }}"
