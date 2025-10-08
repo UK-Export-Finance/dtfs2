@@ -11,7 +11,7 @@ import { RequestInput } from '../types';
  * @param input - The input to sanitize. Can be a string, array, or object.
  * @returns The sanitized input, matching the original input type, or `null` for unsupported types.
  */
-export const clean = (input: RequestInput): RequestInput => {
+export const xssClean = (input: RequestInput): RequestInput => {
   const options = {
     allowedTags: [],
     allowedAttributes: {},
@@ -26,7 +26,7 @@ export const clean = (input: RequestInput): RequestInput => {
   const isArray = Array.isArray(input);
 
   if (isArray) {
-    return input.map((element: string) => clean(element));
+    return input.map((element: string) => xssClean(element));
   }
 
   const isObject = typeof input === 'object' && input !== null;
@@ -36,7 +36,7 @@ export const clean = (input: RequestInput): RequestInput => {
     const cleaned: Record<string, RequestInput> = {};
 
     for (const [key, value] of keys) {
-      cleaned[String(key)] = clean(String(value));
+      cleaned[String(key)] = xssClean(String(value));
     }
 
     return cleaned;
