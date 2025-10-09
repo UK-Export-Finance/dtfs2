@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { xssClean } from '../../helpers';
+import { xssClean, hasEntries } from '../../helpers';
 
 /**
  * Express middleware to sanitize request parameters, body, and query against XSS attacks.
@@ -14,15 +14,15 @@ import { xssClean } from '../../helpers';
  */
 export const xss = (req: Request, _res: Response, next: NextFunction) => {
   try {
-    if (req.params) {
+    if (hasEntries(req.params)) {
       req.params = xssClean(req.params) as typeof req.params;
     }
 
-    if (req.body) {
+    if (hasEntries(req.body)) {
       req.body = xssClean(req.body as Record<string, unknown>) as Record<string, unknown>;
     }
 
-    if (req.query) {
+    if (hasEntries(req.query)) {
       req.query = xssClean(req.query) as typeof req.query;
     }
   } catch (error) {
