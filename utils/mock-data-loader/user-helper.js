@@ -25,18 +25,16 @@ const mockDataLoaderTFMUser = {
 };
 
 const createAndLogInAsInitialUser = async () => {
-  console.info('Initial user');
   try {
     return await api.loginViaPortal(mockDataLoaderUser);
   } catch (error) {
-    console.error('❌ Login failed for initial user, creating initial user');
+    console.error('❌ Login failed for primary mock loader user, creating primary mock loader user');
     await api.createMockLoaderUser(mockDataLoaderUser);
     return api.loginViaPortal(mockDataLoaderUser);
   }
 };
 
 const deleteInitialUser = async (token) => {
-  console.info('Initial user');
   const allUsers = await api.listUsers(token);
   const userToDelete = allUsers.find((user) => user.username === mockDataLoaderUser.username);
   await api.deleteUser(userToDelete, token);
@@ -44,7 +42,6 @@ const deleteInitialUser = async (token) => {
 
 const createAndLogInAsInitialTfmUser = async () => {
   try {
-    console.info('Initial user');
     const token = await api.loginTfmUser(mockDataLoaderTFMUser);
 
     if (!token) {
@@ -56,14 +53,13 @@ const createAndLogInAsInitialTfmUser = async () => {
 
     return token;
   } catch (error) {
-    console.error('❌ Login failed for initial user %o, recreating.');
+    console.error('❌ Login failed for primary TFM mock loader user %o, recreating.');
     await api.createInitialTfmUser(mockDataLoaderTFMUser);
     return api.loginTfmUser(mockDataLoaderTFMUser);
   }
 };
 
 const deleteInitialTFMUser = async (token) => {
-  console.info('Initial user');
   const allUsers = await tfmApi.listUsers(token);
   const userToDelete = allUsers.filter((user) => user.username === 're-insert-mocks');
 
