@@ -23,7 +23,6 @@ export const generateApp = (): Express => {
   app.use(`/v1/${SWAGGER_ROUTE}`, swaggerRoutes);
 
   app.use(security);
-  app.use(xss);
 
   /**
    * Scheduled maintenance middleware.
@@ -37,6 +36,7 @@ export const generateApp = (): Express => {
   app.use(compression());
   app.use(removeCsrfToken);
   app.use(createRateLimit());
+  app.use(xss);
   // MongoDB sanitisation
   app.use(
     mongoSanitise({
