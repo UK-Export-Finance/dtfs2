@@ -32,11 +32,17 @@ export const xssClean = (input: RequestInput): RequestInput => {
   const isObject = typeof input === 'object' && input !== null;
 
   if (isObject) {
+    const hasEntries = Object.entries(input).length;
+
+    if (!hasEntries) {
+      return input;
+    }
+
     const keys = Object.keys(input);
     const cleaned: Record<string, RequestInput> = {};
 
     for (const key of keys) {
-      cleaned[String(key)] = xssClean(String(input[key]));
+      cleaned[String(key)] = xssClean(input[key] as RequestInput);
     }
 
     return cleaned;
