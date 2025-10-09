@@ -155,6 +155,7 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
           const newReportedFee = '12345.67';
           const newReportedCurrency = CURRENCY.JPY;
           const additionalComments = 'Some additional comments & Some more additional comments';
+          const expectedComments = 'Some additional comments &amp; Some more additional comments';
 
           beforeEach(() => {
             const matchingTfmFacility = {
@@ -185,7 +186,7 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
             provideCorrection.facilityIdInput().should('have.value', newFacilityId);
             provideCorrection.reportedFeeInput().should('have.value', getFormattedMonetaryValue(newReportedFee));
             provideCorrection.reportedCurrency.radioInput(newReportedCurrency).should('be.checked');
-            provideCorrection.additionalComments.input().should('have.value', additionalComments);
+            provideCorrection.additionalComments.input().should('have.value', expectedComments);
           });
 
           it('should retain the values entered by the user when they return to the page via the review page change link', () => {
@@ -194,7 +195,7 @@ context('Provide correction - Fee record correction feature flag enabled', () =>
             provideCorrection.facilityIdInput().should('have.value', newFacilityId);
             provideCorrection.reportedFeeInput().should('have.value', getFormattedMonetaryValue(newReportedFee));
             provideCorrection.reportedCurrency.radioInput(newReportedCurrency).should('be.checked');
-            provideCorrection.additionalComments.input().should('have.value', additionalComments);
+            provideCorrection.additionalComments.input().should('have.value', expectedComments);
           });
 
           it('should NOT retain the values entered by the user when they navigate away and restart the journey', () => {
