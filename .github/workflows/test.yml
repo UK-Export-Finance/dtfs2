@@ -196,7 +196,7 @@ jobs:
 
       - name: Timestamp
         id: timestamp
-        run: echo "epoch=$(date + '%Y%m%d%H%M%S')" >> "$GITHUB_OUTPUT"
+        run: echo "epoch=$(date +%s)" >> "$GITHUB_OUTPUT"
 
   # 2.1. API tests
   api-tests:
