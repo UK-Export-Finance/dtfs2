@@ -47,10 +47,12 @@ describe('PORTAL_USER', () => {
         {
           parameterPath: 'salt',
           type: 'string',
+          options: { isOptional: true },
         },
         {
           parameterPath: 'hash',
           type: 'string',
+          options: { isOptional: true },
         },
         {
           parameterPath: 'auditRecord',
