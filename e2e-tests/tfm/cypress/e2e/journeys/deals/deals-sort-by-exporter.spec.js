@@ -1,4 +1,3 @@
-import createMockDeal from '../../../fixtures/create-mock-deal';
 import relative from '../../relativeURL';
 import pages from '../../pages';
 import { T1_USER_1, BANK1_MAKER1 } from '../../../../../e2e-fixtures';
@@ -7,36 +6,20 @@ import { aliasSelector } from '../../../../../support/alias-selector';
 
 context('User can view and sort deals by exporter', () => {
   let ALL_SUBMITTED_DEALS = [];
-  let ALL_FACILITIES = [];
+  const ALL_FACILITIES = [];
   let dealAscending1;
   let dealAscending2;
   let dealDescending1;
   let dealDescending2;
 
-  // Exporter (called supplier-name in a BSS deal), is generated automatically with mock data and deal ID.
-  const DEAL_A_SUPPLIER = createMockDeal({
-    testId: 'DEAL_A_SUPPLIER',
-  });
-
-  const DEAL_B_SUPPLIER = createMockDeal({
-    testId: 'DEAL_B_SUPPLIER',
-  });
-
-  const MOCK_DEALS = [DEAL_A_SUPPLIER, DEAL_B_SUPPLIER];
-
   before(() => {
     cy.deleteTfmDeals();
 
-    cy.insertManyDeals(MOCK_DEALS, BANK1_MAKER1).then((insertedDeals) => {
-      insertedDeals.forEach((deal) => {
-        const { _id: dealId, mockFacilities } = deal;
+    cy.loadData('deals-sort-by-exporter');
 
-        cy.createFacilities(dealId, mockFacilities, BANK1_MAKER1).then((facilities) => {
-          ALL_FACILITIES = [...ALL_FACILITIES, ...facilities];
-        });
-      });
+    cy.listAllDeals(BANK1_MAKER1).then((deals) => {
+      cy.submitManyDeals(deals, T1_USER_1);
 
-      cy.submitManyDeals(insertedDeals, T1_USER_1);
       cy.get(aliasSelector(ALIAS_KEY.SUBMIT_MANY_DEALS)).then((submittedDeals) => {
         // sort by ascending order
         ALL_SUBMITTED_DEALS = submittedDeals.sort((a, b) => {
@@ -50,6 +33,13 @@ context('User can view and sort deals by exporter', () => {
 
         dealDescending1 = dealAscending2;
         dealDescending2 = dealAscending1;
+
+        submittedDeals.forEach((deal) => {
+          const { dealSnapshot } = deal;
+          if (dealSnapshot.facilities && dealSnapshot.facilities.length) {
+            ALL_FACILITIES.push(...dealSnapshot.facilities);
+          }
+        });
       });
     });
   });

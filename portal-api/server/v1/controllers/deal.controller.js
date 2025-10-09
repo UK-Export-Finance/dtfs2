@@ -225,6 +225,7 @@ const queryAllDeals = async (filters = {}, sort = {}, start = 0, pagesize = 0) =
           // exporter in lowercase for sorting
           lowerExporter: { $toLower: '$exporter.companyName' },
           updatedAt: { $toDouble: '$updatedAt' },
+          dealType: '$dealType',
         },
       },
       {

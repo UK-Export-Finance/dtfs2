@@ -78,6 +78,10 @@ module.exports = (app) => ({
 
       get: async (url, query = {}) => request(app).get(url).set(headers).query(query),
 
+      getWithBody: (data) => ({
+        to: async (url) => request(app).get(url).set(headers).send(data),
+      }),
+
       remove: (data) => ({
         to: async (url) => request(app).delete(url).set(headers).send(data),
       }),

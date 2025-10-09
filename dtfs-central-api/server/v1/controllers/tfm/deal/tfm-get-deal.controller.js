@@ -9,66 +9,73 @@ const findOneDeal = async (_id, callback) => {
     throw new Error('Invalid Deal Id');
   }
 
-  const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
+  try {
+    const dealsCollection = await db.getCollection(MONGO_DB_COLLECTIONS.TFM_DEALS);
 
-  const deal = await dealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
-  let returnDeal = deal;
-  let facilityIds = [];
+    const deal = await dealsCollection.findOne({ _id: { $eq: ObjectId(_id) } });
+    let returnDeal = deal;
+    let facilityIds = [];
 
-  if (deal) {
-    if (deal?.dealSnapshot?.dealType === DEALS.DEAL_TYPE.GEF) {
-      returnDeal = {
-        ...deal,
-        dealSnapshot: deal.dealSnapshot,
-      };
-    } else {
-      if (deal?.dealSnapshot?.facilities?.length) {
-        facilityIds = deal.dealSnapshot.facilities.map((facility) => ObjectId(facility._id));
-      }
-
-      if (facilityIds?.length > 0) {
-        const mappedDeal = deal.dealSnapshot;
-        const mappedBonds = [];
-        const mappedLoans = [];
-        const facilities = await TfmFacilitiesRepo.findByIds(facilityIds);
-
-        facilityIds.forEach((id) => {
-          const { facilitySnapshot } = facilities.find((f) => f._id.toHexString() === id.toHexString());
-
-          if (facilitySnapshot) {
-            const { type } = facilitySnapshot;
-
-            if (type === FACILITY_TYPE.BOND) {
-              mappedBonds.push(facilitySnapshot);
-            }
-
-            if (type === FACILITY_TYPE.LOAN) {
-              mappedLoans.push(facilitySnapshot);
-            }
-          }
-        });
-
-        mappedDeal.bondTransactions = {
-          items: mappedBonds,
-        };
-
-        mappedDeal.loanTransactions = {
-          items: mappedLoans,
-        };
+    if (deal) {
+      if (deal?.dealSnapshot?.dealType === DEALS.DEAL_TYPE.GEF) {
+        const { dealSnapshot } = deal;
 
         returnDeal = {
           ...deal,
-          dealSnapshot: mappedDeal,
+          dealSnapshot,
         };
+      } else {
+        if (deal?.dealSnapshot?.facilities?.length) {
+          facilityIds = deal.dealSnapshot.facilities.map((facility) => ObjectId(facility._id));
+        }
+
+        if (facilityIds?.length > 0) {
+          const mappedDeal = deal.dealSnapshot;
+          const mappedBonds = [];
+          const mappedLoans = [];
+          const facilities = await TfmFacilitiesRepo.findByIds(facilityIds);
+
+          facilityIds.forEach((id) => {
+            const { facilitySnapshot } = facilities.find((f) => f._id.toHexString() === id.toHexString());
+
+            if (facilitySnapshot) {
+              const { type } = facilitySnapshot;
+
+              if (type === FACILITY_TYPE.BOND) {
+                mappedBonds.push(facilitySnapshot);
+              }
+
+              if (type === FACILITY_TYPE.LOAN) {
+                mappedLoans.push(facilitySnapshot);
+              }
+            }
+          });
+
+          mappedDeal.bondTransactions = {
+            items: mappedBonds,
+          };
+
+          mappedDeal.loanTransactions = {
+            items: mappedLoans,
+          };
+
+          returnDeal = {
+            ...deal,
+            dealSnapshot: mappedDeal,
+          };
+        }
       }
     }
-  }
 
-  if (callback) {
-    callback(returnDeal);
-  }
+    if (callback) {
+      callback(returnDeal);
+    }
 
-  return returnDeal;
+    return returnDeal;
+  } catch (error) {
+    console.error('Error finding deal: %o', error);
+    throw new Error('Error finding deal');
+  }
 };
 exports.findOneDeal = findOneDeal;
 

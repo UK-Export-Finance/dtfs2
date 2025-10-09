@@ -1,6 +1,6 @@
 services:
   clamav:
-    image: mkodockx/docker-clamav:alpine
+    image: clamav/clamav:stable
     restart: always
     ports:
       - '3310:3310'

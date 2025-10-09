@@ -39,3 +39,6 @@ Cypress.Commands.add('deleteTfmDeals', require('./central-api/deleteTfmDeals'));
 Cypress.Commands.add('updateTFMDeal', require('./central-api/updateTFMDeal'));
 
 Cypress.Commands.add('submitDealCancellation', submitDealCancellation);
+Cypress.Commands.add('listAllDeals', require('./portal-api/listAllDeals'));
+
+Cypress.Commands.add('loadData', require('./utils/loadData'));
