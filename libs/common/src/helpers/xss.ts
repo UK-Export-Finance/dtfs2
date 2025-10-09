@@ -15,6 +15,7 @@ export const xssClean = (input: RequestInput): RequestInput => {
   const options = {
     allowedTags: [],
     allowedAttributes: {},
+    textFilter: (text: string) => text.replace(/&amp;/g, '&'),
   };
 
   const isString = typeof input === 'string';
