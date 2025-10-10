@@ -10,11 +10,11 @@
         data-cy="loan-bank-reference-number-link-{{ loan._id }}"
         title="Loan {{ loan.name }}"
         aria-label="Loan {{ loan.name }}">
-        {{ loan.name | safe }}
+        {{ loan.name }}
       </a>
     {% else %}
       <span data-cy="loan-bank-reference-number-{{ loan._id }}">
-        {{ loan.name | safe }}
+        {{ loan.name }}
       </span>
     {% endif %}
   {% else %}

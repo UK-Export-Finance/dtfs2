@@ -31,32 +31,32 @@
             {% for bond in bonds %}
               <tr class="govuk-table__row" data-cy="bond-{{ bond._id }}" id="{{ bond._id }}">
                 <td class="govuk-table__cell govuk-!-font-size-14">
-                  {{ bondLink.render(params, bond) | safe }}
+                  {{ bondLink.render(params, bond) }}
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-ukef-facility-id-{{ bond._id }}">
-                  {{ bond.ukefFacilityId | safe }}
+                  {{ bond.ukefFacilityId }}
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14 contract-table--status-cell" data-cy="bond-status-{{ bond._id}}">
-                  {{ statusTag.render(bond.status) | safe }}
+                  {{ statusTag.render(bond.status) }}
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-facility-value">
-                  {{ bond.currency.id | safe }} {{ bond.value | safe }}
+                  {{ bond.currency.id }} {{ bond.value }}
                 </td>
 
-                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="facility-stage-{{ bond._id}}">{{ bond.facilityStage | safe }}</td>
+                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="facility-stage-{{ bond._id}}">{{ bond.facilityStage }}</td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-requested-cover-start-date-{{ bond._id }}">
                   {% if bond.requestedCoverStartDate %}
-                    {{ bond.requestedCoverStartDate | localiseTimestamp('dd/MM/yyyy', params.user.timezone) | safe }}
+                    {{ bond.requestedCoverStartDate | localiseTimestamp('dd/MM/yyyy', params.user.timezone) }}
                   {% endif %}
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="bond-cover-end-date-{{ bond._id}}">
                    {% if bond.coverEndDate %}
-                  {{ bond.coverEndDate | localiseTimestamp('dd/MM/yyyy', params.user.timezone) | safe }}
+                  {{ bond.coverEndDate | localiseTimestamp('dd/MM/yyyy', params.user.timezone) }}
                 {% endif %}
                 </td>
 
