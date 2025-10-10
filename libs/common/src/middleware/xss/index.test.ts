@@ -116,6 +116,9 @@ describe('xss', () => {
     const { res } = httpMocks.createMocks({ url: 'http://localhost:500/valid' });
     const mockError = new TypeError("Cannot read properties of null (reading 'params')");
 
+    /**
+     * Adding ts-ignore when supplying an invalid type request
+     */
     // @ts-ignore
     xss(null, res, next);
 

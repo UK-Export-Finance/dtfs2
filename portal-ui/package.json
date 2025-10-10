@@ -44,7 +44,7 @@
     "clamscan": "^2.4.0",
     "connect-flash": "0.1.1",
     "cookie-parser": "^1.4.7",
-    "core-js": "^3.45.1",
+    "core-js": "^3.46.0",
     "csv-parser": "^3.2.0",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.1",
