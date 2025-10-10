@@ -39,7 +39,7 @@
         data-sort-value="{{ payment.amount.dataSortValue }}"
         data-cy="payment-currency-and-amount"
       >
-        {{ (paymentAmountHtml) if isFirstLineOfRow }}
+        {{ ( paymentAmountHtml | safe ) if isFirstLineOfRow }}
       </td>
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" data-cy="payment-reference" data-sort-value="{{ payment.reference }}">{{ payment.reference if isFirstLineOfRow }}</td>
       <td class="govuk-table__cell{{ " no-border" if not isLastLineOfRow }}" aria-hidden="true" data-cy="facility-id">{{ feeRecord.facilityId }}</td>

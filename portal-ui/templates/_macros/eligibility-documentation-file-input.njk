@@ -1,10 +1,10 @@
 {% macro fileInput(fieldname, label, hint, fileList, validationError, dealId, csrfToken) %}
   <div id="criterion-group-{{ fieldname }}" class="govuk-form-group govuk-!-margin-bottom-6 {% if validationError %}govuk-form-group--error{% endif %}" data-cy="{{fieldname}}">
     <label class="govuk-label" for="{{ fieldname }}">
-      {{ label}}
+      {{ label }}
     </label>
     <span id="{{ fieldname }}-hint" class="govuk-hint">
-      {{ hint }}
+      {{ hint | safe }}
     </span>
     {% if validationError %}
       <span class="govuk-error-message">
@@ -28,7 +28,7 @@
     {% if fileList | length %}
       {% for file in fileList %}
             <div class="govuk-!-margin-top-2">
-              <a download="{{file.filename}}" class="govuk-link file-upload-link" href="/contract/{{dealId}}/eligibility-documentation/{{fieldname}}/{{file.filename}}" data-cy="{{ fieldname }}-file-uploaded">{{file.filename}} ({{file.size}})</a>
+              <a download="{{file.filename}}" class="govuk-link file-upload-link" href="/contract/{{dealId}}/eligibility-documentation/{{fieldname}}/{{file.filename}}" data-cy="{{ fieldname }}-file-uploaded">{{ file.filename }} ({{ file.size }})</a>
               <button formAction="?stayonpage=true&removefile={{ file.filename }}&_csrf={{ csrfToken }}" type="submit" class="button-as-link" data-cy="{{ fieldname }}-file-uploaded-remove">Remove</button>
             </div>
       {% endfor %}
