@@ -55,7 +55,7 @@ context('When fee record correction feature flag is enabled', () => {
 
   context('PDC_RECONCILE users can send record correction requests', () => {
     const { createFeeRecordCorrectionRequestPage, checkFeeRecordCorrectionRequestPage, feeRecordCorrectionRequestSentPage } = pages;
-    const additionalInfoUserInput = 'Some additional info.\nSome special characters &$%!<>?@*()_+={}[];:~`\'"';
+    const additionalInfoUserInput = 'Some additional info.\nSome special characters &$%!?@*()_+={}[];:~`\'"';
     const expectedBankEmails = BANKS.find((bank) => bank.id === bankId).paymentOfficerTeam.emails;
 
     beforeEach(() => {

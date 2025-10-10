@@ -18,15 +18,15 @@ export const xss = (req: Request, _res: Response, next: NextFunction) => {
       req.params = xssClean(req.params) as typeof req.params;
     }
 
-    if (hasEntries(req.body)) {
-      req.body = xssClean(req.body as Record<string, unknown>) as Record<string, unknown>;
-    }
-
     if (hasEntries(req.query)) {
       req.query = xssClean(req.query) as typeof req.query;
     }
+
+    if (hasEntries(req.body)) {
+      req.body = xssClean(req.body as Record<string, unknown>) as Record<string, unknown>;
+    }
   } catch (error) {
-    console.error('An error has occurred while sanitising the request %s %o', req.url, error);
+    console.error('An error has occurred while sanitising the request %s %o', req?.url, error);
   }
 
   next();

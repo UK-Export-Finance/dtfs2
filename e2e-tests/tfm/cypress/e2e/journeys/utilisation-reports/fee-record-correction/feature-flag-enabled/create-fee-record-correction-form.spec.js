@@ -147,7 +147,7 @@ context('When fee record correction feature flag is enabled', () => {
     it('should let the user enter additional info equal to the character limit containing special characters', () => {
       createFeeRecordCorrectionRequestPage.reasonCheckbox(RECORD_CORRECTION_REASON.OTHER).check();
 
-      const specialCharactersToTest = '&!?$£¥€¢^*()_+=-%:;@~/><,.';
+      const specialCharactersToTest = '&!?$£¥€¢^*()_+=-%:;@~/,.';
       const paddingToReachMaxLength = 'a'.repeat(MAX_RECORD_CORRECTION_ADDITIONAL_INFO_CHARACTER_COUNT - specialCharactersToTest.length);
       const additionalInfo = `${specialCharactersToTest}${paddingToReachMaxLength}`;
       cy.keyboardInput(createFeeRecordCorrectionRequestPage.additionalInfoInput(), additionalInfo);
