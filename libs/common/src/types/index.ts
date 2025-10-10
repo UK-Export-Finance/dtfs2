@@ -51,3 +51,4 @@ export * from './facility-exposure-period';
 export * from './number-generator';
 export * from './cookie';
 export * from './crypto';
+export * from './request';
