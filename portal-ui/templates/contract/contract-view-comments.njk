@@ -37,7 +37,7 @@
             {{ comment.timestamp | localiseTimestamp("dd/MM/yyyy HH:mm", user.timezone) }}
           </p>
 
-          <div class="govuk-body govuk-!-padding-left-3 preserve-white-space" data-cy="comment-{{count}}">{{ comment.text | safe }}</div>
+          <div class="govuk-body govuk-!-padding-left-3 preserve-white-space" data-cy="comment-{{count}}">{{ comment.text }}</div>
           {% set count = count+1 %}
         </li>
       {% endfor %}

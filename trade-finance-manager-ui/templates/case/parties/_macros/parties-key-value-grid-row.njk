@@ -3,13 +3,13 @@
   <dl class="govuk-grid-row">
     <dt class="govuk-grid-column-one-third">
       {% if params.keyClass %}
-        <p class="{{ params.keyClass }}">{{ params.key | safe }}</p>
+        <p class="{{ params.keyClass }}">{{ params.key }}</p>
       {% else %}
-        <p class="ukef-heading-xs">{{ params.key | safe }}</p>
+        <p class="ukef-heading-xs">{{ params.key }}</p>
         {% endif %}
     </dt>
     <dd class="govuk-grid-column-two-thirds">
-      {% if params.dataCy | safe %}
+      {% if params.dataCy %}
         <p class="govuk-body-s govuk-!-margin-top-3 {{ params.valueStyle }}" data-cy="{{ params.dataCy }}">
       {% else %}
         <p class="govuk-body-s {{ params.valueStyle }}">
