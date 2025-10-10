@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const dotenv = require('dotenv');
 const jsonwebtoken = require('jsonwebtoken');
-const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
+const { PORTAL_LOGIN_STATUS, CSRF } = require('@ukef/dtfs2-common');
 
 dotenv.config();
 
@@ -32,9 +32,12 @@ function validPassword(password, hash, salt) {
 }
 
 function genPasswordResetToken(user) {
-  const hash = crypto.pbkdf2Sync(user.email, user.salt, 10000, 64, 'sha512').toString('hex');
+  const { email } = user;
+  const salt = crypto.randomBytes(CSRF.SECRET.BYTES).toString('hex');
+  const hash = crypto.pbkdf2Sync(email, salt, 10000, 64, 'sha512').toString('hex');
 
   return {
+    salt,
     hash,
   };
 }

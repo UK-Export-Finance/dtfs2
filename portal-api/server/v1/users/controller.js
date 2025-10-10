@@ -47,15 +47,16 @@ const createPasswordToken = async (email, userService, auditDetails) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
   const user = await collection.findOne({ email: { $eq: email } }, { collation: { locale: 'en', strength: 2 } });
-
   if (!user || userService.isUserBlockedOrDisabled(user)) {
     console.info('Not creating password token due to invalid or missing user');
     return false;
   }
 
-  const { hash } = utils.genPasswordResetToken(user);
+  const { salt, hash } = utils.genPasswordResetToken(user);
 
   const userUpdate = {
+    salt,
+    hash,
     resetPwdToken: hash,
     resetPwdTimestamp: `${Date.now()}`,
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
@@ -152,11 +153,12 @@ exports.create = async (user, userService, auditDetails, callback) => {
   delete insert?.autoCreatePassword;
   delete insert?.password;
   delete insert?.passwordConfirm;
+  insert.salt = insert.salt || '';
+  insert.hash = insert.hash || '';
 
   if (!isVerifiedPayload({ payload: insert, template: PORTAL_USER.CREATE })) {
     return callback('Invalid user payload', user);
   }
-
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
   const createUserResult = await collection.insertOne(insert);
 
