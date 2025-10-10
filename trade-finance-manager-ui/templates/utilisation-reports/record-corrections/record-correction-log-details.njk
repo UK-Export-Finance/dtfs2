@@ -70,7 +70,7 @@
           text: "Contact email address(es)"
         },
         value: {
-          html: span((correctionDetails.bankTeamEmails | join(",<br>")), "contact-email-addresses"),
+          html: span((correctionDetails.bankTeamEmails | join(",<br>") | safe), "contact-email-addresses"),
           classes: "ukef-word-break-break-all"
         }
       },
