@@ -26,22 +26,14 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
     cy.keyboardInput(contractDelete.comments(), '<script>alert("XSS")</script>');
     contractDelete.abandon().click();
 
-    // expect to land on the /dashboard page with a success message
-    cy.url().should('include', '/dashboard');
+    // expect to stay on the same page with an error due to tags
+    cy.url().should('include', contractUrl);
 
     // visit the deal and confirm the updates have been made
     cy.visit(contractUrl);
     contract.commentsTab().click();
 
-    contractComments
-      .row(0)
-      .comment()
-      .invoke('children')
-      .then((children) => {
-        expect(children.length).equal(0);
-      });
-
-    cy.assertText(contractComments.row(0).comment(), '');
+    contractComments.row(0).comment().should('not.exist');
   });
 
   it('should not allow <object> tag', () => {
@@ -51,7 +43,7 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
     contract.abandonButton().click();
 
     // submit with a comment with script tag
-    cy.keyboardInput(contractDelete.comments(), '<object src = "https://unknown-domain/path"></object>');
+    cy.keyboardInput(contractDelete.comments(), '<object src = "https://unknown-domain/path"></object>ABCDE');
     contractDelete.abandon().click();
 
     // expect to land on the /dashboard page with a success message
@@ -69,10 +61,10 @@ context('Input is cleaned to avoid Cross Site Scripting', () => {
         expect(children.length).equal(0);
       });
 
-    cy.assertText(contractComments.row(0).comment(), '');
+    cy.assertText(contractComments.row(0).comment(), 'ABCDE');
   });
 
-  it('should not allow a non-tag submission', () => {
+  it('should allow a non-tag submission', () => {
     // log in, visit a deal, select abandon
     cy.login(BANK1_MAKER1);
     cy.visit(contractUrl);
