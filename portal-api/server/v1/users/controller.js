@@ -47,15 +47,16 @@ const createPasswordToken = async (email, userService, auditDetails) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
 
   const user = await collection.findOne({ email: { $eq: email } }, { collation: { locale: 'en', strength: 2 } });
-
   if (!user || userService.isUserBlockedOrDisabled(user)) {
     console.info('Not creating password token due to invalid or missing user');
     return false;
   }
 
-  const { hash } = utils.genPasswordResetToken(user);
+  const { salt, hash } = utils.genPasswordResetToken(user);
 
   const userUpdate = {
+    salt,
+    hash,
     resetPwdToken: hash,
     resetPwdTimestamp: `${Date.now()}`,
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),

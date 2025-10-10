@@ -105,7 +105,7 @@ describe('user controller', () => {
     function givenEverythingElseSucceeds() {
       sendEmail.mockResolvedValue({});
       sanitizeUser.mockReturnValue(TEST_USER_SANITISED_FOR_FRONTEND);
-      utils.genPasswordResetToken.mockReturnValue({ hash: '02' });
+      utils.genPasswordResetToken.mockReturnValue({ salt: '01', hash: '02' });
       when(db.getCollection)
         .calledWith('users')
         .mockResolvedValue({
