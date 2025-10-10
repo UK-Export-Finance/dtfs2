@@ -81,10 +81,22 @@ jobs:
       - name: Repository
         uses: actions/checkout@v5
 
+      # - name: Codacy
+      #   uses: codacy/codacy-analysis-cli-action@master
+      #   with:
+      #     verbose: true
       - name: Codacy
-        uses: codacy/codacy-analysis-cli-action@master
+        run: |
+          bash <(curl -Ls https://raw.githubusercontent.com/codacy/codacy-cli-v2/main/codacy-cli.sh) install
+          bash <(curl -Ls https://raw.githubusercontent.com/codacy/codacy-cli-v2/main/codacy-cli.sh) analyze -t eslint --format sarif -o eslint.sarif
+      - name: Upload SARIF file to GH
+        uses: github/codeql-action/upload-sarif@v3
         with:
-          verbose: true
+          # Path to SARIF file relative to the root of the repository
+          sarif_file: eslint.sarif
+          # Optional category for the results
+          # Used to differentiate multiple results for one commit
+          category: eslint
 
   # 3. Code quality - Spell check
   spell:
