@@ -1,5 +1,13 @@
 import { add, getUnixTime, fromUnixTime, format, sub } from 'date-fns';
-import { TFM_DEAL_STAGE, TFM_AMENDMENT_STATUS, PORTAL_AMENDMENT_STATUS, DEAL_SUBMISSION_TYPE, DATE_FORMATS } from '@ukef/dtfs2-common';
+import {
+  TFM_DEAL_STAGE,
+  TFM_AMENDMENT_STATUS,
+  PORTAL_AMENDMENT_STATUS,
+  DEAL_SUBMISSION_TYPE,
+  DATE_FORMATS,
+  DEAL_STATUS,
+  TFM_DEAL_CANCELLATION_STATUS,
+} from '@ukef/dtfs2-common';
 import { getAmendmentsInProgress } from './amendments.helper';
 
 const previousEffectiveDate = getUnixTime(sub(new Date(), { days: 1 }));
@@ -62,10 +70,14 @@ const completedPortalAmendmentFutureEffectiveDate = () => ({
   facilityId,
 });
 
-const deal = { dealSnapshot: { submissionType: DEAL_SUBMISSION_TYPE.AIN }, tfm: { stage: TFM_DEAL_STAGE.CONFIRMED } };
+let deal = { dealSnapshot: { submissionType: DEAL_SUBMISSION_TYPE.AIN }, tfm: { stage: TFM_DEAL_STAGE.CONFIRMED } };
 const teams = ['PIM'];
 
 describe('getAmendmentsInProgress', () => {
+  beforeEach(() => {
+    deal = { dealSnapshot: { submissionType: DEAL_SUBMISSION_TYPE.AIN }, tfm: { stage: TFM_DEAL_STAGE.CONFIRMED } };
+  });
+
   describe('when there are no amendments', () => {
     it('should return an empty array', () => {
       // Arrange
@@ -254,6 +266,61 @@ describe('getAmendmentsInProgress', () => {
     });
   });
 
+  describe('when there is one portal amendment that is in progress and the deal is cancelled', () => {
+    it('should return hasInProgressPortalAmendments set to false', () => {
+      // Arrange
+      const amendments = [inProgressPortalAmendment()];
+      deal.tfm.stage = DEAL_STATUS.CANCELLED;
+
+      // Act
+      const result = getAmendmentsInProgress({ amendments, deal, teams });
+
+      // Assert
+      const expected = {
+        amendmentsInProgress: [inProgressPortalAmendment()],
+        hasAmendmentInProgress: true,
+        hasAmendmentInProgressButton: false,
+        showContinueAmendmentButton: false,
+        inProgressPortalAmendments: [inProgressPortalAmendment()],
+        hasInProgressPortalAmendments: false,
+        hasFutureEffectiveDatePortalAmendments: false,
+        formattedFutureEffectiveDatePortalAmendments: [],
+      };
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('when there is one portal amendment that is in progress and the deal is pending cancellation', () => {
+    it('should return hasInProgressPortalAmendments set to false', () => {
+      // Arrange
+      const amendments = [inProgressPortalAmendment()];
+      deal.tfm = {
+        ...deal.tfm,
+        cancellation: {
+          status: TFM_DEAL_CANCELLATION_STATUS.PENDING,
+        },
+      };
+
+      // Act
+      const result = getAmendmentsInProgress({ amendments, deal, teams });
+
+      // Assert
+      const expected = {
+        amendmentsInProgress: [inProgressPortalAmendment()],
+        hasAmendmentInProgress: true,
+        hasAmendmentInProgressButton: false,
+        showContinueAmendmentButton: false,
+        inProgressPortalAmendments: [inProgressPortalAmendment()],
+        hasInProgressPortalAmendments: false,
+        hasFutureEffectiveDatePortalAmendments: false,
+        formattedFutureEffectiveDatePortalAmendments: [],
+      };
+
+      expect(result).toEqual(expected);
+    });
+  });
+
   describe('when there is one portal amendment that is completed', () => {
     it('should return an empty array', () => {
       // Arrange
@@ -306,6 +373,61 @@ describe('getAmendmentsInProgress', () => {
         hasInProgressPortalAmendments: false,
         hasFutureEffectiveDatePortalAmendments: true,
         formattedFutureEffectiveDatePortalAmendments,
+      };
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('when there is one portal amendment that is completed with a future effective date and the deal is cancelled', () => {
+    it('should return hasFutureEffectiveDatePortalAmendments set to false and an empty formattedFutureEffectiveDatePortalAmendments array', () => {
+      // Arrange
+      const amendments = [completedPortalAmendmentFutureEffectiveDate()];
+      deal.tfm.stage = DEAL_STATUS.CANCELLED;
+
+      // Act
+      const result = getAmendmentsInProgress({ amendments, deal, teams });
+
+      // Assert
+      const expected = {
+        amendmentsInProgress: [],
+        hasAmendmentInProgress: false,
+        hasAmendmentInProgressButton: false,
+        showContinueAmendmentButton: false,
+        inProgressPortalAmendments: [],
+        hasInProgressPortalAmendments: false,
+        hasFutureEffectiveDatePortalAmendments: false,
+        formattedFutureEffectiveDatePortalAmendments: [],
+      };
+
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('when there is one portal amendment that is completed with a future effective date and the deal is pending cancellation', () => {
+    it('should return hasFutureEffectiveDatePortalAmendments set to false and an empty formattedFutureEffectiveDatePortalAmendments array', () => {
+      // Arrange
+      const amendments = [completedPortalAmendmentFutureEffectiveDate()];
+      deal.tfm = {
+        ...deal.tfm,
+        cancellation: {
+          status: TFM_DEAL_CANCELLATION_STATUS.PENDING,
+        },
+      };
+
+      // Act
+      const result = getAmendmentsInProgress({ amendments, deal, teams });
+
+      // Assert
+      const expected = {
+        amendmentsInProgress: [],
+        hasAmendmentInProgress: false,
+        hasAmendmentInProgressButton: false,
+        showContinueAmendmentButton: false,
+        inProgressPortalAmendments: [],
+        hasInProgressPortalAmendments: false,
+        hasFutureEffectiveDatePortalAmendments: false,
+        formattedFutureEffectiveDatePortalAmendments: [],
       };
 
       expect(result).toEqual(expected);
