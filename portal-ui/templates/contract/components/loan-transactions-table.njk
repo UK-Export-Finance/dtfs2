@@ -36,28 +36,28 @@
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-ukef-facility-id-{{ loan._id }}">
-                  {{ loan.ukefFacilityId | safe }}
+                  {{ loan.ukefFacilityId }}
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14 contract-table--status-cell" data-cy="loan-status-{{ loan._id }}">
-                  {{ statusTag.render(loan.status) | safe }}
+                  {{ statusTag.render(loan.status) }}
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-facility-value">
-                  {{ loan.currency.id | safe }} {{ loan.value | safe }}
+                  {{ loan.currency.id }} {{ loan.value }}
                 </td>
 
-                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-facility-stage-{{ loan._id }}">{{ loan.facilityStage | safe }}</td>
+                <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-facility-stage-{{ loan._id }}">{{ loan.facilityStage }}</td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-requested-cover-start-date-{{ loan._id }}">
                   {% if loan.requestedCoverStartDate %}
-                    {{ loan.requestedCoverStartDate | localiseTimestamp('dd/MM/yyyy', params.user.timezone) | safe }}
+                    {{ loan.requestedCoverStartDate | localiseTimestamp('dd/MM/yyyy', params.user.timezone) }}
                   {% endif %}
                 </td>
 
                 <td class="govuk-table__cell govuk-!-font-size-14" data-cy="loan-cover-end-date-{{ loan._id }}">
                   {% if loan.coverEndDate %}
-                    {{ loan.coverEndDate | localiseTimestamp('dd/MM/yyyy', params.user.timezone) | safe }}
+                    {{ loan.coverEndDate | localiseTimestamp('dd/MM/yyyy', params.user.timezone) }}
                   {% endif %}
                 </td>
 

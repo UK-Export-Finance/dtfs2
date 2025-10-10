@@ -7,11 +7,11 @@
          data-cy="name-link-{{bond._id}}"
          title="Bond {{bond.name}}"
          aria-label="Bond {{bond.name}}">
-         {{ bond.name | safe }}
+         {{ bond.name }}
       </a>
     {% else %}
       <span data-cy="name-{{bond._id}}">
-        {{ bond.name | safe }}
+        {{ bond.name }}
       </span>
     {% endif %}
   {% else %}
