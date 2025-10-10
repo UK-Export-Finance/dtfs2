@@ -153,6 +153,8 @@ exports.create = async (user, userService, auditDetails, callback) => {
   delete insert?.autoCreatePassword;
   delete insert?.password;
   delete insert?.passwordConfirm;
+  insert.salt = insert.salt || '';
+  insert.hash = insert.hash || '';
 
   if (!isVerifiedPayload({ payload: insert, template: PORTAL_USER.CREATE })) {
     return callback('Invalid user payload', user);
