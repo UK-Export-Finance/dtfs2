@@ -37,7 +37,7 @@ const { getBankHolidays } = require('./controllers/bank-holidays.controller');
 const companies = require('./controllers/companies.controller');
 const tfm = require('./controllers/tfm.controller');
 
-const { cleanXss, fileUpload, utilisationReportFileUpload } = require('./middleware');
+const { fileUpload, utilisationReportFileUpload } = require('./middleware');
 const checkApiKey = require('./middleware/headers/check-api-key');
 
 const users = require('./users/routes');
@@ -284,9 +284,6 @@ authRouter.route('/mandatory-criteria').post(validateUserHasAtLeastOneAllowedRol
  *          description: Unauthorized - insertion not allowed in production
  */
 authRouter.route('/gef/mandatory-criteria-versioned').post(validateUserHasAtLeastOneAllowedRole({ allowedRoles: [ADMIN] }), mandatoryCriteriaVersioned.create);
-
-// Enable XSS
-authRouter.use(cleanXss);
 
 // Mandatory Criteria Routes
 /**

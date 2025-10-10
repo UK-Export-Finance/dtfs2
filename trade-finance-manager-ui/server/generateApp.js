@@ -14,7 +14,6 @@ const configureNunjucks = require('./nunjucks-configuration');
 const healthcheck = require('./healthcheck');
 const seo = require('./middleware/headers/seo');
 const security = require('./middleware/headers/security');
-const { sanitizeXss } = require('./middleware/xss-sanitizer');
 const createRateLimit = require('./middleware/rateLimit/index');
 
 const generateApp = () => {
@@ -69,7 +68,6 @@ const generateApp = () => {
   }
   // Unauthenticated routes
   app.use('/', feedbackRoutes);
-  app.use(sanitizeXss());
   app.use('/', routes);
 
   /**

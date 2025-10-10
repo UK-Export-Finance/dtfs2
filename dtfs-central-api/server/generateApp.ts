@@ -1,7 +1,7 @@
 import express, { Express } from 'express';
 import compression from 'compression';
 import mongoSanitise from 'express-mongo-sanitize';
-import { MAX_REQUEST_SIZE, maintenance } from '@ukef/dtfs2-common';
+import { MAX_REQUEST_SIZE, xss, maintenance } from '@ukef/dtfs2-common';
 import { seo, security, checkApiKey, createRateLimit } from './v1/routes/middleware';
 
 import { ROUTES } from './constants';
@@ -36,6 +36,7 @@ export const generateApp = (): Express => {
   app.use(compression());
   app.use(removeCsrfToken);
   app.use(createRateLimit());
+  app.use(xss);
   // MongoDB sanitisation
   app.use(
     mongoSanitise({
