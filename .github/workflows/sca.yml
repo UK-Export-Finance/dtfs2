@@ -85,7 +85,7 @@ jobs:
         uses: codacy/codacy-cli-v2-action@main
         with:
           project_token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          tool: eslin
+          tool: eslint
           upload_report: true
 
   # 3. Code quality - Spell check
