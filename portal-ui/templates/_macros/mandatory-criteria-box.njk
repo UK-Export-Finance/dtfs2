@@ -19,7 +19,7 @@
                 {% if params.text %}
                   {{ item.copy | striptags }}
                 {% else %}
-                  {{ item.copy }}
+                  {{ item.copy | safe }}
                 {% endif %}
               </li>
             {% endfor %}
