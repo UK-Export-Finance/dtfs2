@@ -1,1586 +1,1586 @@
-# 1. Infrastructure Setup:
-# Sets environment variables: environment, timezone, and secrets for various services.
-# Outputs: Exposes environment and timezone for use in subsequent jobs.
-#
-# 2. API Tests:
-# Runs tests for API endpoints in parallel:
-# portal-api, gef-ui, trade-finance-manager-ui, portal, dtfs-central-api, external-api
-# DOF-specific API tests:
-# acbs
-# Generates code coverage reports for API tests.
-#
-# 3. Unit Tests:
-# Runs unit tests for individual code components:
-# portal-api, dtfs-central-api, external-api, trade-finance-manager-api
-# Generates code coverage reports for unit tests.
-#
-# 4. UI Integration Tests:
-# Tests interactions between UI elements and backend logic:
-# portal, gef-ui, trade-finance-manager-ui
-# Generates code coverage reports for UI integration tests.
-#
-# 5-7. End-to-End (E2E) Tests:
-# Runs tests simulating user journeys through different parts of the application:
-# portal (various scenarios)
-# gef
-# tfm
-# ukef
-# Uses Cypress for E2E testing.
-# Initializes the environment with data before tests.
-#
-# 8. End-to-End (E2E) - Feature flags (FF)
-# Run tests 5-7 with all feature flags set to true
-#
-# Additional Notes:
-# Workflow runs on pull requests to the main branch and pushes to specific branches.
-# Concurrency strategies ensure efficient resource usage and avoid job collisions.
-# Environment variables and secrets are managed securely.
-# Codecov integration tracks code coverage across different test types.
-#
-# 9. Docker build
-# Verified docker build step for `acbs` microservice.
-# All other microservice builds are not tested due to docker compose
-# execution prior to test suits initiation.
-# Since ACBS pertinent tests do not require `acbs` docker service initialisation
-# any build failure would be missed without this Quality Assurance - Tests job.
-
-name: Quality Assurance - Tests
-run-name: ✅ Executing test QA on ${{ github.event.number }}
-
-permissions:
-  contents: read
-
-on:
-  pull_request:
-    branches:
-      - main
-      - 'release-*'
-
-    paths:
-      - 'package*.json'
-      - 'docker*.yml'
-      - '.github/**'
-      - 'gef-ui/**'
-      - 'portal-ui/**'
-      - 'portal-api/**'
-      - 'trade-finance-manager-ui/**'
-      - 'trade-finance-manager-api/**'
-      - 'external-api/**'
-      - 'dtfs-central-api/**'
-      - 'azure-functions/**'
-      - 'e2e-tests/**'
-      - 'utils/**'
-      - 'libs/**'
-      - 'README.md'
-      - 'reverse-proxy/**'
-
-  push:
-    branches:
-      # Staging ready release
-      - release-*
-      - '!release-please*'
-
-  create:
-    branches:
-      # Production ready release candidates
-      - release-*-rc
-
-    paths:
-      - '.github/workflows/deployment.yml'
-      - 'portal-ui/**'
-      - 'gef-ui/**'
-      - 'trade-finance-manager-ui/**'
-      - 'portal-api/**'
-      - 'dtfs-central-api/**'
-      - 'trade-finance-manager-api/**'
-      - 'external-api/**'
-      - 'azure-functions/acbs/**'
-
-env:
-  environment: dev
-  TZ: ${{ vars.TIMEZONE }}
-  credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
-  MONGODB_URI: ${{ secrets.MONGODB_URI }}
-  MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
-  MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGO_INITDB_ROOT_USERNAME }}
-  MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
-  AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
-  AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
-  AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
-  AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
-  AZURE_UTILISATION_REPORTS_FILESHARE_NAME: ${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}
-  GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY}}
-  MOCK_E2E_GOV_NOTIFY_API_KEY: ${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-  MOCK_E2E_NUMBER_GENERATOR: ${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-  GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
-  JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
-  JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
-  APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
-  APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
-  APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
-  APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
-  APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
-  APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
-  APIM_ESTORE_URL: ${{ secrets.APIM_ESTORE_URL }}
-  APIM_ESTORE_KEY: ${{ secrets.APIM_ESTORE_KEY }}
-  APIM_ESTORE_VALUE: ${{ secrets.APIM_ESTORE_VALUE }}
-  SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
-  UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
-  UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
-  ESTORE_URL: ${{ secrets.ESTORE_URL }}
-  ESTORE_CRON_MANAGER_SCHEDULE: ${{ vars.ESTORE_CRON_MANAGER_SCHEDULE }}
-  TFM_API_KEY: ${{ secrets.TFM_API_KEY }}
-  PORTAL_API_KEY: ${{ secrets.PORTAL_API_KEY }}
-  DTFS_CENTRAL_API_KEY: ${{ secrets.DTFS_CENTRAL_API_KEY }}
-  EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
-  NODE_ENV: ${{ secrets.NODE_ENV }}
-  CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
-  PORTAL_API_URL: ${{ vars.PORTAL_API_URL_LOCALHOST }}
-  TFM_API_URL: ${{ vars.TFM_API_URL_LOCALHOST }}
-  EXTERNAL_API_URL: ${{ vars.EXTERNAL_API_URL_LOCALHOST }}
-  DTFS_CENTRAL_API_URL: ${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
-  PORTAL_UI_URL: ${{ vars.PORTAL_UI_URL_LOCALHOST }}
-  TFM_UI_URL: ${{ vars.TFM_UI_URL_LOCALHOST }}
-  RATE_LIMIT_THRESHOLD: ${{ vars.RATE_LIMIT_THRESHOLD }}
-  UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: ${{ vars.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}
-  UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: ${{ vars.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}
-  UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE }}
-  UTILISATION_REPORT_DUE_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_DUE_EMAIL_SCHEDULE }}
-  UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE }}
-  CHANGE_STREAM_ENABLED: ${{ vars.CHANGE_STREAM_ENABLED }}
-  DELETION_AUDIT_LOGS_TTL_SECONDS: ${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS }}
-  AUDIT_API_URL: ${{ secrets.AUDIT_API_URL }}
-  AUDIT_API_USERNAME: ${{ secrets.AUDIT_API_USERNAME }}
-  AUDIT_API_PASSWORD: ${{ secrets.AUDIT_API_PASSWORD }}
-  UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: ${{ vars.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}
-  UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS: ${{ secrets. UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS }}
-  ACCEPT_EULA: ${{ vars.ACCEPT_EULA }}
-  MSSQL_SA_PASSWORD: ${{ secrets.MSSQL_SA_PASSWORD }}
-  SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_QA }}
-  SQL_DB_PORT: ${{ secrets.SQL_DB_PORT_QA }}
-  SQL_DB_USERNAME: ${{ secrets.SQL_DB_USERNAME_QA }}
-  SQL_DB_PASSWORD: ${{ secrets.SQL_DB_PASSWORD_QA }}
-  SQL_DB_NAME: ${{ secrets.SQL_DB_NAME_QA }}
-  SQL_DB_LOGGING_ENABLED: ${{ vars.SQL_DB_LOGGING_ENABLED }}
-  ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE: ${{ vars.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE }}
-  CONTACT_US_EMAIL_ADDRESS: ${{ vars.CONTACT_US_EMAIL_ADDRESS }}
-  FF_FEE_RECORD_CORRECTION_ENABLED: ${{ vars.FF_FEE_RECORD_CORRECTION_ENABLED }}
-  FF_TFM_DEAL_CANCELLATION_ENABLED: ${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }}
-  FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: ${{ vars.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED }}
-  FF_TFM_SSO_ENABLED: ${{ vars.FF_TFM_SSO_ENABLED }}
-  FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: ${{ vars.FF_SALESFORCE_CUSTOMER_CREATION_ENABLED }}
-  GEF_DEAL_VERSION: ${{ vars.GEF_DEAL_VERSION }}
-  ENTRA_ID_CLIENT_ID: ${{ vars.ENTRA_ID_CLIENT_ID }}
-  ENTRA_ID_CLOUD_INSTANCE: ${{ vars.ENTRA_ID_CLOUD_INSTANCE }}
-  ENTRA_ID_TENANT_ID: ${{ vars.ENTRA_ID_TENANT_ID }}
-  ENTRA_ID_CLIENT_SECRET: ${{ vars.ENTRA_ID_CLIENT_SECRET }}
-  ENTRA_ID_REDIRECT_URL: ${{ vars.ENTRA_ID_REDIRECT_URL }}
-  DEAL_CANCELLATION_SCHEDULE: ${{ vars.DEAL_CANCELLATION_SCHEDULE }}
-  RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE: ${{ vars.RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE }}
-  UKEF_GEF_REPORTING_EMAIL_RECIPIENT: ${{ secrets.UKEF_GEF_REPORTING_EMAIL_RECIPIENT }}
-
-jobs:
-  # 1. Setup test infrastructure
-  setup:
-    name: Infrastructure setup 🔧
-    runs-on: ubuntu-latest
-    outputs:
-      environment: ${{ env.environment }}
-      TZ: ${{ env.TZ }}
-    steps:
-      - name: Environment 🧪
-        run: echo "Environment set to ${{ env.environment }}"
-
-      - name: Timezone 🌐
-        run: echo "Timezone set to ${{ env.TZ }}"
-
-      - name: Timestamp
-        id: timestamp
-        run: echo "epoch=$(date +%s)" >> "$GITHUB_OUTPUT"
-
-  # 2.1. API tests
-  api-tests:
-    name: API 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'trade-finance-manager-api', 'external-api']
-
-    concurrency:
-      group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
-
-      - name: Repository
-        uses: actions/checkout@v5
-
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Start
-        uses: ./.github/actions/rerun
-        with:
-          command: docker compose up --build -d
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Initialise
-        uses: ./.github/actions/rerun
-        with:
-          command: sleep 100s && npm run load
-          working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: SQL
-        working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-        run: npm run db:migrate
-
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run api-test --workspace=${{ matrix.services }}
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Stop
-        working-directory: ./
-        run: docker compose down
-
-      - name: Coverage
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: api-test
-          verbose: true
-
-  # 2.2 dtfs-central-api API tests
-  dtfs-central-api-api-tests:
-    name: API - dtfs-central-api 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services:
-          [
-            'api-tests/v1/bank',
-            'api-tests/v1/cron-jobs',
-            'api-tests/v1/durable-functions',
-            'api-tests/v1/middleware',
-            'api-tests/v1/routes',
-            'api-tests/v1/user',
-            'api-tests/v1/deals',
-            'api-tests/v1/facilities',
-            'api-tests/v1/gef-deals',
-            'api-tests/v1/gef-facilities',
-            'api-tests/v1/portal-facility-amendments',
-            'api-tests/v1/tfm',
-            'api-tests/v1/utilisation-reports',
-          ]
-
-    concurrency:
-      group: dtfs-central-api-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
-
-      - name: Repository
-        uses: actions/checkout@v5
-
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Start
-        uses: ./.github/actions/rerun
-        with:
-          command: docker compose up --build -d
-          retries: ${{ vars.RETRY_LIMIT }}
-          env: |
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-
-      - name: Initialise
-        uses: ./.github/actions/rerun
-        with:
-          command: sleep 100s && npm run load
-          working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: SQL
-        working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-        run: npm run db:migrate
-
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run api-test ${{ matrix.services }} --workspace=dtfs-central-api
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Stop
-        working-directory: ./
-        run: docker compose down
-
-      - name: Coverage
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: api-test
-          verbose: true
-
-  # 2.3 portal-api API tests
-  portal-api-api-tests:
-    name: API - portal-api 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services:
-          [
-            'api-tests/api',
-            'api-tests/drivers',
-            'api-tests/v1/bank-holidays',
-            'api-tests/v1/banks',
-            'api-tests/v1/bonds',
-            'api-tests/v1/companies',
-            'api-tests/v1/countries',
-            'api-tests/v1/currencies',
-            'api-tests/v1/deals',
-            'api-tests/v1/eligibility-criteria',
-            'api-tests/v1/feedback',
-            'api-tests/v1/gef',
-            'api-tests/v1/industry-sectors',
-            'api-tests/v1/loan',
-            'api-tests/v1/mandatory-criteria',
-            'api-tests/v1/middleware',
-            'api-tests/v1/reports',
-            'api-tests/v1/users',
-            'api-tests/v1/utilisation-report-service',
-            'api-tests/v1/validate',
-          ]
-
-    concurrency:
-      group: portal-api-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
-
-      - name: Repository
-        uses: actions/checkout@v5
-
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Start
-        uses: ./.github/actions/rerun
-        with:
-          command: docker compose up --build -d
-          retries: ${{ vars.RETRY_LIMIT }}
-          env: |
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-
-      - name: Initialise
-        uses: ./.github/actions/rerun
-        with:
-          command: sleep 100s && npm run load
-          working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: SQL
-        working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-        run: npm run db:migrate
-
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run api-test ${{ matrix.services }} --workspace=portal-api
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Stop
-        working-directory: ./
-        run: docker compose down
-
-      - name: Coverage
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: api-test
-          verbose: true
-
-  # 2.4. API tests
-  dof-api-tests:
-    name: DOF API 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        functions: ['acbs']
-
-    concurrency:
-      group: dof-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
-
-      - name: Repository
-        uses: actions/checkout@v5
-
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: ${{ matrix.functions }}
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run api-test
-          working-directory: ./azure-functions/${{ matrix.functions }}
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Coverage
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: api-test
-          verbose: true
-
-  # 3. Unit tests
-  unit-tests:
-    name: Unit 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services:
-          [
-            './portal-ui',
-            './gef-ui',
-            './trade-finance-manager-ui',
-            './portal-api',
-            './dtfs-central-api',
-            './external-api',
-            './trade-finance-manager-api',
-            './libs/common',
-            './azure-functions/acbs',
-          ]
-
-    concurrency:
-      group: unit-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
-
-      - name: Repository
-        uses: actions/checkout@v5
-
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run unit-test
-          working-directory: ${{ matrix.services }}
-          retries: ${{ vars.RETRY_LIMIT }}
-          env: |
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-
-      - name: Coverage
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: unit-test
-          verbose: true
-
-  # 3. Unit tests - FF
-  unit-tests-ff:
-    name: Unit feature flag 👷
-    needs: [setup]
-    env:
-      # Various feature flags
-      FF_FEE_RECORD_CORRECTION_ENABLED: 'true'
-      FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
-      FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
-      FF_TFM_SSO_ENABLED: 'true'
-      FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true'
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        services:
-          [
-            './portal-ui',
-            './gef-ui',
-            './trade-finance-manager-ui',
-            './portal-api',
-            './dtfs-central-api',
-            './external-api',
-            './trade-finance-manager-api',
-            './libs/common',
-            './azure-functions/acbs',
-          ]
-
-    concurrency:
-      group: unit-tests-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
-
-      - name: Repository
-        uses: actions/checkout@v5
-
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npm run unit-test-ff
-          working-directory: ${{ matrix.services }}
-          retries: ${{ vars.RETRY_LIMIT }}
-          env: |
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-
-      - name: Coverage
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: unit-test
-          verbose: true
-
-  # 4. E2E - PORTAL
-  e2e-tests-portal:
-    name: E2E Portal 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        spec:
-          [
-            'homepage/**/*.spec.js',
-            'admin/**/*.spec.js',
-            'checker/**/*.spec.js',
-            'dashboard/dashboard-deals/deal-cancellation-disabled/*.spec.js',
-            'dashboard/dashboard-deals/filter-by/*.spec.js',
-            'dashboard/dashboard-deals/filters/*.spec.js',
-            'dashboard/dashboard-deals/sort/*.spec.js',
-            'dashboard/dashboard-facilities/filter-by/*.spec.js',
-            'dashboard/dashboard-facilities/filters/*.spec.js',
-            'dashboard/dashboard-facilities/sort/*.spec.js',
-            'feedback/**/*.spec.js',
-            'contact/**/*.spec.js',
-            'login/**/*.spec.js',
-            'maker/check-deal-details/*.spec.js',
-            'maker/clone-deal/*.spec.js',
-            'maker/dashboard/**/*.spec.js',
-            'maker/submit-a-deal-for-review/*.spec.js',
-            'maker/submit-a-deal-for-review-with-issued-and-unissued-facilities-and-resubmit-after-checker-returns/*.spec.js',
-            'maker/submit-issued-facilities-for-review/*.spec.js',
-            'maker/bank-details/*.spec.js',
-            'maker/eligibility/*.spec.js',
-            'maker/abandon-a-deal/*.spec.js',
-            'maker/before-you-start/*.spec.js',
-            'maker/bss-mandatory-criteria/*.spec.js',
-            'maker/edit-deal-name/*.spec.js',
-            'maker/proceed-to-review/*.spec.js',
-            'maker/select-scheme/*.spec.js',
-            'maker/xss/*.spec.js',
-            'maker-about-supply-contract/**/*.spec.js',
-            'maker-bond/**/*.spec.js',
-            'maker-facilities/**/*.spec.js',
-            'maker-loan/**/*.spec.js',
-            'read-only/**/*.spec.js',
-            'reports/**/*.spec.js',
-            'payment-report-officer/utilisation-report-upload/**/*.spec.js',
-            'payment-report-officer/previous-reports/**/*.spec.js',
-            'payment-report-officer/record-corrections/feature-flag-disabled/**/*.spec.js',
-          ]
-
-    concurrency:
-      group: e2e-tests-portal-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-
-      - name: Repository
-        uses: actions/checkout@v5
-
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
-
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Docker
-        uses: ./.github/actions/rerun
-        with:
-          command: docker compose up --build -d
-          retries: ${{ vars.RETRY_LIMIT }}
-          env: |
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-
-      - name: Initialise
-        uses: ./.github/actions/rerun
-        with:
-          command: sleep 100s && npm run load
-          working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: SQL
-        working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-        run: npm run db:migrate
-
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npx cypress run --config video=false --browser electron --project ./portal --record false --spec './portal/cypress/e2e/journeys/${{ matrix.spec }}'
-          working-directory: ./e2e-tests
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-            TZ=${{ vars.TIMEZONE }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Screenshots
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: e2e-tests-portal-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
-          path: ./e2e-tests/portal/cypress/screenshots/
-          retention-days: 1
-
-  # 5. E2E - GEF
-  e2e-tests-gef:
-    name: E2E GEF 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        spec:
-          [
-            'homepage/**/*.spec.js',
-            'amendments/portal-amendments-disabled/**/*.spec.js',
-            'application/**/*.spec.js',
-            'checker/**/*.spec.js',
-            'clone/**/*.spec.js',
-            'eligibility/**/*.spec.js',
-            'exporter/**/*.spec.js',
-            'external/**/*.spec.js',
-            'facility/pre-submission/**/*.spec.js',
-            'facility/review-ukef-approval/**/*.spec.js',
-            'facility/version-0/*.spec.js',
-            'facility/unissued-facilities/AIN/**/*.spec.js',
-            'facility/unissued-facilities/MIN/**/*.spec.js',
-            'maker/**/*.spec.js',
-            'scenarios/**/*.spec.js',
-            'security/**/*.spec.js',
-            'ukef/**/*.spec.js',
-            'upload/**/*.spec.js',
-          ]
-
-    concurrency:
-      group: e2e-tests-gef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-
-      - name: Repository
-        uses: actions/checkout@v5
-
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
-
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Docker
-        uses: ./.github/actions/rerun
-        with:
-          command: docker compose up --build -d
-          retries: ${{ vars.RETRY_LIMIT }}
-          env: |
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-
-      - name: Initialise
-        uses: ./.github/actions/rerun
-        with:
-          command: sleep 100s && npm run load
-          working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: SQL
-        working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-        run: npm run db:migrate
-
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npx cypress run --config video=false --browser electron --project ./gef --record false --spec './gef/cypress/e2e/${{ matrix.spec }}'
-          working-directory: ./e2e-tests
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-            TZ=${{ vars.TIMEZONE }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Screenshots
-
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: e2e-tests-gef-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
-          path: ./e2e-tests/gef/cypress/screenshots/
-          retention-days: 1
-
-  #6. E2E - TFM
-  e2e-tests-tfm:
-    name: E2E TFM 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        spec:
-          [
-            'case/activities/*.spec.js',
-            'case/AIN/*.spec.js',
-            'case/deal-cancellation-disabled/*.spec.js',
-            'case/documents/*.spec.js',
-            'case/GEF/*.spec.js',
-            'case/MIA/*.spec.js',
-            'case/parties/*.spec.js',
-            'case/parties/agent/*.spec.js',
-            'case/parties/bond/*.spec.js',
-            'case/parties/buyer/*.spec.js',
-            'case/parties/exporter/*.spec.js',
-            'case/parties/indemnifier/*.spec.js',
-            'case/tasks/*.spec.js',
-            'case/tasks/AIN/*.spec.js',
-            'case/tasks/MIA/*.spec.js',
-            'case-amendments/add-bank-decision/*.spec.js',
-            'case-amendments/add-underwriter-decision/*.spec.js',
-            'case-amendments/amendment-changes-multiple-single-amendments/*.spec.js',
-            'case-amendments/amendment-should-change-all-facilities-values/*.spec.js',
-            'case-amendments/amendment-underwriting-page-multiple-amendments/*.spec.js',
-            'case-amendments/amendments-version-order/*.spec.js',
-            'case-amendments/facility-end-date/**/*.spec.js',
-            'case-amendments/in-progress/*.spec.js',
-            'case-amendments/request-when-previously-submitted/*.spec.js',
-            'case-amendments/show-amendment-button/*.spec.js',
-            'case-amendments/tasks/*.spec.js',
-            'case-amendments/underwriting-page-unassigned/*.spec.js',
-            'case-amendments/user-flow/*.spec.js',
-            'case-underwriting/**/*.spec.js',
-            'deals/**/*.spec.js',
-            'facility/**/*.spec.js',
-            'feedback/**/*.spec.js',
-            'footer/**/*.spec.js',
-            'header/**/*.spec.js',
-            'login/**/*.spec.js',
-            'users/**/*.spec.js',
-            'utilisation-reports/report-reconciliation/**/*.spec.js',
-            'utilisation-reports/fee-record-correction/feature-flag-disabled/**/*.spec.js',
-          ]
-
-    concurrency:
-      group: e2e-tests-tfm-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-
-      - name: Repository
-        uses: actions/checkout@v5
-
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
-
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Docker
-        uses: ./.github/actions/rerun
-        with:
-          command: docker compose up --build -d
-          retries: ${{ vars.RETRY_LIMIT }}
-          env: |
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-
-      - name: Initialise
-        uses: ./.github/actions/rerun
-        with:
-          command: sleep 100s && npm run load
-          working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: SQL
-        working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-        run: npm run db:migrate
-
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npx cypress run --config video=false --browser electron --project ./tfm --record false --spec './tfm/cypress/e2e/journeys/${{ matrix.spec }}'
-          working-directory: ./e2e-tests
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-            TZ=${{ vars.TIMEZONE }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Screenshots
-
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: e2e-tests-tfm-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
-          path: ./e2e-tests/tfm/cypress/screenshots/
-          retention-days: 1
-
-  #7.1. E2E - UKEF
-  e2e-tests-ukef:
-    name: E2E UKEF 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        spec: ['portal/MIA-underwriter/**/*.spec.js']
-
-    concurrency:
-      group: e2e-tests-ukef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-
-      - name: Repository
-        uses: actions/checkout@v5
-
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
-
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Docker
-        uses: ./.github/actions/rerun
-        with:
-          command: docker compose up --build -d
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Initialise
-        uses: ./.github/actions/rerun
-        with:
-          command: sleep 100s && npm run load
-          working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: SQL
-        working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-        run: npm run db:migrate
-
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npx cypress run --config video=false --browser electron --project ./ukef --record false --spec './ukef/cypress/e2e/journeys/${{ matrix.spec }}'
-          working-directory: ./e2e-tests
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
-            TZ=${{ vars.TIMEZONE }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Screenshots
-
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: e2e-tests-ukef-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
-          path: ./e2e-tests/ukef/cypress/screenshots/
-          retention-days: 1
-
-  #7.2. E2E - UKEF - Mocked
-  e2e-tests-ukef-mocked-calls:
-    name: E2E UKEF - MOCKED 👷
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        spec:
-          [
-            'portal/submit-AIN/**/*.spec.js',
-            'portal/submit-MIA/**/*.spec.js',
-            'portal/submit-MIN/**/*.spec.js',
-            'portal/submit-deal/**/*.spec.js',
-            'utilisation-reports/**/*.spec.js',
-          ]
-
-    concurrency:
-      group: e2e-tests-ukef-mocked-calls-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-
-      - name: Repository
-        uses: actions/checkout@v5
-
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
-
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Docker
-        uses: ./.github/actions/rerun
-        with:
-          command: docker compose up --build -d
-          retries: ${{ vars.RETRY_LIMIT }}
-          env: |
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-
-      - name: Initialise
-        uses: ./.github/actions/rerun
-        with:
-          command: sleep 100s && npm run load
-          working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: SQL
-        working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-        run: npm run db:migrate
-
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npx cypress run --config video=false --browser electron --project ./ukef --record false --spec './ukef/cypress/e2e/journeys/${{ matrix.spec }}'
-          working-directory: ./e2e-tests
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
-            TZ=${{ vars.TIMEZONE }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Screenshots
-
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: e2e-tests-ukef-mocked-calls-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
-          path: ./e2e-tests/ukef/cypress/screenshots/
-          retention-days: 1
-
-  #8. E2E - FF
-  e2e-tests-ff:
-    name: E2E feature flag 👷
-    needs: [setup]
-    env:
-      # Various feature flags
-      FF_FEE_RECORD_CORRECTION_ENABLED: 'true'
-      FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
-      FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
-      FF_TFM_SSO_ENABLED: 'false'
-      FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true'
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        spec:
-          [
-            './portal/cypress/e2e/journeys/feature-flag-enabled/**/*.spec.js',
-            './portal/cypress/e2e/journeys/admin/**/*.spec.js',
-            './portal/cypress/e2e/journeys/checker/**/*.spec.js',
-            './portal/cypress/e2e/journeys/dashboard/dashboard-deals/filter-by/*.spec.js',
-            './portal/cypress/e2e/journeys/dashboard/dashboard-deals/filters/*.spec.js',
-            './portal/cypress/e2e/journeys/dashboard/dashboard-deals/sort/*.spec.js',
-            './portal/cypress/e2e/journeys/dashboard/dashboard-deals/deal-cancellation-enabled/*.spec.js',
-            './portal/cypress/e2e/journeys/dashboard/dashboard-facilities/filter-by/*.spec.js',
-            './portal/cypress/e2e/journeys/dashboard/dashboard-facilities/filters/*.spec.js',
-            './portal/cypress/e2e/journeys/dashboard/dashboard-facilities/sort/*.spec.js',
-            './portal/cypress/e2e/journeys/feedback/**/*.spec.js',
-            './portal/cypress/e2e/journeys/login/**/*.spec.js',
-            './portal/cypress/e2e/journeys/maker/check-deal-details/*.spec.js',
-            './portal/cypress/e2e/journeys/maker/clone-deal/*.spec.js',
-            './portal/cypress/e2e/journeys/maker/dashboard/**/*.spec.js',
-            './portal/cypress/e2e/journeys/maker/submit-a-deal-for-review/*.spec.js',
-            './portal/cypress/e2e/journeys/maker/submit-a-deal-for-review-with-issued-and-unissued-facilities-and-resubmit-after-checker-returns/*.spec.js',
-            './portal/cypress/e2e/journeys/maker/submit-issued-facilities-for-review/*.spec.js',
-            './portal/cypress/e2e/journeys/maker/bank-details/*.spec.js',
-            './portal/cypress/e2e/journeys/maker/eligibility/*.spec.js',
-            './portal/cypress/e2e/journeys/maker/abandon-a-deal/*.spec.js',
-            './portal/cypress/e2e/journeys/maker/before-you-start/*.spec.js',
-            './portal/cypress/e2e/journeys/maker/bss-mandatory-criteria/*.spec.js',
-            './portal/cypress/e2e/journeys/maker/edit-deal-name/*.spec.js',
-            './portal/cypress/e2e/journeys/maker/proceed-to-review/*.spec.js',
-            './portal/cypress/e2e/journeys/maker/select-scheme/*.spec.js',
-            './portal/cypress/e2e/journeys/maker/xss/*.spec.js',
-            './portal/cypress/e2e/journeys/maker-about-supply-contract/**/*.spec.js',
-            './portal/cypress/e2e/journeys/maker-bond/**/*.spec.js',
-            './portal/cypress/e2e/journeys/maker-facilities/**/*.spec.js',
-            './portal/cypress/e2e/journeys/maker-loan/**/*.spec.js',
-            './portal/cypress/e2e/journeys/read-only/**/*.spec.js',
-            './portal/cypress/e2e/journeys/reports/**/*.spec.js',
-            './portal/cypress/e2e/journeys/payment-report-officer/utilisation-report-upload/**/*.spec.js',
-            './portal/cypress/e2e/journeys/payment-report-officer/previous-reports/**/*.spec.js',
-            './portal/cypress/e2e/journeys/payment-report-officer/record-corrections/feature-flag-enabled/**/*.spec.js',
-            './gef/cypress/e2e/feature-flag-enabled/**/*.spec.js',
-            './gef/cypress/e2e/application/**/*.spec.js',
-            './gef/cypress/e2e/checker/**/*.spec.js',
-            './gef/cypress/e2e/clone/*.spec.js',
-            './gef/cypress/e2e/clone/**/*.spec.js',
-            './gef/cypress/e2e/eligibility/**/*.spec.js',
-            './gef/cypress/e2e/exporter/**/*.spec.js',
-            './gef/cypress/e2e/external/**/*.spec.js',
-            './gef/cypress/e2e/facility/pre-submission/**/*.spec.js',
-            './gef/cypress/e2e/facility/review-ukef-approval/**/*.spec.js',
-            './gef/cypress/e2e/facility/version-0/*.spec.js',
-            './gef/cypress/e2e/facility/unissued-facilities/AIN/**/*.spec.js',
-            './gef/cypress/e2e/facility/unissued-facilities/MIN/**/*.spec.js',
-            './gef/cypress/e2e/maker/**/*.spec.js',
-            './gef/cypress/e2e/scenarios/**/*.spec.js',
-            './gef/cypress/e2e/security/**/*.spec.js',
-            './gef/cypress/e2e/ukef/**/*.spec.js',
-            './gef/cypress/e2e/upload/**/*.spec.js',
-            './gef/cypress/e2e/amendments/portal-amendments-enabled/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/activities/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/AIN/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/deal-cancellation-enabled/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/documents/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/GEF/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/MIA/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/parties/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/parties/agent/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/parties/bond/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/parties/buyer/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/parties/exporter/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/parties/indemnifier/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/tasks/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/tasks/AIN/*.spec.js',
-            './tfm/cypress/e2e/journeys/case/tasks/MIA/*.spec.js',
-            './tfm/cypress/e2e/journeys/case-amendments/add-bank-decision/*.spec.js',
-            './tfm/cypress/e2e/journeys/case-amendments/add-underwriter-decision/*.spec.js',
-            './tfm/cypress/e2e/journeys/case-amendments/amendment-changes-multiple-single-amendments/*.spec.js',
-            './tfm/cypress/e2e/journeys/case-amendments/amendment-should-change-all-facilities-values/*.spec.js',
-            './tfm/cypress/e2e/journeys/case-amendments/amendment-underwriting-page-multiple-amendments/*.spec.js',
-            './tfm/cypress/e2e/journeys/case-amendments/amendments-version-order/*.spec.js',
-            './tfm/cypress/e2e/journeys/case-amendments/facility-end-date/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/case-amendments/in-progress/*.spec.js',
-            './tfm/cypress/e2e/journeys/case-amendments/request-when-previously-submitted/*.spec.js',
-            './tfm/cypress/e2e/journeys/case-amendments/show-amendment-button/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/case-amendments/tasks/*.spec.js',
-            './tfm/cypress/e2e/journeys/case-amendments/underwriting-page-unassigned/*.spec.js',
-            './tfm/cypress/e2e/journeys/case-amendments/user-flow/*.spec.js',
-            './tfm/cypress/e2e/journeys/case-underwriting/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/deal-cancellation/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/deals/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/facility/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/feedback/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/footer/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/header/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/login/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/users/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/utilisation-reports/fee-record-correction/feature-flag-enabled/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/deal-cancellation/BSS-EWCS/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/deal-cancellation/gef/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/journeys/tfm/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/amendment-details/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/general/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/application-details/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/status/**/*.spec.js',
-            './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/**/*.spec.js',
-          ]
-
-    concurrency:
-      group: e2e-tests-ukef-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-
-      - name: Repository
-        uses: actions/checkout@v5
-
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
-
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Docker
-        uses: ./.github/actions/rerun
-        with:
-          command: docker compose up --build -d
-          retries: ${{ vars.RETRY_LIMIT }}
-          env: |
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-
-      - name: Initialise
-        uses: ./.github/actions/rerun
-        with:
-          command: sleep 100s && npm run load
-          working-directory: ./utils
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: SQL
-        working-directory: ./libs/common
-        env:
-          SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
-        run: npm run db:migrate
-
-      - name: Project
-        id: project
-        run: |
-          directory=$(echo ${{ matrix.spec }} | cut -d / -f2)
-          echo "::set-output name=directory::$directory"
-
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npx cypress run --config video=false --browser electron --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
-          working-directory: ./e2e-tests
-          env: |
-            MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
-            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
-            TZ=${{ vars.TIMEZONE }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Screenshots
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: e2e-tests-ukef-ff-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
-          path: ./e2e-tests/${{ steps.project.outputs.directory }}/cypress/screenshots/
-          retention-days: 1
-
-  #9. E2E - Maintenance
-  e2e-tests-maintenance:
-    name: E2E maintenance 👷
-    needs: [setup]
-    env:
-      MAINTENANCE_ACTIVE: 'true'
-      MAINTENANCE_TIMESTAMP: ${{ vars.MAINTENANCE_TIMESTAMP }}
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        spec:
-          [
-            './portal/cypress/e2e/journeys/maintenance/**/*.spec.js',
-            './gef/cypress/e2e/maintenance/**/*.spec.js',
-            './tfm/cypress/e2e/journeys/maintenance/**/*.spec.js',
-          ]
-
-    concurrency:
-      group: e2e-tests-maintenance-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-
-      - name: Repository
-        uses: actions/checkout@v5
-
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
-
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Docker
-        uses: ./.github/actions/rerun
-        with:
-          command: docker compose up --build -d
-          retries: ${{ vars.RETRY_LIMIT }}
-          env: |
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-
-      - name: Project
-        id: project
-        run: |
-          directory=$(echo ${{ matrix.spec }} | cut -d / -f2)
-          echo "::set-output name=directory::$directory"
-
-      - name: Execute
-        uses: ./.github/actions/rerun
-        with:
-          command: npx cypress run --config video=false --browser electron --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
-          working-directory: ./e2e-tests
-          env: |
-            SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
-            GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
-            TZ=${{ vars.TIMEZONE }}
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Screenshots
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: e2e-tests-maintenance-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
-          path: ./e2e-tests/${{ steps.project.outputs.directory }}/cypress/screenshots/
-          retention-days: 1
-
-  #10. Docker build
-  build:
-    name: Build 🛠️
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        functions: ['acbs']
-        webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'dtfs-central-api', 'external-api', 'trade-finance-manager-api']
-
-    concurrency:
-      group: docker-build-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}-${{ matrix.webapp }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-
-      - name: Repository
-        uses: actions/checkout@v5
-
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
-
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: Function
-        run: docker build -f ./azure-functions/${{ matrix.functions }}/Dockerfile .
-
-      - name: WebApp
-        run: docker build -f ./${{ matrix.webapp }}/Dockerfile . --build-arg GITHUB_SHA=${{ github.sha }}
-
-  #11. Webpack build
-  webpack:
-    name: Webpack 🛠️
-    needs: [setup]
-    environment:
-      name: ${{ needs.setup.outputs.environment }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      # Do not cancel in-progress jobs upon failure
-      fail-fast: false
-      # Single dimension matrix
-      matrix:
-        webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui']
-
-    concurrency:
-      group: webpack-build-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.webapp }}
-      cancel-in-progress: true
-
-    steps:
-      - name: Node
-        uses: actions/setup-node@v5
-        with:
-          node-version: ${{ vars.NODE_VERSION }}
-
-      - name: Repository
-        uses: actions/checkout@v5
-
-      - name: Timezone
-        uses: szenius/set-timezone@v2.0
-        with:
-          timezoneLinux: ${{ needs.setup.outputs.TZ }}
-
-      - name: Dependencies
-        uses: ./.github/actions/rerun
-        with:
-          command: npm ci
-          retries: ${{ vars.RETRY_LIMIT }}
-
-      - name: WebApp
-        run: npm run build -w=${{ matrix.webapp }}
+# # 1. Infrastructure Setup:
+# # Sets environment variables: environment, timezone, and secrets for various services.
+# # Outputs: Exposes environment and timezone for use in subsequent jobs.
+# #
+# # 2. API Tests:
+# # Runs tests for API endpoints in parallel:
+# # portal-api, gef-ui, trade-finance-manager-ui, portal, dtfs-central-api, external-api
+# # DOF-specific API tests:
+# # acbs
+# # Generates code coverage reports for API tests.
+# #
+# # 3. Unit Tests:
+# # Runs unit tests for individual code components:
+# # portal-api, dtfs-central-api, external-api, trade-finance-manager-api
+# # Generates code coverage reports for unit tests.
+# #
+# # 4. UI Integration Tests:
+# # Tests interactions between UI elements and backend logic:
+# # portal, gef-ui, trade-finance-manager-ui
+# # Generates code coverage reports for UI integration tests.
+# #
+# # 5-7. End-to-End (E2E) Tests:
+# # Runs tests simulating user journeys through different parts of the application:
+# # portal (various scenarios)
+# # gef
+# # tfm
+# # ukef
+# # Uses Cypress for E2E testing.
+# # Initializes the environment with data before tests.
+# #
+# # 8. End-to-End (E2E) - Feature flags (FF)
+# # Run tests 5-7 with all feature flags set to true
+# #
+# # Additional Notes:
+# # Workflow runs on pull requests to the main branch and pushes to specific branches.
+# # Concurrency strategies ensure efficient resource usage and avoid job collisions.
+# # Environment variables and secrets are managed securely.
+# # Codecov integration tracks code coverage across different test types.
+# #
+# # 9. Docker build
+# # Verified docker build step for `acbs` microservice.
+# # All other microservice builds are not tested due to docker compose
+# # execution prior to test suits initiation.
+# # Since ACBS pertinent tests do not require `acbs` docker service initialisation
+# # any build failure would be missed without this Quality Assurance - Tests job.
+
+# name: Quality Assurance - Tests
+# run-name: ✅ Executing test QA on ${{ github.event.number }}
+
+# permissions:
+#   contents: read
+
+# on:
+#   pull_request:
+#     branches:
+#       - main
+#       - 'release-*'
+
+#     paths:
+#       - 'package*.json'
+#       - 'docker*.yml'
+#       - '.github/**'
+#       - 'gef-ui/**'
+#       - 'portal-ui/**'
+#       - 'portal-api/**'
+#       - 'trade-finance-manager-ui/**'
+#       - 'trade-finance-manager-api/**'
+#       - 'external-api/**'
+#       - 'dtfs-central-api/**'
+#       - 'azure-functions/**'
+#       - 'e2e-tests/**'
+#       - 'utils/**'
+#       - 'libs/**'
+#       - 'README.md'
+#       - 'reverse-proxy/**'
+
+#   push:
+#     branches:
+#       # Staging ready release
+#       - release-*
+#       - '!release-please*'
+
+#   create:
+#     branches:
+#       # Production ready release candidates
+#       - release-*-rc
+
+#     paths:
+#       - '.github/workflows/deployment.yml'
+#       - 'portal-ui/**'
+#       - 'gef-ui/**'
+#       - 'trade-finance-manager-ui/**'
+#       - 'portal-api/**'
+#       - 'dtfs-central-api/**'
+#       - 'trade-finance-manager-api/**'
+#       - 'external-api/**'
+#       - 'azure-functions/acbs/**'
+
+# env:
+#   environment: dev
+#   TZ: ${{ vars.TIMEZONE }}
+#   credentials: ${{ secrets.AZURE_DIGITAL_DEV }}
+#   MONGODB_URI: ${{ secrets.MONGODB_URI }}
+#   MONGO_INITDB_DATABASE: ${{ secrets.MONGO_INITDB_DATABASE }}
+#   MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGO_INITDB_ROOT_USERNAME }}
+#   MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
+#   AZURE_PORTAL_STORAGE_ACCOUNT: ${{ secrets.AZURE_PORTAL_STORAGE_ACCOUNT }}
+#   AZURE_PORTAL_STORAGE_ACCESS_KEY: ${{ secrets.AZURE_PORTAL_STORAGE_ACCESS_KEY }}
+#   AZURE_PORTAL_FILESHARE_NAME: ${{ secrets.AZURE_PORTAL_FILESHARE_NAME }}
+#   AZURE_PORTAL_EXPORT_FOLDER: ${{ secrets.AZURE_PORTAL_EXPORT_FOLDER }}
+#   AZURE_UTILISATION_REPORTS_FILESHARE_NAME: ${{ vars.AZURE_UTILISATION_REPORTS_FILESHARE_NAME }}
+#   GOV_NOTIFY_API_KEY: ${{ secrets.GOV_NOTIFY_API_KEY}}
+#   MOCK_E2E_GOV_NOTIFY_API_KEY: ${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#   MOCK_E2E_NUMBER_GENERATOR: ${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+#   GOV_NOTIFY_EMAIL_RECIPIENT: ${{ secrets.GOV_NOTIFY_EMAIL_RECIPIENT }}
+#   JWT_SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
+#   JWT_VALIDATING_KEY: ${{ secrets.JWT_VALIDATING_KEY }}
+#   APIM_TFS_URL: ${{ secrets.APIM_TFS_URL }}
+#   APIM_TFS_KEY: ${{ secrets.APIM_TFS_KEY }}
+#   APIM_TFS_VALUE: ${{ secrets.APIM_TFS_VALUE }}
+#   APIM_MDM_URL: ${{ secrets.APIM_MDM_URL }}
+#   APIM_MDM_KEY: ${{ secrets.APIM_MDM_KEY }}
+#   APIM_MDM_VALUE: ${{ secrets.APIM_MDM_VALUE }}
+#   APIM_ESTORE_URL: ${{ secrets.APIM_ESTORE_URL }}
+#   APIM_ESTORE_KEY: ${{ secrets.APIM_ESTORE_KEY }}
+#   APIM_ESTORE_VALUE: ${{ secrets.APIM_ESTORE_VALUE }}
+#   SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+#   UKEF_TFM_API_SYSTEM_KEY: ${{ secrets.UKEF_TFM_API_SYSTEM_KEY }}
+#   UKEF_TFM_API_REPORTS_KEY: ${{ secrets.UKEF_TFM_API_REPORTS_KEY }}
+#   ESTORE_URL: ${{ secrets.ESTORE_URL }}
+#   ESTORE_CRON_MANAGER_SCHEDULE: ${{ vars.ESTORE_CRON_MANAGER_SCHEDULE }}
+#   TFM_API_KEY: ${{ secrets.TFM_API_KEY }}
+#   PORTAL_API_KEY: ${{ secrets.PORTAL_API_KEY }}
+#   DTFS_CENTRAL_API_KEY: ${{ secrets.DTFS_CENTRAL_API_KEY }}
+#   EXTERNAL_API_KEY: ${{ secrets.EXTERNAL_API_KEY }}
+#   NODE_ENV: ${{ secrets.NODE_ENV }}
+#   CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
+#   PORTAL_API_URL: ${{ vars.PORTAL_API_URL_LOCALHOST }}
+#   TFM_API_URL: ${{ vars.TFM_API_URL_LOCALHOST }}
+#   EXTERNAL_API_URL: ${{ vars.EXTERNAL_API_URL_LOCALHOST }}
+#   DTFS_CENTRAL_API_URL: ${{ vars.DTFS_CENTRAL_API_URL_LOCALHOST }}
+#   PORTAL_UI_URL: ${{ vars.PORTAL_UI_URL_LOCALHOST }}
+#   TFM_UI_URL: ${{ vars.TFM_UI_URL_LOCALHOST }}
+#   RATE_LIMIT_THRESHOLD: ${{ vars.RATE_LIMIT_THRESHOLD }}
+#   UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: ${{ vars.UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}
+#   UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: ${{ vars.UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH }}
+#   UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE }}
+#   UTILISATION_REPORT_DUE_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_DUE_EMAIL_SCHEDULE }}
+#   UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE: ${{ vars.UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE }}
+#   CHANGE_STREAM_ENABLED: ${{ vars.CHANGE_STREAM_ENABLED }}
+#   DELETION_AUDIT_LOGS_TTL_SECONDS: ${{ vars.DELETION_AUDIT_LOGS_TTL_SECONDS }}
+#   AUDIT_API_URL: ${{ secrets.AUDIT_API_URL }}
+#   AUDIT_API_USERNAME: ${{ secrets.AUDIT_API_USERNAME }}
+#   AUDIT_API_PASSWORD: ${{ secrets.AUDIT_API_PASSWORD }}
+#   UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: ${{ vars.UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE }}
+#   UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS: ${{ secrets. UTILISATION_REPORT_CREATION_FAILURE_EMAIL_ADDRESS }}
+#   ACCEPT_EULA: ${{ vars.ACCEPT_EULA }}
+#   MSSQL_SA_PASSWORD: ${{ secrets.MSSQL_SA_PASSWORD }}
+#   SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_QA }}
+#   SQL_DB_PORT: ${{ secrets.SQL_DB_PORT_QA }}
+#   SQL_DB_USERNAME: ${{ secrets.SQL_DB_USERNAME_QA }}
+#   SQL_DB_PASSWORD: ${{ secrets.SQL_DB_PASSWORD_QA }}
+#   SQL_DB_NAME: ${{ secrets.SQL_DB_NAME_QA }}
+#   SQL_DB_LOGGING_ENABLED: ${{ vars.SQL_DB_LOGGING_ENABLED }}
+#   ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE: ${{ vars.ACBS_DURABLE_FUNCTIONS_LOG_DELETION_SCHEDULE }}
+#   CONTACT_US_EMAIL_ADDRESS: ${{ vars.CONTACT_US_EMAIL_ADDRESS }}
+#   FF_FEE_RECORD_CORRECTION_ENABLED: ${{ vars.FF_FEE_RECORD_CORRECTION_ENABLED }}
+#   FF_TFM_DEAL_CANCELLATION_ENABLED: ${{ vars.FF_TFM_DEAL_CANCELLATION_ENABLED }}
+#   FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: ${{ vars.FF_PORTAL_FACILITY_AMENDMENTS_ENABLED }}
+#   FF_TFM_SSO_ENABLED: ${{ vars.FF_TFM_SSO_ENABLED }}
+#   FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: ${{ vars.FF_SALESFORCE_CUSTOMER_CREATION_ENABLED }}
+#   GEF_DEAL_VERSION: ${{ vars.GEF_DEAL_VERSION }}
+#   ENTRA_ID_CLIENT_ID: ${{ vars.ENTRA_ID_CLIENT_ID }}
+#   ENTRA_ID_CLOUD_INSTANCE: ${{ vars.ENTRA_ID_CLOUD_INSTANCE }}
+#   ENTRA_ID_TENANT_ID: ${{ vars.ENTRA_ID_TENANT_ID }}
+#   ENTRA_ID_CLIENT_SECRET: ${{ vars.ENTRA_ID_CLIENT_SECRET }}
+#   ENTRA_ID_REDIRECT_URL: ${{ vars.ENTRA_ID_REDIRECT_URL }}
+#   DEAL_CANCELLATION_SCHEDULE: ${{ vars.DEAL_CANCELLATION_SCHEDULE }}
+#   RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE: ${{ vars.RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE }}
+#   UKEF_GEF_REPORTING_EMAIL_RECIPIENT: ${{ secrets.UKEF_GEF_REPORTING_EMAIL_RECIPIENT }}
+
+# jobs:
+#   # 1. Setup test infrastructure
+#   setup:
+#     name: Infrastructure setup 🔧
+#     runs-on: ubuntu-latest
+#     outputs:
+#       environment: ${{ env.environment }}
+#       TZ: ${{ env.TZ }}
+#     steps:
+#       - name: Environment 🧪
+#         run: echo "Environment set to ${{ env.environment }}"
+
+#       - name: Timezone 🌐
+#         run: echo "Timezone set to ${{ env.TZ }}"
+
+#       - name: Timestamp
+#         id: timestamp
+#         run: echo "epoch=$(date +%s)" >> "$GITHUB_OUTPUT"
+
+#   # 2.1. API tests
+#   api-tests:
+#     name: API 👷
+#     needs: [setup]
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         services: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'trade-finance-manager-api', 'external-api']
+
+#     concurrency:
+#       group: api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Node
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: ${{ vars.NODE_VERSION }}
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v2.0
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+#       - name: Repository
+#         uses: actions/checkout@v5
+
+#       - name: Dependencies
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm ci
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Start
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: docker compose up --build -d
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Initialise
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: sleep 100s && npm run load
+#           working-directory: ./utils
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: SQL
+#         working-directory: ./libs/common
+#         env:
+#           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+#         run: npm run db:migrate
+
+#       - name: Execute
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm run api-test --workspace=${{ matrix.services }}
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Stop
+#         working-directory: ./
+#         run: docker compose down
+
+#       - name: Coverage
+#         uses: codecov/codecov-action@v5
+#         with:
+#           token: ${{ secrets.CODECOV_TOKEN }}
+#           flags: api-test
+#           verbose: true
+
+#   # 2.2 dtfs-central-api API tests
+#   dtfs-central-api-api-tests:
+#     name: API - dtfs-central-api 👷
+#     needs: [setup]
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         services:
+#           [
+#             'api-tests/v1/bank',
+#             'api-tests/v1/cron-jobs',
+#             'api-tests/v1/durable-functions',
+#             'api-tests/v1/middleware',
+#             'api-tests/v1/routes',
+#             'api-tests/v1/user',
+#             'api-tests/v1/deals',
+#             'api-tests/v1/facilities',
+#             'api-tests/v1/gef-deals',
+#             'api-tests/v1/gef-facilities',
+#             'api-tests/v1/portal-facility-amendments',
+#             'api-tests/v1/tfm',
+#             'api-tests/v1/utilisation-reports',
+#           ]
+
+#     concurrency:
+#       group: dtfs-central-api-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Node
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: ${{ vars.NODE_VERSION }}
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v2.0
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+#       - name: Repository
+#         uses: actions/checkout@v5
+
+#       - name: Dependencies
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm ci
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Start
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: docker compose up --build -d
+#           retries: ${{ vars.RETRY_LIMIT }}
+#           env: |
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+
+#       - name: Initialise
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: sleep 100s && npm run load
+#           working-directory: ./utils
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: SQL
+#         working-directory: ./libs/common
+#         env:
+#           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+#         run: npm run db:migrate
+
+#       - name: Execute
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm run api-test ${{ matrix.services }} --workspace=dtfs-central-api
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Stop
+#         working-directory: ./
+#         run: docker compose down
+
+#       - name: Coverage
+#         uses: codecov/codecov-action@v5
+#         with:
+#           token: ${{ secrets.CODECOV_TOKEN }}
+#           flags: api-test
+#           verbose: true
+
+#   # 2.3 portal-api API tests
+#   portal-api-api-tests:
+#     name: API - portal-api 👷
+#     needs: [setup]
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         services:
+#           [
+#             'api-tests/api',
+#             'api-tests/drivers',
+#             'api-tests/v1/bank-holidays',
+#             'api-tests/v1/banks',
+#             'api-tests/v1/bonds',
+#             'api-tests/v1/companies',
+#             'api-tests/v1/countries',
+#             'api-tests/v1/currencies',
+#             'api-tests/v1/deals',
+#             'api-tests/v1/eligibility-criteria',
+#             'api-tests/v1/feedback',
+#             'api-tests/v1/gef',
+#             'api-tests/v1/industry-sectors',
+#             'api-tests/v1/loan',
+#             'api-tests/v1/mandatory-criteria',
+#             'api-tests/v1/middleware',
+#             'api-tests/v1/reports',
+#             'api-tests/v1/users',
+#             'api-tests/v1/utilisation-report-service',
+#             'api-tests/v1/validate',
+#           ]
+
+#     concurrency:
+#       group: portal-api-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Node
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: ${{ vars.NODE_VERSION }}
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v2.0
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+#       - name: Repository
+#         uses: actions/checkout@v5
+
+#       - name: Dependencies
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm ci
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Start
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: docker compose up --build -d
+#           retries: ${{ vars.RETRY_LIMIT }}
+#           env: |
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+
+#       - name: Initialise
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: sleep 100s && npm run load
+#           working-directory: ./utils
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: SQL
+#         working-directory: ./libs/common
+#         env:
+#           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+#         run: npm run db:migrate
+
+#       - name: Execute
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm run api-test ${{ matrix.services }} --workspace=portal-api
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Stop
+#         working-directory: ./
+#         run: docker compose down
+
+#       - name: Coverage
+#         uses: codecov/codecov-action@v5
+#         with:
+#           token: ${{ secrets.CODECOV_TOKEN }}
+#           flags: api-test
+#           verbose: true
+
+#   # 2.4. API tests
+#   dof-api-tests:
+#     name: DOF API 👷
+#     needs: [setup]
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         functions: ['acbs']
+
+#     concurrency:
+#       group: dof-api-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Node
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: ${{ vars.NODE_VERSION }}
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v2.0
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+#       - name: Repository
+#         uses: actions/checkout@v5
+
+#       - name: Dependencies
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm ci
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: ${{ matrix.functions }}
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm run api-test
+#           working-directory: ./azure-functions/${{ matrix.functions }}
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Coverage
+#         uses: codecov/codecov-action@v5
+#         with:
+#           token: ${{ secrets.CODECOV_TOKEN }}
+#           flags: api-test
+#           verbose: true
+
+#   # 3. Unit tests
+#   unit-tests:
+#     name: Unit 👷
+#     needs: [setup]
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         services:
+#           [
+#             './portal-ui',
+#             './gef-ui',
+#             './trade-finance-manager-ui',
+#             './portal-api',
+#             './dtfs-central-api',
+#             './external-api',
+#             './trade-finance-manager-api',
+#             './libs/common',
+#             './azure-functions/acbs',
+#           ]
+
+#     concurrency:
+#       group: unit-tests-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Node
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: ${{ vars.NODE_VERSION }}
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v2.0
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+#       - name: Repository
+#         uses: actions/checkout@v5
+
+#       - name: Dependencies
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm ci
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Execute
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm run unit-test
+#           working-directory: ${{ matrix.services }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+#           env: |
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+
+#       - name: Coverage
+#         uses: codecov/codecov-action@v5
+#         with:
+#           token: ${{ secrets.CODECOV_TOKEN }}
+#           flags: unit-test
+#           verbose: true
+
+#   # 3. Unit tests - FF
+#   unit-tests-ff:
+#     name: Unit feature flag 👷
+#     needs: [setup]
+#     env:
+#       # Various feature flags
+#       FF_FEE_RECORD_CORRECTION_ENABLED: 'true'
+#       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
+#       FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
+#       FF_TFM_SSO_ENABLED: 'true'
+#       FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true'
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         services:
+#           [
+#             './portal-ui',
+#             './gef-ui',
+#             './trade-finance-manager-ui',
+#             './portal-api',
+#             './dtfs-central-api',
+#             './external-api',
+#             './trade-finance-manager-api',
+#             './libs/common',
+#             './azure-functions/acbs',
+#           ]
+
+#     concurrency:
+#       group: unit-tests-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.services }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Node
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: ${{ vars.NODE_VERSION }}
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v2.0
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+#       - name: Repository
+#         uses: actions/checkout@v5
+
+#       - name: Dependencies
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm ci
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Execute
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm run unit-test-ff
+#           working-directory: ${{ matrix.services }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+#           env: |
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+
+#       - name: Coverage
+#         uses: codecov/codecov-action@v5
+#         with:
+#           token: ${{ secrets.CODECOV_TOKEN }}
+#           flags: unit-test
+#           verbose: true
+
+#   # 4. E2E - PORTAL
+#   e2e-tests-portal:
+#     name: E2E Portal 👷
+#     needs: [setup]
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         spec:
+#           [
+#             'homepage/**/*.spec.js',
+#             'admin/**/*.spec.js',
+#             'checker/**/*.spec.js',
+#             'dashboard/dashboard-deals/deal-cancellation-disabled/*.spec.js',
+#             'dashboard/dashboard-deals/filter-by/*.spec.js',
+#             'dashboard/dashboard-deals/filters/*.spec.js',
+#             'dashboard/dashboard-deals/sort/*.spec.js',
+#             'dashboard/dashboard-facilities/filter-by/*.spec.js',
+#             'dashboard/dashboard-facilities/filters/*.spec.js',
+#             'dashboard/dashboard-facilities/sort/*.spec.js',
+#             'feedback/**/*.spec.js',
+#             'contact/**/*.spec.js',
+#             'login/**/*.spec.js',
+#             'maker/check-deal-details/*.spec.js',
+#             'maker/clone-deal/*.spec.js',
+#             'maker/dashboard/**/*.spec.js',
+#             'maker/submit-a-deal-for-review/*.spec.js',
+#             'maker/submit-a-deal-for-review-with-issued-and-unissued-facilities-and-resubmit-after-checker-returns/*.spec.js',
+#             'maker/submit-issued-facilities-for-review/*.spec.js',
+#             'maker/bank-details/*.spec.js',
+#             'maker/eligibility/*.spec.js',
+#             'maker/abandon-a-deal/*.spec.js',
+#             'maker/before-you-start/*.spec.js',
+#             'maker/bss-mandatory-criteria/*.spec.js',
+#             'maker/edit-deal-name/*.spec.js',
+#             'maker/proceed-to-review/*.spec.js',
+#             'maker/select-scheme/*.spec.js',
+#             'maker/xss/*.spec.js',
+#             'maker-about-supply-contract/**/*.spec.js',
+#             'maker-bond/**/*.spec.js',
+#             'maker-facilities/**/*.spec.js',
+#             'maker-loan/**/*.spec.js',
+#             'read-only/**/*.spec.js',
+#             'reports/**/*.spec.js',
+#             'payment-report-officer/utilisation-report-upload/**/*.spec.js',
+#             'payment-report-officer/previous-reports/**/*.spec.js',
+#             'payment-report-officer/record-corrections/feature-flag-disabled/**/*.spec.js',
+#           ]
+
+#     concurrency:
+#       group: e2e-tests-portal-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Node
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: ${{ vars.NODE_VERSION }}
+
+#       - name: Repository
+#         uses: actions/checkout@v5
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v2.0
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+#       - name: Dependencies
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm ci
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Docker
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: docker compose up --build -d
+#           retries: ${{ vars.RETRY_LIMIT }}
+#           env: |
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+
+#       - name: Initialise
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: sleep 100s && npm run load
+#           working-directory: ./utils
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: SQL
+#         working-directory: ./libs/common
+#         env:
+#           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+#         run: npm run db:migrate
+
+#       - name: Execute
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npx cypress run --config video=false --browser electron --project ./portal --record false --spec './portal/cypress/e2e/journeys/${{ matrix.spec }}'
+#           working-directory: ./e2e-tests
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+#             TZ=${{ vars.TIMEZONE }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Screenshots
+#         uses: actions/upload-artifact@v4
+#         if: failure()
+#         with:
+#           name: e2e-tests-portal-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
+#           path: ./e2e-tests/portal/cypress/screenshots/
+#           retention-days: 1
+
+#   # 5. E2E - GEF
+#   e2e-tests-gef:
+#     name: E2E GEF 👷
+#     needs: [setup]
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         spec:
+#           [
+#             'homepage/**/*.spec.js',
+#             'amendments/portal-amendments-disabled/**/*.spec.js',
+#             'application/**/*.spec.js',
+#             'checker/**/*.spec.js',
+#             'clone/**/*.spec.js',
+#             'eligibility/**/*.spec.js',
+#             'exporter/**/*.spec.js',
+#             'external/**/*.spec.js',
+#             'facility/pre-submission/**/*.spec.js',
+#             'facility/review-ukef-approval/**/*.spec.js',
+#             'facility/version-0/*.spec.js',
+#             'facility/unissued-facilities/AIN/**/*.spec.js',
+#             'facility/unissued-facilities/MIN/**/*.spec.js',
+#             'maker/**/*.spec.js',
+#             'scenarios/**/*.spec.js',
+#             'security/**/*.spec.js',
+#             'ukef/**/*.spec.js',
+#             'upload/**/*.spec.js',
+#           ]
+
+#     concurrency:
+#       group: e2e-tests-gef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Node
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: ${{ vars.NODE_VERSION }}
+
+#       - name: Repository
+#         uses: actions/checkout@v5
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v2.0
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+#       - name: Dependencies
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm ci
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Docker
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: docker compose up --build -d
+#           retries: ${{ vars.RETRY_LIMIT }}
+#           env: |
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+
+#       - name: Initialise
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: sleep 100s && npm run load
+#           working-directory: ./utils
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: SQL
+#         working-directory: ./libs/common
+#         env:
+#           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+#         run: npm run db:migrate
+
+#       - name: Execute
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npx cypress run --config video=false --browser electron --project ./gef --record false --spec './gef/cypress/e2e/${{ matrix.spec }}'
+#           working-directory: ./e2e-tests
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+#             TZ=${{ vars.TIMEZONE }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Screenshots
+
+#         uses: actions/upload-artifact@v4
+#         if: failure()
+#         with:
+#           name: e2e-tests-gef-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
+#           path: ./e2e-tests/gef/cypress/screenshots/
+#           retention-days: 1
+
+#   #6. E2E - TFM
+#   e2e-tests-tfm:
+#     name: E2E TFM 👷
+#     needs: [setup]
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         spec:
+#           [
+#             'case/activities/*.spec.js',
+#             'case/AIN/*.spec.js',
+#             'case/deal-cancellation-disabled/*.spec.js',
+#             'case/documents/*.spec.js',
+#             'case/GEF/*.spec.js',
+#             'case/MIA/*.spec.js',
+#             'case/parties/*.spec.js',
+#             'case/parties/agent/*.spec.js',
+#             'case/parties/bond/*.spec.js',
+#             'case/parties/buyer/*.spec.js',
+#             'case/parties/exporter/*.spec.js',
+#             'case/parties/indemnifier/*.spec.js',
+#             'case/tasks/*.spec.js',
+#             'case/tasks/AIN/*.spec.js',
+#             'case/tasks/MIA/*.spec.js',
+#             'case-amendments/add-bank-decision/*.spec.js',
+#             'case-amendments/add-underwriter-decision/*.spec.js',
+#             'case-amendments/amendment-changes-multiple-single-amendments/*.spec.js',
+#             'case-amendments/amendment-should-change-all-facilities-values/*.spec.js',
+#             'case-amendments/amendment-underwriting-page-multiple-amendments/*.spec.js',
+#             'case-amendments/amendments-version-order/*.spec.js',
+#             'case-amendments/facility-end-date/**/*.spec.js',
+#             'case-amendments/in-progress/*.spec.js',
+#             'case-amendments/request-when-previously-submitted/*.spec.js',
+#             'case-amendments/show-amendment-button/*.spec.js',
+#             'case-amendments/tasks/*.spec.js',
+#             'case-amendments/underwriting-page-unassigned/*.spec.js',
+#             'case-amendments/user-flow/*.spec.js',
+#             'case-underwriting/**/*.spec.js',
+#             'deals/**/*.spec.js',
+#             'facility/**/*.spec.js',
+#             'feedback/**/*.spec.js',
+#             'footer/**/*.spec.js',
+#             'header/**/*.spec.js',
+#             'login/**/*.spec.js',
+#             'users/**/*.spec.js',
+#             'utilisation-reports/report-reconciliation/**/*.spec.js',
+#             'utilisation-reports/fee-record-correction/feature-flag-disabled/**/*.spec.js',
+#           ]
+
+#     concurrency:
+#       group: e2e-tests-tfm-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Node
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: ${{ vars.NODE_VERSION }}
+
+#       - name: Repository
+#         uses: actions/checkout@v5
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v2.0
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+#       - name: Dependencies
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm ci
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Docker
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: docker compose up --build -d
+#           retries: ${{ vars.RETRY_LIMIT }}
+#           env: |
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+
+#       - name: Initialise
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: sleep 100s && npm run load
+#           working-directory: ./utils
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: SQL
+#         working-directory: ./libs/common
+#         env:
+#           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+#         run: npm run db:migrate
+
+#       - name: Execute
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npx cypress run --config video=false --browser electron --project ./tfm --record false --spec './tfm/cypress/e2e/journeys/${{ matrix.spec }}'
+#           working-directory: ./e2e-tests
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+#             TZ=${{ vars.TIMEZONE }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Screenshots
+
+#         uses: actions/upload-artifact@v4
+#         if: failure()
+#         with:
+#           name: e2e-tests-tfm-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
+#           path: ./e2e-tests/tfm/cypress/screenshots/
+#           retention-days: 1
+
+#   #7.1. E2E - UKEF
+#   e2e-tests-ukef:
+#     name: E2E UKEF 👷
+#     needs: [setup]
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         spec: ['portal/MIA-underwriter/**/*.spec.js']
+
+#     concurrency:
+#       group: e2e-tests-ukef-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Node
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: ${{ vars.NODE_VERSION }}
+
+#       - name: Repository
+#         uses: actions/checkout@v5
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v2.0
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+#       - name: Dependencies
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm ci
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Docker
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: docker compose up --build -d
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Initialise
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: sleep 100s && npm run load
+#           working-directory: ./utils
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: SQL
+#         working-directory: ./libs/common
+#         env:
+#           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+#         run: npm run db:migrate
+
+#       - name: Execute
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npx cypress run --config video=false --browser electron --project ./ukef --record false --spec './ukef/cypress/e2e/journeys/${{ matrix.spec }}'
+#           working-directory: ./e2e-tests
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+#             TZ=${{ vars.TIMEZONE }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Screenshots
+
+#         uses: actions/upload-artifact@v4
+#         if: failure()
+#         with:
+#           name: e2e-tests-ukef-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
+#           path: ./e2e-tests/ukef/cypress/screenshots/
+#           retention-days: 1
+
+#   #7.2. E2E - UKEF - Mocked
+#   e2e-tests-ukef-mocked-calls:
+#     name: E2E UKEF - MOCKED 👷
+#     needs: [setup]
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         spec:
+#           [
+#             'portal/submit-AIN/**/*.spec.js',
+#             'portal/submit-MIA/**/*.spec.js',
+#             'portal/submit-MIN/**/*.spec.js',
+#             'portal/submit-deal/**/*.spec.js',
+#             'utilisation-reports/**/*.spec.js',
+#           ]
+
+#     concurrency:
+#       group: e2e-tests-ukef-mocked-calls-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Node
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: ${{ vars.NODE_VERSION }}
+
+#       - name: Repository
+#         uses: actions/checkout@v5
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v2.0
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+#       - name: Dependencies
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm ci
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Docker
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: docker compose up --build -d
+#           retries: ${{ vars.RETRY_LIMIT }}
+#           env: |
+#             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+
+#       - name: Initialise
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: sleep 100s && npm run load
+#           working-directory: ./utils
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: SQL
+#         working-directory: ./libs/common
+#         env:
+#           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+#         run: npm run db:migrate
+
+#       - name: Execute
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npx cypress run --config video=false --browser electron --project ./ukef --record false --spec './ukef/cypress/e2e/journeys/${{ matrix.spec }}'
+#           working-directory: ./e2e-tests
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+#             TZ=${{ vars.TIMEZONE }}
+#             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Screenshots
+
+#         uses: actions/upload-artifact@v4
+#         if: failure()
+#         with:
+#           name: e2e-tests-ukef-mocked-calls-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
+#           path: ./e2e-tests/ukef/cypress/screenshots/
+#           retention-days: 1
+
+#   #8. E2E - FF
+#   e2e-tests-ff:
+#     name: E2E feature flag 👷
+#     needs: [setup]
+#     env:
+#       # Various feature flags
+#       FF_FEE_RECORD_CORRECTION_ENABLED: 'true'
+#       FF_TFM_DEAL_CANCELLATION_ENABLED: 'true'
+#       FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'true'
+#       FF_TFM_SSO_ENABLED: 'false'
+#       FF_SALESFORCE_CUSTOMER_CREATION_ENABLED: 'true'
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         spec:
+#           [
+#             './portal/cypress/e2e/journeys/feature-flag-enabled/**/*.spec.js',
+#             './portal/cypress/e2e/journeys/admin/**/*.spec.js',
+#             './portal/cypress/e2e/journeys/checker/**/*.spec.js',
+#             './portal/cypress/e2e/journeys/dashboard/dashboard-deals/filter-by/*.spec.js',
+#             './portal/cypress/e2e/journeys/dashboard/dashboard-deals/filters/*.spec.js',
+#             './portal/cypress/e2e/journeys/dashboard/dashboard-deals/sort/*.spec.js',
+#             './portal/cypress/e2e/journeys/dashboard/dashboard-deals/deal-cancellation-enabled/*.spec.js',
+#             './portal/cypress/e2e/journeys/dashboard/dashboard-facilities/filter-by/*.spec.js',
+#             './portal/cypress/e2e/journeys/dashboard/dashboard-facilities/filters/*.spec.js',
+#             './portal/cypress/e2e/journeys/dashboard/dashboard-facilities/sort/*.spec.js',
+#             './portal/cypress/e2e/journeys/feedback/**/*.spec.js',
+#             './portal/cypress/e2e/journeys/login/**/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker/check-deal-details/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker/clone-deal/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker/dashboard/**/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker/submit-a-deal-for-review/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker/submit-a-deal-for-review-with-issued-and-unissued-facilities-and-resubmit-after-checker-returns/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker/submit-issued-facilities-for-review/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker/bank-details/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker/eligibility/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker/abandon-a-deal/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker/before-you-start/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker/bss-mandatory-criteria/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker/edit-deal-name/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker/proceed-to-review/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker/select-scheme/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker/xss/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker-about-supply-contract/**/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker-bond/**/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker-facilities/**/*.spec.js',
+#             './portal/cypress/e2e/journeys/maker-loan/**/*.spec.js',
+#             './portal/cypress/e2e/journeys/read-only/**/*.spec.js',
+#             './portal/cypress/e2e/journeys/reports/**/*.spec.js',
+#             './portal/cypress/e2e/journeys/payment-report-officer/utilisation-report-upload/**/*.spec.js',
+#             './portal/cypress/e2e/journeys/payment-report-officer/previous-reports/**/*.spec.js',
+#             './portal/cypress/e2e/journeys/payment-report-officer/record-corrections/feature-flag-enabled/**/*.spec.js',
+#             './gef/cypress/e2e/feature-flag-enabled/**/*.spec.js',
+#             './gef/cypress/e2e/application/**/*.spec.js',
+#             './gef/cypress/e2e/checker/**/*.spec.js',
+#             './gef/cypress/e2e/clone/*.spec.js',
+#             './gef/cypress/e2e/clone/**/*.spec.js',
+#             './gef/cypress/e2e/eligibility/**/*.spec.js',
+#             './gef/cypress/e2e/exporter/**/*.spec.js',
+#             './gef/cypress/e2e/external/**/*.spec.js',
+#             './gef/cypress/e2e/facility/pre-submission/**/*.spec.js',
+#             './gef/cypress/e2e/facility/review-ukef-approval/**/*.spec.js',
+#             './gef/cypress/e2e/facility/version-0/*.spec.js',
+#             './gef/cypress/e2e/facility/unissued-facilities/AIN/**/*.spec.js',
+#             './gef/cypress/e2e/facility/unissued-facilities/MIN/**/*.spec.js',
+#             './gef/cypress/e2e/maker/**/*.spec.js',
+#             './gef/cypress/e2e/scenarios/**/*.spec.js',
+#             './gef/cypress/e2e/security/**/*.spec.js',
+#             './gef/cypress/e2e/ukef/**/*.spec.js',
+#             './gef/cypress/e2e/upload/**/*.spec.js',
+#             './gef/cypress/e2e/amendments/portal-amendments-enabled/**/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case/activities/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case/AIN/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case/deal-cancellation-enabled/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case/documents/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case/GEF/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case/MIA/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case/parties/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case/parties/agent/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case/parties/bond/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case/parties/buyer/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case/parties/exporter/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case/parties/indemnifier/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case/tasks/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case/tasks/AIN/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case/tasks/MIA/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case-amendments/add-bank-decision/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case-amendments/add-underwriter-decision/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case-amendments/amendment-changes-multiple-single-amendments/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case-amendments/amendment-should-change-all-facilities-values/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case-amendments/amendment-underwriting-page-multiple-amendments/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case-amendments/amendments-version-order/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case-amendments/facility-end-date/**/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case-amendments/in-progress/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case-amendments/request-when-previously-submitted/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case-amendments/show-amendment-button/**/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case-amendments/tasks/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case-amendments/underwriting-page-unassigned/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case-amendments/user-flow/*.spec.js',
+#             './tfm/cypress/e2e/journeys/case-underwriting/**/*.spec.js',
+#             './tfm/cypress/e2e/journeys/deal-cancellation/**/*.spec.js',
+#             './tfm/cypress/e2e/journeys/deals/**/*.spec.js',
+#             './tfm/cypress/e2e/journeys/facility/**/*.spec.js',
+#             './tfm/cypress/e2e/journeys/feedback/**/*.spec.js',
+#             './tfm/cypress/e2e/journeys/footer/**/*.spec.js',
+#             './tfm/cypress/e2e/journeys/header/**/*.spec.js',
+#             './tfm/cypress/e2e/journeys/login/**/*.spec.js',
+#             './tfm/cypress/e2e/journeys/users/**/*.spec.js',
+#             './tfm/cypress/e2e/journeys/utilisation-reports/fee-record-correction/feature-flag-enabled/**/*.spec.js',
+#             './ukef/cypress/e2e/journeys/portal/deal-cancellation/BSS-EWCS/**/*.spec.js',
+#             './ukef/cypress/e2e/journeys/portal/deal-cancellation/gef/**/*.spec.js',
+#             './ukef/cypress/e2e/journeys/portal/amendments/journeys/portal/**/*.spec.js',
+#             './ukef/cypress/e2e/journeys/portal/amendments/journeys/tfm/**/*.spec.js',
+#             './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/amendment-details/**/*.spec.js',
+#             './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/general/**/*.spec.js',
+#             './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/application-details/**/*.spec.js',
+#             './ukef/cypress/e2e/journeys/portal/amendments/pages/portal/status/**/*.spec.js',
+#             './ukef/cypress/e2e/journeys/portal/amendments/pages/tfm/**/*.spec.js',
+#           ]
+
+#     concurrency:
+#       group: e2e-tests-ukef-ff-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Node
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: ${{ vars.NODE_VERSION }}
+
+#       - name: Repository
+#         uses: actions/checkout@v5
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v2.0
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+#       - name: Dependencies
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm ci
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Docker
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: docker compose up --build -d
+#           retries: ${{ vars.RETRY_LIMIT }}
+#           env: |
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+
+#       - name: Initialise
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: sleep 100s && npm run load
+#           working-directory: ./utils
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: SQL
+#         working-directory: ./libs/common
+#         env:
+#           SQL_DB_HOST: ${{ secrets.SQL_DB_HOST_LOCAL }}
+#         run: npm run db:migrate
+
+#       - name: Project
+#         id: project
+#         run: |
+#           directory=$(echo ${{ matrix.spec }} | cut -d / -f2)
+#           echo "::set-output name=directory::$directory"
+
+#       - name: Execute
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npx cypress run --config video=false --browser electron --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
+#           working-directory: ./e2e-tests
+#           env: |
+#             MONGODB_URI=${{ secrets.MONGODB_URI_LOCALHOST }}
+#             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#             MOCK_E2E_NUMBER_GENERATOR=${{ vars.MOCK_E2E_NUMBER_GENERATOR }}
+#             TZ=${{ vars.TIMEZONE }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Screenshots
+#         uses: actions/upload-artifact@v4
+#         if: failure()
+#         with:
+#           name: e2e-tests-ukef-ff-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
+#           path: ./e2e-tests/${{ steps.project.outputs.directory }}/cypress/screenshots/
+#           retention-days: 1
+
+#   #9. E2E - Maintenance
+#   e2e-tests-maintenance:
+#     name: E2E maintenance 👷
+#     needs: [setup]
+#     env:
+#       MAINTENANCE_ACTIVE: 'true'
+#       MAINTENANCE_TIMESTAMP: ${{ vars.MAINTENANCE_TIMESTAMP }}
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         spec:
+#           [
+#             './portal/cypress/e2e/journeys/maintenance/**/*.spec.js',
+#             './gef/cypress/e2e/maintenance/**/*.spec.js',
+#             './tfm/cypress/e2e/journeys/maintenance/**/*.spec.js',
+#           ]
+
+#     concurrency:
+#       group: e2e-tests-maintenance-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.spec }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Node
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: ${{ vars.NODE_VERSION }}
+
+#       - name: Repository
+#         uses: actions/checkout@v5
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v2.0
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+#       - name: Dependencies
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm ci
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Docker
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: docker compose up --build -d
+#           retries: ${{ vars.RETRY_LIMIT }}
+#           env: |
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+
+#       - name: Project
+#         id: project
+#         run: |
+#           directory=$(echo ${{ matrix.spec }} | cut -d / -f2)
+#           echo "::set-output name=directory::$directory"
+
+#       - name: Execute
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npx cypress run --config video=false --browser electron --project ./${{ steps.project.outputs.directory }} --record false --spec '${{ matrix.spec }}'
+#           working-directory: ./e2e-tests
+#           env: |
+#             SQL_DB_HOST=${{ secrets.SQL_DB_HOST_LOCAL }}
+#             GOV_NOTIFY_API_KEY=${{ vars.MOCK_E2E_GOV_NOTIFY_API_KEY }}
+#             TZ=${{ vars.TIMEZONE }}
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Screenshots
+#         uses: actions/upload-artifact@v4
+#         if: failure()
+#         with:
+#           name: e2e-tests-maintenance-${{ needs.setup.steps.timestamp.outputs.epoch  }}-${{ github.job.check_run_id }}-${{ github.run_attempt }}
+#           path: ./e2e-tests/${{ steps.project.outputs.directory }}/cypress/screenshots/
+#           retention-days: 1
+
+#   #10. Docker build
+#   build:
+#     name: Build 🛠️
+#     needs: [setup]
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         functions: ['acbs']
+#         webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui', 'portal-api', 'dtfs-central-api', 'external-api', 'trade-finance-manager-api']
+
+#     concurrency:
+#       group: docker-build-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}-${{ matrix.webapp }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Node
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: ${{ vars.NODE_VERSION }}
+
+#       - name: Repository
+#         uses: actions/checkout@v5
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v2.0
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+#       - name: Dependencies
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm ci
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: Function
+#         run: docker build -f ./azure-functions/${{ matrix.functions }}/Dockerfile .
+
+#       - name: WebApp
+#         run: docker build -f ./${{ matrix.webapp }}/Dockerfile . --build-arg GITHUB_SHA=${{ github.sha }}
+
+#   #11. Webpack build
+#   webpack:
+#     name: Webpack 🛠️
+#     needs: [setup]
+#     environment:
+#       name: ${{ needs.setup.outputs.environment }}
+#     runs-on: ubuntu-latest
+
+#     strategy:
+#       # Do not cancel in-progress jobs upon failure
+#       fail-fast: false
+#       # Single dimension matrix
+#       matrix:
+#         webapp: ['portal-ui', 'gef-ui', 'trade-finance-manager-ui']
+
+#     concurrency:
+#       group: webpack-build-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.webapp }}
+#       cancel-in-progress: true
+
+#     steps:
+#       - name: Node
+#         uses: actions/setup-node@v5
+#         with:
+#           node-version: ${{ vars.NODE_VERSION }}
+
+#       - name: Repository
+#         uses: actions/checkout@v5
+
+#       - name: Timezone
+#         uses: szenius/set-timezone@v2.0
+#         with:
+#           timezoneLinux: ${{ needs.setup.outputs.TZ }}
+
+#       - name: Dependencies
+#         uses: ./.github/actions/rerun
+#         with:
+#           command: npm ci
+#           retries: ${{ vars.RETRY_LIMIT }}
+
+#       - name: WebApp
+#         run: npm run build -w=${{ matrix.webapp }}
