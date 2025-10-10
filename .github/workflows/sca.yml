@@ -84,7 +84,9 @@ jobs:
       - name: Codacy
         uses: codacy/codacy-cli-v2-action@main
         with:
-          verbose: true
+          project_token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          tool: eslin
+          upload_report: true
 
   # 3. Code quality - Spell check
   spell:
