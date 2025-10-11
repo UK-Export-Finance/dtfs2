@@ -917,6 +917,9 @@ jobs:
   e2e-tests-tfm:
     name: E2E TFM 👷
     needs: [setup]
+    env:
+      # Various feature flags
+      FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'false'
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
