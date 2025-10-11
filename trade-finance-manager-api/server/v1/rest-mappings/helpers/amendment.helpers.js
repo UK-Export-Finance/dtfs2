@@ -55,8 +55,8 @@ const findLatestCompletedAmendment = (amendments) => {
     sortedAmendments = orderBy(
       completedAmendments,
       [
-        (a) => a.referenceNumber || '', // Sort by referenceNumber if exists, else empty string
-        (a) => a.version, // Then by version
+        (amendment) => amendment.referenceNumber || '', // Sort by referenceNumber if exists, else empty string
+        (amendment) => amendment.version, // Then by version
       ],
       ['desc', 'desc'],
     );
