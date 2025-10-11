@@ -1,6 +1,7 @@
 import { ObjectId, Document } from 'mongodb';
 import { TFM_AMENDMENT_STATUS, AMENDMENT_TYPES } from '@ukef/dtfs2-common';
 
+// TODO: DTFS2-8159 - add sort by referenceNumber to this function
 export const latestCompletedTfmAmendmentByFacilityId = (facilityId: string | ObjectId): Document[] => [
   { $match: { _id: { $eq: new ObjectId(facilityId) } } },
   { $unwind: '$amendments' },
