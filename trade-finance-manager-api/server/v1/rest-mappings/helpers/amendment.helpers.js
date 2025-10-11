@@ -41,7 +41,8 @@ const findLatestCompletedAmendment = (amendments) => {
     return {};
   }
   const completedAmendments = amendments.filter(({ status }) => status === TFM_AMENDMENT_STATUS.COMPLETED || status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED);
-  const sortedAmendments = orderBy(completedAmendments, ['updatedAt', 'version'], ['desc', 'asc']);
+  // sort by version number descending - latest completed amendment first in array
+  const sortedAmendments = orderBy(completedAmendments, ['version'], ['desc']);
 
   /**
    * The amended coverEndDate can come both from 'amendment' or

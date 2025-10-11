@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
 import { HttpStatusCode } from 'axios';
-import { MAPPED_FACILITY_TYPE } from '@ukef/dtfs2-common';
+import { MAPPED_FACILITY_TYPE, isPortalFacilityAmendmentsFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { getUnixTime } from 'date-fns';
 import { postAmendmentAnswers } from './amendmentAnswers.controller';
 import api from '../../../api';
@@ -11,6 +11,11 @@ jest.mock('../../../api', () => ({
   getFacility: jest.fn(),
   getApprovedAmendments: jest.fn(),
   updateAmendment: jest.fn(),
+}));
+
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isPortalFacilityAmendmentsFeatureFlagEnabled: jest.fn(),
 }));
 
 const getAmendmentByIdMock = jest.fn();
@@ -73,51 +78,96 @@ describe('postAmendmentAnswers', () => {
     updateAmendmentMock.mockResolvedValue({ status: HttpStatusCode.Ok, data: amendment });
   });
 
-  describe('when an amendment has all types of amendments', () => {
-    it('should call updateAmendment', async () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
-
-      // Act
-      await postAmendmentAnswers(req, res);
-
-      // Assert
-      expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
-      expect(updateAmendmentMock).toHaveBeenCalledWith(
-        facilityId,
-        amendmentId,
-        {
-          ...payload,
-          automaticApprovalEmail: true,
-          bankReviewDate: null,
-          coverEndDate: null,
-          currency: null,
-          currentCoverEndDate: null,
-          currentValue: null,
-          facilityEndDate: null,
-          isUsingFacilityEndDate: null,
-          referenceNumber: `${ukefFacilityId}-002`,
-          status: 'Completed',
-          submissionDate: getUnixTime(new Date()),
-          ukefExposure: null,
-          updateTfmLastUpdated: true,
-          value: null,
-        },
-        userToken,
-      );
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is not enabled', () => {
+    beforeEach(() => {
+      jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(false);
     });
+    describe('when an amendment has all types of amendments', () => {
+      it('should call updateAmendment with referenceNumber as an empty string', async () => {
+        // Arrange
+        const { req, res } = getHttpMocks();
 
-    it('should redirect to amendments page', async () => {
-      // Arrange
-      const { req, res } = getHttpMocks();
+        // Act
+        await postAmendmentAnswers(req, res);
 
-      // Act
-      await postAmendmentAnswers(req, res);
-
-      // Assert
-      expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
-      expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/facility/${facilityId}#amendments`);
+        // Assert
+        expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
+        expect(updateAmendmentMock).toHaveBeenCalledWith(
+          facilityId,
+          amendmentId,
+          {
+            ...payload,
+            automaticApprovalEmail: true,
+            bankReviewDate: null,
+            coverEndDate: null,
+            currency: null,
+            currentCoverEndDate: null,
+            currentValue: null,
+            facilityEndDate: null,
+            isUsingFacilityEndDate: null,
+            referenceNumber: '',
+            status: 'Completed',
+            submissionDate: getUnixTime(new Date()),
+            ukefExposure: null,
+            updateTfmLastUpdated: true,
+            value: null,
+          },
+          userToken,
+        );
+      });
     });
+  });
+
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is enabled', () => {
+    beforeEach(() => {
+      jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(true);
+    });
+    describe('when an amendment has all types of amendments', () => {
+      it('should call updateAmendment with a referenceNumber', async () => {
+        // Arrange
+        const { req, res } = getHttpMocks();
+
+        // Act
+        await postAmendmentAnswers(req, res);
+
+        // Assert
+        expect(updateAmendmentMock).toHaveBeenCalledTimes(1);
+        expect(updateAmendmentMock).toHaveBeenCalledWith(
+          facilityId,
+          amendmentId,
+          {
+            ...payload,
+            automaticApprovalEmail: true,
+            bankReviewDate: null,
+            coverEndDate: null,
+            currency: null,
+            currentCoverEndDate: null,
+            currentValue: null,
+            facilityEndDate: null,
+            isUsingFacilityEndDate: null,
+            referenceNumber: `${ukefFacilityId}-002`,
+            status: 'Completed',
+            submissionDate: getUnixTime(new Date()),
+            ukefExposure: null,
+            updateTfmLastUpdated: true,
+            value: null,
+          },
+          userToken,
+        );
+      });
+    });
+  });
+
+  it('should redirect to amendments page', async () => {
+    // Arrange
+    const { req, res } = getHttpMocks();
+
+    // Act
+    await postAmendmentAnswers(req, res);
+
+    // Assert
+    expect(res._getStatusCode()).toEqual(HttpStatusCode.Found);
+    expect(res._getRedirectUrl()).toEqual(`/case/${dealId}/facility/${facilityId}#amendments`);
   });
 
   it('should redirect to amendments page if updateAmendment throws an error', async () => {

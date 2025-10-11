@@ -917,6 +917,9 @@ jobs:
   e2e-tests-tfm:
     name: E2E TFM 👷
     needs: [setup]
+    env:
+      # Various feature flags
+      FF_PORTAL_FACILITY_AMENDMENTS_ENABLED: 'false'
     environment:
       name: ${{ needs.setup.outputs.environment }}
     runs-on: ubuntu-latest
@@ -949,6 +952,7 @@ jobs:
             'case-amendments/amendment-should-change-all-facilities-values/*.spec.js',
             'case-amendments/amendment-underwriting-page-multiple-amendments/*.spec.js',
             'case-amendments/amendments-version-order/*.spec.js',
+            'case-amendments/amendment-versions/*.spec.js',
             'case-amendments/facility-end-date/**/*.spec.js',
             'case-amendments/in-progress/*.spec.js',
             'case-amendments/request-when-previously-submitted/*.spec.js',
@@ -1308,7 +1312,8 @@ jobs:
             './tfm/cypress/e2e/journeys/case-amendments/amendment-changes-multiple-single-amendments/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/amendment-should-change-all-facilities-values/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/amendment-underwriting-page-multiple-amendments/*.spec.js',
-            './tfm/cypress/e2e/journeys/case-amendments/amendments-version-order/*.spec.js',
+            './tfm/cypress/e2e/journeys/feature-flag-enabled/amendments-version-order/*.spec.js',
+            './tfm/cypress/e2e/journeys/feature-flag-enabled/amendment-versions/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/facility-end-date/**/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/in-progress/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/request-when-previously-submitted/*.spec.js',

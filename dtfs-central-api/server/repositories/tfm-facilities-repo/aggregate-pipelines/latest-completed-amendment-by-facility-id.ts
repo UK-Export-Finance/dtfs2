@@ -5,7 +5,7 @@ export const latestCompletedTfmAmendmentByFacilityId = (facilityId: string | Obj
   { $match: { _id: { $eq: new ObjectId(facilityId) } } },
   { $unwind: '$amendments' },
   { $match: { 'amendments.status': { $eq: TFM_AMENDMENT_STATUS.COMPLETED }, 'amendments.type': { $ne: AMENDMENT_TYPES.PORTAL } } },
-  { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
+  { $sort: { 'amendments.version': -1 } },
   { $project: { _id: false, amendments: true } },
   { $limit: 1 },
 ];

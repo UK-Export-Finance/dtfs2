@@ -1,6 +1,11 @@
-import { TFM_AMENDMENT_STATUS, PORTAL_AMENDMENT_STATUS, STATUS_TAG_COLOURS } from '@ukef/dtfs2-common';
+import { TFM_AMENDMENT_STATUS, PORTAL_AMENDMENT_STATUS, STATUS_TAG_COLOURS, isPortalFacilityAmendmentsFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { aPortalFacilityAmendment } from '@ukef/dtfs2-common/mock-data-backend';
 import { generatePortalAmendmentEligibilityRows } from './amendments.helper';
+
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isPortalFacilityAmendmentsFeatureFlagEnabled: jest.fn(),
+}));
 
 const anAcknowledgedPortalAmendment = aPortalFacilityAmendment({ status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED });
 
@@ -95,6 +100,11 @@ describe('generatePortalAmendmentEligibilityRows', () => {
       submittedByPim: true,
     });
 
+    const completedTFMAmendment2 = () => ({
+      status: TFM_AMENDMENT_STATUS.COMPLETED,
+      submittedByPim: true,
+    });
+
     it('should return the amendment and flag set to false', () => {
       const result = generatePortalAmendmentEligibilityRows([completedTFMAmendment()]);
 
@@ -104,6 +114,42 @@ describe('generatePortalAmendmentEligibilityRows', () => {
       };
 
       expect(result).toEqual([expected]);
+    });
+
+    describe('when multiple amendments are passed in', () => {
+      const expected1 = {
+        ...completedTFMAmendment(),
+        isPortalAmendment: false,
+      };
+
+      const expected2 = {
+        ...completedTFMAmendment2(),
+        isPortalAmendment: false,
+      };
+
+      describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
+        beforeEach(() => {
+          jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(false);
+        });
+
+        it('should return the array unreversed', () => {
+          const result = generatePortalAmendmentEligibilityRows([completedTFMAmendment(), completedTFMAmendment2()]);
+
+          expect(result).toEqual([expected1, expected2]);
+        });
+      });
+
+      describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is enabled', () => {
+        beforeEach(() => {
+          jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(true);
+        });
+
+        it('should return the array reversed', () => {
+          const result = generatePortalAmendmentEligibilityRows([completedTFMAmendment(), completedTFMAmendment2()]);
+
+          expect(result).toEqual([expected2, expected1]);
+        });
+      });
     });
   });
 });
