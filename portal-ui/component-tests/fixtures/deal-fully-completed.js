@@ -414,11 +414,11 @@ const deal = {
         items: [
           {
             id: 4,
-            copy: 'Where the supplier is not a “Person Within Scope of Windsor Framework”, it is an <a href="/assets/files/financial_difficulty_model_1.1.0.xlsx" class="govuk-link">eligible person</a> OR',
+            copy: 'Where the supplier is not a “Person Within Scope of Windsor Framework”, it is an (eligible person)["/assets/files/financial_difficulty_model_1.1.0.xlsx"] OR',
           },
           {
             id: 5,
-            copy: 'Where the supplier is a “Person Within Scope of Windsor Framework”, both it and its parent obligor (if any) is an <a href="/assets/files/financial_difficulty_model_1.1.0.xlsx" class="govuk-link">eligible person</a>.',
+            copy: 'Where the supplier is a “Person Within Scope of Windsor Framework”, both it and its parent obligor (if any) is an (eligible person)["/assets/files/financial_difficulty_model_1.1.0.xlsx"].',
           },
         ],
       },

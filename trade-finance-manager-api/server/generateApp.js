@@ -2,7 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const compression = require('compression');
 const mongoSanitise = require('express-mongo-sanitize');
-const { initialiseCronJobScheduler } = require('@ukef/dtfs2-common');
+const { initialiseCronJobScheduler, xss } = require('@ukef/dtfs2-common');
 const { maintenance, SWAGGER } = require('@ukef/dtfs2-common');
 const { validateSsoFeatureFlagFalse } = require('./v1/middleware/validate-sso-feature-flag');
 const healthcheck = require('./healthcheck');
@@ -41,7 +41,9 @@ const generateApp = () => {
   app.use(express.json());
   app.use(compression());
   app.use(removeCsrfToken);
+  app.use(xss);
   app.use(passport.initialize());
+
   app.post('/v1/login', validateSsoFeatureFlagFalse, loginController.login);
   app.use('/v1', openRouter);
   app.use('/v1', authRouter);

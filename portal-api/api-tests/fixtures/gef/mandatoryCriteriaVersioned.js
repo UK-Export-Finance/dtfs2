@@ -153,11 +153,11 @@ const MANDATORY_CRITERIA_VERSIONED = [
       },
       {
         id: '3.a',
-        body: 'Where the exporter is not a “Person Within Scope of Windsor Framework”, it is an <a href="/assets/files/financial_difficulty_model_1.1.0.xlsx" class="govuk-link">eligible person</a> OR',
+        body: 'Where the exporter is not a “Person Within Scope of Windsor Framework”, it is an (eligible person)["/assets/files/financial_difficulty_model_1.1.0.xlsx"] OR',
       },
       {
         id: '3.b',
-        body: 'Where the exporter is a “Person Within Scope of Windsor Framework”, both it and its parent obligor (if any) is an <a href="/assets/files/financial_difficulty_model_1.1.0.xlsx" class="govuk-link">eligible person</a>.',
+        body: 'Where the exporter is a “Person Within Scope of Windsor Framework”, both it and its parent obligor (if any) is an (eligible person)["/assets/files/financial_difficulty_model_1.1.0.xlsx"].',
       },
       {
         id: '4',

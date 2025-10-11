@@ -1,5 +1,5 @@
 const { CORS_ORIGIN } = process.env;
-const { maintenance, MAX_REQUEST_SIZE, SWAGGER } = require('@ukef/dtfs2-common');
+const { maintenance, xss, MAX_REQUEST_SIZE, SWAGGER } = require('@ukef/dtfs2-common');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
@@ -46,6 +46,7 @@ const generateApp = () => {
   app.use(express.json({ limit: MAX_REQUEST_SIZE }));
   app.use(compression());
   app.use(removeCsrfToken);
+  app.use(xss);
 
   // MongoDB sanitisation
   app.use(
