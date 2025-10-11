@@ -85,7 +85,7 @@ context('Amendments - TFM - Creating a TFM amendment with a future effective dat
     cy.visit(tfmDealPage);
   });
 
-  it.only('should display the create an amendment button for a portal amendment without a future effective date', () => {
+  it('should display the create an amendment button for a portal amendment without a future effective date', () => {
     cy.visit(tfmFacilityPage1);
 
     facilityPage.facilityTabAmendments().click();

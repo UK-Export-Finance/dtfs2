@@ -5,6 +5,7 @@ const {
   TFM_AMENDMENT_STATUS,
   PORTAL_AMENDMENT_STATUS,
   isFutureEffectiveDate,
+  isPortalFacilityAmendmentsFeatureFlagEnabled,
 } = require('@ukef/dtfs2-common');
 const { orderBy, cloneDeep } = require('lodash');
 const isValidFacility = require('./isValidFacility.helper');
@@ -41,8 +42,25 @@ const findLatestCompletedAmendment = (amendments) => {
     return {};
   }
   const completedAmendments = amendments.filter(({ status }) => status === TFM_AMENDMENT_STATUS.COMPLETED || status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED);
+
   // sort by version number descending - latest completed amendment first in array
-  const sortedAmendments = orderBy(completedAmendments, ['version'], ['desc']);
+  let sortedAmendments = orderBy(completedAmendments, ['version'], ['desc']);
+
+  /**
+   * if the feature flag is enabled,
+   * sort by referenceNumber (if it exists)
+   * and if it does not exist then sort by version
+   */
+  if (isPortalFacilityAmendmentsFeatureFlagEnabled()) {
+    sortedAmendments = orderBy(
+      completedAmendments,
+      [
+        (a) => a.referenceNumber || '', // Sort by referenceNumber if exists, else empty string
+        (a) => a.version, // Then by version
+      ],
+      ['desc', 'desc'],
+    );
+  }
 
   /**
    * The amended coverEndDate can come both from 'amendment' or
