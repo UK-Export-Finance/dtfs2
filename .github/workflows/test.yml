@@ -1310,6 +1310,7 @@ jobs:
             './tfm/cypress/e2e/journeys/case-amendments/amendment-should-change-all-facilities-values/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/amendment-underwriting-page-multiple-amendments/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/amendments-version-order/*.spec.js',
+            './tfm/cypress/e2e/journeys/case-amendments/amendment-versions/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/facility-end-date/**/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/in-progress/*.spec.js',
             './tfm/cypress/e2e/journeys/case-amendments/request-when-previously-submitted/*.spec.js',
