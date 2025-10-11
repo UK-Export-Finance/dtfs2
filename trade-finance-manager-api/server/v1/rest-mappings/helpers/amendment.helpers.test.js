@@ -130,10 +130,10 @@ describe('findLatestCompletedAmendment()', () => {
     const latestAmendmentTfmObject = { ...anAmendmentTfmObject(), value: 3000, coverEndDate: new Date('2023-12-12').getTime() };
     const anotherAmendmentTfmObject = { ...anAmendmentTfmObject(), value: 1000, coverEndDate: null };
     const amendments = [
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS), tfm: anotherAmendmentTfmObject },
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: anotherAmendmentTfmObject },
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: latestAmendmentTfmObject },
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: null },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS), tfm: anotherAmendmentTfmObject, version: 1 },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: anotherAmendmentTfmObject, version: 2 },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: latestAmendmentTfmObject, version: 3 },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: null, version: 4 },
     ];
 
     // Act
@@ -157,19 +157,19 @@ describe('findLatestCompletedAmendment()', () => {
       updatedAt: 1723641611,
       version: 1,
     };
-    const secondAmendmentTfmObject = {
+    const secondAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 2 };
+    const thirdAmendmentTfmObject = {
       ...anAmendmentTfmObject(),
       isUsingFacilityEndDate: true,
       facilityEndDate: new Date('2024-01-01'),
-      updatedAt: 1723641622,
-      version: 2,
+      updatedAt: secondAmendmentTfmObject.updatedAt - 50,
+      version: 3,
     };
-    const thirdAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 3 };
 
     const amendments = [
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject },
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject },
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: thirdAmendmentTfmObject },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject, version: 1 },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject, version: 2 },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: thirdAmendmentTfmObject, version: 3 },
     ];
 
     // Act
@@ -200,9 +200,9 @@ describe('findLatestCompletedAmendment()', () => {
     const thirdAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 3 };
 
     const amendments = [
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject },
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject },
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: thirdAmendmentTfmObject },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject, version: 1 },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject, version: 2 },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: thirdAmendmentTfmObject, version: 3 },
     ];
 
     // Act
@@ -226,9 +226,9 @@ describe('findLatestCompletedAmendment()', () => {
     };
     const anotherAmendmentTfmObject = { ...anAmendmentTfmObject(), value: 1000, coverEndDate: null };
     const amendments = [
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS), tfm: anotherAmendmentTfmObject },
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: anotherAmendmentTfmObject },
-      { ...anAmendmentWithStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED), tfm: latestAmendmentTfmObject },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS), tfm: anotherAmendmentTfmObject, version: 1 },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: anotherAmendmentTfmObject, version: 2 },
+      { ...anAmendmentWithStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED), tfm: latestAmendmentTfmObject, version: 3 },
     ];
 
     // Act
@@ -254,9 +254,9 @@ describe('findLatestCompletedAmendment()', () => {
 
     const anotherAmendmentTfmObject = { ...anAmendmentTfmObject(), value: 1000, coverEndDate: null };
     const amendments = [
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS), tfm: anotherAmendmentTfmObject },
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: anotherAmendmentTfmObject },
-      { ...anAmendmentWithStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED), tfm: latestAmendmentTfmObject },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS), tfm: anotherAmendmentTfmObject, version: 1 },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: anotherAmendmentTfmObject, version: 2 },
+      { ...anAmendmentWithStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED), tfm: latestAmendmentTfmObject, version: 3 },
     ];
 
     // Act

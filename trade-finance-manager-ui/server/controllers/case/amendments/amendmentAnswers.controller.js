@@ -1,5 +1,11 @@
 const { format, fromUnixTime, getUnixTime } = require('date-fns');
-const { TFM_AMENDMENT_STATUS, createAmendmentReferenceNumber, formattedNumber, convertUnixTimestampWithoutMilliseconds } = require('@ukef/dtfs2-common');
+const {
+  TFM_AMENDMENT_STATUS,
+  createAmendmentReferenceNumber,
+  formattedNumber,
+  convertUnixTimestampWithoutMilliseconds,
+  isPortalFacilityAmendmentsFeatureFlagEnabled,
+} = require('@ukef/dtfs2-common');
 const { HttpStatusCode } = require('axios');
 const api = require('../../../api');
 
@@ -61,7 +67,12 @@ const postAmendmentAnswers = async (req, res) => {
     response: { data: amendmentsOnDeal },
   } = await api.getApprovedAmendments(dealId, userToken);
   const amendmentsOnFacility = amendmentsOnDeal.filter((amendmentOnDeal) => amendmentOnDeal.facilityId.toString() === facilityId);
-  const referenceNumber = createAmendmentReferenceNumber(amendmentsOnFacility, ukefFacilityId);
+
+  let referenceNumber = '';
+
+  if (isPortalFacilityAmendmentsFeatureFlagEnabled()) {
+    referenceNumber = createAmendmentReferenceNumber(amendmentsOnFacility, ukefFacilityId);
+  }
 
   try {
     const payload = {

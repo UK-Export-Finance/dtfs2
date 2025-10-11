@@ -22,11 +22,21 @@ export const updateTfmAmendment = async (req: UpdateTfmAmendmentRequest, res: Up
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.TFM);
 
     const foundAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
+
     if (!foundAmendment) {
       throw new NotFoundError('The amendment does not exist');
     }
 
-    const update = { ...payload, updatedAt: getUnixTime(new Date()) };
+    let update = { ...payload, updatedAt: getUnixTime(new Date()) };
+
+    /**
+     * if doNotUpdateLastUpdated is true,
+     * then do not want to update the updatedAt field
+     * so we the existing updatedAt value from the found amendment is used
+     */
+    if (payload.doNotUpdateLastUpdated) {
+      update = { ...payload, updatedAt: foundAmendment.updatedAt };
+    }
 
     await TfmFacilitiesRepo.updateOneByIdAndAmendmentId(
       facilityId,

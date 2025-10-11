@@ -171,6 +171,7 @@ describe('updated facility amendment API call', () => {
           facilityId,
           amendmentId,
           {
+            doNotUpdateLastUpdated: true,
             tasks: MOCK_TASKS,
             ukefDecision: {
               isReadyForApproval: isRiskAnalysisCompleted(MOCK_TASKS),
@@ -196,7 +197,7 @@ describe('updated facility amendment API call', () => {
 
         // Assert
         expect(api.updateFacilityAmendment).toHaveBeenCalledTimes(1);
-        expect(api.updateFacilityAmendment).toHaveBeenCalledWith(facilityId, amendmentId, { tasks: MOCK_TASKS }, auditDetails);
+        expect(api.updateFacilityAmendment).toHaveBeenCalledWith(facilityId, amendmentId, { doNotUpdateLastUpdated: true, tasks: MOCK_TASKS }, auditDetails);
 
         expect(res._getStatusCode()).toBe(HttpStatusCode.Ok);
         expect(res._getData().ukefDecision).toEqual(MOCK_AMENDMENT_WITH_UKEF_DECISION.ukefDecision);

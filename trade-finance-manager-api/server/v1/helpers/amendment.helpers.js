@@ -73,7 +73,7 @@ const sendAutomaticAmendmentEmail = async (amendmentVariables, auditDetails) => 
 
     // if successful, then updates flag to say email has been sent
     if (emailResponse && pimEmailResponse) {
-      await api.updateFacilityAmendment(facilityId, amendmentId, { automaticApprovalEmailSent: true }, auditDetails);
+      await api.updateFacilityAmendment(facilityId, amendmentId, { automaticApprovalEmailSent: true, doNotUpdateLastUpdated: true }, auditDetails);
     }
   } catch (error) {
     console.error('TFM-API error sending email - sendAutomaticAmendmentEmail %o', error);
@@ -87,6 +87,7 @@ const managersDecisionUpdateEmailConfirmation = async (facilityId, amendmentId, 
       managersDecisionEmailSent: true,
     },
   };
+
   await api.updateFacilityAmendment(facilityId, amendmentId, payload, auditDetails);
 };
 
@@ -229,6 +230,7 @@ const banksDecisionUpdateEmailConfirmation = async (facilityId, amendmentId, aud
       banksDecisionEmailSent: true,
     },
   };
+
   await api.updateFacilityAmendment(facilityId, amendmentId, payload, auditDetails);
 };
 
@@ -305,6 +307,7 @@ const firstTaskEmailConfirmation = async (facilityId, amendmentId, auditDetails)
   const payload = {
     firstTaskEmailSent: true,
   };
+
   await api.updateFacilityAmendment(facilityId, amendmentId, payload, auditDetails);
 };
 
