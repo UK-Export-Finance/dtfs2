@@ -75,7 +75,7 @@ describe('user controller', () => {
         isUserBlockedOrDisabled: jest.fn().mockImplementationOnce(() => true),
       };
 
-      const token = await createPasswordToken(MOCK_EMAIL, userService, generateNoUserLoggedInAuditDetails());
+      const token = await createPasswordToken(MOCK_EMAIL, '', userService, generateNoUserLoggedInAuditDetails());
 
       expect(token).toEqual(false);
     });
@@ -87,7 +87,7 @@ describe('user controller', () => {
         isUserBlockedOrDisabled: jest.fn().mockImplementationOnce(() => false),
       };
 
-      const token = await createPasswordToken(MOCK_EMAIL, userService, generateNoUserLoggedInAuditDetails());
+      const token = await createPasswordToken(MOCK_EMAIL, '', userService, generateNoUserLoggedInAuditDetails());
 
       expect(token).toEqual(false);
     });

@@ -39,7 +39,7 @@ const sendPasswordUpdateEmail = async (emailAddress, timestamp) => {
 };
 exports.sendPasswordUpdateEmail = sendPasswordUpdateEmail;
 
-const createPasswordToken = async (email, userService, auditDetails) => {
+const createPasswordToken = async (email, hash, userService, auditDetails) => {
   if (typeof email !== 'string') {
     throw new Error('Invalid Email');
   }
@@ -52,12 +52,9 @@ const createPasswordToken = async (email, userService, auditDetails) => {
     return false;
   }
 
-  const { salt, hash } = utils.genPasswordResetToken(user);
-
+  const { hash: resetPwdToken } = utils.genPasswordResetToken(user);
   const userUpdate = {
-    salt,
-    hash,
-    resetPwdToken: hash,
+    resetPwdToken: hash || resetPwdToken,
     resetPwdTimestamp: `${Date.now()}`,
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
@@ -153,12 +150,11 @@ exports.create = async (user, userService, auditDetails, callback) => {
   delete insert?.autoCreatePassword;
   delete insert?.password;
   delete insert?.passwordConfirm;
-  insert.salt = insert.salt || '';
-  insert.hash = insert.hash || '';
 
   if (!isVerifiedPayload({ payload: insert, template: PORTAL_USER.CREATE })) {
     return callback('Invalid user payload', user);
   }
+
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.USERS);
   const createUserResult = await collection.insertOne(insert);
 
@@ -172,7 +168,7 @@ exports.create = async (user, userService, auditDetails, callback) => {
 
   const sanitizedUser = sanitizeUser(createdUser);
 
-  const resetPasswordToken = await createPasswordToken(sanitizedUser.email, userService, auditDetails);
+  const resetPasswordToken = await createPasswordToken(sanitizedUser.email, user.hash, userService, auditDetails);
   await sendNewAccountEmail(sanitizedUser, resetPasswordToken);
 
   return callback(null, sanitizedUser);

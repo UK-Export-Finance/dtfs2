@@ -1,3 +1,4 @@
+const { generatePasswordHash } = require('@ukef/dtfs2-common');
 const api = require('./api');
 const { mongoDbClient: db } = require('../server/drivers/db-client');
 const databaseHelper = require('./database-helper');
@@ -259,8 +260,11 @@ const loginTestUser = async (as, user) =>
   createLoggedInUserSession(user);
 
 const setUpApiTestUser = async (as) => {
+  const { salt, hash } = generatePasswordHash(apiTestUser.password);
   const userToCreate = {
     'user-status': STATUS.ACTIVE,
+    salt,
+    hash,
     ...apiTestUser,
   };
 
