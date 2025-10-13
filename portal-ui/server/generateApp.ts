@@ -3,7 +3,7 @@ import express from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import flash from 'connect-flash';
-import { SWAGGER, create as createCsrf, verify as verifyCsrf, maintenance, notFound, errors } from '@ukef/dtfs2-common';
+import { SWAGGER, xss, create as createCsrf, verify as verifyCsrf, maintenance, notFound, errors } from '@ukef/dtfs2-common';
 import { configure, expressSession } from '@ukef/dtfs2-common/backend';
 import { HttpStatusCode } from 'axios';
 import routes from './routes';
@@ -56,6 +56,8 @@ export const generateApp = () => {
   app.use(maintenance);
   app.use(createRateLimit());
   app.use(verifyCsrf);
+  app.use(xss);
+
   app.use('/', routes);
 
   app.get('*', (req, res) => {

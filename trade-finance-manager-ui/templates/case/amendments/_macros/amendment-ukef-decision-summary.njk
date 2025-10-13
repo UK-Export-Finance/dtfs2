@@ -13,21 +13,21 @@
       <dt class="ukef-heading-xs" data-cy="amendment--conditions-heading">Conditions
         <p class="govuk-body-s ukef-conditions--hint">Sent to the bank.</p>
       </dt>
-      <dd class="govuk-body-s" data-cy="amendment--decision-{{amendment.version}}-ukef-decision-conditions">{{ amendment.ukefDecision.conditions | safe }}</dd>
+      <dd class="govuk-body-s" data-cy="amendment--decision-{{amendment.version}}-ukef-decision-conditions">{{ amendment.ukefDecision.conditions }}</dd>
       {% endif %}
 
       {% if amendment.ukefDecision.declined %}
       <dt class="ukef-heading-xs" data-cy="amendment--reasons-heading">Reasons
         <p class="govuk-body-s ukef-conditions--hint">Sent to the bank.</p>
       </dt>
-      <dd class="govuk-body-s ukef-preserve-white-space" data-cy="amendment--decision-{{amendment.version}}-ukef-decision-reasons">{{ amendment.ukefDecision.declined | safe }}</dd>
+      <dd class="govuk-body-s ukef-preserve-white-space" data-cy="amendment--decision-{{amendment.version}}-ukef-decision-reasons">{{ amendment.ukefDecision.declined }}</dd>
       {% endif %}
 
       {% if amendment.ukefDecision.comments %}
       <dt class="ukef-heading-xs" data-cy="amendment--comments-heading">Comments
         <p class="govuk-body-s ukef-conditions--hint">Only UKEF staff will see this.</p>
       </dt>
-      <dd class="govuk-body-s ukef-preserve-white-space" data-cy="amendment--decision-{{amendment.version}}-ukef-decision-comments">{{ amendment.ukefDecision.comments | safe }}</dd>
+      <dd class="govuk-body-s ukef-preserve-white-space" data-cy="amendment--decision-{{amendment.version}}-ukef-decision-comments">{{ amendment.ukefDecision.comments }}</dd>
       {% endif %}
 
     </dl>
