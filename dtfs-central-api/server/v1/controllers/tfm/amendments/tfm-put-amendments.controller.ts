@@ -29,9 +29,9 @@ export const updateTfmAmendment = async (req: UpdateTfmAmendmentRequest, res: Up
     let update = { ...payload, updatedAt: getEpochMs() };
 
     /**
-     * if shouldNotUpdateTimestamp is true,
-     * then do not want to update the updatedAt field
-     * so we the existing updatedAt value from the found amendment is used
+     * if `shouldNotUpdateTimestamp` is true,
+     * then we should not update the `updatedAt` field.
+     * to ensure the existing `updatedAt` value from the found amendment is utilised.
      */
     if (payload.shouldNotUpdateTimestamp) {
       update = { ...payload, updatedAt: foundAmendment.updatedAt };
