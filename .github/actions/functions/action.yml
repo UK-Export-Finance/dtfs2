@@ -31,7 +31,7 @@ runs:
   steps:
     # Step 1: Check out the repository.
     - name: Repository 🗃️
-      uses: actions/checkout@v5
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.branch }}
 
@@ -50,12 +50,18 @@ runs:
       with:
         creds: ${{ inputs.credentials }}
 
+    # Step 4: Set environment variable for function name.
+    - name: Directory 📁
+      if: ${{ 'acbs-function' == inputs.functions }}
+      run: echo "NAME=acbs" >> $GITHUB_ENV
+      shell: bash
+
     # Step 5: Set environment variables for ACR and function.
     - name: CLI 📝
       run: |
         echo ACR=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query loginServer -o tsv) >> $GITHUB_ENV
         echo ACR_USER=$(az acr show -n $(az resource list --resource-type 'Microsoft.ContainerRegistry/registries' --query '[0].name' -o tsv) --query name -o tsv) >> $GITHUB_ENV
-        echo FUNCTION=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ inputs.functions }}`)].name' -o tsv) >> $GITHUB_ENV
+        echo FUNCTION=$(az resource list --resource-type 'Microsoft.Web/sites' --query '[?contains(name, `${{ env.NAME }}`)].name' -o tsv) >> $GITHUB_ENV
       shell: bash
 
     # Step 6: Log in to Azure Container Registry.
