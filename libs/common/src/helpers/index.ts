@@ -55,3 +55,4 @@ export * from './is-https';
 export * from './crypto';
 export * from './xss';
 export * from './object-has-entries';
+export * from './is-deal-cancelled';

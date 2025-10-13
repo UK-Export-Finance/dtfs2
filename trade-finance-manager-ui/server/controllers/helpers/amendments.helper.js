@@ -10,7 +10,7 @@ const {
   DATE_FORMATS,
   AMENDMENT_TYPES,
   STATUS_TAG_COLOURS,
-  TFM_DEAL_CANCELLATION_STATUS,
+  isDealCancelled,
 } = require('@ukef/dtfs2-common');
 const { DECISIONS, DEAL } = require('../../constants');
 const { userIsInTeam } = require('../../helpers/user');
@@ -128,7 +128,7 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
       ({ status, effectiveDate }) => status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED && isFutureEffectiveDate(effectiveDate),
     );
 
-    const dealIsCancelled = deal.tfm.stage === DEAL_STATUS.CANCELLED || deal.tfm?.cancellation?.status === TFM_DEAL_CANCELLATION_STATUS.PENDING;
+    const dealIsCancelled = isDealCancelled(deal.tfm);
 
     const hasInProgressPortalAmendments = inProgressPortalAmendments.length > 0 && !dealIsCancelled;
     const hasFutureEffectiveDatePortalAmendments = futureEffectiveDatePortalAmendments.length > 0 && !dealIsCancelled;
