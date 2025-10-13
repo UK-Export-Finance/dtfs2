@@ -38,7 +38,7 @@ const PutFacilityAmendmentSchema = z.object({
       effectiveDate: z.number(),
       automaticApprovalEmail: z.boolean(),
       referenceNumber: z.string().optional(),
-      doNotUpdateLastUpdated: z.boolean().optional(),
+      shouldNotUpdateTimestamp: z.boolean().optional(),
       ukefDecision: z
         .object({
           coverEndDate: z.string(),

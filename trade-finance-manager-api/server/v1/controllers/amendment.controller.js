@@ -260,7 +260,7 @@ const updateFacilityAmendment = async (req, res) => {
           payload.ukefDecision = { isReadyForApproval: isRiskAnalysisCompleted(tasks) };
         }
 
-        payload.doNotUpdateLastUpdated = true;
+        payload.shouldNotUpdateTimestamp = true;
 
         delete payload.taskUpdate;
       }

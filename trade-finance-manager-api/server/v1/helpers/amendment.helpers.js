@@ -73,7 +73,7 @@ const sendAutomaticAmendmentEmail = async (amendmentVariables, auditDetails) => 
 
     // if successful, then updates flag to say email has been sent
     if (emailResponse && pimEmailResponse) {
-      await api.updateFacilityAmendment(facilityId, amendmentId, { automaticApprovalEmailSent: true, doNotUpdateLastUpdated: true }, auditDetails);
+      await api.updateFacilityAmendment(facilityId, amendmentId, { automaticApprovalEmailSent: true, shouldNotUpdateTimestamp: true }, auditDetails);
     }
   } catch (error) {
     console.error('TFM-API error sending email - sendAutomaticAmendmentEmail %o', error);

@@ -299,11 +299,11 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
         const item = { ...amendment };
         item.requestDate = amendment?.requestDate ? format(fromUnixTime(item.requestDate), DATE_FORMATS.DD_MMMM_YYYY) : null;
 
-        let amendmentName = amendment.version;
+        const { version, referenceNumber } = amendment;
 
-        if (isPortalFacilityAmendmentsFeatureFlagEnabled() && amendment.referenceNumber) {
-          amendmentName = amendment.referenceNumber;
-        }
+        const hasReferenceNumber = isPortalFacilityAmendmentsFeatureFlagEnabled() && referenceNumber;
+
+        const amendmentName = hasReferenceNumber ? referenceNumber : version;
 
         item.name = `Amendment ${amendmentName}`;
 
