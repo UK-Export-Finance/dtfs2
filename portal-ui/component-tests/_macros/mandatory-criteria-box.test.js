@@ -33,13 +33,13 @@ describe(component, () => {
     wrapper
       .expectElement('li[value=4]')
       .toHaveHtmlContent(
-        'Where the supplier is not a “Person Within Scope of Windsor Framework”, it is an (eligible person)["/assets/files/financial_difficulty_model_1.1.0.xlsx"] OR',
+        'Where the supplier is not a “Person Within Scope of Windsor Framework”, it is an [eligible person](/assets/files/financial_difficulty_model_1.1.0.xlsx) OR',
       );
 
     wrapper
       .expectElement('li[value=5]')
       .toHaveHtmlContent(
-        'Where the supplier is a “Person Within Scope of Windsor Framework”, both it and its parent obligor (if any) is an (eligible person)["/assets/files/financial_difficulty_model_1.1.0.xlsx"].',
+        'Where the supplier is a “Person Within Scope of Windsor Framework”, both it and its parent obligor (if any) is an [eligible person](/assets/files/financial_difficulty_model_1.1.0.xlsx).',
       );
   });
 
@@ -51,13 +51,13 @@ describe(component, () => {
     wrapper
       .expectElement('li[value=4]')
       .toHaveHtmlContent(
-        'Where the supplier is not a “Person Within Scope of Windsor Framework”, it is an (eligible person)["/assets/files/financial_difficulty_model_1.1.0.xlsx"] OR',
+        'Where the supplier is not a “Person Within Scope of Windsor Framework”, it is an [eligible person](/assets/files/financial_difficulty_model_1.1.0.xlsx) OR',
       );
 
     wrapper
       .expectElement('li[value=5]')
       .toHaveHtmlContent(
-        'Where the supplier is a “Person Within Scope of Windsor Framework”, both it and its parent obligor (if any) is an (eligible person)["/assets/files/financial_difficulty_model_1.1.0.xlsx"].',
+        'Where the supplier is a “Person Within Scope of Windsor Framework”, both it and its parent obligor (if any) is an [eligible person](/assets/files/financial_difficulty_model_1.1.0.xlsx).',
       );
   });
 

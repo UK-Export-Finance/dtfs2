@@ -176,7 +176,7 @@ const MANDATORY_CRITERIA = [
         items: [
           {
             id: 4,
-            copy: 'The Bank Customer (to include both the Supplier and any Parent Obligor) is an (eligible person)["/assets/files/financial_difficulty_model_1.1.0.xlsx"]',
+            copy: 'The Bank Customer (to include both the Supplier and any Parent Obligor) is an [eligible person](/assets/files/financial_difficulty_model_1.1.0.xlsx)',
           },
         ],
       },
@@ -330,11 +330,11 @@ const MANDATORY_CRITERIA = [
         items: [
           {
             id: 4,
-            copy: 'Where the supplier is not a “Person Within Scope of Windsor Framework”, it is an (eligible person)["/assets/files/financial_difficulty_model_1.1.0.xlsx"] OR',
+            copy: 'Where the supplier is not a “Person Within Scope of Windsor Framework”, it is an [eligible person](/assets/files/financial_difficulty_model_1.1.0.xlsx) OR',
           },
           {
             id: 5,
-            copy: 'Where the supplier is a “Person Within Scope of Windsor Framework”, both it and its parent obligor (if any) is an (eligible person)["/assets/files/financial_difficulty_model_1.1.0.xlsx"].',
+            copy: 'Where the supplier is a “Person Within Scope of Windsor Framework”, both it and its parent obligor (if any) is an [eligible person](/assets/files/financial_difficulty_model_1.1.0.xlsx).',
           },
         ],
       },
