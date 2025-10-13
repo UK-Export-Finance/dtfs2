@@ -1,4 +1,4 @@
-import { Role, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_AMENDMENT_STATUS, now } from '@ukef/dtfs2-common';
+import { Role, DEAL_STATUS, DEAL_SUBMISSION_TYPE, PORTAL_AMENDMENT_STATUS, now, isPortalFacilityAmendmentsFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { add } from 'date-fns';
 import { mapFacilityApplicationDetails } from './map-facility-application-details';
 import { addAmendmentParamsToFacility } from './add-amendment-params-to-facility';
@@ -6,6 +6,12 @@ import { MOCK_ISSUED_FACILITY } from '../utils/mocks/mock-facilities';
 import { MOCK_MAKER } from '../utils/mocks/mock-users';
 import { MOCK_BASIC_DEAL } from '../utils/mocks/mock-applications';
 import { SubmittedAmendmentsParams } from '../types/portal-amendments';
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isPortalFacilityAmendmentsFeatureFlagEnabled: jest.fn(),
+}));
 
 describe('mapFacilityApplicationDetails', () => {
   const facility = {
@@ -87,53 +93,115 @@ describe('mapFacilityApplicationDetails', () => {
   });
 
   describe('when there are no on going amendments', () => {
-    describe('when a facility is issued', () => {
-      it('should return mapped facilities with canIssuedFacilitiesBeAmended set to true', () => {
-        // Arrange
-        const onGoingAmendments: SubmittedAmendmentsParams[] = [];
+    beforeEach(() => {
+      jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(false);
+    });
 
-        // Act
-        const response = mapFacilityApplicationDetails(mockDeal, [facility], onGoingAmendments, params, MOCK_MAKER.roles as Role[]);
+    describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is false', () => {
+      describe('when a facility is issued', () => {
+        it('should return mapped facilities with canIssuedFacilitiesBeAmended set to true', () => {
+          // Arrange
+          const onGoingAmendments: SubmittedAmendmentsParams[] = [];
 
-        // Assert
-        const expected = {
-          mappedFacilities: [
-            {
-              ...facility,
-              canIssuedFacilitiesBeAmended: true,
-            },
-          ],
-          facilityParams: params,
-        };
+          // Act
+          const response = mapFacilityApplicationDetails(mockDeal, [facility], onGoingAmendments, params, MOCK_MAKER.roles as Role[]);
 
-        expect(response).toEqual(expected);
+          // Assert
+          const expected = {
+            mappedFacilities: [
+              {
+                ...facility,
+                canIssuedFacilitiesBeAmended: false,
+              },
+            ],
+            facilityParams: params,
+          };
+
+          expect(response).toEqual(expected);
+        });
+      });
+
+      describe('when a facility is unissued', () => {
+        it('should return mapped facilities with canIssuedFacilitiesBeAmended set to true', () => {
+          // Arrange
+          const unissuedFacility = {
+            ...facility,
+            stage: 'Unissued',
+          };
+          const onGoingAmendments: SubmittedAmendmentsParams[] = [];
+
+          // Act
+          const response = mapFacilityApplicationDetails(mockDeal, [unissuedFacility], onGoingAmendments, params, MOCK_MAKER.roles as Role[]);
+
+          // Assert
+          const expected = {
+            mappedFacilities: [
+              {
+                ...unissuedFacility,
+                canIssuedFacilitiesBeAmended: false,
+              },
+            ],
+            facilityParams: params,
+          };
+
+          expect(response).toEqual(expected);
+        });
       });
     });
 
-    describe('when a facility is unissued', () => {
-      it('should return mapped facilities with canIssuedFacilitiesBeAmended set to true', () => {
-        // Arrange
-        const unissuedFacility = {
-          ...facility,
-          stage: 'Unissued',
-        };
-        const onGoingAmendments: SubmittedAmendmentsParams[] = [];
+    describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is true', () => {
+      beforeEach(() => {
+        jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(true);
+      });
 
-        // Act
-        const response = mapFacilityApplicationDetails(mockDeal, [unissuedFacility], onGoingAmendments, params, MOCK_MAKER.roles as Role[]);
+      describe('when a facility is issued', () => {
+        it('should return mapped facilities with canIssuedFacilitiesBeAmended set to true', () => {
+          // Arrange
+          const onGoingAmendments: SubmittedAmendmentsParams[] = [];
 
-        // Assert
-        const expected = {
-          mappedFacilities: [
-            {
-              ...unissuedFacility,
-              canIssuedFacilitiesBeAmended: false,
-            },
-          ],
-          facilityParams: params,
-        };
+          // Act
+          const response = mapFacilityApplicationDetails(mockDeal, [facility], onGoingAmendments, params, MOCK_MAKER.roles as Role[]);
 
-        expect(response).toEqual(expected);
+          // Assert
+          const expected = {
+            mappedFacilities: [
+              {
+                ...facility,
+                canIssuedFacilitiesBeAmended: true,
+              },
+            ],
+            facilityParams: params,
+          };
+
+          expect(response).toEqual(expected);
+        });
+      });
+
+      describe('when a facility is unissued', () => {
+        it('should return mapped facilities with canIssuedFacilitiesBeAmended set to true', () => {
+          // Arrange
+          const unissuedFacility = {
+            ...facility,
+            stage: 'Unissued',
+          };
+          const onGoingAmendments: SubmittedAmendmentsParams[] = [];
+
+          // Act
+          const response = mapFacilityApplicationDetails(mockDeal, [unissuedFacility], onGoingAmendments, params, MOCK_MAKER.roles as Role[]);
+
+          // Assert
+          const expected = {
+            mappedFacilities: [
+              {
+                ...unissuedFacility,
+                canIssuedFacilitiesBeAmended: false,
+              },
+            ],
+            facilityParams: params,
+          };
+
+          expect(response).toEqual(expected);
+        });
       });
     });
   });
