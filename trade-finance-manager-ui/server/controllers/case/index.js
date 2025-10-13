@@ -6,6 +6,7 @@ const {
   convertUnixTimestampWithoutMilliseconds,
   PORTAL_AMENDMENT_STATUS,
   DATE_FORMATS,
+  isPortalFacilityAmendmentsFeatureFlagEnabled,
 } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const {
@@ -338,7 +339,13 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
         const item = { ...amendment };
         item.requestDate = amendment?.requestDate ? format(fromUnixTime(item.requestDate), DATE_FORMATS.DD_MMMM_YYYY) : null;
 
-        item.name = `Amendment ${amendment.referenceNumber}`;
+        const { version, referenceNumber } = amendment;
+
+        const hasReferenceNumber = isPortalFacilityAmendmentsFeatureFlagEnabled() && referenceNumber;
+
+        const amendmentName = hasReferenceNumber ? referenceNumber : version;
+
+        item.name = `Amendment ${amendmentName}`;
 
         const formattedCoverEndDate = amendment?.coverEndDate ? convertUnixTimestampWithoutMilliseconds(amendment.coverEndDate) : null;
 
@@ -755,4 +762,5 @@ module.exports = {
   getCaseDocuments,
   confirmTfmFacility,
   postTfmFacility,
+  formatCompletedAmendmentDetails,
 };
