@@ -31,38 +31,33 @@ module.exports = (facility, errorList, deal) => {
 
   const issuedDayHasValues = dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear);
 
-  newErrorList.issuedDate = [];
   const hasSubmittedDate = issuedDate || issuedDayHasValues;
 
   if (hasSubmittedDate) {
     if (!issuedDate) {
-      newErrorList.issuedDate.push({
+      newErrorList.issuedDate = {
         text: dateValidationText('Issued Date', issuedDateDay, issuedDateMonth, issuedDateYear),
         order: orderNumber(newErrorList),
-      });
+      };
     } else {
       if (isBefore(issuedDate, dealSubmissionDate)) {
-        newErrorList.issuedDate.push({
+        newErrorList.issuedDate = {
           text: `Issued Date must be on or after ${getLongFormattedDate(dealSubmissionDate)}`,
           order: orderNumber(newErrorList),
-        });
+        };
       }
       if (isAfter(issuedDate, today)) {
-        newErrorList.issuedDate.push({
+        newErrorList.issuedDate = {
           text: 'Issued Date must be today or in the past',
           order: orderNumber(newErrorList),
-        });
+        };
       }
     }
   } else {
-    newErrorList.issuedDate.push({
+    newErrorList.issuedDate = {
       text: dateValidationText('Issued Date', issuedDateDay, issuedDateMonth, issuedDateYear),
       order: orderNumber(newErrorList),
-    });
-  }
-
-  if (!newErrorList.issuedDate.length) {
-    delete newErrorList.issuedDate;
+    };
   }
 
   return newErrorList;
