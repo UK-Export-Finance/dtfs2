@@ -1,4 +1,4 @@
-const { getCurrentGefDealVersion, FACILITY_TYPE, PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { getCurrentGefDealVersion, FACILITY_TYPE, PORTAL_AMENDMENT_STATUS, isPortalFacilityAmendmentsFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { aPortalFacilityAmendment } = require('@ukef/dtfs2-common/mock-data-backend');
 const databaseHelper = require('../../../database-helper');
 
@@ -21,6 +21,11 @@ const { DB_COLLECTIONS } = require('../../../fixtures/constants');
 const { generateANewFacility } = require('./helpers/generate-a-new-facility.tests');
 
 const getAcknowledgedAmendmentsByFacilityIdMock = jest.fn();
+
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isPortalFacilityAmendmentsFeatureFlagEnabled: jest.fn(),
+}));
 
 jest.mock('../../../../server/v1/api', () => ({
   ...jest.requireActual('../../../../server/v1/api'),
@@ -88,6 +93,14 @@ describe(baseUrl, () => {
       const { status, body } = await as(maker1).get(`${baseUrl}?dealId=123`);
       expect(status).toEqual(400);
       expect(body).toStrictEqual({ message: 'Invalid Deal Id', status: 400 });
+    });
+
+    beforeEach(() => {
+      jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(true);
+    });
+
+    afterEach(() => {
+      jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(false);
     });
 
     describe('when there are no amendments', () => {
