@@ -4,7 +4,7 @@ const compression = require('compression');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
-const { SWAGGER, create: createCsrf, verify: verifyCsrf, maintenance, notFound, errors } = require('@ukef/dtfs2-common');
+const { SWAGGER, xss, create: createCsrf, verify: verifyCsrf, maintenance, notFound, errors } = require('@ukef/dtfs2-common');
 const { expressSession, configure } = require('@ukef/dtfs2-common/backend');
 const routes = require('./routes');
 const swaggerRouter = require('./routes/swagger.route');
@@ -61,6 +61,8 @@ const generateApp = () => {
   app.use(createRateLimit());
 
   app.use(verifyCsrf);
+  app.use(xss);
+
   // We add a conditional check here as there are no auth routes for the non sso journey, and
   // we cannot call app.use with './', undefined.
   if (unauthenticatedLoginRoutes) {

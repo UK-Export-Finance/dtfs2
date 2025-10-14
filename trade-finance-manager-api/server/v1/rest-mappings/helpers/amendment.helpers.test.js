@@ -1,6 +1,11 @@
-const { CURRENCY, TFM_AMENDMENT_STATUS, PORTAL_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { CURRENCY, TFM_AMENDMENT_STATUS, PORTAL_AMENDMENT_STATUS, isPortalFacilityAmendmentsFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { add } = require('date-fns');
 const amendmentHelpers = require('./amendment.helpers');
+
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isPortalFacilityAmendmentsFeatureFlagEnabled: jest.fn(),
+}));
 
 describe('amendmentChangeValueExportCurrency()', () => {
   const amendment = { currency: CURRENCY.GBP };
@@ -130,10 +135,10 @@ describe('findLatestCompletedAmendment()', () => {
     const latestAmendmentTfmObject = { ...anAmendmentTfmObject(), value: 3000, coverEndDate: new Date('2023-12-12').getTime() };
     const anotherAmendmentTfmObject = { ...anAmendmentTfmObject(), value: 1000, coverEndDate: null };
     const amendments = [
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS), tfm: anotherAmendmentTfmObject },
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: anotherAmendmentTfmObject },
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: latestAmendmentTfmObject },
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: null },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS), tfm: anotherAmendmentTfmObject, version: 1 },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: anotherAmendmentTfmObject, version: 2 },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: latestAmendmentTfmObject, version: 3 },
+      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: null, version: 4 },
     ];
 
     // Act
@@ -148,125 +153,242 @@ describe('findLatestCompletedAmendment()', () => {
     jest.resetAllMocks();
   });
 
-  it('should return the latest submitted facility end date fields when the most recently submitted value had isUsingFacilityEndDate as true', () => {
-    // Arrange
-    const firstAmendmentTfmObject = {
-      ...anAmendmentTfmObject(),
-      isUsingFacilityEndDate: false,
-      bankReviewDate: new Date('2023-12-12'),
-      updatedAt: 1723641611,
-      version: 1,
-    };
-    const secondAmendmentTfmObject = {
-      ...anAmendmentTfmObject(),
-      isUsingFacilityEndDate: true,
-      facilityEndDate: new Date('2024-01-01'),
-      updatedAt: 1723641622,
-      version: 2,
-    };
-    const thirdAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 3 };
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
+    beforeEach(() => {
+      jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(false);
+    });
 
-    const amendments = [
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject },
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject },
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: thirdAmendmentTfmObject },
-    ];
+    it('should return the latest submitted facility end date fields when the most recently submitted value had isUsingFacilityEndDate as true', () => {
+      // Arrange
+      const firstAmendmentTfmObject = {
+        ...anAmendmentTfmObject(),
+        isUsingFacilityEndDate: false,
+        bankReviewDate: new Date('2023-12-12'),
+        updatedAt: 1723641611,
+        version: 1,
+      };
+      const secondAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 2 };
+      const thirdAmendmentTfmObject = {
+        ...anAmendmentTfmObject(),
+        isUsingFacilityEndDate: true,
+        facilityEndDate: new Date('2024-01-01'),
+        updatedAt: secondAmendmentTfmObject.updatedAt - 50,
+        version: 3,
+      };
 
-    // Act
-    const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
+      const amendments = [
+        { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject, version: 1 },
+        { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject, version: 2 },
+        { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: thirdAmendmentTfmObject, version: 3 },
+      ];
 
-    // Assert
-    expect(result.facilityEndDate).toEqual(new Date('2024-01-01'));
-    expect(result.isUsingFacilityEndDate).toEqual(true);
-    expect(result.bankReviewDate).toBeUndefined();
+      // Act
+      const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
+
+      // Assert
+      expect(result.facilityEndDate).toEqual(new Date('2024-01-01'));
+      expect(result.isUsingFacilityEndDate).toEqual(true);
+      expect(result.bankReviewDate).toBeUndefined();
+    });
+
+    it('should return the latest submitted facility end date fields when the most recently submitted value had isUsingFacilityEndDate as false', () => {
+      // Arrange
+      const firstAmendmentTfmObject = {
+        ...anAmendmentTfmObject(),
+        isUsingFacilityEndDate: true,
+        facilityEndDate: new Date('2023-12-12'),
+        updatedAt: 1723641611,
+        version: 1,
+      };
+      const secondAmendmentTfmObject = {
+        ...anAmendmentTfmObject(),
+        isUsingFacilityEndDate: false,
+        bankReviewDate: new Date('2025-05-05'),
+        updatedAt: 1723641622,
+        version: 2,
+      };
+      const thirdAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 3 };
+
+      const amendments = [
+        { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject, version: 1 },
+        { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject, version: 2 },
+        { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: thirdAmendmentTfmObject, version: 3 },
+      ];
+
+      // Act
+      const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
+
+      // Assert
+      expect(result.bankReviewDate).toEqual(new Date('2025-05-05'));
+      expect(result.isUsingFacilityEndDate).toEqual(false);
+      expect(result.facilityEndDate).toBeUndefined();
+    });
+
+    it('should return a portal amendment if it is the latest amendment', () => {
+      // Arrange
+      const latestAmendmentTfmObject = {
+        ...anAmendmentTfmObject(),
+        value: 3000,
+        coverEndDate: new Date('2023-12-12').getTime(),
+        bankReviewDate: undefined,
+        facilityEndDate: undefined,
+        isUsingFacilityEndDate: undefined,
+      };
+      const anotherAmendmentTfmObject = { ...anAmendmentTfmObject(), value: 1000, coverEndDate: null };
+      const amendments = [
+        { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS), tfm: anotherAmendmentTfmObject, version: 1 },
+        { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: anotherAmendmentTfmObject, version: 2 },
+        { ...anAmendmentWithStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED), tfm: latestAmendmentTfmObject, version: 3 },
+      ];
+
+      // Act
+      const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
+
+      // Assert
+      expect(result).toEqual(latestAmendmentTfmObject);
+    });
+
+    it('should return the original values if effective date is in the future', () => {
+      // Arrange
+      const tomorrow = add(new Date(), { days: 1 });
+
+      const latestAmendmentTfmObject = {
+        ...anAmendmentTfmObject(),
+        value: 3000,
+        coverEndDate: new Date('2023-12-12').getTime(),
+        bankReviewDate: undefined,
+        facilityEndDate: undefined,
+        isUsingFacilityEndDate: undefined,
+        effectiveDate: tomorrow.getTime(),
+      };
+
+      const anotherAmendmentTfmObject = { ...anAmendmentTfmObject(), value: 1000, coverEndDate: null };
+      const amendments = [
+        { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS), tfm: anotherAmendmentTfmObject, version: 1 },
+        { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: anotherAmendmentTfmObject, version: 2 },
+        { ...anAmendmentWithStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED), tfm: latestAmendmentTfmObject, version: 3 },
+      ];
+
+      // Act
+      const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
+
+      // Assert
+      const expected = { ...latestAmendmentTfmObject };
+      delete expected.effectiveDate;
+
+      expect(result).toEqual(expected);
+    });
   });
 
-  it('should return the latest submitted facility end date fields when the most recently submitted value had isUsingFacilityEndDate as false', () => {
-    // Arrange
-    const firstAmendmentTfmObject = {
-      ...anAmendmentTfmObject(),
-      isUsingFacilityEndDate: true,
-      facilityEndDate: new Date('2023-12-12'),
-      updatedAt: 1723641611,
-      version: 1,
-    };
-    const secondAmendmentTfmObject = {
-      ...anAmendmentTfmObject(),
-      isUsingFacilityEndDate: false,
-      bankReviewDate: new Date('2025-05-05'),
-      updatedAt: 1723641622,
-      version: 2,
-    };
-    const thirdAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 3 };
+  describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is enabled', () => {
+    beforeEach(() => {
+      jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(true);
+    });
 
-    const amendments = [
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject },
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject },
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: thirdAmendmentTfmObject },
-    ];
+    describe('when no reference numbers are present', () => {
+      it('should return the latest submitted amendment by version', () => {
+        // Arrange
+        const firstAmendmentTfmObject = {
+          ...anAmendmentTfmObject(),
+          isUsingFacilityEndDate: false,
+          bankReviewDate: new Date('2023-12-12'),
+          updatedAt: 1723641611,
+          version: 1,
+        };
+        const secondAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 2 };
+        const thirdAmendmentTfmObject = {
+          ...anAmendmentTfmObject(),
+          isUsingFacilityEndDate: true,
+          facilityEndDate: new Date('2024-01-01'),
+          updatedAt: secondAmendmentTfmObject.updatedAt - 50,
+          version: 3,
+        };
 
-    // Act
-    const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
+        const amendments = [
+          { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject, version: 1 },
+          { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject, version: 2 },
+          { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: thirdAmendmentTfmObject, version: 3 },
+        ];
 
-    // Assert
-    expect(result.bankReviewDate).toEqual(new Date('2025-05-05'));
-    expect(result.isUsingFacilityEndDate).toEqual(false);
-    expect(result.facilityEndDate).toBeUndefined();
-  });
+        // Act
+        const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
 
-  it('should return a portal amendment if it is the latest amendment', () => {
-    // Arrange
-    const latestAmendmentTfmObject = {
-      ...anAmendmentTfmObject(),
-      value: 3000,
-      coverEndDate: new Date('2023-12-12').getTime(),
-      bankReviewDate: undefined,
-      facilityEndDate: undefined,
-      isUsingFacilityEndDate: undefined,
-    };
-    const anotherAmendmentTfmObject = { ...anAmendmentTfmObject(), value: 1000, coverEndDate: null };
-    const amendments = [
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS), tfm: anotherAmendmentTfmObject },
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: anotherAmendmentTfmObject },
-      { ...anAmendmentWithStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED), tfm: latestAmendmentTfmObject },
-    ];
+        // Assert
+        expect(result.facilityEndDate).toEqual(new Date('2024-01-01'));
+        expect(result.isUsingFacilityEndDate).toEqual(true);
+        expect(result.bankReviewDate).toBeUndefined();
+      });
+    });
 
-    // Act
-    const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
+    describe('when reference numbers are present', () => {
+      it('should return the latest submitted facility end date fields for the latest reference number amendment', () => {
+        // Arrange
+        const firstAmendmentTfmObject = {
+          ...anAmendmentTfmObject(),
+          isUsingFacilityEndDate: false,
+          bankReviewDate: new Date('2023-12-12'),
+          updatedAt: 1723641611,
+          version: 1,
+        };
+        const secondAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 2 };
+        const thirdAmendmentTfmObject = {
+          ...anAmendmentTfmObject(),
+          isUsingFacilityEndDate: true,
+          facilityEndDate: new Date('2024-01-01'),
+          updatedAt: secondAmendmentTfmObject.updatedAt - 50,
+          version: 3,
+        };
 
-    // Assert
-    expect(result).toEqual(latestAmendmentTfmObject);
-  });
+        const amendments = [
+          { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject, version: 1, referenceNumber: '0011-003' },
+          { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject, version: 2, referenceNumber: '0011-001' },
+          { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: thirdAmendmentTfmObject, version: 3, referenceNumber: '0011-002' },
+        ];
 
-  it('should return the original values if effective date is in the future', () => {
-    // Arrange
-    const tomorrow = add(new Date(), { days: 1 });
+        // Act
+        const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
 
-    const latestAmendmentTfmObject = {
-      ...anAmendmentTfmObject(),
-      value: 3000,
-      coverEndDate: new Date('2023-12-12').getTime(),
-      bankReviewDate: undefined,
-      facilityEndDate: undefined,
-      isUsingFacilityEndDate: undefined,
-      effectiveDate: tomorrow.getTime(),
-    };
+        // Assert
+        expect(result.facilityEndDate).toEqual(amendments[0].tfm.facilityEndDate);
+        expect(result.isUsingFacilityEndDate).toEqual(amendments[0].tfm.isUsingFacilityEndDate);
+        expect(result.bankReviewDate).toEqual(amendments[0].tfm.bankReviewDate);
+      });
+    });
 
-    const anotherAmendmentTfmObject = { ...anAmendmentTfmObject(), value: 1000, coverEndDate: null };
-    const amendments = [
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.IN_PROGRESS), tfm: anotherAmendmentTfmObject },
-      { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: anotherAmendmentTfmObject },
-      { ...anAmendmentWithStatus(PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED), tfm: latestAmendmentTfmObject },
-    ];
+    describe('when mix of version and referenceNumbers', () => {
+      it('should return the latest submitted facility end date fields for the latest reference number amendment', () => {
+        // Arrange
+        const firstAmendmentTfmObject = {
+          ...anAmendmentTfmObject(),
+          isUsingFacilityEndDate: false,
+          bankReviewDate: new Date('2023-12-12'),
+          updatedAt: 1723641611,
+          version: 1,
+        };
+        const secondAmendmentTfmObject = { ...anAmendmentTfmObject(), updatedAt: 1723641633, version: 2 };
+        const thirdAmendmentTfmObject = {
+          ...anAmendmentTfmObject(),
+          isUsingFacilityEndDate: true,
+          facilityEndDate: new Date('2024-01-01'),
+          updatedAt: secondAmendmentTfmObject.updatedAt - 50,
+          version: 3,
+        };
 
-    // Act
-    const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
+        const amendments = [
+          { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: firstAmendmentTfmObject, version: 1, referenceNumber: '0011-003' },
+          { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: secondAmendmentTfmObject, version: 2 },
+          { ...anAmendmentWithStatus(TFM_AMENDMENT_STATUS.COMPLETED), tfm: thirdAmendmentTfmObject, version: 3, referenceNumber: '0011-002' },
+        ];
 
-    // Assert
-    const expected = { ...latestAmendmentTfmObject };
-    delete expected.effectiveDate;
+        // Act
+        const result = amendmentHelpers.findLatestCompletedAmendment(amendments);
 
-    expect(result).toEqual(expected);
+        // Assert
+        expect(result.facilityEndDate).toEqual(amendments[0].tfm.facilityEndDate);
+        expect(result.isUsingFacilityEndDate).toEqual(amendments[0].tfm.isUsingFacilityEndDate);
+        expect(result.bankReviewDate).toEqual(amendments[0].tfm.bankReviewDate);
+      });
+    });
   });
 
   function* timestampGenerator() {

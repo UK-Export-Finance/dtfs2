@@ -1,8 +1,7 @@
 import { Response } from 'express';
 import { flatten } from 'mongo-dot-notation';
-import { getUnixTime } from 'date-fns';
 import { HttpStatusCode } from 'axios';
-import { ApiError, ApiErrorResponseBody, AUDIT_USER_TYPES, CustomExpressRequest, FacilityAmendment } from '@ukef/dtfs2-common';
+import { ApiError, ApiErrorResponseBody, AUDIT_USER_TYPES, CustomExpressRequest, FacilityAmendment, getEpochMs } from '@ukef/dtfs2-common';
 import { generateAuditDatabaseRecordFromAuditDetails, validateAuditDetailsAndUserType } from '@ukef/dtfs2-common/change-stream';
 import { NotFoundError } from '../../../../errors';
 import { TfmFacilitiesRepo } from '../../../../repositories/tfm-facilities-repo';
@@ -22,11 +21,21 @@ export const updateTfmAmendment = async (req: UpdateTfmAmendmentRequest, res: Up
     validateAuditDetailsAndUserType(auditDetails, AUDIT_USER_TYPES.TFM);
 
     const foundAmendment = await TfmFacilitiesRepo.findOneAmendmentByFacilityIdAndAmendmentId(facilityId, amendmentId);
+
     if (!foundAmendment) {
       throw new NotFoundError('The amendment does not exist');
     }
 
-    const update = { ...payload, updatedAt: getUnixTime(new Date()) };
+    let update = { ...payload, updatedAt: getEpochMs() };
+
+    /**
+     * if `shouldNotUpdateTimestamp` is true,
+     * then we should not update the `updatedAt` field.
+     * to ensure the existing `updatedAt` value from the found amendment is utilised.
+     */
+    if (payload.shouldNotUpdateTimestamp) {
+      update = { ...payload, updatedAt: foundAmendment.updatedAt };
+    }
 
     await TfmFacilitiesRepo.updateOneByIdAndAmendmentId(
       facilityId,
