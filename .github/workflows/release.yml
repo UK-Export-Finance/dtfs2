@@ -9,7 +9,7 @@
 # 1. Setup: Determines the appropriate environment based on the release branch and configures environment variables (e.g., timezone).
 # 2. SQL schema migration: Deploys SQL migrations to the specified environment.
 # 3. WebApp Deployment: Sequentially deploys a list of web apps defined in the matrix (`portal-ui`, `gef-ui`, etc.) to the target environment.
-# 4. Function Deployment: Sequentially deploys a list of Azure functions (e.g., `acbs-function`) to the target environment.
+# 4. Function Deployment: Sequentially deploys a list of Azure functions (e.g., `acbs`) to the target environment.
 #
 # Key Points:
 # - The workflow is triggered by the completion of the Quality Assurance - Tests workflow.
@@ -87,7 +87,7 @@ jobs:
 
     steps:
       - name: Repository 🗂️
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Deploy ⚡
         uses: ./.github/actions/mssql
@@ -125,7 +125,7 @@ jobs:
 
     steps:
       - name: Repository 🗂️
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Deploy ⚡
         uses: ./.github/actions/webapp
@@ -153,7 +153,7 @@ jobs:
       fail-fast: false
       # Single dimension matrix
       matrix:
-        functions: ['acbs-function']
+        functions: ['acbs']
 
     concurrency:
       group: deployment-functions-${{ github.workflow }}-${{ github.workflow_ref }}-${{ matrix.functions }}
@@ -161,7 +161,7 @@ jobs:
 
     steps:
       - name: Repository 🗂️
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Deploy ⚡
         uses: ./.github/actions/functions
