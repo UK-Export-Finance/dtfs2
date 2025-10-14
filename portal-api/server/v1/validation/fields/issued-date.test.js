@@ -24,7 +24,7 @@ describe('validateIssuedDate', () => {
 
     const result = validateIssuedDate(facility, errorList, deal);
 
-    expect(result.issuedDate[0].text).toEqual('Enter the Issued Date');
+    expect(result.issuedDate.text).toEqual('Enter the Issued Date');
   });
   it('should return error if date is before dealSubmissionDate', () => {
     const facility = {
@@ -36,7 +36,7 @@ describe('validateIssuedDate', () => {
 
     const result = validateIssuedDate(facility, errorList, deal);
 
-    expect(result.issuedDate[0].text).toEqual(`Issued Date must be on or after ${getLongFormattedDate(deal.details.submissionDate)}`);
+    expect(result.issuedDate.text).toEqual(`Issued Date must be on or after ${getLongFormattedDate(deal.details.submissionDate)}`);
   });
   it('should return error if date is in the future', () => {
     const facility = {
@@ -48,7 +48,7 @@ describe('validateIssuedDate', () => {
 
     const result = validateIssuedDate(facility, errorList, deal);
 
-    expect(result.issuedDate[0].text).toEqual('Issued Date must be today or in the past');
+    expect(result.issuedDate.text).toEqual('Issued Date must be today or in the past');
   });
   it('should return missing error if day values exist but full date is missing', () => {
     const facility = {
@@ -60,6 +60,6 @@ describe('validateIssuedDate', () => {
 
     const result = validateIssuedDate(facility, errorList, deal);
 
-    expect(result.issuedDate[0].text).toEqual('Enter the Issued Date');
+    expect(result.issuedDate.text).toEqual('Enter the Issued Date');
   });
 });
