@@ -61,5 +61,9 @@ module.exports = (facility, errorList, deal) => {
     });
   }
 
+  if (!newErrorList.issuedDate.length) {
+    delete newErrorList.issuedDate;
+  }
+
   return newErrorList;
 };
