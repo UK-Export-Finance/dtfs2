@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { MONGO_DB_COLLECTIONS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, format } = require('@ukef/dtfs2-common');
 const {
   generateParsedMockPortalUserAuditDatabaseRecord,
   withDeleteOneTests,
@@ -60,7 +60,7 @@ describe('/v1/mandatory-criteria', () => {
         count: allMandatoryCriteria.length,
         mandatoryCriteria: expectMongoIds(
           allMandatoryCriteria.map((criteria) => ({
-            ...criteria,
+            ...format(criteria),
             auditRecord: generateParsedMockPortalUserAuditDatabaseRecord(anAdmin._id),
           })),
         ),

@@ -26,7 +26,7 @@ const MANDATORY_CRITERIA = [
         items: [
           {
             id: 4,
-            copy: 'The Bank Customer (to include both the Supplier and any Parent Obligor) is an [Eligible Person](/financial_difficulty_calculator-v1.2.0.xlsx).',
+            copy: 'The Bank Customer (to include both the Supplier and any Parent Obligor) is an [eligible person](/financial_difficulty_calculator-v1.2.0.xlsx).',
           },
         ],
       },
@@ -101,7 +101,7 @@ const MANDATORY_CRITERIA = [
         items: [
           {
             id: 4,
-            copy: 'The Bank Customer (to include both the Supplier and any Parent Obligor) is an [Eligible Person](/financial_difficulty_calculator-v1.2.0.xlsx).',
+            copy: 'The Bank Customer (to include both the Supplier and any Parent Obligor) is an [eligible person](/financial_difficulty_calculator-v1.2.0.xlsx).',
           },
         ],
       },

@@ -12,25 +12,25 @@ describe('format', () => {
 
   it('should return formatted output when the input is a string', () => {
     // Arrange
-    const input = '[Eligible Person](/financial_difficulty_calculator-v1.2.0.xlsx)';
+    const input = '[eligible person](/financial_difficulty_calculator-v1.2.0.xlsx)';
     // Act
     const response = format(input);
 
     // Assert
-    expect(response).toEqual("<a href='/financial_difficulty_calculator-v1.2.0.xlsx' class='govuk-link'>Eligible Person</a>");
+    expect(response).toEqual("<a href='/financial_difficulty_calculator-v1.2.0.xlsx' class='govuk-link'>eligible person</a>");
   });
 
   it('should return formatted output when the input is an array', () => {
     // Arrange
     const input = [
-      'The Bank Customer (to include both the Supplier and any Parent Obligor) is an [Eligible Person](/financial_difficulty_calculator-v1.2.0.xlsx).',
+      'The Bank Customer (to include both the Supplier and any Parent Obligor) is an [eligible person](/financial_difficulty_calculator-v1.2.0.xlsx).',
     ];
     // Act
     const response = format(input);
 
     // Assert
     expect(response).toEqual([
-      "The Bank Customer (to include both the Supplier and any Parent Obligor) is an <a href='/financial_difficulty_calculator-v1.2.0.xlsx' class='govuk-link'>Eligible Person</a>.",
+      "The Bank Customer (to include both the Supplier and any Parent Obligor) is an <a href='/financial_difficulty_calculator-v1.2.0.xlsx' class='govuk-link'>eligible person</a>.",
     ]);
   });
 
@@ -38,7 +38,7 @@ describe('format', () => {
     // Arrange
     const input = {
       version: 1,
-      text: 'The Bank Customer (to include both the Supplier and any Parent Obligor) is an [Eligible Person](/financial_difficulty_calculator-v1.2.0.xlsx).',
+      text: 'The Bank Customer (to include both the Supplier and any Parent Obligor) is an [eligible person](/financial_difficulty_calculator-v1.2.0.xlsx).',
     };
     // Act
     const response = format(input);
@@ -46,7 +46,7 @@ describe('format', () => {
     // Assert
     expect(response).toEqual({
       version: 1,
-      text: "The Bank Customer (to include both the Supplier and any Parent Obligor) is an <a href='/financial_difficulty_calculator-v1.2.0.xlsx' class='govuk-link'>Eligible Person</a>.",
+      text: "The Bank Customer (to include both the Supplier and any Parent Obligor) is an <a href='/financial_difficulty_calculator-v1.2.0.xlsx' class='govuk-link'>eligible person</a>.",
     });
   });
 
