@@ -1,6 +1,6 @@
 const { HttpStatusCode } = require('axios');
 const { ObjectId } = require('mongodb');
-const { PAYLOAD_VERIFICATION, MONGO_DB_COLLECTIONS, DocumentNotDeletedError, isProduction } = require('@ukef/dtfs2-common');
+const { PAYLOAD_VERIFICATION, MONGO_DB_COLLECTIONS, DocumentNotDeletedError, isProduction, format } = require('@ukef/dtfs2-common');
 const { isVerifiedPayload } = require('@ukef/dtfs2-common/payload-verification');
 const assert = require('assert');
 const { generatePortalAuditDetails, generateAuditDatabaseRecordFromAuditDetails, deleteOne } = require('@ukef/dtfs2-common/change-stream');
@@ -16,7 +16,7 @@ const findMandatoryCriteria = async (callback) => {
 
   collection.find().toArray((error, result) => {
     assert.equal(error, null);
-    callback(result);
+    callback(format(result));
   });
 };
 exports.findMandatoryCriteria = findMandatoryCriteria;
@@ -38,7 +38,7 @@ const findOneMandatoryCriteria = async (version, callback) => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.MANDATORY_CRITERIA);
   collection.findOne({ version: { $eq: versionAsNumber } }, (error, result) => {
     assert.equal(error, null);
-    callback(result);
+    callback(format(result));
   });
 };
 
@@ -79,9 +79,9 @@ exports.create = async (req, res) => {
 exports.findAll = async (req, res) =>
   findMandatoryCriteria((mandatoryCriteria) =>
     sortMandatoryCriteria(mandatoryCriteria, (sortedMandatoryCriteria) =>
-      res.status(200).send({
+      res.status(HttpStatusCode.Ok).send({
         count: mandatoryCriteria.length,
-        mandatoryCriteria: sortedMandatoryCriteria,
+        mandatoryCriteria: format(sortedMandatoryCriteria),
       }),
     ),
   );
@@ -93,7 +93,8 @@ exports.findAll = async (req, res) =>
  * @param {Express.Response} res - The Express response object.
  * @returns {Promise<Express.Response>} - A promise that resolves to the Express response object.
  */
-exports.findOne = async (req, res) => findOneMandatoryCriteria(req.params.version, (mandatoryCriteria) => res.status(200).send(mandatoryCriteria));
+exports.findOne = async (req, res) =>
+  findOneMandatoryCriteria(req.params.version, (mandatoryCriteria) => res.status(HttpStatusCode.Ok).send(format(mandatoryCriteria)));
 
 /**
  * Finds the latest mandatory criteria.
@@ -102,7 +103,7 @@ exports.findOne = async (req, res) => findOneMandatoryCriteria(req.params.versio
 const findLatestMandatoryCriteria = async () => {
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.MANDATORY_CRITERIA);
   const latest = await collection.find().sort({ version: -1 }).limit(1).toArray();
-  return latest[0];
+  return format(latest[0]);
 };
 exports.findLatestMandatoryCriteria = findLatestMandatoryCriteria;
 
@@ -115,7 +116,7 @@ exports.findLatestMandatoryCriteria = findLatestMandatoryCriteria;
  */
 exports.findLatest = async (req, res) => {
   const latest = await findLatestMandatoryCriteria();
-  return res.status(200).send(latest);
+  return res.status(HttpStatusCode.Ok).send(format(latest));
 };
 
 /**
@@ -130,14 +131,14 @@ exports.delete = async (req, res) => {
   const auditDetails = generatePortalAuditDetails(req.user._id);
 
   if (Number.isNaN(versionNumber)) {
-    return res.status(400).send({ status: 400, message: 'Invalid mandatory criteria version number' });
+    return res.status(HttpStatusCode.BadRequest).send({ status: HttpStatusCode.BadRequest, message: 'Invalid mandatory criteria version number' });
   }
 
   const collection = await db.getCollection(MONGO_DB_COLLECTIONS.MANDATORY_CRITERIA);
   const mandatoryCriteria = await collection.findOne({ version: { $eq: versionNumber } }, { projection: { _id: true } });
 
   if (!mandatoryCriteria) {
-    return res.status(404).send({ status: 404, message: 'Mandatory Criteria not found' });
+    return res.status(HttpStatusCode.NotFound).send({ status: HttpStatusCode.NotFound, message: 'Mandatory Criteria not found' });
   }
 
   try {
@@ -148,12 +149,12 @@ exports.delete = async (req, res) => {
       auditDetails,
     });
 
-    return res.status(200).send(deleteResult);
+    return res.status(HttpStatusCode.Ok).send(deleteResult);
   } catch (error) {
     if (error instanceof DocumentNotDeletedError) {
-      return res.status(404).send({ status: 404, message: 'Mandatory Criteria not found' });
+      return res.status(HttpStatusCode.NotFound).send({ status: HttpStatusCode.NotFound, message: 'Mandatory Criteria not found' });
     }
     console.error('Error occurred deleting mandatory criteria, %o', error);
-    return res.status(500).send({ status: 500, error });
+    return res.status(HttpStatusCode.InternalServerError).send({ status: HttpStatusCode.InternalServerError, error });
   }
 };
