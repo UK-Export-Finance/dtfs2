@@ -13,6 +13,9 @@ ARG MICROSERVICE=dtfs-central-api
 
 FROM node:24.1.0-alpine3.20 AS build
 
+# Shell
+SHELL ["/bin/sh", "-c"]
+
 # Variables
 ARG PORT
 ARG NODE_ENV
@@ -53,6 +56,9 @@ RUN npm ci --omit=dev --ignore-scripts --workspace=${MICROSERVICE}
 ###################
 
 FROM node:24.1.0-alpine3.20 AS production
+
+# Shell
+SHELL ["/bin/sh", "-c"]
 
 # Variables
 ARG PORT
@@ -96,7 +102,7 @@ HEALTHCHECK \
 --interval=60s \
 --timeout=30s \
 CMD curl \
--f http://localhost:${PORT} \
+-fail http://localhost:${PORT} \
 || exit 1
 
 # Non-root user
