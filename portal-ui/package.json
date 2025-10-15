@@ -64,7 +64,6 @@
     "morgan": "1.10.0",
     "multer": "2.0.2",
     "node-fetch": "^2.7.0",
-    "nodemon": "^3.1.10",
     "nunjucks": "3.2.4",
     "path": "0.12.7",
     "supertest": "^6.3.4",
