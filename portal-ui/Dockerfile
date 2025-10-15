@@ -103,14 +103,12 @@ EXPOSE ${PORT}
 HEALTHCHECK \
 --interval=60s \
 --timeout=30s \
-CMD wget \
---no-verbose \
---tries=3 \
---spider https://localhost:${PORT} \
+CMD curl \
+-f http://localhost:${PORT} \
 || exit 1
-
-# Execute Script
-ENTRYPOINT sh -c "$ROOT/start.sh"
 
 # Non-root user
 USER node
+
+# Execute Script
+ENTRYPOINT ["sh", "-c", "exec \"$ROOT/start.sh\""]
