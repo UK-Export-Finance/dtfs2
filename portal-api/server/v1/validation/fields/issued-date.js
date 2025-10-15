@@ -12,7 +12,11 @@ module.exports = (facility, errorList, deal) => {
   const { submissionType } = deal;
   const { submissionDate: dealSubmissionDateTimestamp, manualInclusionNoticeSubmissionDate: minSubmissionDateTimestamp } = deal.details;
 
-  const issuedDate = getStartOfDateFromEpochMillisecondString(facility.issuedDate);
+  let issuedDate;
+  if (facility.issuedDate) {
+    issuedDate = getStartOfDateFromEpochMillisecondString(facility.issuedDate);
+  }
+
   const today = startOfDay(new Date());
 
   let dealSubmissionDate = startOfDay(new Date());
@@ -27,22 +31,29 @@ module.exports = (facility, errorList, deal) => {
 
   const issuedDayHasValues = dateHasAllValues(issuedDateDay, issuedDateMonth, issuedDateYear);
 
-  if (issuedDayHasValues) {
-    if (isBefore(issuedDate, dealSubmissionDate)) {
-      newErrorList.issuedDate = {
-        text: `Issued Date must be on or after ${getLongFormattedDate(dealSubmissionDate)}`,
-        order: orderNumber(newErrorList),
-      };
-    }
+  const hasSubmittedDate = issuedDate || issuedDayHasValues;
 
-    if (isAfter(issuedDate, today)) {
+  if (hasSubmittedDate) {
+    if (!issuedDate) {
       newErrorList.issuedDate = {
-        text: 'Issued Date must be today or in the past',
+        text: dateValidationText('Issued Date', issuedDateDay, issuedDateMonth, issuedDateYear),
         order: orderNumber(newErrorList),
       };
+    } else {
+      if (isBefore(issuedDate, dealSubmissionDate)) {
+        newErrorList.issuedDate = {
+          text: `Issued Date must be on or after ${getLongFormattedDate(dealSubmissionDate)}`,
+          order: orderNumber(newErrorList),
+        };
+      }
+      if (isAfter(issuedDate, today)) {
+        newErrorList.issuedDate = {
+          text: 'Issued Date must be today or in the past',
+          order: orderNumber(newErrorList),
+        };
+      }
     }
-  }
-  if (!facility.issuedDate && !issuedDayHasValues) {
+  } else {
     newErrorList.issuedDate = {
       text: dateValidationText('Issued Date', issuedDateDay, issuedDateMonth, issuedDateYear),
       order: orderNumber(newErrorList),
