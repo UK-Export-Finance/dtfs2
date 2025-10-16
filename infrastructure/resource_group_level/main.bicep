@@ -22,7 +22,7 @@ param peeringAddressSpace string = '10.50.0.0/16'
 param onPremiseNetworkIpsString string
 
 ///////////////////////////////////////////////////////////////////////////////
-// We have a lot of application secrets that are passsed in from GitHub
+// We have a lot of application secrets that are passed in from GitHub
 // We define them here.
 ///////////////////////////////////////////////////////////////////////////////
 @secure()
@@ -81,9 +81,20 @@ param AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE string
 param SESSION_SECRET string
 @secure()
 param ESTORE_URL string
+@secure()
+param PDC_INPUTTERS_EMAIL_RECIPIENT string
 
 // The following parameters come from GH vars, rather than secrets.
 param RATE_LIMIT_THRESHOLD string
+param UTILISATION_REPORT_MAX_FILE_SIZE_BYTES string
+param PORTAL_UI_URL string
+param UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH string
+param UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH string
+param UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE string
+param UTILISATION_REPORT_DUE_EMAIL_SCHEDULE string
+param UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE string
+param AZURE_UTILISATION_REPORTS_FILESHARE_NAME string
+param UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE string
 
 ///////////////////////////////////////////////////////////////////////////////
 // Having read all the parameters, we set up the values that are needed for the
@@ -134,6 +145,7 @@ var externalApiAdditionalSecureSettings = {
 
 var dtfsCentralApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+  UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE: UTILISATION_REPORT_CREATION_FOR_BANKS_SCHEDULE
 }
 var dtfsCentralApiSecureSettings = {}
 var dtfsCentralApiAdditionalSecureSetting = {
@@ -142,16 +154,16 @@ var dtfsCentralApiAdditionalSecureSetting = {
 
 var portalApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+  PORTAL_UI_URL: PORTAL_UI_URL
+  UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
+  UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: UTILISATION_REPORT_OVERDUE_CHASER_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
+  UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE: UTILISATION_REPORT_REPORTING_PERIOD_START_EMAIL_SCHEDULE
+  UTILISATION_REPORT_DUE_EMAIL_SCHEDULE: UTILISATION_REPORT_DUE_EMAIL_SCHEDULE
+  UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE: UTILISATION_REPORT_OVERDUE_EMAIL_SCHEDULE
+  AZURE_UTILISATION_REPORTS_FILESHARE_NAME: AZURE_UTILISATION_REPORTS_FILESHARE_NAME
 }
-var portalApiSecureSettings = {}
-var portalApiAdditionalSecureSetting = {
-  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
-  EXTERNAL_API_KEY: EXTERNAL_API_KEY
-  PORTAL_API_KEY: PORTAL_API_KEY
-  TFM_API_KEY: TFM_API_KEY
-}
-var portalApiConnectionStrings = { }
-var portalApiSecureConnectionStrings = {
+var portalApiSecureSettings = {
+  PDC_INPUTTERS_EMAIL_RECIPIENT: PDC_INPUTTERS_EMAIL_RECIPIENT
   // NOTE that CORS_ORIGIN is not present in the variables exported from dev or staging but is used in application code
   CORS_ORIGIN: CORS_ORIGIN
   AZURE_PORTAL_EXPORT_FOLDER: AZURE_PORTAL_EXPORT_FOLDER
@@ -161,70 +173,79 @@ var portalApiSecureConnectionStrings = {
   GOV_NOTIFY_API_KEY: GOV_NOTIFY_API_KEY
   GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
 }
+var portalApiAdditionalSecureSetting = {
+  DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
+  EXTERNAL_API_KEY: EXTERNAL_API_KEY
+  PORTAL_API_KEY: PORTAL_API_KEY
+  TFM_API_KEY: TFM_API_KEY
+}
+var portalApiConnectionStrings = { }
+var portalApiSecureConnectionStrings = { }
 
 var tmfApiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+  AZURE_UTILISATION_REPORTS_FILESHARE_NAME: AZURE_UTILISATION_REPORTS_FILESHARE_NAME
 }
-var tfmApiSecureSettings = {}
+var tfmApiSecureSettings = {
+  UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
+  UKEF_TFM_API_REPORTS_KEY: UKEF_TFM_API_REPORTS_KEY
+  AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
+  JWT_SIGNING_KEY: JWT_SIGNING_KEY
+}
 var tfmApiAdditionalSecureSettings = {
   UKEF_INTERNAL_NOTIFICATION: UKEF_INTERNAL_NOTIFICATION
   DTFS_CENTRAL_API_KEY: DTFS_CENTRAL_API_KEY
   EXTERNAL_API_KEY: EXTERNAL_API_KEY
-  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY // TODO:FN-1086 JWT_VALIDATING_KEY seems to have been moved to connection strings.
+  JWT_VALIDATING_KEY: JWT_VALIDATING_KEY
   TFM_API_KEY: TFM_API_KEY
-}
-var tfmApiSecureConnectionStrings = {
-  UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
-  UKEF_TFM_API_REPORTS_KEY: UKEF_TFM_API_REPORTS_KEY
-  AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE: AZURE_NUMBER_GENERATOR_FUNCTION_SCHEDULE
-  JWT_SIGNING_KEY: JWT_SIGNING_KEY // NOTE - in the export this appears to be a slot setting. However, we don't need to replicate that.
-}
-var tfmApiAdditionalSecureConnectionStrings = {
   GOV_NOTIFY_EMAIL_RECIPIENT: GOV_NOTIFY_EMAIL_RECIPIENT
 }
+var tfmApiSecureConnectionStrings = { }
+var tfmApiAdditionalSecureConnectionStrings = { }
 
 var portalUiSettings = {
-    RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD // TODO:FN-1086 30 on dev, 10000 on feature
-    COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
+  RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD // TODO:FN-1086 30 on dev, 10000 on feature
+  COMPANIES_HOUSE_API_URL: COMPANIES_HOUSE_API_URL
+  UTILISATION_REPORT_MAX_FILE_SIZE_BYTES: UTILISATION_REPORT_MAX_FILE_SIZE_BYTES
 }
-var portalUiSecureSettings = {}
+var portalUiSecureSettings = {
+  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY
+  SESSION_SECRET: SESSION_SECRET
+}
 var portalUiAdditionalSecureSettings = {
   PORTAL_API_KEY: PORTAL_API_KEY
   TFM_API_KEY: TFM_API_KEY
 }
-var portalUiSecureConnectionStrings = {
-  COMPANIES_HOUSE_API_KEY: COMPANIES_HOUSE_API_KEY
-  SESSION_SECRET: SESSION_SECRET
-}
-var portalUiAdditionalSecureConnectionStrings = {}
+var portalUiSecureConnectionStrings = { }
+var portalUiAdditionalSecureConnectionStrings = { }
 
 var tfmUiSettings = {
   RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
+  UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH: UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
 }
 var tfmUiSecureSettings = {
   UKEF_TFM_API_SYSTEM_KEY: UKEF_TFM_API_SYSTEM_KEY
   ESTORE_URL: ESTORE_URL
+  SESSION_SECRET: SESSION_SECRET
 }
 var tfmUiAdditionalSecureSettings = {
   TFM_API_KEY: TFM_API_KEY
 }
-var tfmUiSecureConnectionStrings = {
-  SESSION_SECRET: SESSION_SECRET
-}
-var tfmUiAdditionalSecureConnectionStrings = {}
+var tfmUiSecureConnectionStrings = { }
+var tfmUiAdditionalSecureConnectionStrings = { }
 
 var gefUiSettings = {
     // from vars.
     RATE_LIMIT_THRESHOLD: RATE_LIMIT_THRESHOLD
 }
-var gefUiSecureSettings = {}
+var gefUiSecureSettings = {
+  SESSION_SECRET: SESSION_SECRET
+}
 var gefUiAdditionalSecureSettings = {
   PORTAL_API_KEY: PORTAL_API_KEY
 }
-var gefUiSecureConnectionStrings = {
-  SESSION_SECRET: SESSION_SECRET
-}
-var gefUiAdditionalSecureConnectionStrings = {}
+var gefUiSecureConnectionStrings = { }
+var gefUiAdditionalSecureConnectionStrings = { }
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -235,7 +256,7 @@ var gefUiAdditionalSecureConnectionStrings = {}
 
 // The following settings have not been made part of the parameters map
 // as they are the same for all environments and don't look like they will change.
-// The following parameters come from GH environment varaiables, rather than secrets
+// The following parameters come from GH environment variables, rather than secrets
 var COMPANIES_HOUSE_API_URL = 'https://api.companieshouse.gov.uk'
 var ORDNANCE_SURVEY_API_URL = 'https://api.os.co.uk'
 
@@ -273,7 +294,7 @@ var parametersMap = {
     }
     asp: {
       name: 'dev'
-      sku: 'p2v2'  
+      sku: 'p2v2'
     }
     cosmosDb: {
       databaseName: 'dtfs-submissions'
@@ -300,6 +321,7 @@ var parametersMap = {
       addressPrefixes: ['172.16.40.0/22', '172.16.60.0/23']
       applicationGatewayCidr: '172.16.41.0/24'
       appServicePlanEgressPrefixCidr: '172.16.42.0/28'
+      acaClamAvCidr: '172.16.42.32/27'
       privateEndpointsCidr: '172.16.40.0/24'
       peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
     }
@@ -351,6 +373,7 @@ var parametersMap = {
       // Note that for appServicePlanEgressPrefixCidr /28 is rather small (16 - 5 reserved = 11 IPs)
       // MS recommend at least /26 (64 - 5 reserved = 59 IPs)
       appServicePlanEgressPrefixCidr: '172.16.22.0/28'
+      acaClamAvCidr: '172.16.22.32/27'
       privateEndpointsCidr: '172.16.20.0/24'
       peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
     }
@@ -400,6 +423,7 @@ var parametersMap = {
       // TODO:DTFS2-6422 check if all the addressPrefixes are needed
       addressPrefixes: ['172.16.50.0/23', '172.16.52.0/23', '172.16.70.0/23']
       appServicePlanEgressPrefixCidr: '172.16.52.0/28'
+      acaClamAvCidr: '172.16.52.32/27'
       applicationGatewayCidr: '172.16.71.0/24'
       privateEndpointsCidr: '172.16.70.0/24'
       // Note that the peeringVnetName for staging uses the name `test` for the staging environment so we override it here.
@@ -452,6 +476,7 @@ var parametersMap = {
       // TODO:DTFS2-6422 check if all the addressPrefixes are needed
       addressPrefixes: ['172.16.30.0/23', '172.16.32.0/23']
       appServicePlanEgressPrefixCidr: '172.16.32.0/28'
+      acaClamAvCidr: '172.16.32.32/27'
       applicationGatewayCidr: '172.16.31.0/24'
       privateEndpointsCidr: '172.16.30.0/24'
       peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
@@ -553,6 +578,7 @@ module vnet 'modules/vnet.bicep' = {
     privateEndpointsCidr: parametersMap[environment].vnet.privateEndpointsCidr
     appServicePlanEgressPrefixCidr: parametersMap[environment].vnet.appServicePlanEgressPrefixCidr
     applicationGatewayCidr: parametersMap[environment].vnet.applicationGatewayCidr
+    acaClamAvCidr: parametersMap[environment].vnet.acaClamAvCidr
     storageLocations: storageLocations
     peeringVnetName: parametersMap[environment].vnet.peeringVnetName
     peeringRemoteVnetSubscriptionId: peeringRemoteVnetSubscriptionId
@@ -627,6 +653,16 @@ module redis 'modules/redis.bicep' = {
     location: location
     environment: environment
     sku: parametersMap[environment].redis.sku
+  }
+}
+
+module clamAv 'modules/clamav-aca.bicep' = {
+  name: 'clamAv'
+  params: {
+    location: location
+    environment: environment
+    acaClamAvSubnetId: vnet.outputs.acaClamAvSubnetId
+    logAnalyticsWorkspaceName: logAnalyticsWorkspace.name
   }
 }
 
@@ -732,26 +768,24 @@ module portalApi 'modules/webapps/portal-api.bicep' = {
     additionalSecureSettings: portalApiAdditionalSecureSetting
     connectionStrings: portalApiConnectionStrings
     secureConnectionStrings: portalApiSecureConnectionStrings
+    clamAvSettings: {
+      ipAddress: clamAv.outputs.exposedIp
+      port: clamAv.outputs.exposedPort
+    }
   }
 }
 
-module tfmApi 'modules/webapps/trade-finance-manager-api-no-connection-strings.bicep' = {
+module tfmApi 'modules/webapps/trade-finance-manager-api-no-calculated-variables.bicep' = {
   name: 'tfmApi'
   params: {
     appServicePlanEgressSubnetId: vnet.outputs.appServicePlanEgressSubnetId
     appServicePlanId: appServicePlan.id
     containerRegistryName: containerRegistry.name
-    dtfsCentralApiHostname: dtfsCentralApi.outputs.defaultHostName
     environment: environment
-    externalApiHostname: externalApi.outputs.defaultHostName
     location: location
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     privateEndpointsSubnetId: vnet.outputs.privateEndpointsSubnetId
     azureWebsitesDnsZoneId: websitesDns.outputs.azureWebsitesDnsZoneId
-    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
-    settings: tmfApiSettings
-    secureSettings: tfmApiSecureSettings
-    additionalSecureSettings: tfmApiAdditionalSecureSettings
   }
 }
 
@@ -776,6 +810,10 @@ module portalUi 'modules/webapps/portal-ui.bicep' = {
     additionalSecureSettings: portalUiAdditionalSecureSettings
     secureConnectionStrings: portalUiSecureConnectionStrings
     additionalSecureConnectionStrings: portalUiAdditionalSecureConnectionStrings
+    clamAvSettings: {
+      ipAddress: clamAv.outputs.exposedIp
+      port: clamAv.outputs.exposedPort
+    }
   }
 }
 
@@ -906,15 +944,23 @@ module frontDoorTfm 'modules/front-door-tfm.bicep' = {
 
 var tfmUiUrl = 'https://${frontDoorTfm.outputs.defaultHostName}'
 
-module tfmApiConnectionStrings 'modules/webapps/trade-finance-manager-api-connection-strings.bicep' = {
-  name: 'tfmApiConnectionStrings'
+module tfmApiCalculatedVariables 'modules/webapps/trade-finance-manager-api-calculated-variables.bicep' = {
+  name: 'tfmApiCalculatedVariables'
   params: {
     cosmosDbAccountName: cosmosDb.outputs.cosmosDbAccountName
     cosmosDbDatabaseName: cosmosDb.outputs.cosmosDbDatabaseName
     environment: environment
+    containerRegistryName: containerRegistry.name
+    dtfsCentralApiHostname: dtfsCentralApi.outputs.defaultHostName
+    externalApiHostname: externalApi.outputs.defaultHostName
+    nodeDeveloperMode: parametersMap[environment].nodeDeveloperMode
     numberGeneratorFunctionDefaultHostName: functionNumberGenerator.outputs.defaultHostName
     secureConnectionStrings: tfmApiSecureConnectionStrings
     additionalSecureConnectionStrings: tfmApiAdditionalSecureConnectionStrings
     tfmUiUrl: tfmUiUrl
+    storageAccountName: storage.outputs.storageAccountName
+    settings: tmfApiSettings
+    secureSettings: tfmApiSecureSettings
+    additionalSecureSettings: tfmApiAdditionalSecureSettings
   }
 }

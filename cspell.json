@@ -33,6 +33,7 @@
     "centralised",
     "CICD",
     "CILC",
+    "clamav",
     "Clickjacking",
     "codacy",
     "codecov",
@@ -73,6 +74,7 @@
     "MAKENCHECK",
     "Markan",
     "mdm",
+    "mkodockx",
     "MRUI",
     "Mulesoft",
     "nestjs",
@@ -86,6 +88,7 @@
     "NVARCHAR",
     "ORDANANCE",
     "organisation",
+    "parameterised",
     "pino",
     "pinojs",
     "plusplus",
@@ -121,7 +124,10 @@
     "MAKENCHECK",
     "unmock",
     "unsubmitted",
-    "wordprocessingml"
+    "wordprocessingml",
+    "stbr",
+    "ukwest",
+    "tfsproduction"
   ],
   "dictionaries": ["en-gb", "companies", "softwareTerms", "misc", "lorem-ipsum", "typescript", "node", "bash", "npm"],
   "languageSettings": [

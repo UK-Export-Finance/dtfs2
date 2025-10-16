@@ -11,6 +11,10 @@ param portalApiHostname string
 param redisName string
 param azureWebsitesDnsZoneId string
 param nodeDeveloperMode bool
+param clamAvSettings {
+  ipAddress: string
+  port: int
+}
 
 param resourceNameFragment string = 'portal-ui'
 
@@ -53,6 +57,11 @@ var staticSettings = {
   REDIS_PORT: redis.properties.sslPort
   REDIS_KEY: redis.listKeys().primaryKey
   HTTPS: 1
+
+  CLAMAV_HOST: clamAvSettings.ipAddress
+  CLAMAV_PORT: clamAvSettings.port
+  CLAMAV_DEBUG_MODE_ENABLED: 'true'
+  CLAMAV_SCANNING_ENABLED: 'true'
 
   // hard coded
   WEBSITE_DNS_SERVER: azureDnsServerIp

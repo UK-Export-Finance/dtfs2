@@ -5,7 +5,7 @@ param environment string
 param appServicePlanId string
 param dockerImageName string
 param ftpsState string // TODO:DTFS2-6422 make consistent?
-param scmMinTlsVersion string // TODON:FN-829 require 1.2
+param scmMinTlsVersion string // TODO:FN-829 require 1.2
 param appServicePlanEgressSubnetId string
 
 @secure()
@@ -31,7 +31,7 @@ var appSettingsWithAppInsights = union(
   deployApplicationInsights ? {
     APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
     } : {},
-    selfHostnameEnvironmentVariable == '' ? {} :  {
+    selfHostnameEnvironmentVariable == '' ? {} : {
       '${selfHostnameEnvironmentVariable}': site.properties.defaultHostName
     }
   )
@@ -59,12 +59,13 @@ resource site 'Microsoft.Web/sites@2022-09-01' = {
       scmMinTlsVersion: scmMinTlsVersion
       remoteDebuggingVersion: 'VS2019'
       httpLoggingEnabled: true // false in staging, true in prod
+      healthCheckPath: '/healthcheck'
     }
     virtualNetworkSubnetId: appServicePlanEgressSubnetId
   }
 }
 
-resource webappSetting 'Microsoft.Web/sites/config@2022-09-01' = {
+resource webappSetting 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(appSettings)) {
   parent: site
   name: 'appsettings'
   properties: appSettingsWithAppInsights
