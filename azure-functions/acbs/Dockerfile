@@ -105,6 +105,5 @@ HEALTHCHECK \
 --interval=60s \
 --timeout=30s \
 CMD curl \
-
 -fail http://localhost:${PORT} \
 || exit 1
