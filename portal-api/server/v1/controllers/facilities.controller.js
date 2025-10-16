@@ -85,7 +85,7 @@ exports.createMultipleFacilities = async (facilities, dealId, user, auditDetails
  * @param {number} pagesize Size of each page - limits list results
  * @returns combined and formatted list of facilities
  */
-export const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize = 0) => {
+const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize = 0) => {
   const startPage = computeSkipPosition(start, filters, sort);
 
   const collection = await db.getCollection('facilities');
@@ -197,6 +197,8 @@ export const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pag
     count: 0,
   };
 };
+
+exports.queryAllFacilities = queryAllFacilities;
 
 exports.getQueryAllFacilities = async (req, res) => {
   const { start, pagesize, filters, sort } = req.body;
