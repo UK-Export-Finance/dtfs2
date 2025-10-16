@@ -1,3 +1,4 @@
+const { mapFacilityFieldsToAmendmentFields } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../drivers/db-client');
 const api = require('../api');
@@ -84,7 +85,7 @@ exports.createMultipleFacilities = async (facilities, dealId, user, auditDetails
  * @param {number} pagesize Size of each page - limits list results
  * @returns combined and formatted list of facilities
  */
-const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize = 0) => {
+export const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize = 0) => {
   const startPage = computeSkipPosition(start, filters, sort);
 
   const collection = await db.getCollection('facilities');
@@ -146,9 +147,48 @@ const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize =
   if (results.length) {
     const { count, facilities } = results[0];
 
+    if (!count || !facilities.length) {
+      return {
+        facilities,
+        count,
+      };
+    }
+
+    const mappedFacilities = [];
+
+    /**
+     * loops through all facilities and checks if there are any amendments for each facility
+     * if there are amendments, it maps the relevant fields to the facility object and pushes the facility to the mappedFacilities array
+     * if there are no amendments, it pushes the facility object as is to the mappedFacilities array
+     */
+    for (const eachFacility of facilities) {
+      const facility = eachFacility;
+
+      const amendments = await api.getAcknowledgedAmendmentsByFacilityId(facility._id);
+
+      if (amendments?.length) {
+        /**
+         * returns the latest cover end date and/or value from the amendments array
+         * if either field does not exist in the amendments, it will not be returned
+         * (i.e. if only cover end date has been amended, value will not be returned)
+         */
+        const { coverEndDate, value } = mapFacilityFieldsToAmendmentFields(amendments);
+
+        if (value) {
+          facility.value = value;
+        }
+
+        if (coverEndDate) {
+          facility.coverEndDate = new Date(coverEndDate);
+        }
+      }
+
+      mappedFacilities.push(facility);
+    }
+
     return {
       count,
-      facilities,
+      facilities: mappedFacilities,
     };
   }
 
