@@ -73,6 +73,7 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - NODE_ENV
       - MAINTENANCE_ACTIVE
       - MAINTENANCE_TIMESTAMP
       - PORT=5005
@@ -84,7 +85,6 @@ services:
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
-      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - AUDIT_API_URL
       - AUDIT_API_USERNAME
@@ -125,6 +125,7 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - NODE_ENV
       - MAINTENANCE_ACTIVE
       - MAINTENANCE_TIMESTAMP
       - PORT=5003
@@ -139,7 +140,6 @@ services:
       - REDIS_HOSTNAME=redis
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - SESSION_SECRET
-      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
       - CONTACT_US_SELF_SERVICE_PORTAL_URL
@@ -172,6 +172,7 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - NODE_ENV
       - MAINTENANCE_ACTIVE
       - PORT=5004
       - CORS_ORIGIN
@@ -193,7 +194,6 @@ services:
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
       - UKEF_INTERNAL_NOTIFICATION=test
-      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - CHANGE_STREAM_ENABLED
       - DELETION_AUDIT_LOGS_TTL_SECONDS
@@ -227,6 +227,7 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - NODE_ENV
       - MAINTENANCE_ACTIVE
       - MAINTENANCE_TIMESTAMP
       - PORTAL_API_URL=http://portal-api:5001
@@ -238,7 +239,6 @@ services:
       - EXTERNAL_API_KEY
       - REDIS_HOSTNAME=redis
       - SESSION_SECRET
-      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - CLAMAV_PORT=3310
       - CLAMAV_HOST=clamav
@@ -267,6 +267,7 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - NODE_ENV
       - MAINTENANCE_ACTIVE
       - MAINTENANCE_TIMESTAMP
       - PORT=5001
@@ -291,7 +292,6 @@ services:
       - TFM_UI_URL=http://localhost:5003
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - TFM_API_URL=http://trade-finance-manager-api:5004
-      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - UKEF_GEF_REPORTING_EMAIL_RECIPIENT
       - UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE
@@ -326,6 +326,7 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - NODE_ENV
       - MAINTENANCE_ACTIVE
       - MAINTENANCE_TIMESTAMP
       - PORT=5002
@@ -350,7 +351,6 @@ services:
       - MONGO_INITDB_DATABASE
       - MONGODB_URI
       - EXTERNAL_API_URL=http://external-api:5002
-      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - ESTORE_CRON_MANAGER_SCHEDULE
       - FF_SALESFORCE_CUSTOMER_CREATION_ENABLED
@@ -374,6 +374,7 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - NODE_ENV
       - MAINTENANCE_ACTIVE
       - MAINTENANCE_TIMESTAMP
       - PORTAL_API_URL=http://portal-api:5001
@@ -383,7 +384,6 @@ services:
       - SESSION_SECRET
       - AZURE_PORTAL_STORAGE_ACCOUNT
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
-      - NODE_ENV
       - PORTAL_API_KEY
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
@@ -433,6 +433,7 @@ services:
       - "7071:80"
     environment:
       - TZ
+      - NODE_ENV
       - MAINTENANCE_ACTIVE
       - MAINTENANCE_TIMESTAMP
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net
