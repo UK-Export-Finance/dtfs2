@@ -113,8 +113,8 @@ CMD curl \
 -fail http://localhost:${PORT} \
 || exit 1
 
-# Execute Script
-ENTRYPOINT ["sh", "-c", "exec \"$ROOT/start.sh\""]
-
 # Non-root user
 USER node
+
+# Execute Script
+CMD ["npm", "run", "start:dev", "-c", "$MICROSERVICE"]
