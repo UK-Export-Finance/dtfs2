@@ -57,3 +57,5 @@ export * from './xss';
 export * from './object-has-entries';
 export * from './is-deal-cancelled';
 export * from './format';
+export * from './can-submit-to-acbs';
+export * from './is-amendment-declined';

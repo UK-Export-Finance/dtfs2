@@ -24,16 +24,13 @@ const { tasksRouter } = require('./tasks/routes');
 const { ssoOpenRouter } = require('./sso/routes');
 
 openRouter.use(checkApiKey);
-
-openRouter.use('/sso', validateSsoFeatureFlagTrue, ssoOpenRouter);
-
 authRouter.use(passport.authenticate('jwt', { session: false }));
 
+openRouter.use('/sso', validateSsoFeatureFlagTrue, ssoOpenRouter);
 openRouter.use('/', dealsOpenRouter);
+
 authRouter.use('/', dealsAuthRouter);
-
 authRouter.use('/', teamsRoutes);
-
 authRouter.use('/', tasksRouter);
 
 /**
@@ -376,6 +373,49 @@ authRouter
  *         description: Internal server error
  */
 authRouter.route('/amendments/:status?').get(amendmentController.getAllAmendments);
+
+/**
+ * @openapi
+ * /amendment/facility/{facilityId}/amendment/{amendmentId}/acbs:
+ *   post:
+ *     summary: Submits an amendment to ACBS for a specific facility and amendment.
+ *     tags:
+ *       - TFM - Amendments
+ *     description: This endpoint submits the amendment to ACBS after the pre-requisites ACBS checks have passed.
+ *     parameters:
+ *       - in: path
+ *         name: facilityId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the facility.
+ *       - in: path
+ *         name: amendmentId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the amendment.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user:
+ *                 type: object
+ *           example:
+ *             user:
+ *               _id: '123'
+ *     responses:
+ *       '200':
+ *         description: Amendment submitted to ACBS successfully
+ *       '400':
+ *         description: Bad request
+ *       '422':
+ *         description: Unable to submit amendment to ACBS
+ */
+openRouter.route('/amendment/facility/:facilityId/amendment/:amendmentId/acbs').post(amendmentController.sendAmendmentToAcbs);
 
 /**
  * @openapi

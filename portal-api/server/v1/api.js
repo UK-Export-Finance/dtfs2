@@ -813,7 +813,7 @@ const putPortalFacilityAmendment = async ({ dealId, facilityId, amendment, audit
 };
 
 /**
- * Update portal facility amendment status.
+ * Update portal facility amendment status and if successful submit the amendment to ACBS.
  * @param {object} params
  * @param {string} params.facilityId - the facility id
  * @param {string} params.amendmentId - the amendment id.
@@ -865,6 +865,13 @@ const patchPortalFacilitySubmitAmendment = async ({
     const { success, error, data } = PORTAL_FACILITY_AMENDMENT.safeParse(response.data);
 
     if (success) {
+      // If successful, send the amendment to ACBS
+      await axios({
+        method: 'post',
+        url: `${TFM_API_URL}/v1/amendment/facility/${facilityId}/amendment/${amendmentId}/acbs`,
+        headers: headers.tfm,
+      });
+
       return data;
     }
 
