@@ -110,6 +110,16 @@ context('Amendments - TFM - Amendments details page - Portal amendment in progre
     cy.assertText(amendmentsPage.portalAmendmentInProgressBar(), 'There is an amendment in progress for this facility');
   });
 
+  it('should not display a portal amendment in progress bar for the facility without an amendment', () => {
+    cy.visit(TFM_URL);
+
+    cy.tfmLogin(PIM_USER_1);
+
+    cy.visit(facilityUrl1);
+
+    amendmentsPage.portalAmendmentInProgressBar().should('not.exist');
+  });
+
   it(`should display a portal amendment in progress bar when portal amendment is ${PORTAL_AMENDMENT_STATUS.READY_FOR_CHECKERS_APPROVAL}`, () => {
     cy.visit(relative(applicationDetailsUrl));
 
@@ -139,6 +149,16 @@ context('Amendments - TFM - Amendments details page - Portal amendment in progre
     });
   });
 
+  it('should not display a portal amendment in progress bar for the facility without an amendment', () => {
+    cy.visit(TFM_URL);
+
+    cy.tfmLogin(PIM_USER_1);
+
+    cy.visit(facilityUrl1);
+
+    amendmentsPage.portalAmendmentInProgressBar().should('not.exist');
+  });
+
   it(`should display a portal amendment in progress bar when portal amendment is ${PORTAL_AMENDMENT_STATUS.FURTHER_MAKERS_INPUT_REQUIRED}`, () => {
     // returns the amendment to the maker
     cy.login(BANK1_CHECKER1);
@@ -159,6 +179,16 @@ context('Amendments - TFM - Amendments details page - Portal amendment in progre
     cy.assertText(amendmentsPage.portalAmendmentInProgressBar(), 'There is an amendment in progress for this facility');
   });
 
+  it('should not display a portal amendment in progress bar for the facility without an amendment', () => {
+    cy.visit(TFM_URL);
+
+    cy.tfmLogin(PIM_USER_1);
+
+    cy.visit(facilityUrl1);
+
+    amendmentsPage.portalAmendmentInProgressBar().should('not.exist');
+  });
+
   it(`should not display a portal amendment in progress bar when portal amendment is ${PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED}`, () => {
     // submits the amendment to UKEF
     cy.visit(amendmentDetailsUrl);
@@ -175,6 +205,16 @@ context('Amendments - TFM - Amendments details page - Portal amendment in progre
     amendmentsPage.portalAmendmentInProgressDealBar().should('not.exist');
 
     cy.visit(facilityUrl);
+
+    amendmentsPage.portalAmendmentInProgressBar().should('not.exist');
+  });
+
+  it('should not display a portal amendment in progress bar for the facility without an amendment', () => {
+    cy.visit(TFM_URL);
+
+    cy.tfmLogin(PIM_USER_1);
+
+    cy.visit(facilityUrl1);
 
     amendmentsPage.portalAmendmentInProgressBar().should('not.exist');
   });
