@@ -54,7 +54,7 @@
     "express-rate-limit": "^6.11.2",
     "filesize": "9.0.11",
     "form-data": "4.0.4",
-    "govuk-frontend": "^5.12.0",
+    "govuk-frontend": "^5.13.0",
     "http-errors": "^2.0.0",
     "imask": "^6.6.3",
     "joi": "^17.13.3",
@@ -99,7 +99,7 @@
     "style-loader": "3.3.2",
     "supertest": "^6.3.4",
     "terser-webpack-plugin": "^5.3.14",
-    "ts-jest": "^29.4.4",
+    "ts-jest": "^29.4.5",
     "webpack": "^5.102.1",
     "webpack-cli": "^5.1.4",
     "webpack-merge": "^5.10.0"

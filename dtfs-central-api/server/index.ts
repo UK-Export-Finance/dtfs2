@@ -1,6 +1,9 @@
+import dotenv from 'dotenv';
 import { initialiseCronJobScheduler } from '@ukef/dtfs2-common';
-import { createApp } from './createApp';
 import { cronSchedulerJobs } from './cron-scheduler-jobs';
+import { createApp } from './createApp';
+
+dotenv.config();
 
 initialiseCronJobScheduler(cronSchedulerJobs);
 
