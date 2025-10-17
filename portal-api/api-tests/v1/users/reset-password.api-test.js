@@ -1,3 +1,4 @@
+const { generatePasswordHash } = require('@ukef/dtfs2-common');
 const { generateNoUserLoggedInAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const databaseHelper = require('../../database-helper');
 const { setUpApiTestUser } = require('../../api-test-users');
@@ -16,8 +17,6 @@ const MOCK_USER = {
   email: temporaryUsernameAndEmail,
 };
 
-const utils = require('../../../server/crypto/utils');
-
 jest.mock('../../../server/v1/email');
 const sendEmail = require('../../../server/v1/email');
 const { UserService } = require('../../../server/v1/users/user.service');
@@ -33,10 +32,6 @@ const RESET_PASSWORD_EMAIL_TEMPLATE_ID = '6935e539-1a0c-4eca-a6f3-f239402c0987';
 const PASSWORD_UPDATE_CONFIRMATION_TEMPLATE_ID = '41235821-7e52-4d63-a773-fa147362c5f0';
 const EMAIL_FOR_NO_USER = 'no.user@email.com';
 
-function mockKnownTokenResponse(token) {
-  return () => ({ hash: token });
-}
-
 describe('password reset', () => {
   let loggedInUser;
   let testUser;
@@ -49,7 +44,14 @@ describe('password reset', () => {
 
   beforeEach(async () => {
     databaseHelper.deleteUser(MOCK_USER);
-    const testUserResponse = await as(loggedInUser).post(MOCK_USER).to('/v1/users');
+    const { salt, hash } = generatePasswordHash(MOCK_USER.password);
+    const userToCreate = {
+      ...MOCK_USER,
+      salt,
+      hash,
+    };
+    delete userToCreate?.password;
+    const testUserResponse = await as(loggedInUser).post(userToCreate).to('/v1/users');
     testUser = testUserResponse.body.user;
     jest.clearAllMocks();
   });
@@ -88,7 +90,15 @@ describe('password reset', () => {
 
   it('should return the correct user for a given reset token', async () => {
     const passwordResetToken = 'passwordResetToken';
-    jest.spyOn(utils, 'genPasswordResetToken').mockImplementation(mockKnownTokenResponse(passwordResetToken));
+    // set the token directly on the test user in the DB
+    await databaseHelper.setUserProperties({
+      username: MOCK_USER.username,
+      update: {
+        hash: passwordResetToken,
+        resetPwdToken: passwordResetToken,
+        resetPwdTimestamp: `${Date.now()}`,
+      },
+    });
     await resetPassword(MOCK_USER.email, userService, generateNoUserLoggedInAuditDetails());
     const user = await getUserByPasswordToken(passwordResetToken);
 
@@ -148,7 +158,20 @@ describe('password reset', () => {
         const passwordResetToken = 'passwordResetToken';
         const validTokenUrl = `/v1/users/reset-password/${passwordResetToken}`;
         beforeEach(async () => {
-          jest.spyOn(utils, 'genPasswordResetToken').mockImplementation(mockKnownTokenResponse(passwordResetToken));
+          await databaseHelper.setUserProperties({
+            username: MOCK_USER.username,
+            update: {
+              resetPwdToken: passwordResetToken,
+              resetPwdTimestamp: `${Date.now()}`,
+            },
+          });
+        });
+
+        afterEach(async () => {
+          await databaseHelper.unsetUserProperties({
+            username: MOCK_USER.username,
+            properties: ['resetPwdToken', 'resetPwdTimestamp'],
+          });
         });
 
         withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests({
@@ -159,8 +182,6 @@ describe('password reset', () => {
 
         it('should reset the users password when using correct reset token', async () => {
           const newPassword = 'XyZ!2345';
-          await resetPassword(MOCK_USER.email, userService, generateNoUserLoggedInAuditDetails());
-
           const { status, body } = await as()
             .post({ currentPassword: MOCK_USER.password, password: newPassword, passwordConfirm: newPassword })
             .to(validTokenUrl);

@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+const { generatePasswordHash } = require('@ukef/dtfs2-common');
 const { produce } = require('immer');
 const users = require('./test-data');
 const databaseHelper = require('../../database-helper');
@@ -39,7 +40,14 @@ const withValidateEmailIsUniqueTests = ({ payload, makeRequest, getAdminUser }) 
     });
 
     async function createUser(userToCreate) {
-      return as(getAdminUser()).post(userToCreate).to('/v1/users');
+      const { salt, hash } = generatePasswordHash(userToCreate.password);
+      const userCreate = {
+        ...userToCreate,
+        salt,
+        hash,
+      };
+      delete userCreate?.password;
+      return as(getAdminUser()).post(userCreate).to('/v1/users');
     }
   });
 };

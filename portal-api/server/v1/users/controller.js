@@ -8,7 +8,6 @@ const { mongoDbClient: db } = require('../../drivers/db-client');
 const sendEmail = require('../email');
 const businessRules = require('../../config/businessRules');
 const { sanitizeUser } = require('./sanitizeUserData');
-const utils = require('../../crypto/utils');
 const CONSTANTS = require('../../constants');
 const { isValidEmail } = require('../../utils/string');
 const { USER } = require('../../constants');
@@ -48,15 +47,13 @@ const createPasswordToken = async (email, userService, auditDetails) => {
 
   const user = await collection.findOne({ email: { $eq: email } }, { collation: { locale: 'en', strength: 2 } });
 
-  if (!user || userService.isUserBlockedOrDisabled(user)) {
+  if (!user || userService.isUserBlockedOrDisabled(user) || !user?.hash) {
     console.info('Not creating password token due to invalid or missing user');
     return false;
   }
 
-  const { hash } = utils.genPasswordResetToken(user);
-
   const userUpdate = {
-    resetPwdToken: hash,
+    resetPwdToken: user.hash,
     resetPwdTimestamp: `${Date.now()}`,
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
@@ -67,7 +64,7 @@ const createPasswordToken = async (email, userService, auditDetails) => {
 
   await collection.updateOne({ _id: { $eq: user._id } }, { $set: userUpdate }, {});
 
-  return hash;
+  return user.hash;
 };
 exports.createPasswordToken = createPasswordToken;
 
@@ -148,10 +145,6 @@ exports.create = async (user, userService, auditDetails, callback) => {
     ...user,
     auditRecord: generateAuditDatabaseRecordFromAuditDetails(auditDetails),
   };
-
-  delete insert?.autoCreatePassword;
-  delete insert?.password;
-  delete insert?.passwordConfirm;
 
   if (!isVerifiedPayload({ payload: insert, template: PORTAL_USER.CREATE })) {
     return callback('Invalid user payload', user);
