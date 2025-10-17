@@ -43,10 +43,14 @@ describe('a user', () => {
 
   describe('GET /v1/users', () => {
     it(`should return ${HttpStatusCode.Ok}`, async () => {
+      // Act
       const response = await as(aNonAdmin).get('/v1/users');
+
+      // Assert
       expect(response.status).toEqual(HttpStatusCode.Ok);
       // initial users plus the api-test-user we create first
-      expect(response.body.count).toEqual(initialUsers.length + 1);
+      const expectedUsersCount = initialUsers.length + 1;
+      expect(response.body.count).toEqual(expectedUsersCount);
     });
   });
 
@@ -60,15 +64,21 @@ describe('a user', () => {
 
     describe(`when getting a user Id`, () => {
       it(`should return ${HttpStatusCode.Ok}`, async () => {
+        // Act
         const response = await as(aNonAdmin).get(`/v1/users/${userToGetId}`);
 
+        // Assert
         expect(response.status).toEqual(HttpStatusCode.Ok);
       });
 
       it('should return an empty object if the user does not exist', async () => {
+        // Arrange
         const anotherId = '123456789f0ffe00219319c1';
+
+        // Act
         const response = await as(aNonAdmin).get(`/v1/users/${anotherId}`);
 
+        // Assert
         expect(response.status).toEqual(HttpStatusCode.Ok);
         expect(response.body).toEqual({});
       });
