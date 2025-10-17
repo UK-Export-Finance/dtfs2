@@ -117,4 +117,5 @@ CMD curl \
 USER node
 
 # Execute Script
-ENTRYPOINT ["sh", "-c", "exec \"$ROOT/start.sh\""]
+# ENTRYPOINT ["sh", "-c", "exec \"$ROOT/start.sh\""]
+CMD ["npx", "ts-node", "portal-ui/server/index.ts"]
