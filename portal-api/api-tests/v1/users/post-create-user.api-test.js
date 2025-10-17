@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+const { generatePasswordHash } = require('@ukef/dtfs2-common');
 const { produce } = require('immer');
 const databaseHelper = require('../../database-helper');
 const testUserCache = require('../../api-test-users');
@@ -15,7 +16,6 @@ const { STATUS } = require('../../../server/constants/user');
 const { withClientAuthenticationTests } = require('../../common-tests/client-authentication-tests');
 const { withValidateEmailIsUniqueTests } = require('./with-validate-email-is-unique.api-tests');
 const { withValidateUsernameAndEmailMatchTests } = require('./with-validate-username-and-email-match.api-tests');
-const { withValidatePasswordWhenCreatingUserTests } = require('./with-validate-password.api-tests');
 const { withValidateEmailIsCorrectFormatTests } = require('./with-validate-email-is-correct-format.api-tests');
 
 const MOCK_USER = users.testBank1Maker1;
@@ -46,11 +46,6 @@ describe('a user', () => {
     withClientAuthenticationTests({
       makeRequestWithoutAuthHeader: () => post(BASE_URL, MOCK_USER),
       makeRequestWithAuthHeader: (authHeader) => post(BASE_URL, MOCK_USER, { headers: { Authorization: authHeader } }),
-    });
-
-    withValidatePasswordWhenCreatingUserTests({
-      payload: MOCK_USER,
-      makeRequest: async (user) => await createUser(user),
     });
 
     withValidateEmailIsUniqueTests({
@@ -145,6 +140,13 @@ describe('a user', () => {
   });
 
   async function createUser(userToCreate) {
-    return as(aNonAdmin).post(userToCreate).to(BASE_URL);
+    const { salt, hash } = generatePasswordHash(userToCreate.password);
+    const userCreate = {
+      ...userToCreate,
+      salt,
+      hash,
+    };
+    delete userCreate?.password;
+    return as(aNonAdmin).post(userCreate).to(BASE_URL);
   }
 });
