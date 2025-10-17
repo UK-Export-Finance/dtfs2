@@ -13,6 +13,9 @@ ARG MICROSERVICE=gef-ui
 
 FROM node:24.1.0-alpine3.20 AS build
 
+# Shell
+SHELL ["/bin/sh", "-c"]
+
 # Variables
 ARG PORT
 ARG NODE_ENV
@@ -57,6 +60,9 @@ RUN npm ci --omit=dev --ignore-scripts --workspace=${MICROSERVICE}
 ###################
 
 FROM node:24.1.0-alpine3.20 AS production
+
+# Shell
+SHELL ["/bin/sh", "-c"]
 
 # Variables
 ARG PORT
@@ -103,14 +109,12 @@ EXPOSE ${PORT}
 HEALTHCHECK \
 --interval=60s \
 --timeout=30s \
-CMD wget \
---no-verbose \
---tries=3 \
---spider https://localhost:${PORT} \
+CMD curl \
+-fail http://localhost:${PORT} \
 || exit 1
-
-# Execute Script
-ENTRYPOINT sh -c "$ROOT/start.sh"
 
 # Non-root user
 USER node
+
+# Execute Script
+ENTRYPOINT ["sh", "-c", "exec \"$ROOT/start.sh\""]
