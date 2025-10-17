@@ -1,35 +1,46 @@
-import { AMENDMENT_BANK_DECISION, TFM_AMENDMENT_STATUS } from '../constants';
+import { AMENDMENT_TYPES, AMENDMENT_BANK_DECISION, TFM_AMENDMENT_STATUS, PORTAL_AMENDMENT_STATUS } from '../constants';
 import { TfmFacilityAmendmentWithUkefId } from '../types';
 import { amendmentDeclined } from './is-amendment-declined';
 
 /**
- * Determines if an amendment can be sent to ACBS based on its properties.
+ * Determines if an amendment can be sent to ACBS based on its type, status, user involvement, and amendment details.
  *
  * The function checks the following conditions:
- * - At least one of the amendment attributes (`changeCoverEndDate` or `changeFacilityValue`) has been amended.
- * - The amendment status is marked as `COMPLETED`.
- * - The amendment has been submitted by the PIM team (`submittedByPim`).
- * - For manual amendments (where `requireUkefApproval` and `bankDecision` are truthy):
- *   - The bank decision has been submitted.
- *   - The bank decision is to proceed (`PROCEED`).
- *   - The amendment has not been declined (`amendmentDeclined` returns false).
- * - For automatic amendments, only the first three conditions are checked.
+ * - The amendment type (Portal or TFM).
+ * - At least one attribute (cover end date or facility value) has been amended.
+ * - The amendment status is appropriate for its type (Acknowledged for Portal, Completed for TFM).
+ * - The amendment has the required user involvement (created by for Portal, submitted by PIM for TFM).
+ * - For manual amendments (TFM only), verifies bank decision has been submitted and accepted, and the amendment has not been declined.
  *
- * @param amendment - The amendment object to evaluate.
- * @returns `true` if the amendment can be sent to ACBS, otherwise `false`.
+ * @param amendment - The amendment object containing all relevant details for validation.
+ * @returns `true` if the amendment meets all criteria to be sent to ACBS, otherwise `false`.
  */
 export const canSendToAcbs = (amendment: TfmFacilityAmendmentWithUkefId) => {
+  // Amendment type
+  const isPortalAmendment = amendment.type === AMENDMENT_TYPES.PORTAL;
+
   // Ensure at least one of the attribute has been amended
   const hasBeenAmended = amendment.changeCoverEndDate || amendment.changeFacilityValue;
-  // Amendment status is marked as `Completed`
-  const completed = amendment.status === TFM_AMENDMENT_STATUS.COMPLETED;
-  // Amendment has been submitted by PIM team
-  const pim = amendment.submittedByPim;
-  // Manual amendment verification
-  const manual = Boolean(amendment.requireUkefApproval) && Boolean(amendment.bankDecision);
 
-  // Manual amendment
-  if (manual) {
+  /**
+   * Amendment status is marked as `Completed` for `TFM` type amendment
+   * Amendment status is marked as `Acknowledged` for `Portal` type amendment
+   */
+  const hasBeenSubmittedToUkef = isPortalAmendment
+    ? amendment.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED
+    : amendment.status === TFM_AMENDMENT_STATUS.COMPLETED;
+
+  /**
+   * Amendment type `TFM`, check for PIM.
+   * Amendment type `Portal`, check for Checker.
+   */
+  const hasUser = isPortalAmendment ? Boolean(amendment.createdBy?.username) : amendment.submittedByPim;
+
+  // Manual amendment verification
+  const isAmendmentManual = Boolean(amendment.requireUkefApproval) && Boolean(amendment.bankDecision);
+
+  // Manual amendment - TFM only
+  if (isAmendmentManual && !isPortalAmendment) {
     // Bank Decision
     const submitted = amendment.bankDecision?.submitted;
     const decision = amendment.bankDecision?.decision;
@@ -37,9 +48,9 @@ export const canSendToAcbs = (amendment: TfmFacilityAmendmentWithUkefId) => {
     // Bank has accepted the UW decision
     const proceed = decision === AMENDMENT_BANK_DECISION.PROCEED;
 
-    return hasBeenAmended && completed && pim && submitted && proceed && !amendmentDeclined(amendment);
+    return hasBeenAmended && hasBeenSubmittedToUkef && hasUser && submitted && proceed && !amendmentDeclined(amendment);
   }
 
   // Automatic amendment
-  return hasBeenAmended && completed && pim;
+  return hasBeenAmended && hasBeenSubmittedToUkef && hasUser;
 };
