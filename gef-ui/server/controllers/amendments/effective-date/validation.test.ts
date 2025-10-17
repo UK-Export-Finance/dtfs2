@@ -54,7 +54,7 @@ describe('validateAndParseEffectiveDate', () => {
       errors: [
         {
           errRef: valueRef,
-          errMsg: 'The date entered is invalid. Please ensure the date entered does not exceed the allowable timeframe',
+          errMsg: 'The date entered is invalid. You can only select past dates that are within your cover period.',
           subFieldErrorRefs: ['effectiveDate-day', 'effectiveDate-month', 'effectiveDate-year'],
         },
       ],

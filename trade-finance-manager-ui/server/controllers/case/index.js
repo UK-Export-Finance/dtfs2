@@ -445,7 +445,7 @@ const getCaseFacility = async (req, res) => {
       hasFutureEffectiveDatePortalAmendments,
       formattedFutureEffectiveDatePortalAmendments,
     } = getAmendmentsInProgress({
-      amendments,
+      amendments: allAmendmentsByFacilityId,
       deal,
       teams,
     });
