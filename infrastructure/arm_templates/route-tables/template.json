@@ -1,0 +1,72 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "2022-11-01",
+            "name": "Digital-Dev-UDR",
+            "location": "uksouth",
+            "tags": {
+                "Environment": "Preproduction"
+            },
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "ProductionSubnet",
+                        "id": "[resourceId('Microsoft.Network/routeTables/routes', 'Digital-Dev-UDR', 'ProductionSubnet')]",
+                        "properties": {
+                            "addressPrefix": "10.60.0.0/16",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.50.0.100",
+                            "hasBgpOverride": false
+                        },
+                        "type": "Microsoft.Network/routeTables/routes"
+                    },
+                    {
+                        "name": "MulesoftSubnet",
+                        "id": "[resourceId('Microsoft.Network/routeTables/routes', 'Digital-Dev-UDR', 'MulesoftSubnet')]",
+                        "properties": {
+                            "addressPrefix": "172.16.10.0/23",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "10.50.0.100",
+                            "hasBgpOverride": false
+                        },
+                        "type": "Microsoft.Network/routeTables/routes"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/routeTables/routes",
+            "apiVersion": "2022-11-01",
+            "name": "Digital-Dev-UDR/MulesoftSubnet",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/routeTables', 'Digital-Dev-UDR')]"
+            ],
+            "properties": {
+                "addressPrefix": "172.16.10.0/23",
+                "nextHopType": "VirtualAppliance",
+                "nextHopIpAddress": "10.50.0.100",
+                "hasBgpOverride": false
+            }
+        },
+        {
+            "type": "Microsoft.Network/routeTables/routes",
+            "apiVersion": "2022-11-01",
+            "name": "Digital-Dev-UDR/ProductionSubnet",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/routeTables', 'Digital-Dev-UDR')]"
+            ],
+            "properties": {
+                "addressPrefix": "10.60.0.0/16",
+                "nextHopType": "VirtualAppliance",
+                "nextHopIpAddress": "10.50.0.100",
+                "hasBgpOverride": false
+            }
+        }
+    ]
+}

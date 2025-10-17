@@ -1,0 +1,308 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2022-11-01",
+            "name": "tfs-dev-gw-nsg",
+            "location": "uksouth",
+            "tags": {
+                "Environment": "Preproduction"
+            },
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "gateway-manager",
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', 'tfs-dev-gw-nsg', 'gateway-manager')]",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "65200-65535",
+                            "sourceAddressPrefix": "GatewayManager",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "front-door",
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', 'tfs-dev-gw-nsg', 'front-door')]",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "AzureFrontDoor.Backend",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 200,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "vm-ips-dev",
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', 'tfs-dev-gw-nsg', 'vm-ips-dev')]",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "51.104.202.42",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 997,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "vm-ips-test",
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', 'tfs-dev-gw-nsg', 'vm-ips-test')]",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "51.11.144.7",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 998,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "vm-ips-prod",
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', 'tfs-dev-gw-nsg', 'vm-ips-prod')]",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "51.145.36.44",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 999,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "team-ips-ukef",
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', 'tfs-dev-gw-nsg', 'team-ips-ukef')]",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "51.140.76.208",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 3000,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "api-port",
+                        "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', 'tfs-dev-gw-nsg', 'api-port')]",
+                        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "44232",
+                            "sourceAddressPrefix": "Internet",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 300,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2022-11-01",
+            "name": "tfs-dev-gw-nsg/api-port",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', 'tfs-dev-gw-nsg')]"
+            ],
+            "properties": {
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "44232",
+                "sourceAddressPrefix": "Internet",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 300,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2022-11-01",
+            "name": "tfs-dev-gw-nsg/front-door",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', 'tfs-dev-gw-nsg')]"
+            ],
+            "properties": {
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "AzureFrontDoor.Backend",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 200,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2022-11-01",
+            "name": "tfs-dev-gw-nsg/gateway-manager",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', 'tfs-dev-gw-nsg')]"
+            ],
+            "properties": {
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "65200-65535",
+                "sourceAddressPrefix": "GatewayManager",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2022-11-01",
+            "name": "tfs-dev-gw-nsg/team-ips-ukef",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', 'tfs-dev-gw-nsg')]"
+            ],
+            "properties": {
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "51.140.76.208",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 3000,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2022-11-01",
+            "name": "tfs-dev-gw-nsg/vm-ips-dev",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', 'tfs-dev-gw-nsg')]"
+            ],
+            "properties": {
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "51.104.202.42",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 997,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2022-11-01",
+            "name": "tfs-dev-gw-nsg/vm-ips-prod",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', 'tfs-dev-gw-nsg')]"
+            ],
+            "properties": {
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "51.145.36.44",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 999,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2022-11-01",
+            "name": "tfs-dev-gw-nsg/vm-ips-test",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', 'tfs-dev-gw-nsg')]"
+            ],
+            "properties": {
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "51.11.144.7",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 998,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        }
+    ]
+}

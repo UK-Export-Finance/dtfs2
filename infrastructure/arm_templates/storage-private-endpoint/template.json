@@ -1,0 +1,62 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "privateEndpoints_tfsdevstorage_name": {
+            "defaultValue": "tfsdevstorage",
+            "type": "String"
+        },
+        "storageAccounts_tfsdevstorage_externalid": {
+            "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Storage/storageAccounts/tfsdevstorage",
+            "type": "String"
+        },
+        "virtualNetworks_tfs_dev_vnet_externalid": {
+            "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/virtualNetworks/tfs-dev-vnet",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "apiVersion": "2022-11-01",
+            "name": "[parameters('privateEndpoints_tfsdevstorage_name')]",
+            "location": "uksouth",
+            "tags": {
+                "Environment": "Preproduction"
+            },
+            "properties": {
+                "privateLinkServiceConnections": [
+                    {
+                        "name": "[parameters('privateEndpoints_tfsdevstorage_name')]",
+                        "id": "[concat(resourceId('Microsoft.Network/privateEndpoints', parameters('privateEndpoints_tfsdevstorage_name')), concat('/privateLinkServiceConnections/', parameters('privateEndpoints_tfsdevstorage_name')))]",
+                        "properties": {
+                            "privateLinkServiceId": "[parameters('storageAccounts_tfsdevstorage_externalid')]",
+                            "groupIds": [
+                                "file"
+                            ],
+                            "privateLinkServiceConnectionState": {
+                                "status": "Approved",
+                                "description": "Auto-Approved",
+                                "actionsRequired": "None"
+                            }
+                        }
+                    }
+                ],
+                "manualPrivateLinkServiceConnections": [],
+                "subnet": {
+                    "id": "[concat(parameters('virtualNetworks_tfs_dev_vnet_externalid'), '/subnets/dev-private-endpoints')]"
+                },
+                "ipConfigurations": [],
+                "customDnsConfigs": [
+                    {
+                        "fqdn": "[concat(parameters('privateEndpoints_tfsdevstorage_name'), '.file.core.windows.net')]",
+                        "ipAddresses": [
+                            "172.16.40.4"
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

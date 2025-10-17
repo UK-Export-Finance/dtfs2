@@ -1,0 +1,553 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "storageAccounts_tfsdevstorage_name": {
+            "defaultValue": "tfsdevstorage",
+            "type": "String"
+        },
+        "virtualNetworks_tfs_dev_vnet_externalid": {
+            "defaultValue": "/subscriptions/8beaa40a-2fb6-49d1-b080-ff1871b6276f/resourceGroups/Digital-Dev/providers/Microsoft.Network/virtualNetworks/tfs-dev-vnet",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2022-09-01",
+            "name": "[parameters('storageAccounts_tfsdevstorage_name')]",
+            "location": "uksouth",
+            "tags": {
+                "Environment": "Preproduction"
+            },
+            "sku": {
+                "name": "Standard_ZRS",
+                "tier": "Standard"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "defaultToOAuthAuthentication": false,
+                "publicNetworkAccess": "Enabled",
+                "minimumTlsVersion": "TLS1_2",
+                "allowBlobPublicAccess": false,
+                "allowSharedKeyAccess": true,
+                "networkAcls": {
+                    "resourceAccessRules": [],
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [
+                        {
+                            "id": "[concat(parameters('virtualNetworks_vnet_ukef_uks_prod_externalid'), '/subnets/snet-wvd')]",
+                            "action": "Allow",
+                            "state": "Succeeded"
+                        },
+                        {
+                            "id": "[concat(parameters('virtualNetworks_tfs_dev_vnet_externalid'), '/subnets/Digital-Dev-vm')]",
+                            "action": "Allow",
+                            "state": "Succeeded"
+                        },
+                        {
+                            "id": "[concat(parameters('virtualNetworks_tfs_dev_vnet_externalid'), '/subnets/dev-app-service-plan-egress')]",
+                            "action": "Allow",
+                            "state": "Succeeded"
+                        },
+                        {
+                            "id": "[concat(parameters('virtualNetworks_tfs_dev_vnet_externalid'), '/subnets/dev-gateway')]",
+                            "action": "Allow",
+                            "state": "Succeeded"
+                        },
+                        {
+                            "id": "[concat(parameters('virtualNetworks_tfs_dev_vnet_externalid'), '/subnets/dev-private-endpoints')]",
+                            "action": "Allow",
+                            "state": "Succeeded"
+                        }
+                    ],
+                    "ipRules": [
+                    ],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                },
+                "accessTier": "Hot"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_ZRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "containerDeleteRetentionPolicy": {
+                    "enabled": true,
+                    "days": 3
+                },
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "allowPermanentDelete": false,
+                    "enabled": true,
+                    "days": 3
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_ZRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "protocolSettings": {
+                    "smb": {}
+                },
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/privateEndpointConnections",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/', parameters('storageAccounts_tfsdevstorage_name'), '.e2571c56-66d6-4962-80b4-69cae9adbdf1')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "provisioningState": "Succeeded",
+                "privateEndpoint": {},
+                "privateLinkServiceConnectionState": {
+                    "status": "Approved",
+                    "description": "Auto-Approved",
+                    "actionRequired": "None"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/acbs-largemessages')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/acbs-leases')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/azure-webjobs-hosts')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/azure-webjobs-secrets')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/numbergenerator-leases')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "immutableStorageWithVersioning": {
+                    "enabled": false
+                },
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/files')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "accessTier": "TransactionOptimized",
+                "shareQuota": 5120,
+                "enabledProtocols": "SMB"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/portal')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "accessTier": "TransactionOptimized",
+                "shareQuota": 5120,
+                "enabledProtocols": "SMB"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/workflow')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "accessTier": "TransactionOptimized",
+                "shareQuota": 5120,
+                "enabledProtocols": "SMB"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices/queues",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/acbs-control-00')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/queueServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "metadata": {}
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices/queues",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/acbs-control-01')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/queueServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "metadata": {}
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices/queues",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/acbs-control-02')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/queueServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "metadata": {}
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices/queues",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/acbs-control-03')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/queueServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "metadata": {}
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices/queues",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/acbs-workitems')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/queueServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "metadata": {}
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices/queues",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/durablefunctionshub-control-00')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/queueServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "metadata": {}
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices/queues",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/durablefunctionshub-control-01')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/queueServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "metadata": {}
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices/queues",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/durablefunctionshub-control-02')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/queueServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "metadata": {}
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices/queues",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/durablefunctionshub-control-03')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/queueServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "metadata": {}
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices/queues",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/durablefunctionshub-workitems')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/queueServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "metadata": {}
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices/queues",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/numbergenerator-control-00')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/queueServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "metadata": {}
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices/queues",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/numbergenerator-control-01')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/queueServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "metadata": {}
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices/queues",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/numbergenerator-control-02')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/queueServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "metadata": {}
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices/queues",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/numbergenerator-control-03')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/queueServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "metadata": {}
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices/queues",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/numbergenerator-workitems')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/queueServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {
+                "metadata": {}
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices/tables",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/acbsHistory')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/tableServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices/tables",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/acbsInstances')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/tableServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices/tables",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/AzureFunctionsDiagnosticEvents202304')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/tableServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices/tables",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/DurableFunctionsHubHistory')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/tableServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices/tables",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/DurableFunctionsHubInstances')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/tableServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices/tables",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/numbergeneratorHistory')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/tableServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices/tables",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('storageAccounts_tfsdevstorage_name'), '/default/numbergeneratorInstances')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/tableServices', parameters('storageAccounts_tfsdevstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_tfsdevstorage_name'))]"
+            ],
+            "properties": {}
+        }
+    ]
+}

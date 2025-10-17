@@ -1,0 +1,12 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "publicIPAddresses_tfs_dev_nat_ip_name": {
+            "value": null
+        },
+        "natGateways_tfs_dev_nat_gw_externalid": {
+            "value": null
+        }
+    }
+}
