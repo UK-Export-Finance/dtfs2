@@ -865,6 +865,7 @@ const patchPortalFacilitySubmitAmendment = async ({
     const { success, error, data } = PORTAL_FACILITY_AMENDMENT.safeParse(response.data);
 
     if (success) {
+      // Send to ACBS
       return data;
     }
 

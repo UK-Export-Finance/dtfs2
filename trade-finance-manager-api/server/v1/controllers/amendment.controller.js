@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES } = require('@ukef/dtfs2-common');
+const { canSendToAcbs, AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES } = require('@ukef/dtfs2-common');
 const isGefFacility = require('../rest-mappings/helpers/isGefFacility');
 const api = require('../api');
 const acbs = require('./acbs.controller');
@@ -14,7 +14,6 @@ const {
   sendManualBankDecisionEmail,
   sendFirstTaskEmail,
   internalAmendmentEmail,
-  canSendToAcbs,
   calculateAcbsUkefExposure,
   addLatestAmendmentValue,
   addLatestAmendmentCoverEndDate,

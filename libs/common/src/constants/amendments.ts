@@ -79,3 +79,14 @@ export const AMENDMENT_TYPES = {
  * The statuses for which amendment pages can be accessed
  */
 export const AMENDMENT_ACCEPTABLE_DEAL_STATUSES = [DEAL_STATUS.UKEF_ACKNOWLEDGED] as string[];
+
+/**
+ * Represents the possible decisions a bank can make regarding an amendment.
+ *
+ * @property PROCEED - Indicates that the bank has decided to proceed with the amendment.
+ * @property WITHDRAW - Indicates that the bank has withdrawn the amendment.
+ */
+export const AMENDMENT_BANK_DECISION = {
+  PROCEED: 'Proceed',
+  WITHDRAW: 'Withdrawn',
+};
