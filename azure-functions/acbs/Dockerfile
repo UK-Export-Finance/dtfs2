@@ -104,8 +104,6 @@ EXPOSE ${PORT}
 HEALTHCHECK \
 --interval=60s \
 --timeout=30s \
-CMD wget \
---no-verbose \
---tries=3 \
---spider https://localhost:${PORT} \
+CMD curl \
+-fail http://localhost:${PORT} \
 || exit 1
