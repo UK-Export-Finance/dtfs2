@@ -1,13 +1,11 @@
 import dotenv from 'dotenv';
 import { initialiseCronJobScheduler } from '@ukef/dtfs2-common';
 import { cronSchedulerJobs } from './cron-scheduler-jobs';
+import app from './createApp';
 
 dotenv.config();
 
 initialiseCronJobScheduler(cronSchedulerJobs);
-
-// eslint-disable-next-line import/first
-import app from './createApp';
 
 const PORT = process.env.PORT || 5000;
 
