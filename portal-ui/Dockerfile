@@ -113,9 +113,8 @@ CMD curl \
 -fail http://localhost:${PORT} \
 || exit 1
 
+# Execute Script
+ENTRYPOINT ["sh", "-c", "exec \"$ROOT/start.sh\""]
+
 # Non-root user
 USER node
-
-# Execute Script
-# ENTRYPOINT ["sh", "-c", "exec \"$ROOT/start.sh\""]
-CMD ["npx", "ts-node", "portal-ui/server/index.ts"]
