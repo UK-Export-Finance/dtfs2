@@ -117,4 +117,4 @@ CMD curl \
 USER node
 
 # Execute Script
-CMD ["npm", "run", "start:dev", "-w", "${MICROSERVICE}"]
+CMD ["npx", "nodemon", "portal-ui/server/index.ts"]
