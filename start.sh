@@ -12,7 +12,11 @@ set -euo pipefail
 
 if [ "$NODE_ENV" != "production" ]; then
     npm i nodemon
-    exec npm run start:dev -w "$MICROSERVICE"
+    if ["$MICROSERVICE" == "portal-ui"]; then
+        exec npx nodemon server/index.ts --config ../nodemon.json
+    else
+        exec npm run start:dev -w "$MICROSERVICE"
+    fi
 else
     exec npm run start -w "$MICROSERVICE"
 fi
