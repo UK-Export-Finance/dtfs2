@@ -117,4 +117,4 @@ CMD curl \
 USER node
 
 # Execute Script
-CMD ["npm", "run", "start:dev", "-c", "$MICROSERVICE"]
+CMD ["npm", "run", "start:dev", "-w", "${MICROSERVICE}"]
