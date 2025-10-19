@@ -41,7 +41,7 @@ if [ "${NODE_ENV:-}" != "production" ]; then
 
     # Ensure nodemon is installed (for automatic restarts on file changes)
     if ! command -v nodemon >/dev/null 2>&1; then
-        npm install -g nodemon
+        npm install nodemon
     fi
 
     # Start the portal UI directly if the selected service is "portal-ui"
