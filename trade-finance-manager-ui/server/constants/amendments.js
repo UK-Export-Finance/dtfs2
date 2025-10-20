@@ -1,9 +1,4 @@
-const AMENDMENT_BANK_DECISION = {
-  PROCEED: 'Proceed',
-  WITHDRAW: 'Withdrawn',
-  NOT_APPLICABLE: 'Not applicable',
-  AWAITING_DECISION: 'Awaiting decision',
-};
+const { AMENDMENT_BANK_DECISION } = require('@ukef/dtfs2-common');
 
 const BANK_DECISIONS_TAGS = {
   [AMENDMENT_BANK_DECISION.PROCEED]: 'govuk-tag--green',
