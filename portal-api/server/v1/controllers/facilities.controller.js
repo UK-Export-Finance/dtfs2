@@ -1,4 +1,4 @@
-// const { mapFacilityFieldsToAmendmentFields } = require('@ukef/dtfs2-common');
+const { mapFacilityFieldsToAmendmentFields } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../drivers/db-client');
 const api = require('../api');
@@ -154,41 +154,71 @@ const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize =
       };
     }
 
-    const mappedFacilities = [];
-
     /**
      * loops through all facilities and checks if there are any amendments for each facility
      * if there are amendments, it maps the relevant fields to the facility object and pushes the facility to the mappedFacilities array
      * if there are no amendments, it pushes the facility object as is to the mappedFacilities array
      */
-    for (const eachFacility of facilities) {
-      const facility = eachFacility;
+    // for (const eachFacility of facilities) {
+    //   const facility = eachFacility;
 
-      await api.getAcknowledgedAmendmentsByFacilityId(facility._id);
+    //   await api.getAcknowledgedAmendmentsByFacilityId(facility._id);
 
-      // if (amendments?.length) {
-      //   /**
-      //    * returns the latest cover end date and/or value from the amendments array
-      //    * if either field does not exist in the amendments, it will not be returned
-      //    * (i.e. if only cover end date has been amended, value will not be returned)
-      //    */
-      //   const { coverEndDate, value } = mapFacilityFieldsToAmendmentFields(amendments);
+    //   // if (amendments?.length) {
+    //   //   /**
+    //   //    * returns the latest cover end date and/or value from the amendments array
+    //   //    * if either field does not exist in the amendments, it will not be returned
+    //   //    * (i.e. if only cover end date has been amended, value will not be returned)
+    //   //    */
+    //   //   const { coverEndDate, value } = mapFacilityFieldsToAmendmentFields(amendments);
 
-      //   if (value) {
-      //     facility.value = value;
-      //   }
+    //   //   if (value) {
+    //   //     facility.value = value;
+    //   //   }
 
-      //   if (coverEndDate) {
-      //     facility.coverEndDate = new Date(coverEndDate);
-      //   }
-      // }
+    //   //   if (coverEndDate) {
+    //   //     facility.coverEndDate = new Date(coverEndDate);
+    //   //   }
+    //   // }
 
-      mappedFacilities.push(facility);
-    }
+    //   mappedFacilities.push(facility);
+    // }
+
+    const mappedFacilities = await Promise.all(
+      facilities.map(async (eachFacility) => {
+        const facility = eachFacility;
+        try {
+          await api.getAcknowledgedAmendmentsByFacilityId(facility._id);
+
+          const amendments = await api.getAcknowledgedAmendmentsByFacilityId(facility._id);
+
+          if (amendments?.length) {
+            /**
+             * returns the latest cover end date and/or value from the amendments array
+             * if either field does not exist in the amendments, it will not be returned
+             * (i.e. if only cover end date has been amended, value will not be returned)
+             */
+            const { coverEndDate, value } = mapFacilityFieldsToAmendmentFields(amendments);
+
+            if (value) {
+              facility.value = value;
+            }
+
+            if (coverEndDate) {
+              facility.coverEndDate = new Date(coverEndDate);
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching and mapping amendments for facility %s %o', facility._id, error);
+        }
+
+        return facility;
+      }),
+    );
 
     return {
       count,
-      facilities,
+      facilities: mappedFacilities,
     };
   }
 
