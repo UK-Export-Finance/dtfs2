@@ -164,7 +164,7 @@ const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize =
     for (const eachFacility of facilities) {
       const facility = eachFacility;
 
-      // const amendments = await api.getAcknowledgedAmendmentsByFacilityId(facility._id);
+      await api.getAcknowledgedAmendmentsByFacilityId(facility._id);
 
       // if (amendments?.length) {
       //   /**
