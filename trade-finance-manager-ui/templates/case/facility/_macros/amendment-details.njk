@@ -14,7 +14,7 @@
       <div class="govuk-grid-column-full">
         <h2 class="govuk-heading-l" data-cy="amendment--heading-{{loop.index}}">{{amendment.name}} </h2>
         
-        {% if futureEffectiveDatePortalAmendment %}
+        {% if amendment.futureEffectiveDatePortalAmendment %}
           <div class="govuk-!-padding-bottom-6">
           {% set amendmentFutureEffectiveDateFacilityBarParams = {
             futureEffectiveDatePortalAmendment: futureEffectiveDatePortalAmendment,

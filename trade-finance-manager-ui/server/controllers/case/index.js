@@ -7,6 +7,7 @@ const {
   PORTAL_AMENDMENT_STATUS,
   DATE_FORMATS,
   isPortalFacilityAmendmentsFeatureFlagEnabled,
+  isFutureEffectiveDate,
 } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const {
@@ -390,6 +391,10 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
 
         if (amendment?.changeFacilityValue && amendment?.currentValue) {
           item.currentValue = `${amendment.currency} ${formattedNumber(amendment.currentValue)}`;
+        }
+
+        if (amendment.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED && isFutureEffectiveDate(amendment.effectiveDate)) {
+          item.futureEffectiveDatePortalAmendment = true;
         }
 
         allCompletedAmendments.push(item);
