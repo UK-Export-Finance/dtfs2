@@ -165,6 +165,7 @@ const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize =
       mappedFacilities = await Promise.all(
         facilities.map(async (eachFacility) => {
           const facility = eachFacility;
+
           try {
             const amendments = await api.getAcknowledgedAmendmentsByFacilityId(facility._id);
 
