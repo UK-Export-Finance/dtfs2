@@ -1,3 +1,5 @@
+import { HttpStatusCode } from 'axios';
+
 const { ObjectId } = require('mongodb');
 const { withDeleteOneTests, expectAnyPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
 const { MONGO_DB_COLLECTIONS, PORTAL_LOGIN_STATUS, generatePasswordHash } = require('@ukef/dtfs2-common');
@@ -22,11 +24,13 @@ const MOCK_USER = {
 
 describe('a user', () => {
   let aNonAdmin;
+  let initialUsers;
 
   beforeAll(async () => {
     await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
     const testUsers = await testUserCache.initialise(app);
     aNonAdmin = testUsers().withoutRole(ADMIN).one();
+    initialUsers = testUsers().all();
   });
 
   beforeEach(async () => {
@@ -37,10 +41,55 @@ describe('a user', () => {
     await databaseHelper.wipe([DB_COLLECTIONS.USERS]);
   });
 
+  describe('GET /v1/users', () => {
+    it(`should return ${HttpStatusCode.Ok}`, async () => {
+      // Act
+      const response = await as(aNonAdmin).get('/v1/users');
+
+      // Assert
+      expect(response.status).toEqual(HttpStatusCode.Ok);
+      // initial users plus the api-test-user we create first
+      const expectedUsersCount = initialUsers.length + 1;
+      expect(response.body.count).toEqual(expectedUsersCount);
+    });
+  });
+
+  describe('GET /v1/users/:userId', () => {
+    let userToGetId;
+
+    beforeEach(async () => {
+      const response = await createUser(MOCK_USER);
+      userToGetId = new ObjectId(response.body.user._id);
+    });
+
+    describe(`when getting a user Id`, () => {
+      it(`should return ${HttpStatusCode.Ok}`, async () => {
+        // Act
+        const response = await as(aNonAdmin).get(`/v1/users/${userToGetId}`);
+
+        // Assert
+        expect(response.status).toEqual(HttpStatusCode.Ok);
+      });
+
+      it('should return an empty object if the user does not exist', async () => {
+        // Arrange
+        const anotherId = '123456789f0ffe00219319c1';
+
+        // Act
+        const response = await as(aNonAdmin).get(`/v1/users/${anotherId}`);
+
+        // Assert
+        expect(response.status).toEqual(HttpStatusCode.Ok);
+        expect(response.body).toEqual({});
+      });
+    });
+  });
+
   describe('DELETE /v1/users/:userId', () => {
     let userToDeleteId;
 
     beforeEach(async () => {
+      await databaseHelper.deleteUser(MOCK_USER);
       const response = await createUser(MOCK_USER);
       userToDeleteId = new ObjectId(response.body.user._id);
     });
