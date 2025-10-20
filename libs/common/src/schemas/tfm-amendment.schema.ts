@@ -13,7 +13,7 @@ export const TFM_FACILITY_AMENDMENT = z.object({
   amendmentId: z.string(),
   facilityId: z.string(),
   dealId: z.string(),
-  type: z.literal(AMENDMENT_TYPES.PORTAL),
+  type: z.literal(AMENDMENT_TYPES.TFM),
   createdAt: z.number(),
   updatedAt: z.number(),
   createdBy: z.object({
