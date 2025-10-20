@@ -147,14 +147,14 @@ const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize =
   if (results.length) {
     const { count, facilities } = results[0];
 
-    if (!count || !facilities.length) {
-      return {
-        facilities,
-        count,
-      };
-    }
+    // if (!count || !facilities.length) {
+    //   return {
+    //     facilities,
+    //     count,
+    //   };
+    // }
 
-    const mappedFacilities = [];
+    // const mappedFacilities = [];
 
     /**
      * loops through all facilities and checks if there are any amendments for each facility
@@ -188,7 +188,7 @@ const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize =
 
     return {
       count,
-      facilities: mappedFacilities,
+      facilities,
     };
   }
 
