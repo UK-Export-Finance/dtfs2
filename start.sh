@@ -8,7 +8,7 @@ set -euo pipefail
 #
 #   - In non-production environments (NODE_ENV != "production"):
 #       • Ensures `nodemon` is installed for automatic restarts on file changes.
-#       • If the MICROSERVICE is "portal-ui", starts the UI server directly with nodemon.
+#       • If the MICROSERVICE is `portal-ui`, starts the UI server directly with nodemon.
 #       • Otherwise, runs the microservice in development mode via "npm run start:dev".
 #
 #   - In production (NODE_ENV == "production"):
@@ -19,7 +19,7 @@ set -euo pipefail
 #
 # Environment Variables:
 #   NODE_ENV      - Defines the environment ("production" or other).
-#   MICROSERVICE  - The name of the microservice to start (e.g., "portal-ui").
+#   MICROSERVICE  - The name of the microservice to start (e.g., `portal-ui`).
 #
 # Exit Codes:
 #   0   - Successful execution.
@@ -39,12 +39,13 @@ if [ "${NODE_ENV:-}" != "production" ]; then
     # Development mode setup
     # -------------------------------------------------------------------------
 
-    # Ensure nodemon is installed (for automatic restarts on file changes)
-    if ! command -v nodemon >/dev/null 2>&1; then
-        npm install nodemon
+    # Ensure nodemon is installed
+    if ! command -v nodemon > /dev/null 2>&1; then
+        npm i nodemon
     fi
 
-    # Start the portal UI directly if the selected service is "portal-ui"
+    # Start the portal UI directly if the selected service is `portal-ui`
+    # Starting `portal-ui` with npm run start:dev renders Cypress error.
     if [ "${MICROSERVICE:-}" = "portal-ui" ]; then
         exec npx nodemon portal-ui/server/index.ts --config ./nodemon.json
     else
