@@ -6,6 +6,7 @@ jest.mock('node:crypto', () => ({
   randomBytes: jest.fn(),
 }));
 
+const { generatePasswordHash } = require('@ukef/dtfs2-common');
 const { when, resetAllWhenMocks } = require('jest-when');
 const { pbkdf2Sync, randomBytes } = require('node:crypto');
 const { AxiosError } = require('axios');
@@ -524,6 +525,13 @@ describe('POST /users/me/sign-in-link', () => {
   }
 
   async function createUser(userToCreate) {
-    return as(userToCreateOtherUsers).post(userToCreate).to('/v1/users');
+    const { salt, hash } = generatePasswordHash(userToCreate.password);
+    const userCreate = {
+      ...userToCreate,
+      salt,
+      hash,
+    };
+    delete userCreate?.password;
+    return as(userToCreateOtherUsers).post(userCreate).to('/v1/users');
   }
 });

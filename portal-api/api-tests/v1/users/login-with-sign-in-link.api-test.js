@@ -1,4 +1,4 @@
-const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
+const { PORTAL_LOGIN_STATUS, generatePasswordHash } = require('@ukef/dtfs2-common');
 const app = require('../../../server/createApp');
 const { mongoDbClient: db } = require('../../../server/drivers/db-client');
 const { Hasher } = require('../../../server/crypto/hasher');
@@ -482,6 +482,13 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
   });
 
   async function createUser(userToCreate) {
-    return as(userToCreateOtherUsers).post(userToCreate).to('/v1/users');
+    const { salt, hash } = generatePasswordHash(userToCreate.password);
+    const userCreate = {
+      ...userToCreate,
+      salt,
+      hash,
+    };
+    delete userCreate?.password;
+    return as(userToCreateOtherUsers).post(userCreate).to('/v1/users');
   }
 });

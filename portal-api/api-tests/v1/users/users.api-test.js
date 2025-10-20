@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { withDeleteOneTests, expectAnyPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { MONGO_DB_COLLECTIONS, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, PORTAL_LOGIN_STATUS, generatePasswordHash } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const testUserCache = require('../../api-test-users');
 
@@ -158,11 +158,18 @@ describe('a user', () => {
 
   it('User already exists', async () => {
     // User creation - first instance
-    const first = await as(aNonAdmin).post(MOCK_USER).to('/v1/users');
+    const { salt, hash } = generatePasswordHash(MOCK_USER.password);
+    const userCreate = {
+      ...MOCK_USER,
+      salt,
+      hash,
+    };
+    delete userCreate?.password;
+    const first = await as(aNonAdmin).post(userCreate).to('/v1/users');
     expect(first.status).toEqual(200);
 
     // User creation - second instance
-    const second = await as(aNonAdmin).post(MOCK_USER).to('/v1/users');
+    const second = await as(aNonAdmin).post(userCreate).to('/v1/users');
     expect(second.status).toEqual(400);
   });
 
@@ -258,6 +265,13 @@ describe('a user', () => {
   });
 
   async function createUser(userToCreate) {
-    return as(aNonAdmin).post(userToCreate).to('/v1/users');
+    const { salt, hash } = generatePasswordHash(userToCreate.password);
+    const userCreate = {
+      ...userToCreate,
+      salt,
+      hash,
+    };
+    delete userCreate?.password;
+    return as(aNonAdmin).post(userCreate).to('/v1/users');
   }
 });
