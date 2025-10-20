@@ -89,7 +89,28 @@ describe('canSendToAcbs', () => {
         expect(response).toBeFalsy();
       });
 
-      it('should return true when the amendment has been amended, has been sent to UKEF and has a user', () => {
+      it('should return true only a single attribute has been amended, has been sent to UKEF and has a user', () => {
+        // Arrange
+        const mockAmendment = {
+          type: AMENDMENT_TYPES.PORTAL,
+          changeCoverEndDate: false,
+          changeFacilityValue: true,
+          status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+          createdBy: {
+            username: 'test',
+            name: 'test',
+            email: 'test@ukexportfinance.gov.uk',
+          },
+        } as PortalFacilityAmendmentWithUkefId;
+
+        // Act
+        const response = canSendToAcbs(mockAmendment);
+
+        // Assert
+        expect(response).toBeTruthy();
+      });
+
+      it('should return true when both the attributes has been amended, has been sent to UKEF and has a user', () => {
         // Arrange
         const mockAmendment = {
           type: AMENDMENT_TYPES.PORTAL,
@@ -206,7 +227,24 @@ describe('canSendToAcbs', () => {
         expect(response).toBeFalsy();
       });
 
-      it('should return true when the amendment has been amended, has been sent to UKEF and has been submitted by PIM', () => {
+      it('should return true when only a single attribute has been amended, has been sent to UKEF and has been submitted by PIM', () => {
+        // Arrange
+        const mockAmendment = {
+          type: AMENDMENT_TYPES.TFM,
+          changeCoverEndDate: true,
+          changeFacilityValue: false,
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
+          submittedByPim: true,
+        } as TfmFacilityAmendmentWithUkefId;
+
+        // Act
+        const response = canSendToAcbs(mockAmendment);
+
+        // Assert
+        expect(response).toBeTruthy();
+      });
+
+      it('should return true when both the attributes of a facility has been amended, has been sent to UKEF and has been submitted by PIM', () => {
         // Arrange
         const mockAmendment = {
           type: AMENDMENT_TYPES.TFM,
@@ -366,6 +404,22 @@ describe('canSendToAcbs', () => {
           ukefDecision: {
             value: UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS,
             coverEndDate: UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITH_CONDITIONS,
+          },
+        },
+        {
+          type: AMENDMENT_TYPES.TFM,
+          changeCoverEndDate: false,
+          changeFacilityValue: true,
+          status: TFM_AMENDMENT_STATUS.COMPLETED,
+          submittedByPim: true,
+          requireUkefApproval: true,
+          bankDecision: {
+            decision: AMENDMENT_BANK_DECISION.PROCEED,
+            submitted: true,
+          },
+          ukefDecision: {
+            value: UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS,
+            coverEndDate: UNDERWRITER_MANAGER_DECISIONS.APPROVED_WITHOUT_CONDITIONS,
           },
         },
         {
