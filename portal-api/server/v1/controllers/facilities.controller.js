@@ -147,7 +147,7 @@ const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize =
   if (results.length) {
     const { count, facilities } = results[0];
 
-    if (!count || !facilities.length) {
+    if (!count || !facilities?.length) {
       return {
         facilities: [],
         count: 0,
