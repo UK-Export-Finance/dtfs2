@@ -89,4 +89,6 @@ export const AMENDMENT_ACCEPTABLE_DEAL_STATUSES = [DEAL_STATUS.UKEF_ACKNOWLEDGED
 export const AMENDMENT_BANK_DECISION = {
   PROCEED: 'Proceed',
   WITHDRAW: 'Withdrawn',
+  NOT_APPLICABLE: 'Not applicable',
+  AWAITING_DECISION: 'Awaiting decision',
 };
