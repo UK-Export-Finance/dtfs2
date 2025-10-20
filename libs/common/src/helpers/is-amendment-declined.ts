@@ -1,29 +1,44 @@
-import { UNDERWRITER_MANAGER_DECISIONS } from '../constants';
-import { TfmFacilityAmendmentWithUkefId } from '../types';
+import { AMENDMENT_TYPES, UNDERWRITER_MANAGER_DECISIONS } from '../constants';
+import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } from '../types';
 
 /**
- * Determines if an amendment has been declined based on the underwriter manager's decision.
+ * Determines if a given amendment has been declined by UKEF.
  *
- * For dual amendment requests (both `changeFacilityValue` and `changeCoverEndDate` are true),
- * the amendment is considered declined only if both `value` and `coverEndDate` decisions are declined.
- * For single amendment requests, the amendment is considered declined if either decision is declined.
+ * For TFM amendments (manual amendments), checks the UKEF decision for both
+ * facility value and cover end date changes:
+ * - If both `changeFacilityValue` and `changeCoverEndDate` are requested,
+ *   returns `true` only if both are declined.
+ * - If only one is requested, returns `true` if either is declined.
  *
- * @param amendment - The amendment object containing decision details.
- * @returns `true` if the amendment is declined according to the decision logic, otherwise `false`.
+ * For non-TFM amendments, always returns `false`.
+ *
+ * @param amendment - The amendment object, which can be either a Portal or TFM amendment with a UKEF ID.
+ * @returns `true` if the amendment is declined according to UKEF decision, otherwise `false`.
  */
-export const amendmentDeclined = (amendment: TfmFacilityAmendmentWithUkefId) => {
-  const { changeFacilityValue, changeCoverEndDate } = amendment;
-  const value = amendment.ukefDecision?.value;
-  const coverEndDate = amendment.ukefDecision?.coverEndDate;
+export const isAmendmentDeclined = (amendment: PortalFacilityAmendmentWithUkefId | TfmFacilityAmendmentWithUkefId) => {
+  const isTfmAmendment = amendment.type === AMENDMENT_TYPES.TFM;
 
-  const { DECLINED } = UNDERWRITER_MANAGER_DECISIONS;
+  /**
+   * UKEF decision can only be applied to manual amendment.
+   * At the time of writing this comment only TFM amendments
+   * support manual amendments
+   */
+  if (isTfmAmendment) {
+    const { changeFacilityValue, changeCoverEndDate } = amendment;
+    const value = amendment.ukefDecision?.value;
+    const coverEndDate = amendment.ukefDecision?.coverEndDate;
 
-  // Ensure not all of the amendment requests are declined
+    const { DECLINED } = UNDERWRITER_MANAGER_DECISIONS;
 
-  // Dual amendment request
-  if (changeFacilityValue && changeCoverEndDate) {
-    return value === DECLINED && coverEndDate === DECLINED;
+    // Ensure not all of the amendment requests are declined
+
+    // Dual amendment request
+    if (changeFacilityValue && changeCoverEndDate) {
+      return value === DECLINED && coverEndDate === DECLINED;
+    }
+    // Single amendment request
+    return value === DECLINED || coverEndDate === DECLINED;
   }
-  // Single amendment request
-  return value === DECLINED || coverEndDate === DECLINED;
+
+  return false;
 };

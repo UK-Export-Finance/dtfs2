@@ -1,21 +1,25 @@
 import { AMENDMENT_TYPES, AMENDMENT_BANK_DECISION, TFM_AMENDMENT_STATUS, PORTAL_AMENDMENT_STATUS } from '../constants';
-import { TfmFacilityAmendmentWithUkefId } from '../types';
-import { amendmentDeclined } from './is-amendment-declined';
+import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } from '../types';
+import { isAmendmentDeclined } from './is-amendment-declined';
 
 /**
  * Determines if an amendment can be sent to ACBS based on its type, status, user involvement, and amendment details.
  *
- * The function checks the following conditions:
- * - The amendment type (Portal or TFM).
- * - At least one attribute (cover end date or facility value) has been amended.
- * - The amendment status is appropriate for its type (Acknowledged for Portal, Completed for TFM).
- * - The amendment has the required user involvement (created by for Portal, submitted by PIM for TFM).
- * - For manual amendments (TFM only), verifies bank decision has been submitted and accepted, and the amendment has not been declined.
+ * For TFM amendments:
+ * - Requires the amendment to be marked as `Completed`.
+ * - Checks for PIM user involvement.
+ * - If the amendment is manual (requires UKEF approval and has a bank decision), verifies the bank decision is submitted and accepted.
  *
- * @param amendment - The amendment object containing all relevant details for validation.
+ * For Portal amendments:
+ * - Requires the amendment to be marked as `Acknowledged`.
+ * - Checks for Checker user involvement.
+ *
+ * In both cases, ensures at least one attribute (cover end date or facility value) has been amended.
+ *
+ * @param amendment - The amendment object, either PortalFacilityAmendmentWithUkefId or TfmFacilityAmendmentWithUkefId.
  * @returns `true` if the amendment meets all criteria to be sent to ACBS, otherwise `false`.
  */
-export const canSendToAcbs = (amendment: TfmFacilityAmendmentWithUkefId) => {
+export const canSendToAcbs = (amendment: PortalFacilityAmendmentWithUkefId | TfmFacilityAmendmentWithUkefId) => {
   // Amendment type
   const isPortalAmendment = amendment.type === AMENDMENT_TYPES.PORTAL;
 
@@ -36,8 +40,8 @@ export const canSendToAcbs = (amendment: TfmFacilityAmendmentWithUkefId) => {
    */
   const hasUser = isPortalAmendment ? Boolean(amendment.createdBy?.username) : amendment.submittedByPim;
 
-  // Manual amendment verification
-  const isAmendmentManual = Boolean(amendment.requireUkefApproval) && Boolean(amendment.bankDecision);
+  // Manual amendment verification - TFM amendments only
+  const isAmendmentManual = isPortalAmendment ? false : Boolean(amendment.requireUkefApproval) && Boolean(amendment.bankDecision);
 
   // Manual amendment - TFM only
   if (isAmendmentManual && !isPortalAmendment) {
@@ -48,7 +52,7 @@ export const canSendToAcbs = (amendment: TfmFacilityAmendmentWithUkefId) => {
     // Bank has accepted the UW decision
     const proceed = decision === AMENDMENT_BANK_DECISION.PROCEED;
 
-    return hasBeenAmended && hasBeenSubmittedToUkef && hasUser && submitted && proceed && !amendmentDeclined(amendment);
+    return hasBeenAmended && hasBeenSubmittedToUkef && hasUser && submitted && proceed && !isAmendmentDeclined(amendment);
   }
 
   // Automatic amendment

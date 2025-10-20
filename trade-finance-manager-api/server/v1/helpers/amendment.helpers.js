@@ -1,4 +1,4 @@
-const { amendmentDeclined, formatDatesForTenor, createAmendmentFacilityExposure, epochToEpochMs } = require('@ukef/dtfs2-common');
+const { isAmendmentDeclined, formatDatesForTenor, createAmendmentFacilityExposure, epochToEpochMs } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const sendTfmEmail = require('../services/send-tfm-email');
 const { TEAMS } = require('../../constants');
@@ -175,23 +175,23 @@ const sendManualDecisionAmendmentEmail = async (amendmentVariables, auditDetails
 
   try {
     // if one is approved with conditions and not declined
-    if (isApprovedWithConditions(ukefDecision) && !amendmentDeclined(amendment)) {
+    if (isApprovedWithConditions(ukefDecision) && !isAmendmentDeclined(amendment)) {
       await emailApprovedWithWithoutConditions(amendmentVariables, auditDetails);
 
       // if only approved without conditions (and not declined or with conditions)
-    } else if (isApprovedWithoutConditions(ukefDecision) && !amendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision)) {
+    } else if (isApprovedWithoutConditions(ukefDecision) && !isAmendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision)) {
       await emailApprovedWithoutConditions(amendmentVariables, auditDetails);
 
       // if approved with conditions and declined only
-    } else if (isApprovedWithConditions(ukefDecision) && amendmentDeclined(amendment) && !isApprovedWithoutConditions(ukefDecision)) {
+    } else if (isApprovedWithConditions(ukefDecision) && isAmendmentDeclined(amendment) && !isApprovedWithoutConditions(ukefDecision)) {
       await emailApprovedWithConditionsDeclined(amendmentVariables, auditDetails);
 
       // if approved without conditions and declined only
-    } else if (isApprovedWithoutConditions(ukefDecision) && amendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision)) {
+    } else if (isApprovedWithoutConditions(ukefDecision) && isAmendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision)) {
       await emailApprovedWithoutConditionsDeclined(amendmentVariables, auditDetails);
 
       // if declined only
-    } else if (amendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision) && !isApprovedWithoutConditions(ukefDecision)) {
+    } else if (isAmendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision) && !isApprovedWithoutConditions(ukefDecision)) {
       await emailDeclined(amendmentVariables, auditDetails);
     } else {
       console.error('Incorrect ukefDecision passed for manual amendment email');
