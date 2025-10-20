@@ -1,11 +1,16 @@
 import { ObjectId } from 'mongodb';
-import { PORTAL_AMENDMENT_STATUS } from '@ukef/dtfs2-common';
+import { PORTAL_AMENDMENT_STATUS, isPortalFacilityAmendmentsFeatureFlagEnabled } from '@ukef/dtfs2-common';
 import { queryAllFacilities } from './facilities.controller';
 import { mongoDbClient } from '../../drivers/db-client';
 import completedDeal from '../../../api-tests/fixtures/deal-fully-completed';
 import api from '../api';
 
 const { mockFacilities } = completedDeal;
+
+jest.mock('@ukef/dtfs2-common', () => ({
+  ...jest.requireActual('@ukef/dtfs2-common'),
+  isPortalFacilityAmendmentsFeatureFlagEnabled: jest.fn(),
+}));
 
 const mockAcknowledgedAmendmentsByFacilityId = jest.fn();
 
@@ -51,108 +56,224 @@ describe('facilities.controller', () => {
       });
     });
 
-    describe('when results are returned and no amendments are present', () => {
+    describe('when isPortalFacilityAmendmentsFeatureFlagEnabled is true', () => {
       beforeEach(() => {
-        const mockToArray = jest.fn().mockResolvedValue([
-          {
+        jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(true);
+      });
+
+      describe('when results are returned and no amendments are present', () => {
+        beforeEach(() => {
+          jest.resetAllMocks();
+
+          jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(true);
+
+          const mockToArray = jest.fn().mockResolvedValue([
+            {
+              facilities: mockFacilities,
+              count: mockFacilities.length,
+            },
+          ]);
+
+          const mockAggregate = jest.fn().mockReturnValue({ toArray: mockToArray });
+
+          mockDatabase = {
+            getCollection: jest.fn().mockResolvedValue({ aggregate: mockAggregate }),
+          };
+
+          mongoDbClient.getCollection = mockDatabase.getCollection;
+        });
+
+        it('should return an array of facilities and a count', async () => {
+          const results = await queryAllFacilities({}, {}, 0, 0);
+
+          const expected = {
             facilities: mockFacilities,
             count: mockFacilities.length,
+          };
+
+          expect(results).toEqual(expected);
+        });
+
+        it('should call getAcknowledgedAmendmentsByFacilityId once for each facility', async () => {
+          await queryAllFacilities({}, {}, 0, 0);
+
+          expect(api.getAcknowledgedAmendmentsByFacilityId).toHaveBeenCalledTimes(mockFacilities.length);
+        });
+      });
+
+      describe('when results are returned and amendments are present', () => {
+        const amendments = [
+          {
+            _id: new ObjectId(),
+            facilityId: '1',
+            coverEndDate: '2024-12-31T00:00:00.000Z',
+            value: 5000,
+            status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
           },
-        ]);
+          {
+            _id: new ObjectId(),
+            facilityId: '2',
+            coverEndDate: '2025-06-30T00:00:00.000Z',
+            value: 10000,
+            status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+          },
+        ];
 
-        const mockAggregate = jest.fn().mockReturnValue({ toArray: mockToArray });
+        beforeEach(() => {
+          jest.resetAllMocks();
 
-        mockDatabase = {
-          getCollection: jest.fn().mockResolvedValue({ aggregate: mockAggregate }),
-        };
+          jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(true);
 
-        mongoDbClient.getCollection = mockDatabase.getCollection;
-      });
+          const mockToArray = jest.fn().mockResolvedValue([
+            {
+              facilities: mockFacilities,
+              count: mockFacilities.length,
+            },
+          ]);
 
-      it('should return an array of facilities and a count', async () => {
-        const results = await queryAllFacilities({}, {}, 0, 0);
+          const mockAggregate = jest.fn().mockReturnValue({ toArray: mockToArray });
 
-        const expected = {
-          facilities: mockFacilities,
-          count: mockFacilities.length,
-        };
+          mockDatabase = {
+            getCollection: jest.fn().mockResolvedValue({ aggregate: mockAggregate }),
+          };
 
-        expect(results).toEqual(expected);
-      });
+          mongoDbClient.getCollection = mockDatabase.getCollection;
 
-      it('should call getAcknowledgedAmendmentsByFacilityId once for each facility', async () => {
-        await queryAllFacilities({}, {}, 0, 0);
+          mockAcknowledgedAmendmentsByFacilityId.mockImplementation((facilityId) =>
+            Promise.resolve(amendments.filter((amendment) => amendment.facilityId === facilityId)),
+          );
+        });
 
-        expect(api.getAcknowledgedAmendmentsByFacilityId).toHaveBeenCalledTimes(mockFacilities.length);
+        it('should return an array of facilities with amended values and a count', async () => {
+          const results = await queryAllFacilities({}, {}, 0, 0);
+
+          const expectedFacilities = mockFacilities.map((facility) => {
+            const amendment = amendments.find((a) => a.facilityId === facility._id);
+            if (amendment) {
+              return {
+                ...facility,
+                coverEndDate: new Date(amendment.coverEndDate),
+                value: amendment.value,
+              };
+            }
+            return facility;
+          });
+
+          const expected = {
+            facilities: expectedFacilities,
+            count: mockFacilities.length,
+          };
+
+          expect(results).toEqual(expected);
+        });
+
+        it('should call getAcknowledgedAmendmentsByFacilityId once for each facility', async () => {
+          await queryAllFacilities({}, {}, 0, 0);
+
+          expect(api.getAcknowledgedAmendmentsByFacilityId).toHaveBeenCalledTimes(mockFacilities.length);
+        });
       });
     });
 
-    describe('when results are returned and amendments are present', () => {
-      const amendments = [
-        {
-          _id: new ObjectId(),
-          facilityId: '1',
-          coverEndDate: '2024-12-31T00:00:00.000Z',
-          value: 5000,
-          status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
-        },
-        {
-          _id: new ObjectId(),
-          facilityId: '2',
-          coverEndDate: '2025-06-30T00:00:00.000Z',
-          value: 10000,
-          status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
-        },
-      ];
-
+    describe('when isPortalFacilityAmendmentsFeatureFlagEnabled is false', () => {
       beforeEach(() => {
-        const mockToArray = jest.fn().mockResolvedValue([
-          {
-            facilities: mockFacilities,
-            count: mockFacilities.length,
-          },
-        ]);
-
-        const mockAggregate = jest.fn().mockReturnValue({ toArray: mockToArray });
-
-        mockDatabase = {
-          getCollection: jest.fn().mockResolvedValue({ aggregate: mockAggregate }),
-        };
-
-        mongoDbClient.getCollection = mockDatabase.getCollection;
-
-        mockAcknowledgedAmendmentsByFacilityId.mockImplementation((facilityId) =>
-          Promise.resolve(amendments.filter((amendment) => amendment.facilityId === facilityId)),
-        );
+        jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(false);
       });
 
-      it('should return an array of facilities with amended values and a count', async () => {
-        const results = await queryAllFacilities({}, {}, 0, 0);
+      describe('when results are returned and no amendments are present', () => {
+        beforeEach(() => {
+          jest.resetAllMocks();
+          const mockToArray = jest.fn().mockResolvedValue([
+            {
+              facilities: mockFacilities,
+              count: mockFacilities.length,
+            },
+          ]);
 
-        const expectedFacilities = mockFacilities.map((facility) => {
-          const amendment = amendments.find((a) => a.facilityId === facility._id);
-          if (amendment) {
-            return {
-              ...facility,
-              coverEndDate: new Date(amendment.coverEndDate),
-              value: amendment.value,
-            };
-          }
-          return facility;
+          const mockAggregate = jest.fn().mockReturnValue({ toArray: mockToArray });
+
+          mockDatabase = {
+            getCollection: jest.fn().mockResolvedValue({ aggregate: mockAggregate }),
+          };
+
+          mongoDbClient.getCollection = mockDatabase.getCollection;
         });
 
-        const expected = {
-          facilities: expectedFacilities,
-          count: mockFacilities.length,
-        };
+        it('should return an array of facilities and a count', async () => {
+          const results = await queryAllFacilities({}, {}, 0, 0);
 
-        expect(results).toEqual(expected);
+          const expected = {
+            facilities: mockFacilities,
+            count: mockFacilities.length,
+          };
+
+          expect(results).toEqual(expected);
+        });
+
+        it('should not call getAcknowledgedAmendmentsByFacilityId', async () => {
+          await queryAllFacilities({}, {}, 0, 0);
+
+          expect(api.getAcknowledgedAmendmentsByFacilityId).toHaveBeenCalledTimes(0);
+        });
       });
 
-      it('should call getAcknowledgedAmendmentsByFacilityId once for each facility', async () => {
-        await queryAllFacilities({}, {}, 0, 0);
+      describe('when results are returned and amendments are present', () => {
+        const amendments = [
+          {
+            _id: new ObjectId(),
+            facilityId: '1',
+            coverEndDate: '2024-12-31T00:00:00.000Z',
+            value: 5000,
+            status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+          },
+          {
+            _id: new ObjectId(),
+            facilityId: '2',
+            coverEndDate: '2025-06-30T00:00:00.000Z',
+            value: 10000,
+            status: PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED,
+          },
+        ];
 
-        expect(api.getAcknowledgedAmendmentsByFacilityId).toHaveBeenCalledTimes(mockFacilities.length);
+        beforeEach(() => {
+          jest.resetAllMocks();
+
+          const mockToArray = jest.fn().mockResolvedValue([
+            {
+              facilities: mockFacilities,
+              count: mockFacilities.length,
+            },
+          ]);
+
+          const mockAggregate = jest.fn().mockReturnValue({ toArray: mockToArray });
+
+          mockDatabase = {
+            getCollection: jest.fn().mockResolvedValue({ aggregate: mockAggregate }),
+          };
+
+          mongoDbClient.getCollection = mockDatabase.getCollection;
+
+          mockAcknowledgedAmendmentsByFacilityId.mockImplementation((facilityId) =>
+            Promise.resolve(amendments.filter((amendment) => amendment.facilityId === facilityId)),
+          );
+        });
+
+        it('should return an array of original facilities and a count', async () => {
+          const results = await queryAllFacilities({}, {}, 0, 0);
+
+          const expected = {
+            facilities: mockFacilities,
+            count: mockFacilities.length,
+          };
+
+          expect(results).toEqual(expected);
+        });
+
+        it('should not call getAcknowledgedAmendmentsByFacilityId', async () => {
+          await queryAllFacilities({}, {}, 0, 0);
+
+          expect(api.getAcknowledgedAmendmentsByFacilityId).toHaveBeenCalledTimes(0);
+        });
       });
     });
   });
