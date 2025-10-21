@@ -79,3 +79,48 @@ export const AMENDMENT_TYPES = {
  * The statuses for which amendment pages can be accessed
  */
 export const AMENDMENT_ACCEPTABLE_DEAL_STATUSES = [DEAL_STATUS.UKEF_ACKNOWLEDGED] as string[];
+
+/**
+ * Represents the possible decisions a bank can make regarding an amendment.
+ *
+ * @property {string} PROCEED - Indicates the bank has decided to proceed with the amendment.
+ * @property {string} WITHDRAW - Indicates the amendment has been withdrawn.
+ * @property {string} NOT_APPLICABLE - Indicates the amendment is not applicable.
+ * @property {string} AWAITING_DECISION - Indicates the bank's decision on the amendment is pending.
+ */
+export const AMENDMENT_BANK_DECISION = {
+  PROCEED: 'Proceed',
+  WITHDRAW: 'Withdrawn',
+  NOT_APPLICABLE: 'Not applicable',
+  AWAITING_DECISION: 'Awaiting decision',
+};
+
+/**
+ * Enum-like object representing the types of submission amendments.
+ *
+ * @property MANUAL_AMENDMENT - Indicates a submission that was amended manually.
+ * @property AUTOMATIC_AMENDMENT - Indicates a submission that was amended automatically.
+ */
+export const AMENDMENT_SUBMISSION_TYPE = {
+  MANUAL_AMENDMENT: 'Manual Amendment',
+  AUTOMATIC_AMENDMENT: 'Automatic Amendment',
+};
+
+/**
+ * Maps each amendment bank decision to its corresponding GOV.UK tag CSS class.
+ *
+ * @remarks
+ * This object uses the `AMENDMENT_BANK_DECISION` enum as keys and assigns
+ * a string representing the appropriate GOV.UK tag color class for each decision.
+ *
+ * @example
+ * BANK_DECISIONS_TAGS[AMENDMENT_BANK_DECISION.PROCEED] // 'govuk-tag--green'
+ *
+ * @see AMENDMENT_BANK_DECISION
+ */
+export const BANK_DECISIONS_TAGS = {
+  [AMENDMENT_BANK_DECISION.PROCEED]: 'govuk-tag--green',
+  [AMENDMENT_BANK_DECISION.WITHDRAW]: 'govuk-tag--red',
+  [AMENDMENT_BANK_DECISION.NOT_APPLICABLE]: 'govuk-tag--red',
+  [AMENDMENT_BANK_DECISION.AWAITING_DECISION]: 'govuk-tag--yellow',
+};
