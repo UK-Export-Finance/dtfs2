@@ -9,6 +9,7 @@ const {
   BANK_DECISIONS_TAGS,
   AMENDMENT_BANK_DECISION,
   isPortalFacilityAmendmentsFeatureFlagEnabled,
+  isFutureEffectiveDate,
 } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const {
@@ -391,6 +392,12 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
 
         if (amendment?.changeFacilityValue && amendment?.currentValue) {
           item.currentValue = `${amendment.currency} ${formattedNumber(amendment.currentValue)}`;
+        }
+
+        const isFuturePortalAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED && isFutureEffectiveDate(amendment.effectiveDate);
+
+        if (isFuturePortalAmendment) {
+          item.futureEffectiveDatePortalAmendment = true;
         }
 
         allCompletedAmendments.push(item);

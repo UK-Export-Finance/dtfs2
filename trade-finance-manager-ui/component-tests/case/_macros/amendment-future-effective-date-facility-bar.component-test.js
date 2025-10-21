@@ -49,12 +49,13 @@ describe(component, () => {
           effectiveDate: '25 September 2025',
         },
         isOnAmendmentTab: true,
+        amendmentIndex: 1,
       };
 
       wrapper = render(params);
 
       wrapper
-        .expectText('[data-cy="amendment-future-effective-date-amendment-bar"]')
+        .expectText(`[data-cy="amendment-future-effective-date-${params.amendmentIndex}-amendment-bar"]`)
         .toRead(
           `Amendment ${params.futureEffectiveDatePortalAmendment.referenceNumber} is effective on ${params.futureEffectiveDatePortalAmendment.effectiveDate}.`,
         );

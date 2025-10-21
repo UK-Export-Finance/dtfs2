@@ -7,8 +7,6 @@ const amendmentsPage = {
 
   amendmentFutureEffectiveDateFacilityBar: () => cy.get('[data-cy="amendment-future-effective-date-facility-bar"]'),
 
-  amendmentFutureEffectiveDateAmendmentBar: () => cy.get('[data-cy="amendment-future-effective-date-amendment-bar"]'),
-
   amendmentFutureEffectiveDateDealBar: (ukefFacilityId) => cy.get(`[data-cy="amendment--future-effective-date-deal-bar-${ukefFacilityId}"]`),
   amendmentFutureEffectiveDateDealLink: (ukefFacilityId) => cy.get(`[data-cy="amendment--future-effective-date-deal-link-${ukefFacilityId}"]`),
 
@@ -81,6 +79,7 @@ const amendmentsPage = {
         submittedBy: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-submitted-by"]`),
         requireApproval: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-require-approval"]`),
         bankDecision: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-banks-decision"]`),
+        amendmentFutureEffectiveDateAmendmentBar: () => cy.get('@row').get(`[data-cy="amendment-future-effective-date-${index}-amendment-bar"]`),
 
         ukefDecisionCoverEndDate: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-cover-end-date-decision"]`),
         currentCoverEndDate: () => cy.get('@row').get(`[data-cy="amendment--details-${index}-current-cover-end-date"]`),
