@@ -1,10 +1,9 @@
 import { getUnixTime, set } from 'date-fns';
-import { TEAM_IDS } from '@ukef/dtfs2-common';
+import { AMENDMENT_BANK_DECISION, TEAM_IDS } from '@ukef/dtfs2-common';
 import api from '../../../api';
 import { mockRes } from '../../../test-mocks';
 import amendmentsController from './bankDecision.controller';
 import MOCKS from '../../../test-mocks/amendment-test-mocks';
-import CONSTANTS from '../../../constants';
 
 const res = mockRes();
 
@@ -106,7 +105,7 @@ describe('POST postAmendmentBankDecisionChoice', () => {
           facilityId: '12345',
         },
         body: {
-          banksDecision: CONSTANTS.AMENDMENTS.AMENDMENT_BANK_DECISION.PROCEED,
+          banksDecision: AMENDMENT_BANK_DECISION.PROCEED,
         },
         session,
       };
@@ -162,7 +161,7 @@ describe('POST postAmendmentBankDecisionChoice', () => {
           facilityId: '12345',
         },
         body: {
-          banksDecision: CONSTANTS.AMENDMENTS.AMENDMENT_BANK_DECISION.PROCEED,
+          banksDecision: AMENDMENT_BANK_DECISION.PROCEED,
         },
         session,
       };
@@ -189,7 +188,7 @@ describe('POST postAmendmentBankDecisionChoice', () => {
           facilityId: '12345',
         },
         body: {
-          banksDecision: CONSTANTS.AMENDMENTS.AMENDMENT_BANK_DECISION.PROCEED,
+          banksDecision: AMENDMENT_BANK_DECISION.PROCEED,
         },
         session,
       };
@@ -846,7 +845,7 @@ describe('GET getAmendmentBankDecisionAnswers', () => {
         amendment: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_EFFECTIVE_DATES,
         isEditable: true,
         user,
-        decision: CONSTANTS.AMENDMENTS.AMENDMENT_BANK_DECISION.PROCEED,
+        decision: AMENDMENT_BANK_DECISION.PROCEED,
         receivedDate: '08 Jun 2022',
         effectiveDate: '08 Jun 2022',
       });
@@ -869,7 +868,7 @@ describe('GET getAmendmentBankDecisionAnswers', () => {
         amendment: MOCKS.MOCK_AMENDMENT_BANK_DECISION_WITH_DATES,
         isEditable: true,
         user,
-        decision: CONSTANTS.AMENDMENTS.AMENDMENT_BANK_DECISION.PROCEED,
+        decision: AMENDMENT_BANK_DECISION.PROCEED,
         receivedDate: '08 Jun 2022',
         effectiveDate: '',
       });

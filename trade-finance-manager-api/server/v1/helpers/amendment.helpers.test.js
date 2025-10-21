@@ -1,5 +1,5 @@
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { CURRENCY, FACILITY_TYPE, formattedNumber, getGBPValue } = require('@ukef/dtfs2-common');
+const { CURRENCY, FACILITY_TYPE, AMENDMENT_BANK_DECISION, formattedNumber, getGBPValue } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const {
   sendManualDecisionAmendmentEmail,
@@ -13,7 +13,7 @@ const {
   formatAmendmentDates,
 } = require('./amendment.helpers');
 const CONSTANTS = require('../../constants');
-const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
+const { AMENDMENT_UW_DECISION } = require('../../constants/deals');
 const amendmentVariables = require('../__mocks__/amendmentVariables');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
 const MOCK_NOTIFY_EMAIL_BAD_RESPONSE = require('../__mocks__/mock-notify-email-bad-response');

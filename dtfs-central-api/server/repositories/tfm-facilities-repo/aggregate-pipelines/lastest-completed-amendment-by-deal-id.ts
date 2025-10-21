@@ -5,7 +5,7 @@ export const latestCompletedAmendmentByDealId = (dealId: string | ObjectId): Doc
   { $match: { 'facilitySnapshot.dealId': { $eq: new ObjectId(dealId) } } },
   { $unwind: '$amendments' },
   { $match: { 'amendments.status': TFM_AMENDMENT_STATUS.COMPLETED } },
-  { $sort: { 'amendments.updatedAt': -1, 'amendments.version': -1 } },
+  { $sort: { 'amendments.referenceNumber': -1, 'amendments.version': -1 } },
   { $project: { _id: false, amendments: true } },
   { $limit: 1 },
 ];
