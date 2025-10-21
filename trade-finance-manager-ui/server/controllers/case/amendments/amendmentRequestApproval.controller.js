@@ -1,7 +1,6 @@
-const { TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
+const { AMENDMENT_SUBMISSION_TYPE, TFM_AMENDMENT_STATUS } = require('@ukef/dtfs2-common');
 const api = require('../../../api');
 const { requestApprovalValidation } = require('./validation/amendmentRequestApproval.validate');
-const { SUBMISSION_TYPE } = require('../../../constants/amendments');
 
 /**
  * Controller to get the amendment request approval page
@@ -50,7 +49,7 @@ const postAmendmentRequestApproval = async (req, res) => {
   const { userToken } = req.session;
   const { requireUkefApproval } = req.body;
   const approval = requireUkefApproval === 'Yes';
-  const submissionType = approval ? SUBMISSION_TYPE.MANUAL_AMENDMENT : SUBMISSION_TYPE.AUTOMATIC_AMENDMENT;
+  const submissionType = approval ? AMENDMENT_SUBMISSION_TYPE.MANUAL_AMENDMENT : AMENDMENT_SUBMISSION_TYPE.AUTOMATIC_AMENDMENT;
 
   const { errorsObject, amendmentRequestApprovalErrors } = requestApprovalValidation(requireUkefApproval);
   const { data: amendment } = await api.getAmendmentById(facilityId, amendmentId, userToken);
