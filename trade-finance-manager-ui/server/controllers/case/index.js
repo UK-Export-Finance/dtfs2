@@ -393,7 +393,8 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
           item.currentValue = `${amendment.currency} ${formattedNumber(amendment.currentValue)}`;
         }
 
-        if (amendment.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED && isFutureEffectiveDate(amendment.effectiveDate)) {
+        const isFuturePortalAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED && isFutureEffectiveDate(amendment.effectiveDate);
+        if (isFuturePortalAmendment) {
           item.futureEffectiveDatePortalAmendment = true;
         }
 
