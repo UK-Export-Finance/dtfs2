@@ -1,3 +1,4 @@
+const { mapFacilityFieldsToAmendmentFields, isPortalFacilityAmendmentsFeatureFlagEnabled } = require('@ukef/dtfs2-common');
 const { generatePortalAuditDetails } = require('@ukef/dtfs2-common/change-stream');
 const { mongoDbClient: db } = require('../../drivers/db-client');
 const api = require('../api');
@@ -146,9 +147,56 @@ const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize =
   if (results.length) {
     const { count, facilities } = results[0];
 
+    if (!count || !facilities?.length) {
+      return {
+        facilities: [],
+        count: 0,
+      };
+    }
+
+    let mappedFacilities = facilities;
+
+    if (isPortalFacilityAmendmentsFeatureFlagEnabled()) {
+      /**
+       * maps through all facilities and checks if there are any amendments for each facility
+       * if there are amendments, it maps the relevant fields to the facility object and returns the updated facility
+       * if there are no amendments, it returns the facility as is
+       */
+      mappedFacilities = await Promise.all(
+        facilities.map(async (eachFacility) => {
+          const facility = eachFacility;
+
+          try {
+            const amendments = await api.getAcknowledgedAmendmentsByFacilityId(facility._id);
+
+            if (amendments?.length) {
+              /**
+               * returns the latest cover end date and/or value from the amendments array
+               * if either field does not exist in the amendments, it will not be returned
+               * (i.e. if only cover end date has been amended, value will not be returned)
+               */
+              const { coverEndDate, value } = mapFacilityFieldsToAmendmentFields(amendments);
+
+              if (value) {
+                facility.value = value;
+              }
+
+              if (coverEndDate) {
+                facility.coverEndDate = new Date(coverEndDate);
+              }
+            }
+          } catch (error) {
+            console.error('Error fetching and mapping amendments for facility %s %o', facility._id, error);
+          }
+
+          return facility;
+        }),
+      );
+    }
+
     return {
       count,
-      facilities,
+      facilities: mappedFacilities,
     };
   }
 
@@ -157,6 +205,8 @@ const queryAllFacilities = async (filters = {}, sort = {}, start = 0, pagesize =
     count: 0,
   };
 };
+
+exports.queryAllFacilities = queryAllFacilities;
 
 exports.getQueryAllFacilities = async (req, res) => {
   const { start, pagesize, filters, sort } = req.body;
