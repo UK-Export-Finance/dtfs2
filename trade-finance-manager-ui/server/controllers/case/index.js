@@ -355,14 +355,12 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
         item.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
         item.requireUkefApproval = amendment?.requireUkefApproval ? 'Yes' : 'No';
         // if bankDecision submitted, then adds decision, else adds awaiting decision (locally)
-        item.banksDecision = amendment?.bankDecision?.submitted
-          ? amendment?.bankDecision?.decision
-          : BANK_DECISIONS_TAGS[AMENDMENT_BANK_DECISION.AWAITING_DECISION];
+        item.banksDecision = amendment?.bankDecision?.submitted ? amendment?.bankDecision?.decision : AMENDMENT_BANK_DECISION.AWAITING_DECISION;
         // checks if coverEndDate/facility value or both on an amendment request are declined
         if (amendment?.ukefDecision?.submitted) {
           if (ukefDecisionRejected(amendment)) {
             // sets bank decision to not applicable locally
-            item.banksDecision = BANK_DECISIONS_TAGS[AMENDMENT_BANK_DECISION.NOT_APPLICABLE];
+            item.banksDecision = AMENDMENT_BANK_DECISION.NOT_APPLICABLE;
           }
 
           const date = format(fromUnixTime(amendment.ukefDecision.submittedAt), DATE_FORMATS.DD_MMMM_YYYY);
