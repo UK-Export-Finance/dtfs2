@@ -395,6 +395,7 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
         }
 
         const isFuturePortalAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED && isFutureEffectiveDate(amendment.effectiveDate);
+
         if (isFuturePortalAmendment) {
           item.futureEffectiveDatePortalAmendment = true;
         }
