@@ -388,11 +388,13 @@ const sendAmendmentToAcbs = async (req, res) => {
         },
       };
 
-      // Facility amendment UKEF exposure
-      amendment = {
-        ...amendment,
-        ukefExposure: amendment.tfm.exposure.ukefExposureValue,
-      };
+      if (amendment.changeFacilityValue) {
+        // Facility amendment UKEF exposure
+        amendment = {
+          ...amendment,
+          ukefExposure: amendment.tfm.exposure.ukefExposureValue,
+        };
+      }
 
       // Amendment null & property existence check
       if (facility._id && amendment && tfmDeal.tfm) {

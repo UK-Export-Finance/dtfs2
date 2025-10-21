@@ -83,8 +83,10 @@ export const AMENDMENT_ACCEPTABLE_DEAL_STATUSES = [DEAL_STATUS.UKEF_ACKNOWLEDGED
 /**
  * Represents the possible decisions a bank can make regarding an amendment.
  *
- * @property PROCEED - Indicates that the bank has decided to proceed with the amendment.
- * @property WITHDRAW - Indicates that the bank has withdrawn the amendment.
+ * @property {string} PROCEED - Indicates the bank has decided to proceed with the amendment.
+ * @property {string} WITHDRAW - Indicates the amendment has been withdrawn.
+ * @property {string} NOT_APPLICABLE - Indicates the amendment is not applicable.
+ * @property {string} AWAITING_DECISION - Indicates the bank's decision on the amendment is pending.
  */
 export const AMENDMENT_BANK_DECISION = {
   PROCEED: 'Proceed',
