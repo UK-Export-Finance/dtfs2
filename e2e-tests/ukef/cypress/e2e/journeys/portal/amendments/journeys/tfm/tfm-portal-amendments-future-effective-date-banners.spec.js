@@ -152,6 +152,6 @@ context('Amendments - TFM - TFM should display banners when there are portal ame
     amendmentsPage.amendmentFutureEffectiveDateFacilityBar().should('not.exist');
 
     facilityPage.facilityTabAmendments().click();
-    amendmentsPage.amendmentDetails.row(1).amendmentFutureEffectiveDateAmendmentBar().should('not.exist');
+    cy.get('[data-cy="amendment-future-effective-date-1-amendment-bar"]').should('not.exist');
   });
 });
