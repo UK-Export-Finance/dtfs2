@@ -10,20 +10,20 @@ import { PortalFacilityAmendmentWithUkefId, TfmFacilityAmendmentWithUkefId } fro
  *   returns `true` only if both are declined.
  * - If only one is requested, returns `true` if either is declined.
  *
- * For non-TFM amendments, always returns `false`.
+ * For non-TFM (Portal) amendments, always returns `false`.
  *
  * @param amendment - The amendment object, which can be either a Portal or TFM amendment with a UKEF ID.
  * @returns `true` if the amendment is declined according to UKEF decision, otherwise `false`.
  */
 export const isAmendmentDeclined = (amendment: PortalFacilityAmendmentWithUkefId | TfmFacilityAmendmentWithUkefId) => {
-  const isTfmAmendment = amendment.type === AMENDMENT_TYPES.TFM;
+  const isPortalAmendment = amendment?.type === AMENDMENT_TYPES.PORTAL;
 
   /**
    * UKEF decision can only be applied to manual amendment.
    * At the time of writing this comment only TFM amendments
    * support manual amendments
    */
-  if (isTfmAmendment) {
+  if (!isPortalAmendment) {
     const { changeFacilityValue, changeCoverEndDate } = amendment;
     const value = amendment.ukefDecision?.value;
     const coverEndDate = amendment.ukefDecision?.coverEndDate;
@@ -36,6 +36,7 @@ export const isAmendmentDeclined = (amendment: PortalFacilityAmendmentWithUkefId
     if (changeFacilityValue && changeCoverEndDate) {
       return value === DECLINED && coverEndDate === DECLINED;
     }
+
     // Single amendment request
     return value === DECLINED || coverEndDate === DECLINED;
   }
