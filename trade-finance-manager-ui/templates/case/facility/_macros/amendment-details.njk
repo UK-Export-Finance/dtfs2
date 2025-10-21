@@ -18,7 +18,8 @@
           <div class="govuk-!-padding-bottom-6">
           {% set amendmentFutureEffectiveDateFacilityBarParams = {
             futureEffectiveDatePortalAmendment: futureEffectiveDatePortalAmendment,
-            isOnAmendmentTab: true
+            isOnAmendmentTab: true,
+            amendmentIndex: loop.index
           } %}
           {{ amendmentFutureEffectiveDateFacilityBar.render(amendmentFutureEffectiveDateFacilityBarParams) }}
           </div>
