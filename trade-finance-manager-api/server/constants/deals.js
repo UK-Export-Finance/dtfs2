@@ -66,12 +66,6 @@ const AMENDMENT_TYPE = {
   VALUE: 'facility value',
   COVER_END_DATE: 'cover end date',
 };
-
-const AMENDMENT_BANK_DECISION = {
-  PROCEED: 'Proceed',
-  WITHDRAW: 'Withdrawn',
-};
-
 const DEFAULT_COUNTRY = 'United Kingdom';
 
 const UKEF_ID = {
@@ -97,7 +91,6 @@ module.exports = {
   TFM_SORT_BY,
   AMENDMENT_UW_DECISION,
   AMENDMENT_TYPE,
-  AMENDMENT_BANK_DECISION,
   DEFAULT_COUNTRY,
   UKEF_ID,
   COMPANY_REGISTRATION_NUMBER,
