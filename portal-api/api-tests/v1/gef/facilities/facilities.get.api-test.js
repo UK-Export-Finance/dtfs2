@@ -135,6 +135,7 @@ describe(baseUrl, () => {
 
         updatedFacility.value = amendment.value;
         updatedFacility.coverEndDate = amendment.coverEndDate.toISOString();
+        updatedFacility.facilityEndDate = amendment.facilityEndDate.toISOString();
 
         expect(response).toEqual(updatedFacility);
       });
