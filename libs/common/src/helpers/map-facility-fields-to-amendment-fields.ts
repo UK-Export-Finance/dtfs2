@@ -4,6 +4,7 @@ import { isFutureEffectiveDate } from './amendment-future-effectiveDate';
 type UpdatedFields = {
   coverEndDate?: number | null;
   value?: number | null;
+  facilityEndDate?: Date | null;
 };
 
 /**
@@ -27,9 +28,8 @@ export const mapFacilityFieldsToAmendmentFields = (amendments: FacilityAmendment
         updatedFields.value = amendment.value;
       }
 
-      // If both fields are set, break the loop
-      if (updatedFields.coverEndDate && updatedFields.value) {
-        break;
+      if (!updatedFields.facilityEndDate && amendment.facilityEndDate) {
+        updatedFields.facilityEndDate = amendment.facilityEndDate;
       }
     }
   }

@@ -127,7 +127,11 @@ exports.getFacilitiesByDealId = async (req, res) => {
 
           if (amendments?.length) {
             // sets the coverEndDate and value to the amended values if present
-            const { coverEndDate: amendedCoverEndDate, value: amendedValue } = mapFacilityFieldsToAmendmentFields(amendments);
+            const {
+              coverEndDate: amendedCoverEndDate,
+              value: amendedValue,
+              facilityEndDate: amendedFacilityEndDate,
+            } = mapFacilityFieldsToAmendmentFields(amendments);
 
             if (amendedValue) {
               facility.value = amendedValue;
@@ -135,6 +139,10 @@ exports.getFacilitiesByDealId = async (req, res) => {
 
             if (amendedCoverEndDate) {
               facility.coverEndDate = new Date(amendedCoverEndDate);
+            }
+
+            if (amendedFacilityEndDate) {
+              facility.facilityEndDate = amendedFacilityEndDate;
             }
           }
         }

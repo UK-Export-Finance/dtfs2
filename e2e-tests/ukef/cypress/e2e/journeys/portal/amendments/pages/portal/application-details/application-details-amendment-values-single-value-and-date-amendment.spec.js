@@ -18,6 +18,7 @@ context('Amendments - Single cover end date AND value amendment - Application de
   let dealId;
   let facilityId;
   let applicationDetailsUrl;
+  let facilityEndDate;
 
   before(() => {
     cy.insertOneGefDeal(MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1).then((insertedDeal) => {
@@ -28,6 +29,7 @@ context('Amendments - Single cover end date AND value amendment - Application de
 
       cy.createGefFacilities(dealId, [mockFacility], BANK1_MAKER1).then((createdFacility) => {
         facilityId = createdFacility.details._id;
+        facilityEndDate = format(new Date(createdFacility.details.facilityEndDate), D_MMMM_YYYY_FORMAT);
 
         cy.makerLoginSubmitGefDealForReview(insertedDeal);
         cy.checkerLoginSubmitGefDealToUkef(insertedDeal);
@@ -60,5 +62,6 @@ context('Amendments - Single cover end date AND value amendment - Application de
   it('should display the updated amendment value AND cover end date on facility summary list', () => {
     applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(CHANGED_FACILITY_VALUE, false));
     applicationPreview.facilitySummaryList().contains(format(new Date(), D_MMMM_YYYY_FORMAT));
+    applicationPreview.facilitySummaryList().contains(facilityEndDate);
   });
 });
