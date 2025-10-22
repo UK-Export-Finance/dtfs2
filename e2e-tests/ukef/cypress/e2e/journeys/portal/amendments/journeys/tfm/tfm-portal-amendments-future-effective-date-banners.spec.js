@@ -133,11 +133,17 @@ context('Amendments - TFM - TFM should display banners when there are portal ame
   it('should display the future effective date banner on the amendment tab', () => {
     cy.visit(tfmFacilityPage1);
     facilityPage.facilityTabAmendments().click();
-    cy.assertText(amendmentsPage.amendmentFutureEffectiveDateAmendmentBar(), `Amendment ${ukefFacilityId1}-001 is effective on ${tomorrow.dd_MMMM_yyyy}.`);
+    cy.assertText(
+      amendmentsPage.amendmentDetails.row(1).amendmentFutureEffectiveDateAmendmentBar(),
+      `Amendment ${ukefFacilityId1}-001 is effective on ${tomorrow.dd_MMMM_yyyy}.`,
+    );
 
     cy.visit(tfmFacilityPage2);
     facilityPage.facilityTabAmendments().click();
-    cy.assertText(amendmentsPage.amendmentFutureEffectiveDateAmendmentBar(), `Amendment ${ukefFacilityId2}-001 is effective on ${tomorrow.dd_MMMM_yyyy}.`);
+    cy.assertText(
+      amendmentsPage.amendmentDetails.row(1).amendmentFutureEffectiveDateAmendmentBar(),
+      `Amendment ${ukefFacilityId2}-001 is effective on ${tomorrow.dd_MMMM_yyyy}.`,
+    );
   });
 
   it('should not display the future effective date banner for the facility without a future effective amendment', () => {
@@ -146,6 +152,6 @@ context('Amendments - TFM - TFM should display banners when there are portal ame
     amendmentsPage.amendmentFutureEffectiveDateFacilityBar().should('not.exist');
 
     facilityPage.facilityTabAmendments().click();
-    amendmentsPage.amendmentFutureEffectiveDateAmendmentBar().should('not.exist');
+    cy.get('[data-cy="amendment-future-effective-date-1-amendment-bar"]').should('not.exist');
   });
 });
