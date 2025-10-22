@@ -8,8 +8,8 @@ type UpdatedFields = {
 };
 
 /**
- * Finds the first amendment in the amendments array for coverEndDate and value and check if the `effectiveDate` is not in the future.
- * if the updatedValue for either field is not already set, then it will be set to the amended value from the amendment
+ * Finds the first amendment in the amendments array for coverEndDate, value and facilityEndDate and check if the `effectiveDate` is not in the future.
+ * if the updatedValue for either fields is not already set, then it will be set to the amended value from the amendment
  * @param amendments - amendments array
  * @returns object with amended coverEndDate and value
  */
