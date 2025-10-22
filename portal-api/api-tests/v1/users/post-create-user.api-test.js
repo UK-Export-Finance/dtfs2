@@ -1,5 +1,4 @@
 /* eslint-disable no-param-reassign */
-const { generatePasswordHash } = require('@ukef/dtfs2-common');
 const { produce } = require('immer');
 const databaseHelper = require('../../database-helper');
 const testUserCache = require('../../api-test-users');
@@ -140,12 +139,7 @@ describe('a user', () => {
   });
 
   async function createUser(userToCreate) {
-    const { salt, hash } = generatePasswordHash(userToCreate.password);
-    const userCreate = {
-      ...userToCreate,
-      salt,
-      hash,
-    };
+    const userCreate = { ...userToCreate };
     delete userCreate?.password;
     return as(aNonAdmin).post(userCreate).to(BASE_URL);
   }

@@ -140,6 +140,19 @@ describe('a user', () => {
     it('a disabled user cannot log in', async () => {
       const response = await createUser(MOCK_USER);
       const createdUser = response.body.user;
+      const { salt, hash } = generatePasswordHash(MOCK_USER.password);
+
+      // set a known reset token/timestamp on the user record
+      await databaseHelper.setUserProperties({
+        username: MOCK_USER.username,
+        update: {
+          salt,
+          hash,
+          resetPwdToken: hash,
+          resetPwdTimestamp: `${Date.now()}`,
+        },
+      });
+
       await as(aNonAdmin).remove().to(`/v1/users/${createdUser._id}/disable`);
 
       const { username, password } = MOCK_USER;
@@ -152,6 +165,18 @@ describe('a user', () => {
     it('a known user can log in with a valid username and password', async () => {
       const { username, password } = MOCK_USER;
       await createUser(MOCK_USER);
+      const { salt, hash } = generatePasswordHash(MOCK_USER.password);
+
+      // set a known reset token/timestamp on the user record
+      await databaseHelper.setUserProperties({
+        username: MOCK_USER.username,
+        update: {
+          salt,
+          hash,
+          resetPwdToken: hash,
+          resetPwdTimestamp: `${Date.now()}`,
+        },
+      });
 
       const { status, body } = await as().post({ username, password }).to('/v1/login');
 
@@ -207,18 +232,15 @@ describe('a user', () => {
 
   it('User already exists', async () => {
     // User creation - first instance
-    const { salt, hash } = generatePasswordHash(MOCK_USER.password);
-    const userCreate = {
+    const userToCreate = {
       ...MOCK_USER,
-      salt,
-      hash,
     };
-    delete userCreate?.password;
-    const first = await as(aNonAdmin).post(userCreate).to('/v1/users');
+    delete userToCreate?.password;
+    const first = await as(aNonAdmin).post(userToCreate).to('/v1/users');
     expect(first.status).toEqual(200);
 
     // User creation - second instance
-    const second = await as(aNonAdmin).post(userCreate).to('/v1/users');
+    const second = await as(aNonAdmin).post(userToCreate).to('/v1/users');
     expect(second.status).toEqual(400);
   });
 
@@ -248,6 +270,20 @@ describe('a user', () => {
     it('a disabled user cannot log in', async () => {
       const response = await createUser(MOCK_USER);
       const createdUser = response.body.user;
+
+      const { salt, hash } = generatePasswordHash(MOCK_USER.password);
+
+      // set a known reset token/timestamp on the user record
+      await databaseHelper.setUserProperties({
+        username: MOCK_USER.username,
+        update: {
+          salt,
+          hash,
+          resetPwdToken: hash,
+          resetPwdTimestamp: `${Date.now()}`,
+        },
+      });
+
       await as(aNonAdmin).remove().to(`/v1/users/${createdUser._id}/disable`);
 
       const { username, password } = MOCK_USER;
@@ -260,6 +296,19 @@ describe('a user', () => {
     it('a known user can log in with a valid username and password', async () => {
       const { username, password } = MOCK_USER;
       await createUser(MOCK_USER);
+
+      const { salt, hash } = generatePasswordHash(MOCK_USER.password);
+
+      // set a known reset token/timestamp on the user record
+      await databaseHelper.setUserProperties({
+        username: MOCK_USER.username,
+        update: {
+          salt,
+          hash,
+          resetPwdToken: hash,
+          resetPwdTimestamp: `${Date.now()}`,
+        },
+      });
 
       const { status, body } = await as().post({ username, password }).to('/v1/login');
 
@@ -314,12 +363,7 @@ describe('a user', () => {
   });
 
   async function createUser(userToCreate) {
-    const { salt, hash } = generatePasswordHash(userToCreate.password);
-    const userCreate = {
-      ...userToCreate,
-      salt,
-      hash,
-    };
+    const userCreate = { ...userToCreate };
     delete userCreate?.password;
     return as(aNonAdmin).post(userCreate).to('/v1/users');
   }

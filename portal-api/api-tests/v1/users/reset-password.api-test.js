@@ -44,14 +44,22 @@ describe('password reset', () => {
 
   beforeEach(async () => {
     databaseHelper.deleteUser(MOCK_USER);
-    const { salt, hash } = generatePasswordHash(MOCK_USER.password);
-    const userToCreate = {
-      ...MOCK_USER,
-      salt,
-      hash,
-    };
+    const userToCreate = { ...MOCK_USER };
     delete userToCreate?.password;
     const testUserResponse = await as(loggedInUser).post(userToCreate).to('/v1/users');
+
+    const { salt, hash } = generatePasswordHash(MOCK_USER.password);
+
+    // set a known reset token/timestamp on the user record
+    await databaseHelper.setUserProperties({
+      username: MOCK_USER.username,
+      update: {
+        salt,
+        hash,
+        resetPwdToken: hash,
+        resetPwdTimestamp: `${Date.now()}`,
+      },
+    });
     testUser = testUserResponse.body.user;
     jest.clearAllMocks();
   });
