@@ -12,7 +12,7 @@ import {
   getLongTimeDateFormat,
   nowZeroSeconds,
   differenceInDays,
-  epochToEpochMs,
+  epochSecondsToMilliseconds,
 } from './date';
 
 describe('date helpers', () => {
@@ -523,20 +523,22 @@ describe('date helpers', () => {
     });
   });
 
-  describe('epochToEpochMs', () => {
+  describe('epochSecondsToMilliseconds', () => {
     const epochs = [
-      { seconds: 0, milliseconds: 0 },
+      { seconds: 0, milliseconds: 0 }, // 01-01-1970
       { seconds: 1, milliseconds: 1000 },
+      { seconds: 86400, milliseconds: 86_400_000 }, // 02-01-1970
       { seconds: 1000, milliseconds: 1000000 },
       { seconds: -1000, milliseconds: -1000000 },
       { seconds: 622249200, milliseconds: 622249200000 },
+      { seconds: 1761087600000, milliseconds: 1761087600000 }, // When already in MS
     ];
 
     it.each(epochs)(
       'should covert given EPOCH in seconds %i to EPOCH in milliseconds %i',
       ({ seconds, milliseconds }: { seconds: number; milliseconds: number }) => {
         // Act
-        const result = epochToEpochMs(seconds);
+        const result = epochSecondsToMilliseconds(seconds);
 
         // Assert
         expect(result).toBe(milliseconds);
