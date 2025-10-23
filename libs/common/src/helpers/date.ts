@@ -122,7 +122,7 @@ export const differenceInDays = (startEpoch: number, endEpoch: number): number =
  * Converts a Unix seconds timestamp into milliseconds.
  * If already in MS then returns the input.
  *
- * This is function will only work for date after 2001,
+ * This is function will only work for date after `09/09/2001 01:46:40`,
  * any historical dates will be multiplied by 1000 and thus
  * will be incorrect.
  * @param epoch Unix EPOCH in seconds or milliseconds
