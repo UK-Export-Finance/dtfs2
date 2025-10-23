@@ -1,7 +1,6 @@
 services:
   clamav:
     image: clamav/clamav:stable
-    platform: linux/amd64
     restart: always
     ports:
       - "3310:3310"
