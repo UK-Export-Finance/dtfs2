@@ -81,12 +81,6 @@ jobs:
       - name: Repository
         uses: actions/checkout@v5
 
-      - name: install codacy
-        run: alias codacy-cli="bash <(curl -Ls https://raw.githubusercontent.com/codacy/codacy-cli-v2/main/codacy-cli.sh)"
-      
-      - name: Run Codacy Analysis
-        run: codacy-cli init
-
       - name: Codacy
         uses: codacy/codacy-cli-v2-action@main
         with:
