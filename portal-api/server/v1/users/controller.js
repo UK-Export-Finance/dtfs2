@@ -47,7 +47,9 @@ const createPasswordToken = async (email, userService, auditDetails) => {
 
   const user = await collection.findOne({ email: { $eq: email } }, { collation: { locale: 'en', strength: 2 } });
 
-  if (!user || userService.isUserBlockedOrDisabled(user) || !user?.hash) {
+  const isInvalidOrBlockedUser = !user || userService.isUserBlockedOrDisabled(user) || !user?.hash;
+
+  if (isInvalidOrBlockedUser) {
     console.info('Not creating password token due to invalid or missing user');
     return false;
   }

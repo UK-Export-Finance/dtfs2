@@ -11,6 +11,7 @@ const { setUpApiTestUser } = require('../../api-test-users');
 const databaseHelper = require('../../database-helper');
 const { createPartiallyLoggedInUserSession } = require('../../../test-helpers/api-test-helpers/database/user-repository');
 const { sanitizeUser } = require('../../../server/v1/users/sanitizeUserData');
+const { createUser } = require('../../helpers/create-user');
 
 const maker1 = users.testBank1Maker1;
 const maker2 = users.testBank1Maker2;
@@ -51,7 +52,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
 
     userToCreateOtherUsers = await setUpApiTestUser(as);
 
-    const partiallyLoggedInUserResponse = await createUser(userToCreateAsPartiallyLoggedIn);
+    const partiallyLoggedInUserResponse = await createUser(userToCreateAsPartiallyLoggedIn, userToCreateOtherUsers);
     partiallyLoggedInUser = partiallyLoggedInUserResponse.body.user;
     partiallyLoggedInUserId = partiallyLoggedInUser._id;
     ({ token: partiallyLoggedInUserToken } = await createPartiallyLoggedInUserSession(partiallyLoggedInUser));
@@ -202,7 +203,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
     let anotherPartiallyLoggedInUserToken;
 
     beforeAll(async () => {
-      const anotherPartiallyLoggedInUserResponse = await createUser(anotherUserToCreateAsPartiallyLoggedIn);
+      const anotherPartiallyLoggedInUserResponse = await createUser(anotherUserToCreateAsPartiallyLoggedIn, userToCreateOtherUsers);
       anotherPartiallyLoggedInUser = anotherPartiallyLoggedInUserResponse.body.user;
       ({ token: anotherPartiallyLoggedInUserToken } = await createPartiallyLoggedInUserSession(anotherPartiallyLoggedInUser));
     });
@@ -480,10 +481,4 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
       });
     });
   });
-
-  async function createUser(userToCreate) {
-    const userCreate = { ...userToCreate };
-    delete userCreate?.password;
-    return as(userToCreateOtherUsers).post(userCreate).to('/v1/users');
-  }
 });

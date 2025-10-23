@@ -2,9 +2,7 @@
 const { produce } = require('immer');
 const users = require('./test-data');
 const databaseHelper = require('../../database-helper');
-
-const app = require('../../../server/createApp');
-const { as } = require('../../api')(app);
+const { createUser } = require('../../helpers/create-user');
 
 const withValidateEmailIsUniqueTests = ({ payload, makeRequest, getAdminUser }) => {
   describe('when validating the email is unique', () => {
@@ -29,7 +27,7 @@ const withValidateEmailIsUniqueTests = ({ payload, makeRequest, getAdminUser }) 
         draftRequest.email = A_MATCHING_EMAIL;
       });
 
-      await createUser(EXISTING_USER_WITH_SAME_EMAIL);
+      await createUser(EXISTING_USER_WITH_SAME_EMAIL, getAdminUser());
 
       const { status, body } = await makeRequest(payloadWithMatchingEmail);
 
@@ -37,12 +35,6 @@ const withValidateEmailIsUniqueTests = ({ payload, makeRequest, getAdminUser }) 
       expect(body.success).toEqual(false);
       expect(body.errors.errorList.email.text).toEqual(EMAIL_MUST_BE_UNIQUE_ERROR.text);
     });
-
-    async function createUser(userToCreate) {
-      const userCreate = { ...userToCreate };
-      delete userCreate?.password;
-      return as(getAdminUser()).post(userCreate).to('/v1/users');
-    }
   });
 };
 

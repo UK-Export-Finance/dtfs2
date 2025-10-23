@@ -16,6 +16,7 @@ const { withClientAuthenticationTests } = require('../../common-tests/client-aut
 const { withValidateEmailIsUniqueTests } = require('./with-validate-email-is-unique.api-tests');
 const { withValidateUsernameAndEmailMatchTests } = require('./with-validate-username-and-email-match.api-tests');
 const { withValidateEmailIsCorrectFormatTests } = require('./with-validate-email-is-correct-format.api-tests');
+const { createUser } = require('../../helpers/create-user');
 
 const MOCK_USER = users.testBank1Maker1;
 
@@ -49,7 +50,7 @@ describe('a user', () => {
 
     withValidateEmailIsUniqueTests({
       payload: MOCK_USER,
-      makeRequest: async (user) => await createUser(user),
+      makeRequest: async (user) => await createUser(user, aNonAdmin),
       getAdminUser: () => anAdmin,
     });
 
@@ -58,7 +59,7 @@ describe('a user', () => {
         produce(MOCK_USER, (draftRequest) => {
           draftRequest.email = email;
         }),
-      makeRequest: async (user) => await createUser(user),
+      makeRequest: async (user) => await createUser(user, aNonAdmin),
     });
 
     withValidateEmailIsCorrectFormatTests({
@@ -67,7 +68,7 @@ describe('a user', () => {
           draftRequest.username = email;
           draftRequest.email = email;
         }),
-      makeRequest: async (user) => await createUser(user),
+      makeRequest: async (user) => await createUser(user, aNonAdmin),
     });
 
     it.each(NON_READ_ONLY_ROLES)('rejects if the user creation request has the read-only role and the %s role', async (otherRole) => {
@@ -76,7 +77,7 @@ describe('a user', () => {
         roles: [READ_ONLY, otherRole],
       };
 
-      const { status, body } = await createUser(newUser);
+      const { status, body } = await createUser(newUser, aNonAdmin);
 
       expect(status).toEqual(400);
       expect(body.success).toEqual(false);
@@ -85,7 +86,7 @@ describe('a user', () => {
 
     describe('it creates the user', () => {
       it('creates the user if all provided data is valid', async () => {
-        await createUser(MOCK_USER);
+        await createUser(MOCK_USER, aNonAdmin);
         const { status, body } = await as(aNonAdmin).get(BASE_URL);
 
         expect(status).toEqual(200);
@@ -116,7 +117,7 @@ describe('a user', () => {
           roles: [READ_ONLY, READ_ONLY],
         };
 
-        await createUser(newUser);
+        await createUser(newUser, aNonAdmin);
         const { status, body } = await as(aNonAdmin).get(BASE_URL);
 
         expect(status).toEqual(200);
@@ -129,7 +130,7 @@ describe('a user', () => {
           roles: [READ_ONLY],
         };
 
-        await createUser(newUser);
+        await createUser(newUser, aNonAdmin);
         const { status, body } = await as(aNonAdmin).get(BASE_URL);
 
         expect(status).toEqual(200);
@@ -137,10 +138,4 @@ describe('a user', () => {
       });
     });
   });
-
-  async function createUser(userToCreate) {
-    const userCreate = { ...userToCreate };
-    delete userCreate?.password;
-    return as(aNonAdmin).post(userCreate).to(BASE_URL);
-  }
 });
