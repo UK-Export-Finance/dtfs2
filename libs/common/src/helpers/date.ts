@@ -119,9 +119,13 @@ export const differenceInDays = (startEpoch: number, endEpoch: number): number =
 };
 
 /**
- * Converts a Unix epoch time in seconds to milliseconds.
+ * Converts a Unix seconds timestamp into milliseconds.
+ * If already in MS then returns the input.
  *
- * @param epoch - The Unix epoch time in seconds.
- * @returns The corresponding time in milliseconds.
+ * This is function will only work for date after 2001,
+ * any historical dates will be multiplied by 1000 and thus
+ * will be incorrect.
+ * @param epoch Unix EPOCH in seconds or milliseconds
+ * @returns EPOCH in milliseconds
  */
-export const epochToEpochMs = (epoch: number): number => epoch * 1000;
+export const epochSecondsToMilliseconds = (epoch: number): number => (epoch < 1e12 ? epoch * 1000 : epoch);
