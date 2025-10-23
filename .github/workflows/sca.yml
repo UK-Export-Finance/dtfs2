@@ -80,6 +80,9 @@ jobs:
     steps:
       - name: Repository
         uses: actions/checkout@v5
+      
+      - name: Run Codacy Analysis
+        run: codacy-cli init
 
       - name: Codacy
         uses: codacy/codacy-cli-v2-action@main
