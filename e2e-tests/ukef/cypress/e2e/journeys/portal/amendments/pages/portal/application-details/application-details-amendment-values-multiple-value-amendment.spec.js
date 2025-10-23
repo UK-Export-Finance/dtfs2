@@ -19,6 +19,7 @@ context('Amendments - Multiple value amendments - Application details displays a
   let facilityId;
   let applicationDetailsUrl;
   let coverEndDate;
+  let facilityEndDate;
 
   before(() => {
     cy.insertOneGefDeal(MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1).then((insertedDeal) => {
@@ -30,6 +31,7 @@ context('Amendments - Multiple value amendments - Application details displays a
       cy.createGefFacilities(dealId, [mockFacility], BANK1_MAKER1).then((createdFacility) => {
         facilityId = createdFacility.details._id;
         coverEndDate = new Date(createdFacility.details.coverEndDate);
+        facilityEndDate = format(new Date(createdFacility.details.facilityEndDate), D_MMMM_YYYY_FORMAT);
 
         cy.makerLoginSubmitGefDealForReview(insertedDeal);
         cy.checkerLoginSubmitGefDealToUkef(insertedDeal);
@@ -69,5 +71,6 @@ context('Amendments - Multiple value amendments - Application details displays a
   it('should display the latest updated amendment value on facility summary list', () => {
     applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(CHANGED_FACILITY_VALUE_2, false));
     applicationPreview.facilitySummaryList().contains(format(coverEndDate, D_MMMM_YYYY_FORMAT));
+    applicationPreview.facilitySummaryList().contains(facilityEndDate);
   });
 });

@@ -1,5 +1,5 @@
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { CURRENCY, FACILITY_TYPE, formattedNumber, getGBPValue } = require('@ukef/dtfs2-common');
+const { CURRENCY, FACILITY_TYPE, AMENDMENT_BANK_DECISION, formattedNumber, getGBPValue } = require('@ukef/dtfs2-common');
 const api = require('../api');
 const {
   sendManualDecisionAmendmentEmail,
@@ -13,7 +13,7 @@ const {
   formatAmendmentDates,
 } = require('./amendment.helpers');
 const CONSTANTS = require('../../constants');
-const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
+const { AMENDMENT_UW_DECISION } = require('../../constants/deals');
 const amendmentVariables = require('../__mocks__/amendmentVariables');
 const MOCK_NOTIFY_EMAIL_RESPONSE = require('../__mocks__/mock-notify-email-response');
 const MOCK_NOTIFY_EMAIL_BAD_RESPONSE = require('../__mocks__/mock-notify-email-bad-response');
@@ -1060,6 +1060,23 @@ describe('formatAmendmentDates', () => {
     expect(response).toEqual({
       effectiveDate: 1760546450000,
       coverEndDate: 1759509638000,
+    });
+  });
+
+  it('should not convert EPOCH in MS effective and cover end date to EPOCH in MS', () => {
+    // Arrange
+    const mockPayload = {
+      effectiveDate: 1761087600000,
+      coverEndDate: 1761087600000,
+    };
+
+    // Act
+    const response = formatAmendmentDates(mockPayload);
+
+    // Assert
+    expect(response).toEqual({
+      effectiveDate: 1761087600000,
+      coverEndDate: 1761087600000,
     });
   });
 });

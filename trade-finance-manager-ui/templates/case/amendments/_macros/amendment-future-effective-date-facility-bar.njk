@@ -3,9 +3,10 @@
  {% macro render(params) %}
   {% set futureEffectiveDatePortalAmendment = params.futureEffectiveDatePortalAmendment %}
   {% set isOnAmendmentTab = params.isOnAmendmentTab %}
+  {% set amendmentIndex = params.amendmentIndex %}
 
   {% if isOnAmendmentTab %}
-    {% set dataCy = "amendment-future-effective-date-amendment-bar" %}
+    {% set dataCy = 'amendment-future-effective-date-' ~ amendmentIndex ~ '-amendment-bar' %}
   {% else %}
     {% set dataCy = "amendment-future-effective-date-facility-bar" %}
   {% endif %}

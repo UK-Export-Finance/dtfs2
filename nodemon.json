@@ -1,0 +1,17 @@
+{
+    "restartable": "rs",
+    "verbose": true,
+    "watch": [
+        "server",
+        "templates",
+        "scripts",
+        "styles"
+    ],
+    "ignore": [
+        ".git",
+        "**/node_modules",
+        "**/*test*",
+        "**/*mock*",
+        "**/*fixture*"
+    ]
+}

@@ -1,9 +1,14 @@
-const { TFM_AMENDMENT_STATUS, formatDatesForTenor, createAmendmentFacilityExposure, epochToEpochMs } = require('@ukef/dtfs2-common');
+const {
+  AMENDMENT_BANK_DECISION,
+  isAmendmentDeclined,
+  formatDatesForTenor,
+  createAmendmentFacilityExposure,
+  epochSecondsToMilliseconds,
+} = require('@ukef/dtfs2-common');
 const api = require('../api');
 const sendTfmEmail = require('../services/send-tfm-email');
-const { UNDERWRITER_MANAGER_DECISIONS } = require('../../constants/amendments');
 const { TEAMS } = require('../../constants');
-const { AMENDMENT_UW_DECISION, AMENDMENT_BANK_DECISION } = require('../../constants/deals');
+const { AMENDMENT_UW_DECISION } = require('../../constants/deals');
 const EMAIL_TEMPLATE_IDS = require('../../constants/email-template-ids');
 const { automaticAmendmentEmailVariables } = require('../emails/amendments/automatic-approval-email-variables');
 const { generateTaskEmailVariables } = require('./generate-task-email-variables');
@@ -39,27 +44,6 @@ const isApprovedWithoutConditions = (ukefDecision) => {
   return value === AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS || coverEndDate === AMENDMENT_UW_DECISION.APPROVED_WITHOUT_CONDITIONS;
 };
 
-/**
- * Ascertain whether the requested amendment
- * have been declined or not.
- * @param {object} amendment Amendment object
- * @returns {boolean} Whether both the amendments decision has been declined by the underwriter.
- */
-const amendmentDeclined = (amendment) => {
-  const { changeFacilityValue, changeCoverEndDate } = amendment;
-  const { value, coverEndDate } = amendment.ukefDecision;
-  const { DECLINED } = UNDERWRITER_MANAGER_DECISIONS;
-
-  // Ensure not all of the amendment requests are declined
-
-  // Dual amendment request
-  if (changeFacilityValue && changeCoverEndDate) {
-    return value === DECLINED && coverEndDate === DECLINED;
-  }
-  // Single amendment request
-  return value === DECLINED || coverEndDate === DECLINED;
-};
-
 const sendAutomaticAmendmentEmail = async (amendmentVariables, auditDetails) => {
   const { email: pimEmail } = await api.findOneTeam(TEAMS.PIM.id);
   const { user, facilityId, amendmentId } = amendmentVariables;
@@ -73,7 +57,7 @@ const sendAutomaticAmendmentEmail = async (amendmentVariables, auditDetails) => 
 
     // if successful, then updates flag to say email has been sent
     if (emailResponse && pimEmailResponse) {
-      await api.updateFacilityAmendment(facilityId, amendmentId, { automaticApprovalEmailSent: true }, auditDetails);
+      await api.updateFacilityAmendment(facilityId, amendmentId, { automaticApprovalEmailSent: true, shouldNotUpdateTimestamp: true }, auditDetails);
     }
   } catch (error) {
     console.error('TFM-API error sending email - sendAutomaticAmendmentEmail %o', error);
@@ -87,6 +71,7 @@ const managersDecisionUpdateEmailConfirmation = async (facilityId, amendmentId, 
       managersDecisionEmailSent: true,
     },
   };
+
   await api.updateFacilityAmendment(facilityId, amendmentId, payload, auditDetails);
 };
 
@@ -196,23 +181,23 @@ const sendManualDecisionAmendmentEmail = async (amendmentVariables, auditDetails
 
   try {
     // if one is approved with conditions and not declined
-    if (isApprovedWithConditions(ukefDecision) && !amendmentDeclined(amendment)) {
+    if (isApprovedWithConditions(ukefDecision) && !isAmendmentDeclined(amendment)) {
       await emailApprovedWithWithoutConditions(amendmentVariables, auditDetails);
 
       // if only approved without conditions (and not declined or with conditions)
-    } else if (isApprovedWithoutConditions(ukefDecision) && !amendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision)) {
+    } else if (isApprovedWithoutConditions(ukefDecision) && !isAmendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision)) {
       await emailApprovedWithoutConditions(amendmentVariables, auditDetails);
 
       // if approved with conditions and declined only
-    } else if (isApprovedWithConditions(ukefDecision) && amendmentDeclined(amendment) && !isApprovedWithoutConditions(ukefDecision)) {
+    } else if (isApprovedWithConditions(ukefDecision) && isAmendmentDeclined(amendment) && !isApprovedWithoutConditions(ukefDecision)) {
       await emailApprovedWithConditionsDeclined(amendmentVariables, auditDetails);
 
       // if approved without conditions and declined only
-    } else if (isApprovedWithoutConditions(ukefDecision) && amendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision)) {
+    } else if (isApprovedWithoutConditions(ukefDecision) && isAmendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision)) {
       await emailApprovedWithoutConditionsDeclined(amendmentVariables, auditDetails);
 
       // if declined only
-    } else if (amendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision) && !isApprovedWithoutConditions(ukefDecision)) {
+    } else if (isAmendmentDeclined(amendment) && !isApprovedWithConditions(ukefDecision) && !isApprovedWithoutConditions(ukefDecision)) {
       await emailDeclined(amendmentVariables, auditDetails);
     } else {
       console.error('Incorrect ukefDecision passed for manual amendment email');
@@ -229,6 +214,7 @@ const banksDecisionUpdateEmailConfirmation = async (facilityId, amendmentId, aud
       banksDecisionEmailSent: true,
     },
   };
+
   await api.updateFacilityAmendment(facilityId, amendmentId, payload, auditDetails);
 };
 
@@ -270,41 +256,12 @@ const sendManualBankDecisionEmail = async (amendmentVariables, auditDetails) => 
   }
 };
 
-/**
- * Evaluated whether facility amendment is eligible
- * for ACBS interaction based on myriads of conditions.
- * This function evaluated across all amendment types.
- * @param {object} amendment Facility amendments object
- */
-const canSendToAcbs = (amendment) => {
-  // Ensure at least one of the attribute has been amended
-  const hasBeenAmended = amendment.changeCoverEndDate || amendment.changeFacilityValue;
-  // Amendment status is marked as `Completed`
-  const completed = amendment.status === TFM_AMENDMENT_STATUS.COMPLETED;
-  // Amendment has been submitted by PIM team
-  const pim = amendment.submittedByPim;
-  // Manual amendment verification
-  const manual = Boolean(amendment.requireUkefApproval) && Boolean(amendment.bankDecision);
-
-  // Manual amendment
-  if (manual) {
-    // Bank Decision
-    const { submitted, decision } = amendment.bankDecision;
-    // Bank has accepted the UW decision
-    const proceed = decision === AMENDMENT_BANK_DECISION.PROCEED;
-
-    return hasBeenAmended && completed && pim && submitted && proceed && !amendmentDeclined(amendment);
-  }
-
-  // Automatic amendment
-  return hasBeenAmended && completed && pim;
-};
-
 // updates flag if managers decision email sent so not sent again
 const firstTaskEmailConfirmation = async (facilityId, amendmentId, auditDetails) => {
   const payload = {
     firstTaskEmailSent: true,
   };
+
   await api.updateFacilityAmendment(facilityId, amendmentId, payload, auditDetails);
 };
 
@@ -532,11 +489,11 @@ const calculateAcbsUkefExposure = (payload) => {
 const formatAmendmentDates = (payload) => {
   const formatted = {
     ...payload,
-    effectiveDate: epochToEpochMs(payload.effectiveDate),
+    effectiveDate: epochSecondsToMilliseconds(payload.effectiveDate),
   };
 
   if (formatted?.coverEndDate) {
-    formatted.coverEndDate = epochToEpochMs(formatted.coverEndDate);
+    formatted.coverEndDate = epochSecondsToMilliseconds(formatted.coverEndDate);
   }
 
   return formatted;
@@ -549,7 +506,6 @@ module.exports = {
   sendManualBankDecisionEmail,
   sendFirstTaskEmail,
   internalAmendmentEmail,
-  canSendToAcbs,
   formatAmendmentDates,
   addLatestAmendmentValue,
   addLatestAmendmentCoverEndDate,

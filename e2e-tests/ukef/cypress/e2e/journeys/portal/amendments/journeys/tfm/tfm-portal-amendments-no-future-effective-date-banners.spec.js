@@ -105,10 +105,10 @@ context('Amendments - TFM - TFM should display no banners when there are no port
   it('should not display the future effective date banner on the amendment tab', () => {
     cy.visit(tfmFacilityPage1);
     facilityPage.facilityTabAmendments().click();
-    amendmentsPage.amendmentFutureEffectiveDateAmendmentBar().should('not.exist');
+    amendmentsPage.amendmentDetails.row(1).amendmentFutureEffectiveDateAmendmentBar().should('not.exist');
 
     cy.visit(tfmFacilityPage2);
     facilityPage.facilityTabAmendments().click();
-    amendmentsPage.amendmentFutureEffectiveDateAmendmentBar().should('not.exist');
+    amendmentsPage.amendmentDetails.row(1).amendmentFutureEffectiveDateAmendmentBar().should('not.exist');
   });
 });

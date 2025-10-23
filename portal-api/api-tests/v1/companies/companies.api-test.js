@@ -20,7 +20,7 @@ describe.each([{ baseUrl: '/v1' }, { baseUrl: '/v1/gef' }])('GET $baseUrl/compan
     maker1 = testUsers().withRole(MAKER).one();
   });
 
-  it.only(`returns a ${HttpStatusCode.Ok} response with the company when it is found`, async () => {
+  it(`returns a ${HttpStatusCode.Ok} response with the company when it is found`, async () => {
     const { status, body } = await as(maker1).get(`${baseUrl}/companies/${MOCK_COMPANY_REGISTRATION_NUMBERS.VALID}`);
     expect(status).toEqual(HttpStatusCode.Ok);
     expect(body.companiesHouseRegistrationNumber).toEqual(expect.any(String));

@@ -80,7 +80,7 @@
           <strong data-cy="accept-mia-conditions">You are proceeding with UKEF cover and accepting the following conditions:</strong>
         {% endif %}
 
-        <p>{{ ukefDecision[0].text | safe }}</p>
+        <p>{{ ukefDecision[0].text }}</p>
       {% endif %}
     {% endif %}
 
@@ -89,7 +89,7 @@
         <strong>Comments from {{ comment.firstname }}
           {{ comment.surname }}</strong>
         <p>{{ comment.createdAt | localiseTimestamp('dd MMM yyyy h:mmaaa', timezone) }}</p>
-        <p>{{ comment.comment | safe }}</p>
+        <p>{{ comment.comment }}</p>
       {% endfor %}
     </div>
     {% endset %}

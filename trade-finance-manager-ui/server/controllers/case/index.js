@@ -6,6 +6,10 @@ const {
   convertUnixTimestampWithoutMilliseconds,
   PORTAL_AMENDMENT_STATUS,
   DATE_FORMATS,
+  BANK_DECISIONS_TAGS,
+  AMENDMENT_BANK_DECISION,
+  isPortalFacilityAmendmentsFeatureFlagEnabled,
+  isFutureEffectiveDate,
 } = require('@ukef/dtfs2-common');
 const api = require('../../api');
 const {
@@ -28,7 +32,6 @@ const { getDealSuccessBannerMessage } = require('../helpers/get-success-banner-m
 const {
   DEAL,
   TASKS,
-  AMENDMENTS,
   DECISIONS: { UNDERWRITER_MANAGER_DECISIONS, UNDERWRITER_MANAGER_DECISIONS_TAGS },
 } = CONSTANTS;
 
@@ -338,7 +341,13 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
         const item = { ...amendment };
         item.requestDate = amendment?.requestDate ? format(fromUnixTime(item.requestDate), DATE_FORMATS.DD_MMMM_YYYY) : null;
 
-        item.name = `Amendment ${amendment.referenceNumber}`;
+        const { version, referenceNumber } = amendment;
+
+        const hasReferenceNumber = isPortalFacilityAmendmentsFeatureFlagEnabled() && referenceNumber;
+
+        const amendmentName = hasReferenceNumber ? referenceNumber : version;
+
+        item.name = `Amendment ${amendmentName}`;
 
         const formattedCoverEndDate = amendment?.coverEndDate ? convertUnixTimestampWithoutMilliseconds(amendment.coverEndDate) : null;
 
@@ -347,12 +356,12 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
         item.value = amendment?.value ? `${amendment.currency} ${formattedNumber(amendment.value)}` : null;
         item.requireUkefApproval = amendment?.requireUkefApproval ? 'Yes' : 'No';
         // if bankDecision submitted, then adds decision, else adds awaiting decision (locally)
-        item.banksDecision = amendment?.bankDecision?.submitted ? amendment?.bankDecision?.decision : AMENDMENTS.AMENDMENT_BANK_DECISION.AWAITING_DECISION;
+        item.banksDecision = amendment?.bankDecision?.submitted ? amendment?.bankDecision?.decision : AMENDMENT_BANK_DECISION.AWAITING_DECISION;
         // checks if coverEndDate/facility value or both on an amendment request are declined
         if (amendment?.ukefDecision?.submitted) {
           if (ukefDecisionRejected(amendment)) {
             // sets bank decision to not applicable locally
-            item.banksDecision = AMENDMENTS.AMENDMENT_BANK_DECISION.NOT_APPLICABLE;
+            item.banksDecision = AMENDMENT_BANK_DECISION.NOT_APPLICABLE;
           }
 
           const date = format(fromUnixTime(amendment.ukefDecision.submittedAt), DATE_FORMATS.DD_MMMM_YYYY);
@@ -361,7 +370,7 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
         }
 
         item.tags = UNDERWRITER_MANAGER_DECISIONS_TAGS;
-        item.bankDecisionTags = AMENDMENTS.BANK_DECISIONS_TAGS;
+        item.bankDecisionTags = BANK_DECISIONS_TAGS;
 
         if (amendment?.requireUkefApproval) {
           item.ukefDecisionValue = amendment?.ukefDecision?.submitted ? amendment?.ukefDecision?.value : UNDERWRITER_MANAGER_DECISIONS.NOT_ADDED;
@@ -383,6 +392,12 @@ const formatCompletedAmendmentDetails = (allAmendments) => {
 
         if (amendment?.changeFacilityValue && amendment?.currentValue) {
           item.currentValue = `${amendment.currency} ${formattedNumber(amendment.currentValue)}`;
+        }
+
+        const isFuturePortalAmendment = amendment.status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED && isFutureEffectiveDate(amendment.effectiveDate);
+
+        if (isFuturePortalAmendment) {
+          item.futureEffectiveDatePortalAmendment = true;
         }
 
         allCompletedAmendments.push(item);
@@ -438,7 +453,7 @@ const getCaseFacility = async (req, res) => {
       hasFutureEffectiveDatePortalAmendments,
       formattedFutureEffectiveDatePortalAmendments,
     } = getAmendmentsInProgress({
-      amendments,
+      amendments: allAmendmentsByFacilityId,
       deal,
       teams,
     });
@@ -755,4 +770,5 @@ module.exports = {
   getCaseDocuments,
   confirmTfmFacility,
   postTfmFacility,
+  formatCompletedAmendmentDetails,
 };
