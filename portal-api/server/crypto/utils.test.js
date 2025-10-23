@@ -1,7 +1,7 @@
 const jsonwebtoken = require('jsonwebtoken');
 const crypto = require('crypto');
 const { when } = require('jest-when');
-const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
+const { salt, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const { issueValidUsernameAndPasswordJWT, issueValid2faJWT, validPassword } = require('./utils');
 const { TEST_USER } = require('../../test-helpers/unit-test-mocks/mock-user');
 
@@ -81,7 +81,7 @@ describe('crypto utils', () => {
 
     const USER = TEST_USER;
 
-    const EXISTING_SESSION_IDENTIFIER = crypto.randomBytes(32).toString('hex');
+    const EXISTING_SESSION_IDENTIFIER = salt().toString('hex');
 
     const USER_WITH_EXISTING_SESSION_IDENTIFIER = { ...USER, sessionIdentifier: EXISTING_SESSION_IDENTIFIER };
 

@@ -8,7 +8,7 @@ class Pbkdf2Sha512HashStrategy {
   }
 
   generateSalt() {
-    return this.#byteGenerator.randomBytes(64);
+    return this.#byteGenerator.randomBytes();
   }
 
   generateHash(target, salt) {

@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const dotenv = require('dotenv');
 const jsonwebtoken = require('jsonwebtoken');
-const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
+const { salt: generateSalt, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 
 dotenv.config();
 
@@ -43,7 +43,7 @@ function genPasswordResetToken(user) {
  * @param {object} user We need this to set the JWT `sub` payload property to the MongoDB user ID
  * @returns {object} Token, expires in and session ID
  */
-function issueJWTWithExpiryAndPayload({ user, sessionIdentifier = crypto.randomBytes(32).toString('hex'), expiresIn, additionalPayload }) {
+function issueJWTWithExpiryAndPayload({ user, sessionIdentifier = generateSalt().toString('hex'), expiresIn, additionalPayload }) {
   const { _id } = user;
 
   const payload = {
