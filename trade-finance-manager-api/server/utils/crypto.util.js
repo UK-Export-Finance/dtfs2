@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const dotenv = require('dotenv');
 const jsonwebtoken = require('jsonwebtoken');
+const { salt: generatedSalt, CRYPTO } = require('@ukef/dtfs2-common');
 
 dotenv.config();
 
@@ -20,7 +21,7 @@ function validPassword(password, hash, salt) {
     return false;
   }
   const hashAsBuffer = Buffer.from(hash, 'hex');
-  const hashVerify = crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512');
+  const hashVerify = crypto.pbkdf2Sync(password, salt, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
 
   if (!hashVerify || !hashAsBuffer || hashVerify.length !== hashAsBuffer.length) {
     // This is not timing safe. This is only reached under specific conditions where the buffer length is different (new user with no password).
@@ -31,7 +32,7 @@ function validPassword(password, hash, salt) {
 }
 
 function genPasswordResetToken(user) {
-  const hash = crypto.pbkdf2Sync(user.email, user.salt, 10000, 64, 'sha512').toString('hex');
+  const hash = crypto.pbkdf2Sync(user.email, user.salt, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM).toString('hex');
 
   return { hash };
 }
@@ -41,7 +42,7 @@ function genPasswordResetToken(user) {
  */
 function issueJWT(user) {
   const { _id } = user;
-  const sessionIdentifier = crypto.randomBytes(32).toString('hex');
+  const sessionIdentifier = generatedSalt().toString('hex');
 
   const expiresIn = '1d';
 
