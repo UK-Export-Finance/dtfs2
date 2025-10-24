@@ -9,6 +9,7 @@ jest.mock('node:crypto', () => ({
 const { when, resetAllWhenMocks } = require('jest-when');
 const { pbkdf2Sync, randomBytes } = require('node:crypto');
 const { AxiosError } = require('axios');
+const { CRYPTO } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const { setUpApiTestUser } = require('../../api-test-users');
 const sendEmail = require('../../../server/v1/email');
@@ -278,7 +279,7 @@ describe('POST /users/me/sign-in-link', () => {
         describe('when creating the sign in hash errors', () => {
           beforeEach(() => {
             when(pbkdf2Sync)
-              .calledWith(signInToken, saltBytes, 210000, 64, 'sha512')
+              .calledWith(signInToken, saltBytes, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM)
               .mockImplementationOnce(() => {
                 throw new Error();
               });
@@ -299,7 +300,9 @@ describe('POST /users/me/sign-in-link', () => {
               hashHex: hashHexOne,
               expiry: dateNow + SIGN_IN_LINK.DURATION_MILLISECONDS,
             };
-            when(pbkdf2Sync).calledWith(signInToken, saltBytes, 210000, 64, 'sha512').mockReturnValueOnce(Buffer.from(hashHexOne, 'hex'));
+            when(pbkdf2Sync)
+              .calledWith(signInToken, saltBytes, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM)
+              .mockReturnValueOnce(Buffer.from(hashHexOne, 'hex'));
           });
 
           afterEach(() => {
