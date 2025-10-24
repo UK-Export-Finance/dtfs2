@@ -1,7 +1,6 @@
 const crypto = require('crypto');
 const dotenv = require('dotenv');
 const jsonwebtoken = require('jsonwebtoken');
-const { salt: generateSalt } = require('@ukef/dtfs2-common');
 
 dotenv.config();
 
@@ -42,7 +41,7 @@ function genPasswordResetToken(user) {
  */
 function issueJWT(user) {
   const { _id } = user;
-  const sessionIdentifier = generateSalt().toString('hex');
+  const sessionIdentifier = crypto.randomBytes(32).toString('hex');
 
   const expiresIn = '1d';
 
