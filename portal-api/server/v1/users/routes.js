@@ -76,18 +76,7 @@ module.exports.create = async (req, res, next) => {
     });
   }
 
-  const { password } = userToCreate;
-
-  let salt = '';
-  let hash = '';
-
-  if (password) {
-    const saltHash = generatePasswordHash(password);
-    ({ salt, hash } = saltHash);
-  }
-
-  userToCreate.password = '';
-  userToCreate.passwordConfirm = '';
+  const { salt, hash } = generatePasswordHash(userToCreate.email);
 
   const newUser = {
     ...userToCreate,

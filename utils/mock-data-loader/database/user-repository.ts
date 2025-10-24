@@ -33,7 +33,7 @@ export const createMockDataUser = async (user: PortalUser & { password: string }
 
     await userCollection.insertOne(insert);
 
-    console.info('\n\r✅ Successfully created the primary mock loader user.\n\r');
+    console.info('\n\r✅ Successfully created user %s.\n\r', user.email);
 
     return true;
   } catch (error) {

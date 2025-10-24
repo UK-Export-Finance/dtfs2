@@ -2,9 +2,10 @@ import { HttpStatusCode } from 'axios';
 
 const { ObjectId } = require('mongodb');
 const { withDeleteOneTests, expectAnyPortalUserAuditDatabaseRecord } = require('@ukef/dtfs2-common/change-stream/test-helpers');
-const { MONGO_DB_COLLECTIONS, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
+const { MONGO_DB_COLLECTIONS, PORTAL_LOGIN_STATUS, generatePasswordHash } = require('@ukef/dtfs2-common');
 const databaseHelper = require('../../database-helper');
 const testUserCache = require('../../api-test-users');
+const { createUser } = require('../../helpers/create-user');
 
 const app = require('../../../server/createApp');
 const { as } = require('../../api')(app);
@@ -58,7 +59,7 @@ describe('a user', () => {
     let userToGetId;
 
     beforeEach(async () => {
-      const response = await createUser(MOCK_USER);
+      const response = await createUser(MOCK_USER, aNonAdmin);
       userToGetId = new ObjectId(response.body.user._id);
     });
 
@@ -90,7 +91,7 @@ describe('a user', () => {
 
     beforeEach(async () => {
       await databaseHelper.deleteUser(MOCK_USER);
-      const response = await createUser(MOCK_USER);
+      const response = await createUser(MOCK_USER, aNonAdmin);
       userToDeleteId = new ObjectId(response.body.user._id);
     });
 
@@ -104,7 +105,7 @@ describe('a user', () => {
 
   describe('DELETE /v1/users/:userId/disable', () => {
     it('a user can be disabled', async () => {
-      const response = await createUser(MOCK_USER);
+      const response = await createUser(MOCK_USER, aNonAdmin);
       const createdUser = response.body.user;
 
       await as(aNonAdmin).remove().to(`/v1/users/${createdUser._id}/disable`);
@@ -129,7 +130,7 @@ describe('a user', () => {
 
     it('an incorrect password cannot log in', async () => {
       const { username } = MOCK_USER;
-      await createUser(MOCK_USER);
+      await createUser(MOCK_USER, aNonAdmin);
 
       const { status, body } = await as().post({ username, password: 'NotTheUsersPassword' }).to('/v1/login');
 
@@ -138,8 +139,21 @@ describe('a user', () => {
     });
 
     it('a disabled user cannot log in', async () => {
-      const response = await createUser(MOCK_USER);
+      const response = await createUser(MOCK_USER, aNonAdmin);
       const createdUser = response.body.user;
+      const { salt, hash } = generatePasswordHash(MOCK_USER.password);
+
+      // set a known reset token/timestamp on the user record
+      await databaseHelper.setUserProperties({
+        username: MOCK_USER.username,
+        update: {
+          salt,
+          hash,
+          resetPwdToken: hash,
+          resetPwdTimestamp: `${Date.now()}`,
+        },
+      });
+
       await as(aNonAdmin).remove().to(`/v1/users/${createdUser._id}/disable`);
 
       const { username, password } = MOCK_USER;
@@ -151,7 +165,19 @@ describe('a user', () => {
 
     it('a known user can log in with a valid username and password', async () => {
       const { username, password } = MOCK_USER;
-      await createUser(MOCK_USER);
+      await createUser(MOCK_USER, aNonAdmin);
+      const { salt, hash } = generatePasswordHash(MOCK_USER.password);
+
+      // set a known reset token/timestamp on the user record
+      await databaseHelper.setUserProperties({
+        username: MOCK_USER.username,
+        update: {
+          salt,
+          hash,
+          resetPwdToken: hash,
+          resetPwdTimestamp: `${Date.now()}`,
+        },
+      });
 
       const { status, body } = await as().post({ username, password }).to('/v1/login');
 
@@ -177,7 +203,7 @@ describe('a user', () => {
 
   describe('GET /v1/validate', () => {
     it('a token from a fully logged in user can be validated', async () => {
-      await createUser(MOCK_USER);
+      await createUser(MOCK_USER, aNonAdmin);
 
       const { token } = await createLoggedInUserSession(MOCK_USER);
 
@@ -187,7 +213,7 @@ describe('a user', () => {
     });
 
     it('a token from a partially logged in user cannot be validated', async () => {
-      await createUser(MOCK_USER);
+      await createUser(MOCK_USER, aNonAdmin);
 
       const { token } = await createPartiallyLoggedInUserSession(MOCK_USER);
 
@@ -207,11 +233,15 @@ describe('a user', () => {
 
   it('User already exists', async () => {
     // User creation - first instance
-    const first = await as(aNonAdmin).post(MOCK_USER).to('/v1/users');
+    const userToCreate = {
+      ...MOCK_USER,
+    };
+    delete userToCreate?.password;
+    const first = await as(aNonAdmin).post(userToCreate).to('/v1/users');
     expect(first.status).toEqual(200);
 
     // User creation - second instance
-    const second = await as(aNonAdmin).post(MOCK_USER).to('/v1/users');
+    const second = await as(aNonAdmin).post(userToCreate).to('/v1/users');
     expect(second.status).toEqual(400);
   });
 
@@ -230,7 +260,7 @@ describe('a user', () => {
 
     it('an incorrect password cannot log in', async () => {
       const { username } = MOCK_USER;
-      await createUser(MOCK_USER);
+      await createUser(MOCK_USER, aNonAdmin);
 
       const { status, body } = await as().post({ username, password: 'NotTheUsersPassword' }).to('/v1/login');
 
@@ -239,8 +269,22 @@ describe('a user', () => {
     });
 
     it('a disabled user cannot log in', async () => {
-      const response = await createUser(MOCK_USER);
+      const response = await createUser(MOCK_USER, aNonAdmin);
       const createdUser = response.body.user;
+
+      const { salt, hash } = generatePasswordHash(MOCK_USER.password);
+
+      // set a known reset token/timestamp on the user record
+      await databaseHelper.setUserProperties({
+        username: MOCK_USER.username,
+        update: {
+          salt,
+          hash,
+          resetPwdToken: hash,
+          resetPwdTimestamp: `${Date.now()}`,
+        },
+      });
+
       await as(aNonAdmin).remove().to(`/v1/users/${createdUser._id}/disable`);
 
       const { username, password } = MOCK_USER;
@@ -252,7 +296,20 @@ describe('a user', () => {
 
     it('a known user can log in with a valid username and password', async () => {
       const { username, password } = MOCK_USER;
-      await createUser(MOCK_USER);
+      await createUser(MOCK_USER, aNonAdmin);
+
+      const { salt, hash } = generatePasswordHash(MOCK_USER.password);
+
+      // set a known reset token/timestamp on the user record
+      await databaseHelper.setUserProperties({
+        username: MOCK_USER.username,
+        update: {
+          salt,
+          hash,
+          resetPwdToken: hash,
+          resetPwdTimestamp: `${Date.now()}`,
+        },
+      });
 
       const { status, body } = await as().post({ username, password }).to('/v1/login');
 
@@ -278,7 +335,7 @@ describe('a user', () => {
 
   describe('GET /v1/validate', () => {
     it('a token from a fully logged in user can be validated', async () => {
-      await createUser(MOCK_USER);
+      await createUser(MOCK_USER, aNonAdmin);
 
       const { token } = await createLoggedInUserSession(MOCK_USER);
 
@@ -288,7 +345,7 @@ describe('a user', () => {
     });
 
     it('a token from a partially logged in user cannot be validated', async () => {
-      await createUser(MOCK_USER);
+      await createUser(MOCK_USER, aNonAdmin);
 
       const { token } = await createPartiallyLoggedInUserSession(MOCK_USER);
 
@@ -305,8 +362,4 @@ describe('a user', () => {
       expect(status).toEqual(401);
     });
   });
-
-  async function createUser(userToCreate) {
-    return as(aNonAdmin).post(userToCreate).to('/v1/users');
-  }
 });

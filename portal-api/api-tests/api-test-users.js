@@ -268,14 +268,11 @@ const setUpApiTestUser = async (as) => {
     hash,
     ...apiTestUser,
   };
-
-  userToCreate.password = '';
-  userToCreate.passwordConfirm = '';
-
+  delete userToCreate.password;
   const collection = await db.getCollection(DB_COLLECTIONS.USERS);
   await collection.insertOne(userToCreate);
 
-  const { token } = await loginTestUser(as, apiTestUser);
+  const { token } = await loginTestUser(as, userToCreate);
   return { token, ...userToCreate };
 };
 
@@ -290,10 +287,18 @@ const initialise = async (app) => {
 
     // We then set up all other test users
     for (const testUser of testUsers) {
-      await as(loggedInApiTestUser).post(testUser).to('/v1/users/');
-      const { token, userId } = await loginTestUser(as, testUser);
-      loadedUsers.push({
+      const { salt, hash } = generatePasswordHash(testUser?.password);
+      delete testUser?.password;
+      const testUserCreate = {
         ...testUser,
+        salt,
+        hash,
+      };
+
+      await as(loggedInApiTestUser).post(testUserCreate).to('/v1/users/');
+      const { token, userId } = await loginTestUser(as, testUserCreate);
+      loadedUsers.push({
+        ...testUserCreate,
         _id: userId,
         token,
       });

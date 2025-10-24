@@ -16,7 +16,7 @@ const { STATUS } = require('../../../server/constants/user');
 const { withValidateUsernameAndEmailMatchTests } = require('./with-validate-username-and-email-match.api-tests');
 const { withValidateEmailIsCorrectFormatTests } = require('./with-validate-email-is-correct-format.api-tests');
 const { withValidateEmailIsUniqueTests } = require('./with-validate-email-is-unique.api-tests');
-const { withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests } = require('./with-validate-password.api-tests');
+const { createUser } = require('../../helpers/create-user');
 
 const temporaryUsernameAndEmail = 'temporary_user@ukexportfinance.gov.uk';
 const MOCK_USER = {
@@ -26,8 +26,6 @@ const MOCK_USER = {
 };
 
 const READ_ONLY_ROLE_EXCLUSIVE_ERROR = { text: "You cannot combine 'Read-only' with any of the other roles" };
-
-const BASE_URL = '/v1/users';
 
 describe('a user', () => {
   let aNonAdmin;
@@ -46,7 +44,7 @@ describe('a user', () => {
   beforeEach(async () => {
     await databaseHelper.deleteUser(MOCK_USER);
 
-    const response = await createUser(MOCK_USER);
+    const response = await createUser(MOCK_USER, aNonAdmin);
     createdUser = response.body.user;
   });
 
@@ -129,12 +127,6 @@ describe('a user', () => {
         expect(body.roles).toStrictEqual([READ_ONLY, READ_ONLY]);
       });
 
-      withValidatePasswordWhenUpdateUserWithoutCurrentPasswordTests({
-        payload: {},
-        makeRequest: async (updatedUserCredentials) => await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`),
-        existingUserPassword: MOCK_USER.password,
-      });
-
       withValidateEmailIsUniqueTests({
         payload: { roles: [READ_ONLY] },
         makeRequest: async (updatedUserCredentials) => await as(anAdmin).put(updatedUserCredentials).to(`/v1/users/${createdUser._id}`),
@@ -212,8 +204,4 @@ describe('a user', () => {
       });
     });
   });
-
-  async function createUser(userToCreate) {
-    return as(aNonAdmin).post(userToCreate).to(BASE_URL);
-  }
 });
