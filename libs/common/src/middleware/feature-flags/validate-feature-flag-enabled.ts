@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import { HttpStatusCode } from 'axios';
 import { isPortalFacilityAmendmentsFeatureFlagEnabled, isTfmDealCancellationFeatureFlagEnabled } from '../../helpers';
-import { FeatureFlag, isFeeRecordCorrectionFeatureFlagEnabled } from '../../helpers/is-feature-flag-enabled';
+import { FeatureFlag, isFeeRecordCorrectionFeatureFlagEnabled, isPortal2FAFeatureFlagEnabled } from '../../helpers/is-feature-flag-enabled';
 
 /**
  * Creates a middleware function to check if the given feature flag is enabled
@@ -60,3 +60,5 @@ export const validatePortalFacilityAmendmentsEnabled = generateBackendFeatureFla
 export const validateFeeRecordCorrectionFeatureFlagIsEnabled = generateFrontendFeatureFlagMiddleware('FF_FEE_RECORD_CORRECTION_ENABLED', () =>
   isFeeRecordCorrectionFeatureFlagEnabled(),
 );
+
+export const validatePortal2FAFeatureFlagIsEnabled = generateFrontendFeatureFlagMiddleware('FF_PORTAL_2FA_ENABLED', () => isPortal2FAFeatureFlagEnabled());

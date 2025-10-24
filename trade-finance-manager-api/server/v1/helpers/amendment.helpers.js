@@ -1,4 +1,10 @@
-const { AMENDMENT_BANK_DECISION, isAmendmentDeclined, formatDatesForTenor, createAmendmentFacilityExposure, epochToEpochMs } = require('@ukef/dtfs2-common');
+const {
+  AMENDMENT_BANK_DECISION,
+  isAmendmentDeclined,
+  formatDatesForTenor,
+  createAmendmentFacilityExposure,
+  epochSecondsToMilliseconds,
+} = require('@ukef/dtfs2-common');
 const api = require('../api');
 const sendTfmEmail = require('../services/send-tfm-email');
 const { TEAMS } = require('../../constants');
@@ -483,11 +489,11 @@ const calculateAcbsUkefExposure = (payload) => {
 const formatAmendmentDates = (payload) => {
   const formatted = {
     ...payload,
-    effectiveDate: epochToEpochMs(payload.effectiveDate),
+    effectiveDate: epochSecondsToMilliseconds(payload.effectiveDate),
   };
 
   if (formatted?.coverEndDate) {
-    formatted.coverEndDate = epochToEpochMs(formatted.coverEndDate);
+    formatted.coverEndDate = epochSecondsToMilliseconds(formatted.coverEndDate);
   }
 
   return formatted;
