@@ -1,4 +1,5 @@
 const crypto = require('node:crypto');
+const { CRYPTO } = require('@ukef/dtfs2-common');
 const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 const {
@@ -52,7 +53,7 @@ module.exports = {
     const overridePortalUserSignInTokenWithValidTokenByUsername = async ({ username, newSignInToken }) => {
       const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
       const salt = generateSalt();
-      const hash = crypto.pbkdf2Sync(newSignInToken, salt, 210000, 64, 'sha512');
+      const hash = crypto.pbkdf2Sync(newSignInToken, salt, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
       const saltHex = salt.toString('hex');
       const hashHex = hash.toString('hex');
       const expiry = Date.now() + thirtyMinutesInMilliseconds;
@@ -64,7 +65,7 @@ module.exports = {
       const signInTokens = newSignInTokens.map((newSignInToken) => {
         const { signInTokenFromLink, expiry } = newSignInToken;
         const salt = generateSalt();
-        const hash = crypto.pbkdf2Sync(signInTokenFromLink, salt, 210000, 64, 'sha512');
+        const hash = crypto.pbkdf2Sync(signInTokenFromLink, salt, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
         const saltHex = salt.toString('hex');
         const hashHex = hash.toString('hex');
         return { saltHex, hashHex, expiry };
