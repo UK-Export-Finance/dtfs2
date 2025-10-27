@@ -5,6 +5,7 @@ type UpdatedFields = {
   coverEndDate?: number | null;
   value?: number | null;
   facilityEndDate?: Date | null;
+  bankReviewDate?: Date | null;
 };
 
 /**
@@ -30,6 +31,10 @@ export const mapFacilityFieldsToAmendmentFields = (amendments: FacilityAmendment
 
       if (!updatedFields.facilityEndDate && amendment.facilityEndDate) {
         updatedFields.facilityEndDate = amendment.facilityEndDate;
+      }
+
+      if (!updatedFields.bankReviewDate && amendment.bankReviewDate) {
+        updatedFields.bankReviewDate = amendment.bankReviewDate;
       }
     }
   }

@@ -19,6 +19,7 @@ export const makerAndCheckerSubmitPortalAmendmentRequest = ({
   effectiveDate = today.date,
   changedFacilityValue,
   changedCoverEndDate,
+  changedBankReviewDate,
   amendmentDetailsUrl,
   confirmSubmissionToUkefUrl,
   submittedUrl,
@@ -30,6 +31,7 @@ export const makerAndCheckerSubmitPortalAmendmentRequest = ({
     facilityEndDateExists,
     changedFacilityValue,
     changedCoverEndDate,
+    changedBankReviewDate,
     effectiveDate,
   });
 
