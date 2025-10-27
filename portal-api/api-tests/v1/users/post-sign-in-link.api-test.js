@@ -41,7 +41,11 @@ const userToCreateAsPartiallyLoggedIn = {
 const userToCreateFullyLoggedIn = { ...maker2 };
 
 jest.mock('../../../server/v1/email');
-jest.mock('crypto');
+jest.mock('crypto', () => ({
+  ...jest.requireActual('crypto'),
+  pbkdf2Sync: jest.fn().mockReturnValue(Buffer.from([111])),
+  randomBytes: jest.fn().mockReturnValue(Buffer.from([222])),
+}));
 
 describe('POST /users/me/sign-in-link', () => {
   let userToCreateOtherUsers;
@@ -55,9 +59,6 @@ describe('POST /users/me/sign-in-link', () => {
   let dateOneHourAgo;
   let dateTwelveHoursAgo;
   let dateOverTwelveHoursAgo;
-
-  when(crypto.randomBytes).calledWith(CRYPTO.SALT.BYTES).mockReturnValue(mockSalt);
-  when(crypto.pbkdf2Sync).calledWith(CRYPTO.SALT.BYTES).mockReturnValue(mockHash);
 
   beforeAll(async () => {
     // Not faking next tick is required for test database interaction to work
@@ -235,7 +236,7 @@ describe('POST /users/me/sign-in-link', () => {
   });
 
   describe('when user has remaining attempts', () => {
-    describe.only('when creating the sign in token errors', () => {
+    describe('when creating the sign in token errors', () => {
       beforeEach(() => {
         when(crypto.randomBytes)
           .calledWith(CRYPTO.SALT.BYTES)
