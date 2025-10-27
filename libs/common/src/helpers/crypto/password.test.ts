@@ -72,7 +72,7 @@ describe('password', () => {
     expect(crypto.pbkdf2Sync).not.toHaveBeenCalled();
     expect(crypto.pbkdf2Sync).not.toHaveBeenCalledWith(mockPassword, '', CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
 
-    expect(console.error).toHaveBeenCalledWith('An error has occurred while generating password %s', new Error('Salt cannot be empty'));
+    expect(console.error).toHaveBeenCalledWith('An error has occurred while generating password %o', new Error('Salt cannot be empty'));
     expect(response).toEqual({
       salt: '',
       hash: '',
@@ -98,7 +98,7 @@ describe('password', () => {
     expect(crypto.pbkdf2Sync).not.toHaveBeenCalled();
     expect(crypto.pbkdf2Sync).not.toHaveBeenCalledWith('', mockSaltString, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
 
-    expect(console.error).toHaveBeenCalledWith('An error has occurred while generating password %s', new Error('Password cannot be empty'));
+    expect(console.error).toHaveBeenCalledWith('An error has occurred while generating password %o', new Error('Password cannot be empty'));
     expect(response).toEqual({
       salt: '',
       hash: '',
