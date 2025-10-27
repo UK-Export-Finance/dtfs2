@@ -18,7 +18,7 @@ export const generatePasswordHash = (password: string): PasswordHash => {
       hash: generatedHash.toString('hex'),
     };
   } catch (error) {
-    console.error('An error has occurred while generating password %s', error);
+    console.error('An error has occurred while generating password %o', error);
     return {
       salt: '',
       hash: '',

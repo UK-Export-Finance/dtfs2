@@ -1,4 +1,4 @@
-const crypto = require('node:crypto');
+const crypto = require('crypto');
 const { CRYPTO } = require('@ukef/dtfs2-common');
 const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');

@@ -1,5 +1,5 @@
 const { CRYPTO } = require('@ukef/dtfs2-common');
-const crypto = require('node:crypto');
+const crypto = require('crypto');
 
 class Pbkdf2Sha512HashStrategy {
   #byteGenerator;
