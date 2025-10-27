@@ -1062,4 +1062,21 @@ describe('formatAmendmentDates', () => {
       coverEndDate: 1759509638000,
     });
   });
+
+  it('should not convert EPOCH in MS effective and cover end date to EPOCH in MS', () => {
+    // Arrange
+    const mockPayload = {
+      effectiveDate: 1761087600000,
+      coverEndDate: 1761087600000,
+    };
+
+    // Act
+    const response = formatAmendmentDates(mockPayload);
+
+    // Assert
+    expect(response).toEqual({
+      effectiveDate: 1761087600000,
+      coverEndDate: 1761087600000,
+    });
+  });
 });

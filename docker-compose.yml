@@ -1,6 +1,7 @@
 services:
   clamav:
     image: clamav/clamav:stable
+    platform: linux/amd64
     restart: always
     ports:
       - "3310:3310"
@@ -107,6 +108,7 @@ services:
       - UKEF_GEF_REPORTING_EMAIL_RECIPIENT
       - TFM_UI_URL=http://localhost:5003
       - RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE
+      - FF_PORTAL_2FA_ENABLED
 
   trade-finance-manager-ui:
     build:
@@ -249,6 +251,7 @@ services:
       - FF_TFM_DEAL_CANCELLATION_ENABLED
       - FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
       - FF_FEE_RECORD_CORRECTION_ENABLED
+      - FF_PORTAL_2FA_ENABLED
 
   portal-api:
     build:
@@ -309,6 +312,7 @@ services:
       - DELETION_AUDIT_LOGS_TTL_SECONDS
       - GEF_DEAL_VERSION
       - FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
+      - FF_PORTAL_2FA_ENABLED
 
   external-api:
     build:
@@ -393,6 +397,7 @@ services:
       - GEF_DEAL_VERSION
       - FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
       - FF_FEE_RECORD_CORRECTION_ENABLED
+      - FF_PORTAL_2FA_ENABLED
 
   redis:
     image: "redis:alpine"
