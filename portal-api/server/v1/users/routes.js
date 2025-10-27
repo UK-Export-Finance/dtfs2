@@ -4,6 +4,7 @@ const {
   generateNoUserLoggedInAuditDetails,
 } = require('@ukef/dtfs2-common/change-stream');
 const { PORTAL_LOGIN_STATUS, generatePasswordHash } = require('@ukef/dtfs2-common');
+const { ObjectId } = require('mongodb');
 const { login } = require('./login.controller');
 const { userIsBlocked, userIsDisabled, usernameOrPasswordIncorrect } = require('../../constants/login-results');
 const { create, update, remove, list, findOne, disable } = require('./controller');
@@ -76,7 +77,9 @@ module.exports.create = async (req, res, next) => {
     });
   }
 
-  const { salt, hash } = generatePasswordHash(userToCreate.email);
+  // generate password hash from a random MongoDB ObjectId
+  const randomMongoId = new ObjectId().toHexString();
+  const { salt, hash } = generatePasswordHash(randomMongoId);
 
   const newUser = {
     ...userToCreate,
