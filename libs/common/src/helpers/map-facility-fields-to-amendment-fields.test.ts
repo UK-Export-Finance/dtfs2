@@ -238,7 +238,7 @@ describe('map-facility-fields-to-amendment-fields helper', () => {
     });
   });
 
-  describe('when there are multiple types of amendments and facilityEndDate amendment is in the future', () => {
+  describe('when there are multiple amendments with different attributes and the amendment with a facility end date attribute is in the future', () => {
     it('should return the correct fields from each amendment type but not the facilityEndDate', () => {
       const result = mapFacilityFieldsToAmendmentFields([valueAmendment1, coverEndDateAmendment1, futureFacilityEndDateAmendment]);
 
@@ -249,7 +249,7 @@ describe('map-facility-fields-to-amendment-fields helper', () => {
     });
   });
 
-  describe('when there are multiple types of amendments and bankReviewDate amendment is in the future', () => {
+  describe('when there are multiple amendments with different attributes and the amendment with a bankReviewDate attribute is in the future', () => {
     it('should return the correct fields from each amendment type but not the bankReviewDate', () => {
       const result = mapFacilityFieldsToAmendmentFields([valueAmendment1, coverEndDateAmendment1, futureBankReviewDateAmendment]);
 
