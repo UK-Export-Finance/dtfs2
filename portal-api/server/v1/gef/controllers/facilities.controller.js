@@ -131,6 +131,7 @@ exports.getFacilitiesByDealId = async (req, res) => {
               coverEndDate: amendedCoverEndDate,
               value: amendedValue,
               facilityEndDate: amendedFacilityEndDate,
+              bankReviewDate: amendedBankReviewDate,
             } = mapFacilityFieldsToAmendmentFields(amendments);
 
             if (amendedValue) {
@@ -143,6 +144,10 @@ exports.getFacilitiesByDealId = async (req, res) => {
 
             if (amendedFacilityEndDate) {
               facility.facilityEndDate = amendedFacilityEndDate;
+            }
+
+            if (amendedBankReviewDate) {
+              facility.bankReviewDate = amendedBankReviewDate;
             }
           }
         }

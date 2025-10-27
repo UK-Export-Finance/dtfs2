@@ -17,6 +17,7 @@ export const makerMakesPortalAmendmentRequest = ({
   facilityEndDateExists = false,
   changedFacilityValue,
   changedCoverEndDate,
+  changedBankReviewDate,
   effectiveDate = today.date,
 }) => {
   if (coverEndDateExists) {
@@ -41,7 +42,7 @@ export const makerMakesPortalAmendmentRequest = ({
     } else {
       doYouHaveAFacilityEndDate.noRadioButton().click();
       cy.clickContinueButton();
-      cy.completeDateFormFields({ idPrefix: 'bank-review-date' });
+      cy.completeDateFormFields({ idPrefix: 'bank-review-date', date: changedBankReviewDate });
       cy.clickContinueButton();
     }
 
