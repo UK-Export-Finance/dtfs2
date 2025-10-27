@@ -3,7 +3,7 @@ services:
     image: clamav/clamav:stable
     restart: always
     ports:
-      - '3310:3310'
+      - "3310:3310"
 
   dtfs-sql:
     build: ./libs/common/src/sql-db-connection
@@ -15,11 +15,23 @@ services:
       - SQL_DB_PASSWORD
       - SQL_DB_NAME
     ports:
-      - '1433:1433'
+      - "1433:1433"
     volumes:
       - ./dtfs-sql-volume-dtfs-submissions:/data/db
     healthcheck:
-      test: ['CMD', '/opt/mssql-tools18/bin/sqlcmd', '-C -S', 'localhost', '-U', 'sa', '-P', MSSQL_SA_PASSWORD, '-Q', 'SELECT 1;']
+      test:
+        [
+          "CMD",
+          "/opt/mssql-tools18/bin/sqlcmd",
+          "-C -S",
+          "localhost",
+          "-U",
+          "sa",
+          "-P",
+          MSSQL_SA_PASSWORD,
+          "-Q",
+          "SELECT 1;",
+        ]
       retries: 3
       interval: 60s
       timeout: 10s
@@ -39,7 +51,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD
     restart: always
     ports:
-      - '27017:27017'
+      - "27017:27017"
     volumes:
       - ./dtfs-mongo-volume-dtfs-submissions:/data/db
 
@@ -54,13 +66,14 @@ services:
       - dtfs-mongo
       - external-api
     ports:
-      - '5005:5005' # http
-      - '9223:9223' # debug
+      - "5005:5005" # http
+      - "9223:9223" # debug
     volumes:
-      - ./dtfs-central-api/src:/app/dtfs-central-api/src:ro
+      - ./dtfs-central-api/server:/app/dtfs-central-api/server:ro
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - NODE_ENV
       - MAINTENANCE_ACTIVE
       - MAINTENANCE_TIMESTAMP
       - PORT=5005
@@ -72,7 +85,6 @@ services:
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
       - EXTERNAL_API_KEY
-      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - AUDIT_API_URL
       - AUDIT_API_USERNAME
@@ -95,6 +107,7 @@ services:
       - UKEF_GEF_REPORTING_EMAIL_RECIPIENT
       - TFM_UI_URL=http://localhost:5003
       - RECORD_CORRECTION_TRANSIENT_FORM_DATA_DELETE_SCHEDULE
+      - FF_PORTAL_2FA_ENABLED
 
   trade-finance-manager-ui:
     build:
@@ -104,8 +117,8 @@ services:
     depends_on:
       - trade-finance-manager-api
     ports:
-      - '5003:5003' # http
-      - '9224:9224' # debug
+      - "5003:5003" # http
+      - "9224:9224" # debug
     volumes:
       - ./trade-finance-manager-ui/server:/app/trade-finance-manager-ui/server:ro
       - ./trade-finance-manager-ui/public:/app/trade-finance-manager-ui/public:ro
@@ -113,6 +126,7 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - NODE_ENV
       - MAINTENANCE_ACTIVE
       - MAINTENANCE_TIMESTAMP
       - PORT=5003
@@ -127,7 +141,6 @@ services:
       - REDIS_HOSTNAME=redis
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - SESSION_SECRET
-      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - UTILISATION_REPORT_DUE_DATE_BUSINESS_DAYS_FROM_START_OF_MONTH
       - CONTACT_US_SELF_SERVICE_PORTAL_URL
@@ -153,13 +166,14 @@ services:
       - dtfs-central-api
       - external-api
     ports:
-      - '5004:5004' # http
-      - '9225:9225' # debug
+      - "5004:5004" # http
+      - "9225:9225" # debug
     volumes:
-      - ./trade-finance-manager-api/src:/app/trade-finance-manager-api/src:ro
+      - ./trade-finance-manager-api/server:/app/trade-finance-manager-api/server:ro
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - NODE_ENV
       - MAINTENANCE_ACTIVE
       - PORT=5004
       - CORS_ORIGIN
@@ -181,7 +195,6 @@ services:
       - JWT_SIGNING_KEY
       - JWT_VALIDATING_KEY
       - UKEF_INTERNAL_NOTIFICATION=test
-      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - CHANGE_STREAM_ENABLED
       - DELETION_AUDIT_LOGS_TTL_SECONDS
@@ -206,8 +219,8 @@ services:
       - portal-api
       - clamav
     ports:
-      - '5000:5000' # http
-      - '9226:9226' # debug
+      - "5000:5000" # http
+      - "9226:9226" # debug
     volumes:
       - ./portal-ui/server:/app/portal-ui/server:ro
       - ./portal-ui/public:/app/portal-ui/public:ro
@@ -215,6 +228,7 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - NODE_ENV
       - MAINTENANCE_ACTIVE
       - MAINTENANCE_TIMESTAMP
       - PORTAL_API_URL=http://portal-api:5001
@@ -226,7 +240,6 @@ services:
       - EXTERNAL_API_KEY
       - REDIS_HOSTNAME=redis
       - SESSION_SECRET
-      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - CLAMAV_PORT=3310
       - CLAMAV_HOST=clamav
@@ -237,6 +250,7 @@ services:
       - FF_TFM_DEAL_CANCELLATION_ENABLED
       - FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
       - FF_FEE_RECORD_CORRECTION_ENABLED
+      - FF_PORTAL_2FA_ENABLED
 
   portal-api:
     build:
@@ -248,13 +262,14 @@ services:
       - dtfs-central-api
       - external-api
     ports:
-      - '5001:5001' # http
-      - '9227:9227' # debug
+      - "5001:5001" # http
+      - "9227:9227" # debug
     volumes:
       - ./portal-api/server:/app/portal-api/server:ro
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - NODE_ENV
       - MAINTENANCE_ACTIVE
       - MAINTENANCE_TIMESTAMP
       - PORT=5001
@@ -279,7 +294,6 @@ services:
       - TFM_UI_URL=http://localhost:5003
       - DTFS_CENTRAL_API_URL=http://dtfs-central-api:5005
       - TFM_API_URL=http://trade-finance-manager-api:5004
-      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - UKEF_GEF_REPORTING_EMAIL_RECIPIENT
       - UTILISATION_REPORT_SUBMISSION_PERIOD_START_EMAIL_SCHEDULE
@@ -297,6 +311,7 @@ services:
       - DELETION_AUDIT_LOGS_TTL_SECONDS
       - GEF_DEAL_VERSION
       - FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
+      - FF_PORTAL_2FA_ENABLED
 
   external-api:
     build:
@@ -307,13 +322,14 @@ services:
     depends_on:
       - dtfs-mongo
     ports:
-      - '5002:5002' # http
-      - '9228:9228' # debug
+      - "5002:5002" # http
+      - "9228:9228" # debug
     volumes:
       - ./external-api/server:/app/external-api/server:ro
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - NODE_ENV
       - MAINTENANCE_ACTIVE
       - MAINTENANCE_TIMESTAMP
       - PORT=5002
@@ -338,11 +354,9 @@ services:
       - MONGO_INITDB_DATABASE
       - MONGODB_URI
       - EXTERNAL_API_URL=http://external-api:5002
-      - NODE_ENV
       - RATE_LIMIT_THRESHOLD
       - ESTORE_CRON_MANAGER_SCHEDULE
       - FF_SALESFORCE_CUSTOMER_CREATION_ENABLED
-    entrypoint: npx ts-node external-api/server/index.ts
 
   gef-ui:
     build:
@@ -354,8 +368,8 @@ services:
       - redis
       - portal-api
     ports:
-      - '5006:5006' # http
-      - '9229:9229' # debug
+      - "5006:5006" # http
+      - "9229:9229" # debug
     volumes:
       - ./gef-ui/server:/app/gef-ui/server:ro
       - ./gef-ui/public:/app/gef-ui/public:ro
@@ -363,6 +377,7 @@ services:
       - ./libs:/app/libs:ro
     environment:
       - TZ
+      - NODE_ENV
       - MAINTENANCE_ACTIVE
       - MAINTENANCE_TIMESTAMP
       - PORTAL_API_URL=http://portal-api:5001
@@ -372,7 +387,6 @@ services:
       - SESSION_SECRET
       - AZURE_PORTAL_STORAGE_ACCOUNT
       - AZURE_PORTAL_STORAGE_ACCESS_KEY
-      - NODE_ENV
       - PORTAL_API_KEY
       - TFM_API_KEY
       - DTFS_CENTRAL_API_KEY
@@ -382,32 +396,33 @@ services:
       - GEF_DEAL_VERSION
       - FF_PORTAL_FACILITY_AMENDMENTS_ENABLED
       - FF_FEE_RECORD_CORRECTION_ENABLED
+      - FF_PORTAL_2FA_ENABLED
 
   redis:
-    image: 'redis:alpine'
+    image: "redis:alpine"
     ports:
-      - '6379:6379'
+      - "6379:6379"
     deploy:
       resources:
         limits:
-          cpus: '0.1'
+          cpus: "0.1"
           memory: 300M
 
   reverse-proxy:
     build: ./reverse-proxy
-    image: 'dtfs/reverse-proxy'
+    image: "dtfs/reverse-proxy"
     depends_on:
       - portal-ui
       - gef-ui
     ports:
-      - '80:80'
+      - "80:80"
     environment:
       - PORTAL_UI=portal-ui:5000
       - GEF_UI=gef-ui:5006
     deploy:
       resources:
         limits:
-          cpus: '0.01'
+          cpus: "0.01"
           memory: 150M
 
   acbs:
@@ -419,9 +434,10 @@ services:
       - acbs
     restart: always
     ports:
-      - '7071:80'
+      - "7071:80"
     environment:
       - TZ
+      - NODE_ENV
       - MAINTENANCE_ACTIVE
       - MAINTENANCE_TIMESTAMP
       - AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=${AZURE_PORTAL_STORAGE_ACCOUNT};AccountKey=${AZURE_PORTAL_STORAGE_ACCESS_KEY};EndpointSuffix=core.windows.net

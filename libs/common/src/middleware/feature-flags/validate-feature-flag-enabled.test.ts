@@ -5,6 +5,7 @@ import {
   validateDealCancellationEnabled,
   validateFeeRecordCorrectionFeatureFlagIsEnabled,
   validatePortalFacilityAmendmentsEnabled,
+  validatePortal2FAFeatureFlagIsEnabled,
 } from './validate-feature-flag-enabled';
 
 describe('feature flag middleware', () => {
@@ -22,6 +23,10 @@ describe('feature flag middleware', () => {
 
   describe('validateFeeRecordCorrectionFeatureFlagIsEnabled', () => {
     withFrontendMiddlewareFeatureFlagTests('isFeeRecordCorrectionFeatureFlagEnabled', validateFeeRecordCorrectionFeatureFlagIsEnabled);
+  });
+
+  describe('validatePortal2FAFeatureFlagIsEnabled', () => {
+    withFrontendMiddlewareFeatureFlagTests('isPortal2FAFeatureFlagEnabled', validatePortal2FAFeatureFlagIsEnabled);
   });
 });
 

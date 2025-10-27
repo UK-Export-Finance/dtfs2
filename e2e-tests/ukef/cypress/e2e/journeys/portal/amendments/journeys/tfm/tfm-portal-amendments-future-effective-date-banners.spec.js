@@ -22,12 +22,14 @@ context('Amendments - TFM - TFM should display banners when there are portal ame
   let dealId;
   let facilityId1;
   let facilityId2;
+  let facilityId3;
   let ukefFacilityId1;
   let ukefFacilityId2;
   let applicationDetailsUrl;
   let tfmDealPage;
   let tfmFacilityPage1;
   let tfmFacilityPage2;
+  let tfmFacilityPage3;
 
   before(() => {
     cy.insertOneGefDeal(MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1).then((insertedDeal) => {
@@ -35,6 +37,10 @@ context('Amendments - TFM - TFM should display banners when there are portal ame
       applicationDetailsUrl = `/gef/application-details/${dealId}`;
 
       cy.updateGefDeal(dealId, MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1);
+
+      cy.createGefFacilities(dealId, [mockFacility], BANK1_MAKER1).then((createdFacility) => {
+        facilityId3 = createdFacility.details._id;
+      });
 
       cy.createGefFacilities(dealId, [mockFacility], BANK1_MAKER1).then((createdFacility) => {
         facilityId1 = createdFacility.details._id;
@@ -48,6 +54,7 @@ context('Amendments - TFM - TFM should display banners when there are portal ame
         tfmDealPage = `${TFM_URL}/case/${dealId}/deal`;
         tfmFacilityPage1 = `${TFM_URL}/case/${dealId}/facility/${facilityId1}`;
         tfmFacilityPage2 = `${TFM_URL}/case/${dealId}/facility/${facilityId2}`;
+        tfmFacilityPage3 = `${TFM_URL}/case/${dealId}/facility/${facilityId3}`;
 
         cy.makerLoginSubmitGefDealForReview(insertedDeal);
         cy.checkerLoginSubmitGefDealToUkef(insertedDeal);
@@ -126,10 +133,25 @@ context('Amendments - TFM - TFM should display banners when there are portal ame
   it('should display the future effective date banner on the amendment tab', () => {
     cy.visit(tfmFacilityPage1);
     facilityPage.facilityTabAmendments().click();
-    cy.assertText(amendmentsPage.amendmentFutureEffectiveDateAmendmentBar(), `Amendment ${ukefFacilityId1}-001 is effective on ${tomorrow.dd_MMMM_yyyy}.`);
+    cy.assertText(
+      amendmentsPage.amendmentDetails.row(1).amendmentFutureEffectiveDateAmendmentBar(),
+      `Amendment ${ukefFacilityId1}-001 is effective on ${tomorrow.dd_MMMM_yyyy}.`,
+    );
 
     cy.visit(tfmFacilityPage2);
     facilityPage.facilityTabAmendments().click();
-    cy.assertText(amendmentsPage.amendmentFutureEffectiveDateAmendmentBar(), `Amendment ${ukefFacilityId2}-001 is effective on ${tomorrow.dd_MMMM_yyyy}.`);
+    cy.assertText(
+      amendmentsPage.amendmentDetails.row(1).amendmentFutureEffectiveDateAmendmentBar(),
+      `Amendment ${ukefFacilityId2}-001 is effective on ${tomorrow.dd_MMMM_yyyy}.`,
+    );
+  });
+
+  it('should not display the future effective date banner for the facility without a future effective amendment', () => {
+    cy.visit(tfmFacilityPage3);
+
+    amendmentsPage.amendmentFutureEffectiveDateFacilityBar().should('not.exist');
+
+    facilityPage.facilityTabAmendments().click();
+    cy.get('[data-cy="amendment-future-effective-date-1-amendment-bar"]').should('not.exist');
   });
 });

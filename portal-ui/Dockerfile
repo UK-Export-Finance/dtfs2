@@ -13,6 +13,9 @@ ARG MICROSERVICE=portal-ui
 
 FROM node:24.1.0-alpine3.20 AS build
 
+# Shell
+SHELL ["/bin/sh", "-c"]
+
 # Variables
 ARG PORT
 ARG NODE_ENV
@@ -30,6 +33,8 @@ WORKDIR ${ROOT}
 # Root
 COPY --chown=node:node ./package.json .
 COPY --chown=node:node ./package-lock.json .
+COPY --chown=node:node ./nodemon.json .
+COPY --chown=node:node ./start.sh .
 
 # Central library
 COPY --chown=node:node ./libs/common/package.json ./libs/common/package.json
@@ -56,6 +61,9 @@ RUN npm ci --omit=dev --ignore-scripts --workspace=${MICROSERVICE}
 
 FROM node:24.1.0-alpine3.20 AS production
 
+# Shell
+SHELL ["/bin/sh", "-c"]
+
 # Variables
 ARG PORT
 ARG NODE_ENV
@@ -74,6 +82,8 @@ WORKDIR ${ROOT}
 COPY --chown=node:node --from=build ${ROOT}/package.json .
 COPY --chown=node:node --from=build ${ROOT}/package-lock.json .
 COPY --chown=node:node --from=build ${ROOT}/node_modules ./node_modules
+COPY --chown=node:node --from=build ${ROOT}/nodemon.json ./nodemon.json
+COPY --chown=node:node --from=build ${ROOT}/start.sh ./start.sh
 
 COPY --chown=node:node --from=build ${ROOT}/libs/common/package.json ./libs/common/package.json
 COPY --chown=node:node --from=build ${ROOT}/libs/common/tsconfig.json ./libs/common/tsconfig.json
@@ -89,6 +99,9 @@ COPY --chown=node:node --from=build ${ROOT}/${MICROSERVICE}/server ./${MICROSERV
 COPY --chown=node:node --from=build ${ROOT}/${MICROSERVICE}/styles ./${MICROSERVICE}/styles
 COPY --chown=node:node --from=build ${ROOT}/${MICROSERVICE}/templates ./${MICROSERVICE}/templates
 
+# File permission
+RUN chmod +x ${ROOT}/start.sh
+
 # Expose listening port
 EXPOSE ${PORT}
 
@@ -96,14 +109,12 @@ EXPOSE ${PORT}
 HEALTHCHECK \
 --interval=60s \
 --timeout=30s \
-CMD wget \
---no-verbose \
---tries=3 \
---spider https://localhost:${PORT} \
+CMD curl \
+-fail http://localhost:${PORT} \
 || exit 1
-
-# Execute Script
-CMD ["npx", "ts-node", "portal-ui/server/index.ts"]
 
 # Non-root user
 USER node
+
+# Execute Script
+ENTRYPOINT ["sh", "-c", "exec \"$ROOT/start.sh\""]

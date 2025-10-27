@@ -1,12 +1,10 @@
-import { getFormattedMonetaryValue } from '@ukef/dtfs2-common';
-import { format } from 'date-fns';
+import { getFormattedMonetaryValue, CURRENCY } from '@ukef/dtfs2-common';
 
-import { D_MMMM_YYYY_FORMAT } from '@ukef/dtfs2-common/test-helpers';
-import relative from '../../../../../../relativeURL';
 import MOCK_USERS from '../../../../../../../../../e2e-fixtures/portal-users.fixture';
 import { MOCK_APPLICATION_AIN_DRAFT } from '../../../../../../../../../e2e-fixtures/gef/mocks/mock-deals';
 import { anIssuedCashFacility } from '../../../../../../../../../e2e-fixtures/mock-gef-facilities';
-import { applicationPreview } from '../../../../../../../../../gef/cypress/e2e/pages';
+import { dashboardSubNavigation } from '../../../../../../../../../gef/cypress/e2e/partials';
+import { dashboardFacilities } from '../../../../../../../../../portal/cypress/e2e/pages';
 
 const { BANK1_MAKER1 } = MOCK_USERS;
 
@@ -14,12 +12,10 @@ const mockFacility = anIssuedCashFacility({ facilityEndDateEnabled: true });
 const CHANGED_FACILITY_VALUE_1 = '20000';
 const CHANGED_FACILITY_VALUE_2 = '30000';
 
-context('Amendments - Multiple value amendments - Application details displays amendment values on facility summary list', () => {
+context('Amendments - Multiple value amendments - All facilities page should display the latest amended value', () => {
   let dealId;
   let facilityId;
   let applicationDetailsUrl;
-  let coverEndDate;
-  let facilityEndDate;
 
   before(() => {
     cy.insertOneGefDeal(MOCK_APPLICATION_AIN_DRAFT, BANK1_MAKER1).then((insertedDeal) => {
@@ -30,8 +26,6 @@ context('Amendments - Multiple value amendments - Application details displays a
 
       cy.createGefFacilities(dealId, [mockFacility], BANK1_MAKER1).then((createdFacility) => {
         facilityId = createdFacility.details._id;
-        coverEndDate = new Date(createdFacility.details.coverEndDate);
-        facilityEndDate = format(new Date(createdFacility.details.facilityEndDate), D_MMMM_YYYY_FORMAT);
 
         cy.makerLoginSubmitGefDealForReview(insertedDeal);
         cy.checkerLoginSubmitGefDealToUkef(insertedDeal);
@@ -65,12 +59,11 @@ context('Amendments - Multiple value amendments - Application details displays a
   beforeEach(() => {
     cy.clearSessionCookies();
     cy.login(BANK1_MAKER1);
-    cy.visit(relative(applicationDetailsUrl));
+
+    dashboardSubNavigation.facilities().click();
   });
 
-  it('should display the latest updated amendment value on facility summary list', () => {
-    applicationPreview.facilitySummaryList().contains(getFormattedMonetaryValue(CHANGED_FACILITY_VALUE_2, false));
-    applicationPreview.facilitySummaryList().contains(format(coverEndDate, D_MMMM_YYYY_FORMAT));
-    applicationPreview.facilitySummaryList().contains(facilityEndDate);
+  it('should display the latest amendment value on all facilities page', () => {
+    cy.assertText(dashboardFacilities.row.value(facilityId), `${CURRENCY.GBP} ${getFormattedMonetaryValue(CHANGED_FACILITY_VALUE_2, true)}`);
   });
 });

@@ -107,7 +107,7 @@ context('Amendments - Date amendment effective from - page tests', () => {
     {
       description: 'the date amendment effective from is before the cover start date',
       dateFieldInput: twoDaysAgo,
-      expectedErrorMessage: 'The date entered is invalid. Please ensure the date entered does not exceed the allowable timeframe',
+      expectedErrorMessage: 'The date entered is invalid. You can only select past dates that are within your cover period.',
     },
   ];
 

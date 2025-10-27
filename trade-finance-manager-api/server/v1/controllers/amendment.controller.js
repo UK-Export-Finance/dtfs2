@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb');
 const { generateTfmAuditDetails } = require('@ukef/dtfs2-common/change-stream');
-const { AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES } = require('@ukef/dtfs2-common');
+const { canSendToAcbs, AMENDMENT_QUERIES, AMENDMENT_QUERY_STATUSES } = require('@ukef/dtfs2-common');
+const { HttpStatusCode } = require('axios');
 const isGefFacility = require('../rest-mappings/helpers/isGefFacility');
 const api = require('../api');
 const acbs = require('./acbs.controller');
@@ -14,7 +15,6 @@ const {
   sendManualBankDecisionEmail,
   sendFirstTaskEmail,
   internalAmendmentEmail,
-  canSendToAcbs,
   calculateAcbsUkefExposure,
   addLatestAmendmentValue,
   addLatestAmendmentCoverEndDate,
@@ -345,6 +345,78 @@ const updateFacilityAmendment = async (req, res) => {
   return res.status(422).send({ data: 'Unable to update amendment' });
 };
 
+/**
+ * Sends an amendment to ACBS for a given facility and amendment ID.
+ *
+ * This controller function performs the following steps:
+ * 1. Retrieves the amendment and facility objects using the provided IDs.
+ * 2. Fetches the related deal object.
+ * 3. Constructs a minimal deal object required for ACBS interaction.
+ * 4. Checks if the amendment can be sent to ACBS.
+ * 5. Sends an internal email notification and amends the facility in ACBS if eligible.
+ * 6. Handles errors and sends appropriate HTTP responses.
+ *
+ * @async
+ * @function sendAmendmentToAcbs
+ * @param {import('express').Request} req - Express request object, expects `amendmentId` and `facilityId` in params.
+ * @param {import('express').Response} res - Express response object.
+ * @returns {Promise<void>} Sends HTTP response with appropriate status code.
+ */
+const sendAmendmentToAcbs = async (req, res) => {
+  const { amendmentId, facilityId } = req.params;
+
+  try {
+    if (amendmentId && facilityId) {
+      let amendment = await api.getAmendmentById(facilityId, amendmentId);
+
+      // Fetch facility object
+      const facility = await api.findOneFacility(facilityId);
+      const { ukefFacilityId } = facility.facilitySnapshot;
+
+      // Fetch deal object from deal-tfm
+      const tfmDeal = await api.findOneDeal(amendment.dealId);
+
+      // Construct acceptable deal object
+      const deal = {
+        dealSnapshot: {
+          dealType: tfmDeal.dealSnapshot.dealType,
+          submissionType: tfmDeal.dealSnapshot.submissionType,
+          submissionDate: tfmDeal.dealSnapshot.submissionDate,
+        },
+        exporter: {
+          companyName: tfmDeal.dealSnapshot.exporter.companyName,
+        },
+      };
+
+      if (amendment.changeFacilityValue) {
+        // Facility amendment UKEF exposure
+        amendment = {
+          ...amendment,
+          ukefExposure: amendment.tfm.exposure.ukefExposureValue,
+        };
+      }
+
+      // Amendment null & property existence check
+      if (facility._id && amendment && tfmDeal.tfm) {
+        // TFM Facility update + ACBS Interaction
+        if (canSendToAcbs(amendment)) {
+          // Amendment email notification to PDC
+          await internalAmendmentEmail(ukefFacilityId);
+          // Amend facility ACBS records
+          acbs.amendAcbsFacility(amendment, facility, deal);
+        }
+      }
+
+      return res.status(HttpStatusCode.Ok).send();
+    }
+  } catch (error) {
+    console.error('Unable to send amendment to ACBS %o', error);
+    return res.status(HttpStatusCode.BadGateway).send({ data: 'Unable to send amendment to ACBS' });
+  }
+
+  return res.status(HttpStatusCode.UnprocessableEntity).send({ data: 'Unable to send amendment to ACBS' });
+};
+
 module.exports = {
   createFacilityAmendment,
   updateFacilityAmendment,
@@ -355,4 +427,5 @@ module.exports = {
   sendAmendmentEmail,
   updateTFMDealLastUpdated,
   createAmendmentTFMObject,
+  sendAmendmentToAcbs,
 };

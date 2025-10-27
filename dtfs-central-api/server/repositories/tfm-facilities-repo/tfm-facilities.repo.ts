@@ -411,6 +411,7 @@ export class TfmFacilitiesRepo {
       .aggregate(aggregatePipelines.latestCompletedTfmAmendmentByFacilityId(facilityId))
       .map<TfmFacilityAmendment>((doc) => doc.amendments as TfmFacilityAmendment)
       .toArray();
+
     return amendments.at(0) ?? null;
   }
 

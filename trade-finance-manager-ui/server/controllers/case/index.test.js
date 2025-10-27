@@ -855,6 +855,7 @@ describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
 
         it('should render facility template with data', async () => {
           api.getAmendmentsByDealId = () => Promise.resolve({ status: 200, data: [mockAmendment] });
+          api.getAmendmentsByFacilityId = () => Promise.resolve({ status: 200, data: [mockAmendment] });
 
           const req = {
             params: {
@@ -901,6 +902,7 @@ describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
           ];
 
           api.getAmendmentsByDealId = () => Promise.resolve({ status: 200, data: mockPortalAmendment });
+          api.getAmendmentsByFacilityId = () => Promise.resolve({ status: 200, data: mockPortalAmendment });
 
           const req = {
             params: {
@@ -952,6 +954,7 @@ describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
           ];
 
           api.getAmendmentsByDealId = () => Promise.resolve({ status: 200, data: mockPortalAmendment });
+          api.getAmendmentsByFacilityId = () => Promise.resolve({ status: 200, data: mockPortalAmendment });
 
           const req = {
             params: {
@@ -989,7 +992,7 @@ describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
         });
       });
 
-      describe('when facility does not exists', () => {
+      describe('when facility does not exist', () => {
         beforeEach(() => {
           api.getFacility = () => Promise.resolve({});
           api.getDeal = () => Promise.resolve(mockDeal);
