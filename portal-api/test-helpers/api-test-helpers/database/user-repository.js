@@ -48,8 +48,8 @@ function issueValid2faJWT(user, sessionIdentifier) {
 const overridePortalUserSignInTokenWithValidTokenByUsername = async ({ username, newSignInToken }) => {
   const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
   const salt = generatedSalt();
-  const hash = generateHash(newSignInToken, salt);
   const saltHex = salt.toString('hex');
+  const hash = generateHash(newSignInToken, saltHex);
   const hashHex = hash.toString('hex');
   const expiry = Date.now() + thirtyMinutesInMilliseconds;
   const userCollection = await db.getCollection('users');

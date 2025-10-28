@@ -11,8 +11,11 @@ class Pbkdf2Sha512HashStrategy {
     return this.#byteGenerator.randomBytes();
   }
 
-  generateHash(target, salt) {
-    return hash(target, salt);
+  generateHash(password, salt) {
+    const passwordString = password.toString('hex');
+    const saltString = salt.toString('hex');
+
+    return hash(passwordString, saltString);
   }
 }
 
