@@ -10,6 +10,7 @@ class Hasher {
   hash(target) {
     const salt = this.#hashStrategy.generateSalt();
     const hash = this.#hashStrategy.generateHash(target, salt);
+
     return {
       hash,
       salt,
@@ -18,6 +19,7 @@ class Hasher {
 
   verifyHash({ target, salt, hash }) {
     const targetHash = this.#hashStrategy.generateHash(target, salt);
+
     return crypto.timingSafeEqual(targetHash, hash);
   }
 }

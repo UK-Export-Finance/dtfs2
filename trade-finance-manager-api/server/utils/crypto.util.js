@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const dotenv = require('dotenv');
 const jsonwebtoken = require('jsonwebtoken');
 const { salt: generatedSalt, hash: generateHash } = require('@ukef/dtfs2-common');
