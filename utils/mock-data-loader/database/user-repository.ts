@@ -1,6 +1,5 @@
-import crypto from 'crypto';
 import jsonwebtoken from 'jsonwebtoken';
-import { PORTAL_LOGIN_STATUS, TIMEZONE, USER_STATUS, PortalUser, generatePasswordHash } from '@ukef/dtfs2-common';
+import { salt as generateSalt, PORTAL_LOGIN_STATUS, TIMEZONE, USER_STATUS, PortalUser, generatePasswordHash } from '@ukef/dtfs2-common';
 import { mongoDbClient } from '../../drivers/db-client';
 
 const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY ?? '', 'base64').toString('ascii');
@@ -81,7 +80,7 @@ export const createLoggedInUserSession = async (user: PortalUser): Promise<strin
       throw new Error('User not found');
     }
 
-    const sessionIdentifier = crypto.randomBytes(32).toString('hex');
+    const sessionIdentifier = generateSalt().toString('hex');
     const token = issueValid2faJWT(userFromDatabase, sessionIdentifier);
     await userCollection.updateOne({ _id: { $eq: userFromDatabase._id } }, { $set: { sessionIdentifier } });
     return `Bearer ${token}`;

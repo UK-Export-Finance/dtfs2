@@ -1,10 +1,9 @@
-const crypto = require('crypto');
 const signature = require('cookie-signature');
-const { PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
+const { PORTAL_LOGIN_STATUS, salt } = require('@ukef/dtfs2-common');
 const { getUserWithRoles } = require('./user-generator');
 
 const generateUserSession = (roles) => {
-  const sessionId = crypto.randomBytes(8).toString('hex');
+  const sessionId = salt().toString('hex');
   const sessionCookie = `s:${signature.sign(sessionId, process.env.SESSION_SECRET)}`;
   const sessionKey = `sess:${sessionId}`;
   const user = getUserWithRoles(roles);
