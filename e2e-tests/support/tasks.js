@@ -1,5 +1,3 @@
-const crypto = require('crypto');
-const { CRYPTO } = require('@ukef/dtfs2-common');
 const { MongoDbClient } = require('@ukef/dtfs2-common/mongo-db-client');
 const { SqlDbDataSource } = require('@ukef/dtfs2-common/sql-db-connection');
 const {
@@ -12,6 +10,7 @@ const {
   FeeRecordCorrectionRequestTransientFormDataEntity,
   FeeRecordCorrectionEntity,
   salt: generateSalt,
+  hash: generateHash,
 } = require('@ukef/dtfs2-common');
 const createTfmDealToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-deal-to-insert-into-db');
 const createTfmFacilityToInsertIntoDb = require('../tfm/cypress/fixtures/create-tfm-facility-to-insert-into-db');
@@ -53,7 +52,7 @@ module.exports = {
     const overridePortalUserSignInTokenWithValidTokenByUsername = async ({ username, newSignInToken }) => {
       const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
       const salt = generateSalt();
-      const hash = crypto.pbkdf2Sync(newSignInToken, salt, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
+      const hash = generateHash(newSignInToken, salt);
       const saltHex = salt.toString('hex');
       const hashHex = hash.toString('hex');
       const expiry = Date.now() + thirtyMinutesInMilliseconds;
@@ -65,7 +64,7 @@ module.exports = {
       const signInTokens = newSignInTokens.map((newSignInToken) => {
         const { signInTokenFromLink, expiry } = newSignInToken;
         const salt = generateSalt();
-        const hash = crypto.pbkdf2Sync(signInTokenFromLink, salt, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
+        const hash = generateHash(signInTokenFromLink, salt);
         const saltHex = salt.toString('hex');
         const hashHex = hash.toString('hex');
         return { saltHex, hashHex, expiry };

@@ -1,6 +1,5 @@
-const crypto = require('crypto');
 const jsonwebtoken = require('jsonwebtoken');
-const { salt: generatedSalt, CRYPTO, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
+const { salt: generatedSalt, hash: generateHash, PORTAL_LOGIN_STATUS } = require('@ukef/dtfs2-common');
 const { mongoDbClient: db } = require('../../../server/drivers/db-client');
 
 const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY, 'base64').toString('ascii');
@@ -49,7 +48,7 @@ function issueValid2faJWT(user, sessionIdentifier) {
 const overridePortalUserSignInTokenWithValidTokenByUsername = async ({ username, newSignInToken }) => {
   const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
   const salt = generatedSalt();
-  const hash = crypto.pbkdf2Sync(newSignInToken, salt, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM);
+  const hash = generateHash(newSignInToken, salt);
   const saltHex = salt.toString('hex');
   const hashHex = hash.toString('hex');
   const expiry = Date.now() + thirtyMinutesInMilliseconds;
