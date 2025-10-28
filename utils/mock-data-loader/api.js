@@ -146,22 +146,14 @@ const createEligibilityCriteria = async (eligibilityCriteria, token) => {
   return response.data;
 };
 
-const createUser = async (user, token) => {
-  const response = await axios({
-    method: 'post',
-    headers: {
-      [HEADERS.CONTENT_TYPE.KEY]: HEADERS.CONTENT_TYPE.VALUES.JSON,
-      Accepts: 'application/json',
-      Authorization: token,
-    },
-    url: `${PORTAL_API_URL}/v1/users`,
-    data: user,
-  }).catch((error) => {
-    throw new ApiError({ cause: error });
-  });
-
-  return response.data;
-};
+/**
+ * Creates a mock user
+ *
+ * @async
+ * @param {Object} user - The user object to create mock data for.
+ * @returns {Promise<Object>} A promise that resolves to the created mock user data.
+ */
+const createUser = async (user) => createMockDataUser(user);
 
 /**
  * Creates a mock loader user by delegating to the createMockDataUser function.
