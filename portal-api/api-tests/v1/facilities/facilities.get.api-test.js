@@ -97,9 +97,8 @@ describe(baseUrl, () => {
     });
 
     it('should replace value and coverEndDate with amended values when feature flag is enabled', async () => {
-      jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(true);
-
       // Arrange
+      jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(true);
       const { body } = await as(maker1).get(baseUrl);
       const items = body.facilities || [];
 
@@ -114,9 +113,8 @@ describe(baseUrl, () => {
     });
 
     it('should not replace value and coverEndDate with amended values when feature flag is disabled', async () => {
-      jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(false);
-
       // Arrange
+      jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(false);
       const { body } = await as(maker1).get(baseUrl);
       const items = body.facilities || [];
 
