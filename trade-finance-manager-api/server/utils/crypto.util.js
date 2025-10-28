@@ -20,15 +20,19 @@ function validPassword(password, hash, salt) {
   if (!hash || !salt) {
     return false;
   }
-  const hashAsBuffer = Buffer.from(hash, 'hex');
-  const hashVerify = generateHash(password, salt);
 
-  if (!hashVerify || !hashAsBuffer || hashVerify.length !== hashAsBuffer.length) {
+  // Saved hash
+  const savedHash = Buffer.from(hash, 'hex');
+
+  // Generate hash as Buffer from provided password and salt
+  const generatedHash = generateHash(password, salt);
+
+  if (!savedHash || !generatedHash || savedHash.length !== generatedHash.length) {
     // This is not timing safe. This is only reached under specific conditions where the buffer length is different (new user with no password).
     return false;
   }
 
-  return crypto.timingSafeEqual(hashAsBuffer, hashVerify);
+  return crypto.timingSafeEqual(savedHash, generatedHash);
 }
 
 function genPasswordResetToken(user) {
