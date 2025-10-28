@@ -96,11 +96,8 @@ describe(baseUrl, () => {
       jest.mocked(getAcknowledgedAmendmentsByFacilityIdMock).mockResolvedValue([amendment]);
     });
 
-    test.each([
-      [true, 'should replace value and coverEndDate with amended values'],
-      [false, 'should not replace value and coverEndDate with amended values'],
-    ])('feature flag enabled=%s: %s', async (featureFlagEnabled) => {
-      jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(featureFlagEnabled);
+    it('should replace value and coverEndDate with amended values when feature flag is enabled', async () => {
+      jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(true);
 
       // Arrange
       const { body } = await as(maker1).get(baseUrl);
@@ -111,15 +108,26 @@ describe(baseUrl, () => {
       const response = responseFacilityItem;
 
       // Assert
-      if (featureFlagEnabled) {
-        expect(items.length).toEqual(1);
-        expect(response.value).toEqual(12345);
-        expect(new Date(response.coverEndDate).toISOString()).toEqual(new Date('2030-12-31').toISOString());
-      } else {
-        expect(items.length).toEqual(1);
-        expect(response.value).not.toEqual(12345);
-        expect(response.coverEndDate ? new Date(response.coverEndDate).toISOString() : undefined).not.toEqual(new Date('2030-12-31').toISOString());
-      }
+      expect(items.length).toEqual(1);
+      expect(response.value).toEqual(12345);
+      expect(new Date(response.coverEndDate).toISOString()).toEqual(new Date('2030-12-31').toISOString());
+    });
+
+    it('should replace value and coverEndDate with amended values when feature flag is disabled', async () => {
+      jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(false);
+
+      // Arrange
+      const { body } = await as(maker1).get(baseUrl);
+      const items = body.facilities || [];
+
+      // Act
+      const responseFacilityItem = items.find((i) => `${i._id}` === `${createdFacility._id}`);
+      const response = responseFacilityItem;
+
+      // Assert
+      expect(items.length).toEqual(1);
+      expect(response.value).not.toEqual(12345);
+      expect(response.coverEndDate ? new Date(response.coverEndDate).toISOString() : undefined).not.toEqual(new Date('2030-12-31').toISOString());
     });
   });
 });
