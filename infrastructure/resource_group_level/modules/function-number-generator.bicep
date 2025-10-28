@@ -67,9 +67,9 @@ var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-var functionNumberGeneratorName = 'tfs-${environment}-${resourceNameFragment}'
-var privateEndpointName = 'tfs-${environment}-${resourceNameFragment}'
-var applicationInsightsName = 'tfs-${environment}-${resourceNameFragment}'
+var functionNumberGeneratorName = '${product}-${environment}-${resourceNameFragment}'
+var privateEndpointName = '${product}-${environment}-${resourceNameFragment}'
+var applicationInsightsName = '${product}-${environment}-${resourceNameFragment}'
 
 
 // Minimal setup from MS example

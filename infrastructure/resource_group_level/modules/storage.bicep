@@ -19,7 +19,7 @@ param shareDeleteRetentionEnabled bool
 
 param filesDnsZoneId string
 
-var storageAccountName = 'tfs${environment}storage'
+var storageAccountName = '${product}-${environment}-storage'
 
 var allowedIps = json(allowedIpsString)
 

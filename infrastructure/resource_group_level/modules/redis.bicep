@@ -2,7 +2,7 @@ param location string
 param environment string
 param sku object
 
-var redisName = 'tfs-${environment}-redis'
+var redisName = '${product}-${environment}-redis'
 
 // See https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-redis-cache-bicep-provision?tabs=CLI
 // for an example Bicep file

@@ -276,7 +276,8 @@ var storageLocations = [
 @description('Enable 7-day soft deletes on file shares')
 var shareDeleteRetentionEnabled = false
 
-var logAnalyticsWorkspaceName = '${resourceGroup().name}-Logs-Workspace'
+var logAnalyticsWorkspaceName ='log-workspace-${ product }-${ target }-${ version }'
+var peeringVnetName ='vnet-peer-uks-${target}-${product}-${version}'
 
 // This parameters map holds the per-environment settings.
 // Some notes from initial networking conversations:
@@ -323,7 +324,7 @@ var parametersMap = {
       appServicePlanEgressPrefixCidr: '172.16.42.0/28'
       acaClamAvCidr: '172.16.42.32/27'
       privateEndpointsCidr: '172.16.40.0/24'
-      peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
+      peeringVnetName: peeringVnetName
     }
     wafPolicies: {
       matchVariable: 'SocketAddr'
@@ -338,7 +339,7 @@ var parametersMap = {
     acr: {
       // Note that containerRegistryName needs to be globally unique. However,
       // the existing environments have bagged `tfsdev`, `tfsstaging` & `tfsproduction`.
-      name: 'tfs${environment}acr${uniqueString(resourceGroup().id)}'
+      name: 'cr${product}${target}${version}${uniqueString(resourceGroup().id)}'
       sku: {
         name: 'Basic'
       }
@@ -375,7 +376,7 @@ var parametersMap = {
       appServicePlanEgressPrefixCidr: '172.16.22.0/28'
       acaClamAvCidr: '172.16.22.32/27'
       privateEndpointsCidr: '172.16.20.0/24'
-      peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
+      peeringVnetName: peeringVnetName
     }
     wafPolicies: {
       matchVariable: 'SocketAddr'
@@ -427,7 +428,7 @@ var parametersMap = {
       applicationGatewayCidr: '172.16.71.0/24'
       privateEndpointsCidr: '172.16.70.0/24'
       // Note that the peeringVnetName for staging uses the name `test` for the staging environment so we override it here.
-      peeringVnetName: 'tfs-test-vnet_vnet-ukef-uks'
+      peeringVnetName: peeringVnetName
     }
     wafPolicies: {
       matchVariable: 'SocketAddr'
@@ -479,7 +480,7 @@ var parametersMap = {
       acaClamAvCidr: '172.16.32.32/27'
       applicationGatewayCidr: '172.16.31.0/24'
       privateEndpointsCidr: '172.16.30.0/24'
-      peeringVnetName: 'tfs-${environment}-vnet_vnet-ukef-uks'
+      peeringVnetName: peeringVnetName
     }
     wafPolicies: {
       matchVariable: 'RemoteAddr'
@@ -498,7 +499,7 @@ var parametersMap = {
 ///////////////////////////////////////////////////////////////////////////////
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
-  name: parametersMap[environment].asp.name
+  name: 'appservice-plan-${product}-${target}-${version}'
   location: location
   sku: {
     name: parametersMap[environment].asp.sku
@@ -512,7 +513,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
 }
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' = {
-  name: parametersMap[environment].acr.name
+  name: 'cr${product}${target}${version}${uniqueString(resourceGroup().id)}'
   location: location
   sku: parametersMap[environment].acr.sku
   properties: {
@@ -569,7 +570,7 @@ module networkSecurityGroup 'modules/gw-nsg.bicep' = {
 }
 
 module vnet 'modules/vnet.bicep' = {
-  name: 'vnet'
+  name: 'vnet-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}'
   params: {
     environment: environment
     location: location
@@ -580,7 +581,7 @@ module vnet 'modules/vnet.bicep' = {
     applicationGatewayCidr: parametersMap[environment].vnet.applicationGatewayCidr
     acaClamAvCidr: parametersMap[environment].vnet.acaClamAvCidr
     storageLocations: storageLocations
-    peeringVnetName: parametersMap[environment].vnet.peeringVnetName
+    peeringVnetName: peeringVnetName
     peeringRemoteVnetSubscriptionId: peeringRemoteVnetSubscriptionId
     peeringRemoteVnetResourceGroupName: peeringRemoteVnetResourceGroupName
     peeringRemoteVnetName: peeringRemoteVnetName
