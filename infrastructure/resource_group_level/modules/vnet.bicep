@@ -11,7 +11,7 @@ param appServicePlanName string
 param networkSecurityGroupId string
 
 // Note that the staging name is: "tfs-test-vnet_vnet-ukef-uks", so we accept a parameter to set it.
-param peeringVnetName string = 'tfs-${environment}-vnet_vnet-ukef-uks'
+param peeringVnetName string = 'vnet-peer-uks-${target}-${product}-${version}'
 @secure()
 param peeringRemoteVnetSubscriptionId string
 param peeringRemoteVnetResourceGroupName string
@@ -20,10 +20,10 @@ param peeringAddressSpace string
 
 param storageLocations array
 
-var natGatewayName = 'tfs-${appServicePlanName}-nat-gw'
-var natGatewayIpAddressesName = 'tfs-${appServicePlanName}-nat-ip'
+var natGatewayName = '${product}-${appServicePlanName}-nat-gw'
+var natGatewayIpAddressesName = '${product}-${appServicePlanName}-nat-ip'
 
-var vnetName = 'tfs-${appServicePlanName}-vnet'
+var vnetName = '${product}-${appServicePlanName}-vnet'
 
 var appServicePlanEgressSubnetName = '${appServicePlanName}-app-service-plan-egress'
 var gatewaySubnetName = '${environment}-gateway'

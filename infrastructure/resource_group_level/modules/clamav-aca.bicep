@@ -3,9 +3,9 @@ param environment string
 param acaClamAvSubnetId string
 param logAnalyticsWorkspaceName string
 
-var managedEnvironmentName = 'tfs-${environment}-clamav-env'
-var applicationInsightsName = 'tfs-${environment}-clamav-ai'
-var containerName = 'tfs-${environment}-clamav'
+var managedEnvironmentName = '${product}-${environment}-clamav-env'
+var applicationInsightsName = '${product}-${environment}-clamav-ai'
+var containerName = '${product}-${environment}-clamav'
 
 resource workspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' existing = {
   name: logAnalyticsWorkspaceName

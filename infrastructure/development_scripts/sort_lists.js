@@ -7,7 +7,7 @@ const files = fs
   .readdirSync(__dirname)
   .filter((fn) => fs.lstatSync(fn).isFile())
   .filter((fn) => fn.endsWith('.json'));
-
+console.log(fs.readdirSync(__dirname));
 files.forEach((file) => {
   console.log(`processing ${file}`);
   const new_fn = file.replace('.json', '_sorted.json');

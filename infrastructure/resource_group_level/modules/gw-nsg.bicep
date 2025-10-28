@@ -4,7 +4,7 @@ param environment string
 param frontDoorAccess string
 param apiPortalAccessPort int
 
-var nsgName = 'tfs-${environment}-gw-nsg'
+var nsgName = '${product}-${environment}-gw-nsg'
 
 
 var staticRules = [
