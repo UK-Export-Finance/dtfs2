@@ -5,13 +5,14 @@ type UpdatedFields = {
   coverEndDate?: number | null;
   value?: number | null;
   facilityEndDate?: Date | null;
+  bankReviewDate?: Date | null;
 };
 
 /**
- * Finds the first amendment in the amendments array for coverEndDate, value and facilityEndDate and check if the `effectiveDate` is not in the future.
+ * Finds the first amendment in the amendments array for coverEndDate, value, facilityEndDate and bankReviewDate and check if the `effectiveDate` is not in the future.
  * if the updatedValue for either fields is not already set, then it will be set to the amended value from the amendment
  * @param amendments - amendments array
- * @returns object with amended coverEndDate and value
+ * @returns object with amended coverEndDate, value, facilityEndDate and bankReviewDate
  */
 export const mapFacilityFieldsToAmendmentFields = (amendments: FacilityAmendment[]) => {
   const updatedFields: UpdatedFields = {};
@@ -20,16 +21,25 @@ export const mapFacilityFieldsToAmendmentFields = (amendments: FacilityAmendment
     const hasFutureEffectiveDate = amendment.effectiveDate && isFutureEffectiveDate(amendment.effectiveDate);
 
     if (!hasFutureEffectiveDate) {
-      if (!updatedFields.coverEndDate && amendment.coverEndDate) {
+      const updateCoverEndDate = !updatedFields.coverEndDate && amendment.coverEndDate;
+      const updateValue = !updatedFields.value && amendment.value;
+      const updateFacilityEndDate = !updatedFields.facilityEndDate && amendment.facilityEndDate;
+      const updateBankReviewDate = !updatedFields.bankReviewDate && amendment.bankReviewDate;
+
+      if (updateCoverEndDate) {
         updatedFields.coverEndDate = amendment.coverEndDate;
       }
 
-      if (!updatedFields.value && amendment.value) {
+      if (updateValue) {
         updatedFields.value = amendment.value;
       }
 
-      if (!updatedFields.facilityEndDate && amendment.facilityEndDate) {
+      if (updateFacilityEndDate) {
         updatedFields.facilityEndDate = amendment.facilityEndDate;
+      }
+
+      if (updateBankReviewDate) {
+        updatedFields.bankReviewDate = amendment.bankReviewDate;
       }
     }
   }
