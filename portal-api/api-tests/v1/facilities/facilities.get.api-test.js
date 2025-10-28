@@ -71,9 +71,11 @@ describe(baseUrl, () => {
   });
 
   it('should return the created facility', async () => {
+    // Arrange & Act
     const { body } = await as(maker1).get(baseUrl);
     const items = body.facilities || [];
 
+    // Assert
     expect(items.length).toBeGreaterThanOrEqual(1);
     expect(items[0]._id).toEqual(createdFacility._id);
   });
@@ -95,13 +97,16 @@ describe(baseUrl, () => {
     });
 
     it('should replace value and coverEndDate with amended values', async () => {
+      // Arrange
       const { body } = await as(maker1).get(baseUrl);
       const items = body.facilities || [];
-      expect(items.length).toBeGreaterThanOrEqual(1);
 
+      // Act
       const responseFacilityItem = items.find((i) => `${i._id}` === `${createdFacility._id}`);
       const response = responseFacilityItem;
 
+      // Assert
+      expect(items.length).toBeGreaterThanOrEqual(1);
       expect(response.value).toEqual(12345);
       expect(new Date(response.coverEndDate).toISOString()).toEqual(new Date('2030-12-31').toISOString());
     });
