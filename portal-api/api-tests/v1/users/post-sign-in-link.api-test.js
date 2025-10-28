@@ -5,6 +5,8 @@ const crypto = require('crypto');
 const databaseHelper = require('../../database-helper');
 const { setUpApiTestUser } = require('../../api-test-users');
 const sendEmail = require('../../../server/v1/email');
+const { createUser } = require('../../helpers/create-user');
+
 const app = require('../../../server/createApp');
 const { as, post } = require('../../api')(app);
 const users = require('./test-data');
@@ -75,11 +77,11 @@ describe('POST /users/me/sign-in-link', () => {
 
     userToCreateOtherUsers = await setUpApiTestUser(as);
 
-    const fullyLoggedInUserResponse = await createUser(userToCreateFullyLoggedIn);
+    const fullyLoggedInUserResponse = await createUser(userToCreateFullyLoggedIn, userToCreateOtherUsers);
     fullyLoggedInUser = fullyLoggedInUserResponse.body.user;
     ({ token: fullyLoggedInUserToken } = await createLoggedInUserSession(fullyLoggedInUser));
 
-    const partiallyLoggedInUserResponse = await createUser(userToCreateAsPartiallyLoggedIn);
+    const partiallyLoggedInUserResponse = await createUser(userToCreateAsPartiallyLoggedIn, userToCreateOtherUsers);
     partiallyLoggedInUser = partiallyLoggedInUserResponse.body.user;
     partiallyLoggedInUserId = partiallyLoggedInUser._id;
     ({ token: partiallyLoggedInUserToken } = await createPartiallyLoggedInUserSession(partiallyLoggedInUser));
@@ -524,9 +526,5 @@ describe('POST /users/me/sign-in-link', () => {
       error: 'Internal Server Error',
       message: 'Failed to email the sign in token',
     });
-  }
-
-  async function createUser(userToCreate) {
-    return as(userToCreateOtherUsers).post(userToCreate).to('/v1/users');
   }
 });

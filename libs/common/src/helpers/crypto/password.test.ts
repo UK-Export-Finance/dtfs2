@@ -17,13 +17,13 @@ describe('password', () => {
     jest.clearAllMocks();
   });
 
-  it('should return string salt and hash', () => {
+  it('should return string salt and hash by calling randomBytes and pbkdf2Sync', () => {
     // Arrange
     (crypto.randomBytes as jest.Mock).mockReturnValue(mockSaltBuffer);
     (crypto.pbkdf2Sync as jest.Mock).mockReturnValue(mockHashBuffer);
 
     // Act
-    const response = generatePasswordHash(mockPassword);
+    generatePasswordHash(mockPassword);
 
     // Assert
     expect(console.error).not.toHaveBeenCalled();
@@ -45,6 +45,17 @@ describe('password', () => {
     expect(crypto.pbkdf2Sync(mockPassword, mockSaltString, CRYPTO.HASHING.ITERATIONS, CRYPTO.HASHING.KEY_LENGTH, CRYPTO.HASHING.ALGORITHM)).toEqual(
       mockHashBuffer,
     );
+  });
+
+  it('should return string salt and hash and expect the response to be hex string', () => {
+    // Arrange
+    (crypto.randomBytes as jest.Mock).mockReturnValue(mockSaltBuffer);
+    (crypto.pbkdf2Sync as jest.Mock).mockReturnValue(mockHashBuffer);
+
+    // Act
+    const response = generatePasswordHash(mockPassword);
+
+    // Assert
 
     // String response
     expect(response).toEqual({
