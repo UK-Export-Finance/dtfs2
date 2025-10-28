@@ -113,7 +113,7 @@ describe(baseUrl, () => {
       expect(new Date(response.coverEndDate).toISOString()).toEqual(new Date('2030-12-31').toISOString());
     });
 
-    it('should replace value and coverEndDate with amended values when feature flag is disabled', async () => {
+    it('should not replace value and coverEndDate with amended values when feature flag is disabled', async () => {
       jest.mocked(isPortalFacilityAmendmentsFeatureFlagEnabled).mockReturnValue(false);
 
       // Arrange
