@@ -23,9 +23,11 @@ function validPassword(password, hash, salt) {
 
   // Saved hash
   const savedHash = Buffer.from(hash, 'hex');
+  const passwordString = password.toString('hex');
+  const saltString = salt.toString('hex');
 
   // Generate hash as Buffer from provided password and salt
-  const generatedHash = generateHash(password, salt);
+  const generatedHash = generateHash(passwordString, saltString);
 
   if (!savedHash || !generatedHash || savedHash.length !== generatedHash.length) {
     // This is not timing safe. This is only reached under specific conditions where the buffer length is different (new user with no password).
@@ -35,9 +37,21 @@ function validPassword(password, hash, salt) {
   return crypto.timingSafeEqual(savedHash, generatedHash);
 }
 
+/**
+ * Generates a password reset token hash for a given user.
+ *
+ * @param {Object} user - The user object containing email and salt properties.
+ * @param {Buffer|string} user.email - The user's email address as a Buffer or string.
+ * @param {Buffer|string} user.salt - The user's salt as a Buffer or string.
+ * @returns {{ hash: string }} An object containing the generated hash as a hexadecimal string.
+ */
 function genPasswordResetToken(user) {
   const { email, salt } = user;
-  const hash = generateHash(email, salt);
+
+  const emailString = email.toString('hex');
+  const saltString = salt.toString('hex');
+
+  const hash = generateHash(emailString, saltString);
 
   return {
     hash: hash.toString('hex'),

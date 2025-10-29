@@ -52,8 +52,8 @@ module.exports = {
     const overridePortalUserSignInTokenWithValidTokenByUsername = async ({ username, newSignInToken }) => {
       const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
       const salt = generateSalt();
-      const hash = generateHash(newSignInToken, salt);
       const saltHex = salt.toString('hex');
+      const hash = generateHash(newSignInToken, saltHex);
       const hashHex = hash.toString('hex');
       const expiry = Date.now() + thirtyMinutesInMilliseconds;
       const userCollection = await getUsersCollection();
@@ -64,8 +64,8 @@ module.exports = {
       const signInTokens = newSignInTokens.map((newSignInToken) => {
         const { signInTokenFromLink, expiry } = newSignInToken;
         const salt = generateSalt();
-        const hash = generateHash(signInTokenFromLink, salt);
         const saltHex = salt.toString('hex');
+        const hash = generateHash(signInTokenFromLink, saltHex);
         const hashHex = hash.toString('hex');
         return { saltHex, hashHex, expiry };
       });
