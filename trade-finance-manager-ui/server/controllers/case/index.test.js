@@ -146,8 +146,7 @@ describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
             amendments: mockAmendments,
             amendmentsInProgressSubmittedFromPim: mockAmendments,
             successMessage: mockSuccessBannerMessage,
-            inProgressPortalAmendments: [],
-            hasInProgressPortalAmendments: false,
+            inProgressPortalAmendments: false,
             hasFutureEffectiveDatePortalAmendments: false,
             formattedFutureEffectiveDatePortalAmendments: [],
           });
@@ -885,8 +884,7 @@ describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
             amendmentsInProgressSubmittedFromPim: expect.any(Array),
             amendments: expect.any(Array),
             showFacilityEndDate: false,
-            inProgressPortalAmendments: [],
-            hasInProgressPortalAmendments: false,
+            inProgressPortalAmendments: false,
             hasFutureEffectiveDatePortalAmendments: false,
             futureEffectiveDatePortalAmendment: undefined,
           });
@@ -933,7 +931,6 @@ describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
             amendments: expect.any(Array),
             showFacilityEndDate: false,
             inProgressPortalAmendments: expect.any(Array),
-            hasInProgressPortalAmendments: true,
             hasFutureEffectiveDatePortalAmendments: false,
             futureEffectiveDatePortalAmendment: undefined,
           });
@@ -985,7 +982,6 @@ describe('when FF_PORTAL_FACILITY_AMENDMENTS_ENABLED is disabled', () => {
             amendments: expect.any(Array),
             showFacilityEndDate: false,
             inProgressPortalAmendments: expect.any(Array),
-            hasInProgressPortalAmendments: true,
             hasFutureEffectiveDatePortalAmendments: false,
             formattedFutureEffectiveDatePortalAmendments: undefined,
           });

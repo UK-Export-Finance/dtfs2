@@ -123,7 +123,7 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
     // TFM amendments that are in progress and not submitted by PIM - submittedByPim means tfm amendment is submitted, hence aliased to submitted
     const unsubmittedTFMAmendments = amendments.filter(({ status, submittedByPim: submitted }) => status === TFM_AMENDMENT_STATUS.IN_PROGRESS && !submitted);
     // Portal amendments which are in progress
-    const inProgressPortalAmendments = amendments.filter(({ status }) => PORTAL_AMENDMENT_STARTED_STATUSES.includes(status));
+    const getPortalAmendmentsInProgress = amendments.filter(({ status }) => PORTAL_AMENDMENT_STARTED_STATUSES.includes(status));
 
     const futureEffectiveDatePortalAmendments = amendments.filter(
       ({ status, effectiveDate }) => status === PORTAL_AMENDMENT_STATUS.ACKNOWLEDGED && isFutureEffectiveDate(effectiveDate),
@@ -131,7 +131,7 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
 
     const dealIsCancelled = isDealCancelled(deal.tfm);
 
-    const hasInProgressPortalAmendments = inProgressPortalAmendments.length > 0 && !dealIsCancelled;
+    const inProgressPortalAmendments = getPortalAmendmentsInProgress.length > 0 && !dealIsCancelled ? getPortalAmendmentsInProgress : false;
     const hasFutureEffectiveDatePortalAmendments = futureEffectiveDatePortalAmendments.length > 0 && !dealIsCancelled;
 
     let formattedFutureEffectiveDatePortalAmendments = [];
@@ -148,8 +148,9 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
       );
     }
 
-    const amendmentsInProgress = [...unsubmittedTFMAmendments, ...inProgressPortalAmendments];
-    const hasAmendmentInProgress = amendmentsInProgress.length > 0;
+    const combinedInProgressAmendments = [...unsubmittedTFMAmendments, ...getPortalAmendmentsInProgress];
+    // Return either false when none exist or the array when they exist
+    const inProgressAllAmendments = combinedInProgressAmendments.length > 0 ? combinedInProgressAmendments : false;
 
     // If any TFM amendments which are in progress have been submitted by PIM
     const hasAmendmentSubmittedByPim = unsubmittedTFMAmendments.some(({ submittedByPim }) => submittedByPim);
@@ -160,10 +161,8 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
     const showContinueAmendmentButton = hasAmendmentInProgressButton && !hasAmendmentSubmittedByPim && showAmendmentButton(deal, teams);
 
     return {
-      amendmentsInProgress,
-      hasAmendmentInProgress,
+      inProgressAllAmendments,
       inProgressPortalAmendments,
-      hasInProgressPortalAmendments,
       hasAmendmentInProgressButton,
       showContinueAmendmentButton,
       hasFutureEffectiveDatePortalAmendments,
@@ -172,10 +171,12 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
   }
 
   return {
-    amendmentsInProgress: [],
-    hasAmendmentInProgress: false,
+    inProgressAllAmendments: false,
+    inProgressPortalAmendments: false,
     hasAmendmentInProgressButton: false,
     showContinueAmendmentButton: false,
+    hasFutureEffectiveDatePortalAmendments: false,
+    formattedFutureEffectiveDatePortalAmendments: [],
   };
 };
 

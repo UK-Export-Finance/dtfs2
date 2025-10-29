@@ -1,27 +1,24 @@
  {% from "moj/components/banner/macro.njk" import mojBanner %}
 
  {% macro render(params) %}
-  {% set hasInProgressPortalAmendments = params.hasInProgressPortalAmendments %}
   {% set inProgressPortalAmendments = params.inProgressPortalAmendments %}
 
-  {% if hasInProgressPortalAmendments === true %}
-      {% if inProgressPortalAmendments %}
-        {% set bannerHtml %}
-          <p class="govuk-body" data-cy="portal-amendment--in-progress-deal-bar">
-            There is an amendment initiated by the bank on the deal (Facility
-            {%- for amendment in inProgressPortalAmendments -%}
-              <a> {{ amendment.ukefFacilityId }}</a>{% if not loop.last %},{% endif %}
-            {%- endfor -%}
-            ).
-          </p>
-        {% endset %}
+  {% if inProgressPortalAmendments %}
+    {% set bannerHtml %}
+      <p class="govuk-body" data-cy="portal-amendment--in-progress-deal-bar">
+        There is an amendment initiated by the bank on the deal (Facility
+        {%- for amendment in inProgressPortalAmendments -%}
+          <a> {{ amendment.ukefFacilityId }}</a>{% if not loop.last %},{% endif %}
+        {%- endfor -%}
+        ).
+      </p>
+    {% endset %}
 
-        {{ mojBanner({
-          type: 'information',
-          classes: 'govuk-!-margin-bottom-0 govuk-!-margin-top-6',
-          html: bannerHtml
-        }) }}
-      {% endif %}
+    {{ mojBanner({
+      type: 'information',
+      classes: 'govuk-!-margin-bottom-0 govuk-!-margin-top-6',
+      html: bannerHtml
+    }) }}
   {% endif %}
 
 {% endmacro %}

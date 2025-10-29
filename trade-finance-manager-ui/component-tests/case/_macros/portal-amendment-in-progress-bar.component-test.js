@@ -9,7 +9,7 @@ describe(component, () => {
   describe('when a portal amendment exists', () => {
     it('should render the banner', () => {
       const params = {
-        hasInProgressPortalAmendments: true,
+        inProgressPortalAmendments: [{ ukefFacilityId: '12345' }],
       };
 
       wrapper = render(params);
@@ -21,7 +21,7 @@ describe(component, () => {
   describe('when a portal amendment does not exist', () => {
     it('should not render the banner', () => {
       const params = {
-        hasInProgressPortalAmendments: false,
+        inProgressPortalAmendments: false,
       };
 
       wrapper = render(params);

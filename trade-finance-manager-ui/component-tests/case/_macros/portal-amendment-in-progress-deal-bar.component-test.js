@@ -9,8 +9,7 @@ describe(component, () => {
   describe('when a portal amendment does not exist', () => {
     it('should not render the banner', () => {
       const params = {
-        hasInProgressPortalAmendments: false,
-        inProgressPortalAmendments: [],
+        inProgressPortalAmendments: false,
       };
 
       wrapper = render(params);
@@ -22,7 +21,6 @@ describe(component, () => {
   describe('when one portal amendment exists', () => {
     it('should render the banner with the correct text', () => {
       const params = {
-        hasInProgressPortalAmendments: true,
         inProgressPortalAmendments: [{ ukefFacilityId: '12345' }],
       };
 
@@ -37,7 +35,6 @@ describe(component, () => {
   describe('when more than one portal amendment exists', () => {
     it('should render the banner with the correct text', () => {
       const params = {
-        hasInProgressPortalAmendments: true,
         inProgressPortalAmendments: [{ ukefFacilityId: '12345' }, { ukefFacilityId: '67890' }],
       };
 
