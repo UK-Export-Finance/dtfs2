@@ -53,6 +53,10 @@ describe('crypto utils', () => {
         inputPassword: A_PASSWORD,
       },
       { testName: 'when the hashes do not match', inputHash: A_DIFFERENT_HASH_AS_HEX, inputSalt: A_SALT },
+      { testName: 'when no hash is supplied', inputPassword: A_PASSWORD, inputSalt: A_SALT },
+      { testName: 'when no salt is supplied', inputPassword: A_PASSWORD, inputHash: A_DIFFERENT_HASH_AS_HEX },
+      { testName: 'when password, salt, hash are all empty', inputPassword: '', inputSalt: '', inputHash: '' },
+      { testName: 'when no input is supplied' },
     ];
 
     describe.each(returnFalseTestCases)('$testName', ({ inputHash, inputPassword, inputSalt }) => {
