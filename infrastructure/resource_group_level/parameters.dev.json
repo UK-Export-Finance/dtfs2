@@ -1,0 +1,91 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "product": {
+        "value": "{{PRODUCT}}"
+      },
+      "target": {
+        "value": "{{TARGET}}"
+      },
+      "version": {
+        "value": "{{VERSION}}"
+      },
+      "webAppName": {
+        "value": "app-{{PRODUCT}}-ui-{{TARGET}}-{{VERSION}}"
+      },
+      "appServicePlanName": {
+        "value": "appservice-plan-{{PRODUCT}}-{{TARGET}}-{{VERSION}}"
+      },
+      "frontDoorName": {
+        "value": "frontdoor-{{PRODUCT}}-{{TARGET}}-{{VERSION}}"
+      },
+      "wafPolicyName": {
+        "value": "{{VERSION}}"
+      },
+      "location": {
+        "value": "{{LOCATION}}"
+      },
+      "sku": {
+        "value": "B1"
+      },
+      "logPlan": {
+        "value": "{{LOG_PLAN}}"
+      },
+      "logQuota": {
+        "value": 3
+      },
+      "logRetentionDays": {
+        "value": 30
+      },
+      "vnetAddressPrefix": {
+        "value": "{{VNET_ADDRESS_PREFIX}}"
+      },
+      "appServicePlanEgressPrefixCidr": {
+        "value": "{{SNET_ASP_EGRESS_PREFIX_CIDR}}"
+      },
+      "acaClamAvCidr": {
+        "value": "{{SNET_ACA_CLAMAV_CIDR}}"
+      },
+      "applicationGatewayCidr": {
+        "value": "{{SNET_APPGW_CIDR_PREFIX}}"
+      },
+      "privateEndpointsCidr": {
+        "value": "{{SNET_PRIVATE_EP_CIDR}}"
+      },
+      "allowIpRange": {
+        "value": "{{ALLOWED_IP_RANGES}}"
+      },
+      "additionalAllowIpRange": {
+        "value": "{{ALLOWED_ADDITIONAL_IP}}"
+      },
+      "imageTag": {
+        "value": "{{IMAGE_TAG}}"
+      },
+      "acrName": {
+        "value": "{{VERSION}}"
+      },
+      "acrSku": {
+        "value": "Basic"
+      },
+      "remoteVnetSubscriptionUks": {
+        "value": "{{REMOTE_VNET_SUBSCRIPTION_UKS}}"
+      },
+      "remoteVnetResourceGroupUks": {
+        "value": "{{REMOTE_VNET_RESOURCE_GROUP_UKS}}"
+      },
+      "remoteVnetNameUks": {
+        "value": "{{REMOTE_VNET_NAME_UKS}}"
+      },
+      "wafRedirectUrl": {
+        "value": "{{WAF_REDIRECT_URL}}"
+      },
+      "tags": {
+        "value": {
+          "Environment": "{{ENVIRONMENT_TYPE}}",
+          "Product": "{{PRODUCT}}",
+          "Team": "development"
+        }
+      }
+    }
+}
