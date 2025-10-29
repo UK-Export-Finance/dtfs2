@@ -8,7 +8,7 @@ class Hasher {
   }
 
   hash(target) {
-    const salt = this.#hashStrategy.generateSalt().toString('hex');
+    const salt = this.#hashStrategy.generateSalt();
     const hash = this.#hashStrategy.generateHash(target, salt);
 
     return {

@@ -17,7 +17,7 @@ const PRIV_KEY = Buffer.from(process.env.JWT_SIGNING_KEY, 'base64').toString('as
  * the decrypted hash/salt with the password that the user provided at login
  */
 function validPassword(password, hash, salt) {
-  if (!hash || !salt) {
+  if (!password || !hash || !salt) {
     return false;
   }
 
