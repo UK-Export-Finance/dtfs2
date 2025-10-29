@@ -14,7 +14,7 @@ param autoscaleConfiguration object = {
   maxCapacity: 5
 }
 
-var applicationGatewayName = 'tfs-${environment}-tfm-gw'
+var applicationGatewayName = 'tfs-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-tfm-gw'
 
 var frontendPorts = [
   {
@@ -23,7 +23,7 @@ var frontendPorts = [
       port: 80
     }
   }]
-  
+
 var backendPools = [
   {
     name: 'appGatewayBackendPool'
@@ -72,13 +72,13 @@ var requestRoutingRules = [
   }]
 
 
-// NOTE: Until the following issue is resolved, we need to self-reference the applicationGateway 
+// NOTE: Until the following issue is resolved, we need to self-reference the applicationGateway
 // using resourceId() for the various sub-components that need to be created.
 // https://github.com/Azure/bicep/issues/1852
 // See the following for example usage.
 // https://github.com/Azure/azure-quickstart-templates/blob/master/demos/ag-docs-qs/main.bicep
 
-resource applicationGateway 'Microsoft.Network/applicationGateways@2022-11-01' = {
+resource applicationGateway 'Microsoft.Network/applicationGateways@2024-02-15' = {
   name: applicationGatewayName
   location: location
   tags: {}

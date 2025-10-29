@@ -70,15 +70,15 @@ var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-var functionAcbsName = '${product}-${environment}-${resourceNameFragment}'
-var privateEndpointName = '${product}-${environment}-${resourceNameFragment}'
-var applicationInsightsName = '${product}-${environment}-${resourceNameFragment}'
+var functionAcbsName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-${resourceNameFragment}'
+var privateEndpointName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-${resourceNameFragment}'
+var applicationInsightsName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-${resourceNameFragment}'
 
 
 // Minimal setup from MS example
 // See also https://learn.microsoft.com/en-my/azure/azure-functions/functions-infrastructure-as-code?tabs=bicep
 
-resource functionAcbs 'Microsoft.Web/sites@2022-09-01' = {
+resource functionAcbs 'Microsoft.Web/sites@2024-02-15' = {
   name: functionAcbsName
   location: location
   tags: {}
@@ -108,7 +108,7 @@ resource functionAcbs 'Microsoft.Web/sites@2022-09-01' = {
   }
 }
 
-resource functionAcbsAppSettings 'Microsoft.Web/sites/config@2022-09-01' = {
+resource functionAcbsAppSettings 'Microsoft.Web/sites/config@2024-02-15' = {
   parent: functionAcbs
   name: 'appsettings'
   properties: appSettings
@@ -116,7 +116,7 @@ resource functionAcbsAppSettings 'Microsoft.Web/sites/config@2022-09-01' = {
 
 
 // The private endpoint is taken from the function-acbs/private-endpoint export
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-02-15' = {
   name: privateEndpointName
   location: location
   tags: {}
@@ -141,7 +141,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
   }
 }
 
-resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-02-15' = {
   parent: privateEndpoint
   name: 'default'
   properties: {
@@ -156,7 +156,7 @@ resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022
   }
 }
 
-resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
+resource applicationInsights 'Microsoft.Insights/components@2024-02-15' = {
   name: applicationInsightsName
   location: location
   kind: 'web'

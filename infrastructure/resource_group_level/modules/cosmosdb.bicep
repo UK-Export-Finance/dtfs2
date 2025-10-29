@@ -17,8 +17,8 @@ param capacityMode string
 @allowed(['Continuous7Days', 'Continuous30Days'])
 param backupPolicyTier string
 
-var cosmosDbAccountName = '${product}-${environment}-mongo'
-var privateEndpointName = '${product}-${environment}-mongo'
+var cosmosDbAccountName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-mongo'
+var privateEndpointName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-mongo'
 
 var allowedIps = json(allowedIpsString)
 
@@ -53,11 +53,11 @@ var capabilities = capacityMode == 'Provisioned Throughput' ? [
   }
   {
     name: 'EnableServerless'
-  }  
+  }
 ]
 
 
-resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
+resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2024-02-15' = {
   name: cosmosDbAccountName
   location: location
   tags: {}
@@ -121,7 +121,7 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
 }
 
 
-resource submissionsDb 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases@2023-04-15' = {
+resource submissionsDb 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases@2024-02-15' = {
   parent: cosmosDbAccount
   name: databaseName
   properties: {
@@ -522,12 +522,12 @@ var collectionsArray = [
         ]
       }
     }
-  } 
+  }
 ]
 
 // We set a batch size because otherwise Azure tries to create all of the resources in parallel and we get 429 errors.
 @batchSize(4)
-resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2023-04-15' = [for collection in collectionsArray: {
+resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/collections@2024-02-15' = [for collection in collectionsArray: {
   parent: submissionsDb
   name: collection.name
   properties: collection.properties
@@ -535,7 +535,7 @@ resource collections 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/col
 
 
 // Setting the throughput only makes sense for 'Provisioned Throughput' mode
-resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2023-04-15' = if (capacityMode == 'Provisioned Throughput') {
+resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongodbDatabases/throughputSettings@2024-02-15' = if (capacityMode == 'Provisioned Throughput') {
   parent: submissionsDb
   name: 'default'
   properties: {
@@ -549,7 +549,7 @@ resource defaultThroughputSettings 'Microsoft.DocumentDB/databaseAccounts/mongod
 }
 
 // The private endpoint is taken from the cosmosdb/private-endpoint export
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-02-15' = {
   name: privateEndpointName
   location: location
   tags: {}
@@ -574,8 +574,8 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
   }
 }
 
-// Adding the Zone group sets up automatic DNS for the private link. 
-resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
+// Adding the Zone group sets up automatic DNS for the private link.
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-02-15' = {
   parent: privateEndpoint
   name: 'default'
   properties: {
