@@ -19,7 +19,7 @@ param shareDeleteRetentionEnabled bool
 
 param filesDnsZoneId string
 
-var storageAccountName = '${product}-${environment}-storage'
+var storageAccountName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-storage'
 
 var allowedIps = json(allowedIpsString)
 
@@ -117,7 +117,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   }
 }
 
-resource defaultBlobService 'Microsoft.Storage/storageAccounts/blobServices@2022-09-01' = {
+resource defaultBlobService 'Microsoft.Storage/storageAccounts/blobServices@2024-02-15' = {
   parent: storageAccount
   name: 'default'
   properties: {
@@ -133,7 +133,7 @@ resource defaultBlobService 'Microsoft.Storage/storageAccounts/blobServices@2022
   }
 }
 
-resource defaultFileService 'Microsoft.Storage/storageAccounts/fileServices@2022-09-01' = {
+resource defaultFileService 'Microsoft.Storage/storageAccounts/fileServices@2024-02-15' = {
   parent: storageAccount
   name: 'default'
   // TODO:FN-693 Note that the extant environments don't have
@@ -146,17 +146,17 @@ resource defaultFileService 'Microsoft.Storage/storageAccounts/fileServices@2022
   }
 }
 
-resource queueService 'Microsoft.Storage/storageAccounts/queueServices@2022-09-01' = {
+resource queueService 'Microsoft.Storage/storageAccounts/queueServices@2024-02-15' = {
   parent: storageAccount
   name: 'default'
 }
 
-resource tableService 'Microsoft.Storage/storageAccounts/tableServices@2022-09-01' = {
+resource tableService 'Microsoft.Storage/storageAccounts/tableServices@2024-02-15' = {
   parent: storageAccount
   name: 'default'
 }
 
-resource blobContainers 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = [for blobContainerName in blobContainerNames: {
+resource blobContainers 'Microsoft.Storage/storageAccounts/blobServices/containers@2024-02-15' = [for blobContainerName in blobContainerNames: {
   parent: defaultBlobService
   name: blobContainerName
   properties: {
@@ -169,7 +169,7 @@ resource blobContainers 'Microsoft.Storage/storageAccounts/blobServices/containe
   }
 }]
 
-resource fileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-09-01' = {
+resource fileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2024-02-15' = {
   parent: defaultFileService
   name: 'files'
   properties: {
@@ -179,7 +179,7 @@ resource fileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-0
   }
 }
 
-resource portalFileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-09-01' = {
+resource portalFileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2024-02-15' = {
   parent: defaultFileService
   name: 'portal'
   properties: {
@@ -189,7 +189,7 @@ resource portalFileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@
   }
 }
 
-resource utilisationReportsFileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2022-09-01' = {
+resource utilisationReportsFileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2024-02-15' = {
   parent: defaultFileService
   name: 'utilisation-reports'
   properties: {
@@ -199,19 +199,19 @@ resource utilisationReportsFileShare 'Microsoft.Storage/storageAccounts/fileServ
   }
 }
 
-resource queues 'Microsoft.Storage/storageAccounts/queueServices/queues@2022-09-01' = [for queueName in queueNames: {
+resource queues 'Microsoft.Storage/storageAccounts/queueServices/queues@2024-02-15' = [for queueName in queueNames: {
   parent: queueService
   name: queueName
 }]
 
 
-resource tables 'Microsoft.Storage/storageAccounts/tableServices/tables@2022-09-01' = [for tableName in tableNames: {
+resource tables 'Microsoft.Storage/storageAccounts/tableServices/tables@2024-02-15' = [for tableName in tableNames: {
   parent: tableService
   name: tableName
 }]
 
 // This resource definition is taken from the storage-private-endpoint export
-resource storagePrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
+resource storagePrivateEndpoint 'Microsoft.Network/privateEndpoints@2024-02-15' = {
   name: storageAccountName
   location: location
   tags: {}
@@ -241,7 +241,7 @@ resource storagePrivateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' 
 // https://stackoverflow.com/questions/69810938/what-is-azure-private-dns-zone-group
 // https://learn.microsoft.com/en-us/azure/private-link/create-private-endpoint-bicep?tabs=CLI
 // https://bhabalajinkya.medium.com/azure-bicep-private-communication-between-azure-resources-f4a17c171cfb
-resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-02-15' = {
   parent: storagePrivateEndpoint
   name: 'default'
   properties: {

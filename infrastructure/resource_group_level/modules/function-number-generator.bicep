@@ -67,15 +67,15 @@ var nodeEnv = nodeDeveloperMode ? { NODE_ENV: 'development' } : {}
 
 var appSettings = union(settings, staticSettings, secureSettings, additionalSettings, additionalSecureSettings, nodeEnv)
 
-var functionNumberGeneratorName = '${product}-${environment}-${resourceNameFragment}'
-var privateEndpointName = '${product}-${environment}-${resourceNameFragment}'
-var applicationInsightsName = '${product}-${environment}-${resourceNameFragment}'
+var functionNumberGeneratorName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-${resourceNameFragment}'
+var privateEndpointName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-${resourceNameFragment}'
+var applicationInsightsName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-${resourceNameFragment}'
 
 
 // Minimal setup from MS example
 // See also https://learn.microsoft.com/en-my/azure/azure-functions/functions-infrastructure-as-code?tabs=bicep
 
-resource functionNumberGenerator 'Microsoft.Web/sites@2022-09-01' = {
+resource functionNumberGenerator 'Microsoft.Web/sites@2024-02-15' = {
   name: functionNumberGeneratorName
   location: location
   tags: {}
@@ -104,7 +104,7 @@ resource functionNumberGenerator 'Microsoft.Web/sites@2022-09-01' = {
   }
 }
 
-resource functionNumberGeneratorAppSettings 'Microsoft.Web/sites/config@2022-09-01' = {
+resource functionNumberGeneratorAppSettings 'Microsoft.Web/sites/config@2024-02-15' = {
   parent: functionNumberGenerator
   name: 'appsettings'
   properties: appSettings
@@ -112,7 +112,7 @@ resource functionNumberGeneratorAppSettings 'Microsoft.Web/sites/config@2022-09-
 
 
 // The private endpoint is taken from the function-number-generator/private-endpoint export
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-02-15' = {
   name: privateEndpointName
   location: location
   tags: {}
@@ -137,7 +137,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
   }
 }
 
-resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-02-15' = {
   parent: privateEndpoint
   name: 'default'
   properties: {
@@ -152,7 +152,7 @@ resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022
   }
 }
 
-resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
+resource applicationInsights 'Microsoft.Insights/components@2024-02-15' = {
   name: applicationInsightsName
   location: location
   kind: 'web'

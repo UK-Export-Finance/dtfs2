@@ -4,7 +4,7 @@ param environment string
 param frontDoorAccess string
 param apiPortalAccessPort int
 
-var nsgName = '${product}-${environment}-gw-nsg'
+var nsgName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-gw-nsg'
 
 
 var staticRules = [
@@ -145,7 +145,7 @@ var optionalRules = apiPortalAccessPort != 0 ? [
 
 var securityRulesCombined = concat(staticRules, optionalRules)
 
-resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2022-11-01' = {
+resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2024-02-15' = {
   name: nsgName
   location: location
   tags: {}

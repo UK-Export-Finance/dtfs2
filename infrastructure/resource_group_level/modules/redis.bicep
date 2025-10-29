@@ -2,7 +2,7 @@ param location string
 param environment string
 param sku object
 
-var redisName = '${product}-${environment}-redis'
+var redisName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-redis'
 
 // See https://learn.microsoft.com/en-us/azure/azure-cache-for-redis/cache-redis-cache-bicep-provision?tabs=CLI
 // for an example Bicep file
@@ -11,7 +11,7 @@ var redisName = '${product}-${environment}-redis'
 // See line 718 in developmentinfrastructure.yml
 // and https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-private-link
 
-resource redis 'Microsoft.Cache/redis@2022-06-01' = {
+resource redis 'Microsoft.Cache/redis@2024-02-15' = {
   name: redisName
   location: location
   tags: {}
