@@ -5,7 +5,7 @@ const folders = [
   'dtfs-central-api',
   'external-api',
   'gef-ui',
-  'portal',
+  'portal-ui',
   'portal-api',
   'trade-finance-manager-api',
   'trade-finance-manager-ui',
