@@ -3,15 +3,15 @@ param environment string
 param acaClamAvSubnetId string
 param logAnalyticsWorkspaceName string
 
-var managedEnvironmentName = '${product}-${environment}-clamav-env'
-var applicationInsightsName = '${product}-${environment}-clamav-ai'
-var containerName = '${product}-${environment}-clamav'
+var managedEnvironmentName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-clamav-env'
+var applicationInsightsName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-clamav-ai'
+var containerName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-clamav'
 
-resource workspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' existing = {
+resource workspace 'Microsoft.OperationalInsights/workspaces@2024-02-15' existing = {
   name: logAnalyticsWorkspaceName
 }
 
-resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-02-preview' = {
+resource managedEnvironment 'Microsoft.App/managedEnvironments@2024-02-15' = {
   name: managedEnvironmentName
   location: location
   properties: {
@@ -35,7 +35,7 @@ resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-02-previe
   }
 }
 
-resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
+resource applicationInsights 'Microsoft.Insights/components@2024-02-15' = {
   name: applicationInsightsName
   location: location
   kind: 'web'
@@ -45,7 +45,7 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
-resource clamAvAca 'Microsoft.App/containerApps@2023-05-01' = {
+resource clamAvAca 'Microsoft.App/containerApps@2024-02-15' = {
   name: containerName
   location: location
   properties: {
@@ -64,12 +64,12 @@ resource clamAvAca 'Microsoft.App/containerApps@2023-05-01' = {
           image: 'mkodockx/docker-clamav:1.1.2-alpine'
           name: containerName
           resources: {
-            // We need minimal CPU, but 4GiB of memory. 
+            // We need minimal CPU, but 4GiB of memory.
             // However, currently only some combinations of CPU and memory are allowed.
             // See https://learn.microsoft.com/en-us/azure/container-apps/containers
             cpu: 2
             memory: '4Gi'
-          }          
+          }
         }
       ]
       scale: {

@@ -27,7 +27,7 @@ var privateEndpointName = 'tfs-${environment}-${resourceNameFragment}'
 var applicationInsightsName = 'tfs-${environment}-${resourceNameFragment}'
 
 var appSettingsWithAppInsights = union(
-  appSettings, 
+  appSettings,
   deployApplicationInsights ? {
     APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
     } : {},
@@ -36,8 +36,8 @@ var appSettingsWithAppInsights = union(
     }
   )
 
-resource site 'Microsoft.Web/sites@2022-09-01' = {
-  name: appName
+resource site 'Microsoft.Web/sites@2024-02-15' = {
+  name: appName-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
   location: location
   tags: {}
   kind: 'app,linux,container'
@@ -65,20 +65,20 @@ resource site 'Microsoft.Web/sites@2022-09-01' = {
   }
 }
 
-resource webappSetting 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(appSettings)) {
+resource webappSetting 'Microsoft.Web/sites/config@2024-02-15' = if (!empty(appSettings)) {
   parent: site
   name: 'appsettings'
   properties: appSettingsWithAppInsights
 }
 
-resource webappConnectionStrings 'Microsoft.Web/sites/config@2022-09-01' = if (!empty(connectionStrings)) {
+resource webappConnectionStrings 'Microsoft.Web/sites/config@2024-02-15' = if (!empty(connectionStrings)) {
   parent: site
   name: 'connectionstrings'
   properties: connectionStrings
 }
 
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
-  name: privateEndpointName
+resource privateEndpoint 'Microsoft.Network/privateEndpoints@2024-02-15' = {
+  name: privateEndpointName-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
   location: location
   tags: {}
   properties: {
@@ -102,8 +102,8 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-11-01' = {
   }
 }
 
-// Adding the Zone group sets up automatic DNS for the private link. 
-resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-11-01' = {
+// Adding the Zone group sets up automatic DNS for the private link.
+resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2024-02-15' = {
   parent: privateEndpoint
   name: 'default'
   properties: {
@@ -118,8 +118,8 @@ resource zoneGroup 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022
   }
 }
 
-resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = if (deployApplicationInsights) {
-  name: applicationInsightsName
+resource applicationInsights 'Microsoft.Insights/components@2024-02-15' = if (deployApplicationInsights) {
+  name: applicationInsightsName-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}
   location: location
   tags: {}
   kind: 'web'

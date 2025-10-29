@@ -23,7 +23,7 @@ param ruleSet RuleSet
 var allowedIps = json(allowedIpsString)
 var unauthorisedMessageBody = base64('Unathorised access!')
 
-// Note that by default, some rules are disabled by default because they have been superceded. 
+// Note that by default, some rules are disabled by default because they have been superceded.
 // These don't appear in ruleGroupOverrides.
 // See https://learn.microsoft.com/en-us/azure/web-application-firewall/afds/waf-front-door-drs?tabs=drs10
 // However, Dev appears to have considerably more rules disabled, which we replicate here.
@@ -280,7 +280,7 @@ var wafCustomRules = restrictAccessToUkefIps ? [
   }
 ] : []
 
-resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@2022-05-01' = {
+resource wafPolicies 'Microsoft.Network/frontdoorwebapplicationfirewallpolicies@2024-02-15' = {
   name: wafPoliciesName
   location: 'Global'
   tags: {}

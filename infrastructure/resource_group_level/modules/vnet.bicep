@@ -11,7 +11,7 @@ param appServicePlanName string
 param networkSecurityGroupId string
 
 // Note that the staging name is: "tfs-test-vnet_vnet-ukef-uks", so we accept a parameter to set it.
-param peeringVnetName string = 'vnet-peer-uks-${target}-${product}-${version}'
+param peeringVnetName string = 'vnet-peer-uks-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}'
 @secure()
 param peeringRemoteVnetSubscriptionId string
 param peeringRemoteVnetResourceGroupName string
@@ -20,18 +20,18 @@ param peeringAddressSpace string
 
 param storageLocations array
 
-var natGatewayName = '${product}-${appServicePlanName}-nat-gw'
-var natGatewayIpAddressesName = '${product}-${appServicePlanName}-nat-ip'
+var natGatewayName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-nat-gw'
+var natGatewayIpAddressesName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-nat-ip'
 
-var vnetName = '${product}-${appServicePlanName}-vnet'
+var vnetName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-vnet'
 
-var appServicePlanEgressSubnetName = '${appServicePlanName}-app-service-plan-egress'
-var gatewaySubnetName = '${environment}-gateway'
-var privateEndpointsSubnetName = '${environment}-private-endpoints'
+var appServicePlanEgressSubnetName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-app-service-plan-egress'
+var gatewaySubnetName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-gateway'
+var privateEndpointsSubnetName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-private-endpoints'
 
-var acaClamAvSubnetName = '${environment}-aca-clamav'
+var acaClamAvSubnetName = '${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}-aca-clamav'
 
-resource natGatewayIpAddresses 'Microsoft.Network/publicIPAddresses@2022-11-01' = {
+resource natGatewayIpAddresses 'Microsoft.Network/publicIPAddresses@2024-02-15' = {
   name: natGatewayIpAddressesName
   location: location
   tags: {}
@@ -53,7 +53,7 @@ resource natGatewayIpAddresses 'Microsoft.Network/publicIPAddresses@2022-11-01' 
   }
 }
 
-resource natGateway 'Microsoft.Network/natGateways@2022-11-01' = {
+resource natGateway 'Microsoft.Network/natGateways@2024-02-15' = {
   name: natGatewayName
   location: location
   tags: {}
@@ -70,7 +70,7 @@ resource natGateway 'Microsoft.Network/natGateways@2022-11-01' = {
   }
 }
 
-resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
+resource vnet 'Microsoft.Network/virtualNetworks@2024-02-15' = {
   name: vnetName
   location: location
   tags: {}
@@ -87,7 +87,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
         name: appServicePlanEgressSubnetName
         properties: {
           // TODO:DTFS-6422 if using test / prod as our template, this should be linked with the following nat gateway.
-          // It isn't clear why dev does not have this and links with sub-prototypekit-dev-001 in the 
+          // It isn't clear why dev does not have this and links with sub-prototypekit-dev-001 in the
           // rg-prototypekit-dev-001 RG instead
           natGateway: {
             id: natGateway.id
@@ -218,22 +218,22 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
   }
 }
 
-resource appServicePlanEgressSubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' existing = {
+resource appServicePlanEgressSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-02-15' existing = {
   parent: vnet
   name: appServicePlanEgressSubnetName
 }
 
-resource gatewaySubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' existing = {
+resource gatewaySubnet 'Microsoft.Network/virtualNetworks/subnets@2024-02-15' existing = {
   parent: vnet
   name: gatewaySubnetName
 }
 
-resource privateEndpointsSubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' existing = {
+resource privateEndpointsSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-02-15' existing = {
   parent: vnet
   name: privateEndpointsSubnetName
 }
 
-resource acaClamAvSubnet 'Microsoft.Network/virtualNetworks/subnets@2022-11-01' existing = {
+resource acaClamAvSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-02-15' existing = {
   parent: vnet
   name: acaClamAvSubnetName
 }
