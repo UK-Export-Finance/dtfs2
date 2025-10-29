@@ -3,7 +3,7 @@ name: Bicep Quality Assurance - Lint
 on:
   pull_request:
     branches:
-      - feat/stbr-infra
+      - feat/DTFS2-16188-bicep-templates
     paths:
       - '.github/workflows/bicep_az_deployment_group.yml'
       - '.github/workflows/bicep_deploy.yml'
