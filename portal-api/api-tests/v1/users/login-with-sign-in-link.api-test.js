@@ -132,7 +132,7 @@ describe('POST /users/:userId/sign-in-link/:signInToken/login', () => {
       });
     });
 
-    it('returns a 400 error if signInToken is 256 Hex characters', async () => {
+    it('returns a 400 error if signInToken is not 256 Hex characters', async () => {
       const { status, body } = await loginWithSignInLink({
         userId: partiallyLoggedInUserId,
         signInToken: invalidSignInToken,
