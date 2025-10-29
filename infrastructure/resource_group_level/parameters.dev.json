@@ -84,7 +84,8 @@
         "value": {
           "Environment": "{{ENVIRONMENT_TYPE}}",
           "Product": "{{PRODUCT}}",
-          "Team": "development"
+          "Team": "development",
+          "Owner": "Hari"
         }
       }
     }
