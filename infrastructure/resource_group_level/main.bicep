@@ -21,6 +21,13 @@ param peeringAddressSpace string = '10.50.0.0/16'
 // UKEF_VPN_IPS
 param onPremiseNetworkIpsString string
 
+param vnetAddressPrefix string
+param applicationGatewayCidr string
+param appServicePlanEgressPrefixCidr string
+param acaClamAvCidr string
+param privateEndpointsCidr string
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // We have a lot of application secrets that are passed in from GitHub
 // We define them here.
@@ -319,11 +326,11 @@ var parametersMap = {
     }
     vnet: {
       // TODO:DTFS2-6422 Note that 172.16.60.0/23 is probably the "demo" subnet so isn't needed.
-      addressPrefixes: ['172.16.40.0/22', '172.16.60.0/23']
-      applicationGatewayCidr: '172.16.41.0/24'
-      appServicePlanEgressPrefixCidr: '172.16.42.0/28'
-      acaClamAvCidr: '172.16.42.32/27'
-      privateEndpointsCidr: '172.16.40.0/24'
+      addressPrefixes: vnetAddressPrefix
+      applicationGatewayCidr: applicationGatewayCidr
+      appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
+      acaClamAvCidr: acaClamAvCidr
+      privateEndpointsCidr: privateEndpointsCidr
       peeringVnetName: peeringVnetName
     }
     wafPolicies: {
@@ -369,13 +376,13 @@ var parametersMap = {
       }
     }
     vnet: {
-      addressPrefixes: ['172.16.20.0/22']
-      applicationGatewayCidr: '172.16.21.0/24'
+      addressPrefixes: vnetAddressPrefix
+      applicationGatewayCidr: applicationGatewayCidr
       // Note that for appServicePlanEgressPrefixCidr /28 is rather small (16 - 5 reserved = 11 IPs)
       // MS recommend at least /26 (64 - 5 reserved = 59 IPs)
-      appServicePlanEgressPrefixCidr: '172.16.22.0/28'
-      acaClamAvCidr: '172.16.22.32/27'
-      privateEndpointsCidr: '172.16.20.0/24'
+      appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
+      acaClamAvCidr: acaClamAvCidr
+      privateEndpointsCidr: privateEndpointsCidr
       peeringVnetName: peeringVnetName
     }
     wafPolicies: {
@@ -422,11 +429,11 @@ var parametersMap = {
     }
     vnet: {
       // TODO:DTFS2-6422 check if all the addressPrefixes are needed
-      addressPrefixes: ['172.16.50.0/23', '172.16.52.0/23', '172.16.70.0/23']
-      appServicePlanEgressPrefixCidr: '172.16.52.0/28'
-      acaClamAvCidr: '172.16.52.32/27'
-      applicationGatewayCidr: '172.16.71.0/24'
-      privateEndpointsCidr: '172.16.70.0/24'
+      addressPrefixes: vnetAddressPrefix
+      appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
+      acaClamAvCidr: acaClamAvCidr
+      applicationGatewayCidr: applicationGatewayCidr
+      privateEndpointsCidr: privateEndpointsCidr
       // Note that the peeringVnetName for staging uses the name `test` for the staging environment so we override it here.
       peeringVnetName: peeringVnetName
     }
@@ -475,11 +482,11 @@ var parametersMap = {
     }
     vnet: {
       // TODO:DTFS2-6422 check if all the addressPrefixes are needed
-      addressPrefixes: ['172.16.30.0/23', '172.16.32.0/23']
-      appServicePlanEgressPrefixCidr: '172.16.32.0/28'
-      acaClamAvCidr: '172.16.32.32/27'
-      applicationGatewayCidr: '172.16.31.0/24'
-      privateEndpointsCidr: '172.16.30.0/24'
+      addressPrefixes: vnetAddressPrefix
+      appServicePlanEgressPrefixCidr: appServicePlanEgressPrefixCidr
+      acaClamAvCidr: acaClamAvCidr
+      applicationGatewayCidr: applicationGatewayCidr
+      privateEndpointsCidr: privateEndpointsCidr
       peeringVnetName: peeringVnetName
     }
     wafPolicies: {
@@ -570,7 +577,7 @@ module networkSecurityGroup 'modules/gw-nsg.bicep' = {
 }
 
 module vnet 'modules/vnet.bicep' = {
-  name: 'vnet-${{ env.PRODUCT }}-${{ env.TARGET }}-${{ vars.VERSION }}'
+  name: 'vnet-${{ PRODUCT }}-${{ TARGET }}-${{ VERSION }}'
   params: {
     environment: environment
     location: location

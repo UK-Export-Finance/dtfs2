@@ -277,7 +277,8 @@
     "SCOM",
     "UCDO",
     "tfsdemostorage",
-    "tfsdevstorage"
+    "tfsdevstorage",
+    "APPGW"
   ],
   "dictionaries": [
     "en-gb",
