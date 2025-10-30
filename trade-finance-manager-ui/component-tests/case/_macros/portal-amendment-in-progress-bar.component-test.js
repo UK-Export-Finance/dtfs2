@@ -21,7 +21,7 @@ describe(component, () => {
   describe('when a portal amendment does not exist', () => {
     it('should not render the banner', () => {
       const params = {
-        inProgressPortalAmendments: false,
+        hasInProgressPortalAmendments: false,
       };
 
       wrapper = render(params);

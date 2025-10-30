@@ -1,13 +1,13 @@
  {% from "moj/components/banner/macro.njk" import mojBanner %}
 
  {% macro render(params) %}
-  {% set inProgressPortalAmendments = params.inProgressPortalAmendments %}
+  {% set hasInProgressPortalAmendments = params.hasInProgressPortalAmendments %}
 
-  {% if inProgressPortalAmendments %}
+  {% if hasInProgressPortalAmendments %}
     {% set bannerHtml %}
       <p class="govuk-body" data-cy="portal-amendment--in-progress-deal-bar">
         There is an amendment initiated by the bank on the deal (Facility
-        {%- for amendment in inProgressPortalAmendments -%}
+        {%- for amendment in hasInProgressPortalAmendments -%}
           <a> {{ amendment.ukefFacilityId }}</a>{% if not loop.last %},{% endif %}
         {%- endfor -%}
         ).

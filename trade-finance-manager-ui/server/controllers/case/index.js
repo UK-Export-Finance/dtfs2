@@ -70,7 +70,7 @@ const getCaseDeal = async (req, res) => {
       deal.tfm.stage = DEAL.DEAL_STAGE.AMENDMENT_IN_PROGRESS;
     }
 
-    const { inProgressPortalAmendments, hasFutureEffectiveDatePortalAmendments, formattedFutureEffectiveDatePortalAmendments } = getAmendmentsInProgress({
+    const { hasInProgressPortalAmendments, hasFutureEffectiveDatePortalAmendments, formattedFutureEffectiveDatePortalAmendments } = getAmendmentsInProgress({
       amendments,
       deal,
       teams,
@@ -108,7 +108,7 @@ const getCaseDeal = async (req, res) => {
       hasAmendmentInProgressSubmittedFromPim,
       showDealCancelButton,
       hasDraftCancellation,
-      inProgressPortalAmendments,
+      hasInProgressPortalAmendments,
       hasFutureEffectiveDatePortalAmendments,
       formattedFutureEffectiveDatePortalAmendments,
     });
@@ -443,10 +443,10 @@ const getCaseFacility = async (req, res) => {
     const hasAmendmentInProgressSubmittedFromPim = amendmentsInProgressSubmittedFromPim.length > 0;
 
     const {
-      inProgressAllAmendments,
+      hasInProgressAllAmendments,
       hasAmendmentInProgressButton,
       showContinueAmendmentButton,
-      inProgressPortalAmendments,
+      hasInProgressPortalAmendments,
       hasFutureEffectiveDatePortalAmendments,
       formattedFutureEffectiveDatePortalAmendments,
     } = getAmendmentsInProgress({
@@ -486,7 +486,7 @@ const getCaseFacility = async (req, res) => {
       facilityTfm: facility.tfm,
       user: req.session.user,
       showAmendmentButton:
-        showAmendmentButton(deal, req.session.user.teams) && !inProgressAllAmendments && !amendment.amendmentId && !futureEffectiveDatePortalAmendment,
+        showAmendmentButton(deal, req.session.user.teams) && !hasInProgressAllAmendments && !amendment.amendmentId && !futureEffectiveDatePortalAmendment,
       showContinueAmendmentButton,
       amendmentId: amendment?.amendmentId,
       amendmentVersion: amendment?.version,
@@ -496,7 +496,7 @@ const getCaseFacility = async (req, res) => {
       amendments,
       amendmentsInProgressSubmittedFromPim,
       showFacilityEndDate: facility.facilitySnapshot.isGef,
-      inProgressPortalAmendments,
+      hasInProgressPortalAmendments,
       hasFutureEffectiveDatePortalAmendments,
       futureEffectiveDatePortalAmendment,
     });

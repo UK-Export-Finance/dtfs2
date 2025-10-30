@@ -131,7 +131,7 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
 
     const dealIsCancelled = isDealCancelled(deal.tfm);
 
-    const inProgressPortalAmendments = getPortalAmendmentsInProgress.length > 0 && !dealIsCancelled ? getPortalAmendmentsInProgress : false;
+    const hasInProgressPortalAmendments = getPortalAmendmentsInProgress.length > 0 && !dealIsCancelled ? getPortalAmendmentsInProgress : false;
     const hasFutureEffectiveDatePortalAmendments = futureEffectiveDatePortalAmendments.length > 0 && !dealIsCancelled;
 
     let formattedFutureEffectiveDatePortalAmendments = [];
@@ -150,7 +150,7 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
 
     const combinedInProgressAmendments = [...unsubmittedTFMAmendments, ...getPortalAmendmentsInProgress];
     // Return either false when none exist or the array when they exist
-    const inProgressAllAmendments = combinedInProgressAmendments.length > 0 ? combinedInProgressAmendments : false;
+    const hasInProgressAllAmendments = combinedInProgressAmendments.length > 0 ? combinedInProgressAmendments : false;
 
     // If any TFM amendments which are in progress have been submitted by PIM
     const hasAmendmentSubmittedByPim = unsubmittedTFMAmendments.some(({ submittedByPim }) => submittedByPim);
@@ -161,8 +161,8 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
     const showContinueAmendmentButton = hasAmendmentInProgressButton && !hasAmendmentSubmittedByPim && showAmendmentButton(deal, teams);
 
     return {
-      inProgressAllAmendments,
-      inProgressPortalAmendments,
+      hasInProgressAllAmendments,
+      hasInProgressPortalAmendments,
       hasAmendmentInProgressButton,
       showContinueAmendmentButton,
       hasFutureEffectiveDatePortalAmendments,
@@ -172,7 +172,7 @@ const getAmendmentsInProgress = ({ amendments, deal, teams }) => {
 
   return {
     inProgressAllAmendments: false,
-    inProgressPortalAmendments: false,
+    hasInProgressPortalAmendments: false,
     hasAmendmentInProgressButton: false,
     showContinueAmendmentButton: false,
     hasFutureEffectiveDatePortalAmendments: false,
